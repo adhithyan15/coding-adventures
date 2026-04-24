@@ -19,6 +19,16 @@
       ]
     },
     {
+      "description": "explicit data state fixture still normalizes",
+      "initialStates": ["Data state"],
+      "input": "<em>Hi</em>",
+      "output": [
+        ["StartTag", "em", {}],
+        ["Character", "Hi"],
+        ["EndTag", "em"]
+      ]
+    },
+    {
       "description": "doctype plus single attribute start tag",
       "input": "<!DOCTYPE html><p class=test>Hi</p>",
       "output": [
@@ -29,6 +39,13 @@
       ]
     },
     {
+      "description": "self closing start tag uses html5lib boolean slot",
+      "input": "<br/>",
+      "output": [
+        ["StartTag", "br", {}, true]
+      ]
+    },
+    {
       "description": "comment eof recovery reports tokenizer error",
       "input": "<!--open",
       "output": [
@@ -36,6 +53,17 @@
       ],
       "errors": [
         {"code": "eof-in-comment", "line": 1, "col": 9}
+      ]
+    },
+    {
+      "description": "unsupported rcdata fixture is skipped by the importer",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "Hello&lt;/title>",
+      "output": [
+        ["Character", "Hello"],
+        ["Character", "<"],
+        ["Character", "/title>"]
       ]
     }
   ]

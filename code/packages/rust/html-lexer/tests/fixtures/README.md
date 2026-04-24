@@ -41,8 +41,12 @@ binary while production code continues to link only static Rust source.
 
 - `html-skeleton.json`: narrow bootstrap regression cases
 - `html1.json`: Mosaic-era compatibility-floor cases for the current default wrapper
+- `html5lib-smoke.json`: generated normalized Venture fixture corpus derived from
+  the raw html5lib-style smoke file
 - `upstream-html5lib-smoke.test`: raw html5lib-style tokenizer cases used to
   exercise the normalization path toward broader upstream corpora
+- `normalize_html5lib_fixtures.py`: importer that lowers supported raw
+  html5lib-style tokenizer cases into Venture's portable fixture schema
 
 ## WPT Path
 
@@ -55,8 +59,28 @@ letting us mirror broader living-standard cases.
 uses the tokenizer JSON structure documented by the html5lib tokenizer tests:
 top-level `tests`, with each test carrying `description`, `input`, `output`,
 optional `initialStates`, optional `lastStartTag`, and optional `errors`.
-Rust tests parse that raw upstream-style file and lower it into
-`venture-html-lexer-fixtures/v1` before running the shared conformance harness.
+
+`normalize_html5lib_fixtures.py` is the checked-in importer for this shape. It
+currently supports:
+
+- default data-state cases
+- explicit `initialStates: ["Data state"]`
+- `StartTag`, `EndTag`, `Character`, `Comment`, and `DOCTYPE` output tokens
+- html5lib start-tag self-closing booleans
+- tokenizer error codes lowered into Venture diagnostics
+
+Unsupported raw cases are skipped into metadata in the generated file rather
+than silently disappearing. Rust conformance tests execute the generated
+`html5lib-smoke.json` corpus and separately parse the raw upstream-style file to
+keep the intake path visible.
+
+To regenerate the normalized corpus:
+
+```bash
+python3 code/packages/rust/html-lexer/tests/fixtures/normalize_html5lib_fixtures.py \
+  code/packages/rust/html-lexer/tests/fixtures/upstream-html5lib-smoke.test \
+  code/packages/rust/html-lexer/tests/fixtures/html5lib-smoke.json
+```
 
 Planned flow:
 

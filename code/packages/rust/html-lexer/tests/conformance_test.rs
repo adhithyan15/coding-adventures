@@ -6,7 +6,8 @@ use serde_json::Value;
 
 const HTML_SKELETON_FIXTURES: &str = include_str!("fixtures/html-skeleton.json");
 const HTML1_FIXTURES: &str = include_str!("fixtures/html1.json");
-const HTML5LIB_SMOKE_FIXTURES: &str = include_str!("fixtures/upstream-html5lib-smoke.test");
+const HTML5LIB_RAW_FIXTURES: &str = include_str!("fixtures/upstream-html5lib-smoke.test");
+const HTML5LIB_NORMALIZED_FIXTURES: &str = include_str!("fixtures/html5lib-smoke.json");
 
 #[derive(Debug, Deserialize)]
 struct FixtureSuite {
@@ -16,7 +17,7 @@ struct FixtureSuite {
     cases: Vec<FixtureCase>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, Deserialize)]
 struct FixtureCase {
     id: String,
     input: String,
@@ -50,6 +51,25 @@ struct Html5libTokenizerError {
     col: usize,
 }
 
+#[derive(Debug, Deserialize)]
+struct Html5libNormalizedSuite {
+    format: String,
+    suite: String,
+    description: String,
+    source: String,
+    generator: String,
+    supported_initial_states: Vec<String>,
+    cases: Vec<FixtureCase>,
+    skipped: Vec<Html5libSkippedCase>,
+}
+
+#[derive(Debug, Deserialize)]
+struct Html5libSkippedCase {
+    id: String,
+    description: String,
+    reason: String,
+}
+
 #[test]
 fn fixture_manifests_parse() {
     let skeleton = load_suite(HTML_SKELETON_FIXTURES);
@@ -68,18 +88,50 @@ fn fixture_manifests_parse() {
 
 #[test]
 fn html5lib_smoke_fixture_file_parses() {
-    let file = load_html5lib_file(HTML5LIB_SMOKE_FIXTURES);
+    let file = load_html5lib_file(HTML5LIB_RAW_FIXTURES);
 
-    assert_eq!(file.tests.len(), 4);
+    assert_eq!(file.tests.len(), 7);
     assert_eq!(
         file.tests[0].description,
         "simple start and end tag in data state"
     );
     assert!(file.tests[0].initial_states.is_empty());
     assert!(file.tests[0].last_start_tag.is_none());
-    assert_eq!(file.tests[3].errors[0].code, "eof-in-comment");
-    assert_eq!(file.tests[3].errors[0].line, 1);
-    assert_eq!(file.tests[3].errors[0].col, 9);
+    assert_eq!(file.tests[2].initial_states, vec!["Data state".to_string()]);
+    assert_eq!(file.tests[5].errors[0].code, "eof-in-comment");
+    assert_eq!(file.tests[5].errors[0].line, 1);
+    assert_eq!(file.tests[5].errors[0].col, 9);
+    assert_eq!(
+        file.tests[6].initial_states,
+        vec!["RCDATA state".to_string()]
+    );
+    assert_eq!(file.tests[6].last_start_tag.as_deref(), Some("title"));
+}
+
+#[test]
+fn normalized_html5lib_fixture_parses_with_importer_metadata() {
+    let normalized = load_html5lib_normalized_suite(HTML5LIB_NORMALIZED_FIXTURES);
+
+    assert_eq!(normalized.format, "venture-html-lexer-fixtures/v1");
+    assert_eq!(normalized.suite, "html5lib-smoke");
+    assert!(!normalized.description.is_empty());
+    assert_eq!(normalized.source, "upstream-html5lib-smoke.test");
+    assert_eq!(normalized.generator, "normalize_html5lib_fixtures.py");
+    assert_eq!(
+        normalized.supported_initial_states,
+        vec!["Data state".to_string()]
+    );
+    assert_eq!(normalized.cases.len(), 6);
+    assert_eq!(normalized.skipped.len(), 1);
+    assert_eq!(normalized.skipped[0].id, "html5lib-smoke-7");
+    assert_eq!(
+        normalized.skipped[0].description,
+        "unsupported rcdata fixture is skipped by the importer"
+    );
+    assert_eq!(
+        normalized.skipped[0].reason,
+        "unsupported initialStates=['RCDATA state']"
+    );
 }
 
 #[test]
@@ -112,12 +164,12 @@ fn html1_conformance_cases_match_default_wrapper() {
 
 #[test]
 fn normalized_html5lib_cases_match_default_wrapper() {
-    let file = load_html5lib_file(HTML5LIB_SMOKE_FIXTURES);
-    let suite = normalize_html5lib_suite(&file);
+    let normalized = load_html5lib_normalized_suite(HTML5LIB_NORMALIZED_FIXTURES);
+    let suite = fixture_suite_from_normalized(&normalized);
 
     assert_eq!(suite.format, "venture-html-lexer-fixtures/v1");
     assert_eq!(suite.suite, "html5lib-smoke");
-    assert_eq!(suite.cases.len(), 4);
+    assert_eq!(suite.cases.len(), 6);
 
     run_fixture_suite(&suite, || {
         create_html_lexer().map_err(|error| format!("{error:?}"))
@@ -126,8 +178,8 @@ fn normalized_html5lib_cases_match_default_wrapper() {
 
 #[test]
 fn normalized_html5lib_cases_match_generated_html1_machine() {
-    let file = load_html5lib_file(HTML5LIB_SMOKE_FIXTURES);
-    let suite = normalize_html5lib_suite(&file);
+    let normalized = load_html5lib_normalized_suite(HTML5LIB_NORMALIZED_FIXTURES);
+    let suite = fixture_suite_from_normalized(&normalized);
 
     run_fixture_suite(&suite, || {
         html1_machine()
@@ -144,149 +196,17 @@ fn load_html5lib_file(raw: &str) -> Html5libTokenizerFile {
     serde_json::from_str(raw).expect("html5lib tokenizer fixture file should parse")
 }
 
-fn normalize_html5lib_suite(file: &Html5libTokenizerFile) -> FixtureSuite {
+fn load_html5lib_normalized_suite(raw: &str) -> Html5libNormalizedSuite {
+    serde_json::from_str(raw).expect("normalized html5lib fixture suite should parse")
+}
+
+fn fixture_suite_from_normalized(normalized: &Html5libNormalizedSuite) -> FixtureSuite {
     FixtureSuite {
-        format: "venture-html-lexer-fixtures/v1".to_string(),
-        suite: "html5lib-smoke".to_string(),
-        description:
-            "Normalized html5lib-style tokenizer smoke cases lowered into the Venture fixture schema"
-                .to_string(),
-        cases: file
-            .tests
-            .iter()
-            .enumerate()
-            .map(|(index, test)| normalize_html5lib_case(index, test))
-            .collect(),
+        format: normalized.format.clone(),
+        suite: normalized.suite.clone(),
+        description: normalized.description.clone(),
+        cases: normalized.cases.clone(),
     }
-}
-
-fn normalize_html5lib_case(index: usize, test: &Html5libTokenizerTest) -> FixtureCase {
-    assert!(
-        test.initial_states.is_empty() || test.initial_states == ["Data state".to_string()],
-        "html5lib smoke normalizer currently supports only the data state"
-    );
-    assert!(
-        test.last_start_tag.is_none(),
-        "html5lib smoke normalizer does not yet support lastStartTag"
-    );
-
-    let mut tokens = Vec::new();
-    let mut pending_text = String::new();
-
-    for token in &test.output {
-        let items = token
-            .as_array()
-            .expect("html5lib tokenizer output tokens should be arrays");
-        let kind = items
-            .first()
-            .and_then(Value::as_str)
-            .expect("html5lib tokenizer token kind should be a string");
-
-        match kind {
-            "Character" => {
-                pending_text.push_str(
-                    items
-                        .get(1)
-                        .and_then(Value::as_str)
-                        .expect("Character token should carry data"),
-                );
-            }
-            "StartTag" => {
-                flush_pending_text(&mut pending_text, &mut tokens);
-                tokens.push(normalize_html5lib_start_tag(items));
-            }
-            "EndTag" => {
-                flush_pending_text(&mut pending_text, &mut tokens);
-                tokens.push(format!(
-                    "EndTag(name={})",
-                    items
-                        .get(1)
-                        .and_then(Value::as_str)
-                        .expect("EndTag token should carry a name")
-                ));
-            }
-            "Comment" => {
-                flush_pending_text(&mut pending_text, &mut tokens);
-                tokens.push(format!(
-                    "Comment(data={})",
-                    items
-                        .get(1)
-                        .and_then(Value::as_str)
-                        .expect("Comment token should carry data")
-                ));
-            }
-            "DOCTYPE" => {
-                flush_pending_text(&mut pending_text, &mut tokens);
-                tokens.push(normalize_html5lib_doctype(items));
-            }
-            other => panic!("unsupported html5lib smoke token kind `{other}`"),
-        }
-    }
-
-    flush_pending_text(&mut pending_text, &mut tokens);
-    tokens.push("EOF".to_string());
-
-    FixtureCase {
-        id: format!("html5lib-smoke-{}", index + 1),
-        input: test.input.clone(),
-        tokens,
-        diagnostics: test.errors.iter().map(|error| error.code.clone()).collect(),
-    }
-}
-
-fn flush_pending_text(pending_text: &mut String, tokens: &mut Vec<String>) {
-    if pending_text.is_empty() {
-        return;
-    }
-
-    tokens.push(format!("Text(data={pending_text})"));
-    pending_text.clear();
-}
-
-fn normalize_html5lib_start_tag(items: &[Value]) -> String {
-    let name = items
-        .get(1)
-        .and_then(Value::as_str)
-        .expect("StartTag token should carry a name");
-    let attributes = items
-        .get(2)
-        .and_then(Value::as_object)
-        .expect("StartTag token should carry an attribute map");
-    let attribute_summary = if attributes.is_empty() {
-        "[]".to_string()
-    } else {
-        let joined = attributes
-            .iter()
-            .map(|(name, value)| {
-                format!(
-                    "{}={}",
-                    name,
-                    value
-                        .as_str()
-                        .expect("attribute values should be strings in smoke fixtures")
-                )
-            })
-            .collect::<Vec<_>>()
-            .join(", ");
-        format!("[{joined}]")
-    };
-    let self_closing = items.get(3).and_then(Value::as_bool).unwrap_or(false);
-
-    format!("StartTag(name={name}, attributes={attribute_summary}, self_closing={self_closing})")
-}
-
-fn normalize_html5lib_doctype(items: &[Value]) -> String {
-    let name = items
-        .get(1)
-        .and_then(Value::as_str)
-        .expect("DOCTYPE token should carry a name");
-    let correctness = items
-        .get(4)
-        .and_then(Value::as_bool)
-        .expect("DOCTYPE token should carry correctness");
-    let force_quirks = !correctness;
-
-    format!("Doctype(name={name}, force_quirks={force_quirks})")
 }
 
 fn run_fixture_suite(suite: &FixtureSuite, create_lexer: impl Fn() -> Result<HtmlLexer, String>) {
