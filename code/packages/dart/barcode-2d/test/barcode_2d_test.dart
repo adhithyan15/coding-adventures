@@ -18,7 +18,12 @@
 import 'dart:math' as math;
 
 import 'package:coding_adventures_barcode_2d/coding_adventures_barcode_2d.dart';
-import 'package:coding_adventures_paint_instructions/coding_adventures_paint_instructions.dart';
+// Hide `version` from paint_instructions to avoid ambiguity with the
+// `version` constant exported by coding_adventures_barcode_2d.
+// The test exercises barcode_2d's version; paint_instructions' version
+// is tested in its own test suite.
+import 'package:coding_adventures_paint_instructions/coding_adventures_paint_instructions.dart'
+    hide version;
 import 'package:test/test.dart';
 
 void main() {
