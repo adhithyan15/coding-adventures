@@ -6,6 +6,8 @@ from pathlib import Path
 
 import pytest
 from logic_engine import (
+    Atom,
+    Compound,
     ConjExpr,
     DisjExpr,
     FreshExpr,
@@ -27,6 +29,7 @@ from logic_engine import (
 from prolog_loader import (
     LoadedPrologProject,
     PrologInitializationError,
+    SourceResolver,
     __version__,
     adapt_prolog_goal,
     link_loaded_prolog_sources,
@@ -262,6 +265,7 @@ class TestPrologLoader:
         result_var = project.initialization_directives[0].variables["Result"]
 
         assert reify(result_var, state.substitution) == atom("done")
+
     def test_linked_queries_support_explicit_module_qualification(self) -> None:
         project = load_swi_prolog_project(
             """
@@ -489,6 +493,116 @@ class TestPrologLoader:
             match=expected_message,
         ):
             load_swi_prolog_project_from_files(app_path)
+
+    def test_load_swi_prolog_project_from_files_splices_include_into_parent(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        facts_path = tmp_path / "facts.pl"
+        facts_path.write_text("parent(homer, bart).\n", encoding="utf-8")
+        helper_path = tmp_path / "helpers.pl"
+        helper_path.write_text(
+            ":- consult('facts.pl').\nrun(Who) :- parent(homer, Who).\n",
+            encoding="utf-8",
+        )
+        app_path = tmp_path / "app.pl"
+        app_path.write_text(
+            ":- module(app, [run/1]).\n"
+            ":- include('helpers.pl').\n"
+            "?- run(Who).\n",
+            encoding="utf-8",
+        )
+
+        project = load_swi_prolog_project_from_files(app_path)
+        query = project.queries[0]
+
+        assert solve_all(project.program, query.variables["Who"], query.goal) == [
+            atom("bart"),
+        ]
+
+    def test_include_target_must_not_declare_a_module(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        helper_path = tmp_path / "helpers.pl"
+        helper_path.write_text(
+            ":- module(helpers, [helper/1]).\nhelper(ok).\n",
+            encoding="utf-8",
+        )
+        app_path = tmp_path / "app.pl"
+        app_path.write_text(
+            ":- module(app, []).\n:- include('helpers.pl').\n",
+            encoding="utf-8",
+        )
+
+        with pytest.raises(
+            ValueError,
+            match=r"included file .*helpers\.pl must not declare module/2",
+        ):
+            load_swi_prolog_file(app_path)
+
+    def test_load_swi_prolog_file_rejects_circular_includes(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        first_path = tmp_path / "first.pl"
+        second_path = tmp_path / "second.pl"
+        first_path.write_text(":- include('second.pl').\n", encoding="utf-8")
+        second_path.write_text(":- include('first.pl').\n", encoding="utf-8")
+
+        with pytest.raises(
+            ValueError,
+            match=r"circular include detected at .*first\.pl",
+        ):
+            load_swi_prolog_file(first_path)
+
+    def test_load_swi_prolog_project_from_files_uses_custom_library_resolver(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        library_dir = tmp_path / "lib"
+        library_dir.mkdir()
+        family_path = library_dir / "family.pl"
+        family_path.write_text(
+            ":- module(family, [ancestor/2]).\nancestor(homer, bart).\n",
+            encoding="utf-8",
+        )
+        app_path = tmp_path / "app.pl"
+        app_path.write_text(
+            ":- module(app, []).\n"
+            ":- use_module(library(family), [ancestor/2]).\n"
+            "?- ancestor(homer, Who).\n",
+            encoding="utf-8",
+        )
+
+        def resolve_library(
+            term_value: object,
+            source_path: Path,
+        ) -> Path | None:
+            del source_path
+            if (
+                isinstance(term_value, Compound)
+                and term_value.functor.name == "library"
+                and len(term_value.args) == 1
+                and isinstance(term_value.args[0], Atom)
+            ):
+                return library_dir / f"{term_value.args[0].symbol.name}.pl"
+            return None
+
+        source_resolver: SourceResolver = resolve_library
+
+        project = load_swi_prolog_project_from_files(
+            app_path,
+            source_resolver=source_resolver,
+        )
+        query = project.queries[0]
+
+        assert family_path.resolve() in {
+            source.source_path for source in project.sources if source.source_path
+        }
+        assert solve_all(project.program, query.variables["Who"], query.goal) == [
+            atom("bart"),
+        ]
 
 
 class TestPrologGoalAdapter:

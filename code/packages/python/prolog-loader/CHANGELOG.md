@@ -21,3 +21,6 @@
   linked queries, initialization goals, and common meta-goal wrappers
 - add file-backed SWI project loading with recursive `consult/1`,
   `ensure_loaded/1`, and relative `use_module/1,2` resolution
+- add `include/1` source splicing for file-backed SWI loader flows
+- add pluggable `SourceResolver` hooks so callers can resolve `library(...)`
+  and other custom source references during dependency loading
