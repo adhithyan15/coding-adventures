@@ -308,6 +308,55 @@ class TestAlgolIrCompiler:
         assert IrOp.CMP_EQ in opcodes
         assert any(label.startswith("switch_0_1_next") for label in labels)
 
+    def test_compiles_nonlocal_switch_designational_goto(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result, i; "
+                "switch s := first, second; "
+                "i := 2; "
+                "begin goto s[i] end; "
+                "first: result := 1; goto done; "
+                "second: result := 2; "
+                "done: "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+
+        assert IrOp.CMP_EQ in opcodes
+        assert any(label.startswith("switch_0_1_next") for label in labels)
+
+    def test_compiles_procedure_crossing_nonlocal_switch_with_pending_transfer(
+        self,
+    ) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result, flag; "
+                "switch s := if flag = 0 then left else right; "
+                "procedure escape; begin flag := 1; goto s[1] end; "
+                "left: result := 1; goto done; "
+                "right: result := 2; "
+                "done: "
+                "escape "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+
+        assert IrOp.CALL in opcodes
+        assert opcodes.count(IrOp.RET) >= 2
+        assert any(label.startswith("algol_label_") for label in labels)
+
     def test_repeated_switch_selections_get_distinct_dispatch_labels(self) -> None:
         result = compile_algol(
             parse_algol(

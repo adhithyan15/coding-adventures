@@ -189,7 +189,7 @@ class TestAlgolTypeChecker:
         assert not result.ok
         assert "switch index must be integer" in result.diagnostics[0].message
 
-    def test_rejects_nonlocal_switch_selection_for_now(self) -> None:
+    def test_accepts_nonlocal_switch_selection(self) -> None:
         ast = parse_algol(
             "begin integer result; "
             "switch s := done; "
@@ -199,8 +199,12 @@ class TestAlgolTypeChecker:
         )
         result = check_algol(ast)
 
-        assert not result.ok
-        assert "nonlocal switch 's'" in result.diagnostics[0].message
+        assert result.ok
+        assert result.semantic is not None
+        assert len(result.semantic.switch_selections) == 1
+        selection = result.semantic.switch_selections[0]
+        assert selection.use_block_id != selection.declaration_block_id
+        assert selection.lexical_depth_delta == 1
 
     def test_rejects_nested_switch_selection_entries_for_now(self) -> None:
         ast = parse_algol(

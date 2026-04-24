@@ -1172,13 +1172,6 @@ class AlgolTypeChecker:
         if symbol.kind != SWITCH:
             self._error(name_token, f"{name_token.value!r} is not a switch")
             return
-        if lexical_depth_delta != 0:
-            self._error(
-                name_token,
-                f"nonlocal switch {name_token.value!r} requires Phase 7b frame "
-                "unwinding",
-            )
-            return
         if symbol.switch_id is None:
             self._error(name_token, f"switch {name_token.value!r} has no descriptor")
             return
