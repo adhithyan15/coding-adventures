@@ -333,7 +333,10 @@ describe("error handling", () => {
   });
 
   it("error message mentions the ECC level", () => {
-    const giant = "A".repeat(8000);
+    // 2000 ASCII bytes is under the 7089-char early-exit guard but exceeds
+    // v40-H byte-mode capacity (~1273 bytes), so selectVersion throws with
+    // the ECC level in the message.
+    const giant = "A".repeat(2000);
     try {
       encode(giant, "H");
     } catch (e) {
