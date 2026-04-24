@@ -8,8 +8,10 @@ from logic_engine import relation, term, var
 from prolog_core import (
     __version__,
     apply_op_directive,
+    apply_predicate_directive,
     directive,
     empty_operator_table,
+    empty_predicate_registry,
     iso_operator_table,
     swi_operator_table,
 )
@@ -84,3 +86,64 @@ class TestDirective:
         assert parsed.relation is not None
         assert str(parsed.relation) == "initialization/1"
         assert "X" in parsed.variables
+
+
+class TestPredicateRegistry:
+    """Predicate directive helpers should preserve frontend predicate metadata."""
+
+    def test_apply_predicate_directive_tracks_properties_and_initialization(
+        self,
+    ) -> None:
+        registry = empty_predicate_registry()
+        registry = apply_predicate_directive(
+            registry,
+            directive(relation("dynamic", 1)(term("/", "parent", 2))),
+        )
+        registry = apply_predicate_directive(
+            registry,
+            directive(
+                relation("multifile", 1)(
+                    term(
+                        ".",
+                        term("/", "parent", 2),
+                        term(".", term("/", "helper", 1), "[]"),
+                    ),
+                ),
+            ),
+        )
+        registry = apply_predicate_directive(
+            registry,
+            directive(relation("initialization", 1)("main")),
+        )
+
+        parent = registry.get("parent", 2)
+        helper = registry.get("helper", 1)
+
+        assert parent is not None
+        assert helper is not None
+        assert parent.dynamic is True
+        assert parent.multifile is True
+        assert helper.multifile is True
+        assert registry.initialization_directives[0].term == term(
+            "initialization",
+            "main",
+        )
+
+    def test_apply_predicate_directive_rejects_invalid_predicate_indicators(
+        self,
+    ) -> None:
+        with pytest.raises(TypeError, match="predicate indicator or proper list"):
+            apply_predicate_directive(
+                empty_predicate_registry(),
+                directive(relation("dynamic", 1)("parent")),
+            )
+
+        with pytest.raises(TypeError, match="contain predicate indicators"):
+            apply_predicate_directive(
+                empty_predicate_registry(),
+                directive(
+                    relation("dynamic", 1)(
+                        term(".", term("/", "parent", 2), term(".", "oops", "[]")),
+                    ),
+                ),
+            )
