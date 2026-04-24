@@ -267,6 +267,36 @@ def test_compile_i32_to_f64_conversion_and_compare() -> None:
     assert _runtime_result(module, "gt_three_point_five", [3]) == [0]
 
 
+def test_compile_f64_to_i32_truncation() -> None:
+    gen = IDGenerator()
+    program = IrProgram(entry_label="_fn_trunc_real")
+    program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_fn_trunc_real")], id=-1))
+    program.add_instruction(
+        IrInstruction(
+            IrOp.I32_TRUNC_FROM_F64,
+            [IrRegister(1), IrRegister(2)],
+            id=gen.next(),
+        )
+    )
+    program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+
+    module = IrToWasmCompiler().compile(
+        program,
+        function_signatures=[
+            FunctionSignature(
+                label="_fn_trunc_real",
+                param_count=1,
+                export_name="trunc_real",
+                param_types=(ValueType.F64,),
+                result_types=(ValueType.I32,),
+            )
+        ],
+    )
+
+    assert _runtime_result(module, "trunc_real", [3.75]) == [3]
+    assert _runtime_result(module, "trunc_real", [-2.9]) == [-2]
+
+
 def test_compile_function_call_and_run_it() -> None:
     gen = IDGenerator()
     program = IrProgram(entry_label="_start")

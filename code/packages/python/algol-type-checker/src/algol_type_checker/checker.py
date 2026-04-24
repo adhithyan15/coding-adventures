@@ -1489,12 +1489,13 @@ class AlgolTypeChecker:
                 if actual_type != ERROR and actual_type not in {
                     INTEGER,
                     BOOLEAN,
+                    REAL,
                     STRING,
                 }:
                     self._error(
                         argument,
                         f"builtin procedure {name_token.value!r} expects integer, "
-                        f"boolean, or string, got {actual_type}",
+                        f"boolean, real, or string, got {actual_type}",
                     )
                 continue
             if actual_type != ERROR and not self._parameter_accepts_type(

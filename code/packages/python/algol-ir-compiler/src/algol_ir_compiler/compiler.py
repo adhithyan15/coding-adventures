@@ -1537,9 +1537,12 @@ class AlgolIrCompiler:
             self._emit_output_boolean(self._compile_expr(actual, scope))
         elif actual_type == _INTEGER_TYPE:
             self._emit_output_integer(self._compile_expr(actual, scope))
+        elif actual_type == _REAL_TYPE:
+            self._emit_output_real(self._compile_expr(actual, scope))
         else:
             raise CompileError(
-                "builtin output currently supports integer, boolean, and string"
+                "builtin output currently supports integer, boolean, real, "
+                "and string"
             )
 
         if saved_arg_reg is not None:
@@ -1665,6 +1668,166 @@ class AlgolIrCompiler:
         )
         self._emit(IrOp.JUMP, IrLabel(emit_loop_label))
         self._label(end_label)
+
+    def _emit_output_real(self, value_reg: int) -> None:
+        index = self.output_count
+        self.output_count += 1
+        positive_label = f"algol_label_output_real_{index}_positive"
+        normalized_label = f"algol_label_output_real_{index}_normalized"
+        no_carry_label = f"algol_label_output_real_{index}_no_carry"
+
+        zero_f64 = self._const_f64_reg(0.0)
+        abs_reg = self._fresh_reg()
+        negative_reg = self._fresh_reg()
+        self._emit(
+            IrOp.F64_CMP_LT,
+            IrRegister(negative_reg),
+            IrRegister(value_reg),
+            IrRegister(zero_f64),
+        )
+        self._emit(
+            IrOp.BRANCH_Z,
+            IrRegister(negative_reg),
+            IrLabel(positive_label),
+        )
+        self._emit_output_chars("-")
+        self._emit(
+            IrOp.F64_SUB,
+            IrRegister(abs_reg),
+            IrRegister(zero_f64),
+            IrRegister(value_reg),
+        )
+        self._emit(IrOp.JUMP, IrLabel(normalized_label))
+        self._label(positive_label)
+        self._copy_scalar_reg(type_name=_REAL_TYPE, dst=abs_reg, src=value_reg)
+        self._label(normalized_label)
+
+        integer_part_reg = self._fresh_reg()
+        self._emit(
+            IrOp.I32_TRUNC_FROM_F64,
+            IrRegister(integer_part_reg),
+            IrRegister(abs_reg),
+        )
+        integer_part_f64 = self._coerce_reg_to_type(
+            integer_part_reg,
+            _INTEGER_TYPE,
+            expected_type=_REAL_TYPE,
+        )
+        fractional_reg = self._fresh_reg()
+        self._emit(
+            IrOp.F64_SUB,
+            IrRegister(fractional_reg),
+            IrRegister(abs_reg),
+            IrRegister(integer_part_f64),
+        )
+        thousand_f64 = self._const_f64_reg(1000.0)
+        half_f64 = self._const_f64_reg(0.5)
+        scaled_fraction_reg = self._fresh_reg()
+        self._emit(
+            IrOp.F64_MUL,
+            IrRegister(scaled_fraction_reg),
+            IrRegister(fractional_reg),
+            IrRegister(thousand_f64),
+        )
+        rounded_fraction_reg = self._fresh_reg()
+        self._emit(
+            IrOp.F64_ADD,
+            IrRegister(rounded_fraction_reg),
+            IrRegister(scaled_fraction_reg),
+            IrRegister(half_f64),
+        )
+        fraction_digits_reg = self._fresh_reg()
+        self._emit(
+            IrOp.I32_TRUNC_FROM_F64,
+            IrRegister(fraction_digits_reg),
+            IrRegister(rounded_fraction_reg),
+        )
+        carry_check_reg = self._fresh_reg()
+        thousand_i32 = self._const_reg(1000)
+        self._emit(
+            IrOp.CMP_EQ,
+            IrRegister(carry_check_reg),
+            IrRegister(fraction_digits_reg),
+            IrRegister(thousand_i32),
+        )
+        self._emit(
+            IrOp.BRANCH_Z,
+            IrRegister(carry_check_reg),
+            IrLabel(no_carry_label),
+        )
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(integer_part_reg),
+            IrRegister(integer_part_reg),
+            IrImmediate(1),
+        )
+        self._emit(
+            IrOp.LOAD_IMM,
+            IrRegister(fraction_digits_reg),
+            IrImmediate(0),
+        )
+        self._label(no_carry_label)
+
+        self._emit_output_integer(integer_part_reg)
+        self._emit_output_chars(".")
+        self._emit_output_three_digits(fraction_digits_reg)
+
+    def _emit_output_three_digits(self, value_reg: int) -> None:
+        hundred_reg = self._const_reg(100)
+        ten_reg = self._const_reg(10)
+        ascii_zero_reg = self._const_reg(ord("0"))
+
+        hundreds_reg = self._fresh_reg()
+        self._emit(
+            IrOp.DIV,
+            IrRegister(hundreds_reg),
+            IrRegister(value_reg),
+            IrRegister(hundred_reg),
+        )
+        hundreds_product_reg = self._fresh_reg()
+        self._emit(
+            IrOp.MUL,
+            IrRegister(hundreds_product_reg),
+            IrRegister(hundreds_reg),
+            IrRegister(hundred_reg),
+        )
+        remainder_reg = self._fresh_reg()
+        self._emit(
+            IrOp.SUB,
+            IrRegister(remainder_reg),
+            IrRegister(value_reg),
+            IrRegister(hundreds_product_reg),
+        )
+        tens_reg = self._fresh_reg()
+        self._emit(
+            IrOp.DIV,
+            IrRegister(tens_reg),
+            IrRegister(remainder_reg),
+            IrRegister(ten_reg),
+        )
+        tens_product_reg = self._fresh_reg()
+        self._emit(
+            IrOp.MUL,
+            IrRegister(tens_product_reg),
+            IrRegister(tens_reg),
+            IrRegister(ten_reg),
+        )
+        ones_reg = self._fresh_reg()
+        self._emit(
+            IrOp.SUB,
+            IrRegister(ones_reg),
+            IrRegister(remainder_reg),
+            IrRegister(tens_product_reg),
+        )
+        for digit_reg in (hundreds_reg, tens_reg, ones_reg):
+            ascii_reg = self._fresh_reg()
+            self._emit(
+                IrOp.ADD,
+                IrRegister(ascii_reg),
+                IrRegister(digit_reg),
+                IrRegister(ascii_zero_reg),
+            )
+            self._emit_output_reg(ascii_reg)
 
     def _emit_extract_integer_digit(
         self,

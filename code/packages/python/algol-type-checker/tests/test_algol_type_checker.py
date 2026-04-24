@@ -924,12 +924,8 @@ class TestAlgolTypeChecker:
 
         assert result.ok
 
-    def test_rejects_builtin_print_with_real_argument(self) -> None:
+    def test_accepts_builtin_print_with_real_argument(self) -> None:
         ast = parse_algol("begin integer result; print(1.5); result := 0 end")
         result = check_algol(ast)
 
-        assert not result.ok
-        assert (
-            "builtin procedure 'print' expects integer, boolean, or string, got real"
-            in result.diagnostics[0].message
-        )
+        assert result.ok
