@@ -425,6 +425,9 @@ fn tokenizer_supports_rcdata_end_tag_candidate_fallback_action() {
                     "rcdata",
                 )
                 .with_effects(&["emit_rcdata_end_tag_or_text"]),
+                EffectfulTransition::new("end_tag_name", EffectfulMatcher::End, "done")
+                    .with_effects(&["discard_current_token", "flush_text", "emit(EOF)"])
+                    .consuming(false),
                 EffectfulTransition::new("end_tag_name", EffectfulMatcher::Any, "end_tag_name")
                     .with_effects(&[
                         "append_tag_name(current_lowercase)",
@@ -497,6 +500,9 @@ fn tokenizer_supports_rcdata_end_tag_candidate_fallback_action() {
                     "rcdata",
                 )
                 .with_effects(&["emit_rcdata_end_tag_or_text"]),
+                EffectfulTransition::new("end_tag_name", EffectfulMatcher::End, "done")
+                    .with_effects(&["discard_current_token", "flush_text", "emit(EOF)"])
+                    .consuming(false),
                 EffectfulTransition::new("end_tag_name", EffectfulMatcher::Any, "end_tag_name")
                     .with_effects(&[
                         "append_tag_name(current_lowercase)",
