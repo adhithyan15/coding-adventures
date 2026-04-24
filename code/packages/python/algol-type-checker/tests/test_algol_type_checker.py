@@ -984,3 +984,16 @@ class TestAlgolTypeChecker:
         result = check_algol(ast)
 
         assert result.ok
+
+    def test_accepts_string_variable_declaration_and_assignment(self) -> None:
+        ast = parse_algol("begin string msg; msg := 'Hi' end")
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.root_scope.children[0].symbols["msg"].type_name == "string"
+
+    def test_accepts_builtin_print_with_string_variable(self) -> None:
+        ast = parse_algol("begin string msg; integer result; msg := 'Hi'; print(msg); result := 1 end")
+        result = check_algol(ast)
+
+        assert result.ok
