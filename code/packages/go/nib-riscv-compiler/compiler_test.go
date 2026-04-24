@@ -141,6 +141,64 @@ func TestRunSourceHandlesNibLocalsBeyondStarterRegisterMap(t *testing.T) {
 	}
 }
 
+func TestRunSourcePreservesEarlierNibArgumentsAcrossNestedCalls(t *testing.T) {
+	source := strings.Join([]string{
+		"fn inc(value: u4) -> u4 { return value +% 1; }",
+		"fn sum7(a: u4, b: u4, c: u4, d: u4, e: u4, f: u4, g: u4) -> u4 {",
+		"  return a + b + c + d + e + f + g;",
+		"}",
+		"fn main() -> u4 {",
+		"  return sum7(inc(0), inc(1), inc(2), inc(3), inc(4), inc(5), inc(6));",
+		"}",
+	}, " ")
+	run, err := RunSource(source)
+	if err != nil {
+		t.Fatalf("run failed: %v", err)
+	}
+	if !run.Halted {
+		t.Fatal("expected simulator to halt")
+	}
+	if run.ReturnValue != 28 {
+		t.Fatalf("expected nested-argument call result 28, got %d", run.ReturnValue)
+	}
+}
+
+func TestRunSourcePreservesSpilledNibLocalsAcrossCalls(t *testing.T) {
+	source := strings.Join([]string{
+		"fn bump(value: u4) -> u4 { return value +% 1; }",
+		"fn main() -> u4 {",
+		"  let a: u4 = 1;",
+		"  let b: u4 = 1;",
+		"  let c: u4 = 1;",
+		"  let d: u4 = 1;",
+		"  let e: u4 = 1;",
+		"  let f: u4 = 1;",
+		"  let g: u4 = 1;",
+		"  let h: u4 = 1;",
+		"  let i: u4 = 1;",
+		"  let j: u4 = 1;",
+		"  let k: u4 = 1;",
+		"  let l: u4 = 1;",
+		"  let m: u4 = 1;",
+		"  let called: u4 = bump(2);",
+		"  return a + b + c + d + e + f + g + h + i + j + k + l + m + called;",
+		"}",
+	}, " ")
+	run, err := RunSource(source)
+	if err != nil {
+		t.Fatalf("run failed: %v", err)
+	}
+	if !run.Halted {
+		t.Fatal("expected simulator to halt")
+	}
+	if run.ReturnValue != 16 {
+		t.Fatalf("expected spilled locals plus call result to be 16, got %d", run.ReturnValue)
+	}
+	if !strings.Contains(run.Package.Assembly, "addi sp, sp, -") {
+		t.Fatalf("expected spill-heavy function frame in assembly, got:\n%s", run.Package.Assembly)
+	}
+}
+
 func TestTypeErrorsReportStage(t *testing.T) {
 	_, err := CompileSource("fn main() { let flag: bool = 1; }")
 	if err == nil {
