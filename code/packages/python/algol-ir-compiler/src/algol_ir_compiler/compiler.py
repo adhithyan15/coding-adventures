@@ -570,6 +570,31 @@ class AlgolIrCompiler:
             self._allocate_array(array, scope)
 
     def _allocate_array(self, array: ArrayDescriptor, scope: _FrameScope) -> None:
+        static_base_reg: int | None = None
+        if array.storage_class == "static":
+            static_base_reg = self._fresh_reg()
+            existing_descriptor = self._fresh_reg()
+            initialized = self._fresh_reg()
+            end_label = f"algol_label_static_array_{array.array_id}_ready"
+            self._emit(
+                IrOp.LOAD_ADDR,
+                IrRegister(static_base_reg),
+                IrLabel(_STATIC_MEMORY_LABEL),
+            )
+            self._emit(
+                IrOp.LOAD_WORD,
+                IrRegister(existing_descriptor),
+                IrRegister(static_base_reg),
+                IrRegister(self._const_reg(array.slot_offset)),
+            )
+            self._emit(
+                IrOp.CMP_EQ,
+                IrRegister(initialized),
+                IrRegister(existing_descriptor),
+                IrRegister(_ZERO_REG),
+            )
+            self._emit(IrOp.BRANCH_Z, IrRegister(initialized), IrLabel(end_label))
+
         lower_regs: list[int] = []
         upper_regs: list[int] = []
         length_regs: list[int] = []
@@ -761,6 +786,19 @@ class AlgolIrCompiler:
                 base_reg=bounds_pointer,
                 offset=offset + _ARRAY_DIM_STRIDE_OFFSET,
             )
+
+        if array.storage_class == "static":
+            if static_base_reg is None:
+                raise CompileError(
+                    f"static array {array.name!r} is missing a static base register"
+                )
+            self._store_word_reg(
+                value_reg=heap_pointer,
+                base_reg=static_base_reg,
+                offset=array.slot_offset,
+            )
+            self._label(end_label)
+            return
 
         self._store_word_reg(
             value_reg=heap_pointer,
@@ -2724,6 +2762,23 @@ class AlgolIrCompiler:
         access: ResolvedArrayAccess,
         scope: _FrameScope,
     ) -> int:
+        array = self.arrays[access.array_id]
+        if array.storage_class == "static":
+            static_base_reg = self._fresh_reg()
+            descriptor_pointer = self._fresh_reg()
+            self._emit(
+                IrOp.LOAD_ADDR,
+                IrRegister(static_base_reg),
+                IrLabel(_STATIC_MEMORY_LABEL),
+            )
+            self._emit(
+                IrOp.LOAD_WORD,
+                IrRegister(descriptor_pointer),
+                IrRegister(static_base_reg),
+                IrRegister(self._const_reg(access.slot_offset)),
+            )
+            return descriptor_pointer
+
         frame_reg = self._emit_frame_for_array_access(access, scope)
         descriptor_pointer = self._fresh_reg()
         self._emit(

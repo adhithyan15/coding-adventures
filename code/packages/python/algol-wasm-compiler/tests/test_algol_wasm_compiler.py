@@ -141,6 +141,15 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [12]
 
+    def test_own_integer_array_persists_across_procedure_calls(self) -> None:
+        result = compile_source(
+            "begin own integer array counts[1:1]; integer result; "
+            "procedure bump; begin counts[1] := counts[1] + 1; result := counts[1] end; "
+            "counts[1] := 4; bump; bump "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [6]
+
     def test_boolean_variable_assignment_drives_condition(self) -> None:
         result = compile_source(
             "begin integer result; "
