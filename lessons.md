@@ -4,6 +4,38 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-23: QR format info `write_format_info` — bit ordering is MSB-first in row 8
+
+ISO/IEC 18004 places format information bits **MSB-first** (f14 → f9) going
+left-to-right across row 8 (cols 0–5) and **LSB-first** (f0 → f5) going
+top-to-bottom down col 8 (rows 0–5).  Copy 2 mirrors this: f0 → f7 going
+right-to-left across row 8 (cols n−1 → n−8), and f8 → f14 going top-to-bottom
+down col 8 (rows n−7 → n−1).
+
+**The bug:** `write_format_info` was placing bits in LSB-first order everywhere,
+producing a reversed 15-bit word.  Both copies read `0x1F3D` instead of `0x5E7C`
+for ECC=M/mask=2.  BCH remainder was `0x3DA` (non-zero) for both copies, so
+every standard decoder (zbarimg, iPhone camera, ZXing) rejected the format info
+and could not determine the correct mask pattern or ECC level — the QR code
+appeared structurally correct but was completely unscannable.
+
+**Root cause:** The manual decoder written to debug the issue used the same
+reversed reading order, so it incorrectly confirmed the format info as valid.
+The bug was only caught by comparing pixel values at specific grid positions
+against the expected standard layout.
+
+**Fix:**
+- Copy 1, row 8 cols 0–5: use `(fmt >> (14 - i))` (f14 at col 0, not f0).
+- Copy 1, (8,7) = f8, (8,8) = f7, (7,8) = f6.
+- Copy 1, col 8 rows 0–5: use `(fmt >> i)` (f0 at row 0 … f5 at row 5).
+- Copy 2, row 8 cols n−1..n−8: use `(fmt >> i)` for i=0..7 (f0 at rightmost).
+- Copy 2, col 8 rows n−7..n−1: use `(fmt >> i)` for i=8..14.
+
+**Always verify with `zbarimg` (or equivalent standard decoder) immediately
+after implementing format info — the BCH check is the ground truth.**
+
+---
+
 ### 2026-04-21: BUILD files must be updated whenever package.json dependencies change
 
 The build-tool validates that every `BUILD` / `BUILD_windows` shell script lists
