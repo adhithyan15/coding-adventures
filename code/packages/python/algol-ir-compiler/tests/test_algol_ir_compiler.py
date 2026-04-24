@@ -783,3 +783,19 @@ class TestAlgolIrCompiler:
 
         assert any(label.startswith("algol_label_output_bool_") for label in labels)
         assert len(syscalls) >= 4
+
+    def test_compiles_builtin_print_real_to_fixed_point_output(self) -> None:
+        result = compile_algol(
+            parse_algol("begin integer result; print(3.5); result := 1 end")
+        )
+        opcodes = [instruction.opcode for instruction in result.program.instructions]
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+
+        assert IrOp.I32_TRUNC_FROM_F64 in opcodes
+        assert IrOp.F64_MUL in opcodes
+        assert IrOp.F64_ADD in opcodes
+        assert any(label.startswith("algol_label_output_real_") for label in labels)

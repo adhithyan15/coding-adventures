@@ -24,7 +24,8 @@ The opcodes are grouped by category:
   Arithmetic:   ADD, ADD_IMM, SUB, AND, AND_IMM, MUL, DIV
   Bitwise:      OR, OR_IMM, XOR, XOR_IMM, NOT
   Comparison:   CMP_EQ, CMP_NE, CMP_LT, CMP_GT
-  Floating:     LOAD_F64_IMM, LOAD_F64, STORE_F64, F64_ADD, ..., F64_FROM_I32
+  Floating:     LOAD_F64_IMM, LOAD_F64, STORE_F64, F64_ADD, ..., F64_FROM_I32,
+                I32_TRUNC_FROM_F64
   Control Flow: LABEL, JUMP, BRANCH_Z, BRANCH_NZ, CALL, RET
   System:       SYSCALL, HALT
   Meta:         NOP, COMMENT
@@ -189,6 +190,10 @@ class IrOp(IntEnum):
     # Convert a signed i32 value to f64.
     #   F64_FROM_I32 v1, v2  →  v1 = float(v2)
     F64_FROM_I32 = 45
+
+    # Truncate an f64 value toward zero into a signed i32.
+    #   I32_TRUNC_FROM_F64 v1, v2  →  v1 = trunc(v2)
+    I32_TRUNC_FROM_F64 = 46
 
     # ── Comparison ────────────────────────────────────────────────────────────
     # Set dst = 1 if lhs == rhs, else 0.

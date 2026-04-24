@@ -105,6 +105,7 @@ _OPCODE = {
         "f64.mul",
         "f64.div",
         "f64.convert_i32_s",
+        "i32.trunc_f64_s",
         "drop",
     )
 }
@@ -157,6 +158,7 @@ _WASM_SUPPORTED_OPCODES: frozenset[IrOp] = frozenset({
     IrOp.F64_CMP_LE,
     IrOp.F64_CMP_GE,
     IrOp.F64_FROM_I32,
+    IrOp.I32_TRUNC_FROM_F64,
     IrOp.MUL,
     IrOp.DIV,
     IrOp.CMP_EQ,
@@ -830,6 +832,16 @@ class _FunctionLowerer:
                 self._emit_local_get(src.index)
                 self._emit_opcode("f64.convert_i32_s")
                 self._emit_local_set(dst.index)
+            case IrOp.I32_TRUNC_FROM_F64:
+                dst = _expect_register(
+                    instruction.operands[0], "I32_TRUNC_FROM_F64 dst"
+                )
+                src = _expect_register(
+                    instruction.operands[1], "I32_TRUNC_FROM_F64 src"
+                )
+                self._emit_local_get(src.index)
+                self._emit_opcode("i32.trunc_f64_s")
+                self._emit_local_set(dst.index)
             case IrOp.CALL:
                 label = _expect_label(instruction.operands[0], "CALL target")
                 signature = self.signatures.get(label.name)
@@ -1445,6 +1457,7 @@ def _infer_register_types(
                 | IrOp.F64_CMP_GT
                 | IrOp.F64_CMP_LE
                 | IrOp.F64_CMP_GE
+                | IrOp.I32_TRUNC_FROM_F64
             ):
                 dst = _expect_register(instruction.operands[0], f"{instruction.opcode.name} dst")
                 _assign_register_type(
