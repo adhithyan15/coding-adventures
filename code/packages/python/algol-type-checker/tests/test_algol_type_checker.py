@@ -310,6 +310,14 @@ class TestAlgolTypeChecker:
         )
         assert check_algol(ast).ok
 
+    def test_accepts_boolean_implication_and_equivalence(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "if (true impl false) eqv false then result := 1 else result := 0 "
+            "end"
+        )
+        assert check_algol(ast).ok
+
     def test_reports_chained_assignment(self) -> None:
         ast = parse_algol("begin integer result, other; result := other := 1 end")
         result = check_algol(ast)

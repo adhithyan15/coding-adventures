@@ -1822,6 +1822,7 @@ class AlgolIrCompiler:
             "expr_and",
             "simple_bool",
             "implication",
+            "bool_factor",
             "bool_term",
         }:
             return self._compile_bool_chain(expr.rule_name, meaningful, scope)
@@ -1909,13 +1910,13 @@ class AlgolIrCompiler:
             if not isinstance(operator, Token):
                 raise CompileError("expected boolean operator")
             value = operator.value
-            if value == "and" or rule_name in {"expr_and", "bool_term"}:
+            if value == "and":
                 dst = self._fresh_reg()
                 self._emit(
                     IrOp.AND, IrRegister(dst), IrRegister(current), IrRegister(right)
                 )
                 current = dst
-            elif value == "or" or rule_name in {"expr_or", "simple_bool"}:
+            elif value == "or":
                 summed = self._fresh_reg()
                 dst = self._fresh_reg()
                 self._emit(
@@ -1923,6 +1924,26 @@ class AlgolIrCompiler:
                 )
                 self._emit(
                     IrOp.CMP_NE, IrRegister(dst), IrRegister(summed), IrRegister(0)
+                )
+                current = dst
+            elif value == "impl":
+                inverted = self._invert_bool(current)
+                summed = self._fresh_reg()
+                dst = self._fresh_reg()
+                self._emit(
+                    IrOp.ADD,
+                    IrRegister(summed),
+                    IrRegister(inverted),
+                    IrRegister(right),
+                )
+                self._emit(
+                    IrOp.CMP_NE, IrRegister(dst), IrRegister(summed), IrRegister(0)
+                )
+                current = dst
+            elif value == "eqv":
+                dst = self._fresh_reg()
+                self._emit(
+                    IrOp.CMP_EQ, IrRegister(dst), IrRegister(current), IrRegister(right)
                 )
                 current = dst
             else:
