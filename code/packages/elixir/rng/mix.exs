@@ -21,7 +21,6 @@ defmodule CodingAdventures.Rng.MixProject do
   end
 
   defp deps do
-    [
-    ]
+    []
   end
 end
