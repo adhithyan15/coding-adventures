@@ -1,0 +1,22 @@
+name: coding_adventures_micro_qr
+version: 0.1.0
+description: >
+  Micro QR Code encoder — ISO/IEC 18004:2015 Annex E compliant.
+  Encodes strings to Micro QR Code symbols (M1–M4, 11×11 to 17×17 modules).
+  Supports numeric, alphanumeric, and byte encoding modes with automatic
+  symbol-version selection. Produces a ModuleGrid consumable by barcode-2d
+  for pixel-level rendering.
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_barcode_2d:
+    path: ../barcode-2d
+  coding_adventures_gf256:
+    path: ../gf256
+
+dev_dependencies:
+  test: ^1.25.0
