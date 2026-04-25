@@ -2,6 +2,6 @@
 name = "rng"
 version = "0.1.0"
 edition = "2021"
-description = ""
+description = "LCG, Xorshift64, and PCG32 pseudorandom number generators"
 
 [dependencies]
