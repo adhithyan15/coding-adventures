@@ -188,6 +188,11 @@ struct LuaConduitServer {
     lua_lock: Arc<Mutex<()>>,
     server: Option<PlatformWebServer>,
     running: Arc<AtomicBool>,
+    /// Handle to the background thread started by `serve_background()`.
+    /// `server_gc` joins this before dropping to prevent use-after-free:
+    /// the background thread holds a raw pointer into `server`, so the
+    /// `PlatformWebServer` must not be dropped until `serve()` has returned.
+    bg_thread: Option<std::thread::JoinHandle<()>>,
 }
 
 // SAFETY: All access to `lua` is gated by `lua_lock`.
@@ -448,7 +453,7 @@ unsafe extern "C" fn lua_new_server(L: *mut lua_State) -> c_int {
     let ptr = lua_newuserdatauv(L, std::mem::size_of::<LuaConduitServer>(), 0);
     ptr::write(
         ptr as *mut LuaConduitServer,
-        LuaConduitServer { lua: L, lua_lock, server: Some(server), running },
+        LuaConduitServer { lua: L, lua_lock, server: Some(server), running, bg_thread: None },
     );
 
     luaL_newmetatable(L, SERVER_MT);
@@ -461,10 +466,14 @@ unsafe extern "C" fn lua_new_server(L: *mut lua_State) -> c_int {
 
 unsafe extern "C" fn server_gc(L: *mut lua_State) -> c_int {
     let srv = check_server(L, 1);
-    if (*srv).running.load(Ordering::SeqCst) {
-        if let Some(ref s) = (*srv).server {
-            s.stop_handle().stop();
-        }
+    // Signal the background thread to stop (no-op if not running).
+    if let Some(ref s) = (*srv).server {
+        s.stop_handle().stop();
+    }
+    // Join the background thread BEFORE dropping the server so the raw
+    // `*mut PlatformWebServer` pointer the thread holds does not dangle.
+    if let Some(handle) = (*srv).bg_thread.take() {
+        let _ = handle.join();
     }
     ptr::drop_in_place(srv);
     0
@@ -501,15 +510,18 @@ unsafe extern "C" fn lua_server_serve_background(L: *mut lua_State) -> c_int {
         None    => { luaL_error(L, b"server is disposed\0".as_ptr() as *const c_char); unreachable!() },
     };
     // Wrap the raw pointer so the closure is Send.
-    // SAFETY: sp is owned by the LuaConduitServer userdata which outlives this
-    // thread (test teardown calls stop() and waits before releasing the userdata).
+    // SAFETY: sp points into `(*srv).server` which is kept alive until
+    // `server_gc` runs. `server_gc` calls `handle.join()` on the handle
+    // stored in `(*srv).bg_thread` *before* calling `ptr::drop_in_place`,
+    // guaranteeing the PlatformWebServer outlives the background thread.
     let sp = ThreadSafePtr(sp_raw);
     let running = Arc::clone(&(*srv).running);
     running.store(true, Ordering::SeqCst);
-    std::thread::spawn(move || {
+    let handle = std::thread::spawn(move || {
         let _ = (*sp.ptr()).serve();
         running.store(false, Ordering::SeqCst);
     });
+    (*srv).bg_thread = Some(handle);
     0
 }
 

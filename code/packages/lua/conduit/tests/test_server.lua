@@ -126,9 +126,9 @@ local function build_app()
         error("Intentional error for testing")
     end)
 
-    -- Custom not-found handler
+    -- Custom not-found handler (JSON to avoid XSS from raw path interpolation)
     app:not_found(function(ctx)
-        return conduit.html("<h1>Not Found: " .. ctx:path() .. "</h1>", 404)
+        return conduit.json({ message = "Not Found", path = ctx:path() }, 404)
     end)
 
     -- Custom error handler

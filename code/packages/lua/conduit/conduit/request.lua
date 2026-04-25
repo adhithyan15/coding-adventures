@@ -70,7 +70,8 @@ end
 function Request:json_body()
     local ok, result = pcall(json_mod.decode, self:body())
     if not ok then
-        halt_mod.raise(400, "Invalid JSON body: " .. tostring(result))
+        -- Do not echo the decoder error (it may contain the raw body).
+        halt_mod.raise(400, "Invalid JSON body")
     end
     return result
 end
