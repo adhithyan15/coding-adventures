@@ -2,7 +2,7 @@
 name = "diagram-layout-geometric"
 version = "0.1.0"
 edition = "2021"
-description = "Bounding-box resolver for geometric (Pikchr-style) diagrams (DG04)"
+description = "Coordinate resolver for geometric diagrams (DG04)"
 
 [dependencies]
 diagram-ir = { path = "../diagram-ir" }

@@ -2,6 +2,6 @@
 name = "diagram-ir"
 version = "0.2.0"
 edition = "2021"
-description = "Semantic diagram intermediate representation (DG00): types shared across DOT, Mermaid, and PlantUML pipelines"
+description = "Semantic diagram intermediate representation (DG00+DG04): types shared across all diagram pipeline families"
 
 [dependencies]

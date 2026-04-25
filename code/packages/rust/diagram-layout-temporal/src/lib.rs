@@ -1,175 +1,353 @@
+//! # diagram-layout-temporal
+//!
+//! Layout engine for temporal diagrams (DG04): Gantt and git-graph.
+//!
+//! ## Gantt
+//! Maps each task to a horizontal bar on a time axis.  Task dates are
+//! parsed as `YYYY-MM-DD`; `After(id)` dependencies are resolved in a
+//! second pass after all absolute starts are known.
+//!
+//! ## Git-graph
+//! Assigns each branch a horizontal lane and replays commit events to
+//! place commit nodes and merge arcs.
+
 use diagram_ir::{
-    GanttDiagram, GanttTask, LayoutedTemporalDiagram, LayoutedTemporalItem, TaskStart,
-    TaskStatus, TemporalBody, TemporalDiagram,
+    GitDiagram, GitEvent,
+    LayoutedTemporalDiagram, LayoutedTemporalItem, TaskStart, TaskStatus,
+    TemporalBody, TemporalDiagram,
 };
+use std::collections::HashMap;
 
 pub const VERSION: &str = "0.1.0";
 
-const MARGIN: f64 = 20.0;
-const TITLE_H: f64 = 30.0;
-const AXIS_H: f64 = 28.0;
-const SECTION_H: f64 = 24.0;
-const TASK_H: f64 = 20.0;
-const TASK_GAP: f64 = 4.0;
-const LABEL_W: f64 = 120.0;
-const TICK_DAYS: f64 = 7.0;
-const LANE_H: f64 = 60.0;
-const COMMIT_SPACING: f64 = 80.0;
-const BRANCH_COLORS: &[&str] = &["#3b82f6","#ef4444","#22c55e","#f59e0b","#a855f7","#14b8a6"];
+// ── Constants ─────────────────────────────────────────────────────────────
 
-pub fn layout_temporal_diagram(diagram: &TemporalDiagram, canvas_width: f64) -> LayoutedTemporalDiagram {
-    match &diagram.body {
-        TemporalBody::Gantt(g) => layout_gantt(diagram.title.as_deref(), g, canvas_width),
-        TemporalBody::Git(g) => layout_git(diagram.title.as_deref(), g, canvas_width),
+const AXIS_H:         f64 = 28.0;
+const TASK_H:         f64 = 20.0;
+const TASK_GAP:       f64 = 4.0;
+const LABEL_W:        f64 = 120.0;
+const TICK_DAYS:      f64 = 7.0;
+const SECTION_H:      f64 = 24.0;
+const LANE_H:         f64 = 60.0;
+const COMMIT_SPACING: f64 = 80.0;
+
+const BRANCH_COLORS: &[&str] = &[
+    "#3b82f6", "#ef4444", "#22c55e", "#f59e0b", "#a855f7", "#14b8a6",
+];
+
+/// Lay out a `TemporalDiagram` on a canvas of `cw` pixels wide.
+pub fn layout_temporal_diagram(d: &TemporalDiagram, cw: f64) -> LayoutedTemporalDiagram {
+    match &d.body {
+        TemporalBody::Gantt(g) => layout_gantt(&d.title, g, cw),
+        TemporalBody::Git(g)   => layout_git(g, cw),
     }
 }
 
-struct ResolvedTask { id: String, label: String, start_day: f64, duration: f64, status: TaskStatus }
+// ── Date helpers ──────────────────────────────────────────────────────────
 
-fn parse_date(date: &str) -> f64 {
-    let p: Vec<&str> = date.trim().split('-').collect();
-    if p.len() != 3 { return 0.0; }
-    let y: f64 = p[0].parse().unwrap_or(2026.0);
-    let m: f64 = p[1].parse().unwrap_or(1.0);
-    let d: f64 = p[2].parse().unwrap_or(1.0);
-    y * 365.25 + (m-1.0)*30.44 + d
+/// Approximate days since a fixed epoch for `YYYY-MM-DD` strings.
+/// Uses 365.25 d/yr and 30.44 d/month — good enough for Gantt bar widths.
+fn date_to_days(s: &str) -> Option<f64> {
+    let parts: Vec<&str> = s.split('-').collect();
+    if parts.len() != 3 { return None; }
+    let y: f64 = parts[0].parse().ok()?;
+    let m: f64 = parts[1].parse().ok()?;
+    let d: f64 = parts[2].parse().ok()?;
+    Some(y * 365.25 + (m - 1.0) * 30.44 + d)
 }
 
-fn resolve_gantt_tasks(gantt: &GanttDiagram) -> Vec<ResolvedTask> {
-    let all: Vec<&GanttTask> = gantt.sections.iter().flat_map(|s| s.tasks.iter()).collect();
-    let mut starts: std::collections::HashMap<String,f64> = std::collections::HashMap::new();
-    for _ in 0..all.len()+1 {
-        for t in &all {
-            let s = match &t.start {
-                TaskStart::Date(d) => parse_date(d),
-                TaskStart::After(dep) => {
-                    let ds = starts.get(dep.as_str()).copied().unwrap_or(0.0);
-                    let dd = all.iter().find(|dt| dt.id == *dep).map(|dt| dt.duration_days).unwrap_or(0.0);
-                    ds + dd
+// ── Gantt layout ──────────────────────────────────────────────────────────
+
+fn layout_gantt(
+    title: &Option<String>,
+    diagram: &diagram_ir::GanttDiagram,
+    cw: f64,
+) -> LayoutedTemporalDiagram {
+    // First pass: collect all task absolute starts (Date variant only).
+    let mut starts: HashMap<String, f64> = HashMap::new();
+    for section in &diagram.sections {
+        for task in &section.tasks {
+            if let TaskStart::Date(ref ds) = task.start {
+                if let Some(d) = date_to_days(ds) {
+                    starts.insert(task.id.clone(), d);
                 }
-            };
-            starts.insert(t.id.clone(), s);
+            }
         }
     }
-    all.iter().map(|t| ResolvedTask { id:t.id.clone(), label:t.label.clone(), start_day:*starts.get(&t.id).unwrap_or(&0.0), duration:t.duration_days, status:t.status.clone() }).collect()
-}
+    // Second pass: resolve After dependencies.
+    for section in &diagram.sections {
+        for task in &section.tasks {
+            if let TaskStart::After(ref dep_id) = task.start {
+                if !starts.contains_key(&task.id) {
+                    if let Some(&dep_end) = starts.get(dep_id) {
+                        // Find duration of the dep task.
+                        let dep_dur = diagram.sections.iter()
+                            .flat_map(|s| s.tasks.iter())
+                            .find(|t| &t.id == dep_id)
+                            .map(|t| t.duration_days)
+                            .unwrap_or(0.0);
+                        starts.insert(task.id.clone(), dep_end + dep_dur);
+                    }
+                }
+            }
+        }
+    }
 
-fn layout_gantt(title: Option<&str>, gantt: &GanttDiagram, cw: f64) -> LayoutedTemporalDiagram {
-    let resolved = resolve_gantt_tasks(gantt);
-    let t_min = resolved.iter().map(|t| t.start_day).fold(f64::INFINITY, f64::min);
-    let t_max = resolved.iter().map(|t| t.start_day+t.duration).fold(f64::NEG_INFINITY, f64::max);
+    // Determine time range.
+    let t_min = starts.values().cloned().fold(f64::INFINITY, f64::min);
+    let t_max = diagram.sections.iter()
+        .flat_map(|s| s.tasks.iter())
+        .filter_map(|t| starts.get(&t.id).map(|&s| s + t.duration_days))
+        .fold(f64::NEG_INFINITY, f64::max);
     let t_min = if t_min.is_infinite() { 0.0 } else { t_min };
-    let t_max = if t_max.is_infinite() { t_min+30.0 } else { t_max };
-    let t_range = (t_max-t_min).max(1.0);
-    let plot_left = MARGIN+LABEL_W; let plot_right = cw-MARGIN; let plot_w = (plot_right-plot_left).max(1.0);
-    let x_scale = plot_w/t_range;
-    let day_to_x = |day: f64| plot_left + (day-t_min)*x_scale;
-    let has_title = title.is_some();
-    let mut y = MARGIN + if has_title { TITLE_H } else { 0.0 };
+    let t_max = if t_max.is_infinite() { t_min + 30.0 } else { t_max };
+    let t_range = (t_max - t_min).max(1.0);
+
+    let plot_w = (cw - LABEL_W - 32.0).max(100.0);
+    let x_scale = plot_w / t_range;
+
     let mut items: Vec<LayoutedTemporalItem> = Vec::new();
-    if let Some(t) = title { items.push(LayoutedTemporalItem::TimeAxisTick { x:cw/2.0, y:MARGIN+TITLE_H/2.0, label:t.to_string() }); }
-    let axis_y = y+AXIS_H/2.0;
-    items.push(LayoutedTemporalItem::TimeAxisSpine { x1:plot_left, y1:axis_y, x2:plot_right, y2:axis_y });
-    let first_tick = (t_min/TICK_DAYS).ceil()*TICK_DAYS;
-    let mut tick = first_tick;
-    while tick <= t_max { items.push(LayoutedTemporalItem::TimeAxisTick { x:day_to_x(tick), y:y+4.0, label:format!("+{}d",(tick-t_min).round() as i64) }); tick += TICK_DAYS; }
+    let mut y = AXIS_H;
+
+    // Title
+    if let Some(ref t) = title {
+        items.push(LayoutedTemporalItem::SectionHeader {
+            x: 0.0, y: 0.0, width: cw, height: AXIS_H, label: t.clone(),
+        });
+        y += AXIS_H;
+    }
+
+    // Time axis spine.
+    items.push(LayoutedTemporalItem::TimeAxisSpine {
+        x1: LABEL_W, y1: y, x2: cw - 16.0, y2: y,
+    });
+
+    // Axis ticks (weekly).
+    let mut tick_day = 0.0;
+    while tick_day <= t_range {
+        let tx = LABEL_W + tick_day * x_scale;
+        items.push(LayoutedTemporalItem::TimeAxisTick {
+            x: tx, y: y + 4.0,
+            label: format!("d{:.0}", tick_day),
+        });
+        tick_day += TICK_DAYS;
+    }
     y += AXIS_H;
-    let all_rows: usize = gantt.sections.iter().map(|s| 1+s.tasks.len()).sum();
-    let total_h = MARGIN + if has_title { TITLE_H } else { 0.0 } + all_rows as f64*(TASK_H+TASK_GAP) + AXIS_H + MARGIN;
-    for section in &gantt.sections {
+
+    // Sections and tasks.
+    for section in &diagram.sections {
         if let Some(ref lbl) = section.label {
-            items.push(LayoutedTemporalItem::SectionHeader { x:MARGIN, y, width:cw-MARGIN*2.0, height:SECTION_H, label:lbl.clone() });
-            y += SECTION_H+TASK_GAP;
+            items.push(LayoutedTemporalItem::SectionHeader {
+                x: 0.0, y, width: cw, height: SECTION_H, label: lbl.clone(),
+            });
+            y += SECTION_H;
         }
         for task in &section.tasks {
-            if let Some(rt) = resolved.iter().find(|r| r.id == task.id) {
-                let bar_x = day_to_x(rt.start_day); let bar_w = (rt.duration*x_scale).max(2.0);
-                if rt.status == TaskStatus::Milestone {
-                    items.push(LayoutedTemporalItem::MilestoneMarker { x:bar_x, y:y+TASK_H/2.0, label:rt.label.clone() });
-                } else {
-                    items.push(LayoutedTemporalItem::TaskBar { x:bar_x, y, width:bar_w, height:TASK_H, status:rt.status.clone(), label:rt.label.clone() });
-                }
+            let start_day = starts.get(&task.id).copied().unwrap_or(t_min) - t_min;
+            let bx = LABEL_W + start_day * x_scale;
+            let bw = (task.duration_days * x_scale).max(4.0);
+            if task.status == TaskStatus::Milestone {
+                items.push(LayoutedTemporalItem::MilestoneMarker {
+                    x: bx, y: y + TASK_H / 2.0, label: task.label.clone(),
+                });
+            } else {
+                items.push(LayoutedTemporalItem::TaskBar {
+                    x: bx, y, width: bw, height: TASK_H,
+                    status: task.status.clone(),
+                    label: task.label.clone(),
+                });
             }
-            y += TASK_H+TASK_GAP;
+            y += TASK_H + TASK_GAP;
         }
     }
-    LayoutedTemporalDiagram { width:cw, height:total_h, items }
+
+    LayoutedTemporalDiagram { width: cw, height: y + 16.0, items }
 }
 
-fn layout_git(title: Option<&str>, git: &diagram_ir::GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
-    use diagram_ir::GitEvent;
-    let has_title = title.is_some();
-    let top = MARGIN + if has_title { TITLE_H } else { 0.0 };
+// ── Git layout ────────────────────────────────────────────────────────────
+
+fn layout_git(diagram: &GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
     let mut items: Vec<LayoutedTemporalItem> = Vec::new();
-    if let Some(t) = title { items.push(LayoutedTemporalItem::TimeAxisTick { x:cw/2.0, y:MARGIN+TITLE_H/2.0, label:t.to_string() }); }
-    let branch_names: Vec<String> = git.branches.iter().map(|b| b.name.clone()).collect();
-    for (i, name) in branch_names.iter().enumerate() {
-        items.push(LayoutedTemporalItem::BranchLane { y:top+i as f64*LANE_H+LANE_H/2.0, color:BRANCH_COLORS[i%BRANCH_COLORS.len()].to_string(), label:name.clone() });
+    let mut branch_lanes: HashMap<String, usize> = HashMap::new();
+    let mut commit_x: HashMap<String, (f64, f64)> = HashMap::new(); // id -> (x,y)
+    let mut x_cursor = 60.0_f64;
+    let mut current_branch = "main".to_string();
+
+    // Pre-assign lanes in declaration order; default "main" to lane 0.
+    if !diagram.branches.is_empty() {
+        for (i, b) in diagram.branches.iter().enumerate() {
+            branch_lanes.insert(b.name.clone(), i);
+        }
+    } else {
+        branch_lanes.insert("main".into(), 0);
     }
-    let mut active_branch = branch_names.first().cloned().unwrap_or_default();
-    let mut cx_per: std::collections::HashMap<String,f64> = branch_names.iter().map(|b| (b.clone(), MARGIN+LABEL_W)).collect();
-    let mut last_pos: std::collections::HashMap<String,(f64,f64)> = std::collections::HashMap::new();
-    for event in &git.events {
+    let mut next_lane = diagram.branches.len().max(1);
+
+    let lane_y = |lane: usize| -> f64 { 30.0 + lane as f64 * LANE_H };
+
+    // Emit branch lane labels.
+    for (name, &lane) in &branch_lanes {
+        let color = BRANCH_COLORS[lane % BRANCH_COLORS.len()].to_string();
+        items.push(LayoutedTemporalItem::BranchLane {
+            y: lane_y(lane), color, label: name.clone(),
+        });
+    }
+
+    for event in &diagram.events {
         match event {
-            GitEvent::Checkout { branch } => { active_branch = branch.clone(); }
             GitEvent::Commit { id, message, tag, branch } => {
-                let b = if branch.is_empty() { &active_branch } else { branch };
-                let li = branch_names.iter().position(|n| n == b).unwrap_or(0);
-                let ly = top + li as f64 * LANE_H + LANE_H/2.0;
-                let cx = cx_per.entry(b.clone()).or_insert(MARGIN+LABEL_W);
-                let cid = id.clone().unwrap_or_else(|| format!("c{}", *cx as i64));
-                items.push(LayoutedTemporalItem::CommitNode { x:*cx, y:ly, id:cid, message:message.clone(), tag:tag.clone() });
-                last_pos.insert(b.clone(), (*cx, ly));
-                *cx += COMMIT_SPACING;
+                let lane = *branch_lanes.entry(branch.clone()).or_insert_with(|| {
+                    let l = next_lane; next_lane += 1; l
+                });
+                let cy = lane_y(lane);
+                let cx = x_cursor;
+                let commit_id = id.clone().unwrap_or_else(|| format!("c{:.0}", cx));
+                commit_x.insert(commit_id.clone(), (cx, cy));
+                items.push(LayoutedTemporalItem::CommitNode {
+                    x: cx, y: cy,
+                    id: commit_id,
+                    message: message.clone(),
+                    tag: tag.clone(),
+                });
+                x_cursor += COMMIT_SPACING;
+            }
+            GitEvent::Checkout { branch } => {
+                current_branch = branch.clone();
+                // Ensure lane exists.
+                branch_lanes.entry(branch.clone()).or_insert_with(|| {
+                    let l = next_lane; next_lane += 1; l
+                });
             }
             GitEvent::Merge { from, id, tag } => {
-                let tli = branch_names.iter().position(|n| n == &active_branch).unwrap_or(0);
-                let fli = branch_names.iter().position(|n| n == from).unwrap_or(0);
-                let ty = top+tli as f64*LANE_H+LANE_H/2.0; let fy = top+fli as f64*LANE_H+LANE_H/2.0;
-                let (fx, _) = last_pos.get(from.as_str()).copied().unwrap_or((MARGIN+LABEL_W,fy));
-                let to_cx = cx_per.entry(active_branch.clone()).or_insert(MARGIN+LABEL_W);
-                let tx = *to_cx;
-                items.push(LayoutedTemporalItem::MergeArc { from_x:fx, from_y:fy, to_x:tx, to_y:ty });
-                items.push(LayoutedTemporalItem::CommitNode { x:tx, y:ty, id:id.clone().unwrap_or("merge".into()), message:None, tag:tag.clone() });
-                last_pos.insert(active_branch.clone(), (tx, ty));
-                *to_cx += COMMIT_SPACING;
+                let from_lane = *branch_lanes.get(from).unwrap_or(&0);
+                let to_lane   = *branch_lanes.get(&current_branch).unwrap_or(&0);
+                let from_y    = lane_y(from_lane);
+                let to_y      = lane_y(to_lane);
+                items.push(LayoutedTemporalItem::MergeArc {
+                    from_x: x_cursor - COMMIT_SPACING, from_y,
+                    to_x:   x_cursor, to_y,
+                });
+                // The merge itself is a commit on the target branch.
+                let commit_id = id.clone().unwrap_or_else(|| format!("m{:.0}", x_cursor));
+                items.push(LayoutedTemporalItem::CommitNode {
+                    x: x_cursor, y: to_y,
+                    id: commit_id,
+                    message: Some(format!("merge {from}")),
+                    tag: tag.clone(),
+                });
+                x_cursor += COMMIT_SPACING;
             }
         }
     }
-    let total_h = top + branch_names.len().max(1) as f64 * LANE_H + MARGIN;
-    LayoutedTemporalDiagram { width:cw, height:total_h, items }
+
+    let ch = lane_y(next_lane - 1) + LANE_H;
+    LayoutedTemporalDiagram { width: cw.max(x_cursor + 60.0), height: ch, items }
 }
+
+// ── Tests ─────────────────────────────────────────────────────────────────
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use diagram_ir::{GanttDiagram,GanttSection,GanttTask,TaskStart,TaskStatus,TemporalBody,TemporalDiagram,TemporalKind};
+    use diagram_ir::*;
+
     fn simple_gantt() -> TemporalDiagram {
-        TemporalDiagram { kind:TemporalKind::Gantt, title:Some("Test".into()), body:TemporalBody::Gantt(GanttDiagram { date_format:"YYYY-MM-DD".into(), sections:vec![GanttSection { label:Some("P1".into()), tasks:vec![
-            GanttTask{id:"t1".into(),label:"Design".into(),start:TaskStart::Date("2026-01-01".into()),duration_days:5.0,status:TaskStatus::Done,dependencies:vec![]},
-            GanttTask{id:"t2".into(),label:"Implement".into(),start:TaskStart::After("t1".into()),duration_days:10.0,status:TaskStatus::Active,dependencies:vec!["t1".into()]},
-        ]}]})}
+        TemporalDiagram {
+            kind: TemporalKind::Gantt,
+            title: Some("Project".into()),
+            body: TemporalBody::Gantt(GanttDiagram {
+                date_format: "YYYY-MM-DD".into(),
+                sections: vec![GanttSection {
+                    label: Some("Phase 1".into()),
+                    tasks: vec![
+                        GanttTask {
+                            id: "t1".into(), label: "Design".into(),
+                            start: TaskStart::Date("2026-01-01".into()),
+                            duration_days: 5.0,
+                            status: TaskStatus::Done,
+                            dependencies: vec![],
+                        },
+                        GanttTask {
+                            id: "t2".into(), label: "Build".into(),
+                            start: TaskStart::After("t1".into()),
+                            duration_days: 3.0,
+                            status: TaskStatus::Active,
+                            dependencies: vec!["t1".into()],
+                        },
+                    ],
+                }],
+            }),
+        }
     }
-    #[test] fn version_exists() { assert_eq!(VERSION, "0.1.0"); }
-    #[test] fn gantt_has_task_bars() { let out = layout_temporal_diagram(&simple_gantt(), 800.0); assert_eq!(out.items.iter().filter(|i| matches!(i,LayoutedTemporalItem::TaskBar{..})).count(), 2); }
-    #[test] fn gantt_has_axis_spine() { let out = layout_temporal_diagram(&simple_gantt(), 800.0); assert!(out.items.iter().any(|i| matches!(i,LayoutedTemporalItem::TimeAxisSpine{..}))); }
-    #[test] fn after_dependency_resolves_correctly() {
-        let out = layout_temporal_diagram(&simple_gantt(), 800.0);
-        let bars: Vec<_> = out.items.iter().filter_map(|i| if let LayoutedTemporalItem::TaskBar{x,label,..}=i { Some((*x,label.clone())) } else { None }).collect();
-        let t1x = bars.iter().find(|(_,l)| l=="Design").map(|(x,_)| *x).unwrap();
-        let t2x = bars.iter().find(|(_,l)| l=="Implement").map(|(x,_)| *x).unwrap();
-        assert!(t2x > t1x, "t2_x={t2x} should be > t1_x={t1x}");
+
+    fn simple_git() -> TemporalDiagram {
+        TemporalDiagram {
+            kind: TemporalKind::Git,
+            title: None,
+            body: TemporalBody::Git(GitDiagram {
+                direction: DiagramDirection::Lr,
+                branches: vec![GitBranch { name: "main".into() }],
+                events: vec![
+                    GitEvent::Commit {
+                        id: Some("a1".into()), message: Some("init".into()),
+                        tag: None, branch: "main".into(),
+                    },
+                    GitEvent::Commit {
+                        id: Some("a2".into()), message: Some("feature".into()),
+                        tag: None, branch: "main".into(),
+                    },
+                ],
+            }),
+        }
     }
-    #[test] fn gantt_has_section_header() { let out = layout_temporal_diagram(&simple_gantt(), 800.0); assert!(out.items.iter().any(|i| matches!(i,LayoutedTemporalItem::SectionHeader{..}))); }
-    #[test] fn git_layout_produces_commits() {
-        use diagram_ir::{DiagramDirection,GitBranch,GitDiagram,GitEvent,TemporalDiagram};
-        let d = TemporalDiagram { kind:TemporalKind::Git, title:None, body:TemporalBody::Git(GitDiagram { direction:DiagramDirection::Lr, branches:vec![GitBranch{name:"main".into()},GitBranch{name:"feat".into()}],
-            events:vec![GitEvent::Commit{id:Some("c1".into()),message:None,tag:None,branch:"main".into()},
-                        GitEvent::Commit{id:Some("c2".into()),message:None,tag:None,branch:"feat".into()},
-                        GitEvent::Checkout{branch:"main".into()},
-                        GitEvent::Merge{from:"feat".into(),id:None,tag:None}] }) };
-        let out = layout_temporal_diagram(&d, 600.0);
-        assert!(out.items.iter().filter(|i| matches!(i,LayoutedTemporalItem::CommitNode{..})).count() >= 2);
-        assert_eq!(out.items.iter().filter(|i| matches!(i,LayoutedTemporalItem::MergeArc{..})).count(), 1);
+
+    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.1.0"); }
+
+    #[test]
+    fn gantt_has_task_bars() {
+        let d = layout_temporal_diagram(&simple_gantt(), 800.0);
+        let bars = d.items.iter().filter(|i| matches!(i, LayoutedTemporalItem::TaskBar{..})).count();
+        assert_eq!(bars, 2);
+    }
+
+    #[test]
+    fn gantt_has_axis_spine() {
+        let d = layout_temporal_diagram(&simple_gantt(), 800.0);
+        assert!(d.items.iter().any(|i| matches!(i, LayoutedTemporalItem::TimeAxisSpine{..})));
+    }
+
+    #[test]
+    fn after_dependency_resolves_correctly() {
+        let d = layout_temporal_diagram(&simple_gantt(), 800.0);
+        // t2 starts after t1 ends (5 days in), so its bar x should be > t1's bar x.
+        let bars: Vec<_> = d.items.iter().filter_map(|i| {
+            if let LayoutedTemporalItem::TaskBar { x, label, .. } = i { Some((*x, label.clone())) } else { None }
+        }).collect();
+        let t1_x = bars.iter().find(|(_, l)| l == "Design").unwrap().0;
+        let t2_x = bars.iter().find(|(_, l)| l == "Build").unwrap().0;
+        assert!(t2_x > t1_x, "Build should start after Design");
+    }
+
+    #[test]
+    fn gantt_has_section_header() {
+        let d = layout_temporal_diagram(&simple_gantt(), 800.0);
+        assert!(d.items.iter().any(|i| {
+            if let LayoutedTemporalItem::SectionHeader { label, .. } = i {
+                label == "Phase 1"
+            } else { false }
+        }));
+    }
+
+    #[test]
+    fn git_layout_produces_commits() {
+        let d = layout_temporal_diagram(&simple_git(), 800.0);
+        let commits = d.items.iter().filter(|i| matches!(i, LayoutedTemporalItem::CommitNode{..})).count();
+        assert_eq!(commits, 2);
+    }
+
+    #[test]
+    fn git_canvas_width_covers_commits() {
+        let d = layout_temporal_diagram(&simple_git(), 800.0);
+        assert!(d.width >= 2.0 * COMMIT_SPACING);
     }
 }

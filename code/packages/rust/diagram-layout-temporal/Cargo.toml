@@ -2,7 +2,7 @@
 name = "diagram-layout-temporal"
 version = "0.1.0"
 edition = "2021"
-description = "Time-axis Gantt and Git-branch-lane layout engine for temporal diagrams (DG04)"
+description = "Gantt and git-graph layout engine for temporal diagrams (DG04)"
 
 [dependencies]
 diagram-ir = { path = "../diagram-ir" }
