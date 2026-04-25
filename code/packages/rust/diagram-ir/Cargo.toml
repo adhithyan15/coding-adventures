@@ -1,6 +1,6 @@
 [package]
 name = "diagram-ir"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Semantic diagram intermediate representation (DG00): types shared across DOT, Mermaid, and PlantUML pipelines"
 
