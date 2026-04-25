@@ -16,3 +16,5 @@ features = [
 
 [dev-dependencies]
 paint-codec-png = { path = "../paint-codec-png" }
+text-interfaces = { path = "../text-interfaces" }
+text-native = { path = "../text-native" }
