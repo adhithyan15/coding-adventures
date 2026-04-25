@@ -4,6 +4,28 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-25: Never let a worktree accumulate uncommitted work — it will be lost
+
+A full session implementing RNG in 6 languages was lost when the worktree was deleted before any commits were made. The branch existed but had no commits on it, so `git` had nothing to recover.
+
+**Rule:** Commit after completing each logical unit of work (one language implementation, one passing test suite, one fixed bug). Do not batch up multiple packages into a single end-of-session commit. Each language's implementation should be its own commit on the feature branch, pushed to the remote, before moving to the next.
+
+**Corollary:** After scaffolding, immediately commit the scaffolds. After implementing and testing one language, commit and push before starting the next. A worktree deletion, machine crash, or context-window reset cannot destroy work that is already on the remote.
+
+---
+
+### 2026-04-25: `nextIntInRange` with inverted range silently corrupts output — guard in all languages
+
+When `min > max`, `rangeSize = max - min + 1` is negative (or zero). Casting to an unsigned 64-bit type wraps to a huge number, making the rejection-sampling threshold 0 — every draw passes immediately, but `r % huge_rangeSize` produces values far outside `[min, max]`. In some languages the result is a divide-by-zero; in others it is a silent infinite loop.
+
+**Fix (applied in PR #1300):** Add an explicit `min > max` guard at the top of every `nextIntInRange` implementation that panics / raises / throws with a clear message. Also fix the `rangeSize` arithmetic to use unsigned subtraction:
+- Go: `uint64(max) - uint64(min) + 1` (not `uint64(max - min + 1)` which overflows signed i64)
+- Rust: `(max as u64).wrapping_sub(min as u64).wrapping_add(1)`
+
+**Rule:** Any function that takes a `(min, max)` pair must validate `min <= max` before doing unsigned range arithmetic.
+
+---
+
 ### 2026-04-23: QR format info `write_format_info` — bit ordering is MSB-first in row 8
 
 ISO/IEC 18004 places format information bits **MSB-first** (f14 → f9) going
