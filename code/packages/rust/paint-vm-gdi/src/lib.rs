@@ -101,18 +101,42 @@ use windows::Win32::Graphics::Gdi::{
 // by paint-metal — duplicated here so paint-vm-gdi has no dependency on
 // paint-metal.
 
-/// Parse a hex colour string to RGBA floats in the range 0.0–1.0.
+/// Parse a CSS colour string to RGBA floats in the range 0.0–1.0.
 ///
 /// Supported formats:
 /// - `"#rrggbb"`   → (r, g, b, 1.0)
 /// - `"#rrggbbaa"` → (r, g, b, a)
 /// - `"#rgb"`      → expanded to `#rrggbb`
+/// - `"rgb(r,g,b)"` / `"rgba(r,g,b,a)"`
 /// - `"transparent"` / anything else → (0.0, 0.0, 0.0, 0.0)
 ///
 /// Returns `(0.0, 0.0, 0.0, 1.0)` for unrecognised non-transparent input.
-fn parse_hex_color(s: &str) -> (f64, f64, f64, f64) {
+fn parse_css_color(s: &str) -> (f64, f64, f64, f64) {
+    let s = s.trim();
     if s == "transparent" {
         return (0.0, 0.0, 0.0, 0.0);
+    }
+    if let Some(inner) = s.strip_prefix("rgba(").and_then(|v| v.strip_suffix(')')) {
+        let parts: Vec<&str> = inner.split(',').map(str::trim).collect();
+        if parts.len() == 4 {
+            return (
+                parse_css_channel(parts[0]),
+                parse_css_channel(parts[1]),
+                parse_css_channel(parts[2]),
+                parts[3].parse::<f64>().unwrap_or(1.0).clamp(0.0, 1.0),
+            );
+        }
+    }
+    if let Some(inner) = s.strip_prefix("rgb(").and_then(|v| v.strip_suffix(')')) {
+        let parts: Vec<&str> = inner.split(',').map(str::trim).collect();
+        if parts.len() == 3 {
+            return (
+                parse_css_channel(parts[0]),
+                parse_css_channel(parts[1]),
+                parse_css_channel(parts[2]),
+                1.0,
+            );
+        }
     }
     let hex = s.trim_start_matches('#');
     let hex = if hex.len() == 3 {
@@ -138,6 +162,14 @@ fn parse_hex_color(s: &str) -> (f64, f64, f64, f64) {
         1.0
     };
     (r, g, b, a)
+}
+
+fn parse_css_channel(s: &str) -> f64 {
+    s.parse::<f64>().unwrap_or(0.0).clamp(0.0, 255.0) / 255.0
+}
+
+fn parse_hex_color(s: &str) -> (f64, f64, f64, f64) {
+    parse_css_color(s)
 }
 
 /// Convert RGBA floats (0.0–1.0) to a Win32 COLORREF (0x00BBGGRR).
@@ -193,6 +225,7 @@ unsafe fn render_instructions(
             PaintInstruction::Clip(clip) => render_clip(hdc, clip),
             // Planned but not yet implemented — same skip list as paint-metal:
             PaintInstruction::GlyphRun(_)
+            | PaintInstruction::Text(_)
             | PaintInstruction::Ellipse(_)
             | PaintInstruction::Path(_)
             | PaintInstruction::Layer(_)
@@ -507,6 +540,24 @@ mod tests {
     }
 
     #[test]
+    fn parse_css_rgb() {
+        let (r, g, b, a) = parse_hex_color("rgb(255, 128, 0)");
+        assert!((r - 1.0).abs() < 0.01);
+        assert!((g - (128.0 / 255.0)).abs() < 0.01);
+        assert!((b - 0.0).abs() < 0.01);
+        assert!((a - 1.0).abs() < 0.01);
+    }
+
+    #[test]
+    fn parse_css_rgba() {
+        let (r, g, b, a) = parse_hex_color("rgba(0, 255, 0, 0.5)");
+        assert!((r - 0.0).abs() < 0.01);
+        assert!((g - 1.0).abs() < 0.01);
+        assert!((b - 0.0).abs() < 0.01);
+        assert!((a - 0.5).abs() < 0.01);
+    }
+
+    #[test]
     fn parse_transparent() {
         let (r, g, b, a) = parse_hex_color("transparent");
         assert_eq!(a, 0.0);
@@ -594,6 +645,19 @@ mod tests {
         assert_eq!(r, 0, "green bg: r should be 0");
         assert_eq!(g, 255, "green bg: g should be 255");
         assert_eq!(b, 0, "green bg: b should be 0");
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn render_css_rgb_background() {
+        let mut scene = PaintScene::new(50.0, 50.0);
+        scene.background = "rgb(255, 255, 255)".to_string();
+
+        let pixels = render(&scene);
+        let (r, g, b, _a) = pixels.pixel_at(25, 25);
+        assert_eq!(r, 255, "rgb bg: r should be 255");
+        assert_eq!(g, 255, "rgb bg: g should be 255");
+        assert_eq!(b, 255, "rgb bg: b should be 255");
     }
 
     /// Transparent rects should not draw anything — background shows through.
