@@ -1,16 +1,26 @@
 # TET04 — Tetrad Register VM Specification
 
-> **LANG migration (2026-04-23):** Tetrad programs now also execute on
-> the generic `vm-core` (LANG02) via the `tetrad-runtime` package
-> (`TetradRuntime.run(source)`).  vm-core is configured with
-> `u8_wrap=True`, four-frame max depth, and a small Tetrad opcode
-> extension (`tetrad.move`).  The legacy `TetradVM` described below
-> continues to exist unchanged — its rich metric surface (feedback
-> vectors with a V8 Ignition state machine, branch stats, loop
-> iteration counts) is kept for callers that need it.  Future work
-> will migrate those metrics to vm-core's profiler shape; until then
-> both runtimes coexist, both backed by the same `tetrad-compiler`
-> front end.
+> **🪦 RETIRED (2026-04-25)** — the `tetrad-vm` package has been
+> deleted.  Its responsibilities are fully covered by:
+>
+> - **Execution** — `vm_core.VMCore` (spec [LANG02](LANG02-vm-core.md))
+>   configured with `u8_wrap=True`, `max_frames=4`, and a small
+>   Tetrad opcode extension (`tetrad.move`).
+> - **Metrics surface** — `vm_core` exposes the same V8 Ignition-style
+>   feedback-slot state machine, branch counters, loop-iteration
+>   counters, and `execute_traced` opt-in tracing (spec
+>   [LANG17](LANG17-vm-core-metrics.md)).
+> - **Tetrad-shaped wrappers** — `tetrad_runtime.TetradRuntime` mirrors
+>   every legacy `TetradVM.*` metric API (`hot_functions`,
+>   `feedback_vector`, `type_profile`, `branch_profile`,
+>   `loop_iterations`, `call_site_shape`, `execute_traced`,
+>   `reset_metrics`) with the same return-type signatures, so callers
+>   can switch `TetradVM` → `TetradRuntime` without rewriting
+>   metric-reading code.
+>
+> The text below is preserved as a historical record of what the
+> retired implementation did.  Read it for context; do not start new
+> work against `TetradVM` — there is no `TetradVM` anymore.
 
 ## Overview
 
