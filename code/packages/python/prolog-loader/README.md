@@ -22,6 +22,8 @@ It keeps parsing side-effect free, then exposes helpers to:
 - splice `include/1` targets into the including source before project linking
 - accept an optional `SourceResolver` hook so callers can resolve non-file
   source references like `library(...)` without hard-coding one search policy
+- apply explicit `term_expansion/2` and `goal_expansion/2` passes during load
+  without making parsing itself stateful or magical
 - expose a convenience runner for executing initialization goals with the shared
   Prolog builtin adapter enabled
 

@@ -22,12 +22,14 @@ from logic_engine import (
     reify,
     relation,
     solve_all,
+    solve_from,
     term,
     visible_clauses_for,
 )
 
 from prolog_loader import (
     LoadedPrologProject,
+    PrologExpansionError,
     PrologInitializationError,
     SourceResolver,
     __version__,
@@ -101,6 +103,75 @@ class TestPrologLoader:
         assert [str(imported) for imported in loaded.module_imports[0].imports] == [
             "edge/2",
         ]
+
+    def test_load_swi_source_applies_term_expansion_to_clauses(self) -> None:
+        loaded = load_swi_prolog_source(
+            """
+            :- term_expansion(edge(X, Y), link(X, Y)).
+            edge(homer, bart).
+            ?- link(homer, Who).
+            """,
+        )
+        query = loaded.queries[0]
+
+        assert solve_all(loaded.program, query.variables["Who"], query.goal) == [
+            atom("bart"),
+        ]
+
+    def test_load_swi_source_term_expansion_supports_lists_and_repeatable_passes(
+        self,
+    ) -> None:
+        loaded = load_swi_prolog_source(
+            """
+            :- term_expansion(bundle(X), [left(X), middle(X)]).
+            :- term_expansion(middle(X), right(X)).
+            bundle(ok).
+            ?- left(Value).
+            ?- right(Value).
+            """,
+        )
+        first_query = loaded.queries[0]
+        second_query = loaded.queries[1]
+
+        assert solve_all(
+            loaded.program,
+            first_query.variables["Value"],
+            first_query.goal,
+        ) == [atom("ok")]
+        assert solve_all(
+            loaded.program,
+            second_query.variables["Value"],
+            second_query.goal,
+        ) == [atom("ok")]
+
+    def test_load_swi_source_applies_goal_expansion_to_queries_and_initialization(
+        self,
+    ) -> None:
+        loaded = load_swi_prolog_source(
+            """
+            :- goal_expansion(run, main).
+            :- initialization(run).
+            main.
+            ?- run.
+            """,
+        )
+        query = loaded.queries[0]
+
+        assert str(loaded.initialization_terms[0]) == "main"
+        assert next(solve_from(loaded.program, query.goal, State()), None) is not None
+        assert run_initialization_goals(loaded) == State()
+
+    def test_load_swi_source_raises_for_invalid_term_expansion_output(self) -> None:
+        with pytest.raises(
+            PrologExpansionError,
+            match=r"term expansion produced invalid clause term: 42",
+        ):
+            load_swi_prolog_source(
+                """
+                :- term_expansion(edge, 42).
+                edge.
+                """,
+            )
 
     def test_run_initialization_goals_executes_clause_backed_startup_goals(
         self,
