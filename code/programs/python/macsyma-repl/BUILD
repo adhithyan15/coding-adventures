@@ -1,0 +1,3 @@
+uv venv --quiet --clear
+uv pip install -e ../../../packages/python/grammar-tools -e ../../../packages/python/graph -e ../../../packages/python/directed-graph -e ../../../packages/python/state-machine -e ../../../packages/python/lexer -e ../../../packages/python/parser -e ../../../packages/python/macsyma-lexer -e ../../../packages/python/macsyma-parser -e ../../../packages/python/symbolic-ir -e ../../../packages/python/polynomial -e ../../../packages/python/macsyma-compiler -e ../../../packages/python/symbolic-vm -e ../../../packages/python/repl -e ../../../packages/python/cas-pretty-printer -e ../../../packages/python/macsyma-runtime -e ".[dev]" --quiet
+.venv/bin/python -m pytest tests/ -v --tb=short
