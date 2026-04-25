@@ -1,0 +1,8 @@
+requires 'perl', '5.026';
+requires 'coding-adventures-gf256';
+requires 'coding-adventures-barcode-2d';
+requires 'List::Util';
+
+on test => sub {
+    requires 'Test2::V0';
+};
