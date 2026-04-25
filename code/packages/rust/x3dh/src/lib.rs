@@ -87,8 +87,10 @@ impl Drop for IdentityKeyPair {
 
 impl IdentityKeyPair {
     /// Return the X25519 secret key, used by the Sealed Sender layer for ECDH.
-    pub fn x25519_secret(&self) -> [u8; 32] {
-        self.x25519_secret
+    ///
+    /// Returns a `Zeroizing` wrapper so the caller's stack copy is wiped on drop.
+    pub fn x25519_secret(&self) -> Zeroizing<[u8; 32]> {
+        Zeroizing::new(self.x25519_secret)
     }
 }
 
@@ -517,7 +519,8 @@ mod tests {
     #[test]
     fn x25519_secret_accessor_roundtrips() {
         let ik = generate_identity_keypair();
-        let derived_pub = x25519_public_key(&ik.x25519_secret());
+        let secret = ik.x25519_secret();
+        let derived_pub = x25519_public_key(&*secret);
         assert_eq!(ik.x25519_public, derived_pub);
     }
 }
