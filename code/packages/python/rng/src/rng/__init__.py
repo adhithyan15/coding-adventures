@@ -117,6 +117,11 @@ class LCG:
 
         Any draw below ``threshold`` is discarded; expected extra draws < 2.
         """
+        if min_val > max_val:
+            raise ValueError(
+                f"next_int_in_range requires min_val <= max_val, "
+                f"got {min_val} > {max_val}"
+            )
         range_size = max_val - min_val + 1
         # Rejection threshold eliminates modulo bias.
         # (-range_size) % (1 << 32) % range_size gives the number of values
@@ -183,6 +188,11 @@ class Xorshift64:
 
         Identical rejection-sampling algorithm to :meth:`LCG.next_int_in_range`.
         """
+        if min_val > max_val:
+            raise ValueError(
+                f"next_int_in_range requires min_val <= max_val, "
+                f"got {min_val} > {max_val}"
+            )
         range_size = max_val - min_val + 1
         threshold = (-range_size) % (1 << 32) % range_size
         while True:
@@ -265,6 +275,11 @@ class PCG32:
 
         Identical rejection-sampling algorithm to :meth:`LCG.next_int_in_range`.
         """
+        if min_val > max_val:
+            raise ValueError(
+                f"next_int_in_range requires min_val <= max_val, "
+                f"got {min_val} > {max_val}"
+            )
         range_size = max_val - min_val + 1
         threshold = (-range_size) % (1 << 32) % range_size
         while True:

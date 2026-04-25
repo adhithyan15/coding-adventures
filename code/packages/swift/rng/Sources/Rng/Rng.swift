@@ -158,6 +158,7 @@ public struct LCG {
     ///   - max: upper bound (inclusive); must be ≥ min
     /// - Returns: uniformly distributed value in [min, max]
     public mutating func nextIntInRange(min: Int64, max: Int64) -> Int64 {
+        precondition(min <= max, "nextIntInRange requires min <= max")
         let rangeSize = UInt64(bitPattern: max - min + 1)
         let threshold = (0 &- rangeSize) % rangeSize
         while true {
@@ -245,6 +246,7 @@ public struct Xorshift64 {
     ///
     /// See `LCG.nextIntInRange` for a full explanation of rejection sampling.
     public mutating func nextIntInRange(min: Int64, max: Int64) -> Int64 {
+        precondition(min <= max, "nextIntInRange requires min <= max")
         let rangeSize = UInt64(bitPattern: max - min + 1)
         let threshold = (0 &- rangeSize) % rangeSize
         while true {
@@ -365,6 +367,7 @@ public struct PCG32 {
     ///
     /// See `LCG.nextIntInRange` for a full explanation of rejection sampling.
     public mutating func nextIntInRange(min: Int64, max: Int64) -> Int64 {
+        precondition(min <= max, "nextIntInRange requires min <= max")
         let rangeSize = UInt64(bitPattern: max - min + 1)
         let threshold = (0 &- rangeSize) % rangeSize
         while true {

@@ -98,6 +98,9 @@ class Lcg {
   /// draw that falls in a partial bucket at the bottom, ensuring every value
   /// in the range is reachable by the same number of raw outputs.
   int nextIntInRange(int min, int max) {
+    if (min > max) {
+      throw ArgumentError('nextIntInRange requires min <= max, got $min > $max');
+    }
     final rangeSize = max - min + 1;
     // (-rangeSize) mod rangeSize — the partial-bucket threshold.
     final threshold = ((-rangeSize) & _mask64) % rangeSize;
@@ -166,6 +169,9 @@ class Xorshift64 {
 
   /// Return an integer in `[min, max]` inclusive via rejection sampling.
   int nextIntInRange(int min, int max) {
+    if (min > max) {
+      throw ArgumentError('nextIntInRange requires min <= max, got $min > $max');
+    }
     final rangeSize = max - min + 1;
     final threshold = ((-rangeSize) & _mask64) % rangeSize;
     while (true) {
@@ -248,6 +254,9 @@ class Pcg32 {
 
   /// Return an integer in `[min, max]` inclusive via rejection sampling.
   int nextIntInRange(int min, int max) {
+    if (min > max) {
+      throw ArgumentError('nextIntInRange requires min <= max, got $min > $max');
+    }
     final rangeSize = max - min + 1;
     final threshold = ((-rangeSize) & _mask64) % rangeSize;
     while (true) {

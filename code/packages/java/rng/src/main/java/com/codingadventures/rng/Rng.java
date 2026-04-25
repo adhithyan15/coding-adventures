@@ -146,6 +146,9 @@ public final class Rng {
          * @param max upper bound (inclusive), must be &ge; min
          */
         public long nextIntInRange(long min, long max) {
+            if (min > max) {
+                throw new IllegalArgumentException("nextIntInRange requires min <= max, got " + min + " > " + max);
+            }
             long rangeSize = max - min + 1;
             long threshold = Long.remainderUnsigned(-rangeSize, rangeSize);
             while (true) {
@@ -246,6 +249,9 @@ public final class Rng {
          * @param max upper bound (inclusive), must be &ge; min
          */
         public long nextIntInRange(long min, long max) {
+            if (min > max) {
+                throw new IllegalArgumentException("nextIntInRange requires min <= max, got " + min + " > " + max);
+            }
             long rangeSize = max - min + 1;
             long threshold = Long.remainderUnsigned(-rangeSize, rangeSize);
             while (true) {
@@ -365,6 +371,9 @@ public final class Rng {
          * @param max upper bound (inclusive), must be &ge; min
          */
         public long nextIntInRange(long min, long max) {
+            if (min > max) {
+                throw new IllegalArgumentException("nextIntInRange requires min <= max, got " + min + " > " + max);
+            }
             long rangeSize = max - min + 1;
             long threshold = Long.remainderUnsigned(-rangeSize, rangeSize);
             while (true) {

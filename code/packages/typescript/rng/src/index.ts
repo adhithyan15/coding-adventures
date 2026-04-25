@@ -98,6 +98,9 @@ export class LCG {
    * `(-rangeSize) mod rangeSize` — any draw below it is discarded.
    */
   nextIntInRange(min: number, max: number): number {
+    if (min > max) {
+      throw new RangeError(`nextIntInRange requires min <= max, got ${min} > ${max}`);
+    }
     const rangeSize = BigInt(max - min + 1);
     const threshold = (-rangeSize & MASK32) % rangeSize;
     for (;;) {
@@ -166,6 +169,9 @@ export class Xorshift64 {
    * Identical rejection-sampling algorithm to {@link LCG.nextIntInRange}.
    */
   nextIntInRange(min: number, max: number): number {
+    if (min > max) {
+      throw new RangeError(`nextIntInRange requires min <= max, got ${min} > ${max}`);
+    }
     const rangeSize = BigInt(max - min + 1);
     const threshold = (-rangeSize & MASK32) % rangeSize;
     for (;;) {
@@ -255,6 +261,9 @@ export class PCG32 {
    * Identical rejection-sampling algorithm to {@link LCG.nextIntInRange}.
    */
   nextIntInRange(min: number, max: number): number {
+    if (min > max) {
+      throw new RangeError(`nextIntInRange requires min <= max, got ${min} > ${max}`);
+    }
     const rangeSize = BigInt(max - min + 1);
     const threshold = (-rangeSize & MASK32) % rangeSize;
     for (;;) {

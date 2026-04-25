@@ -133,7 +133,11 @@ end
 --
 --   threshold = (2^32 - range) % range  =  (-range) % range  (mod 2^32)
 --
-local function rejection_sample(next_u32_fn, min, max)
+local function rejection_sample(next_u32_fn, min_val, max_val)
+    if min_val > max_val then
+        error("next_int_in_range requires min_val <= max_val, got " .. min_val .. " > " .. max_val, 2)
+    end
+    local min, max = min_val, max_val
     local range = max - min + 1
     -- (-range) mod range in 32-bit arithmetic:
     -- In Lua we compute: (2^32 - range) % range, but since range fits in 32

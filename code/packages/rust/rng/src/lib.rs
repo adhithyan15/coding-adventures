@@ -116,7 +116,8 @@ impl Lcg {
     /// Any draw below `threshold` is discarded. The expected number of
     /// extra draws per call is less than 2 for all range sizes.
     pub fn next_int_in_range(&mut self, min: i64, max: i64) -> i64 {
-        let range_size = (max - min + 1) as u64;
+        assert!(min <= max, "rng: next_int_in_range requires min <= max");
+        let range_size = (max as u64).wrapping_sub(min as u64).wrapping_add(1);
         let threshold = range_size.wrapping_neg() % range_size;
         loop {
             let r = self.next_u32() as u64;
@@ -183,7 +184,8 @@ impl Xorshift64 {
     /// Returns a uniform random integer in `[min, max]` inclusive.
     /// Uses rejection sampling — identical algorithm to [`Lcg::next_int_in_range`].
     pub fn next_int_in_range(&mut self, min: i64, max: i64) -> i64 {
-        let range_size = (max - min + 1) as u64;
+        assert!(min <= max, "rng: next_int_in_range requires min <= max");
+        let range_size = (max as u64).wrapping_sub(min as u64).wrapping_add(1);
         let threshold = range_size.wrapping_neg() % range_size;
         loop {
             let r = self.next_u32() as u64;
@@ -280,7 +282,8 @@ impl Pcg32 {
     /// Returns a uniform random integer in `[min, max]` inclusive.
     /// Uses rejection sampling — identical algorithm to [`Lcg::next_int_in_range`].
     pub fn next_int_in_range(&mut self, min: i64, max: i64) -> i64 {
-        let range_size = (max - min + 1) as u64;
+        assert!(min <= max, "rng: next_int_in_range requires min <= max");
+        let range_size = (max as u64).wrapping_sub(min as u64).wrapping_add(1);
         let threshold = range_size.wrapping_neg() % range_size;
         loop {
             let r = self.next_u32() as u64;

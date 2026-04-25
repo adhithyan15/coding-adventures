@@ -156,11 +156,15 @@ defmodule CodingAdventures.Rng.LCG do
   is less than 2 for all range sizes.
   """
   @spec next_int_in_range(t(), integer(), integer()) :: {integer(), t()}
-  def next_int_in_range(g, min, max) do
-    range_size = max - min + 1
+  def next_int_in_range(g, min_val, max_val) when min_val <= max_val do
+    range_size = max_val - min_val + 1
     threshold  = rem(rem(-range_size, 1 <<< 32) + (1 <<< 32), 1 <<< 32)
     threshold  = rem(threshold, range_size)
-    do_sample(g, min, range_size, threshold)
+    do_sample(g, min_val, range_size, threshold)
+  end
+
+  def next_int_in_range(_gen, min_val, max_val) do
+    raise ArgumentError, "next_int_in_range requires min_val <= max_val, got #{min_val} > #{max_val}"
   end
 
   defp do_sample(g, min, range_size, threshold) do
@@ -239,11 +243,15 @@ defmodule CodingAdventures.Rng.Xorshift64 do
 
   @doc "Return a uniform integer in `[min, max]` using rejection sampling."
   @spec next_int_in_range(t(), integer(), integer()) :: {integer(), t()}
-  def next_int_in_range(g, min, max) do
-    range_size = max - min + 1
+  def next_int_in_range(g, min_val, max_val) when min_val <= max_val do
+    range_size = max_val - min_val + 1
     threshold  = rem(rem(-range_size, 1 <<< 32) + (1 <<< 32), 1 <<< 32)
     threshold  = rem(threshold, range_size)
-    do_sample(g, min, range_size, threshold)
+    do_sample(g, min_val, range_size, threshold)
+  end
+
+  def next_int_in_range(_gen, min_val, max_val) do
+    raise ArgumentError, "next_int_in_range requires min_val <= max_val, got #{min_val} > #{max_val}"
   end
 
   defp do_sample(g, min, range_size, threshold) do
@@ -355,11 +363,15 @@ defmodule CodingAdventures.Rng.PCG32 do
 
   @doc "Return a uniform integer in `[min, max]` using rejection sampling."
   @spec next_int_in_range(t(), integer(), integer()) :: {integer(), t()}
-  def next_int_in_range(g, min, max) do
-    range_size = max - min + 1
+  def next_int_in_range(g, min_val, max_val) when min_val <= max_val do
+    range_size = max_val - min_val + 1
     threshold  = rem(rem(-range_size, 1 <<< 32) + (1 <<< 32), 1 <<< 32)
     threshold  = rem(threshold, range_size)
-    do_sample(g, min, range_size, threshold)
+    do_sample(g, min_val, range_size, threshold)
+  end
+
+  def next_int_in_range(_gen, min_val, max_val) do
+    raise ArgumentError, "next_int_in_range requires min_val <= max_val, got #{min_val} > #{max_val}"
   end
 
   defp do_sample(g, min, range_size, threshold) do

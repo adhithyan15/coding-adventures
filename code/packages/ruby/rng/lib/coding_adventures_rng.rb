@@ -117,6 +117,7 @@ module CodingAdventures
       # Any draw r < threshold is rejected; the expected number of extra
       # draws is less than 2 for every possible range_size.
       def next_int_in_range(min, max)
+        raise ArgumentError, "next_int_in_range requires min <= max, got #{min} > #{max}" if min > max
         range_size = (max - min + 1).to_i
         threshold = (-range_size) % (1 << 32) % range_size
         loop do
@@ -179,6 +180,7 @@ module CodingAdventures
 
       # Unbiased integer in [min, max] using rejection sampling.
       def next_int_in_range(min, max)
+        raise ArgumentError, "next_int_in_range requires min <= max, got #{min} > #{max}" if min > max
         range_size = (max - min + 1).to_i
         threshold = (-range_size) % (1 << 32) % range_size
         loop do
@@ -266,6 +268,7 @@ module CodingAdventures
 
       # Unbiased integer in [min, max] using rejection sampling.
       def next_int_in_range(min, max)
+        raise ArgumentError, "next_int_in_range requires min <= max, got #{min} > #{max}" if min > max
         range_size = (max - min + 1).to_i
         threshold = (-range_size) % (1 << 32) % range_size
         loop do

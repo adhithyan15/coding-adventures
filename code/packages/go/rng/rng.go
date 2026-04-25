@@ -76,7 +76,10 @@ func (g *LCG) NextFloat() float64 {
 // Any draw below threshold is discarded; the expected extra draws per call
 // is less than 2 for all range sizes.
 func (g *LCG) NextIntInRange(min, max int64) int64 {
-	rangeSize := uint64(max - min + 1)
+	if min > max {
+		panic("rng: NextIntInRange requires min <= max")
+	}
+	rangeSize := uint64(max)-uint64(min) + 1
 	threshold := (-rangeSize) % rangeSize
 	for {
 		r := uint64(g.NextU32())
@@ -136,7 +139,10 @@ func (g *Xorshift64) NextFloat() float64 {
 // NextIntInRange returns a uniform random integer in [min, max] inclusive
 // using rejection sampling (same algorithm as LCG).
 func (g *Xorshift64) NextIntInRange(min, max int64) int64 {
-	rangeSize := uint64(max - min + 1)
+	if min > max {
+		panic("rng: NextIntInRange requires min <= max")
+	}
+	rangeSize := uint64(max)-uint64(min) + 1
 	threshold := (-rangeSize) % rangeSize
 	for {
 		r := uint64(g.NextU32())
@@ -206,7 +212,10 @@ func (g *PCG32) NextFloat() float64 {
 // NextIntInRange returns a uniform random integer in [min, max] inclusive
 // using rejection sampling (same algorithm as LCG and Xorshift64).
 func (g *PCG32) NextIntInRange(min, max int64) int64 {
-	rangeSize := uint64(max - min + 1)
+	if min > max {
+		panic("rng: NextIntInRange requires min <= max")
+	}
+	rangeSize := uint64(max)-uint64(min) + 1
 	threshold := (-rangeSize) % rangeSize
 	for {
 		r := uint64(g.NextU32())

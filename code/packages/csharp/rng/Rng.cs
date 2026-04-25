@@ -119,6 +119,8 @@ public sealed class Lcg
     /// </summary>
     public long NextIntInRange(long min, long max)
     {
+        if (min > max)
+            throw new ArgumentOutOfRangeException(nameof(min), $"NextIntInRange requires min <= max, got {min} > {max}");
         ulong rangeSize = (ulong)(max - min + 1);
         ulong threshold = (ulong)(-(long)rangeSize) % rangeSize;
         while (true)
@@ -201,6 +203,8 @@ public sealed class Xorshift64
     /// <summary>Return a long in [min, max] inclusive via rejection sampling.</summary>
     public long NextIntInRange(long min, long max)
     {
+        if (min > max)
+            throw new ArgumentOutOfRangeException(nameof(min), $"NextIntInRange requires min <= max, got {min} > {max}");
         ulong rangeSize = (ulong)(max - min + 1);
         ulong threshold = (ulong)(-(long)rangeSize) % rangeSize;
         while (true)
@@ -296,6 +300,8 @@ public sealed class Pcg32
     /// <summary>Return a long in [min, max] inclusive via rejection sampling.</summary>
     public long NextIntInRange(long min, long max)
     {
+        if (min > max)
+            throw new ArgumentOutOfRangeException(nameof(min), $"NextIntInRange requires min <= max, got {min} > {max}");
         ulong rangeSize = (ulong)(max - min + 1);
         ulong threshold = (ulong)(-(long)rangeSize) % rangeSize;
         while (true)

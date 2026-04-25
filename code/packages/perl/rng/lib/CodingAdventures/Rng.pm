@@ -69,6 +69,7 @@ package CodingAdventures::Rng;
 
 use strict;
 use warnings;
+use Carp;
 use Math::BigInt;
 
 our $VERSION = '0.01';
@@ -187,6 +188,7 @@ use Math::BigInt;
 sub new {
     my ($class, $seed) = @_;
     $seed //= 0;
+    Carp::croak("seed must be a non-negative integer") unless defined $seed && $seed =~ /^\d+$/;
     return bless {
         _state => Math::BigInt->new("$seed"),
     }, $class;
@@ -222,6 +224,7 @@ sub next_float {
 # next_int_in_range(min, max): uniform integer in [min, max] inclusive.
 sub next_int_in_range {
     my ($self, $min, $max) = @_;
+    Carp::croak("next_int_in_range requires min <= max, got $min > $max") if $min > $max;
     return CodingAdventures::Rng::_rejection_sample(
         sub { $self->next_u32() },
         $min, $max
@@ -248,6 +251,7 @@ use Math::BigInt;
 sub new {
     my ($class, $seed) = @_;
     $seed //= 0;
+    Carp::croak("seed must be a non-negative integer") unless defined $seed && $seed =~ /^\d+$/;
     $seed = 1 if $seed == 0;   # seed 0 is a fixed point; replace with 1
     return bless {
         _state => Math::BigInt->new("$seed"),
@@ -306,6 +310,7 @@ sub next_float {
 # next_int_in_range(min, max): uniform integer in [min, max] inclusive.
 sub next_int_in_range {
     my ($self, $min, $max) = @_;
+    Carp::croak("next_int_in_range requires min <= max, got $min > $max") if $min > $max;
     return CodingAdventures::Rng::_rejection_sample(
         sub { $self->next_u32() },
         $min, $max
@@ -339,6 +344,7 @@ use Math::BigInt;
 sub new {
     my ($class, $seed) = @_;
     $seed //= 0;
+    Carp::croak("seed must be a non-negative integer") unless defined $seed && $seed =~ /^\d+$/;
     my $inc = Math::BigInt->new(CodingAdventures::Rng::LCG_INCREMENT);
     my $state = Math::BigInt->new(0);
 
@@ -394,6 +400,7 @@ sub next_float {
 # next_int_in_range(min, max): uniform integer in [min, max] inclusive.
 sub next_int_in_range {
     my ($self, $min, $max) = @_;
+    Carp::croak("next_int_in_range requires min <= max, got $min > $max") if $min > $max;
     return CodingAdventures::Rng::_rejection_sample(
         sub { $self->next_u32() },
         $min, $max

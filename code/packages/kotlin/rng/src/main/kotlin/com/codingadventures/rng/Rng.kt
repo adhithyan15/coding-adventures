@@ -122,6 +122,7 @@ class Lcg(seed: Long) {
      * @param max upper bound (inclusive), must be ≥ min
      */
     fun nextIntInRange(min: Long, max: Long): Long {
+        require(min <= max) { "nextIntInRange requires min <= max, got $min > $max" }
         val rangeSize = max - min + 1L
         val threshold = java.lang.Long.remainderUnsigned(-rangeSize, rangeSize)
         while (true) {
@@ -200,6 +201,7 @@ class Xorshift64(seed: Long) {
      * @param max upper bound (inclusive), must be ≥ min
      */
     fun nextIntInRange(min: Long, max: Long): Long {
+        require(min <= max) { "nextIntInRange requires min <= max, got $min > $max" }
         val rangeSize = max - min + 1L
         val threshold = java.lang.Long.remainderUnsigned(-rangeSize, rangeSize)
         while (true) {
@@ -301,6 +303,7 @@ class Pcg32(seed: Long) {
      * @param max upper bound (inclusive), must be ≥ min
      */
     fun nextIntInRange(min: Long, max: Long): Long {
+        require(min <= max) { "nextIntInRange requires min <= max, got $min > $max" }
         val rangeSize = max - min + 1L
         val threshold = java.lang.Long.remainderUnsigned(-rangeSize, rangeSize)
         while (true) {

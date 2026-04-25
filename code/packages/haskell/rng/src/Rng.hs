@@ -121,7 +121,9 @@ class RandomGen g where
     -- Uses rejection sampling to eliminate modulo bias.  See the LCG
     -- implementation notes below for a full explanation.
     nextIntInRange :: Int64 -> Int64 -> g -> (Int64, g)
-    nextIntInRange lo hi g0 =
+    nextIntInRange lo hi g0
+      | lo > hi   = error "nextIntInRange: lo must be <= hi"
+      | otherwise =
         let rangeSize = fromIntegral (hi - lo + 1) :: Word64
             threshold = (0 - rangeSize) `mod` rangeSize
             go gen =
