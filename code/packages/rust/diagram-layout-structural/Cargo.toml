@@ -1,0 +1,8 @@
+[package]
+name = "diagram-layout-structural"
+version = "0.1.0"
+edition = "2021"
+description = "Compartmented node sizing and connector routing for class/ER/C4 diagrams (DG04)"
+
+[dependencies]
+diagram-ir = { path = "../diagram-ir" }
