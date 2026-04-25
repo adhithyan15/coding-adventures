@@ -10,11 +10,15 @@ paint-instructions = { path = "../paint-instructions" }
 [dependencies.windows]
 version = "0.58"
 features = [
+    "Win32_Graphics_Imaging",
     "Win32_Graphics_Gdi",
     "Win32_Foundation",
+    "Win32_Storage_FileSystem",
+    "Win32_System_Com",
 ]
 
 [dev-dependencies]
+image-codec-bmp = { path = "../image-codec-bmp" }
 paint-codec-png = { path = "../paint-codec-png" }
 text-interfaces = { path = "../text-interfaces" }
 text-native = { path = "../text-native" }
