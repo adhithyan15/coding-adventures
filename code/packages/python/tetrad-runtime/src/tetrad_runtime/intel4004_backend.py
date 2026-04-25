@@ -1,33 +1,27 @@
 """``Intel4004Backend`` — ``BackendProtocol`` adapter for the 4004 simulator.
 
-The legacy ``tetrad-jit`` package contains a working bytecode → 4004
-abstract-assembly → binary pipeline (``codegen_4004.py``) and a runner
-(``run_on_4004``).  Re-implementing that from scratch against jit-core's
-``CIRInstr`` shape is a substantial follow-up project; for the migration
-PR we adopt a **hybrid strategy**:
+Implements ``jit_core.backend.BackendProtocol``: takes a ``list[CIRInstr]``
+from jit-core's specialise / optimise passes, translates it through a
+small SSA-by-name re-projection (``_cir_to_legacy_ir``), runs it through
+the 4004 codegen, and executes the resulting binary on
+``intel4004-simulator``.
 
-1.  Translate the post-specialise / post-optimise ``list[CIRInstr]`` into
-    the legacy ``tetrad_jit.ir.IRInstr`` shape (a small re-projection — both
-    are flat SSA-by-name lists).
-2.  Hand the IRInstr list to the existing ``codegen()`` function, which
-    returns either ``bytes`` or ``None`` (None = the function uses an
-    opcode the 4004 codegen does not yet support — jit-core treats this
-    as deopt and falls back to the interpreter).
-3.  ``run`` defers to ``tetrad_jit.codegen_4004.run_on_4004`` which feeds
-    the binary into ``Intel4004Simulator`` and returns the u8 result.
+The codegen / IR types live in :mod:`tetrad_runtime._intel4004_codegen` —
+they were originally part of ``tetrad-jit``'s public surface but moved
+in-tree when ``tetrad-jit`` was retired.  See that subpackage's module
+docstring for the deprecation history.
 
-This is a deliberate **bridge**.  When the 4004 backend is rewritten to
-consume CIR directly (a future package, ``intel4004-backend``), this
-module becomes a one-line forwarder.  Until then, this is the path that
-gets a working JIT through the LANG pipeline today.
+This module is still a deliberate **bridge**: the codegen consumes a
+non-CIR shape and ``Intel4004Backend`` re-projects to fit.  When a
+CIR-native 4004 backend lands (planned ``intel4004-backend`` package),
+this module becomes a one-line forwarder and the
+``_intel4004_codegen`` subpackage retires.
 
 Why a bridge instead of "wait for the rewrite"
 ----------------------------------------------
-The point of the migration is to prove Tetrad runs on LANG.  Forcing a
-rewrite of the codegen as a prerequisite would block that proof on weeks
-of unrelated work.  A bridge lets us exercise jit-core, the backend
-protocol, the deopt path, and the JIT cache *today*, with the clear
-signal that the codegen replacement is what's left.
+The bridge lets us exercise jit-core, the backend protocol, the deopt
+path, and the JIT cache *today*.  It defers the codegen rewrite as
+follow-up work without blocking the LANG migration on it.
 """
 
 from __future__ import annotations
@@ -36,11 +30,17 @@ from typing import Any
 
 from jit_core.cir import CIRInstr
 
+from tetrad_runtime._intel4004_codegen import (
+    IRInstr,
+    codegen,
+    run_on_4004,
+)
+
 __all__ = ["Intel4004Backend"]
 
 
 class Intel4004Backend:
-    """Backend that compiles CIR → Intel 4004 binary via the legacy codegen.
+    """Backend that compiles CIR → Intel 4004 binary via the in-tree codegen.
 
     Implements the ``jit_core.backend.BackendProtocol`` structural protocol.
     """
@@ -50,16 +50,10 @@ class Intel4004Backend:
     def compile(self, cir: list[CIRInstr]) -> bytes | None:
         """Translate CIR to a 4004 binary.
 
-        Returns ``None`` for any CIR list that contains an instruction the
-        legacy codegen does not yet support — jit-core's deopt machinery
+        Returns ``None`` for any CIR list that contains an instruction
+        the codegen does not yet support — jit-core's deopt machinery
         will then keep the function on the interpreted path.
         """
-        try:
-            from tetrad_jit.codegen_4004 import codegen
-            from tetrad_jit.ir import IRInstr
-        except ImportError:
-            return None
-
         ir = _cir_to_legacy_ir(cir, IRInstr)
         if ir is None:
             return None
@@ -70,14 +64,13 @@ class Intel4004Backend:
 
     def run(self, binary: bytes, args: list[Any]) -> Any:
         """Execute a previously-compiled 4004 binary on the simulator."""
-        from tetrad_jit.codegen_4004 import run_on_4004
         # The simulator expects ints; coerce.
         int_args = [int(a) & 0xFF for a in args]
         return run_on_4004(binary, int_args)
 
 
 # ---------------------------------------------------------------------------
-# CIR → legacy IRInstr re-projection
+# CIR → in-tree IRInstr re-projection
 # ---------------------------------------------------------------------------
 #
 # jit-core's CIRInstr carries:
@@ -86,20 +79,21 @@ class Intel4004Backend:
 #   srcs — operands (variable names or literals)
 #   type — concrete IIR type ("u8" mostly for Tetrad)
 #
-# Legacy tetrad-jit IRInstr (per tetrad_jit.ir module — discovered at
-# runtime to avoid an import cycle when tetrad-jit is not installed) has:
+# In-tree IRInstr (in :mod:`._intel4004_codegen.ir`) has:
 #   op   — bare mnemonic ("add", "cmp_lt", "const", ...)
-#   dest — SSA destination
+#   dst  — SSA destination
 #   srcs — operands
+#   ty   — "u8" | "unknown"
 #
-# The re-projection drops the type suffix from ``op`` and otherwise copies
-# fields verbatim.  Returns None if any op cannot be mapped (e.g.,
-# ``call_runtime`` — the 4004 codegen has no notion of runtime calls).
+# The re-projection drops the type suffix from ``op`` and otherwise
+# copies fields verbatim.  Returns None if any op cannot be mapped
+# (e.g. ``call_runtime`` — the 4004 codegen has no notion of runtime
+# calls).
 # ---------------------------------------------------------------------------
 
 
 def _cir_to_legacy_ir(cir: list[CIRInstr], IRInstrCls: type) -> list | None:  # type: ignore[type-arg]
-    """Re-project a CIR list to the legacy tetrad-jit IRInstr shape."""
+    """Re-project a CIR list to the in-tree IRInstr shape."""
     out: list = []
     for instr in cir:
         op = instr.op
@@ -119,7 +113,7 @@ def _cir_to_legacy_ir(cir: list[CIRInstr], IRInstrCls: type) -> list | None:  # 
             return None
         if instr.is_generic():
             return None
-        # Map the CIR concrete type onto the legacy IR's two-state field:
+        # Map the CIR concrete type onto the in-tree IR's two-state field:
         # "u8" stays "u8"; anything else is treated as "unknown" (which the
         # codegen handles as a deopt in most cases).
         ty = "u8" if instr.type == "u8" else "unknown"

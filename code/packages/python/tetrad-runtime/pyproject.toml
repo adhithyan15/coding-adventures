@@ -16,9 +16,10 @@ dependencies = [
     "coding-adventures-interpreter-ir",
     "coding-adventures-vm-core",
     "coding-adventures-jit-core",
-    # Intel4004Backend bridges to the legacy tetrad-jit codegen and the
-    # intel4004-simulator runner, so both are direct runtime dependencies.
-    "coding-adventures-tetrad-jit",
+    # Intel4004Backend's run() executes 4004 binaries on the simulator.
+    # The codegen + IRInstr that the bridge uses now live in-tree under
+    # tetrad_runtime._intel4004_codegen (moved out of the retired
+    # tetrad-jit package), so simulator is the only external 4004 dep.
     "coding-adventures-intel4004-simulator",
 ]
 classifiers = [
