@@ -1,6 +1,6 @@
 # Silicon Stack — Master Index
 
-> **Status: Outline (Phase-1 contract).** This document is a structural skeleton committed during Phase 1 to keep all leaf specs aligned. Each section header is final; section content is filled in as the corresponding leaf specs land. Sections marked `[STUB]` will be expanded in Phase 7 once all leaves exist; sections marked `[FROZEN]` are complete and committed-to as part of the contract.
+> **Status: Complete.** All 28 leaf specs have landed. Every section is filled in. The structural contract laid down in Phase 1 has held: no leaf spec required revising the index DAG.
 
 ## 0. Purpose `[FROZEN]`
 
@@ -37,17 +37,125 @@ The stack is intentionally general-purpose. The 4-bit adder appears throughout a
 - The same flow works on a small RISC-V core.
 - An iCE40 FPGA bitstream is produced and successfully programs a real iCE40-HX1K-EVN dev board.
 
-## 2. The stack at a glance `[STUB — will hold the canonical layered diagram once all specs land]`
+## 2. The stack at a glance
 
-Layered ASCII diagram from HDL source at top to GDSII / FPGA bitstream at bottom. Each box labeled with the corresponding spec filename. The two-track structure (FPGA path on left, ASIC path on right) made explicit. Cross-cutting concerns (testbench, coverage, SPICE) shown as side-channels.
+```
+                       Verilog (.v)        VHDL (.vhd)        Ruby DSL (.rb)
+                       ───────────         ─────────────      ──────────────
+                            │                    │                  │
+                            ▼                    ▼                  ▼
+                      verilog-parser      vhdl-parser     ruby-hdl-dsl.md
+                       AST per F05         AST per F05    elaboration trace
+                       + f05-full-ieee-extensions.md
+                            │                    │                  │
+                            └────────────┬───────┴──────────────────┘
+                                         ▼
+                              hdl-elaboration.md
+                                         │
+                                         ▼
+                              ╔═════════════════╗
+                              ║  hdl-ir.md      ║   ◀── KEYSTONE
+                              ║  (HIR — unified)║
+                              ╚════════╤════════╝
+                                       │
+            ┌──────────────┬───────────┼─────────────────┐
+            ▼              ▼           ▼                 ▼
+  hardware-vm.md     synthesis.md   coverage.md   real-fpga-export.md
+       │                  │              ▲              (Verilog/EDIF
+   vcd-writer.md          ▼              │               for yosys/nextpnr)
+   testbench-                            │                 │
+    framework.md  gate-netlist-format    │                 ▼
+                  (HNL: generic gates)   │              external toolchain
+                          │              │              (yosys → nextpnr →
+                          ▼              │               icepack → iceprog)
+                    tech-mapping.md  ◄───┘                 │
+                          │                                │
+                          ▼                                ▼
+                  HNL: stdcell                       real iCE40 board
+                          │
+              ┌───────────┴───────────┐
+              ▼                       ▼
+      (FPGA path)              (ASIC path — Sky130)
+              │                       │
+   fpga-place-route-bridge.md   sky130-pdk.md
+              │                       │
+              ▼              standard-cell-library.md
+   F01 fpga JSON config              │
+              │                       ▼
+              ▼                  lef-def.md
+   fpga-bitstream.md                  │
+   (iCE40 .bin)                       ▼
+              │                  asic-floorplan.md
+              ▼                       │
+   real iCE40 board                   ▼
+                                 asic-placement.md
+                                       │
+                                       ▼
+                                 asic-routing.md
+                                       │
+                                       ▼
+                                 gdsii-writer.md
+                                       │
+                                       ▼
+                                  drc-lvs.md
+                                       │
+                                       ▼
+                                  tape-out.md
+                                       │
+                                       ▼
+                          Efabless chipIgnite shuttle
+                                       │
+                                       ▼
+                                 Real silicon (~6 mo later)
 
-(Phase-7 task to populate.)
 
-## 3. The 4-bit adder traced through every layer `[STUB]`
+  Analog substrate (used by sky130-pdk + standard-cell-library):
+       device-physics.md → mosfet-models.md → spice-engine.md
+                                                     ▲
+                                       fab-process-simulation.md
+```
 
-A single concrete table threading the 4-bit adder through every spec. Each row is a layer; each cell is the adder's representation at that layer (a code snippet, a JSON fragment, an ASCII diagram, or a screenshot reference). When complete, this is the most useful single page in the entire stack — a reader who wants to know "what does my circuit look like at layer X?" finds it here.
+**FPGA path** (left of split) — fast end-to-end win: HIR → synth → tech-map → fpga JSON → iCE40 bin → real hardware. Or the parallel `real-fpga-export.md` shortcut: HIR → Verilog → yosys/nextpnr toolchain.
 
-(Phase-7 task: populate one row per spec as that spec's worked example crystallizes.)
+**ASIC path** (right of split) — full silicon flow ending at GDSII + tape-out bundle.
+
+**Cross-cutting** — `testbench-framework`, `coverage`, `vcd-writer` instrument any simulation; `spice-engine` characterizes cells for the ASIC path; `device-physics` and `mosfet-models` ground the SPICE results in physics; `fab-process-simulation` validates Sky130 parameters from first principles.
+
+## 3. The 4-bit adder traced through every layer
+
+The adder is the smoke-test example. Same circuit, different representations as it descends the stack:
+
+| Layer | Spec | Representation |
+|---|---|---|
+| Source — Verilog | F05 + ext | `module adder4(input [3:0] a, b, input cin, output [3:0] sum, output cout); assign {cout, sum} = a + b + cin; endmodule` |
+| Source — VHDL | F05 + ext | `entity adder4 is port (a,b: in std_logic_vector(3 downto 0); cin: in std_logic; sum: out std_logic_vector(3 downto 0); cout: out std_logic); ...` |
+| Source — Ruby DSL | ruby-hdl-dsl | `class Adder4 < Module; io = Bundle.new(a:Input(UInt(4)), ...); io.sum := io.a +& io.b + io.cin; end` |
+| AST | parsers (F05) | `ModuleDecl{name="adder4", ports=[...], body=[ContAssign(Concat(cout,sum), Add(Add(a,b),cin))]}` |
+| HIR | hdl-ir | `Module{ports=..., cont_assigns=[ContAssign(Concat((PortRef("cout"), PortRef("sum"))), BinaryOp("+", BinaryOp("+", PortRef("a"), PortRef("b")), PortRef("cin")))]}` |
+| Simulated | hardware-vm | a=0001, b=0010, cin=0 → sum=00011, cout=0 (one transition emitted to VCD per delta) |
+| VCD trace | vcd-writer | `#0` `b0001 !` `b0010 "` `0 #` `#5000` `b0011 $` `0 %` (~3 KB total file) |
+| Tested | testbench-framework | 256-vector exhaustive test passes; ALU testbench with reference model passes |
+| Synthesized | synthesis | 4 × FullAdder, each = 2 XOR + 2 AND + 1 OR = 20 generic gates |
+| Generic HNL | gate-netlist-format | `level=generic`; 20 instances; 5 internal nets; ~5 KB JSON |
+| Tech-mapped (Sky130) | tech-mapping + sky130-pdk | 16 stdcells: 4 × `xor2_1`, 8 × `and2_1` (after AOI21 fold), 4 × `or2_1` (or 4 × `aoi22_1`); ~70 µm² estimated area |
+| FPGA-mapped | fpga-place-route-bridge | 8 × LUT4 + 1 × LUT3 packed into 4 CLBs on a 2×2 fabric grid |
+| FPGA JSON | F01-fpga + place-route-bridge | F01 schema: 4 CLBs configured, ~10 routes, ~6 KB |
+| iCE40 bitstream | fpga-bitstream | ~135 KB `.bin` (mostly zeros — most tile config unused) |
+| Real iCE40 board | (programmer step) | `iceprog adder4.bin` → flashed; LEDs respond to switches per truth table |
+| Verilog re-emission | real-fpga-export | Identical structural Verilog re-emitted from HNL; passes `yosys -p "synth_ice40"` cleanly |
+| Floorplan DEF | asic-floorplan | 27 µm × 28 µm die; 3 rows × 16 sites; 14 IO pins on boundary; VDD/VSS rings on met4/met5 |
+| Placed DEF | asic-placement | 16 cells laid out left-to-right by bit position; HPWL ~25 µm |
+| Routed DEF | asic-routing | ~30 metal segments on met1+met2; carry chain on met2; ~4 vias |
+| GDSII | gdsii-writer | ~5 KB `.gds`; layers: nwell, pwell, diff, poly, li1, met1, met2, vias |
+| DRC | drc-lvs | 0 violations |
+| LVS | drc-lvs | layout extracts to ~480 transistors; isomorphic to schematic netlist ✓ |
+| Tape-out bundle | tape-out | `adder4_chipignite.tar.gz`: GDS, LEF, DEF, Verilog, signoff reports, manifest.yaml |
+| Real silicon | Efabless chipIgnite | ~6 months after submission; packaged QFN32 chip arrives in mail |
+| SPICE-level verify | spice-engine + mosfet-models | Per-cell SPICE: NAND2_X1 propagation delay = 87 ps @ TT corner |
+| Device physics | device-physics | NAND2's NMOS V_t derived from physics: 0.42 V (matches BSIM3v3 default) |
+| Process | fab-process-simulation | NMOS cross-section from bare wafer: gate oxide 5 nm, V_t-adjust implant peak ~4e17/cm³, salicided source/drain |
+
+The adder threads from `assign sum = a + b + cin` to packaged silicon in 25 distinct representations, each documented in its own spec.
 
 ## 4. Specs in this stack `[FROZEN — table of contents]`
 
@@ -149,47 +257,98 @@ A single concrete table threading the 4-bit adder through every spec. Each row i
 
 The DAG is acyclic. No spec depends on a spec downstream of it.
 
-## 6. Reading orders `[STUB]`
+## 6. Reading orders
 
-Three suggested paths through the stack:
+Three suggested paths through the stack, with first-3-questions per stop.
 
-### "Follow the data" (top-down)
-For a reader who thinks like a compiler engineer: starts at HDL source, traces every transformation down to silicon. Spec sequence: `f05-full-ieee-extensions` → `hdl-ir` → `hdl-elaboration` → `ruby-hdl-dsl` → `hardware-vm` → `vcd-writer` → `testbench-framework` → `coverage` → `gate-netlist-format` → `synthesis` → `tech-mapping` → (split) → FPGA path / ASIC path → `tape-out` → `silicon-stack` (this doc, re-read).
+### "Follow the data" (top-down) — for compiler-engineer minded readers
 
-### "From electrons to gates" (bottom-up)
-For a reader who wants to understand silicon physically before getting to logic. Spec sequence: `device-physics` → `mosfet-models` → `spice-engine` → `fab-process-simulation` → `sky130-pdk` → `standard-cell-library` → `tech-mapping` → `gate-netlist-format` → `synthesis` → `hdl-ir` → ... → top.
+| Stop | Spec | First 3 questions to answer |
+|---|---|---|
+| 1 | f05-full-ieee-extensions | What's a synthesizable subset? Which IEEE constructs are added? Why "additive only"? |
+| 2 | hdl-ir | What is HIR? Why one IR vs three? How is provenance preserved? |
+| 3 | hdl-elaboration | What is the three-pass design? How does generate-for unroll? How is mixed-language handled? |
+| 4 | ruby-hdl-dsl | What is tracing-style elaboration? How does `:=` work? What's a Bundle? |
+| 5 | hardware-vm | What is a delta cycle? Why CPS-style processes? How does blocking vs non-blocking differ? |
+| 6 | vcd-writer | What's the VCD format? How does identifier compaction work? |
+| 7 | testbench-framework | Three test surfaces — when to use each? |
+| 8 | coverage | Code vs functional coverage — when does each catch bugs? |
+| 9 | gate-netlist-format | What's HNL? How does it differ from HIR? |
+| 10 | synthesis | What does process classification do? How is FSM extraction done? |
+| 11 | tech-mapping | Bubble-pushing? AOI/OAI folding? Drive-strength selection? |
+| 12 | (split) FPGA: fpga-place-route-bridge / fpga-bitstream / real-fpga-export | LUT packing? PathFinder? iCE40 .bin format? |
+| 13 | (split) ASIC: sky130-pdk → standard-cell-library → lef-def → asic-floorplan → asic-placement → asic-routing → gdsii-writer → drc-lvs → tape-out | Sky130 layer stack? Liberty timing? Floorplan utilization? SA placement? Lee routing? GDSII record format? DRC rules? Tape-out bundle? |
 
-### "I just want the adder to blink" (minimum viable end-to-end)
-For a reader who wants to see something work fast. Spec sequence: `hdl-ir` (skim) → `real-fpga-export` (full read) → run `yosys` → `nextpnr` → `icepack` → flash to a real iCE40 board. Skip simulation, skip ASIC, skip everything that doesn't lead to bits-on-FPGA. Comes back to the rest later.
+### "From electrons to gates" (bottom-up) — for physics-first readers
 
-(Phase-7 task: populate each path with concrete first-3-questions per spec.)
+| Stop | Spec | First 3 questions |
+|---|---|---|
+| 1 | device-physics | Where do BSIM constants come from? What's the depletion approximation? How is V_t derived? |
+| 2 | mosfet-models | Level-1 vs EKV vs BSIM3 — when to use each? What's the model interface? |
+| 3 | spice-engine | What is MNA? Why Newton-Raphson? How does transient integration work? |
+| 4 | fab-process-simulation | Deal-Grove? Implant Gaussian? Diffusion broadening? |
+| 5 | sky130-pdk | What's in a PDK? Teaching vs full subset? PVT corners? |
+| 6 | standard-cell-library | What's Liberty? Cell characterization methodology? Drive strengths? |
+| 7 | tech-mapping | (cross-reference) |
+| 8 | gate-netlist-format | (cross-reference) |
+| 9 | synthesis → hdl-ir → hdl-elaboration → parsers | Climb the stack to source code |
 
-## 7. Glossary `[STUB — accumulating]`
+### "I just want the adder to blink on real hardware" (minimum viable end-to-end)
 
-Maintain a single glossary of every acronym used anywhere in the stack. Phase-7 task: gather from all leaf specs and consolidate. Start of seed list:
+| Stop | Spec | What you do |
+|---|---|---|
+| 1 | hdl-ir | Skim — just enough to understand what HIR is |
+| 2 | real-fpga-export | Read carefully — this is the path |
+| 3 | (action) | Write Verilog adder; emit via real-fpga-export driver |
+| 4 | (action) | `yosys → nextpnr → icepack → iceprog` runs the toolchain |
+| 5 | (action) | Plug iCE40-HX1K-EVN dev board into USB; LEDs blink per inputs |
+
+Skip everything else for now. Come back later for synthesis, simulation, the ASIC track.
+
+## 7. Glossary
 
 | Term | Definition |
 |---|---|
+| **AOI / OAI** | And-Or-Invert / Or-And-Invert. Compound CMOS cells that fold multi-stage logic into one cell. |
 | **AST** | Abstract Syntax Tree. Output of the parser. |
+| **BSIM** | Berkeley Short-channel IGFET Model. Industry-standard MOSFET I-V model (BSIM3v3 for Sky130). |
+| **CLB** | Configurable Logic Block. The repeating tile in an FPGA fabric. Contains LUTs + flip-flops. |
+| **CPS** | Continuation-passing style. Used in `hardware-vm.md` to model wait/@ as suspension points. |
+| **CRAM** | Configuration RAM. The on-FPGA SRAM that holds the bitstream. |
+| **CTS** | Clock-Tree Synthesis. Builds a balanced buffer tree for the clock signal. |
+| **DEF** | Design Exchange Format. Layout + placement + routing text format. |
+| **DIBL** | Drain-induced barrier lowering. A short-channel effect captured by BSIM3v3. |
+| **DRC** | Design Rule Check. Geometric correctness of layout. |
+| **EDIF** | Electronic Design Interchange Format. LISP-like netlist format (used by `nextpnr`). |
+| **EKV** | A MOSFET model (Enz-Krummenacher-Vittoz) — smooth all-region. |
+| **FF** | Flip-flop. Sequential storage element. |
+| **FPGA** | Field-Programmable Gate Array. Reconfigurable hardware. |
+| **GDSII** | Calma Stream Format. Binary mask layout file (the format fabs accept). |
+| **HDL** | Hardware Description Language (Verilog, VHDL, Ruby DSL in this stack). |
 | **HIR** | Hardware IR. Internal representation; defined in `hdl-ir.md`. |
 | **HNL** | Hardware NetList. Canonical netlist format; defined in `gate-netlist-format.md`. |
-| **CLB** | Configurable Logic Block. The repeating tile in an FPGA fabric. |
-| **LUT** | Look-Up Table. The atom of FPGA programmable logic. |
-| **PDK** | Process Design Kit. The technology files for a fab process. |
-| **PVT** | Process, Voltage, Temperature corner. |
-| **DRC** | Design Rule Check. Geometric correctness of layout. |
-| **LVS** | Layout vs Schematic. Verifies layout matches netlist. |
-| **GDSII** | Calma Stream Format. Binary mask layout file. |
+| **HPWL** | Half-perimeter wirelength. Cost function for placement. |
+| **IR** | Intermediate Representation. |
+| **iCE40** | A family of small Lattice FPGAs supported by Project IceStorm (open-source toolchain). |
 | **LEF** | Library Exchange Format. Cell library + tech rules text format. |
-| **DEF** | Design Exchange Format. Layout + placement + routing text format. |
+| **LTE** | Local Truncation Error. Used to size SPICE timesteps. |
+| **LUT** | Look-Up Table. The atom of FPGA programmable logic. |
+| **LVS** | Layout vs Schematic. Verifies layout matches netlist. |
 | **MNA** | Modified Nodal Analysis. The algorithm at the heart of every SPICE engine. |
-| **BSIM** | Berkeley Short-channel IGFET Model. Industry-standard MOSFET I-V model. |
-| **VCD** | Value Change Dump. Waveform format. |
-| **EDIF** | Electronic Design Interchange Format. LISP-like netlist format. |
-| **BLIF** | Berkeley Logic Interchange Format. Flat truth-table-based netlist. |
-| **SDF** | Standard Delay Format. Back-annotation file for timing. |
-| **PSL** | Property Specification Language. Assertion language. |
+| **NBA** | Non-Blocking Assignment. Verilog `<=`. Deferred update; visible at next delta. |
+| **PDK** | Process Design Kit. The technology files for a fab process. |
 | **PEX** | Parasitic Extraction. Adds RC parasitics to post-layout netlist. |
+| **PSL** | Property Specification Language. Assertion language (IEEE 1850). |
+| **PVT** | Process, Voltage, Temperature corner. |
+| **RTL** | Register-Transfer Level. The abstraction synthesis works on. |
+| **SA** | Simulated Annealing. Used for placement. |
+| **SDF** | Standard Delay Format. Back-annotation file for timing. |
+| **Sky130** | The open-source 130nm PDK from SkyWater. Our target process. |
+| **SPICE** | Simulation Program with Integrated Circuit Emphasis. The analog simulator. |
+| **SREF** | Structure Reference. GDSII record for instantiating a cell by reference. |
+| **STA** | Static Timing Analysis. |
+| **TBUF** | Tristate Buffer. A buffer with output-enable. |
+| **VCD** | Value Change Dump. Waveform format (IEEE 1364 §18). |
 
 ## 8. Standards index `[FROZEN]`
 
@@ -249,18 +408,27 @@ Per `CLAUDE.md`:
 - **Spec-implementation drift.** When implementation diverges from spec, the spec is updated and the divergence noted in the commit message. Specs are the source of truth.
 - **PR review.** Every PR runs `/security-review` and `/babysit-pr`.
 
-## 12. Verification (how we know the stack works) `[STUB]`
+## 12. Verification (how we know the stack works)
 
-End-to-end verification gates:
+End-to-end verification gates, each with the specific tests in the responsible leaf spec.
 
-1. **Smoke test:** 4-bit adder runs through every layer and produces a tape-out bundle.
-2. **Mid-scale test:** 32-bit ALU runs through every layer and produces a tape-out bundle.
-3. **Real-hardware test:** an iCE40 bitstream programs a real Lattice iCE40-HX1K-EVN dev board and the adder operates correctly with hardware test vectors.
-4. **Cross-check:** our synthesis + P&R produces results within X% of `yosys` + `nextpnr` for a benchmark suite.
-5. **Industry interchange:** designs round-trip through EDIF, BLIF, Verilog, LEF/DEF, GDSII without semantic loss.
-6. **Standards conformance:** IEEE 1076-2008 / 1364-2005 reference suites parse and elaborate correctly.
-
-(Phase-7 task: cite specific tests in each leaf spec.)
+| Gate | Test | Defined in |
+|---|---|---|
+| **Smoke test** | 4-bit adder runs through every layer; produces tape-out bundle. | Worked Example 1 in every spec |
+| **Mid-scale test** | 32-bit ALU runs through every layer; produces tape-out bundle. | Worked Example 2 in synthesis, hardware-vm, asic-placement, asic-routing, etc. |
+| **Reference design** | ARM1 (`arm1-gatelevel`) runs through; gate count comparable to existing reference. | Test Strategy in synthesis, tech-mapping |
+| **Real-hardware FPGA** | iCE40 bitstream programs a real iCE40-HX1K-EVN dev board; adder responds to switch inputs per truth table. | real-fpga-export Test Strategy + Worked Example |
+| **Cross-validation vs yosys/nextpnr** | Our synth+PnR results within X% of yosys/nextpnr on benchmark suite. | synthesis Test Strategy; fpga-place-route-bridge Test Strategy |
+| **Cross-validation vs OpenROAD** | Our placement HPWL within 10% of OpenROAD's RePlAce; routing within 30% of TritonRoute. | asic-placement, asic-routing |
+| **Industry interchange** | Round-trip HNL → BLIF → HNL: structurally identical. Round-trip HNL → EDIF → HNL: same. GDSII round-trips through KLayout. | gate-netlist-format Test Strategy; gdsii-writer |
+| **IEEE 1076-2008 / 1364-2005 conformance** | Parse + elaborate IEEE reference suite vectors. | f05-full-ieee-extensions; hdl-ir; hdl-elaboration |
+| **Sky130 V_t derivation** | Compute V_t from physics; matches BSIM3v3 default within 10%. | device-physics + fab-process-simulation Worked Examples |
+| **Cell characterization vs Sky130 reference** | Re-characterize teaching subset; match published Liberty within 10% (combinational), 15% (sequential). | standard-cell-library Worked Example 3 |
+| **DRC clean** | 4-bit adder GDS DRC-clean against Sky130 teaching rule deck. | drc-lvs Worked Example 1 |
+| **LVS match** | 4-bit adder layout extracts to ~480 transistors isomorphic to schematic netlist. | drc-lvs Worked Example 2 |
+| **Tape-out bundle valid** | `validate_for_chipignite(bundle)` passes. | tape-out Worked Example |
+| **Real silicon (optional)** | Submit to Efabless chipIgnite shuttle; receive packaged QFN chip ~6 mo later; bring up; verify behavior on bench. | tape-out future-work |
+| **Determinism** | Every spec's algorithm produces identical results given identical inputs + seed. | Property tests in every spec |
 
 ## 13. Open Questions and Future Work `[FROZEN]`
 
