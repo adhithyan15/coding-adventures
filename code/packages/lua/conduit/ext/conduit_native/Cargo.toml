@@ -1,0 +1,17 @@
+[package]
+name = "conduit_native"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[lib]
+# cdylib produces the .so/.dylib/.dll that Lua's require() loads.
+# The entry point must be named luaopen_conduit_native (see lib.rs).
+crate-type = ["cdylib"]
+
+[dependencies]
+embeddable-http-server = { path = "../../../../rust/embeddable-http-server" }
+http-core             = { path = "../../../../rust/http-core" }
+lua-bridge            = { path = "../../../../rust/lua-bridge" }
+transport-platform    = { path = "../../../../rust/transport-platform" }
+web-core              = { path = "../../../../rust/web-core" }
