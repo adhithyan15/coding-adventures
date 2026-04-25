@@ -2,6 +2,22 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-04-25
+
+### Added
+
+- `Lcg` — Linear Congruential Generator (Knuth 1948).  Constructor takes
+  `seed: Long`.  Methods: `nextU32()`, `nextU64()`, `nextFloat()`,
+  `nextIntInRange(min: Long, max: Long)`.
+- `Xorshift64` — Marsaglia (2003) XOR-shift generator.  Seed 0 is replaced
+  with 1 to avoid the fixed point.  Same API as `Lcg`.
+- `Pcg32` — O'Neill (2014) Permuted Congruential Generator with XSH RR
+  output permutation and initseq warm-up.  Same API as `Lcg`.
+- 27 JUnit 5 unit tests: reference-value checks (seed=1 verified against Go
+  implementation), reproducibility, differing seeds, range invariants,
+  `nextU64` consistency, `nextFloat` distribution, rejection-sampling bounds,
+  edge cases (seed 0, `Long.MAX_VALUE`), and PCG32 initseq non-triviality.
+
 ## [0.1.0] - 2026-04-25
 
 ### Added
