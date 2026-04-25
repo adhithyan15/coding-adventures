@@ -3293,3 +3293,66 @@ This caused four CI workaround hacks in the `conduit` package — all of which m
 Confirm against `ruby/internal/special_consts.h` in the Ruby installation. The `nil.object_id` value in Ruby (which returns 4 in Ruby 3.x) is computed as `LONG2FIX(QNIL)` and matches: `QNIL = nil.object_id` only if you account for the Fixnum encoding (`LONG2FIX(n) = n << 1 | 1`, so `LONG2FIX(4) >> 1 = 4`).
 
 **Rule:** When a Ruby native extension starts crashing with SIGSEGV at a low address like `0x10`, suspect that a "nil" or other special constant is being returned with the wrong bit pattern, causing Ruby to dereference it as an object pointer.
+
+---
+
+## Lesson: `LUA_REGISTRYINDEX` in lua-bridge was set to the Lua 5.1 value (-10000) instead of Lua 5.4's (-1001000)
+
+**Date:** 2026-04-24
+
+**What happened:** The `lua-bridge` Rust crate had `LUA_REGISTRYINDEX = -10000`, which is the Lua 5.1 value. Lua 5.4 derives this constant from `LUAI_MAXSTACK`:
+
+```c
+#define LUAI_MAXSTACK  1000000
+#define LUA_REGISTRYINDEX  (-LUAI_MAXSTACK - 1000)  /* = -1_001_000 */
+```
+
+Using `-10000` as the table index in `luaL_ref(L, LUA_REGISTRYINDEX)` caused Lua to treat it as a regular negative stack index (not a pseudo-index), landing 10000 slots below the current stack frame — far outside valid memory. This produced SIGBUS/SIGSEGV crashes whenever `app_add_route`, `app_add_before`, `app_add_after`, `app_set_not_found`, or `app_set_error_handler` were called (all of which store Lua function references in the registry).
+
+**Rule:** In any Rust/C Lua extension targeting Lua 5.4, use:
+```rust
+pub const LUA_REGISTRYINDEX: c_int = -1_001_000;
+```
+
+The Lua 5.1 value (`-10000`) must never appear in Lua 5.4 code. Pseudo-indices in 5.4 start below `-LUAI_MAXSTACK - 1000`, so any value between `-10001` and `-1_000_999` is treated as a regular stack index — not the registry.
+
+---
+
+## Lesson: Extra `push_cstr` before `lua_rawset_str_top` corrupts the Lua stack when setting metatable `__gc`
+
+**Date:** 2026-04-24
+
+**What happened:** In `lua_new_app` (and `lua_new_server`), the code was:
+```rust
+luaL_newmetatable(L, APP_MT);        // stack: [ud | mt]
+push_cstr(L, "__gc");                // stack: [ud | mt | "__gc"]  ← wrong
+lua_pushcclosure(L, Some(app_gc), 0);// stack: [ud | mt | "__gc" | fn]
+lua_rawset_str_top(L, -3, "__gc\0"); // sets stack[-3]["__gc"] = fn → [ud | mt | "__gc"]
+lua_setmetatable(L, -2);             // sets stack[-2]'s metatable = top ("__gc" string) → crash
+```
+
+The extra `push_cstr` left a dangling string on the stack. After `lua_rawset_str_top` consumed `fn`, the top was `"__gc"` (a string), and `lua_setmetatable` tried to set that string as the metatable — which is invalid.
+
+**Rule:** When attaching a `__gc` metamethod to a userdata metatable, the pattern is:
+```rust
+luaL_newmetatable(L, MT_NAME);        // stack: [ud | mt]
+lua_pushcclosure(L, Some(gc_fn), 0); // stack: [ud | mt | fn]
+lua_rawset_str_top(L, -2, "__gc\0"); // mt["__gc"] = fn; stack: [ud | mt]
+lua_setmetatable(L, -2);             // ud.metatable = mt; stack: [ud]
+```
+Never push the key string manually before `lua_rawset_str_top` — the function already supplies the key.
+
+---
+
+## Lesson: Lua route errors must be caught inline and routed to the error handler, not via `on_handler_error`
+
+**Date:** 2026-04-24
+
+**What happened:** The web-core `on_handler_error` hook is for Rust-level errors (panics), not Lua errors. Lua errors from `error("...")` inside a route handler are caught by `lua_pcall` inside `dispatch()`, but `dispatch()` was returning a generic 500 instead of calling the registered Lua error handler. The test `GET /error returns 500 JSON via error handler` failed because the custom error handler body was never sent.
+
+**Rule:** When a route handler's `lua_pcall` returns non-zero and the error is NOT a HaltError, the dispatch code must:
+1. Extract the error message from the stack
+2. Call the Lua error handler ref (if registered) with `(env, err_message)`
+3. Only fall back to a generic 500 if no error handler is registered
+
+Use a dedicated `dispatch_route` function that holds the Lua lock across both the route call and the error handler call.
