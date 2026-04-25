@@ -1,41 +1,21 @@
-"""LANG17 PR4 — TetradRuntime legacy-shape API parity tests.
+"""LANG17 PR4 — TetradRuntime legacy-shape API tests.
 
 These tests verify that ``TetradRuntime`` exposes every metric API the
-legacy ``TetradVM`` exposed, with the **same return-type signatures**.
-A caller can switch from ``TetradVM`` → ``TetradRuntime`` without
-rewriting metric-reading code.
+legacy ``TetradVM`` used to expose, with the **same return-type
+signatures**.  ``tetrad-vm`` and ``tetrad-jit`` have since been retired;
+this file is the contract for the migration's metric surface.
 
-Why we don't compare values directly with TetradVM
---------------------------------------------------
-
-The two runtimes execute Tetrad programs *differently*:
-
-- ``TetradVM.execute(code)`` runs the top-level CodeObject only (a
-  HALT for most programs); the user's ``fn main()`` is a sibling
-  CodeObject that is never auto-called.  ``TetradJIT.execute_with_jit``
-  is what wraps main into the executed flow.
-- ``TetradRuntime.run(source)`` always wraps the user's ``fn main()``
-  in a synthetic ``__entry__`` function that runs globals and calls
-  main, so main and its callees are always in the call counts.
-
-These different execution scopes mean per-call-count values will
-naturally differ.  What MUST match is the API shape — return types,
-empty-default semantics, and the existence of every legacy method.
-The shape tests below pin that down; the integration test suite in
-``test_runtime.py`` already verifies that ``TetradRuntime`` produces
-the same *result* as semantic Tetrad.
-
-We use the legacy ``TetradVM`` import as a smoke check that both
-runtimes can run the same program without crashing — if a program
-that runs on legacy fails on TetradRuntime (or vice versa), the
-parity contract is broken.
+Originally these tests imported ``tetrad_vm.TetradVM`` for a smoke
+check that the same source ran on both runtimes.  When the legacy
+packages were deleted that import was dropped; the metric-shape
+assertions below remain — they're the parts that mattered for
+guaranteeing call sites can switch from ``TetradVM`` → ``TetradRuntime``
+without rewriting metric-reading code.
 """
 
 from __future__ import annotations
 
 from interpreter_ir import SlotKind
-from tetrad_compiler import compile_program
-from tetrad_vm import TetradVM
 
 from tetrad_runtime import TetradRuntime
 
@@ -100,16 +80,6 @@ def test_hot_functions_threshold_filters_correctly() -> None:
     assert "helper" not in runtime.hot_functions(threshold=10)
     # Threshold of 5 includes it (5 >= 5).
     assert "helper" in runtime.hot_functions(threshold=5)
-
-
-def test_legacy_runtime_imports_for_smoke() -> None:
-    """Importing TetradVM and running a Tetrad program does not crash —
-    a smoke check that the legacy runtime is still functional alongside
-    TetradRuntime."""
-    legacy = TetradVM()
-    code = compile_program(_HOT_PROGRAM)
-    # Legacy execute runs the top-level (HALT) — does not raise.
-    legacy.execute(code)
 
 
 # ---------------------------------------------------------------------------
