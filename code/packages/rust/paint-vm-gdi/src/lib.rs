@@ -64,8 +64,8 @@
 pub const VERSION: &str = "0.1.0";
 
 use paint_instructions::{
-    FillRule, PaintClip, PaintEllipse, PaintGlyphRun, PaintInstruction, PaintLine, PaintPath,
-    PaintRect, PaintScene, PathCommand, PixelContainer,
+    FillRule, ImageSrc, PaintClip, PaintEllipse, PaintGlyphRun, PaintImage, PaintInstruction,
+    PaintLine, PaintPath, PaintRect, PaintScene, PathCommand, PixelContainer,
 };
 
 // ---------------------------------------------------------------------------
@@ -87,18 +87,29 @@ compile_error!("paint-vm-gdi requires Windows. Use paint-metal on macOS or paint
 #[cfg(target_os = "windows")]
 use windows::core::PCWSTR;
 #[cfg(target_os = "windows")]
-use windows::Win32::Foundation::{POINT, RECT};
+use windows::Win32::Foundation::{GENERIC_ACCESS_RIGHTS, POINT, RECT};
 #[cfg(target_os = "windows")]
 use windows::Win32::Graphics::Gdi::{
-    BeginPath, CloseFigure, CreateCompatibleDC, CreateDIBSection, CreateFontW, CreatePen,
-    CreateSolidBrush, DeleteDC, DeleteObject, Ellipse, EndPath, ExtCreatePen, ExtTextOutW,
-    FillPath, FillRect, GetStockObject, IntersectClipRect, LineTo, MoveToEx, PolyBezierTo,
-    Rectangle, RestoreDC, RoundRect, SaveDC, SelectObject, SetBkMode, SetPolyFillMode,
-    SetTextAlign, SetTextColor, StrokeAndFillPath, StrokePath, BITMAPINFO, BITMAPINFOHEADER,
-    BI_RGB, BS_SOLID, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, DEFAULT_CHARSET, DEFAULT_PITCH,
-    DIB_RGB_COLORS, ETO_GLYPH_INDEX, LOGBRUSH, NULL_BRUSH, NULL_PEN, OUT_DEFAULT_PRECIS,
+    AlphaBlend, BeginPath, CloseFigure, CreateCompatibleDC, CreateDIBSection, CreateFontW,
+    CreatePen, CreateSolidBrush, DeleteDC, DeleteObject, Ellipse, EndPath, ExtCreatePen,
+    ExtTextOutW, FillPath, FillRect, GetStockObject, IntersectClipRect, LineTo, MoveToEx,
+    PolyBezierTo, Rectangle, RestoreDC, RoundRect, SaveDC, SelectObject, SetBkMode,
+    SetPolyFillMode, SetTextAlign, SetTextColor, StrokeAndFillPath, StrokePath, BITMAPINFO,
+    BITMAPINFOHEADER, BI_RGB, BLENDFUNCTION, BS_SOLID, CLIP_DEFAULT_PRECIS,
+    CLEARTYPE_QUALITY, DEFAULT_CHARSET, DEFAULT_PITCH, DIB_RGB_COLORS, ETO_GLYPH_INDEX,
+    HBITMAP, HDC, HGDIOBJ, LOGBRUSH, NULL_BRUSH, NULL_PEN, OUT_DEFAULT_PRECIS,
     PS_ENDCAP_FLAT, PS_GEOMETRIC, PS_JOIN_MITER, PS_SOLID, PS_USERSTYLE, TA_BASELINE, TA_LEFT,
-    TRANSPARENT, ALTERNATE, WINDING,
+    TRANSPARENT, AC_SRC_ALPHA, AC_SRC_OVER, ALTERNATE, WINDING,
+};
+#[cfg(target_os = "windows")]
+use windows::Win32::Graphics::Imaging::{
+    CLSID_WICImagingFactory, GUID_WICPixelFormat32bppPBGRA, IWICFormatConverter,
+    IWICImagingFactory, WICBitmapDitherTypeNone, WICBitmapPaletteTypeCustom,
+    WICDecodeMetadataCacheOnLoad,
+};
+#[cfg(target_os = "windows")]
+use windows::Win32::System::Com::{
+    CoCreateInstance, CoInitializeEx, CLSCTX_INPROC_SERVER, COINIT_MULTITHREADED,
 };
 
 // ---------------------------------------------------------------------------
@@ -346,6 +357,250 @@ unsafe fn create_pen_for_stroke(
     }
 }
 
+#[cfg(target_os = "windows")]
+struct GdiSurface {
+    hdc: HDC,
+    hbitmap: HBITMAP,
+    old_bitmap: HGDIOBJ,
+    bits_ptr: *mut u8,
+    width: u32,
+    height: u32,
+}
+
+#[cfg(target_os = "windows")]
+impl GdiSurface {
+    fn byte_len(&self) -> usize {
+        self.width as usize * self.height as usize * 4
+    }
+
+    unsafe fn pixels_mut(&mut self) -> &mut [u8] {
+        std::slice::from_raw_parts_mut(self.bits_ptr, self.byte_len())
+    }
+}
+
+#[cfg(target_os = "windows")]
+impl Drop for GdiSurface {
+    fn drop(&mut self) {
+        unsafe {
+            let _ = SelectObject(self.hdc, self.old_bitmap);
+            let _ = DeleteObject(self.hbitmap);
+            let _ = DeleteDC(self.hdc);
+        }
+    }
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn create_surface(width: u32, height: u32) -> Option<GdiSurface> {
+    if width == 0 || height == 0 {
+        return None;
+    }
+    let hdc = CreateCompatibleDC(None);
+    if hdc.is_invalid() {
+        return None;
+    }
+
+    let bmi = BITMAPINFO {
+        bmiHeader: BITMAPINFOHEADER {
+            biSize: std::mem::size_of::<BITMAPINFOHEADER>() as u32,
+            biWidth: width as i32,
+            biHeight: -(height as i32),
+            biPlanes: 1,
+            biBitCount: 32,
+            biCompression: BI_RGB.0 as u32,
+            biSizeImage: 0,
+            biXPelsPerMeter: 0,
+            biYPelsPerMeter: 0,
+            biClrUsed: 0,
+            biClrImportant: 0,
+        },
+        bmiColors: [Default::default()],
+    };
+
+    let mut bits_ptr: *mut std::ffi::c_void = std::ptr::null_mut();
+    let Ok(hbitmap) = CreateDIBSection(hdc, &bmi, DIB_RGB_COLORS, &mut bits_ptr, None, 0) else {
+        let _ = DeleteDC(hdc);
+        return None;
+    };
+    if bits_ptr.is_null() {
+        let _ = DeleteObject(hbitmap);
+        let _ = DeleteDC(hdc);
+        return None;
+    }
+    let old_bitmap = SelectObject(hdc, hbitmap);
+    Some(GdiSurface {
+        hdc,
+        hbitmap,
+        old_bitmap,
+        bits_ptr: bits_ptr as *mut u8,
+        width,
+        height,
+    })
+}
+
+#[cfg(target_os = "windows")]
+fn rgba_to_pbgra_bytes(rgba: &[u8]) -> Vec<u8> {
+    let mut pbgra = Vec::with_capacity(rgba.len());
+    for pixel in rgba.chunks_exact(4) {
+        let a = pixel[3] as u16;
+        pbgra.push(((pixel[2] as u16 * a + 127) / 255) as u8);
+        pbgra.push(((pixel[1] as u16 * a + 127) / 255) as u8);
+        pbgra.push(((pixel[0] as u16 * a + 127) / 255) as u8);
+        pbgra.push(pixel[3]);
+    }
+    pbgra
+}
+
+#[cfg(target_os = "windows")]
+fn percent_decode_component(text: &str) -> String {
+    fn hex_value(byte: u8) -> Option<u8> {
+        match byte {
+            b'0'..=b'9' => Some(byte - b'0'),
+            b'a'..=b'f' => Some(byte - b'a' + 10),
+            b'A'..=b'F' => Some(byte - b'A' + 10),
+            _ => None,
+        }
+    }
+
+    let bytes = text.as_bytes();
+    let mut out = Vec::with_capacity(bytes.len());
+    let mut i = 0;
+    while i < bytes.len() {
+        if bytes[i] == b'%' && i + 2 < bytes.len() {
+            if let (Some(hi), Some(lo)) = (hex_value(bytes[i + 1]), hex_value(bytes[i + 2])) {
+                out.push((hi << 4) | lo);
+                i += 3;
+                continue;
+            }
+        }
+        out.push(bytes[i]);
+        i += 1;
+    }
+    String::from_utf8_lossy(&out).into_owned()
+}
+
+#[cfg(target_os = "windows")]
+fn resolve_image_uri_path(uri: &str) -> Option<String> {
+    if let Some(path) = uri.strip_prefix("file:///") {
+        return Some(percent_decode_component(path));
+    }
+    if let Some(path) = uri.strip_prefix("file://") {
+        return Some(format!(r"\\{}", percent_decode_component(path).replace('/', "\\")));
+    }
+    if uri.contains("://") {
+        return None;
+    }
+    Some(uri.to_string())
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn decode_uri_to_pbgra(uri: &str) -> Option<(u32, u32, Vec<u8>)> {
+    const GENERIC_READ_ACCESS: u32 = 0x8000_0000;
+
+    let path = resolve_image_uri_path(uri)?;
+    let _ = CoInitializeEx(None, COINIT_MULTITHREADED);
+    let factory: IWICImagingFactory =
+        CoCreateInstance(&CLSID_WICImagingFactory, None, CLSCTX_INPROC_SERVER).ok()?;
+    let wide = wide_null(&path);
+    let decoder = factory
+        .CreateDecoderFromFilename(
+            PCWSTR(wide.as_ptr()),
+            None,
+            GENERIC_ACCESS_RIGHTS(GENERIC_READ_ACCESS),
+            WICDecodeMetadataCacheOnLoad,
+        )
+        .ok()?;
+    let frame = decoder.GetFrame(0).ok()?;
+    let converter: IWICFormatConverter = factory.CreateFormatConverter().ok()?;
+    converter
+        .Initialize(
+            &frame,
+            &GUID_WICPixelFormat32bppPBGRA,
+            WICBitmapDitherTypeNone,
+            None,
+            0.0,
+            WICBitmapPaletteTypeCustom,
+        )
+        .ok()?;
+    let mut width = 0;
+    let mut height = 0;
+    converter.GetSize(&mut width, &mut height).ok()?;
+    let stride = width.checked_mul(4)?;
+    let mut pixels = vec![0u8; stride as usize * height as usize];
+    converter.CopyPixels(std::ptr::null(), stride, &mut pixels).ok()?;
+    Some((width, height, pixels))
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn alpha_blend_surface(
+    dest_hdc: HDC,
+    src_surface: &GdiSurface,
+    dest_x: i32,
+    dest_y: i32,
+    dest_width: i32,
+    dest_height: i32,
+    opacity: Option<f64>,
+) {
+    let alpha = (opacity.unwrap_or(1.0).clamp(0.0, 1.0) * 255.0).round() as u8;
+    if alpha == 0 || dest_width <= 0 || dest_height <= 0 {
+        return;
+    }
+    let blend = BLENDFUNCTION {
+        BlendOp: AC_SRC_OVER as u8,
+        BlendFlags: 0,
+        SourceConstantAlpha: alpha,
+        AlphaFormat: AC_SRC_ALPHA as u8,
+    };
+    let _ = AlphaBlend(
+        dest_hdc,
+        dest_x,
+        dest_y,
+        dest_width,
+        dest_height,
+        src_surface.hdc,
+        0,
+        0,
+        src_surface.width as i32,
+        src_surface.height as i32,
+        blend,
+    );
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn render_image(hdc: HDC, image: &PaintImage) {
+    if image.width <= 0.0 || image.height <= 0.0 {
+        return;
+    }
+
+    let decoded = match &image.src {
+        ImageSrc::Pixels(pixels) => {
+            if pixels.width == 0 || pixels.height == 0 {
+                return;
+            }
+            if pixels.data.len() < pixels.width as usize * pixels.height as usize * 4 {
+                return;
+            }
+            Some((pixels.width, pixels.height, rgba_to_pbgra_bytes(&pixels.data)))
+        }
+        ImageSrc::Uri(uri) => decode_uri_to_pbgra(uri),
+    };
+    let Some((src_width, src_height, pbgra)) = decoded else {
+        return;
+    };
+    let Some(mut surface) = create_surface(src_width, src_height) else {
+        return;
+    };
+    surface.pixels_mut().copy_from_slice(&pbgra);
+    alpha_blend_surface(
+        hdc,
+        &surface,
+        image.x.round() as i32,
+        image.y.round() as i32,
+        image.width.round() as i32,
+        image.height.round() as i32,
+        image.opacity,
+    );
+}
+
 // ---------------------------------------------------------------------------
 // Instruction dispatch — PaintInstruction → GDI calls
 // ---------------------------------------------------------------------------
@@ -378,11 +633,11 @@ unsafe fn render_instructions(
             PaintInstruction::GlyphRun(run) => render_glyph_run(hdc, run),
             PaintInstruction::Ellipse(ellipse) => render_ellipse(hdc, ellipse),
             PaintInstruction::Path(path) => render_path(hdc, path),
+            PaintInstruction::Image(image) => render_image(hdc, image),
             // Planned but not yet implemented — same skip list as paint-metal:
             PaintInstruction::Text(_)
             | PaintInstruction::Layer(_)
-            | PaintInstruction::Gradient(_)
-            | PaintInstruction::Image(_) => {
+            | PaintInstruction::Gradient(_) => {
                 // No-op for now. Barcodes only need Rect/Line/Group/Clip.
             }
         }
@@ -943,9 +1198,11 @@ unsafe fn render_unsafe(scene: &PaintScene, width: u32, height: u32) -> PixelCon
 #[cfg(test)]
 mod tests {
     use super::*;
+    use image_codec_bmp::encode_bmp;
+    use paint_codec_png::encode_png;
     use paint_instructions::{
-        PaintBase, PaintEllipse, PaintGroup, PaintInstruction, PaintPath, PaintRect, PaintScene,
-        PathCommand,
+        ImageSrc, PaintBase, PaintEllipse, PaintGroup, PaintImage, PaintInstruction, PaintPath,
+        PaintRect, PaintScene, PathCommand,
     };
 
     #[test]
@@ -1250,6 +1507,130 @@ mod tests {
         assert_eq!(r, 255, "gap between dashes should stay background");
         assert_eq!(g, 255);
         assert_eq!(b, 255);
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn pixel_image_renders_and_blends_with_opacity() {
+        let mut source = PixelContainer::new(2, 2);
+        source.fill(0, 0, 0, 0);
+        source.set_pixel(0, 0, 255, 0, 0, 255);
+        source.set_pixel(1, 0, 0, 255, 0, 255);
+        source.set_pixel(0, 1, 0, 0, 255, 255);
+        source.set_pixel(1, 1, 255, 255, 0, 255);
+
+        let mut scene = PaintScene::new(40.0, 40.0);
+        scene.instructions.push(PaintInstruction::Image(PaintImage {
+            base: PaintBase::default(),
+            x: 0.0,
+            y: 0.0,
+            width: 40.0,
+            height: 40.0,
+            src: ImageSrc::Pixels(source.clone()),
+            opacity: None,
+        }));
+
+        let pixels = render(&scene);
+        let (r, g, b, _a) = pixels.pixel_at(10, 10);
+        assert_eq!((r, g, b), (255, 0, 0), "top-left quadrant should be red");
+        let (r, g, b, _a) = pixels.pixel_at(30, 10);
+        assert_eq!((r, g, b), (0, 255, 0), "top-right quadrant should be green");
+        let (r, g, b, _a) = pixels.pixel_at(10, 30);
+        assert_eq!((r, g, b), (0, 0, 255), "bottom-left quadrant should be blue");
+        let (r, g, b, _a) = pixels.pixel_at(30, 30);
+        assert_eq!((r, g, b), (255, 255, 0), "bottom-right quadrant should be yellow");
+
+        let mut translucent_scene = PaintScene::new(20.0, 20.0);
+        translucent_scene.instructions.push(PaintInstruction::Image(PaintImage {
+            base: PaintBase::default(),
+            x: 0.0,
+            y: 0.0,
+            width: 20.0,
+            height: 20.0,
+            src: ImageSrc::Pixels(PixelContainer::from_data(
+                1,
+                1,
+                vec![255, 0, 0, 255],
+            )),
+            opacity: Some(0.5),
+        }));
+        let blended = render(&translucent_scene);
+        let (r, g, b, _a) = blended.pixel_at(10, 10);
+        assert!(r >= 250, "half-opacity red over white should keep red high");
+        assert!((120..=136).contains(&g), "half-opacity red should soften green");
+        assert!((120..=136).contains(&b), "half-opacity red should soften blue");
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn file_uri_image_loads_via_wic() {
+        let mut source = PixelContainer::new(2, 1);
+        source.set_pixel(0, 0, 255, 0, 255, 255);
+        source.set_pixel(1, 0, 0, 255, 255, 255);
+        let bmp = encode_bmp(&source);
+
+        let mut path = std::env::temp_dir();
+        let unique = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        path.push(format!("paint-vm-gdi-image-{unique}.bmp"));
+        std::fs::write(&path, bmp).unwrap();
+
+        let uri = format!("file:///{}", path.display().to_string().replace('\\', "/"));
+        let mut scene = PaintScene::new(40.0, 20.0);
+        scene.instructions.push(PaintInstruction::Image(PaintImage {
+            base: PaintBase::default(),
+            x: 0.0,
+            y: 0.0,
+            width: 40.0,
+            height: 20.0,
+            src: ImageSrc::Uri(uri),
+            opacity: None,
+        }));
+
+        let pixels = render(&scene);
+        let _ = std::fs::remove_file(&path);
+
+        let (r, g, b, _a) = pixels.pixel_at(10, 10);
+        assert_eq!((r, g, b), (255, 0, 255), "left half should be magenta");
+        let (r, g, b, _a) = pixels.pixel_at(30, 10);
+        assert_eq!((r, g, b), (0, 255, 255), "right half should be cyan");
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn png_file_uri_with_percent_encoding_loads_via_wic() {
+        let mut source = PixelContainer::new(1, 1);
+        source.set_pixel(0, 0, 12, 34, 56, 255);
+        let png = encode_png(&source);
+
+        let mut path = std::env::temp_dir();
+        let unique = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        path.push(format!("paint vm gdi png {unique}.png"));
+        std::fs::write(&path, png).unwrap();
+
+        let path_for_uri = path.display().to_string().replace('\\', "/").replace(' ', "%20");
+        let uri = format!("file:///{path_for_uri}");
+        let mut scene = PaintScene::new(8.0, 8.0);
+        scene.instructions.push(PaintInstruction::Image(PaintImage {
+            base: PaintBase::default(),
+            x: 0.0,
+            y: 0.0,
+            width: 8.0,
+            height: 8.0,
+            src: ImageSrc::Uri(uri),
+            opacity: None,
+        }));
+
+        let pixels = render(&scene);
+        let _ = std::fs::remove_file(&path);
+
+        let (r, g, b, _a) = pixels.pixel_at(4, 4);
+        assert_eq!((r, g, b), (12, 34, 56), "png file URI should decode via WIC");
     }
 
     /// Group should recurse into children and render both rects.
