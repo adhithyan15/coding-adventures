@@ -1,5 +1,5 @@
-import Rng
+import Test.Hspec
+import RngSpec
 
 main :: IO ()
-main = do
-    putStrLn "Test suite not yet implemented."
+main = hspec spec
