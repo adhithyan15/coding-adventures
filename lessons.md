@@ -3356,3 +3356,26 @@ Never push the key string manually before `lua_rawset_str_top` — the function 
 3. Only fall back to a generic 500 if no error handler is registered
 
 Use a dedicated `dispatch_route` function that holds the Lua lock across both the route call and the error handler call.
+
+---
+
+## Lesson: Lua GC collects userdata when Lua-side variable goes out of scope — pin it in the registry when Rust holds raw integer refs into it
+
+**Date:** 2026-04-24
+
+**What happened:** `LuaConduitServer` was built from a `LuaConduitApp` userdata. After `setup()` returns, the Lua `app` variable goes out of scope. On Linux (glibc), Lua's incremental GC is more aggressive than on macOS and will collect the unreachable `LuaConduitApp` userdata between test runs. When `app_gc` fires, it calls `luaL_unref` on every handler registry slot. The server's Rust closures still hold those slot integers, but `lua_rawgeti` now pushes nil — causing all subsequent HTTP handler dispatches to fail with 500.
+
+**Root cause:** Raw `i32` registry refs (integers from `luaL_ref`) are not Lua values — they don't prevent GC. The GC only tracks the Lua value graph (upvalues, tables, the registry itself). Once the `LuaConduitApp` userdata is unreachable from Lua's value graph, it will be collected even if Rust holds its slot integers.
+
+**Fix:** In `lua_new_server`, before allocating the server userdata:
+```rust
+lua_pushvalue(L, 1);                         // push copy of app userdata (arg 1)
+let app_ref = luaL_ref(L, LUA_REGISTRYINDEX); // pin it; pops the copy
+```
+Store `app_ref: i32` in `LuaConduitServer`. In `server_gc`, after stopping the server and joining the background thread:
+```rust
+luaL_unref(L, LUA_REGISTRYINDEX, (*srv).app_ref);
+```
+This keeps the `LuaConduitApp` reachable from the Lua registry (which is always a GC root) until the server is destroyed. The `luaL_unref` in `server_gc` runs only after all Rust closures will never fire again.
+
+**Rule:** Any time Rust holds raw `luaL_ref` integers derived from a Lua object's internal state, and that object could become unreachable from Lua's value graph, you must keep a registry reference to the object alive for at least as long as the raw integer refs are in use. Use `luaL_ref` to pin the object and `luaL_unref` to release only after all integer refs are retired.

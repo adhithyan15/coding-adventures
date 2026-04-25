@@ -60,6 +60,19 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **`code/programs/lua/conduit-hello/hello.lua`** — 8-route demo program
   exercising every framework feature.
 
+### Fixed
+
+- **Lua GC premature collection of `LuaConduitApp` on Linux** — On Linux
+  (glibc), Lua's GC is more aggressive than on macOS. After `setup()` returns,
+  the local `app` variable goes out of scope, leaving `LuaConduitApp` userdata
+  unreachable. The GC would then fire `app_gc`, calling `luaL_unref` on every
+  handler registry slot while the server's Rust closures still held those slot
+  integers. Subsequent HTTP requests would get nil from `lua_rawgeti` and return
+  500. Fix: `lua_new_server` now pins the app userdata into the Lua registry
+  (`luaL_ref`) and stores the reference in `LuaConduitServer.app_ref`. The pin
+  is released in `server_gc` after the server has fully stopped and all Rust
+  closures are guaranteed to never fire again.
+
 ### Implementation notes
 
 - **Threading model**: `lua_State` is not thread-safe; all Lua callbacks are

@@ -180,12 +180,6 @@ impl LuaConduitApp {
 
 /// Server state stored in a Lua userdata.
 struct LuaConduitServer {
-    /// Raw pointer to the Lua interpreter. NEVER accessed without holding
-    /// `lua_lock`.
-    lua: *mut lua_State,
-    /// Serialises all callbacks from web-core's background I/O threads back
-    /// into the single-threaded Lua interpreter.
-    lua_lock: Arc<Mutex<()>>,
     server: Option<PlatformWebServer>,
     running: Arc<AtomicBool>,
     /// Handle to the background thread started by `serve_background()`.
@@ -193,9 +187,17 @@ struct LuaConduitServer {
     /// the background thread holds a raw pointer into `server`, so the
     /// `PlatformWebServer` must not be dropped until `serve()` has returned.
     bg_thread: Option<std::thread::JoinHandle<()>>,
+    /// Registry reference to the `LuaConduitApp` userdata this server was built
+    /// from. Keeping this reference alive prevents Lua's GC from collecting
+    /// the app — and therefore from calling `app_gc`, which would unref all
+    /// handler registry slots while the server's Rust closures still hold
+    /// those slot integers. Released in `server_gc` after the server has fully
+    /// stopped and all closures will never be called again.
+    app_ref: i32,
 }
 
-// SAFETY: All access to `lua` is gated by `lua_lock`.
+// SAFETY: PlatformWebServer wraps a socket fd that is only touched by the
+// background serve thread; Arc<AtomicBool> is inherently thread-safe.
 unsafe impl Send for LuaConduitServer {}
 unsafe impl Sync for LuaConduitServer {}
 
@@ -449,11 +451,19 @@ unsafe extern "C" fn lua_new_server(L: *mut lua_State) -> c_int {
         }
     };
 
+    // Pin the LuaConduitApp userdata in the Lua registry so Lua's GC will not
+    // collect it (and therefore not call app_gc / luaL_unref the handler slots)
+    // while this server is alive. Without this, on aggressive-GC runtimes (Linux)
+    // the app becomes unreachable once the Lua-side `app` variable goes out of
+    // scope after setup(), causing all handler refs to be freed mid-test-run.
+    lua_pushvalue(L, 1); // push copy of app userdata (arg 1)
+    let app_ref = luaL_ref(L, LUA_REGISTRYINDEX); // pin it; pops the copy
+
     // Allocate server userdata.
     let ptr = lua_newuserdatauv(L, std::mem::size_of::<LuaConduitServer>(), 0);
     ptr::write(
         ptr as *mut LuaConduitServer,
-        LuaConduitServer { lua: L, lua_lock, server: Some(server), running, bg_thread: None },
+        LuaConduitServer { server: Some(server), running, bg_thread: None, app_ref },
     );
 
     luaL_newmetatable(L, SERVER_MT);
@@ -475,6 +485,10 @@ unsafe extern "C" fn server_gc(L: *mut lua_State) -> c_int {
     if let Some(handle) = (*srv).bg_thread.take() {
         let _ = handle.join();
     }
+    // Release the app pin now that all Rust closures will never fire again.
+    // This allows the LuaConduitApp to be GC-collected, which in turn will
+    // call app_gc and clean up the handler registry slots.
+    luaL_unref(L, LUA_REGISTRYINDEX, (*srv).app_ref);
     ptr::drop_in_place(srv);
     0
 }
@@ -865,12 +879,6 @@ fn split_target(target: &str) -> (&str, &str) {
 // ---------------------------------------------------------------------------
 // Small helpers for metatable setup
 // ---------------------------------------------------------------------------
-
-/// Push a Rust `&str` onto the stack as a Lua string (same as push_str but
-/// as a convenience alias used in metatable construction).
-unsafe fn push_cstr(L: *mut lua_State, s: &str) {
-    push_str(L, s);
-}
 
 /// Set `table[key] = top_of_stack`, consuming the top value.
 /// `key_with_nul` must be a `b"...\0"` byte literal.
