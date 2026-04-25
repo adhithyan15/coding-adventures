@@ -352,6 +352,7 @@ unsafe fn render_instructions(
             PaintInstruction::Path(path) => render_path(ctx, rt, path),
             PaintInstruction::Layer(layer) => render_layer(ctx, rt, layer),
             PaintInstruction::Image(image) => render_image(rt, image),
+            PaintInstruction::Text(_) => {}
             PaintInstruction::Gradient(_) => {}
         }
     }

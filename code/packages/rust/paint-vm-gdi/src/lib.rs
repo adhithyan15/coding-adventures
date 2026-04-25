@@ -18,7 +18,7 @@
 //! | `PaintLine`       | Fully implemented — rendered via pen + LineTo   |
 //! | `PaintGroup`      | Fully implemented — recurses into children      |
 //! | `PaintClip`       | Fully implemented — IntersectClipRect + restore |
-//! | `PaintGlyphRun`   | Planned — ExtTextOutW                           |
+//! | `PaintGlyphRun`   | Implemented — ExtTextOutW + ETO_GLYPH_INDEX     |
 //! | `PaintEllipse`    | Planned — Ellipse()                             |
 //! | `PaintPath`       | Planned — BeginPath/PolyBezierTo                |
 //! | `PaintLayer`      | Planned — offscreen DC + BitBlt                 |
@@ -64,7 +64,7 @@
 pub const VERSION: &str = "0.1.0";
 
 use paint_instructions::{
-    PaintClip, PaintInstruction, PaintLine, PaintRect, PaintScene, PixelContainer,
+    PaintClip, PaintGlyphRun, PaintInstruction, PaintLine, PaintRect, PaintScene, PixelContainer,
 };
 
 // ---------------------------------------------------------------------------
@@ -84,13 +84,17 @@ compile_error!("paint-vm-gdi requires Windows. Use paint-metal on macOS or paint
 // whose pixel memory we can read directly).
 
 #[cfg(target_os = "windows")]
+use windows::core::PCWSTR;
+#[cfg(target_os = "windows")]
 use windows::Win32::Foundation::RECT;
 #[cfg(target_os = "windows")]
 use windows::Win32::Graphics::Gdi::{
-    CreateCompatibleDC, CreateDIBSection, CreatePen, CreateSolidBrush, DeleteDC, DeleteObject,
-    FillRect, GetStockObject, IntersectClipRect, LineTo, MoveToEx, RestoreDC, SaveDC,
-    SelectObject, BITMAPINFO, BITMAPINFOHEADER, BI_RGB, DIB_RGB_COLORS, NULL_BRUSH,
-    PS_SOLID,
+    CreateCompatibleDC, CreateDIBSection, CreateFontW, CreatePen, CreateSolidBrush, DeleteDC,
+    DeleteObject, ExtTextOutW, FillRect, GetStockObject, IntersectClipRect, LineTo, MoveToEx,
+    RestoreDC, SaveDC, SelectObject, SetBkMode, SetTextAlign, SetTextColor, BITMAPINFO,
+    BITMAPINFOHEADER, BI_RGB, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, DEFAULT_CHARSET,
+    DEFAULT_PITCH, DIB_RGB_COLORS, ETO_GLYPH_INDEX, NULL_BRUSH, OUT_DEFAULT_PRECIS, PS_SOLID,
+    TA_BASELINE, TA_LEFT, TRANSPARENT,
 };
 
 // ---------------------------------------------------------------------------
@@ -101,18 +105,42 @@ use windows::Win32::Graphics::Gdi::{
 // by paint-metal — duplicated here so paint-vm-gdi has no dependency on
 // paint-metal.
 
-/// Parse a hex colour string to RGBA floats in the range 0.0–1.0.
+/// Parse a CSS colour string to RGBA floats in the range 0.0–1.0.
 ///
 /// Supported formats:
 /// - `"#rrggbb"`   → (r, g, b, 1.0)
 /// - `"#rrggbbaa"` → (r, g, b, a)
 /// - `"#rgb"`      → expanded to `#rrggbb`
+/// - `"rgb(r,g,b)"` / `"rgba(r,g,b,a)"`
 /// - `"transparent"` / anything else → (0.0, 0.0, 0.0, 0.0)
 ///
 /// Returns `(0.0, 0.0, 0.0, 1.0)` for unrecognised non-transparent input.
-fn parse_hex_color(s: &str) -> (f64, f64, f64, f64) {
+fn parse_css_color(s: &str) -> (f64, f64, f64, f64) {
+    let s = s.trim();
     if s == "transparent" {
         return (0.0, 0.0, 0.0, 0.0);
+    }
+    if let Some(inner) = s.strip_prefix("rgba(").and_then(|v| v.strip_suffix(')')) {
+        let parts: Vec<&str> = inner.split(',').map(str::trim).collect();
+        if parts.len() == 4 {
+            return (
+                parse_css_channel(parts[0]),
+                parse_css_channel(parts[1]),
+                parse_css_channel(parts[2]),
+                parts[3].parse::<f64>().unwrap_or(1.0).clamp(0.0, 1.0),
+            );
+        }
+    }
+    if let Some(inner) = s.strip_prefix("rgb(").and_then(|v| v.strip_suffix(')')) {
+        let parts: Vec<&str> = inner.split(',').map(str::trim).collect();
+        if parts.len() == 3 {
+            return (
+                parse_css_channel(parts[0]),
+                parse_css_channel(parts[1]),
+                parse_css_channel(parts[2]),
+                1.0,
+            );
+        }
     }
     let hex = s.trim_start_matches('#');
     let hex = if hex.len() == 3 {
@@ -138,6 +166,115 @@ fn parse_hex_color(s: &str) -> (f64, f64, f64, f64) {
         1.0
     };
     (r, g, b, a)
+}
+
+fn parse_css_channel(s: &str) -> f64 {
+    s.parse::<f64>().unwrap_or(0.0).clamp(0.0, 255.0) / 255.0
+}
+
+fn parse_hex_color(s: &str) -> (f64, f64, f64, f64) {
+    parse_css_color(s)
+}
+
+#[cfg(target_os = "windows")]
+#[derive(Clone, Debug)]
+struct GdiFontSpec {
+    family: String,
+    weight: i32,
+    italic: bool,
+}
+
+#[cfg(target_os = "windows")]
+fn font_spec_for_ref(font_ref: &str) -> GdiFontSpec {
+    if let Some(spec) = parse_directwrite_font_ref(font_ref) {
+        return spec;
+    }
+    if let Some(spec) = parse_canvas_font_ref(font_ref) {
+        return spec;
+    }
+    GdiFontSpec {
+        family: "Segoe UI".to_string(),
+        weight: 400,
+        italic: false,
+    }
+}
+
+#[cfg(target_os = "windows")]
+fn parse_directwrite_font_ref(font_ref: &str) -> Option<GdiFontSpec> {
+    let body = font_ref.strip_prefix("directwrite:")?;
+    let (family_part, rest) = body.split_once('@')?;
+    let mut weight = 400i32;
+    let mut italic = false;
+    for part in rest.split(';').skip(1) {
+        if let Some(value) = part.strip_prefix("w=") {
+            weight = value.parse().unwrap_or(weight);
+        } else if let Some(value) = part.strip_prefix("style=") {
+            italic = matches!(value, "italic" | "oblique");
+        }
+    }
+    Some(GdiFontSpec {
+        family: map_font_family(&unescape_ref_component(family_part)),
+        weight,
+        italic,
+    })
+}
+
+#[cfg(target_os = "windows")]
+fn parse_canvas_font_ref(font_ref: &str) -> Option<GdiFontSpec> {
+    let body = font_ref.strip_prefix("canvas:")?;
+    let (family_part, rest) = body.split_once('@')?;
+    let mut weight = 400i32;
+    let mut italic = false;
+    let parts: Vec<&str> = rest.split(':').collect();
+    if let Some(value) = parts.get(1) {
+        weight = value.parse().unwrap_or(weight);
+    }
+    if let Some(value) = parts.get(2) {
+        italic = matches!((*value).trim(), "italic" | "oblique");
+    }
+    Some(GdiFontSpec {
+        family: map_font_family(family_part),
+        weight,
+        italic,
+    })
+}
+
+#[cfg(target_os = "windows")]
+fn map_font_family(family: &str) -> String {
+    match family.trim().to_ascii_lowercase().as_str() {
+        "system-ui" | "ui-sans-serif" => "Segoe UI".to_string(),
+        other => {
+            if other.is_empty() {
+                "Segoe UI".to_string()
+            } else {
+                family.trim().to_string()
+            }
+        }
+    }
+}
+
+#[cfg(target_os = "windows")]
+fn unescape_ref_component(s: &str) -> String {
+    let mut out = String::with_capacity(s.len());
+    let bytes = s.as_bytes();
+    let mut i = 0;
+    while i < bytes.len() {
+        if bytes[i] == b'%' && i + 2 < bytes.len() {
+            if let Ok(v) = u8::from_str_radix(&s[i + 1..i + 3], 16) {
+                out.push(v as char);
+                i += 3;
+                continue;
+            }
+        }
+        out.push(bytes[i] as char);
+        i += 1;
+    }
+    out
+}
+
+#[cfg(target_os = "windows")]
+fn wide_null(s: &str) -> Vec<u16> {
+    s.encode_utf16().chain(std::iter::once(0)).collect()
 }
 
 /// Convert RGBA floats (0.0–1.0) to a Win32 COLORREF (0x00BBGGRR).
@@ -191,8 +328,9 @@ unsafe fn render_instructions(
                 render_instructions(hdc, &group.children);
             }
             PaintInstruction::Clip(clip) => render_clip(hdc, clip),
+            PaintInstruction::GlyphRun(run) => render_glyph_run(hdc, run),
             // Planned but not yet implemented — same skip list as paint-metal:
-            PaintInstruction::GlyphRun(_)
+            PaintInstruction::Text(_)
             | PaintInstruction::Ellipse(_)
             | PaintInstruction::Path(_)
             | PaintInstruction::Layer(_)
@@ -202,6 +340,71 @@ unsafe fn render_instructions(
             }
         }
     }
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn render_glyph_run(hdc: windows::Win32::Graphics::Gdi::HDC, run: &PaintGlyphRun) {
+    if run.glyphs.is_empty() {
+        return;
+    }
+
+    let fill = run.fill.as_deref().unwrap_or("#000000");
+    let (r, g, b, a) = parse_hex_color(fill);
+    if a == 0.0 {
+        return;
+    }
+
+    let spec = font_spec_for_ref(&run.font_ref);
+    let height = -(run.font_size.max(1.0).round() as i32);
+    let family_w = wide_null(&spec.family);
+    let hfont = CreateFontW(
+        height,
+        0,
+        0,
+        0,
+        spec.weight,
+        spec.italic as u32,
+        0,
+        0,
+        DEFAULT_CHARSET.0 as u32,
+        OUT_DEFAULT_PRECIS.0 as u32,
+        CLIP_DEFAULT_PRECIS.0 as u32,
+        CLEARTYPE_QUALITY.0 as u32,
+        DEFAULT_PITCH.0 as u32,
+        PCWSTR(family_w.as_ptr()),
+    );
+    if hfont.is_invalid() {
+        return;
+    }
+
+    let old_font = SelectObject(hdc, hfont);
+    let _ = SetTextAlign(
+        hdc,
+        windows::Win32::Graphics::Gdi::TEXT_ALIGN_OPTIONS(TA_LEFT.0 | TA_BASELINE.0),
+    );
+    let _ = SetBkMode(hdc, TRANSPARENT);
+    let colorref = color_to_colorref(r, g, b);
+    let _ = SetTextColor(hdc, windows::Win32::Foundation::COLORREF(colorref));
+
+    for glyph in &run.glyphs {
+        let Ok(glyph_index) = u16::try_from(glyph.glyph_id) else {
+            continue;
+        };
+        let glyphs = [glyph_index];
+        let _ = ExtTextOutW(
+            hdc,
+            glyph.x.round() as i32,
+            glyph.y.round() as i32,
+            ETO_GLYPH_INDEX,
+            None,
+            PCWSTR(glyphs.as_ptr()),
+            glyphs.len() as u32,
+            None,
+        );
+    }
+
+    let _ = SelectObject(hdc, old_font);
+    let _ = DeleteObject(hfont);
 }
 
 /// Render a [`PaintRect`] as a filled rectangle.
@@ -507,6 +710,24 @@ mod tests {
     }
 
     #[test]
+    fn parse_css_rgb() {
+        let (r, g, b, a) = parse_hex_color("rgb(255, 128, 0)");
+        assert!((r - 1.0).abs() < 0.01);
+        assert!((g - (128.0 / 255.0)).abs() < 0.01);
+        assert!((b - 0.0).abs() < 0.01);
+        assert!((a - 1.0).abs() < 0.01);
+    }
+
+    #[test]
+    fn parse_css_rgba() {
+        let (r, g, b, a) = parse_hex_color("rgba(0, 255, 0, 0.5)");
+        assert!((r - 0.0).abs() < 0.01);
+        assert!((g - 1.0).abs() < 0.01);
+        assert!((b - 0.0).abs() < 0.01);
+        assert!((a - 0.5).abs() < 0.01);
+    }
+
+    #[test]
     fn parse_transparent() {
         let (r, g, b, a) = parse_hex_color("transparent");
         assert_eq!(a, 0.0);
@@ -594,6 +815,19 @@ mod tests {
         assert_eq!(r, 0, "green bg: r should be 0");
         assert_eq!(g, 255, "green bg: g should be 255");
         assert_eq!(b, 0, "green bg: b should be 0");
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn render_css_rgb_background() {
+        let mut scene = PaintScene::new(50.0, 50.0);
+        scene.background = "rgb(255, 255, 255)".to_string();
+
+        let pixels = render(&scene);
+        let (r, g, b, _a) = pixels.pixel_at(25, 25);
+        assert_eq!(r, 255, "rgb bg: r should be 255");
+        assert_eq!(g, 255, "rgb bg: g should be 255");
+        assert_eq!(b, 255, "rgb bg: b should be 255");
     }
 
     /// Transparent rects should not draw anything — background shows through.
@@ -745,5 +979,55 @@ mod tests {
         assert_eq!(r, 0, "black module should have r=0");
         assert_eq!(g, 0, "black module should have g=0");
         assert_eq!(b, 0, "black module should have b=0");
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn render_directwrite_glyph_run_draws_text_pixels() {
+        use paint_instructions::{GlyphPosition, PaintGlyphRun};
+        use text_interfaces::{FontQuery, FontResolver, ShapeOptions, TextShaper};
+        use text_native::{NativeResolver, NativeShaper};
+
+        let resolver = NativeResolver::new();
+        let shaper = NativeShaper::new();
+        let handle = resolver.resolve(&FontQuery::named("Segoe UI")).unwrap();
+        let shaped = shaper
+            .shape("Hi", &handle, 32.0, &ShapeOptions::default())
+            .unwrap();
+        let run = &shaped.runs[0];
+
+        let mut x = 12.0;
+        let glyphs: Vec<GlyphPosition> = run
+            .glyphs
+            .iter()
+            .map(|g| {
+                let positioned = GlyphPosition {
+                    glyph_id: g.glyph_id,
+                    x,
+                    y: 46.0,
+                };
+                x += g.x_advance as f64;
+                positioned
+            })
+            .collect();
+
+        let mut scene = PaintScene::new(100.0, 64.0);
+        scene
+            .instructions
+            .push(PaintInstruction::GlyphRun(PaintGlyphRun {
+                base: PaintBase::default(),
+                glyphs,
+                font_ref: run.font_ref.clone(),
+                font_size: 32.0,
+                fill: Some("#000000".to_string()),
+            }));
+
+        let pixels = render(&scene);
+        let dark_pixels = pixels
+            .data
+            .chunks_exact(4)
+            .filter(|px| px[0] < 128 && px[1] < 128 && px[2] < 128 && px[3] > 0)
+            .count();
+        assert!(dark_pixels > 20, "expected visible glyph pixels");
     }
 }
