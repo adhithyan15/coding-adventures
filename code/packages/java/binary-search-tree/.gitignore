@@ -1,5 +1,2 @@
-/.gradle/
-/gradle-build/
-/build/
-/out/
-/javac-out/
+.gradle/
+gradle-build/

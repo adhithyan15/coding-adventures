@@ -1,6 +1,2 @@
-/.gradle/
-/gradle-build/
-/build/
-/out/
-/.kotlin/
-/kotlinc-out/
+.gradle/
+gradle-build/

@@ -1,220 +1,357 @@
+// ============================================================================
+// BinaryTree.kt — Generic Binary Tree with Traversal and Shape Queries
+// ============================================================================
+//
+// A binary tree is a rooted tree where each node has at most two children.
+// Unlike a BST, there is no ordering constraint — this is purely structural.
+//
+//              1
+//            /   \
+//           2     3
+//          / \     \
+//         4   5     6
+//
+// == Construction ==
+//
+// The canonical way to specify a binary tree is level-order (BFS order):
+//   [1, 2, 3, 4, 5, null, 6]
+//
+// Index i maps to children at 2i+1 (left) and 2i+2 (right):
+//   i=0 (1)  → children at 1 and 2
+//   i=1 (2)  → children at 3 and 4
+//   i=2 (3)  → children at 5=null and 6
+//
+// == Traversals ==
+//
+//   In-order   (L → root → R):  4, 2, 5, 1, 3, 6
+//   Pre-order  (root → L → R):  1, 2, 4, 5, 3, 6
+//   Post-order (L → R → root):  4, 5, 2, 6, 3, 1
+//   Level-order (BFS):          1, 2, 3, 4, 5, 6
+//
+// == Shape predicates ==
+//
+//   Full:     every node has 0 or 2 children
+//   Complete: all levels filled L→R except possibly the last
+//   Perfect:  all leaves at same depth; node count = 2^(h+1) - 1
+//
+// == Kotlin idioms ==
+//
+//   • Generic class with unconstrained `T` type parameter.
+//   • Public `data class Node<T>` — value equality is useful for tests.
+//   • `companion object` holds `fromLevelOrder` factory.
+//   • Null-sentinel BFS for `isComplete` uses `LinkedList` (allows null items).
+//   • Extension functions for private recursive helpers.
+//
+// ============================================================================
+
 package com.codingadventures.binarytree
 
-import java.util.ArrayDeque
 import java.util.LinkedList
-import java.util.Queue
 
-data class BinaryTreeNode<T>(
-    val value: T,
-    val left: BinaryTreeNode<T>? = null,
-    val right: BinaryTreeNode<T>? = null,
-)
+/**
+ * A generic binary tree with traversal and structural shape helpers.
+ *
+ * ```kotlin
+ * val t = BinaryTree.fromLevelOrder(listOf(1, 2, 3, 4, 5, null, 6))
+ *
+ * t.levelOrder()   // [1, 2, 3, 4, 5, 6]
+ * t.inorder()      // [4, 2, 5, 1, 3, 6]
+ * t.height()       // 2
+ * t.isFull()       // false (node 3 has only right child)
+ * t.isComplete()   // false (null slot before node 6)
+ * ```
+ *
+ * @param T the element type
+ */
+class BinaryTree<T> {
 
-class BinaryTree<T>(val root: BinaryTreeNode<T>? = null) {
-    fun find(value: T): BinaryTreeNode<T>? = find(root, value)
+    // =========================================================================
+    // Node
+    // =========================================================================
 
-    fun leftChild(value: T): BinaryTreeNode<T>? = find(value)?.left
-
-    fun rightChild(value: T): BinaryTreeNode<T>? = find(value)?.right
-
-    fun isFull(): Boolean = isFull(root)
-
-    fun isComplete(): Boolean = isComplete(root)
-
-    fun isPerfect(): Boolean = isPerfect(root)
-
-    fun height(): Int = height(root)
-
-    fun size(): Int = size(root)
-
-    fun inOrder(): List<T> = inOrder(root)
-
-    fun preOrder(): List<T> = preOrder(root)
-
-    fun postOrder(): List<T> = postOrder(root)
-
-    fun levelOrder(): List<T> = levelOrder(root)
-
-    fun toArray(): List<T?> = toArray(root)
-
-    fun toAscii(): String = toAscii(root)
-
-    override fun toString(): String {
-        val rootValue = root?.value?.toString() ?: "null"
-        return "BinaryTree(root=$rootValue, size=${size()})"
+    /**
+     * A single node in the binary tree.
+     *
+     * Using a regular class (not data class) since equality by identity is
+     * more natural for tree nodes; value equality would compare subtrees.
+     */
+    inner class Node(
+        var value: T,
+        var left:  Node? = null,
+        var right: Node? = null
+    ) {
+        override fun toString() = "Node($value)"
     }
 
+    // =========================================================================
+    // Fields
+    // =========================================================================
+
+    /** The root node; null for an empty tree. */
+    var root: Node? = null
+
+    // =========================================================================
+    // Companion (factory)
+    // =========================================================================
+
     companion object {
-        fun <T> empty(): BinaryTree<T> = BinaryTree()
-
-        fun <T> singleton(value: T): BinaryTree<T> = BinaryTree(BinaryTreeNode(value))
-
-        fun <T> withRoot(root: BinaryTreeNode<T>?): BinaryTree<T> = BinaryTree(root)
-
-        fun <T> fromLevelOrder(values: List<T?>): BinaryTree<T> =
-            BinaryTree(buildFromLevelOrder(values, 0))
-
-        fun <T> find(root: BinaryTreeNode<T>?, value: T): BinaryTreeNode<T>? {
-            if (root == null) return null
-            if (root.value == value) return root
-            return find(root.left, value) ?: find(root.right, value)
+        /**
+         * Build a binary tree from a level-order (BFS) list.
+         *
+         * Null entries represent absent nodes. Index [i] maps to left child at
+         * [2i+1] and right child at [2i+2].
+         *
+         * Example: `[1, 2, 3, null, 5]` builds:
+         * ```
+         *     1
+         *    / \
+         *   2   3
+         *    \
+         *     5
+         * ```
+         */
+        fun <T> fromLevelOrder(values: List<T?>): BinaryTree<T> {
+            val tree = BinaryTree<T>()
+            if (values.isEmpty()) return tree
+            tree.root = tree.buildFromLevelOrder(values, 0)
+            return tree
         }
+    }
 
-        fun <T> leftChild(root: BinaryTreeNode<T>?, value: T): BinaryTreeNode<T>? =
-            find(root, value)?.left
+    // =========================================================================
+    // Search
+    // =========================================================================
 
-        fun <T> rightChild(root: BinaryTreeNode<T>?, value: T): BinaryTreeNode<T>? =
-            find(root, value)?.right
+    /**
+     * Find the first node (in pre-order) whose value equals [value].
+     *
+     * @return the matching [Node], or `null` if not found
+     */
+    fun find(value: T): Node? = findRec(root, value)
 
-        fun <T> isFull(root: BinaryTreeNode<T>?): Boolean =
-            when {
-                root == null -> true
-                root.left == null && root.right == null -> true
-                root.left == null || root.right == null -> false
-                else -> isFull(root.left) && isFull(root.right)
-            }
+    /** Return the left child of the first node with [value], or null. */
+    fun leftChild(value: T): Node? = find(value)?.left
 
-        fun <T> isComplete(root: BinaryTreeNode<T>?): Boolean {
-            val queue: Queue<BinaryTreeNode<T>?> = LinkedList()
-            queue.add(root)
-            var seenNull = false
+    /** Return the right child of the first node with [value], or null. */
+    fun rightChild(value: T): Node? = find(value)?.right
 
-            while (queue.isNotEmpty()) {
-                val node = queue.remove()
-                if (node == null) {
-                    seenNull = true
-                    continue
-                }
+    // =========================================================================
+    // Shape predicates
+    // =========================================================================
+
+    /**
+     * Return `true` if every node has exactly 0 or 2 children (no lone children).
+     */
+    fun isFull(): Boolean = isFullRec(root)
+
+    /**
+     * Return `true` if all levels are fully filled except possibly the last,
+     * which must be filled left-to-right.
+     *
+     * Uses a null-sentinel BFS: once a null position is seen, every subsequent
+     * non-null node means the last level is not filled left-to-right.
+     *
+     * Requires [LinkedList] (not ArrayDeque) because we enqueue null sentinels.
+     */
+    fun isComplete(): Boolean {
+        val root = this.root ?: return true   // empty tree is complete
+        val queue: LinkedList<Node?> = LinkedList()
+        queue.add(root)
+        var seenNull = false
+        while (queue.isNotEmpty()) {
+            val node = queue.poll()
+            if (node == null) {
+                seenNull = true
+            } else {
                 if (seenNull) return false
-                queue.add(node.left)
+                queue.add(node.left)    // may be null — that is intentional
                 queue.add(node.right)
             }
-
-            return true
         }
+        return true
+    }
 
-        fun <T> isPerfect(root: BinaryTreeNode<T>?): Boolean {
-            val treeHeight = height(root)
-            return if (treeHeight < 0) {
-                size(root) == 0
-            } else {
-                size(root) == (1 shl (treeHeight + 1)) - 1
-            }
+    /**
+     * Return `true` if all leaves are at the same depth (i.e., the tree is
+     * both full and all leaves are at depth h). A perfect tree of height h has
+     * exactly 2^(h+1) - 1 nodes.
+     */
+    fun isPerfect(): Boolean {
+        val h = height()
+        if (h < 0) return size == 0
+        return size == (1 shl (h + 1)) - 1
+    }
+
+    // =========================================================================
+    // Traversals
+    // =========================================================================
+
+    /** In-order traversal: left → root → right. */
+    fun inorder(): List<T> {
+        val out = mutableListOf<T>()
+        inorderRec(root, out)
+        return out
+    }
+
+    /** Pre-order traversal: root → left → right. */
+    fun preorder(): List<T> {
+        val out = mutableListOf<T>()
+        preorderRec(root, out)
+        return out
+    }
+
+    /** Post-order traversal: left → right → root. */
+    fun postorder(): List<T> {
+        val out = mutableListOf<T>()
+        postorderRec(root, out)
+        return out
+    }
+
+    /** Level-order traversal (BFS): layer by layer, left to right. */
+    fun levelOrder(): List<T> {
+        val out = mutableListOf<T>()
+        val root = this.root ?: return out
+        val queue: ArrayDeque<Node> = ArrayDeque()
+        queue.add(root)
+        while (queue.isNotEmpty()) {
+            val node = queue.removeFirst()
+            out.add(node.value)
+            node.left?.let  { queue.add(it) }
+            node.right?.let { queue.add(it) }
         }
+        return out
+    }
 
-        fun <T> height(root: BinaryTreeNode<T>?): Int =
-            if (root == null) -1 else 1 + maxOf(height(root.left), height(root.right))
+    // =========================================================================
+    // Structural queries
+    // =========================================================================
 
-        fun <T> size(root: BinaryTreeNode<T>?): Int =
-            if (root == null) 0 else 1 + size(root.left) + size(root.right)
+    /** Height of the tree. Empty → -1; single node → 0. */
+    fun height(): Int = heightRec(root)
 
-        fun <T> inOrder(root: BinaryTreeNode<T>?): List<T> {
-            val output = mutableListOf<T>()
-            inOrder(root, output)
-            return output
-        }
+    /** Total number of nodes. */
+    val size: Int get() = sizeRec(root)
 
-        fun <T> preOrder(root: BinaryTreeNode<T>?): List<T> {
-            val output = mutableListOf<T>()
-            preOrder(root, output)
-            return output
-        }
+    /** True if the tree contains no nodes. */
+    val isEmpty: Boolean get() = root == null
 
-        fun <T> postOrder(root: BinaryTreeNode<T>?): List<T> {
-            val output = mutableListOf<T>()
-            postOrder(root, output)
-            return output
-        }
+    // =========================================================================
+    // Array projection
+    // =========================================================================
 
-        fun <T> levelOrder(root: BinaryTreeNode<T>?): List<T> {
-            if (root == null) return emptyList()
+    /**
+     * Project the tree into a level-order array of size `2^(h+1) - 1` with
+     * null for absent nodes. The inverse of [fromLevelOrder].
+     *
+     * Empty tree → empty list.
+     */
+    fun toArray(): List<T?> {
+        val h = height()
+        if (h < 0) return emptyList()
+        val capacity = (1 shl (h + 1)) - 1
+        val result = arrayOfNulls<Any?>(capacity)
+        fillArrayRec(root, 0, result)
+        @Suppress("UNCHECKED_CAST")
+        return result.toList() as List<T?>
+    }
 
-            val output = mutableListOf<T>()
-            val queue: Queue<BinaryTreeNode<T>> = ArrayDeque()
-            queue.add(root)
+    /**
+     * Render the tree as a multi-line ASCII string with box-drawing connectors.
+     *
+     * Example for `[1, 2, 3, 4, 5, null, 6]`:
+     * ```
+     * `-- 1
+     *     |-- 2
+     *     |   |-- 4
+     *     |   `-- 5
+     *     `-- 3
+     *         `-- 6
+     * ```
+     */
+    fun toAscii(): String {
+        val root = this.root ?: return ""
+        val lines = mutableListOf<String>()
+        renderAsciiRec(root, "", isTail = true, lines)
+        return lines.joinToString("\n")
+    }
 
-            while (queue.isNotEmpty()) {
-                val node = queue.remove()
-                output += node.value
-                node.left?.let(queue::add)
-                node.right?.let(queue::add)
-            }
+    // =========================================================================
+    // Object overrides
+    // =========================================================================
 
-            return output
-        }
+    override fun toString(): String = "BinaryTree(root=${root?.value}, size=$size)"
 
-        fun <T> toArray(root: BinaryTreeNode<T>?): List<T?> {
-            val treeHeight = height(root)
-            if (treeHeight < 0) return emptyList()
+    // =========================================================================
+    // Private helpers
+    // =========================================================================
 
-            val output = MutableList<T?>((1 shl (treeHeight + 1)) - 1) { null }
-            fillArray(root, 0, output)
-            return output
-        }
+    private fun buildFromLevelOrder(values: List<T?>, index: Int): Node? {
+        if (index >= values.size) return null
+        val value = values[index] ?: return null
+        val node = Node(value)
+        node.left  = buildFromLevelOrder(values, 2 * index + 1)
+        node.right = buildFromLevelOrder(values, 2 * index + 2)
+        return node
+    }
 
-        fun <T> toAscii(root: BinaryTreeNode<T>?): String {
-            if (root == null) return ""
+    private fun findRec(node: Node?, value: T): Node? {
+        if (node == null) return null
+        if (node.value == value) return node
+        return findRec(node.left, value) ?: findRec(node.right, value)
+    }
 
-            val output = StringBuilder()
-            renderAscii(root, "", true, output)
-            return output.toString().trimEnd()
-        }
+    private fun isFullRec(node: Node?): Boolean {
+        if (node == null) return true
+        if (node.left == null && node.right == null) return true
+        if (node.left == null || node.right == null) return false
+        return isFullRec(node.left) && isFullRec(node.right)
+    }
 
-        private fun <T> buildFromLevelOrder(values: List<T?>, index: Int): BinaryTreeNode<T>? {
-            if (index >= values.size) return null
-            val value = values[index] ?: return null
-            return BinaryTreeNode(
-                value,
-                buildFromLevelOrder(values, (2 * index) + 1),
-                buildFromLevelOrder(values, (2 * index) + 2),
-            )
-        }
+    private fun inorderRec(node: Node?, out: MutableList<T>) {
+        if (node == null) return
+        inorderRec(node.left, out)
+        out.add(node.value)
+        inorderRec(node.right, out)
+    }
 
-        private fun <T> inOrder(root: BinaryTreeNode<T>?, output: MutableList<T>) {
-            if (root == null) return
-            inOrder(root.left, output)
-            output += root.value
-            inOrder(root.right, output)
-        }
+    private fun preorderRec(node: Node?, out: MutableList<T>) {
+        if (node == null) return
+        out.add(node.value)
+        preorderRec(node.left, out)
+        preorderRec(node.right, out)
+    }
 
-        private fun <T> preOrder(root: BinaryTreeNode<T>?, output: MutableList<T>) {
-            if (root == null) return
-            output += root.value
-            preOrder(root.left, output)
-            preOrder(root.right, output)
-        }
+    private fun postorderRec(node: Node?, out: MutableList<T>) {
+        if (node == null) return
+        postorderRec(node.left, out)
+        postorderRec(node.right, out)
+        out.add(node.value)
+    }
 
-        private fun <T> postOrder(root: BinaryTreeNode<T>?, output: MutableList<T>) {
-            if (root == null) return
-            postOrder(root.left, output)
-            postOrder(root.right, output)
-            output += root.value
-        }
+    private fun heightRec(node: Node?): Int {
+        if (node == null) return -1
+        return 1 + maxOf(heightRec(node.left), heightRec(node.right))
+    }
 
-        private fun <T> fillArray(root: BinaryTreeNode<T>?, index: Int, output: MutableList<T?>) {
-            if (root == null || index >= output.size) return
-            output[index] = root.value
-            fillArray(root.left, (2 * index) + 1, output)
-            fillArray(root.right, (2 * index) + 2, output)
-        }
+    private fun sizeRec(node: Node?): Int {
+        if (node == null) return 0
+        return 1 + sizeRec(node.left) + sizeRec(node.right)
+    }
 
-        private fun <T> renderAscii(
-            node: BinaryTreeNode<T>,
-            prefix: String,
-            isTail: Boolean,
-            output: StringBuilder,
-        ) {
-            output
-                .append(prefix)
-                .append(if (isTail) "`-- " else "|-- ")
-                .append(node.value)
-                .append(System.lineSeparator())
+    private fun fillArrayRec(node: Node?, index: Int, out: Array<Any?>) {
+        if (node == null || index >= out.size) return
+        out[index] = node.value
+        fillArrayRec(node.left,  2 * index + 1, out)
+        fillArrayRec(node.right, 2 * index + 2, out)
+    }
 
-            val children = listOfNotNull(node.left, node.right)
-            val nextPrefix = prefix + if (isTail) "    " else "|   "
-            children.forEachIndexed { index, child ->
-                renderAscii(child, nextPrefix, index + 1 == children.size, output)
-            }
+    private fun renderAsciiRec(node: Node, prefix: String, isTail: Boolean, lines: MutableList<String>) {
+        val connector = if (isTail) "`-- " else "|-- "
+        lines.add("$prefix$connector${node.value}")
+        val children = listOfNotNull(node.left, node.right)
+        val nextPrefix = prefix + if (isTail) "    " else "|   "
+        children.forEachIndexed { i, child ->
+            renderAsciiRec(child, nextPrefix, i + 1 == children.size, lines)
         }
     }
 }
