@@ -1,0 +1,19 @@
+{
+  "name": "@coding-adventures/bloom-filter",
+  "version": "0.1.0",
+  "description": "A configurable Bloom filter for probabilistic membership checks",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "license": "MIT",
+  "author": "Adhithya Rajasekaran",
+  "devDependencies": {
+    "@vitest/coverage-v8": "^3.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}
