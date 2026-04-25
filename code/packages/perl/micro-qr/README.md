@@ -1,115 +1,107 @@
 # CodingAdventures::MicroQR
 
-Perl implementation of the **Micro QR Code** encoder, compliant with
-ISO/IEC 18004:2015 Annex E.
+ISO/IEC 18004:2015 Annex E compliant Micro QR Code encoder in Perl.
 
-Micro QR Code is the compact variant of QR Code, designed for applications
-where the smallest standard QR symbol (21×21) is still too large. Common use
-cases include surface-mount component labels, circuit board markings, and
-miniature industrial tags.
+Micro QR Code is the compact variant of QR Code, designed for applications where even
+the smallest standard QR (21×21) is too large — circuit board markings, surface-mount
+component labels, miniature industrial tags.
 
 ## Symbol sizes
 
-| Symbol | Size    | Max numeric | Max alphanumeric | Max bytes |
-|--------|---------|-------------|------------------|-----------|
-| M1     | 11×11   | 5           | —                | —         |
-| M2-L   | 13×13   | 10          | 6                | 4         |
-| M2-M   | 13×13   | 8           | 5                | 3         |
-| M3-L   | 15×15   | 23          | 14               | 9         |
-| M3-M   | 15×15   | 18          | 11               | 7         |
-| M4-L   | 17×17   | 35          | 21               | 15        |
-| M4-M   | 17×17   | 30          | 18               | 13        |
-| M4-Q   | 17×17   | 21          | 13               | 9         |
+| Symbol | Size    | Numeric cap | Alphanumeric cap | Byte cap | ECC levels |
+|--------|---------|-------------|------------------|----------|------------|
+| M1     | 11×11   | 5           | —                | —        | Detection  |
+| M2     | 13×13   | 10          | 6                | 4        | L, M       |
+| M3     | 15×15   | 23          | 14               | 9        | L, M       |
+| M4     | 17×17   | 35          | 21               | 15       | L, M, Q    |
 
 ## Key differences from regular QR Code
 
-- **Single finder pattern** at top-left only (not three corner squares)
-- **Timing at row 0 / col 0** (not row 6 / col 6)
-- **Only 4 mask patterns** (not 8)
-- **Format XOR mask 0x4445** (not 0x5412)
-- **Single copy of format info** (not two)
-- **2-module quiet zone** (not 4)
-- **Variable-width mode indicator**: 0 bits (M1), 1 bit (M2), 2 bits (M3), 3 bits (M4)
-- **No interleaving** — single RS block
+- **Single finder pattern** — top-left only; no top-right or bottom-left.
+- **Timing at row 0 / col 0** — not row 6 / col 6 as in regular QR.
+- **Only 4 mask patterns** — (r+c)%2, r%2, c%3, (r+c)%3.
+- **Format XOR 0x4445** — not 0x5412.
+- **Single format info copy** — not two.
+- **2-module quiet zone** — not 4.
 
 ## Installation
 
-```sh
-cpanm .
+```bash
+cpanm --notest CodingAdventures::MicroQR
+```
+
+Or with the repo build tool:
+
+```bash
+./build-tool code/packages/perl/micro-qr
 ```
 
 ## Usage
 
 ```perl
-use CodingAdventures::MicroQR qw(encode encode_at layout_grid M1 M2 M3 M4
-                                   ECC_L ECC_M ECC_Q DETECTION);
+use CodingAdventures::MicroQR qw(encode encode_at layout_grid);
+use CodingAdventures::MicroQR;  # for constants
 
-# Auto-select smallest symbol and ECC
-my $grid = encode('12345');       # M1, 11×11
-my $grid = encode('HELLO');       # M2-L, 13×13, alphanumeric
-my $grid = encode('https://a.b'); # M4-L, 17×17, byte mode
+# Auto-select smallest symbol that fits
+my $grid = encode("HELLO");               # M2 13×13
+my $grid = encode("12345");              # M1 11×11 (5 numeric)
+my $grid = encode("https://example.com"); # M4 17×17 (byte mode)
 
-# Force version and/or ECC
-my $grid = encode('1', M4, ECC_Q);    # M4-Q, 17×17 (extra error correction)
-my $grid = encode_at('1', M1, DETECTION);  # explicit version required
+# Force a specific version and ECC level
+# IMPORTANT: constants must be called with () under use strict
+my $grid = encode_at("HELLO", CodingAdventures::MicroQR::M2(), CodingAdventures::MicroQR::ECC_L());
+my $grid = encode("1",
+    CodingAdventures::MicroQR::M4(),
+    CodingAdventures::MicroQR::ECC_Q());
 
-# Convert to PaintScene for rendering (uses Barcode2D::layout)
-my $scene = layout_grid($grid);
-my $scene = layout_grid($grid, { module_size_px => 20, quiet_zone_modules => 2 });
+# Access the module grid
+printf "Size: %d×%d\n", $grid->{rows}, $grid->{cols};
+for my $row (@{ $grid->{modules} }) {
+    print join('', map { $_ ? '█' : ' ' } @$row), "\n";
+}
+
+# Render to a PaintScene (requires barcode-2d)
+my $scene = layout_grid($grid);   # default quiet zone = 2
+my $scene = layout_grid($grid, { quiet_zone_modules => 4 });
 ```
 
-The `encode` function returns a `ModuleGrid` hashref compatible with
-`CodingAdventures::Barcode2D`:
+## Constants
 
 ```perl
-{
-    rows         => 11,       # or 13, 15, 17
-    cols         => 11,
-    modules      => \@grid,   # 2D array: 1 = dark, 0 = light
-    module_shape => 'square',
-}
+# Version constants (integers 1-4)
+CodingAdventures::MicroQR::M1()  # 1
+CodingAdventures::MicroQR::M2()  # 2
+CodingAdventures::MicroQR::M3()  # 3
+CodingAdventures::MicroQR::M4()  # 4
+
+# ECC level constants (strings)
+CodingAdventures::MicroQR::DETECTION()  # 'D'
+CodingAdventures::MicroQR::ECC_L()      # 'L'
+CodingAdventures::MicroQR::ECC_M()      # 'M'
+CodingAdventures::MicroQR::ECC_Q()      # 'Q'
 ```
 
 ## Encoding pipeline
 
 ```
 input string
-  → select smallest (version, ECC) that fits
-  → mode: numeric | alphanumeric | byte
-  → bit stream: [mode indicator] [char count] [data] [terminator] [pad]
-  → Reed-Solomon ECC (GF(256)/0x11D, b=0, single block)
-  → flatten to bit array
-  → build grid (finder 7×7, L-separator, timing row0/col0, format reserved)
-  → zigzag data placement (two-column snake, bottom-right → top-left)
-  → evaluate 4 mask patterns — pick lowest penalty
-  → write format information (15 bits, XOR 0x4445, single copy)
-  → return ModuleGrid
+  → auto-select smallest (version, ECC) that fits and supports the mode
+  → build bit stream: [mode indicator] [char count] [data] [terminator] [padding]
+  → Reed-Solomon ECC: GF(256)/0x11D, b=0 convention, single block
+  → init grid: finder (7×7), L-shaped separator, timing (row 0 / col 0)
+  → reserve 15 format info positions
+  → zigzag data placement (two-column snake from bottom-right)
+  → evaluate all 4 mask patterns, select lowest penalty
+  → write format information (15 bits, XOR 0x4445)
+  → return ModuleGrid hashref
 ```
 
 ## Dependencies
 
-| Package                        | Role                              |
-|--------------------------------|-----------------------------------|
-| `CodingAdventures::GF256`      | GF(256) multiply for Reed-Solomon |
-| `CodingAdventures::Barcode2D`  | ModuleGrid type and layout()      |
+- `CodingAdventures::GF256` — GF(2^8) field arithmetic for Reed-Solomon
+- `CodingAdventures::Barcode2D` — ModuleGrid type and layout rendering
 
-## In this stack
+## Related packages
 
-- Sits above `GF256` (field arithmetic) and `Barcode2D` (grid + renderer)
-- Parallel implementations: Rust (`micro-qr`), TypeScript, Python, Ruby,
-  Go, Elixir, Swift, Lua, Perl (this package)
-
-## Tests
-
-```sh
-cpanm --notest Test2::V0
-prove -I../gf256/lib -I../barcode-2d/lib -I../paint-instructions/lib -l -v t/
-```
-
-58 tests covering symbol dimensions, auto-selection, structural patterns,
-format information, ECC constraints, encoding modes, capacity boundaries,
-error conditions, determinism, and cross-language corpus verification.
-
-## License
-
-MIT
+- `CodingAdventures::QrCode` — full QR Code encoder (regular sizes V1–V40)
+- `code/packages/rust/micro-qr` — Rust reference implementation

@@ -1,59 +1,57 @@
 package CodingAdventures::MicroQR;
 
 # =============================================================================
-# CodingAdventures::MicroQR — Micro QR Code encoder
+# CodingAdventures::MicroQR — ISO/IEC 18004:2015 Annex E compliant Micro QR encoder
+# =============================================================================
 #
-# ISO/IEC 18004:2015 Annex E compliant Micro QR Code encoder.
-#
-# ## What Is Micro QR Code?
-#
-# Micro QR is the compact variant of QR Code, designed for applications where
-# even the smallest standard QR Code (21×21 at version 1) is too large.
-# Common use cases include:
-#
-#   - Surface-mount component labels on circuit boards
-#   - Miniature industrial tags and part markings
-#   - Any application where the 4-module quiet zone of regular QR wastes space
-#
-# The defining characteristic is the **single finder pattern** — where regular
-# QR uses three identical corner squares to establish orientation, Micro QR
-# uses only one, in the top-left corner. This saves significant space at the
-# cost of some scanner robustness.
+# Micro QR Code is the compact cousin of the full QR Code, designed for
+# applications where even the smallest standard QR (21×21) is too large.
+# Think surface-mount component labels, circuit board markings, or miniature
+# industrial tags on watch parts.
 #
 # ## Symbol sizes
 #
-#   M1: 11×11 modules    M2: 13×13 modules
-#   M3: 15×15 modules    M4: 17×17 modules
-#
+#   M1: 11×11   M2: 13×13   M3: 15×15   M4: 17×17
 #   Formula: size = 2 × version_number + 9
 #
-# ## Key differences from regular QR Code
+# ## Key differences from full QR Code
 #
-#   - Single finder pattern at top-left only
-#   - Timing patterns at row 0 / col 0 (not row 6 / col 6)
-#   - Only 4 mask patterns (not 8)
-#   - Format XOR mask 0x4445 (not 0x5412)
-#   - Single copy of format info (not two)
-#   - 2-module quiet zone (not 4)
-#   - Narrower mode indicators: 0–3 bits (not fixed 4)
-#   - Single block — no interleaving
+#   1. SINGLE finder pattern (top-left only) — no top-right or bottom-left.
+#   2. Timing strips at ROW 0 and COL 0, not row 6/col 6 as in full QR.
+#   3. Only 4 mask patterns (not 8).
+#   4. Format XOR mask is 0x4445 (not 0x5412).
+#   5. Single copy of format information (not two).
+#   6. 2-module quiet zone (not 4).
+#   7. Narrower mode indicators: 0–3 bits (symbol-dependent).
+#   8. Single RS block per symbol (no interleaving needed).
 #
 # ## Encoding pipeline
 #
 #   input string
-#     → auto-select smallest symbol (M1..M4) and mode
-#     → build bit stream (mode indicator + char count + data + terminator + padding)
+#     → auto-select smallest symbol (M1..M4) and encoding mode
+#     → build bit stream (mode indicator + char count + data + terminator + pad)
 #     → Reed-Solomon ECC (GF(256)/0x11D, b=0, single block)
-#     → initialize grid (finder, L-shaped separator, timing at row0/col0, format reserved)
+#     → init grid (finder, L-shaped separator, timing row0/col0, format reserved)
 #     → zigzag data placement (two-column snake from bottom-right)
-#     → evaluate 4 mask patterns, pick lowest penalty
+#     → evaluate 4 mask patterns, pick lowest penalty score
 #     → write format information (15 bits, single copy, XOR 0x4445)
-#     → ModuleGrid
+#     → return ModuleGrid hashref
 #
-# ## Dependencies
+# ## Encoding modes (subset available per symbol)
 #
-#   CodingAdventures::GF256    — GF(256) multiply for Reed-Solomon
-#   CodingAdventures::Barcode2D — ModuleGrid type and layout()
+#   numeric      — digits 0-9 only.  3 digits → 10 bits, 2 → 7 bits, 1 → 4 bits.
+#   alphanumeric — 45-char set (0-9, A-Z, space, $%*+-./:). Pairs → 11 bits, single → 6 bits.
+#   byte         — raw bytes (ASCII or UTF-8). Each byte → 8 bits.
+#
+# ## Building blocks
+#
+#   P2D01 barcode-2d — ModuleGrid representation and layout() rendering
+#   MA01  gf256      — GF(2^8) field arithmetic for Reed-Solomon
+#
+# ## Reference
+#
+#   ISO/IEC 18004:2015, Annex E (Micro QR Code)
+#   Rust reference implementation: code/packages/rust/micro-qr/
 #
 # =============================================================================
 
@@ -61,233 +59,65 @@ use strict;
 use warnings;
 use Carp qw(croak);
 use List::Util ();
-use Exporter 'import';
 
-use CodingAdventures::GF256 qw(multiply);
 use CodingAdventures::Barcode2D ();
+use CodingAdventures::GF256     ();
 
 our $VERSION = '0.1.0';
 
-our @EXPORT_OK = qw(
-    encode
-    encode_at
-    layout_grid
-);
-
 # =============================================================================
-# Public type constants
+# Public exports
 # =============================================================================
 
-# MicroQRVersion constants — the four symbol designators.
+use Exporter 'import';
+our @EXPORT_OK = qw(encode encode_at layout_grid);
+
+# =============================================================================
+# Symbol version constants (exported as sub constants)
+# =============================================================================
 #
-# Each version adds two rows and columns. The formula is:
-#   size = 2 × version_number + 9
+# Each Micro QR symbol has a "version number" that governs its size:
+#   M1 → 11×11 modules
+#   M2 → 13×13 modules
+#   M3 → 15×15 modules
+#   M4 → 17×17 modules
 #
-# So M1=11×11, M2=13×13, M3=15×15, M4=17×17.
+# In code we represent these as small integers 1-4.
+# The `use constant` pragma creates zero-argument subs that return the value;
+# under `use strict` these MUST be called with parens: M1() not M1.
+
 use constant {
-    M1 => 'M1',
-    M2 => 'M2',
-    M3 => 'M3',
-    M4 => 'M4',
+    M1 => 1,
+    M2 => 2,
+    M3 => 3,
+    M4 => 4,
 };
 
-# ECC level constants.
+# =============================================================================
+# ECC level constants
+# =============================================================================
 #
-# | Level     | Available in | Recovery        |
-# |-----------|-------------|-----------------|
-# | DETECTION | M1 only     | detects errors  |
-# | L         | M2, M3, M4  | ~7% of codewords|
-# | M         | M2, M3, M4  | ~15%            |
-# | Q         | M4 only     | ~25%            |
+# Micro QR supports only a subset of QR's four ECC levels:
 #
-# Level H is not available in any Micro QR symbol — the symbols are too small
-# to absorb 30% redundancy while retaining useful capacity.
+#   DETECTION — M1 only.  No correction; detects single-codeword errors.
+#   ECC_L     — M2, M3, M4.  ~7% codeword recovery.
+#   ECC_M     — M2, M3, M4.  ~15% codeword recovery.
+#   ECC_Q     — M4 only.     ~25% codeword recovery.
+#
+# Level H is not available in Micro QR.
+
 use constant {
-    DETECTION => 'Detection',
+    DETECTION => 'D',
     ECC_L     => 'L',
     ECC_M     => 'M',
     ECC_Q     => 'Q',
 };
 
 # =============================================================================
-# Symbol configurations
+# Encoding mode identifiers (private)
 # =============================================================================
 #
-# There are exactly 8 valid (version, ECC) combinations. Each configuration
-# captures all the compile-time constants needed for encoding.
-#
-# Fields:
-#   version         — M1, M2, M3, or M4
-#   ecc             — Detection, L, M, or Q
-#   symbol_indicator— 3-bit value in format information (0..7)
-#   size            — symbol side length in modules (11, 13, 15, or 17)
-#   data_cw         — number of data codewords (bytes, except M1 = 2.5 bytes)
-#   ecc_cw          — number of ECC codewords
-#   numeric_cap     — max numeric characters (0 = not supported)
-#   alpha_cap       — max alphanumeric characters (0 = not supported)
-#   byte_cap        — max byte characters (0 = not supported)
-#   terminator_bits — terminator zero-bit count (3/5/7/9)
-#   mode_bits       — mode indicator bit width (0=M1, 1=M2, 2=M3, 3=M4)
-#   cc_numeric      — character count field width for numeric mode
-#   cc_alpha        — character count field width for alphanumeric mode
-#   cc_byte         — character count field width for byte mode
-#   m1_half_cw      — true for M1: last data "codeword" is only 4 bits
-#
-# The 8 configurations are listed in the order SYMBOL_CONFIGS is iterated for
-# auto-selection: smallest+weakest ECC first, largest+strongest last.
-
-my @SYMBOL_CONFIGS = (
-    # M1 / Detection
-    {   version => M1, ecc => DETECTION, symbol_indicator => 0, size => 11,
-        data_cw => 3,  ecc_cw => 2,
-        numeric_cap => 5, alpha_cap => 0, byte_cap => 0,
-        terminator_bits => 3, mode_bits => 0,
-        cc_numeric => 3, cc_alpha => 0, cc_byte => 0,
-        m1_half_cw => 1 },
-    # M2 / L
-    {   version => M2, ecc => ECC_L, symbol_indicator => 1, size => 13,
-        data_cw => 5,  ecc_cw => 5,
-        numeric_cap => 10, alpha_cap => 6, byte_cap => 4,
-        terminator_bits => 5, mode_bits => 1,
-        cc_numeric => 4, cc_alpha => 3, cc_byte => 4,
-        m1_half_cw => 0 },
-    # M2 / M
-    {   version => M2, ecc => ECC_M, symbol_indicator => 2, size => 13,
-        data_cw => 4,  ecc_cw => 6,
-        numeric_cap => 8, alpha_cap => 5, byte_cap => 3,
-        terminator_bits => 5, mode_bits => 1,
-        cc_numeric => 4, cc_alpha => 3, cc_byte => 4,
-        m1_half_cw => 0 },
-    # M3 / L
-    {   version => M3, ecc => ECC_L, symbol_indicator => 3, size => 15,
-        data_cw => 11, ecc_cw => 6,
-        numeric_cap => 23, alpha_cap => 14, byte_cap => 9,
-        terminator_bits => 7, mode_bits => 2,
-        cc_numeric => 5, cc_alpha => 4, cc_byte => 4,
-        m1_half_cw => 0 },
-    # M3 / M
-    {   version => M3, ecc => ECC_M, symbol_indicator => 4, size => 15,
-        data_cw => 9,  ecc_cw => 8,
-        numeric_cap => 18, alpha_cap => 11, byte_cap => 7,
-        terminator_bits => 7, mode_bits => 2,
-        cc_numeric => 5, cc_alpha => 4, cc_byte => 4,
-        m1_half_cw => 0 },
-    # M4 / L
-    {   version => M4, ecc => ECC_L, symbol_indicator => 5, size => 17,
-        data_cw => 16, ecc_cw => 8,
-        numeric_cap => 35, alpha_cap => 21, byte_cap => 15,
-        terminator_bits => 9, mode_bits => 3,
-        cc_numeric => 6, cc_alpha => 5, cc_byte => 5,
-        m1_half_cw => 0 },
-    # M4 / M
-    {   version => M4, ecc => ECC_M, symbol_indicator => 6, size => 17,
-        data_cw => 14, ecc_cw => 10,
-        numeric_cap => 30, alpha_cap => 18, byte_cap => 13,
-        terminator_bits => 9, mode_bits => 3,
-        cc_numeric => 6, cc_alpha => 5, cc_byte => 5,
-        m1_half_cw => 0 },
-    # M4 / Q
-    {   version => M4, ecc => ECC_Q, symbol_indicator => 7, size => 17,
-        data_cw => 10, ecc_cw => 14,
-        numeric_cap => 21, alpha_cap => 13, byte_cap => 9,
-        terminator_bits => 9, mode_bits => 3,
-        cc_numeric => 6, cc_alpha => 5, cc_byte => 5,
-        m1_half_cw => 0 },
-);
-
-# =============================================================================
-# RS generator polynomials (compile-time constants)
-# =============================================================================
-#
-# Monic RS generator polynomials for GF(256)/0x11D with b=0 convention.
-#
-# The generator of degree n for n ECC codewords is:
-#
-#   g(x) = (x + α⁰)(x + α¹)···(x + α^{n-1})
-#
-# where α = 2 (the primitive element of the field).
-#
-# Each entry is an arrayref of n+1 coefficients, leading monic term included,
-# highest degree first.
-#
-# Only the six counts {2, 5, 6, 8, 10, 14} are needed for Micro QR.
-# These are the same polynomials used by regular QR Code for blocks with
-# matching ECC counts — the field and convention are identical.
-
-my %RS_GENERATORS = (
-    2  => [0x01, 0x03, 0x02],
-    5  => [0x01, 0x1f, 0xf6, 0x44, 0xd9, 0x68],
-    6  => [0x01, 0x3f, 0x4e, 0x17, 0x9b, 0x05, 0x37],
-    8  => [0x01, 0x63, 0x0d, 0x60, 0x6d, 0x5b, 0x10, 0xa2, 0xa3],
-    10 => [0x01, 0xf6, 0x75, 0xa8, 0xd0, 0xc3, 0xe3, 0x36, 0xe1, 0x3c, 0x45],
-    14 => [0x01, 0xf6, 0x9a, 0x60, 0x97, 0x8a, 0xf1, 0xa4, 0xa1,
-           0x8e, 0xfc, 0x7a, 0x52, 0xad, 0xac],
-);
-
-# =============================================================================
-# Format information table (pre-computed)
-# =============================================================================
-#
-# All 32 format words after XOR with the Micro QR mask 0x4445.
-#
-# The format information bit structure is:
-#   [symbol_indicator (3b)] [mask_pattern (2b)] [BCH-10 remainder]
-#
-# XOR-masked with 0x4445 to prevent Micro QR symbols from being misread
-# as regular QR symbols (which use 0x5412).
-#
-# Indexed as $FORMAT_TABLE[$symbol_indicator][$mask_pattern].
-# symbol_indicator runs 0..7, mask_pattern runs 0..3.
-#
-# The values are 15-bit integers (bit 14 = MSB, bit 0 = LSB).
-# They are placed MSB-first into the format information strip.
-
-my @FORMAT_TABLE = (
-    [0x4445, 0x4172, 0x4E2B, 0x4B1C],  # M1  (sym_ind=0)
-    [0x5528, 0x501F, 0x5F46, 0x5A71],  # M2-L (sym_ind=1)
-    [0x6649, 0x637E, 0x6C27, 0x6910],  # M2-M (sym_ind=2)
-    [0x7764, 0x7253, 0x7D0A, 0x783D],  # M3-L (sym_ind=3)
-    [0x06DE, 0x03E9, 0x0CB0, 0x0987],  # M3-M (sym_ind=4)
-    [0x17F3, 0x12C4, 0x1D9D, 0x18AA],  # M4-L (sym_ind=5)
-    [0x24B2, 0x2185, 0x2EDC, 0x2BEB],  # M4-M (sym_ind=6)
-    [0x359F, 0x30A8, 0x3FF1, 0x3AC6],  # M4-Q (sym_ind=7)
-);
-
-# =============================================================================
-# Alphanumeric character set
-# =============================================================================
-#
-# The 45-character set shared with regular QR Code. Each character maps to its
-# index in this string (0-based). Index is used in the 45×first+second encoding.
-#
-# | Range       | Indices |
-# |-------------|---------|
-# | '0'–'9'     | 0–9     |
-# | 'A'–'Z'     | 10–35   |
-# | ' '         | 36      |
-# | '$'         | 37      |
-# | '%'         | 38      |
-# | '*'         | 39      |
-# | '+'         | 40      |
-# | '-'         | 41      |
-# | '.'         | 42      |
-# | '/'         | 43      |
-# | ':'         | 44      |
-
-my $ALPHANUM_CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:';
-
-# Pre-compute a lookup hash for O(1) index retrieval.
-my %ALPHANUM_INDEX;
-{
-    my @chars = split //, $ALPHANUM_CHARS;
-    for my $i (0 .. $#chars) {
-        $ALPHANUM_INDEX{$chars[$i]} = $i;
-    }
-}
-
-# =============================================================================
-# Encoding mode constants
-# =============================================================================
+# These are internal string tags used throughout the module.
 
 use constant {
     MODE_NUMERIC      => 'numeric',
@@ -296,329 +126,462 @@ use constant {
 };
 
 # =============================================================================
-# _select_mode($input, $cfg) → mode string
+# Symbol configuration table
 # =============================================================================
 #
-# Choose the most compact encoding mode supported by $cfg that can represent
-# every character in $input.
+# There are exactly 8 valid (version, ECC) combinations in Micro QR.
+# Each has its own set of parameters:
 #
-# Priority (most to least compact):
-#   1. Numeric      — all characters are ASCII digits 0–9
-#   2. Alphanumeric — all characters are in the 45-char set
-#   3. Byte         — raw byte encoding (UTF-8 bytes for non-ASCII)
+#   symbol_indicator — 3-bit field embedded in format information (0..7).
+#   size             — symbol side length in modules.
+#   data_cw          — number of data codewords (8-bit bytes, except M1 uses 2.5).
+#   ecc_cw           — number of Reed-Solomon ECC codewords.
+#   numeric_cap      — max numeric characters (0 = not supported).
+#   alpha_cap        — max alphanumeric characters.
+#   byte_cap         — max byte characters.
+#   terminator_bits  — bits in the end-of-data terminator (3/5/7/9).
+#   mode_bits        — width of the mode indicator field (0=M1, 1=M2, 2=M3, 3=M4).
+#   cc_num           — char-count field width for numeric mode.
+#   cc_alpha         — char-count field width for alphanumeric mode.
+#   cc_byte          — char-count field width for byte mode.
+#   m1_half_cw       — true only for M1: last data "codeword" is a 4-bit nibble.
 #
-# Returns MODE_NUMERIC, MODE_ALPHANUMERIC, or MODE_BYTE.
-# Dies with an informative message if no mode is available.
+# Source: ISO/IEC 18004:2015 Tables E.1–E.5.
 
+my @CONFIGS = (
+    # M1 / Detection
+    {
+        version => M1, ecc => DETECTION,
+        symbol_indicator => 0, size => 11,
+        data_cw => 3, ecc_cw => 2,
+        numeric_cap => 5, alpha_cap => 0, byte_cap => 0,
+        terminator_bits => 3, mode_bits => 0,
+        cc_num => 3, cc_alpha => 0, cc_byte => 0,
+        m1_half_cw => 1,
+    },
+    # M2 / L
+    {
+        version => M2, ecc => ECC_L,
+        symbol_indicator => 1, size => 13,
+        data_cw => 5, ecc_cw => 5,
+        numeric_cap => 10, alpha_cap => 6, byte_cap => 4,
+        terminator_bits => 5, mode_bits => 1,
+        cc_num => 4, cc_alpha => 3, cc_byte => 4,
+        m1_half_cw => 0,
+    },
+    # M2 / M
+    {
+        version => M2, ecc => ECC_M,
+        symbol_indicator => 2, size => 13,
+        data_cw => 4, ecc_cw => 6,
+        numeric_cap => 8, alpha_cap => 5, byte_cap => 3,
+        terminator_bits => 5, mode_bits => 1,
+        cc_num => 4, cc_alpha => 3, cc_byte => 4,
+        m1_half_cw => 0,
+    },
+    # M3 / L
+    {
+        version => M3, ecc => ECC_L,
+        symbol_indicator => 3, size => 15,
+        data_cw => 11, ecc_cw => 6,
+        numeric_cap => 23, alpha_cap => 14, byte_cap => 9,
+        terminator_bits => 7, mode_bits => 2,
+        cc_num => 5, cc_alpha => 4, cc_byte => 4,
+        m1_half_cw => 0,
+    },
+    # M3 / M
+    {
+        version => M3, ecc => ECC_M,
+        symbol_indicator => 4, size => 15,
+        data_cw => 9, ecc_cw => 8,
+        numeric_cap => 18, alpha_cap => 11, byte_cap => 7,
+        terminator_bits => 7, mode_bits => 2,
+        cc_num => 5, cc_alpha => 4, cc_byte => 4,
+        m1_half_cw => 0,
+    },
+    # M4 / L
+    {
+        version => M4, ecc => ECC_L,
+        symbol_indicator => 5, size => 17,
+        data_cw => 16, ecc_cw => 8,
+        numeric_cap => 35, alpha_cap => 21, byte_cap => 15,
+        terminator_bits => 9, mode_bits => 3,
+        cc_num => 6, cc_alpha => 5, cc_byte => 5,
+        m1_half_cw => 0,
+    },
+    # M4 / M
+    {
+        version => M4, ecc => ECC_M,
+        symbol_indicator => 6, size => 17,
+        data_cw => 14, ecc_cw => 10,
+        numeric_cap => 30, alpha_cap => 18, byte_cap => 13,
+        terminator_bits => 9, mode_bits => 3,
+        cc_num => 6, cc_alpha => 5, cc_byte => 5,
+        m1_half_cw => 0,
+    },
+    # M4 / Q
+    {
+        version => M4, ecc => ECC_Q,
+        symbol_indicator => 7, size => 17,
+        data_cw => 10, ecc_cw => 14,
+        numeric_cap => 21, alpha_cap => 13, byte_cap => 9,
+        terminator_bits => 9, mode_bits => 3,
+        cc_num => 6, cc_alpha => 5, cc_byte => 5,
+        m1_half_cw => 0,
+    },
+);
+
+# =============================================================================
+# Pre-computed format information table
+# =============================================================================
+#
+# Each of the 32 combinations of (symbol_indicator × mask_pattern) has a
+# unique pre-computed 15-bit format word. Pre-computing avoids BCH polynomial
+# division at encode time.
+#
+# FORMAT_TABLE[$si][$mp] gives the word already XOR-masked with 0x4445.
+#
+# The 15-bit format word structure:
+#   bits 14-12: symbol_indicator (3 bits)
+#   bits 11-10: mask_pattern (2 bits)
+#   bits  9- 0: BCH-10 error-protection bits (computed from the 5-bit data above)
+# XOR-masked with 0x4445 (Micro QR specific, NOT 0x5412 like regular QR).
+#
+# Values verified against Rust reference implementation.
+
+my @FORMAT_TABLE = (
+    [0x4445, 0x4172, 0x4E2B, 0x4B1C],  # si=0 (M1/Detection)
+    [0x5528, 0x501F, 0x5F46, 0x5A71],  # si=1 (M2/L)
+    [0x6649, 0x637E, 0x6C27, 0x6910],  # si=2 (M2/M)
+    [0x7764, 0x7253, 0x7D0A, 0x783D],  # si=3 (M3/L)
+    [0x06DE, 0x03E9, 0x0CB0, 0x0987],  # si=4 (M3/M)
+    [0x17F3, 0x12C4, 0x1D9D, 0x18AA],  # si=5 (M4/L)
+    [0x24B2, 0x2185, 0x2EDC, 0x2BEB],  # si=6 (M4/M)
+    [0x359F, 0x30A8, 0x3FF1, 0x3AC6],  # si=7 (M4/Q)
+);
+
+# =============================================================================
+# Alphanumeric character set
+# =============================================================================
+#
+# 45 characters in QR/Micro QR's alphanumeric encoding mode, indexed 0-44.
+# Character pair (a, b) encodes to: a_idx * 45 + b_idx → 11 bits.
+
+my $ALPHANUM_CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:';
+
+# =============================================================================
+# Symbol selection
+# =============================================================================
+
+# _select_config — find the smallest (version, ECC) config that fits the input.
+#
+# If $version and/or $ecc are provided, only configs matching those constraints
+# are considered. Among the matching candidates (ordered smallest-first), the
+# first one where both the mode is supported and the input fits is returned.
+#
+# The candidates array is already ordered smallest-first (M1..M4, L before M,
+# M before Q within the same version) so the first fit is the optimal choice.
+#
+# Returns a hashref from @CONFIGS, or dies with a descriptive message.
+sub _select_config {
+    my ($input, $version, $ecc) = @_;
+
+    my @candidates = grep {
+        (!defined $version || $_->{version} == $version) &&
+        (!defined $ecc     || $_->{ecc}     eq $ecc    )
+    } @CONFIGS;
+
+    croak "ECCNotAvailable: no Micro QR symbol matches version=${\(defined $version ? $version : 'any')}"
+        . " ecc=${\(defined $ecc ? $ecc : 'any')}"
+        unless @candidates;
+
+    for my $cfg (@candidates) {
+        my $mode = _select_mode($input, $cfg);
+        next unless defined $mode;
+
+        my $len = ($mode eq MODE_BYTE)
+            ? length(pack 'A*', $input)
+            : length($input);
+        my $cap = $mode eq MODE_NUMERIC      ? $cfg->{numeric_cap}
+                : $mode eq MODE_ALPHANUMERIC ? $cfg->{alpha_cap}
+                :                              $cfg->{byte_cap};
+        next unless $cap > 0 && $len <= $cap;
+        return $cfg;
+    }
+
+    croak "InputTooLong: input (length " . length($input) . ") does not fit in any"
+        . " Micro QR symbol. Maximum is 35 numeric chars in M4-L.";
+}
+
+# _select_mode — choose the most compact encoding mode supported by $cfg.
+#
+# Priority: numeric (most compact) → alphanumeric → byte (least compact).
+# Returns undef if the input cannot be encoded in any mode $cfg supports.
 sub _select_mode {
     my ($input, $cfg) = @_;
 
-    # --- Numeric check ---
-    # All characters must be ASCII digits 0-9.
-    # An empty string qualifies as numeric (zero digits to encode).
-    my $is_numeric = ($input =~ /\A[0-9]*\z/);
-    if ($is_numeric && $cfg->{cc_numeric} > 0) {
+    # Numeric: all characters are ASCII digits 0-9.
+    if ($input =~ /^\d*$/ && $cfg->{cc_num} > 0) {
         return MODE_NUMERIC;
     }
 
-    # --- Alphanumeric check ---
-    # Every character must appear in the 45-char alphanumeric set.
-    my $is_alpha = 1;
-    for my $ch (split //, $input) {
-        unless (exists $ALPHANUM_INDEX{$ch}) {
-            $is_alpha = 0;
-            last;
-        }
-    }
-    if ($is_alpha && $cfg->{alpha_cap} > 0) {
+    # Alphanumeric: all characters are in the 45-char QR set.
+    if ($cfg->{alpha_cap} > 0 && _all_alphanum($input)) {
         return MODE_ALPHANUMERIC;
     }
 
-    # --- Byte mode ---
-    # Raw bytes. All inputs are representable; the question is whether
-    # this symbol version supports byte mode.
+    # Byte: raw bytes.
     if ($cfg->{byte_cap} > 0) {
         return MODE_BYTE;
     }
 
-    die sprintf(
-        "MicroQR::UnsupportedMode: input cannot be encoded in any mode "
-        . "supported by %s/%s\n",
-        $cfg->{version}, $cfg->{ecc}
-    );
+    return undef;  # no supported mode
+}
+
+# _all_alphanum — return 1 if every character in $s is in the QR alphanumeric set.
+sub _all_alphanum {
+    my ($s) = @_;
+    for my $c (split //, $s) {
+        return 0 if index($ALPHANUM_CHARS, $c) < 0;
+    }
+    return 1;
 }
 
 # =============================================================================
-# _mode_indicator($mode, $cfg) → integer
+# Inner package: BitWriter
 # =============================================================================
 #
-# Return the mode indicator value for the given mode and symbol version.
+# A simple MSB-first bit accumulator. Callers write (value, count) pairs;
+# the writer appends the `count` least-significant bits of `value` in
+# big-endian (MSB-first) order. This matches the QR Code bit convention
+# throughout.
 #
-# The mode indicator width (in bits) depends on the symbol:
-#
-#   M1 (mode_bits=0) — no indicator; only numeric is supported
-#   M2 (mode_bits=1) — 1 bit: 0=numeric, 1=alphanumeric
-#   M3 (mode_bits=2) — 2 bits: 00=num, 01=alpha, 10=byte
-#   M4 (mode_bits=3) — 3 bits: 000=num, 001=alpha, 010=byte, 011=kanji
-#
-# Kanji is not implemented in this encoder (returns 0x011 if ever requested).
+# Example:
+#   my $w = CodingAdventures::MicroQR::BitWriter->new;
+#   $w->write(0b101, 3);   # appends bits: 1, 0, 1
+#   $w->to_bytes();         # returns [0b10100000]  (packed into first byte)
 
-sub _mode_indicator {
+package CodingAdventures::MicroQR::BitWriter;
+
+sub new  { bless { bits => [] }, shift }
+
+# write — append the $count LSBs of $value, MSB first.
+sub write {
+    my ($self, $value, $count) = @_;
+    for my $i (reverse 0 .. $count - 1) {
+        push @{ $self->{bits} }, ($value >> $i) & 1;
+    }
+}
+
+# bit_len — total number of bits accumulated so far.
+sub bit_len { scalar @{ $_[0]->{bits} } }
+
+# to_bytes — pack accumulated bits into a byte array (MSB first within each byte).
+#
+# Bits are grouped into 8-bit chunks. If the total bit count is not a
+# multiple of 8, the last byte is zero-padded on the right (least significant side).
+sub to_bytes {
+    my ($self) = @_;
+    my @bytes;
+    my @bits = @{ $self->{bits} };
+    my $n = scalar @bits;
+    for (my $i = 0; $i < $n; $i += 8) {
+        my $byte = 0;
+        for my $j (0 .. 7) {
+            $byte = ($byte << 1) | ($bits[$i + $j] // 0);
+        }
+        push @bytes, $byte;
+    }
+    return \@bytes;
+}
+
+# to_bit_vec — return a reference to the raw bit array (0s and 1s).
+sub to_bit_vec { [ @{ $_[0]->{bits} } ] }
+
+package CodingAdventures::MicroQR;
+
+# =============================================================================
+# Data encoding helpers
+# =============================================================================
+
+# _mode_indicator_value — numeric value for the mode indicator field.
+#
+# The mode indicator bit width varies by symbol (0 bits for M1, 1 for M2,
+# 2 for M3, 3 for M4). Within a given width, each mode has a distinct code.
+#
+#   M1 (0 bits): no indicator — M1 only supports numeric anyway.
+#   M2 (1 bit):  numeric=0, alphanumeric/byte=1
+#   M3 (2 bits): numeric=00, alphanumeric=01, byte=10
+#   M4 (3 bits): numeric=000, alphanumeric=001, byte=010
+sub _mode_indicator_value {
     my ($mode, $cfg) = @_;
     my $bits = $cfg->{mode_bits};
-
     return 0 if $bits == 0;   # M1: no indicator
-
     if ($bits == 1) {
-        return $mode eq MODE_NUMERIC ? 0 : 1;
+        return ($mode eq MODE_NUMERIC) ? 0 : 1;
     }
     if ($bits == 2) {
-        return 0 if $mode eq MODE_NUMERIC;
-        return 1 if $mode eq MODE_ALPHANUMERIC;
-        return 2;   # byte
+        return 0b00 if $mode eq MODE_NUMERIC;
+        return 0b01 if $mode eq MODE_ALPHANUMERIC;
+        return 0b10;   # byte
     }
-    if ($bits == 3) {
-        return 0 if $mode eq MODE_NUMERIC;
-        return 1 if $mode eq MODE_ALPHANUMERIC;
-        return 2;   # byte (kanji would be 3, not implemented)
-    }
-
-    return 0;
+    # $bits == 3 (M4)
+    return 0b000 if $mode eq MODE_NUMERIC;
+    return 0b001 if $mode eq MODE_ALPHANUMERIC;
+    return 0b010;  # byte
 }
 
-# =============================================================================
-# _char_count_bits($mode, $cfg) → integer
-# =============================================================================
-#
-# Return the number of bits used for the character count field.
-
-sub _char_count_bits {
+# _cc_bits — width of the character-count field for the given mode and config.
+sub _cc_bits {
     my ($mode, $cfg) = @_;
-    return $cfg->{cc_numeric} if $mode eq MODE_NUMERIC;
-    return $cfg->{cc_alpha}   if $mode eq MODE_ALPHANUMERIC;
+    return $cfg->{cc_num}   if $mode eq MODE_NUMERIC;
+    return $cfg->{cc_alpha} if $mode eq MODE_ALPHANUMERIC;
     return $cfg->{cc_byte};
 }
 
-# =============================================================================
-# BitWriter — accumulate bits MSB-first, flush to bytes
-# =============================================================================
+# _encode_numeric — push numeric data bits into $w.
 #
-# The QR/Micro-QR specification uses big-endian bit ordering within each
-# codeword. A "bit writer" accumulates bits as individual 0/1 values, then
-# packs them into bytes 8 at a time (MSB at the highest index of each byte).
-#
-# Example:
-#   write(5, 4)  → 0 1 0 1   (binary 0101 in 4 bits, MSB first)
-#   write(3, 3)  → 0 1 1     (binary 011 in 3 bits, MSB first)
-#   to_bytes()   → [0b01010011]  = [0x53]
-
-{
-    package CodingAdventures::MicroQR::BitWriter;
-
-    sub new {
-        my $class = shift;
-        return bless { bits => [] }, $class;
-    }
-
-    # Write the `count` least-significant bits of `$value`, MSB first.
-    sub write {
-        my ($self, $value, $count) = @_;
-        for my $i (reverse 0 .. $count - 1) {
-            push @{$self->{bits}}, ($value >> $i) & 1;
-        }
-    }
-
-    # Return the current bit count.
-    sub bit_len { return scalar @{$_[0]->{bits}} }
-
-    # Return the raw bit array (arrayref of 0/1 values).
-    sub bit_vec { return [@{$_[0]->{bits}}] }
-
-    # Pack the accumulated bits into a byte array (arrayref of integers 0..255).
-    # If the total bit count is not a multiple of 8, the final byte is
-    # zero-padded on the right (LSB side).
-    sub to_bytes {
-        my $self = shift;
-        my @bits = @{$self->{bits}};
-        my @result;
-        my $i = 0;
-        while ($i < @bits) {
-            my $byte = 0;
-            for my $j (0 .. 7) {
-                $byte = ($byte << 1) | (($i + $j < @bits) ? $bits[$i + $j] : 0);
-            }
-            push @result, $byte;
-            $i += 8;
-        }
-        return \@result;
-    }
-}
-
-# =============================================================================
-# _encode_numeric($input, $bw)
-# =============================================================================
-#
-# Encode a string of digits into the bit writer.
-#
-# The encoding groups digits greedily from left to right:
-#
-#   3 digits (000–999) → 10 bits   (decimal value)
-#   2 digits (00–99)   →  7 bits
-#   1 digit  (0–9)     →  4 bits
-#
-# Example: "12345" → groups "123" (123→10 bits) + "45" (45→7 bits) = 17 bits
-# Example: "1"     → 1 (4 bits)
-# Example: "12"    → 12 (7 bits)
-
+# Groups of 3 digits → 10 bits (value range 0-999, needs 10 bits).
+# Pairs of 2 digits  →  7 bits (value range 0-99).
+# Single digit       →  4 bits (value range 0-9).
 sub _encode_numeric {
-    my ($input, $bw) = @_;
-    my @digits = map { ord($_) - ord('0') } split //, $input;
+    my ($input, $w) = @_;
+    my @chars = split //, $input;
+    my $n = scalar @chars;
     my $i = 0;
-    while ($i + 2 <= $#digits) {
-        $bw->write($digits[$i] * 100 + $digits[$i+1] * 10 + $digits[$i+2], 10);
+    while ($i + 2 < $n) {
+        my $v = substr($input, $i, 3) + 0;
+        $w->write($v, 10);
         $i += 3;
     }
-    if ($i + 1 <= $#digits) {
-        $bw->write($digits[$i] * 10 + $digits[$i+1], 7);
+    if ($i + 1 < $n) {
+        my $v = substr($input, $i, 2) + 0;
+        $w->write($v, 7);
         $i += 2;
     }
-    if ($i <= $#digits) {
-        $bw->write($digits[$i], 4);
+    if ($i < $n) {
+        $w->write(substr($input, $i, 1) + 0, 4);
     }
 }
 
-# =============================================================================
-# _encode_alphanumeric($input, $bw)
-# =============================================================================
+# _encode_alphanumeric — push alphanumeric data bits into $w.
 #
-# Encode a string using the 45-character alphanumeric set.
-#
-# Pairs of characters are packed into 11 bits:
-#   value = first_index × 45 + second_index
-#
-# A trailing single character uses 6 bits.
-#
-# Example: "AC-3"
-#   "AC" → index(A)=10, index(C)=12  → 10×45+12 = 462  → 11 bits
-#   "-3" → index(-)=41, index(3)=3   → 41×45+3  = 1848 → 11 bits
-
+# Character pairs encode as: (idx_a * 45 + idx_b) → 11 bits.
+# Trailing single character encodes as: idx → 6 bits.
 sub _encode_alphanumeric {
-    my ($input, $bw) = @_;
-    my @indices = map { $ALPHANUM_INDEX{$_} } split //, $input;
+    my ($input, $w) = @_;
+    my @chars = split //, $input;
+    my $n = scalar @chars;
     my $i = 0;
-    while ($i + 1 <= $#indices) {
-        $bw->write($indices[$i] * 45 + $indices[$i+1], 11);
+    while ($i + 1 < $n) {
+        my $ia = index($ALPHANUM_CHARS, $chars[$i]);
+        my $ib = index($ALPHANUM_CHARS, $chars[$i + 1]);
+        croak "InvalidCharacter: '$chars[$i]' not in QR alphanumeric set" if $ia < 0;
+        croak "InvalidCharacter: '$chars[$i+1]' not in QR alphanumeric set" if $ib < 0;
+        $w->write($ia * 45 + $ib, 11);
         $i += 2;
     }
-    if ($i <= $#indices) {
-        $bw->write($indices[$i], 6);
+    if ($i < $n) {
+        my $idx = index($ALPHANUM_CHARS, $chars[$i]);
+        croak "InvalidCharacter: '$chars[$i]' not in QR alphanumeric set" if $idx < 0;
+        $w->write($idx, 6);
     }
 }
 
-# =============================================================================
-# _encode_byte($input, $bw)
-# =============================================================================
+# _encode_byte — push raw byte data bits into $w.
 #
-# Encode raw bytes. Each byte of the UTF-8 representation of $input is
-# encoded as 8 bits. For ASCII input this is identical to ISO-8859-1 encoding.
-#
-# Example: "Hi!" → 0x48 0x69 0x21 → 01001000 01101001 00100001
-
+# Each byte is written as-is, 8 bits, MSB first.
+# For pure ASCII input this is equivalent to the character code.
 sub _encode_byte {
-    my ($input, $bw) = @_;
-    for my $byte (unpack 'C*', $input) {
-        $bw->write($byte, 8);
+    my ($input, $w) = @_;
+    for my $b (unpack 'C*', $input) {
+        $w->write($b, 8);
     }
 }
 
 # =============================================================================
-# _build_data_codewords($input, $cfg, $mode) → arrayref of bytes
+# Data codeword assembly
 # =============================================================================
-#
-# Construct the complete data codeword byte sequence for the given input,
-# configuration, and encoding mode.
-#
-# The bit stream structure is:
-#
-#   [mode indicator  (0/1/2/3 bits, version-dependent)]
-#   [character count (width from char-count table)]
-#   [encoded data bits (mode-specific)]
-#   [terminator (3/5/7/9 zero bits, truncated if capacity full)]
-#   [zero bits to next byte boundary]
-#   [pad bytes: alternate 0xEC and 0x11 to fill remaining data codewords]
-#
-# M1 special case: total data capacity is 20 bits (not 24). The RS encoder
-# still receives 3 bytes, but the last byte carries data in its upper nibble
-# only; the lower nibble is always zero. There is no 0xEC/0x11 padding for M1.
 
+# _build_data_codewords — assemble the full data codeword byte sequence.
+#
+# For all symbols except M1:
+#   [mode indicator (0/1/2/3 bits)] [char count] [data bits]
+#   [terminator (≤N zero bits)] [byte-boundary pad] [0xEC/0x11 fill bytes]
+#   → exactly cfg->{data_cw} bytes
+#
+# For M1 (m1_half_cw = true):
+#   Total data capacity = 20 bits (2 full bytes + 4-bit nibble).
+#   The RS encoder sees 3 bytes where byte[2] carries data in its upper nibble
+#   and its lower nibble is always 0.
+#
+# The 0xEC/0x11 pad bytes are the "11101100" / "00010001" alternation from
+# ISO 18004. They ensure that the padding doesn't accidentally create a
+# valid-looking terminator pattern.
 sub _build_data_codewords {
     my ($input, $cfg, $mode) = @_;
 
     # Total usable data bit capacity.
-    # M1: 3 codewords × 8 bits − 4 = 20 bits (last "codeword" is 4 bits)
-    # Others: data_cw × 8 bits
+    # M1 has 2.5 codewords = 20 bits; the last byte uses only upper 4 bits.
     my $total_bits = $cfg->{m1_half_cw}
-        ? ($cfg->{data_cw} * 8 - 4)
+        ? ($cfg->{data_cw} * 8 - 4)   # 3×8 − 4 = 20 bits
         : ($cfg->{data_cw} * 8);
 
-    my $bw = CodingAdventures::MicroQR::BitWriter->new();
+    my $w = CodingAdventures::MicroQR::BitWriter->new;
 
-    # Mode indicator (0, 1, 2, or 3 bits)
+    # 1. Mode indicator (variable width: 0-3 bits)
     if ($cfg->{mode_bits} > 0) {
-        $bw->write(_mode_indicator($mode, $cfg), $cfg->{mode_bits});
+        $w->write(_mode_indicator_value($mode, $cfg), $cfg->{mode_bits});
     }
 
-    # Character count (width depends on mode and version)
-    # For byte mode: count raw bytes (UTF-8 encoded).
-    # For numeric/alphanumeric: count characters (code points).
+    # 2. Character count
     my $char_count;
     if ($mode eq MODE_BYTE) {
-        $char_count = length(pack 'A*', $input);   # byte length
+        $char_count = length(pack 'A*', $input);
     } else {
-        $char_count = length($input);              # character count
+        $char_count = length($input);
     }
-    $bw->write($char_count, _char_count_bits($mode, $cfg));
+    $w->write($char_count, _cc_bits($mode, $cfg));
 
-    # Encoded data
-    if    ($mode eq MODE_NUMERIC)      { _encode_numeric($input, $bw) }
-    elsif ($mode eq MODE_ALPHANUMERIC) { _encode_alphanumeric($input, $bw) }
-    else                               { _encode_byte($input, $bw) }
+    # 3. Data payload
+    if ($mode eq MODE_NUMERIC) {
+        _encode_numeric($input, $w);
+    } elsif ($mode eq MODE_ALPHANUMERIC) {
+        _encode_alphanumeric($input, $w);
+    } else {
+        _encode_byte($input, $w);
+    }
 
-    # Terminator: up to terminator_bits zero bits, truncated if capacity is full
-    my $remaining = $total_bits - $bw->bit_len();
+    # 4. Terminator: up to cfg->{terminator_bits} zero bits, truncated if near capacity.
+    my $remaining = $total_bits - $w->bit_len;
     if ($remaining > 0) {
-        my $term = ($cfg->{terminator_bits} < $remaining)
+        my $term = $cfg->{terminator_bits} < $remaining
             ? $cfg->{terminator_bits}
             : $remaining;
-        $bw->write(0, $term);
+        $w->write(0, $term);
     }
 
-    # --- M1 special packing ---
-    # Pack exactly 20 bits into 3 bytes.
-    # The first two bytes are fully packed (bits 0..15).
-    # The third byte carries bits 16..19 in the upper nibble; lower nibble = 0.
+    # 5. M1 special case: pack 20 bits into 3 bytes (last byte = upper nibble only).
     if ($cfg->{m1_half_cw}) {
-        my $bits = $bw->bit_vec();
-        while (@$bits < 20) { push @$bits, 0 }
-        my @b = @{$bits}[0..19];
-        my $b0 = ($b[0]<<7)|($b[1]<<6)|($b[2]<<5)|($b[3]<<4)
-               | ($b[4]<<3)|($b[5]<<2)|($b[6]<<1)|$b[7];
-        my $b1 = ($b[8]<<7)|($b[9]<<6)|($b[10]<<5)|($b[11]<<4)
-               | ($b[12]<<3)|($b[13]<<2)|($b[14]<<1)|$b[15];
-        my $b2 = ($b[16]<<7)|($b[17]<<6)|($b[18]<<5)|($b[19]<<4);
+        my $bits = $w->to_bit_vec;
+        # Extend to exactly 20 bits (zero-pad on the right if needed).
+        push @$bits, (0) x (20 - scalar(@$bits)) if scalar(@$bits) < 20;
+        my $b0 = ($bits->[0]  << 7) | ($bits->[1]  << 6) | ($bits->[2]  << 5) | ($bits->[3]  << 4)
+               | ($bits->[4]  << 3) | ($bits->[5]  << 2) | ($bits->[6]  << 1) | $bits->[7];
+        my $b1 = ($bits->[8]  << 7) | ($bits->[9]  << 6) | ($bits->[10] << 5) | ($bits->[11] << 4)
+               | ($bits->[12] << 3) | ($bits->[13] << 2) | ($bits->[14] << 1) | $bits->[15];
+        my $b2 = ($bits->[16] << 7) | ($bits->[17] << 6) | ($bits->[18] << 5) | ($bits->[19] << 4);
         return [$b0, $b1, $b2];
     }
 
-    # Pad to byte boundary
-    my $rem = $bw->bit_len() % 8;
-    if ($rem != 0) {
-        $bw->write(0, 8 - $rem);
-    }
+    # 6. Pad to byte boundary.
+    my $rem = $w->bit_len % 8;
+    $w->write(0, 8 - $rem) if $rem != 0;
 
-    # Fill remaining codewords with alternating 0xEC / 0x11
-    my $bytes = $bw->to_bytes();
+    # 7. Fill remaining codewords with alternating 0xEC / 0x11 pad bytes.
+    my $bytes = $w->to_bytes;
     my $pad = 0xEC;
-    while (@$bytes < $cfg->{data_cw}) {
+    while (scalar(@$bytes) < $cfg->{data_cw}) {
         push @$bytes, $pad;
         $pad = ($pad == 0xEC) ? 0x11 : 0xEC;
     }
@@ -627,636 +590,537 @@ sub _build_data_codewords {
 }
 
 # =============================================================================
-# _rs_encode($data, $n_ecc) → arrayref of ECC bytes
+# Reed-Solomon encoder (GF(256)/0x11D, b=0 convention)
 # =============================================================================
 #
-# Compute the Reed-Solomon ECC bytes using polynomial remainder division.
+# Micro QR uses a specific RS variant:
+#   - Field: GF(2^8) with primitive polynomial 0x11D (x^8+x^4+x^3+x^2+1)
+#   - b=0 convention: generator polynomial g(x) = ∏(x + α^i) for i=0..n-1
+#     where α^0 = 1 (first root is 1, not α).
 #
-# Algorithm — LFSR polynomial division over GF(256)/0x11D:
+# Generator polynomial degree equals the number of ECC codewords.
+# The 6 degrees needed are {2, 5, 6, 8, 10, 14}.
 #
-#   ecc = [0] × n
-#   for each byte b in data:
-#       feedback = b XOR ecc[0]
-#       shift ecc left by one (drop ecc[0], append 0)
-#       for i in 0..n-1:
-#           ecc[i] ^= gf_multiply(generator[i+1], feedback)
-#
-# This computes the remainder of D(x)·x^n mod G(x), which is the standard
-# RS ECC computation for the b=0 convention (first root is α^0 = 1).
-#
-# The same algorithm is used by regular QR Code — Micro QR shares the same
-# GF(256) field, primitive polynomial 0x11D, and generator convention.
+# We pre-compute (cache) each generator on first use.
 
+my %GENERATORS;
+
+# Generator polynomials pre-computed from the Rust reference implementation.
+# Each array contains coefficients [leading=1, ..., constant term], degree = n.
+my %GENERATOR_TABLE = (
+    2  => [0x01, 0x03, 0x02],
+    5  => [0x01, 0x1f, 0xf6, 0x44, 0xd9, 0x68],
+    6  => [0x01, 0x3f, 0x4e, 0x17, 0x9b, 0x05, 0x37],
+    8  => [0x01, 0x63, 0x0d, 0x60, 0x6d, 0x5b, 0x10, 0xa2, 0xa3],
+    10 => [0x01, 0xf6, 0x75, 0xa8, 0xd0, 0xc3, 0xe3, 0x36, 0xe1, 0x3c, 0x45],
+    14 => [0x01, 0xf6, 0x9a, 0x60, 0x97, 0x8a, 0xf1, 0xa4, 0xa1, 0x8e, 0xfc, 0x7a, 0x52, 0xad, 0xac],
+);
+
+# _get_generator — return (cached) generator polynomial for degree $n.
+sub _get_generator {
+    my ($n) = @_;
+    unless (exists $GENERATORS{$n}) {
+        croak "micro-qr: no generator for ecc_count=$n"
+            unless exists $GENERATOR_TABLE{$n};
+        $GENERATORS{$n} = $GENERATOR_TABLE{$n};
+    }
+    return $GENERATORS{$n};
+}
+
+# _gf_mul — multiply two GF(256) elements.
+#
+# Delegates to CodingAdventures::GF256::multiply which uses log/antilog
+# tables for O(1) multiplication.
+sub _gf_mul {
+    my ($a, $b) = @_;
+    return CodingAdventures::GF256::multiply($a, $b);
+}
+
+# _rs_encode — compute $n ECC bytes for @$data using the LFSR shift-register method.
+#
+# This implements polynomial long division: R(x) = D(x)·x^n mod G(x).
+#
+# Algorithm (classic LFSR):
+#   Initialize remainder register rem[0..n-1] = 0.
+#   For each data byte b:
+#     feedback = b XOR rem[0]
+#     Shift register left: rem[i] = rem[i+1] for i=0..n-2; rem[n-1] = 0
+#     For each position i = 0..n-1:
+#       rem[i] ^= G[i+1] * feedback
+#
+# Result: rem[0..n-1] are the n ECC bytes.
 sub _rs_encode {
-    my ($data, $n_ecc) = @_;
-    my $gen = $RS_GENERATORS{$n_ecc}
-        or die "MicroQR: no RS generator for n_ecc=$n_ecc\n";
+    my ($data_ref, $gen_ref) = @_;
+    my $n = scalar(@$gen_ref) - 1;   # degree of generator polynomial
+    my @rem = (0) x $n;
 
-    my @rem = (0) x $n_ecc;
-
-    for my $b (@$data) {
+    for my $b (@$data_ref) {
         my $fb = $b ^ $rem[0];
-        # Shift register left: drop rem[0], shift rest left, append 0
-        @rem = (@rem[1..$#rem], 0);
+        for my $i (0 .. $n - 2) { $rem[$i] = $rem[$i + 1]; }
+        $rem[$n - 1] = 0;
         if ($fb != 0) {
-            for my $i (0 .. $n_ecc - 1) {
-                $rem[$i] ^= multiply($gen->[$i + 1], $fb);
+            for my $i (0 .. $n - 1) {
+                $rem[$i] ^= _gf_mul($gen_ref->[$i + 1], $fb);
             }
         }
     }
-
     return \@rem;
 }
 
 # =============================================================================
-# _select_config($input, $version, $ecc) → $cfg hashref
+# WorkGrid — mutable grid with reservation tracking
 # =============================================================================
 #
-# Find the smallest symbol configuration that can hold the given input.
+# During construction we maintain two parallel 2D arrays:
+#   modules[r][c]  — boolean (1=dark, 0=light)
+#   reserved[r][c] — boolean (1=function module; skip during data placement/masking)
 #
-# If $version and/or $ecc are provided, only configurations matching those
-# constraints are considered.
-#
-# The configurations in @SYMBOL_CONFIGS are ordered smallest-first, so the
-# first fit is automatically the smallest valid symbol.
-#
-# Dies with an informative error if no configuration fits the input.
+# "Function modules" include: finder pattern, separator, timing strips, and
+# format information positions. They are never overwritten by data or masking.
 
-sub _select_config {
-    my ($input, $version, $ecc) = @_;
-
-    # Filter to matching configurations
-    my @candidates = grep {
-        (!defined $version || $_->{version} eq $version) &&
-        (!defined $ecc     || $_->{ecc}     eq $ecc)
-    } @SYMBOL_CONFIGS;
-
-    unless (@candidates) {
-        die sprintf(
-            "MicroQR::ECCNotAvailable: no symbol configuration matches "
-            . "version=%s ecc=%s\n",
-            $version // 'any', $ecc // 'any'
-        );
+sub _make_work_grid {
+    my ($size) = @_;
+    my (@modules, @reserved);
+    for my $r (0 .. $size - 1) {
+        push @modules,  [(0) x $size];
+        push @reserved, [(0) x $size];
     }
+    return {
+        size     => $size,
+        modules  => \@modules,
+        reserved => \@reserved,
+    };
+}
 
-    for my $cfg (@candidates) {
-        # Determine what mode would be used
-        my $mode = eval { _select_mode($input, $cfg) };
-        next unless defined $mode;   # mode not supported for this config
-
-        # Determine character count (byte count for byte mode)
-        my $len;
-        if ($mode eq MODE_BYTE) {
-            $len = length(pack 'A*', $input);
-        } else {
-            my @chars = split //, $input;
-            $len = scalar @chars;
-        }
-
-        # Check capacity
-        my $cap = ($mode eq MODE_NUMERIC)      ? $cfg->{numeric_cap}
-                : ($mode eq MODE_ALPHANUMERIC)  ? $cfg->{alpha_cap}
-                :                                 $cfg->{byte_cap};
-
-        return $cfg if $cap > 0 && $len <= $cap;
-    }
-
-    die sprintf(
-        "MicroQR::InputTooLong: input (length %d) does not fit in any "
-        . "Micro QR symbol (version=%s, ecc=%s). "
-        . "Maximum is 35 numeric chars in M4-L.\n",
-        length($input), $version // 'any', $ecc // 'any'
-    );
+# _set_mod — write a module value and optionally mark it as reserved.
+sub _set_mod {
+    my ($g, $r, $c, $dark, $reserve) = @_;
+    $g->{modules}[$r][$c]  = $dark ? 1 : 0;
+    $g->{reserved}[$r][$c] = 1 if $reserve;
 }
 
 # =============================================================================
-# Grid helpers
+# Structural module placement
 # =============================================================================
-#
-# The working grid holds two parallel 2D arrays:
-#
-#   $modules[row][col]  — 0 (light) or 1 (dark)
-#   $reserved[row][col] — boolean: true means the module is structural
-#                         (finder, separator, timing, or format info)
-#
-# Structural modules are never overwritten by data or modified by masking.
-# The reserved flag is the authoritative gate for both data placement and
-# masking.
 
-sub _make_working_grid {
-    my $size = shift;
-    my @modules  = map { [(0) x $size] } 1..$size;
-    my @reserved = map { [(0) x $size] } 1..$size;
-    return (\@modules, \@reserved);
-}
-
-# =============================================================================
-# _place_finder($modules, $reserved, $size)
-# =============================================================================
+# _place_finder — draw the 7×7 finder pattern at the top-left corner (rows 0–6, cols 0–6).
 #
-# Place the 7×7 finder pattern at the top-left corner (rows 0–6, cols 0–6).
+# The finder pattern is the distinctive 3-ring square that lets any scanner
+# locate and orient the symbol:
 #
-# The finder pattern is identical to the one used in regular QR Code:
-#
-#   ■ ■ ■ ■ ■ ■ ■
+#   ■ ■ ■ ■ ■ ■ ■   (outer ring: all dark)
 #   ■ □ □ □ □ □ ■
-#   ■ □ ■ ■ ■ □ ■
+#   ■ □ ■ ■ ■ □ ■   (middle ring: inner-border dark, rest light)
 #   ■ □ ■ ■ ■ □ ■
 #   ■ □ ■ ■ ■ □ ■
 #   ■ □ □ □ □ □ ■
 #   ■ ■ ■ ■ ■ ■ ■
 #
-# The outer ring (border) is always dark. The inner 5×5 ring is always light.
-# The innermost 3×3 core is always dark. This 1:1:3:1:1 ratio is what scanners
-# look for to detect a finder pattern.
-
+# The 1:1:3:1:1 ratio appears in every horizontal and vertical scan direction,
+# making the pattern uniquely identifiable at any orientation or skew angle.
 sub _place_finder {
-    my ($modules, $reserved) = @_;
-    for my $dr (0..6) {
-        for my $dc (0..6) {
+    my ($g) = @_;
+    for my $dr (0 .. 6) {
+        for my $dc (0 .. 6) {
             my $on_border = ($dr == 0 || $dr == 6 || $dc == 0 || $dc == 6);
             my $in_core   = ($dr >= 2 && $dr <= 4 && $dc >= 2 && $dc <= 4);
-            $modules->[$dr][$dc]  = ($on_border || $in_core) ? 1 : 0;
-            $reserved->[$dr][$dc] = 1;
+            _set_mod($g, $dr, $dc, ($on_border || $in_core) ? 1 : 0, 1);
         }
     }
 }
 
-# =============================================================================
-# _place_separator($modules, $reserved)
-# =============================================================================
+# _place_separator — draw the L-shaped light separator around the finder.
 #
-# Place the L-shaped separator (all-light modules).
+# Unlike full QR (which surrounds all three finders), Micro QR's single finder
+# only needs separation on its bottom (row 7) and right (col 7) sides.
+# The top and left are the symbol boundary itself.
 #
-# Unlike regular QR Code which surrounds all three finder patterns with a
-# full ring of separator modules, Micro QR has only one finder in the
-# top-left corner. Its top edge and left edge are the symbol boundary itself,
-# so only the bottom and right edges need separators.
-#
-# Separator positions:
-#   Row 7, cols 0–7  — bottom of finder
-#   Col 7, rows 0–7  — right of finder
-#
-# The corner module at (row=7, col=7) is shared by both; it is always light.
-
+#   Row 7, cols 0-7: light (bottom separator)
+#   Col 7, rows 0-7: light (right separator)
 sub _place_separator {
-    my ($modules, $reserved) = @_;
-    for my $i (0..7) {
-        $modules->[7][$i] = 0;  $reserved->[7][$i] = 1;  # bottom row
-        $modules->[$i][7] = 0;  $reserved->[$i][7] = 1;  # right column
+    my ($g) = @_;
+    for my $i (0 .. 7) {
+        _set_mod($g, 7, $i, 0, 1);   # bottom row
+        _set_mod($g, $i, 7, 0, 1);   # right column
     }
 }
 
-# =============================================================================
-# _place_timing($modules, $reserved, $size)
-# =============================================================================
+# _place_timing — draw timing strips along row 0 and col 0.
 #
-# Place timing pattern extensions along row 0 and col 0.
+# In Micro QR, timing is at row 0 and col 0 (the symbol edges), not row 6/col 6
+# as in regular QR. This saves space and eliminates the timing column skip.
 #
-# In regular QR Code, timing patterns run along row 6 and column 6. In Micro
-# QR, they run along the OUTER edge: row 0 and column 0.
+# Positions 0-6 are already covered by the finder pattern.
+# Position 7 is the separator (light).
+# Positions 8+ alternate dark/light starting with dark at even indices.
 #
-# Positions 0–6 are already occupied by the finder pattern. Position 7 is the
-# separator (always light). The timing pattern extends from position 8 to the
-# end of the symbol:
-#
-#   Position k (from 0): dark if k is even, light if k is odd
-#   Col 8 (even) is dark; col 9 (odd) is light; col 10 (even) is dark; …
-#
-# This produces the alternating dark/light "teeth" that timing patterns are
-# named for. Scanners use them to precisely locate module boundaries.
-
+# The alternating pattern (dark, light, dark, light...) gives decoders a
+# reference for module pitch calibration.
 sub _place_timing {
-    my ($modules, $reserved, $size) = @_;
-    for my $c (8..$size-1) {
-        $modules->[0][$c]  = ($c % 2 == 0) ? 1 : 0;
-        $reserved->[0][$c] = 1;
+    my ($g) = @_;
+    my $sz = $g->{size};
+    for my $c (8 .. $sz - 1) {
+        _set_mod($g, 0, $c, ($c % 2 == 0) ? 1 : 0, 1);
     }
-    for my $r (8..$size-1) {
-        $modules->[$r][0]  = ($r % 2 == 0) ? 1 : 0;
-        $reserved->[$r][0] = 1;
+    for my $r (8 .. $sz - 1) {
+        _set_mod($g, $r, 0, ($r % 2 == 0) ? 1 : 0, 1);
     }
 }
 
-# =============================================================================
-# _reserve_format_info($modules, $reserved)
-# =============================================================================
+# _reserve_format_info — mark the 15 format information module positions.
 #
-# Mark the 15 format information module positions as reserved.
+# Format info occupies a single L-shaped region (unlike regular QR which has two copies):
 #
-# The format information strip forms an L-shape adjacent to the finder's
-# separator:
+#   Row 8, cols 1-8: f14 (col 1, MSB) ... f7 (col 8)
+#   Col 8, rows 1-7: f6 (row 7) ... f0 (row 1, LSB)
 #
-#   Row 8, cols 1–8  →  8 modules  (bits f14 down to f7, MSB first)
-#   Col 8, rows 1–7  →  7 modules  (bits f6 down to f0, with f6 at row 7)
-#
-# These 15 positions match exactly the 15 bits of the format information word.
-# They are initialized to light (0) here; the actual values are written after
-# mask selection is complete.
-
+# These 15 modules are reserved now (light) and filled with the actual format
+# word at the end of encoding, after the best mask is determined.
 sub _reserve_format_info {
-    my ($modules, $reserved) = @_;
-    for my $c (1..8) {
-        $modules->[8][$c]  = 0;
-        $reserved->[8][$c] = 1;
-    }
-    for my $r (1..7) {
-        $modules->[$r][8]  = 0;
-        $reserved->[$r][8] = 1;
-    }
+    my ($g) = @_;
+    for my $c (1 .. 8) { $g->{reserved}[8][$c] = 1; }
+    for my $r (1 .. 7) { $g->{reserved}[$r][8] = 1; }
 }
 
-# =============================================================================
-# _write_format_info($modules, $fmt)
-# =============================================================================
+# _write_format_info — write the 15-bit format word into the reserved positions.
 #
-# Write a 15-bit format word into the reserved format information positions.
+# Bit ordering (verified against Rust reference and ISO 18004:2015 Annex E):
 #
-# Bit placement (f14 = MSB, f0 = LSB):
-#
-#   Row 8, col 1  ← f14   Row 8, col 5  ← f10   Col 8, row 6  ← f5
-#   Row 8, col 2  ← f13   Row 8, col 6  ← f9    Col 8, row 5  ← f4
-#   Row 8, col 3  ← f12   Row 8, col 7  ← f8    Col 8, row 4  ← f3
-#   Row 8, col 4  ← f11   Row 8, col 8  ← f7    Col 8, row 3  ← f2
-#                          Col 8, row 7  ← f6    Col 8, row 2  ← f1
-#                                                 Col 8, row 1  ← f0
-#
-# There is only ONE copy of the format information in Micro QR (unlike regular
-# QR which places it in two locations for redundancy).
-
+#   Row 8, col 1 → bit f14 (MSB)
+#   Row 8, col 2 → bit f13
+#   ...
+#   Row 8, col 8 → bit f7
+#   Col 8, row 7 → bit f6
+#   Col 8, row 6 → bit f5
+#   ...
+#   Col 8, row 1 → bit f0 (LSB)
 sub _write_format_info {
-    my ($modules, $fmt) = @_;
-    # Row 8, cols 1–8: bits f14 down to f7
-    for my $i (0..7) {
-        $modules->[8][1 + $i] = ($fmt >> (14 - $i)) & 1;
+    my ($g, $fmt) = @_;
+    # Row 8, cols 1-8: bits f14 down to f7 (MSB first, left to right)
+    for my $i (0 .. 7) {
+        $g->{modules}[8][1 + $i] = ($fmt >> (14 - $i)) & 1;
     }
     # Col 8, rows 7 down to 1: bits f6 down to f0
-    for my $i (0..6) {
-        $modules->[7 - $i][8] = ($fmt >> (6 - $i)) & 1;
+    for my $i (0 .. 6) {
+        $g->{modules}[7 - $i][8] = ($fmt >> (6 - $i)) & 1;
     }
 }
 
-# =============================================================================
-# _build_grid($cfg) → ($modules, $reserved)
-# =============================================================================
+# _build_grid — initialize the symbol grid with all structural modules.
 #
-# Initialize the symbol grid with all structural modules in place.
-#
-# Call order matters:
-#   1. Finder (rows 0–6, cols 0–6)
-#   2. Separator (row 7 cols 0–7, col 7 rows 0–7)
-#   3. Timing extensions (row 0 and col 0 from position 8 onward)
-#   4. Format info reservation (row 8 cols 1–8, col 8 rows 1–7)
-#
-# Later steps will add data bits and mask, then write the format info.
-
+# Builds the "skeleton" grid before data placement. Steps:
+#   1. Place 7×7 finder pattern (top-left corner).
+#   2. Place L-shaped separator (bottom and right of finder).
+#   3. Place timing strips (row 0 and col 0, positions 8+).
+#   4. Reserve format information positions.
 sub _build_grid {
-    my $cfg = shift;
-    my $size = $cfg->{size};
-    my ($modules, $reserved) = _make_working_grid($size);
-    _place_finder($modules, $reserved);
-    _place_separator($modules, $reserved);
-    _place_timing($modules, $reserved, $size);
-    _reserve_format_info($modules, $reserved);
-    return ($modules, $reserved);
+    my ($cfg) = @_;
+    my $g = _make_work_grid($cfg->{size});
+    _place_finder($g);
+    _place_separator($g);
+    _place_timing($g);
+    _reserve_format_info($g);
+    return $g;
 }
 
 # =============================================================================
-# _place_bits($modules, $reserved, $bits, $size)
+# Data placement — two-column zigzag scan
 # =============================================================================
-#
-# Place data/ECC bits into the grid via a two-column zigzag scan.
-#
-# The scan starts at the bottom-right corner and moves upward, scanning two
-# columns at a time. After each vertical scan, direction reverses and the
-# scan moves two columns to the left.
-#
-# Pictorially for a small grid (columns numbered right-to-left):
-#
-#   col:  ... 5  4  3  2  1  0
-#              ↑  ↑  ↑  ↑  ...
-#   pass1: cols 5,4  — upward   (then flip)
-#   pass2: cols 3,2  — downward (then flip)
-#   pass3: cols 1,0  — upward
-#
-# Reserved modules are skipped silently. Any bits left after all non-reserved
-# modules are filled are discarded (this handles the 4 remainder bits in M1,
-# which are left as 0 since the array only has data+ecc bits).
-#
-# Note: Unlike regular QR, there is NO timing column at col 6 to hop over.
-# Micro QR's timing is at col 0 (reserved), so it is auto-skipped.
 
+# _place_bits — fill non-reserved modules with codeword bits via zigzag scan.
+#
+# The scan visits the symbol in two-column strips from right to left,
+# alternating direction (up/down) with each strip:
+#
+#   Strip at cols (sz-1, sz-2): upward   (first strip; row decreases)
+#   Strip at cols (sz-3, sz-4): downward
+#   ... and so on leftward.
+#
+# Note: unlike regular QR there is NO timing column skip at col 6.
+# Micro QR's timing is at col 0, which is reserved and auto-skipped.
+#
+# Reserved modules are skipped; data bits fill the unreserved positions.
+# Any codeword bits beyond the available space are discarded (should not happen).
 sub _place_bits {
-    my ($modules, $reserved, $bits, $size) = @_;
+    my ($g, $bits_ref) = @_;
+    my $sz      = $g->{size};
     my $bit_idx = 0;
-    my $up = 1;   # 1 = scanning upward, 0 = downward
+    my $up      = 1;      # 1=upward (row decreasing), 0=downward
+    my $col     = $sz - 1;
 
-    my $col = $size - 1;
     while ($col >= 1) {
-        # Scan this two-column strip in the current direction
-        for my $vi (0..$size-1) {
-            my $row = $up ? ($size - 1 - $vi) : $vi;
+        for my $vi (0 .. $sz - 1) {
+            my $row = $up ? ($sz - 1 - $vi) : $vi;
             for my $dc (0, 1) {
                 my $c = $col - $dc;
-                next if $reserved->[$row][$c];
-                $modules->[$row][$c] = ($bit_idx < @$bits) ? $bits->[$bit_idx++] : 0;
+                next if $g->{reserved}[$row][$c];
+                $g->{modules}[$row][$c] = ($bit_idx < scalar(@$bits_ref))
+                    ? $bits_ref->[$bit_idx++]
+                    : 0;
             }
         }
-        $up = !$up;
+        $up  = !$up;
         $col -= 2;
     }
 }
 
 # =============================================================================
-# _mask_condition($mask_idx, $row, $col) → boolean
+# Masking
 # =============================================================================
 #
-# Return true if mask pattern $mask_idx applies to module at ($row, $col).
+# Micro QR defines 4 mask patterns (regular QR has 8). A mask is applied by
+# XOR-ing every non-reserved module with the condition for that mask.
+# The goal is to break up large homogeneous regions that could confuse decoders.
 #
-# Micro QR uses only 4 mask patterns — the first four of regular QR's eight:
+# Mask conditions (row r, col c):
+#   0: (r + c) mod 2 == 0
+#   1: r mod 2 == 0
+#   2: c mod 3 == 0
+#   3: (r + c) mod 3 == 0
+
+my @MASK_CONDS = (
+    sub { ($_[0] + $_[1]) % 2 == 0 },   # mask 0
+    sub { $_[0] % 2 == 0 },             # mask 1
+    sub { $_[1] % 3 == 0 },             # mask 2
+    sub { ($_[0] + $_[1]) % 3 == 0 },   # mask 3
+);
+
+# _apply_mask — return a new module AoA with the chosen mask applied.
 #
-#   Pattern 0: (row + col) mod 2 == 0   — checkerboard
-#   Pattern 1:  row mod 2 == 0          — alternate rows
-#   Pattern 2:  col mod 3 == 0          — every third column
-#   Pattern 3: (row + col) mod 3 == 0   — diagonal thirds
-#
-# When the condition is true for a data/ECC module, that module's value is
-# flipped (dark↔light). Structural modules are never masked.
-
-sub _mask_condition {
-    my ($mask_idx, $row, $col) = @_;
-    return 0 if $mask_idx == 0 && ($row + $col) % 2 != 0;
-    return 1 if $mask_idx == 0;
-
-    return 0 if $mask_idx == 1 && $row % 2 != 0;
-    return 1 if $mask_idx == 1;
-
-    return 0 if $mask_idx == 2 && $col % 3 != 0;
-    return 1 if $mask_idx == 2;
-
-    return 0 if $mask_idx == 3 && ($row + $col) % 3 != 0;
-    return 1 if $mask_idx == 3;
-
-    return 0;
-}
-
-# =============================================================================
-# _apply_mask($modules, $reserved, $size, $mask_idx) → new modules arrayref
-# =============================================================================
-#
-# Apply a mask pattern to all non-reserved modules. Returns a new 2D array
-# (does not modify the input).
-
+# Only non-reserved modules are toggled. We return a fresh AoA (not in-place)
+# so we can try all 4 masks cheaply on the same base grid.
 sub _apply_mask {
-    my ($modules, $reserved, $size, $mask_idx) = @_;
-    my @result;
-    for my $r (0..$size-1) {
-        push @result, [@{$modules->[$r]}];
-    }
-    for my $r (0..$size-1) {
-        for my $c (0..$size-1) {
-            unless ($reserved->[$r][$c]) {
-                if (_mask_condition($mask_idx, $r, $c)) {
-                    $result[$r][$c] = $result[$r][$c] ? 0 : 1;
-                }
+    my ($modules_ref, $reserved_ref, $sz, $mask_idx) = @_;
+    my $cond = $MASK_CONDS[$mask_idx];
+    my @masked;
+    for my $r (0 .. $sz - 1) {
+        my @row;
+        for my $c (0 .. $sz - 1) {
+            if ($reserved_ref->[$r][$c]) {
+                push @row, $modules_ref->[$r][$c];
+            } else {
+                push @row, $modules_ref->[$r][$c] ^ ($cond->($r, $c) ? 1 : 0);
             }
         }
+        push @masked, \@row;
     }
-    return \@result;
+    return \@masked;
 }
 
 # =============================================================================
-# _compute_penalty($modules, $size) → integer
+# Penalty scoring — ISO 18004 Section 7.8.3 (same rules as regular QR)
 # =============================================================================
-#
-# Compute the 4-rule penalty score for a candidate masked grid.
-# The mask with the lowest score is selected.
-#
-# The four penalty rules (identical to regular QR Code):
-#
-#   Rule 1 — Adjacent same-color run penalty:
-#     For each row and column, find runs of ≥5 consecutive same-color modules.
-#     Each qualifying run contributes (run_length − 2) to the penalty.
-#
-#     A run of exactly 5 → +3
-#     A run of 6 → +4
-#     A run of 7 → +5   … and so on.
-#
-#   Rule 2 — 2×2 block penalty:
-#     For each 2×2 square where all four modules are the same color, add 3.
-#
-#   Rule 3 — Finder-pattern-like sequences:
-#     For each row and column, check for the 11-module patterns:
-#       P1: 1 0 1 1 1 0 1 0 0 0 0
-#       P2: 0 0 0 0 1 0 1 1 1 0 1  (reverse of P1)
-#     Each occurrence (horizontal or vertical) adds 40.
-#     These sequences look like finder patterns and confuse scanners.
-#
-#   Rule 4 — Dark module proportion penalty:
-#     Compute the percentage of dark modules in the symbol.
-#     Penalty = min(|prev5 − 50|, |next5 − 50|) / 5 × 10
-#     where prev5 and next5 are the multiples of 5 surrounding dark_pct.
-#     Penalty is 0 at exactly 50% dark, escalates as the balance shifts.
 
+# _compute_penalty — score a masked module grid; lower score is better.
+#
+# Four rules:
+#
+# Rule 1 — adjacent same-color runs of ≥5 modules:
+#   For each horizontal or vertical run of length L ≥ 5: score += L − 2.
+#   A run of 5 scores 3; a run of 6 scores 4; etc.
+#
+# Rule 2 — 2×2 same-color blocks:
+#   For each 2×2 square where all 4 modules are the same color: score += 3.
+#
+# Rule 3 — finder-pattern-like sequences:
+#   Scans for 11-module sequences matching [1,0,1,1,1,0,1,0,0,0,0] or its
+#   reverse [0,0,0,0,1,0,1,1,1,0,1] in both rows and columns.
+#   Each match: score += 40.
+#
+# Rule 4 — dark module ratio deviation from 50%:
+#   Compute dark% = (dark_modules / total_modules) × 100.
+#   Round down to nearest multiple of 5: prev5.
+#   Score += min(|prev5 − 50|, |prev5+5 − 50|) / 5 × 10.
 sub _compute_penalty {
-    my ($modules, $size) = @_;
+    my ($modules_ref, $sz) = @_;
     my $penalty = 0;
 
-    # --- Rule 1: same-color runs of ≥ 5 ---
-    for my $a (0..$size-1) {
-        for my $horiz (0, 1) {
-            my $run = 1;
-            my $prev = $horiz ? $modules->[$a][0] : $modules->[0][$a];
-            for my $i (1..$size-1) {
-                my $cur = $horiz ? $modules->[$a][$i] : $modules->[$i][$a];
+    # ── Rule 1: same-color runs ≥ 5 ─────────────────────────────────────────
+    for my $a (0 .. $sz - 1) {
+        for my $horiz (1, 0) {
+            my $run  = 1;
+            my $prev = $horiz ? $modules_ref->[$a][0] : $modules_ref->[0][$a];
+            for my $i (1 .. $sz - 1) {
+                my $cur = $horiz ? $modules_ref->[$a][$i] : $modules_ref->[$i][$a];
                 if ($cur == $prev) {
                     $run++;
                 } else {
-                    $penalty += ($run - 2) if $run >= 5;
-                    $run = 1;
+                    $penalty += $run - 2 if $run >= 5;
+                    $run  = 1;
                     $prev = $cur;
                 }
             }
-            $penalty += ($run - 2) if $run >= 5;
+            $penalty += $run - 2 if $run >= 5;
         }
     }
 
-    # --- Rule 2: 2×2 same-color blocks ---
-    for my $r (0..$size-2) {
-        for my $c (0..$size-2) {
-            my $d = $modules->[$r][$c];
-            if ($d == $modules->[$r][$c+1] &&
-                $d == $modules->[$r+1][$c] &&
-                $d == $modules->[$r+1][$c+1]) {
+    # ── Rule 2: 2×2 same-color blocks ───────────────────────────────────────
+    for my $r (0 .. $sz - 2) {
+        for my $c (0 .. $sz - 2) {
+            my $d = $modules_ref->[$r][$c];
+            if ($d == $modules_ref->[$r][$c + 1]
+             && $d == $modules_ref->[$r + 1][$c]
+             && $d == $modules_ref->[$r + 1][$c + 1]) {
                 $penalty += 3;
             }
         }
     }
 
-    # --- Rule 3: finder-pattern-like sequences ---
-    my @P1 = (1,0,1,1,1,0,1,0,0,0,0);
-    my @P2 = (0,0,0,0,1,0,1,1,1,0,1);
-
-    for my $a (0..$size-1) {
-        my $limit = ($size >= 11) ? $size - 11 : 0;
-        for my $b (0..$limit) {
-            my ($mh1, $mh2, $mv1, $mv2) = (1,1,1,1);
-            for my $k (0..10) {
-                my $bh = $modules->[$a][$b+$k];
-                my $bv = $modules->[$b+$k][$a];
-                $mh1 = 0 unless $bh == $P1[$k];
-                $mh2 = 0 unless $bh == $P2[$k];
-                $mv1 = 0 unless $bv == $P1[$k];
-                $mv2 = 0 unless $bv == $P2[$k];
+    # ── Rule 3: finder-pattern-like sequences ────────────────────────────────
+    my @p1 = (1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0);
+    my @p2 = (0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1);
+    if ($sz >= 11) {
+        for my $a (0 .. $sz - 1) {
+            for my $b (0 .. $sz - 11) {
+                my ($mh1, $mh2, $mv1, $mv2) = (1, 1, 1, 1);
+                for my $k (0 .. 10) {
+                    my $bh = $modules_ref->[$a][$b + $k];
+                    my $bv = $modules_ref->[$b + $k][$a];
+                    $mh1 = 0 if $bh != $p1[$k];
+                    $mh2 = 0 if $bh != $p2[$k];
+                    $mv1 = 0 if $bv != $p1[$k];
+                    $mv2 = 0 if $bv != $p2[$k];
+                }
+                $penalty += 40 if $mh1;
+                $penalty += 40 if $mh2;
+                $penalty += 40 if $mv1;
+                $penalty += 40 if $mv2;
             }
-            $penalty += 40 if $mh1;
-            $penalty += 40 if $mh2;
-            $penalty += 40 if $mv1;
-            $penalty += 40 if $mv2;
         }
     }
 
-    # --- Rule 4: dark-module proportion ---
+    # ── Rule 4: dark module ratio ─────────────────────────────────────────────
     my $dark = 0;
-    for my $r (0..$size-1) {
-        for my $c (0..$size-1) {
-            $dark++ if $modules->[$r][$c];
+    for my $r (0 .. $sz - 1) {
+        for my $c (0 .. $sz - 1) {
+            $dark++ if $modules_ref->[$r][$c];
         }
     }
-    my $total    = $size * $size;
+    my $total  = $sz * $sz;
     my $dark_pct = int($dark * 100 / $total);
     my $prev5    = int($dark_pct / 5) * 5;
-    my $next5    = $prev5 + 5;
-    my $a_dist   = abs($prev5 - 50);
-    my $b_dist   = abs($next5 - 50);
+    my $a_dist   = abs($prev5      - 50);
+    my $b_dist   = abs($prev5 + 5  - 50);
     my $r4_raw   = $a_dist < $b_dist ? $a_dist : $b_dist;
-    $penalty += int($r4_raw / 5) * 10;
+    $penalty    += int($r4_raw / 5) * 10;
 
     return $penalty;
 }
 
 # =============================================================================
-# _flatten_to_bits($final_cw, $cfg) → arrayref of 0/1 values
+# Public API
 # =============================================================================
-#
-# Flatten the final codeword sequence (data + ECC) to a bit array.
-#
-# Each codeword is expanded MSB-first (big-endian within codeword). The only
-# special case is M1: the third data codeword (index 2) contributes only 4 bits
-# (the upper nibble), not 8. All ECC codewords are always full 8 bits.
 
-sub _flatten_to_bits {
-    my ($final_cw, $cfg) = @_;
+# encode — encode a string to a Micro QR Code ModuleGrid hashref.
+#
+# Automatically selects the smallest (version, ECC) combination that fits the
+# input. Pass $version and/or $ecc to restrict selection to a specific symbol.
+#
+# Arguments:
+#   $input   — input string (ASCII or UTF-8)
+#   $version — undef, or one of: M1(), M2(), M3(), M4()   (integer 1-4)
+#   $ecc     — undef, or one of: DETECTION(), ECC_L(), ECC_M(), ECC_Q()
+#
+# Returns a hashref compatible with CodingAdventures::Barcode2D::ModuleGrid:
+#   {
+#     rows         => $size,      # e.g. 11 for M1
+#     cols         => $size,
+#     modules      => \@aoa,      # 2D array of 0/1 (0=light, 1=dark)
+#     module_shape => 'square',
+#   }
+#
+# Dies with a descriptive string on error:
+#   "InputTooLong: ..."     — input exceeds maximum capacity
+#   "ECCNotAvailable: ..."  — no config matches the requested version/ECC
+#   "InvalidCharacter: ..."  — character not encodeable in selected mode
+#
+# Example:
+#   use CodingAdventures::MicroQR qw(encode);
+#   my $grid = encode("HELLO", undef, undef);  # auto-select: M2 13×13
+#   my $m4   = encode("12345", M4(), ECC_Q()); # forced: M4 17×17
+sub encode {
+    my ($input, $version, $ecc) = @_;
+
+    my $cfg  = _select_config($input, $version, $ecc);
+    my $mode = _select_mode($input, $cfg);
+    croak "UnsupportedMode: cannot encode '$input' in any mode for this symbol"
+        unless defined $mode;
+
+    # 1. Build data codewords (mode + count + data + terminator + padding).
+    my $data_cw = _build_data_codewords($input, $cfg, $mode);
+
+    # 2. Compute RS ECC (GF(256)/0x11D, b=0 convention).
+    my $gen    = _get_generator($cfg->{ecc_cw});
+    my $ecc_cw = _rs_encode($data_cw, $gen);
+
+    # 3. Flatten codewords to a bit stream.
+    #
+    # For M1: data[2] carries data only in its upper nibble → contribute 4 bits.
+    # All other codewords contribute all 8 bits.
+    my @all_cw = (@$data_cw, @$ecc_cw);
     my @bits;
-    for my $cw_idx (0..$#$final_cw) {
-        my $cw = $final_cw->[$cw_idx];
-        # M1: the last data codeword (index data_cw - 1) is a 4-bit nibble
-        my $bits_in_cw = ($cfg->{m1_half_cw} && $cw_idx == $cfg->{data_cw} - 1)
-            ? 4 : 8;
-        # Extract bits MSB first, right-aligning within the byte
+    for my $cw_idx (0 .. $#all_cw) {
+        my $cw = $all_cw[$cw_idx];
+        my $bits_in_cw = ($cfg->{m1_half_cw} && $cw_idx == $cfg->{data_cw} - 1) ? 4 : 8;
         for my $b (reverse 0 .. $bits_in_cw - 1) {
             push @bits, ($cw >> ($b + (8 - $bits_in_cw))) & 1;
         }
     }
-    return \@bits;
-}
 
-# =============================================================================
-# encode($input, $version, $ecc) → ModuleGrid hashref
-# =============================================================================
-#
-# Encode a string to a Micro QR Code ModuleGrid.
-#
-# Automatically selects the smallest symbol (M1..M4) and mode that can hold
-# the input. Pass $version (M1/M2/M3/M4) and/or $ecc (L/M/Q/Detection) to
-# override auto-selection.
-#
-# Returns a ModuleGrid hashref:
-#   {
-#     rows   => $size,    # e.g. 11 for M1
-#     cols   => $size,
-#     modules => \@grid,  # 2D array of 0/1 values
-#     module_shape => 'square',
-#   }
-#
-# Dies (with a descriptive message) on any encoding error.
-#
-# Examples:
-#
-#   my $grid = encode("1");
-#   # $grid->{rows} == 11 (M1, smallest symbol)
-#
-#   my $grid = encode("HELLO");
-#   # $grid->{rows} == 13 (M2-L, alphanumeric mode)
-#
-#   my $grid = encode("https://a.b", M4, ECC_L);
-#   # $grid->{rows} == 17 (M4-L, byte mode)
+    # 4. Build the structural grid (finder, separator, timing, reserved format).
+    my $grid = _build_grid($cfg);
 
-sub encode {
-    my ($input, $version, $ecc) = @_;
+    # 5. Zigzag placement of data/ECC bits.
+    _place_bits($grid, \@bits);
 
-    # 1. Select symbol configuration
-    my $cfg = _select_config($input, $version, $ecc);
-    my $mode = _select_mode($input, $cfg);
-
-    # 2. Build data codewords
-    my $data_cw = _build_data_codewords($input, $cfg, $mode);
-
-    # 3. Compute RS ECC
-    my $ecc_cw = _rs_encode($data_cw, $cfg->{ecc_cw});
-
-    # 4. Flatten to bit stream
-    my @final_cw = (@$data_cw, @$ecc_cw);
-    my $bits = _flatten_to_bits(\@final_cw, $cfg);
-
-    # 5. Initialize grid
-    my ($modules, $reserved) = _build_grid($cfg);
-
-    # 6. Place data bits
-    _place_bits($modules, $reserved, $bits, $cfg->{size});
-
-    # 7. Evaluate all 4 masks, pick the one with the lowest penalty score
-    #    Ties are broken by preferring the lower-numbered mask.
+    # 6. Evaluate all 4 masks; choose the one with the lowest penalty score.
     my $best_mask    = 0;
-    my $best_penalty = 2**31;   # large initial value
-
-    for my $m (0..3) {
-        my $masked = _apply_mask($modules, $reserved, $cfg->{size}, $m);
-        my $fmt    = $FORMAT_TABLE[$cfg->{symbol_indicator}][$m];
-        # Write format info into a temporary copy of the masked modules
-        my @tmp;
-        for my $r (0..$cfg->{size}-1) {
-            push @tmp, [@{$masked->[$r]}];
-        }
-        _write_format_info(\@tmp, $fmt);
-        my $p = _compute_penalty(\@tmp, $cfg->{size});
+    my $best_penalty = ~0;   # start at "infinity" (max int)
+    my $sz = $cfg->{size};
+    for my $m (0 .. 3) {
+        my $masked = _apply_mask($grid->{modules}, $grid->{reserved}, $sz, $m);
+        my $fmt    = $FORMAT_TABLE[ $cfg->{symbol_indicator} ][$m];
+        # Write format info into a temporary grid for scoring.
+        my $tmp = {
+            size     => $sz,
+            modules  => $masked,
+            reserved => $grid->{reserved},
+        };
+        _write_format_info($tmp, $fmt);
+        my $p = _compute_penalty($masked, $sz);
         if ($p < $best_penalty) {
             $best_penalty = $p;
             $best_mask    = $m;
         }
     }
 
-    # 8. Apply best mask and write final format information
-    my $final_modules = _apply_mask($modules, $reserved, $cfg->{size}, $best_mask);
-    my $final_fmt     = $FORMAT_TABLE[$cfg->{symbol_indicator}][$best_mask];
-    _write_format_info($final_modules, $final_fmt);
+    # 7. Apply best mask and write final format information.
+    my $final_mods = _apply_mask($grid->{modules}, $grid->{reserved}, $sz, $best_mask);
+    my $final_fmt  = $FORMAT_TABLE[ $cfg->{symbol_indicator} ][$best_mask];
+    my $final_g = {
+        size     => $sz,
+        modules  => $final_mods,
+        reserved => $grid->{reserved},
+    };
+    _write_format_info($final_g, $final_fmt);
 
-    # 9. Return as a ModuleGrid hashref (CodingAdventures::Barcode2D format)
+    # 8. Return as a ModuleGrid hashref.
     return {
-        rows         => $cfg->{size},
-        cols         => $cfg->{size},
-        modules      => $final_modules,
+        rows         => $sz,
+        cols         => $sz,
+        modules      => $final_mods,
         module_shape => CodingAdventures::Barcode2D::SHAPE_SQUARE,
     };
 }
 
-# =============================================================================
-# encode_at($input, $version, $ecc) → ModuleGrid hashref
-# =============================================================================
+# encode_at — encode with explicit version and ECC level (convenience wrapper).
 #
-# Encode to a specific symbol version. Both $version and $ecc are required.
-# Dies if the input does not fit in the requested version/ECC combination.
-
+# Equivalent to encode($input, $version, $ecc) but with positional $version/$ecc
+# required rather than optional — throws immediately if the combination is invalid.
+#
+# Example:
+#   use CodingAdventures::MicroQR qw(encode_at);
+#   my $grid = encode_at("HELLO", M2(), ECC_L());
 sub encode_at {
     my ($input, $version, $ecc) = @_;
     croak "encode_at: version is required" unless defined $version;
@@ -1264,84 +1128,20 @@ sub encode_at {
     return encode($input, $version, $ecc);
 }
 
-# =============================================================================
-# layout_grid($grid, $config) → PaintScene hashref
-# =============================================================================
+# layout_grid — convert a ModuleGrid to a PaintScene via barcode-2d layout.
 #
-# Convert a ModuleGrid to a PaintScene via CodingAdventures::Barcode2D::layout().
+# Uses a default quiet zone of 2 modules (Micro QR minimum; regular QR uses 4).
+# Pass a CodingAdventures::Barcode2D::LayoutConfig hashref to override.
 #
-# The Micro QR quiet zone is 2 modules (not QR's default of 4), so this
-# function overrides the quiet_zone_modules default to 2.
+# Arguments:
+#   $grid   — ModuleGrid hashref from encode() or encode_at()
+#   $config — optional LayoutConfig hashref (see barcode-2d docs)
 #
-# $config is an optional hashref with layout parameters. If omitted, sensible
-# defaults are used (quiet_zone=2, module_size=10, black on white).
-
+# Returns a PaintScene hashref.
 sub layout_grid {
     my ($grid, $config) = @_;
-    $config //= {};
-    $config->{quiet_zone_modules} //= 2;   # Micro QR uses half the QR quiet zone
+    $config //= { quiet_zone_modules => 2 };
     return CodingAdventures::Barcode2D::layout($grid, $config);
 }
 
 1;
-
-__END__
-
-=head1 NAME
-
-CodingAdventures::MicroQR - Micro QR Code encoder (ISO/IEC 18004:2015 Annex E)
-
-=head1 VERSION
-
-0.1.0
-
-=head1 SYNOPSIS
-
-  use CodingAdventures::MicroQR qw(encode encode_at layout_grid M1 M2 M3 M4
-                                    ECC_L ECC_M ECC_Q DETECTION);
-
-  # Auto-select smallest symbol
-  my $grid = encode("HELLO");   # returns 13x13 M2 grid
-
-  # Single digit → M1 (11x11, detection-only ECC)
-  my $grid = encode("1");
-
-  # Byte mode URL → M4
-  my $grid = encode("https://a.b", M4, ECC_L);
-
-  # Forced version + ECC
-  my $grid = encode_at("12345", M1, DETECTION);
-
-  # Convert to PaintScene for rendering
-  my $scene = layout_grid($grid);
-
-=head1 DESCRIPTION
-
-Encodes arbitrary strings to ISO/IEC 18004:2015 Annex E compliant Micro QR
-Code symbols. Supports all four symbol sizes (M1–M4), all available ECC levels
-(Detection, L, M, Q), and three encoding modes (numeric, alphanumeric, byte).
-
-=head1 FUNCTIONS
-
-=head2 encode($input, $version, $ecc)
-
-Encode $input to a ModuleGrid. $version (M1..M4) and $ecc (ECC_L/ECC_M/ECC_Q/
-DETECTION) are optional; if omitted, the smallest fitting symbol is chosen.
-
-=head2 encode_at($input, $version, $ecc)
-
-Like encode() but requires both $version and $ecc explicitly.
-
-=head2 layout_grid($grid, $config)
-
-Convert a ModuleGrid to a PaintScene. Uses quiet_zone=2 by default.
-
-=head1 AUTHOR
-
-coding-adventures
-
-=head1 LICENSE
-
-MIT
-
-=cut
