@@ -1,0 +1,22 @@
+cabal-version: 3.0
+name:          coding-adventures-rng
+version:       0.1.0
+synopsis:      
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  Rng
+    build-depends:    base >=4.14
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    build-depends:    base >=4.14
+                    , coding-adventures-rng
+%!(EXTRA string=coding-adventures-rng)    hs-source-dirs:   test
+    default-language: Haskell2010
