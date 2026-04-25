@@ -1,0 +1,56 @@
+cabal-version:      2.4
+name:               qr-code
+version:            0.1.0.0
+synopsis:           ISO/IEC 18004:2015 QR Code encoder
+description:
+    QR Code encoder — ISO/IEC 18004:2015 compliant.
+    .
+    Encodes any UTF-8 string into a scannable QR Code symbol. Outputs a
+    ModuleGrid (abstract boolean grid) that can be passed to barcode-2d's
+    layout() for pixel rendering.
+    .
+    Supports:
+    .
+    * Modes: Numeric, Alphanumeric, Byte (UTF-8)
+    * Versions 1–40 (21×21 to 177×177 modules)
+    * ECC levels L (7%), M (15%), Q (25%), H (30%)
+    * Reed-Solomon error correction (GF(256), b=0 convention, poly 0x11D)
+    * All structural elements: finders, separators, timing, alignment patterns
+    * Format information (BCH-coded 15-bit word, two copies)
+    * Version information (BCH-coded 18-bit word, versions 7+)
+    * All 8 mask patterns with 4-rule ISO penalty scoring
+    * Output as ModuleGrid → PaintScene via barcode-2d
+license:            MIT
+author:             Coding Adventures
+maintainer:         contact@coding-adventures.com
+category:           Graphics
+homepage:           https://github.com/adhithyan15/coding-adventures
+bug-reports:        https://github.com/adhithyan15/coding-adventures/issues
+extra-doc-files:    README.md
+                    CHANGELOG.md
+
+library
+    exposed-modules:  QRCode
+    build-depends:    base               >= 4.7 && < 5
+                    , vector             >= 0.12
+                    , containers         >= 0.6
+                    , gf256
+                    , barcode-2d
+                    , paint-instructions
+    hs-source-dirs:   src
+    default-language: Haskell2010
+    ghc-options:      -Wall
+
+test-suite qr-code-test
+    default-language: Haskell2010
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          Spec.hs
+    other-modules:    QRCodeSpec
+    build-depends:    base       >= 4.7 && < 5
+                    , vector     >= 0.12
+                    , qr-code
+                    , gf256
+                    , barcode-2d
+                    , hspec      == 2.*
+    ghc-options:      -Wall
