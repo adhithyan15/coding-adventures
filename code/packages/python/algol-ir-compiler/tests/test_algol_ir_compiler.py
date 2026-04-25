@@ -722,6 +722,37 @@ class TestAlgolIrCompiler:
         assert IrOp.LOAD_WORD in opcodes
         assert IrOp.SYSCALL in opcodes
 
+    def test_compiles_switch_parameter_call_and_helper_dispatch(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result, flag; "
+                "procedure escape(sw); switch sw; begin goto sw[1] end; "
+                "switch s := if flag = 0 then left else right; "
+                "flag := 1; escape(s); result := 0; "
+                "left: result := 1; goto done; "
+                "right: result := 2; "
+                "done: "
+                "end"
+            )
+        )
+        labels = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.LABEL
+        ]
+        calls = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+
+        assert result.procedure_signatures["_fn_algol_eval_switch"].param_count == 3
+        assert "_fn_algol_eval_switch" in labels
+        assert any(
+            instruction.operands[0].name == "_fn_algol_eval_switch"
+            for instruction in calls
+        )
+
     def test_compiles_dynamic_multidimensional_array_bounds(self) -> None:
         result = compile_algol(
             parse_algol(
