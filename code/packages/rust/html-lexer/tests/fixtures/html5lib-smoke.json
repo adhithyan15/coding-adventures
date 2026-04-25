@@ -6,6 +6,7 @@
   "generator": "normalize_html5lib_fixtures.py",
   "supported_initial_states": [
     "Data state",
+    "RAWTEXT state",
     "RCDATA state"
   ],
   "cases": [
@@ -105,13 +106,20 @@
       "diagnostics": [],
       "initial_state": "RCDATA state",
       "last_start_tag": "title"
-    }
-  ],
-  "skipped": [
+    },
     {
       "id": "html5lib-smoke-9",
-      "description": "unsupported rawtext fixture is skipped by the importer",
-      "reason": "unsupported initialStates=['RAWTEXT state']"
+      "description": "rawtext matching end tag emits end tag token",
+      "input": "body { color: red; }</style>",
+      "tokens": [
+        "Text(data=body { color: red; })",
+        "EndTag(name=style)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
     }
-  ]
+  ],
+  "skipped": []
 }

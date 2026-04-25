@@ -47,9 +47,9 @@ without coupling the shared harness to upstream file formats or requiring raw
 fixture normalization logic to live forever inside the Rust tests.
 
 The normalized corpus now carries optional tokenizer-context metadata such as
-`initial_state` and `last_start_tag`, so upstream RCDATA cases can already live
+`initial_state` and `last_start_tag`, so upstream RCDATA and RAWTEXT cases can already live
 in the shared Venture fixture format. Current Rust conformance tests now seed
-that context into the generated lexer so the first RCDATA cases execute through
+that context into the generated lexer so the first RCDATA and RAWTEXT cases execute through
 the same static Rust wrapper as the data-state corpus.
 
 The intended WHATWG/WPT path is to normalize upstream tokenizer cases into this

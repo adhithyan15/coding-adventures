@@ -17,6 +17,7 @@ fn html1_authoring_artifact_parses_as_mosaic_era_floor() {
         .iter()
         .any(|state| state.id == "doctype_name"));
     assert!(definition.states.iter().any(|state| state.id == "rcdata"));
+    assert!(definition.states.iter().any(|state| state.id == "rawtext"));
 }
 
 #[test]

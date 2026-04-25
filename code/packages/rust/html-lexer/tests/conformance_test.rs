@@ -89,7 +89,7 @@ fn fixture_manifests_parse() {
     assert_eq!(html1.format, "venture-html-lexer-fixtures/v1");
     assert_eq!(html1.suite, "html1");
     assert!(!html1.description.is_empty());
-    assert_eq!(html1.cases.len(), 7);
+    assert_eq!(html1.cases.len(), 8);
 }
 
 #[test]
@@ -130,19 +130,14 @@ fn normalized_html5lib_fixture_parses_with_importer_metadata() {
     assert_eq!(normalized.generator, "normalize_html5lib_fixtures.py");
     assert_eq!(
         normalized.supported_initial_states,
-        vec!["Data state".to_string(), "RCDATA state".to_string()]
+        vec![
+            "Data state".to_string(),
+            "RAWTEXT state".to_string(),
+            "RCDATA state".to_string()
+        ]
     );
-    assert_eq!(normalized.cases.len(), 8);
-    assert_eq!(normalized.skipped.len(), 1);
-    assert_eq!(normalized.skipped[0].id, "html5lib-smoke-9");
-    assert_eq!(
-        normalized.skipped[0].description,
-        "unsupported rawtext fixture is skipped by the importer"
-    );
-    assert_eq!(
-        normalized.skipped[0].reason,
-        "unsupported initialStates=['RAWTEXT state']"
-    );
+    assert_eq!(normalized.cases.len(), 9);
+    assert!(normalized.skipped.is_empty());
     assert_eq!(
         normalized.cases[6].initial_state.as_deref(),
         Some("RCDATA state")
@@ -153,6 +148,11 @@ fn normalized_html5lib_fixture_parses_with_importer_metadata() {
         Some("RCDATA state")
     );
     assert_eq!(normalized.cases[7].last_start_tag.as_deref(), Some("title"));
+    assert_eq!(
+        normalized.cases[8].initial_state.as_deref(),
+        Some("RAWTEXT state")
+    );
+    assert_eq!(normalized.cases[8].last_start_tag.as_deref(), Some("style"));
 }
 
 #[test]
@@ -194,7 +194,7 @@ fn normalized_html5lib_cases_match_default_wrapper() {
 
     assert_eq!(suite.format, "venture-html-lexer-fixtures/v1");
     assert_eq!(suite.suite, "html5lib-smoke");
-    assert_eq!(suite.cases.len(), 8);
+    assert_eq!(suite.cases.len(), 9);
 
     run_fixture_suite(&suite, |case| {
         let mut lexer = create_html_lexer().map_err(|error| format!("{error:?}"))?;
@@ -267,6 +267,7 @@ fn is_supported_by_current_runtime(case: &FixtureCase) -> bool {
     match case.initial_state.as_deref() {
         None | Some("Data state") => case.last_start_tag.is_none(),
         Some("RCDATA state") => case.last_start_tag.is_some(),
+        Some("RAWTEXT state") => case.last_start_tag.is_some(),
         Some(_) => false,
     }
 }
@@ -327,6 +328,7 @@ fn machine_state_for_fixture(state: &str) -> &str {
     match state {
         "Data state" => "data",
         "RCDATA state" => "rcdata",
+        "RAWTEXT state" => "rawtext",
         other => panic!("unsupported fixture state `{other}`"),
     }
 }

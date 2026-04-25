@@ -69,6 +69,7 @@ currently supports:
 - default data-state cases
 - explicit `initialStates: ["Data state"]`
 - `initialStates: ["RCDATA state"]` together with `lastStartTag`
+- `initialStates: ["RAWTEXT state"]` together with `lastStartTag`
 - `StartTag`, `EndTag`, `Character`, `Comment`, and `DOCTYPE` output tokens
 - html5lib start-tag self-closing booleans
 - tokenizer error codes lowered into Venture diagnostics
@@ -76,10 +77,11 @@ currently supports:
 Unsupported raw cases are skipped into metadata in the generated file rather
 than silently disappearing. Rust conformance tests execute the generated
 `html5lib-smoke.json` corpus and separately parse the raw upstream-style file to
-keep the intake path visible. Tokenizer-context cases such as RCDATA stay in
-the generated corpus with `initial_state` / `last_start_tag` metadata and are
-seeded into the Rust wrapper at test time, while still unsupported upstream
-states remain recorded under `skipped` instead of being discarded.
+keep the intake path visible. Tokenizer-context cases such as RCDATA and
+RAWTEXT stay in the generated corpus with `initial_state` / `last_start_tag`
+metadata and are seeded into the Rust wrapper at test time, while still
+unsupported upstream states remain recorded under `skipped` instead of being
+discarded.
 
 To regenerate the normalized corpus:
 
