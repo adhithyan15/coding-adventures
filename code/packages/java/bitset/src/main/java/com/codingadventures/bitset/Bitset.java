@@ -107,6 +107,25 @@ public final class Bitset {
      */
     private static final int BITS_PER_WORD = 64;
 
+    /**
+     * Maximum allowed bitset size, in bits.
+     *
+     * <p>67,108,864 bits = 8 MB of word storage. This cap prevents two
+     * denial-of-service vectors:
+     * <ul>
+     *   <li><b>Direct over-allocation</b>: {@code new Bitset(Integer.MAX_VALUE)}
+     *       would silently try to allocate ~256 MB of {@code long[]}.</li>
+     *   <li><b>Integer overflow in ensureCapacity</b>: the doubling loop
+     *       {@code while (newCap <= i) newCap *= 2} wraps to a negative value
+     *       when {@code i} is near {@code Integer.MAX_VALUE}, causing an
+     *       {@code ArrayIndexOutOfBoundsException} or silent corruption.</li>
+     * </ul>
+     *
+     * <p>8 MB is generous for a single bitset. Adjust if your application
+     * genuinely needs larger bitsets with untrusted size inputs.
+     */
+    static final int MAX_BITS = 1 << 26; // 67,108,864 bits ≈ 8 MB
+
     // =========================================================================
     // Fields
     // =========================================================================
@@ -150,6 +169,14 @@ public final class Bitset {
      * @param size the number of addressable bits
      */
     public Bitset(int size) {
+        if (size < 0) {
+            throw new IllegalArgumentException(
+                "size must be non-negative, got: " + size);
+        }
+        if (size > MAX_BITS) {
+            throw new IllegalArgumentException(
+                "size " + size + " exceeds maximum allowed bits (" + MAX_BITS + ")");
+        }
         this.words = new long[wordsNeeded(size)];
         this.length = size;
     }
@@ -224,7 +251,7 @@ public final class Bitset {
             char c = s.charAt(i);
             if (c != '0' && c != '1') {
                 throw new IllegalArgumentException(
-                    "invalid binary string: \"" + s + "\"");
+                    "invalid character '" + c + "' at index " + i + " in binary string");
             }
         }
 
@@ -912,8 +939,25 @@ public final class Bitset {
      *   Example: capacity=128, set(500)
      *   128 → 256 → 512 → 1024  (stop: 500 &lt; 1024)
      * </pre>
+     *
+     * <p><b>Bounds guards</b>:
+     * <ul>
+     *   <li>Negative indices are rejected immediately.</li>
+     *   <li>Indices at or above {@link #MAX_BITS} are rejected to prevent
+     *       the doubling loop from overflowing {@code int} arithmetic and
+     *       causing a silent wrap-around into negative values.</li>
+     * </ul>
      */
     private void ensureCapacity(int i) {
+        if (i < 0) {
+            throw new IllegalArgumentException(
+                "bit index must be non-negative, got: " + i);
+        }
+        if (i >= MAX_BITS) {
+            throw new IllegalArgumentException(
+                "bit index " + i + " exceeds maximum allowed bits (" + MAX_BITS + ")");
+        }
+
         if (i < capacity()) {
             // Already have room. But we might need to extend length.
             if (i >= length) {
@@ -927,6 +971,9 @@ public final class Bitset {
         if (newCap < BITS_PER_WORD) {
             newCap = BITS_PER_WORD;
         }
+        // Double until we have room. The i >= MAX_BITS guard above means
+        // newCap can never overflow: MAX_BITS (1<<26) fits comfortably in int,
+        // and doubling from MAX_BITS/2 still fits (1<<27 < Integer.MAX_VALUE).
         while (newCap <= i) {
             newCap *= 2;
         }

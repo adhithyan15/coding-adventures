@@ -360,4 +360,55 @@ class BitsetTest {
         assertEquals("Bitset()", Bitset.fromBinaryStr("").toString())
         assertEquals("Bitset(101)", Bitset.fromBinaryStr("101").toString())
     }
+
+    // =========================================================================
+    // 10. Security — Input Validation
+    // =========================================================================
+    //
+    // These tests verify the denial-of-service guards added to reject
+    // inputs that would otherwise cause unbounded allocation or integer
+    // overflow in the doubling loop.
+
+    @Test
+    fun constructorNegativeSizeThrows() {
+        assertThrows<IllegalArgumentException> { Bitset(-1) }
+        assertThrows<IllegalArgumentException> { Bitset(Int.MIN_VALUE) }
+    }
+
+    @Test
+    fun constructorExceedsMaxBitsThrows() {
+        assertThrows<IllegalArgumentException> { Bitset(Bitset.MAX_BITS + 1) }
+        assertThrows<IllegalArgumentException> { Bitset(Int.MAX_VALUE) }
+    }
+
+    @Test
+    fun setNegativeIndexThrows() {
+        val bs = Bitset(10)
+        assertThrows<IllegalArgumentException> { bs.set(-1) }
+    }
+
+    @Test
+    fun toggleNegativeIndexThrows() {
+        val bs = Bitset(10)
+        assertThrows<IllegalArgumentException> { bs.toggle(-1) }
+    }
+
+    @Test
+    fun setExceedsMaxBitsThrows() {
+        val bs = Bitset(10)
+        assertThrows<IllegalArgumentException> { bs.set(Bitset.MAX_BITS) }
+        assertThrows<IllegalArgumentException> { bs.set(Int.MAX_VALUE) }
+    }
+
+    @Test
+    fun fromBinaryStrInvalidCharMessageContainsCharAndIndex() {
+        // Verify the error message includes the offending character and its
+        // index rather than echoing the entire (possibly large) input string.
+        val ex = assertThrows<IllegalArgumentException> {
+            Bitset.fromBinaryStr("01X01")
+        }
+        val msg = ex.message ?: ""
+        assertTrue(msg.contains("'X'"), "message should name the bad char")
+        assertTrue(msg.contains("2"),   "message should include the index")
+    }
 }

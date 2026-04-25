@@ -105,6 +105,22 @@ class Bitset private constructor(
      */
     constructor(size: Int) : this(LongArray(wordsNeeded(size)), size)
 
+    // =========================================================================
+    // Validation
+    // =========================================================================
+
+    init {
+        // Validate _size here (runs for every constructor path, including the
+        // public `constructor(size: Int)` and the private primary constructor
+        // used internally by fromInteger / fromBinaryStr).
+        require(_size >= 0) {
+            "size must be non-negative, got: $_size"
+        }
+        require(_size <= MAX_BITS) {
+            "size $_size exceeds maximum allowed bits ($MAX_BITS)"
+        }
+    }
+
     companion object {
         // =====================================================================
         // Constants
@@ -117,6 +133,24 @@ class Bitset private constructor(
          * number.
          */
         const val BITS_PER_WORD = 64
+
+        /**
+         * Maximum allowed bitset size, in bits.
+         *
+         * 67,108,864 bits = 8 MB of word storage. This cap prevents two
+         * denial-of-service vectors:
+         *
+         * - **Direct over-allocation**: `Bitset(Int.MAX_VALUE)` would try to
+         *   allocate ~256 MB of `LongArray`.
+         * - **Integer overflow in ensureCapacity**: the doubling loop
+         *   `while (newCap <= i) newCap *= 2` wraps to a negative value when
+         *   `i` is near `Int.MAX_VALUE`, causing an `ArrayIndexOutOfBoundsException`
+         *   or silent corruption.
+         *
+         * Adjust if your application genuinely needs larger bitsets with
+         * untrusted size inputs.
+         */
+        const val MAX_BITS = 1 shl 26 // 67,108,864 bits ≈ 8 MB
 
         // =====================================================================
         // Factory methods
@@ -171,9 +205,9 @@ class Bitset private constructor(
          * @throws IllegalArgumentException if any character is not '0' or '1'
          */
         fun fromBinaryStr(s: String): Bitset {
-            for (c in s) {
+            for ((i, c) in s.withIndex()) {
                 require(c == '0' || c == '1') {
-                    "invalid binary string: \"$s\""
+                    "invalid character '$c' at index $i in binary string"
                 }
             }
 
@@ -208,9 +242,22 @@ class Bitset private constructor(
          * wordsNeeded(65)  = 2
          * wordsNeeded(200) = 4
          * ```
+         *
+         * Validates [bitCount] is in `0..MAX_BITS` to prevent denial-of-service
+         * via unbounded allocation. This is the earliest point where we can
+         * reject bad inputs from the public `constructor(size: Int)` delegating
+         * constructor — that path calls `wordsNeeded(size)` before the class
+         * `init` block gets a chance to run.
          */
-        fun wordsNeeded(bitCount: Int): Int =
-            (bitCount + BITS_PER_WORD - 1) / BITS_PER_WORD
+        fun wordsNeeded(bitCount: Int): Int {
+            require(bitCount >= 0) {
+                "size must be non-negative, got: $bitCount"
+            }
+            require(bitCount <= MAX_BITS) {
+                "size $bitCount exceeds maximum allowed bits ($MAX_BITS)"
+            }
+            return (bitCount + BITS_PER_WORD - 1) / BITS_PER_WORD
+        }
 
         /**
          * Which word contains bit [i]? Simply `i / 64`.
@@ -674,13 +721,26 @@ class Bitset private constructor(
      *
      * Growth: double capacity until it exceeds [i], starting from max(capacity,
      * 64). This gives amortised O(1) growth.
+     *
+     * **Bounds guards**:
+     * - Negative indices are rejected immediately.
+     * - Indices at or above [MAX_BITS] are rejected to prevent the doubling
+     *   loop from overflowing `Int` arithmetic (wrap-around to negative).
      */
     private fun ensureCapacity(i: Int) {
+        require(i >= 0) { "bit index must be non-negative, got: $i" }
+        require(i < MAX_BITS) {
+            "bit index $i exceeds maximum allowed bits ($MAX_BITS)"
+        }
+
         if (i < capacity()) {
             if (i >= _size) _size = i + 1
             return
         }
 
+        // Double until we have room. The i < MAX_BITS guard above means
+        // newCap can never overflow: MAX_BITS (1 shl 26) fits in Int, and
+        // doubling from MAX_BITS/2 still fits (1 shl 27 < Int.MAX_VALUE).
         var newCap = capacity().coerceAtLeast(BITS_PER_WORD)
         while (newCap <= i) newCap *= 2
 

@@ -410,4 +410,54 @@ class BitsetTest {
         assertEquals("Bitset()", Bitset.fromBinaryStr("").toString());
         assertEquals("Bitset(101)", Bitset.fromBinaryStr("101").toString());
     }
+
+    // =========================================================================
+    // 10. Security — Input Validation
+    // =========================================================================
+    //
+    // These tests verify the denial-of-service guards added to reject
+    // inputs that would otherwise cause unbounded allocation or integer
+    // overflow in the doubling loop.
+
+    @Test
+    void constructorNegativeSizeThrows() {
+        assertThrows(IllegalArgumentException.class, () -> new Bitset(-1));
+        assertThrows(IllegalArgumentException.class, () -> new Bitset(Integer.MIN_VALUE));
+    }
+
+    @Test
+    void constructorExceedsMaxBitsThrows() {
+        assertThrows(IllegalArgumentException.class, () -> new Bitset(Bitset.MAX_BITS + 1));
+        assertThrows(IllegalArgumentException.class, () -> new Bitset(Integer.MAX_VALUE));
+    }
+
+    @Test
+    void setNegativeIndexThrows() {
+        Bitset bs = new Bitset(10);
+        assertThrows(IllegalArgumentException.class, () -> bs.set(-1));
+    }
+
+    @Test
+    void toggleNegativeIndexThrows() {
+        Bitset bs = new Bitset(10);
+        assertThrows(IllegalArgumentException.class, () -> bs.toggle(-1));
+    }
+
+    @Test
+    void setExceedsMaxBitsThrows() {
+        Bitset bs = new Bitset(10);
+        assertThrows(IllegalArgumentException.class, () -> bs.set(Bitset.MAX_BITS));
+        assertThrows(IllegalArgumentException.class, () -> bs.set(Integer.MAX_VALUE));
+    }
+
+    @Test
+    void fromBinaryStrInvalidCharMessageContainsCharAndIndex() {
+        // Verify the error message includes the offending character and its
+        // index rather than echoing the entire (possibly huge) input string.
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+            () -> Bitset.fromBinaryStr("01X01"));
+        String msg = ex.getMessage();
+        assertTrue(msg.contains("'X'"), "message should name the bad char");
+        assertTrue(msg.contains("2"),   "message should include the index");
+    }
 }
