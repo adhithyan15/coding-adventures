@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "coding-adventures-in-memory-data-store-protocol"
+version = "0.1.0"
+description = "Protocol frames and engine response types for the in-memory data store"
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "Adhithya Rajasekaran" }]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4", "mypy>=1.10"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/in_memory_data_store_protocol"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=in_memory_data_store_protocol --cov-report=term-missing --cov-fail-under=95"
+
+[tool.coverage.run]
+source = ["src/in_memory_data_store_protocol"]
