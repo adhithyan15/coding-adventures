@@ -1,0 +1,25 @@
+{
+  "name": "@coding-adventures/aztec-code",
+  "version": "0.1.0",
+  "description": "Aztec Code encoder — ISO/IEC 24778:2008 compliant, produces scannable Aztec barcodes",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/barcode-2d": "file:../barcode-2d",
+    "@coding-adventures/gf256": "file:../gf256",
+    "@coding-adventures/reed-solomon": "file:../reed-solomon",
+    "@coding-adventures/paint-vm-svg": "file:../paint-vm-svg"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
