@@ -113,6 +113,8 @@ fn parse_rect(value: &JsonValue, path: &str) -> Result<PaintInstruction, String>
         stroke: optional_string_field(object, "stroke", path)?,
         stroke_width: optional_f64_field(object, "stroke_width", path)?,
         corner_radius: optional_f64_field(object, "corner_radius", path)?,
+        stroke_dash: None,
+        stroke_dash_offset: None,
     }))
 }
 
