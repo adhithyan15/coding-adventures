@@ -1000,32 +1000,39 @@ applySeqs dtLl dtMl dtOf sLl sMl sOf br lits litPos out n = do
                      (mlExVal, br5) = readBits br4 (fromIntegral mlExBits)
                      (ofExVal, br6) = readBits br5 (fromIntegral ofCode)
 
-                     ll     = llBase + fromIntegral llExVal
-                     ml     = mlBase + fromIntegral mlExVal
+                     ll      = llBase + fromIntegral llExVal
+                     ml      = mlBase + fromIntegral mlExVal
                      ofCode' = fromIntegral ofCode :: Int
-                     ofRaw  = (1 `shiftL` ofCode' :: Word32) .|. fromIntegral ofExVal
 
-                 offset <- case safeSub ofRaw 3 of
-                               Just v  -> Right v
-                               Nothing -> Left ("offset underflow: raw=" ++ show ofRaw)
-
-                 let litEnd = litPos + fromIntegral ll
-                 if litEnd > length lits
-                     then Left ("literal overrun: pos=" ++ show litPos
-                                ++ " ll=" ++ show ll
-                                ++ " buf=" ++ show (length lits))
+                 -- ZStd offset codes are 0..31 (5-bit). Guard before using as shift count
+                 -- to prevent silent corruption from a shift >= 32 on Word32.
+                 if ofCode' > 31
+                     then Left ("offset code " ++ show ofCode ++ " out of range [0,31]")
                      else do
-                         let newLits = take (fromIntegral ll) (drop litPos lits)
-                             out'    = out ++ newLits
-                         if fromIntegral offset == 0 || fromIntegral offset > length out'
-                             then Left ("bad match offset " ++ show offset
-                                        ++ " (output len " ++ show (length out') ++ ")")
+                         let ofRaw = (1 `shiftL` ofCode' :: Word32) .|. fromIntegral ofExVal
+
+                         offset <- case safeSub ofRaw 3 of
+                                       Just v  -> Right v
+                                       Nothing -> Left ("offset underflow: raw=" ++ show ofRaw)
+
+                         let litEnd = litPos + fromIntegral ll
+                         if litEnd > length lits
+                             then Left ("literal overrun: pos=" ++ show litPos
+                                        ++ " ll=" ++ show ll
+                                        ++ " buf=" ++ show (length lits))
                              else do
-                                 let copyStart = length out' - fromIntegral offset
-                                     copied    = copyBytes out' copyStart (fromIntegral ml)
-                                     out''     = out' ++ copied
-                                 applySeqs dtLl dtMl dtOf sLl' sMl' sOf' br6
-                                           lits litEnd out'' (n - 1)
+                                 let newLits = take (fromIntegral ll) (drop litPos lits)
+                                     out'    = out ++ newLits
+                                 let offsetInt = fromIntegral offset :: Int
+                                 if offsetInt == 0 || offsetInt > length out'
+                                     then Left ("bad match offset " ++ show offset
+                                                ++ " (output len " ++ show (length out') ++ ")")
+                                     else do
+                                         let copyStart = length out' - offsetInt
+                                             copied    = copyBytes out' copyStart (fromIntegral ml)
+                                             out''     = out' ++ copied
+                                         applySeqs dtLl dtMl dtOf sLl' sMl' sOf' br6
+                                                   lits litEnd out'' (n - 1)
 
 -- | Safe subtraction: returns 'Nothing' if a < b.
 safeSub :: Word32 -> Word32 -> Maybe Word32
@@ -1035,12 +1042,15 @@ safeSub a b
 
 -- | Copy @len@ bytes starting at @start@ from the output buffer.
 -- Done byte-by-byte to handle overlapping matches correctly.
+-- Uses safe pattern-matching instead of partial (!!) to avoid panics.
 copyBytes :: [Word8] -> Int -> Int -> [Word8]
 copyBytes _   _     0   = []
 copyBytes out start len =
-    let b    = out !! start
-        out' = out ++ [b]
-    in b : copyBytes out' (start + 1) (len - 1)
+    case drop start out of
+        []    -> []
+        (b:_) ->
+            let out' = out ++ [b]
+            in b : copyBytes out' (start + 1) (len - 1)
 
 -- ─── List manipulation helpers ────────────────────────────────────────────────
 
@@ -1203,6 +1213,10 @@ parseFrame bs pos0 =
 
     in parseBlocks bs pos4 []
 
+-- | Maximum total decompressed output (256 MB). Prevents decompression bomb attacks.
+maxDecompressedSize :: Int
+maxDecompressedSize = 256 * 1024 * 1024
+
 -- | Parse all blocks, accumulating output.
 parseBlocks :: ByteString -> Int -> [Word8] -> Either String ByteString
 parseBlocks bs pos out
@@ -1213,7 +1227,11 @@ parseBlocks bs pos out
             btype  = fromIntegral ((hdr `shiftR` 1) .&. 3) :: Int
             bsize  = fromIntegral (hdr `shiftR` 3) :: Int
             pos'   = pos + 3
-        in case btype of
+        in if bsize > maxBlockSize
+           then Left ("block size " ++ show bsize ++ " exceeds maximum " ++ show maxBlockSize)
+           else if length out + bsize > maxDecompressedSize
+           then Left "decompressed size exceeds 256 MB safety limit"
+           else case btype of
                0 ->  -- Raw block: bsize bytes verbatim
                    if pos' + bsize > BS.length bs
                    then Left ("raw block truncated: need " ++ show bsize)
