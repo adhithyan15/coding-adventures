@@ -64,7 +64,8 @@
 pub const VERSION: &str = "0.1.0";
 
 use paint_instructions::{
-    PaintClip, PaintGlyphRun, PaintInstruction, PaintLine, PaintRect, PaintScene, PixelContainer,
+    FillRule, PaintClip, PaintEllipse, PaintGlyphRun, PaintInstruction, PaintLine, PaintPath,
+    PaintRect, PaintScene, PathCommand, PixelContainer,
 };
 
 // ---------------------------------------------------------------------------
@@ -86,15 +87,18 @@ compile_error!("paint-vm-gdi requires Windows. Use paint-metal on macOS or paint
 #[cfg(target_os = "windows")]
 use windows::core::PCWSTR;
 #[cfg(target_os = "windows")]
-use windows::Win32::Foundation::RECT;
+use windows::Win32::Foundation::{POINT, RECT};
 #[cfg(target_os = "windows")]
 use windows::Win32::Graphics::Gdi::{
-    CreateCompatibleDC, CreateDIBSection, CreateFontW, CreatePen, CreateSolidBrush, DeleteDC,
-    DeleteObject, ExtTextOutW, FillRect, GetStockObject, IntersectClipRect, LineTo, MoveToEx,
-    RestoreDC, SaveDC, SelectObject, SetBkMode, SetTextAlign, SetTextColor, BITMAPINFO,
-    BITMAPINFOHEADER, BI_RGB, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, DEFAULT_CHARSET,
-    DEFAULT_PITCH, DIB_RGB_COLORS, ETO_GLYPH_INDEX, NULL_BRUSH, OUT_DEFAULT_PRECIS, PS_SOLID,
-    TA_BASELINE, TA_LEFT, TRANSPARENT,
+    BeginPath, CloseFigure, CreateCompatibleDC, CreateDIBSection, CreateFontW, CreatePen,
+    CreateSolidBrush, DeleteDC, DeleteObject, Ellipse, EndPath, ExtCreatePen, ExtTextOutW,
+    FillPath, FillRect, GetStockObject, IntersectClipRect, LineTo, MoveToEx, PolyBezierTo,
+    Rectangle, RestoreDC, RoundRect, SaveDC, SelectObject, SetBkMode, SetPolyFillMode,
+    SetTextAlign, SetTextColor, StrokeAndFillPath, StrokePath, BITMAPINFO, BITMAPINFOHEADER,
+    BI_RGB, BS_SOLID, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, DEFAULT_CHARSET, DEFAULT_PITCH,
+    DIB_RGB_COLORS, ETO_GLYPH_INDEX, LOGBRUSH, NULL_BRUSH, NULL_PEN, OUT_DEFAULT_PRECIS,
+    PS_ENDCAP_FLAT, PS_GEOMETRIC, PS_JOIN_MITER, PS_SOLID, PS_USERSTYLE, TA_BASELINE, TA_LEFT,
+    TRANSPARENT, ALTERNATE, WINDING,
 };
 
 // ---------------------------------------------------------------------------
@@ -117,7 +121,7 @@ use windows::Win32::Graphics::Gdi::{
 /// Returns `(0.0, 0.0, 0.0, 1.0)` for unrecognised non-transparent input.
 fn parse_css_color(s: &str) -> (f64, f64, f64, f64) {
     let s = s.trim();
-    if s == "transparent" {
+    if s == "transparent" || s == "none" {
         return (0.0, 0.0, 0.0, 0.0);
     }
     if let Some(inner) = s.strip_prefix("rgba(").and_then(|v| v.strip_suffix(')')) {
@@ -299,6 +303,49 @@ fn color_to_colorref(r: f64, g: f64, b: f64) -> u32 {
     ri | (gi << 8) | (bi << 16)
 }
 
+#[cfg(target_os = "windows")]
+fn parse_colorref(s: &str) -> Option<windows::Win32::Foundation::COLORREF> {
+    let (r, g, b, a) = parse_hex_color(s);
+    if a == 0.0 {
+        return None;
+    }
+    Some(windows::Win32::Foundation::COLORREF(color_to_colorref(r, g, b)))
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn create_pen_for_stroke(
+    colorref: windows::Win32::Foundation::COLORREF,
+    width: Option<f64>,
+    dash: Option<&[f64]>,
+) -> windows::Win32::Graphics::Gdi::HPEN {
+    let width_px = width.unwrap_or(1.0).max(1.0).round() as u32;
+    if let Some(pattern) = dash.filter(|pattern| !pattern.is_empty()) {
+        let styles: Vec<u32> = pattern
+            .iter()
+            .map(|value| value.max(1.0).round() as u32)
+            .collect();
+        let brush = LOGBRUSH {
+            lbStyle: BS_SOLID,
+            lbColor: colorref,
+            lbHatch: 0,
+        };
+        ExtCreatePen(
+            windows::Win32::Graphics::Gdi::PEN_STYLE(
+                PS_GEOMETRIC.0 | PS_USERSTYLE.0 | PS_ENDCAP_FLAT.0 | PS_JOIN_MITER.0,
+            ),
+            width_px,
+            &brush,
+            Some(&styles),
+        )
+    } else {
+        CreatePen(
+            PS_SOLID,
+            width_px as i32,
+            colorref,
+        )
+    }
+}
+
 // ---------------------------------------------------------------------------
 // Instruction dispatch — PaintInstruction → GDI calls
 // ---------------------------------------------------------------------------
@@ -329,10 +376,10 @@ unsafe fn render_instructions(
             }
             PaintInstruction::Clip(clip) => render_clip(hdc, clip),
             PaintInstruction::GlyphRun(run) => render_glyph_run(hdc, run),
+            PaintInstruction::Ellipse(ellipse) => render_ellipse(hdc, ellipse),
+            PaintInstruction::Path(path) => render_path(hdc, path),
             // Planned but not yet implemented — same skip list as paint-metal:
             PaintInstruction::Text(_)
-            | PaintInstruction::Ellipse(_)
-            | PaintInstruction::Path(_)
             | PaintInstruction::Layer(_)
             | PaintInstruction::Gradient(_)
             | PaintInstruction::Image(_) => {
@@ -409,37 +456,60 @@ unsafe fn render_glyph_run(hdc: windows::Win32::Graphics::Gdi::HDC, run: &PaintG
 
 /// Render a [`PaintRect`] as a filled rectangle.
 ///
-/// GDI's `FillRect` takes a `RECT` (left, top, right, bottom) and an HBRUSH.
-/// The rectangle is filled but NOT outlined — there is no stroke. If the rect
-/// has no fill or is transparent, we skip it entirely.
-///
-/// ```text
-/// (left, top) ────── (right, top)
-///      │                    │
-///      │   FillRect area    │
-///      │                    │
-/// (left, bottom) ── (right, bottom)
-/// ```
+/// GDI's `Rectangle` / `RoundRect` can paint fill and stroke in one pass using
+/// the currently selected brush and pen.
 #[cfg(target_os = "windows")]
 unsafe fn render_rect(hdc: windows::Win32::Graphics::Gdi::HDC, rect: &PaintRect) {
-    let fill = rect.fill.as_deref().unwrap_or("transparent");
-    let (r, g, b, a) = parse_hex_color(fill);
-    if a == 0.0 {
-        return; // Fully transparent — nothing to draw.
+    let fill_color = rect.fill.as_deref().and_then(parse_colorref);
+    let stroke_color = rect.stroke.as_deref().and_then(parse_colorref);
+    if fill_color.is_none() && stroke_color.is_none() {
+        return;
     }
 
-    let colorref = color_to_colorref(r, g, b);
-    let brush = CreateSolidBrush(windows::Win32::Foundation::COLORREF(colorref));
-
-    let gdi_rect = RECT {
-        left: rect.x.round() as i32,
-        top: rect.y.round() as i32,
-        right: (rect.x + rect.width).round() as i32,
-        bottom: (rect.y + rect.height).round() as i32,
+    let mut owned_brush = None;
+    let brush_obj = if let Some(colorref) = fill_color {
+        let brush = CreateSolidBrush(colorref);
+        owned_brush = Some(brush);
+        brush.into()
+    } else {
+        GetStockObject(NULL_BRUSH)
     };
 
-    let _ = FillRect(hdc, &gdi_rect, brush);
-    let _ = DeleteObject(brush);
+    let mut owned_pen = None;
+    let pen_obj = if let Some(colorref) = stroke_color {
+        let pen = create_pen_for_stroke(
+            colorref,
+            rect.stroke_width,
+            rect.stroke_dash.as_deref(),
+        );
+        owned_pen = Some(pen);
+        pen.into()
+    } else {
+        GetStockObject(NULL_PEN)
+    };
+
+    let old_pen = SelectObject(hdc, pen_obj);
+    let old_brush = SelectObject(hdc, brush_obj);
+    let left = rect.x.round() as i32;
+    let top = rect.y.round() as i32;
+    let right = (rect.x + rect.width).round() as i32;
+    let bottom = (rect.y + rect.height).round() as i32;
+    let radius = rect.corner_radius.unwrap_or(0.0).max(0.0).round() as i32;
+    if radius > 0 {
+        let diameter = (radius * 2).max(1);
+        let _ = RoundRect(hdc, left, top, right, bottom, diameter, diameter);
+    } else {
+        let _ = Rectangle(hdc, left, top, right, bottom);
+    }
+
+    let _ = SelectObject(hdc, old_pen);
+    let _ = SelectObject(hdc, old_brush);
+    if let Some(pen) = owned_pen {
+        let _ = DeleteObject(pen);
+    }
+    if let Some(brush) = owned_brush {
+        let _ = DeleteObject(brush);
+    }
 }
 
 /// Render a [`PaintLine`] using GDI's pen + MoveToEx/LineTo.
@@ -458,14 +528,10 @@ unsafe fn render_rect(hdc: windows::Win32::Graphics::Gdi::HDC, rect: &PaintRect)
 /// ```
 #[cfg(target_os = "windows")]
 unsafe fn render_line(hdc: windows::Win32::Graphics::Gdi::HDC, line: &PaintLine) {
-    let (r, g, b, a) = parse_hex_color(&line.stroke);
-    if a == 0.0 {
+    let Some(colorref) = parse_colorref(&line.stroke) else {
         return;
-    }
-
-    let colorref = color_to_colorref(r, g, b);
-    let width = line.stroke_width.unwrap_or(1.0).round() as i32;
-    let pen = CreatePen(PS_SOLID, width, windows::Win32::Foundation::COLORREF(colorref));
+    };
+    let pen = create_pen_for_stroke(colorref, line.stroke_width, line.stroke_dash.as_deref());
 
     let old_pen = SelectObject(hdc, pen);
     let null_brush = GetStockObject(NULL_BRUSH);
@@ -477,6 +543,208 @@ unsafe fn render_line(hdc: windows::Win32::Graphics::Gdi::HDC, line: &PaintLine)
     let _ = SelectObject(hdc, old_pen);
     let _ = SelectObject(hdc, old_brush);
     let _ = DeleteObject(pen);
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn render_ellipse(hdc: windows::Win32::Graphics::Gdi::HDC, ellipse: &PaintEllipse) {
+    let fill_color = ellipse.fill.as_deref().and_then(parse_colorref);
+    let stroke_color = ellipse.stroke.as_deref().and_then(parse_colorref);
+    if fill_color.is_none() && stroke_color.is_none() {
+        return;
+    }
+
+    let mut owned_brush = None;
+    let brush_obj = if let Some(colorref) = fill_color {
+        let brush = CreateSolidBrush(colorref);
+        owned_brush = Some(brush);
+        brush.into()
+    } else {
+        GetStockObject(NULL_BRUSH)
+    };
+
+    let mut owned_pen = None;
+    let pen_obj = if let Some(colorref) = stroke_color {
+        let pen = create_pen_for_stroke(
+            colorref,
+            ellipse.stroke_width,
+            ellipse.stroke_dash.as_deref(),
+        );
+        owned_pen = Some(pen);
+        pen.into()
+    } else {
+        GetStockObject(NULL_PEN)
+    };
+
+    let old_pen = SelectObject(hdc, pen_obj);
+    let old_brush = SelectObject(hdc, brush_obj);
+    let left = (ellipse.cx - ellipse.rx).round() as i32;
+    let top = (ellipse.cy - ellipse.ry).round() as i32;
+    let right = (ellipse.cx + ellipse.rx).round() as i32;
+    let bottom = (ellipse.cy + ellipse.ry).round() as i32;
+    let _ = Ellipse(hdc, left, top, right, bottom);
+
+    let _ = SelectObject(hdc, old_pen);
+    let _ = SelectObject(hdc, old_brush);
+    if let Some(pen) = owned_pen {
+        let _ = DeleteObject(pen);
+    }
+    if let Some(brush) = owned_brush {
+        let _ = DeleteObject(brush);
+    }
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn render_path(hdc: windows::Win32::Graphics::Gdi::HDC, path: &PaintPath) {
+    let fill_color = path.fill.as_deref().and_then(parse_colorref);
+    let stroke_color = path.stroke.as_deref().and_then(parse_colorref);
+    if fill_color.is_none() && stroke_color.is_none() {
+        return;
+    }
+
+    let saved = SaveDC(hdc);
+    let old_fill_mode = SetPolyFillMode(
+        hdc,
+        match path.fill_rule.as_ref().unwrap_or(&FillRule::NonZero) {
+            FillRule::EvenOdd => ALTERNATE,
+            FillRule::NonZero => WINDING,
+        },
+    );
+
+    let mut owned_brush = None;
+    let brush_obj = if let Some(colorref) = fill_color {
+        let brush = CreateSolidBrush(colorref);
+        owned_brush = Some(brush);
+        brush.into()
+    } else {
+        GetStockObject(NULL_BRUSH)
+    };
+
+    let mut owned_pen = None;
+    let pen_obj = if let Some(colorref) = stroke_color {
+        let pen = create_pen_for_stroke(
+            colorref,
+            path.stroke_width,
+            path.stroke_dash.as_deref(),
+        );
+        owned_pen = Some(pen);
+        pen.into()
+    } else {
+        GetStockObject(NULL_PEN)
+    };
+
+    let _ = SelectObject(hdc, pen_obj);
+    let _ = SelectObject(hdc, brush_obj);
+    let _ = BeginPath(hdc);
+
+    let mut current: Option<(f64, f64)> = None;
+    let mut subpath_start: Option<(f64, f64)> = None;
+    for command in &path.commands {
+        match *command {
+            PathCommand::MoveTo { x, y } => {
+                let _ = MoveToEx(hdc, x.round() as i32, y.round() as i32, None);
+                current = Some((x, y));
+                subpath_start = Some((x, y));
+            }
+            PathCommand::LineTo { x, y } => {
+                if current.is_none() {
+                    let _ = MoveToEx(hdc, x.round() as i32, y.round() as i32, None);
+                    subpath_start = Some((x, y));
+                } else {
+                    let _ = LineTo(hdc, x.round() as i32, y.round() as i32);
+                }
+                current = Some((x, y));
+            }
+            PathCommand::QuadTo { cx, cy, x, y } => {
+                let (sx, sy) = current.unwrap_or((x, y));
+                let cubic = [
+                    POINT {
+                        x: (sx + (2.0 / 3.0) * (cx - sx)).round() as i32,
+                        y: (sy + (2.0 / 3.0) * (cy - sy)).round() as i32,
+                    },
+                    POINT {
+                        x: (x + (2.0 / 3.0) * (cx - x)).round() as i32,
+                        y: (y + (2.0 / 3.0) * (cy - y)).round() as i32,
+                    },
+                    POINT {
+                        x: x.round() as i32,
+                        y: y.round() as i32,
+                    },
+                ];
+                if current.is_none() {
+                    let _ = MoveToEx(hdc, sx.round() as i32, sy.round() as i32, None);
+                    subpath_start = Some((sx, sy));
+                }
+                let _ = PolyBezierTo(hdc, &cubic);
+                current = Some((x, y));
+            }
+            PathCommand::CubicTo {
+                cx1,
+                cy1,
+                cx2,
+                cy2,
+                x,
+                y,
+            } => {
+                if current.is_none() {
+                    let _ = MoveToEx(hdc, x.round() as i32, y.round() as i32, None);
+                    subpath_start = Some((x, y));
+                } else {
+                    let points = [
+                        POINT {
+                            x: cx1.round() as i32,
+                            y: cy1.round() as i32,
+                        },
+                        POINT {
+                            x: cx2.round() as i32,
+                            y: cy2.round() as i32,
+                        },
+                        POINT {
+                            x: x.round() as i32,
+                            y: y.round() as i32,
+                        },
+                    ];
+                    let _ = PolyBezierTo(hdc, &points);
+                }
+                current = Some((x, y));
+            }
+            PathCommand::ArcTo { x, y, .. } => {
+                if current.is_none() {
+                    let _ = MoveToEx(hdc, x.round() as i32, y.round() as i32, None);
+                    subpath_start = Some((x, y));
+                } else {
+                    let _ = LineTo(hdc, x.round() as i32, y.round() as i32);
+                }
+                current = Some((x, y));
+            }
+            PathCommand::Close => {
+                let _ = CloseFigure(hdc);
+                current = subpath_start;
+            }
+        }
+    }
+
+    let _ = EndPath(hdc);
+    match (fill_color.is_some(), stroke_color.is_some()) {
+        (true, true) => {
+            let _ = StrokeAndFillPath(hdc);
+        }
+        (true, false) => {
+            let _ = FillPath(hdc);
+        }
+        (false, true) => {
+            let _ = StrokePath(hdc);
+        }
+        (false, false) => {}
+    }
+
+    let _ = SetPolyFillMode(hdc, windows::Win32::Graphics::Gdi::CREATE_POLYGON_RGN_MODE(old_fill_mode));
+    let _ = RestoreDC(hdc, saved);
+    if let Some(pen) = owned_pen {
+        let _ = DeleteObject(pen);
+    }
+    if let Some(brush) = owned_brush {
+        let _ = DeleteObject(brush);
+    }
 }
 
 /// Render a [`PaintClip`] using GDI's clip region save/restore.
@@ -675,7 +943,10 @@ unsafe fn render_unsafe(scene: &PaintScene, width: u32, height: u32) -> PixelCon
 #[cfg(test)]
 mod tests {
     use super::*;
-    use paint_instructions::{PaintBase, PaintGroup, PaintInstruction, PaintRect, PaintScene};
+    use paint_instructions::{
+        PaintBase, PaintEllipse, PaintGroup, PaintInstruction, PaintPath, PaintRect, PaintScene,
+        PathCommand,
+    };
 
     #[test]
     fn version_exists() {
@@ -730,6 +1001,15 @@ mod tests {
     #[test]
     fn parse_transparent() {
         let (r, g, b, a) = parse_hex_color("transparent");
+        assert_eq!(a, 0.0);
+        assert_eq!(r, 0.0);
+        assert_eq!(g, 0.0);
+        assert_eq!(b, 0.0);
+    }
+
+    #[test]
+    fn parse_none_as_transparent() {
+        let (r, g, b, a) = parse_hex_color("none");
         assert_eq!(a, 0.0);
         assert_eq!(r, 0.0);
         assert_eq!(g, 0.0);
@@ -843,6 +1123,131 @@ mod tests {
         // Should be white background everywhere
         let (r, g, b, _a) = pixels.pixel_at(25, 25);
         assert_eq!(r, 255);
+        assert_eq!(g, 255);
+        assert_eq!(b, 255);
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn rect_stroke_and_fill_render() {
+        let mut scene = PaintScene::new(80.0, 80.0);
+        scene.instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: 10.0,
+            y: 10.0,
+            width: 60.0,
+            height: 60.0,
+            fill: Some("#00ff00".to_string()),
+            stroke: Some("#ff0000".to_string()),
+            stroke_width: Some(2.0),
+            corner_radius: Some(8.0),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let pixels = render(&scene);
+        let (r, g, b, _a) = pixels.pixel_at(40, 40);
+        assert_eq!(r, 0, "center should preserve fill color");
+        assert_eq!(g, 255);
+        assert_eq!(b, 0);
+
+        let (r, g, b, _a) = pixels.pixel_at(10, 40);
+        assert_eq!(r, 255, "left edge should draw stroke");
+        assert_eq!(g, 0);
+        assert_eq!(b, 0);
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn ellipse_fill_and_stroke_render() {
+        let mut scene = PaintScene::new(80.0, 80.0);
+        scene.instructions.push(PaintInstruction::Ellipse(PaintEllipse {
+            base: PaintBase::default(),
+            cx: 40.0,
+            cy: 40.0,
+            rx: 20.0,
+            ry: 15.0,
+            fill: Some("#0000ff".to_string()),
+            stroke: Some("#ff0000".to_string()),
+            stroke_width: Some(2.0),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let pixels = render(&scene);
+        let (r, g, b, _a) = pixels.pixel_at(40, 40);
+        assert_eq!(r, 0, "ellipse center should keep fill color");
+        assert_eq!(g, 0);
+        assert_eq!(b, 255);
+
+        let (r, g, b, _a) = pixels.pixel_at(40, 25);
+        assert_eq!(r, 255, "ellipse top edge should draw stroke");
+        assert_eq!(g, 0);
+        assert_eq!(b, 0);
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn stroked_path_with_none_fill_keeps_interior_clear() {
+        let mut scene = PaintScene::new(50.0, 50.0);
+        scene.instructions.push(PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: 25.0, y: 5.0 },
+                PathCommand::LineTo { x: 45.0, y: 45.0 },
+                PathCommand::LineTo { x: 5.0, y: 45.0 },
+                PathCommand::Close,
+            ],
+            fill: Some("none".to_string()),
+            fill_rule: None,
+            stroke: Some("#000000".to_string()),
+            stroke_width: Some(1.0),
+            stroke_cap: None,
+            stroke_join: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let pixels = render(&scene);
+        let (r, g, b, _a) = pixels.pixel_at(25, 25);
+        assert_eq!(r, 255, "triangle interior should remain background");
+        assert_eq!(g, 255);
+        assert_eq!(b, 255);
+
+        let (r, g, b, _a) = pixels.pixel_at(25, 5);
+        assert_eq!(r, 0, "triangle edge should draw stroke");
+        assert_eq!(g, 0);
+        assert_eq!(b, 0);
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn dashed_path_renders_gaps() {
+        let mut scene = PaintScene::new(100.0, 40.0);
+        scene.instructions.push(PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: 5.0, y: 20.0 },
+                PathCommand::LineTo { x: 95.0, y: 20.0 },
+            ],
+            fill: Some("none".to_string()),
+            fill_rule: None,
+            stroke: Some("#000000".to_string()),
+            stroke_width: Some(1.0),
+            stroke_cap: None,
+            stroke_join: None,
+            stroke_dash: Some(vec![4.0, 4.0]),
+            stroke_dash_offset: None,
+        }));
+
+        let pixels = render(&scene);
+        let (r, g, b, _a) = pixels.pixel_at(7, 20);
+        assert_eq!(r, 0, "first dash should draw");
+        assert_eq!(g, 0);
+        assert_eq!(b, 0);
+
+        let (r, g, b, _a) = pixels.pixel_at(11, 20);
+        assert_eq!(r, 255, "gap between dashes should stay background");
         assert_eq!(g, 255);
         assert_eq!(b, 255);
     }
