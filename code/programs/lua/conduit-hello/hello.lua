@@ -94,13 +94,14 @@ end)
 -- ── Custom not-found handler ─────────────────────────────────────────────────
 
 app:not_found(function(ctx)
-    return html("<h1>404 Not Found</h1><p>No route for " .. ctx:path() .. "</p>", 404)
+    return html("<h1>404 Not Found</h1>", 404)
 end)
 
 -- ── Custom error handler ──────────────────────────────────────────────────────
-
+-- Never include raw error details in the response: they may expose file paths,
+-- line numbers, or other internal implementation details to external clients.
 app:error_handler(function(ctx, err)
-    return json({ error = "Internal Server Error", detail = err }, 500)
+    return json({ error = "Internal Server Error" }, 500)
 end)
 
 -- ── Start server ─────────────────────────────────────────────────────────────

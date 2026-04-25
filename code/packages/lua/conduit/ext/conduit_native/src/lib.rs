@@ -762,7 +762,7 @@ unsafe fn parse_header_table(L: *mut lua_State, idx: c_int) -> Vec<Header> {
         lua_rawgeti(L, idx, i);
         if lua_type(L, -1) == LUA_TTABLE {
             lua_rawgeti(L, -1, 1);
-            let name = get_str(L, -1).unwrap_or_default();
+            let name = get_str(L, -1).unwrap_or_default().replace('\r', "").replace('\n', "");
             lua_pop(L, 1);
             lua_rawgeti(L, -1, 2);
             let value = get_str(L, -1).unwrap_or_default().replace('\r', "").replace('\n', "");

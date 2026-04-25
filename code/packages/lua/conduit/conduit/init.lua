@@ -25,7 +25,7 @@
 ---   end)
 ---
 ---   app:not_found(function(ctx)
----       return html("<h1>Not Found: " .. ctx:path() .. "</h1>", 404)
+---       return html("<h1>Not Found</h1>", 404)
 ---   end)
 ---
 ---   app:error_handler(function(ctx, err)
