@@ -218,6 +218,24 @@ class PrologDirective:
         return None
 
 
+@dataclass(frozen=True, slots=True)
+class PrologTermExpansion:
+    """One structured ``term_expansion/2`` declaration."""
+
+    pattern: Term
+    expansion: Term
+    variables: dict[str, LogicVar]
+
+
+@dataclass(frozen=True, slots=True)
+class PrologGoalExpansion:
+    """One structured ``goal_expansion/2`` declaration."""
+
+    pattern: Term
+    expansion: Term
+    variables: dict[str, LogicVar]
+
+
 def directive(
     goal: GoalExpr,
     variables: dict[str, LogicVar] | None = None,
@@ -271,6 +289,8 @@ class PredicateRegistry:
 
     predicates: tuple[PredicateSpec, ...] = ()
     initialization_directives: tuple[PrologDirective, ...] = ()
+    term_expansions: tuple[PrologTermExpansion, ...] = ()
+    goal_expansions: tuple[PrologGoalExpansion, ...] = ()
     _by_key: dict[tuple[Symbol, int], PredicateSpec] = field(
         init=False,
         repr=False,
@@ -296,6 +316,22 @@ class PredicateRegistry:
                 msg = (
                     "predicate registry initialization directives must be "
                     "PrologDirective values"
+                )
+                raise TypeError(msg)
+
+        for expansion_value in self.term_expansions:
+            if not isinstance(expansion_value, PrologTermExpansion):
+                msg = (
+                    "predicate registry term expansions must be "
+                    "PrologTermExpansion values"
+                )
+                raise TypeError(msg)
+
+        for expansion_value in self.goal_expansions:
+            if not isinstance(expansion_value, PrologGoalExpansion):
+                msg = (
+                    "predicate registry goal expansions must be "
+                    "PrologGoalExpansion values"
                 )
                 raise TypeError(msg)
 
@@ -343,6 +379,8 @@ class PredicateRegistry:
         return PredicateRegistry(
             predicates=tuple(updates.values()),
             initialization_directives=self.initialization_directives,
+            term_expansions=self.term_expansions,
+            goal_expansions=self.goal_expansions,
         )
 
     def add_initialization(self, directive_value: PrologDirective) -> PredicateRegistry:
@@ -357,6 +395,40 @@ class PredicateRegistry:
                 *self.initialization_directives,
                 directive_value,
             ),
+            term_expansions=self.term_expansions,
+            goal_expansions=self.goal_expansions,
+        )
+
+    def add_term_expansion(
+        self,
+        expansion_value: PrologTermExpansion,
+    ) -> PredicateRegistry:
+        """Return a registry that appends one structured term expansion."""
+
+        if not isinstance(expansion_value, PrologTermExpansion):
+            msg = "term expansions must be PrologTermExpansion values"
+            raise TypeError(msg)
+        return PredicateRegistry(
+            predicates=self.predicates,
+            initialization_directives=self.initialization_directives,
+            term_expansions=(*self.term_expansions, expansion_value),
+            goal_expansions=self.goal_expansions,
+        )
+
+    def add_goal_expansion(
+        self,
+        expansion_value: PrologGoalExpansion,
+    ) -> PredicateRegistry:
+        """Return a registry that appends one structured goal expansion."""
+
+        if not isinstance(expansion_value, PrologGoalExpansion):
+            msg = "goal expansions must be PrologGoalExpansion values"
+            raise TypeError(msg)
+        return PredicateRegistry(
+            predicates=self.predicates,
+            initialization_directives=self.initialization_directives,
+            term_expansions=self.term_expansions,
+            goal_expansions=(*self.goal_expansions, expansion_value),
         )
 
     def dynamic_relations(self) -> tuple[Relation, ...]:
@@ -378,6 +450,8 @@ _DYNAMIC_DIRECTIVE = sym("dynamic")
 _DISCONTIGUOUS_DIRECTIVE = sym("discontiguous")
 _MULTIFILE_DIRECTIVE = sym("multifile")
 _INITIALIZATION_DIRECTIVE = sym("initialization")
+_TERM_EXPANSION_DIRECTIVE = sym("term_expansion")
+_GOAL_EXPANSION_DIRECTIVE = sym("goal_expansion")
 _PREDICATE_INDICATOR = sym("/")
 _MODULE_DIRECTIVE = sym("module")
 _USE_MODULE_DIRECTIVE = sym("use_module")
@@ -439,6 +513,14 @@ def apply_predicate_directive(
             msg = "initialization/1 directives require exactly one argument"
             raise ValueError(msg)
         return predicate_registry.add_initialization(directive_value)
+
+    parsed_term_expansion = term_expansion_from_directive(directive_value)
+    if parsed_term_expansion is not None:
+        return predicate_registry.add_term_expansion(parsed_term_expansion)
+
+    parsed_goal_expansion = goal_expansion_from_directive(directive_value)
+    if parsed_goal_expansion is not None:
+        return predicate_registry.add_goal_expansion(parsed_goal_expansion)
 
     if len(term_value.args) != 1:
         return predicate_registry
@@ -519,6 +601,42 @@ def module_import_from_directive(
         module_name=module_term.symbol,
         imports=imports,
         import_all=False,
+    )
+
+
+def term_expansion_from_directive(
+    directive_value: PrologDirective,
+) -> PrologTermExpansion | None:
+    """Parse one ``term_expansion/2`` declaration into shared metadata."""
+
+    parsed = _expansion_from_directive(
+        directive_value,
+        directive_name=_TERM_EXPANSION_DIRECTIVE,
+    )
+    if parsed is None:
+        return None
+    return PrologTermExpansion(
+        pattern=parsed[0],
+        expansion=parsed[1],
+        variables=dict(directive_value.variables),
+    )
+
+
+def goal_expansion_from_directive(
+    directive_value: PrologDirective,
+) -> PrologGoalExpansion | None:
+    """Parse one ``goal_expansion/2`` declaration into shared metadata."""
+
+    parsed = _expansion_from_directive(
+        directive_value,
+        directive_name=_GOAL_EXPANSION_DIRECTIVE,
+    )
+    if parsed is None:
+        return None
+    return PrologGoalExpansion(
+        pattern=parsed[0],
+        expansion=parsed[1],
+        variables=dict(directive_value.variables),
     )
 
 
@@ -659,6 +777,24 @@ def _module_operator_exports(export_term: Compound) -> tuple[OperatorSpec, ...]:
         msg = "module/2 operator exports may not remove operators"
         raise ValueError(msg)
     return tuple(operator(name, precedence, associativity) for name in names)
+
+
+def _expansion_from_directive(
+    directive_value: PrologDirective,
+    *,
+    directive_name: Symbol,
+) -> tuple[Term, Term] | None:
+    if not isinstance(directive_value, PrologDirective):
+        msg = "expansion directives must be PrologDirective values"
+        raise TypeError(msg)
+
+    term_value = directive_value.term
+    if not isinstance(term_value, Compound) or term_value.functor != directive_name:
+        return None
+    if len(term_value.args) != 2:
+        msg = f"{directive_name.name}/2 directives require exactly two arguments"
+        raise ValueError(msg)
+    return (term_value.args[0], term_value.args[1])
 
 
 def _append_dcg_state(

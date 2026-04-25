@@ -24,3 +24,5 @@
 - add `include/1` source splicing for file-backed SWI loader flows
 - add pluggable `SourceResolver` hooks so callers can resolve `library(...)`
   and other custom source references during dependency loading
+- add explicit `term_expansion/2` and `goal_expansion/2` load-time rewriting
+- add `PrologExpansionError` for invalid or non-converging loader expansions
