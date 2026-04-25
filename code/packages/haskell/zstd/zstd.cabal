@@ -1,0 +1,29 @@
+cabal-version: 3.0
+name:          zstd
+version:       0.1.0
+synopsis:      Educational Haskell ZStd (CMP07) compression library
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  Zstd
+    build-depends:    base >=4.14
+                    , bytestring >= 0.11
+                    , array >= 0.5
+                    , lzss
+    hs-source-dirs:   src
+    default-language: Haskell2010
+    ghc-options:      -Wall
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    ZstdSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14
+                    , zstd
+                    , hspec == 2.*
+                    , bytestring >= 0.11
+    default-language: Haskell2010
