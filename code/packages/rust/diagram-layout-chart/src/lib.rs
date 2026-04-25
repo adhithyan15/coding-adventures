@@ -11,7 +11,7 @@
 //!   * **Sankey** — left-to-right proportional bands
 
 use diagram_ir::{
-    Axis, AxisKind, ChartDiagram, ChartKind, ChartSeries, LegendEntry,
+    ChartDiagram, ChartKind, ChartSeries, LegendEntry,
     LayoutedChartDiagram, LayoutedChartItem, Orientation, Point, SeriesKind,
 };
 

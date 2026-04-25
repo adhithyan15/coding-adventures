@@ -26,12 +26,15 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.1.2";
+pub const VERSION: &str = "0.2.0";
 
 use std::collections::HashMap;
 
 use diagram_ir::{
-    DiagramShape, EdgeKind, LayoutedGraphDiagram, LayoutedGraphEdge, LayoutedGraphNode, Point,
+    DiagramShape, EdgeKind, GeoElement, LayoutedChartDiagram, LayoutedChartItem,
+    LayoutedGeometricDiagram, LayoutedGraphDiagram, LayoutedGraphEdge, LayoutedGraphNode,
+    LayoutedStructuralDiagram, LayoutedTemporalDiagram, LayoutedTemporalItem, Orientation,
+    Point, RelKind, TaskStatus, TextAlign as GeoTextAlign,
 };
 use layout_ir::{Color, Content, FontSpec, PositionedNode, TextAlign, TextContent};
 use layout_to_paint::{LayoutToPaintOptions, layout_to_paint};
@@ -414,6 +417,699 @@ where
 // Tests
 // ============================================================================
 
+// ============================================================================
+// Chart family (DG04)
+// ============================================================================
+
+/// Lower a [`LayoutedChartDiagram`] into a [`PaintScene`].
+pub fn diagram_to_paint_chart<S, M, R>(
+    diagram: &LayoutedChartDiagram,
+    options: &DiagramToPaintOptions<'_, S, M, R>,
+) -> PaintScene
+where
+    S: TextShaper,
+    M: FontMetrics<Handle = S::Handle>,
+    R: FontResolver<Handle = S::Handle>,
+{
+    let mut instructions: Vec<PaintInstruction> = Vec::new();
+    let mut text_children: Vec<PositionedNode> = Vec::new();
+    let lf = options.label_font.clone();
+    let ls = lf.size;
+
+    if let Some(ref tb) = diagram.title_box {
+        text_children.push(text_node(
+            &tb.text, tb.x - diagram.width / 2.0, tb.y - ls, diagram.width, ls * 1.4,
+            options.title_font.clone(), Color { r: 17, g: 24, b: 39, a: 255 },
+        ));
+    }
+
+    for item in &diagram.items {
+        match item {
+            LayoutedChartItem::AxisSpine { x1, y1, x2, y2, .. } => {
+                instructions.push(PaintInstruction::Path(line_path(
+                    &[Point { x: *x1, y: *y1 }, Point { x: *x2, y: *y2 }],
+                    "#374151", 1.5,
+                )));
+            }
+            LayoutedChartItem::GridLine { x1, y1, x2, y2 } => {
+                instructions.push(PaintInstruction::Path(PaintPath {
+                    base: PaintBase::default(),
+                    commands: vec![
+                        PathCommand::MoveTo { x: *x1, y: *y1 },
+                        PathCommand::LineTo { x: *x2, y: *y2 },
+                    ],
+                    fill: Some("none".into()), fill_rule: None,
+                    stroke: Some("#e5e7eb".into()), stroke_width: Some(1.0),
+                    stroke_cap: None, stroke_join: None,
+                    stroke_dash: Some(vec![4.0, 4.0]), stroke_dash_offset: None,
+                }));
+            }
+            LayoutedChartItem::Bar { x, y, width, height, color } => {
+                instructions.push(PaintInstruction::Rect(PaintRect {
+                    base: PaintBase::default(),
+                    x: *x, y: *y, width: *width, height: *height,
+                    fill: Some(color.clone()), stroke: None, stroke_width: None,
+                    corner_radius: Some(2.0), stroke_dash: None, stroke_dash_offset: None,
+                }));
+            }
+            LayoutedChartItem::LinePath { points, color } => {
+                if points.len() >= 2 {
+                    instructions.push(PaintInstruction::Path(line_path(points, color, 2.0)));
+                }
+            }
+            LayoutedChartItem::PieArc { cx, cy, r, start_angle, end_angle, color, label } => {
+                let cmds = pie_slice_commands(*cx, *cy, *r, *start_angle, *end_angle);
+                instructions.push(PaintInstruction::Path(PaintPath {
+                    base: PaintBase::default(),
+                    commands: cmds,
+                    fill: Some(color.clone()), fill_rule: None,
+                    stroke: Some("#ffffff".into()), stroke_width: Some(1.5),
+                    stroke_cap: None, stroke_join: None,
+                    stroke_dash: None, stroke_dash_offset: None,
+                }));
+                // Label at midpoint of arc
+                let mid = (start_angle + end_angle) / 2.0;
+                let lx = cx + (r * 0.65) * mid.cos();
+                let ly = cy + (r * 0.65) * mid.sin();
+                text_children.push(text_node(
+                    label, lx - 40.0, ly - ls / 2.0, 80.0, ls * 1.2,
+                    lf.clone(), Color { r: 255, g: 255, b: 255, a: 255 },
+                ));
+            }
+            LayoutedChartItem::SankeyBand { from_x, from_y, to_x, width, color, .. } => {
+                instructions.push(PaintInstruction::Rect(PaintRect {
+                    base: PaintBase::default(),
+                    x: *from_x, y: *from_y,
+                    width: to_x - from_x, height: *width,
+                    fill: Some(color.clone()), stroke: None, stroke_width: None,
+                    corner_radius: None, stroke_dash: None, stroke_dash_offset: None,
+                }));
+            }
+            LayoutedChartItem::DataLabel { x, y, text } => {
+                text_children.push(text_node(
+                    text, x - 40.0, y - ls / 2.0, 80.0, ls * 1.2,
+                    lf.clone(), Color { r: 55, g: 65, b: 81, a: 255 },
+                ));
+            }
+            LayoutedChartItem::AxisTick { x, y, label, orientation } => {
+                let (tx, ty, tw) = match orientation {
+                    Orientation::Horizontal => (x - 30.0, y - ls / 2.0, 60.0),
+                    Orientation::Vertical   => (x - 30.0, y + 2.0,       60.0),
+                };
+                text_children.push(text_node(
+                    label, tx, ty, tw, ls * 1.2,
+                    lf.clone(), Color { r: 107, g: 114, b: 128, a: 255 },
+                ));
+            }
+            LayoutedChartItem::Legend { x, y, entries } => {
+                let mut ex = *x;
+                for e in entries {
+                    instructions.push(PaintInstruction::Rect(PaintRect {
+                        base: PaintBase::default(),
+                        x: ex, y: y - ls / 2.0, width: ls, height: ls,
+                        fill: Some(e.color.clone()), stroke: None, stroke_width: None,
+                        corner_radius: None, stroke_dash: None, stroke_dash_offset: None,
+                    }));
+                    text_children.push(text_node(
+                        &e.label, ex + ls + 4.0, y - ls / 2.0, 80.0, ls * 1.2,
+                        lf.clone(), Color { r: 55, g: 65, b: 81, a: 255 },
+                    ));
+                    ex += ls + 4.0 + 88.0;
+                }
+            }
+        }
+    }
+
+    let text_root = PositionedNode {
+        x: 0.0, y: 0.0, width: diagram.width, height: diagram.height,
+        id: None, content: None, children: text_children, ext: HashMap::new(),
+    };
+    let text_opts = LayoutToPaintOptions {
+        width: diagram.width, height: diagram.height,
+        background: Color { r: 0, g: 0, b: 0, a: 0 },
+        device_pixel_ratio: 1.0,
+        shaper: options.shaper, metrics: options.metrics, resolver: options.resolver,
+    };
+    let text_scene = layout_to_paint(&text_root, &text_opts);
+    instructions.extend(text_scene.instructions);
+
+    let bg = options.background;
+    PaintScene {
+        width: diagram.width, height: diagram.height,
+        background: format!("rgb({},{},{})", bg.r, bg.g, bg.b),
+        instructions, id: None, metadata: None,
+    }
+}
+
+/// Build `PathCommand`s for a filled pie slice (center → arc → close).
+fn pie_slice_commands(
+    cx: f64, cy: f64, r: f64, start: f64, end: f64,
+) -> Vec<PathCommand> {
+    let mut cmds = vec![
+        PathCommand::MoveTo { x: cx, y: cy },
+        PathCommand::LineTo { x: cx + r * start.cos(), y: cy + r * start.sin() },
+    ];
+    // Split arc into ≤ 90° segments.
+    let total = end - start;
+    let n = ((total.abs() / (std::f64::consts::FRAC_PI_2)).ceil() as usize).max(1);
+    let step = total / n as f64;
+    for i in 0..n {
+        let a0 = start + i as f64 * step;
+        let a1 = a0 + step;
+        let k = (4.0 / 3.0) * ((a1 - a0) / 4.0).tan();
+        let (c0s, c0c) = (a0.sin(), a0.cos());
+        let (c1s, c1c) = (a1.sin(), a1.cos());
+        cmds.push(PathCommand::CubicTo {
+            cx1: cx + r * (c0c - k * c0s),
+            cy1: cy + r * (c0s + k * c0c),
+            cx2: cx + r * (c1c + k * c1s),
+            cy2: cy + r * (c1s - k * c1c),
+            x:    cx + r * c1c,
+            y:    cy + r * c1s,
+        });
+    }
+    cmds.push(PathCommand::Close);
+    cmds
+}
+
+// ============================================================================
+// Structural family (DG04)
+// ============================================================================
+
+/// Lower a [`LayoutedStructuralDiagram`] into a [`PaintScene`].
+pub fn diagram_to_paint_structural<S, M, R>(
+    diagram: &LayoutedStructuralDiagram,
+    options: &DiagramToPaintOptions<'_, S, M, R>,
+) -> PaintScene
+where
+    S: TextShaper,
+    M: FontMetrics<Handle = S::Handle>,
+    R: FontResolver<Handle = S::Handle>,
+{
+    let mut instructions: Vec<PaintInstruction> = Vec::new();
+    let mut text_children: Vec<PositionedNode> = Vec::new();
+    let lf = options.label_font.clone();
+    let ls = lf.size;
+    const HEADER_H: f64 = 40.0;
+
+    // ── Relationships (drawn behind nodes) ───────────────────────────────────
+    for rel in &diagram.relationships {
+        instructions.push(PaintInstruction::Path(line_path(&rel.points, "#6b7280", 1.5)));
+        // Arrowhead on the last segment
+        if rel.points.len() >= 2 {
+            let tip  = &rel.points[rel.points.len() - 1];
+            let prev = &rel.points[rel.points.len() - 2];
+            instructions.push(PaintInstruction::Path(
+                structural_arrowhead(prev, tip, &rel.kind),
+            ));
+        }
+        if let Some((ref pos, ref lbl)) = rel.label {
+            text_children.push(text_node(
+                lbl, pos.x - 40.0, pos.y - ls / 2.0, 80.0, ls * 1.2,
+                lf.clone(), Color { r: 55, g: 65, b: 81, a: 255 },
+            ));
+        }
+    }
+
+    // ── Node boxes ───────────────────────────────────────────────────────────
+    for node in &diagram.nodes {
+        // Outer rect
+        instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: node.x, y: node.y, width: node.width, height: node.height,
+            fill: Some("#f9fafb".into()), stroke: Some("#374151".into()),
+            stroke_width: Some(1.5), corner_radius: Some(4.0),
+            stroke_dash: None, stroke_dash_offset: None,
+        }));
+        // Header divider
+        instructions.push(PaintInstruction::Path(line_path(
+            &[
+                Point { x: node.x, y: node.y + HEADER_H },
+                Point { x: node.x + node.width, y: node.y + HEADER_H },
+            ],
+            "#d1d5db", 1.0,
+        )));
+        // Header text (with optional stereotype)
+        let header_label = if let Some(ref st) = node.stereotype {
+            format!("«{}»\n{}", st, node.header)
+        } else {
+            node.header.clone()
+        };
+        text_children.push(text_node(
+            &header_label,
+            node.x, node.y + 8.0, node.width, HEADER_H - 8.0,
+            options.title_font.clone(), Color { r: 17, g: 24, b: 39, a: 255 },
+        ));
+        // Compartments
+        for comp in &node.compartments {
+            let comp_y = node.y + comp.y_offset;
+            // Compartment divider
+            instructions.push(PaintInstruction::Path(line_path(
+                &[
+                    Point { x: node.x, y: comp_y },
+                    Point { x: node.x + node.width, y: comp_y },
+                ],
+                "#e5e7eb", 1.0,
+            )));
+            // Row text
+            for (i, row) in comp.rows.iter().enumerate() {
+                text_children.push(text_node(
+                    row,
+                    node.x + 8.0,
+                    comp_y + 8.0 + i as f64 * (ls + 4.0),
+                    node.width - 16.0,
+                    ls * 1.2,
+                    lf.clone(),
+                    Color { r: 55, g: 65, b: 81, a: 255 },
+                ));
+            }
+        }
+    }
+
+    let text_root = PositionedNode {
+        x: 0.0, y: 0.0, width: diagram.width, height: diagram.height,
+        id: None, content: None, children: text_children, ext: HashMap::new(),
+    };
+    let text_opts = LayoutToPaintOptions {
+        width: diagram.width, height: diagram.height,
+        background: Color { r: 0, g: 0, b: 0, a: 0 },
+        device_pixel_ratio: 1.0,
+        shaper: options.shaper, metrics: options.metrics, resolver: options.resolver,
+    };
+    let text_scene = layout_to_paint(&text_root, &text_opts);
+    instructions.extend(text_scene.instructions);
+
+    let bg = options.background;
+    PaintScene {
+        width: diagram.width, height: diagram.height,
+        background: format!("rgb({},{},{})", bg.r, bg.g, bg.b),
+        instructions, id: None, metadata: None,
+    }
+}
+
+fn structural_arrowhead(prev: &Point, tip: &Point, kind: &RelKind) -> PaintPath {
+    let dx = tip.x - prev.x;
+    let dy = tip.y - prev.y;
+    let len = (dx * dx + dy * dy).sqrt().max(1e-9);
+    let ux = dx / len;
+    let uy = dy / len;
+    let size  = 10.0;
+    let hw    = size * 0.5;
+    let bx    = tip.x - ux * size;
+    let by    = tip.y - uy * size;
+    let px = -uy;
+    let py =  ux;
+    let (fill, open) = match kind {
+        RelKind::Inheritance | RelKind::Realization => ("#ffffff", true),
+        RelKind::Composition => ("#374151", false),
+        _ => ("#6b7280", false),
+    };
+    let commands = if open {
+        vec![
+            PathCommand::MoveTo { x: tip.x, y: tip.y },
+            PathCommand::LineTo { x: bx + px * hw, y: by + py * hw },
+            PathCommand::MoveTo { x: tip.x, y: tip.y },
+            PathCommand::LineTo { x: bx - px * hw, y: by - py * hw },
+        ]
+    } else {
+        vec![
+            PathCommand::MoveTo { x: tip.x, y: tip.y },
+            PathCommand::LineTo { x: bx + px * hw, y: by + py * hw },
+            PathCommand::LineTo { x: bx - px * hw, y: by - py * hw },
+            PathCommand::Close,
+        ]
+    };
+    PaintPath {
+        base: PaintBase::default(),
+        commands,
+        fill: if open { Some("none".into()) } else { Some(fill.into()) },
+        fill_rule: None,
+        stroke: Some("#374151".into()), stroke_width: Some(1.5),
+        stroke_cap: None, stroke_join: None,
+        stroke_dash: None, stroke_dash_offset: None,
+    }
+}
+
+// ============================================================================
+// Temporal family (DG04)
+// ============================================================================
+
+/// Lower a [`LayoutedTemporalDiagram`] into a [`PaintScene`].
+pub fn diagram_to_paint_temporal<S, M, R>(
+    diagram: &LayoutedTemporalDiagram,
+    options: &DiagramToPaintOptions<'_, S, M, R>,
+) -> PaintScene
+where
+    S: TextShaper,
+    M: FontMetrics<Handle = S::Handle>,
+    R: FontResolver<Handle = S::Handle>,
+{
+    let mut instructions: Vec<PaintInstruction> = Vec::new();
+    let mut text_children: Vec<PositionedNode> = Vec::new();
+    let lf = options.label_font.clone();
+    let ls = lf.size;
+
+    for item in &diagram.items {
+        match item {
+            LayoutedTemporalItem::TimeAxisSpine { x1, y1, x2, y2 } => {
+                instructions.push(PaintInstruction::Path(line_path(
+                    &[Point { x: *x1, y: *y1 }, Point { x: *x2, y: *y2 }],
+                    "#374151", 1.5,
+                )));
+            }
+            LayoutedTemporalItem::TimeAxisTick { x, y, label } => {
+                instructions.push(PaintInstruction::Path(line_path(
+                    &[Point { x: *x, y: *y - 4.0 }, Point { x: *x, y: *y }],
+                    "#374151", 1.0,
+                )));
+                text_children.push(text_node(
+                    label, x - 20.0, *y + 2.0, 40.0, ls * 1.2,
+                    lf.clone(), Color { r: 107, g: 114, b: 128, a: 255 },
+                ));
+            }
+            LayoutedTemporalItem::SectionHeader { x, y, width, height, label } => {
+                instructions.push(PaintInstruction::Rect(PaintRect {
+                    base: PaintBase::default(),
+                    x: *x, y: *y, width: *width, height: *height,
+                    fill: Some("#f3f4f6".into()), stroke: None, stroke_width: None,
+                    corner_radius: None, stroke_dash: None, stroke_dash_offset: None,
+                }));
+                text_children.push(text_node(
+                    label, *x + 8.0, *y + (*height - ls) / 2.0, *width - 16.0, ls * 1.2,
+                    options.title_font.clone(), Color { r: 17, g: 24, b: 39, a: 255 },
+                ));
+            }
+            LayoutedTemporalItem::TaskBar { x, y, width, height, status, label } => {
+                let color = task_status_color(status);
+                instructions.push(PaintInstruction::Rect(PaintRect {
+                    base: PaintBase::default(),
+                    x: *x, y: *y, width: *width, height: *height,
+                    fill: Some(color.into()), stroke: None, stroke_width: None,
+                    corner_radius: Some(2.0), stroke_dash: None, stroke_dash_offset: None,
+                }));
+                text_children.push(text_node(
+                    label, *x + 4.0, *y + (*height - ls) / 2.0,
+                    (*width - 8.0).max(8.0), ls * 1.2,
+                    lf.clone(), Color { r: 255, g: 255, b: 255, a: 255 },
+                ));
+            }
+            LayoutedTemporalItem::MilestoneMarker { x, y, label } => {
+                let s = 8.0;
+                instructions.push(PaintInstruction::Path(PaintPath {
+                    base: PaintBase::default(),
+                    commands: vec![
+                        PathCommand::MoveTo { x: *x,     y: y - s },
+                        PathCommand::LineTo { x: x + s,  y: *y },
+                        PathCommand::LineTo { x: *x,     y: y + s },
+                        PathCommand::LineTo { x: x - s,  y: *y },
+                        PathCommand::Close,
+                    ],
+                    fill: Some("#111827".into()), fill_rule: None,
+                    stroke: None, stroke_width: None,
+                    stroke_cap: None, stroke_join: None,
+                    stroke_dash: None, stroke_dash_offset: None,
+                }));
+                text_children.push(text_node(
+                    label, x - 40.0, y + s + 2.0, 80.0, ls * 1.2,
+                    lf.clone(), Color { r: 17, g: 24, b: 39, a: 255 },
+                ));
+            }
+            LayoutedTemporalItem::TodayMarker { x, y1, y2 } => {
+                instructions.push(PaintInstruction::Path(PaintPath {
+                    base: PaintBase::default(),
+                    commands: vec![
+                        PathCommand::MoveTo { x: *x, y: *y1 },
+                        PathCommand::LineTo { x: *x, y: *y2 },
+                    ],
+                    fill: Some("none".into()), fill_rule: None,
+                    stroke: Some("#ef4444".into()), stroke_width: Some(2.0),
+                    stroke_cap: None, stroke_join: None,
+                    stroke_dash: Some(vec![6.0, 3.0]), stroke_dash_offset: None,
+                }));
+            }
+            LayoutedTemporalItem::BranchLane { y, color, label } => {
+                instructions.push(PaintInstruction::Path(line_path(
+                    &[Point { x: 0.0, y: *y }, Point { x: diagram.width, y: *y }],
+                    color, 1.0,
+                )));
+                text_children.push(text_node(
+                    label, 4.0, y - ls / 2.0, 56.0, ls * 1.2,
+                    lf.clone(), Color { r: 55, g: 65, b: 81, a: 255 },
+                ));
+            }
+            LayoutedTemporalItem::CommitNode { x, y, id: _, message, tag } => {
+                instructions.push(PaintInstruction::Ellipse(PaintEllipse {
+                    base: PaintBase::default(),
+                    cx: *x, cy: *y, rx: 8.0, ry: 8.0,
+                    fill: Some("#3b82f6".into()),
+                    stroke: Some("#1d4ed8".into()), stroke_width: Some(2.0),
+                    stroke_dash: None, stroke_dash_offset: None,
+                }));
+                if let Some(ref msg) = message {
+                    text_children.push(text_node(
+                        msg, x - 40.0, y - ls - 10.0, 80.0, ls * 1.2,
+                        lf.clone(), Color { r: 55, g: 65, b: 81, a: 255 },
+                    ));
+                }
+                if let Some(ref t) = tag {
+                    text_children.push(text_node(
+                        t, x - 24.0, y + 12.0, 48.0, ls * 1.2,
+                        lf.clone(), Color { r: 34, g: 197, b: 94, a: 255 },
+                    ));
+                }
+            }
+            LayoutedTemporalItem::MergeArc { from_x, from_y, to_x, to_y } => {
+                let cpx = (from_x + to_x) / 2.0;
+                instructions.push(PaintInstruction::Path(PaintPath {
+                    base: PaintBase::default(),
+                    commands: vec![
+                        PathCommand::MoveTo { x: *from_x, y: *from_y },
+                        PathCommand::CubicTo {
+                            cx1: cpx, cy1: *from_y,
+                            cx2: cpx, cy2: *to_y,
+                            x: *to_x, y: *to_y,
+                        },
+                    ],
+                    fill: Some("none".into()), fill_rule: None,
+                    stroke: Some("#6b7280".into()), stroke_width: Some(2.0),
+                    stroke_cap: Some(StrokeCap::Round), stroke_join: Some(StrokeJoin::Round),
+                    stroke_dash: None, stroke_dash_offset: None,
+                }));
+            }
+        }
+    }
+
+    let text_root = PositionedNode {
+        x: 0.0, y: 0.0, width: diagram.width, height: diagram.height,
+        id: None, content: None, children: text_children, ext: HashMap::new(),
+    };
+    let text_opts = LayoutToPaintOptions {
+        width: diagram.width, height: diagram.height,
+        background: Color { r: 0, g: 0, b: 0, a: 0 },
+        device_pixel_ratio: 1.0,
+        shaper: options.shaper, metrics: options.metrics, resolver: options.resolver,
+    };
+    let text_scene = layout_to_paint(&text_root, &text_opts);
+    instructions.extend(text_scene.instructions);
+
+    let bg = options.background;
+    PaintScene {
+        width: diagram.width, height: diagram.height,
+        background: format!("rgb({},{},{})", bg.r, bg.g, bg.b),
+        instructions, id: None, metadata: None,
+    }
+}
+
+fn task_status_color(status: &TaskStatus) -> &'static str {
+    match status {
+        TaskStatus::Normal    => "#3b82f6",
+        TaskStatus::Done      => "#22c55e",
+        TaskStatus::Active    => "#f59e0b",
+        TaskStatus::Crit      => "#ef4444",
+        TaskStatus::Milestone => "#111827",
+    }
+}
+
+// ============================================================================
+// Geometric family (DG04)
+// ============================================================================
+
+/// Lower a [`LayoutedGeometricDiagram`] into a [`PaintScene`].
+pub fn diagram_to_paint_geometric<S, M, R>(
+    diagram: &LayoutedGeometricDiagram,
+    options: &DiagramToPaintOptions<'_, S, M, R>,
+) -> PaintScene
+where
+    S: TextShaper,
+    M: FontMetrics<Handle = S::Handle>,
+    R: FontResolver<Handle = S::Handle>,
+{
+    let mut instructions: Vec<PaintInstruction> = Vec::new();
+    let mut text_children: Vec<PositionedNode> = Vec::new();
+    let lf = options.label_font.clone();
+    let ls = lf.size;
+
+    for el in &diagram.elements {
+        match el {
+            GeoElement::Box { x, y, w, h, corner_radius, label, fill, stroke, .. } => {
+                instructions.push(PaintInstruction::Rect(PaintRect {
+                    base: PaintBase::default(),
+                    x: *x, y: *y, width: *w, height: *h,
+                    fill: Some(fill.clone().unwrap_or_else(|| "#f9fafb".into())),
+                    stroke: Some(stroke.clone().unwrap_or_else(|| "#374151".into())),
+                    stroke_width: Some(1.5),
+                    corner_radius: Some(*corner_radius),
+                    stroke_dash: None, stroke_dash_offset: None,
+                }));
+                if let Some(ref lbl) = label {
+                    text_children.push(text_node(
+                        lbl, *x + 4.0, y + (h - ls) / 2.0, w - 8.0, ls * 1.2,
+                        lf.clone(), Color { r: 17, g: 24, b: 39, a: 255 },
+                    ));
+                }
+            }
+            GeoElement::Circle { cx, cy, r, label, fill, stroke, .. } => {
+                instructions.push(PaintInstruction::Ellipse(PaintEllipse {
+                    base: PaintBase::default(),
+                    cx: *cx, cy: *cy, rx: *r, ry: *r,
+                    fill: Some(fill.clone().unwrap_or_else(|| "#f9fafb".into())),
+                    stroke: Some(stroke.clone().unwrap_or_else(|| "#374151".into())),
+                    stroke_width: Some(1.5),
+                    stroke_dash: None, stroke_dash_offset: None,
+                }));
+                if let Some(ref lbl) = label {
+                    text_children.push(text_node(
+                        lbl, cx - r * 0.7, cy - ls / 2.0, r * 1.4, ls * 1.2,
+                        lf.clone(), Color { r: 17, g: 24, b: 39, a: 255 },
+                    ));
+                }
+            }
+            GeoElement::Line { x1, y1, x2, y2, arrow_end, arrow_start, stroke, .. } => {
+                let stroke_color = stroke.as_deref().unwrap_or("#374151");
+                instructions.push(PaintInstruction::Path(line_path(
+                    &[Point { x: *x1, y: *y1 }, Point { x: *x2, y: *y2 }],
+                    stroke_color, 1.5,
+                )));
+                if *arrow_end {
+                    let prev = Point { x: *x1, y: *y1 };
+                    let tip  = Point { x: *x2, y: *y2 };
+                    instructions.push(PaintInstruction::Path(simple_arrowhead(&prev, &tip, stroke_color)));
+                }
+                if *arrow_start {
+                    let prev = Point { x: *x2, y: *y2 };
+                    let tip  = Point { x: *x1, y: *y1 };
+                    instructions.push(PaintInstruction::Path(simple_arrowhead(&prev, &tip, stroke_color)));
+                }
+            }
+            GeoElement::Arc { cx, cy, r, start_deg, end_deg, stroke, .. } => {
+                let start = start_deg.to_radians();
+                let end   = end_deg.to_radians();
+                let n = (((end - start).abs() / std::f64::consts::FRAC_PI_2).ceil() as usize).max(1);
+                let step = (end - start) / n as f64;
+                let mut cmds = vec![
+                    PathCommand::MoveTo {
+                        x: cx + r * start.cos(), y: cy + r * start.sin(),
+                    }
+                ];
+                for i in 0..n {
+                    let a0 = start + i as f64 * step;
+                    let a1 = a0 + step;
+                    let k = (4.0 / 3.0) * ((a1 - a0) / 4.0).tan();
+                    let (c0s, c0c) = (a0.sin(), a0.cos());
+                    let (c1s, c1c) = (a1.sin(), a1.cos());
+                    cmds.push(PathCommand::CubicTo {
+                        cx1: cx + r * (c0c - k * c0s),
+                        cy1: cy + r * (c0s + k * c0c),
+                        cx2: cx + r * (c1c + k * c1s),
+                        cy2: cy + r * (c1s - k * c1c),
+                        x:    cx + r * c1c,
+                        y:    cy + r * c1s,
+                    });
+                }
+                instructions.push(PaintInstruction::Path(PaintPath {
+                    base: PaintBase::default(),
+                    commands: cmds,
+                    fill: Some("none".into()), fill_rule: None,
+                    stroke: Some(stroke.clone().unwrap_or_else(|| "#374151".into())),
+                    stroke_width: Some(1.5),
+                    stroke_cap: Some(StrokeCap::Round), stroke_join: Some(StrokeJoin::Round),
+                    stroke_dash: None, stroke_dash_offset: None,
+                }));
+            }
+            GeoElement::Text { x, y, text, align, .. } => {
+                use layout_ir::TextAlign as LTextAlign;
+                let ta = match align {
+                    GeoTextAlign::Left   => LTextAlign::Start,
+                    GeoTextAlign::Center => LTextAlign::Center,
+                    GeoTextAlign::Right  => LTextAlign::End,
+                };
+                let est_w = text.len() as f64 * 7.5 + 8.0;
+                text_children.push(PositionedNode {
+                    x: *x, y: y - ls, width: est_w, height: ls * 1.4,
+                    id: None,
+                    content: Some(layout_ir::Content::Text(layout_ir::TextContent {
+                        value: text.clone(),
+                        font: lf.clone(),
+                        color: Color { r: 17, g: 24, b: 39, a: 255 },
+                        max_lines: None,
+                        text_align: ta,
+                    })),
+                    children: Vec::new(),
+                    ext: HashMap::new(),
+                });
+            }
+        }
+    }
+
+    let text_root = PositionedNode {
+        x: 0.0, y: 0.0, width: diagram.width, height: diagram.height,
+        id: None, content: None, children: text_children, ext: HashMap::new(),
+    };
+    let text_opts = LayoutToPaintOptions {
+        width: diagram.width, height: diagram.height,
+        background: Color { r: 0, g: 0, b: 0, a: 0 },
+        device_pixel_ratio: 1.0,
+        shaper: options.shaper, metrics: options.metrics, resolver: options.resolver,
+    };
+    let text_scene = layout_to_paint(&text_root, &text_opts);
+    instructions.extend(text_scene.instructions);
+
+    let bg = options.background;
+    PaintScene {
+        width: diagram.width, height: diagram.height,
+        background: format!("rgb({},{},{})", bg.r, bg.g, bg.b),
+        instructions, id: None, metadata: None,
+    }
+}
+
+fn simple_arrowhead(prev: &Point, tip: &Point, stroke: &str) -> PaintPath {
+    let dx = tip.x - prev.x;
+    let dy = tip.y - prev.y;
+    let len = (dx * dx + dy * dy).sqrt().max(1e-9);
+    let ux = dx / len;
+    let uy = dy / len;
+    let size = 10.0;
+    let hw   = size * 0.5;
+    let bx   = tip.x - ux * size;
+    let by   = tip.y - uy * size;
+    let px   = -uy;
+    let py   =  ux;
+    PaintPath {
+        base: PaintBase::default(),
+        commands: vec![
+            PathCommand::MoveTo { x: tip.x, y: tip.y },
+            PathCommand::LineTo { x: bx + px * hw, y: by + py * hw },
+            PathCommand::LineTo { x: bx - px * hw, y: by - py * hw },
+            PathCommand::Close,
+        ],
+        fill: Some(stroke.into()), fill_rule: None,
+        stroke: None, stroke_width: None,
+        stroke_cap: None, stroke_join: None,
+        stroke_dash: None, stroke_dash_offset: None,
+    }
+}
+
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -567,7 +1263,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.1.2");
+        assert_eq!(crate::VERSION, "0.2.0");
     }
 
     #[test]

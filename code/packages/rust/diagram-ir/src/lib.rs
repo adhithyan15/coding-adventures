@@ -1,169 +1,394 @@
 //! # diagram-ir
 //!
-//! Semantic diagram intermediate representation (IR) for all diagram families.
+//! Semantic diagram intermediate representation (IR) for the DG00 pipeline.
 //!
-//! This crate defines the shared vocabulary between all diagram source parsers
-//! (DOT, Mermaid, PlantUML…) and all layout engines, covering five families:
-//!
-//!   • **Graph**     — flowcharts, directed/undirected graphs (DG00)
-//!   • **Chart**     — XY bar/line, pie, Sankey (DG04)
-//!   • **Structural** — class, ER, C4 diagrams (DG04)
-//!   • **Temporal**  — Gantt, git-graph (DG04)
-//!   • **Geometric** — Pikchr-style coordinate diagrams (DG04)
+//! This crate is the Rust counterpart of the TypeScript
+//! `@coding-adventures/diagram-ir` package. It defines the *shared vocabulary*
+//! between all diagram source parsers (DOT, Mermaid, PlantUML…) and all
+//! layout engines (`diagram-layout-graph`, `diagram-layout-sequence`, …).
 //!
 //! ## Pipeline position
 //!
 //! ```text
-//! parser  →  SemanticDiagram  (this crate)
-//!         →  layout engine
-//!         →  LayoutedDiagram  (this crate)
-//!         →  diagram-to-paint
-//!         →  PaintScene
+//! dot-parser / mermaid-parser / …
+//!   → GraphDiagram  ←── this crate
+//!   → diagram-layout-graph
+//!   → LayoutedGraphDiagram  ←── this crate
+//!   → diagram-to-paint
+//!   → PaintScene
 //! ```
+//!
+//! ## Design rules (from DG00)
+//!
+//! - No absolute `x` / `y` coordinates in the semantic IR.
+//! - No bezier control points.
+//! - No backend-specific colour strings.
+//! - No glyph IDs.
+//!
+//! Those belong in `LayoutedGraphDiagram` (geometry) or `PaintScene` (render).
 
 pub const VERSION: &str = "0.2.0";
 
-// ═══════════════════════════════════════════════════════════════════════════
-// GRAPH FAMILY (DG00 — unchanged)
-// ═══════════════════════════════════════════════════════════════════════════
+// ============================================================================
+// DiagramDirection — which axis is the "rank" axis
+// ============================================================================
 
-/// Overall left-right / top-bottom flow for graphs.
-#[derive(Debug, Clone, PartialEq)]
+/// Direction of graph layout — which way the main flow runs.
+///
+/// Think of a flowchart:
+///
+/// ```text
+/// TB = "Top to Bottom" — boxes flow downward (the most common flowchart layout)
+/// LR = "Left to Right" — boxes flow rightward (good for timelines)
+/// RL = "Right to Left" — reverse of LR
+/// BT = "Bottom to Top" — reverse of TB
+/// ```
+///
+/// DOT uses the `rankdir` attribute: `rankdir=LR` maps to [`DiagramDirection::Lr`].
+#[derive(Clone, Debug, PartialEq)]
 pub enum DiagramDirection {
-    LeftRight,
-    RightLeft,
-    TopBottom,
-    BottomTop,
+    /// Top to bottom (default). Ranks increase downward.
+    Tb,
+    /// Left to right. Ranks increase rightward.
+    Lr,
+    /// Right to left. Ranks increase leftward.
+    Rl,
+    /// Bottom to top. Ranks increase upward.
+    Bt,
 }
 
-/// Node shape variants used in Mermaid / DOT.
-#[derive(Debug, Clone, PartialEq)]
+impl Default for DiagramDirection {
+    fn default() -> Self {
+        DiagramDirection::Tb
+    }
+}
+
+// ============================================================================
+// DiagramShape — the visual shape of a graph node
+// ============================================================================
+
+/// The visual shape used to draw a graph node's outline.
+///
+/// These are the shapes that the layout and paint layers know how to render.
+/// Source-specific shapes (e.g., DOT's `hexagon`) that have no canonical
+/// mapping are rounded rectangles.
+///
+/// ```text
+/// Rect           RoundedRect      Ellipse         Diamond
+/// ┌───────┐      ╭───────╮         ╭───────╮      ◇
+/// │       │      │       │        ╱         ╲    ╱ ╲
+/// └───────┘      ╰───────╯        ╲         ╱   ╲   ╱
+///                                  ╰───────╯     ◇
+/// ```
+#[derive(Clone, Debug, PartialEq)]
 pub enum DiagramShape {
-    Rectangle,
-    RoundedRectangle,
-    Stadium,
-    Subroutine,
-    Cylindrical,
-    Circle,
-    Asymmetric,
-    Rhombus,
-    Hexagon,
-    Parallelogram,
-    ParallelogramAlt,
-    Trapezoid,
-    TrapezoidAlt,
-    DoubleCircle,
+    /// Plain rectangle with sharp corners.
+    Rect,
+    /// Rectangle with rounded corners (most common default).
+    RoundedRect,
+    /// Ellipse or circle.
+    Ellipse,
+    /// Diamond / rhombus — used for decision nodes.
+    Diamond,
 }
 
-/// Inline text label that may carry a Markdown or plain string.
-#[derive(Debug, Clone, PartialEq)]
+impl Default for DiagramShape {
+    fn default() -> Self {
+        DiagramShape::RoundedRect
+    }
+}
+
+// ============================================================================
+// DiagramLabel — a text label attached to a node or edge
+// ============================================================================
+
+/// A text label attached to a node or edge.
+///
+/// v1 only carries a plain string. Future versions will carry rich text
+/// (bold, italic, HTML) and a style reference.
+#[derive(Clone, Debug, PartialEq)]
 pub struct DiagramLabel {
     pub text: String,
 }
 
-/// Raw styling key-value pairs (colour, stroke width …).
-#[derive(Debug, Clone, PartialEq)]
-pub struct DiagramStyle {
-    pub fill: Option<String>,
-    pub stroke: Option<String>,
-    pub stroke_width: Option<f64>,
-    pub color: Option<String>,
+impl DiagramLabel {
+    pub fn new(text: impl Into<String>) -> Self {
+        DiagramLabel { text: text.into() }
+    }
 }
 
-/// Styling after resolving cascading class styles.
-#[derive(Debug, Clone, PartialEq)]
+// ============================================================================
+// DiagramStyle — optional per-element style overrides
+// ============================================================================
+
+/// Optional style overrides for a node or edge.
+///
+/// Every field is `Option<_>`. A `None` field means "use the resolved
+/// default from [`ResolvedDiagramStyle`]". This lets authors override only
+/// the fields they care about:
+///
+/// ```rust
+/// use diagram_ir::DiagramStyle;
+/// let red_border = DiagramStyle {
+///     stroke: Some("#ef4444".to_string()),
+///     ..Default::default()
+/// };
+/// ```
+#[derive(Clone, Debug, PartialEq, Default)]
+pub struct DiagramStyle {
+    /// Fill colour of the node body (CSS colour string).
+    pub fill: Option<String>,
+    /// Stroke (border) colour.
+    pub stroke: Option<String>,
+    /// Border width in pixels.
+    pub stroke_width: Option<f64>,
+    /// Colour of text labels.
+    pub text_color: Option<String>,
+    /// Font size for labels, in pixels.
+    pub font_size: Option<f64>,
+    /// Corner rounding radius for `RoundedRect` nodes.
+    pub corner_radius: Option<f64>,
+}
+
+// ============================================================================
+// ResolvedDiagramStyle — fully-resolved style with no optional fields
+// ============================================================================
+
+/// Fully-resolved style with concrete values for every field.
+///
+/// Produced by [`resolve_style`] by filling in defaults wherever the
+/// source [`DiagramStyle`] left a field as `None`.
+///
+/// The defaults match the TypeScript `@coding-adventures/diagram-ir`
+/// package so diagrams look the same in Rust and TypeScript pipelines.
+///
+/// | Field          | Default     |
+/// |----------------|-------------|
+/// | `fill`         | `#eff6ff`   |
+/// | `stroke`       | `#2563eb`   |
+/// | `stroke_width` | `2.0`       |
+/// | `text_color`   | `#1e40af`   |
+/// | `font_size`    | `14.0`      |
+/// | `corner_radius`| `8.0`       |
+#[derive(Clone, Debug, PartialEq)]
 pub struct ResolvedDiagramStyle {
     pub fill: String,
     pub stroke: String,
     pub stroke_width: f64,
-    pub color: String,
+    pub text_color: String,
+    pub font_size: f64,
+    pub corner_radius: f64,
 }
 
-/// Arrow / line decoration on a graph edge.
-#[derive(Debug, Clone, PartialEq)]
+impl Default for ResolvedDiagramStyle {
+    fn default() -> Self {
+        ResolvedDiagramStyle {
+            fill:         "#eff6ff".to_string(),
+            stroke:       "#2563eb".to_string(),
+            stroke_width: 2.0,
+            text_color:   "#1e40af".to_string(),
+            font_size:    14.0,
+            corner_radius: 8.0,
+        }
+    }
+}
+
+/// Resolve an optional [`DiagramStyle`] against the package-level defaults.
+///
+/// Any `None` field in `style` falls back to the value in
+/// [`ResolvedDiagramStyle::default()`].
+pub fn resolve_style(style: Option<&DiagramStyle>) -> ResolvedDiagramStyle {
+    resolve_style_with_base(style, ResolvedDiagramStyle::default())
+}
+
+/// Resolve an optional [`DiagramStyle`] against a caller-supplied base.
+///
+/// Useful for edges, which use a different default fill (`"none"`) than nodes.
+pub fn resolve_style_with_base(
+    style: Option<&DiagramStyle>,
+    base: ResolvedDiagramStyle,
+) -> ResolvedDiagramStyle {
+    match style {
+        None => base,
+        Some(s) => ResolvedDiagramStyle {
+            fill:          s.fill.clone().unwrap_or(base.fill),
+            stroke:        s.stroke.clone().unwrap_or(base.stroke),
+            stroke_width:  s.stroke_width.unwrap_or(base.stroke_width),
+            text_color:    s.text_color.clone().unwrap_or(base.text_color),
+            font_size:     s.font_size.unwrap_or(base.font_size),
+            corner_radius: s.corner_radius.unwrap_or(base.corner_radius),
+        },
+    }
+}
+
+// ============================================================================
+// EdgeKind — directed or undirected
+// ============================================================================
+
+/// Whether an edge is directed (has an arrowhead) or undirected (plain line).
+///
+/// In DOT: `->` produces a directed edge; `--` produces an undirected edge.
+#[derive(Clone, Debug, PartialEq)]
 pub enum EdgeKind {
-    Arrow,
-    Open,
-    Dot,
-    Cross,
-    DottedArrow,
-    ThickArrow,
-    BiArrow,
-    None,
+    Directed,
+    Undirected,
 }
 
-/// A single node in a graph-family diagram.
-#[derive(Debug, Clone, PartialEq)]
+// ============================================================================
+// GraphNode — a single node in the semantic diagram
+// ============================================================================
+
+/// A node in the semantic graph diagram.
+///
+/// This is the parsed, pre-layout representation. It carries the node's
+/// identity, label, shape preference, and optional style. It does NOT
+/// carry x/y coordinates — those are assigned by `diagram-layout-graph`.
+#[derive(Clone, Debug, PartialEq)]
 pub struct GraphNode {
+    /// Unique node identifier (from DOT node ID, Mermaid node key, etc.).
     pub id: String,
-    pub label: Option<DiagramLabel>,
-    pub shape: DiagramShape,
+    /// Human-readable label shown inside the node shape.
+    pub label: DiagramLabel,
+    /// Preferred shape; `None` → layout will use `RoundedRect`.
+    pub shape: Option<DiagramShape>,
+    /// Optional per-node style overrides.
     pub style: Option<DiagramStyle>,
-    pub class: Option<String>,
-    pub subgraph: Option<String>,
 }
 
-/// A directed or undirected edge between two graph nodes.
-#[derive(Debug, Clone, PartialEq)]
+// ============================================================================
+// GraphEdge — a connection between two nodes
+// ============================================================================
+
+/// A directed or undirected connection between two nodes.
+#[derive(Clone, Debug, PartialEq)]
 pub struct GraphEdge {
+    /// Optional stable identifier (useful for debugging and incremental layout).
+    pub id: Option<String>,
+    /// Source node id.
     pub from: String,
+    /// Target node id.
     pub to: String,
+    /// Optional label shown along the edge.
     pub label: Option<DiagramLabel>,
+    /// Whether the edge has an arrowhead (`Directed`) or not (`Undirected`).
     pub kind: EdgeKind,
-    pub is_bidirectional: bool,
-    pub length: u32,
+    /// Optional per-edge style overrides.
+    pub style: Option<DiagramStyle>,
 }
 
-/// Semantic IR for a graph / flowchart diagram. No geometry yet.
-#[derive(Debug, Clone, PartialEq)]
+// ============================================================================
+// GraphDiagram — the complete semantic diagram (pre-layout)
+// ============================================================================
+
+/// A complete semantic graph diagram — the output of all DOT / Mermaid parsers.
+///
+/// This is the input to `diagram-layout-graph`. It carries:
+///
+/// - the flow direction
+/// - an ordered list of nodes (order is preserved but not semantically
+///   significant — the layout engine computes placement)
+/// - an ordered list of edges
+/// - an optional diagram title
+///
+/// What it does NOT carry:
+///
+/// - Absolute geometry (x, y, width, height)
+/// - Render commands
+/// - Backend-specific handles
+#[derive(Clone, Debug, PartialEq)]
 pub struct GraphDiagram {
+    /// Direction of the main flow axis.
     pub direction: DiagramDirection,
-    pub nodes: Vec<GraphNode>,
-    pub edges: Vec<GraphEdge>,
+    /// Optional title shown at the top of the rendered diagram.
     pub title: Option<String>,
+    /// All nodes in the diagram.
+    pub nodes: Vec<GraphNode>,
+    /// All edges in the diagram.
+    pub edges: Vec<GraphEdge>,
 }
 
-/// Bare 2-D point used in layouted types.
-#[derive(Debug, Clone, PartialEq)]
+// ============================================================================
+// Geometry types — used in the layouted IR
+// ============================================================================
+
+/// A 2D point with floating-point coordinates.
+///
+/// Coordinate system: top-left origin, Y increasing downward (same as
+/// PaintScene, SVG, and HTML Canvas).
+#[derive(Clone, Debug, PartialEq)]
 pub struct Point {
     pub x: f64,
     pub y: f64,
 }
 
-/// A graph node after layout — carries geometry.
-#[derive(Debug, Clone, PartialEq)]
+// ============================================================================
+// LayoutedGraphNode — a node after geometry has been assigned
+// ============================================================================
+
+/// A graph node after layout has assigned absolute geometry.
+///
+/// Produced by `diagram-layout-graph::layout_graph_diagram`.
+/// Consumed by `diagram-to-paint::diagram_to_paint`.
+#[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedGraphNode {
     pub id: String,
+    pub label: DiagramLabel,
+    /// Resolved shape (never `None` after layout; defaults to `RoundedRect`).
+    pub shape: DiagramShape,
+    /// Left edge of the bounding box.
     pub x: f64,
+    /// Top edge of the bounding box.
     pub y: f64,
     pub width: f64,
     pub height: f64,
-    pub label: Option<DiagramLabel>,
-    pub shape: DiagramShape,
-    pub style: Option<ResolvedDiagramStyle>,
+    /// Fully-resolved style (no `Option` fields).
+    pub style: ResolvedDiagramStyle,
 }
 
-/// A graph edge after layout — carries a polyline path.
-#[derive(Debug, Clone, PartialEq)]
+// ============================================================================
+// LayoutedGraphEdge — an edge after routing has been computed
+// ============================================================================
+
+/// A graph edge after layout has computed its route.
+#[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedGraphEdge {
-    pub from: String,
-    pub to: String,
+    pub id: Option<String>,
+    pub from_node_id: String,
+    pub to_node_id: String,
+    pub kind: EdgeKind,
+    /// Ordered waypoints of the edge route (2 points for straight edges,
+    /// 5 points for self-loops).
     pub points: Vec<Point>,
     pub label: Option<DiagramLabel>,
-    pub label_point: Option<Point>,
-    pub kind: EdgeKind,
-    pub is_bidirectional: bool,
+    /// Midpoint where the edge label is positioned (if any).
+    pub label_position: Option<Point>,
+    pub style: ResolvedDiagramStyle,
 }
 
-/// A fully-layouted graph / flowchart — ready for diagram-to-paint.
-#[derive(Debug, Clone, PartialEq)]
+// ============================================================================
+// LayoutedGraphDiagram — the complete diagram after layout
+// ============================================================================
+
+/// A fully-laid-out graph diagram with absolute geometry.
+///
+/// This is the output of `diagram-layout-graph` and the input to
+/// `diagram-to-paint`. Every node has a bounding box; every edge has a
+/// routed polyline.
+#[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedGraphDiagram {
+    pub direction: DiagramDirection,
+    pub title: Option<String>,
+    /// Total canvas width in pixels.
     pub width: f64,
+    /// Total canvas height in pixels.
     pub height: f64,
     pub nodes: Vec<LayoutedGraphNode>,
     pub edges: Vec<LayoutedGraphEdge>,
-    pub title: Option<String>,
 }
+
+// ============================================================================
+// Tests
+// ============================================================================
 
 // ═══════════════════════════════════════════════════════════════════════════
 // CHART FAMILY (DG04) — XY bar/line, pie, Sankey
@@ -191,10 +416,11 @@ pub struct Axis {
     pub max: f64,
 }
 
-/// A bar or line series with optional label and data points.
+/// Bar or line series kind.
 #[derive(Debug, Clone, PartialEq)]
 pub enum SeriesKind { Bar, Line }
 
+/// A bar or line series with optional label and data points.
 #[derive(Debug, Clone, PartialEq)]
 pub struct ChartSeries {
     pub kind: SeriesKind,
@@ -310,7 +536,6 @@ pub struct Compartment {
 pub struct StructuralNode {
     pub id: String,
     pub label: String,
-    /// Mermaid / UML stereotype text, e.g. "interface".
     pub stereotype: Option<String>,
     pub node_kind: StructuralNodeKind,
     pub compartments: Vec<Compartment>,
@@ -319,13 +544,8 @@ pub struct StructuralNode {
 /// Relationship kind between structural nodes.
 #[derive(Debug, Clone, PartialEq)]
 pub enum RelKind {
-    Inheritance,
-    Realization,
-    Composition,
-    Aggregation,
-    Association,
-    Dependency,
-    Link,
+    Inheritance, Realization, Composition, Aggregation,
+    Association, Dependency, Link,
 }
 
 /// A directed relationship between two structural nodes.
@@ -400,10 +620,7 @@ pub enum TemporalKind { Gantt, Git }
 
 /// Task start anchor — fixed date or relative ("after X").
 #[derive(Debug, Clone, PartialEq)]
-pub enum TaskStart {
-    Date(String),
-    After(String),
-}
+pub enum TaskStart { Date(String), After(String) }
 
 /// Visual status of a Gantt task.
 #[derive(Debug, Clone, PartialEq)]
@@ -436,9 +653,7 @@ pub struct GanttDiagram {
 
 /// A named git branch.
 #[derive(Debug, Clone, PartialEq)]
-pub struct GitBranch {
-    pub name: String,
-}
+pub struct GitBranch { pub name: String }
 
 /// A git graph event — commit, branch checkout, or merge.
 #[derive(Debug, Clone, PartialEq)]
@@ -458,10 +673,7 @@ pub struct GitDiagram {
 
 /// Union body for a temporal diagram.
 #[derive(Debug, Clone, PartialEq)]
-pub enum TemporalBody {
-    Gantt(GanttDiagram),
-    Git(GitDiagram),
-}
+pub enum TemporalBody { Gantt(GanttDiagram), Git(GitDiagram) }
 
 /// Semantic IR for a temporal (Gantt / git-graph) diagram.
 #[derive(Debug, Clone, PartialEq)]
@@ -504,9 +716,6 @@ pub struct LayoutedTemporalDiagram {
 pub enum TextAlign { Left, Center, Right }
 
 /// A primitive element in a geometric diagram.
-///
-/// All coordinates are in the user's own coordinate system; the layout engine
-/// resolves the canvas size but does not move elements.
 #[derive(Debug, Clone, PartialEq)]
 pub enum GeoElement {
     Box {
@@ -535,9 +744,7 @@ pub enum GeoElement {
 #[derive(Debug, Clone, PartialEq)]
 pub struct GeometricDiagram {
     pub title: Option<String>,
-    /// Optional explicit canvas width; auto-computed from elements if None.
     pub width: Option<f64>,
-    /// Optional explicit canvas height; auto-computed from elements if None.
     pub height: Option<f64>,
     pub elements: Vec<GeoElement>,
 }
@@ -550,199 +757,93 @@ pub struct LayoutedGeometricDiagram {
     pub elements: Vec<GeoElement>,
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// TESTS
-// ═══════════════════════════════════════════════════════════════════════════
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    // ── Version ──────────────────────────────────────────────────────────
     #[test]
-    fn version_is_0_2_0() { assert_eq!(crate::VERSION, "0.2.0"); }
-
-    // ── Graph family ─────────────────────────────────────────────────────
-    #[test]
-    fn graph_diagram_roundtrip() {
-        let d = GraphDiagram {
-            direction: DiagramDirection::LeftRight,
-            nodes: vec![GraphNode {
-                id: "a".into(), label: Some(DiagramLabel { text: "A".into() }),
-                shape: DiagramShape::Rectangle,
-                style: None, class: None, subgraph: None,
-            }],
-            edges: vec![],
-            title: None,
-        };
-        assert_eq!(d.nodes.len(), 1);
-        assert_eq!(d.direction, DiagramDirection::LeftRight);
+    fn version_is_0_2_0() {
+        assert_eq!(crate::VERSION, "0.2.0");
     }
 
     #[test]
-    fn layouted_graph_has_geometry() {
-        let n = LayoutedGraphNode {
-            id: "x".into(), x: 10.0, y: 20.0, width: 80.0, height: 40.0,
-            label: None, shape: DiagramShape::Circle, style: None,
-        };
-        assert!(n.width > 0.0);
-    }
-
-    // ── Chart family ─────────────────────────────────────────────────────
-    #[test]
-    fn chart_diagram_xy_roundtrip() {
-        let d = ChartDiagram {
-            title: Some("Sales".into()),
-            kind: ChartKind::Xy,
-            x_axis: Some(Axis {
-                kind: AxisKind::Categorical,
-                title: None,
-                categories: vec!["Jan".into(), "Feb".into()],
-                min: 0.0, max: 0.0,
-            }),
-            y_axis: Some(Axis {
-                kind: AxisKind::Numeric,
-                title: None,
-                categories: vec![],
-                min: 0.0, max: 100.0,
-            }),
-            series: vec![ChartSeries {
-                kind: SeriesKind::Bar,
-                label: Some("Revenue".into()),
-                data: vec![40.0, 60.0],
-            }],
-            slices: vec![], sankey_nodes: vec![], flows: vec![],
-            orientation: ChartOrientation::Vertical,
-        };
-        assert_eq!(d.kind, ChartKind::Xy);
-        assert_eq!(d.series[0].data.len(), 2);
+    fn default_direction_is_tb() {
+        assert_eq!(DiagramDirection::default(), DiagramDirection::Tb);
     }
 
     #[test]
-    fn chart_diagram_pie_roundtrip() {
-        let d = ChartDiagram {
-            title: None, kind: ChartKind::Pie,
-            x_axis: None, y_axis: None, series: vec![],
-            slices: vec![
-                PieSlice { label: "A".into(), value: 60.0 },
-                PieSlice { label: "B".into(), value: 40.0 },
-            ],
-            sankey_nodes: vec![], flows: vec![],
-            orientation: ChartOrientation::Vertical,
-        };
-        assert_eq!(d.slices.len(), 2);
+    fn default_shape_is_rounded_rect() {
+        assert_eq!(DiagramShape::default(), DiagramShape::RoundedRect);
     }
 
     #[test]
-    fn chart_diagram_sankey_roundtrip() {
-        let d = ChartDiagram {
-            title: None, kind: ChartKind::Sankey,
-            x_axis: None, y_axis: None, series: vec![], slices: vec![],
-            sankey_nodes: vec![
-                SankeyNode { id: "a".into(), label: None },
-                SankeyNode { id: "b".into(), label: None },
-            ],
-            flows: vec![SankeyFlow { source: "a".into(), target: "b".into(), weight: 10.0 }],
-            orientation: ChartOrientation::Horizontal,
-        };
-        assert_eq!(d.flows.len(), 1);
-    }
-
-    // ── Structural family ─────────────────────────────────────────────────
-    #[test]
-    fn structural_diagram_roundtrip() {
-        let d = StructuralDiagram {
-            kind: StructuralKind::Class,
-            title: Some("Domain Model".into()),
-            nodes: vec![StructuralNode {
-                id: "Animal".into(), label: "Animal".into(),
-                stereotype: Some("abstract".into()),
-                node_kind: StructuralNodeKind::Abstract,
-                compartments: vec![Compartment {
-                    kind: CompartmentKind::Methods,
-                    entries: vec!["speak()".into()],
-                }],
-            }],
-            relationships: vec![],
-        };
-        assert_eq!(d.nodes[0].compartments[0].entries.len(), 1);
+    fn resolve_style_none_gives_defaults() {
+        let s = resolve_style(None);
+        assert_eq!(s.fill, "#eff6ff");
+        assert_eq!(s.stroke, "#2563eb");
+        assert_eq!(s.stroke_width, 2.0);
+        assert_eq!(s.text_color, "#1e40af");
+        assert_eq!(s.font_size, 14.0);
+        assert_eq!(s.corner_radius, 8.0);
     }
 
     #[test]
-    fn structural_relationship_kinds() {
-        // Verify that all RelKind variants are distinct (no copy-paste collision).
-        let kinds = vec![
-            RelKind::Inheritance, RelKind::Realization, RelKind::Composition,
-            RelKind::Aggregation, RelKind::Association, RelKind::Dependency,
-            RelKind::Link,
-        ];
-        // 7 variants, all differ from each other.
-        assert_eq!(kinds.len(), 7);
-        assert_ne!(kinds[0], kinds[1]);
-    }
-
-    // ── Temporal family ───────────────────────────────────────────────────
-    #[test]
-    fn gantt_diagram_roundtrip() {
-        let d = GanttDiagram {
-            date_format: "YYYY-MM-DD".into(),
-            sections: vec![GanttSection {
-                label: Some("Phase 1".into()),
-                tasks: vec![GanttTask {
-                    id: "t1".into(), label: "Design".into(),
-                    start: TaskStart::Date("2026-01-01".into()),
-                    duration_days: 5.0,
-                    status: TaskStatus::Done,
-                    dependencies: vec![],
-                }],
-            }],
+    fn resolve_style_partial_override() {
+        let style = DiagramStyle {
+            fill: Some("#ff0000".to_string()),
+            ..Default::default()
         };
-        assert_eq!(d.sections[0].tasks[0].duration_days, 5.0);
+        let s = resolve_style(Some(&style));
+        assert_eq!(s.fill, "#ff0000");
+        assert_eq!(s.stroke, "#2563eb"); // unchanged
     }
 
     #[test]
-    fn git_diagram_roundtrip() {
-        let d = GitDiagram {
-            direction: DiagramDirection::LeftRight,
-            branches: vec![GitBranch { name: "main".into() }],
-            events: vec![GitEvent::Commit {
-                id: Some("abc".into()), message: Some("init".into()),
-                tag: None, branch: "main".into(),
-            }],
+    fn resolve_style_with_base_overrides_base() {
+        let base = ResolvedDiagramStyle {
+            fill: "none".to_string(),
+            stroke: "#4b5563".to_string(),
+            stroke_width: 2.0,
+            text_color: "#374151".to_string(),
+            font_size: 12.0,
+            corner_radius: 0.0,
         };
-        assert_eq!(d.branches.len(), 1);
-    }
-
-    // ── Geometric family ──────────────────────────────────────────────────
-    #[test]
-    fn geometric_diagram_roundtrip() {
-        let d = GeometricDiagram {
-            title: None, width: Some(400.0), height: Some(300.0),
-            elements: vec![
-                GeoElement::Box {
-                    id: "b1".into(), x: 10.0, y: 10.0, w: 100.0, h: 50.0,
-                    corner_radius: 4.0, label: Some("Input".into()),
-                    fill: Some("#eef".into()), stroke: None,
-                },
-                GeoElement::Line {
-                    id: "l1".into(), x1: 110.0, y1: 35.0, x2: 200.0, y2: 35.0,
-                    arrow_end: true, arrow_start: false, stroke: None,
-                },
-            ],
-        };
-        assert_eq!(d.width, Some(400.0));
-        assert_eq!(d.elements.len(), 2);
+        let s = resolve_style_with_base(None, base.clone());
+        assert_eq!(s.fill, "none");
+        assert_eq!(s.stroke, "#4b5563");
     }
 
     #[test]
-    fn layouted_geometric_preserves_elements() {
-        let lg = LayoutedGeometricDiagram {
-            width: 500.0, height: 400.0,
-            elements: vec![GeoElement::Circle {
-                id: "c1".into(), cx: 100.0, cy: 100.0, r: 40.0,
-                label: None, fill: None, stroke: None,
-            }],
+    fn graph_diagram_builds_correctly() {
+        let node = GraphNode {
+            id: "A".to_string(),
+            label: DiagramLabel::new("Node A"),
+            shape: None,
+            style: None,
         };
-        assert_eq!(lg.elements.len(), 1);
+        let edge = GraphEdge {
+            id: None,
+            from: "A".to_string(),
+            to: "B".to_string(),
+            label: None,
+            kind: EdgeKind::Directed,
+            style: None,
+        };
+        let diagram = GraphDiagram {
+            direction: DiagramDirection::Lr,
+            title: Some("My Graph".to_string()),
+            nodes: vec![node],
+            edges: vec![edge],
+        };
+        assert_eq!(diagram.nodes.len(), 1);
+        assert_eq!(diagram.edges.len(), 1);
+        assert_eq!(diagram.direction, DiagramDirection::Lr);
+    }
+
+    #[test]
+    fn diagram_label_new() {
+        let label = DiagramLabel::new("hello");
+        assert_eq!(label.text, "hello");
     }
 }

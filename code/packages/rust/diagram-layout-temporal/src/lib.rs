@@ -12,7 +12,7 @@
 //! place commit nodes and merge arcs.
 
 use diagram_ir::{
-    DiagramDirection, GanttSection, GitDiagram, GitEvent,
+    GitDiagram, GitEvent,
     LayoutedTemporalDiagram, LayoutedTemporalItem, TaskStart, TaskStatus,
     TemporalBody, TemporalDiagram,
 };
@@ -285,7 +285,7 @@ mod tests {
             kind: TemporalKind::Git,
             title: None,
             body: TemporalBody::Git(GitDiagram {
-                direction: DiagramDirection::LeftRight,
+                direction: DiagramDirection::Lr,
                 branches: vec![GitBranch { name: "main".into() }],
                 events: vec![
                     GitEvent::Commit {

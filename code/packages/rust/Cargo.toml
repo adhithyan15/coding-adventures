@@ -234,7 +234,6 @@ members = [
     "diagram-layout-structural",
     "diagram-layout-temporal",
     "diagram-layout-geometric",
-    "data-matrix",
     "image-codec-bmp",
     "image-codec-ppm",
     "image-codec-qoi",
