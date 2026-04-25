@@ -42,7 +42,7 @@ Pass 2 — encode each instruction, resolving label names to ROM addresses.
 
 from __future__ import annotations
 
-from tetrad_runtime._intel4004_codegen.ir import IRInstr
+from intel4004_backend.ir import IRInstr
 
 __all__ = ["codegen", "run_on_4004", "DeoptimizerError"]
 

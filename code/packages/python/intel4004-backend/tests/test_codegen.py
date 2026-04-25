@@ -1,18 +1,16 @@
-"""Tests for the in-tree Intel 4004 codegen (``_intel4004_codegen``).
+"""Tests for the Intel 4004 codegen (``intel4004_backend.codegen`` and
+``intel4004_backend.ir``).
 
-These tests were originally in ``tetrad-jit/tests/test_tetrad_jit.py``
-under the ``TestEvaluateOp`` and ``TestCodegen`` classes.  They moved
-here when the codegen modules moved out of ``tetrad-jit`` (which has
-been retired) and into ``tetrad_runtime._intel4004_codegen``.
+History: these tests were originally part of ``tetrad-jit``'s suite,
+then moved to ``tetrad-runtime`` when ``tetrad-jit`` was retired,
+and now live here as part of the ``intel4004-backend`` package
+extraction.  They exercise:
 
-The tests exercise:
-
-- ``ir.evaluate_op`` — the abstract-evaluation helper used by the
+- ``ir.evaluate_op`` — abstract-evaluation helper used by the
   constant-folding optimiser.
-- ``codegen.codegen`` — the IRInstr → 4004 abstract-assembly →
-  binary pipeline.
-- ``codegen.run_on_4004`` — the runner that loads the binary into
-  ``intel4004-simulator`` and returns the u8 accumulator.
+- ``codegen.codegen`` — IRInstr → 4004 abstract-assembly → binary.
+- ``codegen.run_on_4004`` — load a 4004 binary into
+  ``intel4004-simulator`` and return the u8 accumulator.
 
 End-to-end: ``codegen(ir)`` → ``run_on_4004(binary, args)`` should
 produce the value the IR represents.
@@ -20,12 +18,12 @@ produce the value the IR represents.
 
 from __future__ import annotations
 
-from tetrad_runtime._intel4004_codegen import (
+from intel4004_backend import (
     IRInstr,
     codegen,
+    evaluate_op,
     run_on_4004,
 )
-from tetrad_runtime._intel4004_codegen.ir import evaluate_op
 
 # ---------------------------------------------------------------------------
 # evaluate_op — abstract-eval helper for constant folding
