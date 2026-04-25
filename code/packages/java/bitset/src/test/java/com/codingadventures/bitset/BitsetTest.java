@@ -451,6 +451,18 @@ class BitsetTest {
     }
 
     @Test
+    void clearNegativeIndexThrows() {
+        Bitset bs = new Bitset(10);
+        assertThrows(IllegalArgumentException.class, () -> bs.clear(-1));
+    }
+
+    @Test
+    void testNegativeIndexThrows() {
+        Bitset bs = new Bitset(10);
+        assertThrows(IllegalArgumentException.class, () -> bs.test(-1));
+    }
+
+    @Test
     void fromBinaryStrInvalidCharMessageContainsCharAndIndex() {
         // Verify the error message includes the offending character and its
         // index rather than echoing the entire (possibly huge) input string.

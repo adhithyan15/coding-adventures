@@ -337,6 +337,7 @@ class Bitset private constructor(
      * @param i the bit index (0-based)
      */
     fun clear(i: Int) {
+        require(i >= 0) { "bit index must be non-negative, got: $i" }
         if (i >= _size) return
         _words[wordIndex(i)] = _words[wordIndex(i)] and bitmask(i).inv()
     }
@@ -350,6 +351,7 @@ class Bitset private constructor(
      * @return `true` if bit i is set
      */
     fun test(i: Int): Boolean {
+        require(i >= 0) { "bit index must be non-negative, got: $i" }
         if (i >= _size) return false
         return (_words[wordIndex(i)] and bitmask(i)) != 0L
     }

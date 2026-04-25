@@ -401,6 +401,18 @@ class BitsetTest {
     }
 
     @Test
+    fun clearNegativeIndexThrows() {
+        val bs = Bitset(10)
+        assertThrows<IllegalArgumentException> { bs.clear(-1) }
+    }
+
+    @Test
+    fun testNegativeIndexThrows() {
+        val bs = Bitset(10)
+        assertThrows<IllegalArgumentException> { bs.test(-1) }
+    }
+
+    @Test
     fun fromBinaryStrInvalidCharMessageContainsCharAndIndex() {
         // Verify the error message includes the offending character and its
         // index rather than echoing the entire (possibly large) input string.

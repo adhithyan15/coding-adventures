@@ -327,6 +327,10 @@ public final class Bitset {
      * @param i the bit index (0-based)
      */
     public void clear(int i) {
+        if (i < 0) {
+            throw new IllegalArgumentException(
+                "bit index must be non-negative, got: " + i);
+        }
         if (i >= length) {
             return; // out of range: nothing to clear
         }
@@ -355,6 +359,10 @@ public final class Bitset {
      * @return {@code true} if bit i is set
      */
     public boolean test(int i) {
+        if (i < 0) {
+            throw new IllegalArgumentException(
+                "bit index must be non-negative, got: " + i);
+        }
         if (i >= length) {
             return false; // out of range: conceptually zero
         }
