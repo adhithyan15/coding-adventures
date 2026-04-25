@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "elixir/lisp_lexer",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads the shared Lisp token grammar file from code/grammars/ to configure the lexer."
+    }
+  ],
+  "justification": "Reads the shared Lisp token grammar file at runtime."
+}
