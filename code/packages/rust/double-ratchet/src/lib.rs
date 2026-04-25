@@ -82,12 +82,18 @@ use coding_adventures_zeroize::{Zeroize, Zeroizing};
 // SECTION 1: CONSTANTS
 // ═══════════════════════════════════════════════════════════════════════════════
 
-/// Maximum number of future message keys to cache at once.
+/// Maximum number of future message keys to cache at once per ratchet step.
 ///
 /// If a peer's message counter is more than `MAX_SKIP` ahead of ours, we
 /// reject the message. A legitimate peer never sends that far ahead, so
 /// seeing it is a sign of a bug or a DoS attempt.
 pub const MAX_SKIP: u32 = 1000;
+
+/// Maximum total number of skipped message keys across all ratchet epochs.
+///
+/// Without this bound an adversary could accumulate up to `MAX_SKIP` entries
+/// per DH ratchet step, indefinitely, causing unbounded memory growth.
+pub const MAX_SKIPPED_KEYS_TOTAL: usize = 5_000;
 
 /// Byte length of an encoded `MessageHeader`.
 ///
@@ -346,14 +352,14 @@ pub fn decode_header(bytes: &[u8; HEADER_LEN]) -> MessageHeader {
 
 /// Generate a fresh X25519 ratchet key pair with RFC 7748 clamping.
 pub fn generate_ratchet_keypair() -> KeyPair {
-    let mut secret = [0u8; 32];
-    getrandom::getrandom(&mut secret).expect("getrandom failed");
+    let mut secret = Zeroizing::new([0u8; 32]);
+    getrandom::getrandom(&mut *secret).expect("getrandom failed");
     // RFC 7748 §5 scalar clamping: ensures the scalar is a valid X25519 scalar
     // and the result point lies in the prime-order subgroup.
     secret[0] &= 248; // clear bits 0-2
     secret[31] &= 127; // clear bit 7
     secret[31] |= 64; // set bit 6
-    KeyPair::from_secret(secret)
+    KeyPair::from_secret(*secret) // copy out; Zeroizing drops and wipes the seed
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -473,21 +479,28 @@ fn try_skipped_message_key(
     aad: &[u8],
 ) -> Option<Vec<u8>> {
     let key = (header.dh, header.n);
-    let mk = mk_skipped.remove(&key)?;
+    let mut mk = mk_skipped.remove(&key)?;
 
     let header_bytes = encode_header(header);
     let mut full_aad = Vec::with_capacity(aad.len() + HEADER_LEN);
     full_aad.extend_from_slice(aad);
     full_aad.extend_from_slice(&header_bytes);
 
-    if let Ok((enc_key, iv)) = expand_message_key(&mk) {
+    let result = if let Ok((enc_key, iv)) = expand_message_key(&mk) {
         if ciphertext.len() >= 16 {
             let ct = &ciphertext[..ciphertext.len() - 16];
             let tag: [u8; 16] = ciphertext[ciphertext.len() - 16..].try_into().ok()?;
-            return aead_decrypt(ct, &enc_key, &iv, &full_aad, &tag);
+            aead_decrypt(ct, &enc_key, &iv, &full_aad, &tag)
+        } else {
+            None
         }
-    }
-    None
+    } else {
+        None
+    };
+
+    // Zeroize the message key whether decryption succeeded or failed.
+    mk.zeroize();
+    result
 }
 
 /// Store message keys for future out-of-order messages up to `until`.
@@ -495,15 +508,20 @@ fn try_skipped_message_key(
 /// Advances the receiving chain key from `state.nr` to `until`, caching each
 /// derived message key in `mk_skipped`. Enforces `MAX_SKIP` to prevent DoS.
 fn skip_message_keys(state: &mut RatchetState, until: u32) -> Result<(), RatchetError> {
-    // Reject if the jump is too large. Using saturating arithmetic to avoid
-    // overflow when nr is near u32::MAX.
-    if until.saturating_sub(state.nr) > MAX_SKIP {
+    // Per-step limit: reject if the jump is too large.
+    let keys_to_add = until.saturating_sub(state.nr) as usize;
+    if keys_to_add > MAX_SKIP as usize {
+        return Err(RatchetError::TooManySkippedMessages);
+    }
+
+    // Global limit: prevent unbounded cache growth across all DH ratchet epochs.
+    if state.mk_skipped.len().saturating_add(keys_to_add) > MAX_SKIPPED_KEYS_TOTAL {
         return Err(RatchetError::TooManySkippedMessages);
     }
 
     if let Some(mut ck) = state.ckr {
         // dhr is always Some when ckr is Some (invariant maintained by dh_ratchet_step).
-        let dhr = state.dhr.expect("invariant: ckr is Some ⇒ dhr is Some");
+        let dhr = state.dhr.ok_or(RatchetError::NoReceivingChain)?;
         while state.nr < until {
             let (new_ck, mk) = kdf_ck(&ck)?;
             state.mk_skipped.insert((dhr, state.nr), mk);
