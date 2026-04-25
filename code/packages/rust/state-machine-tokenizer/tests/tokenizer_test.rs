@@ -352,6 +352,179 @@ fn tokenizer_supports_return_state_round_trips() {
     );
 }
 
+#[test]
+fn tokenizer_can_seed_initial_state_and_last_start_tag() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "rcdata", "done"]),
+            set(&["H"]),
+            vec![
+                EffectfulTransition::new("data", EffectfulMatcher::Any, "done"),
+                EffectfulTransition::new("rcdata", EffectfulMatcher::Any, "done")
+                    .with_effects(&["append_text(current)", "flush_text"]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    )
+    .with_initial_state("rcdata")
+    .unwrap()
+    .with_last_start_tag("title");
+
+    tokenizer.push("H").unwrap();
+
+    assert_eq!(tokenizer.current_state(), "done");
+    assert_eq!(tokenizer.drain_tokens(), vec![Token::Text("H".to_string())]);
+}
+
+#[test]
+fn tokenizer_supports_rcdata_end_tag_candidate_fallback_action() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&[
+                "rcdata",
+                "less_than",
+                "end_tag_open",
+                "end_tag_name",
+                "done",
+            ]),
+            set(&["H", "e", "l", "o", "<", "/", "t", "i", ">"]),
+            vec![
+                EffectfulTransition::new(
+                    "rcdata",
+                    EffectfulMatcher::Event("H".to_string()),
+                    "rcdata",
+                )
+                .with_effects(&["append_text(current)"]),
+                EffectfulTransition::new(
+                    "rcdata",
+                    EffectfulMatcher::Event("<".to_string()),
+                    "less_than",
+                ),
+                EffectfulTransition::new("rcdata", EffectfulMatcher::Any, "rcdata")
+                    .with_effects(&["append_text(current)"]),
+                EffectfulTransition::new("rcdata", EffectfulMatcher::End, "done")
+                    .with_effects(&["flush_text", "emit(EOF)"])
+                    .consuming(false),
+                EffectfulTransition::new(
+                    "less_than",
+                    EffectfulMatcher::Event("/".to_string()),
+                    "end_tag_open",
+                )
+                .with_effects(&["clear_temporary_buffer"]),
+                EffectfulTransition::new("end_tag_open", EffectfulMatcher::Any, "end_tag_name")
+                    .with_effects(&[
+                        "create_end_tag",
+                        "append_tag_name(current_lowercase)",
+                        "append_temporary_buffer(current_lowercase)",
+                    ]),
+                EffectfulTransition::new(
+                    "end_tag_name",
+                    EffectfulMatcher::Event(">".to_string()),
+                    "rcdata",
+                )
+                .with_effects(&["emit_rcdata_end_tag_or_text"]),
+                EffectfulTransition::new("end_tag_name", EffectfulMatcher::End, "done")
+                    .with_effects(&["discard_current_token", "flush_text", "emit(EOF)"])
+                    .consuming(false),
+                EffectfulTransition::new("end_tag_name", EffectfulMatcher::Any, "end_tag_name")
+                    .with_effects(&[
+                        "append_tag_name(current_lowercase)",
+                        "append_temporary_buffer(current_lowercase)",
+                    ]),
+            ],
+            "rcdata".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    )
+    .with_last_start_tag("title");
+
+    tokenizer.push("Hello</title>").unwrap();
+    tokenizer.finish().unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![
+            Token::Text("Hello".to_string()),
+            Token::EndTag {
+                name: "title".to_string(),
+            },
+            Token::Eof,
+        ]
+    );
+
+    let mut mismatch = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&[
+                "rcdata",
+                "less_than",
+                "end_tag_open",
+                "end_tag_name",
+                "done",
+            ]),
+            set(&["H", "e", "l", "o", "<", "/", "s", "t", "y", ">"]),
+            vec![
+                EffectfulTransition::new(
+                    "rcdata",
+                    EffectfulMatcher::Event("H".to_string()),
+                    "rcdata",
+                )
+                .with_effects(&["append_text(current)"]),
+                EffectfulTransition::new(
+                    "rcdata",
+                    EffectfulMatcher::Event("<".to_string()),
+                    "less_than",
+                ),
+                EffectfulTransition::new("rcdata", EffectfulMatcher::Any, "rcdata")
+                    .with_effects(&["append_text(current)"]),
+                EffectfulTransition::new("rcdata", EffectfulMatcher::End, "done")
+                    .with_effects(&["flush_text", "emit(EOF)"])
+                    .consuming(false),
+                EffectfulTransition::new(
+                    "less_than",
+                    EffectfulMatcher::Event("/".to_string()),
+                    "end_tag_open",
+                )
+                .with_effects(&["clear_temporary_buffer"]),
+                EffectfulTransition::new("end_tag_open", EffectfulMatcher::Any, "end_tag_name")
+                    .with_effects(&[
+                        "create_end_tag",
+                        "append_tag_name(current_lowercase)",
+                        "append_temporary_buffer(current_lowercase)",
+                    ]),
+                EffectfulTransition::new(
+                    "end_tag_name",
+                    EffectfulMatcher::Event(">".to_string()),
+                    "rcdata",
+                )
+                .with_effects(&["emit_rcdata_end_tag_or_text"]),
+                EffectfulTransition::new("end_tag_name", EffectfulMatcher::End, "done")
+                    .with_effects(&["discard_current_token", "flush_text", "emit(EOF)"])
+                    .consuming(false),
+                EffectfulTransition::new("end_tag_name", EffectfulMatcher::Any, "end_tag_name")
+                    .with_effects(&[
+                        "append_tag_name(current_lowercase)",
+                        "append_temporary_buffer(current_lowercase)",
+                    ]),
+            ],
+            "rcdata".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    )
+    .with_last_start_tag("title");
+
+    mismatch.push("Hello</style>").unwrap();
+    mismatch.finish().unwrap();
+
+    assert_eq!(
+        mismatch.drain_tokens(),
+        vec![Token::Text("Hello</style>".to_string()), Token::Eof]
+    );
+}
+
 fn set(values: &[&str]) -> HashSet<String> {
     values.iter().map(|value| value.to_string()).collect()
 }

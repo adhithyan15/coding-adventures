@@ -21,6 +21,7 @@ ARRAY = "array"
 LABEL = "label"
 SWITCH = "switch"
 STATIC = "static"
+PARAMETER_STORAGE = "parameter"
 MAX_ARRAY_DIMENSIONS = 4
 
 
@@ -192,8 +193,17 @@ class ProcedureParameter:
     mode: str
     symbol_id: int
     slot_offset: int
+    kind: str = "scalar"
     may_write: bool = False
     write_reason: str | None = None
+
+
+@dataclass(frozen=True)
+class _ParameterSpec:
+    """Combined kind/type information for one formal parameter."""
+
+    kind: str = "scalar"
+    type_name: str | None = None
 
 
 @dataclass(frozen=True)
@@ -752,7 +762,7 @@ class AlgolTypeChecker:
 
         formal_names = _formal_parameter_names(node)
         value_names = _value_parameter_names(node)
-        spec_types = _parameter_spec_types(node)
+        parameter_specs = _parameter_specs(node)
         body = _first_direct_node(node, "proc_body")
         body_inner = _first_ast_child(body) if body is not None else None
         known_procedures = _unique_procedure_names(self.semantic_procedures)
@@ -765,8 +775,40 @@ class AlgolTypeChecker:
         )
         for formal in formal_names:
             mode = VALUE if formal.value in value_names else NAME
-            parameter_type = spec_types.get(formal.value)
-            if mode == NAME and parameter_type not in {
+            parameter_spec = parameter_specs.get(formal.value, _ParameterSpec())
+            parameter_kind = parameter_spec.kind
+            parameter_type = parameter_spec.type_name
+            if parameter_kind == ARRAY:
+                if mode == VALUE:
+                    self._error(
+                        formal,
+                        f"value parameter {formal.value!r} cannot be an array in "
+                        "this phase",
+                    )
+                if parameter_type is None:
+                    parameter_type = REAL
+            elif parameter_kind == LABEL:
+                if mode == VALUE:
+                    self._error(
+                        formal,
+                        f"value parameter {formal.value!r} cannot be a label in "
+                        "this phase",
+                    )
+                parameter_type = LABEL
+            elif parameter_kind == SWITCH:
+                if mode == VALUE:
+                    self._error(
+                        formal,
+                        f"value parameter {formal.value!r} cannot be a switch in "
+                        "this phase",
+                    )
+                parameter_type = SWITCH
+            elif parameter_kind == "procedure":
+                self._error(
+                    formal,
+                    f"{parameter_kind} parameter {formal.value!r} is not supported yet",
+                )
+            elif mode == NAME and parameter_type not in {
                 INTEGER,
                 BOOLEAN,
                 REAL,
@@ -842,20 +884,42 @@ class AlgolTypeChecker:
 
         for formal in formal_names:
             mode = VALUE if formal.value in value_names else NAME
-            parameter_type = spec_types.get(formal.value)
+            parameter_spec = parameter_specs.get(formal.value, _ParameterSpec())
+            parameter_kind = parameter_spec.kind
+            parameter_type = parameter_spec.type_name
+            if parameter_kind == ARRAY:
+                if parameter_type is None:
+                    parameter_type = REAL
+            elif parameter_kind == LABEL:
+                parameter_type = LABEL
+            elif parameter_kind == SWITCH:
+                parameter_type = SWITCH
+            elif parameter_kind == "procedure":
+                parameter_kind = "scalar"
             param_symbol = Symbol(
                 name=formal.value,
                 type_name=(
                     parameter_type
-                    if parameter_type in {INTEGER, BOOLEAN, REAL, STRING}
+                    if parameter_type
+                    in {INTEGER, BOOLEAN, REAL, STRING, LABEL, SWITCH}
                     else INTEGER
                 ),
                 line=formal.line,
                 column=formal.column,
                 symbol_id=self._next_symbol_id,
-                kind="parameter",
+                kind=(
+                    parameter_kind
+                    if parameter_kind in {ARRAY, LABEL, SWITCH}
+                    else "parameter"
+                ),
+                storage_class=(
+                    PARAMETER_STORAGE if parameter_kind == ARRAY else "frame"
+                ),
                 declaring_block_id=proc_scope.block_id,
                 procedure_id=procedure_id,
+                array_id=(
+                    self._next_array_id if parameter_kind == ARRAY else None
+                ),
                 parameter_mode=mode,
             )
             if not proc_scope.declare(param_symbol):
@@ -865,9 +929,32 @@ class AlgolTypeChecker:
                 )
                 continue
             self._next_symbol_id += 1
-            if proc_scope.frame_layout is not None:
+            if parameter_kind == ARRAY:
+                self._next_array_id += 1
+                if proc_scope.frame_layout is not None:
+                    proc_scope.frame_layout.allocate_descriptor(param_symbol)
+            elif proc_scope.frame_layout is not None:
                 proc_scope.frame_layout.allocate_scalar(param_symbol)
             self.semantic_symbols.append(param_symbol)
+            if (
+                parameter_kind == ARRAY
+                and param_symbol.slot_offset is not None
+                and param_symbol.array_id is not None
+            ):
+                self.semantic_arrays.append(
+                    ArrayDescriptor(
+                        array_id=param_symbol.array_id,
+                        name=formal.value,
+                        element_type=param_symbol.type_name,
+                        storage_class=PARAMETER_STORAGE,
+                        declaring_block_id=proc_scope.block_id,
+                        dimensions=tuple(),
+                        symbol_id=param_symbol.symbol_id,
+                        slot_offset=param_symbol.slot_offset,
+                        line=formal.line,
+                        column=formal.column,
+                    )
+                )
             if param_symbol.slot_offset is not None:
                 parameters.append(
                     ProcedureParameter(
@@ -876,8 +963,17 @@ class AlgolTypeChecker:
                         mode=mode,
                         symbol_id=param_symbol.symbol_id,
                         slot_offset=param_symbol.slot_offset,
-                        may_write=formal.value in write_reasons,
-                        write_reason=write_reasons.get(formal.value),
+                        kind=parameter_kind,
+                        may_write=(
+                            formal.value in write_reasons
+                            if parameter_kind == "scalar"
+                            else False
+                        ),
+                        write_reason=(
+                            write_reasons.get(formal.value)
+                            if parameter_kind == "scalar"
+                            else None
+                        ),
                     )
                 )
 
@@ -1134,6 +1230,19 @@ class AlgolTypeChecker:
         if symbol.kind != LABEL:
             self._error(target_token, f"{target_token.value!r} is not a label")
             return
+        if symbol.parameter_mode is not None and symbol.slot_offset is not None:
+            return ResolvedGoto(
+                token_id=id(target_token),
+                label_id=-1,
+                target_name=target_token.value,
+                ir_label="",
+                source_block_id=scope.block_id,
+                target_block_id=declaring_scope.block_id,
+                lexical_depth_delta=lexical_depth_delta,
+                line=target_token.line,
+                column=target_token.column,
+                designational_node_id=id(outer_node),
+            )
         if lexical_depth_delta != 0 and not allow_nonlocal_label:
             self._error(
                 target_token,
@@ -1194,9 +1303,6 @@ class AlgolTypeChecker:
                 f"switch {name_token.value!r} cannot select itself recursively",
             )
             return
-        if symbol.switch_id is None:
-            self._error(name_token, f"switch {name_token.value!r} has no descriptor")
-            return
 
         indexes = _direct_nodes(node, "arith_expr")
         if len(indexes) != 1:
@@ -1206,12 +1312,20 @@ class AlgolTypeChecker:
         if index_type != ERROR and index_type != INTEGER:
             self._error(indexes[0], "switch index must be integer")
 
+        if symbol.parameter_mode is not None and symbol.slot_offset is not None:
+            switch_id = -1
+        elif symbol.switch_id is None:
+            self._error(name_token, f"switch {name_token.value!r} has no descriptor")
+            return
+        else:
+            switch_id = symbol.switch_id
+
         self.resolved_switch_selections.append(
             ResolvedSwitchSelection(
                 node_id=id(node),
                 token_id=id(name_token),
                 name=name_token.value,
-                switch_id=symbol.switch_id,
+                switch_id=switch_id,
                 use_block_id=scope.block_id,
                 declaration_block_id=declaring_scope.block_id,
                 lexical_depth_delta=lexical_depth_delta,
@@ -1255,6 +1369,9 @@ class AlgolTypeChecker:
             symbol = self._resolve_name(name, scope, role="write")
             if symbol is not None and symbol.kind == ARRAY:
                 self._error(name, f"array {name.value!r} requires subscripts")
+                target_type = ERROR
+            elif symbol is not None and symbol.kind == LABEL:
+                self._error(name, f"label {name.value!r} is not assignable")
                 target_type = ERROR
             else:
                 target_type = ERROR if symbol is None else symbol.type_name
@@ -1525,6 +1642,7 @@ class AlgolTypeChecker:
         scope: Scope,
         *,
         role: str,
+        allow_whole: bool = False,
     ) -> ResolvedArrayAccess | None:
         name_token = _variable_head_name(variable)
         if name_token is None:
@@ -1567,7 +1685,11 @@ class AlgolTypeChecker:
             return None
 
         subscripts = _variable_subscripts(variable)
-        if len(subscripts) != len(descriptor.dimensions):
+        if (
+            descriptor.storage_class != PARAMETER_STORAGE
+            and not allow_whole
+            and len(subscripts) != len(descriptor.dimensions)
+        ):
             self._error(
                 name_token,
                 f"array {name_token.value!r} expects "
@@ -1632,6 +1754,15 @@ class AlgolTypeChecker:
                 f"{len(descriptor.parameters)} argument(s), got {len(arguments)}",
             )
         for argument, parameter in zip(arguments, descriptor.parameters, strict=False):
+            if parameter.kind == ARRAY:
+                self._check_array_parameter_actual(argument, scope, parameter)
+                continue
+            if parameter.kind == LABEL:
+                self._check_label_parameter_actual(argument, scope, parameter)
+                continue
+            if parameter.kind == SWITCH:
+                self._check_switch_parameter_actual(argument, scope, parameter)
+                continue
             actual_type = self._infer_expr(argument, scope)
             if descriptor.procedure_id == -1:
                 if actual_type != ERROR and actual_type not in {
@@ -1699,6 +1830,115 @@ class AlgolTypeChecker:
         )
         self.resolved_procedure_calls.append(call)
         return call
+
+    def _check_array_parameter_actual(
+        self,
+        argument: ASTNode,
+        scope: Scope,
+        parameter: ProcedureParameter,
+    ) -> ResolvedArrayAccess | None:
+        variable = _single_variable_expr(argument)
+        if variable is None or _variable_subscripts(variable):
+            self._error(
+                argument,
+                f"array parameter {parameter.name!r} expects a whole-array actual",
+            )
+            return None
+        access = self._check_array_access(
+            variable,
+            scope,
+            role="actual",
+            allow_whole=True,
+        )
+        if access is None:
+            return None
+        descriptor = next(
+            (
+                array
+                for array in self.semantic_arrays
+                if array.array_id == access.array_id
+            ),
+            None,
+        )
+        if (
+            descriptor is not None
+            and descriptor.element_type != ERROR
+            and descriptor.element_type != parameter.type_name
+        ):
+            self._error(
+                argument,
+                f"array parameter {parameter.name!r} expects "
+                f"{parameter.type_name} elements, got {descriptor.element_type}",
+            )
+        return access
+
+    def _check_label_parameter_actual(
+        self,
+        argument: ASTNode,
+        scope: Scope,
+        parameter: ProcedureParameter,
+    ) -> Symbol | None:
+        variable = _single_variable_expr(argument)
+        if variable is None or _variable_subscripts(variable):
+            self._error(
+                argument,
+                f"label parameter {parameter.name!r} expects a direct label actual",
+            )
+            return None
+        name = _variable_head_name(variable)
+        if name is None:
+            self._error(argument, "label actual is missing a name")
+            return None
+        resolved = scope.resolve_with_scope(name.value)
+        if resolved is None:
+            self._error(
+                name,
+                f"{name.value!r} is not declared in block {scope.block_id} "
+                "or its lexical parents",
+            )
+            return None
+        symbol, _, _ = resolved
+        if symbol.kind != LABEL:
+            self._error(
+                name,
+                f"label parameter {parameter.name!r} expects a label actual",
+            )
+            return None
+        return symbol
+
+    def _check_switch_parameter_actual(
+        self,
+        argument: ASTNode,
+        scope: Scope,
+        parameter: ProcedureParameter,
+    ) -> Symbol | None:
+        variable = _single_variable_expr(argument)
+        if variable is None or _variable_subscripts(variable):
+            self._error(
+                argument,
+                f"switch parameter {parameter.name!r} expects a direct switch actual",
+            )
+            return None
+        name = _variable_head_name(variable)
+        if name is None:
+            self._error(argument, "switch actual is missing a name")
+            return None
+        resolved = scope.resolve_with_scope(name.value)
+        if resolved is None:
+            self._error(
+                name,
+                f"{name.value!r} is not declared in block {scope.block_id} "
+                "or its lexical parents",
+            )
+            return None
+        symbol, _, _ = resolved
+        if symbol.kind != SWITCH:
+            self._error(
+                name,
+                f"switch parameter {parameter.name!r} expects a switch actual",
+            )
+            return None
+        return symbol
 
     def _resolve_builtin_procedure(
         self,
@@ -2066,16 +2306,26 @@ def _value_parameter_names(node: ASTNode) -> set[str]:
     }
 
 
-def _parameter_spec_types(node: ASTNode) -> dict[str, str]:
-    spec_types: dict[str, str] = {}
+def _parameter_specs(node: ASTNode) -> dict[str, _ParameterSpec]:
+    specs: dict[str, _ParameterSpec] = {}
     for spec_part in _direct_nodes(node, "spec_part"):
         specifier = _first_direct_node(spec_part, "specifier")
-        type_name = _first_keyword_value(specifier) or ""
+        specifier_name = _first_keyword_value(specifier) or ""
         ident_list = _first_direct_node(spec_part, "ident_list")
         for token in _tokens(ident_list):
             if token.type_name == "NAME":
-                spec_types[token.value] = type_name
-    return spec_types
+                current = specs.get(token.value, _ParameterSpec())
+                if specifier_name in {INTEGER, BOOLEAN, REAL, STRING}:
+                    specs[token.value] = _ParameterSpec(
+                        kind=current.kind,
+                        type_name=specifier_name,
+                    )
+                elif specifier_name in {ARRAY, LABEL, SWITCH, "procedure"}:
+                    specs[token.value] = _ParameterSpec(
+                        kind=specifier_name,
+                        type_name=current.type_name,
+                    )
+    return specs
 
 
 def _label_token(node: ASTNode) -> Token | None:

@@ -67,6 +67,45 @@ func PaintSceneOf(width, height int, instructions []PaintInstruction, background
 	return CreateScene(width, height, instructions, background, metadata)
 }
 
+// PathCommand represents a single drawing command within a path.
+//
+// Kind must be one of:
+//
+//	"move_to"  — lift the pen and move to (X, Y)
+//	"line_to"  — draw a straight line from the current position to (X, Y)
+//	"close"    — close the current sub-path back to the most recent move_to
+//
+// For "close" the X and Y fields are unused; they should be set to 0.
+type PathCommand struct {
+	Kind string
+	X    float64
+	Y    float64
+}
+
+// PaintPathInstruction draws a closed polygon described by a series of
+// PathCommands.  Typically the commands form:
+//
+//	move_to → line_to … → close
+type PaintPathInstruction struct {
+	Commands []PathCommand
+	Fill     string
+	Metadata Metadata
+}
+
+func (PaintPathInstruction) InstructionKind() string { return "path" }
+
+// PaintPath builds a PaintPathInstruction from the given commands.
+// If fill is empty it defaults to "#000000".
+func PaintPath(commands []PathCommand, fill string, metadata Metadata) PaintPathInstruction {
+	if fill == "" {
+		fill = "#000000"
+	}
+	if metadata == nil {
+		metadata = Metadata{}
+	}
+	return PaintPathInstruction{Commands: commands, Fill: fill, Metadata: metadata}
+}
+
 func ParseColorRGBA8(value string) (PaintColorRGBA8, error) {
 	value = strings.TrimSpace(value)
 	if !strings.HasPrefix(value, "#") {

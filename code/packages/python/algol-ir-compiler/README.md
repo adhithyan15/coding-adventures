@@ -38,10 +38,11 @@ thunks are supported, including nested by-name descriptor allocation and runtime
 failure propagation from callees back to the by-name formal read. Stores through
 read-only expression thunks still raise targeted `CompileError` diagnostics
 until Phase 5 grows full store-helper coverage. The supported integer by-name
-surface is covered by the WASM acceptance suite, while full ALGOL forms such as
-non-integer formals, whole-array by-name values, procedure-valued actuals,
-procedure-crossing gotos, nonlocal switch selections, and escaping thunk
-descriptors remain future work.
+surface is covered by the WASM acceptance suite, including typed whole-array
+formals passed as descriptor pointers, label formals passed as pending-goto
+targets, and switch formals passed as descriptor closures that re-evaluate in
+the caller's declaring scope. Full ALGOL forms such as procedure-valued
+formals and escaping thunk descriptors remain future work.
 
 Direct `goto` statements lower to ordinary IR `JUMP` instructions targeting
 generated ALGOL labels. Local jumps emit the jump directly. Direct nonlocal

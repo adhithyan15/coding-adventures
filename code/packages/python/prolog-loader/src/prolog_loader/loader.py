@@ -7,12 +7,14 @@ from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Literal, Protocol
 
+from logic_core import unify
 from logic_engine import (
     Atom,
     Clause,
     Compound,
     FreshExpr,
     GoalExpr,
+    LogicVar,
     Number,
     Program,
     Relation,
@@ -21,19 +23,25 @@ from logic_engine import (
     String,
     Term,
     atom,
+    clause_from_term,
     goal_as_term,
     goal_from_term,
     program,
+    reify,
     rule,
     solve_from,
     term,
+    var,
 )
 from prolog_core import (
     OperatorTable,
     PredicateRegistry,
     PrologDirective,
+    PrologGoalExpansion,
     PrologModule,
     PrologModuleImport,
+    PrologTermExpansion,
+    empty_predicate_registry,
     module_import_from_directive,
     module_spec_from_directive,
 )
@@ -46,6 +54,7 @@ __version__ = "0.1.0"
 
 type GoalAdapter = Callable[[GoalExpr], object]
 type RelationResolver = Callable[[Relation], Relation]
+type SourceResolver = Callable[[Term, Path], Path | None]
 _USER_MODULE = sym("user")
 _MODULE_QUALIFIER = sym(":")
 _CONJUNCTION = sym(",")
@@ -77,7 +86,7 @@ class InitializableLike(Protocol):
     initialization_goals: tuple[GoalExpr, ...]
 
 
-type DependencyKind = Literal["consult", "ensure_loaded", "use_module"]
+type DependencyKind = Literal["consult", "ensure_loaded", "use_module", "include"]
 
 
 @dataclass(frozen=True, slots=True)
@@ -102,6 +111,8 @@ class LoadedPrologSource:
     directives: tuple[PrologDirective, ...]
     operator_table: OperatorTable
     predicate_registry: PredicateRegistry
+    term_expansions: tuple[PrologTermExpansion, ...]
+    goal_expansions: tuple[PrologGoalExpansion, ...]
     module_spec: PrologModule | None
     module_imports: tuple[PrologModuleImport, ...]
     file_dependencies: tuple[PrologSourceDependency, ...]
@@ -141,10 +152,15 @@ class PrologInitializationError(RuntimeError):
         )
 
 
+class PrologExpansionError(RuntimeError):
+    """Raised when an explicit loader expansion pass fails."""
+
+
 def load_parsed_prolog_source(
     parsed_source: ParsedSourceLike,
     *,
     source_path: str | Path | None = None,
+    source_resolver: SourceResolver | None = None,
 ) -> LoadedPrologSource:
     """Normalize a dialect-specific parsed source into one loader result."""
 
@@ -162,26 +178,30 @@ def load_parsed_prolog_source(
                 raise ValueError(msg)
             module_spec = parsed_module
 
-        parsed_import = module_import_from_directive(directive_value)
-        if parsed_import is not None and (
+        if (
             normalized_source_path is None
             or not _is_file_backed_use_module_directive(
                 directive_value,
                 source_path=normalized_source_path,
+                source_resolver=source_resolver,
             )
         ):
+            parsed_import = module_import_from_directive(directive_value)
+            if parsed_import is None:
+                continue
             module_imports.append(parsed_import)
 
     file_dependencies = _source_dependencies(
         parsed_source.directives,
         source_path=normalized_source_path,
+        source_resolver=source_resolver,
     )
     initialization_directives = predicate_registry.initialization_directives
     initialization_terms = tuple(
         _initialization_term(directive_value)
         for directive_value in initialization_directives
     )
-    return LoadedPrologSource(
+    loaded_source = LoadedPrologSource(
         source_path=normalized_source_path,
         program=parsed_source.program,
         clauses=parsed_source.clauses,
@@ -189,6 +209,8 @@ def load_parsed_prolog_source(
         directives=parsed_source.directives,
         operator_table=parsed_source.operator_table,
         predicate_registry=predicate_registry,
+        term_expansions=predicate_registry.term_expansions,
+        goal_expansions=predicate_registry.goal_expansions,
         module_spec=module_spec,
         module_imports=tuple(module_imports),
         file_dependencies=file_dependencies,
@@ -198,6 +220,7 @@ def load_parsed_prolog_source(
             goal_from_term(term_value) for term_value in initialization_terms
         ),
     )
+    return apply_expansion_directives(loaded_source)
 
 
 def load_iso_prolog_source(
@@ -205,6 +228,7 @@ def load_iso_prolog_source(
     *,
     operator_table: OperatorTable | None = None,
     source_path: str | Path | None = None,
+    source_resolver: SourceResolver | None = None,
 ) -> LoadedPrologSource:
     """Parse and load one ISO/Core Prolog source file."""
 
@@ -213,6 +237,7 @@ def load_iso_prolog_source(
     return load_parsed_prolog_source(
         parse_iso_source(source, operator_table=operator_table),
         source_path=source_path,
+        source_resolver=source_resolver,
     )
 
 
@@ -221,6 +246,7 @@ def load_swi_prolog_source(
     *,
     operator_table: OperatorTable | None = None,
     source_path: str | Path | None = None,
+    source_resolver: SourceResolver | None = None,
 ) -> LoadedPrologSource:
     """Parse and load one SWI-Prolog source file."""
 
@@ -229,6 +255,7 @@ def load_swi_prolog_source(
     return load_parsed_prolog_source(
         parse_swi_source(source, operator_table=operator_table),
         source_path=source_path,
+        source_resolver=source_resolver,
     )
 
 
@@ -236,25 +263,30 @@ def load_swi_prolog_file(
     path: str | Path,
     *,
     operator_table: OperatorTable | None = None,
+    source_resolver: SourceResolver | None = None,
 ) -> LoadedPrologSource:
-    """Read, parse, and load one SWI-Prolog source file."""
+    """Read, parse, load, and expand one SWI-Prolog source file."""
 
-    normalized_path = Path(path).expanduser().resolve()
-    return load_swi_prolog_source(
-        normalized_path.read_text(encoding="utf-8"),
+    return _load_swi_prolog_file(
+        Path(path).expanduser().resolve(),
         operator_table=operator_table,
-        source_path=normalized_path,
+        source_resolver=source_resolver,
     )
 
 
 def load_swi_prolog_project(
     *sources: str,
     operator_table: OperatorTable | None = None,
+    source_resolver: SourceResolver | None = None,
 ) -> LoadedPrologProject:
     """Parse, load, and link multiple SWI-Prolog sources as one project."""
 
     loaded_sources = tuple(
-        load_swi_prolog_source(source, operator_table=operator_table)
+        load_swi_prolog_source(
+            source,
+            operator_table=operator_table,
+            source_resolver=source_resolver,
+        )
         for source in sources
     )
     return link_loaded_prolog_sources(*loaded_sources)
@@ -263,6 +295,7 @@ def load_swi_prolog_project(
 def load_swi_prolog_project_from_files(
     *entry_paths: str | Path,
     operator_table: OperatorTable | None = None,
+    source_resolver: SourceResolver | None = None,
 ) -> LoadedPrologProject:
     """Load, resolve, and link a SWI-Prolog file graph."""
 
@@ -279,12 +312,14 @@ def load_swi_prolog_project_from_files(
         loaded_source = load_swi_prolog_file(
             current_path,
             operator_table=operator_table,
+            source_resolver=source_resolver,
         )
         loaded_by_path[current_path] = loaded_source
         pending_paths.extend(
             dependency.resolved_path
             for dependency in loaded_source.file_dependencies
-            if dependency.resolved_path not in loaded_by_path
+            if dependency.kind != "include"
+            and dependency.resolved_path not in loaded_by_path
         )
 
     normalized_sources = tuple(
@@ -450,6 +485,371 @@ def run_prolog_initialization_goals(
     )
 
 
+def apply_expansion_directives(
+    loaded_source: LoadedPrologSource,
+    *,
+    max_passes: int = 8,
+) -> LoadedPrologSource:
+    """Apply collected term and goal expansion declarations to one source."""
+
+    if max_passes < 1:
+        msg = "max_passes must be at least 1"
+        raise ValueError(msg)
+
+    if not loaded_source.term_expansions and not loaded_source.goal_expansions:
+        return loaded_source
+
+    expanded_clauses = _expand_clause_sequence(
+        loaded_source.clauses,
+        term_expansions=loaded_source.term_expansions,
+        max_passes=max_passes,
+    )
+    expanded_queries = tuple(
+        _expand_query(
+            query_value,
+            goal_expansions=loaded_source.goal_expansions,
+            max_passes=max_passes,
+        )
+        for query_value in loaded_source.queries
+    )
+    expanded_initialization_terms = tuple(
+        _expand_goal_term(
+            term_value,
+            goal_expansions=loaded_source.goal_expansions,
+            max_passes=max_passes,
+        )
+        for term_value in loaded_source.initialization_terms
+    )
+    return replace(
+        loaded_source,
+        program=program(
+            *expanded_clauses,
+            dynamic_relations=loaded_source.predicate_registry.dynamic_relations(),
+        ),
+        clauses=expanded_clauses,
+        queries=expanded_queries,
+        initialization_terms=expanded_initialization_terms,
+        initialization_goals=tuple(
+            goal_from_term(term_value) for term_value in expanded_initialization_terms
+        ),
+    )
+
+
+def _expand_clause_sequence(
+    clauses: tuple[Clause, ...],
+    *,
+    term_expansions: tuple[PrologTermExpansion, ...],
+    max_passes: int,
+) -> tuple[Clause, ...]:
+    current_terms = [_source_term_from_clause(clause_value) for clause_value in clauses]
+    for _ in range(max_passes):
+        changed = False
+        next_terms: list[Term] = []
+        for term_value in current_terms:
+            expanded = _apply_first_term_expansion(term_value, term_expansions)
+            if expanded is None:
+                next_terms.append(term_value)
+                continue
+            changed = True
+            next_terms.extend(_expanded_term_terms(expanded))
+        current_terms = next_terms
+        if not changed:
+            return tuple(
+                _clause_from_expanded_term(term_value)
+                for term_value in current_terms
+            )
+
+    msg = "term expansion did not reach a fixed point within max_passes"
+    raise PrologExpansionError(msg)
+
+
+def _expand_query(
+    query_value: ParsedQuery,
+    *,
+    goal_expansions: tuple[PrologGoalExpansion, ...],
+    max_passes: int,
+) -> ParsedQuery:
+    expanded_goal_term = _expand_goal_term(
+        _source_term_from_goal(query_value.goal),
+        goal_expansions=goal_expansions,
+        max_passes=max_passes,
+    )
+    return ParsedQuery(
+        goal=_goal_from_expanded_term(expanded_goal_term),
+        variables=query_value.variables,
+    )
+
+
+def _expand_goal_term(
+    term_value: Term,
+    *,
+    goal_expansions: tuple[PrologGoalExpansion, ...],
+    max_passes: int,
+) -> Term:
+    current = term_value
+    for _ in range(max_passes):
+        expanded = _apply_first_goal_expansion(current, goal_expansions)
+        if expanded is None:
+            return current
+        current = expanded
+
+    msg = f"goal expansion did not reach a fixed point for {term_value}"
+    raise PrologExpansionError(msg)
+
+
+def _apply_first_term_expansion(
+    term_value: Term,
+    term_expansions: tuple[PrologTermExpansion, ...],
+) -> Term | None:
+    for expansion_value in term_expansions:
+        expanded = _apply_expansion(
+            term_value,
+            pattern=expansion_value.pattern,
+            replacement=expansion_value.expansion,
+        )
+        if expanded is not None:
+            return expanded
+    return None
+
+
+def _apply_first_goal_expansion(
+    term_value: Term,
+    goal_expansions: tuple[PrologGoalExpansion, ...],
+) -> Term | None:
+    for expansion_value in goal_expansions:
+        expanded = _apply_expansion(
+            term_value,
+            pattern=expansion_value.pattern,
+            replacement=expansion_value.expansion,
+        )
+        if expanded is not None:
+            return expanded
+    return None
+
+
+def _apply_expansion(
+    term_value: Term,
+    *,
+    pattern: Term,
+    replacement: Term,
+) -> Term | None:
+    fresh_pattern, fresh_replacement = _freshen_expansion_terms(pattern, replacement)
+    substitution = unify(term_value, fresh_pattern)
+    if substitution is None:
+        return None
+    return reify(fresh_replacement, substitution)
+
+
+def _freshen_expansion_terms(
+    pattern: Term,
+    replacement: Term,
+) -> tuple[Term, Term]:
+    mapping = {
+        variable_value: var(variable_value.display_name)
+        for variable_value in _term_variables(pattern) | _term_variables(replacement)
+    }
+    return (
+        _rename_term(pattern, mapping),
+        _rename_term(replacement, mapping),
+    )
+
+
+def _term_variables(term_value: Term) -> set[LogicVar]:
+    if isinstance(term_value, LogicVar):
+        return {term_value}
+    if isinstance(term_value, Compound):
+        variables: set[LogicVar] = set()
+        for argument in term_value.args:
+            variables.update(_term_variables(argument))
+        return variables
+    return set()
+
+
+def _rename_term(
+    term_value: Term,
+    mapping: dict[LogicVar, LogicVar],
+) -> Term:
+    if isinstance(term_value, LogicVar):
+        return mapping.get(term_value, term_value)
+    if isinstance(term_value, Compound):
+        return Compound(
+            functor=term_value.functor,
+            args=tuple(_rename_term(argument, mapping) for argument in term_value.args),
+        )
+    return term_value
+
+
+def _expanded_term_terms(term_value: Term) -> tuple[Term, ...]:
+    items = _logic_list_items(term_value)
+    if items is None:
+        return (term_value,)
+    return tuple(items)
+
+
+def _clause_from_expanded_term(term_value: Term) -> Clause:
+    try:
+        return clause_from_term(term_value)
+    except TypeError as error:
+        msg = f"term expansion produced invalid clause term: {term_value}"
+        raise PrologExpansionError(msg) from error
+
+
+def _source_term_from_clause(clause_value: Clause) -> Term:
+    head_term = _source_term_from_relation_call(clause_value.head)
+    if clause_value.body is None:
+        return head_term
+    return term(":-", head_term, goal_as_term(clause_value.body))
+
+
+def _source_term_from_relation_call(relation_call: RelationCall) -> Term:
+    if not relation_call.args:
+        return atom(relation_call.relation.symbol)
+    return relation_call.as_term()
+
+
+def _source_term_from_goal(goal_value: GoalExpr) -> Term:
+    if isinstance(goal_value, RelationCall):
+        return _source_term_from_relation_call(goal_value)
+    return goal_as_term(goal_value)
+
+
+def _goal_from_expanded_term(term_value: Term) -> GoalExpr:
+    try:
+        return goal_from_term(term_value)
+    except TypeError as error:
+        msg = f"goal expansion produced invalid goal term: {term_value}"
+        raise PrologExpansionError(msg) from error
+
+
+def _load_swi_prolog_file(
+    normalized_path: Path,
+    *,
+    operator_table: OperatorTable | None = None,
+    source_resolver: SourceResolver | None = None,
+    include_stack: tuple[Path, ...] = (),
+) -> LoadedPrologSource:
+    if normalized_path in include_stack:
+        msg = f"circular include detected at {normalized_path}"
+        raise ValueError(msg)
+
+    loaded_source = load_swi_prolog_source(
+        normalized_path.read_text(encoding="utf-8"),
+        operator_table=operator_table,
+        source_path=normalized_path,
+        source_resolver=source_resolver,
+    )
+    include_dependencies = tuple(
+        dependency
+        for dependency in loaded_source.file_dependencies
+        if dependency.kind == "include"
+    )
+    if not include_dependencies:
+        return loaded_source
+
+    merged_includes = tuple(
+        _load_swi_prolog_file(
+            dependency.resolved_path,
+            operator_table=operator_table,
+            source_resolver=source_resolver,
+            include_stack=(*include_stack, normalized_path),
+        )
+        for dependency in include_dependencies
+    )
+    return _merge_included_sources(
+        loaded_source,
+        merged_includes,
+    )
+
+
+def _merge_included_sources(
+    loaded_source: LoadedPrologSource,
+    included_sources: tuple[LoadedPrologSource, ...],
+) -> LoadedPrologSource:
+    for included_source in included_sources:
+        if included_source.module_spec is not None:
+            msg = (
+                f"included file {included_source.source_path} "
+                "must not declare module/2"
+            )
+            raise ValueError(msg)
+
+    merged_clauses = tuple(
+        clause_value
+        for included_source in included_sources
+        for clause_value in included_source.clauses
+    ) + loaded_source.clauses
+    merged_queries = tuple(
+        query_value
+        for included_source in included_sources
+        for query_value in included_source.queries
+    ) + loaded_source.queries
+    merged_directives = tuple(
+        directive_value
+        for included_source in included_sources
+        for directive_value in included_source.directives
+    ) + loaded_source.directives
+    merged_file_dependencies = tuple(
+        dependency
+        for included_source in included_sources
+        for dependency in included_source.file_dependencies
+    ) + loaded_source.file_dependencies
+    merged_module_imports = tuple(
+        module_import
+        for included_source in included_sources
+        for module_import in included_source.module_imports
+    ) + loaded_source.module_imports
+    merged_registry = _merge_predicate_registries(
+        *(included_source.predicate_registry for included_source in included_sources),
+        loaded_source.predicate_registry,
+    )
+    merged_source = replace(
+        loaded_source,
+        program=program(
+            *merged_clauses,
+            dynamic_relations=merged_registry.dynamic_relations(),
+        ),
+        clauses=merged_clauses,
+        queries=merged_queries,
+        directives=merged_directives,
+        predicate_registry=merged_registry,
+        term_expansions=merged_registry.term_expansions,
+        goal_expansions=merged_registry.goal_expansions,
+        module_imports=merged_module_imports,
+        file_dependencies=merged_file_dependencies,
+        initialization_directives=merged_registry.initialization_directives,
+        initialization_terms=tuple(
+            _initialization_term(directive_value)
+            for directive_value in merged_registry.initialization_directives
+        ),
+        initialization_goals=tuple(
+            goal_from_term(_initialization_term(directive_value))
+            for directive_value in merged_registry.initialization_directives
+        ),
+    )
+    return apply_expansion_directives(merged_source)
+
+
+def _merge_predicate_registries(
+    *registries: PredicateRegistry,
+) -> PredicateRegistry:
+    merged = empty_predicate_registry()
+    for registry in registries:
+        for spec in registry.predicates:
+            merged = merged.define(
+                spec.relation,
+                dynamic=spec.dynamic,
+                discontiguous=spec.discontiguous,
+                multifile=spec.multifile,
+            )
+        for directive_value in registry.initialization_directives:
+            merged = merged.add_initialization(directive_value)
+        for expansion_value in registry.term_expansions:
+            merged = merged.add_term_expansion(expansion_value)
+        for expansion_value in registry.goal_expansions:
+            merged = merged.add_goal_expansion(expansion_value)
+    return merged
+
+
 def _normalize_file_module_imports(
     loaded_source: LoadedPrologSource,
     *,
@@ -486,6 +886,7 @@ def _source_dependencies(
     directives: tuple[PrologDirective, ...],
     *,
     source_path: Path | None,
+    source_resolver: SourceResolver | None,
 ) -> tuple[PrologSourceDependency, ...]:
     if source_path is None:
         return ()
@@ -495,6 +896,7 @@ def _source_dependencies(
         parsed = _dependency_from_directive(
             directive_value,
             source_path=source_path,
+            source_resolver=source_resolver,
         )
         dependencies.extend(parsed)
     return tuple(dependencies)
@@ -504,12 +906,14 @@ def _is_file_backed_use_module_directive(
     directive_value: PrologDirective,
     *,
     source_path: Path,
+    source_resolver: SourceResolver | None,
 ) -> bool:
     return any(
         dependency.kind == "use_module"
         for dependency in _dependency_from_directive(
             directive_value,
             source_path=source_path,
+            source_resolver=source_resolver,
         )
     )
 
@@ -518,6 +922,7 @@ def _dependency_from_directive(
     directive_value: PrologDirective,
     *,
     source_path: Path,
+    source_resolver: SourceResolver | None,
 ) -> tuple[PrologSourceDependency, ...]:
     term_value = directive_value.term
     if not isinstance(term_value, Compound):
@@ -537,7 +942,26 @@ def _dependency_from_directive(
                 term_value.args[0],
                 source_path=source_path,
                 resolve_plain_atoms=True,
+                source_resolver=source_resolver,
             )
+        )
+
+    if term_value.functor.name == "include":
+        if len(term_value.args) != 1:
+            msg = "include/1 directives require exactly one argument"
+            raise ValueError(msg)
+        requested, resolved_path = _resolved_source_terms(
+            term_value.args[0],
+            source_path=source_path,
+            resolve_plain_atoms=True,
+            source_resolver=source_resolver,
+        )[0]
+        return (
+            PrologSourceDependency(
+                kind="include",
+                requested=requested,
+                resolved_path=resolved_path,
+            ),
         )
 
     if term_value.functor.name == "use_module":
@@ -549,6 +973,7 @@ def _dependency_from_directive(
             term_value.args[0],
             source_path=source_path,
             resolve_plain_atoms=True,
+            source_resolver=source_resolver,
         )
         if resolved is None:
             return ()
@@ -589,6 +1014,7 @@ def _resolved_source_terms(
     *,
     source_path: Path,
     resolve_plain_atoms: bool,
+    source_resolver: SourceResolver | None,
 ) -> tuple[tuple[str, Path], ...]:
     items = _logic_list_items(term_value)
     if items is None:
@@ -596,6 +1022,7 @@ def _resolved_source_terms(
             term_value,
             source_path=source_path,
             resolve_plain_atoms=resolve_plain_atoms,
+            source_resolver=source_resolver,
         )
         if resolved is None:
             msg = f"unsupported source reference {term_value}"
@@ -608,6 +1035,7 @@ def _resolved_source_terms(
             item,
             source_path=source_path,
             resolve_plain_atoms=resolve_plain_atoms,
+            source_resolver=source_resolver,
         )
         if resolved is None:
             msg = f"unsupported source reference {item}"
@@ -621,19 +1049,26 @@ def _resolved_source_term(
     *,
     source_path: Path,
     resolve_plain_atoms: bool,
+    source_resolver: SourceResolver | None,
 ) -> tuple[str, Path] | None:
-    requested = _source_reference_text(term_value)
-    if requested is None:
+    requested = _source_reference_display(term_value)
+    if source_resolver is not None:
+        resolved_path = source_resolver(term_value, source_path)
+        if resolved_path is not None:
+            return (requested, resolved_path.expanduser().resolve())
+
+    requested_text = _source_reference_text(term_value)
+    if requested_text is None:
         return None
 
     explicit_path = (
-        "/" in requested
-        or "\\" in requested
-        or requested.startswith(".")
-        or requested.endswith(".pl")
+        "/" in requested_text
+        or "\\" in requested_text
+        or requested_text.startswith(".")
+        or requested_text.endswith(".pl")
     )
     if explicit_path:
-        candidate = Path(requested).expanduser()
+        candidate = Path(requested_text).expanduser()
         if not candidate.is_absolute():
             candidate = source_path.parent / candidate
         return (requested, candidate.resolve())
@@ -643,8 +1078,15 @@ def _resolved_source_term(
 
     return (
         requested,
-        (source_path.parent / f"{requested}.pl").resolve(),
+        (source_path.parent / f"{requested_text}.pl").resolve(),
     )
+
+
+def _source_reference_display(term_value: Term) -> str:
+    raw = _source_reference_text(term_value)
+    if raw is not None:
+        return raw
+    return str(term_value)
 
 
 def _source_reference_text(term_value: Term) -> str | None:

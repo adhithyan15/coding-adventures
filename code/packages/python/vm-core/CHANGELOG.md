@@ -4,6 +4,87 @@ All notable changes to this package will be documented in this file.
 
 ---
 
+## [Unreleased]
+
+### Added — LANG17 PR3: ``execute_traced`` and the ``VMTracer`` helper
+
+- `vm_core.tracer` — new module with `VMTrace` dataclass and
+  `VMTracer` accumulator.  `VMTrace` captures one dispatch event:
+  `frame_depth`, `fn_name`, `ip`, `instr` (reference), shallow copies
+  of the register file before and after dispatch, and `slot_delta`
+  recording any feedback-slot changes produced by this instruction.
+- `VMCore.execute_traced(module, fn, args) -> (result, list[VMTrace])`
+  — opt-in tracing path.  Runs the normal dispatch loop with a fresh
+  `VMTracer` installed for the duration of the call, returns the
+  function result alongside the accumulated trace records.  Normal
+  `execute` pays zero tracing overhead.
+- Re-exports `VMTrace` and `VMTracer` from the package root.
+
+### Changed (PR3)
+
+- `run_dispatch_loop` now consults `vm._tracer`; when set, snapshots
+  registers + frame depth before dispatch, then records a `VMTrace`
+  after.  Frame depth is captured *before* dispatch so `ret`
+  instructions still report the correct depth even though the frame
+  is popped during the same dispatch step.
+
+### Added — LANG17 PR2: branch and loop iteration counters (already on main)
+
+- `BranchStats` — new dataclass in `vm_core.metrics` holding
+  `taken_count` / `not_taken_count` for one conditional-branch site,
+  with derived `taken_ratio` and `total` properties.  JITs use
+  `taken_ratio` to decide branch layout (hot-body inline vs.
+  out-of-line).  Re-exported from the package root.
+- `VMMetrics.branch_stats: dict[str, dict[int, BranchStats]]` —
+  per-function per-branch-site counts, keyed by IIR instruction index.
+- `VMMetrics.loop_back_edge_counts: dict[str, dict[int, int]]` —
+  per-function per-back-edge iteration counts.  A back-edge is any
+  jump whose target index is strictly less than the source index.
+- `VMCore.branch_profile(fn_name, source_ip) -> BranchStats | None` —
+  live counter lookup.
+- `VMCore.loop_iterations(fn_name) -> dict[int, int]` — fresh copy of
+  per-back-edge counts.
+- `VMCore.hot_functions(threshold=100)` — function names whose call
+  count meets the threshold.  JITs use this for tier promotion.
+- `VMCore.reset_metrics()` — zero all aggregate counters including
+  branch / loop state.  Does NOT reset per-IIRInstr observations
+  (those live on the module).
+- `VMCore.metrics()` now returns deep copies of the branch and loop
+  dicts so callers can mutate the snapshot without affecting live
+  state.
+
+### Changed (PR2)
+
+- `handle_jmp` now detects back-edges (target < source) and bumps the
+  loop counter.  `handle_jmp_if_true` and `handle_jmp_if_false` now
+  record (taken, not-taken) counters and also bump the loop counter
+  when the branch is taken to an earlier index.
+
+### Added — LANG17 PR1: feedback-slot state machine (already on main)
+
+- `VMProfiler` gained a pluggable `type_mapper` parameter — a callable
+  from runtime value to IIR type string.  Defaults to
+  `default_type_mapper` (Python primitives).  Frontends hosting a
+  non-primitive runtime (Lisp cons cells, Ruby tagged pointers, JS
+  Values, etc.) pass a custom mapper so the profiler records
+  language-specific type names in `SlotState.observations`.
+- `VMCore(type_mapper=...)` constructor kwarg threads the mapper
+  through to the profiler.
+- `TypeMapper` and `default_type_mapper` are re-exported from the
+  package root for consumers declaring their own mappers.
+- The profiler now drives the V8 Ignition-style state machine on
+  `IIRInstr.observed_slot` (defined in `interpreter-ir`).  Legacy
+  `observed_type` / `observation_count` fields remain populated for
+  backwards compatibility.
+
+### Changed (PR1)
+
+- `VMProfiler.__init__` signature is now `VMProfiler(type_mapper=None)`
+  instead of `VMProfiler()`.  Callers passing no arguments are
+  unaffected; the old call site is still valid.
+
+---
+
 ## [0.1.0] — 2026-04-21
 
 ### Added

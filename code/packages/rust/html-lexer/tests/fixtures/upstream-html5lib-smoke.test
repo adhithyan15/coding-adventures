@@ -77,7 +77,7 @@
       ]
     },
     {
-      "description": "unsupported rawtext fixture is skipped by the importer",
+      "description": "rawtext matching end tag emits end tag token",
       "initialStates": ["RAWTEXT state"],
       "lastStartTag": "style",
       "input": "body { color: red; }</style>",

@@ -1,0 +1,15 @@
+[package]
+name = "coding_adventures_double_ratchet"
+version = "0.1.0"
+edition = "2021"
+description = "Signal Double Ratchet Algorithm — forward-secret messaging with AEAD — implemented from scratch"
+
+[dependencies]
+coding_adventures_curve25519        = { path = "../curve25519" }
+coding_adventures_hkdf              = { path = "../hkdf" }
+coding_adventures_hmac              = { path = "../hmac" }
+coding_adventures_chacha20_poly1305 = { path = "../chacha20-poly1305" }
+coding_adventures_zeroize           = { path = "../zeroize" }
+getrandom = "0.2"
+
+[dev-dependencies]

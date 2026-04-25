@@ -52,6 +52,41 @@
       "diagnostics": [
         "eof-in-comment"
       ]
+    },
+    {
+      "id": "mosaic-title-rcdata-end-tag",
+      "description": "Seeded title RCDATA context emits the matching end tag",
+      "input": "Hello</title>",
+      "tokens": [
+        "Text(data=Hello)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "mosaic-title-rcdata-lt-reference",
+      "description": "Seeded title RCDATA context resolves &lt; into text",
+      "input": "Hello&lt;/title>",
+      "tokens": [
+        "Text(data=Hello</title>)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "mosaic-style-rawtext-end-tag",
+      "description": "Seeded style RAWTEXT context emits the matching end tag while keeping raw text literal",
+      "input": "body { color: red; }</style>",
+      "tokens": [
+        "Text(data=body { color: red; })",
+        "EndTag(name=style)",
+        "EOF"
+      ],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
     }
   ]
 }

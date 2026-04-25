@@ -89,7 +89,7 @@ fn fixture_manifests_parse() {
     assert_eq!(html1.format, "venture-html-lexer-fixtures/v1");
     assert_eq!(html1.suite, "html1");
     assert!(!html1.description.is_empty());
-    assert_eq!(html1.cases.len(), 5);
+    assert_eq!(html1.cases.len(), 8);
 }
 
 #[test]
@@ -130,19 +130,14 @@ fn normalized_html5lib_fixture_parses_with_importer_metadata() {
     assert_eq!(normalized.generator, "normalize_html5lib_fixtures.py");
     assert_eq!(
         normalized.supported_initial_states,
-        vec!["Data state".to_string(), "RCDATA state".to_string()]
+        vec![
+            "Data state".to_string(),
+            "RAWTEXT state".to_string(),
+            "RCDATA state".to_string()
+        ]
     );
-    assert_eq!(normalized.cases.len(), 8);
-    assert_eq!(normalized.skipped.len(), 1);
-    assert_eq!(normalized.skipped[0].id, "html5lib-smoke-9");
-    assert_eq!(
-        normalized.skipped[0].description,
-        "unsupported rawtext fixture is skipped by the importer"
-    );
-    assert_eq!(
-        normalized.skipped[0].reason,
-        "unsupported initialStates=['RAWTEXT state']"
-    );
+    assert_eq!(normalized.cases.len(), 9);
+    assert!(normalized.skipped.is_empty());
     assert_eq!(
         normalized.cases[6].initial_state.as_deref(),
         Some("RCDATA state")
@@ -153,12 +148,17 @@ fn normalized_html5lib_fixture_parses_with_importer_metadata() {
         Some("RCDATA state")
     );
     assert_eq!(normalized.cases[7].last_start_tag.as_deref(), Some("title"));
+    assert_eq!(
+        normalized.cases[8].initial_state.as_deref(),
+        Some("RAWTEXT state")
+    );
+    assert_eq!(normalized.cases[8].last_start_tag.as_deref(), Some("style"));
 }
 
 #[test]
 fn bootstrap_skeleton_conformance_cases_match_generated_machine() {
     let suite = load_suite(HTML_SKELETON_FIXTURES);
-    run_fixture_suite(&suite, || {
+    run_fixture_suite(&suite, |_case| {
         html_skeleton_machine()
             .map(HtmlLexer::new)
             .map_err(|error| error.to_string())
@@ -168,18 +168,22 @@ fn bootstrap_skeleton_conformance_cases_match_generated_machine() {
 #[test]
 fn html1_conformance_cases_match_generated_machine() {
     let suite = load_suite(HTML1_FIXTURES);
-    run_fixture_suite(&suite, || {
-        html1_machine()
+    run_fixture_suite(&suite, |case| {
+        let mut lexer = html1_machine()
             .map(HtmlLexer::new)
-            .map_err(|error| error.to_string())
+            .map_err(|error| error.to_string())?;
+        configure_lexer_for_case(&mut lexer, case).map_err(|error| format!("{error:?}"))?;
+        Ok(lexer)
     });
 }
 
 #[test]
 fn html1_conformance_cases_match_default_wrapper() {
     let suite = load_suite(HTML1_FIXTURES);
-    run_fixture_suite(&suite, || {
-        create_html_lexer().map_err(|error| format!("{error:?}"))
+    run_fixture_suite(&suite, |case| {
+        let mut lexer = create_html_lexer().map_err(|error| format!("{error:?}"))?;
+        configure_lexer_for_case(&mut lexer, case).map_err(|error| format!("{error:?}"))?;
+        Ok(lexer)
     });
 }
 
@@ -190,10 +194,12 @@ fn normalized_html5lib_cases_match_default_wrapper() {
 
     assert_eq!(suite.format, "venture-html-lexer-fixtures/v1");
     assert_eq!(suite.suite, "html5lib-smoke");
-    assert_eq!(suite.cases.len(), 6);
+    assert_eq!(suite.cases.len(), 9);
 
-    run_fixture_suite(&suite, || {
-        create_html_lexer().map_err(|error| format!("{error:?}"))
+    run_fixture_suite(&suite, |case| {
+        let mut lexer = create_html_lexer().map_err(|error| format!("{error:?}"))?;
+        configure_lexer_for_case(&mut lexer, case).map_err(|error| format!("{error:?}"))?;
+        Ok(lexer)
     });
 }
 
@@ -202,33 +208,23 @@ fn normalized_html5lib_cases_match_generated_html1_machine() {
     let normalized = load_html5lib_normalized_suite(HTML5LIB_NORMALIZED_FIXTURES);
     let suite = executable_suite_from_normalized(&normalized);
 
-    run_fixture_suite(&suite, || {
-        html1_machine()
+    run_fixture_suite(&suite, |case| {
+        let mut lexer = html1_machine()
             .map(HtmlLexer::new)
-            .map_err(|error| error.to_string())
+            .map_err(|error| error.to_string())?;
+        configure_lexer_for_case(&mut lexer, case).map_err(|error| format!("{error:?}"))?;
+        Ok(lexer)
     });
 }
 
 #[test]
-fn normalized_html5lib_cases_report_runtime_gaps_for_rcdata_context() {
+fn normalized_html5lib_cases_have_no_remaining_runtime_gaps() {
     let normalized = load_html5lib_normalized_suite(HTML5LIB_NORMALIZED_FIXTURES);
     let unsupported = unsupported_runtime_cases(&normalized);
 
-    assert_eq!(unsupported.len(), 2);
-    assert_eq!(unsupported[0].id, "html5lib-smoke-7");
-    assert_eq!(
-        unsupported[0].description,
-        "rcdata matching end tag emits end tag token"
-    );
-    assert_eq!(
-        unsupported[0].initial_state.as_deref(),
-        Some("RCDATA state")
-    );
-    assert_eq!(unsupported[0].last_start_tag.as_deref(), Some("title"));
-    assert_eq!(unsupported[1].id, "html5lib-smoke-8");
-    assert_eq!(
-        unsupported[1].description,
-        "rcdata non matching end tag stays text"
+    assert!(
+        unsupported.is_empty(),
+        "unexpected runtime gaps: {unsupported:?}"
     );
 }
 
@@ -248,7 +244,7 @@ fn executable_suite_from_normalized(normalized: &Html5libNormalizedSuite) -> Fix
     FixtureSuite {
         format: normalized.format.clone(),
         suite: normalized.suite.clone(),
-        description: format!("{} (runtime-executable subset)", normalized.description),
+        description: format!("{} (runtime-executable corpus)", normalized.description),
         cases: normalized
             .cases
             .iter()
@@ -270,13 +266,18 @@ fn unsupported_runtime_cases(normalized: &Html5libNormalizedSuite) -> Vec<Fixtur
 fn is_supported_by_current_runtime(case: &FixtureCase) -> bool {
     match case.initial_state.as_deref() {
         None | Some("Data state") => case.last_start_tag.is_none(),
+        Some("RCDATA state") => case.last_start_tag.is_some(),
+        Some("RAWTEXT state") => case.last_start_tag.is_some(),
         Some(_) => false,
     }
 }
 
-fn run_fixture_suite(suite: &FixtureSuite, create_lexer: impl Fn() -> Result<HtmlLexer, String>) {
+fn run_fixture_suite(
+    suite: &FixtureSuite,
+    create_lexer: impl Fn(&FixtureCase) -> Result<HtmlLexer, String>,
+) {
     for case in &suite.cases {
-        let mut lexer = create_lexer().unwrap_or_else(|error| {
+        let mut lexer = create_lexer(case).unwrap_or_else(|error| {
             panic!("suite `{}` failed to construct lexer: {error}", suite.suite)
         });
         lexer
@@ -307,6 +308,28 @@ fn run_fixture_suite(suite: &FixtureSuite, create_lexer: impl Fn() -> Result<Htm
             "suite `{}` case `{}` diagnostic mismatch",
             suite.suite, case.id
         );
+    }
+}
+
+fn configure_lexer_for_case(
+    lexer: &mut HtmlLexer,
+    case: &FixtureCase,
+) -> coding_adventures_html_lexer::Result<()> {
+    if let Some(initial_state) = case.initial_state.as_deref() {
+        lexer.set_initial_state(machine_state_for_fixture(initial_state))?;
+    }
+    if let Some(last_start_tag) = case.last_start_tag.as_deref() {
+        lexer.set_last_start_tag(last_start_tag);
+    }
+    Ok(())
+}
+
+fn machine_state_for_fixture(state: &str) -> &str {
+    match state {
+        "Data state" => "data",
+        "RCDATA state" => "rcdata",
+        "RAWTEXT state" => "rawtext",
+        other => panic!("unsupported fixture state `{other}`"),
     }
 }
 

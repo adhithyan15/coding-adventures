@@ -722,6 +722,37 @@ class TestAlgolIrCompiler:
         assert IrOp.LOAD_WORD in opcodes
         assert IrOp.SYSCALL in opcodes
 
+    def test_compiles_switch_parameter_call_and_helper_dispatch(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result, flag; "
+                "procedure escape(sw); switch sw; begin goto sw[1] end; "
+                "switch s := if flag = 0 then left else right; "
+                "flag := 1; escape(s); result := 0; "
+                "left: result := 1; goto done; "
+                "right: result := 2; "
+                "done: "
+                "end"
+            )
+        )
+        labels = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.LABEL
+        ]
+        calls = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+
+        assert result.procedure_signatures["_fn_algol_eval_switch"].param_count == 3
+        assert "_fn_algol_eval_switch" in labels
+        assert any(
+            instruction.operands[0].name == "_fn_algol_eval_switch"
+            for instruction in calls
+        )
+
     def test_compiles_dynamic_multidimensional_array_bounds(self) -> None:
         result = compile_algol(
             parse_algol(
@@ -829,6 +860,67 @@ class TestAlgolIrCompiler:
         assert signature.param_count == 3
         assert signature.param_types == ("integer", "integer", "string")
         assert signature.return_type == "string"
+
+    def test_compiles_integer_array_parameter_call(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer array xs[1:2]; integer result; "
+                "procedure setfirst(a); integer a; array a; begin a[1] := 9 end; "
+                "xs[1] := 4; setfirst(xs); result := xs[1] "
+                "end"
+            )
+        )
+        calls = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+        signature = result.procedure_signatures[calls[0].operands[0].name]
+
+        assert signature.param_count == 3
+        assert signature.param_types == ("integer", "integer", "integer")
+
+    def test_compiles_array_parameter_dimension_guard(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer array xs[1:2]; integer result; "
+                "procedure probe(a); integer a; array a; begin result := a[1, 1] end; "
+                "probe(xs); result := 1 "
+                "end"
+            )
+        )
+        instructions = result.program.instructions
+        probe_index = next(
+            index
+            for index, instruction in enumerate(instructions)
+            if instruction.opcode == IrOp.LABEL
+            and instruction.operands[0].name == "_fn_algol_0_probe"
+        )
+        probe_window = instructions[probe_index : probe_index + 80]
+
+        assert any(
+            instruction.opcode == IrOp.CMP_NE for instruction in probe_window
+        )
+
+    def test_compiles_label_parameter_call(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "procedure jump(target); label target; begin goto target end; "
+                "jump(done); "
+                "done: result := 7 "
+                "end"
+            )
+        )
+        calls = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+        signature = result.procedure_signatures[calls[0].operands[0].name]
+
+        assert signature.param_count == 3
+        assert signature.param_types == ("integer", "integer", "integer")
 
     def test_compiles_integer_actual_promoted_for_real_value_parameter(self) -> None:
         result = compile_algol(

@@ -11,6 +11,11 @@ build/
 .venv/
 venv/
 .python-version
+.ruff_cache/
+
+# Compiled Python C extensions (built by BUILD scripts; not committed)
+*.so
+*.pyd
 
 # uv
 uv.lock
@@ -27,6 +32,7 @@ coverage/
 .bundle/
 vendor/bundle
 Gemfile.lock
+*.bundle
 
 # TypeScript / Node
 node_modules/

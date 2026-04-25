@@ -1,5 +1,54 @@
 # Changelog — coding-adventures-interpreter-ir
 
+## [Unreleased]
+
+### Added — LANG17 PR4: optional frontend side tables on IIRFunction
+
+- `IIRFunction.feedback_slots: dict[int, int]` — optional
+  ``slot_index → iir_instr_index`` mapping.  Frontends that allocate
+  named feedback slots at compile time (Tetrad, SpiderMonkey, V8)
+  populate this so a slot index can be resolved back to the IIR
+  instruction that owns it.  ``vm-core`` does not interpret this field
+  — it is the frontend's contract with its own metric APIs.
+- `IIRFunction.source_map: list[tuple[int, int, int]]` — optional
+  ``(iir_index, source_a, source_b)`` triples.  Conventional uses:
+  ``(iir_index, source_line, source_column)`` for debuggers, or
+  ``(iir_index, original_byte_code_ip, 0)`` for legacy-API
+  re-projection (used by tetrad-runtime to map Tetrad bytecode IPs
+  to IIR IPs).
+
+Both fields default to empty so existing callers see no behaviour
+change.  Neither is serialised by `serialise.py` — they are runtime
+metadata only, repopulated each time a frontend translates source.
+
+### Added — LANG17 feedback-slot state machine
+
+- `slot_state.py` — `SlotKind` enum (UNINITIALIZED / MONOMORPHIC /
+  POLYMORPHIC / MEGAMORPHIC) and `SlotState` dataclass implementing the
+  V8 Ignition-style inline-cache state machine.  `SlotState.record()`
+  advances the machine; `is_specialisable()`, `is_megamorphic()`, and
+  `dominant_type()` are JIT-oriented read helpers.
+  `MAX_POLYMORPHIC_OBSERVATIONS = 4` is exposed as a module-level
+  constant.
+- `IIRInstr.observed_slot: SlotState | None` — new field holding the
+  live state machine.  Populated on first call to `record_observation`.
+- `IIRInstr.record_observation()` now advances `observed_slot` *and*
+  keeps the legacy `observed_type` / `observation_count` fields in
+  sync.  Callers that read those legacy fields keep working unchanged;
+  callers that want the full four-state view read `observed_slot`.
+- `SlotKind`, `SlotState`, and `MAX_POLYMORPHIC_OBSERVATIONS` re-exported
+  from the package root.
+
+### Notes
+
+- `SlotState` lives in `interpreter-ir` (not `vm-core` as LANG17's
+  first draft suggested) because `IIRInstr.observed_slot` references
+  it directly.  Putting the type in `vm-core` would require an import
+  cycle (`vm-core` already depends on `interpreter-ir`).  Grouping the
+  runtime-observation type with the instruction it annotates also
+  matches how `observed_type` and `observation_count` have always
+  lived on `IIRInstr`.
+
 ## [0.1.0] — 2026-04-21
 
 ### Added

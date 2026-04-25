@@ -60,6 +60,11 @@ from interpreter_ir.opcodes import (
     VALUE_OPS,
 )
 from interpreter_ir.serialise import deserialise, serialise
+from interpreter_ir.slot_state import (
+    MAX_POLYMORPHIC_OBSERVATIONS,
+    SlotKind,
+    SlotState,
+)
 
 __all__ = [
     # Core types
@@ -67,6 +72,10 @@ __all__ = [
     "IIRFunction",
     "IIRModule",
     "FunctionTypeStatus",
+    # Feedback slot state machine (LANG17)
+    "SlotKind",
+    "SlotState",
+    "MAX_POLYMORPHIC_OBSERVATIONS",
     # Serialisation
     "serialise",
     "deserialise",

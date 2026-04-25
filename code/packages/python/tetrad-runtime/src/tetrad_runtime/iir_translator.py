@@ -211,6 +211,18 @@ def _translate_function(
     ``append_user_main_call`` is only ever True for the synthetic
     ``__entry__`` wrapper.  It tells the translator to drop the trailing
     HALT, splice in a call to the user's ``main``, and ``ret`` the result.
+
+    Populates two LANG17 PR4 side tables on the returned function:
+
+    - ``source_map``: ``(iir_index, tetrad_ip, 0)`` per translated Tetrad
+      instruction, so ``TetradRuntime`` can re-project ``branch_profile``
+      / ``loop_iterations`` lookups from Tetrad-IP to IIR-IP.
+    - ``feedback_slots``: ``slot_index → iir_instr_index`` for every
+      Tetrad instruction that carried a feedback slot.  The IIR index is
+      the **value-producing** IIR instruction emitted for that Tetrad
+      op (typically the last instruction in its translation), so the
+      profiler's observation on that instr is what the slot's caller
+      sees.
     """
     instructions = code.instructions
     branch_targets = _collect_branch_targets(instructions)
@@ -218,6 +230,9 @@ def _translate_function(
     iir_params: list[tuple[str, str]] = [(p, _U8) for p in code.params]
 
     body: list[IIRInstr] = []
+    # LANG17 PR4 side tables, populated below.
+    source_map: list[tuple[int, int, int]] = []
+    feedback_slots: dict[int, int] = {}
 
     # Pre-bind the function's parameters into the named register slots
     # ``_r0`` … ``_r{N-1}``.  Tetrad's preamble does ``LDA_REG i`` to
@@ -243,6 +258,13 @@ def _translate_function(
     for ip, instr in enumerate(body_instructions):
         if ip in branch_targets:
             body.append(_label(branch_targets[ip]))
+
+        # Record the IIR index where this Tetrad instruction's
+        # translation begins — used by ``TetradRuntime.branch_profile``
+        # / ``loop_iterations`` to re-project Tetrad-IP lookups.
+        iir_start = len(body)
+        source_map.append((iir_start, ip, 0))
+
         translated = _translate_instr(
             instr=instr,
             ip=ip,
@@ -253,6 +275,16 @@ def _translate_function(
             sibling_functions=sibling_functions,
         )
         body.extend(translated)
+
+        # If this Tetrad instruction had a feedback slot, the
+        # value-producing IIR instruction is the *last* one we just
+        # emitted (translation produces the result-bearing op last).
+        # Map slot index → that IIR instr index so
+        # ``TetradRuntime.feedback_vector(fn)`` can reconstruct the
+        # legacy slot-indexed list.
+        slot_idx = _extract_slot_index(instr)
+        if slot_idx is not None and translated:
+            feedback_slots[slot_idx] = len(body) - 1
 
     if append_user_main_call:
         # Call user's main() with no args, return its result.
@@ -266,7 +298,38 @@ def _translate_function(
         instructions=body,
         register_count=max(code.register_count, 8, len(iir_params) or 1),
         type_status=_map_type_status(code.type_status),
+        feedback_slots=feedback_slots,
+        source_map=source_map,
     )
+
+
+# Tetrad opcodes whose untyped variant carries a feedback slot in
+# operand position 1.  Matches TET03's "two-path compilation" rule:
+# arithmetic / comparison are slotted when the operands are not both
+# statically u8.  The ADD_IMM and SUB_IMM optimisations are also
+# slotted because the left operand may be untyped.
+_SLOTTED_ARITH_OPS = frozenset({
+    Op.ADD, Op.SUB, Op.MUL, Op.DIV, Op.MOD,
+    Op.ADD_IMM, Op.SUB_IMM,
+    Op.EQ, Op.NEQ, Op.LT, Op.LTE, Op.GT, Op.GTE,
+})
+
+
+def _extract_slot_index(instr: Instruction) -> int | None:
+    """Return this Tetrad instruction's feedback-slot index, or ``None``.
+
+    Three cases:
+    - CALL always carries a slot at ``operands[2]``.
+    - Slotted arith / comparison ops carry a slot at ``operands[1]``
+      when their length is 2 (untyped path; typed path is single-operand).
+    - Anything else has no slot.
+    """
+    if instr.opcode == Op.CALL:
+        # operands = [func_idx, argc, slot]
+        return instr.operands[2] if len(instr.operands) >= 3 else None
+    if instr.opcode in _SLOTTED_ARITH_OPS and len(instr.operands) >= 2:
+        return instr.operands[1]
+    return None
 
 
 def _map_type_status(status: TetradFunctionTypeStatus) -> IIRFunctionTypeStatus:

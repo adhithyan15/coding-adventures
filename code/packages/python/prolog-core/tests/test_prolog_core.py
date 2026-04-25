@@ -14,10 +14,12 @@ from prolog_core import (
     empty_predicate_registry,
     expand_dcg_clause,
     expand_dcg_phrase,
+    goal_expansion_from_directive,
     iso_operator_table,
     module_import_from_directive,
     module_spec_from_directive,
     swi_operator_table,
+    term_expansion_from_directive,
 )
 
 
@@ -132,6 +134,29 @@ class TestPredicateRegistry:
             "initialization",
             "main",
         )
+
+    def test_apply_predicate_directive_tracks_term_and_goal_expansions(
+        self,
+    ) -> None:
+        registry = empty_predicate_registry()
+        registry = apply_predicate_directive(
+            registry,
+            directive(
+                relation("term_expansion", 2)(
+                    term("edge", "X", "Y"),
+                    term("link", "X", "Y"),
+                ),
+            ),
+        )
+        registry = apply_predicate_directive(
+            registry,
+            directive(relation("goal_expansion", 2)("run", "main")),
+        )
+
+        assert registry.term_expansions[0].pattern == term("edge", "X", "Y")
+        assert registry.term_expansions[0].expansion == term("link", "X", "Y")
+        assert registry.goal_expansions[0].pattern == atom("run")
+        assert registry.goal_expansions[0].expansion == atom("main")
 
     def test_apply_predicate_directive_rejects_invalid_predicate_indicators(
         self,
@@ -263,4 +288,45 @@ class TestModules:
                         term(".", "oops", "[]"),
                     ),
                 ),
+            )
+
+
+class TestExpansions:
+    """Expansion helpers should retain structured pattern/replacement terms."""
+
+    def test_term_expansion_from_directive_parses_pattern_and_replacement(self) -> None:
+        parsed = term_expansion_from_directive(
+            directive(
+                relation("term_expansion", 2)(
+                    term("edge", "X", "Y"),
+                    term("link", "X", "Y"),
+                ),
+                {"X": var("X"), "Y": var("Y")},
+            ),
+        )
+
+        assert parsed is not None
+        assert parsed.pattern == term("edge", "X", "Y")
+        assert parsed.expansion == term("link", "X", "Y")
+        assert sorted(parsed.variables) == ["X", "Y"]
+
+    def test_goal_expansion_from_directive_parses_pattern_and_replacement(self) -> None:
+        parsed = goal_expansion_from_directive(
+            directive(
+                relation("goal_expansion", 2)(
+                    term("once", "Goal"),
+                    term("call", "Goal"),
+                ),
+                {"Goal": var("Goal")},
+            ),
+        )
+
+        assert parsed is not None
+        assert parsed.pattern == term("once", "Goal")
+        assert parsed.expansion == term("call", "Goal")
+
+    def test_term_expansion_from_directive_rejects_wrong_arity(self) -> None:
+        with pytest.raises(ValueError, match=r"term_expansion/2 directives require"):
+            term_expansion_from_directive(
+                directive(relation("term_expansion", 1)("edge")),
             )

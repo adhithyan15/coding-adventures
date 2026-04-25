@@ -517,6 +517,35 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
 
+    def test_switch_parameter_designational_goto_uses_caller_switch_scope(self) -> None:
+        result = compile_source(
+            "begin integer result, flag; "
+            "procedure escape(sw); switch sw; begin goto sw[1] end; "
+            "switch s := if flag = 0 then left else right; "
+            "flag := 1; escape(s); result := 0; "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_forwarded_switch_parameter_propagates_descriptor_through_calls(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure escape(sw); switch sw; begin goto sw[1] end; "
+            "procedure relay(sw); switch sw; begin escape(sw) end; "
+            "switch s := second; "
+            "relay(s); result := 0; "
+            "first: result := 1; goto done; "
+            "second: result := 8; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
+
     def test_repeated_switch_designational_gotos_use_distinct_dispatch(self) -> None:
         result = compile_source(
             "begin integer result, i; "
@@ -653,6 +682,47 @@ class TestAlgolWasmCompiler:
 
         assert runtime.load_and_run(result.binary, "_start", []) == [8]
         assert "".join(captured) == "OK"
+
+    def test_integer_array_parameter_writes_back_through_descriptor(self) -> None:
+        result = compile_source(
+            "begin integer array xs[1:2]; integer result; "
+            "procedure setfirst(a); integer a; array a; begin a[1] := 9 end; "
+            "xs[1] := 4; setfirst(xs); result := xs[1] "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
+
+    def test_array_parameter_runtime_dimension_mismatch_returns_from_callee(self) -> None:
+        result = compile_source(
+            "begin integer array xs[1:2]; integer result; "
+            "procedure probe(a); integer a; array a; begin result := a[1, 1] end; "
+            "probe(xs); result := 1 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
+
+    def test_label_parameter_jumps_to_caller_label(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure jump(target); label target; begin goto target end; "
+            "jump(done); result := 1; "
+            "done: result := 7 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_forwarded_label_parameter_propagates_through_intermediate_procedure(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure jump(target); label target; begin goto target end; "
+            "procedure relay(target); label target; begin jump(target) end; "
+            "relay(done); result := 1; "
+            "done: result := 8 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
 
     def test_scalar_by_name_parameter_reads_forwarded_pointer(self) -> None:
         result = compile_source(

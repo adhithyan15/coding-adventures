@@ -38,5 +38,8 @@ documented in this file.
   corpus so broader upstream-style cases can be regenerated instead of
   hand-maintained in Rust tests.
 - RCDATA and `lastStartTag` support in the html5lib importer, with normalized
-  fixture metadata that lets Rust tests distinguish executable cases from
-  runtime gaps that still need lexer support.
+  fixture metadata that seeds the first executable Rust RCDATA cases while the
+  importer still records unsupported upstream states separately.
+- RAWTEXT support in the authored `html1` machine, the html5lib importer, and
+  the Rust conformance harness, so seeded style-like tokenizer cases now
+  execute through the generated static wrapper instead of being skipped.

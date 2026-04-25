@@ -115,6 +115,84 @@ fn default_html_lexer_reports_recoverable_comment_eof_diagnostic() {
 }
 
 #[test]
+fn default_html_lexer_supports_seeded_rcdata_end_tags() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rcdata").unwrap();
+    lexer.set_last_start_tag("title");
+
+    lexer.push("Hello</title>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("Hello".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_rcdata_lt_references() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rcdata").unwrap();
+    lexer.set_last_start_tag("title");
+
+    lexer.push("Hello&lt;/title>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![Token::Text("Hello</title>".to_string()), Token::Eof]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_rawtext_end_tags() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rawtext").unwrap();
+    lexer.set_last_start_tag("style");
+
+    lexer.push("body { color: red; }</style>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("body { color: red; }".to_string()),
+            Token::EndTag {
+                name: "style".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_keeps_ampersands_literal_in_seeded_rawtext() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rawtext").unwrap();
+    lexer.set_last_start_tag("style");
+
+    lexer.push("body &lt; </style>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("body &lt; ".to_string()),
+            Token::EndTag {
+                name: "style".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn html1_machine_exports_definition_with_eof_matcher() {
     let definition = html1_machine().unwrap().to_definition("html1-lexer");
 

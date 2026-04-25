@@ -648,6 +648,97 @@ class TestAlgolTypeChecker:
         assert parameter.mode == "name"
         assert parameter.may_write
 
+    def test_accepts_integer_array_parameter_and_whole_array_actual(self) -> None:
+        ast = parse_algol(
+            "begin integer array xs[1:2]; integer result; "
+            "procedure setfirst(a); integer a; array a; begin a[1] := 9 end; "
+            "xs[1] := 4; setfirst(xs); result := xs[1] "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        parameter = result.semantic.procedures[0].parameters[0]
+        assert parameter.kind == "array"
+        assert parameter.type_name == "integer"
+        assert any(access.role == "actual" for access in result.semantic.array_accesses)
+
+    def test_rejects_value_array_parameter_in_this_phase(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure probe(a); value a; integer a; array a; begin end; "
+            "result := 0 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "cannot be an array in this phase" in result.diagnostics[0].message
+
+    def test_accepts_label_parameter_and_direct_label_actual(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure jump(target); label target; begin goto target end; "
+            "jump(done); "
+            "done: result := 7 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        parameter = result.semantic.procedures[0].parameters[0]
+        assert parameter.kind == "label"
+        assert parameter.type_name == "label"
+
+    def test_rejects_value_label_parameter_in_this_phase(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure jump(target); value target; label target; begin end; "
+            "result := 0 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "cannot be a label in this phase" in result.diagnostics[0].message
+
+    def test_accepts_switch_parameter_and_direct_switch_actual(self) -> None:
+        ast = parse_algol(
+            "begin integer result, flag; "
+            "procedure escape(sw); switch sw; begin goto sw[1] end; "
+            "switch s := if flag = 0 then left else right; "
+            "flag := 1; escape(s); "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        parameter = result.semantic.procedures[0].parameters[0]
+        assert parameter.kind == "switch"
+        assert parameter.type_name == "switch"
+        assert any(
+            selection.name == "sw" and selection.switch_id == -1
+            for selection in result.semantic.switch_selections
+        )
+
+    def test_rejects_value_switch_parameter_in_this_phase(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure escape(sw); value sw; switch sw; begin end; "
+            "result := 0 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "cannot be a switch in this phase" in result.diagnostics[0].message
+
     def test_accepts_integer_array_descriptor_and_accesses(self) -> None:
         ast = parse_algol(
             "begin integer result, lo, hi; "

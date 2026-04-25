@@ -17,7 +17,8 @@ already supports a substantial ALGOL 60 surface:
 - `own` scalars and arrays with static lifetime
 - arrays of `integer`, `boolean`, `real`, and `string` values with runtime
   bounds and checked element access
-- value and by-name parameters, including Jensen-style expression thunks
+- value and by-name parameters, including Jensen-style expression thunks and
+  typed whole-array, label, and switch formals
 - labels, local and nonlocal `goto`, switch designators, and conditional
   designational expressions, including nonlocal branches and nested
   non-recursive switch entries

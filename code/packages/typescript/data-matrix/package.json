@@ -1,0 +1,23 @@
+{
+  "name": "@coding-adventures/data-matrix",
+  "version": "0.1.0",
+  "description": "Data Matrix ECC200 encoder — ISO/IEC 16022:2006 compliant, produces scannable Data Matrix symbols",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/barcode-2d": "file:../barcode-2d",
+    "@coding-adventures/paint-vm-svg": "file:../paint-vm-svg"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

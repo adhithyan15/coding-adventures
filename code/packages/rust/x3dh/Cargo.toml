@@ -1,0 +1,14 @@
+[package]
+name = "coding_adventures_x3dh"
+version = "0.1.0"
+edition = "2021"
+description = "X3DH Extended Triple Diffie-Hellman key agreement (Signal Protocol) — implemented from scratch"
+
+[dependencies]
+coding_adventures_curve25519 = { path = "../curve25519" }
+coding_adventures_ed25519    = { path = "../ed25519" }
+coding_adventures_hkdf       = { path = "../hkdf" }
+coding_adventures_zeroize    = { path = "../zeroize" }
+getrandom = "0.2"
+
+[dev-dependencies]

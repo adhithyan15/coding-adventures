@@ -1,0 +1,21 @@
+name: coding_adventures_qr_code
+version: 0.1.0
+description: >
+  QR Code encoder — ISO/IEC 18004:2015 compliant. Encodes any UTF-8 string
+  into a scannable QR Code, outputs a ModuleGrid that integrates with the
+  barcode-2d layout pipeline. Supports numeric, alphanumeric, and byte modes;
+  ECC levels L/M/Q/H; versions 1–40.
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_gf256:
+    path: ../gf256
+  coding_adventures_barcode_2d:
+    path: ../barcode-2d
+
+dev_dependencies:
+  test: ^1.25.0

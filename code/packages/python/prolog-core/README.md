@@ -8,8 +8,10 @@ The first batch includes:
 - `OperatorSpec`
 - `OperatorTable`
 - `PrologDirective`
+- `PrologTermExpansion` and `PrologGoalExpansion`
 - `PrologModule` and `PrologModuleImport`
 - `apply_op_directive(...)`
+- `term_expansion_from_directive(...)` and `goal_expansion_from_directive(...)`
 - `expand_dcg_clause(...)` and `expand_dcg_phrase(...)`
 - default ISO/Core and SWI operator tables
 

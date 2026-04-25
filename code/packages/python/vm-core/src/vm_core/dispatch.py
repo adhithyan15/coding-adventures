@@ -51,6 +51,11 @@ def run_dispatch_loop(vm: VMCore) -> Any:
 
     Returns the last value produced by a ``ret`` instruction in the root frame,
     or ``None`` if no ``ret`` was executed.
+
+    If ``vm._tracer`` is not None, every dispatched instruction produces
+    a ``VMTrace`` record — see :mod:`vm_core.tracer`.  The tracing path
+    takes two extra ``list`` copies per instruction (register file
+    before/after), so it is opt-in through ``VMCore.execute_traced``.
     """
     return_value: Any = None
 
@@ -66,7 +71,22 @@ def run_dispatch_loop(vm: VMCore) -> Any:
             raise VMInterrupt("execution interrupted")
 
         instr = frame.fn.instructions[frame.ip]
+        ip_before = frame.ip
         frame.ip += 1
+
+        # Snapshot state before dispatch when tracing is active.  We
+        # capture the pre-observation count too so we can tell whether
+        # the profiler produced a slot-delta during this instruction,
+        # and the frame depth (since a ``ret`` will pop the frame off
+        # the VM stack and we'd lose the original depth).
+        tracing = vm._tracer is not None
+        regs_before: list[Any] | None = None
+        obs_count_before: int = 0
+        depth_before: int = 0
+        if tracing:
+            regs_before = frame.registers.snapshot()
+            obs_count_before = instr.observation_count
+            depth_before = _compute_depth(vm, frame)
 
         result = _dispatch_one(vm, frame, instr)
         vm._metrics_instrs += 1
@@ -74,10 +94,43 @@ def run_dispatch_loop(vm: VMCore) -> Any:
         if vm._profiler_enabled and instr.dest is not None and result is not None:
             vm._profiler.observe(instr, result)
 
+        if tracing:
+            slot_delta = []
+            if instr.observation_count != obs_count_before and instr.observed_slot:
+                slot_delta = [(ip_before, instr.observed_slot)]
+            # The dispatch may have popped the frame (ret); in that case
+            # the post-register snapshot should come from whatever frame
+            # was active at dispatch time — ``frame`` is still a live
+            # object even if it's no longer on the VM's frame stack.
+            regs_after = frame.registers.snapshot()
+            vm._tracer.observe(
+                frame_depth=depth_before,
+                fn_name=frame.fn.name,
+                ip=ip_before,
+                instr=instr,
+                registers_before=regs_before or [],
+                registers_after=regs_after,
+                slot_delta=slot_delta,
+            )
+
         if instr.op in {"ret", "ret_void"}:
             return_value = result
 
     return return_value
+
+
+def _compute_depth(vm: VMCore, frame: VMFrame) -> int:
+    """Compute a frame's depth by its position on the VM's frame stack.
+
+    ``VMFrame`` does not carry a native ``depth`` field; recover it from
+    the frame stack at trace time.  Returns ``0`` if the frame is no
+    longer on the stack (e.g. because the dispatch just popped it) —
+    the caller gets a stable value rather than -1.
+    """
+    for i, f in enumerate(vm._frames):
+        if f is frame:
+            return i
+    return 0
 
 
 def _dispatch_one(vm: VMCore, frame: VMFrame, instr: IIRInstr) -> Any:
@@ -268,25 +321,77 @@ def handle_label(_vm: VMCore, _frame: VMFrame, _instr: IIRInstr) -> None:
 
 
 def handle_jmp(vm: VMCore, frame: VMFrame, instr: IIRInstr) -> None:
-    label = instr.srcs[0]
-    frame.ip = frame.fn.label_index(str(label))
+    # ``frame.ip`` has already been advanced past this instruction by the
+    # dispatch loop, so the *source* index of this jump is ip - 1.  We use
+    # it for back-edge detection (a back-edge is any jump whose target
+    # index is strictly less than the source index).
+    source_ip = frame.ip - 1
+    target_ip = frame.fn.label_index(str(instr.srcs[0]))
+    if target_ip < source_ip:
+        _bump_loop(vm, frame.fn.name, source_ip)
+    frame.ip = target_ip
     return None
 
 
 def handle_jmp_if_true(vm: VMCore, frame: VMFrame, instr: IIRInstr) -> None:
+    source_ip = frame.ip - 1
     cond = frame.resolve(instr.srcs[0])
-    if cond:
-        label = instr.srcs[1]
-        frame.ip = frame.fn.label_index(str(label))
+    taken = bool(cond)
+    _bump_branch(vm, frame.fn.name, source_ip, taken)
+    if taken:
+        target_ip = frame.fn.label_index(str(instr.srcs[1]))
+        if target_ip < source_ip:
+            _bump_loop(vm, frame.fn.name, source_ip)
+        frame.ip = target_ip
     return None
 
 
 def handle_jmp_if_false(vm: VMCore, frame: VMFrame, instr: IIRInstr) -> None:
+    source_ip = frame.ip - 1
     cond = frame.resolve(instr.srcs[0])
-    if not cond:
-        label = instr.srcs[1]
-        frame.ip = frame.fn.label_index(str(label))
+    # For a jmp_if_false, "taken" means the branch was followed, i.e.
+    # the condition was false.  We record it in the same (taken vs
+    # not-taken) shape so consumers get a uniform view regardless of
+    # which conditional opcode was used.
+    taken = not bool(cond)
+    _bump_branch(vm, frame.fn.name, source_ip, taken)
+    if taken:
+        target_ip = frame.fn.label_index(str(instr.srcs[1]))
+        if target_ip < source_ip:
+            _bump_loop(vm, frame.fn.name, source_ip)
+        frame.ip = target_ip
     return None
+
+
+# ---------------------------------------------------------------------------
+# Branch / loop counter helpers
+# ---------------------------------------------------------------------------
+#
+# These mutate the live dicts on ``VMCore``.  They are private to this
+# module — external callers read the deep-copied snapshot via
+# ``VMCore.metrics()`` or the typed accessors ``VMCore.branch_profile``
+# and ``VMCore.loop_iterations``.
+# ---------------------------------------------------------------------------
+
+
+def _bump_branch(vm: VMCore, fn_name: str, source_ip: int, taken: bool) -> None:
+    """Record one conditional-branch observation on the live metrics dicts."""
+    from vm_core.metrics import BranchStats
+    fn_stats = vm._branch_stats.setdefault(fn_name, {})
+    stats = fn_stats.get(source_ip)
+    if stats is None:
+        stats = BranchStats()
+        fn_stats[source_ip] = stats
+    if taken:
+        stats.taken_count += 1
+    else:
+        stats.not_taken_count += 1
+
+
+def _bump_loop(vm: VMCore, fn_name: str, source_ip: int) -> None:
+    """Record one back-edge traversal on the live metrics dicts."""
+    fn_loops = vm._loop_back_edges.setdefault(fn_name, {})
+    fn_loops[source_ip] = fn_loops.get(source_ip, 0) + 1
 
 
 def handle_ret(vm: VMCore, frame: VMFrame, instr: IIRInstr) -> Any:
