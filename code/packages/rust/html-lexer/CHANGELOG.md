@@ -40,3 +40,6 @@ documented in this file.
 - RCDATA and `lastStartTag` support in the html5lib importer, with normalized
   fixture metadata that seeds the first executable Rust RCDATA cases while the
   importer still records unsupported upstream states separately.
+- RAWTEXT support in the authored `html1` machine, the html5lib importer, and
+  the Rust conformance harness, so seeded style-like tokenizer cases now
+  execute through the generated static wrapper instead of being skipped.
