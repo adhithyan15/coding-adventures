@@ -1,0 +1,50 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "go/haskell-lexer",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/haskell/haskell1.0.tokens",
+      "justification": "Haskell 1.0 token grammar."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/haskell/haskell1.1.tokens",
+      "justification": "Haskell 1.1 token grammar."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/haskell/haskell1.2.tokens",
+      "justification": "Haskell 1.2 token grammar."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/haskell/haskell1.3.tokens",
+      "justification": "Haskell 1.3 token grammar."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/haskell/haskell1.4.tokens",
+      "justification": "Haskell 1.4 token grammar."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/haskell/haskell98.tokens",
+      "justification": "Haskell 98 token grammar."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/haskell/haskell2010.tokens",
+      "justification": "Haskell 2010 token grammar."
+    }
+  ],
+  "justification": "Reads grammar definition files for the selected Haskell version. No write, network, or process access needed."
+}
