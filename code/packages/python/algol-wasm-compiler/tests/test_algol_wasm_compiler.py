@@ -517,6 +517,35 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
 
+    def test_switch_parameter_designational_goto_uses_caller_switch_scope(self) -> None:
+        result = compile_source(
+            "begin integer result, flag; "
+            "procedure escape(sw); switch sw; begin goto sw[1] end; "
+            "switch s := if flag = 0 then left else right; "
+            "flag := 1; escape(s); result := 0; "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_forwarded_switch_parameter_propagates_descriptor_through_calls(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure escape(sw); switch sw; begin goto sw[1] end; "
+            "procedure relay(sw); switch sw; begin escape(sw) end; "
+            "switch s := second; "
+            "relay(s); result := 0; "
+            "first: result := 1; goto done; "
+            "second: result := 8; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
+
     def test_repeated_switch_designational_gotos_use_distinct_dispatch(self) -> None:
         result = compile_source(
             "begin integer result, i; "

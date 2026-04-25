@@ -795,7 +795,15 @@ class AlgolTypeChecker:
                         "this phase",
                     )
                 parameter_type = LABEL
-            elif parameter_kind in {SWITCH, "procedure"}:
+            elif parameter_kind == SWITCH:
+                if mode == VALUE:
+                    self._error(
+                        formal,
+                        f"value parameter {formal.value!r} cannot be a switch in "
+                        "this phase",
+                    )
+                parameter_type = SWITCH
+            elif parameter_kind == "procedure":
                 self._error(
                     formal,
                     f"{parameter_kind} parameter {formal.value!r} is not supported yet",
@@ -884,13 +892,16 @@ class AlgolTypeChecker:
                     parameter_type = REAL
             elif parameter_kind == LABEL:
                 parameter_type = LABEL
-            elif parameter_kind in {SWITCH, "procedure"}:
+            elif parameter_kind == SWITCH:
+                parameter_type = SWITCH
+            elif parameter_kind == "procedure":
                 parameter_kind = "scalar"
             param_symbol = Symbol(
                 name=formal.value,
                 type_name=(
                     parameter_type
-                    if parameter_type in {INTEGER, BOOLEAN, REAL, STRING, LABEL}
+                    if parameter_type
+                    in {INTEGER, BOOLEAN, REAL, STRING, LABEL, SWITCH}
                     else INTEGER
                 ),
                 line=formal.line,
@@ -898,7 +909,7 @@ class AlgolTypeChecker:
                 symbol_id=self._next_symbol_id,
                 kind=(
                     parameter_kind
-                    if parameter_kind in {ARRAY, LABEL}
+                    if parameter_kind in {ARRAY, LABEL, SWITCH}
                     else "parameter"
                 ),
                 storage_class=(
@@ -955,12 +966,12 @@ class AlgolTypeChecker:
                         kind=parameter_kind,
                         may_write=(
                             formal.value in write_reasons
-                            if parameter_kind != ARRAY
+                            if parameter_kind == "scalar"
                             else False
                         ),
                         write_reason=(
                             write_reasons.get(formal.value)
-                            if parameter_kind != ARRAY
+                            if parameter_kind == "scalar"
                             else None
                         ),
                     )
@@ -1292,9 +1303,6 @@ class AlgolTypeChecker:
                 f"switch {name_token.value!r} cannot select itself recursively",
             )
             return
-        if symbol.switch_id is None:
-            self._error(name_token, f"switch {name_token.value!r} has no descriptor")
-            return
 
         indexes = _direct_nodes(node, "arith_expr")
         if len(indexes) != 1:
@@ -1304,12 +1312,20 @@ class AlgolTypeChecker:
         if index_type != ERROR and index_type != INTEGER:
             self._error(indexes[0], "switch index must be integer")
 
+        if symbol.parameter_mode is not None and symbol.slot_offset is not None:
+            switch_id = -1
+        elif symbol.switch_id is None:
+            self._error(name_token, f"switch {name_token.value!r} has no descriptor")
+            return
+        else:
+            switch_id = symbol.switch_id
+
         self.resolved_switch_selections.append(
             ResolvedSwitchSelection(
                 node_id=id(node),
                 token_id=id(name_token),
                 name=name_token.value,
-                switch_id=symbol.switch_id,
+                switch_id=switch_id,
                 use_block_id=scope.block_id,
                 declaration_block_id=declaring_scope.block_id,
                 lexical_depth_delta=lexical_depth_delta,
@@ -1744,6 +1760,9 @@ class AlgolTypeChecker:
             if parameter.kind == LABEL:
                 self._check_label_parameter_actual(argument, scope, parameter)
                 continue
+            if parameter.kind == SWITCH:
+                self._check_switch_parameter_actual(argument, scope, parameter)
+                continue
             actual_type = self._infer_expr(argument, scope)
             if descriptor.procedure_id == -1:
                 if actual_type != ERROR and actual_type not in {
@@ -1883,6 +1902,40 @@ class AlgolTypeChecker:
             self._error(
                 name,
                 f"label parameter {parameter.name!r} expects a label actual",
+            )
+            return None
+        return symbol
+
+    def _check_switch_parameter_actual(
+        self,
+        argument: ASTNode,
+        scope: Scope,
+        parameter: ProcedureParameter,
+    ) -> Symbol | None:
+        variable = _single_variable_expr(argument)
+        if variable is None or _variable_subscripts(variable):
+            self._error(
+                argument,
+                f"switch parameter {parameter.name!r} expects a direct switch actual",
+            )
+            return None
+        name = _variable_head_name(variable)
+        if name is None:
+            self._error(argument, "switch actual is missing a name")
+            return None
+        resolved = scope.resolve_with_scope(name.value)
+        if resolved is None:
+            self._error(
+                name,
+                f"{name.value!r} is not declared in block {scope.block_id} "
+                "or its lexical parents",
+            )
+            return None
+        symbol, _, _ = resolved
+        if symbol.kind != SWITCH:
+            self._error(
+                name,
+                f"switch parameter {parameter.name!r} expects a switch actual",
             )
             return None
         return symbol
