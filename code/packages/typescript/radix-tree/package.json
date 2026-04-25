@@ -1,0 +1,19 @@
+{
+  "name": "@coding-adventures/radix-tree",
+  "version": "0.1.0",
+  "description": "A compressed radix tree for string-keyed prefix lookup",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "license": "MIT",
+  "author": "Adhithya Rajasekaran",
+  "devDependencies": {
+    "@vitest/coverage-v8": "^3.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}
