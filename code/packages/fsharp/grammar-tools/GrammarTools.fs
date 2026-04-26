@@ -168,6 +168,31 @@ module private TokenGrammarParsing =
 
         result.ToString()
 
+    let findAliasMarker (rhs: string) =
+        let mutable inRegex = false
+        let mutable inString = false
+        let mutable escaped = false
+        let mutable found = -1
+        let mutable index = 0
+
+        while found < 0 && index < rhs.Length - 1 do
+            let ch = rhs[index]
+
+            if escaped then
+                escaped <- false
+            elif ch = '\\' then
+                escaped <- true
+            elif ch = '"' && not inRegex then
+                inString <- not inString
+            elif ch = '/' && not inString then
+                inRegex <- not inRegex
+            elif not inRegex && not inString && ch = '-' && rhs[index + 1] = '>' then
+                found <- index
+
+            index <- index + 1
+
+        found
+
     let parseDefinition (line: string) lineNumber =
         let equalsIndex = line.IndexOf('=')
         if equalsIndex < 1 then
@@ -176,7 +201,7 @@ module private TokenGrammarParsing =
         let name = line.Substring(0, equalsIndex).Trim()
         let mutable rhs = line.Substring(equalsIndex + 1).Trim()
         let mutable alias = None
-        let aliasIndex = rhs.IndexOf("->", StringComparison.Ordinal)
+        let aliasIndex = findAliasMarker rhs
 
         if aliasIndex >= 0 then
             alias <- Some(rhs.Substring(aliasIndex + 2).Trim())
@@ -231,6 +256,12 @@ type TokenGrammarParser =
                     mode <- Some(trimmed.Substring("mode:".Length).Trim())
                 elif trimmed.StartsWith("escape_mode:", StringComparison.Ordinal) then
                     escapeMode <- Some(trimmed.Substring("escape_mode:".Length).Trim())
+                elif trimmed.StartsWith("escapes:", StringComparison.Ordinal) then
+                    escapeMode <- Some(trimmed.Substring("escapes:".Length).Trim())
+                elif trimmed.StartsWith("case_sensitive:", StringComparison.Ordinal) then
+                    match Boolean.TryParse(trimmed.Substring("case_sensitive:".Length).Trim()) with
+                    | true, parsedBool -> caseInsensitive <- not parsedBool
+                    | _ -> ()
                 elif
                     trimmed = "keywords:"
                     || trimmed = "reserved:"
@@ -251,6 +282,14 @@ type TokenGrammarParser =
                     currentGroup <- Some groupName
                     groupDefinitions[groupName] <- ResizeArray<TokenDefinition>()
                 else
+                    if
+                        (section = "skip" || section = "errors" || section = "group")
+                        && not (Char.IsWhiteSpace(lines[index][0]))
+                        && trimmed.Contains("=")
+                    then
+                        section <- "definitions"
+                        currentGroup <- None
+
                     match section with
                     | "keywords" -> keywords.Add(trimmed)
                     | "reserved" -> reserved.Add(trimmed)
