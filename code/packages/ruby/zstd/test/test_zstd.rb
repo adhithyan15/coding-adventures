@@ -390,11 +390,42 @@ end
 # ── Unit: Sequence count encode/decode ───────────────────────────────────────
 
 class TestSeqCount < Minitest::Test
+  # ── Endianness regression: low-byte-< 128 values ───────────────────────────
+  #
+  # The 2-byte form must place the format-flag byte (with bit 7 set) FIRST.
+  # An earlier broken pattern in TS+Go wrote `[count & 0xFF, (count >> 8) | 0x80]`
+  # — low byte first. For any count ≥ 128 whose low byte happens to be < 128
+  # (e.g. 515 = 0x0203 → byte0 = 0x03), the decoder mis-takes the 1-byte path
+  # and silently returns a tiny garbage count. The values below all have
+  # low byte < 128, so they'd round-trip wrong if Ruby ever regressed.
+  REGRESSION_VALUES = [
+    128,       # 0x0080 — boundary, low byte = 0x80 (high bit borderline)
+    256,       # 0x0100 — low byte 0x00, would decode as 1-byte 0
+    300,       # 0x012C — low byte 0x2C, would decode as 1-byte 44
+    515,       # 0x0203 — Lua's TC-8 case, low byte 0x03 = decode as 3
+    768,       # 0x0300 — low byte 0x00
+    1024,      # 0x0400 — low byte 0x00
+    32258      # 0x7E02 — near upper end of 2-byte range, low 0x02
+  ].freeze
+
   def test_roundtrip_values
     [0, 1, 50, 127, 128, 1000, 0x7FFE].each do |n|
       encoded = CodingAdventures::Zstd.encode_seq_count(n).b
       decoded, = CodingAdventures::Zstd.decode_seq_count(encoded)
       assert_equal n, decoded, "seq count #{n}"
+    end
+  end
+
+  def test_low_byte_lt_128_regression
+    REGRESSION_VALUES.each do |n|
+      encoded = CodingAdventures::Zstd.encode_seq_count(n).b
+      decoded, consumed = CodingAdventures::Zstd.decode_seq_count(encoded)
+      assert_equal n, decoded, "seq count #{n} (low byte = 0x#{(n & 0xFF).to_s(16)})"
+      assert_equal 2, consumed, "seq count #{n} should consume 2 bytes"
+      # Wire format check: byte0 must have bit 7 set so the decoder picks
+      # the 2-byte branch unambiguously.
+      assert_operator encoded.getbyte(0), :>=, 128,
+        "byte0 for count=#{n} must have bit 7 set; got 0x#{encoded.getbyte(0).to_s(16)}"
     end
   end
 

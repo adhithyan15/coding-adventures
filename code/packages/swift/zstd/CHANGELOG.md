@@ -3,6 +3,17 @@
 All notable changes to the `swift/zstd` package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.1.1] — 2026-04-26
+
+### Tests
+
+- Added `testSeqCountEndiannessRegression`. The test round-trips 200 KB of
+  repetitive ASCII, reliably yielding ≥ 128 sequences in a single block —
+  exercising the 2-byte path of `encodeSeqCount` / `decodeSeqCount`. Same
+  shape as the regression added to TS+Go in PR #1448.
+- Audited `encodeSeqCount` / `decodeSeqCount`: already RFC 8878
+  §3.1.1.3.1-compliant (`0x80 | (count >> 8), count & 0xFF`); no fix needed.
+
 ## [0.1.0] — 2026-04-24
 
 ### Added

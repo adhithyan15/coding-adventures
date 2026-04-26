@@ -274,4 +274,27 @@ void main() {
     final data = bytes(List.generate(1024, (i) => (i * 17 + 3) % 256));
     expect(rt(data), equals(data));
   });
+
+  // ── Regression: seq_count endianness bug ──────────────────────────────────
+  //
+  // The 2-byte seq_count form must place the format-flag byte (with bit 7 set)
+  // FIRST, not last. An earlier broken pattern in TS+Go wrote
+  // `[count & 0xFF, (count >> 8) | 0x80]` — low byte first. For any count ≥ 128
+  // whose low byte happened to be < 128 (e.g. 515 = 0x0203 → byte0 = 0x03), the
+  // decoder mis-took the 1-byte path and silently returned a tiny garbage
+  // count, mis-aligning every byte downstream (modes byte, FSE bitstream, …).
+  //
+  // 200 KB of long-period repetitive text reliably yields ≥ 128 sequences in
+  // a single block (LZSS finds ~one match per pattern repetition). This
+  // round-trip is the canonical regression: same pattern as the TS/Go
+  // regression tests added in PR #1448.
+  test('Seq count: 200 KB repetitive text — endianness regression', () {
+    final pattern = 'hello world and more text for compression testing!\n';
+    final buf = StringBuffer();
+    for (var i = 0; i < 4000; i++) {
+      buf.write(pattern);
+    }
+    final data = bytes(buf.toString().codeUnits);
+    expect(rt(data), equals(data));
+  });
 }

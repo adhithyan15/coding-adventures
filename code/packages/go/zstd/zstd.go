@@ -827,17 +827,37 @@ func decodeLiteralsSection(data []byte) ([]byte, int, error) {
 //     read OF extra bits
 //  5. Apply sequence to output buffer.
 
-// encodeSeqCount encodes the sequence count in 1-3 bytes per RFC 8878.
+// encodeSeqCount encodes the sequence count in 1-3 bytes per RFC 8878 §3.1.1.3.1.
+//
+// Layout — byte0 is the FORMAT MARKER:
+//
+//	byte0 < 128            → 1-byte form, count = byte0
+//	byte0 ∈ [128, 254]     → 2-byte form, count = ((byte0 - 128) << 8) | byte1
+//	byte0 == 0xFF          → 3-byte form, count = byte1 + (byte2 << 8) + 0x7F00
+//
+// The decoder branches on byte0 alone, so the encoder MUST place the byte
+// that determines the form first. The previous implementation used
+// `binary.LittleEndian.AppendUint16(nil, count|0x8000)`, which writes the
+// LOW byte first. For any count ≥ 128 whose low byte happened to be < 128
+// (e.g. count = 515 → byte0 = 0x03), the decoder mis-took the 1-byte
+// path and returned a tiny garbage count, mis-aligning every byte downstream
+// (including the symbol-modes byte). Because the bug was silent for any
+// count whose low byte was ≥ 128 — roughly half the range — most tests
+// still passed.
 func encodeSeqCount(count int) []byte {
 	if count == 0 {
 		return []byte{0}
-	} else if count < 128 {
-		return []byte{byte(count)}
-	} else if count < 0x7FFF {
-		v := uint16(count) | 0x8000
-		return binary.LittleEndian.AppendUint16(nil, v)
 	}
-	// 3-byte encoding: first byte = 0xFF, next 2 bytes = count - 0x7F00
+	if count < 128 {
+		return []byte{byte(count)}
+	}
+	if count < 0x7F00 {
+		// 2-byte form: byte0 = (count >> 8) | 0x80, byte1 = count & 0xFF.
+		// count < 0x7F00 keeps byte0 in [0x80, 0xFE]; counts at or above 0x7F00
+		// fall through to the 3-byte form (byte0 = 0xFF).
+		return []byte{byte((count >> 8) | 0x80), byte(count & 0xFF)}
+	}
+	// 3-byte encoding: first byte = 0xFF, next 2 bytes = (count - 0x7F00) LE
 	r := count - 0x7F00
 	return []byte{0xFF, byte(r & 0xFF), byte((r >> 8) & 0xFF)}
 }
@@ -851,14 +871,15 @@ func decodeSeqCount(data []byte) (int, int, error) {
 	if b0 < 128 {
 		// 1-byte encoding: value is in [0, 127]
 		return int(b0), 1, nil
-	} else if b0 < 0xFF {
-		// 2-byte encoding: the pair is a LE u16 with the high bit set.
-		// The count = (u16 value) & 0x7FFF.
+	}
+	if b0 < 0xFF {
+		// 2-byte encoding: count = ((b0 - 128) << 8) | b1
+		// Equivalent to ((b0 & 0x7F) << 8) | b1 since b0's bit 7 is set.
 		if len(data) < 2 {
 			return 0, 0, fmt.Errorf("truncated sequence count")
 		}
-		v := binary.LittleEndian.Uint16(data[:2])
-		return int(v & 0x7FFF), 2, nil
+		count := (int(b0&0x7F) << 8) | int(data[1])
+		return count, 2, nil
 	}
 	// 3-byte encoding: byte0=0xFF, then (count - 0x7F00) as LE u16
 	if len(data) < 3 {

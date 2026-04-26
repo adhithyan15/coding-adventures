@@ -3433,3 +3433,31 @@ This keeps the `LuaConduitApp` reachable from the Lua registry (which is always 
 **Fix:** Remove all `mise exec --` prefixes.  Just call `cargo`, `npm`, `npx`, `node`, etc. directly.  The Python conduit BUILD already documented this pattern explicitly in a comment.
 
 **Rule:** BUILD files should call language tools (cargo, npm, npx, node, python, go, etc.) directly without any wrapper.  `mise` provides shims locally so direct invocation works in both environments.  CI installs tools into PATH itself.
+
+---
+
+## Lesson: In variable-length encodings, the FORMAT MARKER must come first — never write the length-distinguishing flag on the LOW byte of an LE16
+
+**Date:** 2026-04-26
+
+**What happened:** Several zstd ports (TS, Go, Lua) encoded the 2-byte sequence count as a little-endian u16 with `0x8000` ORed in, then wrote it LE — which puts the LOW byte of `count` first and the flag byte (with bit 7 set) second:
+
+```ts
+// BROKEN: low byte first
+const v = count | 0x8000;
+return [v & 0xFF, (v >>> 8) & 0xFF];
+```
+
+The decoder branches on `byte0` to choose form (`< 128` → 1 byte, `< 0xFF` → 2 bytes, `== 0xFF` → 3 bytes). For any count ≥ 128 whose LOW byte happened to be < 128 (e.g. count=515 → `[0x03, 0x82]`), the decoder mis-took the 1-byte path and silently returned a tiny garbage count, mis-aligning the modes byte and the FSE bitstream that followed. About half of all 2-byte counts triggered this; the other half worked. Round-trip tests with counts like 1000 (low byte 0xE8) or 0x7FFE (both high) silently passed despite the bug. Discovered when Lua's TC-8 (300 KB → 515 sequences) finally hit a count whose low byte was < 128 and threw `unsupported FSE modes` from a misaligned modes byte.
+
+**Rule:** Any variable-length integer encoding whose decoder branches on `byte0` MUST place the byte that carries the format marker **first** in the wire stream — independent of the host's natural endianness. For zstd's seq_count specifically, the RFC 8878 §3.1.1.3.1 layout is:
+
+```
+count < 128:           [count]
+128 ≤ count < 0x7FFF:  [(count >> 8) | 0x80, count & 0xFF]   # high byte first
+count ≥ 0x7FFF:        [0xFF, low, high]                       # 3-byte form
+```
+
+Decode: `((b0 & 0x7F) << 8) | b1`, equivalent to RFC's `((byte0 - 128) << 8) | byte1`.
+
+When testing variable-length codecs, the round-trip test parameter set MUST include at least one value in each form whose low byte is < 128 (e.g. 256, 300, 515, 768) — otherwise a low-byte-first regression silently passes. Pure round-trip tests on a self-consistent broken codec are blind to byte-order bugs by construction. The integration test that catches it reliably is "≥ 200 KB of repetitive text → ≥ 128 sequences in a single block" — that input distribution naturally produces counts spanning both halves of the 2-byte range.

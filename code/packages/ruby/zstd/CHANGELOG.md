@@ -3,6 +3,20 @@
 All notable changes to this package are recorded here.
 Follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) conventions.
 
+## [0.1.1] — 2026-04-26
+
+### Tests
+
+- Added `TestSeqCount#test_low_byte_lt_128_regression` covering counts whose
+  low byte is < 128 (128, 256, 300, 515, 768, 1024, 32258). These would have
+  silently round-tripped wrong if the encoder ever regressed to the
+  byte-swapped form (`[count & 0xFF, (count >> 8) | 0x80]`) that broke the
+  TS and Go ports — see PR #1448. Also asserts that `byte0 ≥ 128` for the
+  2-byte form, locking in the wire-format invariant.
+- Audited `encode_seq_count` / `decode_seq_count`: already RFC 8878
+  §3.1.1.3.1-compliant (`[(count >> 8) | 0x80, count & 0xFF]`); no fix
+  needed in Ruby.
+
 ## [0.1.0] — 2026-04-24
 
 ### Added

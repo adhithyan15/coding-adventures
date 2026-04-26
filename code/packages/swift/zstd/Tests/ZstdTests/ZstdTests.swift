@@ -335,4 +335,30 @@ final class ZstdTests: XCTestCase {
                 "using Finite State Entropy coding and LZ77 back-references."
         try rt(Array(s.utf8))
     }
+
+    // =========================================================================
+    // Regression: seq_count endianness bug
+    // =========================================================================
+    //
+    // The 2-byte seq_count form must place the format-flag byte (bit 7 set)
+    // FIRST. An earlier broken pattern in TS+Go wrote
+    // `[count & 0xFF, (count >> 8) | 0x80]` — low byte first. For any count ≥
+    // 128 whose low byte happened to be < 128 (e.g. 515 = 0x0203 → byte0 =
+    // 0x03), the decoder mis-took the 1-byte path and silently returned a
+    // tiny garbage count, mis-aligning every byte downstream.
+    //
+    // 200 KB of long-period repetitive text reliably yields ≥ 128 sequences
+    // in a single block (LZSS finds ~one match per pattern repetition). This
+    // round-trip mirrors the TS/Go regression added in PR #1448.
+
+    func testSeqCountEndiannessRegression() throws {
+        let pattern = "hello world and more text for compression testing!\n"
+        var data = [UInt8]()
+        data.reserveCapacity(pattern.utf8.count * 4000)
+        let bytes = Array(pattern.utf8)
+        for _ in 0..<4000 {
+            data.append(contentsOf: bytes)
+        }
+        try rt(data)
+    }
 }

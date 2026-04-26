@@ -3,6 +3,23 @@
 All notable changes to this package will be documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.1.1] — 2026-04-26
+
+### Fixed
+
+- **`encodeSeqCount` / `decodeSeqCount` now use RFC 8878 §3.1.1.3.1 layout.**
+  The 2-byte form previously wrote bytes in the wrong order
+  (`[count & 0xFF, (count >> 8) | 0x80]`), placing the LOW byte first. The
+  decoder reads byte0 to determine the form: for any count ≥ 128 whose low
+  byte was < 128 (e.g. count=515 → byte0=0x03), the decoder mis-took the
+  1-byte path and returned a tiny garbage count, mis-aligning every byte
+  downstream — including the symbol-modes byte, which then often parsed
+  with `LL_Mode != 0` and threw "unsupported FSE modes". Roughly half of all
+  counts in the 2-byte range silently corrupted; the other half worked, so
+  most existing tests passed.
+- New regression test in TC-8 round-trips 200 KB of repetitive text, which
+  reliably produces > 128 sequences in a single block.
+
 ## [0.1.0] — 2026-04-24
 
 ### Added

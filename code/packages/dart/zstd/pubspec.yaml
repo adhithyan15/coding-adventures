@@ -1,7 +1,7 @@
 name: coding_adventures_zstd
 description: >
   ZStd (RFC 8878) lossless compression algorithm from scratch — CMP07.
-version: 0.1.0
+version: 0.1.1
 repository: https://github.com/adhithyan15/coding-adventures
 publish_to: none
 
