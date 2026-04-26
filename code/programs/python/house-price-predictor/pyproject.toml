@@ -5,9 +5,11 @@ description = "Multi-Variable Linear Regression for Real Estate"
 requires-python = ">=3.9"
 dependencies = [
     "coding-adventures-loss-functions",
-    "coding-adventures-matrix"
+    "coding-adventures-matrix",
+    "coding-adventures-feature-normalization"
 ]
 
 [tool.uv.sources]
 coding-adventures-loss-functions = { path = "../../../packages/python/loss-functions" }
 coding-adventures-matrix = { path = "../../../packages/python/matrix" }
+coding-adventures-feature-normalization = { path = "../../../packages/python/feature-normalization" }

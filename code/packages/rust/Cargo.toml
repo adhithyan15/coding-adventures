@@ -377,5 +377,6 @@ members = [
     "web-core",
     "generic-job-protocol",
     "generic-job-runtime",
-  "rng",
+    "rng",
+    "feature-normalization",
 ]

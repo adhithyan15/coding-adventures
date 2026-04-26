@@ -5,6 +5,7 @@
     "start": "npx ts-node --transpileOnly src/index.ts"
   },
   "dependencies": {
+    "coding-adventures-feature-normalization": "file:../../../packages/typescript/feature-normalization",
     "loss-functions": "file:../../../packages/typescript/loss-functions",
     "matrix": "file:../../../packages/typescript/matrix"
   },
