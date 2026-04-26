@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/feat+zstd-and-catchups/code/packages/swift/zstd/.build/arm64-apple-macosx/debug/zstdPackageTests.build/primary.swiftdeps"
+  },
+  "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/feat+zstd-and-catchups/code/packages/swift/zstd/.build/arm64-apple-macosx/debug/zstdPackageTests.derived/runner.swift": {
+    "dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/feat+zstd-and-catchups/code/packages/swift/zstd/.build/arm64-apple-macosx/debug/zstdPackageTests.build/runner.d",
+    "object": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/feat+zstd-and-catchups/code/packages/swift/zstd/.build/arm64-apple-macosx/debug/zstdPackageTests.build/runner.swift.o",
+    "swiftmodule": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/feat+zstd-and-catchups/code/packages/swift/zstd/.build/arm64-apple-macosx/debug/zstdPackageTests.build/runner~partial.swiftmodule",
+    "swift-dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/feat+zstd-and-catchups/code/packages/swift/zstd/.build/arm64-apple-macosx/debug/zstdPackageTests.build/runner.swiftdeps",
+    "diagnostics": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/feat+zstd-and-catchups/code/packages/swift/zstd/.build/arm64-apple-macosx/debug/zstdPackageTests.build/runner.dia"
+  }
+}
