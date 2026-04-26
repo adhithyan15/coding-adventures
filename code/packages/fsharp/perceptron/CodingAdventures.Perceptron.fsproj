@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>CodingAdventures.Perceptron.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>Binary perceptron classifier trained with sigmoid and binary cross-entropy</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../activation-functions/CodingAdventures.ActivationFunctions.fsproj" />
+    <ProjectReference Include="../loss-functions/CodingAdventures.LossFunctions.fsproj" />
+    <Compile Include="Perceptron.fs" />
+  </ItemGroup>
+</Project>
