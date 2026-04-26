@@ -6,3 +6,4 @@ edition = "2021"
 [dependencies]
 matrix = { path = "../../../packages/rust/matrix" }
 loss-functions = { path = "../../../packages/rust/loss-functions" }
+feature-normalization = { path = "../../../packages/rust/feature-normalization" }
