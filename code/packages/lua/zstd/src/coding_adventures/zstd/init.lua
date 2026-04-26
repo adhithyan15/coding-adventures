@@ -820,13 +820,21 @@ end
 --   0x7FFF+:      3 bytes, byte 0 = 0xFF, next 2 bytes LE = count - 0x7F00
 
 local function encode_seq_count(count)
+    -- RFC 8878 §3.1.1.3.1 layout:
+    --   byte0 < 128: 1-byte form, count = byte0
+    --   byte0 in [128, 254]: 2-byte form, count = ((byte0 - 128) << 8) | byte1
+    --   byte0 == 255: 3-byte form, count = byte1 + (byte2 << 8) + 0x7F00
+    -- NOTE: byte0 must be the FORMAT MARKER. The previous implementation wrote
+    -- the low byte first (`{count & 0xFF, (count >> 8) | 0x80}`) — for any
+    -- count ≥ 128 whose low byte happens to be < 128 (e.g. 515 → low=0x03),
+    -- the decoder would read byte0 < 128 and take the 1-byte path,
+    -- mis-decoding the count and corrupting all downstream parsing.
     if count == 0 then
         return {0}
     elseif count < 128 then
         return {count}
     elseif count < 0x7FFF then
-        local v = count | 0x8000
-        return {v & 0xFF, (v >> 8) & 0xFF}
+        return {0x80 | (count >> 8), count & 0xFF}
     else
         local r = count - 0x7F00
         return {0xFF, r & 0xFF, (r >> 8) & 0xFF}
@@ -841,8 +849,8 @@ local function decode_seq_count(data, start)
         return b0, 1
     elseif b0 < 0xFF then
         if start + 1 > #data then error("zstd: truncated sequence count (2-byte)") end
-        local v     = b0 | (data[start + 1] << 8)
-        local count = v & 0x7FFF
+        -- (byte0 - 128) << 8 | byte1 — equivalent to ((b0 & 0x7F) << 8) | b1.
+        local count = ((b0 & 0x7F) << 8) | data[start + 1]
         return count, 2
     else
         if start + 2 > #data then error("zstd: truncated sequence count (3-byte)") end
