@@ -600,6 +600,8 @@ func fseEncodeSym(state *uint32, sym uint8, ee []fseEe, st []uint16, bw *revBitW
 	slotI := int32(*state>>nb) + e.deltaFs
 	if slotI < 0 {
 		slotI = 0
+	} else if int(slotI) >= len(st) {
+		slotI = int32(len(st) - 1)
 	}
 	slot := int(slotI)
 	*state = uint32(st[slot])
@@ -1077,6 +1079,9 @@ func decompressBlock(data []byte, out *[]byte) error {
 				ll, litPos, len(litBytes),
 			)
 		}
+		if len(*out)+int(ll) > maxOutput {
+			return fmt.Errorf("decompressed size exceeds limit of %d bytes", maxOutput)
+		}
 		*out = append(*out, litBytes[litPos:litEnd]...)
 		litPos = litEnd
 
@@ -1086,6 +1091,9 @@ func decompressBlock(data []byte, out *[]byte) error {
 		if offset == 0 || int(offset) > len(*out) {
 			return fmt.Errorf("bad match offset %d (output len %d)", offset, len(*out))
 		}
+		if len(*out)+int(ml) > maxOutput {
+			return fmt.Errorf("decompressed size exceeds limit of %d bytes", maxOutput)
+		}
 		copyStart := len(*out) - int(offset)
 		for j := 0; j < int(ml); j++ {
 			*out = append(*out, (*out)[copyStart+j])
@@ -1093,6 +1101,9 @@ func decompressBlock(data []byte, out *[]byte) error {
 	}
 
 	// Any remaining literals after the last sequence.
+	if len(*out)+len(litBytes[litPos:]) > maxOutput {
+		return fmt.Errorf("decompressed size exceeds limit of %d bytes", maxOutput)
+	}
 	*out = append(*out, litBytes[litPos:]...)
 	return nil
 }
@@ -1259,6 +1270,9 @@ func Decompress(data []byte) ([]byte, error) {
 	// ── Dict ID ──────────────────────────────────────────────────────────
 	dictIDBytes := [4]int{0, 1, 2, 4}
 	pos += dictIDBytes[dictFlag] // skip dict ID (we don't support custom dicts)
+	if pos > len(data) {
+		return nil, fmt.Errorf("zstd: frame header truncated (dict ID field)")
+	}
 
 	// ── Frame Content Size ───────────────────────────────────────────────
 	// We read but don't validate FCS (we trust the blocks to be correct).
@@ -1278,6 +1292,9 @@ func Decompress(data []byte) ([]byte, error) {
 		fcsBytes = 8
 	}
 	pos += fcsBytes // skip FCS
+	if pos > len(data) {
+		return nil, fmt.Errorf("zstd: frame header truncated (FCS field)")
+	}
 
 	// ── Blocks ───────────────────────────────────────────────────────────
 	// Guard against decompression bombs: cap total output at maxOutput (256 MB).

@@ -527,7 +527,7 @@ class _RevBitReader {
       // left shift could produce negative numbers via sign overflow. However,
       // since _bits >= 0 and we only enter this loop when _bits <= 56, the
       // shift is at least 0 and at most 64-0-8 = 56. Safe.
-      _reg |= _data[_pos] << shift;
+      _reg |= (_data[_pos] & 0xFF) << shift;
       _bits += 8;
     }
   }
@@ -1059,6 +1059,9 @@ void _decompressBlock(Uint8List data, List<int> out) {
         '(pos=$litPos, len=${lits.length})',
       );
     }
+    if (out.length + ll > _maxOutput) {
+      throw ArgumentError('decompressed size exceeds limit of $_maxOutput bytes');
+    }
     out.addAll(lits.sublist(litPos, litEnd));
     litPos = litEnd;
 
@@ -1069,6 +1072,9 @@ void _decompressBlock(Uint8List data, List<int> out) {
         'bad match offset $offset (output length ${out.length})',
       );
     }
+    if (out.length + ml > _maxOutput) {
+      throw ArgumentError('decompressed size exceeds limit of $_maxOutput bytes');
+    }
     final copyStart = out.length - offset;
     // Copy byte-by-byte to handle overlapping back-references correctly.
     // (The source may overlap the destination if ml > offset.)
@@ -1078,6 +1084,9 @@ void _decompressBlock(Uint8List data, List<int> out) {
   }
 
   // Append any trailing literals after the last sequence.
+  if (out.length + lits.length - litPos > _maxOutput) {
+    throw ArgumentError('decompressed size exceeds limit of $_maxOutput bytes');
+  }
   out.addAll(lits.sublist(litPos));
 }
 
@@ -1243,6 +1252,9 @@ Uint8List decompress(Uint8List data) {
   // Skip the dict ID bytes. We do not support custom dictionaries.
   const dictIdBytes = [0, 1, 2, 4];
   pos += dictIdBytes[dictFlag];
+  if (pos > data.length) {
+    throw ArgumentError('zstd: frame header truncated (dict ID field)');
+  }
 
   // ── Frame Content Size ───────────────────────────────────────────────────────
   // Read but do not validate; we trust the block data to be consistent.
@@ -1260,6 +1272,9 @@ Uint8List decompress(Uint8List data) {
       fcsBytes = 0;
   }
   pos += fcsBytes; // skip FCS
+  if (pos > data.length) {
+    throw ArgumentError('zstd: frame header truncated (FCS field)');
+  }
 
   // ── Blocks ──────────────────────────────────────────────────────────────────
   final out = <int>[];

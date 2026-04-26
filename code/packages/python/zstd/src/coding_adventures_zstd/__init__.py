@@ -587,7 +587,7 @@ class _RevBitReader:
         # Use the mask to stay within 64 bits (Python integers don't overflow,
         # but we must truncate to maintain the 64-bit register model).
         self.reg = (self.reg << nb) & 0xFFFF_FFFF_FFFF_FFFF
-        self.bits -= nb
+        self.bits = max(0, self.bits - nb)
         if self.bits < 24:
             self._reload()
         return val
@@ -1203,6 +1203,8 @@ def _decompress_block(data: bytes, out: bytearray) -> None:
                 f"literal run {ll} overflows literals buffer "
                 f"(pos={lit_pos} len={len(lits)})"
             )
+        if len(out) + ll > MAX_OUTPUT:
+            raise ValueError(f"decompressed size exceeds limit of {MAX_OUTPUT} bytes")
         out.extend(lits[lit_pos:lit_end])
         lit_pos = lit_end
 
@@ -1213,11 +1215,15 @@ def _decompress_block(data: bytes, out: bytearray) -> None:
             raise ValueError(
                 f"bad match offset {offset} (output len {len(out)})"
             )
+        if len(out) + ml > MAX_OUTPUT:
+            raise ValueError(f"decompressed size exceeds limit of {MAX_OUTPUT} bytes")
         copy_start = len(out) - offset
         for i in range(ml):
             out.append(out[copy_start + i])
 
     # ── Emit remaining literals after the last sequence ───────────────────────
+    if len(out) + len(lits) - lit_pos > MAX_OUTPUT:
+        raise ValueError(f"decompressed size exceeds limit of {MAX_OUTPUT} bytes")
     out.extend(lits[lit_pos:])
 
 
@@ -1381,6 +1387,8 @@ def decompress(data: bytes) -> bytes:
     # dict_flag maps to 0, 1, 2, or 4 bytes of dictionary ID.
     dict_id_bytes = [0, 1, 2, 4][dict_flag]
     pos += dict_id_bytes
+    if pos > len(data):
+        raise ValueError("zstd: frame header truncated (dict ID field)")
 
     # ── Skip Frame Content Size ───────────────────────────────────────────────
     # We read FCS but don't validate against actual output (the blocks are
@@ -1394,6 +1402,8 @@ def decompress(data: bytes) -> bytes:
     else:
         fcs_bytes = 8
     pos += fcs_bytes
+    if pos > len(data):
+        raise ValueError("zstd: frame header truncated (FCS field)")
 
     # ── Decode Blocks ─────────────────────────────────────────────────────────
     out = bytearray()

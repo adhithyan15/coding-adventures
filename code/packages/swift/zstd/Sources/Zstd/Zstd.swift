@@ -449,9 +449,15 @@ private final class RevBitWriter {
     ///
     /// The sentinel is a `1` bit placed just ABOVE all remaining data bits.
     /// The decoder locates it via `leadingZeroBitCount` on the last byte.
+    ///
+    /// Precondition: `bits` must be in [0, 7] — if 8 or more bits remain the
+    /// drain loop in `addBits` should have flushed them already.  Violating
+    /// this invariant means the sentinel would be placed at bit 8 or higher,
+    /// which does not fit in a UInt8 and would silently truncate.
     func flush() {
-        let sentinel: UInt8 = 1 << bits   // 1 at position `bits` (just above data)
-        buf.append(UInt8(reg & 0xFF) | sentinel)
+        precondition(bits < 8, "RevBitWriter.flush() called with \(bits) pending bits — drain invariant violated")
+        let sentinel: UInt8 = 1 << UInt8(bits)  // 1 at position `bits` (just above data)
+        buf.append((UInt8(reg & 0xFF)) | sentinel)
         reg = 0
         bits = 0
     }
@@ -1015,6 +1021,9 @@ private func decompressBlock(_ data: [UInt8], out: inout [UInt8]) throws {
             throw ZstdError.decodingError(
                 "literal run \(ll) overflows literals buffer (pos=\(litPos) len=\(lits.count))")
         }
+        guard out.count + Int(ll) <= maxOutput else {
+            throw ZstdError.decompressionBomb("decompressed size exceeds limit of \(maxOutput) bytes")
+        }
         out.append(contentsOf: lits[litPos..<litEnd])
         litPos = litEnd
 
@@ -1023,6 +1032,9 @@ private func decompressBlock(_ data: [UInt8], out: inout [UInt8]) throws {
         guard offset > 0, Int(offset) <= out.count else {
             throw ZstdError.invalidOffset(offset, out.count)
         }
+        guard out.count + Int(ml) <= maxOutput else {
+            throw ZstdError.decompressionBomb("decompressed size exceeds limit of \(maxOutput) bytes")
+        }
         let copyStart = out.count - Int(offset)
         for i in 0..<Int(ml) {
             out.append(out[copyStart + i])
@@ -1030,6 +1042,9 @@ private func decompressBlock(_ data: [UInt8], out: inout [UInt8]) throws {
     }
 
     // Append any remaining literals after the last sequence.
+    guard out.count + lits[litPos...].count <= maxOutput else {
+        throw ZstdError.decompressionBomb("decompressed size exceeds limit of \(maxOutput) bytes")
+    }
     out.append(contentsOf: lits[litPos...])
 }
 
@@ -1059,6 +1074,11 @@ public enum ZstdError: Error {
     case invalidOffset(UInt32, Int)
     /// A generic decoding error with a human-readable message.
     case decodingError(String)
+    /// The decompressed output would exceed the per-block or per-frame size cap.
+    /// Separate from `outputLimitExceeded` to carry a descriptive message.
+    case decompressionBomb(String)
+    /// The frame header was truncated while reading a variable-length field.
+    case truncatedFrame(String)
 }
 
 /// Compress `data` to a ZStd frame (RFC 8878).
@@ -1204,6 +1224,9 @@ public func decompress(_ data: [UInt8]) throws -> [UInt8] {
     // ── Dict ID ───────────────────────────────────────────────────────────
     let dictIdBytes = [0, 1, 2, 4][Int(dictFlag)]
     pos += dictIdBytes  // skip dict ID (custom dicts not supported)
+    guard pos <= data.count else {
+        throw ZstdError.truncatedFrame("frame header truncated (dict ID field)")
+    }
 
     // ── Frame Content Size ────────────────────────────────────────────────
     let fcsBytes: Int = {
@@ -1215,6 +1238,9 @@ public func decompress(_ data: [UInt8]) throws -> [UInt8] {
         }
     }()
     pos += fcsBytes  // skip FCS (we trust the blocks to be correct)
+    guard pos <= data.count else {
+        throw ZstdError.truncatedFrame("frame header truncated (FCS field)")
+    }
 
     // ── Blocks ────────────────────────────────────────────────────────────
     var out: [UInt8] = []

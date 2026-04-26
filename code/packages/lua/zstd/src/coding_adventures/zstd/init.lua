@@ -1103,6 +1103,13 @@ local function decompress_block(data, start, bsize, out)
         if ml_code >= #ML_CODES then
             error("zstd: invalid ML code " .. ml_code)
         end
+        -- of_code drives both br:read_bits(of_code) and a left-shift of 1.
+        -- Values above 28 would shift by ≥ 29 bits, which can overflow Lua's
+        -- 64-bit integers and produce a garbage offset. RFC 8878 Table 9 only
+        -- defines of_codes 0..28 in the predefined table.
+        if of_code > 28 then
+            error("zstd: of_code out of range: " .. of_code)
+        end
 
         local ll_info = LL_CODES[ll_code + 1]  -- 1-indexed
         local ml_info = ML_CODES[ml_code + 1]
@@ -1125,6 +1132,11 @@ local function decompress_block(data, start, bsize, out)
             error(string.format(
                 "zstd: literal run %d overflows literals buffer (pos=%d, len=%d)",
                 ll, lit_pos, #lits))
+        end
+        -- Guard before expanding the literal run: a crafted sequence could use a
+        -- huge ll value to inflate output beyond MAX_OUTPUT.
+        if #out + ll > MAX_OUTPUT then
+            error("zstd: decompressed size exceeds limit of " .. MAX_OUTPUT .. " bytes")
         end
         for i = lit_pos, lit_end do
             out[#out + 1] = lits[i]
@@ -1149,7 +1161,12 @@ local function decompress_block(data, start, bsize, out)
     end
 
     -- Step 5: Emit any remaining literals after the last sequence.
+    -- Guard against decompression bombs: a crafted block could have a huge
+    -- trailing-literals section. Check per byte to catch the limit exactly.
     for i = lit_pos, #lits do
+        if #out >= MAX_OUTPUT then
+            error("zstd: decompressed size exceeds limit of " .. MAX_OUTPUT .. " bytes")
+        end
         out[#out + 1] = lits[i]
     end
 end

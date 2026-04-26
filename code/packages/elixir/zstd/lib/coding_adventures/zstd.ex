@@ -493,7 +493,11 @@ defmodule CodingAdventures.Zstd do
         mask = if valid_bits == 0, do: 0, else: (1 <<< valid_bits) - 1
         reg = if valid_bits == 0, do: 0, else: (last &&& mask) <<< (64 - valid_bits)
 
-        state = %{data: bytes, reg: reg, bits: valid_bits, pos: n - 1}
+        # Store data as a binary so rbr_reload can use :binary.at/2 (O(1)) instead
+        # of Enum.at/2 (O(n)). Without this, decoding large blocks that reload
+        # many bytes would be O(n²) in the number of bytes in the bitstream.
+        data_bin = :erlang.list_to_binary(bytes)
+        state = %{data: data_bin, reg: reg, bits: valid_bits, pos: n - 1}
         {:ok, rbr_reload(state)}
     end
   end
@@ -503,7 +507,9 @@ defmodule CodingAdventures.Zstd do
   # In the left-aligned register, "just below" means at position 64 - bits - 8.
   defp rbr_reload(%{bits: bits, pos: pos} = state) when bits <= 56 and pos > 0 do
     new_pos = pos - 1
-    byte = Enum.at(state.data, new_pos)
+    # :binary.at/2 is O(1) (constant-time indexed access into a binary).
+    # The previous Enum.at/2 was O(n) on a list, making reload O(n²) overall.
+    byte = :binary.at(state.data, new_pos)
     shift = 64 - bits - 8
     new_reg = state.reg ||| (byte <<< shift)
     rbr_reload(%{state | reg: new_reg, bits: bits + 8, pos: new_pos})
@@ -1279,12 +1285,16 @@ defmodule CodingAdventures.Zstd do
           if pos >= byte_size(data) do
             {:error, "RLE block missing byte"}
           else
-            byte_val = :binary.at(data, pos)
-            rle_chunk = :binary.copy(<<byte_val>>, bsize)
-            new_acc = acc <> rle_chunk
-            if byte_size(new_acc) > @max_output do
-              {:error, "decompressed size exceeds limit of #{@max_output} bytes"}
+            # Guard BEFORE :binary.copy to prevent allocating gigabytes from a
+            # crafted RLE block (decompression bomb). Without this check,
+            # :binary.copy(<<byte>>, 2^30) would silently allocate 1 GB of RAM
+            # before we ever check the output size.
+            if byte_size(acc) + bsize > @max_output do
+              {:error, "zstd: decompressed size exceeds limit of #{@max_output} bytes"}
             else
+              byte_val = :binary.at(data, pos)
+              rle_chunk = :binary.copy(<<byte_val>>, bsize)
+              new_acc = acc <> rle_chunk
               if is_last, do: {:ok, new_acc},
                           else: decompress_blocks(data, pos + 1, new_acc)
             end

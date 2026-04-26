@@ -978,6 +978,10 @@ sub _decompress_block {
             if $ll_code >= scalar @LL_CODES;
         die "decompress_block: invalid ML code $ml_code\n"
             if $ml_code >= scalar @ML_CODES;
+        # of_code drives a left-shift (`1 << $of_code`) and a read_bits($of_code)
+        # call. Values above 28 are outside the RFC 8878 predefined table range
+        # and would cause a gigantic bit-read or integer overflow.
+        die "zstd: of_code out of range ($of_code)\n" if $of_code > 28;
 
         # Read extra bits for each field.
         my $ll = $LL_CODES[$ll_code][0] + $br->read_bits($LL_CODES[$ll_code][1]);
@@ -993,12 +997,20 @@ sub _decompress_block {
         my $lit_end = $lit_pos + $ll;
         die "decompress_block: literal run overflows buffer\n"
             if $lit_end > scalar @$lits_ref;
+        # Decompression bomb guard: a huge $ll in a crafted stream could
+        # silently grow @$out_ref past the MAX_OUTPUT limit.
+        die "zstd: decompressed size exceeds limit\n"
+            if scalar(@$out_ref) + $ll > MAX_OUTPUT;
         push @$out_ref, @{$lits_ref}[$lit_pos .. $lit_end - 1];
         $lit_pos = $lit_end;
 
         # Copy $ml bytes from $offset positions back in the output buffer.
         die "decompress_block: bad match offset $offset (output len " . scalar(@$out_ref) . ")\n"
             if $offset == 0 || $offset > scalar @$out_ref;
+        # Decompression bomb guard for the match-copy: a crafted large $ml
+        # (e.g., offset=1, ml=256MB) would silently expand one byte to 256 MB.
+        die "zstd: decompressed size exceeds limit\n"
+            if scalar(@$out_ref) + $ml > MAX_OUTPUT;
         my $copy_start = scalar(@$out_ref) - $offset;
         for my $i (0 .. $ml - 1) {
             push @$out_ref, $out_ref->[$copy_start + $i];
@@ -1006,7 +1018,11 @@ sub _decompress_block {
     }
 
     # Any remaining literals after the last sequence.
-    push @$out_ref, @{$lits_ref}[$lit_pos .. $#$lits_ref];
+    my @trailing_lits = @{$lits_ref}[$lit_pos .. $#$lits_ref];
+    # Decompression bomb guard for trailing literals.
+    die "zstd: decompressed size exceeds limit\n"
+        if scalar(@$out_ref) + scalar(@trailing_lits) > MAX_OUTPUT;
+    push @$out_ref, @trailing_lits;
 }
 
 # ============================================================================
@@ -1128,6 +1144,11 @@ reserved block types).
 
 sub decompress {
     my ($data) = @_;
+    # Reject undef and references (arrayrefs, hashrefs, etc.) early.
+    # unpack('C*', undef) silently treats undef as "", and unpack on a reference
+    # stringifies it (e.g., "ARRAY(0x...)"), both of which produce confusing
+    # "bad magic" errors rather than a clear type-mismatch message.
+    die "zstd: data must be a defined string\n" unless defined $data && !ref $data;
     my @bytes = unpack('C*', $data);
 
     die "zstd: frame too short\n" if @bytes < 5;

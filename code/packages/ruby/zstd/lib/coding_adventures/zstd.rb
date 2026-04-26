@@ -882,6 +882,13 @@ module CodingAdventures
       state_ml = br.read_bits(ML_ACC_LOG)
       state_of = br.read_bits(OF_ACC_LOG)
 
+      # Validate that each initial state is a legal index into its decode table.
+      # An out-of-bounds state would cause a silent array read at an arbitrary
+      # position, producing wrong output or an exception far from the cause.
+      raise "invalid initial state_ll #{state_ll}" if state_ll >= dt_ll.size
+      raise "invalid initial state_ml #{state_ml}" if state_ml >= dt_ml.size
+      raise "invalid initial state_of #{state_of}" if state_of >= dt_of.size
+
       lit_pos = 0
 
       n_seqs.times do
@@ -908,17 +915,20 @@ module CodingAdventures
         # Emit ll literal bytes from the literals buffer.
         lit_end = lit_pos + ll
         raise "literal run #{ll} overflows literals buffer (pos=#{lit_pos} len=#{lits.size})" if lit_end > lits.size
+        raise "decompressed size exceeds limit of #{MAX_OUTPUT} bytes" if out.length + ll > MAX_OUTPUT
         out.concat(lits[lit_pos...lit_end])
         lit_pos = lit_end
 
         # Copy ml bytes from offset positions back in the output.
         # offset = 1 means "last byte written".
         raise "bad match offset #{offset} (output len #{out.size})" if offset < 1 || offset > out.size
+        raise "decompressed size exceeds limit of #{MAX_OUTPUT} bytes" if out.length + ml > MAX_OUTPUT
         copy_start = out.size - offset
         ml.times { |i| out << out[copy_start + i] }
       end
 
       # Remaining literals after the last sequence.
+      raise "decompressed size exceeds limit of #{MAX_OUTPUT} bytes" if out.length + (lits.length - lit_pos) > MAX_OUTPUT
       out.concat(lits[lit_pos..])
     end
 
