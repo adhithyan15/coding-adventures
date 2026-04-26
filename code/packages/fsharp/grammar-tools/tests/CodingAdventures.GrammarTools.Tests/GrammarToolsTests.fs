@@ -48,6 +48,19 @@ module GrammarToolsTests =
         Assert.True(grammar.Groups.ContainsKey("punctuation"))
 
     [<Fact>]
+    let ``token grammar parser allows arrow literal`` () =
+        let grammar =
+            TokenGrammarParser.Parse "escapes: none\ncase_sensitive: false\nskip:\n  WS = /[ \t]+/\nTRIGGER = \"->\"\nNAME = /[a-z]+/ -> IDENT"
+
+        Assert.Equal("none", grammar.EscapeMode)
+        Assert.False(grammar.CaseSensitive)
+        Assert.True(grammar.CaseInsensitive)
+        Assert.Single(grammar.SkipDefinitions) |> ignore
+        Assert.Equal("->", grammar.Definitions[0].Pattern)
+        Assert.Null(grammar.Definitions[0].Alias)
+        Assert.Equal("IDENT", grammar.Definitions[1].Alias)
+
+    [<Fact>]
     let ``token grammar parser rejects malformed definitions`` () =
         let error =
             Assert.Throws<TokenGrammarError>(fun () ->
