@@ -1069,6 +1069,13 @@ function decompressBlock(data: Uint8Array, out: number[]): void {
         `literal run ${ll} overflows literals buffer (pos=${litPos} len=${lits.length})`
       );
     }
+    // Decompression bomb guard: a crafted block can declare nSeqs ≈ 196 K
+    // and ll ≤ 131 K per sequence — without this check, a few-KB compressed
+    // block could push gigabytes of output before the outer raw/RLE caps in
+    // `decompress` ever fire (those caps don't see inside compressed blocks).
+    if (out.length + ll > MAX_OUTPUT) {
+      throw new Error(`decompressed size exceeds limit of ${MAX_OUTPUT} bytes`);
+    }
     for (let j = litPos; j < litEnd; j++) out.push(lits[j]!);
     litPos = litEnd;
 
@@ -1077,6 +1084,12 @@ function decompressBlock(data: Uint8Array, out: number[]): void {
     if (offset === 0 || offset > out.length) {
       throw new Error(`bad match offset ${offset} (output len ${out.length})`);
     }
+    // Decompression bomb guard: ml ≤ 131 K per sequence; with offset=1 this
+    // would silently inflate one byte to 131 K bytes. Multiplied by the
+    // sequence count this dwarfs MAX_OUTPUT.
+    if (out.length + ml > MAX_OUTPUT) {
+      throw new Error(`decompressed size exceeds limit of ${MAX_OUTPUT} bytes`);
+    }
     const copyStart = out.length - offset;
     for (let j = 0; j < ml; j++) {
       out.push(out[copyStart + j]!);
@@ -1084,6 +1097,9 @@ function decompressBlock(data: Uint8Array, out: number[]): void {
   }
 
   // Append any remaining literals after the last sequence.
+  if (out.length + (lits.length - litPos) > MAX_OUTPUT) {
+    throw new Error(`decompressed size exceeds limit of ${MAX_OUTPUT} bytes`);
+  }
   for (let j = litPos; j < lits.length; j++) out.push(lits[j]!);
 }
 
@@ -1224,6 +1240,9 @@ export function decompress(data: Uint8Array): Uint8Array {
   // ── Dict ID ──────────────────────────────────────────────────────────
   const dictIdBytes = [0, 1, 2, 4][dictFlag]!;
   pos += dictIdBytes; // skip dict ID (custom dicts not supported)
+  if (pos > data.length) {
+    throw new Error("zstd: frame header truncated (dict ID field)");
+  }
 
   // ── Frame Content Size ───────────────────────────────────────────────
   let fcsBytes: number;
@@ -1237,6 +1256,9 @@ export function decompress(data: Uint8Array): Uint8Array {
     fcsBytes = 8;
   }
   pos += fcsBytes; // skip FCS (we trust the blocks)
+  if (pos > data.length) {
+    throw new Error("zstd: frame header truncated (FCS field)");
+  }
 
   // ── Blocks ───────────────────────────────────────────────────────────
   const out: number[] = [];

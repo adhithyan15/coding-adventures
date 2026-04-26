@@ -961,7 +961,13 @@ defmodule CodingAdventures.Zstd do
     # Append any remaining trailing literals.
     n_lits = byte_size(lits_bin)
     if lit_pos < n_lits do
-      {:ok, out <> binary_part(lits_bin, lit_pos, n_lits - lit_pos)}
+      trailing_len = n_lits - lit_pos
+      # Decompression bomb guard for the trailing-literals tail.
+      if byte_size(out) + trailing_len > @max_output do
+        {:error, "zstd: decompressed size exceeds limit of #{@max_output} bytes"}
+      else
+        {:ok, out <> binary_part(lits_bin, lit_pos, trailing_len)}
+      end
     else
       {:ok, out}
     end
@@ -998,22 +1004,37 @@ defmodule CodingAdventures.Zstd do
         if lit_end > n_lits do
           {:error, "literal run #{ll} overflows literals buffer (pos=#{lit_pos} len=#{n_lits})"}
         else
-          lit_chunk = if ll > 0, do: binary_part(lits_bin, lit_pos, ll), else: <<>>
-          out2 = out <> lit_chunk
-
-          # Copy `ml` bytes from `offset` back in the output buffer.
-          # `offset` is 1-indexed (1 = last byte written), so the copy starts at
-          # byte_size(out2) - offset. The copy may overlap (e.g., offset=1, ml=10
-          # expands one byte into 10 identical bytes — run-length expansion).
-          out_len = byte_size(out2)
-          if offset == 0 or offset > out_len do
-            {:error, "bad match offset #{offset} (output len #{out_len})"}
+          # Decompression bomb guard BEFORE the literal append. n_seqs can be ~196 K
+          # and ll up to ~131 K per sequence; without this check a few-KB compressed
+          # block could push gigabytes of output before the outer cap fires (the cap
+          # in `decompress_blocks` only sees per-block totals, not intra-block growth).
+          if byte_size(out) + ll > @max_output do
+            {:error, "zstd: decompressed size exceeds limit of #{@max_output} bytes"}
           else
-            copy_start = out_len - offset
-            copy_chunk = copy_with_overlap(out2, copy_start, offset, ml)
-            out3 = out2 <> copy_chunk
+            lit_chunk = if ll > 0, do: binary_part(lits_bin, lit_pos, ll), else: <<>>
+            out2 = out <> lit_chunk
 
-            apply_sequences(remaining - 1, lits_bin, lit_end, out3, new_s_ll, new_s_ml, new_s_of, br, dt_ll, dt_ml, dt_of)
+            # Copy `ml` bytes from `offset` back in the output buffer.
+            # `offset` is 1-indexed (1 = last byte written), so the copy starts at
+            # byte_size(out2) - offset. The copy may overlap (e.g., offset=1, ml=10
+            # expands one byte into 10 identical bytes — run-length expansion).
+            out_len = byte_size(out2)
+            if offset == 0 or offset > out_len do
+              {:error, "bad match offset #{offset} (output len #{out_len})"}
+            else
+              # Bomb guard for the match copy too. With offset=1 and ml=131 074 a
+              # single byte expands 131 K-fold; this MUST be checked before
+              # `do_copy_overlap` walks the list.
+              if out_len + ml > @max_output do
+                {:error, "zstd: decompressed size exceeds limit of #{@max_output} bytes"}
+              else
+                copy_start = out_len - offset
+                copy_chunk = copy_with_overlap(out2, copy_start, offset, ml)
+                out3 = out2 <> copy_chunk
+
+                apply_sequences(remaining - 1, lits_bin, lit_end, out3, new_s_ll, new_s_ml, new_s_of, br, dt_ll, dt_ml, dt_of)
+              end
+            end
           end
         end
       end
@@ -1126,6 +1147,13 @@ defmodule CodingAdventures.Zstd do
     Enum.reverse(acc) |> List.flatten()
   end
 
+  # O(n) time, O(1) heap scan: returns true iff every byte in `bin` equals `b`.
+  # Replaces the prior `:binary.bin_to_list/1 |> Enum.all?` pattern, which
+  # allocated ~2 MB of cons cells per 128 KB block.
+  defp is_all_same(<<>>, _b), do: true
+  defp is_all_same(<<b, rest::binary>>, b), do: is_all_same(rest, b)
+  defp is_all_same(_bin, _b), do: false
+
   defp encode_blocks(data, offset, acc) do
     blk_end = min(offset + @max_block_size, byte_size(data))
     blk_size = blk_end - offset
@@ -1139,10 +1167,20 @@ defmodule CodingAdventures.Zstd do
 
   defp encode_one_block(block_bin, blk_size, last_bit) do
     # Try RLE first: if all bytes are identical, use a 4-byte RLE block.
-    block_list = :binary.bin_to_list(block_bin)
-    first_byte = hd(block_list)
+    #
+    # We avoid `:binary.bin_to_list/1` here — that would materialise the entire
+    # 128 KB block as a Lua-style list of integers (~2 MB of heap per block via
+    # cons-cell overhead) just to scan for "all bytes equal". For a multi-GB
+    # input under a compress-as-a-service deployment this becomes a memory
+    # amplification vector. `is_all_same/2` walks the binary in-place at O(n)
+    # time and O(1) heap.
+    {first_byte, all_same} =
+      case block_bin do
+        <<>> -> {nil, false}
+        <<f, _::binary>> -> {f, is_all_same(block_bin, f)}
+      end
 
-    if Enum.all?(block_list, fn b -> b == first_byte end) do
+    if all_same do
       # RLE block header: Type=01, Size=blk_size
       hdr = (blk_size <<< 3) ||| (0b01 <<< 1) ||| last_bit
       [hdr &&& 0xFF, (hdr >>> 8) &&& 0xFF, (hdr >>> 16) &&& 0xFF, first_byte]
@@ -1155,9 +1193,11 @@ defmodule CodingAdventures.Zstd do
           [hdr &&& 0xFF, (hdr >>> 8) &&& 0xFF, (hdr >>> 16) &&& 0xFF | compressed_bytes]
 
         :fallback ->
-          # Raw block fallback.
+          # Raw block fallback. We only materialise the byte list HERE — at the
+          # point we actually need to emit it — instead of pre-computing it for
+          # the RLE check.
           hdr = (blk_size <<< 3) ||| (0b00 <<< 1) ||| last_bit
-          [hdr &&& 0xFF, (hdr >>> 8) &&& 0xFF, (hdr >>> 16) &&& 0xFF | block_list]
+          [hdr &&& 0xFF, (hdr >>> 8) &&& 0xFF, (hdr >>> 16) &&& 0xFF | :binary.bin_to_list(block_bin)]
       end
     end
   end
