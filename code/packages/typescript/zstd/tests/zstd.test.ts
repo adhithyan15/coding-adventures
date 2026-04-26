@@ -194,12 +194,15 @@ describe("TC-8: large repetitive text", () => {
   // per single block to push past 128 (LZSS finds ~one match per pattern
   // repetition). This round-trip is the canonical regression: it must pass
   // for the same reason the analogous Lua TC-8 must pass.
+  //
+  // Timeout bumped to 30 s: the LZSS pass over 200 KB takes ~10 s on slower
+  // CI runners. Default 5 s timeout was too tight.
   it("round-trips 200 KB of repetitive text (>= 128 sequences per block)", () => {
     const pattern = "hello world and more text for compression testing!\n";
     const text = pattern.repeat(4000); // ~204 KB → first block has ~500 sequences
     const input = new TextEncoder().encode(text);
     expect(rt(input)).toEqual(input);
-  });
+  }, 30_000);
 });
 
 // ─── TC-9: Bad magic throws ───────────────────────────────────────────────────
