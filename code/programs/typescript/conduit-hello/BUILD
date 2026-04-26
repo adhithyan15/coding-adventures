@@ -5,9 +5,12 @@ set -e
 # Depends on the conduit package being built first.  The build tool handles
 # dependency ordering via the directed-graph affected_nodes() traversal.
 #
+# Tools (npm, npx, node) are expected on PATH (mise shims locally; CI installs
+# directly via actions/setup-node).
+#
 # Steps:
 #   1. Install npm dependencies (tsx + vitest devDeps)
 #   2. Run the test suite (imports conduit package src/ directly)
 
-mise exec -- npm ci --quiet
-mise exec -- npx vitest run
+npm ci --quiet
+npx vitest run

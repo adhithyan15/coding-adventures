@@ -3419,3 +3419,17 @@ This keeps the `LuaConduitApp` reachable from the Lua registry (which is always 
 **Fix:** In `extract_halt_or_error`, for non-halt JS exceptions, return a bare `WebResponse { status: 500, headers: vec![], body: msg.into_bytes() }` instead of `WebResponse::internal_error(&msg)`. This makes the sentinel check `headers.is_empty()` reliable. If no error handler is registered, the bare 500 with the error message body is returned to the client as-is.
 
 **Rule:** When using a `WebResponse` field value as a sentinel to distinguish "exception thrown, call error handler" from "handler returned a real 500 response", do NOT use the convenience constructors that add headers. Build the sentinel response manually with `headers: vec![]`.
+
+---
+
+## Lesson: Don't use `mise exec --` in BUILD files — CI Ubuntu doesn't have mise
+
+**Date:** 2026-04-26
+
+**What happened:** WEB05 PR #1426 build failed on `ubuntu-latest` with `sh: 1: mise: not found` for both `typescript/conduit` and `typescript/programs/conduit-hello`.
+
+**Root cause:** The BUILD files prefixed every command with `mise exec --` (e.g. `mise exec -- npm ci`).  This works locally because `mise` is installed and on PATH.  In GitHub Actions, the workflow uses `actions/setup-node` and `dtolnay/rust-toolchain` to install tools directly into PATH; it does NOT install mise.  So the shell that runs the BUILD script can't find the `mise` binary.
+
+**Fix:** Remove all `mise exec --` prefixes.  Just call `cargo`, `npm`, `npx`, `node`, etc. directly.  The Python conduit BUILD already documented this pattern explicitly in a comment.
+
+**Rule:** BUILD files should call language tools (cargo, npm, npx, node, python, go, etc.) directly without any wrapper.  `mise` provides shims locally so direct invocation works in both environments.  CI installs tools into PATH itself.
