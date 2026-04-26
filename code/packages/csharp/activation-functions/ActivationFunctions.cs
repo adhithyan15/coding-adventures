@@ -26,6 +26,17 @@ public static class ActivationFunctions
 {
     // exp(710) overflows a double, so we clamp before calling Math.Exp.
     private const double SigmoidOverflowClamp = 709.0;
+    private const double LeakyReluSlope = 0.01;
+
+    /// <summary>
+    /// Return the input unchanged.
+    /// </summary>
+    public static double Linear(double x) => x;
+
+    /// <summary>
+    /// Return the constant slope of the identity function.
+    /// </summary>
+    public static double LinearDerivative(double x) => 1.0;
 
     /// <summary>
     /// Compute the logistic sigmoid.
@@ -82,6 +93,16 @@ public static class ActivationFunctions
     public static double ReluDerivative(double x) => x > 0.0 ? 1.0 : 0.0;
 
     /// <summary>
+    /// Compute Leaky ReLU with the spec default negative slope of 0.01.
+    /// </summary>
+    public static double LeakyRelu(double x) => x > 0.0 ? x : LeakyReluSlope * x;
+
+    /// <summary>
+    /// Return the slope of Leaky ReLU.
+    /// </summary>
+    public static double LeakyReluDerivative(double x) => x > 0.0 ? 1.0 : LeakyReluSlope;
+
+    /// <summary>
     /// Compute tanh(x), the zero-centered sibling of sigmoid.
     ///
     /// tanh maps any real number to (-1, 1). Because its midpoint is 0 rather
@@ -102,4 +123,14 @@ public static class ActivationFunctions
         var tanh = Math.Tanh(x);
         return 1.0 - (tanh * tanh);
     }
+
+    /// <summary>
+    /// Compute Softplus using a stable absolute-value formulation.
+    /// </summary>
+    public static double Softplus(double x) => Math.Log(1.0 + Math.Exp(-Math.Abs(x))) + Math.Max(x, 0.0);
+
+    /// <summary>
+    /// Compute the derivative of Softplus, which is sigmoid.
+    /// </summary>
+    public static double SoftplusDerivative(double x) => Sigmoid(x);
 }

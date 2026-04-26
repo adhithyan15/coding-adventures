@@ -19,6 +19,8 @@ package CodingAdventures::ActivationFunctions;
 #
 #   | Function              | Range        | Typical Use                      |
 #   |-----------------------|-------------|----------------------------------|
+#   | linear                | (-∞, ∞)      | Regression output baseline       |
+#   | linear_derivative     | {1}          | Backprop through linear          |
 #   | sigmoid               | (0, 1)       | Binary classification output     |
 #   | sigmoid_derivative    | (0, 0.25]    | Backprop through sigmoid         |
 #   | relu                  | [0, ∞)       | Default hidden layer activation  |
@@ -27,6 +29,8 @@ package CodingAdventures::ActivationFunctions;
 #   | tanh_derivative       | (0, 1]       | Backprop through tanh            |
 #   | leaky_relu            | (-∞, ∞)      | Fixes "dying ReLU" problem       |
 #   | leaky_relu_derivative | {α, 1}       | Backprop through leaky_relu      |
+#   | softplus              | (0, ∞)       | Smooth alternative to ReLU       |
+#   | softplus_derivative   | (0, 1)       | Backprop through softplus        |
 #   | elu                   | (-α, ∞)      | Smooth, saturating alternative   |
 #   | elu_derivative        | (0, 1]       | Backprop through elu             |
 #   | softmax               | (0,1)^n      | Multi-class output probabilities |
@@ -56,6 +60,7 @@ package CodingAdventures::ActivationFunctions;
 #       relu relu_derivative
 #       tanh_activation tanh_derivative
 #       leaky_relu leaky_relu_derivative
+#       softplus softplus_derivative
 #       elu elu_derivative
 #       softmax softmax_derivative
 #   );
@@ -74,13 +79,31 @@ our $VERSION = '0.01';
 
 use parent 'Exporter';
 our @EXPORT_OK = qw(
+    linear              linear_derivative
     sigmoid             sigmoid_derivative
     relu                relu_derivative
     tanh_activation     tanh_derivative
     leaky_relu          leaky_relu_derivative
+    softplus            softplus_derivative
     elu                 elu_derivative
     softmax             softmax_derivative
 );
+
+# ============================================================================
+# LINEAR
+# ============================================================================
+
+# linear($x) — identity activation for regression outputs.
+sub linear {
+    my ($x) = @_;
+    return 0.0 + $x;
+}
+
+# linear_derivative($x) — constant slope of the identity function.
+sub linear_derivative {
+    my ($x) = @_;
+    return 1.0;
+}
 
 # ============================================================================
 # SIGMOID
@@ -253,6 +276,24 @@ sub leaky_relu_derivative {
 }
 
 # ============================================================================
+# SOFTPLUS
+# ============================================================================
+
+# softplus($x) — smooth ReLU approximation: log(1 + e^x)
+#
+# Uses the stable equivalent log(1 + e^(-abs(x))) + max(x, 0).
+sub softplus {
+    my ($x) = @_;
+    return log(1.0 + exp(-abs($x))) + ($x > 0 ? $x : 0.0);
+}
+
+# softplus_derivative($x) — derivative of softplus is sigmoid.
+sub softplus_derivative {
+    my ($x) = @_;
+    return sigmoid($x);
+}
+
+# ============================================================================
 # ELU
 # ============================================================================
 
@@ -389,10 +430,12 @@ CodingAdventures::ActivationFunctions - Neural network activation functions
 =head1 SYNOPSIS
 
     use CodingAdventures::ActivationFunctions qw(
+        linear linear_derivative
         sigmoid sigmoid_derivative
         relu relu_derivative
         tanh_activation tanh_derivative
         leaky_relu leaky_relu_derivative
+        softplus softplus_derivative
         elu elu_derivative
         softmax softmax_derivative
     );

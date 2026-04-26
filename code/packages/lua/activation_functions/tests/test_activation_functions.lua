@@ -66,6 +66,26 @@ local function fd_derivative(f, x, h)
 end
 
 -- ============================================================================
+-- LINEAR
+-- ============================================================================
+
+describe("linear", function()
+    it("returns the input unchanged", function()
+        assert.is_true(near(af.linear(-3), -3.0))
+        assert.is_true(near(af.linear(0), 0.0))
+        assert.is_true(near(af.linear(5), 5.0))
+    end)
+end)
+
+describe("linear_derivative", function()
+    it("returns 1 everywhere", function()
+        for _, x in ipairs({-3, 0, 5}) do
+            assert.is_true(near(af.linear_derivative(x), 1.0))
+        end
+    end)
+end)
+
+-- ============================================================================
 -- SIGMOID
 -- ============================================================================
 
@@ -294,6 +314,39 @@ describe("leaky_relu_derivative", function()
         local analytical = af.leaky_relu_derivative(2)
         local numerical  = fd_derivative(f, 2)
         assert.is_true(near(analytical, numerical, 1e-4))
+    end)
+end)
+
+-- ============================================================================
+-- SOFTPLUS
+-- ============================================================================
+
+describe("softplus", function()
+    it("returns log(2) at x=0", function()
+        assert.is_true(near(af.softplus(0), math.log(2.0)))
+    end)
+
+    it("matches golden values", function()
+        assert.is_true(near(af.softplus(1), 1.3132616875182228, 1e-9))
+        assert.is_true(near(af.softplus(-1), 0.31326168751822286, 1e-9))
+    end)
+
+    it("stays stable for large positive values", function()
+        assert.is_true(af.softplus(1000) > 999.0)
+    end)
+end)
+
+describe("softplus_derivative", function()
+    it("equals sigmoid", function()
+        for _, x in ipairs({-1, 0, 1}) do
+            assert.is_true(near(af.softplus_derivative(x), af.sigmoid(x)))
+        end
+    end)
+
+    it("matches finite-difference approximation at x=1", function()
+        local analytical = af.softplus_derivative(1)
+        local numerical = fd_derivative(af.softplus, 1)
+        assert.is_true(near(analytical, numerical, 1e-5))
     end)
 end)
 

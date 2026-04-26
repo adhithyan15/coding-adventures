@@ -21,6 +21,8 @@
 package com.codingadventures.activationfunctions
 
 import kotlin.math.exp
+import kotlin.math.abs
+import kotlin.math.ln1p
 import kotlin.math.max
 import kotlin.math.tanh
 
@@ -30,6 +32,17 @@ import kotlin.math.tanh
  * All functions are pure, stateless scalar operations.
  */
 object ActivationFunctions {
+    private const val LEAKY_RELU_SLOPE = 0.01
+
+    // ========================================================================
+    // Linear: x
+    // ========================================================================
+
+    /** Return the input unchanged. */
+    fun linear(x: Double): Double = x
+
+    /** Derivative of linear activation: 1 everywhere. */
+    fun linearDerivative(x: Double): Double = 1.0
 
     // ========================================================================
     // Sigmoid: σ(x) = 1 / (1 + e^(-x))
@@ -59,6 +72,16 @@ object ActivationFunctions {
     fun reluDerivative(x: Double): Double = if (x > 0.0) 1.0 else 0.0
 
     // ========================================================================
+    // Leaky ReLU: x if x > 0, otherwise 0.01x
+    // ========================================================================
+
+    /** Compute Leaky ReLU with the spec default negative slope of 0.01. */
+    fun leakyRelu(x: Double): Double = if (x > 0.0) x else LEAKY_RELU_SLOPE * x
+
+    /** Derivative: 1 if x > 0, 0.01 otherwise. */
+    fun leakyReluDerivative(x: Double): Double = if (x > 0.0) 1.0 else LEAKY_RELU_SLOPE
+
+    // ========================================================================
     // Tanh: (e^x - e^(-x)) / (e^x + e^(-x))
     // ========================================================================
 
@@ -70,4 +93,14 @@ object ActivationFunctions {
         val t = kotlin.math.tanh(x)
         return 1.0 - t * t
     }
+
+    // ========================================================================
+    // Softplus: log(1 + e^x)
+    // ========================================================================
+
+    /** Compute Softplus using a numerically stable log1p formulation. */
+    fun softplus(x: Double): Double = ln1p(exp(-abs(x))) + max(x, 0.0)
+
+    /** Derivative: sigmoid(x). */
+    fun softplusDerivative(x: Double): Double = sigmoid(x)
 }

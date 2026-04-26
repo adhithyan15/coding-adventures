@@ -8,6 +8,19 @@ class ActivationFunctionsTest {
     private static final double EPS = 1e-10;
 
     // ========================================================================
+    // Linear Tests
+    // ========================================================================
+
+    @Test void linearNegative() { assertEquals(-3.0, ActivationFunctions.linear(-3.0), EPS); }
+    @Test void linearZero() { assertEquals(0.0, ActivationFunctions.linear(0.0), EPS); }
+    @Test void linearPositive() { assertEquals(5.0, ActivationFunctions.linear(5.0), EPS); }
+    @Test void linearDerivEverywhere() {
+        assertEquals(1.0, ActivationFunctions.linearDerivative(-3.0), EPS);
+        assertEquals(1.0, ActivationFunctions.linearDerivative(0.0), EPS);
+        assertEquals(1.0, ActivationFunctions.linearDerivative(5.0), EPS);
+    }
+
+    // ========================================================================
     // Sigmoid Tests
     // ========================================================================
 
@@ -80,6 +93,17 @@ class ActivationFunctionsTest {
     @Test void reluDerivZero() { assertEquals(0.0, ActivationFunctions.reluDerivative(0.0)); }
 
     // ========================================================================
+    // Leaky ReLU Tests
+    // ========================================================================
+
+    @Test void leakyReluPositive() { assertEquals(5.0, ActivationFunctions.leakyRelu(5.0), EPS); }
+    @Test void leakyReluNegative() { assertEquals(-0.03, ActivationFunctions.leakyRelu(-3.0), EPS); }
+    @Test void leakyReluZero() { assertEquals(0.0, ActivationFunctions.leakyRelu(0.0), EPS); }
+    @Test void leakyReluDerivPositive() { assertEquals(1.0, ActivationFunctions.leakyReluDerivative(5.0), EPS); }
+    @Test void leakyReluDerivNegative() { assertEquals(0.01, ActivationFunctions.leakyReluDerivative(-3.0), EPS); }
+    @Test void leakyReluDerivZero() { assertEquals(0.01, ActivationFunctions.leakyReluDerivative(0.0), EPS); }
+
+    // ========================================================================
     // Tanh Tests
     // ========================================================================
 
@@ -113,6 +137,20 @@ class ActivationFunctionsTest {
 
     @Test void tanhDerivAtZero() { assertEquals(1.0, ActivationFunctions.tanhDerivative(0.0), EPS); }
     @Test void tanhDerivAtOne() { assertEquals(0.4199743416140261, ActivationFunctions.tanhDerivative(1.0), EPS); }
+
+    // ========================================================================
+    // Softplus Tests
+    // ========================================================================
+
+    @Test void softplusAtZero() { assertEquals(0.6931471805599453, ActivationFunctions.softplus(0.0), EPS); }
+    @Test void softplusPositive() { assertEquals(1.3132616875182228, ActivationFunctions.softplus(1.0), EPS); }
+    @Test void softplusNegative() { assertEquals(0.31326168751822286, ActivationFunctions.softplus(-1.0), EPS); }
+    @Test void softplusLargePositiveStable() { assertTrue(ActivationFunctions.softplus(1000.0) > 999.0); }
+    @Test void softplusDerivativeEqualsSigmoid() {
+        assertEquals(0.5, ActivationFunctions.softplusDerivative(0.0), EPS);
+        assertEquals(ActivationFunctions.sigmoid(1.0), ActivationFunctions.softplusDerivative(1.0), EPS);
+        assertEquals(ActivationFunctions.sigmoid(-1.0), ActivationFunctions.softplusDerivative(-1.0), EPS);
+    }
 
     @Test
     void tanhDerivNonNegative() {

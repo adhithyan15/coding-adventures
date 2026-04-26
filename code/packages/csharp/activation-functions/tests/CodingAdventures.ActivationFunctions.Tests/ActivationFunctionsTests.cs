@@ -12,6 +12,18 @@ public sealed class ActivationFunctionsTests
     }
 
     [Fact]
+    public void LinearAndItsDerivativeMatchTheIdentityDefinition()
+    {
+        AssertClose(-3.0, Activation.Linear(-3.0));
+        AssertClose(0.0, Activation.Linear(0.0));
+        AssertClose(5.0, Activation.Linear(5.0));
+
+        AssertClose(1.0, Activation.LinearDerivative(-3.0));
+        AssertClose(1.0, Activation.LinearDerivative(0.0));
+        AssertClose(1.0, Activation.LinearDerivative(5.0));
+    }
+
+    [Fact]
     public void SigmoidMatchesTheSpecVectors()
     {
         AssertClose(0.5, Activation.Sigmoid(0.0));
@@ -43,6 +55,18 @@ public sealed class ActivationFunctionsTests
     }
 
     [Fact]
+    public void LeakyReluAndItsDerivativeKeepTheNegativeSlope()
+    {
+        AssertClose(5.0, Activation.LeakyRelu(5.0));
+        AssertClose(-0.03, Activation.LeakyRelu(-3.0));
+        AssertClose(0.0, Activation.LeakyRelu(0.0));
+
+        AssertClose(1.0, Activation.LeakyReluDerivative(5.0));
+        AssertClose(0.01, Activation.LeakyReluDerivative(-3.0));
+        AssertClose(0.01, Activation.LeakyReluDerivative(0.0));
+    }
+
+    [Fact]
     public void TanhAndItsDerivativeMatchTheReferenceValues()
     {
         AssertClose(0.0, Activation.Tanh(0.0));
@@ -51,6 +75,19 @@ public sealed class ActivationFunctionsTests
 
         AssertClose(1.0, Activation.TanhDerivative(0.0));
         AssertClose(0.41997434161402614, Activation.TanhDerivative(1.0));
+    }
+
+    [Fact]
+    public void SoftplusAndItsDerivativeMatchTheReferenceValues()
+    {
+        AssertClose(0.6931471805599453, Activation.Softplus(0.0));
+        AssertClose(1.3132616875182228, Activation.Softplus(1.0));
+        AssertClose(0.31326168751822286, Activation.Softplus(-1.0));
+        Assert.True(Activation.Softplus(1000.0) > 999.0);
+
+        AssertClose(0.5, Activation.SoftplusDerivative(0.0));
+        AssertClose(Activation.Sigmoid(1.0), Activation.SoftplusDerivative(1.0));
+        AssertClose(Activation.Sigmoid(-1.0), Activation.SoftplusDerivative(-1.0));
     }
 
     [Fact]
@@ -68,7 +105,9 @@ public sealed class ActivationFunctionsTests
 
             Assert.True(Activation.SigmoidDerivative(sample) >= 0.0);
             Assert.True(Activation.ReluDerivative(sample) >= 0.0);
+            Assert.True(Activation.LeakyReluDerivative(sample) >= 0.0);
             Assert.True(Activation.TanhDerivative(sample) >= 0.0);
+            Assert.True(Activation.SoftplusDerivative(sample) >= 0.0);
         }
     }
 }

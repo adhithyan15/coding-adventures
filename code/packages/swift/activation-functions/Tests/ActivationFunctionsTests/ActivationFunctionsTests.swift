@@ -6,6 +6,28 @@ final class ActivationFunctionsTests: XCTestCase {
     private let eps: Double = 1e-10
 
     // ========================================================================
+    // MARK: - Linear Tests
+    // ========================================================================
+
+    func testLinearNegative() {
+        XCTAssertEqual(ActivationFunctions.linear(-3.0), -3.0, accuracy: eps)
+    }
+
+    func testLinearZero() {
+        XCTAssertEqual(ActivationFunctions.linear(0.0), 0.0, accuracy: eps)
+    }
+
+    func testLinearPositive() {
+        XCTAssertEqual(ActivationFunctions.linear(5.0), 5.0, accuracy: eps)
+    }
+
+    func testLinearDerivativeEverywhere() {
+        XCTAssertEqual(ActivationFunctions.linearDerivative(-3.0), 1.0, accuracy: eps)
+        XCTAssertEqual(ActivationFunctions.linearDerivative(0.0), 1.0, accuracy: eps)
+        XCTAssertEqual(ActivationFunctions.linearDerivative(5.0), 1.0, accuracy: eps)
+    }
+
+    // ========================================================================
     // MARK: - Sigmoid Tests
     // ========================================================================
 
@@ -120,6 +142,34 @@ final class ActivationFunctionsTests: XCTestCase {
     }
 
     // ========================================================================
+    // MARK: - Leaky ReLU Tests
+    // ========================================================================
+
+    func testLeakyReluPositive() {
+        XCTAssertEqual(ActivationFunctions.leakyRelu(5.0), 5.0, accuracy: eps)
+    }
+
+    func testLeakyReluNegative() {
+        XCTAssertEqual(ActivationFunctions.leakyRelu(-3.0), -0.03, accuracy: eps)
+    }
+
+    func testLeakyReluZero() {
+        XCTAssertEqual(ActivationFunctions.leakyRelu(0.0), 0.0, accuracy: eps)
+    }
+
+    func testLeakyReluDerivativePositive() {
+        XCTAssertEqual(ActivationFunctions.leakyReluDerivative(5.0), 1.0, accuracy: eps)
+    }
+
+    func testLeakyReluDerivativeNegative() {
+        XCTAssertEqual(ActivationFunctions.leakyReluDerivative(-3.0), 0.01, accuracy: eps)
+    }
+
+    func testLeakyReluDerivativeZero() {
+        XCTAssertEqual(ActivationFunctions.leakyReluDerivative(0.0), 0.01, accuracy: eps)
+    }
+
+    // ========================================================================
     // MARK: - Tanh Tests
     // ========================================================================
 
@@ -173,5 +223,31 @@ final class ActivationFunctionsTests: XCTestCase {
         for x in values {
             XCTAssertGreaterThanOrEqual(ActivationFunctions.tanhDerivative(x), 0.0)
         }
+    }
+
+    // ========================================================================
+    // MARK: - Softplus Tests
+    // ========================================================================
+
+    func testSoftplusAtZero() {
+        XCTAssertEqual(ActivationFunctions.softplus(0.0), 0.6931471805599453, accuracy: eps)
+    }
+
+    func testSoftplusPositive() {
+        XCTAssertEqual(ActivationFunctions.softplus(1.0), 1.3132616875182228, accuracy: eps)
+    }
+
+    func testSoftplusNegative() {
+        XCTAssertEqual(ActivationFunctions.softplus(-1.0), 0.31326168751822286, accuracy: eps)
+    }
+
+    func testSoftplusLargePositiveStable() {
+        XCTAssertGreaterThan(ActivationFunctions.softplus(1000.0), 999.0)
+    }
+
+    func testSoftplusDerivativeEqualsSigmoid() {
+        XCTAssertEqual(ActivationFunctions.softplusDerivative(0.0), 0.5, accuracy: eps)
+        XCTAssertEqual(ActivationFunctions.softplusDerivative(1.0), ActivationFunctions.sigmoid(1.0), accuracy: eps)
+        XCTAssertEqual(ActivationFunctions.softplusDerivative(-1.0), ActivationFunctions.sigmoid(-1.0), accuracy: eps)
     }
 }
