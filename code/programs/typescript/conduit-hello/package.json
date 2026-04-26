@@ -11,7 +11,8 @@
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
   "dependencies": {
-    "tsx": "^4.7.0"
+    "tsx": "^4.7.0",
+    "coding-adventures-conduit": "file:../../../packages/typescript/conduit"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
