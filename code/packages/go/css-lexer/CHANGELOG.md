@@ -1,0 +1,6 @@
+# Changelog
+
+## 0.1.0
+
+- Initial Go CSS lexer with token priority matching, skipped whitespace and
+  comments, string/error tokens, EOF emission, and line/column tracking.

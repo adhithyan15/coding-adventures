@@ -101,7 +101,9 @@ class IIRFunction:
     # observation time.
     # ----------------------------------------------------------------------
 
-    feedback_slots: dict[int, int] = field(default_factory=dict, repr=False, compare=False)
+    feedback_slots: dict[int, int] = field(
+        default_factory=dict, repr=False, compare=False
+    )
     """Optional: ``slot_index → iir_instr_index`` mapping.
 
     Frontends that allocate named feedback slots at compile time (Tetrad,
@@ -112,7 +114,9 @@ class IIRFunction:
     returns a list indexed by slot index).
     """
 
-    source_map: list[tuple[int, int, int]] = field(default_factory=list, repr=False, compare=False)
+    source_map: list[tuple[int, int, int]] = field(
+        default_factory=list, repr=False, compare=False
+    )
     """Optional: ``(iir_index, source_a, source_b)`` triples.
 
     Frontends populate this with whatever indexing scheme they need on

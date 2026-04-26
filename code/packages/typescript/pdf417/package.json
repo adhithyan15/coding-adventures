@@ -1,0 +1,22 @@
+{
+  "name": "@coding-adventures/pdf417",
+  "version": "0.1.0",
+  "description": "PDF417 stacked linear barcode encoder — ISO/IEC 15438:2015 compliant, produces scannable PDF417 symbols",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/barcode-2d": "file:../barcode-2d"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

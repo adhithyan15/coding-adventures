@@ -13,9 +13,10 @@ Public API
     ``runtime.run_with_jit(source)`` for the JIT path.
 
 ``Intel4004Backend``
-    Backend protocol implementation that wraps ``intel4004-simulator``.
-    Re-exported so callers can pass a custom-configured instance to
-    ``TetradRuntime.run_with_jit(backend=...)``.
+    Re-export from the ``intel4004-backend`` package — kept here so
+    callers that reach ``tetrad_runtime.Intel4004Backend`` keep
+    working.  New code should import from ``intel4004_backend``
+    directly.
 
 ``TETRAD_OPCODE_EXTENSIONS``
     Dict of Tetrad-specific opcode handlers (``tetrad.move`` and the

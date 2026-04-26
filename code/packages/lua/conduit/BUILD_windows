@@ -1,0 +1,4 @@
+cd ext\conduit_native && cargo build --release && cd ..\..
+python -c "import glob,shutil,sys,os; libs=glob.glob('ext/conduit_native/target/release/conduit_native.dll'); src=next((l for l in libs if l.endswith('.dll')),None); sys.exit('no conduit_native.dll found') if not src else shutil.copy(src,'conduit/conduit_native.dll')"
+luarocks install luasocket 2>NUL || echo luasocket install skipped
+cd tests && busted . --verbose --pattern=test_

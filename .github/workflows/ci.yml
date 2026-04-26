@@ -266,6 +266,7 @@ jobs:
           luarocks install busted
           luarocks install luacov
           luarocks install luacheck
+          luarocks install luasocket 2>/dev/null || true
 
       - name: Install Lua test tools (Windows)
         if: needs.detect.outputs.needs_lua == 'true' && runner.os == 'Windows'

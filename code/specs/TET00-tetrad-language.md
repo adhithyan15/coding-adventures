@@ -493,15 +493,23 @@ tetrad-type-checker  TET02b  TypeCheckResult (TypeMap + FunctionTypeStatus per f
 tetrad-compiler      TET03   CodeObject (two-path: typed ops skip slot bytes)
     │
     ▼
-tetrad-vm            TET04   Executes bytecode; skips feedback vector for typed fns;
-    │                        exposes metrics API; queues typed fns for immediate JIT
+vm-core              LANG02  (replaces retired tetrad-vm) — generic register VM;
+    │                        Tetrad opcode extension (`tetrad.move`); same V8
+    │                        Ignition feedback-slot machine, branch / loop
+    │                        counters, and `execute_traced` surface.
     ▼
-tetrad-jit           TET05   Three-tier: typed→compile on call 1, partial→call 10,
-                             untyped→call 100; reads feedback for untyped paths
+jit-core             LANG03  (replaces retired tetrad-jit) — generic JIT engine;
+    + Intel4004Backend       Intel 4004 codegen lives in the
+    (in tetrad-runtime)      tetrad-runtime package as the BackendProtocol
+                             implementation.
 ```
 
-Each stage is a standalone Python package with its own `pyproject.toml`, tests,
-README, and CHANGELOG. The implementation language is Python 3.12 throughout.
+The first five stages remain standalone Python packages with their own
+`pyproject.toml`, tests, README, and CHANGELOG.  The runtime stages
+(VM + JIT) were originally `tetrad-vm` and `tetrad-jit` and have since
+been **retired** in favour of the generic LANG pipeline; the
+`tetrad-runtime` package wires Tetrad onto vm-core / jit-core and
+exposes the legacy metric APIs unchanged.
 
 ---
 
@@ -510,12 +518,13 @@ README, and CHANGELOG. The implementation language is Python 3.12 throughout.
 | Phase | Package | Spec | Status |
 |---|---|---|---|
 | 1 | Language spec | TET00 | This document |
-| 2 | Lexer | tetrad-lexer | TET01 — Planned |
-| 3 | Parser | tetrad-parser | TET02 — Planned |
-| 4 | Type checker | tetrad-type-checker | TET02b — Planned |
-| 5 | Bytecode compiler | tetrad-compiler | TET03 — Planned |
-| 6 | Register VM | tetrad-vm | TET04 — Planned |
-| 7 | JIT compiler | tetrad-jit | TET05 — Planned |
+| 2 | Lexer | tetrad-lexer | TET01 — Implemented |
+| 3 | Parser | tetrad-parser | TET02 — Implemented |
+| 4 | Type checker | tetrad-type-checker | TET02b — Implemented |
+| 5 | Bytecode compiler | tetrad-compiler | TET03 — Implemented |
+| 6 | Register VM | vm-core (was tetrad-vm) | TET04 — Retired; see LANG02 |
+| 7 | JIT compiler | jit-core + Intel4004Backend (was tetrad-jit) | TET05 — Retired; see LANG03 |
+| 8 | Tetrad-on-LANG runtime | tetrad-runtime | — |
 
 ---
 

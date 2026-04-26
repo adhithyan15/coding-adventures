@@ -4,6 +4,57 @@ All notable changes to `tetrad-runtime` will be documented in this file.
 
 ## [Unreleased]
 
+### Changed — Intel 4004 codegen extracted into intel4004-backend
+
+The `Intel4004Backend` class and the codegen / IR it depends on
+moved out of `tetrad-runtime` and into a new sibling package,
+`intel4004-backend`.  This establishes the per-target
+`<arch>-backend` package pattern future native backends will follow
+(`intel8008-backend`, `mos6502-backend`, `riscv32-backend`, …).
+
+- `tetrad_runtime._intel4004_codegen` subpackage removed.  Its
+  `codegen.py` and `ir.py` now live as `intel4004_backend.codegen`
+  / `intel4004_backend.ir`.
+- `tetrad_runtime.intel4004_backend` becomes a thin shim that
+  re-exports `intel4004_backend.Intel4004Backend`.  Callers that
+  reach `tetrad_runtime.Intel4004Backend` continue to work; new
+  code should import from `intel4004_backend` directly.
+- `pyproject.toml` swaps the direct `intel4004-simulator` dep for
+  `intel4004-backend` (which depends on the simulator transitively).
+- `BUILD` adds `-e ../intel4004-backend` to the `uv pip install`
+  chain.
+
+The 33 codegen tests + 5 backend-adapter tests moved with the code
+into `intel4004-backend/tests/`.  `tetrad-runtime` keeps its 67
+runtime / translator / parity tests; coverage jumped to 94.7%
+because the inlined codegen (which had ~92% coverage) is no longer
+counted toward `tetrad-runtime`'s lines.
+
+### Changed — inline the Intel 4004 codegen, drop legacy package deps
+
+The bytecode → 4004 codegen and the SSA-by-name `IRInstr` it consumes
+moved in-tree under `tetrad_runtime._intel4004_codegen` (subpackage,
+underscore-prefixed to mark it internal).  Originally these lived in
+the now-retired `tetrad-jit` package; the only consumer was
+`Intel4004Backend`, so co-locating them with their sole user
+simplifies the dependency graph and unblocks deletion of `tetrad-jit`.
+
+- `tetrad_runtime._intel4004_codegen.ir` — `IRInstr`, `evaluate_op`
+- `tetrad_runtime._intel4004_codegen.codegen` — `codegen`,
+  `run_on_4004`, `DeoptimizerError`
+- `Intel4004Backend.compile` / `.run` now import from the in-tree
+  module instead of `tetrad_jit`; the deprecated import-fallback
+  branch was removed.
+- The 13 `evaluate_op` tests and 20 `codegen` tests from
+  `tetrad-jit/tests/test_tetrad_jit.py` (the `TestEvaluateOp` and
+  `TestCodegen` classes) moved here as `tests/test_intel4004_codegen.py`.
+
+### Removed
+
+- `coding-adventures-tetrad-vm` and `coding-adventures-tetrad-jit`
+  removed from `pyproject.toml` `dependencies` and from `BUILD`.
+  `intel4004-simulator` remains (still needed for `run_on_4004`).
+
 ### Added — LANG17 PR4: legacy ``TetradVM`` API parity
 
 Adds re-projection wrappers on `TetradRuntime` so callers can switch

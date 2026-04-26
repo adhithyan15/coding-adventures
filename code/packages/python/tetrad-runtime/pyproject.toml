@@ -16,10 +16,11 @@ dependencies = [
     "coding-adventures-interpreter-ir",
     "coding-adventures-vm-core",
     "coding-adventures-jit-core",
-    # Intel4004Backend bridges to the legacy tetrad-jit codegen and the
-    # intel4004-simulator runner, so both are direct runtime dependencies.
-    "coding-adventures-tetrad-jit",
-    "coding-adventures-intel4004-simulator",
+    # Native backends are their own packages (one per target ISA).
+    # tetrad-runtime currently only re-exports the 4004 backend for
+    # back-compat; new callers should import from intel4004-backend
+    # directly.
+    "coding-adventures-intel4004-backend",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",

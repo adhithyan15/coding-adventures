@@ -1,0 +1,8 @@
+[package]
+name = "diagram-layout-temporal"
+version = "0.1.0"
+edition = "2021"
+description = "Gantt and git-graph layout engine for temporal diagrams (DG04)"
+
+[dependencies]
+diagram-ir = { path = "../diagram-ir" }

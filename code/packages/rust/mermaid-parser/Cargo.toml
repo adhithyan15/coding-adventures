@@ -1,6 +1,6 @@
 [package]
 name = "mermaid-parser"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Grammar-driven parser for a focused Mermaid flowchart subset that lowers to diagram-ir GraphDiagram"
 
