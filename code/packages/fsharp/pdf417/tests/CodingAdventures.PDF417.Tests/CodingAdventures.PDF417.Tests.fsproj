@@ -2,6 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <IsPackable>false</IsPackable>
+    <Include>[CodingAdventures.PDF417.FSharp]*</Include>
   </PropertyGroup>
 
   <ItemGroup>
