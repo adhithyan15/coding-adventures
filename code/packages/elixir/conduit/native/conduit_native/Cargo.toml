@@ -1,0 +1,23 @@
+# Compiles to a cdylib (C-compatible dynamic library) loaded by Erlang's NIF
+# system via `:erlang.load_nif/2`. Unlike a workspace-member crate, this one
+# is intentionally [workspace]-isolated: BUILD does its own `cargo build`
+# from this directory.
+[workspace]
+
+[package]
+name = "conduit-native-nif"
+version = "0.1.0"
+edition = "2021"
+description = "Erlang NIF exposing the web-core HTTP engine to Elixir Conduit"
+build = "build.rs"
+
+[lib]
+name = "conduit_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+erl-nif-bridge = { path = "../../../../rust/erl-nif-bridge" }
+web-core = { path = "../../../../rust/web-core" }
+embeddable-http-server = { path = "../../../../rust/embeddable-http-server" }
+tcp-runtime = { path = "../../../../rust/tcp-runtime" }
+transport-platform = { path = "../../../../rust/transport-platform" }
