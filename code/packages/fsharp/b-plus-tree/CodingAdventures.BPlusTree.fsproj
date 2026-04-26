@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>CodingAdventures.BPlusTree.FSharp</AssemblyName>
+    <PackageId>CodingAdventures.BPlusTree</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>Pure F# B+ tree with point lookup, linked-leaf scans, deletion, and validation</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="BPlusTree.fs" />
+  </ItemGroup>
+</Project>
