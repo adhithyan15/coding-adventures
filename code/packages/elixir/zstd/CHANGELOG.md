@@ -5,6 +5,18 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.1.1] — 2026-04-26
+
+### Tests
+
+- Added `seq_count: 200 KB repetitive text — endianness regression`. The
+  test round-trips 200 KB of repetitive ASCII, which reliably yields ≥ 128
+  sequences in a single block — exercising the 2-byte path of
+  `encode_seq_count` / `decode_seq_count`. Same shape as the regression
+  added to TS+Go in PR #1448.
+- Audited `encode_seq_count` / `decode_seq_count`: already RFC 8878
+  §3.1.1.3.1-compliant (`(cnt >>> 8) ||| 0x80, cnt &&& 0xFF`); no fix needed.
+
 ## [0.1.0] — 2026-04-24
 
 ### Added

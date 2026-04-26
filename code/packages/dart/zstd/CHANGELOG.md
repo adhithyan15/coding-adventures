@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.1
+
+- Tests: added `Seq count: 200 KB repetitive text — endianness regression`
+  to lock in the wire-format invariant for the 2-byte sequence-count form.
+  This is the same shape as the regression added to TS+Go in PR #1448 — it
+  reliably produces ≥ 128 sequences in a single block, exercising the
+  2-byte path of `_encodeSeqCount` / `_decodeSeqCount`.
+- Audited `_encodeSeqCount` / `_decodeSeqCount`: already RFC 8878
+  §3.1.1.3.1-compliant (the existing comment near the encoder explicitly
+  cites the `or 0x8000 as LE16` form being avoided); no fix needed.
+
 ## 0.1.0
 
 - Added the initial Dart implementation of the CMP07 ZStd compression package.
