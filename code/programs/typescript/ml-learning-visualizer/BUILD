@@ -1,4 +1,4 @@
-set -euo pipefail
+set -eu
 
 (cd ../../../packages/typescript/directed-graph && npm install)
 (cd ../../../packages/typescript/state-machine && npm install)
