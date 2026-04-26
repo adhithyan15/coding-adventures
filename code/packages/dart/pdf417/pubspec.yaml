@@ -1,0 +1,20 @@
+name: coding_adventures_pdf417
+version: 0.1.0
+description: >
+  PDF417 stacked linear barcode encoder — ISO/IEC 15438:2015 compliant.
+  Encodes byte data to PDF417 symbols using byte compaction mode (codeword 924),
+  Reed-Solomon error correction over GF(929) with the b=3 convention, and
+  automatic dimension/ECC-level selection. Produces a ModuleGrid consumable
+  by barcode-2d for pixel-level rendering.
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_barcode_2d:
+    path: ../barcode-2d
+
+dev_dependencies:
+  test: ^1.25.0
