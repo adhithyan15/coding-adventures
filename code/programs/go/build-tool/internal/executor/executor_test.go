@@ -475,6 +475,49 @@ func TestBuildResourceKeysDoesNotIncludeGlobalCabalStoreLockWithoutCabalCommand(
 		t.Fatalf("expected keys not to include global cabal-store lock, got %v", keys)
 	}
 }
+
+func TestBuildResourceKeysIncludesGlobalDotnetLockForDotnetPackages(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"pkg/BUILD": "dotnet test tests/CodingAdventures.Tests.csproj --disable-build-servers",
+	})
+
+	pkg := discovery.Package{
+		Name:          "csharp/pkg",
+		Path:          filepath.Join(root, "pkg"),
+		BuildCommands: []string{"dotnet test tests/CodingAdventures.Tests.csproj --disable-build-servers"},
+		Language:      "csharp",
+	}
+
+	keys := buildResourceKeys(pkg, map[string]string{
+		filepath.Join(root, "pkg"): "csharp/pkg",
+	})
+	joined := strings.Join(keys, ",")
+	if !strings.Contains(joined, "global:dotnet-cli") {
+		t.Fatalf("expected keys to include global dotnet-cli lock, got %v", keys)
+	}
+}
+
+func TestBuildResourceKeysSkipsGlobalDotnetLockForNonDotnetPackages(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"pkg/BUILD": "echo dotnet test is only text here",
+	})
+
+	pkg := discovery.Package{
+		Name:          "typescript/pkg",
+		Path:          filepath.Join(root, "pkg"),
+		BuildCommands: []string{"echo dotnet test is only text here"},
+		Language:      "typescript",
+	}
+
+	keys := buildResourceKeys(pkg, map[string]string{
+		filepath.Join(root, "pkg"): "typescript/pkg",
+	})
+	joined := strings.Join(keys, ",")
+	if strings.Contains(joined, "global:dotnet-cli") {
+		t.Fatalf("expected keys not to include global dotnet-cli lock, got %v", keys)
+	}
+}
+
 func TestBuildResourceKeysIncludesGlobalGradleLockForJavaOnWindows(t *testing.T) {
 	root := makeFixture(t, map[string]string{
 		"pkg/BUILD": "gradle test",
