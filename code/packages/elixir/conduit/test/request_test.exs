@@ -91,5 +91,27 @@ defmodule CodingAdventures.Conduit.RequestTest do
         assert result == :error
       end
     end
+
+    test "tagged-tuple form returns :error when JSON module is unavailable" do
+      # Elixir 1.16/1.17 does not ship the JSON module — the bang variant
+      # raises ArgumentError, the safe variant catches and returns :error.
+      unless Code.ensure_loaded?(JSON) do
+        r = Request.from_env(%{"conduit.body" => "{}"})
+        {kind, _reason} = Request.json_body(r)
+        assert kind == :error
+      end
+    end
+  end
+
+  describe "json_body!/1 — JSON module unavailable path" do
+    test "raises ArgumentError on Elixir 1.16/1.17 (no JSON module)" do
+      unless Code.ensure_loaded?(JSON) do
+        r = Request.from_env(%{"conduit.body" => "{}"})
+
+        assert_raise ArgumentError, fn ->
+          Request.json_body!(r)
+        end
+      end
+    end
   end
 end

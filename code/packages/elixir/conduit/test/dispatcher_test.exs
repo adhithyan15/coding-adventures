@@ -61,4 +61,47 @@ defmodule CodingAdventures.Conduit.DispatcherTest do
     assert body == "Internal Server Error"
     refute body =~ "something_weird"
   end
+
+  test "exit kind is caught and short_error_message kicks in" do
+    handlers = %{1 => fn _req -> exit(:bye) end}
+    {500, %{}, body} = Dispatcher.run_handler(handlers, 1, %{})
+    assert body =~ "exit"
+    refute body =~ "stacktrace"
+  end
+
+  describe "GenServer lifecycle" do
+    test "start_link/1 starts a process and init/1 stores the handlers map" do
+      handlers = %{42 => fn _req -> {200, %{}, "hi"} end}
+      {:ok, pid} = Dispatcher.start_link(handlers)
+      assert Process.alive?(pid)
+      :ok = GenServer.stop(pid, :normal)
+    end
+
+    test "handle_info ignores unrelated messages without crashing" do
+      handlers = %{}
+      {:ok, pid} = Dispatcher.start_link(handlers)
+      send(pid, :random_message)
+      send(pid, {:hello, "world"})
+      # If the dispatcher crashed, the next call would error.
+      assert Process.alive?(pid)
+      :ok = GenServer.stop(pid, :normal)
+    end
+
+    test "handle_info processes a real {:conduit_request, ...} via the GenServer" do
+      handlers = %{
+        1 => fn req ->
+          {200, %{"x-method" => req.method}, "ok"}
+        end
+      }
+
+      {:ok, pid} = Dispatcher.start_link(handlers)
+      # Use a synthetic env map and a slot_id of 0 — Native.respond/2 will
+      # look up slot 0, find nothing in the table, and silently no-op.
+      # The point of the test is that handle_info doesn't crash.
+      send(pid, {:conduit_request, 0, 1, %{"REQUEST_METHOD" => "GET"}})
+      Process.sleep(20)
+      assert Process.alive?(pid)
+      :ok = GenServer.stop(pid, :normal)
+    end
+  end
 end
