@@ -1,8 +1,10 @@
 export type LossKind = "mse" | "mae";
 
 export interface TrainingPoint {
-  celsius: number;
-  fahrenheit: number;
+  x: number;
+  y: number;
+  label?: string;
+  group?: string;
 }
 
 export interface ModelState {
@@ -20,21 +22,21 @@ export interface StepResult {
 }
 
 export const CELSIUS_DATASET: TrainingPoint[] = [
-  { celsius: -40, fahrenheit: -40 },
-  { celsius: -10, fahrenheit: 14 },
-  { celsius: 0, fahrenheit: 32 },
-  { celsius: 8, fahrenheit: 46.4 },
-  { celsius: 15, fahrenheit: 59 },
-  { celsius: 22, fahrenheit: 71.6 },
-  { celsius: 38, fahrenheit: 100.4 },
+  { x: -40, y: -40 },
+  { x: -10, y: 14 },
+  { x: 0, y: 32 },
+  { x: 8, y: 46.4 },
+  { x: 15, y: 59 },
+  { x: 22, y: 71.6 },
+  { x: 38, y: 100.4 },
 ];
 
-export function predict(celsius: number, state: ModelState): number {
-  return state.weight * celsius + state.bias;
+export function predict(x: number, state: ModelState): number {
+  return state.weight * x + state.bias;
 }
 
 export function predictions(points: TrainingPoint[], state: ModelState): number[] {
-  return points.map((point) => predict(point.celsius, state));
+  return points.map((point) => predict(point.x, state));
 }
 
 export function loss(points: TrainingPoint[], state: ModelState, lossKind: LossKind): number {
@@ -43,7 +45,7 @@ export function loss(points: TrainingPoint[], state: ModelState, lossKind: LossK
   if (lossKind === "mse") {
     return (
       points.reduce((sum, point, index) => {
-        const error = yPred[index]! - point.fahrenheit;
+        const error = yPred[index]! - point.y;
         return sum + error * error;
       }, 0) / points.length
     );
@@ -51,7 +53,7 @@ export function loss(points: TrainingPoint[], state: ModelState, lossKind: LossK
 
   return (
     points.reduce((sum, point, index) => {
-      return sum + Math.abs(yPred[index]! - point.fahrenheit);
+      return sum + Math.abs(yPred[index]! - point.y);
     }, 0) / points.length
   );
 }
@@ -70,12 +72,12 @@ export function gradients(
 
   return points.reduce(
     (acc, point, index) => {
-      const error = yPred[index]! - point.fahrenheit;
+      const error = yPred[index]! - point.y;
       const predictionGradient =
         lossKind === "mse" ? (2 / n) * error : Math.sign(error) / n;
 
       return {
-        gradientWeight: acc.gradientWeight + predictionGradient * point.celsius,
+        gradientWeight: acc.gradientWeight + predictionGradient * point.x,
         gradientBias: acc.gradientBias + predictionGradient,
       };
     },
@@ -122,4 +124,19 @@ export function trainSteps(
   }
 
   return results;
+}
+
+export function fitLinearClosedForm(points: TrainingPoint[]): ModelState {
+  const n = points.length;
+  const meanX = points.reduce((sum, point) => sum + point.x, 0) / n;
+  const meanY = points.reduce((sum, point) => sum + point.y, 0) / n;
+  const numerator = points.reduce((sum, point) => sum + (point.x - meanX) * (point.y - meanY), 0);
+  const denominator = points.reduce((sum, point) => sum + (point.x - meanX) ** 2, 0);
+  const weight = denominator === 0 ? 0 : numerator / denominator;
+
+  return {
+    weight,
+    bias: meanY - weight * meanX,
+    epoch: 0,
+  };
 }
