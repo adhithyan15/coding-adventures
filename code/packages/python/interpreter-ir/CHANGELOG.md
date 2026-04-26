@@ -2,6 +2,64 @@
 
 ## [Unreleased]
 
+### Added — LANG16 PR1: heap / GC opcodes and ref<T> type encoding
+
+Schema-only foundation for the GC plug-in framework — vm-core, jit-core,
+and the GC packages will fill in the runtime semantics in follow-up
+PRs.  Programs that don't allocate are unaffected: the new opcodes
+never appear in their IIR, and ``IIRInstr.may_alloc`` defaults to
+``False``.
+
+**New opcodes** (in ``HEAP_OPS``):
+
+- ``alloc(size, kind)`` — allocate ``size`` bytes tagged ``kind``;
+  produces ``ref<any>``.  Sets a safepoint.
+- ``box(value)`` — allocate a single-slot heap cell holding ``value``;
+  produces ``ref<typeof(value)>``.  Sets a safepoint.
+- ``unbox(ref)`` — deref a single-slot box; traps on null.
+- ``field_load(ref, offset)`` — read one field from a heap object.
+- ``field_store(ref, offset, value)`` — write one field; emits a
+  write barrier when the active GC requires one.
+- ``is_null(ref)`` — produces ``bool``.
+- ``safepoint()`` — yield to the GC if a collection is pending.
+
+**New opcode-category sets**:
+
+- ``HEAP_OPS`` — the seven opcodes above.
+- ``ALLOCATING_OPS`` — the subset that may trigger a collection
+  (``alloc``, ``box``, ``safepoint``).
+
+``alloc``, ``box``, ``unbox``, ``field_load``, ``is_null`` are added
+to ``VALUE_OPS``.  ``field_store`` and ``safepoint`` are added to
+``SIDE_EFFECT_OPS``.
+
+**``ref<T>`` type encoding**:
+
+Heap pointers use the string form ``"ref<T>"`` where ``T`` is the
+pointee type.  Examples: ``"ref<u8>"``, ``"ref<any>"``,
+``"ref<ref<any>>"``.  Three helpers are exported:
+
+- ``is_ref_type(s) -> bool``
+- ``unwrap_ref_type(s) -> str | None`` (``"ref<u8>"`` → ``"u8"``)
+- ``make_ref_type(t) -> str`` (``"u8"`` → ``"ref<u8>"``)
+
+``IIRInstr.is_typed()`` was updated to recognise ``ref<T>`` as a
+concrete type so the profiler skips them (heap references are not
+profiled the way primitives are).
+
+**``IIRInstr.may_alloc: bool`` field**:
+
+A new optional flag (default ``False``) frontends set on any
+instruction that may trigger a heap allocation — directly via the
+allocating opcodes, or transitively via a ``call`` whose callee
+allocates.  vm-core uses this in PR3 to decide where to insert GC
+safepoints; for now it is metadata.  ``compare=False`` so it does
+not affect ``==``.
+
+**Test coverage**: 140 tests, 100% coverage (was 114, 100%).  Pre-existing
+lint warnings on ``feedback_slots`` and ``source_map`` field declarations
+fixed in passing.
+
 ### Added — LANG17 PR4: optional frontend side tables on IIRFunction
 
 - `IIRFunction.feedback_slots: dict[int, int]` — optional
