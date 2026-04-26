@@ -32,7 +32,23 @@ package com.codingadventures.activationfunctions;
  */
 public final class ActivationFunctions {
 
+    private static final double LEAKY_RELU_SLOPE = 0.01;
+
     private ActivationFunctions() {}
+
+    // ========================================================================
+    // Linear: x
+    // ========================================================================
+
+    /** Return the input unchanged. */
+    public static double linear(double x) {
+        return x;
+    }
+
+    /** Derivative of linear activation: 1 everywhere. */
+    public static double linearDerivative(double x) {
+        return 1.0;
+    }
 
     // ========================================================================
     // Sigmoid: σ(x) = 1 / (1 + e^(-x))
@@ -70,6 +86,20 @@ public final class ActivationFunctions {
     }
 
     // ========================================================================
+    // Leaky ReLU: x if x > 0, otherwise 0.01x
+    // ========================================================================
+
+    /** Compute Leaky ReLU with the spec default negative slope of 0.01. */
+    public static double leakyRelu(double x) {
+        return x > 0.0 ? x : LEAKY_RELU_SLOPE * x;
+    }
+
+    /** Derivative: 1 if x > 0, 0.01 otherwise. */
+    public static double leakyReluDerivative(double x) {
+        return x > 0.0 ? 1.0 : LEAKY_RELU_SLOPE;
+    }
+
+    // ========================================================================
     // Tanh: (e^x - e^(-x)) / (e^x + e^(-x))
     // ========================================================================
 
@@ -82,5 +112,19 @@ public final class ActivationFunctions {
     public static double tanhDerivative(double x) {
         double t = Math.tanh(x);
         return 1.0 - t * t;
+    }
+
+    // ========================================================================
+    // Softplus: log(1 + e^x)
+    // ========================================================================
+
+    /** Compute Softplus using a numerically stable log1p formulation. */
+    public static double softplus(double x) {
+        return Math.log1p(Math.exp(-Math.abs(x))) + Math.max(x, 0.0);
+    }
+
+    /** Derivative: sigmoid(x). */
+    public static double softplusDerivative(double x) {
+        return sigmoid(x);
     }
 }

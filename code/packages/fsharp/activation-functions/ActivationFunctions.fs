@@ -25,6 +25,13 @@ open System
 module ActivationFunctions =
     // exp(710) is already too large for float, so we clamp before calling Exp.
     let private sigmoidOverflowClamp = 709.0
+    let private leakyReluSlope = 0.01
+
+    /// Return the input unchanged.
+    let linear (x: float) = x
+
+    /// Return the constant slope of the identity function.
+    let linearDerivative (_x: float) = 1.0
 
     /// Compute the logistic sigmoid.
     ///
@@ -64,6 +71,20 @@ module ActivationFunctions =
         else
             0.0
 
+    /// Compute Leaky ReLU with the spec default negative slope of 0.01.
+    let leakyRelu (x: float) =
+        if x > 0.0 then
+            x
+        else
+            leakyReluSlope * x
+
+    /// Return the slope of Leaky ReLU.
+    let leakyReluDerivative (x: float) =
+        if x > 0.0 then
+            1.0
+        else
+            leakyReluSlope
+
     /// Compute tanh(x), the zero-centered sibling of sigmoid.
     let tanh (x: float) = Math.Tanh(x)
 
@@ -74,3 +95,10 @@ module ActivationFunctions =
     let tanhDerivative (x: float) =
         let t = Math.Tanh(x)
         1.0 - (t * t)
+
+    /// Compute Softplus using a stable absolute-value formulation.
+    let softplus (x: float) =
+        Math.Log(1.0 + Math.Exp(-abs x)) + max x 0.0
+
+    /// Compute the derivative of Softplus, which is sigmoid.
+    let softplusDerivative (x: float) = sigmoid x

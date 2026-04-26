@@ -36,6 +36,21 @@ import Foundation
 /// All functions are pure, stateless scalar operations.
 public struct ActivationFunctions {
     private init() {}
+    private static let leakyReluSlope = 0.01
+
+    // ========================================================================
+    // MARK: - Linear
+    // ========================================================================
+
+    /// Return the input unchanged.
+    public static func linear(_ x: Double) -> Double {
+        return x
+    }
+
+    /// Derivative of linear activation: 1 everywhere.
+    public static func linearDerivative(_ x: Double) -> Double {
+        return 1.0
+    }
 
     // ========================================================================
     // MARK: - Sigmoid
@@ -112,6 +127,20 @@ public struct ActivationFunctions {
     }
 
     // ========================================================================
+    // MARK: - Leaky ReLU
+    // ========================================================================
+
+    /// Compute Leaky ReLU with the spec default negative slope of 0.01.
+    public static func leakyRelu(_ x: Double) -> Double {
+        return x > 0.0 ? x : leakyReluSlope * x
+    }
+
+    /// Derivative of Leaky ReLU: 1 if x > 0, 0.01 otherwise.
+    public static func leakyReluDerivative(_ x: Double) -> Double {
+        return x > 0.0 ? 1.0 : leakyReluSlope
+    }
+
+    // ========================================================================
     // MARK: - Tanh (Hyperbolic Tangent)
     // ========================================================================
     //
@@ -137,5 +166,19 @@ public struct ActivationFunctions {
     public static func tanhDerivative(_ x: Double) -> Double {
         let t = Foundation.tanh(x)
         return 1.0 - t * t
+    }
+
+    // ========================================================================
+    // MARK: - Softplus
+    // ========================================================================
+
+    /// Compute Softplus using a numerically stable log1p formulation.
+    public static func softplus(_ x: Double) -> Double {
+        return log1p(exp(-abs(x))) + max(x, 0.0)
+    }
+
+    /// Derivative of Softplus: sigmoid(x).
+    public static func softplusDerivative(_ x: Double) -> Double {
+        return sigmoid(x)
     }
 }
