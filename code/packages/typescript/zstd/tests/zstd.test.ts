@@ -181,6 +181,25 @@ describe("TC-8: large repetitive text", () => {
     const threshold = Math.floor(input.length * 70 / 100);
     expect(compressed.length).toBeLessThan(threshold);
   });
+
+  // ── Regression for the seq_count endianness bug ──────────────────────────
+  //
+  // The original encoder for counts in [128, 0x7FFE] wrote bytes in the
+  // wrong order: `[count & 0xFF, (count >> 8) | 0x80]`. When the LOW byte
+  // of `count` happened to be < 128, the decoder mis-took the 1-byte path
+  // and returned a tiny garbage count. Roughly half of all counts in the
+  // 2-byte range trigger this — for example, 515 (= 0x0203, low byte 0x03).
+  //
+  // 200 KB of long-period repetitive text reliably yields enough sequences
+  // per single block to push past 128 (LZSS finds ~one match per pattern
+  // repetition). This round-trip is the canonical regression: it must pass
+  // for the same reason the analogous Lua TC-8 must pass.
+  it("round-trips 200 KB of repetitive text (>= 128 sequences per block)", () => {
+    const pattern = "hello world and more text for compression testing!\n";
+    const text = pattern.repeat(4000); // ~204 KB → first block has ~500 sequences
+    const input = new TextEncoder().encode(text);
+    expect(rt(input)).toEqual(input);
+  });
 });
 
 // ─── TC-9: Bad magic throws ───────────────────────────────────────────────────

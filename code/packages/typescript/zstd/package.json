@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/zstd",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "ZStd (RFC 8878) lossless compression from scratch — CMP07",
   "type": "module",
   "main": "src/index.ts",

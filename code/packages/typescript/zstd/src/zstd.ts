@@ -847,11 +847,26 @@ function decodeLiteralsSection(data: Uint8Array, offset: number): [Uint8Array, n
 
 /** Encode sequence count as 1, 2, or 3 bytes. */
 function encodeSeqCount(count: number): number[] {
+  // RFC 8878 §3.1.1.3.1 layout — byte0 is the FORMAT MARKER:
+  //   byte0 < 128            → 1-byte form, count = byte0
+  //   byte0 ∈ [128, 254]     → 2-byte form, count = ((byte0 - 128) << 8) | byte1
+  //   byte0 == 0xFF          → 3-byte form, count = byte1 + (byte2 << 8) + 0x7F00
+  //
+  // The decoder branches on byte0 alone, so the encoder MUST write the byte
+  // that determines the form first. The previous implementation wrote
+  // `[count & 0xFF, (count >> 8) | 0x80]` (low byte first). For any
+  // count ≥ 128 whose low byte happened to be < 128 (e.g. count=515 →
+  // byte0=0x03), the decoder mis-took the 1-byte path and returned a tiny
+  // garbage count, mis-aligning every byte that followed (including the
+  // symbol-modes byte). The bug was silent for counts whose low byte was
+  // ≥ 128, which is roughly half — so most existing tests still passed.
   if (count === 0) return [0];
   if (count < 128) return [count];
-  if (count < 0x7FFF) {
-    const v = count | 0x8000;
-    return [v & 0xFF, (v >>> 8) & 0xFF];
+  if (count < 0x7F00) {
+    // 2-byte form: byte0 = (count >> 8) | 0x80, byte1 = count & 0xFF.
+    // count < 0x7F00 keeps byte0 in [0x80, 0xFE]; counts at or above 0x7F00
+    // fall through to the 3-byte form (byte0 = 0xFF).
+    return [(count >>> 8) | 0x80, count & 0xFF];
   }
   // 3-byte: first byte = 0xFF, then (count - 0x7F00) as LE u16
   const r = count - 0x7F00;
@@ -865,8 +880,9 @@ function decodeSeqCount(data: Uint8Array, offset: number): [number, number] {
   if (b0 < 128) return [b0, 1];
   if (b0 < 0xFF) {
     if (offset + 2 > data.length) throw new Error("truncated sequence count");
-    const v = b0 | (data[offset + 1]! << 8);
-    return [(v & 0x7FFF), 2];
+    // Equivalent to `((b0 - 128) << 8) | b1` per RFC 8878 §3.1.1.3.1.
+    const count = ((b0 & 0x7F) << 8) | data[offset + 1]!;
+    return [count, 2];
   }
   // b0 === 0xFF
   if (offset + 3 > data.length) throw new Error("truncated sequence count (3-byte)");

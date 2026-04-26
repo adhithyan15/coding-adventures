@@ -185,6 +185,69 @@ func TestTC8RepeatOffset(t *testing.T) {
 	}
 }
 
+// ─── Regression: seq_count endianness bug ────────────────────────────────────
+//
+// The original encodeSeqCount for counts in [128, 0x7FFE] wrote bytes in the
+// wrong order via `binary.LittleEndian.AppendUint16(nil, count|0x8000)`,
+// which puts the LOW byte first. When the low byte happened to be < 128,
+// the decoder mis-took the 1-byte path and returned a tiny garbage count,
+// mis-aligning every byte downstream. Roughly half of all counts in the
+// 2-byte range trigger it (e.g. 515 = 0x0203, low byte 0x03).
+//
+// 200 KB of long-period repetitive text reliably yields enough sequences
+// per single block to push past 128 (LZSS finds ~one match per pattern
+// repetition), so this round-trip exercises the 2-byte seq_count path.
+func TestSeqCountEndiannessRegression(t *testing.T) {
+	pattern := "hello world and more text for compression testing!\n"
+	var sb []byte
+	for i := 0; i < 4000; i++ {
+		sb = append(sb, pattern...)
+	}
+	compressed := Compress(sb)
+	got, err := Decompress(compressed)
+	if err != nil {
+		t.Fatalf("decompress failed: %v", err)
+	}
+	assertBytes(t, got, sb, "seq_count regression round-trip")
+}
+
+// TestEncodeSeqCountRoundTrip exhaustively checks the encode↔decode pair on
+// the 1-byte boundary, the entire 2-byte range, and a few 3-byte values.
+// This is the lowest-level confirmation that the format is self-consistent
+// and matches RFC 8878 §3.1.1.3.1's decoder formula.
+func TestEncodeSeqCountRoundTrip(t *testing.T) {
+	check := func(count int) {
+		t.Helper()
+		bs := encodeSeqCount(count)
+		got, consumed, err := decodeSeqCount(bs)
+		if err != nil {
+			t.Fatalf("count=%d: decode error: %v", count, err)
+		}
+		if got != count {
+			t.Errorf("count=%d: round-trip got %d (bytes=%v consumed=%d)",
+				count, got, bs, consumed)
+		}
+		if consumed != len(bs) {
+			t.Errorf("count=%d: consumed=%d but encoded %d bytes",
+				count, consumed, len(bs))
+		}
+	}
+
+	// 1-byte form: 0..127
+	for c := 0; c < 128; c++ {
+		check(c)
+	}
+	// 2-byte form: every value in [128, 0x7F00). This is the range that
+	// previously had silent corruption for low-byte-< 128.
+	for c := 128; c < 0x7F00; c++ {
+		check(c)
+	}
+	// 3-byte form: spot checks
+	for _, c := range []int{0x7F00, 0x7F01, 0x8000, 0x10000, 0x17EFE} {
+		check(c)
+	}
+}
+
 // ─── TC-9: deterministic output ───────────────────────────────────────────────
 
 // TestTC9Deterministic verifies that compressing the same data twice produces

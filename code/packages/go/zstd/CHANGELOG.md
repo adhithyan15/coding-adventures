@@ -2,6 +2,25 @@
 
 All notable changes to this package follow [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.0.2] — 2026-04-26
+
+### Fixed
+
+- **`encodeSeqCount` / `decodeSeqCount` now use RFC 8878 §3.1.1.3.1 layout.**
+  The 2-byte form previously emitted bytes via
+  `binary.LittleEndian.AppendUint16(nil, count|0x8000)`, placing the LOW
+  byte first. The decoder branches on byte0 to determine the form: for any
+  count ≥ 128 whose low byte was < 128 (e.g. count=515 → byte0=0x03), the
+  decoder mis-took the 1-byte path and returned a tiny garbage count,
+  mis-aligning every byte downstream. Roughly half of all counts in the
+  2-byte range silently corrupted; the other half worked, so most existing
+  tests passed.
+- New `TestSeqCountEndiannessRegression` round-trips 200 KB of repetitive
+  text (> 128 sequences in a single block).
+- New `TestEncodeSeqCountRoundTrip` exhaustively round-trips every count in
+  the 1-byte range (0..127), the entire 2-byte range (128..0x7EFF), and a
+  spot of 3-byte values.
+
 ## [0.0.1] — 2026-04-24
 
 ### Added
