@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>CodingAdventures.GradientDescent.FSharp</AssemblyName>
+    <PackageId>CodingAdventures.GradientDescent</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>Pure F# stochastic gradient descent weight update helper</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="GradientDescent.fs" />
+  </ItemGroup>
+</Project>
