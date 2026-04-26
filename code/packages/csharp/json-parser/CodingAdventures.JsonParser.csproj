@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>CodingAdventures.JsonParser.CSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>JSON parser - parses JSON source text using the grammar-driven parser infrastructure</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../grammar-tools/CodingAdventures.GrammarTools.csproj" />
+    <ProjectReference Include="../lexer/CodingAdventures.Lexer.csproj" />
+    <ProjectReference Include="../parser/CodingAdventures.Parser.csproj" />
+    <ProjectReference Include="../json-lexer/CodingAdventures.JsonLexer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="tests\**\*.cs" />
+    <EmbeddedResource Remove="tests\**" />
+    <None Remove="tests\**" />
+  </ItemGroup>
+</Project>
