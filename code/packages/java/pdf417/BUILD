@@ -1,0 +1,1 @@
+mkdir -p ../../../../.build-locks && while ! mkdir ../../../../.build-locks/java-pdf417.lock 2>/dev/null; do sleep 1; done; gradle --no-daemon --no-build-cache --max-workers=1 test; status=$?; rmdir ../../../../.build-locks/java-pdf417.lock; exit $status
