@@ -91,6 +91,24 @@ defmodule CodingAdventures.TcpServerTest do
     TcpServer.stop(first)
   end
 
+  test "serve returns error when listener cannot be opened" do
+    {:ok, blocker} = TcpServer.start(TcpServer.new(port: 0))
+    {_host, port} = TcpServer.address(blocker)
+
+    assert {:error, :address_in_use} = TcpServer.serve(TcpServer.new(port: port))
+
+    TcpServer.stop(blocker)
+  end
+
+  test "serve_forever surfaces start errors" do
+    {:ok, blocker} = TcpServer.start(TcpServer.new(port: 0))
+    {_host, port} = TcpServer.address(blocker)
+
+    assert {:error, :address_in_use} = TcpServer.serve_forever(TcpServer.new(port: port))
+
+    TcpServer.stop(blocker)
+  end
+
   test "loopback echo request" do
     {server, task} = start_server(TcpServer.new(port: 0))
     {_host, port} = TcpServer.address(server)
