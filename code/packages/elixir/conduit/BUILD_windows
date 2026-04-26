@@ -1,0 +1,6 @@
+# BUILD_windows — coding_adventures_conduit
+#
+# Windows NIF support is not yet wired up (BEAM links against erts.dll
+# in a way that requires explicit import-library linkage). Skip this
+# package on Windows builds.
+echo "skipped (NIF not yet supported on Windows)"

@@ -574,9 +574,26 @@ extern "C" {
 
 /// Opaque map iterator. Pass a stack-allocated instance to
 /// `enif_map_iterator_create` then `enif_map_iterator_destroy` when done.
+///
+/// The internal layout is reserved by BEAM (5 machine words on 64-bit
+/// platforms; we round up to 8 for safety). Construct one via
+/// `ErlNifMapIterator::zeroed()` — never read or write the bytes
+/// directly.
 #[repr(C)]
 pub struct ErlNifMapIterator {
-    _opaque: [usize; 8],
+    // Public so callers can zero-initialize without going through a method,
+    // but the field name is reserved and must never be read or written
+    // directly by user code.
+    pub __private_internal_state: [usize; 8],
+}
+
+impl ErlNifMapIterator {
+    /// Construct a zero-initialized iterator suitable for passing to
+    /// `enif_map_iterator_create`. The BEAM populates the internal state
+    /// inside that call.
+    pub const fn zeroed() -> Self {
+        Self { __private_internal_state: [0usize; 8] }
+    }
 }
 
 /// `entry` argument to `enif_map_iterator_create`: start at the first key.
