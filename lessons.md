@@ -3379,3 +3379,57 @@ luaL_unref(L, LUA_REGISTRYINDEX, (*srv).app_ref);
 This keeps the `LuaConduitApp` reachable from the Lua registry (which is always a GC root) until the server is destroyed. The `luaL_unref` in `server_gc` runs only after all Rust closures will never fire again.
 
 **Rule:** Any time Rust holds raw `luaL_ref` integers derived from a Lua object's internal state, and that object could become unreachable from Lua's value graph, you must keep a registry reference to the object alive for at least as long as the raw integer refs are in use. Use `luaL_ref` to pin the object and `luaL_unref` to release only after all integer refs are retired.
+
+---
+
+## Lesson: `napi_create_threadsafe_function` — pass C NULL for `async_resource`, not JS `undefined`
+
+**Date:** 2026-04-25
+
+**What happened:** Calling `napi_create_threadsafe_function` with `async_resource = napi_get_undefined()` (the JavaScript `undefined` value) causes Node.js v25 to return `napi_invalid_arg`. The panic message was `N-API error (status 2): napi_create_threadsafe_function`.
+
+**Root cause:** Node.js source checks `v8_resource->IsObject()` on the `async_resource` parameter. The JavaScript `undefined` value is not an Object, so the check fails and `napi_invalid_arg` is returned. When `async_resource` is C NULL (the null pointer), Node.js instead creates a fresh internal Object — the correct way to opt out of async-hook tracking.
+
+**Fix:** In `node-bridge/src/lib.rs` `tsfn_create()`, pass `ptr::null_mut()` for `async_resource` instead of the result of `napi_get_undefined`. Remove the `napi_get_undefined` call entirely for this parameter.
+
+**Rule:** For optional `napi_value` parameters in N-API, "no value" must be represented as C NULL (`ptr::null_mut()`), not JavaScript `undefined`. The two are distinct: a C null pointer means "not provided"; JS `undefined` is a real JS value subject to type checks.
+
+---
+
+## Lesson: `napi_create_threadsafe_function` — pass C NULL for `func` when providing a custom `call_js_cb`
+
+**Date:** 2026-04-25
+
+**What happened:** On Node.js v25, passing both `func` (a JS function value) AND `call_js_cb` (a custom C callback) to `napi_create_threadsafe_function` caused `napi_invalid_arg`. The function value failed the internal `v8_func->IsFunction()` check even though it was a valid JS function.
+
+**Root cause:** Platform-specific V8 value type checking; passing a non-null `func` triggers additional validation that can fail. When `func = NULL`, Node.js skips the function-type check and requires `call_js_cb != NULL` instead.
+
+**Fix:** Pass `ptr::null_mut()` for `func`. Store the JS function as an `napi_ref` and pass it as the `context` pointer. In `call_js_cb`, cast `ctx` back to `napi_ref` and call `deref(env, handler_ref)` to retrieve the function.
+
+**Rule:** When using a custom `call_js_cb`, always pass `func = NULL` to `napi_create_threadsafe_function` and carry the JS function reference via the `context` parameter as an `napi_ref`. This is the safe, N-API-documented pattern.
+
+---
+
+## Lesson: `WebResponse::internal_error` sets Content-Type header — breaks empty-headers sentinel check
+
+**Date:** 2026-04-25
+
+**What happened:** A route handler check `if resp.status == 500 && resp.headers.is_empty()` was used to detect an unhandled exception (to re-dispatch to the error handler TSFN). But `WebResponse::internal_error()` calls `.with_content_type("text/plain")`, which adds a `Content-Type` header — making `headers.is_empty()` false. The error handler was never invoked.
+
+**Fix:** In `extract_halt_or_error`, for non-halt JS exceptions, return a bare `WebResponse { status: 500, headers: vec![], body: msg.into_bytes() }` instead of `WebResponse::internal_error(&msg)`. This makes the sentinel check `headers.is_empty()` reliable. If no error handler is registered, the bare 500 with the error message body is returned to the client as-is.
+
+**Rule:** When using a `WebResponse` field value as a sentinel to distinguish "exception thrown, call error handler" from "handler returned a real 500 response", do NOT use the convenience constructors that add headers. Build the sentinel response manually with `headers: vec![]`.
+
+---
+
+## Lesson: Don't use `mise exec --` in BUILD files — CI Ubuntu doesn't have mise
+
+**Date:** 2026-04-26
+
+**What happened:** WEB05 PR #1426 build failed on `ubuntu-latest` with `sh: 1: mise: not found` for both `typescript/conduit` and `typescript/programs/conduit-hello`.
+
+**Root cause:** The BUILD files prefixed every command with `mise exec --` (e.g. `mise exec -- npm ci`).  This works locally because `mise` is installed and on PATH.  In GitHub Actions, the workflow uses `actions/setup-node` and `dtolnay/rust-toolchain` to install tools directly into PATH; it does NOT install mise.  So the shell that runs the BUILD script can't find the `mise` binary.
+
+**Fix:** Remove all `mise exec --` prefixes.  Just call `cargo`, `npm`, `npx`, `node`, etc. directly.  The Python conduit BUILD already documented this pattern explicitly in a comment.
+
+**Rule:** BUILD files should call language tools (cargo, npm, npx, node, python, go, etc.) directly without any wrapper.  `mise` provides shims locally so direct invocation works in both environments.  CI installs tools into PATH itself.
