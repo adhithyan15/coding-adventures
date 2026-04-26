@@ -112,14 +112,29 @@ class IIRInstr:
     ``None`` means no guard has been emitted yet.
     """
 
+    may_alloc: bool = field(default=False, repr=False, compare=False)
+    """LANG16 hint: this instruction may trigger a heap allocation.
+
+    Set by language frontends for any instruction that allocates (`alloc`,
+    `box`, `safepoint`) or transitively reaches one through a function
+    call.  vm-core uses this to decide where to insert GC safepoints —
+    a collection cycle can only happen at an instruction whose
+    ``may_alloc`` is True (or at the periodic forced-safepoint interval
+    for tight loops with no allocation).
+
+    Defaults to ``False`` so existing callers see no behaviour change:
+    programs that never allocate pay zero GC overhead because no
+    instruction's ``may_alloc`` ever fires.
+    """
+
     # -----------------------------------------------------------------------
     # Convenience helpers
     # -----------------------------------------------------------------------
 
     def is_typed(self) -> bool:
         """Return True if this instruction has a concrete (non-dynamic) type hint."""
-        from interpreter_ir.opcodes import CONCRETE_TYPES
-        return self.type_hint in CONCRETE_TYPES
+        from interpreter_ir.opcodes import CONCRETE_TYPES, is_ref_type
+        return self.type_hint in CONCRETE_TYPES or is_ref_type(self.type_hint)
 
     def has_observation(self) -> bool:
         """Return True if the profiler has recorded at least one observation."""

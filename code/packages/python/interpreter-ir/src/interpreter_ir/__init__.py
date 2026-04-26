@@ -44,6 +44,7 @@ from interpreter_ir.instr import IIRInstr
 from interpreter_ir.module import IIRModule
 from interpreter_ir.opcodes import (
     ALL_OPS,
+    ALLOCATING_OPS,
     ARITHMETIC_OPS,
     BITWISE_OPS,
     BRANCH_OPS,
@@ -53,11 +54,17 @@ from interpreter_ir.opcodes import (
     CONCRETE_TYPES,
     CONTROL_OPS,
     DYNAMIC_TYPE,
+    HEAP_OPS,
     IO_OPS,
     MEMORY_OPS,
     POLYMORPHIC_TYPE,
+    REF_PREFIX,
+    REF_SUFFIX,
     SIDE_EFFECT_OPS,
     VALUE_OPS,
+    is_ref_type,
+    make_ref_type,
+    unwrap_ref_type,
 )
 from interpreter_ir.serialise import deserialise, serialise
 from interpreter_ir.slot_state import (
@@ -81,6 +88,7 @@ __all__ = [
     "deserialise",
     # Opcode sets
     "ALL_OPS",
+    "ALLOCATING_OPS",
     "ARITHMETIC_OPS",
     "BITWISE_OPS",
     "BRANCH_OPS",
@@ -88,12 +96,18 @@ __all__ = [
     "CMP_OPS",
     "COERCION_OPS",
     "CONTROL_OPS",
+    "HEAP_OPS",
     "IO_OPS",
     "MEMORY_OPS",
     "SIDE_EFFECT_OPS",
     "VALUE_OPS",
-    # Type constants
+    # Type constants and helpers
     "CONCRETE_TYPES",
     "DYNAMIC_TYPE",
     "POLYMORPHIC_TYPE",
+    "REF_PREFIX",
+    "REF_SUFFIX",
+    "is_ref_type",
+    "make_ref_type",
+    "unwrap_ref_type",
 ]
