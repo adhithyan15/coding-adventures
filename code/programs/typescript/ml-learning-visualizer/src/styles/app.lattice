@@ -1,12 +1,13 @@
-$paper: #f5f7f2;
+$paper: #f7f8f3;
 $ink: #17201c;
 $muted: #5d6d68;
-$panel: rgba(255, 255, 255, 0.88);
+$panel: rgba(255, 255, 255, 0.92);
 $line: rgba(23, 32, 28, 0.14);
 $green: #237a57;
 $blue: #2563eb;
 $red: #c2413b;
 $gold: #b7791f;
+$violet: #6d5bd0;
 
 @mixin surface() {
   border: 1px solid $line;
@@ -31,7 +32,9 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: linear-gradient(180deg, #fbfcf7 0%, $paper 100%);
+  background:
+    linear-gradient(180deg, #fcfbf6 0%, $paper 72%),
+    linear-gradient(90deg, rgba(35, 122, 87, 0.08), rgba(37, 99, 235, 0.05));
   color: $ink;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   line-height: 1.5;
@@ -44,12 +47,12 @@ select {
 }
 
 button {
-  min-height: 42px;
+  min-height: 40px;
   border: 1px solid rgba(35, 122, 87, 0.28);
   border-radius: 7px;
   background: #ffffff;
   color: $ink;
-  font-weight: 700;
+  font-weight: 750;
   cursor: pointer;
 }
 
@@ -79,9 +82,9 @@ input[type="range"] {
 }
 
 .app {
-  width: min(1380px, calc(100vw - 28px));
+  width: min(1540px, calc(100vw - 28px));
   margin: 0 auto;
-  padding: 24px 0 42px;
+  padding: 22px 0 42px;
 }
 
 .app-header {
@@ -95,49 +98,153 @@ input[type="range"] {
 .eyebrow {
   margin: 0 0 4px;
   color: $green;
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
+  font-size: 0.76rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
-h1 {
+h1,
+h2 {
   margin: 0;
-  font-size: clamp(1.7rem, 3vw, 3rem);
-  line-height: 1.05;
+  line-height: 1.08;
   letter-spacing: 0;
+}
+
+h1 {
+  font-size: clamp(1.7rem, 3vw, 2.7rem);
+}
+
+h2 {
+  font-size: 1.1rem;
 }
 
 .formula {
   @include surface;
-  min-width: 270px;
-  padding: 14px 16px;
+  min-width: 260px;
+  padding: 13px 15px;
   font-family: "SFMono-Regular", Consolas, monospace;
-  font-size: 1rem;
+  font-size: 0.95rem;
   text-align: right;
 }
 
-.workspace {
+.workspace--lab {
   display: grid;
-  grid-template-columns: 286px minmax(480px, 1fr) 286px;
+  grid-template-columns: 310px minmax(500px, 1fr) 300px;
   gap: 14px;
   align-items: start;
 }
 
-.controls,
+.lab-rail,
 .chart-panel,
-.metrics {
+.metrics,
+.lab-intro {
   @include surface;
 }
 
-.controls,
-.metrics {
-  padding: 16px;
+.lab-rail {
+  max-height: calc(100vh - 126px);
+  overflow: auto;
+  padding: 14px;
 }
 
-.controls {
+.rail-summary {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.rail-summary strong {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.rail-summary span {
+  color: $muted;
+  font-weight: 800;
+}
+
+.lab-group {
   display: grid;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.lab-group h2 {
+  color: $muted;
+  font-size: 0.76rem;
+  text-transform: uppercase;
+}
+
+.lab-list {
+  display: grid;
+  gap: 6px;
+}
+
+.lab-button {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 7px 9px;
+  border-color: $line;
+  text-align: left;
+}
+
+.lab-button span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lab-button small {
+  color: $muted;
+  font-size: 0.68rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.lab-button--active {
+  border-color: rgba(37, 99, 235, 0.52);
+  background: #edf4ff;
+}
+
+.lab-stage {
+  display: grid;
+  gap: 12px;
+}
+
+.lab-intro {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
   gap: 16px;
+  padding: 15px;
+}
+
+.lab-intro p:not(.eyebrow) {
+  margin: 7px 0 0;
+  color: $muted;
+}
+
+.lab-chip {
+  min-width: 86px;
+  padding: 8px 10px;
+  border-radius: 7px;
+  background: #f4efe2;
+  color: #67460d;
+  font-size: 0.78rem;
+  font-weight: 850;
+  text-align: center;
+}
+
+.controls,
+.metrics {
+  display: grid;
+  gap: 13px;
+  padding: 15px;
 }
 
 .field,
@@ -146,10 +253,16 @@ h1 {
   gap: 7px;
 }
 
-.field span {
+.field span,
+.metric span,
+.history__topline span,
+.gradients span,
+.lesson span,
+.source-panel span {
+  display: block;
   color: $muted;
-  font-size: 0.78rem;
-  font-weight: 800;
+  font-size: 0.72rem;
+  font-weight: 850;
   text-transform: uppercase;
 }
 
@@ -182,11 +295,6 @@ h1 {
   stroke-width: 1;
 }
 
-.axis {
-  stroke: rgba(23, 32, 28, 0.34);
-  stroke-width: 1.5;
-}
-
 .axis-label,
 .axis-title {
   fill: $muted;
@@ -199,12 +307,12 @@ h1 {
 }
 
 .axis-title {
-  font-weight: 800;
+  font-weight: 850;
 }
 
 .axis-title--y {
   transform: rotate(-90deg);
-  transform-origin: 18px 230px;
+  transform-origin: 20px 230px;
 }
 
 .ideal-line {
@@ -225,16 +333,14 @@ h1 {
   stroke-width: 2;
 }
 
-.truth-point {
-  fill: $green;
+.truth-point,
+.prediction-point {
   stroke: #ffffff;
   stroke-width: 2;
 }
 
 .prediction-point {
   fill: $red;
-  stroke: #ffffff;
-  stroke-width: 2;
 }
 
 .legend {
@@ -243,8 +349,8 @@ h1 {
   gap: 10px 18px;
   padding: 8px 4px 2px;
   color: $muted;
-  font-size: 0.86rem;
-  font-weight: 700;
+  font-size: 0.84rem;
+  font-weight: 750;
 }
 
 .legend span {
@@ -282,36 +388,21 @@ h1 {
   border-top-style: dashed;
 }
 
-.metrics {
-  display: grid;
-  gap: 10px;
-}
-
 .metric {
   border-bottom: 1px solid $line;
-  padding: 0 0 10px;
-}
-
-.metric span,
-.history__topline span,
-.gradients span {
-  display: block;
-  color: $muted;
-  font-size: 0.74rem;
-  font-weight: 800;
-  text-transform: uppercase;
+  padding: 0 0 9px;
 }
 
 .metric strong {
   display: block;
   margin-top: 2px;
-  font-size: 1.25rem;
+  font-size: 1.16rem;
 }
 
 .history {
   display: grid;
   gap: 8px;
-  padding: 4px 0;
+  padding: 2px 0;
 }
 
 .history__topline {
@@ -342,42 +433,64 @@ h1 {
   stroke-width: 3;
 }
 
-.gradients {
+.gradients,
+.lesson,
+.activation-panel,
+.source-panel {
   display: grid;
   gap: 6px;
 }
 
+.lesson p,
+.activation-panel p,
+.source-panel p {
+  margin: 0;
+  color: $muted;
+  font-size: 0.9rem;
+}
+
+.activation-panel svg {
+  width: 100%;
+  height: 82px;
+  overflow: visible;
+}
+
+.activation-line {
+  fill: none;
+  stroke: $violet;
+  stroke-width: 3;
+}
+
 code {
   display: block;
-  min-height: 32px;
+  min-height: 30px;
   padding: 6px 8px;
   border-radius: 6px;
   background: #eef4f0;
   color: #24352e;
   font-family: "SFMono-Regular", Consolas, monospace;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
 }
 
-@media (max-width: 1120px) {
-  .workspace {
-    grid-template-columns: 1fr;
+@media (max-width: 1180px) {
+  .workspace--lab {
+    grid-template-columns: 270px minmax(420px, 1fr);
   }
 
-  .controls,
   .metrics {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-column: 1 / -1;
   }
 }
 
-@media (max-width: 720px) {
+@media (max-width: 820px) {
   .app {
-    width: min(100% - 18px, 640px);
-    padding-top: 14px;
+    width: min(100vw - 16px, 720px);
+    padding-top: 12px;
   }
 
-  .app-header {
-    align-items: stretch;
-    flex-direction: column;
+  .app-header,
+  .lab-intro {
+    display: grid;
   }
 
   .formula {
@@ -385,9 +498,12 @@ code {
     text-align: left;
   }
 
-  .controls,
-  .metrics {
+  .workspace--lab {
     grid-template-columns: 1fr;
+  }
+
+  .lab-rail {
+    max-height: 320px;
   }
 
   .field-grid {
