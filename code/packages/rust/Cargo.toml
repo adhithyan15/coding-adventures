@@ -391,4 +391,5 @@ members = [
     "cas-matrix",
     "cas-limit-series",
     "cas-pretty-printer",
+    "cas-number-theory",
 ]
