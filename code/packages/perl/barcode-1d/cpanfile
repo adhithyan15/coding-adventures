@@ -1,10 +1,5 @@
-requires 'coding-adventures-codabar';
-requires 'coding-adventures-code128';
 requires 'coding-adventures-code39';
-requires 'coding-adventures-ean-13';
-requires 'coding-adventures-itf';
 requires 'coding-adventures-pixel-container';
 requires 'coding-adventures-paint_vm_metal_native';
 requires 'coding-adventures-paint_codec_png_native';
-requires 'coding-adventures-upc-a';
 on 'test' => sub { requires 'Test2::V0'; };

@@ -46,10 +46,114 @@
 #![allow(non_snake_case, non_camel_case_types)]
 
 use perl_bridge::{
-    av_push, av_to_f64_vec, die, f64_to_sv, f64_vec_to_av, newAV, newRV_noinc, newSViv, newXS,
-    sv_2nv, xs_boot_finish, xs_bootstrap, xsub_frame, xsub_return, SvROK, SvRV, AV, CV, IV, SV,
+    av_to_f64_vec, die, f64_to_sv, f64_vec_to_av, i64_to_sv, sv_to_f64, sv_to_i64,
+    xs_boot_finish, xs_bootstrap, AV, CV, IV, SV, SvREFCNT_dec, newSViv, sv_2iv, sv_2nv,
 };
-use std::ffi::c_char;
+use std::ffi::{c_char, c_int, CString};
+use std::panic::catch_unwind;
+
+// ---------------------------------------------------------------------------
+// Declare newXS — not in perl-bridge, but exported by Perl's runtime
+// ---------------------------------------------------------------------------
+//
+// `newXS` registers a C function as a Perl subroutine in the symbol table.
+// It is the core of every XS boot function.
+//
+// Signature (simplified — real Perl has ithreads variants):
+//   CV* newXS(const char *name, XSUBADDR_t subaddr, const char *filename)
+// Returns a CV* (code value); we don't use the return value.
+
+extern "C" {
+    #[link_name = "Perl_newXS"]
+    fn newXS(name: *const c_char, subaddr: unsafe extern "C" fn(*mut CV), filename: *const c_char)
+        -> *mut CV;
+}
+
+// ---------------------------------------------------------------------------
+// Stack access helpers
+// ---------------------------------------------------------------------------
+//
+// In XS C code, `dSP` / `dXSARGS` / `ST(n)` are macros that reach into
+// Perl's internal stack. Since we can't easily replicate those macros in
+// Rust without Perl headers, we use a simpler approach:
+//
+// We call `Perl_call_sv` to invoke helper Perl code, OR we declare the
+// XSUBs using a pattern where arguments are read from Perl's public API.
+//
+// For this implementation, we use `PL_stack_sp` — the Perl global stack
+// pointer — which IS exported by libperl. We read arguments relative to it.
+//
+// PL_stack_sp is a thread-local in ithreads builds; in non-threaded builds
+// it is a plain global. For simplicity we target non-threaded Perl here.
+
+extern "C" {
+    // The Perl argument stack mark stack — marks mark beginnings of argument lists.
+    static mut PL_markstack_ptr: *mut i32;
+    // The Perl value stack pointer — top of the argument stack.
+    static mut PL_stack_sp: *mut *mut SV;
+    // The Perl value stack base.
+    static mut PL_stack_base: *mut *mut SV;
+}
+
+/// Declare SvRV — not in perl-bridge, needed to dereference array refs.
+extern "C" {
+    fn SvRV(sv: *mut SV) -> *mut SV;
+    /// Returns non-zero if sv is a reference (RV). Must be checked before SvRV.
+    fn SvROK(sv: *mut SV) -> c_int;
+}
+
+/// Read the number of arguments passed to the current XSUB.
+///
+/// The XS calling convention uses a "mark" on the argument stack. The mark
+/// tells us where the current argument list begins. `ax` = mark index,
+/// `items` = number of args = sp - (mark + 1).
+///
+/// This function uses saturating arithmetic and pointer comparison to guard
+/// against pathological mark values that could cause pointer arithmetic overflow.
+///
+/// ## Guard against stack corruption
+///
+/// If `mark = i32::MAX`, then `ax = i32::MAX` (saturated), and
+/// `base.add(i32::MAX as usize)` is pointer arithmetic that exceeds the valid
+/// allocation range — undefined behaviour in Rust.
+///
+/// We therefore clamp `ax` to a sane maximum. Perl's maximum stack depth is
+/// far below 64k arguments; 4096 is generous.
+unsafe fn xsub_args() -> (*mut *mut SV, i32, i32) {
+    let mark = *PL_markstack_ptr;
+    // Guard against pathological mark values with saturating add.
+    let ax = mark.saturating_add(1);
+    let base = PL_stack_base;
+    let sp = PL_stack_sp;
+
+    // Guard: if ax is unreasonably large, Perl's stack is corrupted.
+    // Perl's maximum stack depth is far below 64k arguments; 4096 is generous.
+    const MAX_SANE_AX: i32 = 4096;
+    if ax > MAX_SANE_AX || ax < 0 {
+        // Stack is corrupted; return 0 items so each XSUB's arity check fires.
+        return (base, 0, 0);
+    }
+
+    // Compute items with overflow protection: only subtract if sp >= base_ax.
+    let base_ax = base.add(ax as usize);
+    let items = if sp >= base_ax {
+        ((sp as usize - base_ax as usize) / std::mem::size_of::<*mut SV>()) as i32 + 1
+    } else {
+        0
+    };
+    (base, ax, items)
+}
+
+/// Return n SV* results from an XSUB.
+///
+/// Adjusts the stack pointer to point to the return values, which must
+/// already be in place starting at PL_stack_base[ax].
+unsafe fn xsub_return(n: i32, ax: i32) {
+    // Set sp to point to the last return value.
+    PL_stack_sp = PL_stack_base.add((ax + n - 1) as usize);
+    // Consume the mark.
+    PL_markstack_ptr = PL_markstack_ptr.sub(1);
+}
 
 /// Read a polynomial (arrayref) from argument n.
 ///
@@ -519,65 +623,29 @@ pub unsafe extern "C" fn boot_CodingAdventures__PolynomialNative(cv: *mut CV) {
     let file = b"PolynomialNative.so\0".as_ptr() as *const c_char;
     let ax = xs_bootstrap(cv, file);
 
-    newXS(
-        b"CodingAdventures::PolynomialNative::normalize\0".as_ptr() as *const c_char,
-        xs_normalize,
-        file,
-    );
-    newXS(
-        b"CodingAdventures::PolynomialNative::degree\0".as_ptr() as *const c_char,
-        xs_degree,
-        file,
-    );
-    newXS(
-        b"CodingAdventures::PolynomialNative::zero\0".as_ptr() as *const c_char,
-        xs_zero,
-        file,
-    );
-    newXS(
-        b"CodingAdventures::PolynomialNative::one\0".as_ptr() as *const c_char,
-        xs_one,
-        file,
-    );
-    newXS(
-        b"CodingAdventures::PolynomialNative::add\0".as_ptr() as *const c_char,
-        xs_add,
-        file,
-    );
-    newXS(
-        b"CodingAdventures::PolynomialNative::subtract\0".as_ptr() as *const c_char,
-        xs_subtract,
-        file,
-    );
-    newXS(
-        b"CodingAdventures::PolynomialNative::multiply\0".as_ptr() as *const c_char,
-        xs_multiply,
-        file,
-    );
-    newXS(
-        b"CodingAdventures::PolynomialNative::evaluate\0".as_ptr() as *const c_char,
-        xs_evaluate,
-        file,
-    );
-    newXS(
-        b"CodingAdventures::PolynomialNative::divmod_poly\0".as_ptr() as *const c_char,
-        xs_divmod_poly,
-        file,
-    );
-    newXS(
-        b"CodingAdventures::PolynomialNative::divide\0".as_ptr() as *const c_char,
-        xs_divide,
-        file,
-    );
-    newXS(
-        b"CodingAdventures::PolynomialNative::modulo\0".as_ptr() as *const c_char,
-        xs_modulo,
-        file,
-    );
-    newXS(
-        b"CodingAdventures::PolynomialNative::gcd\0".as_ptr() as *const c_char,
-        xs_gcd,
-        file,
-    );
+    newXS(b"CodingAdventures::PolynomialNative::normalize\0".as_ptr() as *const c_char,
+          xs_normalize, file);
+    newXS(b"CodingAdventures::PolynomialNative::degree\0".as_ptr() as *const c_char,
+          xs_degree, file);
+    newXS(b"CodingAdventures::PolynomialNative::zero\0".as_ptr() as *const c_char,
+          xs_zero, file);
+    newXS(b"CodingAdventures::PolynomialNative::one\0".as_ptr() as *const c_char,
+          xs_one, file);
+    newXS(b"CodingAdventures::PolynomialNative::add\0".as_ptr() as *const c_char,
+          xs_add, file);
+    newXS(b"CodingAdventures::PolynomialNative::subtract\0".as_ptr() as *const c_char,
+          xs_subtract, file);
+    newXS(b"CodingAdventures::PolynomialNative::multiply\0".as_ptr() as *const c_char,
+          xs_multiply, file);
+    newXS(b"CodingAdventures::PolynomialNative::evaluate\0".as_ptr() as *const c_char,
+          xs_evaluate, file);
+    newXS(b"CodingAdventures::PolynomialNative::divmod_poly\0".as_ptr() as *const c_char,
+          xs_divmod_poly, file);
+    newXS(b"CodingAdventures::PolynomialNative::divide\0".as_ptr() as *const c_char,
+          xs_divide, file);
+    newXS(b"CodingAdventures::PolynomialNative::modulo\0".as_ptr() as *const c_char,
+          xs_modulo, file);
+    newXS(b"CodingAdventures::PolynomialNative::gcd\0".as_ptr() as *const c_char,
+          xs_gcd, file);
     xs_boot_finish(ax);
 }

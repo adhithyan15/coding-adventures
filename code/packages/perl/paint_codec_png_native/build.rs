@@ -1,6 +1,8 @@
 fn main() {
     let target_os = std::env::var("CARGO_CFG_TARGET_OS").unwrap_or_default();
 
+    println!("cargo:warning=perl-native extensions assume non-threaded Perl (no MULTIPLICITY). If your Perl was compiled with usethreads, this extension will cause memory corruption.");
+
     match target_os.as_str() {
         "macos" => {
             println!("cargo:rustc-cdylib-link-arg=-undefined");

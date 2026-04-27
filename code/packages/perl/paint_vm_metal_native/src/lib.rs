@@ -1,12 +1,51 @@
 #![allow(non_snake_case, non_camel_case_types)]
 
-use paint_instructions::{PaintInstruction, PaintRect, PaintScene};
 use perl_bridge::{
-    die, newSViv, newSVpvn, newXS, sv_2nv, sv_2pv_flags, xs_boot_finish, xs_bootstrap, xsub_frame,
-    xsub_return, CV, IV, SV,
+    die, newSViv, newSVpvn, sv_2nv, sv_2pv_flags, xs_boot_finish, xs_bootstrap, CV, IV, SV,
 };
+use paint_instructions::{PaintInstruction, PaintRect, PaintScene};
 use std::ffi::c_char;
 use std::panic::catch_unwind;
+
+extern "C" {
+    #[link_name = "Perl_newXS"]
+    fn newXS(
+        name: *const c_char,
+        subaddr: unsafe extern "C" fn(*mut CV),
+        filename: *const c_char,
+    ) -> *mut CV;
+}
+
+extern "C" {
+    static mut PL_markstack_ptr: *mut i32;
+    static mut PL_stack_sp: *mut *mut SV;
+    static mut PL_stack_base: *mut *mut SV;
+}
+
+unsafe fn xsub_args() -> (*mut *mut SV, i32, i32) {
+    let mark = *PL_markstack_ptr;
+    let ax = mark.saturating_add(1);
+    let base = PL_stack_base;
+    let sp = PL_stack_sp;
+
+    const MAX_SANE_AX: i32 = 4096;
+    if ax > MAX_SANE_AX || ax < 0 {
+        return (base, 0, 0);
+    }
+
+    let base_ax = base.add(ax as usize);
+    let items = if sp >= base_ax {
+        ((sp as usize - base_ax as usize) / std::mem::size_of::<*mut SV>()) as i32 + 1
+    } else {
+        0
+    };
+    (base, ax, items)
+}
+
+unsafe fn xsub_return(n: i32, ax: i32) {
+    PL_stack_sp = PL_stack_base.add((ax + n - 1) as usize);
+    PL_markstack_ptr = PL_markstack_ptr.sub(1);
+}
 
 unsafe fn set_return(base: *mut *mut SV, ax: i32, n: i32, sv: *mut SV) {
     *base.add((ax + n) as usize) = sv;
@@ -59,10 +98,7 @@ fn parse_rect_blob(blob: &str) -> Vec<PaintInstruction> {
 
 extern "C" fn xs_render_rect_scene_native(_cv: *mut CV) {
     let result = catch_unwind(|| unsafe {
-        let frame = xsub_frame();
-        let base = frame.base;
-        let ax = frame.ax;
-        let items = frame.items;
+        let (base, ax, items) = xsub_args();
         if items < 4 {
             die("render_rect_scene_native: expected width, height, background, rect_blob");
             return;

@@ -127,14 +127,6 @@ pub type NV = f64;
 /// Perl's internal stack offset type used by XS boot helpers.
 pub type StackOffset = isize;
 
-/// Snapshot of Perl's current XSUB stack frame.
-#[repr(C)]
-pub struct XsubFrame {
-    pub base: *mut *mut SV,
-    pub ax: i32,
-    pub items: i32,
-}
-
 // ---------------------------------------------------------------------------
 // SV type tag constants
 // ---------------------------------------------------------------------------
@@ -245,9 +237,156 @@ extern "C" {
     #[link_name = "perl_bridge_xs_boot_finish"]
     fn raw_xs_boot_finish(ax: StackOffset);
 
+    /// Create a new SV holding an integer (IV). Returns a mortal SV with
+    /// refcount 1. Equivalent to Perl's `my $x = 42`.
+    #[link_name = "Perl_newSViv"]
+    pub fn newSViv(i: IV) -> *mut SV;
+
+    /// Create a new SV holding a float (NV). Equivalent to Perl's `my $x = 3.14`.
+    #[link_name = "Perl_newSVnv"]
+    pub fn newSVnv(n: NV) -> *mut SV;
+
+    /// Create a new SV holding a string copy of `s[0..len]`.
+    /// If `len == 0`, the string is determined by `strlen(s)`.
+    #[link_name = "Perl_newSVpv"]
+    pub fn newSVpv(s: *const c_char, len: usize) -> *mut SV;
+
+    /// Like `newSVpv` but explicitly uses the provided length.
+    #[link_name = "Perl_newSVpvn"]
+    pub fn newSVpvn(s: *const c_char, len: usize) -> *mut SV;
+
+    /// Create a new SV holding an unsigned integer (UV).
+    #[link_name = "Perl_newSVuv"]
+    pub fn newSVuv(u: UV) -> *mut SV;
+
+    // -- SV conversion (macro-equivalents) ---------------------------------
+    //
+    // These are the underlying functions that the `Sv2*` macros call.
+    // They coerce the SV to the requested type if needed.
+
+    /// Convert (coerce) an SV to an IV. E.g. string `"42"` → 42.
+    #[link_name = "Perl_sv_2iv"]
+    pub fn sv_2iv(sv: *mut SV) -> IV;
+
+    /// Convert (coerce) an SV to an NV (float). E.g. string `"3.14"` → 3.14.
+    #[link_name = "Perl_sv_2nv"]
+    pub fn sv_2nv(sv: *mut SV) -> NV;
+
+    /// Convert (coerce) an SV to a PV (string pointer).
+    /// `flags` controls stringification behavior (0 = default).
+    /// The returned pointer is owned by the SV; do not free it.
+    #[link_name = "Perl_sv_2pv_flags"]
+    pub fn sv_2pv_flags(sv: *mut SV, lp: *mut usize, flags: u32) -> *mut c_char;
+
+    /// Return the boolean truth value of an SV (like Perl's `if ($sv)`).
+    pub fn SvTRUE(sv: *mut SV) -> bool;
+
+    /// Return true if the SV's IV (integer) representation is valid.
+    pub fn SvIOK(sv: *mut SV) -> bool;
+
+    /// Return true if the SV's NV (float) representation is valid.
+    pub fn SvNOK(sv: *mut SV) -> bool;
+
+    /// Return true if the SV's PV (string) representation is valid.
+    pub fn SvPOK(sv: *mut SV) -> bool;
+
+    // -- Reference counting ------------------------------------------------
+    //
+    // Perl uses reference counting for memory management. XS code must
+    // maintain counts carefully: each `newSV*` or `av_pop` returns an SV
+    // with refcount 1. Store it somewhere to own it; decrement when done.
+
+    /// Increment the SV's reference count. Returns `sv` for chaining.
+    /// Equivalent to the `SvREFCNT_inc` macro.
+    pub fn SvREFCNT_inc(sv: *mut SV) -> *mut SV;
+
+    /// Decrement the SV's reference count. If it reaches 0, the SV is freed.
+    /// Equivalent to the `SvREFCNT_dec` macro.
+    pub fn SvREFCNT_dec(sv: *mut SV);
+
+    // -- Array operations --------------------------------------------------
+
+    /// Create a new empty AV (Perl array). Refcount starts at 1.
+    #[link_name = "Perl_newAV"]
+    pub fn newAV() -> *mut AV;
+
+    /// Push `val` onto the end of `av`. Takes ownership of `val`'s reference.
+    #[link_name = "Perl_av_push"]
+    pub fn av_push(av: *mut AV, val: *mut SV);
+
+    /// Pop the last element from `av` and return it.
+    /// The caller owns the returned SV and must decrement its refcount.
+    #[link_name = "Perl_av_pop"]
+    pub fn av_pop(av: *mut AV) -> *mut SV;
+
+    /// Fetch the SV at index `key` from `av`.
+    /// If `lval` is non-zero, creates the slot if absent.
+    /// Returns a pointer-to-SV-pointer (double indirection), or null if absent.
+    #[link_name = "Perl_av_fetch"]
+    pub fn av_fetch(av: *mut AV, key: isize, lval: c_int) -> *mut *mut SV;
+
+    /// Return the highest valid index in `av` (i.e. `length - 1`).
+    /// Returns -1 for an empty array.
+    #[link_name = "Perl_av_len"]
+    pub fn av_len(av: *mut AV) -> isize;
+
+    /// Create a new AV from an array of `size` SV pointers.
+    #[link_name = "Perl_av_make"]
+    pub fn av_make(size: isize, strp: *mut *mut SV) -> *mut AV;
+
+    // -- Stack management --------------------------------------------------
+    //
+    // Perl's argument stack is how XSUBs receive arguments and return values.
+    // The stack is accessed via macros like `ST(n)` in C. Here we declare the
+    // internal growth function; the actual stack pointer arithmetic is done in
+    // our `xs_arg_sv` helper below.
+
+    /// Grow the Perl argument stack if needed. Called internally by XS macros.
+    pub fn Perl_stack_grow(
+        my_perl: pTHX,
+        sp: *mut *mut SV,
+        p: *mut *mut SV,
+        n: c_int,
+    ) -> *mut *mut SV;
+
+    // -- Error handling ----------------------------------------------------
+
+    /// Perl's `die()` equivalent. Raises a Perl exception. Never returns.
+    /// `pat` is a printf-style format string.
+    #[link_name = "Perl_croak"]
+    pub fn croak(pat: *const c_char, ...) -> !;
+
+    /// Complete XS bootstrapping by restoring the Perl stack for DynaLoader.
+    pub fn Perl_xs_boot_epilog(ax: StackOffset);
+
     /// Perform Perl's XS bootstrap handshake and return the boot stack offset.
-    fn Perl_xs_handshake(key: u32, v_my_perl: *mut c_void, file: *const c_char, ...)
-        -> StackOffset;
+    pub fn Perl_xs_handshake(
+        key: u32,
+        v_my_perl: *mut c_void,
+        file: *const c_char,
+        ...,
+    ) -> StackOffset;
+
+    /// Perl's `warn()` equivalent. Prints a warning to STDERR. Returns normally.
+    #[link_name = "Perl_warn"]
+    pub fn warn(pat: *const c_char, ...);
+
+    // -- XS return helpers -------------------------------------------------
+    //
+    // These push a single return value onto the stack and set up the return
+    // count. They are typically called as the last thing in an XSUB.
+
+    /// Return an IV (integer) value from an XSUB.
+    pub fn XSRETURN_IV(i: IV);
+
+    /// Return an NV (float) value from an XSUB.
+    pub fn XSRETURN_NV(n: NV);
+
+    /// Return a PV (string) value from an XSUB.
+    pub fn XSRETURN_PV(s: *const c_char);
+
+    /// Return `undef` from an XSUB.
+    pub fn XSRETURN_UNDEF();
 }
 
 // ---------------------------------------------------------------------------
@@ -483,6 +622,27 @@ pub unsafe fn xs_bootstrap(cv: *mut CV, file: *const c_char) -> StackOffset {
 /// Finish a boot XSUB after all `newXS` registrations have completed.
 pub unsafe fn xs_boot_finish(ax: StackOffset) {
     raw_xs_boot_finish(ax);
+}
+
+// ---------------------------------------------------------------------------
+// XS boot helpers
+// ---------------------------------------------------------------------------
+//
+// Perl calls `boot_Module` as an XSUB, not a plain C function. That means the
+// bootstrap function must perform the XS handshake up front and run Perl's
+// epilog before returning, otherwise DynaLoader observes a corrupted stack.
+
+/// Handshake key matching Perl's `XS_SETXSUBFN_POPMARK | HSf_NOCHK`.
+const XS_BOOT_HANDSHAKE_KEY_NOCHK: u32 = 0xFFFF00E0;
+
+/// Begin a boot XSUB and return the stack offset Perl expects at epilog time.
+pub unsafe fn xs_bootstrap(cv: *mut CV, file: *const c_char) -> StackOffset {
+    Perl_xs_handshake(XS_BOOT_HANDSHAKE_KEY_NOCHK, cv.cast::<c_void>(), file)
+}
+
+/// Finish a boot XSUB after all `newXS` registrations have completed.
+pub unsafe fn xs_boot_finish(ax: StackOffset) {
+    Perl_xs_boot_epilog(ax);
 }
 
 // ---------------------------------------------------------------------------

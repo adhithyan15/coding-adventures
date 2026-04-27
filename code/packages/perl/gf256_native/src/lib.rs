@@ -22,10 +22,73 @@
 #![allow(non_snake_case, non_camel_case_types)]
 
 use perl_bridge::{
-    die, newSViv, newXS, sv_2iv, xs_boot_finish, xs_bootstrap, xsub_frame, xsub_return, CV, IV, SV,
+    die, xs_boot_finish, xs_bootstrap, CV, IV, SV, newSViv, sv_2iv,
 };
 use std::ffi::c_char;
 use std::panic::catch_unwind;
+
+// ---------------------------------------------------------------------------
+// Declare runtime functions not in perl-bridge
+// ---------------------------------------------------------------------------
+
+extern "C" {
+    #[link_name = "Perl_newXS"]
+    fn newXS(name: *const c_char, subaddr: unsafe extern "C" fn(*mut CV), filename: *const c_char)
+        -> *mut CV;
+}
+
+extern "C" {
+    static mut PL_markstack_ptr: *mut i32;
+    static mut PL_stack_sp: *mut *mut SV;
+    static mut PL_stack_base: *mut *mut SV;
+}
+
+// ---------------------------------------------------------------------------
+// Stack helpers (same pattern as polynomial_native)
+// ---------------------------------------------------------------------------
+
+/// Read the number of arguments passed to the current XSUB.
+///
+/// Uses saturating arithmetic and pointer comparison to guard against
+/// pathological mark values that could cause pointer arithmetic overflow.
+///
+/// ## Guard against stack corruption
+///
+/// If `mark = i32::MAX`, then `ax = i32::MAX` (saturated), and
+/// `base.add(i32::MAX as usize)` is pointer arithmetic that exceeds the valid
+/// allocation range — undefined behaviour in Rust.
+///
+/// We therefore clamp `ax` to a sane maximum. Perl's maximum stack depth is
+/// far below 64k arguments; 4096 is generous.
+unsafe fn xsub_args() -> (*mut *mut SV, i32, i32) {
+    let mark = *PL_markstack_ptr;
+    // Guard against pathological mark values with saturating add.
+    let ax = mark.saturating_add(1);
+    let base = PL_stack_base;
+    let sp = PL_stack_sp;
+
+    // Guard: if ax is unreasonably large, Perl's stack is corrupted.
+    // Perl's maximum stack depth is far below 64k arguments; 4096 is generous.
+    const MAX_SANE_AX: i32 = 4096;
+    if ax > MAX_SANE_AX || ax < 0 {
+        // Stack is corrupted; return 0 items so each XSUB's arity check fires.
+        return (base, 0, 0);
+    }
+
+    // Compute items with overflow protection: only subtract if sp >= base_ax.
+    let base_ax = base.add(ax as usize);
+    let items = if sp >= base_ax {
+        ((sp as usize - base_ax as usize) / std::mem::size_of::<*mut SV>()) as i32 + 1
+    } else {
+        0
+    };
+    (base, ax, items)
+}
+
+unsafe fn xsub_return(n: i32, ax: i32) {
+    PL_stack_sp = PL_stack_base.add((ax + n - 1) as usize);
+    PL_markstack_ptr = PL_markstack_ptr.sub(1);
+}
 
 unsafe fn set_return(base: *mut *mut SV, ax: i32, n: i32, sv: *mut SV) {
     *base.add((ax + n) as usize) = sv;
@@ -229,35 +292,17 @@ pub unsafe extern "C" fn boot_CodingAdventures__GF256Native(cv: *mut CV) {
     let file = b"GF256Native.so\0".as_ptr() as *const c_char;
     let ax = xs_bootstrap(cv, file);
 
-    newXS(
-        b"CodingAdventures::GF256Native::add\0".as_ptr() as *const c_char,
-        xs_add,
-        file,
-    );
-    newXS(
-        b"CodingAdventures::GF256Native::subtract\0".as_ptr() as *const c_char,
-        xs_subtract,
-        file,
-    );
-    newXS(
-        b"CodingAdventures::GF256Native::multiply\0".as_ptr() as *const c_char,
-        xs_multiply,
-        file,
-    );
-    newXS(
-        b"CodingAdventures::GF256Native::divide\0".as_ptr() as *const c_char,
-        xs_divide,
-        file,
-    );
-    newXS(
-        b"CodingAdventures::GF256Native::power\0".as_ptr() as *const c_char,
-        xs_power,
-        file,
-    );
-    newXS(
-        b"CodingAdventures::GF256Native::inverse\0".as_ptr() as *const c_char,
-        xs_inverse,
-        file,
-    );
+    newXS(b"CodingAdventures::GF256Native::add\0".as_ptr() as *const c_char,
+          xs_add, file);
+    newXS(b"CodingAdventures::GF256Native::subtract\0".as_ptr() as *const c_char,
+          xs_subtract, file);
+    newXS(b"CodingAdventures::GF256Native::multiply\0".as_ptr() as *const c_char,
+          xs_multiply, file);
+    newXS(b"CodingAdventures::GF256Native::divide\0".as_ptr() as *const c_char,
+          xs_divide, file);
+    newXS(b"CodingAdventures::GF256Native::power\0".as_ptr() as *const c_char,
+          xs_power, file);
+    newXS(b"CodingAdventures::GF256Native::inverse\0".as_ptr() as *const c_char,
+          xs_inverse, file);
     xs_boot_finish(ax);
 }

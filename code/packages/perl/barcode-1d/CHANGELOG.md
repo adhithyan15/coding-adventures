@@ -1,9 +1,12 @@
-# Changelog — barcode-1d (Perl)
+# Changelog — code39 (Perl)
 
-## 0.01 — 2026-04-13
+## 0.01 — 2026-03-31
 
 Initial release.
 
-- `build_scene` — dispatches Code 39, Codabar, Code 128, EAN-13, ITF, and UPC-A
-- `render_pixels` — executes the native Paint VM for the current host
-- `render_png` — wraps native PNG encoding
+- `normalize_code39` — uppercase conversion and validation
+- `encode_code39_char` — single character to N/W pattern
+- `encode_code39` — full string encoding with start/stop markers
+- `expand_code39_runs` — bar/space run expansion
+- `draw_code39` — SVG rendering
+- `compute_checksum` — optional mod-43 checksum
