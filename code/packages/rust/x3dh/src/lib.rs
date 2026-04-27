@@ -116,10 +116,8 @@ impl Drop for PreKeyPair {
 
 impl PreKeyPair {
     /// Return the secret key for DH operations.
-    ///
-    /// Returns a `Zeroizing` wrapper so the caller's stack copy is wiped on drop.
-    pub fn secret(&self) -> Zeroizing<[u8; 32]> {
-        Zeroizing::new(self.secret)
+    pub fn secret(&self) -> &[u8; 32] {
+        &self.secret
     }
 }
 
@@ -290,11 +288,9 @@ pub fn x3dh_send(
     let dh3 = Zeroizing::new(x25519(&*ek_secret, &bundle.signed_prekey));
 
     // KM = F ‖ DH1 ‖ DH2 ‖ DH3 [‖ DH4]
-    // Salt = 0x00 × 32 per Signal X3DH spec §3.3 (salt is all-zeros, length = HashLen).
-    // The 0xFF padding belongs in the IKM prefix only.
-    let salt = [0u8; 32];
+    let salt = [0xFFu8; 32];
     let mut ikm = Zeroizing::new(Vec::with_capacity(32 * 5));
-    ikm.extend_from_slice(&[0xFFu8; 32]); // F prefix — Signal spec §3.3
+    ikm.extend_from_slice(&[0xFFu8; 32]); // F prefix
     ikm.extend_from_slice(&*dh1);
     ikm.extend_from_slice(&*dh2);
     ikm.extend_from_slice(&*dh3);
@@ -331,10 +327,9 @@ pub fn x3dh_receive(
     let dh2 = Zeroizing::new(x25519(&receiver_ik.x25519_secret, sender_ek_pub));
     let dh3 = Zeroizing::new(x25519(&receiver_spk.secret, sender_ek_pub));
 
-    // Salt = 0x00 × 32 per Signal X3DH spec §3.3.
-    let salt = [0u8; 32];
+    let salt = [0xFFu8; 32];
     let mut ikm = Zeroizing::new(Vec::with_capacity(32 * 5));
-    ikm.extend_from_slice(&[0xFFu8; 32]); // F prefix
+    ikm.extend_from_slice(&[0xFFu8; 32]);
     ikm.extend_from_slice(&*dh1);
     ikm.extend_from_slice(&*dh2);
     ikm.extend_from_slice(&*dh3);
@@ -371,8 +366,7 @@ mod tests {
     #[test]
     fn prekey_public_matches_secret() {
         let pk = generate_prekey_pair();
-        let s = pk.secret();
-        let derived_pub = x25519_public_key(&*s);
+        let derived_pub = x25519_public_key(pk.secret());
         assert_eq!(pk.public, derived_pub);
     }
 
@@ -518,8 +512,7 @@ mod tests {
     #[test]
     fn secret_accessor_returns_correct_value() {
         let pk = generate_prekey_pair();
-        let s = pk.secret();
-        let pub_from_accessor = x25519_public_key(&*s);
+        let pub_from_accessor = x25519_public_key(pk.secret());
         assert_eq!(pk.public, pub_from_accessor);
     }
 
