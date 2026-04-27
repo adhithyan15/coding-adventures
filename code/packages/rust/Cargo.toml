@@ -393,4 +393,5 @@ members = [
     "cas-pretty-printer",
     "cas-number-theory",
     "cas-complex",
+    "cas-trig",
 ]
