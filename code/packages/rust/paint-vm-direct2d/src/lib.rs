@@ -101,7 +101,7 @@ compile_error!(
 //   - IWICBitmap: a CPU-accessible bitmap that Direct2D can render into
 
 #[cfg(target_os = "windows")]
-use windows::core::{Interface, GUID, PCWSTR};
+use windows::core::{GUID, Interface, PCWSTR};
 #[cfg(target_os = "windows")]
 use windows::Foundation::Numerics::Matrix3x2;
 #[cfg(target_os = "windows")]
@@ -352,7 +352,6 @@ unsafe fn render_instructions(
             PaintInstruction::Path(path) => render_path(ctx, rt, path),
             PaintInstruction::Layer(layer) => render_layer(ctx, rt, layer),
             PaintInstruction::Image(image) => render_image(rt, image),
-            PaintInstruction::Text(_) => {}
             PaintInstruction::Gradient(_) => {}
         }
     }
@@ -1014,9 +1013,11 @@ pub unsafe fn show_scene_in_window(scene: &PaintScene, title: &str) {
     attributes.initial_size = LogicalSize::new(scene_size.0, scene_size.1);
     attributes.preferred_surface = SurfacePreference::Direct2D;
 
-    if let Err(err) =
-        backend.create_native_window(attributes, Some(render_paint_callback), scene_ptr)
-    {
+    if let Err(err) = backend.create_native_window(
+        attributes,
+        Some(render_paint_callback),
+        scene_ptr,
+    ) {
         drop(unsafe { Box::from_raw(scene_ptr as *mut PaintScene) });
         panic!("failed to create native Direct2D window: {err}");
     }
@@ -1030,17 +1031,16 @@ pub unsafe fn show_scene_in_window(scene: &PaintScene, title: &str) {
 }
 
 #[cfg(target_os = "windows")]
-unsafe extern "system" fn render_paint_callback(hwnd: HWND, user_data: isize) {
+unsafe extern "system" fn render_paint_callback(
+    hwnd: HWND,
+    user_data: isize,
+) {
     let scene_ptr = user_data as *const PaintScene;
     if scene_ptr.is_null() {
         return;
     }
 
-    let scene = unsafe {
-        scene_ptr
-            .as_ref()
-            .expect("scene pointer provided by show_scene_in_window")
-    };
+    let scene = unsafe { scene_ptr.as_ref().expect("scene pointer provided by show_scene_in_window") };
     let _ = render_to_hwnd(hwnd, scene);
 }
 

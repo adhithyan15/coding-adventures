@@ -10,35 +10,31 @@
 //! `WM_PAINT` path so renderers can plug in their native drawing routines
 //! without duplicating the full HWND creation boilerplate.
 
-#[cfg(target_os = "windows")]
 use std::collections::HashMap;
-#[cfg(target_os = "windows")]
 use std::sync::{Mutex, OnceLock};
 
 use window_core::{
-    LogicalSize, MountTarget, PhysicalSize, RenderTarget, SurfacePreference, Win32RenderTarget,
-    Window, WindowAttributes, WindowBackend, WindowError, WindowId,
+    LogicalSize, MountTarget, RenderTarget, SurfacePreference, Window, WindowAttributes,
+    WindowBackend, WindowError, WindowId, Win32RenderTarget, PhysicalSize,
 };
 
 pub const VERSION: &str = "0.1.0";
 
 #[cfg(target_os = "windows")]
-use windows::core::{w, PCWSTR};
+use windows::core::{PCWSTR, w};
 #[cfg(target_os = "windows")]
 use windows::Win32::Foundation::{HWND, LPARAM, LRESULT, WPARAM};
 #[cfg(target_os = "windows")]
-use windows::Win32::Graphics::Gdi::{
-    BeginPaint, EndPaint, GetStockObject, InvalidateRect, HBRUSH, PAINTSTRUCT, WHITE_BRUSH,
-};
-#[cfg(target_os = "windows")]
-use windows::Win32::System::LibraryLoader::GetModuleHandleW;
+use windows::Win32::Graphics::Gdi::{BeginPaint, EndPaint, GetStockObject, HBRUSH, PAINTSTRUCT, InvalidateRect, WHITE_BRUSH};
 #[cfg(target_os = "windows")]
 use windows::Win32::UI::WindowsAndMessaging::{
     CreateWindowExW, DefWindowProcW, DispatchMessageW, GetMessageW, LoadCursorW, PostQuitMessage,
-    RegisterClassW, SetWindowTextW, ShowWindow, TranslateMessage, CS_HREDRAW, CS_VREDRAW,
-    CW_USEDEFAULT, HMENU, IDC_ARROW, SW_HIDE, SW_SHOW, WM_CREATE, WM_DESTROY, WM_NCDESTROY,
-    WM_PAINT, WNDCLASSW, WS_OVERLAPPEDWINDOW,
+    RegisterClassW, SetWindowTextW, ShowWindow,
+    TranslateMessage, WNDCLASSW, WM_CREATE, WM_DESTROY, WM_NCDESTROY, WM_PAINT, WS_OVERLAPPEDWINDOW,
+    CS_HREDRAW, CS_VREDRAW, CW_USEDEFAULT, HMENU, IDC_ARROW, SW_SHOW, SW_HIDE,
 };
+#[cfg(target_os = "windows")]
+use windows::Win32::System::LibraryLoader::GetModuleHandleW;
 
 /// Which Win32 host family the renderer should expect.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -46,11 +42,6 @@ pub enum Win32SurfaceChoice {
     /// A normal `HWND`-backed presentation host.
     Hwnd,
 }
-
-#[cfg(target_os = "windows")]
-type RawWindowHandle = HWND;
-#[cfg(not(target_os = "windows"))]
-type RawWindowHandle = usize;
 
 /// A created Win32 window host.
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -60,19 +51,12 @@ pub struct Win32Window {
     physical_size: PhysicalSize,
     #[allow(dead_code)]
     scale_factor: f64,
-    hwnd: RawWindowHandle,
+    hwnd: HWND,
 }
 
 impl Win32Window {
     /// Return the raw Win32 window handle.
-    #[cfg(target_os = "windows")]
     pub fn hwnd(&self) -> HWND {
-        self.hwnd
-    }
-
-    /// Return the stored raw handle placeholder on non-Windows targets.
-    #[cfg(not(target_os = "windows"))]
-    pub fn hwnd(&self) -> usize {
         self.hwnd
     }
 }
@@ -107,10 +91,10 @@ impl Window for Win32Window {
         ))
     }
 
-    fn set_title(&self, _title: &str) -> Result<(), WindowError> {
+    fn set_title(&self, title: &str) -> Result<(), WindowError> {
         #[cfg(target_os = "windows")]
         unsafe {
-            let title = wide_null(_title);
+            let title = wide_null(title);
             let _ = SetWindowTextW(self.hwnd, PCWSTR(title.as_ptr()));
             Ok(())
         }
@@ -121,14 +105,10 @@ impl Window for Win32Window {
         ))
     }
 
-    fn set_visible(&self, _visible: bool) -> Result<(), WindowError> {
+    fn set_visible(&self, visible: bool) -> Result<(), WindowError> {
         #[cfg(target_os = "windows")]
         unsafe {
-            let _ = if _visible {
-                ShowWindow(self.hwnd, SW_SHOW)
-            } else {
-                ShowWindow(self.hwnd, SW_HIDE)
-            };
+            let _ = if visible { ShowWindow(self.hwnd, SW_SHOW) } else { ShowWindow(self.hwnd, SW_HIDE) };
             Ok(())
         }
 
@@ -139,23 +119,16 @@ impl Window for Win32Window {
     }
 
     fn render_target(&self) -> RenderTarget {
-        #[cfg(target_os = "windows")]
-        let hwnd = self.hwnd.0 as usize;
-        #[cfg(not(target_os = "windows"))]
-        let hwnd = self.hwnd;
-
-        RenderTarget::Win32(Win32RenderTarget { hwnd })
+        RenderTarget::Win32(Win32RenderTarget {
+            hwnd: self.hwnd.0 as usize,
+        })
     }
 }
 
 /// Per-window callback invoked from `WM_PAINT`.
-#[cfg(target_os = "windows")]
 pub type WindowPaintCallback = unsafe extern "system" fn(HWND, isize);
-#[cfg(not(target_os = "windows"))]
-pub type WindowPaintCallback = unsafe extern "system" fn(usize, isize);
 
 #[derive(Debug, Clone, Copy)]
-#[cfg(target_os = "windows")]
 struct PaintHandler {
     callback: Option<WindowPaintCallback>,
     user_data: isize,
@@ -172,7 +145,6 @@ fn paint_handlers() -> &'static Mutex<HashMap<isize, PaintHandler>> {
 /// Backend shell for Win32 validation and native creation.
 #[derive(Debug, Default)]
 pub struct Win32Backend {
-    #[cfg_attr(not(target_os = "windows"), allow(dead_code))]
     next_id: u64,
 }
 
@@ -341,9 +313,7 @@ fn ensure_window_class(class_name: PCWSTR) -> Result<(), WindowError> {
     };
     let already_registered = unsafe { RegisterClassW(&wc) != 0 };
     if !already_registered {
-        return Err(WindowError::backend(
-            "failed to register Win32 window class",
-        ));
+        return Err(WindowError::backend("failed to register Win32 window class"));
     }
     let _ = REGISTERED.set(true);
     Ok(())
