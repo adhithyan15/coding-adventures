@@ -382,4 +382,5 @@ members = [
     "single-layer-network",
     "symbolic-ir",
     "symbolic-vm",
+    "cas-pattern-matching",
 ]
