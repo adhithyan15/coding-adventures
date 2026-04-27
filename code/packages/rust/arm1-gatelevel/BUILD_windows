@@ -1,1 +1,1 @@
-cargo test --target-dir target_isolated -p arm1-gatelevel --verbose
+cargo test -p arm1-gatelevel --verbose
