@@ -58,6 +58,16 @@ FLOOR = IRSymbol("Floor")
 CEILING = IRSymbol("Ceiling")
 ABS = IRSymbol("Abs")
 
+# Equation-side selectors (C5)
+LHS = IRSymbol("Lhs")
+RHS = IRSymbol("Rhs")
+
+# Generative list construction (C2)
+MAKE_LIST = IRSymbol("MakeList")
+
+# Point evaluation (C4)
+AT = IRSymbol("At")
+
 # Re-export the runtime-owned heads so callers have one import.
 from macsyma_runtime.heads import (  # noqa: E402
     ASSUME,
@@ -89,7 +99,7 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "last": LAST,
     "append": APPEND,
     "reverse": REVERSE,
-    "makelist": RANGE,
+    "makelist": MAKE_LIST,
     "map": MAP,
     "apply": APPLY,
     "sublist": SELECT,
@@ -109,6 +119,11 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "floor": FLOOR,
     "ceiling": CEILING,
     "abs": ABS,
+    # Equation-side selectors (C5)
+    "lhs": LHS,
+    "rhs": RHS,
+    # Point evaluation — At(expr, Equal(var, val)) (C4)
+    "at": AT,
     # Runtime-owned operations
     "kill": KILL,
     "ev": EV,

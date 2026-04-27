@@ -67,6 +67,7 @@ from cas_solve import ALL, solve_linear, solve_quadratic
 from cas_substitution import subst
 from symbolic_ir import (
     ADD,
+    EQUAL,
     MUL,
     NEG,
     POW,
@@ -851,6 +852,178 @@ def lcm_handler(_vm: "VM", expr: IRApply) -> IRNode:
 
 
 # ===========================================================================
+# Section 9: equation-side handlers (C5)
+# ===========================================================================
+
+_EQUAL_HEAD = "Equal"
+
+
+def lhs_handler(_vm: "VM", expr: IRApply) -> IRNode:
+    """``Lhs(eq)`` → left-hand side of equation ``Equal(a, b)`` → ``a``.
+
+    MACSYMA syntax: ``lhs(x = 3)`` → ``x``.
+
+    If the argument is not an ``Equal`` expression, returns unevaluated.
+    """
+    if len(expr.args) != 1:
+        return expr
+    eq = expr.args[0]
+    if (
+        isinstance(eq, IRApply)
+        and isinstance(eq.head, IRSymbol)
+        and eq.head.name == _EQUAL_HEAD
+        and len(eq.args) == 2
+    ):
+        return eq.args[0]
+    return expr
+
+
+def rhs_handler(_vm: "VM", expr: IRApply) -> IRNode:
+    """``Rhs(eq)`` → right-hand side of equation ``Equal(a, b)`` → ``b``.
+
+    MACSYMA syntax: ``rhs(x = 3)`` → ``3``.
+
+    If the argument is not an ``Equal`` expression, returns unevaluated.
+    """
+    if len(expr.args) != 1:
+        return expr
+    eq = expr.args[0]
+    if (
+        isinstance(eq, IRApply)
+        and isinstance(eq.head, IRSymbol)
+        and eq.head.name == _EQUAL_HEAD
+        and len(eq.args) == 2
+    ):
+        return eq.args[1]
+    return expr
+
+
+# ===========================================================================
+# Section 10: MakeList handler (C2)
+# ===========================================================================
+
+_LIST_HEAD = IRSymbol("List")
+
+
+def make_list_handler(vm: "VM", expr: IRApply) -> IRNode:
+    """``MakeList(expr, var, n)`` or ``MakeList(expr, var, from, to[, step])``.
+
+    Evaluates *expr* for *var* = each integer in the specified range and
+    collects the results into a ``List``.
+
+    Supported arities
+    -----------------
+    - 3 args: ``MakeList(expr, var, n)``  → range ``1..n`` (step 1).
+    - 4 args: ``MakeList(expr, var, from, to)`` → range ``from..to``.
+    - 5 args: ``MakeList(expr, var, from, to, step)`` → with given step.
+
+    MACSYMA examples::
+
+        makelist(i^2, i, 4)        → [1, 4, 9, 16]
+        makelist(i*2, i, 2, 6, 2)  → [4, 8, 12]
+    """
+    nargs = len(expr.args)
+    if nargs not in (3, 4, 5):
+        return expr
+
+    body = expr.args[0]
+    var = expr.args[1]
+    if not isinstance(var, IRSymbol):
+        return expr
+
+    # Resolve range bounds — they must evaluate to integers.
+    def _to_int(node: IRNode) -> int | None:
+        evaled = vm.eval(node)
+        if isinstance(evaled, IRInteger):
+            return evaled.value
+        return None
+
+    if nargs == 3:
+        stop = _to_int(expr.args[2])
+        if stop is None:
+            return expr
+        start, step = 1, 1
+    elif nargs == 4:
+        start = _to_int(expr.args[2])
+        stop = _to_int(expr.args[3])
+        if start is None or stop is None:
+            return expr
+        step = 1
+    else:
+        start = _to_int(expr.args[2])
+        stop = _to_int(expr.args[3])
+        step = _to_int(expr.args[4])
+        if start is None or stop is None or step is None or step == 0:
+            return expr
+
+    results: list[IRNode] = []
+    for i in range(start, stop + 1, step):
+        substituted = subst(IRInteger(i), var, body)
+        results.append(vm.eval(substituted))
+
+    return IRApply(_LIST_HEAD, tuple(results))
+
+
+# ===========================================================================
+# Section 11: At handler (C4)
+# ===========================================================================
+
+
+def at_handler(vm: "VM", expr: IRApply) -> IRNode:
+    """``At(expr, Equal(var, val))`` → evaluate *expr* at *var* = *val*.
+
+    MACSYMA syntax: ``at(x^2 + 1, x = 3)`` → ``10``.
+
+    This is syntactic sugar over :func:`subst_handler`. The ``Equal``-as-
+    substitution-rule convention is MACSYMA-specific (Mathematica uses
+    ``Rule`` instead), so this handler lives in the common substrate but
+    the name-table binding lives only in ``macsyma-runtime``.
+
+    Supported forms
+    ---------------
+    - ``At(expr, Equal(var, val))`` — single substitution.
+    - ``At(expr, List(Equal(v1, a1), Equal(v2, a2), …))`` — simultaneous
+      substitution of multiple variables.
+    """
+    if len(expr.args) != 2:
+        return expr
+    body, rule_or_list = expr.args
+
+    def _apply_rule(current: IRNode, rule: IRNode) -> IRNode | None:
+        """Return *current* with the rule applied, or None if not a rule."""
+        if (
+            isinstance(rule, IRApply)
+            and isinstance(rule.head, IRSymbol)
+            and rule.head.name == _EQUAL_HEAD
+            and len(rule.args) == 2
+        ):
+            var, val = rule.args
+            return vm.eval(subst(val, var, current))
+        return None
+
+    # Single rule.
+    result = _apply_rule(body, rule_or_list)
+    if result is not None:
+        return result
+
+    # List of rules — apply each in sequence.
+    if (
+        isinstance(rule_or_list, IRApply)
+        and isinstance(rule_or_list.head, IRSymbol)
+        and rule_or_list.head.name == "List"
+    ):
+        current = body
+        for rule in rule_or_list.args:
+            applied = _apply_rule(current, rule)
+            if applied is None:
+                return expr  # malformed rule — bail out
+            current = applied
+        return current
+
+    return expr
+
+
+# ===========================================================================
 # Public entry point
 # ===========================================================================
 
@@ -905,4 +1078,11 @@ def build_cas_handler_table() -> dict[str, Handler]:
         "Mod": mod_handler,
         "Gcd": gcd_handler,
         "Lcm": lcm_handler,
+        # --- equation sides (C5) --------------------------------------------
+        "Lhs": lhs_handler,
+        "Rhs": rhs_handler,
+        # --- MakeList (C2) --------------------------------------------------
+        "MakeList": make_list_handler,
+        # --- At / point evaluation (C4) -------------------------------------
+        "At": at_handler,
     }
