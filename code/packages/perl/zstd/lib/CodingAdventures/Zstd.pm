@@ -1044,6 +1044,13 @@ conforming RFC 8878 implementation.
 
 sub compress {
     my $data = @_ > 1 ? $_[1] : $_[0];
+    die "zstd: data must be a defined string\n" unless defined $data && !ref $data;
+    # Guard against ~56x memory amplification from unpack('C*',...).
+    # `do { use bytes; length(...) }` counts raw bytes regardless of Perl's
+    # UTF-8 flag, so a UTF-8-upgraded string with wide characters cannot slip
+    # past a character-count-based limit.
+    die "zstd: input too large (max 64 MB)\n"
+        if do { use bytes; length($data) } > 64 * 1024 * 1024;
 
     my @bytes = unpack('C*', $data);
     my @out;
@@ -1157,7 +1164,7 @@ sub decompress {
     # 64 MB is a generous upper bound: our compressor emits at most 128 KB per
     # block and a multi-block frame must still fit within MAX_OUTPUT (256 MB).
     die "zstd: input too large (max 64 MB)\n"
-        if length($data) > 64 * 1024 * 1024;
+        if do { use bytes; length($data) } > 64 * 1024 * 1024;
 
     my @bytes = unpack('C*', $data);
 
