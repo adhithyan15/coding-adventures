@@ -1,11 +1,38 @@
-"""Tests for complex handlers via SymbolicBackend."""
+"""Tests for complex handlers — no symbolic_vm dependency.
+
+Uses a self-contained MinimalVM stub so this package can be tested
+without installing the full symbolic_vm stack (which would create a
+circular dependency: symbolic_vm → cas_complex → symbolic_vm).
+"""
 from __future__ import annotations
 
-from symbolic_ir import ADD, MUL, NEG, POW, IRApply, IRInteger, IRSymbol
-from symbolic_vm import VM, SymbolicBackend
+from typing import Any
+
+from symbolic_ir import ADD, MUL, IRApply, IRInteger, IRNode, IRSymbol
 
 from cas_complex import IMAGINARY_UNIT, build_complex_handler_table
 from cas_complex.handlers import imaginary_power_handler
+
+
+# ---------------------------------------------------------------------------
+# Minimal VM stub — no symbolic_vm dependency required.
+# Dispatches to registered handlers; leaves unregistered heads unevaluated.
+# ---------------------------------------------------------------------------
+
+class _MinimalVM:
+    def __init__(self) -> None:
+        self._handlers: dict[str, Any] = {}
+
+    def eval(self, node: IRNode) -> IRNode:
+        if not isinstance(node, IRApply):
+            return node
+        if not isinstance(node.head, IRSymbol):
+            return node
+        handler = self._handlers.get(node.head.name)
+        if handler is None:
+            return node
+        return handler(self, node)  # type: ignore[no-any-return]
+
 
 _RE = IRSymbol("Re")
 _IM = IRSymbol("Im")
@@ -17,34 +44,34 @@ _POLAR_FORM = IRSymbol("PolarForm")
 _I_POW = IRSymbol("_ImaginaryPow")
 
 
-def make_vm() -> VM:
-    backend = SymbolicBackend()
-    backend._handlers.update(build_complex_handler_table())
+def make_vm() -> _MinimalVM:
+    vm = _MinimalVM()
+    vm._handlers.update(build_complex_handler_table())
     # Wire imaginary power through Pow
-    original_pow = backend._handlers.get("Pow")
+    original_pow = vm._handlers.get("Pow")
 
-    def complex_pow_handler(vm: VM, expr: IRApply) -> IRApply | IRInteger | IRSymbol:
+    def complex_pow_handler(vm_: _MinimalVM, expr: IRApply) -> IRNode:
         if (
             len(expr.args) == 2
             and isinstance(expr.args[0], IRSymbol)
             and expr.args[0].name == "ImaginaryUnit"
             and isinstance(expr.args[1], IRInteger)
         ):
-            return imaginary_power_handler(vm, expr)  # type: ignore[return-value]
+            return imaginary_power_handler(vm_, expr)  # type: ignore[arg-type]
         if original_pow is not None:
-            return original_pow(vm, expr)  # type: ignore[return-value]
-        return expr  # type: ignore[return-value]
+            return original_pow(vm_, expr)
+        return expr
 
-    backend._handlers["Pow"] = complex_pow_handler  # type: ignore[assignment]
-    return VM(backend)
+    vm._handlers["Pow"] = complex_pow_handler
+    return vm
 
 
 def i() -> IRSymbol:
     return IMAGINARY_UNIT
 
 
-def rect(a: object, b: object) -> IRApply:
-    return IRApply(ADD, (a, IRApply(MUL, (b, IMAGINARY_UNIT))))  # type: ignore[arg-type]
+def rect(a: IRNode, b: IRNode) -> IRApply:
+    return IRApply(ADD, (a, IRApply(MUL, (b, IMAGINARY_UNIT))))
 
 
 def test_re_pure_real() -> None:

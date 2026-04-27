@@ -1,8 +1,16 @@
-"""Tests for cas_number_theory.handlers via SymbolicBackend."""
+"""Tests for cas_number_theory.handlers — no symbolic_vm dependency.
+
+Uses a self-contained MinimalVM stub so this package can be tested
+without installing the full symbolic_vm stack (which would create a
+circular dependency: symbolic_vm → cas_number_theory → symbolic_vm).
+"""
 from __future__ import annotations
+
+from typing import Any
+
 import pytest
-from symbolic_ir import IRApply, IRInteger, IRSymbol
-from symbolic_vm import VM, SymbolicBackend
+from symbolic_ir import IRApply, IRInteger, IRNode, IRSymbol
+
 from cas_number_theory.handlers import build_number_theory_handler_table
 
 _LIST = IRSymbol("List")
@@ -20,15 +28,34 @@ _TRUE = IRSymbol("True")
 _FALSE = IRSymbol("False")
 
 
-def make_vm() -> VM:
-    backend = SymbolicBackend()
-    # Install number theory handlers
-    backend._handlers.update(build_number_theory_handler_table())
-    return VM(backend)
+# ---------------------------------------------------------------------------
+# Minimal VM stub — no symbolic_vm dependency required.
+# Dispatches to registered handlers; leaves unregistered heads unevaluated.
+# ---------------------------------------------------------------------------
+
+class _MinimalVM:
+    def __init__(self) -> None:
+        self._handlers: dict[str, Any] = {}
+
+    def eval(self, node: IRNode) -> IRNode:
+        if not isinstance(node, IRApply):
+            return node
+        if not isinstance(node.head, IRSymbol):
+            return node
+        handler = self._handlers.get(node.head.name)
+        if handler is None:
+            return node
+        return handler(self, node)  # type: ignore[no-any-return]
 
 
-def ilist(*args: object) -> IRApply:
-    return IRApply(_LIST, tuple(args))  # type: ignore[arg-type]
+def make_vm() -> _MinimalVM:
+    vm = _MinimalVM()
+    vm._handlers.update(build_number_theory_handler_table())
+    return vm
+
+
+def ilist(*args: IRNode) -> IRApply:
+    return IRApply(_LIST, args)
 
 
 def test_is_prime_2() -> None:
