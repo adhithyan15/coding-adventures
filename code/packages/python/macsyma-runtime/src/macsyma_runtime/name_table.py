@@ -28,6 +28,7 @@ SIMPLIFY = IRSymbol("Simplify")
 EXPAND = IRSymbol("Expand")
 FACTOR = IRSymbol("Factor")
 SOLVE = IRSymbol("Solve")
+NSOLVE = IRSymbol("NSolve")
 TAYLOR = IRSymbol("Taylor")
 LIMIT = IRSymbol("Limit")
 
@@ -58,6 +59,48 @@ FLOOR = IRSymbol("Floor")
 CEILING = IRSymbol("Ceiling")
 ABS = IRSymbol("Abs")
 
+# Equation-side selectors (C5)
+LHS = IRSymbol("Lhs")
+RHS = IRSymbol("Rhs")
+
+# Generative list construction (C2)
+MAKE_LIST = IRSymbol("MakeList")
+
+# Point evaluation (C4)
+AT = IRSymbol("At")
+
+# Number theory (B3)
+IS_PRIME = IRSymbol("IsPrime")
+NEXT_PRIME = IRSymbol("NextPrime")
+PREV_PRIME = IRSymbol("PrevPrime")
+FACTOR_INTEGER = IRSymbol("FactorInteger")
+DIVISORS = IRSymbol("Divisors")
+TOTIENT = IRSymbol("Totient")
+MOEBIUS_MU = IRSymbol("MoebiusMu")
+JACOBI_SYMBOL = IRSymbol("JacobiSymbol")
+CHINESE_REMAINDER = IRSymbol("ChineseRemainder")
+INTEGER_LENGTH = IRSymbol("IntegerLength")
+
+# Trig transformation heads (B1)
+TRIG_SIMPLIFY = IRSymbol("TrigSimplify")
+TRIG_EXPAND = IRSymbol("TrigExpand")
+TRIG_REDUCE = IRSymbol("TrigReduce")
+
+# Rational function operations (A3)
+COLLECT = IRSymbol("Collect")
+TOGETHER = IRSymbol("Together")
+RAT_SIMPLIFY = IRSymbol("RatSimplify")
+APART = IRSymbol("Apart")
+
+# Complex number IR heads (B2)
+IMAGINARY_UNIT = IRSymbol("ImaginaryUnit")
+RE = IRSymbol("Re")
+IM = IRSymbol("Im")
+CONJUGATE = IRSymbol("Conjugate")
+ARG = IRSymbol("Arg")
+RECT_FORM = IRSymbol("RectForm")
+POLAR_FORM = IRSymbol("PolarForm")
+
 # Re-export the runtime-owned heads so callers have one import.
 from macsyma_runtime.heads import (  # noqa: E402
     ASSUME,
@@ -80,6 +123,8 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "expand": EXPAND,
     "factor": FACTOR,
     "solve": SOLVE,
+    "nsolve": NSOLVE,
+    "linsolve": SOLVE,  # MACSYMA's linsolve is linear-system solving
     "taylor": TAYLOR,
     "limit": LIMIT,
     # List operations
@@ -89,7 +134,7 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "last": LAST,
     "append": APPEND,
     "reverse": REVERSE,
-    "makelist": RANGE,
+    "makelist": MAKE_LIST,
     "map": MAP,
     "apply": APPLY,
     "sublist": SELECT,
@@ -109,6 +154,44 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "floor": FLOOR,
     "ceiling": CEILING,
     "abs": ABS,
+    # Equation-side selectors (C5)
+    "lhs": LHS,
+    "rhs": RHS,
+    # Point evaluation — At(expr, Equal(var, val)) (C4)
+    "at": AT,
+    # Number theory (B3)
+    "primep": IS_PRIME,
+    "next_prime": NEXT_PRIME,
+    "prev_prime": PREV_PRIME,
+    "ifactor": FACTOR_INTEGER,
+    "divisors": DIVISORS,
+    "totient": TOTIENT,
+    "moebius": MOEBIUS_MU,
+    "jacobi": JACOBI_SYMBOL,
+    "chinese": CHINESE_REMAINDER,
+    "numdigits": INTEGER_LENGTH,
+    # Trig transformation operations (B1)
+    "trigsimp": TRIG_SIMPLIFY,
+    "trigexpand": TRIG_EXPAND,
+    "trigreduce": TRIG_REDUCE,
+    # Rational function operations (A3)
+    "collect": COLLECT,
+    "together": TOGETHER,
+    "ratsimp": RAT_SIMPLIFY,
+    "partfrac": APART,
+    # Complex number operations (B2)
+    # %i is the imaginary unit constant; the compiler maps the token to
+    # IMAGINARY_UNIT so the VM finds the pre-bound symbol.
+    "%i": IMAGINARY_UNIT,
+    "realpart": RE,
+    "imagpart": IM,
+    "conjugate": CONJUGATE,
+    # cabs(z) = complex modulus; Abs dispatches to complex handler when z
+    # contains ImaginaryUnit, so both names route to the same IR head.
+    "cabs": ABS,
+    "carg": ARG,
+    "rectform": RECT_FORM,
+    "polarform": POLAR_FORM,
     # Runtime-owned operations
     "kill": KILL,
     "ev": EV,

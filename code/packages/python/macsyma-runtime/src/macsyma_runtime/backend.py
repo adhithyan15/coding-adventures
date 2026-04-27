@@ -16,10 +16,11 @@ passthrough — comes from :class:`SymbolicBackend` unchanged.
 
 from __future__ import annotations
 
+import math
 from collections.abc import Iterator, Mapping
 from contextlib import contextmanager
 
-from symbolic_ir import IRNode, IRSymbol
+from symbolic_ir import IRFloat, IRNode, IRSymbol
 from symbolic_vm import SymbolicBackend
 from symbolic_vm.backend import Handler
 
@@ -57,7 +58,8 @@ class MacsymaBackend(SymbolicBackend):
         self.simp = True
 
         # Patch the inherited handler table with the runtime's heads.
-        # ``SymbolicBackend.__init__`` filled ``self._handlers`` already.
+        # ``SymbolicBackend.__init__`` filled ``self._handlers`` already
+        # (including all CAS substrate handlers: Factor, Solve, Simplify, …).
         runtime_handlers: dict[str, Handler] = {
             DISPLAY.name: display_handler,
             SUPPRESS.name: suppress_handler,
@@ -65,6 +67,20 @@ class MacsymaBackend(SymbolicBackend):
             EV.name: make_ev_handler(),
         }
         self._handlers = {**self._handlers, **runtime_handlers}
+
+        # Pre-bind the standard MACSYMA constants so users can write
+        # ``%pi`` and ``%e`` without defining them first.  These are
+        # float-valued because MACSYMA treats them as numeric by default;
+        # a later ``simp`` flag can return exact symbolic forms.
+        self._env["%pi"] = IRFloat(math.pi)
+        self._env["%e"] = IRFloat(math.e)
+        # ``%i`` is the imaginary unit constant.  It is pre-bound to the
+        # ``ImaginaryUnit`` symbol (an inert IR symbol handled by the
+        # complex-number substrate) so that expressions like ``3 + 2*%i``
+        # compile and normalise correctly.  SymbolicBackend already
+        # pre-binds ``ImaginaryUnit``; we add the MACSYMA surface alias.
+        from symbolic_ir import IRSymbol as _IRSymbol
+        self._env["%i"] = _IRSymbol("ImaginaryUnit")
 
         # ``Kill`` and ``Ev`` need their arguments raw — not pre-evaluated:
         # ``kill(x)`` should clear the symbol ``x``, not evaluate ``x``
