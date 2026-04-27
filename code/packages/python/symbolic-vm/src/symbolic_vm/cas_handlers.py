@@ -43,16 +43,16 @@ from cas_complex import IMAGINARY_UNIT as _IMAGINARY_UNIT
 from cas_complex import build_complex_handler_table as _build_complex
 from cas_complex.handlers import (
     abs_complex_handler as _abs_complex_handler,
+)
+from cas_complex.handlers import (
+    atan2_handler as _atan2_handler,
+)
+from cas_complex.handlers import (
     imaginary_power_handler as _imaginary_power_handler,
 )
 from cas_complex.normalize import contains_imaginary as _contains_imaginary
 from cas_factor import factor_integer_polynomial
 from cas_limit_series import PolynomialError, limit_direct, taylor_polynomial
-from cas_number_theory.handlers import build_number_theory_handler_table as _build_nt
-from cas_solve import nsolve_fraction_poly as _nsolve_fraction_poly
-from cas_solve import solve_cubic as _solve_cubic
-from cas_solve import solve_linear_system as _solve_linear_system
-from cas_solve import solve_quartic as _solve_quartic
 from cas_list_operations import (
     ListOperationError,
     append,
@@ -74,23 +74,41 @@ from cas_matrix import (
     matrix,
     transpose,
 )
+from cas_number_theory.handlers import build_number_theory_handler_table as _build_nt
 from cas_simplify import canonical, simplify
 from cas_solve import ALL, solve_linear, solve_quadratic
+from cas_solve import nsolve_fraction_poly as _nsolve_fraction_poly
+from cas_solve import solve_cubic as _solve_cubic
+from cas_solve import solve_linear_system as _solve_linear_system
+from cas_solve import solve_quartic as _solve_quartic
 from cas_substitution import subst
 from polynomial import (
     degree as _poly_degree,
+)
+from polynomial import (
     deriv as _poly_deriv,
+)
+from polynomial import (
     divmod_poly as _poly_divmod,
+)
+from polynomial import (
     evaluate as _poly_evaluate,
+)
+from polynomial import (
     gcd as _poly_gcd,
+)
+from polynomial import (
     monic as _poly_monic,
+)
+from polynomial import (
     normalize as _poly_normalize,
+)
+from polynomial import (
     rational_roots as _poly_rational_roots,
 )
 from symbolic_ir import (
     ADD,
     DIV,
-    EQUAL,
     MUL,
     NEG,
     POW,
@@ -101,8 +119,9 @@ from symbolic_ir import (
     IRRational,
     IRSymbol,
 )
+
 from symbolic_vm.backend import Handler
-from symbolic_vm.numeric import Numeric, from_number, to_number
+from symbolic_vm.numeric import from_number, to_number
 from symbolic_vm.polynomial_bridge import from_polynomial, to_rational
 
 if TYPE_CHECKING:
@@ -127,7 +146,7 @@ _CONSTANT_NAMES = frozenset({"True", "False", "%pi", "%e", "%i"})
 # ===========================================================================
 
 
-def simplify_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def simplify_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Simplify(expr)`` — fixed-point canonical + identity-rule simplifier.
 
     Applies :func:`cas_simplify.simplify` to the already-evaluated inner
@@ -144,7 +163,7 @@ def simplify_handler(_vm: "VM", expr: IRApply) -> IRNode:
     return simplify(expr.args[0])
 
 
-def expand_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def expand_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Expand(expr)`` — full polynomial expansion.
 
     Distributes ``Mul`` over ``Add`` and expands integer powers of
@@ -198,7 +217,7 @@ def _frac_to_ir(f: Fraction) -> IRNode:
     return IRRational(f.numerator, f.denominator)
 
 
-def collect_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def collect_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Collect(expr, var)`` — collect terms by powers of ``var``.
 
     Groups all terms in ``expr`` by their degree in ``var`` and returns the
@@ -226,7 +245,7 @@ def collect_handler(_vm: "VM", expr: IRApply) -> IRNode:
     return expr
 
 
-def together_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def together_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Together(expr)`` — combine rational sub-expressions over a common denominator.
 
     Converts a sum of rational functions into a single fraction
@@ -264,7 +283,7 @@ def together_handler(_vm: "VM", expr: IRApply) -> IRNode:
     return IRApply(DIV, (from_polynomial(num_n, x), from_polynomial(den_n, x)))
 
 
-def rat_simplify_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def rat_simplify_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``RatSimplify(expr)`` — cancel common polynomial factors.
 
     Computes the GCD of numerator and denominator and cancels it, reducing
@@ -370,7 +389,7 @@ def _apart_proper(
     return acc
 
 
-def apart_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def apart_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Apart(expr, var)`` — partial fraction decomposition.
 
     Decomposes a rational function ``P(x)/Q(x)`` into a sum of simpler
@@ -425,7 +444,7 @@ def apart_handler(_vm: "VM", expr: IRApply) -> IRNode:
 # ===========================================================================
 
 
-def subst_handler(vm: "VM", expr: IRApply) -> IRNode:
+def subst_handler(vm: VM, expr: IRApply) -> IRNode:
     """``Subst(value, var, target)`` — structural substitution then re-eval.
 
     Replaces every occurrence of ``var`` in ``target`` with ``value`` (the
@@ -535,7 +554,7 @@ def _factor_result_to_ir(
     return acc
 
 
-def factor_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def factor_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Factor(expr)`` — factor a univariate integer polynomial over Z.
 
     Uses rational-root extraction (Phase 1) followed by Kronecker's
@@ -636,7 +655,7 @@ def _ir_to_fraction_poly(
     return num_frac  # (c_0, c_1, ...) as Fraction
 
 
-def solve_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def solve_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Solve(equation, var)`` or ``Solve(List(eqs...), List(vars...))``.
 
     Single-equation form
@@ -743,7 +762,7 @@ def solve_handler(_vm: "VM", expr: IRApply) -> IRNode:
     return expr
 
 
-def nsolve_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def nsolve_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``NSolve(polynomial, var)`` — numeric root-finding via Durand–Kerner.
 
     Finds all roots of a univariate polynomial numerically using the
@@ -794,7 +813,7 @@ def _as_list_args(node: IRNode) -> tuple[IRNode, ...]:
     raise ListOperationError(f"expected a List, got {node!r}")
 
 
-def length_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def length_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Length(list)`` → number of elements as ``IRInteger``."""
     if len(expr.args) != 1:
         return expr
@@ -804,7 +823,7 @@ def length_handler(_vm: "VM", expr: IRApply) -> IRNode:
         return expr
 
 
-def first_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def first_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``First(list)`` → the first element."""
     if len(expr.args) != 1:
         return expr
@@ -814,7 +833,7 @@ def first_handler(_vm: "VM", expr: IRApply) -> IRNode:
         return expr
 
 
-def rest_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def rest_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Rest(list)`` → all elements except the first."""
     if len(expr.args) != 1:
         return expr
@@ -824,7 +843,7 @@ def rest_handler(_vm: "VM", expr: IRApply) -> IRNode:
         return expr
 
 
-def last_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def last_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Last(list)`` → the last element."""
     if len(expr.args) != 1:
         return expr
@@ -834,7 +853,7 @@ def last_handler(_vm: "VM", expr: IRApply) -> IRNode:
         return expr
 
 
-def append_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def append_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Append(list1, list2, …)`` → concatenated list.
 
     Accepts two or more lists. MACSYMA's ``append`` also accepts multiple
@@ -848,7 +867,7 @@ def append_handler(_vm: "VM", expr: IRApply) -> IRNode:
         return expr
 
 
-def reverse_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def reverse_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Reverse(list)`` → elements in reverse order."""
     if len(expr.args) != 1:
         return expr
@@ -858,7 +877,7 @@ def reverse_handler(_vm: "VM", expr: IRApply) -> IRNode:
         return expr
 
 
-def range_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def range_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Range(n)`` / ``Range(start, stop)`` / ``Range(start, stop, step)``.
 
     Single-argument form ``Range(n)`` produces ``[1, 2, …, n]`` (the
@@ -889,7 +908,7 @@ def range_handler(_vm: "VM", expr: IRApply) -> IRNode:
         return expr
 
 
-def map_handler(vm: "VM", expr: IRApply) -> IRNode:
+def map_handler(vm: VM, expr: IRApply) -> IRNode:
     """``Map(f, list)`` → ``[f(a), f(b), f(c), …]`` evaluated through the VM.
 
     ``f`` is any IR node that can appear as a head (typically an
@@ -913,7 +932,7 @@ def map_handler(vm: "VM", expr: IRApply) -> IRNode:
     return IRApply(IRSymbol("List"), results)
 
 
-def apply_handler(vm: "VM", expr: IRApply) -> IRNode:
+def apply_handler(vm: VM, expr: IRApply) -> IRNode:
     """``Apply(f, list)`` → ``f(a, b, c, …)`` evaluated through the VM.
 
     Replaces the ``List`` head with ``f`` and evaluates the result.
@@ -929,7 +948,7 @@ def apply_handler(vm: "VM", expr: IRApply) -> IRNode:
     return vm.eval(IRApply(f, elems))
 
 
-def select_handler(vm: "VM", expr: IRApply) -> IRNode:
+def select_handler(vm: VM, expr: IRApply) -> IRNode:
     """``Select(pred, list)`` → elements ``e`` for which ``pred(e)`` is ``True``.
 
     ``pred`` must be a function-head IR node. It is called with each list
@@ -952,7 +971,7 @@ def select_handler(vm: "VM", expr: IRApply) -> IRNode:
     return IRApply(IRSymbol("List"), tuple(kept))
 
 
-def sort_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def sort_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Sort(list)`` → stable sort by canonical ``repr`` key.
 
     Uses the same ordering as :func:`cas_simplify.canonical` — numerics
@@ -967,7 +986,7 @@ def sort_handler(_vm: "VM", expr: IRApply) -> IRNode:
         return expr
 
 
-def part_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def part_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Part(list, index)`` → 1-based element access.
 
     ``Part(lst, 1)`` is the first element; ``Part(lst, -1)`` is the last.
@@ -985,7 +1004,7 @@ def part_handler(_vm: "VM", expr: IRApply) -> IRNode:
         return expr
 
 
-def flatten_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def flatten_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Flatten(list)`` / ``Flatten(list, depth)`` → flattened list.
 
     Default depth is 1 (one level of nesting). Pass an ``IRInteger``
@@ -1003,7 +1022,7 @@ def flatten_handler(_vm: "VM", expr: IRApply) -> IRNode:
         return expr
 
 
-def join_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def join_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Join(list1, list2, …)`` → concatenation (alias for ``Append``)."""
     if len(expr.args) < 2:
         return expr
@@ -1018,7 +1037,7 @@ def join_handler(_vm: "VM", expr: IRApply) -> IRNode:
 # ===========================================================================
 
 
-def matrix_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def matrix_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Matrix(List(…), List(…), …)`` → validated ``Matrix`` IR node.
 
     Each argument must be a ``List`` of equal length (the rows). The
@@ -1035,7 +1054,7 @@ def matrix_handler(_vm: "VM", expr: IRApply) -> IRNode:
         return expr
 
 
-def transpose_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def transpose_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Transpose(M)`` → matrix with rows and columns swapped."""
     if len(expr.args) != 1:
         return expr
@@ -1045,7 +1064,7 @@ def transpose_handler(_vm: "VM", expr: IRApply) -> IRNode:
         return expr
 
 
-def determinant_handler(vm: "VM", expr: IRApply) -> IRNode:
+def determinant_handler(vm: VM, expr: IRApply) -> IRNode:
     """``Determinant(M)`` → scalar.
 
     Computes the symbolic determinant via cofactor expansion, then
@@ -1063,7 +1082,7 @@ def determinant_handler(vm: "VM", expr: IRApply) -> IRNode:
         return expr
 
 
-def inverse_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def inverse_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Inverse(M)`` → matrix whose entries are IR rational expressions."""
     if len(expr.args) != 1:
         return expr
@@ -1078,7 +1097,7 @@ def inverse_handler(_vm: "VM", expr: IRApply) -> IRNode:
 # ===========================================================================
 
 
-def limit_handler(vm: "VM", expr: IRApply) -> IRNode:
+def limit_handler(vm: VM, expr: IRApply) -> IRNode:
     """``Limit(expr, var, point)`` — direct-substitution limit.
 
     Phase 1: substitutes ``point`` for ``var`` in ``expr`` via
@@ -1099,7 +1118,7 @@ def limit_handler(vm: "VM", expr: IRApply) -> IRNode:
     return vm.eval(simplify(result))
 
 
-def taylor_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def taylor_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Taylor(expr, var, point, order)`` — truncated Taylor polynomial.
 
     Expands the polynomial ``expr`` around ``point`` to the given
@@ -1157,7 +1176,7 @@ def _numeric_binary(
     return from_number(fn(a, b))
 
 
-def abs_handler(vm: "VM", expr: IRApply) -> IRNode:
+def abs_handler(vm: VM, expr: IRApply) -> IRNode:
     """``Abs(x)`` → absolute value.
 
     For complex inputs (containing ``ImaginaryUnit``), delegates to
@@ -1170,17 +1189,17 @@ def abs_handler(vm: "VM", expr: IRApply) -> IRNode:
     return _numeric_unary(expr, abs)
 
 
-def floor_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def floor_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Floor(x)`` → greatest integer ≤ x."""
     return _numeric_unary(expr, lambda n: Fraction(math.floor(n)))
 
 
-def ceiling_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def ceiling_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Ceiling(x)`` → smallest integer ≥ x."""
     return _numeric_unary(expr, lambda n: Fraction(math.ceil(n)))
 
 
-def mod_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def mod_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Mod(a, b)`` → ``a mod b``. Both arguments must be numeric."""
     if len(expr.args) != 2:
         return expr
@@ -1195,7 +1214,7 @@ def mod_handler(_vm: "VM", expr: IRApply) -> IRNode:
     return from_number(float(a) % float(b))
 
 
-def gcd_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def gcd_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Gcd(a, b)`` → greatest common divisor. Both must be integers."""
     if len(expr.args) != 2:
         return expr
@@ -1208,7 +1227,7 @@ def gcd_handler(_vm: "VM", expr: IRApply) -> IRNode:
     return IRInteger(math.gcd(a.numerator, b.numerator))
 
 
-def lcm_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def lcm_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Lcm(a, b)`` → least common multiple. Both must be integers."""
     if len(expr.args) != 2:
         return expr
@@ -1228,7 +1247,7 @@ def lcm_handler(_vm: "VM", expr: IRApply) -> IRNode:
 _EQUAL_HEAD = "Equal"
 
 
-def lhs_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def lhs_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Lhs(eq)`` → left-hand side of equation ``Equal(a, b)`` → ``a``.
 
     MACSYMA syntax: ``lhs(x = 3)`` → ``x``.
@@ -1248,7 +1267,7 @@ def lhs_handler(_vm: "VM", expr: IRApply) -> IRNode:
     return expr
 
 
-def rhs_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def rhs_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Rhs(eq)`` → right-hand side of equation ``Equal(a, b)`` → ``b``.
 
     MACSYMA syntax: ``rhs(x = 3)`` → ``3``.
@@ -1275,7 +1294,7 @@ def rhs_handler(_vm: "VM", expr: IRApply) -> IRNode:
 _LIST_HEAD = IRSymbol("List")
 
 
-def make_list_handler(vm: "VM", expr: IRApply) -> IRNode:
+def make_list_handler(vm: VM, expr: IRApply) -> IRNode:
     """``MakeList(expr, var, n)`` or ``MakeList(expr, var, from, to[, step])``.
 
     Evaluates *expr* for *var* = each integer in the specified range and
@@ -1339,7 +1358,7 @@ def make_list_handler(vm: "VM", expr: IRApply) -> IRNode:
 # ===========================================================================
 
 
-def at_handler(vm: "VM", expr: IRApply) -> IRNode:
+def at_handler(vm: VM, expr: IRApply) -> IRNode:
     """``At(expr, Equal(var, val))`` → evaluate *expr* at *var* = *val*.
 
     MACSYMA syntax: ``at(x^2 + 1, x = 3)`` → ``10``.
@@ -1471,6 +1490,8 @@ def build_cas_handler_table() -> dict[str, Handler]:
         # complex inputs.  Imaginary power reduction is wired separately
         # into the Pow handler by SymbolicBackend.__init__.
         **_build_complex(),
+        # --- atan2 (numeric two-argument arctangent) -------------------------
+        "Atan2": _atan2_handler,
     }
 
 

@@ -25,6 +25,22 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 
+from cas_complex.handlers import (
+    complex_div_handler as _complex_div_handler,
+)
+from cas_complex.handlers import (
+    complex_mul_handler as _complex_mul_handler,
+)
+from cas_complex.handlers import (
+    complex_pow_handler as _complex_pow_handler,
+)
+from cas_complex.handlers import (
+    euler_pow_handler as _euler_pow_handler,
+)
+from cas_complex.handlers import (
+    exp_complex_handler as _exp_complex_handler,
+)
+from cas_trig.handlers import build_trig_handler_table as _build_trig
 from symbolic_ir import ASSIGN, DEFINE, IF, IRApply, IRNode, IRSymbol
 
 from symbolic_vm.backend import Backend, Handler
@@ -33,7 +49,6 @@ from symbolic_vm.cas_handlers import (
     IMAGINARY_UNIT_SYMBOL,
     build_cas_handler_table,
 )
-from cas_trig.handlers import build_trig_handler_table as _build_trig
 from symbolic_vm.derivative import differentiate
 from symbolic_vm.handlers import FALSE, TRUE, build_handler_table
 from symbolic_vm.integrate import integrate
@@ -125,7 +140,17 @@ class SymbolicBackend(_BaseBackend):
         _orig_pow = handlers.get("Pow")
 
         def _pow_with_imaginary(vm: object, expr: IRApply) -> IRNode:  # type: ignore[type-arg]
+            # First: i^n → {1, i, -1, -i}
             result = IMAGINARY_POWER_HOOK(vm, expr)  # type: ignore[arg-type]
+            if result is not expr:
+                return result
+            # Second: b^(i*theta) → cos(ln(b)*theta) + i*sin(ln(b)*theta)
+            result = _euler_pow_handler(vm, expr)  # type: ignore[arg-type]
+            if result is not expr:
+                return result
+            # Third: (a+bi)^n for small positive integer n — expand via
+            # repeated multiplication so complex_mul_handler can reduce.
+            result = _complex_pow_handler(vm, expr)  # type: ignore[arg-type]
             if result is not expr:
                 return result
             if _orig_pow is not None:
@@ -133,6 +158,50 @@ class SymbolicBackend(_BaseBackend):
             return expr
 
         handlers["Pow"] = _pow_with_imaginary  # type: ignore[assignment]
+
+        # B2: wrap Mul to normalize complex products.
+        # When at least one operand contains ImaginaryUnit, distribute via
+        # (re_a + im_a*i)(re_b + im_b*i) = (re_a*re_b - im_a*im_b) + ...
+        _orig_mul = handlers.get("Mul")
+
+        def _mul_with_complex(vm: object, expr: IRApply) -> IRNode:  # type: ignore[type-arg]
+            result = _complex_mul_handler(vm, expr)  # type: ignore[arg-type]
+            if result is not expr:
+                return result
+            if _orig_mul is not None:
+                return _orig_mul(vm, expr)  # type: ignore[arg-type]
+            return expr
+
+        handlers["Mul"] = _mul_with_complex  # type: ignore[assignment]
+
+        # B2: wrap Div to handle complex numerators and denominators.
+        # Div(a + b*i, c) → a/c + (b/c)*i
+        # Div(a + b*i, c + d*i) → ((ac+bd) + (bc-ad)*i) / (c²+d²)
+        _orig_div = handlers.get("Div")
+
+        def _div_with_complex(vm: object, expr: IRApply) -> IRNode:  # type: ignore[type-arg]
+            result = _complex_div_handler(vm, expr)  # type: ignore[arg-type]
+            if result is not expr:
+                return result
+            if _orig_div is not None:
+                return _orig_div(vm, expr)  # type: ignore[arg-type]
+            return expr
+
+        handlers["Div"] = _div_with_complex  # type: ignore[assignment]
+
+        # B2: wrap Exp to apply Euler's formula for complex exponents.
+        _orig_exp = handlers.get("Exp")
+
+        def _exp_with_complex(vm: object, expr: IRApply) -> IRNode:  # type: ignore[type-arg]
+            result = _exp_complex_handler(vm, expr)  # type: ignore[arg-type]
+            if result is not expr:
+                return result
+            if _orig_exp is not None:
+                return _orig_exp(vm, expr)  # type: ignore[arg-type]
+            return expr
+
+        handlers["Exp"] = _exp_with_complex  # type: ignore[assignment]
+
         self._handlers = handlers
         # B2: pre-bind ImaginaryUnit so it evaluates to itself (an inert
         # symbol) rather than triggering the unresolved-symbol fall-through.

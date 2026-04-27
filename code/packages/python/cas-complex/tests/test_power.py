@@ -1,7 +1,7 @@
 """Tests for ImaginaryUnit power reduction."""
 from __future__ import annotations
 
-from symbolic_ir import IRInteger, IRSymbol
+from symbolic_ir import IRInteger
 
 from cas_complex.constants import IMAGINARY_UNIT
 from cas_complex.power import reduce_imaginary_power

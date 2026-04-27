@@ -1,9 +1,9 @@
 """ImaginaryUnit power reduction: i^n → one of {1, i, -1, -i}."""
 from __future__ import annotations
 
-from symbolic_ir import IRInteger, IRNode, IRSymbol
+from symbolic_ir import IRInteger, IRNode
 
-from cas_complex.constants import IMAGINARY_UNIT, make_mul, make_neg
+from cas_complex.constants import IMAGINARY_UNIT, make_neg
 
 # The four canonical values of i^n (n mod 4)
 _I_POWERS: dict[int, IRNode] = {

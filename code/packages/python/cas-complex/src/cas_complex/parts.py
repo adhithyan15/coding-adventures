@@ -1,9 +1,9 @@
 """Re, Im, Conjugate operations on IR complex expressions."""
 from __future__ import annotations
 
-from symbolic_ir import IRApply, IRInteger, IRNode, IRRational, IRSymbol
+from symbolic_ir import IRInteger, IRNode, IRRational
 
-from cas_complex.constants import IMAGINARY_UNIT, _NEG, make_add, make_mul, make_neg
+from cas_complex.constants import IMAGINARY_UNIT, make_add, make_mul, make_neg
 from cas_complex.normalize import contains_imaginary, normalize_complex, split_rect
 
 

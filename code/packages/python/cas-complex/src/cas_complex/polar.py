@@ -4,13 +4,11 @@ from __future__ import annotations
 from symbolic_ir import IRApply, IRInteger, IRNode, IRSymbol
 
 from cas_complex.constants import (
-    IMAGINARY_UNIT,
     _ATAN2,
     _EXP,
     _SQRT,
-    make_add,
+    IMAGINARY_UNIT,
     make_mul,
-    make_pow,
 )
 from cas_complex.normalize import contains_imaginary, normalize_complex, split_rect
 
