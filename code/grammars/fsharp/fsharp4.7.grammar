@@ -83,8 +83,6 @@ union_type = union_case { case_separator union_case } ;
 
 union_case = NAME [ "of" type_expression { STAR type_expression } ] ;
 
-alias_type = type_expression ;
-
 field_separator = SEMICOLON
                 | NEWLINE ;
 
@@ -150,33 +148,6 @@ expression = if_expression
 sequence_expression = infix_expression { NEWLINE infix_expression | SEMICOLON infix_expression } ;
 
 infix_expression = application_expression { infix_operator application_expression } ;
-
-infix_operator = PIPE_RIGHT
-               | PIPE_LEFT
-               | COMPOSE_RIGHT
-               | COMPOSE_LEFT
-               | NOT_EQUALS
-               | LESS_EQUALS
-               | GREATER_EQUALS
-               | EQUALS_EQUALS
-               | COLON_EQUALS
-               | DOUBLE_COLON
-               | LARROW
-               | ARROW
-               | DOT_DOT
-               | AND_AND
-               | OR_OR
-               | EQUALS
-               | PLUS
-               | MINUS
-               | STAR
-               | SLASH
-               | PERCENT
-               | LESS_THAN
-               | GREATER_THAN
-               | AMPERSAND
-               | PIPE
-               | CARET ;
 
 application_expression = prefix_expression { prefix_expression } ;
 

@@ -55,11 +55,6 @@ Cargo.lock
 # Generated output artifacts
 out.txt
 build_output.txt
-/.build-cache.json
-/build-plan.json
-/build-tool
-/build-tool.exe
-/.tmp/
 
 # IDE
 .vscode/

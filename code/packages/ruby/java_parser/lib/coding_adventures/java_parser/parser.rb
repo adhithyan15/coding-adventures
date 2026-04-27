@@ -47,7 +47,6 @@ module CodingAdventures
     #   code/                               <- ../../../../../..
     #   grammars/                           <- ../../../../../../grammars
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
-    COMPILED_GRAMMAR_DIR = __dir__
 
     # The default Java version used when no version is specified.
     DEFAULT_VERSION = "21"
@@ -80,26 +79,6 @@ module CodingAdventures
       File.join(GRAMMAR_DIR, "java", "java#{effective_version}.grammar")
     end
 
-    def self.resolve_compiled_grammar_path(version)
-      effective_version = if version.nil? || version.empty?
-        DEFAULT_VERSION
-      else
-        resolve_grammar_path(version)
-        version
-      end
-
-      if effective_version == DEFAULT_VERSION && (version.nil? || version.empty?)
-        File.join(COMPILED_GRAMMAR_DIR, "_grammar.rb")
-      else
-        suffix = effective_version.tr(".", "_")
-        File.join(COMPILED_GRAMMAR_DIR, "_grammar_#{suffix}.rb")
-      end
-    end
-
-    def self.parser_grammar(version)
-      CodingAdventures::GrammarTools.load_parser_grammar(resolve_compiled_grammar_path(version))
-    end
-
     # Parse a string of Java source code into a generic AST.
     #
     # The optional `version:` keyword argument selects a specific versioned
@@ -115,8 +94,14 @@ module CodingAdventures
       # Step 1: Tokenize using the Java lexer (version-aware)
       tokens = CodingAdventures::JavaLexer.tokenize(source, version: version)
 
-      # Step 2: Parse tokens using the compiled grammar for this version.
-      parser = CodingAdventures::Parser::GrammarDrivenParser.new(tokens, parser_grammar(version))
+      # Step 2: Load and parse the Java grammar for this version
+      grammar_path = resolve_grammar_path(version)
+      grammar = CodingAdventures::GrammarTools.parse_parser_grammar(
+        File.read(grammar_path, encoding: "UTF-8")
+      )
+
+      # Step 3: Parse tokens using the grammar-driven parser
+      parser = CodingAdventures::Parser::GrammarDrivenParser.new(tokens, grammar)
       parser.parse
     end
 

@@ -57,7 +57,6 @@ module CodingAdventures
     #   code/                              <- ../../../../../..
     #   grammars/                          <- ../../../../../../grammars
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
-    COMPILED_GRAMMAR_DIR = __dir__
 
     # The default Java version used when no version is specified.
     DEFAULT_VERSION = "21"
@@ -92,26 +91,6 @@ module CodingAdventures
       File.join(GRAMMAR_DIR, "java", "java#{effective_version}.tokens")
     end
 
-    def self.resolve_compiled_tokens_path(version)
-      effective_version = if version.nil? || version.empty?
-        DEFAULT_VERSION
-      else
-        resolve_tokens_path(version)
-        version
-      end
-
-      if effective_version == DEFAULT_VERSION && (version.nil? || version.empty?)
-        File.join(COMPILED_GRAMMAR_DIR, "_grammar.rb")
-      else
-        suffix = effective_version.tr(".", "_")
-        File.join(COMPILED_GRAMMAR_DIR, "_grammar_#{suffix}.rb")
-      end
-    end
-
-    def self.token_grammar(version)
-      CodingAdventures::GrammarTools.load_token_grammar(resolve_compiled_tokens_path(version))
-    end
-
     # Tokenize a string of Java source code into an array of Token objects.
     #
     # The optional `version:` keyword argument selects a specific versioned
@@ -123,7 +102,11 @@ module CodingAdventures
     # @return [Array<CodingAdventures::Lexer::Token>] the token stream
     # @raise [ArgumentError] if version is not nil and not in VALID_VERSIONS
     def self.tokenize(source, version: nil)
-      lexer = CodingAdventures::Lexer::GrammarLexer.new(source, token_grammar(version))
+      tokens_path = resolve_tokens_path(version)
+      grammar = CodingAdventures::GrammarTools.parse_token_grammar(
+        File.read(tokens_path, encoding: "UTF-8")
+      )
+      lexer = CodingAdventures::Lexer::GrammarLexer.new(source, grammar)
       lexer.tokenize
     end
 
