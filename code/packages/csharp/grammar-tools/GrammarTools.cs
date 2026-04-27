@@ -131,22 +131,6 @@ public static class TokenGrammarParser
                 continue;
             }
 
-            if (trimmed.StartsWith("escapes:", StringComparison.Ordinal))
-            {
-                escapeMode = trimmed["escapes:".Length..].Trim();
-                continue;
-            }
-
-            if (trimmed.StartsWith("case_sensitive:", StringComparison.Ordinal))
-            {
-                if (bool.TryParse(trimmed["case_sensitive:".Length..].Trim(), out var parsedBool))
-                {
-                    caseInsensitive = !parsedBool;
-                }
-
-                continue;
-            }
-
             if (trimmed == "keywords:" || trimmed == "reserved:" || trimmed == "context_keywords:" || trimmed == "soft_keywords:" || trimmed == "skip:" || trimmed == "errors:")
             {
                 section = trimmed[..^1];
@@ -165,14 +149,6 @@ public static class TokenGrammarParser
                 section = "group";
                 groupDefinitions[currentGroup] = new List<TokenDefinition>();
                 continue;
-            }
-
-            if ((section == "skip" || section == "errors" || section == "group")
-                && !char.IsWhiteSpace(rawLine[0])
-                && trimmed.Contains('='))
-            {
-                section = "definitions";
-                currentGroup = null;
             }
 
             switch (section)
@@ -271,7 +247,7 @@ public static class TokenGrammarParser
         var rhs = line[(equalsIndex + 1)..].Trim();
         string? alias = null;
 
-        var aliasIndex = FindAliasMarker(rhs);
+        var aliasIndex = rhs.IndexOf("->", StringComparison.Ordinal);
         if (aliasIndex >= 0)
         {
             alias = rhs[(aliasIndex + 2)..].Trim();
@@ -289,48 +265,6 @@ public static class TokenGrammarParser
         }
 
         throw new TokenGrammarError("Pattern must be /regex/ or \"literal\"", lineNumber);
-    }
-
-    private static int FindAliasMarker(string rhs)
-    {
-        var inRegex = false;
-        var inString = false;
-        var escaped = false;
-
-        for (var index = 0; index < rhs.Length - 1; index++)
-        {
-            var ch = rhs[index];
-            if (escaped)
-            {
-                escaped = false;
-                continue;
-            }
-
-            if (ch == '\\')
-            {
-                escaped = true;
-                continue;
-            }
-
-            if (ch == '"' && !inRegex)
-            {
-                inString = !inString;
-                continue;
-            }
-
-            if (ch == '/' && !inString)
-            {
-                inRegex = !inRegex;
-                continue;
-            }
-
-            if (!inRegex && !inString && ch == '-' && rhs[index + 1] == '>')
-            {
-                return index;
-            }
-        }
-
-        return -1;
     }
 
     private static string UnescapeQuoted(string text)

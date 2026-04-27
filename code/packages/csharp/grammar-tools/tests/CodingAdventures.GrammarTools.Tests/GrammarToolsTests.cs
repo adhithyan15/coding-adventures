@@ -28,27 +28,6 @@ public class GrammarToolsTests
     }
 
     [Fact]
-    public void TokenGrammarParser_AllowsArrowLiteral()
-    {
-        var grammar = TokenGrammarParser.Parse("""
-            escapes: none
-            case_sensitive: false
-            skip:
-              WS = /[ \t]+/
-            TRIGGER = "->"
-            NAME = /[a-z]+/ -> IDENT
-            """);
-
-        Assert.Equal("none", grammar.EscapeMode);
-        Assert.False(grammar.CaseSensitive);
-        Assert.True(grammar.CaseInsensitive);
-        Assert.Single(grammar.SkipDefinitions!);
-        Assert.Equal("->", grammar.Definitions[0].Pattern);
-        Assert.Null(grammar.Definitions[0].Alias);
-        Assert.Equal("IDENT", grammar.Definitions[1].Alias);
-    }
-
-    [Fact]
     public void ParserGrammarParser_ParsesCoreForms()
     {
         var grammar = ParserGrammarParser.Parse("""

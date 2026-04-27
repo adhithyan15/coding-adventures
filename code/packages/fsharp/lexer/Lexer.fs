@@ -3,7 +3,7 @@ namespace CodingAdventures.Lexer.FSharp
 open System
 open System.Collections.Generic
 open System.Text.RegularExpressions
-open CodingAdventures.GrammarTools.FSharp
+open CodingAdventures.GrammarTools
 
 type TokenType =
     | Name = 0
