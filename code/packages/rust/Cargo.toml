@@ -392,4 +392,5 @@ members = [
     "cas-limit-series",
     "cas-pretty-printer",
     "cas-number-theory",
+    "cas-complex",
 ]
