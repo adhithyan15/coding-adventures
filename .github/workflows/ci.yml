@@ -343,8 +343,9 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       # ── Build the build tool ──────────────────────────────────
-      - name: Compile build tool
-        shell: bash
+      - name: Pin MSVC linker for Rust (Windows only)
+        if: runner.os == 'Windows'
+        shell: pwsh
         run: |
           $vsInstall = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath
           $msvcVer = Get-ChildItem "$vsInstall\VC\Tools\MSVC" -Directory | Sort-Object Name -Descending | Select-Object -First 1
@@ -352,6 +353,17 @@ jobs:
           if (-not (Test-Path $linkExe)) { Write-Error "MSVC link.exe not found: $linkExe"; exit 1 }
           echo "CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER=$linkExe" >> $env:GITHUB_ENV
           Write-Host "Pinned Rust MSVC linker to: $linkExe"
+
+      - name: Compile build tool
+        shell: bash
+        run: |
+          cd code/programs/go/build-tool
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            go build -o ../../../../build-tool.exe .
+          else
+            go build -o ../../../../build-tool .
+          fi
+          cd ../../../..
 
       - name: Build and test affected Swift packages on Windows
         if: runner.os == 'Windows' && needs.detect.outputs.needs_swift == 'true'
