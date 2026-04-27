@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+    <PackageId>CodingAdventures.Barcode1D.CSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>High-level 1D barcode pipeline for C#: symbology selection over shared barcode encoders and paint scenes</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../barcode-layout-1d/CodingAdventures.BarcodeLayout1D.csproj" />
+    <ProjectReference Include="../codabar/CodingAdventures.Codabar.csproj" />
+    <ProjectReference Include="../code128/CodingAdventures.Code128.csproj" />
+    <ProjectReference Include="../code39/CodingAdventures.Code39.csproj" />
+    <ProjectReference Include="../ean-13/CodingAdventures.Ean13.csproj" />
+    <ProjectReference Include="../itf/CodingAdventures.Itf.csproj" />
+    <ProjectReference Include="../paint-instructions/CodingAdventures.PaintInstructions.csproj" />
+    <ProjectReference Include="../pixel-container/CodingAdventures.PixelContainer.csproj" />
+    <ProjectReference Include="../upc-a/CodingAdventures.UpcA.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="tests\**\*.cs" />
+    <EmbeddedResource Remove="tests\**" />
+    <None Remove="tests\**" />
+  </ItemGroup>
+</Project>
