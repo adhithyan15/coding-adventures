@@ -3,5 +3,5 @@
   "version": 1,
   "package": "fsharp/pdf417",
   "capabilities": [],
-  "justification": "Pure in-memory F# facade over the shared .NET PDF417 encoder. No filesystem, process, environment, or network access needed."
+  "justification": "Pure in-memory PDF417 encoder. No filesystem, process, environment, or network access needed."
 }
