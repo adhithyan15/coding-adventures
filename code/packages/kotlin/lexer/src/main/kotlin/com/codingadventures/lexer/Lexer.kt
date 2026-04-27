@@ -77,7 +77,6 @@ class GrammarLexer(private val grammar: TokenGrammar) {
     private val keywordSet = grammar.keywords.toSet()
     private val reservedSet = grammar.reservedKeywords.toSet()
     private val contextKeywordSet = grammar.contextKeywords.toSet()
-    private val layoutKeywordSet = grammar.layoutKeywords.toSet()
 
     /**
      * Tokenize source code into a list of tokens.
@@ -171,73 +170,7 @@ class GrammarLexer(private val grammar: TokenGrammar) {
         }
 
         tokens.add(Token(TokenType.EOF, "", line, column, "EOF"))
-        return if (grammar.mode == "layout") applyLayout(tokens) else tokens
-    }
-
-    private fun applyLayout(tokens: List<Token>): List<Token> {
-        val result = mutableListOf<Token>()
-        val layoutStack = mutableListOf<Int>()
-        var pendingLayouts = 0
-        var suppressDepth = 0
-
-        for ((index, token) in tokens.withIndex()) {
-            val typeName = token.effectiveTypeName()
-
-            if (typeName == "NEWLINE") {
-                result += token
-                val nextToken = tokens.drop(index + 1).firstOrNull { it.effectiveTypeName() != "NEWLINE" }
-                if (suppressDepth == 0 && nextToken != null) {
-                    while (layoutStack.isNotEmpty() && nextToken.column < layoutStack.last()) {
-                        result += Token(TokenType.GRAMMAR, "}", nextToken.line, nextToken.column, "VIRTUAL_RBRACE")
-                        layoutStack.removeAt(layoutStack.lastIndex)
-                    }
-                    if (layoutStack.isNotEmpty() &&
-                        nextToken.effectiveTypeName() != "EOF" &&
-                        nextToken.value != "}" &&
-                        nextToken.column == layoutStack.last()
-                    ) {
-                        result += Token(TokenType.GRAMMAR, ";", nextToken.line, nextToken.column, "VIRTUAL_SEMICOLON")
-                    }
-                }
-                continue
-            }
-
-            if (typeName == "EOF") {
-                while (layoutStack.isNotEmpty()) {
-                    result += Token(TokenType.GRAMMAR, "}", token.line, token.column, "VIRTUAL_RBRACE")
-                    layoutStack.removeAt(layoutStack.lastIndex)
-                }
-                result += token
-                continue
-            }
-
-            if (pendingLayouts > 0) {
-                if (token.value == "{") {
-                    pendingLayouts -= 1
-                } else {
-                    repeat(pendingLayouts) {
-                        layoutStack += token.column
-                        result += Token(TokenType.GRAMMAR, "{", token.line, token.column, "VIRTUAL_LBRACE")
-                    }
-                    pendingLayouts = 0
-                }
-            }
-
-            result += token
-
-            if (!typeName.startsWith("VIRTUAL_")) {
-                when (token.value) {
-                    "(", "[", "{" -> suppressDepth += 1
-                    ")", "]", "}" -> if (suppressDepth > 0) suppressDepth -= 1
-                }
-            }
-
-            if (layoutKeywordSet.contains(token.value) || layoutKeywordSet.contains(token.value.lowercase())) {
-                pendingLayouts += 1
-            }
-        }
-
-        return result
+        return tokens
     }
 
     private fun compileDefinitions(defs: List<TokenDefinition>): List<CompiledPattern> =

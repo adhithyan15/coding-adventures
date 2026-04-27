@@ -58,7 +58,6 @@ public final class GrammarLexer {
     private final Set<String> keywordSet;
     private final Set<String> reservedSet;
     private final Set<String> contextKeywordSet;
-    private final Set<String> layoutKeywordSet;
 
     /**
      * Create a new GrammarLexer from a TokenGrammar.
@@ -73,7 +72,6 @@ public final class GrammarLexer {
         this.keywordSet = new HashSet<>(grammar.getKeywords());
         this.reservedSet = new HashSet<>(grammar.getReservedKeywords());
         this.contextKeywordSet = new HashSet<>(grammar.getContextKeywords());
-        this.layoutKeywordSet = new HashSet<>(grammar.getLayoutKeywords());
     }
 
     /**
@@ -192,94 +190,9 @@ public final class GrammarLexer {
         // Keyword promotion: NAME tokens whose values match keywords become KEYWORD
         promoteKeywords(tokens);
 
-        if ("layout".equals(grammar.getMode())) {
-            tokens = applyLayout(tokens);
-        }
-
         // Add EOF token
         tokens.add(new Token(TokenType.EOF, "", line, column, "EOF", 0));
         return tokens;
-    }
-
-    private List<Token> applyLayout(List<Token> tokens) {
-        List<Token> result = new ArrayList<>();
-        List<Integer> layoutStack = new ArrayList<>();
-        int pendingLayouts = 0;
-        int suppressDepth = 0;
-
-        for (int i = 0; i < tokens.size(); i++) {
-            Token token = tokens.get(i);
-            String typeName = token.effectiveTypeName();
-
-            if ("NEWLINE".equals(typeName)) {
-                result.add(token);
-                Token nextToken = nextLayoutToken(tokens, i + 1);
-                if (suppressDepth == 0 && nextToken != null) {
-                    while (!layoutStack.isEmpty() && nextToken.getColumn() < layoutStack.get(layoutStack.size() - 1)) {
-                        result.add(virtualLayoutToken("VIRTUAL_RBRACE", "}", nextToken));
-                        layoutStack.remove(layoutStack.size() - 1);
-                    }
-
-                    if (!layoutStack.isEmpty()
-                            && !"EOF".equals(nextToken.effectiveTypeName())
-                            && !"}".equals(nextToken.getValue())
-                            && nextToken.getColumn() == layoutStack.get(layoutStack.size() - 1)) {
-                        result.add(virtualLayoutToken("VIRTUAL_SEMICOLON", ";", nextToken));
-                    }
-                }
-                continue;
-            }
-
-            if ("EOF".equals(typeName)) {
-                while (!layoutStack.isEmpty()) {
-                    result.add(virtualLayoutToken("VIRTUAL_RBRACE", "}", token));
-                    layoutStack.remove(layoutStack.size() - 1);
-                }
-                result.add(token);
-                continue;
-            }
-
-            if (pendingLayouts > 0) {
-                if ("{".equals(token.getValue())) {
-                    pendingLayouts -= 1;
-                } else {
-                    for (int count = 0; count < pendingLayouts; count++) {
-                        layoutStack.add(token.getColumn());
-                        result.add(virtualLayoutToken("VIRTUAL_LBRACE", "{", token));
-                    }
-                    pendingLayouts = 0;
-                }
-            }
-
-            result.add(token);
-
-            if (!typeName.startsWith("VIRTUAL_")) {
-                if ("(".equals(token.getValue()) || "[".equals(token.getValue()) || "{".equals(token.getValue())) {
-                    suppressDepth++;
-                } else if ((")".equals(token.getValue()) || "]".equals(token.getValue()) || "}".equals(token.getValue())) && suppressDepth > 0) {
-                    suppressDepth--;
-                }
-            }
-
-            if (layoutKeywordSet.contains(token.getValue()) || layoutKeywordSet.contains(token.getValue().toLowerCase())) {
-                pendingLayouts += 1;
-            }
-        }
-
-        return result;
-    }
-
-    private Token nextLayoutToken(List<Token> tokens, int startIndex) {
-        for (int i = startIndex; i < tokens.size(); i++) {
-            if (!"NEWLINE".equals(tokens.get(i).effectiveTypeName())) {
-                return tokens.get(i);
-            }
-        }
-        return null;
-    }
-
-    private Token virtualLayoutToken(String typeName, String value, Token anchor) {
-        return new Token(TokenType.GRAMMAR, value, anchor.getLine(), anchor.getColumn(), typeName, 0);
     }
 
     /**

@@ -38,7 +38,6 @@ public final class TokenGrammar {
     private final List<TokenDefinition> skipDefinitions = new ArrayList<>();
     private final List<TokenDefinition> errorDefinitions = new ArrayList<>();
     private final List<String> reservedKeywords = new ArrayList<>();
-    private final List<String> layoutKeywords = new ArrayList<>();
     private final List<String> contextKeywords = new ArrayList<>();
     private final Map<String, PatternGroup> groups = new LinkedHashMap<>();
 
@@ -65,7 +64,6 @@ public final class TokenGrammar {
     public List<TokenDefinition> getSkipDefinitions() { return skipDefinitions; }
     public List<TokenDefinition> getErrorDefinitions() { return errorDefinitions; }
     public List<String> getReservedKeywords() { return reservedKeywords; }
-    public List<String> getLayoutKeywords() { return layoutKeywords; }
     public List<String> getContextKeywords() { return contextKeywords; }
     public Map<String, PatternGroup> getGroups() { return groups; }
 

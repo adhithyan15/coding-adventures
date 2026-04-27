@@ -26,7 +26,6 @@ tasks.withType<JavaCompile> {
 dependencies {
     implementation("com.codingadventures:grammar-tools")
     implementation("com.codingadventures:lexer")
-    implementation("com.codingadventures:directed-graph")
     testImplementation(kotlin("test"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
