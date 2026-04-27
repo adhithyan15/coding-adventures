@@ -207,6 +207,9 @@ jobs:
       # Go is always installed — the build tool is written in Go.
       # Other toolchains are installed only if their language has
       # affected packages, as determined by the detect job.
+      #
+      # On main pushes we also run a forced full build later, so we
+      # provision every toolchain up front for that path.
 
       - name: Set up Go
         uses: actions/setup-go@v5
@@ -462,11 +465,10 @@ jobs:
       - name: Install test runners
         shell: bash
         run: |
-          IS_MAIN="${{ needs.detect.outputs.is_main }}"
-          if [ "${{ needs.detect.outputs.needs_python }}" = "true" ] || [ "$IS_MAIN" = "true" ]; then
+          if [ "${{ needs.detect.outputs.needs_python }}" = "true" ] || [ "${{ needs.detect.outputs.is_main }}" = "true" ]; then
             uv pip install --system pytest
           fi
-          if [ "${{ needs.detect.outputs.needs_typescript }}" = "true" ] || [ "$IS_MAIN" = "true" ]; then
+          if [ "${{ needs.detect.outputs.needs_typescript }}" = "true" ] || [ "${{ needs.detect.outputs.is_main }}" = "true" ]; then
             npm install -g jest
           fi
 
@@ -475,38 +477,31 @@ jobs:
         shell: bash
         run: |
           echo "Go: $(go version)"
-          IS_MAIN="${{ needs.detect.outputs.is_main }}"
-          if [ "${{ needs.detect.outputs.needs_python }}" = "true" ] || [ "$IS_MAIN" = "true" ]; then
+          if [ "${{ needs.detect.outputs.needs_python }}" = "true" ] || [ "${{ needs.detect.outputs.is_main }}" = "true" ]; then
             echo "Python: $(python --version)"
             echo "uv: $(uv --version)"
           fi
-          if [ "${{ needs.detect.outputs.needs_ruby }}" = "true" ] || [ "$IS_MAIN" = "true" ]; then
+          if [ "${{ needs.detect.outputs.needs_ruby }}" = "true" ] || [ "${{ needs.detect.outputs.is_main }}" = "true" ]; then
             echo "Ruby: $(ruby --version)"
             echo "Bundler: $(bundle --version)"
           fi
-          if [ "${{ needs.detect.outputs.needs_typescript }}" = "true" ] || [ "$IS_MAIN" = "true" ]; then
+          if [ "${{ needs.detect.outputs.needs_typescript }}" = "true" ] || [ "${{ needs.detect.outputs.is_main }}" = "true" ]; then
             echo "Node: $(node --version)"
             echo "npm: $(npm --version)"
           fi
-          if [ "${{ needs.detect.outputs.needs_rust }}" = "true" ] || [ "$IS_MAIN" = "true" ]; then
+          if [ "${{ needs.detect.outputs.needs_rust }}" = "true" ] || [ "${{ needs.detect.outputs.is_main }}" = "true" ]; then
             echo "Rust: $(rustc --version)"
             echo "Cargo: $(cargo --version)"
           fi
-          if [ "${{ needs.detect.outputs.needs_swift }}" = "true" ]; then
-            echo "Swift: $(swift --version | head -1)"
-          fi
-          if [ "${{ needs.detect.outputs.needs_elixir }}" = "true" ] || [ "$IS_MAIN" = "true" ]; then
+          if [ "${{ needs.detect.outputs.needs_elixir }}" = "true" ] || [ "${{ needs.detect.outputs.is_main }}" = "true" ]; then
             echo "Elixir: $(elixir --version)"
             echo "Mix: $(mix --version)"
           fi
-          if [ "${{ needs.detect.outputs.needs_dart }}" = "true" ]; then
-            echo "Dart: $(dart --version 2>&1)"
-          fi
-          if [ "${{ needs.detect.outputs.needs_lua }}" = "true" ] || [ "$IS_MAIN" = "true" ]; then
+          if [ "${{ needs.detect.outputs.needs_lua }}" = "true" ] || [ "${{ needs.detect.outputs.is_main }}" = "true" ]; then
             echo "Lua: $(lua -v)"
             echo "LuaRocks: $(luarocks --version)"
           fi
-          if ([ "${{ needs.detect.outputs.needs_perl }}" = "true" ] || [ "$IS_MAIN" = "true" ]) && [ "$RUNNER_OS" != "Windows" ]; then
+          if { [ "${{ needs.detect.outputs.needs_perl }}" = "true" ] || [ "${{ needs.detect.outputs.is_main }}" = "true" ]; } && [ "$RUNNER_OS" != "Windows" ]; then
             echo "Perl: $(perl --version | head -2 | tail -1)"
             echo "cpanm: $(cpanm --version)"
           fi

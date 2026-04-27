@@ -41,22 +41,10 @@ jobs:
 
       - name: Install renderer dependencies
         run: |
-          (cd code/packages/typescript/directed-graph && npm install)
-          (cd code/packages/typescript/grammar-tools && npm install)
-          (cd code/packages/typescript/lexer && npm install)
-          (cd code/packages/typescript/state-machine && npm install)
-          (cd code/packages/typescript/lattice-lexer && npm install)
-          (cd code/packages/typescript/parser && npm install)
-          (cd code/packages/typescript/lattice-parser && npm install)
-          (cd code/packages/typescript/lattice-ast-to-css && npm install)
-          (cd code/packages/typescript/pixel-container && npm install)
-          (cd code/packages/typescript/paint-instructions && npm install)
-          (cd code/packages/typescript/paint-vm && npm install)
-          (cd code/packages/typescript/paint-vm-canvas && npm install)
-          (cd code/packages/typescript/paint-vm-svg && npm install)
-          (cd code/packages/typescript/barcode-layout-1d && npm install)
-          (cd code/packages/typescript/code39 && npm install)
-          (cd code/packages/typescript/lattice-transpiler && npm install)
+          cd code/packages/typescript/code39
+          npm install
+          cd ../draw-instructions-svg
+          npm install
 
       - name: Install app dependencies
         run: (cd code/programs/typescript/code39-visualizer && npm install)

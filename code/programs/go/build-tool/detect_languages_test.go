@@ -38,24 +38,17 @@ func TestSharedPrefixesAreNarrow(t *testing.T) {
 		found[p] = true
 	}
 
-	if found[gitdiff.CIWorkflowPath] {
-		t.Fatalf("%q should be analyzed diff-by-diff, not blindly forced via sharedPrefixes", gitdiff.CIWorkflowPath)
-	}
-
-	if gitdiff.CIWorkflowPath != ".github/workflows/ci.yml" {
-		t.Fatalf("unexpected ci workflow path: %q", gitdiff.CIWorkflowPath)
-	}
-
 	// Regression guard: the following paths must NOT be in sharedPrefixes.
 	// code/grammars/ and code/specs/ are shared data, not build infrastructure —
 	// changes there only affect packages that import them, not all languages.
 	// code/programs/go/build-tool/ is a program, not a shared library — changing
 	// it should only rebuild the build-tool package, not trigger a full 715-package
 	// rebuild that exposes pre-existing failures on every platform.
-	// Deployment workflows are intentionally excluded so GitHub Pages changes
-	// do not trigger a full-force rebuild of the monorepo.
+	// Workflow-only changes are intentionally excluded so CI/deploy tweaks do not
+	// trigger a full-force rebuild of the monorepo on every PR platform.
 	for _, dontWant := range []string{
 		".github/",
+		".github/workflows/ci.yml",
 		".github/workflows/deploy-electronics-visualizers.yml",
 		"code/grammars/",
 		"code/specs/",

@@ -503,9 +503,11 @@ func toolchainForPackageLanguage(language string) string {
 // or language toolchain selection, and treating them as global changes wastes
 // several minutes of CI time.
 //
-// .github/workflows/ci.yml is handled separately: toolchain-scoped edits are
-// analyzed diff-by-diff so they can opt only the touched toolchains into CI
-// verification without forcing the whole repo through a rebuild.
+// Note: .github/workflows/ci.yml is intentionally NOT here. Workflow-only
+// changes should not force a repo-wide rebuild on PRs; that turns a small CI
+// tweak into an all-platform full build that surfaces unrelated pre-existing
+// failures and blocks the workflow change from landing. The workflow file still
+// gets validated by GitHub Actions syntax checks and by the build-tool tests.
 //
 // Note: code/programs/go/build-tool/ is NOT here. The build tool is a program,
 // not a shared library. Changes to it only rebuild the build-tool package itself
@@ -517,16 +519,7 @@ func toolchainForPackageLanguage(language string) string {
 // shared data files, but modifying them only triggers rebuilds of packages that
 // actually import them. Installing all toolchains for a grammar file change would
 // waste 5+ minutes of CI time when no Rust/Ruby/etc. packages are affected.
-var sharedPrefixes []string
-
-func containsPath(paths []string, want string) bool {
-	for _, path := range paths {
-		if path == want {
-			return true
-		}
-	}
-	return false
-}
+var sharedPrefixes = []string{}
 
 // detectNeededLanguages determines which language toolchains CI needs to
 // install based on the affected packages. It outputs one line per language
