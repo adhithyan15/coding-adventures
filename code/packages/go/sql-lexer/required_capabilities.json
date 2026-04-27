@@ -6,9 +6,9 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "../../../grammars/sql.tokens",
-      "justification": "Reads the SQL token grammar file from the filesystem to configure the lexer at initialization time."
+      "target": "code/grammars/sql.tokens",
+      "justification": "Reads exactly code/grammars/sql.tokens at initialization to build the SQL tokenizer DFA. No other file access is permitted."
     }
   ],
-  "justification": "Reads token pattern definitions from code/grammars/*.tokens at runtime to configure the tokenizer. The grammar file is loaded once at initialization via the filesystem."
+  "justification": "Reads exactly code/grammars/sql.tokens at initialization to build the SQL tokenizer DFA. No other file access is permitted."
 }
