@@ -39,7 +39,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 
 	interpreter "github.com/adhithyan15/coding-adventures/code/packages/go/starlark-interpreter"
@@ -149,24 +148,9 @@ func EvaluateBuildFile(buildFilePath, pkgDir, repoRoot string) (*BuildResult, er
 		return string(data), nil
 	}
 
-	// Build the _ctx dict — the build context injected into every Starlark
-	// scope.  This is how Starlark code (cmd.star, rule files) accesses
-	// platform and environment information.  See spec 15 for the full schema.
-	ctxDict := map[string]interface{}{
-		"version":   CtxSchemaVersion,
-		"os":        runtime.GOOS,
-		"arch":      runtime.GOARCH,
-		"cpu_count": runtime.NumCPU(),
-		"ci":        os.Getenv("CI") != "",
-		"repo_root": repoRoot,
-	}
-
-	// Create the interpreter with the file resolver and _ctx globals.
+	// Create the interpreter with the file resolver.
 	interp := interpreter.NewInterpreter(
 		interpreter.WithFileResolver(fileResolver),
-		interpreter.WithGlobals(map[string]interface{}{
-			"_ctx": ctxDict,
-		}),
 	)
 
 	// Execute the BUILD file.  The VM may panic on type errors or
