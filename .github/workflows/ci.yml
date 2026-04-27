@@ -29,18 +29,25 @@ permissions:
   contents: read
 
 jobs:
-  build:
-    strategy:
-      matrix:
-        os: ${{ github.event_name == 'pull_request' && fromJSON('["ubuntu-latest", "macos-latest", "windows-latest"]') || fromJSON('["ubuntu-latest"]') }}
-      fail-fast: false
-    runs-on: ${{ matrix.os }}
-    permissions:
-      contents: read
-    defaults:
-      run:
-        shell: bash
-
+  # ── Job 1: Detect which languages need toolchains ────────────
+  #
+  # This job is fast (~10s). It compiles the Go build tool, runs
+  # --detect-languages, and outputs boolean flags for each language.
+  # The build job reads these flags to conditionally install toolchains.
+  detect:
+    runs-on: ubuntu-latest
+    outputs:
+      needs_python: ${{ steps.toolchains.outputs.needs_python }}
+      needs_ruby: ${{ steps.toolchains.outputs.needs_ruby }}
+      needs_go: ${{ steps.toolchains.outputs.needs_go }}
+      needs_typescript: ${{ steps.toolchains.outputs.needs_typescript }}
+      needs_rust: ${{ steps.toolchains.outputs.needs_rust }}
+      needs_elixir: ${{ steps.toolchains.outputs.needs_elixir }}
+      needs_lua: ${{ steps.toolchains.outputs.needs_lua }}
+      needs_perl: ${{ steps.toolchains.outputs.needs_perl }}
+      needs_java: ${{ steps.toolchains.outputs.needs_java }}
+      diff_base: ${{ steps.diff-base.outputs.base }}
+      is_main: ${{ steps.detect-main.outputs.is_main }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -80,12 +87,42 @@ jobs:
         id: plan
         run: |
           cd code/programs/go/build-tool
-          if [ "$RUNNER_OS" = "Windows" ]; then
-            go build -o ../../../../build-tool.exe .
-            BT=./build-tool.exe
+          go build -o ../../../../build-tool .
+          cd ../../../..
+          ./build-tool \
+            -root . \
+            -diff-base "${{ steps.diff-base.outputs.base }}" \
+            -validate-build-files \
+            -detect-languages \
+            -emit-plan build-plan.json
+
+      - name: Normalize toolchain requirements
+        id: toolchains
+        shell: bash
+        run: |
+          if [ "${{ steps.detect-main.outputs.is_main }}" = "true" ]; then
+            echo "Main branch push detected; enabling all supported toolchains for the forced full build"
+            printf '%s\n' \
+              'needs_python=true' \
+              'needs_ruby=true' \
+              'needs_go=true' \
+              'needs_typescript=true' \
+              'needs_rust=true' \
+              'needs_elixir=true' \
+              'needs_lua=true' \
+              'needs_perl=true' \
+              'needs_java=true' >> "$GITHUB_OUTPUT"
           else
-            go build -o ../../../../build-tool .
-            BT=./build-tool
+            printf '%s\n' \
+              'needs_python=${{ steps.detect.outputs.needs_python }}' \
+              'needs_ruby=${{ steps.detect.outputs.needs_ruby }}' \
+              'needs_go=${{ steps.detect.outputs.needs_go }}' \
+              'needs_typescript=${{ steps.detect.outputs.needs_typescript }}' \
+              'needs_rust=${{ steps.detect.outputs.needs_rust }}' \
+              'needs_elixir=${{ steps.detect.outputs.needs_elixir }}' \
+              'needs_lua=${{ steps.detect.outputs.needs_lua }}' \
+              'needs_perl=${{ steps.detect.outputs.needs_perl }}' \
+              'needs_java=${{ steps.detect.outputs.needs_java }}' >> "$GITHUB_OUTPUT"
           fi
           cd ../../../..
           
@@ -314,22 +351,32 @@ jobs:
             echo "cpanm: $(cpanm --version)"
           fi
 
-      # ── Pin Rust to MSVC linker on Windows ─────────────────────
+      # ── Download build plan (skip discovery in build job) ─────
+      - name: Download build plan
+        uses: actions/download-artifact@v4
+        with:
+          name: build-plan
+        continue-on-error: true
+
+      # ── Java (JDK 21 + Gradle) ───────────────────────────────
       #
-      # Ruby's setup-ruby adds msys64/usr/bin to the front of PATH, which
-      # contains a GNU 'link' hard-link utility that shadows MSVC's link.exe.
-      # Rust's x86_64-pc-windows-msvc target calls link.exe for linking —
-      # if it picks up the MSYS2 one, ALL Rust packages fail with
-      # "extra operand" linker errors.
-      #
-      # Deleting or removing the file from PATH is unreliable (hard links,
-      # file locks, MSYS2/Windows filesystem translation issues). Instead,
-      # we use CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER to pin Cargo to
-      # the absolute path of the real MSVC link.exe, bypassing PATH entirely.
-      # vswhere.exe is always present on GitHub Actions Windows runners.
-      - name: Pin Rust to MSVC linker on Windows
-        if: runner.os == 'Windows'
-        shell: pwsh
+      # Java packages use Gradle as their build system.
+      # JDK 21 is required because the source code uses Java 21 features
+      # (sealed interfaces, records, pattern matching in switch).
+      - name: Set up JDK 21
+        if: needs.detect.outputs.needs_java == 'true'
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Set up Gradle
+        if: needs.detect.outputs.needs_java == 'true'
+        uses: gradle/actions/setup-gradle@v4
+
+      # ── Build the build tool ──────────────────────────────────
+      - name: Compile build tool
+        shell: bash
         run: |
           $vsInstall = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath
           $msvcVer = Get-ChildItem "$vsInstall\VC\Tools\MSVC" -Directory | Sort-Object Name -Descending | Select-Object -First 1
