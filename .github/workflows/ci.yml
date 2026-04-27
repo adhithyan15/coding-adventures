@@ -215,14 +215,14 @@ jobs:
           cache: false
 
       - name: Set up Python
-        if: needs.detect.outputs.needs_python == 'true'
+        if: needs.detect.outputs.needs_python == 'true' || needs.detect.outputs.is_main == 'true'
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
           allow-prereleases: true
 
       - name: Install uv
-        if: needs.detect.outputs.needs_python == 'true'
+        if: needs.detect.outputs.needs_python == 'true' || needs.detect.outputs.is_main == 'true'
         uses: astral-sh/setup-uv@v4
         with:
           version: "0.6.x"
@@ -234,21 +234,21 @@ jobs:
       # first, the MSVC `link.exe` is in PATH before Ruby's MSYS2.
 
       - name: Set up MSVC (required for Lua on Windows)
-        if: needs.detect.outputs.needs_lua == 'true' && runner.os == 'Windows'
+        if: (needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.is_main == 'true') && runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
 
       - name: Set up Lua
-        if: needs.detect.outputs.needs_lua == 'true'
+        if: needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.is_main == 'true'
         uses: leafo/gh-actions-lua@v11
         with:
           luaVersion: "5.4"
 
       - name: Set up LuaRocks (Unix)
-        if: needs.detect.outputs.needs_lua == 'true' && runner.os != 'Windows'
+        if: (needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.is_main == 'true') && runner.os != 'Windows'
         uses: leafo/gh-actions-luarocks@v4
 
       - name: Set up LuaRocks (Windows)
-        if: needs.detect.outputs.needs_lua == 'true' && runner.os == 'Windows'
+        if: (needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.is_main == 'true') && runner.os == 'Windows'
         shell: cmd
         run: |
           curl -L -o luarocks.zip https://luarocks.github.io/luarocks/releases/luarocks-3.11.1-windows-64.zip
@@ -257,7 +257,7 @@ jobs:
           echo %CD%>> %GITHUB_PATH%
 
       - name: Install Lua test tools (Unix)
-        if: needs.detect.outputs.needs_lua == 'true' && runner.os != 'Windows'
+        if: (needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.is_main == 'true') && runner.os != 'Windows'
         shell: bash
         run: |
           tmpdir="$(mktemp -d)"
@@ -271,7 +271,7 @@ jobs:
           luarocks install luasocket 2>/dev/null || true
 
       - name: Install Lua test tools (Windows)
-        if: needs.detect.outputs.needs_lua == 'true' && runner.os == 'Windows'
+        if: (needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.is_main == 'true') && runner.os == 'Windows'
         shell: cmd
         run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
@@ -281,33 +281,33 @@ jobs:
           for /f "delims=" %%i in ('luarocks path --lr-bin') do echo %%i>> %GITHUB_PATH%
 
       - name: Set up Ruby
-        if: needs.detect.outputs.needs_ruby == 'true'
+        if: needs.detect.outputs.needs_ruby == 'true' || needs.detect.outputs.is_main == 'true'
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.4'
           bundler-cache: false
 
       - name: Install bundler
-        if: needs.detect.outputs.needs_ruby == 'true'
+        if: needs.detect.outputs.needs_ruby == 'true' || needs.detect.outputs.is_main == 'true'
         shell: bash
         run: gem install bundler
 
       - name: Set up Node.js
-        if: needs.detect.outputs.needs_typescript == 'true'
+        if: needs.detect.outputs.needs_typescript == 'true' || needs.detect.outputs.is_main == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
       - name: Set up Rust
-        if: needs.detect.outputs.needs_rust == 'true'
+        if: needs.detect.outputs.needs_rust == 'true' || needs.detect.outputs.is_main == 'true'
         uses: dtolnay/rust-toolchain@stable
 
       - name: Install cargo-tarpaulin
-        if: needs.detect.outputs.needs_rust == 'true' && runner.os == 'Linux'
+        if: (needs.detect.outputs.needs_rust == 'true' || needs.detect.outputs.is_main == 'true') && runner.os == 'Linux'
         run: cargo install cargo-tarpaulin
 
       - name: Set up Elixir
-        if: needs.detect.outputs.needs_elixir == 'true'
+        if: needs.detect.outputs.needs_elixir == 'true' || needs.detect.outputs.is_main == 'true'
         uses: erlef/setup-beam@v1
         with:
           elixir-version: '1.16'
@@ -431,7 +431,7 @@ jobs:
           } >> "$GITHUB_ENV"
 
       - name: Install cpanm and test dependencies (Perl)
-        if: needs.detect.outputs.needs_perl == 'true' && runner.os != 'Windows'
+        if: (needs.detect.outputs.needs_perl == 'true' || needs.detect.outputs.is_main == 'true') && runner.os != 'Windows'
         shell: bash
         run: |
           if [ "$RUNNER_OS" = "Linux" ]; then
@@ -462,10 +462,11 @@ jobs:
       - name: Install test runners
         shell: bash
         run: |
-          if [ "${{ needs.detect.outputs.needs_python }}" = "true" ]; then
+          IS_MAIN="${{ needs.detect.outputs.is_main }}"
+          if [ "${{ needs.detect.outputs.needs_python }}" = "true" ] || [ "$IS_MAIN" = "true" ]; then
             uv pip install --system pytest
           fi
-          if [ "${{ needs.detect.outputs.needs_typescript }}" = "true" ]; then
+          if [ "${{ needs.detect.outputs.needs_typescript }}" = "true" ] || [ "$IS_MAIN" = "true" ]; then
             npm install -g jest
           fi
 
@@ -474,37 +475,38 @@ jobs:
         shell: bash
         run: |
           echo "Go: $(go version)"
-          if [ "${{ needs.detect.outputs.needs_python }}" = "true" ]; then
+          IS_MAIN="${{ needs.detect.outputs.is_main }}"
+          if [ "${{ needs.detect.outputs.needs_python }}" = "true" ] || [ "$IS_MAIN" = "true" ]; then
             echo "Python: $(python --version)"
             echo "uv: $(uv --version)"
           fi
-          if [ "${{ needs.detect.outputs.needs_ruby }}" = "true" ]; then
+          if [ "${{ needs.detect.outputs.needs_ruby }}" = "true" ] || [ "$IS_MAIN" = "true" ]; then
             echo "Ruby: $(ruby --version)"
             echo "Bundler: $(bundle --version)"
           fi
-          if [ "${{ needs.detect.outputs.needs_typescript }}" = "true" ]; then
+          if [ "${{ needs.detect.outputs.needs_typescript }}" = "true" ] || [ "$IS_MAIN" = "true" ]; then
             echo "Node: $(node --version)"
             echo "npm: $(npm --version)"
           fi
-          if [ "${{ needs.detect.outputs.needs_rust }}" = "true" ]; then
+          if [ "${{ needs.detect.outputs.needs_rust }}" = "true" ] || [ "$IS_MAIN" = "true" ]; then
             echo "Rust: $(rustc --version)"
             echo "Cargo: $(cargo --version)"
           fi
           if [ "${{ needs.detect.outputs.needs_swift }}" = "true" ]; then
             echo "Swift: $(swift --version | head -1)"
           fi
-          if [ "${{ needs.detect.outputs.needs_elixir }}" = "true" ]; then
+          if [ "${{ needs.detect.outputs.needs_elixir }}" = "true" ] || [ "$IS_MAIN" = "true" ]; then
             echo "Elixir: $(elixir --version)"
             echo "Mix: $(mix --version)"
           fi
           if [ "${{ needs.detect.outputs.needs_dart }}" = "true" ]; then
             echo "Dart: $(dart --version 2>&1)"
           fi
-          if [ "${{ needs.detect.outputs.needs_lua }}" = "true" ]; then
+          if [ "${{ needs.detect.outputs.needs_lua }}" = "true" ] || [ "$IS_MAIN" = "true" ]; then
             echo "Lua: $(lua -v)"
             echo "LuaRocks: $(luarocks --version)"
           fi
-          if [ "${{ needs.detect.outputs.needs_perl }}" = "true" ] && [ "$RUNNER_OS" != "Windows" ]; then
+          if ([ "${{ needs.detect.outputs.needs_perl }}" = "true" ] || [ "$IS_MAIN" = "true" ]) && [ "$RUNNER_OS" != "Windows" ]; then
             echo "Perl: $(perl --version | head -2 | tail -1)"
             echo "cpanm: $(cpanm --version)"
           fi
