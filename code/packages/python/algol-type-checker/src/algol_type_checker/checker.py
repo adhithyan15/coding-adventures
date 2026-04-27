@@ -220,6 +220,7 @@ class ProcedureDescriptor:
     parameters: tuple[ProcedureParameter, ...]
     line: int
     column: int
+    parameter_symbol_id: int | None = None
 
 
 @dataclass(frozen=True)
@@ -238,6 +239,7 @@ class ResolvedProcedureCall:
     return_type: str | None
     line: int
     column: int
+    parameter_symbol_id: int | None = None
 
 
 @dataclass(frozen=True)
@@ -804,10 +806,13 @@ class AlgolTypeChecker:
                     )
                 parameter_type = SWITCH
             elif parameter_kind == "procedure":
-                self._error(
-                    formal,
-                    f"{parameter_kind} parameter {formal.value!r} is not supported yet",
-                )
+                if mode == VALUE:
+                    self._error(
+                        formal,
+                        f"value parameter {formal.value!r} cannot be a procedure in "
+                        "this phase",
+                    )
+                parameter_type = "procedure"
             elif mode == NAME and parameter_type not in {
                 INTEGER,
                 BOOLEAN,
@@ -895,13 +900,13 @@ class AlgolTypeChecker:
             elif parameter_kind == SWITCH:
                 parameter_type = SWITCH
             elif parameter_kind == "procedure":
-                parameter_kind = "scalar"
+                parameter_type = "procedure"
             param_symbol = Symbol(
                 name=formal.value,
                 type_name=(
                     parameter_type
                     if parameter_type
-                    in {INTEGER, BOOLEAN, REAL, STRING, LABEL, SWITCH}
+                    in {INTEGER, BOOLEAN, REAL, STRING, LABEL, SWITCH, "procedure"}
                     else INTEGER
                 ),
                 line=formal.line,
@@ -910,6 +915,8 @@ class AlgolTypeChecker:
                 kind=(
                     parameter_kind
                     if parameter_kind in {ARRAY, LABEL, SWITCH}
+                    else "procedure_parameter"
+                    if parameter_kind == "procedure"
                     else "parameter"
                 ),
                 storage_class=(
@@ -1763,6 +1770,9 @@ class AlgolTypeChecker:
             if parameter.kind == SWITCH:
                 self._check_switch_parameter_actual(argument, scope, parameter)
                 continue
+            if parameter.kind == "procedure":
+                self._check_procedure_parameter_actual(argument, scope, parameter)
+                continue
             actual_type = self._infer_expr(argument, scope)
             if descriptor.procedure_id == -1:
                 if actual_type != ERROR and actual_type not in {
@@ -1827,6 +1837,7 @@ class AlgolTypeChecker:
             return_type=descriptor.return_type,
             line=name_token.line,
             column=name_token.column,
+            parameter_symbol_id=descriptor.parameter_symbol_id,
         )
         self.resolved_procedure_calls.append(call)
         return call
@@ -1940,6 +1951,61 @@ class AlgolTypeChecker:
             return None
         return symbol
 
+    def _check_procedure_parameter_actual(
+        self,
+        argument: ASTNode,
+        scope: Scope,
+        parameter: ProcedureParameter,
+    ) -> Symbol | None:
+        variable = _single_variable_expr(argument)
+        if variable is None or _variable_subscripts(variable):
+            self._error(
+                argument,
+                f"procedure parameter {parameter.name!r} expects a direct "
+                "procedure actual",
+            )
+            return None
+        name = _variable_head_name(variable)
+        if name is None:
+            self._error(argument, "procedure actual is missing a name")
+            return None
+        resolved = scope.resolve_with_scope(name.value)
+        if resolved is None:
+            self._error(
+                name,
+                f"{name.value!r} is not declared in block {scope.block_id} "
+                "or its lexical parents",
+            )
+            return None
+        symbol, _, _ = resolved
+        if symbol.kind == "procedure_parameter":
+            return symbol
+        if symbol.kind != "procedure" or symbol.procedure_id is None:
+            self._error(
+                name,
+                f"procedure parameter {parameter.name!r} expects a procedure actual",
+            )
+            return None
+        descriptor = next(
+            (
+                procedure
+                for procedure in self.semantic_procedures
+                if procedure.procedure_id == symbol.procedure_id
+            ),
+            None,
+        )
+        if descriptor is None:
+            self._error(name, f"procedure {name.value!r} has no descriptor")
+            return None
+        if descriptor.return_type is not None or descriptor.parameters:
+            self._error(
+                name,
+                f"procedure parameter {parameter.name!r} expects a no-argument "
+                "statement procedure actual in this phase",
+            )
+            return None
+        return symbol
+
     def _resolve_builtin_procedure(
         self,
         token: Token,
@@ -1999,6 +2065,24 @@ class AlgolTypeChecker:
                 if descriptor is None:
                     return None
                 return descriptor, current, lexical_depth_delta
+            if symbol is not None and symbol.kind == "procedure_parameter":
+                return (
+                    ProcedureDescriptor(
+                        procedure_id=-2,
+                        name=token.value,
+                        label="__algol_dynamic_procedure_parameter",
+                        declaring_block_id=current.block_id,
+                        body_block_id=current.block_id,
+                        body_node_id=-1,
+                        return_type=None,
+                        parameters=tuple(),
+                        line=token.line,
+                        column=token.column,
+                        parameter_symbol_id=symbol.symbol_id,
+                    ),
+                    current,
+                    lexical_depth_delta,
+                )
             current = current.parent
             lexical_depth_delta += 1
         return None

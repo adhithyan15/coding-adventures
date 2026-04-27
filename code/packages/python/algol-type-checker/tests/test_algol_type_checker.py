@@ -739,6 +739,58 @@ class TestAlgolTypeChecker:
         assert not result.ok
         assert "cannot be a switch in this phase" in result.diagnostics[0].message
 
+    def test_accepts_procedure_parameter_and_direct_procedure_actual(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure twice(p); procedure p; begin p; p end; "
+            "procedure bump; begin result := result + 1 end; "
+            "result := 0; twice(bump) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        parameter = result.semantic.procedures[0].parameters[0]
+        assert parameter.kind == "procedure"
+        assert parameter.type_name == "procedure"
+        formal_call = next(
+            call
+            for call in result.semantic.procedure_calls
+            if call.name == "p"
+        )
+        assert formal_call.parameter_symbol_id == parameter.symbol_id
+
+    def test_rejects_procedure_parameter_with_argument_actual_in_this_phase(
+        self,
+    ) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure invoke(p); procedure p; begin p end; "
+            "procedure set(x); value x; integer x; begin result := x end; "
+            "invoke(set) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert (
+            "expects a no-argument statement procedure actual in this phase"
+            in result.diagnostics[0].message
+        )
+
+    def test_rejects_value_procedure_parameter_in_this_phase(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure invoke(p); value p; procedure p; begin end; "
+            "result := 0 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "cannot be a procedure in this phase" in result.diagnostics[0].message
+
     def test_accepts_integer_array_descriptor_and_accesses(self) -> None:
         ast = parse_algol(
             "begin integer result, lo, hi; "

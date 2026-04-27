@@ -41,8 +41,11 @@ until Phase 5 grows full store-helper coverage. The supported integer by-name
 surface is covered by the WASM acceptance suite, including typed whole-array
 formals passed as descriptor pointers, label formals passed as pending-goto
 targets, and switch formals passed as descriptor closures that re-evaluate in
-the caller's declaring scope. Full ALGOL forms such as procedure-valued
-formals and escaping thunk descriptors remain future work.
+the caller's declaring scope. No-argument statement procedure formals pass
+descriptor closures containing the callee procedure id and static link; formal
+calls dispatch through a generated helper so forwarded procedure formals keep
+the original environment. Full ALGOL forms such as typed or argument-taking
+procedure formals and escaping thunk descriptors remain future work.
 
 Direct `goto` statements lower to ordinary IR `JUMP` instructions targeting
 generated ALGOL labels. Local jumps emit the jump directly. Direct nonlocal

@@ -546,6 +546,29 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
 
+    def test_procedure_parameter_statement_call_dispatches_actual(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure twice(p); procedure p; begin p; p end; "
+            "procedure bump; begin result := result + 1 end; "
+            "result := 0; twice(bump) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_forwarded_procedure_parameter_propagates_descriptor_through_calls(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure invoke(p); procedure p; begin p end; "
+            "procedure relay(p); procedure p; begin invoke(p) end; "
+            "procedure bump; begin result := result + 3 end; "
+            "result := 2; relay(bump) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [5]
+
     def test_repeated_switch_designational_gotos_use_distinct_dispatch(self) -> None:
         result = compile_source(
             "begin integer result, i; "
