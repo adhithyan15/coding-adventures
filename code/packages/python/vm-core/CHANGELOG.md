@@ -6,6 +6,52 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — LANG06: Debug hooks, breakpoints, and step-mode API
+
+- `vm_core.debug` — new module containing:
+  - `StepMode` enum with three values: `IN` (pause at very next IIR instruction),
+    `OVER` (pause at next instruction in same or outer frame), `OUT` (pause after
+    the current frame returns).
+  - `DebugHooks` — base class with four no-op callback methods: `on_instruction`,
+    `on_call`, `on_return`, `on_exception`.  Debug adapters subclass this.
+- `VMCore.attach_debug_hooks(hooks)` — registers a `DebugHooks` adapter and
+  enables debug mode (`_debug_mode = True`).  Zero overhead when no hooks are
+  attached: the dispatch loop gates the entire debug path behind a single boolean.
+- `VMCore.detach_debug_hooks()` — removes the adapter and disables debug mode.
+- `VMCore.is_debug_mode() -> bool` — True when hooks are attached.
+- `VMCore.pause()` — requests that the dispatch loop fire `on_instruction` at
+  the very next instruction.
+- `VMCore.step_in()` — set `StepMode.IN`: pause at every next instruction in any
+  frame.  Call from inside `on_instruction` to single-step.
+- `VMCore.step_over()` — set `StepMode.OVER`: pause at next instruction in the
+  current or a shallower frame (skips callee internals).
+- `VMCore.step_out()` — set `StepMode.OUT`: let execution continue until the
+  current frame returns, then pause at the next instruction in the caller.
+- `VMCore.continue_()` — clear step mode; execution resumes without any
+  additional pauses until the next breakpoint.
+- `VMCore.set_breakpoint(instr_idx, fn_name, condition=None)` — register an
+  unconditional or conditional breakpoint.  A `condition` string is a Python
+  expression evaluated with the frame's named register values as locals; the
+  breakpoint only fires when the expression is truthy.  Invalid expressions are
+  silently ignored.
+- `VMCore.clear_breakpoint(instr_idx, fn_name)` — remove a registered
+  breakpoint.
+- `VMCore.call_stack() -> list[VMFrame]` — return a shallow copy of the current
+  frame stack (bottom to top).  Safe to inspect outside `on_instruction`.
+- `VMCore.patch_function(fn_name, new_fn)` — hot-swap a function body mid-run;
+  raises `KeyError` if the function is not in the module.
+- `run_dispatch_loop` — fires `on_instruction` before each dispatch when debug
+  mode is on; fires `on_call` in `handle_call` before pushing the callee frame;
+  fires `on_return` in `handle_ret` / `handle_ret_void` after popping the frame;
+  fires `on_exception` (best-effort, never masked) when an unhandled error
+  propagates.  `StepMode.OUT` is handled in `_fire_on_return` by converting a
+  return at the watched depth into a `_paused = True` for the next instruction.
+- Re-exports `DebugHooks` and `StepMode` from the package root.
+- `tests/test_debug_hooks.py` — 184 tests (28 new debug-hook tests added to the
+  existing 156): attach/detach, on_instruction at breakpoints, conditional
+  breakpoints, step_in / step_over / step_out, call_stack, patch_function,
+  on_call / on_return / on_exception, adapter-error robustness.
+
 ### Added — LANG17 PR3: ``execute_traced`` and the ``VMTracer`` helper
 
 - `vm_core.tracer` — new module with `VMTrace` dataclass and

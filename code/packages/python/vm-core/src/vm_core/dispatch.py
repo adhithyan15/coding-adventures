@@ -35,6 +35,7 @@ from typing import TYPE_CHECKING, Any
 
 from interpreter_ir import IIRInstr
 
+from vm_core.debug import StepMode
 from vm_core.errors import FrameOverflowError, UnknownOpcodeError, VMInterrupt
 from vm_core.frame import VMFrame
 
@@ -79,6 +80,12 @@ def run_dispatch_loop(vm: VMCore) -> Any:
         # the profiler produced a slot-delta during this instruction,
         # and the frame depth (since a ``ret`` will pop the frame off
         # the VM stack and we'd lose the original depth).
+        # LANG06: fire debug hooks / check breakpoints / honour step mode.
+        # This block is guarded by ``vm._debug_mode`` so it costs one
+        # boolean check per instruction on the normal (non-debug) path.
+        if vm._debug_mode:
+            _check_debug_pause(vm, frame, instr, ip_before)
+
         tracing = vm._tracer is not None
         regs_before: list[Any] | None = None
         obs_count_before: int = 0
@@ -88,7 +95,17 @@ def run_dispatch_loop(vm: VMCore) -> Any:
             obs_count_before = instr.observation_count
             depth_before = _compute_depth(vm, frame)
 
-        result = _dispatch_one(vm, frame, instr)
+        try:
+            result = _dispatch_one(vm, frame, instr)
+        except Exception as exc:
+            # LANG06: fire on_exception for unhandled errors so the debug
+            # adapter can show a post-mortem stack trace before the VM exits.
+            if vm._debug_mode and vm._debug_hooks is not None:
+                try:
+                    vm._debug_hooks.on_exception(frame, exc)
+                except Exception:
+                    pass  # adapter errors must never mask the original
+            raise
         vm._metrics_instrs += 1
 
         if vm._profiler_enabled and instr.dest is not None and result is not None:
@@ -131,6 +148,112 @@ def _compute_depth(vm: VMCore, frame: VMFrame) -> int:
         if f is frame:
             return i
     return 0
+
+
+# ---------------------------------------------------------------------------
+# LANG06 debug helpers
+# ---------------------------------------------------------------------------
+
+
+def _check_debug_pause(
+    vm: "VMCore", frame: VMFrame, instr: IIRInstr, ip: int
+) -> None:
+    """Decide whether the VM should pause before dispatching ``instr``.
+
+    Called by the dispatch loop when ``vm._debug_mode`` is True.  This
+    function checks three conditions in priority order:
+
+    1. **Explicit pause request** (``vm._paused``): pause unconditionally.
+    2. **Step mode**: pause based on the current step granularity.
+    3. **Breakpoint**: pause if ``ip`` is registered for ``frame.fn.name``,
+       subject to an optional condition expression.
+
+    When a pause is warranted, ``vm._debug_hooks.on_instruction`` is called.
+    After the hook returns, the adapter will have called one of the step or
+    continue methods on the VM, which set ``_step_mode`` / ``_paused`` for
+    the *next* iteration.  This function does not loop — it fires once per
+    call.
+
+    Conditional breakpoints
+    -----------------------
+    A condition string is a simple Python expression that is evaluated in a
+    namespace containing the current named register values.  For example, the
+    condition ``"a > 10"`` passes when the register named ``"a"`` holds a
+    value greater than 10.  The evaluation uses :func:`eval` with a
+    restricted globals dict (``__builtins__``  set to an empty dict) and the
+    frame's name-to-value mapping as locals.
+
+    If evaluation raises an exception (undefined name, type error, etc.), the
+    breakpoint is treated as *not* triggered and execution continues.
+
+    Parameters
+    ----------
+    vm:
+        The running VMCore.
+    frame:
+        The current top frame.
+    instr:
+        The IIR instruction about to be dispatched.
+    ip:
+        The 0-based instruction index of ``instr`` within the function body
+        (``frame.ip`` has already been advanced, so this is ``frame.ip - 1``).
+    """
+    hooks = vm._debug_hooks
+    if hooks is None:
+        return
+
+    should_pause = False
+
+    # --- 1. Explicit pause ---
+    if vm._paused:
+        should_pause = True
+
+    # --- 2. Step mode ---
+    elif vm._step_mode is StepMode.IN:
+        should_pause = True
+
+    elif vm._step_mode is StepMode.OVER:
+        # Pause when we are at or above the depth where the step was requested.
+        # len(vm._frames) is the current depth (frames already include the
+        # current frame since we haven't dispatched yet).
+        if len(vm._frames) <= vm._step_frame_depth:
+            should_pause = True
+
+    elif vm._step_mode is StepMode.OUT:
+        # OUT is handled in handle_ret / handle_ret_void via on_return.
+        # Here we do nothing — we let execution continue until a ret fires.
+        pass
+
+    # --- 3. Breakpoints ---
+    if not should_pause:
+        fn_bps = vm._breakpoints.get(frame.fn.name)
+        if fn_bps is not None and ip in fn_bps:
+            condition = fn_bps[ip]
+            if condition is None:
+                should_pause = True
+            else:
+                # Build a local namespace from the frame's named register values.
+                local_ns: dict[str, Any] = {}
+                for name, reg_idx in frame.name_to_reg.items():
+                    if reg_idx < len(frame.registers):
+                        local_ns[name] = frame.registers[reg_idx]
+                try:
+                    result = eval(condition, {"__builtins__": {}}, local_ns)  # noqa: S307
+                    should_pause = bool(result)
+                except Exception:
+                    should_pause = False
+
+    if should_pause:
+        # Deliver the pause: clear step state, fire the hook.
+        vm._paused = True
+        vm._step_mode = None
+        try:
+            hooks.on_instruction(frame, instr)
+        finally:
+            # Always clear the paused flag after the hook returns so the
+            # dispatch loop does not pause again on the very next instruction
+            # unless the hook (or the adapter) called pause() / step_*() again.
+            vm._paused = False
 
 
 def _dispatch_one(vm: VMCore, frame: VMFrame, instr: IIRInstr) -> Any:
@@ -401,12 +524,52 @@ def handle_ret(vm: VMCore, frame: VMFrame, instr: IIRInstr) -> Any:
         caller_frame.registers[frame.return_dest] = value
         if instr.dest and frame.return_dest < len(frame.registers):
             pass  # dest is in caller
+    # LANG06: fire on_return and handle StepMode.OUT.
+    _fire_on_return(vm, frame, value)
     return value
 
 
 def handle_ret_void(vm: VMCore, frame: VMFrame, instr: IIRInstr) -> None:
     _pop_frame(vm, frame)
+    # LANG06: fire on_return and handle StepMode.OUT.
+    _fire_on_return(vm, frame, None)
     return None
+
+
+def _fire_on_return(vm: "VMCore", frame: VMFrame, return_value: Any) -> None:
+    """Fire ``on_return`` and handle ``StepMode.OUT``.
+
+    Called after a frame is popped.  If the adapter was stepping out of the
+    returned frame's depth, transition to a pause at the next instruction in
+    the caller by setting ``_paused = True``.
+
+    Parameters
+    ----------
+    vm:
+        The running VMCore.
+    frame:
+        The frame that just returned (already off the stack).
+    return_value:
+        The value returned by the frame.
+    """
+    if not vm._debug_mode or vm._debug_hooks is None:
+        return
+    try:
+        vm._debug_hooks.on_return(frame, return_value)
+    except Exception:
+        pass  # adapter errors must not abort execution
+
+    # If we were in StepMode.OUT and the frame that returned was at or
+    # below the depth where step_out was requested, transition to a pause
+    # at the next instruction in the caller.
+    if vm._step_mode is StepMode.OUT:
+        # After the pop, len(vm._frames) is the caller's depth.
+        # We requested step_out when the frame stack had _step_frame_depth
+        # frames.  The frame that just returned was at that depth, so now
+        # the stack is one shorter — we should pause.
+        if len(vm._frames) < vm._step_frame_depth:
+            vm._paused = True
+            vm._step_mode = None
 
 
 def _pop_frame(vm: VMCore, frame: VMFrame) -> VMFrame | None:
@@ -487,9 +650,25 @@ def handle_call(vm: VMCore, frame: VMFrame, instr: IIRInstr) -> Any:
     for i, arg_src in enumerate(args[: len(callee.params)]):
         callee_frame.registers[i] = frame.resolve(arg_src)
 
+    # LANG06: fire on_call *before* the callee frame is pushed so that the
+    # adapter sees the caller as the top-of-stack (consistent with how most
+    # debuggers present "step into" — you are still in the caller when the
+    # call event fires).
+    if vm._debug_mode and vm._debug_hooks is not None:
+        try:
+            vm._debug_hooks.on_call(frame, callee)
+        except Exception:
+            pass  # adapter errors must not abort execution
+
     vm._frames.append(callee_frame)
     vm._metrics_frames += 1
     vm._fn_call_counts[fn_name] = vm._fn_call_counts.get(fn_name, 0) + 1
+
+    # LANG06 StepMode.OUT tracking: if we were stepping out, record the new
+    # depth so on_return in the callee fires appropriately.
+    # (No extra work needed here — _step_frame_depth was set at the original
+    # frame's depth, and on_return checks depth after pop.)
+
     return None  # result stored when callee executes ret
 
 
