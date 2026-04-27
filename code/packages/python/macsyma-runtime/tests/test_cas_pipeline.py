@@ -363,3 +363,65 @@ def test_pipeline_totient() -> None:
     """totient(12) → 4."""
     result = _eval("totient(12)")
     assert result == _int(4)
+
+
+# ===========================================================================
+# Section L: Complex number operations (B2)
+# ===========================================================================
+
+
+def test_pipeline_imaginary_unit() -> None:
+    """%i evaluates to the ImaginaryUnit symbol."""
+    result = _eval("%i")
+    assert isinstance(result, IRSymbol)
+    assert result.name == "ImaginaryUnit"
+
+
+def test_pipeline_realpart_of_rect() -> None:
+    """realpart(3 + 4*%i) → 3."""
+    result = _eval("realpart(3 + 4*%i)")
+    assert result == _int(3)
+
+
+def test_pipeline_imagpart_of_rect() -> None:
+    """imagpart(3 + 4*%i) → 4."""
+    result = _eval("imagpart(3 + 4*%i)")
+    assert result == _int(4)
+
+
+def test_pipeline_realpart_pure_real() -> None:
+    """realpart(7) → 7 (no imaginary component)."""
+    result = _eval("realpart(7)")
+    assert result == _int(7)
+
+
+def test_pipeline_imagpart_pure_real() -> None:
+    """imagpart(7) → 0."""
+    result = _eval("imagpart(7)")
+    assert result == _int(0)
+
+
+def test_pipeline_conjugate_rect() -> None:
+    """conjugate(3 + 4*%i) returns an Add expression (3 - 4*%i)."""
+    result = _eval("conjugate(3 + 4*%i)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Add"
+
+
+def test_pipeline_i_power_2() -> None:
+    """%i^2 → -1."""
+    result = _eval("%i^2")
+    assert result == _int(-1)
+
+
+def test_pipeline_i_power_4() -> None:
+    """%i^4 → 1."""
+    result = _eval("%i^4")
+    assert result == _int(1)
+
+
+def test_pipeline_i_power_3() -> None:
+    """%i^3 → -i (a Neg expression)."""
+    result = _eval("%i^3")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Neg"

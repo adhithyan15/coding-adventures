@@ -28,7 +28,11 @@ from collections.abc import Mapping
 from symbolic_ir import ASSIGN, DEFINE, IF, IRApply, IRNode, IRSymbol
 
 from symbolic_vm.backend import Backend, Handler
-from symbolic_vm.cas_handlers import build_cas_handler_table
+from symbolic_vm.cas_handlers import (
+    IMAGINARY_POWER_HOOK,
+    IMAGINARY_UNIT_SYMBOL,
+    build_cas_handler_table,
+)
 from symbolic_vm.derivative import differentiate
 from symbolic_vm.handlers import FALSE, TRUE, build_handler_table
 from symbolic_vm.integrate import integrate
@@ -108,7 +112,25 @@ class SymbolicBackend(_BaseBackend):
         # automatically. Language-specific quirks (Display/Suppress/Kill)
         # are layered on top in the language backend subclass.
         handlers.update(build_cas_handler_table())
+        # B2: wire imaginary-power reduction into the Pow handler.
+        # When the base is exactly ImaginaryUnit and the exponent is an
+        # integer, reduce i^n → {1, i, -1, -i}.  All other Pow calls
+        # fall through to the standard handler.
+        _orig_pow = handlers.get("Pow")
+
+        def _pow_with_imaginary(vm: object, expr: IRApply) -> IRNode:  # type: ignore[type-arg]
+            result = IMAGINARY_POWER_HOOK(vm, expr)  # type: ignore[arg-type]
+            if result is not expr:
+                return result
+            if _orig_pow is not None:
+                return _orig_pow(vm, expr)  # type: ignore[arg-type]
+            return expr
+
+        handlers["Pow"] = _pow_with_imaginary  # type: ignore[assignment]
         self._handlers = handlers
+        # B2: pre-bind ImaginaryUnit so it evaluates to itself (an inert
+        # symbol) rather than triggering the unresolved-symbol fall-through.
+        self._env["ImaginaryUnit"] = IMAGINARY_UNIT_SYMBOL
 
     def on_unresolved(self, symbol: IRSymbol) -> IRNode:
         return symbol

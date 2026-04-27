@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.5.0 — 2026-04-27
+
+**Complex number MACSYMA names wired (B2).**
+
+Adds `MACSYMA_NAME_TABLE` entries for complex-number operations:
+`%i`→`ImaginaryUnit`, `realpart`→`Re`, `imagpart`→`Im`,
+`conjugate`→`Conjugate`, `cabs`→`Abs`, `carg`→`Arg`,
+`rectform`→`RectForm`, `polarform`→`PolarForm`.
+
+Pre-binds `%i` to `ImaginaryUnit` in `MacsymaBackend.__init__` so the
+imaginary-unit constant is available without a prior `%i : ImaginaryUnit`
+assignment.
+
+11 new pipeline tests in `test_cas_pipeline.py` cover the MACSYMA surface
+syntax end-to-end (`%i`, `realpart`, `imagpart`, `conjugate`, `%i^n`).
+
 ## 0.4.0 — 2026-04-27
 
 **Number theory MACSYMA names wired (B3).**

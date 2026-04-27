@@ -39,6 +39,13 @@ import math
 from fractions import Fraction
 from typing import TYPE_CHECKING
 
+from cas_complex import IMAGINARY_UNIT as _IMAGINARY_UNIT
+from cas_complex import build_complex_handler_table as _build_complex
+from cas_complex.handlers import (
+    abs_complex_handler as _abs_complex_handler,
+    imaginary_power_handler as _imaginary_power_handler,
+)
+from cas_complex.normalize import contains_imaginary as _contains_imaginary
 from cas_factor import factor_integer_polynomial
 from cas_limit_series import PolynomialError, limit_direct, taylor_polynomial
 from cas_number_theory.handlers import build_number_theory_handler_table as _build_nt
@@ -796,8 +803,16 @@ def _numeric_binary(
     return from_number(fn(a, b))
 
 
-def abs_handler(_vm: "VM", expr: IRApply) -> IRNode:
-    """``Abs(x)`` → absolute value. Folds numerics; leaves symbolics."""
+def abs_handler(vm: "VM", expr: IRApply) -> IRNode:
+    """``Abs(x)`` → absolute value.
+
+    For complex inputs (containing ``ImaginaryUnit``), delegates to
+    :func:`cas_complex.handlers.abs_complex_handler` which returns
+    ``sqrt(re^2 + im^2)``.  For real numeric inputs, folds directly.
+    Leaves symbolic real inputs unevaluated.
+    """
+    if len(expr.args) == 1 and _contains_imaginary(expr.args[0]):
+        return _abs_complex_handler(vm, expr)
     return _numeric_unary(expr, abs)
 
 
@@ -1088,4 +1103,23 @@ def build_cas_handler_table() -> dict[str, Handler]:
         "At": at_handler,
         # --- cas_number_theory (B3) -----------------------------------------
         **_build_nt(),
+        # --- cas_complex (B2) -----------------------------------------------
+        # Re, Im, Conjugate, Arg, RectForm, PolarForm — Re/Im/Conjugate
+        # operate on ImaginaryUnit-containing IR expressions and extract
+        # the a and b of a + b*i form.  AbsComplex is registered under
+        # its own key; the main Abs dispatcher (above) routes to it for
+        # complex inputs.  Imaginary power reduction is wired separately
+        # into the Pow handler by SymbolicBackend.__init__.
+        **_build_complex(),
     }
+
+
+# ---------------------------------------------------------------------------
+# B2 helpers exposed to SymbolicBackend
+# ---------------------------------------------------------------------------
+
+#: The ``ImaginaryUnit`` symbol, pre-bound to itself in ``SymbolicBackend``.
+IMAGINARY_UNIT_SYMBOL: IRSymbol = _IMAGINARY_UNIT  # type: ignore[assignment]
+
+#: Imaginary-power handler — install on ``Pow`` in ``SymbolicBackend``.
+IMAGINARY_POWER_HOOK = _imaginary_power_handler

@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.22.0 — 2026-04-27
+
+**Roadmap item B2 (cas-complex) wired into SymbolicBackend.**
+
+`cas-complex` is now a dependency. Its handler table is merged into
+`build_cas_handler_table()` via `**_build_complex()`, and two additional
+integration points are set up in `SymbolicBackend.__init__`:
+
+- `ImaginaryUnit` is pre-bound to itself so it evaluates as an inert
+  symbol (rather than triggering the unresolved-symbol fall-through).
+- A wrapper around the `Pow` handler routes `ImaginaryUnit^n` through
+  `imaginary_power_handler` (reducing `i^n → {1, i, -1, -i}` via `n % 4`)
+  before falling through to the standard power handler.
+- `Abs` is extended: when its argument contains `ImaginaryUnit`, it
+  delegates to `abs_complex_handler` (returning `sqrt(re² + im²)`).
+
+**New IR heads** (7 total):
+`Re`, `Im`, `Conjugate`, `Arg`, `RectForm`, `PolarForm`, `AbsComplex`.
+
 ## 0.21.0 — 2026-04-27
 
 **Roadmap item B3 (cas-number-theory) wired into SymbolicBackend.**
