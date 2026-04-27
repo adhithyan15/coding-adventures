@@ -121,6 +121,7 @@ from symbolic_ir import (
 )
 
 from symbolic_vm.backend import Handler
+from symbolic_vm.derivative import _diff as _symbolic_diff
 from symbolic_vm.numeric import from_number, to_number
 from symbolic_vm.polynomial_bridge import from_polynomial, to_rational
 
@@ -1118,20 +1119,27 @@ def limit_handler(vm: VM, expr: IRApply) -> IRNode:
     return vm.eval(simplify(result))
 
 
-def taylor_handler(_vm: VM, expr: IRApply) -> IRNode:
+def taylor_handler(vm: VM, expr: IRApply) -> IRNode:
     """``Taylor(expr, var, point, order)`` — truncated Taylor polynomial.
 
-    Expands the polynomial ``expr`` around ``point`` to the given
-    ``order``. All four arguments are required:
+    Expands ``expr`` in ``var`` around ``point`` to the given ``order``.
+    All four arguments are required:
 
-    - ``expr``  — polynomial IR expression in ``var``
+    - ``expr``  — expression in ``var`` (polynomial *or* transcendental)
     - ``var``   — the expansion variable (``IRSymbol``)
     - ``point`` — the expansion point (numeric IR literal)
     - ``order`` — non-negative ``IRInteger`` truncation order
 
-    Non-polynomial inputs (transcendental functions, multiple variables)
-    raise :class:`cas_limit_series.PolynomialError` internally; the
-    handler catches this and returns the expression unevaluated.
+    Two-phase dispatch
+    ------------------
+    1. Try :func:`cas_limit_series.taylor_polynomial` (fast, polynomial only).
+    2. If the input is transcendental (raises :class:`PolynomialError`),
+       fall back to :func:`_taylor_derivative_fallback`, which computes
+       each Taylor coefficient by successive symbolic differentiation
+       followed by point-substitution.
+
+    Truly malformed inputs (wrong arity, non-symbol ``var``, non-integer
+    order) return the expression unevaluated.
     """
     if len(expr.args) != 4:
         return expr
@@ -1142,8 +1150,110 @@ def taylor_handler(_vm: VM, expr: IRApply) -> IRNode:
         return expr
     try:
         return taylor_polynomial(body, var, point, order_ir.value)
-    except (PolynomialError, ValueError):
-        return expr
+    except PolynomialError:
+        # Transcendental input — compute coefficients via symbolic diff.
+        return _taylor_derivative_fallback(vm, body, var, point, order_ir.value)
+    except ValueError:
+        return expr  # Truly malformed — return unevaluated.
+
+
+def _taylor_derivative_fallback(
+    vm: VM,
+    body: IRNode,
+    var: IRSymbol,
+    point: IRNode,
+    order: int,
+) -> IRNode:
+    """Compute a Taylor expansion via successive symbolic differentiation.
+
+    Falls back when the direct polynomial-coefficient method can't handle
+    the input (transcendental functions like ``sin``, ``cos``, ``exp``).
+
+    Algorithm
+    ---------
+    The Taylor polynomial around ``a`` to order ``n`` is::
+
+        T(x) = Σ_{k=0}^{n}  f^(k)(a) / k!  ·  (x − a)^k
+
+    For each ``k`` we:
+
+    1. Differentiate ``f_k = d^k f / dx^k`` symbolically via
+       :func:`symbolic_vm.derivative._diff`, then simplify through the
+       VM so the expression stays compact between iterations.
+    2. Substitute ``var = point`` into ``f_k`` via
+       :func:`cas_substitution.subst` and evaluate through the VM to
+       obtain the numeric coefficient.
+    3. Scale by ``1/k!`` (exact rational arithmetic).
+    4. Multiply by the monomial basis ``(x − a)^k`` and evaluate.
+
+    The per-term VM pass ensures that zero coefficients collapse to
+    ``0`` before they're summed, keeping the output clean.
+
+    Parameters
+    ----------
+    vm:
+        The live VM instance (supplies evaluation context).
+    body:
+        The un-differentiated expression ``f``.
+    var:
+        The expansion variable.
+    point:
+        The expansion point (numeric IR node).
+    order:
+        The truncation order ``n`` (non-negative integer).
+
+    Returns
+    -------
+    IRNode
+        The summed Taylor polynomial, fully simplified.
+    """
+    terms: list[IRNode] = []
+    f_k: IRNode = body
+    factorial_k = 1  # k! — updated at the start of each iteration
+
+    point_is_zero = isinstance(point, IRInteger) and point.value == 0
+
+    for k in range(order + 1):
+        # ---- coefficient f^(k)(a) / k! ----------------------------------
+        # Substitute var = point, then let the VM collapse numerics.
+        coeff_ir = vm.eval(subst(point, var, f_k))
+
+        # Scale by 1/k!  (k=0: 0!/1 = 1; k>0: k! accumulated below)
+        if k > 0:
+            factorial_k *= k
+        if factorial_k != 1:
+            scale: IRNode = IRRational(1, factorial_k)
+            coeff_ir = vm.eval(IRApply(MUL, (scale, coeff_ir)))
+
+        # ---- monomial basis (x − a)^k -----------------------------------
+        if k == 0:
+            term = coeff_ir
+        else:
+            if point_is_zero:
+                # (x − 0)^k simplifies to x^k
+                basis: IRNode = (
+                    var if k == 1 else IRApply(POW, (var, IRInteger(k)))
+                )
+            else:
+                shift = IRApply(SUB, (var, point))
+                basis = shift if k == 1 else IRApply(POW, (shift, IRInteger(k)))
+            term = vm.eval(IRApply(MUL, (coeff_ir, basis)))
+
+        terms.append(term)
+
+        # ---- prepare next derivative ------------------------------------
+        # Differentiate symbolically then simplify through the VM so the
+        # working expression stays compact (avoids exponential blow-up).
+        if k < order:
+            f_k = vm.eval(_symbolic_diff(f_k, var))
+
+    # ---- accumulate ---------------------------------------------------------
+    if not terms:
+        return IRInteger(0)
+    result = terms[0]
+    for t in terms[1:]:
+        result = vm.eval(IRApply(ADD, (result, t)))
+    return result
 
 
 # ===========================================================================
