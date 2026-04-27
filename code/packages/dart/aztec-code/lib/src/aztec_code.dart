@@ -43,6 +43,8 @@
 /// 4. **Auto-select compact vs full** (force-compact option is v0.2.0).
 library aztec_code;
 
+import 'dart:convert' show utf8;
+
 import 'package:coding_adventures_barcode_2d/coding_adventures_barcode_2d.dart';
 
 // ============================================================================
@@ -934,7 +936,10 @@ void _placeDataBits(
 /// ```
 ModuleGrid encode(String data, {AztecOptions options = const AztecOptions()}) {
   final minEccPct = options.minEccPercent;
-  final inputBytes = data.codeUnits; // UTF-16 code units (ASCII-safe for typical data)
+  // Use UTF-8 encoding so non-ASCII characters (e.g. accented letters,
+  // CJK) are correctly represented as multi-byte sequences rather than the
+  // UTF-16 code units that Dart's String.codeUnits returns.
+  final inputBytes = utf8.encode(data);
 
   // Step 1: encode data into a bit stream via Binary-Shift.
   final dataBits = _encodeBytesAsBits(inputBytes);

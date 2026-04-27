@@ -831,6 +831,9 @@ private fun rasterize(
 
         // 2. Left Row Indicator (17 modules).
         val lri = computeLRI(r, rows, cols, eccLevel)
+        require(lri in 0 until clusterTable.size) {
+            "LRI value $lri out of cluster table range [0, ${clusterTable.size})"
+        }
         expandPattern(clusterTable[lri], rowBuf, pos)
         pos += 17
 
@@ -843,6 +846,9 @@ private fun rasterize(
 
         // 4. Right Row Indicator (17 modules).
         val rri = computeRRI(r, rows, cols, eccLevel)
+        require(rri in 0 until clusterTable.size) {
+            "RRI value $rri out of cluster table range [0, ${clusterTable.size})"
+        }
         expandPattern(clusterTable[rri], rowBuf, pos)
         pos += 17
 
