@@ -1,4 +1,5 @@
-# Test dependencies
+requires 'perl', '5.040';
+
 on 'test' => sub {
     requires 'Test2::V0';
 };

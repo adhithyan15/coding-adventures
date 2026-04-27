@@ -37,15 +37,13 @@ jobs:
   detect:
     runs-on: ubuntu-latest
     outputs:
-      needs_python: ${{ steps.toolchains.outputs.needs_python }}
-      needs_ruby: ${{ steps.toolchains.outputs.needs_ruby }}
-      needs_go: ${{ steps.toolchains.outputs.needs_go }}
-      needs_typescript: ${{ steps.toolchains.outputs.needs_typescript }}
-      needs_rust: ${{ steps.toolchains.outputs.needs_rust }}
-      needs_elixir: ${{ steps.toolchains.outputs.needs_elixir }}
-      needs_lua: ${{ steps.toolchains.outputs.needs_lua }}
-      needs_perl: ${{ steps.toolchains.outputs.needs_perl }}
-      needs_kotlin: ${{ steps.toolchains.outputs.needs_kotlin }}
+      needs_python: ${{ steps.detect.outputs.needs_python }}
+      needs_ruby: ${{ steps.detect.outputs.needs_ruby }}
+      needs_go: ${{ steps.detect.outputs.needs_go }}
+      needs_typescript: ${{ steps.detect.outputs.needs_typescript }}
+      needs_rust: ${{ steps.detect.outputs.needs_rust }}
+      needs_elixir: ${{ steps.detect.outputs.needs_elixir }}
+      needs_perl: ${{ steps.detect.outputs.needs_perl }}
       diff_base: ${{ steps.diff-base.outputs.base }}
       is_main: ${{ steps.detect-main.outputs.is_main }}
     steps:
@@ -251,26 +249,18 @@ jobs:
           elixir-version: '1.16'
           otp-version: '26.0'
 
-      - name: Set up Lua
-        if: steps.plan.outputs.needs_lua == 'true' && runner.os != 'Windows'
-        uses: leafo/gh-actions-lua@v11
+      - name: Set up Perl
+        if: needs.detect.outputs.needs_perl == 'true'
+        uses: shogo82148/actions-setup-perl@v1
         with:
-          distribution: 'temurin'
-          java-version: '21'
+          perl-version: '5.40'
 
-      - name: Set up LuaRocks
-        if: steps.plan.outputs.needs_lua == 'true' && runner.os != 'Windows'
-        uses: leafo/gh-actions-luarocks@v4
+      - name: Install Perl test deps
+        if: needs.detect.outputs.needs_perl == 'true'
+        shell: bash
+        run: cpanm --quiet --notest Test2::Suite
 
-      - name: Install Lua test tools
-        if: steps.plan.outputs.needs_lua == 'true' && runner.os != 'Windows'
-        run: |
-          {
-            echo 'GRADLE_OPTS=-Dorg.gradle.daemon=false -Dorg.gradle.vfs.watch=false'
-          } >> "$GITHUB_ENV"
-
-      - name: Install cpanm and test dependencies (Perl)
-        if: (needs.detect.outputs.needs_perl == 'true' || needs.detect.outputs.is_main == 'true') && runner.os != 'Windows'
+      - name: Install test runners
         shell: bash
         run: |
           if [ "$RUNNER_OS" = "Linux" ]; then
@@ -342,13 +332,8 @@ jobs:
             echo "Elixir: $(elixir --version)"
             echo "Mix: $(mix --version)"
           fi
-          if [ "${{ steps.plan.outputs.needs_lua }}" = "true" ] && [ "$RUNNER_OS" != "Windows" ]; then
-            echo "Lua: $(lua -v)"
-            echo "LuaRocks: $(luarocks --version)"
-          fi
-          if [ "${{ steps.plan.outputs.needs_perl }}" = "true" ] && [ "$RUNNER_OS" != "Windows" ]; then
-            echo "Perl: $(perl --version | head -2 | tail -1)"
-            echo "cpanm: $(cpanm --version)"
+          if [ "${{ needs.detect.outputs.needs_perl }}" = "true" ]; then
+            echo "Perl: $(perl --version | head -2)"
           fi
 
       # ── Download build plan (skip discovery in build job) ─────

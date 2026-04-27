@@ -531,7 +531,7 @@ func run() int {
 
 // allLanguages is the canonical list of supported languages in the monorepo.
 // The order is stable and matches the order used in CI toolchain setup.
-var allLanguages = []string{"python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "kotlin"}
+var allLanguages = []string{"python", "ruby", "go", "typescript", "rust", "elixir", "perl"}
 
 func toolchainForPackageLanguage(language string) string {
 	switch language {

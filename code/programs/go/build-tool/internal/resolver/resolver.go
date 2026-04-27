@@ -445,6 +445,44 @@ func parseElixirDeps(pkg discovery.Package, knownNames map[string]string) []stri
 	return internalDeps
 }
 
+// parsePerlDeps extracts internal dependencies from a Perl cpanfile.
+//
+// Perl cpanfiles declare dependencies like:
+//
+//	requires 'CodingAdventures::LogicGates';
+//
+// We look for lines referencing the CodingAdventures:: namespace and map
+// them to internal package names via the knownNames table.
+func parsePerlDeps(pkg discovery.Package, knownNames map[string]string) []string {
+	cpanfile := filepath.Join(pkg.Path, "cpanfile")
+	data, err := os.ReadFile(cpanfile)
+	if err != nil {
+		return nil
+	}
+
+	text := string(data)
+	var internalDeps []string
+
+	// Match: requires 'CodingAdventures::SomeName' or requires "CodingAdventures::SomeName"
+	re := regexp.MustCompile(`requires\s+['"]CodingAdventures::([A-Za-z0-9:]+)['"]`)
+	for _, line := range strings.Split(text, "\n") {
+		trimmed := strings.TrimSpace(line)
+		for _, match := range re.FindAllStringSubmatch(trimmed, -1) {
+			if len(match) < 2 {
+				continue
+			}
+			// Convert CodingAdventures::ModuleName to lowercase lookup key
+			// e.g. "LogicGates" → "codingadventures::logicgates"
+			moduleName := strings.ToLower("codingadventures::" + match[1])
+			if pkgName, ok := knownNames[moduleName]; ok {
+				internalDeps = append(internalDeps, pkgName)
+			}
+		}
+	}
+
+	return internalDeps
+}
+
 // buildKnownNames creates a mapping from ecosystem-specific dependency names
 // to our internal package names.
 //
@@ -589,6 +627,20 @@ func buildKnownNamesForLanguage(packages []discovery.Package, language string) m
 			// Elixir mix names replace hyphens with underscores: "logic-gates" → "coding_adventures_logic_gates"
 			appName := "coding_adventures_" + strings.ReplaceAll(strings.ToLower(filepath.Base(pkg.Path)), "-", "_")
 			known[appName] = pkg.Name
+
+		case "perl":
+			// Perl module names use CamelCase: "logic-gates" → "CodingAdventures::LogicGates"
+			// We map the kebab-case directory name to the Perl namespace.
+			dirName := strings.ToLower(filepath.Base(pkg.Path))
+			// Build the CodingAdventures::PascalCase module name from kebab-case dir.
+			parts := strings.Split(dirName, "-")
+			for i, part := range parts {
+				if len(part) > 0 {
+					parts[i] = strings.ToUpper(part[:1]) + part[1:]
+				}
+			}
+			perlName := "codingadventures::" + strings.ToLower(strings.Join(parts, ""))
+			known[perlName] = pkg.Name
 		}
 	}
 
@@ -657,6 +709,8 @@ func ResolveDependencies(packages []discovery.Package) *directedgraph.Graph {
 			deps = parseRustDeps(pkg, knownNames)
 		case "elixir":
 			deps = parseElixirDeps(pkg, knownNames)
+		case "perl":
+			deps = parsePerlDeps(pkg, knownNames)
 		}
 		deps = append(deps, parseBuildToolDeps(pkg, knownPackageNames)...)
 
