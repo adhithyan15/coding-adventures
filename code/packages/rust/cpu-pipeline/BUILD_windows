@@ -1,1 +1,1 @@
-cargo test --target-dir target_isolated -p cpu-pipeline -- --nocapture
+cargo test -p cpu-pipeline -- --nocapture

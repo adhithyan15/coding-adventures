@@ -14,7 +14,7 @@ keywords = ["json", "parser", "grammar-driven", "ast", "computer-science", "educ
 # Runtime dependency: coding-adventures-json-lexer
 # Declared via BUILD file's -e ../json-lexer for local development and CI.
 # When publishing to PyPI, restore: dependencies = ["coding-adventures-json-lexer"]
-dependencies = ["coding-adventures-directed-graph", "coding-adventures-grammar-tools", "coding-adventures-json-lexer", "coding-adventures-lexer", "coding-adventures-parser", "coding-adventures-state-machine"]
+dependencies = []
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Education",

@@ -1,1 +1,1 @@
-cargo test --target-dir target_isolated -p hazard-detection -- --nocapture
+cargo test -p hazard-detection -- --nocapture

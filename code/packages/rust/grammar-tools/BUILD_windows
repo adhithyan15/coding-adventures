@@ -1,2 +1,2 @@
 cargo build -p grammar-tools
-cargo test --target-dir target_isolated -p grammar-tools -- --nocapture
+cargo test -p grammar-tools -- --nocapture

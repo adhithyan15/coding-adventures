@@ -3,12 +3,7 @@
   "version": 1,
   "package": "ruby/file_system",
   "capabilities": [
-    {
-      "category": "time",
-      "action": "read",
-      "target": "*",
-      "justification": "Reads the system clock for timestamp generation and time-based computations."
-    }
+    "time:read:*"
   ],
   "justification": "Uses Time.now for inode created_at, modified_at, and accessed_at timestamps."
 }

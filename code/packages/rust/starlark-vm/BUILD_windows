@@ -1,1 +1,1 @@
-cargo test --target-dir target_isolated -p starlark-vm -- --nocapture
+cargo test -p starlark-vm -- --nocapture

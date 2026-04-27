@@ -6,7 +6,7 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "../../../grammars/lattice.tokens",
+      "target": "../../grammars/lattice.tokens",
       "justification": "Reads token grammar definition file to build the lexer DFA at initialization time."
     }
   ],

@@ -1,1 +1,1 @@
-cargo test --target-dir target_isolated -p bitset -- --nocapture
+cargo test -p bitset -- --nocapture

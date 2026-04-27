@@ -1,8 +1,7 @@
-cd ../directed-graph && npm ci --quiet
-cd ../grammar-tools && npm ci --quiet
-cd ../lexer && npm ci --quiet
-cd ../state-machine && npm ci --quiet
-cd ../toml-lexer && npm ci --quiet
-cd ../parser && npm ci --quiet
-npm ci --quiet
+cd ../directed-graph && npm install --silent
+cd ../grammar-tools && npm install --silent
+cd ../lexer && npm install --silent
+cd ../toml-lexer && npm install --silent
+cd ../parser && npm install --silent
+cd ../toml-parser && npm install --silent
 npx vitest run --coverage

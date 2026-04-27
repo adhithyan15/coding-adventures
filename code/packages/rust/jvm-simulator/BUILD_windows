@@ -1,1 +1,1 @@
-cargo test --target-dir target_isolated -p jvm-simulator -- --nocapture
+cargo test -p jvm-simulator -- --nocapture

@@ -1,1 +1,1 @@
-cargo test --target-dir target_isolated -p virtual-memory
+cargo test -p virtual-memory

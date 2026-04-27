@@ -1,1 +1,1 @@
-cargo test --target-dir target_isolated -p clr-simulator -- --nocapture
+cargo test -p clr-simulator -- --nocapture

@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/os-kernel",
   "capabilities": [],
-  "justification": "Freestanding UEFI-loaded OS kernel. No host-side capabilities are used by the kernel at runtime."
+  "justification": "Simulated OS kernel. Implements process scheduling, system calls, and memory management in-memory without real OS interaction."
 }

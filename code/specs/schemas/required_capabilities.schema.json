@@ -18,7 +18,7 @@
     },
     "package": {
       "type": "string",
-      "pattern": "^(csharp|dart|elixir|fsharp|go|haskell|java|kotlin|lua|perl|python|ruby|rust|starlark|swift|typescript|wasm)/[a-z0-9][a-z0-9_-]*$",
+      "pattern": "^(python|ruby|go|typescript|rust|elixir|lua)/[a-z0-9][a-z0-9_-]*$",
       "description": "Qualified package name matching the build tool's naming: {language}/{dirname}. Examples: python/logic-gates, ruby/lexer, go/cache, rust/json-value, elixir/json_value, lua/grammar_tools."
     },
     "capabilities": {

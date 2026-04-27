@@ -1,1 +1,1 @@
-cargo test --target-dir target_isolated -p arithmetic -- --nocapture
+cargo test -p arithmetic -- --nocapture

@@ -3,12 +3,7 @@
   "version": 1,
   "package": "ruby/fpga",
   "capabilities": [
-    {
-      "category": "fs",
-      "action": "read",
-      "target": "*",
-      "justification": "Reads grammar and token definition files from the filesystem to configure the package at initialization time."
-    }
+    "fs:read:*"
   ],
   "justification": "Uses File.read to load bitstream JSON files from disk."
 }

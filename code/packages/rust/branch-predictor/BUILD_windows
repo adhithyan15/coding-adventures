@@ -1,1 +1,1 @@
-cargo test --target-dir target_isolated -p branch-predictor -- --nocapture
+cargo test -p branch-predictor -- --nocapture

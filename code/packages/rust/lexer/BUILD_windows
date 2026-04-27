@@ -1,1 +1,1 @@
-cargo test --target-dir target_isolated -p lexer -- --nocapture
+cargo test -p lexer -- --nocapture

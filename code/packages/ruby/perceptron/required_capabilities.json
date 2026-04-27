@@ -3,12 +3,7 @@
   "version": 1,
   "package": "ruby/perceptron",
   "capabilities": [
-    {
-      "category": "stdout",
-      "action": "write",
-      "target": "*",
-      "justification": "Writes output to standard output for user-facing display and program output."
-    }
+    "stdout:write:*"
   ],
   "justification": "Uses puts for epoch-by-epoch training loss logging as core training feedback."
 }

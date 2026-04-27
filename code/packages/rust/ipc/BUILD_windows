@@ -1,1 +1,1 @@
-cargo test --target-dir target_isolated -p ipc
+cargo test -p ipc

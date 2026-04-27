@@ -6,7 +6,7 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "../../../grammars/json.grammar",
+      "target": "../../grammars/json.grammar",
       "justification": "Reads parser grammar definition file to build parse tables at initialization time."
     }
   ],

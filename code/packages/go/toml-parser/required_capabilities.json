@@ -6,7 +6,7 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "../../../grammars/toml.grammar",
+      "target": "../../grammars/toml.grammar",
       "justification": "Reads parser grammar definition file to build parse tables at initialization time."
     }
   ],

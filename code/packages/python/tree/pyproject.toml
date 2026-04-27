@@ -12,7 +12,7 @@ authors = [{ name = "Adhithya Rajasekaran" }]
 # Runtime dependency: coding-adventures-directed-graph
 # Declared via BUILD file's -e ../directed-graph for local development and CI.
 # When publishing to PyPI, restore: dependencies = ["coding-adventures-directed-graph"]
-dependencies = ["coding-adventures-directed-graph"]
+dependencies = []
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4", "mypy>=1.10"]

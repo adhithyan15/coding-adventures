@@ -14,7 +14,7 @@ keywords = ["toml", "parser", "grammar-driven", "ast", "computer-science", "educ
 # Runtime dependency: coding-adventures-toml-lexer
 # Declared via BUILD file's -e ../toml-lexer for local development and CI.
 # When publishing to PyPI, restore: dependencies = ["coding-adventures-toml-lexer"]
-dependencies = ["coding-adventures-directed-graph", "coding-adventures-grammar-tools", "coding-adventures-lexer", "coding-adventures-parser", "coding-adventures-state-machine", "coding-adventures-toml-lexer"]
+dependencies = []
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Education",

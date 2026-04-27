@@ -1,1 +1,1 @@
-cargo test --target-dir target_isolated -p fpga -- --nocapture
+cargo test -p fpga -- --nocapture

@@ -1,1 +1,1 @@
-cargo test --target-dir target_isolated -p wasm-types -- --nocapture
+cargo test -p wasm-types -- --nocapture

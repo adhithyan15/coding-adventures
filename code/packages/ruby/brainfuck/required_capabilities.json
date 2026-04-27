@@ -3,18 +3,8 @@
   "version": 1,
   "package": "ruby/brainfuck",
   "capabilities": [
-    {
-      "category": "stdin",
-      "action": "read",
-      "target": "*",
-      "justification": "Reads user input from standard input during interactive program execution."
-    },
-    {
-      "category": "stdout",
-      "action": "write",
-      "target": "*",
-      "justification": "Writes output to standard output for user-facing display and program output."
-    }
+    "stdin:read:*",
+    "stdout:write:*"
   ],
   "justification": "Brainfuck . and , commands read stdin and write stdout via simulated I/O buffers."
 }

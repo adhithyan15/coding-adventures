@@ -1,1 +1,1 @@
-cargo test --target-dir target_isolated -p arm-simulator -- --nocapture
+cargo test -p arm-simulator -- --nocapture

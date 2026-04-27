@@ -1,1 +1,1 @@
-cargo test --target-dir target_isolated -p immutable-list -- --nocapture
+cargo test -p immutable-list -- --nocapture

@@ -3,24 +3,9 @@
   "version": 1,
   "package": "ruby/actor",
   "capabilities": [
-    {
-      "category": "fs",
-      "action": "read",
-      "target": "*",
-      "justification": "Reads grammar and token definition files from the filesystem to configure the package at initialization time."
-    },
-    {
-      "category": "fs",
-      "action": "write",
-      "target": "*",
-      "justification": "Writes data files to the filesystem as part of the package persistent storage operations."
-    },
-    {
-      "category": "time",
-      "action": "read",
-      "target": "*",
-      "justification": "Reads the system clock for timestamp generation and time-based computations."
-    }
+    "fs:read:*",
+    "fs:write:*",
+    "time:read:*"
   ],
   "justification": "Uses FileUtils.mkdir_p and File.open for persistent channel storage. Uses Process.clock_gettime for monotonic timestamps."
 }

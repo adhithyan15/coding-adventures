@@ -1,1 +1,1 @@
-cargo test --target-dir target_isolated -p coding-adventures-json-parser -- --nocapture
+cargo test -p coding-adventures-json-parser -- --nocapture

@@ -1,1 +1,1 @@
-cargo test --target-dir target_isolated -p wasm-module-parser -- --nocapture
+cargo test -p wasm-module-parser -- --nocapture

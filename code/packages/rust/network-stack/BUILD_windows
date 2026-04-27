@@ -1,1 +1,1 @@
-cargo test --target-dir target_isolated -p network-stack
+cargo test -p network-stack

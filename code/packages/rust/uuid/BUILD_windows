@@ -1,1 +1,1 @@
-cargo test --target-dir target_isolated -p coding_adventures_uuid -- --nocapture
+cargo test -p coding_adventures_uuid -- --nocapture

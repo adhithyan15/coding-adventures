@@ -1,1 +1,1 @@
-cargo test --target-dir target_isolated -p cpu-simulator -- --nocapture
+cargo test -p cpu-simulator -- --nocapture

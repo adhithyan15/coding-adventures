@@ -1,1 +1,1 @@
-cargo test --target-dir target_isolated -p wasm-leb128 -- --nocapture
+cargo test -p wasm-leb128 -- --nocapture

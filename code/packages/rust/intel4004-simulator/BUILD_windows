@@ -1,1 +1,1 @@
-cargo test --target-dir target_isolated -p intel4004-simulator -- --nocapture
+cargo test -p intel4004-simulator -- --nocapture

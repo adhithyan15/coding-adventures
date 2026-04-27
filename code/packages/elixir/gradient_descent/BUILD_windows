@@ -1,1 +1,1 @@
-mix deps.get --quiet && mix test
+mix test

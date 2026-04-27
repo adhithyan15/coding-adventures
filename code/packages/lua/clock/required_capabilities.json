@@ -3,12 +3,7 @@
   "version": 1,
   "package": "lua/clock",
   "capabilities": [
-    {
-      "category": "time",
-      "action": "read",
-      "target": "*",
-      "justification": "Reads the system clock for timestamp generation and time-based computations."
-    }
+    "time:read:*"
   ],
   "justification": "Clock simulation reads system time for tick synchronization."
 }

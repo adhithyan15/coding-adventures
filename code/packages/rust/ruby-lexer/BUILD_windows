@@ -1,1 +1,1 @@
-cargo test --target-dir target_isolated -p coding-adventures-ruby-lexer -- --nocapture
+cargo test -p coding-adventures-ruby-lexer -- --nocapture

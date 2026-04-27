@@ -3,12 +3,7 @@
   "version": 1,
   "package": "ruby/uuid",
   "capabilities": [
-    {
-      "category": "time",
-      "action": "read",
-      "target": "*",
-      "justification": "Reads the system clock for timestamp generation and time-based computations."
-    }
+    "time:read:*"
   ],
   "justification": "Uses Process.clock_gettime for wall-clock timestamps in UUID v1 and v7 generation."
 }

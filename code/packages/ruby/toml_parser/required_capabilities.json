@@ -3,12 +3,7 @@
   "version": 1,
   "package": "ruby/toml_parser",
   "capabilities": [
-    {
-      "category": "fs",
-      "action": "read",
-      "target": "*",
-      "justification": "Reads grammar and token definition files from the filesystem to configure the package at initialization time."
-    }
+    "fs:read:*"
   ],
   "justification": "Uses File.read to load the TOML grammar definition file."
 }

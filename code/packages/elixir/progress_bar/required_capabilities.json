@@ -3,18 +3,8 @@
   "version": 1,
   "package": "elixir/progress_bar",
   "capabilities": [
-    {
-      "category": "stdout",
-      "action": "write",
-      "target": "*",
-      "justification": "Writes output to standard output for user-facing display and program output."
-    },
-    {
-      "category": "time",
-      "action": "read",
-      "target": "*",
-      "justification": "Reads the system clock for timestamp generation and time-based computations."
-    }
+    "stdout:write:*",
+    "time:read:*"
   ],
   "justification": "Writes progress bar output to stdout via IO.write and reads System.monotonic_time for elapsed time calculation."
 }

@@ -3,12 +3,7 @@
   "version": 1,
   "package": "ruby/cli_builder",
   "capabilities": [
-    {
-      "category": "fs",
-      "action": "read",
-      "target": "*",
-      "justification": "Reads grammar and token definition files from the filesystem to configure the package at initialization time."
-    }
+    "fs:read:*"
   ],
   "justification": "Uses File.read to load CLI spec files and File.file?/File.readable? to validate file-type arguments."
 }

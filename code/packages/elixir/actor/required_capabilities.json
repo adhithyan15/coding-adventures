@@ -3,24 +3,9 @@
   "version": 1,
   "package": "elixir/actor",
   "capabilities": [
-    {
-      "category": "fs",
-      "action": "read",
-      "target": "*",
-      "justification": "Reads grammar and token definition files from the filesystem to configure the package at initialization time."
-    },
-    {
-      "category": "fs",
-      "action": "write",
-      "target": "*",
-      "justification": "Writes data files to the filesystem as part of the package persistent storage operations."
-    },
-    {
-      "category": "time",
-      "action": "read",
-      "target": "*",
-      "justification": "Reads the system clock for timestamp generation and time-based computations."
-    }
+    "fs:read:*",
+    "fs:write:*",
+    "time:read:*"
   ],
   "justification": "Reads and writes actor persistence log files via File.read/File.write!, uses Path.join for file paths, and reads System.monotonic_time for message timestamps."
 }

@@ -3,12 +3,7 @@
   "version": 1,
   "package": "elixir/cli_builder",
   "capabilities": [
-    {
-      "category": "fs",
-      "action": "read",
-      "target": "*",
-      "justification": "Reads grammar and token definition files from the filesystem to configure the package at initialization time."
-    }
+    "fs:read:*"
   ],
   "justification": "Reads CLI spec JSON files from disk via File.read in the spec loader."
 }

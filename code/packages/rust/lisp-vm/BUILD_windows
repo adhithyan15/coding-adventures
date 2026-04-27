@@ -1,1 +1,1 @@
-cargo test --target-dir target_isolated -p lisp-vm -- --nocapture
+cargo test -p lisp-vm -- --nocapture

@@ -3,12 +3,7 @@
   "version": 1,
   "package": "lua/parser",
   "capabilities": [
-    {
-      "category": "stdout",
-      "action": "write",
-      "target": "*",
-      "justification": "Writes output to standard output for user-facing display and program output."
-    }
+    "stdout:write:*"
   ],
   "justification": "Writes debug trace output to io.stderr when tracing is enabled."
 }

@@ -1,1 +1,1 @@
-cargo test --target-dir target_isolated -p vendor-api-simulators -- --nocapture
+cargo test -p vendor-api-simulators -- --nocapture

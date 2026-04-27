@@ -1,1 +1,1 @@
-cargo test --target-dir target_isolated -p cpu-cache -- --nocapture
+cargo test -p cache -- --nocapture
