@@ -1,0 +1,52 @@
+cabal-version:      2.4
+name:               data-matrix
+version:            0.1.0.0
+synopsis:           ISO/IEC 16022:2006 Data Matrix ECC200 encoder
+description:
+    Data Matrix ECC200 encoder — ISO/IEC 16022:2006 compliant.
+    .
+    Encodes ASCII / extended-ASCII strings into a Data Matrix symbol.
+    Outputs a ModuleGrid (abstract boolean grid) that can be passed to
+    barcode-2d's layout for pixel rendering.
+    .
+    Supports:
+    .
+    * 24 square symbols (10x10 - 144x144) and 6 rectangular symbols (8x18 - 16x48)
+    * ASCII encoding with digit-pair compression
+    * Reed-Solomon over GF(256), primitive polynomial 0x12D, b=1 convention
+    * Multi-block interleaving for burst-error resilience
+    * L-shaped finder pattern + alternating timing border
+    * Alignment borders for multi-region symbols
+    * Diagonal "Utah" placement algorithm with 4 corner patterns
+    * No masking step — the diagonal walk distributes bits naturally
+license:            MIT
+author:             Coding Adventures
+maintainer:         contact@coding-adventures.com
+category:           Graphics
+homepage:           https://github.com/adhithyan15/coding-adventures
+bug-reports:        https://github.com/adhithyan15/coding-adventures/issues
+extra-doc-files:    README.md
+                    CHANGELOG.md
+
+library
+    exposed-modules:  CodingAdventures.DataMatrix
+    build-depends:    base               >= 4.7 && < 5
+                    , vector             >= 0.12
+                    , containers         >= 0.6
+                    , barcode-2d
+    hs-source-dirs:   src
+    default-language: Haskell2010
+    ghc-options:      -Wall
+
+test-suite data-matrix-test
+    default-language: Haskell2010
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          Spec.hs
+    other-modules:    DataMatrixSpec
+    build-depends:    base       >= 4.7 && < 5
+                    , vector     >= 0.12
+                    , data-matrix
+                    , barcode-2d
+                    , hspec      == 2.*
+    ghc-options:      -Wall
