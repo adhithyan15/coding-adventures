@@ -792,3 +792,124 @@ def test_at_wrong_arity_passthrough() -> None:
     vm, _ = make_vm()
     expr = IRApply(_AT, (x,))
     assert vm.eval(expr) == expr
+
+
+# ===========================================================================
+# Section 12: Complex number handlers (B2)
+# ===========================================================================
+
+_I = IRSymbol("ImaginaryUnit")
+_RE = IRSymbol("Re")
+_IM = IRSymbol("Im")
+_CONJUGATE = IRSymbol("Conjugate")
+_ARG = IRSymbol("Arg")
+_RECT_FORM = IRSymbol("RectForm")
+_POLAR_FORM = IRSymbol("PolarForm")
+
+
+def _rect(a: object, b: object) -> IRApply:
+    """Build ``a + b*ImaginaryUnit`` in IR."""
+    return IRApply(ADD, (a, IRApply(MUL, (b, _I))))  # type: ignore[arg-type]
+
+
+def test_imaginary_unit_prebound() -> None:
+    """ImaginaryUnit is pre-bound to itself in SymbolicBackend."""
+    vm, _ = make_vm()
+    assert vm.eval(_I) == _I
+
+
+def test_i_power_2() -> None:
+    """ImaginaryUnit^2 → -1."""
+    vm, _ = make_vm()
+    expr = IRApply(IRSymbol("Pow"), (_I, IRInteger(2)))
+    assert vm.eval(expr) == IRInteger(-1)
+
+
+def test_i_power_4() -> None:
+    """ImaginaryUnit^4 → 1."""
+    vm, _ = make_vm()
+    expr = IRApply(IRSymbol("Pow"), (_I, IRInteger(4)))
+    assert vm.eval(expr) == IRInteger(1)
+
+
+def test_i_power_3() -> None:
+    """ImaginaryUnit^3 → Neg(ImaginaryUnit)."""
+    vm, _ = make_vm()
+    expr = IRApply(IRSymbol("Pow"), (_I, IRInteger(3)))
+    result = vm.eval(expr)
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Neg"
+    assert result.args[0] == _I
+
+
+def test_re_of_rect() -> None:
+    """Re(3 + 4*i) → 3."""
+    vm, _ = make_vm()
+    node = _rect(IRInteger(3), IRInteger(4))
+    assert vm.eval(IRApply(_RE, (node,))) == IRInteger(3)
+
+
+def test_re_of_pure_real() -> None:
+    """Re(x) → x when x has no imaginary part."""
+    vm, _ = make_vm()
+    assert vm.eval(IRApply(_RE, (x,))) == x
+
+
+def test_im_of_rect() -> None:
+    """Im(3 + 4*i) → 4."""
+    vm, _ = make_vm()
+    node = _rect(IRInteger(3), IRInteger(4))
+    assert vm.eval(IRApply(_IM, (node,))) == IRInteger(4)
+
+
+def test_im_of_pure_real() -> None:
+    """Im(5) → 0."""
+    vm, _ = make_vm()
+    assert vm.eval(IRApply(_IM, (IRInteger(5),))) == IRInteger(0)
+
+
+def test_conjugate_rect() -> None:
+    """Conjugate(3 + 4*i) → Add(3, ...) form."""
+    vm, _ = make_vm()
+    node = _rect(IRInteger(3), IRInteger(4))
+    result = vm.eval(IRApply(_CONJUGATE, (node,)))
+    assert isinstance(result, IRApply)
+    assert result.head.name in ("Add",)
+
+
+def test_conjugate_pure_imaginary() -> None:
+    """Conjugate(i) → Neg(i)."""
+    vm, _ = make_vm()
+    result = vm.eval(IRApply(_CONJUGATE, (_I,)))
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Neg"
+    assert result.args[0] == _I
+
+
+def test_abs_complex_3_4i() -> None:
+    """Abs(3 + 4*i) → sqrt(25) (not yet folded to 5)."""
+    vm, _ = make_vm()
+    node = _rect(IRInteger(3), IRInteger(4))
+    result = vm.eval(IRApply(_ABS, (node,)))
+    assert result is not None
+
+
+def test_abs_real_numeric() -> None:
+    """Abs(-3) → 3 (real numeric fold unchanged)."""
+    vm, _ = make_vm()
+    result = vm.eval(IRApply(_ABS, (IRInteger(-3),)))
+    assert result == IRInteger(3)
+
+
+def test_re_wrong_arity_passthrough() -> None:
+    """Re(a, b) → unevaluated."""
+    vm, _ = make_vm()
+    expr = IRApply(_RE, (IRInteger(1), IRInteger(2)))
+    assert vm.eval(expr) == expr
+
+
+def test_im_wrong_arity_passthrough() -> None:
+    """Im(a, b) → unevaluated."""
+    vm, _ = make_vm()
+    expr = IRApply(_IM, (IRInteger(1), IRInteger(2)))
+    assert vm.eval(expr) == expr

@@ -68,6 +68,27 @@ MAKE_LIST = IRSymbol("MakeList")
 # Point evaluation (C4)
 AT = IRSymbol("At")
 
+# Number theory (B3)
+IS_PRIME = IRSymbol("IsPrime")
+NEXT_PRIME = IRSymbol("NextPrime")
+PREV_PRIME = IRSymbol("PrevPrime")
+FACTOR_INTEGER = IRSymbol("FactorInteger")
+DIVISORS = IRSymbol("Divisors")
+TOTIENT = IRSymbol("Totient")
+MOEBIUS_MU = IRSymbol("MoebiusMu")
+JACOBI_SYMBOL = IRSymbol("JacobiSymbol")
+CHINESE_REMAINDER = IRSymbol("ChineseRemainder")
+INTEGER_LENGTH = IRSymbol("IntegerLength")
+
+# Complex number IR heads (B2)
+IMAGINARY_UNIT = IRSymbol("ImaginaryUnit")
+RE = IRSymbol("Re")
+IM = IRSymbol("Im")
+CONJUGATE = IRSymbol("Conjugate")
+ARG = IRSymbol("Arg")
+RECT_FORM = IRSymbol("RectForm")
+POLAR_FORM = IRSymbol("PolarForm")
+
 # Re-export the runtime-owned heads so callers have one import.
 from macsyma_runtime.heads import (  # noqa: E402
     ASSUME,
@@ -124,6 +145,30 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "rhs": RHS,
     # Point evaluation — At(expr, Equal(var, val)) (C4)
     "at": AT,
+    # Number theory (B3)
+    "primep": IS_PRIME,
+    "next_prime": NEXT_PRIME,
+    "prev_prime": PREV_PRIME,
+    "ifactor": FACTOR_INTEGER,
+    "divisors": DIVISORS,
+    "totient": TOTIENT,
+    "moebius": MOEBIUS_MU,
+    "jacobi": JACOBI_SYMBOL,
+    "chinese": CHINESE_REMAINDER,
+    "numdigits": INTEGER_LENGTH,
+    # Complex number operations (B2)
+    # %i is the imaginary unit constant; the compiler maps the token to
+    # IMAGINARY_UNIT so the VM finds the pre-bound symbol.
+    "%i": IMAGINARY_UNIT,
+    "realpart": RE,
+    "imagpart": IM,
+    "conjugate": CONJUGATE,
+    # cabs(z) = complex modulus; Abs dispatches to complex handler when z
+    # contains ImaginaryUnit, so both names route to the same IR head.
+    "cabs": ABS,
+    "carg": ARG,
+    "rectform": RECT_FORM,
+    "polarform": POLAR_FORM,
     # Runtime-owned operations
     "kill": KILL,
     "ev": EV,

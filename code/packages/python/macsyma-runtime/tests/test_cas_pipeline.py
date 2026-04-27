@@ -316,3 +316,112 @@ def test_pipeline_at_linear() -> None:
     """at(2*x - 1, x = 5) → 9."""
     result = _eval("at(2*x - 1, x = 5)")
     assert result == _int(9)
+
+
+# ---------------------------------------------------------------------------
+# Section K — number theory (B3)
+# ---------------------------------------------------------------------------
+
+
+def test_pipeline_primep_true() -> None:
+    """primep(97) → True."""
+    result = _eval("primep(97)")
+    assert result == _sym("True")
+
+
+def test_pipeline_primep_false() -> None:
+    """primep(100) → False."""
+    result = _eval("primep(100)")
+    assert result == _sym("False")
+
+
+def test_pipeline_next_prime() -> None:
+    """next_prime(10) → 11."""
+    result = _eval("next_prime(10)")
+    assert result == _int(11)
+
+
+def test_pipeline_ifactor() -> None:
+    """ifactor(12) returns a list of [prime, exp] pairs."""
+    result = _eval("ifactor(12)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List"
+    # Should have 2 pairs: [[2,2],[3,1]]
+    assert len(result.args) == 2
+
+
+def test_pipeline_divisors() -> None:
+    """divisors(12) → [1, 2, 3, 4, 6, 12]."""
+    result = _eval("divisors(12)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List"
+    values = [a.value for a in result.args]  # type: ignore[attr-defined]
+    assert values == [1, 2, 3, 4, 6, 12]
+
+
+def test_pipeline_totient() -> None:
+    """totient(12) → 4."""
+    result = _eval("totient(12)")
+    assert result == _int(4)
+
+
+# ===========================================================================
+# Section L: Complex number operations (B2)
+# ===========================================================================
+
+
+def test_pipeline_imaginary_unit() -> None:
+    """%i evaluates to the ImaginaryUnit symbol."""
+    result = _eval("%i")
+    assert isinstance(result, IRSymbol)
+    assert result.name == "ImaginaryUnit"
+
+
+def test_pipeline_realpart_of_rect() -> None:
+    """realpart(3 + 4*%i) → 3."""
+    result = _eval("realpart(3 + 4*%i)")
+    assert result == _int(3)
+
+
+def test_pipeline_imagpart_of_rect() -> None:
+    """imagpart(3 + 4*%i) → 4."""
+    result = _eval("imagpart(3 + 4*%i)")
+    assert result == _int(4)
+
+
+def test_pipeline_realpart_pure_real() -> None:
+    """realpart(7) → 7 (no imaginary component)."""
+    result = _eval("realpart(7)")
+    assert result == _int(7)
+
+
+def test_pipeline_imagpart_pure_real() -> None:
+    """imagpart(7) → 0."""
+    result = _eval("imagpart(7)")
+    assert result == _int(0)
+
+
+def test_pipeline_conjugate_rect() -> None:
+    """conjugate(3 + 4*%i) returns an Add expression (3 - 4*%i)."""
+    result = _eval("conjugate(3 + 4*%i)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Add"
+
+
+def test_pipeline_i_power_2() -> None:
+    """%i^2 → -1."""
+    result = _eval("%i^2")
+    assert result == _int(-1)
+
+
+def test_pipeline_i_power_4() -> None:
+    """%i^4 → 1."""
+    result = _eval("%i^4")
+    assert result == _int(1)
+
+
+def test_pipeline_i_power_3() -> None:
+    """%i^3 → -i (a Neg expression)."""
+    result = _eval("%i^3")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Neg"
