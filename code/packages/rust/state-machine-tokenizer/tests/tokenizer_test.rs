@@ -292,6 +292,64 @@ fn tokenizer_uses_temporary_buffer_actions() {
 }
 
 #[test]
+fn tokenizer_appends_temporary_buffer_to_attribute_value() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "buffering", "done"]),
+            set(&["A", "x", ";"]),
+            vec![
+                EffectfulTransition::new(
+                    "data",
+                    EffectfulMatcher::Event("A".to_string()),
+                    "buffering",
+                )
+                .with_effects(&[
+                    "create_start_tag",
+                    "append_tag_name(current_lowercase)",
+                    "start_attribute",
+                    "append_attribute_name(href)",
+                    "clear_temporary_buffer",
+                    "append_temporary_buffer(&)",
+                ]),
+                EffectfulTransition::new(
+                    "buffering",
+                    EffectfulMatcher::Event("x".to_string()),
+                    "buffering",
+                )
+                .with_effects(&["append_temporary_buffer(current)"]),
+                EffectfulTransition::new(
+                    "buffering",
+                    EffectfulMatcher::Event(";".to_string()),
+                    "done",
+                )
+                .with_effects(&[
+                    "append_temporary_buffer_to_attribute_value",
+                    "commit_attribute",
+                    "emit_current_token",
+                ]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("Ax;").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![Token::StartTag {
+            name: "a".to_string(),
+            attributes: vec![Attribute {
+                name: "href".to_string(),
+                value: "&x".to_string(),
+            }],
+            self_closing: false,
+        }]
+    );
+}
+
+#[test]
 fn tokenizer_supports_switch_to_with_reconsume() {
     let mut tokenizer = Tokenizer::new(
         EffectfulStateMachine::new(
