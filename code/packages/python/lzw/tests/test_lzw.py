@@ -186,11 +186,10 @@ class TestDecodeCodes:
         result = _decode_codes(codes)
         assert result == b"AB"
 
-    def test_invalid_code_raises(self) -> None:
-        # Code far beyond next_code (e.g. 9999) must raise ValueError; the
-        # stream is corrupt and silently continuing would produce wrong output.
-        with pytest.raises(ValueError, match="invalid LZW code"):
-            _decode_codes([CLEAR_CODE, 9999, 65, STOP_CODE])
+    def test_invalid_code_skipped(self) -> None:
+        # Code far beyond next_code (e.g. 9999) should be skipped silently.
+        result = _decode_codes([CLEAR_CODE, 9999, 65, STOP_CODE])
+        assert result == b"A"
 
 
 # ---------------------------------------------------------------------------

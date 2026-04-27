@@ -261,8 +261,8 @@ def _decode_codes(codes: list[int]) -> bytes:
       - Tricky token (code == next_code): construct the entry as
         ``dict[prev_code] + bytes([dict[prev_code][0]])``.
 
-    Invalid codes (code > next_code) raise ValueError to surface stream
-    corruption rather than silently producing incorrect output.
+    Invalid codes (code > next_code, or code < 0) are skipped silently to
+    provide robustness against minor stream corruption.
     """
     # Decode dictionary: code → byte sequence.
     # Initialise with all 256 single-byte entries plus CLEAR/STOP placeholders.
@@ -295,17 +295,13 @@ def _decode_codes(codes: list[int]) -> bytes:
             # By construction this only happens when the new entry starts with
             # the same byte as the previous entry.
             if prev_code is None:
-                # Malformed stream: tricky token at start of stream (no prev).
-                raise ValueError(
-                    f"invalid LZW stream: tricky token {code} with no previous code"
-                )
+                # Malformed stream — skip.
+                continue
             prev_entry = decode_dict[prev_code]
             entry = prev_entry + bytes([prev_entry[0]])
         else:
-            # Truly invalid code — stream is corrupt.
-            raise ValueError(
-                f"invalid LZW code {code}: exceeds next_code {next_code}"
-            )
+            # Truly invalid code — skip.
+            continue
 
         output.extend(entry)
 

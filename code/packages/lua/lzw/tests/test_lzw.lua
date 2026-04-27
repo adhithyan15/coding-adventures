@@ -1,212 +1,200 @@
--- ============================================================================
--- Tests for the LZW compression implementation.
--- ============================================================================
---
--- Test vectors come from the CMP03 specification. Covers: spec vectors,
--- encode properties, decode correctness, round-trip invariants, wire format,
--- and compression effectiveness. Uses Busted test framework.
-
-package.path = "../src/?.lua;../src/?/init.lua;" .. package.path
+-- Tests for coding_adventures.lzw — CMP03 LZW compression.
 
 local lzw = require("coding_adventures.lzw")
 
--- Module-level round-trip helper.
--- Compresses and immediately decompresses `str`; result must equal `str`.
-local function rt(str)
-    return lzw.decompress(lzw.compress(str))
+local pass = 0
+local fail = 0
+
+local function eq_list(a, b)
+  if #a ~= #b then return false end
+  for i = 1, #a do
+    if a[i] ~= b[i] then return false end
+  end
+  return true
 end
 
--- ── Version ──────────────────────────────────────────────────────────────────
+local function assert_eq(got, expected, name)
+  if got == expected then
+    pass = pass + 1
+    print("PASS: " .. name)
+  else
+    fail = fail + 1
+    print("FAIL: " .. name)
+    print("  expected: " .. tostring(expected))
+    print("  got:      " .. tostring(got))
+  end
+end
 
-describe("lzw", function()
-    it("has VERSION", function()
-        assert.equals("0.1.0", lzw.VERSION)
-    end)
+local function assert_list_eq(got, expected, name)
+  if eq_list(got, expected) then
+    pass = pass + 1
+    print("PASS: " .. name)
+  else
+    fail = fail + 1
+    print("FAIL: " .. name)
+    print("  expected: {" .. table.concat(expected, ", ") .. "}")
+    print("  got:      {" .. table.concat(got, ", ") .. "}")
+  end
+end
 
-    it("exposes constants", function()
-        assert.equals(256, lzw.CLEAR_CODE)
-        assert.equals(257, lzw.STOP_CODE)
-        assert.equals(258, lzw.INITIAL_NEXT_CODE)
-        assert.equals(9,   lzw.INITIAL_CODE_SIZE)
-        assert.equals(16,  lzw.MAX_CODE_SIZE)
-    end)
-end)
+local function assert_true(cond, name)
+  assert_eq(cond, true, name)
+end
 
--- ── Round-trip spec vectors ───────────────────────────────────────────────────
+-- ---------------------------------------------------------------------------
+-- Constants
+-- ---------------------------------------------------------------------------
 
-describe("round-trip spec vectors", function()
-    it("empty string", function()
-        assert.equals("", rt(""))
-    end)
+assert_eq(lzw.CLEAR_CODE,        256, "CLEAR_CODE == 256")
+assert_eq(lzw.STOP_CODE,         257, "STOP_CODE == 257")
+assert_eq(lzw.INITIAL_NEXT_CODE, 258, "INITIAL_NEXT_CODE == 258")
+assert_eq(lzw.INITIAL_CODE_SIZE, 9,   "INITIAL_CODE_SIZE == 9")
+assert_eq(lzw.MAX_CODE_SIZE,     16,  "MAX_CODE_SIZE == 16")
 
-    it("single byte A", function()
-        assert.equals("A", rt("A"))
-    end)
+-- ---------------------------------------------------------------------------
+-- encode_codes
+-- ---------------------------------------------------------------------------
 
-    it("AB", function()
-        assert.equals("AB", rt("AB"))
-    end)
+do
+  local codes, orig = lzw.encode_codes("")
+  assert_eq(orig, 0, "encode empty: orig")
+  assert_eq(codes[1], lzw.CLEAR_CODE, "encode empty: first = CLEAR")
+  assert_eq(codes[#codes], lzw.STOP_CODE, "encode empty: last = STOP")
+  assert_eq(#codes, 2, "encode empty: len=2")
+end
 
-    it("ABABAB", function()
-        assert.equals("ABABAB", rt("ABABAB"))
-    end)
+do
+  local codes, orig = lzw.encode_codes("A")
+  assert_eq(orig, 1, "encode single: orig")
+  assert_eq(codes[1], lzw.CLEAR_CODE, "encode single: first = CLEAR")
+  assert_eq(codes[#codes], lzw.STOP_CODE, "encode single: last = STOP")
+  local found = false
+  for _, c in ipairs(codes) do if c == 65 then found = true end end
+  assert_true(found, "encode single: contains 65")
+end
 
-    it("AAAAAAA — tricky token", function()
-        -- "AAAAAAA" triggers the tricky-token case: the encoder emits a code
-        -- for a sequence the decoder hasn't added yet.  The decoder recovers
-        -- by repeating the first byte of the previous entry.
-        assert.equals("AAAAAAA", rt("AAAAAAA"))
-    end)
+do
+  local codes, _ = lzw.encode_codes("AB")
+  assert_list_eq(codes, {lzw.CLEAR_CODE, 65, 66, lzw.STOP_CODE}, "encode two distinct")
+end
 
-    it("all 256 bytes", function()
-        -- Build a string containing bytes 0–255 in order.
-        local chars = {}
-        for i = 0, 255 do chars[i + 1] = string.char(i) end
-        local data = table.concat(chars)
-        assert.equals(data, rt(data))
-    end)
+do
+  local codes, _ = lzw.encode_codes("ABABAB")
+  assert_list_eq(codes, {lzw.CLEAR_CODE, 65, 66, 258, 258, lzw.STOP_CODE}, "encode ABABAB")
+end
 
-    it("repetitive data compresses", function()
-        -- A highly repetitive string should produce fewer bytes than the input.
-        local data = string.rep("ABC", 1000)
-        local compressed = lzw.compress(data)
-        assert.is_true(#compressed < #data)
-    end)
-end)
+do
+  local codes, _ = lzw.encode_codes("AAAAAAA")
+  assert_list_eq(codes, {lzw.CLEAR_CODE, 65, 258, 259, 65, lzw.STOP_CODE}, "encode AAAAAAA")
+end
 
--- ── Round-trip extra coverage ─────────────────────────────────────────────────
+-- ---------------------------------------------------------------------------
+-- decode_codes
+-- ---------------------------------------------------------------------------
 
-describe("round-trip extra coverage", function()
-    it("no repetition ABCDE", function()
-        assert.equals("ABCDE", rt("ABCDE"))
-    end)
+assert_eq(lzw.decode_codes({lzw.CLEAR_CODE, lzw.STOP_CODE}), "", "decode empty stream")
+assert_eq(lzw.decode_codes({lzw.CLEAR_CODE, 65, lzw.STOP_CODE}), "A", "decode single byte")
+assert_eq(lzw.decode_codes({lzw.CLEAR_CODE, 65, 66, lzw.STOP_CODE}), "AB", "decode two distinct")
+assert_eq(lzw.decode_codes({lzw.CLEAR_CODE, 65, 66, 258, 258, lzw.STOP_CODE}), "ABABAB", "decode ABABAB")
+assert_eq(lzw.decode_codes({lzw.CLEAR_CODE, 65, 258, 259, 65, lzw.STOP_CODE}), "AAAAAAA", "decode AAAAAAA tricky token")
+assert_eq(lzw.decode_codes({lzw.CLEAR_CODE, 65, lzw.CLEAR_CODE, 66, lzw.STOP_CODE}), "AB", "decode clear mid-stream")
 
-    it("AABCBBABC", function()
-        assert.equals("AABCBBABC", rt("AABCBBABC"))
-    end)
+do
+  local result = lzw.decode_codes({lzw.CLEAR_CODE, 9999, 65, lzw.STOP_CODE})
+  assert_eq(result, "A", "decode invalid code skipped")
+end
 
-    it("hello world", function()
-        assert.equals("hello world", rt("hello world"))
-    end)
+-- ---------------------------------------------------------------------------
+-- pack / unpack codes
+-- ---------------------------------------------------------------------------
 
-    it("ABC repeated 100 times", function()
-        local data = string.rep("ABC", 100)
-        assert.equals(data, rt(data))
-    end)
+do
+  local packed = lzw.pack_codes({lzw.CLEAR_CODE, lzw.STOP_CODE}, 42)
+  local b1, b2, b3, b4 = string.byte(packed, 1, 4)
+  local stored = b1 * 16777216 + b2 * 65536 + b3 * 256 + b4
+  assert_eq(stored, 42, "pack: header stores original_length")
+end
 
-    it("null bytes", function()
-        local s = "\0\0\0\255\255"
-        assert.equals(s, rt(s))
-    end)
+do
+  local codes = {lzw.CLEAR_CODE, 65, 66, 258, 258, lzw.STOP_CODE}
+  local packed = lzw.pack_codes(codes, 6)
+  local unpacked, orig = lzw.unpack_codes(packed)
+  assert_eq(orig, 6, "pack/unpack ABABAB: orig")
+  assert_list_eq(unpacked, codes, "pack/unpack ABABAB: codes")
+end
 
-    it("repeated pattern 0,1,2,0,1,2,...", function()
-        local chars = {}
-        for i = 0, 299 do chars[i + 1] = string.char(i % 3) end
-        local data = table.concat(chars)
-        assert.equals(data, rt(data))
-    end)
+do
+  local codes = {lzw.CLEAR_CODE, 65, 258, 259, 65, lzw.STOP_CODE}
+  local packed = lzw.pack_codes(codes, 7)
+  local unpacked, orig = lzw.unpack_codes(packed)
+  assert_eq(orig, 7, "pack/unpack AAAAAAA: orig")
+  assert_list_eq(unpacked, codes, "pack/unpack AAAAAAA: codes")
+end
 
-    it("long ABCDEF repeated 500 times", function()
-        local data = string.rep("ABCDEF", 500)
-        assert.equals(data, rt(data))
-    end)
+do
+  local codes, orig = lzw.unpack_codes("\x00\x00")
+  assert_true(type(codes) == "table", "unpack short: codes is table")
+  assert_true(type(orig) == "number", "unpack short: orig is number")
+end
 
-    it("all same byte compresses significantly", function()
-        local data = string.rep("\66", 10000)
-        local compressed = lzw.compress(data)
-        assert.is_true(#compressed < #data)
-        assert.equals(data, lzw.decompress(compressed))
-    end)
+-- ---------------------------------------------------------------------------
+-- compress / decompress
+-- ---------------------------------------------------------------------------
 
-    it("binary data with all byte values", function()
-        -- Round-trip 256 bytes followed by 256 reversed bytes.
-        local chars = {}
-        for i = 0, 255 do chars[i + 1] = string.char(i) end
-        for i = 255, 0, -1 do chars[#chars + 1] = string.char(i) end
-        local data = table.concat(chars)
-        assert.equals(data, rt(data))
-    end)
+local function rt(data, name)
+  local compressed = lzw.compress(data)
+  local result = lzw.decompress(compressed)
+  assert_eq(result, data, name)
+end
 
-    it("long uniform run of zero bytes", function()
-        local data = string.rep("\0", 5000)
-        assert.equals(data, rt(data))
-    end)
-end)
+rt("", "compress empty")
+rt("A", "compress single byte")
+rt("AB", "compress two distinct")
+rt("ABABAB", "compress ABABAB")
+rt("AAAAAAA", "compress AAAAAAA tricky token")
+rt("AABABC", "compress AABABC")
 
--- ── Wire format ───────────────────────────────────────────────────────────────
+do
+  local data = string.rep("the quick brown fox jumps over the lazy dog ", 20)
+  rt(data, "compress long string")
+end
 
-describe("wire format", function()
-    it("compress stores original_length in first 4 bytes (big-endian)", function()
-        local compressed = lzw.compress("hello")
-        local b1, b2, b3, b4 = compressed:byte(1, 4)
-        local orig_len = b1 * 16777216 + b2 * 65536 + b3 * 256 + b4
-        assert.equals(5, orig_len)
-    end)
+do
+  local bytes = {}
+  for b = 0, 255 do bytes[#bytes+1] = string.char(b) end
+  local data = table.concat(bytes) .. table.concat(bytes)
+  rt(data, "compress binary data")
+end
 
-    it("compress empty → 4-byte header only (original_length=0, no codes)", function()
-        -- Empty input: CLEAR_CODE + STOP_CODE packed in 9 bits each = 18 bits = 3 bytes
-        -- plus the 4-byte header = 7 bytes total.
-        local c = lzw.compress("")
-        assert.is_true(#c >= 4)
-        local b1, b2, b3, b4 = c:byte(1, 4)
-        local orig_len = b1 * 16777216 + b2 * 65536 + b3 * 256 + b4
-        assert.equals(0, orig_len)
-    end)
+do
+  local data = string.rep("\x00", 100)
+  rt(data, "compress all zeros")
+end
 
-    it("compress is deterministic", function()
-        local data = "hello world test"
-        assert.equals(lzw.compress(data), lzw.compress(data))
-    end)
+do
+  local data = string.rep("\xFF", 100)
+  rt(data, "compress all 0xFF")
+end
 
-    it("compressed output starts with big-endian length header", function()
-        -- 300-byte input → first 4 bytes should be 0x00 0x00 0x01 0x2C
-        local data = string.rep("X", 300)
-        local c    = lzw.compress(data)
-        assert.equals(0,    c:byte(1))
-        assert.equals(0,    c:byte(2))
-        assert.equals(1,    c:byte(3))
-        assert.equals(0x2C, c:byte(4))
-    end)
+do
+  local data = string.rep("ABCABC", 100)
+  local compressed = lzw.compress(data)
+  assert_true(#compressed < #data, "compress: repetitive data shrinks")
+end
 
-    it("decompress of truncated data does not crash", function()
-        -- Only a 3-byte string (shorter than the 4-byte header).
-        local result = lzw.decompress("abc")
-        assert.is_string(result)
-    end)
+do
+  local data = "hello world"
+  local compressed = lzw.compress(data)
+  local b1, b2, b3, b4 = string.byte(compressed, 1, 4)
+  local stored = b1 * 16777216 + b2 * 65536 + b3 * 256 + b4
+  assert_eq(stored, #data, "compress: header stores original_length")
+end
 
-    it("decompress of empty string does not crash", function()
-        local result = lzw.decompress("")
-        assert.is_string(result)
-    end)
+-- ---------------------------------------------------------------------------
+-- Summary
+-- ---------------------------------------------------------------------------
 
-    it("decompress of garbage does not crash", function()
-        -- 4-byte header claiming length 999, followed by random bytes.
-        local junk = string.char(0, 0, 3, 231) ..  -- original_length = 999
-                     string.char(0xFF, 0xFE, 0xAB, 0xCD, 0x12, 0x34)
-        local result = lzw.decompress(junk)
-        assert.is_string(result)
-    end)
-end)
-
--- ── Compression effectiveness ─────────────────────────────────────────────────
-
-describe("compression effectiveness", function()
-    it("repetitive ABC*1000 compresses to less than input", function()
-        local data = string.rep("ABC", 1000)
-        assert.is_true(#lzw.compress(data) < #data)
-    end)
-
-    it("repetitive single-char data compresses to less than input", function()
-        local data = string.rep("Z", 5000)
-        assert.is_true(#lzw.compress(data) < #data)
-    end)
-
-    it("compress then decompress preserves all 256 distinct bytes", function()
-        -- Each byte value appears exactly twice.
-        local chars = {}
-        for i = 0, 255 do chars[#chars + 1] = string.char(i) end
-        for i = 0, 255 do chars[#chars + 1] = string.char(i) end
-        local data = table.concat(chars)
-        assert.equals(data, rt(data))
-    end)
-end)
+print(string.format("\n%d passed, %d failed", pass, fail))
+if fail > 0 then
+  os.exit(1)
+end

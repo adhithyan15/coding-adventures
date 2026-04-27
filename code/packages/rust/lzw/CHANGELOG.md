@@ -4,12 +4,11 @@
 
 ### Added
 
-- Initial implementation of LZW encoding and decoding (CMP03 spec).
-- `BitWriter` and `BitReader` helpers for LSB-first variable-width bit packing.
-- `compress` / `decompress` one-shot CMP03 wire-format API.
-- Variable-width codes (9–16 bits) with automatic code-size growth.
-- Dictionary reset (CLEAR_CODE) when `next_code` reaches 2^16.
-- Tricky-token edge case (`code == next_code`) handled in decoder.
-- Security: invalid code, missing CLEAR_CODE, and short-header errors returned
-  as `Err(String)` rather than panics.
-- 30 unit tests covering spec vectors, round-trips, bit I/O, and error paths.
+- Initial implementation of LZW compression (CMP03).
+- `compress(data: &[u8]) -> Vec<u8>` — encodes to CMP03 wire format.
+- `decompress(data: &[u8]) -> Vec<u8>` — decodes CMP03 wire format.
+- Private `BitWriter` / `BitReader` for LSB-first variable-width bit I/O.
+- Private `encode_codes` / `decode_codes` for code-stream encode/decode.
+- Private `pack_codes` / `unpack_codes` for bit-packing serialisation.
+- 29 tests, 0 failures, tricky-token edge case covered.
+- Constants: `CLEAR_CODE`, `STOP_CODE`, `INITIAL_NEXT_CODE`, `INITIAL_CODE_SIZE`, `MAX_CODE_SIZE`.
