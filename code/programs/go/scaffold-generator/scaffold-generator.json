@@ -1,1 +1,66 @@
-/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/programs/scaffold-generator.json
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "scaffold-generator",
+  "display_name": "Scaffold Generator",
+  "description": "Generate CI-ready package scaffolding for the coding-adventures monorepo",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [
+    {
+      "id": "type",
+      "short": "t",
+      "long": "type",
+      "description": "Package type: 'library' goes in code/packages/, 'program' goes in code/programs/",
+      "type": "enum",
+      "enum_values": ["library", "program"],
+      "default": "library"
+    },
+    {
+      "id": "language",
+      "short": "l",
+      "long": "language",
+      "description": "Target language(s). Comma-separated or 'all' for all 10 languages: python, go, ruby, typescript, rust, elixir, perl, lua, swift, haskell",
+      "type": "string",
+      "default": "all"
+    },
+    {
+      "id": "depends-on",
+      "short": "d",
+      "long": "depends-on",
+      "description": "Comma-separated list of sibling package names this package depends on (kebab-case)",
+      "type": "string",
+      "default": ""
+    },
+    {
+      "id": "layer",
+      "long": "layer",
+      "description": "Layer number for README context (e.g., 1 for logic-gates, 2 for arithmetic)",
+      "type": "integer"
+    },
+    {
+      "id": "description",
+      "long": "description",
+      "description": "One-line description of the package",
+      "type": "string",
+      "default": ""
+    },
+    {
+      "id": "dry-run",
+      "long": "dry-run",
+      "description": "Print what would be generated without writing files",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "package-name",
+      "name": "PACKAGE_NAME",
+      "description": "Name of the package in kebab-case (e.g., 'my-package')",
+      "type": "string",
+      "required": true
+    }
+  ],
+  "commands": [],
+  "mutually_exclusive_groups": []
+}

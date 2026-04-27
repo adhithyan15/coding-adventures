@@ -512,6 +512,50 @@ pub fn or_n(inputs: &[u8]) -> u8 {
     inputs.iter().copied().reduce(or_gate).unwrap()
 }
 
+/// N-input XOR gate — reduces a slice of bits via XOR (parity checker).
+///
+/// Returns 1 if an **odd** number of inputs are 1 (odd parity).
+/// Returns 0 if an **even** number of inputs are 1 (even parity).
+///
+/// This chains 2-input XOR gates left-to-right using fold:
+///
+/// ```text
+/// XOR_N(a, b, c, d) = XOR(XOR(XOR(a, b), c), d)
+/// ```
+///
+/// # Why XOR gives parity
+///
+/// XOR is 1 when the count of 1-inputs is odd. Chaining XOR gates over
+/// all bits counts parity: each new 1-bit flips the running total between
+/// odd and even. This is exactly how real hardware implements parity checks —
+/// a chain of XOR gates is the most area-efficient parity detector.
+///
+/// # Use in the Intel 8008
+///
+/// The 8008 Parity flag P is set when the result has **even** parity
+/// (an even number of 1-bits). So the hardware computes:
+///
+/// ```text
+/// P = NOT(XOR_N(result_bits))
+/// ```
+///
+/// P=1 means "even number of 1s" — the inverse of the raw XOR parity.
+///
+/// # Example
+///
+/// ```
+/// use logic_gates::gates::xor_n;
+/// // Three inputs = odd count → odd parity → XOR result = 1
+/// assert_eq!(xor_n(&[1, 0, 0]), 1);
+/// assert_eq!(xor_n(&[1, 1, 0]), 0); // two 1s = even parity → 0
+/// assert_eq!(xor_n(&[1, 1, 1]), 1); // three 1s = odd parity → 1
+/// assert_eq!(xor_n(&[0, 0, 0, 0]), 0); // all zeros = even parity → 0
+/// ```
+pub fn xor_n(inputs: &[u8]) -> u8 {
+    assert!(inputs.len() >= 2, "xor_n requires at least 2 inputs");
+    inputs.iter().copied().reduce(xor_gate).unwrap()
+}
+
 // ===========================================================================
 // Inline unit tests
 // ===========================================================================
@@ -643,5 +687,32 @@ mod tests {
     #[should_panic(expected = "or_n requires at least 2 inputs")]
     fn test_or_n_panics_on_too_few_inputs() {
         or_n(&[0]);
+    }
+
+    // --- XOR_N gate ---
+    #[test]
+    fn test_xor_n_parity() {
+        // Zero 1-bits → even parity → 0
+        assert_eq!(xor_n(&[0, 0]), 0);
+        assert_eq!(xor_n(&[0, 0, 0, 0]), 0);
+        // One 1-bit → odd parity → 1
+        assert_eq!(xor_n(&[1, 0]), 1);
+        assert_eq!(xor_n(&[0, 1]), 1);
+        assert_eq!(xor_n(&[1, 0, 0]), 1);
+        // Two 1-bits → even parity → 0
+        assert_eq!(xor_n(&[1, 1]), 0);
+        assert_eq!(xor_n(&[1, 1, 0]), 0);
+        // Three 1-bits → odd parity → 1
+        assert_eq!(xor_n(&[1, 1, 1]), 1);
+        // Eight bits of 0xFF (all ones) → even parity → 0
+        assert_eq!(xor_n(&[1, 1, 1, 1, 1, 1, 1, 1]), 0);
+        // Five 1-bits → odd parity → 1
+        assert_eq!(xor_n(&[1, 0, 1, 1, 0, 1, 0, 1]), 1);
+    }
+
+    #[test]
+    #[should_panic(expected = "xor_n requires at least 2 inputs")]
+    fn test_xor_n_panics_on_too_few_inputs() {
+        xor_n(&[1]);
     }
 }

@@ -1,0 +1,543 @@
+# Parser grammar for Verilog (IEEE 1364-1995)
+#
+# Baseline note: this edition currently starts from the shared Verilog 2005 parser grammar.
+# Edition-specific deltas can be tightened incrementally without changing package APIs.
+#
+# Synthesizable subset â€" constructs that map to real digital hardware.
+#
+# Verilog describes circuits, not computations. A Verilog "program" is a
+# collection of modules, each defining a piece of hardware. Modules connect
+# to each other through ports (input/output wires), forming a hierarchy
+# that ultimately describes a complete digital system.
+#
+# This grammar covers:
+#   - Module declarations with ports and parameters
+#   - Wire and reg declarations with bit widths
+#   - Continuous assignments (assign)
+#   - Always blocks with sensitivity lists
+#   - If/else, case/casex/casez statements
+#   - Module instantiation with port connections
+#   - Generate blocks for parameterized hardware
+#   - Functions and tasks
+#   - Full expression grammar with operator precedence
+#
+# Format: rule_name = definition ;
+#
+# UPPERCASE names reference tokens from verilog.tokens
+# lowercase names reference other grammar rules
+#
+# Notation:
+#   |       alternation (or)
+#   { x }   zero or more repetitions
+#   [ x ]   optional
+#   ( x )   grouping
+#   "lit"   literal token match (keyword)
+
+# ============================================================================
+# Top-Level Structure
+# ============================================================================
+#
+# A Verilog source file contains one or more module declarations.
+# In a real design, each file typically holds one module, but the grammar
+# allows multiple. Compiler directives have already been processed by the
+# preprocessor hook before parsing begins.
+
+source_text = { description } ;
+
+description = module_declaration ;
+
+# ============================================================================
+# Module Declaration
+# ============================================================================
+#
+# A module is the fundamental building block of Verilog. Think of it as a
+# "component" in electronics â€" it has named input and output pins (ports)
+# and internal logic connecting them.
+#
+# Examples:
+#
+#   // Simplest possible module (no ports, no body):
+#   module empty; endmodule
+#
+#   // AND gate with two inputs and one output:
+#   module and_gate(input a, input b, output y);
+#     assign y = a & b;
+#   endmodule
+#
+#   // Parameterized adder:
+#   module adder #(parameter WIDTH = 8) (
+#     input  [WIDTH-1:0] a,
+#     input  [WIDTH-1:0] b,
+#     output [WIDTH-1:0] sum
+#   );
+#     assign sum = a + b;
+#   endmodule
+
+module_declaration = "module" NAME [ parameter_port_list ]
+                     [ port_list ] SEMICOLON
+                     { module_item }
+                     "endmodule" ;
+
+# ============================================================================
+# Parameters
+# ============================================================================
+#
+# Parameters make modules reusable. Instead of hardcoding bit widths or
+# array sizes, you declare them as parameters that can be overridden when
+# the module is instantiated.
+#
+#   module fifo #(parameter DEPTH = 16, parameter WIDTH = 8) (...);
+#
+# When instantiated:
+#   fifo #(.DEPTH(32), .WIDTH(16)) my_fifo (...);
+
+parameter_port_list = HASH LPAREN parameter_declaration
+                      { COMMA parameter_declaration } RPAREN ;
+
+parameter_declaration  = "parameter" [ range ] NAME EQUALS expression ;
+localparam_declaration = "localparam" [ range ] NAME EQUALS expression ;
+
+# ============================================================================
+# Ports
+# ============================================================================
+#
+# Ports are the module's interface to the outside world. Every signal
+# entering or leaving a module must be declared as a port.
+#
+#   input        â€" signal flows into the module (read-only inside)
+#   output       â€" signal flows out of the module
+#   inout        â€" bidirectional (used for buses like I2C, SPI)
+#
+# Ports can have bit widths:
+#   input [7:0] data    â€" 8-bit input (bits 7 down to 0)
+#   output [31:0] addr  â€" 32-bit output
+#
+# The [MSB:LSB] range notation specifies the bit range. By convention,
+# MSB > LSB (big-endian bit numbering), though [0:7] is also valid.
+
+port_list = LPAREN port { COMMA port } RPAREN ;
+
+port = [ port_direction ] [ net_type ] [ "signed" ] [ range ] NAME ;
+
+port_direction = "input" | "output" | "inout" ;
+net_type       = "wire" | "reg" | "tri" | "supply0" | "supply1" ;
+
+range = LBRACKET expression COLON expression RBRACKET ;
+
+# ============================================================================
+# Module Items
+# ============================================================================
+#
+# The body of a module contains declarations and behavioral/structural
+# descriptions. There are two paradigms:
+#
+# 1. Structural: Instantiate other modules and connect their ports.
+#    This is like placing components on a circuit board and wiring them.
+#
+# 2. Behavioral: Describe what the circuit DOES using if/else, case,
+#    and assignments. The synthesis tool figures out what gates to use.
+#
+# Most real designs mix both styles.
+
+module_item = port_declaration SEMICOLON
+            | net_declaration SEMICOLON
+            | reg_declaration SEMICOLON
+            | integer_declaration SEMICOLON
+            | parameter_declaration SEMICOLON
+            | localparam_declaration SEMICOLON
+            | continuous_assign
+            | always_construct
+            | initial_construct
+            | module_instantiation
+            | generate_region
+            | function_declaration
+            | task_declaration ;
+
+# ============================================================================
+# Declarations
+# ============================================================================
+#
+# Verilog has two fundamental signal types:
+#
+#   wire  â€" a physical connection. Has no storage. Its value is
+#           continuously driven by whatever is connected to it.
+#           Like a copper trace on a circuit board.
+#
+#   reg   â€" a storage element. Holds its value until explicitly
+#           changed. Despite the name, a reg does NOT always become
+#           a flip-flop! If assigned in a combinational always block,
+#           it synthesizes to combinational logic, not a register.
+#           The name "reg" is one of Verilog's historical mistakes.
+#
+# Other types:
+#   integer  â€" 32-bit signed, used for loop counters and calculations
+#   tri      â€" like wire, but can be driven by multiple sources
+#   supply0/supply1 â€" constant logic 0 and 1
+
+port_declaration = port_direction [ net_type ] [ "signed" ] [ range ]
+                   name_list ;
+net_declaration  = net_type [ "signed" ] [ range ] name_list ;
+reg_declaration  = "reg" [ "signed" ] [ range ] name_list ;
+integer_declaration = "integer" name_list ;
+name_list        = NAME { COMMA NAME } ;
+
+# ============================================================================
+# Continuous Assignment
+# ============================================================================
+#
+# Continuous assignments model combinational logic â€" circuits with no
+# memory. The output is always a function of the current inputs, like
+# a truth table evaluated in real time.
+#
+#   assign y = a & b;            // AND gate
+#   assign sum = a + b;          // adder
+#   assign mux_out = sel ? a : b; // 2-to-1 multiplexer
+#
+# The keyword is "continuous" because the assignment is always active.
+# Whenever 'a' or 'b' changes, 'y' updates immediately (after gate delay).
+# This is fundamentally different from software assignment, which executes
+# once and moves on.
+
+continuous_assign = "assign" assignment { COMMA assignment } SEMICOLON ;
+assignment        = lvalue EQUALS expression ;
+
+# An lvalue is something that can appear on the left side of an assignment.
+# It can be a signal name, a bit-select, a part-select, or a concatenation.
+lvalue = NAME [ range_select ]
+       | concatenation ;
+
+range_select = LBRACKET expression [ COLON expression ] RBRACKET ;
+
+# ============================================================================
+# Always Blocks
+# ============================================================================
+#
+# Always blocks describe behavior that triggers repeatedly. The sensitivity
+# list specifies WHEN the block executes:
+#
+#   always @(posedge clk)        â€" on rising clock edge (sequential logic)
+#   always @(negedge reset_n)    â€" on falling edge of reset
+#   always @(a or b or sel)      â€" when any input changes (combinational)
+#   always @(*)                  â€" shorthand: sensitive to all read signals
+#
+# Sequential logic (flip-flops, registers):
+#   always @(posedge clk) begin
+#     if (reset) q <= 0;
+#     else       q <= d;
+#   end
+#
+# Combinational logic (gates, muxes):
+#   always @(*) begin
+#     case (sel)
+#       2'b00: y = a;
+#       2'b01: y = b;
+#       default: y = 0;
+#     endcase
+#   end
+#
+# Note the assignment operators:
+#   =  (blocking)     â€" used in combinational blocks
+#   <= (non-blocking) â€" used in sequential blocks
+#
+# Using the wrong one is a classic Verilog bug. Blocking assignments
+# execute sequentially (like software). Non-blocking assignments all
+# update simultaneously at the end of the time step (like real hardware).
+
+always_construct  = "always" AT sensitivity_list statement ;
+initial_construct = "initial" statement ;
+
+sensitivity_list = LPAREN sensitivity_item
+                   { ( "or" | COMMA ) sensitivity_item } RPAREN
+                 | LPAREN STAR RPAREN ;
+
+sensitivity_item = [ "posedge" | "negedge" ] expression ;
+
+# ============================================================================
+# Statements
+# ============================================================================
+#
+# Statements appear inside always blocks and initial blocks. They describe
+# procedural behavior â€" what happens when the block is triggered.
+
+statement = block_statement
+          | if_statement
+          | case_statement
+          | for_statement
+          | blocking_assignment SEMICOLON
+          | nonblocking_assignment SEMICOLON
+          | task_call SEMICOLON
+          | SEMICOLON ;
+
+# Begin/end blocks group multiple statements (like { } in C).
+# Named blocks can be referenced for disable statements.
+#
+#   begin : data_path
+#     temp = a + b;
+#     result <= temp & mask;
+#   end
+block_statement = "begin" [ COLON NAME ] { statement } "end" ;
+
+# If/else: identical to C syntax.
+#
+#   if (enable) begin
+#     q <= d;
+#   end else if (load) begin
+#     q <= load_data;
+#   end else begin
+#     q <= q;  // hold value
+#   end
+if_statement = "if" LPAREN expression RPAREN statement
+               [ "else" statement ] ;
+
+# Case statements: hardware-friendly multi-way branch.
+#
+#   case (opcode)
+#     4'b0001: result = a + b;   // ADD
+#     4'b0010: result = a - b;   // SUB
+#     4'b0011: result = a & b;   // AND
+#     default: result = 0;
+#   endcase
+#
+# casex: treats x and z as don't-care in comparison
+# casez: treats z (and ?) as don't-care in comparison
+# These are used for priority encoding and instruction decoding.
+case_statement = ( "case" | "casex" | "casez" )
+                 LPAREN expression RPAREN
+                 { case_item }
+                 "endcase" ;
+
+case_item = expression_list COLON statement
+          | "default" [ COLON ] statement ;
+
+expression_list = expression { COMMA expression } ;
+
+# For loops: used primarily in generate blocks and initialization.
+# Synthesis tools unroll the loop into parallel hardware.
+for_statement = "for" LPAREN blocking_assignment SEMICOLON
+                expression SEMICOLON blocking_assignment RPAREN
+                statement ;
+
+blocking_assignment    = lvalue EQUALS expression ;
+nonblocking_assignment = lvalue LESS_EQUALS expression ;
+
+# Task call: invoke a named task (like a procedure call).
+task_call = NAME LPAREN [ expression { COMMA expression } ] RPAREN ;
+
+# ============================================================================
+# Module Instantiation
+# ============================================================================
+#
+# Instantiation creates an instance of another module â€" like placing a
+# chip on a circuit board. You specify which module to instantiate, give
+# the instance a unique name, and connect its ports.
+#
+# Positional port connection (order must match declaration):
+#   and_gate u1 (a, b, y);
+#
+# Named port connection (explicit, recommended):
+#   and_gate u1 (.a(sig_a), .b(sig_b), .y(out));
+#
+# With parameter override:
+#   adder #(.WIDTH(16)) u2 (.a(data_a), .b(data_b), .sum(result));
+
+module_instantiation = NAME [ parameter_value_assignment ]
+                       instance { COMMA instance } SEMICOLON ;
+
+parameter_value_assignment = HASH LPAREN expression { COMMA expression } RPAREN ;
+
+instance = NAME LPAREN port_connections RPAREN ;
+
+port_connections = named_port_connection { COMMA named_port_connection }
+                 | [ expression { COMMA expression } ] ;
+
+named_port_connection = DOT NAME LPAREN [ expression ] RPAREN ;
+
+# ============================================================================
+# Generate Blocks
+# ============================================================================
+#
+# Generate blocks create parameterized, replicated hardware. The synthesis
+# tool evaluates the generate conditions at compile time and produces the
+# appropriate hardware structures.
+#
+# For-generate (creates N copies of hardware):
+#   genvar i;
+#   generate
+#     for (i = 0; i < WIDTH; i = i + 1) begin : bit_slice
+#       xor_gate u (.a(a[i]), .b(b[i]), .y(result[i]));
+#     end
+#   endgenerate
+#
+# If-generate (conditional hardware inclusion):
+#   generate
+#     if (USE_FAST_ADDER) begin
+#       fast_adder u (...);
+#     end else begin
+#       ripple_adder u (...);
+#     end
+#   endgenerate
+
+generate_region = "generate" { generate_item } "endgenerate" ;
+
+generate_item = genvar_declaration
+              | generate_for
+              | generate_if
+              | module_item ;
+
+genvar_declaration = "genvar" NAME { COMMA NAME } SEMICOLON ;
+
+generate_for = "for" LPAREN genvar_assignment SEMICOLON expression
+               SEMICOLON genvar_assignment RPAREN
+               generate_block ;
+
+generate_if = "if" LPAREN expression RPAREN generate_block
+              [ "else" generate_block ] ;
+
+generate_block = "begin" [ COLON NAME ] { generate_item } "end"
+               | generate_item ;
+
+genvar_assignment = NAME EQUALS expression ;
+
+# ============================================================================
+# Function and Task Declarations
+# ============================================================================
+#
+# Functions compute a value from inputs (combinational logic).
+# Tasks are like procedures â€" they can have delays and multiple outputs.
+#
+# In synthesis, functions must be purely combinational (no @, no delays).
+#
+#   function [7:0] add;
+#     input [7:0] a;
+#     input [7:0] b;
+#     begin
+#       add = a + b;
+#     end
+#   endfunction
+
+function_declaration = "function" [ range ] NAME SEMICOLON
+                       { function_item }
+                       statement
+                       "endfunction" ;
+
+function_item = port_declaration SEMICOLON
+              | reg_declaration SEMICOLON
+              | integer_declaration SEMICOLON
+              | parameter_declaration SEMICOLON ;
+
+task_declaration = "task" NAME SEMICOLON
+                   { task_item }
+                   statement
+                   "endtask" ;
+
+task_item = port_declaration SEMICOLON
+          | reg_declaration SEMICOLON
+          | integer_declaration SEMICOLON ;
+
+# ============================================================================
+# Expressions
+# ============================================================================
+#
+# Verilog expressions are organized by operator precedence, from lowest
+# (top) to highest (bottom). Each precedence level calls the next level
+# down, encoding precedence directly in the grammar structure.
+#
+# Operator precedence table (lowest to highest):
+#
+#   1. ?:                    Ternary conditional     Right-assoc
+#   2. ||                    Logical OR              Left-assoc
+#   3. &&                    Logical AND             Left-assoc
+#   4. |                     Bitwise OR              Left-assoc
+#   5. ^ ~^ ^~              Bitwise XOR/XNOR        Left-assoc
+#   6. &                     Bitwise AND             Left-assoc
+#   7. == != === !==         Equality                Left-assoc
+#   8. < <= > >=             Relational              Left-assoc
+#   9. << >> <<< >>>         Shift                   Left-assoc
+#  10. + -                   Addition                Left-assoc
+#  11. * / %                 Multiplication          Left-assoc
+#  12. **                    Power                   Left-assoc
+#  13. ! ~ & | ^ (unary)    Unary/reduction          Right-assoc
+
+expression = ternary_expr ;
+
+# Ternary: sel ? true_val : false_val
+# This is a MUX in hardware! The synthesis tool generates:
+#   sel=1 â†' output = true_val
+#   sel=0 â†' output = false_val
+ternary_expr = or_expr [ QUESTION expression COLON ternary_expr ] ;
+
+# Logical operators (result is 1-bit: 0 or 1)
+or_expr      = and_expr { LOGIC_OR and_expr } ;
+and_expr     = bit_or_expr { LOGIC_AND bit_or_expr } ;
+
+# Bitwise operators (operate on each bit independently)
+bit_or_expr  = bit_xor_expr { PIPE bit_xor_expr } ;
+bit_xor_expr = bit_and_expr { CARET bit_and_expr } ;
+bit_and_expr = equality_expr { AMP equality_expr } ;
+
+# Equality: == and != can return x if inputs have x/z bits.
+# === and !== (case equality) compare all 4 states exactly.
+equality_expr = relational_expr
+                { ( EQUALS_EQUALS | NOT_EQUALS | CASE_EQ | CASE_NEQ )
+                  relational_expr } ;
+
+# Relational: < <= > >=
+# Note: <= here is comparison, not non-blocking assignment.
+# The grammar context distinguishes: inside an expression, <= is comparison.
+relational_expr = shift_expr
+                  { ( LESS_THAN | LESS_EQUALS | GREATER_THAN | GREATER_EQUALS )
+                    shift_expr } ;
+
+# Shift operators
+shift_expr = additive_expr
+             { ( LEFT_SHIFT | RIGHT_SHIFT | ARITH_LEFT_SHIFT | ARITH_RIGHT_SHIFT )
+               additive_expr } ;
+
+# Arithmetic
+additive_expr       = multiplicative_expr { ( PLUS | MINUS ) multiplicative_expr } ;
+multiplicative_expr = power_expr { ( STAR | SLASH | PERCENT ) power_expr } ;
+power_expr          = unary_expr [ POWER unary_expr ] ;
+
+# Unary operators:
+#   +x -x  â€" sign (arithmetic)
+#   !x     â€" logical NOT (result is 1 bit)
+#   ~x     â€" bitwise NOT (invert every bit)
+#   &x     â€" reduction AND (AND all bits together â†' 1 bit)
+#   |x     â€" reduction OR
+#   ^x     â€" reduction XOR
+#   ~&x    â€" reduction NAND
+#   ~|x    â€" reduction NOR
+#   ~^x    â€" reduction XNOR
+unary_expr = ( PLUS | MINUS | BANG | TILDE | AMP | PIPE | CARET
+             | TILDE AMP | TILDE PIPE | TILDE CARET ) unary_expr
+           | primary ;
+
+# ============================================================================
+# Primary Expressions
+# ============================================================================
+#
+# Atoms and suffixed expressions.
+
+primary = NUMBER
+        | SIZED_NUMBER
+        | REAL_NUMBER
+        | STRING
+        | NAME
+        | SYSTEM_ID
+        | LPAREN expression RPAREN
+        | concatenation
+        | replication
+        | primary LBRACKET expression [ COLON expression ] RBRACKET
+        | NAME LPAREN [ expression { COMMA expression } ] RPAREN ;
+
+# Concatenation: join signals together.
+#   {a, b}           â€" concatenate a and b
+#   {carry, sum}     â€" combine carry and sum into wider signal
+#   {a[7:4], b[3:0]} â€" mix bit ranges
+concatenation = LBRACE expression { COMMA expression } RBRACE ;
+
+# Replication: repeat a pattern N times.
+#   {4{1'b0}}        â€" four zero bits: 0000
+#   {8{data[0]}}     â€" replicate LSB 8 times (sign extension)
+#   {2{4'b1010}}     â€" 10101010 (8 bits)
+replication = LBRACE expression concatenation RBRACE ;

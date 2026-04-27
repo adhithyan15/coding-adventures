@@ -1,0 +1,1478 @@
+# Java 7 (2011) — Parser Grammar
+# @version 1
+# @java_version 7
+#
+# The Java Language Specification, Java SE 7 Edition — James Gosling, Bill
+# Joy, Guy Steele, Gilad Bracha, Alex Buckley — 2013 (Addison-Wesley)
+#
+# This grammar defines the syntactic structure of Java 7 (JDK 7, July 2011),
+# codenamed "Dolphin." Java 7 was the first release under Oracle's
+# stewardship and the product of "Project Coin" — a curated set of small
+# language improvements chosen by community ballot.
+#
+# The Project Coin features that affect the grammar:
+#
+#   1. DIAMOND OPERATOR — Type inference for generic instance creation.
+#      Instead of repeating type arguments on the right side of an
+#      assignment, you can use empty angle brackets `<>`:
+#
+#        // Java 5/6: redundant type arguments on both sides
+#        Map<String, List<Integer>> map = new HashMap<String, List<Integer>>();
+#
+#        // Java 7: diamond operator infers the type arguments
+#        Map<String, List<Integer>> map = new HashMap<>();
+#
+#      The compiler infers the type arguments from the left-hand side of the
+#      assignment (or from the target type in method arguments). This is a
+#      limited form of type inference — full local variable type inference
+#      (`var`) does not arrive until Java 10.
+#
+#      Grammatically, the diamond is simply empty type_arguments: `<>` is
+#      parsed as LESS_THAN immediately followed by GREATER_THAN, with no
+#      type_argument list between them.
+#
+#   2. TRY-WITH-RESOURCES — Automatic resource management using the
+#      AutoCloseable interface. Resources declared in the try header are
+#      automatically closed when the try block exits (whether normally or
+#      via exception):
+#
+#        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+#            return br.readLine();
+#        }
+#
+#      This replaces the verbose and error-prone finally-based pattern:
+#
+#        BufferedReader br = null;
+#        try {
+#            br = new BufferedReader(new FileReader(path));
+#            return br.readLine();
+#        } finally {
+#            if (br != null) br.close();  // and what if close() throws?
+#        }
+#
+#      Multiple resources can be declared, separated by semicolons:
+#
+#        try (InputStream in = new FileInputStream(src);
+#             OutputStream out = new FileOutputStream(dst)) {
+#            // copy bytes
+#        }
+#
+#      Resources are closed in reverse declaration order. If both the try
+#      block and the close() method throw exceptions, the close exception
+#      is "suppressed" (added to the try exception via addSuppressed()).
+#
+#      The resource type must implement java.lang.AutoCloseable (a new
+#      interface in Java 7 that is a supertype of the existing Closeable).
+#
+#   3. MULTI-CATCH — A single catch clause can handle multiple exception
+#      types, separated by `|` (the pipe/bitwise-OR token):
+#
+#        try {
+#            // code that might throw different exceptions
+#        } catch (IOException | SQLException e) {
+#            logger.log(e);
+#        }
+#
+#      This replaces duplicate catch blocks:
+#
+#        // Java 5/6: repetitive catch blocks
+#        catch (IOException e) { logger.log(e); }
+#        catch (SQLException e) { logger.log(e); }
+#
+#      The caught variable `e` is implicitly final in a multi-catch clause.
+#      The declared type of `e` is the least upper bound of the listed
+#      exception types (a union type that exists only in the catch clause).
+#
+#      The exception types in a multi-catch must be disjoint — you cannot
+#      list a type and its supertype (e.g., `Exception | IOException` is
+#      illegal because IOException is a subtype of Exception). This is a
+#      semantic constraint, not a syntactic one.
+#
+#   4. STRINGS IN SWITCH — The switch statement now accepts String
+#      expressions in addition to the previously supported char, byte,
+#      short, int, and enum types:
+#
+#        switch (command) {
+#            case "start":  start();  break;
+#            case "stop":   stop();   break;
+#            case "status": status(); break;
+#            default:       help();   break;
+#        }
+#
+#      The compiler implements this using String.hashCode() for efficiency,
+#      but the behavior is specified as equivalent to a chain of
+#      String.equals() comparisons. Null causes a NullPointerException.
+#
+#      This requires NO grammar change — the switch statement already
+#      accepts arbitrary expressions. The restriction to integer types
+#      was a semantic constraint enforced by the compiler, and Java 7
+#      simply relaxes that constraint to include String.
+#
+#   5. @SafeVarargs ANNOTATION — Suppresses heap pollution warnings for
+#      varargs methods with non-reifiable element types. This is a
+#      semantic feature with no grammar impact.
+#
+#   6. IMPROVED TYPE INFERENCE — Better inference for generic method
+#      invocations. Purely semantic, no grammar changes.
+#
+# This grammar includes ALL features from prior versions:
+#   - Java 1.0 (1996): classes, interfaces, methods, fields, constructors,
+#     static initializers, all statements and expressions
+#   - Java 1.1 (1997): inner classes, anonymous classes, instance initializers
+#   - Java 1.2 (1998): strictfp modifier on classes, interfaces, and methods
+#   - Java 1.4 (2002): assert statement
+#   - Java 5 (2004):   generics, enums, annotations, enhanced for, varargs,
+#                       static imports
+#   - Java 7 (2011):   diamond operator, try-with-resources, multi-catch,
+#                       strings in switch (semantic), binary literals (lexical),
+#                       underscores in numbers (lexical)
+#
+# Format:
+#   rule_name = definition ;
+#
+# UPPERCASE names reference tokens from java7.tokens.
+# lowercase names reference other grammar rules.
+#
+# Notation:
+#   |       alternation (ordered choice — PEG semantics, first match wins)
+#   { x }   zero or more repetitions
+#   [ x ]   optional
+#   ( x )   grouping
+#   "lit"   match a keyword (lexer emits KEYWORD token with this value)
+#
+# IMPORTANT: The lexer reclassifies all keyword names as KEYWORD tokens.
+# Grammar rules must therefore use "keyword_value" (quoted literals) to
+# match specific keywords, not a KEYWORD token type directly.
+#
+# IMPORTANT: No left recursion allowed. The parser uses PEG semantics with
+# packrat memoization. Use iterative form: `a { op b }` instead of `a = a op b`.
+
+# ============================================================================
+# Compilation Unit (Entry Point)
+# ============================================================================
+#
+# A Java source file is called a "compilation unit." Every .java file has
+# the same top-level structure:
+#
+#   1. An optional package declaration (what namespace does this file live in?)
+#   2. Zero or more import declarations (what other packages do we reference?)
+#   3. Zero or more type declarations (the actual classes, interfaces, enums,
+#      and annotation types)
+#
+# This structure is unchanged from Java 5. Package declarations can carry
+# annotations (in package-info.java files).
+#
+# Reference: JLS Java SE 7 Edition, Section 7.3
+
+program = { program_item } ;
+program_item = package_declaration | import_declaration | type_declaration | method_declaration | statement ;
+compilation_unit = { annotation } [ package_declaration ]
+                   { import_declaration }
+                   { type_declaration } ;
+
+# ============================================================================
+# Package Declaration
+# ============================================================================
+#
+# Packages provide namespacing. A package declaration like:
+#
+#   package java.util;
+#
+# means this file belongs to the java.util package. If no package declaration
+# is present, the class belongs to the unnamed "default" package.
+#
+# Packages can be annotated (in package-info.java):
+#
+#   @Deprecated
+#   package com.example.legacy;
+#
+# Reference: JLS Java SE 7 Edition, Section 7.4
+
+package_declaration = "package" qualified_name SEMICOLON ;
+
+# ============================================================================
+# Import Declarations
+# ============================================================================
+#
+# Java has four import forms (unchanged since Java 5):
+#
+#   import java.util.List;                      — single type import
+#   import java.util.*;                         — type import on demand
+#   import static java.lang.Math.PI;            — single static import
+#   import static java.lang.Math.*;             — static import on demand
+#
+# Reference: JLS Java SE 7 Edition, Section 7.5
+
+import_declaration = "import" [ "static" ] qualified_name [ DOT STAR ] SEMICOLON ;
+
+# ============================================================================
+# Type Declarations
+# ============================================================================
+#
+# A type declaration is one of:
+#
+#   - A class declaration (since 1.0)
+#   - An interface declaration (since 1.0)
+#   - An enum declaration (since Java 5)
+#   - An annotation type declaration (since Java 5)
+#   - A stray semicolon (permitted at top level)
+#
+# No new type declaration forms in Java 7.
+#
+# Reference: JLS Java SE 7 Edition, Section 7.6
+
+type_declaration = class_declaration
+                 | interface_declaration
+                 | enum_declaration
+                 | annotation_type_declaration
+                 | SEMICOLON ;
+
+# ============================================================================
+# Qualified Names
+# ============================================================================
+#
+# A qualified name is a dot-separated sequence of identifiers, used for
+# package names, class names, and field access chains:
+#
+#   java.lang.Object
+#   System.out.println
+#   com.sun.tools.javac
+
+qualified_name = NAME { DOT NAME } ;
+
+# ============================================================================
+# Annotations
+# ============================================================================
+#
+# Annotations are metadata declarations that begin with the @ symbol,
+# introduced in Java 5. Java 7 adds the @SafeVarargs annotation for
+# suppressing heap pollution warnings on varargs methods, but this is a
+# library addition — no grammar change needed.
+#
+# The three syntactic forms remain:
+#
+#   @Override                              — marker annotation (no arguments)
+#   @SuppressWarnings("unchecked")         — single-element annotation
+#   @Author(name="Gosling", year=1996)     — normal annotation (key=value pairs)
+#
+# Reference: JLS Java SE 7 Edition, Section 9.7
+
+annotation = AT qualified_name [ LPAREN [ element_value_pairs | element_value ] RPAREN ] ;
+
+# The annotations rule matches zero or more annotations. It is used as a
+# prefix in many declaration contexts (class modifiers, method modifiers,
+# field modifiers, parameters, etc.).
+
+annotations = { annotation } ;
+
+# Element value pairs for normal annotations:
+#   @Table(name = "users", schema = "public")
+
+element_value_pairs = element_value_pair { COMMA element_value_pair } ;
+
+element_value_pair = NAME EQUALS element_value ;
+
+# An element value can be one of three things:
+#
+#   1. An expression — typically a literal or constant:
+#      @Version(1)
+#      @Name("hello")
+#
+#   2. Another annotation — annotations can nest:
+#      @Outer(@Inner("value"))
+#
+#   3. An element value array — array initializer syntax:
+#      @SuppressWarnings({"unchecked", "deprecation"})
+
+element_value = annotation
+             | element_value_array
+             | expression ;
+
+# Element value arrays use curly braces like array initializers:
+#   @SuppressWarnings({"unchecked", "rawtypes"})
+#
+# A trailing comma is permitted.
+
+element_value_array = LBRACE [ element_value { COMMA element_value } ] [ COMMA ] RBRACE ;
+
+# ============================================================================
+# Annotation Type Declarations
+# ============================================================================
+#
+# An annotation type is defined with @interface (the AT token followed by
+# the "interface" keyword):
+#
+#   public @interface Author {
+#       String name();
+#       int year() default 2004;
+#       String[] reviewers() default {};
+#   }
+#
+# Annotation types are unchanged from Java 5.
+#
+# Reference: JLS Java SE 7 Edition, Section 9.6
+
+annotation_type_declaration = { class_modifier } AT "interface" NAME
+                              annotation_type_body ;
+
+annotation_type_body = LBRACE { annotation_type_element_declaration } RBRACE ;
+
+annotation_type_element_declaration = annotation_element_declaration
+                                    | field_declaration
+                                    | class_declaration
+                                    | interface_declaration
+                                    | enum_declaration
+                                    | annotation_type_declaration
+                                    | SEMICOLON ;
+
+annotation_element_declaration = { method_modifier } type NAME LPAREN RPAREN
+                                 [ "default" element_value ] SEMICOLON ;
+
+# ============================================================================
+# Class Declarations
+# ============================================================================
+#
+# A class declaration in Java 7 is syntactically identical to Java 5:
+#
+#   @Entity
+#   public abstract class Animal<T extends Comparable<T>>
+#       extends LivingThing
+#       implements Drawable, Serializable {
+#       // fields, methods, constructors, initializers, nested types
+#   }
+#
+# The diamond operator affects how class instances are CREATED (in new
+# expressions), not how classes are DECLARED.
+#
+# Reference: JLS Java SE 7 Edition, Section 8.1
+
+class_declaration = { class_modifier } "class" NAME [ type_parameters ]
+                    [ "extends" class_type ]
+                    [ "implements" interface_type_list ]
+                    class_body ;
+
+# Class modifiers include annotations and keyword modifiers. The `strictfp`
+# modifier (from Java 1.2) forces strict IEEE 754 floating-point arithmetic.
+
+class_modifier = annotation
+               | "public"
+               | "protected"
+               | "private"
+               | "abstract"
+               | "final"
+               | "static"
+               | "strictfp" ;
+
+# The class body contains fields, methods, constructors, initializers, and
+# nested type declarations. Unchanged from Java 5.
+#
+# Reference: JLS Java SE 7 Edition, Section 8.1.6
+
+class_body = LBRACE { class_body_declaration } RBRACE ;
+
+class_body_declaration = static_initializer
+                       | instance_initializer
+                       | constructor_declaration
+                       | method_declaration
+                       | field_declaration
+                       | class_declaration
+                       | interface_declaration
+                       | enum_declaration
+                       | annotation_type_declaration
+                       | SEMICOLON ;
+
+# ============================================================================
+# Interface Declarations
+# ============================================================================
+#
+# Interfaces in Java 7 are syntactically unchanged from Java 5. Default
+# methods (which fundamentally change interfaces) don't arrive until Java 8.
+#
+#   public interface Comparable<T> {
+#       int compareTo(T o);
+#   }
+#
+# Reference: JLS Java SE 7 Edition, Section 9.1
+
+interface_declaration = { interface_modifier } "interface" NAME [ type_parameters ]
+                        [ "extends" interface_type_list ]
+                        interface_body ;
+
+interface_modifier = annotation
+                   | "public"
+                   | "protected"
+                   | "private"
+                   | "abstract"
+                   | "static"
+                   | "strictfp" ;
+
+interface_body = LBRACE { interface_body_declaration } RBRACE ;
+
+interface_body_declaration = interface_method_declaration
+                           | interface_field_declaration
+                           | class_declaration
+                           | interface_declaration
+                           | enum_declaration
+                           | annotation_type_declaration
+                           | SEMICOLON ;
+
+# Interface fields are constant declarations — implicitly public, static, final.
+
+interface_field_declaration = { field_modifier } type variable_declarators SEMICOLON ;
+
+# Interface methods are abstract method signatures — implicitly public, abstract.
+
+interface_method_declaration = { interface_method_modifier } [ type_parameters ]
+                              result_type method_declarator [ throws_clause ] SEMICOLON ;
+
+interface_method_modifier = annotation
+                          | "public"
+                          | "abstract" ;
+
+# An interface type list is used in both `implements` (for classes) and
+# `extends` (for interfaces).
+
+interface_type_list = class_type { COMMA class_type } ;
+
+# ============================================================================
+# Enum Declarations
+# ============================================================================
+#
+# Enums are type-safe enumerated constants, introduced in Java 5.
+# Unchanged in Java 7.
+#
+#   public enum Season { SPRING, SUMMER, FALL, WINTER }
+#
+#   public enum Planet {
+#       MERCURY(3.303e+23, 2.4397e6),
+#       VENUS  (4.869e+24, 6.0518e6),
+#       EARTH  (5.976e+24, 6.37814e6);
+#
+#       private final double mass;
+#       private final double radius;
+#
+#       Planet(double mass, double radius) {
+#           this.mass = mass;
+#           this.radius = radius;
+#       }
+#   }
+#
+# Reference: JLS Java SE 7 Edition, Section 8.9
+
+enum_declaration = { class_modifier } "enum" NAME
+                   [ "implements" interface_type_list ]
+                   enum_body ;
+
+# The enum body starts with enum constants (comma-separated), optionally
+# followed by a semicolon and class body declarations.
+
+enum_body = LBRACE [ enum_constant_list ] [ COMMA ] [ SEMICOLON { class_body_declaration } ] RBRACE ;
+
+enum_constant_list = enum_constant { COMMA enum_constant } ;
+
+# Each enum constant can be annotated, can have constructor arguments,
+# and can have its own class body (creating an anonymous subclass).
+
+enum_constant = annotations NAME [ LPAREN [ argument_list ] RPAREN ] [ class_body ] ;
+
+# ============================================================================
+# Generics — Type Parameters and Type Arguments
+# ============================================================================
+#
+# Generics were introduced in Java 5 and are syntactically unchanged in
+# Java 7. The big change is the DIAMOND OPERATOR, which affects how type
+# arguments are used in `new` expressions — but the type_parameters and
+# type_arguments rules themselves are identical to Java 5.
+#
+# --- Type Parameters (Declaration Side) ---
+#
+# Type parameters appear in angle brackets after the name of a class,
+# interface, or method:
+#
+#   <T>                           — unbounded type parameter
+#   <T extends Number>            — bounded
+#   <T extends Comparable<T>>     — recursive bound (F-bounded polymorphism)
+#   <K, V>                        — multiple type parameters
+#   <T extends A & B & C>         — intersection bound
+#
+# Reference: JLS Java SE 7 Edition, Section 4.4, 4.5
+
+type_parameters = LESS_THAN type_parameter { COMMA type_parameter } GREATER_THAN ;
+
+type_parameter = NAME [ "extends" bound ] ;
+
+# A bound is one or more types joined by `&` (intersection types):
+#
+#   <T extends Number & Comparable<T> & Serializable>
+
+bound = class_type { AMPERSAND class_type } ;
+
+# --- Type Arguments (Use Side) ---
+#
+# Type arguments appear in angle brackets after a class or interface name
+# when USING a generic type:
+#
+#   List<String>                       — concrete type argument
+#   Map<String, Integer>               — multiple type arguments
+#   List<?>                            — unbounded wildcard
+#   List<? extends Number>             — upper-bounded wildcard
+#   List<? super Integer>              — lower-bounded wildcard
+#
+# DIAMOND OPERATOR (Java 7):
+#
+# The diamond `<>` is syntactically empty type_arguments — LESS_THAN
+# immediately followed by GREATER_THAN with no type_argument in between.
+# It is handled by the type_arguments_or_diamond rule used in `new`
+# expressions. The standalone type_arguments rule still requires at least
+# one type_argument, because in type contexts (variable declarations,
+# extends clauses, etc.) the diamond is not valid — you must spell out
+# the full type arguments.
+#
+# Example showing where diamond is and is not valid:
+#
+#   List<String> list = new ArrayList<>();     // diamond OK (new expression)
+#   List<String> list = new ArrayList<String>(); // explicit also OK
+#   List<> list;                               // ILLEGAL — diamond only in new
+#   public class Box<> { }                     // ILLEGAL — diamond only in new
+
+type_arguments = LESS_THAN type_argument { COMMA type_argument } GREATER_THAN ;
+
+type_argument = type
+              | QUESTION [ ( "extends" | "super" ) type ] ;
+
+# The diamond-aware type arguments rule. Used exclusively in `new` expressions
+# where the diamond operator `<>` is permitted. This rule tries the empty
+# diamond first (PEG ordered choice), then falls back to full type arguments.
+#
+# Why a separate rule? Because the diamond is ONLY valid in class instance
+# creation expressions (`new`). In all other type contexts — variable
+# declarations, method return types, extends/implements clauses, cast
+# expressions — you must provide full type arguments. Having a separate
+# rule keeps this constraint in the grammar rather than requiring a
+# semantic check.
+
+type_arguments_or_diamond = LESS_THAN GREATER_THAN
+                          | type_arguments ;
+
+# ============================================================================
+# Field Declarations
+# ============================================================================
+#
+# Fields are the instance and class variables of a class. Unchanged from
+# Java 5 syntactically, though fields can now be initialized using the
+# diamond operator:
+#
+#   private List<String> names = new ArrayList<>();
+#   private Map<String, List<Integer>> index = new HashMap<>();
+#
+# Reference: JLS Java SE 7 Edition, Section 8.3
+
+field_declaration = { field_modifier } type variable_declarators SEMICOLON ;
+
+field_modifier = annotation
+               | "public"
+               | "protected"
+               | "private"
+               | "static"
+               | "final"
+               | "transient"
+               | "volatile" ;
+
+# Variable declarators: a comma-separated list of variable names with
+# optional initializers and optional array dimension brackets.
+#
+#   int x, y = 5, z[] = {1, 2, 3};
+
+variable_declarators = variable_declarator { COMMA variable_declarator } ;
+
+variable_declarator = NAME { LBRACKET RBRACKET } [ EQUALS variable_initializer ] ;
+
+# A variable initializer is either an expression or an array initializer.
+
+variable_initializer = expression
+                     | array_initializer ;
+
+# Array initializers use curly braces and can be nested for multi-
+# dimensional arrays. A trailing comma is permitted.
+#
+#   int[][] matrix = {{1, 2}, {3, 4}};
+
+array_initializer = LBRACE [ variable_initializer { COMMA variable_initializer } ] [ COMMA ] RBRACE ;
+
+# ============================================================================
+# Method Declarations
+# ============================================================================
+#
+# Methods are unchanged from Java 5. The @SafeVarargs annotation (new in
+# Java 7) can be applied to varargs methods, but this is an annotation —
+# no grammar change needed.
+#
+#   @SafeVarargs
+#   public static <T> List<T> asList(T... elements) {
+#       return Arrays.asList(elements);
+#   }
+#
+# Reference: JLS Java SE 7 Edition, Section 8.4
+
+method_declaration = { method_modifier } [ type_parameters ] result_type method_declarator
+                     [ throws_clause ] method_body ;
+
+method_modifier = annotation
+                | "public"
+                | "protected"
+                | "private"
+                | "static"
+                | "abstract"
+                | "final"
+                | "synchronized"
+                | "native"
+                | "strictfp" ;
+
+# The result type is either a type (the method returns a value) or void.
+
+result_type = "void"
+            | type ;
+
+# The method declarator includes the name, parameter list, and optional
+# trailing bracket pairs (the C-ism: `int getValues()[]`).
+
+method_declarator = NAME LPAREN [ formal_parameter_list ] RPAREN { LBRACKET RBRACKET } ;
+
+# ============================================================================
+# Formal Parameters and Varargs
+# ============================================================================
+#
+# Unchanged from Java 5. The last parameter in a method can use the `...`
+# (ellipsis) syntax for varargs:
+#
+#   void printf(String format, Object... args)
+#
+# Parameters can be annotated and declared final:
+#
+#   void process(@NonNull final String name, @Nullable Object... extras)
+#
+# Reference: JLS Java SE 7 Edition, Section 8.4.1
+
+formal_parameter_list = formal_parameter { COMMA formal_parameter }
+                      | formal_parameter { COMMA formal_parameter } COMMA varargs_parameter
+                      | varargs_parameter ;
+
+formal_parameter = { annotation } [ "final" ] type NAME { LBRACKET RBRACKET } ;
+
+varargs_parameter = { annotation } [ "final" ] type ELLIPSIS NAME ;
+
+# The throws clause lists the checked exceptions a method may throw.
+
+throws_clause = "throws" class_type { COMMA class_type } ;
+
+# The method body is either a block or a semicolon (for abstract/native methods).
+
+method_body = block
+            | SEMICOLON ;
+
+# ============================================================================
+# Constructor Declarations
+# ============================================================================
+#
+# Constructors initialize new objects. Unchanged from Java 5.
+#
+#   @Inject
+#   public <T extends Config> Service(T config, Logger... loggers) {
+#       this.config = config;
+#   }
+#
+# Reference: JLS Java SE 7 Edition, Section 8.8
+
+constructor_declaration = { constructor_modifier } [ type_parameters ] NAME
+                          LPAREN [ formal_parameter_list ] RPAREN
+                          [ throws_clause ] constructor_body ;
+
+constructor_modifier = annotation
+                     | "public"
+                     | "protected"
+                     | "private" ;
+
+constructor_body = LBRACE [ explicit_constructor_invocation ] { block_statement } RBRACE ;
+
+# Explicit constructor invocation: `this(args)` or `super(args)`.
+
+explicit_constructor_invocation = [ type_arguments ] "this" LPAREN [ argument_list ] RPAREN SEMICOLON
+                                | [ type_arguments ] "super" LPAREN [ argument_list ] RPAREN SEMICOLON ;
+
+# ============================================================================
+# Static Initializers and Instance Initializers
+# ============================================================================
+#
+# Unchanged from Java 1.1.
+#
+# Static initializer:
+#   static { Properties defaults = new Properties(); ... }
+#
+# Instance initializer (most useful in anonymous classes):
+#   List<String> names = new ArrayList<String>() {{
+#       add("Alice");
+#       add("Bob");
+#   }};
+#
+# Reference: JLS Java SE 7 Edition, Section 8.6, 8.7
+
+static_initializer = "static" block ;
+
+instance_initializer = block ;
+
+# ============================================================================
+# Type System
+# ============================================================================
+#
+# The type system is unchanged from Java 5. Java 7's diamond operator
+# affects type INFERENCE (how the compiler deduces type arguments) but
+# not the grammar of type expressions themselves.
+#
+#   Type                        Example
+#   ----                        -------
+#   Primitive type              int, boolean, double
+#   Raw class type              Object, String, List
+#   Parameterized type          List<String>, Map<K, V>
+#   Wildcard parameterized      List<?>, List<? extends Number>
+#   Array of primitive          int[], double[][]
+#   Array of reference          String[], List<String>[]
+#
+# Reference: JLS Java SE 7 Edition, Chapter 4
+
+type = primitive_type { LBRACKET RBRACKET }
+     | class_type { LBRACKET RBRACKET } ;
+
+# The eight primitive types. Autoboxing (from Java 5) requires no grammar
+# changes.
+
+primitive_type = "boolean"
+               | "byte"
+               | "short"
+               | "int"
+               | "long"
+               | "char"
+               | "float"
+               | "double" ;
+
+# A class type is a reference to a class or interface, identified by its
+# qualified name with optional type arguments:
+#
+#   String
+#   java.util.List
+#   List<String>
+#   Map<String, List<Integer>>
+
+class_type = qualified_name [ type_arguments ] ;
+
+# ============================================================================
+# Statements
+# ============================================================================
+#
+# Java 7 adds ONE new statement form: try-with-resources. All other
+# statements are inherited from Java 5 unchanged.
+#
+# The try_with_resources_statement is listed as a separate alternative
+# alongside the existing try_statement. Both share catch_clause and
+# finally_clause, but differ in their opening: try-with-resources has
+# a parenthesized resource list before the block.
+#
+# The switch statement now accepts String expressions (in addition to
+# char, byte, short, int, and enum types), but this requires NO grammar
+# change — switch already accepted arbitrary expressions, and the type
+# restriction was a semantic constraint relaxed by the compiler.
+#
+# Reference: JLS Java SE 7 Edition, Chapter 14
+
+statement = block
+          | var_declaration
+          | empty_statement
+          | expression_statement
+          | if_statement
+          | while_statement
+          | do_while_statement
+          | for_statement
+          | enhanced_for_statement
+          | switch_statement
+          | try_with_resources_statement
+          | try_statement
+          | throw_statement
+          | return_statement
+          | break_statement
+          | continue_statement
+          | synchronized_statement
+          | assert_statement
+          | labelled_statement ;
+
+# --- Block ---
+#
+# A block is a sequence of statements enclosed in curly braces.
+
+block = LBRACE { block_statement } RBRACE ;
+
+# Block statements include both statements and local variable declarations.
+
+block_statement = var_declaration
+                | class_declaration
+               | statement ;
+
+# --- Local Variable Declaration ---
+#
+# Local variables can include annotations and use generic types.
+# The diamond operator can be used in the initializer:
+#
+#   List<String> names = new ArrayList<>();
+#   Map<String, List<Integer>> index = new HashMap<>();
+#
+# Reference: JLS Java SE 7 Edition, Section 14.4
+
+var_declaration = local_variable_declaration_statement ;
+
+local_variable_declaration_statement = { annotation } [ "final" ] type variable_declarators SEMICOLON ;
+
+# --- Empty Statement ---
+#
+# Just a semicolon.
+
+empty_statement = SEMICOLON ;
+
+# --- Expression Statement ---
+#
+# An expression used as a statement. Only assignment, increment/decrement,
+# method invocations, and object creation are allowed (semantic check).
+
+expression_statement = expression SEMICOLON ;
+
+# --- If/Else ---
+#
+# The dangling-else ambiguity is resolved by PEG ordered choice — `else`
+# always binds to the nearest `if`.
+
+if_statement = "if" LPAREN expression RPAREN statement [ "else" statement ] ;
+
+# --- While Loop ---
+
+while_statement = "while" LPAREN expression RPAREN statement ;
+
+# --- Do-While Loop ---
+
+do_while_statement = "do" statement "while" LPAREN expression RPAREN SEMICOLON ;
+
+# --- Classic For Loop ---
+#
+# The C-style three-part for loop, unchanged since Java 1.0:
+#
+#   for (int i = 0; i < array.length; i++) {
+#       System.out.println(array[i]);
+#   }
+#
+# Reference: JLS Java SE 7 Edition, Section 14.14.1
+
+for_statement = "for" LPAREN for_init SEMICOLON [ expression ] SEMICOLON [ for_update ] RPAREN
+                statement ;
+
+for_init = { annotation } [ "final" ] type variable_declarators
+         | [ expression_list ] ;
+
+for_update = expression_list ;
+
+expression_list = expression { COMMA expression } ;
+
+# --- Enhanced For (For-Each) Loop ---
+#
+# Unchanged from Java 5. Eliminates iterator boilerplate:
+#
+#   for (String s : list) {
+#       System.out.println(s);
+#   }
+#
+# Reference: JLS Java SE 7 Edition, Section 14.14.2
+
+enhanced_for_statement = "for" LPAREN { annotation } [ "final" ] type NAME COLON expression RPAREN
+                         statement ;
+
+# --- Switch Statement ---
+#
+# Java 7 allows String expressions in switch statements. This was one of
+# the most requested features — String switching was a FAQ item since the
+# 1990s. Before Java 7, the workaround was a chain of if/else-if with
+# String.equals() calls.
+#
+# The compiler implements String switching in two phases:
+#   1. Switch on the String's hashCode() to narrow down candidates
+#   2. Use equals() to verify (handling hash collisions)
+#
+# This is more efficient than a linear chain of equals() calls for large
+# switch statements, since hash-based dispatch is O(1).
+#
+# Grammatically, nothing changes — switch already accepted expressions,
+# and the case labels already accepted expressions. The restriction to
+# integer/enum types was purely semantic.
+#
+# Reference: JLS Java SE 7 Edition, Section 14.11
+
+switch_statement = "switch" LPAREN expression RPAREN switch_block ;
+
+switch_block = LBRACE { switch_block_statement_group } { switch_label } RBRACE ;
+
+switch_block_statement_group = switch_label { switch_label } { block_statement } ;
+
+switch_label = "case" expression COLON
+             | "default" COLON ;
+
+# ============================================================================
+# Try-With-Resources (NEW in Java 7)
+# ============================================================================
+#
+# The try-with-resources statement is the most significant syntactic
+# addition in Java 7. It automates the pattern of acquiring a resource,
+# using it, and then closing it — regardless of whether an exception is
+# thrown.
+#
+# Before Java 7, proper resource cleanup required verbose, error-prone
+# finally blocks:
+#
+#   InputStream in = null;
+#   try {
+#       in = new FileInputStream("data.txt");
+#       // use the stream
+#   } catch (IOException e) {
+#       handleError(e);
+#   } finally {
+#       if (in != null) {
+#           try {
+#               in.close();
+#           } catch (IOException e) {
+#               // swallowed! this is the bug-prone part
+#           }
+#       }
+#   }
+#
+# With try-with-resources, this becomes:
+#
+#   try (InputStream in = new FileInputStream("data.txt")) {
+#       // use the stream
+#   } catch (IOException e) {
+#       handleError(e);
+#   }
+#   // in.close() is called automatically, even if an exception was thrown
+#
+# Key behaviors:
+#
+#   - Resources are closed in REVERSE declaration order (last opened, first
+#     closed). This handles dependent resources correctly:
+#
+#       try (FileInputStream fis = new FileInputStream(file);
+#            BufferedInputStream bis = new BufferedInputStream(fis)) {
+#           // bis wraps fis; closing bis first is correct
+#       }
+#
+#   - If both the try block and close() throw exceptions, the close()
+#     exception is SUPPRESSED — it is attached to the primary exception
+#     via the new Throwable.addSuppressed() method. Before Java 7, the
+#     close() exception would silently replace the original exception,
+#     making debugging extremely difficult.
+#
+#   - The resource variable is implicitly final (you cannot reassign it
+#     inside the try block). This is a semantic constraint.
+#
+#   - The resource type must implement java.lang.AutoCloseable (new in
+#     Java 7), which is a supertype of the existing java.io.Closeable
+#     interface. AutoCloseable has a single method: void close() throws
+#     Exception. The broader throws clause (Exception vs IOException)
+#     makes try-with-resources usable for non-IO resources like database
+#     connections and locks.
+#
+# The catch and finally clauses are optional — a try-with-resources
+# statement can stand alone:
+#
+#   try (Lock lock = acquireLock()) {
+#       // do work under lock
+#   }
+#   // lock.close() releases it — no catch or finally needed
+#
+# This is different from the classic try statement, which REQUIRES at
+# least one catch or finally clause.
+#
+# Reference: JLS Java SE 7 Edition, Section 14.20.3
+
+try_with_resources_statement = "try" LPAREN resource_list [ SEMICOLON ] RPAREN
+                               block
+                               { catch_clause }
+                               [ finally_clause ] ;
+
+# The resource list is one or more resource declarations separated by
+# semicolons. A trailing semicolon after the last resource is permitted
+# (handled in the rule above).
+#
+# Multiple resources example:
+#
+#   try (Connection conn = dataSource.getConnection();
+#        PreparedStatement stmt = conn.prepareStatement(sql);
+#        ResultSet rs = stmt.executeQuery()) {
+#       while (rs.next()) { ... }
+#   }
+
+resource_list = resource { SEMICOLON resource } ;
+
+# Each resource is a local variable declaration with an initializer.
+# It looks like a simplified local variable declaration:
+#
+#   ResourceType name = initializer_expression
+#
+# Resources can be annotated and/or declared final:
+#
+#   @SuppressWarnings("resource") final InputStream in = openStream()
+#
+# In Java 9, this rule will be relaxed to allow effectively-final existing
+# variables as resources (e.g., `try (existingVar) { ... }`), but in
+# Java 7, every resource must be a fresh variable declaration.
+
+resource = { annotation } [ "final" ] type NAME EQUALS expression ;
+
+# ============================================================================
+# Try/Catch/Finally and Multi-Catch (UPDATED in Java 7)
+# ============================================================================
+#
+# The classic try statement requires at least one catch clause or a finally
+# clause (or both). This is unchanged from Java 1.0.
+#
+#   try { ... } catch (Exception e) { ... }
+#   try { ... } finally { ... }
+#   try { ... } catch (Exception e) { ... } finally { ... }
+#
+# What IS new in Java 7 is the MULTI-CATCH clause. A single catch can
+# now handle multiple exception types separated by `|`:
+#
+#   try {
+#       // code that might throw different exceptions
+#   } catch (IOException | SQLException e) {
+#       logger.log(e.getMessage());
+#       throw e;    // compiler knows e is IOException | SQLException
+#   } catch (RuntimeException e) {
+#       // handle separately
+#   }
+#
+# The multi-catch clause solves a real problem: before Java 7, handling
+# multiple exception types the same way required either:
+#
+#   1. Duplicate catch blocks (violates DRY):
+#      catch (IOException e) { log(e); }
+#      catch (SQLException e) { log(e); }
+#
+#   2. Catching a common supertype (too broad):
+#      catch (Exception e) { log(e); }  // catches too much!
+#
+# Multi-catch gives you the precision of (1) with the conciseness of (2).
+#
+# Semantic details:
+#   - The caught variable `e` is implicitly final in a multi-catch (you
+#     cannot reassign it). In a single-catch, it is NOT implicitly final.
+#   - The exception types must be disjoint — listing a type and its
+#     supertype (e.g., `Exception | IOException`) is a compile error.
+#   - The declared type of the caught variable is the union of the listed
+#     types. When rethrowing, the compiler performs precise rethrow
+#     analysis to determine which specific type(s) are being thrown.
+#
+# Reference: JLS Java SE 7 Edition, Section 14.20
+
+try_statement = "try" block ( catch_clause { catch_clause } [ finally_clause ]
+                            | finally_clause ) ;
+
+# --- Catch Clause (UPDATED for Multi-Catch) ---
+#
+# The catch clause parameter is now a catch_type (one or more class types
+# separated by PIPE) instead of a single type. This is the syntactic
+# change that enables multi-catch.
+#
+# Single catch (unchanged):
+#   catch (IOException e) { ... }
+#
+# Multi-catch (new):
+#   catch (IOException | SQLException | ClassNotFoundException e) { ... }
+#
+# The catch parameter can still be annotated and/or declared final:
+#   catch (@SuppressWarnings("unused") final IOException | SQLException e) { ... }
+#
+# Note: In a multi-catch, the parameter is IMPLICITLY final even without
+# the `final` keyword. Explicitly writing `final` is allowed but redundant.
+
+catch_clause = "catch" LPAREN { annotation } [ "final" ] catch_type NAME RPAREN block ;
+
+# The catch_type rule: one or more class types separated by PIPE.
+#
+# For a single exception type: catch_type matches just one class_type.
+# For multi-catch: catch_type matches class_type PIPE class_type PIPE ...
+#
+# The PIPE token `|` is the same bitwise OR operator that has existed
+# since Java 1.0. In the catch clause context, it separates exception
+# types. The grammar disambiguates because PIPE appears between types
+# (not expressions) inside a catch parameter declaration.
+
+catch_type = class_type { PIPE class_type } ;
+
+finally_clause = "finally" block ;
+
+# --- Throw ---
+#
+# Throws an exception. Unchanged from Java 1.0.
+#
+# Java 7 adds "more precise rethrow" — the compiler can determine the
+# exact exception type being rethrown from a catch clause, enabling more
+# specific throws declarations. This is a semantic improvement, not a
+# grammar change.
+#
+#   catch (IOException | SQLException e) {
+#       throw e;  // compiler knows this throws IOException | SQLException,
+#                 // not just Exception
+#   }
+
+throw_statement = "throw" expression SEMICOLON ;
+
+# --- Return ---
+
+return_statement = "return" [ expression ] SEMICOLON ;
+
+# --- Break and Continue ---
+#
+# Both can optionally target a label for nested loop control:
+#
+#   outer:
+#   for (int i = 0; i < rows; i++) {
+#       for (int j = 0; j < cols; j++) {
+#           if (found(i, j)) break outer;
+#       }
+#   }
+
+break_statement = "break" [ NAME ] SEMICOLON ;
+
+continue_statement = "continue" [ NAME ] SEMICOLON ;
+
+# --- Synchronized Statement ---
+
+synchronized_statement = "synchronized" LPAREN expression RPAREN block ;
+
+# --- Assert Statement (from Java 1.4) ---
+#
+#   assert x > 0;
+#   assert x > 0 : "x must be positive: " + x;
+
+assert_statement = "assert" expression [ COLON expression ] SEMICOLON ;
+
+# --- Labelled Statement ---
+#
+# Any statement can be prefixed with a label.
+
+labelled_statement = NAME COLON statement ;
+
+# ============================================================================
+# Expressions
+# ============================================================================
+#
+# Java 7 expressions are nearly identical to Java 5 expressions. The
+# precedence model is unchanged — 15 levels from assignment (lowest) to
+# primary (highest).
+#
+# The only expression-level change is in primary expressions, where the
+# `new` expression now supports the diamond operator `<>`:
+#
+#   new ArrayList<>()          // diamond infers String from context
+#   new HashMap<>(16)          // diamond with constructor arguments
+#   new TreeMap<>(comparator)  // diamond with constructor arguments
+#
+# Binary literals (0b1010) and underscored numbers (1_000_000) are lexical
+# changes handled by the tokenizer — the parser sees them as ordinary
+# NUMBER tokens.
+#
+# Precedence (lowest to highest), unchanged from Java 5:
+#
+#   Level 1:  assignment         =, +=, -=, *=, /=, %=, &=, |=, ^=,
+#                                <<=, >>=, >>>=
+#   Level 2:  ternary            ? :
+#   Level 3:  logical OR         ||
+#   Level 4:  logical AND        &&
+#   Level 5:  bitwise OR         |
+#   Level 6:  bitwise XOR        ^
+#   Level 7:  bitwise AND        &
+#   Level 8:  equality           ==, !=
+#   Level 9:  relational         <, >, <=, >=, instanceof
+#   Level 10: shift              <<, >>, >>>
+#   Level 11: additive           +, -
+#   Level 12: multiplicative     *, /, %
+#   Level 13: unary              ++x, --x, +x, -x, ~x, !x, (type)x
+#   Level 14: postfix            x++, x--
+#   Level 15: primary            literals, this, super, new, method call,
+#                                field access, array access, parenthesized
+#
+# Reference: JLS Java SE 7 Edition, Chapter 15
+
+# --- Assignment ---
+#
+# Assignment is right-associative: `a = b = c` means `a = (b = c)`.
+
+expression = assignment_expression ;
+
+assignment_expression = unary_expression assignment_operator assignment_expression
+                      | conditional_expression ;
+
+assignment_operator = EQUALS
+                    | PLUS_EQUALS
+                    | MINUS_EQUALS
+                    | STAR_EQUALS
+                    | SLASH_EQUALS
+                    | PERCENT_EQUALS
+                    | AMPERSAND_EQUALS
+                    | PIPE_EQUALS
+                    | CARET_EQUALS
+                    | LEFT_SHIFT_EQUALS
+                    | RIGHT_SHIFT_EQUALS
+                    | UNSIGNED_RIGHT_SHIFT_EQUALS ;
+
+# --- Ternary Conditional ---
+#
+#   int abs = (x >= 0) ? x : -x;
+
+conditional_expression = logical_or_expression
+                         [ QUESTION assignment_expression COLON assignment_expression ] ;
+
+# --- Logical OR ---
+#
+# Short-circuit: if left is true, right is not evaluated.
+#
+#   if (name == null || name.length() == 0) { ... }
+
+logical_or_expression = logical_and_expression { OR_OR logical_and_expression } ;
+
+# --- Logical AND ---
+#
+# Short-circuit: if left is false, right is not evaluated.
+#
+#   if (obj != null && obj.isValid()) { ... }
+
+logical_and_expression = bitwise_or_expression { AND_AND bitwise_or_expression } ;
+
+# --- Bitwise OR ---
+#
+#   int flags = READ | WRITE | EXECUTE;
+
+bitwise_or_expression = bitwise_xor_expression { PIPE bitwise_xor_expression } ;
+
+# --- Bitwise XOR ---
+#
+#   int toggled = flags ^ mask;
+
+bitwise_xor_expression = bitwise_and_expression { CARET bitwise_and_expression } ;
+
+# --- Bitwise AND ---
+#
+#   boolean canRead = (permissions & READ_FLAG) != 0;
+
+bitwise_and_expression = equality_expression { AMPERSAND equality_expression } ;
+
+# --- Equality ---
+#
+# == and != compare by value for primitives, by reference for objects.
+# With autoboxing (from Java 5), this is a subtle trap:
+#
+#   Integer a = 127;  Integer b = 127;  a == b  // true (cached)
+#   Integer c = 128;  Integer d = 128;  c == d  // false! (not cached)
+
+equality_expression = relational_expression
+                      { ( EQUALS_EQUALS | NOT_EQUALS ) relational_expression } ;
+
+# --- Relational ---
+#
+#   if (x < 100) { ... }
+#   if (obj instanceof Serializable) { ... }
+
+relational_expression = shift_expression
+                        { ( LESS_THAN | GREATER_THAN | LESS_EQUALS | GREATER_EQUALS )
+                          shift_expression
+                        | "instanceof" type } ;
+
+# --- Shift ---
+#
+#   <<   left shift (fills with zeros)
+#   >>   signed right shift (fills with sign bit)
+#   >>>  unsigned right shift (fills with zeros)
+#
+# Java 7's binary literals make shift operations more readable:
+#
+#   int mask = 0b1111 << 4;  // shift a binary pattern
+
+shift_expression = additive_expression
+                   { ( LEFT_SHIFT | RIGHT_SHIFT | UNSIGNED_RIGHT_SHIFT ) additive_expression } ;
+
+# --- Additive ---
+#
+#   String greeting = "Hello, " + name + "!";  // string concatenation
+#   int sum = a + b;
+
+additive_expression = multiplicative_expression
+                      { ( PLUS | MINUS ) multiplicative_expression } ;
+
+# --- Multiplicative ---
+#
+#   double area = Math.PI * radius * radius;
+#   int remainder = total % pageSize;
+
+multiplicative_expression = unary_expression
+                            { ( STAR | SLASH | PERCENT ) unary_expression } ;
+
+# --- Unary ---
+#
+# Prefix operators and type casts.
+
+unary_expression = PLUS_PLUS unary_expression
+                 | MINUS_MINUS unary_expression
+                 | PLUS unary_expression
+                 | MINUS unary_expression
+                 | unary_expression_not_plus_minus ;
+
+unary_expression_not_plus_minus = TILDE unary_expression
+                                | BANG unary_expression
+                                | cast_expression
+                                | postfix_expression ;
+
+# --- Cast Expression ---
+#
+# Type casts. In Java 7, cast targets can be parameterized types:
+#
+#   (List<String>) rawList   // unchecked warning due to type erasure
+
+cast_expression = LPAREN primitive_type { LBRACKET RBRACKET } RPAREN unary_expression
+                | LPAREN class_type { LBRACKET RBRACKET } RPAREN unary_expression_not_plus_minus ;
+
+# --- Postfix ---
+#
+# Postfix increment and decrement return the OLD value before modification.
+#
+#   array[i++]     // access element at i, THEN increment
+
+postfix_expression = primary_expression { PLUS_PLUS | MINUS_MINUS } ;
+
+# ============================================================================
+# Primary Expressions
+# ============================================================================
+#
+# Primary expressions are the atoms of the expression grammar. Java 7
+# changes primary expressions in one key way: the `new` expression now
+# supports the DIAMOND OPERATOR.
+#
+# Java 5:
+#   new ArrayList<String>()
+#   new HashMap<String, List<Integer>>()
+#
+# Java 7:
+#   new ArrayList<>()                    // diamond infers String
+#   new HashMap<>()                      // diamond infers String, List<Integer>
+#   new ArrayList<String>()              // explicit still works
+#   new TreeMap<>(Comparator.reverseOrder())  // diamond with args
+#
+# The diamond operator only works with class instance creation (`new`).
+# It does NOT work with:
+#   - Anonymous class creation: `new Comparable<>() { ... }`
+#     was originally forbidden in Java 7 but later allowed in Java 9
+#   - Array creation: `new List<>[5]` — arrays of generic types are
+#     still forbidden
+#
+# Reference: JLS Java SE 7 Edition, Section 15.8-15.12
+
+primary_expression = primary { primary_suffix } ;
+
+# Primary suffixes enable chaining: obj.field.method(arg)[index].other()
+
+primary_suffix = DOT [ type_arguments ] NAME
+               | DOT "class"
+               | DOT "this"
+               | DOT "super"
+               | DOT "new" [ type_arguments ] NAME [ type_arguments_or_diamond ]
+                   LPAREN [ argument_list ] RPAREN [ class_body ]
+               | LPAREN [ argument_list ] RPAREN
+               | LBRACKET expression RBRACKET ;
+
+# The core primary forms. The `new` expression for class instance creation
+# now uses type_arguments_or_diamond to allow the diamond operator.
+#
+# Java 1.1 additions (still present):
+#   - Anonymous class creation: `new Type(args) { body }`
+#   - Qualified this: `Outer.this` (handled via primary_suffix)
+#   - Class literals: `Type.class` (handled via primary_suffix)
+#
+# Java 5 additions (still present):
+#   - Type arguments in new: `new ArrayList<String>()`
+#   - Type arguments in method calls: handled via primary_suffix
+#
+# Java 7 addition:
+#   - Diamond operator in new: `new ArrayList<>()`
+
+primary = literal
+        | "this"
+        | "super" DOT [ type_arguments ] NAME
+        | "super" LPAREN [ argument_list ] RPAREN
+        | "new" [ type_arguments ] class_type_for_new LPAREN [ argument_list ] RPAREN [ class_body ]
+        | "new" array_creation_type array_dimension_exprs { LBRACKET RBRACKET }
+        | "new" array_creation_type { LBRACKET RBRACKET } array_initializer
+        | LPAREN expression RPAREN
+        | NAME ;
+
+# --- Class Type for New Expression (UPDATED for Diamond) ---
+#
+# In a `new` expression, the class type can use either full type arguments
+# or the diamond operator. We use a separate rule to allow this:
+#
+#   new ArrayList<String>()     — full type arguments
+#   new ArrayList<>()           — diamond operator
+#   new ArrayList()             — raw type (no type arguments)
+#
+# The qualified_name matches the class name (possibly package-qualified),
+# and the optional type_arguments_or_diamond allows diamond or full args.
+
+class_type_for_new = qualified_name [ type_arguments_or_diamond ] ;
+
+# --- Argument List ---
+
+argument_list = expression { COMMA expression } ;
+
+# --- Array Creation ---
+#
+# Arrays are created with `new`. The diamond operator does NOT apply to
+# array creation because generic array creation is illegal in Java:
+#
+#   new int[10]                   — dimension expression
+#   new int[3][4]                 — multidimensional
+#   new int[] {1, 2, 3}          — with initializer
+#   new String[5]                 — reference type array
+#   new List<String>[5]          — ILLEGAL (no generic array creation)
+
+array_creation_type = primitive_type
+                    | class_type ;
+
+array_dimension_exprs = LBRACKET expression RBRACKET
+                        { LBRACKET expression RBRACKET } ;
+
+# ============================================================================
+# Literals
+# ============================================================================
+#
+# Java 7 adds binary literals (0b1010) and underscores in numeric literals
+# (1_000_000), but these are LEXICAL changes handled by the tokenizer. The
+# parser sees them as ordinary NUMBER tokens, just like decimal, hex, and
+# octal literals.
+#
+# The six kinds of literals are unchanged from Java 5:
+#
+#   Integer literals:    42, 0xFF, 077, 42L, 0b1010 (NEW), 1_000 (NEW)
+#   Floating-point:      3.14, 2.0e10, 3.14f, 3.14_15 (NEW)
+#   Character literals:  'a', '\n', '\u0041'
+#   String literals:     "hello", "line1\nline2"
+#   Boolean literals:    true, false
+#   Null literal:        null
+#
+# Reference: JLS Java SE 7 Edition, Section 3.10
+
+literal = NUMBER
+        | CHAR
+        | STRING
+        | "true"
+        | "false"
+        | "null" ;

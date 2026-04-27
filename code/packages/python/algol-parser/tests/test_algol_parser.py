@@ -336,6 +336,36 @@ class TestForLoop:
         )
         assert ast.rule_name == "program"
 
+    def test_simple_for_element(self) -> None:
+        """Simple one-shot for-elements parse correctly."""
+        ast = parse(
+            "begin integer i; integer result; "
+            "for i := 5 do result := i "
+            "end"
+        )
+        for_nodes = find_nodes(ast, "for_stmt")
+        assert len(for_nodes) >= 1
+
+    def test_while_for_element(self) -> None:
+        """While for-elements parse correctly."""
+        ast = parse(
+            "begin integer i; integer x; "
+            "for i := x while x > 0 do x := x - 1 "
+            "end"
+        )
+        for_nodes = find_nodes(ast, "for_stmt")
+        assert len(for_nodes) >= 1
+
+    def test_multiple_for_elements(self) -> None:
+        """Comma-separated for-elements parse correctly."""
+        ast = parse(
+            "begin integer i; integer x; integer result; "
+            "for i := 1 step 1 until 3, 5, x while x > 0 do result := i "
+            "end"
+        )
+        for_nodes = find_nodes(ast, "for_stmt")
+        assert len(for_nodes) >= 1
+
 
 # ---------------------------------------------------------------------------
 # Nested block tests
@@ -430,6 +460,52 @@ class TestBooleanExpression:
         )
         assert ast.rule_name == "program"
 
+    def test_implication_expression(self) -> None:
+        """Boolean expression with IMPL."""
+        ast = parse(
+            "begin integer x; "
+            "if true impl false then x := 1 else x := 0 "
+            "end"
+        )
+        impl_nodes = find_nodes(ast, "implication")
+        assert any(
+            token.value == "impl"
+            for node in impl_nodes
+            for token in child_tokens(node)
+        )
+
+    def test_equivalence_expression(self) -> None:
+        """Boolean expression with EQV."""
+        ast = parse(
+            "begin integer x; "
+            "if true eqv false then x := 1 else x := 0 "
+            "end"
+        )
+        eqv_nodes = find_nodes(ast, "simple_bool")
+        assert any(
+            token.value == "eqv"
+            for node in eqv_nodes
+            for token in child_tokens(node)
+        )
+
+    def test_or_binds_tighter_than_implication(self) -> None:
+        """``or`` should parse inside the left operand of ``impl``."""
+        ast = parse(
+            "begin integer x; "
+            "if true or false impl false then x := 1 else x := 0 "
+            "end"
+        )
+        impl_nodes = find_nodes(ast, "implication")
+        assert any(
+            any(
+                child.rule_name == "bool_term"
+                and any(token.value == "or" for token in child_tokens(child))
+                for child in child_nodes(node)
+            )
+            and any(token.value == "impl" for token in child_tokens(node))
+            for node in impl_nodes
+        )
+
     def test_complex_boolean(self) -> None:
         """A complex boolean expression with multiple operators."""
         ast = parse(
@@ -485,6 +561,18 @@ class TestDeclarations:
         )
         type_decl_nodes = find_nodes(ast, "type_decl")
         assert len(type_decl_nodes) >= 3
+
+    def test_own_scalar_declaration(self) -> None:
+        """Own scalar declaration produces an own_decl node."""
+        ast = parse("begin own integer counter; counter := 1 end")
+        own_decl_nodes = find_nodes(ast, "own_decl")
+        assert len(own_decl_nodes) >= 1
+
+    def test_own_array_declaration(self) -> None:
+        """Own array declaration produces an own_array_decl node."""
+        ast = parse("begin own integer array counts[1:3]; counts[1] := 1 end")
+        own_array_decl_nodes = find_nodes(ast, "own_array_decl")
+        assert len(own_array_decl_nodes) >= 1
 
 
 # ---------------------------------------------------------------------------

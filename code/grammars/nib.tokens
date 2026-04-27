@@ -1,0 +1,297 @@
+# Token definitions for Nib
+# @version 1
+#
+# Nib is a safe, statically-typed toy language designed to compile down to Intel 4004
+# machine code. The name comes from "nibble" (4 bits), the native word size of the 4004.
+#
+# WHY A NEW LANGUAGE?
+# The Intel 4004 (1971) is the world's first commercial microprocessor. It is a 4-bit
+# CPU with extreme constraints: 160 bytes of usable RAM, 4 KB of ROM, a 3-level hardware
+# call stack, and no multiplication or division in hardware. Writing 4004 assembly by
+# hand is error-prone. Nib gives us a safer, higher-level notation that can be verified
+# and compiled rather than hand-assembled.
+#
+# SAFETY MODEL
+# Nib enforces a strict subset of operations suited to the 4004:
+#   - All types fit in 4-bit (u4), 8-bit (u8), BCD (binary-coded decimal), or boolean
+#   - Call depth is statically bounded to 2 (the 4004 stack has 3 levels;
+#     one is always reserved for the current function frame)
+#   - No recursion allowed — the static call graph must be acyclic
+#   - No heap allocation — the 4004 has no heap; all data is stack or static
+#   - Loop bounds must be compile-time constants so ROM size is predictable
+#
+# DESIGN PHILOSOPHY
+# Token ordering follows first-match-wins semantics. The lexer scans the input
+# character by character, trying each pattern in the order they appear in this file.
+# When two patterns could both match at the current position, the one listed first wins.
+# This is why multi-character operators appear before single-character operators,
+# and why HEX_LIT appears before INT_LIT.
+#
+# Key ordering rules:
+#   +%  must come before  +   (WRAP_ADD before PLUS)
+#   +?  must come before  +   (SAT_ADD before PLUS)
+#   ..  must come before nothing that starts with .  (RANGE is the only dot token)
+#   ->  must come before  -   (ARROW before MINUS)
+#   ==  must come before  =   (EQ_EQ before EQ)
+#   !=  must come before nothing (only multi-char use of !)
+#   <=  must come before  <   (LEQ before LT)
+#   >=  must come before  >   (GEQ before GT)
+#   &&  must come before  &   (LAND before AMP)
+#   ||  must come before  |   (LOR before PIPE)
+#   HEX_LIT must come before INT_LIT (0xA must match as hex, not "0" then "xA")
+
+# ---------------------------------------------------------------------------
+# Multi-character operators — must appear before single-character versions
+# ---------------------------------------------------------------------------
+
+# Wrapping addition: +%
+# On the Intel 4004, a u4 value ranges from 0 to 15. Normal addition can overflow
+# silently, producing a wrong answer and (sometimes) setting the carry flag.
+# Wrapping addition is EXPLICIT overflow: 15 +% 1 = 0, with the carry discarded.
+# The % sigil signals "wrap around like a modular counter". This mirrors Rust's
+# wrapping_add() and Zig's +% operator. Making wrapping explicit prevents accidental
+# silent overflow in safety-critical embedded code.
+WRAP_ADD    = "+%"
+
+# Saturating addition: +?
+# Saturating addition clamps at the maximum value instead of overflowing.
+# 15 +? 1 = 15 on u4. The ? sigil asks "did we overflow?" — it saturates at the limit.
+# Useful for things like BCD digit carry: you want to stay at 9 rather than wrap.
+# Inspired by ARM's UQADD instruction and Rust's saturating_add().
+SAT_ADD     = "+?"
+
+# Range separator for for-loops: ..
+# Nib for loops look like: for i: u4 in 0..8 { ... }
+# The two-dot range notation is borrowed from Rust. The range is EXCLUSIVE on the
+# right: 0..8 means i takes values 0, 1, 2, 3, 4, 5, 6, 7 (not 8).
+# Why exclusive? It makes the length of the range equal to the upper bound minus
+# the lower bound (8 - 0 = 8 iterations), which matches 4004 DJNZ loop patterns.
+# The lexer must see ".." as a single token so "0..8" doesn't lex as "0" "." "." "8".
+# (Nib has no floating-point, so single "." never appears outside string/comment context.)
+RANGE       = ".."
+
+# Function return type arrow: ->
+# Function signatures look like: fn add(a: u4, b: u4) -> u4 { ... }
+# The arrow notation (borrowed from Haskell/Rust) visually reads as "produces".
+# Must come before MINUS so "->" is not lexed as MINUS GT.
+ARROW       = "->"
+
+# Equality comparison: ==
+# Nib uses = for assignment (like ALGOL and ML) and == for equality (like C).
+# Wait — actually Nib uses = for assignment in let/static/const declarations
+# and == for comparison in expressions. The single = is never used in expression
+# context, which avoids the classic C bug of writing = when you mean ==.
+# Must come before EQ so "==" is not lexed as EQ EQ.
+EQ_EQ       = "=="
+
+# Not-equal comparison: !=
+# Standard C-family syntax. Bang (!) is the logical NOT unary operator, so "!="
+# is a two-character sequence, not bang followed by equals.
+# Must come before BANG so "!=" is lexed atomically.
+NEQ         = "!="
+
+# Less-or-equal: <=
+# Must come before LT so "<=" is not lexed as LT EQ.
+LEQ         = "<="
+
+# Greater-or-equal: >=
+# Must come before GT so ">=" is not lexed as GT EQ.
+GEQ         = ">="
+
+# Logical AND: &&
+# Short-circuit AND — if the left operand is false, the right is not evaluated.
+# Uses C/Java/Rust syntax. The double-ampersand distinguishes logical AND (&&)
+# from bitwise AND (&), which is important on the 4004 where bitwise AND is a
+# real hardware operation (ANL instruction). Must come before AMP.
+LAND        = "&&"
+
+# Logical OR: ||
+# Short-circuit OR — if the left operand is true, the right is not evaluated.
+# Double-pipe distinguishes logical OR (||) from bitwise OR (|).
+# On the 4004 there is no logical OR instruction — it must be compiled as a
+# branch on the first operand. Must come before PIPE.
+LOR         = "||"
+
+# ---------------------------------------------------------------------------
+# Single-character arithmetic operators
+# ---------------------------------------------------------------------------
+
+# Ordinary addition. On u4 operands, this may raise a compile-time error if
+# the compiler cannot prove the result fits — prefer +% or +? in hot paths.
+PLUS        = "+"
+
+# Subtraction. The 4004 uses SUB (subtract with borrow) for multi-nibble values.
+MINUS       = "-"
+
+# Multiplication. Note: the Intel 4004 has NO multiply instruction in hardware.
+# Nib v1 does NOT include multiplication — see NIB00-nib-language.md section
+# "What is NOT in v1". The STAR token is reserved for future v2.
+STAR        = "*"
+
+# Division. Likewise, the 4004 has no divide instruction. Reserved for v2.
+SLASH       = "/"
+
+# ---------------------------------------------------------------------------
+# Single-character bitwise operators
+# ---------------------------------------------------------------------------
+
+# Bitwise AND. On the 4004 this maps directly to the ANL (AND logical) instruction.
+# AMP is the single-& version; LAND (&&) is logical and.
+AMP         = "&"
+
+# Bitwise OR. Maps to ORL (OR logical) on the 4004.
+# PIPE is single-|; LOR (||) is logical or.
+PIPE        = "|"
+
+# Bitwise XOR. Maps to XRL (XOR logical) on the 4004.
+CARET       = "^"
+
+# Bitwise NOT (complement). Maps to CMA (complement accumulator) on the 4004.
+# Flips all bits: ~0b1010 = 0b0101 on u4.
+TILDE       = "~"
+
+# ---------------------------------------------------------------------------
+# Single-character comparison and logical operators
+# ---------------------------------------------------------------------------
+
+# Logical NOT (boolean negation). Only valid on bool expressions.
+# !true = false, !false = true.
+# Distinct from TILDE (~) which is bitwise NOT.
+BANG        = "!"
+
+# Less-than comparison.
+LT          = "<"
+
+# Greater-than comparison.
+GT          = ">"
+
+# ---------------------------------------------------------------------------
+# Assignment
+# ---------------------------------------------------------------------------
+
+# Assignment in let/static/const declarations: let x: u4 = 5;
+# Also used as the separator between the declared type and initial value.
+# NOT used in expression context — assignment is statement-only in Nib.
+# This eliminates the bug class where = is written when == is intended.
+EQ          = "="
+
+# ---------------------------------------------------------------------------
+# Delimiters
+# ---------------------------------------------------------------------------
+
+# Block delimiters for function bodies, if-bodies, for-bodies.
+LBRACE      = "{"
+RBRACE      = "}"
+
+# Grouping for expressions and parameter lists.
+LPAREN      = "("
+RPAREN      = ")"
+
+# Type annotation separator: let x: u4 = ...
+# Also used in param lists: fn add(a: u4, b: u4) -> u4
+COLON       = ":"
+
+# Statement terminator. Every statement ends with a semicolon.
+# Explicit semicolons keep the grammar unambiguous and simple — no need for
+# the tricky automatic semicolon insertion rules of JavaScript or Go.
+SEMICOLON   = ";"
+
+# Argument/parameter separator.
+COMMA       = ","
+
+# ---------------------------------------------------------------------------
+# Literals
+# ---------------------------------------------------------------------------
+
+# Hexadecimal integer literal: 0x followed by one or more hex digits (case-insensitive).
+# Examples: 0x0, 0xA, 0xFF, 0x1F, 0xfe
+# WHY HEX FIRST: 0xFF must be lexed as a single HEX_LIT token, not as INT_LIT("0")
+# followed by NAME("xFF"). Placing HEX_LIT before INT_LIT ensures the full hex
+# token is consumed before the decimal rule fires on the leading "0".
+# Hex literals are crucial for 4004 programming: nibble masks (0xF), port values,
+# and ROM addresses are all naturally expressed in hex.
+HEX_LIT     = /0x[0-9A-Fa-f]+/
+
+# Decimal integer literal: one or more decimal digits.
+# Must come after HEX_LIT (see above). Examples: 0, 1, 15, 255.
+INT_LIT     = /[0-9]+/
+
+# Identifier: letter or underscore, followed by letters, digits, or underscores.
+# Underscores are allowed (unlike ALGOL 60) because embedded code often uses
+# names like carry_out, nibble_high, or bcd_digit_2.
+# Keywords are reclassified from NAME after a full-token match (see keywords section).
+# The identifier token is named NAME so that the GrammarLexer's keyword promotion
+# logic fires: the check is token_name == "NAME" && value in keyword_set.
+NAME        = /[a-zA-Z_][a-zA-Z0-9_]*/
+
+# ---------------------------------------------------------------------------
+# Keywords — reclassified from NAME after a full-token match
+# ---------------------------------------------------------------------------
+#
+# Case-sensitive: Nib is lowercase-only for keywords (unlike ALGOL 60).
+# Partial matches do NOT qualify: "format" is NAME (identifier), not "for" keyword
+# followed by NAME("mat"). The keyword match fires only on the complete token.
+#
+# Keywords are intentionally minimal. The 4004 target forces a tiny language;
+# a small keyword set keeps the compiler simple and the grammar unambiguous.
+
+keywords:
+  # Function declaration keyword. Short for "function" — matches Rust/Go style.
+  fn
+
+  # Local variable declaration. Introduces a variable into the current block scope.
+  # let is immutable after initialization (Nib v1); a mutable variant may come in v2.
+  let
+
+  # Static variable declaration. Lives in ROM-mapped data section.
+  # On the 4004, static variables map to chip RAM registers.
+  # Limit: total static RAM must be ≤ 160 bytes (compiler enforced).
+  static
+
+  # Compile-time constant. Value is folded into ROM at compile time; no RAM used.
+  # Prefer const over static whenever the value never changes.
+  const
+
+  # Return statement keyword. Returns a value from a function.
+  # Void functions use bare return; (no expression).
+  return
+
+  # For loop keyword. Only loop construct in Nib v1.
+  # Form: for NAME: type in expr..expr { ... }
+  # No while loop — the for loop with const bounds is sufficient for 4004 programs,
+  # and const bounds make loop trip count statically verifiable.
+  for
+
+  # Range keyword in for loop: for i: u4 in 0..8 { ... }
+  # The "in" keyword separates the loop variable from the range.
+  in
+
+  # Conditional: if expr { ... } or if expr { ... } else { ... }
+  if
+
+  # Else branch of conditional.
+  else
+
+  # Boolean literal true. Type: bool.
+  true
+
+  # Boolean literal false. Type: bool.
+  false
+
+# ---------------------------------------------------------------------------
+# Skip patterns — consumed silently, no tokens emitted
+# ---------------------------------------------------------------------------
+
+skip:
+  # Whitespace is completely insignificant in Nib.
+  # Spaces, tabs, carriage returns, and newlines between tokens are all ignored.
+  # Free-format source gives the programmer control over indentation style.
+  WHITESPACE    = /[ \t\r\n]+/
+
+  # Line comments start with // and extend to end of line.
+  # C++/Java/Rust style was chosen over # (Python/Ruby) because // is already
+  # used in the language's division operator context (even though division is
+  # reserved for v2), and because 4004 assembly conventionally uses semicolons
+  # for comments — keeping // as the Nib comment marker avoids confusion.
+  # The [^\n]* matches zero or more non-newline characters greedily.
+  LINE_COMMENT  = /\/\/[^\n]*/

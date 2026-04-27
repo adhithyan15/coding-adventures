@@ -5,11 +5,13 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     NAME             => 'CodingAdventures::Code39',
     VERSION_FROM     => 'lib/CodingAdventures/Code39.pm',
-    ABSTRACT         => 'Code 39 barcode encoder',
+    ABSTRACT         => 'Code 39 barcode encoder that emits paint scenes',
     AUTHOR           => 'coding-adventures',
     LICENSE          => 'mit',
     MIN_PERL_VERSION => '5.026000',
-    PREREQ_PM        => {},
+    PREREQ_PM        => {
+        'CodingAdventures::BarcodeLayout1D' => 0,
+    },
     TEST_REQUIRES    => { 'Test2::V0' => 0 },
     META_MERGE       => {
         'meta-spec' => { version => 2 },

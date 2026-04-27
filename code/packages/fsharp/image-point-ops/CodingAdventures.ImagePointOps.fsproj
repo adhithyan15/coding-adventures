@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>CodingAdventures.ImagePointOps</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>IMG03: Per-pixel point operations on PixelContainer (invert, gamma, LUTs, colour matrix, …)</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../pixel-container/CodingAdventures.PixelContainer.fsproj" />
+    <Compile Include="ImagePointOps.fs" />
+  </ItemGroup>
+</Project>

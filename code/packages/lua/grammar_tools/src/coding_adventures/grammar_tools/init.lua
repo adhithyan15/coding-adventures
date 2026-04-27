@@ -174,7 +174,7 @@ grammar_tools.PatternGroup = PatternGroup
 -- Fields:
 --   definitions       (table)  Ordered list of TokenDefinition instances
 --   keywords          (table)  List of keyword strings
---   mode              (string) Lexer mode, e.g. "indentation"
+--   mode              (string) Lexer mode, e.g. "indentation" or "layout"
 --   escape_mode       (string) Escape processing mode, e.g. "none"
 --   skip_definitions  (table)  Skip pattern TokenDefinition instances
 --   error_definitions (table)  Error recovery TokenDefinition instances
@@ -191,6 +191,7 @@ function TokenGrammar.new()
     self.definitions = {}
     self.keywords = {}
     self.context_keywords = {}
+    self.layout_keywords = {}
     self.soft_keywords = {}
     self.mode = ""
     self.escape_mode = ""
@@ -410,6 +411,7 @@ local RESERVED_GROUP_NAMES = {
     reserved = true,
     errors = true,
     context_keywords = true,
+    layout_keywords = true,
     soft_keywords = true,
 }
 
@@ -551,6 +553,10 @@ function grammar_tools.parse_token_grammar(source)
             current_section = "context_keywords"
             goto continue
         end
+        if stripped == "layout_keywords:" or stripped == "layout_keywords :" then
+            current_section = "layout_keywords"
+            goto continue
+        end
         if stripped == "soft_keywords:" or stripped == "soft_keywords :" then
             current_section = "soft_keywords"
             goto continue
@@ -569,6 +575,11 @@ function grammar_tools.parse_token_grammar(source)
                 elseif current_section == "context_keywords" then
                     if stripped ~= "" then
                         grammar.context_keywords[#grammar.context_keywords + 1] = stripped
+                    end
+
+                elseif current_section == "layout_keywords" then
+                    if stripped ~= "" then
+                        grammar.layout_keywords[#grammar.layout_keywords + 1] = stripped
                     end
 
                 elseif current_section == "soft_keywords" then
@@ -786,11 +797,15 @@ function grammar_tools.validate_token_grammar(grammar)
     end
 
     -- Validate mode
-    if grammar.mode ~= "" and grammar.mode ~= "indentation" then
+    if grammar.mode ~= "" and grammar.mode ~= "indentation" and grammar.mode ~= "layout" then
         issues[#issues + 1] = string.format(
-            "Unknown lexer mode '%s' (only 'indentation' is supported)",
+            "Unknown lexer mode '%s' (only 'indentation' and 'layout' are supported)",
             grammar.mode
         )
+    end
+
+    if grammar.mode == "layout" and #grammar.layout_keywords == 0 then
+        issues[#issues + 1] = "Layout mode requires a non-empty layout_keywords section"
     end
 
     -- Validate escape mode

@@ -1,0 +1,10 @@
+[package]
+name = "coding-adventures-python-parser"
+version = "0.1.0"
+edition = "2021"
+description = "Python parser backed by compiled versioned parser grammars"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+parser = { path = "../parser" }
+coding-adventures-python-lexer = { path = "../python-lexer" }

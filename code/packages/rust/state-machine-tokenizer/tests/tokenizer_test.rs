@@ -1,0 +1,530 @@
+use std::collections::HashSet;
+
+use state_machine::{EffectfulMatcher, EffectfulStateMachine, EffectfulTransition};
+use state_machine_tokenizer::{Attribute, Token, Tokenizer, TokenizerError};
+
+#[test]
+fn tokenizer_rejects_unknown_actions() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data"]),
+            HashSet::new(),
+            vec![
+                EffectfulTransition::new("data", EffectfulMatcher::Any, "data")
+                    .with_effects(&["host_callback()"]),
+            ],
+            "data".to_string(),
+            HashSet::new(),
+        )
+        .unwrap(),
+    );
+
+    let error = tokenizer.push("x").unwrap_err();
+
+    assert_eq!(
+        error,
+        TokenizerError::UnknownAction("host_callback()".to_string())
+    );
+}
+
+#[test]
+fn tokenizer_bounds_non_consuming_transition_loops() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data"]),
+            set(&["x"]),
+            vec![EffectfulTransition::new("data", EffectfulMatcher::Any, "data").consuming(false)],
+            "data".to_string(),
+            HashSet::new(),
+        )
+        .unwrap(),
+    )
+    .with_max_steps_per_input(3);
+
+    let error = tokenizer.push("x").unwrap_err();
+
+    assert!(matches!(
+        error,
+        TokenizerError::StepLimitExceeded { limit: 3, .. }
+    ));
+}
+
+#[test]
+fn tokenizer_builds_start_tag_attributes_and_self_closing_markers() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&[
+                "data",
+                "tag_open",
+                "before_attr",
+                "attr_name",
+                "attr_value",
+                "before_close",
+                "done",
+            ]),
+            set(&["<", "A", " ", "H", "=", "X", "/", ">"]),
+            vec![
+                EffectfulTransition::new(
+                    "data",
+                    EffectfulMatcher::Event("<".to_string()),
+                    "tag_open",
+                ),
+                EffectfulTransition::new(
+                    "tag_open",
+                    EffectfulMatcher::Event("A".to_string()),
+                    "before_attr",
+                )
+                .with_effects(&["create_start_tag", "append_tag_name(current_lowercase)"]),
+                EffectfulTransition::new(
+                    "before_attr",
+                    EffectfulMatcher::Event(" ".to_string()),
+                    "attr_name",
+                ),
+                EffectfulTransition::new(
+                    "attr_name",
+                    EffectfulMatcher::Event("H".to_string()),
+                    "attr_value",
+                )
+                .with_effects(&[
+                    "start_attribute",
+                    "append_attribute_name(current_lowercase)",
+                    "append_attribute_name(ref)",
+                ]),
+                EffectfulTransition::new(
+                    "attr_value",
+                    EffectfulMatcher::Event("=".to_string()),
+                    "attr_value",
+                ),
+                EffectfulTransition::new(
+                    "attr_value",
+                    EffectfulMatcher::Event("X".to_string()),
+                    "before_close",
+                )
+                .with_effects(&["append_attribute_value(current)"]),
+                EffectfulTransition::new(
+                    "before_close",
+                    EffectfulMatcher::Event("/".to_string()),
+                    "before_close",
+                )
+                .with_effects(&[
+                    "append_attribute_value(y)",
+                    "commit_attribute",
+                    "mark_self_closing",
+                ]),
+                EffectfulTransition::new(
+                    "before_close",
+                    EffectfulMatcher::Event(">".to_string()),
+                    "done",
+                )
+                .with_effects(&["emit_current_token"]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("<A H=X/>").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![Token::StartTag {
+            name: "a".to_string(),
+            attributes: vec![Attribute {
+                name: "href".to_string(),
+                value: "Xy".to_string(),
+            }],
+            self_closing: true,
+        }]
+    );
+}
+
+#[test]
+fn tokenizer_builds_comment_tokens_with_current_and_literal_actions() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "comment", "done"]),
+            set(&["!", "O", "k", ".", ";"]),
+            vec![
+                EffectfulTransition::new(
+                    "data",
+                    EffectfulMatcher::Event("!".to_string()),
+                    "comment",
+                )
+                .with_effects(&["create_comment"]),
+                EffectfulTransition::new(
+                    "comment",
+                    EffectfulMatcher::Event("O".to_string()),
+                    "comment",
+                )
+                .with_effects(&["append_comment(current_lowercase)"]),
+                EffectfulTransition::new(
+                    "comment",
+                    EffectfulMatcher::Event("k".to_string()),
+                    "comment",
+                )
+                .with_effects(&["append_comment(current)"]),
+                EffectfulTransition::new(
+                    "comment",
+                    EffectfulMatcher::Event(".".to_string()),
+                    "comment",
+                )
+                .with_effects(&["append_comment(!)"]),
+                EffectfulTransition::new(
+                    "comment",
+                    EffectfulMatcher::Event(";".to_string()),
+                    "done",
+                )
+                .with_effects(&["emit_current_token"]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("!Ok.;").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![Token::Comment("ok!".to_string())]
+    );
+}
+
+#[test]
+fn tokenizer_builds_doctypes_and_marks_force_quirks() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "doctype", "done"]),
+            set(&["D", "H", "t", "!"]),
+            vec![
+                EffectfulTransition::new(
+                    "data",
+                    EffectfulMatcher::Event("D".to_string()),
+                    "doctype",
+                )
+                .with_effects(&["create_doctype"]),
+                EffectfulTransition::new(
+                    "doctype",
+                    EffectfulMatcher::Event("H".to_string()),
+                    "doctype",
+                )
+                .with_effects(&["append_doctype_name(current_lowercase)"]),
+                EffectfulTransition::new(
+                    "doctype",
+                    EffectfulMatcher::Event("t".to_string()),
+                    "doctype",
+                )
+                .with_effects(&["append_doctype_name(current)"]),
+                EffectfulTransition::new(
+                    "doctype",
+                    EffectfulMatcher::Event("!".to_string()),
+                    "done",
+                )
+                .with_effects(&[
+                    "append_doctype_name(ml)",
+                    "mark_force_quirks",
+                    "emit_current_token",
+                ]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("DHt!").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![Token::Doctype {
+            name: Some("html".to_string()),
+            force_quirks: true,
+        }]
+    );
+}
+
+#[test]
+fn tokenizer_uses_temporary_buffer_actions() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "buffering", "done"]),
+            set(&["A", "a", ";"]),
+            vec![
+                EffectfulTransition::new(
+                    "data",
+                    EffectfulMatcher::Event("A".to_string()),
+                    "buffering",
+                )
+                .with_effects(&[
+                    "clear_temporary_buffer",
+                    "append_temporary_buffer(current_lowercase)",
+                ]),
+                EffectfulTransition::new(
+                    "buffering",
+                    EffectfulMatcher::Event("a".to_string()),
+                    "buffering",
+                )
+                .with_effects(&["append_temporary_buffer(current)"]),
+                EffectfulTransition::new(
+                    "buffering",
+                    EffectfulMatcher::Event(";".to_string()),
+                    "done",
+                )
+                .with_effects(&[
+                    "append_temporary_buffer(!)",
+                    "append_temporary_buffer_to_text",
+                    "flush_text",
+                ]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("Aa;").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![Token::Text("aa!".to_string())]
+    );
+}
+
+#[test]
+fn tokenizer_supports_switch_to_with_reconsume() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "switched", "done"]),
+            set(&["x"]),
+            vec![
+                EffectfulTransition::new("data", EffectfulMatcher::Any, "data")
+                    .with_effects(&["switch_to(switched)"])
+                    .consuming(false),
+                EffectfulTransition::new("switched", EffectfulMatcher::Any, "done")
+                    .with_effects(&["append_text(current)", "flush_text"]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("x").unwrap();
+
+    assert_eq!(tokenizer.drain_tokens(), vec![Token::Text("x".to_string())]);
+    assert_eq!(tokenizer.trace()[0].to, "switched");
+}
+
+#[test]
+fn tokenizer_supports_return_state_round_trips() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "entity", "done"]),
+            set(&["&", "x"]),
+            vec![
+                EffectfulTransition::new(
+                    "data",
+                    EffectfulMatcher::Event("&".to_string()),
+                    "entity",
+                )
+                .with_effects(&["set_return_state(data)"]),
+                EffectfulTransition::new("entity", EffectfulMatcher::Any, "entity")
+                    .with_effects(&["append_text(current)", "switch_to_return_state"]),
+                EffectfulTransition::new("data", EffectfulMatcher::End, "done")
+                    .with_effects(&["flush_text", "emit(EOF)"])
+                    .consuming(false),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("&x").unwrap();
+    assert_eq!(tokenizer.current_state(), "data");
+
+    tokenizer.finish().unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![Token::Text("x".to_string()), Token::Eof]
+    );
+}
+
+#[test]
+fn tokenizer_can_seed_initial_state_and_last_start_tag() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "rcdata", "done"]),
+            set(&["H"]),
+            vec![
+                EffectfulTransition::new("data", EffectfulMatcher::Any, "done"),
+                EffectfulTransition::new("rcdata", EffectfulMatcher::Any, "done")
+                    .with_effects(&["append_text(current)", "flush_text"]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    )
+    .with_initial_state("rcdata")
+    .unwrap()
+    .with_last_start_tag("title");
+
+    tokenizer.push("H").unwrap();
+
+    assert_eq!(tokenizer.current_state(), "done");
+    assert_eq!(tokenizer.drain_tokens(), vec![Token::Text("H".to_string())]);
+}
+
+#[test]
+fn tokenizer_supports_rcdata_end_tag_candidate_fallback_action() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&[
+                "rcdata",
+                "less_than",
+                "end_tag_open",
+                "end_tag_name",
+                "done",
+            ]),
+            set(&["H", "e", "l", "o", "<", "/", "t", "i", ">"]),
+            vec![
+                EffectfulTransition::new(
+                    "rcdata",
+                    EffectfulMatcher::Event("H".to_string()),
+                    "rcdata",
+                )
+                .with_effects(&["append_text(current)"]),
+                EffectfulTransition::new(
+                    "rcdata",
+                    EffectfulMatcher::Event("<".to_string()),
+                    "less_than",
+                ),
+                EffectfulTransition::new("rcdata", EffectfulMatcher::Any, "rcdata")
+                    .with_effects(&["append_text(current)"]),
+                EffectfulTransition::new("rcdata", EffectfulMatcher::End, "done")
+                    .with_effects(&["flush_text", "emit(EOF)"])
+                    .consuming(false),
+                EffectfulTransition::new(
+                    "less_than",
+                    EffectfulMatcher::Event("/".to_string()),
+                    "end_tag_open",
+                )
+                .with_effects(&["clear_temporary_buffer"]),
+                EffectfulTransition::new("end_tag_open", EffectfulMatcher::Any, "end_tag_name")
+                    .with_effects(&[
+                        "create_end_tag",
+                        "append_tag_name(current_lowercase)",
+                        "append_temporary_buffer(current_lowercase)",
+                    ]),
+                EffectfulTransition::new(
+                    "end_tag_name",
+                    EffectfulMatcher::Event(">".to_string()),
+                    "rcdata",
+                )
+                .with_effects(&["emit_rcdata_end_tag_or_text"]),
+                EffectfulTransition::new("end_tag_name", EffectfulMatcher::End, "done")
+                    .with_effects(&["discard_current_token", "flush_text", "emit(EOF)"])
+                    .consuming(false),
+                EffectfulTransition::new("end_tag_name", EffectfulMatcher::Any, "end_tag_name")
+                    .with_effects(&[
+                        "append_tag_name(current_lowercase)",
+                        "append_temporary_buffer(current_lowercase)",
+                    ]),
+            ],
+            "rcdata".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    )
+    .with_last_start_tag("title");
+
+    tokenizer.push("Hello</title>").unwrap();
+    tokenizer.finish().unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![
+            Token::Text("Hello".to_string()),
+            Token::EndTag {
+                name: "title".to_string(),
+            },
+            Token::Eof,
+        ]
+    );
+
+    let mut mismatch = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&[
+                "rcdata",
+                "less_than",
+                "end_tag_open",
+                "end_tag_name",
+                "done",
+            ]),
+            set(&["H", "e", "l", "o", "<", "/", "s", "t", "y", ">"]),
+            vec![
+                EffectfulTransition::new(
+                    "rcdata",
+                    EffectfulMatcher::Event("H".to_string()),
+                    "rcdata",
+                )
+                .with_effects(&["append_text(current)"]),
+                EffectfulTransition::new(
+                    "rcdata",
+                    EffectfulMatcher::Event("<".to_string()),
+                    "less_than",
+                ),
+                EffectfulTransition::new("rcdata", EffectfulMatcher::Any, "rcdata")
+                    .with_effects(&["append_text(current)"]),
+                EffectfulTransition::new("rcdata", EffectfulMatcher::End, "done")
+                    .with_effects(&["flush_text", "emit(EOF)"])
+                    .consuming(false),
+                EffectfulTransition::new(
+                    "less_than",
+                    EffectfulMatcher::Event("/".to_string()),
+                    "end_tag_open",
+                )
+                .with_effects(&["clear_temporary_buffer"]),
+                EffectfulTransition::new("end_tag_open", EffectfulMatcher::Any, "end_tag_name")
+                    .with_effects(&[
+                        "create_end_tag",
+                        "append_tag_name(current_lowercase)",
+                        "append_temporary_buffer(current_lowercase)",
+                    ]),
+                EffectfulTransition::new(
+                    "end_tag_name",
+                    EffectfulMatcher::Event(">".to_string()),
+                    "rcdata",
+                )
+                .with_effects(&["emit_rcdata_end_tag_or_text"]),
+                EffectfulTransition::new("end_tag_name", EffectfulMatcher::End, "done")
+                    .with_effects(&["discard_current_token", "flush_text", "emit(EOF)"])
+                    .consuming(false),
+                EffectfulTransition::new("end_tag_name", EffectfulMatcher::Any, "end_tag_name")
+                    .with_effects(&[
+                        "append_tag_name(current_lowercase)",
+                        "append_temporary_buffer(current_lowercase)",
+                    ]),
+            ],
+            "rcdata".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    )
+    .with_last_start_tag("title");
+
+    mismatch.push("Hello</style>").unwrap();
+    mismatch.finish().unwrap();
+
+    assert_eq!(
+        mismatch.drain_tokens(),
+        vec![Token::Text("Hello</style>".to_string()), Token::Eof]
+    );
+}
+
+fn set(values: &[&str]) -> HashSet<String> {
+    values.iter().map(|value| value.to_string()).collect()
+}

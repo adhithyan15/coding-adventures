@@ -1,0 +1,60 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "coding-adventures-ls00"
+version = "0.1.0"
+description = "Generic Language Server Protocol (LSP) framework"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{ name = "Adhithya Rajasekaran" }]
+readme = "README.md"
+keywords = ["lsp", "language-server", "protocol", "editor", "computer-science", "education"]
+dependencies = ["coding-adventures-json-rpc"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Education",
+    "Topic :: Education",
+    "Topic :: Scientific/Engineering",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+    "Typing :: Typed",
+]
+
+[project.urls]
+Homepage = "https://github.com/adhithyan15/coding-adventures"
+Repository = "https://github.com/adhithyan15/coding-adventures"
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0", "pytest-cov>=4.0", "ruff>=0.4", "mypy>=1.10"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ls00"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort (import sorting)
+    "UP",   # pyupgrade (modern Python syntax)
+    "B",    # bugbear (common bugs)
+    "SIM",  # simplify
+    "ANN",  # type annotation enforcement
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=ls00 --cov-report=term-missing --cov-fail-under=80"
+
+[tool.coverage.run]
+source = ["src/ls00"]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true

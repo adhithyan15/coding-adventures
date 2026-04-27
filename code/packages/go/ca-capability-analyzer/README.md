@@ -97,7 +97,11 @@ main.go:7: [CAP002] banned construct: import "C" (CGo)
 
 ## Banned Constructs
 
-These are flagged unconditionally — no manifest entry can authorize them. They represent patterns that defeat static capability analysis entirely.
+These are blocked by default because they defeat static capability analysis entirely.
+Two FFI-style constructs can be explicitly opted into: `import "C"` requires both
+`banned_construct_exceptions` for `import "C"` and an `ffi:call:*` capability, and
+`plugin.Open` requires both a `banned_construct_exceptions` entry for `plugin.Open`
+and an `ffi:load:*` capability. The remaining constructs stay hard-blocked.
 
 | Construct | Why It's Banned |
 |---|---|
@@ -108,6 +112,35 @@ These are flagged unconditionally — no manifest entry can authorize them. They
 | `reflect.Value.CallSlice(...)` | Same as above |
 | `reflect.Value.MethodByName(...)` | Same as above |
 | `//go:linkname` | Reaches into unexported symbols; defeats encapsulation |
+
+### Explicit FFI opt-in
+
+If a package genuinely needs a reviewed native bridge, it must declare both:
+
+1. A matching `ffi` capability in `capabilities`
+2. A matching `banned_construct_exceptions` entry
+
+Example for `cgo`:
+
+```json
+{
+  "capabilities": [
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "libbarcode_renderer",
+      "justification": "Calls a reviewed native bridge."
+    }
+  ],
+  "banned_construct_exceptions": [
+    {
+      "construct": "import \"C\"",
+      "language": "go",
+      "justification": "Uses cgo to call the reviewed native bridge."
+    }
+  ]
+}
+```
 
 ## Exemptions
 
@@ -150,6 +183,9 @@ func DetectBanned(fset *token.FileSet, f *ast.File, filename string) []BannedCon
 
 // Manifest loading: reads required_capabilities.json and returns declared set.
 func LoadManifest(dir string) (map[CapabilityString]bool, error)
+
+// Rich manifest loading: declared capabilities + banned-construct exceptions.
+func LoadManifestData(dir string) (*ManifestData, error)
 ```
 
 ## Test Coverage

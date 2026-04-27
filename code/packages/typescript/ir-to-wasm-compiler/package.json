@@ -1,0 +1,27 @@
+{
+  "name": "@coding-adventures/ir-to-wasm-compiler",
+  "version": "0.1.0",
+  "description": "Lower generic compiler IR into a WebAssembly 1.0 module",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/compiler-ir": "file:../compiler-ir",
+    "@coding-adventures/wasm-leb128": "file:../wasm-leb128",
+    "@coding-adventures/wasm-opcodes": "file:../wasm-opcodes",
+    "@coding-adventures/wasm-types": "file:../wasm-types"
+  },
+  "devDependencies": {
+    "@coding-adventures/brainfuck": "file:../brainfuck",
+    "@coding-adventures/brainfuck-ir-compiler": "file:../brainfuck-ir-compiler",
+    "@vitest/coverage-v8": "^3.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}

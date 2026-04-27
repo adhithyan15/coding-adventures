@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/swift/brotli/.build/arm64-apple-macosx/debug/BrotliTests.build/primary.swiftdeps"
+  },
+  "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/swift/brotli/Tests/BrotliTests/BrotliTests.swift": {
+    "dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/swift/brotli/.build/arm64-apple-macosx/debug/BrotliTests.build/BrotliTests.d",
+    "object": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/swift/brotli/.build/arm64-apple-macosx/debug/BrotliTests.build/BrotliTests.swift.o",
+    "swiftmodule": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/swift/brotli/.build/arm64-apple-macosx/debug/BrotliTests.build/BrotliTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/swift/brotli/.build/arm64-apple-macosx/debug/BrotliTests.build/BrotliTests.swiftdeps",
+    "diagnostics": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/swift/brotli/.build/arm64-apple-macosx/debug/BrotliTests.build/BrotliTests.dia"
+  }
+}

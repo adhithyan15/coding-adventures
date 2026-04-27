@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>CodingAdventures.PaintVmSvg</AssemblyName>
+    <RootNamespace>CodingAdventures.PaintVmSvg</RootNamespace>
+    <PackageId>CodingAdventures.PaintVmSvg.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>Pure F# PaintVM SVG backend for serialisable vector rendering</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../paint-instructions/CodingAdventures.PaintInstructions.fsproj" />
+    <ProjectReference Include="../paint-vm/CodingAdventures.PaintVm.fsproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="PaintVm.fs" />
+  </ItemGroup>
+</Project>

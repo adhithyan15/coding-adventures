@@ -78,7 +78,7 @@ use Exporter 'import';
 our @EXPORT_OK = qw(
     AND OR NOT XOR NAND NOR XNOR
     NAND_NOT NAND_AND NAND_OR NAND_XOR
-    ANDn ORn
+    ANDn ORn XORn
     SRLatch DLatch DFlipFlop
     Register ShiftRegister Counter
     new_flip_flop_state new_counter_state
@@ -421,6 +421,51 @@ sub ORn {
     my $result = $inputs[0];
     for my $i ( 1 .. $#inputs ) {
         $result = OR( $result, $inputs[$i] );
+    }
+    return $result;
+}
+
+# XORn — N-input XOR gate (parity checker).
+#
+# Returns 1 if an ODD number of inputs are 1 (odd parity).
+# Returns 0 if an EVEN number of inputs are 1 (even parity).
+#
+# XOR is often called the "parity gate": chaining XORs computes the parity
+# of any bit string. Each stage answers "have I seen an odd total so far?".
+#
+# This is the building block for 8008/8080 parity flag computation:
+#   P = NOT(XORn(@bits))  — the 8008 sets P=1 for even parity (even count of 1s)
+#
+# Truth table for 3-input XORn (same principle extends to N inputs):
+#
+#   A | B | C | XORn
+#   --|---|---|------
+#   0 | 0 | 0 |   0   (0 ones — even — XORn=0)
+#   0 | 0 | 1 |   1   (1 one  — odd  — XORn=1)
+#   0 | 1 | 0 |   1   (1 one  — odd  — XORn=1)
+#   0 | 1 | 1 |   0   (2 ones — even — XORn=0)
+#   1 | 0 | 0 |   1   (1 one  — odd  — XORn=1)
+#   1 | 0 | 1 |   0   (2 ones — even — XORn=0)
+#   1 | 1 | 0 |   0   (2 ones — even — XORn=0)
+#   1 | 1 | 1 |   1   (3 ones — odd  — XORn=1)
+#
+# Hardware: a chain of 2-input XOR gates (N-1 gates for N inputs).
+# Gate delay: N-1 (linear chain — real hardware uses a balanced tree for speed).
+#
+# @param  @inputs   One or more inputs (each 0 or 1).
+# @return           1 if odd number of inputs are 1, else 0.
+
+sub XORn {
+    my @inputs = ( ref $_[0] eq 'ARRAY' ) ? @{ $_[0] }
+               : ( @_ > 0 && !ref $_[0] && $_[0] =~ /::/ ) ? @_[1..$#_]
+               : @_;
+
+    die "logic_gates: XORn requires at least 1 input\n" if @inputs < 1;
+    _validate_bit( $_, "input" ) for @inputs;
+
+    my $result = $inputs[0];
+    for my $i ( 1 .. $#inputs ) {
+        $result = XOR( $result, $inputs[$i] );
     }
     return $result;
 }

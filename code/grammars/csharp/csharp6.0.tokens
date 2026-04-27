@@ -1,0 +1,456 @@
+# C# 6.0 (2015) — Lexical Grammar
+# @version 1
+# @csharp_version 6.0
+#
+# .NET Framework 4.6 / Visual Studio 2015 — July 2015
+#
+# C# 6.0 is a "quality of life" release. Where C# 5.0 shipped one massive
+# feature (async/await), C# 6.0 shipped a dozen small features that make
+# day-to-day C# writing noticeably more pleasant. Anders Hejlsberg described
+# it as a "grooming" release — polishing the rough edges left from earlier
+# versions.
+#
+# The headline lexical additions are:
+#
+#   1. Interpolated strings ($"..."):
+#      Instead of:  string.Format("Hello {0}, you are {1}!", name, age)
+#      You write:   $"Hello {name}, you are {age}!"
+#      The $ prefix signals that expressions inside { } are evaluated and
+#      embedded. This is far more readable than format strings and was
+#      directly inspired by Ruby's "#{expr}" and Python's f-strings (though
+#      C# got it before Python 3.6).
+#
+#   2. Null-conditional operators (?. and ?[):
+#      Instead of:  if (obj != null) result = obj.Method();
+#      You write:   result = obj?.Method();
+#      Instead of:  if (arr != null && arr.Length > 0) x = arr[0];
+#      You write:   x = arr?[0];
+#      These chain-propagate null: a?.b?.c returns null if any link is null,
+#      without throwing NullReferenceException. Kotlin has the same operator.
+#
+# The null-conditional operators require NEW TOKENS because ?. must be
+# distinguished from ? (ternary start) followed by . (member access), and
+# ?[ must be distinguished from ? followed by [ (separate statements).
+#
+# KEY ORDERING RULE: Multi-character operators MUST come before their
+# single-character prefixes in the token table:
+#   - "?." before "?"
+#   - "?[" before "?"
+#   - "??" before "?"
+#   The lexer greedily matches the longest prefix, so this order ensures
+#   correct tokenization.
+#
+# Accumulated features through C# 6.0:
+#   C# 1.0: Properties, delegates, events, structs, operator overloading,
+#           indexers, attributes, preprocessor, unsafe code, namespaces,
+#           foreach, goto, unsigned types, decimal, verbatim strings
+#   C# 2.0: Generics, nullable types (T?), null coalescing (??),
+#           iterators (yield return/break), anonymous methods (delegate {}),
+#           partial types, static classes, namespace alias (::)
+#   C# 3.0: Lambda expressions (=>), LINQ query syntax, var keyword,
+#           extension methods, anonymous types, object/collection initializers,
+#           expression trees, auto-properties, partial methods
+#   C# 4.0: dynamic keyword, named arguments, optional parameters,
+#           generic covariance/contravariance (in/out on type params)
+#   C# 5.0: async/await, caller info attributes
+#   C# 6.0: String interpolation ($""), null-conditional (?. and ?[),
+#           expression-bodied members, nameof, exception filters (when),
+#           auto-property initializers, using static, index initializers
+#
+# What C# 6.0 does NOT have (added in later versions):
+#   - No binary literals 0b... (added in C# 7.0, 2017)
+#   - No digit separators 1_000 (added in C# 7.0)
+#   - No out variable declarations inline (added in C# 7.0)
+#   - No tuple syntax (int, string) (added in C# 7.0)
+#   - No pattern matching (added in C# 7.0)
+#   - No local functions (added in C# 7.0)
+#   - No .. range operator (added in C# 8.0, 2019)
+#   - No ??= null-coalescing assignment (added in C# 8.0)
+#
+# Format:
+#   TOKEN_NAME = /regex/     — regex-based token pattern
+#   TOKEN_NAME = "literal"   — exact literal match
+#   TOKEN_NAME = /regex/ -> ALIAS  — regex token aliased to a canonical name
+#
+# Order matters: first match wins. Multi-character operators
+# must come before single-character ones (e.g., == before =).
+# Numeric literals with suffixes must come before plain integers.
+
+# ============================================================================
+# Literals
+# ============================================================================
+#
+# Identifiers in C# can contain letters, digits, and underscores. The
+# dollar sign ($) is NOT allowed in regular identifiers (unlike Java/JavaScript).
+#
+# C# also has "verbatim identifiers": prefixing any identifier (including
+# keywords) with @ makes it a valid identifier. This exists for interop
+# with other .NET languages that may use C# keywords as names:
+#
+#   int @class = 5;       // legal — @class is an identifier, not the keyword
+#   int @async = 10;      // legal — even contextual keywords can be escaped
+#
+# The @ prefix is NOT part of the identifier's name — it's just an escape
+# mechanism.
+
+NAME           = /[a-zA-Z_][a-zA-Z0-9_]*/
+VERBATIM_NAME  = /@[a-zA-Z_][a-zA-Z0-9_]*/ -> NAME
+
+# ----------------------------------------------------------------------------
+# Numeric literals
+# ----------------------------------------------------------------------------
+#
+# C# 6.0 still uses the same numeric literal forms as C# 1.0 through 5.0:
+#
+#   1. Hex integers:      0x1A, 0XFF, 0x1AL, 0x1AUL
+#   2. Decimal integers:  42, 42L, 42U, 42UL, 42LU
+#   3. Floating point:    3.14, 3.14f, 3.14d, 3.14m, 1e10, 1e10f
+#
+# Suffixes:
+#   U/u — unsigned (uint or ulong depending on value)
+#   L/l — long (long or ulong depending on U suffix)
+#   UL/ul/LU/lu — unsigned long (always ulong)
+#   F/f — float (32-bit IEEE 754)
+#   D/d — double (64-bit IEEE 754)
+#   M/m — decimal (128-bit decimal floating-point)
+#
+# IMPORTANT: There are STILL no binary literals (0b...) and STILL no digit
+# separators (_). Those arrive in C# 7.0 (2017).
+#
+# IMPORTANT: There are still NO octal literals (unlike Java and C).
+#
+# All numeric variants alias to NUMBER so the parser sees a single token type.
+
+HEX_ULONG      = /0[xX][0-9a-fA-F]+([uU][lL]|[lL][uU])/ -> NUMBER
+HEX_LONG       = /0[xX][0-9a-fA-F]+[lL]/ -> NUMBER
+HEX_UINT       = /0[xX][0-9a-fA-F]+[uU]/ -> NUMBER
+HEX_NUMBER     = /0[xX][0-9a-fA-F]+/ -> NUMBER
+DECIMAL_FLOAT  = /[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?[fFdDmM]?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9]+([eE][+-]?[0-9]+)?[fFdDmM]?/ -> NUMBER
+SCI_NUMBER     = /[0-9]+[eE][+-]?[0-9]+[fFdDmM]?/ -> NUMBER
+ULONG_NUMBER   = /[0-9]+([uU][lL]|[lL][uU])/ -> NUMBER
+LONG_NUMBER    = /[0-9]+[lL]/ -> NUMBER
+UINT_NUMBER    = /[0-9]+[uU]/ -> NUMBER
+FLOAT_SUFFIX   = /[0-9]+[fFdDmM]/ -> NUMBER
+INT_NUMBER     = /[0-9]+/ -> NUMBER
+
+# ----------------------------------------------------------------------------
+# String and character literals
+# ----------------------------------------------------------------------------
+#
+# C# 6.0 adds TWO new string-like literal forms:
+#
+#   4. Interpolated strings:     $"Hello {name}, you are {age}!"
+#   5. Interpolated verbatim:    $@"C:\Users\{username}\Desktop"
+#                            or  @$"C:\Users\{username}\Desktop"
+#
+# The existing forms remain:
+#   1. Regular strings:   "hello\nworld"
+#   2. Verbatim strings:  @"C:\Users\file.txt"
+#   3. Character literals: 'a', '\n', '\u0041'
+#
+# Interpolated strings are LEXICALLY COMPLEX because the { expr } parts
+# require recursive lexing/parsing inside the string. A production-quality
+# lexer would use scanner modes (like ANTLR's lexer modes) to switch context
+# when entering and leaving { } blocks inside an interpolated string.
+#
+# For this grammar we treat the ENTIRE interpolated string as one token,
+# using a simplified regex that handles:
+#   - {{ and }} as literal braces (escaping)
+#   - \. as escape sequences (in non-verbatim form)
+#   - Any character that isn't a { or special
+#
+# This is adequate for tokenizing — a real parser would decompose the token.
+#
+# Interpolated verbatim strings: $@"..." or @$"..."
+#   - In verbatim interpolated, { and } are NOT escaped with backslash
+#   - Double-quote inside is escaped as ""
+#   - {{ and }} are literal braces
+#   - Backslash is NOT an escape character
+#
+# NOTE: The $@ ordering was required in C# 6.0; C# 8.0 added the @$ ordering.
+# We include both here for forward compatibility.
+#
+# ORDER MATTERS: Interpolated string patterns must come BEFORE the plain
+# STRING and VERBATIM_STRING patterns, so that $"..." is recognized as
+# INTERPOLATED_STRING and not as stray $ followed by STRING.
+
+INTERPOLATED_STRING   = /\$"([^"\\{]|\\.|\{\{|\}\})*"/
+INTERPOLATED_VERBATIM = /(\$@|@\$)"([^"{]|""|\{\{|\}\})*"/
+STRING                = /"([^"\\]|\\.)*"/
+VERBATIM_STRING       = /@"([^"]|"")*"/
+CHAR                  = /'([^'\\]|\\.)*'/
+
+# ============================================================================
+# Multi-character operators (must come before single-character versions)
+# ============================================================================
+#
+# C# 6.0 adds TWO new multi-character operators:
+#
+#   ?. — null-conditional member access
+#       Evaluates the left operand. If it is null, short-circuits to null.
+#       If it is non-null, accesses the member on the right.
+#
+#         string s = obj?.ToString();    // null if obj is null
+#         int? len = str?.Length;        // null if str is null
+#         obj?.Method()?.Prop?.Value;    // chain-propagates null
+#
+#       This is equivalent to:
+#         string s = (obj != null) ? obj.ToString() : null;
+#
+#       Java does NOT have this operator (though Kotlin does, as ?.).
+#       JavaScript added it as ?. in ES2020, five years after C# 6.0.
+#
+#   ?[ — null-conditional element access
+#       Same semantics but for indexers: obj?[index]
+#
+#         int? first = arr?[0];           // null if arr is null
+#         char? ch = str?[0];             // null if str is null
+#         string? val = dict?["key"];     // null if dict is null
+#
+# CRITICAL ORDERING:
+#   "?." must come before "?" — otherwise "?." would be tokenized as QUESTION + DOT
+#   "?[" must come before "?" — otherwise "?[" would be tokenized as QUESTION + LBRACKET
+#   "??" must come before "?" — already true (from C# 2.0)
+#
+# So the order is: "??=" (C# 8.0) > "??" > "?." > "?[" > "?"
+# In C# 6.0 we have:            "??" > "?." > "?[" > "?"
+#
+# Cumulative operator additions through C# 6.0:
+#
+#   C# 1.0:  All basic C-style operators
+#   C# 2.0:  ?? (null coalescing), :: (namespace alias qualifier)
+#   C# 3.0:  => (lambda arrow)
+#   C# 6.0:  ?. (null-conditional member access)   — NEW
+#            ?[ (null-conditional element access)   — NEW
+
+NULL_COALESCE        = "??"
+NULL_CONDITIONAL_DOT     = "?."
+NULL_CONDITIONAL_BRACKET = "?["
+LEFT_SHIFT_EQUALS    = "<<="
+RIGHT_SHIFT_EQUALS   = ">>="
+LAMBDA               = "=>"
+EQUALS_EQUALS        = "=="
+NOT_EQUALS           = "!="
+LESS_EQUALS          = "<="
+GREATER_EQUALS       = ">="
+AND_AND              = "&&"
+OR_OR                = "||"
+PLUS_PLUS            = "++"
+MINUS_MINUS          = "--"
+PLUS_EQUALS          = "+="
+MINUS_EQUALS         = "-="
+STAR_EQUALS          = "*="
+SLASH_EQUALS         = "/="
+PERCENT_EQUALS       = "%="
+AMPERSAND_EQUALS     = "&="
+PIPE_EQUALS          = "|="
+CARET_EQUALS         = "^="
+LEFT_SHIFT           = "<<"
+RIGHT_SHIFT          = ">>"
+NAMESPACE_ALIAS      = "::"
+ARROW                = "->"
+
+# ============================================================================
+# Single-character operators
+# ============================================================================
+#
+# C# 6.0 does NOT add any new single-character operators. The set is
+# unchanged from C# 5.0.
+#
+# The ? token does triple duty in C# 6.0:
+#   - Ternary operator:   condition ? thenExpr : elseExpr
+#   - Nullable type:      int? (Nullable<int>)
+#   - Prefix of ?. and ?[ (handled by the longer-match rules above)
+#
+# The . token is now also used in ?.  (but that's handled as NULL_CONDITIONAL_DOT)
+
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+DOT       = "."
+COLON     = ":"
+
+# ============================================================================
+# Keywords
+# ============================================================================
+#
+# C# 6.0 has 79 reserved keywords — the SAME count as C# 5.0.
+#
+# This is intentional: C# 6.0 was designed to add zero new RESERVED keywords.
+# All new features in C# 6.0 use CONTEXTUAL keywords (identifiers that are
+# keyword-like only in specific syntactic positions) or repurpose existing
+# tokens. This preserves backward compatibility — code using these words
+# as identifiers continues to compile.
+#
+# New CONTEXTUAL keywords in C# 6.0:
+#
+#   nameof  — used as a function-like operator: nameof(SomeIdentifier)
+#             Returns the identifier's string name at compile time.
+#             Because it looks like a method call, it does NOT need to be
+#             reserved — the parser treats `nameof(...)` as a special primary.
+#
+#             nameof(SomeClass)         → "SomeClass"
+#             nameof(instance.Method)  → "Method"
+#             nameof(SomeGeneric<int>) → "SomeGeneric"
+#
+#             This replaces the fragile pattern of hardcoding strings like
+#             "SomeProperty" in ArgumentException messages — if you rename
+#             the property, nameof catches the rename automatically.
+#
+#   when    — used in exception filters: catch (Ex e) when (condition)
+#             Also used in switch case guards (C# 7.0 generalizes this).
+#             `when` is a NAME token matched by value in the grammar.
+#
+# The full reserved keyword set through C# 6.0 is identical to C# 5.0:
+
+keywords:
+  abstract
+  as
+  async
+  await
+  base
+  bool
+  break
+  byte
+  case
+  catch
+  char
+  checked
+  class
+  const
+  continue
+  decimal
+  default
+  delegate
+  do
+  double
+  else
+  enum
+  event
+  explicit
+  extern
+  false
+  finally
+  fixed
+  float
+  for
+  foreach
+  goto
+  if
+  implicit
+  in
+  int
+  interface
+  internal
+  is
+  lock
+  long
+  namespace
+  new
+  null
+  object
+  operator
+  out
+  override
+  params
+  private
+  protected
+  public
+  readonly
+  ref
+  return
+  sbyte
+  sealed
+  short
+  sizeof
+  stackalloc
+  static
+  string
+  struct
+  switch
+  this
+  throw
+  true
+  try
+  typeof
+  uint
+  ulong
+  unchecked
+  unsafe
+  ushort
+  using
+  virtual
+  void
+  volatile
+  while
+
+# ============================================================================
+# Skip patterns (whitespace and comments)
+# ============================================================================
+#
+# Same as C# 1.0. Three comment forms:
+#   1. Line comments:    // to end of line
+#   2. Block comments:   /* ... */ (cannot nest)
+#   3. XML doc comments: /// ... (lexically identical to line comments)
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Preprocessor directives
+# ============================================================================
+#
+# Same as C# 1.0. No new preprocessor directives were added in C# 2.0
+# through 6.0.
+#
+# (The #nullable directive is added in C# 8.0.)
+
+PP_IF        = /#\s*if\b[^\n]*/
+PP_ELIF      = /#\s*elif\b[^\n]*/
+PP_ELSE      = /#\s*else\b[^\n]*/
+PP_ENDIF     = /#\s*endif\b[^\n]*/
+PP_DEFINE    = /#\s*define\b[^\n]*/
+PP_UNDEF     = /#\s*undef\b[^\n]*/
+PP_REGION    = /#\s*region\b[^\n]*/
+PP_ENDREGION = /#\s*endregion\b[^\n]*/
+PP_ERROR     = /#\s*error\b[^\n]*/
+PP_WARNING   = /#\s*warning\b[^\n]*/
+PP_LINE      = /#\s*line\b[^\n]*/
+PP_PRAGMA    = /#\s*pragma\b[^\n]*/
+
+# ============================================================================
+# Error recovery tokens
+# ============================================================================
+
+errors:
+  BAD_STRING = /"[^"]*$/
+  BAD_CHAR   = /'[^']*$/
+  BAD_VERBATIM_STRING = /@"([^"]|"")*$/
+  BAD_INTERPOLATED_STRING = /\$"([^"\\{]|\\.)*$/

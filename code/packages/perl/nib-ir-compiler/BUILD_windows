@@ -1,0 +1,2 @@
+REM prereqs: ../compiler-ir ../grammar-tools ../lexer ../nib-lexer ../parser ../nib-parser ../type-checker-protocol ../nib-type-checker
+echo Perl testing is not supported on Windows - skipping

@@ -1,0 +1,381 @@
+# Java 7 (2011) — Lexical Grammar
+# @version 1
+# @java_version 7
+#
+# JDK 7 (codenamed "Dolphin") — July 2011
+#
+# Java 7 was the first release under Oracle's stewardship after acquiring
+# Sun Microsystems in 2010. Originally planned as a massive release with
+# closures (lambdas), modules, and collection literals, the scope was
+# dramatically cut after years of delays. The surviving features were
+# grouped under "Project Coin" — a collection of small, pragmatic language
+# improvements chosen by community ballot from hundreds of proposals.
+#
+# The name "Project Coin" reflects the philosophy: small change (as in
+# coins, not paper bills). Each feature was deliberately modest, addressing
+# a specific pain point without introducing new concepts. Joe Darcy, the
+# project lead, described the selection criteria as features that "make
+# developers' lives easier without adding complexity to the language."
+#
+# The lexical changes in Java 7 are limited to numeric literals:
+#
+#   1. BINARY INTEGER LITERALS — The `0b` and `0B` prefix, analogous to
+#      the existing `0x`/`0X` hex prefix. This fills a gap that had existed
+#      since Java 1.0: you could write hex (0xFF) and octal (077) but not
+#      binary. For bit manipulation, bitmask construction, and low-level
+#      protocol work, binary literals are far more readable:
+#
+#        int mask = 0b1111_0000;           // much clearer than 0xF0
+#        int flags = 0b0010_0100_1000;     // individual bits are visible
+#        byte header = (byte) 0b1010_0001; // protocol headers
+#
+#      Binary was the last remaining common base to be added. Java now
+#      supports all four: binary (0b), octal (0), decimal, and hex (0x).
+#
+#   2. UNDERSCORES IN NUMERIC LITERALS — Underscores can appear between
+#      digits in any numeric literal (integer or floating-point, any base)
+#      to improve readability. They are purely visual separators with no
+#      semantic meaning:
+#
+#        int million = 1_000_000;           // grouped by thousands
+#        long creditCard = 1234_5678_9012_3456L;  // grouped by fours
+#        int hex = 0xFF_EC_DE_5E;          // grouped by bytes
+#        int binary = 0b1010_0001_0100_0010; // grouped by nibbles
+#        double pi = 3.14_15_92_65;        // grouped by pairs
+#
+#      Underscores are NOT allowed in the following positions:
+#        - At the beginning or end of the number: _1000 and 1000_ are illegal
+#        - Adjacent to the decimal point: 3._14 and 3_.14 are illegal
+#        - Adjacent to the base prefix: 0_x1 and 0x_1 are illegal
+#        - Adjacent to the type suffix: 1000_L is illegal
+#        - Adjacent to the exponent indicator: 1_e10 and 1e_10 are illegal
+#
+#      This feature was inspired by Ada, Ruby, and Python 3.6 (though Python
+#      actually added underscores later, in PEP 515 — Java 7 beat Python to
+#      it by five years).
+#
+# No new keywords were added in Java 7. All the major Project Coin features
+# (try-with-resources, multi-catch, diamond operator, strings in switch)
+# reuse existing keywords and operators. The `|` (PIPE) token gains new
+# significance in multi-catch clauses, but lexically it is unchanged.
+#
+# Accumulated tokens from prior versions:
+#   - Java 1.0 (1996): 48 keywords, all operators and delimiters
+#   - Java 1.1 (1997): no lexical changes (inner classes are syntactic)
+#   - Java 1.2 (1998): added `strictfp` keyword
+#   - Java 1.4 (2002): added `assert` keyword
+#   - Java 5 (2004):   added `enum` keyword, `@` operator, `...` operator
+#   - Java 7 (2011):   added binary literals (0b), underscores in numbers
+#
+# Format:
+#   TOKEN_NAME = /regex/     — regex-based token pattern
+#   TOKEN_NAME = "literal"   — exact literal match
+#   TOKEN_NAME = /regex/ -> ALIAS  — regex token aliased to a canonical name
+#
+# Order matters: first match wins. Multi-character operators
+# must come before single-character ones (e.g., == before =).
+# Numeric literals with suffixes must come before plain integers.
+
+# ============================================================================
+# Literals
+# ============================================================================
+#
+# Identifiers in Java can contain letters, digits, underscores, and the
+# dollar sign ($). The $ was originally used by the compiler for inner class
+# names (e.g., Outer$Inner.class) and is technically legal in user code,
+# though discouraged by convention. The Java Language Specification defines
+# identifiers using Unicode categories, but we use the ASCII subset here
+# since the tokenizer operates on ASCII source.
+
+NAME = /[a-zA-Z_$][a-zA-Z0-9_$]*/
+
+# ----------------------------------------------------------------------------
+# Numeric literals
+# ----------------------------------------------------------------------------
+#
+# Java 7 makes two additions to numeric literals:
+#
+#   1. BINARY INTEGER LITERALS: 0b and 0B prefixes
+#
+#      Before Java 7, programmers working with bitmasks had to use hex
+#      (0xFF) or decimal (255) and mentally convert to binary. The 0b
+#      prefix makes the bit pattern explicit:
+#
+#        int permissions = 0b111_101_101;  // rwxr-xr-x (Unix permissions)
+#        int sync = 0b10101010;            // alternating bits
+#
+#      Binary literals support the long suffix (L/l) just like other
+#      integer forms: 0b1010L is a long binary literal.
+#
+#   2. UNDERSCORES IN NUMERIC LITERALS
+#
+#      Underscores can appear between any two digits in any numeric literal.
+#      They are ignored by the compiler — `1_000_000` and `1000000` produce
+#      identical bytecode. The underscore is purely a visual aid.
+#
+#      The rules for underscore placement are:
+#        - Must appear BETWEEN digits (not at start, end, or adjacent to
+#          prefix/suffix/decimal point/exponent marker)
+#        - Multiple consecutive underscores are legal: `1___000` works
+#        - Underscores work in ALL numeric forms: decimal, hex, octal,
+#          binary, and floating-point
+#
+#      Examples across all numeric forms:
+#
+#        Decimal:  1_000_000, 999_99
+#        Hex:      0xFF_FF, 0xCAFE_BABE
+#        Octal:    0177_777
+#        Binary:   0b1010_0001, 0b1111_0000_1111
+#        Float:    3.14_15_92, 1_000.50, 1.0e1_0
+#        Long:     1_000_000L, 0xFF_FFL
+#
+# The regex patterns below use `[0-9](_*[0-9])*` to match digit sequences
+# with optional interleaved underscores. This ensures underscores appear
+# only between digits, never at the start or end of the digit sequence.
+#
+# All numeric variants alias to NUMBER so the parser sees a single token type.
+
+BINARY_NUMBER     = /0[bB][01](_*[01])*[lL]?/ -> NUMBER
+HEX_NUMBER        = /0[xX][0-9a-fA-F](_*[0-9a-fA-F])*[lL]?/ -> NUMBER
+OCTAL_NUMBER      = /0[0-7](_*[0-7])*[lL]?/ -> NUMBER
+FLOAT_NUMBER      = /[0-9](_*[0-9])*\.[0-9](_*[0-9])*([eE][+-]?[0-9](_*[0-9])*)?[fFdD]?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9](_*[0-9])*([eE][+-]?[0-9](_*[0-9])*)?[fFdD]?/ -> NUMBER
+SCI_NUMBER        = /[0-9](_*[0-9])*[eE][+-]?[0-9](_*[0-9])*[fFdD]?/ -> NUMBER
+LONG_NUMBER       = /[0-9](_*[0-9])*[lL]/ -> NUMBER
+FLOAT_SUFFIX      = /[0-9](_*[0-9])*[fFdD]/ -> NUMBER
+INT_NUMBER        = /[0-9](_*[0-9])*/ -> NUMBER
+
+# ----------------------------------------------------------------------------
+# String and character literals
+# ----------------------------------------------------------------------------
+#
+# Java 7 makes no changes to string or character literals. Both support the
+# same escape sequences as Java 1.0:
+#
+#   \\    backslash
+#   \"    double quote (in strings)
+#   \'    single quote (in chars)
+#   \n    newline, \r carriage return, \t tab, \b backspace, \f form feed
+#   \0    null character
+#   \ooo  octal escape (1-3 digits, max \377)
+#   \uHHHH  Unicode escape (exactly 4 hex digits)
+#
+# Text blocks (""") don't arrive until Java 13.
+
+STRING = /"([^"\\]|\\.)*"/
+CHAR   = /'([^'\\]|\\.)*'/
+
+# ============================================================================
+# Multi-character operators (must come before single-character versions)
+# ============================================================================
+#
+# No new operators in Java 7. The `...` (ellipsis) from Java 5, `>>>` and
+# `>>>=` (unsigned right shift) from Java 1.0, and all other multi-character
+# operators are inherited unchanged.
+#
+# The `<>` diamond operator is NOT a new token — it is composed of the
+# existing LESS_THAN and GREATER_THAN tokens. The parser handles the
+# diamond as empty type_arguments in the grammar.
+#
+# Notably, Java 7 also fixes the ">>" ambiguity in nested generics. In
+# Java 5, `List<List<String>>` required a space between the two closing
+# angle brackets because the lexer greedily matched `>>` as RIGHT_SHIFT.
+# Java 7 adds a special parser rule to handle this. Our PEG grammar
+# already handles it naturally by matching GREATER_THAN individually in
+# type argument contexts.
+
+ELLIPSIS                    = "..."
+UNSIGNED_RIGHT_SHIFT_EQUALS = ">>>="
+UNSIGNED_RIGHT_SHIFT        = ">>>"
+LEFT_SHIFT_EQUALS           = "<<="
+RIGHT_SHIFT_EQUALS          = ">>="
+EQUALS_EQUALS               = "=="
+NOT_EQUALS                  = "!="
+LESS_EQUALS                 = "<="
+GREATER_EQUALS              = ">="
+AND_AND                     = "&&"
+OR_OR                       = "||"
+PLUS_PLUS                   = "++"
+MINUS_MINUS                 = "--"
+PLUS_EQUALS                 = "+="
+MINUS_EQUALS                = "-="
+STAR_EQUALS                 = "*="
+SLASH_EQUALS                = "/="
+PERCENT_EQUALS              = "%="
+AMPERSAND_EQUALS            = "&="
+PIPE_EQUALS                 = "|="
+CARET_EQUALS                = "^="
+LEFT_SHIFT                  = "<<"
+RIGHT_SHIFT                 = ">>"
+
+# ============================================================================
+# Single-character operators
+# ============================================================================
+#
+# All single-character operators are inherited from Java 5 unchanged.
+#
+# The PIPE (`|`) token gains new significance in Java 7 multi-catch clauses:
+#
+#   catch (IOException | SQLException e) { ... }
+#
+# Here `|` separates exception types in a union catch. Lexically it is the
+# same bitwise OR token that has existed since Java 1.0 — the grammar
+# disambiguates by context (inside a catch clause parameter, PIPE separates
+# types; in expressions, PIPE is bitwise OR).
+#
+# The AT (`@`) token, QUESTION (`?`) token, and all other single-character
+# operators continue to serve their Java 5 roles.
+
+AT           = "@"
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+#
+# Standard C-family delimiters, unchanged since Java 1.0.
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+DOT       = "."
+COLON     = ":"
+
+# ============================================================================
+# Keywords
+# ============================================================================
+#
+# Java 7 adds NO new keywords. The keyword count remains at 51 (plus the
+# three literal keywords true, false, null — 54 total).
+#
+# This is a deliberate design choice. Project Coin features were selected
+# partly on the criterion that they should NOT require new keywords, since
+# new keywords break backward compatibility (any existing code using the
+# new keyword as an identifier would fail to compile).
+#
+# The try-with-resources statement reuses `try`, `catch`, and `finally`.
+# Multi-catch reuses `catch` and the PIPE operator `|`.
+# The diamond operator reuses `<` and `>`.
+# Strings in switch reuse `switch` and `case`.
+#
+# All keywords from Java 5 are preserved:
+#   - Java 1.0 originals: abstract, boolean, break, byte, case, catch,
+#     char, class, continue, default, do, double, else, extends, final,
+#     finally, float, for, if, implements, import, instanceof, int,
+#     interface, long, native, new, package, private, protected, public,
+#     return, short, static, super, switch, synchronized, this, throw,
+#     throws, transient, try, void, volatile, while
+#   - Java 1.2: strictfp
+#   - Java 1.4: assert
+#   - Java 5: enum
+
+keywords:
+  abstract
+  assert
+  boolean
+  break
+  byte
+  case
+  catch
+  char
+  class
+  continue
+  default
+  do
+  double
+  else
+  enum
+  extends
+  final
+  finally
+  float
+  for
+  if
+  implements
+  import
+  instanceof
+  int
+  interface
+  long
+  native
+  new
+  package
+  private
+  protected
+  public
+  return
+  short
+  static
+  strictfp
+  super
+  switch
+  synchronized
+  this
+  throw
+  throws
+  transient
+  try
+  void
+  volatile
+  while
+  true
+  false
+  null
+
+# ============================================================================
+# Future reserved words
+# ============================================================================
+#
+# The same two identifiers from Java 1.0 remain reserved but unused:
+#
+# const — C/C++ uses this for immutable variables. Java chose `final`
+#   instead. const has never been given a meaning in any Java version.
+#
+# goto — Reserved to produce a helpful error if C programmers try to use
+#   it. Java uses labeled break/continue instead.
+
+reserved:
+  const
+  goto
+
+# ============================================================================
+# Skip patterns (whitespace and comments)
+# ============================================================================
+#
+# No changes to whitespace or comment handling in Java 7. The three comment
+# forms (line //, block /* */, Javadoc /** */) remain unchanged.
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Error recovery tokens
+# ============================================================================
+#
+# These patterns match malformed literals so the lexer can report a
+# meaningful error ("unterminated string literal") instead of producing
+# a confusing cascade of errors from the parser.
+
+errors:
+  BAD_STRING = /"[^"]*$/
+  BAD_CHAR   = /'[^']*$/

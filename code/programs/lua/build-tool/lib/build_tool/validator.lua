@@ -8,6 +8,8 @@ local CI_MANAGED_TOOLCHAIN_LANGUAGES = {
     elixir = true,
     lua = true,
     perl = true,
+    java = true,
+    kotlin = true,
     haskell = true,
 }
 

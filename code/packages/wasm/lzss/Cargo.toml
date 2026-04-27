@@ -1,0 +1,18 @@
+[workspace]
+
+[package]
+name = "lzss-wasm"
+version = "0.1.0"
+edition = "2021"
+description = "WebAssembly bindings for LZSS compression — CMP02"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+lzss = { path = "../../rust/lzss" }
+wasm-bindgen = "0.2"
+
+[dev-dependencies]
+wasm-bindgen-test = "0.3"

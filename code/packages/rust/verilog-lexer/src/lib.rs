@@ -1,210 +1,61 @@
-//! # Verilog Lexer — tokenizing Verilog HDL source code.
-//!
-//! [Verilog](https://en.wikipedia.org/wiki/Verilog) is a Hardware Description
-//! Language (HDL) used to model and design digital circuits. Unlike software
-//! languages that describe sequential computations, Verilog describes physical
-//! structures — gates, wires, flip-flops — that exist simultaneously and
-//! operate in parallel.
-//!
-//! This crate provides a lexer (tokenizer) for Verilog (IEEE 1364-2005). It
-//! loads the `verilog.tokens` grammar file — a declarative description of
-//! every token in Verilog — and feeds it to the generic [`GrammarLexer`]
-//! from the `lexer` crate.
-//!
-//! # Preprocessor
-//!
-//! Verilog has a C-like preprocessor with directives prefixed by backtick:
-//! `` `define ``, `` `ifdef ``, `` `include ``, etc. This crate includes a
-//! [`preprocessor`] module that expands macros and evaluates conditional
-//! compilation directives *before* tokenization.
-//!
-//! The preprocessor is optional: you can call [`tokenize_verilog`] for raw
-//! tokenization, or [`tokenize_verilog_preprocessed`] to run the preprocessor
-//! first.
-//!
-//! # Architecture
-//!
-//! ```text
-//! verilog.tokens       (grammar file on disk)
-//!        |
-//!        v
-//! grammar-tools        (parses .tokens -> TokenGrammar struct)
-//!        |
-//!        v
-//! lexer::GrammarLexer  (tokenizes source using TokenGrammar)
-//!        |
-//!        v
-//! verilog-lexer        (THIS CRATE: wires grammar + lexer + preprocessor)
-//! ```
-//!
-//! # Token types
-//!
-//! The Verilog lexer produces these token categories:
-//!
-//! - **NAME** — identifiers like `clk`, `data_in`, `_valid`
-//! - **KEYWORD** — reserved words: `module`, `wire`, `reg`, `always`, `assign`, etc.
-//! - **NUMBER** — plain integer literals: `42`, `0`, `1_000`
-//! - **SIZED_NUMBER** — sized literals with base: `4'b1010`, `8'hFF`, `32'd42`
-//! - **REAL_NUMBER** — floating-point literals: `3.14`, `1.5e-3`
-//! - **STRING** — string literals: `"hello"`, `"value = %d"`
-//! - **SYSTEM_ID** — system tasks/functions: `$display`, `$finish`, `$time`
-//! - **DIRECTIVE** — compiler directives: `` `define ``, `` `ifdef ``
-//! - **ESCAPED_IDENT** — escaped identifiers: `\my.name`, `\bus[0]`
-//! - **Operators** — `+`, `-`, `*`, `===`, `!==`, `<<<`, `>>>`, `&&`, `||`, etc.
-//! - **Delimiters** — `(`, `)`, `[`, `]`, `{`, `}`, `;`, `,`, `.`, `#`, `@`
-//! - **EOF** — end of file
+//! Verilog lexer backed by compiled token grammar.
 
 pub mod preprocessor;
 
-use std::fs;
-
-use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
 use lexer::token::Token;
 
-// ===========================================================================
-// Grammar file location
-// ===========================================================================
+mod _grammar;
 
-/// Build the path to the `verilog.tokens` grammar file.
-///
-/// We use `env!("CARGO_MANIFEST_DIR")` to get the directory containing this
-/// crate's `Cargo.toml` at compile time. From there, we navigate up to the
-/// `grammars/` directory at the repository root.
-///
-/// ```text
-/// code/
-///   grammars/
-///     verilog.tokens        <-- this is what we want
-///   packages/
-///     rust/
-///       verilog-lexer/
-///         Cargo.toml        <-- CARGO_MANIFEST_DIR points here
-///         src/
-///           lib.rs          <-- we are here
-/// ```
-///
-/// So the relative path from CARGO_MANIFEST_DIR to the grammar file is:
-/// `../../../grammars/verilog.tokens`
-fn grammar_path() -> String {
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    format!("{manifest_dir}/../../../grammars/verilog.tokens")
+pub const DEFAULT_VERSION: &str = "2005";
+pub const SUPPORTED_VERSIONS: &[&str] = _grammar::SUPPORTED_VERSIONS;
+
+fn validate_version(version: &str) -> Result<&str, String> {
+    if SUPPORTED_VERSIONS.contains(&version) {
+        Ok(version)
+    } else {
+        Err(format!(
+            "Unknown Verilog version '{version}'. Valid values: {}",
+            SUPPORTED_VERSIONS
+                .iter()
+                .map(|value| format!("\"{}\"", value))
+                .collect::<Vec<_>>()
+                .join(", ")
+        ))
+    }
 }
 
-// ===========================================================================
-// Public API
-// ===========================================================================
-
-/// Create a `GrammarLexer` configured for Verilog source code.
-///
-/// This function:
-/// 1. Reads the `verilog.tokens` grammar file from disk.
-/// 2. Parses it into a `TokenGrammar` using `grammar-tools`.
-/// 3. Constructs a `GrammarLexer` with the grammar and the given source.
-///
-/// The returned lexer is ready to call `.tokenize()` on.
-///
-/// **Note:** This function does NOT run the preprocessor. If your source
-/// contains `` `define `` or `` `ifdef `` directives, call
-/// [`preprocessor::verilog_preprocess`] first, or use
-/// [`tokenize_verilog_preprocessed`].
-///
-/// # Panics
-///
-/// Panics if the grammar file cannot be read or parsed.
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_verilog_lexer::create_verilog_lexer;
-///
-/// let mut lexer = create_verilog_lexer("module top; endmodule");
-/// let tokens = lexer.tokenize().expect("tokenization failed");
-/// for token in &tokens {
-///     println!("{}", token);
-/// }
-/// ```
 pub fn create_verilog_lexer(source: &str) -> GrammarLexer<'_> {
-    // Step 1: Read the grammar file from disk.
-    let grammar_text = fs::read_to_string(grammar_path())
-        .unwrap_or_else(|e| panic!("Failed to read verilog.tokens: {e}"));
-
-    // Step 2: Parse the grammar text into a structured TokenGrammar.
-    //
-    // The TokenGrammar contains:
-    //   - Token definitions (NAME, NUMBER, SIZED_NUMBER, REAL_NUMBER, STRING,
-    //     SYSTEM_ID, DIRECTIVE, ESCAPED_IDENT, operators, delimiters)
-    //   - Skip patterns (whitespace, single-line comments, block comments)
-    //   - Keywords (module, wire, reg, always, assign, if, else, etc.)
-    //   - Mode: default (no indentation tracking)
-    let grammar = parse_token_grammar(&grammar_text)
-        .unwrap_or_else(|e| panic!("Failed to parse verilog.tokens: {e}"));
-
-    // Step 3: Create and return the lexer.
-    GrammarLexer::new(source, &grammar)
+    create_verilog_lexer_with_version(source, DEFAULT_VERSION)
+        .expect("compiled Verilog token grammar missing default version")
 }
 
-/// Tokenize Verilog source code into a vector of tokens.
-///
-/// This is the most convenient entry point for raw tokenization — it handles
-/// grammar loading, lexer creation, and tokenization in one call. The returned
-/// vector always ends with an `EOF` token.
-///
-/// **Note:** This function does NOT run the preprocessor. Directive tokens
-/// like `` `define `` will appear as DIRECTIVE tokens in the output.
-///
-/// # Panics
-///
-/// Panics if the grammar file cannot be read/parsed, or if the source
-/// contains an unexpected character.
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_verilog_lexer::tokenize_verilog;
-///
-/// let tokens = tokenize_verilog("module top; endmodule");
-/// for token in &tokens {
-///     println!("{:?} {:?}", token.type_, token.value);
-/// }
-/// ```
+pub fn create_verilog_lexer_with_version<'src>(
+    source: &'src str,
+    version: &str,
+) -> Result<GrammarLexer<'src>, String> {
+    let version = validate_version(version)?;
+    let grammar = _grammar::token_grammar(version)
+        .expect("compiled Verilog token grammar missing supported version");
+    Ok(GrammarLexer::new(source, &grammar))
+}
+
 pub fn tokenize_verilog(source: &str) -> Vec<Token> {
-    let mut verilog_lexer = create_verilog_lexer(source);
-
-    verilog_lexer
-        .tokenize()
-        .unwrap_or_else(|e| panic!("Verilog tokenization failed: {e}"))
+    tokenize_verilog_with_version(source, DEFAULT_VERSION)
+        .expect("compiled Verilog token grammar missing default version")
 }
 
-/// Tokenize Verilog source code with preprocessing.
-///
-/// This function first runs the Verilog preprocessor to expand macros and
-/// evaluate conditional compilation directives, then tokenizes the result.
-///
-/// Use this when your source contains directives like `` `define ``,
-/// `` `ifdef ``, `` `include ``, or `` `timescale ``.
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_verilog_lexer::tokenize_verilog_preprocessed;
-///
-/// let source = r#"`define WIDTH 8
-/// module top;
-///   reg [`WIDTH-1:0] data;
-/// endmodule"#;
-///
-/// let tokens = tokenize_verilog_preprocessed(source);
-/// // `WIDTH has been expanded to 8 before tokenization
-/// ```
+pub fn tokenize_verilog_with_version(source: &str, version: &str) -> Result<Vec<Token>, String> {
+    let mut lexer = create_verilog_lexer_with_version(source, version)?;
+    lexer
+        .tokenize()
+        .map_err(|e| format!("Verilog tokenization failed: {e}"))
+}
+
 pub fn tokenize_verilog_preprocessed(source: &str) -> Vec<Token> {
     let preprocessed = preprocessor::verilog_preprocess(source);
     tokenize_verilog(&preprocessed)
 }
-
-// ===========================================================================
-// Tests
-// ===========================================================================
 
 #[cfg(test)]
 mod tests {
@@ -726,4 +577,20 @@ endmodule
         let has_trigger = pairs.iter().any(|(_, v)| *v == "->");
         assert!(has_trigger, "Expected '->' token");
     }
+
+    #[test]
+    fn test_default_version_matches_explicit_2005() {
+        let default_tokens = tokenize_verilog("module top; endmodule");
+        let explicit_tokens =
+            tokenize_verilog_with_version("module top; endmodule", "2005").unwrap();
+        assert_eq!(default_tokens.len(), explicit_tokens.len());
+    }
+
+    #[test]
+    fn test_unknown_version_rejected() {
+        let err = tokenize_verilog_with_version("module top; endmodule", "2099")
+            .expect_err("unknown versions should be rejected");
+        assert!(err.contains("Unknown Verilog version"));
+    }
 }
+

@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PackageId>CodingAdventures.Graph</PackageId>
+    <PackageId>CodingAdventures.Graph.FSharp</PackageId>
     <Version>0.1.0</Version>
     <Authors>Adhithya Rajasekaran</Authors>
     <Description>An undirected weighted graph with adjacency-list and adjacency-matrix representations plus traversal and pathfinding algorithms</Description>

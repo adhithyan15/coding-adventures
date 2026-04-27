@@ -32,6 +32,7 @@ package CodingAdventures::BuildTool::GitDiff;
 use strict;
 use warnings;
 use File::Spec ();
+use CodingAdventures::BuildTool::CIWorkflow ();
 
 our $VERSION = '0.01';
 
@@ -91,10 +92,22 @@ sub affected_packages {
     my @changed_files = $self->changed_files();
     return () unless @changed_files;
 
-    for my $file (@changed_files) {
-        if ($file =~ /^\.github\//) {
-            print "Git diff: shared files changed -- rebuilding everything\n";
+    if (grep { $_ eq CodingAdventures::BuildTool::CIWorkflow::ci_workflow_path() } @changed_files) {
+        my $ci_change = CodingAdventures::BuildTool::CIWorkflow::analyze_changes(
+            $self->{root},
+            $self->{diff_base},
+        );
+
+        if ($ci_change->{requires_full_rebuild}) {
+            print "Git diff: ci.yml changed in shared ways -- rebuilding everything\n";
             return map { $_->{name} } @{$packages_ref};
+        }
+
+        my @toolchains =
+            CodingAdventures::BuildTool::CIWorkflow::sorted_toolchains($ci_change->{toolchains});
+        if (@toolchains) {
+            print "Git diff: ci.yml changed only toolchain-scoped setup for "
+                . join(', ', @toolchains) . "\n";
         }
     }
 

@@ -1,0 +1,7 @@
+[package]
+name = "coding_adventures_des"
+version = "0.1.0"
+edition = "2021"
+description = "DES and 3DES block cipher (FIPS 46-3) implemented from scratch"
+
+[dependencies]

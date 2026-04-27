@@ -1,0 +1,14 @@
+[package]
+name = "coding-adventures-markov-chain"
+version = "0.1.0"
+edition = "2021"
+description = "General-purpose Markov Chain (DT28) built on directed-graph (DT01)"
+license = "MIT"
+
+[dependencies]
+directed-graph = { path = "../directed-graph" }
+rand = "0.8"
+thiserror = "1"
+
+[dev-dependencies]
+# none needed beyond std

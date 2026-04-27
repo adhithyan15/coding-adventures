@@ -173,7 +173,7 @@ nonlocal_stmt = "nonlocal" NAME { COMMA NAME } ;
 # The grammar parses all as expression_list with optional suffixes.
 # Semantic analysis validates that the LHS is a valid assignment target.
 assign_stmt = expression_list
-              ( assign_suffix | augmented_assign | annotation | ) ;
+              [ assign_suffix | augmented_assign | annotation ] ;
 
 assign_suffix = EQUALS expression_list { EQUALS expression_list } ;
 

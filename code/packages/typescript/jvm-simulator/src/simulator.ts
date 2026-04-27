@@ -47,6 +47,13 @@
  *     return            Return void from method
  */
 
+import {
+  ExecutionResult,
+  StepTrace,
+} from "@coding-adventures/simulator-protocol";
+
+import type { JVMState } from "./state.js";
+
 // ---------------------------------------------------------------------------
 // JVM Opcode definitions
 // ---------------------------------------------------------------------------
@@ -107,6 +114,10 @@ export const JVMOpcode = {
 const _OPCODE_NAMES: Record<number, string> = {};
 for (const [name, value] of Object.entries(JVMOpcode)) {
   _OPCODE_NAMES[value] = name.toLowerCase();
+}
+
+function freezeArray<T>(values: readonly T[]): readonly T[] {
+  return Object.freeze([...values]);
 }
 
 // ---------------------------------------------------------------------------
@@ -216,6 +227,63 @@ export class JVMSimulator {
       traces.push(this.step());
     }
     return traces;
+  }
+
+  getState(): JVMState {
+    return Object.freeze({
+      stack: freezeArray(this.stack),
+      locals: freezeArray(this.locals),
+      constants: freezeArray(this.constants),
+      pc: this.pc,
+      halted: this.halted,
+      returnValue: this.returnValue,
+    });
+  }
+
+  execute(
+    program: Uint8Array,
+    maxSteps: number = 100_000
+  ): ExecutionResult<JVMState> {
+    this.load(program);
+
+    const traces: StepTrace[] = [];
+    let steps = 0;
+    let error: string | null = null;
+
+    try {
+      while (!this.halted && steps < maxSteps) {
+        const pcBefore = this.pc;
+        const trace = this.step();
+        traces.push(
+          new StepTrace(pcBefore, this.pc, trace.opcode, trace.description)
+        );
+        steps += 1;
+      }
+    } catch (caught) {
+      error = caught instanceof Error ? caught.message : String(caught);
+    }
+
+    if (error === null && !this.halted) {
+      error = `max_steps (${maxSteps}) exceeded`;
+    }
+
+    return new ExecutionResult({
+      halted: this.halted,
+      steps,
+      finalState: this.getState(),
+      error,
+      traces,
+    });
+  }
+
+  reset(): void {
+    this.stack = [];
+    this.locals = new Array(this._numLocals).fill(null);
+    this.constants = [];
+    this.pc = 0;
+    this.halted = false;
+    this.returnValue = null;
+    this._bytecode = new Uint8Array(0);
   }
 
   // -------------------------------------------------------------------
@@ -585,7 +653,7 @@ export function encodeIload(slot: number): Uint8Array {
  * Each instruction is a number array: [opcode] or [opcode, operand, ...].
  */
 export function assembleJvm(...instructions: number[][]): Uint8Array {
-  const oneByteOpcodes = new Set([
+  const oneByteOpcodes: Set<number> = new Set([
     JVMOpcode.ICONST_0, JVMOpcode.ICONST_1, JVMOpcode.ICONST_2,
     JVMOpcode.ICONST_3, JVMOpcode.ICONST_4, JVMOpcode.ICONST_5,
     JVMOpcode.ILOAD_0, JVMOpcode.ILOAD_1, JVMOpcode.ILOAD_2, JVMOpcode.ILOAD_3,
@@ -594,11 +662,11 @@ export function assembleJvm(...instructions: number[][]): Uint8Array {
     JVMOpcode.IRETURN, JVMOpcode.RETURN,
   ]);
 
-  const twoByteOpcodes = new Set([
+  const twoByteOpcodes: Set<number> = new Set([
     JVMOpcode.BIPUSH, JVMOpcode.LDC, JVMOpcode.ILOAD, JVMOpcode.ISTORE,
   ]);
 
-  const threeByteOpcodes = new Set([
+  const threeByteOpcodes: Set<number> = new Set([
     JVMOpcode.GOTO, JVMOpcode.IF_ICMPEQ, JVMOpcode.IF_ICMPGT,
   ]);
 

@@ -1,0 +1,273 @@
+-- AUTO-GENERATED FILE - DO NOT EDIT
+-- Source: vhdl2008.tokens
+-- Regenerate with: grammar-tools compile-tokens vhdl2008.tokens
+--
+-- This file embeds a TokenGrammar as native Lua data structures.
+-- Call token_grammar() instead of reading and parsing the .tokens file.
+
+local gt = require("coding_adventures.grammar_tools")
+
+local function token_grammar()
+  local g = gt.TokenGrammar.new()
+  g.definitions = {
+        {
+          name="STRING",
+          pattern="\"([^\"]|\"\")*\"",
+          is_regex=true,
+          line_number=63,
+          alias=nil,
+        },
+        {
+          name="BIT_STRING",
+          pattern="[bBoOxXdD]\"[0-9a-fA-F_]+\"",
+          is_regex=true,
+          line_number=82,
+          alias=nil,
+        },
+        {
+          name="CHAR_LITERAL",
+          pattern="'[^']'",
+          is_regex=true,
+          line_number=100,
+          alias=nil,
+        },
+        {
+          name="BASED_LITERAL",
+          pattern="[0-9]+#[0-9a-fA-F_]+(\\.[0-9a-fA-F_]+)?#([eE][+-]?[0-9_]+)?",
+          is_regex=true,
+          line_number=116,
+          alias=nil,
+        },
+        {
+          name="REAL_NUMBER",
+          pattern="[0-9][0-9_]*\\.[0-9_]+([eE][+-]?[0-9_]+)?",
+          is_regex=true,
+          line_number=120,
+          alias=nil,
+        },
+        {
+          name="NUMBER",
+          pattern="[0-9][0-9_]*",
+          is_regex=true,
+          line_number=124,
+          alias=nil,
+        },
+        {
+          name="EXTENDED_IDENT",
+          pattern="\\\\[^\\\\]+\\\\",
+          is_regex=true,
+          line_number=143,
+          alias=nil,
+        },
+        {
+          name="NAME",
+          pattern="[a-zA-Z][a-zA-Z0-9_]*",
+          is_regex=true,
+          line_number=144,
+          alias=nil,
+        },
+        {
+          name="VAR_ASSIGN",
+          pattern=":=",
+          is_regex=false,
+          line_number=165,
+          alias=nil,
+        },
+        {
+          name="LESS_EQUALS",
+          pattern="<=",
+          is_regex=false,
+          line_number=166,
+          alias=nil,
+        },
+        {
+          name="GREATER_EQUALS",
+          pattern=">=",
+          is_regex=false,
+          line_number=167,
+          alias=nil,
+        },
+        {
+          name="ARROW",
+          pattern="=>",
+          is_regex=false,
+          line_number=168,
+          alias=nil,
+        },
+        {
+          name="NOT_EQUALS",
+          pattern="/=",
+          is_regex=false,
+          line_number=169,
+          alias=nil,
+        },
+        {
+          name="POWER",
+          pattern="**",
+          is_regex=false,
+          line_number=170,
+          alias=nil,
+        },
+        {
+          name="BOX",
+          pattern="<>",
+          is_regex=false,
+          line_number=171,
+          alias=nil,
+        },
+        {
+          name="PLUS",
+          pattern="+",
+          is_regex=false,
+          line_number=184,
+          alias=nil,
+        },
+        {
+          name="MINUS",
+          pattern="-",
+          is_regex=false,
+          line_number=185,
+          alias=nil,
+        },
+        {
+          name="STAR",
+          pattern="*",
+          is_regex=false,
+          line_number=186,
+          alias=nil,
+        },
+        {
+          name="SLASH",
+          pattern="/",
+          is_regex=false,
+          line_number=187,
+          alias=nil,
+        },
+        {
+          name="AMPERSAND",
+          pattern="&",
+          is_regex=false,
+          line_number=188,
+          alias=nil,
+        },
+        {
+          name="LESS_THAN",
+          pattern="<",
+          is_regex=false,
+          line_number=189,
+          alias=nil,
+        },
+        {
+          name="GREATER_THAN",
+          pattern=">",
+          is_regex=false,
+          line_number=190,
+          alias=nil,
+        },
+        {
+          name="EQUALS",
+          pattern="=",
+          is_regex=false,
+          line_number=191,
+          alias=nil,
+        },
+        {
+          name="TICK",
+          pattern="'",
+          is_regex=false,
+          line_number=192,
+          alias=nil,
+        },
+        {
+          name="PIPE",
+          pattern="|",
+          is_regex=false,
+          line_number=193,
+          alias=nil,
+        },
+        {
+          name="LPAREN",
+          pattern="(",
+          is_regex=false,
+          line_number=199,
+          alias=nil,
+        },
+        {
+          name="RPAREN",
+          pattern=")",
+          is_regex=false,
+          line_number=200,
+          alias=nil,
+        },
+        {
+          name="LBRACKET",
+          pattern="[",
+          is_regex=false,
+          line_number=201,
+          alias=nil,
+        },
+        {
+          name="RBRACKET",
+          pattern="]",
+          is_regex=false,
+          line_number=202,
+          alias=nil,
+        },
+        {
+          name="SEMICOLON",
+          pattern=";",
+          is_regex=false,
+          line_number=203,
+          alias=nil,
+        },
+        {
+          name="COMMA",
+          pattern=",",
+          is_regex=false,
+          line_number=204,
+          alias=nil,
+        },
+        {
+          name="DOT",
+          pattern=".",
+          is_regex=false,
+          line_number=205,
+          alias=nil,
+        },
+        {
+          name="COLON",
+          pattern=":",
+          is_regex=false,
+          line_number=206,
+          alias=nil,
+        },
+      }
+  g.keywords = {"abs", "access", "after", "alias", "all", "and", "architecture", "array", "assert", "attribute", "begin", "block", "body", "buffer", "bus", "case", "component", "configuration", "constant", "disconnect", "downto", "else", "elsif", "end", "entity", "exit", "file", "for", "function", "generate", "generic", "group", "guarded", "if", "impure", "in", "inout", "is", "label", "library", "linkage", "literal", "loop", "map", "mod", "nand", "new", "next", "nor", "not", "null", "of", "on", "open", "or", "others", "out", "package", "port", "postponed", "procedure", "process", "pure", "range", "record", "register", "reject", "rem", "report", "return", "rol", "ror", "select", "severity", "signal", "shared", "sla", "sll", "sra", "srl", "subtype", "then", "to", "transport", "type", "unaffected", "units", "until", "use", "variable", "wait", "when", "while", "with", "xnor", "xor"}
+  g.mode = nil
+  g.escape_mode = "none"
+  g.skip_definitions = {
+        {
+          name="COMMENT",
+          pattern="--[^\\n]*",
+          is_regex=true,
+          line_number=50,
+          alias=nil,
+        },
+        {
+          name="WHITESPACE",
+          pattern="[ \\t\\r\\n]+",
+          is_regex=true,
+          line_number=51,
+          alias=nil,
+        },
+      }
+  g.reserved_keywords = {}
+  g.error_definitions = {}
+  g.groups = {}
+  g.case_sensitive = false
+  g.version = 0
+  g.case_insensitive = false
+  return g
+end
+
+return { token_grammar = token_grammar }

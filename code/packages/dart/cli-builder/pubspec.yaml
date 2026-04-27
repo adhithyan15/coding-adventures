@@ -1,0 +1,19 @@
+name: coding_adventures_cli_builder
+description: >
+  Declarative CLI argument parsing for Dart driven by JSON specs.
+version: 0.1.0
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_directed_graph:
+    path: ../directed-graph
+  coding_adventures_state_machine:
+    path: ../state-machine
+
+dev_dependencies:
+  test: ^1.25.0
+

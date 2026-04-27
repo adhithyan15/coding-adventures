@@ -1,0 +1,9 @@
+[package]
+name = "brotli"
+version = "0.1.0"
+edition = "2021"
+description = "Brotli lossless compression algorithm (2013) — CMP06"
+license = "MIT"
+
+[dependencies]
+huffman-tree = { path = "../huffman-tree" }

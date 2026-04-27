@@ -1,0 +1,453 @@
+# Java 14 (2020) — Lexical Grammar
+# @version 1
+# @java_version 14
+#
+# JDK 14 (March 2020) — Two years into Oracle's rapid six-month cadence, Java
+# 14 delivers three major language features:
+#
+#   1. RECORDS (JEP 359, preview) — Transparent carriers for immutable data.
+#   2. SWITCH EXPRESSIONS (JEP 361, standard) — Switch as an expression, not
+#      just a statement.
+#   3. TEXT BLOCKS (JEP 378, second preview) — Multi-line string literals
+#      with `"""` delimiters.
+#
+# Lexically, Java 14 adds two things on top of Java 10's token set:
+#
+#   1. The `yield` keyword — used inside switch expressions to return a value
+#      from a switch arm that needs more than a simple expression (i.e., from
+#      a block). Example:
+#
+#        int result = switch (x) {
+#            case 1 -> 10;
+#            case 2 -> {
+#                int temp = compute();
+#                yield temp * 2;    // <-- yield returns value from this arm
+#            }
+#            default -> 0;
+#        };
+#
+#   2. The TEXT_BLOCK token — triple-double-quote delimited multi-line strings:
+#
+#        String html = """
+#                <html>
+#                    <body>
+#                        <p>Hello, world</p>
+#                    </body>
+#                </html>
+#                """;
+#
+#      Text blocks strip common leading whitespace (incidental indentation)
+#      and normalize line endings. They support the same escape sequences as
+#      regular strings, plus two new ones:
+#
+#        \s — a literal space (prevents trailing whitespace stripping)
+#        \<newline> — line continuation (suppresses the newline)
+#
+# --------------------------------------------------------------------------
+# WHY `yield` IS A KEYWORD (AND `record` IS NOT)
+# --------------------------------------------------------------------------
+#
+# `yield` is added as a FULL KEYWORD in Java 14. Unlike `var` (Java 10) and
+# `record` (also Java 14), `yield` is a reserved word that cannot be used as
+# an identifier. This is a deliberate choice: `yield` appears in statement
+# position inside switch expressions, where it could be confused with a
+# method call if it were a context keyword:
+#
+#   yield(x);   // Is this yield-statement or method-call?
+#
+# Making `yield` a keyword resolves the ambiguity at the lexer level.
+#
+# `record`, on the other hand, IS a context keyword (restricted identifier),
+# just like `var`. It is lexed as a regular NAME token and given special
+# meaning by the grammar only in type declaration contexts. This design was
+# chosen because `record` was already widely used as a variable name and
+# method name in existing Java code:
+#
+#   Record record = getRecord();    // LEGAL — record is a variable name
+#   record Point(int x, int y) {}   // LEGAL — record is a type declaration
+#   public class record {}          // ILLEGAL — record cannot be a type name
+#
+# In this token file, `record` does NOT appear in the keywords section. It
+# is lexed as NAME and matched by the grammar as a literal `"record"` in
+# record_declaration contexts.
+#
+# --------------------------------------------------------------------------
+# THE `->` ARROW TOKEN: REUSED FROM JAVA 8
+# --------------------------------------------------------------------------
+#
+# Switch expressions use `->` for arrow-form case labels:
+#
+#   int result = switch (day) {
+#       case MONDAY  -> 1;
+#       case TUESDAY -> 2;
+#       default      -> 0;
+#   };
+#
+# The `->` (ARROW) token was already introduced in Java 8 for lambda
+# expressions. No new token is needed — the grammar disambiguates by
+# context (lambda parameter list vs. switch label).
+#
+# --------------------------------------------------------------------------
+# ACCUMULATED CHANGES ACROSS VERSIONS
+# --------------------------------------------------------------------------
+#
+# This token file accumulates all lexical changes from Java 1.0 through 14:
+#
+#   Java 1.0 (1996):  48 keywords, all basic operators and delimiters
+#   Java 1.2 (1998):  added `strictfp` keyword
+#   Java 1.4 (2002):  added `assert` keyword
+#   Java 5 (2004):    added `enum` keyword, `@` operator, `...` ellipsis
+#   Java 7 (2011):    added binary literals (0b1010), underscores in
+#                      numeric literals (1_000_000) — LEXICAL changes only
+#   Java 8 (2014):    added `->` arrow operator, `::` double colon operator
+#   Java 9 (2017):    no lexical changes (module keywords are contextual,
+#                      `_` becomes restricted as identifier)
+#   Java 10 (2018):   no new tokens (`var` is a NAME, not a keyword)
+#   Java 11-13:       no lexical changes relevant to the grammar
+#   Java 14 (2020):   added `yield` keyword, TEXT_BLOCK token
+#
+# Format:
+#   TOKEN_NAME = /regex/     — regex-based token pattern
+#   TOKEN_NAME = "literal"   — exact literal match
+#   TOKEN_NAME = /regex/ -> ALIAS  — regex token aliased to a canonical name
+#
+# Order matters: first match wins. Multi-character operators
+# must come before single-character ones (e.g., == before =).
+# Numeric literals with suffixes must come before plain integers.
+
+# ============================================================================
+# Literals
+# ============================================================================
+#
+# Identifiers in Java can contain letters, digits, underscores, and the
+# dollar sign ($). The $ was originally used by the compiler for inner class
+# names (e.g., Outer$Inner.class) and is technically legal in user code,
+# though discouraged by convention.
+#
+# IMPORTANT: The identifiers `var` and `record` match this pattern and are
+# lexed as NAME. The grammar handles their special meanings in local variable
+# declaration contexts (var) and type declaration contexts (record).
+# Similarly, `_` (standalone underscore) was restricted in Java 9 — it
+# generates a warning when used as an identifier. But lexically it still
+# matches NAME.
+
+NAME = /[a-zA-Z_$][a-zA-Z0-9_$]*/
+
+# ----------------------------------------------------------------------------
+# Numeric literals
+# ----------------------------------------------------------------------------
+#
+# Java 14 inherits the expanded numeric literal forms from Java 7, which
+# added two major enhancements:
+#
+#   1. BINARY LITERALS (Java 7): Integer literals with the 0b or 0B prefix:
+#
+#        int flags = 0b1010_0011;   // binary: 163
+#        long mask = 0B1111_0000L;  // binary long
+#
+#   2. UNDERSCORES IN NUMERIC LITERALS (Java 7): Underscores between digits
+#      as visual separators for readability:
+#
+#        long creditCard = 1234_5678_9012_3456L;
+#        int hexBytes    = 0xFF_EC_DE_5E;
+#        float pi        = 3.14_15_92f;
+#
+#      Underscores are NOT allowed at the start or end of a number, nor
+#      adjacent to a decimal point, 0x/0b prefix, or type suffix.
+#
+# Earlier literal forms are preserved:
+#   Java 1.0: Hex (0xFF), octal (077), decimal (42), long (42L),
+#             float (3.14f), double (3.14d), scientific (1e10)
+#
+# All numeric variants alias to NUMBER so the parser sees a single token type.
+
+BINARY_NUMBER     = /0[bB][01][01_]*[01][lL]?/ -> NUMBER
+BINARY_SHORT      = /0[bB][01][lL]?/ -> NUMBER
+HEX_NUMBER        = /0[xX][0-9a-fA-F][0-9a-fA-F_]*[0-9a-fA-F][lL]?/ -> NUMBER
+HEX_SHORT         = /0[xX][0-9a-fA-F][lL]?/ -> NUMBER
+OCTAL_NUMBER      = /0[0-7_]*[0-7]+[lL]?/ -> NUMBER
+FLOAT_NUMBER      = /[0-9][0-9_]*\.[0-9_]*([eE][+-]?[0-9_]+)?[fFdD]?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9][0-9_]*([eE][+-]?[0-9_]+)?[fFdD]?/ -> NUMBER
+SCI_NUMBER        = /[0-9][0-9_]*[eE][+-]?[0-9_]+[fFdD]?/ -> NUMBER
+LONG_NUMBER       = /[0-9][0-9_]*[lL]/ -> NUMBER
+FLOAT_SUFFIX      = /[0-9][0-9_]*[fFdD]/ -> NUMBER
+INT_NUMBER        = /[0-9][0-9_]*/ -> NUMBER
+
+# ----------------------------------------------------------------------------
+# String and character literals
+# ----------------------------------------------------------------------------
+#
+# Java 14 adds TEXT BLOCKS (JEP 378, second preview — finalized in Java 15).
+# Text blocks are multi-line string literals delimited by triple double
+# quotes ("""). They were inspired by similar features in Python, Kotlin,
+# Scala, and Swift.
+#
+# A text block opens with `"""` followed by optional whitespace and a
+# MANDATORY newline. The content begins on the next line and continues until
+# a closing `"""` is found. The opening `"""` CANNOT have content on the
+# same line — this is a deliberate design choice to prevent ugly formatting:
+#
+#   // LEGAL — opening """ on its own line:
+#   String html = """
+#           <html>
+#               <body>Hello</body>
+#           </html>
+#           """;
+#
+#   // ILLEGAL — content on same line as opening """:
+#   String bad = """Hello""";    // compile error!
+#
+# Text blocks support all traditional escape sequences plus two new ones:
+#
+#   \s        — explicit space (prevents trailing whitespace stripping)
+#   \<newline> — line continuation (joins the next line, suppressing newline)
+#
+# The compiler processes text blocks in three phases:
+#   1. Line endings are normalized to \n (LF)
+#   2. Incidental leading whitespace is stripped (based on the position of
+#      the closing """)
+#   3. Escape sequences are interpreted
+#
+# The position of the closing `"""` is significant — it determines how much
+# leading whitespace is stripped. If `"""` is at column 0, no stripping
+# occurs. If it's indented to column 12, then up to 12 characters of
+# leading whitespace are removed from each line.
+#
+# IMPORTANT: TEXT_BLOCK must be matched BEFORE STRING in the token order,
+# because `"""` starts with `"` and first-match-wins. If STRING came first,
+# the lexer would match `""` as an empty string, leaving `"...` as a bad
+# string.
+#
+# The regex matches: opening `"""`, optional horizontal whitespace, a
+# newline, then content (any chars including quotes, as long as we don't
+# see three consecutive unescaped quotes), and finally the closing `"""`.
+# The content portion `([^"\\]|\\.|"[^"\\]|""[^"\\])*` ensures we handle
+# escaped characters and don't prematurely match on one or two quotes.
+#
+# Regular string and character literals from Java 1.0 are preserved.
+
+TEXT_BLOCK = /"""[ \t]*\n([^"\\]|\\.|"[^"\\]|""[^"\\])*"""/ -> STRING
+
+STRING = /"([^"\\]|\\.)*"/
+CHAR   = /'([^'\\]|\\.)*'/
+
+# ============================================================================
+# Multi-character operators
+# ============================================================================
+#
+# Java 14 inherits all multi-character operators from Java 10 (which
+# accumulated them from Java 1.0 through Java 8). No new multi-character
+# operators are added.
+#
+# Key operators from prior versions:
+#   - ELLIPSIS `...` (Java 5, for varargs)
+#   - ARROW `->` (Java 8, for lambdas; REUSED in Java 14 for switch rules)
+#   - DOUBLE_COLON `::` (Java 8, for method references)
+#
+# The ARROW token `->` takes on dual meaning in Java 14:
+#
+#   // Java 8: lambda expression
+#   list.forEach(item -> process(item));
+#
+#   // Java 14: switch expression rule (arrow label)
+#   int result = switch (x) {
+#       case 1 -> 10;           // arrow between case label and expression
+#       case 2 -> { yield 20; } // arrow between case label and block
+#       default -> 0;
+#   };
+#
+# The grammar disambiguates: in a switch_rule context, ARROW separates a
+# switch_label from its body. In an expression context, ARROW separates
+# lambda parameters from their body.
+
+ELLIPSIS                    = "..."
+ARROW                       = "->"
+DOUBLE_COLON                = "::"
+UNSIGNED_RIGHT_SHIFT_EQUALS = ">>>="
+UNSIGNED_RIGHT_SHIFT        = ">>>"
+LEFT_SHIFT_EQUALS           = "<<="
+RIGHT_SHIFT_EQUALS          = ">>="
+EQUALS_EQUALS               = "=="
+NOT_EQUALS                  = "!="
+LESS_EQUALS                 = "<="
+GREATER_EQUALS              = ">="
+AND_AND                     = "&&"
+OR_OR                       = "||"
+PLUS_PLUS                   = "++"
+MINUS_MINUS                 = "--"
+PLUS_EQUALS                 = "+="
+MINUS_EQUALS                = "-="
+STAR_EQUALS                 = "*="
+SLASH_EQUALS                = "/="
+PERCENT_EQUALS              = "%="
+AMPERSAND_EQUALS            = "&="
+PIPE_EQUALS                 = "|="
+CARET_EQUALS                = "^="
+LEFT_SHIFT                  = "<<"
+RIGHT_SHIFT                 = ">>"
+
+# ============================================================================
+# Single-character operators
+# ============================================================================
+#
+# All single-character operators from Java 5, unchanged. The `@` sign (from
+# Java 5, for annotations) and `?` (dual use: ternary operator and wildcard
+# type argument) are included.
+
+AT           = "@"
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+#
+# Standard C-family delimiters, unchanged from Java 1.0. The ELLIPSIS (...)
+# must be matched before DOT in the operator section above.
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+DOT       = "."
+COLON     = ":"
+
+# ============================================================================
+# Keywords
+# ============================================================================
+#
+# Java 14 has 52 keywords — one more than Java 10's 51. The new keyword is
+# `yield`, added for switch expressions.
+#
+# Accumulated keyword history:
+#   Java 1.0 (1996):  48 keywords (abstract, boolean, break, ... while)
+#   Java 1.2 (1998):  + strictfp (49)
+#   Java 1.4 (2002):  + assert (50)
+#   Java 5 (2004):    + enum (51)
+#   Java 7-13:        no new keywords
+#   Java 14 (2020):   + yield (52)
+#
+# IMPORTANT: `var` is NOT listed here. It is a "restricted identifier" (context
+# keyword) that is lexed as NAME and given special meaning by the grammar ONLY
+# in local variable declaration contexts.
+#
+# IMPORTANT: `record` is NOT listed here. Like `var`, it is a restricted
+# identifier. It is lexed as NAME and matched by the grammar as a literal
+# `"record"` in type declaration contexts. `record` was chosen as a context
+# keyword because it was widely used as an identifier in existing code —
+# particularly in database-related code (ResultSet.getRecord(), etc.).
+#
+# The three literal keywords (true, false, null) are included. Technically
+# the JLS calls them "literals" rather than keywords, but they are reserved
+# words that cannot be used as identifiers.
+
+keywords:
+  abstract
+  assert
+  boolean
+  break
+  byte
+  case
+  catch
+  char
+  class
+  continue
+  default
+  do
+  double
+  else
+  enum
+  extends
+  final
+  finally
+  float
+  for
+  if
+  implements
+  import
+  instanceof
+  int
+  interface
+  long
+  native
+  new
+  package
+  private
+  protected
+  public
+  return
+  short
+  static
+  strictfp
+  super
+  switch
+  synchronized
+  this
+  throw
+  throws
+  transient
+  try
+  void
+  volatile
+  while
+  yield
+  true
+  false
+  null
+
+# ============================================================================
+# Future reserved words
+# ============================================================================
+#
+# The same two identifiers from Java 1.0 remain reserved but unused:
+#
+# const — Reserved since Java 1.0, never given a meaning. Java uses `final`.
+# goto  — Reserved to produce a helpful error for C programmers. Java uses
+#         labeled break/continue instead.
+
+reserved:
+  const
+  goto
+
+# ============================================================================
+# Skip patterns (whitespace and comments)
+# ============================================================================
+#
+# Three comment forms, unchanged since Java 1.0:
+#   1. Line comments:    // to end of line
+#   2. Block comments:   /* ... */ (cannot nest)
+#   3. Javadoc comments: /** ... */ (lexically identical to block comments)
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Error recovery tokens
+# ============================================================================
+#
+# Malformed literals for better error reporting. Java 14 adds BAD_TEXT_BLOCK
+# for unterminated text blocks — since text blocks can span many lines, an
+# unterminated one would otherwise consume the rest of the file.
+
+errors:
+  BAD_TEXT_BLOCK = /"""[ \t]*\n([^"\\]|\\.|"[^"\\]|""[^"\\])*$/
+  BAD_STRING     = /"[^"]*$/
+  BAD_CHAR       = /'[^']*$/

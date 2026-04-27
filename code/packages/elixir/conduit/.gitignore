@@ -1,0 +1,15 @@
+# Mix build output / deps cache.
+_build/
+deps/
+
+# Compiled NIF — rebuilt from source on every BUILD invocation.
+priv/*.so
+priv/*.dylib
+priv/*.dll
+
+# Rust build artifacts.
+native/conduit_native/target/
+
+# ExUnit coverage / dialyzer cache.
+cover/
+.elixir_ls/

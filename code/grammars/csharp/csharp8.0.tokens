@@ -1,0 +1,422 @@
+# C# 8.0 (2019) — Lexical Grammar
+# @version 1
+# @csharp_version 8.0
+#
+# .NET Core 3.0 — September 2019
+#
+# C# 8.0 is a landmark release that arrived alongside .NET Core 3.0, the first
+# version of .NET Core to support desktop workloads (Windows Forms, WPF). More
+# importantly, C# 8.0 represents a philosophical shift in the language: it
+# introduces NULLABLE REFERENCE TYPES, fundamentally changing how C# developers
+# think about null safety.
+#
+# For its entire history (versions 1.0 through 7.3), C# treated null as a
+# valid value for any reference type. The string type could hold either a
+# string or null. This led to the "billion-dollar mistake" — NullReferenceException
+# being the most common runtime error in .NET applications.
+#
+# C# 8.0 adds opt-in nullable reference type analysis. When enabled, the
+# compiler distinguishes between `string` (non-nullable, should never be null)
+# and `string?` (nullable, might be null). This is a MAJOR cultural shift for
+# the C# ecosystem, comparable to Kotlin's null safety system.
+#
+# Other significant additions:
+#   - Async streams (await foreach)
+#   - Ranges and indices (a[1..3], a[^1])
+#   - Switch expressions (concise pattern-based switching)
+#   - Default interface methods (implementation in interfaces)
+#   - Null-coalescing assignment (x ??= defaultValue)
+#   - Using declarations (using without braces)
+#   - Static local functions
+#   - Property patterns, tuple patterns, positional patterns
+#
+# What C# 8.0 does NOT have (added in later versions):
+#   - Records (C# 9.0, 2020)
+#   - Top-level statements (C# 9.0)
+#   - Global usings (C# 10.0, 2021)
+#   - File-scoped namespaces (C# 10.0)
+#   - Raw string literals (C# 11.0, 2022)
+#   - Primary constructors for classes (C# 12.0, 2023)
+#   - Collection expressions (C# 12.0)
+#
+# This tokens file is COMPLETE and SELF-CONTAINED. It includes all tokens from
+# C# 1.0 through 7.3, plus the new tokens introduced in C# 8.0.
+#
+# Format:
+#   TOKEN_NAME = /regex/     — regex-based token pattern
+#   TOKEN_NAME = "literal"   — exact literal match
+#   TOKEN_NAME = /regex/ -> ALIAS  — regex token aliased to a canonical name
+#
+# Order matters: first match wins. Multi-character operators
+# must come before single-character ones (e.g., == before =).
+# Numeric literals with suffixes must come before plain integers.
+
+# ============================================================================
+# Literals
+# ============================================================================
+#
+# Identifiers follow the same rules as C# 1.0: letters, digits, underscores.
+# The verbatim identifier prefix (@) escapes keywords to use them as names.
+#
+# No changes to identifier rules through C# 8.0.
+
+NAME           = /[a-zA-Z_][a-zA-Z0-9_]*/
+VERBATIM_NAME  = /@[a-zA-Z_][a-zA-Z0-9_]*/ -> NAME
+
+# ----------------------------------------------------------------------------
+# Numeric literals
+# ----------------------------------------------------------------------------
+#
+# C# 7.0 added binary literals (0b...) and digit separators (_) to all
+# numeric forms. These were the first changes to numeric lexing since C# 1.0.
+#
+# Binary literals (C# 7.0):
+#   0b1010       — decimal 10
+#   0B1111_0000  — decimal 240, with digit separators for readability
+#
+# Digit separators (C# 7.0):
+#   1_000_000          — one million (much more readable)
+#   0xFF_FF_FF_FF      — max unsigned int, grouped by byte
+#   0b1111_0000_1111   — binary with nibble grouping
+#   3.14_159_265       — pi with digit groups
+#
+# Digit separators are purely cosmetic — they have no effect on the value.
+# They cannot appear at the start or end of a number, and cannot be adjacent
+# to the radix prefix (0b, 0x) or suffix (L, U, etc.). But multiple separators
+# can appear between digits: 1__000 is legal.
+#
+# C# 7.2 added a leading separator after the radix prefix:
+#   0b_1010    — legal in 7.2+ (illegal in 7.0-7.1)
+#   0x_FF      — legal in 7.2+
+#
+# C# 8.0 does NOT add any new numeric literal forms.
+#
+# All numeric variants alias to NUMBER so the parser sees a single token type.
+
+BINARY_ULONG     = /0[bB]_?[01][01_]*([uU][lL]|[lL][uU])/ -> NUMBER
+BINARY_LONG      = /0[bB]_?[01][01_]*[lL]/ -> NUMBER
+BINARY_UINT      = /0[bB]_?[01][01_]*[uU]/ -> NUMBER
+BINARY_NUMBER    = /0[bB]_?[01][01_]*/ -> NUMBER
+HEX_ULONG        = /0[xX]_?[0-9a-fA-F][0-9a-fA-F_]*([uU][lL]|[lL][uU])/ -> NUMBER
+HEX_LONG         = /0[xX]_?[0-9a-fA-F][0-9a-fA-F_]*[lL]/ -> NUMBER
+HEX_UINT         = /0[xX]_?[0-9a-fA-F][0-9a-fA-F_]*[uU]/ -> NUMBER
+HEX_NUMBER       = /0[xX]_?[0-9a-fA-F][0-9a-fA-F_]*/ -> NUMBER
+DECIMAL_FLOAT    = /[0-9][0-9_]*\.[0-9_]*([eE][+-]?[0-9][0-9_]*)?[fFdDmM]?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9][0-9_]*([eE][+-]?[0-9][0-9_]*)?[fFdDmM]?/ -> NUMBER
+SCI_NUMBER       = /[0-9][0-9_]*[eE][+-]?[0-9][0-9_]*[fFdDmM]?/ -> NUMBER
+ULONG_NUMBER     = /[0-9][0-9_]*([uU][lL]|[lL][uU])/ -> NUMBER
+LONG_NUMBER      = /[0-9][0-9_]*[lL]/ -> NUMBER
+UINT_NUMBER      = /[0-9][0-9_]*[uU]/ -> NUMBER
+FLOAT_SUFFIX     = /[0-9][0-9_]*[fFdDmM]/ -> NUMBER
+INT_NUMBER       = /[0-9][0-9_]*/ -> NUMBER
+
+# ----------------------------------------------------------------------------
+# String and character literals
+# ----------------------------------------------------------------------------
+#
+# C# 6.0 added interpolated strings ($"Hello {name}") and C# 8.0 adds no
+# new string forms. The full set of string literals through C# 8.0:
+#
+#   1. Regular strings:          "hello\nworld"
+#   2. Verbatim strings:         @"C:\Users\file.txt"
+#   3. Character literals:       'a', '\n', '\u0041'
+#   4. Interpolated strings:     $"Hello {name}, age {age + 1}"     (C# 6.0)
+#   5. Interpolated verbatim:    $@"Path: {dir}\{file}"             (C# 6.0)
+#                            or  @$"Path: {dir}\{file}"             (C# 8.0)
+#
+# C# 8.0 allows BOTH orderings of the $ and @ prefixes for interpolated
+# verbatim strings. Previously only $@"..." was allowed; now @$"..." is also
+# valid. This was a small quality-of-life improvement — developers kept
+# getting the order wrong.
+#
+# Interpolated strings are context-sensitive: the {expression} parts need
+# to be lexed in expression mode. For a full treatment, we would need
+# pattern groups (like template literals in ECMAScript). Here we treat the
+# opening delimiter as a single token and let the parser handle the structure.
+
+STRING                   = /"([^"\\]|\\.)*"/
+VERBATIM_STRING          = /@"([^"]|"")*"/
+INTERPOLATED_STRING      = /\$"([^"\\{]|\\.|\{\{|\}\})*"/
+INTERPOLATED_VERBATIM    = /(\$@|@\$)"([^"{]|""|\{\{|\}\})*"/
+CHAR                     = /'([^'\\]|\\.)*'/
+
+# ============================================================================
+# Multi-character operators (must come before single-character versions)
+# ============================================================================
+#
+# Cumulative operator additions through C# 8.0:
+#
+#   C# 1.0:  All basic C-style operators (see list below)
+#   C# 2.0:  ?? (null coalescing)
+#   C# 3.0:  => (lambda arrow)
+#   C# 6.0:  ?. (null-conditional member access)
+#            ?[ (null-conditional element access)
+#   C# 8.0:  .. (range operator)  — NEW in this version
+#            ??= (null-coalescing assignment)  — NEW in this version
+#
+# The range operator (..) enables a concise syntax for creating Range objects:
+#
+#   a[1..3]     — elements at index 1 and 2 (exclusive end)
+#   a[..3]      — first three elements
+#   a[1..]      — everything from index 1 onward
+#   a[..]       — entire array (clone)
+#   a[^2..]     — last two elements (^ is index-from-end)
+#
+# The .. operator creates a System.Range value. The ^ prefix on an index
+# creates a System.Index value that counts from the end. These are not new
+# tokens — ^ is already CARET, and the grammar handles the context.
+#
+# The null-coalescing assignment (??=) is a compound assignment operator:
+#
+#   x ??= defaultValue;
+#   // equivalent to: if (x == null) x = defaultValue;
+#
+# This is especially useful for lazy initialization:
+#   _cache ??= new Dictionary<string, object>();
+
+QUESTION_QUESTION_EQUALS = "??="
+NULL_CONDITIONAL_DOT     = "?."
+NULL_CONDITIONAL_BRACKET = "?["
+NULL_COALESCING          = "??"
+LAMBDA_ARROW             = "=>"
+LEFT_SHIFT_EQUALS        = "<<="
+RIGHT_SHIFT_EQUALS       = ">>="
+DOT_DOT                  = ".."
+EQUALS_EQUALS            = "=="
+NOT_EQUALS               = "!="
+LESS_EQUALS              = "<="
+GREATER_EQUALS           = ">="
+AND_AND                  = "&&"
+OR_OR                    = "||"
+PLUS_PLUS                = "++"
+MINUS_MINUS              = "--"
+PLUS_EQUALS              = "+="
+MINUS_EQUALS             = "-="
+STAR_EQUALS              = "*="
+SLASH_EQUALS             = "/="
+PERCENT_EQUALS           = "%="
+AMPERSAND_EQUALS         = "&="
+PIPE_EQUALS              = "|="
+CARET_EQUALS             = "^="
+LEFT_SHIFT               = "<<"
+RIGHT_SHIFT              = ">>"
+COLON_COLON              = "::"
+ARROW                    = "->"
+
+# ============================================================================
+# Single-character operators
+# ============================================================================
+#
+# All single-character operators from C# 1.0. Note that several of these
+# have context-dependent meanings in C# 8.0:
+#
+#   CARET (^): In unsafe code, XOR. With Index, means "from end": ^1 is
+#   the last element, ^2 is second-to-last. The grammar disambiguates.
+#
+#   BANG (!): Logical NOT in expressions. Also the null-forgiving operator
+#   in nullable reference type contexts: someValue! tells the compiler
+#   "I know this is not null, suppress the warning." This is a contextual
+#   postfix operator — the lexer emits the same BANG token, and the grammar
+#   handles the two interpretations.
+
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+#
+# Standard C-family delimiters plus :: (namespace alias qualifier, C# 2.0).
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+DOT       = "."
+COLON     = ":"
+
+# ============================================================================
+# Keywords
+# ============================================================================
+#
+# C# 8.0 has 79 reserved keywords (same as C# 7.0 — the count has been
+# stable since C# 5.0 added `async` and `await`). New features in C# 8.0
+# use CONTEXTUAL keywords instead of reserved keywords, so existing code
+# is never broken.
+#
+# Reserved keywords (79 total — unchanged since C# 5.0):
+#
+# The full set includes the original 77 from C# 1.0, plus:
+#   yield    — added in C# 2.0 for iterators (contextual, became reserved)
+#   var      — added in C# 3.0 for type inference (technically contextual)
+#   async    — added in C# 5.0 for asynchronous methods
+#   await    — added in C# 5.0 for asynchronous operations
+#
+# Contextual keywords through C# 8.0 (not reserved — can be used as names):
+#
+#   C# 2.0: partial, yield, where (generic constraints)
+#   C# 3.0: var, from, select, where (LINQ), group, into, orderby,
+#           ascending, descending, join, on, equals, let, by
+#   C# 4.0: dynamic
+#   C# 5.0: async, await (contextual in practice)
+#   C# 6.0: nameof, when (exception filters)
+#   C# 7.0: _ (discard), ref (returns/locals as contextual modifier)
+#   C# 8.0: No new contextual keywords. The new features reuse existing
+#           syntax (switch expressions reuse switch and =>, using
+#           declarations reuse using, etc.)
+#
+# The fact that C# 8.0 adds no new keywords — despite adding major features —
+# demonstrates the language team's skill at extending the grammar without
+# breaking backward compatibility.
+
+keywords:
+  abstract
+  as
+  async
+  await
+  base
+  bool
+  break
+  byte
+  case
+  catch
+  char
+  checked
+  class
+  const
+  continue
+  decimal
+  default
+  delegate
+  do
+  double
+  else
+  enum
+  event
+  explicit
+  extern
+  false
+  finally
+  fixed
+  float
+  for
+  foreach
+  goto
+  if
+  implicit
+  in
+  int
+  interface
+  internal
+  is
+  lock
+  long
+  namespace
+  new
+  null
+  object
+  operator
+  out
+  override
+  params
+  private
+  protected
+  public
+  readonly
+  ref
+  return
+  sbyte
+  sealed
+  short
+  sizeof
+  stackalloc
+  static
+  string
+  struct
+  switch
+  this
+  throw
+  true
+  try
+  typeof
+  uint
+  ulong
+  unchecked
+  unsafe
+  ushort
+  using
+  virtual
+  void
+  volatile
+  while
+
+# ============================================================================
+# Skip patterns (whitespace and comments)
+# ============================================================================
+#
+# Unchanged from C# 1.0. C# has three comment forms:
+#   1. Line comments:    // to end of line
+#   2. Block comments:   /* ... */ (cannot nest)
+#   3. XML doc comments: /// ... (lexically identical to line comments)
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Preprocessor directives
+# ============================================================================
+#
+# C# 8.0 adds the #nullable directive for controlling nullable reference
+# type analysis. This is one of the most important preprocessor additions
+# since C# 1.0:
+#
+#   #nullable enable       — enable nullable warnings and annotations
+#   #nullable disable      — disable nullable warnings and annotations
+#   #nullable restore      — restore to project-level settings
+#   #nullable enable warnings    — enable only warnings
+#   #nullable enable annotations — enable only annotations
+#
+# This directive allows gradual adoption: you can enable nullable analysis
+# file by file, or even section by section within a file.
+
+PP_NULLABLE  = /#\s*nullable\b[^\n]*/
+PP_IF        = /#\s*if\b[^\n]*/
+PP_ELIF      = /#\s*elif\b[^\n]*/
+PP_ELSE      = /#\s*else\b[^\n]*/
+PP_ENDIF     = /#\s*endif\b[^\n]*/
+PP_DEFINE    = /#\s*define\b[^\n]*/
+PP_UNDEF     = /#\s*undef\b[^\n]*/
+PP_REGION    = /#\s*region\b[^\n]*/
+PP_ENDREGION = /#\s*endregion\b[^\n]*/
+PP_ERROR     = /#\s*error\b[^\n]*/
+PP_WARNING   = /#\s*warning\b[^\n]*/
+PP_LINE      = /#\s*line\b[^\n]*/
+PP_PRAGMA    = /#\s*pragma\b[^\n]*/
+
+# ============================================================================
+# Error recovery tokens
+# ============================================================================
+
+errors:
+  BAD_STRING = /"[^"]*$/
+  BAD_CHAR   = /'[^']*$/
+  BAD_VERBATIM_STRING = /@"([^"]|"")*$/
+  BAD_INTERPOLATED_STRING = /\$"([^"\\{]|\\.)*$/

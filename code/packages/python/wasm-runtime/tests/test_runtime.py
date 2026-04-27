@@ -342,10 +342,10 @@ class TestArgumentConversion:
 
 
 class TestRuntimeWithWasi:
-    def test_wasi_stub_integration(self) -> None:
+    def test_wasi_host_integration(self) -> None:
         """Runtime with WASI host should be able to resolve imported funcs."""
-        from wasm_runtime.wasi_stub import WasiStub
-        wasi = WasiStub()
+        from wasm_runtime.wasi_host import WasiHost
+        wasi = WasiHost()
         runtime = WasmRuntime(host=wasi)
 
         module = WasmModule(

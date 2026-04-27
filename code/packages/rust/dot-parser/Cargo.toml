@@ -1,0 +1,9 @@
+[package]
+name = "dot-parser"
+version = "0.1.0"
+edition = "2021"
+description = "Recursive-descent parser for the DOT graph language — produces a DotDocument AST and lowers to GraphDiagram (diagram-ir)"
+
+[dependencies]
+dot-lexer = { path = "../dot-lexer" }
+diagram-ir = { path = "../diagram-ir" }

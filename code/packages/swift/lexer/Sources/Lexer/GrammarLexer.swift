@@ -326,6 +326,9 @@ public final class GrammarLexer {
     /// Whether indentation mode is active.
     private let _indentationMode: Bool
 
+    /// Whether Haskell-style layout post-processing is active.
+    private let _layoutMode: Bool
+
     /// Whether keyword matching is case-insensitive.
     ///
     /// When true, NAME tokens are checked against the keyword set using their
@@ -382,6 +385,9 @@ public final class GrammarLexer {
     /// Pre-computed set of context-sensitive keywords for O(1) lookup.
     /// Words in this set are emitted as NAME with TOKEN_CONTEXT_KEYWORD flag.
     private let _contextKeywordSet: Set<String>
+
+    /// Pre-computed set of layout introducer keywords for O(1) lookup.
+    private let _layoutKeywordSet: Set<String>
 
     // -- Pre/post tokenize hooks --
 
@@ -450,6 +456,8 @@ public final class GrammarLexer {
         self._reservedSet = Set(grammar.reservedKeywords ?? [])
         self._contextKeywordSet = Set(grammar.contextKeywords ?? [])
         self._indentationMode = grammar.mode == "indentation"
+        self._layoutMode = grammar.mode == "layout"
+        self._layoutKeywordSet = Set(grammar.layoutKeywords ?? [])
         self._hasSkipPatterns = !(grammar.skipDefinitions ?? []).isEmpty
 
         // Build alias map: definition name -> alias name.
@@ -627,6 +635,8 @@ public final class GrammarLexer {
         var tokens: [Token]
         if _indentationMode {
             tokens = try _tokenizeIndentation()
+        } else if _layoutMode {
+            tokens = try _tokenizeLayout()
         } else {
             tokens = try _tokenizeStandard()
         }
@@ -748,6 +758,97 @@ public final class GrammarLexer {
         _skipEnabled = true
 
         return tokens
+    }
+
+    private func _tokenizeLayout() throws -> [Token] {
+        return _applyLayout(try _tokenizeStandard())
+    }
+
+    private func _applyLayout(_ tokens: [Token]) -> [Token] {
+        var result: [Token] = []
+        var layoutStack: [Int] = []
+        var pendingLayouts = 0
+        var suppressDepth = 0
+
+        for (index, token) in tokens.enumerated() {
+            if token.type == "NEWLINE" {
+                result.append(token)
+
+                if suppressDepth == 0, let nextToken = _nextLayoutToken(tokens, startIndex: index + 1) {
+                    while let current = layoutStack.last, nextToken.column < current {
+                        result.append(_virtualLayoutToken(type: "VIRTUAL_RBRACE", value: "}", anchor: nextToken))
+                        layoutStack.removeLast()
+                    }
+
+                    if let current = layoutStack.last,
+                       nextToken.type != "EOF",
+                       nextToken.value != "}",
+                       nextToken.column == current {
+                        result.append(_virtualLayoutToken(type: "VIRTUAL_SEMICOLON", value: ";", anchor: nextToken))
+                    }
+                }
+                continue
+            }
+
+            if token.type == "EOF" {
+                while !layoutStack.isEmpty {
+                    result.append(_virtualLayoutToken(type: "VIRTUAL_RBRACE", value: "}", anchor: token))
+                    layoutStack.removeLast()
+                }
+                result.append(token)
+                continue
+            }
+
+            if pendingLayouts > 0 {
+                if token.value == "{" {
+                    pendingLayouts -= 1
+                } else {
+                    for _ in 0..<pendingLayouts {
+                        layoutStack.append(token.column)
+                        result.append(_virtualLayoutToken(type: "VIRTUAL_LBRACE", value: "{", anchor: token))
+                    }
+                    pendingLayouts = 0
+                }
+            }
+
+            result.append(token)
+
+            if !_isVirtualLayoutToken(token) {
+                if token.value == "(" || token.value == "[" || token.value == "{" {
+                    suppressDepth += 1
+                } else if (token.value == ")" || token.value == "]" || token.value == "}") && suppressDepth > 0 {
+                    suppressDepth -= 1
+                }
+            }
+
+            if _isLayoutKeyword(token) {
+                pendingLayouts += 1
+            }
+        }
+
+        return result
+    }
+
+    private func _nextLayoutToken(_ tokens: [Token], startIndex: Int) -> Token? {
+        guard startIndex < tokens.count else { return nil }
+        for token in tokens[startIndex...] where token.type != "NEWLINE" {
+            return token
+        }
+        return nil
+    }
+
+    private func _virtualLayoutToken(type: String, value: String, anchor: Token) -> Token {
+        return Token(type: type, value: value, line: anchor.line, column: anchor.column)
+    }
+
+    private func _isVirtualLayoutToken(_ token: Token) -> Bool {
+        return token.type.hasPrefix("VIRTUAL_")
+    }
+
+    private func _isLayoutKeyword(_ token: Token) -> Bool {
+        guard !_layoutKeywordSet.isEmpty else { return false }
+        let value = token.value
+        return _layoutKeywordSet.contains(value) || _layoutKeywordSet.contains(value.lowercased())
     }
 
     // -----------------------------------------------------------------------

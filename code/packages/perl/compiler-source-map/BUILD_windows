@@ -1,0 +1,2 @@
+REM prereqs: ../compiler-ir
+echo Perl testing is not supported on Windows - skipping

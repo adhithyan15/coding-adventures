@@ -1,0 +1,10 @@
+[package]
+name = "coding-adventures-intel8008-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Intel 8008 first 8-bit microprocessor simulation"
+license = "MIT"
+
+[dependencies]
+
+[dev-dependencies]

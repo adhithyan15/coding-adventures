@@ -10,7 +10,18 @@ from build_tool.discovery import Package
 
 
 CI_MANAGED_TOOLCHAIN_LANGUAGES = frozenset(
-    {"python", "ruby", "typescript", "rust", "elixir", "lua", "perl", "haskell"}
+    {
+        "python",
+        "ruby",
+        "typescript",
+        "rust",
+        "elixir",
+        "lua",
+        "perl",
+        "java",
+        "kotlin",
+        "haskell",
+    }
 )
 
 

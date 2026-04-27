@@ -11,10 +11,14 @@ from grammar_tools.parser_grammar import (
     GrammarRule,
     Group,
     Literal,
+    NegativeLookahead,
+    OneOrMoreRepetition,
     Optional,
     ParserGrammar,
+    PositiveLookahead,
     Repetition,
     RuleReference,
+    SeparatedRepetition,
     Sequence,
 )
 
@@ -700,8 +704,9 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='STAR', is_token=True),
                 RuleReference(name='AMPERSAND', is_token=True),
                 RuleReference(name='VARIABLE', is_token=True),
+                RuleReference(name='PERCENTAGE', is_token=True),
             ]),
-            line_number=330,
+            line_number=331,
         ),
         GrammarRule(
             name='subclass_selector',
@@ -714,13 +719,13 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='pseudo_class', is_token=False),
                 RuleReference(name='pseudo_element', is_token=False),
             ]),
-            line_number=333,
+            line_number=334,
         ),
         GrammarRule(
             name='placeholder_selector',
             body=
             RuleReference(name='PLACEHOLDER', is_token=True),
-            line_number=337,
+            line_number=338,
         ),
         GrammarRule(
             name='class_selector',
@@ -729,13 +734,13 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='DOT', is_token=True),
                 RuleReference(name='IDENT', is_token=True),
             ]),
-            line_number=339,
+            line_number=340,
         ),
         GrammarRule(
             name='id_selector',
             body=
             RuleReference(name='HASH', is_token=True),
-            line_number=341,
+            line_number=342,
         ),
         GrammarRule(
             name='attribute_selector',
@@ -754,7 +759,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 ),
                 RuleReference(name='RBRACKET', is_token=True),
             ]),
-            line_number=343,
+            line_number=344,
         ),
         GrammarRule(
             name='attr_matcher',
@@ -767,7 +772,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='DOLLAR_EQUALS', is_token=True),
                 RuleReference(name='STAR_EQUALS', is_token=True),
             ]),
-            line_number=345,
+            line_number=346,
         ),
         GrammarRule(
             name='attr_value',
@@ -776,7 +781,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='IDENT', is_token=True),
                 RuleReference(name='STRING', is_token=True),
             ]),
-            line_number=348,
+            line_number=349,
         ),
         GrammarRule(
             name='pseudo_class',
@@ -793,7 +798,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     RuleReference(name='IDENT', is_token=True),
                 ]),
             ]),
-            line_number=350,
+            line_number=351,
         ),
         GrammarRule(
             name='pseudo_class_args',
@@ -801,7 +806,7 @@ PARSER_GRAMMAR = ParserGrammar(
             Repetition(element=
                 RuleReference(name='pseudo_class_arg', is_token=False),
             ),
-            line_number=353,
+            line_number=354,
         ),
         GrammarRule(
             name='pseudo_class_arg',
@@ -829,7 +834,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     RuleReference(name='RBRACKET', is_token=True),
                 ]),
             ]),
-            line_number=355,
+            line_number=356,
         ),
         GrammarRule(
             name='pseudo_element',
@@ -838,7 +843,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='COLON_COLON', is_token=True),
                 RuleReference(name='IDENT', is_token=True),
             ]),
-            line_number=360,
+            line_number=361,
         ),
         GrammarRule(
             name='block',
@@ -848,7 +853,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='block_contents', is_token=False),
                 RuleReference(name='RBRACE', is_token=True),
             ]),
-            line_number=370,
+            line_number=371,
         ),
         GrammarRule(
             name='block_contents',
@@ -856,7 +861,7 @@ PARSER_GRAMMAR = ParserGrammar(
             Repetition(element=
                 RuleReference(name='block_item', is_token=False),
             ),
-            line_number=372,
+            line_number=373,
         ),
         GrammarRule(
             name='block_item',
@@ -866,7 +871,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='at_rule', is_token=False),
                 RuleReference(name='declaration_or_nested', is_token=False),
             ]),
-            line_number=374,
+            line_number=375,
         ),
         GrammarRule(
             name='lattice_block_item',
@@ -879,7 +884,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='extend_directive', is_token=False),
                 RuleReference(name='at_root_directive', is_token=False),
             ]),
-            line_number=380,
+            line_number=381,
         ),
         GrammarRule(
             name='content_directive',
@@ -888,7 +893,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 Literal(value='@content'),
                 RuleReference(name='SEMICOLON', is_token=True),
             ]),
-            line_number=390,
+            line_number=391,
         ),
         GrammarRule(
             name='extend_directive',
@@ -898,7 +903,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='selector_list', is_token=False),
                 RuleReference(name='SEMICOLON', is_token=True),
             ]),
-            line_number=398,
+            line_number=399,
         ),
         GrammarRule(
             name='at_root_directive',
@@ -915,7 +920,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=403,
+            line_number=404,
         ),
         GrammarRule(
             name='declaration_or_nested',
@@ -924,7 +929,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='declaration', is_token=False),
                 RuleReference(name='qualified_rule', is_token=False),
             ]),
-            line_number=405,
+            line_number=406,
         ),
         GrammarRule(
             name='declaration',
@@ -945,7 +950,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     RuleReference(name='block', is_token=False),
                 ]),
             ]),
-            line_number=414,
+            line_number=415,
         ),
         GrammarRule(
             name='property',
@@ -954,7 +959,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='IDENT', is_token=True),
                 RuleReference(name='CUSTOM_PROPERTY', is_token=True),
             ]),
-            line_number=417,
+            line_number=418,
         ),
         GrammarRule(
             name='priority',
@@ -963,7 +968,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='BANG', is_token=True),
                 Literal(value='important'),
             ]),
-            line_number=419,
+            line_number=420,
         ),
         GrammarRule(
             name='value_list',
@@ -974,7 +979,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     RuleReference(name='value', is_token=False),
                 ),
             ]),
-            line_number=430,
+            line_number=431,
         ),
         GrammarRule(
             name='value',
@@ -996,7 +1001,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='MINUS', is_token=True),
                 RuleReference(name='map_literal', is_token=False),
             ]),
-            line_number=432,
+            line_number=433,
         ),
         GrammarRule(
             name='function_call',
@@ -1009,7 +1014,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 ]),
                 RuleReference(name='URL_TOKEN', is_token=True),
             ]),
-            line_number=438,
+            line_number=439,
         ),
         GrammarRule(
             name='function_args',
@@ -1017,7 +1022,7 @@ PARSER_GRAMMAR = ParserGrammar(
             Repetition(element=
                 RuleReference(name='function_arg', is_token=False),
             ),
-            line_number=441,
+            line_number=442,
         ),
         GrammarRule(
             name='function_arg',
@@ -1042,7 +1047,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     RuleReference(name='RPAREN', is_token=True),
                 ]),
             ]),
-            line_number=443,
+            line_number=444,
         ),
     ],
 )

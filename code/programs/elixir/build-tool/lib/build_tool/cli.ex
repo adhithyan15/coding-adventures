@@ -40,7 +40,21 @@ defmodule BuildTool.CLI do
       ./build_tool --root /path/to/repo --force
   """
 
-  alias BuildTool.{Cache, Discovery, DirectedGraph, Executor, GitDiff, Hasher, Plan, Reporter, Resolver, StarlarkEvaluator, Validator}
+  alias BuildTool.{
+    CIWorkflow,
+    Cache,
+    Discovery,
+    DirectedGraph,
+    Executor,
+    GitDiff,
+    Hasher,
+    Plan,
+    Reporter,
+    Resolver,
+    StarlarkEvaluator,
+    Validator
+  }
+
   alias CodingAdventures.ProgressBar
 
   @all_toolchains ["python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "haskell", "dotnet"]
@@ -118,14 +132,35 @@ defmodule BuildTool.CLI do
       IO.puts(:stderr, "Use --root to specify the repo root.")
       1
     else
-      do_build(repo_root, force, dry_run, jobs, language, diff_base, cache_file,
+      do_build(
+        repo_root,
+        force,
+        dry_run,
+        jobs,
+        language,
+        diff_base,
+        cache_file,
         validate_build_files,
-        detect_languages, emit_plan_path, plan_file_path)
+        detect_languages,
+        emit_plan_path,
+        plan_file_path
+      )
     end
   end
 
-  defp do_build(repo_root, force, dry_run, jobs, language, diff_base, cache_file,
-               validate_build_files, detect_languages, emit_plan_path, plan_file_path) do
+  defp do_build(
+         repo_root,
+         force,
+         dry_run,
+         jobs,
+         language,
+         diff_base,
+         cache_file,
+         validate_build_files,
+         detect_languages,
+         emit_plan_path,
+         plan_file_path
+       ) do
     # The build starts from the code/ directory inside the repo root.
     code_root = Path.join(repo_root, "code")
 
@@ -163,28 +198,60 @@ defmodule BuildTool.CLI do
           if validate_build_files do
             case Validator.validate_build_contracts(repo_root, packages) do
               nil ->
-                do_build_packages(packages, repo_root, force, dry_run, jobs, diff_base,
-                  cache_file, detect_languages, emit_plan_path, plan_file_path)
+                do_build_packages(
+                  packages,
+                  repo_root,
+                  force,
+                  dry_run,
+                  jobs,
+                  diff_base,
+                  cache_file,
+                  detect_languages,
+                  emit_plan_path,
+                  plan_file_path
+                )
 
               validation_error ->
                 IO.puts(:stderr, "BUILD/CI validation failed:")
                 IO.puts(:stderr, "  - #{validation_error}")
+
                 IO.puts(
                   :stderr,
                   "Fix the BUILD file or CI workflow so isolated and full-build runs stay correct."
                 )
+
                 1
             end
           else
-            do_build_packages(packages, repo_root, force, dry_run, jobs, diff_base,
-              cache_file, detect_languages, emit_plan_path, plan_file_path)
+            do_build_packages(
+              packages,
+              repo_root,
+              force,
+              dry_run,
+              jobs,
+              diff_base,
+              cache_file,
+              detect_languages,
+              emit_plan_path,
+              plan_file_path
+            )
           end
       end
     end
   end
 
-  defp do_build_packages(packages, repo_root, force, dry_run, jobs, diff_base,
-                         cache_file, detect_languages, emit_plan_path, _plan_file_path) do
+  defp do_build_packages(
+         packages,
+         repo_root,
+         force,
+         dry_run,
+         jobs,
+         diff_base,
+         cache_file,
+         detect_languages,
+         emit_plan_path,
+         _plan_file_path
+       ) do
     IO.puts("Discovered #{length(packages)} packages")
 
     # Step 4: Resolve dependencies.
@@ -198,12 +265,28 @@ defmodule BuildTool.CLI do
         changed_files = GitDiff.get_changed_files(repo_root, diff_base)
 
         if length(changed_files) > 0 do
-          shared_changed = Enum.any?(changed_files, fn f ->
-            String.starts_with?(f, ".github/")
-          end)
+          ci_change =
+            if Enum.member?(changed_files, CIWorkflow.ci_workflow_path()) do
+              change = CIWorkflow.analyze_changes(repo_root, diff_base)
 
-          if shared_changed do
-            IO.puts("Git diff: shared files changed — rebuilding everything")
+              if change.requires_full_rebuild do
+                IO.puts("Git diff: ci.yml changed in shared ways — rebuilding everything")
+              else
+                toolchains = CIWorkflow.sorted_toolchains(change.toolchains)
+
+                if toolchains != [] do
+                  IO.puts(
+                    "Git diff: ci.yml changed only toolchain-scoped setup for #{Enum.join(toolchains, ", ")}"
+                  )
+                end
+              end
+
+              change
+            else
+              %{toolchains: MapSet.new(), requires_full_rebuild: false}
+            end
+
+          if ci_change.requires_full_rebuild do
             {nil, true}
           else
             changed_pkgs = GitDiff.map_files_to_packages(changed_files, packages, repo_root)
@@ -236,12 +319,28 @@ defmodule BuildTool.CLI do
         output_language_flags(languages_needed)
 
       emit_plan_path != nil ->
-      return_emit_plan(packages, graph, repo_root, diff_base, force_override, affected_set,
-        emit_plan_path)
+      return_emit_plan(
+        packages,
+        graph,
+        repo_root,
+        diff_base,
+        force_override,
+        affected_set,
+        emit_plan_path
+      )
 
       true ->
-      do_execute_builds(packages, graph, repo_root, force_override, dry_run, jobs, diff_base,
-        cache_file, affected_set)
+      do_execute_builds(
+        packages,
+        graph,
+        repo_root,
+        force_override,
+        dry_run,
+        jobs,
+        diff_base,
+        cache_file,
+        affected_set
+      )
     end
   end
 
@@ -252,8 +351,15 @@ defmodule BuildTool.CLI do
   # When --emit-plan is specified, we serialize the discovery + change
   # detection results to a JSON file and exit. No builds are executed.
 
-  defp return_emit_plan(packages, graph, repo_root, diff_base, force, affected_set,
-                        emit_plan_path) do
+  defp return_emit_plan(
+         packages,
+         graph,
+         repo_root,
+         diff_base,
+         force,
+         affected_set,
+         emit_plan_path
+       ) do
     # Convert affected_set to a list (or nil for "rebuild all").
     affected_list =
       case affected_set do
@@ -315,9 +421,17 @@ defmodule BuildTool.CLI do
   # Build execution (normal flow)
   # ---------------------------------------------------------------------------
 
-  defp do_execute_builds(packages, graph, repo_root, force, dry_run, jobs, _diff_base,
-                         cache_file, affected_set) do
-
+  defp do_execute_builds(
+         packages,
+         graph,
+         repo_root,
+         force,
+         dry_run,
+         jobs,
+         _diff_base,
+         cache_file,
+         affected_set
+       ) do
     # Step 6: Hash all packages.
     package_hashes = Map.new(packages, fn pkg -> {pkg.name, Hasher.hash_package(pkg)} end)
 
@@ -464,13 +578,17 @@ defmodule BuildTool.CLI do
   end
 
   defp compute_languages_needed(packages, affected_set, _force) do
-    Enum.reduce(packages, Map.new(@all_toolchains, fn toolchain -> {toolchain, false} end), fn pkg, acc ->
-      if MapSet.member?(affected_set, pkg.name) do
-        Map.put(acc, toolchain_for_language(pkg.language), true)
-      else
-        acc
+    Enum.reduce(
+      packages,
+      Map.new(@all_toolchains, fn toolchain -> {toolchain, false} end),
+      fn pkg, acc ->
+        if MapSet.member?(affected_set, pkg.name) do
+          Map.put(acc, toolchain_for_language(pkg.language), true)
+        else
+          acc
+        end
       end
-    end)
+    )
     |> Map.put("go", true)
   end
 
@@ -497,5 +615,4 @@ defmodule BuildTool.CLI do
 
     0
   end
-
 end

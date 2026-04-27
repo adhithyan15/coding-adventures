@@ -139,10 +139,16 @@ my ($tokens_ref, $pos);
 # @return ASTNode          Root node with rule_name "program".
 
 sub parse {
-    my ($class, $source) = @_;
+    my ($class, $source, %opts) = @_;
+    my $version = delete($opts{version});
+    $version = 'algol60' if !defined($version) || $version eq '';
+    die "CodingAdventures::AlgolParser: unknown ALGOL version '$version' (valid: algol60)"
+        unless $version eq 'algol60';
+    die "CodingAdventures::AlgolParser: unknown options: " . join(", ", sort keys %opts)
+        if %opts;
 
     # Tokenize
-    my $toks = CodingAdventures::AlgolLexer->tokenize($source);
+    my $toks = CodingAdventures::AlgolLexer->tokenize($source, version => $version);
     $tokens_ref = $toks;
     $pos = 0;
 

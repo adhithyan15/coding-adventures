@@ -17,7 +17,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
     GT::GrammarRule.new(
       name: "program",
       body: GT::Repetition.new(element: GT::RuleReference.new(name: "statement", is_token: false)),
-      line_number: 29,
+      line_number: 34,
     ),
     GT::GrammarRule.new(
       name: "statement",
@@ -26,7 +26,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "assignment", is_token: false),
         GT::RuleReference.new(name: "expression_stmt", is_token: false),
       ]),
-      line_number: 30,
+      line_number: 35,
     ),
     GT::GrammarRule.new(
       name: "var_declaration",
@@ -37,7 +37,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "expression", is_token: false),
         GT::RuleReference.new(name: "SEMICOLON", is_token: true),
       ]),
-      line_number: 31,
+      line_number: 36,
     ),
     GT::GrammarRule.new(
       name: "assignment",
@@ -47,7 +47,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "expression", is_token: false),
         GT::RuleReference.new(name: "SEMICOLON", is_token: true),
       ]),
-      line_number: 32,
+      line_number: 37,
     ),
     GT::GrammarRule.new(
       name: "expression_stmt",
@@ -55,7 +55,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "expression", is_token: false),
         GT::RuleReference.new(name: "SEMICOLON", is_token: true),
       ]),
-      line_number: 33,
+      line_number: 38,
     ),
     GT::GrammarRule.new(
       name: "expression",
@@ -69,7 +69,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
             GT::RuleReference.new(name: "term", is_token: false),
           ])),
       ]),
-      line_number: 34,
+      line_number: 39,
     ),
     GT::GrammarRule.new(
       name: "term",
@@ -83,7 +83,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
             GT::RuleReference.new(name: "factor", is_token: false),
           ])),
       ]),
-      line_number: 35,
+      line_number: 40,
     ),
     GT::GrammarRule.new(
       name: "factor",
@@ -98,7 +98,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
           GT::RuleReference.new(name: "RPAREN", is_token: true),
         ]),
       ]),
-      line_number: 36,
+      line_number: 41,
     ),
   ],
 )

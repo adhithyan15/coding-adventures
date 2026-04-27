@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>CodingAdventures.PaintVmAscii</AssemblyName>
+    <RootNamespace>CodingAdventures.PaintVmAscii</RootNamespace>
+    <PackageId>CodingAdventures.PaintVmAscii.CSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>Pure C# PaintVM ASCII backend for terminal-friendly text rendering</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../paint-instructions/CodingAdventures.PaintInstructions.csproj" />
+    <ProjectReference Include="../paint-vm/CodingAdventures.PaintVm.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="tests\\**\\*.cs" />
+    <EmbeddedResource Remove="tests\\**" />
+    <None Remove="tests\\**" />
+  </ItemGroup>
+</Project>

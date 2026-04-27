@@ -1,0 +1,27 @@
+{
+  "name": "@coding-adventures/ge225-simulator",
+  "version": "0.1.0",
+  "description": "GE-225 behavioral simulator and compiler backend target",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "ge-225",
+    "mainframe",
+    "historical",
+    "simulator",
+    "dartmouth-basic",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "@vitest/coverage-v8": "^3.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}

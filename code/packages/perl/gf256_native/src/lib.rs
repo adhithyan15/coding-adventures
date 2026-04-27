@@ -15,91 +15,17 @@
 //! ## XS calling convention
 //!
 //! Same pattern as PolynomialNative: `boot_CodingAdventures__GF256Native`
-//! registers XSUBs via `newXS`. Each XSUB reads from/writes to `PL_stack_*`.
-//!
-//! ## SAFETY: ithreads limitation
-//!
-//! This extension assumes non-threaded (non-MULTIPLICITY) Perl.
-//! The PL_stack_sp, PL_stack_base, PL_markstack_ptr externs are only valid
-//! in a non-threaded Perl build. Threaded Perl defines these as
-//! thread-local struct fields accessed via macros, not global variables.
-//!
-//! If compiled against threaded Perl, memory corruption will occur.
-//! The build.rs emits a warning about this condition.
-//!
-//! TODO: Add a build.rs check that runs `perl -V:usethreads` and emits a
-//! compile_error! if threads are enabled.
+//! registers XSUBs via `newXS`. Each XSUB reads from/writes to Perl's stack
+//! through `perl-bridge`, which routes stack access through the host Perl's
+//! own XS macros so threaded builds are safe.
 
 #![allow(non_snake_case, non_camel_case_types)]
 
 use perl_bridge::{
-    die, CV, IV, SV,
-    newSViv, sv_2iv,
+    die, newSViv, newXS, sv_2iv, xs_boot_finish, xs_bootstrap, xsub_frame, xsub_return, CV, IV, SV,
 };
 use std::ffi::c_char;
 use std::panic::catch_unwind;
-
-// ---------------------------------------------------------------------------
-// Declare runtime functions not in perl-bridge
-// ---------------------------------------------------------------------------
-
-extern "C" {
-    fn newXS(name: *const c_char, subaddr: unsafe extern "C" fn(*mut CV), filename: *const c_char)
-        -> *mut CV;
-}
-
-extern "C" {
-    static mut PL_markstack_ptr: *mut i32;
-    static mut PL_stack_sp: *mut *mut SV;
-    static mut PL_stack_base: *mut *mut SV;
-}
-
-// ---------------------------------------------------------------------------
-// Stack helpers (same pattern as polynomial_native)
-// ---------------------------------------------------------------------------
-
-/// Read the number of arguments passed to the current XSUB.
-///
-/// Uses saturating arithmetic and pointer comparison to guard against
-/// pathological mark values that could cause pointer arithmetic overflow.
-///
-/// ## Guard against stack corruption
-///
-/// If `mark = i32::MAX`, then `ax = i32::MAX` (saturated), and
-/// `base.add(i32::MAX as usize)` is pointer arithmetic that exceeds the valid
-/// allocation range — undefined behaviour in Rust.
-///
-/// We therefore clamp `ax` to a sane maximum. Perl's maximum stack depth is
-/// far below 64k arguments; 4096 is generous.
-unsafe fn xsub_args() -> (*mut *mut SV, i32, i32) {
-    let mark = *PL_markstack_ptr;
-    // Guard against pathological mark values with saturating add.
-    let ax = mark.saturating_add(1);
-    let base = PL_stack_base;
-    let sp = PL_stack_sp;
-
-    // Guard: if ax is unreasonably large, Perl's stack is corrupted.
-    // Perl's maximum stack depth is far below 64k arguments; 4096 is generous.
-    const MAX_SANE_AX: i32 = 4096;
-    if ax > MAX_SANE_AX || ax < 0 {
-        // Stack is corrupted; return 0 items so each XSUB's arity check fires.
-        return (base, 0, 0);
-    }
-
-    // Compute items with overflow protection: only subtract if sp >= base_ax.
-    let base_ax = base.add(ax as usize);
-    let items = if sp >= base_ax {
-        ((sp as usize - base_ax as usize) / std::mem::size_of::<*mut SV>()) as i32 + 1
-    } else {
-        0
-    };
-    (base, ax, items)
-}
-
-unsafe fn xsub_return(n: i32, ax: i32) {
-    PL_stack_sp = PL_stack_base.add((ax + n - 1) as usize);
-    PL_markstack_ptr = PL_markstack_ptr.sub(1);
-}
 
 unsafe fn set_return(base: *mut *mut SV, ax: i32, n: i32, sv: *mut SV) {
     *base.add((ax + n) as usize) = sv;
@@ -166,18 +92,19 @@ unsafe fn arg_u32(base: *mut *mut SV, ax: i32, n: i32) -> u32 {
 // normally" vs "panicked".
 
 extern "C" fn xs_add(_cv: *mut CV) {
-    let result = catch_unwind(|| {
-        unsafe {
-            let (base, ax, items) = xsub_args();
-            if items < 2 {
-                die("xs_add: expected 2 arguments");
-                return;
-            }
-            let a = arg_u8(base, ax, 0);
-            let b = arg_u8(base, ax, 1);
-            set_return(base, ax, 0, newSViv(gf256::add(a, b) as IV));
-            xsub_return(1, ax);
+    let result = catch_unwind(|| unsafe {
+        let frame = xsub_frame();
+        let base = frame.base;
+        let ax = frame.ax;
+        let items = frame.items;
+        if items < 2 {
+            die("xs_add: expected 2 arguments");
+            return;
         }
+        let a = arg_u8(base, ax, 0);
+        let b = arg_u8(base, ax, 1);
+        set_return(base, ax, 0, newSViv(gf256::add(a, b) as IV));
+        xsub_return(1, ax);
     });
     if result.is_err() {
         unsafe { die("GF256 operation panicked unexpectedly") };
@@ -185,18 +112,19 @@ extern "C" fn xs_add(_cv: *mut CV) {
 }
 
 extern "C" fn xs_subtract(_cv: *mut CV) {
-    let result = catch_unwind(|| {
-        unsafe {
-            let (base, ax, items) = xsub_args();
-            if items < 2 {
-                die("xs_subtract: expected 2 arguments");
-                return;
-            }
-            let a = arg_u8(base, ax, 0);
-            let b = arg_u8(base, ax, 1);
-            set_return(base, ax, 0, newSViv(gf256::subtract(a, b) as IV));
-            xsub_return(1, ax);
+    let result = catch_unwind(|| unsafe {
+        let frame = xsub_frame();
+        let base = frame.base;
+        let ax = frame.ax;
+        let items = frame.items;
+        if items < 2 {
+            die("xs_subtract: expected 2 arguments");
+            return;
         }
+        let a = arg_u8(base, ax, 0);
+        let b = arg_u8(base, ax, 1);
+        set_return(base, ax, 0, newSViv(gf256::subtract(a, b) as IV));
+        xsub_return(1, ax);
     });
     if result.is_err() {
         unsafe { die("GF256 operation panicked unexpectedly") };
@@ -204,18 +132,19 @@ extern "C" fn xs_subtract(_cv: *mut CV) {
 }
 
 extern "C" fn xs_multiply(_cv: *mut CV) {
-    let result = catch_unwind(|| {
-        unsafe {
-            let (base, ax, items) = xsub_args();
-            if items < 2 {
-                die("xs_multiply: expected 2 arguments");
-                return;
-            }
-            let a = arg_u8(base, ax, 0);
-            let b = arg_u8(base, ax, 1);
-            set_return(base, ax, 0, newSViv(gf256::multiply(a, b) as IV));
-            xsub_return(1, ax);
+    let result = catch_unwind(|| unsafe {
+        let frame = xsub_frame();
+        let base = frame.base;
+        let ax = frame.ax;
+        let items = frame.items;
+        if items < 2 {
+            die("xs_multiply: expected 2 arguments");
+            return;
         }
+        let a = arg_u8(base, ax, 0);
+        let b = arg_u8(base, ax, 1);
+        set_return(base, ax, 0, newSViv(gf256::multiply(a, b) as IV));
+        xsub_return(1, ax);
     });
     if result.is_err() {
         unsafe { die("GF256 operation panicked unexpectedly") };
@@ -223,22 +152,23 @@ extern "C" fn xs_multiply(_cv: *mut CV) {
 }
 
 extern "C" fn xs_divide(_cv: *mut CV) {
-    let result = catch_unwind(|| {
-        unsafe {
-            let (base, ax, items) = xsub_args();
-            if items < 2 {
-                die("xs_divide: expected 2 arguments");
-                return;
+    let result = catch_unwind(|| unsafe {
+        let frame = xsub_frame();
+        let base = frame.base;
+        let ax = frame.ax;
+        let items = frame.items;
+        if items < 2 {
+            die("xs_divide: expected 2 arguments");
+            return;
+        }
+        let a = arg_u8(base, ax, 0);
+        let b = arg_u8(base, ax, 1);
+        match catch_unwind(|| gf256::divide(a, b)) {
+            Ok(result) => {
+                set_return(base, ax, 0, newSViv(result as IV));
+                xsub_return(1, ax);
             }
-            let a = arg_u8(base, ax, 0);
-            let b = arg_u8(base, ax, 1);
-            match catch_unwind(|| gf256::divide(a, b)) {
-                Ok(result) => {
-                    set_return(base, ax, 0, newSViv(result as IV));
-                    xsub_return(1, ax);
-                }
-                Err(_) => die("GF256: division by zero"),
-            }
+            Err(_) => die("GF256: division by zero"),
         }
     });
     if result.is_err() {
@@ -247,18 +177,19 @@ extern "C" fn xs_divide(_cv: *mut CV) {
 }
 
 extern "C" fn xs_power(_cv: *mut CV) {
-    let result = catch_unwind(|| {
-        unsafe {
-            let (base, ax, items) = xsub_args();
-            if items < 2 {
-                die("xs_power: expected 2 arguments (base, exponent)");
-                return;
-            }
-            let b = arg_u8(base, ax, 0);
-            let e = arg_u32(base, ax, 1);
-            set_return(base, ax, 0, newSViv(gf256::power(b, e) as IV));
-            xsub_return(1, ax);
+    let result = catch_unwind(|| unsafe {
+        let frame = xsub_frame();
+        let base = frame.base;
+        let ax = frame.ax;
+        let items = frame.items;
+        if items < 2 {
+            die("xs_power: expected 2 arguments (base, exponent)");
+            return;
         }
+        let b = arg_u8(base, ax, 0);
+        let e = arg_u32(base, ax, 1);
+        set_return(base, ax, 0, newSViv(gf256::power(b, e) as IV));
+        xsub_return(1, ax);
     });
     if result.is_err() {
         unsafe { die("GF256 operation panicked unexpectedly") };
@@ -266,21 +197,22 @@ extern "C" fn xs_power(_cv: *mut CV) {
 }
 
 extern "C" fn xs_inverse(_cv: *mut CV) {
-    let result = catch_unwind(|| {
-        unsafe {
-            let (base, ax, items) = xsub_args();
-            if items < 1 {
-                die("xs_inverse: expected 1 argument");
-                return;
+    let result = catch_unwind(|| unsafe {
+        let frame = xsub_frame();
+        let base = frame.base;
+        let ax = frame.ax;
+        let items = frame.items;
+        if items < 1 {
+            die("xs_inverse: expected 1 argument");
+            return;
+        }
+        let a = arg_u8(base, ax, 0);
+        match catch_unwind(|| gf256::inverse(a)) {
+            Ok(result) => {
+                set_return(base, ax, 0, newSViv(result as IV));
+                xsub_return(1, ax);
             }
-            let a = arg_u8(base, ax, 0);
-            match catch_unwind(|| gf256::inverse(a)) {
-                Ok(result) => {
-                    set_return(base, ax, 0, newSViv(result as IV));
-                    xsub_return(1, ax);
-                }
-                Err(_) => die("GF256: zero has no multiplicative inverse"),
-            }
+            Err(_) => die("GF256: zero has no multiplicative inverse"),
         }
     });
     if result.is_err() {
@@ -293,19 +225,39 @@ extern "C" fn xs_inverse(_cv: *mut CV) {
 // ---------------------------------------------------------------------------
 
 #[no_mangle]
-pub unsafe extern "C" fn boot_CodingAdventures__GF256Native(_cv: *mut CV) {
+pub unsafe extern "C" fn boot_CodingAdventures__GF256Native(cv: *mut CV) {
     let file = b"GF256Native.so\0".as_ptr() as *const c_char;
+    let ax = xs_bootstrap(cv, file);
 
-    newXS(b"CodingAdventures::GF256Native::add\0".as_ptr() as *const c_char,
-          xs_add, file);
-    newXS(b"CodingAdventures::GF256Native::subtract\0".as_ptr() as *const c_char,
-          xs_subtract, file);
-    newXS(b"CodingAdventures::GF256Native::multiply\0".as_ptr() as *const c_char,
-          xs_multiply, file);
-    newXS(b"CodingAdventures::GF256Native::divide\0".as_ptr() as *const c_char,
-          xs_divide, file);
-    newXS(b"CodingAdventures::GF256Native::power\0".as_ptr() as *const c_char,
-          xs_power, file);
-    newXS(b"CodingAdventures::GF256Native::inverse\0".as_ptr() as *const c_char,
-          xs_inverse, file);
+    newXS(
+        b"CodingAdventures::GF256Native::add\0".as_ptr() as *const c_char,
+        xs_add,
+        file,
+    );
+    newXS(
+        b"CodingAdventures::GF256Native::subtract\0".as_ptr() as *const c_char,
+        xs_subtract,
+        file,
+    );
+    newXS(
+        b"CodingAdventures::GF256Native::multiply\0".as_ptr() as *const c_char,
+        xs_multiply,
+        file,
+    );
+    newXS(
+        b"CodingAdventures::GF256Native::divide\0".as_ptr() as *const c_char,
+        xs_divide,
+        file,
+    );
+    newXS(
+        b"CodingAdventures::GF256Native::power\0".as_ptr() as *const c_char,
+        xs_power,
+        file,
+    );
+    newXS(
+        b"CodingAdventures::GF256Native::inverse\0".as_ptr() as *const c_char,
+        xs_inverse,
+        file,
+    );
+    xs_boot_finish(ax);
 }

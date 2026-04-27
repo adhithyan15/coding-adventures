@@ -81,7 +81,14 @@ pub enum PathCommand {
     /// Draw a quadratic Bézier curve.  `(cx, cy)` is the control point.
     QuadTo { cx: f64, cy: f64, x: f64, y: f64 },
     /// Draw a cubic Bézier curve.  `(cx1, cy1)` and `(cx2, cy2)` are the two control points.
-    CubicTo { cx1: f64, cy1: f64, cx2: f64, cy2: f64, x: f64, y: f64 },
+    CubicTo {
+        cx1: f64,
+        cy1: f64,
+        cx2: f64,
+        cy2: f64,
+        x: f64,
+        y: f64,
+    },
     /// Draw an elliptical arc with SVG arc semantics.
     ArcTo {
         rx: f64,
@@ -206,7 +213,12 @@ pub enum FilterEffect {
     /// Gaussian blur. `radius` is in user-space units.
     Blur { radius: f64 },
     /// Drop shadow — offset by `(dx, dy)`, blurred by `blur` radius, filled with `color`.
-    DropShadow { dx: f64, dy: f64, blur: f64, color: String },
+    DropShadow {
+        dx: f64,
+        dy: f64,
+        blur: f64,
+        color: String,
+    },
     /// 4×5 colour matrix (20 values, row-major).  Maps `[R,G,B,A,1]` to `[R',G',B',A']`.
     ColorMatrix { matrix: Vec<f64> },
     /// Multiply luminance. `1.0` = unchanged, `0.0` = black.
@@ -273,6 +285,11 @@ pub struct PaintRect {
     pub stroke_width: Option<f64>,
     /// 0.0 or `None` = sharp corners.
     pub corner_radius: Option<f64>,
+    /// Dash pattern for the stroke, e.g. `[6.0, 3.0]` = 6px dash, 3px gap.
+    /// `None` = solid stroke.
+    pub stroke_dash: Option<Vec<f64>>,
+    /// Phase offset into the dash pattern. `None` = 0.0.
+    pub stroke_dash_offset: Option<f64>,
 }
 
 impl PaintRect {
@@ -288,6 +305,8 @@ impl PaintRect {
             stroke: None,
             stroke_width: None,
             corner_radius: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
         }
     }
 }
@@ -320,6 +339,10 @@ pub struct PaintEllipse {
     pub fill: Option<String>,
     pub stroke: Option<String>,
     pub stroke_width: Option<f64>,
+    /// Dash pattern for the stroke. `None` = solid.
+    pub stroke_dash: Option<Vec<f64>>,
+    /// Phase offset into the dash pattern. `None` = 0.0.
+    pub stroke_dash_offset: Option<f64>,
 }
 
 // ─── PaintPath ────────────────────────────────────────────────────────────────
@@ -342,6 +365,10 @@ pub struct PaintPath {
     pub stroke_width: Option<f64>,
     pub stroke_cap: Option<StrokeCap>,
     pub stroke_join: Option<StrokeJoin>,
+    /// Dash pattern for the stroke. `None` = solid.
+    pub stroke_dash: Option<Vec<f64>>,
+    /// Phase offset into the dash pattern. `None` = 0.0.
+    pub stroke_dash_offset: Option<f64>,
 }
 
 /// Fill rule for overlapping subpaths.
@@ -370,6 +397,60 @@ pub enum StrokeJoin {
     Bevel,
 }
 
+// ─── PaintText ────────────────────────────────────────────────────────────────
+
+/// Simple text instruction — let the backend handle shaping.
+///
+/// `PaintText` is a higher-level alternative to [`PaintGlyphRun`] for backends
+/// that have built-in text shaping (CoreText on Metal, SVG `<text>`, Canvas
+/// `fillText`). The backend is responsible for font loading, glyph selection,
+/// and kerning — the producer just supplies the string and position.
+///
+/// Use `PaintText` when:
+/// - You are targeting a backend with native text support (Metal, SVG, Canvas).
+/// - You do not have pre-shaped glyph IDs (e.g. diagram-to-paint).
+///
+/// Use `PaintGlyphRun` when you have already shaped the text with a font engine
+/// (e.g. through the FNT00 font-parser pipeline) and want pixel-perfect control.
+///
+/// ## font_ref format
+///
+/// `font_ref` is an opaque string passed to the backend unchanged.  Backends
+/// may interpret it however suits them.  The recommended encoding is:
+///
+/// ```text
+/// "canvas:<family>@<size>:<weight>"   e.g. "canvas:system-ui@14:400"
+/// ```
+///
+/// If `font_ref` is `None`, backends should use the system UI font at `font_size`.
+#[derive(Clone, Debug, PartialEq)]
+pub struct PaintText {
+    pub base: PaintBase,
+    /// Horizontal position in scene coordinates (meaning depends on `text_align`).
+    pub x: f64,
+    /// Vertical position — the text baseline in scene coordinates.
+    pub y: f64,
+    /// The string to render.
+    pub text: String,
+    /// Opaque font reference (see struct doc). `None` = backend default.
+    pub font_ref: Option<String>,
+    /// Font size in user-space units (pixels for bitmap renderers).
+    pub font_size: f64,
+    /// Fill colour for the glyphs. `None` defaults to black.
+    pub fill: Option<String>,
+    /// Horizontal alignment relative to `x`. Default: `Left`.
+    pub text_align: Option<TextAlign>,
+}
+
+/// Horizontal text alignment relative to the `x` coordinate in [`PaintText`].
+#[derive(Clone, Debug, PartialEq, Eq, Default)]
+pub enum TextAlign {
+    #[default]
+    Left,
+    Center,
+    Right,
+}
+
 // ─── PaintGlyphRun ────────────────────────────────────────────────────────────
 
 /// Pre-positioned glyphs from a font, after shaping and layout.
@@ -378,12 +459,13 @@ pub enum StrokeJoin {
 /// The producer has resolved the font, computed glyph IDs, applied kerning, and
 /// calculated `(x, y)` for each glyph. The VM just paints them.
 ///
-/// ## Why not a "text" instruction?
+/// ## Why not always use PaintText?
 ///
 /// Because text rendering requires font loading, shaping, line breaking, and
 /// bidirectional text support — none of which the PaintVM should know about.
 /// The `PaintGlyphRun` is what you get **after** all that work is done by the
-/// font-parser (FNT00) and layout layers.
+/// font-parser (FNT00) and layout layers.  Use [`PaintText`] when the backend
+/// can handle shaping natively (see its struct doc).
 #[derive(Clone, Debug, PartialEq)]
 pub struct PaintGlyphRun {
     pub base: PaintBase,
@@ -473,6 +555,10 @@ pub struct PaintLine {
     /// Default 1.0.
     pub stroke_width: Option<f64>,
     pub stroke_cap: Option<StrokeCap>,
+    /// Dash pattern for the stroke. `None` = solid.
+    pub stroke_dash: Option<Vec<f64>>,
+    /// Phase offset into the dash pattern. `None` = 0.0.
+    pub stroke_dash_offset: Option<f64>,
 }
 
 // ─── PaintClip ────────────────────────────────────────────────────────────────
@@ -611,6 +697,7 @@ pub enum ImageSrc {
 ///         PaintInstruction::Rect(_)     => "rect",
 ///         PaintInstruction::Ellipse(_)  => "ellipse",
 ///         PaintInstruction::Path(_)     => "path",
+///         PaintInstruction::Text(_)     => "text",
 ///         PaintInstruction::GlyphRun(_) => "glyph_run",
 ///         PaintInstruction::Group(_)    => "group",
 ///         PaintInstruction::Layer(_)    => "layer",
@@ -626,6 +713,8 @@ pub enum PaintInstruction {
     Rect(PaintRect),
     Ellipse(PaintEllipse),
     Path(PaintPath),
+    /// Simple string text — backend handles shaping. See [`PaintText`].
+    Text(PaintText),
     GlyphRun(PaintGlyphRun),
     Group(PaintGroup),
     Layer(PaintLayer),
@@ -665,6 +754,7 @@ pub enum PaintInstruction {
 ///         PaintInstruction::Rect(PaintRect::filled(50.0, 50.0, 100.0, 100.0, "#ff0000")),
 ///     ],
 ///     id: None,
+///     metadata: None,
 /// };
 /// ```
 #[derive(Clone, Debug, PartialEq)]
@@ -679,6 +769,8 @@ pub struct PaintScene {
     pub instructions: Vec<PaintInstruction>,
     /// Stable scene identity for future `patch()` support.
     pub id: Option<String>,
+    /// Arbitrary scene-level metadata for producers and debuggers.
+    pub metadata: Option<std::collections::HashMap<String, String>>,
 }
 
 impl PaintScene {
@@ -690,6 +782,7 @@ impl PaintScene {
             background: "#ffffff".to_string(),
             instructions: Vec::new(),
             id: None,
+            metadata: None,
         }
     }
 }
@@ -793,15 +886,34 @@ mod tests {
         assert_eq!(scene.height, 600.0);
         assert_eq!(scene.background, "#ffffff");
         assert!(scene.instructions.is_empty());
+        assert!(scene.metadata.is_none());
     }
 
     #[test]
     fn paint_scene_can_hold_instructions() {
         let mut scene = PaintScene::new(100.0, 100.0);
-        scene.instructions.push(PaintInstruction::Rect(
-            PaintRect::filled(0.0, 0.0, 100.0, 100.0, "#000000"),
-        ));
+        scene
+            .instructions
+            .push(PaintInstruction::Rect(PaintRect::filled(
+                0.0, 0.0, 100.0, 100.0, "#000000",
+            )));
         assert_eq!(scene.instructions.len(), 1);
+    }
+
+    #[test]
+    fn paint_scene_can_hold_metadata() {
+        let mut scene = PaintScene::new(100.0, 100.0);
+        scene.metadata = Some(std::collections::HashMap::from([(
+            "label".to_string(),
+            "Demo scene".to_string(),
+        )]));
+        assert_eq!(
+            scene
+                .metadata
+                .as_ref()
+                .and_then(|metadata| metadata.get("label")),
+            Some(&"Demo scene".to_string())
+        );
     }
 
     // ─── PaintInstruction dispatch ───────────────────────────────────────────
@@ -810,10 +922,15 @@ mod tests {
     fn paint_instruction_variants_match() {
         let line = PaintInstruction::Line(PaintLine {
             base: PaintBase::default(),
-            x1: 0.0, y1: 0.0, x2: 10.0, y2: 10.0,
+            x1: 0.0,
+            y1: 0.0,
+            x2: 10.0,
+            y2: 10.0,
             stroke: "#000000".to_string(),
             stroke_width: None,
             stroke_cap: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
         });
 
         match &line {
@@ -860,6 +977,48 @@ mod tests {
         match src {
             ImageSrc::Pixels(p) => assert_eq!(p.width, 4),
             _ => panic!("expected Pixels"),
+        }
+    }
+
+    // ─── PaintText tests ─────────────────────────────────────────────────────
+
+    #[test]
+    fn paint_text_fields_round_trip() {
+        let t = PaintText {
+            base: PaintBase::default(),
+            x: 100.0,
+            y: 50.0,
+            text: "Hello".to_string(),
+            font_ref: Some("canvas:system-ui@14:400".to_string()),
+            font_size: 14.0,
+            fill: Some("#111827".to_string()),
+            text_align: Some(TextAlign::Center),
+        };
+        assert_eq!(t.text, "Hello");
+        assert_eq!(t.font_size, 14.0);
+        assert_eq!(t.text_align, Some(TextAlign::Center));
+    }
+
+    #[test]
+    fn text_align_default_is_left() {
+        assert_eq!(TextAlign::default(), TextAlign::Left);
+    }
+
+    #[test]
+    fn paint_instruction_text_variant() {
+        let instr = PaintInstruction::Text(PaintText {
+            base: PaintBase::default(),
+            x: 0.0,
+            y: 0.0,
+            text: "diagram label".to_string(),
+            font_ref: None,
+            font_size: 12.0,
+            fill: None,
+            text_align: None,
+        });
+        match &instr {
+            PaintInstruction::Text(t) => assert_eq!(t.text, "diagram label"),
+            _ => panic!("expected Text variant"),
         }
     }
 }

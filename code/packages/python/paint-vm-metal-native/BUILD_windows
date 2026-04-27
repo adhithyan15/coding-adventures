@@ -1,0 +1,1 @@
+echo Skipping python/paint-vm-metal-native on Windows -- Metal is macOS only; prerequisite refs: ../paint-instructions ../pixel_container

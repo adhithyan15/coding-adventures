@@ -47,17 +47,19 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 // manifestJSON mirrors the on-disk JSON structure of required_capabilities.json.
 // The "JSON" suffix signals "raw parse target, not an abstraction." Callers
 // receive the higher-level map[CapabilityString]bool.
 type manifestJSON struct {
-	Schema        string           `json:"$schema"`
-	Version       int              `json:"version"`
-	Package       string           `json:"package"`
-	Capabilities  []capabilityJSON `json:"capabilities"`
-	Justification string           `json:"justification"`
+	Schema                    string                         `json:"$schema"`
+	Version                   int                            `json:"version"`
+	Package                   string                         `json:"package"`
+	Capabilities              []capabilityJSON               `json:"capabilities"`
+	Justification             string                         `json:"justification"`
+	BannedConstructExceptions []bannedConstructExceptionJSON `json:"banned_construct_exceptions"`
 }
 
 // capabilityJSON is one capability entry in the raw JSON.
@@ -66,6 +68,27 @@ type capabilityJSON struct {
 	Action        string `json:"action"`
 	Target        string `json:"target"`
 	Justification string `json:"justification"`
+}
+
+// bannedConstructExceptionJSON is one banned_construct_exceptions entry in the
+// raw JSON.
+type bannedConstructExceptionJSON struct {
+	Construct     string `json:"construct"`
+	Language      string `json:"language"`
+	Justification string `json:"justification"`
+}
+
+// ManifestData is the parsed manifest information the analyzer needs.
+//
+// Declared contains the capability declaration set, including the category:action:*
+// wildcard entries added by LoadManifest.
+//
+// BannedConstructExceptions contains explicit per-language exception keys in the
+// form "<language>:<construct>". Only a small subset of constructs are currently
+// honorably exemptible in the Go analyzer.
+type ManifestData struct {
+	Declared                  map[CapabilityString]bool
+	BannedConstructExceptions map[string]bool
 }
 
 // canonicalCapabilityString converts a (category, action, target) triple to
@@ -77,12 +100,17 @@ func canonicalCapabilityString(category, action, target string) CapabilityString
 	return CapabilityString(category + ":" + action + ":" + target)
 }
 
-// LoadManifest reads required_capabilities.json from dir and returns the set
-// of declared capabilities as a set (map with bool values) for O(1) lookup.
+// canonicalBannedConstructExceptionKey converts a (language, construct) pair
+// into the standard "<language>:<construct>" form used for O(1) exemption checks.
+func canonicalBannedConstructExceptionKey(language, construct string) string {
+	return strings.ToLower(strings.TrimSpace(language)) + ":" + normalizeBannedConstructName(construct)
+}
+
+// LoadManifestData reads required_capabilities.json from dir and returns the
+// declared capability set plus any explicit banned-construct exceptions.
 //
-// The map contains one entry per declared capability in canonical form.
-// If no manifest file exists, the map is empty but non-nil — this represents
-// a package with zero declared capabilities.
+// If no manifest file exists, both maps are empty but non-nil — this represents
+// a package with zero declared capabilities and zero construct exemptions.
 //
 // The function also adds "wildcard" entries for each (category:action) pair
 // present in the manifest. This lets the analyzer treat a manifest that
@@ -90,7 +118,7 @@ func canonicalCapabilityString(category, action, target string) CapabilityString
 // because if the package has declared any fs:read target, it has gone through
 // the manifest process, and the specific path enforcement is handled at
 // runtime by the Operations system, not by this static analyzer.
-func LoadManifest(dir string) (map[CapabilityString]bool, error) {
+func LoadManifestData(dir string) (*ManifestData, error) {
 	manifestPath := filepath.Join(dir, "required_capabilities.json")
 
 	// Use op.File.ReadFile via the Operations system (this package declares
@@ -117,7 +145,10 @@ func LoadManifest(dir string) (map[CapabilityString]bool, error) {
 		// so errors.Is(err, os.ErrNotExist) resolves correctly through the
 		// error chain regardless of locale or OS.
 		if errors.Is(err, os.ErrNotExist) {
-			return make(map[CapabilityString]bool), nil
+			return &ManifestData{
+				Declared:                  make(map[CapabilityString]bool),
+				BannedConstructExceptions: make(map[string]bool),
+			}, nil
 		}
 		return nil, fmt.Errorf("LoadManifest: reading %s: %w", manifestPath, err)
 	}
@@ -127,10 +158,13 @@ func LoadManifest(dir string) (map[CapabilityString]bool, error) {
 		return nil, fmt.Errorf("LoadManifest: parsing %s: %w", manifestPath, err)
 	}
 
-	declared := make(map[CapabilityString]bool)
+	manifest := &ManifestData{
+		Declared:                  make(map[CapabilityString]bool),
+		BannedConstructExceptions: make(map[string]bool),
+	}
 	for _, cap := range mf.Capabilities {
 		// Add the exact capability as declared.
-		declared[canonicalCapabilityString(cap.Category, cap.Action, cap.Target)] = true
+		manifest.Declared[canonicalCapabilityString(cap.Category, cap.Action, cap.Target)] = true
 
 		// Also add a wildcard-target entry for this (category, action) pair.
 		// This allows the analyzer to treat any declared target as covering the
@@ -138,10 +172,26 @@ func LoadManifest(dir string) (map[CapabilityString]bool, error) {
 		// "fs:read:*" (it cannot know which specific path will be accessed);
 		// if the manifest declares any fs:read entry, the package has accepted
 		// the manifest discipline and path enforcement is handled at runtime.
-		declared[canonicalCapabilityString(cap.Category, cap.Action, "*")] = true
+		manifest.Declared[canonicalCapabilityString(cap.Category, cap.Action, "*")] = true
 	}
 
-	return declared, nil
+	for _, exception := range mf.BannedConstructExceptions {
+		key := canonicalBannedConstructExceptionKey(exception.Language, exception.Construct)
+		manifest.BannedConstructExceptions[key] = true
+	}
+
+	return manifest, nil
+}
+
+// LoadManifest reads required_capabilities.json from dir and returns just the
+// declared capability set. This compatibility helper keeps the old API surface
+// while the analyzer uses LoadManifestData for the richer manifest shape.
+func LoadManifest(dir string) (map[CapabilityString]bool, error) {
+	manifest, err := LoadManifestData(dir)
+	if err != nil {
+		return nil, err
+	}
+	return manifest.Declared, nil
 }
 
 // DeclaredCapabilityList returns the canonical capability strings from a manifest
@@ -157,4 +207,3 @@ func DeclaredCapabilityList(dir string) ([]CapabilityString, error) {
 	}
 	return result, nil
 }
-

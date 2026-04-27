@@ -1,0 +1,60 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "coding-adventures-hdl-elaboration"
+version = "0.1.0"
+description = "AST + DSL traces -> HIR. The elaborator that bridges Verilog/VHDL parser output to the unified Hardware IR."
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "Adhithya Rajasekaran" }]
+readme = "README.md"
+keywords = ["hdl", "verilog", "vhdl", "elaboration", "ir", "compiler", "education"]
+dependencies = [
+    "coding-adventures-hdl-ir",
+    "coding-adventures-verilog-parser",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Education",
+    "Intended Audience :: Developers",
+    "Topic :: Education",
+    "Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Typing :: Typed",
+]
+
+[project.urls]
+Homepage = "https://github.com/adhithyan15/coding-adventures"
+Repository = "https://github.com/adhithyan15/coding-adventures"
+Documentation = "https://github.com/adhithyan15/coding-adventures/tree/main/code/specs/hdl-elaboration.md"
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4", "mypy>=1.10"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/hdl_elaboration"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "UP", "B", "SIM"]
+ignore = ["E501"]  # long lines OK; comprehensions clearer than line-broken loops
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["ANN", "E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=hdl_elaboration --cov-report=term-missing --cov-fail-under=65"
+
+[tool.coverage.run]
+source = ["src/hdl_elaboration"]
+
+[tool.coverage.report]
+fail_under = 65
+show_missing = true

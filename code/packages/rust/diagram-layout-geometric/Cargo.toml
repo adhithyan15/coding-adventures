@@ -1,0 +1,8 @@
+[package]
+name = "diagram-layout-geometric"
+version = "0.1.0"
+edition = "2021"
+description = "Coordinate resolver for geometric diagrams (DG04)"
+
+[dependencies]
+diagram-ir = { path = "../diagram-ir" }

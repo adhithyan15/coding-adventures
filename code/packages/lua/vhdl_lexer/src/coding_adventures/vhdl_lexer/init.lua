@@ -1,243 +1,89 @@
--- vhdl_lexer — Tokenizes VHDL source using the grammar-driven infrastructure
--- ============================================================================
---
--- This package is part of the coding-adventures monorepo. It is a thin
--- wrapper around the grammar-driven `GrammarLexer` from the `lexer` package,
--- loading the `vhdl.tokens` grammar file to configure the tokenizer.
---
--- # What is VHDL tokenization?
---
--- VHDL (VHSIC Hardware Description Language, IEEE 1076-2008) was designed
--- by the US Department of Defense for documenting and simulating digital
--- systems. Where Verilog is terse and C-like, VHDL is verbose and Ada-like:
--- strong typing, explicit declarations, and case-insensitive identifiers.
---
--- Given the input:  entity adder is port (a : in std_logic);
---
--- The lexer produces a flat stream of typed tokens:
---
---   Token(ENTITY,     "entity",   1:1)
---   Token(NAME,       "adder",    1:8)
---   Token(IS,         "is",       1:14)
---   Token(PORT,       "port",     1:17)
---   Token(LPAREN,     "(",        1:22)
---   Token(NAME,       "a",        1:23)
---   Token(COLON,      ":",        1:25)
---   Token(IN,         "in",       1:27)
---   Token(NAME,       "std_logic",1:30)
---   Token(RPAREN,     ")",        1:39)
---   Token(SEMICOLON,  ";",        1:40)
---   Token(EOF,        "",         1:41)
---
--- VHDL is case-insensitive: ENTITY, Entity, and entity are all the same.
--- The `vhdl.tokens` grammar sets `case_sensitive: false`, so the lexer
--- lowercases all text before matching. All token values are lowercase.
---
--- # Architecture
---
--- This module:
---   1. Locates the shared `vhdl.tokens` grammar file in `code/grammars/`.
---   2. Reads and parses it once (cached) using `grammar_tools.parse_token_grammar`.
---   3. Constructs a `GrammarLexer` from the `lexer` package for each call.
---   4. Returns the flat token list.
---
--- # Path navigation
---
--- The source file lives at:
---   code/packages/lua/vhdl_lexer/src/coding_adventures/vhdl_lexer/init.lua
---
--- `debug.getinfo(1, "S").source` gives the absolute path to this file.
--- We strip the leading `@` Lua adds to source paths, then walk up 6
--- directory levels to reach the repo root (`code/`), then descend into
--- `grammars/vhdl.tokens`.
---
--- Directory structure from script_dir upward:
---   vhdl_lexer/          (1) — module dir
---   coding_adventures/   (2)
---   src/                 (3)
---   vhdl_lexer/          (4) — the package directory
---   lua/                 (5)
---   packages/            (6)
---   code/                → then /grammars/vhdl.tokens
---
--- # Token types produced
---
--- Keyword tokens (NAME tokens with lowercased values matched against keyword list):
---   ABS, ACCESS, AFTER, ALIAS, ALL, AND, ARCHITECTURE, ARRAY, ASSERT,
---   ATTRIBUTE, BEGIN, BLOCK, BODY, BUFFER, BUS, CASE, COMPONENT,
---   CONFIGURATION, CONSTANT, DISCONNECT, DOWNTO, ELSE, ELSIF, END, ENTITY,
---   EXIT, FILE, FOR, FUNCTION, GENERATE, GENERIC, GROUP, GUARDED, IF,
---   IMPURE, IN, INOUT, IS, LABEL, LIBRARY, LINKAGE, LITERAL, LOOP, MAP,
---   MOD, NAND, NEW, NEXT, NOR, NOT, NULL, OF, ON, OPEN, OR, OTHERS, OUT,
---   PACKAGE, PORT, POSTPONED, PROCEDURE, PROCESS, PURE, RANGE, RECORD,
---   REGISTER, REJECT, REM, REPORT, RETURN, ROL, ROR, SELECT, SEVERITY,
---   SIGNAL, SHARED, SLA, SLL, SRA, SRL, SUBTYPE, THEN, TO, TRANSPORT,
---   TYPE, UNAFFECTED, UNITS, UNTIL, USE, VARIABLE, WAIT, WHEN, WHILE,
---   WITH, XNOR, XOR
---
--- Literal/regex tokens:
---   BASED_LITERAL — e.g. 16#FF#, 2#1010#
---   REAL_NUMBER   — e.g. 3.14, 1.0E-3
---   NUMBER        — plain integers like 42, 1_000
---   STRING        — double-quoted string with "" escaping
---   BIT_STRING    — prefix b/o/x/d + quoted value, e.g. X"FF", B"1010"
---   CHAR_LITERAL  — single character between tick marks: '0', '1', 'X', 'Z'
---   EXTENDED_IDENT — backslash-delimited identifier: \my odd name\
---   NAME          — regular identifier
---
--- Two-char operators: VAR_ASSIGN (:=), LESS_EQUALS (<=), GREATER_EQUALS (>=),
---                     ARROW (=>), NOT_EQUALS (/=), POWER (**), BOX (<>)
--- Single-char operators: PLUS, MINUS, STAR, SLASH, AMPERSAND,
---                        LESS_THAN, GREATER_THAN, EQUALS, TICK, PIPE
--- Delimiters: LPAREN, RPAREN, LBRACKET, RBRACKET, SEMICOLON, COMMA, DOT, COLON
+local lexer_pkg = require("coding_adventures.lexer")
 
-local grammar_tools = require("coding_adventures.grammar_tools")
-local lexer_pkg     = require("coding_adventures.lexer")
+local compiled_grammars = {
+    ["1987"] = require("coding_adventures.vhdl_lexer._grammar_1987"),
+    ["1993"] = require("coding_adventures.vhdl_lexer._grammar_1993"),
+    ["2002"] = require("coding_adventures.vhdl_lexer._grammar_2002"),
+    ["2008"] = require("coding_adventures.vhdl_lexer._grammar_2008"),
+    ["2019"] = require("coding_adventures.vhdl_lexer._grammar_2019"),
+}
 
 local M = {}
 M.VERSION = "0.1.0"
+M.DEFAULT_VERSION = "2008"
+M.SUPPORTED_VERSIONS = { "1987", "1993", "2002", "2008", "2019" }
 
--- =========================================================================
--- Path helpers
--- =========================================================================
+local grammar_cache = {}
+local keyword_cache = {}
 
---- Return the directory of this source file.
--- Lua embeds the source path in chunk debug info with a leading "@".
--- Returns the directory portion of that path (may be relative when the
--- test runner uses a relative package.path like "../src/?.lua").
--- @return string Directory of this init.lua file (absolute or relative).
-local function get_script_dir()
-    local info = debug.getinfo(1, "S")
-    local src  = info.source
-    if src:sub(1, 1) == "@" then
-        src = src:sub(2)
+local function resolve_version(version)
+    local resolved = (version == nil or version == "") and M.DEFAULT_VERSION or version
+    if compiled_grammars[resolved] then
+        return resolved
     end
-    -- Normalize Windows backslashes to forward slashes.
-    src = src:gsub("\\", "/")
-    return src:match("(.+)/[^/]+$") or "."
+    error(
+        "vhdl_lexer: unknown VHDL version '" .. tostring(resolved) .. "'. " ..
+        "Valid values are: 1987, 1993, 2002, 2008, 2019."
+    )
 end
 
---- Walk up `levels` directory levels from `path`.
--- Appends `/../` segments so the OS resolves the result when it is passed
--- to io.open(). Works for both absolute paths (C:/foo, /foo) and relative
--- paths (../src/foo) without needing to know the working directory.
--- The old regex-based dirname approach broke on relative paths starting
--- with `..` because the pattern "(.+)/[^/]+" does not match strings like
--- ".." that have no slash — causing repo_root to collapse to ".".
--- @param path   string  Starting directory.
--- @param levels number  How many levels to climb.
--- @return string        Path with `levels` parent-dir jumps appended.
-local function up(path, levels)
-    local result = path
-    for _ = 1, levels do
-        result = result .. "/.."
+function M.get_grammar(version)
+    local resolved = resolve_version(version)
+    if grammar_cache[resolved] == nil then
+        grammar_cache[resolved] = compiled_grammars[resolved].token_grammar()
     end
-    return result
+    return grammar_cache[resolved]
 end
 
--- =========================================================================
--- Grammar loading
--- =========================================================================
---
--- The grammar is read from disk exactly once and cached in a module-level
--- variable. Subsequent calls to `tokenize` reuse the cached grammar.
--- This avoids repeated file I/O and repeated regex compilation.
-
-local _grammar_cache = nil
-
---- Load and parse the `vhdl.tokens` grammar, with caching.
--- On the first call, opens and parses the file. On subsequent calls,
--- returns the cached TokenGrammar object immediately.
--- @return TokenGrammar  The parsed VHDL token grammar.
-local function get_grammar()
-    if _grammar_cache then
-        return _grammar_cache
+local function keyword_set(version)
+    local resolved = resolve_version(version)
+    if keyword_cache[resolved] == nil then
+        local set = {}
+        for _, keyword in ipairs(M.get_grammar(resolved).keywords or {}) do
+            set[keyword] = true
+        end
+        keyword_cache[resolved] = set
     end
-
-    -- Navigate from this file's directory up to the repo root.
-    -- init.lua is 3 dirs inside the package (src/coding_adventures/vhdl_lexer/).
-    -- The package itself is 3 more dirs inside the repo (packages/lua/vhdl_lexer/).
-    -- Total: 6 levels up lands us at `code/`, the repo root.
-    local script_dir  = get_script_dir()
-    local repo_root   = up(script_dir, 6)
-    local tokens_path = repo_root .. "/grammars/vhdl.tokens"
-
-    local f, open_err = io.open(tokens_path, "r")
-    if not f then
-        error(
-            "vhdl_lexer: cannot open grammar file: " .. tokens_path ..
-            " (" .. (open_err or "unknown error") .. ")"
-        )
-    end
-    local content = f:read("*all")
-    f:close()
-
-    local grammar, parse_err = grammar_tools.parse_token_grammar(content)
-    if not grammar then
-        error("vhdl_lexer: failed to parse vhdl.tokens: " .. (parse_err or "unknown error"))
-    end
-
-    _grammar_cache = grammar
-    return grammar
+    return keyword_cache[resolved]
 end
 
--- =========================================================================
--- Public API
--- =========================================================================
+function M.tokenize(source, version)
+    local resolved = resolve_version(version)
+    local grammar = M.get_grammar(resolved)
+    local keywords = keyword_set(resolved)
+    local gl = lexer_pkg.GrammarLexer.new(source, grammar)
+    local raw = gl:tokenize()
+    local tokens = {}
 
---- Tokenize a VHDL source string.
---
--- Loads the `vhdl.tokens` grammar (cached after first call) and feeds
--- the source to a `GrammarLexer`. Returns the complete flat token list,
--- including a terminal `EOF` token.
---
--- VHDL is case-insensitive: `vhdl.tokens` sets `case_sensitive: false`,
--- so the grammar lowercases input before matching. All returned token
--- values will be in lowercase.
---
--- Whitespace and comments are consumed silently via the skip patterns in
--- `vhdl.tokens`. The caller receives only meaningful tokens: NAME (and
--- keyword subtypes), number/literal tokens, operators, delimiters, and EOF.
---
--- @param source string  The VHDL text to tokenize.
--- @return table         Array of Token objects (type, value, line, col).
--- @error                Raises an error on unexpected characters.
---
--- Example:
---
---   local vh = require("coding_adventures.vhdl_lexer")
---   local tokens = vh.tokenize("entity adder is")
---   -- tokens[1].type  → "ENTITY"
---   -- tokens[1].value → "entity"
---   -- tokens[2].type  → "NAME"
---   -- tokens[2].value → "adder"
---   -- tokens[3].type  → "IS"
---   -- tokens[3].value → "is"
-function M.tokenize(source)
-    local grammar    = get_grammar()
-    local normalized = source:lower()
-    local gl         = lexer_pkg.GrammarLexer.new(normalized, grammar)
-    local raw        = gl:tokenize()
-    local tokens     = {}
     for _, tok in ipairs(raw) do
+        local type_name = tok.type_name
+        local value = tok.value
+        local lowered = type(value) == "string" and string.lower(value) or value
+
+        if keywords[lowered] then
+            value = lowered
+        elseif type_name == "NAME" or type_name == "KEYWORD" then
+            value = lowered
+            if keywords[lowered] then
+                type_name = "KEYWORD"
+            end
+        elseif type_name == "BIT_STRING" then
+            value = lowered
+        end
+
         tokens[#tokens + 1] = {
-            type  = tok.type_name,
-            value = tok.value,
-            line  = tok.line,
-            col   = tok.column,
+            type = type_name,
+            value = value,
+            line = tok.line,
+            col = tok.column,
         }
     end
+
     return tokens
 end
 
---- Return the cached (or freshly loaded) TokenGrammar for VHDL.
---
--- Exposed for callers that want to inspect or reuse the grammar object
--- directly — for example, to build a custom GrammarLexer with callbacks.
---
--- @return TokenGrammar  The parsed VHDL token grammar.
-function M.get_grammar()
-    return get_grammar()
+function M.resolve_version(version)
+    return resolve_version(version)
 end
 
 return M

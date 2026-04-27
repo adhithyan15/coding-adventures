@@ -78,7 +78,22 @@ module CodingAdventures
     #
     # So from __dir__ we go up 6 levels to reach code/, then into grammars/.
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
-    ALGOL_TOKENS_PATH = File.join(GRAMMAR_DIR, "algol.tokens")
+    VALID_VERSIONS = %w[algol60].freeze
+    ALGOL_TOKENS_PATH = File.join(GRAMMAR_DIR, "algol", "algol60.tokens")
+
+    def self.resolve_tokens_path(version = "algol60")
+      if version.nil? || version.empty?
+        version = "algol60"
+      end
+
+      unless VALID_VERSIONS.include?(version)
+        raise ArgumentError,
+          "Unknown ALGOL version #{version.inspect}. " \
+          "Valid versions: #{VALID_VERSIONS.sort.join(", ")}"
+      end
+
+      File.join(GRAMMAR_DIR, "algol", "#{version}.tokens")
+    end
 
     # Tokenize a string of ALGOL 60 source text into an array of Token objects.
     #
@@ -99,13 +114,13 @@ module CodingAdventures
     #
     # @param source [String] ALGOL 60 source text to tokenize
     # @return [Array<CodingAdventures::Lexer::Token>] the token stream
-    def self.tokenize(source)
+    def self.tokenize(source, version: "algol60")
       # Read the algol.tokens file and parse it into a TokenGrammar.
       # The TokenGrammar contains the regex patterns for REAL_LIT, INTEGER_LIT,
       # STRING_LIT, IDENT, all operators and delimiters, the keyword list,
       # and the skip rules for whitespace and comments.
       grammar = CodingAdventures::GrammarTools.parse_token_grammar(
-        File.read(ALGOL_TOKENS_PATH, encoding: "UTF-8")
+        File.read(resolve_tokens_path(version), encoding: "UTF-8")
       )
 
       # Create a GrammarLexer instance and run it. The lexer walks through

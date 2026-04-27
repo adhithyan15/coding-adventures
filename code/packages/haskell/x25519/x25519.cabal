@@ -1,0 +1,24 @@
+cabal-version: 3.0
+name:          x25519
+version:       0.1.0
+synopsis:      X25519 key agreement (RFC 7748) implemented from scratch in pure Haskell
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  X25519
+    build-depends:    base >=4.14
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    X25519Spec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14
+                    , hspec == 2.*
+                    , x25519
+    default-language: Haskell2010

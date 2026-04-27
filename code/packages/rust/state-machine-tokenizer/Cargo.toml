@@ -1,0 +1,8 @@
+[package]
+name = "state-machine-tokenizer"
+version = "0.1.0"
+edition = "2021"
+description = "Tokenizer profile runtime on top of effectful state machines"
+
+[dependencies]
+state-machine = { path = "../state-machine" }

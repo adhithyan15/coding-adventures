@@ -1,0 +1,50 @@
+"""Visible note-to-sound signal chain for virtual audio playback."""
+
+from .note_audio import (
+    DEFAULT_AMPLITUDE,
+    DEFAULT_BIT_DEPTH,
+    DEFAULT_CHANNEL_COUNT,
+    DEFAULT_FULL_SCALE_VOLTAGE,
+    DEFAULT_MAX_SAMPLE_COUNT,
+    DEFAULT_SAMPLE_RATE_HZ,
+    DEFAULT_SPEAKER_GAIN,
+    LinearSpeakerSignal,
+    NoteEvent,
+    PCMBuffer,
+    PCMFormat,
+    RenderedNote,
+    ZeroOrderHoldDACSignal,
+    encode_sample_buffer,
+    float_to_pcm16,
+    pcm16_to_voltage,
+    render_note_to_sound_chain,
+    samples_to_pcm_buffer,
+    to_wav_bytes,
+    write_wav,
+)
+
+__version__ = "0.1.0"
+
+__all__ = [
+    "DEFAULT_AMPLITUDE",
+    "DEFAULT_BIT_DEPTH",
+    "DEFAULT_CHANNEL_COUNT",
+    "DEFAULT_FULL_SCALE_VOLTAGE",
+    "DEFAULT_MAX_SAMPLE_COUNT",
+    "DEFAULT_SAMPLE_RATE_HZ",
+    "DEFAULT_SPEAKER_GAIN",
+    "LinearSpeakerSignal",
+    "NoteEvent",
+    "PCMBuffer",
+    "PCMFormat",
+    "RenderedNote",
+    "ZeroOrderHoldDACSignal",
+    "__version__",
+    "encode_sample_buffer",
+    "float_to_pcm16",
+    "pcm16_to_voltage",
+    "render_note_to_sound_chain",
+    "samples_to_pcm_buffer",
+    "to_wav_bytes",
+    "write_wav",
+]

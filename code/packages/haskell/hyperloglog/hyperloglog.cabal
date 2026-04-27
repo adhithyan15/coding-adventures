@@ -1,0 +1,27 @@
+cabal-version: 3.0
+name:          hyperloglog
+version:       0.1.0
+synopsis:      Haskell HyperLogLog approximate cardinality package
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  Hyperloglog
+    build-depends:    base >=4.14
+                    , bytestring
+                    , hash-functions
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    HyperloglogSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14
+                    , bytestring
+                    , hspec == 2.*
+                    , hyperloglog
+    default-language: Haskell2010

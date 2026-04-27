@@ -64,6 +64,7 @@ defmodule CodingAdventures.AlgolLexer do
   # → packages → code, then into grammars.
   @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "grammars"])
                 |> Path.expand()
+  @valid_versions ~w(algol60)
 
   @doc """
   Tokenize ALGOL 60 source code.
@@ -79,9 +80,10 @@ defmodule CodingAdventures.AlgolLexer do
       ["NAME", "ASSIGN", "INTEGER_LIT", "EOF"]
 
   """
-  @spec tokenize(String.t()) :: {:ok, [CodingAdventures.Lexer.Token.t()]} | {:error, String.t()}
-  def tokenize(source) do
-    grammar = get_grammar()
+  @spec tokenize(String.t(), String.t()) ::
+          {:ok, [CodingAdventures.Lexer.Token.t()]} | {:error, String.t()}
+  def tokenize(source, version \\ "algol60") do
+    grammar = get_grammar(version)
     # Post-tokenize hook: the generic GrammarLexer emits "KEYWORD" as the type
     # for all keyword tokens (begin, end, integer, etc.).  ALGOL 60 has many
     # distinct keywords and callers expect the specific keyword name as the type
@@ -111,22 +113,33 @@ defmodule CodingAdventures.AlgolLexer do
   grammar directly to `GrammarLexer.tokenize/2` in performance-sensitive
   code that already holds a grammar reference.
   """
-  @spec create_lexer() :: TokenGrammar.t()
-  def create_lexer do
-    tokens_path = Path.join(@grammars_dir, "algol.tokens")
+  @spec create_lexer(String.t()) :: TokenGrammar.t()
+  def create_lexer(version \\ "algol60") do
+    tokens_path = resolve_tokens_path(version)
     {:ok, grammar} = TokenGrammar.parse(File.read!(tokens_path))
     grammar
+  end
+
+  defp resolve_tokens_path(version) when version in @valid_versions do
+    Path.join([@grammars_dir, "algol", "#{version}.tokens"])
+  end
+
+  defp resolve_tokens_path(version) do
+    raise ArgumentError,
+          "Unknown ALGOL version #{inspect(version)}. Valid versions: #{Enum.join(@valid_versions, ", ")}"
   end
 
   # Cache the parsed grammar in a persistent_term so the file is read and
   # parsed only once per BEAM node lifetime. persistent_term is faster than
   # ETS for read-heavy, write-once data because the value lives directly in
   # the process heap on read (no copy needed for immutable terms).
-  defp get_grammar do
-    case :persistent_term.get({__MODULE__, :grammar}, nil) do
+  defp get_grammar(version) do
+    key = {__MODULE__, :grammar, version}
+
+    case :persistent_term.get(key, nil) do
       nil ->
-        grammar = create_lexer()
-        :persistent_term.put({__MODULE__, :grammar}, grammar)
+        grammar = create_lexer(version)
+        :persistent_term.put(key, grammar)
         grammar
 
       grammar ->

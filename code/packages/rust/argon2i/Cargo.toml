@@ -1,0 +1,8 @@
+[package]
+name = "coding_adventures_argon2i"
+version = "0.1.0"
+edition = "2021"
+description = "Argon2i (RFC 9106) — data-independent memory-hard password hashing, from scratch, no external deps except sibling blake2b"
+
+[dependencies]
+coding_adventures_blake2b = { path = "../blake2b" }

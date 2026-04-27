@@ -335,9 +335,8 @@ assert_stmt = "assert" expression [ COMMA expression ] ;
 # This was removed because annotations couldn't attach to tuple
 # sub-parameters, and it made function introspection complex.
 assign_stmt = expression_list
-              ( { EQUALS expression_list }
-              | augmented_assign_op expression_list
-              | ) ;
+              [ { EQUALS expression_list }
+              | augmented_assign_op expression_list ] ;
 
 augmented_assign_op = PLUS_EQUALS | MINUS_EQUALS | STAR_EQUALS | SLASH_EQUALS
                     | FLOOR_DIV_EQUALS | PERCENT_EQUALS | AMP_EQUALS

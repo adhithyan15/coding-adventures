@@ -1,0 +1,26 @@
+cabal-version: 3.0
+name:          wasm-types
+version:       0.1.0
+synopsis:      Haskell WASM 1.0 type system and module data structures
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  WasmTypes
+    build-depends:    base >=4.14
+                    , bytestring
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    WasmTypesSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14
+                    , bytestring
+                    , hspec == 2.*
+                    , wasm-types
+    default-language: Haskell2010

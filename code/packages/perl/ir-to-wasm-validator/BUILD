@@ -1,0 +1,2 @@
+cpanm --notest --quiet Test2::V0
+PERL5LIB=$(cd ../compiler-ir && pwd)/lib:$(cd ../compiler-source-map && pwd)/lib:$(cd ../grammar-tools && pwd)/lib:$(cd ../lexer && pwd)/lib:$(cd ../brainfuck && pwd)/lib:$(cd ../virtual-machine && pwd)/lib:$(cd ../brainfuck-ir-compiler && pwd)/lib:$(cd ../wasm-leb128 && pwd)/lib:$(cd ../wasm-types && pwd)/lib:$(cd ../wasm-opcodes && pwd)/lib:$(cd ../wasm-module-encoder && pwd)/lib:$(cd ../wasm-module-parser && pwd)/lib:$(cd ../wasm-validator && pwd)/lib:$(cd ../ir-to-wasm-compiler && pwd)/lib:${PERL5LIB:-} prove -l -v t/

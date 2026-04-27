@@ -1,0 +1,736 @@
+{
+  "builtTestProducts" : [
+    {
+      "binaryPath" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOpsPackageTests.xctest/Contents/MacOS/ImagePointOpsPackageTests",
+      "packagePath" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps",
+      "productName" : "ImagePointOpsPackageTests"
+    }
+  ],
+  "copyCommands" : {
+
+  },
+  "explicitTargetDependencyImportCheckingMode" : {
+    "none" : {
+
+    }
+  },
+  "generatedSourceTargetSet" : [
+
+  ],
+  "pluginDescriptions" : [
+
+  ],
+  "swiftCommands" : {
+    "C.ImagePointOps-arm64-apple-macosx26.0-debug.module" : {
+      "executable" : "/Library/Developer/CommandLineTools/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOps.build/sources",
+      "importPath" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/Sources/ImagePointOps/ImagePointOps.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/swift-version--1AB21518FC5DEDBE.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/Modules/PixelContainer.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOps.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "ImagePointOps",
+      "moduleOutputPath" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/Modules/ImagePointOps.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOps.build/ImagePointOps.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j12",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOps.build/include/ImagePointOps-Swift.h",
+        "-swift-version",
+        "5",
+        "-I",
+        "/Library/Developer/CommandLineTools/Library/Developer/Frameworks",
+        "-L",
+        "/Library/Developer/CommandLineTools/Library/Developer/Frameworks",
+        "-plugin-path",
+        "/Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "imagepointops"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOps.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOps.build/ImagePointOps.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/Modules/ImagePointOps.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/Sources/ImagePointOps/ImagePointOps.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOps.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.ImagePointOpsPackageTests-arm64-apple-macosx26.0-debug.module" : {
+      "executable" : "/Library/Developer/CommandLineTools/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOpsPackageTests.build/sources",
+      "importPath" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOpsPackageTests.derived/runner.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/swift-version--1AB21518FC5DEDBE.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/Modules/ImagePointOpsTests.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOpsPackageTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "ImagePointOpsPackageTests",
+      "moduleOutputPath" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/Modules/ImagePointOpsPackageTests.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOpsPackageTests.build/runner.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j12",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOpsPackageTests.build/include/ImagePointOpsPackageTests-Swift.h",
+        "-I",
+        "/Library/Developer/CommandLineTools/Library/Developer/Frameworks",
+        "-L",
+        "/Library/Developer/CommandLineTools/Library/Developer/Frameworks",
+        "-plugin-path",
+        "/Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "imagepointops"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOpsPackageTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOpsPackageTests.build/runner.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/Modules/ImagePointOpsPackageTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOpsPackageTests.derived/runner.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOpsPackageTests.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.ImagePointOpsTests-arm64-apple-macosx26.0-debug.module" : {
+      "executable" : "/Library/Developer/CommandLineTools/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOpsTests.build/sources",
+      "importPath" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/Tests/ImagePointOpsTests/ImagePointOpsTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/swift-version--1AB21518FC5DEDBE.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/Modules/ImagePointOps.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/Modules/PixelContainer.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOpsTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "ImagePointOpsTests",
+      "moduleOutputPath" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/Modules/ImagePointOpsTests.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOpsTests.build/ImagePointOpsTests.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j12",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-swift-version",
+        "5",
+        "-I",
+        "/Library/Developer/CommandLineTools/Library/Developer/Frameworks",
+        "-L",
+        "/Library/Developer/CommandLineTools/Library/Developer/Frameworks",
+        "-plugin-path",
+        "/Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "imagepointops"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOpsTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOpsTests.build/ImagePointOpsTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/Modules/ImagePointOpsTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/Tests/ImagePointOpsTests/ImagePointOpsTests.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOpsTests.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.PixelContainer-arm64-apple-macosx26.0-debug.module" : {
+      "executable" : "/Library/Developer/CommandLineTools/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/PixelContainer.build/sources",
+      "importPath" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/PixelContainer/Sources/PixelContainer/PixelContainer.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/swift-version--1AB21518FC5DEDBE.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/PixelContainer.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "PixelContainer",
+      "moduleOutputPath" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/Modules/PixelContainer.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/PixelContainer.build/PixelContainer.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j12",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/PixelContainer.build/include/PixelContainer-Swift.h",
+        "-swift-version",
+        "5",
+        "-I",
+        "/Library/Developer/CommandLineTools/Library/Developer/Frameworks",
+        "-L",
+        "/Library/Developer/CommandLineTools/Library/Developer/Frameworks",
+        "-plugin-path",
+        "/Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "pixelcontainer"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/PixelContainer.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/PixelContainer.build/PixelContainer.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/Modules/PixelContainer.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/PixelContainer/Sources/PixelContainer/PixelContainer.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/PixelContainer.build",
+      "wholeModuleOptimization" : false
+    }
+  },
+  "swiftFrontendCommands" : {
+
+  },
+  "swiftTargetScanArgs" : {
+    "ImagePointOps" : [
+      "/Library/Developer/CommandLineTools/usr/bin/swiftc",
+      "-module-name",
+      "ImagePointOps",
+      "-package-name",
+      "imagepointops",
+      "-c",
+      "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/Sources/ImagePointOps/ImagePointOps.swift",
+      "-I",
+      "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j12",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOps.build/include/ImagePointOps-Swift.h",
+      "-swift-version",
+      "5",
+      "-I",
+      "/Library/Developer/CommandLineTools/Library/Developer/Frameworks",
+      "-L",
+      "/Library/Developer/CommandLineTools/Library/Developer/Frameworks",
+      "-plugin-path",
+      "/Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "imagepointops",
+      "-driver-use-frontend-path",
+      "/Library/Developer/CommandLineTools/usr/bin/swiftc"
+    ],
+    "ImagePointOpsPackageTests" : [
+      "/Library/Developer/CommandLineTools/usr/bin/swiftc",
+      "-module-name",
+      "ImagePointOpsPackageTests",
+      "-package-name",
+      "imagepointops",
+      "-c",
+      "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOpsPackageTests.derived/runner.swift",
+      "-I",
+      "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j12",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOpsPackageTests.build/include/ImagePointOpsPackageTests-Swift.h",
+      "-I",
+      "/Library/Developer/CommandLineTools/Library/Developer/Frameworks",
+      "-L",
+      "/Library/Developer/CommandLineTools/Library/Developer/Frameworks",
+      "-plugin-path",
+      "/Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "imagepointops",
+      "-driver-use-frontend-path",
+      "/Library/Developer/CommandLineTools/usr/bin/swiftc"
+    ],
+    "ImagePointOpsTests" : [
+      "/Library/Developer/CommandLineTools/usr/bin/swiftc",
+      "-module-name",
+      "ImagePointOpsTests",
+      "-package-name",
+      "imagepointops",
+      "-c",
+      "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/Tests/ImagePointOpsTests/ImagePointOpsTests.swift",
+      "-I",
+      "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j12",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-swift-version",
+      "5",
+      "-I",
+      "/Library/Developer/CommandLineTools/Library/Developer/Frameworks",
+      "-L",
+      "/Library/Developer/CommandLineTools/Library/Developer/Frameworks",
+      "-plugin-path",
+      "/Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "imagepointops",
+      "-driver-use-frontend-path",
+      "/Library/Developer/CommandLineTools/usr/bin/swiftc"
+    ],
+    "PixelContainer" : [
+      "/Library/Developer/CommandLineTools/usr/bin/swiftc",
+      "-module-name",
+      "PixelContainer",
+      "-package-name",
+      "pixelcontainer",
+      "-c",
+      "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/PixelContainer/Sources/PixelContainer/PixelContainer.swift",
+      "-I",
+      "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j12",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/PixelContainer.build/include/PixelContainer-Swift.h",
+      "-swift-version",
+      "5",
+      "-I",
+      "/Library/Developer/CommandLineTools/Library/Developer/Frameworks",
+      "-L",
+      "/Library/Developer/CommandLineTools/Library/Developer/Frameworks",
+      "-plugin-path",
+      "/Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "pixelcontainer",
+      "-driver-use-frontend-path",
+      "/Library/Developer/CommandLineTools/usr/bin/swiftc"
+    ]
+  },
+  "targetDependencyMap" : {
+    "ImagePointOps" : [
+      "PixelContainer"
+    ],
+    "ImagePointOpsPackageTests" : [
+      "ImagePointOpsTests",
+      "ImagePointOps",
+      "PixelContainer"
+    ],
+    "ImagePointOpsTests" : [
+      "ImagePointOps",
+      "PixelContainer"
+    ],
+    "PixelContainer" : [
+
+    ]
+  },
+  "testDiscoveryCommands" : {
+
+  },
+  "testEntryPointCommands" : {
+    "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOpsPackageTests.derived/runner.swift" : {
+      "inputs" : [
+
+      ],
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOpsPackageTests.derived/runner.swift"
+        }
+      ]
+    }
+  },
+  "traitConfiguration" : {
+    "default" : {
+
+    }
+  },
+  "writeCommands" : {
+    "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOps.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/Sources/ImagePointOps/ImagePointOps.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOps.build/sources"
+    },
+    "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOpsPackageTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOpsPackageTests.derived/runner.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOpsPackageTests.build/sources"
+    },
+    "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOpsPackageTests.product/Objects.LinkFileList" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<link-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOps.build/ImagePointOps.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOpsPackageTests.build/runner.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOpsTests.build/ImagePointOpsTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/PixelContainer.build/PixelContainer.swift.o"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOpsPackageTests.product/Objects.LinkFileList"
+    },
+    "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOpsTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/Tests/ImagePointOpsTests/ImagePointOpsTests.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOpsTests.build/sources"
+    },
+    "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/PixelContainer.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/PixelContainer/Sources/PixelContainer/PixelContainer.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/PixelContainer.build/sources"
+    },
+    "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/swift-version--1AB21518FC5DEDBE.txt" : {
+      "alwaysOutOfDate" : true,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<swift-get-version>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Library/Developer/CommandLineTools/usr/bin/swiftc"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/swift-version--1AB21518FC5DEDBE.txt"
+    }
+  }
+}

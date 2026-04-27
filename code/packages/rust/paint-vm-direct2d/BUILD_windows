@@ -1,0 +1,1 @@
+cargo test -p paint-vm-direct2d -- --nocapture

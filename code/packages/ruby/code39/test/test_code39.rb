@@ -13,9 +13,17 @@ class TestCode39 < Minitest::Test
     assert_equal "WNNNNWNNW", encoded[:pattern]
   end
 
-  def test_draw_scene
+  def test_expand_runs
+    runs = CodingAdventures::Code39.expand_code39_runs("A")
+    assert_equal 29, runs.length
+    assert_equal "inter-character-gap", runs[9][:role]
+    assert_equal 3, runs[10][:modules]
+  end
+
+  def test_paint_scene
     scene = CodingAdventures::Code39.draw_code39("A")
     assert_equal "code39", scene.metadata[:symbology]
     assert_operator scene.width, :>, 0
+    assert_equal 120, scene.height
   end
 end

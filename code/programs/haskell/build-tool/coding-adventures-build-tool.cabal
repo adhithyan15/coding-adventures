@@ -1,6 +1,6 @@
 cabal-version: 3.0
 name:          coding-adventures-build-tool
-version:       0.1.0
+version:       0.2.0
 synopsis:      Haskell implementation of the monorepo build tool
 license:       MIT
 author:        Adhithya Rajasekaran
@@ -10,13 +10,29 @@ build-type:    Simple
 library
     exposed-modules:  BuildTool
     build-depends:    base >=4.14
+                    , containers
+                    , directed-graph
+                    , directory
+                    , filepath
+                    , process
+                    , time
     hs-source-dirs:   src
+    default-language: Haskell2010
+
+executable build-tool
+    main-is:          Main.hs
+    hs-source-dirs:   app
+    build-depends:    base >=4.14
+                    , coding-adventures-build-tool
+    ghc-options:      -threaded -with-rtsopts=--io-manager=native
     default-language: Haskell2010
 
 test-suite spec
     type:             exitcode-stdio-1.0
     main-is:          Spec.hs
+    other-modules:    BuildToolSpec
     build-depends:    base >=4.14
                     , coding-adventures-build-tool
+                    , hspec == 2.*
     hs-source-dirs:   test
     default-language: Haskell2010

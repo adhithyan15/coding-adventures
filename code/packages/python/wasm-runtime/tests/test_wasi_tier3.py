@@ -11,7 +11,7 @@ Covers the eight new WASI functions added in the Tier 3 revision:
   - sched_yield         : cooperative yield (no-op)
 
 All memory-writing tests use real LinearMemory objects so we exercise the
-actual store/load path, not just the stub logic in isolation.
+actual store/load path, not just the host logic in isolation.
 
 Determinism
 ───────────
@@ -24,14 +24,14 @@ from __future__ import annotations
 
 from wasm_execution import LinearMemory, i32, i64
 
-from wasm_runtime.wasi_stub import (
+from wasm_runtime.wasi_host import (
     EINVAL,
     ENOSYS,
     ESUCCESS,
     WasiClock,
     WasiConfig,
+    WasiHost,
     WasiRandom,
-    WasiStub,
 )
 
 # ===========================================================================
@@ -74,13 +74,13 @@ class FakeRandom(WasiRandom):
         return bytes([0xAB] * n)
 
 
-def _make_stub(**kwargs: object) -> tuple[WasiStub, LinearMemory]:
-    """Create a WasiStub with FakeClock/FakeRandom and one page of memory."""
+def _make_host(**kwargs: object) -> tuple[WasiHost, LinearMemory]:
+    """Create a WasiHost with FakeClock/FakeRandom and one page of memory."""
     config = WasiConfig(clock=FakeClock(), random=FakeRandom(), **kwargs)
-    stub = WasiStub(config)
+    host = WasiHost(config)
     mem = LinearMemory(1)  # 1 page = 65536 bytes — plenty for our tests
-    stub.set_memory(mem)
-    return stub, mem
+    host.set_memory(mem)
+    return host, mem
 
 
 # ---------------------------------------------------------------------------
@@ -103,8 +103,8 @@ class TestArgsSizesGet:
 
         "myapp\\0" = 6 bytes, "hello\\0" = 6 bytes, total = 12.
         """
-        stub, mem = _make_stub(args=["myapp", "hello"])
-        func = stub.resolve_function("wasi_snapshot_preview1", "args_sizes_get")
+        host, mem = _make_host(args=["myapp", "hello"])
+        func = host.resolve_function("wasi_snapshot_preview1", "args_sizes_get")
 
         argc_ptr = 8
         buf_ptr = 12
@@ -116,8 +116,8 @@ class TestArgsSizesGet:
 
     def test_empty_args(self) -> None:
         """No args → argc=0, buf_size=0."""
-        stub, mem = _make_stub(args=[])
-        func = stub.resolve_function("wasi_snapshot_preview1", "args_sizes_get")
+        host, mem = _make_host(args=[])
+        func = host.resolve_function("wasi_snapshot_preview1", "args_sizes_get")
 
         result = func.call([i32(0), i32(4)])
         assert result[0].value == ESUCCESS
@@ -126,8 +126,8 @@ class TestArgsSizesGet:
 
     def test_single_arg(self) -> None:
         """Single arg "x\\0" = 2 bytes."""
-        stub, mem = _make_stub(args=["x"])
-        func = stub.resolve_function("wasi_snapshot_preview1", "args_sizes_get")
+        host, mem = _make_host(args=["x"])
+        func = host.resolve_function("wasi_snapshot_preview1", "args_sizes_get")
 
         result = func.call([i32(0), i32(4)])
         assert result[0].value == ESUCCESS
@@ -149,8 +149,8 @@ class TestArgsGet:
           argv_ptr[1] = argv_buf_ptr + 6   (points to "hello\\0")
           Memory at argv_buf_ptr: m y a p p \\0 h e l l o \\0
         """
-        stub, mem = _make_stub(args=["myapp", "hello"])
-        func = stub.resolve_function("wasi_snapshot_preview1", "args_get")
+        host, mem = _make_host(args=["myapp", "hello"])
+        func = host.resolve_function("wasi_snapshot_preview1", "args_get")
 
         argv_ptr = 100       # where the pointer array goes
         argv_buf_ptr = 200   # where the string data goes
@@ -170,8 +170,8 @@ class TestArgsGet:
 
     def test_null_terminator_present(self) -> None:
         """Each argument string is followed by a null byte."""
-        stub, mem = _make_stub(args=["ab"])
-        func = stub.resolve_function("wasi_snapshot_preview1", "args_get")
+        host, mem = _make_host(args=["ab"])
+        func = host.resolve_function("wasi_snapshot_preview1", "args_get")
 
         result = func.call([i32(0), i32(100)])
         assert result[0].value == ESUCCESS
@@ -195,8 +195,8 @@ class TestEnvironSizesGet:
           H O M E = / h o m e / u s e r \\0
           4 + 1 + 10 + 1 = 16 bytes total.
         """
-        stub, mem = _make_stub(env={"HOME": "/home/user"})
-        func = stub.resolve_function("wasi_snapshot_preview1", "environ_sizes_get")
+        host, mem = _make_host(env={"HOME": "/home/user"})
+        func = host.resolve_function("wasi_snapshot_preview1", "environ_sizes_get")
 
         count_ptr = 0
         buf_size_ptr = 4
@@ -208,8 +208,8 @@ class TestEnvironSizesGet:
 
     def test_empty_env(self) -> None:
         """No env vars → count=0, buf_size=0."""
-        stub, mem = _make_stub(env={})
-        func = stub.resolve_function("wasi_snapshot_preview1", "environ_sizes_get")
+        host, mem = _make_host(env={})
+        func = host.resolve_function("wasi_snapshot_preview1", "environ_sizes_get")
 
         result = func.call([i32(0), i32(4)])
         assert result[0].value == ESUCCESS
@@ -225,8 +225,8 @@ class TestEnvironSizesGet:
 class TestEnvironGet:
     def test_single_var_in_memory(self) -> None:
         """HOME=/home/user\\0 is written correctly into memory."""
-        stub, mem = _make_stub(env={"HOME": "/home/user"})
-        func = stub.resolve_function("wasi_snapshot_preview1", "environ_get")
+        host, mem = _make_host(env={"HOME": "/home/user"})
+        func = host.resolve_function("wasi_snapshot_preview1", "environ_get")
 
         environ_ptr = 100
         environ_buf_ptr = 200
@@ -245,8 +245,8 @@ class TestEnvironGet:
 
     def test_null_terminator_present(self) -> None:
         """Environment string ends with a null terminator."""
-        stub, mem = _make_stub(env={"X": "1"})
-        func = stub.resolve_function("wasi_snapshot_preview1", "environ_get")
+        host, mem = _make_host(env={"X": "1"})
+        func = host.resolve_function("wasi_snapshot_preview1", "environ_get")
 
         result = func.call([i32(0), i32(100)])
         assert result[0].value == ESUCCESS
@@ -266,8 +266,8 @@ class TestEnvironGet:
 class TestClockTimeGetRealtime:
     def test_realtime_clock(self) -> None:
         """clock_time_get(0) writes FakeClock.realtime_ns() as i64."""
-        stub, mem = _make_stub()
-        func = stub.resolve_function("wasi_snapshot_preview1", "clock_time_get")
+        host, mem = _make_host()
+        func = host.resolve_function("wasi_snapshot_preview1", "clock_time_get")
 
         time_ptr = 100
         # id=0 (realtime), precision=0 (i64), time_ptr
@@ -279,8 +279,8 @@ class TestClockTimeGetRealtime:
 
     def test_process_cputime_treated_as_realtime(self) -> None:
         """clock_time_get(2) also returns realtime (PROCESS_CPUTIME mapped to real)."""
-        stub, mem = _make_stub()
-        func = stub.resolve_function("wasi_snapshot_preview1", "clock_time_get")
+        host, mem = _make_host()
+        func = host.resolve_function("wasi_snapshot_preview1", "clock_time_get")
 
         result = func.call([i32(2), i64(0), i32(100)])
         assert result[0].value == ESUCCESS
@@ -288,8 +288,8 @@ class TestClockTimeGetRealtime:
 
     def test_thread_cputime_treated_as_realtime(self) -> None:
         """clock_time_get(3) also returns realtime (THREAD_CPUTIME mapped to real)."""
-        stub, mem = _make_stub()
-        func = stub.resolve_function("wasi_snapshot_preview1", "clock_time_get")
+        host, mem = _make_host()
+        func = host.resolve_function("wasi_snapshot_preview1", "clock_time_get")
 
         result = func.call([i32(3), i64(0), i32(100)])
         assert result[0].value == ESUCCESS
@@ -304,8 +304,8 @@ class TestClockTimeGetRealtime:
 class TestClockTimeGetMonotonic:
     def test_monotonic_clock(self) -> None:
         """clock_time_get(1) writes FakeClock.monotonic_ns() as i64."""
-        stub, mem = _make_stub()
-        func = stub.resolve_function("wasi_snapshot_preview1", "clock_time_get")
+        host, mem = _make_host()
+        func = host.resolve_function("wasi_snapshot_preview1", "clock_time_get")
 
         time_ptr = 200
         result = func.call([i32(1), i64(0), i32(time_ptr)])
@@ -314,8 +314,8 @@ class TestClockTimeGetMonotonic:
 
     def test_unknown_clock_returns_einval(self) -> None:
         """Unknown clock id returns EINVAL without writing memory."""
-        stub, mem = _make_stub()
-        func = stub.resolve_function("wasi_snapshot_preview1", "clock_time_get")
+        host, mem = _make_host()
+        func = host.resolve_function("wasi_snapshot_preview1", "clock_time_get")
 
         time_ptr = 0
         # Pre-fill memory with a sentinel value so we can tell it wasn't touched.
@@ -336,8 +336,8 @@ class TestClockTimeGetMonotonic:
 class TestClockResGet:
     def test_resolution_clock0(self) -> None:
         """clock_res_get(0) writes 1_000_000 ns (1 ms) as i64."""
-        stub, mem = _make_stub()
-        func = stub.resolve_function("wasi_snapshot_preview1", "clock_res_get")
+        host, mem = _make_host()
+        func = host.resolve_function("wasi_snapshot_preview1", "clock_res_get")
 
         resolution_ptr = 50
         result = func.call([i32(0), i32(resolution_ptr)])
@@ -346,8 +346,8 @@ class TestClockResGet:
 
     def test_resolution_clock1(self) -> None:
         """clock_res_get(1) also returns 1_000_000 (FakeClock is id-agnostic)."""
-        stub, mem = _make_stub()
-        func = stub.resolve_function("wasi_snapshot_preview1", "clock_res_get")
+        host, mem = _make_host()
+        func = host.resolve_function("wasi_snapshot_preview1", "clock_res_get")
 
         result = func.call([i32(1), i32(50)])
         assert result[0].value == ESUCCESS
@@ -362,8 +362,8 @@ class TestClockResGet:
 class TestRandomGet:
     def test_four_bytes(self) -> None:
         """random_get fills 4 bytes with 0xAB at the given pointer."""
-        stub, mem = _make_stub()
-        func = stub.resolve_function("wasi_snapshot_preview1", "random_get")
+        host, mem = _make_host()
+        func = host.resolve_function("wasi_snapshot_preview1", "random_get")
 
         buf_ptr = 300
         result = func.call([i32(buf_ptr), i32(4)])
@@ -374,8 +374,8 @@ class TestRandomGet:
 
     def test_zero_bytes(self) -> None:
         """random_get with buf_len=0 succeeds and writes nothing."""
-        stub, mem = _make_stub()
-        func = stub.resolve_function("wasi_snapshot_preview1", "random_get")
+        host, mem = _make_host()
+        func = host.resolve_function("wasi_snapshot_preview1", "random_get")
 
         mem.store_i32(0, 0x12345678)  # sentinel
         result = func.call([i32(0), i32(0)])
@@ -384,8 +384,8 @@ class TestRandomGet:
 
     def test_large_fill(self) -> None:
         """random_get fills 32 bytes, all 0xAB."""
-        stub, mem = _make_stub()
-        func = stub.resolve_function("wasi_snapshot_preview1", "random_get")
+        host, mem = _make_host()
+        func = host.resolve_function("wasi_snapshot_preview1", "random_get")
 
         buf_ptr = 1000
         result = func.call([i32(buf_ptr), i32(32)])
@@ -402,15 +402,15 @@ class TestRandomGet:
 class TestSchedYield:
     def test_returns_success(self) -> None:
         """sched_yield() always returns i32(0) (ESUCCESS)."""
-        stub, _ = _make_stub()
-        func = stub.resolve_function("wasi_snapshot_preview1", "sched_yield")
+        host, _ = _make_host()
+        func = host.resolve_function("wasi_snapshot_preview1", "sched_yield")
         result = func.call([])
         assert result[0].value == ESUCCESS
 
     def test_idempotent(self) -> None:
         """Calling sched_yield multiple times always succeeds."""
-        stub, _ = _make_stub()
-        func = stub.resolve_function("wasi_snapshot_preview1", "sched_yield")
+        host, _ = _make_host()
+        func = host.resolve_function("wasi_snapshot_preview1", "sched_yield")
         for _ in range(10):
             result = func.call([])
             assert result[0].value == ESUCCESS
@@ -423,18 +423,18 @@ class TestSchedYield:
 
 class TestWasiConfig:
     def test_default_config(self) -> None:
-        """WasiStub() with no args uses SystemClock and SystemRandom."""
-        stub = WasiStub()
+        """WasiHost() with no args uses SystemClock and SystemRandom."""
+        host = WasiHost()
         # Just check it doesn't crash and resolves functions
-        func = stub.resolve_function("wasi_snapshot_preview1", "sched_yield")
+        func = host.resolve_function("wasi_snapshot_preview1", "sched_yield")
         assert func is not None
 
     def test_legacy_keyword_args(self) -> None:
-        """WasiStub(stdout=fn, stderr=fn) still works (backwards compat)."""
+        """WasiHost(stdout=fn, stderr=fn) still works."""
         captured: list[str] = []
-        stub = WasiStub(stdout=captured.append, stderr=captured.append)
+        host = WasiHost(stdout=captured.append, stderr=captured.append)
         mem = LinearMemory(1)
-        stub.set_memory(mem)
+        host.set_memory(mem)
 
         # Write "hi\0" at offset 100, iovec at 0
         for j, ch in enumerate(b"hi"):
@@ -442,7 +442,7 @@ class TestWasiConfig:
         mem.store_i32(0, 100)
         mem.store_i32(4, 2)
 
-        func = stub.resolve_function("wasi_snapshot_preview1", "fd_write")
+        func = host.resolve_function("wasi_snapshot_preview1", "fd_write")
         result = func.call([i32(1), i32(0), i32(1), i32(200)])
         assert result[0].value == ESUCCESS
         assert captured == ["hi"]
@@ -455,11 +455,11 @@ class TestWasiConfig:
             clock=FakeClock(),
             random=FakeRandom(),
         )
-        stub = WasiStub(config)
+        host = WasiHost(config)
         mem = LinearMemory(1)
-        stub.set_memory(mem)
+        host.set_memory(mem)
 
-        func = stub.resolve_function("wasi_snapshot_preview1", "args_sizes_get")
+        func = host.resolve_function("wasi_snapshot_preview1", "args_sizes_get")
         result = func.call([i32(0), i32(4)])
         assert result[0].value == ESUCCESS
         assert mem.load_i32(0) == 1  # one arg: "prog"
@@ -473,43 +473,43 @@ class TestWasiConfig:
 class TestNoMemoryGuard:
     """All memory-touching functions must return ENOSYS if set_memory not called."""
 
-    def _stub_no_mem(self) -> WasiStub:
+    def _host_no_mem(self) -> WasiHost:
         config = WasiConfig(clock=FakeClock(), random=FakeRandom())
-        return WasiStub(config)  # no set_memory call
+        return WasiHost(config)  # no set_memory call
 
     def test_args_sizes_get_no_memory(self) -> None:
-        stub = self._stub_no_mem()
-        func = stub.resolve_function("wasi_snapshot_preview1", "args_sizes_get")
+        host = self._host_no_mem()
+        func = host.resolve_function("wasi_snapshot_preview1", "args_sizes_get")
         assert func.call([i32(0), i32(4)])[0].value == ENOSYS
 
     def test_args_get_no_memory(self) -> None:
-        stub = self._stub_no_mem()
-        func = stub.resolve_function("wasi_snapshot_preview1", "args_get")
+        host = self._host_no_mem()
+        func = host.resolve_function("wasi_snapshot_preview1", "args_get")
         assert func.call([i32(0), i32(0)])[0].value == ENOSYS
 
     def test_environ_sizes_get_no_memory(self) -> None:
-        stub = self._stub_no_mem()
-        func = stub.resolve_function("wasi_snapshot_preview1", "environ_sizes_get")
+        host = self._host_no_mem()
+        func = host.resolve_function("wasi_snapshot_preview1", "environ_sizes_get")
         assert func.call([i32(0), i32(4)])[0].value == ENOSYS
 
     def test_environ_get_no_memory(self) -> None:
-        stub = self._stub_no_mem()
-        func = stub.resolve_function("wasi_snapshot_preview1", "environ_get")
+        host = self._host_no_mem()
+        func = host.resolve_function("wasi_snapshot_preview1", "environ_get")
         assert func.call([i32(0), i32(0)])[0].value == ENOSYS
 
     def test_clock_res_get_no_memory(self) -> None:
-        stub = self._stub_no_mem()
-        func = stub.resolve_function("wasi_snapshot_preview1", "clock_res_get")
+        host = self._host_no_mem()
+        func = host.resolve_function("wasi_snapshot_preview1", "clock_res_get")
         assert func.call([i32(0), i32(0)])[0].value == ENOSYS
 
     def test_clock_time_get_no_memory(self) -> None:
-        stub = self._stub_no_mem()
-        func = stub.resolve_function("wasi_snapshot_preview1", "clock_time_get")
+        host = self._host_no_mem()
+        func = host.resolve_function("wasi_snapshot_preview1", "clock_time_get")
         assert func.call([i32(0), i64(0), i32(0)])[0].value == ENOSYS
 
     def test_random_get_no_memory(self) -> None:
-        stub = self._stub_no_mem()
-        func = stub.resolve_function("wasi_snapshot_preview1", "random_get")
+        host = self._host_no_mem()
+        func = host.resolve_function("wasi_snapshot_preview1", "random_get")
         assert func.call([i32(0), i32(4)])[0].value == ENOSYS
 
 

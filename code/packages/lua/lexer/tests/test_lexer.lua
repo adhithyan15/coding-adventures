@@ -1074,6 +1074,56 @@ describe("GrammarLexer indentation mode", function()
     end)
 end)
 
+describe("GrammarLexer layout mode", function()
+
+    local function make_layout_grammar()
+        return {
+            mode = "layout",
+            definitions = {
+                { name = "NAME",   pattern = "[a-zA-Z_][a-zA-Z0-9_]*", is_regex = true },
+                { name = "EQUALS", pattern = "=",                       is_regex = false },
+                { name = "LBRACE", pattern = "{",                       is_regex = false },
+                { name = "RBRACE", pattern = "}",                       is_regex = false },
+            },
+            layout_keywords = { "let", "where", "do", "of" },
+            skip_definitions = {
+                { name = "WS", pattern = "[ \t]+", is_regex = true },
+            },
+        }
+    end
+
+    it("injects virtual layout tokens after a layout keyword", function()
+        local gl = GrammarLexer.new("let\n  x = y\n  z = q\n", make_layout_grammar())
+        local tokens = gl:tokenize()
+
+        local type_names = {}
+        for _, tok in ipairs(tokens) do
+            type_names[#type_names + 1] = tok.type_name
+        end
+
+        assert.are.same({
+            "NAME", "NEWLINE", "VIRTUAL_LBRACE",
+            "NAME", "EQUALS", "NAME", "NEWLINE", "VIRTUAL_SEMICOLON",
+            "NAME", "EQUALS", "NAME", "NEWLINE", "VIRTUAL_RBRACE", "EOF",
+        }, type_names)
+    end)
+
+    it("suppresses implicit layout when explicit braces are present", function()
+        local gl = GrammarLexer.new("let {\n  x = y\n}\n", make_layout_grammar())
+        local tokens = gl:tokenize()
+
+        local saw_virtual_lbrace = false
+        local saw_virtual_semicolon = false
+        for _, tok in ipairs(tokens) do
+            if tok.type_name == "VIRTUAL_LBRACE" then saw_virtual_lbrace = true end
+            if tok.type_name == "VIRTUAL_SEMICOLON" then saw_virtual_semicolon = true end
+        end
+
+        assert.is_false(saw_virtual_lbrace)
+        assert.is_false(saw_virtual_semicolon)
+    end)
+end)
+
 -- =========================================================================
 -- Pattern Groups and On-Token Callback
 -- =========================================================================

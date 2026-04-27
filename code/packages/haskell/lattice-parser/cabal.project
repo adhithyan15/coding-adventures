@@ -1,0 +1,10 @@
+packages:
+  .
+  ../grammar-tools
+  ../parser
+  ../graph
+  ../directed-graph
+  ../state-machine
+  ../lexer
+  ../lattice-lexer
+

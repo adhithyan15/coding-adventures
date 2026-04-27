@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "coding-adventures-paint-vm-metal-native"
+version = "0.1.0"
+description = "Rust-backed Metal Paint VM bridge for Python"
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "Adhithya Rajasekaran" }]
+dependencies = [
+    "coding-adventures-pixel_container",
+    "coding-adventures-paint-instructions",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

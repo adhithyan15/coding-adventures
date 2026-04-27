@@ -1,0 +1,4 @@
+# Windows: Lua native extension requires lua5.4.lib to link against.
+# The Lua DLL import library is not available on Windows CI runners.
+# Linux and macOS CI runners cover this package fully.
+echo Skipping lua/paint_codec_png_native on Windows — Lua import library not available

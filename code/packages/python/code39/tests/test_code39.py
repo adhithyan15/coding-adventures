@@ -3,17 +3,15 @@
 from code39 import (
     __version__,
     DEFAULT_RENDER_CONFIG,
-    BarcodeError,
     InvalidCharacterError,
-    InvalidConfigurationError,
     draw_code39,
-    draw_one_dimensional_barcode,
     encode_code39,
     encode_code39_char,
     expand_code39_runs,
+    layout_code39,
     normalize_code39,
-    render_code39,
 )
+from barcode_layout_1d import Barcode1DError, Barcode1DLayoutConfig, InvalidBarcode1DConfigurationError
 
 
 def test_version_exists() -> None:
@@ -21,8 +19,8 @@ def test_version_exists() -> None:
 
 
 def test_error_types() -> None:
-    assert issubclass(InvalidCharacterError, BarcodeError)
-    assert issubclass(InvalidConfigurationError, BarcodeError)
+    assert issubclass(InvalidCharacterError, Barcode1DError)
+    assert issubclass(InvalidBarcode1DConfigurationError, Barcode1DError)
 
 
 def test_normalize_code39() -> None:
@@ -42,31 +40,21 @@ def test_expand_runs() -> None:
     runs = expand_code39_runs("A")
     assert len(runs) == 29
     assert runs[0].color == "bar"
-    assert runs[9].is_inter_character_gap is True
+    assert runs[9].role == "inter-character-gap"
+    assert runs[10].modules == 3
 
 
-def test_draw_scene() -> None:
+def test_paint_scene() -> None:
     scene = draw_code39("A")
     assert scene.metadata["symbology"] == "code39"
     assert scene.width > 0
+    assert scene.height == DEFAULT_RENDER_CONFIG.bar_height
 
 
 def test_invalid_config() -> None:
     try:
-        draw_one_dimensional_barcode(
-            expand_code39_runs("A"),
-            "A",
-            DEFAULT_RENDER_CONFIG.__class__(wide_unit=4),
-        )
-    except InvalidConfigurationError:
+        layout_code39("A", Barcode1DLayoutConfig(module_unit=0))
+    except InvalidBarcode1DConfigurationError:
         assert True
     else:
-        raise AssertionError("expected InvalidConfigurationError")
-
-
-def test_render_with_backend() -> None:
-    class DemoRenderer:
-        def render(self, scene):  # noqa: ANN001
-            return f"{scene.width}:{len(scene.instructions)}"
-
-    assert ":" in render_code39("OK", DemoRenderer())
+        raise AssertionError("expected InvalidBarcode1DConfigurationError")

@@ -1,0 +1,26 @@
+cabal-version: 3.0
+name:          json-serializer
+version:       0.1.0
+synopsis:      Serialize JSON values to compact and pretty text
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  JsonSerializer
+    build-depends:    base >=4.14
+                    , json-value
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    JsonSerializerSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14
+                    , json-serializer
+                    , json-value
+                    , hspec == 2.*
+    default-language: Haskell2010

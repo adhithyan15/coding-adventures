@@ -1,5 +1,5 @@
 use in_memory_data_store::{DataStoreBackend, DataStoreEngine};
-use resp_protocol::RespValue;
+use in_memory_data_store_protocol::EngineResponse;
 
 struct BackendClient<B: DataStoreBackend> {
     backend: B,
@@ -10,12 +10,12 @@ impl<B: DataStoreBackend> BackendClient<B> {
         Self { backend }
     }
 
-    fn call(&self, command: &[&[u8]]) -> RespValue {
+    fn call(&self, command: &[&[u8]]) -> EngineResponse {
         let parts = command.iter().map(|part| part.to_vec()).collect();
         self.backend.execute_owned(parts)
     }
 
-    fn call_strs(&self, command: &str, args: &[&str]) -> RespValue {
+    fn call_strs(&self, command: &str, args: &[&str]) -> EngineResponse {
         let mut parts = Vec::with_capacity(args.len() + 1);
         parts.push(command.as_bytes().to_vec());
         parts.extend(args.iter().map(|arg| arg.as_bytes().to_vec()));
@@ -27,39 +27,39 @@ impl<B: DataStoreBackend> BackendClient<B> {
     }
 }
 
-fn bulk(value: impl AsRef<[u8]>) -> RespValue {
-    RespValue::BulkString(Some(value.as_ref().to_vec()))
+fn bulk(value: impl AsRef<[u8]>) -> EngineResponse {
+    EngineResponse::BulkString(Some(value.as_ref().to_vec()))
 }
 
-fn simple(value: &str) -> RespValue {
-    RespValue::SimpleString(value.to_string())
+fn simple(value: &str) -> EngineResponse {
+    EngineResponse::SimpleString(value.to_string())
 }
 
-fn integer(value: i64) -> RespValue {
-    RespValue::Integer(value)
+fn integer(value: i64) -> EngineResponse {
+    EngineResponse::Integer(value)
 }
 
-fn array(values: &[&str]) -> RespValue {
-    RespValue::Array(Some(values.iter().map(|value| bulk(*value)).collect()))
+fn array(values: &[&str]) -> EngineResponse {
+    EngineResponse::Array(Some(values.iter().map(|value| bulk(*value)).collect()))
 }
 
-fn kv_array(values: &[(&str, &str)]) -> RespValue {
+fn kv_array(values: &[(&str, &str)]) -> EngineResponse {
     let mut out = Vec::with_capacity(values.len() * 2);
     for (key, value) in values {
         out.push(bulk(*key));
         out.push(bulk(*value));
     }
-    RespValue::Array(Some(out))
+    EngineResponse::Array(Some(out))
 }
 
-fn error_message(value: &RespValue) -> Option<&str> {
+fn error_message(value: &EngineResponse) -> Option<&str> {
     match value {
-        RespValue::Error(err) => Some(err.message.as_str()),
+        EngineResponse::Error(err) => Some(err.as_str()),
         _ => None,
     }
 }
 
-fn assert_error_contains(value: RespValue, needle: &str) {
+fn assert_error_contains(value: EngineResponse, needle: &str) {
     let Some(message) = error_message(&value) else {
         panic!("expected error containing {needle:?}, got {value:?}");
     };
@@ -108,7 +108,7 @@ fn backend_tracks_databases_ttls_and_hlls_without_tcp() {
     assert_eq!(app.call_strs("EXPIRE", &["db:key", "0"]), integer(1));
     app.active_expire_all();
     assert_eq!(app.call_strs("DBSIZE", &[]), integer(1));
-    assert_eq!(app.call_strs("GET", &["db:key"]), RespValue::BulkString(None));
+    assert_eq!(app.call_strs("GET", &["db:key"]), EngineResponse::BulkString(None));
 }
 
 #[test]
@@ -131,13 +131,13 @@ fn upstream_string_cases_cover_basic_lifecycle_and_conditionals() {
     assert_eq!(app.call_strs("SET", &["conditional", "1", "NX"]), simple("OK"));
     assert_eq!(
         app.call_strs("SET", &["conditional", "2", "NX"]),
-        RespValue::BulkString(None)
+        EngineResponse::BulkString(None)
     );
     assert_eq!(app.call_strs("SET", &["conditional", "3", "XX"]), simple("OK"));
     assert_eq!(app.call_strs("GET", &["conditional"]), bulk("3"));
 
     assert_eq!(app.call_strs("RENAME", &["x", "renamed"]), simple("OK"));
-    assert_eq!(app.call_strs("GET", &["x"]), RespValue::BulkString(None));
+    assert_eq!(app.call_strs("GET", &["x"]), EngineResponse::BulkString(None));
     assert_eq!(app.call_strs("GET", &["renamed"]), bulk("foobarbar"));
 }
 
@@ -164,7 +164,7 @@ fn upstream_hash_cases_cover_fields_keys_values_and_deletes() {
         kv_array(&[("a", "1")])
     );
     assert_eq!(app.call_strs("HDEL", &["hash", "a"]), integer(1));
-    assert_eq!(app.call_strs("HGET", &["hash", "a"]), RespValue::BulkString(None));
+    assert_eq!(app.call_strs("HGET", &["hash", "a"]), EngineResponse::BulkString(None));
 
     assert_eq!(app.call_strs("LPUSH", &["wrongtype", "foo"]), integer(1));
     assert_error_contains(app.call_strs("HSET", &["wrongtype", "bar", "baz"]), "WRONGTYPE");
@@ -219,7 +219,7 @@ fn upstream_expire_and_persist_cases_cover_immediate_and_absolute_expiry() {
     assert_eq!(app.call_strs("TTL", &["ttl"]), integer(-1));
     assert_eq!(app.call_strs("PERSIST", &["ttl"]), integer(0));
     assert_eq!(app.call_strs("EXPIRE", &["ttl", "0"]), integer(1));
-    assert_eq!(app.call_strs("GET", &["ttl"]), RespValue::BulkString(None));
+    assert_eq!(app.call_strs("GET", &["ttl"]), EngineResponse::BulkString(None));
     assert_eq!(app.call_strs("TTL", &["ttl"]), integer(-2));
 
     assert_eq!(app.call_strs("SET", &["persisted", "value", "EX", "100"]), simple("OK"));
@@ -229,7 +229,7 @@ fn upstream_expire_and_persist_cases_cover_immediate_and_absolute_expiry() {
 
     assert_eq!(app.call_strs("SET", &["past", "value"]), simple("OK"));
     assert_eq!(app.call_strs("EXPIREAT", &["past", "1"]), integer(1));
-    assert_eq!(app.call_strs("GET", &["past"]), RespValue::BulkString(None));
+    assert_eq!(app.call_strs("GET", &["past"]), EngineResponse::BulkString(None));
 }
 
 #[test]

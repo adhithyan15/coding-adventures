@@ -1,0 +1,30 @@
+{
+  "name": "@coding-adventures/irc-server",
+  "version": "0.1.0",
+  "description": "Pure IRC server state machine — channels, nicks, and command dispatch without I/O",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "irc",
+    "server",
+    "state-machine",
+    "rfc1459",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/irc-proto": "file:../irc-proto"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

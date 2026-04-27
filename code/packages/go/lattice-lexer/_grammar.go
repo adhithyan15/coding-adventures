@@ -77,4 +77,5 @@ var TokenGrammarData = &gt.TokenGrammar{
 	ReservedKeywords: []string{},
 	ErrorDefinitions: []gt.TokenDefinition{},
 	Groups:           map[string]*gt.PatternGroup{},
+	LayoutKeywords:   []string{},
 }

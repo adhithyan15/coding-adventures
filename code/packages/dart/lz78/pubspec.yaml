@@ -1,0 +1,14 @@
+name: coding_adventures_lz78
+description: >
+  LZ78 explicit-dictionary compression with token-level and one-shot byte APIs.
+version: 0.1.0
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies: {}
+
+dev_dependencies:
+  test: ^1.25.0

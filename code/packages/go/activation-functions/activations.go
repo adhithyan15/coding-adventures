@@ -17,6 +17,27 @@ package activation
 
 import "math"
 
+const leakyReluSlope = 0.01
+
+// Linear returns the raw weighted sum unchanged.
+func Linear(x float64) float64 {
+	result, _ := StartNew[float64]("activation-functions.Linear", 0,
+		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
+			op.AddProperty("x", x)
+			return rf.Generate(true, false, x)
+		}).GetResult()
+	return result
+}
+
+func LinearDerivative(x float64) float64 {
+	result, _ := StartNew[float64]("activation-functions.LinearDerivative", 0,
+		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
+			op.AddProperty("x", x)
+			return rf.Generate(true, false, 1.0)
+		}).GetResult()
+	return result
+}
+
 // Sigmoid seamlessly clamps any numerical vector precisely between 0.0 and 1.0 representing strict probabilities.
 func Sigmoid(x float64) float64 {
 	result, _ := StartNew[float64]("activation-functions.Sigmoid", 0,
@@ -68,12 +89,57 @@ func ReluDerivative(x float64) float64 {
 	return result
 }
 
+// LeakyRelu keeps a small negative slope so inactive ReLU neurons can still learn.
+func LeakyRelu(x float64) float64 {
+	result, _ := StartNew[float64]("activation-functions.LeakyRelu", 0,
+		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
+			op.AddProperty("x", x)
+			if x > 0 {
+				return rf.Generate(true, false, x)
+			}
+			return rf.Generate(true, false, leakyReluSlope*x)
+		}).GetResult()
+	return result
+}
+
+func LeakyReluDerivative(x float64) float64 {
+	result, _ := StartNew[float64]("activation-functions.LeakyReluDerivative", 0,
+		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
+			op.AddProperty("x", x)
+			if x > 0 {
+				return rf.Generate(true, false, 1.0)
+			}
+			return rf.Generate(true, false, leakyReluSlope)
+		}).GetResult()
+	return result
+}
+
 // Tanh evaluates structurally across negative constraints (-1.0 to 1.0).
 func Tanh(x float64) float64 {
 	result, _ := StartNew[float64]("activation-functions.Tanh", 0,
 		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
 			op.AddProperty("x", x)
 			return rf.Generate(true, false, math.Tanh(x))
+		}).GetResult()
+	return result
+}
+
+// Softplus is a smooth ReLU approximation using a stable log1p formulation.
+func Softplus(x float64) float64 {
+	result, _ := StartNew[float64]("activation-functions.Softplus", 0,
+		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
+			op.AddProperty("x", x)
+			value := math.Log1p(math.Exp(-math.Abs(x))) + math.Max(x, 0.0)
+			return rf.Generate(true, false, value)
+		}).GetResult()
+	return result
+}
+
+func SoftplusDerivative(x float64) float64 {
+	result, _ := StartNew[float64]("activation-functions.SoftplusDerivative", 0,
+		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
+			op.AddProperty("x", x)
+			return rf.Generate(true, false, Sigmoid(x))
 		}).GetResult()
 	return result
 }

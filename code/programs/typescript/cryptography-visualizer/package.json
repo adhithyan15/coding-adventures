@@ -1,0 +1,35 @@
+{
+  "name": "cryptography-visualizer",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Interactive cryptography algorithms visualizer",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@coding-adventures/atbash-cipher": "file:../../../packages/typescript/atbash-cipher",
+    "@coding-adventures/caesar-cipher": "file:../../../packages/typescript/caesar-cipher",
+    "@coding-adventures/lattice-transpiler": "file:../../../packages/typescript/lattice-transpiler",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/react": "^16.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "@vitest/coverage-v8": "^3.0.0",
+    "jsdom": "^25.0.0",
+    "typescript": "~5.7.0",
+    "vite": "^6.4.2",
+    "vitest": "^3.0.0"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT"
+}

@@ -5,5 +5,6 @@ Plugs into the CPU simulator via the decoder/executor protocol.
 """
 
 from arm_simulator.simulator import ARMSimulator
+from arm_simulator.state import ARMState
 
-__all__ = ["ARMSimulator"]
+__all__ = ["ARMSimulator", "ARMState"]

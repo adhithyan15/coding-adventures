@@ -457,4 +457,20 @@ class TestVhdlParser < Minitest::Test
     entity_decl = find_node(ast, "entity_declaration")
     refute_nil entity_decl, "Expected entity_declaration with minimal end clause"
   end
+
+  def test_default_version_matches_explicit_2008
+    default_ast = parse("entity empty is end entity empty;")
+    explicit_ast = CodingAdventures::VhdlParser.parse(
+      "entity empty is end entity empty;",
+      version: "2008"
+    )
+    assert_equal default_ast.rule_name, explicit_ast.rule_name
+  end
+
+  def test_rejects_unknown_version
+    error = assert_raises(ArgumentError) do
+      CodingAdventures::VhdlParser.parse("entity empty is end entity empty;", version: "2099")
+    end
+    assert_match(/Unknown VHDL version/, error.message)
+  end
 end

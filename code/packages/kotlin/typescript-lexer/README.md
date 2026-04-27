@@ -1,0 +1,15 @@
+# typescript-lexer
+
+TypeScript lexer - tokenizes TypeScript source text using the grammar-driven lexer infrastructure
+
+## Dependencies
+
+- grammar-tools
+- lexer
+
+## Development
+
+```bash
+# Run tests
+bash BUILD
+```

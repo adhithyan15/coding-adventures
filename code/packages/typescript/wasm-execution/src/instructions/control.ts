@@ -156,8 +156,11 @@ function executeBranch(
     vm.pushTyped(v);
   }
 
-  // Pop labels down to and including the target label.
-  ctx.labelStack.length = labelStackIndex;
+  // Branching to a block/if lands on that label's `end`, so the target label
+  // must stay on the stack until the `end` instruction executes and pops it.
+  // Branching to a loop jumps back to the loop header, which will push a fresh
+  // loop label when it re-executes, so the current loop label can be removed.
+  ctx.labelStack.length = label.isLoop ? labelStackIndex : labelStackIndex + 1;
 
   // Jump to the label's target PC.
   vm.jumpTo(label.targetPc);

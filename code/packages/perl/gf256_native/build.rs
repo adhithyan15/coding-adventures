@@ -8,15 +8,11 @@
 // - Linux: ELF shared objects allow undefined symbols by default
 // - Windows: link against the Perl DLL import library
 //
-// NOTE: Our Perl extensions assume non-threaded Perl (no MULTIPLICITY). In
-// threaded Perl, PL_stack_sp and friends are per-interpreter struct fields
-// accessed via macros, not plain globals. If usethreads=define, memory
-// corruption will occur.
+// Threaded-Perl-sensitive stack access now lives in `perl-bridge`, which
+// compiles a small shim against the host Perl headers.
 
 fn main() {
     let target_os = std::env::var("CARGO_CFG_TARGET_OS").unwrap_or_default();
-
-    println!("cargo:warning=perl-native extensions assume non-threaded Perl (no MULTIPLICITY). If your Perl was compiled with usethreads, this extension will cause memory corruption.");
 
     match target_os.as_str() {
         "macos" => {

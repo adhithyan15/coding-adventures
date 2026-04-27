@@ -1,0 +1,1 @@
+echo Skipping perl/upc-a on Windows -- prerequisite refs: ..\barcode-layout-1d ..\paint-instructions

@@ -1,0 +1,39 @@
+cabal-version: 3.0
+name:          brainfuck-wasm-compiler
+version:       0.1.0
+synopsis:      Haskell Brainfuck to WebAssembly orchestrator
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  BrainfuckWasmCompiler
+    build-depends:    base >=4.14
+                    , brainfuck
+                    , brainfuck-ir-compiler
+                    , bytestring
+                    , compiler-ir
+                    , ir-optimizer
+                    , ir-to-wasm-compiler
+                    , ir-to-wasm-validator
+                    , wasm-module-encoder
+                    , wasm-types
+                    , wasm-validator
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    BrainfuckWasmCompilerSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14
+                    , brainfuck-wasm-compiler
+                    , bytestring
+                    , directory
+                    , filepath
+                    , hspec == 2.*
+                    , wasm-execution
+                    , wasm-runtime
+    default-language: Haskell2010

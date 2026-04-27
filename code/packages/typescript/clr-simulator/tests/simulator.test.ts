@@ -3,6 +3,7 @@
  */
 
 import { describe, it, expect, beforeEach } from "vitest";
+import type { Simulator } from "@coding-adventures/simulator-protocol";
 import {
   CEQ_BYTE,
   CGT_BYTE,
@@ -14,6 +15,7 @@ import {
   encodeLdloc,
   encodeStloc,
 } from "../src/simulator.js";
+import type { CLRState } from "../src/state.js";
 
 // ===================================================================
 // 1. Constant loading: ldc.i4.0 through ldc.i4.8
@@ -353,4 +355,37 @@ describe("TestErrorCases", () => {
     expect(traces[1].description).toContain("branch taken");
   });
   it("num_locals_parameter", () => { const sim = new CLRSimulator(); sim.load(assembleClr([CLROpcode.RET]), 4); expect(sim.locals.length).toBe(4); });
+});
+
+describe("TestSimulatorProtocol", () => {
+  it("supports_structural_protocol_typing", () => {
+    const sim: Simulator<CLRState> = new CLRSimulator();
+    const result = sim.execute(
+      assembleClr(encodeLdcI4(1), encodeLdcI4(2), [CLROpcode.ADD], encodeStloc(0), [CLROpcode.RET])
+    );
+
+    expect(result.ok).toBe(true);
+    expect(result.finalState.locals[0]).toBe(3);
+  });
+
+  it("get_state_returns_immutable_snapshot", () => {
+    const sim = new CLRSimulator();
+    sim.load(assembleClr(encodeLdcI4(42), encodeStloc(0), [CLROpcode.RET]));
+    sim.run();
+
+    const state = sim.getState();
+    expect(state.locals[0]).toBe(42);
+    expect(Object.isFrozen(state)).toBe(true);
+    expect(Object.isFrozen(state.stack)).toBe(true);
+    expect(Object.isFrozen(state.locals)).toBe(true);
+  });
+
+  it("execute_reports_max_steps_failures", () => {
+    const sim = new CLRSimulator();
+    const result = sim.execute(assembleClr(new Uint8Array([CLROpcode.BR_S, 0xfe])), 3);
+
+    expect(result.ok).toBe(false);
+    expect(result.error).toMatch(/max_steps/);
+    expect(result.steps).toBe(3);
+  });
 });

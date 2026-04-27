@@ -1,5 +1,11 @@
 [tools]
+cabal = "3.16.1.0"
+dart = "latest"
+ghc = "9.14.1"
 go = "latest"
+gradle = "8.14"
+kotlin = "2.1.20"
+lua = "5.4"
 python = "3.12"
 ruby = "3.4"
 rust = "stable"

@@ -11,10 +11,14 @@ from grammar_tools.parser_grammar import (
     GrammarRule,
     Group,
     Literal,
+    NegativeLookahead,
+    OneOrMoreRepetition,
     Optional,
     ParserGrammar,
+    PositiveLookahead,
     Repetition,
     RuleReference,
+    SeparatedRepetition,
     Sequence,
 )
 

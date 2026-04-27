@@ -1,204 +1,21 @@
-//! # TOML Lexer — tokenizing TOML source text.
-//!
-//! [TOML](https://toml.io/) (Tom's Obvious Minimal Language) is a configuration
-//! file format designed to be easy to read and write. It maps unambiguously to a
-//! hash table, making it ideal for configuration files. TOML v1.0.0 is specified
-//! at <https://toml.io/en/v1.0.0>.
-//!
-//! This crate provides a lexer (tokenizer) for TOML. It does **not** hand-write
-//! tokenization rules. Instead, it loads the `toml.tokens` grammar file — a
-//! declarative description of every token in TOML — and feeds it to the generic
-//! [`GrammarLexer`] from the `lexer` crate.
-//!
-//! # Architecture
-//!
-//! The tokenization pipeline has three layers:
-//!
-//! ```text
-//! toml.tokens          (grammar file on disk)
-//!        |
-//!        v
-//! grammar-tools        (parses .tokens -> TokenGrammar struct)
-//!        |
-//!        v
-//! lexer::GrammarLexer  (tokenizes source using TokenGrammar)
-//! ```
-//!
-//! This crate is the thin glue layer that wires these components together
-//! for TOML specifically. It knows where to find `toml.tokens` and provides
-//! two public entry points:
-//!
-//! - [`create_toml_lexer`] — returns a `GrammarLexer` for fine-grained control.
-//! - [`tokenize_toml`] — convenience function that returns `Vec<Token>` directly.
-//!
-//! # TOML vs JSON: lexer complexity
-//!
-//! TOML has significantly more token types than JSON:
-//!
-//! - **4 string types** — basic, multi-line basic, literal, multi-line literal
-//! - **4 integer types** — decimal, hex (0x), octal (0o), binary (0b)
-//! - **3 float types** — decimal, scientific, special (inf/nan)
-//! - **4 date/time types** — offset datetime, local datetime, local date, local time
-//! - **Bare keys** — unquoted identifiers like `server`, `my-key`
-//! - **Booleans** — `true` and `false` (literal tokens, not keywords)
-//!
-//! The grammar file carefully orders patterns so that more specific tokens
-//! (multi-line strings, dates, floats) match before less specific ones
-//! (single-line strings, bare keys, integers).
-//!
-//! # Newline sensitivity
-//!
-//! TOML is newline-sensitive — key-value pairs are terminated by newlines,
-//! not semicolons. The `skip:` section in `toml.tokens` includes only spaces
-//! and tabs (NOT newlines), so the lexer emits NEWLINE tokens that the grammar
-//! uses to delimit expressions. This is different from JSON, where all
-//! whitespace including newlines is silently consumed.
-//!
-//! # Escape handling
-//!
-//! The `toml.tokens` grammar uses `escapes: none`, which tells the lexer to
-//! strip quotes from string tokens but leave escape sequences as raw text.
-//! This is necessary because TOML has four string types with different escape
-//! semantics — basic strings process escapes while literal strings do not.
-//! The semantic layer in `toml-parser` handles type-specific escape processing.
+//! TOML lexer backed by compiled token grammar.
 
-use std::fs;
-
-use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
 use lexer::token::Token;
 
-// ===========================================================================
-// Grammar file location
-// ===========================================================================
+mod _grammar;
 
-/// Build the path to the `toml.tokens` grammar file.
-///
-/// We use `env!("CARGO_MANIFEST_DIR")` to get the directory containing this
-/// crate's `Cargo.toml` at compile time. From there, we navigate up to the
-/// `grammars/` directory at the repository root.
-///
-/// The directory structure looks like:
-///
-/// ```text
-/// code/
-///   grammars/
-///     toml.tokens           <-- this is what we want
-///   packages/
-///     rust/
-///       toml-lexer/
-///         Cargo.toml        <-- CARGO_MANIFEST_DIR points here
-///         src/
-///           lib.rs          <-- we are here
-/// ```
-///
-/// So the relative path from CARGO_MANIFEST_DIR to the grammar file is:
-/// `../../../grammars/toml.tokens`
-fn grammar_path() -> String {
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    format!("{manifest_dir}/../../../grammars/toml.tokens")
-}
-
-// ===========================================================================
-// Public API
-// ===========================================================================
-
-/// Create a `GrammarLexer` configured for TOML source text.
-///
-/// This function:
-/// 1. Reads the `toml.tokens` grammar file from disk.
-/// 2. Parses it into a `TokenGrammar` using `grammar-tools`.
-/// 3. Constructs a `GrammarLexer` with the grammar and the given source.
-///
-/// The returned lexer is ready to call `.tokenize()` on. Use this when you
-/// need access to the lexer object itself (e.g., for incremental tokenization
-/// or custom error handling).
-///
-/// # Panics
-///
-/// Panics if the grammar file cannot be read or parsed. This should never
-/// happen in practice — the grammar file is checked into the repository and
-/// validated by the grammar-tools test suite. A panic here indicates a
-/// broken build or missing file.
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_toml_lexer::create_toml_lexer;
-///
-/// let mut lexer = create_toml_lexer("title = \"TOML Example\"");
-/// let tokens = lexer.tokenize().expect("tokenization failed");
-/// for token in &tokens {
-///     println!("{}", token);
-/// }
-/// ```
 pub fn create_toml_lexer(source: &str) -> GrammarLexer<'_> {
-    // Step 1: Read the grammar file from disk.
-    //
-    // We read the file at runtime (not compile time) because the grammar file
-    // may be updated independently of this crate. This also avoids bloating
-    // the binary with embedded grammar text.
-    let grammar_text = fs::read_to_string(grammar_path())
-        .unwrap_or_else(|e| panic!("Failed to read toml.tokens: {e}"));
-
-    // Step 2: Parse the grammar text into a structured TokenGrammar.
-    //
-    // The TokenGrammar contains:
-    //   - Token definitions (patterns, names, aliases)
-    //   - Skip patterns (COMMENT, WHITESPACE — spaces and tabs only)
-    //   - Escape mode: "none" (strip quotes, leave escapes as-is)
-    //   - No keywords (TOML has none)
-    //   - Mode: default (no indentation tracking, but newline-sensitive)
-    let grammar = parse_token_grammar(&grammar_text)
-        .unwrap_or_else(|e| panic!("Failed to parse toml.tokens: {e}"));
-
-    // Step 3: Create and return the lexer.
-    //
-    // The GrammarLexer compiles all token patterns into anchored regexes
-    // and is ready to tokenize the source string. In standard (non-indentation)
-    // mode, it emits NEWLINE tokens for each '\n' character, which the TOML
-    // grammar needs to delimit key-value pairs.
+    let grammar = _grammar::token_grammar();
     GrammarLexer::new(source, &grammar)
 }
 
-/// Tokenize TOML source text into a vector of tokens.
-///
-/// This is the most convenient entry point — it handles grammar loading,
-/// lexer creation, and tokenization in one call. The returned vector always
-/// ends with an `EOF` token. NEWLINE tokens appear between lines.
-///
-/// # Panics
-///
-/// Panics if the grammar file cannot be read/parsed, or if the source
-/// contains an unexpected character (via `LexerError` propagation).
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_toml_lexer::tokenize_toml;
-///
-/// let tokens = tokenize_toml("name = \"Alice\"\nage = 30");
-/// for token in &tokens {
-///     println!("{:?} {:?}", token.type_, token.value);
-/// }
-/// ```
 pub fn tokenize_toml(source: &str) -> Vec<Token> {
-    // Create a fresh lexer for this source text.
-    let mut toml_lexer = create_toml_lexer(source);
-
-    // Tokenize and unwrap — any LexerError becomes a panic.
-    //
-    // In a production tool, you would want to propagate the error
-    // via Result. For this educational codebase, panicking with a clear
-    // message is sufficient and keeps the API simple.
-    toml_lexer
+    let mut lexer = create_toml_lexer(source);
+    lexer
         .tokenize()
         .unwrap_or_else(|e| panic!("TOML tokenization failed: {e}"))
 }
-
-// ===========================================================================
-// Tests
-// ===========================================================================
 
 #[cfg(test)]
 mod tests {
@@ -790,3 +607,4 @@ ports = [8001, 8001, 8002]
         assert_eq!(info[2].2, Some("INTEGER"));
     }
 }
+

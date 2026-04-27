@@ -29,11 +29,17 @@ Usage::
 """
 
 from vhdl_lexer.tokenizer import (
+    DEFAULT_VERSION,
+    SUPPORTED_VERSIONS,
     create_vhdl_lexer,
+    resolve_version,
     tokenize_vhdl,
 )
 
 __all__ = [
+    "DEFAULT_VERSION",
+    "SUPPORTED_VERSIONS",
     "create_vhdl_lexer",
+    "resolve_version",
     "tokenize_vhdl",
 ]

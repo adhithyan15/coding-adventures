@@ -16,6 +16,8 @@ Each test group corresponds to a major opcode category and is named
 ``test_<category>_<specific_behaviour>``.
 """
 
+from dataclasses import dataclass
+
 import pytest
 
 from register_vm import (
@@ -38,6 +40,12 @@ from register_vm.feedback import (
     record_call_site,
     record_property_load,
     value_type,
+)
+from register_vm.generic_vm import (
+    GenericRegisterVM,
+    GenericTrace,
+    GenericVMError,
+    RegisterFrame,
 )
 from register_vm.scope import get_slot, new_context, set_slot
 
@@ -1566,3 +1574,304 @@ class TestAdditionalCoverage:
         )
         # 0 (int) strictly != False (bool) — different Python types.
         assert execute(code).return_value is False
+
+
+# ===========================================================================
+# GenericRegisterVM tests
+# ===========================================================================
+"""Tests for the pluggable GenericRegisterVM chassis (generic_vm.py).
+
+These tests verify the dispatch loop, trace hook, halt/ret signals,
+and the user_data extension point independently of any language backend.
+"""
+
+
+# ---------------------------------------------------------------------------
+# Minimal instruction type for tests
+# ---------------------------------------------------------------------------
+
+@dataclass
+class Instr:
+    """Minimal instruction: just opcode + operands."""
+    opcode: int
+    operands: list[int]
+
+
+# Opcode constants for test mini-language
+OP_LOAD = 0x01   # acc = operands[0]
+OP_ADD  = 0x02   # acc = acc + registers[operands[0]]
+OP_SAVE = 0x03   # registers[operands[0]] = acc
+OP_HALT = 0xFF   # stop
+OP_RET  = 0xFE   # ret(acc)
+OP_INC  = 0x04   # acc += 1 (no operands)
+OP_JMP  = 0x05   # ip += operands[0] (relative)
+OP_SET_UD = 0x06  # frame.user_data["x"] = operands[0]
+
+
+def _build_grvm() -> GenericRegisterVM:
+    """Build a tiny test VM with the 8 opcodes above."""
+    g = GenericRegisterVM()
+    g.register_handler(OP_LOAD,   lambda grv, f, i: setattr(f, "acc", i.operands[0]))
+    g.register_handler(OP_ADD,    lambda grv, f, i: setattr(f, "acc", f.acc + f.registers[i.operands[0]]))
+    g.register_handler(OP_SAVE,   lambda grv, f, i: f.registers.__setitem__(i.operands[0], f.acc))
+    g.register_handler(OP_HALT,   lambda grv, f, i: grv.halt())
+    g.register_handler(OP_RET,    lambda grv, f, i: grv.ret(f.acc))
+    g.register_handler(OP_INC,    lambda grv, f, i: setattr(f, "acc", f.acc + 1))
+    g.register_handler(OP_JMP,    lambda grv, f, i: setattr(f, "ip", f.ip + i.operands[0]))
+    g.register_handler(OP_SET_UD, lambda grv, f, i: f.user_data.update({"x": i.operands[0]}))
+    return g
+
+
+def _frame(*instrs: Instr, depth: int = 0) -> RegisterFrame:
+    return RegisterFrame(
+        instructions=list(instrs),
+        ip=0,
+        acc=0,
+        registers=[0] * 8,
+        depth=depth,
+    )
+
+
+class TestRegisterFrameDefaults:
+    def test_default_acc(self) -> None:
+        f = RegisterFrame(instructions=[])
+        assert f.acc is None
+
+    def test_default_registers(self) -> None:
+        f = RegisterFrame(instructions=[])
+        assert len(f.registers) == 8
+        assert all(r is None for r in f.registers)
+
+    def test_default_user_data(self) -> None:
+        f = RegisterFrame(instructions=[])
+        assert f.user_data == {}
+
+    def test_default_depth(self) -> None:
+        f = RegisterFrame(instructions=[])
+        assert f.depth == 0
+
+    def test_caller_frame_default_none(self) -> None:
+        f = RegisterFrame(instructions=[])
+        assert f.caller_frame is None
+
+
+class TestGenericRegisterVMBasics:
+    def test_halt_returns_acc(self) -> None:
+        g = _build_grvm()
+        frame = _frame(Instr(OP_LOAD, [42]), Instr(OP_HALT, []))
+        assert g.run(frame) == 42
+
+    def test_load_and_add(self) -> None:
+        g = _build_grvm()
+        frame = _frame(
+            Instr(OP_LOAD, [10]),
+            Instr(OP_SAVE, [0]),   # R0 = 10
+            Instr(OP_LOAD, [5]),
+            Instr(OP_ADD, [0]),    # acc = 5 + 10 = 15
+            Instr(OP_HALT, []),
+        )
+        assert g.run(frame) == 15
+
+    def test_ret_signal_returns_value(self) -> None:
+        g = _build_grvm()
+        frame = _frame(Instr(OP_LOAD, [7]), Instr(OP_RET, []))
+        assert g.run(frame) == 7
+
+    def test_accumulator_starts_at_given_value(self) -> None:
+        g = _build_grvm()
+        frame = RegisterFrame(instructions=[Instr(OP_HALT, [])], acc=99, registers=[0]*8)
+        assert g.run(frame) == 99
+
+    def test_register_handler_overwrites(self) -> None:
+        g = _build_grvm()
+        # Override OP_LOAD to always return 0.
+        g.register_handler(OP_LOAD, lambda grv, f, i: setattr(f, "acc", 0))
+        frame = _frame(Instr(OP_LOAD, [42]), Instr(OP_HALT, []))
+        assert g.run(frame) == 0
+
+    def test_unregistered_opcode_raises_generic_vm_error(self) -> None:
+        g = _build_grvm()
+        frame = _frame(Instr(0xAA, []))
+        with pytest.raises(GenericVMError, match="no handler registered"):
+            g.run(frame)
+
+    def test_ip_advances_sequentially(self) -> None:
+        steps: list[int] = []
+        g = _build_grvm()
+        g.register_handler(OP_INC, lambda grv, f, i: (setattr(f, "acc", f.acc + 1), steps.append(f.ip - 1)))
+        frame = _frame(
+            Instr(OP_INC, []),  # ip=0
+            Instr(OP_INC, []),  # ip=1
+            Instr(OP_HALT, []),
+        )
+        g.run(frame)
+        assert steps == [0, 1]
+
+    def test_user_data_preserved(self) -> None:
+        g = _build_grvm()
+        frame = _frame(Instr(OP_SET_UD, [123]), Instr(OP_HALT, []))
+        g.run(frame)
+        assert frame.user_data["x"] == 123
+
+    def test_jump_skips_instruction(self) -> None:
+        g = _build_grvm()
+        frame = _frame(
+            Instr(OP_LOAD, [1]),
+            Instr(OP_JMP, [1]),     # skip next
+            Instr(OP_LOAD, [99]),   # skipped
+            Instr(OP_HALT, []),
+        )
+        assert g.run(frame) == 1
+
+
+class TestGenericRegisterVMTracing:
+    def test_run_traced_returns_tuple(self) -> None:
+        g = _build_grvm()
+        frame = _frame(Instr(OP_LOAD, [5]), Instr(OP_HALT, []))
+        result, traces = g.run_traced(frame)
+        assert result == 5
+        assert isinstance(traces, list)
+
+    def test_trace_length(self) -> None:
+        g = _build_grvm()
+        frame = _frame(Instr(OP_LOAD, [1]), Instr(OP_INC, []), Instr(OP_HALT, []))
+        _, traces = g.run_traced(frame)
+        assert len(traces) == 3
+
+    def test_trace_fields(self) -> None:
+        g = _build_grvm()
+        frame = _frame(Instr(OP_LOAD, [42]), Instr(OP_HALT, []))
+        _, traces = g.run_traced(frame)
+        first = traces[0]
+        assert isinstance(first, GenericTrace)
+        assert first.opcode == OP_LOAD
+        assert first.operands == [42]
+        assert first.ip == 0
+        assert first.frame_depth == 0
+        assert first.acc_before == 0   # frame started at acc=0
+        assert first.acc_after == 42
+
+    def test_trace_acc_before_after(self) -> None:
+        g = _build_grvm()
+        frame = _frame(Instr(OP_LOAD, [10]), Instr(OP_INC, []), Instr(OP_HALT, []))
+        _, traces = g.run_traced(frame)
+        inc_trace = traces[1]
+        assert inc_trace.acc_before == 10
+        assert inc_trace.acc_after == 11
+
+    def test_trace_registers_snapshot(self) -> None:
+        g = _build_grvm()
+        frame = _frame(Instr(OP_LOAD, [7]), Instr(OP_SAVE, [0]), Instr(OP_HALT, []))
+        _, traces = g.run_traced(frame)
+        save_trace = traces[1]
+        # Before SAVE: R0 was still 0.
+        assert save_trace.registers_before[0] == 0
+        # After SAVE: R0 is 7.
+        assert save_trace.registers_after[0] == 7
+
+    def test_trace_builder_called_on_halt(self) -> None:
+        g = _build_grvm()
+        frame = _frame(Instr(OP_HALT, []))
+        _, traces = g.run_traced(frame)
+        assert traces[-1].opcode == OP_HALT
+
+    def test_trace_builder_called_on_ret(self) -> None:
+        g = _build_grvm()
+        frame = _frame(Instr(OP_LOAD, [5]), Instr(OP_RET, []))
+        _, traces = g.run_traced(frame)
+        assert traces[-1].opcode == OP_RET
+
+    def test_trace_builder_restored_after_run(self) -> None:
+        # Use a real callable so run_traced doesn't crash when chaining it.
+        g = _build_grvm()
+        calls: list[int] = []
+        original = lambda f, i, ip, ab, rb: calls.append(i.opcode)  # noqa: E731
+        g.trace_builder = original
+        frame = _frame(Instr(OP_HALT, []))
+        g.run_traced(frame)
+        assert g.trace_builder is original
+
+    def test_both_trace_builders_run(self) -> None:
+        """If trace_builder is already set, run_traced chains it."""
+        side_effects: list[int] = []
+        g = _build_grvm()
+        g.trace_builder = lambda f, i, ip, ab, rb: side_effects.append(i.opcode)
+        frame = _frame(Instr(OP_LOAD, [1]), Instr(OP_HALT, []))
+        _, generic_traces = g.run_traced(frame)
+        # generic trace captured both
+        assert len(generic_traces) == 2
+        # original builder also called
+        assert len(side_effects) == 2
+
+
+class TestGenericRegisterVMNestedFrames:
+    def test_recursive_run_frame_with_ret(self) -> None:
+        """CALL handler pattern: recursively invoke _run_frame for callee."""
+        g = _build_grvm()
+
+        def _h_call(grv: GenericRegisterVM, frame: RegisterFrame, instr: Instr) -> None:
+            callee = RegisterFrame(
+                instructions=[Instr(OP_LOAD, [99]), Instr(OP_RET, [])],
+                acc=0,
+                registers=[0] * 8,
+                depth=frame.depth + 1,
+                caller_frame=frame,
+            )
+            result = grv._run_frame(callee)  # noqa: SLF001
+            frame.acc = result
+
+        OP_CALL = 0xC0
+        g.register_handler(OP_CALL, _h_call)
+
+        frame = _frame(Instr(OP_CALL, []), Instr(OP_HALT, []))
+        assert g.run(frame) == 99
+
+    def test_nested_frame_trace_appears_in_run_traced(self) -> None:
+        """Traces from nested _run_frame calls appear in the run_traced output."""
+        g = _build_grvm()
+
+        def _h_call(grv: GenericRegisterVM, frame: RegisterFrame, instr: Instr) -> None:
+            callee = RegisterFrame(
+                instructions=[Instr(OP_LOAD, [55]), Instr(OP_RET, [])],
+                acc=0,
+                registers=[0] * 8,
+                depth=frame.depth + 1,
+                caller_frame=frame,
+            )
+            frame.acc = grv._run_frame(callee)  # noqa: SLF001
+
+        OP_CALL = 0xC1
+        g.register_handler(OP_CALL, _h_call)
+
+        frame = _frame(Instr(OP_CALL, []), Instr(OP_HALT, []))
+        _, traces = g.run_traced(frame)
+
+        # Should have: CALL trace (depth 0), LOAD+RET from callee (depth 1), HALT (depth 0)
+        depths = [t.frame_depth for t in traces]
+        assert 1 in depths   # callee instructions were traced
+        callee_traces = [t for t in traces if t.frame_depth == 1]
+        assert len(callee_traces) == 2   # LOAD + RET
+
+
+class TestGenericVMError:
+    def test_error_message_contains_opcode(self) -> None:
+        g = GenericRegisterVM()
+        frame = _frame(Instr(0xBB, []))
+        with pytest.raises(GenericVMError) as exc_info:
+            g.run(frame)
+        assert "0xBB" in str(exc_info.value)
+
+    def test_error_contains_depth_and_ip(self) -> None:
+        g = GenericRegisterVM()
+        frame = RegisterFrame(
+            instructions=[Instr(0xCC, [])],
+            ip=0,
+            acc=0,
+            registers=[0] * 8,
+            depth=2,
+        )
+        with pytest.raises(GenericVMError) as exc_info:
+            g.run(frame)
+        msg = str(exc_info.value)
+        assert "depth=2" in msg
+        assert "ip=0" in msg

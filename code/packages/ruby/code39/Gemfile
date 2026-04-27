@@ -5,4 +5,5 @@ gemspec
 
 # All transitive path dependencies must be listed here.
 # Bundler needs to know where to find each gem locally.
-gem "coding_adventures_draw_instructions", path: "../draw_instructions"
+gem "coding_adventures_paint_instructions", path: "../paint_instructions"
+gem "coding_adventures_barcode_layout_1d", path: "../barcode_layout_1d"

@@ -8,11 +8,12 @@
 # command) and failed because the repo has both an Xcode project
 # and multiple SPM packages.
 #
-# Key decision: use build-mode: none for Swift (and all other
-# interpreted / non-compiled languages). This tells CodeQL to
-# extract source-level facts without compiling, which is fully
-# supported since CodeQL 2.15 and gives good results for the kind
-# of checks we care about (injection, path traversal, etc.).
+# Key decision: use build-mode: none for interpreted languages,
+# and autobuild for compiled languages like Go and Swift. Swift
+# previously supported source-only extraction, but recent CodeQL
+# releases require a real build again, so we keep Swift on macOS
+# autobuild and skip that job unless the build tool says Swift is
+# affected.
 #
 # Languages covered:
 #   javascript-typescript — TypeScript packages and the Vite demos
@@ -22,6 +23,11 @@
 #   swift                 — Swift packages and the Hello-World app
 #
 # Rust is NOT listed because CodeQL does not support it yet.
+#
+# To keep CodeQL fast on pull requests, we run the same Go build-tool
+# detection pass used by CI and only start a language's CodeQL job when
+# its corresponding needs_<lang> flag is true. Scheduled scans still run
+# all enabled languages to keep coverage fresh.
 
 name: CodeQL
 
@@ -40,58 +46,192 @@ permissions:
   security-events: write
 
 jobs:
-  analyze:
-    name: Analyze (${{ matrix.language }})
-    runs-on: ${{ matrix.runner }}
+  detect:
+    name: Detect CodeQL languages
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      needs_typescript: ${{ steps.toolchains.outputs.needs_typescript }}
+      needs_python: ${{ steps.toolchains.outputs.needs_python }}
+      needs_ruby: ${{ steps.toolchains.outputs.needs_ruby }}
+      needs_go: ${{ steps.toolchains.outputs.needs_go }}
+      needs_swift: ${{ steps.toolchains.outputs.needs_swift }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          # ── Interpreted languages — no build step needed ─────────────
-          - language: javascript-typescript
-            runner: ubuntu-latest
-            build-mode: none
-          - language: python
-            runner: ubuntu-latest
-            build-mode: none
-          - language: ruby
-            runner: ubuntu-latest
-            build-mode: none
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
 
-          # ── Go — autobuild works fine for a standard module layout ───
-          - language: go
-            runner: ubuntu-latest
-            build-mode: autobuild
+      - name: Determine diff base
+        id: diff-base
+        shell: bash
+        env:
+          PR_BASE_REF: ${{ github.event.pull_request.base.ref }}
+          EVENT_NAME: ${{ github.event_name }}
+          GIT_REF: ${{ github.ref }}
+        run: |
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            if [[ "$PR_BASE_REF" =~ ^[A-Za-z0-9_./-]+$ ]]; then
+              BASE="origin/$PR_BASE_REF"
+            else
+              echo "::error::Unsafe base ref value: $PR_BASE_REF"
+              exit 1
+            fi
+          elif [ "$GIT_REF" = "refs/heads/main" ]; then
+            BASE="HEAD~1"
+          else
+            git fetch origin main:refs/remotes/origin/main 2>/dev/null || true
+            BASE="origin/main"
+          fi
+          echo "base=$BASE" >> "$GITHUB_OUTPUT"
+          echo "Diff base: $BASE"
 
-          # ── Swift — build-mode: none is no longer supported as of
-          #    CodeQL 2.25.1. autobuild detects Xcode projects and SPM
-          #    packages automatically; it handles multiple projects in
-          #    the same repo by building each one it finds. ────────────
-          - language: swift
-            runner: macos-latest
-            build-mode: autobuild
+      - name: Detect needed languages and emit build plan
+        id: detect
+        shell: bash
+        run: |
+          cd code/programs/go/build-tool
+          go build -o ../../../../build-tool .
+          cd ../../../..
+          ./build-tool \
+            -root . \
+            -diff-base "${{ steps.diff-base.outputs.base }}" \
+            -validate-build-files \
+            -detect-languages \
+            -emit-plan build-plan.json
 
+      - name: Normalize CodeQL language requirements
+        id: toolchains
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          GIT_REF: ${{ github.ref }}
+        run: |
+          if [ "$EVENT_NAME" = "schedule" ] || { [ "$GIT_REF" = "refs/heads/main" ] && [ "$EVENT_NAME" = "push" ]; }; then
+            printf '%s\n' \
+              'needs_typescript=true' \
+              'needs_python=true' \
+              'needs_ruby=true' \
+              'needs_go=true' \
+              'needs_swift=true' >> "$GITHUB_OUTPUT"
+          else
+            printf '%s\n' \
+              'needs_typescript=${{ steps.detect.outputs.needs_typescript }}' \
+              'needs_python=${{ steps.detect.outputs.needs_python }}' \
+              'needs_ruby=${{ steps.detect.outputs.needs_ruby }}' \
+              'needs_go=${{ steps.detect.outputs.needs_go }}' \
+              'needs_swift=${{ steps.detect.outputs.needs_swift }}' >> "$GITHUB_OUTPUT"
+          fi
+
+  analyze-javascript-typescript:
+    name: Analyze (javascript-typescript)
+    needs: detect
+    if: needs.detect.outputs.needs_typescript == 'true'
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       # Initialise the CodeQL database for the target language.
-      # build-mode is passed straight from the matrix.
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
-          languages: ${{ matrix.language }}
-          build-mode: ${{ matrix.build-mode }}
+          languages: javascript-typescript
+          build-mode: none
 
-      # The autobuild step is only meaningful when build-mode is
-      # 'autobuild'. For 'none' it is a no-op, but we keep the step
-      # unconditional so the workflow stays easy to read and extend.
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: /language:javascript-typescript
+
+  analyze-python:
+    name: Analyze (python)
+    needs: detect
+    if: needs.detect.outputs.needs_python == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: python
+          build-mode: none
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: /language:python
+
+  analyze-ruby:
+    name: Analyze (ruby)
+    needs: detect
+    if: needs.detect.outputs.needs_ruby == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ruby
+          build-mode: none
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: /language:ruby
+
+  analyze-go:
+    name: Analyze (go)
+    needs: detect
+    if: needs.detect.outputs.needs_go == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: go
+          build-mode: autobuild
+
       - name: Autobuild
-        if: matrix.build-mode == 'autobuild'
         uses: github/codeql-action/autobuild@v3
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
-          category: /language:${{ matrix.language }}
+          category: /language:go
+
+  analyze-swift:
+    name: Analyze (swift)
+    needs: detect
+    if: needs.detect.outputs.needs_swift == 'true'
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: swift
+          build-mode: autobuild
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: /language:swift

@@ -14,10 +14,16 @@ import gt "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-too
 var ParserGrammarData = &gt.ParserGrammar{
 	Version: 1,
 	Rules:   []gt.GrammarRule{
-		{Name: `program`, Body: gt.Repetition{Element: gt.RuleReference{Name: `statement`, IsToken: false}}, LineNumber: 17},
-		{Name: `statement`, Body: gt.Alternation{Choices: []gt.GrammarElement{
-					gt.RuleReference{Name: `assignment`, IsToken: false},
-					gt.RuleReference{Name: `expression_stmt`, IsToken: false},
+		{Name: `program`, Body: gt.Repetition{Element: gt.Alternation{Choices: []gt.GrammarElement{
+						gt.RuleReference{Name: `NEWLINE`, IsToken: true},
+						gt.RuleReference{Name: `statement`, IsToken: false},
+					}}}, LineNumber: 17},
+		{Name: `statement`, Body: gt.Sequence{Elements: []gt.GrammarElement{
+					gt.Group{Element: gt.Alternation{Choices: []gt.GrammarElement{
+							gt.RuleReference{Name: `assignment`, IsToken: false},
+							gt.RuleReference{Name: `expression_stmt`, IsToken: false},
+						}}},
+					gt.Optional{Element: gt.RuleReference{Name: `NEWLINE`, IsToken: true}},
 				}}, LineNumber: 18},
 		{Name: `assignment`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.RuleReference{Name: `NAME`, IsToken: true},
@@ -46,6 +52,8 @@ var ParserGrammarData = &gt.ParserGrammar{
 						}}},
 				}}, LineNumber: 22},
 		{Name: `factor`, Body: gt.Alternation{Choices: []gt.GrammarElement{
+					gt.RuleReference{Name: `INT`, IsToken: true},
+					gt.RuleReference{Name: `FLOAT`, IsToken: true},
 					gt.RuleReference{Name: `NUMBER`, IsToken: true},
 					gt.RuleReference{Name: `STRING`, IsToken: true},
 					gt.RuleReference{Name: `NAME`, IsToken: true},

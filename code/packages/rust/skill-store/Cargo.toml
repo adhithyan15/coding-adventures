@@ -1,0 +1,11 @@
+[package]
+name = "skill-store"
+version = "0.1.0"
+edition = "2021"
+description = "Typed skill store built on storage-core"
+
+[dependencies]
+storage-core = { path = "../storage-core" }
+coding-adventures-json-value = { path = "../json-value" }
+coding-adventures-json-serializer = { path = "../json-serializer" }
+coding_adventures_sha256 = { path = "../sha256" }

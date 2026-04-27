@@ -1,0 +1,32 @@
+{
+  "name": "@coding-adventures/java-lexer",
+  "version": "0.1.0",
+  "description": "Tokenizes Java source code using the grammar-driven lexer — a thin wrapper that loads java{version}.tokens",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "java",
+    "lexer",
+    "tokenizer",
+    "grammar-driven",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/lexer": "file:../lexer",
+    "@coding-adventures/grammar-tools": "file:../grammar-tools",
+    "@coding-adventures/directed-graph": "file:../directed-graph"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

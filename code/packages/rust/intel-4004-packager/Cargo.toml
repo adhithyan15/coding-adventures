@@ -1,0 +1,7 @@
+[package]
+name = "intel-4004-packager"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+hex = "0.4"

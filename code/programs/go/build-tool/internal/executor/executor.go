@@ -426,12 +426,22 @@ func buildResourceKeys(pkg discovery.Package, pathToPkg map[string]string) []str
 // buildResourceKeysForOS is the testable version of buildResourceKeys that
 // accepts an explicit OS name. This allows tests to verify Windows-specific
 // lock key behaviour on non-Windows hosts.
-func buildResourceKeysForOS(pkg discovery.Package, pathToPkg map[string]string, _ string) []string {
+func buildResourceKeysForOS(pkg discovery.Package, pathToPkg map[string]string, goos string) []string {
 	keys := map[string]bool{
 		pkg.Name: true,
 	}
 
 	for _, command := range pkg.BuildCommands {
+		if goos == "windows" && isGradleCommand(command) {
+			// Windows runners showed long-lived Java/Gradle processes when multiple
+			// independent JVM packages were launched together. Serialize Gradle-backed
+			// Java/Kotlin builds there the same way we already protect other shared
+			// package-manager state such as Hex and LuaRocks.
+			if pkg.Language == "java" || pkg.Language == "kotlin" {
+				keys["global:gradle-windows-runner"] = true
+			}
+		}
+
 		if pkg.Language == "elixir" && strings.Contains(command, "mix deps.get") {
 			// Hex persists a shared cache under ~/.hex, which is not safe for
 			// concurrent writes across packages in CI.
@@ -454,6 +464,19 @@ func buildResourceKeysForOS(pkg discovery.Package, pathToPkg map[string]string, 
 			keys["global:luarocks-tree"] = true
 		}
 
+		if pkg.Language == "haskell" && strings.Contains(command, "cabal ") {
+			// Cabal mutates the shared store under ~/.cabal and coordinates builds
+			// through package database locks. Parallel package tests can contend on
+			// those global resources, so serialize Cabal-backed Haskell BUILDs.
+			keys["global:cabal-store"] = true
+		}
+
+		if (pkg.Language == "csharp" || pkg.Language == "fsharp") && strings.Contains(command, "dotnet ") {
+			// NuGet first-run migrations use global process mutex state outside
+			// DOTNET_CLI_HOME. Parallel dotnet package builds can race there on CI.
+			keys["global:dotnet-cli"] = true
+		}
+
 		for _, raw := range relPathRe.FindAllString(command, -1) {
 			normalized := strings.ReplaceAll(raw, "\\", "/")
 			abs := filepath.Clean(filepath.Join(pkg.Path, filepath.FromSlash(normalized)))
@@ -468,4 +491,34 @@ func buildResourceKeysForOS(pkg discovery.Package, pathToPkg map[string]string, 
 		result = append(result, key)
 	}
 	return result
+}
+
+func isGradleCommand(command string) bool {
+	trimmed := strings.TrimSpace(command)
+	if trimmed == "" {
+		return false
+	}
+
+	for _, prefix := range []string{
+		"gradle ",
+		"gradle\t",
+		"gradlew ",
+		"gradlew\t",
+		"gradlew.bat ",
+		"gradlew.bat\t",
+		"./gradlew ",
+		"./gradlew\t",
+		".\\gradlew ",
+		".\\gradlew\t",
+	} {
+		if strings.HasPrefix(trimmed, prefix) {
+			return true
+		}
+	}
+
+	return trimmed == "gradle" ||
+		trimmed == "gradlew" ||
+		trimmed == "gradlew.bat" ||
+		trimmed == "./gradlew" ||
+		trimmed == ".\\gradlew"
 }

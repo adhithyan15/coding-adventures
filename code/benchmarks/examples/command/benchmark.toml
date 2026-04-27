@@ -1,0 +1,21 @@
+name = "benchmark-tool-command-smoke"
+description = "A tiny command benchmark used to verify benchmark-tool itself."
+
+[defaults]
+warmup_trials = 1
+measurement_trials = 3
+cooldown_ms = 0
+randomize_subject_order = false
+fail_fast = true
+
+[[subjects]]
+name = "go-version"
+kind = "command"
+prebuilt = true
+command = "go version"
+
+[[workloads]]
+name = "command-elapsed"
+driver = "command"
+operations = 1
+timeout_ms = 10000

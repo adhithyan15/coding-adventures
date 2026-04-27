@@ -81,51 +81,9 @@
 //! - [`tokenize_dartmouth_basic`] — convenience one-shot function returning
 //!   `Vec<Token>`.
 
-use std::fs;
-
-use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
 use lexer::token::{Token, TokenType};
-
-// ===========================================================================
-// Grammar file location
-// ===========================================================================
-
-/// Build the absolute path to the `dartmouth_basic.tokens` grammar file.
-///
-/// We use `env!("CARGO_MANIFEST_DIR")` — a compile-time macro that expands to
-/// the directory containing this crate's `Cargo.toml`. From there we navigate
-/// up through the package directory structure to the shared `grammars/`
-/// folder at the repository root.
-///
-/// The directory layout looks like this:
-///
-/// ```text
-/// code/
-///   grammars/
-///     dartmouth_basic.tokens    ← this is what we want
-///   packages/
-///     rust/
-///       dartmouth-basic-lexer/
-///         Cargo.toml            ← CARGO_MANIFEST_DIR points here
-///         src/
-///           lib.rs              ← we are here
-/// ```
-///
-/// Counting up from `dartmouth-basic-lexer/`:
-///   `..` → `rust/`
-///   `..` → `packages/`
-///   `..` → `code/`
-///   `grammars/dartmouth_basic.tokens` → the file we want.
-fn grammar_path() -> std::path::PathBuf {
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    std::path::Path::new(manifest_dir)
-        .join("..")
-        .join("..")
-        .join("..")
-        .join("grammars")
-        .join("dartmouth_basic.tokens")
-}
+mod _grammar;
 
 // ===========================================================================
 // Post-tokenize hooks
@@ -344,41 +302,7 @@ fn suppress_rem_content(tokens: Vec<Token>) -> Vec<Token> {
 /// }
 /// ```
 pub fn create_dartmouth_basic_lexer(source: &str) -> GrammarLexer<'_> {
-    // ----------------------------------------------------------------
-    // Step 1: Read the grammar file from disk.
-    //
-    // We read at runtime (not compile time) for two reasons:
-    //   a) The grammar file can be updated without recompiling this crate.
-    //   b) Compile-time include_str! would bloat the binary; runtime reading
-    //      adds negligible startup overhead.
-    // ----------------------------------------------------------------
-    let grammar_text = fs::read_to_string(grammar_path())
-        .unwrap_or_else(|e| panic!("Failed to read dartmouth_basic.tokens: {e}"));
-
-    // ----------------------------------------------------------------
-    // Step 2: Parse the grammar text into a structured TokenGrammar.
-    //
-    // parse_token_grammar turns the text file into:
-    //   - Token definitions: (name, pattern) pairs in match priority order
-    //   - Skip patterns: WHITESPACE = /[ \t]+/
-    //   - Keywords section: LET, PRINT, INPUT, IF, THEN, GOTO, etc.
-    //   - Directives: @case_insensitive true, @version 1
-    //   - Error rule: UNKNOWN = /./
-    //
-    // The @case_insensitive directive tells the lexer to uppercase the entire
-    // source before matching. This is authentic to the 1964 hardware — the
-    // GE-225 teletypes only had uppercase characters, so `print` and `PRINT`
-    // are the same word.
-    // ----------------------------------------------------------------
-    let grammar = parse_token_grammar(&grammar_text)
-        .unwrap_or_else(|e| panic!("Failed to parse dartmouth_basic.tokens: {e}"));
-
-    // ----------------------------------------------------------------
-    // Step 3: Build the GrammarLexer.
-    //
-    // GrammarLexer::new compiles all token patterns into anchored regexes
-    // (^pattern) and prepares the keyword lookup table.
-    // ----------------------------------------------------------------
+    let grammar = _grammar::token_grammar();
     let mut lexer = GrammarLexer::new(source, &grammar);
 
     // ----------------------------------------------------------------
@@ -563,7 +487,11 @@ mod tests {
 
         assert_eq!(p[0], ("LINE_NUM", "30"), "30 is the line label");
         assert_eq!(p[1], ("KEYWORD", "GOTO"));
-        assert_eq!(p[2], ("NUMBER", "10"), "GOTO target must be NUMBER, not LINE_NUM");
+        assert_eq!(
+            p[2],
+            ("NUMBER", "10"),
+            "GOTO target must be NUMBER, not LINE_NUM"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -688,7 +616,11 @@ mod tests {
             assert_eq!(l.0, u.0, "Token type should match: {:?} vs {:?}", l, u);
         }
         // Keywords are promoted to uppercase regardless of source case
-        assert_eq!(p_lower[1], ("KEYWORD", "PRINT"), "PRINT should be uppercase keyword");
+        assert_eq!(
+            p_lower[1],
+            ("KEYWORD", "PRINT"),
+            "PRINT should be uppercase keyword"
+        );
     }
 
     /// `20 Let A = 1` — mixed-case keyword.
@@ -728,8 +660,12 @@ mod tests {
 
         // Find the operator token — should be LE, not two separate tokens
         let op_idx = 3;
-        assert_eq!(p[op_idx], ("LE", "<="),
-            "Expected LE token, got {:?}", p[op_idx]);
+        assert_eq!(
+            p[op_idx],
+            ("LE", "<="),
+            "Expected LE token, got {:?}",
+            p[op_idx]
+        );
         // Verify total token count: LINE_NUM IF X LE Y THEN NUMBER = 7
         assert_eq!(p.len(), 7, "Expected 7 tokens: {:?}", p);
     }
@@ -739,8 +675,7 @@ mod tests {
         let tokens = tokenize_dartmouth_basic("10 IF X >= Y THEN 50\n");
         let p = pairs_no_newline(&tokens);
 
-        assert_eq!(p[3], ("GE", ">="),
-            "Expected GE token, got {:?}", p[3]);
+        assert_eq!(p[3], ("GE", ">="), "Expected GE token, got {:?}", p[3]);
         assert_eq!(p.len(), 7);
     }
 
@@ -749,8 +684,7 @@ mod tests {
         let tokens = tokenize_dartmouth_basic("10 IF X <> Y THEN 50\n");
         let p = pairs_no_newline(&tokens);
 
-        assert_eq!(p[3], ("NE", "<>"),
-            "Expected NE token, got {:?}", p[3]);
+        assert_eq!(p[3], ("NE", "<>"), "Expected NE token, got {:?}", p[3]);
         assert_eq!(p.len(), 7);
     }
 
@@ -784,8 +718,11 @@ mod tests {
     fn test_number_leading_dot() {
         let tokens = tokenize_dartmouth_basic("10 LET X = .5\n");
         let p = pairs_no_newline(&tokens);
-        assert_eq!(p[4], ("NUMBER", ".5"),
-            "Leading-dot number should tokenize as NUMBER");
+        assert_eq!(
+            p[4],
+            ("NUMBER", ".5"),
+            "Leading-dot number should tokenize as NUMBER"
+        );
     }
 
     #[test]
@@ -799,8 +736,11 @@ mod tests {
     fn test_number_negative_exponent() {
         let tokens = tokenize_dartmouth_basic("10 LET X = 1.5E-3\n");
         let p = pairs_no_newline(&tokens);
-        assert_eq!(p[4], ("NUMBER", "1.5E-3"),
-            "Negative exponent should tokenize as single NUMBER token");
+        assert_eq!(
+            p[4],
+            ("NUMBER", "1.5E-3"),
+            "Negative exponent should tokenize as single NUMBER token"
+        );
     }
 
     #[test]
@@ -826,8 +766,11 @@ mod tests {
         assert_eq!(p[0], ("LINE_NUM", "10"));
         assert_eq!(p[1], ("KEYWORD", "PRINT"));
         assert_eq!(p[2].0, "STRING", "Expected STRING token type");
-        assert!(p[2].1.contains("HELLO WORLD"),
-            "String value should contain HELLO WORLD, got {:?}", p[2].1);
+        assert!(
+            p[2].1.contains("HELLO WORLD"),
+            "String value should contain HELLO WORLD, got {:?}",
+            p[2].1
+        );
     }
 
     #[test]
@@ -854,8 +797,12 @@ mod tests {
 
         // We should see: LINE_NUM("10"), KEYWORD("REM"), NEWLINE
         // The words THIS, IS, A, COMMENT should all be gone.
-        assert_eq!(p.len(), 3,
-            "REM line should have 3 tokens (LINE_NUM, REM, NEWLINE), got: {:?}", p);
+        assert_eq!(
+            p.len(),
+            3,
+            "REM line should have 3 tokens (LINE_NUM, REM, NEWLINE), got: {:?}",
+            p
+        );
         assert_eq!(p[0], ("LINE_NUM", "10"));
         assert_eq!(p[1], ("KEYWORD", "REM"));
         assert_eq!(p[2].0, "NEWLINE");
@@ -979,7 +926,10 @@ mod tests {
         assert!(type_names.contains(&"MINUS"), "MINUS operator");
         assert!(type_names.contains(&"STAR"), "STAR operator");
         assert!(type_names.contains(&"SLASH"), "SLASH operator");
-        assert!(type_names.contains(&"CARET"), "CARET (^) exponentiation operator");
+        assert!(
+            type_names.contains(&"CARET"),
+            "CARET (^) exponentiation operator"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -994,9 +944,8 @@ mod tests {
         // We wrap each in a minimal valid BASIC line so the lexer
         // has context to work with.
         let keywords = [
-            "LET", "PRINT", "INPUT", "IF", "THEN", "GOTO", "GOSUB",
-            "RETURN", "FOR", "TO", "STEP", "NEXT", "END", "STOP",
-            "REM", "READ", "DATA", "RESTORE", "DIM", "DEF",
+            "LET", "PRINT", "INPUT", "IF", "THEN", "GOTO", "GOSUB", "RETURN", "FOR", "TO", "STEP",
+            "NEXT", "END", "STOP", "REM", "READ", "DATA", "RESTORE", "DIM", "DEF",
         ];
 
         for kw in &keywords {
@@ -1004,7 +953,8 @@ mod tests {
             // We skip REM since it would suppress subsequent tokens.
             if *kw == "REM" {
                 let tokens = tokenize_dartmouth_basic(&format!("10 {}\n", kw));
-                let keyword_tokens: Vec<&Token> = tokens.iter()
+                let keyword_tokens: Vec<&Token> = tokens
+                    .iter()
                     .filter(|t| t.type_ == TokenType::Keyword)
                     .collect();
                 assert!(
@@ -1015,7 +965,8 @@ mod tests {
             }
 
             let tokens = tokenize_dartmouth_basic(&format!("10 {} X\n", kw));
-            let keyword_tokens: Vec<&Token> = tokens.iter()
+            let keyword_tokens: Vec<&Token> = tokens
+                .iter()
                 .filter(|t| t.type_ == TokenType::Keyword)
                 .collect();
 
@@ -1039,14 +990,18 @@ mod tests {
 
     #[test]
     fn test_all_builtin_functions() {
-        let builtins = ["SIN", "COS", "TAN", "ATN", "EXP", "LOG", "ABS", "SQR", "INT", "RND", "SGN"];
+        let builtins = [
+            "SIN", "COS", "TAN", "ATN", "EXP", "LOG", "ABS", "SQR", "INT", "RND", "SGN",
+        ];
 
         for func in &builtins {
             let source = format!("10 LET X = {}(X)\n", func);
             let tokens = tokenize_dartmouth_basic(&source);
             let p = pairs_no_newline(&tokens);
 
-            let found = p.iter().any(|(name, val)| *name == "BUILTIN_FN" && *val == *func);
+            let found = p
+                .iter()
+                .any(|(name, val)| *name == "BUILTIN_FN" && *val == *func);
             assert!(found, "Expected BUILTIN_FN({func}) in tokens: {:?}", p);
         }
     }
@@ -1065,7 +1020,9 @@ mod tests {
         let tokens = tokenize_dartmouth_basic("10 LET X = FNA(Y)\n");
         let p = pairs_no_newline(&tokens);
 
-        let found = p.iter().any(|(name, val)| *name == "USER_FN" && *val == "FNA");
+        let found = p
+            .iter()
+            .any(|(name, val)| *name == "USER_FN" && *val == "FNA");
         assert!(found, "Expected USER_FN(FNA): {:?}", p);
     }
 
@@ -1074,7 +1031,9 @@ mod tests {
         let tokens = tokenize_dartmouth_basic("10 LET X = FNZ(Y)\n");
         let p = pairs_no_newline(&tokens);
 
-        let found = p.iter().any(|(name, val)| *name == "USER_FN" && *val == "FNZ");
+        let found = p
+            .iter()
+            .any(|(name, val)| *name == "USER_FN" && *val == "FNZ");
         assert!(found, "Expected USER_FN(FNZ): {:?}", p);
     }
 
@@ -1184,9 +1143,15 @@ mod tests {
         let tokens = tokenize_dartmouth_basic(source);
         let p = pairs_no_newline(&tokens);
 
-        assert!(p.iter().any(|(name, val)| *name == "KEYWORD" && *val == "DATA"));
-        assert!(p.iter().any(|(name, val)| *name == "KEYWORD" && *val == "READ"));
-        assert!(p.iter().any(|(name, val)| *name == "KEYWORD" && *val == "RESTORE"));
+        assert!(p
+            .iter()
+            .any(|(name, val)| *name == "KEYWORD" && *val == "DATA"));
+        assert!(p
+            .iter()
+            .any(|(name, val)| *name == "KEYWORD" && *val == "READ"));
+        assert!(p
+            .iter()
+            .any(|(name, val)| *name == "KEYWORD" && *val == "RESTORE"));
     }
 
     // -----------------------------------------------------------------------
@@ -1255,10 +1220,16 @@ mod tests {
         let p_spaced = pairs(&spaced);
         let p_tabbed = pairs(&tabbed);
 
-        assert_eq!(p_compact.len(), p_spaced.len(),
-            "Compact and spaced should have the same number of tokens");
-        assert_eq!(p_compact.len(), p_tabbed.len(),
-            "Compact and tabbed should have the same number of tokens");
+        assert_eq!(
+            p_compact.len(),
+            p_spaced.len(),
+            "Compact and spaced should have the same number of tokens"
+        );
+        assert_eq!(
+            p_compact.len(),
+            p_tabbed.len(),
+            "Compact and tabbed should have the same number of tokens"
+        );
 
         for (i, (c, s)) in p_compact.iter().zip(p_spaced.iter()).enumerate() {
             assert_eq!(c.0, s.0, "Token {i} type mismatch");
@@ -1276,13 +1247,16 @@ mod tests {
     #[test]
     fn test_create_lexer_factory() {
         let mut lexer = create_dartmouth_basic_lexer("10 LET X = 42\n");
-        let tokens = lexer.tokenize().expect("Lexer should tokenize without error");
+        let tokens = lexer
+            .tokenize()
+            .expect("Lexer should tokenize without error");
 
         // Should end with EOF
         assert_eq!(tokens.last().unwrap().type_, TokenType::Eof);
 
         // Should contain LINE_NUM("10")
-        let has_line_num = tokens.iter()
+        let has_line_num = tokens
+            .iter()
             .any(|t| t.effective_type_name() == "LINE_NUM" && t.value == "10");
         assert!(has_line_num, "Expected LINE_NUM(10) in output");
     }
@@ -1297,12 +1271,16 @@ mod tests {
     #[test]
     fn test_newline_tokens_present() {
         let tokens = tokenize_dartmouth_basic("10 LET X = 1\n20 PRINT X\n");
-        let newline_count = tokens.iter()
+        let newline_count = tokens
+            .iter()
             .filter(|t| t.type_ == TokenType::Newline)
             .count();
 
-        assert_eq!(newline_count, 2,
-            "Expected 2 NEWLINE tokens (one per statement), found {}", newline_count);
+        assert_eq!(
+            newline_count, 2,
+            "Expected 2 NEWLINE tokens (one per statement), found {}",
+            newline_count
+        );
     }
 
     // -----------------------------------------------------------------------

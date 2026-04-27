@@ -49,6 +49,74 @@ pub struct napi_callback_info__ {
 }
 pub type napi_callback_info = *mut napi_callback_info__;
 
+/// Opaque stable reference to a JS value — survives GC moves.
+///
+/// `napi_ref` is like a `Pin<Box<napi_value>>`: it keeps the underlying
+/// JS value alive and reachable even when the originating `napi_value`
+/// (a raw stack pointer) is no longer valid. Use when you need to store
+/// a JS value across multiple N-API calls or callbacks.
+///
+/// Lifecycle: `napi_create_reference` → `napi_get_reference_value`
+///          → `napi_delete_reference`.
+pub type napi_ref = *mut c_void;
+
+/// Opaque handle to a threadsafe function.
+///
+/// A `napi_threadsafe_function` wraps a JS callback so that it can be
+/// invoked from **any** OS thread. N-API queues a `call_js_cb` onto the
+/// V8 event loop; that callback runs on the main thread with a live
+/// `napi_env`.
+///
+/// Lifecycle:
+///   `napi_create_threadsafe_function` (on V8 thread)
+/// → `napi_acquire_threadsafe_function` (on each background thread that
+///    will call it — optional, but required if more than one Rust thread
+///    shares the TSFN)
+/// → `napi_call_threadsafe_function` (from any thread, blocking or not)
+/// → `napi_release_threadsafe_function` (from the last thread that called
+///    `acquire`, or from the creating thread)
+pub type napi_threadsafe_function = *mut c_void;
+
+/// Whether `napi_call_threadsafe_function` blocks when the queue is full.
+pub type napi_threadsafe_function_call_mode = i32;
+/// Non-blocking: returns `napi_queue_full` if the queue is at capacity.
+pub const NAPI_TSFN_NONBLOCKING: napi_threadsafe_function_call_mode = 0;
+/// Blocking: waits until there is space in the queue.
+pub const NAPI_TSFN_BLOCKING: napi_threadsafe_function_call_mode = 1;
+
+/// Whether `napi_release_threadsafe_function` aborts or waits.
+pub type napi_threadsafe_function_release_mode = i32;
+/// Graceful release: outstanding calls still run.
+pub const NAPI_TSFN_RELEASE: napi_threadsafe_function_release_mode = 0;
+/// Abort: discard queued calls that have not yet run.
+pub const NAPI_TSFN_ABORT: napi_threadsafe_function_release_mode = 1;
+
+/// Signature of the callback that runs on the V8 main thread when a
+/// threadsafe function fires.
+///
+/// Parameters:
+/// - `env`     — live N-API env (call N-API here, not from other threads)
+/// - `js_cb`   — the JS function passed to `napi_create_threadsafe_function`
+/// - `context` — the `context` pointer passed at creation time
+/// - `data`    — the per-call `data` pointer from `napi_call_threadsafe_function`
+pub type napi_threadsafe_function_call_js =
+    Option<unsafe extern "C" fn(env: napi_env, js_cb: napi_value, context: *mut c_void, data: *mut c_void)>;
+
+/// JS value type discriminant returned by `napi_typeof`.
+///
+/// Maps exactly to the `napi_valuetype` enum in `node_api_types.h`.
+pub type napi_valuetype = i32;
+pub const NAPI_UNDEFINED: napi_valuetype = 0;
+pub const NAPI_NULL:      napi_valuetype = 1;
+pub const NAPI_BOOLEAN:   napi_valuetype = 2;
+pub const NAPI_NUMBER:    napi_valuetype = 3;
+pub const NAPI_STRING:    napi_valuetype = 4;
+pub const NAPI_SYMBOL:    napi_valuetype = 5;
+pub const NAPI_OBJECT:    napi_valuetype = 6;
+pub const NAPI_FUNCTION:  napi_valuetype = 7;
+pub const NAPI_EXTERNAL:  napi_valuetype = 8;
+pub const NAPI_BIGINT:    napi_valuetype = 9;
+
 /// N-API status codes.
 pub type napi_status = i32;
 pub const NAPI_OK: napi_status = 0;
@@ -198,6 +266,202 @@ extern "C" {
 
     // -- Error handling ----------------------------------------------------
     pub fn napi_throw_error(env: napi_env, code: *const c_char, msg: *const c_char) -> napi_status;
+
+    // -- Value type inspection ---------------------------------------------
+
+    /// Return the JS type of `value` as a `napi_valuetype` discriminant.
+    ///
+    /// Equivalent to `typeof value` in JS but also distinguishes `null`
+    /// (NAPI_NULL) from `undefined` (NAPI_UNDEFINED).
+    pub fn napi_typeof(
+        env: napi_env,
+        value: napi_value,
+        result: *mut napi_valuetype,
+    ) -> napi_status;
+
+    /// Write `true` into `*result` when `value` is a JS Array.
+    pub fn napi_is_array(env: napi_env, value: napi_value, result: *mut bool) -> napi_status;
+
+    // -- Additional number operations --------------------------------------
+
+    /// Extract an `i32` from a JS number value.
+    pub fn napi_get_value_int32(env: napi_env, value: napi_value, result: *mut i32) -> napi_status;
+
+    /// Extract a `bool` from a JS boolean value.
+    pub fn napi_get_value_bool(env: napi_env, value: napi_value, result: *mut bool) -> napi_status;
+
+    // -- Object operations -------------------------------------------------
+
+    /// Create an empty `{}` JS object.
+    pub fn napi_create_object(env: napi_env, result: *mut napi_value) -> napi_status;
+
+    /// Read a named property from `object`, equivalent to `object[utf8name]`.
+    pub fn napi_get_named_property(
+        env: napi_env,
+        object: napi_value,
+        utf8name: *const c_char,
+        result: *mut napi_value,
+    ) -> napi_status;
+
+    /// Read a property using a `napi_value` key: equivalent to `object[key]`.
+    ///
+    /// Unlike `napi_get_named_property`, the key can be any JS value (string,
+    /// symbol, number index).  Use this when iterating property names from
+    /// `napi_get_property_names`.
+    pub fn napi_get_property(
+        env: napi_env,
+        object: napi_value,
+        key: napi_value,
+        result: *mut napi_value,
+    ) -> napi_status;
+
+    /// Return an array of all own enumerable property names of `object`.
+    ///
+    /// The returned `napi_value` is a JS `string[]`.  Equivalent to
+    /// `Object.keys(object)`.
+    pub fn napi_get_property_names(
+        env: napi_env,
+        object: napi_value,
+        result: *mut napi_value,
+    ) -> napi_status;
+
+    /// Set a property using a `napi_value` key: equivalent to `object[key] = value`.
+    pub fn napi_set_property(
+        env: napi_env,
+        object: napi_value,
+        key: napi_value,
+        value: napi_value,
+    ) -> napi_status;
+
+    // -- Function calls ----------------------------------------------------
+
+    /// Call a JS function: equivalent to `func.call(recv, ...argv[0..argc])`.
+    ///
+    /// - `recv`   — the `this` value (pass `napi_get_undefined` for free functions)
+    /// - `argc`   — number of arguments
+    /// - `argv`   — pointer to array of `napi_value` arguments
+    /// - `result` — receives the return value (may be null if caller doesn't care)
+    pub fn napi_call_function(
+        env: napi_env,
+        recv: napi_value,
+        func: napi_value,
+        argc: usize,
+        argv: *const napi_value,
+        result: *mut napi_value,
+    ) -> napi_status;
+
+    /// Construct a new instance: equivalent to `new constructor(...argv)`.
+    pub fn napi_new_instance(
+        env: napi_env,
+        constructor: napi_value,
+        argc: usize,
+        argv: *const napi_value,
+        result: *mut napi_value,
+    ) -> napi_status;
+
+    // -- Exception / pending error handling --------------------------------
+
+    /// Write `true` into `*result` when a JS exception is pending in `env`.
+    ///
+    /// A pending exception means the last N-API call that can throw did throw.
+    /// You MUST clear it (with `napi_get_and_clear_last_exception`) before
+    /// calling most other N-API functions.
+    pub fn napi_is_exception_pending(env: napi_env, result: *mut bool) -> napi_status;
+
+    /// Retrieve and clear the pending JS exception.
+    ///
+    /// Returns the thrown value (any JS value, typically an Error object).
+    /// After this call no exception is pending and normal N-API usage resumes.
+    pub fn napi_get_and_clear_last_exception(env: napi_env, result: *mut napi_value) -> napi_status;
+
+    // -- Stable references -------------------------------------------------
+
+    /// Create a stable reference to `value` with the given refcount.
+    ///
+    /// An `napi_ref` keeps the underlying JS object alive even when the
+    /// `napi_value` (a raw pointer valid only in the current call frame) goes
+    /// out of scope. The reference must be released with `napi_delete_reference`
+    /// when no longer needed, or the object will never be GC'd.
+    pub fn napi_create_reference(
+        env: napi_env,
+        value: napi_value,
+        initial_refcount: u32,
+        result: *mut napi_ref,
+    ) -> napi_status;
+
+    /// Retrieve the `napi_value` currently pointed to by a reference.
+    pub fn napi_get_reference_value(
+        env: napi_env,
+        reference: napi_ref,
+        result: *mut napi_value,
+    ) -> napi_status;
+
+    /// Release a reference, decrementing its refcount. When the refcount
+    /// reaches zero the underlying JS object becomes eligible for GC.
+    pub fn napi_delete_reference(env: napi_env, reference: napi_ref) -> napi_status;
+
+    // -- Threadsafe functions ----------------------------------------------
+    //
+    // These allow any OS thread to queue a JS function call onto the V8
+    // main thread's event loop. This is the only safe way to call into JS
+    // from Rust background threads.
+
+    /// Create a threadsafe wrapper around `func` (a JS function).
+    ///
+    /// - `async_resource`      — pass `napi_get_undefined(env)` (unused here)
+    /// - `async_resource_name` — a JS string for profiling/tracing; usually
+    ///                           the handler name
+    /// - `max_queue_size`      — 0 means unlimited queue
+    /// - `initial_thread_count`— number of threads that will call this TSFN
+    ///                           (including the creating thread); typically 1
+    /// - `thread_finalize_data`— opaque pointer passed to `thread_finalize_cb`
+    /// - `thread_finalize_cb`  — called when all threads have released the TSFN
+    /// - `context`             — arbitrary data passed to every `call_js_cb`
+    /// - `call_js_cb`          — the function that runs on the V8 thread
+    /// - `result`              — receives the new TSFN handle
+    pub fn napi_create_threadsafe_function(
+        env: napi_env,
+        func: napi_value,
+        async_resource: napi_value,
+        async_resource_name: napi_value,
+        max_queue_size: usize,
+        initial_thread_count: usize,
+        thread_finalize_data: *mut c_void,
+        thread_finalize_cb: napi_finalize,
+        context: *mut c_void,
+        call_js_cb: napi_threadsafe_function_call_js,
+        result: *mut napi_threadsafe_function,
+    ) -> napi_status;
+
+    /// Increment the thread-use-count of the TSFN so that an additional thread
+    /// can safely call `napi_call_threadsafe_function`.
+    pub fn napi_acquire_threadsafe_function(tsfn: napi_threadsafe_function) -> napi_status;
+
+    /// Queue a call to the wrapped JS function from any thread.
+    ///
+    /// - `data`       — arbitrary pointer forwarded to `call_js_cb` as `data`
+    /// - `is_blocking`— `NAPI_TSFN_BLOCKING` or `NAPI_TSFN_NONBLOCKING`
+    pub fn napi_call_threadsafe_function(
+        tsfn: napi_threadsafe_function,
+        data: *mut c_void,
+        is_blocking: napi_threadsafe_function_call_mode,
+    ) -> napi_status;
+
+    /// Release the TSFN from this thread. When all threads have released,
+    /// the `thread_finalize_cb` is called and the TSFN is destroyed.
+    pub fn napi_release_threadsafe_function(
+        tsfn: napi_threadsafe_function,
+        mode: napi_threadsafe_function_release_mode,
+    ) -> napi_status;
+
+    /// Mark the TSFN as keeping the event loop alive (default after creation).
+    /// Paired with `napi_unref_threadsafe_function` to let the loop exit.
+    pub fn napi_ref_threadsafe_function(env: napi_env, tsfn: napi_threadsafe_function) -> napi_status;
+
+    /// Allow the event loop to exit even if this TSFN is still alive.
+    /// Use this when the TSFN is only needed while an explicit `serve()` is
+    /// running and should not prevent the process from exiting after `stop()`.
+    pub fn napi_unref_threadsafe_function(env: napi_env, tsfn: napi_threadsafe_function) -> napi_status;
 }
 
 // ---------------------------------------------------------------------------
@@ -569,4 +833,305 @@ pub fn create_function(env: napi_env, name: &str, cb: napi_callback) -> napi_val
         "napi_create_function",
     );
     result
+}
+
+// ---------------------------------------------------------------------------
+// Safe wrappers — Value type inspection
+// ---------------------------------------------------------------------------
+
+/// Return the JS type of `value` (NAPI_UNDEFINED, NAPI_NULL, NAPI_BOOLEAN,
+/// NAPI_NUMBER, NAPI_STRING, NAPI_OBJECT, NAPI_FUNCTION, …).
+pub fn value_type(env: napi_env, value: napi_value) -> napi_valuetype {
+    let mut t: napi_valuetype = NAPI_UNDEFINED;
+    check_status(unsafe { napi_typeof(env, value, &mut t) }, "napi_typeof");
+    t
+}
+
+/// Return `true` when `value` is a JS Array (regular or typed).
+pub fn is_array(env: napi_env, value: napi_value) -> bool {
+    let mut result = false;
+    check_status(
+        unsafe { napi_is_array(env, value, &mut result) },
+        "napi_is_array",
+    );
+    result
+}
+
+// ---------------------------------------------------------------------------
+// Safe wrappers — Additional number extraction
+// ---------------------------------------------------------------------------
+
+/// Extract an `i32` from a JS number. Returns `None` if `value` is not a
+/// number (e.g. undefined, string, etc.).
+pub fn i32_from_js(env: napi_env, value: napi_value) -> Option<i32> {
+    let mut n: i32 = 0;
+    let status = unsafe { napi_get_value_int32(env, value, &mut n) };
+    if status != NAPI_OK { return None; }
+    Some(n)
+}
+
+/// Extract a `bool` from a JS boolean. Returns `None` if `value` is not a
+/// boolean.
+pub fn bool_from_js(env: napi_env, value: napi_value) -> Option<bool> {
+    let mut b = false;
+    let status = unsafe { napi_get_value_bool(env, value, &mut b) };
+    if status != NAPI_OK { return None; }
+    Some(b)
+}
+
+// ---------------------------------------------------------------------------
+// Safe wrappers — Objects
+// ---------------------------------------------------------------------------
+
+/// Create an empty `{}` JS object.
+pub fn object_new(env: napi_env) -> napi_value {
+    let mut result: napi_value = ptr::null_mut();
+    check_status(
+        unsafe { napi_create_object(env, &mut result) },
+        "napi_create_object",
+    );
+    result
+}
+
+/// Read `object[name]`, returning `undefined` if the property does not exist.
+pub fn get_property(env: napi_env, object: napi_value, name: &str) -> napi_value {
+    let c_name = CString::new(name).expect("property name must not contain NUL");
+    let mut result: napi_value = ptr::null_mut();
+    // On failure (e.g. object is not an object) we return undefined.
+    let status = unsafe { napi_get_named_property(env, object, c_name.as_ptr(), &mut result) };
+    if status != NAPI_OK {
+        result = ptr::null_mut();
+        unsafe { napi_get_undefined(env, &mut result) };
+    }
+    result
+}
+
+/// Read a property using a `napi_value` key.
+///
+/// Equivalent to `object[key]` where `key` is a JS value (typically a string
+/// returned from `get_property_names`).  Returns undefined on failure.
+pub fn get_property_by_key(env: napi_env, object: napi_value, key: napi_value) -> napi_value {
+    let mut result: napi_value = ptr::null_mut();
+    let status = unsafe { napi_get_property(env, object, key, &mut result) };
+    if status != NAPI_OK {
+        result = ptr::null_mut();
+        unsafe { napi_get_undefined(env, &mut result) };
+    }
+    result
+}
+
+/// Return `Object.keys(object)` as a `napi_value` array of strings.
+///
+/// Returns an empty array on failure.
+pub fn get_property_names(env: napi_env, object: napi_value) -> napi_value {
+    let mut result: napi_value = ptr::null_mut();
+    let status = unsafe { napi_get_property_names(env, object, &mut result) };
+    if status != NAPI_OK {
+        // Return an empty array.  napi_create_array() creates a zero-length
+        // array; napi_create_array_with_length() would also work but requires
+        // an extra declaration — use the already-declared zero-arg form.
+        let mut arr: napi_value = ptr::null_mut();
+        check_status(
+            unsafe { napi_create_array(env, &mut arr) },
+            "napi_create_array (empty fallback)",
+        );
+        return arr;
+    }
+    result
+}
+
+// ---------------------------------------------------------------------------
+// Safe wrappers — Function calls
+// ---------------------------------------------------------------------------
+
+/// Call `func` with `this = recv` and the given arguments.
+///
+/// Returns `Some(result)` on success or `None` if an exception was thrown
+/// (the exception remains pending; caller must handle it).
+pub fn call_function(
+    env: napi_env,
+    recv: napi_value,
+    func: napi_value,
+    args: &[napi_value],
+) -> Option<napi_value> {
+    let mut result: napi_value = ptr::null_mut();
+    let status = unsafe {
+        napi_call_function(
+            env,
+            recv,
+            func,
+            args.len(),
+            if args.is_empty() { ptr::null() } else { args.as_ptr() },
+            &mut result,
+        )
+    };
+    if status != NAPI_OK { None } else { Some(result) }
+}
+
+// ---------------------------------------------------------------------------
+// Safe wrappers — Exception handling
+// ---------------------------------------------------------------------------
+
+/// Return `true` if a JS exception is currently pending in `env`.
+pub fn exception_pending(env: napi_env) -> bool {
+    let mut pending = false;
+    unsafe { napi_is_exception_pending(env, &mut pending) };
+    pending
+}
+
+/// Retrieve and clear the pending JS exception.
+///
+/// Returns the thrown JS value. After this call no exception is pending.
+/// Panics if no exception is pending (call `exception_pending` first).
+pub fn clear_exception(env: napi_env) -> napi_value {
+    let mut ex: napi_value = ptr::null_mut();
+    check_status(
+        unsafe { napi_get_and_clear_last_exception(env, &mut ex) },
+        "napi_get_and_clear_last_exception",
+    );
+    ex
+}
+
+// ---------------------------------------------------------------------------
+// Safe wrappers — Stable references
+// ---------------------------------------------------------------------------
+
+/// Create a stable reference to a JS value.
+///
+/// The underlying object stays alive until `delete_ref` is called, regardless
+/// of whether any other JS code holds a reference.
+pub fn create_ref(env: napi_env, value: napi_value) -> napi_ref {
+    let mut r: napi_ref = ptr::null_mut();
+    check_status(
+        unsafe { napi_create_reference(env, value, 1, &mut r) },
+        "napi_create_reference",
+    );
+    r
+}
+
+/// Retrieve the current `napi_value` from a stable reference.
+pub fn deref(env: napi_env, r: napi_ref) -> napi_value {
+    let mut val: napi_value = ptr::null_mut();
+    check_status(
+        unsafe { napi_get_reference_value(env, r, &mut val) },
+        "napi_get_reference_value",
+    );
+    val
+}
+
+/// Release a stable reference, allowing the underlying JS object to be GC'd.
+pub fn delete_ref(env: napi_env, r: napi_ref) {
+    check_status(
+        unsafe { napi_delete_reference(env, r) },
+        "napi_delete_reference",
+    );
+}
+
+// ---------------------------------------------------------------------------
+// Safe wrappers — Threadsafe functions
+// ---------------------------------------------------------------------------
+
+/// Create a threadsafe wrapper around `js_fn`.
+///
+/// - `name`                — a label used in async profiling output
+/// - `max_queue`           — 0 = unlimited; >0 caps the pending-call queue
+/// - `initial_thread_count`— how many threads will call `tsfn_call`
+///   (including the thread that creates the TSFN, i.e. the V8 thread).
+///   Each thread that will call `tsfn_call` must either be counted here or
+///   must call `tsfn_acquire` before the first call.
+/// - `context`             — arbitrary pointer passed to every `call_js_cb`
+/// - `call_js_cb`          — the callback that runs on the V8 thread
+pub fn tsfn_create(
+    env: napi_env,
+    js_fn: napi_value,
+    name: &str,
+    max_queue: usize,
+    initial_thread_count: usize,
+    context: *mut c_void,
+    call_js_cb: napi_threadsafe_function_call_js,
+) -> napi_threadsafe_function {
+    // The `async_resource` parameter must be NULL or a JS Object.
+    //
+    // Node.js v25 source: `RETURN_STATUS_IF_FALSE(env, v8_resource->IsObject(),
+    // napi_invalid_arg)` — passing JS `undefined` (which is not an Object) causes
+    // `napi_invalid_arg`.  Passing C NULL causes Node.js to create a fresh Object
+    // internally, which is the correct way to opt out of async-hook tracking.
+    let name_str = str_to_js(env, name);
+    let mut tsfn: napi_threadsafe_function = ptr::null_mut();
+    check_status(
+        unsafe {
+            napi_create_threadsafe_function(
+                env,
+                js_fn,
+                ptr::null_mut(), // async_resource = NULL (Node.js creates one internally)
+                name_str,        // async_resource_name for profiling / DevTools
+                max_queue,
+                initial_thread_count,
+                ptr::null_mut(), // thread_finalize_data
+                None,            // thread_finalize_cb
+                context,
+                call_js_cb,
+                &mut tsfn,
+            )
+        },
+        "napi_create_threadsafe_function",
+    );
+    tsfn
+}
+
+/// Acquire additional access to `tsfn` from the current thread.
+///
+/// Call this from each background thread that will call `tsfn_call`,
+/// unless the thread was already counted in `initial_thread_count` at
+/// creation time.
+pub fn tsfn_acquire(tsfn: napi_threadsafe_function) {
+    check_status(
+        unsafe { napi_acquire_threadsafe_function(tsfn) },
+        "napi_acquire_threadsafe_function",
+    );
+}
+
+/// Queue a call to the TSFN's JS callback from any thread.
+///
+/// `data` is forwarded to `call_js_cb` as its `data` parameter.
+/// Pass `NAPI_TSFN_BLOCKING` to block if the queue is full.
+pub fn tsfn_call(
+    tsfn: napi_threadsafe_function,
+    data: *mut c_void,
+    mode: napi_threadsafe_function_call_mode,
+) {
+    check_status(
+        unsafe { napi_call_threadsafe_function(tsfn, data, mode) },
+        "napi_call_threadsafe_function",
+    );
+}
+
+/// Release this thread's hold on the TSFN.
+///
+/// When all threads have released and the refcount reaches zero,
+/// the `thread_finalize_cb` is called and the TSFN is destroyed.
+pub fn tsfn_release(tsfn: napi_threadsafe_function, mode: napi_threadsafe_function_release_mode) {
+    check_status(
+        unsafe { napi_release_threadsafe_function(tsfn, mode) },
+        "napi_release_threadsafe_function",
+    );
+}
+
+/// Mark the TSFN as keeping the event loop alive.
+///
+/// This is the default after creation. Use `tsfn_unref` to allow the
+/// process to exit even while the TSFN is alive.
+pub fn tsfn_ref(env: napi_env, tsfn: napi_threadsafe_function) {
+    check_status(
+        unsafe { napi_ref_threadsafe_function(env, tsfn) },
+        "napi_ref_threadsafe_function",
+    );
+}
+
+/// Allow the event loop to exit even if this TSFN is still alive.
+pub fn tsfn_unref(env: napi_env, tsfn: napi_threadsafe_function) {
+    check_status(
+        unsafe { napi_unref_threadsafe_function(env, tsfn) },
+        "napi_unref_threadsafe_function",
+    );
 }

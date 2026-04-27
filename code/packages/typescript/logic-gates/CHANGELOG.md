@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.4 - 2026-04-12
+
+### Added
+
+- **`xorN` multi-input XOR gate**: New variadic function `xorN(...bits: Bit[]): Bit`
+  that reduces a sequence of bits via XOR (parity checker). Returns 1 if an odd
+  number of inputs are 1. Handles 0 inputs (returns 0) and 1 input (identity).
+  Exported from `src/index.ts` alongside `andN` and `orN`.
+  Used by `intel8008-gatelevel` for the Parity flag: `P = NOT(xorN(...result_bits))`.
+
 ## 0.1.3 - 2026-03-29
 
 ### Changed

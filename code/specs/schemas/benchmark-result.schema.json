@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.local/schemas/benchmark-result.schema.json",
+  "title": "Benchmark Result Summary",
+  "type": "object",
+  "required": ["manifest_name", "generated_at", "summaries"],
+  "properties": {
+    "manifest_name": {
+      "type": "string"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "summaries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["subject", "workload", "metric", "count", "median"],
+        "properties": {
+          "subject": { "type": "string" },
+          "workload": { "type": "string" },
+          "metric": { "type": "string" },
+          "count": { "type": "integer", "minimum": 0 },
+          "min": { "type": "number" },
+          "max": { "type": "number" },
+          "mean": { "type": "number" },
+          "median": { "type": "number" },
+          "stddev": { "type": "number" },
+          "mad": { "type": "number" },
+          "p50": { "type": "number" },
+          "p90": { "type": "number" },
+          "p95": { "type": "number" },
+          "p99": { "type": "number" },
+          "mean_ci_low": { "type": "number" },
+          "mean_ci_high": { "type": "number" },
+          "median_ci_low": { "type": "number" },
+          "median_ci_high": { "type": "number" }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

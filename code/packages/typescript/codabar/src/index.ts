@@ -5,12 +5,12 @@
  * example for configurable start/stop symbols.
  */
 import {
-  drawBarcode1D,
+  layoutBarcode1D,
   runsFromBinaryPattern,
   type Barcode1DRun,
-  type DrawBarcode1DOptions,
-} from "@coding-adventures/barcode-1d";
-import type { DrawScene } from "@coding-adventures/draw-instructions";
+  type PaintBarcode1DOptions,
+} from "@coding-adventures/barcode-layout-1d";
+import type { PaintScene } from "@coding-adventures/paint-instructions";
 
 export const VERSION = "0.1.0";
 
@@ -130,21 +130,19 @@ export function expandCodabarRuns(data: string, options: CodabarOptions = {}): B
   return runs;
 }
 
-export function drawCodabar(
+export function layoutCodabar(
   data: string,
   options: CodabarOptions &
-    Omit<DrawBarcode1DOptions, "symbols" | "humanReadableText" | "label" | "metadata"> & {
-      humanReadableText?: string | null;
+    Omit<PaintBarcode1DOptions, "symbols" | "humanReadableText" | "label" | "metadata"> & {
       metadata?: Record<string, string | number | boolean>;
       label?: string;
     } = {},
-): DrawScene {
+): PaintScene {
   const { start, stop, ...drawOptions } = options;
   const normalized = normalizeCodabar(data, { start, stop });
 
-  return drawBarcode1D(expandCodabarRuns(normalized), {
+  return layoutBarcode1D(expandCodabarRuns(normalized), {
     ...drawOptions,
-    humanReadableText: drawOptions.humanReadableText ?? normalized,
     label: drawOptions.label ?? `Codabar barcode for ${normalized}`,
     metadata: {
       ...drawOptions.metadata,
@@ -153,4 +151,15 @@ export function drawCodabar(
       stop: normalized[normalized.length - 1],
     },
   });
+}
+
+export function drawCodabar(
+  data: string,
+  options: CodabarOptions &
+    Omit<PaintBarcode1DOptions, "symbols" | "humanReadableText" | "label" | "metadata"> & {
+      metadata?: Record<string, string | number | boolean>;
+      label?: string;
+    } = {},
+): PaintScene {
+  return layoutCodabar(data, options);
 }

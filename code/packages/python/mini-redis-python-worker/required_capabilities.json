@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "python/mini-redis-python-worker",
+  "capabilities": [
+    {
+      "category": "stdin",
+      "action": "read",
+      "target": "*",
+      "justification": "The worker consumes JSON-line command jobs from standard input when launched by the Rust TCP bridge."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "The worker returns JSON-line command results to standard output for the Rust TCP bridge to write back to sockets."
+    }
+  ],
+  "justification": "This worker performs in-memory Mini Redis command execution and communicates only over stdin/stdout with its host process."
+}

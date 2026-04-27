@@ -1,0 +1,68 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "go/java-parser",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/java/java1.0.grammar",
+      "justification": "Java 1.0 parser grammar (January 1996)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/java/java1.1.grammar",
+      "justification": "Java 1.1 parser grammar (February 1997)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/java/java1.4.grammar",
+      "justification": "Java 1.4 parser grammar (February 2002)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/java/java5.grammar",
+      "justification": "Java 5 parser grammar (September 2004)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/java/java7.grammar",
+      "justification": "Java 7 parser grammar (July 2011)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/java/java8.grammar",
+      "justification": "Java 8 parser grammar (March 2014)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/java/java10.grammar",
+      "justification": "Java 10 parser grammar (March 2018)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/java/java14.grammar",
+      "justification": "Java 14 parser grammar (March 2020)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/java/java17.grammar",
+      "justification": "Java 17 parser grammar (September 2021)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/java/java21.grammar",
+      "justification": "Java 21 parser grammar (September 2023)."
+    }
+  ],
+  "justification": "Reads grammar definition files for the selected Java version. No write, network, or process access needed."
+}

@@ -1,0 +1,4 @@
+requires 'coding-adventures-compiler-ir', '0.01';
+requires 'coding-adventures-compiler-source-map', '0.01';
+requires 'coding-adventures-brainfuck', '0.01';
+on 'test' => sub { requires 'Test2::V0'; };

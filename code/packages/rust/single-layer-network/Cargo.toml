@@ -1,0 +1,7 @@
+[package]
+name = "single-layer-network"
+version = "0.1.0"
+edition = "2021"
+description = "Single-layer multi-input multi-output neural network primitives"
+
+[dependencies]

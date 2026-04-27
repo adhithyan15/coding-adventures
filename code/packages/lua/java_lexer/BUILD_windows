@@ -1,0 +1,6 @@
+luarocks show coding-adventures-directed-graph 1>nul 2>nul || (cd ../directed_graph && luarocks make --local coding-adventures-directed-graph-0.1.0-1.rockspec)
+luarocks show coding-adventures-state-machine 1>nul 2>nul || (cd ../state_machine && luarocks make --local coding-adventures-state-machine-0.1.0-1.rockspec)
+luarocks show coding-adventures-grammar-tools 1>nul 2>nul || (cd ../grammar_tools && luarocks make --local coding-adventures-grammar-tools-0.1.0-1.rockspec)
+luarocks show coding-adventures-lexer 1>nul 2>nul || (cd ../lexer && luarocks make --local coding-adventures-lexer-0.1.0-1.rockspec)
+luarocks make --local --deps-mode=none coding-adventures-java-lexer-0.1.0-1.rockspec
+cd tests && busted . --verbose --pattern=test_

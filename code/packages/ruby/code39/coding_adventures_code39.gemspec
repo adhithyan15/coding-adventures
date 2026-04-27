@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.name          = "coding_adventures_code39"
   spec.version       = CodingAdventures::Code39::VERSION
   spec.authors       = ["Adhithya Rajasekaran"]
-  spec.summary       = "Dependency-free Code 39 encoder that emits backend-neutral draw instructions"
+  spec.summary       = "Dependency-free Code 39 encoder that emits backend-neutral paint scenes"
   spec.homepage      = "https://github.com/adhithyan15/coding-adventures"
   spec.license       = "MIT"
   spec.required_ruby_version = ">= 3.3.0"
@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
     "rubygems_mfa_required"  => "true"
   }
 
-  spec.add_dependency "coding_adventures_draw_instructions", "~> 0.1"
+  spec.add_dependency "coding_adventures_barcode_layout_1d", "~> 0.1"
   spec.add_development_dependency "minitest", "~> 5.0"
   spec.add_development_dependency "rake", "~> 13.0"
 end

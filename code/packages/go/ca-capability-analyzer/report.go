@@ -19,7 +19,7 @@
 // 2. Detect raw stdlib calls that map to capability categories.
 // 3. Read required_capabilities.json to get what is declared.
 // 4. Report CAP001 violations for any detected capability not in the manifest.
-// 5. Report CAP002 violations for any banned construct (unconditional).
+// 5. Report CAP002 violations for any disallowed restricted construct.
 //
 // # Exemptions
 //
@@ -66,16 +66,20 @@ type DetectedCapability struct {
 	Evidence string
 }
 
-// BannedConstruct records a detected banned code pattern. These are reported
-// unconditionally — no manifest entry can authorize them. They represent
-// constructs that defeat static capability analysis entirely (dynamic dispatch,
-// native code interop, linker tricks).
+// BannedConstruct records a detected restricted code pattern. The Go analyzer
+// only allows a tiny subset of these through an explicit manifest opt-in;
+// everything else remains a CAP002 violation because it defeats static
+// capability analysis (dynamic dispatch, native code interop, linker tricks).
 type BannedConstruct struct {
 	// File is the path to the source file, relative to the analyzed directory.
 	File string
 
 	// Line is the 1-based line number.
 	Line int
+
+	// Construct is the canonical manifest-facing identifier, e.g. `import "C"`,
+	// "plugin.Open", "reflect.Value.Call", or "//go:linkname".
+	Construct string
 
 	// Kind identifies the banned construct, e.g., "unsafe.Pointer",
 	// `import "C"`, "reflect.Value.Call", "go:linkname".
@@ -87,8 +91,9 @@ type BannedConstruct struct {
 //
 //   - CAP001: an undeclared capability was detected. Fix: add the capability
 //     to required_capabilities.json and regenerate gen_capabilities.go.
-//   - CAP002: a banned construct was detected. Fix: remove the construct.
-//     No manifest entry can authorize banned constructs.
+//   - CAP002: a restricted construct was detected and not explicitly authorized.
+//     Fix: remove it, or for supported FFI-style constructs add the matching
+//     banned_construct_exceptions entry plus the required ffi capability.
 type Violation struct {
 	// Code is the short error code, "CAP001" or "CAP002".
 	Code string
@@ -117,14 +122,16 @@ type AnalysisResult struct {
 	// With --verbose, the CLI prints this list even on a passing run.
 	Detected []DetectedCapability
 
-	// Banned is every banned construct found.
+	// Banned is every restricted construct that remains disallowed after
+	// manifest exceptions are applied.
 	Banned []BannedConstruct
 
 	// Declared is the capability set loaded from required_capabilities.json.
 	// Empty if no manifest exists (treated as zero declared capabilities).
 	Declared []CapabilityString
 
-	// Violations is the final verdict: undeclared capabilities + banned constructs.
+	// Violations is the final verdict: undeclared capabilities + disallowed
+	// restricted constructs.
 	// If len(Violations) == 0, the analysis passes.
 	Violations []Violation
 
@@ -165,8 +172,17 @@ func newViolationCAP001(d DetectedCapability) Violation {
 //
 // No fix instruction because the only valid fix is removing the construct.
 func newViolationCAP002(b BannedConstruct) Violation {
+	return newViolationCAP002Hint(b, "")
+}
+
+// newViolationCAP002Hint constructs a CAP002 violation with extra guidance.
+func newViolationCAP002Hint(b BannedConstruct, hint string) Violation {
+	message := fmt.Sprintf("%s:%d: [CAP002] banned construct: %s", b.File, b.Line, b.Kind)
+	if hint != "" {
+		message += " — " + hint
+	}
 	return Violation{
 		Code:    "CAP002",
-		Message: fmt.Sprintf("%s:%d: [CAP002] banned construct: %s", b.File, b.Line, b.Kind),
+		Message: message,
 	}
 }

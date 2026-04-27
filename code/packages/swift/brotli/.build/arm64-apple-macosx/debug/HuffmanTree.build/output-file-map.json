@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/swift/brotli/.build/arm64-apple-macosx/debug/HuffmanTree.build/primary.swiftdeps"
+  },
+  "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/swift/huffman-tree/Sources/HuffmanTree/HuffmanTree.swift": {
+    "dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/swift/brotli/.build/arm64-apple-macosx/debug/HuffmanTree.build/HuffmanTree.d",
+    "object": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/swift/brotli/.build/arm64-apple-macosx/debug/HuffmanTree.build/HuffmanTree.swift.o",
+    "swiftmodule": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/swift/brotli/.build/arm64-apple-macosx/debug/HuffmanTree.build/HuffmanTree~partial.swiftmodule",
+    "swift-dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/swift/brotli/.build/arm64-apple-macosx/debug/HuffmanTree.build/HuffmanTree.swiftdeps",
+    "diagnostics": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/swift/brotli/.build/arm64-apple-macosx/debug/HuffmanTree.build/HuffmanTree.dia"
+  }
+}

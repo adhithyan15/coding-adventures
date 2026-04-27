@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "python/java-parser",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/java/*.grammar",
+      "justification": "Reads parser grammar definition files to build parse tables at initialization time."
+    }
+  ],
+  "justification": "Reads grammar definition files. No write, network, or process access needed."
+}

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "fsharp/cli-builder",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "The native F# SpecLoader reads CLI spec JSON files from the local filesystem, and file or directory argument validation may inspect referenced paths."
+    }
+  ],
+  "justification": "The pure F# CLI builder loads specs from disk by default and may validate file or directory arguments against the local filesystem."
+}

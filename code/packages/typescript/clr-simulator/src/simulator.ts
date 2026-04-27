@@ -44,6 +44,13 @@
  *     target = (10 + 2) + 3 = 15
  */
 
+import {
+  ExecutionResult,
+  StepTrace,
+} from "@coding-adventures/simulator-protocol";
+
+import type { CLRState } from "./state.js";
+
 // ---------------------------------------------------------------------------
 // Opcode definitions -- real CLR IL opcode values
 // ---------------------------------------------------------------------------
@@ -98,6 +105,10 @@ export interface CLRTrace {
   stackAfter: (number | null)[];
   localsSnapshot: (number | null)[];
   description: string;
+}
+
+function freezeArray<T>(values: readonly T[]): readonly T[] {
+  return Object.freeze([...values]);
 }
 
 // ---------------------------------------------------------------------------
@@ -278,6 +289,59 @@ export class CLRSimulator {
       traces.push(this.step());
     }
     return traces;
+  }
+
+  getState(): CLRState {
+    return Object.freeze({
+      stack: freezeArray(this.stack),
+      locals: freezeArray(this.locals),
+      pc: this.pc,
+      halted: this.halted,
+    });
+  }
+
+  execute(
+    program: Uint8Array,
+    maxSteps: number = 100_000
+  ): ExecutionResult<CLRState> {
+    this.load(program);
+
+    const traces: StepTrace[] = [];
+    let steps = 0;
+    let error: string | null = null;
+
+    try {
+      while (!this.halted && steps < maxSteps) {
+        const pcBefore = this.pc;
+        const trace = this.step();
+        traces.push(
+          new StepTrace(pcBefore, this.pc, trace.opcode, trace.description)
+        );
+        steps += 1;
+      }
+    } catch (caught) {
+      error = caught instanceof Error ? caught.message : String(caught);
+    }
+
+    if (error === null && !this.halted) {
+      error = `max_steps (${maxSteps}) exceeded`;
+    }
+
+    return new ExecutionResult({
+      halted: this.halted,
+      steps,
+      finalState: this.getState(),
+      error,
+      traces,
+    });
+  }
+
+  reset(): void {
+    this.stack = [];
+    this.locals = new Array(this.locals.length).fill(null);
+    this.pc = 0;
+    this.bytecode = new Uint8Array(0);
+    this.halted = false;
   }
 
   // --- Private helper methods ---

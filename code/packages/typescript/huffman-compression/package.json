@@ -1,0 +1,31 @@
+{
+  "name": "@coding-adventures/huffman-compression",
+  "version": "0.1.0",
+  "description": "Huffman (1952) lossless compression and decompression — CMP04",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "huffman",
+    "compression",
+    "entropy-coding",
+    "lossless",
+    "cmp04",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/huffman-tree": "file:../huffman-tree"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

@@ -3,5 +3,5 @@
   "version": 1,
   "package": "lua/algol_parser",
   "capabilities": ["filesystem:read"],
-  "justification": "Reads algol.grammar file from the repository's grammars/ directory at startup to configure the grammar-driven parser. Also indirectly reads algol.tokens via the algol_lexer dependency."
+  "justification": "Reads versioned algol/algol60.grammar file from the repository's grammars/ directory at startup to configure the grammar-driven parser. Also indirectly reads algol/algol60.tokens via the algol_lexer dependency."
 }

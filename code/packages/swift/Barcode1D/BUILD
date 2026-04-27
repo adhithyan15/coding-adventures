@@ -1,0 +1,1 @@
+if [ "$(uname -s)" = "Darwin" ] && [ "$(uname -m)" = "arm64" ]; then (cd ../PaintVmMetalNative && bash BUILD) && (cd ../PaintCodecPNGNative && bash BUILD) && swift test; else echo Skipping swift/Barcode1D on non-macOS-arm64; fi

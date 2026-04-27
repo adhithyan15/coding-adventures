@@ -1,13 +1,9 @@
-use std::fs;
+//! Excel lexer backed by compiled token grammar and callback-based token reclassification.
 
-use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::{GrammarLexer, LexerContext};
 use lexer::token::Token;
 
-fn grammar_path() -> String {
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    format!("{manifest_dir}/../../../grammars/excel.tokens")
-}
+mod _grammar;
 
 fn next_non_space_char(ctx: &LexerContext) -> String {
     let mut offset = 1;
@@ -33,7 +29,8 @@ fn excel_on_token(token: &Token, ctx: &mut LexerContext) {
             value: token.value.clone(),
             line: token.line,
             column: token.column,
-            type_name: Some("FUNCTION_NAME".to_string()), flags: None,
+            type_name: Some("FUNCTION_NAME".to_string()),
+            flags: None,
         });
         return;
     }
@@ -45,16 +42,14 @@ fn excel_on_token(token: &Token, ctx: &mut LexerContext) {
             value: token.value.clone(),
             line: token.line,
             column: token.column,
-            type_name: Some("TABLE_NAME".to_string()), flags: None,
+            type_name: Some("TABLE_NAME".to_string()),
+            flags: None,
         });
     }
 }
 
 pub fn create_excel_lexer(source: &str) -> GrammarLexer<'_> {
-    let grammar_text = fs::read_to_string(grammar_path())
-        .unwrap_or_else(|e| panic!("Failed to read excel.tokens: {e}"));
-    let mut grammar = parse_token_grammar(&grammar_text)
-        .unwrap_or_else(|e| panic!("Failed to parse excel.tokens: {e}"));
+    let mut grammar = _grammar::token_grammar();
     for definition in &mut grammar.definitions {
         if definition.is_regex && !definition.pattern.starts_with('^') {
             definition.pattern = format!("^(?:{})", definition.pattern);
@@ -116,3 +111,4 @@ mod tests {
         assert_eq!(tokens[0].effective_type_name(), "CELL");
     }
 }
+

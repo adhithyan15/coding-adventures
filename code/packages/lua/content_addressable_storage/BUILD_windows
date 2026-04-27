@@ -1,0 +1,3 @@
+luarocks show coding-adventures-sha1 1>nul 2>nul || (cd ../sha1 && luarocks make --local coding-adventures-sha1-0.1.0-1.rockspec)
+luarocks make --local --deps-mode=none coding-adventures-content-addressable-storage-0.1.0-1.rockspec
+set "LUA_PATH=../sha1/src/?.lua;../sha1/src/?/init.lua;../src/?.lua;../src/?/init.lua;;" && cd tests && busted . --verbose --pattern=test_

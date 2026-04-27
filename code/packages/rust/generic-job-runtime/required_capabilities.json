@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/generic-job-runtime",
+  "capabilities": [
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "*",
+      "justification": "The stdio process-pool executor launches configured language worker commands."
+    }
+  ],
+  "justification": "This crate owns generic child process worker-pool execution for language-neutral job runtime prototypes."
+}

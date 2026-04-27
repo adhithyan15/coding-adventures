@@ -1,0 +1,1 @@
+echo Skipping perl/code128 on Windows -- prerequisite refs: ..\barcode-layout-1d ..\paint-instructions

@@ -44,12 +44,14 @@ ROOT = begin
 end
 
 $LOAD_PATH.unshift(ROOT / "code/packages/ruby/grammar_tools/lib")
+$LOAD_PATH.unshift(ROOT / "code/packages/ruby/graph/lib")
 $LOAD_PATH.unshift(ROOT / "code/packages/ruby/directed_graph/lib")
 $LOAD_PATH.unshift(ROOT / "code/packages/ruby/state_machine/lib")
 $LOAD_PATH.unshift(ROOT / "code/packages/ruby/cli_builder/lib")
 
 require "coding_adventures_grammar_tools"
 require "coding_adventures_cli_builder"
+require_relative "generator"
 
 GT  = CodingAdventures::GrammarTools
 CLI = CodingAdventures::CliBuilder
@@ -79,6 +81,7 @@ def print_usage
   $stderr.puts "  validate-grammar <file.grammar>               Validate just a .grammar file"
   $stderr.puts "  compile-tokens <file.tokens> [-o out.rb]     Compile tokens to Ruby"
   $stderr.puts "  compile-grammar <file.grammar> [-o out.rb]   Compile grammar to Ruby"
+  $stderr.puts "  generate-compiled-grammars                    Generate all downstream _grammar files"
   $stderr.puts
   $stderr.puts "Run 'grammar-tools --help' for full help text."
 end
@@ -262,7 +265,7 @@ end
 # compile-tokens — compile a .tokens file to Ruby source code
 # ---------------------------------------------------------------------------
 
-def compile_tokens_command(tokens_path, output_path)
+def compile_tokens_command(tokens_path, output_path, force = false)
   unless File.exist?(tokens_path)
     $stderr.puts "Error: File not found: #{tokens_path}"
     return 1
@@ -279,10 +282,13 @@ def compile_tokens_command(tokens_path, output_path)
 
   issues = GT.validate_token_grammar(token_grammar)
   errors = count_errors(issues)
-  if errors > 0
+  if errors > 0 && !force
     $stderr.puts "#{errors} error(s)"
     print_issues(issues)
     return 1
+  elsif errors > 0
+    $stderr.puts "#{errors} error(s) (forced)"
+    print_issues(issues)
   end
 
   code = GT.compile_token_grammar(token_grammar, File.basename(tokens_path))
@@ -301,7 +307,7 @@ end
 # compile-grammar — compile a .grammar file to Ruby source code
 # ---------------------------------------------------------------------------
 
-def compile_grammar_command(grammar_path, output_path)
+def compile_grammar_command(grammar_path, output_path, force = false)
   unless File.exist?(grammar_path)
     $stderr.puts "Error: File not found: #{grammar_path}"
     return 1
@@ -318,10 +324,13 @@ def compile_grammar_command(grammar_path, output_path)
 
   issues = GT.validate_parser_grammar(parser_grammar)
   errors = count_errors(issues)
-  if errors > 0
+  if errors > 0 && !force
     $stderr.puts "#{errors} error(s)"
     print_issues(issues)
     return 1
+  elsif errors > 0
+    $stderr.puts "#{errors} error(s) (forced)"
+    print_issues(issues)
   end
 
   code = GT.compile_parser_grammar(parser_grammar, File.basename(grammar_path))
@@ -340,7 +349,11 @@ end
 # dispatch
 # ---------------------------------------------------------------------------
 
-def dispatch(command, files, output_path = nil)
+def generate_compiled_grammars_command
+  GrammarToolsProgram::CompiledGrammarGenerator.new(ROOT).run
+end
+
+def dispatch(command, files, output_path = nil, force = false)
   case command
   when "validate"
     if files.length != 2
@@ -376,7 +389,7 @@ def dispatch(command, files, output_path = nil)
       print_usage
       return 2
     end
-    compile_tokens_command(files[0], output_path)
+    compile_tokens_command(files[0], output_path, force)
 
   when "compile-grammar"
     if files.length != 1
@@ -385,7 +398,16 @@ def dispatch(command, files, output_path = nil)
       print_usage
       return 2
     end
-    compile_grammar_command(files[0], output_path)
+    compile_grammar_command(files[0], output_path, force)
+
+  when "generate-compiled-grammars"
+    if files.any?
+      $stderr.puts "Error: 'generate-compiled-grammars' takes no file arguments"
+      $stderr.puts
+      print_usage
+      return 2
+    end
+    generate_compiled_grammars_command
 
   else
     $stderr.puts "Error: Unknown command '#{command}'"
@@ -428,8 +450,9 @@ def main
   command     = args["command"].to_s
   files       = Array(args["files"])
   output_path = flags&.dig("output")
+  force       = !!flags&.dig("force")
 
-  exit dispatch(command, files, output_path)
+  exit dispatch(command, files, output_path, force)
 end
 
 main if __FILE__ == $0

@@ -1,0 +1,36 @@
+cabal-version: 3.0
+name:          in-memory-data-store
+version:       0.1.0
+synopsis:      Haskell in-memory data store composition package without TCP
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  InMemoryDataStore
+    build-depends:    base >=4.14
+                    , bytestring
+                    , hash-functions
+                    , hash-map
+                    , hash-set
+                    , heap
+                    , hyperloglog
+                    , in-memory-data-store-engine
+                    , in-memory-data-store-protocol
+                    , radix-tree
+                    , resp-protocol
+                    , skip-list
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    InMemoryDataStoreSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14
+                    , bytestring
+                    , hspec == 2.*
+                    , in-memory-data-store
+    default-language: Haskell2010

@@ -1,7 +1,7 @@
 {
   "name": "@coding-adventures/itf",
   "version": "0.1.0",
-  "description": "Interleaved 2 of 5 encoder that emits backend-neutral draw instructions",
+  "description": "Interleaved 2 of 5 encoder that emits backend-neutral PaintScene output",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
@@ -12,7 +12,7 @@
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
   "dependencies": {
-    "@coding-adventures/barcode-1d": "file:../barcode-1d"
+    "@coding-adventures/barcode-layout-1d": "file:../barcode-layout-1d"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

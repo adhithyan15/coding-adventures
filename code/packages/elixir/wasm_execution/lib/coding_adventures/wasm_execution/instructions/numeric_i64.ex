@@ -115,7 +115,12 @@ defmodule CodingAdventures.WasmExecution.Instructions.NumericI64 do
     |> GenericVM.register_context_opcode(0x54, fn vm, _instr, _code, _ctx ->
       {b, vm} = GenericVM.pop_typed(vm)
       {a, vm} = GenericVM.pop_typed(vm)
-      result = if Values.to_unsigned_64(Values.as_i64(a)) < Values.to_unsigned_64(Values.as_i64(b)), do: 1, else: 0
+
+      result =
+        if Values.to_unsigned_64(Values.as_i64(a)) < Values.to_unsigned_64(Values.as_i64(b)),
+          do: 1,
+          else: 0
+
       vm = GenericVM.push_typed(vm, Values.i32(result))
       {nil, GenericVM.advance_pc(vm)}
     end)
@@ -131,7 +136,12 @@ defmodule CodingAdventures.WasmExecution.Instructions.NumericI64 do
     |> GenericVM.register_context_opcode(0x56, fn vm, _instr, _code, _ctx ->
       {b, vm} = GenericVM.pop_typed(vm)
       {a, vm} = GenericVM.pop_typed(vm)
-      result = if Values.to_unsigned_64(Values.as_i64(a)) > Values.to_unsigned_64(Values.as_i64(b)), do: 1, else: 0
+
+      result =
+        if Values.to_unsigned_64(Values.as_i64(a)) > Values.to_unsigned_64(Values.as_i64(b)),
+          do: 1,
+          else: 0
+
       vm = GenericVM.push_typed(vm, Values.i32(result))
       {nil, GenericVM.advance_pc(vm)}
     end)
@@ -147,7 +157,12 @@ defmodule CodingAdventures.WasmExecution.Instructions.NumericI64 do
     |> GenericVM.register_context_opcode(0x58, fn vm, _instr, _code, _ctx ->
       {b, vm} = GenericVM.pop_typed(vm)
       {a, vm} = GenericVM.pop_typed(vm)
-      result = if Values.to_unsigned_64(Values.as_i64(a)) <= Values.to_unsigned_64(Values.as_i64(b)), do: 1, else: 0
+
+      result =
+        if Values.to_unsigned_64(Values.as_i64(a)) <= Values.to_unsigned_64(Values.as_i64(b)),
+          do: 1,
+          else: 0
+
       vm = GenericVM.push_typed(vm, Values.i32(result))
       {nil, GenericVM.advance_pc(vm)}
     end)
@@ -163,7 +178,12 @@ defmodule CodingAdventures.WasmExecution.Instructions.NumericI64 do
     |> GenericVM.register_context_opcode(0x5A, fn vm, _instr, _code, _ctx ->
       {b, vm} = GenericVM.pop_typed(vm)
       {a, vm} = GenericVM.pop_typed(vm)
-      result = if Values.to_unsigned_64(Values.as_i64(a)) >= Values.to_unsigned_64(Values.as_i64(b)), do: 1, else: 0
+
+      result =
+        if Values.to_unsigned_64(Values.as_i64(a)) >= Values.to_unsigned_64(Values.as_i64(b)),
+          do: 1,
+          else: 0
+
       vm = GenericVM.push_typed(vm, Values.i32(result))
       {nil, GenericVM.advance_pc(vm)}
     end)
@@ -338,23 +358,27 @@ defmodule CodingAdventures.WasmExecution.Instructions.NumericI64 do
 
   # -- Bit counting helpers for 64-bit --
   defp clz64(0), do: 64
+
   defp clz64(val) do
     v = band(val, 0xFFFFFFFFFFFFFFFF)
     do_clz(v, 63, 0)
   end
 
   defp do_clz(_v, -1, count), do: count
+
   defp do_clz(v, bit, count) do
     if band(v, bsl(1, bit)) != 0, do: count, else: do_clz(v, bit - 1, count + 1)
   end
 
   defp ctz64(0), do: 64
+
   defp ctz64(val) do
     v = band(val, 0xFFFFFFFFFFFFFFFF)
     do_ctz(v, 0, 0)
   end
 
   defp do_ctz(_v, 64, count), do: count
+
   defp do_ctz(v, bit, count) do
     if band(v, bsl(1, bit)) != 0, do: count, else: do_ctz(v, bit + 1, count + 1)
   end
@@ -365,6 +389,7 @@ defmodule CodingAdventures.WasmExecution.Instructions.NumericI64 do
   end
 
   defp do_popcnt(0, count), do: count
+
   defp do_popcnt(v, count) do
     do_popcnt(band(v, v - 1), count + 1)
   end

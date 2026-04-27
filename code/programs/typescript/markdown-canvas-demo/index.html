@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Markdown → Canvas</title>
+    <style>
+      * { box-sizing: border-box; }
+      html, body { margin: 0; height: 100%; font-family: system-ui, -apple-system, sans-serif; }
+      body { display: grid; grid-template-rows: auto 1fr; background: #0e1116; color: #e6edf3; }
+      header { padding: 10px 16px; border-bottom: 1px solid #30363d; background: #161b22; font-size: 14px; }
+      header strong { color: #79c0ff; }
+      main { display: grid; grid-template-columns: 1fr 2fr; overflow: hidden; }
+      #editor {
+        margin: 0; padding: 16px; border: none; outline: none; resize: none;
+        background: #0d1117; color: #c9d1d9; font-family: ui-monospace, monospace;
+        font-size: 14px; line-height: 1.5;
+      }
+      #stage { position: relative; overflow: auto; background: #0d1117; padding: 16px; }
+      #canvas { background: #ffffff; display: block; box-shadow: 0 0 0 1px #30363d; }
+      #stats { position: absolute; top: 8px; right: 16px; font-size: 12px; color: #8b949e; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <strong>Markdown → Canvas</strong> — CommonMark parsed in TS, laid out via <code>layout-block</code> +
+      <code>CanvasTextMeasurer</code> (TXT03d), emitted as <code>PaintText</code> instructions, dispatched
+      by <code>paint-vm-canvas</code>. No DOM for output.
+    </header>
+    <main>
+      <textarea id="editor" spellcheck="false"></textarea>
+      <div id="stage">
+        <div id="stats"></div>
+        <canvas id="canvas" width="800" height="1200"></canvas>
+      </div>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

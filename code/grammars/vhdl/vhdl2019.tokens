@@ -1,0 +1,327 @@
+# Token definitions for VHDL (IEEE 1076-2019)
+#
+# Baseline note: this edition currently starts from the shared VHDL 2008 token grammar.
+# Edition-specific deltas can be tightened incrementally without changing package APIs.
+#
+# VHDL (VHSIC Hardware Description Language) is an HDL designed by the
+# US Department of Defense for documenting and simulating digital systems.
+# Where Verilog is terse and C-like, VHDL is verbose and Ada-like, with
+# strong typing, explicit declarations, and case-insensitive identifiers.
+#
+# This token file covers the synthesizable subset: constructs that map
+# to real hardware (logic gates, flip-flops, multiplexers, memories).
+#
+# VHDL-specific lexing challenges:
+#
+#   1. Case insensitivity â€" ENTITY, Entity, and entity are identical.
+#      The case_sensitive: false directive makes the lexer lowercase all
+#      input before matching, handling this automatically.
+#
+#   2. The '<=' operator â€" means BOTH "signal assignment" and "less than
+#      or equal." We emit a single LESS_EQUALS token; the grammar context
+#      determines which interpretation applies.
+#
+#   3. The tick (') character â€" delimits character literals ('A') AND
+#      marks attribute access (signal'length). Regex ordering handles
+#      this: CHAR_LITERAL matches 'X' first; bare ' matches as TICK.
+#
+# Format:
+#   TOKEN_NAME = /regex/       â€" regex-based token pattern
+#   TOKEN_NAME = "literal"     â€" exact literal match
+#   TOKEN_NAME = /regex/ -> T  â€" regex pattern, emitted as token type T
+#
+# Order matters: first match wins.
+
+# No backslash escapes â€" VHDL uses "" for escaped quotes inside strings.
+escapes: none
+
+# VHDL is case-insensitive: ENTITY, Entity, and entity are identical.
+# The lexer lowercases all source text before matching, so patterns and
+# keywords only need to handle lowercase forms.
+case_sensitive: false
+
+# ============================================================================
+# Skip Patterns
+# ============================================================================
+#
+# VHDL has only single-line comments, introduced by two dashes:
+#   -- This is a comment
+#
+# VHDL-2008 adds block comments (/* */), but we target the core language.
+
+skip:
+  COMMENT    = /--[^\n]*/
+  WHITESPACE = /[ \t\r\n]+/
+
+# ============================================================================
+# String Literals
+# ============================================================================
+#
+# VHDL strings are double-quoted. To include a quote character inside a
+# string, you double it:
+#   "He said ""hello"""  â†'  He said "hello"
+#
+# This differs from C/Verilog which use backslash escaping.
+
+STRING = /"([^"]|"")*"/
+
+# ============================================================================
+# Bit String Literals
+# ============================================================================
+#
+# VHDL uses prefix letters to indicate the base of a bit string:
+#   B"1010"     â€" binary (each char is one bit)
+#   O"77"       â€" octal (each char is three bits)
+#   X"FF"       â€" hexadecimal (each char is four bits)
+#   D"42"       â€" decimal (VHDL-2008; value converted to binary)
+#
+# The prefix is case-insensitive. Must come before NAME in the token
+# list because both start with a letter.
+#
+# Bit strings are the VHDL equivalent of Verilog's sized literals:
+#   Verilog: 8'hFF    â†'  VHDL: X"FF"
+#   Verilog: 4'b1010  â†'  VHDL: B"1010"
+
+BIT_STRING = /[bBoOxXdD]"[0-9a-fA-F_]+"/
+
+# ============================================================================
+# Character Literals
+# ============================================================================
+#
+# Single characters between tick marks:
+#   '0'  '1'  'X'  'Z'  'U'  'H'  'L'  '-'
+#
+# These are the values of std_logic, VHDL's most important type:
+#   '0' â€" logic low     '1' â€" logic high
+#   'X' â€" unknown       'Z' â€" high impedance (tri-state)
+#   'U' â€" uninitialized 'H' â€" weak high
+#   'L' â€" weak low      '-' â€" don't care
+#
+# MUST come before TICK to prevent 'A' from being parsed as
+# TICK NAME('A') TICK.
+
+CHAR_LITERAL = /'[^']'/
+
+# ============================================================================
+# Number Literals
+# ============================================================================
+#
+# Based literals use the format: base#digits#[exponent]
+#   16#FF#       â€" hex 255
+#   2#1010#      â€" binary 10
+#   8#77#        â€" octal 63
+#   16#FF#E2     â€" hex 255 Ã-- 10Â²
+#
+# This is more explicit than Verilog's format: the base is a decimal
+# number (any value 2â€"16), and the digits are enclosed in # delimiters.
+# Must come before plain NUMBER so "16#FF#" is one token, not three.
+
+BASED_LITERAL = /[0-9]+#[0-9a-fA-F_]+(\.[0-9a-fA-F_]+)?#([eE][+-]?[0-9_]+)?/
+
+# Real numbers: 3.14, 1.0E-3, 2.5e+10
+# Must come before NUMBER so 3.14 is one token, not NUMBER DOT NUMBER.
+REAL_NUMBER = /[0-9][0-9_]*\.[0-9_]+([eE][+-]?[0-9_]+)?/
+
+# Plain integers: 42, 1_000_000
+# Underscores are visual separators (like Verilog and modern Python).
+NUMBER = /[0-9][0-9_]*/
+
+# ============================================================================
+# Identifiers
+# ============================================================================
+#
+# VHDL identifiers start with a letter and contain letters, digits, and
+# underscores. They are CASE-INSENSITIVE: "Entity", "ENTITY", and
+# "entity" all refer to the same identifier.
+#
+# Case normalization happens in the wrapper package's post_tokenize hook,
+# not here. The .tokens file defines the regex; the hook lowercases values.
+#
+# Extended identifiers are enclosed in backslashes:
+#   \my odd name\     â€" allows spaces and special characters
+#   \VHDL-2008\       â€" preserves case (NOT normalized)
+#
+# Extended identifiers must come before regular NAME.
+
+EXTENDED_IDENT = /\\[^\\]+\\/
+NAME           = /[a-zA-Z][a-zA-Z0-9_]*/
+
+# ============================================================================
+# Two-Character Operators
+# ============================================================================
+#
+# Must come before their single-character components.
+#
+# VHDL operator table (comparison with Verilog and C):
+#
+#   +-----------+----------+----------+----------+
+#   | Meaning   | VHDL     | Verilog  | C        |
+#   +-----------+----------+----------+----------+
+#   | Assign    | := (var) | = (blk)  | =        |
+#   |           | <= (sig) | <= (nb)  |          |
+#   | Not equal | /=       | !=       | !=       |
+#   | Map/arrow | =>       | (none)   | (none)   |
+#   | Power     | **       | **       | (none)   |
+#   | Unconstr. | <>       | (none)   | (none)   |
+#   +-----------+----------+----------+----------+
+
+VAR_ASSIGN      = ":="
+LESS_EQUALS     = "<="
+GREATER_EQUALS  = ">="
+ARROW           = "=>"
+NOT_EQUALS      = "/="
+POWER           = "**"
+BOX             = "<>"
+
+# ============================================================================
+# Single-Character Operators
+# ============================================================================
+#
+# VHDL's & operator is concatenation (not bitwise AND like in Verilog/C):
+#   "Hello" & " " & "World"  â†'  "Hello World"
+#   '1' & "010"              â†'  "1010"
+#
+# Logical operations (AND, OR, XOR, etc.) are keyword operators, not
+# symbol operators. They appear in the keywords section below.
+
+PLUS            = "+"
+MINUS           = "-"
+STAR            = "*"
+SLASH           = "/"
+AMPERSAND       = "&"
+LESS_THAN       = "<"
+GREATER_THAN    = ">"
+EQUALS          = "="
+TICK            = "'"
+PIPE            = "|"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+DOT       = "."
+COLON     = ":"
+
+# ============================================================================
+# Keywords
+# ============================================================================
+#
+# VHDL has a large keyword set. Many keywords that would be operators in
+# other languages are keywords in VHDL:
+#
+#   Logical:  and, or, xor, nand, nor, xnor, not
+#   Shift:    sll, srl, sla, sra, rol, ror
+#   Arith:    mod, rem, abs
+#
+# This is part of VHDL's philosophy of readability over conciseness.
+# Compare:
+#   Verilog: assign y = (a & b) | (c ^ d);
+#   VHDL:    y <= (a and b) or (c xor d);
+#
+# All keywords are listed in lowercase. The post_tokenize hook normalizes
+# identifiers to lowercase before keyword matching occurs, so ENTITY,
+# Entity, and entity all match the "entity" keyword.
+
+keywords:
+  abs
+  access
+  after
+  alias
+  all
+  and
+  architecture
+  array
+  assert
+  attribute
+  begin
+  block
+  body
+  buffer
+  bus
+  case
+  component
+  configuration
+  constant
+  disconnect
+  downto
+  else
+  elsif
+  end
+  entity
+  exit
+  file
+  for
+  function
+  generate
+  generic
+  group
+  guarded
+  if
+  impure
+  in
+  inout
+  is
+  label
+  library
+  linkage
+  literal
+  loop
+  map
+  mod
+  nand
+  new
+  next
+  nor
+  not
+  null
+  of
+  on
+  open
+  or
+  others
+  out
+  package
+  port
+  postponed
+  procedure
+  process
+  pure
+  range
+  record
+  register
+  reject
+  rem
+  report
+  return
+  rol
+  ror
+  select
+  severity
+  signal
+  shared
+  sla
+  sll
+  sra
+  srl
+  subtype
+  then
+  to
+  transport
+  type
+  unaffected
+  units
+  until
+  use
+  variable
+  wait
+  when
+  while
+  with
+  xnor
+  xor

@@ -18,6 +18,7 @@ use File::Spec ();
 
 use CodingAdventures::BuildTool::GitDiff;
 use CodingAdventures::BuildTool::Resolver;
+use CodingAdventures::BuildTool::CIWorkflow ();
 
 # Mock subclass that returns a predetermined list of changed files.
 package MockGitDiff;
@@ -262,6 +263,59 @@ subtest 'path matching handles subdirectory correctly' => sub {
 
     my @affected = $gd->affected_packages([$pkg], $graph);
     ok(grep { $_ eq 'perl/tree' } @affected, 'deeply nested file maps to package');
+};
+
+# ---------------------------------------------------------------------------
+# Test 11: Safe ci.yml changes no longer force a full rebuild
+# ---------------------------------------------------------------------------
+subtest 'toolchain-scoped ci workflow change does not force a full rebuild' => sub {
+    my $root = tempdir(CLEANUP => 1);
+    my $pkg_path = "$root/code/packages/perl/bitset";
+    make_path($pkg_path);
+
+    my $pkg   = make_pkg(name => 'perl/bitset', path => $pkg_path);
+    my $graph = empty_graph($pkg);
+
+    my $gd = MockGitDiff->new(
+        root       => $root,
+        mock_files => [CodingAdventures::BuildTool::CIWorkflow::ci_workflow_path()],
+    );
+
+    no warnings 'redefine';
+    local *CodingAdventures::BuildTool::CIWorkflow::analyze_changes = sub {
+        return { toolchains => { dotnet => 1 }, requires_full_rebuild => 0 };
+    };
+
+    my @affected = $gd->affected_packages([$pkg], $graph);
+    is(scalar @affected, 0, 'safe ci.yml change does not affect packages directly');
+};
+
+# ---------------------------------------------------------------------------
+# Test 12: Unsafe ci.yml changes still force a full rebuild
+# ---------------------------------------------------------------------------
+subtest 'unsafe ci workflow change still forces a full rebuild' => sub {
+    my $root  = tempdir(CLEANUP => 1);
+    my $path1 = "$root/code/packages/perl/pkg-x";
+    my $path2 = "$root/code/packages/perl/pkg-y";
+    make_path($path1);
+    make_path($path2);
+
+    my $pkg1  = make_pkg(name => 'perl/pkg-x', path => $path1);
+    my $pkg2  = make_pkg(name => 'perl/pkg-y', path => $path2);
+    my $graph = empty_graph($pkg1, $pkg2);
+
+    my $gd = MockGitDiff->new(
+        root       => $root,
+        mock_files => [CodingAdventures::BuildTool::CIWorkflow::ci_workflow_path()],
+    );
+
+    no warnings 'redefine';
+    local *CodingAdventures::BuildTool::CIWorkflow::analyze_changes = sub {
+        return { toolchains => {}, requires_full_rebuild => 1 };
+    };
+
+    my @affected = sort $gd->affected_packages([$pkg1, $pkg2], $graph);
+    is(\@affected, ['perl/pkg-x', 'perl/pkg-y'], 'unsafe ci.yml change still rebuilds everything');
 };
 
 done_testing();

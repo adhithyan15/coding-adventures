@@ -2,9 +2,13 @@
 name = "os-kernel"
 version = "0.1.0"
 edition = "2021"
-description = "S04 OS Kernel -- minimal monolithic kernel with process management, scheduler, and syscalls"
+description = "Base real OS kernel crate that cross-compiles to UEFI targets"
+
+[[bin]]
+name = "os-kernel"
+path = "src/main.rs"
+test = false
+bench = false
 
 [dependencies]
-riscv-simulator = { path = "../riscv-simulator" }
-display = { path = "../display" }
-interrupt-handler = { path = "../interrupt-handler" }
+uefi = { version = "0.37.0", features = ["panic_handler"] }

@@ -1,0 +1,1 @@
+echo Skipping rust/paint-vm-metal-c on Windows -- Metal is macOS only

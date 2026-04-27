@@ -1,0 +1,16 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+gemspec
+
+gem "coding_adventures_compiler_ir", path: "../compiler-ir"
+gem "coding_adventures_compiler_source_map", path: "../compiler-source-map"
+gem "coding_adventures_brainfuck", path: "../brainfuck"
+gem "coding_adventures_virtual_machine", path: "../virtual_machine"
+gem "coding_adventures_grammar_tools", path: "../grammar_tools"
+gem "coding_adventures_graph", path: "../graph"
+gem "coding_adventures_directed_graph", path: "../directed_graph"
+gem "coding_adventures_state_machine", path: "../state_machine"
+gem "coding_adventures_lexer", path: "../lexer"
+gem "coding_adventures_parser", path: "../parser"

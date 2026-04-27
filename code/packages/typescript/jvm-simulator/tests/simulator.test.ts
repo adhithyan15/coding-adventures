@@ -3,6 +3,7 @@
  */
 
 import { describe, it, expect } from "vitest";
+import type { Simulator } from "@coding-adventures/simulator-protocol";
 import {
   JVMOpcode,
   JVMSimulator,
@@ -11,6 +12,7 @@ import {
   encodeIload,
   encodeIstore,
 } from "../src/simulator.js";
+import type { JVMState } from "../src/state.js";
 import type { JVMTrace } from "../src/simulator.js";
 
 // ===========================================================================
@@ -277,5 +279,37 @@ describe("TestStep", () => {
     sim.load(assembleJvm([JVMOpcode.BIPUSH, 42], [JVMOpcode.RETURN]));
     sim.step();
     expect(sim.pc).toBe(2);
+  });
+});
+
+describe("TestSimulatorProtocol", () => {
+  it("supports_structural_protocol_typing", () => {
+    const sim: Simulator<JVMState, JVMTrace> = new JVMSimulator();
+    const result = sim.execute(
+      assembleJvm([JVMOpcode.ICONST_1], [JVMOpcode.ICONST_2], [JVMOpcode.IADD], [JVMOpcode.IRETURN])
+    );
+
+    expect(result.ok).toBe(true);
+    expect(result.finalState.returnValue).toBe(3);
+  });
+
+  it("get_state_returns_immutable_snapshot", () => {
+    const sim = new JVMSimulator();
+    sim.load(assembleJvm([JVMOpcode.ICONST_5], [JVMOpcode.ISTORE_0], [JVMOpcode.RETURN]));
+    sim.run();
+
+    const state = sim.getState();
+    expect(state.locals[0]).toBe(5);
+    expect(Object.isFrozen(state)).toBe(true);
+    expect(Object.isFrozen(state.locals)).toBe(true);
+  });
+
+  it("execute_reports_max_steps_failures", () => {
+    const sim = new JVMSimulator();
+    const result = sim.execute(assembleJvm([JVMOpcode.GOTO, 0]), 3);
+
+    expect(result.ok).toBe(false);
+    expect(result.error).toMatch(/max_steps/);
+    expect(result.steps).toBe(3);
   });
 });

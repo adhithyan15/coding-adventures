@@ -115,6 +115,24 @@ end entity and_gate;`
 	}
 }
 
+func TestTokenizeVersionedVhdl(t *testing.T) {
+	for _, version := range []string{"1987", "1993", "2002", "2008", "2019"} {
+		tokens, err := TokenizeVhdlVersion("ENTITY top IS END ENTITY top;", version)
+		if err != nil {
+			t.Fatalf("version %s: %v", version, err)
+		}
+		if tokens[0].Value != "entity" {
+			t.Fatalf("version %s: expected normalized entity keyword, got %q", version, tokens[0].Value)
+		}
+	}
+}
+
+func TestTokenizeVhdlVersionRejectsUnknownVersion(t *testing.T) {
+	if _, err := TokenizeVhdlVersion("entity top is end entity top;", "2099"); err == nil {
+		t.Fatal("expected unknown VHDL version to fail")
+	}
+}
+
 // ============================================================================
 // Architecture Bodies
 // ============================================================================

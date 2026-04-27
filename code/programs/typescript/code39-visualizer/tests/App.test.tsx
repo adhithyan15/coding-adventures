@@ -1,7 +1,23 @@
 import "@testing-library/jest-dom/vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it, vi } from "vitest";
 import { App } from "../src/App.js";
+
+beforeAll(() => {
+  Object.defineProperty(window, "devicePixelRatio", {
+    value: 1,
+    configurable: true,
+  });
+
+  Object.defineProperty(HTMLCanvasElement.prototype, "getContext", {
+    value: vi.fn(() => ({
+      clearRect: vi.fn(),
+      fillRect: vi.fn(),
+      setTransform: vi.fn(),
+    })),
+    configurable: true,
+  });
+});
 
 describe("App", () => {
   it("renders a barcode preview for valid default input", () => {
@@ -24,6 +40,14 @@ describe("App", () => {
 
     expect(screen.getAllByText("HELLO-39").length).toBeGreaterThan(0);
     expect(screen.getByText("The current input is valid Code 39 data.")).toBeInTheDocument();
+  });
+
+  it("can switch the preview to the Canvas paint vm", () => {
+    render(<App />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Canvas Paint VM" }));
+
+    expect(screen.getByLabelText("barcode canvas preview")).toBeInTheDocument();
   });
 
   it("shows an error for unsupported input", () => {

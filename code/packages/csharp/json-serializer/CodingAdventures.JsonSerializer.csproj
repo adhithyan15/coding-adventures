@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>CodingAdventures.JsonSerializer.CSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>Compact and pretty JSON serialization for JsonValue trees and native .NET values</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="tests\\**\\*.cs" />
+    <EmbeddedResource Remove="tests\\**" />
+    <None Remove="tests\\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../json-value/CodingAdventures.JsonValue.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,8 @@
+[package]
+name = "ean-13"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+barcode-layout-1d = { path = "../barcode-layout-1d" }
+paint-instructions = { path = "../paint-instructions" }

@@ -1,0 +1,28 @@
+{
+  "name": "@coding-adventures/nib-ir-compiler",
+  "version": "0.1.0",
+  "description": "Compile typed Nib ASTs into the shared compiler IR",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/compiler-ir": "file:../compiler-ir",
+    "@coding-adventures/compiler-source-map": "file:../compiler-source-map",
+    "@coding-adventures/lexer": "file:../lexer",
+    "@coding-adventures/nib-parser": "file:../nib-parser",
+    "@coding-adventures/nib-type-checker": "file:../nib-type-checker",
+    "@coding-adventures/parser": "file:../parser"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@vitest/coverage-v8": "^3.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}

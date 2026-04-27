@@ -1,0 +1,9 @@
+[package]
+name = "nib-ir-compiler"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+compiler-ir = { path = "../compiler-ir" }
+nib-type-checker = { path = "../nib-type-checker" }
+parser = { path = "../parser" }

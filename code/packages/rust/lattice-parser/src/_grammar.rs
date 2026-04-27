@@ -571,8 +571,9 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::TokenReference { name: r#"STAR"#.to_string() },
                 GrammarElement::TokenReference { name: r#"AMPERSAND"#.to_string() },
                 GrammarElement::TokenReference { name: r#"VARIABLE"#.to_string() },
+                GrammarElement::TokenReference { name: r#"PERCENTAGE"#.to_string() },
             ] },
-            line_number: 330,
+            line_number: 331,
         },
         GrammarRule {
             name: r#"subclass_selector"#.to_string(),
@@ -584,12 +585,12 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::RuleReference { name: r#"pseudo_class"#.to_string() },
                 GrammarElement::RuleReference { name: r#"pseudo_element"#.to_string() },
             ] },
-            line_number: 333,
+            line_number: 334,
         },
         GrammarRule {
             name: r#"placeholder_selector"#.to_string(),
             body: GrammarElement::TokenReference { name: r#"PLACEHOLDER"#.to_string() },
-            line_number: 337,
+            line_number: 338,
         },
         GrammarRule {
             name: r#"class_selector"#.to_string(),
@@ -597,12 +598,12 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::TokenReference { name: r#"DOT"#.to_string() },
                 GrammarElement::TokenReference { name: r#"IDENT"#.to_string() },
             ] },
-            line_number: 339,
+            line_number: 340,
         },
         GrammarRule {
             name: r#"id_selector"#.to_string(),
             body: GrammarElement::TokenReference { name: r#"HASH"#.to_string() },
-            line_number: 341,
+            line_number: 342,
         },
         GrammarRule {
             name: r#"attribute_selector"#.to_string(),
@@ -616,7 +617,7 @@ pub fn parser_grammar() -> ParserGrammar {
                     ] }) },
                 GrammarElement::TokenReference { name: r#"RBRACKET"#.to_string() },
             ] },
-            line_number: 343,
+            line_number: 344,
         },
         GrammarRule {
             name: r#"attr_matcher"#.to_string(),
@@ -628,7 +629,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::TokenReference { name: r#"DOLLAR_EQUALS"#.to_string() },
                 GrammarElement::TokenReference { name: r#"STAR_EQUALS"#.to_string() },
             ] },
-            line_number: 345,
+            line_number: 346,
         },
         GrammarRule {
             name: r#"attr_value"#.to_string(),
@@ -636,7 +637,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::TokenReference { name: r#"IDENT"#.to_string() },
                 GrammarElement::TokenReference { name: r#"STRING"#.to_string() },
             ] },
-            line_number: 348,
+            line_number: 349,
         },
         GrammarRule {
             name: r#"pseudo_class"#.to_string(),
@@ -652,12 +653,12 @@ pub fn parser_grammar() -> ParserGrammar {
                     GrammarElement::TokenReference { name: r#"IDENT"#.to_string() },
                 ] },
             ] },
-            line_number: 350,
+            line_number: 351,
         },
         GrammarRule {
             name: r#"pseudo_class_args"#.to_string(),
             body: GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"pseudo_class_arg"#.to_string() }) },
-            line_number: 353,
+            line_number: 354,
         },
         GrammarRule {
             name: r#"pseudo_class_arg"#.to_string(),
@@ -684,7 +685,7 @@ pub fn parser_grammar() -> ParserGrammar {
                     GrammarElement::TokenReference { name: r#"RBRACKET"#.to_string() },
                 ] },
             ] },
-            line_number: 355,
+            line_number: 356,
         },
         GrammarRule {
             name: r#"pseudo_element"#.to_string(),
@@ -692,7 +693,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::TokenReference { name: r#"COLON_COLON"#.to_string() },
                 GrammarElement::TokenReference { name: r#"IDENT"#.to_string() },
             ] },
-            line_number: 360,
+            line_number: 361,
         },
         GrammarRule {
             name: r#"block"#.to_string(),
@@ -701,12 +702,12 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::RuleReference { name: r#"block_contents"#.to_string() },
                 GrammarElement::TokenReference { name: r#"RBRACE"#.to_string() },
             ] },
-            line_number: 370,
+            line_number: 371,
         },
         GrammarRule {
             name: r#"block_contents"#.to_string(),
             body: GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"block_item"#.to_string() }) },
-            line_number: 372,
+            line_number: 373,
         },
         GrammarRule {
             name: r#"block_item"#.to_string(),
@@ -715,7 +716,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::RuleReference { name: r#"at_rule"#.to_string() },
                 GrammarElement::RuleReference { name: r#"declaration_or_nested"#.to_string() },
             ] },
-            line_number: 374,
+            line_number: 375,
         },
         GrammarRule {
             name: r#"lattice_block_item"#.to_string(),
@@ -727,7 +728,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::RuleReference { name: r#"extend_directive"#.to_string() },
                 GrammarElement::RuleReference { name: r#"at_root_directive"#.to_string() },
             ] },
-            line_number: 380,
+            line_number: 381,
         },
         GrammarRule {
             name: r#"content_directive"#.to_string(),
@@ -735,7 +736,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::Literal { value: r#"@content"#.to_string() },
                 GrammarElement::TokenReference { name: r#"SEMICOLON"#.to_string() },
             ] },
-            line_number: 390,
+            line_number: 391,
         },
         GrammarRule {
             name: r#"extend_directive"#.to_string(),
@@ -744,7 +745,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::RuleReference { name: r#"selector_list"#.to_string() },
                 GrammarElement::TokenReference { name: r#"SEMICOLON"#.to_string() },
             ] },
-            line_number: 398,
+            line_number: 399,
         },
         GrammarRule {
             name: r#"at_root_directive"#.to_string(),
@@ -758,7 +759,7 @@ pub fn parser_grammar() -> ParserGrammar {
                         GrammarElement::RuleReference { name: r#"block"#.to_string() },
                     ] }) },
             ] },
-            line_number: 403,
+            line_number: 404,
         },
         GrammarRule {
             name: r#"declaration_or_nested"#.to_string(),
@@ -766,7 +767,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::RuleReference { name: r#"declaration"#.to_string() },
                 GrammarElement::RuleReference { name: r#"qualified_rule"#.to_string() },
             ] },
-            line_number: 405,
+            line_number: 406,
         },
         GrammarRule {
             name: r#"declaration"#.to_string(),
@@ -784,7 +785,7 @@ pub fn parser_grammar() -> ParserGrammar {
                     GrammarElement::RuleReference { name: r#"block"#.to_string() },
                 ] },
             ] },
-            line_number: 414,
+            line_number: 415,
         },
         GrammarRule {
             name: r#"property"#.to_string(),
@@ -792,7 +793,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::TokenReference { name: r#"IDENT"#.to_string() },
                 GrammarElement::TokenReference { name: r#"CUSTOM_PROPERTY"#.to_string() },
             ] },
-            line_number: 417,
+            line_number: 418,
         },
         GrammarRule {
             name: r#"priority"#.to_string(),
@@ -800,7 +801,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::TokenReference { name: r#"BANG"#.to_string() },
                 GrammarElement::Literal { value: r#"important"#.to_string() },
             ] },
-            line_number: 419,
+            line_number: 420,
         },
         GrammarRule {
             name: r#"value_list"#.to_string(),
@@ -808,7 +809,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::RuleReference { name: r#"value"#.to_string() },
                 GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"value"#.to_string() }) },
             ] },
-            line_number: 430,
+            line_number: 431,
         },
         GrammarRule {
             name: r#"value"#.to_string(),
@@ -829,7 +830,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::TokenReference { name: r#"MINUS"#.to_string() },
                 GrammarElement::RuleReference { name: r#"map_literal"#.to_string() },
             ] },
-            line_number: 432,
+            line_number: 433,
         },
         GrammarRule {
             name: r#"function_call"#.to_string(),
@@ -841,12 +842,12 @@ pub fn parser_grammar() -> ParserGrammar {
                 ] },
                 GrammarElement::TokenReference { name: r#"URL_TOKEN"#.to_string() },
             ] },
-            line_number: 438,
+            line_number: 439,
         },
         GrammarRule {
             name: r#"function_args"#.to_string(),
             body: GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"function_arg"#.to_string() }) },
-            line_number: 441,
+            line_number: 442,
         },
         GrammarRule {
             name: r#"function_arg"#.to_string(),
@@ -870,7 +871,7 @@ pub fn parser_grammar() -> ParserGrammar {
                     GrammarElement::TokenReference { name: r#"RPAREN"#.to_string() },
                 ] },
             ] },
-            line_number: 443,
+            line_number: 444,
         },
     ],
         version: 1,

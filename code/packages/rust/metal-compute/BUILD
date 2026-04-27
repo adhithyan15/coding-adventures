@@ -1,0 +1,1 @@
+if [ "$(uname)" = "Darwin" ]; then cargo test -p metal-compute -- --nocapture; else echo "SKIP: metal-compute requires macOS/Apple platform"; fi

@@ -1,0 +1,4 @@
+uv venv .venv --python 3.12 --quiet --no-project --clear
+uv pip install --python .venv -e .[dev] --quiet
+.venv/Scripts/ruff.exe check src tests
+uv run --no-project python -m pytest tests/ -v

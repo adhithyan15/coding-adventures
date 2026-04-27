@@ -1,0 +1,3 @@
+uv venv --quiet --clear
+uv pip install -e ../cil-bytecode-builder -e ../compiler-ir -e ../ir-to-cil-bytecode -e ../clr-pe-file -e ../clr-bytecode-disassembler -e .[dev] --quiet
+.venv/bin/python -m pytest tests/ -v

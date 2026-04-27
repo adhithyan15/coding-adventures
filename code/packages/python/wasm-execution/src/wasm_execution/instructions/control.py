@@ -65,12 +65,14 @@ def _execute_branch(
     # Pop labels down to and including the target label
     ctx.label_stack = ctx.label_stack[:label_stack_index]
 
-    # Jump to the label's target PC
-    vm.jump_to(label.target_pc)
+    # Branching to a block/if exits that construct, so execution resumes
+    # after its ``end``. Branching to a loop re-enters at the loop header.
+    vm.jump_to(label.target_pc if label.is_loop else label.target_pc + 1)
 
 
 def _call_function(
     vm: GenericVM,
+    code: Any,
     ctx: WasmExecutionContext,
     func_index: int,
 ) -> None:
@@ -102,9 +104,12 @@ def _call_function(
 
     # Save caller's state
     ctx.saved_frames.append(
-        type(ctx.saved_frames[0] if ctx.saved_frames else None)  # noqa: E501
-        if False
-        else _make_saved_frame(ctx, vm)
+        _make_saved_frame(
+            ctx,
+            vm,
+            code,
+            return_arity=len(func_type.results),
+        )
     )
 
     # Initialize callee's locals
@@ -127,13 +132,17 @@ def _call_function(
 
     # We need to swap code --- store on context for the engine to pick up
     ctx._pending_code = new_code  # type: ignore[attr-defined]
-
     ctx.returned = False
-    vm.halted = False
     vm.jump_to(0)
+    vm.halted = True
 
 
-def _make_saved_frame(ctx: WasmExecutionContext, vm: GenericVM) -> Any:
+def _make_saved_frame(
+    ctx: WasmExecutionContext,
+    vm: GenericVM,
+    code: Any,
+    return_arity: int,
+) -> Any:
     """Create a SavedFrame from the current execution context."""
     from wasm_execution.types import SavedFrame
     return SavedFrame(
@@ -141,8 +150,9 @@ def _make_saved_frame(ctx: WasmExecutionContext, vm: GenericVM) -> Any:
         label_stack=list(ctx.label_stack),
         stack_height=len(vm.typed_stack),
         control_flow_map=ctx.control_flow_map,
+        code=code,
         return_pc=vm.pc + 1,
-        return_arity=0,  # Will be set by the caller
+        return_arity=return_arity,
     )
 
 
@@ -278,9 +288,9 @@ def register_control(vm: GenericVM) -> None:
     vm.register_context_opcode(0x0F, handle_return)
 
     # 0x10: call
-    def handle_call(vm: GenericVM, instr: Any, _code: Any, ctx: WasmExecutionContext) -> str:
+    def handle_call(vm: GenericVM, instr: Any, code: Any, ctx: WasmExecutionContext) -> str:
         func_index = instr.operand
-        _call_function(vm, ctx, func_index)
+        _call_function(vm, code, ctx, func_index)
         return f"call {func_index}"
     vm.register_context_opcode(0x10, handle_call)
 

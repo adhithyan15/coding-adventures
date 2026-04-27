@@ -247,8 +247,16 @@ final class WasmRuntimeTests: XCTestCase {
         let fdWrite = wasi.resolveFunction(moduleName: "wasi_snapshot_preview1", name: "fd_write")
         XCTAssertNotNil(fdWrite)
 
+        let fdRead = wasi.resolveFunction(moduleName: "wasi_snapshot_preview1", name: "fd_read")
+        XCTAssertNotNil(fdRead)
+
         let procExit = wasi.resolveFunction(moduleName: "wasi_snapshot_preview1", name: "proc_exit")
         XCTAssertNotNil(procExit)
+    }
+
+    func testWasiHostAliasExists() {
+        let host = WasiHost()
+        XCTAssertTrue(type(of: host) == WasiStub.self)
     }
 
     func testWasiReturnsNilForNonWasi() {

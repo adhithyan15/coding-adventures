@@ -1,9 +1,10 @@
+use in_memory_data_store_protocol::EngineResponse;
 use std::collections::VecDeque;
 
 use hash_map::HashMap as DtHashMap;
 use hash_set::HashSet as DtHashSet;
 use hyperloglog::HyperLogLog;
-use resp_protocol::{RespError, RespValue};
+
 
 use crate::engine_core::DataStoreEngine;
 use crate::store::{current_time_ms, Store};
@@ -75,7 +76,7 @@ pub fn register_builtin_commands(engine: &DataStoreEngine) {
     register!(engine, "KEYS", false, false, cmd_keys);
 }
 
-pub fn dispatch(store: Store, parts: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn dispatch(store: Store, parts: &[Vec<u8>]) -> (Store, EngineResponse) {
     if parts.is_empty() {
         return (store, err("ERR empty command"));
     }
@@ -124,22 +125,22 @@ pub fn active_expire(store: Store) -> Store {
     store.active_expire_all()
 }
 
-pub fn cmd_ping(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_ping(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
-        [] => (store, RespValue::SimpleString("PONG".to_string())),
-        [message] => (store, RespValue::BulkString(Some(message.clone()))),
+        [] => (store, EngineResponse::SimpleString("PONG".to_string())),
+        [message] => (store, EngineResponse::BulkString(Some(message.clone()))),
         _ => (store, err("ERR wrong number of arguments for 'PING'")),
     }
 }
 
-pub fn cmd_echo(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_echo(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
-        [message] => (store, RespValue::BulkString(Some(message.clone()))),
+        [message] => (store, EngineResponse::BulkString(Some(message.clone()))),
         _ => (store, err("ERR wrong number of arguments for 'ECHO'")),
     }
 }
 
-pub fn cmd_set(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_set(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     if args.len() < 2 {
         return (store, err("ERR wrong number of arguments for 'SET'"));
     }
@@ -185,30 +186,30 @@ pub fn cmd_set(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
 
     let exists = store.get(&key).is_some();
     if nx && exists {
-        return (store, RespValue::BulkString(None));
+        return (store, EngineResponse::BulkString(None));
     }
     if xx && !exists {
-        return (store, RespValue::BulkString(None));
+        return (store, EngineResponse::BulkString(None));
     }
 
     let entry = Entry::string(value, expires_at);
     (store.set(key, entry), ok())
 }
 
-pub fn cmd_get(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_get(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [key] => match store.clone().get(key) {
             Some(entry) => match &entry.value {
-                EntryValue::String(bytes) => (store, RespValue::BulkString(Some(bytes.clone()))),
+                EntryValue::String(bytes) => (store, EngineResponse::BulkString(Some(bytes.clone()))),
                 _ => (store, wrong_type()),
             },
-            None => (store, RespValue::BulkString(None)),
+            None => (store, EngineResponse::BulkString(None)),
         },
         _ => (store, err("ERR wrong number of arguments for 'GET'")),
     }
 }
 
-pub fn cmd_del(mut store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_del(mut store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     if args.is_empty() {
         return (store, err("ERR wrong number of arguments for 'DEL'"));
     }
@@ -222,7 +223,7 @@ pub fn cmd_del(mut store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     (store, integer(removed))
 }
 
-pub fn cmd_exists(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_exists(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     if args.is_empty() {
         return (store, err("ERR wrong number of arguments for 'EXISTS'"));
     }
@@ -230,17 +231,17 @@ pub fn cmd_exists(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     (store, integer(count))
 }
 
-pub fn cmd_type(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_type(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [key] => match store.type_of(key) {
-            Some(entry_type) => (store, RespValue::SimpleString(entry_type.to_string())),
-            None => (store, RespValue::SimpleString("none".to_string())),
+            Some(entry_type) => (store, EngineResponse::SimpleString(entry_type.to_string())),
+            None => (store, EngineResponse::SimpleString("none".to_string())),
         },
         _ => (store, err("ERR wrong number of arguments for 'TYPE'")),
     }
 }
 
-pub fn cmd_rename(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_rename(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [src, dst] => {
             let Some(entry) = store.get(src).cloned() else {
@@ -254,21 +255,21 @@ pub fn cmd_rename(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     }
 }
 
-pub fn cmd_incr(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_incr(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [key] => cmd_incrby(store, &[key.clone(), b"1".to_vec()]),
         _ => (store, err("ERR wrong number of arguments for 'INCR'")),
     }
 }
 
-pub fn cmd_decr(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_decr(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [key] => cmd_incrby(store, &[key.clone(), b"-1".to_vec()]),
         _ => (store, err("ERR wrong number of arguments for 'DECR'")),
     }
 }
 
-pub fn cmd_incrby(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_incrby(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [key, delta_bytes] => match parse_i64(delta_bytes) {
             Ok(delta) => adjust_integer(store, key.clone(), delta),
@@ -278,7 +279,7 @@ pub fn cmd_incrby(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     }
 }
 
-pub fn cmd_decrby(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_decrby(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [key, delta_bytes] => match parse_i64(delta_bytes) {
             Ok(delta) => adjust_integer(store, key.clone(), -delta),
@@ -288,7 +289,7 @@ pub fn cmd_decrby(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     }
 }
 
-pub fn cmd_append(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_append(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [key, suffix] => {
             let expires_at = store.get(key).and_then(|entry| entry.expires_at);
@@ -308,7 +309,7 @@ pub fn cmd_append(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     }
 }
 
-pub fn cmd_hset(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_hset(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     if args.len() < 3 || args.len() % 2 == 0 {
         return (store, err("ERR wrong number of arguments for 'HSET'"));
     }
@@ -334,23 +335,23 @@ pub fn cmd_hset(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     (store, integer(added))
 }
 
-pub fn cmd_hget(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_hget(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [key, field] => match store.clone().get(key) {
             Some(entry) => match &entry.value {
                 EntryValue::Hash(map) => match map.get(field) {
-                    Some(value) => (store, RespValue::BulkString(Some(value.clone()))),
-                    None => (store, RespValue::BulkString(None)),
+                    Some(value) => (store, EngineResponse::BulkString(Some(value.clone()))),
+                    None => (store, EngineResponse::BulkString(None)),
                 },
                 _ => (store, wrong_type()),
             },
-            None => (store, RespValue::BulkString(None)),
+            None => (store, EngineResponse::BulkString(None)),
         },
         _ => (store, err("ERR wrong number of arguments for 'HGET'")),
     }
 }
 
-pub fn cmd_hdel(mut store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_hdel(mut store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     if args.len() < 2 {
         return (store, err("ERR wrong number of arguments for 'HDEL'"));
     }
@@ -378,7 +379,7 @@ pub fn cmd_hdel(mut store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     (store, integer(removed))
 }
 
-pub fn cmd_hgetall(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_hgetall(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [key] => match store.get(key) {
             Some(entry) => match &entry.value {
@@ -387,20 +388,20 @@ pub fn cmd_hgetall(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
                     entries.sort_by(|(left, _), (right, _)| left.cmp(right));
                     let mut out = Vec::with_capacity(entries.len() * 2);
                     for (field, value) in entries {
-                        out.push(RespValue::BulkString(Some(field.clone())));
-                        out.push(RespValue::BulkString(Some(value.clone())));
+                        out.push(EngineResponse::BulkString(Some(field.clone())));
+                        out.push(EngineResponse::BulkString(Some(value.clone())));
                     }
-                    (store, RespValue::Array(Some(out)))
+                    (store, EngineResponse::Array(Some(out)))
                 }
                 _ => (store, wrong_type()),
             },
-            None => (store, RespValue::Array(Some(Vec::new()))),
+            None => (store, EngineResponse::Array(Some(Vec::new()))),
         },
         _ => (store, err("ERR wrong number of arguments for 'HGETALL'")),
     }
 }
 
-pub fn cmd_hlen(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_hlen(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [key] => match store.clone().get(key) {
             Some(entry) => match &entry.value {
@@ -413,7 +414,7 @@ pub fn cmd_hlen(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     }
 }
 
-pub fn cmd_hexists(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_hexists(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [key, field] => match store.clone().get(key) {
             Some(entry) => match &entry.value {
@@ -426,57 +427,57 @@ pub fn cmd_hexists(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     }
 }
 
-pub fn cmd_hkeys(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_hkeys(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [key] => match store.clone().get(key) {
             Some(entry) => match &entry.value {
                 EntryValue::Hash(map) => (
                     store,
-                    RespValue::Array(Some(
+                    EngineResponse::Array(Some(
                         {
                             let mut keys = map.keys();
                             keys.sort();
                             keys
                         }
                         .into_iter()
-                        .map(|field| RespValue::BulkString(Some(field)))
+                        .map(|field| EngineResponse::BulkString(Some(field)))
                         .collect(),
                     )),
                 ),
                 _ => (store, wrong_type()),
             },
-            None => (store, RespValue::Array(Some(Vec::new()))),
+            None => (store, EngineResponse::Array(Some(Vec::new()))),
         },
         _ => (store, err("ERR wrong number of arguments for 'HKEYS'")),
     }
 }
 
-pub fn cmd_hvals(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_hvals(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [key] => match store.clone().get(key) {
             Some(entry) => match &entry.value {
                 EntryValue::Hash(map) => (
                     store,
-                    RespValue::Array(Some(
+                    EngineResponse::Array(Some(
                         {
                             let mut entries = map.entries();
                             entries.sort_by(|(left, _), (right, _)| left.cmp(right));
                             entries
                         }
                         .into_iter()
-                        .map(|(_, value)| RespValue::BulkString(Some(value)))
+                        .map(|(_, value)| EngineResponse::BulkString(Some(value)))
                         .collect(),
                     )),
                 ),
                 _ => (store, wrong_type()),
             },
-            None => (store, RespValue::Array(Some(Vec::new()))),
+            None => (store, EngineResponse::Array(Some(Vec::new()))),
         },
         _ => (store, err("ERR wrong number of arguments for 'HVALS'")),
     }
 }
 
-pub fn cmd_lpush(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_lpush(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     if args.len() < 2 {
         return (store, err("ERR wrong number of arguments for 'LPUSH'"));
     }
@@ -497,7 +498,7 @@ pub fn cmd_lpush(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     (store, integer(len))
 }
 
-pub fn cmd_rpush(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_rpush(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     if args.len() < 2 {
         return (store, err("ERR wrong number of arguments for 'RPUSH'"));
     }
@@ -518,7 +519,7 @@ pub fn cmd_rpush(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     (store, integer(len))
 }
 
-pub fn cmd_lpop(mut store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_lpop(mut store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [key] => {
             let expires_at = store.get(key).and_then(|entry| entry.expires_at);
@@ -527,7 +528,7 @@ pub fn cmd_lpop(mut store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
                     EntryValue::List(list) => list.clone(),
                     _ => return (store, wrong_type()),
                 },
-                None => return (store, RespValue::BulkString(None)),
+                None => return (store, EngineResponse::BulkString(None)),
             };
             let value = list.pop_front();
             if list.is_empty() {
@@ -537,8 +538,8 @@ pub fn cmd_lpop(mut store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
             }
             (
                 store,
-                value.map_or(RespValue::BulkString(None), |v| {
-                    RespValue::BulkString(Some(v))
+                value.map_or(EngineResponse::BulkString(None), |v| {
+                    EngineResponse::BulkString(Some(v))
                 }),
             )
         }
@@ -546,7 +547,7 @@ pub fn cmd_lpop(mut store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     }
 }
 
-pub fn cmd_rpop(mut store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_rpop(mut store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [key] => {
             let expires_at = store.get(key).and_then(|entry| entry.expires_at);
@@ -555,7 +556,7 @@ pub fn cmd_rpop(mut store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
                     EntryValue::List(list) => list.clone(),
                     _ => return (store, wrong_type()),
                 },
-                None => return (store, RespValue::BulkString(None)),
+                None => return (store, EngineResponse::BulkString(None)),
             };
             let value = list.pop_back();
             if list.is_empty() {
@@ -565,8 +566,8 @@ pub fn cmd_rpop(mut store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
             }
             (
                 store,
-                value.map_or(RespValue::BulkString(None), |v| {
-                    RespValue::BulkString(Some(v))
+                value.map_or(EngineResponse::BulkString(None), |v| {
+                    EngineResponse::BulkString(Some(v))
                 }),
             )
         }
@@ -574,7 +575,7 @@ pub fn cmd_rpop(mut store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     }
 }
 
-pub fn cmd_llen(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_llen(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [key] => match store.clone().get(key) {
             Some(entry) => match &entry.value {
@@ -587,7 +588,7 @@ pub fn cmd_llen(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     }
 }
 
-pub fn cmd_lrange(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_lrange(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [key, start, end] => {
             let start = match parse_isize(start) {
@@ -605,27 +606,27 @@ pub fn cmd_lrange(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
                         let start = if start < 0 { len + start } else { start };
                         let end = if end < 0 { len + end } else { end };
                         if start < 0 || end < 0 || start >= len || start > end {
-                            return (store, RespValue::Array(Some(Vec::new())));
+                            return (store, EngineResponse::Array(Some(Vec::new())));
                         }
                         let slice = list
                             .iter()
                             .skip(start as usize)
                             .take((end - start + 1) as usize)
                             .cloned()
-                            .map(|v| RespValue::BulkString(Some(v)))
+                            .map(|v| EngineResponse::BulkString(Some(v)))
                             .collect();
-                        (store, RespValue::Array(Some(slice)))
+                        (store, EngineResponse::Array(Some(slice)))
                     }
                     _ => (store, wrong_type()),
                 },
-                None => (store, RespValue::Array(Some(Vec::new()))),
+                None => (store, EngineResponse::Array(Some(Vec::new()))),
             }
         }
         _ => (store, err("ERR wrong number of arguments for 'LRANGE'")),
     }
 }
 
-pub fn cmd_lindex(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_lindex(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [key, index] => {
             let index = match parse_isize(index) {
@@ -638,26 +639,26 @@ pub fn cmd_lindex(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
                         let len = list.len() as isize;
                         let index = if index < 0 { len + index } else { index };
                         if index < 0 || index >= len {
-                            return (store, RespValue::BulkString(None));
+                            return (store, EngineResponse::BulkString(None));
                         }
                         let value = list.get(index as usize).cloned();
                         (
                             store,
-                            value.map_or(RespValue::BulkString(None), |v| {
-                                RespValue::BulkString(Some(v))
+                            value.map_or(EngineResponse::BulkString(None), |v| {
+                                EngineResponse::BulkString(Some(v))
                             }),
                         )
                     }
                     _ => (store, wrong_type()),
                 },
-                None => (store, RespValue::BulkString(None)),
+                None => (store, EngineResponse::BulkString(None)),
             }
         }
         _ => (store, err("ERR wrong number of arguments for 'LINDEX'")),
     }
 }
 
-pub fn cmd_sadd(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_sadd(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     if args.len() < 2 {
         return (store, err("ERR wrong number of arguments for 'SADD'"));
     }
@@ -681,7 +682,7 @@ pub fn cmd_sadd(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     (store, integer(added))
 }
 
-pub fn cmd_srem(mut store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_srem(mut store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     if args.len() < 2 {
         return (store, err("ERR wrong number of arguments for 'SREM'"));
     }
@@ -709,7 +710,7 @@ pub fn cmd_srem(mut store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     (store, integer(removed))
 }
 
-pub fn cmd_sismember(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_sismember(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [key, member] => match store.clone().get(key) {
             Some(entry) => match &entry.value {
@@ -722,32 +723,32 @@ pub fn cmd_sismember(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     }
 }
 
-pub fn cmd_smembers(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_smembers(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [key] => match store.clone().get(key) {
             Some(entry) => match &entry.value {
                 EntryValue::Set(set) => (
                     store,
-                    RespValue::Array(Some(
+                    EngineResponse::Array(Some(
                         {
                             let mut members = set.to_list();
                             members.sort();
                             members
                         }
                         .into_iter()
-                        .map(|member| RespValue::BulkString(Some(member)))
+                        .map(|member| EngineResponse::BulkString(Some(member)))
                         .collect(),
                     )),
                 ),
                 _ => (store, wrong_type()),
             },
-            None => (store, RespValue::Array(Some(Vec::new()))),
+            None => (store, EngineResponse::Array(Some(Vec::new()))),
         },
         _ => (store, err("ERR wrong number of arguments for 'SMEMBERS'")),
     }
 }
 
-pub fn cmd_scard(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_scard(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [key] => match store.clone().get(key) {
             Some(entry) => match &entry.value {
@@ -760,7 +761,7 @@ pub fn cmd_scard(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     }
 }
 
-pub fn cmd_sunion(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_sunion(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     if args.is_empty() {
         return (store, err("ERR wrong number of arguments for 'SUNION'"));
     }
@@ -779,16 +780,16 @@ pub fn cmd_sunion(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     members.sort();
     (
         store,
-        RespValue::Array(Some(
+        EngineResponse::Array(Some(
             members
                 .into_iter()
-                .map(|member| RespValue::BulkString(Some(member)))
+                .map(|member| EngineResponse::BulkString(Some(member)))
                 .collect(),
         )),
     )
 }
 
-pub fn cmd_sinter(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_sinter(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     if args.is_empty() {
         return (store, err("ERR wrong number of arguments for 'SINTER'"));
     }
@@ -815,16 +816,16 @@ pub fn cmd_sinter(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     members.sort();
     (
         store,
-        RespValue::Array(Some(
+        EngineResponse::Array(Some(
             members
                 .into_iter()
-                .map(|member| RespValue::BulkString(Some(member)))
+                .map(|member| EngineResponse::BulkString(Some(member)))
                 .collect(),
         )),
     )
 }
 
-pub fn cmd_sdiff(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_sdiff(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     if args.is_empty() {
         return (store, err("ERR wrong number of arguments for 'SDIFF'"));
     }
@@ -851,16 +852,16 @@ pub fn cmd_sdiff(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     members.sort();
     (
         store,
-        RespValue::Array(Some(
+        EngineResponse::Array(Some(
             members
                 .into_iter()
-                .map(|member| RespValue::BulkString(Some(member)))
+                .map(|member| EngineResponse::BulkString(Some(member)))
                 .collect(),
         )),
     )
 }
 
-pub fn cmd_zadd(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_zadd(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     if args.len() < 3 || args.len() % 2 == 0 {
         return (store, err("ERR wrong number of arguments for 'ZADD'"));
     }
@@ -887,7 +888,7 @@ pub fn cmd_zadd(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     (store, integer(added))
 }
 
-pub fn cmd_zrange(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_zrange(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [key, start, end] => {
             let start = match parse_isize(start) {
@@ -902,23 +903,23 @@ pub fn cmd_zrange(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
                 Some(entry) => match &entry.value {
                     EntryValue::ZSet(zset) => (
                         store,
-                        RespValue::Array(Some(
+                        EngineResponse::Array(Some(
                             zset.range_by_index(start, end)
                                 .into_iter()
-                                .map(|(member, _)| RespValue::BulkString(Some(member)))
+                                .map(|(member, _)| EngineResponse::BulkString(Some(member)))
                                 .collect(),
                         )),
                     ),
                     _ => (store, wrong_type()),
                 },
-                None => (store, RespValue::Array(Some(Vec::new()))),
+                None => (store, EngineResponse::Array(Some(Vec::new()))),
             }
         }
         _ => (store, err("ERR wrong number of arguments for 'ZRANGE'")),
     }
 }
 
-pub fn cmd_zrangebyscore(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_zrangebyscore(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [key, min, max] => {
             let min = match parse_f64(min) {
@@ -933,16 +934,16 @@ pub fn cmd_zrangebyscore(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
                 Some(entry) => match &entry.value {
                     EntryValue::ZSet(zset) => (
                         store,
-                        RespValue::Array(Some(
+                        EngineResponse::Array(Some(
                             zset.range_by_score(min, max)
                                 .into_iter()
-                                .map(|(member, _)| RespValue::BulkString(Some(member)))
+                                .map(|(member, _)| EngineResponse::BulkString(Some(member)))
                                 .collect(),
                         )),
                     ),
                     _ => (store, wrong_type()),
                 },
-                None => (store, RespValue::Array(Some(Vec::new()))),
+                None => (store, EngineResponse::Array(Some(Vec::new()))),
             }
         }
         _ => (
@@ -952,42 +953,42 @@ pub fn cmd_zrangebyscore(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     }
 }
 
-pub fn cmd_zrank(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_zrank(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [key, member] => match store.get(key) {
             Some(entry) => match &entry.value {
                 EntryValue::ZSet(zset) => match zset.rank(member) {
                     Some(rank) => (store, integer(rank as i64)),
-                    None => (store, RespValue::BulkString(None)),
+                    None => (store, EngineResponse::BulkString(None)),
                 },
                 _ => (store, wrong_type()),
             },
-            None => (store, RespValue::BulkString(None)),
+            None => (store, EngineResponse::BulkString(None)),
         },
         _ => (store, err("ERR wrong number of arguments for 'ZRANK'")),
     }
 }
 
-pub fn cmd_zscore(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_zscore(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [key, member] => match store.get(key) {
             Some(entry) => match &entry.value {
                 EntryValue::ZSet(zset) => match zset.score(member) {
                     Some(score) => (
                         store,
-                        RespValue::BulkString(Some(score.to_string().into_bytes())),
+                        EngineResponse::BulkString(Some(score.to_string().into_bytes())),
                     ),
-                    None => (store, RespValue::BulkString(None)),
+                    None => (store, EngineResponse::BulkString(None)),
                 },
                 _ => (store, wrong_type()),
             },
-            None => (store, RespValue::BulkString(None)),
+            None => (store, EngineResponse::BulkString(None)),
         },
         _ => (store, err("ERR wrong number of arguments for 'ZSCORE'")),
     }
 }
 
-pub fn cmd_zcard(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_zcard(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [key] => match store.clone().get(key) {
             Some(entry) => match &entry.value {
@@ -1000,7 +1001,7 @@ pub fn cmd_zcard(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     }
 }
 
-pub fn cmd_zrem(mut store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_zrem(mut store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     if args.len() < 2 {
         return (store, err("ERR wrong number of arguments for 'ZREM'"));
     }
@@ -1027,7 +1028,7 @@ pub fn cmd_zrem(mut store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     (store, integer(removed))
 }
 
-pub fn cmd_pfadd(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_pfadd(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     if args.len() < 2 {
         return (store, err("ERR wrong number of arguments for 'PFADD'"));
     }
@@ -1049,7 +1050,7 @@ pub fn cmd_pfadd(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     (store, integer(changed as i64))
 }
 
-pub fn cmd_pfcount(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_pfcount(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     if args.is_empty() {
         return (store, err("ERR wrong number of arguments for 'PFCOUNT'"));
     }
@@ -1076,7 +1077,7 @@ pub fn cmd_pfcount(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     (store, integer(hll.count() as i64))
 }
 
-pub fn cmd_pfmerge(mut store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_pfmerge(mut store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     if args.len() < 2 {
         return (store, err("ERR wrong number of arguments for 'PFMERGE'"));
     }
@@ -1097,7 +1098,7 @@ pub fn cmd_pfmerge(mut store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     (store, ok())
 }
 
-pub fn cmd_expire(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_expire(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [key, seconds] => match parse_i64(seconds) {
             Ok(seconds) => set_expiration(store, key.clone(), expiration_from_seconds(seconds)),
@@ -1107,7 +1108,7 @@ pub fn cmd_expire(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     }
 }
 
-pub fn cmd_expireat(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_expireat(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [key, timestamp] => match parse_i64(timestamp) {
             Ok(timestamp) => set_expiration(
@@ -1121,21 +1122,21 @@ pub fn cmd_expireat(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     }
 }
 
-pub fn cmd_ttl(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_ttl(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [key] => ttl_like(store, key, false),
         _ => (store, err("ERR wrong number of arguments for 'TTL'")),
     }
 }
 
-pub fn cmd_pttl(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_pttl(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [key] => ttl_like(store, key, true),
         _ => (store, err("ERR wrong number of arguments for 'PTTL'")),
     }
 }
 
-pub fn cmd_persist(mut store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_persist(mut store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [key] => {
             let Some(entry) = store.get(key).cloned() else {
@@ -1156,7 +1157,7 @@ pub fn cmd_persist(mut store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     }
 }
 
-pub fn cmd_select(mut store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_select(mut store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [index] => match parse_usize(index) {
             Ok(index) if index < store.databases.len() => {
@@ -1170,21 +1171,21 @@ pub fn cmd_select(mut store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     }
 }
 
-pub fn cmd_flushdb(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_flushdb(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     if !args.is_empty() {
         return (store, err("ERR wrong number of arguments for 'FLUSHDB'"));
     }
     (store.flushdb(), ok())
 }
 
-pub fn cmd_flushall(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_flushall(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     if !args.is_empty() {
         return (store, err("ERR wrong number of arguments for 'FLUSHALL'"));
     }
     (store.flushall(), ok())
 }
 
-pub fn cmd_dbsize(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_dbsize(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     if !args.is_empty() {
         return (store, err("ERR wrong number of arguments for 'DBSIZE'"));
     }
@@ -1192,7 +1193,7 @@ pub fn cmd_dbsize(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     (store, integer(size as i64))
 }
 
-pub fn cmd_info(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_info(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     if !args.is_empty() {
         return (store, err("ERR wrong number of arguments for 'INFO'"));
     }
@@ -1201,18 +1202,18 @@ pub fn cmd_info(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
         store.active_db,
         store.dbsize()
     );
-    (store, RespValue::BulkString(Some(info.into_bytes())))
+    (store, EngineResponse::BulkString(Some(info.into_bytes())))
 }
 
-pub fn cmd_keys(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
+pub fn cmd_keys(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
     match args {
         [pattern] => (
             store.clone(),
-            RespValue::Array(Some(
+            EngineResponse::Array(Some(
                 store
                     .keys(pattern)
                     .into_iter()
-                    .map(|key| RespValue::BulkString(Some(key)))
+                    .map(|key| EngineResponse::BulkString(Some(key)))
                     .collect(),
             )),
         ),
@@ -1220,7 +1221,7 @@ pub fn cmd_keys(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     }
 }
 
-fn adjust_integer(store: Store, key: Vec<u8>, delta: i64) -> (Store, RespValue) {
+fn adjust_integer(store: Store, key: Vec<u8>, delta: i64) -> (Store, EngineResponse) {
     let expires_at = store.get(&key).and_then(|entry| entry.expires_at);
     let current = match store.get(&key) {
         Some(entry) => match &entry.value {
@@ -1243,7 +1244,7 @@ fn adjust_integer(store: Store, key: Vec<u8>, delta: i64) -> (Store, RespValue) 
     (store, integer(new_value))
 }
 
-fn ttl_like(store: Store, key: &[u8], milliseconds: bool) -> (Store, RespValue) {
+fn ttl_like(store: Store, key: &[u8], milliseconds: bool) -> (Store, EngineResponse) {
     match store.get(key) {
         None => (store, integer(-2)),
         Some(entry) => match entry.expires_at {
@@ -1264,7 +1265,7 @@ fn ttl_like(store: Store, key: &[u8], milliseconds: bool) -> (Store, RespValue) 
     }
 }
 
-fn set_expiration(mut store: Store, key: Vec<u8>, expires_at: u64) -> (Store, RespValue) {
+fn set_expiration(mut store: Store, key: Vec<u8>, expires_at: u64) -> (Store, EngineResponse) {
     if store.get(&key).is_none() {
         return (store, integer(0));
     }
@@ -1282,54 +1283,50 @@ fn set_expiration(mut store: Store, key: Vec<u8>, expires_at: u64) -> (Store, Re
     (store, integer(1))
 }
 
-fn ok() -> RespValue {
-    RespValue::SimpleString("OK".to_string())
+fn ok() -> EngineResponse {
+    EngineResponse::SimpleString("OK".to_string())
 }
 
-fn integer(value: i64) -> RespValue {
-    RespValue::Integer(value)
+fn integer(value: i64) -> EngineResponse {
+    EngineResponse::Integer(value)
 }
 
-fn err(message: impl Into<String>) -> RespValue {
-    RespValue::Error(RespError::new(message))
+fn err(message: impl Into<String>) -> EngineResponse {
+    EngineResponse::error(message)
 }
 
-fn wrong_type() -> RespValue {
+fn wrong_type() -> EngineResponse {
     err("WRONGTYPE Operation against a key holding the wrong kind of value")
 }
 
-fn parse_i64(bytes: &[u8]) -> Result<i64, RespValue> {
+fn parse_i64(bytes: &[u8]) -> Result<i64, EngineResponse> {
     std::str::from_utf8(bytes)
         .map_err(|_| err("ERR value is not an integer or out of range"))
-        .and_then(|text| {
-            text.parse::<i64>()
+        .and_then(|text: &str| { text.parse::<i64>()
                 .map_err(|_| err("ERR value is not an integer or out of range"))
         })
 }
 
-fn parse_isize(bytes: &[u8]) -> Result<isize, RespValue> {
+fn parse_isize(bytes: &[u8]) -> Result<isize, EngineResponse> {
     std::str::from_utf8(bytes)
         .map_err(|_| err("ERR value is not an integer or out of range"))
-        .and_then(|text| {
-            text.parse::<isize>()
+        .and_then(|text: &str| { text.parse::<isize>()
                 .map_err(|_| err("ERR value is not an integer or out of range"))
         })
 }
 
-fn parse_usize(bytes: &[u8]) -> Result<usize, RespValue> {
+fn parse_usize(bytes: &[u8]) -> Result<usize, EngineResponse> {
     std::str::from_utf8(bytes)
         .map_err(|_| err("ERR value is not an integer or out of range"))
-        .and_then(|text| {
-            text.parse::<usize>()
+        .and_then(|text: &str| { text.parse::<usize>()
                 .map_err(|_| err("ERR value is not an integer or out of range"))
         })
 }
 
-fn parse_f64(bytes: &[u8]) -> Result<f64, RespValue> {
+fn parse_f64(bytes: &[u8]) -> Result<f64, EngineResponse> {
     std::str::from_utf8(bytes)
         .map_err(|_| err("ERR value is not a valid float"))
-        .and_then(|text| {
-            text.parse::<f64>()
+        .and_then(|text: &str| { text.parse::<f64>()
                 .map_err(|_| err("ERR value is not a valid float"))
         })
 }
@@ -1362,11 +1359,11 @@ fn ascii_upper(bytes: &[u8]) -> String {
 }
 
 #[allow(dead_code)]
-pub fn bulk_string_bytes(value: &RespValue) -> Option<Vec<u8>> {
+pub fn bulk_string_bytes(value: &EngineResponse) -> Option<Vec<u8>> {
     match value {
-        RespValue::BulkString(Some(bytes)) => Some(bytes.clone()),
-        RespValue::SimpleString(text) => Some(text.as_bytes().to_vec()),
-        RespValue::Integer(n) => Some(n.to_string().into_bytes()),
+        EngineResponse::BulkString(Some(bytes)) => Some(bytes.clone()),
+        EngineResponse::SimpleString(text) => Some(text.as_bytes().to_vec()),
+        EngineResponse::Integer(n) => Some(n.to_string().into_bytes()),
         _ => None,
     }
 }
@@ -1375,23 +1372,23 @@ pub fn bulk_string_bytes(value: &RespValue) -> Option<Vec<u8>> {
 mod tests {
     use super::*;
 
-    fn run(store: Store, command: &str, args: &[&[u8]]) -> (Store, RespValue) {
+    fn run(store: Store, command: &str, args: &[&[u8]]) -> (Store, EngineResponse) {
         let mut parts = vec![command.as_bytes().to_vec()];
         parts.extend(args.iter().map(|arg| arg.to_vec()));
         dispatch(store, &parts)
     }
 
-    fn bulk(value: &str) -> RespValue {
-        RespValue::BulkString(Some(value.as_bytes().to_vec()))
+    fn bulk(value: &str) -> EngineResponse {
+        EngineResponse::BulkString(Some(value.as_bytes().to_vec()))
     }
 
-    fn array(values: &[&str]) -> RespValue {
-        RespValue::Array(Some(values.iter().map(|value| bulk(value)).collect()))
+    fn array(values: &[&str]) -> EngineResponse {
+        EngineResponse::Array(Some(values.iter().map(|value| bulk(value)).collect()))
     }
 
-    fn assert_error(resp: RespValue, expected: &str) {
+    fn assert_error(resp: EngineResponse, expected: &str) {
         match resp {
-            RespValue::Error(err) => assert_eq!(err.message, expected),
+            EngineResponse::Error(err) => assert_eq!(err, expected),
             other => panic!("unexpected response: {other:?}"),
         }
     }
@@ -1407,7 +1404,7 @@ mod tests {
         assert_eq!(resp, bulk("hello"));
 
         let (store, resp) = run(store, "SET", &[b"greeting", b"world", b"NX"]);
-        assert_eq!(resp, RespValue::BulkString(None));
+        assert_eq!(resp, EngineResponse::BulkString(None));
 
         let (store, resp) = run(store, "SET", &[b"greeting", b"world", b"XX"]);
         assert_eq!(resp, ok());
@@ -1431,7 +1428,7 @@ mod tests {
         assert_eq!(resp, integer(1));
 
         let (_, resp) = run(store, "GET", &[b"greeting"]);
-        assert_eq!(resp, RespValue::BulkString(None));
+        assert_eq!(resp, EngineResponse::BulkString(None));
     }
 
     #[test]
@@ -1463,7 +1460,7 @@ mod tests {
         let (store, resp) = run(store, "HGETALL", &[b"hash"]);
         assert_eq!(
             resp,
-            RespValue::Array(Some(vec![
+            EngineResponse::Array(Some(vec![
                 bulk("a"),
                 bulk("1"),
                 bulk("b"),
@@ -1477,7 +1474,7 @@ mod tests {
         assert_eq!(resp, integer(2));
 
         let (_, resp) = run(store, "HGETALL", &[b"hash"]);
-        assert_eq!(resp, RespValue::Array(Some(vec![bulk("a"), bulk("1")])));
+        assert_eq!(resp, EngineResponse::Array(Some(vec![bulk("a"), bulk("1")])));
     }
 
     #[test]
@@ -1506,7 +1503,7 @@ mod tests {
         assert_eq!(resp, array(&["a", "b", "c", "d"]));
 
         let (_, resp) = run(store.clone(), "SINTER", &[b"alpha", b"beta"]);
-        assert_eq!(resp, RespValue::Array(Some(Vec::new())));
+        assert_eq!(resp, EngineResponse::Array(Some(Vec::new())));
 
         let (_, resp) = run(store, "SDIFF", &[b"alpha", b"beta"]);
         assert_eq!(resp, array(&["a"]));
@@ -1554,13 +1551,13 @@ mod tests {
 
         let (store, resp) = run(store, "TTL", &[b"session"]);
         match resp {
-            RespValue::Integer(seconds) => assert!((0..=10).contains(&seconds)),
+            EngineResponse::Integer(seconds) => assert!((0..=10).contains(&seconds)),
             other => panic!("unexpected TTL response: {other:?}"),
         }
 
         let (store, resp) = run(store, "PTTL", &[b"session"]);
         match resp {
-            RespValue::Integer(millis) => assert!((1..=10_000).contains(&millis)),
+            EngineResponse::Integer(millis) => assert!((1..=10_000).contains(&millis)),
             other => panic!("unexpected PTTL response: {other:?}"),
         }
 
@@ -1574,7 +1571,7 @@ mod tests {
         assert_eq!(resp, integer(1));
 
         let (_, resp) = run(store, "GET", &[b"session"]);
-        assert_eq!(resp, RespValue::BulkString(None));
+        assert_eq!(resp, EngineResponse::BulkString(None));
     }
 
     #[test]
@@ -1611,7 +1608,7 @@ mod tests {
         );
 
         let (_, resp) = run(store.clone(), "PING", &[]);
-        assert_eq!(resp, RespValue::SimpleString("PONG".to_string()));
+        assert_eq!(resp, EngineResponse::SimpleString("PONG".to_string()));
 
         let (_, resp) = run(store.clone(), "PING", &[b"hello"]);
         assert_eq!(resp, bulk("hello"));
@@ -1631,18 +1628,18 @@ mod tests {
 
         assert_eq!(ascii_upper(b"ping"), "PING");
         assert_eq!(
-            bulk_string_bytes(&RespValue::BulkString(Some(b"abc".to_vec()))),
+            bulk_string_bytes(&EngineResponse::BulkString(Some(b"abc".to_vec()))),
             Some(b"abc".to_vec())
         );
         assert_eq!(
-            bulk_string_bytes(&RespValue::SimpleString("OK".to_string())),
+            bulk_string_bytes(&EngineResponse::SimpleString("OK".to_string())),
             Some(b"OK".to_vec())
         );
         assert_eq!(
-            bulk_string_bytes(&RespValue::Integer(7)),
+            bulk_string_bytes(&EngineResponse::Integer(7)),
             Some(b"7".to_vec())
         );
-        assert_eq!(bulk_string_bytes(&RespValue::Array(None)), None);
+        assert_eq!(bulk_string_bytes(&EngineResponse::Array(None)), None);
 
         assert_eq!(parse_i64(b"42").unwrap(), 42);
         assert!(parse_i64(b"nope").is_err());
@@ -1712,10 +1709,10 @@ mod tests {
         assert_eq!(resp, ok());
 
         let (_, resp) = run(store.clone(), "TYPE", &[b"renamed"]);
-        assert_eq!(resp, RespValue::SimpleString("string".to_string()));
+        assert_eq!(resp, EngineResponse::SimpleString("string".to_string()));
 
         let (_, resp) = run(store.clone(), "TYPE", &[b"missing"]);
-        assert_eq!(resp, RespValue::SimpleString("none".to_string()));
+        assert_eq!(resp, EngineResponse::SimpleString("none".to_string()));
 
         let (hash_store, _) = run(Store::empty(), "HSET", &[b"hash", b"field", b"value"]);
         assert_error(
@@ -1781,7 +1778,7 @@ mod tests {
         assert_eq!(resp, bulk("1"));
 
         let (_, resp) = run(store.clone(), "HGET", &[b"hash", b"missing"]);
-        assert_eq!(resp, RespValue::BulkString(None));
+        assert_eq!(resp, EngineResponse::BulkString(None));
 
         let (_, resp) = run(store.clone(), "HLEN", &[b"hash"]);
         assert_eq!(resp, integer(2));
@@ -1796,7 +1793,7 @@ mod tests {
         assert_eq!(resp, array(&["1", "2"]));
 
         let (_, resp) = run(store.clone(), "HGETALL", &[b"hash"]);
-        assert_eq!(resp, RespValue::Array(Some(vec![bulk("a"), bulk("1"), bulk("b"), bulk("2")])));
+        assert_eq!(resp, EngineResponse::Array(Some(vec![bulk("a"), bulk("1"), bulk("b"), bulk("2")])));
 
         assert_error(
             run(store.clone(), "HDEL", &[b"hash"]).1,
@@ -1807,7 +1804,7 @@ mod tests {
         assert_eq!(resp, integer(2));
 
         let (_, resp) = run(store, "HGETALL", &[b"hash"]);
-        assert_eq!(resp, RespValue::Array(Some(Vec::new())));
+        assert_eq!(resp, EngineResponse::Array(Some(Vec::new())));
 
         let (store, _) = run(Store::empty(), "SET", &[b"string", b"value"]);
         assert_error(
@@ -1853,9 +1850,9 @@ mod tests {
             "ERR value is not an integer or out of range",
         );
         let (_, resp) = run(Store::empty(), "LPOP", &[b"missing"]);
-        assert_eq!(resp, RespValue::BulkString(None));
+        assert_eq!(resp, EngineResponse::BulkString(None));
         let (_, resp) = run(Store::empty(), "RPOP", &[b"missing"]);
-        assert_eq!(resp, RespValue::BulkString(None));
+        assert_eq!(resp, EngineResponse::BulkString(None));
 
         let (store, _) = run(Store::empty(), "SET", &[b"not-a-list", b"value"]);
         assert_error(
@@ -1930,10 +1927,10 @@ mod tests {
         assert_eq!(resp, integer(1));
 
         let (_, resp) = run(store.clone(), "ZRANK", &[b"z", b"missing"]);
-        assert_eq!(resp, RespValue::BulkString(None));
+        assert_eq!(resp, EngineResponse::BulkString(None));
 
         let (_, resp) = run(store.clone(), "ZSCORE", &[b"z", b"missing"]);
-        assert_eq!(resp, RespValue::BulkString(None));
+        assert_eq!(resp, EngineResponse::BulkString(None));
 
         assert_error(
             run(store.clone(), "ZADD", &[b"z", b"bad", b"x"]).1,
@@ -2014,13 +2011,13 @@ mod tests {
 
         let (store, resp) = run(store, "TTL", &[b"session"]);
         match resp {
-            RespValue::Integer(seconds) => assert!((0..=1).contains(&seconds)),
+            EngineResponse::Integer(seconds) => assert!((0..=1).contains(&seconds)),
             other => panic!("unexpected TTL response: {other:?}"),
         }
 
         let (store, resp) = run(store, "PTTL", &[b"session"]);
         match resp {
-            RespValue::Integer(millis) => assert!((0..=1_000).contains(&millis)),
+            EngineResponse::Integer(millis) => assert!((0..=1_000).contains(&millis)),
             other => panic!("unexpected PTTL response: {other:?}"),
         }
 
@@ -2044,7 +2041,7 @@ mod tests {
         assert_eq!(resp, integer(1));
 
         let (_, resp) = run(store, "GET", &[b"session"]);
-        assert_eq!(resp, RespValue::BulkString(None));
+        assert_eq!(resp, EngineResponse::BulkString(None));
 
         let (store, _) = run(Store::empty(), "SET", &[b"user:1", b"one"]);
         let (store, _) = run(store, "SET", &[b"user:2", b"two"]);
@@ -2054,7 +2051,7 @@ mod tests {
 
         let (_, resp) = run(store.clone(), "INFO", &[]);
         match resp {
-            RespValue::BulkString(Some(bytes)) => {
+            EngineResponse::BulkString(Some(bytes)) => {
                 let text = String::from_utf8(bytes).unwrap();
                 assert!(text.contains("mini_redis_version:0.1.0"));
                 assert!(text.contains("active_db:0"));

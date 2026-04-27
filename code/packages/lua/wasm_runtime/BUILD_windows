@@ -2,6 +2,7 @@ luarocks show coding-adventures-wasm-leb128 1>nul 2>nul || (cd ..\wasm_leb128 &&
 luarocks show coding-adventures-wasm-types 1>nul 2>nul || (cd ..\wasm_types && luarocks make --local coding-adventures-wasm-types-0.1.0-1.rockspec)
 luarocks show coding-adventures-wasm-opcodes 1>nul 2>nul || (cd ..\wasm_opcodes && luarocks make --local coding-adventures-wasm-opcodes-0.1.0-1.rockspec)
 luarocks show coding-adventures-wasm-module-parser 1>nul 2>nul || (cd ..\wasm_module_parser && luarocks make --local coding-adventures-wasm-module-parser-0.1.0-1.rockspec)
+luarocks show coding-adventures-wasm-execution 1>nul 2>nul || (cd ..\wasm_execution && call BUILD_windows)
 luarocks show coding-adventures-virtual-machine 1>nul 2>nul || (cd ..\virtual_machine && luarocks make --local coding-adventures-virtual-machine-0.1.0-1.rockspec)
 luarocks make --local --deps-mode=none coding-adventures-wasm-runtime-0.1.0-1.rockspec
 cd tests && busted . --verbose --pattern=test_

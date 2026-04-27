@@ -1,0 +1,4 @@
+uv venv -q .venv
+uv pip install -q --no-deps -e ../json-rpc -e .
+uv pip install -q pytest pytest-cov ruff mypy
+uv run --no-project python -m pytest tests/ -v --tb=short --cov=ls00 --cov-report=term-missing

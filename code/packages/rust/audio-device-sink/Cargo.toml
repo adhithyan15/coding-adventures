@@ -1,0 +1,10 @@
+[package]
+name = "audio-device-sink"
+version = "0.1.0"
+edition = "2021"
+description = "Backend-neutral PCM audio device sink contract"
+
+[lib]
+name = "audio_device_sink"
+
+[dependencies]

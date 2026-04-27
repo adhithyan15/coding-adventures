@@ -1,0 +1,8 @@
+uv venv --quiet --clear
+uv pip install -e ../../../packages/python/irc-proto --quiet
+uv pip install -e ../../../packages/python/irc-framing --quiet
+uv pip install -e ../../../packages/python/irc-server --quiet
+uv pip install -e ../../../packages/python/irc-net-stdlib --quiet
+uv pip install --no-deps -e .[dev] --quiet
+uv pip install pytest pytest-cov ruff mypy --quiet
+uv run --no-project python -m pytest tests/ -v

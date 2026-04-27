@@ -1,0 +1,16 @@
+[package]
+name = "window-native"
+version = "0.1.0"
+edition = "2021"
+description = "Python native extension wrapping the Rust window crates via python-bridge"
+
+[lib]
+name = "window_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+python-bridge = { path = "../../rust/python-bridge" }
+window-core = { path = "../../rust/window-core" }
+window-appkit = { path = "../../rust/window-appkit" }
+
+[workspace]

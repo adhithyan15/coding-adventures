@@ -248,6 +248,26 @@ class TestBranch:
         vm = _run_code(instrs, ctx)
         # If unreachable was hit, we'd get TrapError
 
+    def test_br_to_outer_block_resumes_after_end(self) -> None:
+        """br 1 from a nested loop exits the block without halting the function."""
+        ctx = _make_ctx(
+            control_flow_map={
+                0: ControlTarget(end_pc=4, else_pc=None),
+                1: ControlTarget(end_pc=3, else_pc=None),
+            },
+        )
+        instrs = [
+            Instruction(0x02, 0x40),  # block
+            Instruction(0x03, 0x40),  # loop
+            Instruction(0x0C, 1),     # br 1
+            Instruction(0x0B, None),  # end (loop)
+            Instruction(0x0B, None),  # end (block)
+            Instruction(0x41, 7),     # i32.const 7
+            Instruction(0x0B, None),  # end (function)
+        ]
+        vm = _run_code(instrs, ctx)
+        assert as_i32(vm.pop_typed()) == 7
+
 
 # ===========================================================================
 # br_if

@@ -50,7 +50,12 @@ from __future__ import annotations
 import ctypes
 import struct
 from dataclasses import dataclass, field
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+from arm1_simulator.state import ARM1State
+
+if TYPE_CHECKING:
+    from simulator_protocol import ExecutionResult, StepTrace
 
 __version__ = "0.1.0"
 
@@ -1630,6 +1635,150 @@ class ARM1:
         self._regs[15] = r15 & MASK_32
 
         self.pc = 0x04
+
+    # ── simulator-protocol conformance ────────────────────────────────────
+
+    def get_state(self) -> ARM1State:
+        """Return a frozen snapshot of the current CPU state.
+
+        Satisfies the ``Simulator[ARM1State]`` protocol.  Every field is
+        copied out of the mutable simulator so the returned value is a true
+        point-in-time snapshot — independent of any future simulation steps.
+
+        Register banking is respected: ``read_register(i)`` returns the
+        correct physical register for the current mode, so the 16-element
+        ``registers`` tuple always reflects the logical view.
+
+        Memory is snapshotted by converting ``bytearray → bytes``, which
+        copies all bytes once and makes the result immutable.
+
+        Returns
+        -------
+        ARM1State:
+            Frozen dataclass with all CPU state at this moment.
+        """
+        f = self.flags
+        return ARM1State(
+            registers=tuple(self.read_register(i) for i in range(16)),
+            pc=self.pc,
+            mode=self.mode,
+            flags_n=f.n,
+            flags_z=f.z,
+            flags_c=f.c,
+            flags_v=f.v,
+            memory=bytes(self._memory),
+            halted=self._halted,
+            # Banked FIQ registers: physical indices 16–22 (R8_fiq … R14_fiq)
+            banked_fiq=tuple(self._regs[16 + i] for i in range(7)),
+            # Banked IRQ registers: physical indices 23–24 (R13_irq, R14_irq)
+            banked_irq=tuple(self._regs[23 + i] for i in range(2)),
+            # Banked SVC registers: physical indices 25–26 (R13_svc, R14_svc)
+            banked_svc=tuple(self._regs[25 + i] for i in range(2)),
+        )
+
+    def load(self, program: bytes) -> None:
+        """Load a binary program into memory at address 0.
+
+        Satisfies the ``Simulator[ARM1State]`` protocol ``load()`` method.
+        Delegates to the existing ``load_program()`` so all existing callers
+        are unaffected.
+
+        Parameters
+        ----------
+        program:
+            Raw machine-code bytes to write into memory starting at address 0.
+        """
+        self.load_program(program, 0)
+
+    def execute(
+        self, program: bytes, max_steps: int = 100_000
+    ) -> ExecutionResult[ARM1State]:
+        """Load *program*, run to HALT or *max_steps*, return a full result.
+
+        Satisfies the ``Simulator[ARM1State]`` protocol.
+
+        This method is the primary entry point for end-to-end testing.  It:
+
+        1. Resets the CPU to power-on state (all registers zeroed, SVC mode).
+        2. Loads the program bytes into memory at address 0.
+        3. Runs the fetch-decode-execute loop.
+        4. Collects a ``StepTrace`` for every instruction executed.
+        5. Returns an ``ExecutionResult[ARM1State]`` with the final snapshot,
+           trace list, halt status, and error (if any).
+
+        The per-step ``StepTrace`` is built from the existing ``Trace`` objects
+        returned by ``step()``:
+
+        - ``pc_before`` ← ``trace.address``
+        - ``pc_after``  ← the PC value *after* the instruction ran, derived
+          by reading ``self.pc`` immediately after the step.
+        - ``mnemonic``  ← ``trace.mnemonic``  (disassembled instruction text)
+        - ``description`` ← a formatted string combining address, mnemonic,
+          and condition suffix.
+
+        Parameters
+        ----------
+        program:
+            Raw machine-code bytes.
+        max_steps:
+            Maximum instructions to execute before giving up.  Default 100 000.
+
+        Returns
+        -------
+        ExecutionResult[ARM1State]:
+            Full result including halted status, step count, final state,
+            optional error string, and per-instruction trace list.
+
+        Examples
+        --------
+        >>> import struct
+        >>> from arm1_simulator import ARM1, COND_AL, encode_mov_imm, encode_halt
+        >>> cpu = ARM1(1024)
+        >>> code = b"".join(
+        ...     struct.pack("<I", w)
+        ...     for w in [encode_mov_imm(COND_AL, 0, 42), encode_halt()]
+        ... )
+        >>> result = cpu.execute(code)
+        >>> result.ok
+        True
+        >>> result.final_state.registers[0]
+        42
+        """
+        from simulator_protocol import ExecutionResult, StepTrace
+
+        self.reset()
+        self.load_program(program, 0)
+
+        step_traces: list[StepTrace] = []
+        error: str | None = None
+
+        for _ in range(max_steps):
+            if self._halted:
+                break
+            arm_trace = self.step()
+            pc_after = self.pc
+            step_traces.append(
+                StepTrace(
+                    pc_before=arm_trace.address,
+                    pc_after=pc_after,
+                    mnemonic=arm_trace.mnemonic,
+                    description=(
+                        f"{arm_trace.mnemonic} @ 0x{arm_trace.address:08X}"
+                    ),
+                )
+            )
+        else:
+            # Loop completed without a break — max_steps was reached
+            if not self._halted:
+                error = f"max_steps ({max_steps}) exceeded"
+
+        return ExecutionResult(
+            halted=self._halted,
+            steps=len(step_traces),
+            final_state=self.get_state(),
+            error=error,
+            traces=step_traces,
+        )
 
     def __str__(self) -> str:
         """Return a formatted representation of the CPU state."""

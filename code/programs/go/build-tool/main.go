@@ -11,7 +11,7 @@
 //  1. Find the repo root (walk up looking for .git)
 //  2. Discover packages (walk BUILD files under code/)
 //  3. Filter by language if requested
-//  4. Resolve dependencies (parse pyproject.toml, .gemspec, go.mod, Cargo.toml, package.json, mix.exs)
+//  4. Resolve dependencies (parse pyproject.toml, .gemspec, go.mod, Cargo.toml, package.json, mix.exs, pubspec.yaml)
 //  5. Hash all packages and their dependencies
 //  6. Load cache, determine what needs building
 //  7. If --dry-run, report what would build and exit
@@ -140,7 +140,7 @@ func run() int {
 	force := flag.Bool("force", false, "Rebuild everything regardless of cache")
 	dryRun := flag.Bool("dry-run", false, "Show what would build without executing")
 	jobs := flag.Int("jobs", runtime.NumCPU(), "Max parallel jobs")
-	language := flag.String("language", "all", "Filter to package language: python, ruby, go, rust, typescript, elixir, lua, perl, swift, wasm, csharp, fsharp, dotnet, all")
+	language := flag.String("language", "all", "Filter to package language: python, ruby, go, rust, typescript, elixir, lua, perl, swift, dart, wasm, csharp, fsharp, dotnet, all")
 	diffBase := flag.String("diff-base", "origin/main", "Git ref to diff against for change detection (default: origin/main)")
 	cacheFile := flag.String("cache-file", ".build-cache.json", "Path to cache file (fallback when git diff unavailable)")
 	detectLanguages := flag.Bool("detect-languages", false, "Output which language toolchains are needed based on git diff, then exit")
@@ -184,6 +184,7 @@ func run() int {
 	var packages []discovery.Package
 	var graph *directedgraph.Graph
 	var affectedSet map[string]bool
+	ciToolchains := make(map[string]bool)
 	usedPlan := false
 
 	if *planFile != "" {
@@ -340,8 +341,28 @@ func run() int {
 		if !*force {
 			changedFiles := gitdiff.GetChangedFiles(repoRoot, *diffBase)
 			if len(changedFiles) > 0 {
+				if containsPath(changedFiles, gitdiff.CIWorkflowPath) {
+					ciChange := gitdiff.AnalyzeCIWorkflowChanges(repoRoot, *diffBase)
+					if ciChange.RequiresFullRebuild {
+						fmt.Println("Git diff: ci.yml changed in shared ways — rebuilding everything")
+						*force = true
+						affectedSet = nil
+					} else {
+						ciToolchains = ciChange.Toolchains
+						if len(ciToolchains) > 0 {
+							fmt.Printf(
+								"Git diff: ci.yml changed only toolchain-scoped setup for %s\n",
+								strings.Join(gitdiff.SortedToolchains(ciToolchains), ", "),
+							)
+						}
+					}
+				}
+
 				sharedChanged := false
 				for _, f := range changedFiles {
+					if f == gitdiff.CIWorkflowPath {
+						continue
+					}
 					for _, prefix := range sharedPrefixes {
 						if strings.HasPrefix(f, prefix) {
 							sharedChanged = true
@@ -387,11 +408,11 @@ func run() int {
 	// These are early-exit modes that compute metadata but don't build.
 
 	if *emitPlan != "" {
-		return emitBuildPlan(packages, graph, affectedSet, *force, *diffBase, repoRoot, *emitPlan, *detectLanguages)
+		return emitBuildPlan(packages, graph, affectedSet, *force, ciToolchains, *diffBase, repoRoot, *emitPlan, *detectLanguages)
 	}
 
 	if *detectLanguages {
-		return detectNeededLanguages(packages, affectedSet, *force)
+		return detectNeededLanguages(packages, affectedSet, *force, ciToolchains)
 	}
 
 	// Step 6: Hash all packages (needed for cache fallback).
@@ -460,7 +481,7 @@ func run() int {
 
 // allToolchains is the canonical list of build toolchains we may need in CI.
 // The order is stable and matches the order used in CI setup.
-var allToolchains = []string{"python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "haskell", "dotnet"}
+var allToolchains = []string{"python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "dart", "java", "kotlin", "haskell", "dotnet"}
 
 func toolchainForPackageLanguage(language string) string {
 	switch language {
@@ -473,17 +494,18 @@ func toolchainForPackageLanguage(language string) string {
 	}
 }
 
-// sharedPrefixes are repo paths that, when changed, mean ALL languages
+// sharedPrefixes are repo paths that, when changed, still mean ALL languages
 // need rebuilding. Keep this list intentionally narrow: only changes to
-// shared build infrastructure should fan out across the whole monorepo.
+// truly shared build infrastructure should fan out across the whole monorepo.
 //
 // In particular, deployment-only workflows under .github/workflows/ should
 // NOT trigger a full rebuild. They do not affect package dependency graphs
 // or language toolchain selection, and treating them as global changes wastes
 // several minutes of CI time.
 //
-// Today the only GitHub workflow that affects incremental build behavior is:
-//   - .github/workflows/ci.yml — the main monorepo build/test pipeline
+// .github/workflows/ci.yml is handled separately: toolchain-scoped edits are
+// analyzed diff-by-diff so they can opt only the touched toolchains into CI
+// verification without forcing the whole repo through a rebuild.
 //
 // Note: code/programs/go/build-tool/ is NOT here. The build tool is a program,
 // not a shared library. Changes to it only rebuild the build-tool package itself
@@ -495,8 +517,15 @@ func toolchainForPackageLanguage(language string) string {
 // shared data files, but modifying them only triggers rebuilds of packages that
 // actually import them. Installing all toolchains for a grammar file change would
 // waste 5+ minutes of CI time when no Rust/Ruby/etc. packages are affected.
-var sharedPrefixes = []string{
-	".github/workflows/ci.yml",
+var sharedPrefixes []string
+
+func containsPath(paths []string, want string) bool {
+	for _, path := range paths {
+		if path == want {
+			return true
+		}
+	}
+	return false
 }
 
 // detectNeededLanguages determines which language toolchains CI needs to
@@ -513,25 +542,9 @@ func detectNeededLanguages(
 	packages []discovery.Package,
 	affectedSet map[string]bool,
 	force bool,
+	ciToolchains map[string]bool,
 ) int {
-	needed := make(map[string]bool)
-
-	// Go is always needed — the build tool itself is Go.
-	needed["go"] = true
-
-	if force || affectedSet == nil {
-		// Force mode or shared files changed: all languages needed.
-		for _, lang := range allToolchains {
-			needed[lang] = true
-		}
-	} else {
-		// Only mark languages that have affected packages.
-		for _, pkg := range packages {
-			if affectedSet[pkg.Name] {
-				needed[toolchainForPackageLanguage(pkg.Language)] = true
-			}
-		}
-	}
+	needed := computeLanguagesNeeded(packages, affectedSet, force, ciToolchains)
 
 	// Output results. Each line is "needs_<lang>=true" or "needs_<lang>=false".
 	// If $GITHUB_OUTPUT is set, also write there for GitHub Actions.
@@ -570,6 +583,7 @@ func computeLanguagesNeeded(
 	packages []discovery.Package,
 	affectedSet map[string]bool,
 	force bool,
+	ciToolchains map[string]bool,
 ) map[string]bool {
 	needed := make(map[string]bool)
 	needed["go"] = true
@@ -586,6 +600,11 @@ func computeLanguagesNeeded(
 			needed[toolchainForPackageLanguage(pkg.Language)] = true
 		}
 	}
+
+	for toolchain := range ciToolchains {
+		needed[toolchain] = true
+	}
+
 	return needed
 }
 
@@ -597,6 +616,7 @@ func emitBuildPlan(
 	graph *directedgraph.Graph,
 	affectedSet map[string]bool,
 	force bool,
+	ciToolchains map[string]bool,
 	diffBase string,
 	repoRoot string,
 	outputPath string,
@@ -642,7 +662,7 @@ func emitBuildPlan(
 	}
 
 	// Compute languages needed.
-	languagesNeeded := computeLanguagesNeeded(packages, affectedSet, force)
+	languagesNeeded := computeLanguagesNeeded(packages, affectedSet, force, ciToolchains)
 
 	bp := &plan.BuildPlan{
 		DiffBase:         diffBase,

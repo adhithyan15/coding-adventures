@@ -2,7 +2,7 @@
 
 A complete WebAssembly 1.0 runtime written in pure Python.  It parses,
 validates, instantiates, and executes `.wasm` binaries, and provides a
-WASI host stub so real WASM programs can interact with the outside world.
+WASI host implementation so real WASM programs can interact with the outside world.
 
 ## How it fits in the stack
 
@@ -39,14 +39,14 @@ result = runtime.load_and_run(wasm_bytes, "square", [5])
 print(result)  # [25]
 ```
 
-### WASI Tier 1 (stdout/stderr capture)
+### WASI Tier 1 (stdin/stdout/stderr capture)
 
 ```python
-from wasm_runtime import WasiStub, WasmRuntime
+from wasm_runtime import WasiHost, WasmRuntime
 
 output = []
-stub = WasiStub(stdout=output.append)
-runtime = WasmRuntime(wasi=stub)
+host = WasiHost(stdout=output.append)
+runtime = WasmRuntime(host=host)
 runtime.load_and_run(wasm_bytes, "_start", [])
 print("".join(output))
 ```
@@ -56,31 +56,32 @@ print("".join(output))
 Use `WasiConfig` to supply all host configuration in one place:
 
 ```python
-from wasm_runtime import WasiStub
-from wasm_runtime.wasi_stub import WasiConfig, SystemClock, SystemRandom
+from wasm_runtime import WasiHost
+from wasm_runtime.wasi_host import WasiConfig, SystemClock, SystemRandom
 
 config = WasiConfig(
     args=["myapp", "--flag"],
     env={"HOME": "/home/user", "PATH": "/usr/bin"},
+    stdin=lambda n: b"input"[:n],
     stdout=print,
     stderr=print,
     clock=SystemClock(),    # default: real OS clock
     random=SystemRandom(),  # default: OS CSPRNG via secrets module
 )
-stub = WasiStub(config)
+host = WasiHost(config)
 ```
 
 #### Injecting a fake clock for testing
 
 ```python
-from wasm_runtime.wasi_stub import WasiClock, WasiConfig, WasiStub
+from wasm_runtime.wasi_host import WasiClock, WasiConfig, WasiHost
 
 class FakeClock(WasiClock):
     def realtime_ns(self): return 1_700_000_000_000_000_000
     def monotonic_ns(self): return 0
     def resolution_ns(self, clock_id): return 1_000_000
 
-stub = WasiStub(WasiConfig(clock=FakeClock()))
+host = WasiHost(WasiConfig(clock=FakeClock()))
 ```
 
 ## WASI functions implemented
@@ -88,6 +89,7 @@ stub = WasiStub(WasiConfig(clock=FakeClock()))
 | Function            | Tier | Description                                      |
 |---------------------|------|--------------------------------------------------|
 | `fd_write`          | 1    | Write iovec buffers to stdout or stderr          |
+| `fd_read`           | 1    | Read iovec buffers from stdin                    |
 | `proc_exit`         | 1    | Terminate the WASM program (raises ProcExitError)|
 | `args_sizes_get`    | 3    | Report argument count and buffer size            |
 | `args_get`          | 3    | Copy args into WASM linear memory                |

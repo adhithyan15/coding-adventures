@@ -118,9 +118,16 @@ offsets, so this is fairly standard for stack-based VMs.
 from __future__ import annotations
 
 import struct
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import IntEnum
+from typing import TYPE_CHECKING
 
+from clr_bytecode_disassembler import CLRInstruction, CLRMethodBody
+
+if TYPE_CHECKING:
+    from simulator_protocol import ExecutionResult
+
+    from clr_simulator.state import CLRState
 
 # ---------------------------------------------------------------------------
 # Opcode definitions — real CLR IL opcode values
@@ -289,9 +296,9 @@ class CLRTrace:
 
     pc: int  # Program counter where this instruction was located
     opcode: str  # Human-readable mnemonic (e.g., "ldc.i4.1", "add")
-    stack_before: list[int | None]  # Evaluation stack snapshot before execution
-    stack_after: list[int | None]  # Evaluation stack snapshot after execution
-    locals_snapshot: list[int | None]  # Local variable slots after execution
+    stack_before: list[object | None]  # Evaluation stack snapshot before execution
+    stack_after: list[object | None]  # Evaluation stack snapshot after execution
+    locals_snapshot: list[object | None]  # Local variable slots after execution
     description: str  # Human-readable description of what happened
 
 
@@ -355,7 +362,7 @@ class CLRSimulator:
         Step 4: ret           halt
     """
 
-    def __init__(self) -> None:
+    def __init__(self, host: object | None = None) -> None:
         """Initialize the CLR simulator with empty state.
 
         Creates:
@@ -364,11 +371,15 @@ class CLRSimulator:
             - PC at 0
             - No bytecode loaded
         """
-        self.stack: list[int | None] = []
-        self.locals: list[int | None] = [None] * 16
+        self.stack: list[object | None] = []
+        self.locals: list[object | None] = [None] * 16
         self.pc: int = 0
         self.bytecode: bytes = b""
         self.halted: bool = False
+        self._host = host
+        self._method_body: CLRMethodBody | None = None
+        self._instruction_map: dict[int, tuple[int, CLRInstruction]] = {}
+        self._instruction_offsets: list[int] = []
 
     def load(self, bytecode: bytes, num_locals: int = 16) -> None:
         """Load a CLR IL bytecode program into the simulator.
@@ -386,6 +397,30 @@ class CLRSimulator:
         self.locals = [None] * num_locals
         self.pc = 0
         self.halted = False
+        self._method_body = None
+        self._instruction_map = {}
+        self._instruction_offsets = []
+
+    def load_method_body(
+        self,
+        method_body: CLRMethodBody,
+        num_locals: int | None = None,
+    ) -> None:
+        """Load a disassembled CLR method body."""
+        self.bytecode = method_body.il_bytes
+        self.stack = []
+        local_count = num_locals if num_locals is not None else method_body.local_count
+        self.locals = [None] * local_count
+        self.halted = False
+        self._method_body = method_body
+        self._instruction_offsets = [
+            instruction.offset for instruction in method_body.instructions
+        ]
+        self._instruction_map = {
+            instruction.offset: (index, instruction)
+            for index, instruction in enumerate(method_body.instructions)
+        }
+        self.pc = self._instruction_offsets[0] if self._instruction_offsets else 0
 
     def step(self) -> CLRTrace:
         """Execute one CLR IL instruction and return a trace.
@@ -411,8 +446,14 @@ class CLRSimulator:
             msg = "CLR simulator has halted — no more instructions to execute"
             raise RuntimeError(msg)
 
+        if self._method_body is not None:
+            return self._step_disassembled()
+
         if self.pc >= len(self.bytecode):
-            msg = f"PC ({self.pc}) is beyond the end of bytecode (length {len(self.bytecode)})"
+            msg = (
+                f"PC ({self.pc}) is beyond the end of bytecode "
+                f"(length {len(self.bytecode)})"
+            )
             raise RuntimeError(msg)
 
         # Snapshot the stack before execution for the trace
@@ -654,7 +695,391 @@ class CLRSimulator:
             if self.halted:
                 break
             traces.append(self.step())
+        if not self.halted:
+            msg = f"CLR simulator exceeded max_steps ({max_steps})"
+            raise RuntimeError(msg)
         return traces
+
+    # -------------------------------------------------------------------
+    # simulator-protocol conformance methods
+    # -------------------------------------------------------------------
+
+    def get_state(self) -> CLRState:
+        """Return a frozen snapshot of the current CLR simulator state.
+
+        All mutable lists are converted to tuples so the result is a true
+        immutable value.  The snapshot will not change even if the simulator
+        continues executing after this call returns.
+
+        This method satisfies the ``Simulator[CLRState]`` protocol from the
+        ``simulator-protocol`` package.
+
+        Returns
+        -------
+        CLRState:
+            Frozen dataclass capturing: evaluation stack, local variable
+            slots, program counter, and halted flag.
+
+        Examples
+        --------
+        >>> sim = CLRSimulator()
+        >>> sim.load(assemble_clr((CLROpcode.LDC_I4_1,), (CLROpcode.RET,)))
+        >>> sim.run()
+        [...]
+        >>> state = sim.get_state()
+        >>> state.halted
+        True
+        """
+        from clr_simulator.state import CLRState
+
+        return CLRState(
+            stack=tuple(self.stack),
+            locals=tuple(self.locals),
+            pc=self.pc,
+            halted=self.halted,
+        )
+
+    def execute(
+        self,
+        program: bytes,
+        max_steps: int = 100_000,
+    ) -> ExecutionResult[CLRState]:
+        """Load program, run to RET or max_steps, return ExecutionResult.
+
+        This is the protocol-conforming entry point for the
+        ``Simulator[CLRState]`` protocol defined in the ``simulator-protocol``
+        package.  It resets internal state, loads the program, runs the
+        execution loop, and returns a rich result type.
+
+        The existing ``load()`` and ``run()`` methods are unchanged — this
+        method calls them internally and adapts the return value.
+
+        Parameters
+        ----------
+        program:
+            Raw CLR IL bytecode bytes.
+        max_steps:
+            Maximum instructions to execute before giving up (default 100,000).
+
+        Returns
+        -------
+        ExecutionResult[CLRState]:
+            - ``halted``: True if RET was reached.
+            - ``steps``: total instructions executed.
+            - ``final_state``: frozen ``CLRState`` snapshot at termination.
+            - ``error``: None on clean halt; error string otherwise.
+            - ``traces``: one ``StepTrace`` per instruction executed.
+
+        Examples
+        --------
+        >>> sim = CLRSimulator()
+        >>> from clr_simulator.simulator import (
+        ...     CLROpcode,
+        ...     assemble_clr,
+        ...     encode_ldc_i4,
+        ...     encode_stloc,
+        ... )
+        >>> program = assemble_clr(
+        ...     encode_ldc_i4(1),
+        ...     encode_ldc_i4(2),
+        ...     (CLROpcode.ADD,),
+        ...     encode_stloc(0),
+        ...     (CLROpcode.RET,),
+        ... )
+        >>> result = sim.execute(program)
+        >>> result.ok
+        True
+        >>> result.final_state.locals[0]
+        3
+        """
+        from simulator_protocol import ExecutionResult, StepTrace
+
+        # Reset and load
+        self.load(program)
+
+        step_traces: list[StepTrace] = []
+        steps = 0
+        error: str | None = None
+
+        try:
+            while not self.halted and steps < max_steps:
+                pc_before = self.pc
+                clr_trace = self.step()
+                step_traces.append(
+                    StepTrace(
+                        pc_before=pc_before,
+                        pc_after=self.pc,
+                        mnemonic=clr_trace.opcode,
+                        description=clr_trace.description,
+                    )
+                )
+                steps += 1
+        except Exception as exc:
+            error = str(exc)
+
+        if error is None and not self.halted:
+            error = f"max_steps ({max_steps}) exceeded"
+
+        return ExecutionResult(
+            halted=self.halted,
+            steps=steps,
+            final_state=self.get_state(),
+            error=error,
+            traces=step_traces,
+        )
+
+    def reset(self) -> None:
+        """Reset all simulator state to initial values.
+
+        Clears the evaluation stack, locals, program counter, bytecode,
+        and halted flag.  After ``reset()``, the simulator is in the same
+        state as a freshly constructed ``CLRSimulator()``.
+
+        This method satisfies the ``reset()`` requirement of the
+        ``Simulator[CLRState]`` protocol.
+
+        Examples
+        --------
+        >>> sim = CLRSimulator()
+        >>> sim.load(bytes([0x17, 0x2A]))  # ldc.i4.1, ret
+        >>> sim.run()
+        [...]
+        >>> sim.halted
+        True
+        >>> sim.reset()
+        >>> sim.halted
+        False
+        >>> sim.stack
+        []
+        """
+        self.stack = []
+        self.locals = [None] * len(self.locals)
+        self.pc = 0
+        self.bytecode = b""
+        self.halted = False
+        self._method_body = None
+        self._instruction_map = {}
+        self._instruction_offsets = []
+
+    def _step_disassembled(self) -> CLRTrace:
+        if self.pc not in self._instruction_map:
+            msg = f"PC ({self.pc}) is not aligned to a disassembled instruction"
+            raise RuntimeError(msg)
+
+        instruction_index, instruction = self._instruction_map[self.pc]
+        stack_before = list(self.stack)
+        opcode = instruction.opcode
+
+        if opcode == "nop":
+            self._advance_to_next_instruction(instruction_index)
+            return self._trace(instruction, stack_before, "no operation")
+
+        if opcode == "ldnull":
+            self.stack.append(None)
+            self._advance_to_next_instruction(instruction_index)
+            return self._trace(instruction, stack_before, "push null")
+
+        if opcode.startswith("ldc.i4"):
+            self.stack.append(instruction.operand)
+            self._advance_to_next_instruction(instruction_index)
+            return self._trace(instruction, stack_before, f"push {instruction.operand}")
+
+        if opcode == "ldstr":
+            self.stack.append(instruction.operand)
+            self._advance_to_next_instruction(instruction_index)
+            description = f"push {instruction.operand!r}"
+            return self._trace(instruction, stack_before, description)
+
+        if opcode.startswith("ldloc"):
+            slot = int(instruction.operand)
+            value = self.locals[slot]
+            if value is None:
+                msg = f"Local variable {slot} is uninitialized"
+                raise RuntimeError(msg)
+            self.stack.append(value)
+            self._advance_to_next_instruction(instruction_index)
+            return self._trace(
+                instruction,
+                stack_before,
+                f"push locals[{slot}] = {value}",
+            )
+
+        if opcode.startswith("stloc"):
+            slot = int(instruction.operand)
+            value = self.stack.pop()
+            self.locals[slot] = value
+            self._advance_to_next_instruction(instruction_index)
+            return self._trace(
+                instruction,
+                stack_before,
+                f"pop {value}, store in locals[{slot}]",
+            )
+
+        if opcode == "add":
+            return self._step_disassembled_arithmetic(
+                instruction,
+                stack_before,
+                lambda a, b: a + b,
+            )
+        if opcode == "sub":
+            return self._step_disassembled_arithmetic(
+                instruction,
+                stack_before,
+                lambda a, b: a - b,
+            )
+        if opcode == "mul":
+            return self._step_disassembled_arithmetic(
+                instruction,
+                stack_before,
+                lambda a, b: a * b,
+            )
+        if opcode == "div":
+            return self._step_disassembled_arithmetic(
+                instruction,
+                stack_before,
+                lambda a, b: a // b,
+            )
+        if opcode == "ceq":
+            return self._step_disassembled_compare(
+                instruction,
+                stack_before,
+                lambda a, b: a == b,
+            )
+        if opcode == "cgt":
+            return self._step_disassembled_compare(
+                instruction,
+                stack_before,
+                lambda a, b: a > b,
+            )
+        if opcode == "clt":
+            return self._step_disassembled_compare(
+                instruction,
+                stack_before,
+                lambda a, b: a < b,
+            )
+
+        if opcode == "call":
+            return self._step_disassembled_call(
+                instruction_index,
+                instruction,
+                stack_before,
+            )
+
+        if opcode in {"br", "br.s"}:
+            self.pc = int(instruction.operand)
+            return self._trace(
+                instruction,
+                stack_before,
+                f"branch to IL_{self.pc:04x}",
+            )
+
+        if opcode in {"brfalse.s", "brtrue.s"}:
+            value = self.stack.pop()
+            should_branch = bool(value)
+            if opcode == "brfalse.s":
+                should_branch = not should_branch
+            if should_branch:
+                self.pc = int(instruction.operand)
+                description = f"branch to IL_{self.pc:04x}"
+            else:
+                self._advance_to_next_instruction(instruction_index)
+                description = "fall through"
+            return self._trace(instruction, stack_before, description)
+
+        if opcode == "ret":
+            self.halted = True
+            self._advance_to_next_instruction(instruction_index)
+            return self._trace(instruction, stack_before, "return")
+
+        msg = f"Unsupported disassembled CLR opcode {opcode}"
+        raise RuntimeError(msg)
+
+    def _advance_to_next_instruction(self, instruction_index: int) -> None:
+        next_index = instruction_index + 1
+        if next_index >= len(self._instruction_offsets):
+            self.pc = len(self.bytecode)
+        else:
+            self.pc = self._instruction_offsets[next_index]
+
+    def _trace(
+        self,
+        instruction: CLRInstruction,
+        stack_before: list[object | None],
+        description: str,
+    ) -> CLRTrace:
+        return CLRTrace(
+            pc=instruction.offset,
+            opcode=instruction.opcode,
+            stack_before=stack_before,
+            stack_after=list(self.stack),
+            locals_snapshot=list(self.locals),
+            description=description,
+        )
+
+    def _step_disassembled_arithmetic(
+        self,
+        instruction: CLRInstruction,
+        stack_before: list[object | None],
+        op: object,
+    ) -> CLRTrace:
+        right = self.stack.pop()
+        left = self.stack.pop()
+        result = op(left, right)
+        self.stack.append(result)
+        instruction_index, _ = self._instruction_map[instruction.offset]
+        self._advance_to_next_instruction(instruction_index)
+        return self._trace(
+            instruction,
+            stack_before,
+            f"pop {right} and {left}, push {result}",
+        )
+
+    def _step_disassembled_compare(
+        self,
+        instruction: CLRInstruction,
+        stack_before: list[object | None],
+        op: object,
+    ) -> CLRTrace:
+        right = self.stack.pop()
+        left = self.stack.pop()
+        result = 1 if op(left, right) else 0
+        self.stack.append(result)
+        instruction_index, _ = self._instruction_map[instruction.offset]
+        self._advance_to_next_instruction(instruction_index)
+        return self._trace(
+            instruction,
+            stack_before,
+            f"compare {left} and {right}, push {result}",
+        )
+
+    def _step_disassembled_call(
+        self,
+        instruction_index: int,
+        instruction: CLRInstruction,
+        stack_before: list[object | None],
+    ) -> CLRTrace:
+        target = instruction.operand
+        if not hasattr(target, "signature"):
+            msg = "CLR simulator cannot yet invoke internal method definitions"
+            raise RuntimeError(msg)
+        argument_count = len(target.signature.parameter_types)
+        args = [self.stack.pop() for _ in range(argument_count)]
+        args.reverse()
+        if self._host is None or not hasattr(self._host, "call_method"):
+            msg = (
+                "No CLR host available to invoke "
+                f"{target.declaring_type}.{target.name}"
+            )
+            raise RuntimeError(msg)
+        result = self._host.call_method(target, args)
+        if target.signature.return_type != "void":
+            self.stack.append(result)
+        self._advance_to_next_instruction(instruction_index)
+        return self._trace(
+            instruction,
+            stack_before,
+            f"call {target.declaring_type}.{target.name}",
+        )
 
     # --- Private helper methods ---
 

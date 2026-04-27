@@ -1,0 +1,20 @@
+name: coding_adventures_barcode_2d
+version: 0.1.0
+description: >
+  Shared 2D barcode abstraction layer. Provides ModuleGrid (the universal
+  immutable grid produced by every 2D barcode encoder) and layout() (the
+  single function that converts a ModuleGrid into a PaintScene). Supports
+  square modules (QR Code, Data Matrix, Aztec, PDF417) and flat-top hex
+  modules (MaxiCode).
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_paint_instructions:
+    path: ../paint-instructions
+
+dev_dependencies:
+  test: ^1.25.0

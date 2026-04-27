@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "programs/go/ircd",
+  "capabilities": ["network"],
+  "justification": "ircd binds a TCP port to accept IRC client connections."
+}

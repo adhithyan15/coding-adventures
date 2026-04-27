@@ -210,7 +210,7 @@ annotated_assign_stmt = target COLON expression [ EQUALS expression ] ;
 # Multiple assignment (x = y = 1) is parsed as a chain of = operators.
 # Semantic analysis validates that the LHS of each = is a valid target.
 assign_stmt = expression_list
-              [ ( EQUALS expression_list )+
+              [ EQUALS expression_list { EQUALS expression_list }
               | augmented_assign_op expression_list ] ;
 
 augmented_assign_op = PLUS_EQUALS | MINUS_EQUALS | STAR_EQUALS | SLASH_EQUALS

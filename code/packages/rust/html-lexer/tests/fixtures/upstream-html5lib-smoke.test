@@ -1,0 +1,90 @@
+{
+  "tests": [
+    {
+      "description": "simple start and end tag in data state",
+      "input": "<b>Hello</b>",
+      "output": [
+        ["StartTag", "b", {}],
+        ["Character", "Hello"],
+        ["EndTag", "b"]
+      ]
+    },
+    {
+      "description": "comment token surrounded by characters",
+      "input": "Before<!--note-->After",
+      "output": [
+        ["Character", "Before"],
+        ["Comment", "note"],
+        ["Character", "After"]
+      ]
+    },
+    {
+      "description": "explicit data state fixture still normalizes",
+      "initialStates": ["Data state"],
+      "input": "<em>Hi</em>",
+      "output": [
+        ["StartTag", "em", {}],
+        ["Character", "Hi"],
+        ["EndTag", "em"]
+      ]
+    },
+    {
+      "description": "doctype plus single attribute start tag",
+      "input": "<!DOCTYPE html><p class=test>Hi</p>",
+      "output": [
+        ["DOCTYPE", "html", null, null, true],
+        ["StartTag", "p", {"class": "test"}],
+        ["Character", "Hi"],
+        ["EndTag", "p"]
+      ]
+    },
+    {
+      "description": "self closing start tag uses html5lib boolean slot",
+      "input": "<br/>",
+      "output": [
+        ["StartTag", "br", {}, true]
+      ]
+    },
+    {
+      "description": "comment eof recovery reports tokenizer error",
+      "input": "<!--open",
+      "output": [
+        ["Comment", "open"]
+      ],
+      "errors": [
+        {"code": "eof-in-comment", "line": 1, "col": 9}
+      ]
+    },
+    {
+      "description": "rcdata matching end tag emits end tag token",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "Hello</title>",
+      "output": [
+        ["Character", "Hello"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
+      "description": "rcdata non matching end tag stays text",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "Hello&lt;/title>",
+      "output": [
+        ["Character", "Hello"],
+        ["Character", "<"],
+        ["Character", "/title>"]
+      ]
+    },
+    {
+      "description": "rawtext matching end tag emits end tag token",
+      "initialStates": ["RAWTEXT state"],
+      "lastStartTag": "style",
+      "input": "body { color: red; }</style>",
+      "output": [
+        ["Character", "body { color: red; }"],
+        ["EndTag", "style"]
+      ]
+    }
+  ]
+}

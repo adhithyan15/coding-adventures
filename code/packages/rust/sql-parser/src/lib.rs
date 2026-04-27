@@ -69,34 +69,9 @@
 //! 5. **Recursive expressions** — subqueries and nested expressions exercise
 //!    the parser's backtracking and memoization.
 
-use std::fs;
-
-use grammar_tools::parser_grammar::parse_parser_grammar;
-use parser::grammar_parser::{GrammarParser, GrammarASTNode};
 use coding_adventures_sql_lexer::tokenize_sql;
-
-// ===========================================================================
-// Grammar file location
-// ===========================================================================
-
-/// Build the path to the `sql.grammar` file.
-///
-/// Uses `env!("CARGO_MANIFEST_DIR")` — the compile-time path to this crate's
-/// `Cargo.toml` — and navigates up to the shared `grammars/` directory.
-///
-/// ```text
-/// code/
-///   grammars/
-///     sql.grammar           <-- target file
-///   packages/
-///     rust/
-///       sql-parser/
-///         Cargo.toml        <-- CARGO_MANIFEST_DIR
-/// ```
-fn grammar_path() -> String {
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    format!("{manifest_dir}/../../../grammars/sql.grammar")
-}
+use parser::grammar_parser::{GrammarASTNode, GrammarParser};
+mod _grammar;
 
 // ===========================================================================
 // Public API
@@ -138,17 +113,8 @@ pub fn create_sql_parser(source: &str) -> Result<GrammarParser, String> {
     // declares # @case_insensitive true.
     let tokens = tokenize_sql(source)?;
 
-    // Step 2: Read the parser grammar from disk.
-    //
-    // The grammar file defines the syntactic structure of SQL in EBNF notation.
-    // It has ~25 rules covering SELECT, INSERT, UPDATE, DELETE, CREATE, DROP,
-    // and the full expression hierarchy.
-    let grammar_text = fs::read_to_string(grammar_path())
-        .map_err(|e| format!("Failed to read sql.grammar: {e}"))?;
-
-    // Step 3: Parse the grammar text into a structured ParserGrammar.
-    let grammar = parse_parser_grammar(&grammar_text)
-        .map_err(|e| format!("Failed to parse sql.grammar: {e}"))?;
+    // Step 2: Load the compiled parser grammar.
+    let grammar = _grammar::parser_grammar();
 
     // Step 4: Create the parser.
     //
@@ -252,7 +218,10 @@ mod tests {
     #[test]
     fn test_parse_select_star() {
         let ast = assert_program_root("SELECT * FROM users");
-        assert!(find_rule(&ast, "select_stmt"), "Expected select_stmt in AST");
+        assert!(
+            find_rule(&ast, "select_stmt"),
+            "Expected select_stmt in AST"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -392,7 +361,10 @@ mod tests {
         let ast = assert_program_root(
             "CREATE TABLE users (id INTEGER PRIMARY KEY, name VARCHAR NOT NULL)",
         );
-        assert!(find_rule(&ast, "create_table_stmt"), "Expected create_table_stmt");
+        assert!(
+            find_rule(&ast, "create_table_stmt"),
+            "Expected create_table_stmt"
+        );
         assert!(find_rule(&ast, "col_def"), "Expected col_def");
         assert!(find_rule(&ast, "col_constraint"), "Expected col_constraint");
     }
@@ -405,7 +377,10 @@ mod tests {
     #[test]
     fn test_parse_create_table_if_not_exists() {
         let ast = assert_program_root("CREATE TABLE IF NOT EXISTS t (id INTEGER)");
-        assert!(find_rule(&ast, "create_table_stmt"), "Expected create_table_stmt");
+        assert!(
+            find_rule(&ast, "create_table_stmt"),
+            "Expected create_table_stmt"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -418,7 +393,10 @@ mod tests {
     #[test]
     fn test_parse_drop_table() {
         let ast = assert_program_root("DROP TABLE users");
-        assert!(find_rule(&ast, "drop_table_stmt"), "Expected drop_table_stmt");
+        assert!(
+            find_rule(&ast, "drop_table_stmt"),
+            "Expected drop_table_stmt"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -429,7 +407,10 @@ mod tests {
     #[test]
     fn test_parse_drop_table_if_exists() {
         let ast = assert_program_root("DROP TABLE IF EXISTS users");
-        assert!(find_rule(&ast, "drop_table_stmt"), "Expected drop_table_stmt");
+        assert!(
+            find_rule(&ast, "drop_table_stmt"),
+            "Expected drop_table_stmt"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -446,8 +427,14 @@ mod tests {
         let ast_upper = assert_program_root("SELECT * FROM users");
 
         // Both should contain select_stmt and table_ref.
-        assert!(find_rule(&ast_lower, "select_stmt"), "Lowercase: Expected select_stmt");
-        assert!(find_rule(&ast_upper, "select_stmt"), "Uppercase: Expected select_stmt");
+        assert!(
+            find_rule(&ast_lower, "select_stmt"),
+            "Lowercase: Expected select_stmt"
+        );
+        assert!(
+            find_rule(&ast_upper, "select_stmt"),
+            "Uppercase: Expected select_stmt"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -461,7 +448,10 @@ mod tests {
     #[test]
     fn test_parse_arithmetic_expression() {
         let ast = assert_program_root("SELECT x FROM t WHERE x + 1 > 5 * 2");
-        assert!(find_rule(&ast, "additive"), "Expected additive in expression");
+        assert!(
+            find_rule(&ast, "additive"),
+            "Expected additive in expression"
+        );
         assert!(find_rule(&ast, "multiplicative"), "Expected multiplicative");
     }
 
@@ -515,7 +505,10 @@ mod tests {
     #[test]
     fn test_parse_between() {
         let ast = assert_program_root("SELECT x FROM t WHERE age BETWEEN 18 AND 65");
-        assert!(find_rule(&ast, "comparison"), "Expected comparison with BETWEEN");
+        assert!(
+            find_rule(&ast, "comparison"),
+            "Expected comparison with BETWEEN"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -584,7 +577,10 @@ mod tests {
     #[test]
     fn test_parse_trailing_semicolon() {
         let ast = assert_program_root("SELECT * FROM t;");
-        assert!(find_rule(&ast, "select_stmt"), "Expected select_stmt with trailing semicolon");
+        assert!(
+            find_rule(&ast, "select_stmt"),
+            "Expected select_stmt with trailing semicolon"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -597,7 +593,10 @@ mod tests {
     #[test]
     fn test_parse_null_true_false() {
         let ast = assert_program_root("SELECT NULL, TRUE, FALSE FROM t");
-        assert!(find_rule(&ast, "primary"), "Expected primary node for literals");
+        assert!(
+            find_rule(&ast, "primary"),
+            "Expected primary node for literals"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -609,7 +608,11 @@ mod tests {
     #[test]
     fn test_create_sql_parser() {
         let result = create_sql_parser("SELECT 1 FROM t");
-        assert!(result.is_ok(), "Expected Ok parser, got: {:?}", result.err());
+        assert!(
+            result.is_ok(),
+            "Expected Ok parser, got: {:?}",
+            result.err()
+        );
         let mut parser = result.unwrap();
         let parse_result = parser.parse();
         assert!(parse_result.is_ok(), "Expected successful parse");
@@ -631,7 +634,10 @@ mod tests {
     fn test_parse_invalid_sql() {
         // "SELECT FROM" is missing the select_list — should fail to parse.
         let result = parse_sql("SELECT FROM");
-        assert!(result.is_err(), "Expected Err for invalid SQL 'SELECT FROM'");
+        assert!(
+            result.is_err(),
+            "Expected Err for invalid SQL 'SELECT FROM'"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -646,7 +652,10 @@ mod tests {
     fn test_parse_tokenization_error_propagates() {
         // "@" is not in the sql.tokens grammar — tokenization should fail.
         let result = parse_sql("SELECT @ FROM t");
-        assert!(result.is_err(), "Expected Err when source has an invalid character");
+        assert!(
+            result.is_err(),
+            "Expected Err when source has an invalid character"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -688,7 +697,10 @@ mod tests {
     #[test]
     fn test_parse_select_distinct() {
         let ast = assert_program_root("SELECT DISTINCT name FROM users");
-        assert!(find_rule(&ast, "select_stmt"), "Expected select_stmt with DISTINCT");
+        assert!(
+            find_rule(&ast, "select_stmt"),
+            "Expected select_stmt with DISTINCT"
+        );
     }
 
     // -----------------------------------------------------------------------

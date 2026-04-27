@@ -30,7 +30,7 @@ code/packages/{lang}/{name}-parser/
 ```
 
 The underscore prefix (`_grammar`) marks the file as a generated artifact — it must not be edited
-by hand. Regenerate it by running the generation script whenever the source grammar changes.
+by hand. Regenerate it with the Rust `grammar-tools` program whenever the source grammar changes.
 
 ### Per-language filenames and exported symbols
 
@@ -49,18 +49,24 @@ script passes `--package {pkgname}` to set it correctly per directory.
 
 ## How to regenerate
 
-Run the generation script from the repository root:
+For Rust packages, run the native generator from the repository root:
 
 ```sh
-scripts/generate-compiled-grammars.sh
+cargo run --release --manifest-path code/programs/rust/grammar-tools/Cargo.toml -- generate-rust-compiled-grammars
 ```
 
-The script iterates over every grammar in `code/grammars/`, finds all downstream packages across
-all 7 languages that use it, and calls the appropriate `grammar-tools compile-*` command for each.
-It reports any failures at the end. Re-run it whenever a `.tokens` or `.grammar` file changes.
+You can optionally filter to one grammar or package family:
 
-The script is the **source of truth** for the grammar-to-package mapping. It lives at
-`scripts/generate-compiled-grammars.sh` and is committed alongside the generated files.
+```sh
+cargo run --release --manifest-path code/programs/rust/grammar-tools/Cargo.toml -- generate-rust-compiled-grammars sql dartmouth_basic mosaic
+```
+
+The Rust command iterates over `code/packages/rust`, finds `*-lexer` and `*-parser` crates with
+matching files under `code/grammars`, and calls the appropriate compile step for each. Its mapping
+logic now lives in `code/programs/rust/grammar-tools/src/lib.rs`.
+
+The older `scripts/generate-compiled-grammars.sh` script remains as legacy orchestration for the
+non-Rust language outputs until those generators are also moved into native programs.
 
 ## Grammar coverage
 

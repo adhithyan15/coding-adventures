@@ -1,0 +1,17 @@
+[workspace]
+
+[package]
+name = "paint-vm-metal-native-nif"
+version = "0.1.0"
+edition = "2021"
+description = "Erlang NIF exposing the Metal Paint VM to Elixir"
+build = "build.rs"
+
+[lib]
+name = "paint_vm_metal_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+erl-nif-bridge = { path = "../../../../rust/erl-nif-bridge" }
+paint-instructions = { path = "../../../../rust/paint-instructions" }
+paint-metal = { path = "../../../../rust/paint-metal" }

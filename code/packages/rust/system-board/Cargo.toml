@@ -10,5 +10,5 @@ display = { path = "../display" }
 interrupt-handler = { path = "../interrupt-handler" }
 rom-bios = { path = "../rom-bios" }
 bootloader = { path = "../bootloader" }
-os-kernel = { path = "../os-kernel" }
+os-kernel = { package = "os-kernel-simulator", path = "../os-kernel-simulator" }
 cpu-simulator = { path = "../cpu-simulator" }

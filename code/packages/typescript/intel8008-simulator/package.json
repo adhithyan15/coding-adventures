@@ -1,0 +1,28 @@
+{
+  "name": "@coding-adventures/intel8008-simulator",
+  "version": "0.1.0",
+  "description": "Intel 8008 first 8-bit microprocessor behavioral simulation — Layer 4f of the computing stack",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "intel-8008",
+    "microprocessor",
+    "historical",
+    "8-bit",
+    "simulator",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

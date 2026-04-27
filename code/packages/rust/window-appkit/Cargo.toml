@@ -1,0 +1,9 @@
+[package]
+name = "window-appkit"
+version = "0.1.0"
+edition = "2021"
+description = "AppKit-backed desktop window backend for window-core"
+
+[dependencies]
+window-core = { path = "../window-core" }
+objc-bridge = { path = "../objc-bridge" }

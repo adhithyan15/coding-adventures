@@ -28,7 +28,7 @@
 //! for SQL specifically. It knows where to find `sql.tokens` and provides
 //! two public entry points:
 //!
-//! - [`create_sql_lexer`] — returns a `Result<GrammarLexer, String>` for fine-grained control.
+//! - [`create_sql_lexer`] — returns a `GrammarLexer` for fine-grained control.
 //! - [`tokenize_sql`] — convenience function that returns `Result<Vec<Token>, String>`.
 //!
 //! # Case-insensitive keywords
@@ -66,42 +66,9 @@
 //! The grammar-driven approach encodes all of this in the 97-line `sql.tokens`
 //! file, with only ~30 lines of Rust glue code needed here.
 
-use std::fs;
-
-use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
 use lexer::token::Token;
-
-// ===========================================================================
-// Grammar file location
-// ===========================================================================
-
-/// Build the path to the `sql.tokens` grammar file.
-///
-/// We use `env!("CARGO_MANIFEST_DIR")` to get the directory containing this
-/// crate's `Cargo.toml` at compile time. From there, we navigate up to the
-/// shared `grammars/` directory.
-///
-/// The directory structure looks like:
-///
-/// ```text
-/// code/
-///   grammars/
-///     sql.tokens            <-- this is what we want
-///   packages/
-///     rust/
-///       sql-lexer/
-///         Cargo.toml        <-- CARGO_MANIFEST_DIR points here
-///         src/
-///           lib.rs          <-- we are here
-/// ```
-///
-/// So the relative path from CARGO_MANIFEST_DIR to the grammar file is:
-/// `../../../grammars/sql.tokens`
-fn grammar_path() -> String {
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    format!("{manifest_dir}/../../../grammars/sql.tokens")
-}
+mod _grammar;
 
 // ===========================================================================
 // Public API
@@ -129,55 +96,15 @@ fn grammar_path() -> String {
 /// ```no_run
 /// use coding_adventures_sql_lexer::create_sql_lexer;
 ///
-/// let mut lexer = create_sql_lexer("SELECT id FROM users").unwrap();
+/// let mut lexer = create_sql_lexer("SELECT id FROM users");
 /// let tokens = lexer.tokenize().expect("tokenization failed");
 /// for token in &tokens {
 ///     println!("{}", token);
 /// }
 /// ```
-pub fn create_sql_lexer(source: &str) -> Result<GrammarLexer<'_>, String> {
-    create_sql_lexer_with_path(source, &grammar_path())
-}
-
-/// Internal helper: create a lexer using an explicit grammar file path.
-///
-/// This allows tests to supply alternate grammar paths (e.g., a non-existent
-/// path to exercise the error path, or a temp file with bad grammar content).
-///
-/// # Arguments
-///
-/// * `source` — The SQL source text to lex.
-/// * `path`   — Filesystem path to a `.tokens` grammar file.
-///
-/// # Errors
-///
-/// Returns `Err(String)` if the file cannot be read or the grammar cannot
-/// be parsed.
-pub fn create_sql_lexer_with_path<'a>(source: &'a str, path: &str) -> Result<GrammarLexer<'a>, String> {
-    // Step 1: Read the grammar file from disk.
-    //
-    // We read the file at runtime (not compile time) because the grammar file
-    // may be updated independently of this crate. This also avoids bloating
-    // the binary with embedded grammar text.
-    let grammar_text = fs::read_to_string(path)
-        .map_err(|e| format!("Failed to read sql.tokens from '{path}': {e}"))?;
-
-    // Step 2: Parse the grammar text into a structured TokenGrammar.
-    //
-    // The TokenGrammar contains:
-    //   - Token definitions (patterns, names, aliases)
-    //   - Skip patterns (whitespace, line comments, block comments)
-    //   - 50+ keywords (SELECT, FROM, WHERE, etc.)
-    //   - case_insensitive = true (keywords normalized to uppercase)
-    //   - Mode: default (no indentation tracking)
-    let grammar = parse_token_grammar(&grammar_text)
-        .map_err(|e| format!("Failed to parse sql.tokens grammar: {e}"))?;
-
-    // Step 3: Create and return the lexer.
-    //
-    // The GrammarLexer compiles all token patterns into anchored regexes
-    // and reads grammar.case_insensitive to set up keyword normalization.
-    Ok(GrammarLexer::new(source, &grammar))
+pub fn create_sql_lexer(source: &str) -> GrammarLexer<'_> {
+    let grammar = _grammar::token_grammar();
+    GrammarLexer::new(source, &grammar)
 }
 
 /// Tokenize SQL source text into a vector of tokens.
@@ -208,7 +135,7 @@ pub fn create_sql_lexer_with_path<'a>(source: &'a str, path: &str) -> Result<Gra
 /// ```
 pub fn tokenize_sql(source: &str) -> Result<Vec<Token>, String> {
     // Create a fresh lexer for this source text.
-    let mut sql_lexer = create_sql_lexer(source)?;
+    let mut sql_lexer = create_sql_lexer(source);
 
     // Tokenize and propagate any LexerError as a String.
     sql_lexer
@@ -276,8 +203,17 @@ mod tests {
         for input in &["select", "SELECT", "Select"] {
             let pairs = lex(input);
             assert_eq!(pairs.len(), 1, "Expected 1 token for input {:?}", input);
-            assert_eq!(pairs[0].0, TokenType::Keyword, "Input {:?} should be Keyword", input);
-            assert_eq!(pairs[0].1, "SELECT", "Input {:?} should normalize to SELECT", input);
+            assert_eq!(
+                pairs[0].0,
+                TokenType::Keyword,
+                "Input {:?} should be Keyword",
+                input
+            );
+            assert_eq!(
+                pairs[0].1, "SELECT",
+                "Input {:?} should normalize to SELECT",
+                input
+            );
         }
     }
 
@@ -375,7 +311,10 @@ mod tests {
     fn test_not_equals_both_forms() {
         for op in &["!=", "<>"] {
             let tokens = tokenize_sql(op).expect("tokenize_sql failed");
-            let non_eof: Vec<_> = tokens.iter().filter(|t| t.type_ != TokenType::Eof).collect();
+            let non_eof: Vec<_> = tokens
+                .iter()
+                .filter(|t| t.type_ != TokenType::Eof)
+                .collect();
             assert_eq!(non_eof.len(), 1, "Expected 1 token for {:?}", op);
             assert_eq!(
                 non_eof[0].type_name.as_deref(),
@@ -400,12 +339,18 @@ mod tests {
     #[test]
     fn test_less_equals_and_greater_equals() {
         let tokens_le = tokenize_sql("<=").expect("tokenize_sql failed");
-        let non_eof_le: Vec<_> = tokens_le.iter().filter(|t| t.type_ != TokenType::Eof).collect();
+        let non_eof_le: Vec<_> = tokens_le
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof)
+            .collect();
         assert_eq!(non_eof_le.len(), 1);
         assert_eq!(non_eof_le[0].type_name.as_deref(), Some("LESS_EQUALS"));
 
         let tokens_ge = tokenize_sql(">=").expect("tokenize_sql failed");
-        let non_eof_ge: Vec<_> = tokens_ge.iter().filter(|t| t.type_ != TokenType::Eof).collect();
+        let non_eof_ge: Vec<_> = tokens_ge
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof)
+            .collect();
         assert_eq!(non_eof_ge.len(), 1);
         assert_eq!(non_eof_ge[0].type_name.as_deref(), Some("GREATER_EQUALS"));
     }
@@ -427,12 +372,18 @@ mod tests {
     #[test]
     fn test_less_than_and_greater_than() {
         let tokens_lt = tokenize_sql("<").expect("tokenize_sql failed");
-        let non_eof_lt: Vec<_> = tokens_lt.iter().filter(|t| t.type_ != TokenType::Eof).collect();
+        let non_eof_lt: Vec<_> = tokens_lt
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof)
+            .collect();
         assert_eq!(non_eof_lt.len(), 1);
         assert_eq!(non_eof_lt[0].type_name.as_deref(), Some("LESS_THAN"));
 
         let tokens_gt = tokenize_sql(">").expect("tokenize_sql failed");
-        let non_eof_gt: Vec<_> = tokens_gt.iter().filter(|t| t.type_ != TokenType::Eof).collect();
+        let non_eof_gt: Vec<_> = tokens_gt
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof)
+            .collect();
         assert_eq!(non_eof_gt.len(), 1);
         assert_eq!(non_eof_gt[0].type_name.as_deref(), Some("GREATER_THAN"));
     }
@@ -536,8 +487,17 @@ mod tests {
         ] {
             let pairs = lex(input);
             assert_eq!(pairs.len(), 1, "Expected 1 token for {:?}", input);
-            assert_eq!(pairs[0].0, TokenType::Keyword, "Input {:?} should be Keyword", input);
-            assert_eq!(pairs[0].1, *expected_value, "Input {:?} should normalize to {:?}", input, expected_value);
+            assert_eq!(
+                pairs[0].0,
+                TokenType::Keyword,
+                "Input {:?} should be Keyword",
+                input
+            );
+            assert_eq!(
+                pairs[0].1, *expected_value,
+                "Input {:?} should normalize to {:?}",
+                input, expected_value
+            );
         }
     }
 
@@ -607,7 +567,10 @@ mod tests {
         assert_eq!(pairs[4].0, TokenType::Name);
 
         let tokens_pct = tokenize_sql("%").expect("tokenize_sql failed");
-        let non_eof_pct: Vec<_> = tokens_pct.iter().filter(|t| t.type_ != TokenType::Eof).collect();
+        let non_eof_pct: Vec<_> = tokens_pct
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof)
+            .collect();
         assert_eq!(non_eof_pct[0].type_name.as_deref(), Some("PERCENT"));
     }
 
@@ -649,13 +612,10 @@ mod tests {
     // Test 20: create_sql_lexer factory function
     // -----------------------------------------------------------------------
 
-    /// The `create_sql_lexer` factory returns a `Result<GrammarLexer, String>`.
-    /// On success, the lexer tokenizes correctly.
+    /// The `create_sql_lexer` factory returns a working `GrammarLexer`.
     #[test]
     fn test_create_sql_lexer_success() {
-        let result = create_sql_lexer("SELECT 1");
-        assert!(result.is_ok(), "Expected Ok lexer, got {:?}", result.err());
-        let mut lexer = result.unwrap();
+        let mut lexer = create_sql_lexer("SELECT 1");
         let tokens = lexer.tokenize().expect("tokenize should succeed");
         assert!(tokens.len() >= 2); // SELECT, NUMBER, EOF
         assert_eq!(tokens.last().unwrap().type_, TokenType::Eof);
@@ -671,19 +631,6 @@ mod tests {
     /// | Path                  | Result |
     /// |-----------------------|--------|
     /// | "/no/such/file.tokens"| Err(_) |
-    #[test]
-    fn test_error_nonexistent_grammar_path() {
-        let result = create_sql_lexer_with_path("SELECT 1", "/no/such/file.tokens");
-        assert!(
-            result.is_err(),
-            "Expected Err for non-existent grammar file"
-        );
-        let err = result.err().unwrap();
-        assert!(
-            err.contains("Failed to read sql.tokens"),
-            "Error message should mention the read failure, got: {err}"
-        );
-    }
 
     // -----------------------------------------------------------------------
     // Test 22: Error path — tokenize_sql with bad grammar path
@@ -692,12 +639,6 @@ mod tests {
     /// `tokenize_sql` uses the default grammar path. When the grammar path
     /// is good, it returns `Ok`. This test ensures the `Err` variant of
     /// the `Result` is exercised via the `create_sql_lexer_with_path` helper.
-    #[test]
-    fn test_tokenize_sql_err_via_path() {
-        // Verify that using a bad path (through the with_path helper) returns Err.
-        let result = create_sql_lexer_with_path("SELECT 1", "/tmp/does_not_exist_sql.tokens");
-        assert!(result.is_err());
-    }
 
     // -----------------------------------------------------------------------
     // Test 23: INSERT keywords
@@ -757,7 +698,10 @@ mod tests {
     #[test]
     fn test_semicolon_separator() {
         let pairs = lex("SELECT 1 ; SELECT 2");
-        let semicolons: Vec<_> = pairs.iter().filter(|(t, _)| *t == TokenType::Semicolon).collect();
+        let semicolons: Vec<_> = pairs
+            .iter()
+            .filter(|(t, _)| *t == TokenType::Semicolon)
+            .collect();
         assert_eq!(semicolons.len(), 1);
     }
 

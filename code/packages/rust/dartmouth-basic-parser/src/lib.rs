@@ -77,35 +77,9 @@
 //!                     └── primary (atom)
 //! ```
 
-use std::fs;
-
-use grammar_tools::parser_grammar::parse_parser_grammar;
-use parser::grammar_parser::{GrammarParser, GrammarASTNode};
 use coding_adventures_dartmouth_basic_lexer::tokenize_dartmouth_basic;
-
-// ===========================================================================
-// Grammar file location
-// ===========================================================================
-
-/// Build the path to the `dartmouth_basic.grammar` file.
-///
-/// Uses `env!("CARGO_MANIFEST_DIR")` which gives us the compile-time path
-/// to this crate's directory, then navigates up to the shared `grammars/`
-/// directory.
-///
-/// ```text
-/// code/
-///   grammars/
-///     dartmouth_basic.grammar   <-- target file
-///   packages/
-///     rust/
-///       dartmouth-basic-parser/
-///         Cargo.toml            <-- CARGO_MANIFEST_DIR
-/// ```
-fn grammar_path() -> String {
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    format!("{manifest_dir}/../../../grammars/dartmouth_basic.grammar")
-}
+use parser::grammar_parser::{GrammarASTNode, GrammarParser};
+mod _grammar;
 
 // ===========================================================================
 // Public API
@@ -157,31 +131,7 @@ pub fn create_dartmouth_basic_parser(source: &str) -> GrammarParser {
     //   EOF        — end of input
     let tokens = tokenize_dartmouth_basic(source);
 
-    // Step 2: Read the parser grammar from disk.
-    //
-    // The grammar file defines the syntactic structure of 1964 Dartmouth
-    // BASIC in EBNF notation. It has ~25 rules:
-    //   program, line, statement, let_stmt, print_stmt, input_stmt,
-    //   if_stmt, goto_stmt, gosub_stmt, return_stmt, for_stmt, next_stmt,
-    //   end_stmt, stop_stmt, rem_stmt, read_stmt, data_stmt, restore_stmt,
-    //   dim_stmt, def_stmt, variable, expr, term, power, unary, primary,
-    //   relop, print_list, print_item, print_sep, dim_decl
-    let grammar_text = fs::read_to_string(grammar_path())
-        .unwrap_or_else(|e| panic!("Failed to read dartmouth_basic.grammar: {e}"));
-
-    // Step 3: Parse the grammar text into a structured ParserGrammar.
-    //
-    // The ParserGrammar contains a list of GrammarRule objects, each with
-    // a name and a body (a tree of GrammarElement nodes representing the
-    // EBNF structure).
-    let grammar = parse_parser_grammar(&grammar_text)
-        .unwrap_or_else(|e| panic!("Failed to parse dartmouth_basic.grammar: {e}"));
-
-    // Step 4: Create the parser.
-    //
-    // The GrammarParser takes ownership of both the tokens and the grammar.
-    // It builds internal indexes (rule lookup, memo cache) for efficient
-    // parsing.
+    let grammar = _grammar::parser_grammar();
     GrammarParser::new(tokens, grammar)
 }
 
@@ -589,7 +539,10 @@ mod tests {
     fn test_restore() {
         let ast = parse_dartmouth_basic("10 RESTORE\n");
         assert_program_root(&ast);
-        assert!(find_rule(&ast, "restore_stmt"), "Expected restore_stmt node");
+        assert!(
+            find_rule(&ast, "restore_stmt"),
+            "Expected restore_stmt node"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -620,7 +573,10 @@ mod tests {
         assert!(find_rule(&ast, "dim_stmt"), "Expected dim_stmt node");
         // Three dim_decls: A(10), B(20), C(5)
         let count = count_rule(&ast, "dim_decl");
-        assert!(count >= 3, "Expected at least 3 dim_decl nodes, got {count}");
+        assert!(
+            count >= 3,
+            "Expected at least 3 dim_decl nodes, got {count}"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -860,7 +816,10 @@ mod tests {
         let ast = parse_dartmouth_basic(src);
         assert_program_root(&ast);
         let line_count = count_rule(&ast, "line");
-        assert!(line_count >= 2, "Expected at least 2 line nodes, got {line_count}");
+        assert!(
+            line_count >= 2,
+            "Expected at least 2 line nodes, got {line_count}"
+        );
     }
 
     #[test]

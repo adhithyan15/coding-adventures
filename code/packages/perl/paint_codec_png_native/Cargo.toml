@@ -1,0 +1,17 @@
+[workspace]
+
+[package]
+name = "paint-codec-png-native-perl"
+version = "0.1.0"
+edition = "2021"
+description = "Perl XS extension exposing the PNG paint codec from Rust"
+build = "build.rs"
+
+[lib]
+name = "PaintCodecPngNative"
+crate-type = ["cdylib"]
+
+[dependencies]
+perl-bridge = { path = "../../rust/perl-bridge" }
+paint-codec-png = { path = "../../rust/paint-codec-png" }
+paint-instructions = { path = "../../rust/paint-instructions" }

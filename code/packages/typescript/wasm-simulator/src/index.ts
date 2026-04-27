@@ -18,3 +18,4 @@ export {
 } from "./simulator.js";
 
 export type { WasmInstruction, WasmStepTrace } from "./simulator.js";
+export type { WasmState } from "./state.js";

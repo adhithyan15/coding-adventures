@@ -1,0 +1,281 @@
+# F# 3.0 parser grammar
+# @version 1
+# @fsharp_version 3.0
+#
+# This grammar intentionally models a conservative shared core of the F#
+# language. The versioned files stay separate so future syntax deltas can be
+# introduced without changing the lexer/parser API.
+
+compilation_unit = { NEWLINE | decorated_declaration } ;
+
+decorated_declaration = { attribute_section NEWLINE } declaration_body ;
+
+declaration_body = module_declaration
+                 | namespace_declaration
+                 | open_declaration
+                 | let_binding
+                 | use_binding
+                 | type_declaration
+                 | member_declaration
+                 | do_binding
+                 | expression ;
+
+module_declaration = "module" { module_modifier } [ "rec" ] qualified_name [ EQUALS { NEWLINE } ] ;
+
+module_modifier = "private"
+                | "internal" ;
+
+namespace_declaration = "namespace" { namespace_modifier } qualified_name ;
+
+namespace_modifier = "private"
+                   | "internal" ;
+
+open_declaration = "open" qualified_name ;
+
+let_binding = "let" [ "rec" ] { binding_modifier } binding_clause { "and" { binding_modifier } binding_clause } ;
+
+use_binding = "use" [ "rec" ] { binding_modifier } binding_clause { "and" { binding_modifier } binding_clause } ;
+
+binding_modifier = "inline"
+                 | "mutable" ;
+
+binding_clause = pattern { pattern } [ type_annotation ] EQUALS { NEWLINE } expression ;
+
+do_binding = "do" { NEWLINE } expression ;
+
+member_declaration = [ member_modifier ] "member" qualified_name [ parameter_list ] [ type_annotation ] [ EQUALS { NEWLINE } expression ] ;
+
+member_modifier = "static"
+                | "override"
+                | "default"
+                | "abstract"
+                | "new" ;
+
+type_declaration = "type" { type_modifier } NAME [ generic_parameters ] [ LPAREN [ parameter_list ] RPAREN ] [ EQUALS { NEWLINE } ] type_definition ;
+
+type_modifier = "private"
+              | "public"
+              | "internal" ;
+
+generic_parameters = LESS_THAN type_parameter { COMMA type_parameter } GREATER_THAN ;
+
+type_parameter = TYPEVAR
+               | NAME ;
+
+type_definition = class_type
+                | interface_type
+                | struct_type
+                | record_type
+                | union_type
+                | alias_type ;
+
+class_type = "class" { NEWLINE | declaration_body } "end" ;
+
+interface_type = "interface" { NEWLINE | declaration_body } "end" ;
+
+struct_type = "struct" { NEWLINE | declaration_body } "end" ;
+
+record_type = LBRACE [ field_declaration { field_separator field_declaration } ] RBRACE ;
+
+field_declaration = NAME COLON type_expression ;
+
+union_type = union_case { case_separator union_case } ;
+
+union_case = NAME [ "of" type_expression { STAR type_expression } ] ;
+
+alias_type = type_expression ;
+
+field_separator = SEMICOLON
+                | NEWLINE ;
+
+case_separator = NEWLINE [ PIPE ]
+               | PIPE ;
+
+attribute_section = LBRACKET LESS_THAN attribute { SEMICOLON attribute } GREATER_THAN RBRACKET ;
+
+attribute = [ attribute_target COLON ] qualified_name [ LPAREN [ attribute_arguments ] RPAREN ] ;
+
+attribute_target = "assembly"
+                 | "field"
+                 | "method"
+                 | "module"
+                 | "param"
+                 | "property"
+                 | "return"
+                 | "type"
+                 | "event" ;
+
+attribute_arguments = attribute_argument { COMMA attribute_argument } ;
+
+attribute_argument = [ NAME EQUALS ] expression ;
+
+parameter_list = pattern { pattern } ;
+
+type_annotation = COLON type_expression ;
+
+type_expression = function_type ;
+
+function_type = type_product [ ARROW function_type ] ;
+
+type_product = type_application { STAR type_application } ;
+
+type_application = type_atom { type_atom } ;
+
+generic_type_arguments = LESS_THAN type_expression { COMMA type_expression } GREATER_THAN ;
+
+type_atom = qualified_name [ generic_type_arguments ]
+          | TYPEVAR
+          | tuple_type
+          | unit_type
+          | record_type
+          | parenthesized_type ;
+
+tuple_type = LPAREN type_expression COMMA type_expression { COMMA type_expression } RPAREN ;
+
+unit_type = LPAREN RPAREN ;
+
+parenthesized_type = LPAREN type_expression RPAREN ;
+
+qualified_name = NAME { DOT NAME } ;
+
+expression = if_expression
+           | match_expression
+           | let_expression
+           | function_expression
+           | fun_expression
+           | for_expression
+           | while_expression
+           | sequence_expression ;
+
+sequence_expression = infix_expression { NEWLINE infix_expression | SEMICOLON infix_expression } ;
+
+infix_expression = application_expression { infix_operator application_expression } ;
+
+infix_operator = PIPE_RIGHT
+               | PIPE_LEFT
+               | COMPOSE_RIGHT
+               | COMPOSE_LEFT
+               | NOT_EQUALS
+               | LESS_EQUALS
+               | GREATER_EQUALS
+               | EQUALS_EQUALS
+               | COLON_EQUALS
+               | DOUBLE_COLON
+               | LARROW
+               | ARROW
+               | DOT_DOT
+               | AND_AND
+               | OR_OR
+               | EQUALS
+               | PLUS
+               | MINUS
+               | STAR
+               | SLASH
+               | PERCENT
+               | LESS_THAN
+               | GREATER_THAN
+               | AMPERSAND
+               | PIPE
+               | CARET ;
+
+application_expression = prefix_expression { prefix_expression } ;
+
+prefix_expression = [ unary_operator ] atomic_expression ;
+
+unary_operator = MINUS
+               | PLUS
+               | BANG ;
+
+atomic_expression = computation_expression
+                  | if_expression
+                  | match_expression
+                  | let_expression
+                  | function_expression
+                  | fun_expression
+                  | for_expression
+                  | while_expression
+                  | unit_expression
+                  | tuple_expression
+                  | list_expression
+                  | array_expression
+                  | record_expression
+                  | parenthesized_expression
+                  | qualified_name
+                  | NUMBER
+                  | STRING
+                  | CHAR
+                  | TRUE
+                  | FALSE
+                  | NULL ;
+
+computation_expression = qualified_name LBRACE { expression } RBRACE ;
+
+unit_expression = LPAREN RPAREN ;
+
+tuple_expression = LPAREN expression COMMA expression { COMMA expression } RPAREN ;
+
+list_expression = LBRACKET ! LESS_THAN [ expression { element_separator expression } ] RBRACKET ;
+
+array_expression = ARRAY_LBRACKET [ expression { element_separator expression } ] ARRAY_RBRACKET ;
+
+record_expression = LBRACE [ field_assignment { field_separator field_assignment } ] RBRACE ;
+
+field_assignment = NAME EQUALS expression ;
+
+parenthesized_expression = LPAREN expression RPAREN ;
+
+element_separator = SEMICOLON
+                   | NEWLINE ;
+
+if_expression = "if" expression "then" { NEWLINE } expression [ "else" { NEWLINE } expression ] ;
+
+match_expression = "match" expression "with" [ case_separator ] match_case { case_separator match_case } ;
+
+match_case = pattern [ "when" expression ] ARROW { NEWLINE } expression ;
+
+fun_expression = "fun" parameter_list ARROW { NEWLINE } expression ;
+
+function_expression = "function" [ case_separator ] match_case { case_separator match_case } ;
+
+let_expression = "let" [ "rec" ] { binding_modifier } binding_clause { "and" { binding_modifier } binding_clause } "in" { NEWLINE } expression ;
+
+for_expression = "for" pattern EQUALS expression ( "to" | "downto" ) expression "do" { NEWLINE } expression ;
+
+while_expression = "while" expression "do" { NEWLINE } expression ;
+
+pattern = pattern_atom [ COLON type_expression ] [ "as" NAME ] ;
+
+pattern_atom = wildcard_pattern
+             | literal_pattern
+             | tuple_pattern
+             | list_pattern
+             | array_pattern
+             | record_pattern
+             | unit_pattern
+             | parenthesized_pattern
+             | qualified_name
+             | TYPEVAR
+             | NAME ;
+
+wildcard_pattern = UNDERSCORE ;
+
+literal_pattern = NUMBER
+                | STRING
+                | CHAR
+                | TRUE
+                | FALSE
+                | NULL ;
+
+tuple_pattern = LPAREN pattern COMMA pattern { COMMA pattern } RPAREN ;
+
+list_pattern = LBRACKET [ pattern { element_separator pattern } ] RBRACKET ;
+
+array_pattern = ARRAY_LBRACKET [ pattern { element_separator pattern } ] ARRAY_RBRACKET ;
+
+record_pattern = LBRACE [ field_pattern { field_separator field_pattern } ] RBRACE ;
+
+field_pattern = NAME EQUALS pattern ;
+
+unit_pattern = LPAREN RPAREN ;
+
+parenthesized_pattern = LPAREN pattern RPAREN ;

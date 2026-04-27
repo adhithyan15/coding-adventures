@@ -1,0 +1,1 @@
+echo swift/PaintVmMetalNative is only supported on macOS arm64

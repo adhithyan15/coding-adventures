@@ -1,0 +1,1842 @@
+# Java 8 (2014) — Parser Grammar
+# @version 1
+# @java_version 8
+#
+# The Java Language Specification, Java SE 8 Edition — James Gosling, Bill Joy,
+# Guy Steele, Gilad Bracha, Alex Buckley — 2014 (Oracle)
+#
+# This grammar defines the syntactic structure of Java 8 (JDK 8, March 2014),
+# codenamed "Spider." Java 8 is the most transformative release since Java 5.
+# Where Java 5 changed the TYPE system (generics, enums, annotations), Java 8
+# changes the PROGRAMMING MODEL — shifting Java from a purely object-oriented
+# language toward one that embraces functional programming idioms.
+#
+# The four major language features added in Java 8:
+#
+#   1. LAMBDA EXPRESSIONS — Anonymous functions that can be passed as arguments
+#      and stored in variables. Lambdas transform how Java code is written:
+#
+#        // Before Java 8 (anonymous class — 5 lines of boilerplate):
+#        Collections.sort(names, new Comparator<String>() {
+#            @Override
+#            public int compare(String a, String b) {
+#                return a.compareTo(b);
+#            }
+#        });
+#
+#        // Java 8 (lambda — 1 line):
+#        Collections.sort(names, (a, b) -> a.compareTo(b));
+#
+#      Lambdas are NOT anonymous inner classes compiled to a separate .class
+#      file. Instead, the compiler uses the `invokedynamic` instruction (added
+#      in Java 7 for dynamic languages) to generate the lambda implementation
+#      at runtime via `LambdaMetafactory`. This is more efficient — no class
+#      loading, no extra .class files, and the JIT can inline lambdas.
+#
+#   2. METHOD REFERENCES — A shorthand for lambdas that simply call an existing
+#      method. Four forms:
+#
+#        String::valueOf       — static method reference
+#        System.out::println   — bound instance method reference
+#        String::length        — unbound instance method reference
+#        ArrayList::new        — constructor reference
+#
+#      Each form desugars to a lambda:
+#        String::valueOf       ≡  x -> String.valueOf(x)
+#        System.out::println   ≡  x -> System.out.println(x)
+#        String::length        ≡  s -> s.length()
+#        ArrayList::new        ≡  () -> new ArrayList<>()
+#
+#   3. DEFAULT METHODS — Methods in interfaces that have a body. This was
+#      added to enable API evolution — without default methods, adding a
+#      method to an existing interface (like java.util.List) would break
+#      every class that implements it.
+#
+#        interface Iterable<T> {
+#            Iterator<T> iterator();
+#
+#            default void forEach(Consumer<? super T> action) {
+#                for (T t : this) action.accept(t);
+#            }
+#        }
+#
+#      Default methods solve the "interface evolution problem" that had
+#      plagued Java since 1.0. They also enable a limited form of multiple
+#      inheritance of behavior (not state).
+#
+#   4. TYPE ANNOTATIONS (JSR 308) — Annotations can now appear on ANY type
+#      use, not just declarations. This enables pluggable type systems like
+#      the Checker Framework:
+#
+#        @NonNull String name;                    — annotated field type
+#        List<@NonNull String> names;             — annotated type argument
+#        String @NonNull [] array;                — annotated array type
+#        (@NonNull String) obj;                   — annotated cast
+#        obj instanceof @NonNull String           — annotated instanceof
+#        new @Interned MyObject()                 — annotated constructor
+#        void process() throws @Critical Exception — annotated throws
+#
+#      Two new annotation targets are added:
+#        @Target(ElementType.TYPE_USE)       — annotation on any type use
+#        @Target(ElementType.TYPE_PARAMETER) — annotation on type parameters
+#
+# This grammar also includes ALL features from Java 7 (which had no prior
+# grammar file in this project):
+#
+#   - DIAMOND OPERATOR (Java 7): `<>` infers type arguments on the right
+#     side of a generic constructor call:
+#       Map<String, List<Integer>> map = new HashMap<>();
+#     Instead of repeating the full type:
+#       Map<String, List<Integer>> map = new HashMap<String, List<Integer>>();
+#
+#   - TRY-WITH-RESOURCES (Java 7): Automatic resource management. Resources
+#     declared in the try header are automatically closed when the block exits:
+#       try (InputStream in = new FileInputStream(f);
+#            BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+#           return reader.readLine();
+#       }
+#     Resources must implement java.lang.AutoCloseable.
+#
+#   - MULTI-CATCH (Java 7): A single catch clause can handle multiple
+#     exception types:
+#       catch (IOException | SQLException e) { ... }
+#     This eliminates duplicated catch blocks for exceptions with no
+#     common ancestor.
+#
+#   - STRINGS IN SWITCH (Java 7): The switch statement accepts String
+#     expressions, not just int/char/byte/short/enum:
+#       switch (command) {
+#           case "start": ...
+#           case "stop":  ...
+#       }
+#     The compiler implements this using String.hashCode() and .equals().
+#
+# And ALL features from prior versions:
+#   - Java 1.0 (1996): classes, interfaces, methods, fields, constructors,
+#     static initializers, all statements and expressions
+#   - Java 1.1 (1997): inner classes, anonymous classes, instance initializers
+#   - Java 1.2 (1998): strictfp modifier
+#   - Java 1.4 (2002): assert statement
+#   - Java 5 (2004):   generics, enums, annotations, enhanced for, varargs,
+#                       static imports
+#   - Java 7 (2011):   diamond operator, try-with-resources, multi-catch,
+#                       strings in switch
+#   - Java 8 (2014):   lambda expressions, method references, default and
+#                       static interface methods, type annotations
+#
+# Format:
+#   rule_name = definition ;
+#
+# UPPERCASE names reference tokens from java8.tokens.
+# lowercase names reference other grammar rules.
+#
+# Notation:
+#   |       alternation (ordered choice — PEG semantics, first match wins)
+#   { x }   zero or more repetitions
+#   [ x ]   optional
+#   ( x )   grouping
+#   "lit"   match a keyword (lexer emits KEYWORD token with this value)
+#
+# IMPORTANT: The lexer reclassifies all keyword names as KEYWORD tokens.
+# Grammar rules must therefore use "keyword_value" (quoted literals) to
+# match specific keywords, not a KEYWORD token type directly.
+#
+# IMPORTANT: No left recursion allowed. The parser uses PEG semantics with
+# packrat memoization. Use iterative form: `a { op b }` instead of `a = a op b`.
+
+# ============================================================================
+# Compilation Unit (Entry Point)
+# ============================================================================
+#
+# A Java source file is called a "compilation unit." Every .java file has
+# the same top-level structure:
+#
+#   1. An optional package declaration (what namespace does this file live in?)
+#   2. Zero or more import declarations (what other packages do we reference?)
+#   3. Zero or more type declarations (the actual classes, interfaces, enums,
+#      and annotation types)
+#
+# Package declarations can carry annotations (package-info.java files).
+# Import declarations include static imports (since Java 5).
+#
+# This structure has been unchanged since Java 1.0 — only the contents of
+# the type declarations have grown with each release.
+#
+# Reference: JLS SE 8, Section 7.3
+
+program = { program_item } ;
+program_item = package_declaration | import_declaration | type_declaration | method_declaration | statement ;
+compilation_unit = { annotation } [ package_declaration ]
+                   { import_declaration }
+                   { type_declaration } ;
+
+# ============================================================================
+# Package Declaration
+# ============================================================================
+#
+# Packages provide namespacing. A package declaration like:
+#
+#   package java.util;
+#
+# means this file belongs to the java.util package. If no package declaration
+# is present, the class belongs to the unnamed "default" package.
+#
+# In Java 5+, packages can be annotated. This is done in a special file
+# called package-info.java:
+#
+#   @Deprecated
+#   package com.example.legacy;
+#
+# Reference: JLS SE 8, Section 7.4
+
+package_declaration = "package" qualified_name SEMICOLON ;
+
+# ============================================================================
+# Import Declarations
+# ============================================================================
+#
+# Java 5 added static imports alongside the existing single-type and
+# on-demand imports. There are four import forms:
+#
+#   import java.util.List;                      — single type import
+#   import java.util.*;                         — type import on demand
+#   import static java.lang.Math.PI;            — single static import
+#   import static java.lang.Math.*;             — static import on demand
+#
+# No changes to imports in Java 7 or 8. Imports remain purely a compile-time
+# convenience — they do not affect the bytecode.
+#
+# Reference: JLS SE 8, Section 7.5
+
+import_declaration = "import" [ "static" ] qualified_name [ DOT STAR ] SEMICOLON ;
+
+# ============================================================================
+# Type Declarations
+# ============================================================================
+#
+# A type declaration is one of:
+#
+#   - A class declaration (since 1.0)
+#   - An interface declaration (since 1.0, extended in Java 8)
+#   - An enum declaration (since Java 5)
+#   - An annotation type declaration (since Java 5)
+#   - A stray semicolon (permitted at top level)
+#
+# Java 8 significantly changes what can appear inside an interface declaration
+# (default methods, static methods), but the top-level type declaration
+# structure is unchanged.
+#
+# Reference: JLS SE 8, Section 7.6
+
+type_declaration = class_declaration
+                 | interface_declaration
+                 | enum_declaration
+                 | annotation_type_declaration
+                 | SEMICOLON ;
+
+# ============================================================================
+# Qualified Names
+# ============================================================================
+#
+# A qualified name is a dot-separated sequence of identifiers, used for
+# package names, class names, and field access chains. Examples:
+#
+#   java.lang.Object
+#   System.out.println
+#   com.sun.tools.javac
+#
+# The parser cannot distinguish between package names, class names, and
+# field accesses at parse time — that requires type resolution.
+
+qualified_name = NAME { DOT NAME } ;
+
+# ============================================================================
+# Annotations
+# ============================================================================
+#
+# Annotations are metadata declarations that begin with the @ symbol.
+# Java 5 introduced them with three syntactic forms:
+#
+#   @Override                              — marker annotation (no arguments)
+#   @SuppressWarnings("unchecked")         — single-element annotation
+#   @Author(name="Gosling", year=1996)     — normal annotation (key=value pairs)
+#
+# Java 8 extends WHERE annotations can appear (type annotations / JSR 308),
+# but the annotation syntax itself is unchanged. The new placement rules
+# allow annotations on any type use:
+#
+#   @NonNull String name;                  — annotated variable type
+#   List<@ReadOnly String> names;          — annotated type argument
+#   String @NonNull [] array;              — annotated array dimension
+#   new @Interned MyObject()               — annotated constructor call
+#   void sort(List<@NonNull String> list)  — annotated parameter type
+#
+# Java 8 also adds repeating annotations — applying the same annotation
+# multiple times to the same element:
+#
+#   @Schedule(dayOfMonth="last")
+#   @Schedule(dayOfWeek="Fri", hour="23")
+#   void doPeriodicCleanup() { ... }
+#
+# Repeating annotations are a semantic feature, not a syntactic one — the
+# grammar already allows multiple annotations on any declaration. The Java 8
+# compiler wraps repeated annotations in a container annotation behind
+# the scenes.
+#
+# Reference: JLS SE 8, Section 9.7
+
+annotation = AT qualified_name [ LPAREN [ element_value_pairs | element_value ] RPAREN ] ;
+
+# The annotations rule matches zero or more annotations. It is used as a
+# prefix in many declaration contexts.
+
+annotations = { annotation } ;
+
+# Element value pairs for normal annotations:
+#   @Table(name = "users", schema = "public")
+
+element_value_pairs = element_value_pair { COMMA element_value_pair } ;
+
+element_value_pair = NAME EQUALS element_value ;
+
+# An element value can be one of three things:
+#
+#   1. An expression — typically a literal or constant:
+#      @Version(1)
+#      @Name("hello")
+#
+#   2. Another annotation — annotations can nest:
+#      @Outer(@Inner("value"))
+#
+#   3. An element value array — array initializer syntax:
+#      @SuppressWarnings({"unchecked", "deprecation"})
+
+element_value = annotation
+             | element_value_array
+             | expression ;
+
+# Element value arrays use curly braces. A trailing comma is permitted.
+
+element_value_array = LBRACE [ element_value { COMMA element_value } ] [ COMMA ] RBRACE ;
+
+# ============================================================================
+# Annotation Type Declarations
+# ============================================================================
+#
+# An annotation type is defined with @interface (the AT token followed by
+# the "interface" keyword). Despite the syntax, annotation types are NOT
+# interfaces.
+#
+#   public @interface Author {
+#       String name();
+#       int year() default 2004;
+#       String[] reviewers() default {};
+#   }
+#
+# No changes to annotation type declarations in Java 7 or 8.
+#
+# Reference: JLS SE 8, Section 9.6
+
+annotation_type_declaration = { class_modifier } AT "interface" NAME
+                              annotation_type_body ;
+
+annotation_type_body = LBRACE { annotation_type_element_declaration } RBRACE ;
+
+annotation_type_element_declaration = annotation_element_declaration
+                                    | field_declaration
+                                    | class_declaration
+                                    | interface_declaration
+                                    | enum_declaration
+                                    | annotation_type_declaration
+                                    | SEMICOLON ;
+
+annotation_element_declaration = { method_modifier } type NAME LPAREN RPAREN
+                                 [ "default" element_value ] SEMICOLON ;
+
+# ============================================================================
+# Class Declarations
+# ============================================================================
+#
+# A class declaration in Java 8 is syntactically identical to Java 5:
+#
+#   @Entity
+#   public abstract class Animal<T extends Comparable<T>>
+#       extends LivingThing
+#       implements Drawable, Serializable {
+#       // fields, methods, constructors, initializers, nested types
+#   }
+#
+# No new class-level syntax was added in Java 7 or 8. The changes in Java 8
+# affect what can appear inside CLASS BODIES (lambdas in expressions,
+# method references) and in INTERFACES (default/static methods).
+#
+# Reference: JLS SE 8, Section 8.1
+
+class_declaration = { class_modifier } "class" NAME [ type_parameters ]
+                    [ "extends" class_type ]
+                    [ "implements" interface_type_list ]
+                    class_body ;
+
+class_modifier = annotation
+               | "public"
+               | "protected"
+               | "private"
+               | "abstract"
+               | "final"
+               | "static"
+               | "strictfp" ;
+
+# The class body contains fields, methods, constructors, initializers, and
+# nested type declarations.
+
+class_body = LBRACE { class_body_declaration } RBRACE ;
+
+class_body_declaration = static_initializer
+                       | instance_initializer
+                       | constructor_declaration
+                       | method_declaration
+                       | field_declaration
+                       | class_declaration
+                       | interface_declaration
+                       | enum_declaration
+                       | annotation_type_declaration
+                       | SEMICOLON ;
+
+# ============================================================================
+# Interface Declarations
+# ============================================================================
+#
+# Java 8 transforms interfaces from purely abstract contracts into something
+# approaching abstract classes — but with multiple inheritance.
+#
+# Before Java 8, interfaces could only contain:
+#   - Abstract method signatures (implicitly public abstract)
+#   - Constant fields (implicitly public static final)
+#   - Nested types
+#
+# Java 8 adds TWO new kinds of interface members:
+#
+#   1. DEFAULT METHODS — interface methods with a body, prefixed by `default`:
+#
+#        interface Collection<E> {
+#            // Abstract method (since Java 1.0)
+#            int size();
+#
+#            // Default method (new in Java 8)
+#            default boolean isEmpty() {
+#                return size() == 0;
+#            }
+#        }
+#
+#      Default methods were added primarily to solve the "interface evolution
+#      problem." Before Java 8, adding a method to an interface (like adding
+#      stream() to Collection) would break every existing implementation.
+#      Default methods provide a body that existing implementations inherit
+#      automatically.
+#
+#      The diamond problem (what happens when a class inherits conflicting
+#      default methods from two interfaces?) is resolved by three rules:
+#        a) A class method always wins over an interface default
+#        b) A more specific interface wins (sub-interface over super-interface)
+#        c) If neither rule applies, the class must override and explicitly
+#           choose: `InterfaceA.super.method()` or `InterfaceB.super.method()`
+#
+#   2. STATIC METHODS — interface methods with `static` modifier and a body:
+#
+#        interface Comparator<T> {
+#            int compare(T o1, T o2);
+#
+#            static <T extends Comparable<T>> Comparator<T> naturalOrder() {
+#                return (a, b) -> a.compareTo(b);
+#            }
+#        }
+#
+#      Static interface methods are called on the interface itself:
+#        Comparator<String> c = Comparator.naturalOrder();
+#
+#      They are NOT inherited by implementing classes — you must call them
+#      on the interface directly. This was a deliberate design choice to
+#      avoid the ambiguity of inheriting static methods from multiple
+#      interfaces.
+#
+#      Static interface methods eliminate the need for companion utility
+#      classes like Collections (for Collection) or Paths (for Path).
+#
+# Reference: JLS SE 8, Section 9.1, 9.4
+
+interface_declaration = { interface_modifier } "interface" NAME [ type_parameters ]
+                        [ "extends" interface_type_list ]
+                        interface_body ;
+
+interface_modifier = annotation
+                   | "public"
+                   | "protected"
+                   | "private"
+                   | "abstract"
+                   | "static"
+                   | "strictfp" ;
+
+interface_body = LBRACE { interface_body_declaration } RBRACE ;
+
+# Interface body declarations are extended in Java 8 to include default
+# methods and static methods alongside the existing abstract methods,
+# constant fields, and nested types.
+#
+# The interface_method_declaration rule now handles all three method forms
+# (abstract, default, static) based on the modifiers present.
+
+interface_body_declaration = interface_method_declaration
+                           | interface_field_declaration
+                           | class_declaration
+                           | interface_declaration
+                           | enum_declaration
+                           | annotation_type_declaration
+                           | SEMICOLON ;
+
+# Interface fields are constant declarations. They are implicitly
+# public, static, and final.
+
+interface_field_declaration = { field_modifier } type variable_declarators SEMICOLON ;
+
+# --- Interface Methods (Java 8 Extended) ---
+#
+# Interface methods now come in three flavors:
+#
+#   1. ABSTRACT methods (since Java 1.0) — no body, just a signature:
+#        int size();
+#        <T> T[] toArray(T[] a);
+#
+#   2. DEFAULT methods (new in Java 8) — have a body, prefixed by `default`:
+#        default boolean isEmpty() { return size() == 0; }
+#        default Stream<E> stream() { return StreamSupport.stream(spliterator(), false); }
+#
+#   3. STATIC methods (new in Java 8) — have a body, prefixed by `static`:
+#        static <T> Comparator<T> naturalOrder() { return (a, b) -> a.compareTo(b); }
+#
+# The grammar unifies these three forms by expanding the interface method
+# modifiers to include `default` and `static`, and allowing a block body
+# as an alternative to the semicolon terminator.
+#
+# Note: The `default` keyword is already reserved from Java 1.0 (switch
+# statement labels). Java 8 reuses it in this new context. The parser
+# distinguishes the two uses by position — in a switch block, `default`
+# is followed by a colon; in an interface body, `default` is followed by
+# a return type and method name.
+#
+# Reference: JLS SE 8, Section 9.4
+
+interface_method_declaration = { interface_method_modifier } [ type_parameters ]
+                              result_type method_declarator [ throws_clause ]
+                              ( block | SEMICOLON ) ;
+
+interface_method_modifier = annotation
+                          | "public"
+                          | "abstract"
+                          | "default"
+                          | "static"
+                          | "strictfp" ;
+
+# An interface type list is used in both `implements` (for classes) and
+# `extends` (for interfaces). It is a comma-separated list of type names,
+# which may include type arguments.
+
+interface_type_list = class_type { COMMA class_type } ;
+
+# ============================================================================
+# Enum Declarations
+# ============================================================================
+#
+# Enums are type-safe enumerated constants (since Java 5). They are full
+# classes that can have fields, methods, constructors, and interface
+# implementations.
+#
+#   public enum Planet {
+#       MERCURY(3.303e+23, 2.4397e6),
+#       VENUS  (4.869e+24, 6.0518e6),
+#       EARTH  (5.976e+24, 6.37814e6);
+#
+#       private final double mass;
+#       private final double radius;
+#
+#       Planet(double mass, double radius) {
+#           this.mass = mass;
+#           this.radius = radius;
+#       }
+#
+#       double surfaceGravity() {
+#           return 6.67300E-11 * mass / (radius * radius);
+#       }
+#   }
+#
+# In Java 8, enum method bodies can use lambdas:
+#
+#   enum Operation {
+#       PLUS  ((a, b) -> a + b),
+#       MINUS ((a, b) -> a - b);
+#
+#       private final BinaryOperator<Double> op;
+#       Operation(BinaryOperator<Double> op) { this.op = op; }
+#       double apply(double x, double y) { return op.apply(x, y); }
+#   }
+#
+# No structural grammar changes for enums in Java 7 or 8.
+#
+# Reference: JLS SE 8, Section 8.9
+
+enum_declaration = { class_modifier } "enum" NAME
+                   [ "implements" interface_type_list ]
+                   enum_body ;
+
+enum_body = LBRACE [ enum_constant_list ] [ COMMA ] [ SEMICOLON { class_body_declaration } ] RBRACE ;
+
+enum_constant_list = enum_constant { COMMA enum_constant } ;
+
+enum_constant = annotations NAME [ LPAREN [ argument_list ] RPAREN ] [ class_body ] ;
+
+# ============================================================================
+# Generics — Type Parameters and Type Arguments
+# ============================================================================
+#
+# Generics (since Java 5) introduce parameterized types. Java 7 added the
+# diamond operator `<>` to reduce verbosity.
+#
+# TYPE PARAMETERS (declaration side):
+#
+#   <T>                           — unbounded type parameter
+#   <T extends Number>            — bounded
+#   <T extends Comparable<T>>     — recursive bound (F-bounded polymorphism)
+#   <K, V>                        — multiple type parameters
+#   <T extends A & B & C>         — intersection bound
+#
+# TYPE ARGUMENTS (use side):
+#
+#   List<String>                       — concrete type argument
+#   Map<String, Integer>               — multiple type arguments
+#   List<?>                            — unbounded wildcard
+#   List<? extends Number>             — upper-bounded wildcard
+#   List<? super Integer>              — lower-bounded wildcard
+#
+# DIAMOND OPERATOR (Java 7):
+#
+#   The diamond operator `<>` infers type arguments on the right side of
+#   a variable declaration from the left side:
+#
+#     // Java 5/6: full type specification on both sides
+#     Map<String, List<Integer>> map = new HashMap<String, List<Integer>>();
+#
+#     // Java 7+: diamond operator infers right-side type arguments
+#     Map<String, List<Integer>> map = new HashMap<>();
+#
+#   The compiler infers the type arguments from the assignment context.
+#   This is NOT the same as raw types — `new HashMap<>()` is type-safe,
+#   while `new HashMap()` is raw and generates an unchecked warning.
+#
+#   In the grammar, diamond is represented as `<>` — an empty type argument
+#   list. We handle this by making the type_arguments content optional.
+#
+# TYPE ANNOTATIONS (Java 8 / JSR 308):
+#
+#   Java 8 allows annotations on type parameters themselves:
+#
+#     class Box<@NonNull T extends @ReadOnly Comparable<T>> { ... }
+#
+#   This is handled by allowing annotations before type parameter names.
+#
+# Reference: JLS SE 8, Section 4.4, 4.5
+
+# --- Type Parameters (Declaration Side) ---
+
+type_parameters = LESS_THAN type_parameter { COMMA type_parameter } GREATER_THAN ;
+
+# Java 8 allows annotations on type parameters (JSR 308):
+#   <@NonNull T extends @ReadOnly Comparable<T>>
+
+type_parameter = { annotation } NAME [ "extends" bound ] ;
+
+# A bound is one or more types joined by `&` (intersection types):
+#   <T extends Number & Comparable<T> & Serializable>
+
+bound = annotated_type { AMPERSAND annotated_type } ;
+
+# --- Type Arguments (Use Side) ---
+#
+# Java 7 added the diamond operator `<>`, which is an empty type argument
+# list. In the grammar, we handle this by allowing an empty `<>`:
+
+type_arguments = LESS_THAN GREATER_THAN
+               | LESS_THAN type_argument { COMMA type_argument } GREATER_THAN ;
+
+# Java 8 allows annotations on wildcard bounds:
+#   List<@ReadOnly ? extends @NonNull Number>
+
+type_argument = annotated_type
+              | { annotation } QUESTION [ ( "extends" | "super" ) annotated_type ] ;
+
+# ============================================================================
+# Type Annotations (JSR 308 — New in Java 8)
+# ============================================================================
+#
+# Before Java 8, annotations could only appear on DECLARATIONS — classes,
+# methods, fields, parameters, local variables, and packages. Java 8
+# extends this to allow annotations on any TYPE USE.
+#
+# This is a profound change. It means the Java type system can be augmented
+# with pluggable type checking, enabling tools like the Checker Framework
+# to verify nullability, immutability, taint tracking, and more:
+#
+#   @NonNull String name;                          — annotated simple type
+#   List<@NonNull String> names;                   — annotated type argument
+#   String @NonNull [] array;                      — annotated array dimension
+#   @NonNull String @ReadOnly [] array;            — both type and array annotated
+#   Map<@NonNull String, @Positive Integer> map;   — multiple annotated type args
+#   (@NonNull String) obj;                         — annotated cast
+#   obj instanceof @NonNull String;                — annotated instanceof
+#   new @Interned MyObject();                      — annotated object creation
+#   throws @Critical IOException;                  — annotated exception type
+#
+# The key grammar change is the introduction of `annotated_type` — a type
+# preceded by zero or more annotations. This replaces bare `type` in most
+# positions where type annotations are legal.
+#
+# TYPE_USE vs. DECLARATION annotations:
+#
+#   The distinction between a declaration annotation and a type annotation
+#   depends on the @Target meta-annotation. If an annotation is declared with
+#   @Target(ElementType.TYPE_USE), it can appear on type uses. If declared
+#   with @Target(ElementType.FIELD), it appears on field declarations. Some
+#   annotations have BOTH targets, and the compiler applies them to both
+#   the declaration and the type.
+#
+#   This dual targeting means the grammar must allow annotations in both
+#   positions. For example, in `@NonNull String name`, the @NonNull could
+#   be a field declaration annotation OR a type use annotation (or both),
+#   depending on its @Target.
+#
+# Reference: JLS SE 8, Section 4.11, 9.7.4
+
+annotated_type = { annotation } type ;
+
+# ============================================================================
+# Field Declarations
+# ============================================================================
+#
+# Fields are the instance and class variables of a class. Examples:
+#
+#   private int count;
+#   public static final double PI = 3.14159;
+#   @Deprecated protected volatile boolean running = true;
+#   private List<String> names = new ArrayList<>();   // diamond (Java 7)
+#   private Function<String, Integer> parser = Integer::parseInt;  // method ref (Java 8)
+#
+# No structural grammar changes for fields in Java 7 or 8 — the new
+# expression forms (lambdas, method references, diamond) appear in the
+# initializer expressions, which are handled by the expression grammar.
+#
+# Reference: JLS SE 8, Section 8.3
+
+field_declaration = { field_modifier } type variable_declarators SEMICOLON ;
+
+field_modifier = annotation
+               | "public"
+               | "protected"
+               | "private"
+               | "static"
+               | "final"
+               | "transient"
+               | "volatile" ;
+
+# Variable declarators: a comma-separated list of variable names with
+# optional initializers and optional array dimension brackets.
+#
+#   int x, y = 5, z[] = {1, 2, 3};
+
+variable_declarators = variable_declarator { COMMA variable_declarator } ;
+
+variable_declarator = NAME { LBRACKET RBRACKET } [ EQUALS variable_initializer ] ;
+
+variable_initializer = expression
+                     | array_initializer ;
+
+# Array initializers use curly braces. A trailing comma is permitted.
+#   int[][] matrix = {{1, 2}, {3, 4}};
+
+array_initializer = LBRACE [ variable_initializer { COMMA variable_initializer } ] [ COMMA ] RBRACE ;
+
+# ============================================================================
+# Method Declarations
+# ============================================================================
+#
+# Methods are the behaviors of a class. Java 8 does not change method
+# declaration syntax — the new features (lambdas, method references) appear
+# inside method BODIES as expressions.
+#
+# Java 8 also adds a receiver parameter (the explicit `this` parameter)
+# for use with type annotations:
+#
+#   class Outer {
+#       class Inner {
+#           void method(@NonNull Outer Outer.this) { ... }
+#       }
+#   }
+#
+# The receiver parameter is syntactically present in the parameter list but
+# is not a real parameter — it cannot be referenced by name. It exists solely
+# to provide a place to put type annotations on the receiver type.
+#
+# Reference: JLS SE 8, Section 8.4
+
+method_declaration = { method_modifier } [ type_parameters ] result_type method_declarator
+                     [ throws_clause ] method_body ;
+
+method_modifier = annotation
+                | "public"
+                | "protected"
+                | "private"
+                | "static"
+                | "abstract"
+                | "final"
+                | "synchronized"
+                | "native"
+                | "strictfp" ;
+
+result_type = "void"
+            | type ;
+
+# The method declarator includes the name, parameter list, and optional
+# trailing bracket pairs (C-style array return).
+#
+# Java 8 adds the receiver parameter: an explicit `this` annotation target.
+# The receiver parameter, if present, must be the first parameter and uses
+# the form `AnnotatedType this` or `AnnotatedType Outer.this` for inner
+# classes. We handle this as an optional prefix in the formal parameter list.
+
+method_declarator = NAME LPAREN [ receiver_parameter COMMA ] [ formal_parameter_list ] RPAREN
+                    { LBRACKET RBRACKET } ;
+
+# The receiver parameter is an explicit `this` parameter for type annotations:
+#
+#   void method(@ReadOnly MyClass this) { ... }
+#   void method(@NonNull Outer Outer.this) { ... }
+#
+# It is always the first parameter and does not count toward the method's
+# arity. Its sole purpose is to carry type annotations for the receiver.
+
+receiver_parameter = { annotation } type [ NAME DOT ] "this" ;
+
+# ============================================================================
+# Formal Parameters and Varargs
+# ============================================================================
+#
+# Java 5 introduced varargs (variable-length argument lists). The last
+# parameter can use the `...` (ellipsis) syntax:
+#
+#   void printf(String format, Object... args)
+#
+# Java 8 allows type annotations on parameter types:
+#
+#   void process(@NonNull String name, @Nullable Object... extras)
+#
+# Reference: JLS SE 8, Section 8.4.1
+
+formal_parameter_list = formal_parameter { COMMA formal_parameter }
+                      | formal_parameter { COMMA formal_parameter } COMMA varargs_parameter
+                      | varargs_parameter ;
+
+formal_parameter = { annotation } [ "final" ] type NAME { LBRACKET RBRACKET } ;
+
+varargs_parameter = { annotation } [ "final" ] type { annotation } ELLIPSIS NAME ;
+
+# The throws clause lists the checked exceptions a method may throw.
+# Java 8 allows type annotations on thrown exception types:
+#
+#   void read() throws @Critical IOException { ... }
+
+throws_clause = "throws" annotated_type { COMMA annotated_type } ;
+
+# The method body is either a block or a semicolon (abstract/native methods).
+
+method_body = block
+            | SEMICOLON ;
+
+# ============================================================================
+# Constructor Declarations
+# ============================================================================
+#
+# Constructors initialize new objects. They look like methods but have no
+# return type and their name must match the class name (semantic check).
+#
+# Java 8 adds the receiver parameter for inner class constructors, allowing
+# type annotations on the enclosing instance:
+#
+#   class Outer {
+#       class Inner {
+#           Inner(@NonNull Outer Outer.this) { ... }
+#       }
+#   }
+#
+# Reference: JLS SE 8, Section 8.8
+
+constructor_declaration = { constructor_modifier } [ type_parameters ] NAME
+                          LPAREN [ receiver_parameter COMMA ] [ formal_parameter_list ] RPAREN
+                          [ throws_clause ] constructor_body ;
+
+constructor_modifier = annotation
+                     | "public"
+                     | "protected"
+                     | "private" ;
+
+constructor_body = LBRACE [ explicit_constructor_invocation ] { block_statement } RBRACE ;
+
+# Explicit constructor invocation: `this(args)` or `super(args)`.
+# Type arguments can be used for generic constructors:
+#   <String>this(arg)
+#   <Integer>super(arg)
+
+explicit_constructor_invocation = [ type_arguments ] "this" LPAREN [ argument_list ] RPAREN SEMICOLON
+                                | [ type_arguments ] "super" LPAREN [ argument_list ] RPAREN SEMICOLON ;
+
+# ============================================================================
+# Static Initializers and Instance Initializers
+# ============================================================================
+#
+# A static initializer runs when the class is loaded:
+#
+#   static {
+#       Properties defaults = new Properties();
+#       defaults.put("color", "blue");
+#       DEFAULT_CONFIG = defaults;
+#   }
+#
+# An instance initializer (since Java 1.1) runs when each instance is
+# created, before the constructor body. Most commonly seen in the "double
+# brace initialization" idiom:
+#
+#   List<String> names = new ArrayList<String>() {{
+#       add("Alice");
+#       add("Bob");
+#   }};
+#
+# In Java 8, initializer blocks can contain lambdas and method references.
+# No structural grammar changes needed.
+#
+# Reference: JLS SE 8, Section 8.6, 8.7
+
+static_initializer = "static" block ;
+
+instance_initializer = block ;
+
+# ============================================================================
+# Type System
+# ============================================================================
+#
+# Java 8's type system builds on Java 5 generics and adds type annotations.
+# The core type structure is unchanged:
+#
+#   Type                        Example
+#   ----                        -------
+#   Primitive type              int, boolean, double
+#   Raw class type              Object, String, List
+#   Parameterized type          List<String>, Map<K, V>
+#   Wildcard parameterized      List<?>, List<? extends Number>
+#   Array of primitive          int[], double[][]
+#   Array of reference          String[], List<String>[]
+#
+# Java 8 adds annotations to type uses:
+#   @NonNull String
+#   List<@NonNull String>
+#   String @NonNull []
+#   @NonNull String @ReadOnly []
+#
+# The annotated_type rule (defined above) wraps the base type with optional
+# annotations. It is used in most contexts where type annotations are legal.
+#
+# Reference: JLS SE 8, Chapter 4
+
+type = primitive_type { LBRACKET RBRACKET }
+     | class_type { LBRACKET RBRACKET } ;
+
+# The eight primitive types. Unchanged since Java 1.0.
+#
+# Java 5 added autoboxing (Integer boxed = 42), and Java 8 leverages this
+# heavily in the Streams API — but primitives and autoboxing are semantic
+# features that require no grammar changes.
+
+primitive_type = "boolean"
+               | "byte"
+               | "short"
+               | "int"
+               | "long"
+               | "char"
+               | "float"
+               | "double" ;
+
+# A class type is a reference to a class or interface, identified by its
+# qualified name with optional type arguments:
+#
+#   String
+#   java.util.List<String>
+#   Map<String, List<Integer>>
+#   java.util.function.Function<String, Integer>
+#
+# Java 8 adds many new types to the standard library (Function, Predicate,
+# Consumer, Supplier, Stream, Optional, etc.) but the grammar for class
+# types is unchanged from Java 5.
+
+class_type = qualified_name [ type_arguments ] ;
+
+# ============================================================================
+# Statements
+# ============================================================================
+#
+# Java 8 does not add any new statement forms. The last statement additions
+# were in Java 7:
+#
+#   - Try-with-resources: try (Resource r = ...) { ... }
+#   - Multi-catch: catch (IOException | SQLException e) { ... }
+#
+# And in Java 5:
+#   - Enhanced for: for (String s : list) { ... }
+#   - Assert (from Java 1.4): assert x > 0 : "message"
+#
+# Java 8's lambda expressions and method references appear as EXPRESSIONS,
+# not statements. They show up inside expression statements, variable
+# initializers, method arguments, and other expression contexts.
+#
+# Reference: JLS SE 8, Chapter 14
+
+statement = block
+          | var_declaration
+          | empty_statement
+          | expression_statement
+          | if_statement
+          | while_statement
+          | do_while_statement
+          | for_statement
+          | enhanced_for_statement
+          | switch_statement
+          | try_statement
+          | try_with_resources_statement
+          | throw_statement
+          | return_statement
+          | break_statement
+          | continue_statement
+          | synchronized_statement
+          | assert_statement
+          | labelled_statement ;
+
+# --- Block ---
+#
+# A block is a sequence of statements enclosed in curly braces.
+
+block = LBRACE { block_statement } RBRACE ;
+
+block_statement = var_declaration
+                | class_declaration
+               | statement ;
+
+# --- Local Variable Declaration ---
+#
+# Local variables can include annotations and use generic types:
+#
+#   final List<String> names = new ArrayList<>();         // diamond (Java 7)
+#   Comparator<String> cmp = (a, b) -> a.compareTo(b);   // lambda (Java 8)
+#   Function<String, Integer> f = Integer::parseInt;      // method ref (Java 8)
+#
+# Reference: JLS SE 8, Section 14.4
+
+var_declaration = local_variable_declaration_statement ;
+
+local_variable_declaration_statement = { annotation } [ "final" ] type variable_declarators SEMICOLON ;
+
+# --- Empty Statement ---
+
+empty_statement = SEMICOLON ;
+
+# --- Expression Statement ---
+#
+# An expression used as a statement. In Java 8, this includes lambda
+# invocations (though rare — lambdas are more commonly passed as arguments).
+
+expression_statement = expression SEMICOLON ;
+
+# --- If/Else ---
+#
+# The dangling-else ambiguity is resolved by PEG ordered choice.
+
+if_statement = "if" LPAREN expression RPAREN statement [ "else" statement ] ;
+
+# --- While Loop ---
+
+while_statement = "while" LPAREN expression RPAREN statement ;
+
+# --- Do-While Loop ---
+
+do_while_statement = "do" statement "while" LPAREN expression RPAREN SEMICOLON ;
+
+# --- Classic For Loop ---
+#
+# The classic C-style three-part for loop.
+#
+# Reference: JLS SE 8, Section 14.14.1
+
+for_statement = "for" LPAREN for_init SEMICOLON [ expression ] SEMICOLON [ for_update ] RPAREN
+                statement ;
+
+for_init = { annotation } [ "final" ] type variable_declarators
+         | [ expression_list ] ;
+
+for_update = expression_list ;
+
+expression_list = expression { COMMA expression } ;
+
+# --- Enhanced For (For-Each) Loop ---
+#
+# The enhanced for loop (since Java 5) works on arrays and Iterables:
+#
+#   for (String s : list) { System.out.println(s); }
+#
+# In Java 8, the Iterable interface gained a default forEach method,
+# providing a functional alternative:
+#
+#   list.forEach(s -> System.out.println(s));
+#   list.forEach(System.out::println);       // method reference
+#
+# Both forms are valid Java 8. The enhanced for is still useful when you
+# need break/continue or need to modify a local variable.
+#
+# Reference: JLS SE 8, Section 14.14.2
+
+enhanced_for_statement = "for" LPAREN { annotation } [ "final" ] type NAME COLON expression RPAREN
+                         statement ;
+
+# --- Switch Statement ---
+#
+# Java 7 extended switch to work on String expressions in addition to
+# int/char/byte/short/enum:
+#
+#   switch (dayOfWeek) {
+#       case "Monday":  return "Start of week";
+#       case "Friday":  return "TGIF";
+#       default:        return "Midweek";
+#   }
+#
+# The compiler implements String switch using hashCode() and equals().
+# At the bytecode level, this compiles to a two-phase lookup:
+#   1. Switch on the String's hash code (integer switch)
+#   2. Verify with .equals() to handle hash collisions
+#
+# No further switch changes in Java 8 (switch expressions arrive in Java 14).
+#
+# Reference: JLS SE 8, Section 14.11
+
+switch_statement = "switch" LPAREN expression RPAREN switch_block ;
+
+switch_block = LBRACE { switch_block_statement_group } { switch_label } RBRACE ;
+
+switch_block_statement_group = switch_label { switch_label } { block_statement } ;
+
+switch_label = "case" expression COLON
+             | "default" COLON ;
+
+# --- Try/Catch/Finally ---
+#
+# The traditional try/catch/finally statement, unchanged from Java 1.0.
+# (Try-with-resources is a separate rule below.)
+#
+# Java 7 added MULTI-CATCH — a single catch clause that handles multiple
+# exception types separated by `|`:
+#
+#   try {
+#       // code that might throw
+#   } catch (IOException | SQLException e) {
+#       // handle both exception types identically
+#       logger.error("Operation failed", e);
+#   }
+#
+# Multi-catch was added because Java programmers frequently duplicated
+# catch blocks for exceptions with no common ancestor other than Exception:
+#
+#   // Before Java 7 (duplicated catch blocks):
+#   try { ... }
+#   catch (IOException e) { log(e); throw new AppException(e); }
+#   catch (SQLException e) { log(e); throw new AppException(e); }
+#
+#   // Java 7+ (multi-catch):
+#   try { ... }
+#   catch (IOException | SQLException e) { log(e); throw new AppException(e); }
+#
+# The caught exception variable in a multi-catch is implicitly final — you
+# cannot reassign it. This is because the compiler generates a single catch
+# handler that must work for multiple exception types.
+#
+# Reference: JLS SE 8, Section 14.20
+
+try_statement = "try" block ( catch_clause { catch_clause } [ finally_clause ]
+                            | finally_clause ) ;
+
+# The catch clause now supports multi-catch (Java 7): multiple exception
+# types separated by `|` (PIPE).
+
+catch_clause = "catch" LPAREN catch_formal_parameter RPAREN block ;
+
+# The catch formal parameter is extended for multi-catch. The exception
+# types are separated by `|` (the same PIPE token used for bitwise OR).
+# The parser distinguishes the two uses by context — inside a catch
+# parameter declaration, `|` separates exception types.
+
+catch_formal_parameter = { annotation } [ "final" ] catch_type { PIPE catch_type } NAME ;
+
+catch_type = class_type ;
+
+finally_clause = "finally" block ;
+
+# --- Try-With-Resources (Java 7) ---
+#
+# Try-with-resources provides automatic resource management. Resources
+# declared in the try header are automatically closed (via AutoCloseable.close())
+# when the block exits, whether normally or via exception:
+#
+#   try (InputStream in = new FileInputStream("data.txt");
+#        BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+#       String line = reader.readLine();
+#       process(line);
+#   }
+#   // in and reader are automatically closed here
+#
+# This replaces the error-prone manual pattern:
+#
+#   InputStream in = null;
+#   try {
+#       in = new FileInputStream("data.txt");
+#       // ... use in ...
+#   } finally {
+#       if (in != null) {
+#           try { in.close(); } catch (IOException e) { /* swallowed! */ }
+#       }
+#   }
+#
+# Resources are closed in REVERSE declaration order (last opened, first
+# closed). If both the try block and the close() method throw exceptions,
+# the close() exception is SUPPRESSED (added to the try exception's
+# suppressed list via Throwable.addSuppressed()). This was a new feature
+# in Java 7 to prevent exception swallowing.
+#
+# Resources must implement java.lang.AutoCloseable (a new interface in
+# Java 7) or its subinterface java.io.Closeable. AutoCloseable.close()
+# can throw any Exception; Closeable.close() can only throw IOException.
+#
+# Try-with-resources can have catch and finally clauses just like regular
+# try statements.
+#
+# Reference: JLS SE 8, Section 14.20.3
+
+try_with_resources_statement = "try" resource_specification block
+                               { catch_clause } [ finally_clause ] ;
+
+# The resource specification is a parenthesized, semicolon-separated list
+# of resource declarations. An optional trailing semicolon is permitted.
+#
+# Each resource declaration is a local variable declaration with an
+# initializer. The variable is implicitly final (in Java 7 — Java 9 later
+# relaxes this to allow effectively final variables).
+#
+#   try (FileReader fr = new FileReader("f.txt");
+#        BufferedReader br = new BufferedReader(fr)) { ... }
+
+resource_specification = LPAREN resource { SEMICOLON resource } [ SEMICOLON ] RPAREN ;
+
+resource = { annotation } [ "final" ] type NAME EQUALS expression ;
+
+# --- Throw ---
+
+throw_statement = "throw" expression SEMICOLON ;
+
+# --- Return ---
+
+return_statement = "return" [ expression ] SEMICOLON ;
+
+# --- Break and Continue ---
+#
+# Both can target labels for breaking out of nested loops:
+#
+#   outer:
+#   for (int i = 0; i < rows; i++) {
+#       for (int j = 0; j < cols; j++) {
+#           if (found(i, j)) break outer;
+#       }
+#   }
+
+break_statement = "break" [ NAME ] SEMICOLON ;
+
+continue_statement = "continue" [ NAME ] SEMICOLON ;
+
+# --- Synchronized Statement ---
+
+synchronized_statement = "synchronized" LPAREN expression RPAREN block ;
+
+# --- Assert Statement (from Java 1.4) ---
+#
+#   assert x > 0;
+#   assert x > 0 : "x must be positive: " + x;
+
+assert_statement = "assert" expression [ COLON expression ] SEMICOLON ;
+
+# --- Labelled Statement ---
+
+labelled_statement = NAME COLON statement ;
+
+# ============================================================================
+# Expressions
+# ============================================================================
+#
+# Java 8 makes the biggest change to the expression grammar since Java 1.0.
+# Two entirely new expression forms are added:
+#
+#   1. LAMBDA EXPRESSIONS — anonymous functions:
+#        x -> x * 2
+#        (a, b) -> a + b
+#        (String s) -> s.length()
+#        () -> { System.out.println("hello"); }
+#
+#   2. METHOD REFERENCES — references to existing methods:
+#        String::valueOf
+#        System.out::println
+#        String::length
+#        ArrayList::new
+#
+# --------------------------------------------------------------------------
+# LAMBDA EXPRESSION PLACEMENT IN THE PRECEDENCE HIERARCHY
+# --------------------------------------------------------------------------
+#
+# Lambda expressions present a parsing challenge: where do they fit in the
+# precedence hierarchy? Consider:
+#
+#   Runnable r = () -> System.out.println("hello");
+#
+# The `->` must bind more loosely than the method call, so the body is the
+# entire expression `System.out.println("hello")`. But it must bind more
+# tightly than assignment, so the lambda is assigned to `r`.
+#
+# The JLS places lambda expressions at the ASSIGNMENT level — they can
+# appear wherever an assignment expression can appear. Formally, a lambda
+# is an alternative to a conditional expression in the assignment rule:
+#
+#   assignment_expression = conditional_expression
+#                         | unary_expression assignment_operator assignment_expression
+#                         | lambda_expression
+#
+# This means lambdas can appear:
+#   - On the right side of assignments: `f = x -> x * 2`
+#   - As method arguments: `list.sort((a, b) -> a.compareTo(b))`
+#   - In ternary expressions: `b ? x -> x : y -> y` (the WHOLE ternary,
+#     not individual branches, unless parenthesized)
+#   - In return statements: `return x -> x * 2;`
+#   - In variable initializers: `Supplier<Integer> s = () -> 42;`
+#
+# Lambdas CANNOT appear:
+#   - As operands of binary operators: `x -> x + (y -> y)` (the inner
+#     lambda must be parenthesized)
+#   - As the condition of a ternary: `(x -> x) ? a : b` (syntax error)
+#
+# --------------------------------------------------------------------------
+# METHOD REFERENCE PLACEMENT
+# --------------------------------------------------------------------------
+#
+# Method references are a form of PRIMARY EXPRESSION. They can appear
+# anywhere a primary expression can, and they support the same suffixes
+# (though in practice, method references are rarely suffixed).
+#
+# The four forms of method references:
+#
+#   1. Static method:     ContainingType::staticMethod
+#      Example:           Integer::parseInt
+#      Equivalent lambda: s -> Integer.parseInt(s)
+#
+#   2. Bound instance:    expr::instanceMethod
+#      Example:           System.out::println
+#      Equivalent lambda: x -> System.out.println(x)
+#
+#   3. Unbound instance:  ContainingType::instanceMethod
+#      Example:           String::length
+#      Equivalent lambda: s -> s.length()
+#
+#   4. Constructor:       ClassName::new
+#      Example:           ArrayList::new
+#      Equivalent lambda: () -> new ArrayList<>()
+#
+# Forms 1 and 3 are syntactically identical — both are `Name::method`.
+# The compiler distinguishes them by whether the method is static or
+# instance. This is a semantic distinction, not a syntactic one.
+#
+# Reference: JLS SE 8, Chapter 15
+#
+# Precedence (lowest to highest):
+#
+#   Level 1:  assignment / lambda  =, +=, etc. / ->
+#   Level 2:  ternary              ? :
+#   Level 3:  logical OR           ||
+#   Level 4:  logical AND          &&
+#   Level 5:  bitwise OR           |
+#   Level 6:  bitwise XOR          ^
+#   Level 7:  bitwise AND          &
+#   Level 8:  equality             ==, !=
+#   Level 9:  relational           <, >, <=, >=, instanceof
+#   Level 10: shift                <<, >>, >>>
+#   Level 11: additive             +, -
+#   Level 12: multiplicative       *, /, %
+#   Level 13: unary                ++x, --x, +x, -x, ~x, !x, (type)x
+#   Level 14: postfix              x++, x--
+#   Level 15: primary              literals, this, super, new, method call,
+#                                  field access, array access, method ref,
+#                                  parenthesized expression
+
+# --- Assignment and Lambda ---
+#
+# Lambda expressions sit at the same precedence level as assignments.
+# They are right-associative: the body of a lambda extends as far right
+# as possible.
+#
+# The grammar tries lambda_expression FIRST (PEG ordered choice), then
+# falls back to the traditional assignment forms.
+
+expression = assignment_expression ;
+
+assignment_expression = lambda_expression
+                      | conditional_expression
+                        [ assignment_operator assignment_expression ] ;
+
+assignment_operator = EQUALS
+                    | PLUS_EQUALS
+                    | MINUS_EQUALS
+                    | STAR_EQUALS
+                    | SLASH_EQUALS
+                    | PERCENT_EQUALS
+                    | AMPERSAND_EQUALS
+                    | PIPE_EQUALS
+                    | CARET_EQUALS
+                    | LEFT_SHIFT_EQUALS
+                    | RIGHT_SHIFT_EQUALS
+                    | UNSIGNED_RIGHT_SHIFT_EQUALS ;
+
+# ============================================================================
+# Lambda Expressions (New in Java 8)
+# ============================================================================
+#
+# Lambda expressions are the centerpiece of Java 8. They provide a concise
+# way to represent instances of functional interfaces (interfaces with
+# exactly one abstract method).
+#
+# The syntax is:
+#
+#   parameters -> body
+#
+# There are three forms for the parameter list:
+#
+#   1. SINGLE UNPARENTHESIZED PARAMETER — when there is exactly one
+#      parameter with an inferred type:
+#
+#        x -> x * 2
+#        name -> name.toUpperCase()
+#        e -> System.out.println(e)
+#
+#      This is the shortest lambda form. Parentheses are ONLY omittable
+#      when there is exactly one parameter with no type annotation.
+#
+#   2. TYPED PARAMETER LIST — explicit types, like a method declaration:
+#
+#        (int x, int y) -> x + y
+#        (String s) -> s.length()
+#        (final String name) -> name.trim()
+#
+#      Types and modifiers (final, annotations) can be specified.
+#      This form requires parentheses, even for a single parameter.
+#
+#   3. INFERRED PARAMETER LIST — no types, just names in parentheses:
+#
+#        (x, y) -> x + y
+#        () -> 42
+#        (a, b, c) -> a + b + c
+#
+#      The compiler infers the types from the target functional interface.
+#      This is the most common form for multi-parameter lambdas.
+#      The empty parameter list `() -> ...` is used for Runnable/Supplier.
+#
+# There are two forms for the body:
+#
+#   1. EXPRESSION BODY — a single expression (no braces):
+#
+#        x -> x * 2
+#        (a, b) -> a.compareTo(b)
+#
+#      The expression's value is the lambda's return value. No `return`
+#      keyword is needed (or allowed).
+#
+#   2. BLOCK BODY — a full block with statements:
+#
+#        (x, y) -> {
+#            int sum = x + y;
+#            System.out.println("Sum: " + sum);
+#            return sum;
+#        }
+#
+#      A block body requires explicit `return` statements for non-void
+#      lambdas. A void lambda's block body simply ends without return.
+#
+# VARIABLE CAPTURE:
+#
+#   Lambdas can capture variables from the enclosing scope, but those
+#   variables must be EFFECTIVELY FINAL — assigned exactly once. This is
+#   a relaxation from Java 7's anonymous inner class rule, which required
+#   explicitly declaring captured variables as `final`:
+#
+#     // Java 7: must declare final
+#     final String prefix = "Hello";
+#     button.addActionListener(new ActionListener() {
+#         public void actionPerformed(ActionEvent e) {
+#             System.out.println(prefix + " World");
+#         }
+#     });
+#
+#     // Java 8: effectively final (not reassigned)
+#     String prefix = "Hello";
+#     button.addActionListener(e -> System.out.println(prefix + " World"));
+#
+# Reference: JLS SE 8, Section 15.27
+
+lambda_expression = lambda_parameters ARROW lambda_body ;
+
+# Lambda parameter forms:
+#
+#   x -> ...              — single identifier, no parentheses
+#   () -> ...             — empty, parenthesized
+#   (x) -> ...            — single inferred, parenthesized
+#   (x, y) -> ...         — multiple inferred, parenthesized
+#   (int x) -> ...        — single typed, parenthesized
+#   (int x, int y) -> ... — multiple typed, parenthesized
+#
+# The grammar distinguishes these by trying the parenthesized forms first,
+# then falling back to the bare-name form.
+
+lambda_parameters = LPAREN RPAREN
+                  | LPAREN formal_parameter_list RPAREN
+                  | LPAREN inferred_parameter_list RPAREN
+                  | NAME ;
+
+# Inferred parameter list: just names, no types. The compiler determines
+# the types from the functional interface's abstract method signature.
+#
+#   (a, b) -> a + b       // types inferred from Comparator<String>, BiFunction, etc.
+#   (x, y, z) -> x + y + z
+#
+# This form CANNOT include annotations, `final`, or type names — those
+# require the formal_parameter_list form.
+
+inferred_parameter_list = NAME COMMA NAME { COMMA NAME } ;
+
+# The lambda body is either a single expression or a full block.
+#
+# Expression body:
+#   x -> x * 2                        // value is x * 2
+#   (a, b) -> a.compareTo(b)          // value is the comparison result
+#
+# Block body:
+#   x -> { return x * 2; }            // explicit return
+#   () -> { System.out.println("!"); } // void lambda
+
+lambda_body = block
+            | expression ;
+
+# ============================================================================
+# Method References (New in Java 8)
+# ============================================================================
+#
+# Method references are syntactic sugar for lambdas that simply delegate
+# to an existing method. They use the `::` (DOUBLE_COLON) operator.
+#
+# The four forms:
+#
+#   1. STATIC METHOD REFERENCE — reference to a static method:
+#        Integer::parseInt            ≡  s -> Integer.parseInt(s)
+#        Math::max                    ≡  (a, b) -> Math.max(a, b)
+#        Arrays::sort                 ≡  a -> Arrays.sort(a)
+#
+#   2. BOUND INSTANCE METHOD REFERENCE — reference to an instance method
+#      on a specific object:
+#        System.out::println          ≡  x -> System.out.println(x)
+#        myList::add                  ≡  x -> myList.add(x)
+#        "hello"::charAt              ≡  i -> "hello".charAt(i)
+#
+#   3. UNBOUND INSTANCE METHOD REFERENCE — reference to an instance method
+#      on an unspecified object of a given type:
+#        String::length               ≡  s -> s.length()
+#        String::compareTo            ≡  (s1, s2) -> s1.compareTo(s2)
+#        Object::toString             ≡  o -> o.toString()
+#
+#   4. CONSTRUCTOR REFERENCE — reference to a constructor:
+#        ArrayList::new               ≡  () -> new ArrayList<>()
+#        int[]::new                   ≡  n -> new int[n]
+#        HashMap<String,Integer>::new ≡  () -> new HashMap<String,Integer>()
+#
+# Forms 1 and 3 are syntactically identical (`TypeName::methodName`).
+# The compiler resolves the ambiguity by checking whether the method is
+# static or instance. Form 2 uses an expression (not a type name) as
+# the receiver.
+#
+# Method references are integrated into the grammar as a primary_suffix.
+# The `::` operator can follow any primary expression or type name:
+#
+#   primary_expression DOUBLE_COLON [type_arguments] (NAME | "new")
+#
+# The optional type_arguments handle generic method references:
+#   Arrays::<String>sort
+#   Collections::<Integer>emptyList
+#
+# Reference: JLS SE 8, Section 15.13
+
+# Method references are handled as a primary_suffix (see below) and also
+# as a standalone form for type-based references. The primary_suffix
+# approach handles: expr::method, expr::new, Type::method, Type::new.
+#
+# Array constructor references like `int[]::new` require special handling
+# since the array type is not a simple qualified name.
+
+# ============================================================================
+# Ternary Conditional
+# ============================================================================
+#
+# The conditional operator: `condition ? valueIfTrue : valueIfFalse`.
+#
+# In Java 8, lambda expressions can appear in the then/else branches:
+#
+#   Function<String, String> f = flag
+#       ? s -> s.toUpperCase()
+#       : s -> s.toLowerCase();
+
+conditional_expression = logical_or_expression
+                         [ QUESTION assignment_expression COLON assignment_expression ] ;
+
+# --- Logical OR ---
+#
+# Short-circuit evaluation: if the left side is true, the right side
+# is not evaluated.
+
+logical_or_expression = logical_and_expression { OR_OR logical_and_expression } ;
+
+# --- Logical AND ---
+#
+# Short-circuit: if the left side is false, right side is not evaluated.
+
+logical_and_expression = bitwise_or_expression { AND_AND bitwise_or_expression } ;
+
+# --- Bitwise OR ---
+
+bitwise_or_expression = bitwise_xor_expression { PIPE bitwise_xor_expression } ;
+
+# --- Bitwise XOR ---
+
+bitwise_xor_expression = bitwise_and_expression { CARET bitwise_and_expression } ;
+
+# --- Bitwise AND ---
+
+bitwise_and_expression = equality_expression { AMPERSAND equality_expression } ;
+
+# --- Equality ---
+#
+# == and != compare by value for primitives, by reference for objects.
+
+equality_expression = relational_expression
+                      { ( EQUALS_EQUALS | NOT_EQUALS ) relational_expression } ;
+
+# --- Relational ---
+#
+# Numeric comparison operators plus `instanceof`.
+#
+# Java 8 allows type annotations on the instanceof target type:
+#
+#   if (obj instanceof @NonNull String) { ... }
+
+relational_expression = shift_expression
+                        { ( LESS_THAN | GREATER_THAN | LESS_EQUALS | GREATER_EQUALS )
+                          shift_expression
+                        | "instanceof" annotated_type } ;
+
+# --- Shift ---
+
+shift_expression = additive_expression
+                   { ( LEFT_SHIFT | RIGHT_SHIFT | UNSIGNED_RIGHT_SHIFT ) additive_expression } ;
+
+# --- Additive ---
+
+additive_expression = multiplicative_expression
+                      { ( PLUS | MINUS ) multiplicative_expression } ;
+
+# --- Multiplicative ---
+
+multiplicative_expression = unary_expression
+                            { ( STAR | SLASH | PERCENT ) unary_expression } ;
+
+# --- Unary ---
+#
+# Prefix operators and type casts.
+
+unary_expression = PLUS_PLUS unary_expression
+                 | MINUS_MINUS unary_expression
+                 | PLUS unary_expression
+                 | MINUS unary_expression
+                 | unary_expression_not_plus_minus ;
+
+unary_expression_not_plus_minus = TILDE unary_expression
+                                | BANG unary_expression
+                                | cast_expression
+                                | postfix_expression ;
+
+# --- Cast Expression ---
+#
+# Type casts in Java 8 can include type annotations on the target type:
+#
+#   (@NonNull String) obj
+#   (List<@NonNull String>) rawList
+#
+# Java 8 also introduces intersection types in casts, allowing cast
+# targets to specify multiple bounds:
+#
+#   (Serializable & Comparable<String>) obj
+#
+# This is particularly useful with lambdas — it allows casting a lambda
+# to an intersection of a functional interface and a serializable type:
+#
+#   (Serializable & Comparator<String>) (a, b) -> a.compareTo(b)
+#
+# The intersection cast uses the same `&` syntax as type parameter bounds.
+
+cast_expression = LPAREN primitive_type { LBRACKET RBRACKET } RPAREN unary_expression
+                | LPAREN annotated_type { AMPERSAND annotated_type } { LBRACKET RBRACKET } RPAREN
+                  unary_expression_not_plus_minus ;
+
+# --- Postfix ---
+
+postfix_expression = primary_expression { PLUS_PLUS | MINUS_MINUS } ;
+
+# ============================================================================
+# Primary Expressions
+# ============================================================================
+#
+# Primary expressions are the atoms of the expression grammar. Java 8 adds
+# method references as a new primary suffix form.
+#
+# Java 7 added the diamond operator, which appears in `new` expressions:
+#   new ArrayList<>()
+#   new HashMap<String, List<Integer>>()   // explicit type args still valid
+#
+# Java 8 adds:
+#   - Method references as primary suffixes: `expr::method`, `Type::new`
+#   - Lambda expressions (handled at the assignment level, not here)
+#
+# Reference: JLS SE 8, Section 15.8-15.13
+
+primary_expression = primary { primary_suffix } ;
+
+# Primary suffixes enable chaining and now include method references:
+#
+#   obj.field                          — field access
+#   obj.method(args)                   — method call
+#   obj.<String>method(args)           — generic method call
+#   array[index]                       — array access
+#   obj::method                        — method reference (NEW in Java 8)
+#   Type::new                          — constructor reference (NEW in Java 8)
+#   obj.class                          — class literal
+#   obj.this                           — qualified this
+#   obj.super                          — qualified super
+#   obj.new Inner()                    — inner class creation
+#
+# Method references use the DOUBLE_COLON operator. The reference target is
+# either a method name or "new" (for constructor references). Optional type
+# arguments support generic method references.
+
+primary_suffix = DOUBLE_COLON [ type_arguments ] ( NAME | "new" )
+               | DOT [ type_arguments ] NAME
+               | DOT "class"
+               | DOT "this"
+               | DOT "super"
+               | DOT "new" [ type_arguments ] NAME [ type_arguments ]
+                   LPAREN [ argument_list ] RPAREN [ class_body ]
+               | LPAREN [ argument_list ] RPAREN
+               | LBRACKET expression RBRACKET ;
+
+# The core primary forms.
+#
+# Java 7 additions:
+#   - Diamond operator in new: `new ArrayList<>()`
+#     The type_arguments rule now allows empty `<>`, so `new Type<>()`
+#     is handled by the existing `new` primary with empty type arguments.
+#
+# Java 8 additions:
+#   - Type-based method references: `String::valueOf`, `int[]::new`
+#     These are syntactically ambiguous with qualified names followed by
+#     `::`. They are handled by the primary_suffix rule — after parsing
+#     a NAME (or qualified name via DOT suffixes), the `::` suffix
+#     creates a method reference.
+#   - Array type constructor references: `int[]::new`
+#     These need special handling in the `new` creation forms.
+#
+# IMPORTANT: Anonymous class creation (`new Type(args) { body }`) still
+# works in Java 8 but is largely superseded by lambdas for functional
+# interfaces. Anonymous classes remain necessary for:
+#   - Interfaces with multiple abstract methods
+#   - Abstract classes
+#   - When you need per-instance state (fields)
+
+primary = literal
+        | "this"
+        | "super" DOUBLE_COLON [ type_arguments ] ( NAME | "new" )
+        | "super" DOT [ type_arguments ] NAME
+        | "super" LPAREN [ argument_list ] RPAREN
+        | "new" [ type_arguments ] class_type LPAREN [ argument_list ] RPAREN [ class_body ]
+        | "new" array_creation_type array_dimension_exprs { LBRACKET RBRACKET }
+        | "new" array_creation_type { LBRACKET RBRACKET } array_initializer
+        | primitive_type { LBRACKET RBRACKET } DOT "class"
+        | primitive_type { LBRACKET RBRACKET } DOUBLE_COLON "new"
+        | LPAREN expression RPAREN
+        | NAME ;
+
+# --- Argument List ---
+
+argument_list = expression { COMMA expression } ;
+
+# --- Array Creation ---
+#
+# Arrays are created with `new`. No changes in Java 7 or 8.
+#
+# Generic array creation is still not allowed:
+#   new List<String>[5]    // ILLEGAL (type erasure)
+#   new List[5]            // OK (raw type, unchecked warning)
+
+array_creation_type = primitive_type
+                    | class_type ;
+
+array_dimension_exprs = LBRACKET expression RBRACKET
+                        { LBRACKET expression RBRACKET } ;
+
+# ============================================================================
+# Literals
+# ============================================================================
+#
+# Java 8 has the same literal forms as Java 7:
+#
+#   Integer literals:       42, 0xFF, 077, 42L, 0b1010 (binary, Java 7)
+#   Floating-point:         3.14, 2.0e10, 3.14f, 1_000.50 (underscores, Java 7)
+#   Character literals:     'a', '\n', '\u0041'
+#   String literals:        "hello", "line1\nline2"
+#   Boolean literals:       true, false
+#   Null literal:           null
+#
+# No new literal forms in Java 8. Text blocks (""") arrive in Java 13.
+#
+# Reference: JLS SE 8, Section 3.10
+
+literal = NUMBER
+        | CHAR
+        | STRING
+        | "true"
+        | "false"
+        | "null" ;

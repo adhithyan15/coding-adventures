@@ -1,0 +1,24 @@
+{
+  "name": "@coding-adventures/ir-to-jvm-class-file",
+  "version": "0.1.0",
+  "description": "Lower compiler-ir programs into conservative JVM class files",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/compiler-ir": "file:../compiler-ir",
+    "@coding-adventures/jvm-class-file": "file:../jvm-class-file"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@vitest/coverage-v8": "^3.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}

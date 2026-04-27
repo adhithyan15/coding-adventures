@@ -1,0 +1,13 @@
+{
+  "language": "perl",
+  "min_version": "5.26",
+  "capabilities": [
+    "File::Path",
+    "File::Basename",
+    "File::Temp"
+  ],
+  "test_framework": "Test2::V0",
+  "local_dependencies": [
+    "CodingAdventures::Sha1"
+  ]
+}

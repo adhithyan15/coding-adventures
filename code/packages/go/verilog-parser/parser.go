@@ -10,15 +10,15 @@
 //
 // The parser is a thin wrapper around two lower-level packages:
 //
-//   1. verilog-lexer — tokenizes the raw source text into a flat list of
-//      tokens (keywords, names, operators, numbers, etc.). The lexer also
-//      runs the Verilog preprocessor, expanding `define macros and evaluating
-//      `ifdef conditionals before tokenization.
+//  1. verilog-lexer — tokenizes the raw source text into a flat list of
+//     tokens (keywords, names, operators, numbers, etc.). The lexer also
+//     runs the Verilog preprocessor, expanding `define macros and evaluating
+//     `ifdef conditionals before tokenization.
 //
-//   2. parser.GrammarParser — a generic packrat parser that interprets a
-//      grammar specification at runtime. Given a list of tokens and a set
-//      of grammar rules, it produces an ASTNode tree. The grammar rules
-//      live in verilog.grammar, a human-readable BNF-like file.
+//  2. parser.GrammarParser — a generic packrat parser that interprets a
+//     grammar specification at runtime. Given a list of tokens and a set
+//     of grammar rules, it produces an ASTNode tree. The grammar rules
+//     live in verilog.grammar, a human-readable BNF-like file.
 //
 // This package glues them together: tokenize with verilog-lexer, load
 // verilog.grammar, hand both to GrammarParser, and return the result.
@@ -46,35 +46,34 @@
 package verilogparser
 
 import (
-	"path/filepath"
-	"runtime"
+	"fmt"
 
 	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/parser"
 	veriloglexer "github.com/adhithyan15/coding-adventures/code/packages/go/verilog-lexer"
+	verilogv1995 "github.com/adhithyan15/coding-adventures/code/packages/go/verilog-parser/internal/grammars/v1995"
+	verilogv2001 "github.com/adhithyan15/coding-adventures/code/packages/go/verilog-parser/internal/grammars/v2001"
+	verilogv2005 "github.com/adhithyan15/coding-adventures/code/packages/go/verilog-parser/internal/grammars/v2005"
 )
 
-// getGrammarPath resolves the absolute path to verilog.grammar.
-//
-// Uses runtime.Caller(0) to find the directory containing this source file,
-// then navigates three levels up to reach code/ and into grammars/.
-//
-// Directory layout:
-//
-//	code/
-//	  grammars/
-//	    verilog.grammar    <-- target
-//	  packages/
-//	    go/
-//	      verilog-parser/
-//	        parser.go      <-- we are here
-//
-// So from parser.go: ../../../grammars/verilog.grammar
-func getGrammarPath() string {
-	_, filename, _, _ := runtime.Caller(0)
-	parent := filepath.Dir(filename)
-	root := filepath.Join(parent, "..", "..", "..", "grammars")
-	return filepath.Join(root, "verilog.grammar")
+const DefaultVersion = veriloglexer.DefaultVersion
+
+func parserGrammarForVersion(version string) (*grammartools.ParserGrammar, error) {
+	resolved, err := veriloglexer.ResolveVersion(version)
+	if err != nil {
+		return nil, err
+	}
+
+	switch resolved {
+	case "1995":
+		return verilogv1995.ParserGrammarData, nil
+	case "2001":
+		return verilogv2001.ParserGrammarData, nil
+	case "2005":
+		return verilogv2005.ParserGrammarData, nil
+	default:
+		return nil, fmt.Errorf("compiled Verilog parser grammar missing version %q", resolved)
+	}
 }
 
 // CreateVerilogParser tokenizes Verilog source and returns a configured
@@ -96,34 +95,28 @@ func getGrammarPath() string {
 //	if err != nil { ... }
 //	ast, err := p.Parse()
 func CreateVerilogParser(source string) (*parser.GrammarParser, error) {
+	return CreateVerilogParserVersion(source, DefaultVersion)
+}
+
+// CreateVerilogParserVersion tokenizes Verilog source and returns a configured
+// GrammarParser for the requested Verilog edition.
+func CreateVerilogParserVersion(source string, version string) (*parser.GrammarParser, error) {
 	// Step 1: Tokenize the Verilog source.
 	// The lexer handles the preprocessor (`define, `ifdef, etc.) and
 	// produces a flat list of tokens ending with EOF.
-	tokens, err := veriloglexer.TokenizeVerilog(source)
+	tokens, err := veriloglexer.TokenizeVerilogVersion(source, version)
+	if err != nil {
+		return nil, err
+	}
+
+	grammar, err := parserGrammarForVersion(version)
 	if err != nil {
 		return nil, err
 	}
 
 	return StartNew[*parser.GrammarParser]("verilogparser.CreateVerilogParser", nil,
-		func(op *Operation[*parser.GrammarParser], rf *ResultFactory[*parser.GrammarParser]) *OperationResult[*parser.GrammarParser] {
-			// Step 2: Read the grammar specification from disk.
-			// The grammar file is a BNF-like text file that defines the syntax
-			// rules for Verilog (module_declaration, expression, statement, etc.).
-			bytes, err := op.File.ReadFile(getGrammarPath())
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-
-			// Step 3: Parse the grammar text into structured rule objects.
-			// ParseParserGrammar returns a ParserGrammar containing a list of
-			// GrammarRule objects, each with a name and body (the rule's definition
-			// expressed as GrammarElement nodes: Sequence, Alternation, etc.).
-			grammar, err := grammartools.ParseParserGrammar(string(bytes))
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-
-			// Step 4: Create the parser.
+		func(_ *Operation[*parser.GrammarParser], rf *ResultFactory[*parser.GrammarParser]) *OperationResult[*parser.GrammarParser] {
+			// Step 2: Create the parser from the compiled grammar.
 			// NewGrammarParser builds a packrat parser with memoization that
 			// will interpret the grammar rules against the token stream.
 			return rf.Generate(true, false, parser.NewGrammarParser(tokens, grammar))
@@ -149,7 +142,13 @@ func CreateVerilogParser(source string) (*parser.GrammarParser, error) {
 //	if err != nil { log.Fatal(err) }
 //	// Walk ast.Children to inspect the parsed structure
 func ParseVerilog(source string) (*parser.ASTNode, error) {
-	verilogParser, err := CreateVerilogParser(source)
+	return ParseVerilogVersion(source, DefaultVersion)
+}
+
+// ParseVerilogVersion tokenizes and parses Verilog source code using the
+// requested Verilog edition.
+func ParseVerilogVersion(source string, version string) (*parser.ASTNode, error) {
+	verilogParser, err := CreateVerilogParserVersion(source, version)
 	if err != nil {
 		return nil, err
 	}

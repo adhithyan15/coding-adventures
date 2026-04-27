@@ -6,7 +6,7 @@ use File::Basename qw(basename);
 use File::Spec ();
 
 my %CI_MANAGED_TOOLCHAIN_LANGUAGES = map { $_ => 1 } qw(
-    python ruby typescript rust elixir lua perl haskell
+    python ruby typescript rust elixir lua perl java kotlin haskell
 );
 
 sub validate_ci_full_build_toolchains {

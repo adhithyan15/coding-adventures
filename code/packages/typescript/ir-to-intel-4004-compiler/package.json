@@ -1,0 +1,24 @@
+{
+  "name": "@coding-adventures/ir-to-intel-4004-compiler",
+  "version": "0.1.0",
+  "description": "Compile generic IR to Intel 4004 assembly text",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/compiler-ir": "file:../compiler-ir",
+    "@coding-adventures/intel-4004-ir-validator": "file:../intel-4004-ir-validator"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@vitest/coverage-v8": "^3.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}

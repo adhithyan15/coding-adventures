@@ -30,6 +30,7 @@
 //   - Demonstrates the same algorithms in a different systems language.
 
 mod cache;
+mod ci_workflow;
 mod discovery;
 mod executor;
 mod gitdiff;
@@ -80,7 +81,7 @@ struct Args {
     jobs: Option<usize>,
 
     /// Filter to language: python, ruby, go, typescript, rust, elixir, lua,
-    /// perl, swift, haskell, wasm, csharp, fsharp, dotnet, or all.
+    /// perl, swift, java, kotlin, haskell, wasm, csharp, fsharp, dotnet, or all.
     #[arg(long, default_value = "all")]
     language: String,
 
@@ -277,7 +278,9 @@ fn run() -> i32 {
         if let Some(validation_error) = validator::validate_build_contracts(&repo_root, &packages) {
             eprintln!("BUILD/CI validation failed:");
             eprintln!("  - {}", validation_error);
-            eprintln!("Fix the BUILD file or CI workflow so isolated and full-build runs stay correct.");
+            eprintln!(
+                "Fix the BUILD file or CI workflow so isolated and full-build runs stay correct."
+            );
             return 1;
         }
     }
@@ -293,24 +296,40 @@ fn run() -> i32 {
     let affected_set = if !force {
         let changed_files = gitdiff::get_changed_files(&repo_root, &args.diff_base);
         if !changed_files.is_empty() {
-            let shared_prefixes = [".github/"];
-            let mut shared_changed = false;
-            for f in &changed_files {
-                for prefix in &shared_prefixes {
-                    if f.starts_with(prefix) {
-                        shared_changed = true;
-                        break;
+            if changed_files
+                .iter()
+                .any(|path| path == ci_workflow::CI_WORKFLOW_PATH)
+            {
+                let ci_change =
+                    ci_workflow::analyze_ci_workflow_changes(&repo_root, &args.diff_base);
+                if ci_change.requires_full_rebuild {
+                    println!("Git diff: ci.yml changed in shared ways — rebuilding everything");
+                    force = true;
+                    None
+                } else {
+                    let ci_toolchains = ci_workflow::sorted_toolchains(&ci_change.toolchains);
+                    if !ci_toolchains.is_empty() {
+                        println!(
+                            "Git diff: ci.yml changed only toolchain-scoped setup for {}",
+                            ci_toolchains.join(", ")
+                        );
+                    }
+
+                    let changed_pkgs =
+                        gitdiff::map_files_to_packages(&changed_files, &packages, &repo_root);
+                    if !changed_pkgs.is_empty() {
+                        let affected = graph.affected_nodes(&changed_pkgs);
+                        println!(
+                            "Git diff: {} packages changed, {} affected (including dependents)",
+                            changed_pkgs.len(),
+                            affected.len()
+                        );
+                        Some(affected)
+                    } else {
+                        println!("Git diff: no package files changed — nothing to build");
+                        Some(std::collections::HashSet::new()) // empty = build nothing
                     }
                 }
-                if shared_changed {
-                    break;
-                }
-            }
-
-            if shared_changed {
-                println!("Git diff: shared files changed — rebuilding everything");
-                force = true;
-                None
             } else {
                 let changed_pkgs =
                     gitdiff::map_files_to_packages(&changed_files, &packages, &repo_root);

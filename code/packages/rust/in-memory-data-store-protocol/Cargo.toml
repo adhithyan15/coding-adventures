@@ -6,4 +6,3 @@ description = "RESP-to-engine command frame conversion for the in-memory data st
 license = "MIT"
 
 [dependencies]
-resp-protocol = { path = "../resp-protocol" }

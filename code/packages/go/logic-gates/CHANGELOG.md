@@ -4,6 +4,15 @@ All notable changes to the `logic-gates` package will be documented in this file
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.6.0] - 2026-04-12
+
+### Added
+
+- `XORn(inputs ...int) int` — N-input XOR gate via left-fold over two-input XOR
+  - Requires at least 2 inputs (panics on fewer)
+  - Key building block for parity computation: Intel 8008 parity = NOT(XORn(b0..b7))
+  - P=1 means even parity (even count of 1-bits) on the 8008
+
 ## [0.5.0] - 2026-03-31
 
 ### Changed

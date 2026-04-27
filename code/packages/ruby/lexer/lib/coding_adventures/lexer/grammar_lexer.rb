@@ -351,10 +351,12 @@ module CodingAdventures
         # that match keywords. Used by case-insensitive languages like VHDL.
         @case_sensitive = grammar.case_sensitive
 
-        # Indentation mode state.
+        # Lexer modes.
         @indentation_mode = grammar.mode == "indentation"
+        @layout_mode = grammar.mode == "layout"
         @indent_stack = [0]
         @bracket_depth_indent = 0
+        @layout_keyword_set = (grammar.respond_to?(:layout_keywords) ? grammar.layout_keywords : []).to_set.freeze
 
         # --- Pattern groups ---
         # Compile per-group patterns. The "default" group uses the
@@ -474,6 +476,8 @@ module CodingAdventures
         # Stage 2: Core tokenization.
         tokens = if @indentation_mode
           tokenize_indentation
+        elsif @layout_mode
+          tokenize_layout
         else
           tokenize_standard
         end
@@ -722,6 +726,24 @@ module CodingAdventures
         tokens
       end
 
+      # Layout-aware tokenization (prototype for Haskell-style offside rules).
+      #
+      # We intentionally reuse the standard tokenization pass first so
+      # callbacks, pattern groups, and skip handling all continue to work.
+      # A second pass injects virtual "{", ";", and "}" tokens after
+      # layout introducers declared in the grammar's layout_keywords: section.
+      #
+      # The current prototype is intentionally narrow:
+      # - basic let/where/do/of-style blocks
+      # - explicit "{" cancels implicit layout for that introducer
+      # - dedent and EOF close open layout contexts
+      #
+      # This is enough to validate the engine shape before we tackle the
+      # full Haskell report.
+      def tokenize_layout
+        apply_layout(tokenize_standard)
+      end
+
       # Process the start of a logical line in indentation mode.
       # Returns an array of INDENT/DEDENT tokens, :skip_line for blank/comment
       # lines, or nil if no indent change.
@@ -807,6 +829,102 @@ module CodingAdventures
           end
         end
         false
+      end
+
+      def apply_layout(tokens)
+        result = []
+        layout_stack = []
+        pending_layouts = 0
+        suppress_depth = 0
+
+        tokens.each_with_index do |token, index|
+          type_name = token.type_name
+
+          if type_name == "NEWLINE"
+            result << token
+            next_token = next_layout_token(tokens, index + 1)
+            if suppress_depth == 0 && next_token
+              while !layout_stack.empty? && next_token.column < layout_stack.last
+                result << virtual_layout_token("VIRTUAL_RBRACE", "}", next_token)
+                layout_stack.pop
+              end
+
+              if !layout_stack.empty? &&
+                  next_token.type_name != "EOF" &&
+                  next_token.value != "}" &&
+                  next_token.column == layout_stack.last
+                result << virtual_layout_token("VIRTUAL_SEMICOLON", ";", next_token)
+              end
+            end
+            next
+          end
+
+          if type_name == "EOF"
+            while !layout_stack.empty?
+              result << virtual_layout_token("VIRTUAL_RBRACE", "}", token)
+              layout_stack.pop
+            end
+            result << token
+            next
+          end
+
+          if pending_layouts.positive?
+            if token.value == "{"
+              pending_layouts -= 1
+            else
+              pending_layouts.times do
+                layout_stack << token.column
+                result << virtual_layout_token("VIRTUAL_LBRACE", "{", token)
+              end
+              pending_layouts = 0
+            end
+          end
+
+          result << token
+
+          unless virtual_layout_token?(token)
+            case token.value
+            when "(", "[", "{"
+              suppress_depth += 1
+            when ")", "]", "}"
+              suppress_depth -= 1 if suppress_depth > 0
+            end
+          end
+
+          pending_layouts += 1 if layout_keyword?(token)
+        end
+
+        result
+      end
+
+      def next_layout_token(tokens, start_index)
+        idx = start_index
+        while idx < tokens.length
+          token = tokens[idx]
+          return token unless token.type_name == "NEWLINE"
+          idx += 1
+        end
+        nil
+      end
+
+      def virtual_layout_token(type_name, value, anchor)
+        Token.new(
+          type: type_name,
+          value: value,
+          line: anchor.line,
+          column: anchor.column
+        )
+      end
+
+      def virtual_layout_token?(token)
+        token.type_name.start_with?("VIRTUAL_")
+      end
+
+      def layout_keyword?(token)
+        return false if @layout_keyword_set.empty?
+
+        value = token.value.to_s
+        @layout_keyword_set.include?(value) || @layout_keyword_set.include?(value.downcase)
       end
 
       # Try to match a token using the default group's patterns.

@@ -1,0 +1,336 @@
+# Parser grammar for ALGOL 60
+# @version 1
+#
+# ALGOL 60 was the first language whose grammar was formally specified using BNF
+# (Backus-Naur Form), co-designed by John Backus and Peter Naur in 1960. This
+# grammar derives directly from the ALGOL 60 report.
+#
+# Notation (repo standard):
+#   UPPERCASE    token kinds from algol.tokens (custom operators, literals)
+#   "keyword"    quoted keyword literals (match token.value for keyword tokens)
+#   lowercase    grammar rules (non-terminals, defined below)
+#   |            alternation (or)
+#   { x }        zero or more repetitions of x
+#   [ x ]        optional (zero or one occurrence of x)
+#   ( x )        grouping
+#   ;            rule terminator
+#
+# Token matching rules:
+#   - UPPERCASE names match via token.type_name or token.type_ (built-in types)
+#   - Quoted literals like "begin" match via token.value
+#   - Keywords (begin, end, if, etc.) are tokenized as Keyword tokens with
+#     token.value = the lowercase word. Use quoted literals to match them.
+#   - Custom operators (ASSIGN, POWER, LEQ, GEQ, NEQ, CARET, EQ, LT, GT) are
+#     matched by token.type_name.
+#   - Built-in types (PLUS, MINUS, STAR, SLASH, LPAREN, RPAREN, LBRACKET,
+#     RBRACKET, SEMICOLON, COMMA, COLON) are matched by token.type_.
+#   - Value literals (INTEGER_LIT, REAL_LIT, STRING_LIT) are matched by
+#     token.type_name.
+#   - NAME matches identifiers (token.type_ = Name, type_name unset).
+#
+# Entry point: program
+#
+# Key design decisions documented inline:
+#   - Dangling else resolution: then-branch is unlabeled_stmt (no conditionals),
+#     else-branch is statement (conditionals allowed). Forces begin/end for nesting.
+#   - Exponentiation is LEFT-associative per the ALGOL 60 report: 2^3^4 = (2^3)^4.
+#     This differs from most modern languages and mathematical convention.
+#   - Conditional expressions (if/then/else as expressions) appear in arith_expr
+#     and bool_expr rules, not just in statement rules.
+#   - Boolean operator precedence (low to high): eqv, impl, or, and, not
+
+# ---------------------------------------------------------------------------
+# Top level
+# ---------------------------------------------------------------------------
+
+# Every ALGOL 60 program is a single block.
+program      = block ;
+
+# A block opens a new lexical scope. All declarations must precede all statements.
+# The grammar enforces declaration-before-use at the block level.
+# Blocks can nest: any statement position can hold another block.
+# The statement list is optional — `begin end` is a valid empty block.
+block        = "begin" { declaration SEMICOLON } [ statement { SEMICOLON statement } ] "end" ;
+
+# ---------------------------------------------------------------------------
+# Declarations
+# ---------------------------------------------------------------------------
+
+declaration  = type_decl
+             | own_decl
+             | own_array_decl
+             | array_decl
+             | switch_decl
+             | procedure_decl ;
+
+# Simple type declaration: declares one or more variables of a given type.
+#   integer x, y, z
+#   real sum, average
+#   boolean flag
+type_decl    = type ident_list ;
+
+# OWN declaration: static-lifetime scalar storage with lexical visibility.
+#   own integer counter
+#   own real total
+own_decl     = "own" type ident_list ;
+
+# OWN array declaration: static-lifetime array descriptor with lexical visibility.
+#   own integer array counts[1:3]
+#   own array values[lo:hi]
+own_array_decl = "own" [ type ] "array" array_segment { COMMA array_segment } ;
+
+type         = "integer" | "real" | "boolean" | "string" ;
+
+ident_list   = NAME { COMMA NAME } ;
+
+# Array declaration. Type is optional (omitting type defaults to real in most
+# ALGOL 60 implementations). Bounds may be any arithmetic expressions — including
+# variables — making ALGOL 60 arrays dynamically sized on the stack.
+#   array A[1:10]              single-dimensional real array
+#   integer array B[1:m, 1:n]  two-dimensional integer array
+#   array X[lo:hi], Y[1:5]     two arrays in one declaration
+array_decl   = [ type ] "array" array_segment { COMMA array_segment } ;
+
+array_segment = ident_list LBRACKET bound_pair { COMMA bound_pair } RBRACKET ;
+
+# A bound pair specifies one dimension: lower_bound : upper_bound.
+# Both bounds are arithmetic expressions evaluated at runtime.
+bound_pair   = arith_expr COLON arith_expr ;
+
+# Switch declaration: a named table of jump targets for computed goto.
+#   switch s := label1, label2, label3
+#   goto s[2]   -- jumps to label2
+switch_decl  = "switch" NAME ASSIGN switch_list ;
+
+switch_list  = desig_expr { COMMA desig_expr } ;
+
+# Procedure declaration. Return type is optional (omitted = void procedure).
+# Parameters are refined by:
+#   value_part: lists params passed by value (others are by name — the default)
+#   spec_part:  declares the type of each parameter
+# The body is either a full block (with its own declarations) or a single statement.
+procedure_decl = [ type ] "procedure" NAME [ formal_params ] SEMICOLON
+                 [ value_part ] { spec_part } proc_body ;
+
+formal_params = LPAREN ident_list RPAREN ;
+
+# The VALUE declaration opts specific parameters into call-by-value semantics.
+# All parameters not listed here are call-by-name: the argument expression is
+# re-evaluated every time the parameter is used inside the procedure body.
+value_part   = "value" ident_list SEMICOLON ;
+
+# spec_part declares what kind each parameter is (integer, real, array, etc.)
+spec_part    = specifier ident_list SEMICOLON ;
+
+specifier    = "integer" | "real" | "boolean" | "string" | "array" | "label" | "switch" | "procedure" ;
+
+proc_body    = block | statement ;
+
+# ---------------------------------------------------------------------------
+# Statements
+# ---------------------------------------------------------------------------
+
+# Any statement may carry a label. Labels can be identifiers or integer literals.
+# Labels are the targets of goto statements.
+#
+# The third alternative (label COLON alone) supports a standalone label at the
+# end of a block, e.g. `done:` immediately before `end`. This is equivalent to
+# a label on an empty/dummy statement — a common ALGOL 60 idiom for goto targets
+# at the end of a block. Strictly, ALGOL 60 requires a statement after a label,
+# but most implementations accept a terminal label because the block's `end`
+# acts as the associated statement.
+statement    = [ label COLON ] unlabeled_stmt
+             | [ label COLON ] cond_stmt
+             | label COLON ;
+
+label        = NAME | INTEGER_LIT ;
+
+# DANGLING ELSE RESOLUTION:
+# unlabeled_stmt deliberately excludes cond_stmt. This means a conditional
+# statement cannot appear as the then-branch of another conditional without
+# being wrapped in begin...end. This eliminates the dangling else ambiguity
+# at the grammar level.
+#
+# In C and Java, the else binds to the nearest if by convention (not grammar).
+# ALGOL requires explicit begin/end to make nesting unambiguous.
+unlabeled_stmt = assign_stmt
+               | goto_stmt
+               | proc_stmt
+               | compound_stmt
+               | block
+               | for_stmt ;
+
+# Conditional statement. The then-branch is unlabeled_stmt (excludes conditionals).
+# The else-branch is statement (includes conditionals, enabling if/then/else if chains).
+cond_stmt    = "if" bool_expr "then" unlabeled_stmt [ "else" statement ] ;
+
+# A compound statement is begin...end with only statements, no declarations.
+# Use a full block when declarations are needed.
+compound_stmt = "begin" statement { SEMICOLON statement } "end" ;
+
+# Assignment. Multiple left-hand sides assign the same value right-to-left.
+#   x := 0          simple assignment
+#   x := y := 0     assigns 0 to y, then x
+assign_stmt  = left_part { left_part } expression ;
+
+left_part    = variable ASSIGN ;
+
+goto_stmt    = "goto" desig_expr ;
+
+# Procedure call as a statement (return value, if any, is discarded).
+# Calls with no arguments omit the parentheses entirely.
+proc_stmt    = NAME [ LPAREN actual_params RPAREN ] ;
+
+actual_params = expression { COMMA expression } ;
+
+# For loop with a list of for-elements. Elements are separated by commas.
+# Three element forms:
+#   step/until: for i := 1 step 1 until 10 do   (classic range loop)
+#   while:      for i := x while x > 0 do       (conditional advance)
+#   simple:     for i := 5 do                   (single value, executes once)
+# Multiple forms can be combined: for i := 1 step 1 until 5, 10, 20 do
+for_stmt     = "for" NAME ASSIGN for_list "do" statement ;
+
+for_list     = for_elem { COMMA for_elem } ;
+
+# Order matters: step/until and while must be tried before simple (arith_expr),
+# otherwise the parser would consume only the start expression and stop.
+for_elem     = arith_expr "step" arith_expr "until" arith_expr
+             | arith_expr "while" bool_expr
+             | arith_expr ;
+
+# ---------------------------------------------------------------------------
+# Expressions
+# ---------------------------------------------------------------------------
+
+# A unified expression handles both arithmetic and boolean operators.
+#
+# The naive `arith_expr | bool_expr` alternation is broken: ordered-choice
+# PEG semantics mean arith_expr greedily matches the first operand of a
+# boolean expression (e.g. the `a` in `a impl b`), leaving the boolean
+# operator unconsumed.  The correct fix is a single operator-precedence
+# hierarchy where boolean operators sit ABOVE arithmetic:
+#
+#   Precedence (lowest to highest):
+#     eqv   — logical equivalence
+#     impl  — implication
+#     or    — disjunction
+#     and   — conjunction
+#     not   — negation (unary, prefix)
+#     comparison (=, ≠, <, ≤, >, ≥)
+#     addition / subtraction
+#     multiplication / division / div / mod
+#     exponentiation (left-associative per ALGOL 60 report)
+#     primary (literal, variable, call, parenthesised expression)
+#
+# Only the `expression` rule (used in assignments and actual parameters)
+# needs the full unified hierarchy.  Rules used in type-specific contexts
+# (arith_expr for bounds/subscripts, bool_expr for conditionals) are
+# kept as-is.
+expression   = expr_eqv ;
+
+expr_eqv     = expr_impl { "eqv" expr_impl } ;
+expr_impl    = expr_or { "impl" expr_or } ;
+expr_or      = expr_and { "or" expr_and } ;
+expr_and     = expr_not { "and" expr_not } ;
+expr_not     = "not" expr_not | expr_cmp ;
+expr_cmp     = expr_add [ ( EQ | NEQ | LT | LEQ | GT | GEQ ) expr_add ] ;
+expr_add     = [ PLUS | MINUS ] expr_mul { ( PLUS | MINUS ) expr_mul } ;
+expr_mul     = expr_pow { ( STAR | SLASH | "div" | "mod" ) expr_pow } ;
+expr_pow     = expr_atom { ( CARET | POWER ) expr_atom } ;
+expr_atom    = INTEGER_LIT
+             | REAL_LIT
+             | STRING_LIT
+             | "true"
+             | "false"
+             | proc_call
+             | variable
+             | LPAREN expression RPAREN ;
+
+# Arithmetic expression.
+# The conditional form (if b then x else y) produces a numeric value.
+# This is ALGOL's "conditional expression" — cleaner than C's ternary ?: operator.
+arith_expr   = "if" bool_expr "then" simple_arith "else" arith_expr
+             | simple_arith ;
+
+# Addition and subtraction. Optional leading sign handles unary + and -.
+simple_arith = [ PLUS | MINUS ] term { ( PLUS | MINUS ) term } ;
+
+# Multiplication, division, integer division (div), modulo (mod).
+# div and mod are keywords (not symbols) — another ALGOL design distinguishing
+# exact integer division from floating-point division.
+term         = factor { ( STAR | SLASH | "div" | "mod" ) factor } ;
+
+# Exponentiation. { ( CARET | POWER ) primary } produces LEFT-associativity.
+# Per the ALGOL 60 report: 2^3^4 = (2^3)^4 = 4096.
+# This differs from most mathematical convention (right-associative).
+# Document this when implementing — it surprises people.
+factor       = primary { ( CARET | POWER ) primary } ;
+
+primary      = INTEGER_LIT
+             | REAL_LIT
+             | STRING_LIT
+             | variable
+             | proc_call
+             | LPAREN arith_expr RPAREN ;
+
+# Boolean expression.
+# Conditional form: if b then x else y produces a boolean value.
+# Operator precedence (lowest to highest):
+#   eqv    — logical equivalence    (a eqv b = a iff b)
+#   impl   — logical implication    (a impl b = not a or b)
+#   or     — logical disjunction
+#   and    — logical conjunction
+#   not    — logical negation (unary, highest precedence)
+# Then: relation (< = > etc.) and boolean primaries.
+bool_expr    = "if" bool_expr "then" simple_bool "else" bool_expr
+             | simple_bool ;
+
+simple_bool  = implication { "eqv" implication } ;
+
+implication  = bool_term { "impl" bool_term } ;
+
+bool_term    = bool_factor { "or" bool_factor } ;
+
+bool_factor  = bool_secondary { "and" bool_secondary } ;
+
+bool_secondary = "not" bool_secondary | bool_primary ;
+
+bool_primary = "true"
+             | "false"
+             | relation
+             | proc_call
+             | variable
+             | LPAREN bool_expr RPAREN ;
+
+# A relation compares two arithmetic expressions.
+# Note: the operands are simple_arith (not full arith_expr) to avoid ambiguity
+# with the conditional expression form.
+relation     = simple_arith ( EQ | NEQ | LT | LEQ | GT | GEQ ) simple_arith ;
+
+# Designational expression: used as the target of goto statements.
+# Resolves to a label — either a direct label, a switch subscript, or
+# a conditional jump (if b then label1 else label2).
+desig_expr   = "if" bool_expr "then" simple_desig "else" desig_expr
+             | simple_desig ;
+
+simple_desig = NAME LBRACKET arith_expr RBRACKET
+             | LPAREN desig_expr RPAREN
+             | label ;
+
+# ---------------------------------------------------------------------------
+# Variables and calls
+# ---------------------------------------------------------------------------
+
+# A variable is a name, optionally subscripted for array access.
+#   x          scalar variable
+#   A[i]       one-dimensional array element
+#   B[i, j]    two-dimensional array element
+variable     = NAME [ LBRACKET subscripts RBRACKET ] ;
+
+subscripts   = arith_expr { COMMA arith_expr } ;
+
+# A procedure call with arguments. The no-argument form (proc_stmt with no parens)
+# is handled in the statement rules. Here we require parentheses — this form
+# is used when a procedure call appears inside an expression.
+proc_call    = NAME LPAREN actual_params RPAREN ;

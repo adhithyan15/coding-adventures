@@ -1,0 +1,2 @@
+REM prereqs: ../compiler-ir ../compiler-source-map ../virtual-machine ../brainfuck ../grammar-tools ../lexer
+echo Perl testing is not supported on Windows - skipping

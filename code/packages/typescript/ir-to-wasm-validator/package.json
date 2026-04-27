@@ -1,0 +1,23 @@
+{
+  "name": "@coding-adventures/ir-to-wasm-validator",
+  "version": "0.1.0",
+  "description": "Validate whether generic IR can lower into the current WASM backend",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/compiler-ir": "file:../compiler-ir",
+    "@coding-adventures/ir-to-wasm-compiler": "file:../ir-to-wasm-compiler"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^3.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}

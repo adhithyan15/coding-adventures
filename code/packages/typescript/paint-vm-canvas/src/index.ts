@@ -68,6 +68,7 @@ import type {
   PaintEllipse,
   PaintPath,
   PaintGlyphRun,
+  PaintText,
   PaintGroup,
   PaintLayer,
   PaintLine,
@@ -383,6 +384,107 @@ function handleGlyphRun(
   }
 }
 
+/**
+ * UnsupportedFontBindingError — thrown when a PaintText instruction carries a
+ * font_ref scheme that this backend cannot consume. Matches the font-binding
+ * invariant from TXT00 / P2D00: a font_ref is opaque token bound to a
+ * specific shaper/runtime, and the paint backend must refuse mismatches
+ * rather than guess.
+ */
+export class UnsupportedFontBindingError extends Error {
+  constructor(fontRef: string) {
+    super(
+      `PaintVM Canvas: unsupported font_ref scheme "${fontRef}". ` +
+        `This backend only accepts scheme "canvas:" (see spec TXT03d). ` +
+        `Routing a PaintText with a different scheme (e.g. "coretext:", ` +
+        `"directwrite:") would violate the font-binding invariant.`,
+    );
+    this.name = "UnsupportedFontBindingError";
+  }
+}
+
+/**
+ * Parse a "canvas:" font_ref into a CSS font shorthand that ctx.font accepts.
+ *
+ * Grammar (from spec TXT03d):
+ *
+ *   font_ref := "canvas:" <family> "@" <px_size> [ ":" <weight> [ ":" <style> ] ]
+ *
+ * Examples:
+ *
+ *   "canvas:Helvetica@16"              → "400 16px 'Helvetica'"
+ *   "canvas:Helvetica@16:700"          → "700 16px 'Helvetica'"
+ *   "canvas:Helvetica@16:700:italic"   → "italic 700 16px 'Helvetica'"
+ *   "canvas:system-ui@14"              → "400 14px 'system-ui'"
+ *
+ * Security: family is run through sanitizeFontRef to strip any CSS-injection
+ * characters. Weight is validated as a number in [1, 1000]. Style is checked
+ * against an allowlist. Any malformed input falls back to "16px sans-serif".
+ *
+ * The font_size argument overrides the size encoded in font_ref — the layout
+ * engine is the source of truth for size at paint time.
+ */
+function canvasFontRefToCss(fontRef: string, fontSize: number): string {
+  if (!fontRef.startsWith("canvas:")) {
+    throw new UnsupportedFontBindingError(fontRef);
+  }
+  const body = fontRef.slice("canvas:".length);
+
+  // Split family from size/weight/style
+  const atIdx = body.indexOf("@");
+  const family = atIdx >= 0 ? body.slice(0, atIdx) : body;
+  const rest = atIdx >= 0 ? body.slice(atIdx + 1) : "";
+  const parts = rest.split(":");
+  // parts[0] is size (we ignore it in favour of the authoritative font_size arg)
+  const weightStr = parts[1];
+  const styleStr = parts[2];
+
+  const safeFamily = sanitizeFontRef(family) || "sans-serif";
+
+  let weight = "400";
+  if (weightStr !== undefined) {
+    const w = Number(weightStr);
+    if (Number.isFinite(w) && w >= 1 && w <= 1000) {
+      weight = String(Math.round(w));
+    }
+  }
+
+  let style = "";
+  if (styleStr === "italic" || styleStr === "oblique") {
+    style = `${styleStr} `;
+  }
+
+  return `${style}${weight} ${fontSize}px '${safeFamily}'`;
+}
+
+function handleText(
+  instr: PaintText,
+  ctx: CanvasRenderingContext2D,
+): void {
+  // Validate font_size first — it goes directly into the CSS font shorthand.
+  if (!Number.isFinite(instr.font_size)) {
+    throw new RangeError(
+      `PaintVM Canvas: font_size must be a finite number, got ${instr.font_size}`,
+    );
+  }
+  ctx.save();
+  ctx.font = canvasFontRefToCss(instr.font_ref, instr.font_size);
+  ctx.fillStyle = instr.fill;
+  // PaintText coordinates are a baseline origin (same semantics as PaintGlyphRun).
+  // Canvas default textBaseline is "alphabetic", which aligns to the baseline —
+  // exactly what we want.
+  ctx.textBaseline = "alphabetic";
+  // text_align maps directly to ctx.textAlign. "center" in PaintText is
+  // "center" in Canvas (not "middle" — that's the textBaseline word).
+  // Default "start" is also the Canvas default, so we only set it when
+  // explicitly provided to avoid unnecessary state changes in save/restore.
+  if (instr.text_align !== undefined) {
+    ctx.textAlign = instr.text_align;
+  }
+  ctx.fillText(instr.text, instr.x, instr.y);
+  ctx.restore();
+}
+
 function handleGroup(
   instr: PaintGroup,
   ctx: CanvasRenderingContext2D,
@@ -660,6 +762,9 @@ export function createCanvasVM(): PaintVM<CanvasRenderingContext2D> {
   });
   vm.register("glyph_run", (instr, ctx) => {
     if (instr.kind === "glyph_run") handleGlyphRun(instr as PaintGlyphRun, ctx);
+  });
+  vm.register("text", (instr, ctx) => {
+    if (instr.kind === "text") handleText(instr as PaintText, ctx);
   });
   vm.register("group", (instr, ctx, vm) => {
     if (instr.kind === "group") handleGroup(instr as PaintGroup, ctx, vm);

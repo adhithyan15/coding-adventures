@@ -1,0 +1,11 @@
+[package]
+name = "irc-framing"
+version = "0.1.0"
+edition = "2021"
+description = "Stateful byte-stream-to-line converter for the IRC protocol"
+authors = ["coding-adventures"]
+license = "MIT"
+
+[dependencies]
+
+[dev-dependencies]

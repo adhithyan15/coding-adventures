@@ -2,333 +2,137 @@
 
 require_relative "test_helper"
 
-# ================================================================
-# Tests for the Python Parser
-# ================================================================
-#
-# These tests verify that the grammar-driven parser, when loaded
-# with python.grammar, correctly builds Abstract Syntax Trees from
-# Python source code.
-#
-# The grammar-driven parser produces generic ASTNode objects:
-#
-#   ASTNode(rule_name: "program", children: [...])
-#
-# Each node records which grammar rule produced it and its matched
-# children (which can be tokens or other ASTNodes). This is different
-# from the hand-written parser's typed nodes (NumberLiteral, BinaryOp),
-# but it captures the same structural information.
-#
-# The grammar being tested:
-#
-#   program      = { statement } ;
-#   statement    = assignment | expression_stmt ;
-#   assignment   = NAME EQUALS expression ;
-#   expression_stmt = expression ;
-#   expression   = term { ( PLUS | MINUS ) term } ;
-#   term         = factor { ( STAR | SLASH ) factor } ;
-#   factor       = NUMBER | STRING | NAME | LPAREN expression RPAREN ;
-# ================================================================
-
 class TestPythonParser < Minitest::Test
   ASTNode = CodingAdventures::Parser::ASTNode
   TT = CodingAdventures::Lexer::TokenType
 
-  # ------------------------------------------------------------------
-  # Helper
-  # ------------------------------------------------------------------
-
-  def parse(source)
-    CodingAdventures::PythonParser.parse(source)
+  def parse(source, version: "3.12")
+    CodingAdventures::PythonParser.parse(source, version: version)
   end
 
-  # ------------------------------------------------------------------
-  # Basic assignment: x = 1 + 2
-  # ------------------------------------------------------------------
-
-  def test_simple_assignment
-    ast = parse("x = 1 + 2")
-
-    # Root should be a 'program' node
-    assert_equal "program", ast.rule_name
-
-    # Program has one statement child
-    assert_equal 1, ast.children.count { |c| c.is_a?(ASTNode) }
-
-    # The statement should be resolved as 'statement'
-    stmt = ast.children.find { |c| c.is_a?(ASTNode) }
-    assert_equal "statement", stmt.rule_name
-
-    # Inside statement, find the assignment
-    assignment = stmt.children.find { |c| c.is_a?(ASTNode) && c.rule_name == "assignment" }
-    refute_nil assignment, "Expected an assignment node"
+  def test_default_version_is_3_12
+    assert_equal "3.12", CodingAdventures::PythonParser::DEFAULT_VERSION
   end
 
-  def test_assignment_has_name_and_expression
-    ast = parse("x = 1 + 2")
-    stmt = ast.children.find { |c| c.is_a?(ASTNode) }
-    assignment = stmt.children.find { |c| c.is_a?(ASTNode) && c.rule_name == "assignment" }
-
-    # Assignment children: NAME token, EQUALS token, expression node
-    tokens = assignment.children.select { |c| c.is_a?(CodingAdventures::Lexer::Token) }
-    name_token = tokens.find { |t| t.type == TT::NAME }
-    equals_token = tokens.find { |t| t.type == TT::EQUALS }
-
-    refute_nil name_token, "Expected NAME token in assignment"
-    assert_equal "x", name_token.value
-    refute_nil equals_token, "Expected EQUALS token in assignment"
-
-    expr_node = assignment.children.find { |c| c.is_a?(ASTNode) && c.rule_name == "expression" }
-    refute_nil expr_node, "Expected expression node in assignment"
+  def test_supported_versions
+    assert_equal %w[2.7 3.0 3.6 3.8 3.10 3.12], CodingAdventures::PythonParser::SUPPORTED_VERSIONS
   end
 
-  # ------------------------------------------------------------------
-  # Operator precedence: 1 + 2 * 3
-  # ------------------------------------------------------------------
+  def test_grammar_path_for_version
+    path = CodingAdventures::PythonParser.grammar_path("3.12")
+    assert path.end_with?("python/python3.12.grammar"),
+      "Expected path to end with python/python3.12.grammar, got: #{path}"
+  end
 
-  def test_operator_precedence
-    ast = parse("1 + 2 * 3")
+  def test_compiled_grammar_path_for_version
+    path = CodingAdventures::PythonParser.compiled_grammar_path("3.12")
+    assert path.end_with?("_grammar_3_12.rb"),
+      "Expected compiled grammar path to end with _grammar_3_12.rb, got: #{path}"
+  end
 
-    # Navigate to the expression
-    stmt = ast.children.find { |c| c.is_a?(ASTNode) }
-    expr_stmt = stmt.children.find { |c| c.is_a?(ASTNode) }
-    expr = if expr_stmt.rule_name == "expression"
-      expr_stmt
-    else
-      expr_stmt.children.find { |c| c.is_a?(ASTNode) && c.rule_name == "expression" }
+  def test_grammar_files_exist_for_all_versions
+    CodingAdventures::PythonParser::SUPPORTED_VERSIONS.each do |version|
+      assert File.exist?(CodingAdventures::PythonParser.grammar_path(version)),
+        "Expected parser grammar file for version #{version}"
+      assert File.exist?(CodingAdventures::PythonParser.compiled_grammar_path(version)),
+        "Expected compiled parser grammar for version #{version}"
     end
-
-    refute_nil expr, "Expected an expression node"
-
-    # The expression should contain a PLUS token (addition is at expression level)
-    plus_token = expr.children.find { |c| c.is_a?(CodingAdventures::Lexer::Token) && c.type == TT::PLUS }
-    refute_nil plus_token, "Expected PLUS at expression level"
-
-    # There should be term nodes (multiplication is at term level)
-    terms = expr.children.select { |c| c.is_a?(ASTNode) && c.rule_name == "term" }
-    assert terms.length >= 2, "Expected at least 2 term nodes"
-
-    # The second term should contain STAR (multiplication)
-    second_term = terms[1]
-    star_token = second_term.children.find { |c| c.is_a?(CodingAdventures::Lexer::Token) && c.type == TT::STAR }
-    refute_nil star_token, "Expected STAR in second term (precedence)"
   end
 
-  # ------------------------------------------------------------------
-  # Parenthesized expression: (1 + 2) * 3
-  # ------------------------------------------------------------------
+  def test_default_parse_uses_versioned_3_12_grammar
+    ast = parse("x = 1 + 2")
 
-  def test_parentheses
-    ast = parse("(1 + 2) * 3")
-
-    # Should parse without error -- the parentheses override precedence
-    refute_nil ast, "Expected successful parse with parentheses"
-
-    # Find the STAR token at the term level
-    all_tokens = collect_tokens(ast)
-    assert all_tokens.any? { |t| t.type == TT::STAR }, "Expected STAR token"
-    assert all_tokens.any? { |t| t.type == TT::PLUS }, "Expected PLUS token"
-    assert all_tokens.any? { |t| t.type == TT::LPAREN }, "Expected LPAREN token"
-    assert all_tokens.any? { |t| t.type == TT::RPAREN }, "Expected RPAREN token"
+    assert_equal "file", ast.rule_name
+    refute_nil find_first_rule(ast, "assign_stmt"), "Expected assign_stmt in 3.12 parse"
   end
 
-  # ------------------------------------------------------------------
-  # Multiple statements: x = 1\ny = 2
-  # ------------------------------------------------------------------
+  def test_assignment_contains_expected_tokens
+    ast = parse("x = 1 + 2")
+    assignment = find_first_rule(ast, "assign_stmt")
+    refute_nil assignment
+
+    tokens = collect_tokens(assignment)
+    assert tokens.any? { |t| t.type == TT::NAME && t.value == "x" }, "Expected NAME token"
+    assert tokens.any? { |t| t.type == TT::EQUALS && t.value == "=" }, "Expected EQUALS token"
+    assert_equal %w[1 2], tokens.select { |t| t.type == "INT" }.map(&:value)
+    assert tokens.any? { |t| t.type == TT::PLUS && t.value == "+" }, "Expected PLUS token"
+  end
 
   def test_multiple_statements
     ast = parse("x = 1\ny = 2")
-
-    assert_equal "program", ast.rule_name
-
-    # Should have two statement children
-    statements = ast.children.select { |c| c.is_a?(ASTNode) && c.rule_name == "statement" }
-    assert_equal 2, statements.length, "Expected 2 statements"
-
-    # Both should be assignments
-    statements.each do |stmt|
-      assignment = stmt.children.find { |c| c.is_a?(ASTNode) && c.rule_name == "assignment" }
-      refute_nil assignment, "Expected assignment in each statement"
-    end
+    assert_equal 2, collect_rules(ast, "statement").length
   end
 
-  # ------------------------------------------------------------------
-  # Expression statement: just a number
-  # ------------------------------------------------------------------
-
-  def test_expression_statement
-    ast = parse("42")
-
-    stmt = ast.children.find { |c| c.is_a?(ASTNode) }
-    assert_equal "statement", stmt.rule_name
-
-    # Should be an expression_stmt, not an assignment
-    expr_stmt = stmt.children.find { |c| c.is_a?(ASTNode) && c.rule_name == "expression_stmt" }
-    refute_nil expr_stmt, "Expected expression_stmt for bare number"
-  end
-
-  # ------------------------------------------------------------------
-  # Function call: print("hello")
-  # ------------------------------------------------------------------
-  # Note: The current grammar does not have a dedicated function_call rule.
-  # print("hello") parses as: expression_stmt -> expression -> term -> factor
-  # where factor matches NAME, then the LPAREN STRING RPAREN are separate
-  # factors/terms in an expression. However, the grammar as written might
-  # not parse this correctly since factor = NAME | ... | LPAREN expr RPAREN
-  # and there's no call syntax. Let's test what actually happens.
-
-  def test_function_call_syntax
-    # The grammar treats print("hello") as: NAME followed by LPAREN expr RPAREN
-    # Since there's no call rule, this will parse as two separate expression terms
-    # or fail. Let's see what the grammar produces.
-    # Actually the grammar is:
-    #   expression = term { (PLUS|MINUS) term }
-    #   term = factor { (STAR|SLASH) factor }
-    #   factor = NUMBER | STRING | NAME | LPAREN expression RPAREN
-    #
-    # print("hello") would be: NAME LPAREN STRING RPAREN
-    # factor matches NAME -> term done -> expression done -> statement done
-    # Then LPAREN STRING RPAREN starts next statement:
-    #   factor matches LPAREN expression RPAREN -> term -> expression -> statement
-    #
-    # So it should parse as two statements.
+  def test_function_call_in_python_3_12
     ast = parse('print("hello")')
-    assert_equal "program", ast.rule_name
+    refute_nil find_first_rule(ast, "suffix"), "Expected suffix node for function call"
 
-    statements = ast.children.select { |c| c.is_a?(ASTNode) && c.rule_name == "statement" }
-    assert statements.length >= 1, "Expected at least one statement"
-
-    # Verify the name 'print' appears somewhere
-    all_tokens = collect_tokens(ast)
-    name_token = all_tokens.find { |t| t.value == "print" }
-    refute_nil name_token, "Expected 'print' token in AST"
-
-    # Verify the string 'hello' appears
-    string_token = all_tokens.find { |t| t.value == "hello" }
-    refute_nil string_token, "Expected 'hello' string token in AST"
+    tokens = collect_tokens(ast)
+    assert tokens.any? { |t| t.type == TT::NAME && t.value == "print" }
+    assert tokens.any? { |t| t.type == TT::STRING && t.value == "hello" }
+    assert tokens.any? { |t| t.type == TT::LPAREN }
+    assert tokens.any? { |t| t.type == TT::RPAREN }
   end
 
-  # ------------------------------------------------------------------
-  # Simple subtraction: 5 - 3
-  # ------------------------------------------------------------------
+  def test_python_2_7_print_statement_is_version_specific
+    ast = parse('print "hello"', version: "2.7")
+    print_stmt = find_first_rule(ast, "print_stmt")
+    refute_nil print_stmt, "Expected print_stmt in Python 2.7 parse"
 
-  def test_subtraction
-    ast = parse("5 - 3")
-
-    stmt = ast.children.find { |c| c.is_a?(ASTNode) }
-    refute_nil stmt
-
-    all_tokens = collect_tokens(ast)
-    minus_token = all_tokens.find { |t| t.type == TT::MINUS }
-    refute_nil minus_token, "Expected MINUS token"
+    tokens = collect_tokens(print_stmt)
+    assert tokens.any? { |t| t.type == TT::KEYWORD && t.value == "print" }
+    assert tokens.any? { |t| t.type == TT::STRING && t.value == "hello" }
   end
 
-  # ------------------------------------------------------------------
-  # Division: 10 / 2
-  # ------------------------------------------------------------------
-
-  def test_division
-    ast = parse("10 / 2")
-
-    all_tokens = collect_tokens(ast)
-    slash_token = all_tokens.find { |t| t.type == TT::SLASH }
-    refute_nil slash_token, "Expected SLASH token"
+  def test_nil_version_defaults_to_3_12
+    ast = CodingAdventures::PythonParser.parse("x = 1 + 2", version: nil)
+    assert_equal "file", ast.rule_name
+    refute_nil find_first_rule(ast, "assign_stmt")
   end
 
-  # ------------------------------------------------------------------
-  # String assignment: name = "world"
-  # ------------------------------------------------------------------
+  def test_invalid_version_raises_argument_error
+    error = assert_raises(ArgumentError) do
+      CodingAdventures::PythonParser.parse("x = 1", version: "1.0")
+    end
 
-  def test_string_assignment
-    ast = parse('name = "world"')
-
-    stmt = ast.children.find { |c| c.is_a?(ASTNode) }
-    assignment = stmt.children.find { |c| c.is_a?(ASTNode) && c.rule_name == "assignment" }
-    refute_nil assignment
-
-    all_tokens = collect_tokens(assignment)
-    string_token = all_tokens.find { |t| t.type == TT::STRING }
-    refute_nil string_token, "Expected STRING token in assignment"
-    assert_equal "world", string_token.value
-  end
-
-  # ------------------------------------------------------------------
-  # Nested parentheses: ((1 + 2))
-  # ------------------------------------------------------------------
-
-  def test_nested_parentheses
-    ast = parse("((1 + 2))")
-    refute_nil ast, "Expected successful parse with nested parens"
-
-    all_tokens = collect_tokens(ast)
-    lparens = all_tokens.count { |t| t.type == TT::LPAREN }
-    rparens = all_tokens.count { |t| t.type == TT::RPAREN }
-    assert_equal 2, lparens, "Expected 2 LPAREN tokens"
-    assert_equal 2, rparens, "Expected 2 RPAREN tokens"
-  end
-
-  # ------------------------------------------------------------------
-  # Variable reference in expression: y = x
-  # ------------------------------------------------------------------
-
-  def test_variable_reference
-    ast = parse("y = x")
-
-    stmt = ast.children.find { |c| c.is_a?(ASTNode) }
-    assignment = stmt.children.find { |c| c.is_a?(ASTNode) && c.rule_name == "assignment" }
-    refute_nil assignment
-
-    all_tokens = collect_tokens(assignment)
-    names = all_tokens.select { |t| t.type == TT::NAME }
-    assert_equal 2, names.length, "Expected 2 NAME tokens (target and value)"
-    assert_equal "y", names[0].value
-    assert_equal "x", names[1].value
-  end
-
-  # ------------------------------------------------------------------
-  # Grammar path resolution
-  # ------------------------------------------------------------------
-
-  def test_grammar_path_exists
-    assert File.exist?(CodingAdventures::PythonParser::PYTHON_GRAMMAR_PATH),
-      "python.grammar file should exist at #{CodingAdventures::PythonParser::PYTHON_GRAMMAR_PATH}"
-  end
-
-  # ------------------------------------------------------------------
-  # Root node is always 'program'
-  # ------------------------------------------------------------------
-
-  def test_root_is_program
-    ast = parse("1")
-    assert_equal "program", ast.rule_name
-  end
-
-  # ------------------------------------------------------------------
-  # Complex multi-line program
-  # ------------------------------------------------------------------
-
-  def test_multiline_program
-    source = "x = 1\ny = 2\nz = x"
-    ast = parse(source)
-
-    statements = ast.children.select { |c| c.is_a?(ASTNode) && c.rule_name == "statement" }
-    assert_equal 3, statements.length, "Expected 3 statements"
+    assert_match(/Unsupported Python version/, error.message)
   end
 
   private
 
-  # Recursively collect all Token objects from an AST
   def collect_tokens(node)
-    tokens = []
-    return tokens unless node.is_a?(ASTNode)
+    return [] unless node.is_a?(ASTNode)
 
-    node.children.each do |child|
+    node.children.flat_map do |child|
       if child.is_a?(CodingAdventures::Lexer::Token)
-        tokens << child
+        [child]
       elsif child.is_a?(ASTNode)
-        tokens.concat(collect_tokens(child))
+        collect_tokens(child)
+      else
+        []
       end
     end
-    tokens
+  end
+
+  def find_first_rule(node, rule_name)
+    return nil unless node.is_a?(ASTNode)
+    return node if node.rule_name == rule_name
+
+    node.children.each do |child|
+      next unless child.is_a?(ASTNode)
+
+      match = find_first_rule(child, rule_name)
+      return match if match
+    end
+
+    nil
+  end
+
+  def collect_rules(node, rule_name, matches = [])
+    return matches unless node.is_a?(ASTNode)
+
+    matches << node if node.rule_name == rule_name
+    node.children.each { |child| collect_rules(child, rule_name, matches) if child.is_a?(ASTNode) }
+    matches
   end
 end

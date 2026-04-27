@@ -11,10 +11,14 @@ from grammar_tools.parser_grammar import (
     GrammarRule,
     Group,
     Literal,
+    NegativeLookahead,
+    OneOrMoreRepetition,
     Optional,
     ParserGrammar,
+    PositiveLookahead,
     Repetition,
     RuleReference,
+    SeparatedRepetition,
     Sequence,
 )
 
@@ -29,7 +33,7 @@ PARSER_GRAMMAR = ParserGrammar(
             Repetition(element=
                 RuleReference(name='statement', is_token=False),
             ),
-            line_number=22,
+            line_number=27,
         ),
         GrammarRule(
             name='statement',
@@ -39,7 +43,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='method_call', is_token=False),
                 RuleReference(name='expression_stmt', is_token=False),
             ]),
-            line_number=23,
+            line_number=28,
         ),
         GrammarRule(
             name='assignment',
@@ -49,7 +53,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='EQUALS', is_token=True),
                 RuleReference(name='expression', is_token=False),
             ]),
-            line_number=24,
+            line_number=29,
         ),
         GrammarRule(
             name='method_call',
@@ -75,13 +79,13 @@ PARSER_GRAMMAR = ParserGrammar(
                 ),
                 RuleReference(name='RPAREN', is_token=True),
             ]),
-            line_number=25,
+            line_number=30,
         ),
         GrammarRule(
             name='expression_stmt',
             body=
             RuleReference(name='expression', is_token=False),
-            line_number=26,
+            line_number=31,
         ),
         GrammarRule(
             name='expression',
@@ -100,7 +104,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=27,
+            line_number=32,
         ),
         GrammarRule(
             name='term',
@@ -119,7 +123,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=28,
+            line_number=33,
         ),
         GrammarRule(
             name='factor',
@@ -135,7 +139,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     RuleReference(name='RPAREN', is_token=True),
                 ]),
             ]),
-            line_number=29,
+            line_number=34,
         ),
     ],
 )

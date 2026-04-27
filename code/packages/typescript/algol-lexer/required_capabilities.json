@@ -6,7 +6,7 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "../../grammars/algol.tokens",
+      "target": "../../grammars/algol/algol60.tokens",
       "justification": "Reads token grammar definition file to build the lexer DFA at initialization time."
     }
   ],

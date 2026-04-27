@@ -407,6 +407,169 @@ For one-or-more: match `element { separator element }`
 
 ---
 
+## Extension 9: Opt-In Rich Source Preservation
+
+### Problem
+
+Formatter pipelines need more than just token types and coarse line/column
+spans. To preserve comments, blank lines, explicit grouping, and precise source
+ranges, the generic lexer and parser need to retain:
+
+- exact source offsets
+- end positions
+- named skip matches such as whitespace and comments
+- a stable mapping from AST nodes back to the token stream
+
+The current lexer consumes skip patterns silently, and the parser only keeps
+`ruleName`, `children`, and coarse start/end line-column information.
+
+### Design Goal
+
+Preserve formatter-grade source detail **without** slowing down ordinary
+parsing. The feature must therefore be opt-in, enabled only by callers such as
+formatter pipelines.
+
+### Solution
+
+Add an optional `preserveSourceInfo` flag to the grammar-driven lexer and
+parser. When the flag is disabled, behavior and performance stay as they are
+today. When enabled:
+
+- the lexer enriches tokens with offsets, end positions, token indices, and
+  leading trivia
+- the parser propagates source ranges and token-index spans onto AST nodes
+
+### Lexer API Additions
+
+```typescript
+export interface Trivia {
+  readonly type: string;
+  readonly value: string;
+  readonly line: number;
+  readonly column: number;
+  readonly endLine: number;
+  readonly endColumn: number;
+  readonly startOffset: number;
+  readonly endOffset: number;
+}
+
+export interface Token {
+  readonly type: string;
+  readonly value: string;
+  readonly line: number;
+  readonly column: number;
+  readonly flags?: number;
+
+  // Present only when preserveSourceInfo is enabled.
+  readonly endLine?: number;
+  readonly endColumn?: number;
+  readonly startOffset?: number;
+  readonly endOffset?: number;
+  readonly tokenIndex?: number;
+  readonly leadingTrivia?: readonly Trivia[];
+}
+
+export interface GrammarLexerOptions {
+  readonly preserveSourceInfo?: boolean;
+}
+
+constructor(source: string, grammar: TokenGrammar, options?: GrammarLexerOptions)
+
+export function grammarTokenize(
+  source: string,
+  grammar: TokenGrammar,
+  options?: GrammarLexerOptions,
+): Token[];
+```
+
+### Lexer Semantics
+
+When `preserveSourceInfo` is enabled:
+
+1. Every emitted token gains:
+   - `startOffset` / `endOffset` as half-open source ranges
+   - `endLine` / `endColumn` as exclusive end positions
+   - `tokenIndex` as the token's stable position in the emitted token stream
+
+2. Skip matches are preserved as `Trivia` values and attached to the next emitted
+   token as `leadingTrivia`.
+   - grammar-defined skip patterns use the skip definition name, such as
+     `WHITESPACE` or `LINE_COMMENT`
+   - default whitespace skipping uses synthetic trivia type `WHITESPACE`
+
+3. Any final trailing trivia at end-of-file is attached to the `EOF` token's
+   `leadingTrivia`.
+
+When `preserveSourceInfo` is disabled:
+
+- no extra fields are attached
+- skip patterns remain fully discarded
+- existing callers see no behavior change
+
+### Parser API Additions
+
+```typescript
+export interface ASTNode {
+  readonly ruleName: string;
+  readonly children: ReadonlyArray<ASTNode | Token>;
+  readonly startLine?: number;
+  readonly startColumn?: number;
+  readonly endLine?: number;
+  readonly endColumn?: number;
+
+  // Present only when preserveSourceInfo is enabled and source-aware tokens
+  // were provided to the parser.
+  readonly startOffset?: number;
+  readonly endOffset?: number;
+  readonly firstTokenIndex?: number;
+  readonly lastTokenIndex?: number;
+  readonly leadingTrivia?: readonly Trivia[];
+}
+
+export interface GrammarParserOptions {
+  readonly trace?: boolean;
+  readonly preserveSourceInfo?: boolean;
+}
+```
+
+### Parser Semantics
+
+When `preserveSourceInfo` is enabled and the parser receives tokens that carry
+rich source metadata:
+
+- every AST node computes `startOffset` and `endOffset` from its first and last
+  leaf tokens
+- every AST node computes `firstTokenIndex` and `lastTokenIndex` from those
+  same leaf tokens
+- every AST node exposes `leadingTrivia` from its first leaf token
+
+Nodes with no leaf tokens keep these fields undefined, just as empty nodes
+already leave coarse position fields undefined.
+
+### Formatter Payoff
+
+This extension does **not** attempt language-specific comment attachment.
+Instead, it preserves the raw information formatters need so that language
+packages can later decide whether a given trivia item is:
+
+- leading
+- trailing
+- dangling
+- blank-line separation
+
+That keeps the generic lexer and parser generic while still making them useful
+for `AST + trivia -> Doc` pipelines.
+
+### Backward Compatibility
+
+This extension is fully backward-compatible:
+
+- all new fields are optional
+- the default mode does not preserve trivia
+- existing grammars and callers continue to work unchanged
+
+---
+
 ## Implementation Scope
 
 These extensions are implemented in:

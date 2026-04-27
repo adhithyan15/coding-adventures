@@ -1,154 +1,21 @@
-//! # Ruby Lexer — tokenizing Ruby source code.
-//!
-//! [Ruby](https://www.ruby-lang.org/) is a dynamic, object-oriented programming
-//! language designed for programmer happiness. Created by Yukihiro "Matz"
-//! Matsumoto, Ruby emphasizes elegance and readability with features like
-//! blocks, mixins, and expressive syntax.
-//!
-//! This crate provides a lexer (tokenizer) for a subset of Ruby. It does
-//! **not** hand-write tokenization rules. Instead, it loads the `ruby.tokens`
-//! grammar file — a declarative description of every token in Ruby — and
-//! feeds it to the generic [`GrammarLexer`] from the `lexer` crate.
-//!
-//! # Architecture
-//!
-//! The tokenization pipeline has three layers:
-//!
-//! ```text
-//! ruby.tokens          (grammar file on disk)
-//!        |
-//!        v
-//! grammar-tools        (parses .tokens -> TokenGrammar struct)
-//!        |
-//!        v
-//! lexer::GrammarLexer  (tokenizes source using TokenGrammar)
-//! ```
-//!
-//! This crate is the thin glue layer that wires these components together
-//! for Ruby specifically. It knows where to find `ruby.tokens` and provides
-//! two public entry points:
-//!
-//! - [`create_ruby_lexer`] — returns a `GrammarLexer` for fine-grained control.
-//! - [`tokenize_ruby`] — convenience function that returns `Vec<Token>` directly.
-//!
-//! # Keywords
-//!
-//! Ruby has a rich set of keywords: `def`, `end`, `if`, `else`, `elsif`,
-//! `unless`, `while`, `do`, `class`, `module`, `return`, `true`, `false`,
-//! `nil`, `and`, `or`, `not`, `begin`, `rescue`, `ensure`, etc. The grammar
-//! file lists these in a `keywords:` section.
+//! Ruby lexer backed by compiled token grammar.
 
-use std::fs;
-
-use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
 use lexer::token::Token;
 
-// ===========================================================================
-// Grammar file location
-// ===========================================================================
+mod _grammar;
 
-/// Build the path to the `ruby.tokens` grammar file.
-///
-/// We use `env!("CARGO_MANIFEST_DIR")` to get the directory containing this
-/// crate's `Cargo.toml` at compile time. From there, we navigate up to the
-/// `grammars/` directory at the repository root.
-///
-/// ```text
-/// code/
-///   grammars/
-///     ruby.tokens           <-- this is what we want
-///   packages/
-///     rust/
-///       ruby-lexer/
-///         Cargo.toml        <-- CARGO_MANIFEST_DIR points here
-///         src/
-///           lib.rs          <-- we are here
-/// ```
-fn grammar_path() -> String {
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    format!("{manifest_dir}/../../../grammars/ruby.tokens")
-}
-
-// ===========================================================================
-// Public API
-// ===========================================================================
-
-/// Create a `GrammarLexer` configured for Ruby source code.
-///
-/// This function:
-/// 1. Reads the `ruby.tokens` grammar file from disk.
-/// 2. Parses it into a `TokenGrammar` using `grammar-tools`.
-/// 3. Constructs a `GrammarLexer` with the grammar and the given source.
-///
-/// The returned lexer is ready to call `.tokenize()` on.
-///
-/// # Panics
-///
-/// Panics if the grammar file cannot be read or parsed.
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_ruby_lexer::create_ruby_lexer;
-///
-/// let mut lexer = create_ruby_lexer("x = 1 + 2");
-/// let tokens = lexer.tokenize().expect("tokenization failed");
-/// for token in &tokens {
-///     println!("{}", token);
-/// }
-/// ```
 pub fn create_ruby_lexer(source: &str) -> GrammarLexer<'_> {
-    // Step 1: Read the grammar file from disk.
-    let grammar_text = fs::read_to_string(grammar_path())
-        .unwrap_or_else(|e| panic!("Failed to read ruby.tokens: {e}"));
-
-    // Step 2: Parse the grammar text into a structured TokenGrammar.
-    //
-    // The TokenGrammar contains:
-    //   - Token definitions (NAME, NUMBER, STRING, operators, delimiters)
-    //   - Skip patterns (whitespace, single-line comments)
-    //   - Keywords (def, end, if, else, class, module, return, etc.)
-    //   - Mode: default (no indentation tracking)
-    let grammar = parse_token_grammar(&grammar_text)
-        .unwrap_or_else(|e| panic!("Failed to parse ruby.tokens: {e}"));
-
-    // Step 3: Create and return the lexer.
+    let grammar = _grammar::token_grammar();
     GrammarLexer::new(source, &grammar)
 }
 
-/// Tokenize Ruby source code into a vector of tokens.
-///
-/// This is the most convenient entry point — it handles grammar loading,
-/// lexer creation, and tokenization in one call. The returned vector always
-/// ends with an `EOF` token.
-///
-/// # Panics
-///
-/// Panics if the grammar file cannot be read/parsed, or if the source
-/// contains an unexpected character (via `LexerError` propagation).
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_ruby_lexer::tokenize_ruby;
-///
-/// let tokens = tokenize_ruby("def greet(name)\n  puts name\nend");
-/// for token in &tokens {
-///     println!("{:?} {:?}", token.type_, token.value);
-/// }
-/// ```
 pub fn tokenize_ruby(source: &str) -> Vec<Token> {
-    let mut ruby_lexer = create_ruby_lexer(source);
-
-    ruby_lexer
+    let mut lexer = create_ruby_lexer(source);
+    lexer
         .tokenize()
         .unwrap_or_else(|e| panic!("Ruby tokenization failed: {e}"))
 }
-
-// ===========================================================================
-// Tests
-// ===========================================================================
 
 #[cfg(test)]
 mod tests {
@@ -353,3 +220,4 @@ mod tests {
         assert!(has_colon, "Expected a colon token");
     }
 }
+

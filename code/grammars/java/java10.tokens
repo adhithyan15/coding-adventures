@@ -1,0 +1,402 @@
+# Java 10 (2018) — Lexical Grammar
+# @version 1
+# @java_version 10
+#
+# JDK 10 (March 2018) — The first release under Oracle's new six-month
+# release cadence. After decades of multi-year gaps between major versions,
+# Java adopted a rapid release schedule starting with Java 9 (September 2017).
+# Java 10 arrived just six months later, making it one of the smallest
+# releases in the language's history.
+#
+# The single headline feature of Java 10 is LOCAL VARIABLE TYPE INFERENCE:
+# the ability to use `var` in place of a type in local variable declarations.
+#
+#   var names = new ArrayList<String>();   // inferred as ArrayList<String>
+#   var stream = names.stream();           // inferred as Stream<String>
+#   var count = stream.count();            // inferred as long
+#
+# This brings Java closer to languages like Kotlin (`val`/`var`), C# (`var`),
+# C++ (`auto`), and Scala (type inference). The key difference is that Java's
+# `var` is LIMITED to local variables — it cannot be used for fields, method
+# return types, or method parameters.
+#
+# --------------------------------------------------------------------------
+# WHY `var` IS NOT A KEYWORD
+# --------------------------------------------------------------------------
+#
+# The most important lexical decision in Java 10 is that `var` is NOT a
+# keyword. It is a "restricted identifier" — also called a "context keyword"
+# or "context-sensitive keyword." This means:
+#
+#   - `var` can still be used as a variable name, method name, or package
+#     name (backward compatibility!)
+#   - `var` CANNOT be used as a class name or interface name (this was
+#     always extremely rare, so the compatibility impact is minimal)
+#   - The parser, not the lexer, determines when `var` has special meaning
+#
+# Why this design? Because `var` was already in use as an identifier in
+# existing Java code. If `var` became a full keyword (like `enum` in Java 5),
+# any code using `var` as a variable name would break. The JLS authors
+# chose backward compatibility over lexical simplicity:
+#
+#   int var = 42;                    // LEGAL in Java 10! (var is a variable name)
+#   var var = 42;                    // LEGAL! (first var = type inference, second = name)
+#   var x = 10;                     // LEGAL (type inference)
+#   public class var {}              // ILLEGAL (var cannot be a type name)
+#
+# In this token file, `var` does NOT appear in the keywords section. It is
+# lexed as a regular NAME token (an identifier). The grammar file handles
+# the context-sensitive matching by using a literal "var" match in local
+# variable declaration contexts, which matches a NAME token whose text
+# value is "var".
+#
+# This is the same approach used for other context-sensitive identifiers in
+# later Java versions (e.g., `yield` in Java 14, `record` in Java 16,
+# `sealed`/`permits` in Java 17).
+#
+# --------------------------------------------------------------------------
+# ACCUMULATED CHANGES ACROSS VERSIONS
+# --------------------------------------------------------------------------
+#
+# This token file accumulates all lexical changes from Java 1.0 through 10:
+#
+#   Java 1.0 (1996):  48 keywords, all basic operators and delimiters
+#   Java 1.2 (1998):  added `strictfp` keyword
+#   Java 1.4 (2002):  added `assert` keyword
+#   Java 5 (2004):    added `enum` keyword, `@` operator, `...` ellipsis
+#   Java 7 (2011):    added binary literals (0b1010), underscores in
+#                      numeric literals (1_000_000) — LEXICAL changes only
+#   Java 8 (2014):    added `->` arrow operator, `::` double colon operator
+#   Java 9 (2017):    no lexical changes (modules use existing keywords
+#                      contextually, and _ becomes restricted)
+#   Java 10 (2018):   no new tokens! `var` is a NAME, not a keyword
+#
+# So lexically, Java 10 is identical to Java 8 plus the Java 7 numeric
+# literal extensions. The `var` feature is entirely handled in the grammar.
+#
+# Format:
+#   TOKEN_NAME = /regex/     — regex-based token pattern
+#   TOKEN_NAME = "literal"   — exact literal match
+#   TOKEN_NAME = /regex/ -> ALIAS  — regex token aliased to a canonical name
+#
+# Order matters: first match wins. Multi-character operators
+# must come before single-character ones (e.g., == before =).
+# Numeric literals with suffixes must come before plain integers.
+
+# ============================================================================
+# Literals
+# ============================================================================
+#
+# Identifiers in Java can contain letters, digits, underscores, and the
+# dollar sign ($). The $ was originally used by the compiler for inner class
+# names (e.g., Outer$Inner.class) and is technically legal in user code,
+# though discouraged by convention.
+#
+# IMPORTANT: The identifier `var` matches this pattern and is lexed as NAME.
+# The grammar handles its special meaning in local variable declarations.
+# Similarly, `_` (standalone underscore) was restricted in Java 9 — it
+# generates a warning when used as an identifier. But lexically it still
+# matches NAME.
+
+NAME = /[a-zA-Z_$][a-zA-Z0-9_$]*/
+
+# ----------------------------------------------------------------------------
+# Numeric literals
+# ----------------------------------------------------------------------------
+#
+# Java 10 inherits the expanded numeric literal forms from Java 7, which
+# added two major enhancements:
+#
+#   1. BINARY LITERALS (Java 7): Integer literals with the 0b or 0B prefix,
+#      analogous to 0x for hex and 0 for octal:
+#
+#        int flags = 0b1010_0011;   // binary: 163
+#        long mask = 0B1111_0000L;  // binary long
+#
+#      Binary literals were a long-requested feature. They make bit
+#      manipulation code dramatically more readable — instead of writing
+#      `int mask = 0xF0` and mentally converting, you write `0b1111_0000`.
+#
+#   2. UNDERSCORES IN NUMERIC LITERALS (Java 7): Underscores can appear
+#      between digits as visual separators, making large numbers readable:
+#
+#        long creditCard = 1234_5678_9012_3456L;
+#        int hexBytes    = 0xFF_EC_DE_5E;
+#        float pi        = 3.14_15_92f;
+#        long maxLong    = 0x7fff_ffff_ffff_ffffL;
+#        int binary      = 0b0010_0101;
+#
+#      Underscores are NOT allowed at the start or end of a number, nor
+#      adjacent to a decimal point, 0x/0b prefix, or type suffix:
+#
+#        int bad1 = _100;       // NOT a number (it's an identifier!)
+#        int bad2 = 100_;       // ILLEGAL
+#        int bad3 = 0x_FF;      // ILLEGAL (adjacent to 0x prefix)
+#        float bad4 = 3._14;    // ILLEGAL (adjacent to decimal point)
+#
+# Earlier literal forms are preserved:
+#   Java 1.0: Hex (0xFF), octal (077), decimal (42), long (42L),
+#             float (3.14f), double (3.14d), scientific (1e10)
+#
+# All numeric variants alias to NUMBER so the parser sees a single token type.
+
+BINARY_NUMBER     = /0[bB][01][01_]*[01][lL]?/ -> NUMBER
+BINARY_SHORT      = /0[bB][01][lL]?/ -> NUMBER
+HEX_NUMBER        = /0[xX][0-9a-fA-F][0-9a-fA-F_]*[0-9a-fA-F][lL]?/ -> NUMBER
+HEX_SHORT         = /0[xX][0-9a-fA-F][lL]?/ -> NUMBER
+OCTAL_NUMBER      = /0[0-7_]*[0-7]+[lL]?/ -> NUMBER
+FLOAT_NUMBER      = /[0-9][0-9_]*\.[0-9_]*([eE][+-]?[0-9_]+)?[fFdD]?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9][0-9_]*([eE][+-]?[0-9_]+)?[fFdD]?/ -> NUMBER
+SCI_NUMBER        = /[0-9][0-9_]*[eE][+-]?[0-9_]+[fFdD]?/ -> NUMBER
+LONG_NUMBER       = /[0-9][0-9_]*[lL]/ -> NUMBER
+FLOAT_SUFFIX      = /[0-9][0-9_]*[fFdD]/ -> NUMBER
+INT_NUMBER        = /[0-9][0-9_]*/ -> NUMBER
+
+# ----------------------------------------------------------------------------
+# String and character literals
+# ----------------------------------------------------------------------------
+#
+# Java 10 still has the same two string-like literal forms from Java 1.0:
+# double-quoted strings ("hello") and single-quoted character literals ('a').
+#
+# Both support identical escape sequences:
+#   \\    backslash
+#   \"    double quote (in strings)
+#   \'    single quote (in chars)
+#   \n    newline, \r carriage return, \t tab, \b backspace, \f form feed
+#   \0    null character
+#   \ooo  octal escape (1-3 octal digits, max \377)
+#   \uHHHH  Unicode escape (exactly 4 hex digits)
+#
+# Text blocks (""") do not arrive until Java 13.
+# Raw string literals were proposed for Java 10 but ultimately withdrawn.
+
+STRING = /"([^"\\]|\\.)*"/
+CHAR   = /'([^'\\]|\\.)*'/
+
+# ============================================================================
+# Multi-character operators
+# ============================================================================
+#
+# Java 10 includes two multi-character operators added since Java 5:
+#
+#   1. ARROW `->` (Java 8): Used in lambda expressions and switch
+#      expressions (though switch expressions arrive in Java 14, the arrow
+#      token itself was introduced for lambdas):
+#
+#        (x, y) -> x + y                    // lambda expression
+#        list.forEach(item -> process(item)) // lambda in method call
+#        Runnable r = () -> doWork();        // lambda assigned to variable
+#
+#   2. DOUBLE_COLON `::` (Java 8): Used for method references, a compact
+#      way to refer to methods and constructors as lambda-like expressions:
+#
+#        String::length          // instance method reference
+#        System.out::println     // bound method reference
+#        ArrayList::new          // constructor reference
+#        int[]::new              // array constructor reference
+#
+# Both operators must appear before their single-character counterparts
+# in the match order (-> before - and >, :: before :).
+#
+# The ELLIPSIS `...` (from Java 5) continues to be matched before DOT.
+# All Java 1.0 compound operators are preserved.
+
+ELLIPSIS                    = "..."
+ARROW                       = "->"
+DOUBLE_COLON                = "::"
+UNSIGNED_RIGHT_SHIFT_EQUALS = ">>>="
+UNSIGNED_RIGHT_SHIFT        = ">>>"
+LEFT_SHIFT_EQUALS           = "<<="
+RIGHT_SHIFT_EQUALS          = ">>="
+EQUALS_EQUALS               = "=="
+NOT_EQUALS                  = "!="
+LESS_EQUALS                 = "<="
+GREATER_EQUALS              = ">="
+AND_AND                     = "&&"
+OR_OR                       = "||"
+PLUS_PLUS                   = "++"
+MINUS_MINUS                 = "--"
+PLUS_EQUALS                 = "+="
+MINUS_EQUALS                = "-="
+STAR_EQUALS                 = "*="
+SLASH_EQUALS                = "/="
+PERCENT_EQUALS              = "%="
+AMPERSAND_EQUALS            = "&="
+PIPE_EQUALS                 = "|="
+CARET_EQUALS                = "^="
+LEFT_SHIFT                  = "<<"
+RIGHT_SHIFT                 = ">>"
+
+# ============================================================================
+# Single-character operators
+# ============================================================================
+#
+# All single-character operators from Java 5, unchanged. The `@` sign
+# (from Java 5, for annotations) and `?` (dual use: ternary operator and
+# wildcard type argument) are included.
+#
+# Note: `>` takes on additional significance in Java 7's diamond operator
+# (new ArrayList<>()), but it remains the same GREATER_THAN token. The
+# grammar handles the diamond as empty type_arguments.
+
+AT           = "@"
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+#
+# Standard C-family delimiters, unchanged from Java 1.0. The ELLIPSIS (...)
+# must be matched before DOT in the operator section above.
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+DOT       = "."
+COLON     = ":"
+
+# ============================================================================
+# Keywords
+# ============================================================================
+#
+# Java 10 has 51 keywords — the same count as Java 5. No new keywords have
+# been added since `enum` in Java 5. The keyword count will remain at 51
+# until Java 17 adds `sealed`, `permits`, and `non-sealed`.
+#
+# Accumulated keyword history:
+#   Java 1.0 (1996):  48 keywords (abstract, boolean, break, ... while)
+#   Java 1.2 (1998):  + strictfp (49)
+#   Java 1.4 (2002):  + assert (50)
+#   Java 5 (2004):    + enum (51)
+#   Java 7-10:        no new keywords
+#
+# IMPORTANT: `var` is NOT listed here. It is a "restricted identifier" that
+# is lexed as NAME and given special meaning by the grammar ONLY in local
+# variable declaration contexts. See the extensive discussion at the top of
+# this file.
+#
+# Similarly, `default` is a keyword that gained new grammatical meaning in
+# Java 8 (default methods in interfaces) but remains the same keyword token.
+# And `_` (underscore) was restricted as an identifier in Java 9 but is
+# still lexed as NAME.
+#
+# Java 9 introduced the module system with keywords like `module`, `requires`,
+# `exports`, `opens`, `to`, `with`, `uses`, `provides`, `transitive`, and
+# `open`. But these are ALL context-sensitive — they are only treated as
+# keywords inside module-info.java declarations. Everywhere else, they remain
+# valid identifiers. We do not list them here for the same reason we don't
+# list `var`: they are NAME tokens with contextual grammar meaning.
+#
+# The three literal keywords (true, false, null) are included. Technically
+# the JLS calls them "literals" rather than keywords, but they are reserved
+# words that cannot be used as identifiers.
+
+keywords:
+  abstract
+  assert
+  boolean
+  break
+  byte
+  case
+  catch
+  char
+  class
+  continue
+  default
+  do
+  double
+  else
+  enum
+  extends
+  final
+  finally
+  float
+  for
+  if
+  implements
+  import
+  instanceof
+  int
+  interface
+  long
+  native
+  new
+  package
+  private
+  protected
+  public
+  return
+  short
+  static
+  strictfp
+  super
+  switch
+  synchronized
+  this
+  throw
+  throws
+  transient
+  try
+  void
+  volatile
+  while
+  true
+  false
+  null
+
+# ============================================================================
+# Future reserved words
+# ============================================================================
+#
+# The same two identifiers from Java 1.0 remain reserved but unused:
+#
+# const — Reserved since Java 1.0, never given a meaning. Java uses `final`.
+# goto  — Reserved to produce a helpful error for C programmers. Java uses
+#         labeled break/continue instead.
+
+reserved:
+  const
+  goto
+
+# ============================================================================
+# Skip patterns (whitespace and comments)
+# ============================================================================
+#
+# Three comment forms, unchanged since Java 1.0:
+#   1. Line comments:    // to end of line
+#   2. Block comments:   /* ... */ (cannot nest)
+#   3. Javadoc comments: /** ... */ (lexically identical to block comments)
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Error recovery tokens
+# ============================================================================
+#
+# Malformed literals for better error reporting.
+
+errors:
+  BAD_STRING = /"[^"]*$/
+  BAD_CHAR   = /'[^']*$/

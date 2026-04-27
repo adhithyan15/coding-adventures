@@ -1,0 +1,10 @@
+[package]
+name = "diagram-layout-graph"
+version = "0.1.0"
+edition = "2021"
+description = "Topological rank assignment and geometry layout for graph diagrams (DG00) — produces LayoutedGraphDiagram from GraphDiagram"
+
+[dependencies]
+diagram-ir = { path = "../diagram-ir" }
+directed-graph = { path = "../directed-graph" }
+layout-ir = { path = "../layout-ir" }

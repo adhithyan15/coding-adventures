@@ -1,0 +1,12 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+gem "coding_adventures_irc_proto",      path: "../../../packages/ruby/irc_proto"
+gem "coding_adventures_irc_framing",    path: "../../../packages/ruby/irc_framing"
+gem "coding_adventures_irc_server",     path: "../../../packages/ruby/irc_server"
+gem "coding_adventures_irc_net_stdlib", path: "../../../packages/ruby/irc_net_stdlib"
+
+gem "minitest",  "~> 5.0"
+gem "simplecov", require: false
+gem "rake",      "~> 13.0"

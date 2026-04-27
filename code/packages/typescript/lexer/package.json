@@ -18,6 +18,11 @@
   ],
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/directed-graph": "file:../directed-graph",
+    "@coding-adventures/grammar-tools": "file:../grammar-tools",
+    "@coding-adventures/state-machine": "file:../state-machine"
+  },
   "devDependencies": {
     "typescript": "^5.0.0",
     "vitest": "^3.0.0",

@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "coding-adventures-markov-chain"
+version = "0.1.0"
+description = "General-purpose Markov Chain (DT28) built on the directed-graph (DT01)"
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "Adhithya Rajasekaran" }]
+dependencies = ["coding-adventures-directed-graph"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4", "mypy>=1.10"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/coding_adventures_markov_chain"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=coding_adventures_markov_chain --cov-report=term-missing --cov-fail-under=90"
+
+[tool.coverage.run]
+source = ["src/coding_adventures_markov_chain"]

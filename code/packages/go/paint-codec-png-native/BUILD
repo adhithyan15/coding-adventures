@@ -1,0 +1,1 @@
+if [ "$(uname -s)" = "Darwin" ] && [ "$(uname -m)" = "arm64" ]; then REPO_ROOT=$(git rev-parse --show-toplevel) && (cd "$REPO_ROOT/code/packages/rust/paint-codec-png-c" && cargo build --release) && CGO_ENABLED=1 go test ./... -v -cover; else echo Skipping go/paint-codec-png-native on non-macOS-arm64; fi

@@ -1067,20 +1067,27 @@ describe("generateCSharp", () => {
     expect(csproj).toContain("<PackageId>CodingAdventures.MyPkg</PackageId>");
     expect(testProject).toContain('PackageReference Include="xunit"');
     expect(testProject).toContain('PackageReference Include="coverlet.msbuild"');
-    expect(testProject).toContain('ProjectReference Include="../../CodingAdventures.MyPkg.csproj"');
+    expect(testProject).toContain(
+      'ProjectReference Include="../../CodingAdventures.MyPkg.csproj"',
+    );
   });
 
   it("creates BUILD files and required capabilities metadata", () => {
     generateCSharp(tmpDir, "my-pkg", "A test package", "", []);
 
     const build = fs.readFileSync(path.join(tmpDir, "BUILD"), "utf-8");
-    const buildWindows = fs.readFileSync(path.join(tmpDir, "BUILD_windows"), "utf-8");
+    const buildWindows = fs.readFileSync(
+      path.join(tmpDir, "BUILD_windows"),
+      "utf-8",
+    );
     const capabilities = fs.readFileSync(
       path.join(tmpDir, "required_capabilities.json"),
       "utf-8",
     );
 
-    expect(build).toContain("dotnet test tests/CodingAdventures.MyPkg.Tests/CodingAdventures.MyPkg.Tests.csproj");
+    expect(build).toContain(
+      "dotnet test tests/CodingAdventures.MyPkg.Tests/CodingAdventures.MyPkg.Tests.csproj",
+    );
     expect(build).toContain("/p:Threshold=80");
     expect(buildWindows).toBe(build);
     expect(capabilities).toContain('"package": "csharp/my-pkg"');
@@ -1090,7 +1097,7 @@ describe("generateCSharp", () => {
     generateCSharp(
       tmpDir,
       "my-pkg",
-      `A & B </Description><Target Name="Injected" />`,
+      'A & B </Description><Target Name="Injected" />',
       "",
       [],
     );
@@ -1103,7 +1110,7 @@ describe("generateCSharp", () => {
     expect(csproj).toContain(
       "<Description>A &amp; B &lt;/Description&gt;&lt;Target Name=&quot;Injected&quot; /&gt;</Description>",
     );
-    expect(csproj).not.toContain("<Target Name=\"Injected\"");
+    expect(csproj).not.toContain('<Target Name="Injected"');
   });
 });
 
@@ -1139,20 +1146,27 @@ describe("generateFSharp", () => {
     expect(fsproj).toContain('<Compile Include="MyPkg.fs" />');
     expect(testProject).toContain('PackageReference Include="xunit"');
     expect(testProject).toContain('PackageReference Include="coverlet.msbuild"');
-    expect(testProject).toContain('ProjectReference Include="../../CodingAdventures.MyPkg.fsproj"');
+    expect(testProject).toContain(
+      'ProjectReference Include="../../CodingAdventures.MyPkg.fsproj"',
+    );
   });
 
   it("creates BUILD files and required capabilities metadata", () => {
     generateFSharp(tmpDir, "my-pkg", "A test package", "", []);
 
     const build = fs.readFileSync(path.join(tmpDir, "BUILD"), "utf-8");
-    const buildWindows = fs.readFileSync(path.join(tmpDir, "BUILD_windows"), "utf-8");
+    const buildWindows = fs.readFileSync(
+      path.join(tmpDir, "BUILD_windows"),
+      "utf-8",
+    );
     const capabilities = fs.readFileSync(
       path.join(tmpDir, "required_capabilities.json"),
       "utf-8",
     );
 
-    expect(build).toContain("dotnet test tests/CodingAdventures.MyPkg.Tests/CodingAdventures.MyPkg.Tests.fsproj");
+    expect(build).toContain(
+      "dotnet test tests/CodingAdventures.MyPkg.Tests/CodingAdventures.MyPkg.Tests.fsproj",
+    );
     expect(build).toContain("/p:Threshold=80");
     expect(buildWindows).toBe(build);
     expect(capabilities).toContain('"package": "fsharp/my-pkg"');
@@ -1162,7 +1176,7 @@ describe("generateFSharp", () => {
     generateFSharp(
       tmpDir,
       "my-pkg",
-      `A & B </Description><Target Name="Injected" />`,
+      'A & B </Description><Target Name="Injected" />',
       "",
       [],
     );
@@ -1175,7 +1189,7 @@ describe("generateFSharp", () => {
     expect(fsproj).toContain(
       "<Description>A &amp; B &lt;/Description&gt;&lt;Target Name=&quot;Injected&quot; /&gt;</Description>",
     );
-    expect(fsproj).not.toContain("<Target Name=\"Injected\"");
+    expect(fsproj).not.toContain('<Target Name="Injected"');
   });
 });
 

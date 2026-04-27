@@ -71,7 +71,7 @@ defmodule CodingAdventures.Parser.ASTNode do
 
   defp walk_node(node, parent, visitor) do
     # Enter phase
-    enter_fn = Keyword.get(visitor, :enter) || Map.get(visitor, :enter)
+    enter_fn = visitor_get(visitor, :enter)
 
     current =
       if enter_fn do
@@ -99,10 +99,10 @@ defmodule CodingAdventures.Parser.ASTNode do
         %{current | children: new_children}
       else
         current
-      end
+    end
 
     # Leave phase
-    leave_fn = Keyword.get(visitor, :leave) || Map.get(visitor, :leave)
+    leave_fn = visitor_get(visitor, :leave)
 
     if leave_fn do
       case leave_fn.(current, parent) do
@@ -113,6 +113,10 @@ defmodule CodingAdventures.Parser.ASTNode do
       current
     end
   end
+
+  defp visitor_get(visitor, key) when is_list(visitor), do: Keyword.get(visitor, key)
+  defp visitor_get(visitor, key) when is_map(visitor), do: Map.get(visitor, key)
+  defp visitor_get(_, _), do: nil
 
   @doc """
   Find all nodes matching a rule name (depth-first order).

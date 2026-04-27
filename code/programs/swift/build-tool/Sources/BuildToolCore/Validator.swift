@@ -9,6 +9,8 @@ public enum Validator {
         "elixir",
         "lua",
         "perl",
+        "java",
+        "kotlin",
         "haskell",
     ]
 

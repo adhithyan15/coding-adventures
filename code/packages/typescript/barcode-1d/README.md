@@ -1,76 +1,27 @@
 # @coding-adventures/barcode-1d
 
-Shared geometry and rendering helpers for linear barcode symbologies.
+End-to-end 1D barcode pipeline for TypeScript.
 
-This package exists so each 1D symbology does not have to reinvent the same
-left-to-right layout work. A barcode package should decide:
+This package is the high-level entry point:
 
-- what its valid input looks like
-- how to encode symbols
-- how to compute checksums
-- which parts are guards, starts, stops, or data
-
-Once that work is done, most linear barcodes become the same shape:
-
-```text
-bar / space / bar / space / ...
-```
-
-with widths measured in modules.
-
-## What This Package Owns
-
-- the shared `Barcode1DRun` model
-- binary-pattern and width-pattern helpers
-- quiet-zone aware layout calculation
-- translation from runs into backend-neutral draw instructions
-
-## What It Does Not Own
-
-- UPC-A checksum rules
-- EAN-13 parity tables
-- Codabar guard semantics
-- ITF digit interleaving
-- Code 128 code-set logic
-
-Those belong in the symbology packages.
+1. Choose a symbology package such as Code 39 or UPC-A
+2. Produce barcode runs and lay them out with `@coding-adventures/barcode-layout-1d`
+3. Convert the resulting `PaintScene` to PNG bytes through a native Paint VM
 
 ## Usage
 
 ```typescript
-import {
-  runsFromBinaryPattern,
-  drawBarcode1D,
-} from "@coding-adventures/barcode-1d";
+import { renderBarcode1DToPng } from "@coding-adventures/barcode-1d";
 
-const runs = runsFromBinaryPattern("101", {
-  sourceLabel: "start",
-  sourceIndex: -1,
-  role: "guard",
-});
-
-const scene = drawBarcode1D(runs, {
-  humanReadableText: "demo",
-  label: "Demo barcode",
+const png = renderBarcode1DToPng({
+  symbology: "code39",
+  data: "ADHITHYA",
 });
 ```
 
-## Why It Matters
+## Native backend
 
-This package is the reason we can keep the pipeline clean:
+- macOS: `paint-metal`
+- Windows: `paint-vm-direct2d` with `paint-vm-gdi` available as the fallback path inside the native layer
 
-```text
-symbology rules
-  -> linear barcode runs
-  -> draw instructions
-  -> SVG / Canvas / PNG / other backend
-```
-
-That same split is what makes the repository's barcode visualizers explainable
-instead of black-box image generators.
-
-## Development
-
-```bash
-bash BUILD
-```
+Linux support is not implemented yet.

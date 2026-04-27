@@ -10,6 +10,7 @@ from riscv_simulator.decode import RiscVDecoder
 from riscv_simulator.encoding import assemble
 from riscv_simulator.execute import RiscVExecutor
 from riscv_simulator.simulator import RiscVSimulator
+from riscv_simulator.state import RiscVState
 
 __all__ = [
     "CSRFile",
@@ -17,6 +18,7 @@ __all__ = [
     "RiscVExecutor",
     "RiscVISADecoder",
     "RiscVSimulator",
+    "RiscVState",
     "assemble",
     "new_riscv_core",
 ]

@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <AssemblyName>CodingAdventures.Deflate.FSharp</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>CodingAdventures.Deflate.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>Pure F# DEFLATE compression in the repo's CMP05 wire format</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../fsharp/huffman-tree/CodingAdventures.HuffmanTree.fsproj" />
+    <ProjectReference Include="../../fsharp/lzss/CodingAdventures.Lzss.fsproj" />
+    <Compile Include="Deflate.fs" />
+  </ItemGroup>
+</Project>

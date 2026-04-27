@@ -5,7 +5,9 @@
 // This file embeds a TokenGrammar as native Rust data structures.
 // Call `token_grammar()` instead of reading and parsing the .tokens file.
 
+#[allow(unused_imports)]
 use grammar_tools::token_grammar::{PatternGroup, TokenDefinition, TokenGrammar};
+#[allow(unused_imports)]
 use std::collections::HashMap;
 
 pub fn token_grammar() -> TokenGrammar {
@@ -199,6 +201,8 @@ pub fn token_grammar() -> TokenGrammar {
         case_sensitive: true,
         version: 1,
         case_insensitive: false,
-            context_keywords: Vec::new(),
+        context_keywords: vec![],
+        soft_keywords: vec![],
+        layout_keywords: vec![],
     }
 }

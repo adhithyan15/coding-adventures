@@ -250,12 +250,16 @@ public let allPackageLanguages = [
     "lua",
     "perl",
     "swift",
+    "java",
+    "kotlin",
     "haskell",
     "wasm",
     "csharp",
     "fsharp",
     "dotnet",
 ]
+
+public let allLanguages = allPackageLanguages
 
 public let allToolchains = [
     "python",
@@ -267,10 +271,21 @@ public let allToolchains = [
     "lua",
     "perl",
     "swift",
+    "java",
+    "kotlin",
     "haskell",
     "dotnet",
 ]
 
-public let sharedPrefixes = [
-    ".github/workflows/ci.yml",
-]
+public let sharedPrefixes: [String] = []
+
+public func toolchainForPackageLanguage(_ language: String) -> String {
+    switch language {
+    case "wasm":
+        return "rust"
+    case "csharp", "fsharp", "dotnet":
+        return "dotnet"
+    default:
+        return language
+    }
+}

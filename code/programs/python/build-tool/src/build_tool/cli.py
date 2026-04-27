@@ -40,6 +40,11 @@ import sys
 from pathlib import Path
 
 from build_tool.cache import BuildCache
+from build_tool.ci_workflow import (
+    CI_WORKFLOW_PATH,
+    analyze_ci_workflow_changes,
+    sorted_toolchains,
+)
 from build_tool.discovery import Package, discover_packages
 from build_tool.executor import execute_builds
 from build_tool.gitdiff import get_changed_files, map_files_to_packages
@@ -69,17 +74,34 @@ except ImportError:
     Tracker = None  # type: ignore[assignment, misc]
 
 
-# ALL_TOOLCHAINS is the canonical list of supported build toolchains in the
-# monorepo. The order is stable and matches the order used in CI setup.
-ALL_TOOLCHAINS = ["python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "haskell", "dotnet"]
+# ALL_LANGUAGES is the canonical list of package languages the Python build
+# tool knows how to build directly.
+ALL_LANGUAGES = ["python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "haskell"]
 
-# SHARED_PREFIXES are repo paths that, when changed, mean ALL languages need
-# rebuilding. Only the CI workflow itself fans out to a full rebuild.
-SHARED_PREFIXES = [".github/workflows/ci.yml"]
+# ALL_TOOLCHAINS is the canonical list of CI toolchains we can request.
+ALL_TOOLCHAINS = [
+    "python",
+    "ruby",
+    "go",
+    "typescript",
+    "rust",
+    "elixir",
+    "lua",
+    "perl",
+    "swift",
+    "java",
+    "kotlin",
+    "haskell",
+    "dotnet",
+]
+
+# SHARED_PREFIXES are repo paths that, when changed, still mean every
+# toolchain needs rebuilding. ci.yml is handled separately via patch analysis
+# so toolchain-scoped edits do not fan out across the whole repo.
+SHARED_PREFIXES: list[str] = []
 
 
-def _toolchain_for_language(language: str) -> str:
-    """Map a package language to the toolchain CI needs to install."""
+def _toolchain_for_package_language(language: str) -> str:
     if language == "wasm":
         return "rust"
     if language in {"csharp", "fsharp", "dotnet"}:
@@ -175,23 +197,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument(
         "--language",
-        choices=[
-            "python",
-            "ruby",
-            "go",
-            "typescript",
-            "rust",
-            "elixir",
-            "lua",
-            "perl",
-            "swift",
-            "haskell",
-            "wasm",
-            "csharp",
-            "fsharp",
-            "dotnet",
-            "all",
-        ],
+        choices=["python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "all"],
         default="all",
         help="Only build packages of this language",
     )
@@ -339,14 +345,30 @@ def main(argv: list[str] | None = None) -> int:
     # Git is the source of truth -- no cache file needed.
     # Fallback: hash-based cache (for local dev when not on a branch).
     affected_set: set[str] | None = None
+    ci_toolchains: frozenset[str] = frozenset()
 
     if not args.force:
         # Try git-diff mode first (the default)
         changed_files = get_changed_files(root, args.diff_base)
         if changed_files:
+            if CI_WORKFLOW_PATH in changed_files:
+                ci_change = analyze_ci_workflow_changes(root, args.diff_base)
+                if ci_change.requires_full_rebuild:
+                    print("Git diff: ci.yml changed in shared ways -- rebuilding everything")
+                    args.force = True
+                    affected_set = None
+                else:
+                    ci_toolchains = ci_change.toolchains
+                    if ci_toolchains:
+                        print(
+                            "Git diff: ci.yml changed only toolchain-scoped setup for "
+                            + ", ".join(sorted_toolchains(ci_toolchains))
+                        )
+
             shared_changed = any(
                 f == prefix or f.startswith(prefix + "/")
                 for f in changed_files
+                if f != CI_WORKFLOW_PATH
                 for prefix in SHARED_PREFIXES
             )
             if shared_changed:
@@ -372,19 +394,11 @@ def main(argv: list[str] | None = None) -> int:
     # --emit-plan mode: serialize the plan and exit without building.
     # This is the fast path for CI detect jobs.
     if args.emit_plan is not None:
-        return _emit_plan(args, root, packages, graph, affected_set)
+        return _emit_plan(args, root, packages, graph, affected_set, ci_toolchains)
 
     # --detect-languages standalone mode: output language flags and exit.
     if args.detect_languages:
-        languages_needed: dict[str, bool] = {"go": True}
-        if args.force or affected_set is None:
-            for lang in ALL_TOOLCHAINS:
-                languages_needed[lang] = True
-        else:
-            for pkg in packages:
-                if pkg.name in affected_set:
-                    languages_needed[_toolchain_for_language(pkg.language)] = True
-        _output_language_flags(languages_needed)
+        _output_language_flags(_compute_languages_needed(packages, affected_set, args.force, ci_toolchains))
         return 0
 
     # Step 6: Hash all packages (needed for cache fallback)
@@ -447,6 +461,7 @@ def _emit_plan(
     packages: list[Package],
     graph: DirectedGraph,
     affected_set: set[str] | None,
+    ci_toolchains: frozenset[str],
 ) -> int:
     """Serialize the build plan to JSON and exit.
 
@@ -492,15 +507,7 @@ def _emit_plan(
             )
         )
 
-    # Determine which languages are needed. A language is "needed" if
-    # at least one affected package uses that language.
-    languages_needed: dict[str, bool] = {}
-    for pkg in packages:
-        lang = _toolchain_for_language(pkg.language)
-        if lang not in languages_needed:
-            languages_needed[lang] = False
-        if affected_set is None or pkg.name in affected_set:
-            languages_needed[lang] = True
+    languages_needed = _compute_languages_needed(packages, affected_set, args.force, ci_toolchains)
 
     # Build the plan.
     bp = BuildPlan(
@@ -701,7 +708,7 @@ def _output_language_flags(languages_needed: dict[str, bool]) -> None:
         except OSError as exc:
             print(f"Warning: could not open $GITHUB_OUTPUT: {exc}", file=sys.stderr)
 
-    # Always output all known languages in stable order.
+    # Always output all known toolchains in stable order.
     all_needed = {"go": True}  # Go is always needed
     all_needed.update(languages_needed)
 
@@ -714,6 +721,30 @@ def _output_language_flags(languages_needed: dict[str, bool]) -> None:
 
     if gh_file is not None:
         gh_file.close()
+
+
+def _compute_languages_needed(
+    packages: list[Package],
+    affected_set: set[str] | None,
+    force: bool,
+    ci_toolchains: frozenset[str],
+) -> dict[str, bool]:
+    languages_needed = {toolchain: False for toolchain in ALL_TOOLCHAINS}
+    languages_needed["go"] = True
+
+    if force or affected_set is None:
+        for toolchain in ALL_TOOLCHAINS:
+            languages_needed[toolchain] = True
+        return languages_needed
+
+    for pkg in packages:
+        if pkg.name in affected_set:
+            languages_needed[_toolchain_for_package_language(pkg.language)] = True
+
+    for toolchain in ci_toolchains:
+        languages_needed[toolchain] = True
+
+    return languages_needed
 
 
 if __name__ == "__main__":

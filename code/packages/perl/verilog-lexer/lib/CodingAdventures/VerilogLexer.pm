@@ -1,4 +1,4 @@
-package CodingAdventures::VerilogLexer;
+﻿package CodingAdventures::VerilogLexer;
 
 # ============================================================================
 # CodingAdventures::VerilogLexer — Grammar-driven Verilog tokenizer
@@ -109,6 +109,8 @@ use strict;
 use warnings;
 
 our $VERSION = '0.01';
+our $DEFAULT_VERSION = '2005';
+our @SUPPORTED_VERSIONS = qw(1995 2001 2005);
 
 use File::Basename qw(dirname);
 use File::Spec;
@@ -122,10 +124,10 @@ use CodingAdventures::GrammarTools;
 # wasteful. We cache the TokenGrammar object and compiled rule lists in
 # package-level variables. They are populated on the first call and reused.
 
-my $_grammar;      # CodingAdventures::GrammarTools::TokenGrammar
-my $_rules;        # arrayref of { name => str, pat => qr// }
-my $_skip_rules;   # arrayref of qr// patterns for skip definitions
-my $_keyword_map;  # hashref mapping keyword string → promoted token type
+my %_grammar_cache;      # version -> CodingAdventures::GrammarTools::TokenGrammar
+my %_rules_cache;        # version -> arrayref of { name => str, pat => qr// }
+my %_skip_rules_cache;   # version -> arrayref of qr// patterns for skip definitions
+my %_keyword_map_cache;  # version -> hashref mapping keyword string -> promoted token type
 
 # --- _grammars_dir() ----------------------------------------------------------
 #
@@ -145,26 +147,48 @@ sub _grammars_dir {
     return File::Spec->catdir($dir, 'grammars');
 }
 
+sub _resolve_version {
+    my ($version) = @_;
+    return $DEFAULT_VERSION unless defined $version && length $version;
+    return $version if grep { $_ eq $version } @SUPPORTED_VERSIONS;
+    die sprintf(
+        "CodingAdventures::VerilogLexer: unknown Verilog version '%s' (expected one of: %s)",
+        $version,
+        join(', ', @SUPPORTED_VERSIONS)
+    );
+}
+
+sub default_version {
+    return $DEFAULT_VERSION;
+}
+
+sub supported_versions {
+    return [ @SUPPORTED_VERSIONS ];
+}
+
 # --- _grammar() ---------------------------------------------------------------
 #
 # Load and parse `verilog.tokens`, caching the result.
 # Returns a CodingAdventures::GrammarTools::TokenGrammar object.
 
 sub _grammar {
-    return $_grammar if $_grammar;
+    my ($version) = @_;
+    $version = _resolve_version($version);
 
-    my $tokens_file = File::Spec->catfile( _grammars_dir(), 'verilog.tokens' );
+    return $_grammar_cache{$version} if exists $_grammar_cache{$version};
+
+    my $tokens_file = File::Spec->catfile( _grammars_dir(), 'verilog', "verilog${version}.tokens" );
     open my $fh, '<', $tokens_file
         or die "CodingAdventures::VerilogLexer: cannot open '$tokens_file': $!";
     my $content = do { local $/; <$fh> };
     close $fh;
 
     my ($grammar, $err) = CodingAdventures::GrammarTools->parse_token_grammar($content);
-    die "CodingAdventures::VerilogLexer: failed to parse verilog.tokens: $err"
+    die "CodingAdventures::VerilogLexer: failed to parse verilog${version}.tokens: $err"
         unless $grammar;
 
-    $_grammar = $grammar;
-    return $_grammar;
+    $_grammar_cache{$version} = $grammar;
+    return $_grammar_cache{$version};
 }
 
 # --- _build_rules() -----------------------------------------------------------
@@ -189,9 +213,11 @@ sub _grammar {
 # Alias resolution: definitions with `-> ALIAS` emit the alias as type name.
 
 sub _build_rules {
-    return if $_rules;    # already built
+    my ($version) = @_;
+    $version = _resolve_version($version);
+    return if exists $_rules_cache{$version};    # already built
 
-    my $grammar = _grammar();
+    my $grammar = _grammar($version);
     my (@rules, @skip_rules);
 
     # Build skip patterns
@@ -206,7 +232,7 @@ sub _build_rules {
             # file from disk. Die early rather than silently execute injected code.
             # Fixed: 2026-04-10 security review.
             my $raw_pat = $defn->pattern;
-            if ( $raw_pat =~ /\(\?{|\(\?\?{/ ) {
+            if ( $raw_pat =~ /\(\?\{|\(\?\?\{/ ) {
                 die "Security error: unsafe Perl regex code construct in grammar pattern '$raw_pat'
 ";
             }
@@ -228,7 +254,7 @@ sub _build_rules {
             # file from disk. Die early rather than silently execute injected code.
             # Fixed: 2026-04-10 security review.
             my $raw_pat = $defn->pattern;
-            if ( $raw_pat =~ /\(\?{|\(\?\?{/ ) {
+            if ( $raw_pat =~ /\(\?\{|\(\?\?\{/ ) {
                 die "Security error: unsafe Perl regex code construct in grammar pattern '$raw_pat'
 ";
             }
@@ -253,10 +279,10 @@ sub _build_rules {
     # Build keyword lookup map from the grammar keywords section.
     my %kw_map;
     $kw_map{$_} = uc($_) for @{ $grammar->keywords };
-    $_keyword_map = \%kw_map;
+    $_keyword_map_cache{$version} = \%kw_map;
 
-    $_skip_rules = \@skip_rules;
-    $_rules      = \@rules;
+    $_skip_rules_cache{$version} = \@skip_rules;
+    $_rules_cache{$version}      = \@rules;
 }
 
 # ============================================================================
@@ -295,9 +321,14 @@ sub _build_rules {
 #   `die` with a "LexerError" message on unexpected input.
 
 sub tokenize {
-    my ($class_or_self, $source) = @_;
+    my ($class_or_self, $source, $version) = @_;
 
-    _build_rules();
+    $version = _resolve_version($version);
+    _build_rules($version);
+
+    my $rules       = $_rules_cache{$version};
+    my $skip_rules  = $_skip_rules_cache{$version};
+    my $keyword_map = $_keyword_map_cache{$version};
 
     my @tokens;
     my $line = 1;
@@ -315,7 +346,7 @@ sub tokenize {
         # line/col so that subsequent token positions are accurate.
 
         my $skipped = 0;
-        for my $spat (@$_skip_rules) {
+        for my $spat (@$skip_rules) {
             pos($source) = $pos;
             if ($source =~ /$spat/gc) {
                 my $matched = $&;
@@ -344,14 +375,14 @@ sub tokenize {
         # failure, anchored to \G). First match wins.
 
         my $matched_tok = 0;
-        for my $rule (@$_rules) {
+        for my $rule (@$rules) {
             pos($source) = $pos;
             if ($source =~ /$rule->{pat}/gc) {
                 my $value = $&;
 
                 my $tok_type = $rule->{name};
-                if ($tok_type eq 'NAME' && exists $_keyword_map->{$value}) {
-                    $tok_type = $_keyword_map->{$value};
+                if ($tok_type eq 'NAME' && exists $keyword_map->{$value}) {
+                    $tok_type = $keyword_map->{$value};
                 }
                 push @tokens, {
                     type  => $tok_type,

@@ -10,5 +10,5 @@
       "justification": "Reads grammar and token definition files from the filesystem to configure the package at initialization time."
     }
   ],
-  "justification": "Reads parser grammar definition file (algol.grammar) via File.read! at initialization time."
+  "justification": "Reads versioned parser grammar definition file (algol/algol60.grammar) via File.read! at initialization time."
 }

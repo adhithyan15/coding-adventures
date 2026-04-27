@@ -1,0 +1,9 @@
+[package]
+name = "text-native-coretext"
+version = "0.1.0"
+edition = "2021"
+description = "TXT03a: CoreText-backed implementations of the TXT00 FontMetrics, TextShaper, and FontResolver traits for macOS and iOS."
+
+[dependencies]
+text-interfaces = { path = "../text-interfaces" }
+objc-bridge = { path = "../objc-bridge" }

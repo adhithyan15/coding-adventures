@@ -1,0 +1,30 @@
+{
+  "name": "@coding-adventures/huffman-tree",
+  "version": "0.1.0",
+  "description": "Huffman tree data structure with greedy min-heap construction and canonical code generation — DT27",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "huffman",
+    "huffman-tree",
+    "compression",
+    "prefix-free",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/heap": "file:../heap"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

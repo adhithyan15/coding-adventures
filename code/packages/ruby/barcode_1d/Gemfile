@@ -1,0 +1,18 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+gemspec
+
+# All transitive path dependencies must be listed here.
+# Bundler needs to know where to find each gem locally.
+gem "coding_adventures_paint_instructions", path: "../paint_instructions"
+gem "coding_adventures_barcode_layout_1d", path: "../barcode_layout_1d"
+gem "coding_adventures_codabar", path: "../codabar"
+gem "coding_adventures_code128", path: "../code128"
+gem "coding_adventures_code39", path: "../code39"
+gem "coding_adventures_ean_13", path: "../ean_13"
+gem "coding_adventures_itf", path: "../itf"
+gem "coding_adventures_upc_a", path: "../upc_a"
+gem "coding_adventures_pixel_container", path: "../pixel_container"
+gem "coding_adventures_paint_vm_metal_native", path: "../paint_vm_metal_native"
+gem "coding_adventures_paint_codec_png_native", path: "../paint_codec_png_native"

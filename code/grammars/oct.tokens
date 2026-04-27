@@ -1,0 +1,348 @@
+# Token definitions for Oct
+# @version 1
+#
+# Oct is a small, statically-typed, 8-bit systems programming language designed to
+# compile to the Intel 8008 microprocessor (1972). The name comes from "octet" —
+# the networking/communications term for exactly 8 bits, the native word size of
+# the 8008's ALU.
+#
+# WHY A NEW LANGUAGE FOR THE 8008?
+# The Intel 8008 (1972) was Intel's first 8-bit microprocessor, predating the 8080.
+# It has 7 general-purpose registers (A, B, C, D, E, H, L), a 14-bit address space
+# (16 KB), an 8-level push-down call stack (7 levels usable), and separate I/O port
+# spaces (8 input ports, 24 output ports). Writing 8008 assembly by hand is tedious
+# and error-prone. Oct gives us a higher-level notation with static safety guarantees
+# while remaining faithful to the hardware.
+#
+# Oct is the sister language to Nib (which targets the 4-bit Intel 4004). Where Nib
+# exposes u4 types and 4004-specific wrapping/saturating operators, Oct exposes u8
+# types and 8008-specific intrinsics: port I/O, carry arithmetic, and byte rotations.
+#
+# SAFETY MODEL
+# Oct enforces a strict subset of operations suited to the 8008:
+#   - Types are u8 (unsigned 8-bit) or bool — no larger integers
+#   - At most 4 local variables per function (registers B, C, D, E)
+#   - Call depth statically bounded to 7 (8008 stack minus current frame)
+#   - No recursion (call graph must be acyclic)
+#   - Port numbers are compile-time constants (embedded in opcode)
+#   - Integer literals 0–255 only; literals outside this range are errors
+#
+# DESIGN PHILOSOPHY
+# Token ordering follows first-match-wins semantics. The lexer scans the input
+# character by character, trying each pattern in the order they appear in this file.
+# When two patterns could both match at the current position, the one listed first
+# wins. This is why multi-character operators appear before single-character ones,
+# and why BIN_LIT and HEX_LIT appear before INT_LIT.
+#
+# Key ordering rules:
+#   ==  must come before  =   (EQ_EQ before EQ)
+#   !=  must come before  !   (NEQ before BANG)
+#   <=  must come before  <   (LEQ before LT)
+#   >=  must come before  >   (GEQ before GT)
+#   &&  must come before  &   (LAND before AMP)
+#   ||  must come before  |   (LOR before PIPE)
+#   ->  must come before  -   (ARROW before MINUS)
+#   BIN_LIT must come before INT_LIT (0b101 must not lex as INT_LIT("0") then NAME("b101"))
+#   HEX_LIT must come before INT_LIT (0xFF must not lex as INT_LIT("0") then NAME("xFF"))
+
+# ---------------------------------------------------------------------------
+# Multi-character operators — must appear before single-character versions
+# ---------------------------------------------------------------------------
+
+# Equality comparison: ==
+# Oct uses = for assignment and == for equality (C/Rust/Go convention).
+# The double-equals avoids the classic C bug of writing = when == is intended.
+# Must come before EQ so "==" is not lexed as two EQ tokens.
+EQ_EQ       = "=="
+
+# Not-equal comparison: !=
+# Standard C-family syntax. The ! prefix is also used as logical NOT, so !=
+# must be tokenized atomically. Must come before BANG so "!=" is one token.
+NEQ         = "!="
+
+# Less-or-equal: <=
+# Must come before LT so "<=" is not lexed as LT EQ.
+LEQ         = "<="
+
+# Greater-or-equal: >=
+# Must come before GT so ">=" is not lexed as GT EQ.
+GEQ         = ">="
+
+# Logical AND: &&
+# Short-circuit: if the left operand is false, right is not evaluated.
+# Double-ampersand distinguishes logical AND (&&) from bitwise AND (&).
+# The 8008 has a bitwise AND instruction (ANA r), so this distinction matters.
+# Must come before AMP so "&&" is not lexed as two AMP tokens.
+LAND        = "&&"
+
+# Logical OR: ||
+# Short-circuit: if the left operand is true, right is not evaluated.
+# The 8008 has a bitwise OR instruction (ORA r), so || vs | matters.
+# Must come before PIPE so "||" is not lexed as two PIPE tokens.
+LOR         = "||"
+
+# Function return type arrow: ->
+# Function signatures look like: fn add(a: u8, b: u8) -> u8 { ... }
+# Arrow notation (borrowed from Rust) reads as "produces".
+# Must come before MINUS so "->" is not lexed as MINUS GT.
+ARROW       = "->"
+
+# ---------------------------------------------------------------------------
+# Single-character arithmetic operators
+# ---------------------------------------------------------------------------
+
+# Addition. On u8 operands, wraps modulo 256.
+# Maps to the 8008's ADD r instruction (add register to accumulator).
+# Example: let sum: u8 = x + y;
+PLUS        = "+"
+
+# Subtraction. Wraps modulo 256 (borrow is tracked via carry flag).
+# Maps to the 8008's SUB r instruction.
+# Example: let diff: u8 = x - y;
+MINUS       = "-"
+
+# ---------------------------------------------------------------------------
+# Single-character bitwise operators
+# ---------------------------------------------------------------------------
+
+# Bitwise AND. Maps to the 8008's ANA r instruction.
+# Useful for masking: x & 0x0F extracts the low nibble of a byte.
+# AMP is the single-& version; LAND (&&) is logical and.
+AMP         = "&"
+
+# Bitwise OR. Maps to the 8008's ORA r instruction.
+# Sets specific bits: x | 0x80 sets the high bit.
+# PIPE is single-|; LOR (||) is logical or.
+PIPE        = "|"
+
+# Bitwise XOR. Maps to the 8008's XRA r instruction.
+# Also used to zero-test (XOR a register with itself clears it and sets Z).
+# Flip all bits: x ^ 0xFF is the canonical NOT-a-byte idiom for the 8008.
+CARET       = "^"
+
+# Bitwise NOT (complement). Flips every bit in the operand.
+# On the 8008, lowered to XRI 0xFF (XOR-immediate with 0xFF).
+# Example: ~x flips all 8 bits. ~0b00001111 = 0b11110000.
+TILDE       = "~"
+
+# ---------------------------------------------------------------------------
+# Single-character comparison and logical operators
+# ---------------------------------------------------------------------------
+
+# Logical NOT (boolean negation). Only valid on bool expressions.
+# !true = false, !false = true.
+# Distinct from TILDE (~) which is bitwise NOT on u8 values.
+BANG        = "!"
+
+# Less-than comparison (unsigned). Uses CMP + branch on 8008.
+LT          = "<"
+
+# Greater-than comparison (unsigned).
+GT          = ">"
+
+# ---------------------------------------------------------------------------
+# Assignment
+# ---------------------------------------------------------------------------
+
+# Assignment in let/static declarations and assignment statements.
+# Example: let x: u8 = 5;  or  x = x + 1;
+EQ          = "="
+
+# ---------------------------------------------------------------------------
+# Delimiters
+# ---------------------------------------------------------------------------
+
+# Block delimiters for function bodies, if-branches, while-bodies, loop-bodies.
+# Braces are required (no single-statement shorthand), eliminating dangling-else.
+LBRACE      = "{"
+RBRACE      = "}"
+
+# Grouping for expressions and argument/parameter lists.
+LPAREN      = "("
+RPAREN      = ")"
+
+# Type annotation separator: let x: u8 = ...
+# Also used in parameter lists: fn add(a: u8, b: u8) -> u8
+COLON       = ":"
+
+# Statement terminator. Every statement ends with a semicolon.
+# Explicit semicolons keep the grammar unambiguous without JavaScript-style
+# automatic semicolon insertion rules.
+SEMICOLON   = ";"
+
+# Argument/parameter separator.
+COMMA       = ","
+
+# ---------------------------------------------------------------------------
+# Literals
+# ---------------------------------------------------------------------------
+
+# Binary integer literal: 0b followed by one or more binary digits.
+# Examples: 0b00000000, 0b11111111, 0b10110011
+# WHY BIN FIRST: 0b101 must be lexed as one BIN_LIT token, not INT_LIT("0")
+# then NAME("b101"). Placing BIN_LIT before INT_LIT ensures the full binary
+# token is consumed before the decimal rule fires on the leading "0".
+# Binary literals are particularly useful for 8008 programming: bit masks,
+# flags, and port control bytes are much clearer in binary than decimal.
+BIN_LIT     = /0b[01]+/
+
+# Hexadecimal integer literal: 0x followed by one or more hex digits.
+# Examples: 0x00, 0xFF, 0x3A, 0xfe
+# WHY HEX BEFORE INT: same reason as BIN — 0xFF must not lex as INT("0")+"xFF".
+# Hex is natural for port addresses, bit masks, and ASCII codes.
+HEX_LIT     = /0x[0-9A-Fa-f]+/
+
+# Decimal integer literal: one or more decimal digits.
+# Must come after BIN_LIT and HEX_LIT. Examples: 0, 42, 255.
+# Valid u8 literals are 0–255. Out-of-range values are a compile-time error.
+INT_LIT     = /[0-9]+/
+
+# Identifier: letter or underscore, followed by letters, digits, or underscores.
+# Keywords are reclassified from NAME after a full-token match.
+# The token is named NAME so the GrammarLexer's keyword promotion logic fires:
+# it checks token_name == "NAME" && value in keyword_set.
+# Type names (u8, bool) are also NAME tokens, not keywords — they appear in
+# type annotation positions only and the parser distinguishes them by value.
+NAME        = /[a-zA-Z_][a-zA-Z0-9_]*/
+
+# ---------------------------------------------------------------------------
+# Keywords — reclassified from NAME after a full-token match
+# ---------------------------------------------------------------------------
+#
+# Case-sensitive: Oct uses lowercase-only keywords (matching Rust/Go convention).
+# Partial matches do NOT qualify: "while_count" is NAME, not keyword "while"
+# followed by NAME("_count"). The keyword match fires only on the complete token.
+#
+# Keyword groups:
+#
+#   Control flow:  fn, let, static, if, else, while, loop, break, return
+#   Literals:      true, false
+#   Intrinsics:    in, out, adc, sbb, rlc, rrc, ral, rar, carry, parity
+#
+# The intrinsics (in, out, adc, …) are keywords rather than identifiers so that
+# the type checker can reject re-use of intrinsic names as variable names without
+# any ambiguity. They are called with function-call syntax (e.g. in(0), adc(a, b))
+# and have dedicated grammar rules in oct.grammar.
+
+keywords:
+  # Function declaration. Defines a named function with optional parameters and
+  # an optional return type. Maps to a CALL/RET pair in the 8008 backend.
+  fn
+
+  # Local variable declaration. Binds a name to one of the 4 available registers
+  # (B, C, D, E). All 4 locals (including parameters) are live for the lifetime
+  # of the function. Register exhaustion (>4 locals) is a compile-time error.
+  let
+
+  # Static variable declaration. Allocates a byte in the data segment (RAM region
+  # 0x2000–0x3FFF on the 8008). Accessible from all functions. Initial value must
+  # be a literal (0–255).
+  static
+
+  # Conditional: if expr { ... } or if expr { ... } else { ... }
+  # Condition must be bool. Braces are required on both branches.
+  if
+
+  # Else branch of conditional.
+  else
+
+  # While loop: while expr { ... }
+  # Repeats while condition is true. Condition checked at the top of each iteration.
+  while
+
+  # Infinite loop: loop { ... }
+  # Runs forever until a break statement. Useful for event-driven programs that
+  # poll I/O ports continuously.
+  loop
+
+  # Break out of the innermost while or loop. No labeled breaks in v1.
+  break
+
+  # Return from a function. Void functions use bare "return;"; non-void functions
+  # use "return expr;". At the top level of main, compiles to HALT.
+  return
+
+  # Boolean literal true (encoded as 1).
+  true
+
+  # Boolean literal false (encoded as 0).
+  false
+
+  # ── Intrinsics ──────────────────────────────────────────────────────────────
+
+  # Read from input port: in(PORT) -> u8
+  # PORT must be a compile-time constant 0–7. The 8008 has 8 input ports wired
+  # directly to external hardware (keyboards, ADCs, sensors). Compiles to the
+  # 8008's INP p instruction (IN p in common mnemonics), which moves the port
+  # data to the accumulator.
+  in
+
+  # Write to output port: out(PORT, val)
+  # PORT must be a compile-time constant 0–23. The 8008 has 24 output ports
+  # wired to displays, DACs, LEDs, serial transmitters. Compiles to MOV A, Rval
+  # then OUT p (OUT p sends accumulator to port).
+  out
+
+  # Add with carry: adc(a, b) -> u8
+  # Computes a + b + carry_flag. The carry flag comes from the previous arithmetic
+  # operation. Used as the high-byte addition when implementing 16-bit math.
+  # Compiles to: MOV A, Ra; ADC Rb (add register to A plus carry).
+  adc
+
+  # Subtract with borrow: sbb(a, b) -> u8
+  # Computes a - b - carry_flag. Mirrors adc for subtraction.
+  # Compiles to: MOV A, Ra; SBB Rb (subtract register from A with borrow).
+  sbb
+
+  # Rotate Left Circular: rlc(a) -> u8
+  # Shifts a left by 1. Bit 7 wraps to bit 0 and also goes into carry.
+  #   CY ← bit7;  A ← (A << 1) | bit7
+  # Maps directly to the 8008's RLC instruction (one clock cycle).
+  rlc
+
+  # Rotate Right Circular: rrc(a) -> u8
+  # Shifts a right by 1. Bit 0 wraps to bit 7 and also goes into carry.
+  #   CY ← bit0;  A ← (A >> 1) | (bit0 << 7)
+  # Maps to the 8008's RRC instruction.
+  rrc
+
+  # Rotate Left through Carry (9-bit): ral(a) -> u8
+  # Rotates a and the carry flag together as a 9-bit value shifted left.
+  #   new_CY ← bit7;  A ← (A << 1) | old_CY
+  # The canonical instruction for "multiply by 2" or "shift high bit into carry".
+  # Maps to the 8008's RAL instruction.
+  ral
+
+  # Rotate Right through Carry (9-bit): rar(a) -> u8
+  # Mirrors ral for right rotation.
+  #   new_CY ← bit0;  A ← (old_CY << 7) | (A >> 1)
+  # Maps to the 8008's RAR instruction.
+  rar
+
+  # Read carry flag: carry() -> bool
+  # Returns true if the carry/borrow flag is set, false otherwise.
+  # Valid immediately after +, -, adc(), sbb(), or a rotation.
+  # The carry flag is clobbered by AND, OR, and XOR operations.
+  # Compiles to: MVI A, 0; ACI 0; MOV Rdst, A (ACI adds carry to immediate).
+  carry
+
+  # Read parity flag: parity(a) -> bool
+  # Returns true if a has even parity (an even number of 1-bits), false if odd.
+  # The 8008 computes the P (parity) flag in parallel with every ALU result.
+  # Compiles to: MOV A, Ra; ORA A (refreshes flags); conditional branch to
+  # materialise 0 or 1.
+  parity
+
+# ---------------------------------------------------------------------------
+# Skip patterns — consumed silently, no tokens emitted
+# ---------------------------------------------------------------------------
+
+skip:
+  # Whitespace is insignificant in Oct.
+  # Spaces, tabs, carriage returns, and newlines between tokens are ignored.
+  WHITESPACE    = /[ \t\r\n]+/
+
+  # Line comments start with // and extend to end of line.
+  # Block comments (/* ... */) are not supported in Oct v1.
+  # Example: // This is a comment.
+  LINE_COMMENT  = /\/\/[^\n]*/

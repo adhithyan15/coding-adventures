@@ -5,6 +5,28 @@ All notable changes to the intel4004-simulator package will be documented in thi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-04-12
+
+### Added
+
+- `Intel4004State` frozen dataclass (`src/intel4004_simulator/state.py`): immutable
+  snapshot of full CPU state (accumulator, 16 registers as tuple, carry, pc, halted,
+  RAM as nested tuples, hw_stack as tuple, stack_pointer).  Satisfies the
+  `Simulator[Intel4004State]` type parameter from `simulator-protocol`.
+- `get_state() -> Intel4004State` method on `Intel4004Simulator`: returns a frozen
+  point-in-time snapshot; all mutable lists converted to tuples.
+- `execute(program, max_steps) -> ExecutionResult[Intel4004State]` method on
+  `Intel4004Simulator`: protocol-conforming entry point that wraps the existing
+  `run()` method, returning a `simulator_protocol.ExecutionResult` with full trace.
+- `Intel4004State` added to `__all__` in `__init__.py`.
+- Added `coding-adventures-simulator-protocol` to `dependencies` in `pyproject.toml`.
+- 25 new unit tests in `tests/test_protocol_conformance.py`.
+
+### Backward Compatibility
+
+No existing method signatures were changed.  `run()`, `step()`, `load_program()`,
+and `reset()` are untouched.  All existing tests pass without modification.
+
 ## [0.2.0] - 2026-03-21
 
 ### Changed

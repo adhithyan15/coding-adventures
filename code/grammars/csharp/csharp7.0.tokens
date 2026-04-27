@@ -1,0 +1,421 @@
+# C# 7.0 (2017) — Lexical Grammar
+# @version 1
+# @csharp_version 7.0
+#
+# .NET Framework 4.7 / .NET Core 1.1 — March 2017
+#
+# C# 7.0 is a "features" release with many additions focused on two themes:
+#   1. TUPLES AND DECONSTRUCTION — making it easy to return multiple values
+#   2. PATTERN MATCHING — bringing FP-style matching to C#
+#
+# C# 7.0 also includes several productivity improvements: out variables,
+# local functions, ref returns, discards, binary literals, and digit
+# separators.
+#
+# The two LEXICAL changes in C# 7.0 (changes to the token set):
+#
+#   1. BINARY LITERALS: prefix 0b or 0B
+#
+#      0b1010          — decimal 10
+#      0B1111_0000     — decimal 240
+#      0b0001_0010     — decimal 18, grouped for readability
+#
+#      Why binary? When working with flags, bitmasks, or hardware registers,
+#      binary literals are clearer than hex:
+#        const int TimerPrescale = 0b0000_0111;  // much clearer than 0x07
+#        const int LEDs = 0b1111_0000;           // top 4 bits
+#
+#      Java added binary literals in Java 7 (2011), six years before C# 7.0.
+#
+#   2. DIGIT SEPARATORS: underscores between digits
+#
+#      1_000_000          — one million
+#      0xFF_FF_FF_FF      — max unsigned int (grouped by byte)
+#      0b1111_0000_1111   — binary with nibble grouping
+#      3.141_592_653      — pi with digit groups
+#
+#      The underscore must NOT be:
+#        - The first character of the number (0_123 is fine but _123 is not a number)
+#        - Immediately after the 0b/0x prefix (0b_1010 was illegal in 7.0-7.1,
+#          became legal in C# 7.2 — we include it here for simplicity since the
+#          8.0 grammar supports it and 7.0-7.1 was short-lived)
+#        - Immediately before or after a decimal point
+#        - Immediately before an exponent marker (e/E)
+#        - Immediately before a suffix (L, U, F, etc.)
+#
+#      Python added similar underscores in numeric literals (PEP 515, 2016).
+#      Java added them in Java 7 (2011).
+#
+# ALL NUMERIC PATTERNS are updated in C# 7.0 to accept digit separators.
+# The regex `[0-9][0-9_]*` matches a digit followed by zero or more
+# digits-or-underscores. The leading digit requirement ensures we don't
+# match a bare underscore as a number.
+#
+# Accumulated features through C# 7.0:
+#   C# 1.0: Properties, delegates, events, structs, operator overloading,
+#           indexers, attributes, preprocessor, unsafe code, namespaces,
+#           foreach, goto, unsigned types, decimal, verbatim strings
+#   C# 2.0: Generics, nullable types (T?), null coalescing (??),
+#           iterators (yield return/break), anonymous methods (delegate {}),
+#           partial types, static classes, namespace alias (::)
+#   C# 3.0: Lambda expressions (=>), LINQ query syntax, var keyword,
+#           extension methods, anonymous types, object/collection initializers,
+#           expression trees, auto-properties, partial methods
+#   C# 4.0: dynamic keyword, named arguments, optional parameters,
+#           generic covariance/contravariance (in/out on type params)
+#   C# 5.0: async/await, caller info attributes
+#   C# 6.0: String interpolation ($""), null-conditional (?. and ?[),
+#           expression-bodied members, nameof, exception filters (when),
+#           auto-property initializers, using static, index initializers
+#   C# 7.0: Binary literals (0b...), digit separators (_) in ALL numerics,
+#           tuples, pattern matching, local functions, out variables,
+#           ref returns, discards (_), throw expressions
+#
+# What C# 7.0 does NOT have (added in later versions):
+#   - No .. range operator (added in C# 8.0, 2019)
+#   - No ??= null-coalescing assignment (added in C# 8.0)
+#   - No switch expressions (added in C# 8.0)
+#   - No property patterns { Prop: value } (added in C# 8.0)
+#   - No records (added in C# 9.0, 2020)
+#   - No raw string literals """ (added in C# 11.0, 2022)
+#
+# Format:
+#   TOKEN_NAME = /regex/     — regex-based token pattern
+#   TOKEN_NAME = "literal"   — exact literal match
+#   TOKEN_NAME = /regex/ -> ALIAS  — regex token aliased to a canonical name
+#
+# Order matters: first match wins. Multi-character operators
+# must come before single-character ones (e.g., == before =).
+# Numeric literals with suffixes must come before plain integers.
+
+# ============================================================================
+# Literals
+# ============================================================================
+#
+# Identifiers in C# can contain letters, digits, and underscores. The
+# dollar sign ($) is NOT allowed in identifiers (unlike Java/JavaScript).
+# A bare underscore _ is a valid identifier. In C# 7.0, _ as a pattern
+# or discard is a NAME token that is semantically treated as "throw away."
+
+NAME           = /[a-zA-Z_][a-zA-Z0-9_]*/
+VERBATIM_NAME  = /@[a-zA-Z_][a-zA-Z0-9_]*/ -> NAME
+
+# ----------------------------------------------------------------------------
+# Numeric literals
+# ----------------------------------------------------------------------------
+#
+# C# 7.0 makes TWO changes to numeric literals:
+#
+#   1. BINARY LITERALS (0b prefix):
+#      The binary integer forms mirror the hex integer forms, with all the
+#      same suffix combinations (U, L, UL, etc.). Binary ONLY supports
+#      integer values — there are no binary floating-point literals.
+#
+#      0b1010               — int (decimal 10)
+#      0b1010L              — long
+#      0b1010U              — uint
+#      0b1010UL             — ulong
+#      0b1010LU             — ulong (alternative suffix order)
+#
+#   2. DIGIT SEPARATORS (underscore between digits):
+#      ALL numeric forms gain the ability to include _ between digits:
+#
+#      1_000_000            — decimal integer
+#      0xFF_FF              — hex
+#      0b1111_0000          — binary
+#      3.141_592            — floating point
+#      1_000_000.0f         — float
+#
+#      REGEX TRICK: We use `[0-9][0-9_]*` instead of `[0-9]+`. This:
+#        - Requires the first character to be a digit (not underscore)
+#        - Allows underscores in remaining positions
+#        - The `*` (zero or more) means a single digit with no separators works
+#
+# ORDERING: Binary forms must come BEFORE hex and decimal forms because:
+#   - 0b... starts with 0, which also starts hex (0x...) and decimal (0...).
+#   - If INT_NUMBER = /[0-9][0-9_]*/ came first, it would match "0" in "0b1010",
+#     leaving "b1010" to be tokenized as a NAME. So binary MUST come first.
+#   - Similarly HEX forms must come before decimal forms.
+#
+# All numeric variants alias to NUMBER so the parser sees a single token type.
+
+BINARY_ULONG     = /0[bB]_?[01][01_]*([uU][lL]|[lL][uU])/ -> NUMBER
+BINARY_LONG      = /0[bB]_?[01][01_]*[lL]/ -> NUMBER
+BINARY_UINT      = /0[bB]_?[01][01_]*[uU]/ -> NUMBER
+BINARY_NUMBER    = /0[bB]_?[01][01_]*/ -> NUMBER
+HEX_ULONG        = /0[xX]_?[0-9a-fA-F][0-9a-fA-F_]*([uU][lL]|[lL][uU])/ -> NUMBER
+HEX_LONG         = /0[xX]_?[0-9a-fA-F][0-9a-fA-F_]*[lL]/ -> NUMBER
+HEX_UINT         = /0[xX]_?[0-9a-fA-F][0-9a-fA-F_]*[uU]/ -> NUMBER
+HEX_NUMBER       = /0[xX]_?[0-9a-fA-F][0-9a-fA-F_]*/ -> NUMBER
+DECIMAL_FLOAT    = /[0-9][0-9_]*\.[0-9_]*([eE][+-]?[0-9][0-9_]*)?[fFdDmM]?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9][0-9_]*([eE][+-]?[0-9][0-9_]*)?[fFdDmM]?/ -> NUMBER
+SCI_NUMBER       = /[0-9][0-9_]*[eE][+-]?[0-9][0-9_]*[fFdDmM]?/ -> NUMBER
+ULONG_NUMBER     = /[0-9][0-9_]*([uU][lL]|[lL][uU])/ -> NUMBER
+LONG_NUMBER      = /[0-9][0-9_]*[lL]/ -> NUMBER
+UINT_NUMBER      = /[0-9][0-9_]*[uU]/ -> NUMBER
+FLOAT_SUFFIX     = /[0-9][0-9_]*[fFdDmM]/ -> NUMBER
+INT_NUMBER       = /[0-9][0-9_]*/ -> NUMBER
+
+# ----------------------------------------------------------------------------
+# String and character literals
+# ----------------------------------------------------------------------------
+#
+# C# 7.0 adds NO new string literal forms. The complete set remains
+# the same as C# 6.0:
+#
+#   1. Regular strings:          "hello\nworld"
+#   2. Verbatim strings:         @"C:\Users\file.txt"
+#   3. Character literals:       'a', '\n', '\u0041'
+#   4. Interpolated strings:     $"Hello {name}"        (C# 6.0)
+#   5. Interpolated verbatim:    $@"Path: {dir}\{file}" (C# 6.0)
+#
+# (Raw string literals """ are added in C# 11.0, 2022.)
+#
+# ORDER: Interpolated patterns before plain STRING/VERBATIM_STRING so that
+# $"..." is recognized as INTERPOLATED_STRING, not stray $ + STRING.
+
+INTERPOLATED_STRING   = /\$"([^"\\{]|\\.|\{\{|\}\})*"/
+INTERPOLATED_VERBATIM = /(\$@|@\$)"([^"{]|""|\{\{|\}\})*"/
+STRING                = /"([^"\\]|\\.)*"/
+VERBATIM_STRING       = /@"([^"]|"")*"/
+CHAR                  = /'([^'\\]|\\.)*'/
+
+# ============================================================================
+# Multi-character operators (must come before single-character versions)
+# ============================================================================
+#
+# C# 7.0 adds NO new operators at the lexer level.
+#
+# The new C# 7.0 features (tuples, pattern matching, local functions, etc.)
+# all reuse EXISTING tokens:
+#   - Tuples use ( , ) and => (LAMBDA) — already tokenized
+#   - Patterns use NAME, type tokens, and existing literals
+#   - Local functions use existing method syntax
+#   - Discards use _ — already a valid NAME
+#   - Ref returns/locals use the existing "ref" keyword
+#
+# The IS keyword gains new semantics (type patterns) but is already tokenized.
+# The WHEN keyword is still a NAME matched by value in the grammar.
+#
+# Cumulative operator additions through C# 7.0 (no changes from C# 6.0):
+#
+#   C# 1.0:  All basic C-style operators
+#   C# 2.0:  ?? (null coalescing), :: (namespace alias qualifier)
+#   C# 3.0:  => (lambda arrow)
+#   C# 6.0:  ?. (null-conditional member access)
+#            ?[ (null-conditional element access)
+
+NULL_COALESCE        = "??"
+NULL_CONDITIONAL_DOT     = "?."
+NULL_CONDITIONAL_BRACKET = "?["
+LEFT_SHIFT_EQUALS    = "<<="
+RIGHT_SHIFT_EQUALS   = ">>="
+LAMBDA               = "=>"
+EQUALS_EQUALS        = "=="
+NOT_EQUALS           = "!="
+LESS_EQUALS          = "<="
+GREATER_EQUALS       = ">="
+AND_AND              = "&&"
+OR_OR                = "||"
+PLUS_PLUS            = "++"
+MINUS_MINUS          = "--"
+PLUS_EQUALS          = "+="
+MINUS_EQUALS         = "-="
+STAR_EQUALS          = "*="
+SLASH_EQUALS         = "/="
+PERCENT_EQUALS       = "%="
+AMPERSAND_EQUALS     = "&="
+PIPE_EQUALS          = "|="
+CARET_EQUALS         = "^="
+LEFT_SHIFT           = "<<"
+RIGHT_SHIFT          = ">>"
+NAMESPACE_ALIAS      = "::"
+ARROW                = "->"
+
+# ============================================================================
+# Single-character operators
+# ============================================================================
+#
+# Unchanged from C# 6.0. No new single-character operators in C# 7.0.
+
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+DOT       = "."
+COLON     = ":"
+
+# ============================================================================
+# Keywords
+# ============================================================================
+#
+# C# 7.0 has 79 reserved keywords — the SAME count as C# 6.0 and C# 5.0.
+#
+# This continues the tradition of using CONTEXTUAL keywords for new features:
+#
+# C# 7.0 contextual keywords (NOT reserved, can be identifiers in other contexts):
+#
+#   _     — "discard" pattern. A lone _ is a valid NAME but in pattern
+#           context it means "ignore this value." In C# 7.0:
+#             int.TryParse(s, out _)         — discard the out parameter
+#             if (obj is _)                  — always matches (C# 8.0)
+#             switch: case _: (C# 8.0)       — discard in switch
+#           The _ is simply NAME matched by value in appropriate grammar rules.
+#
+#   when  — introduced in C# 6.0 for exception filters, C# 7.0 generalizes it
+#           to pattern guard clauses in switch:
+#             case int n when n > 0: ...
+#           Still a NAME matched by value.
+#
+#   ref   — becomes more contextual: ref can prefix both a parameter modifier
+#           AND a return type AND a local variable in C# 7.0. Still reserved.
+#
+# The fact that _ is not reserved means you can still use it as a variable name
+# (int _ = 5;) in most positions — just not where the grammar expects a discard.
+#
+# No new reserved keywords are added in C# 7.0. The complete set is the same
+# as C# 5.0:
+
+keywords:
+  abstract
+  as
+  async
+  await
+  base
+  bool
+  break
+  byte
+  case
+  catch
+  char
+  checked
+  class
+  const
+  continue
+  decimal
+  default
+  delegate
+  do
+  double
+  else
+  enum
+  event
+  explicit
+  extern
+  false
+  finally
+  fixed
+  float
+  for
+  foreach
+  goto
+  if
+  implicit
+  in
+  int
+  interface
+  internal
+  is
+  lock
+  long
+  namespace
+  new
+  null
+  object
+  operator
+  out
+  override
+  params
+  private
+  protected
+  public
+  readonly
+  ref
+  return
+  sbyte
+  sealed
+  short
+  sizeof
+  stackalloc
+  static
+  string
+  struct
+  switch
+  this
+  throw
+  true
+  try
+  typeof
+  uint
+  ulong
+  unchecked
+  unsafe
+  ushort
+  using
+  virtual
+  void
+  volatile
+  while
+
+# ============================================================================
+# Skip patterns (whitespace and comments)
+# ============================================================================
+#
+# Unchanged from C# 1.0.
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Preprocessor directives
+# ============================================================================
+#
+# Unchanged from C# 6.0.
+
+PP_IF        = /#\s*if\b[^\n]*/
+PP_ELIF      = /#\s*elif\b[^\n]*/
+PP_ELSE      = /#\s*else\b[^\n]*/
+PP_ENDIF     = /#\s*endif\b[^\n]*/
+PP_DEFINE    = /#\s*define\b[^\n]*/
+PP_UNDEF     = /#\s*undef\b[^\n]*/
+PP_REGION    = /#\s*region\b[^\n]*/
+PP_ENDREGION = /#\s*endregion\b[^\n]*/
+PP_ERROR     = /#\s*error\b[^\n]*/
+PP_WARNING   = /#\s*warning\b[^\n]*/
+PP_LINE      = /#\s*line\b[^\n]*/
+PP_PRAGMA    = /#\s*pragma\b[^\n]*/
+
+# ============================================================================
+# Error recovery tokens
+# ============================================================================
+
+errors:
+  BAD_STRING = /"[^"]*$/
+  BAD_CHAR   = /'[^']*$/
+  BAD_VERBATIM_STRING = /@"([^"]|"")*$/
+  BAD_INTERPOLATED_STRING = /\$"([^"\\{]|\\.)*$/

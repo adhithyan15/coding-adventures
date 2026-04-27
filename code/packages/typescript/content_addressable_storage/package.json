@@ -1,0 +1,25 @@
+{
+  "name": "@coding-adventures/content-addressable-storage",
+  "version": "0.1.0",
+  "description": "Generic content-addressable storage — hash-keyed blob store with SHA-1, integrity checks, and filesystem backend",
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/sha1": "file:../sha1"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

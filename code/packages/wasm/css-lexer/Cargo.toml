@@ -1,0 +1,16 @@
+[workspace]
+
+[package]
+name = "css-lexer-wasm"
+version = "0.1.0"
+edition = "2021"
+description = "WebAssembly bindings for the Rust CSS lexer"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+grammar_wasm_support = { package = "grammar-wasm-support", path = "../../rust/grammar-wasm-support" }
+language_lexer = { package = "coding-adventures-css-lexer", path = "../../rust/css-lexer" }
+wasm-bindgen = "0.2"

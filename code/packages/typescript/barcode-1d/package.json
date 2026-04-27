@@ -1,22 +1,28 @@
 {
   "name": "@coding-adventures/barcode-1d",
   "version": "0.1.0",
-  "description": "Shared linear barcode geometry and draw-scene translation",
+  "description": "End-to-end 1D barcode pipeline for TypeScript using barcode-layout-1d and native Paint VM PNG rendering",
   "type": "module",
-  "main": "src/index.ts",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "barcode_1d_native_node.node"
+  ],
   "scripts": {
-    "build": "tsc",
-    "test": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "test": "node --test tests/barcode-1d.test.js",
+    "test:coverage": "node --test tests/barcode-1d.test.js"
   },
-  "author": "Adhithya Rajasekaran",
-  "license": "MIT",
   "dependencies": {
-    "@coding-adventures/draw-instructions": "file:../draw-instructions"
+    "@coding-adventures/barcode-layout-1d": "file:../barcode-layout-1d",
+    "@coding-adventures/codabar": "file:../codabar",
+    "@coding-adventures/code128": "file:../code128",
+    "@coding-adventures/code39": "file:../code39",
+    "@coding-adventures/ean-13": "file:../ean-13",
+    "@coding-adventures/itf": "file:../itf",
+    "@coding-adventures/paint-instructions": "file:../paint-instructions",
+    "@coding-adventures/upc-a": "file:../upc-a"
   },
-  "devDependencies": {
-    "typescript": "^5.0.0",
-    "vitest": "^3.0.0",
-    "@vitest/coverage-v8": "^3.0.0"
-  }
+  "license": "MIT"
 }

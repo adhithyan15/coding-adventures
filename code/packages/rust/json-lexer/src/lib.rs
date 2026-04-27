@@ -1,189 +1,21 @@
-//! # JSON Lexer — tokenizing JSON source text.
-//!
-//! [JSON](https://www.json.org/) (JavaScript Object Notation) is a lightweight
-//! data interchange format defined by [RFC 8259](https://tools.ietf.org/html/rfc8259).
-//! It is the lingua franca of web APIs, configuration files, and data storage.
-//! JSON's simplicity — only seven value types and six structural characters —
-//! makes it an ideal first target for the grammar-driven lexer infrastructure.
-//!
-//! This crate provides a lexer (tokenizer) for JSON. It does **not** hand-write
-//! tokenization rules. Instead, it loads the `json.tokens` grammar file — a
-//! declarative description of every token in JSON — and feeds it to the generic
-//! [`GrammarLexer`] from the `lexer` crate.
-//!
-//! # Architecture
-//!
-//! The tokenization pipeline has three layers:
-//!
-//! ```text
-//! json.tokens          (grammar file on disk)
-//!        |
-//!        v
-//! grammar-tools        (parses .tokens -> TokenGrammar struct)
-//!        |
-//!        v
-//! lexer::GrammarLexer  (tokenizes source using TokenGrammar)
-//! ```
-//!
-//! This crate is the thin glue layer that wires these components together
-//! for JSON specifically. It knows where to find `json.tokens` and provides
-//! two public entry points:
-//!
-//! - [`create_json_lexer`] — returns a `GrammarLexer` for fine-grained control.
-//! - [`tokenize_json`] — convenience function that returns `Vec<Token>` directly.
-//!
-//! # Why grammar-driven instead of hand-written?
-//!
-//! A hand-written lexer for JSON would be ~200 lines of Rust with
-//! character-by-character logic for strings and numbers. The grammar-driven
-//! approach replaces all that with a 57-line declarative grammar file plus
-//! ~30 lines of Rust glue code. When the format evolves (e.g., adding
-//! comments for JSON5), you edit the grammar file — no Rust code changes needed.
-//!
-//! # No indentation, no keywords
-//!
-//! Unlike Starlark or Python, JSON has no significant whitespace and no
-//! keywords. The grammar file uses `mode: default` (implicit), so the
-//! lexer does not emit INDENT, DEDENT, or NEWLINE tokens. Whitespace is
-//! consumed silently via the `skip:` section. The literal tokens `true`,
-//! `false`, and `null` are their own token types (TRUE, FALSE, NULL) rather
-//! than being NAME tokens promoted to keywords.
+//! JSON lexer backed by compiled token grammar.
 
-use std::fs;
-
-use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
 use lexer::token::Token;
 
-// ===========================================================================
-// Grammar file location
-// ===========================================================================
+mod _grammar;
 
-/// Build the path to the `json.tokens` grammar file.
-///
-/// We use `env!("CARGO_MANIFEST_DIR")` to get the directory containing this
-/// crate's `Cargo.toml` at compile time. From there, we navigate up to the
-/// `grammars/` directory at the repository root.
-///
-/// The directory structure looks like:
-///
-/// ```text
-/// code/
-///   grammars/
-///     json.tokens           <-- this is what we want
-///   packages/
-///     rust/
-///       json-lexer/
-///         Cargo.toml        <-- CARGO_MANIFEST_DIR points here
-///         src/
-///           lib.rs          <-- we are here
-/// ```
-///
-/// So the relative path from CARGO_MANIFEST_DIR to the grammar file is:
-/// `../../../grammars/json.tokens`
-fn grammar_path() -> String {
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    format!("{manifest_dir}/../../../grammars/json.tokens")
-}
-
-// ===========================================================================
-// Public API
-// ===========================================================================
-
-/// Create a `GrammarLexer` configured for JSON source text.
-///
-/// This function:
-/// 1. Reads the `json.tokens` grammar file from disk.
-/// 2. Parses it into a `TokenGrammar` using `grammar-tools`.
-/// 3. Constructs a `GrammarLexer` with the grammar and the given source.
-///
-/// The returned lexer is ready to call `.tokenize()` on. Use this when you
-/// need access to the lexer object itself (e.g., for incremental tokenization
-/// or custom error handling).
-///
-/// # Panics
-///
-/// Panics if the grammar file cannot be read or parsed. This should never
-/// happen in practice — the grammar file is checked into the repository and
-/// validated by the grammar-tools test suite. A panic here indicates a
-/// broken build or missing file.
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_json_lexer::create_json_lexer;
-///
-/// let mut lexer = create_json_lexer("{\"key\": 42}");
-/// let tokens = lexer.tokenize().expect("tokenization failed");
-/// for token in &tokens {
-///     println!("{}", token);
-/// }
-/// ```
 pub fn create_json_lexer(source: &str) -> GrammarLexer<'_> {
-    // Step 1: Read the grammar file from disk.
-    //
-    // We read the file at runtime (not compile time) because the grammar file
-    // may be updated independently of this crate. This also avoids bloating
-    // the binary with embedded grammar text.
-    let grammar_text = fs::read_to_string(grammar_path())
-        .unwrap_or_else(|e| panic!("Failed to read json.tokens: {e}"));
-
-    // Step 2: Parse the grammar text into a structured TokenGrammar.
-    //
-    // The TokenGrammar contains:
-    //   - Token definitions (patterns, names)
-    //   - Skip patterns (whitespace)
-    //   - No keywords (JSON has none)
-    //   - No reserved keywords
-    //   - Mode: default (no indentation tracking)
-    let grammar = parse_token_grammar(&grammar_text)
-        .unwrap_or_else(|e| panic!("Failed to parse json.tokens: {e}"));
-
-    // Step 3: Create and return the lexer.
-    //
-    // The GrammarLexer compiles all token patterns into anchored regexes
-    // and is ready to tokenize the source string.
+    let grammar = _grammar::token_grammar();
     GrammarLexer::new(source, &grammar)
 }
 
-/// Tokenize JSON source text into a vector of tokens.
-///
-/// This is the most convenient entry point — it handles grammar loading,
-/// lexer creation, and tokenization in one call. The returned vector always
-/// ends with an `EOF` token.
-///
-/// # Panics
-///
-/// Panics if the grammar file cannot be read/parsed, or if the source
-/// contains an unexpected character (via `LexerError` propagation).
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_json_lexer::tokenize_json;
-///
-/// let tokens = tokenize_json("{\"name\": \"Alice\", \"age\": 30}");
-/// for token in &tokens {
-///     println!("{:?} {:?}", token.type_, token.value);
-/// }
-/// ```
 pub fn tokenize_json(source: &str) -> Vec<Token> {
-    // Create a fresh lexer for this source text.
-    let mut json_lexer = create_json_lexer(source);
-
-    // Tokenize and unwrap — any LexerError becomes a panic.
-    //
-    // In a production tool, you would want to propagate the error
-    // via Result. For this educational codebase, panicking with a clear
-    // message is sufficient and keeps the API simple.
-    json_lexer
+    let mut lexer = create_json_lexer(source);
+    lexer
         .tokenize()
         .unwrap_or_else(|e| panic!("JSON tokenization failed: {e}"))
 }
-
-// ===========================================================================
-// Tests
-// ===========================================================================
 
 #[cfg(test)]
 mod tests {
@@ -534,3 +366,4 @@ mod tests {
         assert_eq!(pairs_arr[1].0, TokenType::RBracket);
     }
 }
+

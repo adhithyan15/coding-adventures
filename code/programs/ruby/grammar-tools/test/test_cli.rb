@@ -115,3 +115,33 @@ class TestDispatch < Minitest::Test
     assert_equal 0, dispatch("validate-grammar", [grammar.to_s])
   end
 end
+
+class TestGenerateCompiledGrammarsDispatch < Minitest::Test
+  def setup
+    @original_generator = GrammarToolsProgram::CompiledGrammarGenerator
+
+    fake_generator = Class.new do
+      def initialize(_root); end
+
+      def run
+        17
+      end
+    end
+
+    GrammarToolsProgram.send(:remove_const, :CompiledGrammarGenerator)
+    GrammarToolsProgram.const_set(:CompiledGrammarGenerator, fake_generator)
+  end
+
+  def teardown
+    GrammarToolsProgram.send(:remove_const, :CompiledGrammarGenerator)
+    GrammarToolsProgram.const_set(:CompiledGrammarGenerator, @original_generator)
+  end
+
+  def test_dispatches_to_generator
+    assert_equal 17, dispatch("generate-compiled-grammars", [])
+  end
+
+  def test_rejects_extra_files
+    assert_equal 2, dispatch("generate-compiled-grammars", ["unexpected"])
+  end
+end

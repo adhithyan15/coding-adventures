@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-nib-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "Nib lexer — tokenizes Nib source text using the grammar-driven Rust lexer."
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

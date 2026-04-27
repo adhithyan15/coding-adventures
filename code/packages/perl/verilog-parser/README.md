@@ -2,6 +2,12 @@
 
 Hand-written recursive-descent Verilog parser for the coding-adventures monorepo.
 
+The parser core is still hand-written for historical reasons: this package was
+implemented before the generic grammar-driven Perl parser stack landed, and it
+has not been migrated over yet. It now accepts versioned lexer frontends
+(`1995`, `2001`, `2005`) so the public API stays aligned with the shared HDL
+model.
+
 ## What it does
 
 This module parses the synthesizable subset of Verilog (IEEE 1364-2005) into an

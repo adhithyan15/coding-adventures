@@ -1,0 +1,1 @@
+mkdir -p .dotnet .dotnet/tmp .artifacts && TMPDIR="$PWD/.dotnet/tmp" HOME="$PWD/.dotnet" DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1 DOTNET_CLI_HOME="$PWD/.dotnet" dotnet test tests/CodingAdventures.PixelContainer.Tests/CodingAdventures.PixelContainer.Tests.fsproj --disable-build-servers --artifacts-path .artifacts /p:CollectCoverage=true /p:Threshold=80 /p:ThresholdType=line

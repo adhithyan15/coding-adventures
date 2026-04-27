@@ -1,0 +1,2 @@
+REM prereqs: ../compiler-ir ../compiler-source-map ../grammar-tools ../lexer ../virtual-machine ../brainfuck ../brainfuck-ir-compiler ../wasm-leb128 ../wasm-types ../wasm-opcodes ../wasm-module-parser ../wasm-validator ../wasm-execution ../wasm-runtime ../wasm-module-encoder ../ir-to-wasm-compiler ../ir-to-wasm-validator
+echo Perl testing is not supported on Windows - skipping

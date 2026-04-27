@@ -1,0 +1,1318 @@
+# C# 2.0 (2005) — Parser Grammar
+# @version 1
+# @csharp_version 2.0
+#
+# The C# Language Specification, ECMA-334 3rd Edition — 2005
+# Also: ISO/IEC 23270:2006
+#
+# This grammar defines the syntactic structure of C# 2.0, the second major
+# release of C# (.NET Framework 2.0, November 2005). C# 2.0 adds generics,
+# nullable types, iterators, anonymous methods, and partial types to the
+# language defined in C# 1.0.
+#
+# C# 2.0 is a MAJOR evolution. The additions are not just syntactic sugar —
+# they required deep changes to the CLR (Common Language Runtime) itself.
+# Generics in particular required new IL (intermediate language) instructions,
+# new metadata formats, and a new JIT compilation strategy. This is in stark
+# contrast to Java's generics (added in Java 5, 2004), which are purely a
+# compiler feature erased at runtime.
+#
+# Summary of grammar changes from C# 1.0:
+#
+#   ADDED:
+#   - Generic type declarations: class Foo<T>, struct Bar<T, U>
+#   - Generic method declarations: void Process<T>(T item)
+#   - Type arguments: List<int>, Dictionary<string, int>
+#   - Type parameter constraints: where T : class, IComparable
+#   - Nullable types: int?, bool?, DateTime?
+#   - Null coalescing: a ?? b
+#   - Iterators: yield return expr; yield break;
+#   - Anonymous methods: delegate(int x) { return x * 2; }
+#   - Partial types: partial class, partial struct, partial interface
+#   - Static classes: static class Utility { }
+#   - Namespace alias qualifier: global::System.String, N::Type
+#   - Property accessor modifiers: public int Foo { get; private set; }
+#
+#   NOT YET ADDED (comes later):
+#   - Lambda expressions (C# 3.0)
+#   - LINQ query syntax (C# 3.0)
+#   - var keyword (C# 3.0)
+#   - Extension methods (C# 3.0)
+#   - Anonymous types new { } (C# 3.0)
+#   - Object/collection initializers (C# 3.0)
+#   - dynamic keyword (C# 4.0)
+#   - Named/optional arguments (C# 4.0)
+#   - async/await (C# 5.0)
+#
+# Format:
+#   rule_name = definition ;
+#
+# UPPERCASE names reference tokens from csharp2.0.tokens.
+# lowercase names reference other grammar rules.
+#
+# Notation:
+#   |       alternation (ordered choice — PEG semantics, first match wins)
+#   { x }   zero or more repetitions
+#   [ x ]   optional
+#   ( x )   grouping
+#   "lit"   match a keyword (lexer emits KEYWORD token with this value)
+#
+# IMPORTANT: Context keywords like `partial`, `where`, `global`, and `yield`
+# are emitted as NAME tokens by the lexer. The grammar matches them by value
+# using quoted strings, but they are NAME tokens, not KEYWORD tokens. This
+# means the parser must check the token's text value when matching these.
+
+# ============================================================================
+# Compilation Unit (Entry Point)
+# ============================================================================
+#
+# Unchanged from C# 1.0. A C# source file is a compilation unit consisting
+# of extern alias directives, using directives, global attributes, and
+# namespace member declarations.
+
+compilation_unit = { extern_alias_directive }
+                   { using_directive }
+                   { global_attribute_section }
+                   { namespace_member_declaration } ;
+
+# ============================================================================
+# Extern Alias Directives
+# ============================================================================
+#
+# Unchanged from C# 1.0.
+#
+#   extern alias GridV1;
+#   extern alias GridV2;
+
+extern_alias_directive = "extern" NAME SEMICOLON ;
+
+# ============================================================================
+# Using Directives
+# ============================================================================
+#
+# Extended in C# 2.0 to support the namespace alias qualifier (::) in
+# qualified names. The using directive itself is syntactically unchanged,
+# but the qualified names it references can now include generic types:
+#
+#   using System.Collections.Generic;          // import generic collections
+#   using IntList = System.Collections.Generic.List<int>;  // generic alias
+#
+# The alias form now supports generic type arguments in the target name.
+
+using_directive = "using" qualified_name SEMICOLON
+               | "using" NAME EQUALS namespace_or_type_name SEMICOLON ;
+
+# ============================================================================
+# Names and Type References
+# ============================================================================
+#
+# C# 2.0 significantly complicates name resolution because of generics and
+# the namespace alias qualifier (::).
+#
+# Simple names: Console, List, T
+# Generic names: List<int>, Dictionary<string, List<int>>
+# Qualified names: System.Console, System.Collections.Generic.List<int>
+# Alias-qualified: global::System.String, MyAlias::MyType
+#
+# The namespace alias qualifier (::) resolves ambiguity when a namespace
+# and a type have the same name. The special alias `global` refers to
+# the global namespace:
+#
+#   global::System.Console.WriteLine("hello");
+#
+# This is needed when a local namespace shadows System:
+#   namespace MyApp {
+#       class System { }  // shadows the System namespace!
+#       void Foo() {
+#           global::System.Console.WriteLine("works!");
+#       }
+#   }
+
+qualified_name = NAME { DOT NAME } ;
+
+# A namespace-or-type name supports generic type arguments and the :: qualifier.
+# This is the workhorse rule for type references throughout the grammar.
+
+namespace_or_type_name = namespace_or_type_part { DOT namespace_or_type_part } ;
+
+namespace_or_type_part = NAME [ type_argument_list ]
+                       | NAME COLON_COLON NAME [ type_argument_list ] ;
+
+# ============================================================================
+# Generic Type Parameters and Arguments
+# ============================================================================
+#
+# Generics are C# 2.0's most important addition. They provide type-safe
+# parameterized types without the performance overhead of boxing.
+#
+# Type parameters appear in DECLARATIONS (defining a generic type or method):
+#   class List<T> { }
+#   class Dictionary<TKey, TValue> { }
+#   T Find<T>(Predicate<T> match) { }
+#
+# Type arguments appear in USES (instantiating a generic type):
+#   List<int> numbers = new List<int>();
+#   Dictionary<string, int> ages = new Dictionary<string, int>();
+#
+# The angle brackets <> create a lexer ambiguity with the less-than and
+# greater-than operators. The parser must use context to disambiguate:
+#   F(a < b, c > d)     — two arguments to F: (a < b) and (c > d)
+#   F(a<b, c>(d))       — one argument to F: call generic method a<b,c>(d)
+#
+# The C# specification resolves this with a context-sensitive rule:
+# if < follows a name and could start a type argument list, try to parse
+# it as type arguments first.
+
+type_parameter_list = LESS_THAN type_parameter { COMMA type_parameter } GREATER_THAN ;
+
+type_parameter = { attribute_section } NAME ;
+
+type_argument_list = LESS_THAN type { COMMA type } GREATER_THAN ;
+
+# ============================================================================
+# Type Parameter Constraints
+# ============================================================================
+#
+# Constraints restrict what types can be used as type arguments. They use
+# the context keyword `where`:
+#
+#   class SortedList<T> where T : IComparable<T> { }
+#
+#   class Repository<T> where T : class, IEntity, new() { }
+#
+#   T Max<T>(T a, T b) where T : IComparable<T> {
+#       return a.CompareTo(b) >= 0 ? a : b;
+#   }
+#
+# Constraint types:
+#   where T : class       — T must be a reference type
+#   where T : struct      — T must be a value type (non-nullable)
+#   where T : new()       — T must have a parameterless constructor
+#   where T : BaseClass   — T must derive from BaseClass
+#   where T : IInterface  — T must implement IInterface
+#   where T : U           — T must derive from type parameter U
+#
+# Multiple constraints are separated by commas:
+#   where T : class, IComparable, IDisposable, new()
+#
+# Multiple type parameters each get their own where clause:
+#   class Dict<K, V> where K : IComparable<K> where V : new() { }
+#
+# Constraints have no Java equivalent. Java uses `extends` in type bounds:
+#   Java: <T extends Comparable<T>>
+#   C#:   where T : IComparable<T>
+#
+# But C# constraints are more expressive: `struct`, `class`, and `new()`
+# constraints have no Java equivalent.
+
+type_parameter_constraints_clauses = type_parameter_constraints_clause
+                                     { type_parameter_constraints_clause } ;
+
+type_parameter_constraints_clause = "where" NAME COLON type_parameter_constraints ;
+
+type_parameter_constraints = primary_constraint [ COMMA secondary_constraints ] [ COMMA constructor_constraint ]
+                           | secondary_constraints [ COMMA constructor_constraint ]
+                           | constructor_constraint ;
+
+primary_constraint = "class"
+                   | "struct"
+                   | namespace_or_type_name ;
+
+secondary_constraints = namespace_or_type_name { COMMA namespace_or_type_name } ;
+
+constructor_constraint = "new" LPAREN RPAREN ;
+
+# ============================================================================
+# Global Attributes
+# ============================================================================
+#
+# Unchanged from C# 1.0.
+
+global_attribute_section = LBRACKET global_attribute_target COLON attribute_list [ COMMA ] RBRACKET ;
+
+global_attribute_target = "assembly"
+                        | "module" ;
+
+# ============================================================================
+# Namespace Declarations
+# ============================================================================
+#
+# Unchanged from C# 1.0. Namespaces still use { } blocks.
+
+namespace_declaration = "namespace" qualified_name LBRACE
+                        { extern_alias_directive }
+                        { using_directive }
+                        { namespace_member_declaration }
+                        RBRACE [ SEMICOLON ] ;
+
+# ============================================================================
+# Namespace Members
+# ============================================================================
+
+namespace_member_declaration = namespace_declaration
+                             | type_declaration ;
+
+type_declaration = class_declaration
+                 | struct_declaration
+                 | interface_declaration
+                 | enum_declaration
+                 | delegate_declaration
+                 | SEMICOLON ;
+
+# ============================================================================
+# Attributes
+# ============================================================================
+#
+# Unchanged from C# 1.0 (attribute syntax is the same; generic types can
+# now appear in attribute arguments, but the grammar structure is the same).
+
+attribute_section = LBRACKET [ attribute_target COLON ] attribute_list [ COMMA ] RBRACKET ;
+
+attribute_target = "field"
+                 | "event"
+                 | "method"
+                 | "param"
+                 | "property"
+                 | "return"
+                 | "type" ;
+
+attribute_list = attribute { COMMA attribute } ;
+
+attribute = namespace_or_type_name [ LPAREN [ attribute_arguments ] RPAREN ] ;
+
+attribute_arguments = attribute_argument { COMMA attribute_argument } ;
+
+attribute_argument = [ NAME EQUALS ] expression ;
+
+# ============================================================================
+# Class Declarations
+# ============================================================================
+#
+# C# 2.0 extends class declarations with:
+#
+#   1. Optional type parameters: class List<T> { }
+#   2. Optional type parameter constraints: where T : IComparable
+#   3. The `partial` modifier (context keyword)
+#   4. The `static` modifier for classes (not just members)
+#
+# Partial classes allow a single class to be split across multiple files.
+# This was introduced primarily for Windows Forms designer support — the
+# designer generates code in one file, the developer writes code in another:
+#
+#   // Form1.Designer.cs (auto-generated)
+#   partial class Form1 {
+#       private Button button1;
+#       private void InitializeComponent() { ... }
+#   }
+#
+#   // Form1.cs (developer-written)
+#   partial class Form1 {
+#       private void button1_Click(object sender, EventArgs e) { ... }
+#   }
+#
+# Static classes cannot be instantiated and can only contain static members.
+# They replace the Java pattern of utility classes with private constructors:
+#
+#   static class Math {
+#       public static double Sqrt(double x) { ... }
+#       // Cannot do: new Math() — compile error
+#   }
+#
+# The base list now supports generic types:
+#   class SortedList<T> : IList<T>, IEnumerable<T> where T : IComparable<T> { }
+
+class_declaration = { attribute_section } { class_modifier } "class" NAME
+                    [ type_parameter_list ]
+                    [ COLON class_base_list ]
+                    [ type_parameter_constraints_clauses ]
+                    class_body [ SEMICOLON ] ;
+
+class_modifier = "public"
+               | "protected"
+               | "internal"
+               | "private"
+               | "new"
+               | "abstract"
+               | "sealed"
+               | "static"
+               | "partial" ;
+
+class_base_list = namespace_or_type_name { COMMA namespace_or_type_name } ;
+
+class_body = LBRACE { class_member_declaration } RBRACE ;
+
+# ============================================================================
+# Class Member Declarations
+# ============================================================================
+#
+# Same member kinds as C# 1.0. Methods and nested types can now be generic.
+# Properties can now have different access modifiers on get/set.
+
+class_member_declaration = constant_declaration
+                         | field_declaration
+                         | method_declaration
+                         | property_declaration
+                         | event_declaration
+                         | indexer_declaration
+                         | operator_declaration
+                         | conversion_operator_declaration
+                         | constructor_declaration
+                         | destructor_declaration
+                         | static_constructor_declaration
+                         | type_declaration
+                         | SEMICOLON ;
+
+# ============================================================================
+# Constant Declarations
+# ============================================================================
+#
+# Unchanged from C# 1.0 (but the type can now be a generic type).
+
+constant_declaration = { attribute_section } { constant_modifier } "const" type
+                       constant_declarators SEMICOLON ;
+
+constant_modifier = "public"
+                  | "protected"
+                  | "internal"
+                  | "private"
+                  | "new" ;
+
+constant_declarators = constant_declarator { COMMA constant_declarator } ;
+
+constant_declarator = NAME EQUALS expression ;
+
+# ============================================================================
+# Field Declarations
+# ============================================================================
+#
+# Unchanged structurally from C# 1.0 (but the type can now be generic or
+# nullable).
+
+field_declaration = { attribute_section } { field_modifier } type
+                    variable_declarators SEMICOLON ;
+
+field_modifier = "public"
+               | "protected"
+               | "internal"
+               | "private"
+               | "new"
+               | "static"
+               | "readonly"
+               | "volatile" ;
+
+variable_declarators = variable_declarator { COMMA variable_declarator } ;
+
+variable_declarator = NAME [ EQUALS variable_initializer ] ;
+
+variable_initializer = expression
+                     | array_initializer ;
+
+array_initializer = LBRACE [ variable_initializer { COMMA variable_initializer } ] [ COMMA ] RBRACE ;
+
+# ============================================================================
+# Method Declarations
+# ============================================================================
+#
+# C# 2.0 adds type parameters and constraints to methods, enabling generic
+# methods:
+#
+#   public T Max<T>(T a, T b) where T : IComparable<T> {
+#       return a.CompareTo(b) >= 0 ? a : b;
+#   }
+#
+#   public static void Swap<T>(ref T a, ref T b) {
+#       T temp = a; a = b; b = temp;
+#   }
+#
+# Generic methods can infer their type arguments from the call site:
+#   int max = Max(3, 5);              // T inferred as int
+#   Swap(ref x, ref y);              // T inferred from x and y
+#
+# The return type and parameter types can use type parameters.
+# The qualified_name in the method declaration now uses namespace_or_type_name
+# to support explicit interface implementation with generic interfaces:
+#   void IEnumerable<T>.GetEnumerator() { }
+
+method_declaration = { attribute_section } { method_modifier } return_type
+                     namespace_or_type_name [ type_parameter_list ]
+                     LPAREN [ formal_parameter_list ] RPAREN
+                     [ type_parameter_constraints_clauses ]
+                     method_body ;
+
+method_modifier = "public"
+                | "protected"
+                | "internal"
+                | "private"
+                | "new"
+                | "static"
+                | "virtual"
+                | "sealed"
+                | "override"
+                | "abstract"
+                | "extern" ;
+
+return_type = "void"
+            | type ;
+
+method_body = block
+            | SEMICOLON ;
+
+# ============================================================================
+# Formal Parameters
+# ============================================================================
+#
+# Unchanged structurally from C# 1.0 (but parameter types can now be generic
+# or nullable).
+
+formal_parameter_list = fixed_parameters [ COMMA parameter_array ]
+                      | parameter_array ;
+
+fixed_parameters = fixed_parameter { COMMA fixed_parameter } ;
+
+fixed_parameter = { attribute_section } [ parameter_modifier ] type NAME ;
+
+parameter_modifier = "ref"
+                   | "out" ;
+
+parameter_array = { attribute_section } "params" type NAME ;
+
+# ============================================================================
+# Property Declarations
+# ============================================================================
+#
+# C# 2.0 does NOT change the property declaration syntax itself, but
+# accessor modifiers can now differ from the property's declared access.
+# This was technically possible in C# 1.0 grammar but only became a
+# sanctioned language feature in C# 2.0:
+#
+#   public string Name {
+#       get { return _name; }
+#       private set { _name = value; }  // setter is private!
+#   }
+#
+# This pattern enables read-only public properties with private setters,
+# which became the dominant C# property pattern for encapsulated data.
+
+property_declaration = { attribute_section } { property_modifier } type
+                       namespace_or_type_name LBRACE accessor_declarations RBRACE ;
+
+property_modifier = "public"
+                  | "protected"
+                  | "internal"
+                  | "private"
+                  | "new"
+                  | "static"
+                  | "virtual"
+                  | "sealed"
+                  | "override"
+                  | "abstract"
+                  | "extern" ;
+
+accessor_declarations = get_accessor_declaration [ set_accessor_declaration ]
+                      | set_accessor_declaration [ get_accessor_declaration ] ;
+
+get_accessor_declaration = { attribute_section } [ accessor_modifier ] "get"
+                           ( block | SEMICOLON ) ;
+
+set_accessor_declaration = { attribute_section } [ accessor_modifier ] "set"
+                           ( block | SEMICOLON ) ;
+
+accessor_modifier = "protected"
+                  | "internal"
+                  | "private"
+                  | "protected" "internal"
+                  | "internal" "protected" ;
+
+# ============================================================================
+# Event Declarations
+# ============================================================================
+#
+# Unchanged from C# 1.0.
+
+event_declaration = { attribute_section } { event_modifier } "event" type
+                    ( variable_declarators SEMICOLON
+                    | namespace_or_type_name LBRACE event_accessor_declarations RBRACE ) ;
+
+event_modifier = "public"
+               | "protected"
+               | "internal"
+               | "private"
+               | "new"
+               | "static"
+               | "virtual"
+               | "sealed"
+               | "override"
+               | "abstract"
+               | "extern" ;
+
+event_accessor_declarations = add_accessor_declaration remove_accessor_declaration
+                            | remove_accessor_declaration add_accessor_declaration ;
+
+add_accessor_declaration = { attribute_section } "add" block ;
+
+remove_accessor_declaration = { attribute_section } "remove" block ;
+
+# ============================================================================
+# Indexer Declarations
+# ============================================================================
+#
+# Unchanged structurally from C# 1.0 (types can now be generic).
+
+indexer_declaration = { attribute_section } { indexer_modifier } type "this"
+                      LBRACKET formal_parameter_list RBRACKET
+                      LBRACE accessor_declarations RBRACE ;
+
+indexer_modifier = "public"
+                 | "protected"
+                 | "internal"
+                 | "private"
+                 | "new"
+                 | "virtual"
+                 | "sealed"
+                 | "override"
+                 | "abstract"
+                 | "extern" ;
+
+# ============================================================================
+# Operator Declarations
+# ============================================================================
+#
+# Unchanged from C# 1.0.
+
+operator_declaration = { attribute_section } operator_modifiers type
+                       "operator" overloadable_operator
+                       LPAREN type NAME [ COMMA type NAME ] RPAREN
+                       method_body ;
+
+operator_modifiers = "public" "static" [ "extern" ] ;
+
+overloadable_operator = PLUS
+                      | MINUS
+                      | BANG
+                      | TILDE
+                      | PLUS_PLUS
+                      | MINUS_MINUS
+                      | "true"
+                      | "false"
+                      | STAR
+                      | SLASH
+                      | PERCENT
+                      | AMPERSAND
+                      | PIPE
+                      | CARET
+                      | LEFT_SHIFT
+                      | RIGHT_SHIFT
+                      | EQUALS_EQUALS
+                      | NOT_EQUALS
+                      | LESS_THAN
+                      | GREATER_THAN
+                      | LESS_EQUALS
+                      | GREATER_EQUALS ;
+
+# ============================================================================
+# Conversion Operator Declarations
+# ============================================================================
+#
+# Unchanged from C# 1.0.
+
+conversion_operator_declaration = { attribute_section } operator_modifiers
+                                  ( "implicit" | "explicit" ) "operator" type
+                                  LPAREN type NAME RPAREN method_body ;
+
+# ============================================================================
+# Constructor Declarations
+# ============================================================================
+#
+# Unchanged from C# 1.0.
+
+constructor_declaration = { attribute_section } { constructor_modifier } NAME
+                          LPAREN [ formal_parameter_list ] RPAREN
+                          [ constructor_initializer ] method_body ;
+
+constructor_modifier = "public"
+                     | "protected"
+                     | "internal"
+                     | "private"
+                     | "extern" ;
+
+constructor_initializer = COLON "base" LPAREN [ argument_list ] RPAREN
+                        | COLON "this" LPAREN [ argument_list ] RPAREN ;
+
+# ============================================================================
+# Destructor Declarations
+# ============================================================================
+#
+# Unchanged from C# 1.0.
+
+destructor_declaration = { attribute_section } [ "extern" ] TILDE NAME
+                         LPAREN RPAREN method_body ;
+
+# ============================================================================
+# Static Constructor Declarations
+# ============================================================================
+#
+# Unchanged from C# 1.0.
+
+static_constructor_declaration = { attribute_section } static_constructor_modifiers
+                                 NAME LPAREN RPAREN method_body ;
+
+static_constructor_modifiers = "static" [ "extern" ]
+                             | "extern" "static" ;
+
+# ============================================================================
+# Struct Declarations
+# ============================================================================
+#
+# C# 2.0 extends structs with type parameters, constraints, and the partial
+# modifier, mirroring the changes to class declarations:
+#
+#   public partial struct Point<T> where T : struct {
+#       public T X, Y;
+#   }
+#
+# Structs can now implement generic interfaces:
+#   struct Pair<T> : IEquatable<Pair<T>> { }
+
+struct_declaration = { attribute_section } { struct_modifier } "struct" NAME
+                     [ type_parameter_list ]
+                     [ COLON interface_type_list ]
+                     [ type_parameter_constraints_clauses ]
+                     struct_body [ SEMICOLON ] ;
+
+struct_modifier = "public"
+               | "protected"
+               | "internal"
+               | "private"
+               | "new"
+               | "partial" ;
+
+interface_type_list = namespace_or_type_name { COMMA namespace_or_type_name } ;
+
+struct_body = LBRACE { struct_member_declaration } RBRACE ;
+
+struct_member_declaration = constant_declaration
+                          | field_declaration
+                          | method_declaration
+                          | property_declaration
+                          | event_declaration
+                          | indexer_declaration
+                          | operator_declaration
+                          | conversion_operator_declaration
+                          | constructor_declaration
+                          | static_constructor_declaration
+                          | type_declaration
+                          | SEMICOLON ;
+
+# ============================================================================
+# Interface Declarations
+# ============================================================================
+#
+# C# 2.0 extends interfaces with type parameters, constraints, and the
+# partial modifier:
+#
+#   public interface IRepository<T> where T : class {
+#       T FindById(int id);
+#       IList<T> FindAll();
+#       void Save(T entity);
+#   }
+#
+#   public partial interface IEnumerable<T> : IEnumerable {
+#       IEnumerator<T> GetEnumerator();
+#   }
+#
+# Generic interfaces are the foundation of the System.Collections.Generic
+# namespace, which replaces the untyped System.Collections from C# 1.0:
+#   IList<T>, IDictionary<TKey, TValue>, IEnumerable<T>, IComparer<T>
+
+interface_declaration = { attribute_section } { interface_modifier } "interface" NAME
+                        [ type_parameter_list ]
+                        [ COLON interface_type_list ]
+                        [ type_parameter_constraints_clauses ]
+                        interface_body [ SEMICOLON ] ;
+
+interface_modifier = "public"
+                   | "protected"
+                   | "internal"
+                   | "private"
+                   | "new"
+                   | "partial" ;
+
+interface_body = LBRACE { interface_member_declaration } RBRACE ;
+
+interface_member_declaration = interface_method_declaration
+                             | interface_property_declaration
+                             | interface_event_declaration
+                             | interface_indexer_declaration
+                             | SEMICOLON ;
+
+# Interface methods can now have type parameters and constraints.
+
+interface_method_declaration = { attribute_section } [ "new" ] return_type NAME
+                              [ type_parameter_list ]
+                              LPAREN [ formal_parameter_list ] RPAREN
+                              [ type_parameter_constraints_clauses ]
+                              SEMICOLON ;
+
+interface_property_declaration = { attribute_section } [ "new" ] type NAME
+                                LBRACE interface_accessors RBRACE ;
+
+interface_accessors = "get" SEMICOLON [ "set" SEMICOLON ]
+                    | "set" SEMICOLON [ "get" SEMICOLON ] ;
+
+interface_event_declaration = { attribute_section } [ "new" ] "event" type NAME SEMICOLON ;
+
+interface_indexer_declaration = { attribute_section } [ "new" ] type "this"
+                               LBRACKET formal_parameter_list RBRACKET
+                               LBRACE interface_accessors RBRACE ;
+
+# ============================================================================
+# Enum Declarations
+# ============================================================================
+#
+# Unchanged from C# 1.0. Enums cannot be generic.
+
+enum_declaration = { attribute_section } { enum_modifier } "enum" NAME
+                   [ COLON integral_type ]
+                   enum_body [ SEMICOLON ] ;
+
+enum_modifier = "public"
+              | "protected"
+              | "internal"
+              | "private"
+              | "new" ;
+
+integral_type = "byte"
+              | "sbyte"
+              | "short"
+              | "ushort"
+              | "int"
+              | "uint"
+              | "long"
+              | "ulong" ;
+
+enum_body = LBRACE [ enum_member_declarations ] RBRACE ;
+
+enum_member_declarations = enum_member_declaration
+                           { COMMA enum_member_declaration } [ COMMA ] ;
+
+enum_member_declaration = { attribute_section } NAME [ EQUALS expression ] ;
+
+# ============================================================================
+# Delegate Declarations
+# ============================================================================
+#
+# C# 2.0 extends delegates with type parameters and constraints, enabling
+# generic delegate types:
+#
+#   public delegate int Comparison<T>(T x, T y);
+#   public delegate bool Predicate<T>(T item);
+#   public delegate TResult Func<T, TResult>(T arg);
+#   public delegate void Action<T>(T obj);
+#
+# These generic delegate types become the foundation for the functional
+# programming patterns that arrive in C# 3.0 (lambda expressions, LINQ).
+# The Func<> and Action<> families defined in .NET 2.0 are still the
+# standard delegate types used throughout modern C#.
+
+delegate_declaration = { attribute_section } { delegate_modifier } "delegate"
+                       return_type NAME [ type_parameter_list ]
+                       LPAREN [ formal_parameter_list ] RPAREN
+                       [ type_parameter_constraints_clauses ]
+                       SEMICOLON ;
+
+delegate_modifier = "public"
+                  | "protected"
+                  | "internal"
+                  | "private"
+                  | "new" ;
+
+# ============================================================================
+# Type System
+# ============================================================================
+#
+# C# 2.0 significantly extends the type system with:
+#
+#   1. Generic types: List<int>, Dictionary<string, int>, T
+#   2. Nullable value types: int?, bool?, DateTime?
+#
+# Nullable types allow value types to hold null. This is important because
+# C# 1.0 had no way to represent "no value" for value types:
+#
+#   int? age = null;              // nullable int
+#   bool? isDone = null;          // nullable bool (three-state: true/false/null)
+#   DateTime? birthday = null;    // nullable DateTime
+#
+# The T? syntax is shorthand for Nullable<T>, a generic struct:
+#   int? is the same as Nullable<int>
+#   bool? is the same as Nullable<bool>
+#
+# Nullable types have two properties:
+#   HasValue — returns true if the value is not null
+#   Value — returns the value (throws if null)
+#
+# The null coalescing operator (??) works naturally with nullable types:
+#   int value = nullableInt ?? 0;   // 0 if null
+#
+# Reference types are already nullable in C#. The T? syntax is specifically
+# for value types. Reference type nullability annotations come in C# 8.0.
+
+type = non_array_type { rank_specifier }
+     | "void" STAR ;
+
+non_array_type = value_type
+               | reference_type ;
+
+value_type = primitive_type [ QUESTION ]
+           | namespace_or_type_name [ QUESTION ] ;
+
+reference_type = namespace_or_type_name
+               | "object"
+               | "string" ;
+
+primitive_type = numeric_type
+               | "bool" ;
+
+numeric_type = integral_type
+             | floating_point_type
+             | "decimal" ;
+
+floating_point_type = "float"
+                    | "double" ;
+
+rank_specifier = LBRACKET { COMMA } RBRACKET ;
+
+pointer_type = type STAR ;
+
+# ============================================================================
+# Statements
+# ============================================================================
+#
+# C# 2.0 adds TWO new statement forms:
+#
+#   1. yield return expression;  — produce a value in an iterator
+#   2. yield break;              — end iteration
+#
+# Iterators are one of C# 2.0's most elegant features. They allow you to
+# write methods that lazily produce sequences of values using `yield return`,
+# without manually implementing the IEnumerator interface:
+#
+#   IEnumerable<int> Fibonacci() {
+#       int a = 0, b = 1;
+#       while (true) {
+#           yield return a;
+#           int temp = a;
+#           a = b;
+#           b = temp + b;
+#       }
+#   }
+#
+# The compiler transforms iterator methods into state machines that implement
+# IEnumerator<T>. Each `yield return` becomes a state transition, and the
+# method is suspended between calls to MoveNext().
+#
+# This is profoundly different from Java, which had no equivalent until
+# Java 8's Streams (2014), and even then, Streams are not lazy generators —
+# they are a pipeline API. Python has yield (since 2.2, 2001), and C# 2.0's
+# iterators were inspired by Python and CLU iterators.
+#
+# yield break; terminates iteration early:
+#   IEnumerable<int> TakeWhilePositive(IEnumerable<int> source) {
+#       foreach (int n in source) {
+#           if (n <= 0) yield break;
+#           yield return n;
+#       }
+#   }
+
+block = LBRACE { statement } RBRACE ;
+
+statement = block
+          | local_variable_declaration_statement
+          | local_constant_declaration_statement
+          | empty_statement
+          | expression_statement
+          | if_statement
+          | while_statement
+          | do_while_statement
+          | for_statement
+          | foreach_statement
+          | switch_statement
+          | try_statement
+          | throw_statement
+          | return_statement
+          | break_statement
+          | continue_statement
+          | goto_statement
+          | lock_statement
+          | using_statement
+          | checked_statement
+          | unchecked_statement
+          | labelled_statement
+          | unsafe_statement
+          | fixed_statement
+          | yield_statement ;
+
+local_variable_declaration_statement = type variable_declarators SEMICOLON ;
+
+local_constant_declaration_statement = "const" type constant_declarators SEMICOLON ;
+
+empty_statement = SEMICOLON ;
+
+expression_statement = expression SEMICOLON ;
+
+if_statement = "if" LPAREN expression RPAREN statement [ "else" statement ] ;
+
+while_statement = "while" LPAREN expression RPAREN statement ;
+
+do_while_statement = "do" statement "while" LPAREN expression RPAREN SEMICOLON ;
+
+for_statement = "for" LPAREN [ for_initializer ] SEMICOLON [ expression ] SEMICOLON
+                [ for_iterator ] RPAREN statement ;
+
+for_initializer = local_variable_declaration
+                | expression_list ;
+
+for_iterator = expression_list ;
+
+local_variable_declaration = type variable_declarators ;
+
+expression_list = expression { COMMA expression } ;
+
+foreach_statement = "foreach" LPAREN type NAME "in" expression RPAREN statement ;
+
+switch_statement = "switch" LPAREN expression RPAREN switch_block ;
+
+switch_block = LBRACE { switch_section } RBRACE ;
+
+switch_section = { switch_label } { statement } ;
+
+switch_label = "case" expression COLON
+             | "default" COLON ;
+
+try_statement = "try" block ( catch_clauses [ finally_clause ]
+                            | finally_clause ) ;
+
+catch_clauses = specific_catch_clause { specific_catch_clause } [ general_catch_clause ]
+              | general_catch_clause ;
+
+specific_catch_clause = "catch" LPAREN namespace_or_type_name [ NAME ] RPAREN block ;
+
+general_catch_clause = "catch" block ;
+
+finally_clause = "finally" block ;
+
+throw_statement = "throw" [ expression ] SEMICOLON ;
+
+return_statement = "return" [ expression ] SEMICOLON ;
+
+break_statement = "break" SEMICOLON ;
+
+continue_statement = "continue" SEMICOLON ;
+
+goto_statement = "goto" NAME SEMICOLON
+               | "goto" "case" expression SEMICOLON
+               | "goto" "default" SEMICOLON ;
+
+lock_statement = "lock" LPAREN expression RPAREN statement ;
+
+using_statement = "using" LPAREN resource_acquisition RPAREN statement ;
+
+resource_acquisition = type variable_declarators
+                     | expression ;
+
+checked_statement = "checked" block ;
+
+unchecked_statement = "unchecked" block ;
+
+labelled_statement = NAME COLON statement ;
+
+unsafe_statement = "unsafe" block ;
+
+fixed_statement = "fixed" LPAREN type variable_declarators RPAREN statement ;
+
+# --- Yield Statement (NEW in C# 2.0) ---
+#
+# The yield keyword is context-sensitive: it is only special when followed
+# by `return` or `break`. In all other positions, `yield` is a valid
+# identifier name.
+#
+# yield return <expression>;  — produce a value and suspend
+# yield break;                — terminate the iterator
+#
+# A method containing yield return/break must return IEnumerable<T>,
+# IEnumerator<T>, IEnumerable, or IEnumerator. The compiler verifies this.
+
+yield_statement = "yield" "return" expression SEMICOLON
+                | "yield" "break" SEMICOLON ;
+
+# ============================================================================
+# Expressions
+# ============================================================================
+#
+# C# 2.0 adds three expression forms:
+#
+#   1. Null coalescing: a ?? b (between conditional and logical-or)
+#   2. Anonymous methods: delegate(int x) { return x * 2; }
+#   3. Generic method invocations: obj.Method<int>(42)
+#
+# The ?? operator sits at a new precedence level between the ternary
+# conditional (?:) and logical OR (||). It is right-associative:
+#   a ?? b ?? c means a ?? (b ?? c)
+#
+# Anonymous methods provide inline delegate creation without naming a method:
+#
+#   button.Click += delegate(object sender, EventArgs e) {
+#       MessageBox.Show("Clicked!");
+#   };
+#
+#   // With type inference (parameter types omitted):
+#   button.Click += delegate { MessageBox.Show("Clicked!"); };
+#
+# Anonymous methods can capture local variables from the enclosing scope
+# (closures). The compiler generates a class to hold the captured variables.
+# This is the foundation for lambda expressions in C# 3.0.
+
+expression = assignment_expression ;
+
+assignment_expression = conditional_expression
+                      | unary_expression assignment_operator assignment_expression ;
+
+assignment_operator = EQUALS
+                    | PLUS_EQUALS
+                    | MINUS_EQUALS
+                    | STAR_EQUALS
+                    | SLASH_EQUALS
+                    | PERCENT_EQUALS
+                    | AMPERSAND_EQUALS
+                    | PIPE_EQUALS
+                    | CARET_EQUALS
+                    | LEFT_SHIFT_EQUALS
+                    | RIGHT_SHIFT_EQUALS ;
+
+# --- Ternary Conditional ---
+
+conditional_expression = null_coalescing_expression
+                         [ QUESTION expression COLON expression ] ;
+
+# --- Null Coalescing (NEW in C# 2.0) ---
+#
+# The ?? operator returns its left operand if it is non-null; otherwise
+# it returns the right operand. Right-associative.
+#
+#   string name = input ?? "default";
+#   int value = a ?? b ?? c ?? 0;    // first non-null wins
+#
+# Particularly useful with nullable value types:
+#   int count = nullableCount ?? 0;
+
+null_coalescing_expression = logical_or_expression
+                             { QUESTION_QUESTION logical_or_expression } ;
+
+# --- Logical OR ---
+
+logical_or_expression = logical_and_expression { OR_OR logical_and_expression } ;
+
+# --- Logical AND ---
+
+logical_and_expression = bitwise_or_expression { AND_AND bitwise_or_expression } ;
+
+# --- Bitwise OR ---
+
+bitwise_or_expression = bitwise_xor_expression { PIPE bitwise_xor_expression } ;
+
+# --- Bitwise XOR ---
+
+bitwise_xor_expression = bitwise_and_expression { CARET bitwise_and_expression } ;
+
+# --- Bitwise AND ---
+
+bitwise_and_expression = equality_expression { AMPERSAND equality_expression } ;
+
+# --- Equality ---
+
+equality_expression = relational_expression
+                      { ( EQUALS_EQUALS | NOT_EQUALS ) relational_expression } ;
+
+# --- Relational ---
+#
+# Unchanged from C# 1.0: <, >, <=, >=, is, as.
+# The `is` and `as` operators now work with generic and nullable types:
+#   if (obj is List<int>) { ... }
+#   List<string> list = obj as List<string>;
+
+relational_expression = shift_expression
+                        { ( LESS_THAN | GREATER_THAN | LESS_EQUALS | GREATER_EQUALS )
+                          shift_expression
+                        | "is" type
+                        | "as" type } ;
+
+# --- Shift ---
+
+shift_expression = additive_expression
+                   { ( LEFT_SHIFT | RIGHT_SHIFT ) additive_expression } ;
+
+# --- Additive ---
+
+additive_expression = multiplicative_expression
+                      { ( PLUS | MINUS ) multiplicative_expression } ;
+
+# --- Multiplicative ---
+
+multiplicative_expression = unary_expression
+                            { ( STAR | SLASH | PERCENT ) unary_expression } ;
+
+# --- Unary ---
+
+unary_expression = PLUS_PLUS unary_expression
+                 | MINUS_MINUS unary_expression
+                 | PLUS unary_expression
+                 | MINUS unary_expression
+                 | BANG unary_expression
+                 | TILDE unary_expression
+                 | cast_expression
+                 | AMPERSAND unary_expression
+                 | STAR unary_expression
+                 | postfix_expression ;
+
+cast_expression = LPAREN type RPAREN unary_expression ;
+
+# --- Postfix ---
+
+postfix_expression = primary_expression { PLUS_PLUS | MINUS_MINUS } ;
+
+# ============================================================================
+# Primary Expressions
+# ============================================================================
+#
+# C# 2.0 adds:
+#   - Anonymous method expressions: delegate(params) { body }
+#   - Generic method invocations via type arguments in primary_suffix
+#   - Namespace alias qualifier: global::Type, Alias::Type
+
+primary_expression = primary { primary_suffix } ;
+
+primary_suffix = DOT NAME [ type_argument_list ]
+               | LPAREN [ argument_list ] RPAREN
+               | LBRACKET expression_list RBRACKET
+               | ARROW NAME ;
+
+primary = literal
+        | "this"
+        | "base" DOT NAME
+        | "base" LBRACKET expression_list RBRACKET
+        | typeof_expression
+        | sizeof_expression
+        | checked_expression
+        | unchecked_expression
+        | default_value_expression
+        | new_expression
+        | anonymous_method_expression
+        | LPAREN expression RPAREN
+        | NAME [ COLON_COLON NAME ] [ type_argument_list ] ;
+
+# --- typeof Expression ---
+#
+# Extended to support generic types and unbound generic types:
+#   typeof(List<int>)         — bound generic type
+#   typeof(List<>)            — unbound generic type (1 type parameter)
+#   typeof(Dictionary<,>)     — unbound generic type (2 type parameters)
+
+typeof_expression = "typeof" LPAREN type_or_void RPAREN ;
+
+type_or_void = type
+             | "void"
+             | namespace_or_type_name LESS_THAN { COMMA } GREATER_THAN ;
+
+# --- sizeof Expression ---
+
+sizeof_expression = "sizeof" LPAREN type RPAREN ;
+
+# --- checked / unchecked Expressions ---
+
+checked_expression = "checked" LPAREN expression RPAREN ;
+
+unchecked_expression = "unchecked" LPAREN expression RPAREN ;
+
+# --- default Value Expression ---
+#
+# Becomes much more useful with generics:
+#   default(T)    — default value of a type parameter
+#   default(int)  — 0
+#   default(bool) — false
+
+default_value_expression = "default" LPAREN type RPAREN ;
+
+# --- New Expression ---
+#
+# Extended to support generic types in object and array creation:
+#   new List<int>()
+#   new Dictionary<string, int>()
+#   new List<int> { 1, 2, 3 }  (collection initializers come in C# 3.0)
+
+new_expression = "new" new_object_expression
+               | "new" new_array_expression ;
+
+new_object_expression = namespace_or_type_name LPAREN [ argument_list ] RPAREN ;
+
+new_array_expression = array_type array_creation_suffix ;
+
+array_type = ( primitive_type | namespace_or_type_name ) ;
+
+array_creation_suffix = rank_specifier { rank_specifier } array_initializer
+                      | LBRACKET expression_list RBRACKET { rank_specifier }
+                        [ array_initializer ] ;
+
+# --- Anonymous Method Expression (NEW in C# 2.0) ---
+#
+# Anonymous methods allow creating delegate instances inline, without
+# declaring a named method:
+#
+#   // With explicit parameter list:
+#   Predicate<int> isEven = delegate(int n) { return n % 2 == 0; };
+#
+#   // With no parameter list (matches any delegate signature):
+#   EventHandler handler = delegate { Console.WriteLine("fired"); };
+#
+#   // As an event handler:
+#   button.Click += delegate(object s, EventArgs e) { Close(); };
+#
+# Anonymous methods can capture variables from the enclosing scope (closures):
+#   int threshold = 10;
+#   Predicate<int> aboveThreshold = delegate(int n) {
+#       return n > threshold;    // captures 'threshold'
+#   };
+#
+# The compiler transforms the anonymous method into a class with a method,
+# and captures become fields of that class. This is the same transformation
+# that will later be used for lambda expressions in C# 3.0.
+#
+# Anonymous methods are superseded by lambda expressions in C# 3.0 but
+# remain valid syntax. The one thing anonymous methods can do that lambdas
+# cannot: omit the parameter list entirely to match any delegate signature.
+
+anonymous_method_expression = "delegate" [ LPAREN [ anonymous_method_parameter_list ] RPAREN ]
+                              block ;
+
+anonymous_method_parameter_list = anonymous_method_parameter
+                                  { COMMA anonymous_method_parameter } ;
+
+anonymous_method_parameter = [ parameter_modifier ] type NAME ;
+
+# --- Argument List ---
+
+argument_list = argument { COMMA argument } ;
+
+argument = [ "ref" | "out" ] expression ;
+
+# ============================================================================
+# Literals
+# ============================================================================
+#
+# Unchanged from C# 1.0.
+
+literal = NUMBER
+        | CHAR
+        | STRING
+        | VERBATIM_STRING
+        | "true"
+        | "false"
+        | "null" ;

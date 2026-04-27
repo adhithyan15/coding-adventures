@@ -2,7 +2,11 @@
 name = "code39"
 version = "0.1.0"
 edition = "2021"
-description = "Dependency-free Code 39 encoder that emits backend-neutral draw instructions"
+description = "Dependency-free Code 39 encoder that emits barcode runs and PaintScene layout"
 
 [dependencies]
-draw-instructions = { path = "../draw-instructions" }
+barcode-layout-1d = { path = "../barcode-layout-1d" }
+paint-instructions = { path = "../paint-instructions" }
+
+[target.'cfg(target_os = "windows")'.dev-dependencies]
+paint-vm-direct2d = { path = "../paint-vm-direct2d" }

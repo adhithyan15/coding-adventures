@@ -12,13 +12,13 @@
  * shared linear-barcode package.
  */
 import {
-  drawBarcode1D,
+  layoutBarcode1D,
   runsFromBinaryPattern,
   type Barcode1DRun,
   type Barcode1DSymbolDescriptor,
-  type DrawBarcode1DOptions,
-} from "@coding-adventures/barcode-1d";
-import type { DrawScene } from "@coding-adventures/draw-instructions";
+  type PaintBarcode1DOptions,
+} from "@coding-adventures/barcode-layout-1d";
+import type { PaintScene } from "@coding-adventures/paint-instructions";
 
 export const VERSION = "0.1.0";
 
@@ -193,25 +193,33 @@ export function expandUpcARuns(data: string): Barcode1DRun[] {
   return runs;
 }
 
-export function drawUpcA(
+export function layoutUpcA(
   data: string,
-  options: Omit<DrawBarcode1DOptions, "symbols" | "humanReadableText" | "label" | "metadata"> & {
-    humanReadableText?: string | null;
+  options: Omit<PaintBarcode1DOptions, "symbols" | "humanReadableText" | "label" | "metadata"> & {
     metadata?: Record<string, string | number | boolean>;
     label?: string;
   } = {},
-): DrawScene {
+): PaintScene {
   const normalized = normalizeUpcA(data);
   const encodedDigits = encodeUpcA(normalized);
 
-  return drawBarcode1D(expandUpcARuns(normalized), {
+  return layoutBarcode1D(expandUpcARuns(normalized), {
     ...options,
     symbols: buildUpcASymbols(encodedDigits),
-    humanReadableText: options.humanReadableText ?? normalized,
     label: options.label ?? `UPC-A barcode for ${normalized}`,
     metadata: {
       ...options.metadata,
       symbology: "upc-a",
     },
   });
+}
+
+export function drawUpcA(
+  data: string,
+  options: Omit<PaintBarcode1DOptions, "symbols" | "humanReadableText" | "label" | "metadata"> & {
+    metadata?: Record<string, string | number | boolean>;
+    label?: string;
+  } = {},
+): PaintScene {
+  return layoutUpcA(data, options);
 }

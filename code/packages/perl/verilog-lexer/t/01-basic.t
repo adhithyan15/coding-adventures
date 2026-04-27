@@ -20,6 +20,18 @@ sub values_of {
     return [ map { $_->{value} } grep { $_->{type} ne 'EOF' } @$tokens ];
 }
 
+sub types_of_version {
+    my ($source, $version) = @_;
+    my $tokens = CodingAdventures::VerilogLexer->tokenize($source, $version);
+    return [ map { $_->{type} } grep { $_->{type} ne 'EOF' } @$tokens ];
+}
+
+sub values_of_version {
+    my ($source, $version) = @_;
+    my $tokens = CodingAdventures::VerilogLexer->tokenize($source, $version);
+    return [ map { $_->{value} } grep { $_->{type} ne 'EOF' } @$tokens ];
+}
+
 # ============================================================================
 # Empty / trivial inputs
 # ============================================================================
@@ -34,6 +46,26 @@ subtest 'whitespace-only produces only EOF' => sub {
     my $tokens = CodingAdventures::VerilogLexer->tokenize("   \t\n  ");
     is( scalar @$tokens, 1,     '1 token after skipping whitespace' );
     is( $tokens->[0]{type}, 'EOF', 'token is EOF' );
+};
+
+subtest 'default version matches explicit 2005' => sub {
+    is(
+        types_of('module',),
+        types_of_version('module', '2005'),
+        'default token types match 2005'
+    );
+    is(
+        values_of('module'),
+        values_of_version('module', '2005'),
+        'default token values match 2005'
+    );
+};
+
+subtest 'unknown version raises die' => sub {
+    ok(
+        dies { CodingAdventures::VerilogLexer->tokenize('module', '2099') },
+        'unsupported version dies'
+    );
 };
 
 subtest 'line comment only produces EOF' => sub {

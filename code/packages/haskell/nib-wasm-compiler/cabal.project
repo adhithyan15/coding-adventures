@@ -1,0 +1,24 @@
+packages:
+  .
+  ../compiler-ir
+  ../grammar-tools
+  ../parser
+  ../graph
+  ../directed-graph
+  ../state-machine
+  ../lexer
+  ../nib-lexer
+  ../nib-parser
+  ../nib-type-checker
+  ../nib-ir-compiler
+  ../ir-optimizer
+  ../ir-to-wasm-validator
+  ../wasm-leb128
+  ../wasm-types
+  ../wasm-module-encoder
+  ../wasm-module-parser
+  ../wasm-opcodes
+  ../wasm-execution
+  ../wasm-validator
+  ../wasm-runtime
+  ../ir-to-wasm-compiler

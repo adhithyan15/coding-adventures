@@ -1,0 +1,5 @@
+packages:
+  .
+  ../wasm-leb128
+  ../wasm-module-parser
+  ../wasm-types

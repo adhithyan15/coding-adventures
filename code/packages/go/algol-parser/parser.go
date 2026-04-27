@@ -74,6 +74,7 @@
 package algolparser
 
 import (
+	"fmt"
 	"path/filepath"
 	"runtime"
 
@@ -81,6 +82,10 @@ import (
 	algollexer "github.com/adhithyan15/coding-adventures/code/packages/go/algol-lexer"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/parser"
 )
+
+var validAlgolVersions = map[string]bool{
+	"algol60": true,
+}
 
 // getGrammarPath computes the absolute path to the algol.grammar file.
 //
@@ -97,11 +102,17 @@ import (
 //	    go/
 //	      algol-parser/
 //	        parser.go       <-- we are here (3 levels below code/)
-func getGrammarPath() string {
+func getGrammarPath(version string) (string, error) {
 	_, filename, _, _ := runtime.Caller(0)
 	parent := filepath.Dir(filename)
 	root := filepath.Join(parent, "..", "..", "..", "grammars")
-	return filepath.Join(root, "algol.grammar")
+	if version == "" {
+		version = "algol60"
+	}
+	if !validAlgolVersions[version] {
+		return "", fmt.Errorf("unknown ALGOL version %q: valid versions are algol60", version)
+	}
+	return filepath.Join(root, "algol", version+".grammar"), nil
 }
 
 // CreateAlgolParser tokenizes the ALGOL 60 source using the ALGOL lexer, then
@@ -119,11 +130,19 @@ func getGrammarPath() string {
 // backtracking across ALGOL's many ambiguous rules.
 //
 // Returns an error if lexing fails or the grammar file cannot be read/parsed.
-func CreateAlgolParser(source string) (*parser.GrammarParser, error) {
+func CreateAlgolParser(source string, version ...string) (*parser.GrammarParser, error) {
+	effectiveVersion := ""
+	if len(version) > 0 {
+		effectiveVersion = version[0]
+	}
 	// Step 1: Tokenize the ALGOL source.
 	// The lexer strips whitespace and comments (comment...;), reclassifies
 	// keywords from identifiers, and handles multi-character operators.
-	tokens, err := algollexer.TokenizeAlgol(source)
+	tokens, err := algollexer.TokenizeAlgol(source, effectiveVersion)
+	if err != nil {
+		return nil, err
+	}
+	grammarPath, err := getGrammarPath(effectiveVersion)
 	if err != nil {
 		return nil, err
 	}
@@ -134,7 +153,7 @@ func CreateAlgolParser(source string) (*parser.GrammarParser, error) {
 		func(op *Operation[*parser.GrammarParser], rf *ResultFactory[*parser.GrammarParser]) *OperationResult[*parser.GrammarParser] {
 			// Step 2: Read the parser grammar file.
 			// algol.grammar defines the complete ALGOL 60 syntax in EBNF.
-			bytes, err := op.File.ReadFile(getGrammarPath())
+			bytes, err := op.File.ReadFile(grammarPath)
 			if err != nil {
 				return rf.Fail(nil, err)
 			}
@@ -193,8 +212,8 @@ func CreateAlgolParser(source string) (*parser.GrammarParser, error) {
 //	    END("end")
 //
 // Returns an error if lexing or parsing fails.
-func ParseAlgol(source string) (*parser.ASTNode, error) {
-	algolParser, err := CreateAlgolParser(source)
+func ParseAlgol(source string, version ...string) (*parser.ASTNode, error) {
+	algolParser, err := CreateAlgolParser(source, version...)
 	if err != nil {
 		return nil, err
 	}

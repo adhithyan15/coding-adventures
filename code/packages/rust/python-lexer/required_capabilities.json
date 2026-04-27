@@ -2,36 +2,6 @@
   "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
   "version": 1,
   "package": "rust/python-lexer",
-  "capabilities": [
-    {
-      "type": "fs:read",
-      "path": "code/grammars/python/python2.7.tokens",
-      "justification": "Loads the Python 2.7 token grammar file at runtime to configure the lexer."
-    },
-    {
-      "type": "fs:read",
-      "path": "code/grammars/python/python3.0.tokens",
-      "justification": "Loads the Python 3.0 token grammar file at runtime to configure the lexer."
-    },
-    {
-      "type": "fs:read",
-      "path": "code/grammars/python/python3.6.tokens",
-      "justification": "Loads the Python 3.6 token grammar file at runtime to configure the lexer."
-    },
-    {
-      "type": "fs:read",
-      "path": "code/grammars/python/python3.8.tokens",
-      "justification": "Loads the Python 3.8 token grammar file at runtime to configure the lexer."
-    },
-    {
-      "type": "fs:read",
-      "path": "code/grammars/python/python3.10.tokens",
-      "justification": "Loads the Python 3.10 token grammar file at runtime to configure the lexer."
-    },
-    {
-      "type": "fs:read",
-      "path": "code/grammars/python/python3.12.tokens",
-      "justification": "Loads the Python 3.12 token grammar file at runtime to configure the lexer."
-    }
-  ]
+  "capabilities": [],
+  "justification": "Pure computation. Compiled grammars remove runtime filesystem access."
 }

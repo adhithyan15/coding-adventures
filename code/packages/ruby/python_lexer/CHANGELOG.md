@@ -23,6 +23,8 @@ All notable changes to `coding_adventures_python_lexer` will be documented in th
 ### Changed
 - `tokenize(source)` signature changed to `tokenize(source, version: "3.12")`
   -- existing callers that pass no version argument are unaffected
+- Removed the old unversioned `python.tokens` fallback from the Ruby package;
+  all runtime grammar loading now goes through versioned Python grammars
 
 ## [0.1.0] - 2026-03-18
 

@@ -40,9 +40,9 @@ cp target/release/libPolynomialNative.so \
 
 ## Notes
 
-- The XS calling convention (`dXSARGS`, `ST(n)`, `XSRETURN`) uses Perl
-  internals that require Perl headers. We target non-threaded Perl 5 and
-  access the stack via `PL_stack_sp` and `PL_stack_base` globals.
+- The XS calling convention (`dXSARGS`, `ST(n)`, `XSRETURN`) is routed
+  through the shared `perl-bridge` shim so the extension works with threaded
+  Perl builds too.
 - `xs_init!` from perl-bridge needs `concat_idents` (unstable Rust), so
   `boot_CodingAdventures__PolynomialNative` is written by hand.
 - `divmod` is omitted from Perl XS due to Perl's single-return convention;

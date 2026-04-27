@@ -207,4 +207,7 @@ TOKEN_GRAMMAR = GT::TokenGrammar.new(
         ],
       ),
     },
+  layout_keywords: [],
+  context_keywords: [],
+  soft_keywords: [],
 )

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { VERSION, renderToSvgString, createSvgVM, assembleSvg } from "../src/index.js";
+import { VERSION, renderToSvgString, createSvgContext, createSvgVM, assembleSvg } from "../src/index.js";
 import {
   paintScene,
   paintRect,
@@ -73,6 +73,17 @@ describe("renderToSvgString()", () => {
     // Should not have a background rect — the only content is <svg>...</svg>
     // with no fill="#transparent" or similar
     expect(svg).not.toContain('fill="transparent"');
+  });
+
+  it("supports explicit vm.execute() composition", () => {
+    const scene = simpleScene();
+    const vm = createSvgVM();
+    const ctx = createSvgContext();
+
+    vm.execute(scene, ctx);
+
+    const svg = assembleSvg(scene, ctx);
+    expect(svg).toContain("<rect");
   });
 });
 

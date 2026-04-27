@@ -760,6 +760,38 @@ describe("GrammarParser", function()
             assert.is_nil(err)
             assert.are.equal("expr", ast.rule_name)
         end)
+
+        it("handles direct left recursion by growing the memoized match", function()
+            -- Grammar: expr = expr PLUS NUMBER | NUMBER ;
+            -- This would recurse forever without the seed-and-grow guard.
+            local g = grammar.make({
+                grammar.rule("expr",
+                    grammar.alternation({
+                        grammar.sequence({
+                            grammar.rule_ref("expr", false),
+                            grammar.rule_ref("PLUS", true),
+                            grammar.rule_ref("NUMBER", true),
+                        }),
+                        grammar.rule_ref("NUMBER", true),
+                    })),
+            })
+
+            local tokens = {
+                tok(T.NUMBER, "1", 1, 1),
+                tok(T.PLUS,   "+", 1, 3),
+                tok(T.NUMBER, "2", 1, 5),
+                tok(T.PLUS,   "+", 1, 7),
+                tok(T.NUMBER, "3", 1, 9),
+                eof(1, 10),
+            }
+
+            local p = parser.GrammarParser.new(tokens, g)
+            local ast, err = p:parse()
+            assert.is_nil(err)
+            assert.are.equal("expr", ast.rule_name)
+            assert.are.equal(3, #ast.children)
+            assert.are.equal("expr", ast.children[1].rule_name)
+        end)
     end)
 
     describe("string-based token types", function()

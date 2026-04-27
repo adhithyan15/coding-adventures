@@ -1,0 +1,16 @@
+[workspace]
+
+[package]
+name = "paint-codec-png-native-ruby"
+version = "0.1.0"
+edition = "2021"
+build = "build.rs"
+
+[lib]
+name = "paint_codec_png_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+paint-codec-png = { path = "../../../../rust/paint-codec-png" }
+paint-instructions = { path = "../../../../rust/paint-instructions" }
+ruby-bridge = { path = "../../../../rust/ruby-bridge" }

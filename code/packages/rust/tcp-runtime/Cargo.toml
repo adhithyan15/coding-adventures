@@ -1,0 +1,10 @@
+[package]
+name = "tcp-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "TCP-specific runtime layer above stream-reactor"
+license = "MIT"
+
+[dependencies]
+stream-reactor = { path = "../stream-reactor" }
+transport-platform = { path = "../transport-platform" }

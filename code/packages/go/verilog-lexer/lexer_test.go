@@ -97,6 +97,24 @@ func TestTokenizeKeywords(t *testing.T) {
 	}
 }
 
+func TestTokenizeVersionedVerilog(t *testing.T) {
+	for _, version := range []string{"1995", "2001", "2005"} {
+		tokens, err := TokenizeVerilogVersion("module top; endmodule", version)
+		if err != nil {
+			t.Fatalf("version %s: %v", version, err)
+		}
+		if tokens[0].Value != "module" {
+			t.Fatalf("version %s: expected first token to be module, got %q", version, tokens[0].Value)
+		}
+	}
+}
+
+func TestTokenizeVerilogVersionRejectsUnknownVersion(t *testing.T) {
+	if _, err := TokenizeVerilogVersion("module top; endmodule", "2099"); err == nil {
+		t.Fatal("expected unknown Verilog version to fail")
+	}
+}
+
 // ---------------------------------------------------------------------------
 // Sized Numbers — The unique Verilog number format
 // ---------------------------------------------------------------------------
@@ -121,8 +139,8 @@ func TestTokenizeSizedNumbers(t *testing.T) {
 		{"16'hDEAD", "16'hDEAD"},
 		{"8'b1010_0011", "8'b1010_0011"},
 		{"4'bxxzz", "4'bxxzz"},
-		{"8'sb10", "8'sb10"},   // signed
-		{"8'Sb10", "8'Sb10"},   // signed (capital S)
+		{"8'sb10", "8'sb10"}, // signed
+		{"8'Sb10", "8'Sb10"}, // signed (capital S)
 	}
 
 	for _, tt := range tests {

@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2026-04-12
+
+### Added
+
+- `xor_n(inputs: &[u8]) -> u8` — N-input XOR gate (parity reducer). Chains
+  2-input XOR gates left-to-right via `fold`, returning 1 when an odd number
+  of inputs are 1 (odd parity) and 0 for even parity. Used by the Intel 8008
+  gate-level simulator to compute the Parity flag: `P = NOT(xor_n(result_bits))`.
+
 ## [0.3.0] - 2026-03-29
 
 ### Changed

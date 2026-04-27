@@ -11,6 +11,7 @@ import {
   paintClip,
   paintGradient,
   paintImage,
+  paintText,
   type PaintInstruction,
   type PaintScene,
   type PaintRect,
@@ -392,6 +393,40 @@ describe("paintImage", () => {
   it("supports opacity", () => {
     const img = paintImage(0, 0, 100, 100, "file:///x.png", { opacity: 0.8 });
     expect(img.opacity).toBe(0.8);
+  });
+});
+
+// ============================================================================
+// paintText builder
+// ============================================================================
+
+describe("paintText", () => {
+  it("creates a text instruction with the required fields", () => {
+    const t = paintText(10, 20, "Hello", "canvas:Helvetica@16", 16, "#111");
+    expect(t.kind).toBe("text");
+    expect(t.x).toBe(10);
+    expect(t.y).toBe(20);
+    expect(t.text).toBe("Hello");
+    expect(t.font_ref).toBe("canvas:Helvetica@16");
+    expect(t.font_size).toBe(16);
+    expect(t.fill).toBe("#111");
+  });
+
+  it("passes through optional cluster_positions", () => {
+    const t = paintText(0, 0, "Hi", "canvas:Arial@16", 16, "#000", {
+      cluster_positions: [{ cluster: 0, x: 0 }, { cluster: 1, x: 8 }],
+    });
+    expect(t.cluster_positions).toHaveLength(2);
+    expect(t.cluster_positions?.[1].x).toBe(8);
+  });
+
+  it("passes through optional metadata and id from PaintBase", () => {
+    const t = paintText(0, 0, "X", "canvas:Arial@16", 16, "#000", {
+      id: "tag-1",
+      metadata: { "layout:align": "start" },
+    });
+    expect(t.id).toBe("tag-1");
+    expect(t.metadata?.["layout:align"]).toBe("start");
   });
 });
 

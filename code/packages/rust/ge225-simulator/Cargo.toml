@@ -1,0 +1,10 @@
+[package]
+name = "coding-adventures-ge225-simulator"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "GE-225 behavioral simulator and compiler backend target"
+
+[lib]
+name = "coding_adventures_ge225_simulator"
+path = "src/lib.rs"

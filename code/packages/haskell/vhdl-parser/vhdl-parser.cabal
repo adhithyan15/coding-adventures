@@ -1,0 +1,38 @@
+cabal-version: 3.0
+name:          vhdl-parser
+version:       0.1.0
+synopsis:      Haskell starter wrapper for vhdl-parser built on the generic parser package
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  VhdlParser
+    other-modules:    Generated.ParserGrammar
+    build-depends:    base >=4.14
+                    , containers
+                    , grammar-tools
+                    , graph
+                    , directed-graph
+                    , state-machine
+                    , lexer
+                    , parser
+                    , vhdl-lexer
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    VhdlParserSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14
+                    , containers
+                    , grammar-tools
+                    , vhdl-parser
+                    , hspec == 2.*
+    default-language: Haskell2010
+
+
+

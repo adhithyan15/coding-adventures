@@ -22,9 +22,16 @@ Usage::
     print(ast.rule_name)  # "design_file"
 """
 
-from vhdl_parser.parser import create_vhdl_parser, parse_vhdl
+from vhdl_parser.parser import (
+    DEFAULT_VERSION,
+    SUPPORTED_VERSIONS,
+    create_vhdl_parser,
+    parse_vhdl,
+)
 
 __all__ = [
+    "DEFAULT_VERSION",
+    "SUPPORTED_VERSIONS",
     "create_vhdl_parser",
     "parse_vhdl",
 ]

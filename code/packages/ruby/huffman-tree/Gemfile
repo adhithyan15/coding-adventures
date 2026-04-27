@@ -1,0 +1,8 @@
+source "https://rubygems.org"
+
+gemspec
+
+gem "coding_adventures_heap", path: "../heap"
+gem "rspec",     "~> 3.0"
+gem "simplecov", "~> 0.22"
+gem "standard",  "~> 1.0"

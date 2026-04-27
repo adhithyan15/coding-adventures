@@ -6,7 +6,7 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "../../../grammars/algol.grammar",
+      "target": "../../../grammars/algol/algol60.grammar",
       "justification": "Reads ALGOL 60 parser grammar definition file to build parse tables at initialization time."
     }
   ],

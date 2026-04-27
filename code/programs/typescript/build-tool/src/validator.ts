@@ -10,6 +10,8 @@ const CI_MANAGED_TOOLCHAIN_LANGUAGES = new Set([
   "elixir",
   "lua",
   "perl",
+  "java",
+  "kotlin",
   "haskell",
 ]);
 

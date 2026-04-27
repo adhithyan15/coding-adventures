@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "go/ean-13",
+  "capabilities": [],
+  "justification": "Pure computation package for EAN-13 normalization, encoding, run expansion, and paint-scene generation. No filesystem, network, process, or environment access needed."
+}

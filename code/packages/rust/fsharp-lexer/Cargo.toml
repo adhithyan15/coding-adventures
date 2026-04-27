@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-fsharp-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "F# lexer backed by compiled versioned token grammars"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

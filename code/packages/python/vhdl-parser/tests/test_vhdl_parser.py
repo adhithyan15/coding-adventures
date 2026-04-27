@@ -154,6 +154,23 @@ class TestEmptyEntity:
         entities = find_nodes(ast, "entity_declaration")
         assert len(entities) == 1
 
+
+class TestVersions:
+    """Version-selection behaviour for compiled VHDL grammars."""
+
+    def test_default_version_matches_explicit_2008(self) -> None:
+        default_ast = parse_vhdl("entity e is end entity e;")
+        explicit_ast = parse_vhdl("entity e is end entity e;", version="2008")
+        assert default_ast.rule_name == explicit_ast.rule_name
+
+    def test_rejects_unknown_version(self) -> None:
+        try:
+            parse_vhdl("entity e is end entity e;", version="2099")
+        except ValueError as exc:
+            assert "Unknown VHDL version" in str(exc)
+        else:
+            raise AssertionError("Expected ValueError for unknown VHDL version")
+
     def test_empty_entity_has_correct_name(self) -> None:
         """The entity name should be captured as a NAME token."""
         ast = parse_vhdl("entity e is end entity e;")

@@ -1,0 +1,23 @@
+# This crate has its own [workspace] declaration so it is NOT part of the
+# parent Rust workspace (the parent workspace does not manage WASM crates).
+[workspace]
+
+[package]
+name = "markov-chain-wasm"
+version = "0.1.0"
+edition = "2021"
+description = "WebAssembly bindings for the Rust markov-chain crate (DT28) via wasm-bindgen"
+license = "MIT"
+
+[lib]
+# cdylib  → produces the .wasm / .js glue when compiled with wasm-pack
+# rlib    → produces a native Rust library so `cargo test` can run without WASM toolchain
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+# The Rust implementation lives next-door in code/packages/rust/markov-chain/
+coding-adventures-markov-chain = { path = "../../rust/markov-chain" }
+# JSON encoding/decoding lets us pass arrays and maps across the JS/Wasm boundary,
+# since wasm-bindgen only natively supports scalar types and strings.
+serde_json = "1"
+wasm-bindgen = "0.2"

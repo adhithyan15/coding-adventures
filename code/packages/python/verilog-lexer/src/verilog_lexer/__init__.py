@@ -24,7 +24,10 @@ Usage::
 """
 
 from verilog_lexer.tokenizer import (
+    DEFAULT_VERSION,
+    SUPPORTED_VERSIONS,
     create_verilog_lexer,
+    resolve_version,
     tokenize_verilog,
 )
 from verilog_lexer.preprocessor import verilog_preprocess
@@ -32,5 +35,8 @@ from verilog_lexer.preprocessor import verilog_preprocess
 __all__ = [
     "create_verilog_lexer",
     "tokenize_verilog",
+    "DEFAULT_VERSION",
+    "SUPPORTED_VERSIONS",
+    "resolve_version",
     "verilog_preprocess",
 ]

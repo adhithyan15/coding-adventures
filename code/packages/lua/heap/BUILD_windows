@@ -1,0 +1,2 @@
+luarocks make --local --deps-mode=none coding-adventures-heap-0.1.0-1.rockspec
+cd tests && set LUA_PATH=..\src\?.lua;..\src\?\init.lua;; && busted . --verbose --pattern=test_

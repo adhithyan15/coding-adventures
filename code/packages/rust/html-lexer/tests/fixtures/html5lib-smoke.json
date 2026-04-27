@@ -1,0 +1,125 @@
+{
+  "format": "venture-html-lexer-fixtures/v1",
+  "suite": "html5lib-smoke",
+  "description": "Normalized html5lib-style tokenizer smoke cases lowered into the Venture fixture schema.",
+  "source": "upstream-html5lib-smoke.test",
+  "generator": "normalize_html5lib_fixtures.py",
+  "supported_initial_states": [
+    "Data state",
+    "RAWTEXT state",
+    "RCDATA state"
+  ],
+  "cases": [
+    {
+      "id": "html5lib-smoke-1",
+      "description": "simple start and end tag in data state",
+      "input": "<b>Hello</b>",
+      "tokens": [
+        "StartTag(name=b, attributes=[], self_closing=false)",
+        "Text(data=Hello)",
+        "EndTag(name=b)",
+        "EOF"
+      ],
+      "diagnostics": []
+    },
+    {
+      "id": "html5lib-smoke-2",
+      "description": "comment token surrounded by characters",
+      "input": "Before<!--note-->After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=note)",
+        "Text(data=After)",
+        "EOF"
+      ],
+      "diagnostics": []
+    },
+    {
+      "id": "html5lib-smoke-3",
+      "description": "explicit data state fixture still normalizes",
+      "input": "<em>Hi</em>",
+      "tokens": [
+        "StartTag(name=em, attributes=[], self_closing=false)",
+        "Text(data=Hi)",
+        "EndTag(name=em)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-4",
+      "description": "doctype plus single attribute start tag",
+      "input": "<!DOCTYPE html><p class=test>Hi</p>",
+      "tokens": [
+        "Doctype(name=html, force_quirks=false)",
+        "StartTag(name=p, attributes=[class=test], self_closing=false)",
+        "Text(data=Hi)",
+        "EndTag(name=p)",
+        "EOF"
+      ],
+      "diagnostics": []
+    },
+    {
+      "id": "html5lib-smoke-5",
+      "description": "self closing start tag uses html5lib boolean slot",
+      "input": "<br/>",
+      "tokens": [
+        "StartTag(name=br, attributes=[], self_closing=true)",
+        "EOF"
+      ],
+      "diagnostics": []
+    },
+    {
+      "id": "html5lib-smoke-6",
+      "description": "comment eof recovery reports tokenizer error",
+      "input": "<!--open",
+      "tokens": [
+        "Comment(data=open)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "eof-in-comment"
+      ]
+    },
+    {
+      "id": "html5lib-smoke-7",
+      "description": "rcdata matching end tag emits end tag token",
+      "input": "Hello</title>",
+      "tokens": [
+        "Text(data=Hello)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-8",
+      "description": "rcdata non matching end tag stays text",
+      "input": "Hello&lt;/title>",
+      "tokens": [
+        "Text(data=Hello</title>)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-9",
+      "description": "rawtext matching end tag emits end tag token",
+      "input": "body { color: red; }</style>",
+      "tokens": [
+        "Text(data=body { color: red; })",
+        "EndTag(name=style)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    }
+  ],
+  "skipped": []
+}

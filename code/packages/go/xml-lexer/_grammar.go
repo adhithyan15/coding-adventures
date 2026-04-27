@@ -57,4 +57,5 @@ var TokenGrammarData = &gt.TokenGrammar{
 					gt.TokenDefinition{Name: `PI_END`, Pattern: `?>`, IsRegex: false, LineNumber: 130, Alias: ``},
 				}},
 		},
+	LayoutKeywords:   []string{},
 }

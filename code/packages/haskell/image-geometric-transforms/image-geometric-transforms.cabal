@@ -1,0 +1,33 @@
+cabal-version: 3.0
+name:          image-geometric-transforms
+version:       0.1.0
+synopsis:      IMG04: Geometric transforms on PixelContainer
+description:   Lossless and continuous geometric transforms: flip,
+               rotate-by-multiple-of-90, crop, scale, translate,
+               arbitrary rotate, affine, and perspective warp.  Supports
+               nearest / bilinear / bicubic interpolation and out-of-
+               bounds policies zero / replicate / reflect / wrap.
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  ImageGeometricTransforms
+    build-depends:    base >=4.14
+                    , bytestring
+                    , pixel-container
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    ImageGeometricTransformsSpec
+    build-depends:    base >=4.14
+                    , bytestring
+                    , pixel-container
+                    , image-geometric-transforms
+                    , hspec == 2.*
+    hs-source-dirs:   test
+    default-language: Haskell2010

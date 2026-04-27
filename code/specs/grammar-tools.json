@@ -2,7 +2,7 @@
   "cli_builder_spec_version": "1.0",
   "name": "grammar-tools",
   "display_name": "Grammar Tools",
-  "description": "Validate and compile .tokens and .grammar files. Reports syntax errors, duplicate definitions, undefined references, and cross-file consistency issues. Can also compile grammar files into native language representations for zero-overhead embedding.",
+  "description": "Validate and compile .tokens and .grammar files. Reports syntax errors, duplicate definitions, undefined references, and cross-file consistency issues. Can also compile grammar files into native language representations for zero-overhead embedding, and generate downstream compiled grammar artifacts across packages.",
   "version": "2.0.0",
   "parsing_mode": "gnu",
   "builtin_flags": {
@@ -39,7 +39,7 @@
     {
       "id": "command",
       "name": "COMMAND",
-      "description": "Command to run: validate | validate-tokens | validate-grammar | compile-tokens | compile-grammar",
+      "description": "Command to run: validate | validate-tokens | validate-grammar | compile-tokens | compile-grammar | generate-compiled-grammars",
       "type": "string",
       "required": true
     },

@@ -1,0 +1,48 @@
+# @version 1
+
+# SWI-Prolog token grammar.
+#
+# This is intentionally a dialect-owned grammar file. It starts from the
+# executable Prolog subset and adds SWI-flavored lexical affordances here,
+# rather than adding switches to the generic or ISO lexers.
+
+skip:
+  WHITESPACE     = /[ \t\r\n]+/
+  LINE_COMMENT   = /%[^\n]*/
+  BLOCK_COMMENT  = /\/\*([^*]|\*[^\/])*\*\//
+
+# Multi-character structural tokens must come before symbolic atoms.
+DCG          = "-->"
+QUERY        = "?-"
+RULE         = ":-"
+
+# Common dedicated punctuation tokens for the first parser pass.
+LPAREN       = "("
+RPAREN       = ")"
+LBRACKET     = "["
+RBRACKET     = "]"
+LCURLY       = "{"
+RCURLY       = "}"
+BAR          = "|"
+COMMA        = ","
+SEMICOLON    = ";"
+CUT          = "!"
+DOT          = "."
+
+# Numeric literals.
+FLOAT        = /[0-9]+\.[0-9]+([eE][-+]?[0-9]+)?/
+INTEGER      = /[0-9]+/
+
+# Textual values.
+STRING             = /"([^"\\]|\\.)*"/
+BACKQUOTED_STRING  = /`([^`\\]|\\.)*`/ -> STRING
+QUOTED_ATOM        = /'([^'\\]|\\.)*'/ -> ATOM
+
+# Variables and atoms.
+ANON_VAR      = /_(?![A-Za-z0-9_])/
+VARIABLE      = /(?:[A-Z][A-Za-z0-9_]*|_[A-Za-z0-9_]+)/
+ATOM          = /[a-z][A-Za-z0-9_]*/
+
+# Symbolic operators in Prolog are atoms too. Structural punctuation above wins
+# first, keeping this rule useful for ordinary symbolic operator names.
+ATOM_SYMBOLIC = /[#$&*+\-\/:<=>?@\\^~]+/ -> ATOM

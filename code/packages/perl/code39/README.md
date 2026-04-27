@@ -1,6 +1,6 @@
 # code39 (Perl)
 
-Code 39 barcode encoder — normalize, encode, expand runs, render SVG.
+Dependency-free Code 39 encoder that emits backend-neutral paint scenes.
 
 ## Usage
 
@@ -8,9 +8,7 @@ Code 39 barcode encoder — normalize, encode, expand runs, render SVG.
 use CodingAdventures::Code39;
 
 my $scene = CodingAdventures::Code39->draw_code39('HELLO123');
-print $scene->{svg};
 ```
 
-## Dependencies
-
-None — self-contained.
+This package stops at `PaintScene` so the same barcode logic can feed native
+Paint VMs, Canvas, SVG, or future codecs.

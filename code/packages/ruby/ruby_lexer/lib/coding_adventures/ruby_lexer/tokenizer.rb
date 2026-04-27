@@ -35,15 +35,17 @@ module CodingAdventures
   module RubyLexer
     GRAMMAR_DIR       = File.expand_path("../../../../../../grammars", __dir__)
     RUBY_TOKENS_PATH  = File.join(GRAMMAR_DIR, "ruby.tokens")
+    COMPILED_TOKENS_PATH = File.expand_path("_grammar.rb", __dir__)
+
+    def self.token_grammar
+      @token_grammar ||= CodingAdventures::GrammarTools.load_token_grammar(COMPILED_TOKENS_PATH)
+    end
 
     # Create a GrammarLexer configured for Ruby.
     # @param source [String] Ruby source code
     # @return [CodingAdventures::Lexer::GrammarLexer]
     def self.create_ruby_lexer(source)
-      grammar = CodingAdventures::GrammarTools.parse_token_grammar(
-        File.read(RUBY_TOKENS_PATH, encoding: "UTF-8")
-      )
-      CodingAdventures::Lexer::GrammarLexer.new(source, grammar)
+      CodingAdventures::Lexer::GrammarLexer.new(source, token_grammar)
     end
 
     # Tokenize Ruby source code.

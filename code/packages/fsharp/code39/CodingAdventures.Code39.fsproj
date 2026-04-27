@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+    <AssemblyName>CodingAdventures.Code39.FSharp</AssemblyName>
+    <PackageId>CodingAdventures.Code39.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>Code 39 encoder that emits shared 1D barcode runs and paint scenes</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../barcode-layout-1d/CodingAdventures.BarcodeLayout1D.fsproj" />
+    <ProjectReference Include="../paint-instructions/CodingAdventures.PaintInstructions.fsproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Code39.fs" />
+  </ItemGroup>
+</Project>

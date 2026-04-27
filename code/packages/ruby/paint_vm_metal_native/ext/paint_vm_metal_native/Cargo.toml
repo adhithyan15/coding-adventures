@@ -1,0 +1,16 @@
+[workspace]
+
+[package]
+name = "paint-vm-metal-native-ruby"
+version = "0.1.0"
+edition = "2021"
+build = "build.rs"
+
+[lib]
+name = "paint_vm_metal_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+paint-instructions = { path = "../../../../rust/paint-instructions" }
+paint-metal = { path = "../../../../rust/paint-metal" }
+ruby-bridge = { path = "../../../../rust/ruby-bridge" }

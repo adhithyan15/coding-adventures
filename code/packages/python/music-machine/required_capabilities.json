@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "python/music-machine",
+  "capabilities": [
+    {
+      "category": "audio",
+      "action": "play",
+      "target": "default audio output device",
+      "justification": "The optional play_score_text and play_score helpers lazily delegate rendered PCM buffers to audio-device-sink when callers explicitly request playback."
+    }
+  ],
+  "justification": "Parsing and rendering are pure computation. Real audio output is optional and only happens through explicit playback helpers."
+}

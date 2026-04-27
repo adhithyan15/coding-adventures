@@ -1,0 +1,23 @@
+[workspace]
+
+[package]
+name = "barcode-1d-native-node"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+name = "barcode_1d_native_node"
+
+[dependencies]
+coding-adventures-json-value = { path = "../../rust/json-value" }
+node-bridge = { path = "../../rust/node-bridge" }
+paint-codec-png = { path = "../../rust/paint-codec-png" }
+paint-instructions = { path = "../../rust/paint-instructions" }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+paint-metal = { path = "../../rust/paint-metal" }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+paint-vm-direct2d = { path = "../../rust/paint-vm-direct2d" }
+paint-vm-gdi = { path = "../../rust/paint-vm-gdi" }

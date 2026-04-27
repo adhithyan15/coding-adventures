@@ -76,6 +76,24 @@ func TestParseEmptyModule(t *testing.T) {
 	}
 }
 
+func TestParseVersionedVerilog(t *testing.T) {
+	for _, version := range []string{"1995", "2001", "2005"} {
+		ast, err := ParseVerilogVersion("module top; endmodule", version)
+		if err != nil {
+			t.Fatalf("version %s: %v", version, err)
+		}
+		if ast.RuleName != "source_text" {
+			t.Fatalf("version %s: expected source_text root, got %s", version, ast.RuleName)
+		}
+	}
+}
+
+func TestParseVerilogVersionRejectsUnknownVersion(t *testing.T) {
+	if _, err := ParseVerilogVersion("module top; endmodule", "2099"); err == nil {
+		t.Fatal("expected unknown Verilog version to fail")
+	}
+}
+
 // ---------------------------------------------------------------------------
 // Test: Module with ports
 // ---------------------------------------------------------------------------

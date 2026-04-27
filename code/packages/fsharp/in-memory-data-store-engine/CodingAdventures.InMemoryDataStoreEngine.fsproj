@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <PackageId>CodingAdventures.InMemoryDataStoreEngine.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>Pure F# Mini-Redis engine</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Engine.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../hash-map/CodingAdventures.HashMap.fsproj" />
+    <ProjectReference Include="../hash-set/CodingAdventures.HashSet.fsproj" />
+    <ProjectReference Include="../heap/CodingAdventures.Heap.fsproj" />
+    <ProjectReference Include="../hyperloglog/CodingAdventures.HyperLogLog.fsproj" />
+    <ProjectReference Include="../in-memory-data-store-protocol/CodingAdventures.InMemoryDataStoreProtocol.fsproj" />
+    <ProjectReference Include="../resp-protocol/CodingAdventures.RespProtocol.fsproj" />
+    <ProjectReference Include="../skip-list/CodingAdventures.SkipList.fsproj" />
+  </ItemGroup>
+</Project>

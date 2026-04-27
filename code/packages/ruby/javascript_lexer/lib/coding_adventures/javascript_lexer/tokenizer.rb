@@ -58,6 +58,7 @@ module CodingAdventures
     #   code/                                    <- ../../../../../..
     #   grammars/                                <- ../../../../../../grammars
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
+    COMPILED_GRAMMAR_DIR = __dir__
 
     # The generic javascript.tokens file (no version qualifier).
     JS_TOKENS_PATH = File.join(GRAMMAR_DIR, "javascript.tokens")
@@ -93,6 +94,20 @@ module CodingAdventures
       end
     end
 
+    def self.resolve_compiled_tokens_path(version)
+      resolve_tokens_path(version)
+
+      if version.nil? || version.empty?
+        File.join(COMPILED_GRAMMAR_DIR, "_grammar.rb")
+      else
+        File.join(COMPILED_GRAMMAR_DIR, "_grammar_#{version}.rb")
+      end
+    end
+
+    def self.token_grammar(version)
+      CodingAdventures::GrammarTools.load_token_grammar(resolve_compiled_tokens_path(version))
+    end
+
     # Tokenize a string of JavaScript source code into an array of Token objects.
     #
     # The optional `version:` keyword argument selects a specific versioned
@@ -104,11 +119,7 @@ module CodingAdventures
     # @return [Array<CodingAdventures::Lexer::Token>] the token stream
     # @raise [ArgumentError] if version is not nil and not in VALID_VERSIONS
     def self.tokenize(source, version: nil)
-      tokens_path = resolve_tokens_path(version)
-      grammar = CodingAdventures::GrammarTools.parse_token_grammar(
-        File.read(tokens_path, encoding: "UTF-8")
-      )
-      lexer = CodingAdventures::Lexer::GrammarLexer.new(source, grammar)
+      lexer = CodingAdventures::Lexer::GrammarLexer.new(source, token_grammar(version))
       lexer.tokenize
     end
   end

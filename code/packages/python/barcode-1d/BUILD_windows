@@ -1,0 +1,13 @@
+echo Windows prerequisite refs for python/barcode-1d: ../paint-vm-metal-native ../paint-codec-png-native
+uv venv --quiet --clear
+uv pip install --python .venv\Scripts\python.exe -e ../paint-instructions --quiet
+uv pip install --python .venv\Scripts\python.exe -e ../barcode-layout-1d --quiet
+uv pip install --python .venv\Scripts\python.exe -e ../pixel_container --quiet
+uv pip install --python .venv\Scripts\python.exe -e ../code39 --quiet
+uv pip install --python .venv\Scripts\python.exe -e ../codabar --quiet
+uv pip install --python .venv\Scripts\python.exe -e ../code128 --quiet
+uv pip install --python .venv\Scripts\python.exe -e ../ean-13 --quiet
+uv pip install --python .venv\Scripts\python.exe -e ../itf --quiet
+uv pip install --python .venv\Scripts\python.exe -e ../upc-a --quiet
+uv pip install --python .venv\Scripts\python.exe -e .[dev] --quiet
+.venv\Scripts\python.exe -m pytest tests -v

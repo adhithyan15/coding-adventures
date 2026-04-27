@@ -1641,6 +1641,12 @@ function GrammarLexer.new(source, grammar)
         context_keyword_set[ck] = true
     end
 
+    -- Build layout keyword set
+    local layout_keyword_set = {}
+    for _, lk in ipairs(grammar.layout_keywords or {}) do
+        layout_keyword_set[lk] = true
+    end
+
     return setmetatable({
         _source              = source,
         _grammar             = grammar,
@@ -1654,6 +1660,7 @@ function GrammarLexer.new(source, grammar)
         _skip_patterns       = skip_patterns,
         _has_skip_patterns   = #skip_patterns > 0,
         _indent_mode         = (grammar.mode == "indentation"),
+        _layout_mode         = (grammar.mode == "layout"),
         _indent_stack        = { 0 },
         _bracket_depth       = 0,
         _bracket_depths      = { paren = 0, bracket = 0, brace = 0 },
@@ -1665,6 +1672,7 @@ function GrammarLexer.new(source, grammar)
         _alias_map           = alias_map,
         _escape_mode         = grammar.escape_mode or "",
         _case_insensitive    = grammar.case_insensitive or false,
+        _layout_keyword_set  = layout_keyword_set,
     }, GrammarLexer)
 end
 
@@ -1841,6 +1849,8 @@ end
 function GrammarLexer:tokenize()
     if self._indent_mode then
         return self:_tokenize_indentation()
+    elseif self._layout_mode then
+        return self:_tokenize_layout()
     end
     return self:_tokenize_standard()
 end
@@ -1965,6 +1975,108 @@ function GrammarLexer:_tokenize_standard()
     self._skip_enabled = true
 
     return tokens
+end
+
+function GrammarLexer:_tokenize_layout()
+    return self:_apply_layout(self:_tokenize_standard())
+end
+
+function GrammarLexer:_apply_layout(tokens)
+    local result = {}
+    local layout_stack = {}
+    local pending_layouts = 0
+    local suppress_depth = 0
+
+    for index, token in ipairs(tokens) do
+        local type_name = token.type_name or token_type_to_string(token.type):upper()
+
+        if type_name == "NEWLINE" then
+            result[#result + 1] = token
+            local next_token = self:_next_layout_token(tokens, index + 1)
+            if suppress_depth == 0 and next_token ~= nil then
+                while #layout_stack > 0 and next_token.column < layout_stack[#layout_stack] do
+                    result[#result + 1] = self:_virtual_layout_token("VIRTUAL_RBRACE", "}", next_token)
+                    layout_stack[#layout_stack] = nil
+                end
+
+                local next_type = next_token.type_name or token_type_to_string(next_token.type):upper()
+                if #layout_stack > 0
+                    and next_type ~= "EOF"
+                    and next_token.value ~= "}"
+                    and next_token.column == layout_stack[#layout_stack] then
+                    result[#result + 1] = self:_virtual_layout_token("VIRTUAL_SEMICOLON", ";", next_token)
+                end
+            end
+            goto continue
+        end
+
+        if type_name == "EOF" then
+            while #layout_stack > 0 do
+                result[#result + 1] = self:_virtual_layout_token("VIRTUAL_RBRACE", "}", token)
+                layout_stack[#layout_stack] = nil
+            end
+            result[#result + 1] = token
+            goto continue
+        end
+
+        if pending_layouts > 0 then
+            if token.value == "{" then
+                pending_layouts = pending_layouts - 1
+            else
+                for _ = 1, pending_layouts do
+                    layout_stack[#layout_stack + 1] = token.column
+                    result[#result + 1] = self:_virtual_layout_token("VIRTUAL_LBRACE", "{", token)
+                end
+                pending_layouts = 0
+            end
+        end
+
+        result[#result + 1] = token
+
+        if not self:_is_virtual_layout_token(token) then
+            if token.value == "(" or token.value == "[" or token.value == "{" then
+                suppress_depth = suppress_depth + 1
+            elseif (token.value == ")" or token.value == "]" or token.value == "}") and suppress_depth > 0 then
+                suppress_depth = suppress_depth - 1
+            end
+        end
+
+        if self:_is_layout_keyword(token) then
+            pending_layouts = pending_layouts + 1
+        end
+
+        ::continue::
+    end
+
+    return result
+end
+
+function GrammarLexer:_next_layout_token(tokens, start_index)
+    for i = start_index, #tokens do
+        local token = tokens[i]
+        local type_name = token.type_name or token_type_to_string(token.type):upper()
+        if type_name ~= "NEWLINE" then
+            return token
+        end
+    end
+    return nil
+end
+
+function GrammarLexer:_virtual_layout_token(type_name, value, anchor)
+    return Token.new(TokenType.Name, value, anchor.line, anchor.column, type_name)
+end
+
+function GrammarLexer:_is_virtual_layout_token(token)
+    local type_name = token.type_name or ""
+    return type_name:sub(1, 8) == "VIRTUAL_"
+end
+
+function GrammarLexer:_is_layout_keyword(token)
+    if not next(self._layout_keyword_set) then
+        return false
+    end
+    local value = token.value or ""
+    return self._layout_keyword_set[value] or self._layout_keyword_set[value:lower()] or false
 end
 
 --- Process indentation at the start of a logical line.

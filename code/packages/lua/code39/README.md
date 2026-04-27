@@ -1,24 +1,14 @@
 # code39 (Lua)
 
-Code 39 barcode encoder — normalize, encode, expand runs, render SVG.
+Dependency-free Code 39 encoder that emits backend-neutral paint scenes.
 
 ## Usage
 
 ```lua
 local code39 = require("coding_adventures.code39")
 
--- Encode a string
-local encoded = code39.encode_code39("HELLO")
--- Returns: { {char="*",...}, {char="H",...}, {char="E",...}, ..., {char="*",...} }
-
--- Expand into bar/space runs
-local runs = code39.expand_code39_runs("HELLO")
--- Each run: { color="bar"|"space", width="narrow"|"wide", ... }
-
--- Draw as SVG
 local scene = code39.draw_code39("HELLO")
 ```
 
-## Dependencies
-
-None — self-contained. Optionally uses `coding_adventures.draw_instructions` if available.
+This package stops at `PaintScene` so the same barcode logic can feed native
+Paint VMs, Canvas, SVG, or future codecs.

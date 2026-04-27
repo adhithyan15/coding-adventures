@@ -143,7 +143,7 @@ class WasmRuntime:
             host=self._host,
         )
 
-        # Set memory on WASI stub if applicable
+        # Bind linear memory on the WASI host if it exposes set_memory().
         if self._host is not None and hasattr(self._host, "set_memory") and memory is not None:
             self._host.set_memory(memory)
 

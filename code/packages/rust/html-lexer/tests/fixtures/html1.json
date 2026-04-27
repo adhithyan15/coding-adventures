@@ -1,0 +1,92 @@
+{
+  "format": "venture-html-lexer-fixtures/v1",
+  "suite": "html1",
+  "description": "Mosaic-era HTML compatibility-floor cases for the current generated Rust wrapper.",
+  "cases": [
+    {
+      "id": "mosaic-text-and-tag",
+      "input": "<TITLE>Hello</TITLE>",
+      "tokens": [
+        "StartTag(name=title, attributes=[], self_closing=false)",
+        "Text(data=Hello)",
+        "EndTag(name=title)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "mosaic-attributes-and-self-closing",
+      "input": "<IMG SRC=\"mosaic.gif\" ALT='Splash' hidden=1/>",
+      "tokens": [
+        "StartTag(name=img, attributes=[src=mosaic.gif, alt=Splash, hidden=1], self_closing=true)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "mosaic-comment",
+      "input": "Before<!--note-->After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=note)",
+        "Text(data=After)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "mosaic-doctype-and-heading",
+      "input": "<!DOCTYPE HTML><H1 class=test>Hello</H1>",
+      "tokens": [
+        "Doctype(name=html, force_quirks=false)",
+        "StartTag(name=h1, attributes=[class=test], self_closing=false)",
+        "Text(data=Hello)",
+        "EndTag(name=h1)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "comment-eof-recovery",
+      "input": "<!--open",
+      "tokens": [
+        "Comment(data=open)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "eof-in-comment"
+      ]
+    },
+    {
+      "id": "mosaic-title-rcdata-end-tag",
+      "description": "Seeded title RCDATA context emits the matching end tag",
+      "input": "Hello</title>",
+      "tokens": [
+        "Text(data=Hello)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "mosaic-title-rcdata-lt-reference",
+      "description": "Seeded title RCDATA context resolves &lt; into text",
+      "input": "Hello&lt;/title>",
+      "tokens": [
+        "Text(data=Hello</title>)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "mosaic-style-rawtext-end-tag",
+      "description": "Seeded style RAWTEXT context emits the matching end tag while keeping raw text literal",
+      "input": "body { color: red; }</style>",
+      "tokens": [
+        "Text(data=body { color: red; })",
+        "EndTag(name=style)",
+        "EOF"
+      ],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    }
+  ]
+}

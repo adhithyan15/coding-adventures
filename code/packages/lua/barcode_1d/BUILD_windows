@@ -1,0 +1,10 @@
+luarocks show coding-adventures-paint-instructions 1>NUL 2>NUL || (cd ../paint_instructions && luarocks make --local --deps-mode=none coding-adventures-paint-instructions-0.1.0-1.rockspec)
+luarocks show coding-adventures-barcode-layout-1d 1>NUL 2>NUL || (cd ../barcode_layout_1d && luarocks make --local --deps-mode=none coding-adventures-barcode-layout-1d-0.1.0-1.rockspec)
+luarocks show coding-adventures-codabar 1>NUL 2>NUL || (cd ../codabar && luarocks make --local --deps-mode=none coding-adventures-codabar-0.1.0-1.rockspec)
+luarocks show coding-adventures-code128 1>NUL 2>NUL || (cd ../code128 && luarocks make --local --deps-mode=none coding-adventures-code128-0.1.0-1.rockspec)
+luarocks show coding-adventures-code39 1>NUL 2>NUL || (cd ../code39 && luarocks make --local --deps-mode=none coding-adventures-code39-0.1.0-1.rockspec)
+luarocks show coding-adventures-ean-13 1>NUL 2>NUL || (cd ../ean_13 && luarocks make --local --deps-mode=none coding-adventures-ean-13-0.1.0-1.rockspec)
+luarocks show coding-adventures-itf 1>NUL 2>NUL || (cd ../itf && luarocks make --local --deps-mode=none coding-adventures-itf-0.1.0-1.rockspec)
+luarocks show coding-adventures-upc-a 1>NUL 2>NUL || (cd ../upc_a && luarocks make --local --deps-mode=none coding-adventures-upc-a-0.1.0-1.rockspec)
+luarocks make --local --deps-mode=none coding-adventures-barcode-1d-0.1.0-1.rockspec
+cd tests && busted . --verbose --pattern=test_

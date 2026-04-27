@@ -1,0 +1,803 @@
+"""Tests for parsed-source loading and explicit initialization execution."""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+import pytest
+from logic_engine import (
+    Atom,
+    Compound,
+    ConjExpr,
+    DisjExpr,
+    FreshExpr,
+    LogicVar,
+    RelationCall,
+    State,
+    atom,
+    conj,
+    disj,
+    eq,
+    fresh,
+    reify,
+    relation,
+    solve_all,
+    solve_from,
+    term,
+    visible_clauses_for,
+)
+
+from prolog_loader import (
+    LoadedPrologProject,
+    PrologExpansionError,
+    PrologInitializationError,
+    SourceResolver,
+    __version__,
+    adapt_prolog_goal,
+    link_loaded_prolog_sources,
+    load_iso_prolog_source,
+    load_swi_prolog_file,
+    load_swi_prolog_project,
+    load_swi_prolog_project_from_files,
+    load_swi_prolog_source,
+    run_initialization_goals,
+    run_prolog_initialization_goals,
+)
+
+
+class TestVersion:
+    """Verify the package is importable and versioned."""
+
+    def test_version_exists(self) -> None:
+        assert __version__ == "0.1.0"
+
+
+class TestPrologLoader:
+    """Loading should keep parsing separate from explicit initialization."""
+
+    def test_load_iso_source_collects_initialization_metadata(self) -> None:
+        loaded = load_iso_prolog_source(
+            """
+            :- dynamic(parent/2).
+            :- initialization(main(Result)).
+            parent(homer, bart).
+            main(done).
+            """,
+        )
+
+        assert len(loaded.initialization_directives) == 1
+        assert str(loaded.initialization_terms[0]) == "main(Result)"
+        assert loaded.program.dynamic_relations == frozenset(
+            {relation("parent", 2).key()},
+        )
+        assert loaded.predicate_registry.get("parent", 2) is not None
+
+    def test_load_swi_source_collects_initialization_metadata(self) -> None:
+        loaded = load_swi_prolog_source(
+            """
+            :- initialization(main).
+            main.
+            """,
+        )
+
+        assert len(loaded.initialization_goals) == 1
+        assert str(loaded.initialization_terms[0]) == "main"
+
+    def test_load_swi_source_collects_module_metadata(self) -> None:
+        loaded = load_swi_prolog_source(
+            """
+            :- module(family, [parent/2, ancestor/2, op(500, yfx, ++)]).
+            :- use_module(graph, [edge/2]).
+            parent(homer, bart).
+            """,
+        )
+
+        assert loaded.module_spec is not None
+        assert loaded.module_spec.name.name == "family"
+        assert [str(export) for export in loaded.module_spec.exports] == [
+            "parent/2",
+            "ancestor/2",
+        ]
+        assert str(loaded.module_spec.exported_operators[0].symbol) == "++"
+        assert loaded.module_imports[0].module_name.name == "graph"
+        assert [str(imported) for imported in loaded.module_imports[0].imports] == [
+            "edge/2",
+        ]
+
+    def test_load_swi_source_applies_term_expansion_to_clauses(self) -> None:
+        loaded = load_swi_prolog_source(
+            """
+            :- term_expansion(edge(X, Y), link(X, Y)).
+            edge(homer, bart).
+            ?- link(homer, Who).
+            """,
+        )
+        query = loaded.queries[0]
+
+        assert solve_all(loaded.program, query.variables["Who"], query.goal) == [
+            atom("bart"),
+        ]
+
+    def test_load_swi_source_term_expansion_supports_lists_and_repeatable_passes(
+        self,
+    ) -> None:
+        loaded = load_swi_prolog_source(
+            """
+            :- term_expansion(bundle(X), [left(X), middle(X)]).
+            :- term_expansion(middle(X), right(X)).
+            bundle(ok).
+            ?- left(Value).
+            ?- right(Value).
+            """,
+        )
+        first_query = loaded.queries[0]
+        second_query = loaded.queries[1]
+
+        assert solve_all(
+            loaded.program,
+            first_query.variables["Value"],
+            first_query.goal,
+        ) == [atom("ok")]
+        assert solve_all(
+            loaded.program,
+            second_query.variables["Value"],
+            second_query.goal,
+        ) == [atom("ok")]
+
+    def test_load_swi_source_applies_goal_expansion_to_queries_and_initialization(
+        self,
+    ) -> None:
+        loaded = load_swi_prolog_source(
+            """
+            :- goal_expansion(run, main).
+            :- initialization(run).
+            main.
+            ?- run.
+            """,
+        )
+        query = loaded.queries[0]
+
+        assert str(loaded.initialization_terms[0]) == "main"
+        assert next(solve_from(loaded.program, query.goal, State()), None) is not None
+        assert run_initialization_goals(loaded) == State()
+
+    def test_load_swi_source_raises_for_invalid_term_expansion_output(self) -> None:
+        with pytest.raises(
+            PrologExpansionError,
+            match=r"term expansion produced invalid clause term: 42",
+        ):
+            load_swi_prolog_source(
+                """
+                :- term_expansion(edge, 42).
+                edge.
+                """,
+            )
+
+    def test_run_initialization_goals_executes_clause_backed_startup_goals(
+        self,
+    ) -> None:
+        loaded = load_iso_prolog_source(
+            """
+            :- initialization(main(Result)).
+            main(done).
+            """,
+        )
+
+        state = run_initialization_goals(loaded)
+        result_var = loaded.initialization_directives[0].variables["Result"]
+
+        assert reify(result_var, state.substitution) == atom("done")
+
+    def test_run_prolog_initialization_goals_executes_builtin_runtime_goals(
+        self,
+    ) -> None:
+        loaded = load_iso_prolog_source(
+            """
+            :- initialization(dynamic(memo/1)).
+            :- initialization(assertz(memo(ok))).
+            :- initialization(call(memo(ok))).
+            :- initialization(once(memo(ok))).
+            :- initialization(not(memo(missing))).
+            :- initialization(current_predicate(memo/1)).
+            :- initialization(predicate_property(memo/1, dynamic)).
+            """,
+        )
+
+        state = run_prolog_initialization_goals(loaded)
+        memo = relation("memo", 1)
+        visible = visible_clauses_for(loaded.program, memo, state)
+
+        assert len(visible) == 1
+        assert visible[0].head == memo("ok")
+
+    def test_run_initialization_goals_accepts_shared_prolog_goal_adapter(
+        self,
+    ) -> None:
+        loaded = load_iso_prolog_source(
+            """
+            :- initialization(dynamic(memo/1)).
+            :- initialization(assertz(memo(ok))).
+            """,
+        )
+
+        state = run_initialization_goals(loaded, goal_adapter=adapt_prolog_goal)
+        memo = relation("memo", 1)
+        visible = visible_clauses_for(loaded.program, memo, state)
+
+        assert len(visible) == 1
+        assert visible[0].head == memo("ok")
+
+    def test_run_initialization_goals_still_accepts_custom_goal_adapters(
+        self,
+    ) -> None:
+        loaded = load_iso_prolog_source(":- initialization(custom_startup).\n")
+
+        def adapt(goal: object) -> object:
+            if isinstance(goal, RelationCall) and goal.relation == relation(
+                "custom_startup",
+                0,
+            ):
+                return eq(atom("ok"), atom("ok"))
+            return goal
+
+        state = run_initialization_goals(loaded, goal_adapter=adapt)
+
+        assert state == State()
+
+    def test_run_initialization_goals_raises_for_failed_startup_goals(self) -> None:
+        loaded = load_iso_prolog_source(":- initialization(missing_goal).\n")
+
+        with pytest.raises(
+            PrologInitializationError,
+            match=r"initialization directive 1 failed: missing_goal",
+        ):
+            run_initialization_goals(loaded)
+
+    def test_run_prolog_initialization_goals_supports_phrase_with_dcg_rules(
+        self,
+    ) -> None:
+        loaded = load_iso_prolog_source(
+            """
+            digits --> [a], [b].
+            :- initialization(phrase(digits, [a, b], Rest)).
+            """,
+        )
+
+        state = run_prolog_initialization_goals(loaded)
+        rest_var = loaded.initialization_directives[0].variables["Rest"]
+
+        assert reify(rest_var, state.substitution) == atom("[]")
+
+    def test_link_loaded_prolog_sources_resolves_module_imports(self) -> None:
+        family = load_swi_prolog_source(
+            """
+            :- module(family, [parent/2, ancestor/2]).
+            parent(homer, bart).
+            parent(bart, lisa).
+            ancestor(X, Y) :- parent(X, Y).
+            ancestor(X, Y) :- parent(X, Z), ancestor(Z, Y).
+            """,
+        )
+        app = load_swi_prolog_source(
+            """
+            :- module(app, [run/1]).
+            :- use_module(family, [ancestor/2]).
+            run(Who) :- ancestor(homer, Who).
+            ?- run(Who).
+            """,
+        )
+
+        project = link_loaded_prolog_sources(family, app)
+        query = project.queries[0]
+
+        assert isinstance(project, LoadedPrologProject)
+        assert [module.name.name for module in project.modules] == ["family", "app"]
+        assert solve_all(project.program, query.variables["Who"], query.goal) == [
+            atom("bart"),
+            atom("lisa"),
+        ]
+
+    def test_load_swi_prolog_project_keeps_local_definitions_over_imports(self) -> None:
+        project = load_swi_prolog_project(
+            """
+            :- module(family, [message/1]).
+            message(imported).
+            """,
+            """
+            :- module(app, [message/1]).
+            :- use_module(family, [message/1]).
+            message(local).
+            ?- message(Value).
+            """,
+        )
+
+        query = project.queries[0]
+
+        assert solve_all(project.program, query.variables["Value"], query.goal) == [
+            atom("local"),
+        ]
+
+    def test_run_project_initialization_goals_resolves_imported_module_calls(
+        self,
+    ) -> None:
+        project = load_swi_prolog_project(
+            """
+            :- module(family, [main/1]).
+            main(done).
+            """,
+            """
+            :- module(app, []).
+            :- use_module(family, [main/1]).
+            :- initialization(main(Result)).
+            """,
+        )
+
+        state = run_prolog_initialization_goals(project)
+        result_var = project.initialization_directives[0].variables["Result"]
+
+        assert reify(result_var, state.substitution) == atom("done")
+
+    def test_linked_queries_support_explicit_module_qualification(self) -> None:
+        project = load_swi_prolog_project(
+            """
+            :- module(family, [parent/2, ancestor/2]).
+            parent(homer, bart).
+            parent(bart, lisa).
+            ancestor(X, Y) :- parent(X, Y).
+            ancestor(X, Y) :- parent(X, Z), ancestor(Z, Y).
+            """,
+            """
+            :- module(app, []).
+            ?- family:ancestor(homer, Who).
+            """,
+        )
+
+        query = project.queries[0]
+
+        assert solve_all(project.program, query.variables["Who"], query.goal) == [
+            atom("bart"),
+            atom("lisa"),
+        ]
+
+    def test_load_swi_prolog_file_tracks_source_path_and_dependencies(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        family_path = tmp_path / "family.pl"
+        family_path.write_text(
+            ":- module(family, [ancestor/2]).\nancestor(homer, bart).\n",
+            encoding="utf-8",
+        )
+        app_path = tmp_path / "app.pl"
+        app_path.write_text(
+            ":- module(app, [run/1]).\n"
+            ":- use_module(family, [ancestor/2]).\n"
+            ":- consult('facts.pl').\n"
+            "run(Who) :- ancestor(homer, Who).\n",
+            encoding="utf-8",
+        )
+
+        loaded = load_swi_prolog_file(app_path)
+
+        assert loaded.source_path == app_path.resolve()
+        assert [dependency.kind for dependency in loaded.file_dependencies] == [
+            "use_module",
+            "consult",
+        ]
+        assert loaded.file_dependencies[0].resolved_path == family_path.resolve()
+        assert loaded.file_dependencies[1].resolved_path == (
+            tmp_path / "facts.pl"
+        ).resolve()
+
+    def test_load_swi_prolog_project_from_files_loads_consulted_user_sources(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        facts_path = tmp_path / "facts.pl"
+        facts_path.write_text(
+            "parent(homer, bart).\nparent(bart, lisa).\n",
+            encoding="utf-8",
+        )
+        app_path = tmp_path / "app.pl"
+        app_path.write_text(
+            ":- consult(facts).\n?- parent(homer, Who).\n",
+            encoding="utf-8",
+        )
+
+        project = load_swi_prolog_project_from_files(app_path)
+        query = project.queries[0]
+
+        assert solve_all(project.program, query.variables["Who"], query.goal) == [
+            atom("bart"),
+        ]
+
+    def test_load_swi_prolog_project_from_files_resolves_use_module_files(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        family_path = tmp_path / "family.pl"
+        family_path.write_text(
+            ":- module(family, [ancestor/2]).\n"
+            "ancestor(homer, bart).\n"
+            "ancestor(bart, lisa).\n",
+            encoding="utf-8",
+        )
+        app_path = tmp_path / "app.pl"
+        app_path.write_text(
+            ":- module(app, [run/1]).\n"
+            ":- use_module(family, [ancestor/2]).\n"
+            "run(Who) :- ancestor(homer, Who).\n"
+            "?- run(Who).\n",
+            encoding="utf-8",
+        )
+
+        project = load_swi_prolog_project_from_files(app_path)
+        query = project.queries[0]
+
+        assert solve_all(project.program, query.variables["Who"], query.goal) == [
+            atom("bart"),
+        ]
+
+    def test_module_qualification_uses_target_module_imports(self) -> None:
+        project = load_swi_prolog_project(
+            """
+            :- module(edges, [edge/2]).
+            edge(homer, bart).
+            edge(bart, lisa).
+            """,
+            """
+            :- module(family, [ancestor/2]).
+            :- use_module(edges, [edge/2]).
+            ancestor(X, Y) :- edge(X, Y).
+            ancestor(X, Y) :- edge(X, Z), ancestor(Z, Y).
+            """,
+            """
+            :- module(app, []).
+            ?- family:ancestor(homer, Who).
+            """,
+        )
+
+        query = project.queries[0]
+
+        assert solve_all(project.program, query.variables["Who"], query.goal) == [
+            atom("bart"),
+            atom("lisa"),
+        ]
+
+    def test_module_qualification_rewrites_meta_call_arguments(self) -> None:
+        project = load_swi_prolog_project(
+            """
+            :- module(family, [ancestor/2]).
+            ancestor(homer, bart).
+            """,
+            """
+            :- module(app, []).
+            ?- call(family:ancestor(homer, Who)).
+            """,
+        )
+
+        query = project.queries[0]
+
+        assert solve_all(
+            project.program,
+            query.variables["Who"],
+            adapt_prolog_goal(query.goal),
+        ) == [
+            atom("bart"),
+        ]
+
+    def test_module_qualified_initialization_goals_execute(self) -> None:
+        project = load_swi_prolog_project(
+            """
+            :- module(family, [main/1]).
+            main(done).
+            """,
+            """
+            :- module(app, []).
+            :- initialization(family:main(Result)).
+            """,
+        )
+
+        state = run_prolog_initialization_goals(project)
+        result_var = project.initialization_directives[0].variables["Result"]
+
+        assert reify(result_var, state.substitution) == atom("done")
+
+    def test_unknown_module_qualification_raises_during_linking(self) -> None:
+        family = load_swi_prolog_source(
+            """
+            :- module(app, []).
+            ?- missing:main(Result).
+            """,
+        )
+
+        with pytest.raises(
+            ValueError,
+            match=r"module qualification references unknown module missing",
+        ):
+            link_loaded_prolog_sources(family)
+
+    def test_load_swi_prolog_project_from_files_resolves_relative_use_module_paths(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        family_path = tmp_path / "family.pl"
+        family_path.write_text(
+            ":- module(family, [main/1]).\nmain(done).\n",
+            encoding="utf-8",
+        )
+        app_path = tmp_path / "app.pl"
+        app_path.write_text(
+            ":- module(app, []).\n"
+            ":- use_module('./family.pl', [main/1]).\n"
+            ":- initialization(main(Result)).\n",
+            encoding="utf-8",
+        )
+
+        project = load_swi_prolog_project_from_files(app_path)
+        state = run_prolog_initialization_goals(project)
+        result_var = project.initialization_directives[0].variables["Result"]
+
+        assert family_path.resolve() in {
+            source.source_path for source in project.sources if source.source_path
+        }
+        assert reify(result_var, state.substitution) == atom("done")
+
+    def test_use_module_file_targets_must_declare_a_module(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        helper_path = tmp_path / "helper.pl"
+        helper_path.write_text("helper(ok).\n", encoding="utf-8")
+        app_path = tmp_path / "app.pl"
+        app_path.write_text(
+            ":- module(app, []).\n:- use_module(helper, [helper/1]).\n",
+            encoding="utf-8",
+        )
+
+        expected_message = (
+            r"use_module file target .*helper\.pl "
+            r"must load a module/2 declaration"
+        )
+        with pytest.raises(
+            ValueError,
+            match=expected_message,
+        ):
+            load_swi_prolog_project_from_files(app_path)
+
+    def test_load_swi_prolog_project_from_files_splices_include_into_parent(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        facts_path = tmp_path / "facts.pl"
+        facts_path.write_text("parent(homer, bart).\n", encoding="utf-8")
+        helper_path = tmp_path / "helpers.pl"
+        helper_path.write_text(
+            ":- consult('facts.pl').\nrun(Who) :- parent(homer, Who).\n",
+            encoding="utf-8",
+        )
+        app_path = tmp_path / "app.pl"
+        app_path.write_text(
+            ":- module(app, [run/1]).\n"
+            ":- include('helpers.pl').\n"
+            "?- run(Who).\n",
+            encoding="utf-8",
+        )
+
+        project = load_swi_prolog_project_from_files(app_path)
+        query = project.queries[0]
+
+        assert solve_all(project.program, query.variables["Who"], query.goal) == [
+            atom("bart"),
+        ]
+
+    def test_include_target_must_not_declare_a_module(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        helper_path = tmp_path / "helpers.pl"
+        helper_path.write_text(
+            ":- module(helpers, [helper/1]).\nhelper(ok).\n",
+            encoding="utf-8",
+        )
+        app_path = tmp_path / "app.pl"
+        app_path.write_text(
+            ":- module(app, []).\n:- include('helpers.pl').\n",
+            encoding="utf-8",
+        )
+
+        with pytest.raises(
+            ValueError,
+            match=r"included file .*helpers\.pl must not declare module/2",
+        ):
+            load_swi_prolog_file(app_path)
+
+    def test_load_swi_prolog_file_rejects_circular_includes(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        first_path = tmp_path / "first.pl"
+        second_path = tmp_path / "second.pl"
+        first_path.write_text(":- include('second.pl').\n", encoding="utf-8")
+        second_path.write_text(":- include('first.pl').\n", encoding="utf-8")
+
+        with pytest.raises(
+            ValueError,
+            match=r"circular include detected at .*first\.pl",
+        ):
+            load_swi_prolog_file(first_path)
+
+    def test_load_swi_prolog_project_from_files_uses_custom_library_resolver(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        library_dir = tmp_path / "lib"
+        library_dir.mkdir()
+        family_path = library_dir / "family.pl"
+        family_path.write_text(
+            ":- module(family, [ancestor/2]).\nancestor(homer, bart).\n",
+            encoding="utf-8",
+        )
+        app_path = tmp_path / "app.pl"
+        app_path.write_text(
+            ":- module(app, []).\n"
+            ":- use_module(library(family), [ancestor/2]).\n"
+            "?- ancestor(homer, Who).\n",
+            encoding="utf-8",
+        )
+
+        def resolve_library(
+            term_value: object,
+            source_path: Path,
+        ) -> Path | None:
+            del source_path
+            if (
+                isinstance(term_value, Compound)
+                and term_value.functor.name == "library"
+                and len(term_value.args) == 1
+                and isinstance(term_value.args[0], Atom)
+            ):
+                return library_dir / f"{term_value.args[0].symbol.name}.pl"
+            return None
+
+        source_resolver: SourceResolver = resolve_library
+
+        project = load_swi_prolog_project_from_files(
+            app_path,
+            source_resolver=source_resolver,
+        )
+        query = project.queries[0]
+
+        assert family_path.resolve() in {
+            source.source_path for source in project.sources if source.source_path
+        }
+        assert solve_all(project.program, query.variables["Who"], query.goal) == [
+            atom("bart"),
+        ]
+
+
+class TestPrologGoalAdapter:
+    """The shared adapter should translate common Prolog builtin shapes."""
+
+    @pytest.mark.parametrize(
+        "goal",
+        [
+            relation("var", 1)(atom("X")),
+            relation("nonvar", 1)(atom("x")),
+            relation("ground", 1)(atom("x")),
+            relation("atom", 1)(atom("x")),
+            relation("atomic", 1)(atom("x")),
+            relation("number", 1)(1),
+            relation("string", 1)("hello"),
+            relation("compound", 1)(term("pair", atom("a"), atom("b"))),
+            relation("callable", 1)(term("memo", atom("ok"))),
+            relation("call", 1)(term("memo", atom("ok"))),
+            relation(
+                "phrase",
+                2,
+            )(term("digits"), term(".", atom("a"), term(".", atom("b"), atom("[]")))),
+            relation("phrase", 3)(
+                term("digits"),
+                term(".", atom("a"), term(".", atom("b"), atom("[]"))),
+                atom("[]"),
+            ),
+            relation("once", 1)(term("memo", atom("ok"))),
+            relation("not", 1)(term("memo", atom("missing"))),
+            relation("\\+", 1)(term("memo", atom("missing"))),
+            relation("functor", 3)(term("memo", atom("ok")), atom("memo"), 1),
+            relation("arg", 3)(1, term("memo", atom("ok")), atom("ok")),
+            relation("=..", 2)(
+                term("memo", atom("ok")),
+                term(".", atom("memo"), term(".", atom("ok"), atom("[]"))),
+            ),
+            relation("==", 2)(atom("a"), atom("a")),
+            relation("compare", 3)(atom("<"), atom("a"), atom("b")),
+            relation("@<", 2)(atom("a"), atom("b")),
+            relation("@=<", 2)(atom("a"), atom("b")),
+            relation("@>", 2)(atom("b"), atom("a")),
+            relation("@>=", 2)(atom("b"), atom("a")),
+            relation("asserta", 1)(term("memo", atom("ok"))),
+            relation("assertz", 1)(term("memo", atom("ok"))),
+            relation("retract", 1)(term("memo", atom("ok"))),
+            relation("retractall", 1)(term("memo", atom("ok"))),
+            relation("clause", 2)(term("memo", atom("ok")), atom("true")),
+            relation("dynamic", 1)(term("/", atom("memo"), 1)),
+            relation("abolish", 1)(term("/", atom("memo"), 1)),
+            relation("current_predicate", 1)(term("/", atom("memo"), 1)),
+            relation("predicate_property", 2)(
+                term("/", atom("memo"), 1),
+                atom("dynamic"),
+            ),
+            relation("predicate_property", 2)(atom("memo"), atom("defined")),
+            relation("predicate_property", 2)(
+                term("memo", atom("ok")),
+                atom("defined"),
+            ),
+        ],
+    )
+    def test_adapt_prolog_goal_rewrites_supported_relation_calls(
+        self,
+        goal: RelationCall,
+    ) -> None:
+        adapted = adapt_prolog_goal(goal)
+
+        assert adapted is not goal
+
+    def test_adapt_prolog_goal_rewrites_indicator_lists(self) -> None:
+        goal = relation("dynamic", 1)(
+            term(
+                ".",
+                term("/", atom("memo"), 1),
+                term(".", term("/", atom("cache"), 2), atom("[]")),
+            ),
+        )
+
+        adapted = adapt_prolog_goal(goal)
+
+        assert isinstance(adapted, ConjExpr)
+        assert len(adapted.goals) == 2
+
+    def test_adapt_prolog_goal_recurses_through_composite_expressions(self) -> None:
+        composite = conj(
+            relation("call", 1)(term("memo", atom("ok"))),
+            disj(
+                relation("dynamic", 1)(term("/", atom("memo"), 1)),
+                relation("unknown", 1)(atom("value")),
+            ),
+            fresh(
+                1,
+                lambda pred: relation("predicate_property", 2)(
+                    pred,
+                    atom("defined"),
+                ),
+            ),
+        )
+
+        adapted = adapt_prolog_goal(composite)
+
+        assert isinstance(adapted, ConjExpr)
+        assert isinstance(adapted.goals[1], DisjExpr)
+        assert isinstance(adapted.goals[2], FreshExpr)
+
+    def test_adapt_prolog_goal_preserves_unsupported_shapes(self) -> None:
+        variable_indicator = LogicVar(id=1)
+        bad_dynamic = relation("dynamic", 1)(variable_indicator)
+        bad_abolish = relation("abolish", 1)(atom("memo"))
+        bad_current = relation("current_predicate", 1)(atom("memo"))
+        unknown = relation("unknown_builtin", 1)(atom("memo"))
+
+        assert adapt_prolog_goal(bad_dynamic) is bad_dynamic
+        assert adapt_prolog_goal(bad_abolish) is bad_abolish
+        assert adapt_prolog_goal(bad_current) is bad_current
+        assert adapt_prolog_goal(unknown) is unknown
+
+    def test_adapt_prolog_goal_exposes_variable_indicator_forms(self) -> None:
+        predicate_indicator = LogicVar(id=2)
+        current_goal = relation("current_predicate", 1)(predicate_indicator)
+        property_goal = relation("predicate_property", 2)(
+            predicate_indicator,
+            atom("defined"),
+        )
+
+        assert isinstance(adapt_prolog_goal(current_goal), FreshExpr)
+        assert isinstance(adapt_prolog_goal(property_goal), FreshExpr)

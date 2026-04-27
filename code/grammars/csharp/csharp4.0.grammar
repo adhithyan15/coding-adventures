@@ -1,0 +1,1205 @@
+# C# 4.0 (2010) — Parser Grammar
+# @version 1
+# @csharp_version 4.0
+#
+# The C# Language Specification — ECMA-334 4th Edition, 2010
+# .NET Framework 4.0, Visual Studio 2010
+#
+# This grammar defines the syntactic structure of C# 4.0, which accumulates
+# ALL features from C# 1.0 through 3.0 and adds four new features:
+#
+#   1. dynamic type — bypasses compile-time type checking
+#   2. Named arguments — call with parameter names: Method(name: "Alice")
+#   3. Optional parameters — parameters with default values: void F(int x = 0)
+#   4. Generic variance — covariant (out T) and contravariant (in T) type params
+#
+# Understanding the `dynamic` type:
+#
+#   In C#, every expression has a static type known at compile time. When you
+#   write `obj.Foo()`, the compiler checks that `obj`'s type has a method `Foo`.
+#   If not, it's a compile-time error.
+#
+#   `dynamic` breaks this rule. When a variable is declared as `dynamic`, the
+#   compiler SKIPS type checking on all operations involving it:
+#
+#     dynamic obj = GetValue();
+#     obj.Foo();              // no compile error — checked at runtime
+#     obj + 5;                // no compile error
+#     string s = obj;         // no compile error — implicit conversion
+#
+#   At RUNTIME, the CLR uses the DLR (Dynamic Language Runtime) to resolve
+#   member accesses. If `obj` doesn't have `Foo`, you get a
+#   `RuntimeBinderException` instead of a compile error.
+#
+#   The primary uses of `dynamic` in practice:
+#
+#   a) COM interop (Office, Excel, etc.):
+#      dynamic excel = Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application"));
+#      excel.Workbooks.Add();  // no casting needed — dynamic dispatch
+#
+#   b) Calling methods on objects of unknown type (e.g., from JSON, scripting):
+#      dynamic json = JsonParser.Parse(input);
+#      string name = json.user.name;
+#
+#   c) Interop with Python/Ruby via IronPython/IronRuby:
+#      dynamic py = PythonEngine.ImportModule("math");
+#      double result = py.sqrt(16.0);
+#
+# Understanding named and optional arguments:
+#
+#   These features existed in VB since VB6. C# was always more strict about
+#   positional arguments. C# 4.0 finally added them for better COM interop
+#   and general API expressiveness.
+#
+#   Optional parameters (declaration side):
+#     void Greet(string name, string greeting = "Hello", bool formal = false)
+#
+#   Named arguments (call side):
+#     Greet("Alice");                       // greeting="Hello", formal=false
+#     Greet("Alice", formal: true);         // skip greeting, use name for formal
+#     Greet(formal: true, name: "Bob");     // completely out of order!
+#     Greet("Bob", greeting: "Hi");         // mix positional and named
+#
+#   Rules:
+#     - All optional parameters must come AFTER required parameters
+#     - Named arguments can appear in any order
+#     - Positional arguments must come BEFORE named arguments
+#
+# Understanding generic variance:
+#
+#   Variance is about substitutability of generic types. Consider:
+#     class Dog : Animal { }
+#
+#   Intuitively, a list of Dogs IS-A list of Animals... but is it?
+#   If you add a Cat to a List<Animal>, that's a type violation if you
+#   aliased it from List<Dog>! So List<T> is INVARIANT — neither covariant
+#   nor contravariant.
+#
+#   However, read-only collections CAN be covariant:
+#     IEnumerable<Dog> dogs = GetDogs();
+#     IEnumerable<Animal> animals = dogs;   // ERROR in C# 3.0, OK in C# 4.0!
+#   This works because you only READ from IEnumerable<T> — you never add.
+#   The `out T` annotation declares this read-only intent to the compiler.
+#
+#   Write-only constructs CAN be contravariant:
+#     IComparer<Animal> animalComparer = GetAnimalComparer();
+#     IComparer<Dog> dogComparer = animalComparer;  // OK in C# 4.0!
+#   If you can compare any two Animals, you can certainly compare two Dogs.
+#   The `in T` annotation declares this write-only (consumer) intent.
+#
+#   Java uses use-site variance (wildcards): ? extends T, ? super T
+#   C# uses declaration-site variance: out T, in T
+#   Declaration-site is simpler for the user — define it once on the type.
+#
+# Grammar changes from C# 3.0:
+#
+#   ADDED:
+#   - `dynamic` type in type_name positions
+#   - Named argument syntax: name: expression (in argument_list)
+#   - Optional parameter syntax: type NAME = expression (in fixed_parameter)
+#   - Variance annotations: [in|out] on type_parameter in interfaces/delegates
+#
+#   NOT YET ADDED (comes later):
+#   - async/await (C# 5.0)
+#   - string interpolation (C# 6.0)
+#   - null-conditional operator (C# 6.0)
+#   - pattern matching (C# 7.0)
+#
+# Format:
+#   rule_name = definition ;
+#
+# UPPERCASE names reference tokens from csharp4.0.tokens.
+# lowercase names reference other grammar rules.
+#
+# Notation:
+#   |       alternation (ordered choice — PEG semantics, first match wins)
+#   { x }   zero or more repetitions
+#   [ x ]   optional
+#   ( x )   grouping
+#   "lit"   match a keyword (lexer emits KEYWORD token with this value)
+#
+# IMPORTANT: `dynamic` is a NAME token. The grammar matches it by value
+# using "dynamic" in type positions. Same for all C# 3.0 context keywords.
+
+# ============================================================================
+# Compilation Unit (Entry Point)
+# ============================================================================
+#
+# Unchanged from C# 3.0.
+
+compilation_unit = { extern_alias_directive }
+                   { using_directive }
+                   { global_attribute_section }
+                   { namespace_member_declaration } ;
+
+# ============================================================================
+# Extern Alias Directives
+# ============================================================================
+
+extern_alias_directive = "extern" NAME SEMICOLON ;
+
+# ============================================================================
+# Using Directives
+# ============================================================================
+#
+# Unchanged from C# 3.0. `using static` (C# 6.0) is not yet available.
+
+using_directive = "using" qualified_name SEMICOLON
+               | "using" NAME EQUALS qualified_name SEMICOLON ;
+
+# ============================================================================
+# Qualified Names
+# ============================================================================
+
+qualified_name = NAME { DOT NAME }
+               | NAME COLON_COLON NAME { DOT NAME } ;
+
+namespace_or_type_name = namespace_or_type_part { DOT namespace_or_type_part } ;
+
+namespace_or_type_part = NAME COLON_COLON NAME [ type_argument_list ]
+                       | NAME [ type_argument_list ] ;
+
+# ============================================================================
+# Generic Type Parameters and Arguments
+# ============================================================================
+#
+# C# 4.0 EXTENDS type parameters with variance annotations on interfaces
+# and delegate type parameters.
+#
+# Variance annotations:
+#
+#   `out` — covariant. The type parameter appears only in OUTPUT positions
+#           (return type, read-only property type). This allows a more-derived
+#           generic type to be used where a less-derived one is expected.
+#
+#           interface IEnumerable<out T> {
+#               IEnumerator<T> GetEnumerator();
+#           }
+#           // Covariance: IEnumerable<Dog> is a IEnumerable<Animal>
+#
+#   `in` — contravariant. The type parameter appears only in INPUT positions
+#          (method parameter type). This allows a less-derived generic type
+#          to be used where a more-derived one is expected.
+#
+#          interface IComparer<in T> {
+#              int Compare(T x, T y);
+#          }
+#          // Contravariance: IComparer<Animal> is a IComparer<Dog>
+#
+# Variance is ONLY allowed on interface and delegate type parameters.
+# Class and struct type parameters cannot have variance (because they have
+# both input and output positions mixed together).
+#
+# The `in` and `out` keywords used for variance are the SAME tokens as the
+# reserved `in` and `out` keywords. The parser disambiguates by position:
+# inside a type parameter list, they are variance annotations.
+
+type_parameter_list = LESS_THAN type_parameter { COMMA type_parameter } GREATER_THAN ;
+
+# Variance annotations are new in C# 4.0. Only valid for interface/delegate
+# type parameters. The annotation is optional and appears before the name.
+type_parameter = { attribute_section } [ variance_annotation ] NAME ;
+
+variance_annotation = "in"
+                    | "out" ;
+
+type_argument_list = LESS_THAN type { COMMA type } GREATER_THAN ;
+
+# ============================================================================
+# Type Parameter Constraints (C# 2.0, unchanged in 4.0)
+# ============================================================================
+
+type_parameter_constraints_clause = "where" NAME COLON type_parameter_constraints ;
+
+type_parameter_constraints = primary_constraint [ COMMA secondary_constraints ]
+                             [ COMMA constructor_constraint ]
+                           | secondary_constraints [ COMMA constructor_constraint ]
+                           | constructor_constraint ;
+
+primary_constraint = "class"
+                   | "struct"
+                   | namespace_or_type_name ;
+
+secondary_constraints = namespace_or_type_name { COMMA namespace_or_type_name } ;
+
+constructor_constraint = "new" LPAREN RPAREN ;
+
+# ============================================================================
+# Global Attributes
+# ============================================================================
+
+global_attribute_section = LBRACKET global_attribute_target COLON attribute_list [ COMMA ] RBRACKET ;
+
+global_attribute_target = "assembly"
+                        | "module" ;
+
+# ============================================================================
+# Namespace Declarations
+# ============================================================================
+
+namespace_declaration = "namespace" qualified_name LBRACE
+                        { extern_alias_directive }
+                        { using_directive }
+                        { namespace_member_declaration }
+                        RBRACE [ SEMICOLON ] ;
+
+# ============================================================================
+# Namespace Members
+# ============================================================================
+
+namespace_member_declaration = namespace_declaration
+                             | type_declaration ;
+
+type_declaration = class_declaration
+                 | struct_declaration
+                 | interface_declaration
+                 | enum_declaration
+                 | delegate_declaration
+                 | SEMICOLON ;
+
+# ============================================================================
+# Attributes
+# ============================================================================
+
+attribute_section = LBRACKET [ attribute_target COLON ] attribute_list [ COMMA ] RBRACKET ;
+
+attribute_target = "field"
+                 | "event"
+                 | "method"
+                 | "param"
+                 | "property"
+                 | "return"
+                 | "type" ;
+
+attribute_list = attribute { COMMA attribute } ;
+
+attribute = namespace_or_type_name [ LPAREN [ attribute_arguments ] RPAREN ] ;
+
+attribute_arguments = attribute_argument { COMMA attribute_argument } ;
+
+attribute_argument = [ NAME COLON ] expression ;
+
+# ============================================================================
+# Class Declarations
+# ============================================================================
+#
+# Unchanged from C# 3.0 at the class declaration level. The new features
+# (dynamic, named args, optional params, variance) affect method bodies,
+# parameter lists, and type parameter lists — not the class header.
+
+class_declaration = { attribute_section } { class_modifier } [ "partial" ] "class" NAME
+                    [ type_parameter_list ]
+                    [ COLON class_base_list ]
+                    { type_parameter_constraints_clause }
+                    class_body [ SEMICOLON ] ;
+
+class_modifier = "public"
+               | "protected"
+               | "internal"
+               | "private"
+               | "new"
+               | "abstract"
+               | "sealed"
+               | "static" ;
+
+class_base_list = type_name { COMMA type_name } ;
+
+class_body = LBRACE { class_member_declaration } RBRACE ;
+
+# ============================================================================
+# Type Names (with generics and dynamic)
+# ============================================================================
+#
+# C# 4.0 adds `dynamic` as a valid type in type positions.
+#
+# `dynamic` is semantically distinct from `object`:
+#   - `object` is a real type — member access requires casting
+#   - `dynamic` bypasses type checking entirely — all member access compiles
+#
+# Both `object` and `dynamic` are equivalent at RUNTIME (both compile to
+# object in IL), but the compiler treats them very differently.
+
+type_name = NAME { DOT NAME } [ type_argument_list ] ;
+
+type_argument_list = LESS_THAN type_argument { COMMA type_argument } GREATER_THAN ;
+
+type_argument = type ;
+
+# ============================================================================
+# Class Member Declarations
+# ============================================================================
+
+class_member_declaration = constant_declaration
+                         | field_declaration
+                         | method_declaration
+                         | property_declaration
+                         | event_declaration
+                         | indexer_declaration
+                         | operator_declaration
+                         | conversion_operator_declaration
+                         | constructor_declaration
+                         | destructor_declaration
+                         | static_constructor_declaration
+                         | type_declaration
+                         | SEMICOLON ;
+
+# ============================================================================
+# Constant Declarations
+# ============================================================================
+
+constant_declaration = { attribute_section } { constant_modifier } "const" type
+                       constant_declarators SEMICOLON ;
+
+constant_modifier = "public"
+                  | "protected"
+                  | "internal"
+                  | "private"
+                  | "new" ;
+
+constant_declarators = constant_declarator { COMMA constant_declarator } ;
+
+constant_declarator = NAME EQUALS expression ;
+
+# ============================================================================
+# Field Declarations
+# ============================================================================
+
+field_declaration = { attribute_section } { field_modifier } type
+                    variable_declarators SEMICOLON ;
+
+field_modifier = "public"
+               | "protected"
+               | "internal"
+               | "private"
+               | "new"
+               | "static"
+               | "readonly"
+               | "volatile" ;
+
+variable_declarators = variable_declarator { COMMA variable_declarator } ;
+
+variable_declarator = NAME [ EQUALS variable_initializer ] ;
+
+variable_initializer = expression
+                     | array_initializer ;
+
+array_initializer = LBRACE [ variable_initializer { COMMA variable_initializer } ] [ COMMA ] RBRACE ;
+
+# ============================================================================
+# Method Declarations
+# ============================================================================
+#
+# Methods in C# 4.0 can now declare optional parameters with default values.
+# The grammar change is in formal_parameter_list (see below).
+
+method_declaration = { attribute_section } { method_modifier } [ "partial" ]
+                     return_type qualified_name [ type_parameter_list ]
+                     LPAREN [ formal_parameter_list ] RPAREN
+                     { type_parameter_constraints_clause }
+                     method_body ;
+
+method_modifier = "public"
+                | "protected"
+                | "internal"
+                | "private"
+                | "new"
+                | "static"
+                | "virtual"
+                | "sealed"
+                | "override"
+                | "abstract"
+                | "extern" ;
+
+return_type = "void"
+            | type ;
+
+method_body = block
+            | SEMICOLON ;
+
+# ============================================================================
+# Formal Parameters (C# 4.0 EXTENDED)
+# ============================================================================
+#
+# C# 4.0 adds OPTIONAL PARAMETERS: parameters with default values.
+#
+# Rules for optional parameters:
+#   1. Optional parameters must come AFTER required parameters
+#   2. The default value must be a compile-time constant, null, or default(T)
+#   3. params arrays (parameter arrays) must still come last
+#   4. Optional parameters are evaluated at the call site when omitted
+#
+# Examples:
+#   void Connect(string host, int port = 80, bool secure = false) { }
+#   Connect("example.com");              // port=80, secure=false
+#   Connect("example.com", 443);         // port=443, secure=false
+#   Connect("example.com", 443, true);   // all specified
+#
+# Combined with named arguments:
+#   Connect("example.com", secure: true);  // port=80 (default), secure=true
+#
+# The grammar: optional parameters have [ EQUALS expression ] at the end.
+# This EQUALS expression is the default value.
+#
+# Parameter kinds in C# 4.0:
+#   1. Value (required):    void Foo(int x)
+#   2. Value (optional):    void Foo(int x = 0)      — NEW in C# 4.0
+#   3. Reference:           void Foo(ref int x)
+#   4. Output:              void Foo(out int x)
+#   5. Extension target:    void Foo(this string x)  — from C# 3.0
+#   6. Parameter arrays:    void Foo(params int[] x)
+
+formal_parameter_list = fixed_parameters [ COMMA parameter_array ]
+                      | parameter_array ;
+
+fixed_parameters = fixed_parameter { COMMA fixed_parameter } ;
+
+# Optional parameters: the [ EQUALS expression ] part is new in C# 4.0.
+fixed_parameter = { attribute_section } [ parameter_modifier ] type NAME
+                  [ EQUALS expression ] ;
+
+parameter_modifier = "ref"
+                   | "out"
+                   | "this" ;
+
+parameter_array = { attribute_section } "params" type NAME ;
+
+# ============================================================================
+# Property Declarations
+# ============================================================================
+#
+# Unchanged from C# 3.0. Auto-properties are still supported.
+
+property_declaration = { attribute_section } { property_modifier } type
+                       qualified_name LBRACE accessor_declarations RBRACE ;
+
+property_modifier = "public"
+                  | "protected"
+                  | "internal"
+                  | "private"
+                  | "new"
+                  | "static"
+                  | "virtual"
+                  | "sealed"
+                  | "override"
+                  | "abstract"
+                  | "extern" ;
+
+accessor_declarations = get_accessor_declaration [ set_accessor_declaration ]
+                      | set_accessor_declaration [ get_accessor_declaration ] ;
+
+get_accessor_declaration = { attribute_section } [ accessor_modifier ] "get"
+                           ( block | SEMICOLON ) ;
+
+set_accessor_declaration = { attribute_section } [ accessor_modifier ] "set"
+                           ( block | SEMICOLON ) ;
+
+accessor_modifier = "protected"
+                  | "internal"
+                  | "private"
+                  | "protected" "internal"
+                  | "internal" "protected" ;
+
+# ============================================================================
+# Event Declarations
+# ============================================================================
+
+event_declaration = { attribute_section } { event_modifier } "event" type
+                    ( variable_declarators SEMICOLON
+                    | qualified_name LBRACE event_accessor_declarations RBRACE ) ;
+
+event_modifier = "public"
+               | "protected"
+               | "internal"
+               | "private"
+               | "new"
+               | "static"
+               | "virtual"
+               | "sealed"
+               | "override"
+               | "abstract"
+               | "extern" ;
+
+event_accessor_declarations = add_accessor_declaration remove_accessor_declaration
+                            | remove_accessor_declaration add_accessor_declaration ;
+
+add_accessor_declaration = { attribute_section } "add" block ;
+
+remove_accessor_declaration = { attribute_section } "remove" block ;
+
+# ============================================================================
+# Indexer Declarations
+# ============================================================================
+
+indexer_declaration = { attribute_section } { indexer_modifier } type "this"
+                      LBRACKET formal_parameter_list RBRACKET
+                      LBRACE accessor_declarations RBRACE ;
+
+indexer_modifier = "public"
+                 | "protected"
+                 | "internal"
+                 | "private"
+                 | "new"
+                 | "virtual"
+                 | "sealed"
+                 | "override"
+                 | "abstract"
+                 | "extern" ;
+
+# ============================================================================
+# Operator Declarations
+# ============================================================================
+
+operator_declaration = { attribute_section } operator_modifiers type
+                       "operator" overloadable_operator
+                       LPAREN type NAME [ COMMA type NAME ] RPAREN
+                       method_body ;
+
+operator_modifiers = "public" "static" [ "extern" ] ;
+
+overloadable_operator = PLUS
+                      | MINUS
+                      | BANG
+                      | TILDE
+                      | PLUS_PLUS
+                      | MINUS_MINUS
+                      | "true"
+                      | "false"
+                      | STAR
+                      | SLASH
+                      | PERCENT
+                      | AMPERSAND
+                      | PIPE
+                      | CARET
+                      | LEFT_SHIFT
+                      | RIGHT_SHIFT
+                      | EQUALS_EQUALS
+                      | NOT_EQUALS
+                      | LESS_THAN
+                      | GREATER_THAN
+                      | LESS_EQUALS
+                      | GREATER_EQUALS ;
+
+# ============================================================================
+# Conversion Operator Declarations
+# ============================================================================
+
+conversion_operator_declaration = { attribute_section } operator_modifiers
+                                  ( "implicit" | "explicit" ) "operator" type
+                                  LPAREN type NAME RPAREN method_body ;
+
+# ============================================================================
+# Constructor Declarations
+# ============================================================================
+
+constructor_declaration = { attribute_section } { constructor_modifier } NAME
+                          LPAREN [ formal_parameter_list ] RPAREN
+                          [ constructor_initializer ] method_body ;
+
+constructor_modifier = "public"
+                     | "protected"
+                     | "internal"
+                     | "private"
+                     | "extern" ;
+
+constructor_initializer = COLON "base" LPAREN [ argument_list ] RPAREN
+                        | COLON "this" LPAREN [ argument_list ] RPAREN ;
+
+# ============================================================================
+# Destructor (Finalizer) Declarations
+# ============================================================================
+
+destructor_declaration = { attribute_section } [ "extern" ] TILDE NAME
+                         LPAREN RPAREN method_body ;
+
+# ============================================================================
+# Static Constructor Declarations
+# ============================================================================
+
+static_constructor_declaration = { attribute_section } static_constructor_modifiers
+                                 NAME LPAREN RPAREN method_body ;
+
+static_constructor_modifiers = "static" [ "extern" ]
+                             | "extern" "static" ;
+
+# ============================================================================
+# Struct Declarations
+# ============================================================================
+
+struct_declaration = { attribute_section } { struct_modifier } [ "partial" ] "struct" NAME
+                     [ type_parameter_list ]
+                     [ COLON interface_type_list ]
+                     { type_parameter_constraints_clause }
+                     struct_body [ SEMICOLON ] ;
+
+struct_modifier = "public"
+               | "protected"
+               | "internal"
+               | "private"
+               | "new" ;
+
+interface_type_list = type_name { COMMA type_name } ;
+
+struct_body = LBRACE { struct_member_declaration } RBRACE ;
+
+struct_member_declaration = constant_declaration
+                          | field_declaration
+                          | method_declaration
+                          | property_declaration
+                          | event_declaration
+                          | indexer_declaration
+                          | operator_declaration
+                          | conversion_operator_declaration
+                          | constructor_declaration
+                          | static_constructor_declaration
+                          | type_declaration
+                          | SEMICOLON ;
+
+# ============================================================================
+# Interface Declarations (C# 4.0 EXTENDED — variance on type params)
+# ============================================================================
+#
+# C# 4.0 allows variance annotations on interface type parameters:
+#
+#   public interface IEnumerable<out T> {  // covariant
+#       IEnumerator<T> GetEnumerator();
+#   }
+#
+#   public interface IComparer<in T> {     // contravariant
+#       int Compare(T x, T y);
+#   }
+#
+# The grammar is extended to allow variance_annotation in type_parameter,
+# which is already handled in the type_parameter rule above.
+#
+# Note: The C# compiler enforces variance constraints — if you mark T as `out`
+# but use it in an input position, you get a compile error. The grammar only
+# allows the syntax; semantics are checked later.
+
+interface_declaration = { attribute_section } { interface_modifier } [ "partial" ] "interface" NAME
+                        [ type_parameter_list ]
+                        [ COLON interface_type_list ]
+                        { type_parameter_constraints_clause }
+                        interface_body [ SEMICOLON ] ;
+
+interface_modifier = "public"
+                   | "protected"
+                   | "internal"
+                   | "private"
+                   | "new" ;
+
+interface_body = LBRACE { interface_member_declaration } RBRACE ;
+
+interface_member_declaration = interface_method_declaration
+                             | interface_property_declaration
+                             | interface_event_declaration
+                             | interface_indexer_declaration
+                             | SEMICOLON ;
+
+interface_method_declaration = { attribute_section } [ "new" ] return_type NAME
+                              [ type_parameter_list ]
+                              LPAREN [ formal_parameter_list ] RPAREN
+                              { type_parameter_constraints_clause }
+                              SEMICOLON ;
+
+interface_property_declaration = { attribute_section } [ "new" ] type NAME
+                                LBRACE interface_accessors RBRACE ;
+
+interface_accessors = "get" SEMICOLON [ "set" SEMICOLON ]
+                    | "set" SEMICOLON [ "get" SEMICOLON ] ;
+
+interface_event_declaration = { attribute_section } [ "new" ] "event" type NAME SEMICOLON ;
+
+interface_indexer_declaration = { attribute_section } [ "new" ] type "this"
+                               LBRACKET formal_parameter_list RBRACKET
+                               LBRACE interface_accessors RBRACE ;
+
+# ============================================================================
+# Enum Declarations
+# ============================================================================
+
+enum_declaration = { attribute_section } { enum_modifier } "enum" NAME
+                   [ COLON integral_type ]
+                   enum_body [ SEMICOLON ] ;
+
+enum_modifier = "public"
+              | "protected"
+              | "internal"
+              | "private"
+              | "new" ;
+
+integral_type = "byte"
+              | "sbyte"
+              | "short"
+              | "ushort"
+              | "int"
+              | "uint"
+              | "long"
+              | "ulong" ;
+
+enum_body = LBRACE [ enum_member_declarations ] RBRACE ;
+
+enum_member_declarations = enum_member_declaration
+                           { COMMA enum_member_declaration } [ COMMA ] ;
+
+enum_member_declaration = { attribute_section } NAME [ EQUALS expression ] ;
+
+# ============================================================================
+# Delegate Declarations (C# 4.0 EXTENDED — variance on type params)
+# ============================================================================
+#
+# Like interfaces, delegate type parameters can have variance in C# 4.0:
+#
+#   public delegate TResult Func<in T, out TResult>(T arg);
+#   // Covariant result, contravariant parameter
+#   // Func<Animal, string> can be used where Func<Dog, object> is expected
+#
+# This is the built-in Func<T, TResult> delegate in the BCL. The variance
+# annotations make LINQ and lambda type inference work smoothly.
+
+delegate_declaration = { attribute_section } { delegate_modifier } "delegate"
+                       return_type NAME [ type_parameter_list ]
+                       LPAREN [ formal_parameter_list ] RPAREN
+                       { type_parameter_constraints_clause }
+                       SEMICOLON ;
+
+delegate_modifier = "public"
+                  | "protected"
+                  | "internal"
+                  | "private"
+                  | "new" ;
+
+# ============================================================================
+# Type System (C# 4.0 EXTENDED — adds dynamic)
+# ============================================================================
+#
+# C# 4.0 adds `dynamic` as a special type. Syntactically, `dynamic` looks
+# like a type name (and is lexed as a NAME token). Semantically it is
+# treated specially by the compiler.
+#
+# dynamic vs object:
+#
+#   object obj = "hello";
+#   string s = (string)obj;   // requires explicit cast — compile error without
+#
+#   dynamic dyn = "hello";
+#   string s = dyn;           // no cast needed — compiler allows it (runtime check)
+#   int len = dyn.Length;     // compiles even without knowing dyn is a string
+#
+# dynamic is the same as object at the IL level. The difference is entirely
+# in how the compiler handles member access:
+#   - object member access: must know at compile time
+#   - dynamic member access: resolved at runtime via DLR
+#
+# Arrays of dynamic: dynamic[] arr = new dynamic[3];
+# Nullable dynamic: This is unusual but technically: dynamic? is supported
+# as the dynamic type is a reference type, ? has no effect.
+
+type = "dynamic" { rank_specifier }
+     | value_type { rank_specifier } [ QUESTION ]
+     | reference_type { rank_specifier }
+     | "void" STAR ;
+
+value_type = primitive_type
+           | type_name ;
+
+reference_type = type_name
+               | "object"
+               | "string" ;
+
+primitive_type = numeric_type
+               | "bool" ;
+
+numeric_type = integral_type
+             | floating_point_type
+             | "decimal" ;
+
+floating_point_type = "float"
+                    | "double" ;
+
+rank_specifier = LBRACKET { COMMA } RBRACKET ;
+
+pointer_type = type STAR ;
+
+# ============================================================================
+# Statements
+# ============================================================================
+#
+# Unchanged from C# 3.0. No new statement forms in C# 4.0.
+
+block = LBRACE { statement } RBRACE ;
+
+statement = block
+          | local_variable_declaration_statement
+          | local_constant_declaration_statement
+          | empty_statement
+          | expression_statement
+          | if_statement
+          | while_statement
+          | do_while_statement
+          | for_statement
+          | foreach_statement
+          | switch_statement
+          | try_statement
+          | throw_statement
+          | return_statement
+          | break_statement
+          | continue_statement
+          | goto_statement
+          | lock_statement
+          | using_statement
+          | checked_statement
+          | unchecked_statement
+          | labelled_statement
+          | unsafe_statement
+          | fixed_statement
+          | yield_statement ;
+
+local_variable_declaration_statement = type variable_declarators SEMICOLON ;
+
+local_constant_declaration_statement = "const" type constant_declarators SEMICOLON ;
+
+empty_statement = SEMICOLON ;
+
+expression_statement = expression SEMICOLON ;
+
+if_statement = "if" LPAREN expression RPAREN statement [ "else" statement ] ;
+
+while_statement = "while" LPAREN expression RPAREN statement ;
+
+do_while_statement = "do" statement "while" LPAREN expression RPAREN SEMICOLON ;
+
+for_statement = "for" LPAREN [ for_initializer ] SEMICOLON [ expression ] SEMICOLON
+                [ for_iterator ] RPAREN statement ;
+
+for_initializer = local_variable_declaration
+                | expression_list ;
+
+for_iterator = expression_list ;
+
+local_variable_declaration = type variable_declarators ;
+
+expression_list = expression { COMMA expression } ;
+
+foreach_statement = "foreach" LPAREN type NAME "in" expression RPAREN statement ;
+
+switch_statement = "switch" LPAREN expression RPAREN switch_block ;
+
+switch_block = LBRACE { switch_section } RBRACE ;
+
+switch_section = { switch_label } { statement } ;
+
+switch_label = "case" expression COLON
+             | "default" COLON ;
+
+try_statement = "try" block ( catch_clauses [ finally_clause ]
+                            | finally_clause ) ;
+
+catch_clauses = specific_catch_clause { specific_catch_clause } [ general_catch_clause ]
+              | general_catch_clause ;
+
+specific_catch_clause = "catch" LPAREN type_name [ NAME ] RPAREN block ;
+
+general_catch_clause = "catch" block ;
+
+finally_clause = "finally" block ;
+
+throw_statement = "throw" [ expression ] SEMICOLON ;
+
+return_statement = "return" [ expression ] SEMICOLON ;
+
+break_statement = "break" SEMICOLON ;
+
+continue_statement = "continue" SEMICOLON ;
+
+goto_statement = "goto" NAME SEMICOLON
+               | "goto" "case" expression SEMICOLON
+               | "goto" "default" SEMICOLON ;
+
+lock_statement = "lock" LPAREN expression RPAREN statement ;
+
+using_statement = "using" LPAREN resource_acquisition RPAREN statement ;
+
+resource_acquisition = type variable_declarators
+                     | expression ;
+
+checked_statement = "checked" block ;
+
+unchecked_statement = "unchecked" block ;
+
+labelled_statement = NAME COLON statement ;
+
+unsafe_statement = "unsafe" block ;
+
+fixed_statement = "fixed" LPAREN type variable_declarators RPAREN statement ;
+
+yield_statement = "yield" "return" expression SEMICOLON
+                | "yield" "break" SEMICOLON ;
+
+# ============================================================================
+# Expressions
+# ============================================================================
+#
+# C# 4.0 extends expressions in two ways:
+#
+#   1. NAMED ARGUMENTS at call sites: Method(name: expr, age: expr)
+#      The grammar change is in argument_list / argument (see below).
+#
+#   2. DYNAMIC MEMBER ACCESS: since `dynamic` is handled in the type system
+#      and all member access already goes through primary_suffix, no grammar
+#      change is needed for member access syntax. The `dynamic` type causes
+#      the compiler to emit DLR call sites instead of static calls.
+#
+# All other expression forms are inherited from C# 3.0.
+
+expression = assignment_expression
+           | lambda_expression
+           | query_expression ;
+
+# ============================================================================
+# Lambda Expressions (C# 3.0, unchanged in 4.0)
+# ============================================================================
+
+lambda_expression = lambda_parameters LAMBDA lambda_body ;
+
+lambda_parameters = NAME
+                  | LPAREN [ lambda_parameter_list ] RPAREN ;
+
+lambda_parameter_list = lambda_parameter { COMMA lambda_parameter } ;
+
+lambda_parameter = [ type ] NAME ;
+
+lambda_body = expression
+            | block ;
+
+# ============================================================================
+# LINQ Query Expressions (C# 3.0, unchanged in 4.0)
+# ============================================================================
+
+query_expression = from_clause query_body ;
+
+from_clause = "from" [ type ] NAME "in" expression ;
+
+query_body = { query_body_clause } select_or_group_clause [ query_continuation ] ;
+
+query_body_clause = from_clause
+                  | let_clause
+                  | where_clause
+                  | join_clause
+                  | orderby_clause ;
+
+let_clause = "let" NAME EQUALS expression ;
+
+where_clause = "where" expression ;
+
+join_clause = "join" [ type ] NAME "in" expression
+              "on" expression "equals" expression
+              [ "into" NAME ] ;
+
+orderby_clause = "orderby" ordering { COMMA ordering } ;
+
+ordering = expression [ "ascending" | "descending" ] ;
+
+select_or_group_clause = "select" expression
+                        | "group" expression "by" expression ;
+
+query_continuation = "into" NAME query_body ;
+
+# ============================================================================
+# Assignment and Arithmetic Expressions
+# ============================================================================
+
+assignment_expression = conditional_expression
+                      | unary_expression assignment_operator assignment_expression ;
+
+assignment_operator = EQUALS
+                    | PLUS_EQUALS
+                    | MINUS_EQUALS
+                    | STAR_EQUALS
+                    | SLASH_EQUALS
+                    | PERCENT_EQUALS
+                    | AMPERSAND_EQUALS
+                    | PIPE_EQUALS
+                    | CARET_EQUALS
+                    | LEFT_SHIFT_EQUALS
+                    | RIGHT_SHIFT_EQUALS ;
+
+conditional_expression = null_coalescing_expression
+                         [ QUESTION expression COLON expression ] ;
+
+null_coalescing_expression = logical_or_expression { QUESTION_QUESTION logical_or_expression } ;
+
+logical_or_expression = logical_and_expression { OR_OR logical_and_expression } ;
+
+logical_and_expression = bitwise_or_expression { AND_AND bitwise_or_expression } ;
+
+bitwise_or_expression = bitwise_xor_expression { PIPE bitwise_xor_expression } ;
+
+bitwise_xor_expression = bitwise_and_expression { CARET bitwise_and_expression } ;
+
+bitwise_and_expression = equality_expression { AMPERSAND equality_expression } ;
+
+equality_expression = relational_expression
+                      { ( EQUALS_EQUALS | NOT_EQUALS ) relational_expression } ;
+
+relational_expression = shift_expression
+                        { ( LESS_THAN | GREATER_THAN | LESS_EQUALS | GREATER_EQUALS )
+                          shift_expression
+                        | "is" type
+                        | "as" type } ;
+
+shift_expression = additive_expression
+                   { ( LEFT_SHIFT | RIGHT_SHIFT ) additive_expression } ;
+
+additive_expression = multiplicative_expression
+                      { ( PLUS | MINUS ) multiplicative_expression } ;
+
+multiplicative_expression = unary_expression
+                            { ( STAR | SLASH | PERCENT ) unary_expression } ;
+
+# ============================================================================
+# Unary Expressions
+# ============================================================================
+#
+# Unchanged from C# 3.0. (C# 5.0 adds `await` as a unary operator.)
+
+unary_expression = PLUS_PLUS unary_expression
+                 | MINUS_MINUS unary_expression
+                 | PLUS unary_expression
+                 | MINUS unary_expression
+                 | BANG unary_expression
+                 | TILDE unary_expression
+                 | cast_expression
+                 | AMPERSAND unary_expression
+                 | STAR unary_expression
+                 | postfix_expression ;
+
+cast_expression = LPAREN type RPAREN unary_expression ;
+
+postfix_expression = primary_expression { PLUS_PLUS | MINUS_MINUS } ;
+
+# ============================================================================
+# Primary Expressions
+# ============================================================================
+#
+# Unchanged from C# 3.0. Dynamic member access uses the same member access
+# syntax (DOT NAME) — the `dynamic` behavior is in the type system, not the
+# grammar.
+
+primary_expression = primary { primary_suffix } ;
+
+primary_suffix = DOT NAME [ type_argument_list ]
+               | LPAREN [ argument_list ] RPAREN
+               | LBRACKET expression_list RBRACKET
+               | ARROW NAME ;
+
+primary = literal
+        | "this"
+        | "base" DOT NAME
+        | "base" LBRACKET expression_list RBRACKET
+        | typeof_expression
+        | sizeof_expression
+        | checked_expression
+        | unchecked_expression
+        | default_value_expression
+        | new_expression
+        | anonymous_method_expression
+        | LPAREN expression RPAREN
+        | NAME [ type_argument_list ] ;
+
+typeof_expression = "typeof" LPAREN type_or_void RPAREN ;
+
+type_or_void = type | "void" ;
+
+sizeof_expression = "sizeof" LPAREN type RPAREN ;
+
+checked_expression = "checked" LPAREN expression RPAREN ;
+
+unchecked_expression = "unchecked" LPAREN expression RPAREN ;
+
+default_value_expression = "default" LPAREN type RPAREN ;
+
+anonymous_method_expression = "delegate" [ LPAREN [ formal_parameter_list ] RPAREN ] block ;
+
+# ============================================================================
+# New Expressions (C# 3.0, unchanged in 4.0)
+# ============================================================================
+
+new_expression = "new" new_anonymous_type
+               | "new" new_implicitly_typed_array
+               | "new" new_object_expression
+               | "new" new_array_expression ;
+
+new_anonymous_type = LBRACE [ anonymous_type_member { COMMA anonymous_type_member } ] [ COMMA ] RBRACE ;
+
+anonymous_type_member = [ NAME EQUALS ] expression ;
+
+new_implicitly_typed_array = LBRACKET RBRACKET array_initializer ;
+
+new_object_expression = type_name LPAREN [ argument_list ] RPAREN [ object_or_collection_initializer ]
+                      | type_name object_or_collection_initializer ;
+
+object_or_collection_initializer = LBRACE [ initializer_list ] [ COMMA ] RBRACE ;
+
+initializer_list = initializer_item { COMMA initializer_item } ;
+
+initializer_item = NAME EQUALS ( expression | object_or_collection_initializer )
+                 | LBRACE expression_list RBRACE
+                 | expression ;
+
+new_array_expression = array_type array_creation_suffix ;
+
+array_type = ( primitive_type | type_name ) ;
+
+array_creation_suffix = rank_specifier { rank_specifier } array_initializer
+                      | LBRACKET expression_list RBRACKET { rank_specifier }
+                        [ array_initializer ] ;
+
+# ============================================================================
+# Argument List (C# 4.0 EXTENDED — named arguments)
+# ============================================================================
+#
+# C# 4.0 adds NAMED ARGUMENTS at call sites.
+#
+# Before C# 4.0, all arguments were positional:
+#   Method(value1, value2, value3)
+#
+# After C# 4.0, any argument can be named:
+#   Method(param1: value1, param2: value2)
+#   Method(value1, param3: value3)  // mix positional and named
+#
+# Rules for named arguments:
+#   1. Named arguments can appear in any order relative to each other
+#   2. Named arguments must come AFTER all positional arguments
+#   3. You cannot have a positional argument after a named argument
+#   4. Named arguments improve readability for methods with many bool params:
+#
+#      // Before — hard to read:
+#      CreateUser("alice", true, false, true, 30);
+#
+#      // After — named arguments:
+#      CreateUser("alice", isAdmin: true, isActive: false, isVerified: true, age: 30);
+#
+# The grammar: an argument can optionally start with NAME COLON.
+# This is syntactically ambiguous with `expr : expr` in a ternary expression,
+# but the COLON inside LPAREN...RPAREN is always parsed as a named arg label,
+# not as a ternary operator (ternary's COLON appears at a different nesting).
+#
+# ref and out arguments:
+#   Method(ref x, out y)             — unchanged from before 4.0
+#   Method(ref: x)                   — unusual but valid named ref arg
+
+argument_list = argument { COMMA argument } ;
+
+argument = [ NAME COLON ] [ "ref" | "out" ] expression ;
+
+# ============================================================================
+# Literals
+# ============================================================================
+
+literal = NUMBER
+        | CHAR
+        | STRING
+        | VERBATIM_STRING
+        | "true"
+        | "false"
+        | "null" ;

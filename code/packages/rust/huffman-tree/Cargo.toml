@@ -1,0 +1,9 @@
+[package]
+name = "huffman-tree"
+version = "0.1.0"
+edition = "2021"
+description = "Huffman tree data structure with optimal prefix-free encoding — DT27"
+license = "MIT"
+
+[dependencies]
+heap = { path = "../heap" }

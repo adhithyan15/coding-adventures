@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>CodingAdventures.CSharpParser.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>C# parser - parses C# source text using the grammar-driven parser infrastructure</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="CSharpParser.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../grammar-tools/CodingAdventures.GrammarTools.fsproj" />
+    <ProjectReference Include="../lexer/CodingAdventures.Lexer.fsproj" />
+    <ProjectReference Include="../parser/CodingAdventures.Parser.fsproj" />
+    <ProjectReference Include="../csharp-lexer/CodingAdventures.CSharpLexer.fsproj" />
+  </ItemGroup>
+</Project>

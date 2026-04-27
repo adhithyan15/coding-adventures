@@ -1,0 +1,9 @@
+[package]
+name = "zip"
+version = "0.1.0"
+edition = "2021"
+description = "ZIP archive format (CMP09) — read and write .zip files"
+license = "MIT"
+
+[dependencies]
+lzss = { path = "../lzss" }

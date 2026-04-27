@@ -1,3 +1,4 @@
+use in_memory_data_store_protocol::{CommandFrame, EngineResponse};
 use std::collections::HashMap;
 use std::fs::{File, OpenOptions};
 use std::io::{self, Write};
@@ -6,13 +7,13 @@ use std::path::PathBuf;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
 
-use in_memory_data_store_protocol::{command_frame_from_resp, CommandFrame};
-use resp_protocol::{decode_all, encode, RespError, RespValue};
+
+
 
 use crate::commands::register_builtin_commands;
 use crate::store::Store;
 
-pub type CommandHandler = Arc<dyn Fn(Store, &[Vec<u8>]) -> (Store, RespValue) + Send + Sync>;
+pub type CommandHandler = Arc<dyn Fn(Store, &[Vec<u8>]) -> (Store, EngineResponse) + Send + Sync>;
 
 #[derive(Clone)]
 pub struct CommandRegistration {
@@ -22,22 +23,21 @@ pub struct CommandRegistration {
 }
 
 pub trait DataStoreBackend: Send + Sync {
-    fn execute_frame(&self, command: &CommandFrame) -> RespValue;
+    fn execute_frame(&self, command: &CommandFrame) -> EngineResponse;
 
-    fn execute_frame_owned(&self, command: CommandFrame) -> RespValue {
+    fn execute_frame_owned(&self, command: CommandFrame) -> EngineResponse {
         self.execute_frame(&command)
     }
 
-    fn execute(&self, command: &[Vec<u8>]) -> RespValue {
+    fn execute(&self, command: &[Vec<u8>]) -> EngineResponse {
         match CommandFrame::from_parts(command.to_vec()) {
             Some(frame) => self.execute_frame(&frame),
-            None => RespValue::Error(RespError::new(
-                "ERR protocol error: expected array of bulk strings",
-            )),
+            None => EngineResponse::error(
+                "ERR protocol error: expected array of bulk strings"),
         }
     }
 
-    fn execute_owned(&self, command: Vec<Vec<u8>>) -> RespValue {
+    fn execute_owned(&self, command: Vec<Vec<u8>>) -> EngineResponse {
         self.execute(&command)
     }
 
@@ -100,7 +100,7 @@ impl DataStoreEngine {
         skip_lazy_expire: bool,
         handler: F,
     ) where
-        F: Fn(Store, &[Vec<u8>]) -> (Store, RespValue) + Send + Sync + 'static,
+        F: Fn(Store, &[Vec<u8>]) -> (Store, EngineResponse) + Send + Sync + 'static,
     {
         assert!(
             !self.frozen.load(Ordering::SeqCst),
@@ -129,21 +129,20 @@ impl DataStoreEngine {
         db_index: usize,
         command: &CommandFrame,
         record_aof: bool,
-    ) -> (usize, RespValue) {
+    ) -> (usize, EngineResponse) {
         self.execute_parts_with_db(db_index, &command.command, &command.args, record_aof)
     }
 
-    pub fn execute_frame(&self, command: &CommandFrame) -> RespValue {
+    pub fn execute_frame(&self, command: &CommandFrame) -> EngineResponse {
         let db_index = self.store.lock().expect("store mutex poisoned").active_db;
         self.execute_with_db(db_index, command, true).1
     }
 
-    pub fn execute_parts(&self, command: &[Vec<u8>]) -> RespValue {
+    pub fn execute_parts(&self, command: &[Vec<u8>]) -> EngineResponse {
         match CommandFrame::from_parts(command.to_vec()) {
             Some(frame) => self.execute_frame(&frame),
-            None => RespValue::Error(RespError::new(
-                "ERR protocol error: expected array of bulk strings",
-            )),
+            None => EngineResponse::error(
+                "ERR protocol error: expected array of bulk strings"),
         }
     }
 
@@ -163,7 +162,7 @@ impl DataStoreEngine {
         command: &str,
         args: &[Vec<u8>],
         record_aof: bool,
-    ) -> (usize, RespValue) {
+    ) -> (usize, EngineResponse) {
         let command = command.to_ascii_uppercase();
         let registration = self
             .commands
@@ -175,7 +174,7 @@ impl DataStoreEngine {
         let Some(registration) = registration else {
             return (
                 db_index,
-                RespValue::Error(RespError::new(format!("ERR unknown command '{}'", command))),
+                EngineResponse::error(format!("ERR unknown command '{}'", command)),
             );
         };
 
@@ -201,20 +200,39 @@ impl DataStoreEngine {
 
     fn replay_aof(&self, path: &Path) -> io::Result<()> {
         let bytes = std::fs::read(path)?;
-        let (messages, _) = decode_all(&bytes).map_err(map_resp_decode_error)?;
         let mut db_index = self.store.lock().expect("store mutex poisoned").active_db;
-        for message in messages {
-            if let Some(frame) = command_frame_from_resp(message) {
+        
+        let mut i = 0;
+        while i < bytes.len() {
+            if i + 4 > bytes.len() { break; }
+            let len = u32::from_le_bytes(bytes[i..i+4].try_into().unwrap()) as usize;
+            i += 4;
+            if i + len > bytes.len() { break; }
+            
+            let mut parts = Vec::new();
+            let mut j = i;
+            let end = i + len;
+            while j < end {
+                if j + 4 > end { break; }
+                let part_len = u32::from_le_bytes(bytes[j..j+4].try_into().unwrap()) as usize;
+                j += 4;
+                if j + part_len > end { break; }
+                parts.push(bytes[j..j+part_len].to_vec());
+                j += part_len;
+            }
+            
+            if let Some(frame) = CommandFrame::from_parts(parts) {
                 let (next_db, _) = self.execute_with_db(db_index, &frame, false);
                 db_index = next_db;
             }
+            i += len;
         }
         Ok(())
     }
 }
 
 impl DataStoreBackend for DataStoreEngine {
-    fn execute_frame(&self, command: &CommandFrame) -> RespValue {
+    fn execute_frame(&self, command: &CommandFrame) -> EngineResponse {
         DataStoreEngine::execute_frame(self, command)
     }
 
@@ -232,18 +250,27 @@ fn append_aof(engine: &DataStoreEngine, command: &str, args: &[Vec<u8>]) {
     let Some(file) = guard.as_mut() else {
         return;
     };
-    let payload = RespValue::Array(Some(
-        std::iter::once(command.as_bytes().to_vec())
-            .chain(args.iter().cloned())
-            .map(|bytes| RespValue::BulkString(Some(bytes)))
-            .collect(),
-    ));
-    if let Ok(encoded) = encode(payload) {
-        let _ = file.write_all(&encoded);
-        let _ = file.flush();
+    
+    // Custom simple AOF encoding [TotalLen: 4][Part1Len: 4][Part1...][Part2Len: 4][Part2...]
+    let mut payload = Vec::new();
+    let command_bytes = command.as_bytes();
+    
+    let mut total_len = 0;
+    total_len += 4 + command_bytes.len();
+    for arg in args {
+        total_len += 4 + arg.len();
     }
-}
-
-fn map_resp_decode_error(err: resp_protocol::RespDecodeError) -> io::Error {
-    io::Error::new(io::ErrorKind::InvalidData, err.message)
+    
+    payload.extend_from_slice(&(total_len as u32).to_le_bytes());
+    
+    payload.extend_from_slice(&(command_bytes.len() as u32).to_le_bytes());
+    payload.extend_from_slice(command_bytes);
+    
+    for arg in args {
+        payload.extend_from_slice(&(arg.len() as u32).to_le_bytes());
+        payload.extend_from_slice(arg);
+    }
+    
+    let _ = file.write_all(&payload);
+    let _ = file.flush();
 }

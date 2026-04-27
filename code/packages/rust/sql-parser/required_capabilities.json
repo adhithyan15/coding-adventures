@@ -2,19 +2,6 @@
   "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
   "version": 1,
   "package": "rust/sql-parser",
-  "capabilities": [
-    {
-      "category": "fs",
-      "action": "read",
-      "target": "../../grammars/sql.tokens",
-      "justification": "Reads SQL token grammar definition file (via sql-lexer) to tokenize source text at initialization time."
-    },
-    {
-      "category": "fs",
-      "action": "read",
-      "target": "../../grammars/sql.grammar",
-      "justification": "Reads SQL parser grammar definition file to build the recursive-descent parser at initialization time."
-    }
-  ],
-  "justification": "Reads grammar definition files. No write, network, or process access needed."
+  "capabilities": [],
+  "justification": "Pure computation. SQL token and parser grammars are embedded as generated Rust code, so no filesystem, network, or process access is needed."
 }

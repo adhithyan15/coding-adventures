@@ -1,0 +1,11 @@
+[package]
+name = "coding-adventures-csharp-parser"
+version = "0.1.0"
+edition = "2021"
+description = "C# parser — parses C# source code into an AST using the grammar-driven parser and the csharp.grammar file"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+coding-adventures-csharp-lexer = { path = "../csharp-lexer" }

@@ -1,0 +1,1 @@
+cd native/paint_codec_png_native && cargo build --release && cd ../.. && mkdir -p priv && { cp native/paint_codec_png_native/target/release/libpaint_codec_png_native.dylib priv/paint_codec_png_native.so 2>/dev/null || cp native/paint_codec_png_native/target/release/libpaint_codec_png_native.so priv/paint_codec_png_native.so; } && mix deps.get --quiet && mix compile && mix test

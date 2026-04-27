@@ -6,7 +6,7 @@
 // 1. Name normalization (kebab → snake, camel, joined)
 // 2. CLI parsing via cli-builder integration
 // 3. Dependency resolution (transitive closure, topological sort)
-// 4. File generation for all six languages
+// 4. File generation for supported scaffold languages
 // 5. Input validation (bad names, missing deps)
 // 6. End-to-end scaffolding with BUILD file verification
 
@@ -81,6 +81,8 @@ func TestDirName(t *testing.T) {
 		{"my-package", "rust", "my-package"},
 		{"my-package", "ruby", "my_package"},
 		{"my-package", "elixir", "my_package"},
+		{"my-package", "java", "my-package"},
+		{"my-package", "kotlin", "my-package"},
 	}
 	for _, tt := range tests {
 		got := dirName(tt.input, tt.lang)
@@ -168,7 +170,7 @@ func TestInvalidPackageName(t *testing.T) {
 
 func TestUnknownLanguage(t *testing.T) {
 	var stdout, stderr bytes.Buffer
-	code := run(specPath(t), []string{"scaffold-generator", "test-pkg", "--language", "java"}, &stdout, &stderr)
+	code := run(specPath(t), []string{"scaffold-generator", "test-pkg", "--language", "fortran"}, &stdout, &stderr)
 	if code == 0 {
 		t.Error("expected non-zero exit code for unknown language")
 	}
@@ -301,6 +303,50 @@ end
 	}
 	if len(deps) != 2 {
 		t.Fatalf("expected 2 deps, got %d: %v", len(deps), deps)
+	}
+}
+
+func TestReadJavaDeps(t *testing.T) {
+	tmpDir := t.TempDir()
+	buildGradle := `dependencies {
+    api("com.codingadventures:grammar-tools")
+    api("com.codingadventures:lexer")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
+}
+`
+	os.WriteFile(filepath.Join(tmpDir, "build.gradle.kts"), []byte(buildGradle), 0o644)
+
+	deps, err := readJavaDeps(tmpDir)
+	if err != nil {
+		t.Fatalf("readJavaDeps: %v", err)
+	}
+	if len(deps) != 2 {
+		t.Fatalf("expected 2 deps, got %d: %v", len(deps), deps)
+	}
+	if deps[0] != "grammar-tools" || deps[1] != "lexer" {
+		t.Errorf("deps = %v, want [grammar-tools lexer]", deps)
+	}
+}
+
+func TestReadKotlinDeps(t *testing.T) {
+	tmpDir := t.TempDir()
+	buildGradle := `dependencies {
+    api("com.codingadventures:parser")
+    api("com.codingadventures:json-lexer")
+    testImplementation(kotlin("test"))
+}
+`
+	os.WriteFile(filepath.Join(tmpDir, "build.gradle.kts"), []byte(buildGradle), 0o644)
+
+	deps, err := readKotlinDeps(tmpDir)
+	if err != nil {
+		t.Fatalf("readKotlinDeps: %v", err)
+	}
+	if len(deps) != 2 {
+		t.Fatalf("expected 2 deps, got %d: %v", len(deps), deps)
+	}
+	if deps[0] != "parser" || deps[1] != "json-lexer" {
+		t.Errorf("deps = %v, want [parser json-lexer]", deps)
 	}
 }
 
@@ -747,6 +793,93 @@ func TestGenerateHaskellUsesShortTestSuiteName(t *testing.T) {
 
 	if !strings.Contains(string(cabal), "test-suite spec") {
 		t.Fatal("cabal file should use a short test-suite name")
+	}
+}
+
+func TestGenerateJava(t *testing.T) {
+	tmpDir := t.TempDir()
+	err := generateJava(tmpDir, "test-pkg", "A test package", "", []string{"logic-gates"})
+	if err != nil {
+		t.Fatalf("generateJava: %v", err)
+	}
+
+	buildGradle, err := os.ReadFile(filepath.Join(tmpDir, "build.gradle.kts"))
+	if err != nil {
+		t.Fatalf("cannot read build.gradle.kts: %v", err)
+	}
+	if !strings.Contains(string(buildGradle), "api(\"com.codingadventures:logic-gates\")") {
+		t.Error("build.gradle.kts missing direct dependency")
+	}
+
+	settingsGradle, err := os.ReadFile(filepath.Join(tmpDir, "settings.gradle.kts"))
+	if err != nil {
+		t.Fatalf("cannot read settings.gradle.kts: %v", err)
+	}
+	if !strings.Contains(string(settingsGradle), "includeBuild(\"../logic-gates\")") {
+		t.Error("settings.gradle.kts missing composite build include")
+	}
+
+	sourcePath := filepath.Join(tmpDir, "src", "main", "java", "com", "codingadventures", "testpkg", "TestPkg.java")
+	if _, err := os.Stat(sourcePath); err != nil {
+		t.Fatalf("generated Java source missing: %v", err)
+	}
+
+	testPath := filepath.Join(tmpDir, "src", "test", "java", "com", "codingadventures", "testpkg", "TestPkgTest.java")
+	if _, err := os.Stat(testPath); err != nil {
+		t.Fatalf("generated Java test missing: %v", err)
+	}
+
+	capabilities, err := os.ReadFile(filepath.Join(tmpDir, "required_capabilities.json"))
+	if err != nil {
+		t.Fatalf("cannot read required_capabilities.json: %v", err)
+	}
+	if !strings.Contains(string(capabilities), "\"package\": \"java/test-pkg\"") {
+		t.Error("required_capabilities.json missing package identifier")
+	}
+}
+
+func TestGenerateKotlin(t *testing.T) {
+	tmpDir := t.TempDir()
+	err := generateKotlin(tmpDir, "test-pkg", "A test package", "", []string{"logic-gates"})
+	if err != nil {
+		t.Fatalf("generateKotlin: %v", err)
+	}
+
+	buildGradle, err := os.ReadFile(filepath.Join(tmpDir, "build.gradle.kts"))
+	if err != nil {
+		t.Fatalf("cannot read build.gradle.kts: %v", err)
+	}
+	if !strings.Contains(string(buildGradle), "kotlin(\"jvm\") version \"2.1.20\"") {
+		t.Error("build.gradle.kts missing Kotlin JVM plugin")
+	}
+	if !strings.Contains(string(buildGradle), "api(\"com.codingadventures:logic-gates\")") {
+		t.Error("build.gradle.kts missing direct dependency")
+	}
+
+	settingsGradle, err := os.ReadFile(filepath.Join(tmpDir, "settings.gradle.kts"))
+	if err != nil {
+		t.Fatalf("cannot read settings.gradle.kts: %v", err)
+	}
+	if !strings.Contains(string(settingsGradle), "includeBuild(\"../logic-gates\")") {
+		t.Error("settings.gradle.kts missing composite build include")
+	}
+
+	sourcePath := filepath.Join(tmpDir, "src", "main", "kotlin", "com", "codingadventures", "testpkg", "TestPkg.kt")
+	if _, err := os.Stat(sourcePath); err != nil {
+		t.Fatalf("generated Kotlin source missing: %v", err)
+	}
+
+	testPath := filepath.Join(tmpDir, "src", "test", "kotlin", "com", "codingadventures", "testpkg", "TestPkgTest.kt")
+	if _, err := os.Stat(testPath); err != nil {
+		t.Fatalf("generated Kotlin test missing: %v", err)
+	}
+
+	capabilities, err := os.ReadFile(filepath.Join(tmpDir, "required_capabilities.json"))
+	if err != nil {
+		t.Fatalf("cannot read required_capabilities.json: %v", err)
+	}
+	if !strings.Contains(string(capabilities), "\"package\": \"kotlin/test-pkg\"") {
+		t.Error("required_capabilities.json missing package identifier")
 	}
 }
 

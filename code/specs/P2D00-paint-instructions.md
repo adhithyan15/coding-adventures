@@ -99,6 +99,7 @@ type PaintInstruction =
   | PaintEllipse
   | PaintPath
   | PaintGlyphRun
+  | PaintText
   | PaintGroup
   | PaintLayer
   | PaintLine
@@ -393,12 +394,27 @@ Descenders (g, p, y, j) hang below it.
 Ascenders (h, l, d, b) rise above it.
 ```
 
-#### GlyphRun vs Text — why there is no PaintText
+#### GlyphRun vs Text — two text instructions, one invariant
 
-A beginner reading this spec might ask: why `PaintGlyphRun` instead of a simpler
-`PaintText { x, y, text: string, font_name: string, font_size: number }`?
+The IR carries **two** text instructions:
 
-The answer is that *text rendering is a two-phase pipeline*:
+- `PaintGlyphRun` — pre-shaped, glyph-level. Used when the layout engine owns
+  shaping (TXT01+TXT02 device-independent, or TXT03a/b/c native OS backends
+  that return addressable glyph IDs like `CGGlyph` / `IDWriteFontFace` indices
+  / `PangoGlyph`).
+- `PaintText` — string-level. Used when the **runtime itself** does shaping
+  at paint time and does not expose glyph IDs to the caller. The only backend
+  in this category today is HTML Canvas 2D (TXT03d); SVG text and CSS rendering
+  have the same shape.
+
+They are **complements, not alternatives** for a given pipeline. A caller that
+has glyph IDs (macOS native path, device-independent path) emits
+`PaintGlyphRun`. A caller whose runtime does shaping internally (browser
+canvas) emits `PaintText`. The two paths never mix in a single pipeline.
+
+##### Why PaintGlyphRun exists
+
+Text rendering is a *two-phase pipeline* when the caller owns shaping:
 
 **Phase 1 — Shaping (done by the layout engine, NOT the paint layer):**
 
@@ -431,6 +447,66 @@ just places each glyph at its pre-computed position.
 
 This is the same design used by PDF (glyph positions are embedded in the file),
 OpenType `GDEF`/`GPOS`, and every professional typesetting system.
+
+##### Why PaintText also exists
+
+Some runtimes — notably **HTML Canvas 2D** — do not expose glyph IDs to the
+caller at all. The only text-drawing API is `ctx.fillText(string, x, y)`, which
+takes a string and does shaping internally. There is no `drawGlyphs(ids[],
+positions[])` equivalent, and `measureText` returns widths, not glyph tables.
+
+For these runtimes, forcing a `PaintGlyphRun` with synthesized glyph IDs would
+**violate the font-binding invariant** — no paint backend can actually consume
+fake IDs through `fillText`. Either the paint backend cheats (mapping glyph_id
+back to a codepoint and guessing), which breaks the invariant, or the pipeline
+refuses to run, which eliminates a huge class of consumers.
+
+`PaintText` resolves this by representing text at the same level of abstraction
+that the runtime natively speaks:
+
+```typescript
+interface PaintText extends PaintBase {
+  kind: "text";
+  x: number;         // baseline origin x (same semantics as PaintGlyphRun)
+  y: number;         // baseline origin y
+  text: string;      // the literal text to render — UTF-16 in TypeScript;
+                     // the paint backend may re-encode as needed
+  font_ref: string;  // opaque font identifier. For Canvas: "canvas:Helvetica@16:700"
+                     // The scheme prefix (canvas:, css:, svg:) routes dispatch.
+  font_size: number; // in user-space units (same units as x, y)
+  fill: string;      // color of the text — required (no default)
+
+  // Optional: map from cluster (string index) to pen x-offset, computed by the
+  // layout engine via its TextMeasurer. Enables hit-testing and selection
+  // without re-measuring at paint time. Omit for simple rendering.
+  cluster_positions?: Array<{ cluster: number; x: number }>;
+}
+```
+
+**The font-binding invariant still holds — on a coarser grain.** A `PaintText`
+with `font_ref: "canvas:..."` is bindable only to Canvas-compatible backends.
+Dispatching it on a glyph-atlas backend (paint-vm-metal, paint-vm-direct2d)
+MUST throw `UnsupportedFontBindingError`. The binding is the *runtime*
+rather than the glyph-index table, but the invariant — "this token was
+produced by a named shaper and MUST be consumed by a compatible backend" —
+is unchanged.
+
+##### Which instruction should the layout engine emit?
+
+Layout-to-paint (UI04) picks at configuration time, not per instruction:
+
+| Measurer plugin                     | Emitter emits        | Rationale                    |
+|-------------------------------------|----------------------|------------------------------|
+| `font-parser` (TXT01) + naive/HarfBuzz (TXT02/04) | `PaintGlyphRun` | Glyph IDs are real and stable |
+| `CoreTextMeasurer` (TXT03a)         | `PaintGlyphRun` (per CTRun segment) | CoreText exposes `CGGlyph` |
+| `DirectWriteMeasurer` (TXT03b)      | `PaintGlyphRun`      | DirectWrite exposes glyph indices |
+| `PangoMeasurer` (TXT03c)            | `PaintGlyphRun`      | Pango exposes `PangoGlyph` |
+| `CanvasTextMeasurer` (TXT03d)       | `PaintText`          | Canvas has no glyph IDs in JS |
+
+A single `PaintScene` contains instructions from one text pipeline only.
+Mixing `PaintGlyphRun` and `PaintText` in the same scene is legal (e.g., a
+debug overlay rendered via Canvas atop a glyph-atlas main view is possible if
+both backends live side-by-side), but is not a common pattern.
 
 ---
 

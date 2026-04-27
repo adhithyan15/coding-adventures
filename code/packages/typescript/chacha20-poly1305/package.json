@@ -1,0 +1,19 @@
+{
+  "name": "@coding-adventures/chacha20-poly1305",
+  "version": "0.1.0",
+  "description": "ChaCha20-Poly1305 authenticated encryption (RFC 8439) — stream cipher, MAC, and AEAD",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

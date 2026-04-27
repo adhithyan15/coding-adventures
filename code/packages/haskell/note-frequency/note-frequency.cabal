@@ -1,0 +1,27 @@
+cabal-version:      2.4
+name:               note-frequency
+version:            0.1.0.0
+synopsis:           Parse note names and map them to equal-tempered frequencies.
+description:        Educational package implementing the symbolic note-to-frequency layer.
+category:           Music
+license:            MIT
+author:             Coding Adventures
+maintainer:         contact@coding-adventures.com
+extra-doc-files:    README.md
+                  , CHANGELOG.md
+
+library
+    exposed-modules:  NoteFrequency
+    build-depends:    base >= 4.7 && < 5
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite note-frequency-test
+    default-language: Haskell2010
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          Spec.hs
+    other-modules:    NoteFrequencySpec
+    build-depends:    base >= 4.7 && < 5
+                    , hspec == 2.*
+                    , note-frequency

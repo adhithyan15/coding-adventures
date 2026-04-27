@@ -388,4 +388,5 @@ TOKEN_GRAMMAR = TokenGrammar(
     reserved_keywords=[],
     error_definitions=[],
     groups={},
+    layout_keywords=[],
 )

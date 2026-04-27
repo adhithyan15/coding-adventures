@@ -33,6 +33,26 @@ defmodule CodingAdventures.VerilogLexerTest do
       assert "wire" in grammar.keywords
       assert "reg" in grammar.keywords
     end
+
+    test "supports selecting an explicit language edition" do
+      default_names =
+        VerilogLexer.create_lexer()
+        |> Map.fetch!(:definitions)
+        |> Enum.map(& &1.name)
+
+      versioned_names =
+        VerilogLexer.create_lexer("2005")
+        |> Map.fetch!(:definitions)
+        |> Enum.map(& &1.name)
+
+      assert default_names == versioned_names
+    end
+
+    test "raises for an unknown language edition" do
+      assert_raise ArgumentError, ~r/Unknown Verilog version/, fn ->
+        VerilogLexer.create_lexer("2099")
+      end
+    end
   end
 
   # ===========================================================================

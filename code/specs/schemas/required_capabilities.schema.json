@@ -18,7 +18,7 @@
     },
     "package": {
       "type": "string",
-      "pattern": "^(python|ruby|go|typescript|rust|elixir|lua|swift)/[a-z0-9][a-z0-9_-]*$",
+      "pattern": "^(csharp|dart|elixir|fsharp|go|haskell|java|kotlin|lua|perl|python|ruby|rust|starlark|swift|typescript|wasm)/[a-z0-9][a-z0-9_-]*$",
       "description": "Qualified package name matching the build tool's naming: {language}/{dirname}. Examples: python/logic-gates, ruby/lexer, go/cache, rust/json-value, elixir/json_value, lua/grammar_tools."
     },
     "capabilities": {
@@ -35,7 +35,7 @@
     },
     "banned_construct_exceptions": {
       "type": "array",
-      "description": "Exceptions to the banned dynamic execution constructs (eval, exec, __import__, etc.). Each exception requires hardware-key-signed approval. Most packages should not have any exceptions.",
+      "description": "Exceptions to the banned dynamic execution constructs (eval, exec, __import__, import \"C\", plugin.Open, etc.). Each exception requires hardware-key-signed approval. Some languages also require a matching capability declaration, such as Go ffi:call/load for native interop. Most packages should not have any exceptions.",
       "items": {
         "$ref": "#/$defs/banned_construct_exception"
       }
@@ -82,7 +82,7 @@
       "properties": {
         "construct": {
           "type": "string",
-          "description": "The banned construct being exempted (e.g., 'eval', 'compile', '__import__', 'reflect.Value.Call')."
+          "description": "The banned construct being exempted (e.g., 'eval', 'compile', '__import__', 'reflect.Value.Call', 'import \"C\"', or 'plugin.Open')."
         },
         "language": {
           "type": "string",

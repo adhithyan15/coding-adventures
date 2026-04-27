@@ -1,0 +1,26 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/embeddable-tcp-server",
+  "capabilities": [
+    {
+      "category": "net",
+      "action": "listen",
+      "target": "127.0.0.1:*",
+      "justification": "The embeddable TCP server opens a local listener through tcp-runtime so host-language workers can be tested over real sockets."
+    },
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "*",
+      "justification": "The embeddable TCP server launches the configured worker command as a child process to prove the cross-language runtime seam."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "PYTHON",
+      "justification": "Tests may read PYTHON to select an explicit Python 3.12 interpreter for the Python Mini Redis example worker process."
+    }
+  ],
+  "justification": "This crate intentionally owns the TCP listener and child worker process for language-neutral embeddable TCP server prototypes."
+}

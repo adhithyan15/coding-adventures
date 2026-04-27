@@ -14,25 +14,25 @@ import gt "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-too
 var ParserGrammarData = &gt.ParserGrammar{
 	Version: 0,
 	Rules:   []gt.GrammarRule{
-		{Name: `design_file`, Body: gt.Repetition{Element: gt.RuleReference{Name: `design_unit`, IsToken: false}}, LineNumber: 64},
+		{Name: `design_file`, Body: gt.Repetition{Element: gt.RuleReference{Name: `design_unit`, IsToken: false}}, LineNumber: 67},
 		{Name: `design_unit`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.Repetition{Element: gt.RuleReference{Name: `context_item`, IsToken: false}},
 					gt.RuleReference{Name: `library_unit`, IsToken: false},
-				}}, LineNumber: 66},
+				}}, LineNumber: 69},
 		{Name: `context_item`, Body: gt.Alternation{Choices: []gt.GrammarElement{
 					gt.RuleReference{Name: `library_clause`, IsToken: false},
 					gt.RuleReference{Name: `use_clause`, IsToken: false},
-				}}, LineNumber: 68},
+				}}, LineNumber: 71},
 		{Name: `library_clause`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.Literal{Value: `library`},
 					gt.RuleReference{Name: `name_list`, IsToken: false},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 71},
+				}}, LineNumber: 74},
 		{Name: `use_clause`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.Literal{Value: `use`},
 					gt.RuleReference{Name: `selected_name`, IsToken: false},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 74},
+				}}, LineNumber: 77},
 		{Name: `selected_name`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.RuleReference{Name: `NAME`, IsToken: true},
 					gt.Repetition{Element: gt.Sequence{Elements: []gt.GrammarElement{
@@ -42,20 +42,20 @@ var ParserGrammarData = &gt.ParserGrammar{
 									gt.Literal{Value: `all`},
 								}}},
 						}}},
-				}}, LineNumber: 77},
+				}}, LineNumber: 80},
 		{Name: `name_list`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.RuleReference{Name: `NAME`, IsToken: true},
 					gt.Repetition{Element: gt.Sequence{Elements: []gt.GrammarElement{
 							gt.RuleReference{Name: `COMMA`, IsToken: true},
 							gt.RuleReference{Name: `NAME`, IsToken: true},
 						}}},
-				}}, LineNumber: 79},
+				}}, LineNumber: 82},
 		{Name: `library_unit`, Body: gt.Alternation{Choices: []gt.GrammarElement{
 					gt.RuleReference{Name: `entity_declaration`, IsToken: false},
 					gt.RuleReference{Name: `architecture_body`, IsToken: false},
 					gt.RuleReference{Name: `package_declaration`, IsToken: false},
 					gt.RuleReference{Name: `package_body`, IsToken: false},
-				}}, LineNumber: 81},
+				}}, LineNumber: 84},
 		{Name: `entity_declaration`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.Literal{Value: `entity`},
 					gt.RuleReference{Name: `NAME`, IsToken: true},
@@ -66,28 +66,28 @@ var ParserGrammarData = &gt.ParserGrammar{
 					gt.Optional{Element: gt.Literal{Value: `entity`}},
 					gt.Optional{Element: gt.RuleReference{Name: `NAME`, IsToken: true}},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 112},
+				}}, LineNumber: 115},
 		{Name: `generic_clause`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.Literal{Value: `generic`},
 					gt.RuleReference{Name: `LPAREN`, IsToken: true},
 					gt.RuleReference{Name: `interface_list`, IsToken: false},
 					gt.RuleReference{Name: `RPAREN`, IsToken: true},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 117},
+				}}, LineNumber: 120},
 		{Name: `port_clause`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.Literal{Value: `port`},
 					gt.RuleReference{Name: `LPAREN`, IsToken: true},
 					gt.RuleReference{Name: `interface_list`, IsToken: false},
 					gt.RuleReference{Name: `RPAREN`, IsToken: true},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 118},
+				}}, LineNumber: 121},
 		{Name: `interface_list`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.RuleReference{Name: `interface_element`, IsToken: false},
 					gt.Repetition{Element: gt.Sequence{Elements: []gt.GrammarElement{
 							gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
 							gt.RuleReference{Name: `interface_element`, IsToken: false},
 						}}},
-				}}, LineNumber: 123},
+				}}, LineNumber: 126},
 		{Name: `interface_element`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.RuleReference{Name: `name_list`, IsToken: false},
 					gt.RuleReference{Name: `COLON`, IsToken: true},
@@ -97,13 +97,13 @@ var ParserGrammarData = &gt.ParserGrammar{
 							gt.RuleReference{Name: `VAR_ASSIGN`, IsToken: true},
 							gt.RuleReference{Name: `expression`, IsToken: false},
 						}}},
-				}}, LineNumber: 124},
+				}}, LineNumber: 127},
 		{Name: `mode`, Body: gt.Alternation{Choices: []gt.GrammarElement{
 					gt.Literal{Value: `in`},
 					gt.Literal{Value: `out`},
 					gt.Literal{Value: `inout`},
 					gt.Literal{Value: `buffer`},
-				}}, LineNumber: 132},
+				}}, LineNumber: 135},
 		{Name: `architecture_body`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.Literal{Value: `architecture`},
 					gt.RuleReference{Name: `NAME`, IsToken: true},
@@ -117,7 +117,7 @@ var ParserGrammarData = &gt.ParserGrammar{
 					gt.Optional{Element: gt.Literal{Value: `architecture`}},
 					gt.Optional{Element: gt.RuleReference{Name: `NAME`, IsToken: true}},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 154},
+				}}, LineNumber: 157},
 		{Name: `block_declarative_item`, Body: gt.Alternation{Choices: []gt.GrammarElement{
 					gt.RuleReference{Name: `signal_declaration`, IsToken: false},
 					gt.RuleReference{Name: `constant_declaration`, IsToken: false},
@@ -128,7 +128,7 @@ var ParserGrammarData = &gt.ParserGrammar{
 					gt.RuleReference{Name: `function_body`, IsToken: false},
 					gt.RuleReference{Name: `procedure_declaration`, IsToken: false},
 					gt.RuleReference{Name: `procedure_body`, IsToken: false},
-				}}, LineNumber: 160},
+				}}, LineNumber: 163},
 		{Name: `signal_declaration`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.Literal{Value: `signal`},
 					gt.RuleReference{Name: `name_list`, IsToken: false},
@@ -139,7 +139,7 @@ var ParserGrammarData = &gt.ParserGrammar{
 							gt.RuleReference{Name: `expression`, IsToken: false},
 						}}},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 189},
+				}}, LineNumber: 192},
 		{Name: `constant_declaration`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.Literal{Value: `constant`},
 					gt.RuleReference{Name: `name_list`, IsToken: false},
@@ -148,7 +148,7 @@ var ParserGrammarData = &gt.ParserGrammar{
 					gt.RuleReference{Name: `VAR_ASSIGN`, IsToken: true},
 					gt.RuleReference{Name: `expression`, IsToken: false},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 191},
+				}}, LineNumber: 194},
 		{Name: `variable_declaration`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.Literal{Value: `variable`},
 					gt.RuleReference{Name: `name_list`, IsToken: false},
@@ -159,26 +159,26 @@ var ParserGrammarData = &gt.ParserGrammar{
 							gt.RuleReference{Name: `expression`, IsToken: false},
 						}}},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 193},
+				}}, LineNumber: 196},
 		{Name: `type_declaration`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.Literal{Value: `type`},
 					gt.RuleReference{Name: `NAME`, IsToken: true},
 					gt.Literal{Value: `is`},
 					gt.RuleReference{Name: `type_definition`, IsToken: false},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 218},
+				}}, LineNumber: 221},
 		{Name: `subtype_declaration`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.Literal{Value: `subtype`},
 					gt.RuleReference{Name: `NAME`, IsToken: true},
 					gt.Literal{Value: `is`},
 					gt.RuleReference{Name: `subtype_indication`, IsToken: false},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 219},
+				}}, LineNumber: 222},
 		{Name: `type_definition`, Body: gt.Alternation{Choices: []gt.GrammarElement{
 					gt.RuleReference{Name: `enumeration_type`, IsToken: false},
 					gt.RuleReference{Name: `array_type`, IsToken: false},
 					gt.RuleReference{Name: `record_type`, IsToken: false},
-				}}, LineNumber: 221},
+				}}, LineNumber: 224},
 		{Name: `enumeration_type`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.RuleReference{Name: `LPAREN`, IsToken: true},
 					gt.Group{Element: gt.Alternation{Choices: []gt.GrammarElement{
@@ -193,7 +193,7 @@ var ParserGrammarData = &gt.ParserGrammar{
 								}}},
 						}}},
 					gt.RuleReference{Name: `RPAREN`, IsToken: true},
-				}}, LineNumber: 227},
+				}}, LineNumber: 230},
 		{Name: `array_type`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.Literal{Value: `array`},
 					gt.RuleReference{Name: `LPAREN`, IsToken: true},
@@ -201,14 +201,14 @@ var ParserGrammarData = &gt.ParserGrammar{
 					gt.RuleReference{Name: `RPAREN`, IsToken: true},
 					gt.Literal{Value: `of`},
 					gt.RuleReference{Name: `subtype_indication`, IsToken: false},
-				}}, LineNumber: 232},
+				}}, LineNumber: 235},
 		{Name: `index_constraint`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.RuleReference{Name: `discrete_range`, IsToken: false},
 					gt.Repetition{Element: gt.Sequence{Elements: []gt.GrammarElement{
 							gt.RuleReference{Name: `COMMA`, IsToken: true},
 							gt.RuleReference{Name: `discrete_range`, IsToken: false},
 						}}},
-				}}, LineNumber: 234},
+				}}, LineNumber: 237},
 		{Name: `discrete_range`, Body: gt.Alternation{Choices: []gt.GrammarElement{
 					gt.RuleReference{Name: `subtype_indication`, IsToken: false},
 					gt.Sequence{Elements: []gt.GrammarElement{
@@ -219,7 +219,7 @@ var ParserGrammarData = &gt.ParserGrammar{
 							}}},
 						gt.RuleReference{Name: `expression`, IsToken: false},
 					}},
-				}}, LineNumber: 235},
+				}}, LineNumber: 238},
 		{Name: `record_type`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.Literal{Value: `record`},
 					gt.Repetition{Element: gt.Sequence{Elements: []gt.GrammarElement{
@@ -231,11 +231,11 @@ var ParserGrammarData = &gt.ParserGrammar{
 					gt.Literal{Value: `end`},
 					gt.Literal{Value: `record`},
 					gt.Optional{Element: gt.RuleReference{Name: `NAME`, IsToken: true}},
-				}}, LineNumber: 239},
+				}}, LineNumber: 242},
 		{Name: `subtype_indication`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.RuleReference{Name: `selected_name`, IsToken: false},
 					gt.Optional{Element: gt.RuleReference{Name: `constraint`, IsToken: false}},
-				}}, LineNumber: 247},
+				}}, LineNumber: 250},
 		{Name: `constraint`, Body: gt.Alternation{Choices: []gt.GrammarElement{
 					gt.Sequence{Elements: []gt.GrammarElement{
 						gt.RuleReference{Name: `LPAREN`, IsToken: true},
@@ -256,27 +256,27 @@ var ParserGrammarData = &gt.ParserGrammar{
 							}}},
 						gt.RuleReference{Name: `expression`, IsToken: false},
 					}},
-				}}, LineNumber: 249},
+				}}, LineNumber: 252},
 		{Name: `concurrent_statement`, Body: gt.Alternation{Choices: []gt.GrammarElement{
 					gt.RuleReference{Name: `process_statement`, IsToken: false},
 					gt.RuleReference{Name: `signal_assignment_concurrent`, IsToken: false},
 					gt.RuleReference{Name: `component_instantiation`, IsToken: false},
 					gt.RuleReference{Name: `generate_statement`, IsToken: false},
-				}}, LineNumber: 264},
+				}}, LineNumber: 267},
 		{Name: `signal_assignment_concurrent`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.RuleReference{Name: `NAME`, IsToken: true},
 					gt.RuleReference{Name: `LESS_EQUALS`, IsToken: true},
 					gt.RuleReference{Name: `waveform`, IsToken: false},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 272},
+				}}, LineNumber: 275},
 		{Name: `waveform`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.RuleReference{Name: `waveform_element`, IsToken: false},
 					gt.Repetition{Element: gt.Sequence{Elements: []gt.GrammarElement{
 							gt.RuleReference{Name: `COMMA`, IsToken: true},
 							gt.RuleReference{Name: `waveform_element`, IsToken: false},
 						}}},
-				}}, LineNumber: 274},
-		{Name: `waveform_element`, Body: gt.RuleReference{Name: `expression`, IsToken: false}, LineNumber: 275},
+				}}, LineNumber: 277},
+		{Name: `waveform_element`, Body: gt.RuleReference{Name: `expression`, IsToken: false}, LineNumber: 278},
 		{Name: `process_statement`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.Optional{Element: gt.Sequence{Elements: []gt.GrammarElement{
 							gt.RuleReference{Name: `NAME`, IsToken: true},
@@ -296,20 +296,20 @@ var ParserGrammarData = &gt.ParserGrammar{
 					gt.Literal{Value: `process`},
 					gt.Optional{Element: gt.RuleReference{Name: `NAME`, IsToken: true}},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 307},
+				}}, LineNumber: 310},
 		{Name: `sensitivity_list`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.RuleReference{Name: `NAME`, IsToken: true},
 					gt.Repetition{Element: gt.Sequence{Elements: []gt.GrammarElement{
 							gt.RuleReference{Name: `COMMA`, IsToken: true},
 							gt.RuleReference{Name: `NAME`, IsToken: true},
 						}}},
-				}}, LineNumber: 315},
+				}}, LineNumber: 318},
 		{Name: `process_declarative_item`, Body: gt.Alternation{Choices: []gt.GrammarElement{
 					gt.RuleReference{Name: `variable_declaration`, IsToken: false},
 					gt.RuleReference{Name: `constant_declaration`, IsToken: false},
 					gt.RuleReference{Name: `type_declaration`, IsToken: false},
 					gt.RuleReference{Name: `subtype_declaration`, IsToken: false},
-				}}, LineNumber: 317},
+				}}, LineNumber: 320},
 		{Name: `sequential_statement`, Body: gt.Alternation{Choices: []gt.GrammarElement{
 					gt.RuleReference{Name: `signal_assignment_seq`, IsToken: false},
 					gt.RuleReference{Name: `variable_assignment`, IsToken: false},
@@ -318,19 +318,19 @@ var ParserGrammarData = &gt.ParserGrammar{
 					gt.RuleReference{Name: `loop_statement`, IsToken: false},
 					gt.RuleReference{Name: `return_statement`, IsToken: false},
 					gt.RuleReference{Name: `null_statement`, IsToken: false},
-				}}, LineNumber: 329},
+				}}, LineNumber: 332},
 		{Name: `signal_assignment_seq`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.RuleReference{Name: `NAME`, IsToken: true},
 					gt.RuleReference{Name: `LESS_EQUALS`, IsToken: true},
 					gt.RuleReference{Name: `waveform`, IsToken: false},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 342},
+				}}, LineNumber: 345},
 		{Name: `variable_assignment`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.RuleReference{Name: `NAME`, IsToken: true},
 					gt.RuleReference{Name: `VAR_ASSIGN`, IsToken: true},
 					gt.RuleReference{Name: `expression`, IsToken: false},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 346},
+				}}, LineNumber: 349},
 		{Name: `if_statement`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.Literal{Value: `if`},
 					gt.RuleReference{Name: `expression`, IsToken: false},
@@ -349,7 +349,7 @@ var ParserGrammarData = &gt.ParserGrammar{
 					gt.Literal{Value: `end`},
 					gt.Literal{Value: `if`},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 356},
+				}}, LineNumber: 359},
 		{Name: `case_statement`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.Literal{Value: `case`},
 					gt.RuleReference{Name: `expression`, IsToken: false},
@@ -363,19 +363,19 @@ var ParserGrammarData = &gt.ParserGrammar{
 					gt.Literal{Value: `end`},
 					gt.Literal{Value: `case`},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 372},
+				}}, LineNumber: 375},
 		{Name: `choices`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.RuleReference{Name: `choice`, IsToken: false},
 					gt.Repetition{Element: gt.Sequence{Elements: []gt.GrammarElement{
 							gt.RuleReference{Name: `PIPE`, IsToken: true},
 							gt.RuleReference{Name: `choice`, IsToken: false},
 						}}},
-				}}, LineNumber: 376},
+				}}, LineNumber: 379},
 		{Name: `choice`, Body: gt.Alternation{Choices: []gt.GrammarElement{
 					gt.RuleReference{Name: `expression`, IsToken: false},
 					gt.RuleReference{Name: `discrete_range`, IsToken: false},
 					gt.Literal{Value: `others`},
-				}}, LineNumber: 377},
+				}}, LineNumber: 380},
 		{Name: `loop_statement`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.Optional{Element: gt.Sequence{Elements: []gt.GrammarElement{
 							gt.RuleReference{Name: `NAME`, IsToken: true},
@@ -399,16 +399,16 @@ var ParserGrammarData = &gt.ParserGrammar{
 					gt.Literal{Value: `loop`},
 					gt.Optional{Element: gt.RuleReference{Name: `NAME`, IsToken: true}},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 391},
+				}}, LineNumber: 394},
 		{Name: `return_statement`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.Literal{Value: `return`},
 					gt.Optional{Element: gt.RuleReference{Name: `expression`, IsToken: false}},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 398},
+				}}, LineNumber: 401},
 		{Name: `null_statement`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.Literal{Value: `null`},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 399},
+				}}, LineNumber: 402},
 		{Name: `component_declaration`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.Literal{Value: `component`},
 					gt.RuleReference{Name: `NAME`, IsToken: true},
@@ -419,7 +419,7 @@ var ParserGrammarData = &gt.ParserGrammar{
 					gt.Literal{Value: `component`},
 					gt.Optional{Element: gt.RuleReference{Name: `NAME`, IsToken: true}},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 425},
+				}}, LineNumber: 428},
 		{Name: `component_instantiation`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.RuleReference{Name: `NAME`, IsToken: true},
 					gt.RuleReference{Name: `COLON`, IsToken: true},
@@ -450,14 +450,14 @@ var ParserGrammarData = &gt.ParserGrammar{
 							gt.RuleReference{Name: `RPAREN`, IsToken: true},
 						}}},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 430},
+				}}, LineNumber: 433},
 		{Name: `association_list`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.RuleReference{Name: `association_element`, IsToken: false},
 					gt.Repetition{Element: gt.Sequence{Elements: []gt.GrammarElement{
 							gt.RuleReference{Name: `COMMA`, IsToken: true},
 							gt.RuleReference{Name: `association_element`, IsToken: false},
 						}}},
-				}}, LineNumber: 437},
+				}}, LineNumber: 440},
 		{Name: `association_element`, Body: gt.Alternation{Choices: []gt.GrammarElement{
 					gt.Sequence{Elements: []gt.GrammarElement{
 						gt.Optional{Element: gt.Sequence{Elements: []gt.GrammarElement{
@@ -473,7 +473,7 @@ var ParserGrammarData = &gt.ParserGrammar{
 							}}},
 						gt.Literal{Value: `open`},
 					}},
-				}}, LineNumber: 438},
+				}}, LineNumber: 441},
 		{Name: `generate_statement`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.RuleReference{Name: `NAME`, IsToken: true},
 					gt.RuleReference{Name: `COLON`, IsToken: true},
@@ -481,7 +481,7 @@ var ParserGrammarData = &gt.ParserGrammar{
 							gt.RuleReference{Name: `for_generate`, IsToken: false},
 							gt.RuleReference{Name: `if_generate`, IsToken: false},
 						}}},
-				}}, LineNumber: 461},
+				}}, LineNumber: 464},
 		{Name: `for_generate`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.Literal{Value: `for`},
 					gt.RuleReference{Name: `NAME`, IsToken: true},
@@ -493,7 +493,7 @@ var ParserGrammarData = &gt.ParserGrammar{
 					gt.Literal{Value: `generate`},
 					gt.Optional{Element: gt.RuleReference{Name: `NAME`, IsToken: true}},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 463},
+				}}, LineNumber: 466},
 		{Name: `if_generate`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.Literal{Value: `if`},
 					gt.RuleReference{Name: `expression`, IsToken: false},
@@ -503,7 +503,7 @@ var ParserGrammarData = &gt.ParserGrammar{
 					gt.Literal{Value: `generate`},
 					gt.Optional{Element: gt.RuleReference{Name: `NAME`, IsToken: true}},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 467},
+				}}, LineNumber: 470},
 		{Name: `package_declaration`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.Literal{Value: `package`},
 					gt.RuleReference{Name: `NAME`, IsToken: true},
@@ -513,7 +513,7 @@ var ParserGrammarData = &gt.ParserGrammar{
 					gt.Optional{Element: gt.Literal{Value: `package`}},
 					gt.Optional{Element: gt.RuleReference{Name: `NAME`, IsToken: true}},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 488},
+				}}, LineNumber: 491},
 		{Name: `package_body`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.Literal{Value: `package`},
 					gt.Literal{Value: `body`},
@@ -527,7 +527,7 @@ var ParserGrammarData = &gt.ParserGrammar{
 						}}},
 					gt.Optional{Element: gt.RuleReference{Name: `NAME`, IsToken: true}},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 492},
+				}}, LineNumber: 495},
 		{Name: `package_declarative_item`, Body: gt.Alternation{Choices: []gt.GrammarElement{
 					gt.RuleReference{Name: `type_declaration`, IsToken: false},
 					gt.RuleReference{Name: `subtype_declaration`, IsToken: false},
@@ -536,14 +536,14 @@ var ParserGrammarData = &gt.ParserGrammar{
 					gt.RuleReference{Name: `component_declaration`, IsToken: false},
 					gt.RuleReference{Name: `function_declaration`, IsToken: false},
 					gt.RuleReference{Name: `procedure_declaration`, IsToken: false},
-				}}, LineNumber: 496},
+				}}, LineNumber: 499},
 		{Name: `package_body_declarative_item`, Body: gt.Alternation{Choices: []gt.GrammarElement{
 					gt.RuleReference{Name: `type_declaration`, IsToken: false},
 					gt.RuleReference{Name: `subtype_declaration`, IsToken: false},
 					gt.RuleReference{Name: `constant_declaration`, IsToken: false},
 					gt.RuleReference{Name: `function_body`, IsToken: false},
 					gt.RuleReference{Name: `procedure_body`, IsToken: false},
-				}}, LineNumber: 504},
+				}}, LineNumber: 507},
 		{Name: `function_declaration`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.Optional{Element: gt.Alternation{Choices: []gt.GrammarElement{
 							gt.Literal{Value: `pure`},
@@ -559,7 +559,7 @@ var ParserGrammarData = &gt.ParserGrammar{
 					gt.Literal{Value: `return`},
 					gt.RuleReference{Name: `subtype_indication`, IsToken: false},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 520},
+				}}, LineNumber: 523},
 		{Name: `function_body`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.Optional{Element: gt.Alternation{Choices: []gt.GrammarElement{
 							gt.Literal{Value: `pure`},
@@ -582,7 +582,7 @@ var ParserGrammarData = &gt.ParserGrammar{
 					gt.Optional{Element: gt.Literal{Value: `function`}},
 					gt.Optional{Element: gt.RuleReference{Name: `NAME`, IsToken: true}},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 525},
+				}}, LineNumber: 528},
 		{Name: `procedure_declaration`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.Literal{Value: `procedure`},
 					gt.RuleReference{Name: `NAME`, IsToken: true},
@@ -592,7 +592,7 @@ var ParserGrammarData = &gt.ParserGrammar{
 							gt.RuleReference{Name: `RPAREN`, IsToken: true},
 						}}},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 534},
+				}}, LineNumber: 537},
 		{Name: `procedure_body`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.Literal{Value: `procedure`},
 					gt.RuleReference{Name: `NAME`, IsToken: true},
@@ -609,15 +609,15 @@ var ParserGrammarData = &gt.ParserGrammar{
 					gt.Optional{Element: gt.Literal{Value: `procedure`}},
 					gt.Optional{Element: gt.RuleReference{Name: `NAME`, IsToken: true}},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 537},
-		{Name: `expression`, Body: gt.RuleReference{Name: `logical_expr`, IsToken: false}, LineNumber: 574},
+				}}, LineNumber: 540},
+		{Name: `expression`, Body: gt.RuleReference{Name: `logical_expr`, IsToken: false}, LineNumber: 577},
 		{Name: `logical_expr`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.RuleReference{Name: `relation`, IsToken: false},
 					gt.Optional{Element: gt.Sequence{Elements: []gt.GrammarElement{
 							gt.RuleReference{Name: `logical_op`, IsToken: false},
 							gt.RuleReference{Name: `relation`, IsToken: false},
 						}}},
-				}}, LineNumber: 581},
+				}}, LineNumber: 584},
 		{Name: `logical_op`, Body: gt.Alternation{Choices: []gt.GrammarElement{
 					gt.Literal{Value: `and`},
 					gt.Literal{Value: `or`},
@@ -625,14 +625,14 @@ var ParserGrammarData = &gt.ParserGrammar{
 					gt.Literal{Value: `nand`},
 					gt.Literal{Value: `nor`},
 					gt.Literal{Value: `xnor`},
-				}}, LineNumber: 582},
+				}}, LineNumber: 585},
 		{Name: `relation`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.RuleReference{Name: `shift_expr`, IsToken: false},
 					gt.Optional{Element: gt.Sequence{Elements: []gt.GrammarElement{
 							gt.RuleReference{Name: `relational_op`, IsToken: false},
 							gt.RuleReference{Name: `shift_expr`, IsToken: false},
 						}}},
-				}}, LineNumber: 586},
+				}}, LineNumber: 589},
 		{Name: `relational_op`, Body: gt.Alternation{Choices: []gt.GrammarElement{
 					gt.RuleReference{Name: `EQUALS`, IsToken: true},
 					gt.RuleReference{Name: `NOT_EQUALS`, IsToken: true},
@@ -640,14 +640,14 @@ var ParserGrammarData = &gt.ParserGrammar{
 					gt.RuleReference{Name: `LESS_EQUALS`, IsToken: true},
 					gt.RuleReference{Name: `GREATER_THAN`, IsToken: true},
 					gt.RuleReference{Name: `GREATER_EQUALS`, IsToken: true},
-				}}, LineNumber: 587},
+				}}, LineNumber: 590},
 		{Name: `shift_expr`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.RuleReference{Name: `adding_expr`, IsToken: false},
 					gt.Optional{Element: gt.Sequence{Elements: []gt.GrammarElement{
 							gt.RuleReference{Name: `shift_op`, IsToken: false},
 							gt.RuleReference{Name: `adding_expr`, IsToken: false},
 						}}},
-				}}, LineNumber: 592},
+				}}, LineNumber: 595},
 		{Name: `shift_op`, Body: gt.Alternation{Choices: []gt.GrammarElement{
 					gt.Literal{Value: `sll`},
 					gt.Literal{Value: `srl`},
@@ -655,32 +655,32 @@ var ParserGrammarData = &gt.ParserGrammar{
 					gt.Literal{Value: `sra`},
 					gt.Literal{Value: `rol`},
 					gt.Literal{Value: `ror`},
-				}}, LineNumber: 593},
+				}}, LineNumber: 596},
 		{Name: `adding_expr`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.RuleReference{Name: `multiplying_expr`, IsToken: false},
 					gt.Repetition{Element: gt.Sequence{Elements: []gt.GrammarElement{
 							gt.RuleReference{Name: `adding_op`, IsToken: false},
 							gt.RuleReference{Name: `multiplying_expr`, IsToken: false},
 						}}},
-				}}, LineNumber: 597},
+				}}, LineNumber: 600},
 		{Name: `adding_op`, Body: gt.Alternation{Choices: []gt.GrammarElement{
 					gt.RuleReference{Name: `PLUS`, IsToken: true},
 					gt.RuleReference{Name: `MINUS`, IsToken: true},
 					gt.RuleReference{Name: `AMPERSAND`, IsToken: true},
-				}}, LineNumber: 598},
+				}}, LineNumber: 601},
 		{Name: `multiplying_expr`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.RuleReference{Name: `unary_expr`, IsToken: false},
 					gt.Repetition{Element: gt.Sequence{Elements: []gt.GrammarElement{
 							gt.RuleReference{Name: `multiplying_op`, IsToken: false},
 							gt.RuleReference{Name: `unary_expr`, IsToken: false},
 						}}},
-				}}, LineNumber: 601},
+				}}, LineNumber: 604},
 		{Name: `multiplying_op`, Body: gt.Alternation{Choices: []gt.GrammarElement{
 					gt.RuleReference{Name: `STAR`, IsToken: true},
 					gt.RuleReference{Name: `SLASH`, IsToken: true},
 					gt.Literal{Value: `mod`},
 					gt.Literal{Value: `rem`},
-				}}, LineNumber: 602},
+				}}, LineNumber: 605},
 		{Name: `unary_expr`, Body: gt.Alternation{Choices: []gt.GrammarElement{
 					gt.Sequence{Elements: []gt.GrammarElement{
 						gt.Literal{Value: `abs`},
@@ -698,14 +698,14 @@ var ParserGrammarData = &gt.ParserGrammar{
 						gt.RuleReference{Name: `unary_expr`, IsToken: false},
 					}},
 					gt.RuleReference{Name: `power_expr`, IsToken: false},
-				}}, LineNumber: 605},
+				}}, LineNumber: 608},
 		{Name: `power_expr`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.RuleReference{Name: `primary`, IsToken: false},
 					gt.Optional{Element: gt.Sequence{Elements: []gt.GrammarElement{
 							gt.RuleReference{Name: `POWER`, IsToken: true},
 							gt.RuleReference{Name: `primary`, IsToken: false},
 						}}},
-				}}, LineNumber: 611},
+				}}, LineNumber: 614},
 		{Name: `primary`, Body: gt.Alternation{Choices: []gt.GrammarElement{
 					gt.RuleReference{Name: `NUMBER`, IsToken: true},
 					gt.RuleReference{Name: `REAL_NUMBER`, IsToken: true},
@@ -739,7 +739,7 @@ var ParserGrammarData = &gt.ParserGrammar{
 					}},
 					gt.RuleReference{Name: `aggregate`, IsToken: false},
 					gt.Literal{Value: `null`},
-				}}, LineNumber: 619},
+				}}, LineNumber: 622},
 		{Name: `aggregate`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.RuleReference{Name: `LPAREN`, IsToken: true},
 					gt.RuleReference{Name: `element_association`, IsToken: false},
@@ -748,13 +748,13 @@ var ParserGrammarData = &gt.ParserGrammar{
 							gt.RuleReference{Name: `element_association`, IsToken: false},
 						}}},
 					gt.RuleReference{Name: `RPAREN`, IsToken: true},
-				}}, LineNumber: 635},
+				}}, LineNumber: 638},
 		{Name: `element_association`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.Optional{Element: gt.Sequence{Elements: []gt.GrammarElement{
 							gt.RuleReference{Name: `choices`, IsToken: false},
 							gt.RuleReference{Name: `ARROW`, IsToken: true},
 						}}},
 					gt.RuleReference{Name: `expression`, IsToken: false},
-				}}, LineNumber: 636},
+				}}, LineNumber: 639},
 	},
 }

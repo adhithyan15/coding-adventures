@@ -1,0 +1,1 @@
+echo Skipping elixir/paint_codec_png_native on Windows -- ERTS import library not available

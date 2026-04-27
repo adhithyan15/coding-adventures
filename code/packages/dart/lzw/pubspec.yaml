@@ -1,0 +1,14 @@
+name: coding_adventures_lzw
+description: >
+  LZW lossless compression with logical code-stream and packed byte APIs.
+version: 0.1.0
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies: {}
+
+dev_dependencies:
+  test: ^1.25.0

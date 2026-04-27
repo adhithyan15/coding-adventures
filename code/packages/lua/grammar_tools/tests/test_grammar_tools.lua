@@ -152,6 +152,14 @@ keywords:
         assert.are.equal("indentation", grammar.mode)
     end)
 
+    it("parses layout keywords section", function()
+        local source = "mode: layout\nNAME = /[a-z]+/\nlayout_keywords:\n  let\n  where\n  do\n  of"
+        local grammar, err = grammar_tools.parse_token_grammar(source)
+        assert.is_nil(err)
+        assert.are.equal("layout", grammar.mode)
+        assert.are.same({ "let", "where", "do", "of" }, grammar.layout_keywords)
+    end)
+
     it("parses escapes directive", function()
         local grammar, err = grammar_tools.parse_token_grammar("escapes: none\nNAME = /[a-z]+/")
         assert.is_nil(err)
@@ -629,6 +637,21 @@ describe("validate_token_grammar", function()
         grammar.mode = "indentation"
         local issues = grammar_tools.validate_token_grammar(grammar)
         assert.is_false(has_issue(issues, "Unknown lexer mode"))
+    end)
+
+    it("accepts valid mode 'layout'", function()
+        local grammar = grammar_tools.TokenGrammar.new()
+        grammar.mode = "layout"
+        grammar.layout_keywords = { "let" }
+        local issues = grammar_tools.validate_token_grammar(grammar)
+        assert.is_false(has_issue(issues, "Unknown lexer mode"))
+    end)
+
+    it("requires layout keywords in layout mode", function()
+        local grammar = grammar_tools.TokenGrammar.new()
+        grammar.mode = "layout"
+        local issues = grammar_tools.validate_token_grammar(grammar)
+        assert.is_true(has_issue(issues, "layout_keywords"))
     end)
 
     it("reports unknown escape mode", function()

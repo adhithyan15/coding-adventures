@@ -434,6 +434,153 @@ func TestBuildResourceKeysIncludesGlobalLuaRocksLockForLuaRemovesOnLinux(t *test
 	}
 }
 
+func TestBuildResourceKeysIncludesGlobalCabalStoreLockForHaskellBuilds(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"pkg/BUILD": "if command -v cabal >/dev/null 2>&1; then cabal test; else echo 'cabal not found -- skipping'; fi",
+	})
+
+	pkg := discovery.Package{
+		Name:          "haskell/pkg",
+		Path:          filepath.Join(root, "pkg"),
+		BuildCommands: []string{"if command -v cabal >/dev/null 2>&1; then cabal test; else echo 'cabal not found -- skipping'; fi"},
+		Language:      "haskell",
+	}
+
+	keys := buildResourceKeys(pkg, map[string]string{
+		filepath.Join(root, "pkg"): "haskell/pkg",
+	})
+	joined := strings.Join(keys, ",")
+	if !strings.Contains(joined, "global:cabal-store") {
+		t.Fatalf("expected keys to include global cabal-store lock, got %v", keys)
+	}
+}
+
+func TestBuildResourceKeysDoesNotIncludeGlobalCabalStoreLockWithoutCabalCommand(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"pkg/BUILD": "echo haskell build skipped",
+	})
+
+	pkg := discovery.Package{
+		Name:          "haskell/pkg",
+		Path:          filepath.Join(root, "pkg"),
+		BuildCommands: []string{"echo haskell build skipped"},
+		Language:      "haskell",
+	}
+
+	keys := buildResourceKeys(pkg, map[string]string{
+		filepath.Join(root, "pkg"): "haskell/pkg",
+	})
+	joined := strings.Join(keys, ",")
+	if strings.Contains(joined, "global:cabal-store") {
+		t.Fatalf("expected keys not to include global cabal-store lock, got %v", keys)
+	}
+}
+
+func TestBuildResourceKeysIncludesGlobalDotnetLockForDotnetPackages(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"pkg/BUILD": "dotnet test tests/CodingAdventures.Tests.csproj --disable-build-servers",
+	})
+
+	pkg := discovery.Package{
+		Name:          "csharp/pkg",
+		Path:          filepath.Join(root, "pkg"),
+		BuildCommands: []string{"dotnet test tests/CodingAdventures.Tests.csproj --disable-build-servers"},
+		Language:      "csharp",
+	}
+
+	keys := buildResourceKeys(pkg, map[string]string{
+		filepath.Join(root, "pkg"): "csharp/pkg",
+	})
+	joined := strings.Join(keys, ",")
+	if !strings.Contains(joined, "global:dotnet-cli") {
+		t.Fatalf("expected keys to include global dotnet-cli lock, got %v", keys)
+	}
+}
+
+func TestBuildResourceKeysSkipsGlobalDotnetLockForNonDotnetPackages(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"pkg/BUILD": "echo dotnet test is only text here",
+	})
+
+	pkg := discovery.Package{
+		Name:          "typescript/pkg",
+		Path:          filepath.Join(root, "pkg"),
+		BuildCommands: []string{"echo dotnet test is only text here"},
+		Language:      "typescript",
+	}
+
+	keys := buildResourceKeys(pkg, map[string]string{
+		filepath.Join(root, "pkg"): "typescript/pkg",
+	})
+	joined := strings.Join(keys, ",")
+	if strings.Contains(joined, "global:dotnet-cli") {
+		t.Fatalf("expected keys not to include global dotnet-cli lock, got %v", keys)
+	}
+}
+
+func TestBuildResourceKeysIncludesGlobalGradleLockForJavaOnWindows(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"pkg/BUILD": "gradle test",
+	})
+
+	pkg := discovery.Package{
+		Name:          "java/pkg",
+		Path:          filepath.Join(root, "pkg"),
+		BuildCommands: []string{"gradle test"},
+		Language:      "java",
+	}
+
+	keys := buildResourceKeysForOS(pkg, map[string]string{
+		filepath.Join(root, "pkg"): "java/pkg",
+	}, "windows")
+	joined := strings.Join(keys, ",")
+	if !strings.Contains(joined, "global:gradle-windows-runner") {
+		t.Fatalf("expected keys to include global gradle lock on Windows, got %v", keys)
+	}
+}
+
+func TestBuildResourceKeysSkipsGlobalGradleLockForJavaOnLinux(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"pkg/BUILD": "gradle test",
+	})
+
+	pkg := discovery.Package{
+		Name:          "java/pkg",
+		Path:          filepath.Join(root, "pkg"),
+		BuildCommands: []string{"gradle test"},
+		Language:      "java",
+	}
+
+	keys := buildResourceKeysForOS(pkg, map[string]string{
+		filepath.Join(root, "pkg"): "java/pkg",
+	}, "linux")
+	joined := strings.Join(keys, ",")
+	if strings.Contains(joined, "global:gradle-windows-runner") {
+		t.Fatalf("did not expect Windows-only gradle lock on Linux, got %v", keys)
+	}
+}
+
+func TestBuildResourceKeysIncludesGlobalGradleLockForGradleWrapperOnWindows(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"pkg/BUILD_windows": "gradlew.bat assembleDebug",
+	})
+
+	pkg := discovery.Package{
+		Name:          "kotlin/pkg",
+		Path:          filepath.Join(root, "pkg"),
+		BuildCommands: []string{"gradlew.bat assembleDebug"},
+		Language:      "kotlin",
+	}
+
+	keys := buildResourceKeysForOS(pkg, map[string]string{
+		filepath.Join(root, "pkg"): "kotlin/pkg",
+	}, "windows")
+	joined := strings.Join(keys, ",")
+	if !strings.Contains(joined, "global:gradle-windows-runner") {
+		t.Fatalf("expected wrapper-based builds to include global gradle lock on Windows, got %v", keys)
+	}
+}
+
 func TestExecuteBuildsSerializesSharedBuildResources(t *testing.T) {
 	if runtime.GOOS == "windows" {
 		t.Skip("uses shell commands that are only asserted on Unix runners")

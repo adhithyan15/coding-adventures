@@ -1,6 +1,9 @@
+# DEPRECATED compatibility mirror.
+# Canonical source: code/grammars/verilog/verilog2005.grammar
+#
 # Parser grammar for Verilog (IEEE 1364-2005)
 #
-# Synthesizable subset — constructs that map to real digital hardware.
+# Synthesizable subset -- constructs that map to real digital hardware.
 #
 # Verilog describes circuits, not computations. A Verilog "program" is a
 # collection of modules, each defining a piece of hardware. Modules connect
@@ -48,7 +51,7 @@ description = module_declaration ;
 # ============================================================================
 #
 # A module is the fundamental building block of Verilog. Think of it as a
-# "component" in electronics — it has named input and output pins (ports)
+# "component" in electronics -- it has named input and output pins (ports)
 # and internal logic connecting them.
 #
 # Examples:
@@ -101,13 +104,13 @@ localparam_declaration = "localparam" [ range ] NAME EQUALS expression ;
 # Ports are the module's interface to the outside world. Every signal
 # entering or leaving a module must be declared as a port.
 #
-#   input        — signal flows into the module (read-only inside)
-#   output       — signal flows out of the module
-#   inout        — bidirectional (used for buses like I2C, SPI)
+#   input        -- signal flows into the module (read-only inside)
+#   output       -- signal flows out of the module
+#   inout        -- bidirectional (used for buses like I2C, SPI)
 #
 # Ports can have bit widths:
-#   input [7:0] data    — 8-bit input (bits 7 down to 0)
-#   output [31:0] addr  — 32-bit output
+#   input [7:0] data    -- 8-bit input (bits 7 down to 0)
+#   output [31:0] addr  -- 32-bit output
 #
 # The [MSB:LSB] range notation specifies the bit range. By convention,
 # MSB > LSB (big-endian bit numbering), though [0:7] is also valid.
@@ -156,20 +159,20 @@ module_item = port_declaration SEMICOLON
 #
 # Verilog has two fundamental signal types:
 #
-#   wire  — a physical connection. Has no storage. Its value is
+#   wire  -- a physical connection. Has no storage. Its value is
 #           continuously driven by whatever is connected to it.
 #           Like a copper trace on a circuit board.
 #
-#   reg   — a storage element. Holds its value until explicitly
+#   reg   -- a storage element. Holds its value until explicitly
 #           changed. Despite the name, a reg does NOT always become
 #           a flip-flop! If assigned in a combinational always block,
 #           it synthesizes to combinational logic, not a register.
 #           The name "reg" is one of Verilog's historical mistakes.
 #
 # Other types:
-#   integer  — 32-bit signed, used for loop counters and calculations
-#   tri      — like wire, but can be driven by multiple sources
-#   supply0/supply1 — constant logic 0 and 1
+#   integer  -- 32-bit signed, used for loop counters and calculations
+#   tri      -- like wire, but can be driven by multiple sources
+#   supply0/supply1 -- constant logic 0 and 1
 
 port_declaration = port_direction [ net_type ] [ "signed" ] [ range ]
                    name_list ;
@@ -182,7 +185,7 @@ name_list        = NAME { COMMA NAME } ;
 # Continuous Assignment
 # ============================================================================
 #
-# Continuous assignments model combinational logic — circuits with no
+# Continuous assignments model combinational logic -- circuits with no
 # memory. The output is always a function of the current inputs, like
 # a truth table evaluated in real time.
 #
@@ -212,10 +215,10 @@ range_select = LBRACKET expression [ COLON expression ] RBRACKET ;
 # Always blocks describe behavior that triggers repeatedly. The sensitivity
 # list specifies WHEN the block executes:
 #
-#   always @(posedge clk)        — on rising clock edge (sequential logic)
-#   always @(negedge reset_n)    — on falling edge of reset
-#   always @(a or b or sel)      — when any input changes (combinational)
-#   always @(*)                  — shorthand: sensitive to all read signals
+#   always @(posedge clk)        -- on rising clock edge (sequential logic)
+#   always @(negedge reset_n)    -- on falling edge of reset
+#   always @(a or b or sel)      -- when any input changes (combinational)
+#   always @(*)                  -- shorthand: sensitive to all read signals
 #
 # Sequential logic (flip-flops, registers):
 #   always @(posedge clk) begin
@@ -233,8 +236,8 @@ range_select = LBRACKET expression [ COLON expression ] RBRACKET ;
 #   end
 #
 # Note the assignment operators:
-#   =  (blocking)     — used in combinational blocks
-#   <= (non-blocking) — used in sequential blocks
+#   =  (blocking)     -- used in combinational blocks
+#   <= (non-blocking) -- used in sequential blocks
 #
 # Using the wrong one is a classic Verilog bug. Blocking assignments
 # execute sequentially (like software). Non-blocking assignments all
@@ -254,7 +257,7 @@ sensitivity_item = [ "posedge" | "negedge" ] expression ;
 # ============================================================================
 #
 # Statements appear inside always blocks and initial blocks. They describe
-# procedural behavior — what happens when the block is triggered.
+# procedural behavior -- what happens when the block is triggered.
 
 statement = block_statement
           | if_statement
@@ -324,7 +327,7 @@ task_call = NAME LPAREN [ expression { COMMA expression } ] RPAREN ;
 # Module Instantiation
 # ============================================================================
 #
-# Instantiation creates an instance of another module — like placing a
+# Instantiation creates an instance of another module -- like placing a
 # chip on a circuit board. You specify which module to instantiate, give
 # the instance a unique name, and connect its ports.
 #
@@ -400,7 +403,7 @@ genvar_assignment = NAME EQUALS expression ;
 # ============================================================================
 #
 # Functions compute a value from inputs (combinational logic).
-# Tasks are like procedures — they can have delays and multiple outputs.
+# Tasks are like procedures -- they can have delays and multiple outputs.
 #
 # In synthesis, functions must be purely combinational (no @, no delays).
 #
@@ -459,8 +462,8 @@ expression = ternary_expr ;
 
 # Ternary: sel ? true_val : false_val
 # This is a MUX in hardware! The synthesis tool generates:
-#   sel=1 → output = true_val
-#   sel=0 → output = false_val
+#   sel=1 -> output = true_val
+#   sel=0 -> output = false_val
 ternary_expr = or_expr [ QUESTION expression COLON ternary_expr ] ;
 
 # Logical operators (result is 1-bit: 0 or 1)
@@ -496,15 +499,15 @@ multiplicative_expr = power_expr { ( STAR | SLASH | PERCENT ) power_expr } ;
 power_expr          = unary_expr [ POWER unary_expr ] ;
 
 # Unary operators:
-#   +x -x  — sign (arithmetic)
-#   !x     — logical NOT (result is 1 bit)
-#   ~x     — bitwise NOT (invert every bit)
-#   &x     — reduction AND (AND all bits together → 1 bit)
-#   |x     — reduction OR
-#   ^x     — reduction XOR
-#   ~&x    — reduction NAND
-#   ~|x    — reduction NOR
-#   ~^x    — reduction XNOR
+#   +x -x  -- sign (arithmetic)
+#   !x     -- logical NOT (result is 1 bit)
+#   ~x     -- bitwise NOT (invert every bit)
+#   &x     -- reduction AND (AND all bits together -> 1 bit)
+#   |x     -- reduction OR
+#   ^x     -- reduction XOR
+#   ~&x    -- reduction NAND
+#   ~|x    -- reduction NOR
+#   ~^x    -- reduction XNOR
 unary_expr = ( PLUS | MINUS | BANG | TILDE | AMP | PIPE | CARET
              | TILDE AMP | TILDE PIPE | TILDE CARET ) unary_expr
            | primary ;
@@ -528,13 +531,13 @@ primary = NUMBER
         | NAME LPAREN [ expression { COMMA expression } ] RPAREN ;
 
 # Concatenation: join signals together.
-#   {a, b}           — concatenate a and b
-#   {carry, sum}     — combine carry and sum into wider signal
-#   {a[7:4], b[3:0]} — mix bit ranges
+#   {a, b}           -- concatenate a and b
+#   {carry, sum}     -- combine carry and sum into wider signal
+#   {a[7:4], b[3:0]} -- mix bit ranges
 concatenation = LBRACE expression { COMMA expression } RBRACE ;
 
 # Replication: repeat a pattern N times.
-#   {4{1'b0}}        — four zero bits: 0000
-#   {8{data[0]}}     — replicate LSB 8 times (sign extension)
-#   {2{4'b1010}}     — 10101010 (8 bits)
+#   {4{1'b0}}        -- four zero bits: 0000
+#   {8{data[0]}}     -- replicate LSB 8 times (sign extension)
+#   {2{4'b1010}}     -- 10101010 (8 bits)
 replication = LBRACE expression concatenation RBRACE ;

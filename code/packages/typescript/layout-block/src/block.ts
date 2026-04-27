@@ -210,12 +210,32 @@ function layoutInlineRun(
         const s = measurer.measure(text, font, Infinity);
         tokens.push({ node, word: text, width: s.width, height: s.height, spaceAfter: 0, verticalAlign });
       } else {
-        // Split on whitespace; each word is a separate token
+        // Split on whitespace; each word is a separate token. A trailing space
+        // on the original leaf (e.g. "is " in "is **bold**") must become a
+        // spaceAfter on the LAST token so the next leaf doesn't collide
+        // into this one (would render as "isbold").
         const words = text.split(/\s+/).filter(w => w.length > 0);
+        const hasTrailingSpace = /\s$/.test(text);
+        if (words.length === 0 && text.length > 0) {
+          // Leaf is pure whitespace (e.g. a soft_break " "). Emit a single
+          // zero-width spacer token so the space between sibling leaves is
+          // preserved. Paint backends render an empty string as a no-op.
+          tokens.push({
+            node,
+            word: "",
+            width: 0,
+            height: measurer.measure("x", font, Infinity).height,
+            spaceAfter: spaceWidth,
+            verticalAlign,
+          });
+        }
         for (let i = 0; i < words.length; i++) {
           const w = words[i];
           const s = measurer.measure(w, font, Infinity);
-          const spaceAfter = i < words.length - 1 ? spaceWidth : 0;
+          const isLast = i === words.length - 1;
+          const spaceAfter = isLast
+            ? (hasTrailingSpace ? spaceWidth : 0)
+            : spaceWidth;
           tokens.push({ node, word: w, width: s.width, height: s.height, spaceAfter, verticalAlign });
         }
       }
@@ -284,12 +304,25 @@ function layoutInlineRun(
           break;
       }
 
+      // Tokens represent individual words sliced out of the node's full text
+      // content. The source content object carries the *whole* string, which
+      // would cause the paint layer to render the entire paragraph at every
+      // word position (catastrophic double-paint for PaintText backends, less
+      // visible but still wrong for PaintGlyphRun). Override the value with
+      // just this token's word so the paint layer sees what the layout engine
+      // actually decided to draw at this position.
+      const srcContent = token.node.content;
+      const tokenContent =
+        srcContent !== null && srcContent.kind === "text"
+          ? { ...srcContent, value: token.word }
+          : srcContent;
+
       positioned.push({
         x,
         y: tokenY,
         width: token.width,
         height: token.height,
-        content: token.node.content,
+        content: tokenContent,
         children: [],
         ext: token.node.ext,
       });

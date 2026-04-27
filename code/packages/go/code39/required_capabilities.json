@@ -3,5 +3,5 @@
   "version": 1,
   "package": "go/code39",
   "capabilities": [],
-  "justification": "Pure computation package for Code 39 normalization, encoding, run expansion, and draw-scene generation. No filesystem, network, process, or environment access needed."
+  "justification": "Pure computation package for Code 39 normalization, encoding, run expansion, and paint-scene generation. No filesystem, network, process, or environment access needed."
 }

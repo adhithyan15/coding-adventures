@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "package": "python/aes",
+  "capabilities": [],
+  "justification": "Pure computation. AES block cipher performed entirely in memory with no OS access."
+}

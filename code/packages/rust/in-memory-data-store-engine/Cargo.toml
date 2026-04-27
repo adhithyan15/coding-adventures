@@ -10,6 +10,5 @@ heap = { path = "../heap" }
 hash-map = { path = "../hash-map" }
 hash-set = { path = "../hash-set" }
 hyperloglog = { path = "../hyperloglog" }
-resp-protocol = { path = "../resp-protocol" }
 skip-list = { path = "../skip-list" }
 in-memory-data-store-protocol = { path = "../in-memory-data-store-protocol" }

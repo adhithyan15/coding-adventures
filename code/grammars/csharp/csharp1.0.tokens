@@ -1,0 +1,518 @@
+# C# 1.0 (2002) — Lexical Grammar
+# @version 1
+# @csharp_version 1.0
+#
+# .NET Framework 1.0 — February 2002
+#
+# C# was created by Anders Hejlsberg at Microsoft as a modern, type-safe,
+# object-oriented language for the .NET Common Language Runtime (CLR).
+# Hejlsberg had previously designed Turbo Pascal and Delphi at Borland,
+# and C#'s design reflects that heritage: properties, events, and the
+# distinction between value types and reference types all come from Delphi.
+#
+# C# 1.0 launched alongside .NET Framework 1.0 and Visual Studio .NET 2002.
+# It was widely seen as Microsoft's response to Java, and indeed shares much
+# of Java's syntax. But from the very first version, C# had features that
+# Java would not get for years:
+#
+#   - Properties (first-class get/set accessors)
+#   - Delegates (type-safe function pointers)
+#   - Events (language-level observer pattern)
+#   - Structs (user-defined value types on the stack)
+#   - Operator overloading (+, -, ==, explicit/implicit casts)
+#   - Indexers (this[int index] for array-like access)
+#   - Attributes (metadata annotations — Java got @annotations in 2004)
+#   - Preprocessor directives (#if, #region, etc.)
+#   - Unsafe code (pointers and fixed buffers for interop)
+#   - Namespaces (hierarchical, nestable)
+#   - foreach loop (Java waited until Java 5 in 2004)
+#   - goto statement (Java reserved it but never implemented it)
+#   - Unsigned integer types (uint, ulong, ushort, byte)
+#   - Decimal type (128-bit for financial calculations)
+#   - Verbatim strings (@"no\escape\processing")
+#   - Destructor syntax (~ClassName for IDisposable finalization)
+#
+# What C# 1.0 does NOT have (added in later versions):
+#   - No generics <T> (added in C# 2.0, 2005)
+#   - No nullable types int? (added in C# 2.0)
+#   - No null coalescing ?? (added in C# 2.0)
+#   - No iterators / yield return (added in C# 2.0)
+#   - No anonymous methods delegate {} (added in C# 2.0)
+#   - No partial types (added in C# 2.0)
+#   - No lambda expressions => (added in C# 3.0, 2007)
+#   - No LINQ query syntax (added in C# 3.0)
+#   - No var local variable inference (added in C# 3.0)
+#   - No extension methods (added in C# 3.0)
+#   - No anonymous types (added in C# 3.0)
+#   - No dynamic keyword (added in C# 4.0, 2010)
+#   - No async/await (added in C# 5.0, 2012)
+#   - No string interpolation $"" (added in C# 6.0, 2015)
+#   - No null-conditional ?. (added in C# 6.0)
+#   - No pattern matching (added in C# 7.0, 2017)
+#   - No tuples (int x, int y) (added in C# 7.0)
+#   - No records (added in C# 9.0, 2020)
+#   - No raw string literals """ (added in C# 11.0, 2022)
+#
+# Format:
+#   TOKEN_NAME = /regex/     — regex-based token pattern
+#   TOKEN_NAME = "literal"   — exact literal match
+#   TOKEN_NAME = /regex/ -> ALIAS  — regex token aliased to a canonical name
+#
+# Order matters: first match wins. Multi-character operators
+# must come before single-character ones (e.g., == before =).
+# Numeric literals with suffixes must come before plain integers.
+
+# ============================================================================
+# Literals
+# ============================================================================
+#
+# Identifiers in C# can contain letters, digits, and underscores. Unlike
+# Java and JavaScript, the dollar sign ($) is NOT allowed in identifiers.
+# C#'s identifier rules are defined by the Unicode character categories
+# (letter-character, combining-character, decimal-digit-character, etc.),
+# but we use the ASCII subset here.
+#
+# C# also has "verbatim identifiers": prefixing any identifier (including
+# keywords) with @ makes it a valid identifier. This exists for interop
+# with other .NET languages that may use C# keywords as names:
+#
+#   int @class = 5;       // legal — @class is an identifier, not the keyword
+#   Type @int = typeof(int);  // legal — @int is an identifier
+#
+# The @ prefix is NOT part of the identifier's name — it's just an escape
+# mechanism. The identifier @class and the variable named "class" refer to
+# the same thing; it's just that "class" alone would be parsed as a keyword.
+
+NAME           = /[a-zA-Z_][a-zA-Z0-9_]*/
+VERBATIM_NAME  = /@[a-zA-Z_][a-zA-Z0-9_]*/ -> NAME
+
+# ----------------------------------------------------------------------------
+# Numeric literals
+# ----------------------------------------------------------------------------
+#
+# C# 1.0 supports three forms of numeric literal:
+#
+#   1. Hex integers:      0x1A, 0XFF, 0x1AL, 0x1AUL
+#   2. Decimal integers:  42, 42L, 42U, 42UL, 42LU
+#   3. Floating point:    3.14, 3.14f, 3.14d, 3.14m, 1e10, 1e10f
+#
+# C# has MORE numeric suffixes than Java because it has more numeric types:
+#
+#   U/u — unsigned (uint or ulong depending on value)
+#   L/l — long (long or ulong depending on U suffix)
+#   UL/ul/LU/lu — unsigned long (always ulong)
+#   F/f — float (32-bit IEEE 754)
+#   D/d — double (64-bit IEEE 754)
+#   M/m — decimal (128-bit decimal floating-point)
+#
+# The decimal suffix M/m is unique to C#. The `decimal` type uses base-10
+# arithmetic, which means 0.1m + 0.2m == 0.3m (unlike double, where
+# 0.1 + 0.2 == 0.30000000000000004). This makes decimal ideal for
+# financial calculations, currency, and any domain where base-10 precision
+# matters.
+#
+# IMPORTANT: There are NO octal literals in C# (unlike Java and C). The
+# literal 077 in C# is decimal 77, not octal 63. This was a deliberate
+# design choice — Hejlsberg considered octal literals a source of bugs
+# inherited from C. (Binary literals 0b... were added in C# 7.0.)
+#
+# IMPORTANT: There are NO underscores in numeric literals yet. That comes
+# in C# 7.0 alongside binary literals.
+#
+# Integer suffix ordering: both UL and LU are valid (U before L or L before U).
+# The regex handles this with alternation.
+#
+# All numeric variants alias to NUMBER so the parser sees a single token type.
+
+HEX_ULONG      = /0[xX][0-9a-fA-F]+([uU][lL]|[lL][uU])/ -> NUMBER
+HEX_LONG       = /0[xX][0-9a-fA-F]+[lL]/ -> NUMBER
+HEX_UINT       = /0[xX][0-9a-fA-F]+[uU]/ -> NUMBER
+HEX_NUMBER     = /0[xX][0-9a-fA-F]+/ -> NUMBER
+DECIMAL_FLOAT  = /[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?[fFdDmM]?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9]+([eE][+-]?[0-9]+)?[fFdDmM]?/ -> NUMBER
+SCI_NUMBER     = /[0-9]+[eE][+-]?[0-9]+[fFdDmM]?/ -> NUMBER
+ULONG_NUMBER   = /[0-9]+([uU][lL]|[lL][uU])/ -> NUMBER
+LONG_NUMBER    = /[0-9]+[lL]/ -> NUMBER
+UINT_NUMBER    = /[0-9]+[uU]/ -> NUMBER
+FLOAT_SUFFIX   = /[0-9]+[fFdDmM]/ -> NUMBER
+INT_NUMBER     = /[0-9]+/ -> NUMBER
+
+# ----------------------------------------------------------------------------
+# String and character literals
+# ----------------------------------------------------------------------------
+#
+# C# has THREE kinds of string-like literals in version 1.0:
+#
+#   1. Regular strings:  "hello\nworld"
+#   2. Verbatim strings: @"C:\Users\file.txt"
+#   3. Character literals: 'a', '\n', '\u0041'
+#
+# Regular strings process escape sequences just like Java:
+#   \\    backslash
+#   \"    double quote
+#   \'    single quote
+#   \n    newline (line feed, U+000A)
+#   \r    carriage return (U+000D)
+#   \t    horizontal tab (U+0009)
+#   \b    backspace (U+0008)
+#   \f    form feed (U+000C)
+#   \0    null character (U+0000)
+#   \a    alert/bell (U+0007) — C# has this, Java does not
+#   \v    vertical tab (U+000B) — C# has this, Java does not
+#   \xH to \xHHHH  hex escape (1-4 hex digits) — C# allows variable length
+#   \uHHHH         Unicode BMP escape (exactly 4 hex digits)
+#   \UHHHHHHHH     Full Unicode escape (exactly 8 hex digits) — C# only
+#
+# C#'s \U escape handles the full Unicode range (including supplementary
+# planes beyond U+FFFF), while Java's \u is limited to the Basic
+# Multilingual Plane. C# also has \a (alert) and \v (vertical tab) which
+# Java lacks.
+#
+# Verbatim strings (prefixed with @) do NO escape processing. Backslashes
+# are literal characters. The only "escape" is doubling the quote: "" inside
+# a verbatim string produces a single ". Verbatim strings can span multiple
+# lines.
+#
+#   string path = @"C:\Users\Public\Documents";     // no escaping needed
+#   string sql = @"SELECT *
+#                   FROM users
+#                   WHERE active = 1";               // multi-line
+#   string quote = @"He said ""hello""";             // embedded quotes
+#
+# Character literals hold exactly one character or escape sequence and have
+# type char (16-bit Unicode, same as Java).
+
+STRING         = /"([^"\\]|\\.)*"/
+VERBATIM_STRING = /@"([^"]|"")*"/
+CHAR           = /'([^'\\]|\\.)*'/
+
+# ============================================================================
+# Multi-character operators (must come before single-character versions)
+# ============================================================================
+#
+# C# 1.0 shares most of its operators with Java, with a few differences:
+#
+#   - C# has -> (pointer member access in unsafe code). In Java, -> is not
+#     an operator until Java 8 (lambda). In C# 1.0, -> is ONLY for unsafe
+#     pointer member access: `ptr->field`.
+#
+#   - C# does NOT have >>> (unsigned right shift). Java has this because
+#     Java has no unsigned integer types, so >>> is needed to shift without
+#     sign extension. C# has unsigned types (uint, ulong) and uses the
+#     regular >> operator — when >> is applied to an unsigned type, it
+#     automatically fills with zeros. C# gets >>> in C# 11.0 (2022).
+#
+#   - C# does NOT have >>>= (unsigned right shift assignment). Same reason.
+#
+# The compound assignment operators (+=, -=, etc.) work the same as in Java.
+
+LEFT_SHIFT_EQUALS    = "<<="
+RIGHT_SHIFT_EQUALS   = ">>="
+EQUALS_EQUALS        = "=="
+NOT_EQUALS           = "!="
+LESS_EQUALS          = "<="
+GREATER_EQUALS       = ">="
+AND_AND              = "&&"
+OR_OR                = "||"
+PLUS_PLUS            = "++"
+MINUS_MINUS          = "--"
+PLUS_EQUALS          = "+="
+MINUS_EQUALS         = "-="
+STAR_EQUALS          = "*="
+SLASH_EQUALS         = "/="
+PERCENT_EQUALS       = "%="
+AMPERSAND_EQUALS     = "&="
+PIPE_EQUALS          = "|="
+CARET_EQUALS         = "^="
+LEFT_SHIFT           = "<<"
+RIGHT_SHIFT          = ">>"
+ARROW                = "->"
+
+# ============================================================================
+# Single-character operators
+# ============================================================================
+#
+# These are the basic building blocks of expressions. Note that C# 1.0
+# does NOT have:
+#   - The => fat arrow (lambda expressions, added in C# 3.0)
+#   - The ?? null coalescing (added in C# 2.0)
+#   - The ?. null-conditional (added in C# 6.0)
+#   - The .. range operator (added in C# 8.0)
+#   - The >>> unsigned right shift (added in C# 11.0)
+#
+# C# 1.0 DOES have -> (pointer member access in unsafe code). This is the
+# same token that later languages (Java 8, JavaScript ES6) use for lambdas,
+# but in C# 1.0 it has an entirely different meaning.
+
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+#
+# Standard C-family delimiters. The dot (.) serves as both the member access
+# operator (object.field) and is part of floating-point literals (3.14). The
+# lexer resolves this by matching numeric literals first.
+#
+# C# 1.0 does NOT have :: (namespace alias qualifier — that's C# 2.0).
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+DOT       = "."
+COLON     = ":"
+
+# ============================================================================
+# Keywords
+# ============================================================================
+#
+# C# 1.0 has 77 keywords — significantly more than Java 1.0's 50. This
+# larger keyword set reflects C#'s richer feature set from the start.
+#
+# The keywords can be grouped by function:
+#
+#   Type declarations:  class, struct, interface, enum, delegate, namespace
+#   Type modifiers:     abstract, sealed, static, partial (2.0), new (as modifier)
+#   Access modifiers:   public, protected, internal, private
+#   Member modifiers:   virtual, override, extern, readonly, volatile, const
+#   Method modifiers:   static, abstract, virtual, override, sealed, extern
+#   Primitive types:    bool, byte, sbyte, char, short, ushort, int, uint,
+#                       long, ulong, float, double, decimal, string, object
+#   Control flow:       if, else, for, foreach, while, do, switch, case,
+#                       default, break, continue, return, goto
+#   Error handling:     try, catch, finally, throw
+#   Object creation:    new, this, base
+#   Type operations:    is, as, typeof, sizeof
+#   Overflow control:   checked, unchecked
+#   Threading:          lock, volatile
+#   Resource mgmt:      using (directive and statement)
+#   Unsafe code:        unsafe, fixed, stackalloc
+#   Parameters:         ref, out, params
+#   Operators:          operator, explicit, implicit
+#   Events:             event, delegate
+#   Literals:           true, false, null
+#   Other:              void, return, goto
+#
+# Notable C# keywords that Java does NOT have:
+#   as        — safe type cast (returns null on failure, unlike (Type)obj which throws)
+#   base      — like Java's super, accesses base class members
+#   bool      — C# uses the C-style short name (Java uses boolean)
+#   checked   — enable integer overflow checking (throws on overflow)
+#   unchecked — disable integer overflow checking (wraps silently)
+#   decimal   — 128-bit decimal floating-point type
+#   delegate  — declare function pointer type (Java used anonymous inner classes)
+#   enum      — C# had enums from day one (Java waited until Java 5)
+#   event     — language-level observer pattern
+#   explicit  — explicit type conversion operator declaration
+#   implicit  — implicit type conversion operator declaration
+#   fixed     — pin managed object in memory for unsafe code
+#   foreach   — enhanced iteration (Java waited until Java 5's for-each)
+#   goto      — actual jump statement (Java reserved but never implemented)
+#   internal  — assembly-level access modifier (Java has unnamed package-private)
+#   lock      — mutex acquisition (like Java's synchronized block)
+#   namespace — hierarchical namespace (Java has flat package declarations)
+#   object    — keyword alias for System.Object base type
+#   operator  — declare overloaded operator
+#   out       — output parameter passing mode
+#   override  — explicit override marker (Java uses @Override annotation)
+#   params    — variable arguments (Java's ... varargs came in Java 5)
+#   readonly  — runtime immutable field (Java's final covers this and more)
+#   ref       — by-reference parameter passing mode
+#   sbyte     — signed 8-bit integer (Java byte is signed; C# byte is unsigned)
+#   sealed    — prevent inheritance (Java uses final on classes)
+#   sizeof    — get size of value type in bytes
+#   stackalloc— allocate array on stack instead of heap
+#   string    — keyword alias for System.String
+#   struct    — value type declaration (user-defined stack-allocated type)
+#   typeof    — get System.Type object at runtime
+#   uint      — unsigned 32-bit integer (Java has no unsigned types)
+#   ulong     — unsigned 64-bit integer
+#   unchecked — disable overflow checking in expression or block
+#   unsafe    — enable pointer arithmetic and direct memory access
+#   ushort    — unsigned 16-bit integer
+#   using     — import directive AND resource disposal statement
+#   virtual   — mark method as overridable (Java methods are virtual by default)
+#   volatile  — same as Java's volatile, but C# also has it on fields
+
+keywords:
+  abstract
+  as
+  base
+  bool
+  break
+  byte
+  case
+  catch
+  char
+  checked
+  class
+  const
+  continue
+  decimal
+  default
+  delegate
+  do
+  double
+  else
+  enum
+  event
+  explicit
+  extern
+  false
+  finally
+  fixed
+  float
+  for
+  foreach
+  goto
+  if
+  implicit
+  in
+  int
+  interface
+  internal
+  is
+  lock
+  long
+  namespace
+  new
+  null
+  object
+  operator
+  out
+  override
+  params
+  private
+  protected
+  public
+  readonly
+  ref
+  return
+  sbyte
+  sealed
+  short
+  sizeof
+  stackalloc
+  static
+  string
+  struct
+  switch
+  this
+  throw
+  true
+  try
+  typeof
+  uint
+  ulong
+  unchecked
+  unsafe
+  ushort
+  using
+  virtual
+  void
+  volatile
+  while
+
+# ============================================================================
+# Skip patterns (whitespace and comments)
+# ============================================================================
+#
+# C# has three comment forms, identical in syntax to Java:
+#   1. Line comments:    // to end of line
+#   2. Block comments:   /* ... */ (cannot nest)
+#   3. XML doc comments: /// ... (to end of line) or /** ... */
+#
+# XML documentation comments (///) are lexically identical to line comments —
+# the extra / is just a convention. The C# compiler processes them specially
+# to generate XML documentation, but the lexer treats them as line comments.
+# Similarly, /** ... */ is just a block comment to the lexer.
+#
+# Whitespace includes space, tab, carriage return, newline, vertical tab,
+# and form feed. C# follows the Unicode whitespace categories but we match
+# the common ASCII whitespace characters.
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Preprocessor directives
+# ============================================================================
+#
+# C#'s preprocessor is intentionally limited compared to C/C++:
+#
+#   - NO #include (C# uses `using` directives and assemblies)
+#   - NO #define with values (C# #define only defines boolean symbols)
+#   - NO macros (no text substitution at all)
+#   - NO stringification or token pasting
+#
+# What C# DOES have:
+#
+#   #if SYMBOL        — conditional compilation (symbol is boolean only)
+#   #else             — alternative branch
+#   #elif SYMBOL      — else-if branch
+#   #endif            — end conditional block
+#   #define SYMBOL    — define a compilation symbol (true/false only)
+#   #undef SYMBOL     — undefine a compilation symbol
+#   #region name      — IDE code folding region start
+#   #endregion        — IDE code folding region end
+#   #error message    — emit a compiler error
+#   #warning message  — emit a compiler warning
+#   #line number      — override line number for error messages
+#   #pragma warning   — enable/disable specific compiler warnings
+#
+# Preprocessor directives must appear at the beginning of a line (after
+# optional whitespace). They are processed before lexical analysis of the
+# rest of the source. For our purposes, we treat them as skip tokens since
+# modeling conditional compilation would require a two-phase parse.
+#
+# The #region/#endregion directives are pure IDE sugar — they have no
+# effect on compilation whatsoever. They exist solely so that Visual Studio
+# can collapse sections of code. This was important in the early 2000s when
+# C# classes often contained hundreds of lines of boilerplate (before
+# auto-properties, before expression-bodied members).
+
+PP_IF        = /#\s*if\b[^\n]*/
+PP_ELIF      = /#\s*elif\b[^\n]*/
+PP_ELSE      = /#\s*else\b[^\n]*/
+PP_ENDIF     = /#\s*endif\b[^\n]*/
+PP_DEFINE    = /#\s*define\b[^\n]*/
+PP_UNDEF     = /#\s*undef\b[^\n]*/
+PP_REGION    = /#\s*region\b[^\n]*/
+PP_ENDREGION = /#\s*endregion\b[^\n]*/
+PP_ERROR     = /#\s*error\b[^\n]*/
+PP_WARNING   = /#\s*warning\b[^\n]*/
+PP_LINE      = /#\s*line\b[^\n]*/
+PP_PRAGMA    = /#\s*pragma\b[^\n]*/
+
+# ============================================================================
+# Error recovery tokens
+# ============================================================================
+#
+# These patterns match malformed literals so the lexer can report a
+# meaningful error ("unterminated string literal") instead of producing
+# a confusing cascade of errors from the parser.
+
+errors:
+  BAD_STRING = /"[^"]*$/
+  BAD_CHAR   = /'[^']*$/
+  BAD_VERBATIM_STRING = /@"([^"]|"")*$/

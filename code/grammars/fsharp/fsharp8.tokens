@@ -1,0 +1,168 @@
+# F# 8 lexical grammar
+# @version 1
+# @fsharp_version 8
+#
+# This lexer covers the shared F# core used by the versioned grammar files.
+# The syntax surface stays deliberately conservative so each version can
+# reuse the same runtime pattern while still remaining standalone.
+
+# ==========================================================================
+# Identifiers and literals
+# ==========================================================================
+
+UNDERSCORE = "_"
+CHAR       = /'([^'\\]|\\.)'/
+TYPEVAR    = /'[a-zA-Z_][a-zA-Z0-9_']*/
+NAME       = /[a-zA-Z_][a-zA-Z0-9_']*/
+
+LEADING_DOT_FLOAT = /\.[0-9][0-9_]*([eE][+-]?[0-9][0-9_]*)?[fFdDmM]?/ -> NUMBER
+FLOAT_NUMBER      = /[0-9][0-9_]*\.[0-9][0-9_]*([eE][+-]?[0-9][0-9_]*)?[fFdDmM]?/ -> NUMBER
+SCI_NUMBER        = /[0-9][0-9_]*[eE][+-]?[0-9][0-9_]*[fFdDmM]?/ -> NUMBER
+HEX_NUMBER        = /0[xX][0-9a-fA-F][0-9a-fA-F_]*([uU][lL]?|[lL][uU]?|[yY]|[sS]|[nN]|[iI]|[mM]|[fF])?/ -> NUMBER
+BINARY_NUMBER     = /0[bB][01][01_]*([uU][lL]?|[lL][uU]?|[yY]|[sS]|[nN]|[iI]|[mM]|[fF])?/ -> NUMBER
+INT_NUMBER        = /[0-9][0-9_]*([uU][lL]?|[lL][uU]?|[yY]|[sS]|[nN]|[iI]|[mM]|[fF])?/ -> NUMBER
+
+STRING = /"([^"\\]|\\.)*"/
+
+# ==========================================================================
+# Multi-character operators
+# ==========================================================================
+
+ARRAY_LBRACKET = "[|"
+ARRAY_RBRACKET = "|]"
+PIPE_RIGHT     = "|>"
+PIPE_LEFT      = "<|"
+COMPOSE_RIGHT  = ">>"
+COMPOSE_LEFT   = "<<"
+NOT_EQUALS     = "<>"
+LESS_EQUALS    = "<="
+GREATER_EQUALS = ">="
+EQUALS_EQUALS  = "=="
+COLON_EQUALS   = ":="
+DOUBLE_COLON   = "::"
+LARROW         = "<-"
+ARROW          = "->"
+DOT_DOT        = ".."
+AND_AND        = "&&"
+OR_OR          = "||"
+
+# ==========================================================================
+# Single-character operators
+# ==========================================================================
+
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+DOT          = "."
+COLON        = ":"
+COMMA        = ","
+SEMICOLON    = ";"
+LPAREN       = "("
+RPAREN       = ")"
+LBRACE       = "{"
+RBRACE       = "}"
+LBRACKET     = "["
+RBRACKET     = "]"
+
+# ==========================================================================
+# Skip patterns
+# ==========================================================================
+
+skip:
+  WHITESPACE    = /[ \t\r]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\(\*[\s\S]*?\*\)/
+  DIRECTIVE     = /#[^\n]*/
+
+# ==========================================================================
+# Error recovery
+# ==========================================================================
+
+errors:
+  BAD_STRING = /"([^"\\]|\\.)*$/
+  BAD_CHAR   = /'([^'\\]|\\.)*$/
+
+# ==========================================================================
+# Keywords
+# ==========================================================================
+
+keywords:
+  abstract
+  and
+  as
+  assembly
+  assert
+  base
+  begin
+  class
+  default
+  delegate
+  do
+  done
+  downcast
+  downto
+  else
+  end
+  event
+  exception
+  extern
+  false
+  field
+  finally
+  for
+  fun
+  function
+  global
+  if
+  in
+  inherit
+  inline
+  interface
+  internal
+  lazy
+  let
+  match
+  member
+  method
+  module
+  mutable
+  namespace
+  new
+  null
+  of
+  open
+  or
+  override
+  param
+  private
+  property
+  public
+  rec
+  return
+  static
+  struct
+  then
+  this
+  to
+  true
+  try
+  type
+  upcast
+  use
+  val
+  void
+  when
+  while
+  with
+  yield

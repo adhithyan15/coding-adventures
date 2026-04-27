@@ -1,0 +1,10 @@
+[package]
+name = "barcode-layout-1d"
+version = "0.1.0"
+edition = "2021"
+description = "Shared 1D barcode layout crate: barcode runs -> PaintScene"
+
+[dependencies]
+paint-instructions = { path = "../paint-instructions" }
+text-interfaces = { path = "../text-interfaces" }
+text-native = { path = "../text-native" }

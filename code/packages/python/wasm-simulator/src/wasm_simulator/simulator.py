@@ -77,6 +77,8 @@ Rather than forcing the CPU class to support variable-width fetch, we build
 a standalone simulator that directly implements the WASM execution model.
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 
 
@@ -647,3 +649,168 @@ class WasmSimulator:
                 break
             traces.append(self.step())
         return traces
+
+    # -------------------------------------------------------------------
+    # simulator-protocol conformance methods
+    # -------------------------------------------------------------------
+
+    def get_state(self) -> WasmState:
+        """Return a frozen snapshot of the current WASM simulator state.
+
+        All mutable lists are converted to tuples so the result is a true
+        immutable value.  The snapshot will not change even if the simulator
+        continues executing after this call returns.
+
+        This method satisfies the ``Simulator[WasmState]`` protocol from the
+        ``simulator-protocol`` package.
+
+        Returns
+        -------
+        WasmState:
+            Frozen dataclass capturing: operand stack, local variables,
+            program counter, halted flag, and cycle counter.
+
+        Examples
+        --------
+        >>> sim = WasmSimulator(num_locals=4)
+        >>> sim.load(bytes([0x0B]))  # end
+        >>> sim.step()
+        ...
+        >>> state = sim.get_state()
+        >>> state.halted
+        True
+        """
+        from wasm_simulator.state import WasmState
+
+        return WasmState(
+            stack=tuple(self.stack),
+            locals=tuple(self.locals),
+            pc=self.pc,
+            halted=self.halted,
+            cycle=self.cycle,
+        )
+
+    def execute(
+        self,
+        program: bytes,
+        max_steps: int = 100_000,
+    ) -> "ExecutionResult[WasmState]":
+        """Load program, run to end or max_steps, return ExecutionResult.
+
+        This is the protocol-conforming entry point for the
+        ``Simulator[WasmState]`` protocol defined in the ``simulator-protocol``
+        package.  It loads the program (resetting state via ``load()``), runs
+        the execution loop, and returns a rich result type.
+
+        The existing ``load()`` and ``run()`` methods are unchanged — this
+        method calls them internally and adapts the return value.
+
+        Parameters
+        ----------
+        program:
+            Raw WASM bytecode bytes.
+        max_steps:
+            Maximum instructions to execute before giving up (default 100,000).
+
+        Returns
+        -------
+        ExecutionResult[WasmState]:
+            - ``halted``: True if the end instruction was reached.
+            - ``steps``: total instructions executed.
+            - ``final_state``: frozen ``WasmState`` snapshot at termination.
+            - ``error``: None on clean halt; error string otherwise.
+            - ``traces``: one ``StepTrace`` per instruction executed.
+
+        Examples
+        --------
+        >>> sim = WasmSimulator(num_locals=4)
+        >>> from wasm_simulator.simulator import (
+        ...     assemble_wasm, encode_i32_const, encode_i32_add,
+        ...     encode_local_set, encode_end,
+        ... )
+        >>> program = assemble_wasm([
+        ...     encode_i32_const(1),
+        ...     encode_i32_const(2),
+        ...     encode_i32_add(),
+        ...     encode_local_set(0),
+        ...     encode_end(),
+        ... ])
+        >>> result = sim.execute(program)
+        >>> result.ok
+        True
+        >>> result.final_state.locals[0]
+        3
+        """
+        from simulator_protocol import ExecutionResult, StepTrace
+
+        from wasm_simulator.state import WasmState
+
+        # load() resets all execution state (stack, locals, pc, halted, cycle)
+        self.load(program)
+
+        step_traces: list[StepTrace] = []
+        steps = 0
+        error: str | None = None
+
+        try:
+            while not self.halted and steps < max_steps:
+                pc_before = self.pc
+                wasm_trace = self.step()
+                step_traces.append(
+                    StepTrace(
+                        pc_before=pc_before,
+                        pc_after=self.pc,
+                        mnemonic=wasm_trace.instruction.mnemonic,
+                        description=wasm_trace.description,
+                    )
+                )
+                steps += 1
+        except Exception as exc:
+            error = str(exc)
+
+        if error is None and not self.halted:
+            error = f"max_steps ({max_steps}) exceeded"
+
+        return ExecutionResult(
+            halted=self.halted,
+            steps=steps,
+            final_state=self.get_state(),
+            error=error,
+            traces=step_traces,
+        )
+
+    def reset(self) -> None:
+        """Reset all simulator state to initial values.
+
+        Clears the operand stack, resets all locals to 0, resets the program
+        counter and cycle counter, and clears the halted flag and bytecode
+        buffer.
+
+        After ``reset()``, the simulator is in the same state as a freshly
+        constructed ``WasmSimulator(num_locals=N)`` where N is the current
+        number of locals.
+
+        This method satisfies the ``reset()`` requirement of the
+        ``Simulator[WasmState]`` protocol.
+
+        Examples
+        --------
+        >>> sim = WasmSimulator(num_locals=4)
+        >>> sim.load(bytes([0x0B]))  # end
+        >>> sim.step()
+        ...
+        >>> sim.halted
+        True
+        >>> sim.reset()
+        >>> sim.halted
+        False
+        >>> sim.stack
+        []
+        """
+        num_locals = len(self.locals)
+        self.stack = []
+        self.locals = [0] * num_locals
+        self.pc = 0
+        self.bytecode = b""
+        self.halted = False
+        self.cycle = 0

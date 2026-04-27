@@ -296,6 +296,8 @@ final class CustomGrammarTests: XCTestCase {
             definitions: [
                 TokenDefinition(name: "NAME", pattern: "[a-zA-Z_][a-zA-Z0-9_]*", isRegex: true, lineNumber: 1),
                 TokenDefinition(name: "EQUALS", pattern: "=", isRegex: false, lineNumber: 2),
+                TokenDefinition(name: "LBRACE", pattern: "{", isRegex: false, lineNumber: 3),
+                TokenDefinition(name: "RBRACE", pattern: "}", isRegex: false, lineNumber: 4),
             ],
             keywords: []
         )
@@ -959,6 +961,52 @@ final class IndentationModeTests: XCTestCase {
         )
         let tokens = try grammarTokenize(source: "", grammar: grammar)
         XCTAssertEqual(tokens.last?.type, "EOF")
+    }
+}
+
+// ============================================================================
+// Layout Mode Tests
+// ============================================================================
+
+final class LayoutModeTests: XCTestCase {
+
+    private func makeLayoutGrammar() -> TokenGrammar {
+        return TokenGrammar(
+            definitions: [
+                TokenDefinition(name: "NAME", pattern: "[a-zA-Z_][a-zA-Z0-9_]*", isRegex: true, lineNumber: 1),
+                TokenDefinition(name: "EQUALS", pattern: "=", isRegex: false, lineNumber: 2),
+                TokenDefinition(name: "LBRACE", pattern: "{", isRegex: false, lineNumber: 3),
+                TokenDefinition(name: "RBRACE", pattern: "}", isRegex: false, lineNumber: 4),
+            ],
+            keywords: [],
+            mode: "layout",
+            skipDefinitions: [
+                TokenDefinition(name: "WS", pattern: "[ \\t]+", isRegex: true, lineNumber: 10),
+            ],
+            layoutKeywords: ["let", "where", "do", "of"]
+        )
+    }
+
+    func testInjectsVirtualLayoutTokensAfterKeyword() throws {
+        let grammar = makeLayoutGrammar()
+        let tokens = try grammarTokenize(source: "let\n  x = y\n  z = q\n", grammar: grammar)
+
+        XCTAssertEqual(
+            types(tokens),
+            [
+                "NAME", "NEWLINE", "VIRTUAL_LBRACE",
+                "NAME", "EQUALS", "NAME", "NEWLINE", "VIRTUAL_SEMICOLON",
+                "NAME", "EQUALS", "NAME", "NEWLINE", "VIRTUAL_RBRACE", "EOF",
+            ]
+        )
+    }
+
+    func testExplicitBraceSuppressesImplicitLayout() throws {
+        let grammar = makeLayoutGrammar()
+        let tokens = try grammarTokenize(source: "let {\n  x = y\n}\n", grammar: grammar)
+
+        XCTAssertFalse(types(tokens).contains("VIRTUAL_LBRACE"))
+        XCTAssertFalse(types(tokens).contains("VIRTUAL_SEMICOLON"))
     }
 }
 

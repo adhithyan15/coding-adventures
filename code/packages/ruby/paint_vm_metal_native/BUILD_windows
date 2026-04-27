@@ -1,0 +1,1 @@
+echo Skipping ruby/paint_vm_metal_native on Windows -- Metal is macOS only

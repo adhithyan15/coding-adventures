@@ -122,6 +122,9 @@ class SavedFrame:
     control_flow_map: dict[int, ControlTarget]
     """The caller's control flow map."""
 
+    code: Any
+    """The caller's current CodeObject."""
+
     return_pc: int
     """The caller's return PC (instruction after the call)."""
 

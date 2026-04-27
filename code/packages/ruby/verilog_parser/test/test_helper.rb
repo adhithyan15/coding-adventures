@@ -4,8 +4,8 @@ require "simplecov"
 SimpleCov.start do
   enable_coverage :branch
   minimum_coverage 80
-  # _grammar.rb is a generated data file — exclude from coverage
-  add_filter "_grammar.rb"
+  # Generated compiled grammar data files are excluded from coverage.
+  add_filter { |source_file| source_file.filename.match?(%r{/_grammar(?:_\d+)?\.rb$}) }
 end
 
 require "minitest/autorun"

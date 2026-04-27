@@ -1,0 +1,80 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "go/csharp-parser",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/csharp/csharp1.0.grammar",
+      "justification": "C# 1.0 parser grammar (January 2002)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/csharp/csharp2.0.grammar",
+      "justification": "C# 2.0 parser grammar (November 2005)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/csharp/csharp3.0.grammar",
+      "justification": "C# 3.0 parser grammar (November 2007)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/csharp/csharp4.0.grammar",
+      "justification": "C# 4.0 parser grammar (April 2010)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/csharp/csharp5.0.grammar",
+      "justification": "C# 5.0 parser grammar (August 2012)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/csharp/csharp6.0.grammar",
+      "justification": "C# 6.0 parser grammar (July 2015)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/csharp/csharp7.0.grammar",
+      "justification": "C# 7.0 parser grammar (March 2017)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/csharp/csharp8.0.grammar",
+      "justification": "C# 8.0 parser grammar (September 2019)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/csharp/csharp9.0.grammar",
+      "justification": "C# 9.0 parser grammar (November 2020)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/csharp/csharp10.0.grammar",
+      "justification": "C# 10.0 parser grammar (November 2021)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/csharp/csharp11.0.grammar",
+      "justification": "C# 11.0 parser grammar (November 2022)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/csharp/csharp12.0.grammar",
+      "justification": "C# 12.0 parser grammar (November 2023)."
+    }
+  ],
+  "justification": "Reads grammar definition files for the selected C# version. No write, network, or process access needed."
+}

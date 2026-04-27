@@ -1,3 +1,6 @@
+# DEPRECATED compatibility mirror.
+# Canonical source: code/grammars/vhdl/vhdl2008.tokens
+#
 # Token definitions for VHDL (IEEE 1076-2008)
 #
 # VHDL (VHSIC Hardware Description Language) is an HDL designed by the
@@ -10,26 +13,26 @@
 #
 # VHDL-specific lexing challenges:
 #
-#   1. Case insensitivity — ENTITY, Entity, and entity are identical.
+#   1. Case insensitivity -- ENTITY, Entity, and entity are identical.
 #      The case_sensitive: false directive makes the lexer lowercase all
 #      input before matching, handling this automatically.
 #
-#   2. The '<=' operator — means BOTH "signal assignment" and "less than
+#   2. The '<=' operator -- means BOTH "signal assignment" and "less than
 #      or equal." We emit a single LESS_EQUALS token; the grammar context
 #      determines which interpretation applies.
 #
-#   3. The tick (') character — delimits character literals ('A') AND
+#   3. The tick (') character -- delimits character literals ('A') AND
 #      marks attribute access (signal'length). Regex ordering handles
 #      this: CHAR_LITERAL matches 'X' first; bare ' matches as TICK.
 #
 # Format:
-#   TOKEN_NAME = /regex/       — regex-based token pattern
-#   TOKEN_NAME = "literal"     — exact literal match
-#   TOKEN_NAME = /regex/ -> T  — regex pattern, emitted as token type T
+#   TOKEN_NAME = /regex/       -- regex-based token pattern
+#   TOKEN_NAME = "literal"     -- exact literal match
+#   TOKEN_NAME = /regex/ -> T  -- regex pattern, emitted as token type T
 #
 # Order matters: first match wins.
 
-# No backslash escapes — VHDL uses "" for escaped quotes inside strings.
+# No backslash escapes -- VHDL uses "" for escaped quotes inside strings.
 escapes: none
 
 # VHDL is case-insensitive: ENTITY, Entity, and entity are identical.
@@ -56,7 +59,7 @@ skip:
 #
 # VHDL strings are double-quoted. To include a quote character inside a
 # string, you double it:
-#   "He said ""hello"""  →  He said "hello"
+#   "He said ""hello"""  ->  He said "hello"
 #
 # This differs from C/Verilog which use backslash escaping.
 
@@ -67,17 +70,17 @@ STRING = /"([^"]|"")*"/
 # ============================================================================
 #
 # VHDL uses prefix letters to indicate the base of a bit string:
-#   B"1010"     — binary (each char is one bit)
-#   O"77"       — octal (each char is three bits)
-#   X"FF"       — hexadecimal (each char is four bits)
-#   D"42"       — decimal (VHDL-2008; value converted to binary)
+#   B"1010"     -- binary (each char is one bit)
+#   O"77"       -- octal (each char is three bits)
+#   X"FF"       -- hexadecimal (each char is four bits)
+#   D"42"       -- decimal (VHDL-2008; value converted to binary)
 #
 # The prefix is case-insensitive. Must come before NAME in the token
 # list because both start with a letter.
 #
 # Bit strings are the VHDL equivalent of Verilog's sized literals:
-#   Verilog: 8'hFF    →  VHDL: X"FF"
-#   Verilog: 4'b1010  →  VHDL: B"1010"
+#   Verilog: 8'hFF    ->  VHDL: X"FF"
+#   Verilog: 4'b1010  ->  VHDL: B"1010"
 
 BIT_STRING = /[bBoOxXdD]"[0-9a-fA-F_]+"/
 
@@ -89,10 +92,10 @@ BIT_STRING = /[bBoOxXdD]"[0-9a-fA-F_]+"/
 #   '0'  '1'  'X'  'Z'  'U'  'H'  'L'  '-'
 #
 # These are the values of std_logic, VHDL's most important type:
-#   '0' — logic low     '1' — logic high
-#   'X' — unknown       'Z' — high impedance (tri-state)
-#   'U' — uninitialized 'H' — weak high
-#   'L' — weak low      '-' — don't care
+#   '0' -- logic low     '1' -- logic high
+#   'X' -- unknown       'Z' -- high impedance (tri-state)
+#   'U' -- uninitialized 'H' -- weak high
+#   'L' -- weak low      '-' -- don't care
 #
 # MUST come before TICK to prevent 'A' from being parsed as
 # TICK NAME('A') TICK.
@@ -104,13 +107,13 @@ CHAR_LITERAL = /'[^']'/
 # ============================================================================
 #
 # Based literals use the format: base#digits#[exponent]
-#   16#FF#       — hex 255
-#   2#1010#      — binary 10
-#   8#77#        — octal 63
-#   16#FF#E2     — hex 255 × 10²
+#   16#FF#       -- hex 255
+#   2#1010#      -- binary 10
+#   8#77#        -- octal 63
+#   16#FF#E2     -- hex 255 × 10²
 #
 # This is more explicit than Verilog's format: the base is a decimal
-# number (any value 2–16), and the digits are enclosed in # delimiters.
+# number (any value 2-16), and the digits are enclosed in # delimiters.
 # Must come before plain NUMBER so "16#FF#" is one token, not three.
 
 BASED_LITERAL = /[0-9]+#[0-9a-fA-F_]+(\.[0-9a-fA-F_]+)?#([eE][+-]?[0-9_]+)?/
@@ -135,8 +138,8 @@ NUMBER = /[0-9][0-9_]*/
 # not here. The .tokens file defines the regex; the hook lowercases values.
 #
 # Extended identifiers are enclosed in backslashes:
-#   \my odd name\     — allows spaces and special characters
-#   \VHDL-2008\       — preserves case (NOT normalized)
+#   \my odd name\     -- allows spaces and special characters
+#   \VHDL-2008\       -- preserves case (NOT normalized)
 #
 # Extended identifiers must come before regular NAME.
 
@@ -175,8 +178,8 @@ BOX             = "<>"
 # ============================================================================
 #
 # VHDL's & operator is concatenation (not bitwise AND like in Verilog/C):
-#   "Hello" & " " & "World"  →  "Hello World"
-#   '1' & "010"              →  "1010"
+#   "Hello" & " " & "World"  ->  "Hello World"
+#   '1' & "010"              ->  "1010"
 #
 # Logical operations (AND, OR, XOR, etc.) are keyword operators, not
 # symbol operators. They appear in the keywords section below.

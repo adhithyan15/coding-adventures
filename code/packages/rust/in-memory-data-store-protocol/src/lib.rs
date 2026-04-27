@@ -1,6 +1,4 @@
-//! RESP-to-engine command frame conversion.
-
-use resp_protocol::{RespError, RespValue};
+//! In-memory data store protocol intermediate representation.
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CommandFrame {
@@ -25,35 +23,44 @@ impl CommandFrame {
     }
 }
 
-pub fn command_frame_from_resp(value: RespValue) -> Option<CommandFrame> {
-    match value {
-        RespValue::Array(Some(values)) => {
-            let mut parts = Vec::with_capacity(values.len());
-            for item in values {
-                match item {
-                    RespValue::BulkString(Some(bytes)) => parts.push(bytes),
-                    RespValue::SimpleString(text) => parts.push(text.into_bytes()),
-                    RespValue::Integer(n) => parts.push(n.to_string().into_bytes()),
-                    _ => return None,
-                }
-            }
-            CommandFrame::from_parts(parts)
-        }
-        _ => None,
-    }
-}
-
-pub fn map_resp_decode_error(err: resp_protocol::RespDecodeError) -> std::io::Error {
-    std::io::Error::new(std::io::ErrorKind::InvalidData, err.message)
-}
-
-pub fn protocol_error(message: impl Into<String>) -> RespValue {
-    RespValue::Error(RespError::new(message))
-}
-
 fn ascii_upper(bytes: &[u8]) -> String {
     bytes
         .iter()
         .map(|byte| byte.to_ascii_uppercase() as char)
         .collect()
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum EngineResponse {
+    SimpleString(String),
+    Error(String),
+    Integer(i64),
+    BulkString(Option<Vec<u8>>),
+    Array(Option<Vec<EngineResponse>>),
+}
+
+impl EngineResponse {
+    pub fn simple_string(s: impl Into<String>) -> Self {
+        Self::SimpleString(s.into())
+    }
+
+    pub fn error(e: impl Into<String>) -> Self {
+        Self::Error(e.into())
+    }
+
+    pub fn ok() -> Self {
+        Self::SimpleString("OK".to_string())
+    }
+
+    pub fn null() -> Self {
+        Self::BulkString(None)
+    }
+
+    pub fn zero() -> Self {
+        Self::Integer(0)
+    }
+
+    pub fn one() -> Self {
+        Self::Integer(1)
+    }
 }

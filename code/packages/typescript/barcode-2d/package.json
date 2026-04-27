@@ -1,0 +1,22 @@
+{
+  "name": "@coding-adventures/barcode-2d",
+  "version": "0.1.0",
+  "description": "Shared 2D barcode abstraction: ModuleGrid type and layout() pipeline",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/paint-instructions": "file:../paint-instructions"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

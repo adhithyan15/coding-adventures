@@ -40,12 +40,12 @@ func emptyHash() string {
 
 func TestCollectSourceFilesPython(t *testing.T) {
 	root := makeFixture(t, map[string]string{
-		"pkg/BUILD":             "echo build",
-		"pkg/pyproject.toml":    "[project]\nname = \"test\"\n",
-		"pkg/src/main.py":       "print('hello')\n",
-		"pkg/src/helper.py":     "pass\n",
-		"pkg/README.md":         "docs",                  // should be excluded
-		"pkg/data/config.json":  `{"key": "value"}`,      // should be excluded
+		"pkg/BUILD":            "echo build",
+		"pkg/pyproject.toml":   "[project]\nname = \"test\"\n",
+		"pkg/src/main.py":      "print('hello')\n",
+		"pkg/src/helper.py":    "pass\n",
+		"pkg/README.md":        "docs",             // should be excluded
+		"pkg/data/config.json": `{"key": "value"}`, // should be excluded
 	})
 
 	pkg := discovery.Package{
@@ -67,12 +67,12 @@ func TestCollectSourceFilesPython(t *testing.T) {
 
 func TestCollectSourceFilesGo(t *testing.T) {
 	root := makeFixture(t, map[string]string{
-		"pkg/BUILD":       "go build .",
-		"pkg/go.mod":      "module test\n",
-		"pkg/go.sum":      "hash\n",
-		"pkg/main.go":     "package main\n",
+		"pkg/BUILD":        "go build .",
+		"pkg/go.mod":       "module test\n",
+		"pkg/go.sum":       "hash\n",
+		"pkg/main.go":      "package main\n",
 		"pkg/main_test.go": "package main\n",
-		"pkg/README.md":   "docs",
+		"pkg/README.md":    "docs",
 	})
 
 	pkg := discovery.Package{
@@ -94,12 +94,12 @@ func TestCollectSourceFilesGo(t *testing.T) {
 
 func TestCollectSourceFilesRuby(t *testing.T) {
 	root := makeFixture(t, map[string]string{
-		"pkg/BUILD":        "bundle exec rake",
-		"pkg/Gemfile":      "source 'https://rubygems.org'\n",
-		"pkg/Rakefile":     "task :default\n",
-		"pkg/lib.gemspec":  "spec\n",
-		"pkg/lib/main.rb":  "puts 'hi'\n",
-		"pkg/README.md":    "docs",
+		"pkg/BUILD":       "bundle exec rake",
+		"pkg/Gemfile":     "source 'https://rubygems.org'\n",
+		"pkg/Rakefile":    "task :default\n",
+		"pkg/lib.gemspec": "spec\n",
+		"pkg/lib/main.rb": "puts 'hi'\n",
+		"pkg/README.md":   "docs",
 	})
 
 	pkg := discovery.Package{
@@ -110,6 +110,32 @@ func TestCollectSourceFilesRuby(t *testing.T) {
 
 	files := collectSourceFiles(pkg)
 	// Expected: BUILD, Gemfile, Rakefile, lib.gemspec, main.rb
+	if len(files) != 5 {
+		names := make([]string, len(files))
+		for i, f := range files {
+			names[i] = filepath.Base(f)
+		}
+		t.Fatalf("expected 5 files, got %d: %v", len(files), names)
+	}
+}
+
+func TestCollectSourceFilesDart(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"pkg/BUILD":                 "dart run bin/hello_world.dart",
+		"pkg/pubspec.yaml":          "name: hello_world\n",
+		"pkg/pubspec.lock":          "packages:\n",
+		"pkg/analysis_options.yaml": "include: package:lints/recommended.yaml\n",
+		"pkg/bin/hello_world.dart":  "void main() => print('hi');\n",
+		"pkg/README.md":             "docs",
+	})
+
+	pkg := discovery.Package{
+		Name:     "dart/pkg",
+		Path:     filepath.Join(root, "pkg"),
+		Language: "dart",
+	}
+
+	files := collectSourceFiles(pkg)
 	if len(files) != 5 {
 		names := make([]string, len(files))
 		for i, f := range files {

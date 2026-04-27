@@ -1,0 +1,370 @@
+# C# 2.0 (2005) — Lexical Grammar
+# @version 1
+# @csharp_version 2.0
+#
+# .NET Framework 2.0 — November 2005
+#
+# C# 2.0 shipped with Visual Studio 2005 and .NET Framework 2.0, three
+# years after 1.0. This was the most transformative single update in C#'s
+# history, adding features that fundamentally changed how C# code is written.
+#
+# The headline features of C# 2.0:
+#
+#   - Generics <T> (type-safe collections without casting)
+#   - Nullable value types int? (value types that can be null)
+#   - Null coalescing operator ?? (default-if-null in one operator)
+#   - Iterators / yield return (lazy sequence generation)
+#   - Anonymous methods delegate {} (inline callbacks)
+#   - Partial types (split a class across multiple files)
+#   - Static classes (utility classes that cannot be instantiated)
+#   - Property accessor modifiers (private set; on a public property)
+#   - Namespace alias qualifier :: (global::System, etc.)
+#   - Extern aliases (disambiguate assemblies with same type names)
+#   - Covariance/contravariance of delegate types (limited)
+#
+# Generics deserve special attention. Java added generics in Java 5 (2004),
+# but Java's generics use TYPE ERASURE — the type parameter is removed at
+# compile time, and all generic types become Object at runtime. This means:
+#   - Java: List<int> is impossible (must use List<Integer> — boxing overhead)
+#   - Java: cannot do `new T()` or `typeof(T)` at runtime
+#   - Java: List<String> and List<Integer> are the same class at runtime
+#
+# C# generics are REIFIED — the type parameter is preserved at runtime in
+# the CLR. This means:
+#   - C#: List<int> works directly (no boxing, stored as raw int)
+#   - C#: `new T()`, `typeof(T)`, and runtime type checks all work
+#   - C#: List<string> and List<int> are different types at runtime
+#
+# This design decision makes C# generics dramatically more powerful and
+# efficient than Java generics, at the cost of more complex runtime support.
+#
+# What C# 2.0 does NOT have (added in later versions):
+#   - No lambda expressions => (C# 3.0, 2007)
+#   - No LINQ query syntax (C# 3.0)
+#   - No var keyword (C# 3.0)
+#   - No extension methods (C# 3.0)
+#   - No anonymous types new { } (C# 3.0)
+#   - No object/collection initializers (C# 3.0)
+#   - No dynamic keyword (C# 4.0, 2010)
+#   - No named/optional arguments (C# 4.0)
+#   - No async/await (C# 5.0, 2012)
+#   - No string interpolation $"" (C# 6.0, 2015)
+#   - No null-conditional ?. (C# 6.0)
+#   - No pattern matching (C# 7.0, 2017)
+#   - No tuples (int x, int y) (C# 7.0)
+#   - No records (C# 9.0, 2020)
+#   - No raw string literals """ (C# 11.0, 2022)
+#
+# Format:
+#   TOKEN_NAME = /regex/     — regex-based token pattern
+#   TOKEN_NAME = "literal"   — exact literal match
+#   TOKEN_NAME = /regex/ -> ALIAS  — regex token aliased to a canonical name
+#
+# Order matters: first match wins. Multi-character operators
+# must come before single-character ones (e.g., == before =).
+# Numeric literals with suffixes must come before plain integers.
+
+# ============================================================================
+# Literals
+# ============================================================================
+#
+# Identifiers are unchanged from C# 1.0. C# 2.0 adds two new context
+# keywords — `yield` and `partial` — but these are NOT reserved words.
+# They are only special in certain syntactic positions:
+#
+#   yield — special only before `return` or `break` in an iterator body
+#   partial — special only before `class`, `struct`, or `interface`
+#   where — special only after a type parameter list (generic constraints)
+#   global — special only before :: (namespace alias qualifier)
+#
+# Because these are context-sensitive, the lexer emits them as NAME tokens.
+# The parser disambiguates based on position. You CAN still have a variable
+# named `yield` or `partial` — the compiler figures out from context whether
+# it's the keyword or an identifier.
+#
+# Verbatim identifiers (@yield, @partial) also remain valid, using the same
+# mechanism as in C# 1.0 to escape keyword conflicts.
+
+NAME           = /[a-zA-Z_][a-zA-Z0-9_]*/
+VERBATIM_NAME  = /@[a-zA-Z_][a-zA-Z0-9_]*/ -> NAME
+
+# ----------------------------------------------------------------------------
+# Numeric literals
+# ----------------------------------------------------------------------------
+#
+# Unchanged from C# 1.0. C# 2.0 adds no new numeric literal forms.
+# Binary literals (0b...) and digit separators (_) come in C# 7.0.
+
+HEX_ULONG      = /0[xX][0-9a-fA-F]+([uU][lL]|[lL][uU])/ -> NUMBER
+HEX_LONG       = /0[xX][0-9a-fA-F]+[lL]/ -> NUMBER
+HEX_UINT       = /0[xX][0-9a-fA-F]+[uU]/ -> NUMBER
+HEX_NUMBER     = /0[xX][0-9a-fA-F]+/ -> NUMBER
+DECIMAL_FLOAT  = /[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?[fFdDmM]?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9]+([eE][+-]?[0-9]+)?[fFdDmM]?/ -> NUMBER
+SCI_NUMBER     = /[0-9]+[eE][+-]?[0-9]+[fFdDmM]?/ -> NUMBER
+ULONG_NUMBER   = /[0-9]+([uU][lL]|[lL][uU])/ -> NUMBER
+LONG_NUMBER    = /[0-9]+[lL]/ -> NUMBER
+UINT_NUMBER    = /[0-9]+[uU]/ -> NUMBER
+FLOAT_SUFFIX   = /[0-9]+[fFdDmM]/ -> NUMBER
+INT_NUMBER     = /[0-9]+/ -> NUMBER
+
+# ----------------------------------------------------------------------------
+# String and character literals
+# ----------------------------------------------------------------------------
+#
+# Unchanged from C# 1.0. C# 2.0 adds no new string literal forms.
+# String interpolation ($"...") comes in C# 6.0.
+
+STRING         = /"([^"\\]|\\.)*"/
+VERBATIM_STRING = /@"([^"]|"")*"/
+CHAR           = /'([^'\\]|\\.)*'/
+
+# ============================================================================
+# Multi-character operators (must come before single-character versions)
+# ============================================================================
+#
+# C# 2.0 adds ONE new operator:
+#
+#   ?? — null coalescing operator
+#
+# The ?? operator returns its left operand if non-null, otherwise its right:
+#
+#   string name = input ?? "default";
+#   // equivalent to: string name = (input != null) ? input : "default";
+#
+# ?? is particularly useful with nullable value types:
+#
+#   int value = nullableInt ?? 0;
+#   // equivalent to: int value = nullableInt.HasValue ? nullableInt.Value : 0;
+#
+# The ?? operator sits between the conditional (?:) and logical-or (||) in
+# precedence. It is right-associative, so `a ?? b ?? c` means `a ?? (b ?? c)`.
+#
+# Java did not get a null coalescing operator until... well, Java still does
+# not have one as of Java 21 (2023). Java developers use Optional.orElse()
+# or ternary expressions. Kotlin has `?:` (the Elvis operator) for this.
+#
+# IMPORTANT: QUESTION_QUESTION must come before QUESTION in the token list,
+# otherwise "??" would be lexed as two separate "?" tokens.
+#
+# C# 2.0 also adds :: (namespace alias qualifier), but we already have COLON
+# as a single-character token. The parser handles :: by matching COLON COLON
+# or we add a dedicated COLON_COLON token here.
+
+COLON_COLON          = "::"
+LEFT_SHIFT_EQUALS    = "<<="
+RIGHT_SHIFT_EQUALS   = ">>="
+EQUALS_EQUALS        = "=="
+NOT_EQUALS           = "!="
+LESS_EQUALS          = "<="
+GREATER_EQUALS       = ">="
+AND_AND              = "&&"
+OR_OR                = "||"
+PLUS_PLUS            = "++"
+MINUS_MINUS          = "--"
+PLUS_EQUALS          = "+="
+MINUS_EQUALS         = "-="
+STAR_EQUALS          = "*="
+SLASH_EQUALS         = "/="
+PERCENT_EQUALS       = "%="
+AMPERSAND_EQUALS     = "&="
+PIPE_EQUALS          = "|="
+CARET_EQUALS         = "^="
+LEFT_SHIFT           = "<<"
+RIGHT_SHIFT          = ">>"
+QUESTION_QUESTION    = "??"
+ARROW                = "->"
+
+# ============================================================================
+# Single-character operators
+# ============================================================================
+#
+# Unchanged from C# 1.0. The QUESTION token now also serves as the nullable
+# type suffix (int?) and remains the ternary operator (condition ? a : b).
+#
+# C# 2.0 does NOT have:
+#   - The => fat arrow (lambda expressions, added in C# 3.0)
+#   - The ?. null-conditional (added in C# 6.0)
+#   - The .. range operator (added in C# 8.0)
+#   - The >>> unsigned right shift (added in C# 11.0)
+
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+#
+# Same as C# 1.0. Note that :: is now handled by the COLON_COLON token above.
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+DOT       = "."
+COLON     = ":"
+
+# ============================================================================
+# Keywords
+# ============================================================================
+#
+# C# 2.0 adds ONE new reserved keyword:
+#
+#   yield — used in iterator methods to produce values lazily
+#
+# The other new features use CONTEXT KEYWORDS that are only special in
+# certain positions but can still be used as identifiers elsewhere:
+#
+#   partial — only special before class/struct/interface
+#   where   — only special after type parameter list (generic constraints)
+#   global  — only special before :: (namespace alias qualifier)
+#
+# Context keywords are NOT in the keywords list. The lexer emits them as
+# NAME tokens, and the parser recognizes them by value in the appropriate
+# syntactic positions.
+#
+# The yield keyword is technically also context-sensitive (it's only special
+# before `return` or `break`), but the C# specification lists it as a
+# keyword. In practice, `yield` by itself is still a valid identifier name
+# in many positions, but for grammar clarity we list it as a keyword.
+#
+# Note: `static` was already a keyword in C# 1.0 (for static methods and
+# fields). C# 2.0 adds the ability to put `static` on class declarations,
+# but no new keyword is needed.
+#
+# Total keywords: 78 (77 from C# 1.0 + yield)
+
+keywords:
+  abstract
+  as
+  base
+  bool
+  break
+  byte
+  case
+  catch
+  char
+  checked
+  class
+  const
+  continue
+  decimal
+  default
+  delegate
+  do
+  double
+  else
+  enum
+  event
+  explicit
+  extern
+  false
+  finally
+  fixed
+  float
+  for
+  foreach
+  goto
+  if
+  implicit
+  in
+  int
+  interface
+  internal
+  is
+  lock
+  long
+  namespace
+  new
+  null
+  object
+  operator
+  out
+  override
+  params
+  private
+  protected
+  public
+  readonly
+  ref
+  return
+  sbyte
+  sealed
+  short
+  sizeof
+  stackalloc
+  static
+  string
+  struct
+  switch
+  this
+  throw
+  true
+  try
+  typeof
+  uint
+  ulong
+  unchecked
+  unsafe
+  ushort
+  using
+  virtual
+  void
+  volatile
+  while
+  yield
+
+# ============================================================================
+# Skip patterns (whitespace and comments)
+# ============================================================================
+#
+# Unchanged from C# 1.0. C# 2.0 adds no new comment forms.
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Preprocessor directives
+# ============================================================================
+#
+# Unchanged from C# 1.0. C# 2.0 adds no new preprocessor directives.
+
+PP_IF        = /#\s*if\b[^\n]*/
+PP_ELIF      = /#\s*elif\b[^\n]*/
+PP_ELSE      = /#\s*else\b[^\n]*/
+PP_ENDIF     = /#\s*endif\b[^\n]*/
+PP_DEFINE    = /#\s*define\b[^\n]*/
+PP_UNDEF     = /#\s*undef\b[^\n]*/
+PP_REGION    = /#\s*region\b[^\n]*/
+PP_ENDREGION = /#\s*endregion\b[^\n]*/
+PP_ERROR     = /#\s*error\b[^\n]*/
+PP_WARNING   = /#\s*warning\b[^\n]*/
+PP_LINE      = /#\s*line\b[^\n]*/
+PP_PRAGMA    = /#\s*pragma\b[^\n]*/
+
+# ============================================================================
+# Error recovery tokens
+# ============================================================================
+
+errors:
+  BAD_STRING = /"[^"]*$/
+  BAD_CHAR   = /'[^']*$/
+  BAD_VERBATIM_STRING = /@"([^"]|"")*$/

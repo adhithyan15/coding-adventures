@@ -1,0 +1,11 @@
+[package]
+name = "audio-device-coreaudio"
+version = "0.1.0"
+edition = "2021"
+description = "Core Audio backend for the audio-device-sink contract"
+
+[lib]
+name = "audio_device_coreaudio"
+
+[dependencies]
+audio-device-sink = { path = "../audio-device-sink" }

@@ -8,7 +8,8 @@ package main
 //  3. Run capability detection and banned-construct detection.
 //  4. Load required_capabilities.json.
 //  5. Cross-reference detected vs declared → produce violations.
-//  6. Return AnalysisResult.
+//  6. Apply explicit banned-construct exceptions for supported FFI cases.
+//  7. Return AnalysisResult.
 //
 // The two exported functions are:
 //
@@ -267,9 +268,9 @@ func detectSpecialCalls(
 //  1. Walk dir for .go files (skipping gen_capabilities.go and test helpers).
 //  2. Parse each file with go/parser in ParseComments mode.
 //  3. Run DetectCapabilities and DetectBanned over all parsed files.
-//  4. Load required_capabilities.json via LoadManifest.
+//  4. Load required_capabilities.json via LoadManifestData.
 //  5. Cross-reference: detected ⊄ declared → CAP001 violations.
-//  6. Every banned construct → CAP002 violation.
+//  6. Every remaining disallowed restricted construct → CAP002 violation.
 //  7. Return AnalysisResult.
 func AnalyzeDir(dir string) (*AnalysisResult, error) {
 	absDir, err := filepath.Abs(dir)
@@ -324,10 +325,11 @@ func AnalyzeDir(dir string) (*AnalysisResult, error) {
 	}
 
 	// ── Step 4: Load manifest ─────────────────────────────────────────────
-	declared, err := LoadManifest(absDir)
+	manifest, err := LoadManifestData(absDir)
 	if err != nil {
 		return nil, err
 	}
+	declared := manifest.Declared
 	for k := range declared {
 		result.Declared = append(result.Declared, k)
 	}
@@ -350,12 +352,66 @@ func AnalyzeDir(dir string) (*AnalysisResult, error) {
 		}
 	}
 
-	// ── Step 6: Banned constructs → violations ────────────────────────────
+	// ── Step 6: Restricted constructs → violations ────────────────────────
+	filteredBanned := make([]BannedConstruct, 0, len(result.Banned))
 	for _, b := range result.Banned {
-		result.Violations = append(result.Violations, newViolationCAP002(b))
+		allowed, hint := allowBannedConstruct(manifest, b)
+		if allowed {
+			continue
+		}
+		filteredBanned = append(filteredBanned, b)
+		result.Violations = append(result.Violations, newViolationCAP002Hint(b, hint))
 	}
+	result.Banned = filteredBanned
 
 	return result, nil
+}
+
+// allowBannedConstruct returns whether the restricted construct is explicitly
+// authorized for this package. Today this is intentionally narrow: only the
+// two FFI-style bridge constructs may opt in, and they must declare both a
+// banned_construct_exceptions entry and the matching ffi capability.
+func allowBannedConstruct(manifest *ManifestData, banned BannedConstruct) (bool, string) {
+	switch banned.Construct {
+	case bannedConstructImportC:
+		return allowExplicitFFIConstruct(manifest, banned, "ffi:call:*")
+	case bannedConstructPluginOpen:
+		return allowExplicitFFIConstruct(manifest, banned, "ffi:load:*")
+	default:
+		return false, ""
+	}
+}
+
+func allowExplicitFFIConstruct(
+	manifest *ManifestData,
+	banned BannedConstruct,
+	required CapabilityString,
+) (bool, string) {
+	exceptionKey := canonicalBannedConstructExceptionKey("go", banned.Construct)
+	hasException := manifest.BannedConstructExceptions[exceptionKey]
+	hasCapability := manifest.Declared[required]
+
+	if hasException && hasCapability {
+		return true, ""
+	}
+
+	switch {
+	case !hasException && !hasCapability:
+		return false, fmt.Sprintf(
+			"add banned_construct_exceptions for %q and declare %s",
+			banned.Construct, required,
+		)
+	case !hasException:
+		return false, fmt.Sprintf(
+			"add banned_construct_exceptions for %q",
+			banned.Construct,
+		)
+	default:
+		return false, fmt.Sprintf(
+			"declare %s to accompany the %q exception",
+			required, banned.Construct,
+		)
+	}
 }
 
 // ── Internal helpers ──────────────────────────────────────────────────────────

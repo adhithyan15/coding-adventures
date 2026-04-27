@@ -44,10 +44,16 @@ pub type ID = usize;
 
 /// Ruby `false` (VALUE = 0)
 pub const QFALSE: VALUE = 0;
-/// Ruby `true` (VALUE = 2, or 0x14 on some Ruby versions)
-pub const QTRUE: VALUE = 0x14;  // Ruby 2.0+ uses 0x14 for Qtrue
-/// Ruby `nil` (VALUE = 4, or 0x08 on some Ruby versions)
-pub const QNIL: VALUE = 0x08;   // Ruby 2.0+ uses 0x08 for Qnil
+/// Ruby `true` — 0x14 on all 64-bit Ruby builds with USE_FLONUM (the default).
+pub const QTRUE: VALUE = 0x14;
+/// Ruby `nil` — 0x04 on all 64-bit Ruby builds with USE_FLONUM (the default).
+///
+/// USE_FLONUM is enabled on every 64-bit Ruby (x86_64 and aarch64) since
+/// Ruby 2.x. The special-constant layout with USE_FLONUM is:
+///   Qfalse = 0x00, Qnil = 0x04, Qtrue = 0x14, Qundef = 0x24
+/// Without USE_FLONUM (32-bit or unusual builds) Qnil = 0x02, but those
+/// builds are not supported by this crate.
+pub const QNIL: VALUE = 0x04;
 
 // ---------------------------------------------------------------------------
 // Ruby's C API — extern "C" declarations

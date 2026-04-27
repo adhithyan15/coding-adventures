@@ -1,0 +1,19 @@
+{
+  "name": "@coding-adventures/x25519",
+  "version": "0.1.0",
+  "description": "X25519 Elliptic Curve Diffie-Hellman (RFC 7748) — from-scratch field arithmetic over GF(2^255-19)",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

@@ -10,6 +10,7 @@ import (
 
 	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/gitdiff"
 )
 
 // TestAllToolchainsConstant verifies the canonical toolchain list is complete.
@@ -17,7 +18,7 @@ func TestAllToolchainsConstant(t *testing.T) {
 	expected := map[string]bool{
 		"python": true, "ruby": true, "go": true,
 		"typescript": true, "rust": true, "elixir": true, "lua": true, "perl": true,
-		"swift": true, "haskell": true, "dotnet": true,
+		"swift": true, "dart": true, "java": true, "kotlin": true, "haskell": true, "dotnet": true,
 	}
 	if len(allToolchains) != len(expected) {
 		t.Errorf("allToolchains has %d entries, want %d", len(allToolchains), len(expected))
@@ -32,18 +33,17 @@ func TestAllToolchainsConstant(t *testing.T) {
 // TestSharedPrefixesAreNarrow ensures only true shared build infrastructure
 // forces all-language rebuilds.
 func TestSharedPrefixesAreNarrow(t *testing.T) {
-	if len(sharedPrefixes) == 0 {
-		t.Error("sharedPrefixes should not be empty")
-	}
-	// Verify key prefixes are present.
 	found := map[string]bool{}
 	for _, p := range sharedPrefixes {
 		found[p] = true
 	}
-	for _, want := range []string{".github/workflows/ci.yml"} {
-		if !found[want] {
-			t.Errorf("sharedPrefixes missing %q", want)
-		}
+
+	if found[gitdiff.CIWorkflowPath] {
+		t.Fatalf("%q should be analyzed diff-by-diff, not blindly forced via sharedPrefixes", gitdiff.CIWorkflowPath)
+	}
+
+	if gitdiff.CIWorkflowPath != ".github/workflows/ci.yml" {
+		t.Fatalf("unexpected ci workflow path: %q", gitdiff.CIWorkflowPath)
 	}
 
 	// Regression guard: the following paths must NOT be in sharedPrefixes.
@@ -67,6 +67,29 @@ func TestSharedPrefixesAreNarrow(t *testing.T) {
 	}
 }
 
+func TestComputeLanguagesNeededIncludesSafeCIWorkflowToolchains(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "python/logic-gates", Language: "python"},
+	}
+
+	needed := computeLanguagesNeeded(
+		packages,
+		map[string]bool{"python/logic-gates": true},
+		false,
+		map[string]bool{"dotnet": true},
+	)
+
+	for _, toolchain := range []string{"go", "python", "dotnet"} {
+		if !needed[toolchain] {
+			t.Fatalf("expected %s to be enabled, got %v", toolchain, needed)
+		}
+	}
+
+	if needed["rust"] {
+		t.Fatalf("did not expect unrelated rust toolchain: %v", needed)
+	}
+}
+
 // TestCollectAffectedLanguages verifies language detection from affected sets.
 func TestCollectAffectedLanguages(t *testing.T) {
 	packages := []discovery.Package{
@@ -77,6 +100,7 @@ func TestCollectAffectedLanguages(t *testing.T) {
 		{Name: "typescript/starlark-vm", Language: "typescript"},
 		{Name: "rust/starlark-vm", Language: "rust"},
 		{Name: "elixir/starlark_vm", Language: "elixir"},
+		{Name: "dart/hello-world", Language: "dart"},
 		{Name: "wasm/graph", Language: "wasm"},
 		{Name: "csharp/graph", Language: "csharp"},
 		{Name: "fsharp/graph", Language: "fsharp"},
@@ -94,8 +118,8 @@ func TestCollectAffectedLanguages(t *testing.T) {
 		},
 		{
 			name:        "multiple languages affected",
-			affectedSet: map[string]bool{"python/logic-gates": true, "rust/starlark-vm": true},
-			wantLangs:   map[string]bool{"python": true, "rust": true, "go": true},
+			affectedSet: map[string]bool{"python/logic-gates": true, "rust/starlark-vm": true, "dart/hello-world": true},
+			wantLangs:   map[string]bool{"python": true, "rust": true, "dart": true, "go": true},
 		},
 		{
 			name:        "empty affected set",
@@ -197,6 +221,9 @@ func TestToolchainForPackageLanguage(t *testing.T) {
 		"csharp":  "dotnet",
 		"fsharp":  "dotnet",
 		"dotnet":  "dotnet",
+		"dart":    "dart",
+		"java":    "java",
+		"kotlin":  "kotlin",
 		"python":  "python",
 		"swift":   "swift",
 		"unknown": "unknown",

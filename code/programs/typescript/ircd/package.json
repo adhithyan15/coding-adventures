@@ -1,0 +1,34 @@
+{
+  "name": "@coding-adventures/ircd",
+  "version": "0.1.0",
+  "description": "IRC server executable — wires irc-proto, irc-framing, irc-server, and irc-net-stdlib",
+  "type": "module",
+  "main": "src/index.ts",
+  "bin": {
+    "ircd": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node --loader ts-node/esm src/index.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "irc",
+    "ircd",
+    "server",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/irc-framing": "file:../../../packages/typescript/irc-framing",
+    "@coding-adventures/irc-net-stdlib": "file:../../../packages/typescript/irc-net-stdlib",
+    "@coding-adventures/irc-proto": "file:../../../packages/typescript/irc-proto",
+    "@coding-adventures/irc-server": "file:../../../packages/typescript/irc-server"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  }
+}

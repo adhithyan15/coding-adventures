@@ -1,0 +1,17 @@
+[workspace]
+
+[package]
+name = "paint-codec-png-native-lua"
+version = "0.1.0"
+edition = "2021"
+description = "Lua C extension exposing the PNG paint codec from Rust"
+build = "build.rs"
+
+[lib]
+name = "paint_codec_png_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+lua-bridge = { path = "../../rust/lua-bridge" }
+paint-codec-png = { path = "../../rust/paint-codec-png" }
+paint-instructions = { path = "../../rust/paint-instructions" }

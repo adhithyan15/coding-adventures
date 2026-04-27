@@ -1,8 +1,10 @@
-# Scaffold Generator — Package Scaffolding for All Six Languages
+# Scaffold Generator — Package Scaffolding with a Dart Bootstrap Lane
 
 A CLI tool, powered by CLI Builder, that generates correct-by-construction,
-CI-ready package scaffolding across Python, Go, Ruby, Rust, TypeScript, and
-Elixir.
+CI-ready package scaffolding across the monorepo's implementation languages.
+The first published versions covered Python, Go, Ruby, Rust, TypeScript, and
+Elixir; this spec now also defines a Dart bootstrap implementation focused on
+generating Dart packages and programs correctly.
 
 ---
 
@@ -10,7 +12,7 @@ Elixir.
 
 ### 1.1 The Problem
 
-The coding-adventures monorepo contains 400+ packages across six languages.
+The coding-adventures monorepo contains 400+ packages across many languages.
 Every package follows a precise file structure, and getting any detail wrong
 causes CI failures. The `lessons.md` file documents at least twelve recurring
 categories of failure that all stem from the same root cause: **agents
@@ -63,8 +65,26 @@ generated package:
    need to remember them.
 4. **Built on CLI Builder** — the tool's own interface is defined in a JSON
    spec file, consistent with how all CLI tools in this repo are built.
-5. **One tool, six languages** — the same conceptual tool is implemented in
-   each of the six languages, following the same pattern as `pwd`.
+5. **One tool, multiple implementation lanes** — the same conceptual tool is
+   implemented in multiple languages, following the same pattern as `pwd`.
+
+### 1.3.1 Dart Bootstrap Phase
+
+The Dart implementation is intentionally narrower than the older cross-language
+generators. Its near-term job is to unblock future Dart package work so agents
+do not hand-craft `pubspec.yaml`, `BUILD`, `README.md`, `CHANGELOG.md`,
+`.gitignore`, `lib/`, `bin/`, and `test/` layouts from memory.
+
+In this bootstrap phase:
+
+- the Dart program supports scaffolding **Dart libraries** under
+  `code/packages/dart/`
+- it also supports scaffolding **Dart programs** under `code/programs/dart/`
+- its local CLI spec accepts `dart` explicitly and may treat `all` as the
+  Dart bootstrap lane for compatibility with the broader scaffold-generator
+  interface
+- it reads existing Dart `pubspec.yaml` files to validate direct dependencies
+  and compute transitive Dart dependency closures
 
 ### 1.4 How Agents Should Use This Tool
 
@@ -115,7 +135,7 @@ Options:
 | Flag | Type | Default | Description |
 |------|------|---------|-------------|
 | `--type` / `-t` | enum | `library` | `library` → `code/packages/<lang>/`, `program` → `code/programs/<lang>/` |
-| `--language` / `-l` | string | `all` | One of: `python`, `ruby`, `go`, `typescript`, `rust`, `elixir`, `all`. Multiple languages can be comma-separated: `python,go,rust`. |
+| `--language` / `-l` | string | implementation-defined | The accepted language set is implementation-specific. The Dart bootstrap implementation accepts `dart` and `all`, where `all` resolves to the Dart lane. |
 | `--depends-on` / `-d` | string | (none) | Comma-separated list of sibling package names (in kebab-case). These are direct dependencies. The tool computes transitive dependencies automatically. |
 | `--layer` | integer | (none) | Layer number in the computing stack (e.g., 1 for logic-gates, 2 for arithmetic). Used in README context. |
 | `--description` | string | (none) | One-line description. Used in metadata files and README. |
@@ -123,8 +143,10 @@ Options:
 
 ### 2.4 The JSON Spec
 
-The CLI interface is declared in `scaffold-generator.json`, shared by all six
-language implementations (same pattern as `pwd.json`):
+The CLI interface is declared in `scaffold-generator.json`. Mature
+implementations may share one root JSON spec; bootstrap implementations may
+carry a local variant as long as they preserve the same flag names and core
+semantics (same pattern as `pwd.json`):
 
 ```json
 {
@@ -149,7 +171,7 @@ language implementations (same pattern as `pwd.json`):
       "id": "language",
       "short": "l",
       "long": "language",
-      "description": "Target language(s). Comma-separated or 'all' for all 6 languages",
+      "description": "Target language(s). The accepted set is implementation-specific; the Dart bootstrap lane accepts 'dart' and 'all'",
       "type": "string",
       "default": "all"
     },
@@ -203,8 +225,9 @@ Before generating any files, the tool validates:
    Reject names with uppercase, underscores, leading/trailing hyphens, or
    consecutive hyphens.
 
-2. **Language values** — each comma-separated value must be one of the six
-   recognized languages or `all`.
+2. **Language values** — each comma-separated value must be recognized by the
+   active implementation. The Dart bootstrap implementation accepts `dart` and
+   `all`.
 
 3. **Dependencies exist** — for each dependency in `--depends-on`, verify that
    the directory `code/packages/<lang>/<dep>` (or `code/programs/<lang>/<dep>`)
@@ -242,14 +265,14 @@ to_joined_lower("my-package") → "mypackage"     # remove hyphens, no underscor
 
 Given the input `my-package`:
 
-| Context | Python | Ruby | Go | TypeScript | Rust | Elixir |
-|---------|--------|------|----|-----------|------|--------|
-| **Directory name** | `my-package` | `my_package` | `my-package` | `my-package` | `my-package` | `my_package` |
-| **Package/crate/gem/app name** | `coding-adventures-my-package` | `coding_adventures_my_package` | (module path) | `@coding-adventures/my-package` | `my-package` | `:coding_adventures_my_package` |
-| **Module/namespace** | `my_package` | `CodingAdventures::MyPackage` | `mypackage` | (ESM exports) | `my_package` | `CodingAdventures.MyPackage` |
-| **Import in code** | `from my_package import ...` | `require "coding_adventures_my_package"` | `import mypackage` | `import { ... } from "@coding-adventures/my-package"` | `use my_package::...` | `alias CodingAdventures.MyPackage` |
-| **Source directory** | `src/my_package/` | `lib/coding_adventures/my_package/` | (flat) | `src/` | `src/` | `lib/coding_adventures/my_package/` |
-| **Test file** | `tests/test_my_package.py` | `test/test_my_package.rb` | `my_package_test.go` | `tests/my-package.test.ts` | `tests/my_package_test.rs` | `test/my_package_test.exs` |
+| Context | Python | Ruby | Go | TypeScript | Rust | Elixir | Dart |
+|---------|--------|------|----|-----------|------|--------|------|
+| **Directory name** | `my-package` | `my_package` | `my-package` | `my-package` | `my-package` | `my_package` | `my-package` |
+| **Package/crate/gem/app name** | `coding-adventures-my-package` | `coding_adventures_my_package` | (module path) | `@coding-adventures/my-package` | `my-package` | `:coding_adventures_my_package` | `coding_adventures_my_package` for libraries, `my_package` for programs |
+| **Module/namespace** | `my_package` | `CodingAdventures::MyPackage` | `mypackage` | (ESM exports) | `my_package` | `CodingAdventures.MyPackage` | top-level library file `lib/my_package.dart` |
+| **Import in code** | `from my_package import ...` | `require "coding_adventures_my_package"` | `import mypackage` | `import { ... } from "@coding-adventures/my-package"` | `use my_package::...` | `alias CodingAdventures.MyPackage` | `import 'package:coding_adventures_my_package/my_package.dart';` for libraries |
+| **Source directory** | `src/my_package/` | `lib/coding_adventures/my_package/` | (flat) | `src/` | `src/` | `lib/coding_adventures/my_package/` | `lib/` and `lib/src/`, plus `bin/` for programs |
+| **Test file** | `tests/test_my_package.py` | `test/test_my_package.rb` | `my_package_test.go` | `tests/my-package.test.ts` | `tests/my_package_test.rs` | `test/my_package_test.exs` | `test/my_package_test.dart` |
 
 ### 3.3 Dependency Name Normalization
 
@@ -1333,7 +1356,7 @@ print a warning but not prevent generation.
 
 ## 11. Implementation Priority
 
-Not all six language implementations need to ship simultaneously. The
+Not all language implementations need to ship simultaneously. The
 recommended priority order:
 
 1. **Go** — the primary build tool and most programs are in Go; fast compilation
@@ -1344,7 +1367,9 @@ recommended priority order:
    here has the highest impact
 4. **Ruby** — moderate complexity, well-understood patterns
 5. **Rust** — important for workspace integration, but cargo handles deps well
-6. **Elixir** — fewest packages, lowest priority but still needed for parity
+6. **Dart** — bootstrap the Dart ecosystem so future lexer/parser and runtime
+   ports start from correct templates instead of hand-written package layouts
+7. **Elixir** — fewest packages, lowest priority but still needed for parity
 
 ---
 

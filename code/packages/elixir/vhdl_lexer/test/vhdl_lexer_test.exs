@@ -63,6 +63,26 @@ defmodule CodingAdventures.VhdlLexerTest do
       assert "port" in grammar.keywords
       assert "begin" in grammar.keywords
     end
+
+    test "supports selecting an explicit language edition" do
+      default_names =
+        VhdlLexer.create_lexer()
+        |> Map.fetch!(:definitions)
+        |> Enum.map(& &1.name)
+
+      versioned_names =
+        VhdlLexer.create_lexer("2008")
+        |> Map.fetch!(:definitions)
+        |> Enum.map(& &1.name)
+
+      assert default_names == versioned_names
+    end
+
+    test "raises for an unknown language edition" do
+      assert_raise ArgumentError, ~r/Unknown VHDL version/, fn ->
+        VhdlLexer.create_lexer("2099")
+      end
+    end
   end
 
   # ===========================================================================

@@ -1,0 +1,17 @@
+[package]
+name = "text-native"
+version = "0.1.0"
+edition = "2021"
+description = "TXT03 wrapper crate: dispatches to the per-OS native text backend (CoreText on macOS/iOS, DirectWrite on Windows, Pango on Linux) via cfg-gated re-exports."
+
+[dependencies]
+text-interfaces = { path = "../text-interfaces" }
+
+[target.'cfg(target_vendor = "apple")'.dependencies]
+text-native-coretext = { path = "../text-native-coretext" }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+windows = { version = "0.58", features = [
+    "Win32_Foundation",
+    "Win32_Graphics_DirectWrite",
+] }

@@ -307,6 +307,9 @@ M.OPCODES = {
     -- i32.lt_s: Less-than comparison treating both operands as signed.
     [0x48] = { name = "i32.lt_s", operands = "none" },
 
+    -- i32.gt_s: Greater-than comparison treating both operands as signed.
+    [0x4A] = { name = "i32.gt_s", operands = "none" },
+
     -- i32.add: Integer addition. Wraps on overflow (modular 2³²).
     [0x6a] = { name = "i32.add", operands = "none" },
 

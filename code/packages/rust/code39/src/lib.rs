@@ -1,10 +1,20 @@
 //! # code39
 //!
-//! Dependency-free Code 39 encoder that emits backend-neutral draw scenes.
-
-use draw_instructions::{create_scene, draw_rect, draw_text, DrawScene, Metadata, Renderer};
+//! Dependency-free Code 39 encoder that emits shared barcode runs and paint
+//! scenes.
 
 pub const VERSION: &str = "0.1.0";
+
+use barcode_layout_1d::{
+    layout_barcode_1d, Barcode1DRenderConfig, Barcode1DRun, Barcode1DRunColor,
+};
+use paint_instructions::PaintScene;
+
+pub use barcode_layout_1d::{
+    Barcode1DLayout as Layout, Barcode1DRenderConfig as RenderConfig, Barcode1DRun as BarcodeRun,
+    Barcode1DRunColor as RunColor, Barcode1DRunRole, Barcode1DSymbolDescriptor,
+    Barcode1DSymbolLayout, Barcode1DSymbolRole, PaintBarcode1DOptions,
+};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct EncodedCharacter {
@@ -13,51 +23,87 @@ pub struct EncodedCharacter {
     pub pattern: String,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct BarcodeRun {
-    pub color: String,
-    pub width: String,
-    pub source_char: String,
-    pub source_index: usize,
-    pub is_inter_character_gap: bool,
+pub fn default_render_config() -> Barcode1DRenderConfig {
+    Barcode1DRenderConfig::default()
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct RenderConfig {
-    pub narrow_unit: i32,
-    pub wide_unit: i32,
-    pub bar_height: i32,
-    pub quiet_zone_units: i32,
-    pub include_human_readable_text: bool,
-}
-
-pub fn default_render_config() -> RenderConfig {
-    RenderConfig { narrow_unit: 4, wide_unit: 12, bar_height: 120, quiet_zone_units: 10, include_human_readable_text: true }
-}
-
-const TEXT_MARGIN: i32 = 8;
-const TEXT_FONT_SIZE: i32 = 16;
-const TEXT_BLOCK_HEIGHT: i32 = TEXT_MARGIN + TEXT_FONT_SIZE + 4;
+const CODE39_PATTERNS: [(&str, &str); 44] = [
+    ("0", "bwbWBwBwb"),
+    ("1", "BwbWbwbwB"),
+    ("2", "bwBWbwbwB"),
+    ("3", "BwBWbwbwb"),
+    ("4", "bwbWBwbwB"),
+    ("5", "BwbWBwbwb"),
+    ("6", "bwBWBwbwb"),
+    ("7", "bwbWbwBwB"),
+    ("8", "BwbWbwBwb"),
+    ("9", "bwBWbwBwb"),
+    ("A", "BwbwbWbwB"),
+    ("B", "bwBwbWbwB"),
+    ("C", "BwBwbWbwb"),
+    ("D", "bwbwBWbwB"),
+    ("E", "BwbwBWbwb"),
+    ("F", "bwBwBWbwb"),
+    ("G", "bwbwbWBwB"),
+    ("H", "BwbwbWBwb"),
+    ("I", "bwBwbWBwb"),
+    ("J", "bwbwBWBwb"),
+    ("K", "BwbwbwbWB"),
+    ("L", "bwBwbwbWB"),
+    ("M", "BwBwbwbWb"),
+    ("N", "bwbwBwbWB"),
+    ("O", "BwbwBwbWb"),
+    ("P", "bwBwBwbWb"),
+    ("Q", "bwbwbwBWB"),
+    ("R", "BwbwbwBWb"),
+    ("S", "bwBwbwBWb"),
+    ("T", "bwbwBwBWb"),
+    ("U", "BWbwbwbwB"),
+    ("V", "bWBwbwbwB"),
+    ("W", "BWBwbwbwb"),
+    ("X", "bWbwBwbwB"),
+    ("Y", "BWbwBwbwb"),
+    ("Z", "bWBwBwbwb"),
+    ("-", "bWbwbwBwB"),
+    (".", "BWbwbwBwb"),
+    (" ", "bWBwbwBwb"),
+    ("$", "bWbWbWbwb"),
+    ("/", "bWbWbwbWb"),
+    ("+", "bWbwbWbWb"),
+    ("%", "bwbWbWbWb"),
+    ("*", "bWbwBwBwb"),
+];
 
 fn patterns(ch: &str) -> Option<&'static str> {
-    match ch {
-        "0" => Some("bwbWBwBwb"), "1" => Some("BwbWbwbwB"), "2" => Some("bwBWbwbwB"), "3" => Some("BwBWbwbwb"),
-        "4" => Some("bwbWBwbwB"), "5" => Some("BwbWBwbwb"), "6" => Some("bwBWBwbwb"), "7" => Some("bwbWbwBwB"),
-        "8" => Some("BwbWbwBwb"), "9" => Some("bwBWbwBwb"), "A" => Some("BwbwbWbwB"), "B" => Some("bwBwbWbwB"),
-        "C" => Some("BwBwbWbwb"), "D" => Some("bwbwBWbwB"), "E" => Some("BwbwBWbwb"), "F" => Some("bwBwBWbwb"),
-        "G" => Some("bwbwbWBwB"), "H" => Some("BwbwbWBwb"), "I" => Some("bwBwbWBwb"), "J" => Some("bwbwBWBwb"),
-        "K" => Some("BwbwbwbWB"), "L" => Some("bwBwbwbWB"), "M" => Some("BwBwbwbWb"), "N" => Some("bwbwBwbWB"),
-        "O" => Some("BwbwBwbWb"), "P" => Some("bwBwBwbWb"), "Q" => Some("bwbwbwBWB"), "R" => Some("BwbwbwBWb"),
-        "S" => Some("bwBwbwBWb"), "T" => Some("bwbwBwBWb"), "U" => Some("BWbwbwbwB"), "V" => Some("bWBwbwbwB"),
-        "W" => Some("BWBwbwbwb"), "X" => Some("bWbwBwbwB"), "Y" => Some("BWbwBwbwb"), "Z" => Some("bWBwBwbwb"),
-        "-" => Some("bWbwbwBwB"), "." => Some("BWbwbwBwb"), " " => Some("bWBwbwBwb"), "$" => Some("bWbWbWbwb"),
-        "/" => Some("bWbWbwbWb"), "+" => Some("bWbwbWbWb"), "%" => Some("bwbWbWbWb"), "*" => Some("bWbwBwBwb"),
-        _ => None,
-    }
+    CODE39_PATTERNS
+        .iter()
+        .find(|(value, _)| *value == ch)
+        .map(|(_, pattern)| *pattern)
 }
 
 fn width_pattern(pattern: &str) -> String {
-    pattern.chars().map(|part| if part.is_uppercase() { 'W' } else { 'N' }).collect()
+    pattern
+        .chars()
+        .map(|part| if part.is_uppercase() { 'W' } else { 'N' })
+        .collect()
+}
+
+fn run_role_for(
+    source_index: usize,
+    encoded_len: usize,
+    encoded_char: &EncodedCharacter,
+) -> Barcode1DRunRole {
+    if !encoded_char.is_start_stop {
+        return Barcode1DRunRole::Data;
+    }
+
+    if source_index == 0 {
+        Barcode1DRunRole::Start
+    } else if source_index == encoded_len - 1 {
+        Barcode1DRunRole::Stop
+    } else {
+        Barcode1DRunRole::Guard
+    }
 }
 
 pub fn normalize_code39(data: &str) -> Result<String, String> {
@@ -65,18 +111,28 @@ pub fn normalize_code39(data: &str) -> Result<String, String> {
     for ch in normalized.chars() {
         let value = ch.to_string();
         if value == "*" {
-            return Err("input must not contain \"*\" because it is reserved for start/stop".into());
+            return Err(
+                "input must not contain \"*\" because it is reserved for start/stop".into(),
+            );
         }
         if patterns(&value).is_none() {
-            return Err(format!("invalid character: {:?} is not supported by Code 39", value));
+            return Err(format!(
+                "invalid character: {:?} is not supported by Code 39",
+                value
+            ));
         }
     }
     Ok(normalized)
 }
 
 pub fn encode_code39_char(ch: &str) -> Result<EncodedCharacter, String> {
-    let pattern = patterns(ch).ok_or_else(|| format!("invalid character: {:?} is not supported by Code 39", ch))?;
-    Ok(EncodedCharacter { ch: ch.into(), is_start_stop: ch == "*", pattern: width_pattern(pattern) })
+    let pattern = patterns(ch)
+        .ok_or_else(|| format!("invalid character: {:?} is not supported by Code 39", ch))?;
+    Ok(EncodedCharacter {
+        ch: ch.into(),
+        is_start_stop: ch == "*",
+        pattern: width_pattern(pattern),
+    })
 }
 
 pub fn encode_code39(data: &str) -> Result<Vec<EncodedCharacter>, String> {
@@ -87,78 +143,79 @@ pub fn encode_code39(data: &str) -> Result<Vec<EncodedCharacter>, String> {
         .collect()
 }
 
-pub fn expand_code39_runs(data: &str) -> Result<Vec<BarcodeRun>, String> {
+pub fn expand_code39_runs(data: &str) -> Result<Vec<Barcode1DRun>, String> {
     let encoded = encode_code39(data)?;
-    let colors = ["bar", "space", "bar", "space", "bar", "space", "bar", "space", "bar"];
+    let colors = [
+        Barcode1DRunColor::Bar,
+        Barcode1DRunColor::Space,
+        Barcode1DRunColor::Bar,
+        Barcode1DRunColor::Space,
+        Barcode1DRunColor::Bar,
+        Barcode1DRunColor::Space,
+        Barcode1DRunColor::Bar,
+        Barcode1DRunColor::Space,
+        Barcode1DRunColor::Bar,
+    ];
+
     let mut runs = Vec::new();
     for (source_index, encoded_char) in encoded.iter().enumerate() {
+        let role = run_role_for(source_index, encoded.len(), encoded_char);
+
         for (element_index, element) in encoded_char.pattern.chars().enumerate() {
-            runs.push(BarcodeRun {
-                color: colors[element_index].into(),
-                width: if element == 'W' { "wide".into() } else { "narrow".into() },
-                source_char: encoded_char.ch.clone(),
-                source_index,
-                is_inter_character_gap: false,
+            runs.push(Barcode1DRun {
+                color: colors[element_index].clone(),
+                modules: if element == 'W' { 3 } else { 1 },
+                source_label: encoded_char.ch.clone(),
+                source_index: source_index as isize,
+                role: role.clone(),
             });
         }
+
         if source_index < encoded.len() - 1 {
-            runs.push(BarcodeRun {
-                color: "space".into(),
-                width: "narrow".into(),
-                source_char: encoded_char.ch.clone(),
-                source_index,
-                is_inter_character_gap: true,
+            runs.push(Barcode1DRun {
+                color: Barcode1DRunColor::Space,
+                modules: 1,
+                source_label: encoded_char.ch.clone(),
+                source_index: source_index as isize,
+                role: Barcode1DRunRole::InterCharacterGap,
             });
         }
     }
+
     Ok(runs)
 }
 
-pub fn draw_code39(data: &str, config: &RenderConfig) -> Result<DrawScene, String> {
-    if config.wide_unit <= config.narrow_unit || config.narrow_unit <= 0 || config.bar_height <= 0 || config.quiet_zone_units <= 0 {
-        return Err("invalid render config".into());
-    }
+pub fn layout_code39(data: &str, options: &PaintBarcode1DOptions) -> Result<PaintScene, String> {
     let normalized = normalize_code39(data)?;
-    let quiet_zone_width = config.quiet_zone_units * config.narrow_unit;
     let runs = expand_code39_runs(&normalized)?;
-    let mut instructions = Vec::new();
-    let mut cursor_x = quiet_zone_width;
-    for run in runs {
-        let width = if run.width == "wide" { config.wide_unit } else { config.narrow_unit };
-        if run.color == "bar" {
-            let mut metadata = Metadata::new();
-            metadata.insert("char".into(), run.source_char.clone());
-            metadata.insert("index".into(), run.source_index.to_string());
-            instructions.push(draw_rect(cursor_x, 0, width, config.bar_height, "#000000", metadata));
-        }
-        cursor_x += width;
-    }
-    if config.include_human_readable_text {
-        let mut metadata = Metadata::new();
-        metadata.insert("role".into(), "label".into());
-        instructions.push(draw_text((cursor_x + quiet_zone_width) / 2, config.bar_height + TEXT_MARGIN + TEXT_FONT_SIZE - 2, &normalized, metadata));
-    }
-    let mut scene_meta = Metadata::new();
-    scene_meta.insert("label".into(), format!("Code 39 barcode for {}", normalized));
-    scene_meta.insert("symbology".into(), "code39".into());
-    Ok(create_scene(cursor_x + quiet_zone_width, config.bar_height + if config.include_human_readable_text { TEXT_BLOCK_HEIGHT } else { 0 }, instructions, "", scene_meta))
-}
+    let mut layout_options = options.clone();
 
-pub fn render_code39<T>(data: &str, renderer: &impl Renderer<T>, config: &RenderConfig) -> Result<T, String> {
-    let scene = draw_code39(data, config)?;
-    Ok(renderer.render(&scene))
+    if layout_options.label.is_none() {
+        layout_options.label = Some(if normalized.is_empty() {
+            "Code 39 barcode".to_string()
+        } else {
+            format!("Code 39 barcode for {}", normalized)
+        });
+    }
+
+    if layout_options.human_readable_text.is_none() {
+        layout_options.human_readable_text = Some(normalized.clone());
+    }
+
+    layout_options
+        .metadata
+        .insert("symbology".to_string(), "code39".to_string());
+    layout_options
+        .metadata
+        .insert("encodedText".to_string(), normalized.clone());
+
+    layout_barcode_1d(&runs, &layout_options)
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    struct TestRenderer;
-    impl Renderer<String> for TestRenderer {
-        fn render(&self, scene: &DrawScene) -> String {
-            format!("{}:{}", scene.width, scene.instructions.len())
-        }
-    }
+    use paint_instructions::PaintInstruction;
 
     #[test]
     fn version_and_encode() {
@@ -168,16 +225,87 @@ mod tests {
     }
 
     #[test]
-    fn expands_runs_and_draws_scene() {
+    fn expands_runs_and_builds_paint_scene() {
         let runs = expand_code39_runs("A").unwrap();
         assert_eq!(runs.len(), 29);
-        let scene = draw_code39("A", &default_render_config()).unwrap();
-        assert_eq!(scene.metadata.get("symbology").unwrap(), "code39");
+        assert_eq!(runs[0].role, Barcode1DRunRole::Start);
+        assert_eq!(runs[10].role, Barcode1DRunRole::Data);
+
+        let scene = layout_code39("A", &PaintBarcode1DOptions::default()).unwrap();
+        assert_eq!(
+            scene
+                .metadata
+                .as_ref()
+                .and_then(|metadata| metadata.get("symbology")),
+            Some(&"code39".to_string())
+        );
+        assert_eq!(
+            scene
+                .metadata
+                .as_ref()
+                .and_then(|metadata| metadata.get("label")),
+            Some(&"Code 39 barcode for A".to_string())
+        );
     }
 
     #[test]
-    fn renders_with_backend() {
-        let output = render_code39("OK", &TestRenderer, &default_render_config()).unwrap();
-        assert!(output.contains(':'));
+    fn default_render_config_is_paint_friendly() {
+        let config = default_render_config();
+        assert!(!config.include_human_readable_text);
+        assert_eq!(config.module_width, 4.0);
+        assert_eq!(config.bar_height, 120.0);
+    }
+
+    #[test]
+    #[cfg(any(target_os = "windows", target_vendor = "apple"))]
+    fn human_readable_text_emits_glyph_runs_when_enabled() {
+        let mut options = PaintBarcode1DOptions::default();
+        options.render_config.include_human_readable_text = true;
+        let scene = layout_code39("OK", &options).unwrap();
+        assert!(scene
+            .instructions
+            .iter()
+            .any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
+        assert_eq!(
+            scene
+                .metadata
+                .as_ref()
+                .and_then(|metadata| metadata.get("humanReadableText")),
+            Some(&"OK".to_string())
+        );
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn human_readable_text_renders_to_direct2d_pixels() {
+        let mut options = PaintBarcode1DOptions::default();
+        options.render_config.include_human_readable_text = true;
+        let scene = layout_code39("OK", &options).unwrap();
+        let bar_height = options.render_config.bar_height as usize;
+
+        let pixels = paint_vm_direct2d::render(&scene);
+        let label_dark_pixels = pixels
+            .data
+            .chunks_exact(4)
+            .enumerate()
+            .filter(|(index, px)| {
+                let y = index / pixels.width as usize;
+                y >= bar_height && px[0] < 64 && px[1] < 64 && px[2] < 64 && px[3] > 0
+            })
+            .count();
+
+        assert!(
+            label_dark_pixels > 20,
+            "expected visible text pixels below the bars"
+        );
+    }
+
+    #[cfg(all(not(target_os = "windows"), not(target_vendor = "apple")))]
+    #[test]
+    fn human_readable_text_waits_for_platform_text_backend() {
+        let mut options = PaintBarcode1DOptions::default();
+        options.render_config.include_human_readable_text = true;
+        let error = layout_code39("OK", &options).unwrap_err();
+        assert!(error.contains("font resolution failed") || error.contains("LoadFailed"));
     }
 }

@@ -1,0 +1,8 @@
+[package]
+name = "windows-job-backend-task-xml"
+version = "0.1.0"
+edition = "2021"
+description = "Windows Task Scheduler XML backend for native job installation"
+
+[dependencies]
+os-job-core = { path = "../os-job-core" }

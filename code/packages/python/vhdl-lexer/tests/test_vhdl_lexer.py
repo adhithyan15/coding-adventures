@@ -1071,3 +1071,20 @@ class TestEdgeCases:
         tokens = tokenize_vhdl("counter")
         assert token_types(tokens) == ["NAME", "EOF"]
         assert token_values(tokens)[0] == "counter"
+
+
+class TestVersions:
+    """Version-selection behaviour for compiled VHDL grammars."""
+
+    def test_default_version_matches_explicit_2008(self) -> None:
+        default_tokens = tokenize_vhdl("entity e is end entity e;")
+        explicit_tokens = tokenize_vhdl("entity e is end entity e;", version="2008")
+        assert token_values(default_tokens) == token_values(explicit_tokens)
+
+    def test_rejects_unknown_version(self) -> None:
+        try:
+            tokenize_vhdl("entity e is end entity e;", version="2099")
+        except ValueError as exc:
+            assert "Unknown VHDL version" in str(exc)
+        else:
+            raise AssertionError("Expected ValueError for unknown VHDL version")

@@ -20,6 +20,18 @@ sub values_of {
     return [ map { $_->{value} } grep { $_->{type} ne 'EOF' } @$tokens ];
 }
 
+sub types_of_version {
+    my ($source, $version) = @_;
+    my $tokens = CodingAdventures::VhdlLexer->tokenize($source, $version);
+    return [ map { $_->{type} } grep { $_->{type} ne 'EOF' } @$tokens ];
+}
+
+sub values_of_version {
+    my ($source, $version) = @_;
+    my $tokens = CodingAdventures::VhdlLexer->tokenize($source, $version);
+    return [ map { $_->{value} } grep { $_->{type} ne 'EOF' } @$tokens ];
+}
+
 # ============================================================================
 # Empty / trivial inputs
 # ============================================================================
@@ -34,6 +46,26 @@ subtest 'whitespace-only produces only EOF' => sub {
     my $tokens = CodingAdventures::VhdlLexer->tokenize("   \t\n  ");
     is( scalar @$tokens, 1,     '1 token after skipping whitespace' );
     is( $tokens->[0]{type}, 'EOF', 'token is EOF' );
+};
+
+subtest 'default version matches explicit 2008' => sub {
+    is(
+        types_of('entity'),
+        types_of_version('entity', '2008'),
+        'default token types match 2008'
+    );
+    is(
+        values_of('ENTITY'),
+        values_of_version('ENTITY', '2008'),
+        'default token values match 2008'
+    );
+};
+
+subtest 'unknown version raises die' => sub {
+    ok(
+        dies { CodingAdventures::VhdlLexer->tokenize('entity', '2099') },
+        'unsupported version dies'
+    );
 };
 
 subtest 'VHDL line comment only produces EOF' => sub {

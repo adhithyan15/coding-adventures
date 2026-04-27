@@ -1,0 +1,33 @@
+{
+  "name": "@coding-adventures/brotli",
+  "version": "0.1.0",
+  "description": "Brotli lossless compression algorithm (2013, RFC 7932) from scratch — CMP06",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "brotli",
+    "compression",
+    "huffman",
+    "insert-copy",
+    "context-modeling",
+    "lossless",
+    "cmp06",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/huffman-tree": "file:../huffman-tree"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

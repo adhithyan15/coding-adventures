@@ -14,7 +14,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
   {
     name: "program",
     body: { type: "repetition", element: { type: "rule_reference", name: "statement" } },
-    lineNumber: 29,
+    lineNumber: 34,
   },
   {
     name: "statement",
@@ -23,7 +23,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "rule_reference", name: "assignment" },
       { type: "rule_reference", name: "expression_stmt" },
     ] },
-    lineNumber: 30,
+    lineNumber: 35,
   },
   {
     name: "var_declaration",
@@ -34,7 +34,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "rule_reference", name: "expression" },
       { type: "token_reference", name: "SEMICOLON" },
     ] },
-    lineNumber: 31,
+    lineNumber: 36,
   },
   {
     name: "assignment",
@@ -44,7 +44,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "rule_reference", name: "expression" },
       { type: "token_reference", name: "SEMICOLON" },
     ] },
-    lineNumber: 32,
+    lineNumber: 37,
   },
   {
     name: "expression_stmt",
@@ -52,7 +52,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "rule_reference", name: "expression" },
       { type: "token_reference", name: "SEMICOLON" },
     ] },
-    lineNumber: 33,
+    lineNumber: 38,
   },
   {
     name: "expression",
@@ -66,7 +66,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "rule_reference", name: "term" },
         ] } },
     ] },
-    lineNumber: 34,
+    lineNumber: 39,
   },
   {
     name: "term",
@@ -80,7 +80,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "rule_reference", name: "factor" },
         ] } },
     ] },
-    lineNumber: 35,
+    lineNumber: 40,
   },
   {
     name: "factor",
@@ -95,7 +95,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         { type: "token_reference", name: "RPAREN" },
       ] },
     ] },
-    lineNumber: 36,
+    lineNumber: 41,
   },
 ],
 };

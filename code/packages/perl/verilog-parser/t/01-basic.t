@@ -14,6 +14,11 @@ sub parse_verilog {
     return CodingAdventures::VerilogParser->parse_verilog($src);
 }
 
+sub parse_verilog_version {
+    my ($src, $version) = @_;
+    return CodingAdventures::VerilogParser->parse_verilog($src, $version);
+}
+
 sub find_node {
     my ($node, $rule_name) = @_;
     return undef unless ref($node);
@@ -67,6 +72,19 @@ subtest 'empty source parses' => sub {
     my $ast = parse_verilog("");
     is( $ast->rule_name, 'source_text', 'root is source_text' );
     is( scalar @{ $ast->children }, 0, 'no children' );
+};
+
+subtest 'default version matches explicit 2005' => sub {
+    my $default_ast = parse_verilog("module empty; endmodule");
+    my $versioned_ast = parse_verilog_version("module empty; endmodule", '2005');
+    is( $default_ast->rule_name, $versioned_ast->rule_name, 'same root rule' );
+};
+
+subtest 'unknown version raises die' => sub {
+    ok(
+        dies { parse_verilog_version("module empty; endmodule", '2099') },
+        'unsupported version dies'
+    );
 };
 
 subtest 'source_text contains description' => sub {

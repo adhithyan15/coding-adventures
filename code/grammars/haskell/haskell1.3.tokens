@@ -1,0 +1,91 @@
+# Token definitions for Haskell haskell1.3
+# @version 1
+#
+# Minimal versioned Haskell lexical specification used by the Ruby
+# layout-mode lexer prototype.
+
+# ============================================================================
+# Lexer Mode
+# ============================================================================
+mode: layout
+
+layout_keywords:
+  let
+  where
+  do
+  of
+
+# ============================================================================
+# Skip Patterns
+# ============================================================================
+skip:
+  LINE_COMMENT = /--[^\n]*/
+  BLOCK_COMMENT = /\{-[\s\S]*?\-\}/
+  WHITESPACE = /[ \t\r]+/
+
+# ============================================================================
+# Literals
+# ============================================================================
+FLOAT = /[0-9]+\.[0-9]+/
+INTEGER = /[0-9]+/
+CHARACTER = /'(?:[^'\\]|\\.)'/
+STRING = /"(?:[^"\\]|\\.)*"/
+
+# ============================================================================
+# Operators and Punctuation
+# ============================================================================
+LAMBDA = "\\"
+RARROW = "->"
+LARROW = "<-"
+DARROW = "=>"
+DOUBLE_COLON = "::"
+DOUBLE_DOT = ".."
+EQUALS = "="
+EQ = "=="
+PLUS = "+"
+MINUS = "-"
+STAR = "*"
+SLASH = "/"
+PIPE = "|"
+AMPERSAND = "&"
+CARET = "^"
+TILDE = "~"
+BANG = "!"
+LESSTHAN = "<"
+GREATERTHAN = ">"
+COLON = ":"
+COMMA = ","
+SEMICOLON = ";"
+DOT = "."
+LPAREN = "("
+RPAREN = ")"
+LBRACKET = "["
+RBRACKET = "]"
+LBRACE = "{"
+RBRACE = "}"
+
+# ============================================================================
+# Identifiers
+# ============================================================================
+NAME = /[A-Za-z_][A-Za-z0-9_']*/
+
+keywords:
+  as
+  case
+  class
+  data
+  do
+  else
+  foreign
+  if
+  import
+  in
+  infix
+  infixl
+  infixr
+  let
+  module
+  of
+  then
+  type
+  where
