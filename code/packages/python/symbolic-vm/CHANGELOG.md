@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.20.0 — 2026-04-27
+
+**Roadmap items C2, C4, C5 implemented** — three items from the MACSYMA
+completion roadmap (`macsyma-completion.md`) are now live in `SymbolicBackend`.
+All three are language-neutral IR heads; every future CAS frontend inherits
+them automatically.
+
+**New handlers installed on `SymbolicBackend`**:
+
+- **`Lhs(Equal(a, b))` → `a`** (C5) — left-hand side of an equation.
+- **`Rhs(Equal(a, b))` → `b`** (C5) — right-hand side of an equation.
+- **`MakeList(expr, var, n)` / `MakeList(expr, var, from, to[, step])`** (C2)
+  — generative list construction: evaluates `expr` for each integer value
+  of `var` in the specified range.  Replaces the previous stub that mapped
+  `makelist` → `Range`.
+- **`At(expr, Equal(var, val))` / `At(expr, List(…))` → substitution then eval** (C4)
+  — point evaluation; sugar over `Subst`.  Handles both single rules and
+  lists of rules.
+
+**Bug fix**: `MACSYMA_NAME_TABLE["makelist"]` previously routed to `Range`
+(a plain integer range generator). It now routes to the correct `MakeList`
+head, which evaluates an arbitrary expression over a range.
+
+**New import**: `EQUAL` added to the `cas_handlers.py` imports from
+`symbolic_ir`.
+
 ## 0.19.0 — 2026-04-27
 
 **CAS substrate handlers wired into SymbolicBackend** — the universal inner

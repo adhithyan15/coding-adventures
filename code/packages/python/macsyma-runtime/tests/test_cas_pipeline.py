@@ -229,3 +229,90 @@ def test_pipeline_limit_polynomial() -> None:
         assert result.numerator == 9
     else:
         assert result == _int(9)
+
+
+# ---------------------------------------------------------------------------
+# Section H — lhs / rhs (C5)
+# ---------------------------------------------------------------------------
+
+
+def test_pipeline_lhs_of_equation() -> None:
+    """lhs(x = 3) → x."""
+    result = _eval("lhs(x = 3)")
+    assert result == _sym("x")
+
+
+def test_pipeline_rhs_of_equation() -> None:
+    """rhs(x = 3) → 3."""
+    result = _eval("rhs(x = 3)")
+    assert result == _int(3)
+
+
+def test_pipeline_lhs_of_complex_equation() -> None:
+    """lhs(x^2 - 1 = 0) → x^2 - 1 (in some IR form)."""
+    result = _eval("lhs(x^2 - 1 = 0)")
+    # Should not be the integer 0 (that's the rhs) or the full equation.
+    assert result != _int(0)
+    assert not (
+        isinstance(result, IRApply)
+        and isinstance(result.head, IRSymbol)
+        and result.head.name == "Equal"
+    ), "lhs should strip the Equal wrapper"
+
+
+def test_pipeline_rhs_of_complex_equation() -> None:
+    """rhs(x^2 - 1 = 0) → 0."""
+    result = _eval("rhs(x^2 - 1 = 0)")
+    assert result == _int(0)
+
+
+# ---------------------------------------------------------------------------
+# Section I — makelist (C2)
+# ---------------------------------------------------------------------------
+
+
+def test_pipeline_makelist_squares() -> None:
+    """makelist(i^2, i, 4) → [1, 4, 9, 16]."""
+    result = _eval("makelist(i^2, i, 4)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List"
+    assert len(result.args) == 4
+    assert result.args[0] == _int(1)
+    assert result.args[1] == _int(4)
+    assert result.args[2] == _int(9)
+    assert result.args[3] == _int(16)
+
+
+def test_pipeline_makelist_range() -> None:
+    """makelist(i, i, 3, 6) → [3, 4, 5, 6]."""
+    result = _eval("makelist(i, i, 3, 6)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List"
+    assert len(result.args) == 4
+    assert result.args == (_int(3), _int(4), _int(5), _int(6))
+
+
+def test_pipeline_makelist_step() -> None:
+    """makelist(i, i, 1, 9, 2) → [1, 3, 5, 7, 9]."""
+    result = _eval("makelist(i, i, 1, 9, 2)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List"
+    assert len(result.args) == 5
+    assert result.args == (_int(1), _int(3), _int(5), _int(7), _int(9))
+
+
+# ---------------------------------------------------------------------------
+# Section J — at / point evaluation (C4)
+# ---------------------------------------------------------------------------
+
+
+def test_pipeline_at_single_point() -> None:
+    """at(x^2 + 1, x = 3) → 10."""
+    result = _eval("at(x^2 + 1, x = 3)")
+    assert result == _int(10)
+
+
+def test_pipeline_at_linear() -> None:
+    """at(2*x - 1, x = 5) → 9."""
+    result = _eval("at(2*x - 1, x = 5)")
+    assert result == _int(9)

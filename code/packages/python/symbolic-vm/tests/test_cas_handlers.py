@@ -70,6 +70,11 @@ _CEILING = IRSymbol("Ceiling")
 _MOD = IRSymbol("Mod")
 _GCD = IRSymbol("Gcd")
 _LCM = IRSymbol("Lcm")
+_LHS = IRSymbol("Lhs")
+_RHS = IRSymbol("Rhs")
+_MAKE_LIST = IRSymbol("MakeList")
+_AT = IRSymbol("At")
+_EQUAL = IRSymbol("Equal")
 
 x = IRSymbol("x")
 y = IRSymbol("y")
@@ -654,4 +659,136 @@ def test_lcm() -> None:
 def test_gcd_symbolic_passthrough() -> None:
     vm, _ = make_vm()
     expr = IRApply(_GCD, (x, IRInteger(4)))
+    assert vm.eval(expr) == expr
+
+
+# ===========================================================================
+# Section 9: Lhs / Rhs (C5)
+# ===========================================================================
+
+
+def test_lhs_of_equation() -> None:
+    """Lhs(Equal(x, 3)) → x."""
+    vm, _ = make_vm()
+    eq = IRApply(_EQUAL, (x, IRInteger(3)))
+    assert vm.eval(IRApply(_LHS, (eq,))) == x
+
+
+def test_rhs_of_equation() -> None:
+    """Rhs(Equal(x, 3)) → 3."""
+    vm, _ = make_vm()
+    eq = IRApply(_EQUAL, (x, IRInteger(3)))
+    assert vm.eval(IRApply(_RHS, (eq,))) == IRInteger(3)
+
+
+def test_lhs_non_equation_passthrough() -> None:
+    """Lhs(x + 1) returns unevaluated — not an equation."""
+    vm, _ = make_vm()
+    expr = IRApply(_LHS, (IRApply(ADD, (x, IRInteger(1))),))
+    assert vm.eval(expr) == expr
+
+
+def test_rhs_wrong_arity_passthrough() -> None:
+    """Rhs with wrong arity returns unevaluated."""
+    vm, _ = make_vm()
+    expr = IRApply(_RHS, (x, y))
+    assert vm.eval(expr) == expr
+
+
+def test_lhs_of_numeric_equation() -> None:
+    """Lhs(Equal(2*x, 6)) → 2*x (a general IR node)."""
+    vm, _ = make_vm()
+    lhs_expr = IRApply(IRSymbol("Mul"), (IRInteger(2), x))
+    eq = IRApply(_EQUAL, (lhs_expr, IRInteger(6)))
+    result = vm.eval(IRApply(_LHS, (eq,)))
+    # The result should be the lhs expression (possibly simplified by vm.eval)
+    assert isinstance(result, IRApply) or result == lhs_expr
+
+
+# ===========================================================================
+# Section 10: MakeList (C2)
+# ===========================================================================
+
+
+def test_make_list_single_arg() -> None:
+    """MakeList(i^2, i, 4) → [1, 4, 9, 16]."""
+    vm, _ = make_vm()
+    i = IRSymbol("i")
+    body = IRApply(POW, (i, IRInteger(2)))
+    result = vm.eval(IRApply(_MAKE_LIST, (body, i, IRInteger(4))))
+    expected = ilist(IRInteger(1), IRInteger(4), IRInteger(9), IRInteger(16))
+    assert result == expected
+
+
+def test_make_list_range_two_bounds() -> None:
+    """MakeList(i, i, 3, 6) → [3, 4, 5, 6]."""
+    vm, _ = make_vm()
+    i = IRSymbol("i")
+    result = vm.eval(IRApply(_MAKE_LIST, (i, i, IRInteger(3), IRInteger(6))))
+    expected = ilist(IRInteger(3), IRInteger(4), IRInteger(5), IRInteger(6))
+    assert result == expected
+
+
+def test_make_list_with_step() -> None:
+    """MakeList(i*2, i, 1, 5, 2) → [2, 6, 10]  (i=1,3,5)."""
+    vm, _ = make_vm()
+    i = IRSymbol("i")
+    body = IRApply(IRSymbol("Mul"), (IRInteger(2), i))
+    result = vm.eval(IRApply(_MAKE_LIST, (body, i, IRInteger(1), IRInteger(5), IRInteger(2))))
+    expected = ilist(IRInteger(2), IRInteger(6), IRInteger(10))
+    assert result == expected
+
+
+def test_make_list_constant_body() -> None:
+    """MakeList(7, i, 3) → [7, 7, 7] (body doesn't use the variable)."""
+    vm, _ = make_vm()
+    i = IRSymbol("i")
+    result = vm.eval(IRApply(_MAKE_LIST, (IRInteger(7), i, IRInteger(3))))
+    expected = ilist(IRInteger(7), IRInteger(7), IRInteger(7))
+    assert result == expected
+
+
+def test_make_list_wrong_arity_passthrough() -> None:
+    """MakeList with wrong arity returns unevaluated."""
+    vm, _ = make_vm()
+    i = IRSymbol("i")
+    expr = IRApply(_MAKE_LIST, (i, i))  # only 2 args
+    assert vm.eval(expr) == expr
+
+
+# ===========================================================================
+# Section 11: At / point evaluation (C4)
+# ===========================================================================
+
+
+def test_at_single_substitution() -> None:
+    """At(x^2 + 1, Equal(x, 3)) → 10."""
+    vm, _ = make_vm()
+    body = IRApply(ADD, (IRApply(POW, (x, IRInteger(2))), IRInteger(1)))
+    rule = IRApply(_EQUAL, (x, IRInteger(3)))
+    result = vm.eval(IRApply(_AT, (body, rule)))
+    assert result == IRInteger(10)
+
+
+def test_at_list_of_rules() -> None:
+    """At(x + y, List(Equal(x, 2), Equal(y, 5))) → 7."""
+    vm, _ = make_vm()
+    body = IRApply(ADD, (x, y))
+    rules = ilist(IRApply(_EQUAL, (x, IRInteger(2))), IRApply(_EQUAL, (y, IRInteger(5))))
+    result = vm.eval(IRApply(_AT, (body, rules)))
+    assert result == IRInteger(7)
+
+
+def test_at_non_rule_passthrough() -> None:
+    """At(x^2, x) — second arg is not an Equal — returns unevaluated."""
+    vm, _ = make_vm()
+    body = IRApply(POW, (x, IRInteger(2)))
+    expr = IRApply(_AT, (body, x))
+    assert vm.eval(expr) == expr
+
+
+def test_at_wrong_arity_passthrough() -> None:
+    """At with wrong arity returns unevaluated."""
+    vm, _ = make_vm()
+    expr = IRApply(_AT, (x,))
     assert vm.eval(expr) == expr

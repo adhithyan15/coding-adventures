@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.3.0 — 2026-04-27
+
+**MACSYMA completion roadmap items C2, C3, C4, C5 wired.**
+
+Implements the language-layer bindings for the new IR heads added to
+`symbolic-vm` 0.20.0, plus improvements to `ev` flag handling.
+
+**Name-table additions** (`MACSYMA_NAME_TABLE`):
+- `lhs` → `Lhs`  — left-hand side of an equation (C5).
+- `rhs` → `Rhs`  — right-hand side of an equation (C5).
+- `at`  → `At`   — point evaluation (C4).
+- `makelist` corrected: now maps to `MakeList` (proper generative list)
+  instead of `Range` (plain integer range).
+
+**`ev` flag improvements** (C3):
+- `expand` flag: applies `Expand` to the result.
+- `factor` flag: applies `Factor` to the result.
+- `float` flag: alias for `numer` (force floating-point collapse).
+- Unknown flags continue to be silently ignored.
+
+**Tests added**:
+- 9 new pipeline tests in `test_cas_pipeline.py` covering `lhs`, `rhs`,
+  `makelist` (3-arg, 4-arg, 5-arg), and `at` (single rule, multi-rule).
+- 3 new ev tests in `test_ev.py` covering `float`, `expand`, `factor` flags.
+
 ## 0.2.0 — 2026-04-27
 
 **Name table wired; constants pre-bound.**

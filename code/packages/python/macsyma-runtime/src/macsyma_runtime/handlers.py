@@ -85,29 +85,54 @@ _DONE = IRSymbol("done")
 def make_ev_handler() -> Handler:
     """Build the ``Ev(expr, *flags)`` handler.
 
-    Phase A only honours the ``numer`` flag (force-collapse to floats).
-    Future phases will add ``simp``, ``expand``, ``factor``, ``ratsimp``,
-    etc. For now, an unknown flag is silently ignored.
+    Supported flags
+    ---------------
+    ``numer`` / ``float``
+        Force numeric (floating-point) evaluation.  Folds all exact
+        rationals and constants to ``IRFloat``.
+    ``expand``
+        Apply ``Expand`` to the result before returning.
+    ``factor``
+        Apply ``Factor`` to the result before returning.
+
+    Unknown flags are silently ignored so that future flags don't break
+    existing sessions.
+
+    Planned but not yet implemented: ``ratsimp`` (requires A3 patch),
+    ``trigsimp`` (requires B1 patch).
     """
 
     def ev_handler(vm: VM, expr: IRApply) -> IRNode:
-        # We need the un-evaluated expression form here. The simplest
-        # contract for Phase A: every flag is an IRSymbol that arrives
-        # as itself (because they are all unbound). Loop through flags,
-        # gather them into a set, then re-evaluate the first arg.
+        # Every flag is an IRSymbol that arrives as itself (unbound).
+        # Collect them, then evaluate the first arg with the appropriate
+        # post-processing applied.
         if not expr.args:
             return expr
-        first = expr.args[0]
+        inner = expr.args[0]
         flags: set[str] = set()
         for arg in expr.args[1:]:
             if isinstance(arg, IRSymbol):
                 flags.add(arg.name)
-        if "numer" in flags:
-            # Re-evaluate `first` with the numer flag set on the backend.
+
+        # ---- numer / float ------------------------------------------------
+        if "numer" in flags or "float" in flags:
             backend = vm.backend
             if hasattr(backend, "with_numer"):
                 with backend.with_numer():
-                    return vm.eval(first)
-        return first
+                    result: IRNode = vm.eval(inner)
+            else:
+                result = vm.eval(inner)
+            return result
+
+        # ---- plain evaluation first, then post-process --------------------
+        result = vm.eval(inner)
+
+        if "expand" in flags:
+            result = vm.eval(IRApply(IRSymbol("Expand"), (result,)))
+
+        if "factor" in flags:
+            result = vm.eval(IRApply(IRSymbol("Factor"), (result,)))
+
+        return result
 
     return ev_handler
