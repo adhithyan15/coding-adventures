@@ -223,7 +223,7 @@ jobs:
         if: needs.detect.outputs.needs_python == 'true'
         uses: astral-sh/setup-uv@v5
         with:
-          version: "0.11.x"
+          version: "latest"
 
       # ── Lua must be set up BEFORE Ruby on Windows ──────────────
       #
