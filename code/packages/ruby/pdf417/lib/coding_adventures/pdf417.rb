@@ -74,8 +74,8 @@ module CodingAdventures
     GF929_ALPHA = 3       # Primitive root of GF(929) — the generator element.
     GF929_ORDER = 928     # |GF(929)*| = PRIME - 1 — the multiplicative group order.
 
-    LATCH_BYTE  = 924     # Byte-compaction latch codeword.
-    PADDING_CW  = 900     # Neutral padding codeword (fills unused grid slots).
+    LATCH_BYTE = 924     # Byte-compaction latch codeword.
+    PADDING_CW = 900     # Neutral padding codeword (fills unused grid slots).
 
     MIN_ROWS = 3          # PDF417 standard minimum row count.
     MAX_ROWS = 90         # PDF417 standard maximum row count.
@@ -124,7 +124,7 @@ module CodingAdventures
     # frozen arrays so Ruby's object model prevents accidental mutation.
 
     GF_EXP = Array.new(GF929_ORDER + 1, 0)
-    GF_LOG = Array.new(GF929_PRIME,   0)
+    GF_LOG = Array.new(GF929_PRIME, 0)
 
     # Iterate α^0, α^1, … α^{ORDER-1}. Starting at val = 1 = α^0, each step
     # multiplies by α = 3 (mod 929). Because α is primitive, every non-zero
@@ -199,14 +199,14 @@ module CodingAdventures
       g = [1]                     # g(x) = 1 — degree 0, coefficient = 1
 
       (3..(k + 2)).each do |j|
-        root      = GF_EXP[j % GF929_ORDER]                # α^j
-        neg_root  = (GF929_PRIME - root) % GF929_PRIME     # -α^j  in GF(929)
+        root = GF_EXP[j % GF929_ORDER]                # α^j
+        neg_root = (GF929_PRIME - root) % GF929_PRIME     # -α^j  in GF(929)
 
         # Multiply g(x) by (x + neg_root) — "+neg_root" is the same as
         # "-root" in GF(929) because -v ≡ (929 - v) (mod 929).
         new_g = Array.new(g.length + 1, 0)
         g.each_with_index do |coeff, i|
-          new_g[i]     = gf_add(new_g[i],     coeff)
+          new_g[i] = gf_add(new_g[i], coeff)
           new_g[i + 1] = gf_add(new_g[i + 1], gf_mul(coeff, neg_root))
         end
         g = new_g
@@ -362,7 +362,7 @@ module CodingAdventures
 
     # choose_dimensions(total) → [cols, rows]
     def choose_dimensions(total)
-      c = clamp((Math.sqrt(total / 3.0)).ceil, MIN_COLS, MAX_COLS)
+      c = clamp(Math.sqrt(total / 3.0).ceil, MIN_COLS, MAX_COLS)
       r = [MIN_ROWS, ceil_div(total, c)].max
 
       # If the first estimate gives fewer than the minimum 3 rows (edge case
@@ -404,31 +404,31 @@ module CodingAdventures
 
     # compute_lri(r, rows, cols, ecc_level) → Integer codeword for LRI.
     def compute_lri(r, rows, cols, ecc_level)
-      r_info    = (rows - 1) / 3
-      c_info    = cols - 1
-      l_info    = 3 * ecc_level + (rows - 1) % 3
+      r_info = (rows - 1) / 3
+      c_info = cols - 1
+      l_info = 3 * ecc_level + (rows - 1) % 3
       row_group = r / 3
-      cluster   = r % 3
+      cluster = r % 3
 
       case cluster
       when 0 then 30 * row_group + r_info
       when 1 then 30 * row_group + l_info
-      else        30 * row_group + c_info
+      else 30 * row_group + c_info
       end
     end
 
     # compute_rri(r, rows, cols, ecc_level) → Integer codeword for RRI.
     def compute_rri(r, rows, cols, ecc_level)
-      r_info    = (rows - 1) / 3
-      c_info    = cols - 1
-      l_info    = 3 * ecc_level + (rows - 1) % 3
+      r_info = (rows - 1) / 3
+      c_info = cols - 1
+      l_info = 3 * ecc_level + (rows - 1) % 3
       row_group = r / 3
-      cluster   = r % 3
+      cluster = r % 3
 
       case cluster
       when 0 then 30 * row_group + c_info
       when 1 then 30 * row_group + r_info
-      else        30 * row_group + l_info
+      else 30 * row_group + l_info
       end
     end
 
@@ -457,9 +457,9 @@ module CodingAdventures
         (packed >> 20) & 0xf,  # b2
         (packed >> 16) & 0xf,  # s2
         (packed >> 12) & 0xf,  # b3
-        (packed >>  8) & 0xf,  # s3
-        (packed >>  4) & 0xf,  # b4
-        (packed       ) & 0xf  # s4
+        (packed >> 8) & 0xf,  # s3
+        (packed >> 4) & 0xf,  # b4
+        packed & 0xf  # s4
       ]
       dark = true
       widths.each do |w|
@@ -499,7 +499,7 @@ module CodingAdventures
 
     # rasterize(sequence, rows, cols, ecc_level, row_height) → ModuleGrid
     def rasterize(sequence, rows, cols, ecc_level, row_height)
-      module_width  = 69 + 17 * cols
+      module_width = 69 + 17 * cols
       module_height = rows * row_height
 
       # Allocate the full grid, all modules initially light (false).
@@ -512,7 +512,7 @@ module CodingAdventures
       expand_widths(STOP_PATTERN, stop_mods)
 
       rows.times do |r|
-        cluster       = r % 3
+        cluster = r % 3
         cluster_table = CLUSTER_TABLES[cluster]  # 0-indexed in Ruby
 
         row_mods = []

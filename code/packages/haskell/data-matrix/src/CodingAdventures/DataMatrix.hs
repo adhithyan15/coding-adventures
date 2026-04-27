@@ -70,7 +70,7 @@ import qualified Data.Vector as V
 
 import CodingAdventures.Barcode2D
   ( ModuleGrid (..)
-  , ModuleShape (..)
+  , ModuleShape
   , Barcode2DLayoutConfig (..)
   , emptyGrid
   , setModule

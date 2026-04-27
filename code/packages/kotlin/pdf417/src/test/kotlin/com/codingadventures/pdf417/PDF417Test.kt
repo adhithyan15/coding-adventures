@@ -440,12 +440,12 @@ class PDF417Test {
         }
 
         @Test
-        fun `GF_EXP[0] is 1 (α^0 = 1)`() {
+        fun `GF_EXP at 0 is 1 (alpha power 0)`() {
             assertEquals(1, Internal.GF_EXP_TABLE[0])
         }
 
         @Test
-        fun `GF_EXP[1] is 3 (α^1 = α = 3)`() {
+        fun `GF_EXP at 1 is 3 (alpha power 1 equals 3)`() {
             assertEquals(3, Internal.GF_EXP_TABLE[1])
         }
 
@@ -456,7 +456,7 @@ class PDF417Test {
         }
 
         @Test
-        fun `gfMul multiplicative identity: a * 1 = a`() {
+        fun `gfMul multiplicative identity a times 1 equals a`() {
             for (a in listOf(1, 5, 100, 928)) {
                 assertEquals(a, Internal.gfMulExported(a, 1),
                     "gfMul($a, 1) should be $a")
@@ -481,7 +481,7 @@ class PDF417Test {
         }
 
         @Test
-        fun `gfAdd additive identity: a + 0 = a`() {
+        fun `gfAdd additive identity a plus 0 equals a`() {
             for (a in listOf(0, 1, 100, 928)) {
                 assertEquals(a, Internal.gfAddExported(a, 0),
                     "gfAdd($a, 0) should be $a")
@@ -495,7 +495,7 @@ class PDF417Test {
         }
 
         @Test
-        fun `gfMul inverse: a * inverse(a) = 1`() {
+        fun `gfMul inverse a times inverse a equals 1`() {
             // α^k * α^(928-k) = α^928 = α^0 = 1
             // Choose k = GF_LOG[a], then inverse = GF_EXP[928 - k].
             val a = 42
@@ -505,7 +505,7 @@ class PDF417Test {
         }
 
         @Test
-        fun `Fermat little theorem: α^GF929_ORDER = 1`() {
+        fun `Fermat little theorem alpha to GF929_ORDER equals 1`() {
             // 3^928 ≡ 1 (mod 929) — the core of GF(929) arithmetic.
             // GF_EXP[928] is the wrap sentinel = GF_EXP[0] = 1.
             assertEquals(1, Internal.GF_EXP_TABLE[GF929_ORDER])

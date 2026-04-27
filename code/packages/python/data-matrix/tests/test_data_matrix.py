@@ -85,7 +85,7 @@ class TestSymbolShape:
         assert SymbolShape.Square == "square"
 
     def test_rectangle_constant(self):
-        assert SymbolShape.Rectangle == "rectangle"
+        assert SymbolShape.Rectangular == "rectangular"
 
     def test_any_constant(self):
         assert SymbolShape.Any == "any"
@@ -118,10 +118,11 @@ class TestSquareSizes:
         assert g_digits.rows == g_alpha.rows
         assert g_digits.cols == g_alpha.cols
 
-    def test_medium_string_16x16(self):
+    def test_medium_string_18x18(self):
+        # "Hello, World!" = 13 ASCII codewords; 16×16 holds only 12, so 18×18
         g = encode("Hello, World!")
-        assert g.rows == 16
-        assert g.cols == 16
+        assert g.rows == 18
+        assert g.cols == 18
 
     def test_grid_is_square(self):
         for data in ["X", "ABCDE", "Hello!", "12345678901234"]:
@@ -152,9 +153,10 @@ class TestForcedAndRectangular:
         assert g.cols == 10
 
     def test_encode_at_16x48_rect(self):
-        g = encode_at("HELLO WORLD", 8, 32)
-        assert g.rows == 8
-        assert g.cols == 32
+        # "HELLO WORLD" = 11 codewords; 8×32 holds 10 so use 16×48 (22 data cw)
+        g = encode_at("HELLO WORLD", 16, 48)
+        assert g.rows == 16
+        assert g.cols == 48
 
     def test_rectangle_shape_allows_rect(self):
         # A short string should still fit in a rectangle if shape=Rectangle
@@ -179,15 +181,17 @@ class TestLFinder:
             assert dark(g, g.rows - 1, c), f"Bottom row dark at col {c}"
 
     def test_top_row_alternating(self):
+        # ISO 16022: top timing strip starts LIGHT at col 0, alternates L-D-L-D...
         g = encode("A")
         for c in range(g.cols):
-            expected = (c % 2 == 0)
+            expected = (c % 2 == 1)
             assert dark(g, 0, c) == expected, f"Top timing at col {c}"
 
     def test_right_column_alternating(self):
+        # ISO 16022: right timing strip starts DARK at row 0, alternates D-L-D-L...
         g = encode("A")
         for r in range(g.rows):
-            expected = (r % 2 == 1)
+            expected = (r % 2 == 0)
             assert dark(g, r, g.cols - 1) == expected, f"Right timing at row {r}"
 
 
