@@ -1,17 +1,10 @@
-defmodule CodingAdventures.ActivationFunctions do
-  @leaky_relu_slope 0.01
-
-  def linear(x), do: x * 1.0
-
-  def linear_derivative(_x), do: 1.0
-
-  @doc """
-  Sigmoid collapses any continuous state exclusively into a 0.0 to 1.0 float probability seamlessly.
-  """
-  def sigmoid(x) when x < -709.0, do: 0.0
-  def sigmoid(x) when x > 709.0, do: 1.0
+defmodule ActivationFunctions do
   def sigmoid(x) do
-    1.0 / (1.0 + :math.exp(-x))
+    cond do
+      x < -709 -> 0.0
+      x > 709 -> 1.0
+      true -> 1.0 / (1.0 + :math.exp(-x))
+    end
   end
 
   def sigmoid_derivative(x) do
@@ -19,19 +12,15 @@ defmodule CodingAdventures.ActivationFunctions do
     sig * (1.0 - sig)
   end
 
-  def relu(x) when x > 0.0, do: x * 1.0
-  def relu(_x), do: 0.0
+  def relu(x) do
+    if x > 0.0, do: x, else: 0.0
+  end
 
-  def relu_derivative(x) when x > 0.0, do: 1.0
-  def relu_derivative(_x), do: 0.0
+  def relu_derivative(x) do
+    if x > 0.0, do: 1.0, else: 0.0
+  end
 
-  def leaky_relu(x) when x > 0.0, do: x * 1.0
-  def leaky_relu(x), do: @leaky_relu_slope * x
-
-  def leaky_relu_derivative(x) when x > 0.0, do: 1.0
-  def leaky_relu_derivative(_x), do: @leaky_relu_slope
-
-  def tanh_func(x) do
+  def tanh(x) do
     :math.tanh(x)
   end
 

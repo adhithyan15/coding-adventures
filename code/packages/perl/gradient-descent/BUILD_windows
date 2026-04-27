@@ -1,2 +1,1 @@
-REM prereqs: ../loss-functions ../matrix
 echo Perl testing is not supported on Windows - skipping

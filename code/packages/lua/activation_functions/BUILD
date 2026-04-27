@@ -1,1 +1,1 @@
-cd tests && busted . --verbose --pattern=test_
+busted tests/test_activation_functions.lua

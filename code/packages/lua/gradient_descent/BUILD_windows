@@ -1,4 +1,1 @@
-luarocks show coding-adventures-matrix 1>nul 2>nul || (cd ../matrix && luarocks make --local coding-adventures-matrix-0.1.0-1.rockspec)
-luarocks show coding-adventures-loss-functions 1>nul 2>nul || (cd ../loss_functions && luarocks make --local coding-adventures-loss-functions-0.1.0-1.rockspec)
-luarocks make --local --deps-mode=none coding-adventures-gradient-descent-0.1.0-1.rockspec
-cd tests && busted . --verbose --pattern=test_
+busted tests/test_gradient_descent.lua
