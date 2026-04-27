@@ -386,4 +386,5 @@ members = [
     "cas-simplify",
     "cas-substitution",
     "cas-factor",
+    "cas-solve",
 ]
