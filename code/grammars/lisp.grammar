@@ -1,4 +1,3 @@
-# @version 1
 program   = { sexpr } ;
 sexpr     = atom | list | quoted ;
 atom      = NUMBER | SYMBOL | STRING ;

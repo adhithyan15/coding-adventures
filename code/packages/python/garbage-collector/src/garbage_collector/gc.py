@@ -68,6 +68,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import Any
 
+
 # =========================================================================
 # Heap Object Types
 # =========================================================================
@@ -296,65 +297,3 @@ class GarbageCollector(ABC):
             return True
         except KeyError:
             return False
-
-    # ----------------------------------------------------------------
-    # LANG16 dispatch hooks — consulted by vm-core's safepoint logic
-    # and by the ``field_store`` opcode handler.
-    #
-    # Default implementations make the simplest possible policy:
-    # collect at every safepoint, no write barrier needed.  That keeps
-    # mark-and-sweep and any future trace-from-roots collector correct
-    # without overrides.  Generational / incremental / concurrent /
-    # reference-counting collectors override these to implement their
-    # own policy.
-    # ----------------------------------------------------------------
-
-    def should_collect(self) -> bool:
-        """Tell vm-core whether to run a collection at the next safepoint.
-
-        vm-core consults this *after* dispatching an instruction whose
-        ``IIRInstr.may_alloc`` flag is True (and at the periodic
-        forced-safepoint interval).  Returning True triggers
-        ``collect(roots)`` with the VM's current root set.
-
-        The default returns True — i.e. "collect at every safepoint".
-        That is the simplest correct policy: it never wastes memory by
-        deferring a needed collection, and the dispatcher's safepoint
-        interval bounds the overhead.  Mark-and-sweep is happy with
-        this policy and ships unchanged.
-
-        Generational, incremental, or concurrent collectors override
-        to defer collections until a policy-specific trigger fires
-        (young-gen full, allocation-byte threshold, periodic timer,
-        etc.).
-        """
-        return True
-
-    def write_barrier(self, parent_address: int, child_address: int) -> None:
-        """Record a reference write into a heap object.
-
-        vm-core invokes this from the ``field_store`` opcode handler
-        whenever a heap reference is stored into another heap object.
-        The arguments are::
-
-            parent_address — heap address of the object being mutated
-            child_address  — heap address being stored into one of
-                             its fields
-
-        The default is a no-op.  Mark-and-sweep does not need write
-        barriers because it re-scans the entire heap from roots on
-        every collection — every reachable child gets re-discovered.
-
-        Generational collectors override to maintain a remembered set
-        (old → young pointers).  Incremental / concurrent collectors
-        override for tri-color marking invariants (re-mark grey on
-        black → white writes).  Reference-counting collectors typically
-        also need the *old* field value to decref it; they hook
-        ``field_store`` directly and drive ``incref(child)`` /
-        ``decref(old)`` from there, so this barrier is rarely the
-        right place for them either.
-        """
-        # No-op default.  Arguments are explicitly dropped so any
-        # "unused argument" linter that takes the docstring at its
-        # word stays quiet.
-        del parent_address, child_address

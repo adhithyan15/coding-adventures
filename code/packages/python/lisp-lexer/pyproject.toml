@@ -11,7 +11,7 @@ license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
 readme = "README.md"
 keywords = ["lisp", "lexer", "tokenizer", "grammar-driven", "computer-science", "education"]
-dependencies = ["coding-adventures-directed-graph", "coding-adventures-grammar-tools", "coding-adventures-lexer", "coding-adventures-state-machine"]
+dependencies = []
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Education",
@@ -53,7 +53,6 @@ testpaths = ["tests"]
 addopts = "--cov=lisp_lexer --cov-report=term-missing --cov-fail-under=80"
 
 [tool.coverage.run]
-omit = ["src/**/_grammar.py"]
 source = ["src/lisp_lexer"]
 
 [tool.coverage.report]

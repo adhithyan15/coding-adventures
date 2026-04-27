@@ -21,7 +21,6 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "coding-adventures-directed-graph",
     "coding-adventures-lexer",
     "coding-adventures-parser",
     "coding-adventures-bytecode-compiler",
