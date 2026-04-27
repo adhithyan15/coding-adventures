@@ -17,7 +17,7 @@ defmodule CodingAdventures.SqlCsvSource.MixProject do
 
   defp deps do
     [
-      {:csv_parser, path: "../csv_parser"},
+      {:coding_adventures_csv_parser, path: "../csv_parser"},
       {:coding_adventures_sql_execution_engine, path: "../sql_execution_engine"},
       {:coding_adventures_sql_parser, path: "../sql_parser"},
       {:coding_adventures_directed_graph, path: "../directed_graph"},

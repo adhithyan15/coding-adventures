@@ -3,7 +3,7 @@ defmodule CsvParser.MixProject do
 
   def project do
     [
-      app: :csv_parser,
+      app: :coding_adventures_csv_parser,
       version: "0.1.0",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,

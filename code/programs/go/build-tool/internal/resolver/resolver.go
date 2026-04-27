@@ -461,13 +461,21 @@ func parsePerlDeps(pkg discovery.Package, knownNames map[string]string) []string
 	}
 
 	text := string(data)
+	seen := make(map[string]bool)
 	var internalDeps []string
 
+	addDep := func(pkgName string) {
+		if !seen[pkgName] {
+			seen[pkgName] = true
+			internalDeps = append(internalDeps, pkgName)
+		}
+	}
+
 	// Match: requires 'CodingAdventures::SomeName' or requires "CodingAdventures::SomeName"
-	re := regexp.MustCompile(`requires\s+['"]CodingAdventures::([A-Za-z0-9:]+)['"]`)
+	reCamel := regexp.MustCompile(`requires\s+['"]CodingAdventures::([A-Za-z0-9:]+)['"]`)
 	for _, line := range strings.Split(text, "\n") {
 		trimmed := strings.TrimSpace(line)
-		for _, match := range re.FindAllStringSubmatch(trimmed, -1) {
+		for _, match := range reCamel.FindAllStringSubmatch(trimmed, -1) {
 			if len(match) < 2 {
 				continue
 			}
@@ -475,11 +483,100 @@ func parsePerlDeps(pkg discovery.Package, knownNames map[string]string) []string
 			// e.g. "LogicGates" → "codingadventures::logicgates"
 			moduleName := strings.ToLower("codingadventures::" + match[1])
 			if pkgName, ok := knownNames[moduleName]; ok {
-				internalDeps = append(internalDeps, pkgName)
+				addDep(pkgName)
 			}
 		}
 	}
 
+	// Also match dist-name format: requires 'coding-adventures-logic-gates'
+	// Allows underscores too: requires 'coding-adventures-paint_vm_metal_native'
+	reKebab := regexp.MustCompile(`requires\s+['"]coding-adventures-([a-z0-9_-]+)['"]`)
+	for _, line := range strings.Split(text, "\n") {
+		trimmed := strings.TrimSpace(line)
+		for _, match := range reKebab.FindAllStringSubmatch(trimmed, -1) {
+			if len(match) < 2 {
+				continue
+			}
+			distName := "coding-adventures-" + match[1]
+			if pkgName, ok := knownNames[distName]; ok {
+				addDep(pkgName)
+			}
+		}
+	}
+
+	return internalDeps
+}
+
+// parseSwiftDeps extracts internal dependencies from a Swift Package.swift file.
+//
+// Package.swift declares dependencies like:
+//
+//	dependencies: [
+//	    .package(path: "../PaintInstructions"),
+//	]
+//
+// We resolve each relative path to an absolute path and look it up in knownNames,
+// which maps absolute package paths to package names for Swift packages.
+func parseSwiftDeps(pkg discovery.Package, knownNames map[string]string) []string {
+	data, err := os.ReadFile(filepath.Join(pkg.Path, "Package.swift"))
+	if err != nil {
+		return nil
+	}
+
+	re := regexp.MustCompile(`\.package\s*\(\s*path\s*:\s*"([^"]+)"`)
+	seen := make(map[string]bool)
+	var internalDeps []string
+
+	for _, match := range re.FindAllStringSubmatch(string(data), -1) {
+		relPath := match[1]
+		abs := filepath.Clean(filepath.Join(pkg.Path, relPath))
+		if name, ok := knownNames[abs]; ok && name != pkg.Name && !seen[name] {
+			seen[name] = true
+			internalDeps = append(internalDeps, name)
+		}
+	}
+
+	return internalDeps
+}
+
+// parseLuaDeps extracts internal dependencies from a Lua rockspec file.
+//
+// Rockspecs declare dependencies like:
+//
+//	dependencies = {
+//	    "coding-adventures-grammar-tools >= 0.1.0",
+//	}
+//
+// We scan all *.rockspec files in the package dir for "coding-adventures-*" strings.
+func parseLuaDeps(pkg discovery.Package, knownNames map[string]string) []string {
+	entries, err := os.ReadDir(pkg.Path)
+	if err != nil {
+		return nil
+	}
+
+	re := regexp.MustCompile(`"(coding-adventures-[a-z0-9-]+)`)
+	seen := make(map[string]bool)
+	var internalDeps []string
+
+	for _, entry := range entries {
+		if !strings.HasSuffix(entry.Name(), ".rockspec") {
+			continue
+		}
+		data, err := os.ReadFile(filepath.Join(pkg.Path, entry.Name()))
+		if err != nil {
+			continue
+		}
+		for _, match := range re.FindAllStringSubmatch(string(data), -1) {
+			if len(match) < 2 {
+				continue
+			}
+			depName := strings.ToLower(match[1])
+			if pkgName, ok := knownNames[depName]; ok && pkgName != pkg.Name && !seen[pkgName] {
+				seen[pkgName] = true
+				internalDeps = append(internalDeps, pkgName)
+			}
+		}
+	}
 	return internalDeps
 }
 
@@ -692,6 +789,24 @@ func buildKnownNamesForLanguage(packages []discovery.Package, language string) m
 			appName := "coding_adventures_" + strings.ReplaceAll(strings.ToLower(filepath.Base(pkg.Path)), "-", "_")
 			setKnown(appName, pkg.Name, pkg.Path, pkg.Language)
 
+		case "dart":
+			// Dart pubspec package names use underscore-separated lowercase with prefix:
+			// "logic-gates" dir → "coding_adventures_logic_gates" pubspec dep name
+			dartName := "coding_adventures_" + strings.ReplaceAll(strings.ToLower(filepath.Base(pkg.Path)), "-", "_")
+			setKnown(dartName, pkg.Name, pkg.Path, pkg.Language)
+
+		case "lua":
+			// Lua rockspec package names use hyphen-separated lowercase with prefix:
+			// "logic_gates" dir → "coding-adventures-logic-gates" rockspec dep name
+			luaName := "coding-adventures-" + strings.ReplaceAll(strings.ToLower(filepath.Base(pkg.Path)), "_", "-")
+			setKnown(luaName, pkg.Name, pkg.Path, pkg.Language)
+
+		case "swift":
+			// Swift packages are referenced by filesystem path in Package.swift.
+			// Map the absolute package path to the package name so parseSwiftDeps
+			// can resolve .package(path: "../SomePackage") entries.
+			setKnown(filepath.Clean(pkg.Path), pkg.Name, pkg.Path, pkg.Language)
+
 		case "perl":
 			// Perl module names use CamelCase: "logic-gates" → "CodingAdventures::LogicGates"
 			// We map the kebab-case directory name to the Perl namespace.
@@ -705,6 +820,15 @@ func buildKnownNamesForLanguage(packages []discovery.Package, language string) m
 			}
 			perlName := "codingadventures::" + strings.ToLower(strings.Join(parts, ""))
 			setKnown(perlName, pkg.Name, pkg.Path, pkg.Language)
+			// Also add the CPAN dist-name format with hyphens: "coding-adventures-logic-gates"
+			distName := "coding-adventures-" + strings.ReplaceAll(dirName, "_", "-")
+			setKnown(distName, pkg.Name, pkg.Path, pkg.Language)
+			// Also add with underscores preserved (native packages use this format):
+			// "coding-adventures-paint_vm_metal_native"
+			if strings.Contains(dirName, "_") {
+				distNameUnder := "coding-adventures-" + dirName
+				setKnown(distNameUnder, pkg.Name, pkg.Path, pkg.Language)
+			}
 		}
 	}
 
@@ -769,6 +893,10 @@ func ResolveDependencies(packages []discovery.Package) *directedgraph.Graph {
 			deps = parseTypescriptDeps(pkg, knownNames)
 		case "dart":
 			deps = parseDartDeps(pkg, knownNames)
+		case "swift":
+			deps = parseSwiftDeps(pkg, knownNames)
+		case "lua":
+			deps = parseLuaDeps(pkg, knownNames)
 		case "rust":
 			deps = parseRustDeps(pkg, knownNames)
 		case "elixir":

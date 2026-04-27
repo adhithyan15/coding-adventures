@@ -147,7 +147,7 @@ func buildFileLabel(pkgPath string) string {
 	return buildFile
 }
 
-var relPathRe = regexp.MustCompile(`(?:\.\.?[/\\][^ \t\r\n"'&|;()]+)+`)
+var relPathRe = regexp.MustCompile(`(?:\.\.?[/\\][^ \t\r\n"'&|;():]+)+`)
 
 func referencedPackages(pkg discovery.Package, pathToPkg map[string]string) map[string]bool {
 	found := make(map[string]bool)

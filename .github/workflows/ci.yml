@@ -37,13 +37,18 @@ jobs:
   detect:
     runs-on: ubuntu-latest
     outputs:
-      needs_python: ${{ steps.detect.outputs.needs_python }}
-      needs_ruby: ${{ steps.detect.outputs.needs_ruby }}
-      needs_go: ${{ steps.detect.outputs.needs_go }}
-      needs_typescript: ${{ steps.detect.outputs.needs_typescript }}
-      needs_rust: ${{ steps.detect.outputs.needs_rust }}
-      needs_elixir: ${{ steps.detect.outputs.needs_elixir }}
-      needs_perl: ${{ steps.detect.outputs.needs_perl }}
+      needs_python: ${{ steps.toolchains.outputs.needs_python }}
+      needs_ruby: ${{ steps.toolchains.outputs.needs_ruby }}
+      needs_go: ${{ steps.toolchains.outputs.needs_go }}
+      needs_typescript: ${{ steps.toolchains.outputs.needs_typescript }}
+      needs_rust: ${{ steps.toolchains.outputs.needs_rust }}
+      needs_elixir: ${{ steps.toolchains.outputs.needs_elixir }}
+      needs_lua: ${{ steps.toolchains.outputs.needs_lua }}
+      needs_perl: ${{ steps.toolchains.outputs.needs_perl }}
+      needs_dart: ${{ steps.toolchains.outputs.needs_dart }}
+      needs_swift: ${{ steps.toolchains.outputs.needs_swift }}
+      needs_haskell: ${{ steps.toolchains.outputs.needs_haskell }}
+      needs_kotlin: ${{ steps.toolchains.outputs.needs_kotlin }}
       diff_base: ${{ steps.diff-base.outputs.base }}
       is_main: ${{ steps.detect-main.outputs.is_main }}
     steps:
@@ -109,45 +114,25 @@ jobs:
               'needs_elixir=true' \
               'needs_lua=true' \
               'needs_perl=true' \
+              'needs_dart=true' \
+              'needs_swift=true' \
+              'needs_haskell=true' \
               'needs_kotlin=true' >> "$GITHUB_OUTPUT"
           else
             printf '%s\n' \
-              'needs_python=${{ steps.detect.outputs.needs_python }}' \
-              'needs_ruby=${{ steps.detect.outputs.needs_ruby }}' \
-              'needs_go=${{ steps.detect.outputs.needs_go }}' \
-              'needs_typescript=${{ steps.detect.outputs.needs_typescript }}' \
-              'needs_rust=${{ steps.detect.outputs.needs_rust }}' \
-              'needs_elixir=${{ steps.detect.outputs.needs_elixir }}' \
-              'needs_lua=${{ steps.detect.outputs.needs_lua }}' \
-              'needs_perl=${{ steps.detect.outputs.needs_perl }}' \
-              'needs_kotlin=${{ steps.detect.outputs.needs_kotlin }}' >> "$GITHUB_OUTPUT"
+              "needs_python=${{ steps.plan.outputs.needs_python }}" \
+              "needs_ruby=${{ steps.plan.outputs.needs_ruby }}" \
+              "needs_go=${{ steps.plan.outputs.needs_go }}" \
+              "needs_typescript=${{ steps.plan.outputs.needs_typescript }}" \
+              "needs_rust=${{ steps.plan.outputs.needs_rust }}" \
+              "needs_elixir=${{ steps.plan.outputs.needs_elixir }}" \
+              "needs_lua=${{ steps.plan.outputs.needs_lua }}" \
+              "needs_perl=${{ steps.plan.outputs.needs_perl }}" \
+              "needs_dart=${{ steps.plan.outputs.needs_dart }}" \
+              "needs_swift=${{ steps.plan.outputs.needs_swift }}" \
+              "needs_haskell=${{ steps.plan.outputs.needs_haskell }}" \
+              "needs_kotlin=${{ steps.plan.outputs.needs_kotlin }}" >> "$GITHUB_OUTPUT"
           fi
-          cd ../../../..
-          
-          # FORCED FULL BUILD FOR PR VALIDATION
-          $BT -root . -diff-base "${{ steps.diff-base.outputs.base }}" -force -emit-plan build-plan.json
-          
-          # Parse the emitted JSON to drive toolchain installations
-          NEEDS_PYTHON=$(jq -r '.languages_needed.python // false' build-plan.json)
-          echo "needs_python=$NEEDS_PYTHON" >> "$GITHUB_OUTPUT"
-          
-          NEEDS_RUBY=$(jq -r '.languages_needed.ruby // false' build-plan.json)
-          echo "needs_ruby=$NEEDS_RUBY" >> "$GITHUB_OUTPUT"
-          
-          NEEDS_TYPESCRIPT=$(jq -r '.languages_needed.typescript // false' build-plan.json)
-          echo "needs_typescript=$NEEDS_TYPESCRIPT" >> "$GITHUB_OUTPUT"
-          
-          NEEDS_RUST=$(jq -r '.languages_needed.rust // false' build-plan.json)
-          echo "needs_rust=$NEEDS_RUST" >> "$GITHUB_OUTPUT"
-          
-          NEEDS_ELIXIR=$(jq -r '.languages_needed.elixir // false' build-plan.json)
-          echo "needs_elixir=$NEEDS_ELIXIR" >> "$GITHUB_OUTPUT"
-          
-          NEEDS_LUA=$(jq -r '.languages_needed.lua // false' build-plan.json)
-          echo "needs_lua=$NEEDS_LUA" >> "$GITHUB_OUTPUT"
-          
-          NEEDS_PERL=$(jq -r '.languages_needed.perl // false' build-plan.json)
-          echo "needs_perl=$NEEDS_PERL" >> "$GITHUB_OUTPUT"
 
       # ── Language toolchains (conditional) ───────────────────────
       
