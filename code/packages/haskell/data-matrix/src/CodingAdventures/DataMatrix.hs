@@ -68,6 +68,7 @@ import Data.List (sortBy, foldl')
 import Data.Ord  (comparing)
 import qualified Data.Vector as V
 
+import qualified CodingAdventures.Barcode2D as B2D
 import CodingAdventures.Barcode2D
   ( ModuleGrid (..)
   , ModuleShape
@@ -978,7 +979,7 @@ encodeWithEntry input entry =
       sCols = seSymbolCols entry
       mgrid = foldl' (\g (r, c) ->
                   if finalPhys !! r !! c then setModule g r c True else g)
-                (emptyGrid sRows sCols CodingAdventures.Barcode2D.Square)
+                (emptyGrid sRows sCols B2D.Square)
                 [(r, c) | r <- [0..sRows-1], c <- [0..sCols-1]]
 
   in  Right mgrid

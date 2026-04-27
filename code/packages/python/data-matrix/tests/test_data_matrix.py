@@ -181,18 +181,21 @@ class TestLFinder:
             assert dark(g, g.rows - 1, c), f"Bottom row dark at col {c}"
 
     def test_top_row_alternating(self):
-        # ISO 16022: top timing strip starts LIGHT at col 0, alternates L-D-L-D...
+        # ISO 16022: top timing strip starts DARK at col 0 (D-L-D-L-...)
+        # col 0 is also the L-finder left-leg corner (always dark, consistent)
         g = encode("A")
         for c in range(g.cols):
-            expected = (c % 2 == 1)
+            expected = (c % 2 == 0)
             assert dark(g, 0, c) == expected, f"Top timing at col {c}"
 
     def test_right_column_alternating(self):
-        # ISO 16022: right timing strip starts DARK at row 0, alternates D-L-D-L...
+        # ISO 16022: right timing strip starts DARK at row 0 (D-L-D-L-...)
+        # The last row is always dark (L-finder bottom-leg overrides timing there)
         g = encode("A")
-        for r in range(g.rows):
+        for r in range(g.rows - 1):
             expected = (r % 2 == 0)
             assert dark(g, r, g.cols - 1) == expected, f"Right timing at row {r}"
+        assert dark(g, g.rows - 1, g.cols - 1), "Bottom-right corner is always dark (L-finder)"
 
 
 # ---------------------------------------------------------------------------
