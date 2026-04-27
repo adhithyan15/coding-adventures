@@ -1,5 +1,37 @@
 # Changelog
 
+## 1.1.0 — 2026-04-27
+
+**Comprehensive pipeline test coverage (Sections S and T).**
+
+Adds 20 new end-to-end pipeline tests covering operations that were already
+wired in `symbolic-vm` but had no MACSYMA surface coverage:
+
+**Section S — Calculus**:
+- `diff(x^3, x)`, `diff(x^2+2x+1, x)` — polynomial differentiation.
+- `diff(sin(x), x)` → `cos(x)`.
+- `diff(cos(x), x)` → `-sin(x)`.
+- `diff(exp(x), x)` → `exp(x)`.
+- `integrate(x^2, x)` — power rule.
+- `integrate(sin(x), x)` → `-cos(x)` (verifies `Cos` in result).
+- `integrate(cos(x), x)` → `sin(x)`.
+- `integrate(exp(x), x)` → `exp(x)`.
+- `integrate(3, x)` → `3*x` (constant rule).
+- `integrate(x+1, x)` — linearity.
+
+**Section T — Matrix + Numeric**:
+- `matrix([1,2],[3,4])` → `Matrix` node with 2 rows.
+- `determinant(matrix([1,2],[3,4]))` → `IRInteger(-2)`.
+- `transpose(matrix([1,2],[3,4]))` → `Matrix` node.
+- `gcd(12, 8)` → `IRInteger(4)`.
+- `lcm(4, 6)` → `IRInteger(12)`.
+- `mod(17, 5)` → `IRInteger(2)`.
+- `floor(3.7)` → `IRInteger(3)`.
+- `ceiling(3.2)` → `IRInteger(4)`.
+- `abs(-5)` → `IRInteger(5)`.
+
+Total tests: 131, coverage 98.6%.
+
 ## 1.0.0 — 2026-04-27
 
 **Roadmap item A1 — Kronecker polynomial factoring surfaced through MACSYMA `factor`.**

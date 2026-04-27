@@ -702,3 +702,163 @@ def test_pipeline_factor_irreducible_x2_plus_1_unchanged() -> None:
     assert isinstance(result, IRApply)
     assert result.head.name == "Factor"
 
+
+# ---------------------------------------------------------------------------
+# Section S — Calculus: diff and integrate (already wired, no pipeline tests)
+# ---------------------------------------------------------------------------
+
+
+def test_pipeline_diff_monomial() -> None:
+    """diff(x^3, x) → 3*x^2."""
+    result = _eval("diff(x^3, x)")
+    # The VM differentiates symbolically; result should be a Mul or Pow.
+    assert isinstance(result, IRApply)
+    # Should not be an unevaluated D(…).
+    assert result.head.name != "D"
+
+
+def test_pipeline_diff_polynomial() -> None:
+    """diff(x^2 + 2*x + 1, x) → 2*x + 2."""
+    result = _eval("diff(x^2 + 2*x + 1, x)")
+    assert isinstance(result, IRApply)
+    assert result.head.name != "D"
+
+
+def test_pipeline_diff_sin() -> None:
+    """diff(sin(x), x) → cos(x)."""
+    from symbolic_ir import COS, IRApply as _IRApply, IRSymbol as _IRSym
+    result = _eval("diff(sin(x), x)")
+    # Should be Cos(x).
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Cos"
+
+
+def test_pipeline_diff_cos() -> None:
+    """diff(cos(x), x) → -sin(x)."""
+    result = _eval("diff(cos(x), x)")
+    assert isinstance(result, IRApply)
+    # Result is Neg(Sin(x)) or Mul(-1, Sin(x)).
+    assert result.head.name != "D"
+
+
+def test_pipeline_diff_exp() -> None:
+    """diff(exp(x), x) → exp(x)."""
+    result = _eval("diff(exp(x), x)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Exp"
+
+
+def test_pipeline_integrate_power() -> None:
+    """integrate(x^2, x) → x^3/3 (power rule)."""
+    result = _eval("integrate(x^2, x)")
+    assert isinstance(result, IRApply)
+    # Should not come back as unevaluated Integrate(…).
+    assert result.head.name != "Integrate"
+
+
+def test_pipeline_integrate_sin() -> None:
+    """integrate(sin(x), x) → -cos(x)."""
+    result = _eval("integrate(sin(x), x)")
+    assert isinstance(result, IRApply)
+    assert result.head.name != "Integrate"
+    # Result is Neg(Cos(x)) or Mul(-1, Cos(x)).
+    # Either way it should contain a Cos somewhere.
+    def _has_cos(node: object) -> bool:
+        if isinstance(node, IRApply):
+            if isinstance(node.head, IRSymbol) and node.head.name == "Cos":
+                return True
+            return any(_has_cos(a) for a in node.args)
+        return False
+    assert _has_cos(result), f"Expected cos in result, got: {result}"
+
+
+def test_pipeline_integrate_cos() -> None:
+    """integrate(cos(x), x) → sin(x)."""
+    result = _eval("integrate(cos(x), x)")
+    assert isinstance(result, IRApply)
+    assert result.head.name != "Integrate"
+
+
+def test_pipeline_integrate_exp() -> None:
+    """integrate(exp(x), x) → exp(x)."""
+    result = _eval("integrate(exp(x), x)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Exp"
+
+
+def test_pipeline_integrate_constant() -> None:
+    """integrate(3, x) → 3*x (constant rule)."""
+    result = _eval("integrate(3, x)")
+    # Result is Mul(3, x) or Mul(x, 3).
+    assert isinstance(result, IRApply)
+    assert result.head.name not in ("Integrate",)
+
+
+def test_pipeline_integrate_sum() -> None:
+    """integrate(x + 1, x) → x^2/2 + x (linearity)."""
+    result = _eval("integrate(x + 1, x)")
+    assert isinstance(result, IRApply)
+    assert result.head.name != "Integrate"
+
+
+# ---------------------------------------------------------------------------
+# Section T — Matrix operations and numeric functions
+# ---------------------------------------------------------------------------
+
+
+def test_pipeline_matrix_2x2_structure() -> None:
+    """matrix([1,2],[3,4]) creates a Matrix IR node."""
+    result = _eval("matrix([1,2],[3,4])")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Matrix"
+    assert len(result.args) == 2  # 2 rows
+
+
+def test_pipeline_determinant_2x2() -> None:
+    """determinant(matrix([1,2],[3,4])) → -2."""
+    result = _eval("determinant(matrix([1,2],[3,4]))")
+    assert result == IRInteger(-2)
+
+
+def test_pipeline_transpose_2x2() -> None:
+    """transpose(matrix([1,2],[3,4])) → matrix([1,3],[2,4])."""
+    result = _eval("transpose(matrix([1,2],[3,4]))")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Matrix"
+
+
+def test_pipeline_gcd_integers() -> None:
+    """gcd(12, 8) → 4."""
+    result = _eval("gcd(12, 8)")
+    assert result == IRInteger(4)
+
+
+def test_pipeline_lcm_integers() -> None:
+    """lcm(4, 6) → 12."""
+    result = _eval("lcm(4, 6)")
+    assert result == IRInteger(12)
+
+
+def test_pipeline_mod_integers() -> None:
+    """mod(17, 5) → 2."""
+    result = _eval("mod(17, 5)")
+    assert result == IRInteger(2)
+
+
+def test_pipeline_floor_float() -> None:
+    """floor(3.7) → 3."""
+    result = _eval("floor(3.7)")
+    assert result == IRInteger(3)
+
+
+def test_pipeline_ceiling_float() -> None:
+    """ceiling(3.2) → 4."""
+    result = _eval("ceiling(3.2)")
+    assert result == IRInteger(4)
+
+
+def test_pipeline_abs_negative() -> None:
+    """abs(-5) → 5."""
+    result = _eval("abs(-5)")
+    assert result == IRInteger(5)
+
