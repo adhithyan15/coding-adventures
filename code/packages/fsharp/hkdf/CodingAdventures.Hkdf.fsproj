@@ -10,6 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../hmac/CodingAdventures.Hmac.fsproj" />
+    <ProjectReference Include="../sha256/CodingAdventures.Sha256.fsproj" />
+    <ProjectReference Include="../sha512/CodingAdventures.Sha512.fsproj" />
     <Compile Include="Hkdf.fs" />
   </ItemGroup>
 </Project>
