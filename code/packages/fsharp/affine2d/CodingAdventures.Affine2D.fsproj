@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+    <AssemblyName>CodingAdventures.Affine2D.FSharp</AssemblyName>
+    <PackageId>CodingAdventures.Affine2D.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>2D affine transformation matrix for translate, rotate, scale, and skew operations</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../point2d/CodingAdventures.Point2D.fsproj" />
+    <ProjectReference Include="../trig/CodingAdventures.Trig.fsproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Affine2D.fs" />
+  </ItemGroup>
+</Project>
