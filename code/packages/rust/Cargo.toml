@@ -383,4 +383,5 @@ members = [
     "symbolic-ir",
     "symbolic-vm",
     "cas-pattern-matching",
+    "cas-simplify",
 ]
