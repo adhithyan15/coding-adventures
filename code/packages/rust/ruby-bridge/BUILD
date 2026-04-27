@@ -1,1 +1,9 @@
-echo "ruby-bridge: compile-only crate (requires Ruby headers to link)"
+load("code/packages/starlark/library-rules/rust_library.star", "rust_library")
+
+_targets = [
+    rust_library(
+        name = "ruby-bridge",
+        srcs = ["src/**/*.rs"],
+        deps = [],
+    ),
+]

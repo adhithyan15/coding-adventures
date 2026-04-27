@@ -1,1 +1,9 @@
-cd ../parallel-execution-engine && npm ci --quiet && cd ../compute-unit && npm ci --quiet && cd ../device-simulator && npm ci && npx vitest run --coverage
+load("code/packages/starlark/library-rules/typescript_library.star", "ts_library")
+
+_targets = [
+    ts_library(
+        name = "device-simulator",
+        srcs = ["src/**/*.ts", "test/**/*.ts"],
+        deps = [],
+    ),
+]

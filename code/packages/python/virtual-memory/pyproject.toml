@@ -7,6 +7,7 @@ name = "coding-adventures-virtual-memory"
 version = "0.1.0"
 description = "Virtual memory subsystem — page tables, TLB, MMU, and page replacement policies"
 requires-python = ">=3.12"
+dependencies = ["coding-adventures-cache"]
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
 readme = "README.md"

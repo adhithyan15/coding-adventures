@@ -1,2 +1,9 @@
-cargo test -p bytecode-compiler
-if [ "$(uname)" = "Linux" ]; then cargo tarpaulin -p bytecode-compiler --out Stdout --skip-clean; fi
+load("code/packages/starlark/library-rules/rust_library.star", "rust_library")
+
+_targets = [
+    rust_library(
+        name = "bytecode-compiler",
+        srcs = ["src/**/*.rs"],
+        deps = [],
+    ),
+]

@@ -1,1 +1,9 @@
-cd ../directed-graph && npm ci --quiet && cd ../tree && npm ci && npx vitest run
+load("code/packages/starlark/library-rules/typescript_library.star", "ts_library")
+
+_targets = [
+    ts_library(
+        name = "tree",
+        srcs = ["src/**/*.ts", "test/**/*.ts"],
+        deps = [],
+    ),
+]

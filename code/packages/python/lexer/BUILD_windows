@@ -1,5 +1,0 @@
-uv venv --quiet --clear
-uv pip install -e ../graph -e ../directed-graph -e ../state-machine -e ../grammar-tools --quiet
-uv pip install --no-deps -e .[dev] --quiet
-uv pip install pytest pytest-cov ruff mypy --quiet
-uv run --no-project python -m pytest tests/ -v

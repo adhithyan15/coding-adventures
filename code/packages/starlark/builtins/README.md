@@ -6,7 +6,7 @@ Shared Starlark modules that are loaded by BUILD rules across the monorepo.
 
 ### `cmd.star` — Structured Command Builders
 
-Provides functions for creating OS-aware structured command dicts. Instead of writing raw shell commands that differ between Unix and Windows, BUILD rule authors use `cmd()` and its platform-specific variants.
+Provides functions for creating OS-aware structured command dicts.  Instead of writing raw shell commands that differ between Unix and Windows, BUILD rule authors use `cmd()` and its platform-specific variants.
 
 **Functions:**
 
@@ -30,11 +30,11 @@ def rust_library(name, srcs=[], deps=[]):
         cmd("cargo", ["test"]),
         cmd_linux("cargo", ["tarpaulin"]),  # Linux-only coverage
     ])
-    return {
+    _targets.append({
         "rule": "rust_library",
         "name": name,
         "commands": cmds,
-    }
+    })
 ```
 
 **Requires:** The build tool must inject `_ctx` (with at least `_ctx["os"]`) into every Starlark scope via `WithGlobals()`.
@@ -47,7 +47,7 @@ To support a new OS (e.g., FreeBSD), add a function to `cmd.star`:
 def cmd_freebsd(program, args=[]):
     if _current_os != "freebsd":
         return None
-    return {"type": "cmd", "program": program, "args": args}
+    return cmd(program, args)
 ```
 
 No build tool changes needed — `_ctx["os"]` already contains the correct value from `runtime.GOOS`.
@@ -56,8 +56,8 @@ No build tool changes needed — `_ctx["os"]` already contains the correct value
 
 ```
 BUILD file
-  |-- loads rule (e.g., python_library.star)
-        |-- loads builtins/cmd.star
-              |-- reads _ctx["os"] (injected by build tool)
-              |-- provides cmd(), cmd_windows(), etc.
+  └── loads rule (e.g., python_library.star)
+        └── loads builtins/cmd.star
+              └── reads _ctx["os"] (injected by build tool)
+              └── provides cmd(), cmd_windows(), etc.
 ```

@@ -22,6 +22,7 @@ keywords = [
 
 dependencies = [
     "coding-adventures-vendor-api-simulators",
+    "coding-adventures-matrix",
 ]
 
 [project.optional-dependencies]

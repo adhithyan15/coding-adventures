@@ -182,6 +182,27 @@ module CodingAdventures
       end
 
       # ====================================================================
+      # Global Injection
+      # ====================================================================
+
+      # Pre-seed named variables into the VM's global scope.
+      #
+      # These variables are available to the program as regular variables
+      # but are set before execution begins. Useful for build context,
+      # environment info, etc.
+      #
+      # Injected globals are merged into +variables+ — they don't replace
+      # the hash. If a key already exists, the injected value overwrites it.
+      #
+      # @param globals [Hash] a mapping of variable names to values
+      #
+      # @example
+      #   vm.inject_globals("_ctx" => {"os" => "darwin", "arch" => "arm64"})
+      def inject_globals(globals)
+        globals.each { |key, value| @variables[key] = value }
+      end
+
+      # ====================================================================
       # Configuration
       # ====================================================================
 

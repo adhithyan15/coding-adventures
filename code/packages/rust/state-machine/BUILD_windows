@@ -1,2 +1,0 @@
-cargo test --target-dir target_isolated -p state-machine -- --nocapture
-if [ "$(uname)" = "Linux" ]; then cargo tarpaulin -p state-machine --out Stdout --skip-clean; fi

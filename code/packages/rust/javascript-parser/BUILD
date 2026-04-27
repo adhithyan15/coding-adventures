@@ -1,1 +1,9 @@
-cargo test -p coding-adventures-javascript-parser -- --nocapture
+load("code/packages/starlark/library-rules/rust_library.star", "rust_library")
+
+_targets = [
+    rust_library(
+        name = "javascript-parser",
+        srcs = ["src/**/*.rs"],
+        deps = [],
+    ),
+]

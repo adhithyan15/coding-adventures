@@ -11,10 +11,11 @@ license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
 readme = "README.md"
 keywords = ["json", "parser", "grammar-driven", "ast", "computer-science", "education"]
-# Runtime dependency: coding-adventures-json-lexer
-# Declared via BUILD file's -e ../json-lexer for local development and CI.
-# When publishing to PyPI, restore: dependencies = ["coding-adventures-json-lexer"]
-dependencies = []
+dependencies = [
+    "coding-adventures-json-lexer",
+    "coding-adventures-grammar-tools",
+    "coding-adventures-parser",
+]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Education",

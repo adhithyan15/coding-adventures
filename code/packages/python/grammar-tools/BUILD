@@ -1,3 +1,9 @@
-python -m venv .venv --clear
-.venv/bin/pip install -e ".[dev]" --quiet
-.venv/bin/python -m pytest tests/ -v
+load("code/packages/starlark/library-rules/python_library.star", "py_library")
+
+_targets = [
+    py_library(
+        name = "grammar-tools",
+        srcs = ["src/**/*.py", "tests/**/*.py"],
+        deps = [],
+    ),
+]

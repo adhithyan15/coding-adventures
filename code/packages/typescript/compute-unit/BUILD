@@ -1,5 +1,9 @@
-cd ../fp-arithmetic && npm ci --quiet
-cd ../gpu-core && npm ci --quiet
-cd ../parallel-execution-engine && npm ci --quiet
-npm ci --quiet
-npx vitest run --coverage
+load("code/packages/starlark/library-rules/typescript_library.star", "ts_library")
+
+_targets = [
+    ts_library(
+        name = "compute-unit",
+        srcs = ["src/**/*.ts", "test/**/*.ts"],
+        deps = [],
+    ),
+]

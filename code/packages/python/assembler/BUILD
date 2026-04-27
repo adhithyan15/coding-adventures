@@ -1,3 +1,9 @@
-uv venv --quiet --clear
-uv pip install -e ../logic-gates -e ../arithmetic -e ../cpu-simulator -e ../arm-simulator --quiet
-echo "Shell package — no tests"
+load("code/packages/starlark/library-rules/python_library.star", "py_library")
+
+_targets = [
+    py_library(
+        name = "assembler",
+        srcs = ["src/**/*.py", "tests/**/*.py"],
+        deps = [],
+    ),
+]

@@ -1,3 +1,9 @@
-uv venv --quiet --clear
-uv pip install -e ../directed-graph -e ../state-machine -e ../bootloader -e ../os-kernel -e ../riscv-simulator -e ../cpu-simulator -e ../logic-gates -e ../arithmetic -e ../display -e ../interrupt-handler -e ../rom-bios -e ../core -e ../cache -e ../branch-predictor -e ../cpu-pipeline -e ../hazard-detection -e ../clock -e ".[dev]" --quiet
-.venv/bin/python -m pytest tests/ -v
+load("code/packages/starlark/library-rules/python_library.star", "py_library")
+
+_targets = [
+    py_library(
+        name = "system-board",
+        srcs = ["src/**/*.py", "tests/**/*.py"],
+        deps = [],
+    ),
+]

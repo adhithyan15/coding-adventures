@@ -1,3 +1,9 @@
-go build ./...
-go test ./... -v -cover
-go vet ./...
+load("code/packages/starlark/library-rules/go_library.star", "go_library")
+
+_targets = [
+    go_library(
+        name = "starlark-ast-to-bytecode-compiler",
+        srcs = ["**/*.go"],
+        deps = [],
+    ),
+]

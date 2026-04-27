@@ -1,3 +1,9 @@
-cd ../graph && bundle install --quiet && cd ../directed_graph
-bundle install --quiet
-bundle exec rake test
+load("code/packages/starlark/library-rules/ruby_library.star", "ruby_library")
+
+_targets = [
+    ruby_library(
+        name = "directed_graph",
+        srcs = ["lib/**/*.rb", "test/**/*.rb"],
+        deps = [],
+    ),
+]

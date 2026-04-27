@@ -1,1 +1,9 @@
-cargo test -p coding-adventures-toml-lexer -- --nocapture
+load("code/packages/starlark/library-rules/rust_library.star", "rust_library")
+
+_targets = [
+    rust_library(
+        name = "toml-lexer",
+        srcs = ["src/**/*.rs"],
+        deps = [],
+    ),
+]

@@ -1,3 +1,9 @@
-uv venv --quiet --clear
-uv pip install -e ../logic-gates -e ../arithmetic -e ../cpu-simulator -e ../riscv-simulator -e ../simulator-protocol -e ".[dev]" --quiet
-.venv/bin/python -m pytest tests/ -v
+load("code/packages/starlark/library-rules/python_library.star", "py_library")
+
+_targets = [
+    py_library(
+        name = "rom-bios",
+        srcs = ["src/**/*.py", "tests/**/*.py"],
+        deps = [],
+    ),
+]

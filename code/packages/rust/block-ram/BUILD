@@ -1,1 +1,9 @@
-cargo test -p block-ram -- --nocapture
+load("code/packages/starlark/library-rules/rust_library.star", "rust_library")
+
+_targets = [
+    rust_library(
+        name = "block-ram",
+        srcs = ["src/**/*.rs"],
+        deps = [],
+    ),
+]

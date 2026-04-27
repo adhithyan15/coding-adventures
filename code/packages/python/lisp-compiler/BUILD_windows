@@ -1,5 +1,0 @@
-uv venv --quiet --clear
-uv pip install -e ../graph -e ../directed-graph -e ../grammar-tools -e ../state-machine -e ../lexer -e ../parser -e ../virtual-machine -e ../bytecode-compiler -e ../garbage-collector -e ../lisp-lexer -e ../lisp-parser -e ../lisp-vm --quiet
-uv pip install --no-deps -e .[dev] --quiet
-uv pip install pytest pytest-cov ruff mypy --quiet
-uv run --no-project python -m pytest tests/ -v

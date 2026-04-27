@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.1.0] - 2026-03-25
+## [0.1.0] - 2026-03-22
 
 ### Added
 
@@ -15,4 +15,3 @@ All notable changes to this project will be documented in this file.
   - `filter_commands(cmds)` — strips `None` entries from command lists.
 - Reads `_ctx["os"]` at module load time (injected by the build tool via `WithGlobals()`).
 - Captures platform value once at module level for use in all functions.
-- BUILD file, README.md, and CHANGELOG.md.

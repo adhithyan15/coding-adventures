@@ -1,3 +1,9 @@
-cd ../virtual-machine && npm install --silent
-npm install --silent
-npx vitest run --coverage
+load("code/packages/starlark/library-rules/typescript_library.star", "ts_library")
+
+_targets = [
+    ts_library(
+        name = "starlark-vm",
+        srcs = ["src/**/*.ts", "test/**/*.ts"],
+        deps = [],
+    ),
+]

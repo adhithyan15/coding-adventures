@@ -2,29 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.3.0] - 2026-03-29
+## [Unreleased]
 
 ### Added
-
-- **TypeScript dependency resolution**: `_parse_typescript_deps()` parses `package.json` for `@coding-adventures/` scoped dependencies. `_build_known_names()` now maps TypeScript packages to their npm scoped names.
-- **Rust dependency resolution**: `_parse_rust_deps()` parses `Cargo.toml` `[dependencies]` sections with `path =` references. `_build_known_names()` maps Rust packages to their crate names.
-- **Swift dependency resolution**: `_parse_swift_deps()` parses `Package.swift` `.package(path: "../dep-name")` references. `_build_known_names()` maps Swift packages to their directory names.
-- **Library-over-program priority** in `_build_known_names()`: when a library package and a program share the same ecosystem dependency name, the library entry takes priority. Prevents self-loop dep resolution for programs that depend on their own library.
-- **Elixir enhancement**: `_build_known_names()` now reads the actual `app:` atom from `mix.exs` in addition to the convention-based name, ensuring accurate cross-package resolution.
-- **`build_content` field** on `Package` dataclass: raw BUILD file text, populated during discovery, for Starlark detection in CLI.
-- **Starlark evaluation step** in CLI (`cli.py`): after discovery, Starlark BUILD files are evaluated via `starlark_evaluator.py` to extract declared targets, sources, and build commands.
-- **Expanded `--language` choices**: now includes `typescript`, `rust`, `elixir`, `lua`, `perl`, `swift` in addition to `python`, `ruby`, `go`.
-- **`--detect-languages` standalone mode**: outputs `needs_<lang>=true|false` for all languages when used without `--emit-plan`. Writes to both stdout and `$GITHUB_OUTPUT`.
-- **`ALL_LANGUAGES` constant**: canonical ordered list of all supported languages.
-- **`SHARED_PREFIXES` constant**: narrows shared-file detection from any `.github/` path to only `.github/workflows/ci.yml`, avoiding full rebuilds for deployment-only workflow changes.
-- **`_expand_affected_set_with_prereqs()`**: ensures transitive prerequisites of affected packages are also scheduled. Prevents failures on fresh CI runners where prerequisite BUILD steps materialize local dependency state.
-- **`DirectedGraph.affected_nodes()`**: returns changed packages plus all their transitive dependents.
-- **`DirectedGraph.edges()`**: returns all directed edges as (from, to) tuples for plan serialization.
-
-### Fixed
-
-- **Language detection output**: `_output_language_flags()` now uses `needs_<lang>` prefix (matching Go build tool) instead of `need_<lang>`. Also writes to `$GITHUB_OUTPUT` for GitHub Actions integration.
-- **Shared-file detection**: narrowed from `startswith(".github/")` to exact match against `SHARED_PREFIXES` to avoid spurious full rebuilds on deployment workflow changes.
+- **`_ctx` build context injection** (`starlark.py`): The Starlark evaluator now injects a `_ctx` dict into every BUILD file evaluation. The dict carries `os` (e.g. `"macos"`, `"linux"`, `"windows"`) and `arch` (e.g. `"x86_64"`, `"arm64"`) keys, enabling OS-aware rule logic in BUILD files (Phase 8: OS-Aware Starlark BUILD Rules).
+- **`commands` field on `Target` dataclass**: Every resolved build target now carries an optional list of rendered shell command strings, replacing the raw Starlark `cmd` string.
+- **`render_command(cmd)`**: Converts a single Starlark command dict (`{"executable": ..., "args": [...]}`) into a quoted shell string.
+- **`render_commands(cmds)`**: Maps a list of command dicts through `render_command()` and returns a list of shell strings.
+- **`_quote_arg(arg)`**: Shell-safe quoting helper — wraps arguments containing spaces or special characters in double quotes.
 
 ## [0.2.0] - 2026-03-22
 

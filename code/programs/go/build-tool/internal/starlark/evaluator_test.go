@@ -1,6 +1,7 @@
 package starlark
 
 import (
+	"os"
 	"testing"
 )
 
@@ -240,7 +241,7 @@ func TestGenerateCommands(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			cmds := GenerateCommands(tt.target)
+			cmds := GenerateCommands(tt.target, "")
 			if len(cmds) != tt.wantLen {
 				t.Errorf("got %d commands, want %d: %v", len(cmds), tt.wantLen, cmds)
 			}
@@ -314,5 +315,212 @@ func TestGetStringList(t *testing.T) {
 	mixed := getStringList(dict, "mixed")
 	if len(mixed) != 2 || mixed[0] != "a" || mixed[1] != "b" {
 		t.Errorf("getStringList(mixed) = %v, want [a b]", mixed)
+	}
+}
+
+// TestExtractPyMonorepoDeps verifies parsing of monorepo deps from pyproject.toml.
+func TestExtractPyMonorepoDeps(t *testing.T) {
+	tests := []struct {
+		name string
+		text string
+		want []string
+	}{
+		{
+			name: "single dep",
+			text: `[project]
+name = "coding-adventures-logic-gates"
+dependencies = ["coding-adventures-transistors>=0.1.0"]`,
+			want: []string{"transistors"},
+		},
+		{
+			name: "multiple deps",
+			text: `[project]
+dependencies = [
+    "coding-adventures-lexer>=0.1.0",
+    "coding-adventures-grammar-tools>=0.1.0",
+    "pytest>=7.0",
+]`,
+			want: []string{"lexer", "grammar-tools"},
+		},
+		{
+			name: "no monorepo deps",
+			text: `[project]
+dependencies = ["pytest>=7.0", "numpy>=1.0"]`,
+			want: nil,
+		},
+		{
+			name: "no dependencies section",
+			text: `[project]
+name = "foo"`,
+			want: nil,
+		},
+		{
+			name: "single line array",
+			text: `dependencies = ["coding-adventures-vm>=0.1.0", "coding-adventures-compiler"]`,
+			want: []string{"vm", "compiler"},
+		},
+		{
+			name: "dep with version specifiers",
+			text: `dependencies = ["coding-adventures-parser~=1.2.0"]`,
+			want: []string{"parser"},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := extractPyMonorepoDeps(tt.text)
+			if len(got) != len(tt.want) {
+				t.Fatalf("extractPyMonorepoDeps() = %v, want %v", got, tt.want)
+			}
+			for i := range got {
+				if got[i] != tt.want[i] {
+					t.Errorf("dep[%d] = %q, want %q", i, got[i], tt.want[i])
+				}
+			}
+		})
+	}
+}
+
+// TestPyInstallCmd verifies the install command includes monorepo deps.
+func TestPyInstallCmd(t *testing.T) {
+	// With empty path, should return default command.
+	cmd := pyInstallCmd("")
+	if cmd != `uv pip install --system -e ".[dev]"` {
+		t.Errorf("pyInstallCmd(\"\") = %q, want default", cmd)
+	}
+
+	// With nonexistent path, should return default command.
+	cmd = pyInstallCmd("/nonexistent/path")
+	if cmd != `uv pip install --system -e ".[dev]"` {
+		t.Errorf("pyInstallCmd(nonexistent) = %q, want default", cmd)
+	}
+
+	// Create a temp dir structure to test transitive dep discovery.
+	// parent/
+	//   pkg-a/pyproject.toml  (depends on pkg-b)
+	//   pkg-b/pyproject.toml  (depends on pkg-c)
+	//   pkg-c/pyproject.toml  (no monorepo deps)
+	parent := t.TempDir()
+
+	// pkg-c: leaf, no monorepo deps
+	os.MkdirAll(parent+"/pkg-c", 0755)
+	os.WriteFile(parent+"/pkg-c/pyproject.toml", []byte(`[project]
+name = "coding-adventures-pkg-c"
+dependencies = ["pytest>=7.0"]`), 0644)
+
+	// pkg-b: depends on pkg-c
+	os.MkdirAll(parent+"/pkg-b", 0755)
+	os.WriteFile(parent+"/pkg-b/pyproject.toml", []byte(`[project]
+name = "coding-adventures-pkg-b"
+dependencies = ["coding-adventures-pkg-c"]`), 0644)
+
+	// pkg-a: depends on pkg-b
+	os.MkdirAll(parent+"/pkg-a", 0755)
+	os.WriteFile(parent+"/pkg-a/pyproject.toml", []byte(`[project]
+name = "coding-adventures-pkg-a"
+dependencies = ["coding-adventures-pkg-b"]`), 0644)
+
+	cmd = pyInstallCmd(parent + "/pkg-a")
+	// Should install pkg-c first (leaf), then pkg-b, then pkg-a's own deps
+	expected := `uv pip install --system -e ../pkg-c -e ../pkg-b -e ".[dev]"`
+	if cmd != expected {
+		t.Errorf("pyInstallCmd(transitive) = %q, want %q", cmd, expected)
+	}
+
+	// pkg-c has no monorepo deps, should get default command.
+	cmd = pyInstallCmd(parent + "/pkg-c")
+	if cmd != `uv pip install --system -e ".[dev]"` {
+		t.Errorf("pyInstallCmd(leaf) = %q, want default", cmd)
+	}
+}
+
+// TestTsInstallCmd verifies the npm install command chains transitive deps.
+func TestTsInstallCmd(t *testing.T) {
+	// With empty path, should return default command.
+	cmd := tsInstallCmd("")
+	if cmd != "npm install --silent" {
+		t.Errorf("tsInstallCmd(\"\") = %q, want default", cmd)
+	}
+
+	// Create a temp dir structure with transitive file: deps.
+	// parent/
+	//   pkg-a/package.json  (depends on pkg-b)
+	//   pkg-b/package.json  (depends on pkg-c)
+	//   pkg-c/package.json  (no file: deps)
+	parent := t.TempDir()
+
+	os.MkdirAll(parent+"/pkg-c", 0755)
+	os.WriteFile(parent+"/pkg-c/package.json", []byte(`{
+  "name": "@ca/pkg-c",
+  "dependencies": {}
+}`), 0644)
+
+	os.MkdirAll(parent+"/pkg-b", 0755)
+	os.WriteFile(parent+"/pkg-b/package.json", []byte(`{
+  "name": "@ca/pkg-b",
+  "dependencies": {
+    "@ca/pkg-c": "file:../pkg-c"
+  }
+}`), 0644)
+
+	os.MkdirAll(parent+"/pkg-a", 0755)
+	os.WriteFile(parent+"/pkg-a/package.json", []byte(`{
+  "name": "@ca/pkg-a",
+  "dependencies": {
+    "@ca/pkg-b": "file:../pkg-b"
+  }
+}`), 0644)
+
+	cmd = tsInstallCmd(parent + "/pkg-a")
+	// Should install pkg-c first (leaf), then pkg-b, then pkg-a
+	if !containsStr(cmd, "cd ../pkg-c") {
+		t.Errorf("tsInstallCmd() missing transitive dep pkg-c: %q", cmd)
+	}
+	if !containsStr(cmd, "cd ../pkg-b") {
+		t.Errorf("tsInstallCmd() missing direct dep pkg-b: %q", cmd)
+	}
+
+	// pkg-c has no file: deps, should get default command.
+	cmd = tsInstallCmd(parent + "/pkg-c")
+	if cmd != "npm install --silent" {
+		t.Errorf("tsInstallCmd(leaf) = %q, want default", cmd)
+	}
+}
+
+// TestEnhanceInstallCommands verifies that rendered Starlark commands
+// get their install commands replaced with auto-discovered versions.
+func TestEnhanceInstallCommands(t *testing.T) {
+	// Create a temp package with monorepo deps.
+	parent := t.TempDir()
+	os.MkdirAll(parent+"/my-pkg", 0755)
+	os.MkdirAll(parent+"/dep-a", 0755)
+	os.WriteFile(parent+"/my-pkg/pyproject.toml", []byte(`[project]
+name = "coding-adventures-my-pkg"
+dependencies = ["coding-adventures-dep-a"]`), 0644)
+	os.WriteFile(parent+"/dep-a/pyproject.toml", []byte(`[project]
+name = "coding-adventures-dep-a"
+dependencies = []`), 0644)
+
+	cmds := []string{
+		`uv pip install --system -e .[dev]`,
+		`python -m pytest --cov --cov-report=term-missing`,
+	}
+
+	enhanced := EnhanceInstallCommands(cmds, parent+"/my-pkg")
+	if enhanced[0] == cmds[0] {
+		t.Errorf("install command not enhanced: %q", enhanced[0])
+	}
+	if !containsStr(enhanced[0], "-e ../dep-a") {
+		t.Errorf("enhanced command missing dep: %q", enhanced[0])
+	}
+	// Test command should be unchanged.
+	if enhanced[1] != cmds[1] {
+		t.Errorf("test command changed: %q", enhanced[1])
+	}
+
+	// Empty path should return commands unchanged.
+	unchanged := EnhanceInstallCommands(cmds, "")
+	if unchanged[0] != cmds[0] {
+		t.Errorf("empty path should not enhance: %q", unchanged[0])
 	}
 }

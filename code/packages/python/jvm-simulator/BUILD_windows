@@ -1,3 +1,0 @@
-python -m venv .venv --clear
-.venv\Scripts\pip install -e ../simulator-protocol -e ../jvm-bytecode-disassembler -e .[dev] --quiet
-.venv\Scripts\python -m pytest tests/ -v

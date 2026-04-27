@@ -1,5 +1,9 @@
-cd ../directed-graph && go build ./... && cd ../state-machine && go build ./... && cd ../cli-builder
-go build ./...
-go vet ./...
-go test ./... -coverprofile=coverage.out
-go tool cover -func=coverage.out | grep total
+load("code/packages/starlark/library-rules/go_library.star", "go_library")
+
+_targets = [
+    go_library(
+        name = "cli-builder",
+        srcs = ["**/*.go"],
+        deps = [],
+    ),
+]

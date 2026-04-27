@@ -1,3 +1,9 @@
-cd ../transistors && npm ci --quiet
-cd ../cache && npm ci --quiet
-cd ../logic-gates && npm ci --quiet && cd ../arithmetic && npm ci --quiet && cd ../fp-arithmetic && npm ci --quiet && cd ../clock && npm ci --quiet && cd ../gpu-core && npm ci --quiet && cd ../parallel-execution-engine && npm ci --quiet && cd ../compute-unit && npm ci --quiet && cd ../device-simulator && npm ci --quiet && cd ../compute-runtime && npm ci && npx vitest run --coverage
+load("code/packages/starlark/library-rules/typescript_library.star", "ts_library")
+
+_targets = [
+    ts_library(
+        name = "compute-runtime",
+        srcs = ["src/**/*.ts", "test/**/*.ts"],
+        deps = [],
+    ),
+]

@@ -1,2 +1,9 @@
-mix deps.get 2>/dev/null
-mix test
+load("code/packages/starlark/library-rules/elixir_library.star", "elixir_library")
+
+_targets = [
+    elixir_library(
+        name = "progress_bar",
+        srcs = ["lib/**/*.ex", "test/**/*.exs"],
+        deps = [],
+    ),
+]

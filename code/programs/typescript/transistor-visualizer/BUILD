@@ -1,8 +1,9 @@
-cd ../../../packages/typescript/transistors && npm install
-cd ../../../packages/typescript/pixel-container && npm install --quiet
-cd ../../../packages/typescript/paint-instructions && npm install --quiet
-cd ../../../packages/typescript/paint-vm && npm install --quiet
-cd ../../../packages/typescript/paint-vm-canvas && npm install --quiet
-cd ../../../packages/typescript/ui-components && npm install
-npm install
-npx vitest run
+load("code/packages/starlark/program-rules/typescript_binary.star", "ts_binary")
+
+_targets = [
+    ts_binary(
+        name = "transistor-visualizer",
+        srcs = ["src/**/*.ts", "*.ts"],
+        deps = [],
+    ),
+]

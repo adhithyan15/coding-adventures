@@ -1,1 +1,9 @@
-cargo test -p ml-framework-core -- --nocapture
+load("code/packages/starlark/library-rules/rust_library.star", "rust_library")
+
+_targets = [
+    rust_library(
+        name = "ml-framework-core",
+        srcs = ["src/**/*.rs"],
+        deps = [],
+    ),
+]

@@ -1,6 +1,9 @@
-cd ../directed-graph && npm ci --quiet
-cd ../grammar-tools && npm ci --quiet
-cd ../state-machine && npm ci --quiet
-cd ../lexer && npm ci --quiet
-npm ci --quiet
-npx vitest run --coverage
+load("code/packages/starlark/library-rules/typescript_library.star", "ts_library")
+
+_targets = [
+    ts_library(
+        name = "starlark-lexer",
+        srcs = ["src/**/*.ts", "test/**/*.ts"],
+        deps = [],
+    ),
+]

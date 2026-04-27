@@ -7,6 +7,13 @@ name = "coding-adventures-core"
 version = "0.1.0"
 description = "Configurable processor core — integrates pipeline, caches, branch predictor, hazard detection into a complete CPU core"
 requires-python = ">=3.12"
+dependencies = [
+    "coding-adventures-branch-predictor",
+    "coding-adventures-cache",
+    "coding-adventures-clock",
+    "coding-adventures-cpu-pipeline",
+    "coding-adventures-hazard-detection",
+]
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
 readme = "README.md"

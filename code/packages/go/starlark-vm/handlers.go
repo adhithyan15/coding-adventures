@@ -1413,15 +1413,16 @@ func callFunction(v *vm.GenericVM, callable interface{}, args []interface{}, cod
 
 // handleCallFunctionKW calls a function with keyword arguments.
 //
-// Operand: number of keyword argument PAIRS (kwCount).
+// Operand: number of keyword argument pairs.
 //
-// Stack layout (from bottom to top, interleaved format):
-//   [..., callable, key1, val1, key2, val2, ...]
+// The compiler emits keyword arguments as interleaved key-value pairs:
+//   [..., callable, key1, val1, key2, val2, ..., keyN, valN]
 //
-// Arguments are pushed as interleaved key-value pairs. Each keyword
-// argument is pushed as its name (string) followed by its value.
-// This is simpler than the tuple-of-names format because the compiler
-// can emit LOAD_CONST for each name and value in sequence.
+// where operand = N (the number of keyword pairs).  Each key is a string
+// (the parameter name) and each val is the argument value.
+//
+// This matches the compiler's output format in compileArgument(), which
+// pushes LOAD_CONST(name) then the value expression for each keyword arg.
 func handleCallFunctionKW(v *vm.GenericVM, instr vm.Instruction, code vm.CodeObject) *string {
 	kwCount := instr.Operand.(int)
 
@@ -1436,13 +1437,14 @@ func handleCallFunctionKW(v *vm.GenericVM, instr vm.Instruction, code vm.CodeObj
 	// Pop callable.
 	callable := v.Pop()
 
-	// If it's a StarlarkFunction, map keyword args to the right slots.
+	// If it's a StarlarkFunction, map keyword args to the right parameter slots.
 	if fn, ok := callable.(*StarlarkFunction); ok {
 		finalArgs := make([]interface{}, fn.ParamCount)
 
 		// Fill defaults first (from the function's default values).
 		// Defaults are right-aligned: if there are 4 params and 3 defaults,
 		// the defaults apply to params 1, 2, 3 (not 0, 1, 2).
+		// This mirrors Python's convention: def f(a, b=1, c=2).
 		defaultOffset := fn.ParamCount - len(fn.Defaults)
 		for i, def := range fn.Defaults {
 			finalArgs[defaultOffset+i] = def
@@ -1460,7 +1462,7 @@ func handleCallFunctionKW(v *vm.GenericVM, instr vm.Instruction, code vm.CodeObj
 
 		callFunction(v, callable, finalArgs, code)
 	} else {
-		// For builtins, just pass keyword values.
+		// For builtins, convert keyword args to positional.
 		callFunction(v, callable, kwValues, code)
 	}
 	return nil

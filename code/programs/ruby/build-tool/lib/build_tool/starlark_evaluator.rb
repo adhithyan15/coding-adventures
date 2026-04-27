@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require "etc"
+require "set"
+
 # ==========================================================================
 # starlark_evaluator.rb -- Starlark BUILD File Evaluation
 # ==========================================================================
@@ -86,8 +89,8 @@ module BuildTool
   #     entry_point: ""
   #   )
   # --------------------------------------------------------------------------
-  Target = Data.define(:rule, :name, :srcs, :deps, :test_runner, :entry_point) do
-    def initialize(rule:, name:, srcs: [], deps: [], test_runner: "", entry_point: "")
+  Target = Data.define(:rule, :name, :srcs, :deps, :test_runner, :entry_point, :commands) do
+    def initialize(rule:, name:, srcs: [], deps: [], test_runner: "", entry_point: "", commands: [])
       super
     end
   end
@@ -108,6 +111,15 @@ module BuildTool
   end
 
   module StarlarkEvaluator
+    # Schema version for the _ctx build context dict.
+    CTX_SCHEMA_VERSION = 1
+
+    # OS name normalization: Gem::Platform.local.os -> runtime.GOOS equivalents.
+    OS_MAP = {"darwin" => "darwin", "linux" => "linux", "mingw32" => "windows"}.freeze
+
+    # Characters that trigger quoting in shell strings.
+    SHELL_META = Set.new(" \t\"'$`\\|&;()<>!#*?[]{}".chars).freeze
+
     # KNOWN_RULES lists the Starlark rule function call patterns that indicate
     # a BUILD file contains Starlark code rather than shell commands.
     #
@@ -220,12 +232,25 @@ module BuildTool
       # shell BUILD files even when the interpreter gem isn't installed.
       require "coding_adventures_starlark_interpreter"
 
+      # Build the _ctx dict — the build context injected into every Starlark
+      # scope.  See spec 15 for the full schema.
+      os_name = Gem::Platform.local.os
+      ctx_dict = {
+        "version" => CTX_SCHEMA_VERSION,
+        "os" => OS_MAP.fetch(os_name, os_name),
+        "arch" => RbConfig::CONFIG["target_cpu"],
+        "cpu_count" => Etc.respond_to?(:nprocessors) ? Etc.nprocessors : 1,
+        "ci" => !ENV.fetch("CI", "").empty?,
+        "repo_root" => repo_root
+      }
+
       # We use the CodingAdventures::StarlarkInterpreter module-level
       # convenience method, which creates an Interpreter instance with
-      # the file_resolver and runs the full pipeline.
+      # the file_resolver and globals, and runs the full pipeline.
       result = CodingAdventures::StarlarkInterpreter.interpret(
         content,
-        file_resolver: file_resolver
+        file_resolver: file_resolver,
+        globals: {"_ctx" => ctx_dict}
       )
 
       # Step 4: Extract targets from the result.
@@ -353,7 +378,8 @@ module BuildTool
           srcs: get_string_list(raw, "srcs"),
           deps: get_string_list(raw, "deps"),
           test_runner: get_string(raw, "test_runner"),
-          entry_point: get_string(raw, "entry_point")
+          entry_point: get_string(raw, "entry_point"),
+          commands: get_dict_list(raw, "commands")
         )
       end
     end
@@ -385,6 +411,47 @@ module BuildTool
       return [] unless value.is_a?(Array)
 
       value.select { |item| item.is_a?(String) }
+    end
+
+    def get_dict_list(hash, key)
+      value = hash[key]
+      return [] unless value.is_a?(Array)
+
+      value.select { |item| item.is_a?(Hash) }
+    end
+
+    # -- Command Rendering ---------------------------------------------------
+
+    # render_command -- Convert a single command dict to a shell string.
+    #
+    # @param cmd_dict [Hash] A command dict with "program" and optional "args".
+    # @return [String] A shell-safe command string.
+    def render_command(cmd_dict)
+      program = cmd_dict["program"]
+      raise "command dict missing 'program' key: #{cmd_dict}" unless program.is_a?(String) && !program.empty?
+
+      parts = [quote_arg(program)]
+      args = cmd_dict["args"]
+      if args.is_a?(Array)
+        args.each { |arg| parts << quote_arg(arg.to_s) }
+      end
+      parts.join(" ")
+    end
+
+    # render_commands -- Convert a list of command dicts to shell strings.
+    #
+    # @param cmds [Array] List of command dicts (nils are skipped).
+    # @return [Array<String>] Shell command strings.
+    def render_commands(cmds)
+      cmds.filter_map { |cmd| render_command(cmd) if cmd.is_a?(Hash) }
+    end
+
+    def quote_arg(arg)
+      return '""' if arg.empty?
+      return arg unless arg.chars.any? { |c| SHELL_META.include?(c) }
+
+      escaped = arg.gsub('\\', '\\\\\\\\').gsub('"', '\\"')
+      "\"#{escaped}\""
     end
   end
 end

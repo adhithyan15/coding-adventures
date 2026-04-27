@@ -1,4 +1,9 @@
-uv venv .venv --quiet --no-project
-uv pip install --python .venv -e ../graph --quiet
-uv pip install --python .venv -e .[dev] --quiet
-uv run --no-project python -m pytest tests/ -v
+load("code/packages/starlark/library-rules/python_library.star", "py_library")
+
+_targets = [
+    py_library(
+        name = "directed-graph",
+        srcs = ["src/**/*.py", "tests/**/*.py"],
+        deps = [],
+    ),
+]

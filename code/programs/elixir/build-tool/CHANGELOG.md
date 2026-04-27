@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+- **`_ctx` build context injection** (`BuildTool.Starlark`): The Starlark evaluator now injects a `_ctx` dict into every BUILD file evaluation. The dict carries `os` (e.g. `"macos"`, `"linux"`, `"windows"`) and `arch` (e.g. `"x86_64"`, `"arm64"`) keys, enabling OS-aware rule logic in BUILD files (Phase 8: OS-Aware Starlark BUILD Rules).
+- **`commands` field on `Target` struct**: Every resolved build target now carries an optional list of rendered shell command strings.
+- **`render_command/1`**: Converts a single Starlark command map (`%{"executable" => ..., "args" => [...]}`) into a quoted shell string.
+- **`render_commands/1`**: Maps a list of command maps through `render_command/1` and returns a list of shell strings.
+- **`quote_arg/1`**: Shell-safe quoting helper — wraps arguments containing spaces or special characters in double quotes.
+- **`normalize_arch/1`**: Normalises raw architecture strings returned by `:erlang.system_info(:system_architecture)` to canonical names (`"x86_64"` or `"arm64"`), providing consistent values for the `_ctx.arch` key across platforms.
+
 ## [0.2.0] - 2026-03-22
 
 ### Added

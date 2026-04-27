@@ -1,3 +1,9 @@
-uv venv --quiet --clear
-uv pip install -e ../logic-gates -e ../arithmetic -e ../clock -e ".[dev]" --quiet
-.venv/bin/python -m pytest tests/ -v
+load("code/packages/starlark/library-rules/python_library.star", "py_library")
+
+_targets = [
+    py_library(
+        name = "intel4004-gatelevel",
+        srcs = ["src/**/*.py", "tests/**/*.py"],
+        deps = [],
+    ),
+]

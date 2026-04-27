@@ -1,5 +1,9 @@
-(cd ../../../packages/typescript/directed-graph && npm install --silent)
-(cd ../../../packages/typescript/state-machine && npm install --silent)
-(cd ../../../packages/typescript/cli-builder && npm install --silent)
-npm ci --quiet
-npx vitest run --coverage
+load("code/packages/starlark/program-rules/typescript_binary.star", "ts_binary")
+
+_targets = [
+    ts_binary(
+        name = "scaffold-generator",
+        srcs = ["src/**/*.ts", "*.ts"],
+        deps = [],
+    ),
+]

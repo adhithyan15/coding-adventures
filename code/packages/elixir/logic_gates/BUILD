@@ -1,2 +1,9 @@
-cd ../transistors && mix deps.get --quiet && mix compile --quiet && cd -
-mix deps.get --quiet && mix test --cover
+load("code/packages/starlark/library-rules/elixir_library.star", "elixir_library")
+
+_targets = [
+    elixir_library(
+        name = "logic-gates",
+        srcs = ["lib/**/*.ex", "test/**/*.exs"],
+        deps = [],
+    ),
+]

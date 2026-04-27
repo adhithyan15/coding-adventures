@@ -58,6 +58,24 @@ defmodule BuildTool.StarlarkEvaluator do
 
   alias CodingAdventures.StarlarkInterpreter
 
+  # Schema version for the _ctx build context dict.
+  @ctx_schema_version 1
+
+  # OS normalization: :os.type() -> runtime.GOOS equivalents.
+  #
+  # Elixir's :os.type() returns {family, name} tuples:
+  #   {:unix, :darwin}  -> "darwin"
+  #   {:unix, :linux}   -> "linux"
+  #   {:win32, :nt}     -> "windows"
+  @os_map %{
+    darwin: "darwin",
+    linux: "linux",
+    nt: "windows"
+  }
+
+  # Characters that trigger quoting in shell strings.
+  @shell_meta MapSet.new(String.graphemes(" \t\"'$`\\|&;()<>!#*?[]{}"))
+
   # ===========================================================================
   # Target Struct
   # ===========================================================================
@@ -84,7 +102,8 @@ defmodule BuildTool.StarlarkEvaluator do
               srcs: [],
               deps: [],
               test_runner: "",
-              entry_point: ""
+              entry_point: "",
+              commands: []
   end
 
   # ===========================================================================
@@ -223,10 +242,32 @@ defmodule BuildTool.StarlarkEvaluator do
         end
 
         # -----------------------------------------------------------------------
+        # Build context dict (_ctx)
+        # -----------------------------------------------------------------------
+        #
+        # The _ctx dict is injected into every Starlark scope so that BUILD
+        # files and .star rules can branch on platform, architecture, etc.
+        # See spec 15 for the full schema.
+        {_family, os_name} = :os.type()
+        normalized_os = Map.get(@os_map, os_name, Atom.to_string(os_name))
+
+        ctx_dict = %{
+          "version" => @ctx_schema_version,
+          "os" => normalized_os,
+          "arch" => to_string(:erlang.system_info(:system_architecture)) |> normalize_arch(),
+          "cpu_count" => System.schedulers_online(),
+          "ci" => System.get_env("CI", "") != "",
+          "repo_root" => repo_root
+        }
+
+        # -----------------------------------------------------------------------
         # Execute through the interpreter pipeline
         # -----------------------------------------------------------------------
         try do
-          result = StarlarkInterpreter.interpret(source, file_resolver: file_resolver)
+          result = StarlarkInterpreter.interpret(source,
+            file_resolver: file_resolver,
+            globals: %{"_ctx" => ctx_dict}
+          )
 
           # Extract _targets from the result's variables.
           case extract_targets(result.variables) do
@@ -271,7 +312,8 @@ defmodule BuildTool.StarlarkEvaluator do
                 srcs: get_string_list(raw, "srcs"),
                 deps: get_string_list(raw, "deps"),
                 test_runner: get_string(raw, "test_runner"),
-                entry_point: get_string(raw, "entry_point")
+                entry_point: get_string(raw, "entry_point"),
+                commands: get_dict_list(raw, "commands")
               }
             else
               raise "expected _targets[#{idx}] to be a map, got: #{inspect(raw)}"
@@ -395,5 +437,99 @@ defmodule BuildTool.StarlarkEvaluator do
       _ ->
         []
     end
+  end
+
+  @doc false
+  def get_dict_list(map, key) when is_map(map) do
+    case Map.get(map, key) do
+      val when is_list(val) ->
+        Enum.filter(val, &is_map/1)
+
+      _ ->
+        []
+    end
+  end
+
+  # ===========================================================================
+  # Architecture Normalization
+  # ===========================================================================
+  #
+  # Erlang's :erlang.system_info(:system_architecture) returns strings like
+  # "aarch64-apple-darwin24.3.0" or "x86_64-pc-linux-gnu". We extract just
+  # the CPU architecture and normalize to Go's GOARCH convention.
+
+  @doc false
+  def normalize_arch(arch_string) do
+    cond do
+      String.starts_with?(arch_string, "aarch64") -> "arm64"
+      String.starts_with?(arch_string, "arm64") -> "arm64"
+      String.starts_with?(arch_string, "x86_64") -> "amd64"
+      String.starts_with?(arch_string, "i386") -> "386"
+      String.starts_with?(arch_string, "i686") -> "386"
+      true -> arch_string |> String.split("-") |> hd()
+    end
+  end
+
+  # ===========================================================================
+  # Command Rendering
+  # ===========================================================================
+  #
+  # Convert structured command dicts from cmd.star into shell-safe strings.
+  # Each command dict has the form:
+  #   %{"program" => "cargo", "args" => ["build", "--release"]}
+  #
+  # The renderer joins program + args, quoting any argument that contains
+  # shell metacharacters.
+
+  @doc """
+  Render a single command dict to a shell-safe string.
+
+  ## Examples
+
+      iex> BuildTool.StarlarkEvaluator.render_command(%{"program" => "cargo", "args" => ["build"]})
+      "cargo build"
+
+      iex> BuildTool.StarlarkEvaluator.render_command(%{"program" => "uv", "args" => ["pip", "install", "--system", "-e", ".[dev]"]})
+      "uv pip install --system -e \\".[dev]\\""
+  """
+  def render_command(%{"program" => program} = cmd) when is_binary(program) and program != "" do
+    args = Map.get(cmd, "args", [])
+
+    parts =
+      [quote_arg(program) | Enum.map(args, fn arg -> quote_arg(to_string(arg)) end)]
+
+    Enum.join(parts, " ")
+  end
+
+  @doc """
+  Render a list of command dicts to shell-safe strings, skipping non-maps.
+  """
+  def render_commands(cmds) when is_list(cmds) do
+    cmds
+    |> Enum.filter(&is_map/1)
+    |> Enum.filter(fn cmd -> is_binary(Map.get(cmd, "program")) end)
+    |> Enum.map(&render_command/1)
+  end
+
+  @doc false
+  def quote_arg(""), do: "\"\""
+
+  def quote_arg(arg) when is_binary(arg) do
+    if needs_quoting?(arg) do
+      escaped =
+        arg
+        |> String.replace("\\", "\\\\")
+        |> String.replace("\"", "\\\"")
+
+      "\"#{escaped}\""
+    else
+      arg
+    end
+  end
+
+  defp needs_quoting?(arg) do
+    arg
+    |> String.graphemes()
+    |> Enum.any?(fn c -> MapSet.member?(@shell_meta, c) end)
   end
 end

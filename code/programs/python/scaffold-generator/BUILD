@@ -1,6 +1,9 @@
-uv venv --quiet --clear
-uv pip install -e "../../../packages/python/graph" -e "../../../packages/python/directed-graph" --quiet
-uv pip install -e "../../../packages/python/state-machine" --quiet
-uv pip install -e "../../../packages/python/cli-builder" --quiet
-uv pip install -e ".[dev]" --quiet
-.venv/bin/python -m pytest tests/ -v
+load("code/packages/starlark/program-rules/python_binary.star", "py_binary")
+
+_targets = [
+    py_binary(
+        name = "scaffold-generator",
+        srcs = ["src/**/*.py", "*.py"],
+        deps = [],
+    ),
+]

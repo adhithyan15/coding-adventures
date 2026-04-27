@@ -1,5 +1,0 @@
-python -m venv .venv --clear
-.venv\Scripts\pip install pytest --quiet
-cargo build --release
-if exist target\release\directed_graph_native.dll copy target\release\directed_graph_native.dll src\directed_graph_native\directed_graph_native.pyd
-set PYTHONPATH=src&& .venv\Scripts\python -m pytest tests\ -v

@@ -1,1 +1,9 @@
-cd ../transistors && npm install --silent && cd ../logic-gates && npm install --silent && cd ../arithmetic && npm install --silent && cd ../intel4004-gatelevel && npm install --silent && npx vitest run
+load("code/packages/starlark/library-rules/typescript_library.star", "ts_library")
+
+_targets = [
+    ts_library(
+        name = "intel4004-gatelevel",
+        srcs = ["src/**/*.ts", "test/**/*.ts"],
+        deps = [],
+    ),
+]

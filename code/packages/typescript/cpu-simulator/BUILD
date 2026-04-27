@@ -1,5 +1,9 @@
-cd ../transistors && npm ci --quiet
-cd ../logic-gates && npm ci --quiet
-cd ../arithmetic && npm ci --quiet
-npm ci --quiet
-npx vitest run --coverage
+load("code/packages/starlark/library-rules/typescript_library.star", "ts_library")
+
+_targets = [
+    ts_library(
+        name = "cpu-simulator",
+        srcs = ["src/**/*.ts", "test/**/*.ts"],
+        deps = [],
+    ),
+]

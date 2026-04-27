@@ -1,3 +1,9 @@
-uv venv --quiet --clear
-uv pip install -e ../grammar-tools -e ../state-machine -e ../lexer -e ../parser -e ../virtual-machine -e ../bytecode-compiler -e ../garbage-collector -e ../lisp-lexer -e ../lisp-parser -e ../lisp-vm -e ".[dev]" --quiet
-.venv/bin/python -m pytest tests/ -v
+load("code/packages/starlark/library-rules/python_library.star", "py_library")
+
+_targets = [
+    py_library(
+        name = "lisp-compiler",
+        srcs = ["src/**/*.py", "tests/**/*.py"],
+        deps = [],
+    ),
+]

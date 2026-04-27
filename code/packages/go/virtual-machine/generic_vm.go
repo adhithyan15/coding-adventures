@@ -472,13 +472,9 @@ func (vm *GenericVM) JumpTo(target int) {
 //	})
 //	// Now the program can access _ctx["os"] as a regular variable.
 func (vm *GenericVM) InjectGlobals(globals map[string]interface{}) {
-	_, _ = StartNew[struct{}]("virtual-machine.InjectGlobals", struct{}{},
-		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
-			for k, v := range globals {
-				vm.Variables[k] = v
-			}
-			return rf.Generate(true, false, struct{}{})
-		}).GetResult()
+	for k, v := range globals {
+		vm.Variables[k] = v
+	}
 }
 
 // SetMaxRecursionDepth configures the maximum call stack depth.

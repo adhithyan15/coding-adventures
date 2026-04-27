@@ -12,12 +12,9 @@ authors = [{ name = "Adhithya Rajasekaran" }]
 readme = "README.md"
 keywords = ["starlark", "parser", "ast", "grammar-driven", "computer-science", "education"]
 dependencies = [
-    "coding-adventures-directed-graph",
     "coding-adventures-grammar-tools",
-    "coding-adventures-lexer",
     "coding-adventures-parser",
     "coding-adventures-starlark-lexer",
-    "coding-adventures-state-machine",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",

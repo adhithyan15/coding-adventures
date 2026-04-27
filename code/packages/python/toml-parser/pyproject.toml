@@ -11,10 +11,12 @@ license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
 readme = "README.md"
 keywords = ["toml", "parser", "grammar-driven", "ast", "computer-science", "education"]
-# Runtime dependency: coding-adventures-toml-lexer
-# Declared via BUILD file's -e ../toml-lexer for local development and CI.
-# When publishing to PyPI, restore: dependencies = ["coding-adventures-toml-lexer"]
-dependencies = []
+dependencies = [
+    "coding-adventures-toml-lexer",
+    "coding-adventures-grammar-tools",
+    "coding-adventures-parser",
+    "coding-adventures-lexer",
+]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Education",

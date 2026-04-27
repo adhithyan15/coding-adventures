@@ -198,14 +198,16 @@ pub enum Operand {
 /// deliberately kept simple — a real VM would have more types (lists, dicts,
 /// objects), but these cover the fundamentals.
 ///
-/// | Variant | Represents              | Example     |
-/// |---------|-------------------------|-------------|
-/// | Int     | Whole numbers           | 42, -7      |
-/// | Float   | Decimal numbers         | 3.14        |
-/// | Str     | Text                    | "hello"     |
-/// | Bool    | True/false              | true        |
-/// | Code    | A compiled function     | CodeObject  |
-/// | Null    | The absence of a value  | null/nil    |
+/// | Variant | Represents              | Example           |
+/// |---------|-------------------------|-------------------|
+/// | Int     | Whole numbers           | 42, -7            |
+/// | Float   | Decimal numbers         | 3.14              |
+/// | Str     | Text                    | "hello"           |
+/// | Bool    | True/false              | true              |
+/// | Code    | A compiled function     | CodeObject        |
+/// | Null    | The absence of a value  | null/nil          |
+/// | List    | Ordered sequence        | [1, 2, 3]         |
+/// | Dict    | Key-value mapping       | {"a": 1, "b": 2}  |
 #[derive(Debug, Clone)]
 pub enum Value {
     /// A 64-bit signed integer.
@@ -220,6 +222,10 @@ pub enum Value {
     Code(Box<CodeObject>),
     /// The null/nil/None value — represents "nothing."
     Null,
+    /// An ordered sequence of values (mutable list).
+    List(Vec<Value>),
+    /// An ordered key-value mapping (dict).
+    Dict(Vec<(Value, Value)>),
 }
 
 impl std::fmt::Display for Value {
@@ -231,6 +237,22 @@ impl std::fmt::Display for Value {
             Value::Bool(b) => write!(f, "{}", b),
             Value::Code(_) => write!(f, "<code>"),
             Value::Null => write!(f, "null"),
+            Value::List(items) => {
+                write!(f, "[")?;
+                for (i, item) in items.iter().enumerate() {
+                    if i > 0 { write!(f, ", ")?; }
+                    write!(f, "{}", item)?;
+                }
+                write!(f, "]")
+            }
+            Value::Dict(pairs) => {
+                write!(f, "{{")?;
+                for (i, (k, v)) in pairs.iter().enumerate() {
+                    if i > 0 { write!(f, ", ")?; }
+                    write!(f, "{}: {}", k, v)?;
+                }
+                write!(f, "}}")
+            }
         }
     }
 }

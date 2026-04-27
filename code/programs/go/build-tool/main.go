@@ -40,6 +40,7 @@ import (
 	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
 	progress "github.com/adhithyan15/coding-adventures/code/packages/go/progress-bar"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/cache"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/cmdrender"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/executor"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/gitdiff"
@@ -228,19 +229,31 @@ func run() int {
 				// On Windows, we must use BUILD_windows to skip --cover, which
 				// causes failures due to Erlang's coverage module on Windows.
 				platformBuild := discovery.GetBuildFileForPlatform(packages[i].Path, runtime.GOOS)
-				genericBuild := filepath.Join(packages[i].Path, "BUILD")
-				if platformBuild != "" && platformBuild != genericBuild {
-					// A platform-specific override exists (e.g., BUILD_windows).
-					// This is always a shell file — use it regardless of IsStarlark.
-					platformCmds := discovery.ReadLines(platformBuild)
-					if len(platformCmds) > 0 {
-						packages[i].BuildCommands = platformCmds
-						packages[i].IsStarlark = false
-					}
-				} else if !packages[i].IsStarlark {
-					// No platform-specific override; non-Starlark package.
-					// Re-read BUILD to get up-to-date commands.
-					if platformBuild != "" {
+				if platformBuild != "" {
+					if packages[i].IsStarlark {
+						// Starlark BUILD files must be evaluated, not
+						// executed line-by-line as shell commands.
+						result, err := starlarkeval.EvaluateBuildFile(
+							platformBuild,
+							packages[i].Path,
+							repoRoot,
+						)
+						if err != nil {
+							fmt.Fprintf(os.Stderr, "Warning: Starlark re-eval for %s: %v\n", packages[i].Name, err)
+						} else if len(result.Targets) > 0 {
+							t := result.Targets[0]
+							if len(t.Commands) > 0 {
+								rendered, rerr := cmdrender.RenderCommands(t.Commands)
+								if rerr != nil {
+									packages[i].BuildCommands = starlarkeval.GenerateCommands(t, packages[i].Path)
+								} else {
+									packages[i].BuildCommands = starlarkeval.EnhanceInstallCommands(rendered, packages[i].Path)
+								}
+							} else {
+								packages[i].BuildCommands = starlarkeval.GenerateCommands(t, packages[i].Path)
+							}
+						}
+					} else {
 						platformCmds := discovery.ReadLines(platformBuild)
 						if len(platformCmds) > 0 {
 							packages[i].BuildCommands = platformCmds
@@ -330,7 +343,21 @@ func run() int {
 					t := result.Targets[0]
 					pkg.DeclaredSrcs = t.Srcs
 					pkg.DeclaredDeps = t.Deps
-					pkg.BuildCommands = starlarkeval.GenerateCommands(t)
+
+					// If the target has structured commands (from cmd.star),
+					// render them to shell strings.  Otherwise fall back to
+					// GenerateCommands() which hardcodes commands by rule type.
+					if len(t.Commands) > 0 {
+						rendered, err := cmdrender.RenderCommands(t.Commands)
+						if err != nil {
+							fmt.Fprintf(os.Stderr, "Warning: cmd render failed for %s: %v\n", pkg.Name, err)
+							pkg.BuildCommands = starlarkeval.GenerateCommands(t, pkg.Path)
+						} else {
+							pkg.BuildCommands = starlarkeval.EnhanceInstallCommands(rendered, pkg.Path)
+						}
+					} else {
+						pkg.BuildCommands = starlarkeval.GenerateCommands(t, pkg.Path)
+					}
 					starlarkCount++
 				}
 			}

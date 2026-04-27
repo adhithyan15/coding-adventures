@@ -1,2 +1,9 @@
-cargo test -p cli-builder -- --nocapture
-if [ "$(uname)" = "Linux" ]; then cargo tarpaulin -p cli-builder --out Stdout --skip-clean; fi
+load("code/packages/starlark/library-rules/rust_library.star", "rust_library")
+
+_targets = [
+    rust_library(
+        name = "cli-builder",
+        srcs = ["src/**/*.rs"],
+        deps = [],
+    ),
+]

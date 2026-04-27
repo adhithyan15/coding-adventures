@@ -1035,16 +1035,39 @@ func TestWithGlobalsDoNotLeakBetweenExecutions(t *testing.T) {
 	expectVar(t, result2, "y", 0)
 }
 
+func TestWithGlobalsCrossModuleModuleLevelAccess(t *testing.T) {
+	// Globals are accessible at module level in loaded files, but NOT
+	// inside function bodies (the compiler treats all names inside
+	// functions as locals).  This is a known VM limitation — real
+	// Starlark/Python distinguishes locals, free variables, and globals
+	// via a scope analysis pass.
+	//
+	// The workaround: capture _ctx values at module level and use
+	// those captured values.  cmd.star uses this pattern.
+	files := map[string]string{
+		// Module-level capture works:
+		"platform.star": "_os = _ctx[\"os\"]\n",
+	}
+	interp := NewInterpreter(
+		WithFileResolver(DictResolver(files)),
+		WithGlobals(map[string]interface{}{
+			"_ctx": map[string]interface{}{
+				"os": "darwin",
+			},
+		}),
+	)
+	result, err := interp.Interpret(
+		"load(\"platform.star\", \"_os\")\nmy_os = _os\n",
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	expectVar(t, result, "my_os", "darwin")
+}
+
 func TestWithGlobalsCtxSimulation(t *testing.T) {
 	// End-to-end simulation of _ctx usage: loaded modules read _ctx at
-	// module level to compute platform-specific values.  This mirrors
-	// how cmd.star will work — it reads _ctx["os"] at load time to
-	// determine which platform commands are active.
-	//
-	// Note: functions defined in loaded modules cannot directly access
-	// injected globals at call time (the VM's callFunction uses a
-	// separate scope).  Instead, the pattern is to capture _ctx values
-	// at module level and use those captured values in functions.
+	// module level to compute platform-specific values.
 	files := map[string]string{
 		"platform.star": "current_os = _ctx[\"os\"]\nis_windows = current_os == \"windows\"\nis_unix = current_os != \"windows\"\n",
 	}

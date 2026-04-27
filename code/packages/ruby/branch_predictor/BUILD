@@ -1,3 +1,9 @@
-cd ../state_machine && bundle install --quiet && cd ../branch_predictor
-bundle install --quiet
-bundle exec rake test
+load("code/packages/starlark/library-rules/ruby_library.star", "ruby_library")
+
+_targets = [
+    ruby_library(
+        name = "branch_predictor",
+        srcs = ["lib/**/*.rb", "test/**/*.rb"],
+        deps = [],
+    ),
+]

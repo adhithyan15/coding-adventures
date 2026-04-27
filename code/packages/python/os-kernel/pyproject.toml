@@ -7,6 +7,11 @@ name = "coding-adventures-os-kernel"
 version = "0.1.0"
 description = "S04 OS Kernel -- minimal monolithic kernel with process management, scheduler, and syscalls"
 requires-python = ">=3.12"
+dependencies = [
+    "coding-adventures-display",
+    "coding-adventures-interrupt-handler",
+    "coding-adventures-riscv-simulator",
+]
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
 readme = "README.md"

@@ -1,3 +1,9 @@
-uv venv --quiet --clear
-uv pip install -e ../simulator-protocol -e ../clr-pe-file -e ../clr-bytecode-disassembler -e ".[dev]" --quiet
-.venv/bin/python -m pytest tests/ -v
+load("code/packages/starlark/library-rules/python_library.star", "py_library")
+
+_targets = [
+    py_library(
+        name = "clr-simulator",
+        srcs = ["src/**/*.py", "tests/**/*.py"],
+        deps = [],
+    ),
+]

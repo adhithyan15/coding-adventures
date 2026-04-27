@@ -1,3 +1,9 @@
-bundle config set path vendor/bundle
-bundle install --quiet --full-index --gemfile=Gemfile
-bundle exec --gemfile=Gemfile rake test
+load("code/packages/starlark/library-rules/ruby_library.star", "ruby_library")
+
+_targets = [
+    ruby_library(
+        name = "process_manager",
+        srcs = ["lib/**/*.rb", "test/**/*.rb"],
+        deps = [],
+    ),
+]

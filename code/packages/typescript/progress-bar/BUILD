@@ -1,2 +1,9 @@
-npm install --silent 2>/dev/null
-npx vitest run
+load("code/packages/starlark/library-rules/typescript_library.star", "ts_library")
+
+_targets = [
+    ts_library(
+        name = "progress-bar",
+        srcs = ["src/**/*.ts", "test/**/*.ts"],
+        deps = [],
+    ),
+]

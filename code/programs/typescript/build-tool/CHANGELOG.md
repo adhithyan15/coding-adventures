@@ -2,6 +2,15 @@
 
 All notable changes to the TypeScript build tool will be documented in this file.
 
+## [Unreleased]
+
+### Added
+- **`_ctx` build context injection** (`starlark.ts`): The Starlark evaluator now injects a `_ctx` dict into every BUILD file evaluation. The dict carries `os` (e.g. `"macos"`, `"linux"`, `"windows"`) and `arch` (e.g. `"x86_64"`, `"arm64"`) keys, enabling OS-aware rule logic in BUILD files (Phase 8: OS-Aware Starlark BUILD Rules).
+- **`commands` field on `Target` interface**: Every resolved build target now carries an optional list of rendered shell command strings.
+- **`renderCommand(cmd)`**: Converts a single Starlark command object (`{executable, args}`) into a quoted shell string.
+- **`renderCommands(cmds)`**: Maps a list of command objects through `renderCommand()` and returns a list of shell strings.
+- **`quoteArg(arg)`**: Shell-safe quoting helper — wraps arguments containing spaces or special characters in double quotes.
+
 ## [1.1.0] - 2026-03-22
 
 ### Added

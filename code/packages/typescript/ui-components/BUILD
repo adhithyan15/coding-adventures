@@ -1,6 +1,9 @@
-cd ../pixel-container && npm install --silent
-cd ../paint-instructions && npm install --silent
-cd ../paint-vm && npm install --silent
-cd ../paint-vm-canvas && npm install --silent
-npm install
-npx vitest run
+load("code/packages/starlark/library-rules/typescript_library.star", "ts_library")
+
+_targets = [
+    ts_library(
+        name = "ui-components",
+        srcs = ["src/**/*.ts", "test/**/*.ts"],
+        deps = [],
+    ),
+]

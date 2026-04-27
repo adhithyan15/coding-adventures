@@ -1,13 +1,9 @@
-uv venv --quiet --clear
-uv pip install --no-deps -e ../graph -e ../directed-graph --quiet
-uv pip install --no-deps -e ../state-machine --quiet
-uv pip install --no-deps -e ../branch-predictor --quiet
-uv pip install --no-deps -e ../hazard-detection --quiet
-uv pip install --no-deps -e ../clock --quiet
-uv pip install --no-deps -e ../cache --quiet
-uv pip install --no-deps -e ../arithmetic --quiet
-uv pip install --no-deps -e ../cpu-simulator --quiet
-uv pip install --no-deps -e ../cpu-pipeline --quiet
-uv pip install --no-deps -e .[dev] --quiet
-uv pip install pytest pytest-cov ruff mypy --quiet
-uv run --no-project python -m pytest tests/ -v
+load("code/packages/starlark/library-rules/python_library.star", "py_library")
+
+_targets = [
+    py_library(
+        name = "core",
+        srcs = ["src/**/*.py", "tests/**/*.py"],
+        deps = [],
+    ),
+]

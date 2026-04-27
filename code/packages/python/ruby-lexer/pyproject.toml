@@ -11,7 +11,7 @@ license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
 readme = "README.md"
 keywords = ["ruby", "lexer", "tokenizer", "grammar-driven", "computer-science", "education"]
-dependencies = ["coding-adventures-directed-graph", "coding-adventures-grammar-tools", "coding-adventures-lexer", "coding-adventures-state-machine"]
+dependencies = ["coding-adventures-grammar-tools", "coding-adventures-lexer"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Education",

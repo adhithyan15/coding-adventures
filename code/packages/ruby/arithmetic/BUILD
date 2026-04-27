@@ -5,6 +5,5 @@ _targets = [
         name = "arithmetic",
         srcs = ["lib/**/*.rb", "test/**/*.rb"],
         deps = [],
-        test_runner = "minitest",
     ),
 ]

@@ -47,7 +47,6 @@ def go_library(name, srcs = [], deps = []):
     # (go.mod). There's no test_runner parameter to choose between frameworks.
     #
     # The build tool will run these commands for a go_library target:
-    #     go build ./...        — compile all packages
     #     go vet ./...           — static analysis (catches common mistakes)
     #     go test ./... -v -cover — run tests with verbose output and coverage
     #
@@ -74,11 +73,6 @@ def go_library(name, srcs = [], deps = []):
     #           have "go/transistors" in deps so the build tool knows about
     #           the relationship.
     return {
-        # "go_library" tells the build tool to use Go-specific build logic:
-        #   - No virtual environment or package installation step
-        #   - Runs go vet for linting (required by repo standards)
-        #   - Runs go test for testing
-        #   - Coverage is built into go test via the -cover flag
         "rule": "go_library",
         "name": name,
         "srcs": srcs,
