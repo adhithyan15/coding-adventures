@@ -65,8 +65,10 @@ from collections.abc import Callable
 from typing import Any
 
 from interpreter_ir import IIRModule
+from interpreter_ir.function import IIRFunction
 
 from vm_core.builtins import BuiltinRegistry
+from vm_core.debug import DebugHooks, StepMode
 from vm_core.dispatch import STANDARD_OPCODES, run_dispatch_loop
 from vm_core.frame import VMFrame
 from vm_core.metrics import BranchStats, VMMetrics
@@ -157,6 +159,37 @@ class VMCore:
         # path so no overhead is paid.  Set transiently by
         # :meth:`execute_traced` for the duration of one run.
         self._tracer: VMTracer | None = None
+
+        # ------------------------------------------------------------------
+        # LANG06 debug state — all fields are None / False / empty when debug
+        # mode is inactive so the dispatch loop pays zero overhead.
+        # ``_debug_mode`` is the master gate: it is True iff a DebugHooks
+        # instance is currently attached.  The dispatch loop checks only this
+        # flag before calling ``_check_debug_pause``.
+        # ------------------------------------------------------------------
+
+        # The attached debug adapter.  None means debug mode is off.
+        self._debug_hooks: DebugHooks | None = None
+
+        # Convenient alias so the dispatch loop avoids an is-not-None test.
+        self._debug_mode: bool = False
+
+        # True when the dispatch loop should pause at the next instruction.
+        # Set by ``pause()`` and cleared by the dispatch loop after
+        # ``on_instruction`` returns.
+        self._paused: bool = False
+
+        # Step granularity requested by the most recent step call.
+        self._step_mode: StepMode | None = None
+
+        # Frame-stack depth at which a step_over / step_out was requested.
+        # The dispatch loop uses this to decide whether to pause.
+        self._step_frame_depth: int = 0
+
+        # Breakpoints: {fn_name: {instr_idx: condition_expr_or_None}}
+        # condition_expr is a source-level expression string evaluated over
+        # the frame's register file.  None means unconditional.
+        self._breakpoints: dict[str, dict[int, str | None]] = {}
 
     # ------------------------------------------------------------------
     # Public API
@@ -400,6 +433,207 @@ class VMCore:
         self._interrupted = False
         self._memory = {}
         self._io_ports = {}
+
+    # ------------------------------------------------------------------
+    # LANG06 debug API
+    # ------------------------------------------------------------------
+
+    def attach_debug_hooks(self, hooks: DebugHooks) -> None:
+        """Attach a debug adapter and enter debug mode.
+
+        While debug hooks are attached:
+        - ``is_debug_mode()`` returns True.
+        - The dispatch loop fires ``hooks.on_instruction`` whenever the VM
+          pauses (breakpoint hit or step mode).
+        - ``hooks.on_call`` fires before every CALL pushes a new frame.
+        - ``hooks.on_return`` fires after every RET pops a frame.
+        - JIT handlers should not be registered — check ``is_debug_mode()``
+          before calling ``register_jit_handler`` in the JIT tier.
+
+        Calling this with a new hooks object replaces the previous adapter.
+
+        Parameters
+        ----------
+        hooks:
+            A ``DebugHooks`` instance (or subclass).
+        """
+        self._debug_hooks = hooks
+        self._debug_mode = True
+
+    def detach_debug_hooks(self) -> None:
+        """Remove the debug adapter and exit debug mode.
+
+        After this call, ``is_debug_mode()`` returns False and the dispatch
+        loop resumes zero-overhead execution.
+        """
+        self._debug_hooks = None
+        self._debug_mode = False
+        self._paused = False
+        self._step_mode = None
+
+    def is_debug_mode(self) -> bool:
+        """Return True when a debug adapter is attached.
+
+        JIT tiers should consult this before registering JIT handlers::
+
+            if not vm.is_debug_mode():
+                jit.compile_and_register(fn_name)
+
+        This ensures that all functions remain interpreted while debugging
+        so that ``on_instruction`` fires for every instruction.
+        """
+        return self._debug_mode
+
+    def pause(self) -> None:
+        """Request the dispatch loop to pause before the next instruction.
+
+        Safe to call from inside ``on_instruction`` (to stay paused) or from
+        a signal handler / other thread.  The current instruction completes
+        before the pause takes effect.
+
+        The pause is delivered by firing ``on_instruction`` before the next
+        IIR instruction is dispatched.
+        """
+        self._paused = True
+        self._step_mode = None
+
+    def step_in(self) -> None:
+        """Resume and pause before the very next IIR instruction dispatched.
+
+        Steps into called functions — the finest stepping granularity.
+        Equivalent to the DAP ``stepIn`` request.
+        """
+        self._paused = False
+        self._step_mode = StepMode.IN
+
+    def step_over(self) -> None:
+        """Resume and pause at the next instruction in the current or an outer frame.
+
+        Skips the internals of any function called between now and the next
+        instruction at the current call-stack depth.
+        Equivalent to the DAP ``next`` (step-over) request.
+        """
+        self._paused = False
+        self._step_mode = StepMode.OVER
+        self._step_frame_depth = len(self._frames)
+
+    def step_out(self) -> None:
+        """Resume and pause at the instruction after the current frame returns.
+
+        Runs the rest of the current function and pauses at the return site
+        in the caller.  Equivalent to the DAP ``stepOut`` request.
+        """
+        self._paused = False
+        self._step_mode = StepMode.OUT
+        self._step_frame_depth = len(self._frames)
+
+    def continue_(self) -> None:
+        """Resume execution until the next breakpoint or end of program.
+
+        Clears any pending pause or step mode.  Equivalent to the DAP
+        ``continue`` request.
+        """
+        self._paused = False
+        self._step_mode = None
+
+    def set_breakpoint(
+        self,
+        instr_idx: int,
+        fn_name: str,
+        condition: str | None = None,
+    ) -> None:
+        """Register a breakpoint at ``instr_idx`` in ``fn_name``.
+
+        The dispatch loop checks registered breakpoints before every
+        instruction (when debug mode is on).  When the instruction pointer
+        matches, ``on_instruction`` is called.
+
+        To convert a source line number to an instruction index, use::
+
+            from debug_sidecar import DebugSidecarReader
+            reader = DebugSidecarReader(sidecar_bytes)
+            idx = reader.find_instr("myprogram.tetrad", line=42)
+            vm.set_breakpoint(idx, "main")
+
+        Parameters
+        ----------
+        instr_idx:
+            0-based IIR instruction index within ``fn_name``'s body.
+        fn_name:
+            Function name (must match the ``IIRFunction.name``).
+        condition:
+            Optional condition expression (source-level string).  The
+            breakpoint only fires when the expression evaluates to a truthy
+            value over the current frame's register file.  Pass ``None`` for
+            an unconditional breakpoint.
+        """
+        if fn_name not in self._breakpoints:
+            self._breakpoints[fn_name] = {}
+        self._breakpoints[fn_name][instr_idx] = condition
+
+    def clear_breakpoint(self, instr_idx: int, fn_name: str) -> None:
+        """Remove the breakpoint at ``instr_idx`` in ``fn_name``.
+
+        No-op if the breakpoint does not exist.
+        """
+        fn_bps = self._breakpoints.get(fn_name)
+        if fn_bps is not None:
+            fn_bps.pop(instr_idx, None)
+            if not fn_bps:
+                del self._breakpoints[fn_name]
+
+    def call_stack(self) -> list[VMFrame]:
+        """Return a copy of the current call stack, outermost frame first.
+
+        The returned list is a shallow copy of the live frame stack — it is
+        safe to inspect but mutating it has no effect on the running VM.
+
+        Each frame exposes:
+        - ``frame.fn.name``      — function name
+        - ``frame.ip``           — next instruction index (already advanced)
+        - ``frame.registers``    — the register file (live values)
+        - ``frame.name_to_reg``  — variable name → register index mapping
+
+        Use ``frame.ip - 1`` to get the index of the instruction that was
+        last dispatched (the one that caused the pause).
+        """
+        return list(self._frames)
+
+    def patch_function(self, fn_name: str, new_fn: IIRFunction) -> None:
+        """Hot-swap ``fn_name`` with a new ``IIRFunction`` in the running module.
+
+        Replaces the function definition in the current module so that
+        subsequent CALL instructions targeting ``fn_name`` execute the new
+        body.  Frames currently on the call stack that are executing the
+        *old* function body are not affected — they continue running to
+        completion.
+
+        This supports live editing while paused at a breakpoint.  If the new
+        function has a different register count or parameter list, the
+        behaviour is undefined for any frame that was already mid-execution
+        on the old body.
+
+        Raises
+        ------
+        KeyError:
+            If no module is currently loaded or if ``fn_name`` does not
+            exist in the current module.
+        RuntimeError:
+            If called outside of a paused debug session (i.e. not from
+            inside an ``on_instruction`` callback or after ``pause()`` has
+            been called).
+        """
+        if self._module is None:
+            raise KeyError("no module is currently loaded")
+        existing = self._module.get_function(fn_name)
+        if existing is None:
+            raise KeyError(f"function {fn_name!r} not found in current module")
+        # IIRModule stores functions in a list; find and replace by name.
+        for i, fn in enumerate(self._module.functions):
+            if fn.name == fn_name:
+                self._module.functions[i] = new_fn
+                return
+        raise KeyError(f"function {fn_name!r} not found in module function list")
 
     # ------------------------------------------------------------------
     # Properties — read-only access to internal state for tooling

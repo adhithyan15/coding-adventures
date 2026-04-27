@@ -42,7 +42,7 @@ from interpreter_ir import IIRModule, SlotKind, SlotState
 from jit_core import JITCore
 from tetrad_compiler import compile_program
 from tetrad_compiler.bytecode import CodeObject
-from vm_core import BranchStats, VMCore, VMTrace
+from vm_core import BranchStats, DebugHooks, VMCore, VMTrace
 
 from tetrad_runtime.iir_translator import (
     TETRAD_OPCODE_EXTENSIONS,
@@ -115,6 +115,9 @@ class TetradRuntime:
         # ``globals_snapshot`` can read vm._memory.  A fresh VM is created
         # for each ``run()`` to prevent cross-run state leakage.
         self._last_vm: VMCore | None = None
+        # The most-recent DebugSidecar bytes produced by ``compile_with_debug``.
+        # ``None`` until the first debug compilation.
+        self._last_sidecar: bytes | None = None
 
     # ------------------------------------------------------------------
     # Public entry points
@@ -176,6 +179,107 @@ class TetradRuntime:
         """
         module = code_object_to_iir(code)
         return self.run_module(module)
+
+    def compile_with_debug(
+        self,
+        source: str,
+        source_path: str,
+    ) -> tuple[IIRModule, bytes]:
+        """Compile ``source`` and produce a ``DebugSidecar`` alongside the module.
+
+        This is the debug-aware companion to ``compile_to_iir``.  It performs
+        the same Tetrad → IIR translation and additionally builds a sidecar
+        that maps every IIR instruction index in every function back to the
+        original Tetrad source line and column.
+
+        The sidecar bytes can be passed directly to
+        ``debug_sidecar.DebugSidecarReader`` to answer:
+
+        - ``reader.lookup(fn_name, iir_ip)``  → ``SourceLocation``
+        - ``reader.find_instr(source_path, line)``  → ``int | None`` (IIR index)
+        - ``reader.live_variables(fn_name, iir_ip)``  → ``list[Variable]``
+
+        Parameters
+        ----------
+        source:
+            Raw Tetrad source code.
+        source_path:
+            Path to the Tetrad source file — stored verbatim in the sidecar
+            and used by ``find_instr`` when the debugger resolves a breakpoint
+            by source file + line number.
+
+        Returns
+        -------
+        tuple[IIRModule, bytes]
+            ``(module, sidecar_bytes)`` — the module is identical to what
+            ``compile_to_iir(source)`` would produce; ``sidecar_bytes`` is
+            the freshly built DebugSidecar.
+        """
+        from tetrad_runtime.sidecar_builder import code_object_to_iir_with_sidecar
+
+        code = compile_program(source)
+        module, sidecar = code_object_to_iir_with_sidecar(code, source_path)
+        self.last_module = module
+        self._last_sidecar = sidecar
+        return module, sidecar
+
+    def run_with_debug(
+        self,
+        source: str,
+        source_path: str,
+        *,
+        hooks: DebugHooks | None = None,
+        breakpoints: dict[str, list[int]] | None = None,
+    ) -> Any:
+        """Compile and execute ``source`` with optional debug hooks and breakpoints.
+
+        This combines ``compile_with_debug`` + ``run_module`` in one call,
+        wiring up a debug adapter before execution begins.
+
+        The typical workflow for a debug session:
+
+        1. Build the sidecar via ``compile_with_debug`` (or use this method
+           directly).
+        2. Resolve source-line breakpoints to IIR indices via
+           ``DebugSidecarReader.find_instr(source_path, line)``.
+        3. Pass those indices as ``breakpoints`` here.
+        4. Subclass ``DebugHooks`` and pass an instance as ``hooks``.
+        5. In ``on_instruction`` inspect ``frame.ip`` — look up the source
+           location with ``reader.lookup(frame.fn.name, frame.ip)``.
+
+        Parameters
+        ----------
+        source:
+            Raw Tetrad source code.
+        source_path:
+            Path to the Tetrad source file.  Passed to ``compile_with_debug``.
+        hooks:
+            Optional ``DebugHooks`` subclass.  If provided, it is attached to
+            the VM before execution so ``on_instruction``, ``on_call``,
+            ``on_return``, and ``on_exception`` fire at the appropriate points.
+        breakpoints:
+            Optional pre-set breakpoints.  Maps function name → list of IIR
+            instruction indices at which to pause.  Resolve source-line
+            breakpoints to IIR indices first via ``DebugSidecarReader``.
+
+        Returns
+        -------
+        Any
+            Same return value as ``run(source)``.
+        """
+        module, _sidecar = self.compile_with_debug(source, source_path)
+        vm = self._make_vm()
+        self._last_vm = vm
+
+        if hooks is not None:
+            vm.attach_debug_hooks(hooks)
+
+        if breakpoints:
+            for fn_name, indices in breakpoints.items():
+                for idx in indices:
+                    vm.set_breakpoint(idx, fn_name)
+
+        return vm.execute(module, fn=module.entry_point or "main")
 
     # ------------------------------------------------------------------
     # Public introspection
