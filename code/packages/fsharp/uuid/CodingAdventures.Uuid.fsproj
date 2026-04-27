@@ -9,6 +9,9 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="../csprng/CodingAdventures.Csprng.fsproj" />
+    <ProjectReference Include="../md5/CodingAdventures.Md5.fsproj" />
+    <ProjectReference Include="../sha1/CodingAdventures.Sha1.fsproj" />
     <Compile Include="Uuid.fs" />
   </ItemGroup>
 </Project>
