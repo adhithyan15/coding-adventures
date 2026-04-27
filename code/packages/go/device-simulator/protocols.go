@@ -127,13 +127,9 @@ type GlobalMemoryStats struct {
 
 // UpdateEfficiency recalculates coalescing efficiency from current counts.
 func (s *GlobalMemoryStats) UpdateEfficiency() {
-	_, _ = StartNew[struct{}]("device-simulator.GlobalMemoryStats.UpdateEfficiency", struct{}{},
-		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
-			if s.TotalTransactions > 0 {
-				s.CoalescingEfficiency = float64(s.TotalRequests) / float64(s.TotalTransactions)
-			}
-			return rf.Generate(true, false, struct{}{})
-		}).GetResult()
+	if s.TotalTransactions > 0 {
+		s.CoalescingEfficiency = float64(s.TotalRequests) / float64(s.TotalTransactions)
+	}
 }
 
 // =========================================================================
@@ -192,45 +188,29 @@ type KernelDescriptor struct {
 
 // DefaultKernelDescriptor creates a KernelDescriptor with sensible defaults.
 func DefaultKernelDescriptor() KernelDescriptor {
-	result, _ := StartNew[KernelDescriptor]("device-simulator.DefaultKernelDescriptor", KernelDescriptor{},
-		func(op *Operation[KernelDescriptor], rf *ResultFactory[KernelDescriptor]) *OperationResult[KernelDescriptor] {
-			return rf.Generate(true, false, KernelDescriptor{
-				Name:               "unnamed",
-				GridDim:            [3]int{1, 1, 1},
-				BlockDim:           [3]int{32, 1, 1},
-				RegistersPerThread: 32,
-			})
-		}).GetResult()
-	return result
+	return KernelDescriptor{
+		Name:               "unnamed",
+		GridDim:            [3]int{1, 1, 1},
+		BlockDim:           [3]int{32, 1, 1},
+		RegistersPerThread: 32,
+	}
 }
 
 // TotalThreads returns the total number of threads across all blocks.
 func (k KernelDescriptor) TotalThreads() int {
-	result, _ := StartNew[int]("device-simulator.KernelDescriptor.TotalThreads", 0,
-		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
-			gx, gy, gz := k.GridDim[0], k.GridDim[1], k.GridDim[2]
-			bx, by, bz := k.BlockDim[0], k.BlockDim[1], k.BlockDim[2]
-			return rf.Generate(true, false, gx*gy*gz*bx*by*bz)
-		}).GetResult()
-	return result
+	gx, gy, gz := k.GridDim[0], k.GridDim[1], k.GridDim[2]
+	bx, by, bz := k.BlockDim[0], k.BlockDim[1], k.BlockDim[2]
+	return gx * gy * gz * bx * by * bz
 }
 
 // TotalBlocks returns the total number of thread blocks in the grid.
 func (k KernelDescriptor) TotalBlocks() int {
-	result, _ := StartNew[int]("device-simulator.KernelDescriptor.TotalBlocks", 0,
-		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
-			return rf.Generate(true, false, k.GridDim[0]*k.GridDim[1]*k.GridDim[2])
-		}).GetResult()
-	return result
+	return k.GridDim[0] * k.GridDim[1] * k.GridDim[2]
 }
 
 // ThreadsPerBlock returns the number of threads in each block.
 func (k KernelDescriptor) ThreadsPerBlock() int {
-	result, _ := StartNew[int]("device-simulator.KernelDescriptor.ThreadsPerBlock", 0,
-		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
-			return rf.Generate(true, false, k.BlockDim[0]*k.BlockDim[1]*k.BlockDim[2])
-		}).GetResult()
-	return result
+	return k.BlockDim[0] * k.BlockDim[1] * k.BlockDim[2]
 }
 
 // =========================================================================
@@ -291,28 +271,24 @@ type DeviceConfig struct {
 
 // DefaultDeviceConfig returns a DeviceConfig with sensible defaults.
 func DefaultDeviceConfig() DeviceConfig {
-	result, _ := StartNew[DeviceConfig]("device-simulator.DefaultDeviceConfig", DeviceConfig{},
-		func(op *Operation[DeviceConfig], rf *ResultFactory[DeviceConfig]) *OperationResult[DeviceConfig] {
-			return rf.Generate(true, false, DeviceConfig{
-				Name:                   "Generic Accelerator",
-				Architecture:           "generic",
-				NumComputeUnits:        4,
-				L2CacheSize:            4 * 1024 * 1024,
-				L2CacheLatency:         200,
-				L2CacheAssociativity:   16,
-				L2CacheLineSize:        128,
-				GlobalMemorySize:       16 * 1024 * 1024,
-				GlobalMemoryBandwidth:  1000.0,
-				GlobalMemoryLatency:    400,
-				MemoryChannels:         8,
-				HostBandwidth:          64.0,
-				HostLatency:            1000,
-				UnifiedMemory:          false,
-				MaxConcurrentKernels:   1,
-				WorkDistributionPolicy: "round_robin",
-			})
-		}).GetResult()
-	return result
+	return DeviceConfig{
+		Name:                   "Generic Accelerator",
+		Architecture:           "generic",
+		NumComputeUnits:        4,
+		L2CacheSize:            4 * 1024 * 1024,
+		L2CacheLatency:         200,
+		L2CacheAssociativity:   16,
+		L2CacheLineSize:        128,
+		GlobalMemorySize:       16 * 1024 * 1024,
+		GlobalMemoryBandwidth:  1000.0,
+		GlobalMemoryLatency:    400,
+		MemoryChannels:         8,
+		HostBandwidth:          64.0,
+		HostLatency:            1000,
+		UnifiedMemory:          false,
+		MaxConcurrentKernels:   1,
+		WorkDistributionPolicy: "round_robin",
+	}
 }
 
 // =========================================================================
@@ -331,14 +307,10 @@ type ShaderEngineConfig struct {
 
 // DefaultShaderEngineConfig returns defaults for AMD Shader Engine config.
 func DefaultShaderEngineConfig() ShaderEngineConfig {
-	result, _ := StartNew[ShaderEngineConfig]("device-simulator.DefaultShaderEngineConfig", ShaderEngineConfig{},
-		func(op *Operation[ShaderEngineConfig], rf *ResultFactory[ShaderEngineConfig]) *OperationResult[ShaderEngineConfig] {
-			return rf.Generate(true, false, ShaderEngineConfig{
-				CUsPerEngine: 16,
-				SharedL1Size: 32 * 1024,
-			})
-		}).GetResult()
-	return result
+	return ShaderEngineConfig{
+		CUsPerEngine: 16,
+		SharedL1Size: 32 * 1024,
+	}
 }
 
 // AmdGPUConfig is the AMD-specific config with Shader Engine hierarchy.
@@ -359,14 +331,10 @@ type XeSliceConfig struct {
 
 // DefaultXeSliceConfig returns defaults for Intel Xe-Slice config.
 func DefaultXeSliceConfig() XeSliceConfig {
-	result, _ := StartNew[XeSliceConfig]("device-simulator.DefaultXeSliceConfig", XeSliceConfig{},
-		func(op *Operation[XeSliceConfig], rf *ResultFactory[XeSliceConfig]) *OperationResult[XeSliceConfig] {
-			return rf.Generate(true, false, XeSliceConfig{
-				XeCoresPerSlice: 4,
-				L1CachePerSlice: 192 * 1024,
-			})
-		}).GetResult()
-	return result
+	return XeSliceConfig{
+		XeCoresPerSlice: 4,
+		L1CachePerSlice: 192 * 1024,
+	}
 }
 
 // IntelGPUConfig is Intel-specific config with Xe-Slice hierarchy.
@@ -416,155 +384,135 @@ type ANEConfig struct {
 
 // DefaultNvidiaConfig returns an H100-like configuration (scaled down for simulation).
 func DefaultNvidiaConfig() DeviceConfig {
-	result, _ := StartNew[DeviceConfig]("device-simulator.DefaultNvidiaConfig", DeviceConfig{},
-		func(op *Operation[DeviceConfig], rf *ResultFactory[DeviceConfig]) *OperationResult[DeviceConfig] {
-			return rf.Generate(true, false, DeviceConfig{
-				Name:                   "NVIDIA H100",
-				Architecture:           "nvidia_sm",
-				NumComputeUnits:        132,
-				L2CacheSize:            50 * 1024 * 1024,
-				L2CacheLatency:         200,
-				L2CacheAssociativity:   32,
-				L2CacheLineSize:        128,
-				GlobalMemorySize:       80 * 1024 * 1024,
-				GlobalMemoryBandwidth:  3350.0,
-				GlobalMemoryLatency:    400,
-				MemoryChannels:         8,
-				HostBandwidth:          64.0,
-				HostLatency:            1000,
-				UnifiedMemory:          false,
-				MaxConcurrentKernels:   128,
-				WorkDistributionPolicy: "round_robin",
-			})
-		}).GetResult()
-	return result
+	return DeviceConfig{
+		Name:                   "NVIDIA H100",
+		Architecture:           "nvidia_sm",
+		NumComputeUnits:        132,
+		L2CacheSize:            50 * 1024 * 1024,
+		L2CacheLatency:         200,
+		L2CacheAssociativity:   32,
+		L2CacheLineSize:        128,
+		GlobalMemorySize:       80 * 1024 * 1024,
+		GlobalMemoryBandwidth:  3350.0,
+		GlobalMemoryLatency:    400,
+		MemoryChannels:         8,
+		HostBandwidth:          64.0,
+		HostLatency:            1000,
+		UnifiedMemory:          false,
+		MaxConcurrentKernels:   128,
+		WorkDistributionPolicy: "round_robin",
+	}
 }
 
 // DefaultAmdConfig returns an RX 7900 XTX-like configuration.
 func DefaultAmdConfig() AmdGPUConfig {
-	result, _ := StartNew[AmdGPUConfig]("device-simulator.DefaultAmdConfig", AmdGPUConfig{},
-		func(op *Operation[AmdGPUConfig], rf *ResultFactory[AmdGPUConfig]) *OperationResult[AmdGPUConfig] {
-			return rf.Generate(true, false, AmdGPUConfig{
-				DeviceConfig: DeviceConfig{
-					Name:                   "AMD RX 7900 XTX",
-					Architecture:           "amd_cu",
-					NumComputeUnits:        96,
-					L2CacheSize:            6 * 1024 * 1024,
-					L2CacheLatency:         150,
-					L2CacheAssociativity:   16,
-					L2CacheLineSize:        128,
-					GlobalMemorySize:       24 * 1024 * 1024,
-					GlobalMemoryBandwidth:  960.0,
-					GlobalMemoryLatency:    350,
-					MemoryChannels:         6,
-					HostBandwidth:          32.0,
-					HostLatency:            1000,
-					UnifiedMemory:          false,
-					MaxConcurrentKernels:   8,
-					WorkDistributionPolicy: "round_robin",
-				},
-				NumShaderEngines:     6,
-				SEConfig:             DefaultShaderEngineConfig(),
-				InfinityCacheSize:    96 * 1024 * 1024,
-				InfinityCacheLatency: 50,
-				NumACEs:              4,
-			})
-		}).GetResult()
-	return result
+	return AmdGPUConfig{
+		DeviceConfig: DeviceConfig{
+			Name:                   "AMD RX 7900 XTX",
+			Architecture:           "amd_cu",
+			NumComputeUnits:        96,
+			L2CacheSize:            6 * 1024 * 1024,
+			L2CacheLatency:         150,
+			L2CacheAssociativity:   16,
+			L2CacheLineSize:        128,
+			GlobalMemorySize:       24 * 1024 * 1024,
+			GlobalMemoryBandwidth:  960.0,
+			GlobalMemoryLatency:    350,
+			MemoryChannels:         6,
+			HostBandwidth:          32.0,
+			HostLatency:            1000,
+			UnifiedMemory:          false,
+			MaxConcurrentKernels:   8,
+			WorkDistributionPolicy: "round_robin",
+		},
+		NumShaderEngines:     6,
+		SEConfig:             DefaultShaderEngineConfig(),
+		InfinityCacheSize:    96 * 1024 * 1024,
+		InfinityCacheLatency: 50,
+		NumACEs:              4,
+	}
 }
 
 // DefaultTPUConfig returns a TPU v4-like configuration.
 func DefaultTPUConfig() TPUConfig {
-	result, _ := StartNew[TPUConfig]("device-simulator.DefaultTPUConfig", TPUConfig{},
-		func(op *Operation[TPUConfig], rf *ResultFactory[TPUConfig]) *OperationResult[TPUConfig] {
-			return rf.Generate(true, false, TPUConfig{
-				DeviceConfig: DeviceConfig{
-					Name:                   "Google TPU v4",
-					Architecture:           "google_mxu",
-					NumComputeUnits:        1,
-					L2CacheSize:            0,
-					L2CacheLatency:         0,
-					L2CacheAssociativity:   0,
-					L2CacheLineSize:        128,
-					GlobalMemorySize:       32 * 1024 * 1024,
-					GlobalMemoryBandwidth:  1200.0,
-					GlobalMemoryLatency:    300,
-					MemoryChannels:         4,
-					HostBandwidth:          500.0,
-					HostLatency:            500,
-					UnifiedMemory:          false,
-					MaxConcurrentKernels:   1,
-					WorkDistributionPolicy: "sequential",
-				},
-				VectorUnitWidth: 128,
-				ScalarRegisters: 32,
-				TransposeUnit:   true,
-			})
-		}).GetResult()
-	return result
+	return TPUConfig{
+		DeviceConfig: DeviceConfig{
+			Name:                   "Google TPU v4",
+			Architecture:           "google_mxu",
+			NumComputeUnits:        1,
+			L2CacheSize:            0,
+			L2CacheLatency:         0,
+			L2CacheAssociativity:   0,
+			L2CacheLineSize:        128,
+			GlobalMemorySize:       32 * 1024 * 1024,
+			GlobalMemoryBandwidth:  1200.0,
+			GlobalMemoryLatency:    300,
+			MemoryChannels:         4,
+			HostBandwidth:          500.0,
+			HostLatency:            500,
+			UnifiedMemory:          false,
+			MaxConcurrentKernels:   1,
+			WorkDistributionPolicy: "sequential",
+		},
+		VectorUnitWidth: 128,
+		ScalarRegisters: 32,
+		TransposeUnit:   true,
+	}
 }
 
 // DefaultIntelConfig returns an Arc A770-like configuration.
 func DefaultIntelConfig() IntelGPUConfig {
-	result, _ := StartNew[IntelGPUConfig]("device-simulator.DefaultIntelConfig", IntelGPUConfig{},
-		func(op *Operation[IntelGPUConfig], rf *ResultFactory[IntelGPUConfig]) *OperationResult[IntelGPUConfig] {
-			return rf.Generate(true, false, IntelGPUConfig{
-				DeviceConfig: DeviceConfig{
-					Name:                   "Intel Arc A770",
-					Architecture:           "intel_xe_core",
-					NumComputeUnits:        32,
-					L2CacheSize:            16 * 1024 * 1024,
-					L2CacheLatency:         180,
-					L2CacheAssociativity:   16,
-					L2CacheLineSize:        128,
-					GlobalMemorySize:       16 * 1024 * 1024,
-					GlobalMemoryBandwidth:  512.0,
-					GlobalMemoryLatency:    350,
-					MemoryChannels:         4,
-					HostBandwidth:          32.0,
-					HostLatency:            1000,
-					UnifiedMemory:          false,
-					MaxConcurrentKernels:   16,
-					WorkDistributionPolicy: "round_robin",
-				},
-				NumXeSlices: 8,
-				SliceConfig: DefaultXeSliceConfig(),
-			})
-		}).GetResult()
-	return result
+	return IntelGPUConfig{
+		DeviceConfig: DeviceConfig{
+			Name:                   "Intel Arc A770",
+			Architecture:           "intel_xe_core",
+			NumComputeUnits:        32,
+			L2CacheSize:            16 * 1024 * 1024,
+			L2CacheLatency:         180,
+			L2CacheAssociativity:   16,
+			L2CacheLineSize:        128,
+			GlobalMemorySize:       16 * 1024 * 1024,
+			GlobalMemoryBandwidth:  512.0,
+			GlobalMemoryLatency:    350,
+			MemoryChannels:         4,
+			HostBandwidth:          32.0,
+			HostLatency:            1000,
+			UnifiedMemory:          false,
+			MaxConcurrentKernels:   16,
+			WorkDistributionPolicy: "round_robin",
+		},
+		NumXeSlices: 8,
+		SliceConfig: DefaultXeSliceConfig(),
+	}
 }
 
 // DefaultAppleConfig returns an M3 Max ANE-like configuration.
 func DefaultAppleConfig() ANEConfig {
-	result, _ := StartNew[ANEConfig]("device-simulator.DefaultAppleConfig", ANEConfig{},
-		func(op *Operation[ANEConfig], rf *ResultFactory[ANEConfig]) *OperationResult[ANEConfig] {
-			return rf.Generate(true, false, ANEConfig{
-				DeviceConfig: DeviceConfig{
-					Name:                   "Apple M3 Max ANE",
-					Architecture:           "apple_ane_core",
-					NumComputeUnits:        16,
-					L2CacheSize:            0,
-					L2CacheLatency:         0,
-					L2CacheAssociativity:   0,
-					L2CacheLineSize:        128,
-					GlobalMemorySize:       128 * 1024 * 1024,
-					GlobalMemoryBandwidth:  200.0,
-					GlobalMemoryLatency:    100,
-					MemoryChannels:         8,
-					HostBandwidth:          200.0,
-					HostLatency:            0,
-					UnifiedMemory:          true,
-					MaxConcurrentKernels:   1,
-					WorkDistributionPolicy: "scheduled",
-				},
-				SharedSRAMSize: 32 * 1024 * 1024,
-				SRAMBandwidth:  1000.0,
-				SRAMLatency:    5,
-				DMAChannels:    4,
-				DMABandwidth:   100.0,
-			})
-		}).GetResult()
-	return result
+	return ANEConfig{
+		DeviceConfig: DeviceConfig{
+			Name:                   "Apple M3 Max ANE",
+			Architecture:           "apple_ane_core",
+			NumComputeUnits:        16,
+			L2CacheSize:            0,
+			L2CacheLatency:         0,
+			L2CacheAssociativity:   0,
+			L2CacheLineSize:        128,
+			GlobalMemorySize:       128 * 1024 * 1024,
+			GlobalMemoryBandwidth:  200.0,
+			GlobalMemoryLatency:    100,
+			MemoryChannels:         8,
+			HostBandwidth:          200.0,
+			HostLatency:            0,
+			UnifiedMemory:          true,
+			MaxConcurrentKernels:   1,
+			WorkDistributionPolicy: "scheduled",
+		},
+		SharedSRAMSize: 32 * 1024 * 1024,
+		SRAMBandwidth:  1000.0,
+		SRAMLatency:    5,
+		DMAChannels:    4,
+		DMABandwidth:   100.0,
+	}
 }
 
 // =========================================================================
@@ -617,38 +565,32 @@ type DeviceTrace struct {
 //	  Memory: 8 transactions, 45.2% bandwidth
 //	  Active warps: 4234
 func (t DeviceTrace) Format() string {
-	result, _ := StartNew[string]("device-simulator.DeviceTrace.Format", "",
-		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
-			op.AddProperty("cycle", t.Cycle)
-			op.AddProperty("device", t.DeviceName)
-			lines := []string{
-				fmt.Sprintf("[Cycle %d] %s -- %.1f%% occupancy",
-					t.Cycle, t.DeviceName, t.DeviceOccupancy*100),
-			}
+	lines := []string{
+		fmt.Sprintf("[Cycle %d] %s -- %.1f%% occupancy",
+			t.Cycle, t.DeviceName, t.DeviceOccupancy*100),
+	}
 
-			if len(t.DistributorActions) > 0 {
-				actionsStr := strings.Join(t.DistributorActions, ", ")
-				lines = append(lines, fmt.Sprintf("  Distributor: %s", actionsStr))
-			}
+	if len(t.DistributorActions) > 0 {
+		actionsStr := strings.Join(t.DistributorActions, ", ")
+		lines = append(lines, fmt.Sprintf("  Distributor: %s", actionsStr))
+	}
 
-			lines = append(lines, fmt.Sprintf("  Pending: %d blocks, Active: %d blocks",
-				t.PendingBlocks, t.ActiveBlocks))
+	lines = append(lines, fmt.Sprintf("  Pending: %d blocks, Active: %d blocks",
+		t.PendingBlocks, t.ActiveBlocks))
 
-			totalL2 := t.L2Hits + t.L2Misses
-			if totalL2 > 0 {
-				hitRate := float64(t.L2Hits) / float64(totalL2) * 100
-				lines = append(lines, fmt.Sprintf("  L2: %d hits, %d misses (%.1f%% hit rate)",
-					t.L2Hits, t.L2Misses, hitRate))
-			}
+	totalL2 := t.L2Hits + t.L2Misses
+	if totalL2 > 0 {
+		hitRate := float64(t.L2Hits) / float64(totalL2) * 100
+		lines = append(lines, fmt.Sprintf("  L2: %d hits, %d misses (%.1f%% hit rate)",
+			t.L2Hits, t.L2Misses, hitRate))
+	}
 
-			lines = append(lines, fmt.Sprintf("  Memory: %d transactions, %.1f%% bandwidth",
-				t.MemoryTransactions, t.MemoryBandwidthUsed*100))
+	lines = append(lines, fmt.Sprintf("  Memory: %d transactions, %.1f%% bandwidth",
+		t.MemoryTransactions, t.MemoryBandwidthUsed*100))
 
-			lines = append(lines, fmt.Sprintf("  Active warps: %d", t.TotalActiveWarps))
+	lines = append(lines, fmt.Sprintf("  Active warps: %d", t.TotalActiveWarps))
 
-			return rf.Generate(true, false, strings.Join(lines, "\n"))
-		}).GetResult()
-	return result
+	return strings.Join(lines, "\n")
 }
 
 // =========================================================================

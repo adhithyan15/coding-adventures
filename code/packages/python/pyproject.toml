@@ -34,30 +34,6 @@ members = [
     "parallel-execution-engine",
     "compute-unit",
     "device-simulator",
-    "cache",
-    "compute-runtime",
-    "rom-bios",
-    "vendor-api-simulators",
-    "blas-library",
-    "ml-framework-core",
-    "ml-framework-torch",
-    "ml-framework-keras",
-    "ml-framework-tf",
-    "graph",
-    "heap",
-    "fenwick-tree",
-    "trie",
-    "hash-functions",
-    "hash-map",
-    "resp-protocol",
-    "skip-list",
-    "hyperloglog",
-    "bloom-filter",
-    "tree-set",
-    "tree-set-native",
-    "tcp-server",
-    "radix-tree",
-    "simulator-protocol",
 ]
 
 [tool.uv.sources]
@@ -90,34 +66,3 @@ coding-adventures-gpu-core = { workspace = true }
 coding-adventures-parallel-execution-engine = { workspace = true }
 coding-adventures-compute-unit = { workspace = true }
 coding-adventures-device-simulator = { workspace = true }
-coding-adventures-cache = { workspace = true }
-coding-adventures-compute-runtime = { workspace = true }
-coding-adventures-rom-bios = { workspace = true }
-coding-adventures-vendor-api-simulators = { workspace = true }
-coding-adventures-blas-library = { workspace = true }
-coding-adventures-ml-framework-core = { workspace = true }
-coding-adventures-ml-framework-torch = { workspace = true }
-coding-adventures-ml-framework-keras = { workspace = true }
-coding-adventures-ml-framework-tf = { workspace = true }
-coding-adventures-graph = { workspace = true }
-coding-adventures-heap = { workspace = true }
-coding-adventures-fenwick-tree = { workspace = true }
-coding-adventures-trie = { workspace = true }
-coding-adventures-hash-functions = { workspace = true }
-coding-adventures-hash-map = { workspace = true }
-coding-adventures-resp-protocol = { workspace = true }
-coding-adventures-skip-list = { workspace = true }
-coding-adventures-hyperloglog = { workspace = true }
-coding-adventures-bloom-filter = { workspace = true }
-coding-adventures-tree-set = { workspace = true }
-coding-adventures-tree-set-native = { workspace = true }
-coding-adventures-tcp-server = { workspace = true }
-coding-adventures-radix-tree = { workspace = true }
-coding-adventures-simulator-protocol = { workspace = true }
-
-[dependency-groups]
-dev = [
-    "pytest>=9.0.2",
-    "pytest-cov>=7.0.0",
-    "ruff>=0.15.7",
-]

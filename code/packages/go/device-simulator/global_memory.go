@@ -99,68 +99,48 @@ type SimpleGlobalMemoryConfig struct {
 
 // DefaultSimpleGlobalMemoryConfig returns defaults for global memory.
 func DefaultSimpleGlobalMemoryConfig() SimpleGlobalMemoryConfig {
-	result, _ := StartNew[SimpleGlobalMemoryConfig]("device-simulator.DefaultSimpleGlobalMemoryConfig", SimpleGlobalMemoryConfig{},
-		func(op *Operation[SimpleGlobalMemoryConfig], rf *ResultFactory[SimpleGlobalMemoryConfig]) *OperationResult[SimpleGlobalMemoryConfig] {
-			return rf.Generate(true, false, SimpleGlobalMemoryConfig{
-				Capacity:        16 * 1024 * 1024,
-				Bandwidth:       1000.0,
-				Latency:         400,
-				Channels:        8,
-				TransactionSize: 128,
-				HostBandwidth:   64.0,
-				HostLatency:     1000,
-				Unified:         false,
-			})
-		}).GetResult()
-	return result
+	return SimpleGlobalMemoryConfig{
+		Capacity:        16 * 1024 * 1024,
+		Bandwidth:       1000.0,
+		Latency:         400,
+		Channels:        8,
+		TransactionSize: 128,
+		HostBandwidth:   64.0,
+		HostLatency:     1000,
+		Unified:         false,
+	}
 }
 
 // NewSimpleGlobalMemory creates a new SimpleGlobalMemory with the given config.
 func NewSimpleGlobalMemory(cfg SimpleGlobalMemoryConfig) *SimpleGlobalMemory {
-	result, _ := StartNew[*SimpleGlobalMemory]("device-simulator.NewSimpleGlobalMemory", nil,
-		func(op *Operation[*SimpleGlobalMemory], rf *ResultFactory[*SimpleGlobalMemory]) *OperationResult[*SimpleGlobalMemory] {
-			return rf.Generate(true, false, &SimpleGlobalMemory{
-				capacity:        cfg.Capacity,
-				bandwidth:       cfg.Bandwidth,
-				latency:         cfg.Latency,
-				channels:        cfg.Channels,
-				transactionSize: cfg.TransactionSize,
-				hostBandwidth:   cfg.HostBandwidth,
-				hostLatency:     cfg.HostLatency,
-				unified:         cfg.Unified,
-				data:            make(map[int]byte),
-				allocations:     make(map[int]int),
-			})
-		}).GetResult()
-	return result
+	return &SimpleGlobalMemory{
+		capacity:        cfg.Capacity,
+		bandwidth:       cfg.Bandwidth,
+		latency:         cfg.Latency,
+		channels:        cfg.Channels,
+		transactionSize: cfg.TransactionSize,
+		hostBandwidth:   cfg.HostBandwidth,
+		hostLatency:     cfg.HostLatency,
+		unified:         cfg.Unified,
+		data:            make(map[int]byte),
+		allocations:     make(map[int]int),
+	}
 }
 
 // Capacity returns the total memory in bytes.
 func (m *SimpleGlobalMemory) Capacity() int {
-	result, _ := StartNew[int]("device-simulator.SimpleGlobalMemory.Capacity", 0,
-		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
-			return rf.Generate(true, false, m.capacity)
-		}).GetResult()
-	return result
+	return m.capacity
 }
 
 // Bandwidth returns peak bandwidth in bytes per cycle.
 func (m *SimpleGlobalMemory) Bandwidth() float64 {
-	result, _ := StartNew[float64]("device-simulator.SimpleGlobalMemory.Bandwidth", 0,
-		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
-			return rf.Generate(true, false, m.bandwidth)
-		}).GetResult()
-	return result
+	return m.bandwidth
 }
 
 // Stats returns a copy of the access statistics with efficiency updated.
 func (m *SimpleGlobalMemory) Stats() GlobalMemoryStats {
-	result, _ := StartNew[GlobalMemoryStats]("device-simulator.SimpleGlobalMemory.Stats", GlobalMemoryStats{},
-		func(op *Operation[GlobalMemoryStats], rf *ResultFactory[GlobalMemoryStats]) *OperationResult[GlobalMemoryStats] {
-			m.stats.UpdateEfficiency()
-			return rf.Generate(true, false, m.stats)
-		}).GetResult()
-	return result
+	m.stats.UpdateEfficiency()
+	return m.stats
 }
 
 // =========================================================================
@@ -174,25 +154,20 @@ func (m *SimpleGlobalMemory) Stats() GlobalMemoryStats {
 //
 // Returns an error if not enough memory remains.
 func (m *SimpleGlobalMemory) Allocate(size int, alignment int) (int, error) {
-	return StartNew[int]("device-simulator.SimpleGlobalMemory.Allocate", 0,
-		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
-			op.AddProperty("size", size)
-			op.AddProperty("alignment", alignment)
-			if alignment <= 0 {
-				alignment = 256
-			}
-			// Align the next free pointer
-			aligned := (m.nextFree + alignment - 1) & ^(alignment - 1)
+	if alignment <= 0 {
+		alignment = 256
+	}
+	// Align the next free pointer
+	aligned := (m.nextFree + alignment - 1) & ^(alignment - 1)
 
-			if aligned+size > m.capacity {
-				return rf.Fail(0, fmt.Errorf("out of device memory: requested %d bytes at %d, capacity %d",
-					size, aligned, m.capacity))
-			}
+	if aligned+size > m.capacity {
+		return 0, fmt.Errorf("out of device memory: requested %d bytes at %d, capacity %d",
+			size, aligned, m.capacity)
+	}
 
-			m.allocations[aligned] = size
-			m.nextFree = aligned + size
-			return rf.Generate(true, false, aligned)
-		}).GetResult()
+	m.allocations[aligned] = size
+	m.nextFree = aligned + size
+	return aligned, nil
 }
 
 // Free releases a previous allocation.
@@ -200,12 +175,7 @@ func (m *SimpleGlobalMemory) Allocate(size int, alignment int) (int, error) {
 // Note: our simple bump allocator doesn't reclaim memory. In a real
 // implementation you'd use a more sophisticated allocator.
 func (m *SimpleGlobalMemory) Free(address int) {
-	_, _ = StartNew[struct{}]("device-simulator.SimpleGlobalMemory.Free", struct{}{},
-		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
-			op.AddProperty("address", address)
-			delete(m.allocations, address)
-			return rf.Generate(true, false, struct{}{})
-		}).GetResult()
+	delete(m.allocations, address)
 }
 
 // =========================================================================
@@ -217,49 +187,39 @@ func (m *SimpleGlobalMemory) Free(address int) {
 // Uninitialized addresses return zeros (like cudaMemset(0)).
 // Returns an error if the address is out of range.
 func (m *SimpleGlobalMemory) Read(address int, size int) ([]byte, error) {
-	return StartNew[[]byte]("device-simulator.SimpleGlobalMemory.Read", nil,
-		func(op *Operation[[]byte], rf *ResultFactory[[]byte]) *OperationResult[[]byte] {
-			op.AddProperty("address", address)
-			op.AddProperty("size", size)
-			if address < 0 || address+size > m.capacity {
-				return rf.Fail(nil, fmt.Errorf("address %d+%d out of range [0, %d)", address, size, m.capacity))
-			}
+	if address < 0 || address+size > m.capacity {
+		return nil, fmt.Errorf("address %d+%d out of range [0, %d)", address, size, m.capacity)
+	}
 
-			m.stats.TotalReads++
-			m.stats.BytesTransferred += size
+	m.stats.TotalReads++
+	m.stats.BytesTransferred += size
 
-			result := make([]byte, size)
-			for i := 0; i < size; i++ {
-				if v, ok := m.data[address+i]; ok {
-					result[i] = v
-				}
-				// else zero (default)
-			}
-			return rf.Generate(true, false, result)
-		}).GetResult()
+	result := make([]byte, size)
+	for i := 0; i < size; i++ {
+		if v, ok := m.data[address+i]; ok {
+			result[i] = v
+		}
+		// else zero (default)
+	}
+	return result, nil
 }
 
 // Write writes bytes to global memory.
 //
 // Returns an error if the address is out of range.
 func (m *SimpleGlobalMemory) Write(address int, data []byte) error {
-	_, err := StartNew[struct{}]("device-simulator.SimpleGlobalMemory.Write", struct{}{},
-		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
-			op.AddProperty("address", address)
-			size := len(data)
-			if address < 0 || address+size > m.capacity {
-				return rf.Fail(struct{}{}, fmt.Errorf("address %d+%d out of range [0, %d)", address, size, m.capacity))
-			}
+	size := len(data)
+	if address < 0 || address+size > m.capacity {
+		return fmt.Errorf("address %d+%d out of range [0, %d)", address, size, m.capacity)
+	}
 
-			m.stats.TotalWrites++
-			m.stats.BytesTransferred += size
+	m.stats.TotalWrites++
+	m.stats.BytesTransferred += size
 
-			for i, b := range data {
-				m.data[address+i] = b
-			}
-			return rf.Generate(true, false, struct{}{})
-		}).GetResult()
-	return err
+	for i, b := range data {
+		m.data[address+i] = b
+	}
+	return nil
 }
 
 // =========================================================================
@@ -275,31 +235,27 @@ func (m *SimpleGlobalMemory) Write(address int, data []byte) error {
 //
 // Returns the number of cycles consumed by the transfer.
 func (m *SimpleGlobalMemory) CopyFromHost(dstAddr int, data []byte, hostBandwidth float64) (int, error) {
-	return StartNew[int]("device-simulator.SimpleGlobalMemory.CopyFromHost", 0,
-		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
-			op.AddProperty("dstAddr", dstAddr)
-			if err := m.Write(dstAddr, data); err != nil {
-				return rf.Fail(0, err)
-			}
+	if err := m.Write(dstAddr, data); err != nil {
+		return 0, err
+	}
 
-			bw := hostBandwidth
-			if bw <= 0 {
-				bw = m.hostBandwidth
-			}
-			size := len(data)
-			m.stats.HostToDeviceBytes += size
+	bw := hostBandwidth
+	if bw <= 0 {
+		bw = m.hostBandwidth
+	}
+	size := len(data)
+	m.stats.HostToDeviceBytes += size
 
-			if m.unified {
-				return rf.Generate(true, false, 0)
-			}
+	if m.unified {
+		return 0, nil
+	}
 
-			cycles := 0
-			if bw > 0 {
-				cycles = m.hostLatency + int(float64(size)/bw)
-			}
-			m.stats.HostTransferCycles += cycles
-			return rf.Generate(true, false, cycles)
-		}).GetResult()
+	cycles := 0
+	if bw > 0 {
+		cycles = m.hostLatency + int(float64(size)/bw)
+	}
+	m.stats.HostTransferCycles += cycles
+	return cycles, nil
 }
 
 // CopyToHost copies from device memory to host (CPU).
@@ -308,36 +264,27 @@ func (m *SimpleGlobalMemory) CopyFromHost(dstAddr int, data []byte, hostBandwidt
 //
 // Returns (data, cycles).
 func (m *SimpleGlobalMemory) CopyToHost(srcAddr int, size int, hostBandwidth float64) ([]byte, int, error) {
-	var cycles int
-	data, err := StartNew[[]byte]("device-simulator.SimpleGlobalMemory.CopyToHost", nil,
-		func(op *Operation[[]byte], rf *ResultFactory[[]byte]) *OperationResult[[]byte] {
-			op.AddProperty("srcAddr", srcAddr)
-			op.AddProperty("size", size)
-			d, readErr := m.Read(srcAddr, size)
-			if readErr != nil {
-				return rf.Fail(nil, readErr)
-			}
+	data, err := m.Read(srcAddr, size)
+	if err != nil {
+		return nil, 0, err
+	}
 
-			bw := hostBandwidth
-			if bw <= 0 {
-				bw = m.hostBandwidth
-			}
-			m.stats.DeviceToHostBytes += size
+	bw := hostBandwidth
+	if bw <= 0 {
+		bw = m.hostBandwidth
+	}
+	m.stats.DeviceToHostBytes += size
 
-			if m.unified {
-				cycles = 0
-				return rf.Generate(true, false, d)
-			}
+	if m.unified {
+		return data, 0, nil
+	}
 
-			c := 0
-			if bw > 0 {
-				c = m.hostLatency + int(float64(size)/bw)
-			}
-			m.stats.HostTransferCycles += c
-			cycles = c
-			return rf.Generate(true, false, d)
-		}).GetResult()
-	return data, cycles, err
+	cycles := 0
+	if bw > 0 {
+		cycles = m.hostLatency + int(float64(size)/bw)
+	}
+	m.stats.HostTransferCycles += cycles
+	return data, cycles, nil
 }
 
 // =========================================================================
@@ -356,54 +303,48 @@ func (m *SimpleGlobalMemory) CopyToHost(srcAddr int, size int, hostBandwidth flo
 // The fewer transactions, the better -- ideal is 1 transaction
 // for 32 threads (128 bytes of contiguous access).
 func (m *SimpleGlobalMemory) Coalesce(addresses []int, size int) []MemoryTransaction {
-	result, _ := StartNew[[]MemoryTransaction]("device-simulator.SimpleGlobalMemory.Coalesce", nil,
-		func(op *Operation[[]MemoryTransaction], rf *ResultFactory[[]MemoryTransaction]) *OperationResult[[]MemoryTransaction] {
-			op.AddProperty("num_addresses", len(addresses))
-			op.AddProperty("size", size)
-			ts := m.transactionSize
+	ts := m.transactionSize
 
-			// Group threads by aligned transaction address
-			groups := make(map[int]uint64) // aligned_addr -> thread_mask
-			for threadIdx, addr := range addresses {
-				aligned := (addr / ts) * ts
-				groups[aligned] |= 1 << uint(threadIdx)
-			}
+	// Group threads by aligned transaction address
+	groups := make(map[int]uint64) // aligned_addr -> thread_mask
+	for threadIdx, addr := range addresses {
+		aligned := (addr / ts) * ts
+		groups[aligned] |= 1 << uint(threadIdx)
+	}
 
-			// Sort by aligned address for deterministic output
-			sortedAddrs := make([]int, 0, len(groups))
-			for addr := range groups {
-				sortedAddrs = append(sortedAddrs, addr)
-			}
-			sort.Ints(sortedAddrs)
+	// Sort by aligned address for deterministic output
+	sortedAddrs := make([]int, 0, len(groups))
+	for addr := range groups {
+		sortedAddrs = append(sortedAddrs, addr)
+	}
+	sort.Ints(sortedAddrs)
 
-			transactions := make([]MemoryTransaction, 0, len(groups))
-			for _, aligned := range sortedAddrs {
-				transactions = append(transactions, MemoryTransaction{
-					Address:    aligned,
-					Size:       ts,
-					ThreadMask: groups[aligned],
-				})
-			}
+	transactions := make([]MemoryTransaction, 0, len(groups))
+	for _, aligned := range sortedAddrs {
+		transactions = append(transactions, MemoryTransaction{
+			Address:    aligned,
+			Size:       ts,
+			ThreadMask: groups[aligned],
+		})
+	}
 
-			// Track stats
-			m.stats.TotalRequests += len(addresses)
-			m.stats.TotalTransactions += len(transactions)
+	// Track stats
+	m.stats.TotalRequests += len(addresses)
+	m.stats.TotalTransactions += len(transactions)
 
-			// Check partition conflicts
-			channelsHit := make(map[int]int)
-			for _, txn := range transactions {
-				channel := (txn.Address / ts) % m.channels
-				channelsHit[channel]++
-			}
-			for _, count := range channelsHit {
-				if count > 1 {
-					m.stats.PartitionConflicts += count - 1
-				}
-			}
+	// Check partition conflicts
+	channelsHit := make(map[int]int)
+	for _, txn := range transactions {
+		channel := (txn.Address / ts) % m.channels
+		channelsHit[channel]++
+	}
+	for _, count := range channelsHit {
+		if count > 1 {
+			m.stats.PartitionConflicts += count - 1
+		}
+	}
 
-			return rf.Generate(true, false, transactions)
-		}).GetResult()
-	return result
+	return transactions
 }
 
 // =========================================================================
@@ -412,12 +353,8 @@ func (m *SimpleGlobalMemory) Coalesce(addresses []int, size int) []MemoryTransac
 
 // Reset clears all data, allocations, and statistics.
 func (m *SimpleGlobalMemory) Reset() {
-	_, _ = StartNew[struct{}]("device-simulator.SimpleGlobalMemory.Reset", struct{}{},
-		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
-			m.data = make(map[int]byte)
-			m.nextFree = 0
-			m.allocations = make(map[int]int)
-			m.stats = GlobalMemoryStats{}
-			return rf.Generate(true, false, struct{}{})
-		}).GetResult()
+	m.data = make(map[int]byte)
+	m.nextFree = 0
+	m.allocations = make(map[int]int)
+	m.stats = GlobalMemoryStats{}
 }
