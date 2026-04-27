@@ -425,3 +425,64 @@ def test_pipeline_i_power_3() -> None:
     result = _eval("%i^3")
     assert isinstance(result, IRApply)
     assert result.head.name == "Neg"
+
+
+# ---------------------------------------------------------------------------
+# Section M — cubic and quartic equation solving (A2a / A2b)
+# ---------------------------------------------------------------------------
+
+
+def test_pipeline_solve_cubic_three_rational() -> None:
+    """solve(x^3 - 6*x^2 + 11*x - 6, x) → [1, 2, 3]."""
+    result = _eval("solve(x^3 - 6*x^2 + 11*x - 6, x)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List"
+    roots = set(result.args)
+    assert IRInteger(1) in roots
+    assert IRInteger(2) in roots
+    assert IRInteger(3) in roots
+
+
+def test_pipeline_solve_cubic_one_rational_two_complex() -> None:
+    """solve(x^3 + 1, x) → 3 roots including -1."""
+    result = _eval("solve(x^3 + 1, x)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List"
+    assert len(result.args) == 3
+    assert IRInteger(-1) in result.args
+
+
+def test_pipeline_solve_quartic_four_rational() -> None:
+    """solve(x^4 - 10*x^2 + 9, x) → {±1, ±3}."""
+    result = _eval("solve(x^4 - 10*x^2 + 9, x)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List"
+    roots = set(result.args)
+    assert IRInteger(1) in roots
+    assert IRInteger(-1) in roots
+    assert IRInteger(3) in roots
+    assert IRInteger(-3) in roots
+
+
+def test_pipeline_solve_quartic_biquadratic() -> None:
+    """solve(x^4 - 5*x^2 + 4, x) → {±1, ±2}."""
+    result = _eval("solve(x^4 - 5*x^2 + 4, x)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List"
+    roots = set(result.args)
+    assert IRInteger(1) in roots
+    assert IRInteger(-1) in roots
+    assert IRInteger(2) in roots
+    assert IRInteger(-2) in roots
+
+
+def test_pipeline_solve_quartic_all_positive_roots() -> None:
+    """solve(x^4 - 10*x^3 + 35*x^2 - 50*x + 24, x) → {1, 2, 3, 4}."""
+    result = _eval("solve(x^4 - 10*x^3 + 35*x^2 - 50*x + 24, x)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List"
+    roots = set(result.args)
+    assert IRInteger(1) in roots
+    assert IRInteger(2) in roots
+    assert IRInteger(3) in roots
+    assert IRInteger(4) in roots

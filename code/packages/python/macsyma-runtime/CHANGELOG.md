@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.6.0 — 2026-04-27
+
+**Cubic and quartic solve pipeline tests added (A2a / A2b).**
+
+5 new pipeline tests in `test_cas_pipeline.py` cover cubic and quartic
+equation solving end-to-end through the MACSYMA surface syntax:
+`solve(x^3 - 6*x^2 + 11*x - 6, x)` → `[1, 2, 3]`, etc.
+These tests exercise the full pipeline: MACSYMA parser → compiler →
+`solve_handler` → `solve_cubic` / `solve_quartic` from `cas-solve`.
+
 ## 0.5.0 — 2026-04-27
 
 **Complex number MACSYMA names wired (B2).**

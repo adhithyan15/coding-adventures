@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-cas-solve"
-version = "0.1.0"
-description = "Equation solving (Phase 1: linear + quadratic closed-form over Q with i)."
+version = "0.4.0"
+description = "Equation solving (Phases 1–4: linear, quadratic, cubic, quartic closed-form)."
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]

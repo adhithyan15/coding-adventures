@@ -49,6 +49,8 @@ from cas_complex.normalize import contains_imaginary as _contains_imaginary
 from cas_factor import factor_integer_polynomial
 from cas_limit_series import PolynomialError, limit_direct, taylor_polynomial
 from cas_number_theory.handlers import build_number_theory_handler_table as _build_nt
+from cas_solve import solve_cubic as _solve_cubic
+from cas_solve import solve_quartic as _solve_quartic
 from cas_list_operations import (
     ListOperationError,
     append,
@@ -366,22 +368,22 @@ def _ir_to_fraction_poly(
 def solve_handler(_vm: "VM", expr: IRApply) -> IRNode:
     """``Solve(equation, var)`` — closed-form solutions over Q.
 
-    Handles linear and quadratic equations. The first argument is either:
+    Handles linear through quartic equations. The first argument is either:
 
     - A bare expression ``f(var)`` — treated as ``f(var) = 0``.
     - ``Equal(lhs, rhs)`` — treated as ``lhs - rhs = 0``.
 
-    Returns ``List(sol1, sol2, ...)`` of :class:`~symbolic_ir.IRInteger`
-    or :class:`~symbolic_ir.IRRational` nodes.  Complex roots from the
-    quadratic formula (e.g. ``x^2 + 1 = 0``) are returned as
-    ``IRApply(Mul, (IRInteger(-1), IRApply(Sqrt, (IRInteger(-1),))))`` — the
-    CAS renders them symbolically. Returns the expression unevaluated for
-    degree > 2.
+    Returns ``List(sol1, sol2, ...)`` of IR nodes.  Complex roots use
+    ``%i`` (``IRSymbol("%i")``) as the imaginary unit — these are rendered
+    symbolically by the CAS. Returns the expression unevaluated for
+    degree > 4 or polynomials that Cardano/Ferrari cannot resolve.
 
     Truth-table for coefficients::
 
         degree 1: a*x + b = 0  →  [x = -b/a]
         degree 2: a*x^2 + b*x + c = 0  →  quadratic formula solutions
+        degree 3: rational roots + Cardano (D_cardano > 0)
+        degree 4: rational roots + Ferrari (with rational resolvent)
         degree 0 with b ≠ 0: no solution → []
         degree 0 with b = 0: all x satisfy → ``all`` symbol
     """
@@ -419,8 +421,30 @@ def solve_handler(_vm: "VM", expr: IRApply) -> IRNode:
         c_coeff = coeffs[0]
         solutions = solve_quadratic(a_coeff, b_coeff, c_coeff)
         return IRApply(IRSymbol("List"), tuple(solutions))
+    if deg == 3:
+        # a*x^3 + b*x^2 + c*x + d = 0
+        # coeffs order: (c_0=d, c_1=c, c_2=b, c_3=a)
+        a_coeff = coeffs[3]
+        b_coeff = coeffs[2]
+        c_coeff = coeffs[1]
+        d_coeff = coeffs[0]
+        solutions = _solve_cubic(a_coeff, b_coeff, c_coeff, d_coeff)
+        if isinstance(solutions, str) or not solutions:
+            return expr  # unevaluated (casus irreducibilis or no sol)
+        return IRApply(IRSymbol("List"), tuple(solutions))
+    if deg == 4:
+        # a*x^4 + b*x^3 + c*x^2 + d*x + e = 0
+        a_coeff = coeffs[4]
+        b_coeff = coeffs[3]
+        c_coeff = coeffs[2]
+        d_coeff = coeffs[1]
+        e_coeff = coeffs[0]
+        solutions = _solve_quartic(a_coeff, b_coeff, c_coeff, d_coeff, e_coeff)
+        if isinstance(solutions, str) or not solutions:
+            return expr  # unevaluated
+        return IRApply(IRSymbol("List"), tuple(solutions))
 
-    # Degree > 2: return unevaluated.
+    # Degree > 4: return unevaluated.
     return expr
 
 

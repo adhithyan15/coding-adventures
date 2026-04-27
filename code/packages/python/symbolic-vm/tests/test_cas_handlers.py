@@ -295,6 +295,66 @@ def test_solve_wrong_var_passthrough() -> None:
     assert vm.eval(expr) == expr
 
 
+def test_solve_cubic_three_rational() -> None:
+    """Solve(x^3 - 6x^2 + 11x - 6, x) → [1, 2, 3]."""
+    vm, _ = make_vm()
+    # x^3 - 6x^2 + 11x - 6
+    cubic = IRApply(ADD, (
+        IRApply(SUB, (
+            IRApply(ADD, (
+                IRApply(SUB, (
+                    IRApply(POW, (x, IRInteger(3))),
+                    IRApply(MUL, (IRInteger(6), IRApply(POW, (x, IRInteger(2))))),
+                )),
+                IRApply(MUL, (IRInteger(11), x)),
+            )),
+            IRInteger(6),
+        )),
+        IRInteger(0),
+    ))
+    result = vm.eval(IRApply(_SOLVE, (cubic, x)))
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List"
+    assert IRInteger(1) in result.args
+    assert IRInteger(2) in result.args
+    assert IRInteger(3) in result.args
+
+
+def test_solve_cubic_one_rational_two_complex() -> None:
+    """Solve(x^3 + 1, x) → list with -1 and complex pair."""
+    vm, _ = make_vm()
+    cubic = IRApply(ADD, (IRApply(POW, (x, IRInteger(3))), IRInteger(1)))
+    result = vm.eval(IRApply(_SOLVE, (cubic, x)))
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List"
+    assert len(result.args) == 3
+    assert IRInteger(-1) in result.args
+
+
+def test_solve_quartic_four_rational() -> None:
+    """Solve(x^4 - 10x^2 + 9, x) → [±1, ±3]."""
+    vm, _ = make_vm()
+    # x^4 - 10x^2 + 9
+    quartic = IRApply(ADD, (
+        IRApply(SUB, (IRApply(POW, (x, IRInteger(4))), IRApply(MUL, (IRInteger(10), IRApply(POW, (x, IRInteger(2))))))),
+        IRInteger(9),
+    ))
+    result = vm.eval(IRApply(_SOLVE, (quartic, x)))
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List"
+    int_roots = {a.value for a in result.args if isinstance(a, IRInteger)}
+    assert int_roots == {1, -1, 3, -3}
+
+
+def test_solve_degree_5_passthrough() -> None:
+    """Solve(x^5, x) returns unevaluated (degree > 4)."""
+    vm, _ = make_vm()
+    expr = IRApply(_SOLVE, (IRApply(POW, (x, IRInteger(5))), x))
+    result = vm.eval(expr)
+    # Degree 5 should be returned unevaluated
+    assert isinstance(result, IRApply)
+
+
 # ===========================================================================
 # Section 5: List operations
 # ===========================================================================

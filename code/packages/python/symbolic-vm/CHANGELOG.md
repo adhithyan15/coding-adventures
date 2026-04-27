@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.23.0 — 2026-04-27
+
+**Roadmap items A2a + A2b (cubic and quartic solvers) wired into `solve_handler`.**
+
+The `Solve` handler in `cas_handlers.py` now supports degree-3 and degree-4
+polynomials via `cas-solve`'s new `solve_cubic` and `solve_quartic`:
+
+- **Degree 3**: routes through `solve_cubic` (rational-root theorem → Cardano).
+  Returns a `List` of roots, or unevaluated for casus irreducibilis.
+- **Degree 4**: routes through `solve_quartic` (rational-root theorem →
+  biquadratic → Ferrari). Returns a `List` of roots, or unevaluated when the
+  Ferrari resolvent has no rational root.
+- Empty or "ALL" results are propagated as unevaluated expressions.
+
+**Dependencies updated:**
+- `cas-solve` bumped to `>=0.4.0` in `pyproject.toml`.
+
+**New tests (4 in `test_cas_handlers.py`):**
+`test_solve_cubic_three_rational`, `test_solve_cubic_one_rational_two_complex`,
+`test_solve_quartic_four_rational`, `test_solve_degree_5_passthrough`.
+
 ## 0.22.0 — 2026-04-27
 
 **Roadmap item B2 (cas-complex) wired into SymbolicBackend.**
