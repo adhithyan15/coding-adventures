@@ -989,49 +989,6 @@ func TestExpressionStatement(t *testing.T) {
 }
 
 // ════════════════════════════════════════════════════════════════════════
-// DOCSTRING TESTS
-// ════════════════════════════════════════════════════════════════════════
-
-// TestDocstringInFunction verifies that a triple-quoted docstring at the
-// start of a function body is treated as a string expression statement
-// (compiled as LOAD_CONST + POP, then discarded at runtime). This is the
-// standard Python/Starlark docstring pattern.
-func TestDocstringInFunction(t *testing.T) {
-	src := "def f(x):\n" +
-		"    \"\"\"This is a docstring.\"\"\"\n" +
-		"    return x + 1\n"
-	// Must compile without error.
-	code := compile(t, src)
-	// The function should produce a MAKE_FUNCTION instruction at module level.
-	assertOpcode(t, code, 0, OpMakeFunction)
-}
-
-// TestDocstringMultiline verifies that multi-line triple-quoted docstrings
-// compile correctly. Newlines inside the string must not be confused with
-// the NEWLINE/INDENT/DEDENT tokens used for block structure.
-func TestDocstringMultiline(t *testing.T) {
-	src := "def greet(name):\n" +
-		"    \"\"\"\n" +
-		"    Greet a person by name.\n" +
-		"    Returns a greeting string.\n" +
-		"    \"\"\"\n" +
-		"    return \"Hello, \" + name\n"
-	code := compile(t, src)
-	assertOpcode(t, code, 0, OpMakeFunction)
-}
-
-// TestModuleLevelDocstring verifies that a top-level triple-quoted string
-// (module docstring) compiles as an expression statement: LOAD_CONST + POP.
-func TestModuleLevelDocstring(t *testing.T) {
-	src := "\"\"\"Module-level docstring.\"\"\"\nx = 1\n"
-	code := compile(t, src)
-	// First instruction: load the string constant.
-	assertOpcode(t, code, 0, OpLoadConst)
-	// Second instruction: discard it (POP).
-	assertOpcode(t, code, 1, OpPop)
-}
-
-// ════════════════════════════════════════════════════════════════════════
 // VARIABLE REFERENCE TEST
 // ════════════════════════════════════════════════════════════════════════
 

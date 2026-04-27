@@ -108,20 +108,12 @@ type StarlarkIterator struct {
 //       // iterator exhausted
 //   }
 func (it *StarlarkIterator) Next() (interface{}, bool) {
-	type result struct {
-		val interface{}
-		ok  bool
+	if it.Index >= len(it.Items) {
+		return nil, false
 	}
-	r, _ := StartNew[result]("starlark-vm.StarlarkIterator.Next", result{},
-		func(op *Operation[result], rf *ResultFactory[result]) *OperationResult[result] {
-			if it.Index >= len(it.Items) {
-				return rf.Generate(true, false, result{nil, false})
-			}
-			val := it.Items[it.Index]
-			it.Index++
-			return rf.Generate(true, false, result{val, true})
-		}).GetResult()
-	return r.val, r.ok
+	val := it.Items[it.Index]
+	it.Index++
+	return val, true
 }
 
 // ════════════════════════════════════════════════════════════════════════

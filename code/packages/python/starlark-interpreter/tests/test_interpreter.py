@@ -348,12 +348,12 @@ class TestInterpretFile:
             mode="w", suffix=".star", delete=False
         ) as f:
             f.write("result = 1 + 2\n")
-            path = f.name
-        try:
-            result = interpret_file(path)
-            assert result.variables["result"] == 3
-        finally:
-            os.unlink(path)
+            f.flush()
+            try:
+                result = interpret_file(f.name)
+                assert result.variables["result"] == 3
+            finally:
+                os.unlink(f.name)
 
     def test_interpret_file_with_load(self):
         """Execute a file that uses load()."""
@@ -364,15 +364,15 @@ class TestInterpretFile:
                 'load("//lib.star", "double")\n'
                 "result = double(5)\n"
             )
-            path = f.name
-        try:
-            files = {
-                "//lib.star": "def double(n):\n    return n * 2\n",
-            }
-            result = interpret_file(path, file_resolver=files)
-            assert result.variables["result"] == 10
-        finally:
-            os.unlink(path)
+            f.flush()
+            try:
+                files = {
+                    "//lib.star": "def double(n):\n    return n * 2\n",
+                }
+                result = interpret_file(f.name, file_resolver=files)
+                assert result.variables["result"] == 10
+            finally:
+                os.unlink(f.name)
 
 
 # =========================================================================
@@ -422,13 +422,13 @@ class TestStarlarkInterpreterFile:
             mode="w", suffix=".star", delete=False
         ) as f:
             f.write("x = 100\n")
-            path = f.name
-        try:
-            interp = StarlarkInterpreter()
-            result = interp.interpret_file(path)
-            assert result.variables["x"] == 100
-        finally:
-            os.unlink(path)
+            f.flush()
+            try:
+                interp = StarlarkInterpreter()
+                result = interp.interpret_file(f.name)
+                assert result.variables["x"] == 100
+            finally:
+                os.unlink(f.name)
 
     def test_interpret_file_no_trailing_newline(self):
         """File without trailing newline should still work."""
@@ -436,13 +436,13 @@ class TestStarlarkInterpreterFile:
             mode="w", suffix=".star", delete=False
         ) as f:
             f.write("x = 42")  # No trailing newline
-            path = f.name
-        try:
-            interp = StarlarkInterpreter()
-            result = interp.interpret_file(path)
-            assert result.variables["x"] == 42
-        finally:
-            os.unlink(path)
+            f.flush()
+            try:
+                interp = StarlarkInterpreter()
+                result = interp.interpret_file(f.name)
+                assert result.variables["x"] == 42
+            finally:
+                os.unlink(f.name)
 
     def test_interpret_file_with_load_class_method(self):
         """Use the class method with load() support."""
@@ -453,13 +453,13 @@ class TestStarlarkInterpreterFile:
             mode="w", suffix=".star", delete=False
         ) as f:
             f.write('load("//lib.star", "Y")\nresult = Y\n')
-            path = f.name
-        try:
-            interp = StarlarkInterpreter(file_resolver=files)
-            result = interp.interpret_file(path)
-            assert result.variables["result"] == 99
-        finally:
-            os.unlink(path)
+            f.flush()
+            try:
+                interp = StarlarkInterpreter(file_resolver=files)
+                result = interp.interpret_file(f.name)
+                assert result.variables["result"] == 99
+            finally:
+                os.unlink(f.name)
 
 
 class TestEdgeCases:
@@ -566,20 +566,3 @@ class TestBuildFileSimulation:
         )
         assert result.variables["py"] == "py:mypy"
         assert result.variables["go"] == "go:mygo"
-
-
-class TestGlobalsInjection:
-    """Test globals injected into interpreter-created VMs."""
-
-    def test_globals_available_in_main_and_loaded_files(self):
-        files = {
-            "//ctx.star": "loaded_os = ctx_os\n",
-        }
-        result = interpret(
-            'load("//ctx.star", "loaded_os")\n'
-            "main_os = ctx_os\n",
-            file_resolver=files,
-            globals={"ctx_os": "darwin"},
-        )
-        assert result.variables["main_os"] == "darwin"
-        assert result.variables["loaded_os"] == "darwin"

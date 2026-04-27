@@ -91,27 +91,23 @@ import (
 //   v.Variables["my_global"] = 42
 //   traces := v.Execute(code)
 func CreateStarlarkVM(maxRecursionDepth ...int) *vm.GenericVM {
-	result, _ := StartNew[*vm.GenericVM]("starlark-vm.CreateStarlarkVM", nil,
-		func(op *Operation[*vm.GenericVM], rf *ResultFactory[*vm.GenericVM]) *OperationResult[*vm.GenericVM] {
-			v := vm.NewGenericVM()
+	v := vm.NewGenericVM()
 
-			// Set recursion depth.  Default is 200, which is generous for most
-			// Starlark programs (the typical stack depth is under 20).
-			depth := 200
-			if len(maxRecursionDepth) > 0 {
-				depth = maxRecursionDepth[0]
-			}
-			v.SetMaxRecursionDepth(&depth)
+	// Set recursion depth.  Default is 200, which is generous for most
+	// Starlark programs (the typical stack depth is under 20).
+	depth := 200
+	if len(maxRecursionDepth) > 0 {
+		depth = maxRecursionDepth[0]
+	}
+	v.SetMaxRecursionDepth(&depth)
 
-			// Register all 59 opcode handlers.
-			registerAllHandlers(v)
+	// Register all 59 opcode handlers.
+	registerAllHandlers(v)
 
-			// Register all 23 built-in functions.
-			RegisterAllBuiltins(v)
+	// Register all 23 built-in functions.
+	RegisterAllBuiltins(v)
 
-			return rf.Generate(true, false, v)
-		}).GetResult()
-	return result
+	return v
 }
 
 // ExecuteStarlark compiles and executes Starlark source code in one step.
@@ -136,26 +132,22 @@ func CreateStarlarkVM(maxRecursionDepth ...int) *vm.GenericVM {
 //   // result.Variables["message"] == "Hello, World"
 //   // result.Output == ["Hello, World"]
 func ExecuteStarlark(source string) (*StarlarkResult, error) {
-	return StartNew[*StarlarkResult]("starlark-vm.ExecuteStarlark", nil,
-		func(op *Operation[*StarlarkResult], rf *ResultFactory[*StarlarkResult]) *OperationResult[*StarlarkResult] {
-			op.AddProperty("sourceLen", len(source))
-			// Step 1: Compile source to bytecode.
-			code, err := starlarkcompiler.CompileStarlark(source)
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
+	// Step 1: Compile source to bytecode.
+	code, err := starlarkcompiler.CompileStarlark(source)
+	if err != nil {
+		return nil, err
+	}
 
-			// Step 2: Create a fresh VM with all handlers and builtins.
-			v := CreateStarlarkVM()
+	// Step 2: Create a fresh VM with all handlers and builtins.
+	v := CreateStarlarkVM()
 
-			// Step 3: Execute the bytecode.
-			traces := v.Execute(code)
+	// Step 3: Execute the bytecode.
+	traces := v.Execute(code)
 
-			// Step 4: Package the results.
-			return rf.Generate(true, false, &StarlarkResult{
-				Variables: v.Variables,
-				Output:    v.Output,
-				Traces:    traces,
-			})
-		}).PanicOnUnexpected().GetResult()
+	// Step 4: Package the results.
+	return &StarlarkResult{
+		Variables: v.Variables,
+		Output:    v.Output,
+		Traces:    traces,
+	}, nil
 }

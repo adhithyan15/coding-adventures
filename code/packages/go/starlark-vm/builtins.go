@@ -60,15 +60,6 @@ import (
 // RegisterAllBuiltins registers all 23 Starlark built-in functions
 // with the given GenericVM.  This is called once during VM creation.
 func RegisterAllBuiltins(v *vm.GenericVM) {
-	_, _ = StartNew[struct{}]("starlark-vm.RegisterAllBuiltins", struct{}{},
-		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
-			registerAllBuiltinsImpl(v)
-			return rf.Generate(true, false, struct{}{})
-		}).GetResult()
-}
-
-// registerAllBuiltinsImpl is the internal implementation of RegisterAllBuiltins.
-func registerAllBuiltinsImpl(v *vm.GenericVM) {
 	// ── Output ──────────────────────────────────────────────────────
 
 	// print(*args) — Format arguments and return as a string.

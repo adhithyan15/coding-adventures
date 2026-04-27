@@ -1,9 +1,3 @@
-load("code/packages/starlark/library-rules/go_library.star", "go_library")
-
-_targets = [
-    go_library(
-        name = "starlark-interpreter",
-        srcs = ["**/*.go"],
-        deps = [],
-    ),
-]
+cd ../ && go build ./starlark-interpreter/...
+cd ../ && go test ./starlark-interpreter/... -v -count=1
+cd ../ && go vet ./starlark-interpreter/...

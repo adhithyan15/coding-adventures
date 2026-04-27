@@ -1,9 +1,3 @@
-load("code/packages/starlark/library-rules/go_library.star", "go_library")
-
-_targets = [
-    go_library(
-        name = "starlark-ast-to-bytecode-compiler",
-        srcs = ["**/*.go"],
-        deps = [],
-    ),
-]
+cd ../ && go build ./starlark-ast-to-bytecode-compiler/...
+cd ../ && go test ./starlark-ast-to-bytecode-compiler/... -v -count=1
+cd ../ && go vet ./starlark-ast-to-bytecode-compiler/...

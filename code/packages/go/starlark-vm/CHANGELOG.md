@@ -2,11 +2,6 @@
 
 All notable changes to the `starlark-vm` package will be documented in this file.
 
-## [0.1.1] - 2026-04-02
-
-### Fixed
-- Added `.PanicOnUnexpected()` to `ExecuteStarlark` so intentional panics (ZeroDivisionError, TypeError, UndefinedNameError, etc.) propagate correctly instead of being swallowed by the Operations panic-recovery wrapper.
-
 ## [0.1.0] - 2026-03-21
 
 ### Added
