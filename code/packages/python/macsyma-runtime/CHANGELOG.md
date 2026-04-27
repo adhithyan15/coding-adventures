@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.2.0 — 2026-04-27
+
+**Wire `ratsimp` and `trigsimp` flags in `ev` handler (A3 + B1).**
+
+Completes the `ev` flag set by implementing the two previously-documented
+but not-yet-implemented flags:
+
+- `ratsimp` — applies `RatSimplify` (cancel GCD of numerator/denominator)
+  to the evaluated result. Example: `ev((x^2-1)/(x-1), ratsimp)` → `x+1`.
+- `trigsimp` — applies `TrigSimplify` (Pythagorean and related identities)
+  to the evaluated result. Example: `ev(sin(x)^2 + cos(x)^2, trigsimp)` → `1`.
+
+Both flags use the A3/B1 substrate handlers already registered on
+`SymbolicBackend`, so no new CAS code was needed — only the `ev` dispatch
+layer required updating.
+
+2 new tests added to `test_ev.py`; total test count 133, coverage 98.6%.
+
 ## 1.1.0 — 2026-04-27
 
 **Comprehensive pipeline test coverage (Sections S and T).**

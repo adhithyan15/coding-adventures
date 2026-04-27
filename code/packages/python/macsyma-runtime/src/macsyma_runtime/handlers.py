@@ -94,12 +94,15 @@ def make_ev_handler() -> Handler:
         Apply ``Expand`` to the result before returning.
     ``factor``
         Apply ``Factor`` to the result before returning.
+    ``ratsimp``
+        Apply ``RatSimplify`` (cancel GCD of numerator/denominator) to
+        the result before returning.  Implemented via A3 substrate.
+    ``trigsimp``
+        Apply ``TrigSimplify`` (Pythagorean identities etc.) to the
+        result before returning.  Implemented via B1 substrate.
 
     Unknown flags are silently ignored so that future flags don't break
     existing sessions.
-
-    Planned but not yet implemented: ``ratsimp`` (requires A3 patch),
-    ``trigsimp`` (requires B1 patch).
     """
 
     def ev_handler(vm: VM, expr: IRApply) -> IRNode:
@@ -132,6 +135,12 @@ def make_ev_handler() -> Handler:
 
         if "factor" in flags:
             result = vm.eval(IRApply(IRSymbol("Factor"), (result,)))
+
+        if "ratsimp" in flags:
+            result = vm.eval(IRApply(IRSymbol("RatSimplify"), (result,)))
+
+        if "trigsimp" in flags:
+            result = vm.eval(IRApply(IRSymbol("TrigSimplify"), (result,)))
 
         return result
 
