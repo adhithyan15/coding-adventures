@@ -21,10 +21,17 @@ import re
 from cas_pretty_printer import MacsymaDialect, pretty
 from coding_adventures_repl import Language
 from macsyma_compiler import compile_macsyma
+from macsyma_compiler.compiler import _STANDARD_FUNCTIONS
 from macsyma_parser import parse_macsyma
-from macsyma_runtime import History, MacsymaBackend
+from macsyma_runtime import History, MacsymaBackend, extend_compiler_name_table
 from symbolic_ir import IRApply, IRNode, IRSymbol
 from symbolic_vm import VM
+
+# Extend the compiler's name table with all the runtime-known heads
+# (factor, solve, simplify, list ops, matrix, limit, taylor, …).
+# This is idempotent — safe to call at import time; creating multiple
+# MacsymaLanguage instances in the same process is harmless.
+extend_compiler_name_table(_STANDARD_FUNCTIONS)
 
 _DIALECT = MacsymaDialect()
 _QUIT_COMMANDS = frozenset({":quit", ":q", "quit", "quit()", "quit();", "quit;"})
