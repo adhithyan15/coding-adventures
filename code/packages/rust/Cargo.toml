@@ -379,4 +379,5 @@ members = [
     "generic-job-runtime",
     "rng",
     "feature-normalization",
+    "single-layer-network",
 ]

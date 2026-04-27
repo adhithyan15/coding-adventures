@@ -1,0 +1,1 @@
+dotnet test tests/CodingAdventures.SingleLayerNetwork.Tests/CodingAdventures.SingleLayerNetwork.Tests.csproj
