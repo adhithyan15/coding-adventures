@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.26.0 — 2026-04-27
+
+**Roadmap item A3 — rational function operations (Collect, Together, RatSimplify, Apart, full Expand).**
+
+`Expand` handler upgraded from a `canonical()`-only pass to full polynomial
+distribution via the polynomial bridge.  Four new IR heads wired into
+`SymbolicBackend` via `build_cas_handler_table()`:
+
+- **`Expand`** (improved): calls `to_rational` + `from_polynomial` to distribute
+  `Mul` over `Add` and expand integer powers for single-variable polynomials
+  with rational coefficients. Falls back to `canonical` for multi-variable /
+  transcendental expressions.
+- **`Collect(expr, var)`**: groups terms by powers of `var` for single-variable
+  polynomials with rational coefficients (same mechanism as `Expand` but takes
+  an explicit variable argument). MACSYMA surface: `collect`.
+- **`Together(expr)`**: combines a sum of rational functions into a single
+  fraction `P(x)/Q(x)` with monic denominator. MACSYMA surface: `together`.
+- **`RatSimplify(expr)`**: cancels the GCD of numerator and denominator,
+  reducing the rational expression to lowest terms. MACSYMA surface: `ratsimp`.
+- **`Apart(expr, var)`**: partial-fraction decomposition (Phase 1 — distinct
+  rational linear factors only). Uses residue formula `A_i = P(r_i)/Q'(r_i)`.
+  MACSYMA surface: `partfrac`. Falls back to unevaluated for irreducible
+  quadratic or repeated factors.
+
+**Dependencies**: `coding-adventures-polynomial` was already in
+`pyproject.toml`; the new handlers import `gcd`, `monic`, `deriv`,
+`evaluate`, `rational_roots`, `divmod_poly` directly from `polynomial`.
+
+**New tests (18 in Section 14 of `test_cas_handlers.py`)** +
+**6 new pipeline tests in `macsyma-runtime`**.
+
 ## 0.25.0 — 2026-04-27
 
 **Roadmap item B1 (cas-trig) wired into SymbolicBackend.**

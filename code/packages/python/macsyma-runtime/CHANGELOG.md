@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.9.0 — 2026-04-27
+
+**Rational function operations wired into MACSYMA name table (A3).**
+
+Adds `MACSYMA_NAME_TABLE` entries:
+`collect→Collect`, `together→Together`, `ratsimp→RatSimplify`,
+`partfrac→Apart`.
+
+These map to four new IR heads in `symbolic-vm` 0.26.0:
+- `collect(expr, x)` — collect terms by powers of x.
+- `together(expr)` — combine fractions into one rational expression.
+- `ratsimp(expr)` — cancel common polynomial factors.
+- `partfrac(expr, x)` — partial fraction decomposition.
+
+Also adds `COLLECT`, `TOGETHER`, `RAT_SIMPLIFY`, `APART` IR symbol constants
+to `name_table.py`.
+
+6 new pipeline tests in `test_cas_pipeline.py` (Section Q) cover the full
+MACSYMA surface syntax end-to-end.
+
 ## 0.8.0 — 2026-04-27
 
 **Trig operations wired into MACSYMA name table (B1).**

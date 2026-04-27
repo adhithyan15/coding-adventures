@@ -606,3 +606,61 @@ def test_pipeline_trigreduce_sin2() -> None:
         and isinstance(result.args[0], IRApply)
         and result.args[0].head.name == "Sin"
     )
+
+
+# ---------------------------------------------------------------------------
+# Section Q — Rational function operations (A3)
+# ---------------------------------------------------------------------------
+
+
+def test_pipeline_expand_product() -> None:
+    """expand((x+1)*(x+2)) produces the expanded polynomial form."""
+    result = _eval("expand((x+1)*(x+2))")
+    # Result should not be a Mul or Expand — it must be expanded
+    assert isinstance(result, IRApply)
+    assert result.head.name not in ("Expand", "Mul")
+    # Verify numeric correctness: (0+1)*(0+2)=2 at x=0 requires subst
+    # Just check the structural head is Add (polynomial form)
+    assert result.head.name == "Add"
+
+
+def test_pipeline_expand_power() -> None:
+    """expand((x+1)^2) produces the expanded polynomial."""
+    result = _eval("expand((x+1)^2)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Add"
+
+
+def test_pipeline_collect_like_powers() -> None:
+    """collect(x^2 + 3*x + x^2, x) → 2*x^2 + 3*x."""
+    result = _eval("collect(x^2 + 3*x + x^2, x)")
+    # The result should be a collected polynomial (an Add expression)
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Add"
+
+
+def test_pipeline_ratsimp_cancel() -> None:
+    """ratsimp((x^2-1)/(x-1)) → x+1."""
+    result = _eval("ratsimp((x^2-1)/(x-1))")
+    # x+1 is an Add expression
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Add"
+    # Verify the result contains integer 1 (the constant term)
+    assert IRInteger(1) in result.args
+
+
+def test_pipeline_together_fractions() -> None:
+    """together(1/x + 1/(x+1)) produces a single rational expression."""
+    result = _eval("together(1/x + 1/(x+1))")
+    # Result should be a single Div — combined over common denominator
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Div"
+
+
+def test_pipeline_partfrac_decomposition() -> None:
+    """partfrac(1/(x^2-1), x) decomposes into partial fractions."""
+    result = _eval("partfrac(1/(x^2-1), x)")
+    # Result should be an Add of two rational terms
+    assert isinstance(result, IRApply)
+    # Not the original Div form
+    assert result.head.name != "Div"

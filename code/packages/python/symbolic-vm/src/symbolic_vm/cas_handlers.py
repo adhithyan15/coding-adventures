@@ -77,8 +77,19 @@ from cas_matrix import (
 from cas_simplify import canonical, simplify
 from cas_solve import ALL, solve_linear, solve_quadratic
 from cas_substitution import subst
+from polynomial import (
+    degree as _poly_degree,
+    deriv as _poly_deriv,
+    divmod_poly as _poly_divmod,
+    evaluate as _poly_evaluate,
+    gcd as _poly_gcd,
+    monic as _poly_monic,
+    normalize as _poly_normalize,
+    rational_roots as _poly_rational_roots,
+)
 from symbolic_ir import (
     ADD,
+    DIV,
     EQUAL,
     MUL,
     NEG,
@@ -134,22 +145,279 @@ def simplify_handler(_vm: "VM", expr: IRApply) -> IRNode:
 
 
 def expand_handler(_vm: "VM", expr: IRApply) -> IRNode:
-    """``Expand(expr)`` — structural canonical form.
+    """``Expand(expr)`` — full polynomial expansion.
 
-    Phase 1 implementation: applies :func:`cas_simplify.canonical` which
-    flattens nested Add/Mul, sorts commutative operands, and drops
-    singleton wrappers. Full polynomial distribution (e.g.
-    ``(a+b)*(c+d) → ac+ad+bc+bd``) is deferred to Phase 2 when the
-    polynomial package is extended with a multiply-and-expand step.
+    Distributes ``Mul`` over ``Add`` and expands integer powers of
+    polynomials via the polynomial bridge. Works for single-variable
+    polynomials with rational (Q) coefficients. For multi-variable or
+    transcendental expressions (where :func:`~symbolic_vm.polynomial_bridge.to_rational`
+    returns ``None``) the implementation falls back to
+    :func:`cas_simplify.canonical`.
 
-    Returning the canonical form is the correct Phase 1 behaviour — it
-    matches what every CAS does for ``expand`` on an already-expanded
-    expression, and it normalises the sort order so subsequent rules fire
-    reliably.
+    Examples::
+
+        Expand(Mul(Add(x, 1), Add(x, 2)))  →  Add(Add(2, Mul(3, x)), Pow(x, 2))
+        Expand(Pow(Add(x, 1), 2))          →  Add(Add(1, Mul(2, x)), Pow(x, 2))
     """
     if len(expr.args) != 1:
         return expr
-    return canonical(expr.args[0])
+    inner = expr.args[0]
+
+    x = _find_variable(inner)
+    if x is None:
+        return canonical(inner)
+
+    rational = to_rational(inner, x)
+    if rational is None:
+        return canonical(inner)
+
+    num, den = rational
+    _ONE_FRAC: tuple[Fraction, ...] = (Fraction(1),)
+
+    if _poly_normalize(den) == _ONE_FRAC:
+        # Pure polynomial — emit fully expanded form
+        return from_polynomial(num, x)
+
+    # Rational function — expand numerator and denominator separately
+    return IRApply(DIV, (from_polynomial(num, x), from_polynomial(den, x)))
+
+
+# ===========================================================================
+# Section 1b: Rational function operations (A3) — Collect, Together,
+#             RatSimplify, Apart
+# ===========================================================================
+
+# Fraction sentinel for "unit polynomial denominator".
+_ONE_FRAC: tuple[Fraction, ...] = (Fraction(1),)
+
+
+def _frac_to_ir(f: Fraction) -> IRNode:
+    """Lift a ``Fraction`` coefficient to its canonical IR literal."""
+    if f.denominator == 1:
+        return IRInteger(f.numerator)
+    return IRRational(f.numerator, f.denominator)
+
+
+def collect_handler(_vm: "VM", expr: IRApply) -> IRNode:
+    """``Collect(expr, var)`` — collect terms by powers of ``var``.
+
+    Groups all terms in ``expr`` by their degree in ``var`` and returns the
+    collected polynomial form. Works for single-variable polynomials with
+    rational (Q) coefficients; returns unevaluated for symbolic coefficients
+    or transcendental sub-expressions.
+
+    MACSYMA syntax: ``collect(x^2 + 2*x + x^2, x)`` → ``2*x^2 + 2*x``.
+    """
+    if len(expr.args) != 2:
+        return expr
+    inner, var = expr.args
+    if not isinstance(var, IRSymbol):
+        return expr
+
+    rational = to_rational(inner, var)
+    if rational is None:
+        return expr  # Symbolic coefficients or transcendentals — can't collect
+
+    num, den = rational
+    if _poly_normalize(den) == _ONE_FRAC:
+        return from_polynomial(num, var)
+
+    # Rational function — collecting makes no sense; return unevaluated
+    return expr
+
+
+def together_handler(_vm: "VM", expr: IRApply) -> IRNode:
+    """``Together(expr)`` — combine rational sub-expressions over a common denominator.
+
+    Converts a sum of rational functions into a single fraction
+    ``P(x)/Q(x)`` with common denominator. The inverse of
+    :func:`apart_handler`.
+
+    MACSYMA syntax: ``together(1/x + 1/(x+1))`` → ``(2*x+1)/(x^2+x)``.
+    """
+    if len(expr.args) != 1:
+        return expr
+    inner = expr.args[0]
+    x = _find_variable(inner)
+    if x is None:
+        return canonical(inner)
+
+    rational = to_rational(inner, x)
+    if rational is None:
+        return canonical(inner)
+
+    num, den = rational
+    normalized_den = _poly_normalize(den)
+
+    if normalized_den == _ONE_FRAC:
+        return from_polynomial(num, x)
+
+    # Normalise denominator to monic for canonical form
+    lead = normalized_den[-1]
+    if lead != Fraction(1):
+        num_n = tuple(c / lead for c in num)
+        den_n = tuple(c / lead for c in normalized_den)
+    else:
+        num_n = num
+        den_n = normalized_den
+
+    return IRApply(DIV, (from_polynomial(num_n, x), from_polynomial(den_n, x)))
+
+
+def rat_simplify_handler(_vm: "VM", expr: IRApply) -> IRNode:
+    """``RatSimplify(expr)`` — cancel common polynomial factors.
+
+    Computes the GCD of numerator and denominator and cancels it, reducing
+    the rational expression to lowest terms.
+
+    MACSYMA syntax: ``ratsimp((x^2-1)/(x-1))`` → ``x+1``.
+    """
+    if len(expr.args) != 1:
+        return expr
+    inner = expr.args[0]
+    x = _find_variable(inner)
+    if x is None:
+        return simplify(inner)
+
+    rational = to_rational(inner, x)
+    if rational is None:
+        return canonical(inner)
+
+    num, den = rational
+    normalized_den = _poly_normalize(den)
+
+    if normalized_den == _ONE_FRAC:
+        return from_polynomial(num, x)
+
+    # Cancel common GCD between numerator and denominator
+    common = _poly_gcd(num, den)
+    common_monic = _poly_monic(common)
+
+    if _poly_degree(common_monic) >= 1:
+        # Non-trivial common factor — divide it out
+        num_red, _ = _poly_divmod(num, common_monic)
+        den_red, _ = _poly_divmod(den, common_monic)
+        den_norm = _poly_normalize(den_red)
+    else:
+        num_red = num
+        den_norm = normalized_den
+
+    if den_norm == _ONE_FRAC:
+        return from_polynomial(num_red, x)
+
+    # Emit as Div(P, Q) with monic denominator
+    lead = den_norm[-1]
+    if lead != Fraction(1):
+        num_final: tuple[Fraction, ...] = tuple(c / lead for c in num_red)
+        den_final: tuple[Fraction, ...] = tuple(c / lead for c in den_norm)
+    else:
+        num_final = num_red  # type: ignore[assignment]
+        den_final = den_norm  # type: ignore[assignment]
+
+    return IRApply(DIV, (from_polynomial(num_final, x), from_polynomial(den_final, x)))
+
+
+def _apart_proper(
+    num: tuple[Fraction, ...],
+    den: tuple[Fraction, ...],
+    x: IRSymbol,
+) -> IRNode | None:
+    """Partial-fraction decompose a *proper* rational function (deg num < deg den).
+
+    Phase 1: handles only denominators whose roots are all distinct rational
+    numbers (= all roots are from ``polynomial.rational_roots``). Returns
+    ``None`` if the denominator has irreducible quadratic factors or
+    repeated roots.
+
+    Uses the residue formula ``A_i = P(r_i) / Q'(r_i)`` for each simple
+    pole ``r_i``.
+    """
+    roots = _poly_rational_roots(den)
+    if len(roots) != _poly_degree(den):
+        return None  # Irreducible quadratic or repeated factors
+
+    den_deriv = _poly_deriv(den)
+    terms: list[IRNode] = []
+
+    for r in roots:
+        num_val = _poly_evaluate(num, r)
+        den_d_val = _poly_evaluate(den_deriv, r)
+        if den_d_val == 0:
+            return None  # Repeated root (shouldn't happen for distinct roots)
+
+        A = Fraction(num_val) / Fraction(den_d_val)
+
+        # Linear factor: (x − r) as IR
+        neg_r = Fraction(-1) * (r if isinstance(r, Fraction) else Fraction(r))
+        factor_ir = from_polynomial((neg_r, Fraction(1)), x)
+
+        # Emit A / (x − r) — drop explicit coefficient of ±1
+        if A == 1:
+            terms.append(IRApply(DIV, (IRInteger(1), factor_ir)))
+        elif A == -1:
+            terms.append(IRApply(NEG, (IRApply(DIV, (IRInteger(1), factor_ir)),)))
+        else:
+            terms.append(IRApply(DIV, (_frac_to_ir(A), factor_ir)))
+
+    if not terms:
+        return IRInteger(0)
+    if len(terms) == 1:
+        return terms[0]
+
+    acc: IRNode = terms[0]
+    for t in terms[1:]:
+        acc = IRApply(ADD, (acc, t))
+    return acc
+
+
+def apart_handler(_vm: "VM", expr: IRApply) -> IRNode:
+    """``Apart(expr, var)`` — partial fraction decomposition.
+
+    Decomposes a rational function ``P(x)/Q(x)`` into a sum of simpler
+    partial fractions. Phase 1 implementation handles denominators with
+    only simple (non-repeated) rational roots; returns unevaluated when
+    the denominator has irreducible quadratic factors or repeated roots.
+
+    If ``deg(P) ≥ deg(Q)`` (improper fraction) the polynomial part is
+    separated first: ``P/Q = poly_part + proper_fraction``.
+
+    MACSYMA syntax: ``partfrac(1/(x^2-1), x)``
+    → ``-1/(2*(1+x)) + 1/(2*(-1+x))``.
+    """
+    if len(expr.args) != 2:
+        return expr
+    inner, var = expr.args
+    if not isinstance(var, IRSymbol):
+        return expr
+
+    rational = to_rational(inner, var)
+    if rational is None:
+        return expr
+
+    num, den = rational
+    if _poly_normalize(den) == _ONE_FRAC:
+        return from_polynomial(num, var)  # Already a polynomial
+
+    num_deg = _poly_degree(num)
+    den_deg = _poly_degree(den)
+
+    if num_deg >= den_deg:
+        # Improper fraction — polynomial division first
+        q, r = _poly_divmod(num, den)
+        if not _poly_normalize(r):
+            return from_polynomial(q, var)  # Exact division
+
+        proper_result = _apart_proper(r, den, var)
+        if proper_result is None:
+            return expr  # Denominator not fully factorable
+
+        poly_part = from_polynomial(q, var)
+        return IRApply(ADD, (poly_part, proper_result))
+
+    result = _apart_proper(num, den, var)
+    if result is None:
+        return expr
+    return result
 
 
 # ===========================================================================
@@ -1143,6 +1411,11 @@ def build_cas_handler_table() -> dict[str, Handler]:
         # --- cas_simplify ---------------------------------------------------
         "Simplify": simplify_handler,
         "Expand": expand_handler,
+        # --- rational function operations (A3) ------------------------------
+        "Collect": collect_handler,
+        "Together": together_handler,
+        "RatSimplify": rat_simplify_handler,
+        "Apart": apart_handler,
         # --- cas_substitution -----------------------------------------------
         "Subst": subst_handler,
         # --- cas_factor -----------------------------------------------------
