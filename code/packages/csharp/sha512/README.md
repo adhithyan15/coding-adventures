@@ -1,6 +1,6 @@
 # CodingAdventures.Sha512.CSharp
 
-SHA-512 helpers for .NET, backed by `System.Security.Cryptography.SHA512`.
+SHA-512 helpers for .NET, implemented directly from FIPS 180-4.
 
 The package exposes one-shot hashing plus a streaming-style hasher whose `Digest` calls are non-destructive.
 
