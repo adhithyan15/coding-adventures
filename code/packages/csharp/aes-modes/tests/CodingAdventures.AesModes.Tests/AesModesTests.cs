@@ -1,5 +1,3 @@
-using System.Security.Cryptography;
-
 namespace CodingAdventures.AesModes.Tests;
 
 public sealed class AesModesTests
@@ -126,7 +124,7 @@ public sealed class AesModesTests
         var (ciphertext, tag) = AesModes.GcmEncrypt("secret"u8.ToArray(), key, iv);
 
         ciphertext[0] ^= 1;
-        Assert.Throws<AuthenticationTagMismatchException>(() => AesModes.GcmDecrypt(ciphertext, key, iv, null, tag));
+        Assert.Throws<InvalidOperationException>(() => AesModes.GcmDecrypt(ciphertext, key, iv, null, tag));
         Assert.Throws<ArgumentException>(() => AesModes.GcmEncrypt("test"u8.ToArray(), key, new byte[16]));
         Assert.Throws<ArgumentException>(() => AesModes.GcmDecrypt(Array.Empty<byte>(), key, iv, null, new byte[8]));
     }
