@@ -4,30 +4,327 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
-### 2026-03-27: Use PowerShell (pwsh) on Windows — never cmd.exe
+### 2026-04-18: Lua rockspecs must pin immutable source refs, not just HTTPS URLs
 
-The build tool executor originally used `cmd /C` on Windows. `cmd.exe` has a
-design flaw from 1987: it strips the outermost double-quote pair from arguments
-before passing them to child processes. This corrupts paths like:
+Switching a Lua rockspec from `git://` to `https://` fixes transport security,
+but it does not make installs reproducible. If the rockspec points at a moving
+branch tip with no immutable tag or commit, the published package version can
+resolve to different source code over time.
 
-  `uv pip install -e "../../../packages/python/foo" --quiet`
+**Symptom:** Security review flags a supply-chain integrity issue because a
+`0.1.0-1` rockspec can fetch whatever happens to be at the repository head at
+install time.
 
-The trailing `"` is left behind as a literal character, which uv then
-URL-encodes as `%22`, producing an invalid path that fails at runtime.
+**Rule:** Every Lua rockspec that installs from GitHub must use `https://` and
+must pin the `source` table to an immutable git ref, such as a release tag or
+commit SHA.
 
-**The fix:** Use `pwsh -Command` instead of `cmd /C`. PowerShell 7 (`pwsh`):
-- Preserves double-quoted strings (no stripping)
-- Supports `&&` for fail-fast chaining (same as bash)
-- Handles forward-slash paths (`../foo`) without requiring backslashes
-- Is pre-installed on all GitHub Actions Windows runners
+---
 
-**BUILD_windows files:** Many existing `BUILD_windows` files only exist to work
-around cmd.exe quoting (e.g., removing double quotes from paths). With
-PowerShell, these files are no longer needed for that purpose. A follow-up
-cleanup pass should delete `BUILD_windows` files that are identical to their
-`BUILD` counterpart (those files are pure redundancy). Real platform differences
-(`.venv\Scripts\python` vs `.venv/bin/python`, `2>/dev/null` redirects, uv
-workspace behavior) still warrant separate `BUILD_windows` files.
+### 2026-04-17: Use a fresh git worktree before editing shared manifests in a noisy repo
+
+When a worktree already contains unrelated untracked package directories or
+other agents are actively building in the same checkout, shared files like
+workspace manifests can pick up accidental references to crates that are not
+part of the intended change. In this case, a Rust event-loop PR accidentally
+committed `job-*` workspace members from the surrounding dirty tree, and CI
+failed because those package directories were never pushed with the branch.
+
+**Symptom:** CI fails with errors like `failed to load manifest for workspace member ... No such file or directory`, even though the feature itself builds locally in isolation.
+
+**Rule:** If the source worktree has unrelated untracked files, package
+directories, or active agent work, create a fresh `git worktree` from
+`origin/main` before staging or committing shared manifest changes. Replay only
+the intended commits there, then push from the clean worktree.
+
+---
+
+### 2026-04-17: Socket tests should not assume immediate accept batching or instant EOF propagation
+
+Local TCP tests can be timing-sensitive even on loopback. A listener may not
+see every new connection in the very first `accept()` burst, and a client that
+was refused server-side may not observe EOF immediately on the next `read()`.
+Tests that assume either behavior become flaky under the repo build tool and CI.
+
+**Symptom:** a readiness or connection-cap test passes in one direct `cargo test`
+run but fails under CI or under the repo build tool with missing accepted
+connections or a refused client that never reports close quickly enough.
+
+**Rule:** In socket tests, wait for the expected accepted-connection count with
+bounded retries, and assert the stable invariant you actually care about
+(`connections.len()`, state transitions, explicit errors) instead of requiring
+an immediate EOF from the peer.
+
+---
+
+### 2026-04-12: Never commit build artifacts — agents running tests will generate them
+
+When agents run tests locally (e.g., `swift test`, `mix test`, `bundle exec rake test`), they generate build artifacts in directories like `.build/`, `cover/`, `vendor/`, `node_modules/`, `_build/`, `deps/`, `blib/`, `MYMETA.*`, `pm_to_blib`. If the agent then runs `git add .` or `git add <package-dir>/`, these artifacts get committed.
+
+**Symptom:** Windows CI fails with "Filename too long" for deeply nested Swift `.build/` paths. Repo bloats by thousands of files.
+
+**Rule:** After agents complete, always check `git status` for build artifacts before committing. Use specific file paths in `git add` rather than directory globs. Never commit: `.build/`, `cover/`, `vendor/`, `node_modules/`, `.venv/`, `deps/`, `_build/`, `__pycache__/`, `blib/`, `MYMETA.*`, `pm_to_blib`, `Makefile` (Perl-generated), `go.sum`.
+
+**Prevention:** Every new Swift package MUST include a `.gitignore` containing `.build/` and `.swiftpm/`. These directories are created by `swift test` and can contain thousands of deeply nested files that break Windows CI with "Filename too long" errors. The `.gitignore` prevents this even if an agent runs tests and does `git add .`.
+
+---
+
+### 2026-04-12: Security fixes that change error messages require updating test assertions
+
+When unifying error messages for security (e.g., generic "Invalid PKCS#7 padding" to prevent padding oracle attacks), tests that assert specific old messages (`match="Invalid padding value"`, `toThrow("inconsistent padding bytes")`) will fail. Always grep all test files for the old messages after making security changes.
+
+**Rule:** After changing error messages in source code, run `grep -r "old message pattern" */test* */t/` to find all test assertions that need updating.
+
+---
+
+### 2026-04-12: Build tool validator requires declared deps in metadata files, not just BUILD
+
+When a BUILD file references a sibling package (e.g., `cd ../json-rpc`), the build tool's validator (`-validate-build-files`) checks that the referenced package is a declared predecessor in the dependency graph. The graph edges come from **metadata files**, not BUILD files:
+
+- **Python**: `dependencies` array in `pyproject.toml`
+- **Ruby**: `spec.add_dependency` in `.gemspec` (regex requires `spec.`, not `s.`)
+- **Perl**: `requires 'coding-adventures-xxx';` in `cpanfile`
+- **Go**: `require` in `go.mod`
+- **Swift**: `.package(path: "...")` in `Package.swift`
+- **Rust**: `[dependencies]` in `Cargo.toml`
+- **TypeScript**: `dependencies` in `package.json`
+
+**Rule:** Every package that references a sibling in its BUILD file must also declare the dependency in the language-appropriate metadata file. The Ruby gemspec must use `spec` (not `s`) as the block variable, matching the build tool's regex `spec\.add_dependency`.
+
+---
+
+### 2026-04-17: Python build validation only whitelists sibling refs that appear in dependency metadata
+
+For Python packages, adding a sibling path only under `[tool.uv.sources]` is not enough to satisfy the build validator's `undeclared local package refs` check. If a BUILD script installs a sibling package for tests or tooling, that sibling must also appear in `dependencies` or an appropriate `[project.optional-dependencies]` group so the validator can see the edge in the package metadata.
+
+**Symptom:** CI detect or CodeQL fails in the build validation phase with `undeclared local package refs: python/<package>` even though the BUILD file and `tool.uv.sources` both mention the sibling path.
+
+**Rule:** For Python packages, declare every BUILD-installed sibling package in `pyproject.toml` dependency metadata as well as in `[tool.uv.sources]`. If the sibling is test-only, put it in the `dev` extra and prefer installing `.[dev]` from BUILD rather than duplicating a standalone `-e ../package` entry.
+
+---
+
+### 2026-04-06: Perl `reverse LIST, $extra` vs `(reverse LIST), $extra` — precedence trap
+
+When building a list that is the reverse of one list plus an extra item, the expression
+`(reverse @$list, $extra)` in Perl is parsed as `reverse(@$list, $extra)` — reversing the
+ENTIRE list including `$extra`. Use explicit double parens: `((reverse @$list), $extra)`.
+
+**Symptom:** `lineage()` returned the entity itself as the FIRST element instead of the last,
+because `$cv_id` was being reversed into the list along with the ancestors.
+
+**Rule:** When using `reverse` in a list construction that includes extra elements, always
+wrap the `reverse` call in its own parens: `my @result = ((reverse @arr), $extra_item);`
+
+---
+
+### 2026-04-06: JSON null sentinel from JsonValue comes back as object, not Perl undef
+
+`CodingAdventures::JsonSerializer::decode` returns `CodingAdventures::JsonValue::Null`
+blessed objects for JSON `null` values — not Perl `undef`. When deserializing stored data
+that contains null fields (e.g., `parent_cv_id`, `deleted`, `origin`), the decoded values
+are Null sentinel objects. Tests like `is($e->{parent_cv_id}, undef)` fail because the
+sentinel is not undef.
+
+**Solution:** Use `CodingAdventures::JsonSerializer::is_null($v)` to detect nulls and
+normalize them back to Perl `undef` in any deserialization code:
+
+```perl
+sub _to_perl_undef {
+    my ($v) = @_;
+    return undef if !defined $v;
+    return undef if CodingAdventures::JsonSerializer::is_null($v);
+    return $v;
+}
+```
+
+**Rule:** Any Perl module that deserializes JSON and stores the result in internal data
+structures must normalize JSON nulls to Perl undef using `is_null()` checks. Never assume
+a JSON null field will come back as Perl undef.
+
+---
+
+### 2026-04-05: Always verify all agent-written files are staged before committing
+
+When using multiple background agents to write files in parallel, some files may be written after the initial `git add` command. Always run `git status --short` after all agents complete and before committing to catch untracked or unstaged files. In this case, Rust's `src/lib.rs`, Ruby/Elixir/Lua/Perl test updates, and workspace Cargo.toml changes were missed.
+
+**Rule:** After collecting agent results, run `git diff --name-only` and `git status --short` to verify ALL changes are staged. Don't trust a single `git add` command to catch everything when agents run concurrently.
+
+---
+
+### 2026-04-05: Hand-written parsers need manual token type updates
+
+The Perl python-parser is hand-written (not grammar-driven). It checks `$type eq 'NUMBER'` directly. When the lexer grammar changed from `NUMBER` to `INT`, the grammar-driven parsers (Go, TypeScript, Lua, Ruby) picked up the fix from `python.grammar`, but the Perl parser didn't — it never reads that file.
+
+**Rule:** When changing token names, check for BOTH grammar-driven parsers (which load `python.grammar`) AND hand-written parsers (which have hardcoded type checks). Grep for the old token name across ALL parser packages.
+
+---
+
+### 2026-04-05: Changing lexer token names breaks downstream parsers
+
+When updating the python-lexer to use versioned grammar files (python3.12.tokens), the token name for integers changed from `NUMBER` to `INT`. This broke the python-parser, which still loaded the old `python.grammar` containing `factor = NUMBER | ...`. The parser received `INT` tokens but had no grammar rule matching `INT`.
+
+**Rule:** When changing token names in a lexer grammar, always check all downstream parsers that consume those tokens. Either update the parser grammar simultaneously, or make the grammar accept both old and new token names during the transition period (`factor = INT | FLOAT | NUMBER | ...`).
+
+---
+
+### 2026-04-05: Lua regex does not support \v and \f escapes in character classes
+
+The ECMAScript .tokens grammar files use `/[ \t\r\n\v\f]+/` for whitespace skip patterns. In Lua's regex engine, `\v` and `\f` are not recognized escape sequences inside character classes. They are interpreted as literal `v` and `f`, causing the whitespace skip to match the letters `v` and `f` in source code, silently consuming characters from keywords like `var` and `function`.
+
+**Symptom:** `var` tokenizes as NAME with value `ar` (the `v` is consumed by the skip pattern).
+
+**Solution:** In Lua lexer wrappers that load .tokens files with `\v` or `\f` in patterns, replace these escapes with actual control characters before parsing:
+
+```lua
+content = content:gsub("\\v", "\x0B")
+content = content:gsub("\\f", "\x0C")
+```
+
+**Rule:** Every Lua lexer package that loads a .tokens grammar with `\v` or `\f` in skip patterns must sanitize the content before calling `grammar_tools.parse_token_grammar`.
+
+---
+
+### 2026-04-05: Swift GrammarLexer emits generic "KEYWORD" type for all keywords
+
+The Swift `GrammarLexer` emits tokens with type `"KEYWORD"` for all keywords, with the actual keyword text in the `value` field. This differs from the Lua GrammarLexer which uses `type_name` set to the uppercased keyword (e.g., `"VAR"`, `"IF"`).
+
+**Solution:** Swift lexer wrappers must post-process the token stream to promote `KEYWORD` tokens:
+
+```swift
+return raw.map { token in
+    if token.type == "KEYWORD" {
+        return Token(type: token.value.uppercased(), value: token.value, ...)
+    }
+    return token
+}
+```
+
+**Rule:** All Swift language lexer packages need keyword promotion in their `tokenize()` method.
+
+---
+
+### 2026-04-04: Gradle "build" directory conflicts with BUILD file on case-insensitive filesystems
+
+Gradle's default output directory is `build/`. On macOS and Windows (case-insensitive filesystems), this collides with our `BUILD` file — Gradle sees `BUILD` as a file where it expects to create a `build/` directory, causing `IllegalArgumentException: Could not create problems-report directory`.
+
+**Solution:** In every `build.gradle.kts` for Java/Kotlin packages in this monorepo, add this line BEFORE the plugins block:
+
+```kotlin
+layout.buildDirectory = file("gradle-build")
+```
+
+This redirects Gradle's output to `gradle-build/` instead of `build/`. Also add `gradle-build` to the skip dirs in all build tool implementations so the build tool doesn't recurse into Gradle output directories.
+
+**Checklist for every new Java/Kotlin package:**
+- [ ] `layout.buildDirectory = file("gradle-build")` in build.gradle.kts
+- [ ] BUILD file exists for the monorepo build tool
+- [ ] `gradle-build/` in .gitignore
+- [ ] Do NOT use `java { toolchain { languageVersion.set(...) } }` — let Gradle use the running JDK
+
+---
+
+### 2026-04-04: Java toolchain block causes CI failure when JDK is not pre-installed
+
+Using `java { toolchain { languageVersion.set(JavaLanguageVersion.of(21)) } }` in `build.gradle.kts` causes Gradle to search for a JDK 21 installation matching that exact version. If the CI runner doesn't have JDK 21 pre-installed and toolchain auto-provisioning isn't configured, the build fails with "Cannot find a Java installation on your machine."
+
+**Solution:** Do NOT specify an explicit Java toolchain version. Let Gradle use whatever JDK is on the PATH (set up by `actions/setup-java` in CI). This matches the lesson from the hello-world programs.
+
+---
+
+### 2026-04-04: CI detect outputs must use steps.toolchains, not steps.detect
+
+The CI workflow has a "Normalize toolchain requirements" step (id: `toolchains`) that sits between the detect step and the job outputs. On main branch pushes, it forces all languages to `true` for the full rebuild. On other branches, it passes through the detect outputs.
+
+When adding a new language to CI, you must add it in THREE places:
+1. `allLanguages` in the build tool (`main.go`)
+2. The detect job `outputs:` section (using `steps.toolchains.outputs.needs_<lang>`)
+3. The `steps.toolchains` normalization step — in BOTH the `is_main=true` branch AND the `else` branch
+
+If you only add it to `outputs:` using `steps.detect.outputs` instead of `steps.toolchains.outputs`, the validator will fail with: "detect outputs for forced main full builds are not normalized through steps.toolchains."
+
+---
+
+### 2026-04-04: elixir_make chicken-and-egg: do not use `:make` compiler in mix.exs when BUILD builds the NIF externally
+
+When `mix.exs` lists `compilers: Mix.compilers() ++ [:make]`, Mix tries to
+load `Mix.Tasks.Compile.Make` at startup — before `elixir_make` has been compiled
+from deps. This causes `** (Mix) The task "compile.make" could not be found` on
+every `mix` command in CI (including `mix deps.get`), making the BUILD fail.
+
+The error appears even though the subsequent `mix compile` may ultimately succeed
+(after auto-compiling elixir_make), because Mix exits non-zero from the first command.
+
+**Rule:** If the BUILD file already calls `cargo build --release` and copies the
+`.so` into `priv/`, do NOT also use `elixir_make` in `mix.exs`. Remove the
+`:make` compiler, `make_targets`, `make_clean`, `make_cwd`, and the
+`{:elixir_make, "~> 0.7", runtime: false}` dep. Use plain `Mix.compilers()`.
+
+---
+
+### 2026-04-01: kern Format 0 coverage — format is in HIGH byte (bits 8-15)
+
+The `coverage` field of a kern subtable header is a 16-bit value. Bits 0-7
+contain directional flags (bit 0 = horizontal). **Bits 8-15 contain the
+subtable format number.** To check for Format 0 (sorted pairs): `coverage >> 8 == 0`.
+Using `coverage & 0xFF == 0` (the low byte) checks the flags, not the format,
+and will skip all valid Format 0 subtables since the horizontal flag (bit 0)
+is usually set (making the low byte == 1, not 0).
+
+**Rule:** Always extract format as `coverage >> 8` when parsing kern subtable headers.
+
+---
+
+### 2026-04-01: Elixir ranges — always use explicit step //1 when count may be zero
+
+In Elixir, `0..(n - 1)` when `n = 0` creates the range `0..-1` which
+**defaults to step -1** and iterates `[0, -1]`. This causes out-of-bounds
+`binary_part/3` calls (negative offsets) → `ArgumentError` → `ParseError` in
+the error handler, masking the real issue.
+
+**Rule:** All ranges over font table entries must use `//1`: `0..(n - 1)//1`.
+An ascending range `0..-1//1` is correctly empty (zero iterations).
+
+---
+
+### 2026-04-01: Swift XCTestCase shadows module-level `load` function
+
+`XCTestCase` (via `NSObject`) has a static `load()` class method. Inside a
+test class that subclasses `XCTestCase`, calling `load(data)` resolves to
+the inherited class method, not the `FontParser.load(_:)` module function.
+The error is "static member 'load' cannot be used on instance of type '...'".
+
+**Rule:** In Swift test files that use `FontParser.load`, always qualify the
+call as `FontParser.load(...)` to bypass the `XCTestCase` shadow.
+
+---
+
+### 2026-04-01: Swift .build/ directory must be gitignored before first test run
+
+`swift build` / `swift test` creates a `.build/` directory with thousands of
+binary files. If you commit before adding a `.gitignore`, these get staged.
+Add `.gitignore` containing `.build/` **before** running any Swift build commands.
+
+**Rule:** For every new Swift package, create `.gitignore` with `.build/` as
+the very first file — before `swift test`.
+
+---
+
+### 2026-04-01: OpenType synthetic font builder — head table needs 54 bytes exactly
+
+The `head` table in a minimal synthetic OpenType font has this exact layout (54 bytes):
+- 4×u32 (version, fontRevision, checkSumAdjust, magicNumber) = 16 bytes
+- flags u16 + unitsPerEm u16 = 4 bytes
+- created i64 + modified i64 = 16 bytes
+- xMin i16 + yMin i16 + xMax i16 + yMax i16 = 8 bytes
+- macStyle u16 + lowestRecPPEM u16 + fontDirectionHint i16 + indexToLocFormat i16 + glyphDataFormat i16 = 10 bytes
+
+Missing the xMin/yMin/xMax/yMax fields (8 bytes) makes the table only 46 bytes,
+causing all subsequent table offsets to be wrong, leading to `ParseError` when
+loading the synthetic font.
+
+**Rule:** When building a synthetic OpenType font in tests, verify total table
+sizes match the declared lengths in the directory. Assert `buf.count == expected_size`
+at the end of the builder if your language supports it.
 
 ---
 
