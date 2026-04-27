@@ -1,459 +1,279 @@
-// ============================================================================
-// AVLTree.kt — Self-Balancing Binary Search Tree (AVL)
-// ============================================================================
-//
-// An AVL tree (named after Adelson-Velsky and Landis, 1962) is a binary
-// search tree that keeps itself balanced by enforcing one extra invariant:
-//
-//   For every node, |height(left) - height(right)| ≤ 1
-//
-// This single rule guarantees O(log n) height, so all standard BST operations
-// run in O(log n) time in the worst case — unlike an unbalanced BST which
-// degrades to O(n) on sorted input.
-//
-// ============================================================================
-// Node augmentation: height and size
-// ============================================================================
-//
-//   Each node stores two extra fields beyond the value and child pointers:
-//
-//     height: distance to the furthest leaf below (leaves have height 0)
-//     size  : count of nodes in this subtree (leaves have size 1)
-//
-//   These are updated on every structural change, which enables:
-//     - O(1) height lookups (used by the balancing code)
-//     - O(log n) kthSmallest and rank (order statistics)
-//
-// ============================================================================
-// Rebalancing: four rotation cases
-// ============================================================================
-//
-//   When an insert or delete creates a node with balance factor (BF) ≤ -2
-//   or ≥ +2, we apply one of four rotations:
-//
-//     BF(node) = height(left) - height(right)
-//
-//     Case 1 — Left-Left (BF > 1, left child is left-heavy):
-//       rotate right at node
-//
-//     Case 2 — Left-Right (BF > 1, left child is right-heavy):
-//       rotate left at left child, then rotate right at node
-//
-//     Case 3 — Right-Right (BF < -1, right child is right-heavy):
-//       rotate left at node
-//
-//     Case 4 — Right-Left (BF < -1, right child is left-heavy):
-//       rotate right at right child, then rotate left at node
-//
-//   Rotation diagrams:
-//
-//   Right rotation (rotateRight at y):
-//
-//         y             x
-//        / \           / \
-//       x   C    →    A   y
-//      / \               / \
-//     A   B             B   C
-//
-//   Left rotation (rotateLeft at x):
-//
-//       x               y
-//      / \             / \
-//     A   y     →    x   C
-//        / \        / \
-//       B   C      A   B
-//
-// ============================================================================
-
 package com.codingadventures.avltree
 
-/**
- * A self-balancing binary search tree using the AVL invariant.
- *
- * All operations run in O(log n) time in the worst case. Each node is
- * augmented with its subtree height and size, enabling O(log n) order
- * statistics (rank and kth-smallest).
- *
- * ```kotlin
- * val tree = AVLTree<Int>()
- * tree.insert(10)
- * tree.insert(5)
- * tree.insert(20)
- *
- * tree.contains(5)            // true
- * tree.min()                  // 5
- * tree.max()                  // 20
- * tree.kthSmallest(2)         // 10
- * tree.rank(10)               // 1  (0-based: one element is smaller)
- * tree.predecessor(10)        // 5
- * tree.successor(10)          // 20
- *
- * tree.delete(10)
- * tree.size                   // 2
- * tree.isValid()              // true
- * ```
- *
- * @param T the element type; must be [Comparable]
- */
-class AVLTree<T : Comparable<T>> {
+data class AvlNode<T : Comparable<T>>(
+    val value: T,
+    val left: AvlNode<T>? = null,
+    val right: AvlNode<T>? = null,
+    val height: Int = 0,
+    val size: Int = 1,
+) {
+    companion object {
+        fun <T : Comparable<T>> leaf(value: T): AvlNode<T> = AvlNode(value)
 
-    // =========================================================================
-    // Inner class: Node
-    // =========================================================================
+        fun <T : Comparable<T>> create(
+            value: T,
+            left: AvlNode<T>?,
+            right: AvlNode<T>?,
+        ): AvlNode<T> = AvlNode(value, left, right, 1 + maxOf(height(left), height(right)), 1 + size(left) + size(right))
 
-    /**
-     * A single node in the AVL tree.
-     *
-     * Invariants (maintained after every structural change):
-     * - height == 1 + max(height(left), height(right))  (0 for leaves)
-     * - size   == 1 + size(left) + size(right)          (1 for leaves)
-     * - |height(left) - height(right)| ≤ 1              (AVL property)
-     * - BST ordering: all values in left < value < all in right
-     */
-    inner class Node(var value: T) {
-        var left:   Node? = null
-        var right:  Node? = null
-        var height: Int   = 0   // 0 for a leaf
-        var size:   Int   = 1   // 1 for a leaf
+        fun <T : Comparable<T>> height(node: AvlNode<T>?): Int = node?.height ?: -1
+
+        fun <T : Comparable<T>> size(node: AvlNode<T>?): Int = node?.size ?: 0
     }
+}
 
-    // =========================================================================
-    // Fields
-    // =========================================================================
+class AvlTree<T : Comparable<T>>(val root: AvlNode<T>? = null) {
+    fun insert(value: T): AvlTree<T> = AvlTree(insertNode(root, value))
 
-    private var root: Node? = null
+    fun delete(value: T): AvlTree<T> = AvlTree(deleteNode(root, value))
 
-    /** Number of values in the tree. */
-    val size: Int get() = nodeSize(root)
+    fun search(value: T): AvlNode<T>? = searchNode(root, value)
 
-    /** True when the tree contains no values. */
-    val isEmpty: Boolean get() = root == null
+    fun contains(value: T): Boolean = search(value) != null
 
-    // =========================================================================
-    // Public API
-    // =========================================================================
+    fun minValue(): T? = minValue(root)
 
-    /**
-     * Insert [value] into the tree.
-     *
-     * If the value is already present, the tree is unchanged.
-     *
-     * @throws IllegalArgumentException if value is null (enforced by Kotlin)
-     */
-    fun insert(value: T) {
-        root = insert(root, value)
-    }
+    fun maxValue(): T? = maxValue(root)
 
-    /**
-     * Remove [value] from the tree.
-     *
-     * @throws NoSuchElementException if the value is not present
-     */
-    fun delete(value: T) {
-        if (!contains(value)) throw NoSuchElementException("Value not found: $value")
-        root = delete(root, value)
-    }
+    fun predecessor(value: T): T? = predecessor(root, value)
 
-    /**
-     * Return true if [value] is present in the tree.
-     */
-    fun contains(value: T): Boolean {
-        var node = root
-        while (node != null) {
-            val cmp = value.compareTo(node.value)
-            node = when {
-                cmp < 0 -> node.left
-                cmp > 0 -> node.right
-                else    -> return true
-            }
-        }
-        return false
-    }
+    fun successor(value: T): T? = successor(root, value)
 
-    /**
-     * Return the smallest value in the tree.
-     *
-     * @throws NoSuchElementException if the tree is empty
-     */
-    fun min(): T {
-        val r = root ?: throw NoSuchElementException("Tree is empty")
-        var node = r
-        while (node.left != null) node = node.left!!
-        return node.value
-    }
+    fun kthSmallest(k: Int): T? = kthSmallest(root, k)
 
-    /**
-     * Return the largest value in the tree.
-     *
-     * @throws NoSuchElementException if the tree is empty
-     */
-    fun max(): T {
-        val r = root ?: throw NoSuchElementException("Tree is empty")
-        var node = r
-        while (node.right != null) node = node.right!!
-        return node.value
-    }
-
-    /**
-     * Return the largest value strictly less than [value], or null if none exists.
-     */
-    fun predecessor(value: T): T? {
-        var best: T? = null
-        var node = root
-        while (node != null) {
-            node = if (value.compareTo(node.value) <= 0) {
-                node.left
-            } else {
-                best = node.value
-                node.right
-            }
-        }
-        return best
-    }
-
-    /**
-     * Return the smallest value strictly greater than [value], or null if none exists.
-     */
-    fun successor(value: T): T? {
-        var best: T? = null
-        var node = root
-        while (node != null) {
-            node = if (value.compareTo(node.value) >= 0) {
-                node.right
-            } else {
-                best = node.value
-                node.left
-            }
-        }
-        return best
-    }
-
-    /**
-     * Return the k-th smallest value (1-based).
-     *
-     * [kthSmallest](1) returns the minimum; [kthSmallest](size) returns the maximum.
-     *
-     * @param k the rank (1-based)
-     * @return the k-th smallest value, or null if k is out of range
-     */
-    fun kthSmallest(k: Int): T? {
-        if (k <= 0 || k > nodeSize(root)) return null
-        return kthSmallest(root!!, k)
-    }
-
-    /**
-     * Return the 0-based rank of [value] — the number of elements strictly
-     * less than [value].
-     *
-     * If [value] is not in the tree, this is the position it would occupy
-     * if inserted.
-     */
     fun rank(value: T): Int = rank(root, value)
 
-    /**
-     * Return all values in ascending (in-order) order.
-     */
-    fun toSortedList(): List<T> {
-        val out = mutableListOf<T>()
-        inorder(root, out)
-        return out
+    fun toSortedArray(): List<T> = toSortedArray(root)
+
+    fun isValidBst(): Boolean = isValidBst(root)
+
+    fun isValidAvl(): Boolean = isValidAvl(root)
+
+    fun balanceFactor(node: AvlNode<T>?): Int = balanceFactorNode(node)
+
+    fun height(): Int = AvlNode.height(root)
+
+    fun size(): Int = AvlNode.size(root)
+
+    override fun toString(): String {
+        val rootValue = root?.value?.toString() ?: "null"
+        return "AvlTree(root=$rootValue, size=${size()}, height=${height()})"
     }
 
-    /** Height of the tree (0 for single node, -1 for empty). */
-    val height: Int get() = nodeHeight(root)
+    companion object {
+        fun <T : Comparable<T>> empty(): AvlTree<T> = AvlTree()
 
-    /**
-     * Balance factor of the root: height(left) - height(right).
-     * A valid AVL tree has every node's BF in {-1, 0, +1}.
-     */
-    val balanceFactor: Int get() = balanceFactor(root)
+        fun <T : Comparable<T>> fromValues(values: Iterable<T>): AvlTree<T> =
+            values.fold(empty()) { tree, value -> tree.insert(value) }
 
-    /**
-     * Validate all AVL tree invariants:
-     * 1. BST ordering (left < node < right at every node)
-     * 2. AVL property (|BF| ≤ 1 at every node)
-     * 3. Correct height values in every node
-     * 4. Correct size values in every node
-     *
-     * @return true if the tree is a valid AVL tree
-     */
-    fun isValid(): Boolean = validateAVL(root, null, null) != null
-
-    /**
-     * Return true if BST ordering holds (does NOT check AVL balance invariant).
-     */
-    fun isValidBST(): Boolean = validateBST(root, null, null)
-
-    override fun toString(): String = "AVLTree(size=$size, height=$height)"
-
-    // =========================================================================
-    // Private helpers — insertion
-    // =========================================================================
-
-    private fun insert(node: Node?, value: T): Node {
-        if (node == null) return Node(value)
-        val cmp = value.compareTo(node.value)
-        when {
-            cmp < 0 -> node.left  = insert(node.left,  value)
-            cmp > 0 -> node.right = insert(node.right, value)
-            // cmp == 0: already present, no change
+        fun <T : Comparable<T>> searchNode(root: AvlNode<T>?, value: T): AvlNode<T>? {
+            var current = root
+            while (current != null) {
+                current = when {
+                    value < current.value -> current.left
+                    value > current.value -> current.right
+                    else -> return current
+                }
+            }
+            return null
         }
-        update(node)
-        return rebalance(node)
-    }
 
-    // =========================================================================
-    // Private helpers — deletion
-    // =========================================================================
+        fun <T : Comparable<T>> insertNode(root: AvlNode<T>?, value: T): AvlNode<T> {
+            if (root == null) return AvlNode.leaf(value)
 
-    private fun delete(node: Node?, value: T): Node? {
-        node ?: return null
-        val cmp = value.compareTo(node.value)
-        when {
-            cmp < 0 -> node.left  = delete(node.left,  value)
-            cmp > 0 -> node.right = delete(node.right, value)
-            else    -> {
-                if (node.left  == null) return node.right
-                if (node.right == null) return node.left
-                // Two children: replace with in-order successor
-                var successor = node.right!!
-                while (successor.left != null) successor = successor.left!!
-                node.value = successor.value
-                node.right = delete(node.right, successor.value)
+            return when {
+                value < root.value -> rebalance(AvlNode.create(root.value, insertNode(root.left, value), root.right))
+                value > root.value -> rebalance(AvlNode.create(root.value, root.left, insertNode(root.right, value)))
+                else -> root
             }
         }
-        update(node)
-        return rebalance(node)
-    }
 
-    // =========================================================================
-    // Private helpers — rotations and rebalancing
-    // =========================================================================
+        fun <T : Comparable<T>> deleteNode(root: AvlNode<T>?, value: T): AvlNode<T>? {
+            if (root == null) return null
 
-    /**
-     * Rotate right at [y]:
-     *
-     *       y             x
-     *      / \           / \
-     *     x   C    →    A   y
-     *    / \               / \
-     *   A   B             B   C
-     */
-    private fun rotateRight(y: Node): Node {
-        val x = y.left!!
-        val b = x.right
-        x.right = y
-        y.left  = b
-        update(y)
-        update(x)
-        return x
-    }
-
-    /**
-     * Rotate left at [x]:
-     *
-     *     x               y
-     *    / \             / \
-     *   A   y     →    x   C
-     *      / \        / \
-     *     B   C      A   B
-     */
-    private fun rotateLeft(x: Node): Node {
-        val y = x.right!!
-        val b = y.left
-        y.left  = x
-        x.right = b
-        update(x)
-        update(y)
-        return y
-    }
-
-    private fun rebalance(node: Node): Node {
-        val bf = balanceFactor(node)
-        if (bf > 1) {
-            if (balanceFactor(node.left) < 0) node.left = rotateLeft(node.left!!)
-            return rotateRight(node)
+            return when {
+                value < root.value -> rebalance(AvlNode.create(root.value, deleteNode(root.left, value), root.right))
+                value > root.value -> rebalance(AvlNode.create(root.value, root.left, deleteNode(root.right, value)))
+                root.left == null -> root.right
+                root.right == null -> root.left
+                else -> {
+                    val extracted = extractMin(root.right)
+                    rebalance(AvlNode.create(extracted.minimum, root.left, extracted.root))
+                }
+            }
         }
-        if (bf < -1) {
-            if (balanceFactor(node.right) > 0) node.right = rotateRight(node.right!!)
-            return rotateLeft(node)
+
+        fun <T : Comparable<T>> minValue(root: AvlNode<T>?): T? {
+            var current = root
+            while (current?.left != null) {
+                current = current.left
+            }
+            return current?.value
         }
-        return node
-    }
 
-    private fun update(node: Node) {
-        node.height = 1 + maxOf(nodeHeight(node.left), nodeHeight(node.right))
-        node.size   = 1 + nodeSize(node.left) + nodeSize(node.right)
-    }
-
-    // =========================================================================
-    // Private helpers — order statistics
-    // =========================================================================
-
-    private fun kthSmallest(node: Node, k: Int): T {
-        val leftSize = nodeSize(node.left)
-        return when {
-            k == leftSize + 1 -> node.value
-            k <= leftSize     -> kthSmallest(node.left!!, k)
-            else              -> kthSmallest(node.right!!, k - leftSize - 1)
+        fun <T : Comparable<T>> maxValue(root: AvlNode<T>?): T? {
+            var current = root
+            while (current?.right != null) {
+                current = current.right
+            }
+            return current?.value
         }
-    }
 
-    private fun rank(node: Node?, value: T): Int {
-        node ?: return 0
-        val cmp = value.compareTo(node.value)
-        return when {
-            cmp < 0 -> rank(node.left,  value)
-            cmp > 0 -> nodeSize(node.left) + 1 + rank(node.right, value)
-            else    -> nodeSize(node.left)
+        fun <T : Comparable<T>> predecessor(root: AvlNode<T>?, value: T): T? {
+            var current = root
+            var best: T? = null
+
+            while (current != null) {
+                if (value <= current.value) {
+                    current = current.left
+                } else {
+                    best = current.value
+                    current = current.right
+                }
+            }
+
+            return best
         }
-    }
 
-    private fun inorder(node: Node?, out: MutableList<T>) {
-        node ?: return
-        inorder(node.left,  out)
-        out.add(node.value)
-        inorder(node.right, out)
-    }
+        fun <T : Comparable<T>> successor(root: AvlNode<T>?, value: T): T? {
+            var current = root
+            var best: T? = null
 
-    // =========================================================================
-    // Private helpers — utility
-    // =========================================================================
+            while (current != null) {
+                if (value >= current.value) {
+                    current = current.right
+                } else {
+                    best = current.value
+                    current = current.left
+                }
+            }
 
-    private fun nodeHeight(node: Node?): Int = node?.height ?: -1
-    private fun nodeSize(node: Node?):   Int = node?.size   ?: 0
-    private fun balanceFactor(node: Node?): Int =
-        if (node == null) 0 else nodeHeight(node.left) - nodeHeight(node.right)
+            return best
+        }
 
-    // =========================================================================
-    // Private helpers — validation
-    // =========================================================================
+        fun <T : Comparable<T>> kthSmallest(root: AvlNode<T>?, k: Int): T? {
+            if (root == null || k <= 0) return null
 
-    /**
-     * Returns IntArray(height, size) if the subtree rooted at [node] is a
-     * valid AVL tree (BST-ordered, balanced, correct cached values), or null
-     * if any invariant is violated.
-     */
-    private fun validateAVL(node: Node?, min: T?, max: T?): IntArray? {
-        if (node == null) return intArrayOf(-1, 0)
-        if (min != null && node.value.compareTo(min) <= 0) return null
-        if (max != null && node.value.compareTo(max) >= 0) return null
-        val left  = validateAVL(node.left,  min,        node.value) ?: return null
-        val right = validateAVL(node.right, node.value, max)        ?: return null
-        val expectedHeight = 1 + maxOf(left[0], right[0])
-        val expectedSize   = 1 + left[1] + right[1]
-        val bf             = left[0] - right[0]
-        if (node.height != expectedHeight) return null
-        if (node.size   != expectedSize)   return null
-        if (kotlin.math.abs(bf) > 1)       return null
-        return intArrayOf(expectedHeight, expectedSize)
-    }
+            val leftSize = AvlNode.size(root.left)
+            return when {
+                k == leftSize + 1 -> root.value
+                k <= leftSize -> kthSmallest(root.left, k)
+                else -> kthSmallest(root.right, k - leftSize - 1)
+            }
+        }
 
-    private fun validateBST(node: Node?, min: T?, max: T?): Boolean {
-        node ?: return true
-        if (min != null && node.value.compareTo(min) <= 0) return false
-        if (max != null && node.value.compareTo(max) >= 0) return false
-        return validateBST(node.left, min, node.value) &&
-               validateBST(node.right, node.value, max)
+        fun <T : Comparable<T>> rank(root: AvlNode<T>?, value: T): Int {
+            if (root == null) return 0
+
+            return when {
+                value < root.value -> rank(root.left, value)
+                value > root.value -> AvlNode.size(root.left) + 1 + rank(root.right, value)
+                else -> AvlNode.size(root.left)
+            }
+        }
+
+        fun <T : Comparable<T>> toSortedArray(root: AvlNode<T>?): List<T> {
+            val output = mutableListOf<T>()
+            inOrder(root, output)
+            return output
+        }
+
+        fun <T : Comparable<T>> isValidBst(root: AvlNode<T>?): Boolean =
+            validateBst(root, null, null)
+
+        fun <T : Comparable<T>> isValidAvl(root: AvlNode<T>?): Boolean =
+            validateAvl(root, null, null) != null
+
+        fun <T : Comparable<T>> balanceFactorNode(node: AvlNode<T>?): Int =
+            if (node == null) 0 else AvlNode.height(node.left) - AvlNode.height(node.right)
+
+        private fun <T : Comparable<T>> rebalance(node: AvlNode<T>): AvlNode<T> {
+            val balance = balanceFactorNode(node)
+
+            if (balance > 1) {
+                val left = if (node.left != null && balanceFactorNode(node.left) < 0) {
+                    rotateLeft(node.left)
+                } else {
+                    node.left
+                }
+                return rotateRight(AvlNode.create(node.value, left, node.right))
+            }
+
+            if (balance < -1) {
+                val right = if (node.right != null && balanceFactorNode(node.right) > 0) {
+                    rotateRight(node.right)
+                } else {
+                    node.right
+                }
+                return rotateLeft(AvlNode.create(node.value, node.left, right))
+            }
+
+            return node
+        }
+
+        private fun <T : Comparable<T>> rotateLeft(root: AvlNode<T>): AvlNode<T> {
+            val right = root.right ?: return root
+            val newLeft = AvlNode.create(root.value, root.left, right.left)
+            return AvlNode.create(right.value, newLeft, right.right)
+        }
+
+        private fun <T : Comparable<T>> rotateRight(root: AvlNode<T>): AvlNode<T> {
+            val left = root.left ?: return root
+            val newRight = AvlNode.create(root.value, left.right, root.right)
+            return AvlNode.create(left.value, left.left, newRight)
+        }
+
+        private fun <T : Comparable<T>> extractMin(root: AvlNode<T>): Extracted<T> {
+            if (root.left == null) {
+                return Extracted(root.right, root.value)
+            }
+
+            val extracted = extractMin(root.left)
+            return Extracted(
+                rebalance(AvlNode.create(root.value, extracted.root, root.right)),
+                extracted.minimum,
+            )
+        }
+
+        private fun <T : Comparable<T>> inOrder(root: AvlNode<T>?, output: MutableList<T>) {
+            if (root == null) return
+            inOrder(root.left, output)
+            output += root.value
+            inOrder(root.right, output)
+        }
+
+        private fun <T : Comparable<T>> validateBst(
+            root: AvlNode<T>?,
+            minimum: T?,
+            maximum: T?,
+        ): Boolean {
+            if (root == null) return true
+            if (minimum != null && root.value <= minimum) return false
+            if (maximum != null && root.value >= maximum) return false
+            return validateBst(root.left, minimum, root.value) && validateBst(root.right, root.value, maximum)
+        }
+
+        private fun <T : Comparable<T>> validateAvl(
+            root: AvlNode<T>?,
+            minimum: T?,
+            maximum: T?,
+        ): Validation? {
+            if (root == null) return Validation(-1, 0)
+            if (minimum != null && root.value <= minimum) return null
+            if (maximum != null && root.value >= maximum) return null
+
+            val left = validateAvl(root.left, minimum, root.value) ?: return null
+            val right = validateAvl(root.right, root.value, maximum) ?: return null
+            val expectedHeight = 1 + maxOf(left.height, right.height)
+            val expectedSize = 1 + left.size + right.size
+            if (root.height != expectedHeight || root.size != expectedSize || kotlin.math.abs(left.height - right.height) > 1) {
+                return null
+            }
+            return Validation(expectedHeight, expectedSize)
+        }
+
+        private data class Extracted<T : Comparable<T>>(val root: AvlNode<T>?, val minimum: T)
+
+        private data class Validation(val height: Int, val size: Int)
     }
 }
