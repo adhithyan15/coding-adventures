@@ -37,6 +37,8 @@
 
 pub mod graph;
 pub mod errors;
+pub mod traversal;
 
 pub use graph::Graph;
 pub use errors::GraphError;
+pub use traversal::{bfs, TraversalGraph};

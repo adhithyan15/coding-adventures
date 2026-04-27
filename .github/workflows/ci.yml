@@ -49,6 +49,7 @@ jobs:
       needs_swift: ${{ steps.toolchains.outputs.needs_swift }}
       needs_haskell: ${{ steps.toolchains.outputs.needs_haskell }}
       needs_kotlin: ${{ steps.toolchains.outputs.needs_kotlin }}
+      needs_dotnet: ${{ steps.toolchains.outputs.needs_dotnet }}
       diff_base: ${{ steps.diff-base.outputs.base }}
       is_main: ${{ steps.detect-main.outputs.is_main }}
     steps:
@@ -117,7 +118,8 @@ jobs:
               'needs_dart=true' \
               'needs_swift=true' \
               'needs_haskell=true' \
-              'needs_kotlin=true' >> "$GITHUB_OUTPUT"
+              'needs_kotlin=true' \
+              'needs_dotnet=true' >> "$GITHUB_OUTPUT"
           else
             printf '%s\n' \
               "needs_python=${{ steps.plan.outputs.needs_python }}" \
@@ -131,20 +133,21 @@ jobs:
               "needs_dart=${{ steps.plan.outputs.needs_dart }}" \
               "needs_swift=${{ steps.plan.outputs.needs_swift }}" \
               "needs_haskell=${{ steps.plan.outputs.needs_haskell }}" \
-              "needs_kotlin=${{ steps.plan.outputs.needs_kotlin }}" >> "$GITHUB_OUTPUT"
+              "needs_kotlin=${{ steps.plan.outputs.needs_kotlin }}" \
+              "needs_dotnet=${{ steps.plan.outputs.needs_dotnet }}" >> "$GITHUB_OUTPUT"
           fi
 
       # ── Language toolchains (conditional) ───────────────────────
       
       - name: Set up Python
-        if: steps.plan.outputs.needs_python == 'true'
+        if: steps.toolchains.outputs.needs_python == 'true'
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
           allow-prereleases: true
 
       - name: Install uv
-        if: steps.plan.outputs.needs_python == 'true'
+        if: steps.toolchains.outputs.needs_python == 'true'
         uses: astral-sh/setup-uv@v4
         with:
           version: "0.6.x"
@@ -156,21 +159,21 @@ jobs:
       # first, the MSVC `link.exe` is in PATH before Ruby's MSYS2.
 
       - name: Set up MSVC (required for Lua on Windows)
-        if: (needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.is_main == 'true') && runner.os == 'Windows'
+        if: (steps.toolchains.outputs.needs_lua == 'true' || steps.detect-main.outputs.is_main == 'true') && runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
 
       - name: Set up Lua
-        if: needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.is_main == 'true'
+        if: steps.toolchains.outputs.needs_lua == 'true' || steps.detect-main.outputs.is_main == 'true'
         uses: leafo/gh-actions-lua@v11
         with:
           luaVersion: "5.4"
 
       - name: Set up LuaRocks (Unix)
-        if: (needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.is_main == 'true') && runner.os != 'Windows'
+        if: (steps.toolchains.outputs.needs_lua == 'true' || steps.detect-main.outputs.is_main == 'true') && runner.os != 'Windows'
         uses: leafo/gh-actions-luarocks@v4
 
       - name: Set up LuaRocks (Windows)
-        if: (needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.is_main == 'true') && runner.os == 'Windows'
+        if: (steps.toolchains.outputs.needs_lua == 'true' || steps.detect-main.outputs.is_main == 'true') && runner.os == 'Windows'
         shell: cmd
         run: |
           curl -L -o luarocks.zip https://luarocks.github.io/luarocks/releases/luarocks-3.11.1-windows-64.zip
@@ -179,7 +182,7 @@ jobs:
           echo %CD%>> %GITHUB_PATH%
 
       - name: Install Lua test tools (Unix)
-        if: (needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.is_main == 'true') && runner.os != 'Windows'
+        if: (steps.toolchains.outputs.needs_lua == 'true' || steps.detect-main.outputs.is_main == 'true') && runner.os != 'Windows'
         shell: bash
         run: |
           tmpdir="$(mktemp -d)"
@@ -193,7 +196,7 @@ jobs:
           luarocks install luasocket 2>/dev/null || true
 
       - name: Install Lua test tools (Windows)
-        if: (needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.is_main == 'true') && runner.os == 'Windows'
+        if: (steps.toolchains.outputs.needs_lua == 'true' || steps.detect-main.outputs.is_main == 'true') && runner.os == 'Windows'
         shell: cmd
         run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
@@ -203,45 +206,49 @@ jobs:
           for /f "delims=" %%i in ('luarocks path --lr-bin') do echo %%i>> %GITHUB_PATH%
 
       - name: Set up Ruby
-        if: steps.plan.outputs.needs_ruby == 'true'
+        if: steps.toolchains.outputs.needs_ruby == 'true'
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.4'
           bundler-cache: false
 
       - name: Install bundler
-        if: steps.plan.outputs.needs_ruby == 'true'
+        if: steps.toolchains.outputs.needs_ruby == 'true'
         run: gem install bundler
 
       - name: Set up Node.js
-        if: steps.plan.outputs.needs_typescript == 'true'
+        if: steps.toolchains.outputs.needs_typescript == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
       - name: Set up Rust
-        if: steps.plan.outputs.needs_rust == 'true'
+        if: steps.toolchains.outputs.needs_rust == 'true'
         uses: dtolnay/rust-toolchain@stable
 
       - name: Install cargo-tarpaulin
-        if: steps.plan.outputs.needs_rust == 'true' && runner.os == 'Linux'
+        if: steps.toolchains.outputs.needs_rust == 'true' && runner.os == 'Linux'
         run: cargo install cargo-tarpaulin
 
       - name: Set up Elixir
-        if: steps.plan.outputs.needs_elixir == 'true'
+        if: steps.toolchains.outputs.needs_elixir == 'true'
         uses: erlef/setup-beam@v1
         with:
           elixir-version: '1.16'
           otp-version: '26.0'
 
+      - name: Set up Dart
+        if: steps.toolchains.outputs.needs_dart == 'true'
+        uses: dart-lang/setup-dart@v1
+
       - name: Set up Perl
-        if: needs.detect.outputs.needs_perl == 'true'
+        if: steps.toolchains.outputs.needs_perl == 'true'
         uses: shogo82148/actions-setup-perl@v1
         with:
           perl-version: '5.40'
 
       - name: Install Perl test deps
-        if: needs.detect.outputs.needs_perl == 'true'
+        if: steps.toolchains.outputs.needs_perl == 'true'
         shell: bash
         run: cpanm --quiet --notest Test2::Suite
 
@@ -259,14 +266,14 @@ jobs:
           fi
 
       - name: Set up Haskell
-        if: needs.detect.outputs.needs_haskell == 'true'
+        if: steps.toolchains.outputs.needs_haskell == 'true'
         uses: haskell-actions/setup@v2
         with:
           ghc-version: '9.4'
           cabal-version: '3.10'
 
       - name: Set up .NET
-        if: needs.detect.outputs.needs_dotnet == 'true'
+        if: steps.toolchains.outputs.needs_dotnet == 'true'
         uses: actions/setup-dotnet@v4
         with:
           # .NET 9 is the current LTS release. No platform exclusions needed —
@@ -274,7 +281,7 @@ jobs:
           dotnet-version: '9.0.x'
 
       - name: Install cpanm and test dependencies (Perl)
-        if: steps.plan.outputs.needs_perl == 'true' && runner.os != 'Windows'
+        if: steps.toolchains.outputs.needs_perl == 'true' && runner.os != 'Windows'
         run: |
           if [ "$RUNNER_OS" = "Linux" ]; then
             sudo apt-get install -y cpanminus
@@ -286,10 +293,10 @@ jobs:
 
       - name: Install test runners
         run: |
-          if [ "${{ steps.plan.outputs.needs_python }}" = "true" ]; then
+          if [ "${{ steps.toolchains.outputs.needs_python }}" = "true" ]; then
             uv pip install --system pytest
           fi
-          if [ "${{ steps.plan.outputs.needs_typescript }}" = "true" ]; then
+          if [ "${{ steps.toolchains.outputs.needs_typescript }}" = "true" ]; then
             npm install -g jest
           fi
 
@@ -297,27 +304,27 @@ jobs:
       - name: Verify tools
         run: |
           echo "Go: $(go version)"
-          if [ "${{ steps.plan.outputs.needs_python }}" = "true" ]; then
+          if [ "${{ steps.toolchains.outputs.needs_python }}" = "true" ]; then
             echo "Python: $(python --version)"
             echo "uv: $(uv --version)"
           fi
-          if [ "${{ steps.plan.outputs.needs_ruby }}" = "true" ]; then
+          if [ "${{ steps.toolchains.outputs.needs_ruby }}" = "true" ]; then
             echo "Ruby: $(ruby --version)"
             echo "Bundler: $(bundle --version)"
           fi
-          if [ "${{ steps.plan.outputs.needs_typescript }}" = "true" ]; then
+          if [ "${{ steps.toolchains.outputs.needs_typescript }}" = "true" ]; then
             echo "Node: $(node --version)"
             echo "npm: $(npm --version)"
           fi
-          if [ "${{ steps.plan.outputs.needs_rust }}" = "true" ]; then
+          if [ "${{ steps.toolchains.outputs.needs_rust }}" = "true" ]; then
             echo "Rust: $(rustc --version)"
             echo "Cargo: $(cargo --version)"
           fi
-          if [ "${{ steps.plan.outputs.needs_elixir }}" = "true" ]; then
+          if [ "${{ steps.toolchains.outputs.needs_elixir }}" = "true" ]; then
             echo "Elixir: $(elixir --version)"
             echo "Mix: $(mix --version)"
           fi
-          if [ "${{ needs.detect.outputs.needs_perl }}" = "true" ]; then
+          if [ "${{ steps.toolchains.outputs.needs_perl }}" = "true" ]; then
             echo "Perl: $(perl --version | head -2)"
           fi
 
@@ -332,14 +339,14 @@ jobs:
       #
       # Kotlin packages use Gradle as their build system and target JVM 21.
       - name: Set up JDK 21
-        if: needs.detect.outputs.needs_kotlin == 'true'
+        if: steps.toolchains.outputs.needs_kotlin == 'true'
         uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'temurin'
 
       - name: Set up Gradle
-        if: needs.detect.outputs.needs_kotlin == 'true'
+        if: steps.toolchains.outputs.needs_kotlin == 'true'
         uses: gradle/actions/setup-gradle@v4
 
       # ── Build the build tool ──────────────────────────────────
@@ -366,7 +373,7 @@ jobs:
           cd ../../../..
 
       - name: Build and test affected Swift packages on Windows
-        if: runner.os == 'Windows' && needs.detect.outputs.needs_swift == 'true'
+        if: runner.os == 'Windows' && steps.toolchains.outputs.needs_swift == 'true'
         shell: pwsh
         run: |
           $planFlag = @()
