@@ -2,7 +2,6 @@ namespace CodingAdventures.HashFunctions.FSharp
 
 open System
 open System.Numerics
-open System.Security.Cryptography
 open System.Text
 
 type HashFunction =
@@ -113,6 +112,25 @@ module HashFunctions =
         hash <- hash * 0xC2B2AE35u
         hash <- hash ^^^ (hash >>> 16)
         hash
+
+    let private nextSplitMix64 (state: byref<uint64>) =
+        state <- state + 0x9E3779B97F4A7C15UL
+        let mutable value = state
+        value <- (value ^^^ (value >>> 30)) * 0xBF58476D1CE4E5B9UL
+        value <- (value ^^^ (value >>> 27)) * 0x94D049BB133111EBUL
+        value ^^^ (value >>> 31)
+
+    let private fillDeterministicSample (input: byte array) (state: byref<uint64>) =
+        let mutable offset = 0
+
+        while offset < input.Length do
+            let value = nextSplitMix64 &state
+            let mutable index = 0
+
+            while index < 8 && offset < input.Length do
+                input[offset] <- byte ((value >>> (index * 8)) &&& 0xffUL)
+                offset <- offset + 1
+                index <- index + 1
 
     let murmur3_32BytesWithSeed (data: byte array) (seed: uint32) =
         requireBytes "data" data
@@ -242,10 +260,11 @@ module HashFunctions =
             invalidArg "sampleSize" "Sample size must be positive."
 
         let input = Array.zeroCreate<byte> 8
+        let mutable sampleState = 0x9E3779B97F4A7C15UL
         let mutable totalBitFlips = 0UL
         let mutable totalTrials = 0UL
         for _ in 1 .. sampleSize do
-            RandomNumberGenerator.Fill input
+            fillDeterministicSample input &sampleState
             let h1 = hashFunction input
 
             for bitPosition in 0 .. input.Length * 8 - 1 do

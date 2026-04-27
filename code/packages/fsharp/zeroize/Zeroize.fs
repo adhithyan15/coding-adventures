@@ -1,13 +1,14 @@
 namespace CodingAdventures.Zeroize.FSharp
 
 open System
-open System.Security.Cryptography
 
 [<RequireQualifiedAccess>]
 module Zeroize =
     let zeroizeBytes (buffer: byte array) =
         if isNull buffer then nullArg "buffer"
-        CryptographicOperations.ZeroMemory(buffer.AsSpan())
+
+        for index in 0 .. buffer.Length - 1 do
+            buffer[index] <- 0uy
 
     let zeroizeChars (buffer: char array) =
         if isNull buffer then nullArg "buffer"
