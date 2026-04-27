@@ -1,372 +1,319 @@
-local function node_sort_key(node)
-    local value_type = type(node)
-    if value_type == "string" or value_type == "number" or value_type == "boolean" then
-        return value_type .. ":" .. tostring(node)
+-- ============================================================================
+-- init.lua — Undirected Graph
+-- ============================================================================
+--
+-- A complete undirected graph data structure implementation supporting:
+--   - Two representations: adjacency list (default) and adjacency matrix
+--   - Weighted edges: optional weights on edges (default 1.0)
+--   - Core operations: add/remove nodes/edges, neighbor queries, degree
+--   - Algorithms: BFS, DFS, shortest path, cycle detection, connected components,
+--     minimum spanning tree, graph connectivity
+--
+-- All algorithms work identically on both representations because they only
+-- call the Graph's public API.
+--
+-- ============================================================================
+
+local M = {}
+M.__index = M
+
+-- Representation type constants
+M.ADJACENCY_LIST = "adjacency_list"
+M.ADJACENCY_MATRIX = "adjacency_matrix"
+
+-- ============================================================================
+-- Constructor
+-- ============================================================================
+
+--- Create a new empty graph with adjacency list representation (default).
+function M.new()
+    return M.new_with_repr(M.ADJACENCY_LIST)
+end
+
+--- Create a new empty graph with specified representation.
+function M.new_with_repr(repr)
+    local self = setmetatable({}, M)
+    self.repr = repr
+
+    if repr == M.ADJACENCY_LIST then
+        -- adjacency[node] = {neighbor = weight, ...}
+        self.adjacency = {}
+    else
+        -- Adjacency matrix representation
+        self.node_list = {}   -- [1] = node1, [2] = node2, ...
+        self.node_idx = {}    -- {node1 = 1, node2 = 2, ...}
+        self.matrix = {}      -- {{0, w12}, {w12, 0}, ...}
     end
-    return value_type .. ":" .. tostring(node)
-end
 
-local function compare_nodes(left, right)
-    local left_key = node_sort_key(left)
-    local right_key = node_sort_key(right)
-    if left_key < right_key then
-        return -1
-    elseif left_key > right_key then
-        return 1
-    end
-    return 0
-end
-
-local function compare_nodes_less(left, right)
-    return compare_nodes(left, right) < 0
-end
-
-local function canonical_endpoints(left, right)
-    if compare_nodes(left, right) <= 0 then
-        return left, right
-    end
-    return right, left
-end
-
-local function NodeNotFoundError(node)
-    return {
-        type = "node_not_found",
-        node = node,
-        message = string.format("node not found: %q", tostring(node)),
-    }
-end
-
-local function EdgeNotFoundError(left, right)
-    return {
-        type = "edge_not_found",
-        left = left,
-        right = right,
-        message = string.format("edge not found: %q -- %q", tostring(left), tostring(right)),
-    }
-end
-
-local function DisconnectedGraphError()
-    return {
-        type = "disconnected_graph",
-        message = "graph is not connected and has no spanning tree",
-    }
-end
-
-local GraphRepr = {
-    ADJACENCY_LIST = "adjacency_list",
-    ADJACENCY_MATRIX = "adjacency_matrix",
-}
-
-local Graph = {}
-Graph.__index = Graph
-
-function Graph.new(opts)
-    opts = opts or {}
-    local repr = opts.repr or GraphRepr.ADJACENCY_LIST
-    local self = setmetatable({}, Graph)
-    self._repr = repr
-    self._adj = {}
-    self._node_list = {}
-    self._node_index = {}
-    self._matrix = {}
     return self
 end
 
-function Graph:repr()
-    return self._repr
-end
+-- ============================================================================
+-- Node Operations
+-- ============================================================================
 
-function Graph:add_node(node)
-    if self._repr == GraphRepr.ADJACENCY_LIST then
-        if self._adj[node] == nil then
-            self._adj[node] = {}
-        end
-        return
-    end
-
-    if self._node_index[node] ~= nil then
-        return
-    end
-
-    local index = #self._node_list + 1
-    self._node_list[index] = node
-    self._node_index[node] = index
-
-    for _, row in ipairs(self._matrix) do
-        row[index] = nil
-    end
-
-    local new_row = {}
-    for i = 1, index do
-        new_row[i] = nil
-    end
-    self._matrix[index] = new_row
-end
-
-function Graph:remove_node(node)
-    if self._repr == GraphRepr.ADJACENCY_LIST then
-        local neighbors = self._adj[node]
-        if neighbors == nil then
-            return nil, NodeNotFoundError(node)
-        end
-
-        for neighbor, _ in pairs(neighbors) do
-            self._adj[neighbor][node] = nil
-        end
-        self._adj[node] = nil
-        return true
-    end
-
-    local index = self._node_index[node]
-    if index == nil then
-        return nil, NodeNotFoundError(node)
-    end
-
-    table.remove(self._node_list, index)
-    table.remove(self._matrix, index)
-    for _, row in ipairs(self._matrix) do
-        table.remove(row, index)
-    end
-
-    self._node_index = {}
-    for i, current in ipairs(self._node_list) do
-        self._node_index[current] = i
-    end
-    return true
-end
-
-function Graph:has_node(node)
-    if self._repr == GraphRepr.ADJACENCY_LIST then
-        return self._adj[node] ~= nil
-    end
-    return self._node_index[node] ~= nil
-end
-
-function Graph:nodes()
-    local result = {}
-    if self._repr == GraphRepr.ADJACENCY_LIST then
-        for node, _ in pairs(self._adj) do
-            result[#result + 1] = node
+--- Add a node to the graph. No-op if the node already exists.
+function M:add_node(node)
+    if self.repr == M.ADJACENCY_LIST then
+        if not self.adjacency[node] then
+            self.adjacency[node] = {}
         end
     else
-        for i = 1, #self._node_list do
-            result[i] = self._node_list[i]
-        end
-    end
-    table.sort(result, compare_nodes_less)
-    return result
-end
+        if not self.node_idx[node] then
+            local idx = #self.node_list + 1
+            table.insert(self.node_list, node)
+            self.node_idx[node] = idx
 
-function Graph:size()
-    if self._repr == GraphRepr.ADJACENCY_LIST then
-        local count = 0
-        for _ in pairs(self._adj) do
-            count = count + 1
-        end
-        return count
-    end
-    return #self._node_list
-end
-
-function Graph:add_edge(left, right, weight)
-    weight = weight == nil and 1.0 or weight
-    self:add_node(left)
-    self:add_node(right)
-
-    if self._repr == GraphRepr.ADJACENCY_LIST then
-        self._adj[left][right] = weight
-        self._adj[right][left] = weight
-        return
-    end
-
-    local left_index = self._node_index[left]
-    local right_index = self._node_index[right]
-    self._matrix[left_index][right_index] = weight
-    self._matrix[right_index][left_index] = weight
-end
-
-function Graph:remove_edge(left, right)
-    if self._repr == GraphRepr.ADJACENCY_LIST then
-        local left_neighbors = self._adj[left]
-        local right_neighbors = self._adj[right]
-        if left_neighbors == nil or right_neighbors == nil or left_neighbors[right] == nil then
-            return nil, EdgeNotFoundError(left, right)
-        end
-
-        left_neighbors[right] = nil
-        right_neighbors[left] = nil
-        return true
-    end
-
-    local left_index = self._node_index[left]
-    local right_index = self._node_index[right]
-    if left_index == nil or right_index == nil or self._matrix[left_index][right_index] == nil then
-        return nil, EdgeNotFoundError(left, right)
-    end
-
-    self._matrix[left_index][right_index] = nil
-    self._matrix[right_index][left_index] = nil
-    return true
-end
-
-function Graph:has_edge(left, right)
-    if self._repr == GraphRepr.ADJACENCY_LIST then
-        local neighbors = self._adj[left]
-        return neighbors ~= nil and neighbors[right] ~= nil
-    end
-
-    local left_index = self._node_index[left]
-    local right_index = self._node_index[right]
-    return left_index ~= nil and right_index ~= nil and self._matrix[left_index][right_index] ~= nil
-end
-
-function Graph:edge_weight(left, right)
-    if self._repr == GraphRepr.ADJACENCY_LIST then
-        local neighbors = self._adj[left]
-        if neighbors == nil or neighbors[right] == nil then
-            return nil, EdgeNotFoundError(left, right)
-        end
-        return neighbors[right]
-    end
-
-    local left_index = self._node_index[left]
-    local right_index = self._node_index[right]
-    if left_index == nil or right_index == nil or self._matrix[left_index][right_index] == nil then
-        return nil, EdgeNotFoundError(left, right)
-    end
-    return self._matrix[left_index][right_index]
-end
-
-function Graph:edges()
-    local result = {}
-    local seen = {}
-
-    if self._repr == GraphRepr.ADJACENCY_LIST then
-        for left, neighbors in pairs(self._adj) do
-            for right, weight in pairs(neighbors) do
-                local first, second = canonical_endpoints(left, right)
-                local key = node_sort_key(first) .. "\0" .. node_sort_key(second)
-                if not seen[key] then
-                    seen[key] = true
-                    result[#result + 1] = { first, second, weight }
-                end
+            -- Add new row and column of zeros
+            for i = 1, #self.matrix do
+                table.insert(self.matrix[i], 0.0)
             end
+            local new_row = {}
+            for i = 1, idx do
+                table.insert(new_row, 0.0)
+            end
+            table.insert(self.matrix, new_row)
+        end
+    end
+end
+
+--- Remove a node and all its edges from the graph.
+function M:remove_node(node)
+    if not self:has_node(node) then
+        error("Node not found: " .. tostring(node))
+    end
+
+    if self.repr == M.ADJACENCY_LIST then
+        -- Remove all edges connected to this node
+        for neighbor in pairs(self.adjacency[node]) do
+            self.adjacency[neighbor][node] = nil
+        end
+        self.adjacency[node] = nil
+    else
+        local idx = self.node_idx[node]
+        self.node_idx[node] = nil
+        table.remove(self.node_list, idx)
+
+        -- Update indices for nodes that shifted down
+        for i = idx, #self.node_list do
+            self.node_idx[self.node_list[i]] = i
+        end
+
+        -- Remove the row
+        table.remove(self.matrix, idx)
+        -- Remove the column from every remaining row
+        for i = 1, #self.matrix do
+            table.remove(self.matrix[i], idx)
+        end
+    end
+end
+
+--- Check if a node exists in the graph.
+function M:has_node(node)
+    if self.repr == M.ADJACENCY_LIST then
+        return self.adjacency[node] ~= nil
+    else
+        return self.node_idx[node] ~= nil
+    end
+end
+
+--- Get all nodes in the graph as a sorted table.
+function M:nodes()
+    local result
+    if self.repr == M.ADJACENCY_LIST then
+        result = {}
+        for node in pairs(self.adjacency) do
+            table.insert(result, node)
         end
     else
-        for row = 1, #self._node_list do
-            for col = row, #self._node_list do
-                local weight = self._matrix[row][col]
-                if weight ~= nil then
-                    result[#result + 1] = { self._node_list[row], self._node_list[col], weight }
-                end
-            end
+        result = {}
+        for _, node in ipairs(self.node_list) do
+            table.insert(result, node)
         end
     end
 
-    table.sort(result, function(left, right)
-        if left[3] ~= right[3] then
-            return left[3] < right[3]
-        end
-        local by_left = compare_nodes(left[1], right[1])
-        if by_left ~= 0 then
-            return by_left < 0
-        end
-        return compare_nodes(left[2], right[2]) < 0
+    table.sort(result, function(a, b)
+        return tostring(a) < tostring(b)
     end)
     return result
 end
 
-function Graph:neighbors(node)
-    if self._repr == GraphRepr.ADJACENCY_LIST then
-        local neighbors = self._adj[node]
-        if neighbors == nil then
-            return nil, NodeNotFoundError(node)
-        end
+--- Get the number of nodes in the graph.
+function M:size()
+    if self.repr == M.ADJACENCY_LIST then
+        return self._count_keys(self.adjacency)
+    else
+        return #self.node_list
+    end
+end
 
-        local result = {}
-        for neighbor, _ in pairs(neighbors) do
-            result[#result + 1] = neighbor
-        end
-        table.sort(result, compare_nodes_less)
-        return result
+-- Helper: count table keys
+function M._count_keys(tbl)
+    local count = 0
+    for _ in pairs(tbl) do
+        count = count + 1
+    end
+    return count
+end
+
+-- ============================================================================
+-- Edge Operations
+-- ============================================================================
+
+--- Add an undirected edge between u and v with optional weight (default 1.0).
+function M:add_edge(u, v, weight)
+    weight = weight or 1.0
+
+    self:add_node(u)
+    self:add_node(v)
+
+    if self.repr == M.ADJACENCY_LIST then
+        self.adjacency[u][v] = weight
+        self.adjacency[v][u] = weight
+    else
+        local i, j = self.node_idx[u], self.node_idx[v]
+        self.matrix[i][j] = weight
+        self.matrix[j][i] = weight
+    end
+end
+
+--- Remove an edge between u and v.
+function M:remove_edge(u, v)
+    if not self:has_edge(u, v) then
+        error("Edge not found: " .. tostring(u) .. " -- " .. tostring(v))
     end
 
-    local index = self._node_index[node]
-    if index == nil then
-        return nil, NodeNotFoundError(node)
+    if self.repr == M.ADJACENCY_LIST then
+        self.adjacency[u][v] = nil
+        self.adjacency[v][u] = nil
+    else
+        local i, j = self.node_idx[u], self.node_idx[v]
+        self.matrix[i][j] = 0.0
+        self.matrix[j][i] = 0.0
     end
+end
 
+--- Check if an edge exists between u and v.
+function M:has_edge(u, v)
+    if self.repr == M.ADJACENCY_LIST then
+        if not self.adjacency[u] then
+            return false
+        end
+        return self.adjacency[u][v] ~= nil
+    else
+        if not self.node_idx[u] or not self.node_idx[v] then
+            return false
+        end
+        local i, j = self.node_idx[u], self.node_idx[v]
+        return self.matrix[i][j] ~= 0.0
+    end
+end
+
+--- Get all edges as a table of {u, v, weight} tuples.
+function M:edges()
     local result = {}
-    for col = 1, #self._node_list do
-        if self._matrix[index][col] ~= nil then
-            result[#result + 1] = self._node_list[col]
+
+    if self.repr == M.ADJACENCY_LIST then
+        local seen = {}
+        for u, neighbors in pairs(self.adjacency) do
+            for v, w in pairs(neighbors) do
+                -- Canonical ordering
+                local a, b = u, v
+                if tostring(a) > tostring(b) then
+                    a, b = b, a
+                end
+                local key = tostring(a) .. "|" .. tostring(b)
+                if not seen[key] then
+                    table.insert(result, {a, b, w})
+                    seen[key] = true
+                end
+            end
+        end
+    else
+        local n = #self.node_list
+        for i = 1, n do
+            for j = i + 1, n do
+                local w = self.matrix[i][j]
+                if w ~= 0.0 then
+                    table.insert(result, {self.node_list[i], self.node_list[j], w})
+                end
+            end
         end
     end
-    table.sort(result, compare_nodes_less)
+
+    table.sort(result, function(a, b)
+        if tostring(a[1]) ~= tostring(b[1]) then
+            return tostring(a[1]) < tostring(b[1])
+        end
+        return tostring(a[2]) < tostring(b[2])
+    end)
+
     return result
 end
 
-function Graph:neighbors_weighted(node)
-    if self._repr == GraphRepr.ADJACENCY_LIST then
-        local neighbors = self._adj[node]
-        if neighbors == nil then
-            return nil, NodeNotFoundError(node)
-        end
-
-        local copy = {}
-        for neighbor, weight in pairs(neighbors) do
-            copy[neighbor] = weight
-        end
-        return copy
+--- Get the weight of an edge, or error if it doesn't exist.
+function M:edge_weight(u, v)
+    if not self:has_edge(u, v) then
+        error("Edge not found: " .. tostring(u) .. " -- " .. tostring(v))
     end
 
-    local index = self._node_index[node]
-    if index == nil then
-        return nil, NodeNotFoundError(node)
+    if self.repr == M.ADJACENCY_LIST then
+        return self.adjacency[u][v]
+    else
+        local i, j = self.node_idx[u], self.node_idx[v]
+        return self.matrix[i][j]
+    end
+end
+
+-- ============================================================================
+-- Neighborhood Queries
+-- ============================================================================
+
+--- Get all neighbours of node as a sorted table.
+function M:neighbors(node)
+    if not self:has_node(node) then
+        error("Node not found: " .. tostring(node))
     end
 
     local result = {}
-    for col = 1, #self._node_list do
-        local weight = self._matrix[index][col]
-        if weight ~= nil then
-            result[self._node_list[col]] = weight
+
+    if self.repr == M.ADJACENCY_LIST then
+        for neighbor in pairs(self.adjacency[node]) do
+            table.insert(result, neighbor)
+        end
+    else
+        local idx = self.node_idx[node]
+        for j, w in ipairs(self.matrix[idx]) do
+            if w ~= 0.0 then
+                table.insert(result, self.node_list[j])
+            end
         end
     end
+
+    table.sort(result, function(a, b)
+        return tostring(a) < tostring(b)
+    end)
+
     return result
 end
 
-function Graph:degree(node)
-    local neighbors, err = self:neighbors(node)
-    if not neighbors then
-        return nil, err
-    end
-    return #neighbors
-end
-
-function Graph:__tostring()
-    return string.format("Graph(nodes=%d, edges=%d, repr=%s)", self:size(), #self:edges(), self._repr)
-end
-
-local function bfs(graph, start)
-    if not graph:has_node(start) then
-        return nil, NodeNotFoundError(start)
+--- Get neighbors with their weights as a table {neighbor = weight, ...}.
+function M:neighbors_weighted(node)
+    if not self:has_node(node) then
+        error("Node not found: " .. tostring(node))
     end
 
-    local visited = { [start] = true }
-    local queue = { start }
-    local head = 1
     local result = {}
 
-    while head <= #queue do
-        local node = queue[head]
-        head = head + 1
-        result[#result + 1] = node
-
-        local neighbors = graph:neighbors(node)
-        for _, neighbor in ipairs(neighbors) do
-            if not visited[neighbor] then
-                visited[neighbor] = true
-                queue[#queue + 1] = neighbor
+    if self.repr == M.ADJACENCY_LIST then
+        for neighbor, weight in pairs(self.adjacency[node]) do
+            result[neighbor] = weight
+        end
+    else
+        local idx = self.node_idx[node]
+        for j, w in ipairs(self.matrix[idx]) do
+            if w ~= 0.0 then
+                result[self.node_list[j]] = w
             end
         end
     end
@@ -374,26 +321,96 @@ local function bfs(graph, start)
     return result
 end
 
-local function dfs(graph, start)
-    if not graph:has_node(start) then
-        return nil, NodeNotFoundError(start)
+--- Get the degree (number of neighbors) of a node.
+function M:degree(node)
+    return #self:neighbors(node)
+end
+
+--- Check if every node can reach every other node.
+function M:is_connected()
+    if self:size() == 0 then
+        return true
     end
 
+    local start = self:nodes()[1]
+    local reachable = M.bfs(self, start)
+    return #reachable == self:size()
+end
+
+--- Get all connected components as a table of tables of nodes.
+function M:connected_components()
+    local unvisited = {}
+    for _, node in ipairs(self:nodes()) do
+        unvisited[node] = true
+    end
+
+    local components = {}
+
+    while self._count_keys(unvisited) > 0 do
+        local start
+        for node in pairs(unvisited) do
+            start = node
+            break
+        end
+
+        local component = M.bfs(self, start)
+        table.insert(components, component)
+
+        for _, node in ipairs(component) do
+            unvisited[node] = nil
+        end
+    end
+
+    return components
+end
+
+-- ============================================================================
+-- Algorithms (pure functions)
+-- ============================================================================
+
+--- BFS traversal: return nodes reachable from start in breadth-first order.
+function M.bfs(graph, start)
     local visited = {}
-    local stack = { start }
+    local queue = {start}
+    local result = {}
+
+    visited[start] = true
+
+    local head = 1
+    while head <= #queue do
+        local node = queue[head]
+        head = head + 1
+        table.insert(result, node)
+
+        for _, neighbor in ipairs(graph:neighbors(node)) do
+            if not visited[neighbor] then
+                visited[neighbor] = true
+                table.insert(queue, neighbor)
+            end
+        end
+    end
+
+    return result
+end
+
+--- DFS traversal: return nodes reachable from start in depth-first order.
+function M.dfs(graph, start)
+    local visited = {}
+    local stack = {start}
     local result = {}
 
     while #stack > 0 do
         local node = table.remove(stack)
+
         if not visited[node] then
             visited[node] = true
-            result[#result + 1] = node
+            table.insert(result, node)
 
             local neighbors = graph:neighbors(node)
+            -- Reverse order for consistent output
             for i = #neighbors, 1, -1 do
-                local neighbor = neighbors[i]
-                if not visited[neighbor] then
-                    stack[#stack + 1] = neighbor
+                if not visited[neighbors[i]] then
+                    table.insert(stack, neighbors[i])
                 end
             end
         end
@@ -402,205 +419,230 @@ local function dfs(graph, start)
     return result
 end
 
-local function is_connected(graph)
-    local nodes = graph:nodes()
-    if #nodes == 0 then
-        return true
+--- Find the shortest (lowest-weight) path from start to end.
+function M.shortest_path(graph, start, end_node)
+    if start == end_node then
+        if graph:has_node(start) then
+            return {start}
+        else
+            return {}
+        end
     end
-    local visited = bfs(graph, nodes[1])
-    return #visited == #nodes
+
+    -- Check if all weights are 1.0
+    local all_unit = true
+    for _, edge in ipairs(graph:edges()) do
+        if edge[3] ~= 1.0 then
+            all_unit = false
+            break
+        end
+    end
+
+    if all_unit then
+        return M._shortest_path_bfs(graph, start, end_node)
+    else
+        return M._shortest_path_dijkstra(graph, start, end_node)
+    end
 end
 
-local function connected_components(graph)
-    local result = {}
-    local visited = {}
+function M._shortest_path_bfs(graph, start, end_node)
+    local parent = {}
+    parent[start] = false
+    local queue = {start}
+
+    local head = 1
+    while head <= #queue do
+        local node = queue[head]
+        head = head + 1
+
+        if node == end_node then
+            break
+        end
+
+        for _, neighbor in ipairs(graph:neighbors(node)) do
+            if parent[neighbor] == nil then
+                parent[neighbor] = node
+                table.insert(queue, neighbor)
+            end
+        end
+    end
+
+    if parent[end_node] == nil then
+        return {}
+    end
+
+    local path = {}
+    local cur = end_node
+    while cur ~= false do
+        table.insert(path, 1, cur)
+        cur = parent[cur]
+    end
+
+    return path
+end
+
+function M._shortest_path_dijkstra(graph, start, end_node)
+    local INF = math.huge
+    local dist = {}
+    local parent = {}
 
     for _, node in ipairs(graph:nodes()) do
-        if not visited[node] then
-            local component = bfs(graph, node)
-            for _, member in ipairs(component) do
-                visited[member] = true
-            end
-            result[#result + 1] = component
-        end
+        dist[node] = INF
     end
+    dist[start] = 0
 
-    return result
-end
-
-local function has_cycle(graph)
+    local pq = {{0.0, start}}
     local visited = {}
 
-    local function visit(node, parent)
+    while #pq > 0 do
+        -- Find minimum in priority queue
+        local min_idx = 1
+        for i = 2, #pq do
+            if pq[i][1] < pq[min_idx][1] then
+                min_idx = i
+            end
+        end
+
+        local d, node = pq[min_idx][1], pq[min_idx][2]
+        table.remove(pq, min_idx)
+
+        if d > dist[node] then
+            goto continue
+        end
+
+        if node == end_node then
+            break
+        end
+
         visited[node] = true
-        local neighbors = graph:neighbors(node)
-        for _, neighbor in ipairs(neighbors) do
+
+        local neighbors_map = graph:neighbors_weighted(node)
+        for neighbor, weight in pairs(neighbors_map) do
             if not visited[neighbor] then
-                if visit(neighbor, node) then
-                    return true
+                local new_dist = dist[node] + weight
+                if new_dist < dist[neighbor] then
+                    dist[neighbor] = new_dist
+                    parent[neighbor] = node
+                    table.insert(pq, {new_dist, neighbor})
                 end
-            elseif neighbor ~= parent then
+            end
+        end
+
+        ::continue::
+    end
+
+    if dist[end_node] == INF then
+        return {}
+    end
+
+    local path = {}
+    local cur = end_node
+    while cur ~= nil do
+        table.insert(path, 1, cur)
+        cur = parent[cur]
+    end
+
+    return path
+end
+
+--- Check if the graph contains any cycle.
+function M.has_cycle(graph)
+    local visited = {}
+
+    for _, start in ipairs(graph:nodes()) do
+        if not visited[start] then
+            local result, new_visited = M._has_cycle_from(graph, start, nil, visited)
+            visited = new_visited
+
+            if result then
                 return true
             end
-        end
-        return false
-    end
-
-    for _, node in ipairs(graph:nodes()) do
-        if not visited[node] and visit(node, nil) then
-            return true
         end
     end
 
     return false
 end
 
-local function shortest_path(graph, start, goal)
-    if not graph:has_node(start) then
-        return nil, NodeNotFoundError(start)
-    end
-    if not graph:has_node(goal) then
-        return nil, NodeNotFoundError(goal)
-    end
-    if start == goal then
-        return { start }
-    end
+function M._has_cycle_from(graph, node, parent, visited)
+    visited[node] = true
 
-    local inf = math.huge
-    local distances = {}
-    local previous = {}
-    local frontier = {}
-    local sequence = 0
+    for _, neighbor in ipairs(graph:neighbors(node)) do
+        if not visited[neighbor] then
+            local has_cycle, new_visited = M._has_cycle_from(graph, neighbor, node, visited)
+            visited = new_visited
 
-    for _, node in ipairs(graph:nodes()) do
-        distances[node] = inf
-    end
-    distances[start] = 0
-    frontier[1] = { priority = 0, seq = 0, node = start }
-
-    local function pop_min()
-        local best_index = 1
-        for i = 2, #frontier do
-            local left = frontier[i]
-            local right = frontier[best_index]
-            if left.priority < right.priority or
-               (left.priority == right.priority and left.seq < right.seq) then
-                best_index = i
+            if has_cycle then
+                return true, visited
             end
-        end
-        return table.remove(frontier, best_index)
-    end
-
-    while #frontier > 0 do
-        local current = pop_min()
-        if current.priority <= distances[current.node] then
-            if current.node == goal then
-                break
-            end
-
-            local neighbors = graph:neighbors_weighted(current.node)
-            local keys = {}
-            for neighbor, _ in pairs(neighbors) do
-                keys[#keys + 1] = neighbor
-            end
-            table.sort(keys, compare_nodes_less)
-
-            for _, neighbor in ipairs(keys) do
-                local next_distance = distances[current.node] + neighbors[neighbor]
-                if next_distance < distances[neighbor] then
-                    distances[neighbor] = next_distance
-                    previous[neighbor] = current.node
-                    sequence = sequence + 1
-                    frontier[#frontier + 1] = {
-                        priority = next_distance,
-                        seq = sequence,
-                        node = neighbor,
-                    }
-                end
-            end
+        elseif neighbor ~= parent then
+            -- Back edge: visited neighbor that isn't our parent → cycle
+            return true, visited
         end
     end
 
-    if distances[goal] == inf then
-        return {}
-    end
-
-    local path = {}
-    local current = goal
-    while current ~= nil do
-        table.insert(path, 1, current)
-        current = previous[current]
-    end
-    return path
+    return false, visited
 end
 
-local function minimum_spanning_tree(graph)
-    if graph:size() <= 1 then
+--- Get the minimum spanning tree using Kruskal's algorithm.
+function M.minimum_spanning_tree(graph)
+    local nodes = graph:nodes()
+
+    if #nodes == 0 or #nodes == 1 then
         return {}
     end
-    if not is_connected(graph) then
-        return nil, DisconnectedGraphError()
-    end
 
-    local parent = {}
-    local rank = {}
-    for _, node in ipairs(graph:nodes()) do
-        parent[node] = node
-        rank[node] = 0
-    end
+    local edges = graph:edges()
+    table.sort(edges, function(a, b) return a[3] < b[3] end)
 
-    local function find(node)
-        if parent[node] ~= node then
-            parent[node] = find(parent[node])
-        end
-        return parent[node]
-    end
+    local uf = M._union_find_new(nodes)
+    local mst = {}
 
-    local function union(left, right)
-        local left_root = find(left)
-        local right_root = find(right)
-        if left_root == right_root then
-            return
-        end
+    for _, edge in ipairs(edges) do
+        local u, v, w = edge[1], edge[2], edge[3]
 
-        if rank[left_root] < rank[right_root] then
-            parent[left_root] = right_root
-        elseif rank[left_root] > rank[right_root] then
-            parent[right_root] = left_root
-        else
-            parent[right_root] = left_root
-            rank[left_root] = rank[left_root] + 1
-        end
-    end
+        if M._union_find_find(uf, u) ~= M._union_find_find(uf, v) then
+            M._union_find_union(uf, u, v)
+            table.insert(mst, edge)
 
-    local result = {}
-    for _, edge in ipairs(graph:edges()) do
-        if find(edge[1]) ~= find(edge[2]) then
-            union(edge[1], edge[2])
-            result[#result + 1] = edge
-            if #result == graph:size() - 1 then
+            if #mst == #nodes - 1 then
                 break
             end
         end
     end
 
-    return result
+    if #mst < #nodes - 1 then
+        return nil  -- Not connected
+    end
+
+    return mst
 end
 
-local graph = {
-    VERSION = "0.1.0",
-    Graph = Graph,
-    GraphRepr = GraphRepr,
-    NodeNotFoundError = NodeNotFoundError,
-    EdgeNotFoundError = EdgeNotFoundError,
-    DisconnectedGraphError = DisconnectedGraphError,
-    bfs = bfs,
-    dfs = dfs,
-    is_connected = is_connected,
-    connected_components = connected_components,
-    has_cycle = has_cycle,
-    shortest_path = shortest_path,
-    minimum_spanning_tree = minimum_spanning_tree,
-}
+-- ============================================================================
+-- Union-Find (helper for Kruskal's algorithm)
+-- ============================================================================
 
-return graph
+function M._union_find_new(nodes)
+    local uf = {}
+    for _, n in ipairs(nodes) do
+        uf[n] = n
+    end
+    return uf
+end
+
+function M._union_find_find(uf, x)
+    if uf[x] ~= x then
+        uf[x] = M._union_find_find(uf, uf[x])  -- Path compression
+    end
+    return uf[x]
+end
+
+function M._union_find_union(uf, a, b)
+    local ra = M._union_find_find(uf, a)
+    local rb = M._union_find_find(uf, b)
+
+    if ra ~= rb then
+        uf[rb] = ra
+    end
+end
+
+return M

@@ -1,160 +1,54 @@
 /**
- * algorithms.ts
- * =============
+ * algorithms.ts — Pure Graph Algorithms
+ * =====================================
  *
- * Pure algorithms for the DT00 undirected graph. Each helper accepts a graph
- * instance and returns a result without mutating the graph.
+ * All functions here are pure — they take a Graph as input and return a result.
+ * They never mutate the graph.  They work identically on both ADJACENCY_LIST and
+ * ADJACENCY_MATRIX graphs because they only call the Graph's public API.
+ *
+ * Algorithms provided:
+ *   bfs                   — breadth-first traversal
+ *   dfs                   — depth-first traversal
+ *   isConnected           — does every node reach every other?
+ *   connectedComponents   — find all isolated clusters
+ *   hasCycle              — does the graph contain a cycle?
+ *   shortestPath          — fewest-hops or lowest-weight path
+ *   minimumSpanningTree   — cheapest set of edges connecting all nodes
  */
 
-import { compareNodes, type Graph, type WeightedEdge } from "./graph.js";
+import { Graph } from "./graph";
 
-function sortedNodes<T>(nodes: Iterable<T>): T[] {
-  return Array.from(nodes).sort(compareNodes);
-}
-
-class MinPriorityQueue<T> {
-  private readonly _items: Array<{ priority: number; seq: number; value: T }> =
-    [];
-
-  push(priority: number, seq: number, value: T): void {
-    this._items.push({ priority, seq, value });
-    this._bubbleUp(this._items.length - 1);
-  }
-
-  pop(): { priority: number; seq: number; value: T } | undefined {
-    if (this._items.length === 0) {
-      return undefined;
-    }
-
-    const top = this._items[0];
-    const last = this._items.pop()!;
-    if (this._items.length > 0) {
-      this._items[0] = last;
-      this._bubbleDown(0);
-    }
-    return top;
-  }
-
-  get size(): number {
-    return this._items.length;
-  }
-
-  private _bubbleUp(index: number): void {
-    while (index > 0) {
-      const parentIndex = Math.floor((index - 1) / 2);
-      if (this._compare(this._items[parentIndex], this._items[index]) <= 0) {
-        break;
-      }
-      [this._items[parentIndex], this._items[index]] = [
-        this._items[index],
-        this._items[parentIndex],
-      ];
-      index = parentIndex;
-    }
-  }
-
-  private _bubbleDown(index: number): void {
-    while (true) {
-      let smallest = index;
-      const left = index * 2 + 1;
-      const right = index * 2 + 2;
-
-      if (
-        left < this._items.length &&
-        this._compare(this._items[left], this._items[smallest]) < 0
-      ) {
-        smallest = left;
-      }
-
-      if (
-        right < this._items.length &&
-        this._compare(this._items[right], this._items[smallest]) < 0
-      ) {
-        smallest = right;
-      }
-
-      if (smallest === index) {
-        return;
-      }
-
-      [this._items[index], this._items[smallest]] = [
-        this._items[smallest],
-        this._items[index],
-      ];
-      index = smallest;
-    }
-  }
-
-  private _compare(
-    left: { priority: number; seq: number },
-    right: { priority: number; seq: number }
-  ): number {
-    if (left.priority !== right.priority) {
-      return left.priority - right.priority;
-    }
-    return left.seq - right.seq;
-  }
-}
-
-class UnionFind<T> {
-  private readonly _parent = new Map<T, T>();
-  private readonly _rank = new Map<T, number>();
-
-  constructor(nodes: Iterable<T>) {
-    for (const node of nodes) {
-      this._parent.set(node, node);
-      this._rank.set(node, 0);
-    }
-  }
-
-  find(node: T): T {
-    const parent = this._parent.get(node);
-    if (parent === undefined) {
-      throw new Error(`UnionFind node missing: ${String(node)}`);
-    }
-    if (parent !== node) {
-      this._parent.set(node, this.find(parent));
-    }
-    return this._parent.get(node)!;
-  }
-
-  union(left: T, right: T): void {
-    let rootLeft = this.find(left);
-    let rootRight = this.find(right);
-    if (rootLeft === rootRight) {
-      return;
-    }
-
-    const rankLeft = this._rank.get(rootLeft)!;
-    const rankRight = this._rank.get(rootRight)!;
-    if (rankLeft < rankRight) {
-      [rootLeft, rootRight] = [rootRight, rootLeft];
-    }
-
-    this._parent.set(rootRight, rootLeft);
-    if (rankLeft === rankRight) {
-      this._rank.set(rootLeft, rankLeft + 1);
-    }
-  }
-}
-
-export function bfs<T>(graph: Graph<T>, start: T): T[] {
-  if (!graph.hasNode(start)) {
-    throw new Error(`Node not found: ${String(start)}`);
-  }
-
-  const visited = new Set<T>([start]);
-  const queue: T[] = [start];
-  const result: T[] = [];
+/**
+ * BFS — Breadth-First Search
+ *
+ * BFS explores a graph level-by-level: first all nodes 1 hop from start,
+ * then all 2 hops, then 3 hops, etc.  Picture a stone dropped in water:
+ * the ripple rings expand outward one at a time.
+ *
+ *   Queue  (FIFO): nodes to visit, oldest first.
+ *   Visited set:   prevents revisiting nodes and infinite loops.
+ */
+export function bfs(graph: Graph, start: string): string[] {
+  /**
+   * Return nodes reachable from start in breadth-first order.
+   *
+   * Nodes not reachable from start (in a disconnected graph) are excluded.
+   *
+   * Time: O(V + E).  Space: O(V) for the visited set and queue.
+   */
+  const visited = new Set<string>([start]);
+  const queue: string[] = [start];
+  const result: string[] = [];
 
   while (queue.length > 0) {
     const node = queue.shift()!;
     result.push(node);
-
-    for (const neighbor of sortedNodes(graph.neighbors(node))) {
-      if (!visited.has(neighbor)) {
-        visited.add(neighbor);
-        queue.push(neighbor);
+    // Sort neighbours for deterministic output
+    const neighbours = graph.neighbors(node).sort();
+    for (const neighbour of neighbours) {
+      if (!visited.has(neighbour)) {
+        visited.add(neighbour);
+        queue.push(neighbour);
       }
     }
   }
@@ -162,27 +56,42 @@ export function bfs<T>(graph: Graph<T>, start: T): T[] {
   return result;
 }
 
-export function dfs<T>(graph: Graph<T>, start: T): T[] {
-  if (!graph.hasNode(start)) {
-    throw new Error(`Node not found: ${String(start)}`);
-  }
-
-  const visited = new Set<T>();
-  const stack: T[] = [start];
-  const result: T[] = [];
+/**
+ * DFS — Depth-First Search
+ *
+ * DFS explores as far as possible down each branch before backtracking.
+ * Think of solving a maze: go straight until you hit a dead end, back up,
+ * try the next turn.
+ *
+ * We use an explicit stack instead of recursion to avoid stack overflow
+ * on deep graphs.
+ */
+export function dfs(graph: Graph, start: string): string[] {
+  /**
+   * Return nodes reachable from start in depth-first order.
+   *
+   * Nodes not reachable from start (in a disconnected graph) are excluded.
+   *
+   * Time: O(V + E).  Space: O(V) for the visited set and stack.
+   */
+  const visited = new Set<string>();
+  const stack: string[] = [start];
+  const result: string[] = [];
 
   while (stack.length > 0) {
     const node = stack.pop()!;
     if (visited.has(node)) {
       continue;
     }
-
     visited.add(node);
     result.push(node);
 
-    for (const neighbor of sortedNodes(graph.neighbors(node)).reverse()) {
-      if (!visited.has(neighbor)) {
-        stack.push(neighbor);
+    // Reverse-sort so that when we push all neighbours the first (alphabetically)
+    // is on top — this makes output deterministic
+    const neighbours = graph.neighbors(node).sort().reverse();
+    for (const neighbour of neighbours) {
+      if (!visited.has(neighbour)) {
+        stack.push(neighbour);
       }
     }
   }
@@ -190,51 +99,105 @@ export function dfs<T>(graph: Graph<T>, start: T): T[] {
   return result;
 }
 
-export function isConnected<T>(graph: Graph<T>): boolean {
-  if (graph.size === 0) {
+/**
+ * Is Connected
+ *
+ * A graph is connected if every node can reach every other node.
+ * One BFS from any starting node visits ALL nodes iff the graph is connected.
+ */
+export function isConnected(graph: Graph): boolean {
+  /**
+   * Return true if every node can reach every other node.
+   *
+   * An empty graph is vacuously connected (True).
+   * A single-node graph is trivially connected (True).
+   *
+   * Time: O(V + E).
+   */
+  const nodes = graph.nodes();
+  if (nodes.length === 0) {
     return true;
   }
-
-  const [start] = sortedNodes(graph.nodes());
-  return bfs(graph, start).length === graph.size;
+  return bfs(graph, nodes[0]).length === nodes.length;
 }
 
-export function connectedComponents<T>(graph: Graph<T>): Array<ReadonlySet<T>> {
-  const unvisited = new Set<T>(graph.nodes());
-  const result: Array<ReadonlySet<T>> = [];
+/**
+ * Connected Components
+ *
+ * When a graph is disconnected it consists of several isolated clusters called
+ * "connected components".  Think of an archipelago: ships can travel between
+ * ports on the same island, but cannot cross to a different island.
+ *
+ * Algorithm: repeatedly BFS from any unvisited node, collecting each component.
+ */
+export function connectedComponents(graph: Graph): Set<string>[] {
+  /**
+   * Return a list of connected components, each as a Set of nodes.
+   *
+   * Time: O(V + E).
+   */
+  const unvisited = new Set(graph.nodes());
+  const components: Set<string>[] = [];
 
   while (unvisited.size > 0) {
-    const [start] = sortedNodes(unvisited);
-    const component = new Set<T>(bfs(graph, start));
-    result.push(component);
+    const start = unvisited.values().next().value;
+    const component = new Set(bfs(graph, start));
+    components.push(component);
     for (const node of component) {
       unvisited.delete(node);
     }
   }
 
-  return result;
+  return components;
 }
 
-export function hasCycle<T>(graph: Graph<T>): boolean {
-  const visited = new Set<T>();
+/**
+ * Has Cycle
+ *
+ * An undirected graph has a cycle if DFS finds a "back edge" — an edge to a
+ * node already in the visited set that is NOT the node we came from.
+ *
+ * The "not our parent" check is essential: in an undirected graph every edge
+ * appears twice (u→v and v→u).  Without the parent check, the return edge
+ * would always look like a back edge and every edge would falsely indicate a
+ * cycle.
+ */
+export function hasCycle(graph: Graph): boolean {
+  /**
+   * Return true if the graph contains any cycle.
+   *
+   * Uses iterative DFS (avoids stack overflow on large graphs).
+   *
+   * Key insight: an undirected graph has a cycle iff DFS finds a "back edge" —
+   * an edge to an already-visited node that is NOT the node we came from.
+   * The parent check prevents counting the return edge (u→v, v→u) as a cycle.
+   *
+   * Time: O(V + E).
+   */
+  const visited = new Set<string>();
 
-  for (const start of sortedNodes(graph.nodes())) {
+  for (const start of graph.nodes()) {
     if (visited.has(start)) {
       continue;
     }
 
-    const stack: Array<readonly [T, T | null]> = [[start, null]];
+    // Stack holds [node, parent] pairs
+    const stack: Array<[string, string | null]> = [[start, null]];
+
     while (stack.length > 0) {
-      const [node, parent] = stack.pop()!;
+      const [node, par] = stack.pop()!;
+
       if (visited.has(node)) {
         continue;
       }
 
       visited.add(node);
-      for (const neighbor of graph.neighbors(node)) {
-        if (!visited.has(neighbor)) {
-          stack.push([neighbor, node]);
-        } else if (neighbor !== parent) {
+
+      for (const neighbour of graph.neighbors(node)) {
+        if (!visited.has(neighbour)) {
+          stack.push([neighbour, node]);
+        } else if (neighbour !== par) {
+          // Back edge: visited neighbour that isn't our parent → cycle
           return true;
         }
       }
@@ -244,34 +207,59 @@ export function hasCycle<T>(graph: Graph<T>): boolean {
   return false;
 }
 
-export function shortestPath<T>(graph: Graph<T>, start: T, end: T): T[] {
-  if (!graph.hasNode(start) || !graph.hasNode(end)) {
-    return [];
-  }
+/**
+ * Shortest Path
+ *
+ * Two strategies depending on edge weights:
+ *
+ *   All weights equal (or all 1.0):
+ *     BFS finds the shortest path in O(V + E).  BFS naturally explores
+ *     nodes in order of hop-count, so the first time it reaches the
+ *     destination it has found the shortest route.
+ *
+ *   Variable weights (Dijkstra's algorithm):
+ *     A priority queue (min-heap) always expands the cheapest unvisited
+ *     node.  Think of water flowing: it always takes the cheapest path
+ *     available, spreading outward until it reaches the destination.
+ */
+export function shortestPath(graph: Graph, start: string, end: string): string[] {
+  /**
+   * Return the shortest (lowest-weight) path from start to end.
+   *
+   * Returns an empty array if no path exists.
+   *
+   * For unweighted graphs (all weights 1.0) uses BFS — O(V + E).
+   * For weighted graphs uses Dijkstra's algorithm — O((V + E) log V).
+   */
   if (start === end) {
-    return [start];
+    return graph.nodes().includes(start) ? [start] : [];
   }
 
-  const allUnit = graph.edges().every(([, , weight]) => weight === 1.0);
-  return allUnit
-    ? bfsShortestPath(graph, start, end)
-    : dijkstraShortestPath(graph, start, end);
+  // Decide strategy: BFS if all weights are 1.0, else Dijkstra
+  const allUnit = graph.edges().every(([_, __, w]) => w === 1.0);
+
+  if (allUnit) {
+    return bfsPath(graph, start, end);
+  }
+  return dijkstra(graph, start, end);
 }
 
-function bfsShortestPath<T>(graph: Graph<T>, start: T, end: T): T[] {
-  const parent = new Map<T, T | null>([[start, null]]);
-  const queue: T[] = [start];
+function bfsPath(graph: Graph, start: string, end: string): string[] {
+  /**
+   * BFS shortest path (for unweighted graphs).
+   */
+  const parent = new Map<string, string | null>([[start, null]]);
+  const queue: string[] = [start];
 
   while (queue.length > 0) {
     const node = queue.shift()!;
     if (node === end) {
       break;
     }
-
-    for (const neighbor of sortedNodes(graph.neighbors(node))) {
-      if (!parent.has(neighbor)) {
-        parent.set(neighbor, node);
-        queue.push(neighbor);
+    for (const neighbour of graph.neighbors(node)) {
+      if (!parent.has(neighbour)) {
+        parent.set(neighbour, node);
+        queue.push(neighbour);
       }
     }
   }
@@ -280,106 +268,176 @@ function bfsShortestPath<T>(graph: Graph<T>, start: T, end: T): T[] {
     return [];
   }
 
-  const path: T[] = [];
-  let current: T | null = end;
-  while (current !== null) {
-    path.push(current);
-    current = parent.get(current) ?? null;
+  // Trace back from end to start via parent pointers
+  const path: string[] = [];
+  let cur: string | null = end;
+  while (cur !== null) {
+    path.push(cur);
+    cur = parent.get(cur) ?? null;
   }
-
-  return path.reverse();
+  path.reverse();
+  return path;
 }
 
-function dijkstraShortestPath<T>(graph: Graph<T>, start: T, end: T): T[] {
-  const distances = new Map<T, number>();
-  const parent = new Map<T, T | null>();
-  const queue = new MinPriorityQueue<T>();
-  let sequence = 0;
+function dijkstra(graph: Graph, start: string, end: string): string[] {
+  /**
+   * Dijkstra's algorithm for weighted shortest path.
+   */
+  const INF = Number.MAX_VALUE;
+  const dist = new Map<string, number>();
+  const parent = new Map<string, string | null>();
 
   for (const node of graph.nodes()) {
-    distances.set(node, Number.POSITIVE_INFINITY);
+    dist.set(node, INF);
   }
+  dist.set(start, 0);
 
-  distances.set(start, 0);
-  queue.push(0, sequence, start);
+  // Min-heap entries: [distance, node]
+  // Using a simple array and sorting for simplicity (not optimal, but correct)
+  const heap: Array<[number, string]> = [[0, start]];
 
-  while (queue.size > 0) {
-    const current = queue.pop()!;
-    const currentDistance = distances.get(current.value)!;
-    if (current.priority > currentDistance) {
-      continue;
+  while (heap.length > 0) {
+    // Sort to get min element
+    heap.sort((a, b) => a[0] - b[0]);
+    const [d, node] = heap.shift()!;
+
+    if (d > dist.get(node)!) {
+      continue; // Stale entry
     }
-    if (current.value === end) {
+
+    if (node === end) {
       break;
     }
 
-    const neighbors = Array.from(graph.neighborsWeighted(current.value).entries())
-      .sort((left, right) => compareNodes(left[0], right[0]));
-
-    for (const [neighbor, weight] of neighbors) {
-      const nextDistance = currentDistance + weight;
-      if (nextDistance < (distances.get(neighbor) ?? Number.POSITIVE_INFINITY)) {
-        distances.set(neighbor, nextDistance);
-        parent.set(neighbor, current.value);
-        sequence += 1;
-        queue.push(nextDistance, sequence, neighbor);
+    for (const [neighbour, weight] of graph.neighborsWeighted(node).entries()) {
+      const newDist = dist.get(node)! + weight;
+      if (newDist < dist.get(neighbour)!) {
+        dist.set(neighbour, newDist);
+        parent.set(neighbour, node);
+        heap.push([newDist, neighbour]);
       }
     }
   }
 
-  if ((distances.get(end) ?? Number.POSITIVE_INFINITY) === Number.POSITIVE_INFINITY) {
+  if (dist.get(end)! === INF) {
     return [];
   }
 
-  const path: T[] = [];
-  let current: T | null = end;
-  while (current !== null) {
-    path.push(current);
-    current = parent.get(current) ?? null;
+  // Trace back
+  const path: string[] = [];
+  let cur: string | null = end;
+  while (cur !== null) {
+    path.push(cur);
+    cur = parent.get(cur) ?? null;
   }
-
-  return path.reverse();
+  path.reverse();
+  return path;
 }
 
-export function minimumSpanningTree<T>(
-  graph: Graph<T>
-): ReadonlySet<WeightedEdge<T>> {
-  const nodes = Array.from(graph.nodes());
-  if (nodes.length === 0 || graph.edges().length === 0) {
-    return new Set();
+/**
+ * Minimum Spanning Tree — Kruskal's algorithm + Union-Find
+ *
+ * A spanning tree connects all V nodes with exactly V-1 edges and no cycles.
+ * The MINIMUM spanning tree does so with the lowest possible total weight.
+ *
+ * Real-world use: lay cables to connect N cities using the least total wire.
+ *
+ * Kruskal's algorithm:
+ *   1. Sort all edges by weight (cheapest first).
+ *   2. Greedily add each edge IF it doesn't create a cycle.
+ *      Cycle check: use Union-Find.  If both endpoints are already in the
+ *      same component, adding the edge would create a cycle — skip it.
+ *   3. Stop when we have V-1 edges (the spanning tree is complete).
+ */
+export function minimumSpanningTree(
+  graph: Graph
+): Array<[string, string, number]> {
+  /**
+   * Return the minimum spanning tree as an array of [u, v, weight] triples.
+   *
+   * Throws an error if the graph is not connected (no spanning tree exists).
+   *
+   * Time: O(E log E) for sorting + O(E · α(V)) for Union-Find.
+   */
+  const allNodes = graph.nodes();
+  if (allNodes.length === 0) {
+    return [];
   }
 
-  const sortedEdges = [...graph.edges()].sort((left, right) => {
-    const byWeight = left[2] - right[2];
-    if (byWeight !== 0) {
-      return byWeight;
-    }
-    const byFirst = compareNodes(left[0], right[0]);
-    if (byFirst !== 0) {
-      return byFirst;
-    }
-    return compareNodes(left[1], right[1]);
-  });
+  // Sort edges by weight
+  const sortedEdges = graph.edges().sort((a, b) => a[2] - b[2]);
 
-  const uf = new UnionFind(nodes);
-  const mst = new Set<WeightedEdge<T>>();
+  const uf = new UnionFind(allNodes);
+  const mst: Array<[string, string, number]> = [];
 
-  for (const edge of sortedEdges) {
-    const [left, right] = edge;
-    if (uf.find(left) !== uf.find(right)) {
-      uf.union(left, right);
-      mst.add(edge);
-      if (mst.size === nodes.length - 1) {
-        break;
+  for (const [u, v, w] of sortedEdges) {
+    if (uf.find(u) !== uf.find(v)) {
+      uf.union(u, v);
+      mst.push([u, v, w]);
+      if (mst.length === allNodes.length - 1) {
+        break; // MST is complete
       }
     }
   }
 
-  if (mst.size < nodes.length - 1 && nodes.length > 1) {
+  if (mst.length < allNodes.length - 1 && allNodes.length > 1) {
     throw new Error(
-      "minimumSpanningTree: graph is not connected and has no spanning tree"
+      "Graph is not connected — no spanning tree exists"
     );
   }
 
   return mst;
+}
+
+/**
+ * Union-Find (helper for Kruskal's algorithm)
+ *
+ * Tracks which "component" (group) each node belongs to.
+ * Two nodes are in the same component iff find(a) === find(b).
+ *
+ * Path compression:  When we walk up the parent chain to find the root,
+ * we update every visited node to point DIRECTLY to the root.  This
+ * "flattens" the tree and makes future finds very fast.
+ */
+class UnionFind {
+  private parent: Map<string, string>;
+  private rank: Map<string, number>;
+
+  constructor(nodes: string[]) {
+    this.parent = new Map();
+    this.rank = new Map();
+    for (const node of nodes) {
+      this.parent.set(node, node);
+      this.rank.set(node, 0);
+    }
+  }
+
+  find(x: string): string {
+    /**
+     * Return the representative (root) of x's component.
+     */
+    if (this.parent.get(x) !== x) {
+      this.parent.set(x, this.find(this.parent.get(x)!)); // path compression
+    }
+    return this.parent.get(x)!;
+  }
+
+  union(a: string, b: string): void {
+    /**
+     * Merge the components of a and b (union by rank).
+     */
+    let ra = this.find(a);
+    let rb = this.find(b);
+    if (ra === rb) {
+      return;
+    }
+    // Attach the shorter tree under the taller tree
+    if (this.rank.get(ra)! < this.rank.get(rb)!) {
+      [ra, rb] = [rb, ra];
+    }
+    this.parent.set(rb, ra);
+    if (this.rank.get(ra) === this.rank.get(rb)) {
+      this.rank.set(ra, this.rank.get(ra)! + 1);
+    }
+  }
 }

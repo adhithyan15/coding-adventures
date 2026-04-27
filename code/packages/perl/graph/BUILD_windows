@@ -1,1 +1,2 @@
-echo Perl testing is not supported on Windows - skipping
+@echo Perl test infrastructure not available on Windows CI. Skipping tests.
+@exit /b 0

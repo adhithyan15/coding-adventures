@@ -1,443 +1,627 @@
+// ============================================================================
+// Graph.swift — Undirected Weighted Graph
+// ============================================================================
+//
+// A graph G = (V, E) is a collection of:
+//   V — vertices (nodes): any Hashable type
+//   E — edges: unordered pairs {u, v} with optional weights (default 1.0)
+//
+// Two Representations
+// -------------------
+// ADJACENCY_LIST (default):
+//   A Dictionary mapping each node to a Dictionary of neighbours with weights.
+//   Space: O(V + E) — only stores existing edges.
+//   Edge lookup: O(degree) — scan neighbour dictionary.
+//   Best for sparse graphs (most real-world graphs).
+//
+// ADJACENCY_MATRIX:
+//   A V×V matrix where matrix[i][j] = weight (0.0 means no edge).
+//   Nodes are mapped to integer indices for array addressing.
+//   Space: O(V²) — allocates a slot for every possible edge.
+//   Edge lookup: O(1) — single array access.
+//   Best for dense graphs or when O(1) edge lookup is critical.
+//
+// Both representations expose the same public API.
+// ============================================================================
+
 import Foundation
 
-public enum GraphRepr: String, CaseIterable, Sendable {
-    case adjacencyList = "adjacency_list"
-    case adjacencyMatrix = "adjacency_matrix"
+// MARK: - Graph Representation Enum
+
+public enum GraphRepr {
+    case adjacencyList
+    case adjacencyMatrix
 }
 
-public typealias WeightedEdge = (String, String, Double)
+// MARK: - Error Types
 
-public struct NodeNotFoundError: Error, CustomStringConvertible {
-    public let node: String
-    public var description: String { "Node not found: '\(node)'" }
+public enum GraphError: Error, Equatable {
+    case nodeNotFound(String)
+    case edgeNotFound(String, String)
+    case graphNotConnected
+    case invalidRepresentation
 }
 
-public struct EdgeNotFoundError: Error, CustomStringConvertible {
-    public let left: String
-    public let right: String
-    public var description: String { "Edge not found: '\(left)' -- '\(right)'" }
-}
+// MARK: - Graph Structure
 
-public struct NotConnectedError: Error, CustomStringConvertible {
-    public var description: String { "graph is not connected" }
-}
+public struct Graph<Node: Hashable & CustomStringConvertible> {
+    // Internal representation type
+    private let repr: GraphRepr
 
-public struct Graph: Sendable {
-    public let repr: GraphRepr
-    private var adj: [String: [String: Double]]
-    private var nodeList: [String]
-    private var nodeIndex: [String: Int]
-    private var matrix: [[Double?]]
+    // For adjacency list representation:
+    // _adjList[u][v] = weight for edge {u, v}
+    private var adjList: [Node: [Node: Double]] = [:]
 
+    // For adjacency matrix representation:
+    // _nodeList: ordered list of nodes for matrix indexing
+    // _nodeIdx: node -> row/col index mapping
+    // _matrix: V×V matrix (symmetric for undirected)
+    private var nodeList: [Node] = []
+    private var nodeIdx: [Node: Int] = [:]
+    private var matrix: [[Double]] = []
+
+    // MARK: - Initialization
+
+    /// Create a new Graph with the specified representation.
+    /// Default is adjacency list (better for sparse graphs).
     public init(repr: GraphRepr = .adjacencyList) {
         self.repr = repr
-        self.adj = [:]
-        self.nodeList = []
-        self.nodeIndex = [:]
-        self.matrix = []
-    }
 
-    public var size: Int {
-        repr == .adjacencyList ? adj.count : nodeList.count
-    }
-
-    public mutating func addNode(_ node: String) {
         if repr == .adjacencyList {
-            if adj[node] == nil {
-                adj[node] = [:]
+            self.adjList = [:]
+        } else {
+            self.nodeList = []
+            self.nodeIdx = [:]
+            self.matrix = []
+        }
+    }
+
+    // MARK: - Node Operations
+
+    /// Add a node to the graph. No-op if the node already exists.
+    public mutating func addNode(_ node: Node) {
+        if repr == .adjacencyList {
+            if adjList[node] == nil {
+                adjList[node] = [:]
             }
-            return
-        }
+        } else {
+            guard nodeIdx[node] == nil else { return }
 
-        if nodeIndex[node] != nil {
-            return
-        }
+            let idx = nodeList.count
+            nodeList.append(node)
+            nodeIdx[node] = idx
 
-        let index = nodeList.count
-        nodeList.append(node)
-        nodeIndex[node] = index
-        for row in matrix.indices {
-            matrix[row].append(nil)
-        }
-        matrix.append(Array(repeating: nil, count: index + 1))
-    }
-
-    public mutating func removeNode(_ node: String) throws {
-        if repr == .adjacencyList {
-            guard let neighbors = adj[node] else {
-                throw NodeNotFoundError(node: node)
+            // Add column to existing rows
+            for i in 0..<matrix.count {
+                matrix[i].append(0.0)
             }
-            for neighbor in neighbors.keys {
-                adj[neighbor]?.removeValue(forKey: node)
+            // Add new row
+            matrix.append(Array(repeating: 0.0, count: idx + 1))
+        }
+    }
+
+    /// Remove a node and all its incident edges.
+    /// Raises GraphError.nodeNotFound if the node doesn't exist.
+    public mutating func removeNode(_ node: Node) throws {
+        if repr == .adjacencyList {
+            guard adjList[node] != nil else {
+                throw GraphError.nodeNotFound(node.description)
             }
-            adj.removeValue(forKey: node)
-            return
-        }
 
-        guard let index = nodeIndex[node] else {
-            throw NodeNotFoundError(node: node)
-        }
-
-        nodeIndex.removeValue(forKey: node)
-        nodeList.remove(at: index)
-        matrix.remove(at: index)
-        for row in matrix.indices {
-            matrix[row].remove(at: index)
-        }
-        nodeIndex = Dictionary(uniqueKeysWithValues: nodeList.enumerated().map { ($1, $0) })
-    }
-
-    public func hasNode(_ node: String) -> Bool {
-        repr == .adjacencyList ? adj[node] != nil : nodeIndex[node] != nil
-    }
-
-    public func nodes() -> [String] {
-        let values = repr == .adjacencyList ? Array(adj.keys) : nodeList
-        return values.sorted()
-    }
-
-    public mutating func addEdge(_ left: String, _ right: String, weight: Double = 1.0) {
-        addNode(left)
-        addNode(right)
-
-        if repr == .adjacencyList {
-            adj[left, default: [:]][right] = weight
-            adj[right, default: [:]][left] = weight
-            return
-        }
-
-        let leftIndex = nodeIndex[left]!
-        let rightIndex = nodeIndex[right]!
-        matrix[leftIndex][rightIndex] = weight
-        matrix[rightIndex][leftIndex] = weight
-    }
-
-    public mutating func removeEdge(_ left: String, _ right: String) throws {
-        if repr == .adjacencyList {
-            guard adj[left]?[right] != nil else {
-                throw EdgeNotFoundError(left: left, right: right)
+            // Remove all edges touching this node
+            for neighbour in adjList[node]!.keys {
+                adjList[neighbour]?.removeValue(forKey: node)
             }
-            adj[left]?.removeValue(forKey: right)
-            adj[right]?.removeValue(forKey: left)
-            return
-        }
+            adjList.removeValue(forKey: node)
+        } else {
+            guard let idx = nodeIdx[node] else {
+                throw GraphError.nodeNotFound(node.description)
+            }
 
-        guard let leftIndex = nodeIndex[left], let rightIndex = nodeIndex[right], matrix[leftIndex][rightIndex] != nil else {
-            throw EdgeNotFoundError(left: left, right: right)
-        }
+            nodeIdx.removeValue(forKey: node)
+            nodeList.remove(at: idx)
 
-        matrix[leftIndex][rightIndex] = nil
-        matrix[rightIndex][leftIndex] = nil
+            // Update indices for nodes that shifted down
+            for i in idx..<nodeList.count {
+                nodeIdx[nodeList[i]] = i
+            }
+
+            // Remove row
+            matrix.remove(at: idx)
+
+            // Remove column from remaining rows
+            for i in 0..<matrix.count {
+                matrix[i].remove(at: idx)
+            }
+        }
     }
 
-    public func hasEdge(_ left: String, _ right: String) -> Bool {
+    /// Check if a node exists in the graph.
+    public func hasNode(_ node: Node) -> Bool {
         if repr == .adjacencyList {
-            return adj[left]?[right] != nil
+            return adjList[node] != nil
+        } else {
+            return nodeIdx[node] != nil
         }
-        guard let leftIndex = nodeIndex[left], let rightIndex = nodeIndex[right] else {
-            return false
-        }
-        return matrix[leftIndex][rightIndex] != nil
     }
 
-    public func edges() -> [WeightedEdge] {
-        var result: [WeightedEdge] = []
+    /// Return all nodes in the graph.
+    public var nodes: [Node] {
+        if repr == .adjacencyList {
+            return Array(adjList.keys)
+        } else {
+            return nodeList
+        }
+    }
+
+    /// Return the number of nodes.
+    public var count: Int {
+        if repr == .adjacencyList {
+            return adjList.count
+        } else {
+            return nodeList.count
+        }
+    }
+
+    // MARK: - Edge Operations
+
+    /// Add an undirected edge between u and v with the given weight.
+    /// Both nodes are added automatically if they don't exist.
+    public mutating func addEdge(_ u: Node, _ v: Node, weight: Double = 1.0) {
+        addNode(u)
+        addNode(v)
+
+        if repr == .adjacencyList {
+            adjList[u]![v] = weight
+            adjList[v]![u] = weight
+        } else {
+            let i = nodeIdx[u]!
+            let j = nodeIdx[v]!
+            matrix[i][j] = weight
+            matrix[j][i] = weight
+        }
+    }
+
+    /// Remove the edge between u and v.
+    /// Raises GraphError.edgeNotFound if either node or the edge doesn't exist.
+    public mutating func removeEdge(_ u: Node, _ v: Node) throws {
+        if repr == .adjacencyList {
+            guard adjList[u] != nil, adjList[u]![v] != nil else {
+                throw GraphError.edgeNotFound(u.description, v.description)
+            }
+            adjList[u]!.removeValue(forKey: v)
+            adjList[v]!.removeValue(forKey: u)
+        } else {
+            guard let i = nodeIdx[u], let j = nodeIdx[v] else {
+                throw GraphError.edgeNotFound(u.description, v.description)
+            }
+            guard matrix[i][j] != 0.0 else {
+                throw GraphError.edgeNotFound(u.description, v.description)
+            }
+            matrix[i][j] = 0.0
+            matrix[j][i] = 0.0
+        }
+    }
+
+    /// Check if an edge exists between u and v.
+    public func hasEdge(_ u: Node, _ v: Node) -> Bool {
+        if repr == .adjacencyList {
+            return adjList[u]?[v] != nil
+        } else {
+            guard let i = nodeIdx[u], let j = nodeIdx[v] else { return false }
+            return matrix[i][j] != 0.0
+        }
+    }
+
+    /// Return all edges as an array of (u, v, weight) tuples.
+    /// Each undirected edge appears exactly once.
+    public var edges: [(Node, Node, Double)] {
+        var result: [(Node, Node, Double)] = []
 
         if repr == .adjacencyList {
             var seen = Set<String>()
-            for (left, neighbors) in adj {
-                for (right, weight) in neighbors {
-                    let ordered = canonical(left, right)
-                    let key = "\(ordered.0)\u{0}\(ordered.1)"
-                    if seen.insert(key).inserted {
-                        result.append((ordered.0, ordered.1, weight))
-                    }
+            for u in adjList.keys {
+                for (v, weight) in adjList[u]! {
+                    let key = "\(min(u.description, v.description)),\(max(u.description, v.description))"
+                    guard !seen.contains(key) else { continue }
+                    seen.insert(key)
+                    result.append((u, v, weight))
                 }
             }
         } else {
-            guard !nodeList.isEmpty else { return [] }
-            for row in 0..<nodeList.count {
-                for col in row..<nodeList.count {
-                    if let weight = matrix[row][col] {
-                        result.append((nodeList[row], nodeList[col], weight))
+            let n = nodeList.count
+            for i in 0..<n {
+                for j in (i + 1)..<n {
+                    let weight = matrix[i][j]
+                    if weight != 0.0 {
+                        result.append((nodeList[i], nodeList[j], weight))
                     }
                 }
             }
         }
 
-        return result.sorted { left, right in
-            if left.2 != right.2 { return left.2 < right.2 }
-            if left.0 != right.0 { return left.0 < right.0 }
-            return left.1 < right.1
-        }
-    }
-
-    public func edgeWeight(_ left: String, _ right: String) throws -> Double {
-        if repr == .adjacencyList {
-            guard let weight = adj[left]?[right] else {
-                throw EdgeNotFoundError(left: left, right: right)
-            }
-            return weight
-        }
-
-        guard let leftIndex = nodeIndex[left], let rightIndex = nodeIndex[right], let weight = matrix[leftIndex][rightIndex] else {
-            throw EdgeNotFoundError(left: left, right: right)
-        }
-        return weight
-    }
-
-    public func neighbors(of node: String) throws -> [String] {
-        if repr == .adjacencyList {
-            guard let neighbors = adj[node] else {
-                throw NodeNotFoundError(node: node)
-            }
-            return neighbors.keys.sorted()
-        }
-
-        guard let index = nodeIndex[node] else {
-            throw NodeNotFoundError(node: node)
-        }
-        var result: [String] = []
-        for col in 0..<nodeList.count {
-            if matrix[index][col] != nil {
-                result.append(nodeList[col])
-            }
-        }
-        return result.sorted()
-    }
-
-    public func neighborsWeighted(of node: String) throws -> [String: Double] {
-        if repr == .adjacencyList {
-            guard let neighbors = adj[node] else {
-                throw NodeNotFoundError(node: node)
-            }
-            return neighbors
-        }
-
-        guard let index = nodeIndex[node] else {
-            throw NodeNotFoundError(node: node)
-        }
-        var result: [String: Double] = [:]
-        for col in 0..<nodeList.count {
-            if let weight = matrix[index][col] {
-                result[nodeList[col]] = weight
-            }
-        }
         return result
     }
 
-    public func degree(of node: String) throws -> Int {
-        try neighbors(of: node).count
-    }
-}
-
-public func bfs(_ graph: Graph, start: String) throws -> [String] {
-    guard graph.hasNode(start) else { throw NodeNotFoundError(node: start) }
-    var queue = [start]
-    var visited: Set<String> = [start]
-    var result: [String] = []
-    var index = 0
-
-    while index < queue.count {
-        let node = queue[index]
-        index += 1
-        result.append(node)
-        for neighbor in try graph.neighbors(of: node) where !visited.contains(neighbor) {
-            visited.insert(neighbor)
-            queue.append(neighbor)
-        }
-    }
-
-    return result
-}
-
-public func dfs(_ graph: Graph, start: String) throws -> [String] {
-    guard graph.hasNode(start) else { throw NodeNotFoundError(node: start) }
-    var stack = [start]
-    var visited = Set<String>()
-    var result: [String] = []
-
-    while let node = stack.popLast() {
-        if visited.contains(node) { continue }
-        visited.insert(node)
-        result.append(node)
-        for neighbor in try graph.neighbors(of: node).reversed() where !visited.contains(neighbor) {
-            stack.append(neighbor)
-        }
-    }
-
-    return result
-}
-
-public func isConnected(_ graph: Graph) -> Bool {
-    guard let start = graph.nodes().first else { return true }
-    return (try? bfs(graph, start: start).count) == graph.size
-}
-
-public func connectedComponents(_ graph: Graph) -> [[String]] {
-    var remaining = Set(graph.nodes())
-    var result: [[String]] = []
-
-    while let start = remaining.sorted().first {
-        let component = (try? bfs(graph, start: start)) ?? []
-        result.append(component)
-        for node in component {
-            remaining.remove(node)
-        }
-    }
-
-    return result
-}
-
-public func hasCycle(_ graph: Graph) -> Bool {
-    var visited = Set<String>()
-    for start in graph.nodes() where !visited.contains(start) {
-        if visitCycle(graph, start, parent: nil, visited: &visited) {
-            return true
-        }
-    }
-    return false
-}
-
-public func shortestPath(_ graph: Graph, start: String, finish: String) -> [String] {
-    guard graph.hasNode(start), graph.hasNode(finish) else { return [] }
-    if start == finish { return [start] }
-
-    if graph.edges().allSatisfy({ $0.2 == 1.0 }) {
-        return bfsShortestPath(graph, start: start, finish: finish)
-    }
-    return dijkstraShortestPath(graph, start: start, finish: finish)
-}
-
-public func minimumSpanningTree(_ graph: Graph) throws -> [WeightedEdge] {
-    if graph.size <= 1 || graph.edges().isEmpty {
-        return []
-    }
-    guard isConnected(graph) else { throw NotConnectedError() }
-
-    var unionFind = UnionFind(nodes: graph.nodes())
-    var result: [WeightedEdge] = []
-
-    for edge in graph.edges() {
-        if unionFind.find(edge.0) != unionFind.find(edge.1) {
-            unionFind.union(edge.0, edge.1)
-            result.append(edge)
-        }
-    }
-
-    return result
-}
-
-private func canonical(_ left: String, _ right: String) -> (String, String) {
-    left <= right ? (left, right) : (right, left)
-}
-
-private func visitCycle(_ graph: Graph, _ node: String, parent: String?, visited: inout Set<String>) -> Bool {
-    visited.insert(node)
-    for neighbor in (try? graph.neighbors(of: node)) ?? [] {
-        if !visited.contains(neighbor) {
-            if visitCycle(graph, neighbor, parent: node, visited: &visited) {
-                return true
+    /// Get the weight of the edge between u and v.
+    /// Raises GraphError.edgeNotFound if the edge doesn't exist.
+    public func edgeWeight(_ u: Node, _ v: Node) throws -> Double {
+        if repr == .adjacencyList {
+            guard let weight = adjList[u]?[v] else {
+                throw GraphError.edgeNotFound(u.description, v.description)
             }
-        } else if neighbor != parent {
-            return true
-        }
-    }
-    return false
-}
-
-private func bfsShortestPath(_ graph: Graph, start: String, finish: String) -> [String] {
-    var queue = [start]
-    var parents: [String: String?] = [start: nil]
-    var index = 0
-
-    while index < queue.count {
-        let node = queue[index]
-        index += 1
-        if node == finish { break }
-
-        for neighbor in (try? graph.neighbors(of: node)) ?? [] where parents[neighbor] == nil {
-            parents[neighbor] = node
-            queue.append(neighbor)
+            return weight
+        } else {
+            guard let i = nodeIdx[u], let j = nodeIdx[v] else {
+                throw GraphError.edgeNotFound(u.description, v.description)
+            }
+            let weight = matrix[i][j]
+            guard weight != 0.0 else {
+                throw GraphError.edgeNotFound(u.description, v.description)
+            }
+            return weight
         }
     }
 
-    guard parents.keys.contains(finish) else { return [] }
-    return reconstructPath(parents, finish: finish, start: start)
-}
+    // MARK: - Neighbourhood Queries
 
-private func dijkstraShortestPath(_ graph: Graph, start: String, finish: String) -> [String] {
-    var distances = Dictionary(uniqueKeysWithValues: graph.nodes().map { ($0, Double.infinity) })
-    distances[start] = 0.0
-    var parents: [String: String] = [:]
-    var queue: [(Double, String)] = [(0.0, start)]
+    /// Return all neighbours of a node.
+    /// Raises GraphError.nodeNotFound if the node doesn't exist.
+    public func neighbors(_ node: Node) throws -> [Node] {
+        if repr == .adjacencyList {
+            guard let neighs = adjList[node] else {
+                throw GraphError.nodeNotFound(node.description)
+            }
+            return Array(neighs.keys)
+        } else {
+            guard let idx = nodeIdx[node] else {
+                throw GraphError.nodeNotFound(node.description)
+            }
+            var result: [Node] = []
+            for j in 0..<matrix[idx].count {
+                if matrix[idx][j] != 0.0 {
+                    result.append(nodeList[j])
+                }
+            }
+            return result
+        }
+    }
 
-    while !queue.isEmpty {
-        queue.sort { lhs, rhs in lhs.0 == rhs.0 ? lhs.1 < rhs.1 : lhs.0 < rhs.0 }
-        let (distance, node) = queue.removeFirst()
+    /// Return weighted neighbours as a dictionary {neighbour: weight}.
+    /// Raises GraphError.nodeNotFound if the node doesn't exist.
+    public func neighborsWeighted(_ node: Node) throws -> [Node: Double] {
+        if repr == .adjacencyList {
+            guard let neighs = adjList[node] else {
+                throw GraphError.nodeNotFound(node.description)
+            }
+            return neighs
+        } else {
+            guard let idx = nodeIdx[node] else {
+                throw GraphError.nodeNotFound(node.description)
+            }
+            var result: [Node: Double] = [:]
+            for j in 0..<matrix[idx].count {
+                let weight = matrix[idx][j]
+                if weight != 0.0 {
+                    result[nodeList[j]] = weight
+                }
+            }
+            return result
+        }
+    }
 
-        if distance > distances[node, default: .infinity] { continue }
-        if node == finish { break }
+    /// Return the degree of a node (number of incident edges).
+    /// Raises GraphError.nodeNotFound if the node doesn't exist.
+    public func degree(_ node: Node) throws -> Int {
+        return try neighbors(node).count
+    }
 
-        let weighted = (try? graph.neighborsWeighted(of: node)) ?? [:]
-        for (neighbor, weight) in weighted {
-            let next = distance + weight
-            if next < distances[neighbor, default: .infinity] {
-                distances[neighbor] = next
-                parents[neighbor] = node
-                queue.append((next, neighbor))
+    // MARK: - Computed Properties
+
+    /// Check if the graph is connected (all nodes reachable from any node).
+    public var isConnected: Bool {
+        guard !nodes.isEmpty else { return true }
+        let start = nodes[0]
+        let reachable = (try? bfsPrivate(start)) ?? []
+        return reachable.count == nodes.count
+    }
+
+    // MARK: - Algorithms
+
+    /// Breadth-first search from start node.
+    /// Returns nodes in BFS order.
+    /// Time: O(V + E)
+    public func bfs(_ start: Node) -> [Node] {
+        guard hasNode(start) else { return [] }
+
+        var visited = Set<Node>([start])
+        var queue = [start]
+        var result: [Node] = []
+
+        while !queue.isEmpty {
+            let node = queue.removeFirst()
+            result.append(node)
+
+            let neighbors = (try? self.neighbors(node)) ?? []
+            for neighbor in neighbors.sorted(by: { $0.description < $1.description }) {
+                if !visited.contains(neighbor) {
+                    visited.insert(neighbor)
+                    queue.append(neighbor)
+                }
             }
         }
+
+        return result
     }
 
-    guard distances[finish, default: .infinity].isFinite else { return [] }
-    return reconstructPath(parents.mapValues { Optional($0) }, finish: finish, start: start)
-}
+    /// Depth-first search from start node.
+    /// Returns nodes in DFS order.
+    /// Time: O(V + E)
+    public func dfs(_ start: Node) -> [Node] {
+        guard hasNode(start) else { return [] }
 
-private func reconstructPath(_ parents: [String: String?], finish: String, start: String) -> [String] {
-    var result: [String] = []
-    var current: String? = finish
+        var visited = Set<Node>()
+        var stack = [start]
+        var result: [Node] = []
 
-    while let node = current {
-        result.append(node)
-        current = parents[node] ?? nil
-    }
+        while !stack.isEmpty {
+            let node = stack.removeLast()
+            guard !visited.contains(node) else { continue }
 
-    result.reverse()
-    return result.first == start ? result : []
-}
+            visited.insert(node)
+            result.append(node)
 
-private struct UnionFind {
-    var parent: [String: String]
-    var rank: [String: Int]
-
-    init(nodes: [String]) {
-        self.parent = Dictionary(uniqueKeysWithValues: nodes.map { ($0, $0) })
-        self.rank = Dictionary(uniqueKeysWithValues: nodes.map { ($0, 0) })
-    }
-
-    mutating func find(_ node: String) -> String {
-        let current = parent[node]!
-        if current == node { return node }
-        let root = find(current)
-        parent[node] = root
-        return root
-    }
-
-    mutating func union(_ left: String, _ right: String) {
-        var leftRoot = find(left)
-        var rightRoot = find(right)
-        if leftRoot == rightRoot { return }
-
-        let leftRank = rank[leftRoot, default: 0]
-        let rightRank = rank[rightRoot, default: 0]
-        if leftRank < rightRank {
-            swap(&leftRoot, &rightRoot)
+            let neighbors = (try? self.neighbors(node)) ?? []
+            for neighbor in neighbors.sorted(by: { $0.description > $1.description }) {
+                if !visited.contains(neighbor) {
+                    stack.append(neighbor)
+                }
+            }
         }
 
-        parent[rightRoot] = leftRoot
-        if leftRank == rightRank {
-            rank[leftRoot, default: 0] += 1
+        return result
+    }
+
+    /// Find shortest (lowest-weight) path from start to end.
+    /// Returns empty array if no path exists.
+    /// Uses BFS for unweighted graphs, Dijkstra for weighted.
+    /// Time: O(V + E) for BFS, O((V + E) log V) for Dijkstra
+    public func shortestPath(_ start: Node, _ end: Node) -> [Node] {
+        guard start != end || hasNode(start) else { return [] }
+        guard start != end else { return [start] }
+
+        // Check if all weights are 1.0
+        let allUnit = edges.allSatisfy { $0.2 == 1.0 }
+
+        if allUnit {
+            return bfsPath(start, end)
+        } else {
+            return dijkstra(start, end)
+        }
+    }
+
+    /// Check if the graph contains a cycle.
+    /// Uses iterative DFS.
+    /// Time: O(V + E)
+    public func hasCycle() -> Bool {
+        var visited = Set<Node>()
+
+        for start in nodes {
+            guard !visited.contains(start) else { continue }
+
+            var stack: [(Node, Node?)] = [(start, nil)]
+
+            while !stack.isEmpty {
+                let (node, parent) = stack.removeLast()
+                guard !visited.contains(node) else { continue }
+
+                visited.insert(node)
+
+                let neighbors = (try? self.neighbors(node)) ?? []
+                for neighbor in neighbors {
+                    if !visited.contains(neighbor) {
+                        stack.append((neighbor, node))
+                    } else if neighbor != parent {
+                        // Back edge to visited node that isn't parent -> cycle
+                        return true
+                    }
+                }
+            }
+        }
+
+        return false
+    }
+
+    /// Check if the graph is bipartite (2-colorable).
+    /// Time: O(V + E)
+    public func isBipartite() -> Bool {
+        var color: [Node: Int] = [:]
+
+        for start in nodes {
+            guard color[start] == nil else { continue }
+
+            var queue = [start]
+            color[start] = 0
+
+            while !queue.isEmpty {
+                let node = queue.removeFirst()
+                let nodeColor = color[node]!
+
+                let neighbors = (try? self.neighbors(node)) ?? []
+                for neighbor in neighbors {
+                    if color[neighbor] == nil {
+                        color[neighbor] = 1 - nodeColor
+                        queue.append(neighbor)
+                    } else if color[neighbor] == nodeColor {
+                        // Adjacent nodes have same color -> not bipartite
+                        return false
+                    }
+                }
+            }
+        }
+
+        return true
+    }
+
+    /// Find the minimum spanning tree using Kruskal's algorithm.
+    /// Raises GraphError.graphNotConnected if graph is not connected.
+    /// Time: O(E log E)
+    public func minimumSpanningTree() throws -> [(Node, Node, Double)] {
+        guard !nodes.isEmpty else { return [] }
+
+        let sortedEdges = edges.sorted { $0.2 < $1.2 }
+        var uf = UnionFind<Node>()
+
+        for node in nodes {
+            uf.makeSet(node)
+        }
+
+        var mst: [(Node, Node, Double)] = []
+
+        for (u, v, w) in sortedEdges {
+            if uf.find(u) != uf.find(v) {
+                uf.union(u, v)
+                mst.append((u, v, w))
+                if mst.count == nodes.count - 1 {
+                    break
+                }
+            }
+        }
+
+        if mst.count < nodes.count - 1 && nodes.count > 1 {
+            throw GraphError.graphNotConnected
+        }
+
+        return mst
+    }
+
+    // MARK: - Private Helpers
+
+    private func bfsPath(_ start: Node, _ end: Node) -> [Node] {
+        var parent: [Node: Node?] = [start: nil]
+        var queue = [start]
+
+        while !queue.isEmpty {
+            let node = queue.removeFirst()
+            if node == end {
+                break
+            }
+
+            let neighbors = (try? self.neighbors(node)) ?? []
+            for neighbor in neighbors {
+                if parent[neighbor] == nil {
+                    parent[neighbor] = node
+                    queue.append(neighbor)
+                }
+            }
+        }
+
+        guard parent[end] != nil else { return [] }
+
+        // Trace back from end to start
+        var path: [Node] = []
+        var cur: Node? = end
+        while cur != nil {
+            path.insert(cur!, at: 0)
+            cur = parent[cur!]!
+        }
+
+        return path
+    }
+
+    private func dijkstra(_ start: Node, _ end: Node) -> [Node] {
+        var dist: [Node: Double] = [:]
+        var parent: [Node: Node?] = [:]
+
+        for node in nodes {
+            dist[node] = Double.infinity
+        }
+        dist[start] = 0
+
+        var heap: [(Node, Double)] = [(start, 0)]
+
+        while !heap.isEmpty {
+            heap.sort { $0.1 < $1.1 }
+            let (node, d) = heap.removeFirst()
+
+            guard d <= (dist[node] ?? Double.infinity) else { continue }
+            if node == end { break }
+
+            let neighbors = (try? neighborsWeighted(node)) ?? [:]
+            for (neighbor, weight) in neighbors {
+                let newDist = dist[node]! + weight
+                if newDist < (dist[neighbor] ?? Double.infinity) {
+                    dist[neighbor] = newDist
+                    parent[neighbor] = node
+                    heap.append((neighbor, newDist))
+                }
+            }
+        }
+
+        guard (dist[end] ?? Double.infinity) < Double.infinity else { return [] }
+
+        // Trace back
+        var path: [Node] = []
+        var cur: Node? = end
+        while cur != nil {
+            path.insert(cur!, at: 0)
+            cur = parent[cur!] ?? nil
+        }
+
+        return path
+    }
+
+    private func bfsPrivate(_ start: Node) throws -> [Node] {
+        var visited = Set<Node>([start])
+        var queue = [start]
+        var result: [Node] = []
+
+        while !queue.isEmpty {
+            let node = queue.removeFirst()
+            result.append(node)
+
+            let neighbors = try self.neighbors(node)
+            for neighbor in neighbors.sorted(by: { $0.description < $1.description }) {
+                if !visited.contains(neighbor) {
+                    visited.insert(neighbor)
+                    queue.append(neighbor)
+                }
+            }
+        }
+
+        return result
+    }
+
+    // MARK: - Helper: Union-Find for MST
+
+    private struct UnionFind<Element: Hashable> {
+        private var parent: [Element: Element] = [:]
+        private var rank: [Element: Int] = [:]
+
+        mutating func makeSet(_ x: Element) {
+            parent[x] = x
+            rank[x] = 0
+        }
+
+        mutating func find(_ x: Element) -> Element {
+            guard let p = parent[x], p != x else { return x }
+            parent[x] = find(p)
+            return parent[x]!
+        }
+
+        mutating func union(_ a: Element, _ b: Element) {
+            var ra = find(a)
+            var rb = find(b)
+
+            guard ra != rb else { return }
+
+            if (rank[ra] ?? 0) < (rank[rb] ?? 0) {
+                (ra, rb) = (rb, ra)
+            }
+            parent[rb] = ra
+            if rank[ra] == rank[rb] {
+                rank[ra] = (rank[ra] ?? 0) + 1
+            }
         }
     }
 }

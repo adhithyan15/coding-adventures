@@ -1,31 +1,34 @@
-# lua/graph - Graph (DT00)
+# Graph (Lua)
 
-An undirected weighted graph implementation in pure Lua with both adjacency-list
-and adjacency-matrix storage, plus the core DT00 algorithms.
+An undirected graph data structure implemented in pure Lua.
 
-## API
+## Overview
 
-```lua
-local graph = require("coding_adventures.graph")
-local Graph = graph.Graph
-local GraphRepr = graph.GraphRepr
+This package provides a foundational undirected graph implementation as part of the DT00 data structures series. The implementation is built from scratch to demonstrate core graph concepts and algorithms.
 
-local g = Graph.new({ repr = GraphRepr.ADJACENCY_LIST })
-g:add_edge("London", "Paris", 300)
-g:add_edge("London", "Amsterdam", 520)
+## Installation
 
-local path = graph.shortest_path(g, "London", "Paris")
-local mst = graph.minimum_spanning_tree(g)
+```bash
+luarocks install graph
 ```
 
-## Exports
+## Usage
 
-- `Graph`
-- `GraphRepr`
-- `bfs(graph, start)`
-- `dfs(graph, start)`
-- `is_connected(graph)`
-- `connected_components(graph)`
-- `has_cycle(graph)`
-- `shortest_path(graph, start, goal)`
-- `minimum_spanning_tree(graph)`
+```lua
+local Graph = require("coding_adventures.graph")
+
+local g = Graph.new()
+-- Basic graph operations to come in subsequent phases
+```
+
+## API (Phase 1 - Stub)
+
+- `Graph.new()` — Create a new empty graph
+
+## Development
+
+This is Phase 1 of the graph implementation. Comprehensive API and test suite to follow in Phase 2+.
+
+## License
+
+MIT

@@ -1,42 +1,34 @@
 # @coding-adventures/graph
 
-An undirected weighted graph for TypeScript with two interchangeable internal
-representations:
+An undirected graph data structure implementation from scratch.
 
-- `GraphRepr.ADJACENCY_LIST` for sparse graphs
-- `GraphRepr.ADJACENCY_MATRIX` for dense graphs
+## Where it fits in the stack
 
-The package exposes one generic `Graph<T>` class plus pure algorithm helpers:
+This package provides a foundational undirected graph data structure for use across the coding-adventures project.
 
-- `bfs`
-- `dfs`
-- `isConnected`
-- `connectedComponents`
-- `hasCycle`
-- `shortestPath`
-- `minimumSpanningTree`
+## Installation
 
-## Example
-
-```ts
-import {
-  Graph,
-  GraphRepr,
-  shortestPath,
-} from "@coding-adventures/graph";
-
-const graph = new Graph<string>(GraphRepr.ADJACENCY_LIST);
-graph.addEdge("London", "Paris", 300);
-graph.addEdge("Paris", "Berlin", 878);
-graph.addEdge("London", "Amsterdam", 520);
-graph.addEdge("Amsterdam", "Berlin", 655);
-
-console.log(shortestPath(graph, "London", "Berlin"));
-// ["London", "Amsterdam", "Berlin"]
+```bash
+npm install @coding-adventures/graph
 ```
 
-## Notes
+## Quick Start
 
-- Edges are undirected, so adding `A`-`B` also creates `B`-`A`.
-- Nodes are generic and may be strings, numbers, tuples, or object references.
-- The graph stores isolated nodes as well as connected ones.
+```typescript
+import { Graph } from "@coding-adventures/graph";
+
+const g = new Graph();
+g.addEdge("A", "B");
+g.addEdge("B", "C");
+
+console.log(g.nodes());    // ["A", "B", "C"]
+console.log(g.edges());    // [["A", "B"], ["B", "C"]]
+```
+
+## Running Tests
+
+```bash
+npm test
+```
+
+Tests require 80%+ coverage (enforced by vitest configuration).

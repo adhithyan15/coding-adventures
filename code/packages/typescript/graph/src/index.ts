@@ -1,10 +1,16 @@
-export { Graph, GraphRepr, compareNodes, type WeightedEdge } from "./graph.js";
+/**
+ * Undirected Graph Library
+ *
+ * An undirected graph implementation from scratch.
+ */
+
+export { Graph, GraphRepr } from "./graph";
 export {
   bfs,
-  connectedComponents,
   dfs,
-  hasCycle,
   isConnected,
-  minimumSpanningTree,
+  connectedComponents,
+  hasCycle,
   shortestPath,
-} from "./algorithms.js";
+  minimumSpanningTree,
+} from "./algorithms";

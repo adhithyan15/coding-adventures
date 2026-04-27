@@ -1,368 +1,263 @@
-use std::collections::{BTreeMap, BTreeSet};
-use std::fmt;
+use crate::errors::GraphError;
+use std::collections::{HashMap, HashSet, VecDeque};
 
-use crate::algorithms::TraversalGraph;
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum GraphRepr {
-    AdjacencyList,
-    AdjacencyMatrix,
-}
-
-pub type WeightedEdge = (String, String, f64);
-
-#[derive(Debug, Clone, PartialEq)]
-pub enum GraphError {
-    NodeNotFound(String),
-    EdgeNotFound(String, String),
-    NotConnected,
-}
-
-impl fmt::Display for GraphError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            GraphError::NodeNotFound(node) => write!(f, "node not found: {}", node),
-            GraphError::EdgeNotFound(left, right) => {
-                write!(f, "edge not found: {} -- {}", left, right)
-            }
-            GraphError::NotConnected => write!(f, "graph is not connected"),
-        }
-    }
-}
-
-impl std::error::Error for GraphError {}
-
-#[derive(Debug, Clone)]
+/// An undirected graph data structure.
+///
+/// The graph uses an adjacency map representation internally. Each node maps
+/// to a set of its neighbors.
 pub struct Graph {
-    repr: GraphRepr,
-    adj: BTreeMap<String, BTreeMap<String, f64>>,
-    node_list: Vec<String>,
-    node_index: BTreeMap<String, usize>,
-    matrix: Vec<Vec<Option<f64>>>,
+    /// Adjacency map: node -> set of neighbors
+    adjacency: HashMap<String, HashSet<String>>,
 }
 
 impl Graph {
-    pub fn new(repr: GraphRepr) -> Self {
-        Self {
-            repr,
-            adj: BTreeMap::new(),
-            node_list: Vec::new(),
-            node_index: BTreeMap::new(),
-            matrix: Vec::new(),
+    /// Creates a new empty graph.
+    pub fn new() -> Self {
+        Graph {
+            adjacency: HashMap::new(),
         }
     }
 
-    pub fn repr(&self) -> GraphRepr {
-        self.repr
+    /// Adds a node to the graph.
+    pub fn add_node(&mut self, node: &str) {
+        self.adjacency
+            .entry(node.to_string())
+            .or_insert_with(HashSet::new);
     }
 
-    pub fn add_node(&mut self, node: impl Into<String>) {
-        let node = node.into();
-        match self.repr {
-            GraphRepr::AdjacencyList => {
-                self.adj.entry(node).or_default();
-            }
-            GraphRepr::AdjacencyMatrix => {
-                if self.node_index.contains_key(&node) {
-                    return;
-                }
-                let index = self.node_list.len();
-                self.node_list.push(node.clone());
-                self.node_index.insert(node, index);
-                for row in &mut self.matrix {
-                    row.push(None);
-                }
-                self.matrix.push(vec![None; index + 1]);
-            }
-        }
-    }
-
+    /// Removes a node and all its edges from the graph.
     pub fn remove_node(&mut self, node: &str) -> Result<(), GraphError> {
-        match self.repr {
-            GraphRepr::AdjacencyList => {
-                let neighbors = self
-                    .adj
-                    .get(node)
-                    .cloned()
-                    .ok_or_else(|| GraphError::NodeNotFound(node.to_string()))?;
-                for neighbor in neighbors.keys() {
-                    if let Some(entry) = self.adj.get_mut(neighbor) {
-                        entry.remove(node);
-                    }
-                }
-                self.adj.remove(node);
-                Ok(())
-            }
-            GraphRepr::AdjacencyMatrix => {
-                let index = self
-                    .node_index
-                    .remove(node)
-                    .ok_or_else(|| GraphError::NodeNotFound(node.to_string()))?;
-                self.node_list.remove(index);
-                self.matrix.remove(index);
-                for row in &mut self.matrix {
-                    row.remove(index);
-                }
-                for (offset, name) in self.node_list[index..].iter().enumerate() {
-                    self.node_index.insert(name.clone(), index + offset);
-                }
-                Ok(())
+        if !self.has_node(node) {
+            return Err(GraphError::NodeNotFound(node.to_string()));
+        }
+
+        // Remove all edges connected to this node
+        if let Some(neighbors) = self.adjacency.get(node) {
+            let neighbors: Vec<String> = neighbors.iter().cloned().collect();
+            for neighbor in neighbors {
+                self.adjacency
+                    .get_mut(&neighbor)
+                    .map(|set| set.remove(node));
             }
         }
+
+        // Remove the node itself
+        self.adjacency.remove(node);
+        Ok(())
     }
 
+    /// Returns true if the node exists in the graph.
     pub fn has_node(&self, node: &str) -> bool {
-        match self.repr {
-            GraphRepr::AdjacencyList => self.adj.contains_key(node),
-            GraphRepr::AdjacencyMatrix => self.node_index.contains_key(node),
-        }
+        self.adjacency.contains_key(node)
     }
 
+    /// Returns all nodes in the graph.
     pub fn nodes(&self) -> Vec<String> {
-        let mut nodes = match self.repr {
-            GraphRepr::AdjacencyList => self.adj.keys().cloned().collect(),
-            GraphRepr::AdjacencyMatrix => self.node_list.clone(),
-        };
+        let mut nodes: Vec<String> = self.adjacency.keys().cloned().collect();
         nodes.sort();
         nodes
     }
 
-    pub fn add_edge(&mut self, left: impl Into<String>, right: impl Into<String>, weight: f64) {
-        let left = left.into();
-        let right = right.into();
-        self.add_node(left.clone());
-        self.add_node(right.clone());
-
-        match self.repr {
-            GraphRepr::AdjacencyList => {
-                self.adj
-                    .get_mut(&left)
-                    .expect("left node must exist")
-                    .insert(right.clone(), weight);
-                self.adj
-                    .get_mut(&right)
-                    .expect("right node must exist")
-                    .insert(left, weight);
-            }
-            GraphRepr::AdjacencyMatrix => {
-                let left_index = self.node_index[&left];
-                let right_index = self.node_index[&right];
-                self.matrix[left_index][right_index] = Some(weight);
-                self.matrix[right_index][left_index] = Some(weight);
-            }
-        }
-    }
-
-    pub fn remove_edge(&mut self, left: &str, right: &str) -> Result<(), GraphError> {
-        match self.repr {
-            GraphRepr::AdjacencyList => {
-                if !self
-                    .adj
-                    .get(left)
-                    .map(|neighbors| neighbors.contains_key(right))
-                    .unwrap_or(false)
-                {
-                    return Err(GraphError::EdgeNotFound(
-                        left.to_string(),
-                        right.to_string(),
-                    ));
-                }
-                self.adj.get_mut(left).unwrap().remove(right);
-                self.adj.get_mut(right).unwrap().remove(left);
-                Ok(())
-            }
-            GraphRepr::AdjacencyMatrix => {
-                let left_index =
-                    self.node_index.get(left).copied().ok_or_else(|| {
-                        GraphError::EdgeNotFound(left.to_string(), right.to_string())
-                    })?;
-                let right_index =
-                    self.node_index.get(right).copied().ok_or_else(|| {
-                        GraphError::EdgeNotFound(left.to_string(), right.to_string())
-                    })?;
-                if self.matrix[left_index][right_index].is_none() {
-                    return Err(GraphError::EdgeNotFound(
-                        left.to_string(),
-                        right.to_string(),
-                    ));
-                }
-                self.matrix[left_index][right_index] = None;
-                self.matrix[right_index][left_index] = None;
-                Ok(())
-            }
-        }
-    }
-
-    pub fn has_edge(&self, left: &str, right: &str) -> bool {
-        match self.repr {
-            GraphRepr::AdjacencyList => self
-                .adj
-                .get(left)
-                .map(|neighbors| neighbors.contains_key(right))
-                .unwrap_or(false),
-            GraphRepr::AdjacencyMatrix => self
-                .node_index
-                .get(left)
-                .zip(self.node_index.get(right))
-                .and_then(|(left_index, right_index)| self.matrix[*left_index][*right_index])
-                .is_some(),
-        }
-    }
-
-    pub fn edge_weight(&self, left: &str, right: &str) -> Result<f64, GraphError> {
-        match self.repr {
-            GraphRepr::AdjacencyList => self
-                .adj
-                .get(left)
-                .and_then(|neighbors| neighbors.get(right))
-                .copied()
-                .ok_or_else(|| GraphError::EdgeNotFound(left.to_string(), right.to_string())),
-            GraphRepr::AdjacencyMatrix => {
-                let left_index =
-                    self.node_index.get(left).copied().ok_or_else(|| {
-                        GraphError::EdgeNotFound(left.to_string(), right.to_string())
-                    })?;
-                let right_index =
-                    self.node_index.get(right).copied().ok_or_else(|| {
-                        GraphError::EdgeNotFound(left.to_string(), right.to_string())
-                    })?;
-                self.matrix[left_index][right_index]
-                    .ok_or_else(|| GraphError::EdgeNotFound(left.to_string(), right.to_string()))
-            }
-        }
-    }
-
-    pub fn edges(&self) -> Vec<WeightedEdge> {
-        let mut result = Vec::new();
-        match self.repr {
-            GraphRepr::AdjacencyList => {
-                let mut seen = BTreeSet::new();
-                for (left, neighbors) in &self.adj {
-                    for (right, weight) in neighbors {
-                        let (first, second) = canonical_endpoints(left, right);
-                        if seen.insert((first.clone(), second.clone())) {
-                            result.push((first, second, *weight));
-                        }
-                    }
-                }
-            }
-            GraphRepr::AdjacencyMatrix => {
-                for row in 0..self.node_list.len() {
-                    for col in row..self.node_list.len() {
-                        if let Some(weight) = self.matrix[row][col] {
-                            result.push((
-                                self.node_list[row].clone(),
-                                self.node_list[col].clone(),
-                                weight,
-                            ));
-                        }
-                    }
-                }
-            }
-        }
-        result.sort_by(|left, right| {
-            left.2
-                .total_cmp(&right.2)
-                .then_with(|| left.0.cmp(&right.0))
-                .then_with(|| left.1.cmp(&right.1))
-        });
-        result
-    }
-
-    pub fn neighbors(&self, node: &str) -> Result<Vec<String>, GraphError> {
-        match self.repr {
-            GraphRepr::AdjacencyList => self
-                .adj
-                .get(node)
-                .map(|neighbors| neighbors.keys().cloned().collect())
-                .ok_or_else(|| GraphError::NodeNotFound(node.to_string())),
-            GraphRepr::AdjacencyMatrix => {
-                let index = self
-                    .node_index
-                    .get(node)
-                    .copied()
-                    .ok_or_else(|| GraphError::NodeNotFound(node.to_string()))?;
-                let mut neighbors: Vec<String> = self.matrix[index]
-                    .iter()
-                    .enumerate()
-                    .filter_map(|(col, weight)| weight.map(|_| self.node_list[col].clone()))
-                    .collect();
-                neighbors.sort();
-                Ok(neighbors)
-            }
-        }
-    }
-
-    pub fn neighbors_weighted(&self, node: &str) -> Result<BTreeMap<String, f64>, GraphError> {
-        match self.repr {
-            GraphRepr::AdjacencyList => self
-                .adj
-                .get(node)
-                .cloned()
-                .ok_or_else(|| GraphError::NodeNotFound(node.to_string())),
-            GraphRepr::AdjacencyMatrix => {
-                let index = self
-                    .node_index
-                    .get(node)
-                    .copied()
-                    .ok_or_else(|| GraphError::NodeNotFound(node.to_string()))?;
-                let mut result = BTreeMap::new();
-                for (col, weight) in self.matrix[index].iter().enumerate() {
-                    if let Some(weight) = weight {
-                        result.insert(self.node_list[col].clone(), *weight);
-                    }
-                }
-                Ok(result)
-            }
-        }
-    }
-
-    pub fn degree(&self, node: &str) -> Result<usize, GraphError> {
-        Ok(self.neighbors(node)?.len())
-    }
-
+    /// Returns the number of nodes in the graph.
     pub fn size(&self) -> usize {
-        match self.repr {
-            GraphRepr::AdjacencyList => self.adj.len(),
-            GraphRepr::AdjacencyMatrix => self.node_list.len(),
+        self.adjacency.len()
+    }
+
+    /// Adds an edge between two nodes. Creates nodes if they don't exist.
+    pub fn add_edge(&mut self, from: &str, to: &str) -> Result<(), GraphError> {
+        if from == to {
+            return Err(GraphError::SelfLoop(from.to_string()));
         }
+
+        // Ensure both nodes exist
+        self.add_node(from);
+        self.add_node(to);
+
+        // Add edge in both directions (undirected)
+        self.adjacency
+            .get_mut(from)
+            .map(|set| set.insert(to.to_string()));
+        self.adjacency
+            .get_mut(to)
+            .map(|set| set.insert(from.to_string()));
+
+        Ok(())
+    }
+
+    /// Removes an edge between two nodes.
+    pub fn remove_edge(&mut self, from: &str, to: &str) -> Result<(), GraphError> {
+        if !self.has_edge(from, to) {
+            return Err(GraphError::EdgeNotFound(from.to_string(), to.to_string()));
+        }
+
+        self.adjacency
+            .get_mut(from)
+            .map(|set| set.remove(to));
+        self.adjacency
+            .get_mut(to)
+            .map(|set| set.remove(from));
+
+        Ok(())
+    }
+
+    /// Returns true if an edge exists between two nodes.
+    pub fn has_edge(&self, from: &str, to: &str) -> bool {
+        self.adjacency
+            .get(from)
+            .map(|neighbors| neighbors.contains(to))
+            .unwrap_or(false)
+    }
+
+    /// Returns all edges in the graph.
+    pub fn edges(&self) -> Vec<(String, String)> {
+        let mut edges = Vec::new();
+        let mut seen = HashSet::new();
+
+        for (from, neighbors) in &self.adjacency {
+            for to in neighbors {
+                // For undirected graphs, only add each edge once
+                let edge = if from < to {
+                    (from.clone(), to.clone())
+                } else {
+                    (to.clone(), from.clone())
+                };
+
+                if !seen.contains(&edge) {
+                    edges.push(edge.clone());
+                    seen.insert(edge);
+                }
+            }
+        }
+
+        edges.sort();
+        edges
+    }
+
+    /// Returns all neighbors of a node.
+    pub fn neighbors(&self, node: &str) -> Result<Vec<String>, GraphError> {
+        if !self.has_node(node) {
+            return Err(GraphError::NodeNotFound(node.to_string()));
+        }
+
+        let mut neighbors: Vec<String> = self
+            .adjacency
+            .get(node)
+            .map(|set| set.iter().cloned().collect())
+            .unwrap_or_default();
+        neighbors.sort();
+        Ok(neighbors)
+    }
+
+    /// Returns the degree (number of neighbors) of a node.
+    pub fn degree(&self, node: &str) -> Result<usize, GraphError> {
+        if !self.has_node(node) {
+            return Err(GraphError::NodeNotFound(node.to_string()));
+        }
+
+        Ok(self
+            .adjacency
+            .get(node)
+            .map(|set| set.len())
+            .unwrap_or(0))
     }
 }
 
 impl Default for Graph {
     fn default() -> Self {
-        Self::new(GraphRepr::AdjacencyList)
+        Self::new()
     }
 }
 
-impl fmt::Display for Graph {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "Graph(nodes={}, edges={}, repr={:?})",
-            self.size(),
-            self.edges().len(),
-            self.repr
-        )
-    }
-}
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-impl TraversalGraph for Graph {
-    type Error = GraphError;
-
-    fn has_node(&self, node: &str) -> bool {
-        Graph::has_node(self, node)
+    #[test]
+    fn test_new_graph_is_empty() {
+        let g = Graph::new();
+        assert_eq!(g.size(), 0);
     }
 
-    fn neighbors(&self, node: &str) -> Result<Vec<String>, Self::Error> {
-        Graph::neighbors(self, node)
+    #[test]
+    fn test_add_node() {
+        let mut g = Graph::new();
+        g.add_node("A");
+        assert!(g.has_node("A"));
+        assert_eq!(g.size(), 1);
     }
-}
 
-fn canonical_endpoints(left: &str, right: &str) -> (String, String) {
-    if left <= right {
-        (left.to_string(), right.to_string())
-    } else {
-        (right.to_string(), left.to_string())
+    #[test]
+    fn test_add_edge_creates_nodes() {
+        let mut g = Graph::new();
+        g.add_edge("A", "B").unwrap();
+        assert!(g.has_node("A"));
+        assert!(g.has_node("B"));
+        assert!(g.has_edge("A", "B"));
+        assert!(g.has_edge("B", "A")); // undirected
+    }
+
+    #[test]
+    fn test_self_loop_error() {
+        let mut g = Graph::new();
+        let result = g.add_edge("A", "A");
+        assert!(matches!(result, Err(GraphError::SelfLoop(_))));
+    }
+
+    #[test]
+    fn test_neighbors() {
+        let mut g = Graph::new();
+        g.add_edge("A", "B").unwrap();
+        g.add_edge("A", "C").unwrap();
+        let neighbors = g.neighbors("A").unwrap();
+        assert_eq!(neighbors.len(), 2);
+        assert!(neighbors.contains(&"B".to_string()));
+        assert!(neighbors.contains(&"C".to_string()));
+    }
+
+    #[test]
+    fn test_degree() {
+        let mut g = Graph::new();
+        g.add_edge("A", "B").unwrap();
+        g.add_edge("A", "C").unwrap();
+        assert_eq!(g.degree("A").unwrap(), 2);
+        assert_eq!(g.degree("B").unwrap(), 1);
+    }
+
+    #[test]
+    fn test_remove_edge() {
+        let mut g = Graph::new();
+        g.add_edge("A", "B").unwrap();
+        g.remove_edge("A", "B").unwrap();
+        assert!(!g.has_edge("A", "B"));
+    }
+
+    #[test]
+    fn test_remove_node() {
+        let mut g = Graph::new();
+        g.add_edge("A", "B").unwrap();
+        g.add_edge("A", "C").unwrap();
+        g.remove_node("A").unwrap();
+        assert!(!g.has_node("A"));
+        assert_eq!(g.neighbors("B").unwrap().len(), 0);
+        assert_eq!(g.neighbors("C").unwrap().len(), 0);
+    }
+
+    #[test]
+    fn test_nodes() {
+        let mut g = Graph::new();
+        g.add_node("C");
+        g.add_node("A");
+        g.add_node("B");
+        let nodes = g.nodes();
+        assert_eq!(nodes, vec!["A", "B", "C"]);
+    }
+
+    #[test]
+    fn test_edges() {
+        let mut g = Graph::new();
+        g.add_edge("A", "B").unwrap();
+        g.add_edge("B", "C").unwrap();
+        let edges = g.edges();
+        assert_eq!(edges.len(), 2);
     }
 }

@@ -1,7 +1,9 @@
 # Changelog
 
-## 0.1.0
+All notable changes to this project will be documented in this file.
 
-- Initial TypeScript port of the DT00 undirected graph package
-- Added adjacency-list and adjacency-matrix representations
-- Added BFS, DFS, connected-components, shortest-path, and MST algorithms
+## [0.1.0] - 2026-04-09
+
+### Added
+
+- Initial release
