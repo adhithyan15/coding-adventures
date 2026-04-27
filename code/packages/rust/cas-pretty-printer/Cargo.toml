@@ -1,0 +1,8 @@
+[package]
+name = "cas-pretty-printer"
+version = "0.1.0"
+edition = "2021"
+description = "Dialect-aware pretty-printer for symbolic IR: MACSYMA, Mathematica, Maple, Lisp"
+
+[dependencies]
+symbolic-ir = { path = "../symbolic-ir" }
