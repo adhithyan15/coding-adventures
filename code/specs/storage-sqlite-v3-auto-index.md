@@ -269,6 +269,24 @@ class IndexAdvisor:
         ...
 ```
 
+#### Advisor internal state (v3)
+
+```python
+_hits: dict[tuple[str, str], int]                   # (table, col) → scan count
+_pair_hits: dict[tuple[str, str, str], int]          # (table, col_a, col_b) → pair count
+_auto_index_meta: dict[str, tuple[str, tuple[str, ...]]]  # name → (table, columns)
+_query_count: int                                    # total SELECT scans seen
+_last_use: dict[str, int]                            # index_name → _query_count at last use
+_created_at: dict[str, int]                          # index_name → _query_count at creation
+```
+
+`_auto_index_meta` maps each auto-created index name to `(table, columns_tuple)`.
+It is used instead of name parsing (e.g., splitting on `_`) so that composite
+names like `auto_orders_user_id_status` are correctly resolved during the drop
+loop and hit-count reset. It is populated by both `_maybe_create_index` (for
+single-column indexes) and `_maybe_create_composite_index` (for two-column
+composite indexes).
+
 #### Drop loop design
 
 After each `on_query_event` call:
@@ -276,12 +294,12 @@ After each `on_query_event` call:
 1. Advance an internal query counter (`_query_count += 1`).
 2. If `event.used_index` is not None and it names an auto-created index,
    record `_last_use[event.used_index] = _query_count`.
-3. For every auto-created index tracked in `_last_use` (and any that were
-   created by this advisor but have never been used, using `_created_at`):
+3. For every auto-created index tracked in `_auto_index_meta`:
    - Compute `queries_since_last_use = _query_count - _last_use.get(idx, _created_at[idx])`.
    - If `policy.should_drop(idx, table, col, queries_since_last_use)` returns
-     True, call `backend.drop_index(idx, if_exists=True)` and remove it from
-     the tracking dicts.
+     True, call `backend.drop_index(idx, if_exists=True)`, remove it from
+     all tracking dicts, and reset its hit counts so the index can be
+     re-created if the query pattern returns.
 
 The advisor only drops indexes whose names start with `auto_`. Indexes
 created by the user (via explicit `CREATE INDEX`) are never in the advisor's
@@ -362,22 +380,24 @@ row after the index scan).
 #### `IndexScan` node extension
 
 ```python
-@dataclass
+@dataclass(frozen=True, slots=True)
 class IndexScan:
     table: str
     index_name: str
-    columns: list[str]              # now a list (was a single column in v2)
-    lo: list[SqlValue] | None       # multi-column lower bound
-    hi: list[SqlValue] | None       # multi-column upper bound
+    columns: tuple[str, ...]              # now a tuple (was a single column: str in v2)
+    lo: tuple[SqlValue, ...] | None       # multi-column lower bound
+    hi: tuple[SqlValue, ...] | None       # multi-column upper bound
     lo_inclusive: bool
     hi_inclusive: bool
     residual: Expr | None
 ```
 
 The single-column `column: str` field from v2 is replaced by `columns:
-list[str]`. Single-column indexes produce a list of length 1, which is
-backward-compatible with all existing VM and codegen paths (they already
-pass lists to `scan_index`).
+tuple[str, ...]`. Tuples are used (not lists) because `IndexScan` is a
+frozen dataclass and requires hashable fields. Single-column indexes
+produce a 1-tuple, which is backward-compatible with all existing VM and
+codegen paths (they call `list(ins.lo)` when passing bounds to
+`backend.scan_index`, which expects `list[SqlValue]`).
 
 ---
 
