@@ -9,7 +9,6 @@ require (
 )
 
 require (
-	github.com/adhithyan15/coding-adventures/code/packages/go/capability-cage v0.0.0 // indirect
 	github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph v0.0.0 // indirect
 	github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools v0.0.0 // indirect
 	github.com/adhithyan15/coding-adventures/code/packages/go/sql-lexer v0.0.0 // indirect
@@ -17,7 +16,6 @@ require (
 )
 
 replace (
-	github.com/adhithyan15/coding-adventures/code/packages/go/capability-cage => ../capability-cage
 	github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph => ../directed-graph
 	github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools => ../grammar-tools
 	github.com/adhithyan15/coding-adventures/code/packages/go/lexer => ../lexer

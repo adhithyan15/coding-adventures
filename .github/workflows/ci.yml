@@ -536,6 +536,30 @@ jobs:
             go build -o ../../../../build-tool .
           fi
 
+      # ── Pin Rust to MSVC linker on Windows ─────────────────────
+      #
+      # Ruby's setup-ruby adds msys64/usr/bin to the front of PATH, which
+      # contains a GNU 'link' hard-link utility that shadows MSVC's link.exe.
+      # Rust's x86_64-pc-windows-msvc target calls link.exe for linking —
+      # if it picks up the MSYS2 one, ALL Rust packages fail with
+      # "extra operand" linker errors.
+      #
+      # Deleting or removing the file from PATH is unreliable (hard links,
+      # file locks, MSYS2/Windows filesystem translation issues). Instead,
+      # we use CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER to pin Cargo to
+      # the absolute path of the real MSVC link.exe, bypassing PATH entirely.
+      # vswhere.exe is always present on GitHub Actions Windows runners.
+      - name: Pin Rust to MSVC linker on Windows
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $vsInstall = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath
+          $msvcVer = Get-ChildItem "$vsInstall\VC\Tools\MSVC" -Directory | Sort-Object Name -Descending | Select-Object -First 1
+          $linkExe = "$($msvcVer.FullName)\bin\HostX64\x64\link.exe"
+          if (-not (Test-Path $linkExe)) { Write-Error "MSVC link.exe not found: $linkExe"; exit 1 }
+          echo "CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER=$linkExe" >> $env:GITHUB_ENV
+          Write-Host "Pinned Rust MSVC linker to: $linkExe"
+
       - name: Build and test affected Swift packages on Windows
         if: runner.os == 'Windows' && needs.detect.outputs.needs_swift == 'true'
         shell: pwsh
