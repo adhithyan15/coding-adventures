@@ -376,4 +376,5 @@ members = [
     "rng",
     "feature-normalization",
     "single-layer-network",
+    "stats",
 ]

@@ -31,6 +31,7 @@ function assertMatrixIndex(index: number, limit: number, axis: "row" | "col"): v
   }
 }
 
+
 export class Matrix {
   data: number[][];
   rows: number;
