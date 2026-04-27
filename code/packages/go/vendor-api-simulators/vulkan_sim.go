@@ -644,14 +644,11 @@ type VkInstance struct {
 
 // NewVkInstance creates a Vulkan instance.
 func NewVkInstance() (*VkInstance, error) {
-	return StartNew[*VkInstance]("vendorapisimulators.NewVkInstance", nil,
-		func(op *Operation[*VkInstance], rf *ResultFactory[*VkInstance]) *OperationResult[*VkInstance] {
-			base, err := InitBase(nil, "")
-			if err != nil {
-				return rf.Fail(nil, fmt.Errorf("failed to create Vulkan instance: %w", err))
-			}
-			return rf.Generate(true, false, &VkInstance{BaseVendorSimulator: base})
-		}).GetResult()
+	base, err := InitBase(nil, "")
+	if err != nil {
+		return nil, fmt.Errorf("failed to create Vulkan instance: %w", err)
+	}
+	return &VkInstance{BaseVendorSimulator: base}, nil
 }
 
 // VkEnumeratePhysicalDevices enumerates all physical devices.

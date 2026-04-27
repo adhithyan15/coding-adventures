@@ -81,5 +81,8 @@ members = [
     "java-parser",
     "jit-compiler",
     "matrix",
-    "activation-functions",
+    "pipeline",
+    "starlark-lexer",
+    "starlark-parser",
+    "vendor-api-simulators",
 ]

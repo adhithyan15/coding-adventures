@@ -96,39 +96,35 @@ type BaseVendorSimulator struct {
 //
 // deviceType can be nil for "any type". vendorHint can be empty for "any vendor".
 func InitBase(deviceType *cr.DeviceType, vendorHint string) (*BaseVendorSimulator, error) {
-	return StartNew[*BaseVendorSimulator]("vendorapisimulators.InitBase", nil,
-		func(op *Operation[*BaseVendorSimulator], rf *ResultFactory[*BaseVendorSimulator]) *OperationResult[*BaseVendorSimulator] {
-			op.AddProperty("vendorHint", vendorHint)
-			base := &BaseVendorSimulator{}
+	base := &BaseVendorSimulator{}
 
-			// Step 1: Create the runtime instance
-			base.Instance = cr.NewRuntimeInstance(nil)
+	// Step 1: Create the runtime instance
+	base.Instance = cr.NewRuntimeInstance(nil)
 
-			// Step 2: Enumerate all physical devices
-			base.PhysicalDevices = base.Instance.EnumeratePhysicalDevices()
-			if len(base.PhysicalDevices) == 0 {
-				return rf.Fail(nil, fmt.Errorf("no physical devices available"))
-			}
+	// Step 2: Enumerate all physical devices
+	base.PhysicalDevices = base.Instance.EnumeratePhysicalDevices()
+	if len(base.PhysicalDevices) == 0 {
+		return nil, fmt.Errorf("no physical devices available")
+	}
 
-			// Step 3: Select the best matching device
-			base.PhysicalDevice = selectDevice(base.PhysicalDevices, deviceType, vendorHint)
+	// Step 3: Select the best matching device
+	base.PhysicalDevice = selectDevice(base.PhysicalDevices, deviceType, vendorHint)
 
-			// Step 4: Create a logical device
-			base.LogicalDevice = base.Instance.CreateLogicalDevice(base.PhysicalDevice, nil)
+	// Step 4: Create a logical device
+	base.LogicalDevice = base.Instance.CreateLogicalDevice(base.PhysicalDevice, nil)
 
-			// Step 5: Get the compute queue
-			queues := base.LogicalDevice.Queues()
-			if computeQueues, ok := queues["compute"]; ok && len(computeQueues) > 0 {
-				base.ComputeQueue = computeQueues[0]
-			} else {
-				return rf.Fail(nil, fmt.Errorf("no compute queue available on device"))
-			}
+	// Step 5: Get the compute queue
+	queues := base.LogicalDevice.Queues()
+	if computeQueues, ok := queues["compute"]; ok && len(computeQueues) > 0 {
+		base.ComputeQueue = computeQueues[0]
+	} else {
+		return nil, fmt.Errorf("no compute queue available on device")
+	}
 
-			// Step 6: Get the memory manager
-			base.MemoryManager = base.LogicalDevice.MemoryManager()
+	// Step 6: Get the memory manager
+	base.MemoryManager = base.LogicalDevice.MemoryManager()
 
-			return rf.Generate(true, false, base)
-		}).GetResult()
+	return base, nil
 }
 
 // selectDevice picks the best matching device from enumerated physical devices.
@@ -207,38 +203,35 @@ func (b *BaseVendorSimulator) CreateAndSubmitCB(
 	recordFn func(*cr.CommandBuffer) error,
 	queue *cr.CommandQueue,
 ) (*cr.CommandBuffer, error) {
-	return StartNew[*cr.CommandBuffer]("vendorapisimulators.CreateAndSubmitCB", nil,
-		func(op *Operation[*cr.CommandBuffer], rf *ResultFactory[*cr.CommandBuffer]) *OperationResult[*cr.CommandBuffer] {
-			targetQueue := queue
-			if targetQueue == nil {
-				targetQueue = b.ComputeQueue
-			}
+	targetQueue := queue
+	if targetQueue == nil {
+		targetQueue = b.ComputeQueue
+	}
 
-			// Create and begin recording
-			cb := b.LogicalDevice.CreateCommandBuffer()
-			if err := cb.Begin(); err != nil {
-				return rf.Fail(nil, fmt.Errorf("failed to begin command buffer: %w", err))
-			}
+	// Create and begin recording
+	cb := b.LogicalDevice.CreateCommandBuffer()
+	if err := cb.Begin(); err != nil {
+		return nil, fmt.Errorf("failed to begin command buffer: %w", err)
+	}
 
-			// Let the caller record whatever commands they need
-			if err := recordFn(cb); err != nil {
-				return rf.Fail(nil, fmt.Errorf("failed to record commands: %w", err))
-			}
+	// Let the caller record whatever commands they need
+	if err := recordFn(cb); err != nil {
+		return nil, fmt.Errorf("failed to record commands: %w", err)
+	}
 
-			// End recording and submit
-			if err := cb.End(); err != nil {
-				return rf.Fail(nil, fmt.Errorf("failed to end command buffer: %w", err))
-			}
+	// End recording and submit
+	if err := cb.End(); err != nil {
+		return nil, fmt.Errorf("failed to end command buffer: %w", err)
+	}
 
-			fence := b.LogicalDevice.CreateFence(false)
-			_, err := targetQueue.Submit([]*cr.CommandBuffer{cb}, &cr.SubmitOptions{Fence: fence})
-			if err != nil {
-				return rf.Fail(nil, fmt.Errorf("failed to submit command buffer: %w", err))
-			}
-			fence.Wait(nil)
+	fence := b.LogicalDevice.CreateFence(false)
+	_, err := targetQueue.Submit([]*cr.CommandBuffer{cb}, &cr.SubmitOptions{Fence: fence})
+	if err != nil {
+		return nil, fmt.Errorf("failed to submit command buffer: %w", err)
+	}
+	fence.Wait(nil)
 
-			return rf.Generate(true, false, cb)
-		}).GetResult()
+	return cb, nil
 }
 
 // DefaultMemType returns the standard memory type used across all simulators:
@@ -247,11 +240,7 @@ func (b *BaseVendorSimulator) CreateAndSubmitCB(
 // This combination allows both GPU compute and CPU read/write access, which
 // is needed for our simulation where we want to verify results from tests.
 func DefaultMemType() cr.MemoryType {
-	result, _ := StartNew[cr.MemoryType]("vendorapisimulators.DefaultMemType", 0,
-		func(op *Operation[cr.MemoryType], rf *ResultFactory[cr.MemoryType]) *OperationResult[cr.MemoryType] {
-			return rf.Generate(true, false, cr.MemoryTypeDeviceLocal|cr.MemoryTypeHostVisible|cr.MemoryTypeHostCoherent)
-		}).GetResult()
-	return result
+	return cr.MemoryTypeDeviceLocal | cr.MemoryTypeHostVisible | cr.MemoryTypeHostCoherent
 }
 
 // DefaultUsage returns the standard buffer usage flags:
@@ -260,9 +249,5 @@ func DefaultMemType() cr.MemoryType {
 // This combination allows the buffer to be used as a shader storage buffer,
 // and as both source and destination of copy operations.
 func DefaultUsage() cr.BufferUsage {
-	result, _ := StartNew[cr.BufferUsage]("vendorapisimulators.DefaultUsage", 0,
-		func(op *Operation[cr.BufferUsage], rf *ResultFactory[cr.BufferUsage]) *OperationResult[cr.BufferUsage] {
-			return rf.Generate(true, false, cr.BufferUsageStorage|cr.BufferUsageTransferSrc|cr.BufferUsageTransferDst)
-		}).GetResult()
-	return result
+	return cr.BufferUsageStorage | cr.BufferUsageTransferSrc | cr.BufferUsageTransferDst
 }

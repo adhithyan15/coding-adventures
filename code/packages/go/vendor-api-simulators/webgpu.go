@@ -410,24 +410,20 @@ type GPUDevice struct {
 
 // NewGPUDevice creates a WebGPU device.
 func NewGPUDevice(vendorHint string) (*GPUDevice, error) {
-	return StartNew[*GPUDevice]("vendorapisimulators.NewGPUDevice", nil,
-		func(op *Operation[*GPUDevice], rf *ResultFactory[*GPUDevice]) *OperationResult[*GPUDevice] {
-			op.AddProperty("vendorHint", vendorHint)
-			base, err := InitBase(nil, vendorHint)
-			if err != nil {
-				return rf.Fail(nil, fmt.Errorf("failed to create WebGPU device: %w", err))
-			}
-			dev := &GPUDevice{
-				BaseVendorSimulator: base,
-				Features: map[string]bool{"compute": true},
-				Limits: GPUDeviceLimits{
-					MaxBufferSize:            2 * 1024 * 1024 * 1024,
-					MaxComputeWorkgroupSizeX: 1024,
-				},
-			}
-			dev.Queue = &GPUQueue{device: dev}
-			return rf.Generate(true, false, dev)
-		}).GetResult()
+	base, err := InitBase(nil, vendorHint)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create WebGPU device: %w", err)
+	}
+	dev := &GPUDevice{
+		BaseVendorSimulator: base,
+		Features: map[string]bool{"compute": true},
+		Limits: GPUDeviceLimits{
+			MaxBufferSize:            2 * 1024 * 1024 * 1024,
+			MaxComputeWorkgroupSizeX: 1024,
+		},
+	}
+	dev.Queue = &GPUQueue{device: dev}
+	return dev, nil
 }
 
 // CreateBuffer creates a buffer.
@@ -563,15 +559,12 @@ type GPU struct {
 
 // NewGPU creates the WebGPU entry point.
 func NewGPU() (*GPU, error) {
-	return StartNew[*GPU]("vendorapisimulators.NewGPU", nil,
-		func(op *Operation[*GPU], rf *ResultFactory[*GPU]) *OperationResult[*GPU] {
-			instance := cr.NewRuntimeInstance(nil)
-			devices := instance.EnumeratePhysicalDevices()
-			if len(devices) == 0 {
-				return rf.Fail(nil, fmt.Errorf("no GPU adapters available"))
-			}
-			return rf.Generate(true, false, &GPU{instance: instance, physicalDevices: devices})
-		}).GetResult()
+	instance := cr.NewRuntimeInstance(nil)
+	devices := instance.EnumeratePhysicalDevices()
+	if len(devices) == 0 {
+		return nil, fmt.Errorf("no GPU adapters available")
+	}
+	return &GPU{instance: instance, physicalDevices: devices}, nil
 }
 
 // RequestAdapter requests a GPU adapter.

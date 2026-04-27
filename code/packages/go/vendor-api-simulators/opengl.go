@@ -118,24 +118,21 @@ type GLContext struct {
 
 // NewGLContext creates a new OpenGL context.
 func NewGLContext() (*GLContext, error) {
-	return StartNew[*GLContext]("vendorapisimulators.NewGLContext", nil,
-		func(op *Operation[*GLContext], rf *ResultFactory[*GLContext]) *OperationResult[*GLContext] {
-			base, err := InitBase(nil, "")
-			if err != nil {
-				return rf.Fail(nil, fmt.Errorf("failed to initialize OpenGL context: %w", err))
-			}
-			return rf.Generate(true, false, &GLContext{
-				BaseVendorSimulator: base,
-				boundBuffers:        make(map[[2]int]int),
-				targetBuffers:       make(map[int]int),
-				shaders:             make(map[int]map[string]interface{}),
-				programs:            make(map[int]map[string]interface{}),
-				buffers:             make(map[int]*cr.Buffer),
-				syncs:               make(map[int]*cr.Fence),
-				uniforms:            make(map[[2]interface{}]interface{}),
-				nextID:              1,
-			})
-		}).GetResult()
+	base, err := InitBase(nil, "")
+	if err != nil {
+		return nil, fmt.Errorf("failed to initialize OpenGL context: %w", err)
+	}
+	return &GLContext{
+		BaseVendorSimulator: base,
+		boundBuffers:        make(map[[2]int]int),
+		targetBuffers:       make(map[int]int),
+		shaders:             make(map[int]map[string]interface{}),
+		programs:            make(map[int]map[string]interface{}),
+		buffers:             make(map[int]*cr.Buffer),
+		syncs:               make(map[int]*cr.Fence),
+		uniforms:            make(map[[2]interface{}]interface{}),
+		nextID:              1,
+	}, nil
 }
 
 func (gl *GLContext) genID() int {

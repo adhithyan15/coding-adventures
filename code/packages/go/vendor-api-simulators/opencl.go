@@ -522,28 +522,24 @@ type CLContext struct {
 
 // NewCLContext creates an OpenCL context.
 func NewCLContext(devices []*CLDevice) (*CLContext, error) {
-	return StartNew[*CLContext]("vendorapisimulators.NewCLContext", nil,
-		func(op *Operation[*CLContext], rf *ResultFactory[*CLContext]) *OperationResult[*CLContext] {
-			op.AddProperty("deviceCount", len(devices))
-			var vendorHint string
-			if len(devices) > 0 {
-				vendorHint = devices[0].physical.Vendor()
-			}
-			base, err := InitBase(nil, vendorHint)
-			if err != nil {
-				return rf.Fail(nil, fmt.Errorf("failed to initialize OpenCL context: %w", err))
-			}
+	var vendorHint string
+	if len(devices) > 0 {
+		vendorHint = devices[0].physical.Vendor()
+	}
+	base, err := InitBase(nil, vendorHint)
+	if err != nil {
+		return nil, fmt.Errorf("failed to initialize OpenCL context: %w", err)
+	}
 
-			ctx := &CLContext{BaseVendorSimulator: base}
-			if len(devices) > 0 {
-				ctx.devices = devices
-			} else {
-				for _, pd := range base.PhysicalDevices {
-					ctx.devices = append(ctx.devices, &CLDevice{physical: pd})
-				}
-			}
-			return rf.Generate(true, false, ctx)
-		}).GetResult()
+	ctx := &CLContext{BaseVendorSimulator: base}
+	if len(devices) > 0 {
+		ctx.devices = devices
+	} else {
+		for _, pd := range base.PhysicalDevices {
+			ctx.devices = append(ctx.devices, &CLDevice{physical: pd})
+		}
+	}
+	return ctx, nil
 }
 
 // Devices returns all devices in this context.
@@ -611,31 +607,25 @@ type CLPlatform struct {
 
 // NewCLPlatform creates a new platform by discovering devices.
 func NewCLPlatform() (*CLPlatform, error) {
-	return StartNew[*CLPlatform]("vendorapisimulators.NewCLPlatform", nil,
-		func(op *Operation[*CLPlatform], rf *ResultFactory[*CLPlatform]) *OperationResult[*CLPlatform] {
-			base, err := InitBase(nil, "")
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-			return rf.Generate(true, false, &CLPlatform{
-				name:    "Coding Adventures Compute Platform",
-				vendor:  "Coding Adventures",
-				version: "OpenCL 3.0",
-				base:    base,
-			})
-		}).GetResult()
+	base, err := InitBase(nil, "")
+	if err != nil {
+		return nil, err
+	}
+	return &CLPlatform{
+		name:    "Coding Adventures Compute Platform",
+		vendor:  "Coding Adventures",
+		version: "OpenCL 3.0",
+		base:    base,
+	}, nil
 }
 
 // GetPlatforms returns available OpenCL platforms.
 func GetPlatforms() ([]*CLPlatform, error) {
-	return StartNew[[]*CLPlatform]("vendorapisimulators.GetPlatforms", nil,
-		func(op *Operation[[]*CLPlatform], rf *ResultFactory[[]*CLPlatform]) *OperationResult[[]*CLPlatform] {
-			p, err := NewCLPlatform()
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-			return rf.Generate(true, false, []*CLPlatform{p})
-		}).GetResult()
+	p, err := NewCLPlatform()
+	if err != nil {
+		return nil, err
+	}
+	return []*CLPlatform{p}, nil
 }
 
 // Name returns the platform name.

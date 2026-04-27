@@ -2,12 +2,6 @@
 
 All notable changes to the `vendor-api-simulators` Go package will be documented in this file.
 
-## [0.2.0] - 2026-04-02
-
-### Changed
-
-- **Operations pattern**: Wrapped all public constructors and factory functions (`InitBase`, `DefaultMemType`, `DefaultUsage`, `CreateAndSubmitCB`, `NewCUDARuntime`, `NewDim3`, `NewMTLDevice`, `NewMTLSize`, `NewCLContext`, `NewCLPlatform`, `GetPlatforms`, `NewVkInstance`, `NewGPUDevice`, `NewGPU`, `NewGLContext`) with `StartNew` for automatic timing, structured logging, and panic recovery. The public API is fully backward-compatible.
-
 ## [0.1.0] - 2026-03-20
 
 ### Added

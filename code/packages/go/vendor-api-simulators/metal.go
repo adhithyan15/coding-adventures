@@ -59,14 +59,7 @@ type MTLSize struct {
 
 // NewMTLSize creates a new MTLSize.
 func NewMTLSize(w, h, d int) MTLSize {
-	result, _ := StartNew[MTLSize]("vendorapisimulators.NewMTLSize", MTLSize{},
-		func(op *Operation[MTLSize], rf *ResultFactory[MTLSize]) *OperationResult[MTLSize] {
-			op.AddProperty("width", w)
-			op.AddProperty("height", h)
-			op.AddProperty("depth", d)
-			return rf.Generate(true, false, MTLSize{Width: w, Height: h, Depth: d})
-		}).GetResult()
-	return result
+	return MTLSize{Width: w, Height: h, Depth: d}
 }
 
 // MTLResourceOptions is the Metal storage mode options for buffers.
@@ -423,14 +416,11 @@ type MTLDevice struct {
 
 // NewMTLDevice creates a Metal device, preferring Apple hardware.
 func NewMTLDevice() (*MTLDevice, error) {
-	return StartNew[*MTLDevice]("vendorapisimulators.NewMTLDevice", nil,
-		func(op *Operation[*MTLDevice], rf *ResultFactory[*MTLDevice]) *OperationResult[*MTLDevice] {
-			base, err := InitBase(nil, "apple")
-			if err != nil {
-				return rf.Fail(nil, fmt.Errorf("failed to initialize Metal device: %w", err))
-			}
-			return rf.Generate(true, false, &MTLDevice{BaseVendorSimulator: base})
-		}).GetResult()
+	base, err := InitBase(nil, "apple")
+	if err != nil {
+		return nil, fmt.Errorf("failed to initialize Metal device: %w", err)
+	}
+	return &MTLDevice{BaseVendorSimulator: base}, nil
 }
 
 // Name returns the device name.

@@ -34,6 +34,8 @@ members = [
     "parallel-execution-engine",
     "compute-unit",
     "device-simulator",
+    "compute-runtime",
+    "vendor-api-simulators",
 ]
 
 [tool.uv.sources]
@@ -66,3 +68,5 @@ coding-adventures-gpu-core = { workspace = true }
 coding-adventures-parallel-execution-engine = { workspace = true }
 coding-adventures-compute-unit = { workspace = true }
 coding-adventures-device-simulator = { workspace = true }
+coding-adventures-compute-runtime = { workspace = true }
+coding-adventures-vendor-api-simulators = { workspace = true }

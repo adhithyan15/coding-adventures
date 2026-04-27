@@ -300,49 +300,6 @@ class Matrix:
             )
 ```
 
-### Integration with Existing Matrix Package
-
-This repo already has a `Matrix` class (in `code/packages/*/matrix/`) that uses
-**2D nested lists** (`list[list[float]]`) with `dot()`, `transpose()`, `add()`,
-and operator overloading. The existing loss functions, gradient descent, and
-logistic classifiers all use this Matrix type.
-
-The BLAS library's `Matrix` uses a **flat list** for GPU-friendliness (GPUs need
-contiguous memory). We provide conversion utilities:
-
-```python
-# Convert between the two Matrix formats
-def from_matrix_pkg(m) -> Matrix:
-    """Convert existing Matrix (2D nested list) to BLAS Matrix (flat)."""
-    flat = [m.data[i][j] for i in range(m.rows) for j in range(m.cols)]
-    return Matrix(data=flat, rows=m.rows, cols=m.cols)
-
-def to_matrix_pkg(m: Matrix):
-    """Convert BLAS Matrix (flat) to existing Matrix (2D nested list)."""
-    from matrix import Matrix as MatrixPkg
-    data_2d = [m.data[i * m.cols:(i + 1) * m.cols] for i in range(m.rows)]
-    return MatrixPkg(data_2d)
-```
-
-This means the existing ML code (loss functions, SGD, classifiers) can work
-with BLAS results via these converters. In Layer 2 (Tensor), we'll unify
-the two representations into a single Tensor type.
-
-### Existing ML Code Alignment
-
-The repo already has these ML packages that the BLAS library complements:
-
-| Existing Package | What it does | BLAS Equivalent |
-|-----------------|-------------|-----------------|
-| `matrix` | Matrix dot product | SGEMM (Level 3) |
-| `matrix` | Matrix add/subtract | Not BLAS (element-wise) |
-| `matrix` | Matrix scalar multiply | SSCAL on flattened data |
-| `matrix` | Matrix transpose | Transpose flag in SGEMM |
-| `loss-functions` | MSE, MAE, BCE, CCE | ML extensions (future) |
-| `gradient-descent` | SGD optimizer | SAXPY (w = w - lr*grad) |
-
-Note that SGD (`w_new = w - lr * grad`) is literally SAXPY with `alpha = -lr`!
-
 ### Memory Management: Caller Owns Data
 
 The caller creates `Matrix` / `Vector` objects on the host (CPU). Each BLAS
