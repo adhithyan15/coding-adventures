@@ -1,0 +1,26 @@
+{
+  "name": "@coding-adventures/directed-graph-native",
+  "version": "0.1.0",
+  "description": "Rust-backed directed graph for Node.js via napi-rs — drop-in native replacement for @coding-adventures/directed-graph",
+  "type": "module",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "build": "cargo build --release && napi build --release --platform",
+    "build:debug": "napi build",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "license": "MIT",
+  "author": "Adhithya Rajasekaran",
+  "napi": {
+    "name": "directed-graph-native",
+    "triples": {}
+  },
+  "devDependencies": {
+    "@napi-rs/cli": "^2.18.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
