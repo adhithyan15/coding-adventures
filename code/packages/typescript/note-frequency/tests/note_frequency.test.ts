@@ -1,5 +1,4 @@
 import { Note, noteToFrequency, parseNote } from "../src/note_frequency";
-import { describe, expect, test } from "vitest";
 
 describe("parseNote", () => {
   test("parses a sharp note", () => {

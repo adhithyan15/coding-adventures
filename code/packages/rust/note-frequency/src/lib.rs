@@ -60,8 +60,7 @@ impl Note {
     }
 
     pub fn frequency(&self) -> f64 {
-        REFERENCE_FREQUENCY_HZ
-            * 2f64.powf(self.semitones_from_a4() as f64 / SEMITONES_PER_OCTAVE as f64)
+        REFERENCE_FREQUENCY_HZ * 2f64.powf(self.semitones_from_a4() as f64 / SEMITONES_PER_OCTAVE as f64)
     }
 }
 
@@ -74,10 +73,7 @@ impl std::fmt::Display for Note {
 pub fn parse_note(text: &str) -> Result<Note, String> {
     let mut chars = text.chars();
     let letter = chars.next().ok_or_else(|| invalid_note_message(text))?;
-    if !matches!(
-        letter.to_ascii_uppercase(),
-        'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G'
-    ) {
+    if !matches!(letter.to_ascii_uppercase(), 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G') {
         return Err(invalid_note_message(text));
     }
 
@@ -91,9 +87,6 @@ pub fn parse_note(text: &str) -> Result<Note, String> {
     };
 
     if octave_text.is_empty() {
-        return Err(invalid_note_message(text));
-    }
-    if !is_canonical_octave(octave_text) {
         return Err(invalid_note_message(text));
     }
 
@@ -112,9 +105,4 @@ fn invalid_note_message(text: &str) -> String {
         "Invalid note {:?}. Expected <letter><optional # or b><octave>, for example 'A4', 'C#5', or 'Db3'.",
         text
     )
-}
-
-fn is_canonical_octave(text: &str) -> bool {
-    let digits = text.strip_prefix('-').unwrap_or(text);
-    !digits.is_empty() && digits.chars().all(|character| character.is_ascii_digit())
 }

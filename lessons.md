@@ -4,6 +4,109 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-18: New TypeScript packages should not commit local transpile outputs
+
+TypeScript package-local `tsc` and test runs can emit `.js`, `.d.ts`, and
+source-map files right beside the checked-in `.ts` sources. If those generated
+files are staged, the PR ends up carrying duplicate runtime and test artifacts
+that do not match the repo's source-first `main: "src/index.ts"` package
+convention.
+
+**Symptom:** a new package PR includes paired `src/*.ts` and generated
+`src/*.js`, `src/*.d.ts`, `tests/*.js`, or `vitest.config.js` files even though
+the package entrypoint already points at the `.ts` sources.
+
+**Rule:** For new TypeScript packages, commit the `.ts` sources, metadata, and
+lockfile only. Do not commit local transpile outputs such as `src/*.js`,
+`src/*.d.ts`, `tests/*.js`, `vitest.config.js`, or their source maps unless the
+package intentionally publishes prebuilt artifacts and the spec says so.
+
+---
+
+### 2026-04-18: Default to a fresh git worktree before starting substantive repo work
+
+In this repo, the main checkout often contains unrelated untracked files, active
+agent output, or in-progress specs on other branches. Trying to begin work in
+that noisy tree can block the required `git merge origin/main` step or create a
+risk of mixing unrelated changes into the feature.
+
+**Symptom:** `git merge origin/main` fails because untracked local files would be
+overwritten, or the worktree is too noisy to safely isolate a new package/spec
+change.
+
+**Rule:** Before doing substantive work, create a fresh `git worktree` from
+`origin/main` on a dedicated feature branch and do the implementation there.
+Treat this as the default, not an exception, whenever the source checkout is
+shared or noisy.
+
+### 2026-04-18: LuaRocks CI installs may need patched GitHub archive URLs for old rockspecs
+
+Some published LuaRocks rockspecs still point at legacy GitHub archive URLs
+like `https://github.com/<owner>/<repo>/archive/<tag>.tar.gz`. Those URLs can
+be flaky or return gateway errors in CI even when the corresponding tag still
+exists.
+
+**Symptom:** shared CI setup fails before any package build runs, typically
+while installing `busted` or one of its transitive dependencies, with an error
+like `Failed downloading https://github.com/.../archive/0.08.tar.gz`.
+
+**Rule:** When a LuaRocks dependency fails because of an old GitHub archive
+URL, patch the downloaded rockspec in CI to use the stable
+`archive/refs/tags/<tag>.tar.gz` form and install from that patched rockspec
+before proceeding with the rest of the Lua test tool bootstrap.
+
+### 2026-04-18: Dart decompressors must cap declared output size from untrusted headers
+
+Compression formats often encode the original byte length in the payload
+header. If the decoder trusts that field blindly, an attacker can declare a
+huge output size and force the process to allocate or append toward that size,
+turning decompression into a memory-exhaustion denial of service.
+
+**Symptom:** Security review flags `decompress()` because a crafted payload can
+claim an arbitrarily large `originalLength`, and the Dart implementation
+attempts to honor it without any upper bound.
+
+**Rule:** Any Dart decompressor that consumes a declared output length from
+untrusted bytes must enforce a sane maximum decompressed size before decoding.
+Expose the cap as an override for trusted callers, but fail closed by default
+with `FormatException` when the header exceeds the limit.
+
+### 2026-04-18: Dart decompressors must validate backreferences before indexing decoded output
+
+For byte-oriented compression formats like LZ77, the decoder is a trust
+boundary whenever it accepts token streams or compressed bytes from outside the
+process. A malformed token with `offset == 0` or `offset > decoded_prefix_len`
+can trigger a `RangeError` if the implementation blindly indexes into the
+already-decoded output buffer.
+
+**Symptom:** Security review flags a denial-of-service bug because `decode()`
+crashes on hostile compressed input instead of rejecting it cleanly.
+
+**Rule:** Every Dart decoder for backreference-based formats must validate
+token fields before copying. Backreferences need `offset > 0` and
+`offset <= output.length`, and malformed or truncated streams should throw
+`FormatException` rather than indexing past buffer bounds.
+
+---
+
+### 2026-04-18: Dart binary deserializers should reject both short and padded payloads
+
+When a package defines a fixed-width wire format, accepting undersized payloads
+as "empty" messages or silently ignoring extra bytes creates a fail-open
+boundary. That can hide tampering and lets callers treat malformed compressed
+data as if it were valid.
+
+**Symptom:** Security review flags insecure deserialization because a parser
+accepts incomplete headers or trailing attacker-controlled bytes instead of
+failing closed.
+
+**Rule:** For Dart binary formats, validate the exact expected byte length from
+the header before decoding any entries, and validate that the reconstructed
+payload length exactly matches any declared output length. Reject incomplete
+payloads, extra trailing bytes, underflow, and overflow with `FormatException`.
+
+---
+
 ### 2026-04-18: Lua rockspecs must pin immutable source refs, not just HTTPS URLs
 
 Switching a Lua rockspec from `git://` to `https://` fixes transport security,

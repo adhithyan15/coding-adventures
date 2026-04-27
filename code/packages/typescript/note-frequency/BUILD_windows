@@ -1,2 +1,2 @@
 npm install --silent
-npx vitest run
+npx jest --verbose

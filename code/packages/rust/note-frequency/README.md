@@ -17,6 +17,6 @@ frequency by `2^(1/12)`.
 ## Usage
 
 ```rust
-let note = coding_adventures_note_frequency::parse_note("A4")?;
-let frequency = coding_adventures_note_frequency::note_to_frequency("C4")?;
+let note = note_frequency::parse_note("A4")?;
+let frequency = note_frequency::note_to_frequency("C4")?;
 ```

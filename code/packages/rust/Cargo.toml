@@ -134,6 +134,7 @@ members = [
     "trie",
     "trig",
     "wave",
+    "note-frequency",
     "virtual-memory",
     "tree",
     "radix-tree",

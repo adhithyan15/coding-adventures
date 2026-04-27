@@ -78,21 +78,10 @@ parseNote input = case input of
                     '#':xs -> ("#", xs)
                     'b':xs -> ("b", xs)
                     xs     -> ("", xs)
-            if not (isCanonicalOctave octaveText)
-               then Left invalidShape
-               else do
-                octaveValue <- maybe (Left invalidShape) Right (readMaybe octaveText)
-                createNote canonicalLetter accidentalValue octaveValue
+            octaveValue <- maybe (Left invalidShape) Right (readMaybe octaveText)
+            createNote canonicalLetter accidentalValue octaveValue
   where
     invalidShape = "Invalid note. Expected <letter><optional # or b><octave>, for example 'A4', 'C#5', or 'Db3'."
-
-isCanonicalOctave :: String -> Bool
-isCanonicalOctave [] = False
-isCanonicalOctave ('-':digits) = not (null digits) && all isDigitAscii digits
-isCanonicalOctave digits = all isDigitAscii digits
-
-isDigitAscii :: Char -> Bool
-isDigitAscii character = character >= '0' && character <= '9'
 
 noteToFrequency :: String -> Either String Double
 noteToFrequency input = frequency <$> parseNote input

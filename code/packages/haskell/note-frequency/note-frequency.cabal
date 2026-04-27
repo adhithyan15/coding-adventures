@@ -3,12 +3,9 @@ name:               note-frequency
 version:            0.1.0.0
 synopsis:           Parse note names and map them to equal-tempered frequencies.
 description:        Educational package implementing the symbolic note-to-frequency layer.
-category:           Music
 license:            MIT
 author:             Coding Adventures
 maintainer:         contact@coding-adventures.com
-extra-doc-files:    README.md
-                  , CHANGELOG.md
 
 library
     exposed-modules:  NoteFrequency

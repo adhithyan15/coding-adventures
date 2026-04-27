@@ -1,5 +1,3 @@
-package.path = "../src/?.lua;" .. "../src/?/init.lua;" .. package.path
-
 local note_frequency = require("coding_adventures.note_frequency")
 
 describe("note_frequency", function()

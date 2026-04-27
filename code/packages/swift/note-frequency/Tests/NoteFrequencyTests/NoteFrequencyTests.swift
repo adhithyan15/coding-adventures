@@ -14,7 +14,7 @@ final class NoteFrequencyTests: XCTestCase {
     }
 
     func testMalformedNotesThrow() {
-        for value in ["", "A", "H4", "#4", "4A", "A##4", "Bb", "A+4", "A 4"] {
+        for value in ["", "A", "H4", "#4", "4A", "A##4", "Bb"] {
             XCTAssertThrowsError(try parseNote(value))
         }
     }

@@ -17,6 +17,6 @@ frequency by `2^(1/12)`.
 ## Usage
 
 ```haskell
-let note = parseNote "A4"
-let frequency = noteToFrequency "C4"
+note <- parseNote "A4"
+frequency <- noteToFrequency "C4"
 ```

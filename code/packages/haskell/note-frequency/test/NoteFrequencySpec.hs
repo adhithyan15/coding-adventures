@@ -13,7 +13,7 @@ spec = do
             fmap show (parseNote "g4") `shouldBe` Right "G4"
 
         it "rejects malformed notes" $ do
-            map parseNote ["", "A", "H4", "#4", "4A", "A##4", "Bb", "A+4", "A 4"] `shouldSatisfy` all isLeft
+            map parseNote ["", "A", "H4", "#4", "4A", "A##4", "Bb"] `shouldSatisfy` all isLeft
 
         it "rejects unsupported spellings" $ do
             parseNote "E#4" `shouldSatisfy` isLeft

@@ -1,4 +1,4 @@
-# typescript/note-frequency
+# note-frequency
 
 
 Parses typed musical note labels such as `A4`, `C#5`, and `Db3` into a structured
@@ -17,7 +17,7 @@ frequency by `2^(1/12)`.
 ## Usage
 
 ```ts
-import { parseNote, noteToFrequency } from "@coding-adventures/note-frequency";
+import { parseNote, noteToFrequency } from "note-frequency";
 
 const note = parseNote("A4");
 const frequency = noteToFrequency("C4");

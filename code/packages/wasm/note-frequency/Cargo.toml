@@ -6,7 +6,6 @@ version = "0.1.0"
 edition = "2021"
 description = "WebAssembly bindings for the Rust note-frequency package"
 license = "MIT"
-readme = "README.md"
 
 [lib]
 crate-type = ["cdylib", "rlib"]

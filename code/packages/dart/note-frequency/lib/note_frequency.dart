@@ -53,8 +53,7 @@ class Note {
   }
 
   double frequency() =>
-      _referenceFrequencyHz *
-      math.pow(2.0, semitonesFromA4() / _semitonesPerOctave).toDouble();
+      _referenceFrequencyHz * math.pow(2.0, semitonesFromA4() / _semitonesPerOctave).toDouble();
 
   @override
   String toString() => '$spelling$octave';

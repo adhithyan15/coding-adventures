@@ -40,9 +40,6 @@ defmodule NoteFrequencyTest do
     assert_in_delta NoteFrequency.parse_note("A5") |> Note.frequency(), 880.0, 1.0e-12
     assert_in_delta NoteFrequency.parse_note("A3") |> Note.frequency(), 220.0, 1.0e-12
     assert_in_delta NoteFrequency.note_to_frequency("C4"), 261.6255653005986, 1.0e-12
-
-    assert_in_delta NoteFrequency.note_to_frequency("C#4"),
-                    NoteFrequency.note_to_frequency("Db4"),
-                    1.0e-12
+    assert_in_delta NoteFrequency.note_to_frequency("C#4"), NoteFrequency.note_to_frequency("Db4"), 1.0e-12
   end
 end

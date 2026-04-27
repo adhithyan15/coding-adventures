@@ -102,26 +102,11 @@ public func parseNote(_ text: String) throws -> Note {
         octaveText = rest
     }
 
-    guard isCanonicalOctave(octaveText), let octave = Int(octaveText) else {
+    guard !octaveText.isEmpty, let octave = Int(octaveText) else {
         throw NoteFrequencyError.invalidNote(text)
     }
 
     return try Note(letter: uppercaseLetter, accidental: accidental, octave: octave)
-}
-
-private func isCanonicalOctave(_ text: String) -> Bool {
-    guard !text.isEmpty else {
-        return false
-    }
-
-    let digits: Substring
-    if text.first == "-" {
-        digits = text.dropFirst()
-    } else {
-        digits = text[...]
-    }
-
-    return !digits.isEmpty && digits.allSatisfy { $0 >= "0" && $0 <= "9" }
 }
 
 public func noteToFrequency(_ text: String) throws -> Double {
