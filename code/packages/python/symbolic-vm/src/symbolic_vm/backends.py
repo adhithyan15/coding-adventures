@@ -28,6 +28,7 @@ from collections.abc import Mapping
 from symbolic_ir import ASSIGN, DEFINE, IF, IRApply, IRNode, IRSymbol
 
 from symbolic_vm.backend import Backend, Handler
+from symbolic_vm.cas_handlers import build_cas_handler_table
 from symbolic_vm.derivative import differentiate
 from symbolic_vm.handlers import FALSE, TRUE, build_handler_table
 from symbolic_vm.integrate import integrate
@@ -101,6 +102,12 @@ class SymbolicBackend(_BaseBackend):
         handlers = dict(build_handler_table(simplify=True))
         handlers["D"] = differentiate()
         handlers["Integrate"] = integrate()
+        # Install the universal CAS substrate handlers. Every frontend
+        # (MACSYMA, Maple, Mathematica, …) that extends SymbolicBackend
+        # inherits Factor, Solve, Simplify, list/matrix/limit ops, etc.
+        # automatically. Language-specific quirks (Display/Suppress/Kill)
+        # are layered on top in the language backend subclass.
+        handlers.update(build_cas_handler_table())
         self._handlers = handlers
 
     def on_unresolved(self, symbol: IRSymbol) -> IRNode:
