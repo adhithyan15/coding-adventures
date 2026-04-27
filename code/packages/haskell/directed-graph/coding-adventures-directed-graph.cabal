@@ -1,0 +1,27 @@
+cabal-version: 3.0
+name:          coding-adventures-directed-graph
+version:       0.1.0
+synopsis:      
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  DirectedGraph
+                    , LabeledGraph
+    build-depends:    base >=4.14
+                    , containers >=0.6
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    build-depends:    base >=4.14
+                    , containers >=0.6
+                    , hspec >=2.7
+                    , coding-adventures-directed-graph
+    build-tool-depends: hspec-discover:hspec-discover
+    hs-source-dirs:   test
+    default-language: Haskell2010
