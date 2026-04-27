@@ -381,4 +381,5 @@ members = [
     "feature-normalization",
     "single-layer-network",
     "symbolic-ir",
+    "symbolic-vm",
 ]

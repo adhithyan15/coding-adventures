@@ -1,0 +1,9 @@
+[package]
+name = "symbolic-vm"
+version = "0.1.0"
+edition = "2021"
+description = "Generic symbolic expression evaluator over the symbolic-ir tree representation"
+license = "MIT"
+
+[dependencies]
+symbolic-ir = { path = "../symbolic-ir" }
