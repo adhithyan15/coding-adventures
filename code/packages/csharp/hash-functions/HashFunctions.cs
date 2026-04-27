@@ -1,5 +1,4 @@
 using System.Numerics;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace CodingAdventures.HashFunctions;
@@ -265,12 +264,13 @@ public static class HashFunctions
         }
 
         var input = new byte[8];
+        var sampleState = 0x9E3779B97F4A7C15UL;
         ulong totalBitFlips = 0;
         ulong totalTrials = 0;
 
         for (var sample = 0; sample < sampleSize; sample++)
         {
-            RandomNumberGenerator.Fill(input);
+            FillDeterministicSample(input, ref sampleState);
             var h1 = hashFunction(input);
 
             for (var bitPosition = 0; bitPosition < input.Length * 8; bitPosition++)
@@ -328,6 +328,28 @@ public static class HashFunctions
         hash = unchecked(hash * 0xC2B2AE35);
         hash ^= hash >> 16;
         return hash;
+    }
+
+    private static void FillDeterministicSample(byte[] input, ref ulong state)
+    {
+        var offset = 0;
+        while (offset < input.Length)
+        {
+            var value = NextSplitMix64(ref state);
+            for (var index = 0; index < 8 && offset < input.Length; index++)
+            {
+                input[offset++] = (byte)(value >> (index * 8));
+            }
+        }
+    }
+
+    private static ulong NextSplitMix64(ref ulong state)
+    {
+        state = unchecked(state + 0x9E3779B97F4A7C15UL);
+        var value = state;
+        value = unchecked((value ^ (value >> 30)) * 0xBF58476D1CE4E5B9UL);
+        value = unchecked((value ^ (value >> 27)) * 0x94D049BB133111EBUL);
+        return value ^ (value >> 31);
     }
 
     private static void SipRound(ref ulong v0, ref ulong v1, ref ulong v2, ref ulong v3)
