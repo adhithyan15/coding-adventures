@@ -32,7 +32,7 @@ public enum Discovery {
             .replacingOccurrences(of: "\\", with: "/")
             .split(separator: "/")
             .map(String.init)
-        for language in allLanguages where parts.contains(language) {
+        for language in allPackageLanguages where parts.contains(language) {
             return language
         }
         return "unknown"

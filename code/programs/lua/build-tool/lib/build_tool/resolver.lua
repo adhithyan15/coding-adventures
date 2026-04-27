@@ -38,6 +38,40 @@ local function read_file(path)
     return content
 end
 
+local function normalize_path(path)
+    local normalized = path:gsub("\\", "/")
+    local prefix = ""
+    local segments = {}
+
+    if normalized:match("^[A-Za-z]:/") then
+        prefix = normalized:sub(1, 2):lower()
+        normalized = normalized:sub(3)
+    elseif normalized:sub(1, 1) == "/" then
+        prefix = "/"
+        normalized = normalized:sub(2)
+    end
+
+    for segment in normalized:gmatch("[^/]+") do
+        if segment == ".." then
+            if #segments > 0 and segments[#segments] ~= ".." then
+                table.remove(segments)
+            elseif prefix == "" then
+                segments[#segments + 1] = segment
+            end
+        elseif segment ~= "." and segment ~= "" then
+            segments[#segments + 1] = segment
+        end
+    end
+
+    local joined = table.concat(segments, "/")
+    if prefix == "/" then
+        return joined == "" and "/" or "/" .. joined
+    elseif prefix ~= "" then
+        return joined == "" and (prefix .. "/") or (prefix .. "/" .. joined)
+    end
+    return joined
+end
+
 -- =========================================================================
 -- Helper: find a file by extension in a directory.
 -- =========================================================================
@@ -79,6 +113,69 @@ local function find_file_by_extension(directory, extension)
         end
     end
     return nil
+end
+
+local function find_files_by_extensions(directory, extensions)
+    local files = {}
+    local seen = {}
+
+    for _, extension in ipairs(extensions) do
+        local filepath = find_file_by_extension(directory, extension)
+        if filepath then
+            local normalized = normalize_path(filepath)
+            if not seen[normalized] then
+                seen[normalized] = true
+                files[#files + 1] = filepath
+            end
+        end
+    end
+
+    table.sort(files)
+    return files
+end
+
+local function dependency_scope(language)
+    if language == "csharp" or language == "fsharp" or language == "dotnet" then
+        return "dotnet"
+    elseif language == "wasm" then
+        return "rust"
+    end
+    return language
+end
+
+local function in_dependency_scope(package_language, scope)
+    if scope == "dotnet" then
+        return package_language == "csharp" or package_language == "fsharp" or package_language == "dotnet"
+    elseif scope == "rust" then
+        return package_language == "rust" or package_language == "wasm"
+    end
+    return package_language == scope
+end
+
+local function read_cargo_package_name(pkg)
+    local text = read_file(pkg.path .. "/Cargo.toml")
+    if not text then return nil end
+
+    for line in text:gmatch("[^\n]+") do
+        local name = line:match('^%s*name%s*=%s*"([^"]+)"')
+        if name then
+            return name:lower()
+        end
+    end
+
+    return nil
+end
+
+local function set_known(known, key, pkg)
+    if not known[key] then
+        known[key] = pkg.name
+        return
+    end
+
+    local normalized = pkg.path:gsub("\\", "/"):lower()
+    if not normalized:match("/programs/") then
+        known[key] = pkg.name
+    end
 end
 
 -- =========================================================================
@@ -273,6 +370,27 @@ local function parse_rust_deps(pkg, known_names)
     return deps
 end
 
+local function parse_swift_deps(pkg, known_names)
+    local text = read_file(pkg.path .. "/Package.swift")
+    if not text then return {} end
+
+    local deps = {}
+    for dep_path in text:gmatch('%.package%s*%(%s*path%s*:%s*"([^"]+)"') do
+        local cleaned = normalize_path(dep_path)
+        if not cleaned:match("^[A-Za-z]:/") and cleaned:sub(1, 1) ~= "/" then
+            local dep_dir = cleaned:match("([^/]+)$")
+            if dep_dir and dep_dir ~= "." and dep_dir ~= ".." then
+                dep_dir = dep_dir:lower()
+                if known_names[dep_dir] then
+                    deps[#deps + 1] = known_names[dep_dir]
+                end
+            end
+        end
+    end
+
+    return deps
+end
+
 -- =========================================================================
 -- Elixir dependency parsing
 -- =========================================================================
@@ -437,6 +555,26 @@ local function parse_haskell_deps(pkg, known_names)
     return deps
 end
 
+local function parse_dotnet_deps(pkg, known_names)
+    local project_files = find_files_by_extensions(pkg.path, {"csproj", "fsproj"})
+    if #project_files == 0 then return {} end
+
+    local deps = {}
+    for _, project_file in ipairs(project_files) do
+        local text = read_file(project_file)
+        if text then
+            for include_path in text:gmatch('<ProjectReference%s+Include%s*=%s*"([^"]+)"') do
+                local normalized = normalize_path(pkg.path .. "/" .. include_path)
+                if known_names[normalized] then
+                    deps[#deps + 1] = known_names[normalized]
+                end
+            end
+        end
+    end
+
+    return deps
+end
+
 -- =========================================================================
 
 --- Build a mapping from ecosystem-specific dependency names to internal
@@ -455,58 +593,64 @@ end
 --
 -- @param packages table List of package records.
 -- @return table Mapping from ecosystem name to package name.
-function Resolver.build_known_names(packages)
+function Resolver.build_known_names(packages, language)
     local known = {}
+    local scope = language or ""
 
     for _, pkg in ipairs(packages) do
-        -- Extract the directory basename.
-        local basename = pkg.path:gsub("\\", "/"):match("([^/]+)$"):lower()
+        if scope == "" or in_dependency_scope(pkg.language, scope) then
+            local basename = pkg.path:gsub("\\", "/"):match("([^/]+)$"):lower()
 
-        if pkg.language == "python" then
-            local pypi_name = "coding-adventures-" .. basename
-            known[pypi_name] = pkg.name
+            if pkg.language == "python" then
+                set_known(known, "coding-adventures-" .. basename, pkg)
 
-        elseif pkg.language == "ruby" then
-            local gem_name = "coding_adventures_" .. basename
-            known[gem_name] = pkg.name
+            elseif pkg.language == "ruby" then
+                set_known(known, "coding_adventures_" .. basename, pkg)
 
-        elseif pkg.language == "go" then
-            local text = read_file(pkg.path .. "/go.mod")
-            if text then
-                for line in text:gmatch("[^\n]+") do
-                    if line:match("^module ") then
-                        local module_path = line:gsub("^module%s+", ""):match("^%s*(.-)%s*$"):lower()
-                        known[module_path] = pkg.name
-                        break
+            elseif pkg.language == "go" then
+                local text = read_file(pkg.path .. "/go.mod")
+                if text then
+                    for line in text:gmatch("[^\n]+") do
+                        if line:match("^module ") then
+                            local module_path = line:gsub("^module%s+", ""):match("^%s*(.-)%s*$"):lower()
+                            known[module_path] = pkg.name
+                            break
+                        end
                     end
                 end
+
+            elseif pkg.language == "typescript" then
+                set_known(known, "@coding-adventures/" .. basename, pkg)
+                set_known(known, basename, pkg)
+
+            elseif pkg.language == "rust" or pkg.language == "wasm" then
+                set_known(known, basename, pkg)
+                local cargo_name = read_cargo_package_name(pkg)
+                if cargo_name then
+                    set_known(known, cargo_name, pkg)
+                end
+
+            elseif pkg.language == "elixir" then
+                set_known(known, "coding_adventures_" .. basename:gsub("%-", "_"), pkg)
+                set_known(known, basename:gsub("%-", "_"), pkg)
+
+            elseif pkg.language == "lua" then
+                set_known(known, "coding-adventures-" .. basename:gsub("_", "-"), pkg)
+
+            elseif pkg.language == "perl" then
+                set_known(known, "coding-adventures-" .. basename, pkg)
+
+            elseif pkg.language == "swift" then
+                set_known(known, basename, pkg)
+
+            elseif pkg.language == "haskell" then
+                set_known(known, "coding-adventures-" .. basename:gsub("_", "-"), pkg)
+
+            elseif pkg.language == "csharp" or pkg.language == "fsharp" or pkg.language == "dotnet" then
+                for _, project_file in ipairs(find_files_by_extensions(pkg.path, {"csproj", "fsproj"})) do
+                    known[normalize_path(project_file)] = pkg.name
+                end
             end
-
-        elseif pkg.language == "typescript" then
-            local npm_name = "@coding-adventures/" .. basename
-            known[npm_name] = pkg.name
-
-        elseif pkg.language == "rust" then
-            known[basename] = pkg.name
-
-        elseif pkg.language == "elixir" then
-            local app_name = "coding_adventures_" .. basename:gsub("%-", "_")
-            known[app_name] = pkg.name
-
-        elseif pkg.language == "lua" then
-            -- Lua dirs use underscores, rockspec names use hyphens.
-            local rockspec_name = "coding-adventures-" .. basename:gsub("_", "-")
-            known[rockspec_name] = pkg.name
-
-        elseif pkg.language == "perl" then
-            -- Perl CPAN dist names use hyphens: "logic-gates" -> "coding-adventures-logic-gates"
-            -- This matches the Python convention exactly.
-            local cpan_name = "coding-adventures-" .. basename
-            known[cpan_name] = pkg.name
-
-        elseif pkg.language == "haskell" then
-            local cabal_name = "coding-adventures-" .. basename:gsub("_", "-")
-            known[cabal_name] = pkg.name
         end
     end
 
@@ -533,8 +677,13 @@ function Resolver.resolve_dependencies(packages)
         graph:add_node(pkg.name)
     end
 
-    -- Build the ecosystem-specific name mapping table.
-    local known_names = Resolver.build_known_names(packages)
+    local known_names_by_scope = {}
+    for _, pkg in ipairs(packages) do
+        local scope = dependency_scope(pkg.language)
+        if not known_names_by_scope[scope] then
+            known_names_by_scope[scope] = Resolver.build_known_names(packages, scope)
+        end
+    end
 
     -- Dispatch table for language-specific parsers.
     local parsers = {
@@ -543,16 +692,22 @@ function Resolver.resolve_dependencies(packages)
         go         = parse_go_deps,
         typescript = parse_typescript_deps,
         rust       = parse_rust_deps,
+        wasm       = parse_rust_deps,
         elixir     = parse_elixir_deps,
         lua        = parse_lua_deps,
         perl       = parse_perl_deps,
+        swift      = parse_swift_deps,
         haskell    = parse_haskell_deps,
+        csharp     = parse_dotnet_deps,
+        fsharp     = parse_dotnet_deps,
+        dotnet     = parse_dotnet_deps,
     }
 
     -- Parse dependencies for each package and add edges.
     for _, pkg in ipairs(packages) do
         local parser = parsers[pkg.language]
         if parser then
+            local known_names = known_names_by_scope[dependency_scope(pkg.language)] or {}
             local deps = parser(pkg, known_names)
             for _, dep_name in ipairs(deps) do
                 -- Edge direction: dep → pkg means "dep must be built before pkg".

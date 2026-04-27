@@ -550,6 +550,7 @@ TOKEN_GRAMMAR = GT::TokenGrammar.new(
         ],
       ),
     },
+  layout_keywords: [],
   context_keywords: ["as", "from", "of", "get", "set", "static"],
   soft_keywords: [],
 )

@@ -53,7 +53,7 @@ impl WasmBPlusTree {
             self.inner
                 .range_scan(&low, &high)
                 .into_iter()
-                .map(|(&k, v)| (k, v.clone())),
+                .map(|(key, value)| (*key, value.clone())),
         )
     }
 
@@ -63,12 +63,12 @@ impl WasmBPlusTree {
             self.inner
                 .full_scan()
                 .into_iter()
-                .map(|(&k, v)| (k, v.clone())),
+                .map(|(key, value)| (*key, value.clone())),
         )
     }
 
     pub fn iter_keys(&self) -> Vec<i32> {
-        self.inner.iter().map(|(k, _)| *k).collect()
+        self.inner.iter().map(|(key, _)| *key).collect()
     }
 
     pub fn items(&self) -> Array {
@@ -76,7 +76,7 @@ impl WasmBPlusTree {
             self.inner
                 .full_scan()
                 .into_iter()
-                .map(|(&k, v)| (k, v.clone())),
+                .map(|(key, value)| (*key, value.clone())),
         )
     }
 
@@ -109,7 +109,12 @@ impl WasmBPlusTree {
 
     #[wasm_bindgen(js_name = "toString")]
     pub fn to_string_value(&self) -> String {
-        format!("BPlusTree {{ len: {}, height: {} }}", self.inner.len(), self.inner.height())
+        format!(
+            "BPlusTree(len={}, height={}, valid={})",
+            self.inner.len(),
+            self.inner.height(),
+            self.inner.is_valid()
+        )
     }
 }
 
@@ -144,6 +149,6 @@ mod tests {
         assert_eq!(tree.inner.range_scan(&10, &30).len(), 3);
         assert_eq!(tree.inner.full_scan().len(), 3);
         assert_eq!(tree.iter_keys(), vec![10, 20, 30]);
-        assert_eq!(tree.inner.full_scan().len(), 3);
+        assert_eq!(tree.inner.iter().count(), 3);
     }
 }

@@ -1,0 +1,5 @@
+[package]
+name = "coding_adventures_blake2b"
+version = "0.1.0"
+edition = "2021"
+description = "BLAKE2b cryptographic hash function (RFC 7693) from scratch, no external deps"

@@ -1,0 +1,6 @@
+# Runtime dependencies
+
+# Test dependencies
+on 'test' => sub {
+    requires 'Test2::V0';
+};

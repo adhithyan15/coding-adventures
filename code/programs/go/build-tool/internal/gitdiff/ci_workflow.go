@@ -51,6 +51,14 @@ var ciWorkflowToolchainMarkers = map[string][]string{
 	"perl": {
 		"needs_perl", "cpanm", "perl --version", "install cpanm",
 	},
+	"swift": {
+		"needs_swift", "swift.toolchain", "winget install --id swift.toolchain",
+		"swift --version", "swift -version", "set up swift", "swift.exe", "sdkroot",
+		"-language swift", "swift packages",
+	},
+	"dart": {
+		"needs_dart", "setup-dart", "dart --version", "set up dart",
+	},
 	"haskell": {
 		"needs_haskell", "haskell-actions/setup", "ghc-version", "cabal-version",
 		"ghc --version", "cabal --version", "set up haskell",
@@ -74,15 +82,10 @@ var ciWorkflowToolchainMarkers = map[string][]string{
 }
 
 var ciWorkflowUnsafeMarkers = []string{
-	"./build-tool",
-	"build-tool.exe",
 	"-detect-languages",
 	"-emit-plan",
 	"-force",
-	"-plan-file",
-	"-validate-build-files",
 	"actions/checkout",
-	"build-plan",
 	"cancel-in-progress:",
 	"concurrency:",
 	"diff-base",
@@ -230,23 +233,50 @@ func lineTouchesSharedCIBehavior(content string) bool {
 }
 
 func isToolchainScopedStructuralLine(content string) bool {
+	normalized := strings.ToLower(strings.TrimSpace(content))
 	switch {
-	case strings.HasPrefix(content, "if:"),
-		strings.HasPrefix(content, "run:"),
-		strings.HasPrefix(content, "shell:"),
-		strings.HasPrefix(content, "with:"),
-		strings.HasPrefix(content, "env:"),
-		strings.HasPrefix(content, "{"),
-		strings.HasPrefix(content, "}"),
-		strings.HasPrefix(content, "else"),
-		strings.HasPrefix(content, "fi"),
-		strings.HasPrefix(content, "then"),
-		strings.HasPrefix(content, "printf "),
-		strings.HasPrefix(content, "echo "),
-		strings.HasPrefix(content, "curl "),
-		strings.HasPrefix(content, "powershell "),
-		strings.HasPrefix(content, "call "),
-		strings.HasPrefix(content, "cd "):
+	case strings.HasPrefix(normalized, "if:"),
+		strings.HasPrefix(normalized, "if ("),
+		strings.HasPrefix(normalized, "if("),
+		strings.HasPrefix(normalized, "run:"),
+		strings.HasPrefix(normalized, "shell:"),
+		strings.HasPrefix(normalized, "with:"),
+		strings.HasPrefix(normalized, "env:"),
+		strings.HasPrefix(normalized, "$"),
+		strings.HasPrefix(normalized, "tmpdir=\"$(mktemp "),
+		strings.HasPrefix(normalized, "("),
+		strings.HasPrefix(normalized, ")"),
+		strings.HasPrefix(normalized, "["),
+		strings.HasPrefix(normalized, "{"),
+		strings.HasPrefix(normalized, "}"),
+		strings.HasPrefix(normalized, "else"),
+		strings.HasPrefix(normalized, "fi"),
+		strings.HasPrefix(normalized, "then"),
+		strings.HasPrefix(normalized, "printf "),
+		strings.HasPrefix(normalized, "echo "),
+		strings.HasPrefix(normalized, "curl "),
+		strings.HasPrefix(normalized, "sed -i.bak "),
+		normalized == "rm -rf \"$tmpdir\"",
+		strings.HasPrefix(normalized, "powershell "),
+		strings.HasPrefix(normalized, "winget "),
+		strings.HasPrefix(normalized, "foreach "),
+		strings.HasPrefix(normalized, "where-object "),
+		strings.HasPrefix(normalized, "sort-object "),
+		strings.HasPrefix(normalized, "select-object "),
+		strings.HasPrefix(normalized, "split-path "),
+		strings.HasPrefix(normalized, "get-command "),
+		strings.HasPrefix(normalized, "join-path "),
+		strings.HasPrefix(normalized, "test-path "),
+		strings.HasPrefix(normalized, "write-host "),
+		strings.HasPrefix(normalized, "write-warning "),
+		strings.HasPrefix(normalized, "write-output "),
+		strings.HasPrefix(normalized, "where.exe "),
+		strings.HasPrefix(normalized, "out-file "),
+		strings.HasPrefix(normalized, "set-content "),
+		strings.HasPrefix(normalized, "get-childitem "),
+		strings.HasPrefix(normalized, "& "),
+		strings.HasPrefix(normalized, "call "),
+		strings.HasPrefix(normalized, "cd "):
 		return true
 	default:
 		return false

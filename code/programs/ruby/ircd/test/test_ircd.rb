@@ -228,30 +228,39 @@ class TestIntegration < Minitest::Test
   end
 
   # Read available data from a TCPSocket within a timeout window.
-  # Spawns a thread to do blocking recv, joins with timeout.
+  #
+  # Uses IO.select (single-threaded) rather than spawning per-read threads.
+  # The multi-thread approach caused a race: when t.join timed out and we
+  # killed the thread, the killed thread's pending recv() could still consume
+  # bytes from the OS buffer (data loss), leaving the next recv with nothing.
+  #
+  # With IO.select we never have two concurrent readers on the same socket.
+  # The loop strategy:
+  #   - Wait up to 0.4 s (or remaining time) for data to arrive.
+  #   - If data arrives, append and keep looping.
+  #   - If the 0.4 s window expires and we already have data, declare done
+  #     (the server burst is over).
+  #   - If the window expires with no data at all, keep waiting until the
+  #     outer deadline so we don't give up on a slow server start.
+  #   - Hard-exit once buf exceeds 2048 bytes (well above any IRC welcome
+  #     sequence: 001–004 + 251 + 375 + one MOTD line + 376 ≈ 600–800 bytes).
   def read_with_timeout(sock, timeout: 2.0, max_bytes: 8192)
     buf = +""  # mutable string
     deadline = Time.now + timeout
     loop do
       remaining = deadline - Time.now
       break if remaining <= 0
-      t = Thread.new do
-        begin
-          sock.recv(max_bytes)
-        rescue StandardError
-          nil
-        end
+
+      ready = IO.select([sock], nil, nil, [remaining, 0.4].min)
+      unless ready
+        # Window expired with no new data.
+        break if buf.length > 0  # We have a full burst; we're done.
+        next                      # Still waiting for the first byte.
       end
-      chunk = t.join([remaining, 0.4].min)&.value
-      if chunk.nil? || (chunk.is_a?(String) && chunk.empty?)
-        sleep(0.05)
-        t.kill rescue nil
-        next
-      end
-      buf << chunk.to_s
-      # Got data — try a quick extra read then stop.
-      # Threshold must be large enough to hold the full IRC welcome sequence
-      # (001–004 + 251 + 375 + 372 lines + 376 = ~600–800 bytes).
+
+      chunk = sock.recv(max_bytes)
+      break if chunk.nil? || chunk.empty?  # peer closed
+      buf << chunk
       break if buf.length >= 2048
     end
     buf

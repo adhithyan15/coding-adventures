@@ -1,0 +1,5 @@
+{
+  "required_capabilities": [
+    "python-3.12"
+  ]
+}

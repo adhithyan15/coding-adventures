@@ -1,0 +1,37 @@
+# @version 1
+#
+# Mermaid flowchart token grammar for the first native diagram pipeline slice.
+#
+# This subset is intentionally focused on the constructs that map directly into
+# the shared graph diagram IR today:
+# - `flowchart` / `graph` headers
+# - common layout directions (`TB`, `TD`, `BT`, `LR`, `RL`)
+# - node ids with inline shapes
+# - directed (`-->`) and undirected (`---`) edges
+# - optional edge labels (`|yes|`)
+# - newline / semicolon statement separators
+
+skip:
+  WHITESPACE      = /[ \t]+/
+  COMMENT         = /%%[^\r\n]*/
+
+NEWLINE           = /\r?\n/
+SEMICOLON         = ";"
+ARROW             = "-->"
+LINE              = "---"
+EDGE_LABEL        = /\|[^|\r\n]+\|/
+
+# Shape tokens keep the delimiters intact so the semantic layer can map
+# Mermaid syntax to the shared `DiagramShape` enum.
+CIRCLE            = /\(\([^()\r\n]+\)\)/
+ROUND             = /\([^()\r\n]+\)/
+RECT              = /\[[^\[\]\r\n]+\]/
+DIAMOND           = /\{[^{}\r\n]+\}/
+
+# Header direction. `TD` is Mermaid's alias for top-to-bottom.
+DIRECTION         = /TB|TD|BT|LR|RL/
+NAME              = /[A-Za-z_][A-Za-z0-9_]*/
+
+keywords:
+  flowchart
+  graph

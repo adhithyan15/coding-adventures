@@ -1,0 +1,32 @@
+# Cargo.toml — conduit_native_node
+#
+# N-API cdylib that bridges TypeScript/Node.js and the Rust web-core engine.
+# Loaded by Node.js via require('./conduit_native_node.node').
+#
+# No napi-rs, no bindgen, no napi-sys — just node-bridge's extern "C" declarations
+# resolved at dlopen() time when Node.js loads the .node file.
+
+[workspace]
+
+[package]
+name = "conduit_native_node"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[lib]
+# cdylib produces the .so/.dylib/.dll that Node.js loads as a native addon.
+# The entry point must be named napi_register_module_v1 (see lib.rs).
+crate-type = ["cdylib"]
+
+[dependencies]
+embeddable-http-server = { path = "../../../../rust/embeddable-http-server" }
+http-core             = { path = "../../../../rust/http-core" }
+node-bridge           = { path = "../../../../rust/node-bridge" }
+tcp-runtime           = { path = "../../../../rust/tcp-runtime" }
+transport-platform    = { path = "../../../../rust/transport-platform" }
+web-core              = { path = "../../../../rust/web-core" }
+
+[build-dependencies]
+# None — linker flags are inherited from node-bridge's build.rs pattern.
+# We use our own build.rs (see below).

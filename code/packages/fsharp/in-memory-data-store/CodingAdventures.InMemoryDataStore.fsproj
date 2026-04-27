@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <PackageId>CodingAdventures.InMemoryDataStore.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>Pure F# Mini-Redis RESP facade</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="InMemoryDataStore.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../in-memory-data-store-engine/CodingAdventures.InMemoryDataStoreEngine.fsproj" />
+    <ProjectReference Include="../in-memory-data-store-protocol/CodingAdventures.InMemoryDataStoreProtocol.fsproj" />
+    <ProjectReference Include="../resp-protocol/CodingAdventures.RespProtocol.fsproj" />
+  </ItemGroup>
+</Project>

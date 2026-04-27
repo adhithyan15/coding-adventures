@@ -65,17 +65,18 @@ defmodule CodingAdventures.WasmRuntime.WasiTier3Test do
   This avoids overlap between different regions of memory in the tests.
   """
 
-  alias CodingAdventures.WasmRuntime.{WasiStub, WasiConfig}
+  alias CodingAdventures.WasmRuntime.{WasiHost, WasiStub, WasiConfig}
   alias CodingAdventures.WasmExecution.{LinearMemory, Values}
 
   # Create a 1-page (64 KiB) linear memory, zero-initialized.
   defp fresh_memory(), do: LinearMemory.new(1)
 
   # Build host functions with a config that uses fake clock + random.
-  defp test_config(args \\ [], env \\ %{}) do
+  defp test_config(args \\ [], env \\ %{}, stdin \\ nil) do
     %WasiConfig{
       args: args,
       env: env,
+      stdin: stdin,
       clock: FakeClock,
       random: FakeRandom
     }
@@ -84,6 +85,11 @@ defmodule CodingAdventures.WasmRuntime.WasiTier3Test do
   # ===========================================================================
   # 1. args_sizes_get
   # ===========================================================================
+
+  test "WasiHost delegates to WasiStub" do
+    config = test_config(["myapp"], %{})
+    assert WasiHost.host_functions(config) == WasiStub.host_functions(config)
+  end
 
   test "args_sizes_get with [\"myapp\", \"hello\"] writes argc=2 and buf_size=12" do
     # "myapp\0" = 6 bytes, "hello\0" = 6 bytes, total = 12
@@ -145,6 +151,53 @@ defmodule CodingAdventures.WasmRuntime.WasiTier3Test do
     # Read "hello\0" from buf_ptr + 6
     hello_bytes = for i <- 0..5, do: LinearMemory.load_i32_8u(mem2, 106 + i)
     assert hello_bytes == [?h, ?e, ?l, ?l, ?o, 0], "Expected 'hello\\0' in buf"
+  end
+
+  test "fd_write writes stdout text and nwritten" do
+    parent = self()
+
+    config =
+      %WasiConfig{
+        stdout: fn text -> send(parent, {:stdout, text}) end,
+        clock: FakeClock,
+        random: FakeRandom
+      }
+
+    host_fns = WasiStub.host_functions(config)
+    memory = fresh_memory()
+
+    memory =
+      memory
+      |> LinearMemory.store_i32(0, 100)
+      |> LinearMemory.store_i32(4, 2)
+      |> LinearMemory.store_i32_8(100, ?H)
+      |> LinearMemory.store_i32_8(101, ?i)
+
+    wasm_args = [Values.i32(1), Values.i32(0), Values.i32(1), Values.i32(8)]
+    {results, mem2} = WasiStub.call_with_memory(host_fns, "fd_write", wasm_args, memory)
+
+    assert results == [Values.i32(0)]
+    assert_receive {:stdout, "Hi"}
+    assert LinearMemory.load_i32(mem2, 8) == 2
+  end
+
+  test "fd_read reads bytes from stdin and writes nread" do
+    config = test_config([], %{}, "ok")
+    host_fns = WasiStub.host_functions(config)
+    memory = fresh_memory()
+
+    memory =
+      memory
+      |> LinearMemory.store_i32(0, 100)
+      |> LinearMemory.store_i32(4, 2)
+
+    wasm_args = [Values.i32(0), Values.i32(0), Values.i32(1), Values.i32(8)]
+    {results, mem2} = WasiStub.call_with_memory(host_fns, "fd_read", wasm_args, memory)
+
+    assert results == [Values.i32(0)]
+    assert LinearMemory.load_i32(mem2, 8) == 2
+    assert LinearMemory.load_i32_8u(mem2, 100) == ?o
+    assert LinearMemory.load_i32_8u(mem2, 101) == ?k
   end
 
   # ===========================================================================
@@ -229,6 +282,7 @@ defmodule CodingAdventures.WasmRuntime.WasiTier3Test do
     assert results == [Values.i32(0)], "Expected success"
 
     ns = LinearMemory.load_i64(mem2, time_ptr)
+
     assert ns == 1_700_000_000_000_000_001,
            "Expected FakeClock.realtime_ns() = 1_700_000_000_000_000_001, got #{ns}"
   end
@@ -249,6 +303,7 @@ defmodule CodingAdventures.WasmRuntime.WasiTier3Test do
     assert results == [Values.i32(0)]
 
     ns = LinearMemory.load_i64(mem2, time_ptr)
+
     assert ns == 42_000_000_000,
            "Expected FakeClock.monotonic_ns() = 42_000_000_000, got #{ns}"
   end
@@ -290,6 +345,7 @@ defmodule CodingAdventures.WasmRuntime.WasiTier3Test do
     assert results == [Values.i32(0)]
 
     bytes = for i <- 0..3, do: LinearMemory.load_i32_8u(mem2, buf_ptr + i)
+
     assert bytes == [0xAB, 0xAB, 0xAB, 0xAB],
            "Expected 4 bytes of 0xAB from FakeRandom, got #{inspect(bytes)}"
   end

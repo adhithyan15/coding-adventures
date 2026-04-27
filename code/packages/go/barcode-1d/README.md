@@ -4,6 +4,10 @@ High-level Go pipeline for 1D barcodes.
 
 Pipeline:
 
-`symbology package -> barcode-layout-1d -> PaintScene -> paint-vm-raster -> paint-codec-png`
+`symbology package -> barcode-layout-1d -> PaintScene -> backend-specific Paint VM -> PixelContainer -> PNG`
 
-Go currently uses a pure Go raster backend so the language can render end to end without violating the repo's Go capability restrictions around native FFI.
+Backend selection:
+
+- macOS arm64: `paint-vm-metal-native` + `paint-codec-png-native`
+- Windows: `paint-vm-gdi-direct` + `paint-codec-png`
+- other hosts: `paint-vm-raster` + `paint-codec-png`

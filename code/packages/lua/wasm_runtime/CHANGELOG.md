@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- bootstrap `coding-adventures-wasm-execution` in `BUILD_windows` before the
+  self-install step so Windows clean builds still succeed when
+  `luarocks make --deps-mode=none` disables dependency resolution
+
 ## [0.2.0] - 2026-04-06
 
 ### Added

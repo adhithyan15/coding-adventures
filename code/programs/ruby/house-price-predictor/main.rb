@@ -1,74 +1,104 @@
 # Multi-Variable Linear Regression: House Price Predictor
 # -------------------------------------------------------
-# Harnessing native Ruby Module boundaries structurally parsing pure Object Orientated Logic
-# using deeply literate programming variables reflecting exact physical representations natively!
+# Demonstrates n input features -> one output with feature normalization and a
+# short learning-rate sweep before the full training run.
 
+require_relative '../../../packages/ruby/feature_normalization/lib/coding_adventures_feature_normalization'
 require_relative '../../../packages/ruby/loss-functions/lib/loss_functions'
 require_relative '../../../packages/ruby/matrix/lib/matrix_ml'
 
-puts "\n--- Booting Multi-Variable Predictor: House Prices ---\n"
+HOUSE_FEATURES_DATA = [
+  [2000.0, 3.0],
+  [1500.0, 2.0],
+  [2500.0, 4.0],
+  [1000.0, 1.0]
+].freeze
 
-# 1. Initiating Native Object Topologies
-house_features = Matrix.new([
-  [2.0, 3.0],
-  [1.5, 2.0],
-  [2.5, 4.0],
-  [1.0, 1.0]
-])
-
-true_prices = Matrix.new([
+TRUE_PRICES_DATA = [
   [400.0],
   [300.0],
   [500.0],
   [200.0]
-])
+].freeze
 
-feature_weights = Matrix.new([[0.5], [0.5]])
-base_price_bias = 0.5
-learning_rate = 0.01
+def run_training(features_data, prices_data, learning_rate, epochs, log_every: nil)
+  house_features = Matrix.new(features_data)
+  true_prices = Matrix.new(prices_data)
+  feature_weights = Matrix.new([[0.5], [0.5]])
+  base_price_bias = 0.0
+  last_loss = Float::INFINITY
 
-puts "Beginning Training Epochs..."
-1501.times do |epoch|
-  # --- FORWARD CALCULUS ---
-  final_predictions = house_features.dot(feature_weights) + base_price_bias
+  (0..epochs).each do |epoch|
+    final_predictions = house_features.dot(feature_weights) + base_price_bias
+    linear_true_prices = true_prices.data.map { |row| row[0] }
+    linear_predictions = final_predictions.data.map { |row| row[0] }
+    last_loss = LossFunctions.mse(linear_true_prices, linear_predictions)
 
-  # MSE Loss Native Evaluation Array Bound Mapping
-  linear_true_prices = true_prices.data.map { |r| r[0] }
-  linear_predictions = final_predictions.data.map { |r| r[0] }
-  mean_squared_error = LossFunctions.mse(linear_true_prices, linear_predictions)
+    if !last_loss.finite? || last_loss > 1.0e12
+      return {
+        learning_rate: learning_rate,
+        loss: Float::INFINITY,
+        diverged: true,
+        weights: feature_weights,
+        bias: base_price_bias
+      }
+    end
 
-  # --- BACKPROPAGATION (CALCULATING GRADIENTS) ---
-  # How do we figure out exactly how much the SqFt Weight vs Bedroom Weight was responsible for the error?
-  # 1. We take our original (N BY 2) Data Grid and physically flip it on its side to become (2 BY N). 
-  #    - Row 1 now contains only SqFt values. Row 2 contains only Bedroom values.
-  # 2. We Dot Product this (2 BY N) grid against our (N BY 1) Error Vector!
-  #    - This multiplies every single SqFt value by its respective Error, collapsing into a (2 BY 1) Gradient Vector.
-  prediction_errors = final_predictions - true_prices
-  transposed_features = house_features.transpose
-  features_dot_errors = transposed_features.dot(prediction_errors)
-  
-  # We multiply by (2 / N) because of the Mean Squared Error derivative scaling.
-  weight_gradients = features_dot_errors * (2.0 / true_prices.rows)
+    if log_every && (epoch % log_every).zero?
+      puts 'Epoch %4d | Loss: %10.4f | Weights [SqFt: %7.3f, Beds: %7.3f] | Bias: %7.3f' %
+           [epoch, last_loss, feature_weights.data[0][0], feature_weights.data[1][0], base_price_bias]
+    end
 
-  # For the Bias, because it shifts the prediction unconditionally for every house,
-  # its "share" of the blame is simply the average of all the mistakes combined!
-  bias_gradient_total = 0.0
-  prediction_errors.rows.times do |i|
-    bias_gradient_total += prediction_errors.data[i][0]
+    prediction_errors = final_predictions - true_prices
+    weight_gradients = house_features.transpose.dot(prediction_errors) * (2.0 / true_prices.rows)
+
+    bias_gradient_total = prediction_errors.data.sum { |row| row[0] }
+    bias_gradient = bias_gradient_total * (2.0 / true_prices.rows)
+
+    feature_weights = feature_weights - (weight_gradients * learning_rate)
+    base_price_bias -= bias_gradient * learning_rate
   end
-  bias_gradient = bias_gradient_total * (2.0 / true_prices.rows)
 
-  # --- OPTIMIZATION STEP ---
-  # Finally, we take our original Weights and Bias and nudge them against the slope.
-  # We multiply by our Learning Rate (0.01) which acts as a safety brake so we don't explode to infinity.
-  feature_weights = feature_weights - (weight_gradients * learning_rate)
-  base_price_bias = base_price_bias - (bias_gradient * learning_rate)
-
-  if epoch % 150 == 0
-    puts "Epoch %4d | Global Loss: %9.4f | Weights [SqFt: %6.2f, Bed: %6.2f] | Bias: %6.2f" % [epoch, mean_squared_error, feature_weights.data[0][0], feature_weights.data[1][0], base_price_bias]
-  end
+  {
+    learning_rate: learning_rate,
+    loss: last_loss,
+    diverged: false,
+    weights: feature_weights,
+    bias: base_price_bias
+  }
 end
 
+def find_learning_rate(features_data, prices_data)
+  candidates = [0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 0.6]
+  results = candidates.map { |learning_rate| run_training(features_data, prices_data, learning_rate, 120) }
+
+  puts "\nShort learning-rate sweep over normalized features:"
+  results.each do |result|
+    loss_text = result[:diverged] ? 'diverged' : format('%.4f', result[:loss])
+    puts "  lr=#{result[:learning_rate].to_s.ljust(6)} -> loss=#{loss_text}"
+  end
+
+  results.reject { |result| result[:diverged] }.min_by { |result| result[:loss] }
+end
+
+puts "\n--- Booting Multi-Variable Predictor: House Prices ---"
+puts 'Features: square footage and bedroom count. Target: price in $1000s.'
+
+scaler = CodingAdventures::FeatureNormalization.fit_standard_scaler(HOUSE_FEATURES_DATA)
+normalized_features = CodingAdventures::FeatureNormalization.transform_standard(HOUSE_FEATURES_DATA, scaler)
+best_trial = find_learning_rate(normalized_features, TRUE_PRICES_DATA)
+
+puts "\nSelected learning rate: #{best_trial[:learning_rate]}"
+puts 'Beginning full training run...'
+final_result = run_training(
+  normalized_features,
+  TRUE_PRICES_DATA,
+  best_trial[:learning_rate],
+  1500,
+  log_every: 150
+)
+
 puts "\nFinal Optimal Mapping Achieved!"
-prediction = (house_features.dot(feature_weights) + base_price_bias).data[0][0]
-puts "Prediction for House 1 (Target $400k): $%.2fk" % prediction
+normalized_test_house = CodingAdventures::FeatureNormalization.transform_standard([[2000.0, 3.0]], scaler)
+prediction = (Matrix.new(normalized_test_house).dot(final_result[:weights]) + final_result[:bias]).data[0][0]
+puts 'Prediction for House 1 (Target $400k): $%.2fk' % prediction

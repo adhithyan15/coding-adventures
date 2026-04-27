@@ -1,0 +1,9 @@
+[package]
+name = "generic-job-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "Generic bounded job executors for language-neutral job protocol workers"
+
+[dependencies]
+generic-job-protocol = { path = "../generic-job-protocol" }
+serde = { version = "1", features = ["derive"] }

@@ -1,0 +1,9 @@
+[package]
+name = "ir-to-wasm-validator"
+version = "0.1.0"
+edition = "2021"
+description = "Validate that compiler IR can be lowered to WebAssembly"
+
+[dependencies]
+compiler-ir = { path = "../compiler-ir" }
+ir-to-wasm-compiler = { path = "../ir-to-wasm-compiler" }

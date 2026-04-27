@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "ruby/conduit",
+  "capabilities": [
+    {
+      "category": "network",
+      "action": "listen",
+      "target": "127.0.0.1:*",
+      "justification": "Conduit starts a local HTTP listener backed by the Rust TCP and HTTP runtime."
+    }
+  ],
+  "justification": "The Conduit gem embeds the Rust HTTP runtime so Ruby apps can serve local HTTP traffic."
+}

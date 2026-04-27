@@ -1,0 +1,8 @@
+[package]
+name = "kqueue"
+version = "0.1.0"
+edition = "2021"
+description = "Thin Rust wrapper over BSD/macOS kqueue for readiness-based event polling"
+license = "MIT"
+
+[dependencies]

@@ -1,0 +1,45 @@
+# Parser grammar for Haskell haskell1.2
+# @version 1
+#
+# Minimal versioned grammar used to validate that layout-aware token streams
+# can be parsed through the Ruby grammar parser stack.
+
+# ============================================================================
+# Top-Level Grammar
+# ============================================================================
+file = { declaration [ layout_sep ] };
+declaration = module_decl | let_decl | do_decl | expr_decl;
+
+# ============================================================================
+# Block Delimiters
+# ============================================================================
+# Virtual layout tokens are emitted as VIRTUAL_* in layout mode. Allow both
+# explicit braces and implicit layout braces in the same grammar.
+layout_open = VIRTUAL_LBRACE | LBRACE | "{";
+layout_close = VIRTUAL_RBRACE | RBRACE | "}";
+layout_sep = VIRTUAL_SEMICOLON | SEMICOLON | NEWLINE;
+
+module_decl = "module" module_name "where" layout_open module_body layout_close;
+module_name = NAME { DOT NAME };
+module_body = { declaration [ layout_sep ] };
+
+let_decl = "let" layout_open let_bindings layout_close "in" expr_decl;
+let_bindings = { binding [ layout_sep ] };
+binding = NAME EQUALS expr_decl;
+
+do_decl = "do" layout_open { expr_decl [ layout_sep ] } layout_close;
+
+expr_decl = lambda_expr | app_expr | NAME | INTEGER | FLOAT | STRING | CHARACTER;
+
+lambda_expr = LAMBDA { NAME } RARROW expr_decl;
+app_expr = atom_expr { atom_expr };
+atom_expr = NAME
+          | INTEGER
+          | FLOAT
+          | STRING
+          | CHARACTER
+          | LPAREN expr_decl RPAREN
+          | LPAREN expr_list RPAREN
+          | LBRACKET [ expr_list ] RBRACKET;
+
+expr_list = expr_decl { COMMA expr_decl };

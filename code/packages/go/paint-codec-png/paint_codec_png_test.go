@@ -32,3 +32,25 @@ func TestEncodeAndDecodePNG(t *testing.T) {
 		t.Fatalf("unexpected decoded pixel: %d %d %d %d", r, g, b, a)
 	}
 }
+
+func TestEncodeAndDecodeAliases(t *testing.T) {
+	img := pixelcontainer.New(1, 1)
+	pixelcontainer.SetPixel(img, 0, 0, 0x11, 0x22, 0x33, 0x44)
+
+	encoded, err := Encode(img)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.HasPrefix(encoded, []byte{0x89, 'P', 'N', 'G'}) {
+		t.Fatalf("expected PNG signature, got %v", encoded[:4])
+	}
+
+	decoded, err := Decode(encoded)
+	if err != nil {
+		t.Fatal(err)
+	}
+	r, g, b, a := pixelcontainer.PixelAt(decoded, 0, 0)
+	if r != 0x11 || g != 0x22 || b != 0x33 || a != 0x44 {
+		t.Fatalf("unexpected decoded pixel: %d %d %d %d", r, g, b, a)
+	}
+}

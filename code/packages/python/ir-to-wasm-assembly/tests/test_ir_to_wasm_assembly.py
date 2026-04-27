@@ -82,7 +82,7 @@ def test_emit_imported_wasi_function_assembly_and_run_it() -> None:
     program.add_instruction(
         IrInstruction(IrOp.LOAD_IMM, [IrRegister(4), IrImmediate(66)], id=gen.next())
     )
-    program.add_instruction(IrInstruction(IrOp.SYSCALL, [IrImmediate(1)], id=gen.next()))
+    program.add_instruction(IrInstruction(IrOp.SYSCALL, [IrImmediate(1), IrRegister(4)], id=gen.next()))
     program.add_instruction(IrInstruction(IrOp.HALT, [], id=gen.next()))
 
     assembly = emit_wasm_assembly(

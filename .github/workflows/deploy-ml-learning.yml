@@ -1,0 +1,63 @@
+name: Deploy ML Learning Visualizer
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "code/programs/typescript/ml-learning-visualizer/**"
+      - "code/packages/typescript/directed-graph/**"
+      - "code/packages/typescript/state-machine/**"
+      - "code/packages/typescript/grammar-tools/**"
+      - "code/packages/typescript/lexer/**"
+      - "code/packages/typescript/parser/**"
+      - "code/packages/typescript/lattice-lexer/**"
+      - "code/packages/typescript/lattice-parser/**"
+      - "code/packages/typescript/lattice-ast-to-css/**"
+      - "code/packages/typescript/lattice-transpiler/**"
+      - ".github/workflows/deploy-ml-learning.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install renderer dependencies
+        run: |
+          cd code/packages/typescript/directed-graph && npm install
+          cd ../state-machine && npm install
+          cd ../grammar-tools && npm install
+          cd ../lexer && npm install
+          cd ../parser && npm install
+          cd ../lattice-lexer && npm install
+          cd ../lattice-parser && npm install
+          cd ../lattice-ast-to-css && npm install
+          cd ../lattice-transpiler && npm install
+
+      - name: Install app dependencies
+        run: |
+          cd code/programs/typescript/ml-learning-visualizer
+          npm install
+
+      - name: Build
+        run: |
+          cd code/programs/typescript/ml-learning-visualizer
+          npm run build
+
+      - name: Deploy to GitHub Pages (ml-learning/ subdirectory)
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: code/programs/typescript/ml-learning-visualizer/dist
+          destination_dir: ml-learning
+          keep_files: true

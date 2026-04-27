@@ -2,70 +2,120 @@
 
 ## Snapshot
 
-- Haskell package count: `17`
-- Rust package count: `283`
-- Shared package names today: `arithmetic`, `block-ram`, `clock`, `compiler-source-map`, `content-addressable-storage`, `directed-graph`, `fpga`, `grammar-tools`, `graph`, `json-rpc`, `lexer`, `logic-gates`, `parser`, `state-machine`
-- Haskell-only package names today: `discrete-waveform`, `electronics`, `power-supply`
+- Haskell package count: `108`
+- Rust package count: `287`
+- Shared package names today: `101`
+- Haskell-only package names today: `discrete-waveform`, `ecmascript-es1-lexer`, `ecmascript-es3-lexer`, `ecmascript-es5-lexer`, `electronics`, `power-supply`, `wasm-assembler`
 
-The largest gap is not in one vertical. Rust already has broad coverage across:
+The largest remaining gap is no longer generic data structures. Rust still has
+broader coverage across:
 
 - tooling and repository automation
-- parsers and lexers
-- data structures and storage
+- compiler IR and optimizer layers
+- crypto and compression
 - graphics/rendering
-- crypto/compression
 - simulators and execution runtimes
 
-Haskell is currently concentrated around digital logic and electronics.
+Haskell now has broad generic data-structure coverage plus meaningful compiler,
+parser, and runtime foundations.
+
+## Generic Data Structures Status
+
+This pass closes the generic data-structure gap in practice. Newly added
+Haskell packages:
+
+- `avl-tree`
+- `b-plus-tree`
+- `b-tree`
+- `binary-search-tree`
+- `binary-tree`
+- `bitset`
+- `bloom-filter`
+- `fenwick-tree`
+- `immutable-list`
+- `lsm-tree`
+- `red-black-tree`
+- `rope`
+- `segment-tree`
+- `suffix-tree`
+- `tree`
+- `tree-set`
+- `treap`
+- `trie`
+
+Remaining Rust-only structure-shaped packages are down to:
+
+- `bitset-c`, which is a C-specific variant rather than a separate Haskell need
+- `huffman-tree`, which fits better in the compression lane than the generic
+  data-structure lane
 
 ## Tooling Status
 
-- `code/programs/haskell/build-tool` existed as a stub before this pass and now has a real implementation shape.
-- `code/programs/haskell/scaffold-generator` did not exist before this pass and now exists as a Haskell-native scaffold generator package.
-- Rust still has a wider tooling surface overall, especially around generator breadth and richer build metadata support.
+- `code/programs/haskell/build-tool` now has a real implementation and uses the
+  Haskell graph stack instead of carrying its own graph logic.
+- `code/programs/haskell/scaffold-generator` exists and is already useful for
+  adding new Haskell packages quickly.
+- The next tooling gap to close is operational support: `file-system`,
+  `cli-builder`, and a shared `core` layer that other packages can lean on.
 
 ## Recommended Backlog
 
-### Tier 1
+### Tier 1: Tooling and Compiler Foundation
 
-These unblock more Haskell package growth immediately:
+These unlock faster Haskell package growth and make the crypto batch easier to
+build cleanly:
 
 - `file-system`
 - `cli-builder`
+- `core`
+- `compiler-ir`
+- `ir-optimizer`
+- `json-value`
+- `json-serializer`
 
-### Tier 2
+### Tier 2: Crypto
 
-These make Haskell more competitive for language tooling and compiler work:
+These are the best next parity target after the tooling/core pass:
 
-- richer grammar-driven lexer and parser layers
-- source formatting and diagnostics helpers
+- `aes`
+- `sha1`
+- `sha256`
+- `sha512`
+- `x25519`
+- `ed25519`
+- `hkdf`
+- `hmac`
+- `chacha20-poly1305`
 
-### Tier 3
+### Tier 3: Compression
 
-These extend Haskell beyond the current hardware-focused cluster:
+These fit naturally after the crypto primitives:
 
-- `graph`
-- `hash-map`
-- `hash-set`
-- `b-tree`
-- `b-plus-tree`
-- `rope`
-- `trie`
-- `wave`
+- `brotli`
+- `deflate`
+- `huffman-tree`
 
 ## Proposed Strategy
 
-1. Stabilize the Haskell `build-tool` and `scaffold-generator` so new packages are cheap to add.
-2. Port the remaining Tier 1 packages next so Haskell can cover file IO and richer CLI ergonomics inside the repo tooling lane.
-3. Build out Tier 2 on top of `state-machine`, `lexer`, `parser`, `grammar-tools`, `compiler-source-map`, `json-rpc`, and `content-addressable-storage`, so generated Haskell packages can share the same parsing, transport, and compiler substrate Rust already has.
-4. Use the scaffold generator to create the missing packages with consistent `cabal`, `BUILD`, docs, and tests before filling in implementation details.
+1. Finish the tooling/core lane so new Haskell packages can share file IO,
+   CLI parsing, base types, and IR infrastructure instead of each package
+   re-inventing its own helpers.
+2. Use that foundation to add the crypto packages as a coherent batch, with
+   shared byte handling and serialization support.
+3. Follow immediately with the compression lane, which can reuse the new
+   crypto-friendly binary utilities and absorb `huffman-tree`.
+4. Only after those are in place should the focus shift to heavier rendering,
+   simulator, and runtime breadth.
 
 ## Near-Term Goal
 
 The practical definition of “Rust-level” for Haskell should be:
 
 - repo-native tooling exists in Haskell
-- core foundation packages exist in Haskell
-- new Haskell packages can be added with one command and built through the same repo workflow
+- core foundation and compiler substrate packages exist in Haskell
+- crypto and compression primitives exist in Haskell
+- new Haskell packages can be added with one command and built through the same
+  repo workflow
 
-That is the smallest milestone that turns Haskell from a niche island in the repo into a scalable lane.
+That is the smallest milestone that turns Haskell from a strong experimental
+lane into a broadly self-sufficient one.

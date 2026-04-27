@@ -42,19 +42,22 @@ defmodule CodingAdventures.WasmRuntime.SquareTest do
     #   0x01 0x7F = 1 param, i32
     #   0x01 0x7F = 1 result, i32
     type_entry = <<0x60, 0x01, 0x7F, 0x01, 0x7F>>
-    type_section_body = <<0x01>> <> type_entry  # count = 1
+    # count = 1
+    type_section_body = <<0x01>> <> type_entry
     type_section = <<0x01>> <> leb128_size(type_section_body) <> type_section_body
 
     # -- Function Section (ID=3) --
     # One function referencing type index 0
-    func_section_body = <<0x01, 0x00>>  # count = 1, type_idx = 0
+    # count = 1, type_idx = 0
+    func_section_body = <<0x01, 0x00>>
     func_section = <<0x03>> <> leb128_size(func_section_body) <> func_section_body
 
     # -- Export Section (ID=7) --
     # Export "square" as function index 0
     export_name = "square"
     export_entry = leb128_size(export_name) <> export_name <> <<0x00, 0x00>>
-    export_section_body = <<0x01>> <> export_entry  # count = 1
+    # count = 1
+    export_section_body = <<0x01>> <> export_entry
     export_section = <<0x07>> <> leb128_size(export_section_body) <> export_section_body
 
     # -- Code Section (ID=10) --
@@ -62,9 +65,11 @@ defmodule CodingAdventures.WasmRuntime.SquareTest do
     #   locals: 0 local declarations
     #   code: local.get 0, local.get 0, i32.mul, end
     func_code = <<0x20, 0x00, 0x20, 0x00, 0x6C, 0x0B>>
-    func_body = <<0x00>> <> func_code  # 0 local decl groups + code
+    # 0 local decl groups + code
+    func_body = <<0x00>> <> func_code
     func_body_with_size = leb128_size(func_body) <> func_body
-    code_section_body = <<0x01>> <> func_body_with_size  # count = 1
+    # count = 1
+    code_section_body = <<0x01>> <> func_body_with_size
     code_section = <<0x0A>> <> leb128_size(code_section_body) <> code_section_body
 
     header <> type_section <> func_section <> export_section <> code_section
@@ -94,7 +99,8 @@ defmodule CodingAdventures.WasmRuntime.SquareTest do
 
     assert length(results) == 1
     [result] = results
-    assert result.type == 0x7F  # i32
+    # i32
+    assert result.type == 0x7F
     assert result.value == 25
   end
 

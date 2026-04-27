@@ -1,0 +1,8 @@
+[package]
+name = "iocp"
+version = "0.1.0"
+edition = "2021"
+description = "Thin Rust wrapper over Windows I/O Completion Ports"
+license = "MIT"
+
+[dependencies]

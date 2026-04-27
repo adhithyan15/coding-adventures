@@ -19,9 +19,15 @@ class WasmIrValidator:
         self,
         program: IrProgram,
         function_signatures: list[FunctionSignature] | None = None,
+        *,
+        strategy: str = "structured",
     ) -> list[ValidationError]:
         try:
-            IrToWasmCompiler().compile(program, function_signatures)
+            IrToWasmCompiler().compile(
+                program,
+                function_signatures,
+                strategy=strategy,
+            )
         except WasmLoweringError as exc:
             return [ValidationError(rule="lowering", message=str(exc))]
         return []
@@ -30,8 +36,14 @@ class WasmIrValidator:
 def validate(
     program: IrProgram,
     function_signatures: list[FunctionSignature] | None = None,
+    *,
+    strategy: str = "structured",
 ) -> list[ValidationError]:
-    return WasmIrValidator().validate(program, function_signatures)
+    return WasmIrValidator().validate(
+        program,
+        function_signatures,
+        strategy=strategy,
+    )
 
 
 __all__ = [

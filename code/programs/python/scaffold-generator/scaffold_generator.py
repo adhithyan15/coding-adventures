@@ -1076,7 +1076,7 @@ def find_repo_root() -> str:
     """Walk up from cwd to find the git root."""
     d = os.getcwd()
     while True:
-        if os.path.isdir(os.path.join(d, ".git")):
+        if os.path.exists(os.path.join(d, ".git")):
             return d
         parent = os.path.dirname(d)
         if parent == d:

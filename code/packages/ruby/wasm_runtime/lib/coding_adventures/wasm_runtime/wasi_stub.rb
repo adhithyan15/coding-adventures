@@ -123,9 +123,10 @@ module CodingAdventures
       include WasmExecution::HostInterface
 
       # WASI errno values used in this file.
-      ENOSYS = 52  # Function not implemented
       ESUCCESS = 0   # No error
+      EBADF = 8    # Bad file descriptor
       EINVAL = 28  # Invalid argument (e.g. unknown clock id)
+      ENOSYS = 52  # Function not implemented
 
       # WASI clock IDs (from the WASI spec):
       #   0 = REALTIME   — wall clock
@@ -137,12 +138,13 @@ module CodingAdventures
       CLOCK_PROCESS_CPU = 2
       CLOCK_THREAD_CPU = 3
 
-      def initialize(args: [], env: {}, stdout: nil, stderr: nil,
+      def initialize(args: [], env: {}, stdin: nil, stdout: nil, stderr: nil,
         clock: SystemClock.new, random: SystemRandom.new,
         # Legacy keyword aliases kept for backward compatibility:
         stdout_callback: nil, stderr_callback: nil)
         @args = args
         @env = env
+        @stdin_callback = stdin || ->(_count) { "".b }
         # Prefer the new-style keyword; fall back to legacy if given.
         @stdout_callback = stdout || stdout_callback || ->(_text) {}
         @stderr_callback = stderr || stderr_callback || ->(_text) {}
@@ -163,6 +165,7 @@ module CodingAdventures
 
         case name
         when "fd_write" then make_fd_write
+        when "fd_read" then make_fd_read
         when "proc_exit" then make_proc_exit
         when "args_sizes_get" then make_args_sizes_get
         when "args_get" then make_args_get
@@ -248,6 +251,56 @@ module CodingAdventures
             end
 
             memory.store_i32(nwritten_ptr, total_written)
+            [WasmExecution.i32(ESUCCESS)]
+          }
+        )
+      end
+
+      # fd_read(fd, iovs_ptr, iovs_len, nread_ptr) → errno
+      #
+      # Reads bytes from stdin into the guest buffers described by the iovec
+      # array. Only fd 0 is supported.
+      def make_fd_read
+        stub = self
+        WasmExecution::HostFunction.new(
+          func_type: WasmTypes::FuncType.new(
+            [WasmTypes::VALUE_TYPE[:i32]] * 4,
+            [WasmTypes::VALUE_TYPE[:i32]]
+          ),
+          implementation: ->(args) {
+            fd = args[0].value
+            iovs_ptr = args[1].value
+            iovs_len = args[2].value
+            nread_ptr = args[3].value
+
+            return [WasmExecution.i32(ENOSYS)] unless stub.instance_variable_get(:@instance_memory)
+            return [WasmExecution.i32(EBADF)] unless fd == 0
+
+            memory = stub.instance_variable_get(:@instance_memory)
+            total_read = 0
+
+            iovs_len.times do |i|
+              buf_ptr = WasmExecution.to_u32(memory.load_i32(iovs_ptr + i * 8))
+              buf_len = WasmExecution.to_u32(memory.load_i32(iovs_ptr + i * 8 + 4))
+
+              raw_chunk = stub.instance_variable_get(:@stdin_callback).call(buf_len)
+              chunk =
+                case raw_chunk
+                when nil then +""
+                when String then raw_chunk.b
+                else raw_chunk.pack("C*")
+                end
+              chunk = chunk.byteslice(0, buf_len) || +""
+
+              chunk.bytes.each_with_index do |byte, offset|
+                memory.store_i32_8(buf_ptr + offset, byte)
+              end
+
+              total_read += chunk.bytesize
+              break if chunk.bytesize < buf_len
+            end
+
+            memory.store_i32(nread_ptr, total_read)
             [WasmExecution.i32(ESUCCESS)]
           }
         )
@@ -552,5 +605,7 @@ module CodingAdventures
         )
       end
     end
+
+    WasiHost = WasiStub
   end
 end

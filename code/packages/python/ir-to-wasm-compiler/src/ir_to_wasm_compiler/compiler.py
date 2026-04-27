@@ -4,10 +4,12 @@ from __future__ import annotations
 
 import math
 import re
+import struct
 from dataclasses import dataclass
 
 from compiler_ir import (
     IrDataDecl,
+    IrFloatImmediate,
     IrImmediate,
     IrInstruction,
     IrLabel,
@@ -22,8 +24,8 @@ from wasm_types import (
     DataSegment,
     Export,
     ExternalKind,
-    FuncType,
     FunctionBody,
+    FuncType,
     Import,
     Limits,
     MemoryType,
@@ -38,7 +40,6 @@ _FUNCTION_COMMENT_RE = re.compile(r"^function:\s*([A-Za-z_][A-Za-z0-9_]*)\((.*)\
 _SYSCALL_WRITE = 1
 _SYSCALL_READ = 2
 _SYSCALL_EXIT = 10
-_SYSCALL_ARG0 = 4
 
 _WASI_MODULE = "wasi_snapshot_preview1"
 _WASI_IOVEC_OFFSET = 0
@@ -53,6 +54,8 @@ _MEMORY_OPS = frozenset(
         IrOp.STORE_BYTE,
         IrOp.LOAD_WORD,
         IrOp.STORE_WORD,
+        IrOp.LOAD_F64,
+        IrOp.STORE_F64,
     }
 )
 
@@ -84,8 +87,164 @@ _OPCODE = {
         "i32.add",
         "i32.sub",
         "i32.and",
+        "i32.or",
+        "i32.xor",
+        "i32.mul",
+        "i32.div_s",
+        "f64.load",
+        "f64.store",
+        "f64.const",
+        "f64.eq",
+        "f64.ne",
+        "f64.lt",
+        "f64.gt",
+        "f64.le",
+        "f64.ge",
+        "f64.add",
+        "f64.sub",
+        "f64.mul",
+        "f64.div",
+        "f64.convert_i32_s",
+        "i32.trunc_f64_s",
+        "drop",
     )
 }
+
+
+# ---------------------------------------------------------------------------
+# WASM i32 range and supported opcode set
+# ---------------------------------------------------------------------------
+#
+# WASM uses 32-bit two's-complement integers (``i32``).
+# Signed range: -2 147 483 648 (−2^31) to 2 147 483 647 (2^31 − 1).
+
+_WASM_I32_MIN: int = -(1 << 31)   # -2 147 483 648
+_WASM_I32_MAX: int =  (1 << 31) - 1  # 2 147 483 647
+
+# The V1 WASM backend handles exactly these opcodes.
+_WASM_SUPPORTED_OPCODES: frozenset[IrOp] = frozenset({
+    IrOp.LABEL,
+    IrOp.COMMENT,
+    IrOp.NOP,
+    IrOp.HALT,
+    IrOp.JUMP,
+    IrOp.LOAD_IMM,
+    IrOp.LOAD_ADDR,
+    IrOp.LOAD_BYTE,
+    IrOp.LOAD_WORD,
+    IrOp.STORE_BYTE,
+    IrOp.STORE_WORD,
+    IrOp.ADD,
+    IrOp.ADD_IMM,
+    IrOp.SUB,
+    IrOp.AND,
+    IrOp.AND_IMM,
+    IrOp.OR,
+    IrOp.OR_IMM,
+    IrOp.XOR,
+    IrOp.XOR_IMM,
+    IrOp.NOT,
+    IrOp.LOAD_F64_IMM,
+    IrOp.LOAD_F64,
+    IrOp.STORE_F64,
+    IrOp.F64_ADD,
+    IrOp.F64_SUB,
+    IrOp.F64_MUL,
+    IrOp.F64_DIV,
+    IrOp.F64_CMP_EQ,
+    IrOp.F64_CMP_NE,
+    IrOp.F64_CMP_LT,
+    IrOp.F64_CMP_GT,
+    IrOp.F64_CMP_LE,
+    IrOp.F64_CMP_GE,
+    IrOp.F64_FROM_I32,
+    IrOp.I32_TRUNC_FROM_F64,
+    IrOp.MUL,
+    IrOp.DIV,
+    IrOp.CMP_EQ,
+    IrOp.CMP_NE,
+    IrOp.CMP_LT,
+    IrOp.CMP_GT,
+    IrOp.BRANCH_Z,
+    IrOp.BRANCH_NZ,
+    IrOp.CALL,
+    IrOp.RET,
+    IrOp.SYSCALL,
+})
+
+# WASM WASI syscalls supported by the V1 backend (must mirror _SYSCALL_* constants):
+#   SYSCALL 1  → _SYSCALL_WRITE / fd_write (print one byte to stdout)
+#   SYSCALL 2  → _SYSCALL_READ  / fd_read  (read one byte from stdin)
+#   SYSCALL 10 → _SYSCALL_EXIT  / proc_exit
+_WASM_SUPPORTED_SYSCALLS: frozenset[int] = frozenset({
+    _SYSCALL_WRITE,   # 1
+    _SYSCALL_READ,    # 2
+    _SYSCALL_EXIT,    # 10
+})
+
+
+def validate_for_wasm(program: IrProgram) -> list[str]:
+    """Inspect ``program`` for WASM backend incompatibilities without
+    generating any WASM bytes.
+
+    Checks performed:
+
+    1. **Opcode support** — every opcode must appear in
+       ``_WASM_SUPPORTED_OPCODES``.  Unknown opcodes are rejected before any
+       module bytes are produced.
+
+    2. **Constant range** — every ``IrImmediate`` in a ``LOAD_IMM`` or
+       ``ADD_IMM`` instruction must fit in a WASM 32-bit signed integer
+       (−2 147 483 648 to 2 147 483 647).  WASM's ``i32.const`` encodes
+       its operand as a 32-bit LEB128 value; constants outside this range
+       cannot be represented.
+
+    3. **SYSCALL number** — only the WASI syscall numbers in
+       ``_WASM_SUPPORTED_SYSCALLS`` (1=fd_write, 4=fd_read, 10=proc_exit)
+       are wired up in the V1 WASM backend.  Any other number is rejected.
+
+    Args:
+        program: The ``IrProgram`` to inspect.
+
+    Returns:
+        A list of human-readable error strings.  An empty list means the
+        program is compatible with the WASM V1 backend.
+    """
+    errors: list[str] = []
+
+    for instr in program.instructions:
+        op = instr.opcode
+
+        # ── Rule 1: opcode must be in the supported set ─────────────────────
+        if op not in _WASM_SUPPORTED_OPCODES:
+            errors.append(
+                f"unsupported opcode {op.name} in V1 WASM backend"
+            )
+            continue
+
+        # ── Rule 2: constant range on LOAD_IMM and ADD_IMM ──────────────────
+        if op in (IrOp.LOAD_IMM, IrOp.ADD_IMM):
+            for operand in instr.operands:
+                if isinstance(operand, IrImmediate):
+                    v = operand.value
+                    if not (_WASM_I32_MIN <= v <= _WASM_I32_MAX):
+                        errors.append(
+                            f"{op.name}: constant {v:,} overflows WASM i32 "
+                            f"(valid range {_WASM_I32_MIN:,} to {_WASM_I32_MAX:,})"
+                        )
+
+        # ── Rule 3: SYSCALL number ───────────────────────────────────────────
+        elif op == IrOp.SYSCALL:
+            for operand in instr.operands:
+                if isinstance(operand, IrImmediate) and operand.value not in _WASM_SUPPORTED_SYSCALLS:
+                    errors.append(
+                        f"unsupported SYSCALL {operand.value}: "
+                        f"only SYSCALL numbers {sorted(_WASM_SUPPORTED_SYSCALLS)} "
+                        f"are wired in the V1 WASM backend"
+                    )
+                    break
+
+    return errors
 
 
 class WasmLoweringError(Exception):
@@ -99,6 +258,30 @@ class FunctionSignature:
     label: str
     param_count: int
     export_name: str | None = None
+    require_explicit_args: bool = False
+    param_types: tuple[ValueType, ...] | None = None
+    result_types: tuple[ValueType, ...] = (ValueType.I32,)
+
+    def __post_init__(self) -> None:
+        if self.param_types is not None and len(self.param_types) != self.param_count:
+            raise ValueError(
+                f"FunctionSignature({self.label!r}) param_types length "
+                f"{len(self.param_types)} does not match param_count {self.param_count}"
+            )
+        if len(self.result_types) > 1:
+            raise ValueError(
+                f"FunctionSignature({self.label!r}) supports at most one result"
+            )
+
+    @property
+    def wasm_param_types(self) -> tuple[ValueType, ...]:
+        if self.param_types is not None:
+            return self.param_types
+        return (ValueType.I32,) * self.param_count
+
+    @property
+    def wasm_result_types(self) -> tuple[ValueType, ...]:
+        return self.result_types
 
 
 @dataclass(frozen=True)
@@ -107,6 +290,7 @@ class _FunctionIR:
     instructions: list[IrInstruction]
     signature: FunctionSignature
     max_reg: int
+    register_types: tuple[ValueType, ...]
 
 
 @dataclass(frozen=True)
@@ -133,7 +317,16 @@ class IrToWasmCompiler:
         self,
         program: IrProgram,
         function_signatures: list[FunctionSignature] | None = None,
+        *,
+        strategy: str = "structured",
     ) -> WasmModule:
+        errors = validate_for_wasm(program)
+        if errors:
+            joined = "; ".join(errors)
+            raise WasmLoweringError(
+                f"IR program failed WASM pre-flight validation "
+                f"({len(errors)} error{'s' if len(errors) != 1 else ''}): {joined}"
+            )
         signatures = infer_function_signatures_from_comments(program)
         if function_signatures:
             for signature in function_signatures:
@@ -182,13 +375,19 @@ class IrToWasmCompiler:
                 for decl, offset in ((decl, data_offsets[decl.label]) for decl in program.data)
             )
 
+        if strategy not in ("structured", "dispatch_loop"):
+            raise WasmLoweringError(f"unknown lowering strategy: {strategy!r}")
+        lowerer_class: type[_FunctionLowerer] = (
+            _DispatchLoopLowerer if strategy == "dispatch_loop" else _FunctionLowerer
+        )
+
         wasi_context = _WasiContext(
             function_indices={imp.syscall_number: index for index, imp in enumerate(imports)},
             scratch_base=scratch_base,
         )
         for function in functions:
             module.code.append(
-                _FunctionLowerer(
+                lowerer_class(
                     function=function,
                     signatures=signatures,
                     function_indices=function_indices,
@@ -224,8 +423,8 @@ class IrToWasmCompiler:
 
         for function in functions:
             func_type = FuncType(
-                params=(ValueType.I32,) * function.signature.param_count,
-                results=(ValueType.I32,),
+                params=function.signature.wasm_param_types,
+                results=function.signature.wasm_result_types,
             )
             if func_type not in type_indices:
                 type_indices[func_type] = len(function_types)
@@ -351,6 +550,7 @@ class _FunctionLowerer:
         self.data_offsets = data_offsets
         self.wasi_context = wasi_context
         self.param_count = function.signature.param_count
+        self._register_types = function.register_types
         self._bytes = bytearray()
         self._instructions = function.instructions
         self._label_to_index = {
@@ -367,7 +567,7 @@ class _FunctionLowerer:
         self._emit_opcode("end")
 
         return FunctionBody(
-            locals=(ValueType.I32,) * (self.function.max_reg + 1),
+            locals=self.function.register_types,
             code=bytes(self._bytes),
         )
 
@@ -478,6 +678,13 @@ class _FunctionLowerer:
                 imm = _expect_immediate(instruction.operands[1], "LOAD_IMM imm")
                 self._emit_i32_const(imm.value)
                 self._emit_local_set(dst.index)
+            case IrOp.LOAD_F64_IMM:
+                dst = _expect_register(instruction.operands[0], "LOAD_F64_IMM dst")
+                imm = _expect_float_immediate(
+                    instruction.operands[1], "LOAD_F64_IMM imm"
+                )
+                self._emit_f64_const(imm.value)
+                self._emit_local_set(dst.index)
             case IrOp.LOAD_ADDR:
                 dst = _expect_register(instruction.operands[0], "LOAD_ADDR dst")
                 label = _expect_label(instruction.operands[1], "LOAD_ADDR label")
@@ -517,6 +724,22 @@ class _FunctionLowerer:
                 self._emit_local_get(src.index)
                 self._emit_opcode("i32.store")
                 self._emit_memarg(2, 0)
+            case IrOp.LOAD_F64:
+                dst = _expect_register(instruction.operands[0], "LOAD_F64 dst")
+                base = _expect_register(instruction.operands[1], "LOAD_F64 base")
+                offset = _expect_register(instruction.operands[2], "LOAD_F64 offset")
+                self._emit_address(base.index, offset.index)
+                self._emit_opcode("f64.load")
+                self._emit_memarg(3, 0)
+                self._emit_local_set(dst.index)
+            case IrOp.STORE_F64:
+                src = _expect_register(instruction.operands[0], "STORE_F64 src")
+                base = _expect_register(instruction.operands[1], "STORE_F64 base")
+                offset = _expect_register(instruction.operands[2], "STORE_F64 offset")
+                self._emit_address(base.index, offset.index)
+                self._emit_local_get(src.index)
+                self._emit_opcode("f64.store")
+                self._emit_memarg(3, 0)
             case IrOp.ADD:
                 self._emit_binary_numeric("i32.add", instruction)
             case IrOp.ADD_IMM:
@@ -531,6 +754,10 @@ class _FunctionLowerer:
                 self._emit_binary_numeric("i32.sub", instruction)
             case IrOp.AND:
                 self._emit_binary_numeric("i32.and", instruction)
+            case IrOp.MUL:
+                self._emit_binary_numeric("i32.mul", instruction)
+            case IrOp.DIV:
+                self._emit_binary_numeric("i32.div_s", instruction)
             case IrOp.AND_IMM:
                 dst = _expect_register(instruction.operands[0], "AND_IMM dst")
                 src = _expect_register(instruction.operands[1], "AND_IMM src")
@@ -539,6 +766,46 @@ class _FunctionLowerer:
                 self._emit_i32_const(imm.value)
                 self._emit_opcode("i32.and")
                 self._emit_local_set(dst.index)
+            case IrOp.OR:
+                self._emit_binary_numeric("i32.or", instruction)
+            case IrOp.OR_IMM:
+                # OR_IMM dst, src, imm  →  dst = src | imm
+                dst = _expect_register(instruction.operands[0], "OR_IMM dst")
+                src = _expect_register(instruction.operands[1], "OR_IMM src")
+                imm = _expect_immediate(instruction.operands[2], "OR_IMM imm")
+                self._emit_local_get(src.index)
+                self._emit_i32_const(imm.value)
+                self._emit_opcode("i32.or")
+                self._emit_local_set(dst.index)
+            case IrOp.XOR:
+                self._emit_binary_numeric("i32.xor", instruction)
+            case IrOp.XOR_IMM:
+                # XOR_IMM dst, src, imm  →  dst = src ^ imm
+                dst = _expect_register(instruction.operands[0], "XOR_IMM dst")
+                src = _expect_register(instruction.operands[1], "XOR_IMM src")
+                imm = _expect_immediate(instruction.operands[2], "XOR_IMM imm")
+                self._emit_local_get(src.index)
+                self._emit_i32_const(imm.value)
+                self._emit_opcode("i32.xor")
+                self._emit_local_set(dst.index)
+            case IrOp.NOT:
+                # WASM has no bitwise-NOT opcode.  XOR with 0xFFFFFFFF (all ones)
+                # flips every bit of the 32-bit value, which is exactly NOT for i32.
+                # NOT dst, src  →  dst = src ^ 0xFFFFFFFF
+                dst = _expect_register(instruction.operands[0], "NOT dst")
+                src = _expect_register(instruction.operands[1], "NOT src")
+                self._emit_local_get(src.index)
+                self._emit_i32_const(0xFFFFFFFF)
+                self._emit_opcode("i32.xor")
+                self._emit_local_set(dst.index)
+            case IrOp.F64_ADD:
+                self._emit_binary_numeric("f64.add", instruction)
+            case IrOp.F64_SUB:
+                self._emit_binary_numeric("f64.sub", instruction)
+            case IrOp.F64_MUL:
+                self._emit_binary_numeric("f64.mul", instruction)
+            case IrOp.F64_DIV:
+                self._emit_binary_numeric("f64.div", instruction)
             case IrOp.CMP_EQ:
                 self._emit_binary_numeric("i32.eq", instruction)
             case IrOp.CMP_NE:
@@ -547,6 +814,34 @@ class _FunctionLowerer:
                 self._emit_binary_numeric("i32.lt_s", instruction)
             case IrOp.CMP_GT:
                 self._emit_binary_numeric("i32.gt_s", instruction)
+            case IrOp.F64_CMP_EQ:
+                self._emit_binary_numeric("f64.eq", instruction)
+            case IrOp.F64_CMP_NE:
+                self._emit_binary_numeric("f64.ne", instruction)
+            case IrOp.F64_CMP_LT:
+                self._emit_binary_numeric("f64.lt", instruction)
+            case IrOp.F64_CMP_GT:
+                self._emit_binary_numeric("f64.gt", instruction)
+            case IrOp.F64_CMP_LE:
+                self._emit_binary_numeric("f64.le", instruction)
+            case IrOp.F64_CMP_GE:
+                self._emit_binary_numeric("f64.ge", instruction)
+            case IrOp.F64_FROM_I32:
+                dst = _expect_register(instruction.operands[0], "F64_FROM_I32 dst")
+                src = _expect_register(instruction.operands[1], "F64_FROM_I32 src")
+                self._emit_local_get(src.index)
+                self._emit_opcode("f64.convert_i32_s")
+                self._emit_local_set(dst.index)
+            case IrOp.I32_TRUNC_FROM_F64:
+                dst = _expect_register(
+                    instruction.operands[0], "I32_TRUNC_FROM_F64 dst"
+                )
+                src = _expect_register(
+                    instruction.operands[1], "I32_TRUNC_FROM_F64 src"
+                )
+                self._emit_local_get(src.index)
+                self._emit_opcode("i32.trunc_f64_s")
+                self._emit_local_set(dst.index)
             case IrOp.CALL:
                 label = _expect_label(instruction.operands[0], "CALL target")
                 signature = self.signatures.get(label.name)
@@ -554,13 +849,58 @@ class _FunctionLowerer:
                     raise WasmLoweringError(f"missing function signature for {label.name}")
                 if label.name not in self.function_indices:
                     raise WasmLoweringError(f"unknown function label: {label.name}")
-                for param_index in range(signature.param_count):
-                    self._emit_local_get(_REG_VAR_BASE + param_index)
+                explicit_args = instruction.operands[1:]
+                if (
+                    signature.require_explicit_args
+                    and len(explicit_args) != signature.param_count
+                ):
+                    raise WasmLoweringError(
+                        f"CALL {label.name} expects {signature.param_count} "
+                        f"explicit argument register(s), got {len(explicit_args)}"
+                    )
+                if (
+                    not signature.require_explicit_args
+                    and explicit_args
+                    and len(explicit_args) != signature.param_count
+                ):
+                    raise WasmLoweringError(
+                        f"CALL {label.name} expects {signature.param_count} "
+                        f"argument register(s), got {len(explicit_args)}"
+                    )
+                if explicit_args:
+                    for operand, expected_type in zip(
+                        explicit_args, signature.wasm_param_types, strict=True
+                    ):
+                        arg = _expect_register(operand, "CALL argument")
+                        actual_type = self._register_types[arg.index]
+                        if actual_type != expected_type:
+                            raise WasmLoweringError(
+                                f"CALL {label.name} argument v{arg.index} has type "
+                                f"{actual_type.name}, expected {expected_type.name}"
+                            )
+                        self._emit_local_get(arg.index)
+                else:
+                    for param_index in range(signature.param_count):
+                        actual_type = self._register_types[_REG_VAR_BASE + param_index]
+                        expected_type = signature.wasm_param_types[param_index]
+                        if actual_type != expected_type:
+                            raise WasmLoweringError(
+                                f"CALL {label.name} implicit argument v{_REG_VAR_BASE + param_index} "
+                                f"has type {actual_type.name}, expected {expected_type.name}"
+                            )
+                        self._emit_local_get(_REG_VAR_BASE + param_index)
                 self._emit_opcode("call")
                 self._emit_u32(self.function_indices[label.name])
-                self._emit_local_set(_REG_SCRATCH)
+                if signature.wasm_result_types:
+                    result_reg = (
+                        _REG_F64_SCRATCH
+                        if signature.wasm_result_types[0] == ValueType.F64
+                        else _REG_SCRATCH
+                    )
+                    self._emit_local_set(result_reg)
             case IrOp.RET | IrOp.HALT:
-                self._emit_local_get(_REG_SCRATCH)
+                if self.function.signature.wasm_result_types:
+                    self._emit_local_get(_REG_SCRATCH)
                 self._emit_opcode("return")
             case IrOp.NOP:
                 self._emit_opcode("nop")
@@ -571,26 +911,27 @@ class _FunctionLowerer:
 
     def _emit_syscall(self, instruction: IrInstruction) -> None:
         syscall = _expect_immediate(instruction.operands[0], "SYSCALL number").value
+        arg_reg = _expect_register(instruction.operands[1], "SYSCALL arg register").index
 
         if syscall == _SYSCALL_WRITE:
-            self._emit_wasi_write()
+            self._emit_wasi_write(arg_reg)
             return
         if syscall == _SYSCALL_READ:
-            self._emit_wasi_read()
+            self._emit_wasi_read(arg_reg)
             return
         if syscall == _SYSCALL_EXIT:
-            self._emit_wasi_exit()
+            self._emit_wasi_exit(arg_reg)
             return
         raise WasmLoweringError(f"unsupported SYSCALL number: {syscall}")
 
-    def _emit_wasi_write(self) -> None:
+    def _emit_wasi_write(self, arg_reg: int) -> None:
         scratch_base = self._require_wasi_scratch()
         iovec_ptr = scratch_base + _WASI_IOVEC_OFFSET
         nwritten_ptr = scratch_base + _WASI_COUNT_OFFSET
         byte_ptr = scratch_base + _WASI_BYTE_OFFSET
 
         self._emit_i32_const(byte_ptr)
-        self._emit_local_get(_SYSCALL_ARG0)
+        self._emit_local_get(arg_reg)
         self._emit_opcode("i32.store8")
         self._emit_memarg(0, 0)
 
@@ -602,9 +943,9 @@ class _FunctionLowerer:
         self._emit_i32_const(1)
         self._emit_i32_const(nwritten_ptr)
         self._emit_wasi_call(_SYSCALL_WRITE)
-        self._emit_local_set(_REG_SCRATCH)
+        self._emit_opcode("drop")  # discard fd_write errno; storing in _REG_SCRATCH would clobber variable A
 
-    def _emit_wasi_read(self) -> None:
+    def _emit_wasi_read(self, arg_reg: int) -> None:
         scratch_base = self._require_wasi_scratch()
         iovec_ptr = scratch_base + _WASI_IOVEC_OFFSET
         nread_ptr = scratch_base + _WASI_COUNT_OFFSET
@@ -623,15 +964,15 @@ class _FunctionLowerer:
         self._emit_i32_const(1)
         self._emit_i32_const(nread_ptr)
         self._emit_wasi_call(_SYSCALL_READ)
-        self._emit_local_set(_REG_SCRATCH)
+        self._emit_opcode("drop")  # discard fd_read errno
 
         self._emit_i32_const(byte_ptr)
         self._emit_opcode("i32.load8_u")
         self._emit_memarg(0, 0)
-        self._emit_local_set(_SYSCALL_ARG0)
+        self._emit_local_set(arg_reg)
 
-    def _emit_wasi_exit(self) -> None:
-        self._emit_local_get(_SYSCALL_ARG0)
+    def _emit_wasi_exit(self, arg_reg: int) -> None:
+        self._emit_local_get(arg_reg)
         self._emit_wasi_call(_SYSCALL_EXIT)
         self._emit_i32_const(0)
         self._emit_opcode("return")
@@ -680,6 +1021,10 @@ class _FunctionLowerer:
         self._emit_opcode("i32.const")
         self._bytes.extend(encode_signed(value))
 
+    def _emit_f64_const(self, value: float) -> None:
+        self._emit_opcode("f64.const")
+        self._bytes.extend(struct.pack("<d", value))
+
     def _emit_memarg(self, align: int, offset: int) -> None:
         self._emit_u32(align)
         self._emit_u32(offset)
@@ -717,6 +1062,184 @@ class _FunctionLowerer:
             if target == label:
                 return index
         raise WasmLoweringError(f"expected jump to {label} in {self.function.label}")
+
+
+class _DispatchLoopLowerer(_FunctionLowerer):
+    """Lower a function with unstructured control flow using a virtual program counter.
+
+    The resulting WASM looks like::
+
+        [copy params into IR registers]
+        i32.const 0 ; local.set $pc          ← start at segment 0
+        block $prog_end (void)
+          loop $dispatch (void)
+            block $seg_0 (void)              ← one block per label
+              local.get $pc; i32.const 0; i32.ne; br_if 0   ← skip if wrong
+              [instructions for segment 0]
+              i32.const 1; local.set $pc; br 1              ← fall-through
+            end
+            block $seg_1 (void)
+              local.get $pc; i32.const 1; i32.ne; br_if 0
+              [instructions for segment 1]
+              ...
+            end
+          end loop                           ← falls through on out-of-range $pc
+        end block
+        local.get _REG_SCRATCH              ← function return value
+        end function
+
+    br depth table (from inside block $seg_N):
+        br 0 → block $seg_N   (skip this segment)
+        br 1 → loop $dispatch (continue dispatch — loop restart)
+        br 2 → block $prog_end (exit program)
+
+    Inside a generated ``if`` block (for BRANCH_Z / BRANCH_NZ):
+        br 0 → if block
+        br 1 → block $seg_N
+        br 2 → loop $dispatch
+        br 3 → block $prog_end
+    """
+
+    def lower(self) -> FunctionBody:
+        label_to_seg, segments = self._index_segments()
+        # $pc lives at the local slot just past all IR virtual registers
+        pc_reg = self.function.max_reg + 1
+
+        self._copy_params_into_ir_registers()
+
+        # Initialise $pc = 0 (start at segment 0)
+        self._emit_i32_const(0)
+        self._emit_local_set(pc_reg)
+
+        # block $prog_end (void)
+        self._emit_opcode("block")
+        self._bytes.append(int(BlockType.EMPTY))
+        # loop $dispatch (void)
+        self._emit_opcode("loop")
+        self._bytes.append(int(BlockType.EMPTY))
+
+        for seg_idx, instrs in enumerate(segments):
+            self._emit_segment(seg_idx, instrs, pc_reg, label_to_seg)
+
+        # end loop
+        self._emit_opcode("end")
+        # end block $prog_end
+        self._emit_opcode("end")
+
+        # Function return value (HALT via br 2 lands here)
+        if self.function.signature.wasm_result_types:
+            self._emit_local_get(_REG_SCRATCH)
+        self._emit_opcode("end")
+
+        return FunctionBody(
+            # max_reg + 1 IR virtual-register slots, plus one for $pc
+            locals=self.function.register_types + (ValueType.I32,),
+            code=bytes(self._bytes),
+        )
+
+    def _index_segments(
+        self,
+    ) -> tuple[dict[str, int], list[list[IrInstruction]]]:
+        """Assign each LABEL a segment index and split instructions between labels."""
+        label_to_seg: dict[str, int] = {}
+        # segment_starts[i] = instruction index *after* the i-th LABEL
+        segment_starts: list[int] = []
+
+        for i, instr in enumerate(self._instructions):
+            if (
+                instr.opcode == IrOp.LABEL
+                and instr.operands
+                and isinstance(instr.operands[0], IrLabel)
+            ):
+                label_to_seg[instr.operands[0].name] = len(segment_starts)
+                segment_starts.append(i + 1)
+
+        segments: list[list[IrInstruction]] = []
+        for i, start in enumerate(segment_starts):
+            # The next LABEL is at segment_starts[i+1]-1; exclude it from this segment.
+            end = segment_starts[i + 1] - 1 if i + 1 < len(segment_starts) else len(self._instructions)
+            segments.append(list(self._instructions[start:end]))
+
+        return label_to_seg, segments
+
+    def _emit_segment(
+        self,
+        seg_idx: int,
+        instrs: list[IrInstruction],
+        pc_reg: int,
+        label_to_seg: dict[str, int],
+    ) -> None:
+        # block $seg_N (void)
+        self._emit_opcode("block")
+        self._bytes.append(int(BlockType.EMPTY))
+
+        # Skip this segment when $pc ≠ seg_idx
+        self._emit_local_get(pc_reg)
+        self._emit_i32_const(seg_idx)
+        self._emit_opcode("i32.ne")
+        self._emit_opcode("br_if")
+        self._emit_u32(0)  # br 0 → end of block $seg_N
+
+        terminated = False
+        for instr in instrs:
+            if terminated:
+                break
+
+            if instr.opcode == IrOp.COMMENT:
+                continue
+
+            if instr.opcode == IrOp.JUMP:
+                target = _expect_label(instr.operands[0], "JUMP target").name
+                target_idx = label_to_seg.get(target)
+                if target_idx is None:
+                    raise WasmLoweringError(f"JUMP to unknown label: {target!r}")
+                self._emit_i32_const(target_idx)
+                self._emit_local_set(pc_reg)
+                self._emit_opcode("br")
+                self._emit_u32(1)  # br 1 → loop $dispatch (restart)
+                terminated = True
+
+            elif instr.opcode in (IrOp.BRANCH_Z, IrOp.BRANCH_NZ):
+                # Conditional jump: set $pc and continue dispatch *if* condition fires.
+                # Does NOT terminate the segment — falls through to next instruction.
+                cond_reg = _expect_register(instr.operands[0], "BRANCH condition").index
+                target = _expect_label(instr.operands[1], "BRANCH target").name
+                target_idx = label_to_seg.get(target)
+                if target_idx is None:
+                    raise WasmLoweringError(f"BRANCH to unknown label: {target!r}")
+                self._emit_local_get(cond_reg)
+                if instr.opcode == IrOp.BRANCH_Z:
+                    # Branch when zero: invert so WASM if fires when reg == 0
+                    self._emit_opcode("i32.eqz")
+                self._emit_opcode("if")
+                self._bytes.append(int(BlockType.EMPTY))
+                self._emit_i32_const(target_idx)
+                self._emit_local_set(pc_reg)
+                self._emit_opcode("br")
+                self._emit_u32(2)  # br 2 (inside if) → loop $dispatch
+                self._emit_opcode("end")
+                # Intentionally NOT setting terminated — execution continues
+
+            elif instr.opcode in (IrOp.HALT, IrOp.RET):
+                self._emit_opcode("br")
+                self._emit_u32(2)  # br 2 → block $prog_end (exit program)
+                terminated = True
+
+            elif instr.opcode == IrOp.SYSCALL:
+                self._emit_syscall(instr)
+
+            else:
+                self._emit_simple(instr)
+
+        if not terminated:
+            # Fall-through: advance $pc to the next segment in source order
+            self._emit_i32_const(seg_idx + 1)
+            self._emit_local_set(pc_reg)
+            self._emit_opcode("br")
+            self._emit_u32(1)  # br 1 → loop $dispatch (restart)
+
+        # end block $seg_N
+        self._emit_opcode("end")
 
 
 def infer_function_signatures_from_comments(program: IrProgram) -> dict[str, FunctionSignature]:
@@ -774,17 +1297,16 @@ def _make_function_ir(
             raise WasmLoweringError(f"missing function signature for {label}")
 
     max_reg = max(
-        [1, _REG_VAR_BASE + max(signature.param_count - 1, 0)]
+        [
+            1,
+            _REG_VAR_BASE + max(signature.param_count - 1, 0),
+            _REG_F64_SCRATCH if _needs_f64_scratch(instructions, signatures) else 1,
+        ]
         + [
             operand.index
             for instruction in instructions
             for operand in instruction.operands
             if isinstance(operand, IrRegister)
-        ]
-        + [
-            _SYSCALL_ARG0
-            for instruction in instructions
-            if instruction.opcode == IrOp.SYSCALL
         ]
     )
 
@@ -793,7 +1315,29 @@ def _make_function_ir(
         instructions=instructions,
         signature=signature,
         max_reg=max_reg,
+        register_types=_infer_register_types(
+            instructions=instructions,
+            signature=signature,
+            max_reg=max_reg,
+            signatures=signatures,
+        ),
     )
+
+
+def _needs_f64_scratch(
+    instructions: list[IrInstruction],
+    signatures: dict[str, FunctionSignature],
+) -> bool:
+    for instruction in instructions:
+        if instruction.opcode != IrOp.CALL:
+            continue
+        target = instruction.operands[0]
+        if not isinstance(target, IrLabel):
+            continue
+        callee = signatures.get(target.name)
+        if callee is not None and callee.wasm_result_types == (ValueType.F64,):
+            return True
+    return False
 
 
 def _const_expr(value: int) -> bytes:
@@ -833,6 +1377,12 @@ def _expect_immediate(operand: object, context: str) -> IrImmediate:
     return operand
 
 
+def _expect_float_immediate(operand: object, context: str) -> IrFloatImmediate:
+    if not isinstance(operand, IrFloatImmediate):
+        raise WasmLoweringError(f"{context}: expected float immediate, got {operand!r}")
+    return operand
+
+
 def _expect_label(operand: object, context: str) -> IrLabel:
     if not isinstance(operand, IrLabel):
         raise WasmLoweringError(f"{context}: expected label, got {operand!r}")
@@ -844,4 +1394,115 @@ def _align_up(value: int, alignment: int) -> int:
 
 
 _REG_SCRATCH = 1
+_REG_F64_SCRATCH = 31
 _REG_VAR_BASE = 2
+
+
+def _infer_register_types(
+    *,
+    instructions: list[IrInstruction],
+    signature: FunctionSignature,
+    max_reg: int,
+    signatures: dict[str, FunctionSignature],
+) -> tuple[ValueType, ...]:
+    reg_types: list[ValueType | None] = [None] * (max_reg + 1)
+
+    for param_index, param_type in enumerate(signature.wasm_param_types):
+        _assign_register_type(
+            reg_types,
+            _REG_VAR_BASE + param_index,
+            param_type,
+            f"{signature.label} param {param_index}",
+        )
+
+    if signature.wasm_result_types:
+        _assign_register_type(
+            reg_types,
+            _REG_SCRATCH,
+            signature.wasm_result_types[0],
+            f"{signature.label} result",
+        )
+
+    for instruction in instructions:
+        match instruction.opcode:
+            case IrOp.LOAD_F64_IMM | IrOp.LOAD_F64:
+                dst = _expect_register(instruction.operands[0], f"{instruction.opcode.name} dst")
+                _assign_register_type(
+                    reg_types, dst.index, ValueType.F64, instruction.opcode.name
+                )
+            case (
+                IrOp.LOAD_IMM
+                | IrOp.LOAD_ADDR
+                | IrOp.LOAD_BYTE
+                | IrOp.LOAD_WORD
+                | IrOp.ADD
+                | IrOp.ADD_IMM
+                | IrOp.SUB
+                | IrOp.AND
+                | IrOp.AND_IMM
+                | IrOp.OR
+                | IrOp.OR_IMM
+                | IrOp.XOR
+                | IrOp.XOR_IMM
+                | IrOp.NOT
+                | IrOp.MUL
+                | IrOp.DIV
+                | IrOp.CMP_EQ
+                | IrOp.CMP_NE
+                | IrOp.CMP_LT
+                | IrOp.CMP_GT
+                | IrOp.F64_CMP_EQ
+                | IrOp.F64_CMP_NE
+                | IrOp.F64_CMP_LT
+                | IrOp.F64_CMP_GT
+                | IrOp.F64_CMP_LE
+                | IrOp.F64_CMP_GE
+                | IrOp.I32_TRUNC_FROM_F64
+            ):
+                dst = _expect_register(instruction.operands[0], f"{instruction.opcode.name} dst")
+                _assign_register_type(
+                    reg_types, dst.index, ValueType.I32, instruction.opcode.name
+                )
+            case IrOp.F64_ADD | IrOp.F64_SUB | IrOp.F64_MUL | IrOp.F64_DIV | IrOp.F64_FROM_I32:
+                dst = _expect_register(instruction.operands[0], f"{instruction.opcode.name} dst")
+                _assign_register_type(
+                    reg_types, dst.index, ValueType.F64, instruction.opcode.name
+                )
+            case IrOp.CALL:
+                target = _expect_label(instruction.operands[0], "CALL target")
+                callee = signatures.get(target.name)
+                if callee is None:
+                    raise WasmLoweringError(f"missing function signature for {target.name}")
+                if callee.wasm_result_types:
+                    result_reg = (
+                        _REG_F64_SCRATCH
+                        if callee.wasm_result_types[0] == ValueType.F64
+                        else _REG_SCRATCH
+                    )
+                    _assign_register_type(
+                        reg_types,
+                        result_reg,
+                        callee.wasm_result_types[0],
+                        f"CALL {target.name}",
+                    )
+            case _:
+                continue
+
+    return tuple(
+        reg_type if reg_type is not None else ValueType.I32 for reg_type in reg_types
+    )
+
+
+def _assign_register_type(
+    reg_types: list[ValueType | None],
+    reg_index: int,
+    value_type: ValueType,
+    context: str,
+) -> None:
+    existing = reg_types[reg_index]
+    if existing is not None and existing != value_type:
+        raise WasmLoweringError(
+            f"{context}: register v{reg_index} has conflicting WASM types "
+            f"{existing.name} and {value_type.name}"
+        )
+    reg_types[reg_index] = value_type

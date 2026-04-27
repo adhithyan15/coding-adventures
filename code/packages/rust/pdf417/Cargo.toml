@@ -1,0 +1,9 @@
+[package]
+name = "pdf417"
+version = "0.1.0"
+edition = "2021"
+description = "PDF417 stacked linear barcode encoder — ISO/IEC 15438:2015 compliant, produces scannable PDF417 symbols"
+
+[dependencies]
+barcode-2d = { path = "../barcode-2d" }
+paint-instructions = { path = "../paint-instructions" }

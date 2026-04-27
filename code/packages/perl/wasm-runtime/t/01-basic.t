@@ -159,6 +159,26 @@ sub _build_add_wasm {
                 @export_section, @code_section);
 }
 
+# _memory_module_with_data_section(\@payload) — build the smallest parsed module
+# shape that reaches instantiate()'s data-segment application path.  The parser
+# stores data sections as raw byte arrays, so this helper lets security tests
+# exercise malformed raw sections without requiring a full binary fixture.
+sub _memory_module_with_data_section {
+    my ($payload) = @_;
+    return {
+        types     => [],
+        imports   => [],
+        functions => [],
+        codes     => [],
+        tables    => [],
+        memories  => [{ limits => { min => 1, max => undef } }],
+        globals   => [],
+        exports   => [],
+        elements  => [],
+        data      => [$payload],
+    };
+}
+
 # ============================================================================
 # WasmRuntime API tests
 # ============================================================================
@@ -198,6 +218,49 @@ subtest 'instantiate() creates an instance' => sub {
     ok($instance->{exports}, 'instance has exports');
     ok($instance->{exports}{square}, 'instance has "square" export');
     is($instance->{exports}{square}{kind}, 'func', 'square is a function');
+};
+
+subtest 'instantiate() rejects malformed raw data segments before slicing payloads' => sub {
+    my $rt = CodingAdventures::WasmRuntime->new();
+
+    # Data section payload:
+    #   count=1, memory_index=0, offset=(i32.const 0; end), size=32
+    # The actual data bytes are intentionally absent.  Before this guard, the
+    # runtime created the slice [$pos .. $pos + size - 1] even when the payload
+    # was truncated, letting malformed modules force large temporary lists.
+    my @truncated = (
+        _leb128_unsigned(1),
+        _leb128_unsigned(0),
+        0x41, 0x00, 0x0B,
+        _leb128_unsigned(32),
+    );
+    my $truncated_error;
+    eval {
+        $rt->instantiate(_memory_module_with_data_section(\@truncated));
+        1;
+    } or $truncated_error = $@;
+    like(
+        "$truncated_error",
+        qr/data segment payload shorter than declared size/,
+        'truncated raw data payloads fail closed',
+    );
+
+    my @oversized = (
+        _leb128_unsigned(1),
+        _leb128_unsigned(0),
+        0x41, 0x00, 0x0B,
+        _leb128_unsigned(16 * 1024 * 1024 + 1),
+    );
+    my $oversized_error;
+    eval {
+        $rt->instantiate(_memory_module_with_data_section(\@oversized));
+        1;
+    } or $oversized_error = $@;
+    like(
+        "$oversized_error",
+        qr/data segment size exceeds limit/,
+        'oversized raw data payload declarations fail closed',
+    );
 };
 
 subtest 'call() invokes an exported function' => sub {
@@ -301,6 +364,13 @@ subtest 'WasiStub resolves fd_write' => sub {
     my $stub = CodingAdventures::WasmRuntime::WasiStub->new();
     my $fn = $stub->resolve_function('wasi_snapshot_preview1', 'fd_write');
     ok($fn, 'fd_write resolved');
+};
+
+subtest 'WasiHost aliases WasiStub' => sub {
+    my $host = CodingAdventures::WasmRuntime::WasiHost->new();
+    isa_ok($host, 'CodingAdventures::WasmRuntime::WasiStub');
+    my $fn = $host->resolve_function('wasi_snapshot_preview1', 'fd_read');
+    ok($fn, 'fd_read resolved through WasiHost alias');
 };
 
 subtest 'WasiStub returns undef for unknown functions' => sub {

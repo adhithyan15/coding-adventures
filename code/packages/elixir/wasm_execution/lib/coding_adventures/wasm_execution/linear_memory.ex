@@ -284,7 +284,8 @@ defmodule CodingAdventures.WasmExecution.LinearMemory do
     suffix_start = offset + data_size
     suffix_size = byte_size(buf) - suffix_start
 
-    <<prefix::binary-size(prefix_size), _::binary-size(data_size), suffix::binary-size(suffix_size)>> = buf
+    <<prefix::binary-size(prefix_size), _::binary-size(data_size),
+      suffix::binary-size(suffix_size)>> = buf
 
     %{mem | buffer: <<prefix::binary, data::binary, suffix::binary>>}
   end

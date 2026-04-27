@@ -9,6 +9,19 @@ class ActivationFunctionsTest {
     private val eps = 1e-10
 
     // ========================================================================
+    // Linear Tests
+    // ========================================================================
+
+    @Test fun `linear negative`() = assertEquals(-3.0, ActivationFunctions.linear(-3.0), eps)
+    @Test fun `linear zero`() = assertEquals(0.0, ActivationFunctions.linear(0.0), eps)
+    @Test fun `linear positive`() = assertEquals(5.0, ActivationFunctions.linear(5.0), eps)
+    @Test fun `linear deriv everywhere`() {
+        assertEquals(1.0, ActivationFunctions.linearDerivative(-3.0), eps)
+        assertEquals(1.0, ActivationFunctions.linearDerivative(0.0), eps)
+        assertEquals(1.0, ActivationFunctions.linearDerivative(5.0), eps)
+    }
+
+    // ========================================================================
     // Sigmoid Tests
     // ========================================================================
 
@@ -77,6 +90,17 @@ class ActivationFunctionsTest {
     @Test fun `relu deriv zero`() = assertEquals(0.0, ActivationFunctions.reluDerivative(0.0))
 
     // ========================================================================
+    // Leaky ReLU Tests
+    // ========================================================================
+
+    @Test fun `leaky relu positive`() = assertEquals(5.0, ActivationFunctions.leakyRelu(5.0), eps)
+    @Test fun `leaky relu negative`() = assertEquals(-0.03, ActivationFunctions.leakyRelu(-3.0), eps)
+    @Test fun `leaky relu zero`() = assertEquals(0.0, ActivationFunctions.leakyRelu(0.0), eps)
+    @Test fun `leaky relu deriv positive`() = assertEquals(1.0, ActivationFunctions.leakyReluDerivative(5.0), eps)
+    @Test fun `leaky relu deriv negative`() = assertEquals(0.01, ActivationFunctions.leakyReluDerivative(-3.0), eps)
+    @Test fun `leaky relu deriv zero`() = assertEquals(0.01, ActivationFunctions.leakyReluDerivative(0.0), eps)
+
+    // ========================================================================
     // Tanh Tests
     // ========================================================================
 
@@ -108,6 +132,20 @@ class ActivationFunctionsTest {
 
     @Test fun `tanh deriv at zero`() = assertEquals(1.0, ActivationFunctions.tanhDerivative(0.0), eps)
     @Test fun `tanh deriv at one`() = assertEquals(0.4199743416140261, ActivationFunctions.tanhDerivative(1.0), eps)
+
+    // ========================================================================
+    // Softplus Tests
+    // ========================================================================
+
+    @Test fun `softplus at zero`() = assertEquals(0.6931471805599453, ActivationFunctions.softplus(0.0), eps)
+    @Test fun `softplus positive`() = assertEquals(1.3132616875182228, ActivationFunctions.softplus(1.0), eps)
+    @Test fun `softplus negative`() = assertEquals(0.31326168751822286, ActivationFunctions.softplus(-1.0), eps)
+    @Test fun `softplus large positive stable`() = assertTrue(ActivationFunctions.softplus(1000.0) > 999.0)
+    @Test fun `softplus derivative equals sigmoid`() {
+        assertEquals(0.5, ActivationFunctions.softplusDerivative(0.0), eps)
+        assertEquals(ActivationFunctions.sigmoid(1.0), ActivationFunctions.softplusDerivative(1.0), eps)
+        assertEquals(ActivationFunctions.sigmoid(-1.0), ActivationFunctions.softplusDerivative(-1.0), eps)
+    }
 
     @Test
     fun `tanh deriv non-negative`() {

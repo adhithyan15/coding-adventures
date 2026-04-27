@@ -14,6 +14,7 @@ import (
 const Version = "0.1.0"
 
 type PngCodec struct{}
+type Codec = PngCodec
 
 func (PngCodec) MimeType() string { return "image/png" }
 
@@ -27,6 +28,10 @@ func (PngCodec) Encode(c *pixelcontainer.PixelContainer) []byte {
 
 func (PngCodec) Decode(data []byte) (*pixelcontainer.PixelContainer, error) {
 	return DecodePNG(data)
+}
+
+func Encode(c *pixelcontainer.PixelContainer) ([]byte, error) {
+	return EncodePNG(c)
 }
 
 // EncodePNG serializes a PixelContainer into PNG bytes.
@@ -46,6 +51,10 @@ func EncodePNG(c *pixelcontainer.PixelContainer) ([]byte, error) {
 		return nil, err
 	}
 	return buffer.Bytes(), nil
+}
+
+func Decode(data []byte) (*pixelcontainer.PixelContainer, error) {
+	return DecodePNG(data)
 }
 
 // DecodePNG decodes PNG bytes into a PixelContainer.

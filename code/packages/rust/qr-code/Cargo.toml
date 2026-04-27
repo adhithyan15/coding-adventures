@@ -1,0 +1,10 @@
+[package]
+name = "qr-code"
+version = "0.1.0"
+edition = "2021"
+description = "QR Code encoder — ISO/IEC 18004:2015 compliant, produces scannable QR Codes"
+
+[dependencies]
+barcode-2d = { path = "../barcode-2d" }
+gf256 = { path = "../gf256" }
+paint-instructions = { path = "../paint-instructions" }

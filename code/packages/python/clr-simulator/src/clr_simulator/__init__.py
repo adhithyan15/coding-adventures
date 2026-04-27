@@ -9,10 +9,10 @@ from __future__ import annotations
 from clr_simulator.simulator import (
     CEQ_BYTE,
     CGT_BYTE,
+    CLT_BYTE,
     CLROpcode,
     CLRSimulator,
     CLRTrace,
-    CLT_BYTE,
     assemble_clr,
     encode_ldc_i4,
     encode_ldloc,

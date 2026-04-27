@@ -1,0 +1,11 @@
+[package]
+name = "os-job-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "Cross-platform OS job runtime that selects the local native scheduler backend"
+
+[dependencies]
+os-job-core = { path = "../os-job-core" }
+macos-job-backend-launchd-files = { path = "../macos-job-backend-launchd-files" }
+linux-job-backend-systemd-files = { path = "../linux-job-backend-systemd-files" }
+windows-job-backend-task-xml = { path = "../windows-job-backend-task-xml" }

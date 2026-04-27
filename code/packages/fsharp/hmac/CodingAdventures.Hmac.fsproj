@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>CodingAdventures.Hmac.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>HMAC helpers for MD5, SHA-1, SHA-256, and SHA-512</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../md5/CodingAdventures.Md5.fsproj" />
+    <ProjectReference Include="../sha1/CodingAdventures.Sha1.fsproj" />
+    <ProjectReference Include="../sha256/CodingAdventures.Sha256.fsproj" />
+    <ProjectReference Include="../sha512/CodingAdventures.Sha512.fsproj" />
+    <Compile Include="Hmac.fs" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,20 @@
+name: coding_adventures_wasm_module_encoder
+description: >
+  Encodes core Dart WasmModule values back into .wasm bytes.
+version: 0.1.0
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_wasm_leb128:
+    path: ../wasm-leb128
+  coding_adventures_wasm_types:
+    path: ../wasm-types
+
+dev_dependencies:
+  coding_adventures_wasm_module_parser:
+    path: ../wasm-module-parser
+  test: ^1.25.0

@@ -1,0 +1,30 @@
+[project]
+name = "coding-adventures-oscillator"
+version = "0.1.0"
+description = "Virtual continuous oscillators and uniform samplers"
+requires-python = ">=3.9"
+dependencies = ["coding-adventures-trig"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=oscillator --cov-report=term-missing --cov-fail-under=95"
+
+[tool.coverage.run]
+source = ["src/oscillator"]
+
+[tool.coverage.report]
+fail_under = 95
+show_missing = true
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "UP", "B", "SIM", "ANN"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/oscillator"]

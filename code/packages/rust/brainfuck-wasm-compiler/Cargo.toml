@@ -1,0 +1,20 @@
+[package]
+name = "brainfuck-wasm-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "End-to-end Brainfuck to WebAssembly compiler"
+
+[dependencies]
+brainfuck = { path = "../brainfuck" }
+brainfuck-ir-compiler = { path = "../brainfuck-ir-compiler" }
+compiler-ir = { path = "../compiler-ir" }
+ir-optimizer = { path = "../ir-optimizer" }
+ir-to-wasm-compiler = { path = "../ir-to-wasm-compiler" }
+ir-to-wasm-validator = { path = "../ir-to-wasm-validator" }
+parser = { path = "../parser" }
+wasm-module-encoder = { path = "../wasm-module-encoder" }
+wasm-types = { path = "../wasm-types" }
+wasm-validator = { path = "../wasm-validator" }
+
+[dev-dependencies]
+wasm-runtime = { path = "../wasm-runtime" }

@@ -13,6 +13,14 @@ cd code/programs/go/build-tool
 go build -o build-tool .
 ```
 
+On Windows, build the executable with the `.exe` suffix so PowerShell runs it
+directly instead of asking which application should open an extensionless file:
+
+```powershell
+cd code\programs\go\build-tool
+go build -o ..\..\..\..\build-tool.exe .
+```
+
 This produces a single static binary with no runtime dependencies.
 
 ## Usage
@@ -43,6 +51,13 @@ This produces a single static binary with no runtime dependencies.
 ./build-tool -cache-file /tmp/my-cache.json
 ```
 
+On Windows, use the compiled `.exe`:
+
+```powershell
+.\build-tool.exe -root . -diff-base origin/main
+.\build-tool.exe -root . -validate-build-files -detect-languages -emit-plan build-plan.json
+```
+
 ## CLI flags
 
 | Flag | Default | Description |
@@ -51,7 +66,7 @@ This produces a single static binary with no runtime dependencies.
 | `-force` | false | Rebuild everything regardless of cache |
 | `-dry-run` | false | Show what would build without executing |
 | `-jobs` | NumCPU | Maximum parallel build jobs |
-| `-language` | all | Filter to: python, ruby, go, rust, typescript, elixir, or all |
+| `-language` | all | Filter to: python, ruby, go, rust, typescript, elixir, lua, perl, swift, dart, java, kotlin, haskell, dotnet, or all |
 | `-diff-base` | origin/main | Git ref to diff against for change detection |
 | `-cache-file` | .build-cache.json | Path to the build cache file |
 
@@ -60,7 +75,7 @@ This produces a single static binary with no runtime dependencies.
 The tool is organized into seven internal packages, each responsible for one phase of the build pipeline:
 
 1. **discovery** -- Recursively walks for `BUILD` files to find packages
-2. **resolver** -- Parses `pyproject.toml`, `.gemspec`, `go.mod`, `Cargo.toml`, `package.json`, and `mix.exs`
+2. **resolver** -- Parses `pyproject.toml`, `.gemspec`, `go.mod`, `Cargo.toml`, `package.json`, `mix.exs`, and `pubspec.yaml`
 3. **hasher** -- SHA256 hashing for change detection
 4. **cache** -- JSON-based build cache (read/write with atomic saves)
 5. **executor** -- Parallel execution with goroutines + semaphore

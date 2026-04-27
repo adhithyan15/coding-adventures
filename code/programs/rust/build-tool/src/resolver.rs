@@ -34,8 +34,6 @@
 
 use std::collections::HashMap;
 use std::fs;
-use std::path::Path;
-
 use crate::discovery::Package;
 use crate::graph::Graph;
 
@@ -57,9 +55,41 @@ use crate::graph::Graph;
 /// By building this mapping upfront, we can resolve dependencies across
 /// languages without hard-coding specific package names.
 pub fn build_known_names(packages: &[Package]) -> HashMap<String, String> {
+    build_known_names_for_scope(packages, "")
+}
+
+fn dependency_scope(language: &str) -> &str {
+    match language {
+        "csharp" | "fsharp" | "dotnet" => "dotnet",
+        "wasm" => "wasm",
+        _ => language,
+    }
+}
+
+fn in_dependency_scope(package_language: &str, scope: &str) -> bool {
+    match scope {
+        "dotnet" => matches!(package_language, "csharp" | "fsharp" | "dotnet"),
+        "wasm" => matches!(package_language, "wasm" | "rust"),
+        _ => package_language == scope,
+    }
+}
+
+fn read_cargo_package_name(pkg: &Package) -> Option<String> {
+    let cargo_toml = pkg.path.join("Cargo.toml");
+    let data = fs::read_to_string(cargo_toml).ok()?;
+    let parsed = data.parse::<toml::Table>().ok()?;
+    let package = parsed.get("package")?;
+    let name = package.get("name")?.as_str()?;
+    Some(name.to_lowercase())
+}
+
+fn build_known_names_for_scope(packages: &[Package], scope: &str) -> HashMap<String, String> {
     let mut known = HashMap::new();
 
     for pkg in packages {
+        if !scope.is_empty() && !in_dependency_scope(&pkg.language, scope) {
+            continue;
+        }
         let dir_name = pkg
             .path
             .file_name()
@@ -93,7 +123,7 @@ pub fn build_known_names(packages: &[Package]) -> HashMap<String, String> {
                     }
                 }
             }
-            "rust" => {
+            "rust" | "wasm" => {
                 // For Rust, read the package name from Cargo.toml.
                 // The crate name in dependencies should match this.
                 let cargo_toml = pkg.path.join("Cargo.toml");
@@ -107,6 +137,9 @@ pub fn build_known_names(packages: &[Package]) -> HashMap<String, String> {
                             }
                         }
                     }
+                }
+                if let Some(cargo_name) = read_cargo_package_name(pkg) {
+                    known.insert(cargo_name, pkg.name.clone());
                 }
             }
             "elixir" => {
@@ -129,6 +162,9 @@ pub fn build_known_names(packages: &[Package]) -> HashMap<String, String> {
                 // Haskell Cabal package names use hyphens.
                 let cabal_name = format!("coding-adventures-{}", dir_name);
                 known.insert(cabal_name, pkg.name.clone());
+            }
+            "csharp" | "fsharp" | "dotnet" => {
+                known.insert(dir_name, pkg.name.clone());
             }
             _ => {}
         }
@@ -377,6 +413,58 @@ fn parse_rust_deps(pkg: &Package, known_names: &HashMap<String, String>) -> Vec<
         for (name, _value) in deps {
             let lower_name = name.to_lowercase();
             if let Some(pkg_name) = known_names.get(&lower_name) {
+                internal_deps.push(pkg_name.clone());
+            }
+        }
+    }
+
+    internal_deps
+}
+
+fn parse_dotnet_deps(pkg: &Package, known_names: &HashMap<String, String>) -> Vec<String> {
+    let entries = match fs::read_dir(&pkg.path) {
+        Ok(e) => e,
+        Err(_) => return Vec::new(),
+    };
+
+    let mut internal_deps = Vec::new();
+
+    for entry in entries.flatten() {
+        let name = entry.file_name().to_string_lossy().to_string();
+        if !name.ends_with(".csproj") && !name.ends_with(".fsproj") {
+            continue;
+        }
+
+        let data = match fs::read_to_string(entry.path()) {
+            Ok(s) => s,
+            Err(_) => continue,
+        };
+
+        for line in data.lines() {
+            let Some(include_pos) = line.find("<ProjectReference") else {
+                continue;
+            };
+            let line = &line[include_pos..];
+            let Some(attr_pos) = line.find("Include=\"") else {
+                continue;
+            };
+            let include = &line[attr_pos + "Include=\"".len()..];
+            let Some(end_quote) = include.find('"') else {
+                continue;
+            };
+            let project_path = &include[..end_quote];
+            let normalized = project_path.replace('\\', "/");
+            let Some(remainder) = normalized.strip_prefix("../") else {
+                continue;
+            };
+            let Some(dep_dir) = remainder.split('/').next() else {
+                continue;
+            };
+            let dep_dir = dep_dir.to_lowercase();
+            if dep_dir.contains('/') || dep_dir.contains('\\') || dep_dir == ".." {
+                continue;
+            }
+            if let Some(pkg_name) = known_names.get(&dep_dir) {
                 internal_deps.push(pkg_name.clone());
             }
         }
@@ -660,19 +748,29 @@ pub fn resolve_dependencies(packages: &[Package]) -> Graph {
     }
 
     // Build the ecosystem-specific name mapping table.
-    let known_names = build_known_names(packages);
+    let mut known_names_by_scope: HashMap<String, HashMap<String, String>> = HashMap::new();
+    for pkg in packages {
+        let scope = dependency_scope(&pkg.language).to_string();
+        known_names_by_scope
+            .entry(scope.clone())
+            .or_insert_with(|| build_known_names_for_scope(packages, &scope));
+    }
 
     // Parse dependencies for each package and add edges.
     for pkg in packages {
+        let known_names = known_names_by_scope
+            .get(dependency_scope(&pkg.language))
+            .expect("known name scope must exist");
         let deps = match pkg.language.as_str() {
-            "python" => parse_python_deps(pkg, &known_names),
-            "ruby" => parse_ruby_deps(pkg, &known_names),
-            "go" => parse_go_deps(pkg, &known_names),
-            "rust" => parse_rust_deps(pkg, &known_names),
-            "elixir" => parse_elixir_deps(pkg, &known_names),
-            "lua" => parse_lua_deps(pkg, &known_names),
-            "perl" => parse_perl_deps(pkg, &known_names),
-            "haskell" => parse_haskell_deps(pkg, &known_names),
+            "python" => parse_python_deps(pkg, known_names),
+            "ruby" => parse_ruby_deps(pkg, known_names),
+            "go" => parse_go_deps(pkg, known_names),
+            "rust" | "wasm" => parse_rust_deps(pkg, known_names),
+            "elixir" => parse_elixir_deps(pkg, known_names),
+            "lua" => parse_lua_deps(pkg, known_names),
+            "perl" => parse_perl_deps(pkg, known_names),
+            "haskell" => parse_haskell_deps(pkg, known_names),
+            "csharp" | "fsharp" | "dotnet" => parse_dotnet_deps(pkg, known_names),
             _ => Vec::new(),
         };
 

@@ -18,7 +18,7 @@ func TestAllToolchainsConstant(t *testing.T) {
 	expected := map[string]bool{
 		"python": true, "ruby": true, "go": true,
 		"typescript": true, "rust": true, "elixir": true, "lua": true, "perl": true,
-		"swift": true, "java": true, "kotlin": true, "haskell": true, "dotnet": true,
+		"swift": true, "dart": true, "java": true, "kotlin": true, "haskell": true, "dotnet": true,
 	}
 	if len(allToolchains) != len(expected) {
 		t.Errorf("allToolchains has %d entries, want %d", len(allToolchains), len(expected))
@@ -100,6 +100,7 @@ func TestCollectAffectedLanguages(t *testing.T) {
 		{Name: "typescript/starlark-vm", Language: "typescript"},
 		{Name: "rust/starlark-vm", Language: "rust"},
 		{Name: "elixir/starlark_vm", Language: "elixir"},
+		{Name: "dart/hello-world", Language: "dart"},
 		{Name: "wasm/graph", Language: "wasm"},
 		{Name: "csharp/graph", Language: "csharp"},
 		{Name: "fsharp/graph", Language: "fsharp"},
@@ -117,8 +118,8 @@ func TestCollectAffectedLanguages(t *testing.T) {
 		},
 		{
 			name:        "multiple languages affected",
-			affectedSet: map[string]bool{"python/logic-gates": true, "rust/starlark-vm": true},
-			wantLangs:   map[string]bool{"python": true, "rust": true, "go": true},
+			affectedSet: map[string]bool{"python/logic-gates": true, "rust/starlark-vm": true, "dart/hello-world": true},
+			wantLangs:   map[string]bool{"python": true, "rust": true, "dart": true, "go": true},
 		},
 		{
 			name:        "empty affected set",
@@ -220,6 +221,7 @@ func TestToolchainForPackageLanguage(t *testing.T) {
 		"csharp":  "dotnet",
 		"fsharp":  "dotnet",
 		"dotnet":  "dotnet",
+		"dart":    "dart",
 		"java":    "java",
 		"kotlin":  "kotlin",
 		"python":  "python",

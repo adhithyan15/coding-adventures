@@ -91,6 +91,30 @@ describe("Resolver", function()
             assert.are.equal("python/arithmetic", known["coding-adventures-arithmetic"])
             assert.are.equal("ruby/arithmetic", known["coding_adventures_arithmetic"])
         end)
+
+        it("maps wasm crates into the rust dependency scope", function()
+            local tmpbase = os.tmpname()
+            os.remove(tmpbase)
+            os.execute('mkdir "' .. tmpbase .. '"')
+            os.execute('mkdir "' .. tmpbase .. '/wasm_graph"')
+
+            local cargo = io.open(tmpbase .. "/wasm_graph/Cargo.toml", "w")
+            cargo:write('[package]\nname = "graph-wasm"\n')
+            cargo:close()
+
+            local packages = {{
+                name = "wasm/graph",
+                path = tmpbase .. "/wasm_graph",
+                language = "wasm",
+            }}
+
+            local known = Resolver.build_known_names(packages, "rust")
+            assert.are.equal("wasm/graph", known["graph-wasm"])
+
+            os.remove(tmpbase .. "/wasm_graph/Cargo.toml")
+            os.execute('rmdir "' .. tmpbase .. '/wasm_graph"')
+            os.execute('rmdir "' .. tmpbase .. '"')
+        end)
     end)
 
     describe("resolve_dependencies", function()
@@ -164,6 +188,45 @@ describe("Resolver", function()
             local graph = Resolver.resolve_dependencies(packages)
             assert.is_true(graph:has_node("lua/empty"))
             assert.are.equal(0, #graph:predecessors("lua/empty"))
+        end)
+
+        it("parses .NET project references across C# and F#", function()
+            local tmpbase = os.tmpname()
+            os.remove(tmpbase)
+            os.execute('mkdir "' .. tmpbase .. '"')
+            os.execute('mkdir "' .. tmpbase .. '/graph"')
+            os.execute('mkdir "' .. tmpbase .. '/graph-tests"')
+
+            local dep = io.open(tmpbase .. "/graph/CodingAdventures.Graph.csproj", "w")
+            dep:write('<Project Sdk="Microsoft.NET.Sdk"></Project>\n')
+            dep:close()
+
+            local app = io.open(tmpbase .. "/graph-tests/CodingAdventures.Graph.Tests.fsproj", "w")
+            app:write('<Project Sdk="Microsoft.NET.Sdk">\n')
+            app:write('  <ItemGroup>\n')
+            app:write('    <ProjectReference Include="../graph/CodingAdventures.Graph.csproj" />\n')
+            app:write('  </ItemGroup>\n')
+            app:write('</Project>\n')
+            app:close()
+
+            local packages = {
+                {name = "csharp/graph", path = tmpbase .. "/graph", language = "csharp", build_commands = {}},
+                {name = "fsharp/graph-tests", path = tmpbase .. "/graph-tests", language = "fsharp", build_commands = {}},
+            }
+
+            local graph = Resolver.resolve_dependencies(packages)
+            local preds = graph:predecessors("fsharp/graph-tests")
+            local found = false
+            for _, pred in ipairs(preds) do
+                if pred == "csharp/graph" then found = true end
+            end
+            assert.is_true(found, "csharp/graph should be a predecessor of fsharp/graph-tests")
+
+            os.remove(tmpbase .. "/graph/CodingAdventures.Graph.csproj")
+            os.remove(tmpbase .. "/graph-tests/CodingAdventures.Graph.Tests.fsproj")
+            os.execute('rmdir "' .. tmpbase .. '/graph"')
+            os.execute('rmdir "' .. tmpbase .. '/graph-tests"')
+            os.execute('rmdir "' .. tmpbase .. '"')
         end)
     end)
 end)

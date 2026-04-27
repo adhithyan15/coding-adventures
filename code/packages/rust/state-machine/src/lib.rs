@@ -9,6 +9,7 @@
 //! - **[`minimize`]** -- Hopcroft's DFA minimization algorithm
 //! - **[`pda`]** -- Pushdown Automaton (finite automaton + stack)
 //! - **[`modal`]** -- Modal State Machine (multiple DFA sub-machines with mode switching)
+//! - **[`transducer`]** -- ordered effectful state machines for tokenizers
 //!
 //! ## The Chomsky Hierarchy
 //!
@@ -18,9 +19,10 @@
 //! ```
 //!
 //! This crate covers the first two levels: DFA/NFA for regular languages,
-//! and PDA for context-free languages. The modal state machine sits between
-//! the two, providing context-sensitive tokenization (like HTML mode switching)
-//! without the full power of a pushdown automaton.
+//! and PDA for context-free languages.  It also exposes wider primitives such
+//! as modal machines and effectful transducers so tokenizer-style runtimes can
+//! share the same state-machine foundation instead of forcing every problem
+//! into a recognition-only automaton.
 //!
 //! ## Connection to the coding-adventures stack
 //!
@@ -28,16 +30,27 @@
 //! linear DFA. Regex engines convert patterns to NFAs, then to DFAs via subset
 //! construction. Parsers use PDAs. HTML tokenizers use modal state machines.
 
-pub mod types;
+pub mod definitions;
 pub mod dfa;
-pub mod nfa;
 pub mod minimize;
-pub mod pda;
 pub mod modal;
+pub mod nfa;
+pub mod pda;
+pub mod transducer;
+pub mod types;
 
-pub use types::*;
+pub use definitions::{
+    FixtureDefinition, GuardDefinition, InputDefinition, MachineKind, MatcherDefinition,
+    RegisterDefinition, StateDefinition, StateMachineDefinition, TokenDefinition,
+    TransitionDefinition,
+};
 pub use dfa::DFA;
-pub use nfa::{NFA, EPSILON};
 pub use minimize::minimize;
-pub use pda::{PDATransition, PDATraceEntry, PushdownAutomaton};
 pub use modal::{ModalStateMachine, ModeTransitionRecord};
+pub use nfa::{EPSILON, NFA};
+pub use pda::{PDATraceEntry, PDATransition, PushdownAutomaton};
+pub use transducer::{
+    EffectfulInput, EffectfulMatcher, EffectfulStateMachine, EffectfulStep, EffectfulTransition,
+    ANY_INPUT, END_INPUT,
+};
+pub use types::*;

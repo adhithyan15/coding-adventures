@@ -40,7 +40,7 @@
 # │                  │ AND_IMM v2, v2, 255; STORE_BYTE v2, v0, v1        │
 # │ - (DEC)          │ LOAD_BYTE v2, v0, v1; ADD_IMM v2, v2, -1;         │
 # │                  │ AND_IMM v2, v2, 255; STORE_BYTE v2, v0, v1        │
-# │ . (OUTPUT)       │ LOAD_BYTE v2, v0, v1; ADD v4, v2, v6; SYSCALL 1   │
+# │ . (OUTPUT)       │ LOAD_BYTE v2, v0, v1; ADD_IMM v4, v2, 0; SYSCALL 1 │
 # │ , (INPUT)        │ SYSCALL 2; STORE_BYTE v4, v0, v1                  │
 # └──────────────────┴────────────────────────────────────────────────────┘
 #
@@ -322,11 +322,11 @@ module CodingAdventures
                      IR::IrRegister.new(REG_TAPE_BASE),
                      IR::IrRegister.new(REG_TAPE_PTR))
           ir_ids << id1
-          # Step 2: move to syscall argument register (v4 = v2 + v6)
-          id2 = emit(IR::IrOp::ADD,
+          # Step 2: copy to the syscall argument register without v6.
+          id2 = emit(IR::IrOp::ADD_IMM,
                      IR::IrRegister.new(REG_SYS_ARG),
                      IR::IrRegister.new(REG_TEMP),
-                     IR::IrRegister.new(REG_ZERO))
+                     IR::IrImmediate.new(0))
           ir_ids << id2
           # Step 3: syscall 1 = write byte
           id3 = emit(IR::IrOp::SYSCALL, IR::IrImmediate.new(SYSCALL_WRITE))

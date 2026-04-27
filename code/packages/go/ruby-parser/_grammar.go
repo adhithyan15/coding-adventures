@@ -14,17 +14,17 @@ import gt "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-too
 var ParserGrammarData = &gt.ParserGrammar{
 	Version: 1,
 	Rules:   []gt.GrammarRule{
-		{Name: `program`, Body: gt.Repetition{Element: gt.RuleReference{Name: `statement`, IsToken: false}}, LineNumber: 22},
+		{Name: `program`, Body: gt.Repetition{Element: gt.RuleReference{Name: `statement`, IsToken: false}}, LineNumber: 27},
 		{Name: `statement`, Body: gt.Alternation{Choices: []gt.GrammarElement{
 					gt.RuleReference{Name: `assignment`, IsToken: false},
 					gt.RuleReference{Name: `method_call`, IsToken: false},
 					gt.RuleReference{Name: `expression_stmt`, IsToken: false},
-				}}, LineNumber: 23},
+				}}, LineNumber: 28},
 		{Name: `assignment`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.RuleReference{Name: `NAME`, IsToken: true},
 					gt.RuleReference{Name: `EQUALS`, IsToken: true},
 					gt.RuleReference{Name: `expression`, IsToken: false},
-				}}, LineNumber: 24},
+				}}, LineNumber: 29},
 		{Name: `method_call`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.Group{Element: gt.Alternation{Choices: []gt.GrammarElement{
 							gt.RuleReference{Name: `NAME`, IsToken: true},
@@ -39,8 +39,8 @@ var ParserGrammarData = &gt.ParserGrammar{
 								}}},
 						}}},
 					gt.RuleReference{Name: `RPAREN`, IsToken: true},
-				}}, LineNumber: 25},
-		{Name: `expression_stmt`, Body: gt.RuleReference{Name: `expression`, IsToken: false}, LineNumber: 26},
+				}}, LineNumber: 30},
+		{Name: `expression_stmt`, Body: gt.RuleReference{Name: `expression`, IsToken: false}, LineNumber: 31},
 		{Name: `expression`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.RuleReference{Name: `term`, IsToken: false},
 					gt.Repetition{Element: gt.Sequence{Elements: []gt.GrammarElement{
@@ -50,7 +50,7 @@ var ParserGrammarData = &gt.ParserGrammar{
 								}}},
 							gt.RuleReference{Name: `term`, IsToken: false},
 						}}},
-				}}, LineNumber: 27},
+				}}, LineNumber: 32},
 		{Name: `term`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.RuleReference{Name: `factor`, IsToken: false},
 					gt.Repetition{Element: gt.Sequence{Elements: []gt.GrammarElement{
@@ -60,7 +60,7 @@ var ParserGrammarData = &gt.ParserGrammar{
 								}}},
 							gt.RuleReference{Name: `factor`, IsToken: false},
 						}}},
-				}}, LineNumber: 28},
+				}}, LineNumber: 33},
 		{Name: `factor`, Body: gt.Alternation{Choices: []gt.GrammarElement{
 					gt.RuleReference{Name: `NUMBER`, IsToken: true},
 					gt.RuleReference{Name: `STRING`, IsToken: true},
@@ -71,6 +71,6 @@ var ParserGrammarData = &gt.ParserGrammar{
 						gt.RuleReference{Name: `expression`, IsToken: false},
 						gt.RuleReference{Name: `RPAREN`, IsToken: true},
 					}},
-				}}, LineNumber: 29},
+				}}, LineNumber: 34},
 	},
 }

@@ -1,0 +1,9 @@
+[package]
+name = "mermaid-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "Grammar-driven lexer for a focused Mermaid flowchart subset"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

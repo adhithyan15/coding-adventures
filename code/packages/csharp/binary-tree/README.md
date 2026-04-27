@@ -1,0 +1,7 @@
+# CodingAdventures.BinaryTree
+
+Generic binary tree utilities for C#.
+
+The package mirrors the Rust `binary-tree` contract with level-order
+construction, structural predicates, traversals, child lookup, array projection,
+and compact ASCII rendering.

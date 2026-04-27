@@ -57,6 +57,23 @@ local M = {}
 M.VERSION = "0.1.0"
 
 -- ============================================================================
+-- LINEAR and its derivative
+-- ============================================================================
+
+--- linear(x) -> x
+--
+-- Linear activation leaves the weighted sum unchanged. It is useful for
+-- regression output layers and for baseline visualizations.
+function M.linear(x)
+    return x
+end
+
+--- linear_derivative(x) -> 1
+function M.linear_derivative(_x)
+    return 1.0
+end
+
+-- ============================================================================
 -- SIGMOID and its derivative
 -- ============================================================================
 
@@ -293,6 +310,23 @@ function M.leaky_relu_derivative(x, alpha)
     else
         return alpha
     end
+end
+
+-- ============================================================================
+-- SOFTPLUS and its derivative
+-- ============================================================================
+
+--- softplus(x) -> log(1 + e^x)
+--
+-- Softplus is a smooth approximation of ReLU. The implementation uses the
+-- stable equivalent log(1 + e^(-abs(x))) + max(x, 0).
+function M.softplus(x)
+    return math.log(1.0 + math.exp(-math.abs(x))) + math.max(x, 0.0)
+end
+
+--- softplus_derivative(x) -> sigmoid(x)
+function M.softplus_derivative(x)
+    return M.sigmoid(x)
 end
 
 -- ============================================================================

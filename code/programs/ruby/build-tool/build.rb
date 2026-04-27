@@ -66,7 +66,10 @@ module BuildTool
     module_function
 
     # ALL_LANGUAGES is the canonical list of package languages this CLI builds.
-    ALL_LANGUAGES = %w[python ruby go typescript rust elixir lua perl swift haskell].freeze
+    ALL_LANGUAGES = %w[
+      python ruby go typescript rust elixir lua perl swift java kotlin
+      haskell wasm csharp fsharp dotnet
+    ].freeze
 
     # ALL_TOOLCHAINS is the canonical list of CI toolchains we can request.
     ALL_TOOLCHAINS = %w[
@@ -184,7 +187,7 @@ module BuildTool
         end
 
         opts.on("--language LANG",
-                "Only build packages of this language (#{ALL_LANGUAGES.join('/')}//all)") do |lang|
+                "Only build packages of this language (#{ALL_LANGUAGES.join('/')}/all)") do |lang|
           options[:language] = lang
         end
 

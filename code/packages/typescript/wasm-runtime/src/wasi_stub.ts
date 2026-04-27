@@ -27,9 +27,10 @@
  * ==========================================================================
  *
  * This is a **Tier 3 stub** — it goes beyond the minimal Tier 1 (fd_write +
- * proc_exit) to implement the most commonly needed WASI functions:
+ * fd_read + proc_exit) to implement the most commonly needed WASI functions:
  *
  * - **fd_write**: Capture stdout/stderr output (for testing and Hello World).
+ * - **fd_read**: Read bytes from stdin into linear memory.
  * - **proc_exit**: Terminate execution with an exit code.
  * - **args_sizes_get / args_get**: Expose command-line arguments.
  * - **environ_sizes_get / environ_get**: Expose environment variables.
@@ -87,6 +88,9 @@ const ENOSYS = 52;
 
 /** WASI errno: Success. */
 const ESUCCESS = 0;
+
+/** WASI errno: Bad file descriptor. */
+const EBADF = 8;
 
 /** WASI errno: Invalid argument. */
 const EINVAL = 28;
@@ -255,6 +259,7 @@ export class SystemRandom implements WasiRandom {
  * All fields are optional. Sensible defaults are provided:
  * - No command-line args (empty array).
  * - No environment variables (empty object).
+ * - stdin reads EOF by default.
  * - stdout/stderr silently discarded.
  * - System clock and cryptographic random.
  *
@@ -275,6 +280,12 @@ export interface WasiConfig {
 
   /** Environment variables as a key→value map. Defaults to {}. */
   env?: Record<string, string>;
+
+  /**
+   * Called when the program reads from stdin (fd 0).
+   * Returns up to `count` bytes, or an empty result to signal EOF.
+   */
+  stdin?: (count: number) => Uint8Array | readonly number[] | string | null | undefined;
 
   /** Called when the program writes to stdout (fd 1). */
   stdout?: (text: string) => void;
@@ -359,6 +370,7 @@ export class ProcExitError extends Error {
  * ```
  */
 export class WasiStub implements HostInterface {
+  private readonly stdinCallback: (count: number) => Uint8Array | readonly number[] | string | null | undefined;
   private readonly stdoutCallback: (text: string) => void;
   private readonly stderrCallback: (text: string) => void;
   private readonly args: string[];
@@ -368,6 +380,7 @@ export class WasiStub implements HostInterface {
   private instanceMemory: LinearMemory | null = null;
 
   constructor(options?: WasiConfig) {
+    this.stdinCallback = options?.stdin ?? ((_count: number) => new Uint8Array(0));
     this.stdoutCallback = options?.stdout ?? ((_t: string) => {});
     this.stderrCallback = options?.stderr ?? ((_t: string) => {});
     this.args = options?.args ?? [];
@@ -390,6 +403,8 @@ export class WasiStub implements HostInterface {
     switch (name) {
       case "fd_write":
         return this.makeFdWrite();
+      case "fd_read":
+        return this.makeFdRead();
       case "proc_exit":
         return this.makeProcExit();
       case "args_sizes_get":
@@ -482,6 +497,56 @@ export class WasiStub implements HostInterface {
         // Write the number of bytes written to nwritten_ptr.
         memory.storeI32(nwrittenPtr, totalWritten);
 
+        return [i32(ESUCCESS)];
+      },
+    };
+  }
+
+  // ── fd_read ───────────────────────────────────────────────────────
+  //
+  // fd_read(fd: i32, iovs_ptr: i32, iovs_len: i32, nread_ptr: i32) -> i32
+  //
+  // Reads bytes into guest memory buffers. Only fd=0 (stdin) is supported.
+  //
+  private makeFdRead(): HostFunction {
+    const self = this;
+    return {
+      type: makeFuncType(
+        [ValueType.I32, ValueType.I32, ValueType.I32, ValueType.I32],
+        [ValueType.I32],
+      ),
+      call(args: WasmValue[]): WasmValue[] {
+        const fd = args[0].value as number;
+        const iovsPtr = args[1].value as number;
+        const iovsLen = args[2].value as number;
+        const nreadPtr = args[3].value as number;
+
+        if (!self.instanceMemory) {
+          return [i32(ENOSYS)];
+        }
+        if (fd !== 0) {
+          return [i32(EBADF)];
+        }
+
+        const memory = self.instanceMemory;
+        let totalRead = 0;
+
+        for (let i = 0; i < iovsLen; i++) {
+          const bufPtr = memory.loadI32(iovsPtr + i * 8) >>> 0;
+          const bufLen = memory.loadI32(iovsPtr + i * 8 + 4) >>> 0;
+          const chunk = normalizeInputChunk(self.stdinCallback(bufLen), bufLen);
+
+          for (let j = 0; j < chunk.length; j++) {
+            memory.storeI32_8(bufPtr + j, chunk[j]);
+          }
+
+          totalRead += chunk.length;
+          if (chunk.length < bufLen) {
+            break;
+          }
+        }
+
+        memory.storeI32(nreadPtr, totalRead);
         return [i32(ESUCCESS)];
       },
     };
@@ -832,3 +897,34 @@ export class WasiStub implements HostInterface {
     };
   }
 }
+
+function normalizeInputChunk(
+  value: Uint8Array | readonly number[] | string | null | undefined,
+  maxLen: number,
+): Uint8Array {
+  if (value == null) {
+    return new Uint8Array(0);
+  }
+
+  let bytes: Uint8Array;
+  if (typeof value === "string") {
+    bytes = new Uint8Array(
+      Array.from(value, (char) => char.charCodeAt(0) & 0xff),
+    );
+  } else if (value instanceof Uint8Array) {
+    bytes = value;
+  } else {
+    bytes = Uint8Array.from(value, (byte) => byte & 0xff);
+  }
+
+  if (bytes.length <= maxLen) {
+    return bytes;
+  }
+  return bytes.subarray(0, maxLen);
+}
+
+/**
+ * Preferred name for the full WASI host surface.
+ * `WasiStub` remains as a backwards-compatible alias.
+ */
+export const WasiHost = WasiStub;

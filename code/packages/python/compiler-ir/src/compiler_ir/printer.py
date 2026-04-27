@@ -39,6 +39,8 @@ from __future__ import annotations
 from compiler_ir.opcodes import IrOp
 from compiler_ir.types import IrProgram
 
+_OPCODE_COLUMN_WIDTH = max(len(op.name) for op in IrOp) + 1
+
 
 def print_ir(program: IrProgram) -> str:
     """Convert an IrProgram to its canonical text representation.
@@ -94,7 +96,7 @@ def print_ir(program: IrProgram) -> str:
         opcode_name = instr.opcode.name
         operand_str = ", ".join(str(op) for op in instr.operands)
 
-        line = f"  {opcode_name:<11}"
+        line = f"  {opcode_name:<{_OPCODE_COLUMN_WIDTH}}"
         if operand_str:
             line += operand_str
         line += f"  ; #{instr.id}\n"

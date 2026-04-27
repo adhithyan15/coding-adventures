@@ -45,7 +45,7 @@
  * │                │ AND_IMM v2, v2, 255; STORE_BYTE v2, v0, v1             │
  * │ - (DEC)        │ LOAD_BYTE v2, v0, v1; ADD_IMM v2, v2, -1;              │
  * │                │ AND_IMM v2, v2, 255; STORE_BYTE v2, v0, v1             │
- * │ . (OUTPUT)     │ LOAD_BYTE v2, v0, v1; ADD v4, v2, v6; SYSCALL 1       │
+ * │ . (OUTPUT)     │ LOAD_BYTE v2, v0, v1; ADD_IMM v4, v2, 0; SYSCALL 1    │
  * │ , (INPUT)      │ SYSCALL 2; STORE_BYTE v4, v0, v1                       │
  * └────────────────┴──────────────────────────────────────────────────────────┘
  */
@@ -388,12 +388,12 @@ class Compiler {
           reg(REG_TAPE_PTR)
         );
         irIds.push(id1);
-        // Move to syscall argument register (v4 = v2 + v6, where v6 = 0)
+        // Copy to the syscall argument register without depending on v6.
         const id2 = this.emit(
-          IrOp.ADD,
+          IrOp.ADD_IMM,
           reg(REG_SYS_ARG),
           reg(REG_TEMP),
-          reg(REG_ZERO)
+          imm(0)
         );
         irIds.push(id2);
         // Syscall 1 = write byte

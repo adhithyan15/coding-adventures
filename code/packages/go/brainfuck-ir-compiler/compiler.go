@@ -327,11 +327,11 @@ func (c *compiler) compileCommand(node *parser.ASTNode) error {
 			ir.IrRegister{Index: regTapeBase},
 			ir.IrRegister{Index: regTapePtr})
 		irIDs = append(irIDs, id1)
-		// Move to syscall argument register
-		id2 := c.emit(ir.OpAdd,
+		// Copy to the syscall argument register without depending on v6.
+		id2 := c.emit(ir.OpAddImm,
 			ir.IrRegister{Index: regSysArg},
 			ir.IrRegister{Index: regTemp},
-			ir.IrRegister{Index: regZero})
+			ir.IrImmediate{Value: 0})
 		irIDs = append(irIDs, id2)
 		// Syscall 1 = write byte
 		id3 := c.emit(ir.OpSyscall, ir.IrImmediate{Value: syscallWrite})
@@ -361,10 +361,11 @@ func (c *compiler) compileCommand(node *parser.ASTNode) error {
 // current cell by the given delta (+1 or -1).
 //
 // The sequence is:
-//   LOAD_BYTE  v2, v0, v1        ← load current cell
-//   ADD_IMM    v2, v2, delta      ← increment/decrement
-//   AND_IMM    v2, v2, 255        ← mask to byte (if enabled)
-//   STORE_BYTE v2, v0, v1        ← store back
+//
+//	LOAD_BYTE  v2, v0, v1        ← load current cell
+//	ADD_IMM    v2, v2, delta      ← increment/decrement
+//	AND_IMM    v2, v2, 255        ← mask to byte (if enabled)
+//	STORE_BYTE v2, v0, v1        ← store back
 func (c *compiler) emitCellMutation(delta int) []int {
 	var ids []int
 
@@ -409,19 +410,26 @@ func (c *compiler) emitCellMutation(delta int) []int {
 // to the __trap_oob label (which calls exit(1)).
 //
 // RIGHT (>):
-//   CMP_GT  v3, v1, v5        ← is ptr >= tape_size?
+//   ADD_IMM v3, v1, 1         ← predicted ptr after increment
+//   CMP_GT  v3, v3, v5        ← is predicted ptr > max?
 //   BRANCH_NZ v3, __trap_oob  ← if so, trap
 //
 // LEFT (<):
-//   CMP_LT  v3, v1, v6        ← is ptr < 0?
+//   ADD_IMM v3, v1, -1        ← predicted ptr after decrement
+//   CMP_LT  v3, v3, v6        ← is predicted ptr < 0?
 //   BRANCH_NZ v3, __trap_oob  ← if so, trap
 // ──────────────────────────────────────────────────────────────────────────────
 
 func (c *compiler) emitBoundsCheckRight() []int {
 	var ids []int
-	id := c.emit(ir.OpCmpGt,
+	id := c.emit(ir.OpAddImm,
 		ir.IrRegister{Index: regTemp2},
 		ir.IrRegister{Index: regTapePtr},
+		ir.IrImmediate{Value: 1})
+	ids = append(ids, id)
+	id = c.emit(ir.OpCmpGt,
+		ir.IrRegister{Index: regTemp2},
+		ir.IrRegister{Index: regTemp2},
 		ir.IrRegister{Index: regMaxPtr})
 	ids = append(ids, id)
 	id = c.emit(ir.OpBranchNz,
@@ -433,13 +441,18 @@ func (c *compiler) emitBoundsCheckRight() []int {
 
 func (c *compiler) emitBoundsCheckLeft() []int {
 	var ids []int
-	id := c.emit(ir.OpCmpLt,
+	id := c.emit(ir.OpAddImm,
+		ir.IrRegister{Index: regTemp2},
 		ir.IrRegister{Index: regTapePtr},
-		ir.IrRegister{Index: regTapePtr},
+		ir.IrImmediate{Value: -1})
+	ids = append(ids, id)
+	id = c.emit(ir.OpCmpLt,
+		ir.IrRegister{Index: regTemp2},
+		ir.IrRegister{Index: regTemp2},
 		ir.IrRegister{Index: regZero})
 	ids = append(ids, id)
 	id = c.emit(ir.OpBranchNz,
-		ir.IrRegister{Index: regTapePtr},
+		ir.IrRegister{Index: regTemp2},
 		ir.IrLabel{Name: "__trap_oob"})
 	ids = append(ids, id)
 	return ids

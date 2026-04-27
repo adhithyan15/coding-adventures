@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+    <PackageId>CodingAdventures.WasmRuntime</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>Pure C# WebAssembly runtime</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="tests\**\*.cs" />
+    <EmbeddedResource Remove="tests\**" />
+    <None Remove="tests\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../wasm-module-parser/CodingAdventures.WasmModuleParser.csproj" />
+    <ProjectReference Include="../wasm-validator/CodingAdventures.WasmValidator.csproj" />
+    <ProjectReference Include="../wasm-execution/CodingAdventures.WasmExecution.csproj" />
+    <ProjectReference Include="../wasm-types/CodingAdventures.WasmTypes.csproj" />
+  </ItemGroup>
+</Project>

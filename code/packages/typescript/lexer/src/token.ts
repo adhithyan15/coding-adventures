@@ -60,12 +60,30 @@
  *   line: The 1-based line number where this token starts.
  *   column: The 1-based column number where this token starts.
  */
+export interface Trivia {
+  readonly type: string;
+  readonly value: string;
+  readonly line: number;
+  readonly column: number;
+  readonly endLine: number;
+  readonly endColumn: number;
+  readonly startOffset: number;
+  readonly endOffset: number;
+}
+
 export interface Token {
   readonly type: string;
   readonly value: string;
   readonly line: number;
   readonly column: number;
+  readonly typeName?: string;
   readonly flags?: number;
+  readonly endLine?: number;
+  readonly endColumn?: number;
+  readonly startOffset?: number;
+  readonly endOffset?: number;
+  readonly tokenIndex?: number;
+  readonly leadingTrivia?: readonly Trivia[];
 }
 
 // ---------------------------------------------------------------------------

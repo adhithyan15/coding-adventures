@@ -1,0 +1,51 @@
+# @version 1
+
+# SWI-Prolog parser grammar.
+#
+# This first SWI slice keeps ordinary executable clauses compatible with the
+# shared lowerer while owning SWI top-level directives in this dialect grammar.
+
+program = { statement } ;
+
+statement           = directive_statement | query_statement
+                    | dcg_statement | rule_statement | fact_statement ;
+directive_statement = RULE goal DOT ;
+query_statement     = QUERY goal DOT ;
+dcg_statement       = callable_term DCG dcg_body DOT ;
+rule_statement      = callable_term RULE goal DOT ;
+fact_statement      = callable_term DOT ;
+
+goal          = disjunction ;
+disjunction   = conjunction { SEMICOLON conjunction } ;
+conjunction   = goal_primary { COMMA goal_primary } ;
+goal_primary  = CUT | grouped_goal | equality_goal | callable_goal ;
+grouped_goal  = LPAREN goal RPAREN ;
+equality_goal = term equality_operator term ;
+callable_goal = callable_term ;
+
+dcg_body          = dcg_disjunction ;
+dcg_disjunction   = dcg_conjunction { SEMICOLON dcg_conjunction } ;
+dcg_conjunction   = dcg_primary { COMMA dcg_primary } ;
+dcg_primary       = CUT | grouped_dcg_body | braced_goal | equality_goal
+                  | list_term | callable_goal ;
+grouped_dcg_body  = LPAREN dcg_body RPAREN ;
+braced_goal       = LCURLY goal RCURLY ;
+
+equality_operator = "=" | "\=" ;
+
+callable_term = compound_term | atom_term ;
+term          = list_term | compound_term | atom_term | variable_term
+              | anonymous_term | number_term | string_term ;
+
+compound_term  = atom_token LPAREN [ term_arguments ] RPAREN ;
+term_arguments = term { COMMA term } ;
+
+list_term = LBRACKET [ list_body ] RBRACKET ;
+list_body = term { COMMA term } [ BAR term ] ;
+
+atom_term      = atom_token ;
+atom_token     = ATOM ;
+variable_term  = VARIABLE ;
+anonymous_term = ANON_VAR ;
+number_term    = FLOAT | INTEGER ;
+string_term    = STRING ;

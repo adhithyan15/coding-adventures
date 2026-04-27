@@ -1,0 +1,27 @@
+[package]
+name = "markdown-reader"
+version = "0.1.0"
+edition = "2021"
+description = "Native Markdown viewer. Reads Markdown from a file (or stdin), pipes it through the full coding-adventures text stack into PaintInstructions, and displays the rendered scene with the platform paint backend."
+
+[dependencies]
+commonmark-parser = { path = "../../../packages/rust/commonmark-parser" }
+document-ast-to-layout = { path = "../../../packages/rust/document-ast-to-layout" }
+layout-ir = { path = "../../../packages/rust/layout-ir" }
+layout-block = { path = "../../../packages/rust/layout-block" }
+layout-text-measure-native = { path = "../../../packages/rust/layout-text-measure-native" }
+layout-to-paint = { path = "../../../packages/rust/layout-to-paint" }
+paint-codec-png = { path = "../../../packages/rust/paint-codec-png" }
+paint-instructions = { path = "../../../packages/rust/paint-instructions" }
+paint-metal = { path = "../../../packages/rust/paint-metal" }
+text-native = { path = "../../../packages/rust/text-native" }
+
+[target.'cfg(target_vendor = "apple")'.dependencies]
+objc-bridge = { path = "../../../packages/rust/objc-bridge" }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+paint-vm-direct2d = { path = "../../../packages/rust/paint-vm-direct2d" }
+
+[[bin]]
+name = "markdown-reader"
+path = "src/main.rs"

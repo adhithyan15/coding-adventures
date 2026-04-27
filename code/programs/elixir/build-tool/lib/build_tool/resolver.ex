@@ -79,11 +79,15 @@ defmodule BuildTool.Resolver do
       end)
 
     # Build the ecosystem-specific name mapping table.
-    known_names = build_known_names(packages)
+    known_names_by_scope =
+      packages
+      |> Enum.map(&dependency_scope(&1.language))
+      |> Enum.uniq()
+      |> Map.new(fn scope -> {scope, build_known_names(packages, scope)} end)
 
     # Parse dependencies for each package and add edges.
     Enum.reduce(packages, graph, fn pkg, g ->
-      deps = parse_deps(pkg, known_names)
+      deps = parse_deps(pkg, Map.fetch!(known_names_by_scope, dependency_scope(pkg.language)))
 
       Enum.reduce(deps, g, fn dep_name, g2 ->
         # Edge direction: dep -> pkg means "dep must be built before pkg".
@@ -102,8 +106,11 @@ defmodule BuildTool.Resolver do
 
   Exported for testing.
   """
-  def build_known_names(packages) do
+  def build_known_names(packages, language \\ nil) do
     Enum.reduce(packages, %{}, fn pkg, acc ->
+      if language != nil and not in_dependency_scope?(pkg.language, language) do
+        acc
+      else
       case pkg.language do
         "python" ->
           # Convert dir name to PyPI name: "logic-gates" -> "coding-adventures-logic-gates"
@@ -147,7 +154,17 @@ defmodule BuildTool.Resolver do
         "rust" ->
           # Rust crate names use the directory name directly (kebab-case).
           crate_name = String.downcase(Path.basename(pkg.path))
-          Map.put(acc, crate_name, pkg.name)
+
+          acc
+          |> Map.put(crate_name, pkg.name)
+          |> maybe_put(read_cargo_package_name(pkg.path), pkg.name)
+
+        "wasm" ->
+          crate_name = String.downcase(Path.basename(pkg.path))
+
+          acc
+          |> Map.put(crate_name, pkg.name)
+          |> maybe_put(read_cargo_package_name(pkg.path), pkg.name)
 
         "elixir" ->
           # Elixir mix names: "logic-gates" -> "coding_adventures_logic_gates"
@@ -177,8 +194,18 @@ defmodule BuildTool.Resolver do
           cabal_name = "coding-adventures-" <> String.downcase(Path.basename(pkg.path))
           Map.put(acc, cabal_name, pkg.name)
 
+        "csharp" ->
+          Map.put(acc, String.downcase(Path.basename(pkg.path)), pkg.name)
+
+        "fsharp" ->
+          Map.put(acc, String.downcase(Path.basename(pkg.path)), pkg.name)
+
+        "dotnet" ->
+          Map.put(acc, String.downcase(Path.basename(pkg.path)), pkg.name)
+
         _ ->
           acc
+      end
       end
     end)
   end
@@ -199,10 +226,14 @@ defmodule BuildTool.Resolver do
       "go" -> parse_go_deps(pkg, known_names)
       "typescript" -> parse_typescript_deps(pkg, known_names)
       "rust" -> parse_rust_deps(pkg, known_names)
+      "wasm" -> parse_rust_deps(pkg, known_names)
       "elixir" -> parse_elixir_deps(pkg, known_names)
       "lua" -> parse_lua_deps(pkg, known_names)
       "perl" -> parse_perl_deps(pkg, known_names)
       "haskell" -> parse_haskell_deps(pkg, known_names)
+      "csharp" -> parse_dotnet_deps(pkg, known_names)
+      "fsharp" -> parse_dotnet_deps(pkg, known_names)
+      "dotnet" -> parse_dotnet_deps(pkg, known_names)
       _ -> []
     end
   end
@@ -498,6 +529,39 @@ defmodule BuildTool.Resolver do
     end
   end
 
+  defp parse_dotnet_deps(pkg, known_names) do
+    pkg.path
+    |> project_files()
+    |> Enum.flat_map(fn project_file ->
+      case File.read(project_file) do
+        {:ok, data} ->
+          ~r/<ProjectReference\s+Include\s*=\s*"\.\.[\\\/]+([^\/\\"]+)[\\\/][^"]*"/
+          |> Regex.scan(data)
+          |> Enum.flat_map(fn
+            [_, dep_dir] ->
+              dep_dir = String.downcase(dep_dir)
+
+              cond do
+                String.contains?(dep_dir, "/") or String.contains?(dep_dir, "\\") or dep_dir == ".." ->
+                  []
+
+                true ->
+                  case Map.get(known_names, dep_dir) do
+                    nil -> []
+                    pkg_name -> [pkg_name]
+                  end
+              end
+
+            _ ->
+              []
+          end)
+
+        {:error, _} ->
+          []
+      end
+    end)
+  end
+
   defp parse_rust_lines([], _known, _in_deps, acc), do: Enum.reverse(acc)
 
   defp parse_rust_lines([line | rest], known, in_deps, acc) do
@@ -717,6 +781,55 @@ defmodule BuildTool.Resolver do
       {:error, _} -> []
     end
   end
+
+  defp dependency_scope(language) do
+    case language do
+      lang when lang in ["csharp", "fsharp", "dotnet"] -> "dotnet"
+      "wasm" -> "wasm"
+      _ -> language
+    end
+  end
+
+  defp in_dependency_scope?(package_language, scope) do
+    case scope do
+      "dotnet" -> package_language in ["csharp", "fsharp", "dotnet"]
+      "wasm" -> package_language in ["wasm", "rust"]
+      _ -> package_language == scope
+    end
+  end
+
+  defp read_cargo_package_name(path) do
+    cargo_toml = Path.join(path, "Cargo.toml")
+
+    case File.read(cargo_toml) do
+      {:ok, data} ->
+        case Regex.run(~r/^\s*name\s*=\s*"([^"]+)"/m, data) do
+          [_, name] -> String.downcase(String.trim(name))
+          _ -> nil
+        end
+
+      {:error, _} ->
+        nil
+    end
+  end
+
+  defp project_files(path) do
+    case File.ls(path) do
+      {:ok, entries} ->
+        entries
+        |> Enum.sort()
+        |> Enum.filter(fn entry ->
+          String.ends_with?(entry, ".csproj") or String.ends_with?(entry, ".fsproj")
+        end)
+        |> Enum.map(&Path.join(path, &1))
+
+      {:error, _} ->
+        []
+    end
+  end
+
+  defp maybe_put(map, nil, _value), do: map
+  defp maybe_put(map, key, value), do: Map.put(map, key, value)
 
   defp extract_lua_deps(line, known_names) do
     ~r/"([^"]+)"/

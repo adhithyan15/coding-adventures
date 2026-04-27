@@ -6,7 +6,9 @@ module Lexer.Token
     , tokenContextKeyword
     , renderTokenType
     , effectiveTypeName
+    , canonicalTokenName
     , makeToken
+    , withTypeName
     , withFlags
     , simpleTokenType
     ) where
@@ -110,6 +112,38 @@ effectiveTypeName token =
         Just customName -> customName
         Nothing -> renderTokenType (tokenType token)
 
+canonicalTokenName :: Token -> String
+canonicalTokenName token =
+    case tokenTypeName token of
+        Just customName -> customName
+        Nothing ->
+            case tokenType token of
+                TokenName -> "NAME"
+                TokenNumber -> "NUMBER"
+                TokenString -> "STRING"
+                TokenKeyword -> "KEYWORD"
+                TokenPlus -> "PLUS"
+                TokenMinus -> "MINUS"
+                TokenStar -> "STAR"
+                TokenSlash -> "SLASH"
+                TokenEquals -> "EQUALS"
+                TokenEqualsEquals -> "EQUALS_EQUALS"
+                TokenLParen -> "LPAREN"
+                TokenRParen -> "RPAREN"
+                TokenComma -> "COMMA"
+                TokenColon -> "COLON"
+                TokenSemicolon -> "SEMICOLON"
+                TokenLBrace -> "LBRACE"
+                TokenRBrace -> "RBRACE"
+                TokenLBracket -> "LBRACKET"
+                TokenRBracket -> "RBRACKET"
+                TokenDot -> "DOT"
+                TokenBang -> "BANG"
+                TokenNewline -> "NEWLINE"
+                TokenIndent -> "INDENT"
+                TokenDedent -> "DEDENT"
+                TokenEof -> "EOF"
+
 makeToken :: TokenType -> String -> Int -> Int -> Token
 makeToken tokenTypeValue value line column =
     Token
@@ -120,6 +154,9 @@ makeToken tokenTypeValue value line column =
         , tokenTypeName = Nothing
         , tokenFlags = 0
         }
+
+withTypeName :: String -> Token -> Token
+withTypeName customName token = token {tokenTypeName = Just customName}
 
 withFlags :: Int -> Token -> Token
 withFlags flags token = token {tokenFlags = tokenFlags token .|. flags}

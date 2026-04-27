@@ -1,0 +1,17 @@
+[package]
+name = "ir-to-wasm-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "Lower the generic compiler IR into WebAssembly 1.0 modules"
+
+[dependencies]
+compiler-ir = { path = "../compiler-ir" }
+wasm-leb128 = { path = "../wasm-leb128" }
+wasm-opcodes = { path = "../wasm-opcodes" }
+wasm-types = { path = "../wasm-types" }
+
+[dev-dependencies]
+brainfuck = { path = "../brainfuck" }
+brainfuck-ir-compiler = { path = "../brainfuck-ir-compiler" }
+wasm-module-encoder = { path = "../wasm-module-encoder" }
+wasm-runtime = { path = "../wasm-runtime" }

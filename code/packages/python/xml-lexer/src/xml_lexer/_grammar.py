@@ -206,4 +206,5 @@ TOKEN_GRAMMAR = TokenGrammar(
             ],
         ),
     },
+    layout_keywords=[],
 )

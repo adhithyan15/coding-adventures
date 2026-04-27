@@ -361,6 +361,7 @@ type GrammarLexer struct {
 
 	// Indentation mode state
 	indentMode   bool
+	layoutMode   bool
 	indentStack  []int
 	bracketDepth int // Legacy: single bracket depth for indentation mode
 
@@ -390,6 +391,7 @@ type GrammarLexer struct {
 	// for O(1) lookup. Words in this set are emitted as NAME tokens with
 	// the TokenContextKeyword flag.
 	contextKeywordSet map[string]struct{}
+	layoutKeywordSet  map[string]struct{}
 
 	// --- Pattern groups ---
 	// groupPatterns maps group names to their compiled patterns. The
@@ -562,6 +564,10 @@ func newGrammarLexerImpl(source string, grammar *grammartools.TokenGrammar) *Gra
 	for _, ck := range grammar.ContextKeywords {
 		contextKeywordSet[ck] = struct{}{}
 	}
+	layoutKeywordSet := make(map[string]struct{})
+	for _, kw := range grammar.LayoutKeywords {
+		layoutKeywordSet[kw] = struct{}{}
+	}
 
 	return &GrammarLexer{
 		source:            src,
@@ -576,6 +582,7 @@ func newGrammarLexerImpl(source string, grammar *grammartools.TokenGrammar) *Gra
 		skipPatterns:      skipPatterns,
 		hasSkipPatterns:   len(grammar.SkipDefinitions) > 0,
 		indentMode:        grammar.Mode == "indentation",
+		layoutMode:        grammar.Mode == "layout",
 		indentStack:       []int{0},
 		bracketDepth:      0,
 		groupPatterns:     groupPatterns,
@@ -587,6 +594,7 @@ func newGrammarLexerImpl(source string, grammar *grammartools.TokenGrammar) *Gra
 		preTokenizeHooks:  nil,
 		postTokenizeHooks: nil,
 		contextKeywordSet: contextKeywordSet,
+		layoutKeywordSet:  layoutKeywordSet,
 	}
 }
 
@@ -976,6 +984,8 @@ func (l *GrammarLexer) Tokenize() []Token {
 			var tokens []Token
 			if l.indentMode {
 				tokens = l.tokenizeIndentation()
+			} else if l.layoutMode {
+				tokens = l.tokenizeLayout()
 			} else {
 				tokens = l.tokenizeStandard()
 			}
@@ -1195,6 +1205,110 @@ func (l *GrammarLexer) tokenizeIndentation() []Token {
 
 	tokens = append(tokens, Token{Type: TokenEOF, Value: "", Line: l.line, Column: l.column, TypeName: "EOF"})
 	return tokens
+}
+
+func (l *GrammarLexer) tokenizeLayout() []Token {
+	return l.applyLayout(l.tokenizeStandard())
+}
+
+func (l *GrammarLexer) applyLayout(tokens []Token) []Token {
+	result := make([]Token, 0, len(tokens))
+	layoutStack := []int{}
+	pendingLayouts := 0
+	suppressDepth := 0
+
+	for index, token := range tokens {
+		typeName := token.TypeName
+
+		if typeName == "NEWLINE" {
+			result = append(result, token)
+			nextToken := l.nextLayoutToken(tokens, index+1)
+			if suppressDepth == 0 && nextToken != nil {
+				for len(layoutStack) > 0 && nextToken.Column < layoutStack[len(layoutStack)-1] {
+					result = append(result, l.virtualLayoutToken("VIRTUAL_RBRACE", "}", *nextToken))
+					layoutStack = layoutStack[:len(layoutStack)-1]
+				}
+
+				if len(layoutStack) > 0 &&
+					nextToken.TypeName != "EOF" &&
+					nextToken.Value != "}" &&
+					nextToken.Column == layoutStack[len(layoutStack)-1] {
+					result = append(result, l.virtualLayoutToken("VIRTUAL_SEMICOLON", ";", *nextToken))
+				}
+			}
+			continue
+		}
+
+		if typeName == "EOF" {
+			for len(layoutStack) > 0 {
+				result = append(result, l.virtualLayoutToken("VIRTUAL_RBRACE", "}", token))
+				layoutStack = layoutStack[:len(layoutStack)-1]
+			}
+			result = append(result, token)
+			continue
+		}
+
+		if pendingLayouts > 0 {
+			if token.Value == "{" {
+				pendingLayouts--
+			} else {
+				for count := 0; count < pendingLayouts; count++ {
+					layoutStack = append(layoutStack, token.Column)
+					result = append(result, l.virtualLayoutToken("VIRTUAL_LBRACE", "{", token))
+				}
+				pendingLayouts = 0
+			}
+		}
+
+		result = append(result, token)
+
+		if !strings.HasPrefix(token.TypeName, "VIRTUAL_") {
+			switch token.Value {
+			case "(", "[", "{":
+				suppressDepth++
+			case ")", "]", "}":
+				if suppressDepth > 0 {
+					suppressDepth--
+				}
+			}
+		}
+
+		if l.isLayoutKeyword(token) {
+			pendingLayouts++
+		}
+	}
+
+	return result
+}
+
+func (l *GrammarLexer) nextLayoutToken(tokens []Token, startIndex int) *Token {
+	for idx := startIndex; idx < len(tokens); idx++ {
+		if tokens[idx].TypeName != "NEWLINE" {
+			return &tokens[idx]
+		}
+	}
+	return nil
+}
+
+func (l *GrammarLexer) virtualLayoutToken(typeName, value string, anchor Token) Token {
+	return Token{
+		Type:     TokenName,
+		Value:    value,
+		Line:     anchor.Line,
+		Column:   anchor.Column,
+		TypeName: typeName,
+	}
+}
+
+func (l *GrammarLexer) isLayoutKeyword(token Token) bool {
+	if len(l.layoutKeywordSet) == 0 {
+		return false
+	}
+	if _, ok := l.layoutKeywordSet[token.Value]; ok {
+		return true
+	}
+	_, ok := l.layoutKeywordSet[strings.ToLower(token.Value)]
+	return ok
 }
 
 // processLineStart handles indentation at the start of a logical line.

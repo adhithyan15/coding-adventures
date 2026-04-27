@@ -5,6 +5,16 @@ All notable changes to the ge225-simulator package will be documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2026-04-19
+
+### Fixed
+- `_execute_branch_test`: the conditional was inverted (`if not cond: skip`) instead of
+  the correct GE-225 semantics (`if cond: skip`). All skip-test instructions (BZE, BNZ,
+  BMI, BPL, BOD, BEV, BOV, BNO, BPE, BPC, BNR, BNN) now correctly skip the next word
+  when their named condition is **true**, matching the historical GE-225 programming manual.
+  The bug had no observable effect on the existing tests because the affected branch tests
+  coincidentally produced the same PC values by different code paths.
+
 ## [0.1.0] - 2026-04-15
 
 ### Added

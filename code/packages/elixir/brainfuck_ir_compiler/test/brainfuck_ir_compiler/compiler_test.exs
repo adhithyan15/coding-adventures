@@ -3,7 +3,7 @@ defmodule CodingAdventures.BrainfuckIrCompiler.CompilerTest do
 
   alias CodingAdventures.BrainfuckIrCompiler
   alias CodingAdventures.BrainfuckIrCompiler.BuildConfig
-  alias CodingAdventures.CompilerIr.{IrProgram, Printer, Parser}
+  alias CodingAdventures.CompilerIr.{Printer, Parser}
   alias CodingAdventures.Parser.ASTNode
 
   # ── Test helpers ─────────────────────────────────────────────────────────────
@@ -167,6 +167,21 @@ defmodule CodingAdventures.BrainfuckIrCompiler.CompilerTest do
         end)
 
       assert found, "Expected SYSCALL 1 for OUTPUT"
+    end
+
+    test "copies the byte into v4 with ADD_IMM 0 in release mode" do
+      result = must_compile(".")
+
+      found =
+        Enum.any?(result.program.instructions, fn i ->
+          i.opcode == :add_imm and
+            length(i.operands) >= 3 and
+            match?(%{index: 4}, hd(i.operands)) and
+            match?(%{index: 2}, Enum.at(i.operands, 1)) and
+            match?(%{value: 0}, Enum.at(i.operands, 2))
+        end)
+
+      assert found, "Expected ADD_IMM v4, v2, 0 for OUTPUT"
     end
   end
 

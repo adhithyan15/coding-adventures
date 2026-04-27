@@ -74,6 +74,37 @@ sub instr {
     is( $vm->stack->[1], 7, 'DUP: duplicate is identical' );
 }
 
+# ===== Regression: execute_with_context follows code switches =====
+{
+    my $vm = $VM->new();
+    my $caller = make_code(instructions => [ instr(0xAA) ]);
+    my $callee = make_code(instructions => [ instr(0xAB) ]);
+    my $ctx = {
+        caller_hits => 0,
+        callee_hits => 0,
+        callee      => $callee,
+    };
+
+    $vm->register_context_opcode(0xAA, sub {
+        my ($vm, $instr, $code, $context) = @_;
+        $context->{caller_hits}++;
+        die "stuck in caller loop\n" if $context->{caller_hits} > 1;
+        $vm->{_program} = $context->{callee};
+        $vm->{pc} = 0;
+    });
+
+    $vm->register_context_opcode(0xAB, sub {
+        my ($vm, $instr, $code, $context) = @_;
+        $context->{callee_hits}++;
+        $vm->{halted} = 1;
+    });
+
+    ok(eval { $vm->execute_with_context($caller, $ctx); 1 }, 'context execution follows code switches')
+        or diag($@);
+    is($ctx->{caller_hits}, 1, 'caller executed once');
+    is($ctx->{callee_hits}, 1, 'callee executed after the switch');
+}
+
 # ===== Test 5: ADD =====
 {
     my $vm = $VM->new();

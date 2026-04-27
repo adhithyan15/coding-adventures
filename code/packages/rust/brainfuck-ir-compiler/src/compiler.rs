@@ -29,7 +29,7 @@
 //! | `<`     | `ADD_IMM v1, v1, -1` |
 //! | `+`     | `LOAD_BYTE v2, v0, v1; ADD_IMM v2, v2, 1; AND_IMM v2, v2, 255; STORE_BYTE v2, v0, v1` |
 //! | `-`     | `LOAD_BYTE v2, v0, v1; ADD_IMM v2, v2, -1; AND_IMM v2, v2, 255; STORE_BYTE v2, v0, v1` |
-//! | `.`     | `LOAD_BYTE v2, v0, v1; ADD v4, v2, v6; SYSCALL 1` |
+//! | `.`     | `LOAD_BYTE v2, v0, v1; ADD_IMM v4, v2, 0; SYSCALL 1` |
 //! | `,`     | `SYSCALL 2; STORE_BYTE v4, v0, v1` |
 //! | `[`/`]` | `LABEL loop_N_start; LOAD_BYTE; BRANCH_Z loop_N_end; ...; JUMP loop_N_start; LABEL loop_N_end` |
 
@@ -358,11 +358,11 @@ impl Compiler {
                     Self::reg(REG_TAPE_PTR),
                 ]);
                 ir_ids.push(id1);
-                // Move to syscall argument register: v4 = v2 + v6
-                let id2 = self.emit(IrOp::Add, vec![
+                // Copy to the syscall argument register without depending on v6.
+                let id2 = self.emit(IrOp::AddImm, vec![
                     Self::reg(REG_SYS_ARG),
                     Self::reg(REG_TEMP),
-                    Self::reg(REG_ZERO),
+                    Self::imm(0),
                 ]);
                 ir_ids.push(id2);
                 // Syscall 1 = write byte
@@ -702,11 +702,18 @@ mod tests {
     #[test]
     fn test_compile_output() {
         let result = must_compile(".", release_config());
-        // OUTPUT: should have SYSCALL 1
+        let found_copy = result.program.instructions.iter().any(|i| {
+            i.opcode == IrOp::AddImm
+                && i.operands.len() == 3
+                && i.operands[0] == IrOperand::Register(REG_SYS_ARG)
+                && i.operands[1] == IrOperand::Register(REG_TEMP)
+                && i.operands[2] == IrOperand::Immediate(0)
+        });
         let found = result.program.instructions.iter().any(|i| {
             i.opcode == IrOp::Syscall
                 && i.operands.first() == Some(&IrOperand::Immediate(SYSCALL_WRITE))
         });
+        assert!(found_copy, "expected ADD_IMM copy into syscall arg register");
         assert!(found, "expected SYSCALL 1 (write) for OUTPUT");
     }
 

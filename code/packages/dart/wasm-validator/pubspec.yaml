@@ -1,0 +1,22 @@
+name: coding_adventures_wasm_validator
+description: >
+  Structural and instruction-level validation for the MVP Dart WASM subset.
+version: 0.1.0
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_wasm_leb128:
+    path: ../wasm-leb128
+  coding_adventures_wasm_opcodes:
+    path: ../wasm-opcodes
+  coding_adventures_wasm_types:
+    path: ../wasm-types
+
+dev_dependencies:
+  coding_adventures_wasm_module_parser:
+    path: ../wasm-module-parser
+  test: ^1.25.0

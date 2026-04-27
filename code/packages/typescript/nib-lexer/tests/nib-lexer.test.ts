@@ -51,4 +51,18 @@ describe("nib-lexer", () => {
       "SEMICOLON",
     ]);
   });
+
+  it("can preserve comment and whitespace trivia for formatter-oriented callers", () => {
+    const tokens = tokenizeNib("// lead\nconst MAX: u4 = 10;", {
+      preserveSourceInfo: true,
+    });
+
+    expect(tokens[0]?.type).toBe("const");
+    expect(tokens[0]?.leadingTrivia?.map((item) => item.type)).toEqual([
+      "LINE_COMMENT",
+      "WHITESPACE",
+    ]);
+    expect(tokens[0]?.startOffset).toBe(8);
+    expect(tokens[0]?.tokenIndex).toBe(0);
+  });
 });

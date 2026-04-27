@@ -1,0 +1,4 @@
+uv venv --quiet --clear
+uv pip install -e ../grammar-tools -e ../graph -e ../directed-graph -e ../state-machine -e ../lexer -e ../parser -e ../sql-lexer -e ../sql-parser -e ../sql-backend -e ../sql-planner -e ../sql-optimizer -e ../sql-codegen -e ../sql-vm -e ../storage-sqlite -e ".[dev]" --quiet
+.venv/bin/ruff check src/ tests/
+.venv/bin/python -m pytest tests/

@@ -4,3 +4,4 @@ packages:
   ../directed-graph
   ../state-machine
   ../lexer
+  ../grammar-tools

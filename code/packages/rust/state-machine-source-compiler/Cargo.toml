@@ -1,0 +1,9 @@
+[package]
+name = "state-machine-source-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "Build-time source generation for typed state-machine definitions"
+
+[dependencies]
+state-machine = { path = "../state-machine" }
+state-machine-markup-deserializer = { path = "../state-machine-markup-deserializer" }

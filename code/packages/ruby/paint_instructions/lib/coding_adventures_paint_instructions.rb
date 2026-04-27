@@ -19,6 +19,27 @@ module CodingAdventures
       )
     end
 
+    # paint_path creates a PaintPath instruction — an arbitrary vector path
+    # built from an array of PathCommand hashes. Each command has a :kind key
+    # and optional coordinate fields:
+    #
+    #   { kind: "move_to", x: 10, y: 20 }
+    #   { kind: "line_to", x: 50, y: 60 }
+    #   { kind: "close" }
+    #
+    # This is used by hex-module grids (MaxiCode) where each dark module is
+    # rendered as a filled flat-top hexagon made of six line_to commands.
+    def paint_path(commands, fill: "#000000", stroke: nil, stroke_width: nil, metadata: {})
+      OpenStruct.new(
+        kind: "path",
+        commands: commands,
+        fill: fill,
+        stroke: stroke,
+        stroke_width: stroke_width,
+        metadata: metadata,
+      )
+    end
+
     def paint_scene(width:, height:, instructions:, background: "#ffffff", metadata: {})
       OpenStruct.new(
         width: width,

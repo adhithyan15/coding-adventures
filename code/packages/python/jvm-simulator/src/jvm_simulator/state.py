@@ -88,9 +88,9 @@ class JVMState:
     True
     """
 
-    stack: tuple[int, ...]
-    locals: tuple[int | None, ...]
-    constants: tuple[int | str, ...]
+    stack: tuple[object, ...]
+    locals: tuple[object | None, ...]
+    constants: tuple[object, ...]
     pc: int
     halted: bool
-    return_value: int | None
+    return_value: object | None

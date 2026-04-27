@@ -1,0 +1,23 @@
+{
+  "name": "@coding-adventures/micro-qr",
+  "version": "0.1.0",
+  "description": "Micro QR Code encoder — ISO/IEC 18004:2015 Annex E, produces scannable M1–M4 symbols",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/barcode-2d": "file:../barcode-2d",
+    "@coding-adventures/gf256": "file:../gf256"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

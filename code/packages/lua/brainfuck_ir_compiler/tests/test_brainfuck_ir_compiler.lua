@@ -317,6 +317,16 @@ describe("brainfuck_ir_compiler", function()
             assert.is_true(count_opcode(r.program, ir.IrOp.LOAD_BYTE) >= 1)
         end)
 
+        it("copies the byte into v4 with ADD_IMM 0 in release mode", function()
+            local r = must_compile(".", bic.release_config())
+            local found = find_instruction(r.program, ir.IrOp.ADD_IMM, function(ops)
+                return ops[1] and ops[1].kind == "register" and ops[1].index == 4
+                   and ops[2] and ops[2].kind == "register" and ops[2].index == 2
+                   and ops[3] and ops[3].kind == "immediate" and ops[3].value == 0
+            end)
+            assert.is_not_nil(found, "expected ADD_IMM v4, v2, 0 for OUTPUT")
+        end)
+
     end)
 
     -- -----------------------------------------------------------------------

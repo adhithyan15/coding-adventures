@@ -58,6 +58,7 @@ data class TokenGrammar(
     val skipDefinitions: MutableList<TokenDefinition> = mutableListOf(),
     val errorDefinitions: MutableList<TokenDefinition> = mutableListOf(),
     val reservedKeywords: MutableList<String> = mutableListOf(),
+    val layoutKeywords: MutableList<String> = mutableListOf(),
     val contextKeywords: MutableList<String> = mutableListOf(),
     val groups: MutableMap<String, PatternGroup> = mutableMapOf()
 ) {
@@ -93,7 +94,7 @@ class TokenGrammarError(val msg: String, val line: Int) :
 private val MAGIC_COMMENT = Regex("""^#\s*@(\w+)\s*(.*)$""")
 private val GROUP_NAME_RE = Regex("""^[a-z_][a-z0-9_]*$""")
 private val TOKEN_NAME_RE = Regex("""^[a-zA-Z_][a-zA-Z0-9_]*$""")
-private val RESERVED_GROUP_NAMES = setOf("default", "skip", "keywords", "reserved", "errors")
+private val RESERVED_GROUP_NAMES = setOf("default", "skip", "keywords", "reserved", "errors", "layout_keywords", "context_keywords")
 
 /**
  * Parse the full text of a .tokens file into a [TokenGrammar].
@@ -173,6 +174,7 @@ fun parseTokenGrammar(source: String): TokenGrammar {
             "skip:", "skip :" -> { currentSection = "skip"; continue }
             "errors:", "errors :" -> { currentSection = "errors"; continue }
             "context_keywords:", "context_keywords :" -> { currentSection = "context_keywords"; continue }
+            "layout_keywords:", "layout_keywords :" -> { currentSection = "layout_keywords"; continue }
         }
 
         // Inside a section
@@ -183,6 +185,7 @@ fun parseTokenGrammar(source: String): TokenGrammar {
                     currentSection == "keywords" -> grammar.keywords.add(stripped)
                     currentSection == "reserved" -> grammar.reservedKeywords.add(stripped)
                     currentSection == "context_keywords" -> grammar.contextKeywords.add(stripped)
+                    currentSection == "layout_keywords" -> grammar.layoutKeywords.add(stripped)
                     currentSection == "skip" -> parseSectionDef(stripped, lineNumber, grammar.skipDefinitions, "skip pattern")
                     currentSection == "errors" -> parseSectionDef(stripped, lineNumber, grammar.errorDefinitions, "error pattern")
                     currentSection!!.startsWith("group:") -> {
@@ -284,7 +287,12 @@ fun validateTokenGrammar(grammar: TokenGrammar): List<String> {
     issues.addAll(validateDefs(grammar.skipDefinitions, "skip pattern"))
     issues.addAll(validateDefs(grammar.errorDefinitions, "error pattern"))
 
-    grammar.mode?.let { if (it != "indentation") issues.add("Unknown lexer mode '$it'") }
+    grammar.mode?.let {
+        if (it != "indentation" && it != "layout") issues.add("Unknown lexer mode '$it'")
+    }
+    if (grammar.mode == "layout" && grammar.layoutKeywords.isEmpty()) {
+        issues.add("Layout mode requires a non-empty layout_keywords section")
+    }
     grammar.escapeMode?.let { if (it != "none") issues.add("Unknown escape mode '$it'") }
 
     for ((name, group) in grammar.groups) {

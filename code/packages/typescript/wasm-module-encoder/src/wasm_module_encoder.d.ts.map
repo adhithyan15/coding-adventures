@@ -1,0 +1,1 @@
+{"version":3,"file":"wasm_module_encoder.d.ts","sourceRoot":"","sources":["wasm_module_encoder.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,EAcV,UAAU,EACX,MAAM,+BAA+B,CAAC;AAEvC,eAAO,MAAM,UAAU,yBAA2C,CAAC;AACnE,eAAO,MAAM,YAAY,yBAA2C,CAAC;AAErE,qBAAa,eAAgB,SAAQ,KAAK;gBAC5B,OAAO,EAAE,MAAM;CAI5B;AAED,wBAAgB,YAAY,CAAC,MAAM,EAAE,UAAU,GAAG,UAAU,CAmB3D"}

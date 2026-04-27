@@ -524,6 +524,148 @@ pub fn aead_decrypt(
 }
 
 // ============================================================================
+// Section 4: HChaCha20 + XChaCha20-Poly1305 AEAD
+// ============================================================================
+//
+// The standard ChaCha20-Poly1305 AEAD uses a 96-bit (12-byte) nonce, which is
+// dangerously short for random-nonce systems: the birthday bound on accidental
+// reuse is only 2^48 messages.  XChaCha20-Poly1305 extends the nonce to 192
+// bits (24 bytes) via a two-step construction:
+//
+//   1. HChaCha20(key, nonce[0..16]) -> 32-byte subkey
+//   2. Run standard ChaCha20-Poly1305 with
+//        chacha_key   = subkey
+//        chacha_nonce = 0x00000000 || nonce[16..24]      (12 bytes)
+//
+// HChaCha20 is the ChaCha20 round function over a modified initial state:
+// the 32-bit counter and 96-bit nonce are replaced by a single 128-bit nonce.
+// After 20 rounds, the output is *NOT* added back to the original state;
+// instead, we take state[0..4] and state[12..15] (32 bytes total) as the
+// subkey.  That "no feed-forward" property is what makes HChaCha20 a PRF
+// under the assumption that ChaCha20's round function is a pseudorandom
+// permutation.
+//
+// Reference: draft-irtf-cfrg-xchacha (Arciszewski),
+//            §2.2 (HChaCha20), §2.3 (XChaCha20-Poly1305), §A (test vectors).
+
+/// HChaCha20 -- derive a 32-byte subkey from (key, 16-byte nonce).
+///
+/// Used as the first stage of XChaCha20-Poly1305 and of XChaCha20 on its
+/// own.  Unlike `chacha20_block`, HChaCha20 does *not* add the original
+/// state back after the 20 rounds -- instead it takes four words from
+/// row 0 and four words from row 3 of the post-round state.  Those are
+/// the rows that do NOT contain the key, which is what breaks any
+/// trivial relationship between input and output.
+pub fn hchacha20_subkey(key: &[u8; 32], nonce16: &[u8; 16]) -> [u8; 32] {
+    let mut state: [u32; 16] = [0; 16];
+
+    // Row 0: the four ChaCha20 constants ("expand 32-byte k").
+    state[0] = CONSTANTS[0];
+    state[1] = CONSTANTS[1];
+    state[2] = CONSTANTS[2];
+    state[3] = CONSTANTS[3];
+
+    // Rows 1-2: 256-bit key.
+    for i in 0..8 {
+        state[4 + i] = read_u32_le(key, i * 4);
+    }
+
+    // Row 3: the full 128-bit input nonce (no counter in HChaCha20).
+    for i in 0..4 {
+        state[12 + i] = read_u32_le(nonce16, i * 4);
+    }
+
+    // 20 rounds, identical to ChaCha20's column/diagonal double-rounds.
+    for _ in 0..10 {
+        quarter_round(&mut state, 0, 4, 8, 12);
+        quarter_round(&mut state, 1, 5, 9, 13);
+        quarter_round(&mut state, 2, 6, 10, 14);
+        quarter_round(&mut state, 3, 7, 11, 15);
+
+        quarter_round(&mut state, 0, 5, 10, 15);
+        quarter_round(&mut state, 1, 6, 11, 12);
+        quarter_round(&mut state, 2, 7, 8, 13);
+        quarter_round(&mut state, 3, 4, 9, 14);
+    }
+
+    // NO feed-forward.  Take state[0..4] (row 0, post-round) plus
+    // state[12..16] (row 3, post-round) as the 32-byte subkey.
+    let mut subkey = [0u8; 32];
+    for i in 0..4 {
+        write_u32_le(&mut subkey, i * 4, state[i]);
+        write_u32_le(&mut subkey, 16 + i * 4, state[12 + i]);
+    }
+    subkey
+}
+
+/// XChaCha20 stream cipher -- 256-bit key + 192-bit (24-byte) nonce.
+///
+/// Derives a subkey via HChaCha20 using the first 16 bytes of the nonce,
+/// then runs standard ChaCha20 with subkey and the 12-byte nonce
+/// `[0, 0, 0, 0] || nonce[16..24]`.  Starting counter is caller-chosen.
+pub fn xchacha20_encrypt(
+    plaintext: &[u8],
+    key: &[u8; 32],
+    nonce24: &[u8; 24],
+    counter: u32,
+) -> Vec<u8> {
+    let mut n16 = [0u8; 16];
+    n16.copy_from_slice(&nonce24[0..16]);
+    let subkey = hchacha20_subkey(key, &n16);
+
+    let mut n12 = [0u8; 12];
+    // First 4 bytes of the ChaCha20 nonce are zeroed; last 8 bytes come
+    // from the second half of the 24-byte XChaCha20 nonce.
+    n12[4..12].copy_from_slice(&nonce24[16..24]);
+
+    chacha20_encrypt(plaintext, &subkey, &n12, counter)
+}
+
+/// XChaCha20-Poly1305 AEAD encryption.
+///
+/// Returns `(ciphertext, 16-byte tag)`.  Matches the construction in
+/// draft-irtf-cfrg-xchacha §2.3: derive a subkey with HChaCha20, then
+/// run the RFC 8439 AEAD with that subkey and a 12-byte chacha nonce
+/// of `[0,0,0,0] || nonce24[16..24]`.
+pub fn xchacha20_poly1305_aead_encrypt(
+    plaintext: &[u8],
+    key: &[u8; 32],
+    nonce24: &[u8; 24],
+    aad: &[u8],
+) -> (Vec<u8>, [u8; 16]) {
+    let mut n16 = [0u8; 16];
+    n16.copy_from_slice(&nonce24[0..16]);
+    let subkey = hchacha20_subkey(key, &n16);
+
+    let mut n12 = [0u8; 12];
+    n12[4..12].copy_from_slice(&nonce24[16..24]);
+
+    aead_encrypt(plaintext, &subkey, &n12, aad)
+}
+
+/// XChaCha20-Poly1305 AEAD decryption.
+///
+/// Returns `Some(plaintext)` on a valid tag, or `None` on any
+/// authentication failure.  Tag comparison is constant-time (delegated
+/// to `aead_decrypt`).
+pub fn xchacha20_poly1305_aead_decrypt(
+    ciphertext: &[u8],
+    key: &[u8; 32],
+    nonce24: &[u8; 24],
+    aad: &[u8],
+    tag: &[u8; 16],
+) -> Option<Vec<u8>> {
+    let mut n16 = [0u8; 16];
+    n16.copy_from_slice(&nonce24[0..16]);
+    let subkey = hchacha20_subkey(key, &n16);
+
+    let mut n12 = [0u8; 12];
+    n12[4..12].copy_from_slice(&nonce24[16..24]);
+
+    aead_decrypt(ciphertext, &subkey, &n12, aad, tag)
+}
+
+// ============================================================================
 // Tests
 // ============================================================================
 
@@ -849,5 +991,185 @@ mod tests {
             aead_decrypt(&ciphertext, &key, &nonce, &[], &wrong_tag),
             None
         );
+    }
+
+    // ------------------------------------------------------------------
+    // HChaCha20 + XChaCha20-Poly1305 (draft-irtf-cfrg-xchacha)
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn test_hchacha20_draft_section_2_2_1() {
+        // From draft-irtf-cfrg-xchacha §2.2.1 -- the canonical HChaCha20
+        // test vector.
+        let key = hex::decode(
+            "000102030405060708090a0b0c0d0e0f\
+             101112131415161718191a1b1c1d1e1f",
+        )
+        .unwrap();
+        let nonce = hex::decode("000000090000004a0000000031415927").unwrap();
+        let expected = hex::decode(
+            "82413b4227b27bfed30e42508a877d73\
+             a0f9e4d58a74a853c12ec41326d3ecdc",
+        )
+        .unwrap();
+
+        let mut k = [0u8; 32];
+        k.copy_from_slice(&key);
+        let mut n = [0u8; 16];
+        n.copy_from_slice(&nonce);
+
+        let subkey = hchacha20_subkey(&k, &n);
+        assert_eq!(subkey.to_vec(), expected);
+    }
+
+    #[test]
+    fn test_xchacha20_poly1305_draft_appendix_a3() {
+        // draft-irtf-cfrg-xchacha §A.3 -- the gold-standard AEAD vector.
+        let key = hex::decode(
+            "808182838485868788898a8b8c8d8e8f\
+             909192939495969798999a9b9c9d9e9f",
+        )
+        .unwrap();
+        let nonce = hex::decode(
+            "404142434445464748494a4b4c4d4e4f5051525354555657",
+        )
+        .unwrap();
+        let aad = hex::decode("50515253c0c1c2c3c4c5c6c7").unwrap();
+        let plaintext = b"Ladies and Gentlemen of the class of '99: If I could offer you only one tip for the future, sunscreen would be it.";
+
+        let expected_ct = hex::decode(
+            "bd6d179d3e83d43b9576579493c0e939\
+             572a1700252bfaccbed2902c21396cbb\
+             731c7f1b0b4aa6440bf3a82f4eda7e39\
+             ae64c6708c54c216cb96b72e1213b452\
+             2f8c9ba40db5d945b11b69b982c1bb9e\
+             3f3fac2bc369488f76b2383565d3fff9\
+             21f9664c97637da9768812f615c68b13\
+             b52e",
+        )
+        .unwrap();
+        let expected_tag =
+            hex::decode("c0875924c1c7987947deafd8780acf49").unwrap();
+
+        let mut k = [0u8; 32];
+        k.copy_from_slice(&key);
+        let mut n = [0u8; 24];
+        n.copy_from_slice(&nonce);
+        let mut t_expected = [0u8; 16];
+        t_expected.copy_from_slice(&expected_tag);
+
+        let (ct, tag) =
+            xchacha20_poly1305_aead_encrypt(plaintext, &k, &n, &aad);
+        assert_eq!(ct, expected_ct);
+        assert_eq!(tag, t_expected);
+
+        // Round-trip: a correct tag must decrypt.
+        let pt = xchacha20_poly1305_aead_decrypt(&ct, &k, &n, &aad, &tag);
+        assert_eq!(pt.as_deref(), Some(&plaintext[..]));
+    }
+
+    #[test]
+    fn test_xchacha20_poly1305_wrong_tag_rejected() {
+        let key = [0u8; 32];
+        let nonce = [0u8; 24];
+        let plaintext = b"hello";
+        let (ct, _tag) =
+            xchacha20_poly1305_aead_encrypt(plaintext, &key, &nonce, &[]);
+        let wrong_tag = [0u8; 16];
+        assert_eq!(
+            xchacha20_poly1305_aead_decrypt(
+                &ct,
+                &key,
+                &nonce,
+                &[],
+                &wrong_tag
+            ),
+            None,
+        );
+    }
+
+    #[test]
+    fn test_xchacha20_poly1305_aad_binding() {
+        let key = [7u8; 32];
+        let nonce = [9u8; 24];
+        let plaintext = b"secret";
+
+        let (ct, tag) =
+            xchacha20_poly1305_aead_encrypt(plaintext, &key, &nonce, b"ctx-a");
+
+        // Decrypt with the *wrong* AAD must fail.
+        assert_eq!(
+            xchacha20_poly1305_aead_decrypt(
+                &ct,
+                &key,
+                &nonce,
+                b"ctx-b",
+                &tag
+            ),
+            None,
+        );
+        // Decrypt with the *right* AAD must succeed.
+        assert_eq!(
+            xchacha20_poly1305_aead_decrypt(
+                &ct,
+                &key,
+                &nonce,
+                b"ctx-a",
+                &tag
+            )
+            .as_deref(),
+            Some(&plaintext[..]),
+        );
+    }
+
+    #[test]
+    fn test_xchacha20_poly1305_tampered_ciphertext() {
+        let key = [0x42u8; 32];
+        let nonce = [0x24u8; 24];
+        let plaintext = b"do not flip this byte";
+        let (mut ct, tag) =
+            xchacha20_poly1305_aead_encrypt(plaintext, &key, &nonce, &[]);
+
+        // Flip one bit in the middle of the ciphertext.
+        ct[5] ^= 0x01;
+        assert_eq!(
+            xchacha20_poly1305_aead_decrypt(&ct, &key, &nonce, &[], &tag),
+            None,
+        );
+    }
+
+    #[test]
+    fn test_xchacha20_poly1305_long_message() {
+        // Exercise the multi-block path through ChaCha20.
+        let key = [0x11u8; 32];
+        let nonce = [0x22u8; 24];
+        let mut plaintext = vec![0u8; 4096];
+        for (i, b) in plaintext.iter_mut().enumerate() {
+            *b = (i % 251) as u8;
+        }
+
+        let (ct, tag) =
+            xchacha20_poly1305_aead_encrypt(&plaintext, &key, &nonce, b"ctx");
+        assert_eq!(ct.len(), plaintext.len());
+        let pt = xchacha20_poly1305_aead_decrypt(
+            &ct,
+            &key,
+            &nonce,
+            b"ctx",
+            &tag,
+        );
+        assert_eq!(pt, Some(plaintext));
+    }
+
+    #[test]
+    fn test_xchacha20_encrypt_round_trip() {
+        // XChaCha20 (no Poly1305 -- stream cipher on its own) round-trip.
+        let key = [0x5au8; 32];
+        let nonce = [0xa5u8; 24];
+        let plaintext = b"raw stream cipher test, no AEAD";
+        let ct = xchacha20_encrypt(plaintext, &key, &nonce, 1);
+        assert_ne!(ct, plaintext.to_vec());
+        let pt = xchacha20_encrypt(&ct, &key, &nonce, 1);
+        assert_eq!(pt, plaintext);
     }
 }

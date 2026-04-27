@@ -14,7 +14,7 @@ dependencies = [
     "coding-adventures-irc-proto",
     "coding-adventures-irc-framing",
     "coding-adventures-irc-server",
-    "coding-adventures-irc-net-stdlib",
+    "coding-adventures-irc-net-selectors",
 ]
 
 [project.scripts]

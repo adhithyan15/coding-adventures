@@ -1,0 +1,26 @@
+cabal-version: 3.0
+name:          bloom-filter
+version:       0.1.0
+synopsis:      Educational Haskell package for bloom-filter
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  BloomFilter
+    build-depends:    base >=4.14
+                    , bitset
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    BloomFilterSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14
+                    , bitset
+                    , bloom-filter
+                    , hspec == 2.*
+    default-language: Haskell2010

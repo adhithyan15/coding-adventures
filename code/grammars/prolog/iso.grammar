@@ -1,0 +1,57 @@
+# @version 1
+
+# ISO/Core Prolog parser grammar.
+#
+# This file starts as an explicit dialect fork of the current Prolog subset.
+# Keep dialect-specific syntax changes here instead of adding conditional logic
+# to the generic prolog-parser package.
+
+# Prolog parser grammar for the first executable syntax subset.
+#
+# This grammar intentionally mirrors PR01 rather than pretending to be full ISO
+# Prolog. It covers facts, rules, top-level queries, core goals, compound terms,
+# and list notation. Future dialect overlays should extend this grammar instead
+# of baking syntax into parser code.
+
+program = { statement } ;
+
+statement       = query_statement | dcg_statement | rule_statement | fact_statement ;
+query_statement = QUERY goal DOT ;
+dcg_statement   = callable_term DCG dcg_body DOT ;
+rule_statement  = callable_term RULE goal DOT ;
+fact_statement  = callable_term DOT ;
+
+goal          = disjunction ;
+disjunction   = conjunction { SEMICOLON conjunction } ;
+conjunction   = goal_primary { COMMA goal_primary } ;
+goal_primary  = CUT | grouped_goal | equality_goal | callable_goal ;
+grouped_goal  = LPAREN goal RPAREN ;
+equality_goal = term equality_operator term ;
+callable_goal = callable_term ;
+
+dcg_body          = dcg_disjunction ;
+dcg_disjunction   = dcg_conjunction { SEMICOLON dcg_conjunction } ;
+dcg_conjunction   = dcg_primary { COMMA dcg_primary } ;
+dcg_primary       = CUT | grouped_dcg_body | braced_goal | equality_goal
+                  | list_term | callable_goal ;
+grouped_dcg_body  = LPAREN dcg_body RPAREN ;
+braced_goal       = LCURLY goal RCURLY ;
+
+equality_operator = "=" | "\=" ;
+
+callable_term = compound_term | atom_term ;
+term          = list_term | compound_term | atom_term | variable_term
+              | anonymous_term | number_term | string_term ;
+
+compound_term  = atom_token LPAREN [ term_arguments ] RPAREN ;
+term_arguments = term { COMMA term } ;
+
+list_term = LBRACKET [ list_body ] RBRACKET ;
+list_body = term { COMMA term } [ BAR term ] ;
+
+atom_term      = atom_token ;
+atom_token     = ATOM ;
+variable_term  = VARIABLE ;
+anonymous_term = ANON_VAR ;
+number_term    = FLOAT | INTEGER ;
+string_term    = STRING ;

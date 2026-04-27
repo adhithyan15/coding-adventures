@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <AssemblyName>CodingAdventures.WasmModuleParser.FSharp</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>CodingAdventures.WasmModuleParser.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>Pure F# WebAssembly binary parser</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="WasmModuleParser.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../wasm-leb128/CodingAdventures.WasmLeb128.fsproj" />
+    <ProjectReference Include="../wasm-types/CodingAdventures.WasmTypes.fsproj" />
+  </ItemGroup>
+</Project>

@@ -58,6 +58,7 @@
 //! assert_eq!(okm.len(), 32);
 //! ```
 
+use coding_adventures_blake2b::{Blake2bOptions, blake2b as b2b_hash};
 use coding_adventures_hmac::hmac;
 use coding_adventures_sha256::sha256;
 use coding_adventures_sha512::sum512;
@@ -68,12 +69,28 @@ use coding_adventures_sha512::sum512;
 ///
 /// Each variant carries the hash function's output length (HashLen) and
 /// internal block size, which are needed by both Extract and Expand.
+///
+/// ## BLAKE2b variant
+///
+/// `Blake2b` uses BLAKE2b's native keyed-hash mode (Blake2b-MAC) as the
+/// pseudorandom function (PRF) instead of HMAC-SHA-256/SHA-512.  BLAKE2b
+/// in keyed mode is at least as secure as HMAC-BLAKE2b and is the
+/// recommended construction when BLAKE2b is the underlying primitive.
+///
+/// The output length is fixed at **32 bytes** (256-bit) to match the PRK
+/// size expected by the Signal Protocol stack built on this library.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum HashAlgorithm {
     /// SHA-256: 32-byte output, 64-byte block.
     Sha256,
     /// SHA-512: 64-byte output, 128-byte block.
     Sha512,
+    /// BLAKE2b in keyed mode: 32-byte output.
+    ///
+    /// Keyed BLAKE2b serves as the PRF in place of HMAC.  The key (PRK in
+    /// Extract, PRK again in Expand) is passed via BLAKE2b's built-in key
+    /// parameter; no outer/inner-pad construction is needed.
+    Blake2b,
 }
 
 impl HashAlgorithm {
@@ -87,14 +104,17 @@ impl HashAlgorithm {
         match self {
             HashAlgorithm::Sha256 => 32,
             HashAlgorithm::Sha512 => 64,
+            HashAlgorithm::Blake2b => 32,
         }
     }
 
-    /// Compute HMAC using this hash algorithm.
+    /// Compute the PRF (HMAC or keyed-BLAKE2b) for this algorithm.
     ///
-    /// Wraps the generic `hmac` function from coding_adventures_hmac,
-    /// selecting the appropriate hash function and block size.
-    fn hmac(self, key: &[u8], message: &[u8]) -> Vec<u8> {
+    /// For SHA-256 and SHA-512 this wraps the RFC 2104 HMAC construction.
+    /// For BLAKE2b this uses the algorithm's native keyed-hash mode, which
+    /// produces an equivalent pseudorandom function without the extra
+    /// inner/outer padding steps.
+    fn prf(self, key: &[u8], message: &[u8]) -> Vec<u8> {
         match self {
             HashAlgorithm::Sha256 => {
                 hmac(|d| sha256(d).to_vec(), 64, key, message)
@@ -102,7 +122,34 @@ impl HashAlgorithm {
             HashAlgorithm::Sha512 => {
                 hmac(|d| sum512(d).to_vec(), 128, key, message)
             }
+            HashAlgorithm::Blake2b => {
+                // BLAKE2b-keyed: key is 1–64 bytes, output 32 bytes.
+                // If key is empty (e.g. zero-salt case) we fall back to
+                // an unkeyed hash over key||message to stay deterministic.
+                let opts = if key.is_empty() {
+                    // Treat as unkeyed hash of zero-salt||message.
+                    // Concatenate a 32-byte zero key prefix with the message
+                    // so behaviour is consistent with the HMAC zero-key path.
+                    let mut data = vec![0u8; 32];
+                    data.extend_from_slice(message);
+                    return b2b_hash(&data, &Blake2bOptions::new().digest_size(32))
+                        .expect("blake2b digest_size=32 is always valid");
+                } else {
+                    // Clamp key to 64 bytes maximum (BLAKE2b limit).
+                    let key_bytes = if key.len() > 64 { &key[..64] } else { key };
+                    Blake2bOptions::new()
+                        .key(key_bytes)
+                        .digest_size(32)
+                };
+                b2b_hash(message, &opts)
+                    .expect("blake2b key/digest_size are within valid ranges")
+            }
         }
+    }
+
+    /// Backward-compatible alias used internally.
+    fn hmac(self, key: &[u8], message: &[u8]) -> Vec<u8> {
+        self.prf(key, message)
     }
 }
 
@@ -566,5 +613,100 @@ mod tests {
 
         let err = HkdfError::OutputTooShort;
         assert!(err.to_string().contains("positive"));
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // BLAKE2b-keyed HKDF — structural / round-trip tests
+    //
+    // No official RFC test vectors exist for BLAKE2b-HKDF because this
+    // construction is specific to this library (it uses BLAKE2b's native
+    // keyed mode rather than HMAC-BLAKE2b).  We validate structural
+    // properties instead: correct length, determinism, domain separation
+    // via info strings, and consistency of combined vs. manual two-step call.
+    // ═══════════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn blake2b_extract_returns_32_bytes() {
+        let salt = b"signal-salt";
+        let ikm  = b"shared-secret-from-ecdh";
+        let prk  = hkdf_extract(salt, ikm, HashAlgorithm::Blake2b);
+        assert_eq!(prk.len(), 32, "BLAKE2b PRK must be exactly 32 bytes");
+    }
+
+    #[test]
+    fn blake2b_expand_correct_length() {
+        let prk = vec![0x42u8; 32];
+        for len in [1, 16, 32, 64, 128] {
+            let okm = hkdf_expand(&prk, b"info", len, HashAlgorithm::Blake2b).unwrap();
+            assert_eq!(okm.len(), len, "expected {len} bytes from expand");
+        }
+    }
+
+    #[test]
+    fn blake2b_deterministic() {
+        let okm1 = hkdf(b"salt", b"ikm", b"info", 32, HashAlgorithm::Blake2b).unwrap();
+        let okm2 = hkdf(b"salt", b"ikm", b"info", 32, HashAlgorithm::Blake2b).unwrap();
+        assert_eq!(okm1, okm2, "HKDF must be deterministic");
+    }
+
+    #[test]
+    fn blake2b_info_provides_domain_separation() {
+        let prk  = vec![0x01u8; 32];
+        let okm1 = hkdf_expand(&prk, b"x3dh-root-key",    32, HashAlgorithm::Blake2b).unwrap();
+        let okm2 = hkdf_expand(&prk, b"double-ratchet-ck", 32, HashAlgorithm::Blake2b).unwrap();
+        assert_ne!(okm1, okm2, "different info strings must yield different OKM");
+    }
+
+    #[test]
+    fn blake2b_different_salts_different_prk() {
+        let ikm  = b"same-ikm";
+        let prk1 = hkdf_extract(b"salt-alice", ikm, HashAlgorithm::Blake2b);
+        let prk2 = hkdf_extract(b"salt-bob",   ikm, HashAlgorithm::Blake2b);
+        assert_ne!(prk1, prk2);
+    }
+
+    #[test]
+    fn blake2b_empty_salt_uses_zero_key() {
+        // An empty salt must not panic; it falls through to the zero-key path.
+        let prk = hkdf_extract(&[], b"ikm", HashAlgorithm::Blake2b);
+        assert_eq!(prk.len(), 32);
+    }
+
+    #[test]
+    fn blake2b_combined_equals_manual_two_step() {
+        let salt   = b"session-salt";
+        let ikm    = b"dh-output-bytes";
+        let info   = b"coding_adventures_x3dh_v1";
+        let length = 48;
+
+        let combined = hkdf(salt, ikm, info, length, HashAlgorithm::Blake2b).unwrap();
+        let prk      = hkdf_extract(salt, ikm, HashAlgorithm::Blake2b);
+        let manual   = hkdf_expand(&prk, info, length, HashAlgorithm::Blake2b).unwrap();
+        assert_eq!(combined, manual);
+    }
+
+    #[test]
+    fn blake2b_max_output() {
+        let prk = vec![0x01u8; 32];
+        let okm = hkdf_expand(&prk, &[], 255 * 32, HashAlgorithm::Blake2b).unwrap();
+        assert_eq!(okm.len(), 255 * 32);
+    }
+
+    #[test]
+    fn blake2b_exceeds_max_output() {
+        let prk    = vec![0x01u8; 32];
+        let result = hkdf_expand(&prk, &[], 255 * 32 + 1, HashAlgorithm::Blake2b);
+        assert!(matches!(result, Err(HkdfError::OutputTooLong { .. })));
+    }
+
+    #[test]
+    fn blake2b_output_differs_from_sha256_for_same_inputs() {
+        // Sanity check: the algorithm selection actually matters.
+        let salt = b"salt";
+        let ikm  = b"ikm";
+        let info = b"info";
+        let sha  = hkdf(salt, ikm, info, 32, HashAlgorithm::Sha256).unwrap();
+        let b2   = hkdf(salt, ikm, info, 32, HashAlgorithm::Blake2b).unwrap();
+        assert_ne!(sha, b2, "SHA-256 and BLAKE2b HKDF must produce different output");
     }
 }

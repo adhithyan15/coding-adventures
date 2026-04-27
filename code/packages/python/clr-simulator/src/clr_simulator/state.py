@@ -24,7 +24,7 @@ local variables start as ``None`` (uninitialized).  Attempting to read an
 uninitialized local raises a ``RuntimeError``, just as in real .NET where the
 verifier rejects methods that read potentially-uninitialized locals.
 
-This means the ``locals`` tuple can hold ``int | None`` values.
+This means the ``locals`` tuple can hold object or ``None`` values.
 
 === Usage ===
 
@@ -87,7 +87,7 @@ class CLRState:
     True
     """
 
-    stack: tuple[int | None, ...]
-    locals: tuple[int | None, ...]
+    stack: tuple[object | None, ...]
+    locals: tuple[object | None, ...]
     pc: int
     halted: bool

@@ -20,7 +20,10 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Typing :: Typed",
 ]
-dependencies = ["coding-adventures-simulator-protocol"]
+dependencies = [
+    "coding-adventures-clr-bytecode-disassembler",
+    "coding-adventures-simulator-protocol",
+]
 
 [project.urls]
 Homepage = "https://github.com/adhithyan15/coding-adventures"

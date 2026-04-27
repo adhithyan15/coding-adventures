@@ -115,6 +115,7 @@ pub fn token_grammar() -> TokenGrammar {{
         case_insensitive: {case_insensitive},
         context_keywords: {context_kw_src},
         soft_keywords: {soft_kw_src},
+        layout_keywords: {layout_kw_src},
     }}
 }}
 ",
@@ -133,6 +134,7 @@ pub fn token_grammar() -> TokenGrammar {{
         case_insensitive = grammar.case_insensitive,
         context_kw_src = string_vec_src(&grammar.context_keywords),
         soft_kw_src = string_vec_src(&grammar.soft_keywords),
+        layout_kw_src = string_vec_src(&grammar.layout_keywords),
     )
 }
 

@@ -1,0 +1,38 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "coding-adventures-intel-8008-packager"
+version = "0.1.0"
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "Adhithya Rajasekaran" }]
+description = "Intel HEX ROM image encoder/decoder for Intel 8008 — converts binary machine code to EPROM programmer format"
+readme = "README.md"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/intel_8008_packager"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "UP", "B", "SIM", "ANN"]
+ignore = ["ANN101", "ANN102"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=intel_8008_packager --cov-report=term-missing --cov-fail-under=80"
+
+[tool.coverage.run]
+source = ["src/intel_8008_packager"]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true

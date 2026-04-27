@@ -116,9 +116,11 @@ sub affected_packages {
     for my $file (@changed_files) {
         # Make the file path absolute for prefix matching.
         my $abs_file = File::Spec->catfile($root, $file);
+        $abs_file =~ s{\\}{/}g;
 
         for my $pkg (@{$packages_ref}) {
             my $pkg_path = $pkg->{path};
+            $pkg_path =~ s{\\}{/}g;
             # Use \Q...\E to escape any regex metacharacters in the path.
             # The path separator is a metacharacter on Windows.
             if ($abs_file =~ /^\Q$pkg_path\E(\/|$)/) {

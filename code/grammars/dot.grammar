@@ -1,0 +1,29 @@
+# @version 1
+
+# Graphviz DOT parser grammar for the first diagram-pipeline subset.
+#
+# This grammar intentionally mirrors the focused DOT slice used by the current
+# diagram renderer rather than pretending to be the entire Graphviz language.
+# It keeps the syntax source of truth in a shared grammar file so every
+# language port can generate a lexer and parser from the same definition.
+
+graph      = [ "STRICT" ] "DIGRAPH" [ id ] LBRACE stmt_list RBRACE EOF ;
+stmt_list  = { stmt [ SEMICOLON ] | SEMICOLON } ;
+
+stmt       = attr_stmt | edge_stmt | assignment | node_stmt ;
+attr_stmt  = attr_target attr_list ;
+attr_target = "GRAPH" | "NODE" | "EDGE" ;
+
+edge_stmt  = node_id edge_rhs [ attr_list ] ;
+edge_rhs   = EDGEOP node_id { EDGEOP node_id } ;
+
+node_stmt  = node_id [ attr_list ] ;
+assignment = id EQUALS id ;
+node_id    = id ;
+id         = NAME | NUMBER | STRING ;
+
+attr_list      = { bracket_attr_list }+ ;
+bracket_attr_list = LBRACKET [ a_list ] RBRACKET ;
+a_list         = a_pair { [ attr_separator ] a_pair } [ attr_separator ] ;
+a_pair         = id [ EQUALS id ] ;
+attr_separator = COMMA | SEMICOLON ;

@@ -7,7 +7,11 @@ import EAN13
 import ITF
 import PaintCodecPNGNative
 import PaintInstructions
+#if os(macOS) && arch(arm64)
 import PaintVmMetalNative
+#elseif os(Windows)
+import PaintVmDirect2DNative
+#endif
 import PixelContainer
 import UPCA
 
@@ -23,6 +27,8 @@ public enum Barcode1D {
     public static func currentBackend() -> String? {
         #if os(macOS) && arch(arm64)
         return "metal"
+        #elseif os(Windows)
+        return "direct2d"
         #else
         return nil
         #endif
@@ -81,11 +87,14 @@ public enum Barcode1D {
         symbology: String = "code39",
         layoutConfig: Barcode1DLayoutConfig = defaultLayoutConfig
     ) throws -> PixelContainer {
-        guard currentBackend() == "metal" else {
-            throw Barcode1DError.backendUnavailable
-        }
         let scene = try buildScene(data, symbology: symbology, layoutConfig: layoutConfig)
+        #if os(macOS) && arch(arm64)
         return try PaintVmMetalNative.render(scene)
+        #elseif os(Windows)
+        return try PaintVmDirect2DNative.render(scene)
+        #else
+        throw Barcode1DError.backendUnavailable
+        #endif
     }
 
     public static func renderPNG(

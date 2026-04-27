@@ -1,0 +1,9 @@
+[package]
+name = "aztec-code"
+version = "0.1.0"
+edition = "2021"
+description = "Aztec Code encoder — ISO/IEC 24778:2008 compliant, produces scannable Aztec barcodes"
+
+[dependencies]
+barcode-2d = { path = "../barcode-2d" }
+paint-instructions = { path = "../paint-instructions" }

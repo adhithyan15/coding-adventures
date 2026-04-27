@@ -1,0 +1,1 @@
+set PERL5LIB=..\lzss\lib;%PERL5LIB% && perl -I..\lzss\lib -Ilib t\00-load.t && perl -I..\lzss\lib -Ilib t\01-zip.t

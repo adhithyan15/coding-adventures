@@ -211,6 +211,7 @@ var TokenGrammarData = &%s.TokenGrammar{
 	ReservedKeywords: %s,
 	ErrorDefinitions: %s,
 	Groups:           %s,
+	LayoutKeywords:   %s,
 }
 `,
 		sourceLine,
@@ -229,6 +230,7 @@ var TokenGrammarData = &%s.TokenGrammar{
 		goStringSliceLit(grammar.ReservedKeywords),
 		errLit,
 		groupsSrc,
+		goStringSliceLit(grammar.LayoutKeywords),
 	)
 }
 

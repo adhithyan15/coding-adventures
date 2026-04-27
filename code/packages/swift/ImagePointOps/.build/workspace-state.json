@@ -1,0 +1,27 @@
+{
+  "object" : {
+    "artifacts" : [
+
+    ],
+    "dependencies" : [
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "pixelcontainer",
+          "kind" : "fileSystem",
+          "location" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/PixelContainer",
+          "name" : "PixelContainer"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/PixelContainer"
+        },
+        "subpath" : "pixelcontainer"
+      }
+    ],
+    "prebuilts" : [
+
+    ]
+  },
+  "version" : 7
+}

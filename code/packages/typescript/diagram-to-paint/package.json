@@ -1,0 +1,32 @@
+{
+  "name": "@coding-adventures/diagram-to-paint",
+  "version": "0.1.0",
+  "description": "Compiles layouted diagrams to PaintScene and PaintInstruction",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "diagram",
+    "paint",
+    "dot",
+    "graph"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/diagram-ir": "file:../diagram-ir",
+    "@coding-adventures/paint-instructions": "file:../paint-instructions",
+    "@coding-adventures/pixel-container": "file:../pixel-container"
+  },
+  "devDependencies": {
+    "@coding-adventures/dot-parser": "file:../dot-parser",
+    "@coding-adventures/diagram-layout-graph": "file:../diagram-layout-graph",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

@@ -1,0 +1,22 @@
+[package]
+name = "barcode-1d"
+version = "0.1.0"
+edition = "2021"
+description = "High-level Rust pipeline for 1D barcodes: symbology -> PaintScene -> native Paint VM -> PNG"
+
+[dependencies]
+barcode-layout-1d = { path = "../barcode-layout-1d" }
+codabar = { path = "../codabar" }
+code128 = { path = "../code128" }
+code39 = { path = "../code39" }
+ean-13 = { path = "../ean-13" }
+itf = { path = "../itf" }
+paint-codec-png = { path = "../paint-codec-png" }
+paint-instructions = { path = "../paint-instructions" }
+upc-a = { path = "../upc-a" }
+
+[target.'cfg(target_vendor = "apple")'.dependencies]
+paint-metal = { path = "../paint-metal" }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+paint-vm-direct2d = { path = "../paint-vm-direct2d" }

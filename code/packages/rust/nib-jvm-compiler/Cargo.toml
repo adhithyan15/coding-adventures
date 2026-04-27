@@ -1,0 +1,15 @@
+[package]
+name = "nib-jvm-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "End-to-end Nib to JVM class-file compiler"
+
+[dependencies]
+coding-adventures-nib-parser = { path = "../nib-parser" }
+compiler-ir = { path = "../compiler-ir" }
+ir-optimizer = { path = "../ir-optimizer" }
+ir-to-jvm-class-file = { path = "../ir-to-jvm-class-file" }
+jvm-class-file = { path = "../jvm-class-file" }
+nib-ir-compiler = { path = "../nib-ir-compiler" }
+nib-type-checker = { path = "../nib-type-checker" }
+parser = { path = "../parser" }

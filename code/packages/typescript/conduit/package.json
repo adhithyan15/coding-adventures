@@ -1,0 +1,40 @@
+{
+  "name": "coding-adventures-conduit",
+  "version": "0.1.0",
+  "description": "A Sinatra/Express-inspired web framework powered by the web-core Rust engine — TypeScript port of the Conduit series.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "conduit_native_node.node"
+  ],
+  "scripts": {
+    "build:ts": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": [
+    "web",
+    "http",
+    "framework",
+    "conduit",
+    "sinatra",
+    "native",
+    "napi"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.5.0",
+    "vitest": "^3.0.0"
+  }
+}

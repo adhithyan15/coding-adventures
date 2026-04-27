@@ -1,0 +1,8 @@
+[package]
+name = "coding_adventures_csprng"
+version = "0.1.0"
+edition = "2021"
+description = "Thin wrapper around the OS CSPRNG (getrandom/BCryptGenRandom/getentropy) with explicit error handling"
+
+[dependencies]
+getrandom = "0.2"

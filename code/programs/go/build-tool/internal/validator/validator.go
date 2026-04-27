@@ -47,6 +47,8 @@ var ciManagedToolchainLanguages = map[string]bool{
 	"elixir":     true,
 	"lua":        true,
 	"perl":       true,
+	"dart":       true,
+	"swift":      true,
 	"haskell":    true,
 }
 
@@ -95,7 +97,7 @@ func ValidateBuildFiles(packages []discovery.Package, graph *directedgraph.Graph
 		// often point at subdirectories (e.g. ../sha512/lib) rather than
 		// the package root, and those should satisfy the prereq.
 		var missing []string
-		if requiresExplicitPrereqs[pkg.Language] {
+		if requiresExplicitPrereqs[pkg.Language] && !isIntentionalSkipBuild(pkg) {
 			for dep := range prereqs {
 				if !referencedFuzzy[dep] {
 					missing = append(missing, dep)
@@ -233,6 +235,22 @@ func allowedDirectRefsFromMetadata(pkg discovery.Package, pythonKnownNames map[s
 		return nil
 	}
 	return parsePythonOptionalDeps(pkg, pythonKnownNames)
+}
+
+func isIntentionalSkipBuild(pkg discovery.Package) bool {
+	if len(pkg.BuildCommands) == 0 {
+		return false
+	}
+	for _, command := range pkg.BuildCommands {
+		lower := strings.ToLower(strings.TrimSpace(command))
+		if !strings.HasPrefix(lower, "echo ") {
+			return false
+		}
+		if !strings.Contains(lower, "skip") && !strings.Contains(lower, "not supported") {
+			return false
+		}
+	}
+	return true
 }
 
 func parsePythonOptionalDeps(pkg discovery.Package, knownNames map[string]string) map[string]bool {
@@ -542,7 +560,7 @@ func validateRustWorkspaceMembers(packages []discovery.Package) []string {
 		memberRe := regexp.MustCompile(`"([^"]+)"`)
 		inMembers := false
 		inExclude := false
-		members := make(map[string]int)  // name → count (to detect duplicates)
+		members := make(map[string]int)   // name → count (to detect duplicates)
 		excluded := make(map[string]bool) // packages intentionally excluded from workspace
 		for _, line := range strings.Split(string(g.data), "\n") {
 			trimmed := strings.TrimSpace(line)

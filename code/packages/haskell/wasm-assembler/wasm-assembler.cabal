@@ -1,0 +1,34 @@
+cabal-version: 3.0
+name:          wasm-assembler
+version:       0.1.0
+synopsis:      Haskell text assembler for a focused WebAssembly subset
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  WasmAssembler
+    build-depends:    base >=4.14
+                    , bytestring
+                    , containers
+                    , wasm-leb128
+                    , wasm-module-encoder
+                    , wasm-opcodes
+                    , wasm-types
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    WasmAssemblerSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14
+                    , bytestring
+                    , hspec == 2.*
+                    , wasm-assembler
+                    , wasm-execution
+                    , wasm-runtime
+                    , wasm-types
+    default-language: Haskell2010

@@ -272,16 +272,16 @@ mod tests {
             HashSet::from(["reading_name".into(), "tag_done".into()]),
             HashSet::from(["char".into(), "close_angle".into()]),
             HashMap::from([
-                (("reading_name".into(), "char".into()), "reading_name".into()),
+                (
+                    ("reading_name".into(), "char".into()),
+                    "reading_name".into(),
+                ),
                 (
                     ("reading_name".into(), "close_angle".into()),
                     "tag_done".into(),
                 ),
                 (("tag_done".into(), "char".into()), "reading_name".into()),
-                (
-                    ("tag_done".into(), "close_angle".into()),
-                    "tag_done".into(),
-                ),
+                (("tag_done".into(), "close_angle".into()), "tag_done".into()),
             ]),
             "reading_name".into(),
             HashSet::from(["tag_done".into()]),

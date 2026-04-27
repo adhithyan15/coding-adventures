@@ -24,4 +24,4 @@
 - Uses `isASTNode` from `@coding-adventures/parser` for AST traversal
 - Token extraction does depth-first search through AST children
 - Loop source mapping uses `node.startLine` / `node.startColumn` from ASTNode
-- Output command uses ADD (v4 = v2 + v6 where v6=0) to move cell value to syscall arg register, matching Go implementation
+- Output command now uses ADD_IMM 0 to copy into the syscall arg register without depending on the debug-only zero register

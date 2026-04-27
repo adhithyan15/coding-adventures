@@ -1,6 +1,6 @@
 // AUTO-GENERATED FILE — DO NOT EDIT
-// Source: algol60.tokens
-// Regenerate with: grammar-tools compile-tokens algol60.tokens
+// Source: algol.tokens
+// Regenerate with: grammar-tools compile-tokens algol.tokens
 //
 // This file embeds a TokenGrammar as native Rust data structures.
 // Call `token_grammar()` instead of reading and parsing the .tokens file.
@@ -209,5 +209,6 @@ pub fn token_grammar() -> TokenGrammar {
         case_insensitive: false,
         context_keywords: vec![],
         soft_keywords: vec![],
+        layout_keywords: vec![],
     }
 }

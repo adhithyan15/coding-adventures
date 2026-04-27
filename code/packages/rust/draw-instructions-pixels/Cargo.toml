@@ -1,7 +1,0 @@
-[package]
-name = "draw-instructions-pixels"
-version = "0.1.0"
-edition = "2021"
-description = "Shared RGBA pixel buffer type for draw-instructions renderers and image encoders"
-
-[dependencies]

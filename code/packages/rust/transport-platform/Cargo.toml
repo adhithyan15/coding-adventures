@@ -1,0 +1,16 @@
+[package]
+name = "transport-platform"
+version = "0.1.0"
+edition = "2021"
+description = "Runtime-facing transport provider seam for listeners, streams, timers, and wakeups"
+license = "MIT"
+
+[dependencies]
+epoll = { path = "../epoll" }
+iocp = { path = "../iocp" }
+kqueue = { path = "../kqueue" }
+libc = "0.2"
+socket2 = "0.5"
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.52", features = ["Win32_Networking_WinSock"] }

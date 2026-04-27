@@ -1,5 +1,17 @@
 # Changelog — brainfuck-ir-compiler (Python)
 
+## [0.2.0] — 2026-04-20
+
+### Changed
+
+- **SYSCALL instruction now carries the arg register as `operands[1]`.**
+  All three SYSCALL emissions (WRITE, READ, EXIT) now include the IR virtual
+  register that holds the syscall argument as an explicit second operand:
+  `SYSCALL 1, v4` instead of bare `SYSCALL 1`.  This makes the IR
+  self-describing: backends no longer need out-of-band `syscall_arg_reg`
+  configuration to know which register to read.  The register index (4) is
+  unchanged — only the encoding in the IR instruction is new.
+
 ## [0.1.0] — 2026-04-12
 
 ### Added

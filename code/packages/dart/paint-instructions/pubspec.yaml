@@ -1,0 +1,15 @@
+name: coding_adventures_paint_instructions
+version: 0.1.0
+description: >
+  Backend-neutral paint scene model for 2D barcode and graphics rendering.
+  Provides PaintScene, PaintInstruction subtypes (PaintRect, PaintPath),
+  PathCommand, and color parsing utilities. Designed as the thin bridge
+  between abstract barcode grids and concrete pixel backends.
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dev_dependencies:
+  test: ^1.25.0

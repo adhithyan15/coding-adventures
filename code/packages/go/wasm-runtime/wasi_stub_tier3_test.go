@@ -26,7 +26,6 @@
 //
 // FakeRandom fills every byte in the buffer with 0xAB, making it easy to
 // check that random_get wrote the right number of bytes at the right place.
-//
 package wasmruntime
 
 import (
@@ -42,9 +41,9 @@ import (
 // FakeClock returns hard-coded nanosecond values so tests are repeatable.
 type FakeClock struct{}
 
-func (FakeClock) RealtimeNs() int64            { return 1_700_000_000_000_000_001 }
-func (FakeClock) MonotonicNs() int64           { return 42_000_000_000 }
-func (FakeClock) ResolutionNs(_ int32) int64   { return 1_000_000 }
+func (FakeClock) RealtimeNs() int64          { return 1_700_000_000_000_000_001 }
+func (FakeClock) MonotonicNs() int64         { return 42_000_000_000 }
+func (FakeClock) ResolutionNs(_ int32) int64 { return 1_000_000 }
 
 // ════════════════════════════════════════════════════════════════════════
 // FAKE RANDOM
@@ -89,8 +88,9 @@ func newTier3Stub(args, env []string) (*WasiStub, *wasmexecution.LinearMemory) {
 // count and total buffer size into memory.
 //
 // args = ["myapp", "hello"]
-//   argc     = 2
-//   buf_size = len("myapp")+1 + len("hello")+1 = 6 + 6 = 12
+//
+//	argc     = 2
+//	buf_size = len("myapp")+1 + len("hello")+1 = 6 + 6 = 12
 func TestArgsSizesGet(t *testing.T) {
 	stub, mem := newTier3Stub([]string{"myapp", "hello"}, nil)
 
@@ -125,11 +125,12 @@ func TestArgsSizesGet(t *testing.T) {
 // null-terminated strings to the correct memory locations.
 //
 // With args = ["myapp", "hello"]:
-//   argv_buf (at offset 200): m y a p p \0 h e l l o \0
-//                              0 1 2 3 4  5 6 7 8 9 10 11
-//   argv array (at offset 100):
-//     argv[0] = 200  (pointer to "myapp\0")
-//     argv[1] = 206  (pointer to "hello\0")
+//
+//	argv_buf (at offset 200): m y a p p \0 h e l l o \0
+//	                           0 1 2 3 4  5 6 7 8 9 10 11
+//	argv array (at offset 100):
+//	  argv[0] = 200  (pointer to "myapp\0")
+//	  argv[1] = 206  (pointer to "hello\0")
 func TestArgsGet(t *testing.T) {
 	stub, mem := newTier3Stub([]string{"myapp", "hello"}, nil)
 
@@ -185,12 +186,15 @@ func TestArgsGet(t *testing.T) {
 // TestEnvironSizesGet verifies the environ_sizes_get result.
 //
 // env = ["HOME=/home/user"]
-//   count    = 1
-//   buf_size = len("HOME=/home/user")+1 = 15+1 = 16
+//
+//	count    = 1
+//	buf_size = len("HOME=/home/user")+1 = 15+1 = 16
 //
 // Wait — "HOME=/home/user" has 15 chars, so "HOME=/home/user\0" = 16 bytes.
 // But the spec comment in the task says buf_size=15.  Let me count:
-//   H O M E = / h o m e / u s e r  → 15 characters → +1 null → 16 bytes.
+//
+//	H O M E = / h o m e / u s e r  → 15 characters → +1 null → 16 bytes.
+//
 // The task says "buf_size=15" which appears to be counting WITHOUT the null.
 // We always include the null terminator in the buffer, so we assert 16.
 func TestEnvironSizesGet(t *testing.T) {
@@ -412,6 +416,96 @@ func TestRandomGet(t *testing.T) {
 // TestSchedYield verifies that sched_yield returns ESUCCESS immediately.
 //
 // In single-threaded WASM there is nothing to yield to; success is correct.
+func TestFdReadReadsStdinIntoGuestMemory(t *testing.T) {
+	stub, mem := newTier3Stub(nil, nil)
+	stub.StdinCallback = func(count int) []byte {
+		if count >= 3 {
+			return []byte("cat")
+		}
+		return []byte("cat")[:count]
+	}
+
+	mem.StoreI32(100, 200)
+	mem.StoreI32(104, 3)
+
+	fn := stub.ResolveFunction("wasi_snapshot_preview1", "fd_read")
+	if fn == nil {
+		t.Fatal("fd_read not found")
+	}
+
+	result := fn.Call([]wasmexecution.WasmValue{
+		wasmexecution.I32(0),
+		wasmexecution.I32(100),
+		wasmexecution.I32(1),
+		wasmexecution.I32(300),
+	})
+
+	if wasmexecution.AsI32(result[0]) != 0 {
+		t.Fatalf("expected ESUCCESS(0), got %d", wasmexecution.AsI32(result[0]))
+	}
+	if mem.LoadI32(300) != 3 {
+		t.Fatalf("expected nread=3, got %d", mem.LoadI32(300))
+	}
+
+	want := []byte("cat")
+	for i, b := range want {
+		got := byte(mem.LoadI32_8u(200 + i))
+		if got != b {
+			t.Errorf("stdin byte[%d]: expected 0x%02x, got 0x%02x", i, b, got)
+		}
+	}
+}
+
+func TestFdReadRejectsNonStdinFD(t *testing.T) {
+	stub, mem := newTier3Stub(nil, nil)
+	stub.StdinCallback = func(count int) []byte { return []byte("ignored") }
+
+	mem.StoreI32(100, 200)
+	mem.StoreI32(104, 4)
+
+	fn := stub.ResolveFunction("wasi_snapshot_preview1", "fd_read")
+	result := fn.Call([]wasmexecution.WasmValue{
+		wasmexecution.I32(1),
+		wasmexecution.I32(100),
+		wasmexecution.I32(1),
+		wasmexecution.I32(300),
+	})
+
+	if wasmexecution.AsI32(result[0]) != int32(wasiEBadf) {
+		t.Fatalf("expected EBADF(%d), got %d", wasiEBadf, wasmexecution.AsI32(result[0]))
+	}
+	if mem.LoadI32(300) != 0 {
+		t.Fatalf("expected nread to remain 0, got %d", mem.LoadI32(300))
+	}
+}
+
+func TestFdReadEOFReturnsZeroBytes(t *testing.T) {
+	stub, mem := newTier3Stub(nil, nil)
+	stub.StdinCallback = func(count int) []byte { return nil }
+
+	mem.StoreI32(100, 200)
+	mem.StoreI32(104, 4)
+	mem.StoreI32(300, 99)
+
+	fn := stub.ResolveFunction("wasi_snapshot_preview1", "fd_read")
+	result := fn.Call([]wasmexecution.WasmValue{
+		wasmexecution.I32(0),
+		wasmexecution.I32(100),
+		wasmexecution.I32(1),
+		wasmexecution.I32(300),
+	})
+
+	if wasmexecution.AsI32(result[0]) != 0 {
+		t.Fatalf("expected ESUCCESS(0), got %d", wasmexecution.AsI32(result[0]))
+	}
+	if mem.LoadI32(300) != 0 {
+		t.Fatalf("expected nread=0 at EOF, got %d", mem.LoadI32(300))
+	}
+	if mem.LoadI32_8u(200) != 0 {
+		t.Fatalf("expected stdin buffer to remain unchanged, got %d", mem.LoadI32_8u(200))
+	}
+}
+
 func TestSchedYield(t *testing.T) {
 	stub, _ := newTier3Stub(nil, nil)
 

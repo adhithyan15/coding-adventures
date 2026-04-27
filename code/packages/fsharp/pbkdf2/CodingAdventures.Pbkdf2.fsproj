@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>CodingAdventures.Pbkdf2.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>PBKDF2 key derivation helpers for HMAC-SHA1, HMAC-SHA256, and HMAC-SHA512</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../hmac/CodingAdventures.Hmac.fsproj" />
+    <ProjectReference Include="../sha1/CodingAdventures.Sha1.fsproj" />
+    <ProjectReference Include="../sha256/CodingAdventures.Sha256.fsproj" />
+    <ProjectReference Include="../sha512/CodingAdventures.Sha512.fsproj" />
+    <Compile Include="Pbkdf2.fs" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,7 @@
+[package]
+name = "layout-ir"
+version = "0.1.0"
+edition = "2021"
+description = "UI02 layout IR: universal intermediate representation for layout in the coding-adventures stack. Pure types plus a minimal set of builders and the TextMeasurer contract."
+
+[dependencies]

@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <AssemblyName>CodingAdventures.GfmParser.FSharp</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>CodingAdventures.GfmParser.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>Pure F# GFM parser that produces the document AST</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../fsharp/document-ast/CodingAdventures.DocumentAst.fsproj" />
+    <ProjectReference Include="../../fsharp/commonmark-parser/CodingAdventures.CommonmarkParser.fsproj" />
+    <Compile Include="GfmParser.fs" />
+  </ItemGroup>
+</Project>

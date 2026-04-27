@@ -173,11 +173,21 @@ class TestBrainfuckIrCompiler < Minitest::Test
 
   def test_output_emits_syscall_write
     result = compile_source(".")
+    found_copy = result.program.instructions.any? do |i|
+      i.opcode == IR::IrOp::ADD_IMM &&
+        i.operands[0].is_a?(IR::IrRegister) &&
+        i.operands[0].index == 4 &&
+        i.operands[1].is_a?(IR::IrRegister) &&
+        i.operands[1].index == 2 &&
+        i.operands[2].is_a?(IR::IrImmediate) &&
+        i.operands[2].value == 0
+    end
     found = result.program.instructions.any? do |i|
       i.opcode == IR::IrOp::SYSCALL &&
         i.operands.first.is_a?(IR::IrImmediate) &&
         i.operands.first.value == 1  # SYSCALL_WRITE = 1
     end
+    assert found_copy, "expected ADD_IMM copy into syscall arg register"
     assert found, "expected SYSCALL 1 (write) for OUTPUT"
   end
 

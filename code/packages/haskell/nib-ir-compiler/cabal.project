@@ -1,0 +1,12 @@
+packages:
+  .
+  ../compiler-ir
+  ../grammar-tools
+  ../parser
+  ../graph
+  ../directed-graph
+  ../state-machine
+  ../lexer
+  ../nib-lexer
+  ../nib-parser
+  ../nib-type-checker

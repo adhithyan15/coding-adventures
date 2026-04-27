@@ -57,7 +57,7 @@ pub const VERSION: &str = "0.1.0";
 // but all content is hidden behind #[cfg(target_vendor = "apple")].
 // The BUILD files use platform detection to skip tests on non-Apple CI.
 
-use std::ffi::{c_double, c_ulong, c_void};
+use std::ffi::{c_double, c_long, c_ulong, c_void};
 
 #[cfg(target_vendor = "apple")]
 use std::ffi::{c_char, c_int, CString};
@@ -200,6 +200,36 @@ pub const MTL_PRIMITIVE_TYPE_TRIANGLE: c_ulong = 3;
 
 // Metal texture type constants
 pub const MTL_TEXTURE_TYPE_2D: c_ulong = 2;
+
+// ---------------------------------------------------------------------------
+// Metal compute constants
+// ---------------------------------------------------------------------------
+//
+// MTLResourceOptions control the storage mode of buffers and textures.
+// On Apple Silicon (unified memory architecture), MTL_RESOURCE_STORAGE_MODE_SHARED
+// is the key mode: CPU and GPU share the same physical RAM, so no explicit
+// data transfer is needed — just write on one side and read on the other.
+
+/// CPU and GPU share the same physical memory (Apple Silicon).  No upload/
+/// download needed — writes on either side are immediately visible to both.
+pub const MTL_RESOURCE_STORAGE_MODE_SHARED: c_ulong = 0 << 4;
+
+/// GPU-private memory; not CPU-accessible.  Faster for GPU-only resources,
+/// but requires explicit staging buffers to transfer data.
+pub const MTL_RESOURCE_STORAGE_MODE_PRIVATE: c_ulong = 2 << 4;
+
+/// CPU-cached copy with manual CPU→GPU sync via `-didModifyRange:`.
+pub const MTL_RESOURCE_STORAGE_MODE_MANAGED: c_ulong = 1 << 4;
+
+/// Default CPU cache mode — write-combined on arm64 for better GPU performance.
+pub const MTL_RESOURCE_CPU_CACHE_MODE_DEFAULT: c_ulong = 0;
+
+/// Hazard tracking: untracked.  Caller is responsible for barriers.
+/// Use this for shared buffers where you manage sync yourself.
+pub const MTL_RESOURCE_HAZARD_TRACKING_MODE_UNTRACKED: c_ulong = 1 << 8;
+
+// Convenience combination: shared + default cache + tracked hazards.
+pub const MTL_RESOURCE_OPTIONS_DEFAULT: c_ulong = MTL_RESOURCE_STORAGE_MODE_SHARED;
 
 // CoreGraphics bitmap info constants
 pub const K_CG_IMAGE_ALPHA_PREMULTIPLIED_LAST: u32 = 1;
@@ -353,7 +383,79 @@ extern "C" {
 
     #[allow(non_snake_case)]
     pub fn CGContextSetTextPosition(context: CGContextRef, x: c_double, y: c_double);
+
+    // --- CTM transforms (needed to bridge Y-down scene coordinates to
+    //     CoreGraphics' Y-up default) ----------------------------------------
+
+    #[allow(non_snake_case)]
+    pub fn CGContextSaveGState(context: CGContextRef);
+
+    #[allow(non_snake_case)]
+    pub fn CGContextRestoreGState(context: CGContextRef);
+
+    #[allow(non_snake_case)]
+    pub fn CGContextTranslateCTM(context: CGContextRef, tx: c_double, ty: c_double);
+
+    #[allow(non_snake_case)]
+    pub fn CGContextScaleCTM(context: CGContextRef, sx: c_double, sy: c_double);
+
+    #[allow(non_snake_case)]
+    pub fn CGContextSetShouldAntialias(context: CGContextRef, should: bool);
+
+    #[allow(non_snake_case)]
+    pub fn CGContextSetShouldSmoothFonts(context: CGContextRef, should: bool);
+
+    #[allow(non_snake_case)]
+    pub fn CGContextClearRect(context: CGContextRef, rect: CGRect);
+
+    /// Set the text matrix used by CT / CG glyph drawing. Used to
+    /// counter-flip glyphs when the surrounding CTM is Y-flipped.
+    #[allow(non_snake_case)]
+    pub fn CGContextSetTextMatrix(context: CGContextRef, transform: CGAffineTransform);
 }
+
+/// Minimal CGAffineTransform (a, b, c, d, tx, ty). Same layout Apple
+/// uses everywhere. The `scale_flip_y()` constructor produces the
+/// matrix needed to counter-flip CoreText glyphs inside a Y-flipped
+/// CTM (so text comes out right-side up).
+#[repr(C)]
+#[derive(Clone, Copy, Debug)]
+pub struct CGAffineTransform {
+    pub a: c_double,
+    pub b: c_double,
+    pub c: c_double,
+    pub d: c_double,
+    pub tx: c_double,
+    pub ty: c_double,
+}
+
+impl CGAffineTransform {
+    pub const IDENTITY: Self = Self {
+        a: 1.0,
+        b: 0.0,
+        c: 0.0,
+        d: 1.0,
+        tx: 0.0,
+        ty: 0.0,
+    };
+
+    /// `(1, 0, 0, -1, 0, 0)` — mirrors Y. Used as a text matrix inside
+    /// a Y-flipped bitmap context so glyphs render right-side up.
+    pub const FLIP_Y: Self = Self {
+        a: 1.0,
+        b: 0.0,
+        c: 0.0,
+        d: -1.0,
+        tx: 0.0,
+        ty: 0.0,
+    };
+}
+
+/// Bitmap-info flags for `CGBitmapContextCreate`. The paint-metal crate
+/// uses RGBA8 premultiplied alpha, big-endian byte order (matching the
+/// MTLPixelFormatRGBA8Unorm layout produced by the Metal render pass).
+pub const K_CG_IMAGE_ALPHA_PREMULTIPLIED_FIRST: u32 = 2;
+pub const K_CG_BITMAP_BYTE_ORDER_32_LITTLE: u32 = 2 << 12;
 
 // ---------------------------------------------------------------------------
 // CoreText — C functions
@@ -374,6 +476,16 @@ extern "C" {
         matrix: *const c_void, // const CGAffineTransform*, NULL for identity
     ) -> Id; // CTFontRef
 
+    /// Create a copy of an existing font at a different size. Cheap —
+    /// CoreText shares the underlying glyph data internally.
+    #[allow(non_snake_case)]
+    pub fn CTFontCreateCopyWithAttributes(
+        font: Id,            // CTFontRef
+        size: c_double,      // 0.0 to preserve
+        matrix: *const c_void,
+        attributes: Id,      // CTFontDescriptorRef, can be null
+    ) -> Id; // CTFontRef
+
     /// Create a line of text from an attributed string.
     #[allow(non_snake_case)]
     pub fn CTLineCreateWithAttributedString(
@@ -392,6 +504,96 @@ extern "C" {
     /// Draw a line into a CoreGraphics context.
     #[allow(non_snake_case)]
     pub fn CTLineDraw(line: Id, context: CGContextRef);
+
+    /// Get the array of glyph runs that make up a line.
+    /// Returns a CFArrayRef of CTRunRef values (borrowed — do not release).
+    #[allow(non_snake_case)]
+    pub fn CTLineGetGlyphRuns(line: Id) -> Id; // CFArrayRef
+
+    // ----------------------------- CTRun accessors -----------------------------
+
+    #[allow(non_snake_case)]
+    pub fn CTRunGetGlyphCount(run: Id) -> c_long;
+
+    /// Copy glyph IDs (CGGlyph, u16) into caller's buffer.
+    /// The range is a CFRange {location, length}; pass {0, 0} to get all.
+    #[allow(non_snake_case)]
+    pub fn CTRunGetGlyphs(
+        run: Id,
+        range: CFRange,
+        buffer: *mut u16, // CGGlyph is u16
+    );
+
+    /// Copy per-glyph positions (CGPoint) into caller's buffer, in line-
+    /// local coordinates (relative to the line's baseline origin).
+    #[allow(non_snake_case)]
+    pub fn CTRunGetPositions(run: Id, range: CFRange, buffer: *mut CGPoint);
+
+    /// Copy per-glyph advances (CGSize) into caller's buffer.
+    #[allow(non_snake_case)]
+    pub fn CTRunGetAdvances(run: Id, range: CFRange, buffer: *mut CGSize);
+
+    /// Copy per-glyph source-string indices (CFIndex, i64 on 64-bit).
+    /// Indices are UTF-16 code-unit offsets into the input string.
+    #[allow(non_snake_case)]
+    pub fn CTRunGetStringIndices(run: Id, range: CFRange, buffer: *mut c_long);
+
+    /// Get the attribute dictionary attached to a CTRun. The dictionary
+    /// includes the actual font CoreText used for this run (which may
+    /// differ from the originally-requested font when fallback occurs).
+    /// Borrowed; do not CFRelease.
+    #[allow(non_snake_case)]
+    pub fn CTRunGetAttributes(run: Id) -> Id; // CFDictionaryRef
+
+    // --------------------------- CTFont metric accessors ----------------------
+
+    #[allow(non_snake_case)]
+    pub fn CTFontGetUnitsPerEm(font: Id) -> u32;
+
+    #[allow(non_snake_case)]
+    pub fn CTFontGetAscent(font: Id) -> c_double;
+
+    #[allow(non_snake_case)]
+    pub fn CTFontGetDescent(font: Id) -> c_double;
+
+    #[allow(non_snake_case)]
+    pub fn CTFontGetLeading(font: Id) -> c_double;
+
+    #[allow(non_snake_case)]
+    pub fn CTFontGetXHeight(font: Id) -> c_double;
+
+    #[allow(non_snake_case)]
+    pub fn CTFontGetCapHeight(font: Id) -> c_double;
+
+    #[allow(non_snake_case)]
+    pub fn CTFontGetSize(font: Id) -> c_double;
+
+    /// Returns a retained CFStringRef; caller must CFRelease.
+    #[allow(non_snake_case)]
+    pub fn CTFontCopyFamilyName(font: Id) -> Id;
+
+    /// Returns a retained CFStringRef; caller must CFRelease.
+    #[allow(non_snake_case)]
+    pub fn CTFontCopyPostScriptName(font: Id) -> Id;
+
+    /// Draw a span of pre-positioned glyphs. Called by paint backends
+    /// that route a PaintGlyphRun with font_ref prefix "coretext:".
+    #[allow(non_snake_case)]
+    pub fn CTFontDrawGlyphs(
+        font: Id,
+        glyphs: *const u16,     // CGGlyph[]
+        positions: *const CGPoint,
+        count: usize,
+        context: CGContextRef,
+    );
+}
+
+/// CFRange — the start + length pair used by CoreText's range-taking accessors.
+#[repr(C)]
+#[derive(Clone, Copy, Debug, Default)]
+pub struct CFRange {
+    pub location: c_long,
+    pub length: c_long,
 }
 
 // ---------------------------------------------------------------------------
@@ -425,12 +627,17 @@ extern "C" {
     ) -> Id; // CFAttributedStringRef
 
     /// Create a CFDictionary.
+    ///
+    /// `num_values` is typed as `CFIndex` (== `c_long`, 64-bit on Apple
+    /// 64-bit platforms) to match the real ABI. Declaring it as `c_int`
+    /// would leave the upper 32 bits of the argument register undefined
+    /// on arm64, causing CoreFoundation to read garbage for the count.
     #[allow(non_snake_case)]
     pub fn CFDictionaryCreate(
         allocator: *const c_void,
         keys: *const *const c_void,
         values: *const *const c_void,
-        num_values: c_int,
+        num_values: c_long,
         key_callbacks: *const c_void,
         value_callbacks: *const c_void,
     ) -> Id; // CFDictionaryRef
@@ -438,6 +645,38 @@ extern "C" {
 
 // CoreFoundation string encoding constants
 pub const K_CF_STRING_ENCODING_UTF8: u32 = 0x08000100;
+
+// Additional CoreFoundation helpers — CFArray and CFString readback —
+// used by the CoreText shaper in text-native-coretext.
+#[cfg(target_vendor = "apple")]
+#[link(name = "CoreFoundation", kind = "framework")]
+extern "C" {
+    #[allow(non_snake_case)]
+    pub fn CFArrayGetCount(array: Id) -> c_long;
+
+    /// Returns a borrowed pointer (same `Id` type — do not CFRelease).
+    #[allow(non_snake_case)]
+    pub fn CFArrayGetValueAtIndex(array: Id, idx: c_long) -> Id;
+
+    #[allow(non_snake_case)]
+    pub fn CFStringGetLength(s: Id) -> c_long;
+
+    /// Look up a value in a CFDictionary. Returns a borrowed
+    /// reference — do not CFRelease. Returns NIL if the key is not
+    /// present.
+    #[allow(non_snake_case)]
+    pub fn CFDictionaryGetValue(dict: Id, key: *const c_void) -> Id;
+
+    /// Copy into a C buffer. Returns true on success. `max_buf_len`
+    /// includes the null terminator.
+    #[allow(non_snake_case)]
+    pub fn CFStringGetCString(
+        s: Id,
+        buffer: *mut c_char,
+        max_buf_len: c_long,
+        encoding: u32,
+    ) -> bool;
+}
 
 // CoreText attribute key names (these are global CFString constants)
 #[cfg(target_vendor = "apple")]
@@ -508,6 +747,45 @@ pub const NS_BACKING_STORE_BUFFERED: c_ulong = 2;
 // // Two args: [obj setX:1 Y:2]
 // msg!(obj, "setX:Y:", 1usize, 2usize)
 // ```
+
+/// Message dispatch for methods returning a raw `*mut c_void` (not an ObjC Id).
+///
+/// Used for Metal methods like `[MTLBuffer contents]` that return a plain
+/// memory pointer rather than an Objective-C object.
+///
+/// # Example
+///
+/// ```ignore
+/// let ptr: *mut c_void = msg_ptr!(buffer, "contents");
+/// ```
+#[macro_export]
+macro_rules! msg_ptr {
+    ($receiver:expr, $sel:expr) => {{
+        let f: unsafe extern "C" fn($crate::Id, $crate::Sel) -> *mut ::std::ffi::c_void =
+            ::std::mem::transmute($crate::objc_msgSend as *const ());
+        f($receiver, $crate::sel($sel))
+    }};
+}
+
+/// Message dispatch for methods returning a `usize` (e.g. `[MTLBuffer length]`).
+#[macro_export]
+macro_rules! msg_usize {
+    ($receiver:expr, $sel:expr) => {{
+        let f: unsafe extern "C" fn($crate::Id, $crate::Sel) -> usize =
+            ::std::mem::transmute($crate::objc_msgSend as *const ());
+        f($receiver, $crate::sel($sel))
+    }};
+}
+
+/// Message dispatch for methods returning a `u64` (e.g. `[MTLComputePipelineState maxTotalThreadsPerThreadgroup]`).
+#[macro_export]
+macro_rules! msg_u64 {
+    ($receiver:expr, $sel:expr) => {{
+        let f: unsafe extern "C" fn($crate::Id, $crate::Sel) -> u64 =
+            ::std::mem::transmute($crate::objc_msgSend as *const ());
+        f($receiver, $crate::sel($sel))
+    }};
+}
 
 /// Type-safe message dispatch macro.
 ///
@@ -646,6 +924,33 @@ pub fn cfstring(s: &str) -> Id {
             c_str.as_ptr(),
             K_CF_STRING_ENCODING_UTF8,
         )
+    }
+}
+
+/// NUL-safe variant of [`cfstring`].
+///
+/// Returns `None` if `s` contains an interior NUL byte (which
+/// `CString::new` rejects). Callers taking untrusted text input —
+/// especially shapers, which receive arbitrary user content — should
+/// prefer this over [`cfstring`] to turn a DoS-panic into a recoverable
+/// error.
+///
+/// The returned pointer (when `Some`) is a retained `CFStringRef`; the
+/// caller is responsible for `CFRelease`.
+#[cfg(target_vendor = "apple")]
+pub fn cfstring_checked(s: &str) -> Option<Id> {
+    let c_str = CString::new(s).ok()?;
+    let result = unsafe {
+        CFStringCreateWithCString(
+            std::ptr::null(),
+            c_str.as_ptr(),
+            K_CF_STRING_ENCODING_UTF8,
+        )
+    };
+    if result == NIL {
+        None
+    } else {
+        Some(result)
     }
 }
 

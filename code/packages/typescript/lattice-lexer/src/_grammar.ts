@@ -334,6 +334,8 @@ export const TOKEN_GRAMMAR: TokenGrammar = {
     },
   ],
   reservedKeywords: [],
+  layoutKeywords: [],
+  contextKeywords: [],
   errorDefinitions: [],
   groups: {},
 };

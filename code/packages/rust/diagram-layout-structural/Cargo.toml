@@ -1,0 +1,8 @@
+[package]
+name = "diagram-layout-structural"
+version = "0.1.0"
+edition = "2021"
+description = "Class, ER, and C4 diagram layout engine (DG04)"
+
+[dependencies]
+diagram-ir = { path = "../diagram-ir" }

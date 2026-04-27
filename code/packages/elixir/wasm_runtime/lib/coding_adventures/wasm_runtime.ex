@@ -17,6 +17,7 @@ defmodule CodingAdventures.WasmRuntime do
 
   - `Runtime` -- high-level API (parse + validate + instantiate + call)
   - `Instance` -- a live module instance with memory and globals
-  - `WasiStub` -- stub WASI host functions for modules that import WASI
+  - `WasiHost` -- preferred name for the WASI host surface
+  - `WasiStub` -- backward-compatible alias for the WASI host helpers
   """
 end

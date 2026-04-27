@@ -37,6 +37,7 @@ defmodule CodingAdventures.WasmRuntime.Engine do
 
   alias CodingAdventures.VirtualMachine.GenericVM
   alias CodingAdventures.VirtualMachine.Types.CodeObject
+
   alias CodingAdventures.WasmExecution.{
     Decoder,
     Values,
@@ -44,6 +45,7 @@ defmodule CodingAdventures.WasmRuntime.Engine do
     ConstExpr,
     TrapError
   }
+
   alias CodingAdventures.WasmExecution.Instructions.Dispatch
   alias CodingAdventures.WasmValidator.ValidatedModule
   alias CodingAdventures.WasmTypes.WasmModule
@@ -69,18 +71,18 @@ defmodule CodingAdventures.WasmRuntime.Engine do
   - `host_functions` -- map of {module_name, func_name} => handler_fn
   """
   @type execution_context :: %{
-    memory: LinearMemory.t() | nil,
-    tables: [any()],
-    globals: [Values.wasm_value()],
-    typed_locals: [Values.wasm_value()],
-    label_stack: [map()],
-    control_flow_map: map(),
-    func_bodies: [any()],
-    func_types: [any()],
-    num_imported_funcs: non_neg_integer(),
-    pending_call: non_neg_integer() | nil,
-    host_functions: map()
-  }
+          memory: LinearMemory.t() | nil,
+          tables: [any()],
+          globals: [Values.wasm_value()],
+          typed_locals: [Values.wasm_value()],
+          label_stack: [map()],
+          control_flow_map: map(),
+          func_bodies: [any()],
+          func_types: [any()],
+          num_imported_funcs: non_neg_integer(),
+          pending_call: non_neg_integer() | nil,
+          host_functions: map()
+        }
 
   # ===========================================================================
   # Public API
@@ -108,13 +110,15 @@ defmodule CodingAdventures.WasmRuntime.Engine do
     declared_mem = List.first(wasm_mod.memories)
 
     mem_spec = imported_mem || declared_mem
-    memory = if mem_spec do
-      min_pages = mem_spec.limits.min
-      max_pages = mem_spec.limits.max
-      LinearMemory.new(min_pages, max_pages)
-    else
-      nil
-    end
+
+    memory =
+      if mem_spec do
+        min_pages = mem_spec.limits.min
+        max_pages = mem_spec.limits.max
+        LinearMemory.new(min_pages, max_pages)
+      else
+        nil
+      end
 
     # 3. Initialize globals
     globals = initialize_globals(wasm_mod)
@@ -123,13 +127,14 @@ defmodule CodingAdventures.WasmRuntime.Engine do
     memory = initialize_data_segments(memory, wasm_mod.data, globals)
 
     # 5. Decode all function bodies
-    func_bodies = Enum.map(wasm_mod.code, fn body ->
-      decoded = Decoder.decode_function_body(body.code)
-      cf_map = Decoder.build_control_flow_map(decoded)
-      vm_instructions = Decoder.to_vm_instructions(decoded)
-      code_object = %CodeObject{instructions: vm_instructions}
-      {code_object, cf_map, body.locals}
-    end)
+    func_bodies =
+      Enum.map(wasm_mod.code, fn body ->
+        decoded = Decoder.decode_function_body(body.code)
+        cf_map = Decoder.build_control_flow_map(decoded)
+        vm_instructions = Decoder.to_vm_instructions(decoded)
+        code_object = %CodeObject{instructions: vm_instructions}
+        {code_object, cf_map, body.locals}
+      end)
 
     # 6. Build the execution context
     ctx = %{
@@ -174,7 +179,8 @@ defmodule CodingAdventures.WasmRuntime.Engine do
       raise TrapError, "Function '#{func_name}' not exported"
     end
 
-    invoke_function(vm, ctx, func_idx, args)
+    {results, _ctx} = invoke_function(vm, ctx, func_idx, args)
+    results
   end
 
   @doc """
@@ -183,7 +189,9 @@ defmodule CodingAdventures.WasmRuntime.Engine do
   This is the core dispatch function used by both `call_function` and
   the internal `call` instruction handler.
   """
-  @spec invoke_function(GenericVM.t(), execution_context(), non_neg_integer(), [Values.wasm_value()]) ::
+  @spec invoke_function(GenericVM.t(), execution_context(), non_neg_integer(), [
+          Values.wasm_value()
+        ]) ::
           [Values.wasm_value()]
   def invoke_function(vm, ctx, func_idx, args) do
     if func_idx < ctx.num_imported_funcs do
@@ -206,9 +214,12 @@ defmodule CodingAdventures.WasmRuntime.Engine do
 
     # Build locals: params (from args) + zero-initialized body locals
     param_locals = args
-    zero_locals = Enum.map(body_locals, fn type_atom ->
-      Values.default_value(type_atom)
-    end)
+
+    zero_locals =
+      Enum.map(body_locals, fn type_atom ->
+        Values.default_value(type_atom)
+      end)
+
     all_locals = param_locals ++ zero_locals
 
     # Determine result arity
@@ -218,11 +229,12 @@ defmodule CodingAdventures.WasmRuntime.Engine do
     vm = %{vm | pc: 0, halted: false, typed_stack: []}
 
     # Set up context for this function
-    func_ctx = %{ctx |
-      typed_locals: all_locals,
-      label_stack: [],
-      control_flow_map: cf_map,
-      pending_call: nil
+    func_ctx = %{
+      ctx
+      | typed_locals: all_locals,
+        label_stack: [],
+        control_flow_map: cf_map,
+        pending_call: nil
     }
 
     # Run the execution loop, handling nested calls
@@ -232,7 +244,7 @@ defmodule CodingAdventures.WasmRuntime.Engine do
   defp execute_loop(vm, code_object, ctx, result_arity) do
     if vm.halted or vm.pc >= length(code_object.instructions) do
       # Execution complete -- collect results
-      collect_results(vm, result_arity)
+      {collect_results(vm, result_arity), ctx}
     else
       # Execute one step
       {_trace, vm, ctx} = GenericVM.step_with_context(vm, code_object, ctx)
@@ -259,12 +271,20 @@ defmodule CodingAdventures.WasmRuntime.Engine do
     {call_args, vm} = pop_n_typed(vm, num_params)
 
     # Invoke the callee
-    callee_results = invoke_function(vm, ctx, target_func_idx, call_args)
+    {callee_results, callee_ctx} = invoke_function(vm, ctx, target_func_idx, call_args)
+
+    ctx = %{
+      ctx
+      | memory: callee_ctx.memory,
+        tables: callee_ctx.tables,
+        globals: callee_ctx.globals
+    }
 
     # Push results back onto the caller's stack
-    vm = Enum.reduce(callee_results, vm, fn val, acc_vm ->
-      GenericVM.push_typed(acc_vm, val)
-    end)
+    vm =
+      Enum.reduce(callee_results, vm, fn val, acc_vm ->
+        GenericVM.push_typed(acc_vm, val)
+      end)
 
     {vm, ctx}
   end
@@ -272,7 +292,9 @@ defmodule CodingAdventures.WasmRuntime.Engine do
   defp invoke_host_function(_vm, ctx, func_idx, args) do
     # Look up the import by index
     wasm_mod = find_module_from_ctx(ctx)
-    func_imports = wasm_mod.imports
+
+    func_imports =
+      wasm_mod.imports
       |> Enum.filter(fn imp -> imp.kind == :function end)
 
     imp = Enum.at(func_imports, func_idx)
@@ -288,7 +310,20 @@ defmodule CodingAdventures.WasmRuntime.Engine do
       raise TrapError, "No host function registered for #{imp.module_name}.#{imp.name}"
     end
 
-    handler.(args)
+    result =
+      try do
+        handler.({args, ctx.memory})
+      rescue
+        FunctionClauseError -> handler.(args)
+      end
+
+    case result do
+      {results, updated_memory} ->
+        {results, %{ctx | memory: updated_memory}}
+
+      results when is_list(results) ->
+        {results, ctx}
+    end
   end
 
   # ===========================================================================
@@ -301,11 +336,14 @@ defmodule CodingAdventures.WasmRuntime.Engine do
   end
 
   defp pop_n_typed(vm, 0), do: {[], vm}
+
   defp pop_n_typed(vm, n) do
-    {values, final_vm} = Enum.reduce(1..n, {[], vm}, fn _, {acc, acc_vm} ->
-      {val, acc_vm} = GenericVM.pop_typed(acc_vm)
-      {[val | acc], acc_vm}
-    end)
+    {values, final_vm} =
+      Enum.reduce(1..n, {[], vm}, fn _, {acc, acc_vm} ->
+        {val, acc_vm} = GenericVM.pop_typed(acc_vm)
+        {[val | acc], acc_vm}
+      end)
+
     # Values come out in reverse order (last popped = first param)
     # We already accumulate with [val | acc], so they end up reversed.
     # For function results, the first popped is the last result.
@@ -314,9 +352,11 @@ defmodule CodingAdventures.WasmRuntime.Engine do
   end
 
   defp find_exported_function(wasm_mod, func_name) do
-    export = Enum.find(wasm_mod.exports, fn exp ->
-      exp.kind == :function and exp.name == func_name
-    end)
+    export =
+      Enum.find(wasm_mod.exports, fn exp ->
+        exp.kind == :function and exp.name == func_name
+      end)
+
     if export, do: export.index, else: nil
   end
 
@@ -328,6 +368,7 @@ defmodule CodingAdventures.WasmRuntime.Engine do
 
   defp find_imported_memory(%WasmModule{imports: imports}) do
     imp = Enum.find(imports, fn imp -> imp.kind == :memory end)
+
     if imp do
       case imp.type_info do
         {:memory, mem_type} -> mem_type
@@ -339,14 +380,17 @@ defmodule CodingAdventures.WasmRuntime.Engine do
   end
 
   defp initialize_globals(%WasmModule{globals: globals}) do
-    {result, _} = Enum.reduce(globals, {[], []}, fn global, {acc, initialized} ->
-      val = ConstExpr.evaluate(global.init_expr, initialized)
-      {acc ++ [val], initialized ++ [val]}
-    end)
+    {result, _} =
+      Enum.reduce(globals, {[], []}, fn global, {acc, initialized} ->
+        val = ConstExpr.evaluate(global.init_expr, initialized)
+        {acc ++ [val], initialized ++ [val]}
+      end)
+
     result
   end
 
   defp initialize_data_segments(nil, _segments, _globals), do: nil
+
   defp initialize_data_segments(memory, segments, globals) do
     Enum.reduce(segments, memory, fn seg, mem ->
       offset_val = ConstExpr.evaluate(seg.offset_expr, globals)

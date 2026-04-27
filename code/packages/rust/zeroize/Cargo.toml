@@ -1,0 +1,7 @@
+[package]
+name = "coding_adventures_zeroize"
+version = "0.1.0"
+edition = "2021"
+description = "Secure memory zeroization — volatile writes + compiler fence so the compiler cannot elide the zero"
+
+[dependencies]

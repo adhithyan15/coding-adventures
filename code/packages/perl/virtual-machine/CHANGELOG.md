@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.1] - 2026-04-18
+
+### Fixed
+
+- `execute_with_context()` now re-reads the active code object on each step,
+  so domain-specific handlers can switch programs mid-execution. This unblocks
+  nested Wasm function calls in the Perl runtime.
+
 ## [0.2.0] - 2026-04-05
 
 ### Fixed

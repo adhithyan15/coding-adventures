@@ -1,6 +1,6 @@
 [package]
 name = "paint-metal"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Metal GPU renderer for paint-instructions scenes (P2D01): PaintScene → PixelContainer via Apple's Metal API"
 

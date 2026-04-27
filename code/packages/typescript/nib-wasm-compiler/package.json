@@ -1,0 +1,46 @@
+{
+  "name": "@coding-adventures/nib-wasm-compiler",
+  "version": "0.1.0",
+  "description": "Compile Nib source all the way to raw WebAssembly bytes",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/brainfuck": "file:../brainfuck",
+    "@coding-adventures/brainfuck-ir-compiler": "file:../brainfuck-ir-compiler",
+    "@coding-adventures/compiler-ir": "file:../compiler-ir",
+    "@coding-adventures/compiler-source-map": "file:../compiler-source-map",
+    "@coding-adventures/directed-graph": "file:../directed-graph",
+    "@coding-adventures/grammar-tools": "file:../grammar-tools",
+    "@coding-adventures/ir-optimizer": "file:../ir-optimizer",
+    "@coding-adventures/ir-to-wasm-compiler": "file:../ir-to-wasm-compiler",
+    "@coding-adventures/ir-to-wasm-validator": "file:../ir-to-wasm-validator",
+    "@coding-adventures/lexer": "file:../lexer",
+    "@coding-adventures/nib-ir-compiler": "file:../nib-ir-compiler",
+    "@coding-adventures/nib-lexer": "file:../nib-lexer",
+    "@coding-adventures/nib-parser": "file:../nib-parser",
+    "@coding-adventures/nib-type-checker": "file:../nib-type-checker",
+    "@coding-adventures/parser": "file:../parser",
+    "@coding-adventures/state-machine": "file:../state-machine",
+    "@coding-adventures/type-checker-protocol": "file:../type-checker-protocol",
+    "@coding-adventures/virtual-machine": "file:../virtual-machine",
+    "@coding-adventures/wasm-module-encoder": "file:../wasm-module-encoder",
+    "@coding-adventures/wasm-module-parser": "file:../wasm-module-parser",
+    "@coding-adventures/wasm-types": "file:../wasm-types",
+    "@coding-adventures/wasm-validator": "file:../wasm-validator"
+  },
+  "devDependencies": {
+    "@types/node": "^24.9.0",
+    "@coding-adventures/wasm-leb128": "file:../wasm-leb128",
+    "@coding-adventures/wasm-opcodes": "file:../wasm-opcodes",
+    "@vitest/coverage-v8": "^3.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}

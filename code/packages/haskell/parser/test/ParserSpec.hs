@@ -2,6 +2,7 @@ module ParserSpec (spec) where
 
 import Test.Hspec
 
+import GrammarTools (parseParserGrammar)
 import Lexer
 import Parser
 
@@ -51,8 +52,35 @@ spec = do
                 Left err -> parseErrorMessage err `shouldBe` "unexpected token"
                 Right _ -> expectationFailure "expected parse error"
 
+    describe "parseWithGrammar" $ do
+        it "builds a grammar-shaped AST from token references" $ do
+            let grammar =
+                    either (error . show) id $
+                        parseParserGrammar
+                            (unlines
+                                [ "value = LBRACE pair RBRACE ;"
+                                , "pair = STRING COLON NUMBER ;"
+                                ]
+                            )
+                tokens =
+                    [ makeToken TokenLBrace "{" 1 1
+                    , makeToken TokenString "answer" 1 2
+                    , makeToken TokenColon ":" 1 10
+                    , makeToken TokenNumber "42" 1 11
+                    , makeToken TokenRBrace "}" 1 13
+                    ]
+            fmap collectRuleNames (parseWithGrammar grammar tokens)
+                `shouldBe` Right ["value", "pair"]
+
 parseSource :: String -> Either ParseError ASTNode
 parseSource source =
     case tokenize defaultLexerConfig source of
         Left lexerErrorValue -> error (show lexerErrorValue)
         Right tokens -> parseTokens tokens
+
+collectRuleNames :: ASTNode -> [String]
+collectRuleNames ast =
+    case ast of
+        RuleNode name children -> name : concatMap collectRuleNames children
+        TokenNode _ -> []
+        _ -> []

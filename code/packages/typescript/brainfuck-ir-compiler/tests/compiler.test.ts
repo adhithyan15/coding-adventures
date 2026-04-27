@@ -221,6 +221,17 @@ describe("LEFT (<) command", () => {
 describe("OUTPUT (.) command", () => {
   it("emits SYSCALL 1 (write)", () => {
     const { program } = mustCompile(".", releaseConfig());
+    const hasCopy = program.instructions.some(
+      (i) =>
+        i.opcode === IrOp.ADD_IMM &&
+        i.operands.length === 3 &&
+        i.operands[0].kind === "register" &&
+        (i.operands[0] as IrRegister).index === 4 &&
+        i.operands[1].kind === "register" &&
+        (i.operands[1] as IrRegister).index === 2 &&
+        i.operands[2].kind === "immediate" &&
+        (i.operands[2] as IrImmediate).value === 0
+    );
     const found = program.instructions.some(
       (i) =>
         i.opcode === IrOp.SYSCALL &&
@@ -228,6 +239,7 @@ describe("OUTPUT (.) command", () => {
         i.operands[0].kind === "immediate" &&
         (i.operands[0] as IrImmediate).value === 1
     );
+    expect(hasCopy).toBe(true);
     expect(found).toBe(true);
   });
 });

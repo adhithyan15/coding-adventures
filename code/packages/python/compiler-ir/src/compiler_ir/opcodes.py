@@ -21,8 +21,11 @@ The opcodes are grouped by category:
 
   Constants:    LOAD_IMM, LOAD_ADDR
   Memory:       LOAD_BYTE, STORE_BYTE, LOAD_WORD, STORE_WORD
-  Arithmetic:   ADD, ADD_IMM, SUB, AND, AND_IMM
+  Arithmetic:   ADD, ADD_IMM, SUB, AND, AND_IMM, MUL, DIV
+  Bitwise:      OR, OR_IMM, XOR, XOR_IMM, NOT
   Comparison:   CMP_EQ, CMP_NE, CMP_LT, CMP_GT
+  Floating:     LOAD_F64_IMM, LOAD_F64, STORE_F64, F64_ADD, ..., F64_FROM_I32,
+                I32_TRUNC_FROM_F64
   Control Flow: LABEL, JUMP, BRANCH_Z, BRANCH_NZ, CALL, RET
   System:       SYSCALL, HALT
   Meta:         NOP, COMMENT
@@ -103,6 +106,94 @@ class IrOp(IntEnum):
     # Register-immediate bitwise AND: dst = src & immediate.
     #   AND_IMM v2, v2, 255  →  v2 = v2 & 0xFF
     AND_IMM = 10
+
+    # Register-register multiplication: dst = lhs * rhs (signed integer).
+    # For 20-bit targets the result is the low 20 bits of the product.
+    #   MUL v3, v1, v2  →  v3 = v1 * v2
+    MUL = 25
+
+    # Register-register integer division: dst = lhs / rhs (truncates toward zero).
+    # Division by zero is a runtime error; the backend is responsible for detection.
+    #   DIV v3, v1, v2  →  v3 = v1 / v2
+    DIV = 26
+
+    # ── Bitwise ───────────────────────────────────────────────────────────────
+    # Register-register bitwise OR: dst = lhs | rhs.
+    # Clears the carry flag on targets where AND/OR/XOR affect flags (e.g. 8008 ORA).
+    #   OR v3, v1, v2  →  v3 = v1 | v2
+    OR = 27
+
+    # Register-immediate bitwise OR: dst = src | immediate.
+    #   OR_IMM v2, v2, 0x80  →  v2 = v2 | 0x80
+    OR_IMM = 28
+
+    # Register-register bitwise XOR: dst = lhs ^ rhs.
+    # Also clears the carry flag on flag-setting targets (e.g. 8008 XRA).
+    #   XOR v3, v1, v2  →  v3 = v1 ^ v2
+    XOR = 29
+
+    # Register-immediate bitwise XOR: dst = src ^ immediate.
+    # The canonical NOT-a-byte idiom is XOR_IMM dst, src, 0xFF (flip all 8 bits).
+    #   XOR_IMM v2, v2, 0xFF  →  v2 = v2 ^ 0xFF
+    XOR_IMM = 30
+
+    # Bitwise NOT (complement): dst = ~src.
+    # Flips every bit in src.  On platforms with no single NOT instruction
+    # (e.g. Intel 8008), the backend lowers this to XRI 0xFF (XOR-immediate 255).
+    # On WASM i32, it becomes i32.xor with 0xFFFF_FFFF.
+    #   NOT v2, v1  →  v2 = ~v1
+    NOT = 31
+
+    # ── Floating-point ───────────────────────────────────────────────────────
+    # Load an immediate 64-bit float into a register.
+    #   LOAD_F64_IMM v0, 1.5  →  v0 = 1.5
+    LOAD_F64_IMM = 32
+
+    # Load a 64-bit float from memory: dst = *(double*)(base + offset).
+    #   LOAD_F64 v2, v0, v1  →  v2 = *(double*)(v0 + v1)
+    LOAD_F64 = 33
+
+    # Store a 64-bit float to memory: *(double*)(base + offset) = src.
+    #   STORE_F64 v2, v0, v1  →  *(double*)(v0 + v1) = v2
+    STORE_F64 = 34
+
+    # Register-register f64 addition: dst = lhs + rhs.
+    F64_ADD = 35
+
+    # Register-register f64 subtraction: dst = lhs - rhs.
+    F64_SUB = 36
+
+    # Register-register f64 multiplication: dst = lhs * rhs.
+    F64_MUL = 37
+
+    # Register-register f64 division: dst = lhs / rhs.
+    F64_DIV = 38
+
+    # Set dst = 1 if lhs == rhs, else 0.
+    F64_CMP_EQ = 39
+
+    # Set dst = 1 if lhs != rhs, else 0.
+    F64_CMP_NE = 40
+
+    # Set dst = 1 if lhs < rhs, else 0.
+    F64_CMP_LT = 41
+
+    # Set dst = 1 if lhs > rhs, else 0.
+    F64_CMP_GT = 42
+
+    # Set dst = 1 if lhs <= rhs, else 0.
+    F64_CMP_LE = 43
+
+    # Set dst = 1 if lhs >= rhs, else 0.
+    F64_CMP_GE = 44
+
+    # Convert a signed i32 value to f64.
+    #   F64_FROM_I32 v1, v2  →  v1 = float(v2)
+    F64_FROM_I32 = 45
+
+    # Truncate an f64 value toward zero into a signed i32.
+    #   I32_TRUNC_FROM_F64 v1, v2  →  v1 = trunc(v2)
+    I32_TRUNC_FROM_F64 = 46
 
     # ── Comparison ────────────────────────────────────────────────────────────
     # Set dst = 1 if lhs == rhs, else 0.

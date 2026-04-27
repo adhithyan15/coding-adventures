@@ -113,6 +113,7 @@ local function make_stub_and_memory(extra)
     local config = {
         args   = extra.args   or {},
         env    = extra.env    or {},
+        stdin  = extra.stdin  or function(_n) return "" end,
         stdout = extra.stdout or function(_t) end,
         stderr = extra.stderr or function(_t) end,
         clock  = FakeClock.new(),
@@ -222,6 +223,10 @@ describe("WasiStub Tier 3", function()
             assert.is_not_nil(wasm_runtime.WasiStub)
         end)
 
+        it("exports WasiHost as an alias", function()
+            assert.are.equal(wasm_runtime.WasiStub, wasm_runtime.WasiHost)
+        end)
+
         it("exports SystemClock", function()
             assert.is_not_nil(wasm_runtime.SystemClock)
         end)
@@ -296,12 +301,36 @@ describe("WasiStub Tier 3", function()
             assert.is_function(fn.call)
         end)
 
+        it("resolves fd_read", function()
+            local stub, _ = make_stub_and_memory()
+            local fn = stub:resolve_function("wasi_snapshot_preview1", "fd_read")
+            assert.is_not_nil(fn)
+            assert.is_function(fn.call)
+        end)
+
         it("returns an ENOSYS stub for unknown WASI names", function()
             local stub, _ = make_stub_and_memory()
             local fn = stub:resolve_function("wasi_snapshot_preview1", "unknown_func_xyz")
             assert.is_not_nil(fn)
             local results = fn.call({})
             assert.equals(52, results[1].value)  -- ENOSYS = 52
+        end)
+    end)
+
+    describe("fd_read", function()
+        it("copies stdin bytes into guest memory", function()
+            local stub, memory = make_stub_and_memory({
+                stdin = function() return "hi" end,
+            })
+
+            memory:store_i32(0, 200)
+            memory:store_i32(4, 2)
+
+            local results = call_wasi(stub, "fd_read", { 0, 0, 1, 100 })
+            assert.equals(0, results[1].value)
+            assert.equals(2, memory:load_i32(100))
+            assert.equals(string.byte("h"), memory:load_i32_8u(200))
+            assert.equals(string.byte("i"), memory:load_i32_8u(201))
         end)
     end)
 

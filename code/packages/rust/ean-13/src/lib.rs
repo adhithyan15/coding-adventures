@@ -131,7 +131,10 @@ pub fn encode_ean13(data: &str) -> Result<Vec<EncodedDigit>, String> {
     Ok(encoded)
 }
 
-fn build_symbols(normalized: &str, encoded_digits: &[EncodedDigit]) -> Vec<Barcode1DSymbolDescriptor> {
+fn build_symbols(
+    normalized: &str,
+    encoded_digits: &[EncodedDigit],
+) -> Vec<Barcode1DSymbolDescriptor> {
     let mut symbols = vec![Barcode1DSymbolDescriptor {
         label: normalized[0..1].to_string(),
         modules: 0,
@@ -146,16 +149,20 @@ fn build_symbols(normalized: &str, encoded_digits: &[EncodedDigit]) -> Vec<Barco
         role: Barcode1DSymbolRole::Guard,
     });
 
-    symbols.extend(encoded_digits[..6].iter().map(|entry| Barcode1DSymbolDescriptor {
-        label: entry.digit.clone(),
-        modules: 7,
-        source_index: entry.source_index,
-        role: if entry.role == Barcode1DRunRole::Check {
-            Barcode1DSymbolRole::Check
-        } else {
-            Barcode1DSymbolRole::Data
-        },
-    }));
+    symbols.extend(
+        encoded_digits[..6]
+            .iter()
+            .map(|entry| Barcode1DSymbolDescriptor {
+                label: entry.digit.clone(),
+                modules: 7,
+                source_index: entry.source_index,
+                role: if entry.role == Barcode1DRunRole::Check {
+                    Barcode1DSymbolRole::Check
+                } else {
+                    Barcode1DSymbolRole::Data
+                },
+            }),
+    );
 
     symbols.push(Barcode1DSymbolDescriptor {
         label: "center".to_string(),
@@ -164,16 +171,20 @@ fn build_symbols(normalized: &str, encoded_digits: &[EncodedDigit]) -> Vec<Barco
         role: Barcode1DSymbolRole::Guard,
     });
 
-    symbols.extend(encoded_digits[6..].iter().map(|entry| Barcode1DSymbolDescriptor {
-        label: entry.digit.clone(),
-        modules: 7,
-        source_index: entry.source_index,
-        role: if entry.role == Barcode1DRunRole::Check {
-            Barcode1DSymbolRole::Check
-        } else {
-            Barcode1DSymbolRole::Data
-        },
-    }));
+    symbols.extend(
+        encoded_digits[6..]
+            .iter()
+            .map(|entry| Barcode1DSymbolDescriptor {
+                label: entry.digit.clone(),
+                modules: 7,
+                source_index: entry.source_index,
+                role: if entry.role == Barcode1DRunRole::Check {
+                    Barcode1DSymbolRole::Check
+                } else {
+                    Barcode1DSymbolRole::Data
+                },
+            }),
+    );
 
     symbols.push(Barcode1DSymbolDescriptor {
         label: "end".to_string(),
@@ -182,7 +193,10 @@ fn build_symbols(normalized: &str, encoded_digits: &[EncodedDigit]) -> Vec<Barco
         role: Barcode1DSymbolRole::Guard,
     });
 
-    symbols.into_iter().filter(|symbol| symbol.modules > 0).collect()
+    symbols
+        .into_iter()
+        .filter(|symbol| symbol.modules > 0)
+        .collect()
 }
 
 pub fn expand_ean13_runs(data: &str) -> Result<Vec<Barcode1DRun>, String> {
@@ -248,6 +262,9 @@ pub fn layout_ean13(data: &str, options: &PaintBarcode1DOptions) -> Result<Paint
     if layout_options.label.is_none() {
         layout_options.label = Some(format!("EAN-13 barcode for {}", normalized));
     }
+    if layout_options.human_readable_text.is_none() {
+        layout_options.human_readable_text = Some(normalized.clone());
+    }
     layout_options
         .metadata
         .insert("symbology".to_string(), "ean-13".to_string());
@@ -273,7 +290,10 @@ mod tests {
 
         let scene = layout_ean13("400638133393", &PaintBarcode1DOptions::default()).unwrap();
         assert_eq!(
-            scene.metadata.as_ref().and_then(|metadata| metadata.get("symbology")),
+            scene
+                .metadata
+                .as_ref()
+                .and_then(|metadata| metadata.get("symbology")),
             Some(&"ean-13".to_string())
         );
     }

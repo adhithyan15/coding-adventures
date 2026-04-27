@@ -7,9 +7,9 @@ pub fn engine_response_to_resp(response: EngineResponse) -> RespValue {
         EngineResponse::Error(e) => RespValue::Error(resp_protocol::RespError::new(e)),
         EngineResponse::Integer(i) => RespValue::Integer(i),
         EngineResponse::BulkString(b) => RespValue::BulkString(b),
-        EngineResponse::Array(a) => RespValue::Array(a.map(|arr| {
-            arr.into_iter().map(engine_response_to_resp).collect()
-        })),
+        EngineResponse::Array(a) => {
+            RespValue::Array(a.map(|arr| arr.into_iter().map(engine_response_to_resp).collect()))
+        }
     }
 }
 

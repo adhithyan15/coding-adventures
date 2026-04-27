@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "language": "rust",
+  "package": "rust/barcode-1d",
+  "capabilities": [],
+  "justification": "High-level orchestration over local barcode, layout, renderer, and PNG codec crates. Platform-specific rendering is isolated inside the selected paint backend."
+}

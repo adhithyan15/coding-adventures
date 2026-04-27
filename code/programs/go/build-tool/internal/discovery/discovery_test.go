@@ -91,6 +91,13 @@ func TestInferLanguageTypescript(t *testing.T) {
 	}
 }
 
+func TestInferLanguageDart(t *testing.T) {
+	lang := inferLanguage("/repo/code/programs/dart/hello-world")
+	if lang != "dart" {
+		t.Fatalf("expected dart, got %s", lang)
+	}
+}
+
 func TestInferLanguageHaskell(t *testing.T) {
 	lang := inferLanguage("/repo/code/programs/haskell/build-tool")
 	if lang != "haskell" {
@@ -295,9 +302,9 @@ func TestGetBuildFileMacOverridesMacAndLinux(t *testing.T) {
 func TestDiscoverSimplePackage(t *testing.T) {
 	// A minimal fixture: nested directories with a BUILD file at the leaf.
 	root := makeFixture(t, map[string]string{
-		"packages/python/pkg-a/BUILD":           "echo build\n",
-		"packages/python/pkg-a/pyproject.toml":  "[project]\nname = \"coding-adventures-pkg-a\"\n",
-		"packages/python/pkg-a/src/main.py":     "print('hello')\n",
+		"packages/python/pkg-a/BUILD":          "echo build\n",
+		"packages/python/pkg-a/pyproject.toml": "[project]\nname = \"coding-adventures-pkg-a\"\n",
+		"packages/python/pkg-a/src/main.py":    "print('hello')\n",
 	})
 
 	packages := DiscoverPackages(root)
@@ -386,19 +393,20 @@ func TestDiscoverMultiLanguage(t *testing.T) {
 		"packages/ruby/lib-rb/BUILD":   "echo rb",
 		"packages/go/lib-go/BUILD":     "echo go",
 		"packages/rust/lib-rs/BUILD":   "echo rs",
+		"packages/dart/lib-dart/BUILD": "echo dart",
 		"programs/python/app/BUILD":    "echo app",
 	})
 
 	packages := DiscoverPackages(root)
-	if len(packages) != 5 {
-		t.Fatalf("expected 5 packages, got %d", len(packages))
+	if len(packages) != 6 {
+		t.Fatalf("expected 6 packages, got %d", len(packages))
 	}
 
 	langs := make(map[string]int)
 	for _, pkg := range packages {
 		langs[pkg.Language]++
 	}
-	if langs["python"] != 2 || langs["ruby"] != 1 || langs["go"] != 1 || langs["rust"] != 1 {
+	if langs["python"] != 2 || langs["ruby"] != 1 || langs["go"] != 1 || langs["rust"] != 1 || langs["dart"] != 1 {
 		t.Errorf("unexpected language distribution: %v", langs)
 	}
 }
@@ -423,12 +431,12 @@ func TestDiscoverSkipsSkipListDirs(t *testing.T) {
 	// Directories in the skip list should be completely ignored, even if
 	// they contain BUILD files.
 	root := makeFixture(t, map[string]string{
-		"packages/python/pkg-a/BUILD":           "echo a",
-		"packages/python/pkg-a/.venv/BUILD":     "echo venv",
+		"packages/python/pkg-a/BUILD":              "echo a",
+		"packages/python/pkg-a/.venv/BUILD":        "echo venv",
 		"packages/python/pkg-a/node_modules/BUILD": "echo node",
-		".git/hooks/BUILD":                      "echo git",
-		"packages/python/pkg-b/BUILD":           "echo b",
-		"packages/python/pkg-b/__pycache__/BUILD": "echo pycache",
+		".git/hooks/BUILD":                         "echo git",
+		"packages/python/pkg-b/BUILD":              "echo b",
+		"packages/python/pkg-b/__pycache__/BUILD":  "echo pycache",
 	})
 
 	packages := DiscoverPackages(root)
@@ -443,8 +451,8 @@ func TestDiscoverSkipsSkipListDirs(t *testing.T) {
 func TestDiscoverSkipsTargetDir(t *testing.T) {
 	// The "target" directory (Rust build output) should be skipped.
 	root := makeFixture(t, map[string]string{
-		"packages/rust/lib-rs/BUILD":                   "echo rs",
-		"packages/rust/lib-rs/target/debug/BUILD":      "echo target",
+		"packages/rust/lib-rs/BUILD":              "echo rs",
+		"packages/rust/lib-rs/target/debug/BUILD": "echo target",
 	})
 
 	packages := DiscoverPackages(root)
@@ -461,7 +469,7 @@ func TestDiscoverSkipsTargetDir(t *testing.T) {
 func TestDiscoverSkipsRootLevelSkipDirs(t *testing.T) {
 	// Skip-list directories at the root level should be ignored.
 	root := makeFixture(t, map[string]string{
-		"packages/python/pkg-a/BUILD": "echo a",
+		"packages/python/pkg-a/BUILD":  "echo a",
 		".claude/worktrees/test/BUILD": "echo claude",
 		"vendor/some-dep/BUILD":        "echo vendor",
 	})

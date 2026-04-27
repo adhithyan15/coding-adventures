@@ -5,6 +5,7 @@ edition = "2021"
 description = "HKDF (HMAC-based Extract-and-Expand Key Derivation Function) — RFC 5869 — implemented from scratch"
 
 [dependencies]
+coding_adventures_blake2b = { path = "../blake2b" }
 coding_adventures_hmac = { path = "../hmac" }
 coding_adventures_sha256 = { path = "../sha256" }
 coding_adventures_sha512 = { path = "../sha512" }

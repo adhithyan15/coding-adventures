@@ -85,6 +85,22 @@ final class TokenGrammarTests: XCTestCase {
         XCTAssertEqual(grammar.contextKeywords, ["async", "yield", "get", "set"])
     }
 
+    func testParseLayoutKeywordsSection() throws {
+        let source = """
+        mode: layout
+        NAME = /[a-z]+/
+        layout_keywords:
+            let
+            where
+            do
+            of
+        """
+        let grammar = try parseTokenGrammar(source: source)
+
+        XCTAssertEqual(grammar.mode, "layout")
+        XCTAssertEqual(grammar.layoutKeywords, ["let", "where", "do", "of"])
+    }
+
     func testParseSkipSection() throws {
         let source = """
         NUMBER = /[0-9]+/
@@ -287,6 +303,17 @@ final class TokenGrammarTests: XCTestCase {
         let issues = validateTokenGrammar(grammar)
 
         XCTAssertTrue(issues.contains { $0.contains("Unknown mode") })
+    }
+
+    func testValidationLayoutModeRequiresLayoutKeywords() throws {
+        let grammar = TokenGrammar(
+            definitions: [],
+            keywords: [],
+            mode: "layout"
+        )
+        let issues = validateTokenGrammar(grammar)
+
+        XCTAssertTrue(issues.contains { $0.contains("layout_keywords") })
     }
 
     func testValidationEmptyGroup() throws {

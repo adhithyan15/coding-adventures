@@ -165,7 +165,11 @@ impl NFA {
             graph.add_node(state);
         }
         for ((source, event), targets) in &transitions {
-            let label = if event == EPSILON { EPSILON } else { event.as_str() };
+            let label = if event == EPSILON {
+                EPSILON
+            } else {
+                event.as_str()
+            };
             for target in targets {
                 let _ = graph.add_edge(source, target, label);
             }
@@ -213,6 +217,11 @@ impl NFA {
     /// The set of states the NFA is currently in.
     pub fn current_states(&self) -> &HashSet<String> {
         &self.current
+    }
+
+    /// The transition function.
+    pub fn transitions(&self) -> &HashMap<(String, String), HashSet<String>> {
+        &self.transitions
     }
 
     // === Epsilon Closure ===
@@ -274,15 +283,11 @@ impl NFA {
     /// Returns `Err` if the event is not in the alphabet.
     pub fn process(&mut self, event: &str) -> Result<HashSet<String>, String> {
         if !self.alphabet.contains(event) {
-            return Err(format!(
-                "Event '{}' is not in the alphabet {:?}",
-                event,
-                {
-                    let mut v: Vec<_> = self.alphabet.iter().collect();
-                    v.sort();
-                    v
-                }
-            ));
+            return Err(format!("Event '{}' is not in the alphabet {:?}", event, {
+                let mut v: Vec<_> = self.alphabet.iter().collect();
+                v.sort();
+                v
+            }));
         }
 
         // Collect all target states from all current states
@@ -409,8 +414,7 @@ impl NFA {
                 let next_name = state_set_name(&next_closure);
 
                 // Record this DFA transition
-                dfa_transitions
-                    .insert((current_name.clone(), event.clone()), next_name.clone());
+                dfa_transitions.insert((current_name.clone(), event.clone()), next_name.clone());
 
                 // If this is a new DFA state, add it
                 if !dfa_states.contains(&next_name) {
@@ -430,10 +434,16 @@ impl NFA {
             dfa_states,
             self.alphabet.clone(),
             dfa_transitions,
-            state_set_name(&state_map.values().find(|v| {
-                let initial_set: HashSet<String> = [self.initial.clone()].into_iter().collect();
-                *v == &self.epsilon_closure(&initial_set)
-            }).unwrap()),
+            state_set_name(
+                state_map
+                    .values()
+                    .find(|v| {
+                        let initial_set: HashSet<String> =
+                            [self.initial.clone()].into_iter().collect();
+                        *v == &self.epsilon_closure(&initial_set)
+                    })
+                    .unwrap(),
+            ),
             dfa_accepting,
         )
         .expect("Subset construction should always produce a valid DFA")
@@ -551,7 +561,10 @@ mod tests {
             HashSet::from(["q0".into(), "q1".into(), "q2".into()]),
             HashSet::from(["a".into(), "b".into()]),
             HashMap::from([
-                (("q0".into(), "a".into()), HashSet::from(["q0".into(), "q1".into()])),
+                (
+                    ("q0".into(), "a".into()),
+                    HashSet::from(["q0".into(), "q1".into()]),
+                ),
                 (("q0".into(), "b".into()), HashSet::from(["q0".into()])),
                 (("q1".into(), "b".into()), HashSet::from(["q2".into()])),
                 (("q2".into(), "a".into()), HashSet::from(["q2".into()])),

@@ -754,7 +754,7 @@ class GE225Simulator:
             self._overflow = False
         if mnemonic in {"BPE", "BPC"}:
             self._parity_error = False
-        if not cond:
+        if cond:
             self._pc = (self._pc + 1) % self._memory_size
 
     def _execute_shift(self, mnemonic: str, count: int) -> None:

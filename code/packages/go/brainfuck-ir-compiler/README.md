@@ -33,7 +33,7 @@ Build modes are composable flags, not a fixed enum:
 | `<` (LEFT) | `ADD_IMM v1, v1, -1` |
 | `+` (INC) | `LOAD_BYTE → ADD_IMM → AND_IMM → STORE_BYTE` |
 | `-` (DEC) | `LOAD_BYTE → ADD_IMM(-1) → AND_IMM → STORE_BYTE` |
-| `.` (OUTPUT) | `LOAD_BYTE → ADD (move to arg) → SYSCALL 1` |
+| `.` (OUTPUT) | `LOAD_BYTE → ADD_IMM 0 (copy to arg) → SYSCALL 1` |
 | `,` (INPUT) | `SYSCALL 2 → STORE_BYTE` |
 | `[` (LOOP) | `LABEL → LOAD_BYTE → BRANCH_Z` |
 | `]` (END) | `JUMP → LABEL` |

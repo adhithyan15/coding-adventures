@@ -510,6 +510,36 @@ module BuildTool
       internal_deps
     end
 
+    # parse_dotnet_deps -- Extract internal deps from .csproj/.fsproj.
+    #
+    # .NET packages declare sibling package dependencies via ProjectReference:
+    #
+    #   <ProjectReference Include="../logic-gates/logic-gates.csproj" />
+    #
+    # We extract the sibling directory name after "../" and map it back to
+    # the internal package name using the known names table.
+    def parse_dotnet_deps(package, known_names)
+      project_files = package.path.glob("*.csproj").to_a + package.path.glob("*.fsproj").to_a
+      return [] if project_files.empty?
+
+      internal_deps = []
+      pattern = /<ProjectReference\s+Include\s*=\s*"\.\.[\\\/]([^\/\\"]+)[\\\/][^"]*"/
+
+      project_files.each do |project_file|
+        project_file.read.lines.each do |line|
+          match = line.match(pattern)
+          next unless match
+
+          dep_dir = match[1].strip.downcase
+          next if dep_dir.include?("/") || dep_dir.include?("\\") || dep_dir == ".."
+
+          internal_deps << known_names[dep_dir] if known_names.key?(dep_dir)
+        end
+      end
+
+      internal_deps
+    end
+
     # SWIFT_DEP_RE -- Matches .package(path: "../dep-name") in Package.swift.
     SWIFT_DEP_RE = /\.package\s*\(\s*path\s*:\s*"\.\.\/(.*?)"/
 
@@ -661,7 +691,33 @@ module BuildTool
     #
     # @param packages [Array<Package>]
     # @return [Hash<String, String>]
-    def build_known_names(packages)
+    def dependency_scope(language)
+      return "dotnet" if %w[csharp fsharp dotnet].include?(language)
+      return "wasm" if language == "wasm"
+
+      language
+    end
+
+    def in_dependency_scope?(package_language, scope)
+      case scope
+      when "dotnet"
+        %w[csharp fsharp dotnet].include?(package_language)
+      when "wasm"
+        %w[wasm rust].include?(package_language)
+      else
+        package_language == scope
+      end
+    end
+
+    def read_cargo_package_name(pkg)
+      cargo_toml = pkg.path / "Cargo.toml"
+      return nil unless cargo_toml.exist?
+
+      match = cargo_toml.read.match(/^\s*name\s*=\s*"([^"]+)"/)
+      match && match[1].strip.downcase
+    end
+
+    def build_known_names(packages, language = nil)
       known = {}
 
       # set_known inserts key->value, letting library packages overwrite programs
@@ -676,6 +732,8 @@ module BuildTool
       end
 
       packages.each do |pkg|
+        next if language && !in_dependency_scope?(pkg.language, language)
+
         case pkg.language
         when "python"
           pypi_name = "coding-adventures-#{pkg.path.basename}".downcase
@@ -708,10 +766,12 @@ module BuildTool
             match = package_json.read.match(/"name"\s*:\s*"([^"]+)"/)
             set_known.call(match[1].strip.downcase, pkg.name, pkg.path) if match
           end
-        when "rust"
+        when "rust", "wasm"
           # Rust crate names use the directory name directly (kebab-case).
           crate_name = pkg.path.basename.to_s.downcase
           set_known.call(crate_name, pkg.name, pkg.path)
+          cargo_name = read_cargo_package_name(pkg)
+          set_known.call(cargo_name, pkg.name, pkg.path) if cargo_name
         when "elixir"
           # Elixir mix names replace hyphens with underscores.
           base_name = pkg.path.basename.to_s.gsub("-", "_").downcase
@@ -741,9 +801,10 @@ module BuildTool
           # Haskell Cabal package names use hyphens: "logic-gates" -> "coding-adventures-logic-gates"
           cabal_name = "coding-adventures-#{pkg.path.basename}".downcase
           set_known.call(cabal_name, pkg.name, pkg.path)
-        when "java", "kotlin"
+        when "java", "kotlin", "csharp", "fsharp", "dotnet"
           # Java and Kotlin use Gradle composite builds. Dependencies are
-          # referenced by directory name in settings.gradle.kts.
+          # referenced by directory name in settings.gradle.kts. .NET uses the
+          # sibling directory name from ProjectReference paths.
           dir_base = pkg.path.basename.to_s.downcase
           set_known.call(dir_base, pkg.name, pkg.path)
         end
@@ -768,23 +829,28 @@ module BuildTool
       # Add all packages as nodes first.
       packages.each { |pkg| graph.add_node(pkg.name) }
 
-      # Build the name-mapping table.
-      known_names = build_known_names(packages)
+      known_names_by_scope = {}
+      packages.each do |pkg|
+        scope = dependency_scope(pkg.language)
+        known_names_by_scope[scope] ||= build_known_names(packages, scope)
+      end
 
       # Parse dependencies for each package and add edges.
       packages.each do |pkg|
+        known_names = known_names_by_scope.fetch(dependency_scope(pkg.language))
         deps = case pkg.language
                when "python"     then parse_python_deps(pkg, known_names)
                when "ruby"       then parse_ruby_deps(pkg, known_names)
                when "go"         then parse_go_deps(pkg, known_names)
                when "typescript" then parse_typescript_deps(pkg, known_names)
-               when "rust"       then parse_rust_deps(pkg, known_names)
+               when "rust", "wasm" then parse_rust_deps(pkg, known_names)
                when "elixir"     then parse_elixir_deps(pkg, known_names)
                when "lua"        then parse_lua_deps(pkg, known_names)
                when "perl"       then parse_perl_deps(pkg, known_names)
                when "swift"      then parse_swift_deps(pkg, known_names)
                when "haskell"    then parse_haskell_deps(pkg, known_names)
                when "java", "kotlin" then parse_gradle_deps(pkg, known_names)
+               when "csharp", "fsharp", "dotnet" then parse_dotnet_deps(pkg, known_names)
                else []
                end
 

@@ -17,7 +17,10 @@ fn make_data_mode() -> DFA {
             (("text".into(), "char".into()), "text".into()),
             (("text".into(), "open_angle".into()), "tag_detected".into()),
             (("tag_detected".into(), "char".into()), "text".into()),
-            (("tag_detected".into(), "open_angle".into()), "tag_detected".into()),
+            (
+                ("tag_detected".into(), "open_angle".into()),
+                "tag_detected".into(),
+            ),
         ]),
         "text".into(),
         HashSet::from(["text".into()]),
@@ -30,8 +33,14 @@ fn make_tag_mode() -> DFA {
         HashSet::from(["reading_name".into(), "tag_done".into()]),
         HashSet::from(["char".into(), "close_angle".into()]),
         HashMap::from([
-            (("reading_name".into(), "char".into()), "reading_name".into()),
-            (("reading_name".into(), "close_angle".into()), "tag_done".into()),
+            (
+                ("reading_name".into(), "char".into()),
+                "reading_name".into(),
+            ),
+            (
+                ("reading_name".into(), "close_angle".into()),
+                "tag_done".into(),
+            ),
             (("tag_done".into(), "char".into()), "reading_name".into()),
             (("tag_done".into(), "close_angle".into()), "tag_done".into()),
         ]),

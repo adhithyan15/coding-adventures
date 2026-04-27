@@ -543,6 +543,7 @@ TOKEN_GRAMMAR = GT::TokenGrammar.new(
         ],
       ),
     },
+  layout_keywords: [],
   context_keywords: ["as", "from", "of", "get", "set", "static", "type", "interface", "namespace", "module", "declare", "abstract", "readonly", "is", "keyof", "asserts", "unique", "never", "infer"],
   soft_keywords: [],
 )

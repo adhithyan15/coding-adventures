@@ -252,6 +252,7 @@ pub const PAGE_SIZE: usize = 65536;
 /// │  Page 0 (0x0000 - 0xFFFF)  │  Page 1 (0x10000 - 0x1FFFF) │ ...
 /// └─────────────────────────────┴─────────────────────────────┘
 /// ```
+#[derive(Clone)]
 pub struct LinearMemory {
     /// The raw byte storage.
     data: Vec<u8>,
@@ -575,38 +576,34 @@ pub trait HostFunction {
     /// The function's type signature.
     fn func_type(&self) -> &FuncType;
     /// Invoke the function with the given arguments.
-    fn call(&self, args: &[WasmValue]) -> Result<Vec<WasmValue>, TrapError>;
+    fn call(
+        &self,
+        args: &[WasmValue],
+        memory: Option<&mut LinearMemory>,
+    ) -> Result<Vec<WasmValue>, TrapError>;
 }
 
 /// A host interface — resolves WASM imports.
 pub trait HostInterface {
     /// Resolve an imported function.
-    fn resolve_function(
-        &self,
-        module_name: &str,
-        name: &str,
-    ) -> Option<Box<dyn HostFunction>>;
+    fn resolve_function(&self, module_name: &str, name: &str) -> Option<Box<dyn HostFunction>>;
 
     /// Resolve an imported global.
-    fn resolve_global(
-        &self,
-        module_name: &str,
-        name: &str,
-    ) -> Option<(GlobalType, WasmValue)>;
+    fn resolve_global(&self, module_name: &str, name: &str) -> Option<(GlobalType, WasmValue)>;
 
     /// Resolve an imported memory.
-    fn resolve_memory(
-        &self,
-        module_name: &str,
-        name: &str,
-    ) -> Option<LinearMemory>;
+    fn resolve_memory(&self, module_name: &str, name: &str) -> Option<LinearMemory>;
 
     /// Resolve an imported table.
-    fn resolve_table(
-        &self,
-        module_name: &str,
-        name: &str,
-    ) -> Option<Table>;
+    fn resolve_table(&self, module_name: &str, name: &str) -> Option<Table>;
+
+    /// Bind the current instance memory into the host before a call executes.
+    fn set_memory(&self, _memory: LinearMemory) {}
+
+    /// Retrieve any host-owned memory after a call completes.
+    fn take_memory(&self) -> Option<LinearMemory> {
+        None
+    }
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -618,10 +615,7 @@ pub trait HostInterface {
 ///
 /// Allowed opcodes: i32.const (0x41), i64.const (0x42), f32.const (0x43),
 /// f64.const (0x44), global.get (0x23), end (0x0B).
-pub fn evaluate_const_expr(
-    expr: &[u8],
-    globals: &[WasmValue],
-) -> Result<WasmValue, TrapError> {
+pub fn evaluate_const_expr(expr: &[u8], globals: &[WasmValue]) -> Result<WasmValue, TrapError> {
     let mut result: Option<WasmValue> = None;
     let mut pos: usize = 0;
 
@@ -648,12 +642,8 @@ pub fn evaluate_const_expr(
                 if pos + 4 > expr.len() {
                     return Err(TrapError::new("f32.const: not enough bytes"));
                 }
-                let value = f32::from_le_bytes([
-                    expr[pos],
-                    expr[pos + 1],
-                    expr[pos + 2],
-                    expr[pos + 3],
-                ]);
+                let value =
+                    f32::from_le_bytes([expr[pos], expr[pos + 1], expr[pos + 2], expr[pos + 3]]);
                 pos += 4;
                 result = Some(WasmValue::F32(value));
             }
@@ -860,8 +850,7 @@ fn decode_immediates(code: &[u8], offset: usize, immediates: &[&str]) -> (Decode
                 }
             }
         }
-        "labelidx" | "funcidx" | "typeidx" | "localidx" | "globalidx" | "tableidx"
-        | "memidx" => {
+        "labelidx" | "funcidx" | "typeidx" | "localidx" | "globalidx" | "tableidx" | "memidx" => {
             let (value, consumed) = decode_leb_u32(code, offset);
             (DecodedOperand::Int(value as i64), consumed)
         }
@@ -921,7 +910,9 @@ pub struct ControlTarget {
 }
 
 /// Build the control flow map for decoded instructions.
-pub fn build_control_flow_map(instructions: &[DecodedInstruction]) -> HashMap<usize, ControlTarget> {
+pub fn build_control_flow_map(
+    instructions: &[DecodedInstruction],
+) -> HashMap<usize, ControlTarget> {
     let mut map = HashMap::new();
     let mut stack: Vec<(usize, u8, Option<usize>)> = Vec::new(); // (index, opcode, else_pc)
 
@@ -940,13 +931,7 @@ pub fn build_control_flow_map(instructions: &[DecodedInstruction]) -> HashMap<us
             0x0B => {
                 // end
                 if let Some((start_idx, _opcode, else_pc)) = stack.pop() {
-                    map.insert(
-                        start_idx,
-                        ControlTarget {
-                            end_pc: i,
-                            else_pc,
-                        },
-                    );
+                    map.insert(start_idx, ControlTarget { end_pc: i, else_pc });
                 }
             }
             _ => {}
@@ -1039,9 +1024,7 @@ fn get_ctx(ctx: &mut dyn Any) -> &mut WasmExecutionContext {
 fn get_memory<'a>(ctx: &WasmExecutionContext) -> Result<&'a mut LinearMemory, VMError> {
     match ctx.memory {
         Some(ptr) => Ok(unsafe { &mut *ptr }),
-        None => Err(VMError::GenericError(
-            "no memory available".to_string(),
-        )),
+        None => Err(VMError::GenericError("no memory available".to_string())),
     }
 }
 
@@ -1056,11 +1039,9 @@ fn get_table<'a>(ctx: &mut WasmExecutionContext, idx: usize) -> Result<&'a mut T
 // ── Helper: block arity resolution ────────────────────────────────────────
 fn block_arity(block_type: i64, func_types: &[FuncType]) -> usize {
     match block_type {
-        0x40 => 0,                                                    // empty
-        0x7F | 0x7E | 0x7D | 0x7C => 1,                              // single value type
-        n if n >= 0 && (n as usize) < func_types.len() => {
-            func_types[n as usize].results.len()
-        }
+        0x40 => 0,                      // empty
+        0x7F | 0x7E | 0x7D | 0x7C => 1, // single value type
+        n if n >= 0 && (n as usize) < func_types.len() => func_types[n as usize].results.len(),
         _ => 0,
     }
 }
@@ -1071,9 +1052,13 @@ fn execute_branch(
     ctx: &mut WasmExecutionContext,
     label_index: usize,
 ) -> VMResult<()> {
-    let label_stack_index = ctx.label_stack.len().checked_sub(1 + label_index).ok_or_else(|| {
-        VMError::GenericError(format!("branch target {} out of range", label_index))
-    })?;
+    let label_stack_index = ctx
+        .label_stack
+        .len()
+        .checked_sub(1 + label_index)
+        .ok_or_else(|| {
+            VMError::GenericError(format!("branch target {} out of range", label_index))
+        })?;
 
     let label = ctx.label_stack[label_stack_index].clone();
 
@@ -1151,16 +1136,36 @@ fn register_numeric_i32(vm: &mut GenericVM) {
         };
     }
 
-    i32_binop!(vm, 0x46, |a: i32, b: i32| -> VMResult<i32> { Ok(if a == b { 1 } else { 0 }) }); // eq
-    i32_binop!(vm, 0x47, |a: i32, b: i32| -> VMResult<i32> { Ok(if a != b { 1 } else { 0 }) }); // ne
-    i32_binop!(vm, 0x48, |a: i32, b: i32| -> VMResult<i32> { Ok(if a < b { 1 } else { 0 }) }); // lt_s
-    i32_binop!(vm, 0x49, |a: i32, b: i32| -> VMResult<i32> { Ok(if (a as u32) < (b as u32) { 1 } else { 0 }) }); // lt_u
-    i32_binop!(vm, 0x4A, |a: i32, b: i32| -> VMResult<i32> { Ok(if a > b { 1 } else { 0 }) }); // gt_s
-    i32_binop!(vm, 0x4B, |a: i32, b: i32| -> VMResult<i32> { Ok(if (a as u32) > (b as u32) { 1 } else { 0 }) }); // gt_u
-    i32_binop!(vm, 0x4C, |a: i32, b: i32| -> VMResult<i32> { Ok(if a <= b { 1 } else { 0 }) }); // le_s
-    i32_binop!(vm, 0x4D, |a: i32, b: i32| -> VMResult<i32> { Ok(if (a as u32) <= (b as u32) { 1 } else { 0 }) }); // le_u
-    i32_binop!(vm, 0x4E, |a: i32, b: i32| -> VMResult<i32> { Ok(if a >= b { 1 } else { 0 }) }); // ge_s
-    i32_binop!(vm, 0x4F, |a: i32, b: i32| -> VMResult<i32> { Ok(if (a as u32) >= (b as u32) { 1 } else { 0 }) }); // ge_u
+    i32_binop!(vm, 0x46, |a: i32, b: i32| -> VMResult<i32> {
+        Ok(if a == b { 1 } else { 0 })
+    }); // eq
+    i32_binop!(vm, 0x47, |a: i32, b: i32| -> VMResult<i32> {
+        Ok(if a != b { 1 } else { 0 })
+    }); // ne
+    i32_binop!(vm, 0x48, |a: i32, b: i32| -> VMResult<i32> {
+        Ok(if a < b { 1 } else { 0 })
+    }); // lt_s
+    i32_binop!(vm, 0x49, |a: i32, b: i32| -> VMResult<i32> {
+        Ok(if (a as u32) < (b as u32) { 1 } else { 0 })
+    }); // lt_u
+    i32_binop!(vm, 0x4A, |a: i32, b: i32| -> VMResult<i32> {
+        Ok(if a > b { 1 } else { 0 })
+    }); // gt_s
+    i32_binop!(vm, 0x4B, |a: i32, b: i32| -> VMResult<i32> {
+        Ok(if (a as u32) > (b as u32) { 1 } else { 0 })
+    }); // gt_u
+    i32_binop!(vm, 0x4C, |a: i32, b: i32| -> VMResult<i32> {
+        Ok(if a <= b { 1 } else { 0 })
+    }); // le_s
+    i32_binop!(vm, 0x4D, |a: i32, b: i32| -> VMResult<i32> {
+        Ok(if (a as u32) <= (b as u32) { 1 } else { 0 })
+    }); // le_u
+    i32_binop!(vm, 0x4E, |a: i32, b: i32| -> VMResult<i32> {
+        Ok(if a >= b { 1 } else { 0 })
+    }); // ge_s
+    i32_binop!(vm, 0x4F, |a: i32, b: i32| -> VMResult<i32> {
+        Ok(if (a as u32) >= (b as u32) { 1 } else { 0 })
+    }); // ge_u
 
     // i32 unary ops
     macro_rules! i32_unop {
@@ -1179,33 +1184,51 @@ fn register_numeric_i32(vm: &mut GenericVM) {
     i32_unop!(vm, 0x69, |a: i32| a.count_ones() as i32); // popcnt
 
     // Arithmetic
-    i32_binop!(vm, 0x6A, |a: i32, b: i32| -> VMResult<i32> { Ok(a.wrapping_add(b)) }); // add
-    i32_binop!(vm, 0x6B, |a: i32, b: i32| -> VMResult<i32> { Ok(a.wrapping_sub(b)) }); // sub
-    i32_binop!(vm, 0x6C, |a: i32, b: i32| -> VMResult<i32> { Ok(a.wrapping_mul(b)) }); // mul
+    i32_binop!(vm, 0x6A, |a: i32, b: i32| -> VMResult<i32> {
+        Ok(a.wrapping_add(b))
+    }); // add
+    i32_binop!(vm, 0x6B, |a: i32, b: i32| -> VMResult<i32> {
+        Ok(a.wrapping_sub(b))
+    }); // sub
+    i32_binop!(vm, 0x6C, |a: i32, b: i32| -> VMResult<i32> {
+        Ok(a.wrapping_mul(b))
+    }); // mul
 
     // div_s (0x6D): traps on div by zero or overflow
     i32_binop!(vm, 0x6D, |a: i32, b: i32| -> VMResult<i32> {
-        if b == 0 { return Err(VMError::GenericError("integer divide by zero".into())); }
-        if a == i32::MIN && b == -1 { return Err(VMError::GenericError("integer overflow".into())); }
+        if b == 0 {
+            return Err(VMError::GenericError("integer divide by zero".into()));
+        }
+        if a == i32::MIN && b == -1 {
+            return Err(VMError::GenericError("integer overflow".into()));
+        }
         Ok(a.wrapping_div(b))
     });
 
     // div_u (0x6E)
     i32_binop!(vm, 0x6E, |a: i32, b: i32| -> VMResult<i32> {
-        if b == 0 { return Err(VMError::GenericError("integer divide by zero".into())); }
+        if b == 0 {
+            return Err(VMError::GenericError("integer divide by zero".into()));
+        }
         Ok(((a as u32).wrapping_div(b as u32)) as i32)
     });
 
     // rem_s (0x6F)
     i32_binop!(vm, 0x6F, |a: i32, b: i32| -> VMResult<i32> {
-        if b == 0 { return Err(VMError::GenericError("integer divide by zero".into())); }
-        if a == i32::MIN && b == -1 { return Ok(0); }
+        if b == 0 {
+            return Err(VMError::GenericError("integer divide by zero".into()));
+        }
+        if a == i32::MIN && b == -1 {
+            return Ok(0);
+        }
         Ok(a.wrapping_rem(b))
     });
 
     // rem_u (0x70)
     i32_binop!(vm, 0x70, |a: i32, b: i32| -> VMResult<i32> {
-        if b == 0 { return Err(VMError::GenericError("integer divide by zero".into())); }
+        if b == 0 {
+            return Err(VMError::GenericError("integer divide by zero".into()));
+        }
         Ok(((a as u32).wrapping_rem(b as u32)) as i32)
     });
 
@@ -1213,11 +1236,21 @@ fn register_numeric_i32(vm: &mut GenericVM) {
     i32_binop!(vm, 0x71, |a: i32, b: i32| -> VMResult<i32> { Ok(a & b) }); // and
     i32_binop!(vm, 0x72, |a: i32, b: i32| -> VMResult<i32> { Ok(a | b) }); // or
     i32_binop!(vm, 0x73, |a: i32, b: i32| -> VMResult<i32> { Ok(a ^ b) }); // xor
-    i32_binop!(vm, 0x74, |a: i32, b: i32| -> VMResult<i32> { Ok(a.wrapping_shl(b as u32 & 31)) }); // shl
-    i32_binop!(vm, 0x75, |a: i32, b: i32| -> VMResult<i32> { Ok(a.wrapping_shr(b as u32 & 31)) }); // shr_s
-    i32_binop!(vm, 0x76, |a: i32, b: i32| -> VMResult<i32> { Ok(((a as u32).wrapping_shr(b as u32 & 31)) as i32) }); // shr_u
-    i32_binop!(vm, 0x77, |a: i32, b: i32| -> VMResult<i32> { Ok(a.rotate_left(b as u32 & 31)) }); // rotl
-    i32_binop!(vm, 0x78, |a: i32, b: i32| -> VMResult<i32> { Ok(a.rotate_right(b as u32 & 31)) }); // rotr
+    i32_binop!(vm, 0x74, |a: i32, b: i32| -> VMResult<i32> {
+        Ok(a.wrapping_shl(b as u32 & 31))
+    }); // shl
+    i32_binop!(vm, 0x75, |a: i32, b: i32| -> VMResult<i32> {
+        Ok(a.wrapping_shr(b as u32 & 31))
+    }); // shr_s
+    i32_binop!(vm, 0x76, |a: i32, b: i32| -> VMResult<i32> {
+        Ok(((a as u32).wrapping_shr(b as u32 & 31)) as i32)
+    }); // shr_u
+    i32_binop!(vm, 0x77, |a: i32, b: i32| -> VMResult<i32> {
+        Ok(a.rotate_left(b as u32 & 31))
+    }); // rotl
+    i32_binop!(vm, 0x78, |a: i32, b: i32| -> VMResult<i32> {
+        Ok(a.rotate_right(b as u32 & 31))
+    }); // rotr
 }
 
 // ── Numeric i64 ──────────────────────────────────────────────────────────
@@ -1295,35 +1328,63 @@ fn register_numeric_i64(vm: &mut GenericVM) {
         Ok(None)
     }); // popcnt
 
-    i64_binop!(vm, 0x7C, |a: i64, b: i64| -> VMResult<i64> { Ok(a.wrapping_add(b)) }); // add
-    i64_binop!(vm, 0x7D, |a: i64, b: i64| -> VMResult<i64> { Ok(a.wrapping_sub(b)) }); // sub
-    i64_binop!(vm, 0x7E, |a: i64, b: i64| -> VMResult<i64> { Ok(a.wrapping_mul(b)) }); // mul
+    i64_binop!(vm, 0x7C, |a: i64, b: i64| -> VMResult<i64> {
+        Ok(a.wrapping_add(b))
+    }); // add
+    i64_binop!(vm, 0x7D, |a: i64, b: i64| -> VMResult<i64> {
+        Ok(a.wrapping_sub(b))
+    }); // sub
+    i64_binop!(vm, 0x7E, |a: i64, b: i64| -> VMResult<i64> {
+        Ok(a.wrapping_mul(b))
+    }); // mul
     i64_binop!(vm, 0x7F, |a: i64, b: i64| -> VMResult<i64> {
-        if b == 0 { return Err(VMError::GenericError("integer divide by zero".into())); }
-        if a == i64::MIN && b == -1 { return Err(VMError::GenericError("integer overflow".into())); }
+        if b == 0 {
+            return Err(VMError::GenericError("integer divide by zero".into()));
+        }
+        if a == i64::MIN && b == -1 {
+            return Err(VMError::GenericError("integer overflow".into()));
+        }
         Ok(a.wrapping_div(b))
     }); // div_s
     i64_binop!(vm, 0x80, |a: i64, b: i64| -> VMResult<i64> {
-        if b == 0 { return Err(VMError::GenericError("integer divide by zero".into())); }
+        if b == 0 {
+            return Err(VMError::GenericError("integer divide by zero".into()));
+        }
         Ok(((a as u64).wrapping_div(b as u64)) as i64)
     }); // div_u
     i64_binop!(vm, 0x81, |a: i64, b: i64| -> VMResult<i64> {
-        if b == 0 { return Err(VMError::GenericError("integer divide by zero".into())); }
-        if a == i64::MIN && b == -1 { return Ok(0); }
+        if b == 0 {
+            return Err(VMError::GenericError("integer divide by zero".into()));
+        }
+        if a == i64::MIN && b == -1 {
+            return Ok(0);
+        }
         Ok(a.wrapping_rem(b))
     }); // rem_s
     i64_binop!(vm, 0x82, |a: i64, b: i64| -> VMResult<i64> {
-        if b == 0 { return Err(VMError::GenericError("integer divide by zero".into())); }
+        if b == 0 {
+            return Err(VMError::GenericError("integer divide by zero".into()));
+        }
         Ok(((a as u64).wrapping_rem(b as u64)) as i64)
     }); // rem_u
     i64_binop!(vm, 0x83, |a: i64, b: i64| -> VMResult<i64> { Ok(a & b) }); // and
     i64_binop!(vm, 0x84, |a: i64, b: i64| -> VMResult<i64> { Ok(a | b) }); // or
     i64_binop!(vm, 0x85, |a: i64, b: i64| -> VMResult<i64> { Ok(a ^ b) }); // xor
-    i64_binop!(vm, 0x86, |a: i64, b: i64| -> VMResult<i64> { Ok(a.wrapping_shl((b & 63) as u32)) }); // shl
-    i64_binop!(vm, 0x87, |a: i64, b: i64| -> VMResult<i64> { Ok(a.wrapping_shr((b & 63) as u32)) }); // shr_s
-    i64_binop!(vm, 0x88, |a: i64, b: i64| -> VMResult<i64> { Ok(((a as u64).wrapping_shr((b & 63) as u32)) as i64) }); // shr_u
-    i64_binop!(vm, 0x89, |a: i64, b: i64| -> VMResult<i64> { Ok(a.rotate_left((b & 63) as u32)) }); // rotl
-    i64_binop!(vm, 0x8A, |a: i64, b: i64| -> VMResult<i64> { Ok(a.rotate_right((b & 63) as u32)) }); // rotr
+    i64_binop!(vm, 0x86, |a: i64, b: i64| -> VMResult<i64> {
+        Ok(a.wrapping_shl((b & 63) as u32))
+    }); // shl
+    i64_binop!(vm, 0x87, |a: i64, b: i64| -> VMResult<i64> {
+        Ok(a.wrapping_shr((b & 63) as u32))
+    }); // shr_s
+    i64_binop!(vm, 0x88, |a: i64, b: i64| -> VMResult<i64> {
+        Ok(((a as u64).wrapping_shr((b & 63) as u32)) as i64)
+    }); // shr_u
+    i64_binop!(vm, 0x89, |a: i64, b: i64| -> VMResult<i64> {
+        Ok(a.rotate_left((b & 63) as u32))
+    }); // rotl
+    i64_binop!(vm, 0x8A, |a: i64, b: i64| -> VMResult<i64> {
+        Ok(a.rotate_right((b & 63) as u32))
+    }); // rotr
 }
 
 // ── Numeric f32 ──────────────────────────────────────────────────────────
@@ -1375,11 +1436,21 @@ fn register_numeric_f32(vm: &mut GenericVM) {
     f32_unop!(vm, 0x8D, |a: f32| a.ceil()); // ceil
     f32_unop!(vm, 0x8E, |a: f32| a.floor()); // floor
     f32_unop!(vm, 0x8F, |a: f32| a.trunc()); // trunc
-    f32_unop!(vm, 0x90, |a: f32| if a.fract() == 0.5 || a.fract() == -0.5 {
-        // nearest even
-        let rounded = a.round();
-        if rounded as i32 % 2 != 0 { rounded - a.signum() } else { rounded }
-    } else { a.round() }); // nearest
+    f32_unop!(
+        vm,
+        0x90,
+        |a: f32| if a.fract() == 0.5 || a.fract() == -0.5 {
+            // nearest even
+            let rounded = a.round();
+            if rounded as i32 % 2 != 0 {
+                rounded - a.signum()
+            } else {
+                rounded
+            }
+        } else {
+            a.round()
+        }
+    ); // nearest
     f32_unop!(vm, 0x91, |a: f32| a.sqrt()); // sqrt
 
     macro_rules! f32_binop {
@@ -1400,7 +1471,9 @@ fn register_numeric_f32(vm: &mut GenericVM) {
     f32_binop!(vm, 0x95, |a: f32, b: f32| a / b); // div
     f32_binop!(vm, 0x96, |a: f32, b: f32| a.min(b)); // min
     f32_binop!(vm, 0x97, |a: f32, b: f32| a.max(b)); // max
-    f32_binop!(vm, 0x98, |a: f32, b: f32| f32::from_bits((a.to_bits() & 0x7FFF_FFFF) | (b.to_bits() & 0x8000_0000))); // copysign
+    f32_binop!(vm, 0x98, |a: f32, b: f32| f32::from_bits(
+        (a.to_bits() & 0x7FFF_FFFF) | (b.to_bits() & 0x8000_0000)
+    )); // copysign
 }
 
 // ── Numeric f64 ──────────────────────────────────────────────────────────
@@ -1452,10 +1525,20 @@ fn register_numeric_f64(vm: &mut GenericVM) {
     f64_unop!(vm, 0x9B, |a: f64| a.ceil()); // ceil
     f64_unop!(vm, 0x9C, |a: f64| a.floor()); // floor
     f64_unop!(vm, 0x9D, |a: f64| a.trunc()); // trunc
-    f64_unop!(vm, 0x9E, |a: f64| if a.fract() == 0.5 || a.fract() == -0.5 {
-        let rounded = a.round();
-        if rounded as i64 % 2 != 0 { rounded - a.signum() } else { rounded }
-    } else { a.round() }); // nearest
+    f64_unop!(
+        vm,
+        0x9E,
+        |a: f64| if a.fract() == 0.5 || a.fract() == -0.5 {
+            let rounded = a.round();
+            if rounded as i64 % 2 != 0 {
+                rounded - a.signum()
+            } else {
+                rounded
+            }
+        } else {
+            a.round()
+        }
+    ); // nearest
     f64_unop!(vm, 0x9F, |a: f64| a.sqrt()); // sqrt
 
     macro_rules! f64_binop {
@@ -1476,7 +1559,9 @@ fn register_numeric_f64(vm: &mut GenericVM) {
     f64_binop!(vm, 0xA3, |a: f64, b: f64| a / b); // div
     f64_binop!(vm, 0xA4, |a: f64, b: f64| a.min(b)); // min
     f64_binop!(vm, 0xA5, |a: f64, b: f64| a.max(b)); // max
-    f64_binop!(vm, 0xA6, |a: f64, b: f64| f64::from_bits((a.to_bits() & 0x7FFF_FFFF_FFFF_FFFF) | (b.to_bits() & 0x8000_0000_0000_0000))); // copysign
+    f64_binop!(vm, 0xA6, |a: f64, b: f64| f64::from_bits(
+        (a.to_bits() & 0x7FFF_FFFF_FFFF_FFFF) | (b.to_bits() & 0x8000_0000_0000_0000)
+    )); // copysign
 }
 
 // ── Conversion instructions (0xA7-0xBF) ──────────────────────────────────
@@ -1493,8 +1578,14 @@ fn register_conversion(vm: &mut GenericVM) {
     // i32.trunc_f32_s (0xA8)
     vm.register_context_opcode(0xA8, |vm, _instr, _code, _ctx| {
         let a = pop_wasm(vm)?.as_f32().map_err(VMError::from)?;
-        if a.is_nan() { return Err(VMError::GenericError("invalid conversion to integer".into())); }
-        if a >= 2147483648.0 || a < -2147483648.0 { return Err(VMError::GenericError("integer overflow".into())); }
+        if a.is_nan() {
+            return Err(VMError::GenericError(
+                "invalid conversion to integer".into(),
+            ));
+        }
+        if a >= 2147483648.0 || a < -2147483648.0 {
+            return Err(VMError::GenericError("integer overflow".into()));
+        }
         push_wasm(vm, WasmValue::I32(a as i32));
         vm.advance_pc();
         Ok(None)
@@ -1503,8 +1594,14 @@ fn register_conversion(vm: &mut GenericVM) {
     // i32.trunc_f32_u (0xA9)
     vm.register_context_opcode(0xA9, |vm, _instr, _code, _ctx| {
         let a = pop_wasm(vm)?.as_f32().map_err(VMError::from)?;
-        if a.is_nan() { return Err(VMError::GenericError("invalid conversion to integer".into())); }
-        if a >= 4294967296.0 || a < 0.0 { return Err(VMError::GenericError("integer overflow".into())); }
+        if a.is_nan() {
+            return Err(VMError::GenericError(
+                "invalid conversion to integer".into(),
+            ));
+        }
+        if a >= 4294967296.0 || a < 0.0 {
+            return Err(VMError::GenericError("integer overflow".into()));
+        }
         push_wasm(vm, WasmValue::I32(a as u32 as i32));
         vm.advance_pc();
         Ok(None)
@@ -1513,8 +1610,14 @@ fn register_conversion(vm: &mut GenericVM) {
     // i32.trunc_f64_s (0xAA)
     vm.register_context_opcode(0xAA, |vm, _instr, _code, _ctx| {
         let a = pop_wasm(vm)?.as_f64().map_err(VMError::from)?;
-        if a.is_nan() { return Err(VMError::GenericError("invalid conversion to integer".into())); }
-        if a >= 2147483648.0 || a < -2147483649.0 { return Err(VMError::GenericError("integer overflow".into())); }
+        if a.is_nan() {
+            return Err(VMError::GenericError(
+                "invalid conversion to integer".into(),
+            ));
+        }
+        if a >= 2147483648.0 || a < -2147483649.0 {
+            return Err(VMError::GenericError("integer overflow".into()));
+        }
         push_wasm(vm, WasmValue::I32(a as i32));
         vm.advance_pc();
         Ok(None)
@@ -1523,8 +1626,14 @@ fn register_conversion(vm: &mut GenericVM) {
     // i32.trunc_f64_u (0xAB)
     vm.register_context_opcode(0xAB, |vm, _instr, _code, _ctx| {
         let a = pop_wasm(vm)?.as_f64().map_err(VMError::from)?;
-        if a.is_nan() { return Err(VMError::GenericError("invalid conversion to integer".into())); }
-        if a >= 4294967296.0 || a < 0.0 { return Err(VMError::GenericError("integer overflow".into())); }
+        if a.is_nan() {
+            return Err(VMError::GenericError(
+                "invalid conversion to integer".into(),
+            ));
+        }
+        if a >= 4294967296.0 || a < 0.0 {
+            return Err(VMError::GenericError("integer overflow".into()));
+        }
         push_wasm(vm, WasmValue::I32(a as u32 as i32));
         vm.advance_pc();
         Ok(None)
@@ -1549,28 +1658,44 @@ fn register_conversion(vm: &mut GenericVM) {
     // i64.trunc_f32_s (0xAE), i64.trunc_f32_u (0xAF), i64.trunc_f64_s (0xB0), i64.trunc_f64_u (0xB1)
     vm.register_context_opcode(0xAE, |vm, _instr, _code, _ctx| {
         let a = pop_wasm(vm)?.as_f32().map_err(VMError::from)?;
-        if a.is_nan() { return Err(VMError::GenericError("invalid conversion to integer".into())); }
+        if a.is_nan() {
+            return Err(VMError::GenericError(
+                "invalid conversion to integer".into(),
+            ));
+        }
         push_wasm(vm, WasmValue::I64(a as i64));
         vm.advance_pc();
         Ok(None)
     });
     vm.register_context_opcode(0xAF, |vm, _instr, _code, _ctx| {
         let a = pop_wasm(vm)?.as_f32().map_err(VMError::from)?;
-        if a.is_nan() { return Err(VMError::GenericError("invalid conversion to integer".into())); }
+        if a.is_nan() {
+            return Err(VMError::GenericError(
+                "invalid conversion to integer".into(),
+            ));
+        }
         push_wasm(vm, WasmValue::I64(a as u64 as i64));
         vm.advance_pc();
         Ok(None)
     });
     vm.register_context_opcode(0xB0, |vm, _instr, _code, _ctx| {
         let a = pop_wasm(vm)?.as_f64().map_err(VMError::from)?;
-        if a.is_nan() { return Err(VMError::GenericError("invalid conversion to integer".into())); }
+        if a.is_nan() {
+            return Err(VMError::GenericError(
+                "invalid conversion to integer".into(),
+            ));
+        }
         push_wasm(vm, WasmValue::I64(a as i64));
         vm.advance_pc();
         Ok(None)
     });
     vm.register_context_opcode(0xB1, |vm, _instr, _code, _ctx| {
         let a = pop_wasm(vm)?.as_f64().map_err(VMError::from)?;
-        if a.is_nan() { return Err(VMError::GenericError("invalid conversion to integer".into())); }
+        if a.is_nan() {
+            return Err(VMError::GenericError(
+                "invalid conversion to integer".into(),
+            ));
+        }
         push_wasm(vm, WasmValue::I64(a as u64 as i64));
         vm.advance_pc();
         Ok(None)
@@ -1919,7 +2044,9 @@ fn register_memory(vm: &mut GenericVM) {
         let val = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let addr = effective_addr(instr, base);
-        get_memory(ctx)?.store_i32(addr, val).map_err(VMError::from)?;
+        get_memory(ctx)?
+            .store_i32(addr, val)
+            .map_err(VMError::from)?;
         vm.advance_pc();
         Ok(None)
     });
@@ -1928,7 +2055,9 @@ fn register_memory(vm: &mut GenericVM) {
         let val = pop_wasm(vm)?.as_i64().map_err(VMError::from)?;
         let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let addr = effective_addr(instr, base);
-        get_memory(ctx)?.store_i64(addr, val).map_err(VMError::from)?;
+        get_memory(ctx)?
+            .store_i64(addr, val)
+            .map_err(VMError::from)?;
         vm.advance_pc();
         Ok(None)
     });
@@ -1937,7 +2066,9 @@ fn register_memory(vm: &mut GenericVM) {
         let val = pop_wasm(vm)?.as_f32().map_err(VMError::from)?;
         let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let addr = effective_addr(instr, base);
-        get_memory(ctx)?.store_f32(addr, val).map_err(VMError::from)?;
+        get_memory(ctx)?
+            .store_f32(addr, val)
+            .map_err(VMError::from)?;
         vm.advance_pc();
         Ok(None)
     });
@@ -1946,7 +2077,9 @@ fn register_memory(vm: &mut GenericVM) {
         let val = pop_wasm(vm)?.as_f64().map_err(VMError::from)?;
         let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let addr = effective_addr(instr, base);
-        get_memory(ctx)?.store_f64(addr, val).map_err(VMError::from)?;
+        get_memory(ctx)?
+            .store_f64(addr, val)
+            .map_err(VMError::from)?;
         vm.advance_pc();
         Ok(None)
     });
@@ -1957,7 +2090,9 @@ fn register_memory(vm: &mut GenericVM) {
         let val = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let addr = effective_addr(instr, base);
-        get_memory(ctx)?.store_i32_8(addr, val).map_err(VMError::from)?;
+        get_memory(ctx)?
+            .store_i32_8(addr, val)
+            .map_err(VMError::from)?;
         vm.advance_pc();
         Ok(None)
     });
@@ -1966,7 +2101,9 @@ fn register_memory(vm: &mut GenericVM) {
         let val = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let addr = effective_addr(instr, base);
-        get_memory(ctx)?.store_i32_16(addr, val).map_err(VMError::from)?;
+        get_memory(ctx)?
+            .store_i32_16(addr, val)
+            .map_err(VMError::from)?;
         vm.advance_pc();
         Ok(None)
     });
@@ -1977,7 +2114,9 @@ fn register_memory(vm: &mut GenericVM) {
         let val = pop_wasm(vm)?.as_i64().map_err(VMError::from)?;
         let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let addr = effective_addr(instr, base);
-        get_memory(ctx)?.store_i64_8(addr, val).map_err(VMError::from)?;
+        get_memory(ctx)?
+            .store_i64_8(addr, val)
+            .map_err(VMError::from)?;
         vm.advance_pc();
         Ok(None)
     });
@@ -1986,7 +2125,9 @@ fn register_memory(vm: &mut GenericVM) {
         let val = pop_wasm(vm)?.as_i64().map_err(VMError::from)?;
         let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let addr = effective_addr(instr, base);
-        get_memory(ctx)?.store_i64_16(addr, val).map_err(VMError::from)?;
+        get_memory(ctx)?
+            .store_i64_16(addr, val)
+            .map_err(VMError::from)?;
         vm.advance_pc();
         Ok(None)
     });
@@ -1995,7 +2136,9 @@ fn register_memory(vm: &mut GenericVM) {
         let val = pop_wasm(vm)?.as_i64().map_err(VMError::from)?;
         let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let addr = effective_addr(instr, base);
-        get_memory(ctx)?.store_i64_32(addr, val).map_err(VMError::from)?;
+        get_memory(ctx)?
+            .store_i64_32(addr, val)
+            .map_err(VMError::from)?;
         vm.advance_pc();
         Ok(None)
     });
@@ -2031,7 +2174,9 @@ fn register_memory(vm: &mut GenericVM) {
 fn register_control(vm: &mut GenericVM) {
     // unreachable (0x00)
     vm.register_context_opcode(0x00, |_vm, _instr, _code, _ctx| {
-        Err(VMError::GenericError("unreachable instruction executed".into()))
+        Err(VMError::GenericError(
+            "unreachable instruction executed".into(),
+        ))
     });
 
     // nop (0x01)
@@ -2045,7 +2190,11 @@ fn register_control(vm: &mut GenericVM) {
         let ctx = get_ctx(ctx);
         let block_type = operand_int(instr);
         let arity = block_arity(block_type, &ctx.func_types);
-        let end_pc = ctx.control_flow_map.get(&vm.pc).map(|t| t.end_pc).unwrap_or(vm.pc + 1);
+        let end_pc = ctx
+            .control_flow_map
+            .get(&vm.pc)
+            .map(|t| t.end_pc)
+            .unwrap_or(vm.pc + 1);
         ctx.label_stack.push(Label {
             arity,
             target_pc: end_pc,
@@ -2205,9 +2354,11 @@ fn call_function(
     ctx: &mut WasmExecutionContext,
     func_index: usize,
 ) -> VMResult<()> {
-    let func_type = ctx.func_types.get(func_index).ok_or_else(|| {
-        VMError::GenericError(format!("undefined function {}", func_index))
-    })?.clone();
+    let func_type = ctx
+        .func_types
+        .get(func_index)
+        .ok_or_else(|| VMError::GenericError(format!("undefined function {}", func_index)))?
+        .clone();
 
     // Pop arguments.
     let mut args = Vec::new();
@@ -2218,7 +2369,9 @@ fn call_function(
 
     // Check for host function.
     if let Some(Some(host_func)) = ctx.host_functions.get(func_index) {
-        let results = host_func.call(&args).map_err(VMError::from)?;
+        let results = host_func
+            .call(&args, ctx.memory.map(|ptr| unsafe { &mut *ptr }))
+            .map_err(VMError::from)?;
         for r in results {
             push_wasm(vm, r);
         }
@@ -2227,7 +2380,9 @@ fn call_function(
     }
 
     // Module-defined function.
-    let body = ctx.func_bodies.get(func_index)
+    let body = ctx
+        .func_bodies
+        .get(func_index)
         .and_then(|b| b.as_ref())
         .ok_or_else(|| VMError::GenericError(format!("no body for function {}", func_index)))?
         .clone();
@@ -2360,6 +2515,14 @@ pub struct WasmEngineConfig {
     pub host_functions: Vec<Option<Box<dyn HostFunction>>>,
 }
 
+/// Mutable engine state that should be written back to a long-lived instance.
+pub struct WasmEngineState {
+    pub memory: Option<LinearMemory>,
+    pub tables: Vec<Table>,
+    pub globals: Vec<WasmValue>,
+    pub host_functions: Vec<Option<Box<dyn HostFunction>>>,
+}
+
 /// The WASM execution engine — interprets validated WASM modules.
 pub struct WasmExecutionEngine {
     vm: GenericVM,
@@ -2391,15 +2554,26 @@ impl WasmExecutionEngine {
         }
     }
 
+    /// Consume the engine and return the mutated runtime state.
+    pub fn into_state(self) -> WasmEngineState {
+        WasmEngineState {
+            memory: self.memory.map(|memory| *memory),
+            tables: self.tables.into_iter().map(|table| *table).collect(),
+            globals: self.globals,
+            host_functions: self.host_functions,
+        }
+    }
+
     /// Call a WASM function by index.
     pub fn call_function(
         &mut self,
         func_index: usize,
         args: &[WasmValue],
     ) -> Result<Vec<WasmValue>, TrapError> {
-        let func_type = self.func_types.get(func_index).ok_or_else(|| {
-            TrapError::new(format!("undefined function index {}", func_index))
-        })?;
+        let func_type = self
+            .func_types
+            .get(func_index)
+            .ok_or_else(|| TrapError::new(format!("undefined function index {}", func_index)))?;
 
         if args.len() != func_type.params.len() {
             return Err(TrapError::new(format!(
@@ -2412,11 +2586,13 @@ impl WasmExecutionEngine {
 
         // Check for host function.
         if let Some(Some(host_func)) = self.host_functions.get(func_index) {
-            return host_func.call(args);
+            return host_func.call(args, self.memory.as_deref_mut());
         }
 
         // Module-defined function.
-        let body = self.func_bodies.get(func_index)
+        let body = self
+            .func_bodies
+            .get(func_index)
             .and_then(|b| b.as_ref())
             .ok_or_else(|| TrapError::new(format!("no body for function {}", func_index)))?
             .clone();
@@ -2459,7 +2635,12 @@ impl WasmExecutionEngine {
 
         // Build raw pointers for the context.
         let memory_ptr = self.memory.as_mut().map(|m| &mut **m as *mut LinearMemory);
-        let table_ptrs: Vec<*mut Table> = self.tables.iter_mut().map(|t| &mut **t as *mut Table).collect();
+        let table_ptrs: Vec<*mut Table> = self
+            .tables
+            .iter_mut()
+            .map(|t| &mut **t as *mut Table)
+            .collect();
+        let host_functions = std::mem::take(&mut self.host_functions);
 
         let mut ctx = WasmExecutionContext {
             memory: memory_ptr,
@@ -2468,7 +2649,7 @@ impl WasmExecutionEngine {
             global_types: self.global_types.clone(),
             func_types: self.func_types.clone(),
             func_bodies: self.func_bodies.clone(),
-            host_functions: Vec::new(), // We can't clone Box<dyn HostFunction>
+            host_functions,
             typed_locals,
             label_stack: Vec::new(),
             control_flow_map,
@@ -2492,11 +2673,15 @@ impl WasmExecutionEngine {
 
         // Update globals back.
         self.globals = ctx.globals;
+        self.host_functions = ctx.host_functions;
 
         // Collect return values.
         let mut results = Vec::new();
         for _ in 0..result_count {
-            let tv = self.vm.pop_typed().map_err(|e| TrapError::new(format!("{}", e)))?;
+            let tv = self
+                .vm
+                .pop_typed()
+                .map_err(|e| TrapError::new(format!("{}", e)))?;
             results.push(WasmValue::from_typed(&tv)?);
         }
         results.reverse();
@@ -2743,8 +2928,14 @@ mod tests {
         assert_eq!(WasmValue::I64(i64::MIN).as_i64().unwrap(), i64::MIN);
         assert_eq!(WasmValue::I64(i64::MAX).as_i64().unwrap(), i64::MAX);
         assert!(WasmValue::F32(f32::NAN).as_f32().unwrap().is_nan());
-        assert_eq!(WasmValue::F32(f32::INFINITY).as_f32().unwrap(), f32::INFINITY);
-        assert_eq!(WasmValue::F64(f64::NEG_INFINITY).as_f64().unwrap(), f64::NEG_INFINITY);
+        assert_eq!(
+            WasmValue::F32(f32::INFINITY).as_f32().unwrap(),
+            f32::INFINITY
+        );
+        assert_eq!(
+            WasmValue::F64(f64::NEG_INFINITY).as_f64().unwrap(),
+            f64::NEG_INFINITY
+        );
     }
 
     #[test]
@@ -3226,11 +3417,11 @@ mod tests {
             locals: vec![],
             code: vec![
                 0x04, 0x40, // if (empty)
-                0x01,       // nop
-                0x05,       // else
-                0x01,       // nop
-                0x0B,       // end
-                0x0B,       // end (function)
+                0x01, // nop
+                0x05, // else
+                0x01, // nop
+                0x0B, // end
+                0x0B, // end (function)
             ],
         };
         let decoded = decode_function_body(&body);
@@ -3291,48 +3482,62 @@ mod tests {
     #[test]
     fn test_i32_sub() {
         let mut engine = make_i32_binop_engine(0x6B);
-        let result = engine.call_function(0, &[WasmValue::I32(10), WasmValue::I32(3)]).unwrap();
+        let result = engine
+            .call_function(0, &[WasmValue::I32(10), WasmValue::I32(3)])
+            .unwrap();
         assert_eq!(result, vec![WasmValue::I32(7)]);
     }
 
     #[test]
     fn test_i32_mul() {
         let mut engine = make_i32_binop_engine(0x6C);
-        let result = engine.call_function(0, &[WasmValue::I32(6), WasmValue::I32(7)]).unwrap();
+        let result = engine
+            .call_function(0, &[WasmValue::I32(6), WasmValue::I32(7)])
+            .unwrap();
         assert_eq!(result, vec![WasmValue::I32(42)]);
     }
 
     #[test]
     fn test_i32_div_s() {
         let mut engine = make_i32_binop_engine(0x6D);
-        let result = engine.call_function(0, &[WasmValue::I32(-10), WasmValue::I32(3)]).unwrap();
+        let result = engine
+            .call_function(0, &[WasmValue::I32(-10), WasmValue::I32(3)])
+            .unwrap();
         assert_eq!(result, vec![WasmValue::I32(-3)]);
     }
 
     #[test]
     fn test_i32_div_s_by_zero() {
         let mut engine = make_i32_binop_engine(0x6D);
-        assert!(engine.call_function(0, &[WasmValue::I32(1), WasmValue::I32(0)]).is_err());
+        assert!(engine
+            .call_function(0, &[WasmValue::I32(1), WasmValue::I32(0)])
+            .is_err());
     }
 
     #[test]
     fn test_i32_div_s_overflow() {
         let mut engine = make_i32_binop_engine(0x6D);
-        assert!(engine.call_function(0, &[WasmValue::I32(i32::MIN), WasmValue::I32(-1)]).is_err());
+        assert!(engine
+            .call_function(0, &[WasmValue::I32(i32::MIN), WasmValue::I32(-1)])
+            .is_err());
     }
 
     #[test]
     fn test_i32_div_u() {
         let mut engine = make_i32_binop_engine(0x6E);
         // -1 as u32 = 0xFFFFFFFF, divided by 2 = 0x7FFFFFFF
-        let result = engine.call_function(0, &[WasmValue::I32(-1), WasmValue::I32(2)]).unwrap();
+        let result = engine
+            .call_function(0, &[WasmValue::I32(-1), WasmValue::I32(2)])
+            .unwrap();
         assert_eq!(result, vec![WasmValue::I32(0x7FFFFFFFi32)]);
     }
 
     #[test]
     fn test_i32_rem_s() {
         let mut engine = make_i32_binop_engine(0x6F);
-        let result = engine.call_function(0, &[WasmValue::I32(-7), WasmValue::I32(2)]).unwrap();
+        let result = engine
+            .call_function(0, &[WasmValue::I32(-7), WasmValue::I32(2)])
+            .unwrap();
         assert_eq!(result, vec![WasmValue::I32(-1)]);
     }
 
@@ -3340,14 +3545,18 @@ mod tests {
     fn test_i32_rem_s_overflow() {
         let mut engine = make_i32_binop_engine(0x6F);
         // i32::MIN % -1 should be 0 (not trap)
-        let result = engine.call_function(0, &[WasmValue::I32(i32::MIN), WasmValue::I32(-1)]).unwrap();
+        let result = engine
+            .call_function(0, &[WasmValue::I32(i32::MIN), WasmValue::I32(-1)])
+            .unwrap();
         assert_eq!(result, vec![WasmValue::I32(0)]);
     }
 
     #[test]
     fn test_i32_rem_u() {
         let mut engine = make_i32_binop_engine(0x70);
-        let result = engine.call_function(0, &[WasmValue::I32(7), WasmValue::I32(3)]).unwrap();
+        let result = engine
+            .call_function(0, &[WasmValue::I32(7), WasmValue::I32(3)])
+            .unwrap();
         assert_eq!(result, vec![WasmValue::I32(1)]);
     }
 
@@ -3357,12 +3566,24 @@ mod tests {
         let mut eng_or = make_i32_binop_engine(0x72);
         let mut eng_xor = make_i32_binop_engine(0x73);
 
-        assert_eq!(eng_and.call_function(0, &[WasmValue::I32(0xFF), WasmValue::I32(0x0F)]).unwrap(),
-                   vec![WasmValue::I32(0x0F)]);
-        assert_eq!(eng_or.call_function(0, &[WasmValue::I32(0xF0), WasmValue::I32(0x0F)]).unwrap(),
-                   vec![WasmValue::I32(0xFF)]);
-        assert_eq!(eng_xor.call_function(0, &[WasmValue::I32(0xFF), WasmValue::I32(0x0F)]).unwrap(),
-                   vec![WasmValue::I32(0xF0)]);
+        assert_eq!(
+            eng_and
+                .call_function(0, &[WasmValue::I32(0xFF), WasmValue::I32(0x0F)])
+                .unwrap(),
+            vec![WasmValue::I32(0x0F)]
+        );
+        assert_eq!(
+            eng_or
+                .call_function(0, &[WasmValue::I32(0xF0), WasmValue::I32(0x0F)])
+                .unwrap(),
+            vec![WasmValue::I32(0xFF)]
+        );
+        assert_eq!(
+            eng_xor
+                .call_function(0, &[WasmValue::I32(0xFF), WasmValue::I32(0x0F)])
+                .unwrap(),
+            vec![WasmValue::I32(0xF0)]
+        );
     }
 
     #[test]
@@ -3371,12 +3592,24 @@ mod tests {
         let mut eng_shr_s = make_i32_binop_engine(0x75);
         let mut eng_shr_u = make_i32_binop_engine(0x76);
 
-        assert_eq!(eng_shl.call_function(0, &[WasmValue::I32(1), WasmValue::I32(4)]).unwrap(),
-                   vec![WasmValue::I32(16)]);
-        assert_eq!(eng_shr_s.call_function(0, &[WasmValue::I32(-16), WasmValue::I32(2)]).unwrap(),
-                   vec![WasmValue::I32(-4)]);
-        assert_eq!(eng_shr_u.call_function(0, &[WasmValue::I32(-1), WasmValue::I32(1)]).unwrap(),
-                   vec![WasmValue::I32(0x7FFFFFFF)]);
+        assert_eq!(
+            eng_shl
+                .call_function(0, &[WasmValue::I32(1), WasmValue::I32(4)])
+                .unwrap(),
+            vec![WasmValue::I32(16)]
+        );
+        assert_eq!(
+            eng_shr_s
+                .call_function(0, &[WasmValue::I32(-16), WasmValue::I32(2)])
+                .unwrap(),
+            vec![WasmValue::I32(-4)]
+        );
+        assert_eq!(
+            eng_shr_u
+                .call_function(0, &[WasmValue::I32(-1), WasmValue::I32(1)])
+                .unwrap(),
+            vec![WasmValue::I32(0x7FFFFFFF)]
+        );
     }
 
     #[test]
@@ -3384,10 +3617,18 @@ mod tests {
         let mut eng_rotl = make_i32_binop_engine(0x77);
         let mut eng_rotr = make_i32_binop_engine(0x78);
 
-        assert_eq!(eng_rotl.call_function(0, &[WasmValue::I32(1), WasmValue::I32(1)]).unwrap(),
-                   vec![WasmValue::I32(2)]);
-        assert_eq!(eng_rotr.call_function(0, &[WasmValue::I32(1), WasmValue::I32(1)]).unwrap(),
-                   vec![WasmValue::I32(i32::MIN)]); // 0x80000000
+        assert_eq!(
+            eng_rotl
+                .call_function(0, &[WasmValue::I32(1), WasmValue::I32(1)])
+                .unwrap(),
+            vec![WasmValue::I32(2)]
+        );
+        assert_eq!(
+            eng_rotr
+                .call_function(0, &[WasmValue::I32(1), WasmValue::I32(1)])
+                .unwrap(),
+            vec![WasmValue::I32(i32::MIN)]
+        ); // 0x80000000
     }
 
     #[test]
@@ -3396,64 +3637,100 @@ mod tests {
         let mut eng_ctz = make_i32_unop_engine(0x68);
         let mut eng_popcnt = make_i32_unop_engine(0x69);
 
-        assert_eq!(eng_clz.call_function(0, &[WasmValue::I32(1)]).unwrap(),
-                   vec![WasmValue::I32(31)]);
-        assert_eq!(eng_ctz.call_function(0, &[WasmValue::I32(0x80)]).unwrap(),
-                   vec![WasmValue::I32(7)]);
-        assert_eq!(eng_popcnt.call_function(0, &[WasmValue::I32(0xFF)]).unwrap(),
-                   vec![WasmValue::I32(8)]);
+        assert_eq!(
+            eng_clz.call_function(0, &[WasmValue::I32(1)]).unwrap(),
+            vec![WasmValue::I32(31)]
+        );
+        assert_eq!(
+            eng_ctz.call_function(0, &[WasmValue::I32(0x80)]).unwrap(),
+            vec![WasmValue::I32(7)]
+        );
+        assert_eq!(
+            eng_popcnt
+                .call_function(0, &[WasmValue::I32(0xFF)])
+                .unwrap(),
+            vec![WasmValue::I32(8)]
+        );
     }
 
     #[test]
     fn test_i32_eqz() {
         let mut engine = make_i32_unop_engine(0x45);
-        assert_eq!(engine.call_function(0, &[WasmValue::I32(0)]).unwrap(),
-                   vec![WasmValue::I32(1)]);
+        assert_eq!(
+            engine.call_function(0, &[WasmValue::I32(0)]).unwrap(),
+            vec![WasmValue::I32(1)]
+        );
 
         let mut engine2 = make_i32_unop_engine(0x45);
-        assert_eq!(engine2.call_function(0, &[WasmValue::I32(42)]).unwrap(),
-                   vec![WasmValue::I32(0)]);
+        assert_eq!(
+            engine2.call_function(0, &[WasmValue::I32(42)]).unwrap(),
+            vec![WasmValue::I32(0)]
+        );
     }
 
     #[test]
     fn test_i32_comparisons() {
         // eq
         let mut eng = make_i32_binop_engine(0x46);
-        assert_eq!(eng.call_function(0, &[WasmValue::I32(5), WasmValue::I32(5)]).unwrap(),
-                   vec![WasmValue::I32(1)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::I32(5), WasmValue::I32(5)])
+                .unwrap(),
+            vec![WasmValue::I32(1)]
+        );
         let mut eng = make_i32_binop_engine(0x46);
-        assert_eq!(eng.call_function(0, &[WasmValue::I32(5), WasmValue::I32(6)]).unwrap(),
-                   vec![WasmValue::I32(0)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::I32(5), WasmValue::I32(6)])
+                .unwrap(),
+            vec![WasmValue::I32(0)]
+        );
 
         // ne
         let mut eng = make_i32_binop_engine(0x47);
-        assert_eq!(eng.call_function(0, &[WasmValue::I32(5), WasmValue::I32(6)]).unwrap(),
-                   vec![WasmValue::I32(1)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::I32(5), WasmValue::I32(6)])
+                .unwrap(),
+            vec![WasmValue::I32(1)]
+        );
 
         // lt_s
         let mut eng = make_i32_binop_engine(0x48);
-        assert_eq!(eng.call_function(0, &[WasmValue::I32(-1), WasmValue::I32(0)]).unwrap(),
-                   vec![WasmValue::I32(1)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::I32(-1), WasmValue::I32(0)])
+                .unwrap(),
+            vec![WasmValue::I32(1)]
+        );
 
         // lt_u
         let mut eng = make_i32_binop_engine(0x49);
-        assert_eq!(eng.call_function(0, &[WasmValue::I32(-1), WasmValue::I32(0)]).unwrap(),
-                   vec![WasmValue::I32(0)]); // -1 as u32 > 0
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::I32(-1), WasmValue::I32(0)])
+                .unwrap(),
+            vec![WasmValue::I32(0)]
+        ); // -1 as u32 > 0
 
         // gt_s
         let mut eng = make_i32_binop_engine(0x4A);
-        assert_eq!(eng.call_function(0, &[WasmValue::I32(1), WasmValue::I32(-1)]).unwrap(),
-                   vec![WasmValue::I32(1)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::I32(1), WasmValue::I32(-1)])
+                .unwrap(),
+            vec![WasmValue::I32(1)]
+        );
 
         // ge_s
         let mut eng = make_i32_binop_engine(0x4E);
-        assert_eq!(eng.call_function(0, &[WasmValue::I32(5), WasmValue::I32(5)]).unwrap(),
-                   vec![WasmValue::I32(1)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::I32(5), WasmValue::I32(5)])
+                .unwrap(),
+            vec![WasmValue::I32(1)]
+        );
 
         // le_u
         let mut eng = make_i32_binop_engine(0x4D);
-        assert_eq!(eng.call_function(0, &[WasmValue::I32(0), WasmValue::I32(-1)]).unwrap(),
-                   vec![WasmValue::I32(1)]); // 0 <= 0xFFFFFFFF
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::I32(0), WasmValue::I32(-1)])
+                .unwrap(),
+            vec![WasmValue::I32(1)]
+        ); // 0 <= 0xFFFFFFFF
     }
 
     // ══════════════════════════════════════════════════════════════════════
@@ -3503,57 +3780,80 @@ mod tests {
     #[test]
     fn test_i64_add_sub_mul() {
         let mut eng = make_i64_binop_engine(0x7C);
-        assert_eq!(eng.call_function(0, &[WasmValue::I64(10), WasmValue::I64(20)]).unwrap(),
-                   vec![WasmValue::I64(30)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::I64(10), WasmValue::I64(20)])
+                .unwrap(),
+            vec![WasmValue::I64(30)]
+        );
 
         let mut eng = make_i64_binop_engine(0x7D);
-        assert_eq!(eng.call_function(0, &[WasmValue::I64(20), WasmValue::I64(7)]).unwrap(),
-                   vec![WasmValue::I64(13)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::I64(20), WasmValue::I64(7)])
+                .unwrap(),
+            vec![WasmValue::I64(13)]
+        );
 
         let mut eng = make_i64_binop_engine(0x7E);
-        assert_eq!(eng.call_function(0, &[WasmValue::I64(6), WasmValue::I64(7)]).unwrap(),
-                   vec![WasmValue::I64(42)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::I64(6), WasmValue::I64(7)])
+                .unwrap(),
+            vec![WasmValue::I64(42)]
+        );
     }
 
     #[test]
     fn test_i64_div_s_by_zero() {
         let mut eng = make_i64_binop_engine(0x7F);
-        assert!(eng.call_function(0, &[WasmValue::I64(1), WasmValue::I64(0)]).is_err());
+        assert!(eng
+            .call_function(0, &[WasmValue::I64(1), WasmValue::I64(0)])
+            .is_err());
     }
 
     #[test]
     fn test_i64_div_s_overflow() {
         let mut eng = make_i64_binop_engine(0x7F);
-        assert!(eng.call_function(0, &[WasmValue::I64(i64::MIN), WasmValue::I64(-1)]).is_err());
+        assert!(eng
+            .call_function(0, &[WasmValue::I64(i64::MIN), WasmValue::I64(-1)])
+            .is_err());
     }
 
     #[test]
     fn test_i64_rem_s() {
         let mut eng = make_i64_binop_engine(0x81);
-        let result = eng.call_function(0, &[WasmValue::I64(-7), WasmValue::I64(2)]).unwrap();
+        let result = eng
+            .call_function(0, &[WasmValue::I64(-7), WasmValue::I64(2)])
+            .unwrap();
         assert_eq!(result, vec![WasmValue::I64(-1)]);
     }
 
     #[test]
     fn test_i64_rem_s_min_neg1() {
         let mut eng = make_i64_binop_engine(0x81);
-        let result = eng.call_function(0, &[WasmValue::I64(i64::MIN), WasmValue::I64(-1)]).unwrap();
+        let result = eng
+            .call_function(0, &[WasmValue::I64(i64::MIN), WasmValue::I64(-1)])
+            .unwrap();
         assert_eq!(result, vec![WasmValue::I64(0)]);
     }
 
     #[test]
     fn test_i64_clz_ctz_popcnt() {
         let mut eng = make_i64_unop_engine(0x79);
-        assert_eq!(eng.call_function(0, &[WasmValue::I64(1)]).unwrap(),
-                   vec![WasmValue::I64(63)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::I64(1)]).unwrap(),
+            vec![WasmValue::I64(63)]
+        );
 
         let mut eng = make_i64_unop_engine(0x7A);
-        assert_eq!(eng.call_function(0, &[WasmValue::I64(0x100)]).unwrap(),
-                   vec![WasmValue::I64(8)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::I64(0x100)]).unwrap(),
+            vec![WasmValue::I64(8)]
+        );
 
         let mut eng = make_i64_unop_engine(0x7B);
-        assert_eq!(eng.call_function(0, &[WasmValue::I64(0xFF)]).unwrap(),
-                   vec![WasmValue::I64(8)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::I64(0xFF)]).unwrap(),
+            vec![WasmValue::I64(8)]
+        );
     }
 
     #[test]
@@ -3576,8 +3876,10 @@ mod tests {
             func_bodies: vec![Some(body)],
             host_functions: vec![None],
         });
-        assert_eq!(engine.call_function(0, &[WasmValue::I64(0)]).unwrap(),
-                   vec![WasmValue::I32(1)]);
+        assert_eq!(
+            engine.call_function(0, &[WasmValue::I64(0)]).unwrap(),
+            vec![WasmValue::I32(1)]
+        );
     }
 
     #[test]
@@ -3594,13 +3896,20 @@ mod tests {
             code: vec![0x20, 0x00, 0x20, 0x01, 0x51, 0x0B],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None, tables: vec![], globals: vec![], global_types: vec![],
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
             func_types: vec![func_type.clone()],
             func_bodies: vec![Some(body)],
             host_functions: vec![None],
         });
-        assert_eq!(engine.call_function(0, &[WasmValue::I64(42), WasmValue::I64(42)]).unwrap(),
-                   vec![WasmValue::I32(1)]);
+        assert_eq!(
+            engine
+                .call_function(0, &[WasmValue::I64(42), WasmValue::I64(42)])
+                .unwrap(),
+            vec![WasmValue::I32(1)]
+        );
 
         // lt_s (0x53)
         let body = FunctionBody {
@@ -3608,13 +3917,20 @@ mod tests {
             code: vec![0x20, 0x00, 0x20, 0x01, 0x53, 0x0B],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None, tables: vec![], globals: vec![], global_types: vec![],
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
             func_types: vec![func_type],
             func_bodies: vec![Some(body)],
             host_functions: vec![None],
         });
-        assert_eq!(engine.call_function(0, &[WasmValue::I64(-1), WasmValue::I64(0)]).unwrap(),
-                   vec![WasmValue::I32(1)]);
+        assert_eq!(
+            engine
+                .call_function(0, &[WasmValue::I64(-1), WasmValue::I64(0)])
+                .unwrap(),
+            vec![WasmValue::I32(1)]
+        );
     }
 
     // ══════════════════════════════════════════════════════════════════════
@@ -3631,7 +3947,10 @@ mod tests {
             code: vec![0x20, 0x00, 0x20, 0x01, opcode, 0x0B],
         };
         WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None, tables: vec![], globals: vec![], global_types: vec![],
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
             func_types: vec![func_type],
             func_bodies: vec![Some(body)],
             host_functions: vec![None],
@@ -3648,7 +3967,10 @@ mod tests {
             code: vec![0x20, 0x00, opcode, 0x0B],
         };
         WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None, tables: vec![], globals: vec![], global_types: vec![],
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
             func_types: vec![func_type],
             func_bodies: vec![Some(body)],
             host_functions: vec![None],
@@ -3658,61 +3980,85 @@ mod tests {
     #[test]
     fn test_f32_add_sub_mul_div() {
         let mut eng = make_f32_binop_engine(0x92);
-        let r = eng.call_function(0, &[WasmValue::F32(1.5), WasmValue::F32(2.5)]).unwrap();
+        let r = eng
+            .call_function(0, &[WasmValue::F32(1.5), WasmValue::F32(2.5)])
+            .unwrap();
         assert_eq!(r, vec![WasmValue::F32(4.0)]);
 
         let mut eng = make_f32_binop_engine(0x93);
-        let r = eng.call_function(0, &[WasmValue::F32(5.0), WasmValue::F32(2.0)]).unwrap();
+        let r = eng
+            .call_function(0, &[WasmValue::F32(5.0), WasmValue::F32(2.0)])
+            .unwrap();
         assert_eq!(r, vec![WasmValue::F32(3.0)]);
 
         let mut eng = make_f32_binop_engine(0x94);
-        let r = eng.call_function(0, &[WasmValue::F32(3.0), WasmValue::F32(4.0)]).unwrap();
+        let r = eng
+            .call_function(0, &[WasmValue::F32(3.0), WasmValue::F32(4.0)])
+            .unwrap();
         assert_eq!(r, vec![WasmValue::F32(12.0)]);
 
         let mut eng = make_f32_binop_engine(0x95);
-        let r = eng.call_function(0, &[WasmValue::F32(10.0), WasmValue::F32(4.0)]).unwrap();
+        let r = eng
+            .call_function(0, &[WasmValue::F32(10.0), WasmValue::F32(4.0)])
+            .unwrap();
         assert_eq!(r, vec![WasmValue::F32(2.5)]);
     }
 
     #[test]
     fn test_f32_min_max() {
         let mut eng = make_f32_binop_engine(0x96);
-        let r = eng.call_function(0, &[WasmValue::F32(3.0), WasmValue::F32(5.0)]).unwrap();
+        let r = eng
+            .call_function(0, &[WasmValue::F32(3.0), WasmValue::F32(5.0)])
+            .unwrap();
         assert_eq!(r, vec![WasmValue::F32(3.0)]);
 
         let mut eng = make_f32_binop_engine(0x97);
-        let r = eng.call_function(0, &[WasmValue::F32(3.0), WasmValue::F32(5.0)]).unwrap();
+        let r = eng
+            .call_function(0, &[WasmValue::F32(3.0), WasmValue::F32(5.0)])
+            .unwrap();
         assert_eq!(r, vec![WasmValue::F32(5.0)]);
     }
 
     #[test]
     fn test_f32_abs_neg_sqrt() {
         let mut eng = make_f32_unop_engine(0x8B);
-        assert_eq!(eng.call_function(0, &[WasmValue::F32(-5.0)]).unwrap(),
-                   vec![WasmValue::F32(5.0)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::F32(-5.0)]).unwrap(),
+            vec![WasmValue::F32(5.0)]
+        );
 
         let mut eng = make_f32_unop_engine(0x8C);
-        assert_eq!(eng.call_function(0, &[WasmValue::F32(5.0)]).unwrap(),
-                   vec![WasmValue::F32(-5.0)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::F32(5.0)]).unwrap(),
+            vec![WasmValue::F32(-5.0)]
+        );
 
         let mut eng = make_f32_unop_engine(0x91);
-        assert_eq!(eng.call_function(0, &[WasmValue::F32(9.0)]).unwrap(),
-                   vec![WasmValue::F32(3.0)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::F32(9.0)]).unwrap(),
+            vec![WasmValue::F32(3.0)]
+        );
     }
 
     #[test]
     fn test_f32_ceil_floor_trunc() {
         let mut eng = make_f32_unop_engine(0x8D);
-        assert_eq!(eng.call_function(0, &[WasmValue::F32(1.3)]).unwrap(),
-                   vec![WasmValue::F32(2.0)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::F32(1.3)]).unwrap(),
+            vec![WasmValue::F32(2.0)]
+        );
 
         let mut eng = make_f32_unop_engine(0x8E);
-        assert_eq!(eng.call_function(0, &[WasmValue::F32(1.7)]).unwrap(),
-                   vec![WasmValue::F32(1.0)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::F32(1.7)]).unwrap(),
+            vec![WasmValue::F32(1.0)]
+        );
 
         let mut eng = make_f32_unop_engine(0x8F);
-        assert_eq!(eng.call_function(0, &[WasmValue::F32(-1.7)]).unwrap(),
-                   vec![WasmValue::F32(-1.0)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::F32(-1.7)]).unwrap(),
+            vec![WasmValue::F32(-1.0)]
+        );
     }
 
     #[test]
@@ -3728,13 +4074,20 @@ mod tests {
             code: vec![0x20, 0x00, 0x20, 0x01, 0x5B, 0x0B],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None, tables: vec![], globals: vec![], global_types: vec![],
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
             func_types: vec![func_type.clone()],
             func_bodies: vec![Some(body)],
             host_functions: vec![None],
         });
-        assert_eq!(engine.call_function(0, &[WasmValue::F32(1.0), WasmValue::F32(1.0)]).unwrap(),
-                   vec![WasmValue::I32(1)]);
+        assert_eq!(
+            engine
+                .call_function(0, &[WasmValue::F32(1.0), WasmValue::F32(1.0)])
+                .unwrap(),
+            vec![WasmValue::I32(1)]
+        );
 
         // f32.lt (0x5D)
         let body = FunctionBody {
@@ -3742,13 +4095,20 @@ mod tests {
             code: vec![0x20, 0x00, 0x20, 0x01, 0x5D, 0x0B],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None, tables: vec![], globals: vec![], global_types: vec![],
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
             func_types: vec![func_type],
             func_bodies: vec![Some(body)],
             host_functions: vec![None],
         });
-        assert_eq!(engine.call_function(0, &[WasmValue::F32(1.0), WasmValue::F32(2.0)]).unwrap(),
-                   vec![WasmValue::I32(1)]);
+        assert_eq!(
+            engine
+                .call_function(0, &[WasmValue::F32(1.0), WasmValue::F32(2.0)])
+                .unwrap(),
+            vec![WasmValue::I32(1)]
+        );
     }
 
     // ══════════════════════════════════════════════════════════════════════
@@ -3765,7 +4125,10 @@ mod tests {
             code: vec![0x20, 0x00, 0x20, 0x01, opcode, 0x0B],
         };
         WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None, tables: vec![], globals: vec![], global_types: vec![],
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
             func_types: vec![func_type],
             func_bodies: vec![Some(body)],
             host_functions: vec![None],
@@ -3782,7 +4145,10 @@ mod tests {
             code: vec![0x20, 0x00, opcode, 0x0B],
         };
         WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None, tables: vec![], globals: vec![], global_types: vec![],
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
             func_types: vec![func_type],
             func_bodies: vec![Some(body)],
             host_functions: vec![None],
@@ -3792,43 +4158,65 @@ mod tests {
     #[test]
     fn test_f64_add_sub_mul_div() {
         let mut eng = make_f64_binop_engine(0xA0);
-        assert_eq!(eng.call_function(0, &[WasmValue::F64(1.5), WasmValue::F64(2.5)]).unwrap(),
-                   vec![WasmValue::F64(4.0)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::F64(1.5), WasmValue::F64(2.5)])
+                .unwrap(),
+            vec![WasmValue::F64(4.0)]
+        );
 
         let mut eng = make_f64_binop_engine(0xA1);
-        assert_eq!(eng.call_function(0, &[WasmValue::F64(5.0), WasmValue::F64(2.0)]).unwrap(),
-                   vec![WasmValue::F64(3.0)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::F64(5.0), WasmValue::F64(2.0)])
+                .unwrap(),
+            vec![WasmValue::F64(3.0)]
+        );
 
         let mut eng = make_f64_binop_engine(0xA2);
-        assert_eq!(eng.call_function(0, &[WasmValue::F64(3.0), WasmValue::F64(4.0)]).unwrap(),
-                   vec![WasmValue::F64(12.0)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::F64(3.0), WasmValue::F64(4.0)])
+                .unwrap(),
+            vec![WasmValue::F64(12.0)]
+        );
 
         let mut eng = make_f64_binop_engine(0xA3);
-        assert_eq!(eng.call_function(0, &[WasmValue::F64(10.0), WasmValue::F64(4.0)]).unwrap(),
-                   vec![WasmValue::F64(2.5)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::F64(10.0), WasmValue::F64(4.0)])
+                .unwrap(),
+            vec![WasmValue::F64(2.5)]
+        );
     }
 
     #[test]
     fn test_f64_abs_neg_sqrt_ceil_floor() {
         let mut eng = make_f64_unop_engine(0x99);
-        assert_eq!(eng.call_function(0, &[WasmValue::F64(-5.0)]).unwrap(),
-                   vec![WasmValue::F64(5.0)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::F64(-5.0)]).unwrap(),
+            vec![WasmValue::F64(5.0)]
+        );
 
         let mut eng = make_f64_unop_engine(0x9A);
-        assert_eq!(eng.call_function(0, &[WasmValue::F64(5.0)]).unwrap(),
-                   vec![WasmValue::F64(-5.0)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::F64(5.0)]).unwrap(),
+            vec![WasmValue::F64(-5.0)]
+        );
 
         let mut eng = make_f64_unop_engine(0x9F);
-        assert_eq!(eng.call_function(0, &[WasmValue::F64(16.0)]).unwrap(),
-                   vec![WasmValue::F64(4.0)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::F64(16.0)]).unwrap(),
+            vec![WasmValue::F64(4.0)]
+        );
 
         let mut eng = make_f64_unop_engine(0x9B);
-        assert_eq!(eng.call_function(0, &[WasmValue::F64(1.3)]).unwrap(),
-                   vec![WasmValue::F64(2.0)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::F64(1.3)]).unwrap(),
+            vec![WasmValue::F64(2.0)]
+        );
 
         let mut eng = make_f64_unop_engine(0x9C);
-        assert_eq!(eng.call_function(0, &[WasmValue::F64(1.7)]).unwrap(),
-                   vec![WasmValue::F64(1.0)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::F64(1.7)]).unwrap(),
+            vec![WasmValue::F64(1.0)]
+        );
     }
 
     #[test]
@@ -3844,13 +4232,20 @@ mod tests {
             code: vec![0x20, 0x00, 0x20, 0x01, 0x61, 0x0B],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None, tables: vec![], globals: vec![], global_types: vec![],
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
             func_types: vec![func_type.clone()],
             func_bodies: vec![Some(body)],
             host_functions: vec![None],
         });
-        assert_eq!(engine.call_function(0, &[WasmValue::F64(1.0), WasmValue::F64(1.0)]).unwrap(),
-                   vec![WasmValue::I32(1)]);
+        assert_eq!(
+            engine
+                .call_function(0, &[WasmValue::F64(1.0), WasmValue::F64(1.0)])
+                .unwrap(),
+            vec![WasmValue::I32(1)]
+        );
 
         // NaN != NaN
         let body = FunctionBody {
@@ -3858,13 +4253,20 @@ mod tests {
             code: vec![0x20, 0x00, 0x20, 0x01, 0x61, 0x0B],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None, tables: vec![], globals: vec![], global_types: vec![],
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
             func_types: vec![func_type],
             func_bodies: vec![Some(body)],
             host_functions: vec![None],
         });
-        assert_eq!(engine.call_function(0, &[WasmValue::F64(f64::NAN), WasmValue::F64(f64::NAN)]).unwrap(),
-                   vec![WasmValue::I32(0)]);
+        assert_eq!(
+            engine
+                .call_function(0, &[WasmValue::F64(f64::NAN), WasmValue::F64(f64::NAN)])
+                .unwrap(),
+            vec![WasmValue::I32(0)]
+        );
     }
 
     // ══════════════════════════════════════════════════════════════════════
@@ -3886,7 +4288,10 @@ mod tests {
             code: vec![0x20, 0x00, opcode, 0x0B],
         };
         WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None, tables: vec![], globals: vec![], global_types: vec![],
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
             func_types: vec![func_type],
             func_bodies: vec![Some(body)],
             host_functions: vec![None],
@@ -3896,29 +4301,38 @@ mod tests {
     #[test]
     fn test_i32_wrap_i64() {
         let mut eng = make_conversion_engine(0xA7, ValueType::I64, ValueType::I32);
-        assert_eq!(eng.call_function(0, &[WasmValue::I64(0x1_0000_0001)]).unwrap(),
-                   vec![WasmValue::I32(1)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::I64(0x1_0000_0001)])
+                .unwrap(),
+            vec![WasmValue::I32(1)]
+        );
     }
 
     #[test]
     fn test_i64_extend_i32_s() {
         let mut eng = make_conversion_engine(0xAC, ValueType::I32, ValueType::I64);
-        assert_eq!(eng.call_function(0, &[WasmValue::I32(-1)]).unwrap(),
-                   vec![WasmValue::I64(-1)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::I32(-1)]).unwrap(),
+            vec![WasmValue::I64(-1)]
+        );
     }
 
     #[test]
     fn test_i64_extend_i32_u() {
         let mut eng = make_conversion_engine(0xAD, ValueType::I32, ValueType::I64);
-        assert_eq!(eng.call_function(0, &[WasmValue::I32(-1)]).unwrap(),
-                   vec![WasmValue::I64(0xFFFFFFFF)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::I32(-1)]).unwrap(),
+            vec![WasmValue::I64(0xFFFFFFFF)]
+        );
     }
 
     #[test]
     fn test_i32_trunc_f32_s() {
         let mut eng = make_conversion_engine(0xA8, ValueType::F32, ValueType::I32);
-        assert_eq!(eng.call_function(0, &[WasmValue::F32(-2.9)]).unwrap(),
-                   vec![WasmValue::I32(-2)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::F32(-2.9)]).unwrap(),
+            vec![WasmValue::I32(-2)]
+        );
     }
 
     #[test]
@@ -3930,29 +4344,37 @@ mod tests {
     #[test]
     fn test_i32_trunc_f32_u() {
         let mut eng = make_conversion_engine(0xA9, ValueType::F32, ValueType::I32);
-        assert_eq!(eng.call_function(0, &[WasmValue::F32(3.7)]).unwrap(),
-                   vec![WasmValue::I32(3)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::F32(3.7)]).unwrap(),
+            vec![WasmValue::I32(3)]
+        );
     }
 
     #[test]
     fn test_i32_trunc_f64_s() {
         let mut eng = make_conversion_engine(0xAA, ValueType::F64, ValueType::I32);
-        assert_eq!(eng.call_function(0, &[WasmValue::F64(-2.9)]).unwrap(),
-                   vec![WasmValue::I32(-2)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::F64(-2.9)]).unwrap(),
+            vec![WasmValue::I32(-2)]
+        );
     }
 
     #[test]
     fn test_i32_trunc_f64_u() {
         let mut eng = make_conversion_engine(0xAB, ValueType::F64, ValueType::I32);
-        assert_eq!(eng.call_function(0, &[WasmValue::F64(3.7)]).unwrap(),
-                   vec![WasmValue::I32(3)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::F64(3.7)]).unwrap(),
+            vec![WasmValue::I32(3)]
+        );
     }
 
     #[test]
     fn test_f32_convert_i32_s() {
         let mut eng = make_conversion_engine(0xB2, ValueType::I32, ValueType::F32);
-        assert_eq!(eng.call_function(0, &[WasmValue::I32(-5)]).unwrap(),
-                   vec![WasmValue::F32(-5.0)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::I32(-5)]).unwrap(),
+            vec![WasmValue::F32(-5.0)]
+        );
     }
 
     #[test]
@@ -3966,15 +4388,19 @@ mod tests {
     #[test]
     fn test_f64_convert_i32_s() {
         let mut eng = make_conversion_engine(0xB7, ValueType::I32, ValueType::F64);
-        assert_eq!(eng.call_function(0, &[WasmValue::I32(-5)]).unwrap(),
-                   vec![WasmValue::F64(-5.0)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::I32(-5)]).unwrap(),
+            vec![WasmValue::F64(-5.0)]
+        );
     }
 
     #[test]
     fn test_f64_convert_i64_s() {
         let mut eng = make_conversion_engine(0xB9, ValueType::I64, ValueType::F64);
-        assert_eq!(eng.call_function(0, &[WasmValue::I64(42)]).unwrap(),
-                   vec![WasmValue::F64(42.0)]);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::I64(42)]).unwrap(),
+            vec![WasmValue::F64(42.0)]
+        );
     }
 
     #[test]
@@ -4041,18 +4467,23 @@ mod tests {
             code: vec![
                 0x02, 0x7F, // block (result i32)
                 0x41, 0x2A, // i32.const 42
-                0x0B,       // end (block)
-                0x0B,       // end (function)
+                0x0B, // end (block)
+                0x0B, // end (function)
             ],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None, tables: vec![], globals: vec![], global_types: vec![],
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
             func_types: vec![func_type],
             func_bodies: vec![Some(body)],
             host_functions: vec![None],
         });
-        assert_eq!(engine.call_function(0, &[]).unwrap(),
-                   vec![WasmValue::I32(42)]);
+        assert_eq!(
+            engine.call_function(0, &[]).unwrap(),
+            vec![WasmValue::I32(42)]
+        );
     }
 
     #[test]
@@ -4068,20 +4499,25 @@ mod tests {
                 0x20, 0x00, // local.get 0
                 0x04, 0x7F, // if (result i32)
                 0x41, 0x01, // i32.const 1
-                0x05,       // else
+                0x05, // else
                 0x41, 0x02, // i32.const 2
-                0x0B,       // end (if)
-                0x0B,       // end (function)
+                0x0B, // end (if)
+                0x0B, // end (function)
             ],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None, tables: vec![], globals: vec![], global_types: vec![],
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
             func_types: vec![func_type],
             func_bodies: vec![Some(body)],
             host_functions: vec![None],
         });
-        assert_eq!(engine.call_function(0, &[WasmValue::I32(1)]).unwrap(),
-                   vec![WasmValue::I32(1)]);
+        assert_eq!(
+            engine.call_function(0, &[WasmValue::I32(1)]).unwrap(),
+            vec![WasmValue::I32(1)]
+        );
     }
 
     #[test]
@@ -4096,20 +4532,25 @@ mod tests {
                 0x20, 0x00, // local.get 0
                 0x04, 0x7F, // if (result i32)
                 0x41, 0x01, // i32.const 1
-                0x05,       // else
+                0x05, // else
                 0x41, 0x02, // i32.const 2
-                0x0B,       // end (if)
-                0x0B,       // end (function)
+                0x0B, // end (if)
+                0x0B, // end (function)
             ],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None, tables: vec![], globals: vec![], global_types: vec![],
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
             func_types: vec![func_type],
             func_bodies: vec![Some(body)],
             host_functions: vec![None],
         });
-        assert_eq!(engine.call_function(0, &[WasmValue::I32(0)]).unwrap(),
-                   vec![WasmValue::I32(2)]);
+        assert_eq!(
+            engine.call_function(0, &[WasmValue::I32(0)]).unwrap(),
+            vec![WasmValue::I32(2)]
+        );
     }
 
     #[test]
@@ -4127,20 +4568,25 @@ mod tests {
                 0x41, 0x2A, // i32.const 42
                 0x41, 0x01, // i32.const 1
                 0x0D, 0x00, // br_if 0
-                0x1A,       // drop
+                0x1A, // drop
                 0x41, 0x00, // i32.const 0
-                0x0B,       // end (block)
-                0x0B,       // end (function)
+                0x0B, // end (block)
+                0x0B, // end (function)
             ],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None, tables: vec![], globals: vec![], global_types: vec![],
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
             func_types: vec![func_type],
             func_bodies: vec![Some(body)],
             host_functions: vec![None],
         });
-        assert_eq!(engine.call_function(0, &[]).unwrap(),
-                   vec![WasmValue::I32(42)]);
+        assert_eq!(
+            engine.call_function(0, &[]).unwrap(),
+            vec![WasmValue::I32(42)]
+        );
     }
 
     #[test]
@@ -4154,30 +4600,41 @@ mod tests {
             locals: vec![],
             code: vec![
                 0x41, 0x2A, // i32.const 42
-                0x0F,       // return
+                0x0F, // return
                 0x41, 0x63, // i32.const 99 (unreachable)
-                0x0B,       // end
+                0x0B, // end
             ],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None, tables: vec![], globals: vec![], global_types: vec![],
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
             func_types: vec![func_type],
             func_bodies: vec![Some(body)],
             host_functions: vec![None],
         });
-        assert_eq!(engine.call_function(0, &[]).unwrap(),
-                   vec![WasmValue::I32(42)]);
+        assert_eq!(
+            engine.call_function(0, &[]).unwrap(),
+            vec![WasmValue::I32(42)]
+        );
     }
 
     #[test]
     fn test_unreachable_traps() {
-        let func_type = FuncType { params: vec![], results: vec![] };
+        let func_type = FuncType {
+            params: vec![],
+            results: vec![],
+        };
         let body = FunctionBody {
             locals: vec![],
             code: vec![0x00, 0x0B], // unreachable; end
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None, tables: vec![], globals: vec![], global_types: vec![],
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
             func_types: vec![func_type],
             func_bodies: vec![Some(body)],
             host_functions: vec![None],
@@ -4196,13 +4653,18 @@ mod tests {
             code: vec![0x01, 0x01, 0x41, 0x05, 0x0B], // nop; nop; i32.const 5; end
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None, tables: vec![], globals: vec![], global_types: vec![],
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
             func_types: vec![func_type],
             func_bodies: vec![Some(body)],
             host_functions: vec![None],
         });
-        assert_eq!(engine.call_function(0, &[]).unwrap(),
-                   vec![WasmValue::I32(5)]);
+        assert_eq!(
+            engine.call_function(0, &[]).unwrap(),
+            vec![WasmValue::I32(5)]
+        );
     }
 
     // ══════════════════════════════════════════════════════════════════════
@@ -4222,17 +4684,22 @@ mod tests {
                 0x20, 0x00, // local.get 0
                 0x21, 0x01, // local.set 1
                 0x20, 0x01, // local.get 1
-                0x0B,       // end
+                0x0B, // end
             ],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None, tables: vec![], globals: vec![], global_types: vec![],
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
             func_types: vec![func_type],
             func_bodies: vec![Some(body)],
             host_functions: vec![None],
         });
-        assert_eq!(engine.call_function(0, &[WasmValue::I32(42)]).unwrap(),
-                   vec![WasmValue::I32(42)]);
+        assert_eq!(
+            engine.call_function(0, &[WasmValue::I32(42)]).unwrap(),
+            vec![WasmValue::I32(42)]
+        );
     }
 
     #[test]
@@ -4248,17 +4715,22 @@ mod tests {
             code: vec![
                 0x41, 0x0A, // i32.const 10
                 0x22, 0x00, // local.tee 0
-                0x0B,       // end
+                0x0B, // end
             ],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None, tables: vec![], globals: vec![], global_types: vec![],
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
             func_types: vec![func_type],
             func_bodies: vec![Some(body)],
             host_functions: vec![None],
         });
-        assert_eq!(engine.call_function(0, &[WasmValue::I32(0)]).unwrap(),
-                   vec![WasmValue::I32(10)]);
+        assert_eq!(
+            engine.call_function(0, &[WasmValue::I32(0)]).unwrap(),
+            vec![WasmValue::I32(10)]
+        );
     }
 
     #[test]
@@ -4273,10 +4745,10 @@ mod tests {
             code: vec![
                 0x23, 0x00, // global.get 0
                 0x41, 0x01, // i32.const 1
-                0x6A,       // i32.add
+                0x6A, // i32.add
                 0x24, 0x00, // global.set 0
                 0x23, 0x00, // global.get 0
-                0x0B,       // end
+                0x0B, // end
             ],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
@@ -4291,8 +4763,10 @@ mod tests {
             func_bodies: vec![Some(body)],
             host_functions: vec![None],
         });
-        assert_eq!(engine.call_function(0, &[]).unwrap(),
-                   vec![WasmValue::I32(11)]);
+        assert_eq!(
+            engine.call_function(0, &[]).unwrap(),
+            vec![WasmValue::I32(11)]
+        );
     }
 
     // ══════════════════════════════════════════════════════════════════════
@@ -4310,18 +4784,23 @@ mod tests {
             code: vec![
                 0x41, 0x01, // i32.const 1
                 0x41, 0x02, // i32.const 2
-                0x1A,       // drop (removes 2)
-                0x0B,       // end
+                0x1A, // drop (removes 2)
+                0x0B, // end
             ],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None, tables: vec![], globals: vec![], global_types: vec![],
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
             func_types: vec![func_type],
             func_bodies: vec![Some(body)],
             host_functions: vec![None],
         });
-        assert_eq!(engine.call_function(0, &[]).unwrap(),
-                   vec![WasmValue::I32(1)]);
+        assert_eq!(
+            engine.call_function(0, &[]).unwrap(),
+            vec![WasmValue::I32(1)]
+        );
     }
 
     #[test]
@@ -4337,18 +4816,23 @@ mod tests {
                 0x41, 0x0A, // i32.const 10 (val1)
                 0x41, 0x14, // i32.const 20 (val2)
                 0x41, 0x01, // i32.const 1  (cond = true)
-                0x1B,       // select
-                0x0B,       // end
+                0x1B, // select
+                0x0B, // end
             ],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None, tables: vec![], globals: vec![], global_types: vec![],
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
             func_types: vec![func_type],
             func_bodies: vec![Some(body)],
             host_functions: vec![None],
         });
-        assert_eq!(engine.call_function(0, &[]).unwrap(),
-                   vec![WasmValue::I32(10)]);
+        assert_eq!(
+            engine.call_function(0, &[]).unwrap(),
+            vec![WasmValue::I32(10)]
+        );
     }
 
     #[test]
@@ -4363,18 +4847,23 @@ mod tests {
                 0x41, 0x0A, // i32.const 10 (val1)
                 0x41, 0x14, // i32.const 20 (val2)
                 0x41, 0x00, // i32.const 0  (cond = false)
-                0x1B,       // select
-                0x0B,       // end
+                0x1B, // select
+                0x0B, // end
             ],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None, tables: vec![], globals: vec![], global_types: vec![],
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
             func_types: vec![func_type],
             func_bodies: vec![Some(body)],
             host_functions: vec![None],
         });
-        assert_eq!(engine.call_function(0, &[]).unwrap(),
-                   vec![WasmValue::I32(20)]);
+        assert_eq!(
+            engine.call_function(0, &[]).unwrap(),
+            vec![WasmValue::I32(20)]
+        );
     }
 
     // ══════════════════════════════════════════════════════════════════════
@@ -4387,9 +4876,15 @@ mod tests {
             params: vec![ValueType::I32],
             results: vec![ValueType::I32],
         };
-        let body = FunctionBody { locals: vec![], code: vec![0x20, 0x00, 0x0B] };
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![0x20, 0x00, 0x0B],
+        };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None, tables: vec![], globals: vec![], global_types: vec![],
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
             func_types: vec![func_type],
             func_bodies: vec![Some(body)],
             host_functions: vec![None],
@@ -4401,7 +4896,10 @@ mod tests {
     #[test]
     fn test_engine_undefined_function() {
         let engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None, tables: vec![], globals: vec![], global_types: vec![],
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
             func_types: vec![],
             func_bodies: vec![],
             host_functions: vec![],

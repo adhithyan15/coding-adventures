@@ -133,7 +133,10 @@ fn test_nfa_to_dfa_to_minimized() {
         HashSet::from(["q0".into(), "q1".into()]),
         HashSet::from(["a".into(), "b".into()]),
         HashMap::from([
-            (("q0".into(), "a".into()), HashSet::from(["q0".into(), "q1".into()])),
+            (
+                ("q0".into(), "a".into()),
+                HashSet::from(["q0".into(), "q1".into()]),
+            ),
             (("q0".into(), "b".into()), HashSet::from(["q0".into()])),
         ]),
         "q0".into(),
@@ -160,7 +163,10 @@ fn test_minimized_preserves_language_exhaustive() {
         HashSet::from(["q0".into(), "q1".into(), "q2".into()]),
         HashSet::from(["a".into(), "b".into()]),
         HashMap::from([
-            (("q0".into(), "a".into()), HashSet::from(["q0".into(), "q1".into()])),
+            (
+                ("q0".into(), "a".into()),
+                HashSet::from(["q0".into(), "q1".into()]),
+            ),
             (("q0".into(), "b".into()), HashSet::from(["q0".into()])),
             (("q1".into(), "a".into()), HashSet::from(["q2".into()])),
             (("q2".into(), "a".into()), HashSet::from(["q2".into()])),
@@ -188,12 +194,7 @@ fn test_minimized_preserves_language_exhaustive() {
     }
 
     for s in &all_strings {
-        assert_eq!(
-            nfa.accepts(s),
-            minimized.accepts(s),
-            "Mismatch on {:?}",
-            s
-        );
+        assert_eq!(nfa.accepts(s), minimized.accepts(s), "Mismatch on {:?}", s);
     }
 }
 

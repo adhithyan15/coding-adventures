@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "python/macsyma-parser",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../grammars/macsyma/macsyma.grammar",
+      "justification": "Reads the MACSYMA parser grammar at initialization time to configure the generic grammar-driven parser."
+    }
+  ],
+  "justification": "Reads a single grammar file (plus the tokens file via the macsyma-lexer dependency). No write, network, or process access."
+}

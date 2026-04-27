@@ -68,5 +68,5 @@ puts result.source_map.source_to_ast.entries.length  # number of source position
 | `<` (LEFT) | `ADD_IMM v1, v1, -1` |
 | `+` (INC) | `LOAD_BYTE v2, v0, v1; ADD_IMM v2, v2, 1; AND_IMM v2, v2, 255; STORE_BYTE v2, v0, v1` |
 | `-` (DEC) | `LOAD_BYTE v2, v0, v1; ADD_IMM v2, v2, -1; AND_IMM v2, v2, 255; STORE_BYTE v2, v0, v1` |
-| `.` (OUTPUT) | `LOAD_BYTE v2, v0, v1; ADD v4, v2, v6; SYSCALL 1` |
+| `.` (OUTPUT) | `LOAD_BYTE v2, v0, v1; ADD_IMM v4, v2, 0; SYSCALL 1` |
 | `,` (INPUT) | `SYSCALL 2; STORE_BYTE v4, v0, v1` |

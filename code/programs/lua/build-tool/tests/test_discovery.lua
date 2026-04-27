@@ -39,6 +39,22 @@ describe("Discovery", function()
             assert.are.equal("elixir", Discovery.infer_language("/repo/code/packages/elixir/logic_gates"))
         end)
 
+        it("detects swift from path", function()
+            assert.are.equal("swift", Discovery.infer_language("/repo/code/packages/swift/graph"))
+        end)
+
+        it("detects wasm from path", function()
+            assert.are.equal("wasm", Discovery.infer_language("/repo/code/packages/wasm/graph"))
+        end)
+
+        it("detects csharp from path", function()
+            assert.are.equal("csharp", Discovery.infer_language("/repo/code/packages/csharp/graph"))
+        end)
+
+        it("detects fsharp from path", function()
+            assert.are.equal("fsharp", Discovery.infer_language("/repo/code/packages/fsharp/graph"))
+        end)
+
         it("returns unknown for unrecognized paths", function()
             assert.are.equal("unknown", Discovery.infer_language("/repo/code/packages/fortran/matrix"))
         end)

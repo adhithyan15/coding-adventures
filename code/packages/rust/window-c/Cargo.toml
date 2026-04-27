@@ -1,0 +1,12 @@
+[package]
+name = "window-c"
+version = "0.1.0"
+edition = "2021"
+description = "C ABI wrapper for the shared native windowing contract"
+
+[lib]
+crate-type = ["staticlib", "cdylib"]
+
+[dependencies]
+window-core = { path = "../window-core" }
+window-appkit = { path = "../window-appkit" }

@@ -1,0 +1,7 @@
+[package]
+name = "dot-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "Lexer for the DOT graph description language — tokenises DOT source into a flat Token stream"
+
+[dependencies]

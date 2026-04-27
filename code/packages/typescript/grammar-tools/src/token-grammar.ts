@@ -170,6 +170,7 @@ export interface TokenGrammar {
   readonly skipDefinitions?: readonly TokenDefinition[];
   readonly reservedKeywords?: readonly string[];
   readonly groups?: Readonly<Record<string, PatternGroup>>;
+  readonly layoutKeywords?: readonly string[];
   /** Controls whether the lexer matches case-sensitively. Defaults to true.
    *  When false, the lexer lowercases source text before matching. */
   readonly caseSensitive?: boolean;
@@ -463,6 +464,7 @@ export function parseTokenGrammar(source: string): TokenGrammar {
   const keywords: string[] = [];
   const contextKeywords: string[] = [];
   const softKeywords: string[] = [];
+  const layoutKeywords: string[] = [];
   const skipDefinitions: TokenDefinition[] = [];
   const reservedKeywords: string[] = [];
   const groups: Record<string, PatternGroup> = {};
@@ -499,6 +501,7 @@ export function parseTokenGrammar(source: string): TokenGrammar {
     "keywords",
     "reserved",
     "errors",
+    "layout_keywords",
     "context_keywords",
     "soft_keywords",
   ]);
@@ -655,6 +658,10 @@ export function parseTokenGrammar(source: string): TokenGrammar {
       currentSection = "context_keywords";
       continue;
     }
+    if (stripped === "layout_keywords:" || stripped === "layout_keywords :") {
+      currentSection = "layout_keywords";
+      continue;
+    }
     if (stripped === "soft_keywords:" || stripped === "soft_keywords :") {
       currentSection = "soft_keywords";
       continue;
@@ -673,6 +680,13 @@ export function parseTokenGrammar(source: string): TokenGrammar {
     if (isIndented && currentSection === "context_keywords") {
       if (stripped) {
         contextKeywords.push(stripped);
+      }
+      continue;
+    }
+
+    if (isIndented && currentSection === "layout_keywords") {
+      if (stripped) {
+        layoutKeywords.push(stripped);
       }
       continue;
     }
@@ -804,6 +818,7 @@ export function parseTokenGrammar(source: string): TokenGrammar {
     skipDefinitions: skipDefinitions.length > 0 ? skipDefinitions : undefined,
     reservedKeywords: reservedKeywords.length > 0 ? reservedKeywords : undefined,
     groups: hasGroups ? groups : undefined,
+    layoutKeywords: layoutKeywords.length > 0 ? layoutKeywords : undefined,
     caseSensitive: caseSensitive ? undefined : false,
     version,
     caseInsensitive,
@@ -895,8 +910,19 @@ export function validateTokenGrammar(grammar: TokenGrammar): string[] {
   }
 
   // Validate mode value
-  if (grammar.mode !== undefined && grammar.mode !== "indentation") {
+  if (
+    grammar.mode !== undefined &&
+    grammar.mode !== "indentation" &&
+    grammar.mode !== "layout"
+  ) {
     issues.push(`Unknown mode: '${grammar.mode}'`);
+  }
+
+  if (
+    grammar.mode === "layout" &&
+    (!grammar.layoutKeywords || grammar.layoutKeywords.length === 0)
+  ) {
+    issues.push("Layout mode requires a non-empty layoutKeywords list");
   }
 
   // Validate escapeMode value

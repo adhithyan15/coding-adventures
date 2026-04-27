@@ -1,0 +1,26 @@
+cabal-version: 3.0
+name:          hash-map
+version:       0.1.0
+synopsis:      Haskell hash map for DT18 and Mini Redis
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  HashMap
+    build-depends:    base >=4.14
+                    , containers
+                    , hash-functions
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    HashMapSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14
+                    , hash-map
+                    , hspec == 2.*
+    default-language: Haskell2010

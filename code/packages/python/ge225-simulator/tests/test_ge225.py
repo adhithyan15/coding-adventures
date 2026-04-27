@@ -251,6 +251,85 @@ class TestExecution:
         assert sim.disassemble_word(ins(0o00, 10)) == "LDA 0x00A,X0"
 
 
+class TestBranchSemantics:
+    """Verify skip-if-TRUE semantics for all conditional branch instructions.
+
+    The GE-225 branch-test instructions skip the *next* word when their named
+    condition is TRUE.  Pattern used::
+
+        addr 0..n-1 : setup instructions
+        addr n      : B??          (branch-test under test)
+        addr n+1    : BRU 99       (jumped to when condition is FALSE)
+        addr n+2    : NOP          (skipped over when condition is TRUE)
+        addr n+3..  : NOP padding  (BRU-99 target is here)
+
+    After ``n + 3`` steps:
+    - TRUE path:  branch skips BRU → NOP at n+2 → NOP padding → pc = n+4
+    - FALSE path: BRU 99 executes → NOP at 99 → pc = 100
+    """
+
+    def _probe(self, setup_words: list[int], branch_word: int, steps: int | None = None) -> int:
+        """Return PC after running the probe program."""
+        sim = GE225Simulator()
+        n = len(setup_words)
+        program = setup_words + [
+            branch_word,
+            ins(0o26, 99),         # BRU 99: taken when condition is FALSE
+            assemble_fixed("NOP"), # skipped when condition is TRUE
+        ] + [assemble_fixed("NOP")] * 100
+        sim.load_words(program)
+        sim.run(max_steps=steps if steps is not None else n + 3)
+        return sim.get_state().pc
+
+    def test_bze_skips_when_a_is_zero(self) -> None:
+        # A=0 → BZE condition TRUE → skip BRU → pc = 1+4 = 5
+        assert self._probe([assemble_fixed("LDZ")], assemble_fixed("BZE")) == 5
+
+    def test_bze_does_not_skip_when_a_is_nonzero(self) -> None:
+        # A=1 → BZE condition FALSE → BRU 99 → pc = 100
+        assert self._probe([assemble_fixed("LDO")], assemble_fixed("BZE")) == 100
+
+    def test_bnz_skips_when_a_is_nonzero(self) -> None:
+        # A=1 → BNZ condition TRUE → skip BRU → pc = 5
+        assert self._probe([assemble_fixed("LDO")], assemble_fixed("BNZ")) == 5
+
+    def test_bnz_does_not_skip_when_a_is_zero(self) -> None:
+        # A=0 → BNZ condition FALSE → BRU 99 → pc = 100
+        assert self._probe([assemble_fixed("LDZ")], assemble_fixed("BNZ")) == 100
+
+    def test_bpl_skips_when_a_is_nonnegative(self) -> None:
+        # A=0 → BPL condition TRUE → skip BRU → pc = 5
+        assert self._probe([assemble_fixed("LDZ")], assemble_fixed("BPL")) == 5
+
+    def test_bpl_does_not_skip_when_a_is_negative(self) -> None:
+        # A=-1 (LDO + NEG) → BPL condition FALSE → BRU 99 → pc = 100
+        assert self._probe(
+            [assemble_fixed("LDO"), assemble_fixed("NEG")], assemble_fixed("BPL"), steps=5
+        ) == 100
+
+    def test_bmi_skips_when_a_is_negative(self) -> None:
+        # A=-1 (LDO + NEG) → BMI condition TRUE → skip BRU → pc = 2+4 = 6
+        assert self._probe(
+            [assemble_fixed("LDO"), assemble_fixed("NEG")], assemble_fixed("BMI"), steps=5
+        ) == 6
+
+    def test_bod_skips_when_a_is_odd(self) -> None:
+        # A=1 → BOD condition TRUE → skip BRU → pc = 5
+        assert self._probe([assemble_fixed("LDO")], assemble_fixed("BOD")) == 5
+
+    def test_bod_does_not_skip_when_a_is_even(self) -> None:
+        # A=0 → BOD condition FALSE → BRU 99 → pc = 100
+        assert self._probe([assemble_fixed("LDZ")], assemble_fixed("BOD")) == 100
+
+    def test_bev_skips_when_a_is_even(self) -> None:
+        # A=0 → BEV condition TRUE → skip BRU → pc = 5
+        assert self._probe([assemble_fixed("LDZ")], assemble_fixed("BEV")) == 5
+
+    def test_bev_does_not_skip_when_a_is_odd(self) -> None:
+        # A=1 → BEV condition FALSE → BRU 99 → pc = 100
+        assert self._probe([assemble_fixed("LDO")], assemble_fixed("BEV")) == 100
+
+
 class TestProtocolExecution:
     def test_execute_returns_execution_result(self) -> None:
         sim = GE225Simulator()

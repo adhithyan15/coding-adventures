@@ -13,6 +13,8 @@ Near-term concrete scope:
 
 - every supported implementation language should eventually have a real
   `nib-lexer` and `nib-parser`
+- the JVM class-file lane should eventually have a real generic backend and
+  matching source-language pipeline packages in each supported bucket
 - later compiler stages can remain abstract until each language bucket has the
   prerequisites to support them honestly
 - `starlark` is intentionally excluded from this portability push
@@ -83,3 +85,35 @@ Backend-specific pipeline candidates:
 - `ir-to-intel-4004-compiler`
 - `intel-4004-assembler`
 - `intel-4004-packager`
+- `jvm-class-file`
+- `ir-to-jvm-class-file`
+- `brainfuck-jvm-compiler`
+- `nib-jvm-compiler`
+
+## JVM Rollout Note
+
+For the JVM lane, portability should follow the same honesty rule as the rest
+of the compiler stack:
+
+- Python is allowed to be the first source-of-truth implementation
+- Go now has the first truthful portability foothold through `jvm-class-file`
+- other implementation buckets should not grow `brainfuck-jvm-compiler` or
+  `nib-jvm-compiler` wrappers until they also have a real local
+  `ir-to-jvm-class-file`
+- orchestration packages should sit on top of a real backend in the same
+  language bucket, not shell out to Python behind the user's back
+
+That means the next Go JVM step should be:
+
+```text
+compiler-ir -> ir-to-jvm-class-file -> jvm-class-file -> .class
+```
+
+The next honest cross-language JVM wave targets the buckets that already have
+both recognizable Brainfuck and Nib compiler lanes:
+
+- Go
+- Rust
+- TypeScript
+
+The rollout contract for that wave lives in `04j-multi-language-jvm-rollout.md`.

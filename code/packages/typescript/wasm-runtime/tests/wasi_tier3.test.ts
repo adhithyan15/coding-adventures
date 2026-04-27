@@ -124,6 +124,64 @@ describe("args_sizes_get", () => {
   });
 });
 
+describe("fd_read", () => {
+  it("reads one byte into the caller buffer and reports bytes read", () => {
+    const memory = new LinearMemory(1);
+    const wasi = new WasiStub({
+      stdin: (_count) => "Z",
+    });
+    wasi.setMemory(memory);
+
+    const iovsPtr = 0x0100;
+    const bufPtr = 0x0200;
+    const nreadPtr = 0x0300;
+
+    memory.storeI32(iovsPtr, bufPtr);
+    memory.storeI32(iovsPtr + 4, 1);
+
+    const fn = wasi.resolveFunction("wasi_snapshot_preview1", "fd_read")!;
+    const result = fn.call([i32(0), i32(iovsPtr), i32(1), i32(nreadPtr)]);
+
+    expect(result).toEqual([i32(0)]);
+    expect(memory.loadI32_8u(bufPtr)).toBe("Z".charCodeAt(0));
+    expect(memory.loadI32(nreadPtr)).toBe(1);
+  });
+
+  it("returns EBADF for non-stdin file descriptors", () => {
+    const memory = new LinearMemory(1);
+    const wasi = new WasiStub({
+      stdin: (_count) => "ignored",
+    });
+    wasi.setMemory(memory);
+
+    const fn = wasi.resolveFunction("wasi_snapshot_preview1", "fd_read")!;
+    const result = fn.call([i32(1), i32(0), i32(0), i32(0)]);
+
+    expect(result).toEqual([i32(8)]);
+  });
+
+  it("treats missing stdin data as EOF", () => {
+    const memory = new LinearMemory(1);
+    const wasi = new WasiStub({
+      stdin: (_count) => undefined,
+    });
+    wasi.setMemory(memory);
+
+    const iovsPtr = 0x0100;
+    const bufPtr = 0x0200;
+    const nreadPtr = 0x0300;
+
+    memory.storeI32(iovsPtr, bufPtr);
+    memory.storeI32(iovsPtr + 4, 4);
+
+    const fn = wasi.resolveFunction("wasi_snapshot_preview1", "fd_read")!;
+    const result = fn.call([i32(0), i32(iovsPtr), i32(1), i32(nreadPtr)]);
+
+    expect(result).toEqual([i32(0)]);
+    expect(memory.loadI32(nreadPtr)).toBe(0);
+  });
+});
+
 // =========================================================================
 // args_get
 // =========================================================================

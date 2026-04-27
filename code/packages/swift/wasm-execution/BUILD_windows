@@ -1,1 +1,1 @@
-echo Swift testing requires macOS - skipping on Windows
+swift test

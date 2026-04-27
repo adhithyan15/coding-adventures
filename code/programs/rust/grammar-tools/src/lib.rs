@@ -548,9 +548,12 @@ const FSHARP_VERSIONS: &[&str] = &[
     "1.0", "2.0", "3.0", "3.1", "4.0", "4.1", "4.5", "4.6", "4.7", "5", "6", "7", "8", "9",
     "10",
 ];
+const HASKELL_VERSIONS: &[&str] = &["1.0", "1.1", "1.2", "1.3", "1.4", "98", "2010"];
 const JAVA_VERSIONS: &[&str] = &["1.0", "1.1", "1.4", "5", "7", "8", "10", "14", "17", "21"];
 const PYTHON_VERSIONS: &[&str] = &["2.7", "3.0", "3.6", "3.8", "3.10", "3.12"];
 const TYPESCRIPT_VERSIONS: &[&str] = &["ts1.0", "ts2.0", "ts3.0", "ts4.0", "ts5.0", "ts5.8"];
+const VERILOG_VERSIONS: &[&str] = &["1995", "2001", "2005"];
+const VHDL_VERSIONS: &[&str] = &["1987", "1993", "2002", "2008", "2019"];
 
 fn normalize_name(name: &str) -> String {
     name.to_ascii_lowercase().replace('-', "_")
@@ -572,6 +575,7 @@ fn rust_compile_force_for_package(package_name: &str, kind: RustGrammarKind) -> 
         ("excel-lexer", RustGrammarKind::Tokens)
             | ("excel-parser", RustGrammarKind::Grammar)
             | ("csharp-parser", RustGrammarKind::Grammar)
+            | ("haskell-parser", RustGrammarKind::Grammar)
             | ("java-parser", RustGrammarKind::Grammar)
             | ("javascript-parser", RustGrammarKind::Grammar)
             | ("mosaic-lexer", RustGrammarKind::Tokens)
@@ -597,6 +601,14 @@ fn rust_versioned_family_for_package(package_stem: &str) -> Option<RustVersioned
             input_prefix: "fsharp",
             generic_stem: None,
             versions: FSHARP_VERSIONS,
+        }),
+        "haskell" => Some(RustVersionedFamilySpec {
+            family_name: "haskell",
+            filter_names: &["haskell"],
+            input_dir: "haskell",
+            input_prefix: "haskell",
+            generic_stem: None,
+            versions: HASKELL_VERSIONS,
         }),
         "java" => Some(RustVersionedFamilySpec {
             family_name: "java",
@@ -629,6 +641,22 @@ fn rust_versioned_family_for_package(package_stem: &str) -> Option<RustVersioned
             input_prefix: "",
             generic_stem: Some("typescript"),
             versions: TYPESCRIPT_VERSIONS,
+        }),
+        "verilog" => Some(RustVersionedFamilySpec {
+            family_name: "verilog",
+            filter_names: &["verilog"],
+            input_dir: "verilog",
+            input_prefix: "verilog",
+            generic_stem: None,
+            versions: VERILOG_VERSIONS,
+        }),
+        "vhdl" => Some(RustVersionedFamilySpec {
+            family_name: "vhdl",
+            filter_names: &["vhdl"],
+            input_dir: "vhdl",
+            input_prefix: "vhdl",
+            generic_stem: None,
+            versions: VHDL_VERSIONS,
         }),
         _ => None,
     }
@@ -1336,6 +1364,24 @@ mod tests {
         assert!(package_names.contains(&"dartmouth-basic-lexer".to_string()));
         assert!(package_names.contains(&"dartmouth-basic-parser".to_string()));
         assert!(!package_names.contains(&"sql-lexer".to_string()));
+    }
+
+    #[test]
+    fn find_rust_compile_targets_treats_verilog_and_vhdl_as_versioned_families() {
+        let root = find_root();
+
+        for package_name in ["verilog-lexer", "vhdl-lexer"] {
+            let targets = find_rust_compile_targets(&root, &[package_name.to_string()]).unwrap();
+            let target = targets
+                .iter()
+                .find(|target| target.package_name == package_name)
+                .expect("missing expected versioned lexer target");
+
+            assert!(
+                matches!(target.inputs, RustCompileInputs::Versioned(_)),
+                "{package_name} should use versioned compiled grammars"
+            );
+        }
     }
 
     #[test]

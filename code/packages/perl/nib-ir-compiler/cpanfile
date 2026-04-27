@@ -1,0 +1,5 @@
+requires 'coding-adventures-compiler-ir', '0.01';
+requires 'coding-adventures-nib-type-checker', '0.01';
+on 'test' => sub {
+    requires 'Test2::V0';
+};

@@ -1,5 +1,5 @@
 // Package resolver reads package metadata files (pyproject.toml, .gemspec,
-// go.mod, package.json, .rockspec) and extracts internal dependencies,
+// go.mod, package.json, .rockspec, pubspec.yaml) and extracts internal dependencies,
 // building a directed graph.
 //
 // # Why dependency resolution matters
@@ -25,6 +25,9 @@
 //   - TypeScript: package.json uses "@coding-adventures/" scoped npm names.
 //     "@coding-adventures/logic-gates" maps to "typescript/logic-gates".
 //
+//   - Dart: pubspec.yaml uses snake_case package names.
+//     "coding_adventures_logic_gates" maps to "dart/logic-gates".
+//
 // External dependencies (those not matching the monorepo prefix) are
 // silently skipped — we only care about internal build ordering.
 //
@@ -40,6 +43,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"sort"
 	"strings"
 
 	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
@@ -285,6 +289,70 @@ func parseTypescriptDeps(pkg discovery.Package, knownNames map[string]string) []
 			if pkgName, ok := knownNames[depName]; ok {
 				internalDeps = append(internalDeps, pkgName)
 			}
+		}
+	}
+
+	return internalDeps
+}
+
+// parseDartDeps extracts internal dependencies from a Dart pubspec.yaml file.
+//
+// Dart packages declare dependencies in `dependencies:` and
+// `dev_dependencies:` blocks. Local monorepo dependencies still use the
+// package name key even when the value is a path map:
+//
+//	dependencies:
+//	  coding_adventures_logic_gates:
+//	    path: ../logic-gates
+//
+// We only need the dependency keys, so a small line-oriented parser is
+// sufficient here.
+func parseDartDeps(pkg discovery.Package, knownNames map[string]string) []string {
+	pubspec := filepath.Join(pkg.Path, "pubspec.yaml")
+	data, err := os.ReadFile(pubspec)
+	if err != nil {
+		return nil
+	}
+
+	var internalDeps []string
+	currentBlock := ""
+
+	for _, line := range strings.Split(string(data), "\n") {
+		trimmed := strings.TrimSpace(line)
+		if trimmed == "" || strings.HasPrefix(trimmed, "#") {
+			continue
+		}
+
+		if !strings.HasPrefix(line, " ") && strings.HasSuffix(trimmed, ":") {
+			switch strings.TrimSuffix(trimmed, ":") {
+			case "dependencies", "dev_dependencies":
+				currentBlock = strings.TrimSuffix(trimmed, ":")
+			default:
+				currentBlock = ""
+			}
+			continue
+		}
+
+		if currentBlock == "" {
+			continue
+		}
+
+		if len(line)-len(strings.TrimLeft(line, " ")) < 2 {
+			continue
+		}
+
+		if strings.HasPrefix(trimmed, "#") || strings.HasPrefix(trimmed, "sdk:") || strings.HasPrefix(trimmed, "path:") {
+			continue
+		}
+
+		if !strings.Contains(trimmed, ":") {
+			continue
+		}
+
+		depName := strings.TrimSpace(strings.SplitN(trimmed, ":", 2)[0])
+		depName = strings.ToLower(depName)
+		if pkgName, ok := knownNames[depName]; ok && pkgName != pkg.Name {
+			internalDeps = append(internalDeps, pkgName)
 		}
 	}
 
@@ -723,6 +791,40 @@ func parseDotnetDeps(pkg discovery.Package, knownNames map[string]string) []stri
 	return internalDeps
 }
 
+var buildToolDepsRe = regexp.MustCompile(`(?m)#\s*build-tool:\s*deps\s*=\s*(.+)$`)
+
+func parseBuildToolDeps(pkg discovery.Package, knownPackageNames map[string]bool) []string {
+	if pkg.BuildContent == "" {
+		return nil
+	}
+
+	seen := make(map[string]bool)
+	for _, match := range buildToolDepsRe.FindAllStringSubmatch(pkg.BuildContent, -1) {
+		if len(match) < 2 {
+			continue
+		}
+		for _, raw := range strings.FieldsFunc(match[1], func(r rune) bool {
+			return r == ',' || r == ' ' || r == '\t'
+		}) {
+			dep := strings.TrimSpace(raw)
+			if dep == "" || dep == pkg.Name || !knownPackageNames[dep] {
+				continue
+			}
+			seen[dep] = true
+		}
+	}
+
+	if len(seen) == 0 {
+		return nil
+	}
+	deps := make([]string, 0, len(seen))
+	for dep := range seen {
+		deps = append(deps, dep)
+	}
+	sort.Strings(deps)
+	return deps
+}
+
 func parseGradleDeps(pkg discovery.Package, knownNames map[string]string) []string {
 	settingsFile := filepath.Join(pkg.Path, "settings.gradle.kts")
 	data, err := os.ReadFile(settingsFile)
@@ -928,6 +1030,21 @@ func buildKnownNamesForLanguage(packages []discovery.Package, language string) m
 				}
 			}
 
+		case "dart":
+			baseName := strings.ReplaceAll(strings.ToLower(filepath.Base(pkg.Path)), "-", "_")
+			pubName := "coding_adventures_" + baseName
+			setKnown(pubName, pkg.Name, pkg.Path, pkg.Language)
+			setKnown(baseName, pkg.Name, pkg.Path, pkg.Language)
+
+			pubspec := filepath.Join(pkg.Path, "pubspec.yaml")
+			data, err := os.ReadFile(pubspec)
+			if err == nil {
+				re := regexp.MustCompile(`(?m)^name\s*:\s*([a-z0-9_]+)\s*$`)
+				if match := re.FindStringSubmatch(string(data)); len(match) == 2 {
+					setKnown(strings.ToLower(strings.TrimSpace(match[1])), pkg.Name, pkg.Path, pkg.Language)
+				}
+			}
+
 		case "lua":
 			// Lua rockspec names use hyphens: "logic_gates" → "coding-adventures-logic-gates"
 			// Note: Lua directory names use underscores, rockspec names use hyphens.
@@ -1008,7 +1125,9 @@ func ResolveDependencies(packages []discovery.Package) *directedgraph.Graph {
 
 	// Build the ecosystem-specific name mapping table.
 	knownNamesByLanguage := make(map[string]map[string]string)
+	knownPackageNames := make(map[string]bool, len(packages))
 	for _, pkg := range packages {
+		knownPackageNames[pkg.Name] = true
 		if _, ok := knownNamesByLanguage[pkg.Language]; !ok {
 			knownNamesByLanguage[pkg.Language] = buildKnownNamesForLanguage(packages, pkg.Language)
 		}
@@ -1027,6 +1146,8 @@ func ResolveDependencies(packages []discovery.Package) *directedgraph.Graph {
 			deps = parseGoDeps(pkg, knownNames)
 		case "typescript":
 			deps = parseTypescriptDeps(pkg, knownNames)
+		case "dart":
+			deps = parseDartDeps(pkg, knownNames)
 		case "rust":
 			deps = parseRustDeps(pkg, knownNames)
 		case "wasm":
@@ -1046,6 +1167,7 @@ func ResolveDependencies(packages []discovery.Package) *directedgraph.Graph {
 		case "dotnet", "csharp", "fsharp":
 			deps = parseDotnetDeps(pkg, knownNames)
 		}
+		deps = append(deps, parseBuildToolDeps(pkg, knownPackageNames)...)
 
 		for _, depName := range deps {
 			// Edge direction: dep → pkg means "dep must be built before pkg".

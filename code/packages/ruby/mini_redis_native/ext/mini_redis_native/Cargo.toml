@@ -1,0 +1,16 @@
+[workspace]
+
+[package]
+name = "mini-redis-native-ruby"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "mini_redis_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+embeddable-tcp-server = { path = "../../../../rust/embeddable-tcp-server" }
+ruby-bridge = { path = "../../../../rust/ruby-bridge" }
+serde = { version = "1", features = ["derive"] }
+tcp-runtime = { path = "../../../../rust/tcp-runtime" }
