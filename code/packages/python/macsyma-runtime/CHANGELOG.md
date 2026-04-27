@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.4.0 — 2026-04-27
+
+**Number theory MACSYMA names wired (B3).**
+
+Adds `MACSYMA_NAME_TABLE` entries for all number-theory heads:
+`primep`→`IsPrime`, `next_prime`→`NextPrime`, `prev_prime`→`PrevPrime`,
+`ifactor`→`FactorInteger`, `divisors`→`Divisors`, `totient`→`Totient`,
+`moebius`→`MoebiusMu`, `jacobi`→`JacobiSymbol`, `chinese`→`ChineseRemainder`,
+`numdigits`→`IntegerLength`.
+
+6 new pipeline tests in `test_cas_pipeline.py` cover the MACSYMA surface
+syntax end-to-end.
+
 ## 0.3.0 — 2026-04-27
 
 **MACSYMA completion roadmap items C2, C3, C4, C5 wired.**

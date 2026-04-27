@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.21.0 — 2026-04-27
+
+**Roadmap item B3 (cas-number-theory) wired into SymbolicBackend.**
+
+The new `cas-number-theory` package is now a dependency and its handler
+table is merged into `build_cas_handler_table()` via `**_build_nt()`.
+
+**New IR heads** (10 total, all language-neutral):
+`IsPrime`, `NextPrime`, `PrevPrime`, `FactorInteger`, `Divisors`,
+`Totient`, `MoebiusMu`, `JacobiSymbol`, `ChineseRemainder`, `IntegerLength`.
+
 ## 0.20.0 — 2026-04-27
 
 **Roadmap items C2, C4, C5 implemented** — three items from the MACSYMA

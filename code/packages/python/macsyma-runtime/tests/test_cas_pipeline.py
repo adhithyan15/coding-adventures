@@ -316,3 +316,50 @@ def test_pipeline_at_linear() -> None:
     """at(2*x - 1, x = 5) → 9."""
     result = _eval("at(2*x - 1, x = 5)")
     assert result == _int(9)
+
+
+# ---------------------------------------------------------------------------
+# Section K — number theory (B3)
+# ---------------------------------------------------------------------------
+
+
+def test_pipeline_primep_true() -> None:
+    """primep(97) → True."""
+    result = _eval("primep(97)")
+    assert result == _sym("True")
+
+
+def test_pipeline_primep_false() -> None:
+    """primep(100) → False."""
+    result = _eval("primep(100)")
+    assert result == _sym("False")
+
+
+def test_pipeline_next_prime() -> None:
+    """next_prime(10) → 11."""
+    result = _eval("next_prime(10)")
+    assert result == _int(11)
+
+
+def test_pipeline_ifactor() -> None:
+    """ifactor(12) returns a list of [prime, exp] pairs."""
+    result = _eval("ifactor(12)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List"
+    # Should have 2 pairs: [[2,2],[3,1]]
+    assert len(result.args) == 2
+
+
+def test_pipeline_divisors() -> None:
+    """divisors(12) → [1, 2, 3, 4, 6, 12]."""
+    result = _eval("divisors(12)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List"
+    values = [a.value for a in result.args]  # type: ignore[attr-defined]
+    assert values == [1, 2, 3, 4, 6, 12]
+
+
+def test_pipeline_totient() -> None:
+    """totient(12) → 4."""
+    result = _eval("totient(12)")
+    assert result == _int(4)

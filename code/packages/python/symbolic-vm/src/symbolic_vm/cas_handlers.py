@@ -41,6 +41,7 @@ from typing import TYPE_CHECKING
 
 from cas_factor import factor_integer_polynomial
 from cas_limit_series import PolynomialError, limit_direct, taylor_polynomial
+from cas_number_theory.handlers import build_number_theory_handler_table as _build_nt
 from cas_list_operations import (
     ListOperationError,
     append,
@@ -1085,4 +1086,6 @@ def build_cas_handler_table() -> dict[str, Handler]:
         "MakeList": make_list_handler,
         # --- At / point evaluation (C4) -------------------------------------
         "At": at_handler,
+        # --- cas_number_theory (B3) -----------------------------------------
+        **_build_nt(),
     }

@@ -68,6 +68,18 @@ MAKE_LIST = IRSymbol("MakeList")
 # Point evaluation (C4)
 AT = IRSymbol("At")
 
+# Number theory (B3)
+IS_PRIME = IRSymbol("IsPrime")
+NEXT_PRIME = IRSymbol("NextPrime")
+PREV_PRIME = IRSymbol("PrevPrime")
+FACTOR_INTEGER = IRSymbol("FactorInteger")
+DIVISORS = IRSymbol("Divisors")
+TOTIENT = IRSymbol("Totient")
+MOEBIUS_MU = IRSymbol("MoebiusMu")
+JACOBI_SYMBOL = IRSymbol("JacobiSymbol")
+CHINESE_REMAINDER = IRSymbol("ChineseRemainder")
+INTEGER_LENGTH = IRSymbol("IntegerLength")
+
 # Re-export the runtime-owned heads so callers have one import.
 from macsyma_runtime.heads import (  # noqa: E402
     ASSUME,
@@ -124,6 +136,17 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "rhs": RHS,
     # Point evaluation — At(expr, Equal(var, val)) (C4)
     "at": AT,
+    # Number theory (B3)
+    "primep": IS_PRIME,
+    "next_prime": NEXT_PRIME,
+    "prev_prime": PREV_PRIME,
+    "ifactor": FACTOR_INTEGER,
+    "divisors": DIVISORS,
+    "totient": TOTIENT,
+    "moebius": MOEBIUS_MU,
+    "jacobi": JACOBI_SYMBOL,
+    "chinese": CHINESE_REMAINDER,
+    "numdigits": INTEGER_LENGTH,
     # Runtime-owned operations
     "kill": KILL,
     "ev": EV,
