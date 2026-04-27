@@ -1,7 +1,7 @@
 namespace CodingAdventures.Hkdf.FSharp
 
 open System
-open System.Security.Cryptography
+open CodingAdventures.Hmac.FSharp
 
 type HkdfHash =
     | Sha256
@@ -14,10 +14,10 @@ module Hkdf =
         | Sha256 -> 32
         | Sha512 -> 64
 
-    let private createHmac hash key =
+    let private computeHmac hash key message =
         match hash with
-        | Sha256 -> new HMACSHA256(key) :> HMAC
-        | Sha512 -> new HMACSHA512(key) :> HMAC
+        | Sha256 -> Hmac.computeAllowEmptyKey CodingAdventures.Sha256.FSharp.Sha256.hash 64 key message
+        | Sha512 -> Hmac.computeAllowEmptyKey CodingAdventures.Sha512.FSharp.Sha512.hash 128 key message
 
     let extract (salt: byte array) (ikm: byte array) hash =
         if isNull salt then nullArg "salt"
@@ -29,8 +29,7 @@ module Hkdf =
             else
                 salt
 
-        use hmac = createHmac hash actualSalt
-        hmac.ComputeHash(ikm)
+        computeHmac hash actualSalt ikm
 
     let expand (prk: byte array) (info: byte array) length hash =
         if isNull prk then nullArg "prk"
@@ -46,9 +45,8 @@ module Hkdf =
         let mutable counter = 1
 
         while offset < length do
-            use hmac = createHmac hash prk
             let input = Array.concat [ previous; info; [| byte counter |] ]
-            previous <- hmac.ComputeHash(input)
+            previous <- computeHmac hash prk input
             let toCopy = min previous.Length (length - offset)
             Buffer.BlockCopy(previous, 0, okm, offset, toCopy)
             offset <- offset + toCopy
