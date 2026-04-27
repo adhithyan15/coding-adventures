@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.19.0 — 2026-04-27
+
+**CAS substrate handlers wired into SymbolicBackend** — the universal inner
+doll. Every CAS frontend that extends `SymbolicBackend` (MACSYMA, Maple,
+Mathematica, …) now inherits the full algebraic operation set for free.
+Language-specific quirks (Display/Suppress/Kill/Ev) remain in the language
+backend subclass (the outer doll).
+
+**New module**: `symbolic_vm/cas_handlers.py`
+
+**New handlers installed on `SymbolicBackend`**:
+
+- **Algebraic**: `Simplify`, `Expand`, `Factor` (Phase 1: integer-root
+  factoring via rational-root theorem), `Solve` (linear and quadratic over Q),
+  `Subst` (structural substitution + re-evaluation).
+- **List operations**: `Length`, `First`, `Rest`, `Last`, `Append`, `Reverse`,
+  `Range`, `Map`, `Apply`, `Select`, `Sort`, `Part`, `Flatten`, `Join`.
+- **Matrix**: `Matrix`, `Transpose`, `Determinant`, `Inverse`.
+- **Calculus**: `Limit` (direct-substitution Phase 1), `Taylor` (polynomial
+  Taylor expansion).
+- **Numeric**: `Abs`, `Floor`, `Ceiling`, `Mod`, `Gcd`, `Lcm`.
+
+**Package dependencies added**: `cas-pattern-matching`, `cas-substitution`,
+`cas-simplify`, `cas-factor`, `cas-solve`, `cas-list-operations`,
+`cas-matrix`, `cas-limit-series`.
+
+**Architecture note**: These handlers are the **inner doll** — universal
+CAS operations that any symbolic algebra language can use unchanged. They
+are explicitly *not* placed in `MacsymaBackend` so that future Maple and
+Mathematica backends can extend `SymbolicBackend` directly and inherit
+the complete algebraic substrate without touching any MACSYMA-specific code.
+
 ## 0.18.0 — 2026-04-23
 
 Phase 13 of the integration roadmap — hyperbolic functions.
