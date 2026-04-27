@@ -387,4 +387,6 @@ members = [
     "cas-substitution",
     "cas-factor",
     "cas-solve",
+    "cas-list-operations",
+    "cas-matrix",
 ]
