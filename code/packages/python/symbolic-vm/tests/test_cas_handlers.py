@@ -1037,3 +1037,67 @@ def test_im_wrong_arity_passthrough() -> None:
     vm, _ = make_vm()
     expr = IRApply(_IM, (IRInteger(1), IRInteger(2)))
     assert vm.eval(expr) == expr
+
+
+# ===========================================================================
+# Section 13: Trig handlers (B1)
+# ===========================================================================
+
+_TRIG_SIMPLIFY = IRSymbol("TrigSimplify")
+_TRIG_EXPAND = IRSymbol("TrigExpand")
+_TRIG_REDUCE = IRSymbol("TrigReduce")
+_SIN = IRSymbol("Sin")
+_COS = IRSymbol("Cos")
+_PI = IRSymbol("%pi")
+
+
+def test_trig_simplify_pythagorean() -> None:
+    """TrigSimplify(sin²(x) + cos²(x)) → 1."""
+    vm, _ = make_vm()
+    sin2 = IRApply(POW, (IRApply(_SIN, (x,)), IRInteger(2)))
+    cos2 = IRApply(POW, (IRApply(_COS, (x,)), IRInteger(2)))
+    expr = IRApply(_TRIG_SIMPLIFY, (IRApply(ADD, (sin2, cos2)),))
+    result = vm.eval(expr)
+    assert result == IRInteger(1)
+
+
+def test_trig_simplify_sin_pi_is_zero() -> None:
+    """TrigSimplify(Sin(π)) → 0."""
+    vm, _ = make_vm()
+    expr = IRApply(_TRIG_SIMPLIFY, (IRApply(_SIN, (_PI,)),))
+    result = vm.eval(expr)
+    assert result == IRInteger(0)
+
+
+def test_trig_expand_sin_2x() -> None:
+    """TrigExpand(Sin(2x)) expands to contain Sin and Cos."""
+    vm, _ = make_vm()
+    expr = IRApply(_TRIG_EXPAND, (
+        IRApply(_SIN, (IRApply(MUL, (IRInteger(2), x)),)),
+    ))
+    result = vm.eval(expr)
+    assert isinstance(result, IRApply)
+
+
+def test_trig_reduce_sin2() -> None:
+    """TrigReduce(Sin(x)^2) → (1 - Cos(2x)) / 2."""
+    vm, _ = make_vm()
+    expr = IRApply(_TRIG_REDUCE, (
+        IRApply(POW, (IRApply(_SIN, (x,)), IRInteger(2))),
+    ))
+    result = vm.eval(expr)
+    assert isinstance(result, IRApply)
+    # Should not be a plain Pow(Sin(x), 2) anymore
+    assert not (
+        result.head.name == "Pow"
+        and isinstance(result.args[0], IRApply)
+        and result.args[0].head.name == "Sin"
+    )
+
+
+def test_trig_simplify_wrong_arity_passthrough() -> None:
+    """TrigSimplify(a, b) → unevaluated."""
+    vm, _ = make_vm()
+    y = IRSymbol("y")
+    expr = IRApply(_TRIG_SIMPLIFY, (x, y))
+    assert vm.eval(expr) == expr

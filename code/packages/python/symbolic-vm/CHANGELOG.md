@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.25.0 — 2026-04-27
+
+**Roadmap item B1 (cas-trig) wired into SymbolicBackend.**
+
+`cas-trig` is now a dependency. Its handler table is merged via
+`_build_trig()` in `SymbolicBackend.__init__`.
+
+**New IR heads** (3 total):
+`TrigSimplify`, `TrigExpand`, `TrigReduce`.
+
+- `TrigSimplify`: Pythagorean identity (`sin²+cos²→1`), sign rules
+  (`sin(-x)→-sin(x)`, `cos(-x)→cos(x)`), and special-value lookup
+  (`sin(π/6)→1/2`, etc.).
+- `TrigExpand`: angle-addition formulas and Chebyshev recurrence for
+  integer multiples (`sin(2x)→2sin(x)cos(x)`, `cos(3x)→...`).
+- `TrigReduce`: power-to-multiple-angle reduction
+  (`sin²(x)→(1-cos(2x))/2`, `cos³(x)→(3cos(x)+cos(3x))/4`, etc.).
+
+**Dependencies updated:**
+- `cas-trig>=0.1.0` added to `pyproject.toml`.
+
+**New tests (5 in `test_cas_handlers.py`)** + **5 pipeline tests**.
+
 ## 0.24.0 — 2026-04-27
 
 **Roadmap items A2c + A2d (NSolve and linear systems) wired in.**

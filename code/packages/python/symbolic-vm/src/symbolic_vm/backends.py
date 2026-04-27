@@ -33,6 +33,7 @@ from symbolic_vm.cas_handlers import (
     IMAGINARY_UNIT_SYMBOL,
     build_cas_handler_table,
 )
+from cas_trig.handlers import build_trig_handler_table as _build_trig
 from symbolic_vm.derivative import differentiate
 from symbolic_vm.handlers import FALSE, TRUE, build_handler_table
 from symbolic_vm.integrate import integrate
@@ -112,6 +113,11 @@ class SymbolicBackend(_BaseBackend):
         # automatically. Language-specific quirks (Display/Suppress/Kill)
         # are layered on top in the language backend subclass.
         handlers.update(build_cas_handler_table())
+        # B1: install trig transformation handlers (TrigSimplify, TrigExpand,
+        # TrigReduce). These come from the dedicated cas-trig package and are
+        # language-neutral — any CAS frontend that extends SymbolicBackend
+        # inherits them automatically.
+        handlers.update(_build_trig())
         # B2: wire imaginary-power reduction into the Pow handler.
         # When the base is exactly ImaginaryUnit and the exponent is an
         # integer, reduce i^n → {1, i, -1, -i}.  All other Pow calls

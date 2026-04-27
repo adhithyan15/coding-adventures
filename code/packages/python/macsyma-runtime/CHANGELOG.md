@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.8.0 — 2026-04-27
+
+**Trig operations wired into MACSYMA name table (B1).**
+
+Adds `MACSYMA_NAME_TABLE` entries:
+`trigsimp→TrigSimplify`, `trigexpand→TrigExpand`, `trigreduce→TrigReduce`.
+
+5 new pipeline tests cover the MACSYMA surface syntax end-to-end:
+- `trigsimp(sin(x)^2 + cos(x)^2)` → `1`.
+- `trigsimp(sin(%pi))` → `0`.
+- `trigsimp(cos(%pi))` → `-1`.
+- `trigexpand(sin(2*x))` → expanded form.
+- `trigreduce(sin(x)^2)` → multiple-angle form.
+
 ## 0.7.0 — 2026-04-27
 
 **NSolve and linear system pipeline tests added (A2c / A2d).**

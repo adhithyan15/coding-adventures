@@ -3,17 +3,18 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "coding-adventures-macsyma-runtime"
-version = "0.8.0"
-description = "MACSYMA-specific runtime layer on top of the symbolic VM — history, $/; terminators, kill, ev, name table."
+name = "coding-adventures-cas-trig"
+version = "0.1.0"
+description = "Trigonometric simplification, expansion, and reduction for the symbolic IR."
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
 readme = "README.md"
-keywords = ["macsyma", "maxima", "cas", "symbolic", "runtime", "education"]
+keywords = ["cas", "trig", "trigonometric", "symbolic", "education"]
 dependencies = [
     "coding-adventures-symbolic-ir>=0.5.0",
-    "coding-adventures-symbolic-vm>=0.18.0",
+    "coding-adventures-cas-simplify>=0.1.0",
+    "coding-adventures-cas-pattern-matching>=0.1.0",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -33,7 +34,7 @@ Repository = "https://github.com/adhithyan15/coding-adventures"
 dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4", "mypy>=1.10"]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/macsyma_runtime"]
+packages = ["src/cas_trig"]
 
 [tool.ruff]
 target-version = "py312"
@@ -44,7 +45,7 @@ select = ["E", "W", "F", "I", "UP", "B", "SIM"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "--cov=macsyma_runtime --cov-report=term-missing --cov-fail-under=80"
+addopts = "--cov=cas_trig --cov-report=term-missing --cov-fail-under=80"
 
 [tool.coverage.report]
 fail_under = 80
