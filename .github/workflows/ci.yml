@@ -73,6 +73,7 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: '1.23'
+          cache: false
 
       - name: Determine diff base
         id: diff-base
@@ -211,6 +212,7 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: '1.23'
+          cache: false
 
       - name: Set up Python
         if: needs.detect.outputs.needs_python == 'true'
