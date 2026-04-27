@@ -1,5 +1,39 @@
 # Changelog
 
+## [0.6.1] - 2026-04-27
+
+### Added — ML observer hook: IndexPolicy.on_query_event forwarding
+
+- **`IndexPolicy.on_query_event(event: QueryEvent) -> None`** (optional hook) —
+  documented as a third, fully optional method on the `IndexPolicy` protocol.
+  When implemented by a custom policy, the advisor forwards every
+  `QueryEvent` to it immediately after the drop loop completes.  This gives
+  ML-based or adaptive policies access to raw runtime signals — table scanned,
+  filtered columns, `rows_scanned`, `rows_returned`, `used_index`, and
+  `duration_us` — so they can maintain their own feature history without
+  needing to intercept the advisor's internal state.
+
+  Detection follows the same `hasattr` / `callable` pattern already used for
+  `should_drop`: a policy that does not implement `on_query_event` is simply
+  never called, preserving full backward compatibility with v2-style policies.
+
+- **`IndexAdvisor.on_query_event` restructured** — the early `return` for
+  policies without `should_drop` has been replaced by a guarded `if
+  callable(should_drop_fn):` block so execution always reaches the
+  `on_query_event` forwarding at the end of the method, regardless of whether
+  the drop loop ran.
+
+- **`tests/test_tier3_ml_hook.py`** — 14 new tests covering:
+  - Protocol surface: `HitCountPolicy` has no `on_query_event`; v2 policies
+    remain backward compatible.
+  - Forwarding behaviour: single and multiple events forwarded in order; the
+    exact same `QueryEvent` object is passed; hook fires even when
+    `should_drop` is absent; hook fires after the drop loop.
+  - ML policy integration via `Connection`: policy accumulates events from
+    real queries, sees `used_index` after index creation, coexists with
+    `should_drop`, survives `set_policy` swaps, and exposes selectivity
+    signals.
+
 ## [0.6.0] - 2026-04-23
 
 ### Added — Phase 9.7: Composite (multi-column) automatic index support (IX-8)
