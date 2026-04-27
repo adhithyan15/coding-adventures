@@ -289,10 +289,18 @@ func parseStringLiteral(s string) string {
 	// The grammar lexer strips quotes when the first character is a quote char.
 	// Prefixed strings (r"...", b"...", rb"...") still have their prefix + quotes.
 	firstChar := s[0]
+	lastChar := s[len(s)-1]
 	hasPrefix := firstChar == 'r' || firstChar == 'R' || firstChar == 'b' || firstChar == 'B'
 	hasQuotes := firstChar == '"' || firstChar == '\''
+	endsWithQuote := lastChar == '"' || lastChar == '\''
 
-	if !hasPrefix && !hasQuotes {
+	// A prefix is only valid if the string ENDS with a quote (i.e., the full literal
+	// r"..." or b"..." is present). If the last char is not a quote, the lexer has
+	// already stripped the surrounding quotes, so the string starting with 'r' or 'b'
+	// is just a plain value (e.g., "ruby_library.star" → ruby_library.star after
+	// lexer stripping). Without this check, strings like "rust_library.star" would
+	// have their leading 'r' incorrectly stripped as a raw-string prefix.
+	if !hasQuotes && !(hasPrefix && endsWithQuote) {
 		// The lexer already stripped quotes and processed escapes.
 		// Return the value as-is.
 		return s
@@ -1580,9 +1588,14 @@ func (c *StarlarkCompiler) compileSubscript(node *parser.ASTNode) {
 // compileArguments compiles function call arguments.
 // Grammar: arguments = argument { COMMA argument } [ COMMA ] ;
 //
-// We need to count positional and keyword arguments separately.
-// Positional args are pushed onto the stack, then CALL_FUNCTION.
-// Keyword args trigger CALL_FUNCTION_KW instead.
+// CALL_FUNCTION_KW stack layout (expected by handleCallFunctionKW):
+//   [..., callable, pos_val1, ..., pos_valP, kw_val1, ..., kw_valK, (kw_name1, ..., kw_nameK)]
+//   operand = P + K
+//
+// Two-pass approach:
+//   Pass 1: emit positional arg values
+//   Pass 2: emit keyword arg VALUES (not names), collect kwarg names
+//   Then:   push kwarg names via LOAD_CONST + BUILD_TUPLE
 func (c *StarlarkCompiler) compileArguments(node *parser.ASTNode) {
 	argNodes := []*parser.ASTNode{}
 	for _, child := range node.Children {
@@ -1595,12 +1608,49 @@ func (c *StarlarkCompiler) compileArguments(node *parser.ASTNode) {
 
 	positionalCount := 0
 	kwCount := 0
+	var kwNames []string
 
+	// Pass 1: emit positional argument values.
 	for _, arg := range argNodes {
-		c.compileArgument(arg, &positionalCount, &kwCount)
+		if hasToken(arg, "=") {
+			continue
+		}
+		nodes := extractNodes(arg)
+		if len(nodes) > 0 {
+			c.compileNode(nodes[0])
+		}
+		positionalCount++
+	}
+
+	// Pass 2: emit keyword argument VALUES and collect their names.
+	for _, arg := range argNodes {
+		if !hasToken(arg, "=") {
+			continue
+		}
+		tokens := extractTokens(arg)
+		nodes := extractNodes(arg)
+		// Collect the kwarg name from the NAME token before "=".
+		for _, tok := range tokens {
+			if tokenTypeName(tok) == "NAME" {
+				kwNames = append(kwNames, tok.Value)
+				break
+			}
+		}
+		// Emit the kwarg value expression.
+		if len(nodes) > 0 {
+			c.compileNode(nodes[0])
+		}
+		kwCount++
 	}
 
 	if kwCount > 0 {
+		// Build the kwarg names tuple: push each name then BUILD_TUPLE.
+		// handleCallFunctionKW pops this tuple from TOS to find kwarg names.
+		for _, name := range kwNames {
+			nameIdx := c.addConstant(name)
+			c.emit(OpLoadConst, nameIdx)
+		}
+		c.emit(OpBuildTuple, kwCount)
 		c.emit(OpCallFunctionKW, positionalCount+kwCount)
 	} else {
 		c.emit(OpCallFunction, positionalCount)
