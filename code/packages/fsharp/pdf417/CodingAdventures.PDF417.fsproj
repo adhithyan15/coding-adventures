@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../../csharp/barcode-2d/CodingAdventures.Barcode2D.csproj" />
     <ProjectReference Include="../../csharp/pdf417/CodingAdventures.PDF417.csproj" />
   </ItemGroup>
 
