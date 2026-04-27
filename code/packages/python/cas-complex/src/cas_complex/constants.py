@@ -1,7 +1,7 @@
 """ImaginaryUnit constant and related IR sentinels."""
 from __future__ import annotations
 
-from symbolic_ir import ADD, MUL, NEG, POW, IRApply, IRInteger, IRNode, IRSymbol
+from symbolic_ir import ADD, MUL, NEG, POW, IRApply, IRNode, IRSymbol
 
 #: The imaginary unit ``i`` as a pre-bound IR symbol.
 #:
@@ -29,7 +29,12 @@ def is_imaginary_unit(node: IRNode) -> bool:
 
 def make_neg(node: IRNode) -> IRNode:
     """Wrap ``node`` in ``Neg(...)``; fold ``Neg(Neg(x))`` → ``x``."""
-    if isinstance(node, IRApply) and isinstance(node.head, IRSymbol) and node.head.name == "Neg":
+    is_neg = (
+        isinstance(node, IRApply)
+        and isinstance(node.head, IRSymbol)
+        and node.head.name == "Neg"
+    )
+    if is_neg:
         return node.args[0]
     return IRApply(_NEG, (node,))
 

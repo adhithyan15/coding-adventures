@@ -1,4 +1,4 @@
-"""Ev — numer, float, expand, factor flags (C3)."""
+"""Ev — numer, float, expand, factor, ratsimp, trigsimp flags (C3 + A3/B1)."""
 
 from __future__ import annotations
 
@@ -91,3 +91,41 @@ def test_ev_factor_flag_applies_factor() -> None:
         and isinstance(result.head, IRSymbol)
         and result.head.name == "Factor"
     ), f"Expected factored result, got unevaluated: {result}"
+
+
+# ---------------------------------------------------------------------------
+# A3 + B1: ratsimp and trigsimp flags
+# ---------------------------------------------------------------------------
+
+
+def test_ev_ratsimp_flag_cancels_common_factor() -> None:
+    """ev((x^2-1)/(x-1), ratsimp) → x+1 (cancels x-1 from numerator)."""
+    from symbolic_ir import DIV, IRApply as _Apply, IRSymbol as _Sym, IRInteger as _Int, POW, SUB, ADD
+
+    backend = MacsymaBackend()
+    vm = VM(backend)
+    x = IRSymbol("x")
+    # (x^2 - 1) / (x - 1)
+    num = IRApply(SUB, (IRApply(POW, (x, IRInteger(2))), IRInteger(1)))
+    den = IRApply(SUB, (x, IRInteger(1)))
+    div = IRApply(IRSymbol("Div"), (num, den))
+    expr = IRApply(EV, (div, IRSymbol("ratsimp")))
+    result = vm.eval(expr)
+    # Result should be x + 1 — a linear polynomial, not a Div.
+    assert isinstance(result, IRApply)
+    assert result.head.name in ("Add", "Sub")  # x + 1 or 1 + x
+
+
+def test_ev_trigsimp_flag_applies_pythagorean() -> None:
+    """ev(sin(x)^2 + cos(x)^2, trigsimp) → 1."""
+    from symbolic_ir import SIN, COS, ADD, POW, IRApply as _Apply
+
+    backend = MacsymaBackend()
+    vm = VM(backend)
+    x = IRSymbol("x")
+    sin2 = IRApply(POW, (IRApply(IRSymbol("Sin"), (x,)), IRInteger(2)))
+    cos2 = IRApply(POW, (IRApply(IRSymbol("Cos"), (x,)), IRInteger(2)))
+    inner = IRApply(ADD, (sin2, cos2))
+    expr = IRApply(EV, (inner, IRSymbol("trigsimp")))
+    result = vm.eval(expr)
+    assert result == IRInteger(1)

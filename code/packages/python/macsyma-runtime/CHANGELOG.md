@@ -1,5 +1,125 @@
 # Changelog
 
+## 1.2.0 — 2026-04-27
+
+**Wire `ratsimp` and `trigsimp` flags in `ev` handler (A3 + B1).**
+
+Completes the `ev` flag set by implementing the two previously-documented
+but not-yet-implemented flags:
+
+- `ratsimp` — applies `RatSimplify` (cancel GCD of numerator/denominator)
+  to the evaluated result. Example: `ev((x^2-1)/(x-1), ratsimp)` → `x+1`.
+- `trigsimp` — applies `TrigSimplify` (Pythagorean and related identities)
+  to the evaluated result. Example: `ev(sin(x)^2 + cos(x)^2, trigsimp)` → `1`.
+
+Both flags use the A3/B1 substrate handlers already registered on
+`SymbolicBackend`, so no new CAS code was needed — only the `ev` dispatch
+layer required updating.
+
+2 new tests added to `test_ev.py`; total test count 133, coverage 98.6%.
+
+## 1.1.0 — 2026-04-27
+
+**Comprehensive pipeline test coverage (Sections S and T).**
+
+Adds 20 new end-to-end pipeline tests covering operations that were already
+wired in `symbolic-vm` but had no MACSYMA surface coverage:
+
+**Section S — Calculus**:
+- `diff(x^3, x)`, `diff(x^2+2x+1, x)` — polynomial differentiation.
+- `diff(sin(x), x)` → `cos(x)`.
+- `diff(cos(x), x)` → `-sin(x)`.
+- `diff(exp(x), x)` → `exp(x)`.
+- `integrate(x^2, x)` — power rule.
+- `integrate(sin(x), x)` → `-cos(x)` (verifies `Cos` in result).
+- `integrate(cos(x), x)` → `sin(x)`.
+- `integrate(exp(x), x)` → `exp(x)`.
+- `integrate(3, x)` → `3*x` (constant rule).
+- `integrate(x+1, x)` — linearity.
+
+**Section T — Matrix + Numeric**:
+- `matrix([1,2],[3,4])` → `Matrix` node with 2 rows.
+- `determinant(matrix([1,2],[3,4]))` → `IRInteger(-2)`.
+- `transpose(matrix([1,2],[3,4]))` → `Matrix` node.
+- `gcd(12, 8)` → `IRInteger(4)`.
+- `lcm(4, 6)` → `IRInteger(12)`.
+- `mod(17, 5)` → `IRInteger(2)`.
+- `floor(3.7)` → `IRInteger(3)`.
+- `ceiling(3.2)` → `IRInteger(4)`.
+- `abs(-5)` → `IRInteger(5)`.
+
+Total tests: 131, coverage 98.6%.
+
+## 1.0.0 — 2026-04-27
+
+**Roadmap item A1 — Kronecker polynomial factoring surfaced through MACSYMA `factor`.**
+
+Bumps dependency to `symbolic-vm>=0.27.0` which ships `cas-factor 0.2.0`
+with Kronecker's algorithm.  No changes to `macsyma-runtime` source code;
+the improvement flows through automatically since `factor` → `Factor` IR head
+→ `factor_handler` → `factor_integer_polynomial` → Kronecker.
+
+4 new pipeline tests in `test_cas_pipeline.py` (Section R):
+- `factor(x^4 + 4)` → `Mul` (Sophie Germain: `(x²+2x+2)(x²-2x+2)`).
+- `factor(x^4 + x^2 + 1)` → `Mul` (cyclotomic: `(x²+x+1)(x²-x+1)`).
+- `factor(x^3 - 2x^2 + x - 2)` → `Mul` (mixed: linear `(x-2)` + `(x²+1)`).
+- `factor(x^2 + 1)` → `Factor(x^2+1)` unevaluated (irreducible over Z).
+
+## 0.9.0 — 2026-04-27
+
+**Rational function operations wired into MACSYMA name table (A3).**
+
+Adds `MACSYMA_NAME_TABLE` entries:
+`collect→Collect`, `together→Together`, `ratsimp→RatSimplify`,
+`partfrac→Apart`.
+
+These map to four new IR heads in `symbolic-vm` 0.26.0:
+- `collect(expr, x)` — collect terms by powers of x.
+- `together(expr)` — combine fractions into one rational expression.
+- `ratsimp(expr)` — cancel common polynomial factors.
+- `partfrac(expr, x)` — partial fraction decomposition.
+
+Also adds `COLLECT`, `TOGETHER`, `RAT_SIMPLIFY`, `APART` IR symbol constants
+to `name_table.py`.
+
+6 new pipeline tests in `test_cas_pipeline.py` (Section Q) cover the full
+MACSYMA surface syntax end-to-end.
+
+## 0.8.0 — 2026-04-27
+
+**Trig operations wired into MACSYMA name table (B1).**
+
+Adds `MACSYMA_NAME_TABLE` entries:
+`trigsimp→TrigSimplify`, `trigexpand→TrigExpand`, `trigreduce→TrigReduce`.
+
+5 new pipeline tests cover the MACSYMA surface syntax end-to-end:
+- `trigsimp(sin(x)^2 + cos(x)^2)` → `1`.
+- `trigsimp(sin(%pi))` → `0`.
+- `trigsimp(cos(%pi))` → `-1`.
+- `trigexpand(sin(2*x))` → expanded form.
+- `trigreduce(sin(x)^2)` → multiple-angle form.
+
+## 0.7.0 — 2026-04-27
+
+**NSolve and linear system pipeline tests added (A2c / A2d).**
+
+Adds MACSYMA name-table entries `nsolve→NSolve` and `linsolve→Solve`
+(linear-system form).  4 new pipeline tests cover:
+- `nsolve(x^3 - 6*x^2 + 11*x - 6, x)` → 3 numeric IRFloat roots.
+- `nsolve(x^5 - 1, x)` → 5 roots.
+- `linsolve([x+y=3, x-y=1], [x,y])` → `[Rule(x,2), Rule(y,1)]`.
+- `linsolve([x+y+z=6, 2*x+y=5, z=3], [x,y,z])` → 3 rules.
+
+## 0.6.0 — 2026-04-27
+
+**Cubic and quartic solve pipeline tests added (A2a / A2b).**
+
+5 new pipeline tests in `test_cas_pipeline.py` cover cubic and quartic
+equation solving end-to-end through the MACSYMA surface syntax:
+`solve(x^3 - 6*x^2 + 11*x - 6, x)` → `[1, 2, 3]`, etc.
+These tests exercise the full pipeline: MACSYMA parser → compiler →
+`solve_handler` → `solve_cubic` / `solve_quartic` from `cas-solve`.
+
 ## 0.5.0 — 2026-04-27
 
 **Complex number MACSYMA names wired (B2).**

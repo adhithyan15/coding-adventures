@@ -12,25 +12,7 @@ authors = [{ name = "Adhithya Rajasekaran" }]
 readme = "README.md"
 keywords = ["cas", "number-theory", "primality", "factoring", "symbolic", "education"]
 dependencies = [
-    "coding-adventures-grammar-tools>=0.1.0",
-    "coding-adventures-graph>=0.1.0",
-    "coding-adventures-directed-graph>=0.1.0",
-    "coding-adventures-state-machine>=0.1.0",
-    "coding-adventures-lexer>=0.1.0",
-    "coding-adventures-parser>=0.1.0",
-    "coding-adventures-macsyma-lexer>=0.1.0",
-    "coding-adventures-macsyma-parser>=0.1.0",
     "coding-adventures-symbolic-ir>=0.5.0",
-    "coding-adventures-polynomial>=0.1.0",
-    "coding-adventures-macsyma-compiler>=0.1.0",
-    "coding-adventures-cas-pattern-matching>=0.1.0",
-    "coding-adventures-cas-substitution>=0.1.0",
-    "coding-adventures-cas-simplify>=0.1.0",
-    "coding-adventures-cas-factor>=0.1.0",
-    "coding-adventures-cas-solve>=0.1.0",
-    "coding-adventures-cas-list-operations>=0.1.0",
-    "coding-adventures-cas-matrix>=0.1.0",
-    "coding-adventures-cas-limit-series>=0.1.0",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",

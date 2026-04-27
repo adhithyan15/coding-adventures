@@ -28,6 +28,7 @@ SIMPLIFY = IRSymbol("Simplify")
 EXPAND = IRSymbol("Expand")
 FACTOR = IRSymbol("Factor")
 SOLVE = IRSymbol("Solve")
+NSOLVE = IRSymbol("NSolve")
 TAYLOR = IRSymbol("Taylor")
 LIMIT = IRSymbol("Limit")
 
@@ -80,6 +81,17 @@ JACOBI_SYMBOL = IRSymbol("JacobiSymbol")
 CHINESE_REMAINDER = IRSymbol("ChineseRemainder")
 INTEGER_LENGTH = IRSymbol("IntegerLength")
 
+# Trig transformation heads (B1)
+TRIG_SIMPLIFY = IRSymbol("TrigSimplify")
+TRIG_EXPAND = IRSymbol("TrigExpand")
+TRIG_REDUCE = IRSymbol("TrigReduce")
+
+# Rational function operations (A3)
+COLLECT = IRSymbol("Collect")
+TOGETHER = IRSymbol("Together")
+RAT_SIMPLIFY = IRSymbol("RatSimplify")
+APART = IRSymbol("Apart")
+
 # Complex number IR heads (B2)
 IMAGINARY_UNIT = IRSymbol("ImaginaryUnit")
 RE = IRSymbol("Re")
@@ -111,6 +123,8 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "expand": EXPAND,
     "factor": FACTOR,
     "solve": SOLVE,
+    "nsolve": NSOLVE,
+    "linsolve": SOLVE,  # MACSYMA's linsolve is linear-system solving
     "taylor": TAYLOR,
     "limit": LIMIT,
     # List operations
@@ -156,6 +170,15 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "jacobi": JACOBI_SYMBOL,
     "chinese": CHINESE_REMAINDER,
     "numdigits": INTEGER_LENGTH,
+    # Trig transformation operations (B1)
+    "trigsimp": TRIG_SIMPLIFY,
+    "trigexpand": TRIG_EXPAND,
+    "trigreduce": TRIG_REDUCE,
+    # Rational function operations (A3)
+    "collect": COLLECT,
+    "together": TOGETHER,
+    "ratsimp": RAT_SIMPLIFY,
+    "partfrac": APART,
     # Complex number operations (B2)
     # %i is the imaginary unit constant; the compiler maps the token to
     # IMAGINARY_UNIT so the VM finds the pre-bound symbol.

@@ -43,12 +43,16 @@ from cas_complex import IMAGINARY_UNIT as _IMAGINARY_UNIT
 from cas_complex import build_complex_handler_table as _build_complex
 from cas_complex.handlers import (
     abs_complex_handler as _abs_complex_handler,
+)
+from cas_complex.handlers import (
+    atan2_handler as _atan2_handler,
+)
+from cas_complex.handlers import (
     imaginary_power_handler as _imaginary_power_handler,
 )
 from cas_complex.normalize import contains_imaginary as _contains_imaginary
 from cas_factor import factor_integer_polynomial
 from cas_limit_series import PolynomialError, limit_direct, taylor_polynomial
-from cas_number_theory.handlers import build_number_theory_handler_table as _build_nt
 from cas_list_operations import (
     ListOperationError,
     append,
@@ -70,12 +74,41 @@ from cas_matrix import (
     matrix,
     transpose,
 )
+from cas_number_theory.handlers import build_number_theory_handler_table as _build_nt
 from cas_simplify import canonical, simplify
 from cas_solve import ALL, solve_linear, solve_quadratic
+from cas_solve import nsolve_fraction_poly as _nsolve_fraction_poly
+from cas_solve import solve_cubic as _solve_cubic
+from cas_solve import solve_linear_system as _solve_linear_system
+from cas_solve import solve_quartic as _solve_quartic
 from cas_substitution import subst
+from polynomial import (
+    degree as _poly_degree,
+)
+from polynomial import (
+    deriv as _poly_deriv,
+)
+from polynomial import (
+    divmod_poly as _poly_divmod,
+)
+from polynomial import (
+    evaluate as _poly_evaluate,
+)
+from polynomial import (
+    gcd as _poly_gcd,
+)
+from polynomial import (
+    monic as _poly_monic,
+)
+from polynomial import (
+    normalize as _poly_normalize,
+)
+from polynomial import (
+    rational_roots as _poly_rational_roots,
+)
 from symbolic_ir import (
     ADD,
-    EQUAL,
+    DIV,
     MUL,
     NEG,
     POW,
@@ -86,8 +119,9 @@ from symbolic_ir import (
     IRRational,
     IRSymbol,
 )
+
 from symbolic_vm.backend import Handler
-from symbolic_vm.numeric import Numeric, from_number, to_number
+from symbolic_vm.numeric import from_number, to_number
 from symbolic_vm.polynomial_bridge import from_polynomial, to_rational
 
 if TYPE_CHECKING:
@@ -112,7 +146,7 @@ _CONSTANT_NAMES = frozenset({"True", "False", "%pi", "%e", "%i"})
 # ===========================================================================
 
 
-def simplify_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def simplify_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Simplify(expr)`` — fixed-point canonical + identity-rule simplifier.
 
     Applies :func:`cas_simplify.simplify` to the already-evaluated inner
@@ -129,23 +163,280 @@ def simplify_handler(_vm: "VM", expr: IRApply) -> IRNode:
     return simplify(expr.args[0])
 
 
-def expand_handler(_vm: "VM", expr: IRApply) -> IRNode:
-    """``Expand(expr)`` — structural canonical form.
+def expand_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Expand(expr)`` — full polynomial expansion.
 
-    Phase 1 implementation: applies :func:`cas_simplify.canonical` which
-    flattens nested Add/Mul, sorts commutative operands, and drops
-    singleton wrappers. Full polynomial distribution (e.g.
-    ``(a+b)*(c+d) → ac+ad+bc+bd``) is deferred to Phase 2 when the
-    polynomial package is extended with a multiply-and-expand step.
+    Distributes ``Mul`` over ``Add`` and expands integer powers of
+    polynomials via the polynomial bridge. Works for single-variable
+    polynomials with rational (Q) coefficients. For multi-variable or
+    transcendental expressions (where :func:`~symbolic_vm.polynomial_bridge.to_rational`
+    returns ``None``) the implementation falls back to
+    :func:`cas_simplify.canonical`.
 
-    Returning the canonical form is the correct Phase 1 behaviour — it
-    matches what every CAS does for ``expand`` on an already-expanded
-    expression, and it normalises the sort order so subsequent rules fire
-    reliably.
+    Examples::
+
+        Expand(Mul(Add(x, 1), Add(x, 2)))  →  Add(Add(2, Mul(3, x)), Pow(x, 2))
+        Expand(Pow(Add(x, 1), 2))          →  Add(Add(1, Mul(2, x)), Pow(x, 2))
     """
     if len(expr.args) != 1:
         return expr
-    return canonical(expr.args[0])
+    inner = expr.args[0]
+
+    x = _find_variable(inner)
+    if x is None:
+        return canonical(inner)
+
+    rational = to_rational(inner, x)
+    if rational is None:
+        return canonical(inner)
+
+    num, den = rational
+    _ONE_FRAC: tuple[Fraction, ...] = (Fraction(1),)
+
+    if _poly_normalize(den) == _ONE_FRAC:
+        # Pure polynomial — emit fully expanded form
+        return from_polynomial(num, x)
+
+    # Rational function — expand numerator and denominator separately
+    return IRApply(DIV, (from_polynomial(num, x), from_polynomial(den, x)))
+
+
+# ===========================================================================
+# Section 1b: Rational function operations (A3) — Collect, Together,
+#             RatSimplify, Apart
+# ===========================================================================
+
+# Fraction sentinel for "unit polynomial denominator".
+_ONE_FRAC: tuple[Fraction, ...] = (Fraction(1),)
+
+
+def _frac_to_ir(f: Fraction) -> IRNode:
+    """Lift a ``Fraction`` coefficient to its canonical IR literal."""
+    if f.denominator == 1:
+        return IRInteger(f.numerator)
+    return IRRational(f.numerator, f.denominator)
+
+
+def collect_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Collect(expr, var)`` — collect terms by powers of ``var``.
+
+    Groups all terms in ``expr`` by their degree in ``var`` and returns the
+    collected polynomial form. Works for single-variable polynomials with
+    rational (Q) coefficients; returns unevaluated for symbolic coefficients
+    or transcendental sub-expressions.
+
+    MACSYMA syntax: ``collect(x^2 + 2*x + x^2, x)`` → ``2*x^2 + 2*x``.
+    """
+    if len(expr.args) != 2:
+        return expr
+    inner, var = expr.args
+    if not isinstance(var, IRSymbol):
+        return expr
+
+    rational = to_rational(inner, var)
+    if rational is None:
+        return expr  # Symbolic coefficients or transcendentals — can't collect
+
+    num, den = rational
+    if _poly_normalize(den) == _ONE_FRAC:
+        return from_polynomial(num, var)
+
+    # Rational function — collecting makes no sense; return unevaluated
+    return expr
+
+
+def together_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Together(expr)`` — combine rational sub-expressions over a common denominator.
+
+    Converts a sum of rational functions into a single fraction
+    ``P(x)/Q(x)`` with common denominator. The inverse of
+    :func:`apart_handler`.
+
+    MACSYMA syntax: ``together(1/x + 1/(x+1))`` → ``(2*x+1)/(x^2+x)``.
+    """
+    if len(expr.args) != 1:
+        return expr
+    inner = expr.args[0]
+    x = _find_variable(inner)
+    if x is None:
+        return canonical(inner)
+
+    rational = to_rational(inner, x)
+    if rational is None:
+        return canonical(inner)
+
+    num, den = rational
+    normalized_den = _poly_normalize(den)
+
+    if normalized_den == _ONE_FRAC:
+        return from_polynomial(num, x)
+
+    # Normalise denominator to monic for canonical form
+    lead = normalized_den[-1]
+    if lead != Fraction(1):
+        num_n = tuple(c / lead for c in num)
+        den_n = tuple(c / lead for c in normalized_den)
+    else:
+        num_n = num
+        den_n = normalized_den
+
+    return IRApply(DIV, (from_polynomial(num_n, x), from_polynomial(den_n, x)))
+
+
+def rat_simplify_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``RatSimplify(expr)`` — cancel common polynomial factors.
+
+    Computes the GCD of numerator and denominator and cancels it, reducing
+    the rational expression to lowest terms.
+
+    MACSYMA syntax: ``ratsimp((x^2-1)/(x-1))`` → ``x+1``.
+    """
+    if len(expr.args) != 1:
+        return expr
+    inner = expr.args[0]
+    x = _find_variable(inner)
+    if x is None:
+        return simplify(inner)
+
+    rational = to_rational(inner, x)
+    if rational is None:
+        return canonical(inner)
+
+    num, den = rational
+    normalized_den = _poly_normalize(den)
+
+    if normalized_den == _ONE_FRAC:
+        return from_polynomial(num, x)
+
+    # Cancel common GCD between numerator and denominator
+    common = _poly_gcd(num, den)
+    common_monic = _poly_monic(common)
+
+    if _poly_degree(common_monic) >= 1:
+        # Non-trivial common factor — divide it out
+        num_red, _ = _poly_divmod(num, common_monic)
+        den_red, _ = _poly_divmod(den, common_monic)
+        den_norm = _poly_normalize(den_red)
+    else:
+        num_red = num
+        den_norm = normalized_den
+
+    if den_norm == _ONE_FRAC:
+        return from_polynomial(num_red, x)
+
+    # Emit as Div(P, Q) with monic denominator
+    lead = den_norm[-1]
+    if lead != Fraction(1):
+        num_final: tuple[Fraction, ...] = tuple(c / lead for c in num_red)
+        den_final: tuple[Fraction, ...] = tuple(c / lead for c in den_norm)
+    else:
+        num_final = num_red  # type: ignore[assignment]
+        den_final = den_norm  # type: ignore[assignment]
+
+    return IRApply(DIV, (from_polynomial(num_final, x), from_polynomial(den_final, x)))
+
+
+def _apart_proper(
+    num: tuple[Fraction, ...],
+    den: tuple[Fraction, ...],
+    x: IRSymbol,
+) -> IRNode | None:
+    """Partial-fraction decompose a *proper* rational function (deg num < deg den).
+
+    Phase 1: handles only denominators whose roots are all distinct rational
+    numbers (= all roots are from ``polynomial.rational_roots``). Returns
+    ``None`` if the denominator has irreducible quadratic factors or
+    repeated roots.
+
+    Uses the residue formula ``A_i = P(r_i) / Q'(r_i)`` for each simple
+    pole ``r_i``.
+    """
+    roots = _poly_rational_roots(den)
+    if len(roots) != _poly_degree(den):
+        return None  # Irreducible quadratic or repeated factors
+
+    den_deriv = _poly_deriv(den)
+    terms: list[IRNode] = []
+
+    for r in roots:
+        num_val = _poly_evaluate(num, r)
+        den_d_val = _poly_evaluate(den_deriv, r)
+        if den_d_val == 0:
+            return None  # Repeated root (shouldn't happen for distinct roots)
+
+        A = Fraction(num_val) / Fraction(den_d_val)
+
+        # Linear factor: (x − r) as IR
+        neg_r = Fraction(-1) * (r if isinstance(r, Fraction) else Fraction(r))
+        factor_ir = from_polynomial((neg_r, Fraction(1)), x)
+
+        # Emit A / (x − r) — drop explicit coefficient of ±1
+        if A == 1:
+            terms.append(IRApply(DIV, (IRInteger(1), factor_ir)))
+        elif A == -1:
+            terms.append(IRApply(NEG, (IRApply(DIV, (IRInteger(1), factor_ir)),)))
+        else:
+            terms.append(IRApply(DIV, (_frac_to_ir(A), factor_ir)))
+
+    if not terms:
+        return IRInteger(0)
+    if len(terms) == 1:
+        return terms[0]
+
+    acc: IRNode = terms[0]
+    for t in terms[1:]:
+        acc = IRApply(ADD, (acc, t))
+    return acc
+
+
+def apart_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Apart(expr, var)`` — partial fraction decomposition.
+
+    Decomposes a rational function ``P(x)/Q(x)`` into a sum of simpler
+    partial fractions. Phase 1 implementation handles denominators with
+    only simple (non-repeated) rational roots; returns unevaluated when
+    the denominator has irreducible quadratic factors or repeated roots.
+
+    If ``deg(P) ≥ deg(Q)`` (improper fraction) the polynomial part is
+    separated first: ``P/Q = poly_part + proper_fraction``.
+
+    MACSYMA syntax: ``partfrac(1/(x^2-1), x)``
+    → ``-1/(2*(1+x)) + 1/(2*(-1+x))``.
+    """
+    if len(expr.args) != 2:
+        return expr
+    inner, var = expr.args
+    if not isinstance(var, IRSymbol):
+        return expr
+
+    rational = to_rational(inner, var)
+    if rational is None:
+        return expr
+
+    num, den = rational
+    if _poly_normalize(den) == _ONE_FRAC:
+        return from_polynomial(num, var)  # Already a polynomial
+
+    num_deg = _poly_degree(num)
+    den_deg = _poly_degree(den)
+
+    if num_deg >= den_deg:
+        # Improper fraction — polynomial division first
+        q, r = _poly_divmod(num, den)
+        if not _poly_normalize(r):
+            return from_polynomial(q, var)  # Exact division
+
+        proper_result = _apart_proper(r, den, var)
+        if proper_result is None:
+            return expr  # Denominator not fully factorable
+
+        poly_part = from_polynomial(q, var)
+        return IRApply(ADD, (poly_part, proper_result))
+
+    result = _apart_proper(num, den, var)
+    if result is None:
+        return expr
+    return result
 
 
 # ===========================================================================
@@ -153,7 +444,7 @@ def expand_handler(_vm: "VM", expr: IRApply) -> IRNode:
 # ===========================================================================
 
 
-def subst_handler(vm: "VM", expr: IRApply) -> IRNode:
+def subst_handler(vm: VM, expr: IRApply) -> IRNode:
     """``Subst(value, var, target)`` — structural substitution then re-eval.
 
     Replaces every occurrence of ``var`` in ``target`` with ``value`` (the
@@ -263,20 +554,21 @@ def _factor_result_to_ir(
     return acc
 
 
-def factor_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def factor_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Factor(expr)`` — factor a univariate integer polynomial over Z.
 
-    Phase 1: finds all integer-valued rational roots via the rational-root
-    theorem, divides them out, and leaves any irreducible residual as a
-    single factor. Example::
+    Uses rational-root extraction (Phase 1) followed by Kronecker's
+    algorithm (Phase 2) to find all irreducible factors.  Examples::
 
-        Factor(x^2 - 1)  →  Mul(Sub(x, 1), Add(x, 1))
+        Factor(x^2 - 1)      →  Mul(Sub(x, 1), Add(x, 1))
         Factor(2*x^2 + 4*x + 2)  →  Mul(2, Pow(Add(x, 1), 2))
+        Factor(x^4 + 4)      →  Mul(x^2+2x+2, x^2-2x+2)  [Sophie Germain]
+        Factor(x^4+x^2+1)    →  Mul(x^2+x+1, x^2-x+1)    [cyclotomic]
 
     Returns the expression unevaluated if:
     - There is no free variable (purely numeric — no factoring needed).
     - The expression is not a polynomial in the identified variable.
-    - The polynomial has non-integer-valued rational roots (irreducible).
+    - The polynomial is irreducible over Z (e.g. ``x^2 + 1``).
     """
     if len(expr.args) != 1:
         return expr
@@ -363,31 +655,55 @@ def _ir_to_fraction_poly(
     return num_frac  # (c_0, c_1, ...) as Fraction
 
 
-def solve_handler(_vm: "VM", expr: IRApply) -> IRNode:
-    """``Solve(equation, var)`` — closed-form solutions over Q.
+def solve_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Solve(equation, var)`` or ``Solve(List(eqs...), List(vars...))``.
 
-    Handles linear and quadratic equations. The first argument is either:
+    Single-equation form
+    --------------------
+    The first argument is either:
 
     - A bare expression ``f(var)`` — treated as ``f(var) = 0``.
     - ``Equal(lhs, rhs)`` — treated as ``lhs - rhs = 0``.
 
-    Returns ``List(sol1, sol2, ...)`` of :class:`~symbolic_ir.IRInteger`
-    or :class:`~symbolic_ir.IRRational` nodes.  Complex roots from the
-    quadratic formula (e.g. ``x^2 + 1 = 0``) are returned as
-    ``IRApply(Mul, (IRInteger(-1), IRApply(Sqrt, (IRInteger(-1),))))`` — the
-    CAS renders them symbolically. Returns the expression unevaluated for
-    degree > 2.
+    Returns ``List(sol1, sol2, ...)`` of IR nodes.  Complex roots use
+    ``%i`` (``IRSymbol("%i")``) as the imaginary unit.  Returns the
+    expression unevaluated for degree > 4 or polynomials that
+    Cardano/Ferrari cannot resolve.
 
-    Truth-table for coefficients::
-
-        degree 1: a*x + b = 0  →  [x = -b/a]
-        degree 2: a*x^2 + b*x + c = 0  →  quadratic formula solutions
-        degree 0 with b ≠ 0: no solution → []
-        degree 0 with b = 0: all x satisfy → ``all`` symbol
+    System form (linear systems only)
+    ----------------------------------
+    ``Solve(List(eq1, eq2, ...), List(x, y, ...))`` solves a linear system
+    by Gaussian elimination.  Returns ``List(Rule(x, val), Rule(y, val),
+    ...)`` or the expression unevaluated if the system is non-linear,
+    singular, or under/over-determined.
     """
     if len(expr.args) != 2:
         return expr
     eq_ir, var_ir = expr.args
+
+    # -----------------------------------------------------------------
+    # System form: Solve(List(eqs...), List(vars...))
+    # -----------------------------------------------------------------
+    if (
+        isinstance(eq_ir, IRApply)
+        and isinstance(eq_ir.head, IRSymbol)
+        and eq_ir.head.name == "List"
+        and isinstance(var_ir, IRApply)
+        and isinstance(var_ir.head, IRSymbol)
+        and var_ir.head.name == "List"
+    ):
+        equations = list(eq_ir.args)
+        variables = [v for v in var_ir.args if isinstance(v, IRSymbol)]
+        if len(variables) != len(var_ir.args):
+            return expr  # Non-symbol in variable list
+        result = _solve_linear_system(equations, variables)
+        if result is None:
+            return expr  # Non-linear, singular, or wrong size
+        return IRApply(IRSymbol("List"), tuple(result))
+
+    # -----------------------------------------------------------------
+    # Single-equation form: Solve(eq, var)
+    # -----------------------------------------------------------------
     if not isinstance(var_ir, IRSymbol):
         return expr
 
@@ -419,9 +735,66 @@ def solve_handler(_vm: "VM", expr: IRApply) -> IRNode:
         c_coeff = coeffs[0]
         solutions = solve_quadratic(a_coeff, b_coeff, c_coeff)
         return IRApply(IRSymbol("List"), tuple(solutions))
+    if deg == 3:
+        # a*x^3 + b*x^2 + c*x + d = 0
+        # coeffs order: (c_0=d, c_1=c, c_2=b, c_3=a)
+        a_coeff = coeffs[3]
+        b_coeff = coeffs[2]
+        c_coeff = coeffs[1]
+        d_coeff = coeffs[0]
+        solutions = _solve_cubic(a_coeff, b_coeff, c_coeff, d_coeff)
+        if isinstance(solutions, str) or not solutions:
+            return expr  # unevaluated (casus irreducibilis or no sol)
+        return IRApply(IRSymbol("List"), tuple(solutions))
+    if deg == 4:
+        # a*x^4 + b*x^3 + c*x^2 + d*x + e = 0
+        a_coeff = coeffs[4]
+        b_coeff = coeffs[3]
+        c_coeff = coeffs[2]
+        d_coeff = coeffs[1]
+        e_coeff = coeffs[0]
+        solutions = _solve_quartic(a_coeff, b_coeff, c_coeff, d_coeff, e_coeff)
+        if isinstance(solutions, str) or not solutions:
+            return expr  # unevaluated
+        return IRApply(IRSymbol("List"), tuple(solutions))
 
-    # Degree > 2: return unevaluated.
+    # Degree > 4: return unevaluated (use NSolve for numeric roots).
     return expr
+
+
+def nsolve_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``NSolve(polynomial, var)`` — numeric root-finding via Durand–Kerner.
+
+    Finds all roots of a univariate polynomial numerically using the
+    Durand-Kerner (Weierstrass) method.  Returns
+    ``List(root1, root2, ...)`` where each root is an ``IRFloat`` (real
+    roots) or an ``IRApply(Add, (IRFloat(re), Mul(IRFloat(im), %i)))``
+    (complex roots).
+
+    Accepts any degree ≥ 1 polynomial.  Coefficients must be rational
+    (``IRInteger`` or ``IRRational``).  Returns the expression unevaluated
+    if the input is not a rational polynomial.
+    """
+    if len(expr.args) != 2:
+        return expr
+    eq_ir, var_ir = expr.args
+    if not isinstance(var_ir, IRSymbol):
+        return expr
+
+    poly_ir = _unwrap_equation(eq_ir)
+    coeffs = _ir_to_fraction_poly(poly_ir, var_ir)
+    if coeffs is None:
+        return expr
+
+    deg = len(coeffs) - 1
+    if deg < 1:
+        return expr  # constant — no numeric roots
+
+    # coeffs is (c_0, c_1, ..., c_n) ascending degree;
+    # nsolve_fraction_poly expects descending degree.
+    coeffs_desc = list(reversed(coeffs))
+    ir_roots = _nsolve_fraction_poly(coeffs_desc)
+    return IRApply(IRSymbol("List"), tuple(ir_roots))
 
 
 # ===========================================================================
@@ -440,7 +813,7 @@ def _as_list_args(node: IRNode) -> tuple[IRNode, ...]:
     raise ListOperationError(f"expected a List, got {node!r}")
 
 
-def length_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def length_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Length(list)`` → number of elements as ``IRInteger``."""
     if len(expr.args) != 1:
         return expr
@@ -450,7 +823,7 @@ def length_handler(_vm: "VM", expr: IRApply) -> IRNode:
         return expr
 
 
-def first_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def first_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``First(list)`` → the first element."""
     if len(expr.args) != 1:
         return expr
@@ -460,7 +833,7 @@ def first_handler(_vm: "VM", expr: IRApply) -> IRNode:
         return expr
 
 
-def rest_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def rest_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Rest(list)`` → all elements except the first."""
     if len(expr.args) != 1:
         return expr
@@ -470,7 +843,7 @@ def rest_handler(_vm: "VM", expr: IRApply) -> IRNode:
         return expr
 
 
-def last_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def last_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Last(list)`` → the last element."""
     if len(expr.args) != 1:
         return expr
@@ -480,7 +853,7 @@ def last_handler(_vm: "VM", expr: IRApply) -> IRNode:
         return expr
 
 
-def append_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def append_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Append(list1, list2, …)`` → concatenated list.
 
     Accepts two or more lists. MACSYMA's ``append`` also accepts multiple
@@ -494,7 +867,7 @@ def append_handler(_vm: "VM", expr: IRApply) -> IRNode:
         return expr
 
 
-def reverse_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def reverse_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Reverse(list)`` → elements in reverse order."""
     if len(expr.args) != 1:
         return expr
@@ -504,7 +877,7 @@ def reverse_handler(_vm: "VM", expr: IRApply) -> IRNode:
         return expr
 
 
-def range_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def range_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Range(n)`` / ``Range(start, stop)`` / ``Range(start, stop, step)``.
 
     Single-argument form ``Range(n)`` produces ``[1, 2, …, n]`` (the
@@ -535,7 +908,7 @@ def range_handler(_vm: "VM", expr: IRApply) -> IRNode:
         return expr
 
 
-def map_handler(vm: "VM", expr: IRApply) -> IRNode:
+def map_handler(vm: VM, expr: IRApply) -> IRNode:
     """``Map(f, list)`` → ``[f(a), f(b), f(c), …]`` evaluated through the VM.
 
     ``f`` is any IR node that can appear as a head (typically an
@@ -559,7 +932,7 @@ def map_handler(vm: "VM", expr: IRApply) -> IRNode:
     return IRApply(IRSymbol("List"), results)
 
 
-def apply_handler(vm: "VM", expr: IRApply) -> IRNode:
+def apply_handler(vm: VM, expr: IRApply) -> IRNode:
     """``Apply(f, list)`` → ``f(a, b, c, …)`` evaluated through the VM.
 
     Replaces the ``List`` head with ``f`` and evaluates the result.
@@ -575,7 +948,7 @@ def apply_handler(vm: "VM", expr: IRApply) -> IRNode:
     return vm.eval(IRApply(f, elems))
 
 
-def select_handler(vm: "VM", expr: IRApply) -> IRNode:
+def select_handler(vm: VM, expr: IRApply) -> IRNode:
     """``Select(pred, list)`` → elements ``e`` for which ``pred(e)`` is ``True``.
 
     ``pred`` must be a function-head IR node. It is called with each list
@@ -598,7 +971,7 @@ def select_handler(vm: "VM", expr: IRApply) -> IRNode:
     return IRApply(IRSymbol("List"), tuple(kept))
 
 
-def sort_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def sort_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Sort(list)`` → stable sort by canonical ``repr`` key.
 
     Uses the same ordering as :func:`cas_simplify.canonical` — numerics
@@ -613,7 +986,7 @@ def sort_handler(_vm: "VM", expr: IRApply) -> IRNode:
         return expr
 
 
-def part_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def part_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Part(list, index)`` → 1-based element access.
 
     ``Part(lst, 1)`` is the first element; ``Part(lst, -1)`` is the last.
@@ -631,7 +1004,7 @@ def part_handler(_vm: "VM", expr: IRApply) -> IRNode:
         return expr
 
 
-def flatten_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def flatten_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Flatten(list)`` / ``Flatten(list, depth)`` → flattened list.
 
     Default depth is 1 (one level of nesting). Pass an ``IRInteger``
@@ -649,7 +1022,7 @@ def flatten_handler(_vm: "VM", expr: IRApply) -> IRNode:
         return expr
 
 
-def join_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def join_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Join(list1, list2, …)`` → concatenation (alias for ``Append``)."""
     if len(expr.args) < 2:
         return expr
@@ -664,7 +1037,7 @@ def join_handler(_vm: "VM", expr: IRApply) -> IRNode:
 # ===========================================================================
 
 
-def matrix_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def matrix_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Matrix(List(…), List(…), …)`` → validated ``Matrix`` IR node.
 
     Each argument must be a ``List`` of equal length (the rows). The
@@ -681,7 +1054,7 @@ def matrix_handler(_vm: "VM", expr: IRApply) -> IRNode:
         return expr
 
 
-def transpose_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def transpose_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Transpose(M)`` → matrix with rows and columns swapped."""
     if len(expr.args) != 1:
         return expr
@@ -691,7 +1064,7 @@ def transpose_handler(_vm: "VM", expr: IRApply) -> IRNode:
         return expr
 
 
-def determinant_handler(vm: "VM", expr: IRApply) -> IRNode:
+def determinant_handler(vm: VM, expr: IRApply) -> IRNode:
     """``Determinant(M)`` → scalar.
 
     Computes the symbolic determinant via cofactor expansion, then
@@ -709,7 +1082,7 @@ def determinant_handler(vm: "VM", expr: IRApply) -> IRNode:
         return expr
 
 
-def inverse_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def inverse_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Inverse(M)`` → matrix whose entries are IR rational expressions."""
     if len(expr.args) != 1:
         return expr
@@ -724,7 +1097,7 @@ def inverse_handler(_vm: "VM", expr: IRApply) -> IRNode:
 # ===========================================================================
 
 
-def limit_handler(vm: "VM", expr: IRApply) -> IRNode:
+def limit_handler(vm: VM, expr: IRApply) -> IRNode:
     """``Limit(expr, var, point)`` — direct-substitution limit.
 
     Phase 1: substitutes ``point`` for ``var`` in ``expr`` via
@@ -745,7 +1118,7 @@ def limit_handler(vm: "VM", expr: IRApply) -> IRNode:
     return vm.eval(simplify(result))
 
 
-def taylor_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def taylor_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Taylor(expr, var, point, order)`` — truncated Taylor polynomial.
 
     Expands the polynomial ``expr`` around ``point`` to the given
@@ -803,7 +1176,7 @@ def _numeric_binary(
     return from_number(fn(a, b))
 
 
-def abs_handler(vm: "VM", expr: IRApply) -> IRNode:
+def abs_handler(vm: VM, expr: IRApply) -> IRNode:
     """``Abs(x)`` → absolute value.
 
     For complex inputs (containing ``ImaginaryUnit``), delegates to
@@ -816,17 +1189,17 @@ def abs_handler(vm: "VM", expr: IRApply) -> IRNode:
     return _numeric_unary(expr, abs)
 
 
-def floor_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def floor_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Floor(x)`` → greatest integer ≤ x."""
     return _numeric_unary(expr, lambda n: Fraction(math.floor(n)))
 
 
-def ceiling_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def ceiling_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Ceiling(x)`` → smallest integer ≥ x."""
     return _numeric_unary(expr, lambda n: Fraction(math.ceil(n)))
 
 
-def mod_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def mod_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Mod(a, b)`` → ``a mod b``. Both arguments must be numeric."""
     if len(expr.args) != 2:
         return expr
@@ -841,7 +1214,7 @@ def mod_handler(_vm: "VM", expr: IRApply) -> IRNode:
     return from_number(float(a) % float(b))
 
 
-def gcd_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def gcd_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Gcd(a, b)`` → greatest common divisor. Both must be integers."""
     if len(expr.args) != 2:
         return expr
@@ -854,7 +1227,7 @@ def gcd_handler(_vm: "VM", expr: IRApply) -> IRNode:
     return IRInteger(math.gcd(a.numerator, b.numerator))
 
 
-def lcm_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def lcm_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Lcm(a, b)`` → least common multiple. Both must be integers."""
     if len(expr.args) != 2:
         return expr
@@ -874,7 +1247,7 @@ def lcm_handler(_vm: "VM", expr: IRApply) -> IRNode:
 _EQUAL_HEAD = "Equal"
 
 
-def lhs_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def lhs_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Lhs(eq)`` → left-hand side of equation ``Equal(a, b)`` → ``a``.
 
     MACSYMA syntax: ``lhs(x = 3)`` → ``x``.
@@ -894,7 +1267,7 @@ def lhs_handler(_vm: "VM", expr: IRApply) -> IRNode:
     return expr
 
 
-def rhs_handler(_vm: "VM", expr: IRApply) -> IRNode:
+def rhs_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Rhs(eq)`` → right-hand side of equation ``Equal(a, b)`` → ``b``.
 
     MACSYMA syntax: ``rhs(x = 3)`` → ``3``.
@@ -921,7 +1294,7 @@ def rhs_handler(_vm: "VM", expr: IRApply) -> IRNode:
 _LIST_HEAD = IRSymbol("List")
 
 
-def make_list_handler(vm: "VM", expr: IRApply) -> IRNode:
+def make_list_handler(vm: VM, expr: IRApply) -> IRNode:
     """``MakeList(expr, var, n)`` or ``MakeList(expr, var, from, to[, step])``.
 
     Evaluates *expr* for *var* = each integer in the specified range and
@@ -985,7 +1358,7 @@ def make_list_handler(vm: "VM", expr: IRApply) -> IRNode:
 # ===========================================================================
 
 
-def at_handler(vm: "VM", expr: IRApply) -> IRNode:
+def at_handler(vm: VM, expr: IRApply) -> IRNode:
     """``At(expr, Equal(var, val))`` → evaluate *expr* at *var* = *val*.
 
     MACSYMA syntax: ``at(x^2 + 1, x = 3)`` → ``10``.
@@ -1058,12 +1431,18 @@ def build_cas_handler_table() -> dict[str, Handler]:
         # --- cas_simplify ---------------------------------------------------
         "Simplify": simplify_handler,
         "Expand": expand_handler,
+        # --- rational function operations (A3) ------------------------------
+        "Collect": collect_handler,
+        "Together": together_handler,
+        "RatSimplify": rat_simplify_handler,
+        "Apart": apart_handler,
         # --- cas_substitution -----------------------------------------------
         "Subst": subst_handler,
         # --- cas_factor -----------------------------------------------------
         "Factor": factor_handler,
         # --- cas_solve -------------------------------------------------------
         "Solve": solve_handler,
+        "NSolve": nsolve_handler,
         # --- cas_list_operations --------------------------------------------
         "Length": length_handler,
         "First": first_handler,
@@ -1111,6 +1490,8 @@ def build_cas_handler_table() -> dict[str, Handler]:
         # complex inputs.  Imaginary power reduction is wired separately
         # into the Pow handler by SymbolicBackend.__init__.
         **_build_complex(),
+        # --- atan2 (numeric two-argument arctangent) -------------------------
+        "Atan2": _atan2_handler,
     }
 
 

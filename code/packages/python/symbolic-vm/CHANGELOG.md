@@ -1,5 +1,113 @@
 # Changelog
 
+## 0.27.0 — 2026-04-27
+
+**Roadmap item A1 — Kronecker polynomial factoring (Phase 2) wired through `cas-factor 0.2.0`.**
+
+Upgrades `coding-adventures-cas-factor` dependency to `>=0.2.0`.
+
+The `Factor` handler in `build_cas_handler_table()` transparently benefits
+from `cas-factor`'s new Kronecker algorithm — no handler code changes needed.
+Factoring now handles:
+
+- **Sophie Germain identity**: `x⁴ + 4 = (x²+2x+2)(x²−2x+2)`
+- **Cyclotomic**: `x⁴+x²+1 = (x²+x+1)(x²−x+1)`
+- **Repeated irreducibles**: `x⁴+2x²+1 = (x²+1)²`
+- **Mixed**: `(x²+1)(x−2)` correctly split
+
+Updated `factor_handler` docstring to reflect Phase 2 capabilities.
+
+2 new tests in `test_cas_handlers.py` (Sophie Germain, cyclotomic), verifying
+that `Factor(x⁴+4)` and `Factor(x⁴+x²+1)` both return non-trivial `Mul` trees.
+
+## 0.26.0 — 2026-04-27
+
+**Roadmap item A3 — rational function operations (Collect, Together, RatSimplify, Apart, full Expand).**
+
+`Expand` handler upgraded from a `canonical()`-only pass to full polynomial
+distribution via the polynomial bridge.  Four new IR heads wired into
+`SymbolicBackend` via `build_cas_handler_table()`:
+
+- **`Expand`** (improved): calls `to_rational` + `from_polynomial` to distribute
+  `Mul` over `Add` and expand integer powers for single-variable polynomials
+  with rational coefficients. Falls back to `canonical` for multi-variable /
+  transcendental expressions.
+- **`Collect(expr, var)`**: groups terms by powers of `var` for single-variable
+  polynomials with rational coefficients (same mechanism as `Expand` but takes
+  an explicit variable argument). MACSYMA surface: `collect`.
+- **`Together(expr)`**: combines a sum of rational functions into a single
+  fraction `P(x)/Q(x)` with monic denominator. MACSYMA surface: `together`.
+- **`RatSimplify(expr)`**: cancels the GCD of numerator and denominator,
+  reducing the rational expression to lowest terms. MACSYMA surface: `ratsimp`.
+- **`Apart(expr, var)`**: partial-fraction decomposition (Phase 1 — distinct
+  rational linear factors only). Uses residue formula `A_i = P(r_i)/Q'(r_i)`.
+  MACSYMA surface: `partfrac`. Falls back to unevaluated for irreducible
+  quadratic or repeated factors.
+
+**Dependencies**: `coding-adventures-polynomial` was already in
+`pyproject.toml`; the new handlers import `gcd`, `monic`, `deriv`,
+`evaluate`, `rational_roots`, `divmod_poly` directly from `polynomial`.
+
+**New tests (18 in Section 14 of `test_cas_handlers.py`)** +
+**6 new pipeline tests in `macsyma-runtime`**.
+
+## 0.25.0 — 2026-04-27
+
+**Roadmap item B1 (cas-trig) wired into SymbolicBackend.**
+
+`cas-trig` is now a dependency. Its handler table is merged via
+`_build_trig()` in `SymbolicBackend.__init__`.
+
+**New IR heads** (3 total):
+`TrigSimplify`, `TrigExpand`, `TrigReduce`.
+
+- `TrigSimplify`: Pythagorean identity (`sin²+cos²→1`), sign rules
+  (`sin(-x)→-sin(x)`, `cos(-x)→cos(x)`), and special-value lookup
+  (`sin(π/6)→1/2`, etc.).
+- `TrigExpand`: angle-addition formulas and Chebyshev recurrence for
+  integer multiples (`sin(2x)→2sin(x)cos(x)`, `cos(3x)→...`).
+- `TrigReduce`: power-to-multiple-angle reduction
+  (`sin²(x)→(1-cos(2x))/2`, `cos³(x)→(3cos(x)+cos(3x))/4`, etc.).
+
+**Dependencies updated:**
+- `cas-trig>=0.1.0` added to `pyproject.toml`.
+
+**New tests (5 in `test_cas_handlers.py`)** + **5 pipeline tests**.
+
+## 0.24.0 — 2026-04-27
+
+**Roadmap items A2c + A2d (NSolve and linear systems) wired in.**
+
+- `solve_handler` extended to detect `Solve(List(eqs...), List(vars...))`
+  and route it to `solve_linear_system` (Gaussian elimination, exact
+  rational arithmetic). Returns `List(Rule(var, val), ...)`.
+- `nsolve_handler` added for `NSolve(poly, var)`: Durand-Kerner iteration
+  returning `IRFloat`/complex IR roots for any polynomial degree.
+- `MACSYMA_NAME_TABLE` gains `"nsolve"→NSolve` and `"linsolve"→Solve`.
+- `cas-solve>=0.6.0` dependency pin updated.
+- 4 new tests in `test_cas_handlers.py` + 4 new pipeline tests.
+
+## 0.23.0 — 2026-04-27
+
+**Roadmap items A2a + A2b (cubic and quartic solvers) wired into `solve_handler`.**
+
+The `Solve` handler in `cas_handlers.py` now supports degree-3 and degree-4
+polynomials via `cas-solve`'s new `solve_cubic` and `solve_quartic`:
+
+- **Degree 3**: routes through `solve_cubic` (rational-root theorem → Cardano).
+  Returns a `List` of roots, or unevaluated for casus irreducibilis.
+- **Degree 4**: routes through `solve_quartic` (rational-root theorem →
+  biquadratic → Ferrari). Returns a `List` of roots, or unevaluated when the
+  Ferrari resolvent has no rational root.
+- Empty or "ALL" results are propagated as unevaluated expressions.
+
+**Dependencies updated:**
+- `cas-solve` bumped to `>=0.4.0` in `pyproject.toml`.
+
+**New tests (4 in `test_cas_handlers.py`):**
+`test_solve_cubic_three_rational`, `test_solve_cubic_one_rational_two_complex`,
+`test_solve_quartic_four_rational`, `test_solve_degree_5_passthrough`.
+
 ## 0.22.0 — 2026-04-27
 
 **Roadmap item B2 (cas-complex) wired into SymbolicBackend.**

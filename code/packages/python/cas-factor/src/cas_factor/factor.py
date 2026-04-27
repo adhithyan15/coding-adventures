@@ -3,11 +3,12 @@
 Given an integer polynomial as a coefficient list, returns:
 
 1. The integer ``content`` — the GCD of every coefficient.
-2. A list of ``(factor, multiplicity)`` pairs over Q where each
-   ``factor`` is itself a coefficient list. Phase 1 only finds
-   *linear* factors via the rational-root test; the residual after
-   dividing all of those out is appended as a single factor with
-   multiplicity 1 if it isn't trivial.
+2. A list of ``(factor, multiplicity)`` pairs over Z where each
+   ``factor`` is itself a coefficient list.
+
+Phase 1 extracts *linear* factors via the rational-root test.
+Phase 2 (Kronecker) recursively factors any remaining residual into
+irreducible pieces over Z.
 
 Examples::
 
@@ -21,24 +22,69 @@ Examples::
 
     factor_integer_polynomial([1, 0, 1])
     # (1, [([1, 0, 1], 1)])
-    # i.e. 1 * (x^2 + 1) — Phase 1 leaves the irreducible quadratic intact
+    # i.e. 1 * (x^2 + 1) — irreducible over Z
+
+    factor_integer_polynomial([4, 0, 0, 0, 1])
+    # (1, [([2, 2, 1], 1), ([2, -2, 1], 1)])
+    # i.e. 1 * (x^2 + 2x + 2) * (x^2 - 2x + 2)  [Sophie Germain identity]
 """
 
 from __future__ import annotations
 
-from cas_factor.polynomial import Poly, content, primitive_part
+from cas_factor.kronecker import kronecker_factor
+from cas_factor.polynomial import Poly, content, degree, normalize, primitive_part
 from cas_factor.rational_roots import extract_linear_factors
 
 # A factored polynomial is a list of (factor_coeffs, multiplicity).
 FactorList = list[tuple[Poly, int]]
 
 
-def factor_integer_polynomial(p: Poly) -> tuple[int, FactorList]:
-    """Factor ``p`` over Z[x] (linear factors via rational-root test).
+def _factor_residual(residual: Poly) -> FactorList:
+    """Recursively factor *residual* using Kronecker's method.
 
-    Returns ``(content, factors)``. The product equals ``p`` modulo a
-    sign (we pick a positive content; signs of individual factors are
-    chosen so that the product matches).
+    Starts a work-queue with the residual.  At each step, if Kronecker
+    finds a split, both pieces are re-queued.  Otherwise the piece is
+    recorded as irreducible.  Identical factors accumulate their
+    multiplicities.
+    """
+    factors_dict: dict[tuple[int, ...], int] = {}
+    queue: list[Poly] = [normalize(residual)]
+
+    while queue:
+        piece = normalize(queue.pop())
+        if not piece or degree(piece) <= 0:
+            continue
+
+        if degree(piece) == 1:
+            # Linear piece — normalise to positive leading coefficient.
+            if piece[-1] < 0:
+                piece = [-c for c in piece]
+            key = tuple(piece)
+            factors_dict[key] = factors_dict.get(key, 0) + 1
+            continue
+
+        split = kronecker_factor(piece)
+        if split is None:
+            # Irreducible (within the combo budget).
+            if piece[-1] < 0:
+                piece = [-c for c in piece]
+            key = tuple(piece)
+            factors_dict[key] = factors_dict.get(key, 0) + 1
+        else:
+            f1, f2 = split
+            queue.append(f1)
+            queue.append(f2)
+
+    return [(list(k), mult) for k, mult in factors_dict.items()]
+
+
+def factor_integer_polynomial(p: Poly) -> tuple[int, FactorList]:
+    """Factor ``p`` over Z[x].
+
+    Returns ``(content, factors)`` where ``content`` is the positive
+    integer GCD of all coefficients and ``factors`` is a list of
+    ``(poly_coeffs, multiplicity)`` pairs whose product equals the
+    primitive part of ``p``.
     """
     if not p:
         return (0, [])
@@ -48,15 +94,15 @@ def factor_integer_polynomial(p: Poly) -> tuple[int, FactorList]:
 
     factors: FactorList = []
     for root, mult in linear_factors:
-        # Linear factor (x - root) → coefficients [-root, 1].
+        # Linear factor (x − root) → coefficients [−root, 1].
         factors.append(([-root, 1], mult))
 
-    # The residual may still be ±1 (everything pulled out) or a
-    # higher-degree irreducible. Append it iff it's non-trivial.
+    # The residual may still factor further (irreducible quadratics, Sophie
+    # Germain quartics, repeated quadratics, …).  Append iff non-trivial.
     if residual and residual != [1] and residual != [-1]:
-        factors.append((residual, 1))
+        factors.extend(_factor_residual(residual))
     elif residual == [-1]:
-        # Pull the -1 into the content.
+        # Pull the −1 sign into the content.
         c = -c
 
     return (c, factors)

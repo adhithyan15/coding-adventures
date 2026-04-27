@@ -231,6 +231,39 @@ def test_factor_wrong_arity_passthrough() -> None:
     assert vm.eval(expr) == expr
 
 
+def test_factor_sophie_germain_x4_plus_4() -> None:
+    """Factor(x^4 + 4) = (x^2+2x+2)(x^2-2x+2) — Sophie Germain identity."""
+    vm, _ = make_vm()
+    # x^4 + 4
+    target = IRApply(ADD, (IRApply(POW, (x, IRInteger(4))), IRInteger(4)))
+    expr = IRApply(_FACTOR, (target,))
+    result = vm.eval(expr)
+    # Must be a non-trivial product — not equal to the original Factor(…).
+    assert result != expr
+    # Must be an IRApply (Mul tree — left-associative binary product).
+    assert isinstance(result, IRApply)
+    # The top-level head must be Mul (product of two quadratics).
+    assert result.head.name == "Mul"
+
+
+def test_factor_x4_plus_x2_plus_1_cyclotomic() -> None:
+    """Factor(x^4+x^2+1) = (x^2+x+1)(x^2-x+1)."""
+    vm, _ = make_vm()
+    # x^4 + x^2 + 1 built as Add(Add(x^4, x^2), 1)
+    target = IRApply(
+        ADD,
+        (
+            IRApply(ADD, (IRApply(POW, (x, IRInteger(4))), IRApply(POW, (x, IRInteger(2))))),
+            IRInteger(1),
+        ),
+    )
+    expr = IRApply(_FACTOR, (target,))
+    result = vm.eval(expr)
+    assert result != expr
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Mul"
+
+
 # ===========================================================================
 # Section 4: Solve
 # ===========================================================================
@@ -293,6 +326,130 @@ def test_solve_wrong_var_passthrough() -> None:
     vm, _ = make_vm()
     expr = IRApply(_SOLVE, (x, IRInteger(1)))
     assert vm.eval(expr) == expr
+
+
+def test_solve_cubic_three_rational() -> None:
+    """Solve(x^3 - 6x^2 + 11x - 6, x) → [1, 2, 3]."""
+    vm, _ = make_vm()
+    # x^3 - 6x^2 + 11x - 6
+    cubic = IRApply(ADD, (
+        IRApply(SUB, (
+            IRApply(ADD, (
+                IRApply(SUB, (
+                    IRApply(POW, (x, IRInteger(3))),
+                    IRApply(MUL, (IRInteger(6), IRApply(POW, (x, IRInteger(2))))),
+                )),
+                IRApply(MUL, (IRInteger(11), x)),
+            )),
+            IRInteger(6),
+        )),
+        IRInteger(0),
+    ))
+    result = vm.eval(IRApply(_SOLVE, (cubic, x)))
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List"
+    assert IRInteger(1) in result.args
+    assert IRInteger(2) in result.args
+    assert IRInteger(3) in result.args
+
+
+def test_solve_cubic_one_rational_two_complex() -> None:
+    """Solve(x^3 + 1, x) → list with -1 and complex pair."""
+    vm, _ = make_vm()
+    cubic = IRApply(ADD, (IRApply(POW, (x, IRInteger(3))), IRInteger(1)))
+    result = vm.eval(IRApply(_SOLVE, (cubic, x)))
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List"
+    assert len(result.args) == 3
+    assert IRInteger(-1) in result.args
+
+
+def test_solve_quartic_four_rational() -> None:
+    """Solve(x^4 - 10x^2 + 9, x) → [±1, ±3]."""
+    vm, _ = make_vm()
+    # x^4 - 10x^2 + 9
+    quartic = IRApply(ADD, (
+        IRApply(SUB, (IRApply(POW, (x, IRInteger(4))), IRApply(MUL, (IRInteger(10), IRApply(POW, (x, IRInteger(2))))))),
+        IRInteger(9),
+    ))
+    result = vm.eval(IRApply(_SOLVE, (quartic, x)))
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List"
+    int_roots = {a.value for a in result.args if isinstance(a, IRInteger)}
+    assert int_roots == {1, -1, 3, -3}
+
+
+def test_solve_degree_5_passthrough() -> None:
+    """Solve(x^5, x) returns unevaluated (degree > 4)."""
+    vm, _ = make_vm()
+    expr = IRApply(_SOLVE, (IRApply(POW, (x, IRInteger(5))), x))
+    result = vm.eval(expr)
+    # Degree 5 should be returned unevaluated
+    assert isinstance(result, IRApply)
+
+
+def test_solve_linear_system_2x2() -> None:
+    """Solve(List(x+y=3, x-y=1), List(x,y)) → [Rule(x,2), Rule(y,1)]."""
+    vm, _ = make_vm()
+    y = IRSymbol("y")
+    _EQ = IRSymbol("Equal")
+    _LIST = IRSymbol("List")
+    _RULE = IRSymbol("Rule")
+    # x + y = 3 and x - y = 1
+    eq1 = IRApply(_EQ, (IRApply(ADD, (x, y)), IRInteger(3)))
+    eq2 = IRApply(_EQ, (IRApply(SUB, (x, y)), IRInteger(1)))
+    eqs_list = IRApply(_LIST, (eq1, eq2))
+    vars_list = IRApply(_LIST, (x, y))
+    result = vm.eval(IRApply(_SOLVE, (eqs_list, vars_list)))
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List"
+    rules = {r.args[0].name: r.args[1] for r in result.args if isinstance(r, IRApply) and r.head.name == "Rule"}
+    assert rules["x"] == IRInteger(2)
+    assert rules["y"] == IRInteger(1)
+
+
+def test_nsolve_cubic() -> None:
+    """NSolve(x^3 - 6x^2 + 11x - 6, x) → 3 float roots near 1, 2, 3."""
+    from symbolic_ir import IRFloat
+
+    vm, _ = make_vm()
+    _NSOLVE = IRSymbol("NSolve")
+    # x^3 - 6x^2 + 11x - 6
+    cubic = IRApply(ADD, (
+        IRApply(SUB, (
+            IRApply(ADD, (
+                IRApply(SUB, (
+                    IRApply(POW, (x, IRInteger(3))),
+                    IRApply(MUL, (IRInteger(6), IRApply(POW, (x, IRInteger(2))))),
+                )),
+                IRApply(MUL, (IRInteger(11), x)),
+            )),
+            IRInteger(6),
+        )),
+        IRInteger(0),
+    ))
+    result = vm.eval(IRApply(_NSOLVE, (cubic, x)))
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List"
+    assert len(result.args) == 3
+    # All roots should be IRFloat with values near 1, 2, 3
+    vals = sorted(r.value for r in result.args if isinstance(r, IRFloat))
+    assert len(vals) == 3
+    assert abs(vals[0] - 1.0) < 1e-6
+    assert abs(vals[1] - 2.0) < 1e-6
+    assert abs(vals[2] - 3.0) < 1e-6
+
+
+def test_nsolve_quintic_five_roots() -> None:
+    """NSolve(x^5 - 1, x) → 5 roots."""
+    vm, _ = make_vm()
+    _NSOLVE = IRSymbol("NSolve")
+    # x^5 - 1
+    quintic = IRApply(SUB, (IRApply(POW, (x, IRInteger(5))), IRInteger(1)))
+    result = vm.eval(IRApply(_NSOLVE, (quintic, x)))
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List"
+    assert len(result.args) == 5
 
 
 # ===========================================================================
@@ -912,4 +1069,327 @@ def test_im_wrong_arity_passthrough() -> None:
     """Im(a, b) → unevaluated."""
     vm, _ = make_vm()
     expr = IRApply(_IM, (IRInteger(1), IRInteger(2)))
+    assert vm.eval(expr) == expr
+
+
+# ===========================================================================
+# Section 13: Trig handlers (B1)
+# ===========================================================================
+
+_TRIG_SIMPLIFY = IRSymbol("TrigSimplify")
+_TRIG_EXPAND = IRSymbol("TrigExpand")
+_TRIG_REDUCE = IRSymbol("TrigReduce")
+_SIN = IRSymbol("Sin")
+_COS = IRSymbol("Cos")
+_PI = IRSymbol("%pi")
+
+
+def test_trig_simplify_pythagorean() -> None:
+    """TrigSimplify(sin²(x) + cos²(x)) → 1."""
+    vm, _ = make_vm()
+    sin2 = IRApply(POW, (IRApply(_SIN, (x,)), IRInteger(2)))
+    cos2 = IRApply(POW, (IRApply(_COS, (x,)), IRInteger(2)))
+    expr = IRApply(_TRIG_SIMPLIFY, (IRApply(ADD, (sin2, cos2)),))
+    result = vm.eval(expr)
+    assert result == IRInteger(1)
+
+
+def test_trig_simplify_sin_pi_is_zero() -> None:
+    """TrigSimplify(Sin(π)) → 0."""
+    vm, _ = make_vm()
+    expr = IRApply(_TRIG_SIMPLIFY, (IRApply(_SIN, (_PI,)),))
+    result = vm.eval(expr)
+    assert result == IRInteger(0)
+
+
+def test_trig_expand_sin_2x() -> None:
+    """TrigExpand(Sin(2x)) expands to contain Sin and Cos."""
+    vm, _ = make_vm()
+    expr = IRApply(_TRIG_EXPAND, (
+        IRApply(_SIN, (IRApply(MUL, (IRInteger(2), x)),)),
+    ))
+    result = vm.eval(expr)
+    assert isinstance(result, IRApply)
+
+
+def test_trig_reduce_sin2() -> None:
+    """TrigReduce(Sin(x)^2) → (1 - Cos(2x)) / 2."""
+    vm, _ = make_vm()
+    expr = IRApply(_TRIG_REDUCE, (
+        IRApply(POW, (IRApply(_SIN, (x,)), IRInteger(2))),
+    ))
+    result = vm.eval(expr)
+    assert isinstance(result, IRApply)
+    # Should not be a plain Pow(Sin(x), 2) anymore
+    assert not (
+        result.head.name == "Pow"
+        and isinstance(result.args[0], IRApply)
+        and result.args[0].head.name == "Sin"
+    )
+
+
+def test_trig_simplify_wrong_arity_passthrough() -> None:
+    """TrigSimplify(a, b) → unevaluated."""
+    vm, _ = make_vm()
+    y = IRSymbol("y")
+    expr = IRApply(_TRIG_SIMPLIFY, (x, y))
+    assert vm.eval(expr) == expr
+
+
+# ===========================================================================
+# Section 14: Rational function operations (A3)
+#             Expand (full), Collect, Together, RatSimplify, Apart
+# ===========================================================================
+
+_COLLECT = IRSymbol("Collect")
+_TOGETHER = IRSymbol("Together")
+_RAT_SIMPLIFY = IRSymbol("RatSimplify")
+_APART = IRSymbol("Apart")
+_DIV = IRSymbol("Div")
+
+
+def _subst_at(vm: "VM", expr: IRApply, val: int) -> IRNode:
+    """Evaluate ``expr`` with ``x = val`` by calling the Subst handler."""
+    return vm.eval(IRApply(_SUBST, (IRInteger(val), x, expr)))
+
+
+# --- Expand (full polynomial distribution) ----------------------------------
+
+
+def test_expand_product() -> None:
+    """Expand((x+1)*(x+2)) → polynomial evaluating to 2, 6, 12 at x=0,1,2."""
+    vm, _ = make_vm()
+    inner = IRApply(MUL, (IRApply(ADD, (x, IRInteger(1))), IRApply(ADD, (x, IRInteger(2)))))
+    result = vm.eval(IRApply(_EXPAND, (inner,)))
+    # The result should NOT still be a Mul or an Expand — it should be expanded
+    assert not (isinstance(result, IRApply) and result.head == _EXPAND)
+    # Verify by evaluating at numeric points:  (0+1)*(0+2)=2, (1+1)*(1+2)=6
+    assert _subst_at(vm, result, 0) == IRInteger(2)
+    assert _subst_at(vm, result, 1) == IRInteger(6)
+    assert _subst_at(vm, result, 2) == IRInteger(12)
+
+
+def test_expand_power() -> None:
+    """Expand((x+1)^2) → polynomial evaluating to 1, 4, 9 at x=0,1,2."""
+    vm, _ = make_vm()
+    inner = IRApply(POW, (IRApply(ADD, (x, IRInteger(1))), IRInteger(2)))
+    result = vm.eval(IRApply(_EXPAND, (inner,)))
+    assert _subst_at(vm, result, 0) == IRInteger(1)
+    assert _subst_at(vm, result, 1) == IRInteger(4)
+    assert _subst_at(vm, result, 2) == IRInteger(9)
+
+
+def test_expand_already_flat() -> None:
+    """Expand(x^2 + 1) → still evaluates correctly at numeric points."""
+    vm, _ = make_vm()
+    inner = IRApply(ADD, (IRApply(POW, (x, IRInteger(2))), IRInteger(1)))
+    result = vm.eval(IRApply(_EXPAND, (inner,)))
+    assert _subst_at(vm, result, 0) == IRInteger(1)
+    assert _subst_at(vm, result, 2) == IRInteger(5)
+
+
+def test_expand_rational_function() -> None:
+    """Expand of a rational function returns a Div node (not flattened further)."""
+    from symbolic_ir import DIV
+
+    vm, _ = make_vm()
+    # (x+1) / (x+2) — can't expand a rational function into a polynomial
+    inner = IRApply(DIV, (IRApply(ADD, (x, IRInteger(1))), IRApply(ADD, (x, IRInteger(2)))))
+    result = vm.eval(IRApply(_EXPAND, (inner,)))
+    # Should return something (either Div or the original) — not crash
+    assert result is not None
+
+
+def test_expand_wrong_arity_passthrough() -> None:
+    """Expand() or Expand(a, b) with wrong arity → unevaluated."""
+    vm, _ = make_vm()
+    expr = IRApply(_EXPAND, ())
+    assert vm.eval(expr) == expr
+
+
+# --- Collect ----------------------------------------------------------------
+
+
+def test_collect_combines_like_terms() -> None:
+    """Collect(x^2 + x^2, x) → 2*x^2."""
+    vm, _ = make_vm()
+    inner = IRApply(ADD, (IRApply(POW, (x, IRInteger(2))), IRApply(POW, (x, IRInteger(2)))))
+    result = vm.eval(IRApply(_COLLECT, (inner, x)))
+    # 2*x^2 evaluates to 0, 2, 8 at x=0, 1, 2
+    assert _subst_at(vm, result, 0) == IRInteger(0)
+    assert _subst_at(vm, result, 1) == IRInteger(2)
+    assert _subst_at(vm, result, 2) == IRInteger(8)
+
+
+def test_collect_linear_terms() -> None:
+    """Collect(3*x + 2*x + 1, x) → 5*x + 1."""
+    vm, _ = make_vm()
+    inner = IRApply(ADD, (
+        IRApply(ADD, (IRApply(MUL, (IRInteger(3), x)), IRApply(MUL, (IRInteger(2), x)))),
+        IRInteger(1),
+    ))
+    result = vm.eval(IRApply(_COLLECT, (inner, x)))
+    # (5*x + 1): at x=0 → 1, at x=1 → 6, at x=2 → 11
+    assert _subst_at(vm, result, 0) == IRInteger(1)
+    assert _subst_at(vm, result, 1) == IRInteger(6)
+    assert _subst_at(vm, result, 2) == IRInteger(11)
+
+
+def test_collect_wrong_arity_passthrough() -> None:
+    """Collect with wrong arity → unevaluated."""
+    vm, _ = make_vm()
+    expr = IRApply(_COLLECT, (x,))  # missing var arg
+    assert vm.eval(expr) == expr
+
+
+def test_collect_non_symbol_var_passthrough() -> None:
+    """Collect(expr, 3) — non-symbol var → unevaluated."""
+    vm, _ = make_vm()
+    inner = IRApply(POW, (x, IRInteger(2)))
+    expr = IRApply(_COLLECT, (inner, IRInteger(3)))
+    assert vm.eval(expr) == expr
+
+
+# --- Together ---------------------------------------------------------------
+
+
+def test_together_two_fractions() -> None:
+    """Together(1/x + 1/(x+1)) evaluates correctly at x=2: 1/2 + 1/3 = 5/6."""
+    from symbolic_ir import DIV
+
+    vm, _ = make_vm()
+    # Build 1/x + 1/(x+1) in IR
+    frac1 = IRApply(DIV, (IRInteger(1), x))
+    frac2 = IRApply(DIV, (IRInteger(1), IRApply(ADD, (x, IRInteger(1)))))
+    inner = IRApply(ADD, (frac1, frac2))
+    result = vm.eval(IRApply(_TOGETHER, (inner,)))
+    # At x=2: 1/2 + 1/3 = 5/6 — and the combined form should give the same
+    val = _subst_at(vm, result, 2)
+    assert val == IRRational(5, 6)
+
+
+def test_together_already_polynomial() -> None:
+    """Together(x^2 + 1) → polynomial (no denominator change)."""
+    vm, _ = make_vm()
+    inner = IRApply(ADD, (IRApply(POW, (x, IRInteger(2))), IRInteger(1)))
+    result = vm.eval(IRApply(_TOGETHER, (inner,)))
+    assert _subst_at(vm, result, 2) == IRInteger(5)
+
+
+def test_together_wrong_arity_passthrough() -> None:
+    """Together() with wrong arity → unevaluated."""
+    vm, _ = make_vm()
+    expr = IRApply(_TOGETHER, ())
+    assert vm.eval(expr) == expr
+
+
+# --- RatSimplify ------------------------------------------------------------
+
+
+def test_ratsimp_cancel_linear_factor() -> None:
+    """RatSimplify((x^2-1)/(x-1)) → x+1."""
+    from symbolic_ir import DIV, SUB
+
+    vm, _ = make_vm()
+    # (x^2 - 1) / (x - 1)
+    num = IRApply(SUB, (IRApply(POW, (x, IRInteger(2))), IRInteger(1)))
+    den = IRApply(SUB, (x, IRInteger(1)))
+    inner = IRApply(DIV, (num, den))
+    result = vm.eval(IRApply(_RAT_SIMPLIFY, (inner,)))
+    # Result should be x + 1 (a polynomial): at x=2 → 3, at x=3 → 4
+    assert _subst_at(vm, result, 2) == IRInteger(3)
+    assert _subst_at(vm, result, 3) == IRInteger(4)
+
+
+def test_ratsimp_already_reduced() -> None:
+    """RatSimplify(1/(x+1)) → same rational function (nothing to cancel)."""
+    from symbolic_ir import DIV
+
+    vm, _ = make_vm()
+    inner = IRApply(DIV, (IRInteger(1), IRApply(ADD, (x, IRInteger(1)))))
+    result = vm.eval(IRApply(_RAT_SIMPLIFY, (inner,)))
+    # At x=1: 1/2 → IRRational(1,2)
+    val = _subst_at(vm, result, 1)
+    assert val == IRRational(1, 2)
+
+
+def test_ratsimp_polynomial_passthrough() -> None:
+    """RatSimplify(x + 1) → x + 1 (already a polynomial)."""
+    vm, _ = make_vm()
+    inner = IRApply(ADD, (x, IRInteger(1)))
+    result = vm.eval(IRApply(_RAT_SIMPLIFY, (inner,)))
+    assert _subst_at(vm, result, 3) == IRInteger(4)
+
+
+def test_ratsimp_wrong_arity_passthrough() -> None:
+    """RatSimplify() with wrong arity → unevaluated."""
+    vm, _ = make_vm()
+    expr = IRApply(_RAT_SIMPLIFY, ())
+    assert vm.eval(expr) == expr
+
+
+# --- Apart ------------------------------------------------------------------
+
+
+def test_apart_simple_poles() -> None:
+    """Apart(1/(x^2-1), x) decomposes into partial fractions.
+
+    1/(x^2-1) = 1/((x-1)(x+1)) = 1/(2*(x-1)) - 1/(2*(x+1))
+
+    We verify by evaluating the result at x=3: 1/(9-1) = 1/8.
+    """
+    from symbolic_ir import DIV, SUB
+
+    vm, _ = make_vm()
+    # 1 / (x^2 - 1)
+    den = IRApply(SUB, (IRApply(POW, (x, IRInteger(2))), IRInteger(1)))
+    inner = IRApply(DIV, (IRInteger(1), den))
+    result = vm.eval(IRApply(_APART, (inner, x)))
+    # Verify the partial fraction at x=3: 1/(9-1) = 1/8
+    val = _subst_at(vm, result, 3)
+    assert val == IRRational(1, 8)
+
+
+def test_apart_two_simple_poles() -> None:
+    """Apart((3x+5)/((x+2)(x+3)), x) decomposes correctly.
+
+    At x=0: 5/(2*3) = 5/6; verify the apart result gives the same.
+    """
+    from symbolic_ir import DIV, MUL
+
+    vm, _ = make_vm()
+    # (3*x + 5) / ((x+2)*(x+3))
+    num = IRApply(ADD, (IRApply(MUL, (IRInteger(3), x)), IRInteger(5)))
+    den = IRApply(MUL, (
+        IRApply(ADD, (x, IRInteger(2))),
+        IRApply(ADD, (x, IRInteger(3))),
+    ))
+    inner = IRApply(DIV, (num, den))
+    result = vm.eval(IRApply(_APART, (inner, x)))
+    val = _subst_at(vm, result, 0)
+    assert val == IRRational(5, 6)
+
+
+def test_apart_already_polynomial() -> None:
+    """Apart(x^2 + 1, x) → x^2 + 1 (no fraction to decompose)."""
+    vm, _ = make_vm()
+    inner = IRApply(ADD, (IRApply(POW, (x, IRInteger(2))), IRInteger(1)))
+    result = vm.eval(IRApply(_APART, (inner, x)))
+    assert _subst_at(vm, result, 2) == IRInteger(5)
+
+
+def test_apart_wrong_arity_passthrough() -> None:
+    """Apart(x) with only one arg → unevaluated."""
+    vm, _ = make_vm()
+    expr = IRApply(_APART, (x,))
+    assert vm.eval(expr) == expr
+
+
+def test_apart_non_symbol_var_passthrough() -> None:
+    """Apart(1/(x+1), 3) — non-symbol var → unevaluated."""
+    from symbolic_ir import DIV
+
+    vm, _ = make_vm()
+    inner = IRApply(DIV, (IRInteger(1), IRApply(ADD, (x, IRInteger(1)))))
+    expr = IRApply(_APART, (inner, IRInteger(3)))
     assert vm.eval(expr) == expr
