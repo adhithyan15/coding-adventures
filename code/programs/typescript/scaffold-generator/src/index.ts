@@ -473,16 +473,17 @@ export function readDotnetDeps(pkgDir: string): string[] {
   } catch {
     return [];
   }
+
   const projectFile = files.find(
     (file) => file.endsWith(".csproj") || file.endsWith(".fsproj"),
   );
   if (!projectFile) {
     return [];
   }
+
   const content = fs.readFileSync(path.join(pkgDir, projectFile), "utf-8");
   const deps: string[] = [];
-  const re =
-    /<ProjectReference\s+Include\s*=\s*"\.\.[\\/]([^/\\"]+)[\\/][^"]+"/g;
+  const re = /<ProjectReference\s+Include\s*=\s*"\.\.[\\/]([^/\\"]+)[\\/][^"]+"/g;
   let match: RegExpExecArray | null;
   while ((match = re.exec(content)) !== null) {
     const depDir = match[1]?.trim();
@@ -1835,10 +1836,7 @@ export function generateCSharp(
   const testProjectName = `${projectName}.Tests`;
 
   const projectRefs = directDeps
-    .map(
-      (dep) =>
-        `    <ProjectReference Include="../${dep}/CodingAdventures.${toCamelCase(dep)}.csproj" />`,
-    )
+    .map((dep) => `    <ProjectReference Include="../${dep}/CodingAdventures.${toCamelCase(dep)}.csproj" />`)
     .join("\n");
 
   const csproj = `<Project Sdk="Microsoft.NET.Sdk">
@@ -1945,10 +1943,7 @@ export function generateFSharp(
   const testProjectName = `${projectName}.Tests`;
 
   const projectRefs = directDeps
-    .map(
-      (dep) =>
-        `    <ProjectReference Include="../${dep}/CodingAdventures.${toCamelCase(dep)}.fsproj" />`,
-    )
+    .map((dep) => `    <ProjectReference Include="../${dep}/CodingAdventures.${toCamelCase(dep)}.fsproj" />`)
     .join("\n");
 
   const fsproj = `<Project Sdk="Microsoft.NET.Sdk">

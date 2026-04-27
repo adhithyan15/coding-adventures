@@ -259,6 +259,20 @@ public let allPackageLanguages = [
     "dotnet",
 ]
 
+public let allToolchains = [
+    "python",
+    "ruby",
+    "go",
+    "typescript",
+    "rust",
+    "elixir",
+    "lua",
+    "perl",
+    "swift",
+    "haskell",
+    "dotnet",
+]
+
 public let allLanguages = allPackageLanguages
 
 public let allToolchains = [

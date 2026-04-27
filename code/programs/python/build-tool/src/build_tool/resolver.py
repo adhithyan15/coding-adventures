@@ -487,6 +487,27 @@ def _parse_rust_deps(package: Package, known_names: dict[str, str]) -> list[str]
     return internal_deps
 
 
+def _parse_dotnet_deps(package: Package, known_names: dict[str, str]) -> list[str]:
+    """Extract internal dependencies from .NET project references."""
+    project_files = list(package.path.glob("*.csproj")) + list(package.path.glob("*.fsproj"))
+    if not project_files:
+        return []
+
+    internal_deps: list[str] = []
+    pattern = re.compile(r'<ProjectReference\s+Include\s*=\s*"\.\.[\\/]+([^/\\"]+)[\\/][^"]*"')
+
+    for project_file in project_files:
+        text = project_file.read_text(encoding="utf-8")
+        for match in pattern.finditer(text):
+            dep_dir = match.group(1).strip().lower()
+            if "/" in dep_dir or "\\" in dep_dir or dep_dir == "..":
+                continue
+            if dep_dir in known_names:
+                internal_deps.append(known_names[dep_dir])
+
+    return internal_deps
+
+
 # ---------------------------------------------------------------------------
 # Swift dependency parsing
 # ---------------------------------------------------------------------------
@@ -669,7 +690,38 @@ def _parse_gradle_deps(package: Package, known_names: dict[str, str]) -> list[st
 # ---------------------------------------------------------------------------
 
 
-def _build_known_names(packages: list[Package]) -> dict[str, str]:
+def _dependency_scope(language: str) -> str:
+    """Map a package language to the dependency namespace it can resolve."""
+    if language in {"csharp", "fsharp", "dotnet"}:
+        return "dotnet"
+    if language == "wasm":
+        return "wasm"
+    return language
+
+
+def _in_dependency_scope(package_language: str, scope: str) -> bool:
+    """Whether a package contributes names to the requested dependency scope."""
+    if scope == "dotnet":
+        return package_language in {"csharp", "fsharp", "dotnet"}
+    if scope == "wasm":
+        return package_language in {"wasm", "rust"}
+    return package_language == scope
+
+
+def _read_cargo_package_name(package: Package) -> str | None:
+    """Read the Cargo package name from Cargo.toml when available."""
+    cargo_toml = package.path / "Cargo.toml"
+    if not cargo_toml.exists():
+        return None
+
+    text = cargo_toml.read_text(encoding="utf-8")
+    match = re.search(r'(?m)^\s*name\s*=\s*"([^"]+)"', text)
+    if not match:
+        return None
+    return match.group(1).strip().lower()
+
+
+def _build_known_names(packages: list[Package], language: str = "") -> dict[str, str]:
     """Build a mapping from ecosystem-specific dependency names to package names.
 
     For Python:     "coding-adventures-logic-gates" -> "python/logic-gates"
@@ -697,6 +749,8 @@ def _build_known_names(packages: list[Package]) -> dict[str, str]:
             known[key] = value
 
     for pkg in packages:
+        if language and not _in_dependency_scope(pkg.language, language):
+            continue
         if pkg.language == "python":
             # Convert package dir name to pypi name: "logic-gates" -> "coding-adventures-logic-gates"
             pypi_name = f"coding-adventures-{pkg.path.name}".lower()
@@ -733,10 +787,13 @@ def _build_known_names(packages: list[Package]) -> dict[str, str]:
                 if name_match:
                     _set_known(name_match.group(1).strip().lower(), pkg.name, pkg.path)
 
-        elif pkg.language == "rust":
+        elif pkg.language in ("rust", "wasm"):
             # Rust crate names use the directory name directly (kebab-case).
             crate_name = pkg.path.name.lower()
             _set_known(crate_name, pkg.name, pkg.path)
+            cargo_name = _read_cargo_package_name(pkg)
+            if cargo_name is not None:
+                _set_known(cargo_name, pkg.name, pkg.path)
 
         elif pkg.language == "elixir":
             # Elixir mix names replace hyphens with underscores.
@@ -774,10 +831,11 @@ def _build_known_names(packages: list[Package]) -> dict[str, str]:
             cabal_name = f"coding-adventures-{pkg.path.name}".lower()
             _set_known(cabal_name, pkg.name, pkg.path)
 
-        elif pkg.language in ("java", "kotlin"):
+        elif pkg.language in ("java", "kotlin", "csharp", "fsharp", "dotnet"):
             # Java and Kotlin packages use Gradle composite builds. Dependencies
             # are referenced by directory name in settings.gradle.kts via
-            # includeBuild("../dep-name"). The directory name maps directly.
+            # includeBuild("../dep-name"). .NET packages likewise use sibling
+            # directory names in ProjectReference paths. The directory name maps directly.
             dir_base = pkg.path.name.lower()
             _set_known(dir_base, pkg.name, pkg.path)
 
@@ -805,11 +863,16 @@ def resolve_dependencies(packages: list[Package]) -> DirectedGraph:
     for pkg in packages:
         graph.add_node(pkg.name)
 
-    # Build the name-mapping table (single global map for cross-language deps).
-    known_names = _build_known_names(packages)
+    # Build dependency name mappings keyed by the scope each package language uses.
+    known_names_by_scope: dict[str, dict[str, str]] = {}
+    for pkg in packages:
+        scope = _dependency_scope(pkg.language)
+        if scope not in known_names_by_scope:
+            known_names_by_scope[scope] = _build_known_names(packages, scope)
 
     # Parse dependencies for each package.
     for pkg in packages:
+        known_names = known_names_by_scope[_dependency_scope(pkg.language)]
         if pkg.language == "python":
             deps = _parse_python_deps(pkg, known_names)
         elif pkg.language == "ruby":
@@ -818,7 +881,7 @@ def resolve_dependencies(packages: list[Package]) -> DirectedGraph:
             deps = _parse_go_deps(pkg, known_names)
         elif pkg.language == "typescript":
             deps = _parse_typescript_deps(pkg, known_names)
-        elif pkg.language == "rust":
+        elif pkg.language in {"rust", "wasm"}:
             deps = _parse_rust_deps(pkg, known_names)
         elif pkg.language == "elixir":
             deps = _parse_elixir_deps(pkg, known_names)
@@ -832,6 +895,8 @@ def resolve_dependencies(packages: list[Package]) -> DirectedGraph:
             deps = _parse_haskell_deps(pkg, known_names)
         elif pkg.language in ("java", "kotlin"):
             deps = _parse_gradle_deps(pkg, known_names)
+        elif pkg.language in {"csharp", "fsharp", "dotnet"}:
+            deps = _parse_dotnet_deps(pkg, known_names)
         else:
             deps = []
 

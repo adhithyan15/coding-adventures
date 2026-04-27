@@ -1,50 +1,15 @@
 using System.Text.Json;
 
-// Graph.cs -- Two ways to store the same undirected weighted graph
-// ================================================================
-//
-// This package teaches a useful systems lesson: the *interface* to a data
-// structure can stay stable while the *representation* changes underneath.
-//
-// We expose one Graph<T> API, but let callers choose between:
-//
-//   1. Adjacency list   -- best when the graph is sparse
-//   2. Adjacency matrix -- best when edge lookups matter more than space
-//
-// The algorithms later in the file (BFS, DFS, shortest path, MST) are written
-// in terms of the public graph operations rather than the private fields, so
-// they work for both representations without duplicating the algorithmic logic.
-
 namespace CodingAdventures.Graph;
 
-/// <summary>
-/// Select which internal storage model backs the graph.
-/// </summary>
 public enum GraphRepr
 {
-    /// <summary>
-    /// Store only the edges that actually exist.
-    /// </summary>
     AdjacencyList,
-
-    /// <summary>
-    /// Reserve a table entry for every possible node-to-node connection.
-    /// </summary>
     AdjacencyMatrix,
 }
 
-/// <summary>
-/// A single undirected weighted edge.
-///
-/// The endpoints are stored in canonical order so equality checks and sorted
-/// test assertions stay deterministic.
-/// </summary>
 public readonly record struct WeightedEdge<T>(T Left, T Right, double Weight) where T : notnull;
 
-// Node ordering exists purely to make iteration deterministic. Hash-based
-// collections do not promise a stable traversal order, but educational tests
-// and examples are much easier to reason about when neighbors always appear in
-// the same sequence.
 internal static class NodeOrdering
 {
     public static string CanonicalKey<T>(T node)
@@ -82,49 +47,25 @@ internal static class NodeOrdering
     }
 }
 
-/// <summary>
-/// An undirected weighted graph with interchangeable adjacency-list and
-/// adjacency-matrix storage.
-/// </summary>
 public sealed class Graph<T> where T : notnull
 {
-    // Adjacency-list storage:
-    //   node -> (neighbor -> weight)
     private readonly GraphRepr _repr;
     private readonly Dictionary<T, Dictionary<T, double>> _adj = new();
-
-    // Adjacency-matrix storage:
-    //   _nodeList/_nodeIndex translate T <-> integer position
-    //   _matrix[row][col] stores Some(weight) / None
     private readonly List<T> _nodeList = new();
     private readonly Dictionary<T, int> _nodeIndex = new();
     private readonly List<List<double?>> _matrix = new();
 
-    /// <summary>
-    /// Create an empty graph backed by the selected representation.
-    /// </summary>
     public Graph(GraphRepr repr = GraphRepr.AdjacencyList)
     {
         _repr = repr;
     }
 
-    /// <summary>
-    /// Report which internal storage model this graph currently uses.
-    /// </summary>
     public GraphRepr Representation => _repr;
 
-    /// <summary>
-    /// Count how many nodes are currently present in the graph.
-    /// </summary>
     public int Size => _repr == GraphRepr.AdjacencyList ? _adj.Count : _nodeList.Count;
 
-    /// <summary>
-    /// Add a node if it is not already present.
-    /// </summary>
     public void AddNode(T node)
     {
-        // In adjacency-list mode, "adding a node" just means ensuring it has an
-        // empty neighbor map.
         if (_repr == GraphRepr.AdjacencyList)
         {
             if (!_adj.ContainsKey(node))
@@ -135,8 +76,6 @@ public sealed class Graph<T> where T : notnull
             return;
         }
 
-        // In adjacency-matrix mode we must grow the matrix in both dimensions:
-        // every existing row gets a new column, and we append one new row.
         if (_nodeIndex.ContainsKey(node))
         {
             return;
@@ -160,9 +99,6 @@ public sealed class Graph<T> where T : notnull
         _matrix.Add(newRow);
     }
 
-    /// <summary>
-    /// Remove a node and every incident edge attached to it.
-    /// </summary>
     public void RemoveNode(T node)
     {
         if (_repr == GraphRepr.AdjacencyList)
@@ -200,24 +136,14 @@ public sealed class Graph<T> where T : notnull
         }
     }
 
-    /// <summary>
-    /// Test whether the graph already contains the given node.
-    /// </summary>
     public bool HasNode(T node) =>
         _repr == GraphRepr.AdjacencyList ? _adj.ContainsKey(node) : _nodeIndex.ContainsKey(node);
 
-    /// <summary>
-    /// Return the set of nodes currently stored in the graph.
-    /// </summary>
     public IReadOnlyCollection<T> Nodes() =>
         _repr == GraphRepr.AdjacencyList
             ? new HashSet<T>(_adj.Keys)
             : new HashSet<T>(_nodeList);
 
-    /// <summary>
-    /// Add or overwrite an undirected weighted edge between two nodes.
-    /// Missing endpoints are created automatically.
-    /// </summary>
     public void AddEdge(T left, T right, double weight = 1.0)
     {
         AddNode(left);
@@ -236,9 +162,6 @@ public sealed class Graph<T> where T : notnull
         _matrix[rightIndex][leftIndex] = weight;
     }
 
-    /// <summary>
-    /// Remove an existing undirected edge.
-    /// </summary>
     public void RemoveEdge(T left, T right)
     {
         if (_repr == GraphRepr.AdjacencyList)
@@ -266,9 +189,6 @@ public sealed class Graph<T> where T : notnull
         _matrix[rightIndex][leftIndex] = null;
     }
 
-    /// <summary>
-    /// Test whether an undirected edge currently exists between two nodes.
-    /// </summary>
     public bool HasEdge(T left, T right)
     {
         if (_repr == GraphRepr.AdjacencyList)
@@ -281,9 +201,6 @@ public sealed class Graph<T> where T : notnull
                _matrix[leftIndex][rightIndex] is not null;
     }
 
-    /// <summary>
-    /// Look up the stored weight for an existing undirected edge.
-    /// </summary>
     public double EdgeWeight(T left, T right)
     {
         if (_repr == GraphRepr.AdjacencyList)
@@ -306,17 +223,12 @@ public sealed class Graph<T> where T : notnull
         return weightValue;
     }
 
-    /// <summary>
-    /// Return all graph edges in deterministic order.
-    /// </summary>
     public IReadOnlyList<WeightedEdge<T>> Edges()
     {
         var result = new List<WeightedEdge<T>>();
 
         if (_repr == GraphRepr.AdjacencyList)
         {
-            // Each undirected edge is stored twice internally (A -> B and B -> A),
-            // so we track a canonical edge key to emit it only once.
             var seen = new HashSet<string>(StringComparer.Ordinal);
             foreach (var (left, neighbors) in _adj)
             {
@@ -366,9 +278,6 @@ public sealed class Graph<T> where T : notnull
         return result;
     }
 
-    /// <summary>
-    /// Return the neighboring nodes of one node in deterministic order.
-    /// </summary>
     public IReadOnlyList<T> Neighbors(T node)
     {
         if (_repr == GraphRepr.AdjacencyList)
@@ -398,9 +307,6 @@ public sealed class Graph<T> where T : notnull
         return NodeOrdering.Sort(result);
     }
 
-    /// <summary>
-    /// Return the neighbor-to-weight mapping for one node.
-    /// </summary>
     public IReadOnlyDictionary<T, double> NeighborsWeighted(T node)
     {
         if (_repr == GraphRepr.AdjacencyList)
@@ -430,28 +336,14 @@ public sealed class Graph<T> where T : notnull
         return result;
     }
 
-    /// <summary>
-    /// Count how many neighbors a node has.
-    /// </summary>
     public int Degree(T node) => Neighbors(node).Count;
 
-    /// <summary>
-    /// Produce a short human-readable graph summary.
-    /// </summary>
     public override string ToString() =>
         $"Graph(nodes={Size}, edges={Edges().Count}, repr={Representation})";
 }
 
-/// <summary>
-/// Algorithms that operate on <see cref="Graph{T}"/> without caring which
-/// internal representation stores the edges.
-/// </summary>
 public static class GraphAlgorithms
 {
-    /// <summary>
-    /// Breadth-first search explores the graph in "layers" radiating from the
-    /// start node: all nodes one hop away, then two hops away, and so on.
-    /// </summary>
     public static IReadOnlyList<T> Bfs<T>(Graph<T> graph, T start) where T : notnull
     {
         EnsureNode(graph, start);
@@ -478,14 +370,8 @@ public static class GraphAlgorithms
         return result;
     }
 
-    /// <summary>
-    /// Depth-first search follows one branch as far as possible before
-    /// backtracking to try the next branch.
-    /// </summary>
     public static IReadOnlyList<T> Dfs<T>(Graph<T> graph, T start) where T : notnull
     {
-        // DFS uses an explicit stack so we can control the visit order without
-        // recursion depth concerns.
         EnsureNode(graph, start);
 
         var visited = new HashSet<T>();
@@ -515,9 +401,6 @@ public static class GraphAlgorithms
         return result;
     }
 
-    /// <summary>
-    /// Report whether every node is reachable from every other node.
-    /// </summary>
     public static bool IsConnected<T>(Graph<T> graph) where T : notnull
     {
         if (graph.Size == 0)
@@ -529,9 +412,6 @@ public static class GraphAlgorithms
         return Bfs(graph, start).Count == graph.Size;
     }
 
-    /// <summary>
-    /// Partition the graph into its connected components.
-    /// </summary>
     public static IReadOnlyList<HashSet<T>> ConnectedComponents<T>(Graph<T> graph) where T : notnull
     {
         var remaining = new HashSet<T>(graph.Nodes());
@@ -548,9 +428,6 @@ public static class GraphAlgorithms
         return result;
     }
 
-    /// <summary>
-    /// Detect whether an undirected cycle exists anywhere in the graph.
-    /// </summary>
     public static bool HasCycle<T>(Graph<T> graph) where T : notnull
     {
         var visited = new HashSet<T>();
@@ -592,15 +469,8 @@ public static class GraphAlgorithms
         return false;
     }
 
-    /// <summary>
-    /// Compute the lowest-cost path between two nodes.
-    /// For unit-weight graphs this uses BFS; otherwise it uses Dijkstra.
-    /// </summary>
     public static IReadOnlyList<T> ShortestPath<T>(Graph<T> graph, T start, T end) where T : notnull
     {
-        // Unweighted graphs can use BFS because every hop costs the same.
-        // Weighted graphs need Dijkstra so a "longer in hops, cheaper in total"
-        // route is still discovered.
         if (!graph.HasNode(start) || !graph.HasNode(end))
         {
             return Array.Empty<T>();
@@ -616,15 +486,8 @@ public static class GraphAlgorithms
             : DijkstraShortestPath(graph, start, end);
     }
 
-    /// <summary>
-    /// Build a minimum spanning tree using Kruskal's algorithm.
-    /// </summary>
     public static IReadOnlyList<WeightedEdge<T>> MinimumSpanningTree<T>(Graph<T> graph) where T : notnull
     {
-        // We use Kruskal's algorithm:
-        //   sort edges by weight
-        //   keep adding the next-lightest edge that does not create a cycle
-        // A union-find structure makes the cycle test efficient.
         if (graph.Size <= 1)
         {
             return Array.Empty<WeightedEdge<T>>();
@@ -770,8 +633,6 @@ public static class GraphAlgorithms
 
 internal sealed class UnionFind<T> where T : notnull
 {
-    // Union-find keeps track of which nodes already belong to the same partial
-    // tree while Kruskal's algorithm is building the spanning forest.
     private readonly Dictionary<T, T> _parent = new();
     private readonly Dictionary<T, int> _rank = new();
 

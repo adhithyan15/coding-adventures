@@ -81,7 +81,7 @@ struct Args {
     jobs: Option<usize>,
 
     /// Filter to language: python, ruby, go, typescript, rust, elixir, lua,
-    /// perl, swift, java, kotlin, haskell, wasm, csharp, fsharp, dotnet, or all.
+    /// perl, swift, haskell, wasm, csharp, fsharp, dotnet, or all.
     #[arg(long, default_value = "all")]
     language: String,
 

@@ -65,11 +65,9 @@ module BuildTool
   module CLI
     module_function
 
-    # ALL_LANGUAGES is the canonical list of package languages this CLI builds.
-    ALL_LANGUAGES = %w[
-      python ruby go typescript rust elixir lua perl swift java kotlin
-      haskell wasm csharp fsharp dotnet
-    ].freeze
+    # ALL_LANGUAGES is the canonical list of supported languages in the monorepo.
+    # The order is stable and matches the order used in CI toolchain setup.
+    ALL_TOOLCHAINS = %w[python ruby go typescript rust elixir lua perl swift haskell dotnet].freeze
 
     # ALL_TOOLCHAINS is the canonical list of CI toolchains we can request.
     ALL_TOOLCHAINS = %w[
@@ -87,6 +85,13 @@ module BuildTool
       when "csharp", "fsharp", "dotnet" then "dotnet"
       else language
       end
+    end
+
+    def toolchain_for_language(language)
+      return "rust" if language == "wasm"
+      return "dotnet" if %w[csharp fsharp dotnet].include?(language)
+
+      language
     end
 
     # find_repo_root -- Walk up from `start` (or cwd) looking for a `.git` dir.
@@ -187,7 +192,8 @@ module BuildTool
         end
 
         opts.on("--language LANG",
-                "Only build packages of this language (#{ALL_LANGUAGES.join('/')}/all)") do |lang|
+                "Only build packages of this language " \
+                "(python/ruby/go/typescript/rust/elixir/lua/perl/swift/haskell/wasm/csharp/fsharp/dotnet/all)") do |lang|
           options[:language] = lang
         end
 
@@ -679,8 +685,19 @@ module BuildTool
     # @param affected_set [Hash<String, Boolean>, nil]
     # @param force [Boolean]
     # @return [Hash<String, Boolean>]
-    def compute_languages_needed(packages, affected_set, force, ci_toolchains = Set.new)
-      CIWorkflow.compute_languages_needed(packages, affected_set, force, ci_toolchains)
+    def compute_languages_needed(packages, affected_set, force)
+      needed = { "go" => true }
+
+      if force || affected_set.nil?
+        ALL_TOOLCHAINS.each { |lang| needed[lang] = true }
+        return needed
+      end
+
+      packages.each do |pkg|
+        needed[toolchain_for_language(pkg.language)] = true if affected_set.key?(pkg.name)
+      end
+
+      needed
     end
 
     # output_language_flags -- Print language flags to stdout and $GITHUB_OUTPUT.

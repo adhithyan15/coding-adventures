@@ -4,7 +4,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PackageId>CodingAdventures.Graph.CSharp</PackageId>
+    <PackageId>CodingAdventures.Graph</PackageId>
     <Version>0.1.0</Version>
     <Authors>Adhithya Rajasekaran</Authors>
     <Description>An undirected weighted graph with adjacency-list and adjacency-matrix representations plus traversal and pathfinding algorithms</Description>

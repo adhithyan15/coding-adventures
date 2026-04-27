@@ -853,7 +853,7 @@ function parseHaskellDeps(
  * @returns A Map from dependency names to internal package names.
  */
 export function buildKnownNames(packages: Package[]): Map<string, string> {
-  return buildKnownNamesForLanguage(packages, "");
+  return buildKnownNamesForScope(packages, "");
 }
 
 function dependencyScope(language: string): string {
@@ -886,10 +886,7 @@ function readCargoPackageName(pkgPath: string): string | null {
   return match ? match[1].trim().toLowerCase() : null;
 }
 
-function buildKnownNamesForLanguage(
-  packages: Package[],
-  language: string,
-): Map<string, string> {
+function buildKnownNamesForScope(packages: Package[], scope: string): Map<string, string> {
   const known = new Map<string, string>();
   const knownLanguage = new Map<string, string>();
   const scope = dependencyScope(language);
@@ -950,7 +947,7 @@ function buildKnownNamesForLanguage(
   }
 
   for (const pkg of packages) {
-    if (language && !inDependencyScope(pkg.language, scope)) {
+    if (scope && !inDependencyScope(pkg.language, scope)) {
       continue;
     }
     const dirName = nodePath.basename(pkg.path);
@@ -997,23 +994,14 @@ function buildKnownNamesForLanguage(
         break;
       }
 
-      case "rust": {
+      case "rust":
+      case "wasm": {
         // Rust crate names use the directory name directly (kebab-case).
         const crateName = dirName.toLowerCase();
-        setKnown(crateName, pkg.name, pkg.path, pkg.language);
+        known.set(crateName, pkg.name);
         const cargoName = readCargoPackageName(pkg.path);
         if (cargoName) {
-          setKnown(cargoName, pkg.name, pkg.path, pkg.language);
-        }
-        break;
-      }
-
-      case "wasm": {
-        // WASM wrappers should resolve via their explicit Cargo package names,
-        // not by claiming the underlying Rust crate's bare directory name.
-        const cargoName = readCargoPackageName(pkg.path);
-        if (cargoName) {
-          setKnown(cargoName, pkg.name, pkg.path, pkg.language);
+          known.set(cargoName, pkg.name);
         }
         break;
       }
@@ -1061,6 +1049,12 @@ function buildKnownNamesForLanguage(
         // Haskell Cabal package names use hyphens.
         const cabalName = `coding-adventures-${dirName}`.toLowerCase();
         known.set(cabalName, pkg.name);
+        break;
+      }
+      case "csharp":
+      case "fsharp":
+      case "dotnet": {
+        known.set(dirName.toLowerCase(), pkg.name);
         break;
       }
     }
@@ -1131,19 +1125,17 @@ export function resolveDependencies(packages: Package[]): DirectedGraph {
   }
 
   // Build the name-mapping table.
-  const knownNamesByLanguage = new Map<string, Map<string, string>>();
+  const knownNamesByScope = new Map<string, Map<string, string>>();
   for (const pkg of packages) {
-    if (!knownNamesByLanguage.has(pkg.language)) {
-      knownNamesByLanguage.set(
-        pkg.language,
-        buildKnownNamesForLanguage(packages, pkg.language),
-      );
+    const scope = dependencyScope(pkg.language);
+    if (!knownNamesByScope.has(scope)) {
+      knownNamesByScope.set(scope, buildKnownNamesForScope(packages, scope));
     }
   }
 
   // Parse dependencies for each package.
   for (const pkg of packages) {
-    const knownNames = knownNamesByLanguage.get(pkg.language) ?? new Map<string, string>();
+    const knownNames = knownNamesByScope.get(dependencyScope(pkg.language)) ?? new Map<string, string>();
     let deps: string[];
 
     switch (pkg.language) {

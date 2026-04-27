@@ -5,8 +5,8 @@ Generate CI-ready package scaffolding for the coding-adventures monorepo.
 ## What It Does
 
 This CLI tool generates correctly-structured, CI-ready package directories
-for the package ecosystems currently scaffolded in the repo: Python, Go,
-Ruby, TypeScript, Rust, Elixir, Perl, Lua, Swift, Haskell, C#, and F#.
+for the package ecosystems currently scaffolded in the repo:
+Python, Go, Ruby, TypeScript, Rust, Elixir, Perl, Haskell, C#, and F#.
 
 It is powered by [cli-builder](../../../packages/typescript/cli-builder/) --
 the entire command-line interface is defined in a JSON spec file, and this
@@ -60,6 +60,6 @@ npx tsx src/index.ts my-package --dry-run
 bash BUILD
 ```
 
-The generated TypeScript packages enforce an 80% line coverage threshold in
-`vitest.config.ts`, and the C#/F# templates run `dotnet test` with Coverlet
-and an 80% line threshold by default.
+The generated TypeScript packages enforce a line coverage threshold of 80% in
+their `vitest.config.ts`, and the C#/F# templates run `dotnet test` with an
+80% line threshold plus Coverlet wired in by default.

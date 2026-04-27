@@ -260,27 +260,6 @@ name = "graph"
 	}
 }
 
-func TestResolveDependenciesUsesBuildToolDepsComments(t *testing.T) {
-	packages := []discovery.Package{
-		{
-			Name:         "swift/PaintVmDirect2DNative",
-			Path:         filepath.Join("repo", "code", "packages", "swift", "PaintVmDirect2DNative"),
-			Language:     "swift",
-			BuildContent: "# build-tool: deps=rust/paint-vm-direct2d-c\nswift test\n",
-		},
-		{
-			Name:     "rust/paint-vm-direct2d-c",
-			Path:     filepath.Join("repo", "code", "packages", "rust", "paint-vm-direct2d-c"),
-			Language: "rust",
-		},
-	}
-
-	graph := ResolveDependencies(packages)
-	if !graph.HasEdge("rust/paint-vm-direct2d-c", "swift/PaintVmDirect2DNative") {
-		t.Fatalf("expected build-tool deps comment to add Rust prerequisite, got %v", graph.Edges())
-	}
-}
-
 func TestResolveDependenciesWasmPrefersRustOnSharedBasename(t *testing.T) {
 	root := makeFixture(t, map[string]string{
 		"wasm-avl-tree/Cargo.toml": `[package]

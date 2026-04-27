@@ -60,8 +60,6 @@ const ALL_TOOLCHAINS = [
   "lua",
   "perl",
   "swift",
-  "java",
-  "kotlin",
   "haskell",
   "dotnet",
 ];
@@ -298,10 +296,6 @@ Options:
       if (affectedSet.has(pkg.name)) {
         langsNeeded[toolchainForLanguage(pkg.language)] = true;
       }
-    }
-
-    for (const toolchain of ciToolchains) {
-      langsNeeded[toolchain] = true;
     }
   }
 

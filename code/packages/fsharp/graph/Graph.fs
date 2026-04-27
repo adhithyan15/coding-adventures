@@ -4,26 +4,11 @@ open System
 open System.Collections.Generic
 open System.Text.Json
 
-// Graph.fs -- One graph interface, two internal storage stories
-// =============================================================
-//
-// This package is intentionally educational. We keep the public graph API
-// stable while allowing the internal representation to vary:
-//
-//   AdjacencyList   -- compact for sparse graphs
-//   AdjacencyMatrix -- direct edge lookup for dense graphs
-//
-// The higher-level algorithms later in the file are written against the public
-// members of Graph<'T>, so BFS, DFS, shortest path, and minimum spanning tree
-// all work regardless of which representation the caller chooses.
-
-/// Select which internal storage model backs the graph.
 type GraphRepr =
     | AdjacencyList = 0
     | AdjacencyMatrix = 1
 
 [<Struct>]
-/// A single undirected weighted edge in canonical endpoint order.
 type WeightedEdge<'T when 'T : equality> =
     {
         Left: 'T
@@ -32,8 +17,6 @@ type WeightedEdge<'T when 'T : equality> =
     }
 
 module internal NodeOrdering =
-    // Hash-based containers do not preserve insertion order. We sort by a
-    // canonical textual key so examples and tests stay deterministic.
     let canonicalKey<'T> (node: 'T) =
         try
             sprintf "%s:%s" typeof<'T>.FullName (JsonSerializer.Serialize(node))
@@ -62,14 +45,7 @@ module internal NodeOrdering =
 
 type Graph<'T when 'T : equality>(?repr: GraphRepr) =
     let representation = defaultArg repr GraphRepr.AdjacencyList
-
-    // Adjacency-list storage:
-    //   node -> (neighbor -> weight)
     let adjacency = Dictionary<'T, Dictionary<'T, float>>()
-
-    // Adjacency-matrix storage:
-    //   nodeList/nodeIndex translate values to integer positions
-    //   matrix[row][col] stores Some(weight) / None
     let nodeList = ResizeArray<'T>()
     let nodeIndex = Dictionary<'T, int>()
     let matrix = ResizeArray<ResizeArray<float option>>()
@@ -84,11 +60,9 @@ type Graph<'T when 'T : equality>(?repr: GraphRepr) =
 
     member _.AddNode(node: 'T) =
         if representation = GraphRepr.AdjacencyList then
-            // In list mode, a node exists once it has an empty neighbor map.
             if not (adjacency.ContainsKey(node)) then
                 adjacency.[node] <- Dictionary<'T, float>()
         else if not (nodeIndex.ContainsKey(node)) then
-            // In matrix mode we must grow the matrix in both dimensions.
             let index = nodeList.Count
             nodeList.Add(node)
             nodeIndex.[node] <- index
@@ -193,8 +167,6 @@ type Graph<'T when 'T : equality>(?repr: GraphRepr) =
         let result = ResizeArray<WeightedEdge<'T>>()
 
         if representation = GraphRepr.AdjacencyList then
-            // Each undirected edge is stored twice internally, so we deduplicate
-            // using a canonical key before exposing the public edge list.
             let seen = HashSet<string>(StringComparer.Ordinal)
             for KeyValue(left, neighbors) in adjacency do
                 for KeyValue(right, weight) in neighbors do
@@ -312,7 +284,6 @@ module GraphAlgorithms =
         if not (graph.HasNode(start)) then
             raise (KeyNotFoundException(sprintf "Node not found: %A" start))
 
-    /// Breadth-first search visits nodes in increasing hop distance.
     let bfs (graph: Graph<'T>) (start: 'T) =
         ensureNode graph start
 
@@ -333,7 +304,6 @@ module GraphAlgorithms =
 
         result |> Seq.toList
 
-    /// Depth-first search explores one branch as far as it can before backtracking.
     let dfs (graph: Graph<'T>) (start: 'T) =
         ensureNode graph start
 
@@ -486,8 +456,6 @@ module GraphAlgorithms =
         | _ -> []
 
     let shortestPath (graph: Graph<'T>) (start: 'T) (finish: 'T) =
-        // If every edge has weight 1.0, BFS already gives the optimal route.
-        // Once weights vary, we switch to Dijkstra.
         if not (graph.HasNode(start)) || not (graph.HasNode(finish)) then
             []
         elif EqualityComparer<'T>.Default.Equals(start, finish) then
@@ -498,9 +466,6 @@ module GraphAlgorithms =
             dijkstraShortestPath graph start finish
 
     let minimumSpanningTree (graph: Graph<'T>) =
-        // Kruskal's algorithm:
-        //   1. sort edges from cheapest to most expensive
-        //   2. keep an edge only if it connects two previously separate trees
         if graph.Size <= 1 then
             []
         elif not (isConnected graph) then

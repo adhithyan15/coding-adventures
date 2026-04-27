@@ -328,14 +328,8 @@ public enum BuildTool {
         return 0
     }
 
-    private static func computeLanguagesNeeded(
-        packages: [BuildPackage],
-        affectedSet: Set<String>?,
-        force: Bool,
-        ciToolchains: Set<String>
-    ) -> [String: Bool] {
+    private static func computeLanguagesNeeded(packages: [BuildPackage], affectedSet: Set<String>?, force: Bool) -> [String: Bool] {
         var languagesNeeded: [String: Bool] = Dictionary(uniqueKeysWithValues: allToolchains.map { ($0, false) })
-        languagesNeeded["go"] = true
         if force || affectedSet == nil {
             for toolchain in allToolchains {
                 languagesNeeded[toolchain] = true
@@ -344,10 +338,7 @@ public enum BuildTool {
         }
 
         for package in packages where affectedSet?.contains(package.name) == true {
-            languagesNeeded[toolchainForPackageLanguage(package.language)] = true
-        }
-        for toolchain in ciToolchains {
-            languagesNeeded[toolchain] = true
+            languagesNeeded[toolchain(for: package.language)] = true
         }
         return languagesNeeded
     }
@@ -398,7 +389,7 @@ public enum BuildTool {
     private static func parseArguments(_ arguments: [String]) throws -> CLIOptions {
         var options = CLIOptions()
         var index = 0
-        let languageChoices = Set(allLanguages + ["all"])
+        let languageChoices = Set(allPackageLanguages + ["all"])
 
         func requireValue(_ flag: String) throws -> String {
             index += 1
@@ -468,6 +459,17 @@ public enum BuildTool {
           --validate-build-files      Validate BUILD/CI metadata contracts
           --help                      Show this help
         """
+    }
+
+    private static func toolchain(for language: String) -> String {
+        switch language {
+        case "wasm":
+            return "rust"
+        case "csharp", "fsharp", "dotnet":
+            return "dotnet"
+        default:
+            return language
+        }
     }
 
     private static func findRepoRoot(explicitRoot: String?) -> String? {

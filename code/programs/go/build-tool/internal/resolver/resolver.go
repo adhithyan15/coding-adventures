@@ -1030,21 +1030,6 @@ func buildKnownNamesForLanguage(packages []discovery.Package, language string) m
 				}
 			}
 
-		case "dart":
-			baseName := strings.ReplaceAll(strings.ToLower(filepath.Base(pkg.Path)), "-", "_")
-			pubName := "coding_adventures_" + baseName
-			setKnown(pubName, pkg.Name, pkg.Path, pkg.Language)
-			setKnown(baseName, pkg.Name, pkg.Path, pkg.Language)
-
-			pubspec := filepath.Join(pkg.Path, "pubspec.yaml")
-			data, err := os.ReadFile(pubspec)
-			if err == nil {
-				re := regexp.MustCompile(`(?m)^name\s*:\s*([a-z0-9_]+)\s*$`)
-				if match := re.FindStringSubmatch(string(data)); len(match) == 2 {
-					setKnown(strings.ToLower(strings.TrimSpace(match[1])), pkg.Name, pkg.Path, pkg.Language)
-				}
-			}
-
 		case "lua":
 			// Lua rockspec names use hyphens: "logic_gates" → "coding-adventures-logic-gates"
 			// Note: Lua directory names use underscores, rockspec names use hyphens.
@@ -1069,11 +1054,6 @@ func buildKnownNamesForLanguage(packages []discovery.Package, language string) m
 			// Haskell Cabal package names use hyphens: "logic-gates" → "coding-adventures-logic-gates"
 			cabalName := "coding-adventures-" + strings.ToLower(filepath.Base(pkg.Path))
 			setKnown(cabalName, pkg.Name, pkg.Path, pkg.Language)
-
-		case "haskell":
-			// Haskell Cabal package names use hyphens: "logic-gates" → "coding-adventures-logic-gates"
-			cabalName := "coding-adventures-" + strings.ToLower(filepath.Base(pkg.Path))
-			setKnown(cabalName, pkg.Name, pkg.Path)
 
 		case "java", "kotlin":
 			// Java and Kotlin packages use Gradle composite builds. Dependencies

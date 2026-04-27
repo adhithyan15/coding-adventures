@@ -140,7 +140,7 @@ func run() int {
 	force := flag.Bool("force", false, "Rebuild everything regardless of cache")
 	dryRun := flag.Bool("dry-run", false, "Show what would build without executing")
 	jobs := flag.Int("jobs", runtime.NumCPU(), "Max parallel jobs")
-	language := flag.String("language", "all", "Filter to package language: python, ruby, go, rust, typescript, elixir, lua, perl, swift, dart, wasm, csharp, fsharp, dotnet, all")
+	language := flag.String("language", "all", "Filter to package language: python, ruby, go, rust, typescript, elixir, lua, perl, swift, wasm, csharp, fsharp, dotnet, all")
 	diffBase := flag.String("diff-base", "origin/main", "Git ref to diff against for change detection (default: origin/main)")
 	cacheFile := flag.String("cache-file", ".build-cache.json", "Path to cache file (fallback when git diff unavailable)")
 	detectLanguages := flag.Bool("detect-languages", false, "Output which language toolchains are needed based on git diff, then exit")
@@ -502,9 +502,20 @@ func run() int {
 	return 0
 }
 
-// allLanguages is the canonical list of supported languages in the monorepo.
-// The order is stable and matches the order used in CI toolchain setup.
-var allLanguages = []string{"python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "java", "kotlin"}
+// allToolchains is the canonical list of build toolchains we may need in CI.
+// The order is stable and matches the order used in CI setup.
+var allToolchains = []string{"python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "haskell", "dotnet"}
+
+func toolchainForPackageLanguage(language string) string {
+	switch language {
+	case "wasm":
+		return "rust"
+	case "csharp", "fsharp", "dotnet":
+		return "dotnet"
+	default:
+		return language
+	}
+}
 
 func toolchainForPackageLanguage(language string) string {
 	switch language {
@@ -560,7 +571,24 @@ func detectNeededLanguages(
 	force bool,
 	ciToolchains map[string]bool,
 ) int {
-	needed := computeLanguagesNeeded(packages, affectedSet, force, ciToolchains)
+	needed := make(map[string]bool)
+
+	// Go is always needed — the build tool itself is Go.
+	needed["go"] = true
+
+	if force || affectedSet == nil {
+		// Force mode or shared files changed: all languages needed.
+		for _, lang := range allToolchains {
+			needed[lang] = true
+		}
+	} else {
+		// Only mark languages that have affected packages.
+		for _, pkg := range packages {
+			if affectedSet[pkg.Name] {
+				needed[toolchainForPackageLanguage(pkg.Language)] = true
+			}
+		}
+	}
 
 	// Output results. Each line is "needs_<lang>=true" or "needs_<lang>=false".
 	// If $GITHUB_OUTPUT is set, also write there for GitHub Actions.

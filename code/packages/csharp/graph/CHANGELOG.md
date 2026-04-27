@@ -2,16 +2,6 @@
 
 All notable changes to this package will be documented in this file.
 
-## [Unreleased]
-
-### Changed
-
-- Expanded `Graph.cs` into the repo's literate-programming style with design
-  commentary about representations, traversal order, shortest path selection,
-  and Kruskal's MST algorithm
-- Expanded the README so the package explains the API surface and its teaching
-  intent instead of only listing the test command
-
 ## [0.1.0] - 2026-04-12
 
 ### Added

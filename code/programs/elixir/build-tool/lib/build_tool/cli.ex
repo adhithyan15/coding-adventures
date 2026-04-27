@@ -141,26 +141,12 @@ defmodule BuildTool.CLI do
         diff_base,
         cache_file,
         validate_build_files,
-        detect_languages,
-        emit_plan_path,
-        plan_file_path
-      )
+        detect_languages, emit_plan_path, plan_file_path)
     end
   end
 
-  defp do_build(
-         repo_root,
-         force,
-         dry_run,
-         jobs,
-         language,
-         diff_base,
-         cache_file,
-         validate_build_files,
-         detect_languages,
-         emit_plan_path,
-         plan_file_path
-       ) do
+  defp do_build(repo_root, force, dry_run, jobs, language, diff_base, cache_file,
+               validate_build_files, detect_languages, emit_plan_path, plan_file_path) do
     # The build starts from the code/ directory inside the repo root.
     code_root = Path.join(repo_root, "code")
 
@@ -198,18 +184,8 @@ defmodule BuildTool.CLI do
           if validate_build_files do
             case Validator.validate_build_contracts(repo_root, packages) do
               nil ->
-                do_build_packages(
-                  packages,
-                  repo_root,
-                  force,
-                  dry_run,
-                  jobs,
-                  diff_base,
-                  cache_file,
-                  detect_languages,
-                  emit_plan_path,
-                  plan_file_path
-                )
+                do_build_packages(packages, repo_root, force, dry_run, jobs, diff_base,
+                  cache_file, detect_languages, emit_plan_path, plan_file_path)
 
               validation_error ->
                 IO.puts(:stderr, "BUILD/CI validation failed:")
@@ -223,35 +199,15 @@ defmodule BuildTool.CLI do
                 1
             end
           else
-            do_build_packages(
-              packages,
-              repo_root,
-              force,
-              dry_run,
-              jobs,
-              diff_base,
-              cache_file,
-              detect_languages,
-              emit_plan_path,
-              plan_file_path
-            )
+            do_build_packages(packages, repo_root, force, dry_run, jobs, diff_base,
+              cache_file, detect_languages, emit_plan_path, plan_file_path)
           end
       end
     end
   end
 
-  defp do_build_packages(
-         packages,
-         repo_root,
-         force,
-         dry_run,
-         jobs,
-         diff_base,
-         cache_file,
-         detect_languages,
-         emit_plan_path,
-         _plan_file_path
-       ) do
+  defp do_build_packages(packages, repo_root, force, dry_run, jobs, diff_base,
+                         cache_file, detect_languages, emit_plan_path, _plan_file_path) do
     IO.puts("Discovered #{length(packages)} packages")
 
     # Step 4: Resolve dependencies.
@@ -319,28 +275,12 @@ defmodule BuildTool.CLI do
         output_language_flags(languages_needed)
 
       emit_plan_path != nil ->
-      return_emit_plan(
-        packages,
-        graph,
-        repo_root,
-        diff_base,
-        force_override,
-        affected_set,
-        emit_plan_path
-      )
+      return_emit_plan(packages, graph, repo_root, diff_base, force_override, affected_set,
+        emit_plan_path)
 
       true ->
-      do_execute_builds(
-        packages,
-        graph,
-        repo_root,
-        force_override,
-        dry_run,
-        jobs,
-        diff_base,
-        cache_file,
-        affected_set
-      )
+      do_execute_builds(packages, graph, repo_root, force_override, dry_run, jobs, diff_base,
+        cache_file, affected_set)
     end
   end
 
@@ -578,17 +518,13 @@ defmodule BuildTool.CLI do
   end
 
   defp compute_languages_needed(packages, affected_set, _force) do
-    Enum.reduce(
-      packages,
-      Map.new(@all_toolchains, fn toolchain -> {toolchain, false} end),
-      fn pkg, acc ->
-        if MapSet.member?(affected_set, pkg.name) do
-          Map.put(acc, toolchain_for_language(pkg.language), true)
-        else
-          acc
-        end
+    Enum.reduce(packages, Map.new(@all_toolchains, fn toolchain -> {toolchain, false} end), fn pkg, acc ->
+      if MapSet.member?(affected_set, pkg.name) do
+        Map.put(acc, toolchain_for_language(pkg.language), true)
+      else
+        acc
       end
-    )
+    end)
     |> Map.put("go", true)
   end
 
@@ -615,4 +551,5 @@ defmodule BuildTool.CLI do
 
     0
   end
+
 end

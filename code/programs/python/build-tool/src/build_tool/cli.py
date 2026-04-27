@@ -74,9 +74,9 @@ except ImportError:
     Tracker = None  # type: ignore[assignment, misc]
 
 
-# ALL_LANGUAGES is the canonical list of package languages the Python build
-# tool knows how to build directly.
-ALL_LANGUAGES = ["python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "haskell"]
+# ALL_TOOLCHAINS is the canonical list of supported build toolchains in the
+# monorepo. The order is stable and matches the order used in CI setup.
+ALL_TOOLCHAINS = ["python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "haskell", "dotnet"]
 
 # ALL_TOOLCHAINS is the canonical list of CI toolchains we can request.
 ALL_TOOLCHAINS = [
@@ -102,6 +102,15 @@ SHARED_PREFIXES: list[str] = []
 
 
 def _toolchain_for_package_language(language: str) -> str:
+    if language == "wasm":
+        return "rust"
+    if language in {"csharp", "fsharp", "dotnet"}:
+        return "dotnet"
+    return language
+
+
+def _toolchain_for_language(language: str) -> str:
+    """Map a package language to the toolchain CI needs to install."""
     if language == "wasm":
         return "rust"
     if language in {"csharp", "fsharp", "dotnet"}:
@@ -197,7 +206,23 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument(
         "--language",
-        choices=["python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "all"],
+        choices=[
+            "python",
+            "ruby",
+            "go",
+            "typescript",
+            "rust",
+            "elixir",
+            "lua",
+            "perl",
+            "swift",
+            "haskell",
+            "wasm",
+            "csharp",
+            "fsharp",
+            "dotnet",
+            "all",
+        ],
         default="all",
         help="Only build packages of this language",
     )
@@ -398,7 +423,15 @@ def main(argv: list[str] | None = None) -> int:
 
     # --detect-languages standalone mode: output language flags and exit.
     if args.detect_languages:
-        _output_language_flags(_compute_languages_needed(packages, affected_set, args.force, ci_toolchains))
+        languages_needed: dict[str, bool] = {"go": True}
+        if args.force or affected_set is None:
+            for lang in ALL_TOOLCHAINS:
+                languages_needed[lang] = True
+        else:
+            for pkg in packages:
+                if pkg.name in affected_set:
+                    languages_needed[_toolchain_for_language(pkg.language)] = True
+        _output_language_flags(languages_needed)
         return 0
 
     # Step 6: Hash all packages (needed for cache fallback)
@@ -507,7 +540,15 @@ def _emit_plan(
             )
         )
 
-    languages_needed = _compute_languages_needed(packages, affected_set, args.force, ci_toolchains)
+    # Determine which languages are needed. A language is "needed" if
+    # at least one affected package uses that language.
+    languages_needed: dict[str, bool] = {}
+    for pkg in packages:
+        lang = _toolchain_for_language(pkg.language)
+        if lang not in languages_needed:
+            languages_needed[lang] = False
+        if affected_set is None or pkg.name in affected_set:
+            languages_needed[lang] = True
 
     # Build the plan.
     bp = BuildPlan(
