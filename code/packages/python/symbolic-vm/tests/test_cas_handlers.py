@@ -231,6 +231,39 @@ def test_factor_wrong_arity_passthrough() -> None:
     assert vm.eval(expr) == expr
 
 
+def test_factor_sophie_germain_x4_plus_4() -> None:
+    """Factor(x^4 + 4) = (x^2+2x+2)(x^2-2x+2) — Sophie Germain identity."""
+    vm, _ = make_vm()
+    # x^4 + 4
+    target = IRApply(ADD, (IRApply(POW, (x, IRInteger(4))), IRInteger(4)))
+    expr = IRApply(_FACTOR, (target,))
+    result = vm.eval(expr)
+    # Must be a non-trivial product — not equal to the original Factor(…).
+    assert result != expr
+    # Must be an IRApply (Mul tree — left-associative binary product).
+    assert isinstance(result, IRApply)
+    # The top-level head must be Mul (product of two quadratics).
+    assert result.head.name == "Mul"
+
+
+def test_factor_x4_plus_x2_plus_1_cyclotomic() -> None:
+    """Factor(x^4+x^2+1) = (x^2+x+1)(x^2-x+1)."""
+    vm, _ = make_vm()
+    # x^4 + x^2 + 1 built as Add(Add(x^4, x^2), 1)
+    target = IRApply(
+        ADD,
+        (
+            IRApply(ADD, (IRApply(POW, (x, IRInteger(4))), IRApply(POW, (x, IRInteger(2))))),
+            IRInteger(1),
+        ),
+    )
+    expr = IRApply(_FACTOR, (target,))
+    result = vm.eval(expr)
+    assert result != expr
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Mul"
+
+
 # ===========================================================================
 # Section 4: Solve
 # ===========================================================================

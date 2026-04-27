@@ -664,3 +664,41 @@ def test_pipeline_partfrac_decomposition() -> None:
     assert isinstance(result, IRApply)
     # Not the original Div form
     assert result.head.name != "Div"
+
+
+# ---------------------------------------------------------------------------
+# Section R — Kronecker factoring (A1 Phase 2)
+# ---------------------------------------------------------------------------
+
+
+def test_pipeline_factor_sophie_germain() -> None:
+    """factor(x^4 + 4) splits via Sophie Germain identity."""
+    result = _eval("factor(x^4 + 4)")
+    # Must be a product (Mul), not unevaluated Factor(…).
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Mul"
+
+
+def test_pipeline_factor_cyclotomic_x4_x2_1() -> None:
+    """factor(x^4 + x^2 + 1) = (x^2+x+1)(x^2-x+1)."""
+    result = _eval("factor(x^4 + x^2 + 1)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Mul"
+
+
+def test_pipeline_factor_mixed_linear_and_irreducible_quadratic() -> None:
+    """factor((x^2+1)*(x-2)) — linear factor extracted, quadratic left intact."""
+    # x^3 - 2x^2 + x - 2
+    result = _eval("factor(x^3 - 2*x^2 + x - 2)")
+    assert isinstance(result, IRApply)
+    # Should be a Mul with the linear factor (x-2) and the quadratic (x^2+1).
+    assert result.head.name == "Mul"
+
+
+def test_pipeline_factor_irreducible_x2_plus_1_unchanged() -> None:
+    """factor(x^2 + 1) returns the original expression unevaluated."""
+    result = _eval("factor(x^2 + 1)")
+    # x^2 + 1 is irreducible over Z; Factor(…) node returned as-is.
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Factor"
+

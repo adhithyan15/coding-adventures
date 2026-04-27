@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.27.0 — 2026-04-27
+
+**Roadmap item A1 — Kronecker polynomial factoring (Phase 2) wired through `cas-factor 0.2.0`.**
+
+Upgrades `coding-adventures-cas-factor` dependency to `>=0.2.0`.
+
+The `Factor` handler in `build_cas_handler_table()` transparently benefits
+from `cas-factor`'s new Kronecker algorithm — no handler code changes needed.
+Factoring now handles:
+
+- **Sophie Germain identity**: `x⁴ + 4 = (x²+2x+2)(x²−2x+2)`
+- **Cyclotomic**: `x⁴+x²+1 = (x²+x+1)(x²−x+1)`
+- **Repeated irreducibles**: `x⁴+2x²+1 = (x²+1)²`
+- **Mixed**: `(x²+1)(x−2)` correctly split
+
+Updated `factor_handler` docstring to reflect Phase 2 capabilities.
+
+2 new tests in `test_cas_handlers.py` (Sophie Germain, cyclotomic), verifying
+that `Factor(x⁴+4)` and `Factor(x⁴+x²+1)` both return non-trivial `Mul` trees.
+
 ## 0.26.0 — 2026-04-27
 
 **Roadmap item A3 — rational function operations (Collect, Together, RatSimplify, Apart, full Expand).**

@@ -538,17 +538,18 @@ def _factor_result_to_ir(
 def factor_handler(_vm: "VM", expr: IRApply) -> IRNode:
     """``Factor(expr)`` — factor a univariate integer polynomial over Z.
 
-    Phase 1: finds all integer-valued rational roots via the rational-root
-    theorem, divides them out, and leaves any irreducible residual as a
-    single factor. Example::
+    Uses rational-root extraction (Phase 1) followed by Kronecker's
+    algorithm (Phase 2) to find all irreducible factors.  Examples::
 
-        Factor(x^2 - 1)  →  Mul(Sub(x, 1), Add(x, 1))
+        Factor(x^2 - 1)      →  Mul(Sub(x, 1), Add(x, 1))
         Factor(2*x^2 + 4*x + 2)  →  Mul(2, Pow(Add(x, 1), 2))
+        Factor(x^4 + 4)      →  Mul(x^2+2x+2, x^2-2x+2)  [Sophie Germain]
+        Factor(x^4+x^2+1)    →  Mul(x^2+x+1, x^2-x+1)    [cyclotomic]
 
     Returns the expression unevaluated if:
     - There is no free variable (purely numeric — no factoring needed).
     - The expression is not a polynomial in the identified variable.
-    - The polynomial has non-integer-valued rational roots (irreducible).
+    - The polynomial is irreducible over Z (e.g. ``x^2 + 1``).
     """
     if len(expr.args) != 1:
         return expr

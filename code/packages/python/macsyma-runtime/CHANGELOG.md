@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.0.0 — 2026-04-27
+
+**Roadmap item A1 — Kronecker polynomial factoring surfaced through MACSYMA `factor`.**
+
+Bumps dependency to `symbolic-vm>=0.27.0` which ships `cas-factor 0.2.0`
+with Kronecker's algorithm.  No changes to `macsyma-runtime` source code;
+the improvement flows through automatically since `factor` → `Factor` IR head
+→ `factor_handler` → `factor_integer_polynomial` → Kronecker.
+
+4 new pipeline tests in `test_cas_pipeline.py` (Section R):
+- `factor(x^4 + 4)` → `Mul` (Sophie Germain: `(x²+2x+2)(x²-2x+2)`).
+- `factor(x^4 + x^2 + 1)` → `Mul` (cyclotomic: `(x²+x+1)(x²-x+1)`).
+- `factor(x^3 - 2x^2 + x - 2)` → `Mul` (mixed: linear `(x-2)` + `(x²+1)`).
+- `factor(x^2 + 1)` → `Factor(x^2+1)` unevaluated (irreducible over Z).
+
 ## 0.9.0 — 2026-04-27
 
 **Rational function operations wired into MACSYMA name table (A3).**
