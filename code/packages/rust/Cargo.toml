@@ -384,4 +384,5 @@ members = [
     "symbolic-vm",
     "cas-pattern-matching",
     "cas-simplify",
+    "cas-substitution",
 ]
