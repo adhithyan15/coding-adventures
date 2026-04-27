@@ -1,1 +1,1 @@
-cargo test -p blas-library -- --nocapture
+cargo test --target-dir target_isolated -p blas-library -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p device-simulator -- --nocapture
+cargo test --target-dir target_isolated -p device-simulator -- --nocapture

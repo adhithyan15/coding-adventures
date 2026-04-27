@@ -1,1 +1,1 @@
-cargo test -p garbage-collector -- --nocapture
+cargo test --target-dir target_isolated -p garbage-collector -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-javascript-parser -- --nocapture
+cargo test --target-dir target_isolated -p coding-adventures-javascript-parser -- --nocapture

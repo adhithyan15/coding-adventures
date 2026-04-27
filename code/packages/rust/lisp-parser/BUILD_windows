@@ -1,1 +1,1 @@
-cargo test -p lisp-parser -- --nocapture
+cargo test --target-dir target_isolated -p lisp-parser -- --nocapture

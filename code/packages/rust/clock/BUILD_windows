@@ -1,1 +1,1 @@
-cargo test -p clock -- --nocapture
+cargo test --target-dir target_isolated -p clock -- --nocapture

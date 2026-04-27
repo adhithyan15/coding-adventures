@@ -1,1 +1,1 @@
-cargo test -p ml-framework-core -- --nocapture
+cargo test --target-dir target_isolated -p ml-framework-core -- --nocapture

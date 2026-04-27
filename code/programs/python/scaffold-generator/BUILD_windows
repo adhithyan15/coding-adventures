@@ -2,4 +2,4 @@ uv venv --quiet --clear
 uv pip install -e ../../../packages/python/graph -e ../../../packages/python/directed-graph -e ../../../packages/python/state-machine -e ../../../packages/python/cli-builder --quiet
 uv pip install --no-deps -e .[dev] --quiet
 uv pip install pytest pytest-cov ruff mypy --quiet
-uv run --no-project python -m pytest tests/ -v
+.venv\Scripts\python -m pytest tests/ -v

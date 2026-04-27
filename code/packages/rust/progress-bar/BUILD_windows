@@ -1,1 +1,1 @@
-cargo test -p progress-bar
+cargo test --target-dir target_isolated -p progress-bar

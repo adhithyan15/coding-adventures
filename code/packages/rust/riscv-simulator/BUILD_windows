@@ -1,1 +1,1 @@
-cargo test -p riscv-simulator -- --nocapture
+cargo test --target-dir target_isolated -p riscv-simulator -- --nocapture

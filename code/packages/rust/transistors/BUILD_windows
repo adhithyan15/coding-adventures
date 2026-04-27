@@ -1,1 +1,1 @@
-cargo test -p transistors -- --nocapture
+cargo test --target-dir target_isolated -p transistors -- --nocapture

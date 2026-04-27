@@ -1,1 +1,1 @@
-cargo test -p parallel-execution-engine -- --nocapture
+cargo test --target-dir target_isolated -p parallel-execution-engine -- --nocapture

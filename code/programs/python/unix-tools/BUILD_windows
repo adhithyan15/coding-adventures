@@ -4,4 +4,4 @@ uv pip install --no-deps -e ../../../packages/python/state-machine --quiet
 uv pip install --no-deps -e ../../../packages/python/cli-builder --quiet
 uv pip install --no-deps -e .[dev] --quiet
 uv pip install pytest ruff --quiet
-uv run --no-project python -m pytest tests/ -v --ignore=tests/test_chown.py --ignore=tests/test_ls.py --ignore=tests/test_chmod.py --ignore=tests/test_env.py --ignore=tests/test_realpath.py --ignore=tests/test_tty.py
+.venv\Scripts\python -m pytest tests/ -v --ignore=tests/test_chown.py --ignore=tests/test_ls.py --ignore=tests/test_chmod.py --ignore=tests/test_env.py --ignore=tests/test_realpath.py --ignore=tests/test_tty.py
