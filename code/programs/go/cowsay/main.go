@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"math"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -12,29 +11,6 @@ import (
 
 	clibuilder "github.com/adhithyan15/coding-adventures/code/packages/go/cli-builder"
 )
-
-func intFromFloatFlag(value float64) (int, error) {
-	if math.IsNaN(value) || math.IsInf(value, 0) {
-		return 0, fmt.Errorf("%v is not a finite integer", value)
-	}
-
-	truncated := math.Trunc(value)
-	if truncated != value {
-		return 0, fmt.Errorf("%v is not an integer", value)
-	}
-
-	asInt64 := int64(truncated)
-	if float64(asInt64) != truncated {
-		return 0, fmt.Errorf("%v is outside the supported integer range", value)
-	}
-
-	converted := int(asInt64)
-	if int64(converted) != asInt64 {
-		return 0, fmt.Errorf("%v is outside the supported integer range", value)
-	}
-
-	return converted, nil
-}
 
 func wrapText(text string, width int) []string {
 	if len(text) <= width {
@@ -136,7 +112,7 @@ func main() {
 	// Find repo root
 	executablePath, _ := os.Executable()
 	_ = executablePath // Unused if we use relative paths from CWD
-
+	
 	// Better way to find root in this environment
 	root, _ := os.Getwd()
 	// If we are in code/programs/go/cowsay, we need to go up 4 levels
@@ -262,11 +238,9 @@ func handleParseResult(r *clibuilder.ParseResult, root string) {
 		if w, ok := flags["width"].(int); ok {
 			width = w
 		} else if wf, ok := flags["width"].(float64); ok {
-			if parsedWidth, err := intFromFloatFlag(wf); err == nil {
-				width = parsedWidth
-			}
+			width = int(wf)
 		}
-
+		
 		for _, line := range strings.Split(message, "\n") {
 			if line == "" {
 				lines = append(lines, "")
@@ -300,7 +274,7 @@ func handleParseResult(r *clibuilder.ParseResult, root string) {
 	cow := strings.ReplaceAll(cowTemplate, "$eyes", eyes)
 	cow = strings.ReplaceAll(cow, "$tongue", tongue)
 	cow = strings.ReplaceAll(cow, "$thoughts", thoughts)
-
+	
 	// Final unescape
 	cow = strings.ReplaceAll(cow, "\\\\", "\\")
 

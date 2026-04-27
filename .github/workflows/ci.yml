@@ -2,28 +2,15 @@
 # CI — Incremental, parallel monorepo build with conditional toolchains
 # ================================================================
 #
-# Two-job pipeline:
-#   1. detect: Fast (~10s) — compiles the Go build tool and runs
-#      --detect-languages to determine which toolchains are needed.
-#   2. build: Installs only the needed toolchains, then runs the build.
+# Single-job pipeline per platform:
+#   1. Sets up Go and compiles the build tool.
+#   2. Runs planning mode (`--emit-plan`) to detect changed packages and determine
+#      which language toolchains are needed.
+#   3. Conditionally installs only the needed toolchains (e.g. Python, Ruby, Node).
+#   4. Executes the build using the generated JSON plan.
 #
-# This saves 3-5 minutes on language-specific changes by skipping
+# This saves time by avoiding artifact uploads/downloads and skipping
 # unneeded toolchain installations (e.g., Rust tarpaulin, Elixir/Erlang).
-#
-# Change detection: git diff against the base branch determines which
-# files changed, maps them to packages, then uses the dependency graph
-# to find all affected packages (changed + transitive dependents).
-#
-# Parallelism: independent packages run concurrently via goroutines.
-#
-# Tiered strategy:
-# - Every push: Linux only (fast feedback)
-# - PRs to main: Linux + macOS + Windows (thorough validation)
-#
-# Windows shell: The build tool uses 'pwsh -Command' (PowerShell 7) on Windows
-# instead of 'cmd /C'. cmd.exe strips outer double-quotes from arguments,
-# corrupting paths passed to tools like uv. PowerShell preserves quotes,
-# supports '&&' chaining, and handles forward-slash paths correctly.
 
 name: CI
 
@@ -42,138 +29,7 @@ permissions:
   contents: read
 
 jobs:
-  # ── Job 1: Detect which languages need toolchains ────────────
-  #
-  # This job is fast (~10s). It compiles the Go build tool, runs
-  # --detect-languages, and outputs boolean flags for each language.
-  # The build job reads these flags to conditionally install toolchains.
-  detect:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    outputs:
-      needs_python: ${{ steps.toolchains.outputs.needs_python }}
-      needs_ruby: ${{ steps.toolchains.outputs.needs_ruby }}
-      needs_go: ${{ steps.toolchains.outputs.needs_go }}
-      needs_typescript: ${{ steps.toolchains.outputs.needs_typescript }}
-      needs_rust: ${{ steps.toolchains.outputs.needs_rust }}
-      needs_elixir: ${{ steps.toolchains.outputs.needs_elixir }}
-      needs_lua: ${{ steps.toolchains.outputs.needs_lua }}
-      needs_perl: ${{ steps.toolchains.outputs.needs_perl }}
-      needs_java: ${{ steps.toolchains.outputs.needs_java }}
-      needs_kotlin: ${{ steps.toolchains.outputs.needs_kotlin }}
-      diff_base: ${{ steps.diff-base.outputs.base }}
-      is_main: ${{ steps.detect-main.outputs.is_main }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: '1.23'
-          cache: false
-
-      - name: Determine diff base
-        id: diff-base
-        shell: bash
-        env:
-          PR_BASE_REF: ${{ github.event.pull_request.base.ref }}
-          EVENT_NAME: ${{ github.event_name }}
-          GIT_REF: ${{ github.ref }}
-        run: |
-          if [ "$EVENT_NAME" = "pull_request" ]; then
-            # Validate the base ref before using it to prevent script injection.
-            # Branch names may only contain alphanumerics, dots, hyphens, underscores,
-            # and forward slashes — anything else is rejected.
-            if [[ "$PR_BASE_REF" =~ ^[A-Za-z0-9_./-]+$ ]]; then
-              BASE="origin/$PR_BASE_REF"
-            else
-              echo "::error::Unsafe base ref value: $PR_BASE_REF"
-              exit 1
-            fi
-          elif [ "$GIT_REF" = "refs/heads/main" ]; then
-            BASE="HEAD~1"
-          else
-            git fetch origin main:refs/remotes/origin/main 2>/dev/null || true
-            BASE="origin/main"
-          fi
-          echo "base=$BASE" >> "$GITHUB_OUTPUT"
-          echo "Diff base: $BASE"
-
-      - name: Check if main branch
-        id: detect-main
-        shell: bash
-        env:
-          GIT_REF: ${{ github.ref }}
-          EVENT_NAME: ${{ github.event_name }}
-        run: |
-          if [ "$GIT_REF" = "refs/heads/main" ] && [ "$EVENT_NAME" = "push" ]; then
-            echo "is_main=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "is_main=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Detect needed languages and emit build plan
-        id: detect
-        shell: bash
-        run: |
-          cd code/programs/go/build-tool
-          go build -o ../../../../build-tool .
-          cd ../../../..
-          ./build-tool \
-            -root . \
-            -diff-base "${{ steps.diff-base.outputs.base }}" \
-            -validate-build-files \
-            -detect-languages \
-            -emit-plan build-plan.json
-
-      - name: Normalize toolchain requirements
-        id: toolchains
-        shell: bash
-        run: |
-          if [ "${{ steps.detect-main.outputs.is_main }}" = "true" ]; then
-            echo "Main branch push detected; enabling all supported toolchains for the forced full build"
-            printf '%s\n' \
-              'needs_python=true' \
-              'needs_ruby=true' \
-              'needs_go=true' \
-              'needs_typescript=true' \
-              'needs_rust=true' \
-              'needs_elixir=true' \
-              'needs_lua=true' \
-              'needs_perl=true' \
-              'needs_java=true' \
-              'needs_kotlin=true' >> "$GITHUB_OUTPUT"
-          else
-            printf '%s\n' \
-              'needs_python=${{ steps.detect.outputs.needs_python }}' \
-              'needs_ruby=${{ steps.detect.outputs.needs_ruby }}' \
-              'needs_go=${{ steps.detect.outputs.needs_go }}' \
-              'needs_typescript=${{ steps.detect.outputs.needs_typescript }}' \
-              'needs_rust=${{ steps.detect.outputs.needs_rust }}' \
-              'needs_elixir=${{ steps.detect.outputs.needs_elixir }}' \
-              'needs_lua=${{ steps.detect.outputs.needs_lua }}' \
-              'needs_perl=${{ steps.detect.outputs.needs_perl }}' \
-              'needs_java=${{ steps.detect.outputs.needs_java }}' \
-              'needs_kotlin=${{ steps.detect.outputs.needs_kotlin }}' >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Upload build plan
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-plan
-          path: build-plan.json
-          retention-days: 1
-
-  # ── Job 2: Build and test ──────────────────────────────────────
-  #
-  # Installs only the toolchains flagged by the detect job, then
-  # compiles the build tool and runs the incremental build.
   build:
-    needs: detect
     strategy:
       matrix:
         os: ${{ github.event_name == 'pull_request' && fromJSON('["ubuntu-latest", "macos-latest", "windows-latest"]') || fromJSON('["ubuntu-latest"]') }}
@@ -191,30 +47,84 @@ jobs:
         with:
           fetch-depth: 0
 
-      # ── Language toolchains (conditional) ───────────────────────
-      #
-      # Go is always installed — the build tool is written in Go.
-      # Other toolchains are installed only if their language has
-      # affected packages, as determined by the detect job.
-      #
-      # On main pushes we also run a forced full build later, so we
-      # provision every toolchain up front for that path.
-
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
           go-version: '1.23'
           cache: false
 
+      - name: Determine diff base
+        id: diff-base
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE="origin/${{ github.event.pull_request.base.ref }}"
+          elif [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            BASE="HEAD~1"
+          else
+            git fetch origin main:refs/remotes/origin/main 2>/dev/null || true
+            BASE="origin/main"
+          fi
+          echo "base=$BASE" >> "$GITHUB_OUTPUT"
+          echo "Diff base: $BASE"
+
+      - name: Check if main branch
+        id: detect-main
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/main" ] && [ "${{ github.event_name }}" = "push" ]; then
+            echo "is_main=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "is_main=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Generate build plan
+        id: plan
+        run: |
+          cd code/programs/go/build-tool
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            go build -o ../../../../build-tool.exe .
+            BT=./build-tool.exe
+          else
+            go build -o ../../../../build-tool .
+            BT=./build-tool
+          fi
+          cd ../../../..
+          
+          # FORCED FULL BUILD FOR PR VALIDATION
+          $BT -root . -diff-base "${{ steps.diff-base.outputs.base }}" -force -emit-plan build-plan.json
+          
+          # Parse the emitted JSON to drive toolchain installations
+          NEEDS_PYTHON=$(jq -r '.languages_needed.python // false' build-plan.json)
+          echo "needs_python=$NEEDS_PYTHON" >> "$GITHUB_OUTPUT"
+          
+          NEEDS_RUBY=$(jq -r '.languages_needed.ruby // false' build-plan.json)
+          echo "needs_ruby=$NEEDS_RUBY" >> "$GITHUB_OUTPUT"
+          
+          NEEDS_TYPESCRIPT=$(jq -r '.languages_needed.typescript // false' build-plan.json)
+          echo "needs_typescript=$NEEDS_TYPESCRIPT" >> "$GITHUB_OUTPUT"
+          
+          NEEDS_RUST=$(jq -r '.languages_needed.rust // false' build-plan.json)
+          echo "needs_rust=$NEEDS_RUST" >> "$GITHUB_OUTPUT"
+          
+          NEEDS_ELIXIR=$(jq -r '.languages_needed.elixir // false' build-plan.json)
+          echo "needs_elixir=$NEEDS_ELIXIR" >> "$GITHUB_OUTPUT"
+          
+          NEEDS_LUA=$(jq -r '.languages_needed.lua // false' build-plan.json)
+          echo "needs_lua=$NEEDS_LUA" >> "$GITHUB_OUTPUT"
+          
+          NEEDS_PERL=$(jq -r '.languages_needed.perl // false' build-plan.json)
+          echo "needs_perl=$NEEDS_PERL" >> "$GITHUB_OUTPUT"
+
+      # ── Language toolchains (conditional) ───────────────────────
+      
       - name: Set up Python
-        if: needs.detect.outputs.needs_python == 'true' || needs.detect.outputs.is_main == 'true'
+        if: steps.plan.outputs.needs_python == 'true'
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
           allow-prereleases: true
 
       - name: Install uv
-        if: needs.detect.outputs.needs_python == 'true' || needs.detect.outputs.is_main == 'true'
+        if: steps.plan.outputs.needs_python == 'true'
         uses: astral-sh/setup-uv@v4
         with:
           version: "0.6.x"
@@ -273,150 +183,50 @@ jobs:
           for /f "delims=" %%i in ('luarocks path --lr-bin') do echo %%i>> %GITHUB_PATH%
 
       - name: Set up Ruby
-        if: needs.detect.outputs.needs_ruby == 'true' || needs.detect.outputs.is_main == 'true'
+        if: steps.plan.outputs.needs_ruby == 'true'
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.4'
           bundler-cache: false
 
       - name: Install bundler
-        if: needs.detect.outputs.needs_ruby == 'true' || needs.detect.outputs.is_main == 'true'
-        shell: bash
+        if: steps.plan.outputs.needs_ruby == 'true'
         run: gem install bundler
 
       - name: Set up Node.js
-        if: needs.detect.outputs.needs_typescript == 'true' || needs.detect.outputs.is_main == 'true'
+        if: steps.plan.outputs.needs_typescript == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
       - name: Set up Rust
-        if: needs.detect.outputs.needs_rust == 'true' || needs.detect.outputs.is_main == 'true'
+        if: steps.plan.outputs.needs_rust == 'true'
         uses: dtolnay/rust-toolchain@stable
 
       - name: Install cargo-tarpaulin
-        if: (needs.detect.outputs.needs_rust == 'true' || needs.detect.outputs.is_main == 'true') && runner.os == 'Linux'
+        if: steps.plan.outputs.needs_rust == 'true' && runner.os == 'Linux'
         run: cargo install cargo-tarpaulin
 
       - name: Set up Elixir
-        if: needs.detect.outputs.needs_elixir == 'true' || needs.detect.outputs.is_main == 'true'
+        if: steps.plan.outputs.needs_elixir == 'true'
         uses: erlef/setup-beam@v1
         with:
           elixir-version: '1.16'
           otp-version: '26.0'
 
-      - name: Set up Dart
-        if: needs.detect.outputs.needs_dart == 'true'
-        uses: dart-lang/setup-dart@v1
-
-      - name: Set up Swift (Windows)
-        if: needs.detect.outputs.needs_swift == 'true' && runner.os == 'Windows'
-        shell: pwsh
-        run: |
-          winget install --id Swift.Toolchain --exact --accept-package-agreements --accept-source-agreements --source winget
-          $wingetExitCode = $LASTEXITCODE
-
-          if ($wingetExitCode -ne 0) {
-            Write-Warning "winget install exited with code $wingetExitCode; checking whether Swift is available anyway"
-          }
-
-          $currentPathEntries = @($env:Path -split ';')
-          $currentPathSet = @{}
-          foreach ($entry in $currentPathEntries) {
-            if (-not [string]::IsNullOrWhiteSpace($entry)) {
-              $currentPathSet[$entry] = $true
-            }
-          }
-
-          $registryPathEntries = @(
-            [System.Environment]::GetEnvironmentVariable('Path', 'User')
-            [System.Environment]::GetEnvironmentVariable('Path', 'Machine')
-          ) | Where-Object { $_ } | ForEach-Object { $_ -split ';' } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
-
-          $newPathEntries = @()
-          foreach ($entry in $registryPathEntries) {
-            if (-not $currentPathSet.ContainsKey($entry)) {
-              $currentPathSet[$entry] = $true
-              $newPathEntries += $entry
-            }
-          }
-
-          foreach ($entry in $newPathEntries) {
-            $entry | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-          }
-          if ($newPathEntries.Count -gt 0) {
-            $env:Path = "$env:Path;$($newPathEntries -join ';')"
-          }
-
-          $swiftRoots = @(
-            (Join-Path $env:LOCALAPPDATA 'Programs\Swift')
-            (Join-Path $env:ProgramFiles 'Swift')
-          ) | Where-Object { Test-Path $_ }
-
-          $swiftExe = @(
-            (Get-Command swift -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source -ErrorAction SilentlyContinue)
-            ($swiftRoots | ForEach-Object {
-              Get-ChildItem -Path $_ -Filter swift.exe -Recurse -File -ErrorAction SilentlyContinue |
-                Sort-Object FullName -Descending |
-                Select-Object -First 1 -ExpandProperty FullName
-            })
-          ) | Where-Object { $_ } | Select-Object -First 1
-
-          if (-not $swiftExe) {
-            if ($wingetExitCode -ne 0) {
-              throw "winget install exited with code $wingetExitCode and swift.exe was not found"
-            }
-            throw 'swift.exe not found after winget install'
-          }
-
-          $toolchainBin = Split-Path -Parent $swiftExe
-          if (-not $currentPathSet.ContainsKey($toolchainBin)) {
-            $toolchainBin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-            $env:Path = "$env:Path;$toolchainBin"
-            $currentPathSet[$toolchainBin] = $true
-          }
-          Write-Host "Using Swift from $swiftExe"
-
-          $sdkRoot = [System.Environment]::GetEnvironmentVariable('SDKROOT', 'User')
-          if (-not $sdkRoot) {
-            $sdkRoot = [System.Environment]::GetEnvironmentVariable('SDKROOT', 'Machine')
-          }
-          if (-not $sdkRoot) {
-            $sdkRoot = $swiftRoots | ForEach-Object {
-            Get-ChildItem -Path $_ -Filter Windows.sdk -Directory -Recurse -ErrorAction SilentlyContinue |
-              Sort-Object FullName -Descending |
-              Select-Object -First 1 -ExpandProperty FullName
-            } | Where-Object { $_ } | Select-Object -First 1
-          }
-
-          if ($sdkRoot) {
-            "SDKROOT=$sdkRoot" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-            $env:SDKROOT = $sdkRoot
-            Write-Host "Using SDKROOT=$sdkRoot"
-          }
-
-          where.exe swift
-
-      # ── Java / Kotlin ──────────────────────────────────────────
-      #
-      # Both Java and Kotlin packages use Gradle and JDK 21.
-      # A single JDK + Gradle setup covers both languages since
-      # Kotlin/JVM runs on the same JVM.
-
-      - name: Set up JDK 21
-        if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true'
-        uses: actions/setup-java@v4
+      - name: Set up Lua
+        if: steps.plan.outputs.needs_lua == 'true' && runner.os != 'Windows'
+        uses: leafo/gh-actions-lua@v11
         with:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Set up Gradle
-        if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true'
-        uses: gradle/actions/setup-gradle@v4
+      - name: Set up LuaRocks
+        if: steps.plan.outputs.needs_lua == 'true' && runner.os != 'Windows'
+        uses: leafo/gh-actions-luarocks@v4
 
-      - name: Disable long-lived Gradle services on Windows CI
-        if: (needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true') && runner.os == 'Windows'
-        shell: bash
+      - name: Install Lua test tools
+        if: steps.plan.outputs.needs_lua == 'true' && runner.os != 'Windows'
         run: |
           {
             echo 'GRADLE_OPTS=-Dorg.gradle.daemon=false -Dorg.gradle.vfs.watch=false'
@@ -451,89 +261,57 @@ jobs:
           # actions/setup-dotnet@v4 works identically on Ubuntu, macOS, and Windows.
           dotnet-version: '9.0.x'
 
-      - name: Install test runners
-        shell: bash
+      - name: Install cpanm and test dependencies (Perl)
+        if: steps.plan.outputs.needs_perl == 'true' && runner.os != 'Windows'
         run: |
-          if [ "${{ needs.detect.outputs.needs_python }}" = "true" ] || [ "${{ needs.detect.outputs.is_main }}" = "true" ]; then
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            sudo apt-get install -y cpanminus
+            sudo cpanm --quiet --notest Test2::V0
+          elif [ "$RUNNER_OS" = "macOS" ]; then
+            brew install cpanminus
+            cpanm --quiet --notest Test2::V0
+          fi
+
+      - name: Install test runners
+        run: |
+          if [ "${{ steps.plan.outputs.needs_python }}" = "true" ]; then
             uv pip install --system pytest
           fi
-          if [ "${{ needs.detect.outputs.needs_typescript }}" = "true" ] || [ "${{ needs.detect.outputs.is_main }}" = "true" ]; then
+          if [ "${{ steps.plan.outputs.needs_typescript }}" = "true" ]; then
             npm install -g jest
           fi
 
       # ── Verify toolchains ────────────────────────────────────
       - name: Verify tools
-        shell: bash
         run: |
           echo "Go: $(go version)"
-          if [ "${{ needs.detect.outputs.needs_python }}" = "true" ] || [ "${{ needs.detect.outputs.is_main }}" = "true" ]; then
+          if [ "${{ steps.plan.outputs.needs_python }}" = "true" ]; then
             echo "Python: $(python --version)"
             echo "uv: $(uv --version)"
           fi
-          if [ "${{ needs.detect.outputs.needs_ruby }}" = "true" ] || [ "${{ needs.detect.outputs.is_main }}" = "true" ]; then
+          if [ "${{ steps.plan.outputs.needs_ruby }}" = "true" ]; then
             echo "Ruby: $(ruby --version)"
             echo "Bundler: $(bundle --version)"
           fi
-          if [ "${{ needs.detect.outputs.needs_typescript }}" = "true" ] || [ "${{ needs.detect.outputs.is_main }}" = "true" ]; then
+          if [ "${{ steps.plan.outputs.needs_typescript }}" = "true" ]; then
             echo "Node: $(node --version)"
             echo "npm: $(npm --version)"
           fi
-          if [ "${{ needs.detect.outputs.needs_rust }}" = "true" ] || [ "${{ needs.detect.outputs.is_main }}" = "true" ]; then
+          if [ "${{ steps.plan.outputs.needs_rust }}" = "true" ]; then
             echo "Rust: $(rustc --version)"
             echo "Cargo: $(cargo --version)"
           fi
-          if [ "${{ needs.detect.outputs.needs_elixir }}" = "true" ] || [ "${{ needs.detect.outputs.is_main }}" = "true" ]; then
+          if [ "${{ steps.plan.outputs.needs_elixir }}" = "true" ]; then
             echo "Elixir: $(elixir --version)"
             echo "Mix: $(mix --version)"
           fi
-          if [ "${{ needs.detect.outputs.needs_lua }}" = "true" ] || [ "${{ needs.detect.outputs.is_main }}" = "true" ]; then
+          if [ "${{ steps.plan.outputs.needs_lua }}" = "true" ] && [ "$RUNNER_OS" != "Windows" ]; then
             echo "Lua: $(lua -v)"
             echo "LuaRocks: $(luarocks --version)"
           fi
-          if { [ "${{ needs.detect.outputs.needs_perl }}" = "true" ] || [ "${{ needs.detect.outputs.is_main }}" = "true" ]; } && [ "$RUNNER_OS" != "Windows" ]; then
+          if [ "${{ steps.plan.outputs.needs_perl }}" = "true" ] && [ "$RUNNER_OS" != "Windows" ]; then
             echo "Perl: $(perl --version | head -2 | tail -1)"
             echo "cpanm: $(cpanm --version)"
-          fi
-          if [ "${{ needs.detect.outputs.needs_haskell }}" = "true" ]; then
-            echo "GHC: $(ghc --version)"
-            echo "Cabal: $(cabal --version)"
-          fi
-          if [ "${{ needs.detect.outputs.needs_dotnet }}" = "true" ]; then
-            echo ".NET: $(dotnet --version)"
-          fi
-
-      # ── Download build plan (skip discovery in build job) ─────
-      - name: Download build plan
-        uses: actions/download-artifact@v4
-        with:
-          name: build-plan
-        continue-on-error: true
-
-      # ── Java/Kotlin (JDK 21 + Gradle) ────────────────────────
-      #
-      # Both Java and Kotlin packages use Gradle as their build system.
-      # JDK 21 is required because the source code uses Java 21 features
-      # (sealed interfaces, records, pattern matching in switch).
-      - name: Set up JDK 21
-        if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true'
-        uses: actions/setup-java@v4
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-
-      - name: Set up Gradle
-        if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true'
-        uses: gradle/actions/setup-gradle@v4
-
-      # ── Build the build tool ──────────────────────────────────
-      - name: Compile build tool
-        shell: bash
-        run: |
-          cd code/programs/go/build-tool
-          if [ "$RUNNER_OS" = "Windows" ]; then
-            go build -o ../../../../build-tool.exe .
-          else
-            go build -o ../../../../build-tool .
           fi
 
       # ── Pin Rust to MSVC linker on Windows ─────────────────────
@@ -573,8 +351,6 @@ jobs:
 
       # ── Run the build ─────────────────────────────────────────
       - name: Build and test affected packages
-        if: runner.os != 'Windows' || (needs.detect.outputs.needs_swift == 'true' && false)
-        shell: bash
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
           PLAN_FLAG=""
@@ -590,8 +366,7 @@ jobs:
 
       # ── Force full build on main ──────────────────────────────
       - name: Full build on main merge
-        if: needs.detect.outputs.is_main == 'true'
-        shell: bash
+        if: steps.detect-main.outputs.is_main == 'true'
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
           $BT -root . -force -validate-build-files -language all
