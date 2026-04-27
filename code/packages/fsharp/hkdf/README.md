@@ -1,6 +1,6 @@
 # CodingAdventures.Hkdf.FSharp
 
-HKDF extract-and-expand helpers for .NET.
+HKDF extract-and-expand helpers for .NET, implemented directly with package-local HMAC and hash primitives.
 
 ```fsharp
 open CodingAdventures.Hkdf.FSharp

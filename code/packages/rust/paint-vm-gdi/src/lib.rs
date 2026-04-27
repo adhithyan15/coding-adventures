@@ -65,7 +65,8 @@ pub const VERSION: &str = "0.1.0";
 
 use paint_instructions::{
     FillRule, ImageSrc, PaintClip, PaintEllipse, PaintGlyphRun, PaintImage, PaintInstruction,
-    PaintLine, PaintPath, PaintRect, PaintScene, PathCommand, PixelContainer,
+    PaintLine, PaintPath, PaintRect, PaintScene, PaintText, PathCommand, PixelContainer,
+    TextAlign,
 };
 
 // ---------------------------------------------------------------------------
@@ -98,8 +99,8 @@ use windows::Win32::Graphics::Gdi::{
     BITMAPINFOHEADER, BI_RGB, BLENDFUNCTION, BS_SOLID, CLIP_DEFAULT_PRECIS,
     CLEARTYPE_QUALITY, DEFAULT_CHARSET, DEFAULT_PITCH, DIB_RGB_COLORS, ETO_GLYPH_INDEX,
     HBITMAP, HDC, HGDIOBJ, LOGBRUSH, NULL_BRUSH, NULL_PEN, OUT_DEFAULT_PRECIS,
-    PS_ENDCAP_FLAT, PS_GEOMETRIC, PS_JOIN_MITER, PS_SOLID, PS_USERSTYLE, TA_BASELINE, TA_LEFT,
-    TRANSPARENT, AC_SRC_ALPHA, AC_SRC_OVER, ALTERNATE, WINDING,
+    PS_ENDCAP_FLAT, PS_GEOMETRIC, PS_JOIN_MITER, PS_SOLID, PS_USERSTYLE, TA_BASELINE, TA_CENTER,
+    TA_LEFT, TA_RIGHT, TRANSPARENT, AC_SRC_ALPHA, AC_SRC_OVER, ALTERNATE, WINDING,
 };
 #[cfg(target_os = "windows")]
 use windows::Win32::Graphics::Imaging::{
@@ -212,6 +213,40 @@ fn font_spec_for_ref(font_ref: &str) -> GdiFontSpec {
         weight: 400,
         italic: false,
     }
+}
+
+#[cfg(target_os = "windows")]
+fn font_spec_for_optional_ref(font_ref: Option<&String>) -> GdiFontSpec {
+    match font_ref {
+        Some(font_ref) => font_spec_for_ref(font_ref),
+        None => GdiFontSpec {
+            family: "Segoe UI".to_string(),
+            weight: 400,
+            italic: false,
+        },
+    }
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn create_hfont(spec: &GdiFontSpec, font_size: f64) -> windows::Win32::Graphics::Gdi::HFONT {
+    let height = -(font_size.max(1.0).round() as i32);
+    let family_w = wide_null(&spec.family);
+    CreateFontW(
+        height,
+        0,
+        0,
+        0,
+        spec.weight,
+        spec.italic as u32,
+        0,
+        0,
+        DEFAULT_CHARSET.0 as u32,
+        OUT_DEFAULT_PRECIS.0 as u32,
+        CLIP_DEFAULT_PRECIS.0 as u32,
+        CLEARTYPE_QUALITY.0 as u32,
+        DEFAULT_PITCH.0 as u32,
+        PCWSTR(family_w.as_ptr()),
+    )
 }
 
 #[cfg(target_os = "windows")]
@@ -630,18 +665,65 @@ unsafe fn render_instructions(
                 render_instructions(hdc, &group.children);
             }
             PaintInstruction::Clip(clip) => render_clip(hdc, clip),
+            PaintInstruction::Text(text) => render_text(hdc, text),
             PaintInstruction::GlyphRun(run) => render_glyph_run(hdc, run),
             PaintInstruction::Ellipse(ellipse) => render_ellipse(hdc, ellipse),
             PaintInstruction::Path(path) => render_path(hdc, path),
             PaintInstruction::Image(image) => render_image(hdc, image),
             // Planned but not yet implemented — same skip list as paint-metal:
-            PaintInstruction::Text(_)
-            | PaintInstruction::Layer(_)
+            PaintInstruction::Layer(_)
             | PaintInstruction::Gradient(_) => {
                 // No-op for now. Barcodes only need Rect/Line/Group/Clip.
             }
         }
     }
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn render_text(hdc: HDC, text: &PaintText) {
+    if text.text.is_empty() {
+        return;
+    }
+
+    let fill = text.fill.as_deref().unwrap_or("#000000");
+    let (r, g, b, a) = parse_hex_color(fill);
+    if a == 0.0 {
+        return;
+    }
+
+    let spec = font_spec_for_optional_ref(text.font_ref.as_ref());
+    let hfont = create_hfont(&spec, text.font_size);
+    if hfont.is_invalid() {
+        return;
+    }
+
+    let utf16: Vec<u16> = text.text.encode_utf16().collect();
+    let align_flag = match text.text_align.as_ref().unwrap_or(&TextAlign::Left) {
+        TextAlign::Left => TA_LEFT,
+        TextAlign::Center => TA_CENTER,
+        TextAlign::Right => TA_RIGHT,
+    };
+
+    let old_font = SelectObject(hdc, hfont);
+    let _ = SetTextAlign(
+        hdc,
+        windows::Win32::Graphics::Gdi::TEXT_ALIGN_OPTIONS(align_flag.0 | TA_BASELINE.0),
+    );
+    let _ = SetBkMode(hdc, TRANSPARENT);
+    let colorref = color_to_colorref(r, g, b);
+    let _ = SetTextColor(hdc, windows::Win32::Foundation::COLORREF(colorref));
+    let _ = ExtTextOutW(
+        hdc,
+        text.x.round() as i32,
+        text.y.round() as i32,
+        Default::default(),
+        None,
+        PCWSTR(utf16.as_ptr()),
+        utf16.len() as u32,
+        None,
+    );
+    let _ = SelectObject(hdc, old_font);
+    let _ = DeleteObject(hfont);
 }
 
 #[cfg(target_os = "windows")]
@@ -657,24 +739,7 @@ unsafe fn render_glyph_run(hdc: windows::Win32::Graphics::Gdi::HDC, run: &PaintG
     }
 
     let spec = font_spec_for_ref(&run.font_ref);
-    let height = -(run.font_size.max(1.0).round() as i32);
-    let family_w = wide_null(&spec.family);
-    let hfont = CreateFontW(
-        height,
-        0,
-        0,
-        0,
-        spec.weight,
-        spec.italic as u32,
-        0,
-        0,
-        DEFAULT_CHARSET.0 as u32,
-        OUT_DEFAULT_PRECIS.0 as u32,
-        CLIP_DEFAULT_PRECIS.0 as u32,
-        CLEARTYPE_QUALITY.0 as u32,
-        DEFAULT_PITCH.0 as u32,
-        PCWSTR(family_w.as_ptr()),
-    );
+    let hfont = create_hfont(&spec, run.font_size);
     if hfont.is_invalid() {
         return;
     }
@@ -1202,8 +1267,30 @@ mod tests {
     use paint_codec_png::encode_png;
     use paint_instructions::{
         ImageSrc, PaintBase, PaintEllipse, PaintGroup, PaintImage, PaintInstruction, PaintPath,
-        PaintRect, PaintScene, PathCommand,
+        PaintRect, PaintScene, PaintText, PathCommand, TextAlign,
     };
+
+    #[cfg(target_os = "windows")]
+    fn dark_pixel_bounds(pixels: &PixelContainer) -> Option<(u32, u32, u32, u32)> {
+        let mut min_x = u32::MAX;
+        let mut min_y = u32::MAX;
+        let mut max_x = 0;
+        let mut max_y = 0;
+        let mut found = false;
+        for y in 0..pixels.height {
+            for x in 0..pixels.width {
+                let (r, g, b, a) = pixels.pixel_at(x, y);
+                if a > 0 && (r < 245 || g < 245 || b < 245) {
+                    found = true;
+                    min_x = min_x.min(x);
+                    min_y = min_y.min(y);
+                    max_x = max_x.max(x);
+                    max_y = max_y.max(y);
+                }
+            }
+        }
+        found.then_some((min_x, min_y, max_x, max_y))
+    }
 
     #[test]
     fn version_exists() {
@@ -1631,6 +1718,61 @@ mod tests {
 
         let (r, g, b, _a) = pixels.pixel_at(4, 4);
         assert_eq!((r, g, b), (12, 34, 56), "png file URI should decode via WIC");
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn render_text_draws_visible_pixels() {
+        let mut scene = PaintScene::new(160.0, 80.0);
+        scene.instructions.push(PaintInstruction::Text(PaintText {
+            base: PaintBase::default(),
+            x: 16.0,
+            y: 52.0,
+            text: "Paint VM".to_string(),
+            font_ref: Some("directwrite:Segoe UI@windows;w=400;style=normal".to_string()),
+            font_size: 28.0,
+            fill: Some("#000000".to_string()),
+            text_align: Some(TextAlign::Left),
+        }));
+
+        let pixels = render(&scene);
+        let Some((min_x, min_y, max_x, max_y)) = dark_pixel_bounds(&pixels) else {
+            panic!("expected text rendering to produce visible pixels");
+        };
+        assert!(max_x > min_x, "text should occupy width");
+        assert!(max_y > min_y, "text should occupy height");
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn text_alignment_changes_anchor_position() {
+        fn render_bounds(alignment: TextAlign) -> (u32, u32) {
+            let mut scene = PaintScene::new(220.0, 80.0);
+            scene.instructions.push(PaintInstruction::Text(PaintText {
+                base: PaintBase::default(),
+                x: 110.0,
+                y: 52.0,
+                text: "Align".to_string(),
+                font_ref: Some("directwrite:Segoe UI@windows;w=400;style=normal".to_string()),
+                font_size: 28.0,
+                fill: Some("#000000".to_string()),
+                text_align: Some(alignment),
+            }));
+            let pixels = render(&scene);
+            let (min_x, _, max_x, _) =
+                dark_pixel_bounds(&pixels).expect("alignment case should draw pixels");
+            (min_x, max_x)
+        }
+
+        let (left_min, left_max) = render_bounds(TextAlign::Left);
+        let (center_min, center_max) = render_bounds(TextAlign::Center);
+        let (right_min, right_max) = render_bounds(TextAlign::Right);
+
+        assert!(left_min > center_min, "center alignment should start left of left alignment");
+        assert!(center_min > right_min, "right alignment should start furthest left");
+        assert!(left_max >= 110, "left alignment should extend to the right of anchor");
+        assert!(center_min < 110 && center_max > 110, "center alignment should straddle anchor");
+        assert!(right_max <= 110, "right alignment should end at or before anchor");
     }
 
     /// Group should recurse into children and render both rects.
