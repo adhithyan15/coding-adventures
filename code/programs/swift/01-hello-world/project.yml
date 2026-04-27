@@ -38,4 +38,3 @@ targets:
         SWIFT_VERSION: "6.0"
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_WKApplication: YES
-        INFOPLIST_KEY_WKCompanionAppBundleIdentifier: com.adhithyan15.helloworld

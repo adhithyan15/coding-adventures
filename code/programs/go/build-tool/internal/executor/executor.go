@@ -119,8 +119,27 @@ func runPackageBuild(pkg discovery.Package) BuildResult {
 }
 
 // shellCommand returns an exec.Cmd that runs the given command string in
-// the platform-appropriate shell. On Windows this is "cmd /C command"; on
-// Unix (macOS, Linux) it is "sh -c command".
+// the platform-appropriate shell. On Windows this is "pwsh -Command command";
+// on Unix (macOS, Linux) it is "sh -c command".
+//
+// # Why PowerShell instead of cmd.exe on Windows
+//
+// The original implementation used "cmd /C" on Windows, but cmd.exe has a
+// 35-year-old design flaw: it strips the outermost double-quote pair from
+// arguments before passing them to the child process. This causes commands
+// like 'uv pip install -e "../../../packages/python/foo" --quiet' to
+// silently corrupt the path — the trailing '"' is URL-encoded as '%22' by
+// uv, producing an invalid path that fails with "No such file or directory".
+//
+// PowerShell 7 (pwsh) is the correct replacement because:
+//   - It is pre-installed on all GitHub Actions Windows runners.
+//   - It handles double-quoted strings the same way as bash — quotes are
+//     passed through to the child process, not stripped.
+//   - It supports the '&&' operator (since PS 7.0) for fail-fast command
+//     chaining, which is the same idiom BUILD files use on Unix.
+//   - Forward-slash paths work: PowerShell translates '/' to '\' for Win32
+//     API calls, so Unix-style relative paths work without modification.
+//   - Pipes (|) and most redirects behave as expected.
 //
 // This is the same approach used by the Rust build tool (which uses
 // cfg!(target_os = "windows") to select between cmd and sh). Python's
@@ -135,7 +154,7 @@ func shellCommand(command string) *exec.Cmd {
 // non-Windows hosts.
 func shellCommandForOS(command string, goos string) *exec.Cmd {
 	if goos == "windows" {
-		return exec.Command("cmd", "/C", command)
+		return exec.Command("pwsh", "-Command", command)
 	}
 	return exec.Command("sh", "-c", command)
 }

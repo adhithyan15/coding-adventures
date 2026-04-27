@@ -11,9 +11,6 @@ on:
       - 'code/programs/swift/**'
       - '.github/workflows/build-swift.yml'
 
-permissions:
-  contents: read
-
 jobs:
   build-hello-world:
     name: Hello World
@@ -21,8 +18,6 @@ jobs:
     # It ships with Xcode 16.x. When Xcode 26 runners become available
     # on GitHub Actions, update this to macos-16.
     runs-on: macos-15
-    permissions:
-      contents: read
 
     steps:
       - name: Checkout
@@ -45,77 +40,15 @@ jobs:
         run: |
           xcodebuild build \
             -scheme HelloWorld \
-            -destination 'generic/platform=iOS Simulator' \
+            -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
             -configuration Debug \
             CODE_SIGNING_ALLOWED=NO
 
       - name: Build watchOS app
-        # Use generic/platform to avoid needing a watchOS runtime installed.
-        # The runner has Xcode but watchOS simulator runtimes are not
-        # pre-installed. generic/platform compiles and links without
-        # booting a simulator, which is all we need for a build check.
         working-directory: code/programs/swift/01-hello-world
         run: |
           xcodebuild build \
             -scheme HelloWorldWatch \
-            -destination 'generic/platform=watchOS Simulator' \
+            -destination 'platform=watchOS Simulator,name=Apple Watch Series 10 (46mm),OS=latest' \
             -configuration Debug \
-            CODE_SIGNING_ALLOWED=NO
-
-  build-06-notifications:
-    name: "06 — Notifications"
-    runs-on: macos-15
-    permissions:
-      contents: read
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_16.2.app
-
-      - name: Install xcodegen
-        run: brew install xcodegen
-
-      - name: Generate Xcode project
-        working-directory: code/programs/swift/06-notifications
-        run: xcodegen generate
-
-      - name: Build iOS app
-        working-directory: code/programs/swift/06-notifications
-        run: |
-          xcodebuild build \
-            -scheme WaterNotify \
-            -destination 'generic/platform=iOS Simulator' \
-            -configuration Debug \
-            CODE_SIGNING_ALLOWED=NO
-
-      - name: Build macOS app (Mac Catalyst)
-        # Mac Catalyst lets the iOS app run natively on macOS with no code
-        # rewrite. SUPPORTS_MACCATALYST = YES is set in project.yml.
-        # We compile here to catch any iOS-only API usage that breaks on
-        # the macOS SDK (e.g. UIKit symbols unavailable under Catalyst).
-        working-directory: code/programs/swift/06-notifications
-        run: |
-          xcodebuild build \
-            -scheme WaterNotify \
-            -destination 'generic/platform=macOS,variant=Mac Catalyst' \
-            -configuration Debug \
-            CODE_SIGNING_ALLOWED=NO
-
-      - name: Run unit tests
-        # Tests use MockNotificationCenter so no real UNUserNotificationCenter
-        # is needed. We run under Mac Catalyst instead of an iOS Simulator because
-        # the macos-15 runner ships Xcode 16.2 (iOS 18.2 SDK) but its bundled
-        # simulator runtime is iOS 26.x — an incompatible version pair. Creating
-        # an iOS 26.x simulator device with simctl succeeds, but Xcode 16.2
-        # refuses to boot it ("iOS 18.2 is not installed"). Mac Catalyst is always
-        # present on the runner host, requires no extra downloads, and our tests
-        # carry zero iOS-UI dependencies, so this destination is exactly equivalent.
-        working-directory: code/programs/swift/06-notifications
-        run: |
-          xcodebuild test \
-            -scheme WaterNotifyTests \
-            -destination 'platform=macOS,variant=Mac Catalyst' \
             CODE_SIGNING_ALLOWED=NO

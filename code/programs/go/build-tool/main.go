@@ -213,12 +213,33 @@ func run() int {
 				// the BUILD file for the current platform, we get the correct
 				// commands for this runner's OS.
 				//
-				// Skip this for Starlark packages: their commands come from
-				// Starlark evaluation, not from reading the BUILD file as shell.
-				// Reading a Starlark BUILD file as shell lines would produce
-				// load("...") as a command, which shells cannot execute.
-				if !packages[i].IsStarlark {
-					platformBuild := discovery.GetBuildFileForPlatform(packages[i].Path, runtime.GOOS)
+				// Strategy for Starlark packages:
+				// The plan stores is_starlark=true for packages whose BUILD file is
+				// Starlark (evaluated on Linux to generate commands). We cannot
+				// re-read the generic BUILD file as shell (it would produce
+				// load("...") as a command). HOWEVER, a Starlark package may also
+				// have a platform-specific shell override (e.g., BUILD_windows).
+				// That override is a hand-written shell file, NOT Starlark, and
+				// must be used in preference to the Starlark-generated commands.
+				//
+				// For example, elixir/arithmetic has:
+				//   BUILD      — Starlark: generates "mix deps.get" + "mix test --cover"
+				//   BUILD_windows — shell: "mix deps.get --quiet && mix test" (no --cover)
+				// On Windows, we must use BUILD_windows to skip --cover, which
+				// causes failures due to Erlang's coverage module on Windows.
+				platformBuild := discovery.GetBuildFileForPlatform(packages[i].Path, runtime.GOOS)
+				genericBuild := filepath.Join(packages[i].Path, "BUILD")
+				if platformBuild != "" && platformBuild != genericBuild {
+					// A platform-specific override exists (e.g., BUILD_windows).
+					// This is always a shell file — use it regardless of IsStarlark.
+					platformCmds := discovery.ReadLines(platformBuild)
+					if len(platformCmds) > 0 {
+						packages[i].BuildCommands = platformCmds
+						packages[i].IsStarlark = false
+					}
+				} else if !packages[i].IsStarlark {
+					// No platform-specific override; non-Starlark package.
+					// Re-read BUILD to get up-to-date commands.
 					if platformBuild != "" {
 						platformCmds := discovery.ReadLines(platformBuild)
 						if len(platformCmds) > 0 {
@@ -226,6 +247,8 @@ func run() int {
 						}
 					}
 				}
+				// Starlark package with no platform-specific override: use the
+				// plan's Starlark-generated commands as-is.
 			}
 
 			// Reconstruct dependency graph from edges.

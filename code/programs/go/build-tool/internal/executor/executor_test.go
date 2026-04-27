@@ -49,10 +49,15 @@ func TestShellCommandForOSUnix(t *testing.T) {
 }
 
 func TestShellCommandForOSWindows(t *testing.T) {
-	// On Windows, shellCommandForOS should use "cmd /C".
+	// On Windows, shellCommandForOS should use "pwsh -Command".
+	// PowerShell 7 is used instead of cmd.exe because:
+	//   - cmd.exe strips outer double-quotes from arguments, corrupting paths
+	//   - PowerShell handles double-quoted strings correctly (no stripping)
+	//   - PowerShell supports '&&' for fail-fast chaining (same as bash)
+	//   - PowerShell is pre-installed on all GitHub Actions Windows runners
 	cmd := shellCommandForOS("echo hello", "windows")
-	if cmd.Args[0] != "cmd" || cmd.Args[1] != "/C" || cmd.Args[2] != "echo hello" {
-		t.Fatalf("expected cmd /C 'echo hello', got %v", cmd.Args)
+	if cmd.Args[0] != "pwsh" || cmd.Args[1] != "-Command" || cmd.Args[2] != "echo hello" {
+		t.Fatalf("expected pwsh -Command 'echo hello', got %v", cmd.Args)
 	}
 }
 
@@ -60,8 +65,8 @@ func TestShellCommandUsesCurrentOS(t *testing.T) {
 	// shellCommand (no OS parameter) should use the current platform.
 	cmd := shellCommand("echo test")
 	if runtime.GOOS == "windows" {
-		if cmd.Args[0] != "cmd" {
-			t.Fatalf("expected cmd on windows, got %v", cmd.Args[0])
+		if cmd.Args[0] != "pwsh" {
+			t.Fatalf("expected pwsh on windows, got %v", cmd.Args[0])
 		}
 	} else {
 		if cmd.Args[0] != "sh" {

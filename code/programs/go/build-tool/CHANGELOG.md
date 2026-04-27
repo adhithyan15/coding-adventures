@@ -2,20 +2,34 @@
 
 All notable changes to the Go build tool will be documented in this file.
 
-## [0.3.1] - 2026-03-30
+## [0.4.0] - 2026-03-27
 
 ### Fixed
 
-- **Windows Lua luarocks serialisation**: `buildResourceKeys` now adds a
-  `global:luarocks-windows` lock key for every Lua package command that
-  contains `luarocks make` when running on Windows. On Windows, luarocks
-  requires exclusive write access to the local rocks tree
-  (`~\AppData\Roaming\luarocks`); any two concurrent `luarocks make` calls
-  race for that file lock and one fails with "command 'make' requires
-  exclusive write access". The global lock key ensures all Lua luarocks
-  installs are fully serialised on Windows while leaving Linux/macOS
-  unaffected. This mirrors the existing `global:hex-cache` serialisation
-  used for Elixir `mix deps.get`.
+- **Starlark packages now use `BUILD_windows` overrides on Windows**: The plan
+  loader previously skipped re-reading `BUILD_windows` for Starlark packages,
+  causing those packages to use Starlark-generated commands even when a
+  platform-specific shell override existed. For example, `elixir/arithmetic`
+  has a Starlark `BUILD` (generates `mix test --cover`) and a shell
+  `BUILD_windows` (uses `mix test` without `--cover`). On Windows, Erlang's
+  code coverage module causes failures, so the `BUILD_windows` override is
+  essential. The fix: if a platform-specific override (BUILD_windows, BUILD_mac,
+  etc.) exists and differs from the generic BUILD file, always use it regardless
+  of `is_starlark`. Only skip re-reading when the platform resolves to the
+  generic BUILD file itself (which may be Starlark).
+
+### Changed
+
+- **Windows executor switched from `cmd /C` to `pwsh -Command`**: The Windows
+  shell runner now uses PowerShell 7 instead of `cmd.exe`. This eliminates the
+  long-standing path-corruption bug where `cmd.exe` would strip outer
+  double-quotes from arguments, causing `uv pip install -e "../../../packages/foo"`
+  to fail because the trailing `"` was URL-encoded as `%22` by uv. PowerShell
+  handles double-quoted strings correctly — quotes are preserved and passed
+  through to the child process, not stripped. PowerShell also supports the `&&`
+  operator for fail-fast command chaining (same idiom as bash), and
+  forward-slash paths work without modification. PowerShell 7 (`pwsh`) is
+  pre-installed on all GitHub Actions Windows runners.
 
 ## [0.3.0] - 2026-03-22
 
