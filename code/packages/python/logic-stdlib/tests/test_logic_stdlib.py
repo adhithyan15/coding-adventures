@@ -24,9 +24,7 @@ from logic_stdlib import (
     listo,
     membero,
     permuteo,
-    reverseo,
     selecto,
-    subsequenceo,
     tailo,
 )
 
@@ -35,9 +33,8 @@ class TestVersion:
     """Verify the package is importable and wired to the engine layer."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.4.0"
-        engine_major, engine_minor, _engine_patch = logic_engine_version.split(".")
-        assert (int(engine_major), int(engine_minor)) >= (0, 4)
+        assert __version__ == "0.2.0"
+        assert logic_engine_version == "0.3.0"
 
 
 class TestListRelations:
@@ -207,71 +204,3 @@ class TestListRelations:
                 ),
             ),
         ) == [atom("ok")]
-
-    def test_reverseo_reverses_a_concrete_list(self) -> None:
-        reversed_items = var("ReversedItems")
-
-        assert solve_all(
-            program(),
-            reversed_items,
-            reverseo(logic_list(["tea", "cake", "jam"]), reversed_items),
-        ) == [logic_list(["jam", "cake", "tea"])]
-
-    def test_reverseo_can_validate_a_specific_reverse_ordering(self) -> None:
-        marker = var("Marker")
-
-        assert solve_all(
-            program(),
-            marker,
-            conj(
-                eq(marker, "ok"),
-                reverseo(
-                    logic_list(["tea", "cake", "jam"]),
-                    logic_list(["jam", "cake", "tea"]),
-                ),
-            ),
-        ) == [atom("ok")]
-
-    def test_subsequenceo_enumerates_all_subsequences_of_a_small_list(self) -> None:
-        sequence = var("Sequence")
-
-        assert solve_all(
-            program(),
-            sequence,
-            subsequenceo(logic_list(["tea", "cake"]), sequence),
-        ) == [
-            logic_list(["tea", "cake"]),
-            logic_list(["tea"]),
-            logic_list(["cake"]),
-            logic_list([]),
-        ]
-
-    def test_subsequenceo_can_validate_a_known_ordered_subsequence(self) -> None:
-        marker = var("Marker")
-
-        assert solve_all(
-            program(),
-            marker,
-            conj(
-                eq(marker, "ok"),
-                subsequenceo(
-                    logic_list(["tea", "cake", "jam"]),
-                    logic_list(["tea", "jam"]),
-                ),
-            ),
-        ) == [atom("ok")]
-
-    def test_subsequenceo_rejects_out_of_order_candidates(self) -> None:
-        marker = var("Marker")
-
-        assert solve_all(
-            program(),
-            marker,
-            conj(
-                eq(marker, "ok"),
-                subsequenceo(
-                    logic_list(["tea", "cake", "jam"]),
-                    logic_list(["jam", "tea"]),
-                ),
-            ),
-        ) == []

@@ -24,9 +24,7 @@ __all__ = [
     "listo",
     "membero",
     "permuteo",
-    "reverseo",
     "selecto",
-    "subsequenceo",
     "tailo",
 ]
 
@@ -159,43 +157,6 @@ def permuteo(items: object, permutation: object) -> GoalExpr:
                 selecto(head, items, remaining),
                 conso(head, perm_tail, permutation),
                 defer(permuteo, remaining, perm_tail),
-            ),
-        ),
-    )
-
-
-def subsequenceo(items: object, subsequence: object) -> GoalExpr:
-    """Relate ``subsequence`` to any order-preserving deletion of ``items``."""
-
-    return disj(
-        conj(emptyo(items), emptyo(subsequence)),
-        fresh(
-            3,
-            lambda head, tail, sub_tail: conj(
-                conso(head, tail, items),
-                disj(
-                    conj(
-                        conso(head, sub_tail, subsequence),
-                        defer(subsequenceo, tail, sub_tail),
-                    ),
-                    defer(subsequenceo, tail, subsequence),
-                ),
-            ),
-        ),
-    )
-
-
-def reverseo(items: object, reversed_items: object) -> GoalExpr:
-    """Relate ``reversed_items`` to the reverse ordering of ``items``."""
-
-    return disj(
-        conj(emptyo(items), emptyo(reversed_items)),
-        fresh(
-            3,
-            lambda head, tail, reversed_tail: conj(
-                conso(head, tail, items),
-                defer(reverseo, tail, reversed_tail),
-                appendo(reversed_tail, logic_list([head]), reversed_items),
             ),
         ),
     )
