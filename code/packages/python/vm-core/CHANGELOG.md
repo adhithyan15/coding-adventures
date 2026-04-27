@@ -6,6 +6,44 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — LANG18: Lightweight VM coverage mode
+
+- **`VMCore._coverage_mode` / `VMCore._coverage`** — two new internal fields that
+  form the LANG18 coverage subsystem.  `_coverage_mode` is the master gate (False
+  by default, checked once per dispatch iteration); `_coverage` accumulates executed
+  IIR instruction indices per function as `dict[str, set[int]]`.  Zero allocation
+  and zero dict writes when coverage is disabled.
+
+- **`VMCore.enable_coverage()`** — enter coverage mode.  Idempotent; existing data
+  is preserved so multiple partial runs accumulate cleanly.
+
+- **`VMCore.disable_coverage()`** — exit coverage mode.  Collected data is preserved;
+  call `reset_coverage()` to clear it.  Idempotent (no-op if already off).
+
+- **`VMCore.is_coverage_mode() -> bool`** — True when coverage collection is active.
+  Coverage mode and debug mode (`is_debug_mode()`) are independent flags; both can
+  be True simultaneously without interference.
+
+- **`VMCore.coverage_data() -> dict[str, frozenset[int]]`** — point-in-time snapshot
+  of executed IIR instruction indices per function.  Returns `frozenset` values so
+  callers cannot accidentally mutate the live coverage sets.  Subsequent execution
+  does not retroactively change the returned snapshot.
+
+- **`VMCore.reset_coverage()`** — clear all coverage data and disable coverage mode.
+  After this call `coverage_data()` returns `{}` and `is_coverage_mode()` is False.
+
+- **Dispatch loop change** (`vm_core/dispatch.py`) — inserted an
+  `if vm._coverage_mode:` block immediately after the LANG06 debug-mode check.
+  When coverage is on, the current `ip_before` is added to
+  `vm._coverage[frame.fn.name]`.  This is the only hot-path change; coverage and
+  debug mode are checked in separate `if`-blocks so neither feature pays the cost
+  of the other.
+
+- **`tests/test_coverage.py`** — 23 new tests organised into six classes:
+  `TestCoverageDefaultState`, `TestCoverageCollection`, `TestBranchCoverage`,
+  `TestCoverageAccumulation`, `TestDisableCoverage`, `TestCoverageAndDebugMode`.
+  All pass with the full test suite at 97.69% total coverage.
+
 ### Added — LANG06: Debug hooks, breakpoints, and step-mode API
 
 - `vm_core.debug` — new module containing:

@@ -4,6 +4,52 @@ All notable changes to `tetrad-runtime` will be documented in this file.
 
 ## [Unreleased]
 
+### Added — LANG18: Source-line coverage via DebugSidecar composition
+
+LANG18 layers source-level coverage reporting on top of the IIR-level coverage
+collected by `vm-core` (LANG18 vm-core).  The key insight is that the
+`DebugSidecar` built by `sidecar_builder` already maps every IIR instruction
+index back to a `(file, line, col)` — we simply compose that with the
+set of executed IIR indices.
+
+**New module: `tetrad_runtime.coverage`**
+
+- `CoveredLine` — dataclass: `file: str`, `line: int`, `iir_hit_count: int`.
+  `iir_hit_count` is the number of *distinct* IIR instruction indices at that
+  source line that were executed (not how many times the line ran — for frequency
+  use LANG17 `BranchStats`).
+
+- `LineCoverageReport` — report dataclass containing `covered_lines: list[CoveredLine]`
+  with two helpers:
+  - `lines_for_file(path) -> list[int]` — sorted covered line numbers for one file.
+  - `total_lines_covered() -> int` — total number of distinct `(file, line)` pairs.
+  - `files() -> list[str]` — sorted list of unique source files in the report.
+
+- `build_report(iir_coverage, sidecar_bytes) -> LineCoverageReport` — projection
+  function.  For every `(fn_name, ip_set)` entry in `iir_coverage` (from
+  `VMCore.coverage_data()`), calls `DebugSidecarReader.lookup(fn_name, ip)` to
+  obtain a `SourceLocation`, accumulates the `(file, line)` pairs, and builds the
+  report.  IIR instructions with no sidecar entry (synthetic preamble instructions)
+  are silently skipped.
+
+**New method: `TetradRuntime.run_with_coverage(source, source_path) -> LineCoverageReport`**
+
+  End-to-end entry point:
+  1. Calls `compile_with_debug(source, source_path)` to get `(module, sidecar)`.
+  2. Creates a fresh `VMCore` with `enable_coverage()`.
+  3. Executes the module.
+  4. Reads `vm.coverage_data()` and calls `build_report(iir_cov, sidecar)`.
+  5. Returns the `LineCoverageReport`.
+
+**Updated exports** in `tetrad_runtime/__init__.py`:
+- `CoveredLine` and `LineCoverageReport` are now exported from the package root.
+- `__all__` updated accordingly.
+
+**New tests: `tests/test_coverage.py`** — 19 tests in five classes:
+  `TestReturnType`, `TestBasicCoverage`, `TestTwoFunctionCoverage`,
+  `TestBuildReport`, `TestTotalLinesCovered`.  Full suite passes at 95.89%
+  coverage.
+
 ### Added — LANG06: source-map composition sidecar and debug execution API
 
 The LANG06 debug integration connects every stage of the Tetrad pipeline

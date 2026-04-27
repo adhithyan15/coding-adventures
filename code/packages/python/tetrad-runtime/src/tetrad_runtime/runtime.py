@@ -281,6 +281,58 @@ class TetradRuntime:
 
         return vm.execute(module, fn=module.entry_point or "main")
 
+    def run_with_coverage(
+        self,
+        source: str,
+        source_path: str,
+    ) -> "LineCoverageReport":
+        """Compile and run ``source`` with coverage enabled.
+
+        Performs a full debug compilation (via ``compile_with_debug``) so
+        the DebugSidecar is available, then runs the program with
+        ``VMCore._coverage_mode = True``.  After execution the raw IIR
+        coverage data from ``coverage_data()`` is composed with the sidecar
+        to project back to source lines.
+
+        Parameters
+        ----------
+        source:
+            Raw Tetrad source code.
+        source_path:
+            Path to the Tetrad source file — stored verbatim in the sidecar
+            and used to identify files in the returned ``LineCoverageReport``.
+
+        Returns
+        -------
+        LineCoverageReport
+            Source-line coverage: which ``(file, line)`` pairs were reached,
+            plus an IIR-instruction hit count per line.
+
+        Example
+        -------
+        ::
+
+            rt = TetradRuntime()
+            report = rt.run_with_coverage(
+                source=\"\"\"
+                    x := 10
+                    y := x + 5
+                \"\"\",
+                source_path="prog.tetrad",
+            )
+            print(report.lines_for_file("prog.tetrad"))
+            # → [2, 3]
+        """
+        from tetrad_runtime.coverage import LineCoverageReport, build_report
+
+        module, sidecar = self.compile_with_debug(source, source_path)
+        vm = self._make_vm()
+        self._last_vm = vm
+        vm.enable_coverage()
+        vm.execute(module, fn=module.entry_point or "main")
+        iir_cov = vm.coverage_data()
+        return build_report(iir_cov, sidecar)
+
     # ------------------------------------------------------------------
     # Public introspection
     # ------------------------------------------------------------------
