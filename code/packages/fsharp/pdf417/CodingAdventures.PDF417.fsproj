@@ -2,15 +2,19 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>CodingAdventures.PDF417.FSharp</AssemblyName>
     <PackageId>CodingAdventures.PDF417.FSharp</PackageId>
     <Version>0.1.0</Version>
     <Authors>Adhithya Rajasekaran</Authors>
-    <Description>ISO/IEC 15438:2015-compliant PDF417 stacked linear barcode encoder for F# — produces a ModuleGrid scannable by any standard decoder</Description>
+    <Description>F# PDF417 encoder facade backed by the shared .NET PDF417 implementation</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
+
   <ItemGroup>
-    <ProjectReference Include="../barcode-2d/CodingAdventures.Barcode2D.fsproj" />
+    <ProjectReference Include="../../csharp/barcode-2d/CodingAdventures.Barcode2D.csproj" />
+    <ProjectReference Include="../../csharp/pdf417/CodingAdventures.PDF417.csproj" />
   </ItemGroup>
+
   <ItemGroup>
     <Compile Include="PDF417.fs" />
   </ItemGroup>
