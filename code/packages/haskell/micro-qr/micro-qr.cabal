@@ -43,9 +43,10 @@ test-suite micro-qr-test
     hs-source-dirs:   test
     main-is:          Spec.hs
     other-modules:    MicroQRSpec
-    build-depends:    base       >= 4.7 && < 5
-                    , vector     >= 0.12
-                    , micro-qr
-                    , barcode-2d
-                    , hspec      == 2.*
-    ghc-options:      -Wall
+    build-depends:      base       >= 4.7 && < 5
+                      , vector     >= 0.12
+                      , micro-qr
+                      , barcode-2d
+                      , hspec      == 2.*
+    build-tool-depends: hspec-discover:hspec-discover == 2.*
+    ghc-options:        -Wall
