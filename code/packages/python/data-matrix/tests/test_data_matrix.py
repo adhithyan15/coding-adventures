@@ -182,9 +182,12 @@ class TestLFinder:
 
     def test_top_row_alternating(self):
         # ISO 16022: top timing strip starts DARK at col 0 (D-L-D-L-...)
-        # col 0 is also the L-finder left-leg corner (always dark, consistent)
+        # col 0 is also the L-finder left-leg corner (always dark, consistent).
+        # The last column is the right timing strip boundary — it starts dark at
+        # row 0 (overriding the top timing expectation at that corner), so we
+        # exclude it here; test_right_column_alternating covers row 0 of that column.
         g = encode("A")
-        for c in range(g.cols):
+        for c in range(g.cols - 1):
             expected = (c % 2 == 0)
             assert dark(g, 0, c) == expected, f"Top timing at col {c}"
 
