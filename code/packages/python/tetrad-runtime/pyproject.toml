@@ -21,9 +21,6 @@ dependencies = [
     # back-compat; new callers should import from intel4004-backend
     # directly.
     "coding-adventures-intel4004-backend",
-    # LANG06: debug sidecar provides DebugSidecarWriter/Reader for
-    # source-map composition and breakpoint resolution.
-    "coding-adventures-debug-sidecar",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
