@@ -1,0 +1,9 @@
+[package]
+name = "cas-solve"
+version = "0.1.0"
+edition = "2021"
+description = "Closed-form equation solving over Q: linear and quadratic (Phase 1)"
+license = "MIT"
+
+[dependencies]
+symbolic-ir = { path = "../symbolic-ir" }

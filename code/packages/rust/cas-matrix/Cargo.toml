@@ -1,0 +1,9 @@
+[package]
+name = "cas-matrix"
+version = "0.1.0"
+edition = "2021"
+description = "Matrix operations over symbolic IR (construction, arithmetic, determinant, inverse)"
+license = "MIT"
+
+[dependencies]
+symbolic-ir = { path = "../symbolic-ir" }

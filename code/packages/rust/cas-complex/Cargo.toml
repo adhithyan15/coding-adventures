@@ -1,0 +1,8 @@
+[package]
+name = "cas-complex"
+version = "0.1.0"
+edition = "2021"
+description = "Complex number operations over symbolic IR: normalization, real/imaginary parts, polar form, powers"
+
+[dependencies]
+symbolic-ir = { path = "../symbolic-ir" }

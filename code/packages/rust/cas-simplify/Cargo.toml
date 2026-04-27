@@ -1,0 +1,10 @@
+[package]
+name = "cas-simplify"
+version = "0.1.0"
+edition = "2021"
+description = "Algebraic simplification of symbolic IR trees: canonical form, constant folding, identity rules"
+license = "MIT"
+
+[dependencies]
+symbolic-ir = { path = "../symbolic-ir" }
+cas-pattern-matching = { path = "../cas-pattern-matching" }
