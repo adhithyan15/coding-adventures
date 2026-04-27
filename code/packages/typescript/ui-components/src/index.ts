@@ -31,7 +31,6 @@
  * @import "@coding-adventures/ui-components/src/styles/flash-card.css";
  * @import "@coding-adventures/ui-components/src/styles/rating-buttons.css";
  * @import "@coding-adventures/ui-components/src/styles/progress-bar.css";
- * @import "@coding-adventures/ui-components/src/styles/table.css";
  * ```
  */
 
@@ -45,11 +44,6 @@ export type { DatePickerProps } from "./components/DatePicker.js";
 export type { FlashCardProps } from "./components/FlashCard.js";
 export type { RatingButtonsProps, Rating } from "./components/RatingButtons.js";
 export type { ProgressBarProps } from "./components/ProgressBar.js";
-export type { CalendarViewProps, CalendarItem, CalendarViewGranularity, DayOfWeek } from "./components/CalendarView.js";
-export type { TableProps, TableBaseProps, ColumnDef, CellAlignment, RowKeyFn } from "./components/Table.js";
-export type { CanvasTheme } from "./hooks/useCanvasTheme.js";
-export type { CellPosition, UseGridKeyboardOptions, UseGridKeyboardReturn } from "./hooks/useGridKeyboard.js";
-export type { UseColumnResizeOptions, UseColumnResizeReturn } from "./hooks/useColumnResize.js";
 export type { UseTabsOptions, TabProps } from "./hooks/useTabs.js";
 export type { LocaleMap } from "./i18n/index.js";
 
@@ -62,11 +56,6 @@ export { DatePicker } from "./components/DatePicker.js";
 export { FlashCard } from "./components/FlashCard.js";
 export { RatingButtons } from "./components/RatingButtons.js";
 export { ProgressBar } from "./components/ProgressBar.js";
-export { CalendarView } from "./components/CalendarView.js";
-export { Table } from "./components/Table.js";
-export { DataTable } from "./components/DataTable.js";
-export { CanvasTable } from "./components/CanvasTable.js";
-export { resolveCellValue } from "./components/Table.js";
 
 // Hooks
 export { useTabs } from "./hooks/useTabs.js";

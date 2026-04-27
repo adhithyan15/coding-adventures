@@ -21,11 +21,7 @@ import type { Action } from "@coding-adventures/store";
 import type { AppState, Card, CardProgress, Deck, Rating } from "./types.js";
 import {
   DECK_CREATE,
-  DECK_UPDATE,
-  DECK_DELETE,
   CARD_CREATE,
-  CARD_UPDATE,
-  CARD_DELETE,
   SESSION_START,
   SESSION_REVEAL,
   SESSION_RATE,
@@ -38,7 +34,6 @@ import {
   createInitialProgress,
   INITIAL_EASE_FACTOR,
 } from "./sm2.js";
-import { generateSecureId } from "./secure-id.js";
 
 export type { AppState };
 
@@ -56,7 +51,10 @@ export const initialState: AppState = {
 // ── ID generation ───────────────────────────────────────────────────────────
 
 function generateId(): string {
-  return generateSecureId();
+  if (typeof crypto !== "undefined" && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 }
 
 // ── Reducer ─────────────────────────────────────────────────────────────────
@@ -74,54 +72,6 @@ export function reducer(state: AppState, action: Action): AppState {
       return { ...state, decks: [...state.decks, deck] };
     }
 
-    // ── DECK_UPDATE ──────────────────────────────────────────────────────────
-    //
-    // Replaces the name and description of an existing deck.
-    case DECK_UPDATE: {
-      const deckId = action.deckId as string;
-      const name = action.name as string;
-      const description = action.description as string;
-      return {
-        ...state,
-        decks: state.decks.map((d) =>
-          d.id === deckId ? { ...d, name, description } : d,
-        ),
-      };
-    }
-
-    // ── DECK_DELETE ──────────────────────────────────────────────────────────
-    //
-    // Removes a deck and cascade-deletes all related records:
-    //   - Cards belonging to the deck
-    //   - CardProgress for those cards
-    //   - Sessions for the deck
-    //   - Reviews from those sessions
-    //   - activeSession if it belongs to the deleted deck
-    case DECK_DELETE: {
-      const deckId = action.deckId as string;
-
-      // Collect IDs of cards and sessions to cascade-delete
-      const cardIds = new Set(
-        state.cards.filter((c) => c.deckId === deckId).map((c) => c.id),
-      );
-      const sessionIds = new Set(
-        state.sessions.filter((s) => s.deckId === deckId).map((s) => s.id),
-      );
-
-      return {
-        ...state,
-        decks: state.decks.filter((d) => d.id !== deckId),
-        cards: state.cards.filter((c) => c.deckId !== deckId),
-        cardProgress: state.cardProgress.filter((p) => !cardIds.has(p.cardId)),
-        sessions: state.sessions.filter((s) => s.deckId !== deckId),
-        reviews: state.reviews.filter((r) => !sessionIds.has(r.sessionId)),
-        activeSession:
-          state.activeSession?.deckId === deckId
-            ? null
-            : state.activeSession,
-      };
-    }
-
     // ── CARD_CREATE ──────────────────────────────────────────────────────────
     case CARD_CREATE: {
       const card: Card = {
@@ -132,33 +82,6 @@ export function reducer(state: AppState, action: Action): AppState {
         createdAt: Date.now(),
       };
       return { ...state, cards: [...state.cards, card] };
-    }
-
-    // ── CARD_UPDATE ──────────────────────────────────────────────────────────
-    //
-    // Replaces the front and back text of an existing card.
-    case CARD_UPDATE: {
-      const cardId = action.cardId as string;
-      const front = action.front as string;
-      const back = action.back as string;
-      return {
-        ...state,
-        cards: state.cards.map((c) =>
-          c.id === cardId ? { ...c, front, back } : c,
-        ),
-      };
-    }
-
-    // ── CARD_DELETE ──────────────────────────────────────────────────────────
-    //
-    // Removes a card and its CardProgress record.
-    case CARD_DELETE: {
-      const cardId = action.cardId as string;
-      return {
-        ...state,
-        cards: state.cards.filter((c) => c.id !== cardId),
-        cardProgress: state.cardProgress.filter((p) => p.cardId !== cardId),
-      };
     }
 
     // ── SESSION_START ────────────────────────────────────────────────────────

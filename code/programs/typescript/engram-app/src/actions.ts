@@ -21,11 +21,7 @@
 // ── Action type constants ───────────────────────────────────────────────────
 
 export const DECK_CREATE = "DECK_CREATE";
-export const DECK_UPDATE = "DECK_UPDATE";
-export const DECK_DELETE = "DECK_DELETE";
 export const CARD_CREATE = "CARD_CREATE";
-export const CARD_UPDATE = "CARD_UPDATE";
-export const CARD_DELETE = "CARD_DELETE";
 export const SESSION_START = "SESSION_START";
 export const SESSION_REVEAL = "SESSION_REVEAL";
 export const SESSION_RATE = "SESSION_RATE";
@@ -44,35 +40,11 @@ export interface DeckCreateAction extends Action {
   description: string;
 }
 
-export interface DeckUpdateAction extends Action {
-  type: typeof DECK_UPDATE;
-  deckId: string;
-  name: string;
-  description: string;
-}
-
-export interface DeckDeleteAction extends Action {
-  type: typeof DECK_DELETE;
-  deckId: string;
-}
-
 export interface CardCreateAction extends Action {
   type: typeof CARD_CREATE;
   deckId: string;
   front: string;
   back: string;
-}
-
-export interface CardUpdateAction extends Action {
-  type: typeof CARD_UPDATE;
-  cardId: string;
-  front: string;
-  back: string;
-}
-
-export interface CardDeleteAction extends Action {
-  type: typeof CARD_DELETE;
-  cardId: string;
 }
 
 export interface SessionStartAction extends Action {
@@ -116,11 +88,7 @@ export interface StateLoadAction extends Action {
 
 export type AppAction =
   | DeckCreateAction
-  | DeckUpdateAction
-  | DeckDeleteAction
   | CardCreateAction
-  | CardUpdateAction
-  | CardDeleteAction
   | SessionStartAction
   | SessionRevealAction
   | SessionRateAction
@@ -141,25 +109,6 @@ export function createDeckAction(
 }
 
 /**
- * updateDeckAction — rename or re-describe an existing deck.
- */
-export function updateDeckAction(
-  deckId: string,
-  name: string,
-  description: string,
-): DeckUpdateAction {
-  return { type: DECK_UPDATE, deckId, name, description };
-}
-
-/**
- * deleteDeckAction — remove a deck and cascade-delete its cards, progress,
- * sessions, and reviews.
- */
-export function deleteDeckAction(deckId: string): DeckDeleteAction {
-  return { type: DECK_DELETE, deckId };
-}
-
-/**
  * createCardAction — add a card to a deck.
  */
 export function createCardAction(
@@ -168,24 +117,6 @@ export function createCardAction(
   back: string,
 ): CardCreateAction {
   return { type: CARD_CREATE, deckId, front, back };
-}
-
-/**
- * updateCardAction — edit a card's front or back text.
- */
-export function updateCardAction(
-  cardId: string,
-  front: string,
-  back: string,
-): CardUpdateAction {
-  return { type: CARD_UPDATE, cardId, front, back };
-}
-
-/**
- * deleteCardAction — remove a card and its progress record.
- */
-export function deleteCardAction(cardId: string): CardDeleteAction {
-  return { type: CARD_DELETE, cardId };
 }
 
 /**

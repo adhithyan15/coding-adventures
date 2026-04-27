@@ -1,10 +1,6 @@
 # Engram
 
-A spaced repetition flashcard web app built with React and Vite.
-
-Runs in the browser at
-[adhithyan15.github.io/coding-adventures/engram](https://adhithyan15.github.io/coding-adventures/engram/)
-and is wrapped by `engram-electron` for desktop distribution.
+A spaced repetition flashcard desktop app built with Electron and React.
 
 Engram implements the **SM-2 algorithm** — the same algorithm that powers Anki —
 to schedule when you see each card again. Cards you know well get longer intervals
@@ -96,8 +92,10 @@ npm run dev
 # Run tests
 npm run test
 
-# Build (static output in dist/)
+# Build for Electron (production)
 npm run build
+npx tsc -p electron/tsconfig.json
+npx electron .
 ```
 
 ## Testing
@@ -109,16 +107,17 @@ npm run test:coverage  # with coverage report
 
 Target: 95%+ on `sm2.ts` and `queue.ts`, 80%+ overall.
 
-## Deploying
+## Releasing
 
-Pushing to `main` with changes under `code/programs/typescript/engram-app/**`
-triggers the `deploy-engram.yml` GitHub Actions workflow, which builds with
-`VITE_BASE=/coding-adventures/engram/` and deploys to GitHub Pages.
+Tag the commit and push:
 
-## Desktop app
+```bash
+git tag engram-v0.1.0
+git push origin engram-v0.1.0
+```
 
-See `engram-electron` for the thin Electron wrapper that bundles `dist/` from
-this package and distributes it as a native desktop app.
+GitHub Actions builds macOS (.dmg + .zip), Windows (.exe + portable), and
+Linux (.AppImage) in parallel and attaches all installers to a GitHub Release.
 
 ## Spec
 

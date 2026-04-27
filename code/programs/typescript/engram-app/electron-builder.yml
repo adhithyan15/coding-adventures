@@ -1,0 +1,40 @@
+# electron-builder configuration
+# Docs: https://www.electron.build/configuration
+
+appId: com.codingadventures.engram
+productName: Engram
+
+directories:
+  output: release
+  buildResources: build
+
+# Files included in the packaged app.
+# dist/ = Vite build output (the React renderer)
+# dist-electron/ = compiled main process
+files:
+  - dist/**/*
+  - dist-electron/**/*
+  - package.json
+
+# ── macOS ──────────────────────────────────────────────────────────────────
+mac:
+  category: public.app-category.education
+  target:
+    - dmg
+    - zip
+
+# ── Windows ────────────────────────────────────────────────────────────────
+win:
+  target:
+    - nsis
+    - portable
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+
+# ── Linux ──────────────────────────────────────────────────────────────────
+linux:
+  category: Education
+  target:
+    - AppImage

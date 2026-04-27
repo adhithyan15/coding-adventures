@@ -15,7 +15,6 @@ import { FlashCard, RatingButtons, ProgressBar } from "@coding-adventures/ui-com
 import type { Rating } from "@coding-adventures/ui-components";
 import { store } from "../state.js";
 import { revealAction, rateAction, advanceAction, completeSessionAction } from "../actions.js";
-import { generateSecureId } from "../secure-id.js";
 
 interface StudySessionProps {
   onNavigate: (path: string) => void;
@@ -60,7 +59,9 @@ export function StudySession({ onNavigate }: StudySessionProps) {
   function handleRate(rating: Rating) {
     if (!activeSession) return;
 
-    const reviewId = generateSecureId();
+    const reviewId = crypto.randomUUID
+      ? crypto.randomUUID()
+      : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
     const now = Date.now();
 

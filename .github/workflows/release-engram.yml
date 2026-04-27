@@ -1,24 +1,22 @@
-# Electron Release — Engram Desktop App
+# Electron Release — Engram App
 #
 # Builds the Engram desktop app for macOS, Windows, and Linux,
 # then attaches the installers to a GitHub Release.
 #
 # Triggered by pushing a tag matching `engram-v*`:
-#   git tag engram-v0.2.0
-#   git push origin engram-v0.2.0
+#   git tag engram-v0.1.0
+#   git push origin engram-v0.1.0
 #
-# Build steps per platform:
-#   1. Install engram-app dependencies and build the Vite SPA
-#      (base: "./" — relative paths work with Electron's file:// protocol)
-#   2. Copy engram-app/dist/ → engram-electron/renderer/
-#      (electron-builder bundles renderer/ into the packaged app)
-#   3. Install engram-electron dependencies
-#   4. Compile electron/main.ts → dist-electron/
-#   5. Run electron-builder for the target platform
+# The workflow:
+#   1. Builds on macOS, Ubuntu, and Windows runners in parallel
+#   2. Uploads build artifacts per platform
+#   3. A single "release" job collects all artifacts and creates one GitHub Release
 #
 # Why a separate release job?
-# Each platform produces a `builder-debug.yml` file. Collecting artifacts
-# first and uploading once avoids conflicts on immutable releases.
+# Each platform produces a `builder-debug.yml` file. If all three platforms
+# upload directly to the release, the second uploader tries to overwrite the
+# first's file — which fails on repositories with immutable releases enabled.
+# By collecting artifacts first and uploading once, we avoid the conflict.
 
 name: Release Engram
 
@@ -54,36 +52,23 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install shared package dependencies
+      - name: Install local package dependencies
         shell: bash
         run: |
           cd code/packages/typescript/indexeddb && npm install
           cd ../store && npm install
           cd ../ui-components && npm install
+          cd ../../../programs/typescript/engram-app && npm install
 
-      - name: Install and build engram-app (renderer)
-        shell: bash
+      - name: Build renderer (Vite) + main process (tsc)
         working-directory: code/programs/typescript/engram-app
+        shell: bash
         run: |
-          npm install
           npm run build
-
-      - name: Copy renderer into engram-electron
-        shell: bash
-        run: cp -r code/programs/typescript/engram-app/dist code/programs/typescript/engram-electron/renderer
-
-      - name: Install engram-electron dependencies
-        shell: bash
-        working-directory: code/programs/typescript/engram-electron
-        run: npm install
-
-      - name: Compile Electron main process
-        working-directory: code/programs/typescript/engram-electron
-        shell: bash
-        run: npx tsc -p electron/tsconfig.json
+          npx tsc -p electron/tsconfig.json
 
       - name: Package with electron-builder
-        working-directory: code/programs/typescript/engram-electron
+        working-directory: code/programs/typescript/engram-app
         shell: bash
         run: npx electron-builder --${{ matrix.platform }} --publish never
         env:
@@ -96,13 +81,13 @@ jobs:
         with:
           name: release-${{ matrix.platform }}
           path: |
-            code/programs/typescript/engram-electron/release/*.AppImage
-            code/programs/typescript/engram-electron/release/*.dmg
-            code/programs/typescript/engram-electron/release/*.dmg.blockmap
-            code/programs/typescript/engram-electron/release/*.zip
-            code/programs/typescript/engram-electron/release/*.zip.blockmap
-            code/programs/typescript/engram-electron/release/*.exe
-            code/programs/typescript/engram-electron/release/*.yml
+            code/programs/typescript/engram-app/release/*.AppImage
+            code/programs/typescript/engram-app/release/*.dmg
+            code/programs/typescript/engram-app/release/*.dmg.blockmap
+            code/programs/typescript/engram-app/release/*.zip
+            code/programs/typescript/engram-app/release/*.zip.blockmap
+            code/programs/typescript/engram-app/release/*.exe
+            code/programs/typescript/engram-app/release/*.yml
           if-no-files-found: error
 
   release:

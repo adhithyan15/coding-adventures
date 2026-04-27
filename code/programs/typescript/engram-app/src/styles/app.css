@@ -109,16 +109,6 @@ button:disabled {
   background: var(--panel-header, #0f3460);
 }
 
-.btn--danger {
-  background: transparent;
-  color: #e94560;
-  border: 1px solid #e94560;
-}
-.btn--danger:hover:not(:disabled) {
-  background: #e94560;
-  color: #fff;
-}
-
 /* ── Card (deck list item) ──────────────────────────────────────────────── */
 
 .deck-card {
@@ -173,149 +163,10 @@ button:disabled {
   gap: var(--spacing-md);
 }
 
-.deck-list__header {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: var(--spacing-sm);
-}
-
 .deck-list__empty {
   text-align: center;
   padding: var(--spacing-xl);
   color: var(--tab-text, #8899aa);
-}
-
-/* ── Form ──────────────────────────────────────────────────────────────── */
-
-.form-container {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-}
-
-.form-container__title {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--tab-active-text, #ffffff);
-}
-
-.form-container__subtitle {
-  font-size: 0.875rem;
-  color: var(--tab-text, #8899aa);
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-}
-
-.form__label {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs);
-  font-size: 0.875rem;
-  color: var(--tab-text, #8899aa);
-}
-
-.form__input,
-.form__textarea {
-  font-family: inherit;
-  font-size: 0.9rem;
-  padding: var(--spacing-sm) var(--spacing-md);
-  background: var(--panel-bg, #16213e);
-  color: var(--body-text, #e0ddd5);
-  border: 1px solid var(--panel-border, #2a3a5e);
-  border-radius: var(--input-radius);
-  outline: none;
-  transition: border-color 0.15s;
-}
-
-.form__input:focus,
-.form__textarea:focus {
-  border-color: var(--accent, #e94560);
-}
-
-.form__textarea {
-  resize: vertical;
-  min-height: 60px;
-}
-
-.form__actions {
-  display: flex;
-  gap: var(--spacing-sm);
-  margin-top: var(--spacing-sm);
-}
-
-/* ── Card list ─────────────────────────────────────────────────────────── */
-
-.card-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-}
-
-.card-list__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.card-list__title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--tab-active-text, #ffffff);
-}
-
-.card-list__empty {
-  text-align: center;
-  padding: var(--spacing-xl);
-  color: var(--tab-text, #8899aa);
-}
-
-.card-list__items {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-}
-
-.card-list__back {
-  margin-top: var(--spacing-md);
-  align-self: flex-start;
-}
-
-.card-item {
-  background: var(--panel-bg, #16213e);
-  border: 1px solid var(--panel-border, #2a3a5e);
-  border-radius: var(--card-radius);
-  padding: var(--spacing-md);
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: var(--spacing-md);
-}
-
-.card-item__content {
-  flex: 1;
-  min-width: 0;
-}
-
-.card-item__front {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--tab-active-text, #ffffff);
-  margin-bottom: var(--spacing-xs);
-}
-
-.card-item__back {
-  font-size: 0.8rem;
-  color: var(--tab-text, #8899aa);
-}
-
-.card-item__actions {
-  display: flex;
-  gap: var(--spacing-xs);
-  flex-shrink: 0;
 }
 
 /* ── Study session ──────────────────────────────────────────────────────── */
