@@ -1,0 +1,21 @@
+{
+  "name": "coding-adventures-single-layer-network",
+  "version": "0.1.0",
+  "description": "Single-layer multi-input multi-output neural network primitives",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "matrix": "file:../matrix"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
