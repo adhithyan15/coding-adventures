@@ -40,15 +40,19 @@ jobs:
         run: |
           xcodebuild build \
             -scheme HelloWorld \
-            -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
+            -destination 'generic/platform=iOS Simulator' \
             -configuration Debug \
             CODE_SIGNING_ALLOWED=NO
 
       - name: Build watchOS app
+        # Use generic/platform to avoid needing a watchOS runtime installed.
+        # The runner has Xcode but watchOS simulator runtimes are not
+        # pre-installed. generic/platform compiles and links without
+        # booting a simulator, which is all we need for a build check.
         working-directory: code/programs/swift/01-hello-world
         run: |
           xcodebuild build \
             -scheme HelloWorldWatch \
-            -destination 'platform=watchOS Simulator,name=Apple Watch Series 10 (46mm),OS=latest' \
+            -destination 'generic/platform=watchOS Simulator' \
             -configuration Debug \
             CODE_SIGNING_ALLOWED=NO

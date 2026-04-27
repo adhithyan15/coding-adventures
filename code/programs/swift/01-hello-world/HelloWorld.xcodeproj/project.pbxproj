@@ -220,7 +220,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_WKApplication = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.adhithyan15.helloworld.watchkitapp;
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.codingadventures.helloworld;
+				PRODUCT_BUNDLE_IDENTIFIER = com.codingadventures.helloworld.watchkitapp;
 				PRODUCT_NAME = HelloWorldWatch;
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -243,7 +244,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.adhithyan15.helloworld;
+				PRODUCT_BUNDLE_IDENTIFIER = com.codingadventures.helloworld;
 				PRODUCT_NAME = HelloWorld;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 6.0;
@@ -264,7 +265,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.adhithyan15.helloworld;
+				PRODUCT_BUNDLE_IDENTIFIER = com.codingadventures.helloworld;
 				PRODUCT_NAME = HelloWorld;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 6.0;
@@ -334,7 +335,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_WKApplication = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.adhithyan15.helloworld.watchkitapp;
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.codingadventures.helloworld;
+				PRODUCT_BUNDLE_IDENTIFIER = com.codingadventures.helloworld.watchkitapp;
 				PRODUCT_NAME = HelloWorldWatch;
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;

@@ -1,6 +1,6 @@
 name: HelloWorld
 options:
-  bundleIdPrefix: com.adhithyan15
+  bundleIdPrefix: com.codingadventures
   deploymentTarget:
     iOS: "18.0"
     watchOS: "11.0"
@@ -15,7 +15,7 @@ targets:
       - Sources/HelloWorld
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.adhithyan15.helloworld
+        PRODUCT_BUNDLE_IDENTIFIER: com.codingadventures.helloworld
         PRODUCT_NAME: HelloWorld
         SWIFT_VERSION: "6.0"
         TARGETED_DEVICE_FAMILY: "1,2"
@@ -33,8 +33,9 @@ targets:
       - Sources/HelloWorldWatch
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.adhithyan15.helloworld.watchkitapp
+        PRODUCT_BUNDLE_IDENTIFIER: com.codingadventures.helloworld.watchkitapp
         PRODUCT_NAME: HelloWorldWatch
         SWIFT_VERSION: "6.0"
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_WKApplication: YES
+        INFOPLIST_KEY_WKCompanionAppBundleIdentifier: com.codingadventures.helloworld
