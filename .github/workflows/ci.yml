@@ -308,8 +308,8 @@ jobs:
         if: needs.detect.outputs.needs_elixir == 'true'
         uses: erlef/setup-beam@v1
         with:
-          elixir-version: '1.16'
-          otp-version: '26.0'
+          elixir-version: '1.17'
+          otp-version: '27.0'
 
       - name: Set up Dart
         if: needs.detect.outputs.needs_dart == 'true'
