@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.7.0 — 2026-04-27
+
+**NSolve and linear system pipeline tests added (A2c / A2d).**
+
+Adds MACSYMA name-table entries `nsolve→NSolve` and `linsolve→Solve`
+(linear-system form).  4 new pipeline tests cover:
+- `nsolve(x^3 - 6*x^2 + 11*x - 6, x)` → 3 numeric IRFloat roots.
+- `nsolve(x^5 - 1, x)` → 5 roots.
+- `linsolve([x+y=3, x-y=1], [x,y])` → `[Rule(x,2), Rule(y,1)]`.
+- `linsolve([x+y+z=6, 2*x+y=5, z=3], [x,y,z])` → 3 rules.
+
 ## 0.6.0 — 2026-04-27
 
 **Cubic and quartic solve pipeline tests added (A2a / A2b).**

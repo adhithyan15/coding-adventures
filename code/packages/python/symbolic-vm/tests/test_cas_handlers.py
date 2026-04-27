@@ -355,6 +355,70 @@ def test_solve_degree_5_passthrough() -> None:
     assert isinstance(result, IRApply)
 
 
+def test_solve_linear_system_2x2() -> None:
+    """Solve(List(x+y=3, x-y=1), List(x,y)) → [Rule(x,2), Rule(y,1)]."""
+    vm, _ = make_vm()
+    y = IRSymbol("y")
+    _EQ = IRSymbol("Equal")
+    _LIST = IRSymbol("List")
+    _RULE = IRSymbol("Rule")
+    # x + y = 3 and x - y = 1
+    eq1 = IRApply(_EQ, (IRApply(ADD, (x, y)), IRInteger(3)))
+    eq2 = IRApply(_EQ, (IRApply(SUB, (x, y)), IRInteger(1)))
+    eqs_list = IRApply(_LIST, (eq1, eq2))
+    vars_list = IRApply(_LIST, (x, y))
+    result = vm.eval(IRApply(_SOLVE, (eqs_list, vars_list)))
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List"
+    rules = {r.args[0].name: r.args[1] for r in result.args if isinstance(r, IRApply) and r.head.name == "Rule"}
+    assert rules["x"] == IRInteger(2)
+    assert rules["y"] == IRInteger(1)
+
+
+def test_nsolve_cubic() -> None:
+    """NSolve(x^3 - 6x^2 + 11x - 6, x) → 3 float roots near 1, 2, 3."""
+    from symbolic_ir import IRFloat
+
+    vm, _ = make_vm()
+    _NSOLVE = IRSymbol("NSolve")
+    # x^3 - 6x^2 + 11x - 6
+    cubic = IRApply(ADD, (
+        IRApply(SUB, (
+            IRApply(ADD, (
+                IRApply(SUB, (
+                    IRApply(POW, (x, IRInteger(3))),
+                    IRApply(MUL, (IRInteger(6), IRApply(POW, (x, IRInteger(2))))),
+                )),
+                IRApply(MUL, (IRInteger(11), x)),
+            )),
+            IRInteger(6),
+        )),
+        IRInteger(0),
+    ))
+    result = vm.eval(IRApply(_NSOLVE, (cubic, x)))
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List"
+    assert len(result.args) == 3
+    # All roots should be IRFloat with values near 1, 2, 3
+    vals = sorted(r.value for r in result.args if isinstance(r, IRFloat))
+    assert len(vals) == 3
+    assert abs(vals[0] - 1.0) < 1e-6
+    assert abs(vals[1] - 2.0) < 1e-6
+    assert abs(vals[2] - 3.0) < 1e-6
+
+
+def test_nsolve_quintic_five_roots() -> None:
+    """NSolve(x^5 - 1, x) → 5 roots."""
+    vm, _ = make_vm()
+    _NSOLVE = IRSymbol("NSolve")
+    # x^5 - 1
+    quintic = IRApply(SUB, (IRApply(POW, (x, IRInteger(5))), IRInteger(1)))
+    result = vm.eval(IRApply(_NSOLVE, (quintic, x)))
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List"
+    assert len(result.args) == 5
+
+
 # ===========================================================================
 # Section 5: List operations
 # ===========================================================================

@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.24.0 — 2026-04-27
+
+**Roadmap items A2c + A2d (NSolve and linear systems) wired in.**
+
+- `solve_handler` extended to detect `Solve(List(eqs...), List(vars...))`
+  and route it to `solve_linear_system` (Gaussian elimination, exact
+  rational arithmetic). Returns `List(Rule(var, val), ...)`.
+- `nsolve_handler` added for `NSolve(poly, var)`: Durand-Kerner iteration
+  returning `IRFloat`/complex IR roots for any polynomial degree.
+- `MACSYMA_NAME_TABLE` gains `"nsolve"→NSolve` and `"linsolve"→Solve`.
+- `cas-solve>=0.6.0` dependency pin updated.
+- 4 new tests in `test_cas_handlers.py` + 4 new pipeline tests.
+
 ## 0.23.0 — 2026-04-27
 
 **Roadmap items A2a + A2b (cubic and quartic solvers) wired into `solve_handler`.**

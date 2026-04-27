@@ -49,7 +49,9 @@ from cas_complex.normalize import contains_imaginary as _contains_imaginary
 from cas_factor import factor_integer_polynomial
 from cas_limit_series import PolynomialError, limit_direct, taylor_polynomial
 from cas_number_theory.handlers import build_number_theory_handler_table as _build_nt
+from cas_solve import nsolve_fraction_poly as _nsolve_fraction_poly
 from cas_solve import solve_cubic as _solve_cubic
+from cas_solve import solve_linear_system as _solve_linear_system
 from cas_solve import solve_quartic as _solve_quartic
 from cas_list_operations import (
     ListOperationError,
@@ -366,30 +368,54 @@ def _ir_to_fraction_poly(
 
 
 def solve_handler(_vm: "VM", expr: IRApply) -> IRNode:
-    """``Solve(equation, var)`` — closed-form solutions over Q.
+    """``Solve(equation, var)`` or ``Solve(List(eqs...), List(vars...))``.
 
-    Handles linear through quartic equations. The first argument is either:
+    Single-equation form
+    --------------------
+    The first argument is either:
 
     - A bare expression ``f(var)`` — treated as ``f(var) = 0``.
     - ``Equal(lhs, rhs)`` — treated as ``lhs - rhs = 0``.
 
     Returns ``List(sol1, sol2, ...)`` of IR nodes.  Complex roots use
-    ``%i`` (``IRSymbol("%i")``) as the imaginary unit — these are rendered
-    symbolically by the CAS. Returns the expression unevaluated for
-    degree > 4 or polynomials that Cardano/Ferrari cannot resolve.
+    ``%i`` (``IRSymbol("%i")``) as the imaginary unit.  Returns the
+    expression unevaluated for degree > 4 or polynomials that
+    Cardano/Ferrari cannot resolve.
 
-    Truth-table for coefficients::
-
-        degree 1: a*x + b = 0  →  [x = -b/a]
-        degree 2: a*x^2 + b*x + c = 0  →  quadratic formula solutions
-        degree 3: rational roots + Cardano (D_cardano > 0)
-        degree 4: rational roots + Ferrari (with rational resolvent)
-        degree 0 with b ≠ 0: no solution → []
-        degree 0 with b = 0: all x satisfy → ``all`` symbol
+    System form (linear systems only)
+    ----------------------------------
+    ``Solve(List(eq1, eq2, ...), List(x, y, ...))`` solves a linear system
+    by Gaussian elimination.  Returns ``List(Rule(x, val), Rule(y, val),
+    ...)`` or the expression unevaluated if the system is non-linear,
+    singular, or under/over-determined.
     """
     if len(expr.args) != 2:
         return expr
     eq_ir, var_ir = expr.args
+
+    # -----------------------------------------------------------------
+    # System form: Solve(List(eqs...), List(vars...))
+    # -----------------------------------------------------------------
+    if (
+        isinstance(eq_ir, IRApply)
+        and isinstance(eq_ir.head, IRSymbol)
+        and eq_ir.head.name == "List"
+        and isinstance(var_ir, IRApply)
+        and isinstance(var_ir.head, IRSymbol)
+        and var_ir.head.name == "List"
+    ):
+        equations = list(eq_ir.args)
+        variables = [v for v in var_ir.args if isinstance(v, IRSymbol)]
+        if len(variables) != len(var_ir.args):
+            return expr  # Non-symbol in variable list
+        result = _solve_linear_system(equations, variables)
+        if result is None:
+            return expr  # Non-linear, singular, or wrong size
+        return IRApply(IRSymbol("List"), tuple(result))
+
+    # -----------------------------------------------------------------
+    # Single-equation form: Solve(eq, var)
+    # -----------------------------------------------------------------
     if not isinstance(var_ir, IRSymbol):
         return expr
 
@@ -444,8 +470,43 @@ def solve_handler(_vm: "VM", expr: IRApply) -> IRNode:
             return expr  # unevaluated
         return IRApply(IRSymbol("List"), tuple(solutions))
 
-    # Degree > 4: return unevaluated.
+    # Degree > 4: return unevaluated (use NSolve for numeric roots).
     return expr
+
+
+def nsolve_handler(_vm: "VM", expr: IRApply) -> IRNode:
+    """``NSolve(polynomial, var)`` — numeric root-finding via Durand–Kerner.
+
+    Finds all roots of a univariate polynomial numerically using the
+    Durand-Kerner (Weierstrass) method.  Returns
+    ``List(root1, root2, ...)`` where each root is an ``IRFloat`` (real
+    roots) or an ``IRApply(Add, (IRFloat(re), Mul(IRFloat(im), %i)))``
+    (complex roots).
+
+    Accepts any degree ≥ 1 polynomial.  Coefficients must be rational
+    (``IRInteger`` or ``IRRational``).  Returns the expression unevaluated
+    if the input is not a rational polynomial.
+    """
+    if len(expr.args) != 2:
+        return expr
+    eq_ir, var_ir = expr.args
+    if not isinstance(var_ir, IRSymbol):
+        return expr
+
+    poly_ir = _unwrap_equation(eq_ir)
+    coeffs = _ir_to_fraction_poly(poly_ir, var_ir)
+    if coeffs is None:
+        return expr
+
+    deg = len(coeffs) - 1
+    if deg < 1:
+        return expr  # constant — no numeric roots
+
+    # coeffs is (c_0, c_1, ..., c_n) ascending degree;
+    # nsolve_fraction_poly expects descending degree.
+    coeffs_desc = list(reversed(coeffs))
+    ir_roots = _nsolve_fraction_poly(coeffs_desc)
+    return IRApply(IRSymbol("List"), tuple(ir_roots))
 
 
 # ===========================================================================
@@ -1088,6 +1149,7 @@ def build_cas_handler_table() -> dict[str, Handler]:
         "Factor": factor_handler,
         # --- cas_solve -------------------------------------------------------
         "Solve": solve_handler,
+        "NSolve": nsolve_handler,
         # --- cas_list_operations --------------------------------------------
         "Length": length_handler,
         "First": first_handler,

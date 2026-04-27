@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-symbolic-vm"
-version = "0.23.0"
+version = "0.24.0"
 description = "Pluggable symbolic VM — evaluates symbolic-ir trees through swappable backends (strict numeric vs. Mathematica-style symbolic rewriting)."
 requires-python = ">=3.12"
 license = "MIT"
@@ -20,7 +20,7 @@ dependencies = [
     "coding-adventures-cas-substitution",
     "coding-adventures-cas-simplify",
     "coding-adventures-cas-factor",
-    "coding-adventures-cas-solve>=0.4.0",
+    "coding-adventures-cas-solve>=0.6.0",
     "coding-adventures-cas-list-operations",
     "coding-adventures-cas-matrix",
     "coding-adventures-cas-limit-series",

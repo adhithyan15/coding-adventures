@@ -28,6 +28,7 @@ SIMPLIFY = IRSymbol("Simplify")
 EXPAND = IRSymbol("Expand")
 FACTOR = IRSymbol("Factor")
 SOLVE = IRSymbol("Solve")
+NSOLVE = IRSymbol("NSolve")
 TAYLOR = IRSymbol("Taylor")
 LIMIT = IRSymbol("Limit")
 
@@ -111,6 +112,8 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "expand": EXPAND,
     "factor": FACTOR,
     "solve": SOLVE,
+    "nsolve": NSOLVE,
+    "linsolve": SOLVE,  # MACSYMA's linsolve is linear-system solving
     "taylor": TAYLOR,
     "limit": LIMIT,
     # List operations

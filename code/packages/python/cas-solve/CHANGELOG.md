@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.6.0 — 2026-04-27
+
+Phase 3 — Numeric root-finding and linear-system solver.
+
+- ``nsolve_poly(coeffs, max_iter, tol)`` — Durand-Kerner iteration for all
+  roots of a degree-n polynomial (float/complex coefficients).
+- ``nsolve_fraction_poly(coeffs)`` — convenience wrapper accepting
+  ``Fraction`` coefficients; returns ``IRFloat``/``IRApply`` IR nodes.
+- ``roots_to_ir(roots)`` — converts ``complex`` roots to IR: near-real
+  roots become ``IRFloat``; complex roots become
+  ``Add(IRFloat(re), Mul(IRFloat(im), %i))`` expressions.
+- ``solve_linear_system(equations, variables)`` — exact Gaussian
+  elimination on a list of linear IR equations (``Equal(lhs, rhs)`` or
+  ``expr = 0``); returns ``List(Rule(var, val), ...)`` or ``None`` for
+  non-linear/singular systems.
+- 22 new tests (13 Durand-Kerner + 9 linear-system), all green.
+- Exported from ``cas_solve.__init__``.
+
 ## 0.4.0 — 2026-04-27
 
 Phase 2 — Cubic and quartic closed-form solvers.

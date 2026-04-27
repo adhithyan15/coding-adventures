@@ -486,3 +486,64 @@ def test_pipeline_solve_quartic_all_positive_roots() -> None:
     assert IRInteger(2) in roots
     assert IRInteger(3) in roots
     assert IRInteger(4) in roots
+
+
+# ---------------------------------------------------------------------------
+# Section N — NSolve numeric root-finding (A2c)
+# ---------------------------------------------------------------------------
+
+
+def test_pipeline_nsolve_cubic() -> None:
+    """nsolve(x^3 - 6*x^2 + 11*x - 6, x) → 3 numeric roots near 1, 2, 3."""
+    result = _eval("nsolve(x^3 - 6*x^2 + 11*x - 6, x)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List"
+    assert len(result.args) == 3
+    vals = sorted(r.value for r in result.args if isinstance(r, IRFloat))
+    assert len(vals) == 3
+    assert abs(vals[0] - 1.0) < 1e-6
+    assert abs(vals[1] - 2.0) < 1e-6
+    assert abs(vals[2] - 3.0) < 1e-6
+
+
+def test_pipeline_nsolve_quintic() -> None:
+    """nsolve(x^5 - 1, x) → 5 roots."""
+    result = _eval("nsolve(x^5 - 1, x)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List"
+    assert len(result.args) == 5
+
+
+# ---------------------------------------------------------------------------
+# Section O — Linear system solving (A2d)
+# ---------------------------------------------------------------------------
+
+
+def test_pipeline_linsolve_2x2() -> None:
+    """solve([x + y = 3, x - y = 1], [x, y]) → [Rule(x,2), Rule(y,1)]."""
+    # MACSYMA's linsolve routes to Solve with list args
+    result = _eval("linsolve([x + y = 3, x - y = 1], [x, y])")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List"
+    rules = {
+        r.args[0].name: r.args[1]
+        for r in result.args
+        if isinstance(r, IRApply) and r.head.name == "Rule"
+    }
+    assert rules["x"] == IRInteger(2)
+    assert rules["y"] == IRInteger(1)
+
+
+def test_pipeline_linsolve_3x3() -> None:
+    """solve([x+y+z=6, 2*x+y=5, z=3], [x,y,z]) → [x=2, y=1, z=3]."""
+    result = _eval("linsolve([x + y + z = 6, 2*x + y = 5, z = 3], [x, y, z])")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List"
+    rules = {
+        r.args[0].name: r.args[1]
+        for r in result.args
+        if isinstance(r, IRApply) and r.head.name == "Rule"
+    }
+    assert rules["x"] == IRInteger(2)
+    assert rules["y"] == IRInteger(1)
+    assert rules["z"] == IRInteger(3)
