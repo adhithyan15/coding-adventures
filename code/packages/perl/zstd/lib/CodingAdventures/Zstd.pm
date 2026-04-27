@@ -1149,6 +1149,16 @@ sub decompress {
     # stringifies it (e.g., "ARRAY(0x...)"), both of which produce confusing
     # "bad magic" errors rather than a clear type-mismatch message.
     die "zstd: data must be a defined string\n" unless defined $data && !ref $data;
+
+    # Reject oversized inputs before unpacking. `unpack('C*', ...)` converts
+    # every byte into a full Perl scalar (~56 bytes on 64-bit builds), so a
+    # 64 MB compressed string would balloon to ~3.5 GB of scalar memory before
+    # any frame-header check could fire — a classic decompression-bomb variant.
+    # 64 MB is a generous upper bound: our compressor emits at most 128 KB per
+    # block and a multi-block frame must still fit within MAX_OUTPUT (256 MB).
+    die "zstd: input too large (max 64 MB)\n"
+        if length($data) > 64 * 1024 * 1024;
+
     my @bytes = unpack('C*', $data);
 
     die "zstd: frame too short\n" if @bytes < 5;
