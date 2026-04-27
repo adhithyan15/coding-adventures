@@ -685,12 +685,12 @@ func buildKnownNamesForLanguage(packages []discovery.Package, language string) m
 			// Rust crate names use the directory name directly (kebab-case).
 			// "logic-gates" → "logic-gates"
 			crateName := strings.ToLower(filepath.Base(pkg.Path))
-			known[crateName] = pkg.Name
+			setKnown(crateName, pkg.Name, pkg.Path, pkg.Language)
 
 		case "elixir":
 			// Elixir mix names replace hyphens with underscores: "logic-gates" → "coding_adventures_logic_gates"
 			appName := "coding_adventures_" + strings.ReplaceAll(strings.ToLower(filepath.Base(pkg.Path)), "-", "_")
-			known[appName] = pkg.Name
+			setKnown(appName, pkg.Name, pkg.Path, pkg.Language)
 
 		case "perl":
 			// Perl module names use CamelCase: "logic-gates" → "CodingAdventures::LogicGates"
@@ -704,7 +704,7 @@ func buildKnownNamesForLanguage(packages []discovery.Package, language string) m
 				}
 			}
 			perlName := "codingadventures::" + strings.ToLower(strings.Join(parts, ""))
-			known[perlName] = pkg.Name
+			setKnown(perlName, pkg.Name, pkg.Path, pkg.Language)
 		}
 	}
 
