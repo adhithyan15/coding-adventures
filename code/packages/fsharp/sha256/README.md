@@ -1,6 +1,6 @@
 # CodingAdventures.Sha256.FSharp
 
-SHA-256 helpers for .NET, backed by `System.Security.Cryptography.SHA256`.
+SHA-256 helpers for .NET, implemented directly from FIPS 180-4.
 
 The package exposes one-shot hashing plus a streaming-style hasher whose `Digest` calls are non-destructive.
 
