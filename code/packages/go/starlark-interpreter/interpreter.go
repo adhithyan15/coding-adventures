@@ -241,6 +241,26 @@ func WithMaxRecursionDepth(depth int) InterpreterOption {
 	}
 }
 
+// WithGlobals sets pre-seeded variables that are injected into every VM
+// instance created by this interpreter. This is the mechanism for making
+// build context (like _ctx) available to all Starlark code.
+//
+// Example: injecting a build context dict into every Starlark scope:
+//
+//	interp := NewInterpreter(
+//	    WithGlobals(map[string]interface{}{
+//	        "_ctx": map[string]interface{}{
+//	            "version": 1,
+//	            "os":      "darwin",
+//	        },
+//	    }),
+//	)
+func WithGlobals(globals map[string]interface{}) InterpreterOption {
+	return func(i *StarlarkInterpreter) {
+		i.Globals = globals
+	}
+}
+
 // ============================================================================
 // STARLARK INTERPRETER
 // ============================================================================
@@ -259,9 +279,15 @@ func WithMaxRecursionDepth(depth int) InterpreterOption {
 //   loadCache         -- Maps file labels to their executed variable maps.
 //                        Prevents re-executing the same file twice.
 //                        This is analogous to Python's sys.modules.
+//
+//   Globals           -- Pre-seeded variables injected into every VM
+//                        instance before execution begins.
+//                        Use this for build context like _ctx.
+//                        nil means no globals are injected.
 type StarlarkInterpreter struct {
 	FileResolver      FileResolver
 	MaxRecursionDepth int
+	Globals           map[string]interface{}
 	loadCache         map[string]map[string]interface{}
 }
 
@@ -329,6 +355,13 @@ func (interp *StarlarkInterpreter) Interpret(source string) (*starlarkvm.Starlar
 	// The default handler (in starlark-vm/handlers.go) just pushes an
 	// empty dict.  Our override actually resolves and executes the file.
 	interp.registerLoadHandler(v)
+
+	// Step 3.5: Inject pre-seeded globals (e.g., _ctx) into the VM before
+	// execution so they are available as regular variables from the first
+	// instruction.
+	for k, val := range interp.Globals {
+		v.Variables[k] = val
+	}
 
 	// Step 4: Execute the bytecode.
 	traces := v.Execute(code)

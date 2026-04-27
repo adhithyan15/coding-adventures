@@ -529,20 +529,9 @@ func run() int {
 	return 0
 }
 
-// allLanguages is the canonical list of supported languages in the monorepo.
-// The order is stable and matches the order used in CI toolchain setup.
-var allLanguages = []string{"python", "ruby", "go", "typescript", "rust", "elixir", "perl"}
-
-func toolchainForPackageLanguage(language string) string {
-	switch language {
-	case "wasm":
-		return "rust"
-	case "csharp", "fsharp", "dotnet":
-		return "dotnet"
-	default:
-		return language
-	}
-}
+// allToolchains is the canonical list of build toolchains we may need in CI.
+// The order is stable and matches the order used in CI setup.
+var allToolchains = []string{"python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "dart", "java", "kotlin", "haskell", "dotnet"}
 
 func toolchainForPackageLanguage(language string) string {
 	switch language {
@@ -580,7 +569,16 @@ func toolchainForPackageLanguage(language string) string {
 // shared data files, but modifying them only triggers rebuilds of packages that
 // actually import them. Installing all toolchains for a grammar file change would
 // waste 5+ minutes of CI time when no Rust/Ruby/etc. packages are affected.
-var sharedPrefixes = []string{}
+var sharedPrefixes []string
+
+func containsPath(paths []string, want string) bool {
+	for _, path := range paths {
+		if path == want {
+			return true
+		}
+	}
+	return false
+}
 
 // detectNeededLanguages determines which language toolchains CI needs to
 // install based on the affected packages. It outputs one line per language

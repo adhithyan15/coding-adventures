@@ -506,6 +506,70 @@ func buildKnownNames(packages []discovery.Package) map[string]string {
 	return buildKnownNamesForLanguage(packages, "")
 }
 
+// dependencyScope maps a language to the scope it uses for cross-language
+// dependency resolution. Languages in the same scope can depend on each other.
+func dependencyScope(language string) string {
+	switch language {
+	case "csharp", "fsharp", "dotnet":
+		return "dotnet"
+	case "wasm":
+		return "wasm"
+	default:
+		return language
+	}
+}
+
+// inDependencyScope reports whether packageLanguage belongs to the given scope.
+func inDependencyScope(packageLanguage, scope string) bool {
+	switch scope {
+	case "dotnet":
+		return packageLanguage == "csharp" || packageLanguage == "fsharp" || packageLanguage == "dotnet"
+	case "wasm":
+		return packageLanguage == "wasm" || packageLanguage == "rust"
+	default:
+		return packageLanguage == scope
+	}
+}
+
+// buildToolDepsRe matches "# build-tool: deps = pkg1, pkg2" comments in BUILD files.
+var buildToolDepsRe = regexp.MustCompile(`(?m)#\s*build-tool:\s*deps\s*=\s*(.+)$`)
+
+// parseBuildToolDeps extracts explicit dependencies declared via
+// "# build-tool: deps = <pkg1>, <pkg2>" comments in a BUILD file.
+// This is the escape hatch for packages whose deps cannot be auto-detected
+// from their language-specific config files.
+func parseBuildToolDeps(pkg discovery.Package, knownPackageNames map[string]bool) []string {
+	if pkg.BuildContent == "" {
+		return nil
+	}
+
+	seen := make(map[string]bool)
+	for _, match := range buildToolDepsRe.FindAllStringSubmatch(pkg.BuildContent, -1) {
+		if len(match) < 2 {
+			continue
+		}
+		for _, raw := range strings.FieldsFunc(match[1], func(r rune) bool {
+			return r == ',' || r == ' ' || r == '\t'
+		}) {
+			dep := strings.TrimSpace(raw)
+			if dep == "" || dep == pkg.Name || !knownPackageNames[dep] {
+				continue
+			}
+			seen[dep] = true
+		}
+	}
+
+	if len(seen) == 0 {
+		return nil
+	}
+	deps := make([]string, 0, len(seen))
+	for dep := range seen {
+		deps = append(deps, dep)
+	}
+	sort.Strings(deps)
+	return deps
+}
+
 func buildKnownNamesForLanguage(packages []discovery.Package, language string) map[string]string {
 	known := make(map[string]string)
 	knownLanguage := make(map[string]string)
