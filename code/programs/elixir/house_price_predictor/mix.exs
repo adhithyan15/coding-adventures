@@ -13,9 +13,7 @@ defmodule HousePricePredictor.MixProject do
   defp deps do
     [
       {:matrix, path: "../../../packages/elixir/matrix"},
-      {:coding_adventures_loss_functions, path: "../../../packages/elixir/loss_functions"},
-      {:coding_adventures_feature_normalization,
-       path: "../../../packages/elixir/feature_normalization"}
+      {:coding_adventures_loss_functions, path: "../../../packages/elixir/loss_functions"}
     ]
   end
 end

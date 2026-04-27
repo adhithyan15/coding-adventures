@@ -1,10 +1,11 @@
-defmodule ActivationFunctions do
+defmodule CodingAdventures.ActivationFunctions do
+  @doc """
+  Sigmoid collapses any continuous state exclusively into a 0.0 to 1.0 float probability seamlessly.
+  """
+  def sigmoid(x) when x < -709.0, do: 0.0
+  def sigmoid(x) when x > 709.0, do: 1.0
   def sigmoid(x) do
-    cond do
-      x < -709 -> 0.0
-      x > 709 -> 1.0
-      true -> 1.0 / (1.0 + :math.exp(-x))
-    end
+    1.0 / (1.0 + :math.exp(-x))
   end
 
   def sigmoid_derivative(x) do
@@ -12,15 +13,13 @@ defmodule ActivationFunctions do
     sig * (1.0 - sig)
   end
 
-  def relu(x) do
-    if x > 0.0, do: x, else: 0.0
-  end
+  def relu(x) when x > 0.0, do: x * 1.0
+  def relu(_x), do: 0.0
 
-  def relu_derivative(x) do
-    if x > 0.0, do: 1.0, else: 0.0
-  end
+  def relu_derivative(x) when x > 0.0, do: 1.0
+  def relu_derivative(_x), do: 0.0
 
-  def tanh(x) do
+  def tanh_func(x) do
     :math.tanh(x)
   end
 
@@ -28,10 +27,4 @@ defmodule ActivationFunctions do
     t = :math.tanh(x)
     1.0 - (t * t)
   end
-
-  def softplus(x) do
-    :math.log(1.0 + :math.exp(-abs(x))) + max(x, 0.0)
-  end
-
-  def softplus_derivative(x), do: sigmoid(x)
 end
