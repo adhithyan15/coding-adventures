@@ -1,4 +1,4 @@
-import { mse, mae, bce, cce, mseDerivative, maeDerivative, bceDerivative, cceDerivative } from "../src/loss_functions";
+import { mse, mae, bce, cce } from "../src/loss_functions";
 
 describe("Loss Functions", () => {
   const yTrue = [1.0, 0.0];
@@ -42,30 +42,5 @@ describe("Loss Functions", () => {
     const identical = [1.0, 0.5, 0.0];
     expect(almostEqual(mse(identical, identical), 0.0)).toBe(true);
     expect(almostEqual(mae(identical, identical), 0.0)).toBe(true);
-  });
-
-  test("MSE Derivative calculates correctly", () => {
-    const res = mseDerivative([1.0, 0.0], [0.8, 0.2]);
-    expect(almostEqual(res[0], -0.2)).toBe(true);
-    expect(almostEqual(res[1], 0.2)).toBe(true);
-  });
-
-  test("MAE Derivative calculates correctly", () => {
-    const res = maeDerivative([1.0, 0.0, 0.5], [0.8, 0.2, 0.5]);
-    expect(almostEqual(res[0], -1.0/3.0)).toBe(true);
-    expect(almostEqual(res[1], 1.0/3.0)).toBe(true);
-    expect(almostEqual(res[2], 0.0)).toBe(true);
-  });
-
-  test("BCE Derivative calculates correctly", () => {
-    const res = bceDerivative([1.0, 0.0], [0.8, 0.2]);
-    expect(almostEqual(res[0], -0.625)).toBe(true);
-    expect(almostEqual(res[1], 0.625)).toBe(true);
-  });
-
-  test("CCE Derivative calculates correctly", () => {
-    const res = cceDerivative([1.0, 0.0], [0.8, 0.2]);
-    expect(almostEqual(res[0], -0.625)).toBe(true);
-    expect(almostEqual(res[1], 0.0)).toBe(true);
   });
 });

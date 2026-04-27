@@ -1,6 +1,6 @@
 import math
 import pytest
-from loss_functions import mse, mae, bce, cce, mse_derivative, mae_derivative, bce_derivative, cce_derivative
+from loss_functions import mse, mae, bce, cce
 
 def almost_equal(a: float, b: float) -> bool:
     return abs(a - b) <= 1e-6
@@ -56,32 +56,3 @@ def test_identical_slices():
     y_pred = [1.0, 0.0, 0.5]
     assert almost_equal(mse(y_true, y_pred), 0.0)
     assert almost_equal(mae(y_true, y_pred), 0.0)
-
-def test_mse_derivative():
-    y_true = [1.0, 0.0]
-    y_pred = [0.8, 0.2]
-    result = mse_derivative(y_true, y_pred)
-    assert almost_equal(result[0], -0.2)
-    assert almost_equal(result[1], 0.2)
-
-def test_mae_derivative():
-    y_true = [1.0, 0.0, 0.5]
-    y_pred = [0.8, 0.2, 0.5]
-    result = mae_derivative(y_true, y_pred)
-    assert almost_equal(result[0], -1.0/3.0)
-    assert almost_equal(result[1], 1.0/3.0)
-    assert almost_equal(result[2], 0.0)
-
-def test_bce_derivative():
-    y_true = [1.0, 0.0]
-    y_pred = [0.8, 0.2]
-    result = bce_derivative(y_true, y_pred)
-    assert almost_equal(result[0], -0.625)
-    assert almost_equal(result[1], 0.625)
-
-def test_cce_derivative():
-    y_true = [1.0, 0.0]
-    y_pred = [0.8, 0.2]
-    result = cce_derivative(y_true, y_pred)
-    assert almost_equal(result[0], -0.625)
-    assert almost_equal(result[1], 0.0)

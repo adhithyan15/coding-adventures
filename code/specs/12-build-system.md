@@ -94,12 +94,11 @@ The package's language is inferred from its directory path. The build system sca
 
 | Path component | Language |
 |---------------|----------|
-| `python`      | python     |
-| `ruby`        | ruby       |
-| `go`          | go         |
-| `rust`        | rust       |
-| `typescript`  | typescript |
-| `elixir`      | elixir     |
+| `python`      | python   |
+| `ruby`        | ruby     |
+| `go`          | go       |
+| `rust`        | rust     |
+| `elixir`      | elixir   |
 
 For example, `code/packages/python/logic-gates` yields language `python`. If no known language component is found, the language is `unknown`.
 

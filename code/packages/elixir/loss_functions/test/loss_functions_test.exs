@@ -43,37 +43,4 @@ defmodule CodingAdventures.LossFunctionsTest do
     assert almost_equal?(LF.mse([1.0, 0.5], [1.0, 0.5]), 0.0)
     assert almost_equal?(LF.mae([1.0, 0.5], [1.0, 0.5]), 0.0)
   end
-
-  test "mse_derivative" do
-    y_true = [1.0, 0.0]
-    y_pred = [0.8, 0.2]
-    res = LF.mse_derivative(y_true, y_pred)
-    assert almost_equal?(Enum.at(res, 0), -0.2)
-    assert almost_equal?(Enum.at(res, 1), 0.2)
-  end
-
-  test "mae_derivative" do
-    y_true = [1.0, 0.0, 0.5]
-    y_pred = [0.8, 0.2, 0.5]
-    res = LF.mae_derivative(y_true, y_pred)
-    assert almost_equal?(Enum.at(res, 0), -1.0 / 3.0)
-    assert almost_equal?(Enum.at(res, 1), 1.0 / 3.0)
-    assert almost_equal?(Enum.at(res, 2), 0.0)
-  end
-
-  test "bce_derivative" do
-    y_true = [1.0, 0.0]
-    y_pred = [0.8, 0.2]
-    res = LF.bce_derivative(y_true, y_pred)
-    assert almost_equal?(Enum.at(res, 0), -0.625)
-    assert almost_equal?(Enum.at(res, 1), 0.625)
-  end
-
-  test "cce_derivative" do
-    y_true = [1.0, 0.0]
-    y_pred = [0.8, 0.2]
-    res = LF.cce_derivative(y_true, y_pred)
-    assert almost_equal?(Enum.at(res, 0), -0.625)
-    assert almost_equal?(Enum.at(res, 1), 0.0)
-  end
 end

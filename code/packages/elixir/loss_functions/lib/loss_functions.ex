@@ -120,50 +120,6 @@ defmodule CodingAdventures.LossFunctions do
   end
   def cce(_, _), do: {:error, :length_mismatch}
 
-  def mse_derivative(y_true, y_pred) when length(y_true) == length(y_pred) and length(y_true) > 0 do
-    n = length(y_true)
-    y_true
-    |> Enum.zip(y_pred)
-    |> Enum.map(fn {t, p} -> (2.0 / n) * (p - t) end)
-  end
-  def mse_derivative(_, _), do: {:error, :length_mismatch}
-
-  def mae_derivative(y_true, y_pred) when length(y_true) == length(y_pred) and length(y_true) > 0 do
-    n = length(y_true)
-    y_true
-    |> Enum.zip(y_pred)
-    |> Enum.map(fn {t, p} ->
-      cond do
-        p > t -> 1.0 / n
-        p < t -> -1.0 / n
-        true -> 0.0
-      end
-    end)
-  end
-  def mae_derivative(_, _), do: {:error, :length_mismatch}
-
-  def bce_derivative(y_true, y_pred) when length(y_true) == length(y_pred) and length(y_true) > 0 do
-    n = length(y_true)
-    y_true
-    |> Enum.zip(y_pred)
-    |> Enum.map(fn {t, p} ->
-      p = clamp(p, @epsilon, 1.0 - @epsilon)
-      (1.0 / n) * ((p - t) / (p * (1.0 - p)))
-    end)
-  end
-  def bce_derivative(_, _), do: {:error, :length_mismatch}
-
-  def cce_derivative(y_true, y_pred) when length(y_true) == length(y_pred) and length(y_true) > 0 do
-    n = length(y_true)
-    y_true
-    |> Enum.zip(y_pred)
-    |> Enum.map(fn {t, p} ->
-      p = clamp(p, @epsilon, 1.0 - @epsilon)
-      (-1.0 / n) * (t / p)
-    end)
-  end
-  def cce_derivative(_, _), do: {:error, :length_mismatch}
-
   defp clamp(val, min, max) do
     if val < min do
       min

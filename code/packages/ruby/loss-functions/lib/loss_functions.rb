@@ -101,42 +101,4 @@ module LossFunctions
       raise LengthMismatchError, "Arrays must have the same non-zero length"
     end
   end
-
-  def mse_derivative(y_true, y_pred)
-    validate_lengths!(y_true, y_pred)
-    n = y_true.length.to_f
-    y_true.zip(y_pred).map { |t, p| (2.0 / n) * (p - t) }
-  end
-
-  def mae_derivative(y_true, y_pred)
-    validate_lengths!(y_true, y_pred)
-    n = y_true.length.to_f
-    y_true.zip(y_pred).map do |t, p|
-      if p > t
-        1.0 / n
-      elsif p < t
-        -1.0 / n
-      else
-        0.0
-      end
-    end
-  end
-
-  def bce_derivative(y_true, y_pred)
-    validate_lengths!(y_true, y_pred)
-    n = y_true.length.to_f
-    y_true.zip(y_pred).map do |t, p|
-      p = p.clamp(EPSILON, 1.0 - EPSILON)
-      (1.0 / n) * ((p - t) / (p * (1.0 - p)))
-    end
-  end
-
-  def cce_derivative(y_true, y_pred)
-    validate_lengths!(y_true, y_pred)
-    n = y_true.length.to_f
-    y_true.zip(y_pred).map do |t, p|
-      p = p.clamp(EPSILON, 1.0 - EPSILON)
-      (-1.0 / n) * (t / p)
-    end
-  end
 end

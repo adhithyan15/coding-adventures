@@ -1,3 +1,1 @@
-bundle config set path vendor/bundle
-bundle install --quiet --full-index
-bundle exec rake test
+ruby -Ilib:test test/test_loss_functions.rb

@@ -1,8 +1,7 @@
 [project]
 name = "coding-adventures-loss-functions"
-version = "1.0.0"
-description = "Pure mathematical loss functions"
-requires-python = ">=3.9"
+version = "0.1.0"
+dependencies = []
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

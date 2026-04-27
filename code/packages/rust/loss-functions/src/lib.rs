@@ -129,62 +129,6 @@ pub fn cce(y_true: &[f64], y_pred: &[f64]) -> Result<f64, &'static str> {
     Ok(-sum / y_true.len() as f64)
 }
 
-pub fn mse_derivative(y_true: &[f64], y_pred: &[f64]) -> Result<Vec<f64>, &'static str> {
-    if y_true.len() != y_pred.len() || y_true.is_empty() {
-        return Err("Slices must have the same non-zero length");
-    }
-    let n = y_true.len() as f64;
-    let mut res = Vec::with_capacity(y_true.len());
-    for i in 0..y_true.len() {
-        res.push((2.0 / n) * (y_pred[i] - y_true[i]));
-    }
-    Ok(res)
-}
-
-pub fn mae_derivative(y_true: &[f64], y_pred: &[f64]) -> Result<Vec<f64>, &'static str> {
-    if y_true.len() != y_pred.len() || y_true.is_empty() {
-        return Err("Slices must have the same non-zero length");
-    }
-    let n = y_true.len() as f64;
-    let mut res = Vec::with_capacity(y_true.len());
-    for i in 0..y_true.len() {
-        if y_pred[i] > y_true[i] {
-            res.push(1.0 / n);
-        } else if y_pred[i] < y_true[i] {
-            res.push(-1.0 / n);
-        } else {
-            res.push(0.0);
-        }
-    }
-    Ok(res)
-}
-
-pub fn bce_derivative(y_true: &[f64], y_pred: &[f64]) -> Result<Vec<f64>, &'static str> {
-    if y_true.len() != y_pred.len() || y_true.is_empty() {
-        return Err("Slices must have the same non-zero length");
-    }
-    let n = y_true.len() as f64;
-    let mut res = Vec::with_capacity(y_true.len());
-    for i in 0..y_true.len() {
-        let p = y_pred[i].clamp(EPSILON, 1.0 - EPSILON);
-        res.push((1.0 / n) * ((p - y_true[i]) / (p * (1.0 - p))));
-    }
-    Ok(res)
-}
-
-pub fn cce_derivative(y_true: &[f64], y_pred: &[f64]) -> Result<Vec<f64>, &'static str> {
-    if y_true.len() != y_pred.len() || y_true.is_empty() {
-        return Err("Slices must have the same non-zero length");
-    }
-    let n = y_true.len() as f64;
-    let mut res = Vec::with_capacity(y_true.len());
-    for i in 0..y_true.len() {
-        let p = y_pred[i].clamp(EPSILON, 1.0 - EPSILON);
-        res.push((-1.0 / n) * (y_true[i] / p));
-    }
-    Ok(res)
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -233,42 +177,5 @@ mod tests {
         let identical = &[1.0, 0.0, 0.5];
         assert!(almost_equal(mse(identical, identical).unwrap(), 0.0));
         assert!(almost_equal(mae(identical, identical).unwrap(), 0.0));
-    }
-
-    #[test]
-    fn test_mse_derivative() {
-        let y_true = &[1.0, 0.0];
-        let y_pred = &[0.8, 0.2];
-        let res = mse_derivative(y_true, y_pred).unwrap();
-        assert!(almost_equal(res[0], -0.2));
-        assert!(almost_equal(res[1], 0.2));
-    }
-
-    #[test]
-    fn test_mae_derivative() {
-        let y_true = &[1.0, 0.0, 0.5];
-        let y_pred = &[0.8, 0.2, 0.5];
-        let res = mae_derivative(y_true, y_pred).unwrap();
-        assert!(almost_equal(res[0], -1.0 / 3.0));
-        assert!(almost_equal(res[1], 1.0 / 3.0));
-        assert!(almost_equal(res[2], 0.0));
-    }
-
-    #[test]
-    fn test_bce_derivative() {
-        let y_true = &[1.0, 0.0];
-        let y_pred = &[0.8, 0.2];
-        let res = bce_derivative(y_true, y_pred).unwrap();
-        assert!(almost_equal(res[0], -0.625));
-        assert!(almost_equal(res[1], 0.625));
-    }
-
-    #[test]
-    fn test_cce_derivative() {
-        let y_true = &[1.0, 0.0];
-        let y_pred = &[0.8, 0.2];
-        let res = cce_derivative(y_true, y_pred).unwrap();
-        assert!(almost_equal(res[0], -0.625));
-        assert!(almost_equal(res[1], 0.0));
     }
 }

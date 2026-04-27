@@ -26,17 +26,6 @@ We define four distinct error calculations to be implemented. Each must be a pur
 | BCE      | Binary Class. | $-\frac{1}{n}\sum[y_i \log(\hat{y}_i) + (1-y_i) \log(1-\hat{y}_i)]$ | Binary Cross-Entropy. For exactly 2 classes. |
 | CCE      | Multi Class.  | $-\frac{1}{n}\sum[y_i \log(\hat{y}_i)]$ | Categorical Cross-Entropy. For multiple classes (one-hot). |
 
-### Mathematical Derivatives
-
-For Backpropagation (Gradient Descent), implementations must provide the partial derivative of the loss with respect to the prediction `y_pred` ($\hat{y}$):
-
-| Function | Derivative Formula ($\frac{\partial L}{\partial \hat{y}_i}$) |
-|----------|--------------------------------------------------------------|
-| MSE_d    | $\frac{2}{n} (\hat{y}_i - y_i)$                              |
-| MAE_d    | $\frac{1}{n} \text{sign}(\hat{y}_i - y_i)$                   |
-| BCE_d    | $\frac{1}{n} \left( \frac{\hat{y}_i - y_i}{\hat{y}_i(1 - \hat{y}_i)} \right)$ |
-| CCE_d    | $-\frac{1}{n} \frac{y_i}{\hat{y}_i}$                         |
-
 ### Epsilon Clamping
 
 To prevent mathematical undefined behavior when calculating logarithms in BCE and CCE (`log(0) = -infinity`), implementations must clamp predictions $\hat{y}$ to the range $[\epsilon, 1-\epsilon]$, where $\epsilon$ is typically `1e-7`.
@@ -51,13 +40,6 @@ func MSE(yTrue: Array<Float>, yPred: Array<Float>) -> Float
 func MAE(yTrue: Array<Float>, yPred: Array<Float>) -> Float
 func BCE(yTrue: Array<Float>, yPred: Array<Float>) -> Float
 func CCE(yTrue: Array<Float>, yPred: Array<Float>) -> Float
-
-// Derivatives: 
-// Return a new Array<Float> representing the gradient of the loss with respect to predictions
-func MSE_Derivative(yTrue: Array<Float>, yPred: Array<Float>) -> Array<Float>
-func MAE_Derivative(yTrue: Array<Float>, yPred: Array<Float>) -> Array<Float>
-func BCE_Derivative(yTrue: Array<Float>, yPred: Array<Float>) -> Array<Float>
-func CCE_Derivative(yTrue: Array<Float>, yPred: Array<Float>) -> Array<Float>
 ```
 
 ## Data Flow & Constraints

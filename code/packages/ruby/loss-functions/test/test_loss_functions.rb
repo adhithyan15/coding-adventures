@@ -59,37 +59,4 @@ class TestLossFunctions < Minitest::Test
     assert_in_delta 0.0, LossFunctions.mse(identical_true, identical_pred), 1e-6
     assert_in_delta 0.0, LossFunctions.mae(identical_true, identical_pred), 1e-6
   end
-
-  def test_mse_derivative
-    y_true = [1.0, 0.0]
-    y_pred = [0.8, 0.2]
-    res = LossFunctions.mse_derivative(y_true, y_pred)
-    assert_in_delta(-0.2, res[0], 1e-6)
-    assert_in_delta(0.2, res[1], 1e-6)
-  end
-
-  def test_mae_derivative
-    y_true = [1.0, 0.0, 0.5]
-    y_pred = [0.8, 0.2, 0.5]
-    res = LossFunctions.mae_derivative(y_true, y_pred)
-    assert_in_delta(-1.0 / 3.0, res[0], 1e-6)
-    assert_in_delta(1.0 / 3.0, res[1], 1e-6)
-    assert_in_delta(0.0, res[2], 1e-6)
-  end
-
-  def test_bce_derivative
-    y_true = [1.0, 0.0]
-    y_pred = [0.8, 0.2]
-    res = LossFunctions.bce_derivative(y_true, y_pred)
-    assert_in_delta(-0.625, res[0], 1e-6)
-    assert_in_delta(0.625, res[1], 1e-6)
-  end
-
-  def test_cce_derivative
-    y_true = [1.0, 0.0]
-    y_pred = [0.8, 0.2]
-    res = LossFunctions.cce_derivative(y_true, y_pred)
-    assert_in_delta(-0.625, res[0], 1e-6)
-    assert_in_delta(0.0, res[1], 1e-6)
-  end
 end

@@ -166,6 +166,10 @@ fn build_known_names_for_scope(packages: &[Package], scope: &str) -> HashMap<Str
             "csharp" | "fsharp" | "dotnet" => {
                 known.insert(dir_name, pkg.name.clone());
             }
+            "elixir" => {
+                let app_name = format!("coding_adventures_{}", dir_name.replace('-', "_"));
+                known.insert(app_name, pkg.name.clone());
+            }
             _ => {}
         }
     }
@@ -727,6 +731,32 @@ fn parse_haskell_deps(pkg: &Package, known_names: &HashMap<String, String>) -> V
 }
 
 // ---------------------------------------------------------------------------
+// Elixir dependency parsing
+// ---------------------------------------------------------------------------
+
+fn parse_elixir_deps(pkg: &Package, known_names: &HashMap<String, String>) -> Vec<String> {
+    let mix_exs = pkg.path.join("mix.exs");
+    let data = match fs::read_to_string(&mix_exs) {
+        Ok(s) => s,
+        Err(_) => return Vec::new(),
+    };
+
+    let mut internal_deps = Vec::new();
+    for line in data.lines() {
+        if let Some(idx) = line.find("{:coding_adventures_") {
+            let start = idx + 2; // skip {:
+            let rest = &line[start..];
+            let end = rest.find(|c: char| !c.is_alphanumeric() && c != '_').unwrap_or(rest.len());
+            let app_name = rest[..end].to_lowercase();
+            if let Some(pkg_name) = known_names.get(&app_name) {
+                internal_deps.push(pkg_name.clone());
+            }
+        }
+    }
+    internal_deps
+}
+
+// ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
 
@@ -762,15 +792,11 @@ pub fn resolve_dependencies(packages: &[Package]) -> Graph {
             .get(dependency_scope(&pkg.language))
             .expect("known name scope must exist");
         let deps = match pkg.language.as_str() {
-            "python" => parse_python_deps(pkg, known_names),
-            "ruby" => parse_ruby_deps(pkg, known_names),
-            "go" => parse_go_deps(pkg, known_names),
-            "rust" | "wasm" => parse_rust_deps(pkg, known_names),
-            "elixir" => parse_elixir_deps(pkg, known_names),
-            "lua" => parse_lua_deps(pkg, known_names),
-            "perl" => parse_perl_deps(pkg, known_names),
-            "haskell" => parse_haskell_deps(pkg, known_names),
-            "csharp" | "fsharp" | "dotnet" => parse_dotnet_deps(pkg, known_names),
+            "python" => parse_python_deps(pkg, &known_names),
+            "ruby" => parse_ruby_deps(pkg, &known_names),
+            "go" => parse_go_deps(pkg, &known_names),
+            "rust" => parse_rust_deps(pkg, &known_names),
+            "elixir" => parse_elixir_deps(pkg, &known_names),
             _ => Vec::new(),
         };
 

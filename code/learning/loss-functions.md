@@ -61,18 +61,3 @@ Very similar to BCE, but built for "One-Hot" arrays (where the true answer is ex
 In Cross-Entropy, if the network accidentally predicts `0.0` (0% confidence), the math will attempt to calculate `log(0)`. In mathematics, this is negative infinity. This will instantly crash our programming language or produce `NaN` (Not a Number) gradients, breaking the entire training loop.
 
 To build robust, production-ready loss functions, we "clamp" or bound the predictions with a tiny epsilon value (like `0.0000001`) before plugging them into the logarithm.
-
----
-
-## 5. The Derivatives (The Compass)
-
-Knowing the error is only half the battle. To actually *learn* (Gradient Descent), we need to know the **derivative** of the loss function with respect to the network's predictions. The derivative acts as a compass: if the loss is a valley, the derivative tells us the slope under our feet, pointing exactly which way is "down."
-
-1. **MSE Derivative**: $\frac{2}{n} (\text{y\_pred}_i - \text{y\_true}_i)$
-   - Linearly scales the adjustment based on how far off we are.
-2. **MAE Derivative**: $\frac{1}{n} \text{sign}(\text{y\_pred}_i - \text{y\_true}_i)$
-   - Always pushes the prediction by a constant flat step (`1/n` or `-1/n`), completely ignoring the size of the outlier.
-3. **BCE Derivative**: $\frac{1}{n} \left( \frac{\text{y\_pred}_i - \text{y\_true}_i}{\text{y\_pred}_i(1 - \text{y\_pred}_i)} \right)$
-   - Explodes into massive gradients if the network is highly confident but completely wrong.
-4. **CCE Derivative**: $- \frac{1}{n} \frac{\text{y\_true}_i}{\text{y\_pred}_i}$
-   - Only provides a gradient for the true class, steering its probability towards `1.0`.
