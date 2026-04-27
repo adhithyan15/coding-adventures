@@ -141,3 +141,66 @@ def test_auto_terminator_appended() -> None:
     """Input without a trailing ``;`` or ``$`` is treated as ``;``."""
     out = _run(["2 + 3", ":quit"])
     assert any(line == "(%o1) 5" for line in out)
+
+
+# ---------------------------------------------------------------------------
+# CAS operations smoke tests — full pipeline through pretty printer
+# ---------------------------------------------------------------------------
+
+
+def test_factor_difference_of_squares_repl() -> None:
+    """factor(x^2 - 1) produces a factored form, not unevaluated Factor(…)."""
+    out = _run(["factor(x^2 - 1);", ":quit"])
+    result_lines = [line for line in out if line.startswith("(%o1)")]
+    assert len(result_lines) == 1
+    line = result_lines[0]
+    # Must not come back as the unevaluated head.
+    assert "Factor(" not in line
+    # Must contain a * (product of two factors).
+    assert "*" in line
+
+
+def test_diff_monomial_repl() -> None:
+    """diff(x^2, x) → 2*x (not the unevaluated D(…))."""
+    out = _run(["diff(x^2, x);", ":quit"])
+    result_lines = [line for line in out if line.startswith("(%o1)")]
+    assert len(result_lines) == 1
+    line = result_lines[0]
+    assert "D(" not in line
+    assert "2" in line and "x" in line
+
+
+def test_solve_linear_repl() -> None:
+    """solve(2*x - 4, x) → [2]."""
+    out = _run(["solve(2*x - 4, x);", ":quit"])
+    result_lines = [line for line in out if line.startswith("(%o1)")]
+    assert len(result_lines) == 1
+    line = result_lines[0]
+    assert "2" in line
+
+
+def test_integrate_power_repl() -> None:
+    """integrate(x, x) → x^2/2 or 1/2*x^2 (power rule, not unevaluated)."""
+    out = _run(["integrate(x, x);", ":quit"])
+    result_lines = [line for line in out if line.startswith("(%o1)")]
+    assert len(result_lines) == 1
+    line = result_lines[0]
+    assert "Integrate(" not in line
+    assert "x" in line
+
+
+def test_limit_polynomial_repl() -> None:
+    """limit(x^2 + 1, x, 2) → 5."""
+    out = _run(["limit(x^2 + 1, x, 2);", ":quit"])
+    result_lines = [line for line in out if line.startswith("(%o1)")]
+    assert len(result_lines) == 1
+    assert "5" in result_lines[0]
+
+
+def test_simplify_repl() -> None:
+    """simplify(x + 0) → x (identity elimination)."""
+    out = _run(["simplify(x + 0);", ":quit"])
+    result_lines = [line for line in out if line.startswith("(%o1)")]
+    assert len(result_lines) == 1
+    line = result_lines[0]
+    assert "x" in line

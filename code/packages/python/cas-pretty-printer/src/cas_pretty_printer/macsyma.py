@@ -18,7 +18,7 @@ from __future__ import annotations
 
 from symbolic_ir import IRApply, IRInteger, IRNode, IRSymbol
 
-from cas_pretty_printer.dialect import BaseDialect
+from cas_pretty_printer.dialect import BaseDialect, _DEFAULT_FUNCTION_NAMES
 
 _NEG = IRSymbol("Neg")
 _INV = IRSymbol("Inv")
@@ -32,6 +32,20 @@ class MacsymaDialect(BaseDialect):
     """Maxima/MACSYMA flavor of CAS source text."""
 
     name = "macsyma"
+
+    # Extend the default function-name table with MACSYMA-specific entries.
+    function_names: dict[str, str] = {
+        **_DEFAULT_FUNCTION_NAMES,
+        "Atan2": "atan2",
+    }
+
+    # Symbol aliases for MACSYMA surface syntax.
+    _SYMBOL_MAP: dict[str, str] = {
+        "ImaginaryUnit": "%i",
+    }
+
+    def format_symbol(self, name: str) -> str:
+        return self._SYMBOL_MAP.get(name, name)
 
     def try_sugar(self, node: IRApply) -> IRNode | None:
         head = node.head

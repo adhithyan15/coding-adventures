@@ -27,10 +27,11 @@ from macsyma_runtime import History, MacsymaBackend, extend_compiler_name_table
 from symbolic_ir import IRApply, IRNode, IRSymbol
 from symbolic_vm import VM
 
-# Extend the compiler's name table with all the runtime-known heads
-# (factor, solve, simplify, list ops, matrix, limit, taylor, …).
-# This is idempotent — safe to call at import time; creating multiple
-# MacsymaLanguage instances in the same process is harmless.
+# Extend the compiler's name table with the full MACSYMA vocabulary:
+# factor, expand, simplify, solve, subst, limit, taylor, length, first, …
+# This is idempotent (dict.update), so creating multiple MacsymaLanguage
+# instances is safe. It must happen at module load time so the first
+# call to compile_macsyma() already knows all MACSYMA function names.
 extend_compiler_name_table(_STANDARD_FUNCTIONS)
 
 _DIALECT = MacsymaDialect()

@@ -7,10 +7,6 @@ It adds:
   references to ``%``, ``%i3``, ``%o3`` resolve transparently.
 - Handlers for the runtime-owned heads (`Display`, `Suppress`, `Kill`,
   `Ev`).
-- Handlers for all CAS substrate heads: `Simplify`, `Expand`, `Subst`,
-  `Factor`, `Solve`, list operations, matrix operations, `Limit`, `Taylor`,
-  and numeric helpers like `Abs`, `Floor`, `Ceiling`, etc.
-- Pre-bound constants: ``%pi`` and ``%e`` resolve to their float values.
 - Option-flag attributes (`numer`, `simp`, ...) plus a context-manager
   helper :meth:`with_numer` for short-lived flag overrides used by `Ev`.
 
@@ -28,7 +24,6 @@ from symbolic_ir import IRFloat, IRNode, IRSymbol
 from symbolic_vm import SymbolicBackend
 from symbolic_vm.backend import Handler
 
-from macsyma_runtime.cas_handlers import build_cas_handler_table
 from macsyma_runtime.handlers import (
     display_handler,
     make_ev_handler,
@@ -63,25 +58,29 @@ class MacsymaBackend(SymbolicBackend):
         self.simp = True
 
         # Patch the inherited handler table with the runtime's heads.
-        # ``SymbolicBackend.__init__`` filled ``self._handlers`` already.
+        # ``SymbolicBackend.__init__`` filled ``self._handlers`` already
+        # (including all CAS substrate handlers: Factor, Solve, Simplify, …).
         runtime_handlers: dict[str, Handler] = {
             DISPLAY.name: display_handler,
             SUPPRESS.name: suppress_handler,
             KILL.name: make_kill_handler(self),
             EV.name: make_ev_handler(),
         }
-        # Merge in all CAS substrate handlers (simplify, factor, solve,
-        # list ops, matrix, limit, taylor, numeric helpers, …).
-        cas_handlers = build_cas_handler_table()
-        self._handlers = {**self._handlers, **cas_handlers, **runtime_handlers}
+        self._handlers = {**self._handlers, **runtime_handlers}
 
-        # Pre-bind the standard MACSYMA numeric constants so ``%pi`` and
-        # ``%e`` resolve to their float values rather than remaining as
-        # free symbols. Runtime handlers round-trip through the VM, so
-        # these bindings are picked up automatically when an expression
-        # containing ``%pi`` or ``%e`` is evaluated.
+        # Pre-bind the standard MACSYMA constants so users can write
+        # ``%pi`` and ``%e`` without defining them first.  These are
+        # float-valued because MACSYMA treats them as numeric by default;
+        # a later ``simp`` flag can return exact symbolic forms.
         self._env["%pi"] = IRFloat(math.pi)
         self._env["%e"] = IRFloat(math.e)
+        # ``%i`` is the imaginary unit constant.  It is pre-bound to the
+        # ``ImaginaryUnit`` symbol (an inert IR symbol handled by the
+        # complex-number substrate) so that expressions like ``3 + 2*%i``
+        # compile and normalise correctly.  SymbolicBackend already
+        # pre-binds ``ImaginaryUnit``; we add the MACSYMA surface alias.
+        from symbolic_ir import IRSymbol as _IRSymbol
+        self._env["%i"] = _IRSymbol("ImaginaryUnit")
 
         # ``Kill`` and ``Ev`` need their arguments raw — not pre-evaluated:
         # ``kill(x)`` should clear the symbol ``x``, not evaluate ``x``
