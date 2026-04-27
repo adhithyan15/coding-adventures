@@ -46,6 +46,8 @@
 /// ```
 library data_matrix;
 
+import 'dart:convert' show utf8;
+
 import 'package:coding_adventures_barcode_2d/coding_adventures_barcode_2d.dart';
 
 // ============================================================================
@@ -1060,7 +1062,11 @@ ModuleGrid encode(
   DataMatrixOptions options = const DataMatrixOptions(),
 }) {
   // Step 1: ASCII-encode (uses UTF-8 bytes for non-ASCII characters).
-  final inputBytes = data.codeUnits; // UTF-16 code units, works for ASCII range
+  // Use UTF-8 encoding so non-ASCII characters are correctly represented as
+  // multi-byte sequences. Dart's String.codeUnits returns UTF-16 code units
+  // which can exceed 255 for non-Latin-1 characters, corrupting the ASCII
+  // codeword stream for code points above U+00FF.
+  final inputBytes = utf8.encode(data);
   final codewords = _encodeAscii(inputBytes);
 
   // Step 2: Select symbol — explicit size or auto-pick smallest.

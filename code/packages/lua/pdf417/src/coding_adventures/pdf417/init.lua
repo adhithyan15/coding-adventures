@@ -730,14 +730,12 @@ function M.encode(data, opts)
 
   -- ── Validate row_height ────────────────────────────────────────────────
   local row_height = opts.row_height
-  if row_height == nil then
+  if type(row_height) ~= "number"
+     or math.floor(row_height) ~= row_height
+     or row_height < 1 then
     row_height = 3
   end
-  if type(row_height) ~= "number"
-     or row_height ~= math.floor(row_height)
-     or row_height < 1 then
-    row_height = math.max(1, math.floor(row_height or 3))
-  end
+  row_height = math.min(row_height, 100) -- cap at sane maximum to prevent OOM
 
   -- ── Rasterise ──────────────────────────────────────────────────────────
   return rasterize(sequence, rows, cols, ecc_level, row_height), nil

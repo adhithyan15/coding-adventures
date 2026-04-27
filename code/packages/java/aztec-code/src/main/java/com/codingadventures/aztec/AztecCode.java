@@ -382,6 +382,14 @@ public final class AztecCode {
      * <p>Returns a list of 0/1 values, MSB first.
      */
     static List<Integer> encodeBytesAsBits(byte[] input) {
+        // The long-length escape uses an 11-bit field (max 2047). Guard here
+        // so that oversized inputs fail loudly rather than silently truncating
+        // the length field and producing a correctly-structured but corrupted symbol.
+        if (input.length > 2047) {
+            throw new InputTooLongException(
+                "Binary-Shift byte count " + input.length + " exceeds 11-bit field max (2047 bytes).");
+        }
+
         List<Integer> bits = new ArrayList<>();
         writeBits(bits, 31, 5); // Binary-Shift escape
 

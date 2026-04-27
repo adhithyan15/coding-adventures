@@ -801,11 +801,21 @@ function M.encode(data, options)
     }
   end
 
+  -- Check input size before allocating the byte table: to_byte_array builds a
+  -- Lua table entry per byte, so checking first avoids a large allocation for
+  -- inputs that will be rejected anyway.
+  if type(data) == "string" and #data > 2047 then
+    return nil, {
+      kind    = M.InputTooLongError,
+      message = string.format(
+        "Input length %d exceeds Aztec Binary-Shift max (2047 bytes).",
+        #data),
+    }
+  end
+
   local input = to_byte_array(data)
 
-  -- ISO 24778 long-length escape uses 11 bits, so byte length must fit in
-  -- 11 bits (max 2047) when greater than 31. We also bail before that limit
-  -- if the data couldn't fit any 32-layer full symbol.
+  -- Re-check after conversion in case caller passed a pre-built byte table.
   if #input > 2047 then
     return nil, {
       kind    = M.InputTooLongError,

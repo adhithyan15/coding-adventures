@@ -677,8 +677,8 @@ module CodingAdventures
       sequence = padded + ecc_cwords
 
       # ── Validate row_height option ─────────────────────────────────────────
-      row_height = opts[:row_height] || 3
-      row_height = [1, row_height.to_i].max
+      row_height = opts[:row_height]&.to_i || 3
+      row_height = row_height.clamp(1, 100)
 
       # ── Rasterise to boolean module grid ──────────────────────────────────
       rasterize(sequence, rows, cols, ecc_level, row_height)

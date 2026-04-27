@@ -531,6 +531,17 @@ func Encode(data string) *barcode2d.ModuleGrid {
 //   - ErrInvalidDimensions — opts.Columns is outside 1–30 (and not 0)
 //   - ErrInputTooLong — data does not fit in any valid PDF417 symbol
 func EncodeBytes(data []byte, opts Options) (*barcode2d.ModuleGrid, error) {
+	// ── Early input-size guard ────────────────────────────────────────────
+	// The largest PDF417 symbol is 90 rows × 30 cols = 2700 codeword slots.
+	// At ECC level 0 (2 ECC codewords), byte compaction can encode at most
+	// ~3235 raw bytes. Cap at 3600 to reject oversized inputs before running
+	// O(n·k) Reed-Solomon encoding (where k ≤ 512), preventing DoS.
+	const maxInputBytes = 3600
+	if len(data) > maxInputBytes {
+		return nil, fmt.Errorf("%w: input length %d exceeds maximum encodable size (%d bytes)",
+			ErrInputTooLong, len(data), maxInputBytes)
+	}
+
 	// ── Validate ECC level ────────────────────────────────────────────────
 	eccLevel := opts.ECCLevel
 	if eccLevel != ECCLevelAuto && (eccLevel < 0 || eccLevel > 8) {
@@ -549,7 +560,12 @@ func EncodeBytes(data []byte, opts Options) (*barcode2d.ModuleGrid, error) {
 	// ── Length descriptor ─────────────────────────────────────────────────
 	// First codeword counts itself + all data codewords + all ECC codewords
 	// (but NOT padding). This lets the decoder skip past padding tail.
-	lengthDesc := uint16(1 + len(dataCwords) + eccCount)
+	// Compute as int first to guard against uint16 truncation, then cast.
+	rawDesc := 1 + len(dataCwords) + eccCount
+	if rawDesc > 65535 {
+		return nil, fmt.Errorf("%w: codeword count %d overflows uint16", ErrInputTooLong, rawDesc)
+	}
+	lengthDesc := uint16(rawDesc)
 
 	// fullData = [lengthDesc, ...dataCwords] — fed to RS as the message.
 	fullData := make([]uint16, 0, 1+len(dataCwords))
