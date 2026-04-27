@@ -385,4 +385,5 @@ members = [
     "cas-pattern-matching",
     "cas-simplify",
     "cas-substitution",
+    "cas-factor",
 ]
