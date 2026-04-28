@@ -112,7 +112,12 @@ from symbolic_vm.asinh_poly_integral import acosh_poly_integral, asinh_poly_inte
 from symbolic_vm.atan_poly_integral import atan_poly_integral
 from symbolic_vm.backend import Handler
 from symbolic_vm.exp_integral import exp_integral
-from symbolic_vm.exp_hyp_integral import exp_cosh_integral, exp_sinh_integral
+from symbolic_vm.atanh_poly_integral import atanh_poly_integral
+from symbolic_vm.exp_hyp_integral import (
+    exp_cosh_integral,
+    exp_hyp_degenerate,
+    exp_sinh_integral,
+)
 from symbolic_vm.exp_trig_integral import exp_cos_integral, exp_sin_integral
 from symbolic_vm.hermite import hermite_reduce
 from symbolic_vm.log_integral import log_poly_integral
@@ -439,6 +444,10 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
         if result is not None:
             return result
         result = _try_acosh_product(a, b, x) or _try_acosh_product(b, a, x)
+        if result is not None:
+            return result
+        # Phase 14c: atanh(linear) × polynomial via IBP.
+        result = _try_atanh_product(a, b, x) or _try_atanh_product(b, a, x)
         if result is not None:
             return result
         # Phase 14a: exp(linear) × sinh/cosh(linear) — double-IBP closed form.
@@ -921,6 +930,43 @@ def _try_acos_product(
     return acos_poly_integral(poly, a_frac, b_frac, x)
 
 
+def _try_atanh_product(
+    transcendental: IRNode, poly_candidate: IRNode, x: IRSymbol
+) -> IRNode | None:
+    """Return ``∫ poly_candidate · atanh(linear) dx`` or ``None``.
+
+    Checks whether ``transcendental`` is ``Atanh(linear)`` and
+    ``poly_candidate`` is a polynomial. Phase 14c IBP formula:
+
+        Q(x)·atanh − a·T(x) + (r₁/(2a))·log(1−(ax+b)²)
+
+    where Q = ∫P, T = ∫S, and r₁, r₀ are the remainder from
+    dividing Q by 1−(ax+b)².
+    """
+    if not isinstance(transcendental, IRApply):
+        return None
+    if transcendental.head != ATANH:
+        return None
+    lin = _try_linear(transcendental.args[0], x)
+    if lin is None:
+        return None
+    a_frac, b_frac = lin
+    if a_frac == 0:
+        return None  # atanh(b) is a constant — constant-factor rule handles it
+
+    r = to_rational(poly_candidate, x)
+    if r is None:
+        return None
+    num, den = r
+    from polynomial import normalize as _norm
+    if len(_norm(den)) > 1:
+        return None  # rational, not polynomial
+    poly = tuple(Fraction(c) for c in _norm(num))
+    if not poly:
+        return None
+    return atanh_poly_integral(poly, a_frac, b_frac, x)
+
+
 def _try_sinh_product(
     transcendental: IRNode, poly_candidate: IRNode, x: IRSymbol
 ) -> IRNode | None:
@@ -1142,7 +1188,12 @@ def _try_exp_hyp(exp_node: IRNode, hyp_node: IRNode, x: IRSymbol) -> IRNode | No
         return None
     D = a_frac * a_frac - c_frac * c_frac
     if D == Fraction(0):
-        return None  # Degenerate — fall through
+        # a² = c² — expand into exponentials and integrate directly.
+        return exp_hyp_degenerate(
+            a_frac, b_frac, c_frac, d_frac,
+            is_sinh=(hyp_node.head == SINH),
+            x_sym=x,
+        )
     if hyp_node.head == SINH:
         return exp_sinh_integral(a_frac, b_frac, c_frac, d_frac, x)
     return exp_cosh_integral(a_frac, b_frac, c_frac, d_frac, x)

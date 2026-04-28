@@ -71,6 +71,7 @@ direct:
 from __future__ import annotations
 
 from fractions import Fraction
+from math import comb as _comb
 
 from symbolic_ir import (
     ADD,
@@ -288,7 +289,87 @@ def sinh_times_cosh_power(
         denom = IRApply(MUL, (IRInteger(new_exp), a_ir))
         return IRApply(DIV, (sinh_pow, denom))
 
-    return None  # General case deferred
+    # ─────────────────────────────────────────────────────────────────────
+    # General case: both m ≥ 2 and n ≥ 2.
+    #
+    # Three strategies based on parity.  The key algebraic identities are:
+    #
+    #   sinh²(u) = cosh²(u) − 1   →  d(cosh)/dx involves sinh
+    #   cosh²(u) = sinh²(u) + 1   →  d(sinh)/dx involves cosh
+    # ─────────────────────────────────────────────────────────────────────
+
+    cosh_arg = IRApply(COSH, (arg_ir,))
+    sinh_arg = IRApply(SINH, (arg_ir,))
+
+    if m % 2 == 1:
+        # ── Sub-case A: m odd (m = 2p+1 ≥ 3) ──────────────────────────────
+        #
+        # Pull one sinh out and use sinh² = cosh²−1:
+        #   sinh^(2p+1)·cosh^n = sinh · (cosh²−1)^p · cosh^n
+        #
+        # Substitute u = cosh(ax+b), du = a·sinh(ax+b) dx:
+        #   ∫ = (1/a) ∫ (u²−1)^p · u^n du
+        #
+        # Expand (u²−1)^p by binomial:
+        #   (u²−1)^p = Σ_{k=0}^{p} C(p,k)·(−1)^(p−k)·u^(2k)
+        #
+        # Antiderivative (back-sub u = cosh):
+        #   Σ_{k=0}^{p} [C(p,k)·(−1)^(p−k) / (a·(2k+n+1))] · cosh^(2k+n+1)
+        p = (m - 1) // 2
+        terms: list[IRNode] = []
+        for k in range(p + 1):
+            sign = 1 if (p - k) % 2 == 0 else -1
+            binom_k = _comb(p, k)
+            exp_val = 2 * k + n + 1
+            coeff = Fraction(sign * binom_k, exp_val) / a
+            cosh_pow = IRApply(POW, (cosh_arg, IRInteger(exp_val)))
+            terms.append(IRApply(MUL, (_frac_ir(coeff), cosh_pow)))
+        return _fold_add(terms)
+
+    if n % 2 == 1:
+        # ── Sub-case B: n odd (n = 2q+1 ≥ 3) ──────────────────────────────
+        #
+        # Pull one cosh out and use cosh² = sinh²+1:
+        #   sinh^m · cosh^(2q+1) = cosh · (sinh²+1)^q · sinh^m
+        #
+        # Substitute u = sinh(ax+b), du = a·cosh(ax+b) dx:
+        #   ∫ = (1/a) ∫ (u²+1)^q · u^m du
+        #
+        # Expand (u²+1)^q = Σ_{k=0}^{q} C(q,k)·u^(2k)  (all signs positive)
+        #
+        # Antiderivative (back-sub u = sinh):
+        #   Σ_{k=0}^{q} [C(q,k) / (a·(2k+m+1))] · sinh^(2k+m+1)
+        q = (n - 1) // 2
+        terms = []
+        for k in range(q + 1):
+            binom_k = _comb(q, k)
+            exp_val = 2 * k + m + 1
+            coeff = Fraction(binom_k, exp_val) / a
+            sinh_pow = IRApply(POW, (sinh_arg, IRInteger(exp_val)))
+            terms.append(IRApply(MUL, (_frac_ir(coeff), sinh_pow)))
+        return _fold_add(terms)
+
+    # ── Sub-case C: both m, n even ──────────────────────────────────────────
+    #
+    # Use sinh^(2p) = (cosh²−1)^p to express everything in terms of
+    # even powers of cosh, then call cosh_power_integral:
+    #
+    #   sinh^(2p)·cosh^(2q) = (cosh²−1)^p · cosh^(2q)
+    #                       = Σ_{k=0}^{p} C(p,k)·(−1)^(p−k) · cosh^(2k+2q)
+    #   ∫ = Σ_{k=0}^{p} C(p,k)·(−1)^(p−k) · ∫ cosh^(2k+n) dx
+    p = m // 2
+    terms = []
+    for k in range(p + 1):
+        sign = 1 if (p - k) % 2 == 0 else -1
+        binom_k = _comb(p, k)
+        power = 2 * k + n
+        sub_integral = cosh_power_integral(power, a, b, x)
+        coeff = Fraction(sign * binom_k)
+        if coeff == Fraction(1):
+            terms.append(sub_integral)
+        else:
+            terms.append(IRApply(MUL, (_frac_ir(coeff), sub_integral)))
+    return _fold_add(terms)
 
 
 # ---------------------------------------------------------------------------
@@ -301,6 +382,21 @@ def _frac_ir(c: Fraction) -> IRNode:
     if c.denominator == 1:
         return IRInteger(c.numerator)
     return IRRational(c.numerator, c.denominator)
+
+
+def _fold_add(terms: list[IRNode]) -> IRNode:
+    """Left-fold a non-empty list of IR nodes into binary ADD nodes.
+
+    Example: ``[a, b, c]`` → ``ADD(ADD(a, b), c)``.
+
+    This matches the VM's binary-arity ADD handler.  Never pass an empty
+    list.
+    """
+    assert terms, "_fold_add requires at least one term"
+    acc = terms[0]
+    for t in terms[1:]:
+        acc = IRApply(ADD, (acc, t))
+    return acc
 
 
 __all__ = [

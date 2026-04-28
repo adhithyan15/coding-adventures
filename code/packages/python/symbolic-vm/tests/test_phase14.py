@@ -48,6 +48,7 @@ import math
 
 from symbolic_ir import (
     ADD,
+    ATANH,
     COSH,
     DIV,
     EXP,
@@ -233,6 +234,10 @@ def _sinh(arg: IRNode) -> IRNode:
 
 def _cosh(arg: IRNode) -> IRNode:
     return IRApply(COSH, (arg,))
+
+
+def _atanh(arg: IRNode) -> IRNode:
+    return IRApply(ATANH, (arg,))
 
 
 def _lin(a: int | IRNode, b: int = 0) -> IRNode:
@@ -780,25 +785,28 @@ class TestPhase14_Fallthroughs:
     """Integrals that Phase 14 cannot evaluate — should remain Integrate(...)."""
 
     def test_exp_sinh_degenerate_same_coeff(self) -> None:
-        """∫ exp(x)·sinh(x) dx — a=c=1, D=0 → unevaluated."""
+        """∫ exp(x)·sinh(x) dx — a=c=1, D=0 — now closed-form."""
         vm = _make_vm()
         f = _mul(_exp(X), _sinh(X))
         F = _integrate_ir(vm, f)
-        _is_unevaluated(f, F)
+        _was_evaluated(f, F)
+        _check_antiderivative(f, F)
 
     def test_exp_cosh_degenerate_same_coeff(self) -> None:
-        """∫ exp(x)·cosh(x) dx — a=c=1, D=0 → unevaluated."""
+        """∫ exp(x)·cosh(x) dx — a=c=1, D=0 — now closed-form."""
         vm = _make_vm()
         f = _mul(_exp(X), _cosh(X))
         F = _integrate_ir(vm, f)
-        _is_unevaluated(f, F)
+        _was_evaluated(f, F)
+        _check_antiderivative(f, F)
 
     def test_sinh_squared_cosh_squared(self) -> None:
-        """∫ sinh²(x)·cosh²(x) dx — both exponents > 1, u-sub returns None."""
+        """∫ sinh²(x)·cosh²(x) dx — both exponents ≥ 2, now closed-form via binomial."""
         vm = _make_vm()
         f = _mul(_pow(_sinh(X), _INT(2)), _pow(_cosh(X), _INT(2)))
         F = _integrate_ir(vm, f)
-        _is_unevaluated(f, F)
+        _was_evaluated(f, F)
+        _check_antiderivative(f, F)
 
     def test_sinh_power_non_integer_exp(self) -> None:
         """∫ sinh(x)^(1/2) dx — fractional exponent, not handled."""
@@ -820,6 +828,157 @@ class TestPhase14_Fallthroughs:
         f = _mul(_sinh(X), _cosh(_lin(2)))
         F = _integrate_ir(vm, f)
         _is_unevaluated(f, F)
+
+
+# ---------------------------------------------------------------------------
+# Class 7b: Deferred fix tests — cases previously unevaluated
+# ---------------------------------------------------------------------------
+
+
+class TestPhase14_DeferredFixes:
+    """Tests for the three Phase 14 deferred cases now handled.
+
+    14a-fix: exp(ax+b)·sinh/cosh(cx+d) when a²=c² (degenerate D=0)
+    14b-fix: sinh^m·cosh^n for both m,n ≥ 2 (general power case)
+    14c-fix: P(x)·atanh(ax+b) for P ∈ Q[x] (IBP with rational residual)
+    """
+
+    # ── 14a-fix: exp × hyp, degenerate a=−c ─────────────────────────────────
+
+    def test_exp_x_sinh_neg_x(self) -> None:
+        """∫ exp(x)·sinh(−x) dx — a=1, c=−1, D=0."""
+        vm = _make_vm()
+        f = _mul(_exp(X), _sinh(_neg(X)))
+        F = _integrate_ir(vm, f)
+        _was_evaluated(f, F)
+        _check_antiderivative(f, F)
+
+    def test_exp_x_cosh_neg_x(self) -> None:
+        """∫ exp(x)·cosh(−x) dx — a=1, c=−1, D=0."""
+        vm = _make_vm()
+        f = _mul(_exp(X), _cosh(_neg(X)))
+        F = _integrate_ir(vm, f)
+        _was_evaluated(f, F)
+        _check_antiderivative(f, F)
+
+    def test_exp_2x_sinh_2x(self) -> None:
+        """∫ exp(2x)·sinh(2x) dx — a=c=2, D=0."""
+        vm = _make_vm()
+        f = _mul(_exp(_lin(2)), _sinh(_lin(2)))
+        F = _integrate_ir(vm, f)
+        _was_evaluated(f, F)
+        _check_antiderivative(f, F)
+
+    def test_exp_2x_cosh_2x(self) -> None:
+        """∫ exp(2x)·cosh(2x) dx — a=c=2, D=0."""
+        vm = _make_vm()
+        f = _mul(_exp(_lin(2)), _cosh(_lin(2)))
+        F = _integrate_ir(vm, f)
+        _was_evaluated(f, F)
+        _check_antiderivative(f, F)
+
+    # ── 14b-fix: sinh^m · cosh^n, both ≥ 2 ────────────────────────────────
+
+    def test_sinh_cubed_cosh_squared(self) -> None:
+        """∫ sinh³(x)·cosh²(x) dx — m=3 odd, n=2 even → sub-case A."""
+        vm = _make_vm()
+        f = _mul(_pow(_sinh(X), _INT(3)), _pow(_cosh(X), _INT(2)))
+        F = _integrate_ir(vm, f)
+        _was_evaluated(f, F)
+        _check_antiderivative(f, F)
+
+    def test_sinh_squared_cosh_cubed(self) -> None:
+        """∫ sinh²(x)·cosh³(x) dx — m=2 even, n=3 odd → sub-case B."""
+        vm = _make_vm()
+        f = _mul(_pow(_sinh(X), _INT(2)), _pow(_cosh(X), _INT(3)))
+        F = _integrate_ir(vm, f)
+        _was_evaluated(f, F)
+        _check_antiderivative(f, F)
+
+    def test_sinh_squared_cosh_fourth(self) -> None:
+        """∫ sinh²(x)·cosh⁴(x) dx — both even → sub-case C (binomial)."""
+        vm = _make_vm()
+        f = _mul(_pow(_sinh(X), _INT(2)), _pow(_cosh(X), _INT(4)))
+        F = _integrate_ir(vm, f)
+        _was_evaluated(f, F)
+        _check_antiderivative(f, F)
+
+    def test_sinh_fourth_cosh_squared(self) -> None:
+        """∫ sinh⁴(x)·cosh²(x) dx — both even → sub-case C (binomial)."""
+        vm = _make_vm()
+        f = _mul(_pow(_sinh(X), _INT(4)), _pow(_cosh(X), _INT(2)))
+        F = _integrate_ir(vm, f)
+        _was_evaluated(f, F)
+        _check_antiderivative(f, F)
+
+    def test_sinh_cubed_cosh_cubed(self) -> None:
+        """∫ sinh³(x)·cosh³(x) dx — m=n=3, both odd → sub-case A (m odd)."""
+        vm = _make_vm()
+        f = _mul(_pow(_sinh(X), _INT(3)), _pow(_cosh(X), _INT(3)))
+        F = _integrate_ir(vm, f)
+        _was_evaluated(f, F)
+        _check_antiderivative(f, F)
+
+    def test_sinh_cosh_linear_arg_both_powers(self) -> None:
+        """∫ sinh²(2x)·cosh²(2x) dx — both even, a=2."""
+        vm = _make_vm()
+        f = _mul(_pow(_sinh(_lin(2)), _INT(2)), _pow(_cosh(_lin(2)), _INT(2)))
+        F = _integrate_ir(vm, f)
+        _was_evaluated(f, F)
+        _check_antiderivative(f, F)
+
+    # ── 14c-fix: P(x) · atanh(ax+b) — IBP with rational residual ─────────
+
+    def test_atanh_x_bare(self) -> None:
+        """∫ atanh(x) dx = x·atanh(x) + (1/2)·log(1−x²)."""
+        vm = _make_vm()
+        f = _atanh(X)
+        F = _integrate_ir(vm, f)
+        _was_evaluated(f, F)
+        # Use test points inside |x|<1 domain for atanh
+        _check_antiderivative(f, F, test_points=(0.3, 0.6))
+
+    def test_x_times_atanh_x(self) -> None:
+        """∫ x·atanh(x) dx = (x²−1)/2·atanh(x) + x/2."""
+        vm = _make_vm()
+        f = _mul(X, _atanh(X))
+        F = _integrate_ir(vm, f)
+        _was_evaluated(f, F)
+        _check_antiderivative(f, F, test_points=(0.3, 0.6))
+
+    def test_x_squared_times_atanh_x(self) -> None:
+        """∫ x²·atanh(x) dx."""
+        vm = _make_vm()
+        f = _mul(_pow(X, _INT(2)), _atanh(X))
+        F = _integrate_ir(vm, f)
+        _was_evaluated(f, F)
+        _check_antiderivative(f, F, test_points=(0.3, 0.6))
+
+    def test_x_times_atanh_2x(self) -> None:
+        """∫ x·atanh(2x) dx — a=2, b=0."""
+        vm = _make_vm()
+        f = _mul(X, _atanh(_lin(2)))
+        F = _integrate_ir(vm, f)
+        _was_evaluated(f, F)
+        # For atanh(2x), need |2x|<1, so x<0.5; use tighter test points
+        _check_antiderivative(f, F, test_points=(0.1, 0.3))
+
+    def test_atanh_x_plus_half(self) -> None:
+        """∫ atanh(x + 1/2) dx — a=1, b=1/2, linear shift."""
+        vm = _make_vm()
+        f = _atanh(_add(X, _RAT(1, 2)))
+        F = _integrate_ir(vm, f)
+        _was_evaluated(f, F)
+        # Need |x + 1/2| < 1, i.e., -3/2 < x < 1/2; use small positive test points
+        _check_antiderivative(f, F, test_points=(0.1, 0.2))
+
+    def test_atanh_commutativity(self) -> None:
+        """∫ atanh(x)·x dx — same as x·atanh(x) (commutativity of MUL)."""
+        vm = _make_vm()
+        f = _mul(_atanh(X), X)
+        F = _integrate_ir(vm, f)
+        _was_evaluated(f, F)
+        _check_antiderivative(f, F, test_points=(0.3, 0.6))
 
 
 # ---------------------------------------------------------------------------

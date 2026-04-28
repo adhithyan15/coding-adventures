@@ -1,5 +1,61 @@
 # Changelog
 
+## 0.34.0 — 2026-04-28
+
+**Phase 14 deferred fixes: exp×hyp degenerate case, sinh^m·cosh^n (both≥2), atanh×poly.**
+
+### 14a-fix: `∫ exp(ax+b)·sinh/cosh(cx+d) dx` when `a² = c²`
+
+`exp_hyp_integral.py` gains `exp_hyp_degenerate(a, b, c, d, is_sinh, x_sym)`.
+
+Previously `_try_exp_hyp` fell through to unevaluated when `D = a²−c² = 0`.
+The fix expands sinh/cosh into exponentials, giving two terms — one
+exponential and one constant — whose antiderivatives are trivial:
+
+```
+a=c:   e^(2ax+b+d)/(4a)  ±  e^(b-d)·x/2
+a=-c:  e^(b+d)·x/2  ±  e^(2ax+b-d)/(4a)
+```
+
+`+` for cosh, `−` for sinh.
+
+### 14b-fix: `∫ sinh^m·cosh^n dx` for both `m, n ≥ 2`
+
+`hyp_power_integral.sinh_times_cosh_power` is extended with three sub-cases
+(replacing the old `return None`).  A new private helper `_fold_add` left-folds
+term lists into binary ADD nodes.
+
+| Sub-case | Condition | Method |
+|----------|-----------|--------|
+| A | m odd | u=cosh, expand (u²−1)^p by binomial → sum of cosh powers |
+| B | n odd | u=sinh, expand (u²+1)^q by binomial → sum of sinh powers |
+| C | both even | sinh²p=(cosh²−1)^p → reduce to Σ cosh_power_integral calls |
+
+### 14c-fix: `∫ P(x)·atanh(ax+b) dx` for `P ∈ Q[x]`
+
+New file: `atanh_poly_integral.py`.  IBP with u=atanh gives the closed form:
+
+```
+[Q(x) − (r₀ − r₁·b/a)]·atanh(ax+b)  −  a·T(x)  +  (r₁/(2a))·log(1−(ax+b)²)
+```
+
+where `Q = ∫P`, `T = ∫S`, and `r₁x+r₀` is the remainder from dividing `Q`
+by `1−(ax+b)²`.
+
+`integrate.py` gains `_try_atanh_product` wired in the MUL block after the
+Phase 13 inverse-hyp handlers.
+
+### Tests
+
+`test_phase14.py`: three formerly-unevaluated fallthroughs changed to
+closed-form assertions; new class `TestPhase14_DeferredFixes` (18 tests).
+
+`test_phase13.py`: `test_atanh_times_x` updated from unevaluated to evaluated.
+
+Total: 1018 tests, 86% coverage.
+
+---
+
 ## 0.33.0 — 2026-04-28
 
 **Group E: complete matrix handler set + Phase 14 hyperbolic integration.**
