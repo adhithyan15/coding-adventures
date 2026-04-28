@@ -144,6 +144,9 @@ class Connection:
         # release_savepoint / rollback_to_savepoint by engine.run().
         # Cleared when the enclosing transaction commits or rolls back.
         self._savepoints: list[str] = []
+        # User-defined scalar functions: lower-cased name → (nargs, callable).
+        # nargs=-1 means variadic.  Registered via create_function().
+        self._user_functions: dict[str, tuple[int, Any]] = {}
 
     # ------------------------------------------------------------------
     # Cursor + shortcut methods.
@@ -312,6 +315,33 @@ class Connection:
         """
         if self._advisor is not None:
             self._advisor.policy = policy
+
+    def create_function(self, name: str, nargs: int, fn: Any) -> None:
+        """Register a user-defined scalar function.
+
+        After registration, ``name(...)`` is callable from any SQL statement
+        executed on this connection, exactly like a built-in function.
+
+        Parameters
+        ----------
+        name:
+            SQL function name (case-insensitive; stored in lower-case).
+        nargs:
+            Expected argument count.  Pass ``-1`` for a variadic function
+            that accepts any number of arguments.
+        fn:
+            A Python callable.  It receives SQL values as positional
+            arguments and must return a value of a type recognised by the
+            backend (``int``, ``float``, ``str``, ``bytes``, ``bool``, or
+            ``None``).
+
+        Examples::
+
+            conn.create_function("double", 1, lambda x: x * 2 if x is not None else None)
+            conn.create_function("add3", 3, lambda a, b, c: a + b + c)
+        """
+        self._assert_open()
+        self._user_functions[name.lower()] = (nargs, fn)
 
     def _ensure_transaction_if_needed(self, sql: str) -> None:
         """Begin an implicit transaction if this DML needs one.

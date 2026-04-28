@@ -64,6 +64,7 @@ from sql_planner import (
     NotIn,
     Project,
     Rollback,
+    ScalarSubquery,
     Scan,
     Sort,
     UnaryExpr,
@@ -179,6 +180,7 @@ from .ir import (
     RollbackTransaction,
     RunExistsSubquery,
     RunRecursiveCTE,
+    RunScalarSubquery,
     RunSubquery,
     SaveGroupKey,
     ScanAllColumns,
@@ -466,6 +468,13 @@ def _compile_core(p: LogicalPlan, ctx: _Ctx) -> list[Instruction]:
         case Aggregate():
             return _compile_aggregate(p, ctx)
         case Having(input=Aggregate() as agg, predicate=pred):
+            return _compile_aggregate(agg, ctx, having=pred)
+        # Project(Aggregate) — occurs in scalar subquery inner plans that haven't
+        # had _flatten_project_over_aggregate applied. Skip the projection layer;
+        # column names don't matter for sub-program result rows.
+        case Project(input=Aggregate() as agg):
+            return _compile_aggregate(agg, ctx)
+        case Project(input=Having(input=Aggregate() as agg, predicate=pred)):
             return _compile_aggregate(agg, ctx, having=pred)
 
         # Set operations — compile left side, then right side, then post-process.
@@ -1040,6 +1049,20 @@ def _compile_expr(e: Expr, ctx: _Ctx) -> list[Instruction]:
                 result_schema=(),
             )
             return [RunExistsSubquery(sub_program=sub)]
+        case ScalarSubquery(query=inner_plan):
+            # Compile the inner SELECT to a standalone sub-program.  At
+            # runtime the VM executes it, takes the first column of the
+            # single result row, and pushes it as the scalar value.
+            inner_ctx = _Ctx()
+            inner_instrs, _ = _compile_plan(inner_plan, inner_ctx)  # type: ignore[arg-type]
+            inner_instrs.append(Halt())
+            inner_resolved = _resolve_labels(inner_instrs)
+            sub = Program(
+                instructions=tuple(inner_instrs),
+                labels=inner_resolved,
+                result_schema=(),
+            )
+            return [RunScalarSubquery(sub_program=sub)]
         case AggregateExpr():
             # At this point in compilation we're inside an aggregate node's
             # HAVING or projection; direct emission isn't possible without
@@ -1177,6 +1200,7 @@ def _to_ir_col(c: AstColumnDef) -> IrColumnDef:
         name=c.name,
         type=c.type_name,
         nullable=not c.effective_not_null(),
+        primary_key=c.primary_key,
         check_instrs=check_instrs,
         foreign_key=fk,
     )

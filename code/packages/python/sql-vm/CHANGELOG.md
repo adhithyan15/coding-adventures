@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.5.0 — 2026-04-28
+
+### Added
+
+- **User-defined functions (UDFs)** — `execute()` accepts `user_functions`
+  dict; `_do_call_scalar` checks user registry before built-ins. nargs=-1
+  for variadic functions.
+- **`RunScalarSubquery` handler** — `_do_run_scalar_subquery` executes the
+  embedded sub-program, pushes the single result value, or NULL when empty.
+- **`CardinalityError`** (`errors.py`) — raised when a scalar subquery
+  returns more than one row; exported from `sql_vm.__init__`.
+- **`primary_key` passed to `BackendColumnDef`** in `_do_create_table` —
+  threads the primary-key flag through to the backend so PRAGMA table_info
+  correctly reports pk=1 for primary-key columns.
+
 ## 1.4.0 — 2026-04-28
 
 ### Added — Phase 9: SQL Triggers

@@ -2,6 +2,14 @@
 
 All notable changes to the SQL lexer package will be documented in this file.
 
+## [0.11.0] - 2026-04-28
+
+### Added
+
+- **BLOB_HEX token** — regex pattern `[xX]'[0-9A-Fa-f]*'` lexed as token
+  type `BLOB`. Placed before the `NAME` token definition so that `x'...'`
+  is captured as a single token rather than `NAME` + `STRING`.
+
 ## [0.10.0] - 2026-04-28
 
 ### Added — Phase 9: SQL Triggers

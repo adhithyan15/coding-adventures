@@ -83,6 +83,7 @@ from sql_planner import (
     RollbackStmt,
     RollbackToStmt,
     SavepointStmt,
+    ScalarSubquery,
     SelectItem,
     SelectStmt,
     SortKey,
@@ -1109,6 +1110,10 @@ def _primary(node: ASTNode, state: _PlaceholderCounter) -> Expr:
                 return Literal(value=_parse_number(c.value))
             if t == "STRING":
                 return Literal(value=_unquote_string(c.value))
+            if t == "BLOB":
+                # BLOB_HEX token value is e.g. x'deadbeef' — strip x' and '.
+                hex_str = c.value[2:-1]
+                return Literal(value=bytes.fromhex(hex_str))
             if t == "QMARK":
                 idx = state.next()
                 return Literal(value=cast(object, _Placeholder(index=idx)))  # type: ignore[arg-type]
@@ -1141,8 +1146,11 @@ def _primary(node: ASTNode, state: _PlaceholderCounter) -> Expr:
             if c.rule_name == "case_expr":
                 return _case_expr(c, state)
             if c.rule_name == "query_stmt":
-                # Scalar subquery: "(" query_stmt ")" — not yet supported.
-                raise ProgrammingError("scalar subqueries in expressions are not yet supported")
+                # Scalar subquery: "(" query_stmt ")" in expression position.
+                inner_stmt = _query_stmt(c)
+                if not isinstance(inner_stmt, SelectStmt):
+                    raise ProgrammingError("scalar subquery must be a SELECT statement")
+                return ScalarSubquery(query=inner_stmt)
     raise ProgrammingError("unrecognized primary expression")
 
 

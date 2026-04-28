@@ -476,6 +476,7 @@ class ColumnDef:
     name: str
     type: str
     nullable: bool = True
+    primary_key: bool = False
     check_instrs: tuple[Instruction, ...] = ()
     # (ref_table, ref_col_or_None) where None means "reference the parent PK".
     foreign_key: tuple[str, str | None] | None = None
@@ -624,6 +625,26 @@ class RunExistsSubquery:
 
     ``NOT EXISTS`` is handled by the caller: a :class:`UnaryOp` ``NOT``
     instruction is emitted after this one, inverting the boolean result.
+    """
+
+    sub_program: Program   # fully compiled inner SELECT program
+
+
+@dataclass(frozen=True, slots=True)
+class RunScalarSubquery:
+    """Execute the inner sub-program; push the single result value onto the stack.
+
+    Used for scalar subqueries — ``(SELECT expr FROM …)`` in expression
+    position (SELECT list, WHERE clause, HAVING, etc.).  The inner program
+    is expected to return exactly one column.
+
+    - Zero rows returned → ``NULL`` is pushed.
+    - Exactly one row returned → the first column's value is pushed.
+    - More than one row returned → ``CardinalityError`` is raised at runtime.
+
+    ``sub_program`` is a fully compiled inner SELECT program compiled with its
+    own cursor/label namespace so there is no state leakage with the outer
+    program.
     """
 
     sub_program: Program   # fully compiled inner SELECT program
@@ -834,6 +855,7 @@ Instruction = (
     | BeginTransaction | CommitTransaction | RollbackTransaction
     | RunSubquery
     | RunExistsSubquery
+    | RunScalarSubquery
     | RunRecursiveCTE
     | OpenWorkingSetScan
     | Label | Jump | JumpIfFalse | JumpIfTrue | Halt
