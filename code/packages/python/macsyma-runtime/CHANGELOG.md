@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.5.0 — 2026-04-27
+
+**Add `mnewton` to the MACSYMA name table.**
+
+- Added `MNEWTON = IRSymbol("MNewton")` to `name_table.py`.
+- Added `"mnewton": MNEWTON` to `MACSYMA_NAME_TABLE` in the numeric/solve
+  section so `mnewton(f, x, x0)` MACSYMA surface syntax compiles to the
+  canonical `MNewton(f, x, x0)` IR head handled by `cas-mnewton`.
+- Bumped `coding-adventures-symbolic-vm>=0.32.2` to pull in the MNewton
+  handler wired in 0.32.2.
+
+Usage in MACSYMA::
+
+    mnewton(x^2 - 2, x, 1.5);    → 1.4142135623730951
+    mnewton(sin(x), x, 3.0);      → 3.141592653589793
+
+---
+
 ## 1.4.0 — 2026-04-27
 
 **Bump dependency pins to pick up Phase G control flow and Phase 13 hyperbolic functions.**

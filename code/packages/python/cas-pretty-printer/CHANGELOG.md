@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.4.0 — 2026-04-27
+
+**2D box-model layout engine and `MNewton` function name.**
+
+1. **New `box.py` — 2D box engine** (`src/cas_pretty_printer/box.py`):
+   - `Box(lines, baseline)` dataclass — width/height as computed properties.
+   - `atom_box(text)` — single-line box at baseline 0 for all leaf nodes.
+   - `hbox(boxes, sep)` — align baselines horizontally, concatenate columns.
+   - `vbox(boxes)` — stack vertically, centre-pad to widest box.
+   - `_div_box` — fraction layout with `─` bar at the baseline row.
+   - `_pow_box` — superscript layout (exponent above-right of base).
+   - `_sqrt_box` — radical layout with `√`, `┌`, `─`, `┐`, `│` box drawing.
+   - `pretty_2d(node, dialect)` — dispatcher for Add, Sub, Mul, Div, Pow,
+     Sqrt, Neg, List; falls back to linear for unknown heads.
+
+2. **`walker.py` — `style="2d"` support**:
+   - `pretty(node, dialect, style="2d")` now routes to `pretty_2d` instead
+     of raising `ValueError`. `style="linear"` behaviour is unchanged.
+     Unknown styles still raise `ValueError`.
+
+3. **`dialect.py` — `MNewton` name**:
+   - Added `"MNewton": "mnewton"` to `_DEFAULT_FUNCTION_NAMES` so
+     unevaluated `MNewton(f, x, x0)` nodes pretty-print as `mnewton(f, x, x0)`.
+
+4. **Tests** — 31 new tests in `tests/test_box.py` covering primitives,
+   layout geometry, fraction bars, superscripts, radical signs, nested
+   fractions, style validation, and MNewton name mapping.
+
+---
+
 ## 0.3.0 — 2026-04-27
 
 **Complete MACSYMA function-name alias coverage.**

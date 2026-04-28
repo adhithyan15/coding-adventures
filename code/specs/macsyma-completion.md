@@ -26,7 +26,7 @@ syntax differences go in the frontend name table and backend subclass.
 
 ---
 
-## Current status (as of symbolic-vm 0.32.0 / macsyma-runtime 1.4.0)
+## Current status (as of symbolic-vm 0.32.2 / macsyma-runtime 1.5.0)
 
 ### Fully working end-to-end
 
@@ -52,6 +52,8 @@ syntax differences go in the frontend name table and backend subclass.
 | Constants           | `%pi %e %i`                                     | `macsyma-runtime` |
 | REPL mechanics      | `;` / `$` terminators, history `%/%iN/%oN`, `kill`, `ev(numer/expand/factor/trigsimp)`, `at`, `lhs`, `rhs`, `makelist` | `macsyma-runtime` (1.3.0) |
 | Pretty printing     | MACSYMA / Mathematica / Maple / Lisp dialects   | `cas-pretty-printer` (0.2.0) |
+| 2D pretty printing  | `display2d` fraction bars / superscripts / sqrt | `cas-pretty-printer` (0.4.0) |
+| Newton's method     | `MNewton` (`mnewton(f, x, x0)`)                 | `cas-mnewton` (0.1.0) |
 
 ---
 
@@ -145,18 +147,38 @@ in `SymbolicBackend`.  Full `Re/Im/Conjugate/Arg/RectForm/PolarForm` handlers.
 
 ---
 
-## Group D — Deferred (out of scope)
+## Group D — In Progress
 
-| Feature | Reason deferred |
-|---------|-----------------|
-| `ode2` — ODE solving | Requires `cas-ode` spec; variation of parameters, Lie symmetries |
-| `laplace` / `ilt` | Needs `cas-complex` residue algorithm + distribution theory |
-| 2D pretty printing | `display2d` fraction bars / superscripts; UI concern |
-| `fourier` / `ifourier` | Symbolic Fourier transform; distribution theory required |
-| `mnewton` | Newton's method; numeric, not blocking anything |
-| Multivariate `factor`/`solve` | Gröbner bases (Buchberger); future `cas-multivariate` |
-| Algebraic number extensions | Factoring over `Q[√2]` etc.; needs BZH lift |
-| `cas-factor` Phase 4 (BZH) | Berlekamp-Zassenhaus-Hensel for arbitrary-degree; not blocking |
+### D1 · `mnewton` — Newton's method numeric root finder
+
+**Status: ✅ Complete** (`cas-mnewton` 0.1.0)
+
+`mnewton(f, x, x0)` iterates Newton's method `x_{n+1} = x_n − f(x_n)/f'(x_n)`.
+Returns `IRFloat(root)` on convergence; falls through to unevaluated on
+zero-derivative or non-numeric input.
+
+---
+
+### D2 · 2D pretty printing
+
+**Status: ✅ Complete** (`cas-pretty-printer` 0.4.0)
+
+`pretty(node, dialect, style="2d")` uses a box-model layout engine (fractions
+with `─` bars, superscript exponents, `√` radicals). The `Box(lines, baseline)`
+dataclass aligns operands at their mathematical baseline.
+
+---
+
+### D-remaining — Planned
+
+| Feature | Plan |
+|---------|------|
+| `laplace` / `ilt` | Table-driven + partial fractions — `cas-laplace` 0.1.0 |
+| `fourier` / `ifourier` | Shares DiracDelta/UnitStep with laplace — `cas-fourier` 0.1.0 |
+| `ode2` — ODE solving | Separable, linear, Bernoulli, 2nd-order const-coeff — `cas-ode` 0.1.0 |
+| `cas-factor` Phase 4 (BZH) | Berlekamp–Zassenhaus–Hensel for degree ≥ 5 |
+| Algebraic number extensions | `Q[√2]` factoring using BZH lift — `cas-algebraic` 0.1.0 |
+| Multivariate `factor`/`solve` | Gröbner bases (Buchberger) — `cas-multivariate` 0.1.0 |
 
 ---
 

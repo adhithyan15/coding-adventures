@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.7.1 — 2026-04-27
+
+**Add `MNEWTON` head symbol for Newton's method root finder.**
+
+Added `MNEWTON = IRSymbol("MNewton")` to the "Numeric root-finding" group
+at the bottom of `nodes.py`, and exported it from `__init__.py`. Required
+by `cas-mnewton` 0.1.0 and `symbolic-vm` 0.32.2.
+
+---
+
 ## 0.7.0 — 2026-04-27
 
 **Phase 13 — Hyperbolic function head symbols.**

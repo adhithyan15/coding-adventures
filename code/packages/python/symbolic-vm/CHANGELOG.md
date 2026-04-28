@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.32.2 — 2026-04-27
+
+**Wire `cas-mnewton` into `SymbolicBackend`.**
+
+- Added `from cas_mnewton import build_mnewton_handler_table as _build_mnewton`
+  to `cas_handlers.py`.
+- Added `**_build_mnewton()` to the `build_cas_handler_table()` return dict
+  so `MNewton(f, x, x0)` is handled by every `SymbolicBackend`-derived VM.
+- Added `coding-adventures-cas-mnewton` to `pyproject.toml` dependencies.
+- `MNewton(f, x, x0)` now evaluates to `IRFloat(root)` for numeric x0, and
+  falls through to unevaluated on non-numeric input or zero-derivative.
+
+---
+
 ## 0.32.1 — 2026-04-27
 
 **Bug fix — hyperbolic differentiation via `derivative.py` pathway.**

@@ -55,6 +55,7 @@ from symbolic_ir.nodes import (
     LESS_EQUAL,
     LIST,
     LOG,
+    MNEWTON,
     MUL,
     NEG,
     NOT,
@@ -133,4 +134,6 @@ __all__ = [
     "FOR_EACH",
     "BLOCK",
     "RETURN",
+    # Numeric root-finding
+    "MNEWTON",
 ]

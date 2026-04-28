@@ -81,6 +81,9 @@ JACOBI_SYMBOL = IRSymbol("JacobiSymbol")
 CHINESE_REMAINDER = IRSymbol("ChineseRemainder")
 INTEGER_LENGTH = IRSymbol("IntegerLength")
 
+# Numeric root-finding (Newton's method)
+MNEWTON = IRSymbol("MNewton")
+
 # Trig transformation heads (B1)
 TRIG_SIMPLIFY = IRSymbol("TrigSimplify")
 TRIG_EXPAND = IRSymbol("TrigExpand")
@@ -147,6 +150,8 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "transpose": TRANSPOSE,
     "determinant": DETERMINANT,
     "invert": INVERSE,
+    # Newton's method numeric root finder
+    "mnewton": MNEWTON,
     # Number-theoretic
     "gcd": GCD,
     "lcm": LCM,

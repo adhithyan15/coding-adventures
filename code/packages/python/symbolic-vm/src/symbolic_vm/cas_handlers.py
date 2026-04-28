@@ -74,6 +74,7 @@ from cas_matrix import (
     matrix,
     transpose,
 )
+from cas_mnewton import build_mnewton_handler_table as _build_mnewton
 from cas_number_theory.handlers import build_number_theory_handler_table as _build_nt
 from cas_simplify import canonical, simplify
 from cas_solve import ALL, solve_linear, solve_quadratic
@@ -1682,6 +1683,8 @@ def build_cas_handler_table() -> dict[str, Handler]:
         **_build_complex(),
         # --- atan2 (numeric two-argument arctangent) -------------------------
         "Atan2": _atan2_handler,
+        # --- cas-mnewton (Newton's method numeric root finder) ---------------
+        **_build_mnewton(),
     }
 
 

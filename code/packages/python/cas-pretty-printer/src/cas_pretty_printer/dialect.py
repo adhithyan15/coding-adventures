@@ -185,6 +185,8 @@ _DEFAULT_FUNCTION_NAMES: dict[str, str] = {
     "Transpose": "transpose",
     "Determinant": "determinant",
     "Inverse": "inverse",
+    # ---- numeric root-finding -----------------------------------------------
+    "MNewton": "mnewton",
     # ---- arithmetic / numeric helpers ---------------------------------------
     "Gcd": "gcd",
     "Lcm": "lcm",

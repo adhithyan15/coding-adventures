@@ -262,3 +262,6 @@ FOR_RANGE = IRSymbol("ForRange")
 FOR_EACH = IRSymbol("ForEach")
 BLOCK = IRSymbol("Block")
 RETURN = IRSymbol("Return")
+
+# Numeric root-finding
+MNEWTON = IRSymbol("MNewton")
