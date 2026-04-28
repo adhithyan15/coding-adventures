@@ -277,6 +277,25 @@ mod tests {
         vec![vec![0.0], vec![1.0], vec![1.0], vec![0.0]]
     }
 
+    fn sample_parameters(input_count: usize, hidden_count: usize) -> Parameters {
+        Parameters {
+            input_to_hidden_weights: (0..input_count)
+                .map(|feature| {
+                    (0..hidden_count)
+                        .map(|hidden| 0.17 * (feature + 1) as f64 - 0.11 * (hidden + 1) as f64)
+                        .collect()
+                })
+                .collect(),
+            hidden_biases: (0..hidden_count)
+                .map(|hidden| 0.05 * (hidden as f64 - 1.0))
+                .collect(),
+            hidden_to_output_weights: (0..hidden_count)
+                .map(|hidden| vec![0.13 * (hidden + 1) as f64 - 0.25])
+                .collect(),
+            output_biases: vec![0.02],
+        }
+    }
+
     #[test]
     fn forward_pass_exposes_hidden_activations() {
         let passed = forward(
@@ -307,5 +326,95 @@ mod tests {
         assert_eq!(step.input_to_hidden_weight_gradients[0].len(), 2);
         assert_eq!(step.hidden_to_output_weight_gradients.len(), 2);
         assert_eq!(step.hidden_to_output_weight_gradients[0].len(), 1);
+    }
+
+    #[test]
+    fn hidden_layer_teaching_examples_run_one_training_step() {
+        let cases = vec![
+            (
+                "XNOR",
+                xor_inputs(),
+                vec![vec![1.0], vec![0.0], vec![0.0], vec![1.0]],
+                3,
+            ),
+            (
+                "absolute value",
+                vec![vec![-1.0], vec![-0.5], vec![0.0], vec![0.5], vec![1.0]],
+                vec![vec![1.0], vec![0.5], vec![0.0], vec![0.5], vec![1.0]],
+                4,
+            ),
+            (
+                "piecewise pricing",
+                vec![vec![0.1], vec![0.3], vec![0.5], vec![0.7], vec![0.9]],
+                vec![vec![0.12], vec![0.25], vec![0.55], vec![0.88], vec![0.88]],
+                4,
+            ),
+            (
+                "circle classifier",
+                vec![
+                    vec![0.0, 0.0],
+                    vec![0.5, 0.0],
+                    vec![1.0, 1.0],
+                    vec![-0.5, 0.5],
+                    vec![-1.0, 0.0],
+                ],
+                vec![vec![1.0], vec![1.0], vec![0.0], vec![1.0], vec![0.0]],
+                5,
+            ),
+            (
+                "two moons",
+                vec![
+                    vec![1.0, 0.0],
+                    vec![0.0, 0.5],
+                    vec![0.5, 0.85],
+                    vec![0.5, -0.35],
+                    vec![-1.0, 0.0],
+                    vec![2.0, 0.5],
+                ],
+                vec![
+                    vec![0.0],
+                    vec![1.0],
+                    vec![0.0],
+                    vec![1.0],
+                    vec![0.0],
+                    vec![1.0],
+                ],
+                5,
+            ),
+            (
+                "interaction features",
+                vec![
+                    vec![0.2, 0.25, 0.0],
+                    vec![0.6, 0.5, 1.0],
+                    vec![1.0, 0.75, 1.0],
+                    vec![1.0, 1.0, 0.0],
+                ],
+                vec![vec![0.08], vec![0.72], vec![0.96], vec![0.76]],
+                5,
+            ),
+        ];
+
+        for (name, inputs, targets, hidden_count) in cases {
+            let step = train_one_epoch(
+                &inputs,
+                &targets,
+                &sample_parameters(inputs[0].len(), hidden_count),
+                0.4,
+                ActivationName::Sigmoid,
+                ActivationName::Sigmoid,
+            )
+            .expect(name);
+            assert!(step.loss >= 0.0, "{name}");
+            assert_eq!(
+                step.input_to_hidden_weight_gradients.len(),
+                inputs[0].len(),
+                "{name}"
+            );
+            assert_eq!(
+                step.hidden_to_output_weight_gradients.len(),
+                hidden_count,
+                "{name}"
+            );
+        }
     }
 }

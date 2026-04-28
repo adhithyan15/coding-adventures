@@ -128,6 +128,35 @@ h2 {
   text-align: right;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mode-toggle {
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid $line;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.mode-button {
+  min-height: 34px;
+  padding: 0 12px;
+  border-color: transparent;
+  white-space: nowrap;
+}
+
+.mode-button--active {
+  border-color: rgba(37, 99, 235, 0.38);
+  background: #edf4ff;
+  color: #173f8a;
+}
+
 .workspace--lab {
   display: grid;
   grid-template-columns: 310px minmax(500px, 1fr) 300px;
@@ -135,10 +164,18 @@ h2 {
   align-items: start;
 }
 
+.workspace--hidden {
+  display: grid;
+  grid-template-columns: 260px minmax(520px, 1fr) 310px;
+  gap: 14px;
+  align-items: start;
+}
+
 .lab-rail,
 .chart-panel,
 .metrics,
-.lab-intro {
+.lab-intro,
+.trace-panel {
   @include surface;
 }
 
@@ -286,6 +323,14 @@ h2 {
   aspect-ratio: 720 / 460;
 }
 
+.chart-panel--hidden {
+  min-height: 520px;
+}
+
+.chart-panel--hidden svg {
+  max-height: 520px;
+}
+
 .plot-bg {
   fill: #ffffff;
 }
@@ -328,6 +373,12 @@ h2 {
   stroke-width: 4;
 }
 
+.hidden-curve {
+  fill: none;
+  stroke: $blue;
+  stroke-width: 4;
+}
+
 .error-line {
   stroke: rgba(194, 65, 59, 0.42);
   stroke-width: 2;
@@ -341,6 +392,93 @@ h2 {
 
 .prediction-point {
   fill: $red;
+}
+
+.surface-chart {
+  display: block;
+  width: min(100%, 560px);
+  aspect-ratio: 1;
+  margin: 0 auto;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.svg-button {
+  cursor: pointer;
+  outline: none;
+}
+
+.svg-button:focus .surface-point {
+  stroke: $blue;
+  stroke-width: 4;
+}
+
+.surface-point {
+  stroke: #17201c;
+  stroke-width: 2;
+}
+
+.surface-point--selected {
+  stroke: $blue;
+  stroke-width: 4;
+}
+
+.surface-label {
+  fill: #17201c;
+  font-size: 13px;
+  font-weight: 850;
+  paint-order: stroke;
+  stroke: rgba(255, 255, 255, 0.78);
+  stroke-width: 4px;
+}
+
+.hidden-table-chart {
+  display: grid;
+  gap: 8px;
+  padding: 4px;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: minmax(150px, 1fr) minmax(140px, 220px) 72px;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 8px 10px;
+  border-color: $line;
+  text-align: left;
+}
+
+.table-row--selected {
+  border-color: rgba(37, 99, 235, 0.5);
+  background: #edf4ff;
+}
+
+.bar-pair {
+  position: relative;
+  display: block;
+  height: 22px;
+  border-radius: 6px;
+  background: #eef4f0;
+  overflow: hidden;
+}
+
+.bar-target,
+.bar-prediction {
+  position: absolute;
+  left: 0;
+  display: block;
+  height: 10px;
+}
+
+.bar-target {
+  top: 2px;
+  background: rgba(35, 122, 87, 0.78);
+}
+
+.bar-prediction {
+  bottom: 2px;
+  background: rgba(194, 65, 59, 0.78);
 }
 
 .legend {
@@ -436,9 +574,14 @@ h2 {
 .gradients,
 .lesson,
 .activation-panel,
-.source-panel {
+.source-panel,
+.trace-panel {
   display: grid;
   gap: 6px;
+}
+
+.trace-panel {
+  padding: 14px;
 }
 
 .lesson p,
@@ -472,8 +615,47 @@ code {
   font-size: 0.8rem;
 }
 
+.hidden-neuron-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+  gap: 8px;
+}
+
+.neuron-tile {
+  display: grid;
+  gap: 4px;
+  min-height: 76px;
+  padding: 9px;
+  border: 1px solid $line;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.neuron-tile span {
+  color: $muted;
+  font-size: 0.74rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.neuron-tile strong {
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.neuron-tile i {
+  display: block;
+  height: 8px;
+  border-radius: 999px;
+  background: $green;
+}
+
+.trace-equation code {
+  margin-top: 4px;
+}
+
 @media (max-width: 1180px) {
-  .workspace--lab {
+  .workspace--lab,
+  .workspace--hidden {
     grid-template-columns: 270px minmax(420px, 1fr);
   }
 
@@ -489,7 +671,8 @@ code {
   }
 
   .app-header,
-  .lab-intro {
+  .lab-intro,
+  .header-actions {
     display: grid;
   }
 
@@ -498,7 +681,8 @@ code {
     text-align: left;
   }
 
-  .workspace--lab {
+  .workspace--lab,
+  .workspace--hidden {
     grid-template-columns: 1fr;
   }
 
@@ -507,6 +691,10 @@ code {
   }
 
   .field-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .table-row {
     grid-template-columns: 1fr;
   }
 }

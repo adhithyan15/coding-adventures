@@ -13,6 +13,8 @@
   },
   "dependencies": {
     "@coding-adventures/lattice-transpiler": "file:../../../packages/typescript/lattice-transpiler",
+    "coding-adventures-two-layer-network": "file:../../../packages/typescript/two-layer-network",
+    "matrix": "file:../../../packages/typescript/matrix",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

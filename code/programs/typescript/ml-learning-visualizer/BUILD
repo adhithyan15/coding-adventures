@@ -1,6 +1,8 @@
 set -eu
 
 (cd ../../../packages/typescript/directed-graph && npm install)
+(cd ../../../packages/typescript/matrix && npm install)
+(cd ../../../packages/typescript/two-layer-network && npm install)
 (cd ../../../packages/typescript/state-machine && npm install)
 (cd ../../../packages/typescript/grammar-tools && npm install)
 (cd ../../../packages/typescript/lexer && npm install)

@@ -7,6 +7,8 @@
 - Add named answer helpers for source-level query results.
 - Add initialized query helpers that run compiled initialization slots before
   executing source queries.
+- Add a stateful SWI Prolog VM runtime for repeated ad-hoc query strings,
+  initialized dynamic state, optional query commits, and raw query values.
 
 ## 0.1.0
 

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterator, Mapping
+from collections.abc import Iterable, Iterator, Mapping
 from dataclasses import dataclass
 from types import MappingProxyType
 
@@ -19,7 +19,9 @@ from logic_engine import (
     RelationCall,
     State,
     Term,
+    reify,
     relation,
+    solve_from,
     succeed,
 )
 from logic_instructions import (
@@ -34,6 +36,7 @@ from logic_instructions import (
     validate,
 )
 from logic_vm import LogicVM, create_logic_vm
+from prolog_core import OperatorTable
 from prolog_loader import (
     LoadedPrologProject,
     LoadedPrologSource,
@@ -42,6 +45,7 @@ from prolog_loader import (
     load_swi_prolog_source,
 )
 from prolog_parser import ParsedQuery
+from swi_prolog_parser import parse_swi_query
 from symbol_core import Symbol
 
 type RelationKey = tuple[Symbol, int]
@@ -115,6 +119,83 @@ class PrologVMInitializationError(RuntimeError):
     """Raised when a compiled initialization query cannot be proven."""
 
 
+@dataclass(slots=True)
+class PrologVMRuntime:
+    """A loaded Prolog VM runtime that can answer ad-hoc source queries."""
+
+    compiled_program: CompiledPrologVMProgram
+    vm: LogicVM
+    state: State
+    operator_table: OperatorTable | None = None
+    adapt_builtins: bool = True
+
+    def query(
+        self,
+        source: str | ParsedQuery,
+        *,
+        limit: int | None = None,
+        commit: bool = False,
+    ) -> list[PrologAnswer]:
+        """Run an ad-hoc query and return source-variable bindings."""
+
+        parsed_query = self._parse_query(source)
+        goal = _adapt_goal(parsed_query.goal, adapt_builtins=self.adapt_builtins)
+        outputs = tuple(parsed_query.variables.values())
+        proof_states = solve_from(self.vm.assembled_program(), goal, self.state)
+
+        if limit is not None and limit < 0:
+            msg = "query limit must be non-negative"
+            raise ValueError(msg)
+
+        answers: list[PrologAnswer] = []
+        committed_state: State | None = None
+        for index, proof_state in enumerate(proof_states):
+            if limit is not None and index >= limit:
+                break
+            if committed_state is None:
+                committed_state = proof_state
+            answers.append(
+                _answer_from_terms(parsed_query.variables.keys(), outputs, proof_state),
+            )
+
+        if commit and committed_state is not None:
+            self.state = _persistent_state(committed_state)
+
+        return answers
+
+    def query_values(
+        self,
+        source: str | ParsedQuery,
+        *,
+        limit: int | None = None,
+        commit: bool = False,
+    ) -> list[Term | tuple[Term, ...]]:
+        """Run an ad-hoc query and return raw tuple/singleton values."""
+
+        return [
+            _answer_value(answer)
+            for answer in self.query(source, limit=limit, commit=commit)
+        ]
+
+    def run_initializations(self) -> State:
+        """Run initialization slots against this runtime's current state."""
+
+        self.state = _run_initializations_on_vm(
+            self.vm,
+            self.compiled_program,
+            state=self.state,
+        )
+        return self.state
+
+    def _parse_query(self, source: str | ParsedQuery) -> ParsedQuery:
+        if isinstance(source, ParsedQuery):
+            return source
+        return parse_swi_query(
+            _normalize_query_source(source),
+            operator_table=self.operator_table,
+        )
+
+
 def compile_loaded_prolog_source(
     loaded_source: LoadedPrologSource,
     *,
@@ -179,6 +260,48 @@ def load_compiled_prolog_vm(compiled_program: CompiledPrologVMProgram) -> LogicV
     vm.load(compiled_program.instructions)
     vm.run()
     return vm
+
+
+def create_prolog_vm_runtime(
+    compiled_program: CompiledPrologVMProgram,
+    *,
+    initialize: bool = True,
+    operator_table: OperatorTable | None = None,
+    adapt_builtins: bool = True,
+) -> PrologVMRuntime:
+    """Create a stateful ad-hoc query runtime from a compiled program."""
+
+    vm = load_compiled_prolog_vm(compiled_program)
+    runtime = PrologVMRuntime(
+        compiled_program=compiled_program,
+        vm=vm,
+        state=State(),
+        operator_table=operator_table,
+        adapt_builtins=adapt_builtins,
+    )
+    if initialize:
+        runtime.run_initializations()
+    return runtime
+
+
+def create_swi_prolog_vm_runtime(
+    source: str,
+    *,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+) -> PrologVMRuntime:
+    """Parse, load, compile, and initialize a SWI-compatible query runtime."""
+
+    loaded_source = load_swi_prolog_source(source)
+    return create_prolog_vm_runtime(
+        compile_loaded_prolog_source(
+            loaded_source,
+            adapt_builtins=adapt_builtins,
+        ),
+        initialize=initialize,
+        operator_table=loaded_source.operator_table,
+        adapt_builtins=adapt_builtins,
+    )
 
 
 def run_compiled_prolog_query(
@@ -460,3 +583,45 @@ def _answers_from_results(
         values = result if isinstance(result, tuple) else (result,)
         answers.append(PrologAnswer(dict(zip(names, values, strict=True))))
     return answers
+
+
+def _answer_from_terms(
+    names: Iterable[str],
+    outputs: tuple[Term, ...],
+    state: State,
+) -> PrologAnswer:
+    if not outputs:
+        return PrologAnswer({})
+    return PrologAnswer(
+        {
+            name: reify(output, state.substitution)
+            for name, output in zip(names, outputs, strict=True)
+        },
+    )
+
+
+def _answer_value(answer: PrologAnswer) -> Term | tuple[Term, ...]:
+    values = tuple(answer.bindings.values())
+    if len(values) == 1:
+        return values[0]
+    return values
+
+
+def _persistent_state(state: State) -> State:
+    return State(
+        next_var_id=state.next_var_id,
+        database=state.database,
+        fd_store=state.fd_store,
+    )
+
+
+def _normalize_query_source(source: str) -> str:
+    stripped = source.strip()
+    if not stripped:
+        msg = "query source must not be empty"
+        raise ValueError(msg)
+    if not stripped.startswith("?-"):
+        stripped = f"?- {stripped}"
+    if not stripped.endswith("."):
+        stripped = f"{stripped}."
+    return f"{stripped}\n"

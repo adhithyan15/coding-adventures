@@ -1,5 +1,39 @@
 # Changelog
 
+## 0.31.0 — 2026-04-27
+
+**Phase G — Control-flow VM handlers.**
+
+Added five new evaluation handlers to `handlers.py` and wired them into
+`build_handler_table()`:
+
+- `while_(simplify)` — `While(condition, body)` loop handler. Re-evaluates
+  `condition` before each iteration; exits when condition is falsy or
+  indeterminate. Returns the last body value (or `False` if never entered).
+- `for_range_(simplify)` — `ForRange(var, start, step, end, body)` handler.
+  Evaluates bounds once, iterates `var` from `start` to `end` inclusive
+  (step can be negative). Saves and restores the loop variable's binding.
+- `for_each_(simplify)` — `ForEach(var, list, body)` handler. Evaluates the
+  list once; iterates over elements, binding `var` to each in turn.
+- `block_(simplify)` — `Block(List(locals), stmt1, …, stmtN)` handler.
+  Installs local bindings, evaluates statements in order, returns the last
+  value, restores all bindings (including via `Return` exit).
+- `return_(_simplify)` — `Return(value)` handler. Raises `_ReturnSignal`
+  to unwind through any enclosing Block/While/ForRange/ForEach handler.
+
+Also:
+
+- Added `_ReturnSignal(BaseException)` exception class for early-exit
+  signalling through nested control flow.
+- Extended `_HELD_HEADS` in `backends.py` with `WHILE`, `FOR_RANGE`,
+  `FOR_EACH`, `BLOCK` (args not pre-evaluated before dispatch).
+- Added `unbind(name)` to `Backend` ABC (default no-op) and `_BaseBackend`
+  (calls `self._env.pop(name, None)`) for block scope restoration.
+- Bumped `symbolic-ir` dependency to `>=0.6.0`.
+
+Required by `macsyma-grammar-extensions.md` (Phase G). Companion releases:
+`symbolic-ir` 0.6.0, `macsyma-compiler` 0.6.0.
+
 ## 0.30.0 — 2026-04-27
 
 **`Cbrt` evaluation handler — exact cube-root simplification.**

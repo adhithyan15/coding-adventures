@@ -9,6 +9,13 @@ import {
   type ModelState,
 } from "./training.js";
 import { LABS } from "./labs.js";
+import {
+  HIDDEN_LAYER_EXAMPLES,
+  createInitialHiddenState,
+  hiddenLoss,
+  trainHiddenStep,
+  trainHiddenSteps,
+} from "./hidden-layer-examples.js";
 
 describe("training helpers", () => {
   it("reduces MSE loss for a small learning rate", () => {
@@ -54,5 +61,40 @@ describe("training helpers", () => {
     expect(activate(-2, "leakyRelu")).toBeCloseTo(-0.2);
     expect(activate(0, "sigmoid")).toBeCloseTo(0.5);
     expect(activate(0, "tanh")).toBeCloseTo(0);
+  });
+
+  it("registers the hidden-layer teaching examples without sine yet", () => {
+    expect(HIDDEN_LAYER_EXAMPLES.map((example) => example.id)).toEqual([
+      "xnor",
+      "absolute-value",
+      "piecewise-pricing",
+      "circle-classifier",
+      "two-moons",
+      "interaction-features",
+    ]);
+    expect(HIDDEN_LAYER_EXAMPLES.every((example) => example.rows.length > 0)).toBe(true);
+  });
+
+  it("runs a hidden-layer training step for every teaching example", () => {
+    for (const example of HIDDEN_LAYER_EXAMPLES) {
+      const initial = createInitialHiddenState(example);
+      const step = trainHiddenStep(example, initial, example.defaultLearningRate);
+
+      expect(Number.isFinite(step.loss)).toBe(true);
+      expect(step.state.epoch).toBe(1);
+      expect(step.step.inputToHiddenWeightGradients).toHaveLength(example.inputLabels.length);
+      expect(step.step.hiddenToOutputWeightGradients).toHaveLength(example.hiddenCount);
+    }
+  });
+
+  it("moves downhill on XNOR and absolute value with batch updates", () => {
+    for (const example of HIDDEN_LAYER_EXAMPLES.slice(0, 2)) {
+      const initial = createInitialHiddenState(example);
+      const before = hiddenLoss(example, initial);
+      const steps = trainHiddenSteps(example, initial, example.defaultLearningRate, 40);
+      const after = hiddenLoss(example, steps[steps.length - 1]!.state);
+
+      expect(after).toBeLessThan(before);
+    }
   });
 });
