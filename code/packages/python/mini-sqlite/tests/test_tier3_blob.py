@@ -1,7 +1,6 @@
 """Tests for BLOB type — binary data via x'HEX' literals."""
 
 import pytest
-
 import mini_sqlite
 
 

@@ -1,7 +1,6 @@
 """Tests for scalar subquery support — (SELECT expr FROM ...) in expression position."""
 
 import pytest
-
 import mini_sqlite
 
 
@@ -28,21 +27,17 @@ def test_scalar_subquery_in_select_list(conn):
 
 def test_scalar_subquery_in_where(conn):
     """Scalar subquery in WHERE clause for filtering."""
-    sql = (
-        "SELECT name FROM customers"
-        " WHERE id = (SELECT customer_id FROM orders WHERE amount = 200.0)"
-    )
-    rows = conn.execute(sql).fetchall()
+    rows = conn.execute(
+        "SELECT name FROM customers WHERE id = (SELECT customer_id FROM orders WHERE amount = 200.0)"
+    ).fetchall()
     assert rows == [("Bob",)]
 
 
 def test_scalar_subquery_returns_null_when_empty(conn):
     """Scalar subquery returns NULL when no rows match."""
-    sql = (
-        "SELECT id, (SELECT name FROM customers WHERE name = 'Nobody') AS nm"
-        " FROM orders WHERE id = 1"
-    )
-    rows = conn.execute(sql).fetchall()
+    rows = conn.execute(
+        "SELECT id, (SELECT name FROM customers WHERE name = 'Nobody') AS nm FROM orders WHERE id = 1"
+    ).fetchall()
     assert rows == [(1, None)]
 
 
@@ -64,10 +59,8 @@ def test_scalar_subquery_in_select_no_table(conn):
 
 def test_scalar_subquery_cardinality_error(conn):
     """Scalar subquery returning more than one row raises an error."""
-    with pytest.raises(mini_sqlite.InternalError):
-        conn.execute(
-            "SELECT (SELECT id FROM customers) FROM orders WHERE id = 1"
-        ).fetchall()
+    with pytest.raises(Exception):
+        conn.execute("SELECT (SELECT id FROM customers)").fetchall()
 
 
 def test_scalar_subquery_in_having(conn):

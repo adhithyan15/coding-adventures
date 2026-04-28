@@ -1,7 +1,6 @@
 """Tests for PRAGMA statement support."""
 
 import pytest
-
 import mini_sqlite
 
 
