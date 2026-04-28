@@ -84,6 +84,7 @@ from sql_codegen import (
     Pop,
     Program,
     RollbackTransaction,
+    RunExistsSubquery,
     RunSubquery,
     SaveGroupKey,
     ScanAllColumns,
@@ -485,6 +486,9 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
     if isinstance(ins, RunSubquery):
         _do_run_subquery(ins, st)
         return
+    if isinstance(ins, RunExistsSubquery):
+        _do_run_exists_subquery(ins, st)
+        return
 
     # Transactions --------------------------------------------------------
     if isinstance(ins, BeginTransaction):
@@ -664,6 +668,20 @@ def _do_run_subquery(ins: RunSubquery, st: _VmState) -> None:
         dict(zip(cols, row, strict=False)) for row in sub_result.rows
     ]
     st.cursors[ins.cursor_id] = _SubqueryCursor(rows=rows)
+
+
+def _do_run_exists_subquery(ins: RunExistsSubquery, st: _VmState) -> None:
+    """Execute the EXISTS sub-program and push TRUE iff it returned any rows.
+
+    Runs the inner program against the same backend as the outer query and
+    checks the row count.  Unlike :func:`_do_run_subquery`, no cursor is
+    opened — the result is a single boolean pushed onto the expression stack.
+
+    ``NOT EXISTS`` is handled by the caller: a :class:`~sql_codegen.UnaryOp`
+    ``NOT`` instruction follows this one and inverts the boolean.
+    """
+    sub_result = execute(ins.sub_program, st.backend)
+    st.push(len(sub_result.rows) > 0)
 
 
 def _do_open(ins: OpenScan, st: _VmState) -> None:

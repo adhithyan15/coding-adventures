@@ -18,7 +18,7 @@ Compilation pipeline
         ├── for each function:
         │       infer_types(fn)          → env: dict[str, str]
         │       aot_specialise(fn, env)  → list[CIRInstr]
-        │       _optimize(cir)           → list[CIRInstr]
+        │       pipeline.compile(cir)    → bytes | None
         │       backend.compile(cir)     → bytes | None
         │
         │   fully compiled  →  fn_binaries
@@ -57,8 +57,9 @@ from typing import Any
 
 from interpreter_ir import IIRModule
 from interpreter_ir.function import FunctionTypeStatus
-from jit_core import optimizer
-from jit_core.backend import BackendProtocol
+
+from codegen_core import CIROptimizer, CodegenPipeline
+from codegen_core.backend import BackendProtocol  # re-exported for backwards compat
 
 from aot_core import link as link_module
 from aot_core import snapshot as snapshot_module
@@ -100,6 +101,14 @@ class AOTCore:
         self._optimization_level = optimization_level
         self._debug_info = debug_info
         self._stats = AOTStats(optimization_level=optimization_level)
+        # Build the codegen pipeline.  When optimization_level > 0, attach
+        # the CIR optimizer (constant folding + DCE) from codegen-core.
+        # This is the same CodegenPipeline[list[CIRInstr]] used by JITCore;
+        # sharing it removes the aot-core → jit-core backwards dependency.
+        _optimizer = CIROptimizer() if optimization_level > 0 else None
+        self._pipeline: CodegenPipeline = CodegenPipeline(
+            backend=backend, optimizer=_optimizer
+        )
 
     # ------------------------------------------------------------------
     # Public API
@@ -196,6 +205,11 @@ class AOTCore:
     def _compile_fn(self, fn: Any) -> bytes | None:
         """Infer, specialise, optimise, and compile one function.
 
+        Delegates to ``self._pipeline.compile()`` which runs the CIR
+        optimizer (constant fold + DCE) and then the backend.  The
+        pipeline was built in ``__init__`` with the appropriate optimizer
+        attached based on ``optimization_level``.
+
         Returns
         -------
         bytes
@@ -207,20 +221,9 @@ class AOTCore:
         try:
             inferred = infer_types(fn)
             cir = aot_specialise(fn, inferred)
-            cir = self._optimize(cir)
-            return self._backend.compile(cir)
+            return self._pipeline.compile(cir)
         except Exception:
             return None
-
-    def _optimize(self, cir: list) -> list:
-        """Run optimizer passes according to ``optimization_level``."""
-        if self._optimization_level == 0:
-            return cir
-        # Level 1+: constant folding + DCE (same as jit-core).
-        cir = optimizer.run(cir)
-        # Level 2: AOT-specific passes (inlining, loop unrolling — future).
-        # Currently a no-op; structured so passes can be inserted here.
-        return cir
 
     def _is_fully_typed(self, fn: Any, inferred: dict[str, str]) -> bool:
         """Return True if all instruction types in ``fn`` can be resolved."""

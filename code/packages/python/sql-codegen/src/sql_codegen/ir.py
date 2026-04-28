@@ -565,6 +565,23 @@ class RunSubquery:
     sub_program: Program   # Program is defined below; forward-ref resolved by PEP 563
 
 
+@dataclass(frozen=True, slots=True)
+class RunExistsSubquery:
+    """Execute the inner sub-program; push TRUE iff it returns at least one row.
+
+    Used for ``EXISTS (subquery)`` in WHERE, HAVING, and SELECT projection.
+    Unlike :class:`RunSubquery` (which materialises rows for cursor-based
+    iteration), this instruction is a pure boolean test — it executes the inner
+    plan in a temporary child state, checks the row count, and pushes a boolean
+    onto the outer expression stack.
+
+    ``NOT EXISTS`` is handled by the caller: a :class:`UnaryOp` ``NOT``
+    instruction is emitted after this one, inverting the boolean result.
+    """
+
+    sub_program: Program   # fully compiled inner SELECT program
+
+
 # ---- Control flow -------------------------------------------------------
 
 
@@ -613,6 +630,7 @@ Instruction = (
     | CaptureLeftResult | IntersectResult | ExceptResult
     | BeginTransaction | CommitTransaction | RollbackTransaction
     | RunSubquery
+    | RunExistsSubquery
     | Label | Jump | JumpIfFalse | JumpIfTrue | Halt
 )
 

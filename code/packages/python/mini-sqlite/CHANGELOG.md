@@ -1,5 +1,35 @@
 # Changelog
 
+## [0.7.0] - 2026-04-27
+
+### Added — Phase 2: EXISTS / NOT EXISTS subquery expressions
+
+- **`EXISTS (subquery)` and `NOT EXISTS (subquery)`** — fully supported in
+  `WHERE`, `HAVING`, and `SELECT` list positions.  Only uncorrelated subqueries
+  are supported in this version (the subquery may not reference columns from
+  the outer query).
+
+- **Grammar** (`code/grammars/sql.grammar`) — `EXISTS "(" query_stmt ")"` added
+  as an alternative in the `primary` rule, before the existing subquery-in-parens
+  alternative.  `NOT EXISTS` works automatically via the existing `not_expr`
+  grammar rule.
+
+- **Adapter** (`mini_sqlite.adapter._primary`) — recognises the `EXISTS`
+  keyword token and constructs an `ExistsSubquery(query=SelectStmt)` from the
+  child `query_stmt` node.
+
+- **`_flatten_project_over_aggregate`** (engine) — extended to handle
+  `Project(Having(Aggregate(...)))` in addition to the pre-existing
+  `Project(Aggregate(...))` case.  Without this fix, HAVING clauses with
+  non-standard predicates (including EXISTS) caused an "unsupported plan node:
+  Having" error during codegen.
+
+- **`test_tier3_exists.py`** — 26 new tests across three classes:
+  - `TestExistsBasic` (6 tests): grammar parsing, TRUE/FALSE result verification.
+  - `TestExistsIntegration` (13 tests): WHERE, HAVING, SELECT-list, AND/OR
+    combinations, filtered subqueries, LIMIT 0 subquery, empty-table cases.
+  - `TestNotExistsIntegration` (7 tests): same coverage for `NOT EXISTS`.
+
 ## [0.6.1] - 2026-04-27
 
 ### Added — ML observer hook: IndexPolicy.on_query_event forwarding

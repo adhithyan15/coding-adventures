@@ -1,5 +1,34 @@
 # Changelog
 
+## [0.6.0] - 2026-04-27
+
+### Added — Phase 2: EXISTS / NOT EXISTS subquery expressions
+
+- **`ExistsSubquery` expression node** (`sql_planner.expr`) — new `Expr`
+  variant representing `EXISTS (subquery)`.  Holds `query: object` (typed as
+  `object` rather than `LogicalPlan` to avoid a circular import between
+  `expr.py` and `plan.py`).  Before planning the field holds a raw
+  `SelectStmt`; after `_resolve()` it holds a fully-planned `LogicalPlan`.
+
+- **`ExistsSubquery` exported from `sql_planner.__init__`** — added to both
+  the import block and `__all__`.
+
+- **`_resolve()` threaded with `schema` parameter** — signature extended to
+  `_resolve(expr, scope, schema=None)`.  All internal recursive calls and all
+  external call sites (`_plan_select`, `_build_from_tree`, `_plan_update`,
+  `_plan_delete`) updated to forward the schema context.  Required so the
+  inner SELECT inside an EXISTS can be planned against the same schema.
+
+- **`ExistsSubquery` case in `_resolve()`** — when a pre-planner
+  `ExistsSubquery(query=SelectStmt)` is encountered, `_resolve` calls
+  `_plan_select(stmt, schema)` and returns a post-planner
+  `ExistsSubquery(query=LogicalPlan)`.  Raises `InternalError` if called
+  without a schema.
+
+- **`contains_aggregate` / `_collect_columns` updated** — both helpers return
+  `False` / no-op respectively for `ExistsSubquery` (subquery column
+  references don't propagate into the outer query's column set).
+
 ## [0.5.0] - 2026-04-23
 
 ### Added — Phase 9.7: Composite (multi-column) automatic index support (IX-8)

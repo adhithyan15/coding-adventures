@@ -262,6 +262,31 @@ class AggregateExpr:
     distinct: bool = False
 
 
+@dataclass(frozen=True, slots=True)
+class ExistsSubquery:
+    """``EXISTS (subquery)`` — TRUE iff the inner query returns at least one row.
+
+    Lifecycle
+    ---------
+    This node is created by the adapter with ``query`` holding a raw
+    ``SelectStmt``.  The planner's ``_resolve()`` replaces ``query`` with
+    the compiled ``LogicalPlan`` before passing the expression to codegen.
+
+    ``query`` is typed as ``object`` to break the circular import between
+    this module and ``sql_planner.plan`` (which itself imports ``Expr``).
+    Callers narrow the type at the appropriate pipeline stage.
+
+    NOT EXISTS
+    ----------
+    ``NOT EXISTS (...)`` is represented as
+    ``UnaryExpr(op=UnaryOp.NOT, operand=ExistsSubquery(...))``.
+    No ``negated`` field is needed — the existing ``UnaryOp.NOT`` instruction
+    handles inversion at runtime without any extra complexity here.
+    """
+
+    query: object  # SelectStmt before _resolve; LogicalPlan after _resolve
+
+
 # The type union every non-specialized consumer should match on. Order
 # doesn't matter for correctness, but we keep the union sorted to help
 # anyone eyeballing pattern matches.
@@ -281,6 +306,7 @@ Expr = (
     | Wildcard
     | CaseExpr
     | AggregateExpr
+    | ExistsSubquery
 )
 
 
@@ -318,6 +344,11 @@ def contains_aggregate(expr: Expr) -> bool:
             ):
                 return True
             return else_ is not None and contains_aggregate(else_)
+        case ExistsSubquery():
+            # The inner query is independently scoped; from the outer
+            # expression's perspective EXISTS is a boolean atom, not an
+            # aggregate.
+            return False
         case _:
             return False
 
@@ -368,5 +399,9 @@ def _collect_columns(expr: Expr, out: list[Column]) -> None:
         case AggregateExpr(_, arg, _):
             if arg.value is not None:
                 _collect_columns(arg.value, out)
+        case ExistsSubquery():
+            # Inner query columns are independently scoped — not visible to
+            # projection-pruning or column-resolution in the outer query.
+            pass
         case _:
             pass

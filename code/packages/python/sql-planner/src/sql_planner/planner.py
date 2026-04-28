@@ -85,6 +85,7 @@ from .ast import (
 )
 from .errors import (
     AmbiguousColumn,
+    InternalError,
     InvalidAggregate,
     UnknownColumn,
     UnsupportedStatement,
@@ -96,6 +97,7 @@ from .expr import (
     BinaryOp,
     CaseExpr,
     Column,
+    ExistsSubquery,
     Expr,
     FunctionCall,
     In,
@@ -177,7 +179,7 @@ def _plan_select(stmt: SelectStmt, schema: SchemaProvider) -> P.LogicalPlan:
     # 2. WHERE — single Filter above the scan tree. Aggregates are forbidden
     #    inside WHERE (SQL forbids this — WHERE runs per-row before grouping).
     if stmt.where is not None:
-        where = _resolve(stmt.where, scope)
+        where = _resolve(stmt.where, scope, schema)
         if contains_aggregate(where):
             raise InvalidAggregate(message="aggregate function not allowed in WHERE clause")
         # IX-6: If the WHERE predicate can be served by a B-tree index on the
@@ -197,13 +199,13 @@ def _plan_select(stmt: SelectStmt, schema: SchemaProvider) -> P.LogicalPlan:
     #    (a) GROUP BY is non-empty, or
     #    (b) any SELECT item or HAVING predicate uses an aggregate.
     resolved_items = tuple(
-        P.ProjectionItem(expr=_resolve(it.expr, scope), alias=_derive_alias(it))
+        P.ProjectionItem(expr=_resolve(it.expr, scope, schema), alias=_derive_alias(it))
         for it in stmt.items
     )
-    having = _resolve(stmt.having, scope) if stmt.having is not None else None
+    having = _resolve(stmt.having, scope, schema) if stmt.having is not None else None
     order_by = tuple(
         P.SortKey(
-            expr=_resolve(k.expr, scope),
+            expr=_resolve(k.expr, scope, schema),
             descending=k.descending,
             nulls_first=k.nulls_first,
         )
@@ -214,7 +216,7 @@ def _plan_select(stmt: SelectStmt, schema: SchemaProvider) -> P.LogicalPlan:
     has_agg_in_having = having is not None and contains_aggregate(having)
     has_agg_in_order = any(contains_aggregate(k.expr) for k in order_by)
     if stmt.group_by or has_agg_in_select or has_agg_in_having or has_agg_in_order:
-        group_by = tuple(_resolve(g, scope) for g in stmt.group_by)
+        group_by = tuple(_resolve(g, scope, schema) for g in stmt.group_by)
         aggregates = _collect_aggregates(resolved_items, having, order_by)
         tree = P.Aggregate(input=tree, group_by=group_by, aggregates=aggregates)
 
@@ -283,7 +285,7 @@ def _build_from_tree(
             right_node = P.Scan(table=j.right.table, alias=j.right.alias)
         # ON clause is resolved against the merged scope so it can reference
         # columns from both sides.
-        condition = _resolve(j.on, scope) if j.on is not None else None
+        condition = _resolve(j.on, scope, schema) if j.on is not None else None
         _validate_join(j, condition)
         tree = P.Join(
             left=tree,
@@ -358,12 +360,21 @@ def _add_to_scope(scope: Scope, alias: str, columns: list[str]) -> None:
 # --------------------------------------------------------------------------
 
 
-def _resolve(expr: Expr, scope: Scope) -> Expr:
+def _resolve(
+    expr: Expr,
+    scope: Scope,
+    schema: SchemaProvider | None = None,
+) -> Expr:
     """Qualify bare :class:`Column` references against ``scope``.
 
     Returns a new expression tree (because expressions are frozen). For
     expressions that contain no columns, this is equivalent to returning
     the input unchanged.
+
+    ``schema`` is only required when the expression tree may contain
+    :class:`~sql_planner.expr.ExistsSubquery` nodes — the planner needs it
+    to plan the inner SELECT independently.  All other expression types ignore
+    this parameter.
     """
     match expr:
         case Literal() | Wildcard():
@@ -371,53 +382,65 @@ def _resolve(expr: Expr, scope: Scope) -> Expr:
         case Column(table, col):
             return _resolve_column(table, col, scope)
         case BinaryExpr(op, left, right):
-            return BinaryExpr(op=op, left=_resolve(left, scope), right=_resolve(right, scope))
+            return BinaryExpr(
+                op=op,
+                left=_resolve(left, scope, schema),
+                right=_resolve(right, scope, schema),
+            )
         case UnaryExpr(op, operand):
-            return UnaryExpr(op=op, operand=_resolve(operand, scope))
+            return UnaryExpr(op=op, operand=_resolve(operand, scope, schema))
         case FunctionCall(name, args):
             new_args = tuple(
                 a if a.star or a.value is None
-                else type(a)(star=False, value=_resolve(a.value, scope))
+                else type(a)(star=False, value=_resolve(a.value, scope, schema))
                 for a in args
             )
             return FunctionCall(name=name, args=new_args)
         case IsNull(operand):
-            return IsNull(operand=_resolve(operand, scope))
+            return IsNull(operand=_resolve(operand, scope, schema))
         case IsNotNull(operand):
-            return IsNotNull(operand=_resolve(operand, scope))
+            return IsNotNull(operand=_resolve(operand, scope, schema))
         case Between(operand, low, high):
             return Between(
-                operand=_resolve(operand, scope),
-                low=_resolve(low, scope),
-                high=_resolve(high, scope),
+                operand=_resolve(operand, scope, schema),
+                low=_resolve(low, scope, schema),
+                high=_resolve(high, scope, schema),
             )
         case In(operand, values):
             return In(
-                operand=_resolve(operand, scope),
-                values=tuple(_resolve(v, scope) for v in values),
+                operand=_resolve(operand, scope, schema),
+                values=tuple(_resolve(v, scope, schema) for v in values),
             )
         case NotIn(operand, values):
             return NotIn(
-                operand=_resolve(operand, scope),
-                values=tuple(_resolve(v, scope) for v in values),
+                operand=_resolve(operand, scope, schema),
+                values=tuple(_resolve(v, scope, schema) for v in values),
             )
         case Like(operand, pattern):
-            return Like(operand=_resolve(operand, scope), pattern=pattern)
+            return Like(operand=_resolve(operand, scope, schema), pattern=pattern)
         case NotLike(operand, pattern):
-            return NotLike(operand=_resolve(operand, scope), pattern=pattern)
+            return NotLike(operand=_resolve(operand, scope, schema), pattern=pattern)
         case AggregateExpr(func, arg, distinct):
             if arg.star or arg.value is None:
                 return expr
-            new_arg = type(arg)(star=False, value=_resolve(arg.value, scope))
+            new_arg = type(arg)(star=False, value=_resolve(arg.value, scope, schema))
             return AggregateExpr(func=func, arg=new_arg, distinct=distinct)
         case CaseExpr(whens, else_):
             return CaseExpr(
                 whens=tuple(
-                    (_resolve(cond, scope), _resolve(result, scope))
+                    (_resolve(cond, scope, schema), _resolve(result, scope, schema))
                     for cond, result in whens
                 ),
-                else_=_resolve(else_, scope) if else_ is not None else None,
+                else_=_resolve(else_, scope, schema) if else_ is not None else None,
             )
+        case ExistsSubquery(query=stmt):
+            # Plan the inner SELECT independently using the same schema but
+            # without sharing the outer scope — no correlated subqueries.
+            # After this call, query holds a LogicalPlan ready for codegen.
+            if schema is None:
+                raise InternalError(message="schema required to plan EXISTS subquery")
+            inner_plan = _plan_select(stmt, schema)  # type: ignore[arg-type]
+            return ExistsSubquery(query=inner_plan)
     raise AmbiguousColumn(column="<internal>", tables=[])  # unreachable
 
 
@@ -554,10 +577,10 @@ def _plan_update(stmt: UpdateStmt, schema: SchemaProvider) -> P.LogicalPlan:
         if a.column not in cols:
             raise UnknownColumn(table=stmt.table, column=a.column)
     resolved_assignments = tuple(
-        P.Assignment(column=a.column, value=_resolve(a.value, scope))
+        P.Assignment(column=a.column, value=_resolve(a.value, scope, schema))
         for a in stmt.assignments
     )
-    predicate = _resolve(stmt.where, scope) if stmt.where is not None else None
+    predicate = _resolve(stmt.where, scope, schema) if stmt.where is not None else None
     if predicate is not None and contains_aggregate(predicate):
         raise InvalidAggregate(message="aggregate function not allowed in UPDATE WHERE clause")
     return P.Update(
@@ -570,7 +593,7 @@ def _plan_update(stmt: UpdateStmt, schema: SchemaProvider) -> P.LogicalPlan:
 def _plan_delete(stmt: DeleteStmt, schema: SchemaProvider) -> P.LogicalPlan:
     cols = schema.columns(stmt.table)
     scope: Scope = {stmt.table: cols}
-    predicate = _resolve(stmt.where, scope) if stmt.where is not None else None
+    predicate = _resolve(stmt.where, scope, schema) if stmt.where is not None else None
     if predicate is not None and contains_aggregate(predicate):
         raise InvalidAggregate(message="aggregate function not allowed in DELETE WHERE clause")
     return P.Delete(table=stmt.table, predicate=predicate)
@@ -796,7 +819,7 @@ def _extract_multi_column_bounds(
     predicate: Expr,
     alias: str,
     index_cols: list[str],
-) -> "_MultiColBounds | None":
+) -> _MultiColBounds | None:
     """Extract multi-column range bounds for a composite index prefix.
 
     Walks ``index_cols`` in order, trying to bind each leading column to a
