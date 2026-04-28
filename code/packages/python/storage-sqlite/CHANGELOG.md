@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.0] - 2026-04-27
+
+### Added
+- `SqliteFileBackend.add_column` — raises `Unsupported("ALTER TABLE ADD COLUMN")`;
+  file-format rewrite (updating sqlite_schema B-tree pages in-place) is not yet
+  implemented.
+
 ## [0.10.0] - 2026-04-20
 
 ### Added
@@ -492,3 +499,4 @@
   - Context-manager protocol (`with Pager.open(path) as pager:`).
   - Crash-recovery on `open`: if a hot journal is present, its contents are
     replayed back into the main file before the pager becomes usable.
+

@@ -5,6 +5,13 @@ All notable changes to the `sql-backend` Python package are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2026-04-27
+
+### Added
+- `ColumnAlreadyExists` error class — raised by `add_column` when the target column already exists.
+- `Backend.add_column(table, column)` — new abstract method for ALTER TABLE ADD COLUMN support.
+- `InMemoryBackend.add_column` — appends column to table schema and backfills existing rows with NULL.
+
 ## [0.3.0] - 2026-04-21
 
 ### Added
@@ -100,3 +107,4 @@ the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html
   future backend is measured the same way.
 - Unit tests covering values, errors, schema, iteration, InMemoryBackend,
   and the conformance suite itself.
+

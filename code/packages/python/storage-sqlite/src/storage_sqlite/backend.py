@@ -966,6 +966,16 @@ class SqliteFileBackend(Backend):
                 return
             raise TableNotFound(table=table) from None
 
+    def add_column(self, table: str, column: ColumnDef) -> None:
+        """ALTER TABLE … ADD COLUMN is not supported by the file backend.
+
+        The on-disk SQLite B-tree format requires rewriting the schema entry
+        and backfilling all existing leaf pages — a complex, multi-page
+        operation not yet implemented.  Raise :class:`~sql_backend.Unsupported`
+        so callers get a clear message rather than an abstract-method error.
+        """
+        raise Unsupported(operation="ALTER TABLE ADD COLUMN")
+
     # ── Backend interface: Transactions ───────────────────────────────────────
 
     def begin_transaction(self) -> TransactionHandle:

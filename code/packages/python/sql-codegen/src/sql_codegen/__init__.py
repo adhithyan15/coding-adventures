@@ -28,6 +28,7 @@ from .errors import CodegenError, InternalError, UnsupportedNode
 from .ir import (
     AdvanceCursor,
     AdvanceGroupKey,
+    AlterTable,
     BeginRow,
     BeginTransaction,
     Between,
@@ -93,6 +94,7 @@ from .ir import (
 __all__ = [
     "AdvanceCursor",
     "AdvanceGroupKey",
+    "AlterTable",
     "BeginRow",
     "BeginTransaction",
     "BinaryOp",

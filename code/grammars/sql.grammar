@@ -11,6 +11,7 @@ program           = statement { ";" statement } [ ";" ] ;
 
 statement         = query_stmt | insert_stmt | update_stmt
                   | delete_stmt | create_table_stmt | drop_table_stmt
+                  | alter_table_stmt
                   | create_index_stmt | drop_index_stmt
                   | begin_stmt | commit_stmt | rollback_stmt ;
 
@@ -81,6 +82,10 @@ col_constraint    = ( "NOT" "NULL" ) | "NULL" | ( "PRIMARY" "KEY" )
                   | "UNIQUE" | ( "DEFAULT" primary ) ;
 
 drop_table_stmt   = "DROP" "TABLE" [ "IF" "EXISTS" ] NAME ;
+
+# ALTER TABLE — only ADD [COLUMN] is supported.
+# The COLUMN keyword is optional (matches SQLite behaviour).
+alter_table_stmt  = "ALTER" "TABLE" NAME "ADD" [ "COLUMN" ] col_def ;
 
 # ── CREATE INDEX / DROP INDEX ─────────────────────────────────────────────────
 #

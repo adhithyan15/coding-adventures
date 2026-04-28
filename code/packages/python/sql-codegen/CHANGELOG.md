@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0] - 2026-04-27
+
+### Added
+- `AlterTable` IR instruction — holds `table: str` and `column: ColumnDef`.
+- Compiler case `PlanAlterTable → AlterTable` in `_compile_plan`.
+- `AlterTable` exported from `sql_codegen.__init__`.
+
 ## [0.7.0] - 2026-04-27
 
 ### Added — Phase 2: EXISTS / NOT EXISTS subquery expressions
@@ -162,3 +169,4 @@
   CREATE TABLE, DROP TABLE, EmptyResult.
 - Raises `UnsupportedNode` for LEFT / RIGHT / FULL JOIN and
   INSERT ... SELECT (deferred to v0.2).
+

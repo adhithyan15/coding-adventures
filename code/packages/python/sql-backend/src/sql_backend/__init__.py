@@ -25,6 +25,7 @@ from .backend import (
 )
 from .errors import (
     BackendError,
+    ColumnAlreadyExists,
     ColumnNotFound,
     ConstraintViolation,
     IndexAlreadyExists,
@@ -44,6 +45,7 @@ __all__ = [
     "NO_DEFAULT",
     "Backend",
     "BackendError",
+    "ColumnAlreadyExists",
     "ColumnDef",
     "ColumnDefault",
     "ColumnNotFound",

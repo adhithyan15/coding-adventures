@@ -52,6 +52,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='insert_stmt', is_token=False),
                 RuleReference(name='update_stmt', is_token=False),
                 RuleReference(name='delete_stmt', is_token=False),
+                RuleReference(name='alter_table_stmt', is_token=False),
                 RuleReference(name='create_table_stmt', is_token=False),
                 RuleReference(name='drop_table_stmt', is_token=False),
                 RuleReference(name='create_index_stmt', is_token=False),
@@ -487,6 +488,21 @@ PARSER_GRAMMAR = ParserGrammar(
                 ),
             ]),
             line_number=80,
+        ),
+        GrammarRule(
+            name='alter_table_stmt',
+            body=
+            Sequence(elements=[
+                Literal(value='ALTER'),
+                Literal(value='TABLE'),
+                RuleReference(name='NAME', is_token=True),
+                Literal(value='ADD'),
+                Optional(element=
+                    Literal(value='COLUMN'),
+                ),
+                RuleReference(name='col_def', is_token=False),
+            ]),
+            line_number=88,
         ),
         GrammarRule(
             name='drop_table_stmt',

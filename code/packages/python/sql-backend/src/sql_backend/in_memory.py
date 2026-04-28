@@ -55,6 +55,7 @@ from typing import Final
 
 from .backend import Backend, TransactionHandle
 from .errors import (
+    ColumnAlreadyExists,
     ColumnNotFound,
     ConstraintViolation,
     IndexAlreadyExists,
@@ -287,6 +288,18 @@ class InMemoryBackend(Backend):
                 return
             raise TableNotFound(table=table)
         del self._tables[table]
+
+    def add_column(self, table: str, column: ColumnDef) -> None:
+        if table not in self._tables:
+            raise TableNotFound(table=table)
+        tbl = self._tables[table]
+        if any(c.name == column.name for c in tbl.columns):
+            raise ColumnAlreadyExists(table=table, column=column.name)
+        tbl.columns.append(column)
+        # Backfill existing rows: default value if specified, NULL otherwise.
+        fill_value: SqlValue = column.default if column.has_default() else None
+        for row in tbl.rows:
+            row[column.name] = fill_value
 
     # --- Transactions -----------------------------------------------------
 

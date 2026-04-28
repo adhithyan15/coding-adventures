@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.7.0] - 2026-04-27
+
+### Added
+- `AlterTableStmt` AST node (`sql_planner.ast`) — structured representation of
+  ALTER TABLE … ADD [COLUMN] col_def.
+- `AlterTable` plan node (`sql_planner.plan`) — produced by `_plan_alter_table`.
+- Planner dispatch for `AlterTableStmt` in `planner.py`.
+- Both types exported from `sql_planner.__init__`.
+
 ## [0.6.0] - 2026-04-27
 
 ### Added — Phase 2: EXISTS / NOT EXISTS subquery expressions
@@ -159,3 +168,4 @@
 - `plan_all` helper for multi-statement scripts.
 - `children()` tree-walk helper exposed from the plan module.
 - PlanError hierarchy as dataclasses for structural equality in tests.
+

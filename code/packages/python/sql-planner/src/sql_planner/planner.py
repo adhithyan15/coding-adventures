@@ -58,6 +58,7 @@ from .ast import (
     Assignment as AstAssignment,
 )
 from .ast import (
+    AlterTableStmt,
     BeginStmt,
     CommitStmt,
     CreateIndexStmt,
@@ -146,6 +147,8 @@ def plan(ast: Statement, schema: SchemaProvider) -> P.LogicalPlan:
             return _plan_create_table(ast)
         case DropTableStmt():
             return _plan_drop_table(ast)
+        case AlterTableStmt():
+            return _plan_alter_table(ast)
         case CreateIndexStmt():
             return _plan_create_index(ast)
         case DropIndexStmt():
@@ -610,6 +613,10 @@ def _plan_create_table(stmt: CreateTableStmt) -> P.LogicalPlan:
 
 def _plan_drop_table(stmt: DropTableStmt) -> P.LogicalPlan:
     return P.DropTable(table=stmt.table, if_exists=stmt.if_exists)
+
+
+def _plan_alter_table(stmt: AlterTableStmt) -> P.LogicalPlan:
+    return P.AlterTable(table=stmt.table, column=stmt.column)
 
 
 def _plan_create_index(stmt: CreateIndexStmt) -> P.LogicalPlan:

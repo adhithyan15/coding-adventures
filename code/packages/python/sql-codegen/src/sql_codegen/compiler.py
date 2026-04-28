@@ -72,6 +72,9 @@ from sql_planner import (
     Wildcard,
 )
 from sql_planner import (
+    AlterTable as PlanAlterTable,
+)
+from sql_planner import (
     Between as AstBetween,
 )
 from sql_planner import (
@@ -113,6 +116,7 @@ from .errors import UnsupportedNode
 from .ir import (
     AdvanceCursor,
     AdvanceGroupKey,
+    AlterTable,
     BeginRow,
     BeginTransaction,
     Between,
@@ -270,6 +274,9 @@ def _compile_plan(p: LogicalPlan, ctx: _Ctx) -> tuple[list[Instruction], tuple[s
 
         case PlanDropTable(table=t, if_exists=ie):
             return [DropTable(table=t, if_exists=ie)], ()
+
+        case PlanAlterTable(table=t, column=col):
+            return [AlterTable(table=t, column=_to_ir_col(col))], ()
 
         case PlanCreateIndex(name=name, table=table, columns=cols, unique=uniq, if_not_exists=ine):
             return [

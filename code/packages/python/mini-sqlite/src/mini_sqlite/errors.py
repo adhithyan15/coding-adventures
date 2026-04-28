@@ -136,6 +136,7 @@ def translate(exc: BaseException) -> Exception:
     # sql-vm: runtime errors — table lookup, constraints, types.
     try:
         from sql_vm import (
+            ColumnAlreadyExists,
             ColumnNotFound,
             ConstraintViolation,
             DivisionByZero,
@@ -145,7 +146,8 @@ def translate(exc: BaseException) -> Exception:
             VmError,
         )
 
-        if isinstance(exc, TableNotFound | ColumnNotFound | TableAlreadyExists):
+        _table_errs = TableNotFound | ColumnNotFound | TableAlreadyExists | ColumnAlreadyExists
+        if isinstance(exc, _table_errs):
             return OperationalError(str(exc))
         if isinstance(exc, ConstraintViolation):
             return IntegrityError(str(exc))
@@ -166,7 +168,10 @@ def translate(exc: BaseException) -> Exception:
             return NotSupportedError(str(exc))
         if isinstance(exc, be.ConstraintViolation):
             return IntegrityError(str(exc))
-        if isinstance(exc, be.TableNotFound | be.TableAlreadyExists | be.ColumnNotFound):
+        _be_table_errs = (
+            be.TableNotFound | be.TableAlreadyExists | be.ColumnNotFound | be.ColumnAlreadyExists
+        )
+        if isinstance(exc, _be_table_errs):
             return OperationalError(str(exc))
         if isinstance(exc, be.BackendError):
             return InternalError(str(exc))

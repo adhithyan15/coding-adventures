@@ -1,5 +1,46 @@
 # Changelog
 
+## [0.8.0] - 2026-04-27
+
+### Added — Phase 3: ALTER TABLE ADD COLUMN
+
+- **`ALTER TABLE t ADD [COLUMN] col_def`** — full pipeline support across all layers:
+  grammar, lexer keywords, adapter, planner, codegen IR, VM execution, and the
+  InMemoryBackend.  Existing rows are backfilled with NULL (or the column default
+  if one is provided).
+
+- **Grammar** (`code/grammars/sql.grammar`, `sql-lexer _grammar.py`,
+  `sql-parser _grammar.py`) — added `alter_table_stmt` rule; `ALTER`, `ADD`, and
+  `COLUMN` registered as SQL keywords so they tokenize as KEYWORD not NAME.
+
+- **`sql-backend`** — added abstract `add_column(table, column)` method to
+  `Backend`; `InMemoryBackend` appends the column and backfills all existing rows
+  with NULL; `ColumnAlreadyExists` error class added.
+
+- **`storage-sqlite`** — `SqliteFileBackend.add_column` raises
+  `Unsupported("ALTER TABLE ADD COLUMN")` (file-format rewrite not yet
+  implemented).
+
+- **`sql-planner`** — `AlterTableStmt` AST node; `AlterTable` plan node; planner
+  dispatch `_plan_alter_table`.
+
+- **`sql-codegen`** — `AlterTable` IR instruction; compiler case
+  `PlanAlterTable → AlterTable` using `_to_ir_col` for type conversion.
+
+- **`sql-vm`** — `_do_alter_table` handler; `ColumnAlreadyExists` VM error;
+  `_translate_backend_error` extended to map `be.ColumnAlreadyExists`.
+
+- **`mini_sqlite.adapter`** — `_alter_table` parser; `alter_table_stmt` dispatch.
+
+- **`mini_sqlite.errors.translate`** — maps `ColumnAlreadyExists` to
+  `OperationalError`.
+
+- **`test_tier3_alter_table.py`** — 16 new tests across three classes:
+  - `TestAlterTablePipeline` (5 tests): grammar, adapter, planner, codegen.
+  - `TestAlterTableIntegration` (9 tests): nullable add, NOT NULL, INSERT after
+    ALTER, UPDATE on new column, WHERE filter, multiple columns, commit.
+  - `TestAlterTableErrors` (2 tests): table-not-found, duplicate-column.
+
 ## [0.7.0] - 2026-04-27
 
 ### Added — Phase 2: EXISTS / NOT EXISTS subquery expressions
@@ -425,3 +466,4 @@
   pipeline exception family, including lexer and parser errors →
   `ProgrammingError`.
 - Output value coercion: `True`/`False` → `1`/`0` to match sqlite3.
+

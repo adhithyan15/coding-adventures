@@ -42,6 +42,7 @@ from sql_backend.schema import ColumnDef as BackendColumnDef
 from sql_planner import (
     AggFunc,
     AggregateExpr,
+    AlterTableStmt,
     Assignment,
     BeginStmt,
     Between,
@@ -148,6 +149,8 @@ def _stmt_dispatch(stmt: ASTNode) -> Statement:
             return _update(inner)
         case "delete_stmt":
             return _delete(inner)
+        case "alter_table_stmt":
+            return _alter_table(inner)
         case "create_table_stmt":
             return _create_table(inner)
         case "drop_table_stmt":
@@ -491,6 +494,21 @@ def _delete(node: ASTNode) -> DeleteStmt:
     assert table_tok is not None
     where = _maybe_expr(node, "where_clause", state, skip=1)
     return DeleteStmt(table=table_tok.value, where=where)
+
+
+# --------------------------------------------------------------------------
+# ALTER TABLE.
+# --------------------------------------------------------------------------
+
+
+def _alter_table(node: ASTNode) -> AlterTableStmt:
+    # alter_table_stmt = "ALTER" "TABLE" NAME "ADD" [ "COLUMN" ] col_def ;
+    table_tok = _first_token(node, kind="NAME")
+    assert table_tok is not None
+    col_node = _maybe_child(node, "col_def")
+    assert col_node is not None, "alter_table_stmt: missing col_def"
+    col = _col_def(col_node)
+    return AlterTableStmt(table=table_tok.value, column=col)
 
 
 # --------------------------------------------------------------------------

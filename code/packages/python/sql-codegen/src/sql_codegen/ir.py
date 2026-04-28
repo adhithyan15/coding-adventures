@@ -483,6 +483,13 @@ class DropTable:
 
 
 @dataclass(frozen=True, slots=True)
+class AlterTable:
+    """Ask the backend to add a column to an existing table."""
+    table: str
+    column: ColumnDef
+
+
+@dataclass(frozen=True, slots=True)
 class CreateIndex:
     """Ask the backend to create an index and backfill existing rows.
 
@@ -625,7 +632,7 @@ Instruction = (
     | BeginRow | EmitColumn | EmitRow | SetResultSchema | ScanAllColumns
     | InitAgg | UpdateAgg | FinalizeAgg | SaveGroupKey | LoadGroupKey | AdvanceGroupKey
     | SortResult | LimitResult | DistinctResult
-    | InsertRow | InsertFromResult | UpdateRows | DeleteRows | CreateTable | DropTable
+    | InsertRow | InsertFromResult | UpdateRows | DeleteRows | CreateTable | DropTable | AlterTable
     | CreateIndex | DropIndex | OpenIndexScan
     | CaptureLeftResult | IntersectResult | ExceptResult
     | BeginTransaction | CommitTransaction | RollbackTransaction
