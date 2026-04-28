@@ -579,6 +579,29 @@ class _ReturnSignal(BaseException):
         self.value = value
 
 
+# ---------------------------------------------------------------------------
+# Safety limit for loop evaluation
+#
+# While/ForRange loops driven by user-supplied symbolic expressions have
+# no natural upper bound. Without a guard, a user writing ``while true do 1``
+# or ``for i: 1 thru 10^9 do i`` would spin the Python interpreter at 100 %
+# CPU indefinitely — a denial-of-service risk in any multi-tenant or server
+# context.
+#
+# MAX_LOOP_ITERATIONS caps the total number of loop-body executions for
+# While and ForRange (ForEach is inherently bounded by the list length).
+# When the limit is hit a ``RuntimeError`` is raised with an informative
+# message so the caller can catch it cleanly.
+#
+# The value is set to 10,000,000 (ten million) which is more than generous
+# for any legitimate CAS computation and still catches truly runaway loops
+# before they become a problem.  Library consumers that need a different
+# limit can monkey-patch this module attribute at startup.
+# ---------------------------------------------------------------------------
+
+MAX_LOOP_ITERATIONS: int = 10_000_000
+
+
 def while_(simplify: bool) -> Handler:  # noqa: ARG001
     """Build a While handler.
 
@@ -599,8 +622,13 @@ def while_(simplify: bool) -> Handler:  # noqa: ARG001
             )
         cond_template, body_template = expr.args
         result: IRNode = FALSE
+        iters = 0
         try:
             while True:
+                if iters >= MAX_LOOP_ITERATIONS:
+                    raise RuntimeError(
+                        f"While loop exceeded {MAX_LOOP_ITERATIONS} iterations"
+                    )
                 cond = vm.eval(cond_template)
                 t = _is_truthy(cond)
                 if t is False:
@@ -610,6 +638,7 @@ def while_(simplify: bool) -> Handler:  # noqa: ARG001
                     # Return the While expression as-is (unevaluated).
                     return expr
                 result = vm.eval(body_template)
+                iters += 1
         except _ReturnSignal as sig:
             return sig.value
         return result
@@ -656,15 +685,21 @@ def for_range_(simplify: bool) -> Handler:  # noqa: ARG001
         # it again after.
         old = vm.backend.lookup(var_sym.name)
         result: IRNode = FALSE
+        iters = 0
         try:
             i_val = v_start
             while (v_step > 0 and i_val <= v_end) or (v_step < 0 and i_val >= v_end):
+                if iters >= MAX_LOOP_ITERATIONS:
+                    raise RuntimeError(
+                        f"ForRange loop exceeded {MAX_LOOP_ITERATIONS} iterations"
+                    )
                 vm.backend.bind(var_sym.name, from_number(i_val))
                 try:
                     result = vm.eval(body_tpl)
                 except _ReturnSignal as sig:
                     return sig.value
                 i_val += v_step
+                iters += 1
         finally:
             if old is None:
                 vm.backend.unbind(var_sym.name)

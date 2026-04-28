@@ -163,6 +163,20 @@ class TestWhile:
         with pytest.raises(TypeError, match="While expects 2 arguments"):
             vm.eval(IRApply(WHILE, (TRUE,)))
 
+    def test_while_exceeds_iteration_limit(self) -> None:
+        """While raises RuntimeError when MAX_LOOP_ITERATIONS is exceeded."""
+        import symbolic_vm.handlers as _hmod
+        old_limit = _hmod.MAX_LOOP_ITERATIONS
+        try:
+            _hmod.MAX_LOOP_ITERATIONS = 5  # tiny limit for the test
+            vm = VM(_yb())
+            # `while true do 1` — infinite loop, hits the cap at 5 iters
+            expr = IRApply(WHILE, (TRUE, ONE))
+            with pytest.raises(RuntimeError, match="While loop exceeded"):
+                vm.eval(expr)
+        finally:
+            _hmod.MAX_LOOP_ITERATIONS = old_limit
+
 
 # ---------------------------------------------------------------------------
 # TestForRange — ForRange(var, start, step, end, body)
@@ -264,6 +278,22 @@ class TestForRange:
         vm = VM(_sb())
         with pytest.raises(TypeError, match="ForRange expects 5 arguments"):
             vm.eval(IRApply(FOR_RANGE, (IRSymbol("i"), ONE)))
+
+    def test_for_range_exceeds_iteration_limit(self) -> None:
+        """ForRange raises RuntimeError when MAX_LOOP_ITERATIONS is exceeded."""
+        import symbolic_vm.handlers as _hmod
+        old_limit = _hmod.MAX_LOOP_ITERATIONS
+        try:
+            _hmod.MAX_LOOP_ITERATIONS = 3
+            vm = VM(_yb())
+            # for i: 1 thru 1000 do i — 1000 iterations, cap is 3
+            var = IRSymbol("i")
+            body = IRSymbol("i")
+            expr = IRApply(FOR_RANGE, (var, ONE, ONE, IRInteger(1000), body))
+            with pytest.raises(RuntimeError, match="ForRange loop exceeded"):
+                vm.eval(expr)
+        finally:
+            _hmod.MAX_LOOP_ITERATIONS = old_limit
 
 
 # ---------------------------------------------------------------------------
