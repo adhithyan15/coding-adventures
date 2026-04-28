@@ -58,6 +58,7 @@ class TestPrologVMStress:
             tokens --> [one], [two].
 
             ?- findall(Child, older_child(homer, Child), Older),
+               findall(Number, (between(1, 4, Number), Number > 2), Numbers),
                phrase(tokens, [one, two], Rest),
                Score is 1 + 2 * 3,
                Score =:= 7.
@@ -69,6 +70,7 @@ class TestPrologVMStress:
         assert len(answers) == 1
         answer = answers[0].as_dict()
         assert answer["Older"] == logic_list(["bart"])
+        assert answer["Numbers"] == logic_list([3, 4])
         assert answer["Rest"] == logic_list([])
         assert answer["Score"] == num(7)
 

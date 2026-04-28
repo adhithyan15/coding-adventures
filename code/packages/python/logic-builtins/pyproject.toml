@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-logic-builtins"
-version = "0.13.0"
-description = "Prolog-inspired finite-domain sum constraints, examples, arithmetic, cut, dynamic database, callable-term, predicate-metadata, term-order, control, and metaprogramming builtins for Python"
+version = "0.14.0"
+description = "Prolog-inspired integer generators, finite-domain constraints, arithmetic, cut, dynamic database, callable-term, predicate-metadata, term-order, control, and metaprogramming builtins for Python"
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]

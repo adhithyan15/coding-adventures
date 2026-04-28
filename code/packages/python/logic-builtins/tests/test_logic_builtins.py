@@ -36,6 +36,7 @@ from logic_builtins import (
     atomico,
     atomo,
     bagofo,
+    betweeno,
     callableo,
     callo,
     calltermo,
@@ -102,7 +103,7 @@ class TestVersion:
     """Verify the package is importable and versioned."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.13.0"
+        assert __version__ == "0.14.0"
 
 
 class TestAdvancedControlBuiltins:
@@ -460,6 +461,37 @@ class TestArithmeticBuiltins:
             marker,
             conj(eq(marker, "ok"), lto(add(open_value, 1), 3)),
         ) == []
+
+    def test_betweeno_enumerates_inclusive_integer_ranges(self) -> None:
+        value = var("Value")
+
+        assert solve_all(program(), value, betweeno(2, 5, value)) == [
+            num(2),
+            num(3),
+            num(4),
+            num(5),
+        ]
+
+    def test_betweeno_validates_bound_values(self) -> None:
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), betweeno(2, 5, 4)),
+        ) == [atom("ok")]
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), betweeno(2, 5, 8)),
+        ) == []
+
+    def test_betweeno_rejects_non_integer_and_descending_ranges(self) -> None:
+        value = var("Value")
+
+        assert solve_all(program(), value, betweeno(5, 2, value)) == []
+        assert solve_all(program(), value, betweeno(1.5, 3, value)) == []
+        assert solve_all(program(), value, betweeno(1, 3, "tea")) == []
 
     def test_arithmetic_goals_compose_with_relation_search(self) -> None:
         score = relation("score", 2)
