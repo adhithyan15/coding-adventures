@@ -72,6 +72,9 @@ from sql_planner import (
     Wildcard,
 )
 from sql_planner import (
+    AlterTable as PlanAlterTable,
+)
+from sql_planner import (
     Between as AstBetween,
 )
 from sql_planner import (
@@ -82,9 +85,6 @@ from sql_planner import (
 )
 from sql_planner import (
     CreateTable as PlanCreateTable,
-)
-from sql_planner import (
-    AlterTable as PlanAlterTable,
 )
 from sql_planner import (
     DropIndex as PlanDropIndex,
