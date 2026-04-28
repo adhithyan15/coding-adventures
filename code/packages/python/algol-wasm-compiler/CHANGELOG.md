@@ -40,6 +40,8 @@ All notable changes to this package will be documented in this file.
 - Executed chained assignments, ALGOL-left-associative exponentiation with
   integer exponents, and branch-selected conditional expressions through the
   full WASM path.
+- Executed bare no-argument typed procedure names as expression calls,
+  including by-name actuals that re-evaluate through eval thunks.
 - Accepted trailing and repeated semicolons in ALGOL block and compound
   statement lists.
 - Added a convergence golden fixture that combines conditional expressions,

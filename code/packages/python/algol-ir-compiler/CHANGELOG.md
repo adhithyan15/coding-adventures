@@ -47,6 +47,8 @@ All notable changes to this package will be documented in this file.
 - Lowered chained assignments, branch-selected conditional expressions, and
   ALGOL-left-associative exponentiation for numeric bases with integer
   exponents.
+- Lowered bare no-argument typed procedure names as expression calls, including
+  use inside read-only by-name eval thunks.
 
 ## [0.1.0] - 2026-04-20
 

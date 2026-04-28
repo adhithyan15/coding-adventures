@@ -1600,6 +1600,11 @@ class AlgolTypeChecker:
                     inferred = ERROR
                     self.expression_types[id(expr)] = inferred
                     return inferred
+                call = self._check_bare_procedure_expression(name, scope)
+                if call is not None:
+                    inferred = call.return_type or ERROR
+                    self.expression_types[id(expr)] = inferred
+                    return inferred
                 symbol = self._resolve_name(name, scope, role="read")
                 if symbol is not None and symbol.kind == ARRAY:
                     self._error(name, f"array {name.value!r} requires subscripts")
@@ -1862,6 +1867,51 @@ class AlgolTypeChecker:
             _first_direct_node(node, "actual_params"),
             "expression",
         )
+        return self._check_resolved_procedure_call(
+            name_token,
+            descriptor,
+            declaring_scope,
+            lexical_depth_delta,
+            arguments,
+            scope,
+            role=role,
+        )
+
+    def _check_bare_procedure_expression(
+        self,
+        name_token: Token,
+        scope: Scope,
+    ) -> ResolvedProcedureCall | None:
+        nearest = scope.resolve_with_scope(name_token.value)
+        if nearest is not None and nearest[0].kind == "procedure_result":
+            return None
+
+        resolved = self._resolve_procedure(name_token, scope)
+        if resolved is None:
+            return None
+
+        descriptor, declaring_scope, lexical_depth_delta = resolved
+        return self._check_resolved_procedure_call(
+            name_token,
+            descriptor,
+            declaring_scope,
+            lexical_depth_delta,
+            [],
+            scope,
+            role="expression",
+        )
+
+    def _check_resolved_procedure_call(
+        self,
+        name_token: Token,
+        descriptor: ProcedureDescriptor,
+        declaring_scope: Scope,
+        lexical_depth_delta: int,
+        arguments: list[ASTNode],
+        scope: Scope,
+        *,
+        role: str,
+    ) -> ResolvedProcedureCall | None:
         if descriptor.parameter_symbol_id is not None:
             return self._check_formal_procedure_call(
                 name_token,
@@ -1926,7 +1976,10 @@ class AlgolTypeChecker:
             if (
                 parameter.mode == NAME
                 and parameter.may_write
-                and not _is_assignable_actual(argument)
+                and (
+                    not _is_assignable_actual(argument)
+                    or self._resolved_bare_procedure_expression(argument) is not None
+                )
             ):
                 self._error(
                     argument,
@@ -1959,6 +2012,25 @@ class AlgolTypeChecker:
         )
         self.resolved_procedure_calls.append(call)
         return call
+
+    def _resolved_bare_procedure_expression(
+        self,
+        argument: ASTNode,
+    ) -> ResolvedProcedureCall | None:
+        variable = _single_variable_expr(argument)
+        if variable is None or _variable_subscripts(variable):
+            return None
+        name = _variable_head_name(variable)
+        if name is None:
+            return None
+        return next(
+            (
+                call
+                for call in self.resolved_procedure_calls
+                if call.token_id == id(name) and call.role == "expression"
+            ),
+            None,
+        )
 
     def _check_formal_procedure_call(
         self,
@@ -2344,41 +2416,47 @@ class AlgolTypeChecker:
         lexical_depth_delta = 0
         while current is not None:
             symbol = current.symbols.get(token.value)
-            if symbol is not None and symbol.kind == "procedure":
-                descriptor = next(
-                    (
-                        procedure
-                        for procedure in self.semantic_procedures
-                        if procedure.procedure_id == symbol.procedure_id
-                    ),
-                    None,
-                )
-                if descriptor is None:
-                    return None
-                return descriptor, current, lexical_depth_delta
-            if symbol is not None and symbol.kind == "procedure_parameter":
-                return_type = (
-                    symbol.type_name
-                    if symbol.type_name in {INTEGER, BOOLEAN, REAL, STRING}
-                    else None
-                )
-                return (
-                    ProcedureDescriptor(
-                        procedure_id=-2,
-                        name=token.value,
-                        label="__algol_dynamic_procedure_parameter",
-                        declaring_block_id=current.block_id,
-                        body_block_id=current.block_id,
-                        body_node_id=-1,
-                        return_type=return_type,
-                        parameters=tuple(),
-                        line=token.line,
-                        column=token.column,
-                        parameter_symbol_id=symbol.symbol_id,
-                    ),
-                    current,
-                    lexical_depth_delta,
-                )
+            if symbol is not None:
+                if symbol.kind == "procedure":
+                    descriptor = next(
+                        (
+                            procedure
+                            for procedure in self.semantic_procedures
+                            if procedure.procedure_id == symbol.procedure_id
+                        ),
+                        None,
+                    )
+                    if descriptor is None:
+                        return None
+                    return descriptor, current, lexical_depth_delta
+                if symbol.kind == "procedure_parameter":
+                    return_type = (
+                        symbol.type_name
+                        if symbol.type_name in {INTEGER, BOOLEAN, REAL, STRING}
+                        else None
+                    )
+                    return (
+                        ProcedureDescriptor(
+                            procedure_id=-2,
+                            name=token.value,
+                            label="__algol_dynamic_procedure_parameter",
+                            declaring_block_id=current.block_id,
+                            body_block_id=current.block_id,
+                            body_node_id=-1,
+                            return_type=return_type,
+                            parameters=tuple(),
+                            line=token.line,
+                            column=token.column,
+                            parameter_symbol_id=symbol.symbol_id,
+                        ),
+                        current,
+                        lexical_depth_delta,
+                    )
+                if symbol.kind == "procedure_result":
+                    current = current.parent
+                    lexical_depth_delta += 1
+                    continue
+                return None
             current = current.parent
             lexical_depth_delta += 1
         return None

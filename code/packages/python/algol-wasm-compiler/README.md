@@ -21,6 +21,8 @@ already supports a substantial ALGOL 60 surface:
   semicolons, and ALGOL-left-associative exponentiation for integer exponents
 - value and by-name parameters, including Jensen-style expression thunks and
   typed whole-array, label, switch, and no-argument statement procedure formals
+- bare no-argument typed procedure names as expression calls, matching ALGOL's
+  omitted-parentheses call syntax for parameterless procedures
 - labels, local and nonlocal `goto`, switch designators, and conditional
   designational expressions, including nonlocal branches and nested
   non-recursive switch entries

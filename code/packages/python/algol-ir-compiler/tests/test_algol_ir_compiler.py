@@ -882,6 +882,24 @@ class TestAlgolIrCompiler:
         assert any(label.startswith("_fn_algol_") for label in labels)
         assert result.procedure_signatures[calls[0].operands[0].name].param_count == 3
 
+    def test_compiles_bare_no_argument_typed_procedure_call(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "integer procedure seven; begin seven := 7 end; "
+                "result := seven "
+                "end"
+            )
+        )
+        calls = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+
+        assert calls[0].operands[0].name.startswith("_fn_algol_")
+        assert result.procedure_signatures[calls[0].operands[0].name].param_count == 2
+
     def test_compiles_boolean_value_procedure_call(self) -> None:
         result = compile_algol(
             parse_algol(
@@ -1313,6 +1331,25 @@ class TestAlgolIrCompiler:
 
         assert "_fn_algol_eval_thunk" in calls
         assert any(label.startswith("_fn_algol_") for label in calls)
+
+    def test_compiles_bare_procedure_expression_inside_eval_thunk(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result, calls; "
+                "integer procedure next; begin calls := calls + 1; next := calls end; "
+                "integer procedure pair(x); integer x; begin pair := x * 10 + x end; "
+                "result := pair(next) "
+                "end"
+            )
+        )
+        calls = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+
+        assert "_fn_algol_eval_thunk" in calls
+        assert sum(label.startswith("_fn_algol_") for label in calls) >= 2
 
     def test_compiles_builtin_print_string_literal_to_syscalls(self) -> None:
         result = compile_algol(
