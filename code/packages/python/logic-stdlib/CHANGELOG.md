@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.0] - 2026-04-28
+
+### Added
+
+- finite `sorto` relation for sorting proper lists and removing duplicates
+- finite `msorto` relation for sorting proper lists while preserving duplicates
+- pytest coverage for sorted list output and improper-list rejection
+
 ## [0.5.0] - 2026-04-28
 
 ### Added
