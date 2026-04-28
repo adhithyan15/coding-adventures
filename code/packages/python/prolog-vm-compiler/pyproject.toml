@@ -16,6 +16,7 @@ dependencies = [
     "coding-adventures-logic-vm>=0.2.0",
     "coding-adventures-prolog-loader>=0.1.0",
     "coding-adventures-prolog-parser>=0.1.0",
+    "coding-adventures-swi-prolog-parser>=0.1.0",
     "coding-adventures-symbol-core>=0.1.0",
 ]
 keywords = ["prolog", "logic-programming", "virtual-machine", "compiler"]
@@ -43,6 +44,7 @@ coding-adventures-logic-instructions = { path = "../logic-instructions", editabl
 coding-adventures-logic-vm = { path = "../logic-vm", editable = true }
 coding-adventures-prolog-loader = { path = "../prolog-loader", editable = true }
 coding-adventures-prolog-parser = { path = "../prolog-parser", editable = true }
+coding-adventures-swi-prolog-parser = { path = "../swi-prolog-parser", editable = true }
 coding-adventures-symbol-core = { path = "../symbol-core", editable = true }
 
 [tool.hatch.build.targets.wheel]
