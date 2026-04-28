@@ -1316,6 +1316,42 @@ def iftheno(condition: object, then_goal: object) -> GoalExpr:
 
     condition_goal = _as_goal(condition)
     called_then = _as_goal(then_goal)
+    condition_term = _goal_term_or_none(condition_goal)
+    then_term = _goal_term_or_none(called_then)
+
+    if condition_term is not None and then_term is not None:
+
+        def run_terms(
+            program_value: Program,
+            state: State,
+            args: NativeArgs,
+        ) -> Iterator[State]:
+            condition_goal_term, then_goal_term = args
+            try:
+                called_condition = goal_from_term(
+                    _reified(condition_goal_term, state),
+                )
+            except TypeError:
+                return
+
+            condition_proofs = solve_from(program_value, called_condition, state)
+            first_condition_state = next(condition_proofs, None)
+            if first_condition_state is None:
+                return
+
+            try:
+                called_then_goal = goal_from_term(
+                    _reified(then_goal_term, first_condition_state),
+                )
+            except TypeError:
+                return
+            yield from solve_from(
+                program_value,
+                called_then_goal,
+                first_condition_state,
+            )
+
+        return native_goal(run_terms, condition_term, then_term)
 
     def run(program_value: Program, state: State, _args: NativeArgs) -> Iterator[State]:
         condition_proofs = solve_from(program_value, condition_goal, state)
@@ -1333,6 +1369,54 @@ def ifthenelseo(condition: object, then_goal: object, else_goal: object) -> Goal
     condition_goal = _as_goal(condition)
     called_then = _as_goal(then_goal)
     called_else = _as_goal(else_goal)
+    condition_term = _goal_term_or_none(condition_goal)
+    then_term = _goal_term_or_none(called_then)
+    else_term = _goal_term_or_none(called_else)
+
+    if (
+        condition_term is not None
+        and then_term is not None
+        and else_term is not None
+    ):
+
+        def run_terms(
+            program_value: Program,
+            state: State,
+            args: NativeArgs,
+        ) -> Iterator[State]:
+            condition_goal_term, then_goal_term, else_goal_term = args
+            try:
+                called_condition = goal_from_term(
+                    _reified(condition_goal_term, state),
+                )
+            except TypeError:
+                return
+
+            condition_proofs = solve_from(program_value, called_condition, state)
+            first_condition_state = next(condition_proofs, None)
+            if first_condition_state is None:
+                try:
+                    called_else_goal = goal_from_term(
+                        _reified(else_goal_term, state),
+                    )
+                except TypeError:
+                    return
+                yield from solve_from(program_value, called_else_goal, state)
+                return
+
+            try:
+                called_then_goal = goal_from_term(
+                    _reified(then_goal_term, first_condition_state),
+                )
+            except TypeError:
+                return
+            yield from solve_from(
+                program_value,
+                called_then_goal,
+                first_condition_state,
+            )
+
+        return native_goal(run_terms, condition_term, then_term, else_term)
 
     def run(program_value: Program, state: State, _args: NativeArgs) -> Iterator[State]:
         condition_proofs = solve_from(program_value, condition_goal, state)
@@ -1343,6 +1427,13 @@ def ifthenelseo(condition: object, then_goal: object, else_goal: object) -> Goal
         yield from solve_from(program_value, called_then, first_condition_state)
 
     return native_goal(run)
+
+
+def _goal_term_or_none(goal: GoalExpr) -> Term | None:
+    try:
+        return goal_as_term(goal)
+    except TypeError:
+        return None
 
 
 def forallo(generator: object, test: object) -> GoalExpr:
