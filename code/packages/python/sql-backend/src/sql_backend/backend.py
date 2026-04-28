@@ -174,6 +174,16 @@ class Backend(ABC):
         no-op. Otherwise, raise :class:`TableNotFound`.
         """
 
+    @abstractmethod
+    def add_column(self, table: str, column: ColumnDef) -> None:
+        """Add a new column to an existing table (ALTER TABLE … ADD COLUMN).
+
+        Existing rows gain the column with the value ``column.default`` if a
+        DEFAULT was specified, or NULL otherwise.  Raises
+        :class:`TableNotFound` if the table does not exist and
+        :class:`ColumnAlreadyExists` if a column with that name already exists.
+        """
+
     # --- Indexes -----------------------------------------------------------
 
     @abstractmethod

@@ -40,6 +40,7 @@ from sql_backend.values import SqlValue, sql_type_name
 from sql_codegen import (
     AdvanceCursor,
     AdvanceGroupKey,
+    AlterTable,
     BeginRow,
     BeginTransaction,
     Between,
@@ -98,6 +99,7 @@ from sql_codegen import IrAggFunc as AggFunc
 
 from .errors import (
     BackendError,
+    ColumnAlreadyExists,
     ColumnNotFound,
     ConstraintViolation,
     InternalError,
@@ -466,6 +468,9 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
         return
     if isinstance(ins, DropIndex):
         _do_drop_index(ins, st)
+        return
+    if isinstance(ins, AlterTable):
+        _do_alter_table(ins, st)
         return
     if isinstance(ins, OpenIndexScan):
         _do_open_index_scan(ins, st)
@@ -930,6 +935,8 @@ def _translate_backend_error(e: be.BackendError) -> Exception:
         return TableAlreadyExists(table=e.table)
     if isinstance(e, be.ColumnNotFound):
         return ColumnNotFound(cursor_id=-1, column=e.column)
+    if isinstance(e, be.ColumnAlreadyExists):
+        return ColumnAlreadyExists(table=e.table, column=e.column)
     if isinstance(e, be.ConstraintViolation):
         return ConstraintViolation(table=e.table, column=e.column, message=e.message)
     return BackendError(message=str(e), original=e)
@@ -1030,6 +1037,22 @@ def _do_drop_index(ins: DropIndex, st: _VmState) -> None:
         st.backend.drop_index(ins.name, if_exists=ins.if_exists)
     except IndexNotFound:
         raise
+    st.result.rows_affected = 0
+
+
+def _do_alter_table(ins: AlterTable, st: _VmState) -> None:
+    """Add a column to an existing table via ALTER TABLE … ADD COLUMN."""
+    from sql_backend.schema import ColumnDef as BackendColumnDef
+
+    col = BackendColumnDef(
+        name=ins.column.name,
+        type_name=ins.column.type,
+        not_null=not ins.column.nullable,
+    )
+    try:
+        st.backend.add_column(ins.table, col)
+    except be.BackendError as e:
+        raise _translate_backend_error(e) from e
     st.result.rows_affected = 0
 
 

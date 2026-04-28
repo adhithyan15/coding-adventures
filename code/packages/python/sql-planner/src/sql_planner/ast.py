@@ -299,6 +299,18 @@ class DropTableStmt:
 
 
 @dataclass(frozen=True, slots=True)
+class AlterTableStmt:
+    """ALTER TABLE t ADD [COLUMN] col_def.
+
+    Only ADD [COLUMN] is supported; the column definition uses the same
+    :class:`~sql_backend.schema.ColumnDef` as CREATE TABLE.
+    """
+
+    table: str
+    column: ColumnDef
+
+
+@dataclass(frozen=True, slots=True)
 class CreateIndexStmt:
     """CREATE [UNIQUE] INDEX [IF NOT EXISTS] name ON table (col1, col2, ...).
 
@@ -333,6 +345,7 @@ Statement = (
     | DeleteStmt
     | CreateTableStmt
     | DropTableStmt
+    | AlterTableStmt
     | CreateIndexStmt
     | DropIndexStmt
     | BeginStmt

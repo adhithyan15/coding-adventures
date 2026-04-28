@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.9.0 — 2026-04-27
+
+### Added
+- `ColumnAlreadyExists` VM error — raised (and exported) when ALTER TABLE tries to
+  add a column that already exists.
+- `AlterTable` IR instruction dispatch — `_do_alter_table` handler calls
+  `backend.add_column` and translates any `BackendError`.
+- `_translate_backend_error` extended to map `be.ColumnAlreadyExists` to
+  `ColumnAlreadyExists`.
+
 ## 0.8.0 — 2026-04-27
 
 ### Added — Phase 2: EXISTS / NOT EXISTS subquery expressions
@@ -231,3 +241,4 @@ Initial release.
 - DML: InsertRow, UpdateRows, DeleteRows
 - DDL: CreateTable, DropTable
 - Typed error hierarchy rooted at `VmError`
+

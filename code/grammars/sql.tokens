@@ -55,6 +55,9 @@ keywords:
   UPDATE
   SET
   DELETE
+  ALTER
+  ADD
+  COLUMN
   CREATE
   DROP
   TABLE

@@ -17,6 +17,7 @@ from __future__ import annotations
 
 from .errors import (
     BackendError,
+    ColumnAlreadyExists,
     ColumnNotFound,
     ConstraintViolation,
     DivisionByZero,
@@ -37,6 +38,7 @@ from .vm import QueryEvent, execute, set_event_listener
 
 __all__ = [
     "BackendError",
+    "ColumnAlreadyExists",
     "ColumnNotFound",
     "ConstraintViolation",
     "DivisionByZero",

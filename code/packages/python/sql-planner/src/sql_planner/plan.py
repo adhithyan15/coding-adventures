@@ -395,6 +395,14 @@ class DropTable:
 
 
 @dataclass(frozen=True, slots=True)
+class AlterTable:
+    """ALTER TABLE t ADD [COLUMN] col_def."""
+
+    table: str
+    column: ColumnDef
+
+
+@dataclass(frozen=True, slots=True)
 class CreateIndex:
     """CREATE [UNIQUE] INDEX [IF NOT EXISTS] name ON table (col, ...).
 
@@ -497,6 +505,7 @@ LogicalPlan = (
     | Delete
     | CreateTable
     | DropTable
+    | AlterTable
     | CreateIndex
     | DropIndex
 )

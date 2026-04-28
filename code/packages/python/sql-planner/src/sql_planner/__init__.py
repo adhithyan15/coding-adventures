@@ -3,6 +3,7 @@
 from . import ast
 from . import plan as plan_module
 from .ast import (
+    AlterTableStmt,
     Assignment,
     BeginStmt,
     CommitStmt,
@@ -65,6 +66,7 @@ from .expr import (
 from .plan import (
     Aggregate,
     AggregateItem,
+    AlterTable,
     Begin,
     Commit,
     CreateIndex,
@@ -106,6 +108,7 @@ __all__ = [
     "SchemaProvider",
     # AST (input)
     "ast",
+    "AlterTableStmt",
     "Assignment",
     "BeginStmt",
     "CommitStmt",
@@ -157,6 +160,7 @@ __all__ = [
     # Logical plan (output)
     "Aggregate",
     "AggregateItem",
+    "AlterTable",
     "Begin",
     "Commit",
     "CreateIndex",

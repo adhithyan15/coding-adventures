@@ -2,6 +2,12 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.3.0] - 2026-04-27
+
+### Added
+- `alter_table_stmt` rule — `ALTER TABLE NAME ADD [COLUMN] col_def` — added to
+  the `statement` alternation and compiled into `_grammar.py`.
+
 ## [0.2.0] - 2026-04-21
 
 ### Changed
@@ -44,3 +50,4 @@ All notable changes to the SQL parser package will be documented in this file.
 - Produces generic `ASTNode` trees — root rule_name is `"program"`.
 - `py.typed` marker for PEP 561 typing support.
 - `_sql_grammar_path` module-level override for test error-path coverage.
+

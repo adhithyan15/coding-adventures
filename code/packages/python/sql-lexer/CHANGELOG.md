@@ -2,6 +2,12 @@
 
 All notable changes to the SQL lexer package will be documented in this file.
 
+## [0.2.0] - 2026-04-27
+
+### Added
+- `ALTER`, `ADD`, `COLUMN` registered as SQL keywords in `sql.tokens` and
+  the compiled `_grammar.py`, enabling ALTER TABLE to tokenize correctly.
+
 ## [0.1.0] - 2026-03-23
 
 ### Added
@@ -17,3 +23,4 @@ All notable changes to the SQL lexer package will be documented in this file.
 - Single-quoted string literals aliased to STRING (quotes stripped).
 - Backtick-quoted identifiers aliased to NAME (backticks preserved in value).
 - `--` line comments and `/* */` block comments silently skipped.
+

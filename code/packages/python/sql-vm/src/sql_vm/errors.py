@@ -115,6 +115,17 @@ class TableAlreadyExists(VmError):
         return f"table already exists: {self.table!r}"
 
 
+@dataclass(eq=True)
+class ColumnAlreadyExists(VmError):
+    """Raised when ``AlterTable`` tries to add a column that already exists."""
+
+    table: str
+    column: str
+
+    def __str__(self) -> str:
+        return f"column already exists: {self.table!r}.{self.column!r}"
+
+
 class StackUnderflow(VmError):
     """Raised by ``pop()`` on an empty stack. Indicates a codegen bug."""
 
