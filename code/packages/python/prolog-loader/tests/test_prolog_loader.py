@@ -19,6 +19,7 @@ from logic_engine import (
     disj,
     eq,
     fresh,
+    program,
     reify,
     relation,
     solve_all,
@@ -742,6 +743,7 @@ class TestPrologGoalAdapter:
                 atom("[]"),
             ),
             relation("once", 1)(term("memo", atom("ok"))),
+            relation("->", 2)(term("memo", atom("ok")), term("memo", atom("then"))),
             relation("not", 1)(term("memo", atom("missing"))),
             relation("\\+", 1)(term("memo", atom("missing"))),
             relation("functor", 3)(term("memo", atom("ok")), atom("memo"), 1),
@@ -837,6 +839,32 @@ class TestPrologGoalAdapter:
         assert isinstance(adapted, ConjExpr)
         assert isinstance(adapted.goals[1], DisjExpr)
         assert isinstance(adapted.goals[2], FreshExpr)
+
+    def test_adapt_prolog_goal_rewrites_if_then_else_control(self) -> None:
+        parsed = parse_swi_query(
+            "?- ((X = first ; X = second) -> Result = X ; Result = none).",
+        )
+
+        adapted = adapt_prolog_goal(parsed.goal)
+
+        assert solve_all(
+            program(),
+            parsed.variables["Result"],
+            adapted,
+        ) == [atom("first")]
+
+    def test_adapt_prolog_goal_uses_else_branch_from_original_state(self) -> None:
+        parsed = parse_swi_query(
+            "?- (fail -> Result = then ; Result = else).",
+        )
+
+        adapted = adapt_prolog_goal(parsed.goal)
+
+        assert solve_all(
+            program(),
+            parsed.variables["Result"],
+            adapted,
+        ) == [atom("else")]
 
     def test_adapt_prolog_goal_preserves_unsupported_shapes(self) -> None:
         variable_indicator = LogicVar(id=1)

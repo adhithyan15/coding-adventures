@@ -13,6 +13,8 @@
   linked project file graphs through `prolog-loader`.
 - Add module-aware ad-hoc query rewriting for project runtimes via
   `query_module=...`.
+- Run Prolog `->/2` and `(If -> Then ; Else)` control constructs through the
+  VM path with committed condition semantics.
 
 ## 0.1.0
 
