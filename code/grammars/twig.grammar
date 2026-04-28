@@ -1,0 +1,86 @@
+# Parser grammar for Twig
+# @version 1
+#
+# Twig is a tiny purely-functional Lisp-precursor.  The grammar is
+# small enough to fit in one screen — eight production rules plus a
+# few atoms.
+#
+# How the grammar-driven parser uses this file
+# --------------------------------------------
+# Token names (UPPERCASE) match types defined in ``twig.tokens``.
+# Keyword references in double quotes — ``"define"``, ``"lambda"`` —
+# match KEYWORD tokens whose value equals that string.  Order in an
+# alternation matters: PEG semantics try each branch left-to-right
+# and commit on the first that succeeds, so we list the keyword
+# forms before the generic application rule (which would otherwise
+# greedily consume the ``(`` of every keyword form).
+#
+# Why not ``letrec`` or first-class environments?
+# -----------------------------------------------
+# v1 deliberately omits ``letrec``.  Recursion happens via top-level
+# ``define`` (which works because the body sees the global
+# function table at apply time).  Local recursive bindings require
+# closure cycles and are deferred to TW01 + mark-sweep GC.  See
+# ``code/specs/TW00-twig-language.md``.
+
+# A program is a sequence of forms.  An empty file is valid (it
+# compiles to an empty Twig module that returns ``nil``).
+program = { form } ;
+
+# A form is either a top-level (define ...) or any expression.
+# Top-level expressions accumulate into the synthesised ``main``
+# function whose value is the value of the final expression.
+form = define | expr ;
+
+# (define name expr)              — value binding
+# (define (name args*) expr+)     — function-definition sugar
+#
+# The two shapes share the leading "define" keyword.  The parser
+# distinguishes them by what follows: a NAME token starts the value
+# form, an LPAREN starts the function-sugar form.
+define = LPAREN "define" name_or_signature expr { expr } RPAREN ;
+
+name_or_signature = NAME | LPAREN NAME { NAME } RPAREN ;
+
+# An expression is one of:
+#   - an atom (literal or bare name reference)
+#   - a quoted symbol (sugar for (quote name))
+#   - a parenthesised compound form
+expr = atom | quoted | compound ;
+
+atom = INTEGER | BOOL_TRUE | BOOL_FALSE | "nil" | NAME ;
+
+quoted = QUOTE NAME ;
+
+# The compound forms.  Order matters: keyword-led forms come first
+# so they win over the generic ``apply`` alternative.  Each keyword
+# form is wrapped in its own non-terminal for clarity.
+compound = if_form
+         | let_form
+         | begin_form
+         | lambda_form
+         | quote_form
+         | apply ;
+
+if_form     = LPAREN "if"     expr expr expr RPAREN ;
+
+# (let ((x e1) (y e2) ...) body+)
+# Bindings are mutually independent (Scheme ``let``, not ``let*``).
+let_form    = LPAREN "let" LPAREN { binding } RPAREN expr { expr } RPAREN ;
+binding     = LPAREN NAME expr RPAREN ;
+
+# (begin e1 e2 ...) — sequencing, returns the value of the last expr.
+begin_form  = LPAREN "begin" expr { expr } RPAREN ;
+
+# (lambda (params) body+) — anonymous function.  TW00 supports full
+# closure capture via host-side closure objects (see compiler.py).
+lambda_form = LPAREN "lambda" LPAREN { NAME } RPAREN expr { expr } RPAREN ;
+
+# (quote name) — alternative to '-prefix syntax for symbol literals.
+quote_form  = LPAREN "quote" NAME RPAREN ;
+
+# Generic application: (fn arg0 arg1 ...).  The function position
+# can itself be any expression (so higher-order calls like
+# ``((compose f g) x)`` work), and zero arguments is fine
+# (``(thunk)``).
+apply       = LPAREN expr { expr } RPAREN ;
