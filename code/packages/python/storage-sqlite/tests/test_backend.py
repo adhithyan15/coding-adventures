@@ -64,7 +64,9 @@ from storage_sqlite.backend import (
     _parse_literal,
     _parse_one_column,
     _sql_to_columns,
+    _sql_to_trigger_def,
     _tokenize,
+    _trigger_to_sql,
 )
 from storage_sqlite.btree import BTree
 from storage_sqlite.pager import Pager
@@ -879,3 +881,275 @@ def test_choose_rowid_auto_assign(tmp_path: Path) -> None:
         tree.insert(3, record.encode(["three"]))
         rowid = _choose_rowid({"x": "four"}, cols, tree)
         assert rowid == 4
+
+
+# ---------------------------------------------------------------------------
+# add_column
+# ---------------------------------------------------------------------------
+
+
+def test_add_column_basic(tmp_path: Path) -> None:
+    """add_column appends a new column; existing rows read NULL for it."""
+    path = str(tmp_path / "ac.db")
+    with SqliteFileBackend(path) as b:
+        b.create_table("t", [ColumnDef("id", "INTEGER", primary_key=True)], if_not_exists=False)
+        b.insert("t", {"id": 1})
+        b.add_column("t", ColumnDef("name", "TEXT"))
+        cols = [c.name for c in b.columns("t")]
+        assert "name" in cols
+        cursor = b.scan("t")
+        row = cursor.next()
+        assert row is not None
+        assert row["name"] is None
+
+
+def test_add_column_with_default(tmp_path: Path) -> None:
+    """Existing rows get the default value for a new column on read."""
+    path = str(tmp_path / "acd.db")
+    with SqliteFileBackend(path) as b:
+        b.create_table("t", [ColumnDef("id", "INTEGER", primary_key=True)], if_not_exists=False)
+        b.insert("t", {"id": 1})
+        b.add_column("t", ColumnDef("score", "INTEGER", default=0))
+        cursor = b.scan("t")
+        row = cursor.next()
+        assert row is not None
+        assert row["score"] == 0
+
+
+def test_add_column_unknown_table_raises(tmp_path: Path) -> None:
+    """add_column raises TableNotFound for an unknown table."""
+    path = str(tmp_path / "act.db")
+    with SqliteFileBackend(path) as b, pytest.raises(TableNotFound):
+        b.add_column("ghost", ColumnDef("x", "TEXT"))
+
+
+def test_add_column_duplicate_raises(tmp_path: Path) -> None:
+    """add_column raises ColumnAlreadyExists if the column name already exists."""
+    from sql_backend import ColumnAlreadyExists
+    path = str(tmp_path / "acd2.db")
+    with SqliteFileBackend(path) as b:
+        b.create_table("t", [ColumnDef("id", "INTEGER", primary_key=True)], if_not_exists=False)
+        with pytest.raises(ColumnAlreadyExists):
+            b.add_column("t", ColumnDef("id", "TEXT"))
+
+
+# ---------------------------------------------------------------------------
+# current_transaction
+# ---------------------------------------------------------------------------
+
+
+def test_current_transaction_none_when_inactive(tmp_path: Path) -> None:
+    """current_transaction returns None when no transaction is open."""
+    path = str(tmp_path / "ct.db")
+    with SqliteFileBackend(path) as b:
+        assert b.current_transaction() is None
+
+
+def test_current_transaction_returns_handle_when_active(tmp_path: Path) -> None:
+    """current_transaction returns the active handle."""
+    path = str(tmp_path / "ct2.db")
+    with SqliteFileBackend(path) as b:
+        h = b.begin_transaction()
+        assert b.current_transaction() == h
+        b.rollback(h)
+        assert b.current_transaction() is None
+
+
+# ---------------------------------------------------------------------------
+# Savepoints
+# ---------------------------------------------------------------------------
+
+
+def test_savepoint_rollback_undoes_writes(tmp_path: Path) -> None:
+    """rollback_to_savepoint restores data written after the savepoint."""
+    path = str(tmp_path / "sp.db")
+    with SqliteFileBackend(path) as b:
+        b.create_table("t", [ColumnDef("id", "INTEGER", primary_key=True)], if_not_exists=False)
+        h = b.begin_transaction()
+        b.insert("t", {"id": 1})
+        b.create_savepoint("s1")
+        b.insert("t", {"id": 2})
+        b.rollback_to_savepoint("s1")
+        # After rollback, only id=1 should remain.
+        ids = [r["id"] for r in _scan_all(b, "t")]
+        assert ids == [1]
+        b.commit(h)
+
+
+def test_savepoint_release_keeps_data(tmp_path: Path) -> None:
+    """release_savepoint keeps current data; only destroys the savepoint entry."""
+    path = str(tmp_path / "spr.db")
+    with SqliteFileBackend(path) as b:
+        b.create_table("t", [ColumnDef("id", "INTEGER", primary_key=True)], if_not_exists=False)
+        h = b.begin_transaction()
+        b.create_savepoint("s1")
+        b.insert("t", {"id": 10})
+        b.release_savepoint("s1")
+        # Data is still there after release.
+        ids = [r["id"] for r in _scan_all(b, "t")]
+        assert ids == [10]
+        b.commit(h)
+
+
+def test_savepoint_unknown_name_raises(tmp_path: Path) -> None:
+    """rollback_to_savepoint and release_savepoint raise Unsupported for unknown names."""
+    from sql_backend import Unsupported
+    path = str(tmp_path / "spu.db")
+    with SqliteFileBackend(path) as b:
+        b.create_table("t", [ColumnDef("id", "INTEGER")], if_not_exists=False)
+        h = b.begin_transaction()
+        with pytest.raises(Unsupported):
+            b.rollback_to_savepoint("no_such")
+        with pytest.raises(Unsupported):
+            b.release_savepoint("no_such")
+        b.rollback(h)
+
+
+def test_savepoint_nested(tmp_path: Path) -> None:
+    """Nested savepoints roll back independently."""
+    path = str(tmp_path / "spn.db")
+    with SqliteFileBackend(path) as b:
+        b.create_table("t", [ColumnDef("id", "INTEGER", primary_key=True)], if_not_exists=False)
+        h = b.begin_transaction()
+        b.insert("t", {"id": 1})
+        b.create_savepoint("outer")
+        b.insert("t", {"id": 2})
+        b.create_savepoint("inner")
+        b.insert("t", {"id": 3})
+        b.rollback_to_savepoint("inner")  # undo id=3
+        ids = [r["id"] for r in _scan_all(b, "t")]
+        assert ids == [1, 2]
+        b.rollback_to_savepoint("outer")  # undo id=2
+        ids = [r["id"] for r in _scan_all(b, "t")]
+        assert ids == [1]
+        b.commit(h)
+
+
+# ---------------------------------------------------------------------------
+# Triggers
+# ---------------------------------------------------------------------------
+
+
+def test_create_and_list_trigger(tmp_path: Path) -> None:
+    """create_trigger stores a trigger; list_triggers returns it."""
+    from sql_backend.schema import TriggerDef
+    path = str(tmp_path / "trg.db")
+    id_col = [ColumnDef("id", "INTEGER", primary_key=True)]
+    with SqliteFileBackend(path) as b:
+        b.create_table("orders", id_col, if_not_exists=False)
+        defn = TriggerDef(
+            name="trg_ai", table="orders", timing="AFTER", event="INSERT", body="SELECT 1;"
+        )
+        b.create_trigger(defn)
+        triggers = b.list_triggers("orders")
+        assert len(triggers) == 1
+        assert triggers[0].name == "trg_ai"
+        assert triggers[0].timing == "AFTER"
+        assert triggers[0].event == "INSERT"
+        assert triggers[0].table == "orders"
+
+
+def test_list_triggers_empty_table(tmp_path: Path) -> None:
+    """list_triggers returns [] when no triggers exist for the table."""
+    path = str(tmp_path / "trg2.db")
+    with SqliteFileBackend(path) as b:
+        b.create_table("t", [ColumnDef("id", "INTEGER")], if_not_exists=False)
+        assert b.list_triggers("t") == []
+
+
+def test_drop_trigger(tmp_path: Path) -> None:
+    """drop_trigger removes the trigger from list_triggers."""
+    from sql_backend.schema import TriggerDef
+    path = str(tmp_path / "trg3.db")
+    with SqliteFileBackend(path) as b:
+        b.create_table("t", [ColumnDef("id", "INTEGER", primary_key=True)], if_not_exists=False)
+        defn = TriggerDef(name="trg", table="t", timing="BEFORE", event="DELETE", body="SELECT 1;")
+        b.create_trigger(defn)
+        b.drop_trigger("trg")
+        assert b.list_triggers("t") == []
+
+
+def test_drop_trigger_if_exists(tmp_path: Path) -> None:
+    """drop_trigger(if_exists=True) is a no-op for a nonexistent trigger."""
+    path = str(tmp_path / "trg4.db")
+    with SqliteFileBackend(path) as b:
+        b.drop_trigger("ghost", if_exists=True)  # must not raise
+
+
+def test_drop_trigger_not_found_raises(tmp_path: Path) -> None:
+    """drop_trigger raises TriggerNotFound for an unknown name."""
+    from sql_backend import TriggerNotFound
+    path = str(tmp_path / "trg5.db")
+    with SqliteFileBackend(path) as b, pytest.raises(TriggerNotFound):
+        b.drop_trigger("ghost")
+
+
+def test_create_trigger_duplicate_raises(tmp_path: Path) -> None:
+    """create_trigger raises TriggerAlreadyExists for a duplicate name."""
+    from sql_backend import TriggerAlreadyExists
+    from sql_backend.schema import TriggerDef
+    path = str(tmp_path / "trg6.db")
+    with SqliteFileBackend(path) as b:
+        b.create_table("t", [ColumnDef("id", "INTEGER")], if_not_exists=False)
+        defn = TriggerDef(name="trg", table="t", timing="AFTER", event="INSERT", body="SELECT 1;")
+        b.create_trigger(defn)
+        with pytest.raises(TriggerAlreadyExists):
+            b.create_trigger(defn)
+
+
+def test_trigger_roundtrip_timing_event(tmp_path: Path) -> None:
+    """All timing/event combinations round-trip correctly."""
+    from sql_backend.schema import TriggerDef
+    path = str(tmp_path / "trg7.db")
+    with SqliteFileBackend(path) as b:
+        b.create_table("t", [ColumnDef("id", "INTEGER")], if_not_exists=False)
+        combos = [
+            ("BEFORE", "INSERT"),
+            ("AFTER", "INSERT"),
+            ("BEFORE", "DELETE"),
+            ("AFTER", "DELETE"),
+            ("BEFORE", "UPDATE"),
+            ("AFTER", "UPDATE"),
+        ]
+        for timing, event in combos:
+            name = f"trg_{timing.lower()}_{event.lower()}"
+            b.create_trigger(
+                TriggerDef(name=name, table="t", timing=timing, event=event, body="SELECT 1;")  # type: ignore[arg-type]
+            )
+        triggers = b.list_triggers("t")
+        assert len(triggers) == 6
+        for trg in triggers:
+            assert trg.timing in ("BEFORE", "AFTER")
+            assert trg.event in ("INSERT", "DELETE", "UPDATE")
+
+
+def test_trigger_sql_helpers() -> None:
+    """_trigger_to_sql and _sql_to_trigger_def round-trip correctly."""
+    from sql_backend.schema import TriggerDef
+    defn = TriggerDef(
+        name="t1", table="orders", timing="AFTER", event="INSERT",
+        body="INSERT INTO log VALUES (1);"
+    )
+    sql = _trigger_to_sql(defn)
+    assert "AFTER" in sql and "INSERT" in sql and "orders" in sql
+    back = _sql_to_trigger_def("t1", "orders", sql)
+    assert back.timing == "AFTER"
+    assert back.event == "INSERT"
+    assert "INSERT INTO log" in back.body
+
+
+# ---------------------------------------------------------------------------
+# Helpers used by savepoint tests
+# ---------------------------------------------------------------------------
+
+
+def _scan_all(backend: SqliteFileBackend, table: str) -> list[dict]:
+    """Collect all rows from *table* into a list."""
+    cursor = backend.scan(table)
+    rows = []
+    while True:
+        row = cursor.next()
+        if row is None:
+            break
+        rows.append(row)
+    return rows

@@ -77,6 +77,8 @@ v1 limitations
 
 from __future__ import annotations
 
+import contextlib
+import copy
 import os
 import re
 import struct
@@ -84,6 +86,7 @@ from collections.abc import Iterator
 
 from sql_backend import (
     Backend,
+    ColumnAlreadyExists,
     ColumnDef,
     ColumnNotFound,
     ConstraintViolation,
@@ -97,9 +100,11 @@ from sql_backend import (
     TableAlreadyExists,
     TableNotFound,
     TransactionHandle,
+    TriggerAlreadyExists,
+    TriggerNotFound,
     Unsupported,
 )
-from sql_backend.schema import NO_DEFAULT
+from sql_backend.schema import NO_DEFAULT, TriggerDef
 
 from storage_sqlite import record as _record
 from storage_sqlite.btree import BTree, DuplicateRowidError
@@ -420,6 +425,67 @@ def _columns_to_index_sql(name: str, table: str, columns: list[str]) -> str:
 
 
 # ---------------------------------------------------------------------------
+# Trigger SQL helpers
+# ---------------------------------------------------------------------------
+
+
+def _trigger_to_sql(defn: TriggerDef) -> str:
+    """Serialise a :class:`~sql_backend.schema.TriggerDef` to a ``CREATE
+    TRIGGER`` statement for storage in ``sqlite_schema``.
+
+    The body is wrapped in ``BEGIN … END`` to form a syntactically complete
+    SQL statement that is round-trippable via :func:`_sql_to_trigger_def`.
+
+    Example::
+
+        _trigger_to_sql(TriggerDef(
+            name="trg_audit", table="orders",
+            timing="AFTER", event="INSERT",
+            body="INSERT INTO audit VALUES (NEW.id);",
+        ))
+        # → 'CREATE TRIGGER "trg_audit" AFTER INSERT ON "orders"\\nBEGIN\\n...\\nEND'
+    """
+    return (
+        f"CREATE TRIGGER {_quote_identifier(defn.name)} "
+        f"{defn.timing} {defn.event} ON {_quote_identifier(defn.table)}\n"
+        f"BEGIN\n{defn.body}\nEND"
+    )
+
+
+_TIMING_EVENT_RE = re.compile(
+    r"\b(BEFORE|AFTER)\s+(INSERT|UPDATE|DELETE)\b",
+    re.IGNORECASE,
+)
+_BODY_RE = re.compile(r"\bBEGIN\b(.*)\bEND\b", re.IGNORECASE | re.DOTALL)
+
+
+def _sql_to_trigger_def(name: str, tbl_name: str, sql: str) -> TriggerDef:
+    """Parse a ``CREATE TRIGGER`` SQL string back to a :class:`~sql_backend.schema.TriggerDef`.
+
+    Extracts ``timing`` (BEFORE/AFTER), ``event`` (INSERT/UPDATE/DELETE), and
+    ``body`` (the text between ``BEGIN`` and the final ``END``).
+
+    Raises :class:`ValueError` if the SQL cannot be parsed.
+    """
+    m = _TIMING_EVENT_RE.search(sql)
+    if m is None:
+        raise ValueError(f"cannot parse trigger timing/event from: {sql!r}")
+    timing = m.group(1).upper()
+    event = m.group(2).upper()
+
+    body_m = _BODY_RE.search(sql)
+    body = body_m.group(1).strip() if body_m else ""
+
+    return TriggerDef(
+        name=name,
+        table=tbl_name,
+        timing=timing,  # type: ignore[arg-type]
+        event=event,  # type: ignore[arg-type]
+        body=body,
+    )
+
+
+# ---------------------------------------------------------------------------
 # Row encode / decode helpers
 # ---------------------------------------------------------------------------
 
@@ -488,8 +554,12 @@ def _decode_row(rowid: int, payload: bytes, columns: list[ColumnDef]) -> Row:
             result[col.name] = rowid  # inject rowid; consume (and discard) the NULL slot
             payload_idx += 1
         else:
-            val = decoded_values[payload_idx] if payload_idx < len(decoded_values) else None
-            result[col.name] = val
+            if payload_idx < len(decoded_values):
+                result[col.name] = decoded_values[payload_idx]
+            else:
+                # Column was added via ALTER TABLE ADD COLUMN after this row was
+                # written. Return the declared default, or NULL if there is none.
+                result[col.name] = col.default if col.has_default() else None  # type: ignore[assignment]
             payload_idx += 1
     return result
 
@@ -733,6 +803,9 @@ class SqliteFileBackend(Backend):
         self._next_handle: int = 1
         self._active_handle: int | None = None
 
+        # Savepoint stack: list of (name, dirty_snapshot, size_pages_snapshot).
+        self._savepoint_stack: list[tuple[str, dict[int, bytes], int]] = []
+
     # ── Context manager ──────────────────────────────────────────────────────
 
     def __enter__(self) -> SqliteFileBackend:
@@ -967,14 +1040,23 @@ class SqliteFileBackend(Backend):
             raise TableNotFound(table=table) from None
 
     def add_column(self, table: str, column: ColumnDef) -> None:
-        """ALTER TABLE … ADD COLUMN is not supported by the file backend.
+        """Add a new column to an existing table (ALTER TABLE … ADD COLUMN).
 
-        The on-disk SQLite B-tree format requires rewriting the schema entry
-        and backfilling all existing leaf pages — a complex, multi-page
-        operation not yet implemented.  Raise :class:`~sql_backend.Unsupported`
-        so callers get a clear message rather than an abstract-method error.
+        Rewrites the ``CREATE TABLE`` SQL stored in ``sqlite_schema`` to
+        include the new column.  Existing rows are NOT modified on disk —
+        :func:`_decode_row` returns the column default (or NULL) for columns
+        that are absent from old records, mirroring SQLite's own behaviour for
+        ALTER TABLE ADD COLUMN without a data-file rewrite.
+
+        Raises :class:`~sql_backend.TableNotFound` if *table* does not exist.
+        Raises :class:`~sql_backend.ColumnAlreadyExists` if a column with
+        that name already exists in the table.
         """
-        raise Unsupported(operation="ALTER TABLE ADD COLUMN")
+        _, columns = self._require_table(table)
+        if any(c.name == column.name for c in columns):
+            raise ColumnAlreadyExists(table=table, column=column.name)
+        new_sql = _columns_to_sql(table, columns + [column])
+        self._schema.update_table_sql(table, new_sql)
 
     # ── Backend interface: Transactions ───────────────────────────────────────
 
@@ -1044,8 +1126,131 @@ class SqliteFileBackend(Backend):
         self._require_active(handle)
         self._pager.rollback()
         self._active_handle = None
+        self._savepoint_stack.clear()
         # Reattach the schema object so it reads fresh pages after rollback.
         self._schema = Schema(self._pager, freelist=self._freelist)
+
+    def current_transaction(self) -> TransactionHandle | None:
+        """Return the active transaction handle, or ``None`` if none is open.
+
+        Allows multi-statement transactions that span separate
+        :func:`~sql_vm.vm.execute` calls to retrieve the handle issued by
+        an earlier ``BeginTransaction`` instruction without storing it
+        externally.
+        """
+        if self._active_handle is None:
+            return None
+        return TransactionHandle(self._active_handle)
+
+    # ── Backend interface: Savepoints ─────────────────────────────────────────
+
+    def create_savepoint(self, name: str) -> None:
+        """Push a snapshot of the pager's dirty-page table.
+
+        Savepoints in the file backend are implemented by deep-copying the
+        pager's in-memory dirty-page dict and recording the current logical
+        page count.  Rolling back to a savepoint restores both, effectively
+        undoing all page writes that happened after the savepoint was created.
+
+        No disk I/O occurs here — the snapshot lives entirely in memory until
+        the outer transaction is committed or rolled back.
+
+        Multiple savepoints with the same name are allowed; they stack
+        independently, as in SQLite.
+        """
+        dirty_snap = copy.deepcopy(self._pager._dirty)  # noqa: SLF001
+        size_snap = self._pager._size_pages  # noqa: SLF001
+        self._savepoint_stack.append((name, dirty_snap, size_snap))
+
+    def release_savepoint(self, name: str) -> None:
+        """Release (destroy) the named savepoint and all savepoints after it.
+
+        The current data state is unchanged — this is a "partial commit" up
+        to the release point.  Raises :class:`~sql_backend.Unsupported` if no
+        savepoint with *name* exists.
+        """
+        idx = self._find_savepoint(name)
+        if idx is None:
+            raise Unsupported(operation=f"RELEASE {name!r}: no such savepoint")
+        del self._savepoint_stack[idx:]
+
+    def rollback_to_savepoint(self, name: str) -> None:
+        """Restore the pager dirty-page state to when *name* was created.
+
+        Replaces the pager's dirty-page dict and logical size with the
+        snapshot taken at savepoint creation, then re-attaches the schema
+        object so it reads the restored pages.  Savepoints created after
+        *name* are destroyed; *name* itself is kept alive so the caller may
+        roll back to it again or release it later.
+
+        Raises :class:`~sql_backend.Unsupported` if no savepoint with *name*
+        exists.
+        """
+        idx = self._find_savepoint(name)
+        if idx is None:
+            raise Unsupported(operation=f"ROLLBACK TO {name!r}: no such savepoint")
+        _sp_name, dirty_snap, size_snap = self._savepoint_stack[idx]
+        self._pager._dirty = copy.deepcopy(dirty_snap)  # noqa: SLF001
+        self._pager._size_pages = size_snap  # noqa: SLF001
+        self._schema = Schema(self._pager, freelist=self._freelist)
+        del self._savepoint_stack[idx + 1:]
+
+    def _find_savepoint(self, name: str) -> int | None:
+        """Return the index of the *last* savepoint named *name*, or ``None``."""
+        for i in range(len(self._savepoint_stack) - 1, -1, -1):
+            if self._savepoint_stack[i][0] == name:
+                return i
+        return None
+
+    # ── Backend interface: Triggers ───────────────────────────────────────────
+
+    def create_trigger(self, defn: TriggerDef) -> None:
+        """Store a trigger definition in ``sqlite_schema``.
+
+        Serialises *defn* to a ``CREATE TRIGGER`` SQL string and inserts a
+        ``type = 'trigger'`` row into ``sqlite_schema`` with ``rootpage = 0``
+        (the standard convention for trigger rows).
+
+        Raises :class:`~sql_backend.TriggerAlreadyExists` if a trigger with
+        ``defn.name`` already exists.
+        """
+        if self._schema.find_trigger(defn.name) is not None:
+            raise TriggerAlreadyExists(name=defn.name)
+        sql = _trigger_to_sql(defn)
+        self._schema.create_trigger(defn.name, defn.table, sql)
+
+    def drop_trigger(self, name: str, if_exists: bool = False) -> None:
+        """Remove a trigger definition by name.
+
+        Deletes the ``sqlite_schema`` row and bumps the schema cookie.
+        When ``if_exists=True`` and the trigger does not exist, this is a
+        silent no-op.  Otherwise raises :class:`~sql_backend.TriggerNotFound`.
+        """
+        try:
+            self._schema.drop_trigger(name)
+        except SchemaError:
+            if if_exists:
+                return
+            raise TriggerNotFound(name=name) from None
+
+    def list_triggers(self, table: str) -> list[TriggerDef]:
+        """Return all triggers for *table* in creation order.
+
+        Reads ``sqlite_schema`` for ``type = 'trigger'`` rows whose
+        ``tbl_name`` matches *table*, parses the ``CREATE TRIGGER`` SQL to
+        recover the timing, event, and body, and returns a list of
+        :class:`~sql_backend.schema.TriggerDef` objects.
+
+        Returns an empty list when no triggers exist for *table*.
+        """
+        rows = self._schema.list_triggers(table)
+        result: list[TriggerDef] = []
+        for name, tbl_name, sql in rows:
+            if sql is None:
+                continue
+            with contextlib.suppress(ValueError):
+                result.append(_sql_to_trigger_def(name, tbl_name, sql))
+        return result
 
     # ── Backend interface: Indexes ────────────────────────────────────────────
 

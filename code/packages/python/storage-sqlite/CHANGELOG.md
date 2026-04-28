@@ -1,5 +1,56 @@
 # Changelog
 
+## [0.12.0] - 2026-04-28
+
+### Added
+
+**`SqliteFileBackend` — complete Backend interface coverage**
+
+All previously-missing Backend interface methods are now fully implemented,
+bringing the file backend to feature parity with `InMemoryBackend`.
+
+- **`add_column(table, column)`** — implements ALTER TABLE ADD COLUMN by
+  rewriting the stored `CREATE TABLE` SQL in `sqlite_schema` (via the new
+  `Schema.update_table_sql` helper).  Existing rows are not touched on disk;
+  `_decode_row` now returns the column's declared `DEFAULT` (or NULL) for
+  columns absent from pre-existing record payloads, mirroring SQLite's own
+  on-disk semantics.  Raises `ColumnAlreadyExists` for duplicate column names.
+
+- **`current_transaction()`** — returns the active `TransactionHandle` or
+  `None`, enabling multi-statement transaction sequences across separate
+  `execute()` calls to retrieve the handle without external storage.
+
+- **Savepoints (`create_savepoint`, `release_savepoint`,
+  `rollback_to_savepoint`)** — implemented via an in-memory snapshot stack.
+  `create_savepoint(name)` deep-copies the pager's dirty-page dict and records
+  the current logical page count.  `rollback_to_savepoint(name)` restores both,
+  re-attaches the schema object, and destroys savepoints created after the named
+  one (keeping the named savepoint alive, per SQLite semantics).
+  `release_savepoint(name)` drops the savepoint and all later ones without
+  changing the data state.  Raises `Unsupported` for unknown savepoint names.
+
+- **Triggers (`create_trigger`, `drop_trigger`, `list_triggers`)** — triggers
+  are stored as `type='trigger'` rows in `sqlite_schema` with `rootpage=0`
+  (the SQLite convention).  `create_trigger` serialises a `TriggerDef` to a
+  `CREATE TRIGGER … BEGIN … END` statement.  `list_triggers(table)` parses
+  them back into `TriggerDef` objects.  `drop_trigger(name, if_exists=False)`
+  removes the row.  All three use new `Schema` helpers added below.
+
+**`Schema` — new helpers**
+
+- **`find_trigger(name)`**, **`list_triggers(table=None)`** — read `type='trigger'`
+  rows from `sqlite_schema`, with optional per-table filtering.
+- **`create_trigger(name, table, sql)`** — inserts a trigger row with `rootpage=0`.
+- **`drop_trigger(name)`** — deletes the trigger row and bumps the schema cookie.
+- **`update_table_sql(name, new_sql)`** — rewrites the `sql` field of an existing
+  `type='table'` row in-place (using `BTree.update`), preserving the `rootpage`.
+
+### Changed
+
+- `_decode_row` now applies a column's declared `DEFAULT` (instead of unconditionally
+  returning `NULL`) when a record's payload is shorter than the schema's column count.
+  This handles rows written before an `add_column` call correctly.
+
 ## [0.11.0] - 2026-04-27
 
 ### Added
