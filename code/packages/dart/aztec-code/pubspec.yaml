@@ -1,0 +1,21 @@
+name: coding_adventures_aztec_code
+version: 0.1.0
+description: >
+  Aztec Code 2D barcode encoder — ISO/IEC 24778:2008 compliant.
+  Encodes byte data into Compact (1-4 layer) or Full (1-32 layer) Aztec
+  symbols using a Binary-Shift byte mode, GF(256)/0x12D Reed-Solomon error
+  correction, GF(16) Reed-Solomon mode message protection, and bit
+  stuffing. Produces a ModuleGrid consumable by barcode-2d for pixel-level
+  rendering.
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_barcode_2d:
+    path: ../barcode-2d
+
+dev_dependencies:
+  test: ^1.25.0
