@@ -10,7 +10,7 @@ fn html1_authoring_artifact_parses_as_mosaic_era_floor() {
 
     assert_eq!(definition.name, "html1-lexer");
     assert_eq!(definition.profile.as_deref(), Some("lexer/v1"));
-    assert_eq!(definition.fixtures.len(), 6);
+    assert_eq!(definition.fixtures.len(), 7);
     assert!(definition.states.iter().any(|state| state.id == "comment"));
     assert!(definition
         .states

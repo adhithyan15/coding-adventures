@@ -12,6 +12,7 @@ alphabet = [
   ">",
   "/",
   "&",
+  "#",
   ";",
   "=",
   "!",
@@ -54,6 +55,8 @@ alphabet = [
   "b",
   "S",
   "s",
+  "X",
+  "x",
 ]
 
 [[tokens]]
@@ -143,6 +146,18 @@ id = "rcdata_character_reference_lt"
 id = "text_character_reference"
 
 [[states]]
+id = "text_numeric_character_reference"
+
+[[states]]
+id = "text_numeric_hex_character_reference_start"
+
+[[states]]
+id = "text_numeric_hex_character_reference"
+
+[[states]]
+id = "text_numeric_decimal_character_reference"
+
+[[states]]
 id = "text_named_character_reference_a"
 
 [[states]]
@@ -186,6 +201,18 @@ id = "text_named_character_reference_quot"
 
 [[states]]
 id = "attribute_character_reference"
+
+[[states]]
+id = "attribute_numeric_character_reference"
+
+[[states]]
+id = "attribute_numeric_hex_character_reference_start"
+
+[[states]]
+id = "attribute_numeric_hex_character_reference"
+
+[[states]]
+id = "attribute_numeric_decimal_character_reference"
 
 [[states]]
 id = "attribute_named_character_reference_a"
@@ -580,6 +607,12 @@ actions = ["append_temporary_buffer(current_lowercase)"]
 
 [[transitions]]
 from = "text_character_reference"
+matcher = { literal = "#" }
+to = "text_numeric_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "text_character_reference"
 matcher = { eof = true }
 to = "done"
 consume = false
@@ -587,6 +620,140 @@ actions = ["append_temporary_buffer_to_text", "flush_text", "emit(EOF)"]
 
 [[transitions]]
 from = "text_character_reference"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["append_temporary_buffer_to_text", "switch_to_return_state"]
+
+[[transitions]]
+from = "text_numeric_character_reference"
+matcher = { literal = "x" }
+to = "text_numeric_hex_character_reference_start"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "text_numeric_character_reference"
+matcher = { literal = "X" }
+to = "text_numeric_hex_character_reference_start"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "text_numeric_character_reference"
+matcher = { range = ["0", "9"] }
+to = "text_numeric_decimal_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "text_numeric_character_reference"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_temporary_buffer_to_text", "flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "text_numeric_character_reference"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["append_temporary_buffer_to_text", "switch_to_return_state"]
+
+[[transitions]]
+from = "text_numeric_hex_character_reference_start"
+matcher = { range = ["0", "9"] }
+to = "text_numeric_hex_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "text_numeric_hex_character_reference_start"
+matcher = { range = ["A", "F"] }
+to = "text_numeric_hex_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "text_numeric_hex_character_reference_start"
+matcher = { range = ["a", "f"] }
+to = "text_numeric_hex_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "text_numeric_hex_character_reference_start"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_temporary_buffer_to_text", "flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "text_numeric_hex_character_reference_start"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["append_temporary_buffer_to_text", "switch_to_return_state"]
+
+[[transitions]]
+from = "text_numeric_hex_character_reference"
+matcher = { range = ["0", "9"] }
+to = "text_numeric_hex_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "text_numeric_hex_character_reference"
+matcher = { range = ["A", "F"] }
+to = "text_numeric_hex_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "text_numeric_hex_character_reference"
+matcher = { range = ["a", "f"] }
+to = "text_numeric_hex_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "text_numeric_hex_character_reference"
+matcher = { literal = ";" }
+to = "data"
+actions = [
+  "append_numeric_character_reference_to_text",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "text_numeric_hex_character_reference"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_temporary_buffer_to_text", "flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "text_numeric_hex_character_reference"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["append_temporary_buffer_to_text", "switch_to_return_state"]
+
+[[transitions]]
+from = "text_numeric_decimal_character_reference"
+matcher = { range = ["0", "9"] }
+to = "text_numeric_decimal_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "text_numeric_decimal_character_reference"
+matcher = { literal = ";" }
+to = "data"
+actions = [
+  "append_numeric_character_reference_to_text",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "text_numeric_decimal_character_reference"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_temporary_buffer_to_text", "flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "text_numeric_decimal_character_reference"
 matcher = { anything = true }
 to = "data"
 consume = false
@@ -1531,6 +1698,12 @@ actions = ["append_temporary_buffer(current_lowercase)"]
 
 [[transitions]]
 from = "attribute_character_reference"
+matcher = { literal = "#" }
+to = "attribute_numeric_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "attribute_character_reference"
 matcher = { eof = true }
 to = "done"
 consume = false
@@ -1544,6 +1717,176 @@ actions = [
 
 [[transitions]]
 from = "attribute_character_reference"
+matcher = { anything = true }
+to = "attribute_value_unquoted"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_numeric_character_reference"
+matcher = { literal = "x" }
+to = "attribute_numeric_hex_character_reference_start"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "attribute_numeric_character_reference"
+matcher = { literal = "X" }
+to = "attribute_numeric_hex_character_reference_start"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "attribute_numeric_character_reference"
+matcher = { range = ["0", "9"] }
+to = "attribute_numeric_decimal_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "attribute_numeric_character_reference"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "parse_error(eof-in-tag)",
+  "commit_attribute",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "attribute_numeric_character_reference"
+matcher = { anything = true }
+to = "attribute_value_unquoted"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_numeric_hex_character_reference_start"
+matcher = { range = ["0", "9"] }
+to = "attribute_numeric_hex_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "attribute_numeric_hex_character_reference_start"
+matcher = { range = ["A", "F"] }
+to = "attribute_numeric_hex_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "attribute_numeric_hex_character_reference_start"
+matcher = { range = ["a", "f"] }
+to = "attribute_numeric_hex_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "attribute_numeric_hex_character_reference_start"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "parse_error(eof-in-tag)",
+  "commit_attribute",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "attribute_numeric_hex_character_reference_start"
+matcher = { anything = true }
+to = "attribute_value_unquoted"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_numeric_hex_character_reference"
+matcher = { range = ["0", "9"] }
+to = "attribute_numeric_hex_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "attribute_numeric_hex_character_reference"
+matcher = { range = ["A", "F"] }
+to = "attribute_numeric_hex_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "attribute_numeric_hex_character_reference"
+matcher = { range = ["a", "f"] }
+to = "attribute_numeric_hex_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "attribute_numeric_hex_character_reference"
+matcher = { literal = ";" }
+to = "attribute_value_unquoted"
+actions = [
+  "append_numeric_character_reference_to_attribute_value",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_numeric_hex_character_reference"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "parse_error(eof-in-tag)",
+  "commit_attribute",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "attribute_numeric_hex_character_reference"
+matcher = { anything = true }
+to = "attribute_value_unquoted"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_numeric_decimal_character_reference"
+matcher = { range = ["0", "9"] }
+to = "attribute_numeric_decimal_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "attribute_numeric_decimal_character_reference"
+matcher = { literal = ";" }
+to = "attribute_value_unquoted"
+actions = [
+  "append_numeric_character_reference_to_attribute_value",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_numeric_decimal_character_reference"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "parse_error(eof-in-tag)",
+  "commit_attribute",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "attribute_numeric_decimal_character_reference"
 matcher = { anything = true }
 to = "attribute_value_unquoted"
 consume = false
@@ -2735,3 +3078,8 @@ tokens = ["Comment(data=open)", "EOF"]
 name = "html-character-references"
 input = "Fish &amp; &lt;b&gt; &quot;quote&quot; &apos;ok&apos;"
 tokens = ["Text(data=Fish & <b> \"quote\" 'ok')", "EOF"]
+
+[[fixtures]]
+name = "html-numeric-character-references"
+input = "Letters: &#65; &#x42; &#X43; &#0;"
+tokens = ["Text(data=Letters: A B C \uFFFD)", "EOF"]

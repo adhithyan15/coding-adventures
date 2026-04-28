@@ -690,6 +690,8 @@ fn validate_action(action: &str, token_names: &HashSet<String>) -> Result<()> {
         | "clear_temporary_buffer"
         | "append_temporary_buffer_to_text"
         | "append_temporary_buffer_to_attribute_value"
+        | "append_numeric_character_reference_to_text"
+        | "append_numeric_character_reference_to_attribute_value"
         | "discard_current_token"
         | "switch_to_return_state"
         | "emit_rcdata_end_tag_or_text"
