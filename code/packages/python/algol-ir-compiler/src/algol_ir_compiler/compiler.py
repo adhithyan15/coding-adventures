@@ -5390,9 +5390,16 @@ class AlgolIrCompiler:
         scope: _FrameScope,
         label_reg: int,
     ) -> None:
+        tagged_label = self._fresh_reg()
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(tagged_label),
+            IrRegister(label_reg),
+            IrImmediate(1),
+        )
         self._store_runtime_state(
             _RUNTIME_PENDING_GOTO_LABEL_OFFSET,
-            label_reg,
+            tagged_label,
         )
         self._emit_zero_result_reg()
         if not scope.helper_failure:
@@ -5433,7 +5440,7 @@ class AlgolIrCompiler:
                 IrOp.CMP_EQ,
                 IrRegister(matches),
                 IrRegister(pending_label),
-                IrRegister(self._const_reg(label.label_id)),
+                IrRegister(self._const_reg(label.label_id + 1)),
             )
             self._emit(IrOp.BRANCH_Z, IrRegister(matches), IrLabel(next_label))
             self._store_runtime_state(_RUNTIME_PENDING_GOTO_LABEL_OFFSET, _ZERO_REG)

@@ -39,13 +39,12 @@ accesses that preserve the static-link delta and subscript count needed by the
 IR and WASM lowering stages.
 Labels receive stable label descriptors and direct local `goto` statements
 resolve to those descriptors. Direct nonlocal block `goto` statements resolve
-to outer active blocks in the same procedure/function; jumps that cross a
-procedure boundary remain guarded. Switch declarations receive stable
-descriptors whose entries point at checked local designational expressions, and
-switch selection use sites resolve to their chosen switch symbol. Nonlocal
-switch selections and nonlocal conditional/switch designational branches remain
-guarded with targeted diagnostics. Switch entries that recursively select
-another switch are also guarded until the later dispatch-lowering phase.
+to outer active blocks, and procedure-crossing transfers resolve to pending
+label ids that later lowering can propagate through calls. Switch declarations
+receive stable descriptors whose entries point at checked designational
+expressions, including entries that target labels in lexical parent blocks, and
+switch selection use sites resolve to their chosen switch symbol. Recursive
+self-selection inside a switch entry remains guarded with a targeted diagnostic.
 
 Unsupported ALGOL 60 features are reported as diagnostics instead of being
 silently accepted by the compiled pipeline. By-name parameters are accepted in

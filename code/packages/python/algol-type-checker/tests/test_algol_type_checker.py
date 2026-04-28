@@ -206,6 +206,19 @@ class TestAlgolTypeChecker:
         assert selection.use_block_id != selection.declaration_block_id
         assert selection.lexical_depth_delta == 1
 
+    def test_accepts_switch_entry_targeting_nonlocal_label(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "begin switch s := done; goto s[1] end; "
+            "done: result := 1 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        assert len(result.semantic.switches) == 1
+
     def test_accepts_nested_switch_selection_entries(self) -> None:
         ast = parse_algol(
             "begin integer result, i; "

@@ -64,6 +64,8 @@ All notable changes to this package will be documented in this file.
 - Compiled top-level ALGOL programs without a root integer `result` scalar by
   returning `0` from the WASM `_start` wrapper while preserving the existing
   integer `result` return convention when present.
+- Executed switch entries that target labels in lexical parent blocks,
+  including procedure-crossing escapes to the first label in a program.
 - Added a convergence golden fixture that combines conditional expressions,
   exponentiation, chained assignment, by-name array summation, real arithmetic,
   and output in one end-to-end program.
