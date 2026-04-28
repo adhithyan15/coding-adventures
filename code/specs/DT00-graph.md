@@ -92,6 +92,61 @@ The weight is stored alongside the edge. Algorithms that care about weights (lik
 shortest path) use them; algorithms that don't (like BFS) ignore them and treat all edges
 as weight 1.
 
+### Node and edge properties
+
+Graphs also need metadata. A compiler graph may need to know that a node is a parser
+stage. A neural graph may need to know that a node is an activation function and that an
+edge is trainable. A build graph may want to tag edges as `runtime`, `test`, or
+`compile`.
+
+The base graph package owns this capability directly:
+
+```
+node_properties[node]       = PropertyBag
+edge_properties[{u, v}]     = PropertyBag
+graph_properties            = PropertyBag
+```
+
+A **PropertyBag** is a string-keyed map whose values are portable JSON-like scalars:
+
+```
+PropertyValue = string | number | boolean | null
+PropertyBag   = Map<string, PropertyValue>
+```
+
+Language implementations should use the closest idiomatic representation while preserving
+the same semantics:
+
+```
+TypeScript: Record<string, string | number | boolean | null>
+Python:     dict[str, str | int | float | bool | None]
+Go:         map[string]any, restricted by tests/documentation to scalar values
+Rust:       enum GraphPropertyValue { String, Number, Bool, Null }
+Ruby/Perl/Lua/Elixir: native map/hash/table values, restricted to scalar values
+Java/Kotlin/C#/F#: Map/Dictionary<string, object?>
+Swift:      enum GraphPropertyValue
+Dart:       Map<String, Object?>
+Haskell:    data GraphPropertyValue = PropertyString | PropertyNumber | PropertyBool | PropertyNull
+```
+
+Properties are not the runtime. They are facts attached to the graph's structure. A future
+runtime can interpret them, trace them, lower them to matrix operations, or ignore them.
+
+#### The `weight` property
+
+`weight` is the canonical edge property for weighted algorithms. Existing `add_edge(...,
+weight)` and `edge_weight(...)` APIs remain valid, but implementations should also expose
+the weight through the edge property bag:
+
+```
+graph.add_edge("London", "Paris", weight: 300)
+graph.edge_properties("London", "Paris")["weight"] == 300
+```
+
+When callers set the `weight` edge property to a number, `edge_weight` and weighted
+algorithms must observe the same value. If `weight` is absent, the default is `1.0`.
+Non-numeric `weight` values are invalid.
+
 ### Two ways to store a graph
 
 This is one of the most important design decisions in graph programming. There are two
@@ -214,6 +269,9 @@ For adjacency list:
 ```
 nodes: Set<T>
 adj:   Map<T, Map<T, float>>   # neighbor → edge_weight (default 1.0)
+node_properties: Map<T, PropertyBag>
+edge_properties: Map<EdgeKey<T>, PropertyBag>
+graph_properties: PropertyBag
 ```
 
 For adjacency matrix:
@@ -221,10 +279,53 @@ For adjacency matrix:
 nodes:   List<T>               # ordered list for index mapping
 index:   Map<T, int>           # node → row/col index
 matrix:  List<List<float>>     # V×V matrix; 0.0 means no edge
+node_properties: Map<T, PropertyBag>
+edge_properties: Map<EdgeKey<T>, PropertyBag>
+graph_properties: PropertyBag
 ```
 
 Both expose the same public API so every algorithm works on either representation
 without modification.
+
+Edge property keys for undirected graphs are canonicalized because `{u, v}` and `{v, u}`
+are the same edge. Implementations may use tuple keys, stable string keys, or internal
+edge IDs, but the public API must treat both endpoint orders identically.
+
+## Public API
+
+Existing graph APIs remain source-compatible. Property support extends the surface with
+the following common operations:
+
+```
+add_node(node, properties = {})
+add_edge(left, right, weight = 1.0, properties = {})
+
+graph_properties() -> PropertyBag
+set_graph_property(key, value)
+remove_graph_property(key)
+
+node_properties(node) -> PropertyBag
+set_node_property(node, key, value)
+remove_node_property(node, key)
+
+edge_properties(left, right) -> PropertyBag
+set_edge_property(left, right, key, value)
+remove_edge_property(left, right, key)
+```
+
+API naming may follow each language's style (`addNode`, `AddNode`, `add_node`,
+`setNodeProperty`), but semantics must match:
+
+- Returned property bags are copies or read-only views unless the language deliberately
+  documents live mutation.
+- Adding an existing node merges new properties into the existing property bag.
+- Adding an existing edge updates its weight and merges new properties into the existing
+  edge property bag.
+- Removing a node removes its node properties and all incident edge properties.
+- Removing an edge removes its edge properties.
+- Algorithms must not mutate graph, node, or edge properties.
+- Property insertion order is not semantically meaningful.
+- Unknown properties are preserved by copy and serialization operations.
 
 ## Algorithms (Pure Functions)
 
