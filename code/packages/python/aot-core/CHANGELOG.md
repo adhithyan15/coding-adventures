@@ -5,6 +5,34 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [Unreleased]
+
+### Changed — LANG19: Removed backwards dependency on jit-core; use codegen-core
+
+`aot-core` previously depended on `jit-core` solely to import `CIRInstr`
+and `optimizer.run()`.  LANG19 moved both into `codegen-core`, eliminating
+this backwards dependency (ahead-of-time compilation depending on
+just-in-time infrastructure).
+
+- `aot_core.specialise` now imports `CIRInstr` from `codegen_core` instead
+  of `jit_core.cir`.
+
+- `AOTCore.__init__` builds `self._pipeline: CodegenPipeline[list[CIRInstr]]`
+  with `CIROptimizer()` attached when `optimization_level > 0`, or no
+  optimizer when `optimization_level == 0`.
+
+- `AOTCore._compile_fn` calls `self._pipeline.compile(cir)` instead of
+  manually calling `optimizer.run(cir)` + `backend.compile(cir)`.
+
+- `AOTCore._optimize()` removed — the pipeline owns optimization.
+
+- `pyproject.toml`: `coding-adventures-jit-core` replaced by
+  `coding-adventures-codegen-core`.
+
+Zero test changes — all public APIs unchanged.
+
+---
+
 ## [0.1.0] — 2026-04-22
 
 ### Added

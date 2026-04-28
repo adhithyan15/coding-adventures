@@ -1,83 +1,21 @@
-"""BackendProtocol — the interface that JIT backends must implement.
+"""Backwards-compatibility re-export of Backend / BackendProtocol from codegen-core.
 
-Any object that satisfies this structural protocol can be passed to
-``JITCore`` as the ``backend`` argument.
+``BackendProtocol`` was originally defined here in ``jit_core.backend``.
+It has been moved to ``codegen_core.backend`` (LANG19) as a generic
+``Backend[IR]`` protocol so it can serve both the JIT/AOT path
+(``Backend[list[CIRInstr]]``) and the compiled-language path
+(``Backend[IrProgram]``).
 
-Implementing a backend
-----------------------
-A minimal backend for a simulator:
+This module re-exports both ``BackendProtocol`` and ``Backend`` so that
+existing callers of ``from jit_core.backend import BackendProtocol``
+continue to work without modification.
 
-    class MySimulatorBackend:
-        name = "my-sim"
+New code should import from ``codegen_core`` directly:
 
-        def compile(self, cir: list[CIRInstr]) -> bytes | None:
-            # Translate CIR to your binary format.
-            # Return None if the function cannot be compiled.
-            return encode(cir)
-
-        def run(self, binary: bytes, args: list) -> Any:
-            # Execute the compiled binary with the given arguments.
-            return MySimulator(binary).run(args)
-
-The ``BackendProtocol`` is ``runtime_checkable`` so you can use
-``isinstance(obj, BackendProtocol)`` in tests and assertions.
+    from codegen_core import Backend, BackendProtocol
 """
 
-from __future__ import annotations
+from codegen_core.backend import Backend, BackendProtocol, CIRBackend
+from codegen_core.cir import CIRInstr  # re-export for convenience
 
-from typing import Any, Protocol, runtime_checkable
-
-from jit_core.cir import CIRInstr
-
-
-@runtime_checkable
-class BackendProtocol(Protocol):
-    """Structural protocol for jit-core backends.
-
-    A backend translates a ``list[CIRInstr]`` into a native binary and
-    provides a mechanism to execute that binary.
-
-    Attributes
-    ----------
-    name:
-        A short human-readable identifier, e.g. ``"intel4004"``.
-        Stored in ``JITCacheEntry.backend_name`` for diagnostics.
-    """
-
-    name: str
-
-    def compile(self, cir: list[CIRInstr]) -> bytes | None:
-        """Translate ``cir`` to a native binary.
-
-        Parameters
-        ----------
-        cir:
-            Post-optimization ``CIRInstr`` list from the specialization pass.
-
-        Returns
-        -------
-        bytes
-            Opaque binary ready for ``run()``.
-        None
-            If this function cannot be compiled by this backend (e.g., uses
-            instructions the backend doesn't support).
-        """
-        ...
-
-    def run(self, binary: bytes, args: list[Any]) -> Any:
-        """Execute a previously compiled binary.
-
-        Parameters
-        ----------
-        binary:
-            The bytes returned by ``compile()``.
-        args:
-            Positional arguments in the same order as the ``IIRFunction``
-            parameter list.
-
-        Returns
-        -------
-        Any
-            The function's return value, or ``None`` for void functions.
-        """
-        ...
+__all__ = ["Backend", "BackendProtocol", "CIRBackend", "CIRInstr"]

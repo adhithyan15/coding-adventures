@@ -12,6 +12,7 @@ authors = [{ name = "Adhithya Rajasekaran" }]
 readme = "README.md"
 keywords = ["jit", "compiler", "interpreter", "register-machine", "education"]
 dependencies = [
+    "coding-adventures-codegen-core",
     "coding-adventures-interpreter-ir",
     "coding-adventures-vm-core",
 ]
