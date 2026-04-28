@@ -46,6 +46,9 @@ All notable changes to this package will be documented in this file.
   statement lists.
 - Returned `0` for integer `div` or `mod` by zero through the ALGOL runtime
   failure path instead of leaking a host WASM trap.
+- Returned `0` for integer divide overflow, real division by zero, and
+  zero-real-base negative exponentiation through the same ALGOL runtime
+  failure path.
 - Added a convergence golden fixture that combines conditional expressions,
   exponentiation, chained assignment, by-name array summation, real arithmetic,
   and output in one end-to-end program.
