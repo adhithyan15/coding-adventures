@@ -191,6 +191,25 @@ class VMCore:
         # the frame's register file.  None means unconditional.
         self._breakpoints: dict[str, dict[int, str | None]] = {}
 
+        # ------------------------------------------------------------------
+        # LANG18 coverage state — zero cost when coverage mode is off.
+        #
+        # ``_coverage_mode`` is the master gate.  When True, the dispatch
+        # loop records every IIR instruction index that is reached, keyed
+        # by function name, in ``_coverage``.  The gate costs exactly one
+        # boolean comparison per instruction (same pattern as _debug_mode).
+        #
+        # Coverage and debug mode are fully independent — both can be
+        # active simultaneously without interference.
+        # ------------------------------------------------------------------
+
+        # True → dispatch loop updates ``_coverage`` each instruction.
+        self._coverage_mode: bool = False
+
+        # fn_name → set of IIR instruction indices that have been executed.
+        # Populated incrementally; empty until ``enable_coverage()`` is called.
+        self._coverage: dict[str, set[int]] = {}
+
     # ------------------------------------------------------------------
     # Public API
     # ------------------------------------------------------------------
@@ -634,6 +653,78 @@ class VMCore:
                 self._module.functions[i] = new_fn
                 return
         raise KeyError(f"function {fn_name!r} not found in module function list")
+
+    # ------------------------------------------------------------------
+    # LANG18 coverage API
+    # ------------------------------------------------------------------
+
+    def enable_coverage(self) -> None:
+        """Enter coverage mode.
+
+        While coverage mode is active the dispatch loop records every IIR
+        instruction index that is reached, grouped by function name.  The
+        overhead is a single boolean guard per instruction — identical to
+        the LANG06 debug-mode gate — and is zero when disabled.
+
+        Calling this more than once is safe (idempotent).  Existing
+        coverage data is preserved across calls so you can enable, run a
+        slice of a program, disable, re-enable, and accumulate hits across
+        multiple partial runs.  Call ``reset_coverage()`` to start fresh.
+        """
+        self._coverage_mode = True
+
+    def disable_coverage(self) -> None:
+        """Exit coverage mode.
+
+        The dispatch loop stops recording instruction hits.  The data
+        already collected in ``_coverage`` is preserved — call
+        ``coverage_data()`` to read it.
+
+        Calling this when coverage mode is already off is safe (no-op).
+        """
+        self._coverage_mode = False
+
+    def is_coverage_mode(self) -> bool:
+        """Return True when coverage collection is active.
+
+        Coverage mode and debug mode (``is_debug_mode``) are independent
+        flags; both can be True simultaneously.
+        """
+        return self._coverage_mode
+
+    def coverage_data(self) -> dict[str, frozenset[int]]:
+        """Return a snapshot of the IIR instruction indices that have been executed.
+
+        The snapshot maps function name → frozenset of IIR instruction
+        indices (0-based within that function's instruction list).  The
+        values are ``frozenset`` so callers cannot accidentally mutate the
+        live coverage sets.
+
+        The snapshot is taken at the moment of the call — subsequent
+        execution will not retroactively change the returned value, but
+        the *live* internal sets may gain new entries.
+
+        Use ``debug_sidecar.DebugSidecarReader.lookup(fn_name, ip)`` to
+        project each covered IIR index back to a source line::
+
+            reader = DebugSidecarReader(sidecar_bytes)
+            for fn_name, ips in vm.coverage_data().items():
+                for ip in ips:
+                    loc = reader.lookup(fn_name, ip)
+                    if loc:
+                        print(f"{loc.file}:{loc.line}")
+        """
+        return {fn: frozenset(ips) for fn, ips in self._coverage.items()}
+
+    def reset_coverage(self) -> None:
+        """Clear all coverage data and disable coverage mode.
+
+        After this call ``coverage_data()`` returns an empty dict and
+        ``is_coverage_mode()`` returns False.  Call ``enable_coverage()``
+        again to start a fresh coverage run.
+        """
+        self._coverage_mode = False
+        self._coverage = {}
 
     # ------------------------------------------------------------------
     # Properties — read-only access to internal state for tooling

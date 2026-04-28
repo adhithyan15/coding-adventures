@@ -86,6 +86,16 @@ def run_dispatch_loop(vm: VMCore) -> Any:
         if vm._debug_mode:
             _check_debug_pause(vm, frame, instr, ip_before)
 
+        # LANG18: record instruction execution for coverage analysis.
+        # Guarded by ``vm._coverage_mode`` — one boolean check overhead.
+        # Coverage and debug mode are orthogonal; both can be active at once.
+        if vm._coverage_mode:
+            fn_cov = vm._coverage.get(frame.fn.name)
+            if fn_cov is None:
+                fn_cov = set()
+                vm._coverage[frame.fn.name] = fn_cov
+            fn_cov.add(ip_before)
+
         tracing = vm._tracer is not None
         regs_before: list[Any] | None = None
         obs_count_before: int = 0

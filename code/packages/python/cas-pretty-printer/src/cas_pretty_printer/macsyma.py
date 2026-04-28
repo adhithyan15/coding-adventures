@@ -17,6 +17,20 @@ Surface syntax conventions:
     - ``Mul(x, Inv(y))`` displays as ``x / y``.
     - ``Mul(-1, x)`` displays as ``-x``.
     - ``Mul(a, Neg(b))`` displays as ``-(a*b)`` (unary minus out front).
+
+MACSYMA-specific name overrides (differ from generic lowercase):
+- ``Select`` → ``sublist`` (MACSYMA calls it ``sublist``, not ``select``)
+- ``Inverse`` → ``invert`` (MACSYMA uses ``invert``, not ``inverse``)
+- ``RatSimplify`` → ``ratsimp``
+- ``Apart`` → ``partfrac`` (MACSYMA calls it ``partfrac``)
+- ``TrigSimplify`` → ``trigsimp``
+- ``TrigExpand`` → ``trigexpand``
+- ``TrigReduce`` → ``trigreduce``
+- Complex: ``Re`` → ``realpart``, ``Im`` → ``imagpart``, ``Arg`` → ``carg``
+- Number theory: ``IsPrime`` → ``primep``, ``NextPrime`` → ``next_prime``,
+  ``PrevPrime`` → ``prev_prime``, ``FactorInteger`` → ``ifactor``,
+  ``MoebiusMu`` → ``moebius``, ``ChineseRemainder`` → ``chinese``,
+  ``IntegerLength`` → ``numdigits``
 """
 
 from __future__ import annotations
@@ -38,10 +52,41 @@ class MacsymaDialect(BaseDialect):
 
     name = "macsyma"
 
-    # Extend the default function-name table with MACSYMA-specific entries.
+    # Extend and override the default function-name table with
+    # MACSYMA-specific spellings.  Where MACSYMA uses a different surface
+    # name than the generic lowercase IR-head form, we override it here.
     function_names: dict[str, str] = {
         **_DEFAULT_FUNCTION_NAMES,
+        # ---- extra trig / math -------------------------------------------
         "Atan2": "atan2",
+        # ---- list operations (MACSYMA-specific spellings) ----------------
+        "Select": "sublist",      # MACSYMA: sublist(list, pred), not select
+        "MakeList": "makelist",
+        # ---- matrix operations (MACSYMA uses ``invert``) -----------------
+        "Inverse": "invert",
+        # ---- rational / trig simplification names ------------------------
+        "RatSimplify": "ratsimp",
+        "Apart": "partfrac",      # MACSYMA: partfrac(expr, x), not apart
+        "TrigSimplify": "trigsimp",
+        "TrigExpand": "trigexpand",
+        "TrigReduce": "trigreduce",
+        # ---- complex number operations (MACSYMA-specific names) ----------
+        "Re": "realpart",         # MACSYMA: realpart(z), not re(z)
+        "Im": "imagpart",         # MACSYMA: imagpart(z), not im(z)
+        "Arg": "carg",            # MACSYMA: carg(z), not arg(z)
+        "RectForm": "rectform",
+        "PolarForm": "polarform",
+        # ---- number theory (MACSYMA canonical names) ---------------------
+        "IsPrime": "primep",
+        "NextPrime": "next_prime",
+        "PrevPrime": "prev_prime",
+        "FactorInteger": "ifactor",
+        "Divisors": "divisors",
+        "Totient": "totient",
+        "MoebiusMu": "moebius",
+        "JacobiSymbol": "jacobi",
+        "ChineseRemainder": "chinese",
+        "IntegerLength": "numdigits",
     }
 
     # Symbol aliases for MACSYMA surface syntax.

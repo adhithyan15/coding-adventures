@@ -1,7 +1,21 @@
 """Tests for the logic VM runtime."""
 
 import pytest
-from logic_engine import atom, conj, defer, eq, fresh, relation, term, var
+from logic_engine import (
+    State,
+    atom,
+    conj,
+    defer,
+    eq,
+    fresh,
+    relation,
+    runtime_assertz,
+    term,
+    var,
+)
+from logic_engine import (
+    fact as engine_fact,
+)
 from logic_instructions import (
     InstructionProgram,
     defdynamic,
@@ -309,6 +323,28 @@ class TestLogicVM:
         assert trace[0].relation_count == 1
         assert vm.assembled_program().dynamic_relations == frozenset({memo.key()})
         assert vm.run_query() == [atom("cached")]
+
+    def test_run_query_from_preserves_existing_stateful_dynamic_database(
+        self,
+    ) -> None:
+        memo = relation("memo", 1)
+        value = var("Value")
+        program_value = instruction_program(
+            defdynamic(memo),
+            query(memo(value), outputs=(value,)),
+        )
+
+        vm = create_logic_vm()
+        vm.load(program_value)
+        vm.run()
+        initialized = runtime_assertz(
+            vm.assembled_program(),
+            State(),
+            engine_fact(memo("booted")),
+        )
+
+        assert initialized is not None
+        assert vm.run_query_from(initialized) == [atom("booted")]
 
     def test_run_query_rejects_out_of_range_query_indices(self) -> None:
         parent = relation("parent", 2)

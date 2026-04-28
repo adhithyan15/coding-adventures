@@ -798,6 +798,31 @@ class TestAlgolIrCompiler:
             for instruction in calls
         )
 
+    def test_compiles_procedure_parameter_call_with_value_argument(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "procedure invoke(p); procedure p; begin p(7) end; "
+                "procedure set(x); value x; integer x; begin result := x end; "
+                "invoke(set) "
+                "end"
+            )
+        )
+        calls = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+
+        assert (
+            result.procedure_signatures["_fn_algol_call_procedure_i32"].param_types
+            == ("integer", "integer", "integer")
+        )
+        assert any(
+            instruction.operands[0].name == "_fn_algol_call_procedure_i32"
+            for instruction in calls
+        )
+
     def test_compiles_dynamic_multidimensional_array_bounds(self) -> None:
         result = compile_algol(
             parse_algol(

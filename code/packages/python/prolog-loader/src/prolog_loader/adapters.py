@@ -11,28 +11,43 @@ from logic_builtins import (
     assertzo,
     atomico,
     atomo,
+    bagofo,
     callableo,
     calltermo,
     clauseo,
     compare_termo,
     compoundo,
+    copytermo,
     current_predicateo,
+    cuto,
     dynamico,
+    failo,
+    findallo,
+    forallo,
     functoro,
+    geqo,
     groundo,
+    gto,
+    iso,
+    leqo,
+    lto,
     nonvaro,
     noto,
     numbero,
+    numeqo,
+    numneqo,
     onceo,
     predicate_propertyo,
     retractallo,
     retracto,
     same_termo,
+    setofo,
     stringo,
     termo_geqo,
     termo_gto,
     termo_leqo,
     termo_lto,
+    trueo,
     univo,
     varo,
 )
@@ -51,6 +66,7 @@ from logic_engine import (
     disj,
     eq,
     fresh,
+    goal_from_term,
     relation,
     term,
 )
@@ -85,6 +101,14 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
     name = goal.relation.symbol.name
     args = goal.args
 
+    nullary_builtins: dict[str, Callable[[], GoalExpr]] = {
+        "true": trueo,
+        "fail": failo,
+        "!": cuto,
+    }
+    if goal.relation.arity == 0 and name in nullary_builtins:
+        return nullary_builtins[name]()
+
     unary_term_builtins: dict[str, Callable[[object], GoalExpr]] = {
         "var": varo,
         "nonvar": nonvaro,
@@ -99,8 +123,20 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
     if goal.relation.arity == 1 and name in unary_term_builtins:
         return unary_term_builtins[name](args[0])
 
+    binary_arithmetic_builtins: dict[str, Callable[[object, object], GoalExpr]] = {
+        "is": iso,
+        "=:=": numeqo,
+        "=\\=": numneqo,
+        "<": lto,
+        "=<": leqo,
+        ">": gto,
+        ">=": geqo,
+    }
+    if goal.relation.arity == 2 and name in binary_arithmetic_builtins:
+        return binary_arithmetic_builtins[name](args[0], args[1])
+
     if name == "call" and goal.relation.arity == 1:
-        return calltermo(args[0])
+        return _adapt_callable_goal(args[0])
     if name == "phrase" and goal.relation.arity == 2:
         try:
             return calltermo(expand_dcg_phrase(args[0], args[1]))
@@ -112,15 +148,25 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         except TypeError:
             return goal
     if name == "once" and goal.relation.arity == 1:
-        return onceo(calltermo(args[0]))
+        return onceo(_adapt_callable_goal(args[0]))
     if name in {"not", "\\+"} and goal.relation.arity == 1:
-        return noto(calltermo(args[0]))
+        return noto(_adapt_callable_goal(args[0]))
+    if name == "findall" and goal.relation.arity == 3:
+        return findallo(args[0], _adapt_callable_goal(args[1]), args[2])
+    if name == "bagof" and goal.relation.arity == 3:
+        return bagofo(args[0], _adapt_callable_goal(args[1]), args[2])
+    if name == "setof" and goal.relation.arity == 3:
+        return setofo(args[0], _adapt_callable_goal(args[1]), args[2])
+    if name == "forall" and goal.relation.arity == 2:
+        return forallo(_adapt_callable_goal(args[0]), _adapt_callable_goal(args[1]))
     if name == "functor" and goal.relation.arity == 3:
         return functoro(*args)
     if name == "arg" and goal.relation.arity == 3:
         return argo(*args)
     if name == "=.." and goal.relation.arity == 2:
         return univo(*args)
+    if name == "copy_term" and goal.relation.arity == 2:
+        return copytermo(*args)
     if name == "==" and goal.relation.arity == 2:
         return same_termo(*args)
     if name == "compare" and goal.relation.arity == 3:
@@ -157,6 +203,13 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         return goal if property_goal is None else property_goal
 
     return goal
+
+
+def _adapt_callable_goal(term_value: Term) -> GoalExpr:
+    try:
+        return adapt_prolog_goal(goal_from_term(term_value))
+    except TypeError:
+        return calltermo(term_value)
 
 
 def _adapt_indicator_declaration(

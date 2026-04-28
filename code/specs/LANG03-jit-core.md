@@ -383,7 +383,9 @@ jit-core/
     __init__.py       # exports JITCore
     core.py           # JITCore class — top-level API + hot-function promotion
     specialise.py     # IIRFunction → list[CIRInstr] specialization pass
-    cir.py            # CIRInstr dataclass (jit-core's subset of CompilerIR)
+    cir.py            # re-exports CIRInstr from codegen_core (LANG19)
+    backend.py        # re-exports Backend / BackendProtocol from codegen_core (LANG19)
+    optimizer.py      # re-exports run() from codegen_core.optimizer.cir_optimizer (LANG19)
     cache.py          # JITCache, JITCacheEntry
     errors.py         # DeoptimizerError, UnspecializableError
   tests/
@@ -415,3 +417,23 @@ After `jit-core` is implemented:
 - All the logic moves into `jit-core` and `intel4004-backend`
 - The existing `tetrad-jit` tests are re-run against the new implementation
   with zero changes to the test assertions
+
+---
+
+## Relationship to codegen-core (LANG19)
+
+LANG19 extracted the shared parts of the compilation pipeline from `jit-core`
+into `codegen-core` so that `aot-core` no longer depends on `jit-core`:
+
+- `CIRInstr` → moved to `codegen_core.cir`; `jit_core.cir` re-exports it.
+- `BackendProtocol` → moved to `codegen_core.backend` as generic `Backend[IR]`;
+  `jit_core.backend` re-exports it.
+- `optimizer.run()` → moved to `codegen_core.optimizer.cir_optimizer`;
+  `jit_core.optimizer` re-exports it.
+- `JITCore.__init__` now builds a `CodegenPipeline[list[CIRInstr]]` internally.
+  `_compile_fn` delegates to `pipeline.compile_with_stats(cir)` instead of
+  calling `optimizer.run()` + `backend.compile()` separately.
+
+**All public APIs are unchanged.** The re-exports ensure existing callers
+of `from jit_core.cir import CIRInstr` etc. continue to work without
+modification.

@@ -19,7 +19,13 @@ Public API
     ``runtime.run_with_jit(source)`` for the JIT path;
     ``runtime.compile_with_debug(source, source_path)`` for debug compilation;
     ``runtime.run_with_debug(source, source_path, hooks=..., breakpoints=...)``
-    for execution with attached debug hooks.
+    for execution with attached debug hooks;
+    ``runtime.run_with_coverage(source, source_path)`` for source-line coverage.
+
+``LineCoverageReport`` / ``CoveredLine``
+    Data classes returned by ``TetradRuntime.run_with_coverage``.
+    ``LineCoverageReport.lines_for_file(path)`` returns sorted covered line
+    numbers; ``CoveredLine`` holds (file, line, iir_hit_count).
 
 ``Intel4004Backend``
     Re-export from the ``intel4004-backend`` package — kept here so
@@ -36,6 +42,7 @@ Public API
 
 from __future__ import annotations
 
+from tetrad_runtime.coverage import CoveredLine, LineCoverageReport
 from tetrad_runtime.iir_translator import (
     TETRAD_OPCODE_EXTENSIONS,
     code_object_to_iir,
@@ -46,7 +53,9 @@ from tetrad_runtime.sidecar_builder import code_object_to_iir_with_sidecar
 
 __all__ = [
     "TETRAD_OPCODE_EXTENSIONS",
+    "CoveredLine",
     "Intel4004Backend",
+    "LineCoverageReport",
     "TetradRuntime",
     "code_object_to_iir",
     "code_object_to_iir_with_sidecar",
