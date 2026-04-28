@@ -20,7 +20,8 @@ ordinary logic goal expressions.
 - `forallo(generator, test)`
 - `groundo(term)`
 - `varo(term)` and `nonvaro(term)`
-- `atomo(term)`, `numbero(term)`, `stringo(term)`, and `compoundo(term)`
+- `atomo(term)`, `integero(term)`, `numbero(term)`, `stringo(term)`, and
+  `compoundo(term)`
 - `atomico(term)` and `callableo(term)`
 - `functoro(term, name, arity)` for inspection and construction
 - `argo(index, term, value)`
@@ -45,6 +46,7 @@ ordinary logic goal expressions.
 - `iso(result, expression)` for Prolog-style evaluative arithmetic
 - `numeqo(left, right)`, `numneqo(left, right)`, `lto(left, right)`, `leqo(left, right)`, `gto(left, right)`, and `geqo(left, right)`
 - `betweeno(low, high, value)` for finite inclusive integer generation
+- `succo(predecessor, successor)` for non-negative integer successor relations
 - `findallo(template, goal, results)`, `bagofo(template, goal, results)`, and `setofo(template, goal, results)`
 
 ## Quick Start
@@ -74,12 +76,14 @@ from logic_builtins import (
     geqo,
     groundo,
     ifthenelseo,
+    integero,
     iso,
     labelingo,
     noto,
     onceo,
     predicate_propertyo,
     same_termo,
+    succo,
     termo_lto,
     univo,
 )
@@ -117,6 +121,8 @@ family = program(rule(child(X, Name), parent(Name, X)))
 
 assert solve_all(program(), X, onceo(eq(X, "first"))) == [atom("first")]
 assert solve_all(program(), X, betweeno(1, 3, X)) == [num(1), num(2), num(3)]
+assert solve_all(program(), X, succo(2, X)) == [num(3)]
+assert solve_all(program(), X, conj(eq(X, 3), integero(X))) == [num(3)]
 assert solve_all(
     program(),
     X,

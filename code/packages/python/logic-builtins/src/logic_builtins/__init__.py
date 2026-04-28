@@ -49,6 +49,7 @@ from logic_builtins.builtins import (
     gto,
     ifthenelseo,
     iftheno,
+    integero,
     iso,
     labelingo,
     leqo,
@@ -69,6 +70,7 @@ from logic_builtins.builtins import (
     setofo,
     stringo,
     sub,
+    succo,
     termo_geqo,
     termo_gto,
     termo_leqo,
@@ -124,6 +126,7 @@ __all__ = [
     "groundo",
     "ifthenelseo",
     "iftheno",
+    "integero",
     "iso",
     "labelingo",
     "leqo",
@@ -144,6 +147,7 @@ __all__ = [
     "setofo",
     "stringo",
     "sub",
+    "succo",
     "termo_geqo",
     "termo_gto",
     "termo_leqo",
@@ -153,4 +157,4 @@ __all__ = [
     "varo",
 ]
 
-__version__ = "0.14.0"
+__version__ = "0.15.0"

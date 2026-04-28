@@ -128,7 +128,7 @@ The package includes end-to-end stress tests for:
 - linked modules and imported predicates
 - DCG expansion with `phrase/3`
 - arithmetic evaluation and comparison
-- finite integer generation with `between/3`
+- finite integer builtins such as `integer/1`, `between/3`, and `succ/2`
 - collection predicates such as `findall/3`
 - common list predicates such as `member/2`, `append/3`, `length/2`,
   `sort/2`, `msort/2`, `nth0/3`, `nth1/3`, `nth0/4`, and `nth1/4`

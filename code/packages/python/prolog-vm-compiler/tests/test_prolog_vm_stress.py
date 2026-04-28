@@ -141,6 +141,8 @@ class TestPrologVMStress:
                nth0(1, Reversed, ZeroRestBased, ZeroRest),
                nth1(2, Reversed, OneRestBased, OneRest),
                length(Pair, 2),
+               succ(Count, NextCount),
+               integer(NextCount),
                Pair = [left, right].
             """,
         )
@@ -162,6 +164,7 @@ class TestPrologVMStress:
                 "ZeroRest": logic_list(["jam"]),
                 "OneRestBased": atom("tea"),
                 "OneRest": logic_list(["jam"]),
+                "NextCount": num(3),
                 "Pair": logic_list(["left", "right"]),
             },
             {
@@ -178,6 +181,7 @@ class TestPrologVMStress:
                 "ZeroRest": logic_list(["jam"]),
                 "OneRestBased": atom("cake"),
                 "OneRest": logic_list(["jam"]),
+                "NextCount": num(3),
                 "Pair": logic_list(["left", "right"]),
             },
         ]

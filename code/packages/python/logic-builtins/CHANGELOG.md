@@ -8,6 +8,8 @@ All notable changes to this package will be documented in this file.
 
 - `betweeno(low, high, value)` for finite inclusive integer generation and
   validation, matching the common Prolog `between/3` use case.
+- `integero(term)` for non-bool integer type checks and `succo(predecessor,
+  successor)` for non-negative integer successor generation and validation.
 
 ### Fixed
 

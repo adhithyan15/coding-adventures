@@ -730,6 +730,7 @@ class TestPrologGoalAdapter:
             relation("ground", 1)(atom("x")),
             relation("atom", 1)(atom("x")),
             relation("atomic", 1)(atom("x")),
+            relation("integer", 1)(1),
             relation("number", 1)(1),
             relation("string", 1)("hello"),
             relation("compound", 1)(term("pair", atom("a"), atom("b"))),
@@ -781,6 +782,7 @@ class TestPrologGoalAdapter:
             relation("fail", 0)(),
             relation("!", 0)(),
             relation("is", 2)(LogicVar(id=10), term("+", 1, 2)),
+            relation("succ", 2)(1, LogicVar(id=29)),
             relation("=:=", 2)(term("+", 1, 2), 3),
             relation("=\\=", 2)(term("+", 1, 2), 4),
             relation("<", 2)(1, 2),
@@ -934,14 +936,18 @@ class TestPrologGoalAdapter:
 
     def test_adapt_prolog_goal_rewrites_between_generator(self) -> None:
         parsed = parse_swi_query(
-            "?- between(1, 4, Value), Value > 2.",
+            "?- between(1, 4, Value), succ(Value, Next), integer(Next), Next > 3.",
         )
 
         adapted = adapt_prolog_goal(parsed.goal)
 
-        assert solve_all(program(), parsed.variables["Value"], adapted) == [
-            num(3),
-            num(4),
+        assert solve_all(
+            program(),
+            (parsed.variables["Value"], parsed.variables["Next"]),
+            adapted,
+        ) == [
+            (num(3), num(4)),
+            (num(4), num(5)),
         ]
 
     def test_adapt_prolog_goal_rewrites_common_list_predicates(self) -> None:

@@ -11,6 +11,8 @@
   executable logic builtin layer
 - adapt Prolog `between/3` into the logic builtin layer for finite integer
   generation and validation
+- adapt Prolog `integer/1` and `succ/2` into the logic builtin layer for
+  integer type checks and successor relations
 - adapt common Prolog list predicates (`member/2`, `append/3`, `select/3`,
   `permutation/2`, `reverse/2`, `last/2`, `length/2`, `sort/2`, `msort/2`,
   `nth0/3`, `nth1/3`, `nth0/4`, `nth1/4`, and `is_list/1`) into the
