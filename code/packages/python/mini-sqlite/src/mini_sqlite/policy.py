@@ -25,19 +25,52 @@ Protocol, not ABC
 abstract base class.  This means any object that implements the required
 methods satisfies the interface — no inheritance required.
 
-The protocol has two methods:
+The protocol has three methods, of which only one is required:
 
-- :meth:`should_create` — called each time a new hit is observed for a
-  ``(table, column)`` pair in a full-table-scan filter position.
-- :meth:`should_drop` — called periodically to check whether an
-  auto-created index has gone cold and should be removed.
+- :meth:`should_create` (**required**) — called each time a new hit is
+  observed for a ``(table, column)`` pair in a full-table-scan filter
+  position.
+- :meth:`should_drop` (*optional*) — called periodically to check whether
+  an auto-created index has gone cold and should be removed.
+- :meth:`on_query_event` (*optional*) — called after every
+  :class:`~sql_vm.QueryEvent` so that the policy can observe raw runtime
+  signals (selectivity, duration, index usage) for its own bookkeeping.
+  Intended for ML-based or adaptive policies that want to build a feature
+  history from live query data.
 
 Backward compatibility
 ----------------------
 
 Policies that only implement :meth:`should_create` (v2-style) remain valid.
-The advisor checks for :meth:`should_drop` via ``hasattr`` before calling it,
-so a policy without the method is simply never asked to drop anything.
+The advisor checks for :meth:`should_drop` and :meth:`on_query_event` via
+``hasattr`` before calling them, so a policy without those methods is simply
+never asked to drop anything or observe query events.
+
+ML / adaptive observer hook
+----------------------------
+
+:meth:`on_query_event` is the recommended extension point for data-driven
+policies.  Each call receives the full :class:`~sql_vm.QueryEvent` for one
+SELECT scan, including:
+
+- ``table`` — which table was scanned
+- ``filtered_columns`` — which columns appeared in the predicate
+- ``rows_scanned`` / ``rows_returned`` — raw cardinality signals
+- ``used_index`` — which auto-created index was selected (or ``None``)
+- ``duration_us`` — wall-clock cost in microseconds
+
+A minimal ML policy skeleton::
+
+    class MLPolicy:
+        def __init__(self):
+            self._history: list[QueryEvent] = []
+
+        def should_create(self, table, column, hit_count):
+            return hit_count >= 3  # baseline rule while model warms up
+
+        def on_query_event(self, event):
+            self._history.append(event)
+            # retrain / update model here as needed
 
 HitCountPolicy
 --------------
@@ -66,17 +99,20 @@ class IndexPolicy(Protocol):
     """Decision interface for automatic index lifecycle management.
 
     The advisor calls :meth:`should_create` each time it observes a filter
-    hit for a ``(table, column)`` pair, and :meth:`should_drop` (when
+    hit for a ``(table, column)`` pair, :meth:`should_drop` (when
     implemented) after each :class:`~sql_vm.QueryEvent` to check whether
-    a cold auto-created index should be removed.
+    a cold auto-created index should be removed, and :meth:`on_query_event`
+    (when implemented) to deliver the raw event to the policy so it can
+    maintain its own feature history.
 
     ``hit_count`` in :meth:`should_create` is the running total of times the
     advisor has seen a filter on ``column`` within ``table``.  It includes
     the current observation — so the first call arrives with ``hit_count=1``.
 
     Implementations only need to provide :meth:`should_create`.
-    :meth:`should_drop` is optional; the advisor skips drop checks when the
-    method is absent.
+    :meth:`should_drop` and :meth:`on_query_event` are optional; the advisor
+    detects their presence via ``hasattr`` and skips the respective logic
+    when absent.
     """
 
     def should_create(self, table: str, column: str, hit_count: int) -> bool:

@@ -1,0 +1,8 @@
+[package]
+name = "cas-factor"
+version = "0.1.0"
+edition = "2021"
+description = "Univariate integer polynomial factoring over Z (linear factors via rational-root test)"
+license = "MIT"
+
+[dependencies]

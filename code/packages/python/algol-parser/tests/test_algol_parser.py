@@ -32,11 +32,10 @@ The ALGOL 60 grammar differs from JSON in several important ways:
 from __future__ import annotations
 
 import pytest
-
-from algol_parser import create_algol_parser, parse_algol
-from lang_parser import ASTNode, GrammarParser, GrammarParseError
+from lang_parser import ASTNode, GrammarParseError, GrammarParser
 from lexer import Token
 
+from algol_parser import create_algol_parser, parse_algol
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -136,9 +135,9 @@ class TestMinimalProgram:
                 else:
                     collect_tokens(child)
         collect_tokens(ast)
-        type_names = [get_type_name(t) for t in all_tokens]
-        assert "BEGIN" in type_names
-        assert "END" in type_names
+        token_values = [token.value for token in all_tokens]
+        assert "begin" in token_values
+        assert "end" in token_values
 
 
 # ---------------------------------------------------------------------------
@@ -210,10 +209,10 @@ class TestArithmeticExpression:
         ast = parse("begin integer x; x := 1 + 2 * 3 end")
         # The tree should contain a term node (for multiplication)
         # nested inside a simple_arith node (for addition).
-        term_nodes = find_nodes(ast, "term")
-        simple_arith_nodes = find_nodes(ast, "simple_arith")
-        assert len(term_nodes) >= 1
-        assert len(simple_arith_nodes) >= 1
+        product_nodes = find_nodes(ast, "expr_mul") + find_nodes(ast, "term")
+        sum_nodes = find_nodes(ast, "expr_add") + find_nodes(ast, "simple_arith")
+        assert len(product_nodes) >= 1
+        assert len(sum_nodes) >= 1
 
     def test_parenthesized_expression(self) -> None:
         """``(1 + 2) * 3`` parses correctly."""
@@ -239,6 +238,12 @@ class TestArithmeticExpression:
         """Exponentiation with ``^``."""
         ast = parse("begin real x; x := 2 ^ 10 end")
         assert ast.rule_name == "program"
+
+    def test_conditional_expression_assignment(self) -> None:
+        """ALGOL conditional expressions can appear as assignment values."""
+        ast = parse("begin integer x; x := if true then 1 else 2 end")
+        assert ast.rule_name == "program"
+        assert find_nodes(ast, "expression")
 
 
 # ---------------------------------------------------------------------------
@@ -561,6 +566,11 @@ class TestDeclarations:
         )
         type_decl_nodes = find_nodes(ast, "type_decl")
         assert len(type_decl_nodes) >= 3
+
+    def test_statement_list_allows_extra_semicolons(self) -> None:
+        """Statement lists tolerate dummy separators and trailing semicolons."""
+        ast = parse("begin integer x; ; x := 1;; x := 2; end")
+        assert ast.rule_name == "program"
 
     def test_own_scalar_declaration(self) -> None:
         """Own scalar declaration produces an own_decl node."""
