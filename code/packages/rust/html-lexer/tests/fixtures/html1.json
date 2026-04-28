@@ -319,6 +319,18 @@
         "EOF"
       ],
       "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html-script-data-state-end-tag",
+      "description": "Seeded script data context emits the matching script end tag while keeping character references literal",
+      "input": "if (a < b) alert('&amp;');</script>",
+      "tokens": [
+        "Text(data=if (a < b) alert('&amp;');)",
+        "EndTag(name=script)",
+        "EOF"
+      ],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
     }
   ]
 }

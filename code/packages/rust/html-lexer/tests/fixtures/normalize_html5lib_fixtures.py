@@ -15,6 +15,7 @@ SUPPORTED_INITIAL_STATES = {
     "PLAINTEXT state",
     "RCDATA state",
     "RAWTEXT state",
+    "Script data state",
 }
 
 
@@ -75,12 +76,18 @@ def is_supported(test: dict[str, Any]) -> tuple[bool, str]:
         return False, f"unsupported initialStates={initial_states!r}"
 
     last_start_tag = test.get("lastStartTag")
-    if initial_states in (["RCDATA state"], ["RAWTEXT state"]) and not isinstance(
-        last_start_tag, str
-    ):
+    if initial_states in (
+        ["RCDATA state"],
+        ["RAWTEXT state"],
+        ["Script data state"],
+    ) and not isinstance(last_start_tag, str):
         return False, f"{initial_states[0]} requires lastStartTag"
 
-    if initial_states not in (["RCDATA state"], ["RAWTEXT state"]) and last_start_tag is not None:
+    if (
+        initial_states
+        not in (["RCDATA state"], ["RAWTEXT state"], ["Script data state"])
+        and last_start_tag is not None
+    ):
         return False, f"unsupported lastStartTag={last_start_tag!r}"
 
     for token in test.get("output", []):

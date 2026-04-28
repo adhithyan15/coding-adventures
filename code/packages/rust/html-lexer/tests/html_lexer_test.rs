@@ -193,6 +193,42 @@ fn default_html_lexer_keeps_ampersands_literal_in_seeded_rawtext() {
 }
 
 #[test]
+fn default_html_lexer_supports_seeded_script_data_end_tags() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("script_data").unwrap();
+    lexer.set_last_start_tag("script");
+
+    lexer.push("if (a < b) alert('&amp;');</script>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("if (a < b) alert('&amp;');".to_string()),
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_keeps_non_matching_script_end_tags_as_text() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("script_data").unwrap();
+    lexer.set_last_start_tag("script");
+
+    lexer.push("x</style>y").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![Token::Text("x</style>y".to_string()), Token::Eof]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_seeded_plaintext_state() {
     let mut lexer = create_html_lexer().unwrap();
     lexer.set_initial_state("plaintext").unwrap();
