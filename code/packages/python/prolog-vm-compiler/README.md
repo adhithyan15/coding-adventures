@@ -58,6 +58,35 @@ answers = run_initialized_compiled_prolog_query_answers(compiled)
 assert [answer.as_dict() for answer in answers] == [{"Name": atom("alpha")}]
 ```
 
+## Stateful Query Runtime
+
+Use `create_swi_prolog_vm_runtime(...)` when you want to consult a program once
+and ask many top-level queries later:
+
+```python
+from logic_engine import atom
+from prolog_vm_compiler import create_swi_prolog_vm_runtime
+
+runtime = create_swi_prolog_vm_runtime(
+    """
+    :- dynamic(memo/1).
+    parent(homer, bart).
+    parent(homer, lisa).
+    """,
+)
+
+assert [answer.as_dict() for answer in runtime.query("parent(homer, Who)")] == [
+    {"Who": atom("bart")},
+    {"Who": atom("lisa")},
+]
+
+runtime.query("assertz(memo(saved))", commit=True)
+
+assert [answer.as_dict() for answer in runtime.query("memo(Value)")] == [
+    {"Value": atom("saved")},
+]
+```
+
 ## Stress Coverage
 
 The package includes end-to-end stress tests for:
