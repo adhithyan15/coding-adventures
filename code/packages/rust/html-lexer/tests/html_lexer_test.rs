@@ -378,6 +378,34 @@ fn default_html_lexer_supports_seeded_rcdata_semicolonless_legacy_named_characte
 }
 
 #[test]
+fn default_html_lexer_falls_back_for_unknown_named_character_references() {
+    let tokens =
+        lex_html("Known &AMP; unknown &madeup; <a title=\"&copy;\" bogus=&madeup;>").unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Text("Known & unknown &madeup; ".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "title".to_string(),
+                        value: "\u{00A9}".to_string(),
+                    },
+                    Attribute {
+                        name: "bogus".to_string(),
+                        value: "&madeup;".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_numeric_character_references_in_data() {
     let tokens = lex_html("Letters: &#65; &#x42; &#X43; &#0;").unwrap();
 
@@ -521,7 +549,7 @@ fn html1_generated_definition_preserves_lexer_profile_metadata() {
         .registers
         .iter()
         .any(|register| register.id == "temporary_buffer"));
-    assert_eq!(definition.fixtures.len(), 10);
+    assert_eq!(definition.fixtures.len(), 11);
 }
 
 #[test]
