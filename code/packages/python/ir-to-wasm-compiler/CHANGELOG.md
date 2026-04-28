@@ -70,6 +70,8 @@ round-trip, export check.
   convention.
 - Function signatures can require explicit call operands for generated callers
   that must not fall back to the legacy v2, v3, ... convention.
+- F64-returning functions now return through the dedicated f64 scratch register
+  so real results no longer conflict with integer call results in `v1`.
 
 ## [0.5.0] — 2026-04-20
 

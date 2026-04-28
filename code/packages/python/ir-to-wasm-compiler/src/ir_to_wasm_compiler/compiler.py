@@ -899,8 +899,9 @@ class _FunctionLowerer:
                     )
                     self._emit_local_set(result_reg)
             case IrOp.RET | IrOp.HALT:
-                if self.function.signature.wasm_result_types:
-                    self._emit_local_get(_REG_SCRATCH)
+                result_reg = _function_result_register(self.function.signature)
+                if result_reg is not None:
+                    self._emit_local_get(result_reg)
                 self._emit_opcode("return")
             case IrOp.NOP:
                 self._emit_opcode("nop")
@@ -1085,7 +1086,7 @@ class _DispatchLoopLowerer(_FunctionLowerer):
             end
           end loop                           ← falls through on out-of-range $pc
         end block
-        local.get _REG_SCRATCH              ← function return value
+        local.get function result register  ← function return value
         end function
 
     br depth table (from inside block $seg_N):
@@ -1127,8 +1128,9 @@ class _DispatchLoopLowerer(_FunctionLowerer):
         self._emit_opcode("end")
 
         # Function return value (HALT via br 2 lands here)
-        if self.function.signature.wasm_result_types:
-            self._emit_local_get(_REG_SCRATCH)
+        result_reg = _function_result_register(self.function.signature)
+        if result_reg is not None:
+            self._emit_local_get(result_reg)
         self._emit_opcode("end")
 
         return FunctionBody(
@@ -1300,6 +1302,7 @@ def _make_function_ir(
         [
             1,
             _REG_VAR_BASE + max(signature.param_count - 1, 0),
+            _function_result_register(signature) or 1,
             _REG_F64_SCRATCH if _needs_f64_scratch(instructions, signatures) else 1,
         ]
         + [
@@ -1398,6 +1401,16 @@ _REG_F64_SCRATCH = 31
 _REG_VAR_BASE = 2
 
 
+def _function_result_register(signature: FunctionSignature) -> int | None:
+    if not signature.wasm_result_types:
+        return None
+    return (
+        _REG_F64_SCRATCH
+        if signature.wasm_result_types[0] == ValueType.F64
+        else _REG_SCRATCH
+    )
+
+
 def _infer_register_types(
     *,
     instructions: list[IrInstruction],
@@ -1415,10 +1428,11 @@ def _infer_register_types(
             f"{signature.label} param {param_index}",
         )
 
-    if signature.wasm_result_types:
+    result_reg = _function_result_register(signature)
+    if result_reg is not None:
         _assign_register_type(
             reg_types,
-            _REG_SCRATCH,
+            result_reg,
             signature.wasm_result_types[0],
             f"{signature.label} result",
         )

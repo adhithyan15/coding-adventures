@@ -156,7 +156,7 @@ def test_compile_f64_function_with_typed_signature() -> None:
     program.add_instruction(
         IrInstruction(
             IrOp.F64_ADD,
-            [IrRegister(1), IrRegister(2), IrRegister(3)],
+            [IrRegister(31), IrRegister(2), IrRegister(3)],
             id=gen.next(),
         )
     )
@@ -176,6 +176,54 @@ def test_compile_f64_function_with_typed_signature() -> None:
     )
 
     assert _runtime_result(module, "add_real", [1.25, 2.5]) == [3.75]
+
+
+def test_compile_f64_function_can_call_i32_function() -> None:
+    gen = IDGenerator()
+    program = IrProgram(entry_label="_fn_real_from_double")
+    program.add_instruction(
+        IrInstruction(IrOp.LABEL, [IrLabel("_fn_real_from_double")], id=-1)
+    )
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(2), IrImmediate(7)], id=gen.next())
+    )
+    program.add_instruction(
+        IrInstruction(IrOp.CALL, [IrLabel("_fn_double")], id=gen.next())
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.F64_FROM_I32,
+            [IrRegister(31), IrRegister(1)],
+            id=gen.next(),
+        )
+    )
+    program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+    program.add_instruction(
+        IrInstruction(IrOp.LABEL, [IrLabel("_fn_double")], id=-1)
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.ADD,
+            [IrRegister(1), IrRegister(2), IrRegister(2)],
+            id=gen.next(),
+        )
+    )
+    program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+
+    module = IrToWasmCompiler().compile(
+        program,
+        function_signatures=[
+            FunctionSignature(
+                label="_fn_real_from_double",
+                param_count=0,
+                export_name="real_from_double",
+                result_types=(ValueType.F64,),
+            ),
+            FunctionSignature(label="_fn_double", param_count=1),
+        ],
+    )
+
+    assert _runtime_result(module, "real_from_double", []) == [14.0]
 
 
 def test_compile_f64_memory_load_store() -> None:
@@ -206,7 +254,7 @@ def test_compile_f64_memory_load_store() -> None:
     program.add_instruction(
         IrInstruction(
             IrOp.LOAD_F64,
-            [IrRegister(1), IrRegister(2), IrRegister(3)],
+            [IrRegister(31), IrRegister(2), IrRegister(3)],
             id=gen.next(),
         )
     )

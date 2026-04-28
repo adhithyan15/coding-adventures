@@ -703,6 +703,31 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
 
+    def test_real_procedure_parameter_accepts_integer_return_actual(self) -> None:
+        result = compile_source(
+            "begin integer result; real y; "
+            "procedure invoke(f); real f; procedure f; "
+            "begin y := f(2); if y = 4.0 then result := 1 else result := 0 end; "
+            "integer procedure twice(x); value x; integer x; "
+            "begin twice := x * 2 end; "
+            "invoke(twice) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
+
+    def test_real_procedure_can_call_integer_procedure(self) -> None:
+        result = compile_source(
+            "begin integer result; real y; "
+            "integer procedure twice(x); value x; integer x; "
+            "begin twice := x * 2 end; "
+            "real procedure wrap(x); value x; integer x; "
+            "begin wrap := twice(x) end; "
+            "y := wrap(2); "
+            "if y = 4.0 then result := 1 else result := 0 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
+
     def test_value_typed_procedure_parameter_expression_call_returns_real(self) -> None:
         result = compile_source(
             "begin integer result; real y; "

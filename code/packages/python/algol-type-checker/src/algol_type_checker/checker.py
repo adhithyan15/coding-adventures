@@ -2344,6 +2344,8 @@ class AlgolTypeChecker:
         expected_type: str,
         actual_type: str,
     ) -> bool:
+        if expected_type == REAL and actual_type == INTEGER:
+            return True
         return expected_type == actual_type
 
     def _resolve_builtin_procedure(
