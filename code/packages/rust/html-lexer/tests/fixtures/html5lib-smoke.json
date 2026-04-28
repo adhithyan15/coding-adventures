@@ -463,6 +463,20 @@
         "EOF"
       ],
       "diagnostics": []
+    },
+    {
+      "id": "html5lib-smoke-38",
+      "description": "nested comment opener reports tokenizer error",
+      "input": "Before<!--a <!-- b -->After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=a <!-- b )",
+        "Text(data=After)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "nested-comment"
+      ]
     }
   ],
   "skipped": []

@@ -473,6 +473,18 @@ id = "comment_start_dash"
 id = "comment"
 
 [[states]]
+id = "comment_less_than_sign"
+
+[[states]]
+id = "comment_less_than_sign_bang"
+
+[[states]]
+id = "comment_less_than_sign_bang_dash"
+
+[[states]]
+id = "comment_less_than_sign_bang_dash_dash"
+
+[[states]]
 id = "comment_end_dash"
 
 [[states]]
@@ -4381,6 +4393,12 @@ actions = ["append_comment(current)"]
 
 [[transitions]]
 from = "comment"
+matcher = { literal = "<" }
+to = "comment_less_than_sign"
+actions = ["append_comment(<)"]
+
+[[transitions]]
+from = "comment"
 matcher = { literal = "-" }
 to = "comment_end_dash"
 
@@ -4396,6 +4414,91 @@ from = "comment"
 matcher = { anything = true }
 to = "comment"
 actions = ["append_comment(current)"]
+
+[[transitions]]
+from = "comment_less_than_sign"
+matcher = { literal = "!" }
+to = "comment_less_than_sign_bang"
+actions = ["append_comment(!)"]
+
+[[transitions]]
+from = "comment_less_than_sign"
+matcher = { literal = "<" }
+to = "comment_less_than_sign"
+actions = ["append_comment(<)"]
+
+[[transitions]]
+from = "comment_less_than_sign"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(eof-in-comment)", "emit_current_token", "emit(EOF)"]
+
+[[transitions]]
+from = "comment_less_than_sign"
+matcher = { anything = true }
+to = "comment"
+consume = false
+
+[[transitions]]
+from = "comment_less_than_sign_bang"
+matcher = { literal = "-" }
+to = "comment_less_than_sign_bang_dash"
+
+[[transitions]]
+from = "comment_less_than_sign_bang"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(eof-in-comment)", "emit_current_token", "emit(EOF)"]
+
+[[transitions]]
+from = "comment_less_than_sign_bang"
+matcher = { anything = true }
+to = "comment"
+consume = false
+
+[[transitions]]
+from = "comment_less_than_sign_bang_dash"
+matcher = { literal = "-" }
+to = "comment_less_than_sign_bang_dash_dash"
+
+[[transitions]]
+from = "comment_less_than_sign_bang_dash"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-comment)",
+  "append_comment(-)",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "comment_less_than_sign_bang_dash"
+matcher = { anything = true }
+to = "comment_end_dash"
+consume = false
+
+[[transitions]]
+from = "comment_less_than_sign_bang_dash_dash"
+matcher = { literal = ">" }
+to = "comment_end"
+consume = false
+
+[[transitions]]
+from = "comment_less_than_sign_bang_dash_dash"
+matcher = { eof = true }
+to = "comment_end"
+consume = false
+
+[[transitions]]
+from = "comment_less_than_sign_bang_dash_dash"
+matcher = { anything = true }
+to = "comment_end"
+consume = false
+actions = ["parse_error(nested-comment)"]
 
 [[transitions]]
 from = "comment_end_dash"

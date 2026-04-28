@@ -413,6 +413,18 @@
         ["Character", "After"],
         ["EndTag", "p"]
       ]
+    },
+    {
+      "description": "nested comment opener reports tokenizer error",
+      "input": "Before<!--a <!-- b -->After",
+      "output": [
+        ["Character", "Before"],
+        ["Comment", "a <!-- b "],
+        ["Character", "After"]
+      ],
+      "errors": [
+        {"code": "nested-comment", "line": 1, "col": 17}
+      ]
     }
   ]
 }

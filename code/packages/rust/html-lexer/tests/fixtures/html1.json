@@ -79,6 +79,20 @@
       ]
     },
     {
+      "id": "comment-nested-opener-recovery",
+      "description": "Nested-looking <!-- inside a comment remains comment data and reports nested-comment",
+      "input": "Before<!--a <!-- b -->After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=a <!-- b )",
+        "Text(data=After)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "nested-comment"
+      ]
+    },
+    {
       "id": "mosaic-title-rcdata-end-tag",
       "description": "Seeded title RCDATA context emits the matching end tag",
       "input": "Hello</title>",
