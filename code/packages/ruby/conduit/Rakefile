@@ -1,0 +1,51 @@
+# frozen_string_literal: true
+
+require "rake/testtask"
+require "rbconfig"
+require_relative "ext/conduit_native/build_config"
+
+DLEXT = RbConfig::CONFIG["DLEXT"]
+EXT_DIR = File.expand_path("ext/conduit_native", __dir__)
+LIB_DIR = File.expand_path("lib", __dir__)
+
+CARGO_LIB = case RbConfig::CONFIG["host_os"]
+            when /darwin/
+              "libconduit_native.dylib"
+            when /mingw|mswin|cygwin/
+              "conduit_native.dll"
+            else
+              "libconduit_native.so"
+            end
+
+TARGET = "conduit_native.#{DLEXT}"
+
+desc "Compile the Rust native extension"
+task :compile do
+  cd EXT_DIR do
+    sh(*ConduitNativeBuildConfig.cargo_build_command)
+  end
+
+  src = File.join(ConduitNativeBuildConfig.target_release_dir(EXT_DIR), CARGO_LIB)
+  dst = File.join(LIB_DIR, TARGET)
+  mkdir_p LIB_DIR
+  cp src, dst
+  puts "Installed #{TARGET} to lib/"
+end
+
+Rake::TestTask.new(:test) do |t|
+  t.libs << "test"
+  t.libs << "lib"
+  t.test_files = FileList["test/**/*_test.rb"]
+end
+
+task test: :compile
+
+desc "Remove build artifacts"
+task :clean do
+  cd EXT_DIR do
+    sh(*ConduitNativeBuildConfig.cargo_clean_command) if File.exist?("Cargo.toml")
+  end
+  rm_f Dir[File.join(LIB_DIR, "conduit_native.*")]
+end
+
+task default: :test

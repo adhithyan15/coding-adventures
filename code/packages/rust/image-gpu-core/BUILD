@@ -1,0 +1,1 @@
+cargo test -p image-gpu-core -- --nocapture

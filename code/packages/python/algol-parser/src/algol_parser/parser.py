@@ -204,6 +204,8 @@ def parse_algol(source: str, version: str = "algol60") -> ASTNode:
     Declaration node types:
 
     - ``type_decl``       — ``integer x, y, z``
+    - ``own_decl``        — ``own integer counter``
+    - ``own_array_decl``  — ``own integer array A[1:10]``
     - ``array_decl``      — ``array A[1:10]``
     - ``switch_decl``     — ``switch s := label1, label2``
     - ``procedure_decl``  — ``procedure p(x); ...``

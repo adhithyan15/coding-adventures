@@ -26,7 +26,6 @@ Test coverage plan (from spec IR01):
 from __future__ import annotations
 
 import pytest
-
 from compiler_ir import (
     IrImmediate,
     IrInstruction,
@@ -36,7 +35,13 @@ from compiler_ir import (
     IrRegister,
 )
 from ge225_simulator import GE225Simulator
-from ir_to_ge225_compiler import CodeGenError, CompileResult, compile_to_ge225, validate_for_ge225
+
+from ir_to_ge225_compiler import (
+    CodeGenError,
+    CompileResult,
+    compile_to_ge225,
+    validate_for_ge225,
+)
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -942,5 +947,187 @@ class TestValidateForGe225:
         """The error must say 'pre-flight' (raised by the validator, not mid-
         codegen) so callers know the binary is still clean."""
         program = _prog(_instr(IrOp.LOAD_BYTE, _reg(0), _reg(1), _imm(0)))
+        with pytest.raises(CodeGenError, match="pre-flight"):
+            compile_to_ge225(program)
+
+
+# ---------------------------------------------------------------------------
+# Oct IR compatibility — explicit rejection tests
+# ---------------------------------------------------------------------------
+#
+# Oct compiles to a general-purpose IR that targets the Intel 8008 and
+# cross-platform backends (WASM, JVM, CLR).  The GE-225 V1 backend cannot
+# execute Oct IR because:
+#
+#   1. Oct always emits CALL / RET (function calls are in every Oct program;
+#      the entry stub is CALL _fn_main … HALT).
+#   2. Oct emits AND, OR, XOR, NOT for bitwise operations (the Intel 8008
+#      has native bitwise instructions; the GE-225 has none of these).
+#   3. Oct emits LOAD_BYTE / STORE_BYTE / LOAD_ADDR for static variables
+#      (the GE-225 is word-addressed with no byte access semantics).
+#
+# These tests verify that validate_for_ge225() and compile_to_ge225()
+# explicitly reject representative Oct IR patterns, ensuring that any attempt
+# to route Oct programs through the GE-225 backend fails loudly at compile
+# time rather than producing a silently wrong binary.
+# ---------------------------------------------------------------------------
+
+
+class TestOctIrRejected:
+    """Verify that Oct-emitted IR opcodes are rejected by the GE-225 backend.
+
+    Each test constructs a minimal IrProgram that contains an opcode Oct uses
+    but the GE-225 V1 backend does not support.  The validator must return a
+    non-empty error list, and compile_to_ge225 must raise CodeGenError.
+    """
+
+    def test_call_rejected(self) -> None:
+        """CALL is always emitted by Oct's entry stub (CALL _fn_main).
+
+        Oct's _start always contains CALL _fn_main.  Every single Oct program
+        produces a CALL instruction.  The GE-225 V1 backend cannot handle
+        subroutine calls (no hardware stack / return-address register), so
+        CALL is not in _GE225_SUPPORTED_OPCODES.
+        """
+        program = _prog(
+            _instr(IrOp.LABEL,    IrLabel("_start")),
+            _instr(IrOp.LOAD_IMM, _reg(0), _imm(0)),
+            _instr(IrOp.CALL,     IrLabel("_fn_main")),
+            _instr(IrOp.HALT),
+        )
+        errors = validate_for_ge225(program)
+        assert errors, "CALL should be rejected by GE-225 validator"
+        assert any("CALL" in e for e in errors)
+
+        with pytest.raises(CodeGenError, match="pre-flight"):
+            compile_to_ge225(program)
+
+    def test_ret_rejected(self) -> None:
+        """RET is emitted at the end of every Oct function body.
+
+        Every Oct function ends with RET.  The GE-225 has no return
+        instruction; it uses indirect BRU for subroutine returns, which the
+        V1 backend does not implement.
+        """
+        program = _prog(
+            _instr(IrOp.LABEL, IrLabel("_fn_main")),
+            _instr(IrOp.RET),
+        )
+        errors = validate_for_ge225(program)
+        assert errors, "RET should be rejected by GE-225 validator"
+        assert any("RET" in e for e in errors)
+
+    def test_and_rejected(self) -> None:
+        """AND (register-register) is emitted for Oct's bitwise & operator.
+
+        Oct supports bitwise & on u8 values.  The GE-225 has no register-
+        register AND instruction (only AND_IMM 1 for parity extraction is
+        implemented in V1).
+        """
+        program = _prog(
+            _instr(IrOp.LABEL, IrLabel("_start")),
+            _instr(IrOp.AND, _reg(2), _reg(1), _reg(3)),
+            _instr(IrOp.HALT),
+        )
+        errors = validate_for_ge225(program)
+        assert errors, "AND should be rejected by GE-225 validator"
+
+    def test_or_rejected(self) -> None:
+        """OR is emitted for Oct's bitwise | operator.
+
+        The GE-225 has no OR instruction of any kind.
+        """
+        program = _prog(
+            _instr(IrOp.LABEL, IrLabel("_start")),
+            _instr(IrOp.OR, _reg(2), _reg(1), _reg(3)),
+            _instr(IrOp.HALT),
+        )
+        errors = validate_for_ge225(program)
+        assert errors, "OR should be rejected by GE-225 validator"
+
+    def test_xor_rejected(self) -> None:
+        """XOR is emitted for Oct's bitwise ^ operator.
+
+        The GE-225 has no XOR instruction.
+        """
+        program = _prog(
+            _instr(IrOp.LABEL, IrLabel("_start")),
+            _instr(IrOp.XOR, _reg(2), _reg(1), _reg(3)),
+            _instr(IrOp.HALT),
+        )
+        errors = validate_for_ge225(program)
+        assert errors, "XOR should be rejected by GE-225 validator"
+
+    def test_not_rejected(self) -> None:
+        """NOT is emitted for Oct's bitwise ~ operator.
+
+        The GE-225 has no NOT instruction.
+        """
+        program = _prog(
+            _instr(IrOp.LABEL, IrLabel("_start")),
+            _instr(IrOp.NOT, _reg(2), _reg(1)),
+            _instr(IrOp.HALT),
+        )
+        errors = validate_for_ge225(program)
+        assert errors, "NOT should be rejected by GE-225 validator"
+
+    def test_load_byte_rejected(self) -> None:
+        """LOAD_BYTE is emitted for Oct static variable reads.
+
+        Oct's static keyword allocates byte-sized storage.  Reading a static
+        emits LOAD_ADDR + LOAD_BYTE.  The GE-225 is word-addressed; there is
+        no byte-read instruction.
+        """
+        program = _prog(
+            _instr(IrOp.LABEL,     IrLabel("_start")),
+            _instr(IrOp.LOAD_BYTE, _reg(1), _reg(2)),
+            _instr(IrOp.HALT),
+        )
+        errors = validate_for_ge225(program)
+        assert errors, "LOAD_BYTE should be rejected by GE-225 validator"
+
+    def test_store_byte_rejected(self) -> None:
+        """STORE_BYTE is emitted for Oct static variable writes.
+
+        Writing a static variable emits STORE_BYTE.  The GE-225 has no
+        byte-write instruction.
+        """
+        program = _prog(
+            _instr(IrOp.LABEL,      IrLabel("_start")),
+            _instr(IrOp.STORE_BYTE, _reg(1), _reg(2)),
+            _instr(IrOp.HALT),
+        )
+        errors = validate_for_ge225(program)
+        assert errors, "STORE_BYTE should be rejected by GE-225 validator"
+
+    def test_minimal_oct_program_ir_rejected(self) -> None:
+        """A minimal Oct 'fn main() {}' IR is rejected by the GE-225 backend.
+
+        Even the simplest possible Oct program — fn main() { } — produces:
+
+            LABEL _start
+            LOAD_IMM v0, 0
+            CALL _fn_main
+            HALT
+            LABEL _fn_main
+            RET
+
+        Both CALL and RET are in this program, and both are unsupported.
+        The validator must report at least those two errors.
+        """
+        program = IrProgram(entry_label="_start")
+        program.add_instruction(_instr(IrOp.LABEL,    IrLabel("_start")))
+        program.add_instruction(_instr(IrOp.LOAD_IMM, _reg(0), _imm(0)))
+        program.add_instruction(_instr(IrOp.CALL,     IrLabel("_fn_main")))
+        program.add_instruction(_instr(IrOp.HALT))
+        program.add_instruction(_instr(IrOp.LABEL,    IrLabel("_fn_main")))
+        program.add_instruction(_instr(IrOp.RET))
+
+        errors = validate_for_ge225(program)
+        assert errors, "Minimal Oct IR must be rejected by GE-225 validator"
+        opcodes_mentioned = " ".join(errors)
+        assert "CALL" in opcodes_mentioned
+        assert "RET" in opcodes_mentioned
+
         with pytest.raises(CodeGenError, match="pre-flight"):
             compile_to_ge225(program)

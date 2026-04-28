@@ -1,0 +1,39 @@
+# Parser grammar for a focused Mermaid flowchart subset
+# @version 1
+#
+# This grammar is intentionally narrow. The goal is to prove the shared
+# diagram pipeline:
+#
+#   Mermaid source
+#     -> mermaid-parser
+#     -> GraphDiagram
+#     -> diagram-layout-graph
+#     -> diagram-to-paint
+#     -> paint-metal
+#     -> PNG
+#
+# Supported forms:
+#   flowchart LR
+#   graph TD
+#   A[Start]
+#   A --> B
+#   A -->|yes| B{Ship?}
+#   A --> B --> C
+
+document = { terminator } header [ terminators statement { terminators statement } ] { terminator } ;
+
+header = ( "flowchart" | "graph" ) [ DIRECTION ] ;
+
+statement = edge_stmt | node_stmt ;
+
+node_stmt = node_ref ;
+
+edge_stmt = node_ref edge_segment { edge_segment } ;
+edge_segment = edge_op [ EDGE_LABEL ] node_ref ;
+edge_op = ARROW | LINE ;
+
+node_ref = NAME [ node_shape ] ;
+node_shape = CIRCLE | ROUND | RECT | DIAMOND ;
+
+terminators = terminator { terminator } ;
+terminator = NEWLINE | SEMICOLON ;

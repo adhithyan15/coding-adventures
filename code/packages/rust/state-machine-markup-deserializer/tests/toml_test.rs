@@ -1,8 +1,8 @@
 use std::collections::{HashMap, HashSet};
 
 use state_machine::{
-    MachineKind, PDATransition, PushdownAutomaton, StateDefinition, StateMachineDefinition,
-    TransitionDefinition, DFA, EPSILON, NFA,
+    MachineKind, MatcherDefinition, PDATransition, PushdownAutomaton, StateDefinition,
+    StateMachineDefinition, TransitionDefinition, DFA, EPSILON, NFA,
 };
 use state_machine_markup_deserializer::{
     from_states_toml, validate_definition, StateMachineMarkupError, STATE_MACHINE_MARKUP_FORMAT,
@@ -31,6 +31,10 @@ initial = true
     )
 }
 
+const HTML_SKELETON_LEXER_TOML: &str =
+    include_str!("../../html-lexer/html-skeleton.lexer.states.toml");
+const HTML1_LEXER_TOML: &str = include_str!("../../html-lexer/html1.lexer.states.toml");
+
 #[test]
 fn dfa_serializer_output_round_trips_through_deserializer() {
     let dfa = DFA::new(
@@ -58,6 +62,121 @@ fn dfa_serializer_output_round_trips_through_deserializer() {
 
     assert_eq!(parsed.to_states_toml(), toml);
     assert!(imported.accepts(&["coin"]));
+}
+
+#[test]
+fn lexer_profile_html_skeleton_toml_parses_into_typed_definition() {
+    let definition = from_states_toml(HTML_SKELETON_LEXER_TOML).unwrap();
+
+    assert_eq!(definition.profile.as_deref(), Some("lexer/v1"));
+    assert_eq!(definition.version.as_deref(), Some("0.1.0"));
+    assert_eq!(
+        definition.runtime_min.as_deref(),
+        Some("state-machine-tokenizer/0.1")
+    );
+    assert_eq!(definition.done.as_deref(), Some("done"));
+    assert_eq!(
+        definition
+            .tokens
+            .iter()
+            .map(|token| token.name.as_str())
+            .collect::<Vec<_>>(),
+        vec!["Text", "StartTag", "EndTag", "EOF"]
+    );
+    assert_eq!(
+        definition
+            .registers
+            .iter()
+            .map(|register| (register.id.as_str(), register.type_name.as_str()))
+            .collect::<Vec<_>>(),
+        vec![("text_buffer", "string"), ("current_token", "token?")]
+    );
+    assert_eq!(definition.fixtures.len(), 2);
+
+    let first = &definition.transitions[0];
+    assert_eq!(first.from, "data");
+    assert_eq!(first.on, None);
+    assert_eq!(
+        first.matcher,
+        Some(MatcherDefinition::Literal("<".to_string()))
+    );
+
+    let eof = definition
+        .transitions
+        .iter()
+        .find(|transition| transition.matcher == Some(MatcherDefinition::Eof))
+        .unwrap();
+    assert_eq!(eof.on, None);
+    assert!(!eof.consume);
+}
+
+#[test]
+fn lexer_profile_html1_toml_parses_into_typed_definition() {
+    let definition = from_states_toml(HTML1_LEXER_TOML).unwrap();
+
+    assert_eq!(definition.name, "html1-lexer");
+    assert_eq!(definition.profile.as_deref(), Some("lexer/v1"));
+    assert_eq!(
+        definition
+            .tokens
+            .iter()
+            .map(|token| token.name.as_str())
+            .collect::<Vec<_>>(),
+        vec!["Text", "StartTag", "EndTag", "Comment", "Doctype", "EOF"]
+    );
+    assert!(definition
+        .registers
+        .iter()
+        .any(|register| register.id == "temporary_buffer"));
+    assert!(definition.transitions.iter().any(|transition| transition
+        .actions
+        .iter()
+        .any(|action| action == "create_comment")));
+    assert!(definition.transitions.iter().any(|transition| transition
+        .actions
+        .iter()
+        .any(|action| action == "create_doctype")));
+    assert!(definition.states.iter().any(|state| state.id == "rcdata"));
+    assert!(definition.transitions.iter().any(|transition| transition
+        .actions
+        .iter()
+        .any(|action| action == "emit_rcdata_end_tag_or_text")));
+    assert_eq!(definition.fixtures.len(), 5);
+}
+
+#[test]
+fn lexer_profile_rejects_unknown_input_classes_and_tokens() {
+    let source = r#"
+format = "state-machine/v1"
+profile = "lexer/v1"
+name = "bad-lexer"
+kind = "transducer"
+initial = "data"
+
+[[tokens]]
+name = "Text"
+
+[[states]]
+id = "data"
+initial = true
+
+[[states]]
+id = "done"
+final = true
+
+[[transitions]]
+from = "data"
+matcher = { class = "missing" }
+to = "done"
+actions = ["emit(EOF)"]
+"#;
+
+    assert_eq!(
+        from_states_toml(source).unwrap_err(),
+        StateMachineMarkupError::UnknownInputClass {
+            id: "missing".to_string()
+        }
+    );
 }
 
 #[test]
@@ -315,7 +434,7 @@ format = "state-machine/v1"
 name = "guarded"
 kind = "dfa"
 
-[[guards]]
+[[modes]]
 id = "never"
 "#;
     assert!(matches!(

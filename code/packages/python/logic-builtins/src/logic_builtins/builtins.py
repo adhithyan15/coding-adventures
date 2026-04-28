@@ -88,6 +88,7 @@ __all__ = [
     "fd_mulo",
     "fd_neqo",
     "fd_subo",
+    "fd_sumo",
     "failo",
     "FiniteDomainConstraint",
     "FiniteDomainStore",
@@ -190,6 +191,7 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("fd_mulo", 3),
     ("fd_neqo", 2),
     ("fd_subo", 3),
+    ("fd_sumo", 2),
     ("failo", 0),
     ("findallo", 3),
     ("forallo", 2),
@@ -483,6 +485,9 @@ def _fd_tuple_satisfies(
     if constraint.operator == "mul":
         left, right, result = values
         return left * right == result
+    if constraint.operator == "sum":
+        *terms_value, result = values
+        return sum(terms_value) == result
     if constraint.operator == "all_different":
         return len(set(values)) == len(values)
     msg = f"unknown finite-domain constraint {constraint.operator}"
@@ -696,6 +701,52 @@ def _revise_arithmetic_constraint_domains(
     return updated, changed
 
 
+def _revise_sum_constraint_domains(
+    values: tuple[LogicVar | int, ...],
+    value_domains: tuple[frozenset[int], ...],
+    domains: dict[LogicVar, frozenset[int]],
+) -> tuple[dict[LogicVar, frozenset[int]] | None, bool]:
+    """Prune sum domains by checking each candidate against interval bounds."""
+
+    term_domains = value_domains[:-1]
+    result_domain = value_domains[-1]
+    updated = dict(domains)
+    changed = False
+    term_mins = tuple(min(domain) for domain in term_domains)
+    term_maxes = tuple(max(domain) for domain in term_domains)
+    min_total = sum(term_mins)
+    max_total = sum(term_maxes)
+
+    for index, value in enumerate(values):
+        if not isinstance(value, LogicVar):
+            continue
+        current_domain = value_domains[index]
+        if index == len(values) - 1:
+            allowed = frozenset(
+                candidate
+                for candidate in current_domain
+                if min_total <= candidate <= max_total
+            )
+        else:
+            other_min = min_total - term_mins[index]
+            other_max = max_total - term_maxes[index]
+            allowed = frozenset(
+                candidate
+                for candidate in current_domain
+                if any(
+                    other_min <= result - candidate <= other_max
+                    for result in result_domain
+                )
+            )
+        if not allowed:
+            return None, False
+        if allowed != current_domain:
+            updated[value] = allowed
+            changed = True
+
+    return updated, changed
+
+
 def _revise_all_different_domains(
     values: tuple[LogicVar | int, ...],
     value_domains: tuple[frozenset[int] | None, ...],
@@ -778,6 +829,8 @@ def _revise_constraint_domains(
             known_domains,
             domains,
         )
+    if constraint.operator == "sum":
+        return _revise_sum_constraint_domains(values, known_domains, domains)
 
     msg = f"unknown finite-domain constraint {constraint.operator}"
     raise ValueError(msg)
@@ -1125,6 +1178,36 @@ def fd_mulo(left: object, right: object, result: object) -> GoalExpr:
     """Constrain three finite-domain terms so ``left * right == result``."""
 
     return _fd_constrainto("mul", left, right, result)
+
+
+def _sum_terms_goal(terms_value: tuple[Term, ...], result: object) -> GoalExpr:
+    """Create a sum goal for already materialized finite-domain terms."""
+
+    return _fd_constrainto("sum", *terms_value, result)
+
+
+def fd_sumo(terms_value: object, result: object) -> GoalExpr:
+    """Constrain finite-domain terms so their sum equals ``result``."""
+
+    if isinstance(terms_value, list | tuple):
+        return _sum_terms_goal(tuple(terms_value), result)
+
+    def run_logic_list(
+        program_value: Program,
+        state: State,
+        args: NativeArgs,
+    ) -> Iterator[State]:
+        terms_term, result_term = args
+        items = _proper_list_items(_reified(terms_term, state))
+        if items is None:
+            return
+        yield from solve_from(
+            program_value,
+            _sum_terms_goal(tuple(items), result_term),
+            state,
+        )
+
+    return native_goal(run_logic_list, terms_value, result)
 
 
 def _all_different_terms_goal(terms_value: tuple[Term, ...]) -> GoalExpr:

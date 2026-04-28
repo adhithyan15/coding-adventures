@@ -1,0 +1,5 @@
+[package]
+name = "cuda-compute"
+version = "0.1.0"
+edition = "2021"
+description = "G09 Layer 4B: Real CUDA GPU compute via dynamically-loaded libcuda + NVRTC — zero link-time NVIDIA dependency"

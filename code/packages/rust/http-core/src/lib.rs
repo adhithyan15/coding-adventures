@@ -9,6 +9,54 @@ use std::fmt;
 
 pub const VERSION: &str = "0.1.0";
 
+/// A parsed route segment used for path matching.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum RouteSegment {
+    Literal(String),
+    Param(String),
+}
+
+/// A generic HTTP path pattern such as `/hello/:name`.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RoutePattern {
+    pub segments: Vec<RouteSegment>,
+}
+
+impl RoutePattern {
+    pub fn parse(pattern: &str) -> Self {
+        Self {
+            segments: split_path_segments(pattern)
+                .into_iter()
+                .map(|segment| {
+                    if let Some(name) = segment.strip_prefix(':') {
+                        RouteSegment::Param(name.to_string())
+                    } else {
+                        RouteSegment::Literal(segment.to_string())
+                    }
+                })
+                .collect(),
+        }
+    }
+
+    pub fn match_path(&self, path: &str) -> Option<Vec<(String, String)>> {
+        let path_segments = split_path_segments(path);
+        if path_segments.len() != self.segments.len() {
+            return None;
+        }
+
+        let mut params = Vec::new();
+        for (segment, actual) in self.segments.iter().zip(path_segments) {
+            match segment {
+                RouteSegment::Literal(expected) if expected == actual => {}
+                RouteSegment::Literal(_) => return None,
+                RouteSegment::Param(name) => params.push((name.clone(), actual.to_string())),
+            }
+        }
+
+        Some(params)
+    }
+}
+
 /// One HTTP header line, preserved in arrival order.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Header {
@@ -139,6 +187,15 @@ pub fn parse_content_type(headers: &[Header]) -> Option<(String, Option<String>)
     Some((media_type, charset))
 }
 
+/// Split an HTTP path or route pattern into slash-delimited segments.
+pub fn split_path_segments(path: &str) -> Vec<&str> {
+    if path == "/" {
+        return Vec::new();
+    }
+
+    path.split('/').filter(|segment| !segment.is_empty()).collect()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -205,5 +262,23 @@ mod tests {
             response.content_type(),
             Some(("application/json".into(), None))
         );
+    }
+
+    #[test]
+    fn route_pattern_matches_named_params() {
+        let pattern = RoutePattern::parse("/hello/:name");
+        assert_eq!(
+            pattern.match_path("/hello/Adhithya"),
+            Some(vec![("name".into(), "Adhithya".into())])
+        );
+        assert_eq!(pattern.match_path("/hello"), None);
+        assert_eq!(pattern.match_path("/goodbye/Adhithya"), None);
+    }
+
+    #[test]
+    fn route_pattern_handles_root_paths() {
+        let pattern = RoutePattern::parse("/");
+        assert_eq!(pattern.match_path("/"), Some(Vec::new()));
+        assert_eq!(pattern.match_path("/extra"), None);
     }
 }

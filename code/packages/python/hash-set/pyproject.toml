@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "coding-adventures-hash-set"
+version = "0.1.0"
+description = "Persistent hash set with set algebra helpers"
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "Adhithya Rajasekaran" }]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4", "mypy>=1.10"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/hash_set"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=hash_set --cov-report=term-missing --cov-fail-under=95"
+
+[tool.coverage.run]
+source = ["src/hash_set"]

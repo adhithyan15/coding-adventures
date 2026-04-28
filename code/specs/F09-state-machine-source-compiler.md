@@ -189,17 +189,23 @@ Rust end-to-end completion means the compiler test suite proves this full
 build-time chain:
 
 ```text
-manual DFA/NFA/PDA
+manual DFA/NFA/PDA/transducer
   -> StateMachineDefinition
   -> generated Rust module
   -> temporary Rust wrapper crate
   -> cargo test executes the generated constructors
-  -> executable automata accept/reject expected inputs
+  -> executable automata accept/reject expected inputs or emit expected effects
 ```
 
 The generated module itself still contains only typed table data and
 constructors. Test harnesses may write temporary crates to prove linkability,
 but the source compiler API remains file-format and file-system agnostic.
+
+For the first tokenizer-oriented Rust slice, transducer generation emits the
+same kind of typed table data as DFA/NFA/PDA generation, plus `actions` and
+`consume` fields on each transition. The generated constructor calls
+`EffectfulStateMachine::from_definition(...)`, so wrapper packages link static
+source and do not load tokenizer definitions from disk at runtime.
 
 ## Manual Machine Export Layer
 
@@ -284,6 +290,16 @@ and streaming input.
 
 ```text
 html1.tokenizer.states.toml -> generated tokenizer tables -> HtmlLexer wrapper
+```
+
+The Rust foundation starts with a smaller skeleton:
+
+```text
+manual html-skeleton transducer
+  -> StateMachineDefinition(actions, consume)
+  -> generated Rust module
+  -> EffectfulStateMachine
+  -> wrapper/interpreter emits Text, StartTag, EndTag, EOF tokens
 ```
 
 ### Example 6: WHATWG HTML Tokenizer

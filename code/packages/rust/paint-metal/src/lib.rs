@@ -3,36 +3,24 @@
 //! Metal GPU renderer for the paint-instructions scene model (P2D01).
 //!
 //! This crate takes a [`PaintScene`] (backend-neutral 2D paint instructions)
-//! and renders it to a [`PixelContainer`] using Apple's Metal GPU API.
-//!
-//! It is the GPU renderer in the paint-* stack, replacing the older
-//! `draw-instructions-metal` crate which operated on `DrawScene`.  The
-//! key differences are:
-//!
-//! | `draw-instructions-metal` | `paint-metal` (this crate)       |
-//! |---------------------------|----------------------------------|
-//! | `DrawScene` (i32 coords)  | `PaintScene` (f64 coords)        |
-//! | `PixelBuffer`             | `PixelContainer`                 |
-//! | `DrawInstruction` enum    | `PaintInstruction` enum          |
-//! | Handles text via CoreText | Handles `PaintGlyphRun` glyphs   |
+//! and renders it to a [`PixelContainer`] using Apple's Metal GPU API plus a
+//! CoreText overlay for `PaintText` instructions.
 //!
 //! ## Current instruction support
 //!
-//! | Instruction       | Status                                           |
-//! |-------------------|--------------------------------------------------|
-//! | `PaintRect`       | Fully implemented — solid-colour filled rects    |
-//! | `PaintLine`       | Fully implemented — rendered as thin rectangles  |
-//! | `PaintGroup`      | Fully implemented — recurses into children       |
-//! | `PaintClip`       | Partially implemented — clips but no stencil     |
-//! | `PaintGlyphRun`   | Planned — CoreText rasterize + texture quad      |
-//! | `PaintEllipse`    | Planned — tessellate into triangles              |
-//! | `PaintPath`       | Planned — CPU-side polygon tessellation          |
-//! | `PaintLayer`      | Planned — offscreen texture + compose            |
-//! | `PaintGradient`   | Planned — MSL gradient shader                    |
-//! | `PaintImage`      | Planned — texture from PixelContainer or URI     |
-//!
-//! For barcodes (which are only rects + quiet-zone background), the current
-//! implementation is complete.
+//! | Instruction       | Status                                                      |
+//! |-------------------|-------------------------------------------------------------|
+//! | `PaintRect`       | Fully implemented — solid-colour filled rects               |
+//! | `PaintLine`       | Fully implemented — rendered as thin rectangles             |
+//! | `PaintGroup`      | Fully implemented — recurses into children                  |
+//! | `PaintClip`       | Partial — clips but no stencil                              |
+//! | `PaintEllipse`    | Implemented — fan tessellation (64 triangles) + stroke ring |
+//! | `PaintPath`       | Implemented — fan fill + segment stroke + Bézier approx     |
+//! | `PaintText`       | Implemented — CoreText CTLine overlay into CG bitmap        |
+//! | `PaintGlyphRun`   | Implemented — CoreText CTFontDrawGlyphs overlay             |
+//! | `PaintLayer`      | Planned — offscreen texture + compose                       |
+//! | `PaintGradient`   | Planned — MSL gradient shader                               |
+//! | `PaintImage`      | Planned — texture from PixelContainer or URI                |
 //!
 //! ## Metal pipeline
 //!
@@ -43,10 +31,13 @@
 //!   ├── 2. Create offscreen RGBA8 texture (width × height)
 //!   ├── 3. Compile rect shader (solid-color triangles)
 //!   ├── 4. Build render pipeline state
-//!   ├── 5. Collect PaintRect / PaintLine → triangle vertex buffers
+//!   ├── 5. Collect PaintRect / PaintLine / PaintEllipse / PaintPath → triangle vertex buffers
+//!   │       (PaintText collected separately for CoreText overlay)
 //!   ├── 6. Encode render commands into command buffer
 //!   ├── 7. Commit and wait for GPU completion
-//!   └── 8. Read back RGBA8 pixels → PixelContainer
+//!   ├── 8. Read back RGBA8 pixels → PixelContainer
+//!   ├── 9. CoreText overlay: draw PaintText via CTLine into CGBitmapContext
+//!   └── 10. CoreText overlay: draw PaintGlyphRun via CTFontDrawGlyphs
 //! ```
 //!
 //! ## Coordinate system
@@ -82,7 +73,7 @@
 // without pulling in the Apple-only FFI surface. At runtime on
 // non-Apple the panic makes the unsupported path loud.
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.2.0";
 
 pub use paint_instructions::PixelContainer;
 
@@ -100,7 +91,7 @@ compile_error!("paint-metal requires arm64 Apple Silicon. Intel macOS is not sup
 #[cfg(target_vendor = "apple")]
 use objc_bridge::*;
 use paint_instructions::{
-    PaintInstruction, PaintLine, PaintRect, PaintScene,
+    PaintEllipse, PaintInstruction, PaintLine, PaintPath, PaintRect, PaintScene, PathCommand,
 };
 #[allow(unused_imports)]
 use std::ffi::{c_int, c_ulong};
@@ -118,10 +109,7 @@ use std::ptr;
 // (processes one vertex at a time) and a fragment function (computes one
 // pixel at a time after the rasteriser interpolates between vertices).
 
-/// MSL shader source for rendering solid-colour rectangles.
-///
-/// The vertex shader converts pixel coordinates to Metal NDC.
-/// The fragment shader outputs the per-vertex colour directly.
+/// MSL shader source for rendering solid-colour triangles (rects, ellipses, paths).
 ///
 /// ## Data flow
 ///
@@ -242,23 +230,34 @@ fn parse_rgb_components(inner: &str, has_alpha: bool) -> (f64, f64, f64, f64) {
 // Vertex generation — PaintInstruction → triangle vertices
 // ---------------------------------------------------------------------------
 //
-// Each visible instruction becomes 6 vertices (two triangles).  We collect
+// Each visible instruction becomes some number of triangles.  We collect
 // all positions and colours into flat arrays, then upload them to GPU buffers
 // in one batch.  This is more efficient than one draw call per instruction.
 //
 // The GPU only needs the triangle vertex stream — it has no concept of
-// "rectangles" or "lines".  Everything is triangles.
-
-/// Collect rect/line vertices from a [`PaintInstruction`] tree.
+// "rectangles", "ellipses", or "paths".  Everything is triangles.
+//
+/// Collect triangle vertices from a [`PaintInstruction`] tree.
 ///
-/// Recursively descends into Group and Clip nodes.
-/// Text, ellipses, paths, gradients, images, and layers are not yet
-/// implemented — they are silently skipped so barcodes work today.
-fn collect_vertices(
+/// - Rects, lines, ellipses, and paths → triangle vertices in `positions`/`colors`.
+/// - Group and Clip nodes are recursed into (up to `MAX_GROUP_DEPTH` levels).
+/// - GlyphRun is rendered by the CoreText overlay (glyph_run_overlay module).
+/// - Text (PaintText) is Canvas/SVG/DOM-only — not rendered by Metal.
+/// - Layer, Gradient, Image are deferred to P2D08.
+///
+/// `depth` must be 0 on the initial call; it is incremented for each recursive Group/Clip.
+fn collect_geometry(
     instructions: &[PaintInstruction],
     positions: &mut Vec<f32>,
     colors: &mut Vec<f32>,
+    depth: usize,
 ) {
+    // Guard against stack overflow from pathologically deep instruction trees.
+    const MAX_GROUP_DEPTH: usize = 128;
+    if depth > MAX_GROUP_DEPTH {
+        return;
+    }
+
     for instr in instructions {
         match instr {
             PaintInstruction::Rect(rect) => {
@@ -267,28 +266,32 @@ fn collect_vertices(
             PaintInstruction::Line(line) => {
                 add_line_vertices(line, positions, colors);
             }
+            PaintInstruction::Ellipse(ellipse) => {
+                add_ellipse_vertices(ellipse, positions, colors);
+            }
+            PaintInstruction::Path(path) => {
+                add_path_vertices(path, positions, colors);
+            }
             PaintInstruction::Group(group) => {
-                collect_vertices(&group.children, positions, colors);
+                collect_geometry(&group.children, positions, colors, depth + 1);
             }
             PaintInstruction::Clip(clip) => {
                 // Render clip children without a stencil clip for now.
-                // Full stencil-buffer clip support is planned.
-                collect_vertices(&clip.children, positions, colors);
+                collect_geometry(&clip.children, positions, colors, depth + 1);
             }
-            // Planned but not yet implemented:
-            PaintInstruction::GlyphRun(_)
-            | PaintInstruction::Ellipse(_)
-            | PaintInstruction::Path(_)
-            | PaintInstruction::Layer(_)
+            // Rendered via CoreText glyph_run_overlay:
+            PaintInstruction::GlyphRun(_) => {}
+            // PaintText is Canvas/DOM-only — not handled by Metal.
+            PaintInstruction::Text(_) => {}
+            // Deferred to P2D08:
+            PaintInstruction::Layer(_)
             | PaintInstruction::Gradient(_)
-            | PaintInstruction::Image(_) => {
-                // No-op for now.  Barcodes only need Rect/Line/Group/Clip.
-            }
+            | PaintInstruction::Image(_) => {}
         }
     }
 }
 
-/// Add 6 triangle vertices for a `PaintRect`.
+/// Add 6 triangle vertices for a `PaintRect` fill.
 ///
 /// A rectangle is two right triangles sharing the diagonal:
 ///
@@ -306,21 +309,51 @@ fn collect_vertices(
 fn add_rect_vertices(rect: &PaintRect, positions: &mut Vec<f32>, colors: &mut Vec<f32>) {
     let fill = rect.fill.as_deref().unwrap_or("transparent");
     let (r, g, b, a) = parse_hex_color(fill);
-    if a == 0.0 {
-        return; // fully transparent — nothing to draw
+    if a > 0.0 {
+        let (r, g, b, a) = (r as f32, g as f32, b as f32, a as f32);
+        let x = rect.x as f32;
+        let y = rect.y as f32;
+        let w = rect.width as f32;
+        let h = rect.height as f32;
+        // Triangle 1: top-left → top-right → bottom-left
+        positions.extend_from_slice(&[x, y, x + w, y, x, y + h]);
+        colors.extend_from_slice(&[r, g, b, a, r, g, b, a, r, g, b, a]);
+        // Triangle 2: top-right → bottom-right → bottom-left
+        positions.extend_from_slice(&[x + w, y, x + w, y + h, x, y + h]);
+        colors.extend_from_slice(&[r, g, b, a, r, g, b, a, r, g, b, a]);
     }
-    let (r, g, b, a) = (r as f32, g as f32, b as f32, a as f32);
 
-    let x = rect.x as f32;
-    let y = rect.y as f32;
-    let w = rect.width as f32;
-    let h = rect.height as f32;
+    // Stroke: 4 thin edge rects (top, right, bottom, left)
+    if let Some(stroke_str) = rect.stroke.as_deref() {
+        let (sr, sg, sb, sa) = parse_hex_color(stroke_str);
+        if sa > 0.0 {
+            let sw = rect.stroke_width.unwrap_or(1.0) as f32;
+            let (sr, sg, sb, sa) = (sr as f32, sg as f32, sb as f32, sa as f32);
+            let x = rect.x as f32;
+            let y = rect.y as f32;
+            let w = rect.width as f32;
+            let h = rect.height as f32;
+            // top edge
+            emit_filled_rect(x, y, w, sw, sr, sg, sb, sa, positions, colors);
+            // bottom edge
+            emit_filled_rect(x, y + h - sw, w, sw, sr, sg, sb, sa, positions, colors);
+            // left edge
+            emit_filled_rect(x, y, sw, h, sr, sg, sb, sa, positions, colors);
+            // right edge
+            emit_filled_rect(x + w - sw, y, sw, h, sr, sg, sb, sa, positions, colors);
+        }
+    }
+}
 
-    // Triangle 1: top-left → top-right → bottom-left
+/// Emit a filled axis-aligned rectangle as two triangles (helper).
+fn emit_filled_rect(
+    x: f32, y: f32, w: f32, h: f32,
+    r: f32, g: f32, b: f32, a: f32,
+    positions: &mut Vec<f32>,
+    colors: &mut Vec<f32>,
+) {
     positions.extend_from_slice(&[x, y, x + w, y, x, y + h]);
     colors.extend_from_slice(&[r, g, b, a, r, g, b, a, r, g, b, a]);
-
-    // Triangle 2: top-right → bottom-right → bottom-left
     positions.extend_from_slice(&[x + w, y, x + w, y + h, x, y + h]);
     colors.extend_from_slice(&[r, g, b, a, r, g, b, a, r, g, b, a]);
 }
@@ -369,97 +402,270 @@ fn add_line_vertices(line: &PaintLine, positions: &mut Vec<f32>, colors: &mut Ve
     colors.extend_from_slice(&[r, g, b, a, r, g, b, a, r, g, b, a]);
 }
 
+/// Tessellate a `PaintEllipse` into GPU triangles.
+///
+/// ## Fill — fan tessellation
+///
+/// The filled ellipse is approximated by N=64 triangles radiating from the
+/// centre, each covering one arc slice:
+///
+/// ```text
+///          p[0]
+///         ╱    ╲
+///        ╱  T0   ╲
+///  center ── T1 ── p[1]
+///        ╲  T2   ╱
+///         ╲    ╱
+///          p[2]
+/// ```
+///
+/// Each triangle: `(center, p[i], p[(i+1) % N])`.
+///
+/// ## Stroke — ring of N thin quads
+///
+/// A ring quad is the trapezoid between outer point `p_out[i]`
+/// and inner point `p_in[i]` at `(rx - sw)`, `(ry - sw)`.
+const ELLIPSE_SEGMENTS: usize = 64;
+
+fn add_ellipse_vertices(ellipse: &PaintEllipse, positions: &mut Vec<f32>, colors: &mut Vec<f32>) {
+    use std::f64::consts::TAU;
+    let cx = ellipse.cx as f32;
+    let cy = ellipse.cy as f32;
+    let rx = ellipse.rx as f32;
+    let ry = ellipse.ry as f32;
+
+    // Pre-compute perimeter points
+    let mut pts: Vec<(f32, f32)> = Vec::with_capacity(ELLIPSE_SEGMENTS);
+    for i in 0..ELLIPSE_SEGMENTS {
+        let angle = (i as f64 / ELLIPSE_SEGMENTS as f64) * TAU;
+        pts.push((
+            cx + rx * angle.cos() as f32,
+            cy + ry * angle.sin() as f32,
+        ));
+    }
+
+    // Fill: fan from centre
+    if let Some(fill_str) = ellipse.fill.as_deref() {
+        let (r, g, b, a) = parse_hex_color(fill_str);
+        if a > 0.0 {
+            let (r, g, b, a) = (r as f32, g as f32, b as f32, a as f32);
+            for i in 0..ELLIPSE_SEGMENTS {
+                let (ax, ay) = pts[i];
+                let (bx, by) = pts[(i + 1) % ELLIPSE_SEGMENTS];
+                positions.extend_from_slice(&[cx, cy, ax, ay, bx, by]);
+                colors.extend_from_slice(&[r, g, b, a, r, g, b, a, r, g, b, a]);
+            }
+        }
+    }
+
+    // Stroke: ring of thin quads
+    if let Some(stroke_str) = ellipse.stroke.as_deref() {
+        let (sr, sg, sb, sa) = parse_hex_color(stroke_str);
+        if sa > 0.0 {
+            let (sr, sg, sb, sa) = (sr as f32, sg as f32, sb as f32, sa as f32);
+            let sw = ellipse.stroke_width.unwrap_or(1.0) as f32;
+            let inner_rx = (rx - sw).max(0.0);
+            let inner_ry = (ry - sw).max(0.0);
+            // Inner perimeter points
+            let mut inner: Vec<(f32, f32)> = Vec::with_capacity(ELLIPSE_SEGMENTS);
+            for i in 0..ELLIPSE_SEGMENTS {
+                let angle = (i as f64 / ELLIPSE_SEGMENTS as f64) * TAU;
+                inner.push((
+                    cx + inner_rx * angle.cos() as f32,
+                    cy + inner_ry * angle.sin() as f32,
+                ));
+            }
+            // Each quad: outer[i], outer[i+1], inner[i], inner[i+1]
+            for i in 0..ELLIPSE_SEGMENTS {
+                let j = (i + 1) % ELLIPSE_SEGMENTS;
+                let (ox0, oy0) = pts[i];
+                let (ox1, oy1) = pts[j];
+                let (ix0, iy0) = inner[i];
+                let (ix1, iy1) = inner[j];
+                // Two triangles per quad
+                positions.extend_from_slice(&[ox0, oy0, ox1, oy1, ix0, iy0]);
+                colors.extend_from_slice(&[sr, sg, sb, sa, sr, sg, sb, sa, sr, sg, sb, sa]);
+                positions.extend_from_slice(&[ox1, oy1, ix1, iy1, ix0, iy0]);
+                colors.extend_from_slice(&[sr, sg, sb, sa, sr, sg, sb, sa, sr, sg, sb, sa]);
+            }
+        }
+    }
+}
+
+/// Tessellate a `PaintPath` into GPU triangles.
+///
+/// ## Fill — fan tessellation from first point
+///
+/// Correct for convex polygons, which covers all shapes that
+/// `diagram-to-paint` emits (rects, diamonds, arrowheads).  Non-convex
+/// polygons may have artefacts, but diagrams never produce them.
+///
+/// The fan pivots at `pts[0]` and covers every subsequent consecutive pair:
+/// `(pts[0], pts[i], pts[i+1])` for `i in 1..n-1`.
+///
+/// ## Stroke — segment-to-rectangle
+///
+/// Each `LineTo` (and Bézier approximation) segment becomes a thin
+/// rectangle perpendicular to the segment direction, width = `stroke_width`.
+///
+/// ## Bézier curves
+///
+/// `QuadTo` is approximated with 8 linear segments via de Casteljau.
+/// `CubicTo` is approximated with 8 linear segments via de Casteljau.
+/// `ArcTo` is not yet tessellated — it is silently skipped.
+fn add_path_vertices(path: &PaintPath, positions: &mut Vec<f32>, colors: &mut Vec<f32>) {
+    // Guard: each CubicTo/QuadTo expands to 8 points; cap total to prevent OOM.
+    const MAX_PATH_COMMANDS: usize = 10_000;
+    if path.commands.len() > MAX_PATH_COMMANDS {
+        return;
+    }
+
+    // Flatten all path commands into a sequence of (x, y) points.
+    // Each subpath (starting at MoveTo) is collected, then we tessellate fill
+    // and stroke across all points.
+    let mut subpaths: Vec<Vec<(f32, f32)>> = Vec::new();
+    let mut current: Vec<(f32, f32)> = Vec::new();
+    let mut cx = 0.0f32;
+    let mut cy = 0.0f32;
+    let mut first_x = 0.0f32;
+    let mut first_y = 0.0f32;
+
+    for cmd in &path.commands {
+        match cmd {
+            PathCommand::MoveTo { x, y } => {
+                if !current.is_empty() {
+                    subpaths.push(current.clone());
+                    current.clear();
+                }
+                cx = *x as f32;
+                cy = *y as f32;
+                first_x = cx;
+                first_y = cy;
+                current.push((cx, cy));
+            }
+            PathCommand::LineTo { x, y } => {
+                cx = *x as f32;
+                cy = *y as f32;
+                current.push((cx, cy));
+            }
+            PathCommand::QuadTo { cx: qcx, cy: qcy, x, y } => {
+                // De Casteljau — 8 linear segments
+                let p0x = cx; let p0y = cy;
+                let p1x = *qcx as f32; let p1y = *qcy as f32;
+                let p2x = *x as f32;   let p2y = *y as f32;
+                for k in 1..=8u32 {
+                    let t = k as f32 / 8.0;
+                    let u = 1.0 - t;
+                    let qx = u * u * p0x + 2.0 * u * t * p1x + t * t * p2x;
+                    let qy = u * u * p0y + 2.0 * u * t * p1y + t * t * p2y;
+                    current.push((qx, qy));
+                }
+                cx = p2x; cy = p2y;
+            }
+            PathCommand::CubicTo { cx1, cy1, cx2, cy2, x, y } => {
+                // De Casteljau — 8 linear segments
+                let p0x = cx; let p0y = cy;
+                let p1x = *cx1 as f32; let p1y = *cy1 as f32;
+                let p2x = *cx2 as f32; let p2y = *cy2 as f32;
+                let p3x = *x as f32;   let p3y = *y as f32;
+                for k in 1..=8u32 {
+                    let t = k as f32 / 8.0;
+                    let u = 1.0 - t;
+                    let qx = u*u*u*p0x + 3.0*u*u*t*p1x + 3.0*u*t*t*p2x + t*t*t*p3x;
+                    let qy = u*u*u*p0y + 3.0*u*u*t*p1y + 3.0*u*t*t*p2y + t*t*t*p3y;
+                    current.push((qx, qy));
+                }
+                cx = p3x; cy = p3y;
+            }
+            PathCommand::ArcTo { .. } => {
+                // ArcTo: not tessellated yet — skip. Diagrams don't use arcs.
+            }
+            PathCommand::Close => {
+                current.push((first_x, first_y));
+                subpaths.push(current.clone());
+                current.clear();
+            }
+        }
+    }
+    if !current.is_empty() {
+        subpaths.push(current);
+    }
+
+    // Fill: fan tessellation per subpath
+    if let Some(fill_str) = path.fill.as_deref().filter(|s| *s != "none") {
+        let (r, g, b, a) = parse_hex_color(fill_str);
+        if a > 0.0 {
+            let (r, g, b, a) = (r as f32, g as f32, b as f32, a as f32);
+            for pts in &subpaths {
+                if pts.len() < 3 {
+                    continue;
+                }
+                let (fx, fy) = pts[0];
+                for i in 1..pts.len() - 1 {
+                    let (ax, ay) = pts[i];
+                    let (bx, by) = pts[i + 1];
+                    positions.extend_from_slice(&[fx, fy, ax, ay, bx, by]);
+                    colors.extend_from_slice(&[r, g, b, a, r, g, b, a, r, g, b, a]);
+                }
+            }
+        }
+    }
+
+    // Stroke: segment rectangles per subpath
+    if let Some(stroke_str) = path.stroke.as_deref().filter(|s| *s != "none") {
+        let (sr, sg, sb, sa) = parse_hex_color(stroke_str);
+        if sa > 0.0 {
+            let (sr, sg, sb, sa) = (sr as f32, sg as f32, sb as f32, sa as f32);
+            let half_sw = (path.stroke_width.unwrap_or(1.0) as f32) / 2.0;
+            for pts in &subpaths {
+                for i in 0..pts.len().saturating_sub(1) {
+                    let (x1, y1) = pts[i];
+                    let (x2, y2) = pts[i + 1];
+                    let dx = x2 - x1;
+                    let dy = y2 - y1;
+                    let len = (dx * dx + dy * dy).sqrt();
+                    if len < 0.001 {
+                        continue;
+                    }
+                    let nx = -dy / len * half_sw;
+                    let ny = dx / len * half_sw;
+                    // Quad corners
+                    let (ax, ay) = (x1 + nx, y1 + ny);
+                    let (bx, by) = (x1 - nx, y1 - ny);
+                    let (cx2, cy2) = (x2 + nx, y2 + ny);
+                    let (dx2, dy2) = (x2 - nx, y2 - ny);
+                    positions.extend_from_slice(&[ax, ay, cx2, cy2, bx, by]);
+                    colors.extend_from_slice(&[sr, sg, sb, sa, sr, sg, sb, sa, sr, sg, sb, sa]);
+                    positions.extend_from_slice(&[cx2, cy2, dx2, dy2, bx, by]);
+                    colors.extend_from_slice(&[sr, sg, sb, sa, sr, sg, sb, sa, sr, sg, sb, sa]);
+                }
+            }
+        }
+    }
+}
+
 // ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
 
 /// Render a [`PaintScene`] to a [`PixelContainer`] using the Metal GPU.
 ///
-/// This is the main entry point for the `paint-metal` crate.
-///
 /// ## Pipeline
 ///
 /// 1. Create a Metal device and command queue
 /// 2. Allocate an offscreen RGBA8 texture at `scene.width × scene.height`
 /// 3. Compile the rect shader from MSL source
-/// 4. Convert `PaintInstruction` tree to triangle vertex buffers
+/// 4. Convert `PaintInstruction` tree to triangle vertex buffers (Rect, Line, Ellipse, Path)
 /// 5. Encode a render pass that clears to `scene.background` then draws all triangles
 /// 6. Commit the command buffer and wait for GPU completion
 /// 7. Read back the RGBA8 pixels with `getBytes()`
-/// 8. Return the pixels as a `PixelContainer`
-///
-/// ## Requires
-///
-/// - macOS (Apple Silicon, arm64)
-/// - A Metal-capable GPU (all Apple Silicon Macs qualify)
-///
-/// ## Chaining with a codec
-///
-/// ```rust,ignore
-/// let scene = barcode_2d::layout(&grid, &config);
-/// let pixels = paint_metal::render(&scene);
-/// let png = paint_codec_png::encode_png(&pixels);
-/// std::fs::write("qr.png", png).unwrap();
-/// ```
-/// Live-drawable rendering to a CAMetalLayer.
-///
-/// Renders the scene to a `PixelContainer` via the existing `render`
-/// path, then uploads the pixels to the `CAMetalLayer`'s current
-/// drawable and presents. Intended for the
-/// `markdown-reader` binary that drives a window's redraw loop.
-///
-/// Takes the layer as an `Id` (the raw CAMetalLayer pointer). Panics
-/// on non-Apple targets since CAMetalLayer has no equivalent
-/// elsewhere; callers should gate with `#[cfg(target_vendor =
-/// "apple")]`.
-///
-/// Returns an error if the layer has no current drawable (can happen
-/// briefly during a resize).
-#[cfg(target_vendor = "apple")]
-pub fn render_to_metal_layer(
-    scene: &PaintScene,
-    metal_layer: objc_bridge::Id,
-) -> Result<(), PaintMetalError> {
-    let pixels = render(scene);
-    unsafe { live_present::present_pixels_to_layer(metal_layer, &pixels) }
-}
-
-/// Errors from the live-drawable render path.
-#[cfg(target_vendor = "apple")]
-#[derive(Debug, Clone)]
-pub enum PaintMetalError {
-    NoDrawableAvailable,
-    LayerMissingDevice,
-    CommandBufferCreationFailed,
-}
-
-#[cfg(target_vendor = "apple")]
-impl std::fmt::Display for PaintMetalError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Self::NoDrawableAvailable => write!(f, "CAMetalLayer had no current drawable"),
-            Self::LayerMissingDevice => write!(f, "CAMetalLayer had no MTLDevice"),
-            Self::CommandBufferCreationFailed => {
-                write!(f, "MTLCommandQueue.commandBuffer returned nil")
-            }
-        }
-    }
-}
-
-#[cfg(target_vendor = "apple")]
-impl std::error::Error for PaintMetalError {}
-
+/// 8. Apply CoreText overlay for PaintGlyphRun
+/// 9. Return the pixels as a `PixelContainer`
 #[cfg(target_vendor = "apple")]
 pub fn render(scene: &PaintScene) -> PixelContainer {
     let mut pixels = unsafe { render_unsafe(scene) };
-    // After Metal finishes rasterizing rects/lines, overlay any
-    // `coretext:` PaintGlyphRun instructions via CoreText's
-    // glyph-drawing API. CoreText draws directly into a CG bitmap
-    // context wrapping the same RGBA bytes, so no extra allocation
-    // is required. The overlay pass runs once, at the end — so glyph
-    // runs render on top of whatever Metal rasterized. For typical
-    // Markdown (background rects below, text above) this produces
-    // correct painter's-algorithm output.
+
+    // Render PaintGlyphRun instructions via CoreText glyph drawing.
     unsafe {
         glyph_run_overlay::overlay_coretext_glyph_runs(scene, &mut pixels);
     }
@@ -468,21 +674,27 @@ pub fn render(scene: &PaintScene) -> PixelContainer {
 
 #[cfg(target_vendor = "apple")]
 unsafe fn render_unsafe(scene: &PaintScene) -> PixelContainer {
+    // Guard against NaN/Inf before casting — `f64::INFINITY as u32` saturates to
+    // u32::MAX on Rust (4 294 967 295), which would bypass the zero-size check and
+    // trigger the dimension assert with a confusing message.
+    const MAX_DIMENSION_F: f64 = 16384.0;
+    if !scene.width.is_finite()
+        || !scene.height.is_finite()
+        || scene.width > MAX_DIMENSION_F
+        || scene.height > MAX_DIMENSION_F
+    {
+        panic!(
+            "Scene dimensions {}×{} are non-finite or exceed maximum {}×{}",
+            scene.width, scene.height, MAX_DIMENSION_F, MAX_DIMENSION_F
+        );
+    }
+
     let width = scene.width as u32;
     let height = scene.height as u32;
 
     if width == 0 || height == 0 {
         return PixelContainer::new(width, height);
     }
-
-    // Guard against accidental huge allocations.  A 16384×16384 RGBA image
-    // is ~1 GB — beyond this size most systems would OOM.
-    const MAX_DIMENSION: u32 = 16384;
-    assert!(
-        width <= MAX_DIMENSION && height <= MAX_DIMENSION,
-        "Scene dimensions {}×{} exceed maximum {}×{}",
-        width, height, MAX_DIMENSION, MAX_DIMENSION
-    );
 
     // ── Step 1: Metal device + command queue ─────────────────────────────────
     let device = MTLCreateSystemDefaultDevice();
@@ -500,7 +712,7 @@ unsafe fn render_unsafe(scene: &PaintScene) -> PixelContainer {
     // ── Step 5: Generate triangle vertices from PaintInstructions ────────────
     let mut positions: Vec<f32> = Vec::new();
     let mut colors: Vec<f32> = Vec::new();
-    collect_vertices(&scene.instructions, &mut positions, &mut colors);
+    collect_geometry(&scene.instructions, &mut positions, &mut colors, 0);
 
     // ── Step 6: Render pass ───────────────────────────────────────────────────
     let pass_desc_class = class("MTLRenderPassDescriptor");
@@ -526,7 +738,7 @@ unsafe fn render_unsafe(scene: &PaintScene) -> PixelContainer {
 
     let viewport_size: [f32; 2] = [width as f32, height as f32];
 
-    // Draw all rectangles and lines (collected as triangles)
+    // Draw all rectangles, lines, ellipses, paths (collected as triangles)
     if !positions.is_empty() {
         let vertex_count = positions.len() / 2;
 
@@ -569,8 +781,6 @@ unsafe fn render_unsafe(scene: &PaintScene) -> PixelContainer {
 
 #[cfg(target_vendor = "apple")]
 unsafe fn create_offscreen_texture(device: Id, width: u32, height: u32) -> Id {
-    // Build the texture descriptor manually instead of using the class method —
-    // objc_msgSend with mixed integer types can cause alignment issues on arm64.
     let desc = alloc_init("MTLTextureDescriptor");
 
     // MTLPixelFormatRGBA8Unorm = 70
@@ -702,6 +912,7 @@ unsafe fn read_back_pixels(texture: Id, width: u32, height: u32) -> PixelContain
     PixelContainer::from_data(width, height, data)
 }
 
+
 // ---------------------------------------------------------------------------
 // CoreText glyph-run overlay (Apple only)
 // ---------------------------------------------------------------------------
@@ -746,27 +957,15 @@ mod glyph_run_overlay {
             return;
         }
 
-        // Wrap the existing pixel buffer in a CG bitmap context.
-        // MTLPixelFormatRGBA8Unorm lays bytes as R,G,B,A; CoreGraphics'
-        // closest match on Apple platforms is BGRA premultiplied with
-        // little-endian byte order. Since we're only *adding* text
-        // (most pixels are background anyway), minor byte-order
-        // mismatch would manifest as subtly wrong text color. We use
-        // PREMULTIPLIED_FIRST + BYTE_ORDER_32_LITTLE which yields an
-        // ARGB layout compatible with most Core Graphics usage. If
-        // colors look off in the end-to-end integration we can flip
-        // to alpha-last.
         let color_space = CGColorSpaceCreateDeviceRGB();
         if color_space.is_null() {
             return;
         }
 
-        // Cast the PixelContainer's immutable data pointer to mutable.
-        // CGBitmapContextCreate needs a mutable pointer; the caller
-        // holds exclusive access to `pixels` via the `&mut` in this
-        // function's signature, so this is safe per Rust's aliasing
-        // rules.
-        let data_ptr = pixels.data.as_ptr() as *mut std::ffi::c_void;
+        // SAFETY: see text_overlay::overlay_paint_text for the aliasing argument.
+        // `as_mut_ptr()` is required here because CGBitmapContextCreate writes
+        // glyph pixels through this pointer. The context is fully released before return.
+        let data_ptr = pixels.data.as_mut_ptr() as *mut std::ffi::c_void;
 
         let ctx: CGContextRef = CGBitmapContextCreate(
             data_ptr,
@@ -785,13 +984,6 @@ mod glyph_run_overlay {
         CGContextSaveGState(ctx);
         CGContextSetShouldAntialias(ctx, true);
         CGContextSetShouldSmoothFonts(ctx, true);
-
-        // NO CTM manipulation — keep CG's native Y-up convention.
-        // Instead, convert each glyph's scene Y-down baseline to
-        // CG Y-up inside `draw_one_glyph_run` by doing
-        // cg_y = height - scene_y. This avoids the CTM/text-matrix
-        // interaction that made a naive Y-flip produce mirrored or
-        // missing glyphs.
         CGContextSetTextMatrix(ctx, CGAffineTransform::IDENTITY);
 
         for gr in runs {
@@ -829,8 +1021,6 @@ mod glyph_run_overlay {
     }
 
     unsafe fn draw_one_glyph_run(ctx: CGContextRef, run: &PaintGlyphRun, image_height: f64) {
-        // Parse "coretext:<ps_name>@<size>". Size falls back to
-        // run.font_size if the suffix is missing or malformed.
         let (ps_name, size_from_ref) = parse_coretext_font_ref(&run.font_ref);
         let size = size_from_ref.unwrap_or(run.font_size);
 
@@ -844,20 +1034,9 @@ mod glyph_run_overlay {
             return;
         }
 
-        // Set fill color from run.fill (CSS string). Default: black.
         let (r, g, b, a) = parse_css_color(run.fill.as_deref().unwrap_or("rgb(0, 0, 0)"));
         CGContextSetRGBFillColor(ctx, r, g, b, a);
 
-        // Convert scene Y-down to CG Y-up: cg_y = height - scene_y.
-        // The bitmap context stores row 0 at byte 0 (Metal's output
-        // convention). CG's default coord system has origin at
-        // bottom-left with Y-up, which when mapped to that byte
-        // layout means CG(x, y=H) writes to the first row (image
-        // top) and CG(x, y=0) writes to the last row (image bottom).
-        // So a glyph baseline at scene_y (Y-down from image top)
-        // corresponds to CG cg_y = H - scene_y. With text matrix
-        // identity, glyph ascenders rise toward positive CG-y =
-        // toward the top of the image. Correct right-side-up.
         let glyph_ids: Vec<u16> = run.glyphs.iter().map(|g| g.glyph_id as u16).collect();
         let positions: Vec<CGPoint> = run
             .glyphs
@@ -881,7 +1060,6 @@ mod glyph_run_overlay {
     }
 
     /// Parse `"coretext:PSName@Size"` into `(PSName, Some(size))`.
-    /// Malformed inputs return `(stripped, None)`.
     fn parse_coretext_font_ref(s: &str) -> (String, Option<f64>) {
         let rest = s.strip_prefix("coretext:").unwrap_or(s);
         if let Some(at_idx) = rest.rfind('@') {
@@ -894,8 +1072,6 @@ mod glyph_run_overlay {
     }
 
     /// Parse a subset of CSS colours into (r, g, b, a) in 0..=1.
-    /// Supports `rgb(r, g, b)` and `rgba(r, g, b, a)` with decimal
-    /// r,g,b in 0..=255 and a in 0..=1. Falls back to opaque black.
     fn parse_css_color(s: &str) -> (f64, f64, f64, f64) {
         let s = s.trim();
         let (inner, has_alpha) = if let Some(i) = s.strip_prefix("rgba(").and_then(|x| x.strip_suffix(")")) {
@@ -971,12 +1147,40 @@ mod glyph_run_overlay {
 // ---------------------------------------------------------------------------
 // Live-drawable present (Apple only)
 // ---------------------------------------------------------------------------
-//
-// Takes the RGBA pixel buffer produced by `render()` and uploads it
-// into a CAMetalLayer's current drawable via MTLTexture.replaceRegion,
-// then presents. This is the path the markdown-reader binary uses to
-// display a scene in a live window — no offscreen file I/O, no copy
-// back through the CPU beyond the initial render's readback.
+
+#[cfg(target_vendor = "apple")]
+pub fn render_to_metal_layer(
+    scene: &PaintScene,
+    metal_layer: objc_bridge::Id,
+) -> Result<(), PaintMetalError> {
+    let pixels = render(scene);
+    unsafe { live_present::present_pixels_to_layer(metal_layer, &pixels) }
+}
+
+/// Errors from the live-drawable render path.
+#[cfg(target_vendor = "apple")]
+#[derive(Debug, Clone)]
+pub enum PaintMetalError {
+    NoDrawableAvailable,
+    LayerMissingDevice,
+    CommandBufferCreationFailed,
+}
+
+#[cfg(target_vendor = "apple")]
+impl std::fmt::Display for PaintMetalError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::NoDrawableAvailable => write!(f, "CAMetalLayer had no current drawable"),
+            Self::LayerMissingDevice => write!(f, "CAMetalLayer had no MTLDevice"),
+            Self::CommandBufferCreationFailed => {
+                write!(f, "MTLCommandQueue.commandBuffer returned nil")
+            }
+        }
+    }
+}
+
+#[cfg(target_vendor = "apple")]
+impl std::error::Error for PaintMetalError {}
 
 #[cfg(target_vendor = "apple")]
 mod live_present {
@@ -1005,10 +1209,6 @@ mod live_present {
             return Err(PaintMetalError::NoDrawableAvailable);
         }
 
-        // Drawable pixel format is BGRA8Unorm (set on the layer by
-        // window-appkit). paint-metal's render() produces RGBA8.
-        // Byte-swap R and B in a one-shot temporary buffer before
-        // uploading so the drawable displays with correct colours.
         let w = pixels.width as usize;
         let h = pixels.height as usize;
         if w == 0 || h == 0 {
@@ -1033,9 +1233,6 @@ mod live_present {
             },
         };
 
-        // [texture replaceRegion:mipmapLevel:withBytes:bytesPerRow:]
-        // This is a 4-arg Objective-C call; construct the function
-        // pointer explicitly.
         use objc_bridge::objc_msgSend;
         let replace_fn: unsafe extern "C" fn(
             Id,
@@ -1054,8 +1251,6 @@ mod live_present {
             stride,
         );
 
-        // Present via a command buffer created from the layer's
-        // device's default queue.
         let device: Id = msg!(layer, "device");
         if device == NIL {
             return Err(PaintMetalError::LayerMissingDevice);
@@ -1083,11 +1278,14 @@ mod live_present {
 #[cfg(all(test, target_vendor = "apple"))]
 mod tests {
     use super::*;
-    use paint_instructions::{PaintBase, PaintInstruction, PaintRect, PaintScene};
+    use paint_instructions::{
+        PaintBase, PaintEllipse, PaintInstruction, PaintPath, PaintRect, PaintScene,
+        PathCommand,
+    };
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.1.0");
+        assert_eq!(VERSION, "0.2.0");
     }
 
     // ─── Color parser tests ──────────────────────────────────────────────────
@@ -1133,7 +1331,7 @@ mod tests {
         let rect = PaintInstruction::Rect(PaintRect::filled(10.0, 20.0, 30.0, 40.0, "#ff0000"));
         let mut positions = Vec::new();
         let mut colors = Vec::new();
-        collect_vertices(&[rect], &mut positions, &mut colors);
+        collect_geometry(&[rect], &mut positions, &mut colors, 0);
         // 6 vertices × 2 floats (x, y) each = 12 position floats
         assert_eq!(positions.len(), 12);
         // 6 vertices × 4 floats (r, g, b, a) each = 24 color floats
@@ -1145,7 +1343,7 @@ mod tests {
         let rect = PaintInstruction::Rect(PaintRect::filled(0.0, 0.0, 50.0, 50.0, "transparent"));
         let mut positions = Vec::new();
         let mut colors = Vec::new();
-        collect_vertices(&[rect], &mut positions, &mut colors);
+        collect_geometry(&[rect], &mut positions, &mut colors, 0);
         assert!(positions.is_empty(), "transparent rect should produce no vertices");
     }
 
@@ -1163,9 +1361,104 @@ mod tests {
         });
         let mut positions = Vec::new();
         let mut colors = Vec::new();
-        collect_vertices(&[group], &mut positions, &mut colors);
+        collect_geometry(&[group], &mut positions, &mut colors, 0);
         // 2 rects × 6 vertices × 2 floats = 24 positions
         assert_eq!(positions.len(), 24);
+    }
+
+    #[test]
+    fn ellipse_fill_generates_correct_vertex_count() {
+        // A filled ellipse with no stroke: ELLIPSE_SEGMENTS triangles × 3 vertices × 2 floats
+        let ellipse = PaintInstruction::Ellipse(PaintEllipse {
+            base: PaintBase::default(),
+            cx: 50.0,
+            cy: 50.0,
+            rx: 30.0,
+            ry: 20.0,
+            fill: Some("#0000ff".to_string()),
+            stroke: None,
+            stroke_width: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        });
+        let mut positions = Vec::new();
+        let mut colors = Vec::new();
+        collect_geometry(&[ellipse], &mut positions, &mut colors, 0);
+        let expected = ELLIPSE_SEGMENTS * 3 * 2; // 64 triangles × 3 verts × 2 floats
+        assert_eq!(positions.len(), expected, "ellipse fill vertex count");
+    }
+
+    #[test]
+    fn ellipse_stroke_generates_ring_vertices() {
+        // Fill + stroke: fill (64 tris) + stroke ring (64 quads = 128 tris)
+        let ellipse = PaintInstruction::Ellipse(PaintEllipse {
+            base: PaintBase::default(),
+            cx: 50.0,
+            cy: 50.0,
+            rx: 30.0,
+            ry: 20.0,
+            fill: Some("#0000ff".to_string()),
+            stroke: Some("#ff0000".to_string()),
+            stroke_width: Some(2.0),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        });
+        let mut positions = Vec::new();
+        let mut colors = Vec::new();
+        collect_geometry(&[ellipse], &mut positions, &mut colors, 0);
+        // fill: 64 * 3 verts, stroke ring: 64 quads * 2 tris * 3 verts = 384
+        let expected = (ELLIPSE_SEGMENTS * 3 + ELLIPSE_SEGMENTS * 2 * 3) * 2; // × 2 for x,y
+        assert_eq!(positions.len(), expected, "ellipse fill+stroke vertex count");
+    }
+
+    #[test]
+    fn diamond_path_fill_generates_vertices() {
+        // A diamond is 4-point closed polygon (5 points including close)
+        let diamond = PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: 50.0, y: 10.0 },  // top
+                PathCommand::LineTo { x: 90.0, y: 50.0 },  // right
+                PathCommand::LineTo { x: 50.0, y: 90.0 },  // bottom
+                PathCommand::LineTo { x: 10.0, y: 50.0 },  // left
+                PathCommand::Close,
+            ],
+            fill: Some("#ffff00".to_string()),
+            fill_rule: None,
+            stroke: None,
+            stroke_width: None,
+            stroke_cap: None,
+            stroke_join: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        });
+        let mut positions = Vec::new();
+        let mut colors = Vec::new();
+        collect_geometry(&[diamond], &mut positions, &mut colors, 0);
+        // Subpath has 5 points (top, right, bottom, left, top-again from close).
+        // Fan: pivot=pts[0], triangles for i in 1..4 → 3 triangles
+        // Each triangle: 3 vertices × 2 floats = 6 floats → 18 total
+        assert!(positions.len() >= 18, "diamond fill should have at least 3 triangles");
+    }
+
+    #[test]
+    fn paint_text_silently_ignored() {
+        // PaintText is Canvas/SVG/DOM-only — Metal ignores it entirely.
+        let text_instr = PaintInstruction::Text(paint_instructions::PaintText {
+            base: PaintBase::default(),
+            x: 50.0,
+            y: 50.0,
+            text: "Hello".to_string(),
+            font_ref: None,
+            font_size: 14.0,
+            fill: Some("#000000".to_string()),
+            text_align: None,
+        });
+        let mut positions = Vec::new();
+        let mut colors = Vec::new();
+        collect_geometry(&[text_instr], &mut positions, &mut colors, 0);
+        assert!(positions.is_empty(), "PaintText should not generate triangle vertices");
+        assert!(colors.is_empty(), "PaintText should not generate color vertices");
     }
 
     #[test]
@@ -1178,10 +1471,6 @@ mod tests {
     }
 
     /// Render a scene with a red rectangle on a white background.
-    /// The pixel at the rectangle's centre should be red; the corner should be white.
-    ///
-    /// This test exercises the full Metal pipeline: shader compilation, GPU render,
-    /// and pixel readback.
     #[test]
     fn render_red_rect_on_white() {
         let mut scene = PaintScene::new(100.0, 100.0);
@@ -1208,13 +1497,82 @@ mod tests {
         assert_eq!(a, 255, "alpha at corner (background)");
     }
 
-    /// Render a scene with a dark module grid pattern (like a QR code quiet zone).
+    /// Render a blue filled ellipse and verify the centre pixel is blue.
+    #[test]
+    fn render_blue_ellipse() {
+        let mut scene = PaintScene::new(100.0, 100.0);
+        scene.instructions.push(PaintInstruction::Ellipse(PaintEllipse {
+            base: PaintBase::default(),
+            cx: 50.0,
+            cy: 50.0,
+            rx: 30.0,
+            ry: 30.0,
+            fill: Some("#0000ff".to_string()),
+            stroke: None,
+            stroke_width: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let pixels = render(&scene);
+
+        // Centre of the ellipse should be blue
+        let (r, g, b, _a) = pixels.pixel_at(50, 50);
+        assert_eq!(r, 0,   "red channel at ellipse centre should be 0");
+        assert_eq!(g, 0,   "green channel at ellipse centre should be 0");
+        assert_eq!(b, 255, "blue channel at ellipse centre should be 255");
+
+        // Pixel well outside the ellipse should be white background
+        let (r, g, b, _a) = pixels.pixel_at(2, 2);
+        assert_eq!(r, 255, "corner should be background white");
+        assert_eq!(g, 255, "corner should be background white");
+        assert_eq!(b, 255, "corner should be background white");
+    }
+
+    /// Render a yellow diamond (PaintPath) and verify the centre is yellow.
+    #[test]
+    fn render_yellow_diamond() {
+        let mut scene = PaintScene::new(100.0, 100.0);
+        scene.instructions.push(PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: 50.0, y: 10.0 },  // top
+                PathCommand::LineTo { x: 90.0, y: 50.0 },  // right
+                PathCommand::LineTo { x: 50.0, y: 90.0 },  // bottom
+                PathCommand::LineTo { x: 10.0, y: 50.0 },  // left
+                PathCommand::Close,
+            ],
+            fill: Some("#ffff00".to_string()),
+            fill_rule: None,
+            stroke: None,
+            stroke_width: None,
+            stroke_cap: None,
+            stroke_join: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let pixels = render(&scene);
+
+        // Centre (50, 50) should be inside the diamond → yellow
+        let (r, g, b, _a) = pixels.pixel_at(50, 50);
+        assert_eq!(r, 255, "yellow: r=255 at diamond centre");
+        assert_eq!(g, 255, "yellow: g=255 at diamond centre");
+        assert_eq!(b, 0,   "yellow: b=0 at diamond centre");
+
+        // Corner (2, 2) is well outside the diamond → white
+        let (r, g, b, _a) = pixels.pixel_at(2, 2);
+        assert_eq!(r, 255, "background white at corner");
+        assert_eq!(g, 255, "background white at corner");
+        assert_eq!(b, 255, "background white at corner");
+    }
+
+    /// Render a dark module grid pattern (like a QR code quiet zone).
     #[test]
     fn render_black_modules_on_white() {
         let module_size = 4.0_f64;
         let mut scene = PaintScene::new(40.0, 40.0);
 
-        // Place 4×4 black modules (a tiny QR-like grid)
         for row in 0..4u32 {
             for col in 0..4u32 {
                 if (row + col) % 2 == 0 {

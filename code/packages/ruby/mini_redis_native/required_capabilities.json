@@ -1,0 +1,32 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "ruby/mini_redis_native",
+  "capabilities": [
+    {
+      "category": "network",
+      "action": "listen",
+      "target": "127.0.0.1:*",
+      "justification": "The native extension starts a local TCP listener for Mini Redis integration tests and embedded use."
+    },
+    {
+      "category": "process",
+      "action": "spawn",
+      "target": "ruby",
+      "justification": "The Rust embeddable TCP runtime launches the Ruby stdio worker process that owns Mini Redis protocol state."
+    },
+    {
+      "category": "stdin",
+      "action": "read",
+      "target": "*",
+      "justification": "The Ruby worker consumes JSON-line command jobs from the Rust TCP bridge."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "The Ruby worker returns JSON-line command results to the Rust TCP bridge."
+    }
+  ],
+  "justification": "The package embeds the Rust TCP server runtime as a Ruby native extension and runs a Ruby Mini Redis worker behind it."
+}

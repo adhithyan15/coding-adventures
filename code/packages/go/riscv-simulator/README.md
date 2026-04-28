@@ -39,6 +39,9 @@ When `mtvec` is configured with a trap handler address:
 - `ecall` saves PC to `mepc`, sets `mcause` to 11 (M-mode environment call), disables interrupts, and jumps to `mtvec`
 - `mret` restores PC from `mepc` and re-enables interrupts
 - When `mtvec` is 0 (no handler), `ecall` halts the CPU (simple program behavior)
+- When `mtvec` is 0 and a `HostIO` object is attached, simple host syscalls
+  are handled directly: `a7=1` writes the low byte of `a0`, `a7=2` reads one
+  byte into `a0`, and `a7=10` exits.
 
 ## Architecture
 
@@ -80,6 +83,26 @@ program := riscvsimulator.Assemble([]uint32{
 
 traces := sim.Run(program)
 // sim.CPU.Registers.Read(2) == 55
+```
+
+### Host Syscall Example
+
+```go
+host := riscvsimulator.NewHostIO([]byte("A"))
+sim := riscvsimulator.NewRiscVSimulatorWithHost(65536, host)
+
+program := riscvsimulator.Assemble([]uint32{
+    riscvsimulator.EncodeAddi(17, 0, riscvsimulator.SyscallReadByte),
+    riscvsimulator.EncodeEcall(), // a0 = 'A'
+    riscvsimulator.EncodeAddi(17, 0, riscvsimulator.SyscallWriteByte),
+    riscvsimulator.EncodeEcall(), // host.Output = "A"
+    riscvsimulator.EncodeAddi(10, 0, 0),
+    riscvsimulator.EncodeAddi(17, 0, riscvsimulator.SyscallExit),
+    riscvsimulator.EncodeEcall(),
+})
+
+sim.Run(program)
+// host.OutputString() == "A"
 ```
 
 ### Trap Handler Example

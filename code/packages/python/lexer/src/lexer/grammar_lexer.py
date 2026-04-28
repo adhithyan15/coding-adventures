@@ -1,5 +1,5 @@
 """
-Grammar-Driven Lexer — Tokenization from .tokens Files
+Grammar-Driven Lexer â€” Tokenization from .tokens Files
 =======================================================
 
 The hand-written ``Lexer`` in ``tokenizer.py`` hardcodes which characters map
@@ -14,7 +14,7 @@ Instead of hardcoding patterns in Python, we read token definitions from a
 ``.tokens`` file (parsed by the ``grammar_tools`` package) and use those
 definitions to drive tokenization at runtime.
 
-How It Works — The Big Picture
+How It Works â€” The Big Picture
 ------------------------------
 
 A ``.tokens`` file looks like this::
@@ -30,7 +30,7 @@ A ``.tokens`` file looks like this::
 
 Each line defines a token: a name and a pattern. The pattern is either a
 regex (``/.../.``) or a literal string (``"..."``). The ``grammar_tools``
-package parses this file into a ``TokenGrammar`` object — a structured list
+package parses this file into a ``TokenGrammar`` object â€” a structured list
 of ``TokenDefinition`` objects plus a keyword list.
 
 The ``GrammarLexer`` takes that ``TokenGrammar`` and does the following:
@@ -40,7 +40,7 @@ The ``GrammarLexer`` takes that ``TokenGrammar`` and does the following:
    treated as literal characters, not regex operators.
 
 2. **At each position** in the source code, try each compiled pattern in
-   order (first match wins). This is the "priority" mechanism — if two
+   order (first match wins). This is the "priority" mechanism â€” if two
    patterns could match at the same position, the one that appears first
    in the ``.tokens`` file wins.
 
@@ -78,9 +78,9 @@ the ``.tokens`` format:
 Why Two Lexers?
 ---------------
 
-The hand-written ``Lexer`` is the **reference implementation** — clear,
+The hand-written ``Lexer`` is the **reference implementation** â€” clear,
 well-documented, and easy to step through in a debugger. The
-``GrammarLexer`` is the **grammar-driven alternative** — flexible,
+``GrammarLexer`` is the **grammar-driven alternative** â€” flexible,
 language-agnostic, and data-driven. Having both lets us:
 
 - Verify correctness by comparing their outputs
@@ -99,7 +99,7 @@ from grammar_tools import TokenGrammar
 from lexer.tokenizer import TOKEN_CONTEXT_KEYWORD, LexerError, Token, TokenType
 
 # ---------------------------------------------------------------------------
-# Lexer Context — Callback Interface for Group Transitions
+# Lexer Context â€” Callback Interface for Group Transitions
 # ---------------------------------------------------------------------------
 
 
@@ -111,9 +111,9 @@ class LexerContext:
     controlled access to the group stack, token emission, and skip control.
 
     Methods that modify state (push/pop/emit/suppress) take effect after
-    the callback returns — they do not interrupt the current match.
+    the callback returns â€” they do not interrupt the current match.
 
-    Example — XML lexer callback::
+    Example â€” XML lexer callback::
 
         def xml_hook(token, ctx):
             if token.type == "OPEN_TAG_START":
@@ -178,7 +178,7 @@ class LexerContext:
         self._emitted.append(token)
 
     def suppress(self) -> None:
-        """Suppress the current token — do not include it in output."""
+        """Suppress the current token â€” do not include it in output."""
         self._suppressed = True
 
     def peek(self, offset: int = 1) -> str:
@@ -212,7 +212,7 @@ class LexerContext:
     def previous_token(self) -> Token | None:
         """Return the most recently emitted token, or None at start of input.
 
-        "Emitted" means the token actually made it into the output list —
+        "Emitted" means the token actually made it into the output list â€”
         suppressed tokens are not counted. This provides **lookbehind**
         capability for context-sensitive decisions.
 
@@ -235,7 +235,7 @@ class LexerContext:
 
         Depth starts at 0 and increments on each opener (``(``, ``[``,
         ``{``), decrements on each closer (``)``, ``]``, ``}``). The count
-        never goes below 0 — unmatched closers are clamped.
+        never goes below 0 â€” unmatched closers are clamped.
 
         This is essential for template literal interpolation in languages
         like JavaScript, Kotlin, and Ruby, where ``}`` at brace-depth 0
@@ -243,7 +243,7 @@ class LexerContext:
         expression.
 
         Args:
-            kind: Optional bracket type to query — one of ``"paren"``,
+            kind: Optional bracket type to query â€” one of ``"paren"``,
                 ``"bracket"``, or ``"brace"``. If None, returns the sum
                 of all three depths.
         """
@@ -323,9 +323,10 @@ class GrammarLexer:
                 ``.tokens`` file using ``grammar_tools.parse_token_grammar``).
         """
         # For case-insensitive languages, lowercase the source text so that
-        # regex patterns match regardless of input casing. Keep the original
-        # source separately so emitted token values can preserve the user's
-        # original spelling.
+        # regex patterns match regardless of input casing. We keep the original
+        # source so that string literal values can preserve their original case
+        # (e.g., 'Ada' should tokenize as STRING("Ada"), not STRING("ada")).
+        # Keywords are uppercased explicitly via value.upper() in token emission.
         self._original_source = source
         self._source = (
             source.lower() if (grammar.case_insensitive or not grammar.case_sensitive)
@@ -336,7 +337,7 @@ class GrammarLexer:
         self._line = 1
         self._column = 1
 
-        # Case-insensitive mode — when True, keyword matching ignores case.
+        # Case-insensitive mode â€” when True, keyword matching ignores case.
         # Enabled via ``# @case_insensitive true`` in the .tokens file.
         # When active:
         #   - keywords are stored in uppercase in the keyword/reserved sets
@@ -357,7 +358,7 @@ class GrammarLexer:
             self._keyword_set = frozenset(grammar.keywords)
 
         # Reserved keywords cause immediate lex errors. In Starlark, words
-        # like "class" and "import" are reserved — using them is a syntax
+        # like "class" and "import" are reserved â€” using them is a syntax
         # error at lex time rather than a confusing parse error later.
         # Apply the same uppercase normalisation in case-insensitive mode so
         # that reserved-word detection is also case-insensitive.
@@ -386,12 +387,12 @@ class GrammarLexer:
         self._escape_mode = grammar.escape_mode
 
         # Case sensitivity mode. When False, the lexer lowercases input
-        # before matching and promotes NAME → KEYWORD for lowercased values
+        # before matching and promotes NAME â†’ KEYWORD for lowercased values
         # that match keywords. Used by case-insensitive languages like VHDL.
         self._case_sensitive = grammar.case_sensitive
 
-        # Build alias map: definition name → alias name.
-        # For example, STRING_DQ → STRING. When we match STRING_DQ, we
+        # Build alias map: definition name â†’ alias name.
+        # For example, STRING_DQ â†’ STRING. When we match STRING_DQ, we
         # emit the token type as STRING (the alias).
         self._alias_map: dict[str, str] = {}
         for defn in grammar.definitions:
@@ -400,7 +401,7 @@ class GrammarLexer:
 
         # Compile token patterns into regex objects.
         # -------------------------------------------
-        # Order matters — patterns are tried in the order they appear in the
+        # Order matters â€” patterns are tried in the order they appear in the
         # .tokens file. This is the "first match wins" rule from Lex/Flex.
         self._patterns: list[tuple[str, re.Pattern[str]]] = []
         for defn in grammar.definitions:
@@ -421,7 +422,7 @@ class GrammarLexer:
 
         # Compile error patterns (error recovery tokens).
         # These are tried as a last resort when no normal token matches.
-        # Error tokens allow graceful degradation for malformed inputs —
+        # Error tokens allow graceful degradation for malformed inputs â€”
         # for example, CSS emits BAD_STRING for unclosed strings instead
         # of crashing with a LexerError.
         self._error_patterns: list[tuple[str, re.Pattern[str]]] = []
@@ -456,12 +457,12 @@ class GrammarLexer:
         # group whose patterns are tried during token matching.
         self._group_stack: list[str] = ["default"]
 
-        # On-token callback — None means no callback (zero overhead).
+        # On-token callback â€” None means no callback (zero overhead).
         self._on_token: (
             Callable[[Token, LexerContext], None] | None
         ) = None
 
-        # Skip enabled flag — can be toggled by callbacks for groups
+        # Skip enabled flag â€” can be toggled by callbacks for groups
         # where whitespace is significant (e.g., CDATA, comments).
         self._skip_enabled: bool = True
 
@@ -489,10 +490,10 @@ class GrammarLexer:
             grammar.context_keywords if hasattr(grammar, 'context_keywords') and grammar.context_keywords else []
         )
 
-        # Transform hooks — pluggable pipeline stages for language-specific
+        # Transform hooks â€” pluggable pipeline stages for language-specific
         # processing. Hooks compose left-to-right: if three pre_tokenize hooks
-        # A, B, C are registered, source flows through A → B → C.
-        # When no hooks are registered, zero overhead — the existing tokenize()
+        # A, B, C are registered, source flows through A â†’ B â†’ C.
+        # When no hooks are registered, zero overhead â€” the existing tokenize()
         # path executes unchanged.
         self._pre_tokenize_hooks: list[Callable[[str], str]] = []
         self._post_tokenize_hooks: list[Callable[[list[Token]], list[Token]]] = []
@@ -521,7 +522,7 @@ class GrammarLexer:
 
         The hook receives the raw source string and returns a (possibly
         modified) source string. Multiple hooks compose left-to-right:
-        source flows through A → B → C before tokenization.
+        source flows through A â†’ B â†’ C before tokenization.
 
         Use cases:
         - COBOL/FORTRAN column stripping
@@ -529,7 +530,7 @@ class GrammarLexer:
         - Line continuation / splicing
 
         Args:
-            hook: A function str → str.
+            hook: A function str â†’ str.
         """
         self._pre_tokenize_hooks.append(hook)
 
@@ -545,7 +546,7 @@ class GrammarLexer:
         - Inserting synthetic tokens
 
         Args:
-            hook: A function list[Token] → list[Token].
+            hook: A function list[Token] â†’ list[Token].
         """
         self._post_tokenize_hooks.append(hook)
 
@@ -597,18 +598,18 @@ class GrammarLexer:
 
         The tokenization pipeline has three stages:
 
-        1. **Pre-tokenize hooks** — transform the source text before lexing.
+        1. **Pre-tokenize hooks** â€” transform the source text before lexing.
            Each hook receives a string and returns a string. Multiple hooks
-           compose left-to-right (A → B → C).
+           compose left-to-right (A â†’ B â†’ C).
 
-        2. **Core tokenization** — the existing grammar-driven lexer logic,
+        2. **Core tokenization** â€” the existing grammar-driven lexer logic,
            dispatching to standard or indentation mode.
 
-        3. **Post-tokenize hooks** — transform the token list after lexing.
+        3. **Post-tokenize hooks** â€” transform the token list after lexing.
            Each hook receives a token list and returns a token list.
 
         When no hooks are registered, this is equivalent to the original
-        tokenize() — zero overhead.
+        tokenize() â€” zero overhead.
 
         Returns:
             A list of ``Token`` objects, always ending with an EOF token.
@@ -619,14 +620,14 @@ class GrammarLexer:
         """
         # Stage 1: Pre-tokenize hooks transform the source text.
         # Common use cases: COBOL column stripping, C #include resolution,
-        # line continuation splicing. Each hook is str → str.
+        # line continuation splicing. Each hook is str â†’ str.
         if self._pre_tokenize_hooks:
             source = self._source
             for hook in self._pre_tokenize_hooks:
                 source = hook(source)
             self._source = source
 
-        # Stage 2: Core tokenization — dispatch to standard or indentation mode.
+        # Stage 2: Core tokenization â€” dispatch to standard or indentation mode.
         if self._indentation_mode:
             tokens = self._tokenize_indentation()
         elif self._layout_mode:
@@ -636,7 +637,7 @@ class GrammarLexer:
 
         # Stage 3: Post-tokenize hooks transform the token list.
         # Common use cases: C #define expansion, token filtering,
-        # conditional compilation. Each hook is list[Token] → list[Token].
+        # conditional compilation. Each hook is list[Token] â†’ list[Token].
         if self._post_tokenize_hooks:
             for hook in self._post_tokenize_hooks:
                 tokens = hook(tokens)
@@ -687,7 +688,7 @@ class GrammarLexer:
                     continue
 
             # --- Newlines become NEWLINE tokens ---
-            # Newlines are structural — they mark line boundaries.
+            # Newlines are structural â€” they mark line boundaries.
             if char == "\n":
                 tokens.append(Token(
                     type=TokenType.NEWLINE,
@@ -806,15 +807,15 @@ class GrammarLexer:
     # The algorithm is based on CPython's tokenizer (documented in PEP 7 and
     # the Python Language Reference, section 2.1.8). It works as follows:
     #
-    # 1. Maintain an **indent stack** — a stack of indentation levels. It
+    # 1. Maintain an **indent stack** â€” a stack of indentation levels. It
     #    starts with [0] (no indentation).
     #
     # 2. At the beginning of each **logical line**:
     #    a. Count the number of leading spaces.
-    #    b. If it's greater than the top of the stack → push and emit INDENT.
-    #    c. If it's less → pop until we find a matching level, emitting DEDENT
+    #    b. If it's greater than the top of the stack â†’ push and emit INDENT.
+    #    c. If it's less â†’ pop until we find a matching level, emitting DEDENT
     #       for each pop. If no level matches, it's an indentation error.
-    #    d. If it's equal → same block, nothing to emit.
+    #    d. If it's equal â†’ same block, nothing to emit.
     #
     # 3. **Implicit line joining**: Inside brackets (parentheses, square
     #    brackets, curly braces), newlines are ignored. This means:
@@ -859,7 +860,7 @@ class GrammarLexer:
             if at_line_start and bracket_depth == 0:
                 indent_tokens = self._process_line_start(indent_stack)
                 if indent_tokens is None:
-                    # Blank/comment-only line — was consumed, continue
+                    # Blank/comment-only line â€” was consumed, continue
                     continue
                 tokens.extend(indent_tokens)
                 at_line_start = False
@@ -875,7 +876,7 @@ class GrammarLexer:
             if char == "\n":
                 if bracket_depth > 0:
                     # Inside brackets: implicit line joining.
-                    # Consume the newline silently — no NEWLINE token.
+                    # Consume the newline silently â€” no NEWLINE token.
                     self._advance()
                 else:
                     # End of a logical line: emit NEWLINE.
@@ -958,7 +959,7 @@ class GrammarLexer:
         suppress_depth = 0
 
         for index, token in enumerate(tokens):
-            type_name = token.type if isinstance(token.type, str) else token.type.value
+            type_name = token.type if isinstance(token.type, str) else token.type.name
 
             if type_name == "NEWLINE":
                 result.append(token)
@@ -1009,7 +1010,7 @@ class GrammarLexer:
 
     def _next_layout_token(self, tokens: list[Token], start_index: int) -> Token | None:
         for token in tokens[start_index:]:
-            type_name = token.type if isinstance(token.type, str) else token.type.value
+            type_name = token.type if isinstance(token.type, str) else token.type.name
             if type_name != "NEWLINE":
                 return token
         return None
@@ -1018,7 +1019,7 @@ class GrammarLexer:
         return Token(type=type_name, value=value, line=anchor.line, column=anchor.column)
 
     def _is_virtual_layout_token(self, token: Token) -> bool:
-        type_name = token.type if isinstance(token.type, str) else token.type.value
+        type_name = token.type if isinstance(token.type, str) else token.type.name
         return type_name.startswith("VIRTUAL_")
 
     def _is_layout_keyword(self, token: Token) -> bool:
@@ -1066,11 +1067,11 @@ class GrammarLexer:
             return []  # EOF after whitespace
         char = self._source[self._pos]
         if char == "\n":
-            # Blank line — consume and continue
+            # Blank line â€” consume and continue
             self._advance()
             return None
         if char == "#":
-            # Comment-only line — consume everything up to newline
+            # Comment-only line â€” consume everything up to newline
             while self._pos < len(self._source) and self._source[self._pos] != "\n":
                 self._advance()
             if self._pos < len(self._source):
@@ -1082,7 +1083,7 @@ class GrammarLexer:
         current_indent = indent_stack[-1]
 
         if indent > current_indent:
-            # Deeper indentation → new block. Push and emit INDENT.
+            # Deeper indentation â†’ new block. Push and emit INDENT.
             indent_stack.append(indent)
             tokens.append(Token(
                 type="INDENT",
@@ -1091,7 +1092,7 @@ class GrammarLexer:
                 column=1,
             ))
         elif indent < current_indent:
-            # Shallower indentation → closing one or more blocks.
+            # Shallower indentation â†’ closing one or more blocks.
             # Pop the stack until we find the matching level.
             while indent_stack[-1] > indent:
                 indent_stack.pop()
@@ -1119,7 +1120,7 @@ class GrammarLexer:
         """Try to match and consume a skip pattern at the current position.
 
         Skip patterns are defined in the ``skip:`` section of a .tokens file.
-        They match text that should be consumed without emitting a token —
+        They match text that should be consumed without emitting a token â€”
         typically comments and inline whitespace.
 
         Returns:
@@ -1181,12 +1182,14 @@ class GrammarLexer:
                 # Escape mode controls what happens to STRING values:
                 # - None (default): strip quotes AND process escape sequences
                 # - "none": strip quotes only, leave escapes as-is
+                #
+                # IMPORTANT: use the original (non-lowercased) source for
+                # the string body so that 'Ada' tokenizes as STRING("Ada"),
+                # not STRING("ada"). The lowercased source is only for
+                # pattern matching; string content should be case-preserved.
                 effective_name = self._alias_map.get(token_name, token_name)
                 if effective_name == "STRING" or token_name == "STRING":
-                    string_value = (
-                        original_value if self._case_insensitive else value
-                    )
-                    inner = string_value[1:-1]
+                    inner = original_value[1:-1]
                     if self._escape_mode != "none":
                         inner = self._process_escapes(inner)
                     token = Token(
@@ -1228,7 +1231,7 @@ class GrammarLexer:
     def _try_match_error_token(self) -> Token | None:
         """Try to match an error pattern at the current position.
 
-        Error patterns are a fallback — they are only tried when no normal
+        Error patterns are a fallback â€” they are only tried when no normal
         token pattern matches. This allows graceful degradation for malformed
         inputs. For example, CSS can emit a ``BAD_STRING`` token for an
         unclosed string instead of crashing with a ``LexerError``.
@@ -1293,7 +1296,7 @@ class GrammarLexer:
            mode).
 
         3. **Alias resolution**: If the definition has an alias, use the alias
-           name as the token type (e.g., STRING_DQ → STRING).
+           name as the token type (e.g., STRING_DQ â†’ STRING).
 
         4. **Enum mapping**: Try to find a matching TokenType enum member.
            This provides backward compatibility with simple grammars.
@@ -1309,10 +1312,10 @@ class GrammarLexer:
         Returns:
             A TokenType enum member or a string token type name.
         """
-        # Resolve alias: STRING_DQ → STRING, FLOOR_DIV_EQUALS → FLOOR_DIV_EQUALS
+        # Resolve alias: STRING_DQ â†’ STRING, FLOOR_DIV_EQUALS â†’ FLOOR_DIV_EQUALS
         effective_name = self._alias_map.get(token_name, token_name)
 
-        # Reserved keyword check — error on reserved identifiers.
+        # Reserved keyword check â€” error on reserved identifiers.
         # In Starlark, "class", "import", etc. are reserved. Using them
         # is a lex error rather than a confusing parse error.
         # In case-insensitive mode, compare the uppercased value so that
@@ -1325,7 +1328,7 @@ class GrammarLexer:
                 column=self._column,
             )
 
-        # Keyword detection — reclassify NAME → KEYWORD when the value
+        # Keyword detection â€” reclassify NAME â†’ KEYWORD when the value
         # matches a known keyword.
         # In case-insensitive mode we test against the uppercase lookup value
         # (the set already stores entries in uppercase, see __init__).
@@ -1339,7 +1342,7 @@ class GrammarLexer:
         try:
             return TokenType[effective_name]
         except KeyError:
-            # No enum member — use the string name. This is the normal
+            # No enum member â€” use the string name. This is the normal
             # path for extended grammars (Starlark, etc.) that define
             # token names beyond the basic TokenType enum.
             return effective_name
@@ -1402,11 +1405,11 @@ class GrammarLexer:
                         result.append(chr(int(hex_str, 16)))
                         i += 6
                     else:
-                        # Invalid hex digits — pass through as-is.
+                        # Invalid hex digits â€” pass through as-is.
                         result.append(next_char)
                         i += 2
                 else:
-                    # Unknown escape — pass through the escaped character.
+                    # Unknown escape â€” pass through the escaped character.
                     result.append(next_char)
                     i += 2
             else:

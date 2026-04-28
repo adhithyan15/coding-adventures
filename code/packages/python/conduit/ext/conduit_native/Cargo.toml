@@ -1,0 +1,24 @@
+# conduit_native — Python C extension backing the Python Conduit framework.
+#
+# Mirrors the Ruby conduit_native (WEB02) but speaks Python's C API instead
+# of Ruby's. Routing and HTTP live in web-core (Rust); Python owns handler
+# logic, decorator DSL, and HaltException short-circuit.
+#
+# crate-type = ["cdylib"]: emit a shared library Python can `import`.
+
+[package]
+name = "conduit-native-python"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+name = "conduit_native"
+
+[dependencies]
+embeddable-http-server = { path = "../../../../rust/embeddable-http-server" }
+http-core              = { path = "../../../../rust/http-core" }
+python-bridge          = { path = "../../../../rust/python-bridge" }
+transport-platform     = { path = "../../../../rust/transport-platform" }
+web-core               = { path = "../../../../rust/web-core" }

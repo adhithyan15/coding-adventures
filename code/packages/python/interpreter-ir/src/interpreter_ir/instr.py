@@ -9,10 +9,15 @@ Each instruction is a small, immutable-by-convention record with:
 - ``srcs``    — source operands: variable names (str) or literals (int/float/bool)
 - ``type_hint`` — the declared type (``"u8"``, ``"bool"``, ``"any"``, …)
 
-At runtime, two extra fields are written by the ``vm-core`` profiler:
+At runtime, extra fields are written by the ``vm-core`` profiler:
 
-- ``observed_type``    — the actual type seen so far (or ``"polymorphic"``)
-- ``observation_count`` — how many times the profiler has sampled this instruction
+- ``observed_slot``    — a ``SlotState`` holding the V8 Ignition-style
+                         feedback state machine (UNINIT → MONO → POLY → MEGA)
+- ``observed_type``    — derived view: the single observed type for
+                         MONOMORPHIC slots, ``"polymorphic"`` for POLY/MEGA,
+                         or ``None`` before any observation
+- ``observation_count`` — derived view: ``observed_slot.count`` (kept as a
+                         separate field for backwards compatibility)
 
 A ``deopt_anchor`` marks the interpreter instruction index the JIT must revert
 to if a type guard fails.
@@ -26,13 +31,16 @@ Example::
     IIRInstr("add", "v0", ["a", "b"], "any")
 
     # After profiling
-    instr.observed_type = "u8"
-    instr.observation_count = 47
+    instr.observed_slot.kind         # SlotKind.MONOMORPHIC
+    instr.observed_type              # "u8"
+    instr.observation_count          # 47
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+
+from interpreter_ir.slot_state import SlotKind, SlotState
 
 # An operand is either a variable name reference or an immediate literal.
 Operand = str | int | float | bool
@@ -68,15 +76,34 @@ class IIRInstr:
     # -----------------------------------------------------------------------
 
     observed_type: str | None = field(default=None, repr=False, compare=False)
-    """Runtime type observed by the vm-core profiler.
+    """Runtime type observed by the vm-core profiler (legacy view).
 
     ``None``           — not yet observed
-    ``"u8"`` etc.     — concrete single type observed on all calls so far
-    ``"polymorphic"`` — multiple different types seen; do not specialise
+    ``"u8"`` etc.      — concrete single type observed on all calls so far
+    ``"polymorphic"``  — multiple different types seen; do not specialise
+
+    This field is kept as a real slot (not a property) for backwards
+    compatibility with tests and external code that assign directly to
+    it.  ``record_observation`` keeps it in sync with ``observed_slot``.
+    Prefer ``observed_slot`` for new code — it distinguishes polymorphic
+    from megamorphic sites, which ``observed_type`` cannot.
     """
 
     observation_count: int = field(default=0, repr=False, compare=False)
-    """Number of times this instruction has been profiled by vm-core."""
+    """Number of times this instruction has been profiled by vm-core.
+
+    Mirrors ``observed_slot.count`` once ``record_observation`` has been
+    called at least once.  Kept as a separate field for backwards
+    compatibility.
+    """
+
+    observed_slot: SlotState | None = field(default=None, repr=False, compare=False)
+    """V8 Ignition-style feedback slot (LANG17).
+
+    ``None`` until the profiler samples this instruction for the first
+    time; thereafter holds a :class:`SlotState` the profiler updates in
+    place.  See :mod:`interpreter_ir.slot_state` for the state machine.
+    """
 
     deopt_anchor: int | None = field(default=None, repr=False, compare=False)
     """Instruction index to resume interpreter at if a JIT type guard fails.
@@ -85,14 +112,29 @@ class IIRInstr:
     ``None`` means no guard has been emitted yet.
     """
 
+    may_alloc: bool = field(default=False, repr=False, compare=False)
+    """LANG16 hint: this instruction may trigger a heap allocation.
+
+    Set by language frontends for any instruction that allocates (`alloc`,
+    `box`, `safepoint`) or transitively reaches one through a function
+    call.  vm-core uses this to decide where to insert GC safepoints —
+    a collection cycle can only happen at an instruction whose
+    ``may_alloc`` is True (or at the periodic forced-safepoint interval
+    for tight loops with no allocation).
+
+    Defaults to ``False`` so existing callers see no behaviour change:
+    programs that never allocate pay zero GC overhead because no
+    instruction's ``may_alloc`` ever fires.
+    """
+
     # -----------------------------------------------------------------------
     # Convenience helpers
     # -----------------------------------------------------------------------
 
     def is_typed(self) -> bool:
         """Return True if this instruction has a concrete (non-dynamic) type hint."""
-        from interpreter_ir.opcodes import CONCRETE_TYPES
-        return self.type_hint in CONCRETE_TYPES
+        from interpreter_ir.opcodes import CONCRETE_TYPES, is_ref_type
+        return self.type_hint in CONCRETE_TYPES or is_ref_type(self.type_hint)
 
     def has_observation(self) -> bool:
         """Return True if the profiler has recorded at least one observation."""
@@ -113,14 +155,33 @@ class IIRInstr:
     def record_observation(self, runtime_type: str) -> None:
         """Update the observation slot with a new runtime type.
 
-        Called by vm-core's profiler after each execution of this instruction.
-        Marks the slot as ``"polymorphic"`` if a second distinct type is seen.
+        Called by vm-core's profiler after each execution of this
+        instruction.  Advances the V8 Ignition-style state machine on
+        ``observed_slot`` and keeps the legacy ``observed_type`` /
+        ``observation_count`` fields in sync.
+
+        The state machine distinguishes *polymorphic* (2–4 types, still
+        JIT-friendly via a small dispatch table) from *megamorphic* (≥5
+        types, not worth specialising).  Callers that only need the
+        older two-state view can continue reading ``observed_type``.
         """
-        if self.observed_type is None:
-            self.observed_type = runtime_type
-        elif self.observed_type != runtime_type:
+        if self.observed_slot is None:
+            self.observed_slot = SlotState()
+        self.observed_slot.record(runtime_type)
+
+        # Keep the legacy mirror fields in sync so existing callers that
+        # read ``observed_type`` / ``observation_count`` keep working
+        # without modification.
+        self.observation_count = self.observed_slot.count
+        if self.observed_slot.kind is SlotKind.MONOMORPHIC:
+            self.observed_type = self.observed_slot.observations[0]
+        elif self.observed_slot.kind in (
+            SlotKind.POLYMORPHIC,
+            SlotKind.MEGAMORPHIC,
+        ):
             self.observed_type = "polymorphic"
-        self.observation_count += 1
+        # UNINITIALIZED is unreachable here — ``record`` always leaves
+        # the slot in one of the three active kinds above.
 
     def __repr__(self) -> str:
         dest_str = f"{self.dest} = " if self.dest is not None else ""

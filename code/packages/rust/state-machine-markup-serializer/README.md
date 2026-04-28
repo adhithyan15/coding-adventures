@@ -9,6 +9,10 @@ The core `state-machine` crate exposes executable automata and
 definitions into deterministic `.states.toml` text. Runtime automata never need
 to know about TOML, JSON, SCXML, or files.
 
+The serializer preserves transducer transition effects as portable `actions`
+arrays and emits `consume = false` only when a transition does not advance the
+input cursor.
+
 Deserialization intentionally belongs in a separate sibling package so the read
 path can have its own validation, trust-boundary checks, and tests.
 

@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+    <AssemblyName>CodingAdventures.Barcode1D.FSharp</AssemblyName>
+    <PackageId>CodingAdventures.Barcode1D.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>High-level 1D barcode pipeline for F#: symbology selection over shared barcode encoders and paint scenes</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../barcode-layout-1d/CodingAdventures.BarcodeLayout1D.fsproj" />
+    <ProjectReference Include="../codabar/CodingAdventures.Codabar.fsproj" />
+    <ProjectReference Include="../code128/CodingAdventures.Code128.fsproj" />
+    <ProjectReference Include="../code39/CodingAdventures.Code39.fsproj" />
+    <ProjectReference Include="../ean-13/CodingAdventures.Ean13.fsproj" />
+    <ProjectReference Include="../itf/CodingAdventures.Itf.fsproj" />
+    <ProjectReference Include="../paint-instructions/CodingAdventures.PaintInstructions.fsproj" />
+    <ProjectReference Include="../pixel-container/CodingAdventures.PixelContainer.fsproj" />
+    <ProjectReference Include="../upc-a/CodingAdventures.UpcA.fsproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Barcode1D.fs" />
+  </ItemGroup>
+</Project>

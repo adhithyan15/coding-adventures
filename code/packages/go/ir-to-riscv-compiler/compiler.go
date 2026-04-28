@@ -2,6 +2,7 @@ package irtoriscvcompiler
 
 import (
 	"fmt"
+	"sort"
 
 	ir "github.com/adhithyan15/coding-adventures/code/packages/go/compiler-ir"
 	sm "github.com/adhithyan15/coding-adventures/code/packages/go/compiler-source-map"
@@ -11,13 +12,27 @@ import (
 const (
 	x0              = 0
 	xRa             = 1
+	xSp             = 2
 	xSyscallNumber  = 17
+	xSpillTemp0     = 28
+	xSpillTemp1     = 29
+	xSpillTemp2     = 30
 	xBackendScratch = 31
+
+	callFrameStackLabel = "__riscv_call_stack"
+	callFrameStackSize  = 1024
 )
+
+var starterPhysicalRegisters = []int{
+	5, 6, 7,
+	11, 10, 12, 13, 14, 15, 16,
+	18, 19, 20, 21, 22, 23, 24, 25, 26, 27,
+}
 
 // MachineCodeResult is the output of lowering IR to a flat RISC-V image.
 type MachineCodeResult struct {
 	Bytes           []byte
+	Assembly        string
 	Instructions    []uint32
 	LabelOffsets    map[string]int
 	DataOffsets     map[string]int
@@ -41,8 +56,67 @@ func (e LoweringError) Error() string {
 type compilePlan struct {
 	labelOffsets    map[string]int
 	dataOffsets     map[string]int
+	callTargets     map[string]bool
+	functionFrames  map[string]*functionFrame
+	functionRoots   map[string]bool
+	functionByIndex []string
+	callerSavedRegs []callerSavedRegister
+	stackTop        int
 	textSize        int
 	entryTrampoline bool
+}
+
+type functionFrame struct {
+	label              string
+	savesReturnAddress bool
+	frameSize          int
+	spillSlots         map[int]int
+}
+
+func (p *compilePlan) usesStack() bool {
+	return p.stackTop != 0
+}
+
+func (p *compilePlan) frameForInstruction(index int) *functionFrame {
+	if index < 0 || index >= len(p.functionByIndex) {
+		return nil
+	}
+	root := p.functionByIndex[index]
+	if root == "" {
+		return nil
+	}
+	return p.functionFrames[root]
+}
+
+func (f *functionFrame) isEntryLabel(name string) bool {
+	return f != nil && f.label == name
+}
+
+func (f *functionFrame) prologueSize() int {
+	if f == nil || f.frameSize == 0 {
+		return 0
+	}
+	size := stackAdjustInstructionSize(-f.frameSize)
+	if f.savesReturnAddress {
+		size += stackSlotAccessSize(0)
+	}
+	return size
+}
+
+func (f *functionFrame) retEpilogueSize() int {
+	if f == nil || f.frameSize == 0 {
+		return 1
+	}
+	size := stackAdjustInstructionSize(f.frameSize) + 1
+	if f.savesReturnAddress {
+		size += stackSlotAccessSize(0)
+	}
+	return size
+}
+
+type callerSavedRegister struct {
+	virtual  int
+	physical int
 }
 
 // IrToRiscVCompiler lowers compiler IR to RV32I machine code.
@@ -63,6 +137,9 @@ func (c *IrToRiscVCompiler) Compile(program *ir.IrProgram) (*MachineCodeResult, 
 	}
 
 	words := make([]uint32, 0, plan.textSize/4)
+	if plan.usesStack() {
+		words = append(words, emitLoadAddress(xSp, plan.stackTop)...)
+	}
 	if plan.entryTrampoline {
 		entryOffset := plan.labelOffsets[program.EntryLabel]
 		if err := validateJalOffset(entryOffset); err != nil {
@@ -72,9 +149,9 @@ func (c *IrToRiscVCompiler) Compile(program *ir.IrProgram) (*MachineCodeResult, 
 	}
 
 	irToMC := &sm.IrToMachineCode{}
-	for _, instruction := range program.Instructions {
+	for index, instruction := range program.Instructions {
 		pc := len(words) * 4
-		emitted, err := c.emitInstruction(instruction, pc, plan)
+		emitted, err := c.emitInstruction(instruction, index, pc, plan)
 		if err != nil {
 			return nil, err
 		}
@@ -86,9 +163,17 @@ func (c *IrToRiscVCompiler) Compile(program *ir.IrProgram) (*MachineCodeResult, 
 
 	image := riscv.Assemble(words)
 	image = append(image, dataBytes(program.Data)...)
+	if plan.usesStack() {
+		image = append(image, make([]byte, callFrameStackSize)...)
+	}
+	assembly, err := c.emitAssembly(program, plan)
+	if err != nil {
+		return nil, err
+	}
 
 	return &MachineCodeResult{
 		Bytes:           image,
+		Assembly:        assembly,
 		Instructions:    words,
 		LabelOffsets:    plan.labelOffsets,
 		DataOffsets:     plan.dataOffsets,
@@ -97,9 +182,27 @@ func (c *IrToRiscVCompiler) Compile(program *ir.IrProgram) (*MachineCodeResult, 
 }
 
 func (c *IrToRiscVCompiler) plan(program *ir.IrProgram) (*compilePlan, error) {
+	callTargets, err := collectCallTargets(program)
+	if err != nil {
+		return nil, err
+	}
+	functionRoots, err := collectFunctionRoots(program, callTargets)
+	if err != nil {
+		return nil, err
+	}
+	functionFrames, functionByIndex, err := collectFunctionFrames(program, functionRoots, callTargets)
+	if err != nil {
+		return nil, err
+	}
+	callerSavedRegs := []callerSavedRegister{}
+	if len(callTargets) > 0 {
+		callerSavedRegs = collectCallerSavedRegisters(program)
+	}
+
 	labelOffsets := map[string]int{}
-	pc := 0
-	for _, instruction := range program.Instructions {
+	pc := stackSetupSize(functionFrames) * 4
+	fallthroughOffset := pc
+	for index, instruction := range program.Instructions {
 		if instruction.Opcode == ir.OpLabel {
 			label, err := labelOperand(instruction, 0)
 			if err != nil {
@@ -111,7 +214,7 @@ func (c *IrToRiscVCompiler) plan(program *ir.IrProgram) (*compilePlan, error) {
 			labelOffsets[label.Name] = pc
 		}
 
-		size, err := c.instructionSize(instruction)
+		size, err := c.instructionSize(instruction, index, functionFrames[functionByIndex[index]], callerSavedRegs)
 		if err != nil {
 			return nil, err
 		}
@@ -120,7 +223,7 @@ func (c *IrToRiscVCompiler) plan(program *ir.IrProgram) (*compilePlan, error) {
 
 	entryTrampoline := false
 	if program.EntryLabel != "" {
-		if entryOffset, ok := labelOffsets[program.EntryLabel]; ok && entryOffset != 0 {
+		if entryOffset, ok := labelOffsets[program.EntryLabel]; ok && entryOffset != fallthroughOffset {
 			entryTrampoline = true
 			for name, offset := range labelOffsets {
 				labelOffsets[name] = offset + 4
@@ -141,47 +244,125 @@ func (c *IrToRiscVCompiler) plan(program *ir.IrProgram) (*compilePlan, error) {
 		dataOffsets[decl.Label] = dataPC
 		dataPC += decl.Size
 	}
+	stackTop := 0
+	if usesStack(functionFrames) {
+		if _, exists := dataOffsets[callFrameStackLabel]; exists {
+			return nil, fmt.Errorf("duplicate data label %q", callFrameStackLabel)
+		}
+		dataOffsets[callFrameStackLabel] = dataPC
+		stackTop = dataPC + callFrameStackSize
+		dataPC += callFrameStackSize
+	}
 
 	return &compilePlan{
 		labelOffsets:    labelOffsets,
 		dataOffsets:     dataOffsets,
+		callTargets:     callTargets,
+		functionFrames:  functionFrames,
+		functionRoots:   functionRoots,
+		functionByIndex: functionByIndex,
+		callerSavedRegs: callerSavedRegs,
+		stackTop:        stackTop,
 		textSize:        pc,
 		entryTrampoline: entryTrampoline,
 	}, nil
 }
 
-func (c *IrToRiscVCompiler) instructionSize(instruction ir.IrInstruction) (int, error) {
+func (c *IrToRiscVCompiler) instructionSize(instruction ir.IrInstruction, instructionIndex int, frame *functionFrame, callerSavedRegs []callerSavedRegister) (int, error) {
 	switch instruction.Opcode {
-	case ir.OpLabel, ir.OpComment:
+	case ir.OpLabel:
+		if frame == nil {
+			return 0, nil
+		}
+		label, err := labelOperand(instruction, 0)
+		if err != nil {
+			return 0, err
+		}
+		if frame.isEntryLabel(label.Name) {
+			return frame.prologueSize(), nil
+		}
+		return 0, nil
+	case ir.OpComment:
 		return 0, nil
 	case ir.OpLoadImm:
 		imm, err := immOperand(instruction, 1)
 		if err != nil {
 			return 0, err
 		}
-		return loadConstSize(imm.Value), nil
-	case ir.OpLoadAddr:
-		return 2, nil
-	case ir.OpLoadByte, ir.OpLoadWord, ir.OpStoreByte, ir.OpStoreWord:
-		if _, ok := thirdOperandAsImmediate(instruction); ok {
-			return 1, nil
+		size, err := destinationRegisterSize(instruction, frame, 0)
+		if err != nil {
+			return 0, err
 		}
-		return 2, nil
+		return loadConstSize(imm.Value) + size, nil
+	case ir.OpLoadAddr:
+		size, err := destinationRegisterSize(instruction, frame, 0)
+		if err != nil {
+			return 0, err
+		}
+		return 2 + size, nil
+	case ir.OpLoadByte, ir.OpLoadWord, ir.OpStoreByte, ir.OpStoreWord:
+		size, err := sourceRegisterSize(instruction, frame, 1)
+		if err != nil {
+			return 0, err
+		}
+		if instruction.Opcode == ir.OpStoreByte || instruction.Opcode == ir.OpStoreWord {
+			sourceSize, err := sourceRegisterSize(instruction, frame, 0)
+			if err != nil {
+				return 0, err
+			}
+			size += sourceSize
+		} else {
+			destSize, err := destinationRegisterSize(instruction, frame, 0)
+			if err != nil {
+				return 0, err
+			}
+			size += destSize
+		}
+		if _, ok := thirdOperandAsImmediate(instruction); ok {
+			return size + 1, nil
+		}
+		offsetSize, err := sourceRegisterSize(instruction, frame, 2)
+		if err != nil {
+			return 0, err
+		}
+		return size + offsetSize + 2, nil
 	case ir.OpAdd, ir.OpSub, ir.OpAnd, ir.OpCmpLt, ir.OpCmpGt:
-		return 1, nil
+		return c.threeRegInstructionSize(instruction, frame, 1)
 	case ir.OpCmpEq, ir.OpCmpNe:
-		return 2, nil
+		return c.threeRegInstructionSize(instruction, frame, 2)
 	case ir.OpAddImm, ir.OpAndImm:
+		size, err := sourceRegisterSize(instruction, frame, 1)
+		if err != nil {
+			return 0, err
+		}
+		destSize, err := destinationRegisterSize(instruction, frame, 0)
+		if err != nil {
+			return 0, err
+		}
 		imm, err := immOperand(instruction, 2)
 		if err != nil {
 			return 0, err
 		}
 		if fitsSigned(imm.Value, 12) {
+			return size + 1 + destSize, nil
+		}
+		return size + loadConstSize(imm.Value) + 1 + destSize, nil
+	case ir.OpJump, ir.OpBranchZ, ir.OpBranchNz, ir.OpNop:
+		if instruction.Opcode == ir.OpJump || instruction.Opcode == ir.OpNop {
 			return 1, nil
 		}
-		return loadConstSize(imm.Value) + 1, nil
-	case ir.OpJump, ir.OpBranchZ, ir.OpBranchNz, ir.OpCall, ir.OpRet, ir.OpNop:
-		return 1, nil
+		size, err := sourceRegisterSize(instruction, frame, 0)
+		if err != nil {
+			return 0, err
+		}
+		return size + 1, nil
+	case ir.OpCall:
+		return callInstructionSize(callerSavedRegs), nil
+	case ir.OpRet:
+		if frame == nil {
+			return 1, nil
+		}
+		return frame.retEpilogueSize(), nil
 	case ir.OpSyscall:
 		imm, err := immOperand(instruction, 0)
 		if err != nil {
@@ -195,12 +376,41 @@ func (c *IrToRiscVCompiler) instructionSize(instruction ir.IrInstruction) (int, 
 	}
 }
 
-func (c *IrToRiscVCompiler) emitInstruction(instruction ir.IrInstruction, pc int, plan *compilePlan) ([]uint32, error) {
+func (c *IrToRiscVCompiler) threeRegInstructionSize(instruction ir.IrInstruction, frame *functionFrame, opWords int) (int, error) {
+	leftSize, err := sourceRegisterSize(instruction, frame, 1)
+	if err != nil {
+		return 0, err
+	}
+	rightSize, err := sourceRegisterSize(instruction, frame, 2)
+	if err != nil {
+		return 0, err
+	}
+	destSize, err := destinationRegisterSize(instruction, frame, 0)
+	if err != nil {
+		return 0, err
+	}
+	return leftSize + rightSize + opWords + destSize, nil
+}
+
+func (c *IrToRiscVCompiler) emitInstruction(instruction ir.IrInstruction, instructionIndex int, pc int, plan *compilePlan) ([]uint32, error) {
+	frame := plan.frameForInstruction(instructionIndex)
 	switch instruction.Opcode {
-	case ir.OpLabel, ir.OpComment:
+	case ir.OpLabel:
+		if frame == nil {
+			return nil, nil
+		}
+		label, err := labelOperand(instruction, 0)
+		if err != nil {
+			return nil, err
+		}
+		if frame.isEntryLabel(label.Name) {
+			return emitFunctionPrologue(frame), nil
+		}
+		return nil, nil
+	case ir.OpComment:
 		return nil, nil
 	case ir.OpLoadImm:
-		dst, err := physicalRegOperand(instruction, 0)
+		dst, spillOffset, err := destinationRegister(instruction, frame, 0, xSpillTemp0)
 		if err != nil {
 			return nil, err
 		}
@@ -208,9 +418,10 @@ func (c *IrToRiscVCompiler) emitInstruction(instruction ir.IrInstruction, pc int
 		if err != nil {
 			return nil, err
 		}
-		return emitLoadConst(dst, imm.Value), nil
+		words := emitLoadConst(dst, imm.Value)
+		return appendSpillStore(words, dst, spillOffset), nil
 	case ir.OpLoadAddr:
-		dst, err := physicalRegOperand(instruction, 0)
+		dst, spillOffset, err := destinationRegister(instruction, frame, 0, xSpillTemp0)
 		if err != nil {
 			return nil, err
 		}
@@ -225,33 +436,34 @@ func (c *IrToRiscVCompiler) emitInstruction(instruction ir.IrInstruction, pc int
 		if !ok {
 			return nil, loweringError(instruction, "unknown label %q", label.Name)
 		}
-		return emitLoadAddress(dst, offset), nil
+		words := emitLoadAddress(dst, offset)
+		return appendSpillStore(words, dst, spillOffset), nil
 	case ir.OpLoadByte:
-		return c.emitLoad(instruction, riscv.EncodeLbu)
+		return c.emitLoad(instruction, frame, riscv.EncodeLbu)
 	case ir.OpLoadWord:
-		return c.emitLoad(instruction, riscv.EncodeLw)
+		return c.emitLoad(instruction, frame, riscv.EncodeLw)
 	case ir.OpStoreByte:
-		return c.emitStore(instruction, riscv.EncodeSb)
+		return c.emitStore(instruction, frame, riscv.EncodeSb)
 	case ir.OpStoreWord:
-		return c.emitStore(instruction, riscv.EncodeSw)
+		return c.emitStore(instruction, frame, riscv.EncodeSw)
 	case ir.OpAdd:
-		return emitThreeReg(instruction, riscv.EncodeAdd)
+		return emitThreeReg(instruction, frame, riscv.EncodeAdd)
 	case ir.OpSub:
-		return emitThreeReg(instruction, riscv.EncodeSub)
+		return emitThreeReg(instruction, frame, riscv.EncodeSub)
 	case ir.OpAnd:
-		return emitThreeReg(instruction, riscv.EncodeAnd)
+		return emitThreeReg(instruction, frame, riscv.EncodeAnd)
 	case ir.OpAddImm:
-		return emitRegImm(instruction, riscv.EncodeAddi, riscv.EncodeAdd)
+		return emitRegImm(instruction, frame, riscv.EncodeAddi, riscv.EncodeAdd)
 	case ir.OpAndImm:
-		return emitRegImm(instruction, riscv.EncodeAndi, riscv.EncodeAnd)
+		return emitRegImm(instruction, frame, riscv.EncodeAndi, riscv.EncodeAnd)
 	case ir.OpCmpEq:
-		return emitCmpEqNe(instruction, true)
+		return emitCmpEqNe(instruction, frame, true)
 	case ir.OpCmpNe:
-		return emitCmpEqNe(instruction, false)
+		return emitCmpEqNe(instruction, frame, false)
 	case ir.OpCmpLt:
-		return emitThreeReg(instruction, riscv.EncodeSlt)
+		return emitThreeReg(instruction, frame, riscv.EncodeSlt)
 	case ir.OpCmpGt:
-		return emitCmpGt(instruction)
+		return emitCmpGt(instruction, frame)
 	case ir.OpJump:
 		label, err := labelOperand(instruction, 0)
 		if err != nil {
@@ -263,19 +475,20 @@ func (c *IrToRiscVCompiler) emitInstruction(instruction ir.IrInstruction, pc int
 		}
 		return []uint32{riscv.EncodeJal(x0, offset)}, nil
 	case ir.OpBranchZ, ir.OpBranchNz:
-		return emitBranch(instruction, pc, plan)
+		return emitBranch(instruction, frame, pc, plan)
 	case ir.OpCall:
 		label, err := labelOperand(instruction, 0)
 		if err != nil {
 			return nil, err
 		}
-		offset, err := jalOffset(instruction, label, pc, plan)
+		jalPC := pc + callerSavePrologueSize(plan.callerSavedRegs)*4
+		offset, err := jalOffset(instruction, label, jalPC, plan)
 		if err != nil {
 			return nil, err
 		}
-		return []uint32{riscv.EncodeJal(xRa, offset)}, nil
+		return emitCallWithCallerSaves(offset, plan.callerSavedRegs), nil
 	case ir.OpRet:
-		return []uint32{riscv.EncodeJalr(x0, xRa, 0)}, nil
+		return emitRetEpilogue(frame), nil
 	case ir.OpSyscall:
 		imm, err := immOperand(instruction, 0)
 		if err != nil {
@@ -293,78 +506,311 @@ func (c *IrToRiscVCompiler) emitInstruction(instruction ir.IrInstruction, pc int
 	}
 }
 
-func (c *IrToRiscVCompiler) emitLoad(instruction ir.IrInstruction, encode func(rd, rs1, imm int) uint32) ([]uint32, error) {
-	dst, err := physicalRegOperand(instruction, 0)
+func (c *IrToRiscVCompiler) emitLoad(instruction ir.IrInstruction, frame *functionFrame, encode func(rd, rs1, imm int) uint32) ([]uint32, error) {
+	dst, spillOffset, err := destinationRegister(instruction, frame, 0, xSpillTemp0)
 	if err != nil {
 		return nil, err
 	}
-	base, err := physicalRegOperand(instruction, 1)
+	base, baseSetup, err := sourceRegister(instruction, frame, 1, xSpillTemp1)
 	if err != nil {
 		return nil, err
 	}
+	words := append([]uint32{}, baseSetup...)
 	if imm, ok := thirdOperandAsImmediate(instruction); ok {
 		if !fitsSigned(imm.Value, 12) {
 			return nil, loweringError(instruction, "memory immediate %d is outside signed 12-bit range", imm.Value)
 		}
-		return []uint32{encode(dst, base, imm.Value)}, nil
+		words = append(words, encode(dst, base, imm.Value))
+		return appendSpillStore(words, dst, spillOffset), nil
 	}
-	offset, err := physicalRegOperand(instruction, 2)
+	offset, offsetSetup, err := sourceRegister(instruction, frame, 2, xSpillTemp2)
 	if err != nil {
 		return nil, err
 	}
-	return []uint32{
+	words = append(words, offsetSetup...)
+	words = append(words,
 		riscv.EncodeAdd(xBackendScratch, base, offset),
 		encode(dst, xBackendScratch, 0),
-	}, nil
+	)
+	return appendSpillStore(words, dst, spillOffset), nil
 }
 
-func (c *IrToRiscVCompiler) emitStore(instruction ir.IrInstruction, encode func(rs2, rs1, imm int) uint32) ([]uint32, error) {
-	src, err := physicalRegOperand(instruction, 0)
+func (c *IrToRiscVCompiler) emitStore(instruction ir.IrInstruction, frame *functionFrame, encode func(rs2, rs1, imm int) uint32) ([]uint32, error) {
+	src, srcSetup, err := sourceRegister(instruction, frame, 0, xSpillTemp0)
 	if err != nil {
 		return nil, err
 	}
-	base, err := physicalRegOperand(instruction, 1)
+	base, baseSetup, err := sourceRegister(instruction, frame, 1, xSpillTemp1)
 	if err != nil {
 		return nil, err
 	}
+	words := append([]uint32{}, srcSetup...)
+	words = append(words, baseSetup...)
 	if imm, ok := thirdOperandAsImmediate(instruction); ok {
 		if !fitsSigned(imm.Value, 12) {
 			return nil, loweringError(instruction, "memory immediate %d is outside signed 12-bit range", imm.Value)
 		}
-		return []uint32{encode(src, base, imm.Value)}, nil
+		return append(words, encode(src, base, imm.Value)), nil
 	}
-	offset, err := physicalRegOperand(instruction, 2)
+	offset, offsetSetup, err := sourceRegister(instruction, frame, 2, xSpillTemp2)
 	if err != nil {
 		return nil, err
 	}
-	return []uint32{
+	words = append(words, offsetSetup...)
+	return append(words,
 		riscv.EncodeAdd(xBackendScratch, base, offset),
 		encode(src, xBackendScratch, 0),
-	}, nil
+	), nil
 }
 
-func emitThreeReg(instruction ir.IrInstruction, encode func(rd, rs1, rs2 int) uint32) ([]uint32, error) {
-	dst, err := physicalRegOperand(instruction, 0)
-	if err != nil {
-		return nil, err
+func collectCallTargets(program *ir.IrProgram) (map[string]bool, error) {
+	targets := map[string]bool{}
+	for _, instruction := range program.Instructions {
+		if instruction.Opcode != ir.OpCall {
+			continue
+		}
+		label, err := labelOperand(instruction, 0)
+		if err != nil {
+			return nil, err
+		}
+		targets[label.Name] = true
 	}
-	left, err := physicalRegOperand(instruction, 1)
-	if err != nil {
-		return nil, err
-	}
-	right, err := physicalRegOperand(instruction, 2)
-	if err != nil {
-		return nil, err
-	}
-	return []uint32{encode(dst, left, right)}, nil
+	return targets, nil
 }
 
-func emitRegImm(instruction ir.IrInstruction, encodeImm func(rd, rs1, imm int) uint32, encodeReg func(rd, rs1, rs2 int) uint32) ([]uint32, error) {
-	dst, err := physicalRegOperand(instruction, 0)
+func collectFunctionRoots(program *ir.IrProgram, callTargets map[string]bool) (map[string]bool, error) {
+	roots := map[string]bool{}
+	startNewRoot := true
+	for _, instruction := range program.Instructions {
+		if instruction.Opcode == ir.OpLabel {
+			label, err := labelOperand(instruction, 0)
+			if err != nil {
+				return nil, err
+			}
+			if startNewRoot || label.Name == program.EntryLabel || callTargets[label.Name] {
+				roots[label.Name] = true
+				startNewRoot = false
+			}
+		}
+		if instruction.Opcode == ir.OpRet || instruction.Opcode == ir.OpHalt {
+			startNewRoot = true
+		}
+	}
+	return roots, nil
+}
+
+func collectFunctionFrames(program *ir.IrProgram, roots map[string]bool, callTargets map[string]bool) (map[string]*functionFrame, []string, error) {
+	frames := map[string]*functionFrame{}
+	functionByIndex := make([]string, len(program.Instructions))
+	currentRoot := ""
+
+	for index, instruction := range program.Instructions {
+		if instruction.Opcode == ir.OpLabel {
+			label, err := labelOperand(instruction, 0)
+			if err != nil {
+				return nil, nil, err
+			}
+			if roots[label.Name] {
+				currentRoot = label.Name
+				if _, exists := frames[currentRoot]; !exists {
+					frames[currentRoot] = &functionFrame{
+						label:              currentRoot,
+						savesReturnAddress: callTargets[currentRoot],
+						spillSlots:         map[int]int{},
+					}
+				}
+			}
+		}
+		functionByIndex[index] = currentRoot
+		if currentRoot == "" {
+			continue
+		}
+		frame := frames[currentRoot]
+		for _, operand := range instruction.Operands {
+			register, ok := operand.(ir.IrRegister)
+			if !ok {
+				continue
+			}
+			if _, ok := physicalRegister(register.Index); ok {
+				continue
+			}
+			frame.spillSlots[register.Index] = 0
+		}
+	}
+
+	for _, frame := range frames {
+		offset := 0
+		if frame.savesReturnAddress {
+			offset = 4
+			frame.frameSize = 4
+		}
+		virtuals := make([]int, 0, len(frame.spillSlots))
+		for virtual := range frame.spillSlots {
+			virtuals = append(virtuals, virtual)
+		}
+		sort.Ints(virtuals)
+		for _, virtual := range virtuals {
+			frame.spillSlots[virtual] = offset
+			offset += 4
+		}
+		if offset > frame.frameSize {
+			frame.frameSize = offset
+		}
+	}
+
+	return frames, functionByIndex, nil
+}
+
+func collectCallerSavedRegisters(program *ir.IrProgram) []callerSavedRegister {
+	seen := map[int]bool{}
+	for _, instruction := range program.Instructions {
+		for _, operand := range instruction.Operands {
+			register, ok := operand.(ir.IrRegister)
+			if !ok || isVolatileVirtualRegister(register.Index) {
+				continue
+			}
+			physical, ok := physicalRegister(register.Index)
+			if !ok || physical == xRa || physical == xSp || physical == xBackendScratch {
+				continue
+			}
+			seen[register.Index] = true
+		}
+	}
+	virtuals := make([]int, 0, len(seen))
+	for virtual := range seen {
+		virtuals = append(virtuals, virtual)
+	}
+	sort.Ints(virtuals)
+
+	registers := make([]callerSavedRegister, 0, len(virtuals))
+	for _, virtual := range virtuals {
+		physical, _ := physicalRegister(virtual)
+		registers = append(registers, callerSavedRegister{virtual: virtual, physical: physical})
+	}
+	return registers
+}
+
+func isVolatileVirtualRegister(index int) bool {
+	return index == 0 || index == 1
+}
+
+func usesStack(frames map[string]*functionFrame) bool {
+	for _, frame := range frames {
+		if frame.frameSize > 0 {
+			return true
+		}
+	}
+	return false
+}
+
+func stackSetupSize(frames map[string]*functionFrame) int {
+	if !usesStack(frames) {
+		return 0
+	}
+	return 2
+}
+
+func callInstructionSize(regs []callerSavedRegister) int {
+	return callerSavePrologueSize(regs) + 1 + callerSaveEpilogueSize(regs)
+}
+
+func callerSavePrologueSize(regs []callerSavedRegister) int {
+	if len(regs) == 0 {
+		return 0
+	}
+	return stackAdjustInstructionSize(-callerSaveFrameBytes(regs)) + len(regs)
+}
+
+func callerSaveEpilogueSize(regs []callerSavedRegister) int {
+	if len(regs) == 0 {
+		return 0
+	}
+	return len(regs) + stackAdjustInstructionSize(callerSaveFrameBytes(regs))
+}
+
+func callerSaveFrameBytes(regs []callerSavedRegister) int {
+	return len(regs) * 4
+}
+
+func emitCallWithCallerSaves(offset int, regs []callerSavedRegister) []uint32 {
+	words := emitCallerSavePrologue(regs)
+	words = append(words, riscv.EncodeJal(xRa, offset))
+	words = append(words, emitCallerSaveEpilogue(regs)...)
+	return words
+}
+
+func emitCallerSavePrologue(regs []callerSavedRegister) []uint32 {
+	if len(regs) == 0 {
+		return nil
+	}
+	words := emitStackAdjust(-callerSaveFrameBytes(regs))
+	for index, register := range regs {
+		words = append(words, riscv.EncodeSw(register.physical, xSp, index*4))
+	}
+	return words
+}
+
+func emitCallerSaveEpilogue(regs []callerSavedRegister) []uint32 {
+	if len(regs) == 0 {
+		return nil
+	}
+	words := make([]uint32, 0, len(regs)+stackAdjustInstructionSize(callerSaveFrameBytes(regs)))
+	for index, register := range regs {
+		words = append(words, riscv.EncodeLw(register.physical, xSp, index*4))
+	}
+	words = append(words, emitStackAdjust(callerSaveFrameBytes(regs))...)
+	return words
+}
+
+func emitFunctionPrologue(frame *functionFrame) []uint32 {
+	if frame == nil || frame.frameSize == 0 {
+		return nil
+	}
+	words := emitStackAdjust(-frame.frameSize)
+	if frame.savesReturnAddress {
+		words = append(words, emitStackSlotStore(xRa, 0)...)
+	}
+	return words
+}
+
+func emitRetEpilogue(frame *functionFrame) []uint32 {
+	if frame == nil || frame.frameSize == 0 {
+		return []uint32{riscv.EncodeJalr(x0, xRa, 0)}
+	}
+	words := []uint32{}
+	if frame.savesReturnAddress {
+		words = append(words, emitStackSlotLoad(xRa, 0)...)
+	}
+	words = append(words, emitStackAdjust(frame.frameSize)...)
+	words = append(words, riscv.EncodeJalr(x0, xRa, 0))
+	return words
+}
+
+func emitThreeReg(instruction ir.IrInstruction, frame *functionFrame, encode func(rd, rs1, rs2 int) uint32) ([]uint32, error) {
+	dst, spillOffset, err := destinationRegister(instruction, frame, 0, xSpillTemp0)
 	if err != nil {
 		return nil, err
 	}
-	src, err := physicalRegOperand(instruction, 1)
+	left, leftSetup, err := sourceRegister(instruction, frame, 1, xSpillTemp1)
+	if err != nil {
+		return nil, err
+	}
+	right, rightSetup, err := sourceRegister(instruction, frame, 2, xSpillTemp2)
+	if err != nil {
+		return nil, err
+	}
+	words := append([]uint32{}, leftSetup...)
+	words = append(words, rightSetup...)
+	words = append(words, encode(dst, left, right))
+	return appendSpillStore(words, dst, spillOffset), nil
+}
+
+func emitRegImm(instruction ir.IrInstruction, frame *functionFrame, encodeImm func(rd, rs1, imm int) uint32, encodeReg func(rd, rs1, rs2 int) uint32) ([]uint32, error) {
+	dst, spillOffset, err := destinationRegister(instruction, frame, 0, xSpillTemp0)
+	if err != nil {
+		return nil, err
+	}
+	src, srcSetup, err := sourceRegister(instruction, frame, 1, xSpillTemp1)
 	if err != nil {
 		return nil, err
 	}
@@ -372,57 +818,66 @@ func emitRegImm(instruction ir.IrInstruction, encodeImm func(rd, rs1, imm int) u
 	if err != nil {
 		return nil, err
 	}
+	words := append([]uint32{}, srcSetup...)
 	if fitsSigned(imm.Value, 12) {
-		return []uint32{encodeImm(dst, src, imm.Value)}, nil
+		words = append(words, encodeImm(dst, src, imm.Value))
+		return appendSpillStore(words, dst, spillOffset), nil
 	}
-	words := emitLoadConst(xBackendScratch, imm.Value)
+	words = append(words, emitLoadConst(xBackendScratch, imm.Value)...)
 	words = append(words, encodeReg(dst, src, xBackendScratch))
-	return words, nil
+	return appendSpillStore(words, dst, spillOffset), nil
 }
 
-func emitCmpEqNe(instruction ir.IrInstruction, equal bool) ([]uint32, error) {
-	dst, err := physicalRegOperand(instruction, 0)
+func emitCmpEqNe(instruction ir.IrInstruction, frame *functionFrame, equal bool) ([]uint32, error) {
+	dst, spillOffset, err := destinationRegister(instruction, frame, 0, xSpillTemp0)
 	if err != nil {
 		return nil, err
 	}
-	left, err := physicalRegOperand(instruction, 1)
+	left, leftSetup, err := sourceRegister(instruction, frame, 1, xSpillTemp1)
 	if err != nil {
 		return nil, err
 	}
-	right, err := physicalRegOperand(instruction, 2)
+	right, rightSetup, err := sourceRegister(instruction, frame, 2, xSpillTemp2)
 	if err != nil {
 		return nil, err
 	}
+	words := append([]uint32{}, leftSetup...)
+	words = append(words, rightSetup...)
 	if equal {
-		return []uint32{
+		words = append(words,
 			riscv.EncodeXor(dst, left, right),
 			riscv.EncodeSltiu(dst, dst, 1),
-		}, nil
+		)
+		return appendSpillStore(words, dst, spillOffset), nil
 	}
-	return []uint32{
+	words = append(words,
 		riscv.EncodeXor(dst, left, right),
 		riscv.EncodeSltu(dst, x0, dst),
-	}, nil
+	)
+	return appendSpillStore(words, dst, spillOffset), nil
 }
 
-func emitCmpGt(instruction ir.IrInstruction) ([]uint32, error) {
-	dst, err := physicalRegOperand(instruction, 0)
+func emitCmpGt(instruction ir.IrInstruction, frame *functionFrame) ([]uint32, error) {
+	dst, spillOffset, err := destinationRegister(instruction, frame, 0, xSpillTemp0)
 	if err != nil {
 		return nil, err
 	}
-	left, err := physicalRegOperand(instruction, 1)
+	left, leftSetup, err := sourceRegister(instruction, frame, 1, xSpillTemp1)
 	if err != nil {
 		return nil, err
 	}
-	right, err := physicalRegOperand(instruction, 2)
+	right, rightSetup, err := sourceRegister(instruction, frame, 2, xSpillTemp2)
 	if err != nil {
 		return nil, err
 	}
-	return []uint32{riscv.EncodeSlt(dst, right, left)}, nil
+	words := append([]uint32{}, leftSetup...)
+	words = append(words, rightSetup...)
+	words = append(words, riscv.EncodeSlt(dst, right, left))
+	return appendSpillStore(words, dst, spillOffset), nil
 }
 
-func emitBranch(instruction ir.IrInstruction, pc int, plan *compilePlan) ([]uint32, error) {
-	register, err := physicalRegOperand(instruction, 0)
+func emitBranch(instruction ir.IrInstruction, frame *functionFrame, pc int, plan *compilePlan) ([]uint32, error) {
+	register, setup, err := sourceRegister(instruction, frame, 0, xSpillTemp0)
 	if err != nil {
 		return nil, err
 	}
@@ -434,14 +889,15 @@ func emitBranch(instruction ir.IrInstruction, pc int, plan *compilePlan) ([]uint
 	if !ok {
 		return nil, loweringError(instruction, "unknown label %q", label.Name)
 	}
-	offset := target - pc
+	branchPC := pc + len(setup)*4
+	offset := target - branchPC
 	if err := validateBranchOffset(offset); err != nil {
 		return nil, loweringError(instruction, "%v", err)
 	}
 	if instruction.Opcode == ir.OpBranchZ {
-		return []uint32{riscv.EncodeBeq(register, x0, offset)}, nil
+		return append(setup, riscv.EncodeBeq(register, x0, offset)), nil
 	}
-	return []uint32{riscv.EncodeBne(register, x0, offset)}, nil
+	return append(setup, riscv.EncodeBne(register, x0, offset)), nil
 }
 
 func jalOffset(instruction ir.IrInstruction, label ir.IrLabel, pc int, plan *compilePlan) (int, error) {
@@ -454,6 +910,134 @@ func jalOffset(instruction ir.IrInstruction, label ir.IrLabel, pc int, plan *com
 		return 0, loweringError(instruction, "%v", err)
 	}
 	return offset, nil
+}
+
+func sourceRegisterSize(instruction ir.IrInstruction, frame *functionFrame, operandIndex int) (int, error) {
+	reg, err := regOperand(instruction, operandIndex)
+	if err != nil {
+		return 0, err
+	}
+	if _, ok := physicalRegister(reg.Index); ok {
+		return 0, nil
+	}
+	offset, ok := spillSlotOffset(frame, reg.Index)
+	if !ok {
+		return 0, loweringError(instruction, "virtual register v%d has no physical mapping or spill slot", reg.Index)
+	}
+	return stackSlotAccessSize(offset), nil
+}
+
+func destinationRegisterSize(instruction ir.IrInstruction, frame *functionFrame, operandIndex int) (int, error) {
+	reg, err := regOperand(instruction, operandIndex)
+	if err != nil {
+		return 0, err
+	}
+	if _, ok := physicalRegister(reg.Index); ok {
+		return 0, nil
+	}
+	offset, ok := spillSlotOffset(frame, reg.Index)
+	if !ok {
+		return 0, loweringError(instruction, "virtual register v%d has no physical mapping or spill slot", reg.Index)
+	}
+	return stackSlotAccessSize(offset), nil
+}
+
+func sourceRegister(instruction ir.IrInstruction, frame *functionFrame, operandIndex int, spillTemp int) (int, []uint32, error) {
+	reg, err := regOperand(instruction, operandIndex)
+	if err != nil {
+		return 0, nil, err
+	}
+	if physical, ok := physicalRegister(reg.Index); ok {
+		return physical, nil, nil
+	}
+	offset, ok := spillSlotOffset(frame, reg.Index)
+	if !ok {
+		return 0, nil, loweringError(instruction, "virtual register v%d has no physical mapping or spill slot", reg.Index)
+	}
+	return spillTemp, emitStackSlotLoad(spillTemp, offset), nil
+}
+
+func destinationRegister(instruction ir.IrInstruction, frame *functionFrame, operandIndex int, spillTemp int) (int, int, error) {
+	reg, err := regOperand(instruction, operandIndex)
+	if err != nil {
+		return 0, -1, err
+	}
+	if physical, ok := physicalRegister(reg.Index); ok {
+		return physical, -1, nil
+	}
+	offset, ok := spillSlotOffset(frame, reg.Index)
+	if !ok {
+		return 0, -1, loweringError(instruction, "virtual register v%d has no physical mapping or spill slot", reg.Index)
+	}
+	return spillTemp, offset, nil
+}
+
+func spillSlotOffset(frame *functionFrame, virtual int) (int, bool) {
+	if frame == nil {
+		return 0, false
+	}
+	offset, ok := frame.spillSlots[virtual]
+	return offset, ok
+}
+
+func appendSpillStore(words []uint32, physical int, spillOffset int) []uint32 {
+	if spillOffset < 0 {
+		return words
+	}
+	return append(words, emitStackSlotStore(physical, spillOffset)...)
+}
+
+func stackAdjustInstructionSize(amount int) int {
+	if amount == 0 {
+		return 0
+	}
+	if fitsSigned(amount, 12) {
+		return 1
+	}
+	return loadConstSize(amount) + 1
+}
+
+func stackSlotAccessSize(offset int) int {
+	if fitsSigned(offset, 12) {
+		return 1
+	}
+	return loadConstSize(offset) + 2
+}
+
+func emitStackAdjust(amount int) []uint32 {
+	if amount == 0 {
+		return nil
+	}
+	if fitsSigned(amount, 12) {
+		return []uint32{riscv.EncodeAddi(xSp, xSp, amount)}
+	}
+	words := emitLoadConst(xBackendScratch, amount)
+	words = append(words, riscv.EncodeAdd(xSp, xSp, xBackendScratch))
+	return words
+}
+
+func emitStackSlotLoad(rd, offset int) []uint32 {
+	if fitsSigned(offset, 12) {
+		return []uint32{riscv.EncodeLw(rd, xSp, offset)}
+	}
+	words := emitLoadConst(xBackendScratch, offset)
+	words = append(words,
+		riscv.EncodeAdd(xBackendScratch, xSp, xBackendScratch),
+		riscv.EncodeLw(rd, xBackendScratch, 0),
+	)
+	return words
+}
+
+func emitStackSlotStore(rs, offset int) []uint32 {
+	if fitsSigned(offset, 12) {
+		return []uint32{riscv.EncodeSw(rs, xSp, offset)}
+	}
+	words := emitLoadConst(xBackendScratch, offset)
+	words = append(words,
+		riscv.EncodeAdd(xBackendScratch, xSp, xBackendScratch),
+		riscv.EncodeSw(rs, xBackendScratch, 0),
+	)
+	return words
 }
 
 func emitLoadConst(rd, value int) []uint32 {
@@ -506,22 +1090,8 @@ func physicalRegOperand(instruction ir.IrInstruction, index int) (int, error) {
 }
 
 func physicalRegister(index int) (int, bool) {
-	fixed := map[int]int{
-		0: 5,  // tape/data base
-		1: 6,  // tape/data offset
-		2: 7,  // temp
-		3: 28, // temp2
-		4: 10, // a0, syscall arg/result
-		5: 29, // temp3
-		6: 30, // zero/bounds-check temp
-	}
-	if physical, ok := fixed[index]; ok {
-		return physical, true
-	}
-	extra := []int{11, 12, 13, 14, 15, 16, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27}
-	extraIndex := index - 7
-	if extraIndex >= 0 && extraIndex < len(extra) {
-		return extra[extraIndex], true
+	if index >= 0 && index < len(starterPhysicalRegisters) {
+		return starterPhysicalRegisters[index], true
 	}
 	return 0, false
 }

@@ -97,11 +97,16 @@ pub struct luaL_Reg {
 // the same index-based API as the regular stack.
 
 /// Pseudo-index for the Lua registry — a global table for C libraries to store values.
-pub const LUA_REGISTRYINDEX: c_int = -10000;
-/// Pseudo-index for the C function's environment table (Lua 5.1 only; use upvalues in 5.4).
-pub const LUA_ENVIRONINDEX: c_int = -10001;
-/// Pseudo-index for the global table `_G`.
-pub const LUA_GLOBALSINDEX: c_int = -10002;
+///
+/// Lua 5.4 derives this from `LUAI_MAXSTACK` (1_000_000): `LUA_REGISTRYINDEX = -(LUAI_MAXSTACK + 1000) = -1_001_000`.
+/// The Lua 5.1 value (-10000) is wrong for 5.4 and causes crashes in `luaL_ref`/`luaL_unref`.
+pub const LUA_REGISTRYINDEX: c_int = -1_001_000;
+/// Pseudo-index for the C function's environment table (Lua 5.1 only; removed in 5.2+).
+#[deprecated = "LUA_ENVIRONINDEX was removed in Lua 5.2; use upvalues in Lua 5.4"]
+pub const LUA_ENVIRONINDEX: c_int = -1_001_001;
+/// Pseudo-index for the global table `_G` (Lua 5.1 only; removed in 5.2+).
+#[deprecated = "LUA_GLOBALSINDEX was removed in Lua 5.2; use lua_getglobal in Lua 5.4"]
+pub const LUA_GLOBALSINDEX: c_int = -1_001_002;
 
 // ---------------------------------------------------------------------------
 // Lua value type tags (returned by lua_type)

@@ -18,8 +18,15 @@
 
 pub const VERSION: &str = "0.1.0";
 
-use paint_instructions::{PaintInstruction, PaintRect, PaintScene};
+use paint_instructions::{
+    GlyphPosition, PaintBase, PaintGlyphRun, PaintInstruction, PaintRect, PaintScene,
+};
 use std::collections::HashMap;
+use text_interfaces::{
+    FontMetrics, FontQuery, FontResolver, FontStretch, FontStyle, FontWeight, ShapeOptions,
+    TextShaper,
+};
+use text_native::{NativeMetrics, NativeResolver, NativeShaper};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Barcode1DRunColor {
@@ -126,8 +133,26 @@ pub struct Barcode1DSymbolDescriptor {
     pub role: Barcode1DSymbolRole,
 }
 
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum Barcode1DLayoutTarget {
+    NativePaintVm,
+    CanvasPaintVm,
+    DomPaintVm,
+}
+
+impl Barcode1DLayoutTarget {
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::NativePaintVm => "native-paint-vm",
+            Self::CanvasPaintVm => "canvas-paint-vm",
+            Self::DomPaintVm => "dom-paint-vm",
+        }
+    }
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct Barcode1DRenderConfig {
+    pub layout_target: Barcode1DLayoutTarget,
     pub module_width: f64,
     pub bar_height: f64,
     pub quiet_zone_modules: u32,
@@ -141,6 +166,7 @@ pub struct Barcode1DRenderConfig {
 impl Default for Barcode1DRenderConfig {
     fn default() -> Self {
         Self {
+            layout_target: Barcode1DLayoutTarget::NativePaintVm,
             module_width: 4.0,
             bar_height: 120.0,
             quiet_zone_modules: 10,
@@ -448,18 +474,112 @@ pub fn runs_from_width_pattern(
     Ok(runs)
 }
 
+#[cfg(target_vendor = "apple")]
+fn default_text_family() -> &'static str {
+    "Helvetica"
+}
+
+#[cfg(not(target_vendor = "apple"))]
+fn default_text_family() -> &'static str {
+    "sans-serif"
+}
+
+fn compute_text_line_height(
+    metrics: &NativeMetrics,
+    handle: &text_native::NativeHandle,
+    size: f64,
+) -> f64 {
+    let upem = metrics.units_per_em(handle).max(1) as f64;
+    let ascent = metrics.ascent(handle) as f64 * size / upem;
+    let descent = metrics.descent(handle) as f64 * size / upem;
+    let gap = metrics.line_gap(handle) as f64 * size / upem;
+    (ascent + descent + gap).max(size)
+}
+
+fn build_human_readable_text_instructions(
+    scene_width: f64,
+    bar_height: f64,
+    text: &str,
+    config: &Barcode1DRenderConfig,
+) -> Result<(Vec<PaintInstruction>, f64), String> {
+    let text = text.trim();
+    if text.is_empty() {
+        return Ok((Vec::new(), 0.0));
+    }
+
+    let resolver = NativeResolver::new();
+    let metrics = NativeMetrics::new();
+    let shaper = NativeShaper::new();
+    let handle = resolver
+        .resolve(&FontQuery {
+            family_names: vec![default_text_family().to_string()],
+            weight: FontWeight::REGULAR,
+            style: FontStyle::Normal,
+            stretch: FontStretch::Normal,
+        })
+        .map_err(|err| format!("human-readable text font resolution failed: {err}"))?;
+    let shaped = shaper
+        .shape(
+            text,
+            &handle,
+            config.text_font_size as f32,
+            &ShapeOptions::default(),
+        )
+        .map_err(|err| format!("human-readable text shaping failed: {err}"))?;
+
+    let text_width = shaped.total_advance() as f64;
+    let line_height = compute_text_line_height(&metrics, &handle, config.text_font_size);
+    let ascent = metrics.ascent(&handle) as f64 * config.text_font_size
+        / metrics.units_per_em(&handle).max(1) as f64;
+    let baseline_x = ((scene_width - text_width) / 2.0).max(0.0);
+    let baseline_y = bar_height + config.text_margin + ascent;
+
+    let mut instructions = Vec::new();
+    let mut line_pen_x = 0.0f64;
+    let mut line_pen_y = 0.0f64;
+
+    for run in &shaped.runs {
+        if run.glyphs.is_empty() {
+            continue;
+        }
+
+        let mut positions = Vec::with_capacity(run.glyphs.len());
+        let mut seg_pen_x = 0.0f64;
+        let mut seg_pen_y = 0.0f64;
+        for glyph in &run.glyphs {
+            positions.push(GlyphPosition {
+                glyph_id: glyph.glyph_id,
+                x: baseline_x + line_pen_x + seg_pen_x + glyph.x_offset as f64,
+                y: baseline_y + line_pen_y + seg_pen_y + glyph.y_offset as f64,
+            });
+            seg_pen_x += glyph.x_advance as f64;
+            seg_pen_y += glyph.y_advance as f64;
+        }
+
+        instructions.push(PaintInstruction::GlyphRun(PaintGlyphRun {
+            base: PaintBase::default(),
+            glyphs: positions,
+            font_ref: run.font_ref.clone(),
+            font_size: config.text_font_size,
+            fill: Some(config.foreground.clone()),
+        }));
+
+        line_pen_x += run.x_advance_total as f64;
+        line_pen_y += run
+            .glyphs
+            .iter()
+            .map(|glyph| glyph.y_advance as f64)
+            .sum::<f64>();
+    }
+
+    Ok((instructions, config.text_margin + line_height))
+}
+
 pub fn layout_barcode_1d(
     runs: &[Barcode1DRun],
     options: &PaintBarcode1DOptions,
 ) -> Result<PaintScene, String> {
     validate_render_config(&options.render_config)?;
-
-    if options.render_config.include_human_readable_text {
-        return Err(
-            "human-readable text is not yet supported in barcode-layout-1d; leave include_human_readable_text disabled until glyph shaping is wired into the paint pipeline"
-                .to_string(),
-        );
-    }
 
     let layout = compute_barcode_1d_layout(
         runs,
@@ -498,6 +618,38 @@ pub fn layout_barcode_1d(
         module_cursor += run.modules;
     }
 
+    let scene_width = layout.total_modules as f64 * options.render_config.module_width;
+    let text_height = if options.render_config.include_human_readable_text {
+        let text = options.human_readable_text.as_deref().ok_or_else(|| {
+            "include_human_readable_text requires human_readable_text to be provided".to_string()
+        })?;
+        let (text_instructions, extra_height) = match options.render_config.layout_target {
+            Barcode1DLayoutTarget::NativePaintVm => build_human_readable_text_instructions(
+                scene_width,
+                options.render_config.bar_height,
+                text,
+                &options.render_config,
+            )?,
+            Barcode1DLayoutTarget::CanvasPaintVm => {
+                return Err(
+                    "human-readable text for the canvas paint target is not wired yet; choose NativePaintVm or leave include_human_readable_text disabled"
+                        .to_string(),
+                )
+            }
+            Barcode1DLayoutTarget::DomPaintVm => {
+                return Err(
+                    "human-readable text for the DOM paint target is not wired yet; choose NativePaintVm or leave include_human_readable_text disabled"
+                        .to_string(),
+                )
+            }
+        };
+        instructions.extend(text_instructions);
+        extra_height
+    } else {
+        0.0
+    };
+    let scene_height = options.render_config.bar_height + text_height;
+
     let mut metadata = options.metadata.clone();
     metadata.insert(
         "label".to_string(),
@@ -527,27 +679,34 @@ pub fn layout_barcode_1d(
         "barHeightPx".to_string(),
         options.render_config.bar_height.to_string(),
     );
-    metadata.insert(
-        "sceneWidthPx".to_string(),
-        (layout.total_modules as f64 * options.render_config.module_width).to_string(),
-    );
-    metadata.insert(
-        "sceneHeightPx".to_string(),
-        options.render_config.bar_height.to_string(),
-    );
+    metadata.insert("sceneWidthPx".to_string(), scene_width.to_string());
+    metadata.insert("sceneHeightPx".to_string(), scene_height.to_string());
     metadata.insert(
         "symbolCount".to_string(),
         layout.symbol_layouts.len().to_string(),
+    );
+    metadata.insert(
+        "layoutTarget".to_string(),
+        options.render_config.layout_target.as_str().to_string(),
     );
 
     if let Some(text) = options.human_readable_text.as_ref() {
         metadata.insert("humanReadableText".to_string(), text.clone());
     }
 
-    let mut scene = PaintScene::new(
-        layout.total_modules as f64 * options.render_config.module_width,
-        options.render_config.bar_height,
-    );
+    if options.render_config.include_human_readable_text {
+        metadata.insert("humanReadableTextEnabled".to_string(), "true".to_string());
+        metadata.insert(
+            "textFontSizePx".to_string(),
+            options.render_config.text_font_size.to_string(),
+        );
+        metadata.insert(
+            "textMarginPx".to_string(),
+            options.render_config.text_margin.to_string(),
+        );
+    }
+
+    let mut scene = PaintScene::new(scene_width, scene_height);
     scene.background = options.render_config.background.clone();
     scene.instructions = instructions;
     scene.metadata = Some(metadata);
@@ -665,7 +824,39 @@ mod tests {
     }
 
     #[test]
-    fn human_readable_text_is_rejected_until_glyphs_exist() {
+    #[cfg(any(target_os = "windows", target_vendor = "apple"))]
+    fn human_readable_text_emits_glyph_runs() {
+        let runs = runs_from_binary_pattern(
+            "101",
+            &RunsFromBinaryPatternOptions {
+                source_label: "demo".to_string(),
+                source_index: 0,
+                role: Barcode1DRunRole::Guard,
+            },
+        )
+        .unwrap();
+
+        let mut options = PaintBarcode1DOptions::default();
+        options.render_config.include_human_readable_text = true;
+        options.human_readable_text = Some("demo".to_string());
+        let scene = layout_barcode_1d(&runs, &options).unwrap();
+        assert!(scene.height > options.render_config.bar_height);
+        assert!(scene
+            .instructions
+            .iter()
+            .any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
+        assert_eq!(
+            scene
+                .metadata
+                .as_ref()
+                .and_then(|metadata| metadata.get("layoutTarget")),
+            Some(&"native-paint-vm".to_string())
+        );
+    }
+
+    #[cfg(all(not(target_os = "windows"), not(target_vendor = "apple")))]
+    #[test]
+    fn human_readable_text_reports_missing_backend() {
         let runs = runs_from_binary_pattern(
             "101",
             &RunsFromBinaryPatternOptions {
@@ -681,6 +872,27 @@ mod tests {
         options.human_readable_text = Some("demo".to_string());
 
         let error = layout_barcode_1d(&runs, &options).unwrap_err();
-        assert!(error.contains("human-readable text"));
+        assert!(error.contains("font resolution failed") || error.contains("LoadFailed"));
+    }
+
+    #[test]
+    fn canvas_target_rejects_native_glyph_label_path() {
+        let runs = runs_from_binary_pattern(
+            "101",
+            &RunsFromBinaryPatternOptions {
+                source_label: "demo".to_string(),
+                source_index: 0,
+                role: Barcode1DRunRole::Guard,
+            },
+        )
+        .unwrap();
+
+        let mut options = PaintBarcode1DOptions::default();
+        options.render_config.include_human_readable_text = true;
+        options.render_config.layout_target = Barcode1DLayoutTarget::CanvasPaintVm;
+        options.human_readable_text = Some("demo".to_string());
+
+        let error = layout_barcode_1d(&runs, &options).unwrap_err();
+        assert!(error.contains("canvas paint target"));
     }
 }

@@ -1,5 +1,16 @@
 # TET03 — Tetrad Bytecode Compiler Specification
 
+> **LANG migration (2026-04-23):** Tetrad now also compiles to the
+> generic `InterpreterIR` (LANG01) so the program can be executed on
+> `vm-core` (LANG02) and JIT-compiled by `jit-core` (LANG03).  The
+> translation lives in the `tetrad-runtime` package as
+> `tetrad_runtime.compile_to_iir(source) -> IIRModule`.  The legacy
+> `CodeObject` output described below remains the input to the
+> translator and continues to be the contract `tetrad-vm` and
+> `tetrad-jit` consume — nothing in this spec is invalidated; an extra
+> downstream stage has been added.  See `tetrad-runtime/README.md` for
+> the per-opcode translation table.
+
 ## Overview
 
 The Tetrad bytecode compiler walks the AST produced by the parser (spec TET02) and

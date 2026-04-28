@@ -43,6 +43,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"sort"
 	"strings"
 
 	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
@@ -790,6 +791,40 @@ func parseDotnetDeps(pkg discovery.Package, knownNames map[string]string) []stri
 	return internalDeps
 }
 
+var buildToolDepsRe = regexp.MustCompile(`(?m)#\s*build-tool:\s*deps\s*=\s*(.+)$`)
+
+func parseBuildToolDeps(pkg discovery.Package, knownPackageNames map[string]bool) []string {
+	if pkg.BuildContent == "" {
+		return nil
+	}
+
+	seen := make(map[string]bool)
+	for _, match := range buildToolDepsRe.FindAllStringSubmatch(pkg.BuildContent, -1) {
+		if len(match) < 2 {
+			continue
+		}
+		for _, raw := range strings.FieldsFunc(match[1], func(r rune) bool {
+			return r == ',' || r == ' ' || r == '\t'
+		}) {
+			dep := strings.TrimSpace(raw)
+			if dep == "" || dep == pkg.Name || !knownPackageNames[dep] {
+				continue
+			}
+			seen[dep] = true
+		}
+	}
+
+	if len(seen) == 0 {
+		return nil
+	}
+	deps := make([]string, 0, len(seen))
+	for dep := range seen {
+		deps = append(deps, dep)
+	}
+	sort.Strings(deps)
+	return deps
+}
+
 func parseGradleDeps(pkg discovery.Package, knownNames map[string]string) []string {
 	settingsFile := filepath.Join(pkg.Path, "settings.gradle.kts")
 	data, err := os.ReadFile(settingsFile)
@@ -1090,7 +1125,9 @@ func ResolveDependencies(packages []discovery.Package) *directedgraph.Graph {
 
 	// Build the ecosystem-specific name mapping table.
 	knownNamesByLanguage := make(map[string]map[string]string)
+	knownPackageNames := make(map[string]bool, len(packages))
 	for _, pkg := range packages {
+		knownPackageNames[pkg.Name] = true
 		if _, ok := knownNamesByLanguage[pkg.Language]; !ok {
 			knownNamesByLanguage[pkg.Language] = buildKnownNamesForLanguage(packages, pkg.Language)
 		}
@@ -1130,6 +1167,7 @@ func ResolveDependencies(packages []discovery.Package) *directedgraph.Graph {
 		case "dotnet", "csharp", "fsharp":
 			deps = parseDotnetDeps(pkg, knownNames)
 		}
+		deps = append(deps, parseBuildToolDeps(pkg, knownPackageNames)...)
 
 		for _, depName := range deps {
 			// Edge direction: dep → pkg means "dep must be built before pkg".

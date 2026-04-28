@@ -443,6 +443,103 @@ extern "C" {
     /// Return 1 if `term` is a map.
     pub fn enif_is_map(env: ErlNifEnv, term: ERL_NIF_TERM) -> c_int;
 
+    // -- Maps --------------------------------------------------------------
+    //
+    // Erlang maps are %{key => value} hashes — the idiomatic structured-data
+    // type. Building/inspecting them from a NIF requires four operations:
+    // create empty, put a key, look up a key, iterate all entries.
+
+    /// Create an empty map term `%{}`.
+    pub fn enif_make_new_map(env: ErlNifEnv) -> ERL_NIF_TERM;
+    /// Functionally insert `(key, value)` into `map_in`, writing the new
+    /// map term into `*map_out`. Returns 1 on success, 0 if the key was
+    /// already present (use `enif_make_map_update` to overwrite).
+    pub fn enif_make_map_put(
+        env: ErlNifEnv,
+        map_in: ERL_NIF_TERM,
+        key: ERL_NIF_TERM,
+        value: ERL_NIF_TERM,
+        map_out: *mut ERL_NIF_TERM,
+    ) -> c_int;
+    /// Look up `key` in `map`. Writes the value into `*value` and returns 1
+    /// if found, 0 otherwise.
+    pub fn enif_get_map_value(
+        env: ErlNifEnv,
+        map: ERL_NIF_TERM,
+        key: ERL_NIF_TERM,
+        value: *mut ERL_NIF_TERM,
+    ) -> c_int;
+    /// Get the number of entries in a map.
+    pub fn enif_get_map_size(
+        env: ErlNifEnv,
+        map: ERL_NIF_TERM,
+        size: *mut usize,
+    ) -> c_int;
+
+    // -- Map iterators -----------------------------------------------------
+    //
+    // For walking every key/value pair. The iterator state is opaque to us;
+    // BEAM defines it as a small struct, so we reserve enough bytes.
+
+    /// Initialize iterator `iter` over `map` starting at the first entry
+    /// (`entry = ERL_NIF_MAP_ITERATOR_FIRST = 1`). Returns 1 on success.
+    pub fn enif_map_iterator_create(
+        env: ErlNifEnv,
+        map: ERL_NIF_TERM,
+        iter: *mut ErlNifMapIterator,
+        entry: c_int,
+    ) -> c_int;
+    /// Release any resources held by the iterator.
+    pub fn enif_map_iterator_destroy(env: ErlNifEnv, iter: *mut ErlNifMapIterator);
+    /// Advance the iterator. Returns 1 if a next entry exists, 0 at end.
+    pub fn enif_map_iterator_next(env: ErlNifEnv, iter: *mut ErlNifMapIterator) -> c_int;
+    /// Read the current pair into `*key` and `*value`. Returns 1 if
+    /// the iterator is at a valid entry, 0 if past the end.
+    pub fn enif_map_iterator_get_pair(
+        env: ErlNifEnv,
+        iter: *mut ErlNifMapIterator,
+        key: *mut ERL_NIF_TERM,
+        value: *mut ERL_NIF_TERM,
+    ) -> c_int;
+
+    // -- Pids and process messaging ----------------------------------------
+    //
+    // A pid identifies a BEAM process. From a NIF we can:
+    //  - get the pid of the current process via `enif_self`
+    //  - extract a pid from a term via `enif_get_local_pid`
+    //  - send a message to a pid via `enif_send`
+    //
+    // `enif_send(NULL, to_pid, msg_env, msg)` is the off-scheduler-thread
+    // form: it copies the term out of `msg_env` and into the recipient's
+    // mailbox. This is the BEAM analog of N-API's threadsafe function call
+    // and is exactly what we need from a Rust I/O thread.
+
+    /// Write the calling process's pid into `*pid`. Returns its address
+    /// on success, NULL if called from a thread that has no current process
+    /// (e.g. a dirty NIF can call this; a pure background thread cannot).
+    pub fn enif_self(env: ErlNifEnv, pid: *mut ErlNifPid) -> *mut ErlNifPid;
+    /// Extract a local pid from a term. Returns 1 on success.
+    pub fn enif_get_local_pid(
+        env: ErlNifEnv,
+        term: ERL_NIF_TERM,
+        pid: *mut ErlNifPid,
+    ) -> c_int;
+    /// Build a term from a pid (for sending pids back to Elixir code).
+    pub fn enif_make_pid(env: ErlNifEnv, pid: *const ErlNifPid) -> ERL_NIF_TERM;
+    /// Send `msg` (allocated in `msg_env`) to `to_pid`. Returns 1 on
+    /// success, 0 if the destination process is dead.
+    ///
+    /// Pass `caller_env = NULL` from a non-scheduler thread (e.g. Rust
+    /// background I/O thread). In that case `msg_env` MUST be a long-lived
+    /// env created with `enif_alloc_env` — its terms are *consumed* by
+    /// the send, so the env must be freed with `enif_free_env` afterwards.
+    pub fn enif_send(
+        caller_env: ErlNifEnv,
+        to_pid: *const ErlNifPid,
+        msg_env: ErlNifEnv,
+        msg: ERL_NIF_TERM,
+    ) -> c_int;
+
     // -- Environment management --------------------------------------------
 
     /// Allocate a new independent environment (for async/message-passing use).
@@ -457,6 +554,64 @@ extern "C" {
     pub fn enif_alloc(size: usize) -> *mut c_void;
     /// Free memory allocated by `enif_alloc`.
     pub fn enif_free(ptr: *mut c_void);
+}
+
+// ---------------------------------------------------------------------------
+// Map iterator state
+// ---------------------------------------------------------------------------
+//
+// BEAM defines `ErlNifMapIterator` as an opaque struct; the actual layout is:
+//
+//     struct enif_map_iterator_t {
+//         ERL_NIF_TERM map;
+//         ErlNifUInt size;
+//         ErlNifUInt idx;
+//         union { ... } u;
+//     };
+//
+// On 64-bit platforms the size is 5 machine words; we reserve 8 for safety.
+// We never read the fields ourselves — only BEAM does.
+
+/// Opaque map iterator. Pass a stack-allocated instance to
+/// `enif_map_iterator_create` then `enif_map_iterator_destroy` when done.
+///
+/// The internal layout is reserved by BEAM (5 machine words on 64-bit
+/// platforms; we round up to 8 for safety). Construct one via
+/// `ErlNifMapIterator::zeroed()` — never read or write the bytes
+/// directly.
+#[repr(C)]
+pub struct ErlNifMapIterator {
+    // Public so callers can zero-initialize without going through a method,
+    // but the field name is reserved and must never be read or written
+    // directly by user code.
+    pub __private_internal_state: [usize; 8],
+}
+
+impl ErlNifMapIterator {
+    /// Construct a zero-initialized iterator suitable for passing to
+    /// `enif_map_iterator_create`. The BEAM populates the internal state
+    /// inside that call.
+    pub const fn zeroed() -> Self {
+        Self { __private_internal_state: [0usize; 8] }
+    }
+}
+
+/// `entry` argument to `enif_map_iterator_create`: start at the first key.
+pub const ERL_NIF_MAP_ITERATOR_FIRST: c_int = 1;
+
+// ---------------------------------------------------------------------------
+// Pid type
+// ---------------------------------------------------------------------------
+
+/// A BEAM process identifier. Layout-compatible with C `ErlNifPid`.
+///
+/// The single field is itself an `ERL_NIF_TERM` that the BEAM treats
+/// specially. Never construct one by hand — only use `enif_self`,
+/// `enif_get_local_pid`, or copy from another `ErlNifPid` you already have.
+#[repr(C)]
+#[derive(Clone, Copy)]
+pub struct ErlNifPid {
+    pub pid: ERL_NIF_TERM,
 }
 
 // ---------------------------------------------------------------------------
@@ -632,6 +787,171 @@ pub unsafe fn error_tuple(env: ErlNifEnv, reason: &str) -> ERL_NIF_TERM {
     let reason_atom = atom(env, reason);
     let arr = [error, reason_atom];
     enif_make_tuple_from_array(env, arr.as_ptr(), 2)
+}
+
+// ---------------------------------------------------------------------------
+// Safe wrappers — Maps
+// ---------------------------------------------------------------------------
+//
+// Building an Elixir map from Rust normally goes:
+//
+//     let m = enif_make_new_map(env);          // %{}
+//     let mut m = m;
+//     enif_make_map_put(env, m, k1, v1, &mut m);  // %{k1 => v1}
+//     enif_make_map_put(env, m, k2, v2, &mut m);  // %{k1 => v1, k2 => v2}
+//
+// Maps are immutable; each `_put` returns a new term. The wrapper below
+// hides the boilerplate.
+
+/// Create an empty Elixir map term `%{}`.
+pub unsafe fn make_map(env: ErlNifEnv) -> ERL_NIF_TERM {
+    enif_make_new_map(env)
+}
+
+/// Functionally insert `(key, value)` into `map`, returning the new map.
+///
+/// Returns the input map unchanged if the BEAM rejects the put (which
+/// happens only when the key already exists — call this on a fresh map
+/// or use `map_update` for overwrites).
+pub unsafe fn map_put(
+    env: ErlNifEnv,
+    map: ERL_NIF_TERM,
+    key: ERL_NIF_TERM,
+    value: ERL_NIF_TERM,
+) -> ERL_NIF_TERM {
+    let mut out: ERL_NIF_TERM = 0;
+    if enif_make_map_put(env, map, key, value, &mut out) != 0 {
+        out
+    } else {
+        map
+    }
+}
+
+/// Build a map from a slice of `(key, value)` pairs.
+///
+/// Convenient for assembling the env map term from a Rust HashMap:
+///
+/// ```rust,ignore
+/// let pairs: Vec<(ERL_NIF_TERM, ERL_NIF_TERM)> = my_hashmap.iter()
+///     .map(|(k, v)| (str_to_binary(env, k), str_to_binary(env, v)))
+///     .collect();
+/// let m = make_map_from_pairs(env, &pairs);
+/// ```
+pub unsafe fn make_map_from_pairs(
+    env: ErlNifEnv,
+    pairs: &[(ERL_NIF_TERM, ERL_NIF_TERM)],
+) -> ERL_NIF_TERM {
+    let mut m = enif_make_new_map(env);
+    for &(k, v) in pairs {
+        m = map_put(env, m, k, v);
+    }
+    m
+}
+
+/// Look up `key` in `map`. Returns `None` if absent.
+pub unsafe fn map_get(
+    env: ErlNifEnv,
+    map: ERL_NIF_TERM,
+    key: ERL_NIF_TERM,
+) -> Option<ERL_NIF_TERM> {
+    let mut value: ERL_NIF_TERM = 0;
+    if enif_get_map_value(env, map, key, &mut value) != 0 {
+        Some(value)
+    } else {
+        None
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Safe wrappers — Binaries (string ↔ binary conversion)
+// ---------------------------------------------------------------------------
+//
+// In Elixir, binaries (`<<…>>`) are the standard string representation —
+// not char-lists. NIFs that exchange strings with Elixir code should always
+// use binaries: faster, no per-character cons cells, and printable as text
+// when the bytes are valid UTF-8.
+
+/// Build an Erlang binary term from a Rust `&str`.
+///
+/// Allocates a fresh binary, copies the bytes, and returns the term.
+/// On Elixir side this becomes a regular UTF-8 string.
+pub unsafe fn str_to_binary(env: ErlNifEnv, s: &str) -> ERL_NIF_TERM {
+    let mut term: ERL_NIF_TERM = 0;
+    let buf = enif_make_new_binary(env, s.len(), &mut term);
+    if !buf.is_null() && !s.is_empty() {
+        std::ptr::copy_nonoverlapping(s.as_ptr(), buf, s.len());
+    }
+    term
+}
+
+/// Extract the bytes of a binary term as a borrowed `&[u8]`.
+///
+/// Returns `None` if `term` is not a binary. The slice is valid only for
+/// the lifetime of the calling NIF — copy out anything you need to keep.
+pub unsafe fn binary_to_bytes<'a>(env: ErlNifEnv, term: ERL_NIF_TERM) -> Option<&'a [u8]> {
+    let mut bin = ErlNifBinary {
+        size: 0,
+        data: ptr::null_mut(),
+        _priv: [0u8; 32],
+    };
+    if enif_inspect_binary(env, term, &mut bin) == 0 {
+        return None;
+    }
+    Some(std::slice::from_raw_parts(bin.data, bin.size))
+}
+
+/// Extract a binary term as a Rust `String` (UTF-8 lossy).
+///
+/// Returns `None` if `term` is not a binary. Lossy conversion replaces
+/// invalid UTF-8 byte sequences with `U+FFFD REPLACEMENT CHARACTER`.
+pub unsafe fn binary_to_string(env: ErlNifEnv, term: ERL_NIF_TERM) -> Option<String> {
+    let bytes = binary_to_bytes(env, term)?;
+    Some(String::from_utf8_lossy(bytes).into_owned())
+}
+
+// ---------------------------------------------------------------------------
+// Safe wrappers — Pids and send
+// ---------------------------------------------------------------------------
+
+/// Get the calling process's pid.
+///
+/// Returns `None` only when called from a context with no current process
+/// (e.g. a pure background thread that has never been associated with a
+/// scheduler). From a regular NIF or dirty NIF, this always succeeds.
+pub unsafe fn self_pid(env: ErlNifEnv) -> Option<ErlNifPid> {
+    let mut pid = ErlNifPid { pid: 0 };
+    let ret = enif_self(env, &mut pid);
+    if ret.is_null() {
+        None
+    } else {
+        Some(pid)
+    }
+}
+
+/// Extract a pid from a term passed by Elixir.
+pub unsafe fn get_pid(env: ErlNifEnv, term: ERL_NIF_TERM) -> Option<ErlNifPid> {
+    let mut pid = ErlNifPid { pid: 0 };
+    if enif_get_local_pid(env, term, &mut pid) != 0 {
+        Some(pid)
+    } else {
+        None
+    }
+}
+
+/// Send `msg` (built in `msg_env`) to `to_pid` from a non-scheduler thread.
+///
+/// `msg_env` MUST be a long-lived env created with `enif_alloc_env`.
+/// The send transfers ownership of the env's terms; the env itself must
+/// be freed by the caller with `enif_free_env` afterwards.
+///
+/// Returns `true` if the message was queued, `false` if the destination
+/// process is dead.
+pub unsafe fn send_from_thread(
+    to_pid: &ErlNifPid,
+    msg_env: ErlNifEnv,
+    msg: ERL_NIF_TERM,
+) -> bool {
+    enif_send(ptr::null_mut(), to_pid, msg_env, msg) != 0
 }
 
 // ---------------------------------------------------------------------------

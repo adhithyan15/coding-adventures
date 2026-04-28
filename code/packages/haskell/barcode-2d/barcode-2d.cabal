@@ -1,0 +1,49 @@
+cabal-version:      2.4
+name:               barcode-2d
+version:            0.1.0.0
+synopsis:           Shared 2D barcode abstraction layer
+description:
+    Universal 2D barcode abstraction layer (BC00).
+    .
+    Provides two building blocks every 2D barcode format needs:
+    .
+    1. ModuleGrid — the universal intermediate representation produced by every
+       2D barcode encoder (QR, Data Matrix, Aztec, PDF417, MaxiCode). A 2D
+       boolean grid: True = dark module, False = light module.
+    .
+    2. layout functions — convert abstract module coordinates into pixel-level
+       PaintScene instructions ready for the PaintVM (P2D01).
+    .
+    Supports square modules (QR Code, Data Matrix) and flat-top hexagonal
+    modules (MaxiCode).
+license:            MIT
+author:             Coding Adventures
+maintainer:         contact@coding-adventures.com
+category:           Graphics
+homepage:           https://github.com/adhithyan15/coding-adventures
+bug-reports:        https://github.com/adhithyan15/coding-adventures/issues
+extra-doc-files:    README.md
+                    CHANGELOG.md
+
+library
+    exposed-modules:  CodingAdventures.Barcode2D
+    build-depends:    base                >= 4.7 && < 5
+                    , vector              >= 0.12
+                    , containers          >= 0.6
+                    , paint-instructions
+    hs-source-dirs:   src
+    default-language: Haskell2010
+    ghc-options:      -Wall
+
+test-suite barcode-2d-test
+    default-language: Haskell2010
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          Spec.hs
+    other-modules:    Barcode2DSpec
+    build-depends:    base                >= 4.7 && < 5
+                    , vector              >= 0.12
+                    , paint-instructions
+                    , barcode-2d
+                    , hspec               == 2.*
+    ghc-options:      -Wall

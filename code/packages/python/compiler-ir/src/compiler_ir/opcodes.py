@@ -24,6 +24,8 @@ The opcodes are grouped by category:
   Arithmetic:   ADD, ADD_IMM, SUB, AND, AND_IMM, MUL, DIV
   Bitwise:      OR, OR_IMM, XOR, XOR_IMM, NOT
   Comparison:   CMP_EQ, CMP_NE, CMP_LT, CMP_GT
+  Floating:     LOAD_F64_IMM, LOAD_F64, STORE_F64, F64_ADD, ..., F64_FROM_I32,
+                I32_TRUNC_FROM_F64
   Control Flow: LABEL, JUMP, BRANCH_Z, BRANCH_NZ, CALL, RET
   System:       SYSCALL, HALT
   Meta:         NOP, COMMENT
@@ -141,6 +143,57 @@ class IrOp(IntEnum):
     # On WASM i32, it becomes i32.xor with 0xFFFF_FFFF.
     #   NOT v2, v1  →  v2 = ~v1
     NOT = 31
+
+    # ── Floating-point ───────────────────────────────────────────────────────
+    # Load an immediate 64-bit float into a register.
+    #   LOAD_F64_IMM v0, 1.5  →  v0 = 1.5
+    LOAD_F64_IMM = 32
+
+    # Load a 64-bit float from memory: dst = *(double*)(base + offset).
+    #   LOAD_F64 v2, v0, v1  →  v2 = *(double*)(v0 + v1)
+    LOAD_F64 = 33
+
+    # Store a 64-bit float to memory: *(double*)(base + offset) = src.
+    #   STORE_F64 v2, v0, v1  →  *(double*)(v0 + v1) = v2
+    STORE_F64 = 34
+
+    # Register-register f64 addition: dst = lhs + rhs.
+    F64_ADD = 35
+
+    # Register-register f64 subtraction: dst = lhs - rhs.
+    F64_SUB = 36
+
+    # Register-register f64 multiplication: dst = lhs * rhs.
+    F64_MUL = 37
+
+    # Register-register f64 division: dst = lhs / rhs.
+    F64_DIV = 38
+
+    # Set dst = 1 if lhs == rhs, else 0.
+    F64_CMP_EQ = 39
+
+    # Set dst = 1 if lhs != rhs, else 0.
+    F64_CMP_NE = 40
+
+    # Set dst = 1 if lhs < rhs, else 0.
+    F64_CMP_LT = 41
+
+    # Set dst = 1 if lhs > rhs, else 0.
+    F64_CMP_GT = 42
+
+    # Set dst = 1 if lhs <= rhs, else 0.
+    F64_CMP_LE = 43
+
+    # Set dst = 1 if lhs >= rhs, else 0.
+    F64_CMP_GE = 44
+
+    # Convert a signed i32 value to f64.
+    #   F64_FROM_I32 v1, v2  →  v1 = float(v2)
+    F64_FROM_I32 = 45
+
+    # Truncate an f64 value toward zero into a signed i32.
+    #   I32_TRUNC_FROM_F64 v1, v2  →  v1 = trunc(v2)
+    I32_TRUNC_FROM_F64 = 46
 
     # ── Comparison ────────────────────────────────────────────────────────────
     # Set dst = 1 if lhs == rhs, else 0.

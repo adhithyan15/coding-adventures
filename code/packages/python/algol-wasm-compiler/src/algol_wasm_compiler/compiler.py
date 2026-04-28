@@ -12,7 +12,7 @@ from compiler_ir import IrLabel, IrOp, IrProgram
 from ir_to_wasm_compiler import FunctionSignature, IrToWasmCompiler
 from ir_to_wasm_validator import validate as validate_ir_to_wasm
 from wasm_module_encoder import encode_module
-from wasm_types import WasmModule
+from wasm_types import ValueType, WasmModule
 from wasm_validator import ValidatedModule, ValidationError, validate
 
 
@@ -73,10 +73,18 @@ class AlgolWasmCompiler:
         signatures.extend(
             FunctionSignature(
                 label=label,
-                param_count=param_count,
+                param_count=plan.param_count,
                 require_explicit_args=True,
+                param_types=tuple(
+                    _wasm_value_type(type_name) for type_name in plan.param_types
+                ),
+                result_types=(
+                    (_wasm_value_type(plan.return_type),)
+                    if plan.return_type is not None
+                    else ()
+                ),
             )
-            for label, param_count in sorted(ir.procedure_signatures.items())
+            for label, plan in sorted(ir.procedure_signatures.items())
         )
         strategy = _wasm_lowering_strategy(ir.program)
         lowering_errors = validate_ir_to_wasm(
@@ -141,12 +149,28 @@ def write_wasm_file(source: str, output_path: str | Path) -> AlgolWasmResult:
 
 def _wasm_lowering_strategy(program: IrProgram) -> str:
     for instruction in program.instructions:
-        if instruction.opcode != IrOp.LABEL:
+        if instruction.opcode not in (IrOp.BRANCH_NZ, IrOp.BRANCH_Z, IrOp.JUMP):
             continue
         if (
             instruction.operands
-            and isinstance(instruction.operands[0], IrLabel)
-            and instruction.operands[0].name.startswith("algol_label_")
+            and isinstance(instruction.operands[-1], IrLabel)
+            and not _structured_lowerer_target(instruction.operands[-1].name)
         ):
             return "dispatch_loop"
     return "structured"
+
+
+def _structured_lowerer_target(label_name: str) -> bool:
+    parts = label_name.split("_")
+    if len(parts) != 3 or not parts[1].isdigit():
+        return False
+    prefix, _index, suffix = parts
+    return (prefix == "if" and suffix in {"else", "end"}) or (
+        prefix == "loop" and suffix in {"start", "end"}
+    )
+
+
+def _wasm_value_type(type_name: str | None) -> ValueType:
+    if type_name == "real":
+        return ValueType.F64
+    return ValueType.I32

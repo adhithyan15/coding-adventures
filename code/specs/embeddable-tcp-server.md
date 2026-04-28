@@ -100,18 +100,20 @@ transport package identity.
   capacity.
 - Mailbox mode can pass a default worker job timeout into the generic runtime
   so stuck jobs produce timed-out responses instead of leaking capacity.
+- Mailbox mode can opt into generic job-runtime worker restart policy so a
+  crashed process can be replaced without changing the worker slot index.
 - Worker communication uses the JSON-line `generic-job-protocol` codec over
   standard streams, not a binary protocol.
 - Mailbox delivery is bounded by the stream reactor's cooperative poll timeout
   until the transport layer exposes a thread-safe wake handle.
-- Process-pool hardening is still incomplete: restart policy, cancellation,
-  ordered response buffering, and richer backpressure telemetry need dedicated
+- Process-pool hardening is still incomplete: cancellation, ordered response
+  buffering, startup timeouts, and richer backpressure telemetry need dedicated
   follow-up work.
 
 These limits are intentional for the first process-pool slice. The TCP package
-now consumes the generic job runtime, but the runtime still needs restart,
-cancellation, ordering policy, and production metrics before it should be
-treated as the final high-performance architecture.
+now consumes the generic job runtime, but the runtime still needs cancellation,
+ordering policy, startup timeout policy, and production metrics before it should
+be treated as the final high-performance architecture.
 
 ## Acceptance Criteria
 

@@ -5,6 +5,7 @@ go 1.26
 require (
 	github.com/adhithyan15/coding-adventures/code/packages/go/compiler-ir v0.0.0
 	github.com/adhithyan15/coding-adventures/code/packages/go/compiler-source-map v0.0.0
+	github.com/adhithyan15/coding-adventures/code/packages/go/riscv-assembler v0.0.0
 	github.com/adhithyan15/coding-adventures/code/packages/go/riscv-simulator v0.0.0
 )
 
@@ -31,6 +32,7 @@ replace (
 	github.com/adhithyan15/coding-adventures/code/packages/go/cpu-simulator => ../cpu-simulator
 	github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph => ../directed-graph
 	github.com/adhithyan15/coding-adventures/code/packages/go/hazard-detection => ../hazard-detection
+	github.com/adhithyan15/coding-adventures/code/packages/go/riscv-assembler => ../riscv-assembler
 	github.com/adhithyan15/coding-adventures/code/packages/go/riscv-simulator => ../riscv-simulator
 	github.com/adhithyan15/coding-adventures/code/packages/go/state-machine => ../state-machine
 )

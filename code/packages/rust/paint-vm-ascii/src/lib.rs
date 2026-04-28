@@ -125,6 +125,9 @@ pub fn render(scene: &PaintScene, options: AsciiOptions) -> Result<String, Paint
             PaintInstruction::Image(_) => {
                 return Err(PaintVmAsciiError::UnsupportedInstruction("image"))
             }
+            PaintInstruction::Text(_) => {
+                return Err(PaintVmAsciiError::UnsupportedInstruction("text"))
+            }
         }
     }
 
@@ -181,6 +184,8 @@ mod tests {
                 stroke: "#000000".to_string(),
                 stroke_width: None,
                 stroke_cap: None,
+                stroke_dash: None,
+                stroke_dash_offset: None,
             })],
             id: None,
             metadata: None,

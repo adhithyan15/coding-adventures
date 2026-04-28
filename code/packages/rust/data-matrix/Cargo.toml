@@ -1,0 +1,9 @@
+[package]
+name = "data-matrix"
+version = "0.1.0"
+edition = "2021"
+description = "Data Matrix ECC200 encoder — ISO/IEC 16022:2006 compliant, produces scannable Data Matrix symbols"
+
+[dependencies]
+barcode-2d = { path = "../barcode-2d" }
+paint-instructions = { path = "../paint-instructions" }

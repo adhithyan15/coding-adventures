@@ -56,14 +56,14 @@
 
 use std::collections::HashMap;
 
-use layout_ir::{Color, Content, ExtValue, FontSpec, PositionedNode, TextContent};
+use layout_ir::{Color, Content, ExtValue, FontSpec, PositionedNode, TextAlign, TextContent};
 use paint_instructions::{
     GlyphPosition, ImageSrc, PaintBase, PaintGlyphRun, PaintImage, PaintInstruction, PaintRect,
     PaintScene,
 };
 use text_interfaces::{
     FontMetrics, FontQuery, FontResolver, FontStretch, FontStyle, FontWeight, ShapeOptions,
-    TextShaper,
+    ShapedText, TextShaper,
 };
 
 pub const VERSION: &str = "0.1.0";
@@ -237,6 +237,8 @@ fn emit_box_decorations(
         },
         stroke_width: border_width.map(|v| v * dpr),
         corner_radius: corner_radius.map(|v| v * dpr),
+        stroke_dash: None,
+        stroke_dash_offset: None,
     }));
 }
 
@@ -326,46 +328,45 @@ fn emit_text_content<S, M, R>(
     for segment in tc.value.split('\n') {
         let wrapped = wrap_line(options.shaper, handle, segment, size_dpr, max_width_dpr);
         for line in wrapped {
-            emit_paint_glyph_runs_for_line(
-                options.shaper,
-                handle,
-                &line,
-                size_dpr,
-                &shape_opts,
-                box_x_dpr,
-                baseline_y,
-                &fill_css,
-                out,
-            );
+            // Shape the line once. This gives us total_advance for
+            // alignment AND the glyph IDs/positions for emission.
+            if line.is_empty() {
+                baseline_y += line_height_dpr;
+                continue;
+            }
+            let shaped = match options.shaper.shape(&line, handle, size_dpr, &shape_opts) {
+                Ok(s) => s,
+                Err(_) => { baseline_y += line_height_dpr; continue; }
+            };
+
+            // Compute the starting x position based on text alignment.
+            let line_advance = shaped.total_advance() as f64;
+            let baseline_x = match tc.text_align {
+                TextAlign::Center => box_x_dpr + (max_width_dpr - line_advance) / 2.0,
+                TextAlign::End    => box_x_dpr + max_width_dpr - line_advance,
+                TextAlign::Start  => box_x_dpr,
+            };
+
+            emit_glyph_runs_from_shaped(&shaped, size_dpr, baseline_x, baseline_y, &fill_css, out);
             baseline_y += line_height_dpr;
         }
     }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// Shape a single wrapped line → one PaintGlyphRun per font-fallback segment
+// Emit PaintGlyphRun instructions from a pre-shaped ShapedText
 // ═══════════════════════════════════════════════════════════════════════════
 
-#[allow(clippy::too_many_arguments)]
-fn emit_paint_glyph_runs_for_line<S: TextShaper>(
-    shaper: &S,
-    handle: &S::Handle,
-    text: &str,
+/// Emit one `PaintGlyphRun` per `ShapedRun` in `shaped`, starting the pen
+/// at `(baseline_x, baseline_y)` in device-pixel scene coordinates.
+fn emit_glyph_runs_from_shaped(
+    shaped: &ShapedText,
     size: f32,
-    opts: &ShapeOptions,
     baseline_x: f64,
     baseline_y: f64,
     fill_css: &str,
     out: &mut Vec<PaintInstruction>,
 ) {
-    if text.is_empty() {
-        return;
-    }
-    let shaped = match shaper.shape(text, handle, size, opts) {
-        Ok(s) => s,
-        Err(_) => return,
-    };
-
     // The shaper returns potentially MULTIPLE ShapedRuns, one per
     // font-fallback segment. Each must become its own PaintGlyphRun
     // so the paint backend can route on the segment's actual font_ref
@@ -577,7 +578,7 @@ fn color_to_css(c: Color) -> String {
 mod tests {
     use super::*;
     use layout_ir::{
-        color_black, color_white, font_spec, rgb, FontSpec, MeasureResult, TextAlign, TextContent,
+        color_black, color_white, font_spec, rgb, TextAlign, TextContent,
     };
     use text_interfaces::{
         Direction, FontResolutionError, Glyph, ShapedRun, ShapedText, ShapingError,

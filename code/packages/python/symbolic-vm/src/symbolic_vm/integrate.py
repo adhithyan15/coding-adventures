@@ -1,4 +1,4 @@
-"""Symbolic integration — the ``Integrate`` handler (Phases 1–10).
+"""Symbolic integration — the ``Integrate`` handler (Phases 1–13).
 
 The handler tries two routes, in order:
 
@@ -76,9 +76,15 @@ from polynomial import (
     rational_roots,
 )
 from symbolic_ir import (
+    ACOS,
+    ACOSH,
     ADD,
+    ASIN,
+    ASINH,
     ATAN,
+    ATANH,
     COS,
+    COSH,
     DIV,
     EXP,
     INTEGRATE,
@@ -87,9 +93,11 @@ from symbolic_ir import (
     NEG,
     POW,
     SIN,
+    SINH,
     SQRT,
     SUB,
     TAN,
+    TANH,
     IRApply,
     IRFloat,
     IRInteger,
@@ -99,6 +107,8 @@ from symbolic_ir import (
 )
 
 from symbolic_vm.arctan_integral import arctan_integral
+from symbolic_vm.asin_poly_integral import acos_poly_integral, asin_poly_integral
+from symbolic_vm.asinh_poly_integral import acosh_poly_integral, asinh_poly_integral
 from symbolic_vm.atan_poly_integral import atan_poly_integral
 from symbolic_vm.backend import Handler
 from symbolic_vm.exp_integral import exp_integral
@@ -113,6 +123,7 @@ from symbolic_vm.polynomial_bridge import (
     to_rational,
 )
 from symbolic_vm.rothstein_trager import rothstein_trager
+from symbolic_vm.sinh_poly_integral import cosh_poly_integral, sinh_poly_integral
 from symbolic_vm.trig_poly_integral import trig_cos_integral, trig_sin_integral
 
 ONE = IRInteger(1)
@@ -404,6 +415,26 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
         result = _try_atan_product(a, b, x) or _try_atan_product(b, a, x)
         if result is not None:
             return result
+        # Phase 12: asin/acos(linear) × polynomial via IBP.
+        result = _try_asin_product(a, b, x) or _try_asin_product(b, a, x)
+        if result is not None:
+            return result
+        result = _try_acos_product(a, b, x) or _try_acos_product(b, a, x)
+        if result is not None:
+            return result
+        # Phase 13: sinh/cosh/asinh/acosh(linear) × polynomial via IBP.
+        result = _try_sinh_product(a, b, x) or _try_sinh_product(b, a, x)
+        if result is not None:
+            return result
+        result = _try_cosh_product(a, b, x) or _try_cosh_product(b, a, x)
+        if result is not None:
+            return result
+        result = _try_asinh_product(a, b, x) or _try_asinh_product(b, a, x)
+        if result is not None:
+            return result
+        result = _try_acosh_product(a, b, x) or _try_acosh_product(b, a, x)
+        if result is not None:
+            return result
         # Phase 4b: trig × trig via product-to-sum identities.
         result = _try_trig_trig(a, b, x) or _try_trig_trig(b, a, x)
         if result is not None:
@@ -531,7 +562,10 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
     # Generalises the Phase 1 rules above to any a·x + b argument.
     # Only fires when the argument is strictly linear with a ≠ 0 and
     # (a, b) ≠ (1, 0) — otherwise the Phase 1 rules above already fired.
-    if len(f.args) == 1 and head in {EXP, SIN, COS, LOG, TAN, ATAN}:
+    if len(f.args) == 1 and head in {
+        EXP, SIN, COS, LOG, TAN, ATAN, ASIN, ACOS,
+        SINH, COSH, TANH, ASINH, ACOSH, ATANH,
+    }:
         lin = _try_linear(f.args[0], x)
         if lin is not None:
             a_frac, b_frac = lin
@@ -578,6 +612,28 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
                         ),
                     )
                     return IRApply(SUB, (IRApply(MUL, (coef_ir, f)), log_part))
+                if head in (ASIN, ACOS):
+                    # ∫ asin/acos(ax+b) dx — unit-polynomial IBP (Phase 12).
+                    fn = asin_poly_integral if head == ASIN else acos_poly_integral
+                    return fn((Fraction(1),), a_frac, b_frac, x)
+                if head == SINH:
+                    # ∫ sinh(ax+b) dx = (1/a)·cosh(ax+b).
+                    return sinh_poly_integral((Fraction(1),), a_frac, b_frac, x)
+                if head == COSH:
+                    # ∫ cosh(ax+b) dx = (1/a)·sinh(ax+b).
+                    return cosh_poly_integral((Fraction(1),), a_frac, b_frac, x)
+                if head == TANH:
+                    # ∫ tanh(ax+b) dx = (1/a)·log(cosh(ax+b)).
+                    return _tanh_integral(a_frac, b_frac, x)
+                if head == ASINH:
+                    # ∫ asinh(ax+b) dx — unit-polynomial IBP (Phase 13).
+                    return asinh_poly_integral((Fraction(1),), a_frac, b_frac, x)
+                if head == ACOSH:
+                    # ∫ acosh(ax+b) dx — unit-polynomial IBP (Phase 13).
+                    return acosh_poly_integral((Fraction(1),), a_frac, b_frac, x)
+                if head == ATANH:
+                    # ∫ atanh(ax+b) dx = (ax+b)/a·atanh(ax+b) + (1/(2a))·log(1−(ax+b)²).
+                    return _atanh_integral(a_frac, b_frac, f.args[0], x)
 
     # Unknown shape — signal "no rule" to the caller.
     return None
@@ -783,6 +839,194 @@ def _try_atan_product(
     return atan_poly_integral(poly, a_frac, b_frac, x)
 
 
+def _try_asin_product(
+    transcendental: IRNode, poly_candidate: IRNode, x: IRSymbol
+) -> IRNode | None:
+    """Return ``∫ poly_candidate · asin(linear) dx`` or ``None``.
+
+    Checks whether ``transcendental`` is ``Asin(linear)`` and
+    ``poly_candidate`` is a polynomial. Phase 12 IBP formula.
+    """
+    if not isinstance(transcendental, IRApply):
+        return None
+    if transcendental.head != ASIN:
+        return None
+    lin = _try_linear(transcendental.args[0], x)
+    if lin is None:
+        return None
+    a_frac, b_frac = lin
+    if a_frac == 0:
+        return None
+
+    r = to_rational(poly_candidate, x)
+    if r is None:
+        return None
+    num, den = r
+    from polynomial import normalize as _norm
+    if len(_norm(den)) > 1:
+        return None
+    poly = tuple(Fraction(c) for c in _norm(num))
+    if not poly:
+        return None
+    return asin_poly_integral(poly, a_frac, b_frac, x)
+
+
+def _try_acos_product(
+    transcendental: IRNode, poly_candidate: IRNode, x: IRSymbol
+) -> IRNode | None:
+    """Return ``∫ poly_candidate · acos(linear) dx`` or ``None``.
+
+    Checks whether ``transcendental`` is ``Acos(linear)`` and
+    ``poly_candidate`` is a polynomial. Phase 12 IBP formula.
+    """
+    if not isinstance(transcendental, IRApply):
+        return None
+    if transcendental.head != ACOS:
+        return None
+    lin = _try_linear(transcendental.args[0], x)
+    if lin is None:
+        return None
+    a_frac, b_frac = lin
+    if a_frac == 0:
+        return None
+
+    r = to_rational(poly_candidate, x)
+    if r is None:
+        return None
+    num, den = r
+    from polynomial import normalize as _norm
+    if len(_norm(den)) > 1:
+        return None
+    poly = tuple(Fraction(c) for c in _norm(num))
+    if not poly:
+        return None
+    return acos_poly_integral(poly, a_frac, b_frac, x)
+
+
+def _try_sinh_product(
+    transcendental: IRNode, poly_candidate: IRNode, x: IRSymbol
+) -> IRNode | None:
+    """Return ``∫ poly_candidate · sinh(linear) dx`` or ``None``.
+
+    Phase 13 tabular IBP formula.
+    """
+    if not isinstance(transcendental, IRApply):
+        return None
+    if transcendental.head != SINH:
+        return None
+    lin = _try_linear(transcendental.args[0], x)
+    if lin is None:
+        return None
+    a_frac, b_frac = lin
+    if a_frac == 0:
+        return None
+
+    r = to_rational(poly_candidate, x)
+    if r is None:
+        return None
+    num, den = r
+    from polynomial import normalize as _norm
+    if len(_norm(den)) > 1:
+        return None
+    poly = tuple(Fraction(c) for c in _norm(num))
+    if not poly:
+        return None
+    return sinh_poly_integral(poly, a_frac, b_frac, x)
+
+
+def _try_cosh_product(
+    transcendental: IRNode, poly_candidate: IRNode, x: IRSymbol
+) -> IRNode | None:
+    """Return ``∫ poly_candidate · cosh(linear) dx`` or ``None``.
+
+    Phase 13 tabular IBP formula.
+    """
+    if not isinstance(transcendental, IRApply):
+        return None
+    if transcendental.head != COSH:
+        return None
+    lin = _try_linear(transcendental.args[0], x)
+    if lin is None:
+        return None
+    a_frac, b_frac = lin
+    if a_frac == 0:
+        return None
+
+    r = to_rational(poly_candidate, x)
+    if r is None:
+        return None
+    num, den = r
+    from polynomial import normalize as _norm
+    if len(_norm(den)) > 1:
+        return None
+    poly = tuple(Fraction(c) for c in _norm(num))
+    if not poly:
+        return None
+    return cosh_poly_integral(poly, a_frac, b_frac, x)
+
+
+def _try_asinh_product(
+    transcendental: IRNode, poly_candidate: IRNode, x: IRSymbol
+) -> IRNode | None:
+    """Return ``∫ poly_candidate · asinh(linear) dx`` or ``None``.
+
+    Phase 13 reduction IBP formula.
+    """
+    if not isinstance(transcendental, IRApply):
+        return None
+    if transcendental.head != ASINH:
+        return None
+    lin = _try_linear(transcendental.args[0], x)
+    if lin is None:
+        return None
+    a_frac, b_frac = lin
+    if a_frac == 0:
+        return None
+
+    r = to_rational(poly_candidate, x)
+    if r is None:
+        return None
+    num, den = r
+    from polynomial import normalize as _norm
+    if len(_norm(den)) > 1:
+        return None
+    poly = tuple(Fraction(c) for c in _norm(num))
+    if not poly:
+        return None
+    return asinh_poly_integral(poly, a_frac, b_frac, x)
+
+
+def _try_acosh_product(
+    transcendental: IRNode, poly_candidate: IRNode, x: IRSymbol
+) -> IRNode | None:
+    """Return ``∫ poly_candidate · acosh(linear) dx`` or ``None``.
+
+    Phase 13 reduction IBP formula.
+    """
+    if not isinstance(transcendental, IRApply):
+        return None
+    if transcendental.head != ACOSH:
+        return None
+    lin = _try_linear(transcendental.args[0], x)
+    if lin is None:
+        return None
+    a_frac, b_frac = lin
+    if a_frac == 0:
+        return None
+
+    r = to_rational(poly_candidate, x)
+    if r is None:
+        return None
+    num, den = r
+    from polynomial import normalize as _norm
+    if len(_norm(den)) > 1:
+        return None
+    poly = tuple(Fraction(c) for c in _norm(num))
+    if not poly:
+        return None
+    return acosh_poly_integral(poly, a_frac, b_frac, x)
+
+
 # ---------------------------------------------------------------------------
 # Phase 4 helpers
 # ---------------------------------------------------------------------------
@@ -922,6 +1166,43 @@ def _tan_integral(a: Fraction, b: Fraction, x: IRSymbol) -> IRNode:
     if a == Fraction(1):
         return IRApply(NEG, (log_cos,))
     return IRApply(NEG, (IRApply(DIV, (log_cos, _frac_ir(a))),))
+
+
+def _tanh_integral(a: Fraction, b: Fraction, x: IRSymbol) -> IRNode:
+    """Return the IR for ``∫ tanh(ax+b) dx = log(cosh(ax+b)) / a``.
+
+    Precondition: ``a ≠ 0``.
+    """
+    arg_ir = linear_to_ir(a, b, x)
+    cosh_ir = IRApply(COSH, (arg_ir,))
+    log_cosh = IRApply(LOG, (cosh_ir,))
+    if a == Fraction(1):
+        return log_cosh
+    return IRApply(DIV, (log_cosh, _frac_ir(a)))
+
+
+def _atanh_integral(
+    a: Fraction, b: Fraction, arg_ir: IRNode, x: IRSymbol
+) -> IRNode:
+    """Return the IR for ``∫ atanh(ax+b) dx``.
+
+    Formula: (ax+b)/a · atanh(ax+b) + (1/(2a)) · log(1−(ax+b)²)
+
+    Precondition: ``a ≠ 0``.  ``arg_ir`` is the already-constructed ``ax+b``
+    IR node (avoids re-building it).
+    """
+    a_ir = _frac_ir(a)
+    coef_ir = IRApply(DIV, (arg_ir, a_ir))
+    atanh_ir = IRApply(ATANH, (arg_ir,))
+    main_term = IRApply(MUL, (coef_ir, atanh_ir))
+
+    # (1/(2a)) · log(1 − (ax+b)²)
+    inner = IRApply(SUB, (ONE, IRApply(POW, (arg_ir, TWO))))
+    log_part = IRApply(
+        DIV,
+        (IRApply(LOG, (inner,)), IRApply(MUL, (TWO, a_ir))),
+    )
+    return IRApply(ADD, (main_term, log_part))
 
 
 def _try_trig_power(
@@ -1317,6 +1598,68 @@ def _diff_ir(g: IRNode, x: IRSymbol) -> IRNode | None:
             # d/dx cos(u) = −sin(u)·u'
             neg_sin = IRApply(NEG, (IRApply(SIN, (arg,)),))
             return neg_sin if darg_is_one else IRApply(MUL, (neg_sin, darg))
+
+        if head == ASIN:
+            # d/dx asin(u) = u'/√(1−u²)
+            denom = IRApply(
+                SQRT, (IRApply(SUB, (ONE, IRApply(POW, (arg, TWO)))),)
+            )
+            if darg_is_one:
+                return IRApply(DIV, (ONE, denom))
+            return IRApply(DIV, (darg, denom))
+
+        if head == ACOS:
+            # d/dx acos(u) = −u'/√(1−u²)
+            denom = IRApply(
+                SQRT, (IRApply(SUB, (ONE, IRApply(POW, (arg, TWO)))),)
+            )
+            neg_inv = IRApply(NEG, (IRApply(DIV, (ONE, denom)),))
+            if darg_is_one:
+                return neg_inv
+            return IRApply(MUL, (IRApply(NEG, (darg,)), IRApply(DIV, (ONE, denom))))
+
+        if head == SINH:
+            # d/dx sinh(u) = cosh(u)·u'
+            cosh_u = IRApply(COSH, (arg,))
+            return cosh_u if darg_is_one else IRApply(MUL, (cosh_u, darg))
+
+        if head == COSH:
+            # d/dx cosh(u) = sinh(u)·u'
+            sinh_u = IRApply(SINH, (arg,))
+            return sinh_u if darg_is_one else IRApply(MUL, (sinh_u, darg))
+
+        if head == TANH:
+            # d/dx tanh(u) = u'/cosh²(u)
+            cosh_u = IRApply(COSH, (arg,))
+            denom = IRApply(POW, (cosh_u, TWO))
+            if darg_is_one:
+                return IRApply(DIV, (ONE, denom))
+            return IRApply(DIV, (darg, denom))
+
+        if head == ASINH:
+            # d/dx asinh(u) = u'/√(u²+1)
+            denom = IRApply(
+                SQRT, (IRApply(ADD, (IRApply(POW, (arg, TWO)), ONE)),)
+            )
+            if darg_is_one:
+                return IRApply(DIV, (ONE, denom))
+            return IRApply(DIV, (darg, denom))
+
+        if head == ACOSH:
+            # d/dx acosh(u) = u'/√(u²−1)
+            denom = IRApply(
+                SQRT, (IRApply(SUB, (IRApply(POW, (arg, TWO)), ONE)),)
+            )
+            if darg_is_one:
+                return IRApply(DIV, (ONE, denom))
+            return IRApply(DIV, (darg, denom))
+
+        if head == ATANH:
+            # d/dx atanh(u) = u'/(1−u²)
+            denom = IRApply(SUB, (ONE, IRApply(POW, (arg, TWO))))
+            if darg_is_one:
+                return IRApply(DIV, (ONE, denom))
+            return IRApply(DIV, (darg, denom))
 
         if head == EXP:
             # d/dx exp(u) = exp(u)·u'

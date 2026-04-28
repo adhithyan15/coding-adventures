@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>CodingAdventures.VerilogParser.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>Verilog parser backed by shared grammar definitions</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="VerilogParser.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="../../../grammars/verilog/verilog*.grammar" LogicalName="%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../grammar-tools/CodingAdventures.GrammarTools.fsproj" />
+    <ProjectReference Include="../lexer/CodingAdventures.Lexer.fsproj" />
+    <ProjectReference Include="../parser/CodingAdventures.Parser.fsproj" />
+    <ProjectReference Include="../verilog-lexer/CodingAdventures.VerilogLexer.fsproj" />
+  </ItemGroup>
+</Project>

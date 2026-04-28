@@ -1,5 +1,266 @@
 # Changelog
 
+## 0.27.0 — 2026-04-27
+
+**Roadmap item A1 — Kronecker polynomial factoring (Phase 2) wired through `cas-factor 0.2.0`.**
+
+Upgrades `coding-adventures-cas-factor` dependency to `>=0.2.0`.
+
+The `Factor` handler in `build_cas_handler_table()` transparently benefits
+from `cas-factor`'s new Kronecker algorithm — no handler code changes needed.
+Factoring now handles:
+
+- **Sophie Germain identity**: `x⁴ + 4 = (x²+2x+2)(x²−2x+2)`
+- **Cyclotomic**: `x⁴+x²+1 = (x²+x+1)(x²−x+1)`
+- **Repeated irreducibles**: `x⁴+2x²+1 = (x²+1)²`
+- **Mixed**: `(x²+1)(x−2)` correctly split
+
+Updated `factor_handler` docstring to reflect Phase 2 capabilities.
+
+2 new tests in `test_cas_handlers.py` (Sophie Germain, cyclotomic), verifying
+that `Factor(x⁴+4)` and `Factor(x⁴+x²+1)` both return non-trivial `Mul` trees.
+
+## 0.26.0 — 2026-04-27
+
+**Roadmap item A3 — rational function operations (Collect, Together, RatSimplify, Apart, full Expand).**
+
+`Expand` handler upgraded from a `canonical()`-only pass to full polynomial
+distribution via the polynomial bridge.  Four new IR heads wired into
+`SymbolicBackend` via `build_cas_handler_table()`:
+
+- **`Expand`** (improved): calls `to_rational` + `from_polynomial` to distribute
+  `Mul` over `Add` and expand integer powers for single-variable polynomials
+  with rational coefficients. Falls back to `canonical` for multi-variable /
+  transcendental expressions.
+- **`Collect(expr, var)`**: groups terms by powers of `var` for single-variable
+  polynomials with rational coefficients (same mechanism as `Expand` but takes
+  an explicit variable argument). MACSYMA surface: `collect`.
+- **`Together(expr)`**: combines a sum of rational functions into a single
+  fraction `P(x)/Q(x)` with monic denominator. MACSYMA surface: `together`.
+- **`RatSimplify(expr)`**: cancels the GCD of numerator and denominator,
+  reducing the rational expression to lowest terms. MACSYMA surface: `ratsimp`.
+- **`Apart(expr, var)`**: partial-fraction decomposition (Phase 1 — distinct
+  rational linear factors only). Uses residue formula `A_i = P(r_i)/Q'(r_i)`.
+  MACSYMA surface: `partfrac`. Falls back to unevaluated for irreducible
+  quadratic or repeated factors.
+
+**Dependencies**: `coding-adventures-polynomial` was already in
+`pyproject.toml`; the new handlers import `gcd`, `monic`, `deriv`,
+`evaluate`, `rational_roots`, `divmod_poly` directly from `polynomial`.
+
+**New tests (18 in Section 14 of `test_cas_handlers.py`)** +
+**6 new pipeline tests in `macsyma-runtime`**.
+
+## 0.25.0 — 2026-04-27
+
+**Roadmap item B1 (cas-trig) wired into SymbolicBackend.**
+
+`cas-trig` is now a dependency. Its handler table is merged via
+`_build_trig()` in `SymbolicBackend.__init__`.
+
+**New IR heads** (3 total):
+`TrigSimplify`, `TrigExpand`, `TrigReduce`.
+
+- `TrigSimplify`: Pythagorean identity (`sin²+cos²→1`), sign rules
+  (`sin(-x)→-sin(x)`, `cos(-x)→cos(x)`), and special-value lookup
+  (`sin(π/6)→1/2`, etc.).
+- `TrigExpand`: angle-addition formulas and Chebyshev recurrence for
+  integer multiples (`sin(2x)→2sin(x)cos(x)`, `cos(3x)→...`).
+- `TrigReduce`: power-to-multiple-angle reduction
+  (`sin²(x)→(1-cos(2x))/2`, `cos³(x)→(3cos(x)+cos(3x))/4`, etc.).
+
+**Dependencies updated:**
+- `cas-trig>=0.1.0` added to `pyproject.toml`.
+
+**New tests (5 in `test_cas_handlers.py`)** + **5 pipeline tests**.
+
+## 0.24.0 — 2026-04-27
+
+**Roadmap items A2c + A2d (NSolve and linear systems) wired in.**
+
+- `solve_handler` extended to detect `Solve(List(eqs...), List(vars...))`
+  and route it to `solve_linear_system` (Gaussian elimination, exact
+  rational arithmetic). Returns `List(Rule(var, val), ...)`.
+- `nsolve_handler` added for `NSolve(poly, var)`: Durand-Kerner iteration
+  returning `IRFloat`/complex IR roots for any polynomial degree.
+- `MACSYMA_NAME_TABLE` gains `"nsolve"→NSolve` and `"linsolve"→Solve`.
+- `cas-solve>=0.6.0` dependency pin updated.
+- 4 new tests in `test_cas_handlers.py` + 4 new pipeline tests.
+
+## 0.23.0 — 2026-04-27
+
+**Roadmap items A2a + A2b (cubic and quartic solvers) wired into `solve_handler`.**
+
+The `Solve` handler in `cas_handlers.py` now supports degree-3 and degree-4
+polynomials via `cas-solve`'s new `solve_cubic` and `solve_quartic`:
+
+- **Degree 3**: routes through `solve_cubic` (rational-root theorem → Cardano).
+  Returns a `List` of roots, or unevaluated for casus irreducibilis.
+- **Degree 4**: routes through `solve_quartic` (rational-root theorem →
+  biquadratic → Ferrari). Returns a `List` of roots, or unevaluated when the
+  Ferrari resolvent has no rational root.
+- Empty or "ALL" results are propagated as unevaluated expressions.
+
+**Dependencies updated:**
+- `cas-solve` bumped to `>=0.4.0` in `pyproject.toml`.
+
+**New tests (4 in `test_cas_handlers.py`):**
+`test_solve_cubic_three_rational`, `test_solve_cubic_one_rational_two_complex`,
+`test_solve_quartic_four_rational`, `test_solve_degree_5_passthrough`.
+
+## 0.22.0 — 2026-04-27
+
+**Roadmap item B2 (cas-complex) wired into SymbolicBackend.**
+
+`cas-complex` is now a dependency. Its handler table is merged into
+`build_cas_handler_table()` via `**_build_complex()`, and two additional
+integration points are set up in `SymbolicBackend.__init__`:
+
+- `ImaginaryUnit` is pre-bound to itself so it evaluates as an inert
+  symbol (rather than triggering the unresolved-symbol fall-through).
+- A wrapper around the `Pow` handler routes `ImaginaryUnit^n` through
+  `imaginary_power_handler` (reducing `i^n → {1, i, -1, -i}` via `n % 4`)
+  before falling through to the standard power handler.
+- `Abs` is extended: when its argument contains `ImaginaryUnit`, it
+  delegates to `abs_complex_handler` (returning `sqrt(re² + im²)`).
+
+**New IR heads** (7 total):
+`Re`, `Im`, `Conjugate`, `Arg`, `RectForm`, `PolarForm`, `AbsComplex`.
+
+## 0.21.0 — 2026-04-27
+
+**Roadmap item B3 (cas-number-theory) wired into SymbolicBackend.**
+
+The new `cas-number-theory` package is now a dependency and its handler
+table is merged into `build_cas_handler_table()` via `**_build_nt()`.
+
+**New IR heads** (10 total, all language-neutral):
+`IsPrime`, `NextPrime`, `PrevPrime`, `FactorInteger`, `Divisors`,
+`Totient`, `MoebiusMu`, `JacobiSymbol`, `ChineseRemainder`, `IntegerLength`.
+
+## 0.20.0 — 2026-04-27
+
+**Roadmap items C2, C4, C5 implemented** — three items from the MACSYMA
+completion roadmap (`macsyma-completion.md`) are now live in `SymbolicBackend`.
+All three are language-neutral IR heads; every future CAS frontend inherits
+them automatically.
+
+**New handlers installed on `SymbolicBackend`**:
+
+- **`Lhs(Equal(a, b))` → `a`** (C5) — left-hand side of an equation.
+- **`Rhs(Equal(a, b))` → `b`** (C5) — right-hand side of an equation.
+- **`MakeList(expr, var, n)` / `MakeList(expr, var, from, to[, step])`** (C2)
+  — generative list construction: evaluates `expr` for each integer value
+  of `var` in the specified range.  Replaces the previous stub that mapped
+  `makelist` → `Range`.
+- **`At(expr, Equal(var, val))` / `At(expr, List(…))` → substitution then eval** (C4)
+  — point evaluation; sugar over `Subst`.  Handles both single rules and
+  lists of rules.
+
+**Bug fix**: `MACSYMA_NAME_TABLE["makelist"]` previously routed to `Range`
+(a plain integer range generator). It now routes to the correct `MakeList`
+head, which evaluates an arbitrary expression over a range.
+
+**New import**: `EQUAL` added to the `cas_handlers.py` imports from
+`symbolic_ir`.
+
+## 0.19.0 — 2026-04-27
+
+**CAS substrate handlers wired into SymbolicBackend** — the universal inner
+doll. Every CAS frontend that extends `SymbolicBackend` (MACSYMA, Maple,
+Mathematica, …) now inherits the full algebraic operation set for free.
+Language-specific quirks (Display/Suppress/Kill/Ev) remain in the language
+backend subclass (the outer doll).
+
+**New module**: `symbolic_vm/cas_handlers.py`
+
+**New handlers installed on `SymbolicBackend`**:
+
+- **Algebraic**: `Simplify`, `Expand`, `Factor` (Phase 1: integer-root
+  factoring via rational-root theorem), `Solve` (linear and quadratic over Q),
+  `Subst` (structural substitution + re-evaluation).
+- **List operations**: `Length`, `First`, `Rest`, `Last`, `Append`, `Reverse`,
+  `Range`, `Map`, `Apply`, `Select`, `Sort`, `Part`, `Flatten`, `Join`.
+- **Matrix**: `Matrix`, `Transpose`, `Determinant`, `Inverse`.
+- **Calculus**: `Limit` (direct-substitution Phase 1), `Taylor` (polynomial
+  Taylor expansion).
+- **Numeric**: `Abs`, `Floor`, `Ceiling`, `Mod`, `Gcd`, `Lcm`.
+
+**Package dependencies added**: `cas-pattern-matching`, `cas-substitution`,
+`cas-simplify`, `cas-factor`, `cas-solve`, `cas-list-operations`,
+`cas-matrix`, `cas-limit-series`.
+
+**Architecture note**: These handlers are the **inner doll** — universal
+CAS operations that any symbolic algebra language can use unchanged. They
+are explicitly *not* placed in `MacsymaBackend` so that future Maple and
+Mathematica backends can extend `SymbolicBackend` directly and inherit
+the complete algebraic substrate without touching any MACSYMA-specific code.
+
+## 0.18.0 — 2026-04-23
+
+Phase 13 of the integration roadmap — hyperbolic functions.
+
+**New heads** (requires `symbolic-ir >= 0.5.0`): SINH, COSH, TANH, ASINH, ACOSH, ATANH.
+
+**New capability**:
+- `∫ P(x) · sinh(ax+b) dx` and `∫ P(x) · cosh(ax+b) dx` — tabular IBP with sign `(−1)^k`.
+  Assembly: `C(x)·cosh(ax+b) + S(x)·sinh(ax+b)` for sinh; swapped for cosh.
+- `∫ P(x) · asinh(ax+b) dx` — IBP + reduction formula `∫ tⁿ/√(t²+1) dt`.
+  Final: `[Q(x)−B(ax+b)]·asinh(ax+b) − A(ax+b)·√((ax+b)²+1)`.
+- `∫ P(x) · acosh(ax+b) dx` — same reduction formula with `√(t²−1)`.
+  Final: `[Q(x)−B(ax+b)]·acosh(ax+b) − A(ax+b)·√((ax+b)²−1)`.
+- `∫ tanh(ax+b) dx = (1/a)·log(cosh(ax+b))`.
+- `∫ atanh(ax+b) dx = (ax+b)/a·atanh(ax+b) + (1/(2a))·log(1−(ax+b)²)`.
+
+**New modules**: `sinh_poly_integral.py`, `asinh_poly_integral.py`.
+
+**Differentiation rules**: all six hyperbolic functions wired into `_diff_ir`.
+
+**poly×tanh and poly×atanh deferred** to a future phase.
+
+**Tests**: 45 tests in `tests/test_phase13.py` using numerical finite-difference
+verification. All correctness checks pass.
+
+## 0.17.0 — 2026-04-23
+
+Phase 12 of the integration roadmap — polynomial × asin/acos(linear) integration via IBP.
+
+**New capability**: `∫ P(x) · asin(ax+b) dx` and `∫ P(x) · acos(ax+b) dx` for any
+`P ∈ Q[x]` and `a ∈ Q \ {0}`, completing all three inverse-trig × polynomial families.
+
+**Algorithm** (integration by parts):
+
+- **asin IBP**: `u = asin(ax+b)`, `dv = P dx` → `du = a/√(1−(ax+b)²) dx`, `v = Q = ∫P dx`
+  - Residual: `a · ∫ Q/√(1−(ax+b)²) dx = ∫ Q̃(t)/√(1−t²) dt`  (t = ax+b substitution)
+  - Residual decomposed via reduction formula: `∫ Q̃/√(1−t²) dt = A(t)·√(1−t²) + B(t)·asin(t)`
+  - Final result: `[Q(x) − B(ax+b)]·asin(ax+b) − A(ax+b)·√(1−(ax+b)²)`
+
+- **acos IBP**: sign of `du` flips (`d/dx acos = −a/√`), giving
+  - Final result: `Q(x)·acos(ax+b) + A(ax+b)·√(1−(ax+b)²) + B(ax+b)·asin(ax+b)`
+  - The B·asin term is non-zero for deg(P) ≥ 1 — this is expected, not a bug.
+
+**New module** `asin_poly_integral.py`:
+- `asin_poly_integral(poly, a, b, x_sym)` — IBP closed-form for `∫ P(x)·asin(ax+b) dx`.
+- `acos_poly_integral(poly, a, b, x_sym)` — IBP closed-form for `∫ P(x)·acos(ax+b) dx`.
+- Private helpers: `_compose_to_t`, `_sqrt_integral_decompose`, `_poly_compose_linear`, `_compute_AB`.
+- Reduction formula is memoized per monomial degree for efficiency.
+
+**Dispatcher hooks** in `integrate.py`:
+- `_try_asin_product` / `_try_acos_product` — check ASIN/ACOS head, validate linear arg and polynomial coefficient.
+- Both hooks try both operand orders, inserted after Phase 11 in the MUL handler.
+- Bare `asin/acos(linear)` cases (P = 1) handled in the elementary-function branch.
+- Differentiation rules for `d/dx asin(u)` and `d/dx acos(u)` added to `_diff_ir`.
+
+**VM handlers** in `handlers.py`:
+- `asin(simplify)` and `acos(simplify)` handlers registered (numeric fold + symbolic passthrough).
+
+**symbolic-ir**: bumped dependency to `>=0.4.0` (requires ASIN/ACOS head symbols).
+
+**Limitations (future work)**:
+- `∫ asin(g(x))` for non-linear `g`.
+- `∫ asin(ax+b)^n dx` for `n ≥ 2`.
+- `∫ asin(ax+b) · exp(x) dx` (mixed inverse-trig × exponential).
+
 ## 0.16.0 — 2026-04-22
 
 Phase 11 of the integration roadmap — polynomial × arctan(linear) integration via IBP.

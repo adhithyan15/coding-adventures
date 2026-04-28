@@ -28,22 +28,24 @@
 // === Register conventions ===
 //
 // RISC-V has 32 registers, each 32 bits wide. The most important quirk is:
-//     x0  = always 0 (hardwired — writes are ignored, reads always return 0)
+//
+//	x0  = always 0 (hardwired — writes are ignored, reads always return 0)
 //
 // Because x0 is always 0, it enables clever optimizations without dedicated instructions:
-//     addi x1, x0, 42    →    x1 = 0 + 42 = 42 (effectively a "load 42 into x1" operation)
+//
+//	addi x1, x0, 42    →    x1 = 0 + 42 = 42 (effectively a "load 42 into x1" operation)
 //
 // === Architecture ===
 //
 // This simulator bridges the gap between binary encoded bits and the generic
 // fetch-decode-execute cycle provided by the cpu-simulator package:
 //
-//   simulator.go  — top-level simulator struct and factory
-//   opcodes.go    — opcode and funct3/funct7 constants
-//   decode.go     — instruction decoder (binary → structured fields)
-//   execute.go    — instruction executor (structured fields → state changes)
-//   csr.go        — Control and Status Register file for M-mode
-//   encoding.go   — helpers to construct machine code for testing
+//	simulator.go  — top-level simulator struct and factory
+//	opcodes.go    — opcode and funct3/funct7 constants
+//	decode.go     — instruction decoder (binary → structured fields)
+//	execute.go    — instruction executor (structured fields → state changes)
+//	csr.go        — Control and Status Register file for M-mode
+//	encoding.go   — helpers to construct machine code for testing
 package riscvsimulator
 
 import (
@@ -65,7 +67,8 @@ type RiscVDecoder struct{}
 // handlers. The CSR field provides access to M-mode Control and Status Registers
 // for privileged operations (ecall trap handling, mret, CSR read/write).
 type RiscVExecutor struct {
-	CSR *CSRFile
+	CSR  *CSRFile
+	Host *HostIO
 }
 
 // RiscVSimulator encompasses the full RISC-V environment: decoder, executor,
@@ -75,6 +78,7 @@ type RiscVSimulator struct {
 	Executor *RiscVExecutor
 	CPU      *cpu.CPU
 	CSR      *CSRFile
+	Host     *HostIO
 }
 
 // NewRiscVSimulator creates a fully initialized RISC-V simulator with the
@@ -86,16 +90,26 @@ type RiscVSimulator struct {
 // Memory size should be large enough to hold both the program and any
 // data it accesses. 65536 (64 KiB) is a good default for testing.
 func NewRiscVSimulator(memorySize int) *RiscVSimulator {
+	return NewRiscVSimulatorWithHost(memorySize, nil)
+}
+
+// NewRiscVSimulatorWithHost creates a simulator with optional host syscall I/O.
+//
+// When host is nil, ecall keeps the legacy no-trap-handler behavior and halts.
+// When host is present and mtvec is unset, syscall numbers in x17 are handled
+// directly for simple language runtime tests.
+func NewRiscVSimulatorWithHost(memorySize int, host *HostIO) *RiscVSimulator {
 	result, _ := StartNew[*RiscVSimulator]("riscv-simulator.NewRiscVSimulator", nil,
 		func(op *Operation[*RiscVSimulator], rf *ResultFactory[*RiscVSimulator]) *OperationResult[*RiscVSimulator] {
 			decoder := &RiscVDecoder{}
 			csrFile := NewCSRFile()
-			executor := &RiscVExecutor{CSR: csrFile}
+			executor := &RiscVExecutor{CSR: csrFile, Host: host}
 			return rf.Generate(true, false, &RiscVSimulator{
 				Decoder:  decoder,
 				Executor: executor,
 				CPU:      cpu.NewCPU(decoder, executor, 32, 32, memorySize),
 				CSR:      csrFile,
+				Host:     host,
 			})
 		}).GetResult()
 	return result

@@ -1,0 +1,22 @@
+{
+  "name": "coding-adventures-conduit-hello",
+  "version": "0.1.0",
+  "description": "Demo program for coding-adventures-conduit — Express-style routes, filters, halt, redirect, error handler.",
+  "type": "module",
+  "scripts": {
+    "start": "tsx hello.ts",
+    "test": "vitest run"
+  },
+  "keywords": ["conduit", "demo", "web", "http"],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "tsx": "^4.7.0",
+    "coding-adventures-conduit": "file:../../../packages/typescript/conduit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.5.0",
+    "vitest": "^3.0.0"
+  }
+}

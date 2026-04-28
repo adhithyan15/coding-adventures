@@ -4,6 +4,7 @@ import pytest
 from compiler_ir import (
     IDGenerator,
     IrDataDecl,
+    IrFloatImmediate,
     IrImmediate,
     IrInstruction,
     IrLabel,
@@ -13,6 +14,7 @@ from compiler_ir import (
 )
 from wasm_module_encoder import encode_module
 from wasm_runtime import ProcExitError, WasiConfig, WasiHost, WasmRuntime
+from wasm_types import ValueType
 
 from ir_to_wasm_compiler import (
     FunctionSignature,
@@ -23,7 +25,7 @@ from ir_to_wasm_compiler import (
 )
 
 
-def _runtime_result(module, export_name: str, args: list[int], host=None) -> list[int | float]:
+def _runtime_result(module, export_name: str, args: list[int | float], host=None) -> list[int | float]:
     runtime = WasmRuntime(host=host)
     wasm_bytes = encode_module(module)
     return runtime.load_and_run(wasm_bytes, export_name, args)
@@ -145,6 +147,154 @@ def test_compile_memory_ops_and_data_layout() -> None:
 
     assert any(export.name == "memory" for export in module.exports)
     assert _runtime_result(module, "store_read", []) == [90]
+
+
+def test_compile_f64_function_with_typed_signature() -> None:
+    gen = IDGenerator()
+    program = IrProgram(entry_label="_fn_add_real")
+    program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_fn_add_real")], id=-1))
+    program.add_instruction(
+        IrInstruction(
+            IrOp.F64_ADD,
+            [IrRegister(1), IrRegister(2), IrRegister(3)],
+            id=gen.next(),
+        )
+    )
+    program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+
+    module = IrToWasmCompiler().compile(
+        program,
+        function_signatures=[
+            FunctionSignature(
+                label="_fn_add_real",
+                param_count=2,
+                export_name="add_real",
+                param_types=(ValueType.F64, ValueType.F64),
+                result_types=(ValueType.F64,),
+            )
+        ],
+    )
+
+    assert _runtime_result(module, "add_real", [1.25, 2.5]) == [3.75]
+
+
+def test_compile_f64_memory_load_store() -> None:
+    gen = IDGenerator()
+    program = IrProgram(entry_label="_fn_store_read_real")
+    program.add_data(IrDataDecl(label="real_buf", size=8, init=0))
+    program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_fn_store_read_real")], id=-1))
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_ADDR, [IrRegister(2), IrLabel("real_buf")], id=gen.next())
+    )
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(3), IrImmediate(0)], id=gen.next())
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.LOAD_F64_IMM,
+            [IrRegister(4), IrFloatImmediate(6.5)],
+            id=gen.next(),
+        )
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.STORE_F64,
+            [IrRegister(4), IrRegister(2), IrRegister(3)],
+            id=gen.next(),
+        )
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.LOAD_F64,
+            [IrRegister(1), IrRegister(2), IrRegister(3)],
+            id=gen.next(),
+        )
+    )
+    program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+
+    module = IrToWasmCompiler().compile(
+        program,
+        function_signatures=[
+            FunctionSignature(
+                label="_fn_store_read_real",
+                param_count=0,
+                export_name="store_read_real",
+                result_types=(ValueType.F64,),
+            )
+        ],
+    )
+
+    assert _runtime_result(module, "store_read_real", []) == [6.5]
+
+
+def test_compile_i32_to_f64_conversion_and_compare() -> None:
+    gen = IDGenerator()
+    program = IrProgram(entry_label="_fn_gt_three_point_five")
+    program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_fn_gt_three_point_five")], id=-1))
+    program.add_instruction(
+        IrInstruction(IrOp.F64_FROM_I32, [IrRegister(3), IrRegister(2)], id=gen.next())
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.LOAD_F64_IMM,
+            [IrRegister(4), IrFloatImmediate(3.5)],
+            id=gen.next(),
+        )
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.F64_CMP_GT,
+            [IrRegister(1), IrRegister(3), IrRegister(4)],
+            id=gen.next(),
+        )
+    )
+    program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+
+    module = IrToWasmCompiler().compile(
+        program,
+        function_signatures=[
+            FunctionSignature(
+                label="_fn_gt_three_point_five",
+                param_count=1,
+                export_name="gt_three_point_five",
+                param_types=(ValueType.I32,),
+                result_types=(ValueType.I32,),
+            )
+        ],
+    )
+
+    assert _runtime_result(module, "gt_three_point_five", [4]) == [1]
+    assert _runtime_result(module, "gt_three_point_five", [3]) == [0]
+
+
+def test_compile_f64_to_i32_truncation() -> None:
+    gen = IDGenerator()
+    program = IrProgram(entry_label="_fn_trunc_real")
+    program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_fn_trunc_real")], id=-1))
+    program.add_instruction(
+        IrInstruction(
+            IrOp.I32_TRUNC_FROM_F64,
+            [IrRegister(1), IrRegister(2)],
+            id=gen.next(),
+        )
+    )
+    program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+
+    module = IrToWasmCompiler().compile(
+        program,
+        function_signatures=[
+            FunctionSignature(
+                label="_fn_trunc_real",
+                param_count=1,
+                export_name="trunc_real",
+                param_types=(ValueType.F64,),
+                result_types=(ValueType.I32,),
+            )
+        ],
+    )
+
+    assert _runtime_result(module, "trunc_real", [3.75]) == [3]
+    assert _runtime_result(module, "trunc_real", [-2.9]) == [-2]
 
 
 def test_compile_function_call_and_run_it() -> None:

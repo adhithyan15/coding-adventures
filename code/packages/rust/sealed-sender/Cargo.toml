@@ -1,0 +1,17 @@
+[package]
+name = "coding_adventures_sealed_sender"
+version = "0.1.0"
+edition = "2021"
+description = "Signal Sealed Sender — sender-anonymous message delivery — implemented from scratch"
+
+[dependencies]
+coding_adventures_curve25519        = { path = "../curve25519" }
+coding_adventures_ed25519           = { path = "../ed25519" }
+coding_adventures_hkdf              = { path = "../hkdf" }
+coding_adventures_chacha20_poly1305 = { path = "../chacha20-poly1305" }
+coding_adventures_double_ratchet    = { path = "../double-ratchet" }
+coding_adventures_x3dh              = { path = "../x3dh" }
+coding_adventures_zeroize           = { path = "../zeroize" }
+getrandom = "0.2"
+
+[dev-dependencies]

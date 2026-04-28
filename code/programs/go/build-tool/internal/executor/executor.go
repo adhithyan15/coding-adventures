@@ -471,6 +471,12 @@ func buildResourceKeysForOS(pkg discovery.Package, pathToPkg map[string]string, 
 			keys["global:cabal-store"] = true
 		}
 
+		if (pkg.Language == "csharp" || pkg.Language == "fsharp") && strings.Contains(command, "dotnet ") {
+			// NuGet first-run migrations use global process mutex state outside
+			// DOTNET_CLI_HOME. Parallel dotnet package builds can race there on CI.
+			keys["global:dotnet-cli"] = true
+		}
+
 		for _, raw := range relPathRe.FindAllString(command, -1) {
 			normalized := strings.ReplaceAll(raw, "\\", "/")
 			abs := filepath.Clean(filepath.Join(pkg.Path, filepath.FromSlash(normalized)))

@@ -1,6 +1,6 @@
 //! # markdown-reader
 //!
-//! Native macOS Markdown viewer. End-to-end binary that exercises the
+//! Native Markdown viewer. End-to-end binary that exercises the
 //! whole coding-adventures text stack for the first time:
 //!
 //! ```text
@@ -9,11 +9,11 @@
 //!   DocumentNode
 //!      ↓  document-ast-to-layout + DocumentTheme
 //!   LayoutNode tree
-//!      ↓  layout-block + layout-text-measure-native (CoreText under the hood)
+//!      ↓  layout-block + layout-text-measure-native
 //!   PositionedNode tree
 //!      ↓  layout-to-paint + the same CoreText trio
 //!   PaintScene (with pre-shaped PaintGlyphRun instructions)
-//!      ↓  paint-metal (Metal rects/lines + CoreText glyph overlay)
+//!      ↓  platform paint backend
 //!   PixelContainer
 //!      ↓  NSImageView in an NSWindow
 //!   visible text on screen
@@ -54,18 +54,18 @@ const SAMPLE_MARKDOWN: &str = r#"# Hello, Markdown!
 
 This is a **native** Markdown viewer. Every pixel you see on this window
 went through the coding-adventures stack end to end: parse → AST → layout
-→ paint → Metal.
+→ paint → platform pixels.
 
 ## Features
 
 - Pure Rust implementation.
-- CoreText for platform-native shaping.
+- Native OS text shaping.
 - Paint VM for device-independent scene model.
-- Built from first principles — no HarfBuzz, no Pango, no WebKit.
+- Built from first principles - no HarfBuzz, no Pango, no WebKit.
 
 ### Supported today
 
-- Headings (h1–h6)
+- Headings (h1-h6)
 - Paragraphs with word-wrap
 - Unordered and ordered lists
 - Blockquotes
@@ -118,35 +118,66 @@ fn main() {
 
     // Full pipeline: parse → layout → paint → pixels.
     let scene = render_markdown_to_scene(&markdown);
-    let pixels = paint_metal::render(&scene);
-    eprintln!(
-        "markdown-reader: rendered {}×{} pixels ({} paint instructions)",
-        pixels.width,
-        pixels.height,
-        scene.instructions.len()
-    );
 
-    if let Some(path) = png_out {
-        match paint_codec_png::write_png(&pixels, &path) {
-            Ok(()) => {
-                eprintln!("markdown-reader: wrote {}", path);
-                return;
-            }
-            Err(e) => {
-                eprintln!("markdown-reader: failed to write {}: {}", path, e);
-                std::process::exit(1);
+    #[cfg(target_os = "windows")]
+    {
+        let pixels = paint_vm_direct2d::render(&scene);
+        eprintln!(
+            "markdown-reader: rendered {}Ã—{} pixels ({} paint instructions) via Direct2D",
+            pixels.width,
+            pixels.height,
+            scene.instructions.len()
+        );
+        if let Some(path) = png_out {
+            match paint_codec_png::write_png(&pixels, &path) {
+                Ok(()) => {
+                    eprintln!("markdown-reader: wrote {}", path);
+                    return;
+                }
+                Err(e) => {
+                    eprintln!("markdown-reader: failed to write {}: {}", path, e);
+                    std::process::exit(1);
+                }
             }
         }
+        unsafe {
+            paint_vm_direct2d::show_scene_in_window(&scene, "Markdown Reader - Direct2D");
+        }
+        return;
     }
 
-    #[cfg(target_vendor = "apple")]
-    unsafe {
-        show_in_window(&pixels, "Markdown Reader");
-    }
-
-    #[cfg(not(target_vendor = "apple"))]
+    #[cfg(not(target_os = "windows"))]
     {
-        eprintln!("markdown-reader: use --png <path> on non-Apple targets.");
+        let pixels = paint_metal::render(&scene);
+        eprintln!(
+            "markdown-reader: rendered {}×{} pixels ({} paint instructions)",
+            pixels.width,
+            pixels.height,
+            scene.instructions.len()
+        );
+
+        if let Some(path) = png_out {
+            match paint_codec_png::write_png(&pixels, &path) {
+                Ok(()) => {
+                    eprintln!("markdown-reader: wrote {}", path);
+                    return;
+                }
+                Err(e) => {
+                    eprintln!("markdown-reader: failed to write {}: {}", path, e);
+                    std::process::exit(1);
+                }
+            }
+        }
+
+        #[cfg(target_vendor = "apple")]
+        unsafe {
+            show_in_window(&pixels, "Markdown Reader");
+        }
+
+        #[cfg(not(target_vendor = "apple"))]
+        {
+            eprintln!("markdown-reader: use --png <path> on non-Apple targets.");
+        }
     }
 }
 
@@ -158,7 +189,7 @@ fn render_markdown_to_scene(markdown: &str) -> PaintScene {
     let theme = document_default_theme();
     let layout_root = document_ast_to_layout(&doc, &theme);
 
-    // Step 3. Lay out using layout-block with a CoreText-backed measurer.
+    // Step 3. Lay out using layout-block with a native text measurer.
     let measurer = NativeMeasurer::new();
     let constraints = constraints_width(WINDOW_WIDTH);
     let positioned = layout_block(&layout_root, constraints, &measurer);
@@ -166,7 +197,7 @@ fn render_markdown_to_scene(markdown: &str) -> PaintScene {
     // Step 4. Convert to a PaintScene. The shaper/metrics/resolver
     //        trio MUST match a single font binding — by using the
     //        NativeResolver/NativeMetrics/NativeShaper triple they
-    //        all share a CoreText `Handle`.
+    //        all share one backend-specific `Handle`.
     let resolver = NativeResolver::new();
     let metrics = NativeMetrics::new();
     let shaper = NativeShaper::new();
@@ -189,6 +220,376 @@ fn render_markdown_to_scene(markdown: &str) -> PaintScene {
 }
 
 // ---------------------------------------------------------------------------
+// Windows Direct2D window display
+// ---------------------------------------------------------------------------
+//
+// This is the first Windows-native Markdown slice. It intentionally renders
+// Markdown text straight through Direct2D/DirectWrite so the Direct2D window
+// path is usable before the full TXT03b DirectWrite shaper and PaintGlyphRun
+// registry are in place.
+
+#[cfg(any())]
+static DIRECT2D_MARKDOWN: std::sync::OnceLock<String> = std::sync::OnceLock::new();
+
+#[cfg(any())]
+unsafe fn show_direct2d_markdown_window(markdown: &str, title: &str) {
+    use windows::core::{w, PCWSTR};
+    use windows::Win32::Foundation::{HWND, LPARAM, LRESULT, WPARAM};
+    use windows::Win32::Graphics::Gdi::{GetStockObject, HBRUSH, WHITE_BRUSH};
+    use windows::Win32::System::Com::{CoInitializeEx, COINIT_APARTMENTTHREADED};
+    use windows::Win32::System::LibraryLoader::GetModuleHandleW;
+    use windows::Win32::UI::WindowsAndMessaging::{
+        CreateWindowExW, DefWindowProcW, DispatchMessageW, GetMessageW, LoadCursorW,
+        RegisterClassW, ShowWindow, TranslateMessage, UpdateWindow, CS_HREDRAW, CS_VREDRAW,
+        CW_USEDEFAULT, HMENU, IDC_ARROW, MSG, SW_SHOW, WINDOW_EX_STYLE, WM_DESTROY, WM_PAINT,
+        WNDCLASSW, WS_OVERLAPPEDWINDOW, WS_VISIBLE,
+    };
+
+    let _ = DIRECT2D_MARKDOWN.set(markdown.to_string());
+    let _ = CoInitializeEx(None, COINIT_APARTMENTTHREADED);
+
+    let instance = GetModuleHandleW(None).expect("GetModuleHandleW failed");
+    let class_name = w!("CodingAdventuresMarkdownReaderDirect2D");
+
+    let wc = WNDCLASSW {
+        style: CS_HREDRAW | CS_VREDRAW,
+        lpfnWndProc: Some(direct2d_window_proc),
+        hInstance: instance.into(),
+        hCursor: LoadCursorW(None, IDC_ARROW).unwrap_or_default(),
+        hbrBackground: HBRUSH(GetStockObject(WHITE_BRUSH).0),
+        lpszClassName: class_name,
+        ..Default::default()
+    };
+    RegisterClassW(&wc);
+
+    let title_wide = wide_null(title);
+    let hwnd = CreateWindowExW(
+        WINDOW_EX_STYLE::default(),
+        class_name,
+        PCWSTR(title_wide.as_ptr()),
+        WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+        CW_USEDEFAULT,
+        CW_USEDEFAULT,
+        WINDOW_WIDTH as i32,
+        WINDOW_HEIGHT as i32,
+        HWND::default(),
+        HMENU::default(),
+        instance,
+        None,
+    );
+    assert!(!hwnd.is_invalid(), "CreateWindowExW failed");
+
+    ShowWindow(hwnd, SW_SHOW);
+    let _ = UpdateWindow(hwnd);
+
+    let mut msg = MSG::default();
+    while GetMessageW(&mut msg, HWND::default(), 0, 0).into() {
+        let _ = TranslateMessage(&msg);
+        DispatchMessageW(&msg);
+    }
+
+    unsafe extern "system" fn direct2d_window_proc(
+        hwnd: HWND,
+        msg: u32,
+        wparam: WPARAM,
+        lparam: LPARAM,
+    ) -> LRESULT {
+        match msg {
+            WM_PAINT => {
+                paint_direct2d_window(hwnd);
+                LRESULT(0)
+            }
+            WM_DESTROY => {
+                windows::Win32::UI::WindowsAndMessaging::PostQuitMessage(0);
+                LRESULT(0)
+            }
+            _ => DefWindowProcW(hwnd, msg, wparam, lparam),
+        }
+    }
+}
+
+#[cfg(any())]
+unsafe fn paint_direct2d_window(hwnd: windows::Win32::Foundation::HWND) {
+    use windows::Win32::Foundation::RECT;
+    use windows::Win32::Graphics::Direct2D::Common::{
+        D2D1_ALPHA_MODE_UNKNOWN, D2D1_COLOR_F, D2D1_PIXEL_FORMAT, D2D_RECT_F, D2D_SIZE_U,
+    };
+    use windows::Win32::Graphics::Direct2D::{
+        D2D1CreateFactory, D2D1_DRAW_TEXT_OPTIONS_NONE, D2D1_FACTORY_TYPE_SINGLE_THREADED,
+        D2D1_HWND_RENDER_TARGET_PROPERTIES, D2D1_PRESENT_OPTIONS_NONE,
+        D2D1_RENDER_TARGET_PROPERTIES, D2D1_RENDER_TARGET_TYPE_DEFAULT,
+        D2D1_RENDER_TARGET_USAGE_NONE,
+    };
+    use windows::Win32::Graphics::DirectWrite::{
+        DWriteCreateFactory, IDWriteFactory, DWRITE_FACTORY_TYPE_SHARED,
+        DWRITE_FONT_STRETCH_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_WEIGHT,
+        DWRITE_FONT_WEIGHT_BOLD, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_MEASURING_MODE_NATURAL,
+    };
+    use windows::Win32::Graphics::Dxgi::Common::DXGI_FORMAT_UNKNOWN;
+    use windows::Win32::Graphics::Gdi::{BeginPaint, EndPaint, GetClientRect, PAINTSTRUCT};
+
+    let mut ps = PAINTSTRUCT::default();
+    BeginPaint(hwnd, &mut ps);
+
+    let mut rc = RECT::default();
+    if GetClientRect(hwnd, &mut rc).is_ok() {
+        let width = (rc.right - rc.left).max(1) as u32;
+        let height = (rc.bottom - rc.top).max(1) as u32;
+
+        let d2d_factory =
+            D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, None).expect("D2D factory");
+        let dwrite_factory: IDWriteFactory =
+            DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED).expect("DWrite factory");
+
+        let rt_props = D2D1_RENDER_TARGET_PROPERTIES {
+            r#type: D2D1_RENDER_TARGET_TYPE_DEFAULT,
+            pixelFormat: D2D1_PIXEL_FORMAT {
+                format: DXGI_FORMAT_UNKNOWN,
+                alphaMode: D2D1_ALPHA_MODE_UNKNOWN,
+            },
+            dpiX: 96.0,
+            dpiY: 96.0,
+            usage: D2D1_RENDER_TARGET_USAGE_NONE,
+            minLevel: Default::default(),
+        };
+        let hwnd_props = D2D1_HWND_RENDER_TARGET_PROPERTIES {
+            hwnd,
+            pixelSize: D2D_SIZE_U { width, height },
+            presentOptions: D2D1_PRESENT_OPTIONS_NONE,
+        };
+        let target = d2d_factory
+            .CreateHwndRenderTarget(&rt_props, &hwnd_props)
+            .expect("D2D HWND render target");
+
+        target.BeginDraw();
+        target.Clear(Some(&D2D1_COLOR_F {
+            r: 1.0,
+            g: 1.0,
+            b: 1.0,
+            a: 1.0,
+        }));
+
+        let text_brush = target
+            .CreateSolidColorBrush(
+                &D2D1_COLOR_F {
+                    r: 0.08,
+                    g: 0.09,
+                    b: 0.11,
+                    a: 1.0,
+                },
+                None,
+            )
+            .expect("D2D text brush");
+
+        let accent_brush = target
+            .CreateSolidColorBrush(
+                &D2D1_COLOR_F {
+                    r: 0.86,
+                    g: 0.90,
+                    b: 0.96,
+                    a: 1.0,
+                },
+                None,
+            )
+            .expect("D2D accent brush");
+
+        let mut y = 24.0_f32;
+        let content_width = (width as f32 - 48.0).max(120.0);
+        let markdown = DIRECT2D_MARKDOWN.get().map(String::as_str).unwrap_or("");
+        for line in markdown_blocks(markdown) {
+            let size = line.size;
+            let weight = if line.bold {
+                DWRITE_FONT_WEIGHT_BOLD
+            } else {
+                DWRITE_FONT_WEIGHT_NORMAL
+            };
+            let format = create_text_format(&dwrite_factory, size, weight);
+            let wide = wide_null(&line.text);
+            let left = 24.0 + line.indent;
+            let rect = D2D_RECT_F {
+                left,
+                top: y + line.margin_top,
+                right: left + content_width - line.indent,
+                bottom: y + line.margin_top + line.box_height,
+            };
+            if line.accent {
+                target.FillRectangle(
+                    &D2D_RECT_F {
+                        left: 18.0,
+                        top: rect.top - 4.0,
+                        right: rect.right + 6.0,
+                        bottom: rect.bottom,
+                    },
+                    &accent_brush,
+                );
+            }
+            target.DrawText(
+                &wide[..wide.len().saturating_sub(1)],
+                &format,
+                &rect,
+                &text_brush,
+                D2D1_DRAW_TEXT_OPTIONS_NONE,
+                DWRITE_MEASURING_MODE_NATURAL,
+            );
+            y = rect.bottom + line.margin_bottom;
+            if y > height as f32 {
+                break;
+            }
+        }
+
+        target.EndDraw(None, None).expect("D2D EndDraw");
+    }
+
+    EndPaint(hwnd, &ps);
+
+    unsafe fn create_text_format(
+        factory: &IDWriteFactory,
+        size: f32,
+        weight: DWRITE_FONT_WEIGHT,
+    ) -> windows::Win32::Graphics::DirectWrite::IDWriteTextFormat {
+        let family = wide_null("Segoe UI");
+        let locale = wide_null("en-us");
+        factory
+            .CreateTextFormat(
+                windows::core::PCWSTR(family.as_ptr()),
+                None,
+                weight,
+                DWRITE_FONT_STYLE_NORMAL,
+                DWRITE_FONT_STRETCH_NORMAL,
+                size,
+                windows::core::PCWSTR(locale.as_ptr()),
+            )
+            .expect("DWrite text format")
+    }
+}
+
+#[cfg(any())]
+#[derive(Debug)]
+struct MarkdownDrawLine {
+    text: String,
+    size: f32,
+    bold: bool,
+    indent: f32,
+    margin_top: f32,
+    margin_bottom: f32,
+    box_height: f32,
+    accent: bool,
+}
+
+#[cfg(any())]
+fn markdown_blocks(markdown: &str) -> Vec<MarkdownDrawLine> {
+    let mut out = Vec::new();
+    let mut in_code = false;
+    for raw in markdown.lines() {
+        let trimmed = raw.trim();
+        if trimmed.starts_with("```") {
+            in_code = !in_code;
+            continue;
+        }
+        if trimmed.is_empty() {
+            out.push(MarkdownDrawLine {
+                text: String::new(),
+                size: 12.0,
+                bold: false,
+                indent: 0.0,
+                margin_top: 0.0,
+                margin_bottom: 8.0,
+                box_height: 4.0,
+                accent: false,
+            });
+            continue;
+        }
+
+        let (text, size, bold, indent, margin_top, margin_bottom, accent) = if in_code {
+            (raw.to_string(), 14.0, false, 18.0, 4.0, 6.0, true)
+        } else if let Some(rest) = trimmed.strip_prefix("# ") {
+            (
+                strip_inline_markup(rest),
+                32.0,
+                true,
+                0.0,
+                10.0,
+                12.0,
+                false,
+            )
+        } else if let Some(rest) = trimmed.strip_prefix("## ") {
+            (strip_inline_markup(rest), 24.0, true, 0.0, 8.0, 10.0, false)
+        } else if let Some(rest) = trimmed.strip_prefix("### ") {
+            (strip_inline_markup(rest), 19.0, true, 0.0, 6.0, 8.0, false)
+        } else if let Some(rest) = trimmed.strip_prefix("> ") {
+            (strip_inline_markup(rest), 16.0, false, 18.0, 4.0, 8.0, true)
+        } else if let Some(rest) = trimmed.strip_prefix("- ") {
+            (
+                format!("• {}", strip_inline_markup(rest)),
+                16.0,
+                false,
+                20.0,
+                2.0,
+                6.0,
+                false,
+            )
+        } else if let Some(rest) = ordered_list_body(trimmed) {
+            (
+                format!("• {}", strip_inline_markup(rest)),
+                16.0,
+                false,
+                20.0,
+                2.0,
+                6.0,
+                false,
+            )
+        } else {
+            (
+                strip_inline_markup(trimmed),
+                16.0,
+                false,
+                0.0,
+                2.0,
+                8.0,
+                false,
+            )
+        };
+
+        out.push(MarkdownDrawLine {
+            text,
+            size,
+            bold,
+            indent,
+            margin_top,
+            margin_bottom,
+            box_height: (size * 1.55).max(24.0),
+            accent,
+        });
+    }
+    out
+}
+
+#[cfg(any())]
+fn ordered_list_body(line: &str) -> Option<&str> {
+    let dot = line.find('.')?;
+    if dot == 0 || !line[..dot].chars().all(|c| c.is_ascii_digit()) {
+        return None;
+    }
+    Some(line[dot + 1..].trim_start())
+}
+
+#[cfg(any())]
+fn strip_inline_markup(input: &str) -> String {
+    input
+        .replace("**", "")
+        .replace('*', "")
+        .replace('`', "")
+        .replace('[', "")
+        .replace("](", " (")
+        .replace(')', "")
+}
+
+#[cfg(any())]
+fn wide_null(s: &str) -> Vec<u16> {
+    s.encode_utf16().chain(std::iter::once(0)).collect()
+}
+
+// ---------------------------------------------------------------------------
 // macOS window display
 // ---------------------------------------------------------------------------
 //
@@ -203,8 +604,8 @@ fn render_markdown_to_scene(markdown: &str) -> PaintScene {
 #[cfg(target_vendor = "apple")]
 unsafe fn show_in_window(pixels: &paint_instructions::PixelContainer, title: &str) {
     use objc_bridge::{
-        class, msg, msg_send_class, nsstring, release, CFRelease, CGPoint, CGRect, CGSize, Id,
-        NIL, NS_BACKING_STORE_BUFFERED, NS_WINDOW_STYLE_MASK_CLOSABLE,
+        class, msg, msg_send_class, nsstring, release, CFRelease, CGPoint, CGRect, CGSize, Id, NIL,
+        NS_BACKING_STORE_BUFFERED, NS_WINDOW_STYLE_MASK_CLOSABLE,
         NS_WINDOW_STYLE_MASK_MINIATURIZABLE, NS_WINDOW_STYLE_MASK_RESIZABLE,
         NS_WINDOW_STYLE_MASK_TITLED,
     };
@@ -318,11 +719,7 @@ unsafe fn create_nsimage_from_pixels(
     };
 
     let image_class = class("NSImage");
-    let image: Id = msg!(
-        msg_send_class(image_class, "alloc"),
-        "initWithSize:",
-        size
-    );
+    let image: Id = msg!(msg_send_class(image_class, "alloc"), "initWithSize:", size);
     msg!(image, "addRepresentation:", rep);
     release(rep);
 

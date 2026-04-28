@@ -1,0 +1,10 @@
+[package]
+name = "cas-limit-series"
+version = "0.1.0"
+edition = "2021"
+description = "Limit (direct substitution) and polynomial Taylor series for symbolic IR"
+license = "MIT"
+
+[dependencies]
+symbolic-ir = { path = "../symbolic-ir" }
+cas-substitution = { path = "../cas-substitution" }

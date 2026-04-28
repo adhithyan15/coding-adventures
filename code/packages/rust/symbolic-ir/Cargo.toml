@@ -1,0 +1,10 @@
+[package]
+name = "symbolic-ir"
+version = "0.1.0"
+edition = "2021"
+description = "Universal symbolic expression IR — the shared tree representation for CAS frontends and backends"
+license = "MIT"
+
+[dependencies]
+
+[dev-dependencies]

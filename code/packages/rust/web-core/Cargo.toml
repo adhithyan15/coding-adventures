@@ -1,0 +1,12 @@
+[package]
+name = "web-core"
+version = "0.1.0"
+edition = "2021"
+description = "Generic Rack/WSGI-like HTTP application layer built on embeddable-http-server"
+license = "MIT"
+
+[dependencies]
+embeddable-http-server = { path = "../embeddable-http-server" }
+http-core = { path = "../http-core" }
+tcp-runtime = { path = "../tcp-runtime" }
+transport-platform = { path = "../transport-platform" }

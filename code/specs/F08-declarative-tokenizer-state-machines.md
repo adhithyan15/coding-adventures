@@ -1,14 +1,14 @@
-# F08: Declarative Tokenizer State Machines
+# F08: Declarative Lexer State Machines
 
 ## Overview
 
-This spec defines the **tokenizer profile** for the State Machine Markup
+This spec defines the **lexer profile** for the State Machine Markup
 Language in `F07-state-machine-markup-language.md`. The first target is HTML
 tokenization, but the design is generic enough for XML-ish formats, browser
 protocols, programming language lexers with modes, and any stream format where
 the next token depends on the current lexical state.
 
-The tokenizer profile is intended to be compiled by
+The lexer profile is intended to be compiled by
 `F09-state-machine-source-compiler.md` before production use. The `.states.toml`
 file is the authoring artifact, canonical JSON is a normalized build artifact,
 and generated source code is what browser and wrapper packages should link.
@@ -21,10 +21,21 @@ tokens, append text, track temporary buffers, report parse errors, reconsume the
 current input character in a new state, and sometimes call a shared submachine
 such as character-reference parsing.
 
+The first Rust implementation slice widens the state-machine foundation with an
+effectful transducer runtime. That runtime is intentionally generic: it executes
+ordered transitions, emits named effects, and reports whether the transition
+consumed input. HTML lexing then becomes a wrapper/interpreter over those
+effects rather than a custom automaton family bolted beside DFA/NFA/PDA.
+
+Terminology note: the HTML standard calls this phase tokenization. This repo's
+package boundary is **lexer**, so Rust code and authored source files should use
+`html-lexer` and `.lexer.states.toml`. Spec notes may still say tokenizer when
+referring directly to the WHATWG state names.
+
 So the answer to "can the states and transitions live purely in a text file?"
 is:
 
-- **Yes**, if the file serializes a `state-machine/v1` tokenizer definition
+- **Yes**, if the file serializes a `state-machine/v1` lexer definition
   with a fixed portable action vocabulary.
 - **No**, if "purely" means a bare DFA transition table with no registers,
   buffers, token-emission actions, EOF handling, or reconsume semantics.
@@ -67,19 +78,19 @@ language.
 - `F06-haskell-layout-mode.md`: handles a layout-sensitive token transform after
   physical tokenization; this spec handles the tokenization loop itself.
 - `TE04-html1.0-lexer.md`: should eventually become a thin wrapper around an
-  `html1.tokenizer.states.toml` definition.
+  `html1.lexer.states.toml` definition.
 - `TE05-html1.0-parser.md`: consumes tokens from this system but remains a
   separate tree-construction concern.
 
 ## Design Principles
 
-1. **Profile, not fork.** Tokenizers extend the `state-machine/v1` definition
+1. **Profile, not fork.** Lexers extend the `state-machine/v1` definition
    model instead of inventing a separate serialization language.
 2. **Portable by construction.** A definition compiled for Rust must behave the
    same way when compiled for Go, TypeScript, Ruby, Python, or future ports.
 3. **No arbitrary host callbacks in definition files.** Escape hatches are how
    specs become unportable. Add new built-in actions instead.
-4. **Streaming by default.** Generated tokenizers must accept network-fed
+4. **Streaming by default.** Generated lexers must accept network-fed
    chunks without requiring the full HTML document in memory.
 5. **Error recovery is normal behavior.** HTML tokenization must produce tokens
    and diagnostics for invalid input instead of failing fast.
@@ -101,20 +112,20 @@ This spec does not define:
 - arbitrary regex-based lexing for programming languages
 
 Those can sit above or beside this package. This layer only defines an
-effectful state-machine tokenizer runtime and a profile for the generic `F07`
-file format.
+effectful state-machine lexer runtime and a profile for the generic `F07` file
+format.
 
 ## Core Model
 
-A tokenizer definition is a `StateMachineDefinition` with
-`profile = "tokenizer/v1"`. It contains the generic `F07` fields plus:
+A lexer definition is a `StateMachineDefinition` with `profile = "lexer/v1"`.
+It contains the generic `F07` fields plus:
 
 - token type declarations
 - named input classes
 - registers and buffers
 - validation expectations and fixture hooks
 
-At runtime, the tokenizer owns:
+At runtime, the lexer owns:
 
 - an input cursor
 - the current code point or EOF sentinel
@@ -139,25 +150,248 @@ The machine is deterministic because transition matching is ordered and
 `anything`/`anything_else` matchers are only valid as the last transition in a
 state.
 
+The lower-level Rust `EffectfulStateMachine` currently represents the same idea
+with typed events:
+
+- ordinary events match declared alphabet entries
+- `$any` matches any non-EOF event after earlier transitions have had a chance
+  to match, including Unicode code points that are not declared in the alphabet
+- `$end` matches the EOF sentinel and must not consume input
+- `actions` is an ordered list of portable effect identifiers
+- `consume = false` models EOF, lookahead, and future reconsume-style behavior
+
+That representation is deliberately smaller than the full lexer profile,
+but it is enough for generated source and wrapper packages to share one
+execution primitive while the lexer-specific matcher/action vocabulary
+continues to grow.
+
+The Rust `state-machine-tokenizer` package is the first runtime wrapper over
+that primitive. It owns the lexer loop, source positions, text buffer,
+current token, diagnostics, trace entries, a bounded non-consuming step budget,
+and a fixed portable action vocabulary. The Rust `html-lexer` package owns the
+HTML-specific machine constructors and browser-facing lexer API.
+
 ## File Format
 
-The canonical source format is `.tokenizer.states.toml`. It is a
-TOML-compatible `state-machine/v1` document with `profile = "tokenizer/v1"`.
-The shorter `.tokenizer` extension may be accepted by repo tools, but writers
-should prefer `.tokenizer.states.toml` for clarity and easy TOML tooling.
+The canonical source format is `.lexer.states.toml`. It is a TOML-compatible
+`state-machine/v1` document with `profile = "lexer/v1"`. The shorter `.lexer`
+extension may be accepted by repo tools, but writers should prefer
+`.lexer.states.toml` for clarity and easy TOML tooling.
 
 Example filename:
 
 ```text
-code/tokenizers/html/html1.tokenizer.states.toml
+code/packages/rust/html-lexer/html1.lexer.states.toml
 ```
 
-The first version uses the same serialized envelope as `F07`:
+### Root Table
+
+Lexer documents use the same serialized envelope as `F07`, with lexer-profile
+additions:
 
 ```toml
 format = "state-machine/v1"
-profile = "tokenizer/v1"
-name = "html1-tokenizer"
+profile = "lexer/v1"
+name = "html-skeleton-lexer"
+kind = "transducer"
+version = "0.1.0"
+runtime_min = "state-machine-tokenizer/0.1"
+initial = "data"
+done = "done"
+includes = []
+```
+
+Required root fields:
+
+- `format`: must be `state-machine/v1`.
+- `profile`: must be `lexer/v1`.
+- `name`: stable generated identifier source.
+- `kind`: must be `transducer` for lexer profile documents.
+- `initial`: initial lexer state.
+
+Optional root fields:
+
+- `version`: authoring artifact version.
+- `runtime_min`: minimum lexer runtime capability string.
+- `done`: terminal EOF state.
+- `includes`: relative include paths resolved by build tooling only.
+- `metadata`: future structured metadata, only in canonical JSON until the TOML
+  subset supports inline tables safely.
+
+### Token Declarations
+
+`[[tokens]]` declares token shapes emitted by the profile. Token fields are
+names, not host-language types; wrapper packages map them to idiomatic structs
+or enums.
+
+```toml
+[[tokens]]
+name = "StartTag"
+fields = ["name", "attributes", "self_closing"]
+```
+
+Rules:
+
+- token names must be unique
+- field names must be unique within one token
+- every `emit(...)` action must name a declared token or one of the built-in
+  token construction actions that emits `current_token`
+
+### Input Classes
+
+`[[inputs]]` declares reusable matcher classes. Classes are a build-time
+authoring convenience; source generators lower them into static matcher tables
+or predicates for each target language.
+
+```toml
+[[inputs]]
+id = "ascii_alpha"
+matcher = { any_of_classes = ["ascii_upper", "ascii_lower"] }
+```
+
+Rules:
+
+- input class IDs must be unique
+- class references must resolve after includes are expanded
+- recursive class definitions are rejected
+- character ranges are inclusive Unicode scalar ranges
+
+### Registers
+
+`[[registers]]` documents lexer-owned runtime storage. The first Rust
+runtime has fixed storage for text buffer, current token, diagnostics, and
+trace. Registers let the source definition state which additional portable
+storage the machine expects as the profile grows.
+
+```toml
+[[registers]]
+id = "temporary_buffer"
+type = "string"
+```
+
+Initial register types:
+
+- `string`
+- `string?`
+- `token?`
+- `attribute?`
+- `state?`
+- `bool`
+
+Definitions must not declare arbitrary host-language types.
+
+### State Tables
+
+`[[states]]` uses the generic state definition fields from `F07`:
+
+```toml
+[[states]]
+id = "data"
+initial = true
+```
+
+Lexer-specific conventions:
+
+- exactly one state must be marked `initial = true`
+- the root `done` state, when present, must be marked `final = true`
+- states that the tree constructor may enter directly must use
+  `external_entry = true`
+- unreachable states are rejected unless marked `external_entry = true`
+
+### Transition Tables
+
+Lexer transitions use ordered matching. File order is semantically
+meaningful within one source state, so serializer packages must preserve
+lexer transition order unless they are explicitly emitting a canonical form
+with stable `priority` values.
+
+```toml
+[[transitions]]
+from = "data"
+matcher = { literal = "<" }
+to = "tag_open"
+actions = ["flush_text"]
+```
+
+Required fields:
+
+- `from`: source state
+- `matcher`: matcher object
+- `to`: target state
+
+Optional fields:
+
+- `actions`: ordered action-call strings
+- `consume`: defaults to `true`; must be `false` for EOF
+- `guard`: named guard call
+- `priority`: explicit deterministic ordering for canonical output
+- `description`: human-facing notes ignored by runtimes
+
+The older generic `on = "event"` surface remains valid for plain transducers,
+but lexer-profile authoring should prefer `matcher = {...}` because HTML
+needs EOF, classes, literals, ranges, and lookahead.
+
+### Action Calls
+
+The TOML authoring surface writes actions as compact strings:
+
+```toml
+actions = [
+  "parse_error(eof-in-tag-open-state)",
+  "append_text(<)",
+  "flush_text",
+  "emit(EOF)",
+]
+```
+
+Build-time tooling lowers these to canonical structured action calls:
+
+```text
+ActionCall { name: "parse_error", args: ["eof-in-tag-open-state"] }
+```
+
+Action names and argument forms must come from the portable vocabulary in this
+spec. Definition files must not contain Rust, Go, JavaScript, Python, Ruby, or
+shell snippets.
+
+### Fixtures
+
+Lexer documents may include small inline fixtures for build-time smoke
+tests. Larger conformance suites should live beside the definition as `.cases`
+files.
+
+```toml
+[[fixtures]]
+name = "simple-start-tag"
+input = "<p>Hello</p>"
+tokens = [
+  "StartTag(name=p, attributes=[], self_closing=false)",
+  "Text(data=Hello)",
+  "EndTag(name=p)",
+  "EOF",
+]
+```
+
+Fixtures are not part of the runtime machine. Source compilers may use them for
+generated-code tests, but generated production modules should not embed fixture
+data unless a test-only feature requests it.
+
+### Minimal HTML Skeleton
+
+The current Rust skeleton can be authored with this schema as
+`code/packages/rust/html-lexer/html-skeleton.lexer.states.toml`. It
+intentionally
+uses only literal, `anything`, and EOF matchers so the next implementation slice
+can prove the text-file-to-generated-Rust loop before attributes, comments,
+doctype, and character references arrive.
+
+A fuller HTML sketch still follows the same envelope while adding the
+lexer-profile declarations needed by later states:
+
+```toml
+format = "state-machine/v1"
+profile = "lexer/v1"
+name = "html1-lexer"
 kind = "transducer"
 initial = "data"
 done = "done"
@@ -367,7 +601,7 @@ call arbitrary host-language functions.
 
 ## Guards
 
-Some HTML tokenizer states depend on small pieces of parser/tokenizer context.
+Some HTML lexer states depend on small pieces of parser/lexer context.
 Transitions may include guards:
 
 ```text
@@ -399,13 +633,13 @@ language expressions.
 
 ## Streaming Semantics
 
-The tokenizer supports chunked input:
+The lexer supports chunked input:
 
 ```text
-let tokenizer = Tokenizer::new(definition)
-tokenizer.push("<di")
-tokenizer.push("v>Hello")
-tokenizer.finish()
+let lexer = HtmlLexer::new(definition)
+lexer.push("<di")
+lexer.push("v>Hello")
+lexer.finish()
 ```
 
 A transition that needs more input for a literal or lookahead matcher enters an
@@ -458,12 +692,12 @@ the hard part is faithfully encoding every effect attached to each transition.
 To scale from HTML 1.0 to the living standard, add definitions in layers:
 
 ```text
-code/tokenizers/html/
+code/packages/rust/html-lexer/
   html-common-inputs.states.toml
   html-common-actions.md
-  html1.tokenizer.states.toml
-  html4-compatible.tokenizer.states.toml
-  whatwg-html.tokenizer.states.toml
+  html1.lexer.states.toml
+  html4-compatible.lexer.states.toml
+  whatwg-html.lexer.states.toml
 ```
 
 The living-standard definition will need:
@@ -475,39 +709,39 @@ The living-standard definition will need:
 - full named and numeric character-reference states
 - temporary-buffer based end-tag matching
 - parse-error codes aligned with the standard
-- tokenizer hooks that allow the tree constructor to change tokenizer state for
+- lexer hooks that allow the tree constructor to change lexer state for
   raw text elements
 
-That last point is important: the tokenizer and tree constructor are separate,
-but modern HTML lets tree construction influence tokenizer state when entering
-elements such as `script`, `style`, `title`, and `textarea`. The tokenizer
+That last point is important: the lexer and tree constructor are separate, but
+modern HTML lets tree construction influence lexer state when entering
+elements such as `script`, `style`, `title`, and `textarea`. The lexer
 runtime must therefore expose a controlled `set_state(state)` API to the tree
 constructor. That API is host code, but the state names and valid states remain
-declared in the tokenizer file.
+declared in the lexer file.
 
 ## Runtime API
 
 Each language port should expose the same conceptual API:
 
 ```rust
-let definition = TokenizerDefinition::parse_str(source)?;
+let definition = LexerDefinition::parse_str(source)?;
 definition.validate()?;
 
-let mut tokenizer = Tokenizer::new(definition);
-tokenizer.push("<p>Hello");
-tokenizer.push(" &amp; bye</p>");
-tokenizer.finish();
+let mut lexer = HtmlLexer::new(definition);
+lexer.push("<p>Hello");
+lexer.push(" &amp; bye</p>");
+lexer.finish();
 
-let tokens = tokenizer.drain_tokens();
-let diagnostics = tokenizer.diagnostics();
+let tokens = lexer.drain_tokens();
+let diagnostics = lexer.diagnostics();
 ```
 
 Minimum operations:
 
-- `parse_str(source) -> TokenizerDefinition`
-- `parse_file(path) -> TokenizerDefinition`
+- `parse_str(source) -> LexerDefinition`
+- `parse_file(path) -> LexerDefinition`
 - `validate(definition) -> ValidationReport`
-- `Tokenizer::new(definition)`
+- `HtmlLexer::new(definition)`
 - `push(chunk)`
 - `finish()`
 - `next_token()`
@@ -590,19 +824,21 @@ web-platform-tests/html and run them through the same runtime.
 ## Implementation Plan
 
 1. Add this spec.
-2. Add a `tokenizer-state-machine` package in Rust first, because Rust is the
-   browser implementation direction and gives us strong data modeling.
-3. Port the runtime to Go next, because Go is the other preferred systems
-   direction for this repo.
-4. Add TypeScript, Python, Ruby, and other ports only after the Rust and Go APIs
-   settle.
-5. Add `code/tokenizers/html/html1.tokenizer.states.toml`.
-6. Compile the tokenizer definition into static source code with the F09
+2. Add a generic effectful transducer primitive to the Rust `state-machine`
+   package so lexer runtimes build on the same foundation as DFA/NFA/PDA.
+3. Teach the Rust definition, serializer/deserializer, and source compiler
+   pipeline to preserve transition actions and consume flags.
+4. Add a minimal HTML lexer skeleton test that proves text buffering,
+   start/end tag emission, EOF handling, and generated transducer source.
+5. Add the Rust `state-machine-tokenizer` profile runtime that interprets
+   portable actions over a statically linked transducer definition.
+6. Add `code/packages/rust/html-lexer/html1.lexer.states.toml`.
+7. Compile the lexer definition into static source code with the F09
    compiler.
-7. Rebuild `html1.0-lexer` as a wrapper over the generated definition.
-8. Add conformance fixtures and transition traces.
-9. Expand toward `whatwg-html.tokenizer.states.toml` state by state.
-10. Create a later tree-construction spec for insertion modes, stack of open
+8. Rebuild `html1.0-lexer` as a wrapper over the generated definition.
+9. Add conformance fixtures and transition traces.
+10. Expand toward `whatwg-html.lexer.states.toml` state by state.
+11. Create a later tree-construction spec for insertion modes, stack of open
    elements, active formatting elements, foster parenting, template insertion
    modes, and the adoption agency algorithm.
 
@@ -611,24 +847,24 @@ web-platform-tests/html and run them through the same runtime.
 - Should every language have its own build-time TOML deserializer, or should one
   reference deserializer generate a canonical JSON artifact that all source
   compilers consume?
-- How much of the WHATWG character-reference table should live in the tokenizer
+- How much of the WHATWG character-reference table should live in the lexer
   definition versus a shared generated data package?
-- Do we want a visualizer that renders tokenizer states as DOT graphs with
+- Do we want a visualizer that renders lexer states as DOT graphs with
   action labels?
 
-The recommended first implementation is: deserialize `.tokenizer.states.toml`
+The recommended first implementation is: deserialize `.lexer.states.toml`
 text into the `F07` canonical `StateMachineDefinition` during the build, then
-compile that definition into static source tables. Runtime tokenizer packages
+compile that definition into static source tables. Runtime lexer packages
 should link generated code rather than parse definition files from disk.
 
 ## Success Criteria
 
 Phase 1 is successful when:
 
-1. a `.tokenizer.states.toml` file can describe the HTML 1.0 tokenizer states
-2. Rust and Go source generators can compile the same definition file into
-   static tokenizer tables
-3. both generated runtimes pass the same HTML tokenizer fixtures
+1. a `.lexer.states.toml` file can describe the HTML 1.0 tokenizer states
+2. Rust source generators can compile the same definition file into static
+   lexer tables
+3. generated runtimes pass the same HTML lexer fixtures
 4. traces make transition behavior understandable
 5. the old hand-written HTML 1.0 lexer can be replaced by a wrapper without
    changing its public token output

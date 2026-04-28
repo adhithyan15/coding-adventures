@@ -1,0 +1,11 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+gemspec
+gem "coding_adventures_grammar_tools", path: "../grammar_tools"
+gem "coding_adventures_lexer", path: "../lexer"
+gem "coding_adventures_graph", path: "../graph"
+gem "coding_adventures_directed_graph", path: "../directed_graph"
+gem "coding_adventures_state_machine", path: "../state_machine"
+gem "coding_adventures_parser", path: "../parser"
+gem "coding_adventures_haskell_lexer", path: "../haskell_lexer"

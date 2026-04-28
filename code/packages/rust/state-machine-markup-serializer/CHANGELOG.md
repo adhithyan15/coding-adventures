@@ -11,3 +11,5 @@ All notable changes to this package will be documented in this file.
   `StateMachineDefinition` values.
 - Added snapshot coverage for DFA, NFA, PDA, epsilon, multi-target, stack-effect,
   and TOML string escaping behavior.
+- Added TOML output for transition `actions` and non-default `consume` flags
+  used by transducer definitions.

@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "coding-adventures-binary-search-tree"
+version = "0.1.0"
+description = "Functional binary search tree with order statistics"
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "Adhithya Rajasekaran" }]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4", "mypy>=1.10"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/binary_search_tree"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=binary_search_tree --cov-report=term-missing --cov-fail-under=95"
+
+[tool.coverage.run]
+source = ["src/binary_search_tree"]

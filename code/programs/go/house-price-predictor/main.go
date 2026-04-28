@@ -1,94 +1,134 @@
 /*
 Multi-Variable Linear Regression: House Price Predictor
 -------------------------------------------------------
-This standalone program practically applies the custom-built 'matrix' package 
-to run a comprehensive multi-variable Gradient Descent loop natively using explicit
-literate programming variables that explain exactly what the calculations represent physically.
+Demonstrates n input features -> one output with feature normalization and a
+short learning-rate sweep before the full training run.
 */
 package main
 
 import (
 	"fmt"
+	"math"
+
+	norm "github.com/adhithyan15/coding-adventures/code/packages/go/feature-normalization"
 	loss "github.com/adhithyan15/coding-adventures/code/packages/go/loss-functions"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/matrix"
 )
 
-func main() {
-	fmt.Println("\n--- Booting Multi-Variable Predictor: House Prices ---")
+type trainingResult struct {
+	learningRate float64
+	loss         float64
+	diverged     bool
+	weights      *matrix.Matrix
+	bias         float64
+}
 
-	// 1. The Dataset (Inputs)
-	houseFeatures := matrix.New2D([][]float64{
-		{2.0, 3.0}, // House 1: 2000 SqFt, 3 Beds
-		{1.5, 2.0}, // House 2: 1500 SqFt, 2 Beds
-		{2.5, 4.0}, // House 3: 2500 SqFt, 4 Beds
-		{1.0, 1.0}, // House 4: 1000 SqFt, 1 Bed
-	})
+var houseFeaturesData = [][]float64{
+	{2000.0, 3.0},
+	{1500.0, 2.0},
+	{2500.0, 4.0},
+	{1000.0, 1.0},
+}
 
-	// 2. The Target Labels (Y)
-	truePrices := matrix.New2D([][]float64{
-		{400.0},
-		{300.0},
-		{500.0},
-		{200.0},
-	})
-	
-	// 3. Model Parameters mapping Features to Prices.
+var truePricesData = [][]float64{
+	{400.0},
+	{300.0},
+	{500.0},
+	{200.0},
+}
+
+func runTraining(featuresData [][]float64, pricesData [][]float64, learningRate float64, epochs int, logEvery int) trainingResult {
+	houseFeatures := matrix.New2D(featuresData)
+	truePrices := matrix.New2D(pricesData)
 	featureWeights := matrix.New2D([][]float64{{0.5}, {0.5}})
-	basePriceBias := 0.5 
-	learningRate := 0.01
+	basePriceBias := 0.0
+	lastLoss := math.Inf(1)
 
-	fmt.Println("Beginning Training Epochs...")
-	for epoch := 0; epoch <= 1500; epoch++ {
-		
-		// --- THE FORWARD PASS ---
-		// houseFeatures (4x2 Matrix) DOT featureWeights (2x1 Vector) => Generates a 4x1 Prediction block!
+	for epoch := 0; epoch <= epochs; epoch++ {
 		rawPredictions, _ := houseFeatures.Dot(featureWeights)
 		finalPredictions := rawPredictions.AddScalar(basePriceBias)
 
-		// --- LOSS EVALUATION ---
 		linearTruePrices := make([]float64, truePrices.Rows)
 		linearPredictions := make([]float64, finalPredictions.Rows)
 		for i := 0; i < truePrices.Rows; i++ {
 			linearTruePrices[i] = truePrices.Data[i][0]
 			linearPredictions[i] = finalPredictions.Data[i][0]
 		}
-		meanSquaredError, _ := loss.MSE(linearTruePrices, linearPredictions)
+		lastLoss, _ = loss.MSE(linearTruePrices, linearPredictions)
 
-		// --- BACKPROPAGATION (CALCULATING GRADIENTS) ---
-		// How do we figure out exactly how much the SqFt Weight vs Bedroom Weight was responsible for the error?
-		// 1. We take our original (N BY 2) Data Grid and physically flip it on its side to become (2 BY N). 
-		//    - Row 1 now contains only SqFt values. Row 2 contains only Bedroom values.
-		// 2. We Dot Product this (2 BY N) grid against our (N BY 1) Error Vector!
-		//    - This multiplies every single SqFt value by its respective Error, collapsing into a (2 BY 1) Gradient Vector.
+		if math.IsInf(lastLoss, 0) || math.IsNaN(lastLoss) || lastLoss > 1.0e12 {
+			return trainingResult{learningRate: learningRate, loss: math.Inf(1), diverged: true, weights: featureWeights, bias: basePriceBias}
+		}
+
+		if logEvery > 0 && epoch%logEvery == 0 {
+			fmt.Printf("Epoch %4d | Loss: %10.4f | Weights [SqFt: %7.3f, Beds: %7.3f] | Bias: %7.3f\n",
+				epoch, lastLoss, featureWeights.Data[0][0], featureWeights.Data[1][0], basePriceBias)
+		}
+
 		predictionErrors, _ := finalPredictions.Subtract(truePrices)
-		
-		transposedFeatures := houseFeatures.Transpose()
-		featuresDotErrors, _ := transposedFeatures.Dot(predictionErrors)
-		
-		// We multiply by (2 / N) because of the Mean Squared Error derivative scaling.
-		weightGradients := featuresDotErrors.Scale(2.0 / float64(truePrices.Rows))
+		weightGradients, _ := houseFeatures.Transpose().Dot(predictionErrors)
+		weightGradients = weightGradients.Scale(2.0 / float64(truePrices.Rows))
 
-		// For the Bias, because it shifts the prediction unconditionally for every house,
-		// its "share" of the blame is simply the average of all the mistakes combined!
 		biasGradientTotal := 0.0
 		for i := 0; i < predictionErrors.Rows; i++ {
 			biasGradientTotal += predictionErrors.Data[i][0]
 		}
 		biasGradient := biasGradientTotal * (2.0 / float64(truePrices.Rows))
 
-		// --- OPTIMIZATION STEP ---
-		// Finally, we take our original Weights and Bias and nudge them against the slope.
-		// We multiply by our Learning Rate (0.01) which acts as a safety brake so we don't explode to infinity.
-		scaledWeightGradients := weightGradients.Scale(learningRate)
-		featureWeights, _ = featureWeights.Subtract(scaledWeightGradients)
-		basePriceBias = basePriceBias - (biasGradient * learningRate)
+		featureWeights, _ = featureWeights.Subtract(weightGradients.Scale(learningRate))
+		basePriceBias -= biasGradient * learningRate
+	}
 
-		if epoch%150 == 0 {
-			fmt.Printf("Epoch %4d | Global Loss: %10.4f | Weights [SqFt: %6.2f, Bed: %6.2f] | Bias: %6.2f\n", epoch, meanSquaredError, featureWeights.Data[0][0], featureWeights.Data[1][0], basePriceBias)
+	return trainingResult{learningRate: learningRate, loss: lastLoss, diverged: false, weights: featureWeights, bias: basePriceBias}
+}
+
+func findLearningRate(featuresData [][]float64, pricesData [][]float64) trainingResult {
+	candidates := []float64{0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 0.6}
+	results := make([]trainingResult, 0, len(candidates))
+
+	fmt.Println("\nShort learning-rate sweep over normalized features:")
+	for _, learningRate := range candidates {
+		result := runTraining(featuresData, pricesData, learningRate, 120, 0)
+		results = append(results, result)
+		if result.diverged {
+			fmt.Printf("  lr=%-6g -> loss=diverged\n", learningRate)
+		} else {
+			fmt.Printf("  lr=%-6g -> loss=%.4f\n", learningRate, result.loss)
 		}
 	}
-	
+
+	best := results[0]
+	for _, result := range results[1:] {
+		if !result.diverged && (best.diverged || result.loss < best.loss) {
+			best = result
+		}
+	}
+	return best
+}
+
+func main() {
+	fmt.Println("\n--- Booting Multi-Variable Predictor: House Prices ---")
+	fmt.Println("Features: square footage and bedroom count. Target: price in $1000s.")
+
+	scaler, err := norm.FitStandardScaler(houseFeaturesData)
+	if err != nil {
+		panic(err)
+	}
+	normalizedFeatures, err := norm.TransformStandard(houseFeaturesData, scaler)
+	if err != nil {
+		panic(err)
+	}
+
+	bestTrial := findLearningRate(normalizedFeatures, truePricesData)
+	fmt.Printf("\nSelected learning rate: %g\n", bestTrial.learningRate)
+	fmt.Println("Beginning full training run...")
+	finalResult := runTraining(normalizedFeatures, truePricesData, bestTrial.learningRate, 1500, 150)
+
 	fmt.Println("\nFinal Optimal Mapping Achieved!")
-	finalPred, _ := houseFeatures.Dot(featureWeights)
-	fmt.Printf("Prediction for House 1 (Target $400k): $%.2fk\n", finalPred.AddScalar(basePriceBias).Data[0][0])
+	normalizedTestHouse, err := norm.TransformStandard([][]float64{{2000.0, 3.0}}, scaler)
+	if err != nil {
+		panic(err)
+	}
+	prediction, _ := matrix.New2D(normalizedTestHouse).Dot(finalResult.weights)
+	fmt.Printf("Prediction for House 1 (Target $400k): $%.2fk\n", prediction.AddScalar(finalResult.bias).Data[0][0])
 }

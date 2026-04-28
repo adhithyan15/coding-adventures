@@ -1,5 +1,27 @@
 # TET04 — Tetrad Register VM Specification
 
+> **🪦 RETIRED (2026-04-25)** — the `tetrad-vm` package has been
+> deleted.  Its responsibilities are fully covered by:
+>
+> - **Execution** — `vm_core.VMCore` (spec [LANG02](LANG02-vm-core.md))
+>   configured with `u8_wrap=True`, `max_frames=4`, and a small
+>   Tetrad opcode extension (`tetrad.move`).
+> - **Metrics surface** — `vm_core` exposes the same V8 Ignition-style
+>   feedback-slot state machine, branch counters, loop-iteration
+>   counters, and `execute_traced` opt-in tracing (spec
+>   [LANG17](LANG17-vm-core-metrics.md)).
+> - **Tetrad-shaped wrappers** — `tetrad_runtime.TetradRuntime` mirrors
+>   every legacy `TetradVM.*` metric API (`hot_functions`,
+>   `feedback_vector`, `type_profile`, `branch_profile`,
+>   `loop_iterations`, `call_site_shape`, `execute_traced`,
+>   `reset_metrics`) with the same return-type signatures, so callers
+>   can switch `TetradVM` → `TetradRuntime` without rewriting
+>   metric-reading code.
+>
+> The text below is preserved as a historical record of what the
+> retired implementation did.  Read it for context; do not start new
+> work against `TetradVM` — there is no `TetradVM` anymore.
+
 ## Overview
 
 The Tetrad VM executes `CodeObject`s produced by the bytecode compiler (spec TET03).

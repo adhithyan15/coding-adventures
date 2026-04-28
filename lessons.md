@@ -4,6 +4,38 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-23: QR format info `write_format_info` — bit ordering is MSB-first in row 8
+
+ISO/IEC 18004 places format information bits **MSB-first** (f14 → f9) going
+left-to-right across row 8 (cols 0–5) and **LSB-first** (f0 → f5) going
+top-to-bottom down col 8 (rows 0–5).  Copy 2 mirrors this: f0 → f7 going
+right-to-left across row 8 (cols n−1 → n−8), and f8 → f14 going top-to-bottom
+down col 8 (rows n−7 → n−1).
+
+**The bug:** `write_format_info` was placing bits in LSB-first order everywhere,
+producing a reversed 15-bit word.  Both copies read `0x1F3D` instead of `0x5E7C`
+for ECC=M/mask=2.  BCH remainder was `0x3DA` (non-zero) for both copies, so
+every standard decoder (zbarimg, iPhone camera, ZXing) rejected the format info
+and could not determine the correct mask pattern or ECC level — the QR code
+appeared structurally correct but was completely unscannable.
+
+**Root cause:** The manual decoder written to debug the issue used the same
+reversed reading order, so it incorrectly confirmed the format info as valid.
+The bug was only caught by comparing pixel values at specific grid positions
+against the expected standard layout.
+
+**Fix:**
+- Copy 1, row 8 cols 0–5: use `(fmt >> (14 - i))` (f14 at col 0, not f0).
+- Copy 1, (8,7) = f8, (8,8) = f7, (7,8) = f6.
+- Copy 1, col 8 rows 0–5: use `(fmt >> i)` (f0 at row 0 … f5 at row 5).
+- Copy 2, row 8 cols n−1..n−8: use `(fmt >> i)` for i=0..7 (f0 at rightmost).
+- Copy 2, col 8 rows n−7..n−1: use `(fmt >> i)` for i=8..14.
+
+**Always verify with `zbarimg` (or equivalent standard decoder) immediately
+after implementing format info — the BCH check is the ground truth.**
+
+---
+
 ### 2026-04-21: BUILD files must be updated whenever package.json dependencies change
 
 The build-tool validates that every `BUILD` / `BUILD_windows` shell script lists
@@ -3209,3 +3241,274 @@ the shorter duration assumed by the first test.
 **Rule:** For text-score fixtures, count tokens and beats from the same duration rules used by the
 parser before asserting rendered sample counts. Prefer assertions that make the musical math visible:
 event count, note count, total beats, tempo-derived seconds, and sample-rate-derived sample count.
+
+---
+
+## Python BUILD files must use .venv/bin/python, not system python3.12
+
+**Date:** 2026-04-22
+
+**What happened:** The aot-core BUILD file used `python3.12 -m pytest` (the system Python) instead of `.venv/bin/python -m pytest`. Locally this worked because the system Python had the packages installed globally. On CI runners, only the uv venv has pytest and the other dependencies — the system Python has none of them.
+
+**Rule:** Python BUILD files must always run pytest via `.venv/bin/python -m pytest`, matching the pattern used by jit-core, interpreter-ir, and every other Python package in the repo. Never use `python3.12` or `python3` directly in a BUILD file.
+
+---
+
+## Rebase conflict resolution must not carry branch-side BUILD files onto main
+
+**Date:** 2026-04-23
+
+**What happened:** While rebasing the `claude/trusting-thompson-5867c0` branch (msg-crypto/curve25519) onto origin/main, seven BUILD files had merge conflicts. The branch's `our` version was chosen for all of them, which introduced two types of CI failures:
+
+1. **`mise: command not found`** — Elixir and Ruby BUILD files gained `mise exec --` prefixes that don't exist on GitHub Actions runners.
+2. **`sh: 1: set: Illegal option -o pipefail`** — Lua and Perl BUILD files gained `#!/usr/bin/env bash` + `set -euo pipefail` headers. On Ubuntu the build tool invokes BUILD via `/bin/sh` (dash), which rejects `-o pipefail`.
+
+The branch's changes to those BUILD files were from earlier unrelated work that had already been merged or was being merged on main. Keeping the branch version created duplicate/stale changes.
+
+**Rule:** During rebase conflict resolution, BUILD files that the branch did not *intentionally* change should be resolved to the `theirs` (main) side: `git checkout --theirs <file>` then `git add <file>`. Only keep the branch side for files that the current branch deliberately modified.
+
+**Rule:** After completing a rebase, run `git diff origin/main...HEAD -- '**/BUILD'` to verify that only the BUILD files intentionally added or changed by this branch appear in the diff. Any unexpected BUILD file diffs indicate a bad conflict resolution.
+
+---
+
+## Ruby native extensions: QNIL = 0x04 on 64-bit Ruby (USE_FLONUM), not 0x08
+
+**Date:** 2026-04-23
+
+**What happened:** The `ruby-bridge` Rust crate had `QNIL = 0x08`, copied from pre-USE_FLONUM Ruby documentation. On every modern 64-bit Ruby (x86_64, aarch64) `USE_FLONUM` is enabled, which changes the special constant layout:
+
+```
+Qfalse = 0x00, Qnil = 0x04, Qtrue = 0x14, Qundef = 0x24
+```
+
+Returning `0x08` to Ruby caused it to treat the value as an object pointer. Ruby then read the `klass` field at `pointer + 8`, landing at address `0x10`, and crashed with SIGSEGV. The crash only manifested on the "no match" code path (where `None => QNIL` was returned), so the "match" path appeared to work.
+
+This caused four CI workaround hacks in the `conduit` package — all of which masked the real bug rather than fixing it.
+
+**Rule:** In `ruby-bridge` and any other Rust/C Ruby extension, always use:
+- `QNIL = 0x04` (not 0x08)
+- `QTRUE = 0x14`
+- `QFALSE = 0x00`
+
+Confirm against `ruby/internal/special_consts.h` in the Ruby installation. The `nil.object_id` value in Ruby (which returns 4 in Ruby 3.x) is computed as `LONG2FIX(QNIL)` and matches: `QNIL = nil.object_id` only if you account for the Fixnum encoding (`LONG2FIX(n) = n << 1 | 1`, so `LONG2FIX(4) >> 1 = 4`).
+
+**Rule:** When a Ruby native extension starts crashing with SIGSEGV at a low address like `0x10`, suspect that a "nil" or other special constant is being returned with the wrong bit pattern, causing Ruby to dereference it as an object pointer.
+
+---
+
+## Lesson: `LUA_REGISTRYINDEX` in lua-bridge was set to the Lua 5.1 value (-10000) instead of Lua 5.4's (-1001000)
+
+**Date:** 2026-04-24
+
+**What happened:** The `lua-bridge` Rust crate had `LUA_REGISTRYINDEX = -10000`, which is the Lua 5.1 value. Lua 5.4 derives this constant from `LUAI_MAXSTACK`:
+
+```c
+#define LUAI_MAXSTACK  1000000
+#define LUA_REGISTRYINDEX  (-LUAI_MAXSTACK - 1000)  /* = -1_001_000 */
+```
+
+Using `-10000` as the table index in `luaL_ref(L, LUA_REGISTRYINDEX)` caused Lua to treat it as a regular negative stack index (not a pseudo-index), landing 10000 slots below the current stack frame — far outside valid memory. This produced SIGBUS/SIGSEGV crashes whenever `app_add_route`, `app_add_before`, `app_add_after`, `app_set_not_found`, or `app_set_error_handler` were called (all of which store Lua function references in the registry).
+
+**Rule:** In any Rust/C Lua extension targeting Lua 5.4, use:
+```rust
+pub const LUA_REGISTRYINDEX: c_int = -1_001_000;
+```
+
+The Lua 5.1 value (`-10000`) must never appear in Lua 5.4 code. Pseudo-indices in 5.4 start below `-LUAI_MAXSTACK - 1000`, so any value between `-10001` and `-1_000_999` is treated as a regular stack index — not the registry.
+
+---
+
+## Lesson: Extra `push_cstr` before `lua_rawset_str_top` corrupts the Lua stack when setting metatable `__gc`
+
+**Date:** 2026-04-24
+
+**What happened:** In `lua_new_app` (and `lua_new_server`), the code was:
+```rust
+luaL_newmetatable(L, APP_MT);        // stack: [ud | mt]
+push_cstr(L, "__gc");                // stack: [ud | mt | "__gc"]  ← wrong
+lua_pushcclosure(L, Some(app_gc), 0);// stack: [ud | mt | "__gc" | fn]
+lua_rawset_str_top(L, -3, "__gc\0"); // sets stack[-3]["__gc"] = fn → [ud | mt | "__gc"]
+lua_setmetatable(L, -2);             // sets stack[-2]'s metatable = top ("__gc" string) → crash
+```
+
+The extra `push_cstr` left a dangling string on the stack. After `lua_rawset_str_top` consumed `fn`, the top was `"__gc"` (a string), and `lua_setmetatable` tried to set that string as the metatable — which is invalid.
+
+**Rule:** When attaching a `__gc` metamethod to a userdata metatable, the pattern is:
+```rust
+luaL_newmetatable(L, MT_NAME);        // stack: [ud | mt]
+lua_pushcclosure(L, Some(gc_fn), 0); // stack: [ud | mt | fn]
+lua_rawset_str_top(L, -2, "__gc\0"); // mt["__gc"] = fn; stack: [ud | mt]
+lua_setmetatable(L, -2);             // ud.metatable = mt; stack: [ud]
+```
+Never push the key string manually before `lua_rawset_str_top` — the function already supplies the key.
+
+---
+
+## Lesson: Lua route errors must be caught inline and routed to the error handler, not via `on_handler_error`
+
+**Date:** 2026-04-24
+
+**What happened:** The web-core `on_handler_error` hook is for Rust-level errors (panics), not Lua errors. Lua errors from `error("...")` inside a route handler are caught by `lua_pcall` inside `dispatch()`, but `dispatch()` was returning a generic 500 instead of calling the registered Lua error handler. The test `GET /error returns 500 JSON via error handler` failed because the custom error handler body was never sent.
+
+**Rule:** When a route handler's `lua_pcall` returns non-zero and the error is NOT a HaltError, the dispatch code must:
+1. Extract the error message from the stack
+2. Call the Lua error handler ref (if registered) with `(env, err_message)`
+3. Only fall back to a generic 500 if no error handler is registered
+
+Use a dedicated `dispatch_route` function that holds the Lua lock across both the route call and the error handler call.
+
+---
+
+## Lesson: Lua GC collects userdata when Lua-side variable goes out of scope — pin it in the registry when Rust holds raw integer refs into it
+
+**Date:** 2026-04-24
+
+**What happened:** `LuaConduitServer` was built from a `LuaConduitApp` userdata. After `setup()` returns, the Lua `app` variable goes out of scope. On Linux (glibc), Lua's incremental GC is more aggressive than on macOS and will collect the unreachable `LuaConduitApp` userdata between test runs. When `app_gc` fires, it calls `luaL_unref` on every handler registry slot. The server's Rust closures still hold those slot integers, but `lua_rawgeti` now pushes nil — causing all subsequent HTTP handler dispatches to fail with 500.
+
+**Root cause:** Raw `i32` registry refs (integers from `luaL_ref`) are not Lua values — they don't prevent GC. The GC only tracks the Lua value graph (upvalues, tables, the registry itself). Once the `LuaConduitApp` userdata is unreachable from Lua's value graph, it will be collected even if Rust holds its slot integers.
+
+**Fix:** In `lua_new_server`, before allocating the server userdata:
+```rust
+lua_pushvalue(L, 1);                         // push copy of app userdata (arg 1)
+let app_ref = luaL_ref(L, LUA_REGISTRYINDEX); // pin it; pops the copy
+```
+Store `app_ref: i32` in `LuaConduitServer`. In `server_gc`, after stopping the server and joining the background thread:
+```rust
+luaL_unref(L, LUA_REGISTRYINDEX, (*srv).app_ref);
+```
+This keeps the `LuaConduitApp` reachable from the Lua registry (which is always a GC root) until the server is destroyed. The `luaL_unref` in `server_gc` runs only after all Rust closures will never fire again.
+
+**Rule:** Any time Rust holds raw `luaL_ref` integers derived from a Lua object's internal state, and that object could become unreachable from Lua's value graph, you must keep a registry reference to the object alive for at least as long as the raw integer refs are in use. Use `luaL_ref` to pin the object and `luaL_unref` to release only after all integer refs are retired.
+
+---
+
+## Lesson: `napi_create_threadsafe_function` — pass C NULL for `async_resource`, not JS `undefined`
+
+**Date:** 2026-04-25
+
+**What happened:** Calling `napi_create_threadsafe_function` with `async_resource = napi_get_undefined()` (the JavaScript `undefined` value) causes Node.js v25 to return `napi_invalid_arg`. The panic message was `N-API error (status 2): napi_create_threadsafe_function`.
+
+**Root cause:** Node.js source checks `v8_resource->IsObject()` on the `async_resource` parameter. The JavaScript `undefined` value is not an Object, so the check fails and `napi_invalid_arg` is returned. When `async_resource` is C NULL (the null pointer), Node.js instead creates a fresh internal Object — the correct way to opt out of async-hook tracking.
+
+**Fix:** In `node-bridge/src/lib.rs` `tsfn_create()`, pass `ptr::null_mut()` for `async_resource` instead of the result of `napi_get_undefined`. Remove the `napi_get_undefined` call entirely for this parameter.
+
+**Rule:** For optional `napi_value` parameters in N-API, "no value" must be represented as C NULL (`ptr::null_mut()`), not JavaScript `undefined`. The two are distinct: a C null pointer means "not provided"; JS `undefined` is a real JS value subject to type checks.
+
+---
+
+## Lesson: `napi_create_threadsafe_function` — pass C NULL for `func` when providing a custom `call_js_cb`
+
+**Date:** 2026-04-25
+
+**What happened:** On Node.js v25, passing both `func` (a JS function value) AND `call_js_cb` (a custom C callback) to `napi_create_threadsafe_function` caused `napi_invalid_arg`. The function value failed the internal `v8_func->IsFunction()` check even though it was a valid JS function.
+
+**Root cause:** Platform-specific V8 value type checking; passing a non-null `func` triggers additional validation that can fail. When `func = NULL`, Node.js skips the function-type check and requires `call_js_cb != NULL` instead.
+
+**Fix:** Pass `ptr::null_mut()` for `func`. Store the JS function as an `napi_ref` and pass it as the `context` pointer. In `call_js_cb`, cast `ctx` back to `napi_ref` and call `deref(env, handler_ref)` to retrieve the function.
+
+**Rule:** When using a custom `call_js_cb`, always pass `func = NULL` to `napi_create_threadsafe_function` and carry the JS function reference via the `context` parameter as an `napi_ref`. This is the safe, N-API-documented pattern.
+
+---
+
+## Lesson: `WebResponse::internal_error` sets Content-Type header — breaks empty-headers sentinel check
+
+**Date:** 2026-04-25
+
+**What happened:** A route handler check `if resp.status == 500 && resp.headers.is_empty()` was used to detect an unhandled exception (to re-dispatch to the error handler TSFN). But `WebResponse::internal_error()` calls `.with_content_type("text/plain")`, which adds a `Content-Type` header — making `headers.is_empty()` false. The error handler was never invoked.
+
+**Fix:** In `extract_halt_or_error`, for non-halt JS exceptions, return a bare `WebResponse { status: 500, headers: vec![], body: msg.into_bytes() }` instead of `WebResponse::internal_error(&msg)`. This makes the sentinel check `headers.is_empty()` reliable. If no error handler is registered, the bare 500 with the error message body is returned to the client as-is.
+
+**Rule:** When using a `WebResponse` field value as a sentinel to distinguish "exception thrown, call error handler" from "handler returned a real 500 response", do NOT use the convenience constructors that add headers. Build the sentinel response manually with `headers: vec![]`.
+
+---
+
+## Lesson: Don't use `mise exec --` in BUILD files — CI Ubuntu doesn't have mise
+
+**Date:** 2026-04-26
+
+**What happened:** WEB05 PR #1426 build failed on `ubuntu-latest` with `sh: 1: mise: not found` for both `typescript/conduit` and `typescript/programs/conduit-hello`.
+
+**Root cause:** The BUILD files prefixed every command with `mise exec --` (e.g. `mise exec -- npm ci`).  This works locally because `mise` is installed and on PATH.  In GitHub Actions, the workflow uses `actions/setup-node` and `dtolnay/rust-toolchain` to install tools directly into PATH; it does NOT install mise.  So the shell that runs the BUILD script can't find the `mise` binary.
+
+**Fix:** Remove all `mise exec --` prefixes.  Just call `cargo`, `npm`, `npx`, `node`, etc. directly.  The Python conduit BUILD already documented this pattern explicitly in a comment.
+
+**Rule:** BUILD files should call language tools (cargo, npm, npx, node, python, go, etc.) directly without any wrapper.  `mise` provides shims locally so direct invocation works in both environments.  CI installs tools into PATH itself.
+
+---
+
+## Lesson: In variable-length encodings, the FORMAT MARKER must come first — never write the length-distinguishing flag on the LOW byte of an LE16
+
+**Date:** 2026-04-26
+
+**What happened:** Several zstd ports (TS, Go, Lua) encoded the 2-byte sequence count as a little-endian u16 with `0x8000` ORed in, then wrote it LE — which puts the LOW byte of `count` first and the flag byte (with bit 7 set) second:
+
+```ts
+// BROKEN: low byte first
+const v = count | 0x8000;
+return [v & 0xFF, (v >>> 8) & 0xFF];
+```
+
+The decoder branches on `byte0` to choose form (`< 128` → 1 byte, `< 0xFF` → 2 bytes, `== 0xFF` → 3 bytes). For any count ≥ 128 whose LOW byte happened to be < 128 (e.g. count=515 → `[0x03, 0x82]`), the decoder mis-took the 1-byte path and silently returned a tiny garbage count, mis-aligning the modes byte and the FSE bitstream that followed. About half of all 2-byte counts triggered this; the other half worked. Round-trip tests with counts like 1000 (low byte 0xE8) or 0x7FFE (both high) silently passed despite the bug. Discovered when Lua's TC-8 (300 KB → 515 sequences) finally hit a count whose low byte was < 128 and threw `unsupported FSE modes` from a misaligned modes byte.
+
+**Rule:** Any variable-length integer encoding whose decoder branches on `byte0` MUST place the byte that carries the format marker **first** in the wire stream — independent of the host's natural endianness. For zstd's seq_count specifically, the RFC 8878 §3.1.1.3.1 layout is:
+
+```
+count < 128:           [count]
+128 ≤ count < 0x7FFF:  [(count >> 8) | 0x80, count & 0xFF]   # high byte first
+count ≥ 0x7FFF:        [0xFF, low, high]                       # 3-byte form
+```
+
+Decode: `((b0 & 0x7F) << 8) | b1`, equivalent to RFC's `((byte0 - 128) << 8) | byte1`.
+
+When testing variable-length codecs, the round-trip test parameter set MUST include at least one value in each form whose low byte is < 128 (e.g. 256, 300, 515, 768) — otherwise a low-byte-first regression silently passes. Pure round-trip tests on a self-consistent broken codec are blind to byte-order bugs by construction. The integration test that catches it reliably is "≥ 200 KB of repetitive text → ≥ 128 sequences in a single block" — that input distribution naturally produces counts spanning both halves of the 2-byte range.
+
+---
+
+## Lesson 92 — CI runners are ~25× slower for LZSS/compute-heavy tests; always set an explicit timeout
+
+**Date:** 2026-04-26
+
+**What happened:** The TypeScript ZStd TC-8 regression test (200 KB repetitive text → ≥ 128 sequences) ran in ~450 ms locally but took 12–15 seconds on CI runners. Vitest's default per-test timeout is 5 seconds. The CI job failed with a timeout error even though the test was functionally correct and passing locally.
+
+**Rule:** Any test that triggers an LZSS/LZ77 pass over more than 50 KB should have an explicit timeout set to at least `30_000` ms (30 s) in vitest:
+
+```ts
+it("round-trips 200 KB ...", () => { ... }, 30_000);
+```
+
+CI runners (especially GitHub Actions free-tier) run at roughly 25× slower wall-clock for CPU-intensive loops. A test that takes < 1 s locally may take 25 s on CI. Default framework timeouts (5 s for vitest, 60 s for Go's `go test`) are often too tight for large compression round-trips. Always measure on CI before assuming the default is safe.
+
+---
+
+## Lesson 93 — `unpack('C*', ...)` in Perl amplifies memory before any size check
+
+**Date:** 2026-04-26
+
+**What happened:** The Perl ZStd `decompress` function called `my @data = unpack('C*', $input)` on the raw compressed bytes as its very first step, converting each byte into a full Perl scalar. A Perl scalar occupies ~56 bytes on 64-bit builds (SV header + IV/PV storage). A 64 MB compressed input therefore expands to ~3.5 GB of Perl scalars on the heap before any frame-header validation or size guard could fire — a classic unpack memory amplification attack.
+
+**Rule:** In Perl, never `unpack('C*', ...)` a caller-supplied buffer without first checking its length:
+
+```perl
+die "input too large" if length($data) > 64 * 1024 * 1024;
+my @bytes = unpack('C*', $data);
+```
+
+64 MB is a safe upper bound for all realistic ZStd frames (the compressor's MAX_BLOCK_SIZE is 128 KB). The same pattern applies to any language where unpacking bytes into an array of objects/scalars multiplies memory by a large constant factor. Always validate the *raw byte count* before the amplifying operation, not just the logical content-size field inside the frame.
+
+---
+
+## Lesson 94 — Trailing bytes after the last ZStd block must be rejected, not silently ignored
+
+**Date:** 2026-04-26
+
+**What happened:** The Lua ZStd decoder iterated blocks in a `while true` loop and broke on `last_block == 1`. Any bytes remaining in the input after the last block were silently ignored. A fuzz input consisting of a valid 5-byte frame followed by 1 MB of garbage would be accepted without complaint, masking corruption and making the decoder lenient about malformed or concatenated frames.
+
+**Rule:** After the block-decoding loop exits (when `last_block == 1`), assert that the read cursor equals `#data` (or `data.length`, or the frame boundary). If any bytes remain, raise an error:
+
+```lua
+if pos <= #data then
+  error("unexpected trailing data after last block")
+end
+```
+
+The same check belongs in every language port. A strict decoder is far safer — it surfaces truncation and concatenation bugs immediately rather than silently returning partial output or accepting garbage.

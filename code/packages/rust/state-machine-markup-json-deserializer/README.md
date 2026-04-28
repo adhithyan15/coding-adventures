@@ -16,6 +16,11 @@ JSON files in production. This reader exists for build tools, tests, and source
 compiler pipelines that need to validate canonical snapshots before generating
 static code.
 
+The reader accepts transducer transition `actions` and `consume` flags, and now
+also lowers lexer-profile metadata such as token/register/input declarations,
+typed matcher objects, fixtures, and transition guards before delegating
+semantic checks to the shared markup validator.
+
 ## Usage
 
 ```rust
@@ -45,10 +50,12 @@ assert!(machine.accepts(&["coin"]));
 
 ## Security Profile
 
-The parser accepts only the phase 1 State Machine Markup JSON profile: objects,
-arrays, strings, booleans, and `null` for transition epsilon. It rejects numbers,
-unknown fields, duplicate object keys, excessive nesting, oversized sources, and
-oversized arrays before returning a typed definition.
+The parser accepts only the current bounded State Machine Markup JSON profile:
+objects, arrays, strings, booleans, and `null` for generic transition epsilon.
+It rejects numbers, unknown fields, duplicate object keys, excessive nesting,
+oversized sources, and oversized arrays before returning a typed definition.
+Lexer-profile matchers travel as small JSON objects such as
+`{"literal":"<"}` or `{"eof":true}`.
 
 ## Dependencies
 

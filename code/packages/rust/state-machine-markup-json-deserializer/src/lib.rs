@@ -12,7 +12,11 @@ use std::collections::HashMap;
 use std::error::Error;
 use std::fmt;
 
-use state_machine::{MachineKind, StateDefinition, StateMachineDefinition, TransitionDefinition};
+use state_machine::{
+    FixtureDefinition, GuardDefinition, InputDefinition, MachineKind, MatcherDefinition,
+    RegisterDefinition, StateDefinition, StateMachineDefinition, TokenDefinition,
+    TransitionDefinition,
+};
 pub use state_machine_markup_deserializer::STATE_MACHINE_MARKUP_FORMAT;
 use state_machine_markup_deserializer::{validate_definition, StateMachineMarkupError};
 
@@ -145,10 +149,20 @@ fn json_value_to_definition(value: JsonValue) -> Result<StateMachineDefinition> 
             "format",
             "name",
             "kind",
+            "version",
+            "profile",
             "initial",
+            "done",
             "alphabet",
             "stack_alphabet",
             "initial_stack",
+            "runtime_min",
+            "includes",
+            "tokens",
+            "inputs",
+            "registers",
+            "guards",
+            "fixtures",
             "states",
             "transitions",
         ],
@@ -162,11 +176,71 @@ fn json_value_to_definition(value: JsonValue) -> Result<StateMachineDefinition> 
     let name = required_string(&root, "name", "root")?;
     let kind = parse_kind(&required_string(&root, "kind", "root")?)?;
     let mut definition = StateMachineDefinition::new(name, kind);
+    definition.version = optional_string(&root, "version", "root")?;
+    definition.profile = optional_string(&root, "profile", "root")?;
     definition.initial = optional_string(&root, "initial", "root")?;
+    definition.done = optional_string(&root, "done", "root")?;
     definition.alphabet = optional_string_array(&root, "alphabet", "root")?.unwrap_or_default();
     definition.stack_alphabet =
         optional_string_array(&root, "stack_alphabet", "root")?.unwrap_or_default();
     definition.initial_stack = optional_string(&root, "initial_stack", "root")?;
+    definition.runtime_min = optional_string(&root, "runtime_min", "root")?;
+    definition.includes = optional_string_array(&root, "includes", "root")?.unwrap_or_default();
+
+    let tokens = optional_array(&mut root, "tokens", "root")?.unwrap_or_default();
+    for (index, token) in tokens.into_iter().enumerate() {
+        let object = format!("tokens[{index}]");
+        let token = object_fields(token, &object)?;
+        ensure_allowed_fields(&token, &object, &["name", "fields"])?;
+        definition.tokens.push(TokenDefinition {
+            name: required_string(&token, "name", &object)?,
+            fields: optional_string_array(&token, "fields", &object)?.unwrap_or_default(),
+        });
+    }
+
+    let inputs = optional_array(&mut root, "inputs", "root")?.unwrap_or_default();
+    for (index, input) in inputs.into_iter().enumerate() {
+        let object = format!("inputs[{index}]");
+        let input = object_fields(input, &object)?;
+        ensure_allowed_fields(&input, &object, &["id", "matcher"])?;
+        definition.inputs.push(InputDefinition {
+            id: required_string(&input, "id", &object)?,
+            matcher: required_matcher(&input, "matcher", &object)?,
+        });
+    }
+
+    let registers = optional_array(&mut root, "registers", "root")?.unwrap_or_default();
+    for (index, register) in registers.into_iter().enumerate() {
+        let object = format!("registers[{index}]");
+        let register = object_fields(register, &object)?;
+        ensure_allowed_fields(&register, &object, &["id", "type"])?;
+        definition.registers.push(RegisterDefinition {
+            id: required_string(&register, "id", &object)?,
+            type_name: required_string(&register, "type", &object)?,
+        });
+    }
+
+    let guards = optional_array(&mut root, "guards", "root")?.unwrap_or_default();
+    for (index, guard) in guards.into_iter().enumerate() {
+        let object = format!("guards[{index}]");
+        let guard = object_fields(guard, &object)?;
+        ensure_allowed_fields(&guard, &object, &["id"])?;
+        definition.guards.push(GuardDefinition {
+            id: required_string(&guard, "id", &object)?,
+        });
+    }
+
+    let fixtures = optional_array(&mut root, "fixtures", "root")?.unwrap_or_default();
+    for (index, fixture) in fixtures.into_iter().enumerate() {
+        let object = format!("fixtures[{index}]");
+        let fixture = object_fields(fixture, &object)?;
+        ensure_allowed_fields(&fixture, &object, &["name", "input", "tokens"])?;
+        definition.fixtures.push(FixtureDefinition {
+            name: required_string(&fixture, "name", &object)?,
+            input: required_string(&fixture, "input", &object)?,
+            tokens: optional_string_array(&fixture, "tokens", &object)?.unwrap_or_default(),
+        });
+    }
 
     let states = required_array(&mut root, "states", "root")?;
     if states.len() > MAX_STATES {
@@ -205,15 +279,31 @@ fn json_value_to_definition(value: JsonValue) -> Result<StateMachineDefinition> 
         ensure_allowed_fields(
             &transition,
             &object,
-            &["from", "on", "to", "stack_pop", "stack_push"],
+            &[
+                "from",
+                "on",
+                "matcher",
+                "to",
+                "guard",
+                "stack_pop",
+                "stack_push",
+                "actions",
+                "consume",
+            ],
         )?;
+        let matcher = optional_matcher(&transition, "matcher", &object)?;
+        let on = optional_event(&transition, "on", &object)?;
         definition.transitions.push(TransitionDefinition {
             from: required_string(&transition, "from", &object)?,
-            on: required_event(&transition, "on", &object)?,
+            on,
+            matcher,
             to: required_targets(&transition, "to", &object)?,
+            guard: optional_string(&transition, "guard", &object)?,
             stack_pop: optional_string(&transition, "stack_pop", &object)?,
             stack_push: optional_string_array(&transition, "stack_push", &object)?
                 .unwrap_or_default(),
+            actions: optional_string_array(&transition, "actions", &object)?.unwrap_or_default(),
+            consume: optional_bool(&transition, "consume", &object)?.unwrap_or(true),
         });
     }
 
@@ -256,6 +346,79 @@ fn ensure_allowed_fields(
         }
     }
     Ok(())
+}
+
+fn required_matcher(
+    fields: &HashMap<String, JsonValue>,
+    field: &str,
+    object: &str,
+) -> Result<MatcherDefinition> {
+    optional_matcher(fields, field, object)?.ok_or_else(|| {
+        StateMachineMarkupJsonError::MissingField {
+            object: object.to_string(),
+            field: field.to_string(),
+        }
+    })
+}
+
+fn optional_matcher(
+    fields: &HashMap<String, JsonValue>,
+    field: &str,
+    object: &str,
+) -> Result<Option<MatcherDefinition>> {
+    match fields.get(field) {
+        Some(JsonValue::Object(value)) => Ok(Some(parse_matcher_object(value, object)?)),
+        Some(_) => Err(StateMachineMarkupJsonError::InvalidField {
+            object: object.to_string(),
+            field: field.to_string(),
+            expected: "an object".to_string(),
+        }),
+        None => Ok(None),
+    }
+}
+
+fn parse_matcher_object(
+    fields: &Vec<(String, JsonValue)>,
+    object: &str,
+) -> Result<MatcherDefinition> {
+    if fields.len() != 1 {
+        return Err(StateMachineMarkupJsonError::Validation(
+            StateMachineMarkupError::InvalidMatcher {
+                context: object.to_string(),
+                message: "matcher objects must contain exactly one key".to_string(),
+            },
+        ));
+    }
+    let (kind, value) = &fields[0];
+    match (kind.as_str(), value) {
+        ("literal", JsonValue::String(value)) => Ok(MatcherDefinition::Literal(value.clone())),
+        ("eof", JsonValue::Bool(true)) => Ok(MatcherDefinition::Eof),
+        ("anything", JsonValue::Bool(true)) => Ok(MatcherDefinition::Anything),
+        ("class", JsonValue::String(value)) => Ok(MatcherDefinition::Class(value.clone())),
+        ("one_of", JsonValue::String(value)) => Ok(MatcherDefinition::OneOf(value.clone())),
+        ("range", JsonValue::Array(values)) if values.len() == 2 => Ok(MatcherDefinition::Range {
+            start: required_string_from_value(&values[0], object, "range[0]")?,
+            end: required_string_from_value(&values[1], object, "range[1]")?,
+        }),
+        ("any_of_classes", JsonValue::Array(values)) => Ok(MatcherDefinition::AnyOfClasses(
+            values
+                .iter()
+                .enumerate()
+                .map(|(index, value)| {
+                    required_string_from_value(value, object, &format!("any_of_classes[{index}]"))
+                })
+                .collect::<Result<Vec<_>>>()?,
+        )),
+        ("lookahead", JsonValue::Object(value)) => Ok(MatcherDefinition::Lookahead(Box::new(
+            parse_matcher_object(value, object)?,
+        ))),
+        _ => Err(StateMachineMarkupJsonError::Validation(
+            StateMachineMarkupError::InvalidMatcher {
+                context: object.to_string(),
+                message: format!("unsupported matcher entry `{kind}`"),
+            },
+        )),
+    }
 }
 
 fn required_string(
@@ -328,6 +491,22 @@ fn required_array(
     }
 }
 
+fn optional_array(
+    fields: &mut HashMap<String, JsonValue>,
+    field: &str,
+    object: &str,
+) -> Result<Option<Vec<JsonValue>>> {
+    match fields.remove(field) {
+        Some(JsonValue::Array(values)) => Ok(Some(values)),
+        Some(_) => Err(StateMachineMarkupJsonError::InvalidField {
+            object: object.to_string(),
+            field: field.to_string(),
+            expected: "an array".to_string(),
+        }),
+        None => Ok(None),
+    }
+}
+
 fn optional_string_array(
     fields: &HashMap<String, JsonValue>,
     field: &str,
@@ -366,7 +545,7 @@ fn optional_string_array(
     }
 }
 
-fn required_event(
+fn optional_event(
     fields: &HashMap<String, JsonValue>,
     field: &str,
     object: &str,
@@ -379,10 +558,7 @@ fn required_event(
             field: field.to_string(),
             expected: "a string or null".to_string(),
         }),
-        None => Err(StateMachineMarkupJsonError::MissingField {
-            object: object.to_string(),
-            field: field.to_string(),
-        }),
+        None => Ok(None),
     }
 }
 
@@ -424,6 +600,17 @@ fn required_targets(
         None => Err(StateMachineMarkupJsonError::MissingField {
             object: object.to_string(),
             field: field.to_string(),
+        }),
+    }
+}
+
+fn required_string_from_value(value: &JsonValue, object: &str, field: &str) -> Result<String> {
+    match value {
+        JsonValue::String(value) => Ok(value.clone()),
+        _ => Err(StateMachineMarkupJsonError::InvalidField {
+            object: object.to_string(),
+            field: field.to_string(),
+            expected: "a string".to_string(),
         }),
     }
 }

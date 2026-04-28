@@ -172,7 +172,8 @@ func writeRd(registers *cpu.RegisterFile, rd int, value uint32) map[string]uint3
 // === I-type arithmetic executor ===
 //
 // Most I-type arithmetic instructions follow the same pattern:
-//   result = op(rs1_value, sign_extended_immediate)
+//
+//	result = op(rs1_value, sign_extended_immediate)
 //
 // This generic helper avoids duplicating the register read/write boilerplate.
 func (e *RiscVExecutor) execImmArith(decoded cpu.DecodeResult, registers *cpu.RegisterFile, pc int, name string, op func(int32, int32) uint32) cpu.ExecuteResult {
@@ -217,7 +218,8 @@ func (e *RiscVExecutor) execShiftImm(decoded cpu.DecodeResult, registers *cpu.Re
 // === R-type arithmetic executor ===
 //
 // R-type instructions operate on two registers:
-//   result = op(rs1_value, rs2_value)
+//
+//	result = op(rs1_value, rs2_value)
 func (e *RiscVExecutor) execRegArith(decoded cpu.DecodeResult, registers *cpu.RegisterFile, pc int, name string, op func(uint32, uint32) uint32) cpu.ExecuteResult {
 	rd := decoded.Fields["rd"]
 	rs1 := decoded.Fields["rs1"]
@@ -247,9 +249,9 @@ func (e *RiscVExecutor) execRegArith(decoded cpu.DecodeResult, registers *cpu.Re
 // When loading a byte (8 bits) into a 32-bit register, we need to decide
 // what goes in the upper 24 bits:
 //   - Sign extension (lb):  if the byte's MSB is 1, fill upper bits with 1s
-//                           0xFF -> 0xFFFFFFFF (-1 as int32)
+//     0xFF -> 0xFFFFFFFF (-1 as int32)
 //   - Zero extension (lbu): always fill upper bits with 0s
-//                           0xFF -> 0x000000FF (255 as uint32)
+//     0xFF -> 0x000000FF (255 as uint32)
 //
 // This distinction matters for signed arithmetic. If you load a -1 stored
 // as 0xFF and want to add it to something, you need sign extension.
@@ -383,7 +385,7 @@ func (e *RiscVExecutor) execBranch(decoded cpu.DecodeResult, registers *cpu.Regi
 // JAL stores the return address (PC + 4) in rd, then jumps to PC + offset.
 // This is the primary mechanism for calling functions:
 //
-//   jal ra, function_label
+//	jal ra, function_label
 //
 // Here "ra" is the return address register (x1 by convention). The function
 // can later return with: jalr x0, ra, 0 (jump to the saved return address).
@@ -409,8 +411,9 @@ func (e *RiscVExecutor) execJAL(decoded cpu.DecodeResult, registers *cpu.Registe
 // cleared. The bit-clearing ensures the target is always 2-byte aligned.
 //
 // Common uses:
-//   jalr x0, x1, 0   — return from function (jump to ra, discard link)
-//   jalr x1, x5, 0   — indirect call through function pointer in x5
+//
+//	jalr x0, x1, 0   — return from function (jump to ra, discard link)
+//	jalr x1, x5, 0   — indirect call through function pointer in x5
 func (e *RiscVExecutor) execJALR(decoded cpu.DecodeResult, registers *cpu.RegisterFile, pc int) cpu.ExecuteResult {
 	rd := decoded.Fields["rd"]
 	rs1 := decoded.Fields["rs1"]
@@ -434,13 +437,13 @@ func (e *RiscVExecutor) execJALR(decoded cpu.DecodeResult, registers *cpu.Regist
 // LUI places a 20-bit immediate into the upper 20 bits of rd, with the
 // lower 12 bits set to zero:
 //
-//   rd = imm << 12
+//	rd = imm << 12
 //
 // This is used as the first half of a two-instruction sequence to load
 // a full 32-bit constant:
 //
-//   lui  x1, 0x12345     // x1 = 0x12345000
-//   addi x1, x1, 0x678   // x1 = 0x12345678
+//	lui  x1, 0x12345     // x1 = 0x12345000
+//	addi x1, x1, 0x678   // x1 = 0x12345678
 func (e *RiscVExecutor) execLUI(decoded cpu.DecodeResult, registers *cpu.RegisterFile, pc int) cpu.ExecuteResult {
 	rd := decoded.Fields["rd"]
 	imm := decoded.Fields["imm"]
@@ -460,7 +463,7 @@ func (e *RiscVExecutor) execLUI(decoded cpu.DecodeResult, registers *cpu.Registe
 //
 // AUIPC adds a 20-bit immediate (shifted left 12) to the current PC:
 //
-//   rd = PC + (imm << 12)
+//	rd = PC + (imm << 12)
 //
 // This enables PC-relative addressing for data that is far away. Combined
 // with addi or load instructions, it can reach any address in the 32-bit
@@ -487,11 +490,15 @@ func (e *RiscVExecutor) execAUIPC(decoded cpu.DecodeResult, registers *cpu.Regis
 //
 // Behavior depends on whether a trap handler is configured:
 //
-//   If mtvec != 0:  Raise a proper trap — save PC to mepc, set mcause,
-//                   disable interrupts, jump to mtvec.
+//	If mtvec != 0:  Raise a proper trap — save PC to mepc, set mcause,
+//	                disable interrupts, jump to mtvec.
 //
-//   If mtvec == 0:  Halt the CPU (legacy behavior for simple programs
-//                   that don't set up a trap handler).
+//	If mtvec == 0 and HostIO is configured: Handle the small host syscall ABI
+//	                used by compiler end-to-end tests (write byte, read byte,
+//	                exit).
+//
+//	If mtvec == 0:  Halt the CPU (legacy behavior for simple programs
+//	                that don't set up a trap handler).
 func (e *RiscVExecutor) execEcall(decoded cpu.DecodeResult, registers *cpu.RegisterFile, pc int) cpu.ExecuteResult {
 	if e.CSR == nil {
 		// No CSR file configured — simple halt behavior
@@ -506,6 +513,9 @@ func (e *RiscVExecutor) execEcall(decoded cpu.DecodeResult, registers *cpu.Regis
 
 	mtvec := e.CSR.Read(CSRMtvec)
 	if mtvec == 0 {
+		if e.Host != nil {
+			return e.execHostSyscall(registers, pc)
+		}
 		// No trap handler configured — halt as fallback
 		return cpu.ExecuteResult{
 			Description:      "ecall: halt (mtvec=0, no trap handler)",
@@ -533,11 +543,54 @@ func (e *RiscVExecutor) execEcall(decoded cpu.DecodeResult, registers *cpu.Regis
 	}
 }
 
+func (e *RiscVExecutor) execHostSyscall(registers *cpu.RegisterFile, pc int) cpu.ExecuteResult {
+	syscallNumber := registers.Read(17)
+	switch syscallNumber {
+	case SyscallWriteByte:
+		value := byte(registers.Read(10) & 0xFF)
+		e.Host.WriteByte(value)
+		return cpu.ExecuteResult{
+			Description:      fmt.Sprintf("ecall: host write byte 0x%02x", value),
+			RegistersChanged: map[string]uint32{},
+			MemoryChanged:    map[int]byte{},
+			NextPC:           pc + 4,
+		}
+	case SyscallReadByte:
+		value := uint32(e.Host.ReadByte())
+		registers.Write(10, value)
+		return cpu.ExecuteResult{
+			Description:      fmt.Sprintf("ecall: host read byte 0x%02x", value),
+			RegistersChanged: map[string]uint32{"x10": value},
+			MemoryChanged:    map[int]byte{},
+			NextPC:           pc + 4,
+		}
+	case SyscallExit:
+		exitCode := registers.Read(10)
+		e.Host.Exited = true
+		e.Host.ExitCode = exitCode
+		return cpu.ExecuteResult{
+			Description:      fmt.Sprintf("ecall: host exit %d", exitCode),
+			RegistersChanged: map[string]uint32{},
+			MemoryChanged:    map[int]byte{},
+			NextPC:           pc,
+			Halted:           true,
+		}
+	default:
+		return cpu.ExecuteResult{
+			Description:      fmt.Sprintf("ecall: unknown host syscall %d", syscallNumber),
+			RegistersChanged: map[string]uint32{},
+			MemoryChanged:    map[int]byte{},
+			NextPC:           pc,
+			Halted:           true,
+		}
+	}
+}
+
 // === mret executor ===
 //
 // mret returns from a machine-mode trap handler by:
-//   1. Restoring PC from mepc CSR
-//   2. Re-enabling interrupts (set MIE bit in mstatus)
+//  1. Restoring PC from mepc CSR
+//  2. Re-enabling interrupts (set MIE bit in mstatus)
 //
 // After mret, execution resumes at the instruction that caused the trap
 // (or the next one, depending on the trap type). For ecall, the trap
@@ -569,9 +622,10 @@ func (e *RiscVExecutor) execMret(decoded cpu.DecodeResult, registers *cpu.Regist
 // === CSRRW (CSR Read-Write) executor ===
 //
 // Atomically swaps the value in rs1 with the CSR:
-//   old_csr = CSR[csr_addr]
-//   CSR[csr_addr] = rs1
-//   rd = old_csr
+//
+//	old_csr = CSR[csr_addr]
+//	CSR[csr_addr] = rs1
+//	rd = old_csr
 //
 // If rd=x0, the read is still performed but the result is discarded.
 func (e *RiscVExecutor) execCSRRW(decoded cpu.DecodeResult, registers *cpu.RegisterFile, pc int) cpu.ExecuteResult {
@@ -594,9 +648,10 @@ func (e *RiscVExecutor) execCSRRW(decoded cpu.DecodeResult, registers *cpu.Regis
 // === CSRRS (CSR Read-Set) executor ===
 //
 // Reads the CSR, then sets bits specified by rs1:
-//   old_csr = CSR[csr_addr]
-//   CSR[csr_addr] = old_csr | rs1
-//   rd = old_csr
+//
+//	old_csr = CSR[csr_addr]
+//	CSR[csr_addr] = old_csr | rs1
+//	rd = old_csr
 //
 // If rs1=x0 (value 0), no bits are set — this is a pure read (csrr pseudo-instruction).
 func (e *RiscVExecutor) execCSRRS(decoded cpu.DecodeResult, registers *cpu.RegisterFile, pc int) cpu.ExecuteResult {
@@ -619,9 +674,10 @@ func (e *RiscVExecutor) execCSRRS(decoded cpu.DecodeResult, registers *cpu.Regis
 // === CSRRC (CSR Read-Clear) executor ===
 //
 // Reads the CSR, then clears bits specified by rs1:
-//   old_csr = CSR[csr_addr]
-//   CSR[csr_addr] = old_csr & ~rs1
-//   rd = old_csr
+//
+//	old_csr = CSR[csr_addr]
+//	CSR[csr_addr] = old_csr & ~rs1
+//	rd = old_csr
 func (e *RiscVExecutor) execCSRRC(decoded cpu.DecodeResult, registers *cpu.RegisterFile, pc int) cpu.ExecuteResult {
 	rd := decoded.Fields["rd"]
 	rs1 := decoded.Fields["rs1"]

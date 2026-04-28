@@ -113,6 +113,28 @@ class TestBasicTokenization:
             "EOF",
         ]
 
+    def test_dcg_rule_with_braced_goal(self) -> None:
+        tokens = tokenize_prolog("digits(X) --> { X = done }, [X].\n")
+
+        assert token_types(tokens) == [
+            "ATOM",
+            "LPAREN",
+            "VARIABLE",
+            "RPAREN",
+            "DCG",
+            "LCURLY",
+            "VARIABLE",
+            "ATOM",
+            "ATOM",
+            "RCURLY",
+            "COMMA",
+            "LBRACKET",
+            "VARIABLE",
+            "RBRACKET",
+            "DOT",
+            "EOF",
+        ]
+
 
 class TestAtomsAndVariables:
     """Prolog's core lexical distinction is atoms vs variables."""

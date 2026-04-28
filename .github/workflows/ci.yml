@@ -221,9 +221,9 @@ jobs:
 
       - name: Install uv
         if: needs.detect.outputs.needs_python == 'true'
-        uses: astral-sh/setup-uv@v4
+        uses: astral-sh/setup-uv@v5
         with:
-          version: "0.6.x"
+          version: "latest"
 
       # ── Lua must be set up BEFORE Ruby on Windows ──────────────
       #
@@ -266,6 +266,7 @@ jobs:
           luarocks install busted
           luarocks install luacov
           luarocks install luacheck
+          luarocks install luasocket 2>/dev/null || true
 
       - name: Install Lua test tools (Windows)
         if: needs.detect.outputs.needs_lua == 'true' && runner.os == 'Windows'
@@ -307,8 +308,9 @@ jobs:
         if: needs.detect.outputs.needs_elixir == 'true'
         uses: erlef/setup-beam@v1
         with:
-          elixir-version: '1.16'
-          otp-version: '26.0'
+          elixir-version: '1.18.4'
+          otp-version: '27.3.4.11'
+          version-type: strict
 
       - name: Set up Dart
         if: needs.detect.outputs.needs_dart == 'true'

@@ -6,3 +6,12 @@ description = "Win32 desktop window backend for window-core"
 
 [dependencies]
 window-core = { path = "../window-core" }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+windows = { version = "0.58", features = [
+    "Win32_Foundation",
+    "Win32_Graphics_Gdi",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_System",
+    "Win32_System_LibraryLoader",
+] }

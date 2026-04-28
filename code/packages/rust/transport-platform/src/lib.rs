@@ -26,6 +26,24 @@ pub struct TimerId(pub u64);
 pub struct WakeupId(pub u64);
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum NativeEventProvider {
+    Kqueue,
+    Epoll,
+    Iocp,
+    ReadinessProbe,
+}
+
+impl NativeEventProvider {
+    pub const fn is_completion_based(self) -> bool {
+        matches!(self, Self::Iocp)
+    }
+
+    pub const fn is_readiness_based(self) -> bool {
+        matches!(self, Self::Kqueue | Self::Epoll | Self::ReadinessProbe)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct PlatformCapabilities {
     pub supports_half_close: bool,
     pub supports_vectored_write: bool,
@@ -223,6 +241,10 @@ pub enum WriteOutcome {
 }
 
 pub trait TransportPlatform {
+    fn native_event_provider(&self) -> NativeEventProvider {
+        NativeEventProvider::ReadinessProbe
+    }
+
     fn capabilities(&self) -> PlatformCapabilities;
 
     fn bind_listener(
@@ -295,12 +317,21 @@ struct ListenerStateDefaults {
 }
 
 #[derive(Debug)]
+#[allow(dead_code)]
 struct ListenerState {
     socket: TcpListener,
     defaults: ListenerStateDefaults,
     readable_interest: bool,
 }
 
+#[cfg(any(
+    target_os = "linux",
+    target_os = "macos",
+    target_os = "freebsd",
+    target_os = "openbsd",
+    target_os = "netbsd",
+    target_os = "dragonfly"
+))]
 #[derive(Debug)]
 struct StreamState {
     socket: TcpStream,
@@ -485,6 +516,10 @@ pub mod bsd {
     }
 
     impl TransportPlatform for KqueueTransportPlatform {
+        fn native_event_provider(&self) -> NativeEventProvider {
+            NativeEventProvider::Kqueue
+        }
+
         fn capabilities(&self) -> PlatformCapabilities {
             PlatformCapabilities {
                 supports_half_close: true,
@@ -1140,6 +1175,10 @@ pub mod linux {
     }
 
     impl TransportPlatform for EpollTransportPlatform {
+        fn native_event_provider(&self) -> NativeEventProvider {
+            NativeEventProvider::Epoll
+        }
+
         fn capabilities(&self) -> PlatformCapabilities {
             PlatformCapabilities {
                 supports_half_close: true,
@@ -1555,36 +1594,115 @@ pub mod linux {
 pub mod windows {
     use super::*;
     use socket2::{Domain, Protocol, SockRef, Socket, TcpKeepalive, Type};
-    use std::io::{ErrorKind, Read, Write};
-    use std::net::{Ipv4Addr, SocketAddrV4};
+    use std::collections::VecDeque;
+    use std::ffi::c_void;
+    use std::io::ErrorKind;
     use std::os::windows::io::AsRawSocket;
-    use std::thread;
-    use windows_sys::Win32::Networking::WinSock::{setsockopt, SOCKET_ERROR, SOL_SOCKET};
+    use std::ptr;
+    use windows_sys::Win32::Networking::WinSock::{WSAStartup, WSADATA};
 
-    type SocketHandle = usize;
-    type Short = i16;
-    type Ulong = u32;
+    const WINDOWS_IO_BUFFER_SIZE: usize = 64 * 1024;
+    const WINDOWS_ACCEPTEX_ADDRESS_SIZE: usize = 128 + 16;
+    const WINDOWS_MAX_PENDING_ACCEPTS: usize = 1024;
+    const SOCKET_ERROR: i32 = -1;
+    const WSA_IO_PENDING: i32 = 997;
+    const SIO_GET_EXTENSION_FUNCTION_POINTER: Dword = 0xC800_0006;
+    const SOL_SOCKET: i32 = 0xffff;
+    const SO_UPDATE_ACCEPT_CONTEXT: i32 = 0x700b;
 
-    const POLLERR: Short = 0x0001;
-    const POLLHUP: Short = 0x0002;
-    const POLLNVAL: Short = 0x0004;
-    const POLLWRNORM: Short = 0x0010;
-    const POLLRDNORM: Short = 0x0100;
-    const POLLIN: Short = POLLRDNORM;
-    const POLLOUT: Short = POLLWRNORM;
-    const SO_EXCLUSIVEADDRUSE: i32 = -5;
+    type RawSocketValue = usize;
+    type Dword = u32;
+
+    type AcceptExFn = unsafe extern "system" fn(
+        listen_socket: RawSocketValue,
+        accept_socket: RawSocketValue,
+        output_buffer: *mut c_void,
+        receive_data_length: Dword,
+        local_address_length: Dword,
+        remote_address_length: Dword,
+        bytes_received: *mut Dword,
+        overlapped: *mut iocp::Overlapped,
+    ) -> i32;
+
+    #[repr(C)]
+    struct WsaBuf {
+        len: u32,
+        buf: *mut i8,
+    }
 
     #[repr(C)]
     #[derive(Clone, Copy)]
-    struct WsPollFd {
-        fd: SocketHandle,
-        events: Short,
-        revents: Short,
+    struct Guid {
+        data1: u32,
+        data2: u16,
+        data3: u16,
+        data4: [u8; 8],
     }
 
-    #[link(name = "ws2_32")]
+    const WSAID_ACCEPTEX: Guid = Guid {
+        data1: 0xb5367df1,
+        data2: 0xcbac,
+        data3: 0x11cf,
+        data4: [0x95, 0xca, 0x00, 0x80, 0x5f, 0x48, 0xa1, 0x92],
+    };
+
+    #[link(name = "Ws2_32")]
     unsafe extern "system" {
-        fn WSAPoll(fd_array: *mut WsPollFd, fds: Ulong, timeout: i32) -> i32;
+        fn WSAIoctl(
+            socket: RawSocketValue,
+            io_control_code: Dword,
+            in_buffer: *mut c_void,
+            in_buffer_size: Dword,
+            out_buffer: *mut c_void,
+            out_buffer_size: Dword,
+            bytes_returned: *mut Dword,
+            overlapped: *mut iocp::Overlapped,
+            completion_routine: *mut c_void,
+        ) -> i32;
+        fn WSARecv(
+            socket: RawSocketValue,
+            buffers: *mut WsaBuf,
+            buffer_count: Dword,
+            bytes_received: *mut Dword,
+            flags: *mut Dword,
+            overlapped: *mut iocp::Overlapped,
+            completion_routine: *mut c_void,
+        ) -> i32;
+        fn WSASend(
+            socket: RawSocketValue,
+            buffers: *mut WsaBuf,
+            buffer_count: Dword,
+            bytes_sent: *mut Dword,
+            flags: Dword,
+            overlapped: *mut iocp::Overlapped,
+            completion_routine: *mut c_void,
+        ) -> i32;
+        fn setsockopt(
+            socket: RawSocketValue,
+            level: i32,
+            optname: i32,
+            optval: *const i8,
+            optlen: i32,
+        ) -> i32;
+        fn WSAGetLastError() -> i32;
+    }
+
+    #[derive(Debug)]
+    struct WindowsCompletedAccept {
+        stream: TcpStream,
+        peer_addr: SocketAddr,
+    }
+
+    #[derive(Debug)]
+    struct WindowsListenerState {
+        socket: TcpListener,
+        defaults: ListenerStateDefaults,
+        readable_interest: bool,
+        domain: Domain,
+        accept_ex: AcceptExFn,
+        accept_queue_depth: usize,
+        pending_accepts: usize,
+        completed_accepts: VecDeque<WindowsCompletedAccept>,
     }
 
     #[derive(Debug)]
@@ -1593,37 +1711,123 @@ pub mod windows {
     }
 
     #[derive(Debug)]
-    struct WindowsWakeupState {
-        reader: TcpStream,
-        writer: TcpStream,
+    struct WindowsWakeupState;
+
+    #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+    enum WindowsOperationKind {
+        Read,
+        Write,
     }
 
-    struct PollEntry {
-        resource: ResourceId,
-        fd: WsPollFd,
+    #[repr(C)]
+    #[derive(Debug)]
+    struct WindowsOverlappedOperation {
+        overlapped: iocp::Overlapped,
+        stream: StreamId,
+        kind: WindowsOperationKind,
+        buffer: Vec<u8>,
     }
 
-    /// `WindowsTransportPlatform` is the current Windows provider. It uses
-    /// nonblocking sockets plus `WSAPoll` for readiness, a loopback socket pair
-    /// for wakeups, and user-space timer bookkeeping. A richer IOCP-backed
-    /// socket completion provider can replace this later without changing the
-    /// public seam.
+    unsafe impl Send for WindowsOverlappedOperation {}
+
+    impl WindowsOverlappedOperation {
+        fn read(stream: StreamId, buffer_size: usize) -> Self {
+            Self {
+                overlapped: zeroed_overlapped(),
+                stream,
+                kind: WindowsOperationKind::Read,
+                buffer: vec![0; buffer_size.max(1)],
+            }
+        }
+
+        fn write(stream: StreamId, buffer: Vec<u8>) -> Self {
+            Self {
+                overlapped: zeroed_overlapped(),
+                stream,
+                kind: WindowsOperationKind::Write,
+                buffer,
+            }
+        }
+
+        fn key(&mut self) -> usize {
+            (&mut self.overlapped as *mut iocp::Overlapped) as usize
+        }
+    }
+
+    #[repr(C)]
+    #[derive(Debug)]
+    struct WindowsAcceptOperation {
+        overlapped: iocp::Overlapped,
+        listener: ListenerId,
+        socket: Option<Socket>,
+        buffer: Vec<u8>,
+    }
+
+    unsafe impl Send for WindowsAcceptOperation {}
+
+    impl WindowsAcceptOperation {
+        fn new(listener: ListenerId, socket: Socket) -> Self {
+            Self {
+                overlapped: zeroed_overlapped(),
+                listener,
+                socket: Some(socket),
+                buffer: vec![0; WINDOWS_ACCEPTEX_ADDRESS_SIZE * 2],
+            }
+        }
+
+        fn key(&mut self) -> usize {
+            (&mut self.overlapped as *mut iocp::Overlapped) as usize
+        }
+    }
+
+    #[derive(Debug)]
+    struct WindowsStreamState {
+        socket: TcpStream,
+        interest: StreamInterest,
+        read_buffer_size: usize,
+        pending_read: Option<usize>,
+        completed_reads: VecDeque<Vec<u8>>,
+        pending_write: Option<usize>,
+        completed_writes: VecDeque<usize>,
+        read_closed: bool,
+    }
+
+    /// `WindowsTransportPlatform` owns the Windows completion-port provider.
+    /// Sockets are associated with IOCP as they enter the runtime; wakeups use
+    /// posted completion packets, and stream reads/writes keep the same
+    /// nonblocking contract that `stream-reactor` already consumes.
     pub struct WindowsTransportPlatform {
+        completion_port: iocp::CompletionPort,
         next_token: u64,
-        listeners: BTreeMap<ListenerId, ListenerState>,
-        streams: BTreeMap<StreamId, StreamState>,
+        listeners: BTreeMap<ListenerId, WindowsListenerState>,
+        streams: BTreeMap<StreamId, WindowsStreamState>,
         timers: BTreeMap<TimerId, WindowsTimerState>,
         wakeups: BTreeMap<WakeupId, WindowsWakeupState>,
+        resources: BTreeMap<u64, ResourceId>,
+        accept_operations: BTreeMap<usize, Box<WindowsAcceptOperation>>,
+        operations: BTreeMap<usize, Box<WindowsOverlappedOperation>>,
     }
+
+    pub type IocpTransportPlatform = WindowsTransportPlatform;
 
     impl WindowsTransportPlatform {
         pub fn new() -> Result<Self, PlatformError> {
+            let mut data = std::mem::MaybeUninit::<WSADATA>::uninit();
+            let result = unsafe { WSAStartup(0x0202, data.as_mut_ptr()) };
+            if result != 0 {
+                return Err(PlatformError::from(io::Error::from_raw_os_error(result)));
+            }
+
             Ok(Self {
+                completion_port: iocp::CompletionPort::new(0)?,
                 next_token: 1,
                 listeners: BTreeMap::new(),
                 streams: BTreeMap::new(),
                 timers: BTreeMap::new(),
                 wakeups: BTreeMap::new(),
+                resources: BTreeMap::new(),
+                accept_operations: BTreeMap::new(),
+                operations: BTreeMap::new(),
             })
         }
 
@@ -1631,6 +1835,18 @@ pub mod windows {
             let token = self.next_token;
             self.next_token += 1;
             token
+        }
+
+        fn register_resource(&mut self, token: u64, resource: ResourceId) {
+            self.resources.insert(token, resource);
+        }
+
+        fn unregister_resource(&mut self, token: u64) {
+            self.resources.remove(&token);
+        }
+
+        fn resource_for_token(&self, token: u64) -> Option<ResourceId> {
+            self.resources.get(&token).copied()
         }
 
         fn socket_domain(address: SocketAddr) -> Domain {
@@ -1646,40 +1862,243 @@ pub mod windows {
             address: SocketAddr,
             options: ListenerOptions,
         ) -> Result<(), PlatformError> {
+            socket.set_reuse_address(options.reuse_address)?;
             if address.is_ipv6() {
                 socket.set_only_v6(true)?;
             }
-
-            // On Windows, SO_REUSEADDR for TCP listeners allows less isolated
-            // rebinding semantics than Unix server code expects, so the
-            // transport seam prefers exclusive ownership of the port.
-            let value: i32 = 1;
-            let result = unsafe {
-                setsockopt(
-                    socket.as_raw_socket() as SocketHandle,
-                    SOL_SOCKET as i32,
-                    SO_EXCLUSIVEADDRUSE as i32,
-                    (&value as *const i32).cast(),
-                    std::mem::size_of_val(&value) as i32,
-                )
-            };
-            if result == SOCKET_ERROR {
-                return Err(PlatformError::from(io::Error::last_os_error()));
+            if options.reuse_port {
+                return Err(PlatformError::Unsupported(
+                    "SO_REUSEPORT is not supported by the Windows TCP provider",
+                ));
             }
-
-            let _ = options.reuse_address;
-            Self::set_socket_reuse_port(socket, options.reuse_port)?;
             Ok(())
         }
 
-        fn set_socket_reuse_port(_socket: &Socket, reuse_port: bool) -> Result<(), PlatformError> {
-            if reuse_port {
-                Err(PlatformError::Unsupported(
-                    "SO_REUSEPORT-style listener sharding is not yet supported on Windows transport-platform",
-                ))
+        fn load_accept_ex(socket: RawSocketValue) -> Result<AcceptExFn, PlatformError> {
+            let mut guid = WSAID_ACCEPTEX;
+            let mut accept_ex = std::mem::MaybeUninit::<AcceptExFn>::uninit();
+            let mut bytes = 0;
+            let result = unsafe {
+                WSAIoctl(
+                    socket,
+                    SIO_GET_EXTENSION_FUNCTION_POINTER,
+                    (&mut guid as *mut Guid).cast(),
+                    std::mem::size_of::<Guid>() as Dword,
+                    accept_ex.as_mut_ptr().cast(),
+                    std::mem::size_of::<AcceptExFn>() as Dword,
+                    &mut bytes,
+                    ptr::null_mut(),
+                    ptr::null_mut(),
+                )
+            };
+            if result == SOCKET_ERROR {
+                return Err(PlatformError::from(io::Error::from_raw_os_error(unsafe {
+                    WSAGetLastError()
+                })));
+            }
+            Ok(unsafe { accept_ex.assume_init() })
+        }
+
+        fn associate_listener(
+            &self,
+            listener: &TcpListener,
+            listener_id: ListenerId,
+        ) -> Result<(), PlatformError> {
+            self.completion_port
+                .associate_handle(
+                    raw_socket_handle(listener.as_raw_socket()),
+                    listener_id.0 as usize,
+                )
+                .map_err(PlatformError::from)
+        }
+
+        fn associate_stream(
+            &self,
+            stream: &TcpStream,
+            stream_id: StreamId,
+        ) -> Result<(), PlatformError> {
+            self.completion_port
+                .associate_handle(
+                    raw_socket_handle(stream.as_raw_socket()),
+                    stream_id.0 as usize,
+                )
+                .map_err(PlatformError::from)
+        }
+
+        fn queue_accept(&mut self, listener: ListenerId) -> Result<(), PlatformError> {
+            let Some(state) = self.listeners.get(&listener) else {
+                return Err(PlatformError::InvalidResource);
+            };
+            if !state.readable_interest {
+                return Ok(());
+            }
+
+            let accept_socket = Socket::new(state.domain, Type::STREAM, Some(Protocol::TCP))?;
+            accept_socket.set_nonblocking(true)?;
+            let listen_socket = raw_socket_value(state.socket.as_raw_socket());
+            let accept_socket_raw = raw_socket_value(accept_socket.as_raw_socket());
+            let accept_ex = state.accept_ex;
+
+            let mut operation = Box::new(WindowsAcceptOperation::new(listener, accept_socket));
+            let mut bytes = 0;
+            let result = unsafe {
+                accept_ex(
+                    listen_socket,
+                    accept_socket_raw,
+                    operation.buffer.as_mut_ptr().cast(),
+                    0,
+                    WINDOWS_ACCEPTEX_ADDRESS_SIZE as Dword,
+                    WINDOWS_ACCEPTEX_ADDRESS_SIZE as Dword,
+                    &mut bytes,
+                    &mut operation.overlapped,
+                )
+            };
+            if result == SOCKET_ERROR {
+                let error = unsafe { WSAGetLastError() };
+                if error != WSA_IO_PENDING {
+                    return Err(PlatformError::from(io::Error::from_raw_os_error(error)));
+                }
+            }
+
+            let key = operation.key();
+            self.accept_operations.insert(key, operation);
+            if let Some(state) = self.listeners.get_mut(&listener) {
+                state.pending_accepts += 1;
+            }
+            Ok(())
+        }
+
+        fn replenish_accepts(&mut self, listener: ListenerId) -> Result<(), PlatformError> {
+            loop {
+                let Some(state) = self.listeners.get(&listener) else {
+                    return Ok(());
+                };
+                if !state.readable_interest || state.pending_accepts >= state.accept_queue_depth {
+                    return Ok(());
+                }
+                self.queue_accept(listener)?;
+            }
+        }
+
+        fn replenish_all_accepts(&mut self) -> Result<(), PlatformError> {
+            let listeners: Vec<_> = self.listeners.keys().copied().collect();
+            for listener in listeners {
+                self.replenish_accepts(listener)?;
+            }
+            Ok(())
+        }
+
+        fn update_accept_context(
+            accept_socket: RawSocketValue,
+            listen_socket: RawSocketValue,
+        ) -> Result<(), PlatformError> {
+            let listen_socket_bytes = listen_socket.to_ne_bytes();
+            let result = unsafe {
+                setsockopt(
+                    accept_socket,
+                    SOL_SOCKET,
+                    SO_UPDATE_ACCEPT_CONTEXT,
+                    listen_socket_bytes.as_ptr().cast(),
+                    listen_socket_bytes.len() as i32,
+                )
+            };
+            if result == SOCKET_ERROR {
+                Err(PlatformError::from(io::Error::from_raw_os_error(unsafe {
+                    WSAGetLastError()
+                })))
             } else {
                 Ok(())
             }
+        }
+
+        fn queue_read_if_needed(&mut self, stream: StreamId) -> Result<(), PlatformError> {
+            let Some(state) = self.streams.get(&stream) else {
+                return Err(PlatformError::InvalidResource);
+            };
+            if !state.interest.readable
+                || state.read_closed
+                || state.pending_read.is_some()
+                || !state.completed_reads.is_empty()
+            {
+                return Ok(());
+            }
+
+            let socket = raw_socket_value(state.socket.as_raw_socket());
+            let mut operation = Box::new(WindowsOverlappedOperation::read(
+                stream,
+                state.read_buffer_size,
+            ));
+            let mut wsabuf = WsaBuf {
+                len: operation.buffer.len().min(u32::MAX as usize) as u32,
+                buf: operation.buffer.as_mut_ptr().cast(),
+            };
+            let mut bytes = 0;
+            let mut flags = 0;
+            let result = unsafe {
+                WSARecv(
+                    socket,
+                    &mut wsabuf,
+                    1,
+                    &mut bytes,
+                    &mut flags,
+                    &mut operation.overlapped,
+                    ptr::null_mut(),
+                )
+            };
+            if result == SOCKET_ERROR {
+                let error = unsafe { WSAGetLastError() };
+                if error != WSA_IO_PENDING {
+                    return Err(PlatformError::from(io::Error::from_raw_os_error(error)));
+                }
+            }
+
+            let key = operation.key();
+            self.operations.insert(key, operation);
+            if let Some(state) = self.streams.get_mut(&stream) {
+                state.pending_read = Some(key);
+            }
+            Ok(())
+        }
+
+        fn queue_send(&mut self, stream: StreamId, buffer: Vec<u8>) -> Result<(), PlatformError> {
+            let Some(state) = self.streams.get(&stream) else {
+                return Err(PlatformError::InvalidResource);
+            };
+            if state.pending_write.is_some() {
+                return Ok(());
+            }
+
+            let socket = raw_socket_value(state.socket.as_raw_socket());
+            let mut operation = Box::new(WindowsOverlappedOperation::write(stream, buffer));
+            let mut wsabuf = WsaBuf {
+                len: operation.buffer.len().min(u32::MAX as usize) as u32,
+                buf: operation.buffer.as_mut_ptr().cast(),
+            };
+            let mut bytes = 0;
+            let result = unsafe {
+                WSASend(
+                    socket,
+                    &mut wsabuf,
+                    1,
+                    &mut bytes,
+                    0,
+                    &mut operation.overlapped,
+                    ptr::null_mut(),
+                )
+            };
+            if result == SOCKET_ERROR {
+                let error = unsafe { WSAGetLastError() };
+                if error != WSA_IO_PENDING {
+                    return Err(PlatformError::from(io::Error::from_raw_os_error(error)));
+                }
+            }
+
+            let key = operation.key();
+            self.operations.insert(key, operation);
+            if let Some(state) = self.streams.get_mut(&stream) {
+                state.pending_write = Some(key);
+            }
+            Ok(())
         }
 
         fn configure_stream_defaults(
@@ -1692,63 +2111,6 @@ pub mod windows {
                 SockRef::from(stream).set_tcp_keepalive(&keepalive)?;
             }
             Ok(())
-        }
-
-        fn create_wakeup_pair() -> Result<(TcpStream, TcpStream), PlatformError> {
-            let listener =
-                TcpListener::bind(SocketAddr::V4(SocketAddrV4::new(Ipv4Addr::LOCALHOST, 0)))?;
-            let addr = listener.local_addr()?;
-            let writer = TcpStream::connect(addr)?;
-            let (reader, _) = listener.accept()?;
-            reader.set_nonblocking(true)?;
-            writer.set_nonblocking(true)?;
-            Ok((reader, writer))
-        }
-
-        fn build_poll_entries(&self) -> Vec<PollEntry> {
-            let mut entries = Vec::new();
-            for (&listener_id, state) in &self.listeners {
-                if state.readable_interest {
-                    entries.push(PollEntry {
-                        resource: ResourceId::Listener(listener_id),
-                        fd: WsPollFd {
-                            fd: state.socket.as_raw_socket() as SocketHandle,
-                            events: POLLIN,
-                            revents: 0,
-                        },
-                    });
-                }
-            }
-            for (&stream_id, state) in &self.streams {
-                let mut events = 0;
-                if state.interest.readable {
-                    events |= POLLIN;
-                }
-                if state.interest.writable {
-                    events |= POLLOUT;
-                }
-                if events != 0 {
-                    entries.push(PollEntry {
-                        resource: ResourceId::Stream(stream_id),
-                        fd: WsPollFd {
-                            fd: state.socket.as_raw_socket() as SocketHandle,
-                            events,
-                            revents: 0,
-                        },
-                    });
-                }
-            }
-            for (&wakeup_id, state) in &self.wakeups {
-                entries.push(PollEntry {
-                    resource: ResourceId::Wakeup(wakeup_id),
-                    fd: WsPollFd {
-                        fd: state.reader.as_raw_socket() as SocketHandle,
-                        events: POLLIN,
-                        revents: 0,
-                    },
-                });
-            }
-            entries
         }
 
         fn next_timer_deadline(&self) -> Option<Instant> {
@@ -1782,27 +2144,205 @@ pub mod windows {
             }
         }
 
-        fn drain_wakeup(reader: &mut TcpStream) -> Result<(), PlatformError> {
-            let mut buffer = [0u8; 128];
-            loop {
-                match reader.read(&mut buffer) {
-                    Ok(0) => return Ok(()),
-                    Ok(_) => continue,
-                    Err(error) if error.kind() == ErrorKind::WouldBlock => return Ok(()),
-                    Err(error) => return Err(PlatformError::from(error)),
+        fn wait_for_iocp_packet(
+            &mut self,
+            timeout: Option<Duration>,
+            output: &mut Vec<PlatformEvent>,
+        ) -> Result<bool, PlatformError> {
+            match self.completion_port.get(timeout) {
+                Ok(packet) => {
+                    self.push_completion_packet(packet, output);
+                    Ok(true)
                 }
+                Err(error) if error.kind() == ErrorKind::TimedOut => Ok(false),
+                Err(error) => Err(PlatformError::from(error)),
+            }
+        }
+
+        fn drain_iocp_now(&mut self, output: &mut Vec<PlatformEvent>) -> Result<(), PlatformError> {
+            while self.wait_for_iocp_packet(Some(Duration::ZERO), output)? {}
+            Ok(())
+        }
+
+        fn push_completion_packet(
+            &mut self,
+            packet: iocp::CompletionPacket,
+            output: &mut Vec<PlatformEvent>,
+        ) {
+            if !packet.overlapped.is_null() {
+                self.push_overlapped_completion(packet, output);
+                return;
+            }
+
+            let Some(resource) = self.resource_for_token(packet.completion_key as u64) else {
+                return;
+            };
+
+            match resource {
+                ResourceId::Listener(listener) => {
+                    output.push(PlatformEvent::ListenerAcceptReady { listener });
+                }
+                ResourceId::Stream(stream) => {
+                    if let Some(state) = self.streams.get(&stream) {
+                        if state.interest.readable {
+                            output.push(PlatformEvent::StreamReadable { stream });
+                        }
+                        if state.interest.writable {
+                            output.push(PlatformEvent::StreamWritable { stream });
+                        }
+                    }
+                }
+                ResourceId::Timer(timer) => {
+                    output.push(PlatformEvent::TimerExpired { timer });
+                }
+                ResourceId::Wakeup(wakeup) => {
+                    output.push(PlatformEvent::Wakeup { wakeup });
+                }
+            }
+        }
+
+        fn push_overlapped_completion(
+            &mut self,
+            packet: iocp::CompletionPacket,
+            output: &mut Vec<PlatformEvent>,
+        ) {
+            let key = packet.overlapped as usize;
+            if self.accept_operations.contains_key(&key) {
+                self.push_accept_completion(packet, output);
+                return;
+            }
+
+            let Some(mut operation) = self.operations.remove(&key) else {
+                return;
+            };
+            let stream = operation.stream;
+            let kind = operation.kind;
+
+            let Some(state) = self.streams.get_mut(&stream) else {
+                return;
+            };
+
+            match kind {
+                WindowsOperationKind::Read => {
+                    if state.pending_read == Some(key) {
+                        state.pending_read = None;
+                    }
+                    if packet.error.is_some() {
+                        state.read_closed = true;
+                        output.push(PlatformEvent::StreamClosed {
+                            stream,
+                            kind: CloseKind::Reset,
+                        });
+                        return;
+                    }
+                    if packet.bytes_transferred == 0 {
+                        state.read_closed = true;
+                        output.push(PlatformEvent::StreamClosed {
+                            stream,
+                            kind: CloseKind::ReadClosed,
+                        });
+                        return;
+                    }
+
+                    let mut buffer = std::mem::take(&mut operation.buffer);
+                    buffer.truncate(packet.bytes_transferred as usize);
+                    state.completed_reads.push_back(buffer);
+                    output.push(PlatformEvent::StreamReadable { stream });
+                }
+                WindowsOperationKind::Write => {
+                    if state.pending_write == Some(key) {
+                        state.pending_write = None;
+                    }
+                    if packet.error.is_some() {
+                        output.push(PlatformEvent::StreamClosed {
+                            stream,
+                            kind: CloseKind::Reset,
+                        });
+                        return;
+                    }
+                    state
+                        .completed_writes
+                        .push_back(packet.bytes_transferred as usize);
+                    output.push(PlatformEvent::StreamWritable { stream });
+                }
+            }
+        }
+
+        fn push_accept_completion(
+            &mut self,
+            packet: iocp::CompletionPacket,
+            output: &mut Vec<PlatformEvent>,
+        ) {
+            let key = packet.overlapped as usize;
+            let Some(mut operation) = self.accept_operations.remove(&key) else {
+                return;
+            };
+            let listener = operation.listener;
+
+            let Some(listener_state) = self.listeners.get_mut(&listener) else {
+                return;
+            };
+            listener_state.pending_accepts = listener_state.pending_accepts.saturating_sub(1);
+
+            if packet.error.is_some() {
+                return;
+            }
+
+            let Some(socket) = operation.socket.take() else {
+                return;
+            };
+            let listen_socket = raw_socket_value(listener_state.socket.as_raw_socket());
+            let accept_socket = raw_socket_value(socket.as_raw_socket());
+
+            if let Err(error) = Self::update_accept_context(accept_socket, listen_socket) {
+                output.push(PlatformEvent::Error {
+                    resource: ResourceId::Listener(listener),
+                    error,
+                });
+                return;
+            }
+
+            let stream: TcpStream = socket.into();
+            if let Err(error) = stream.set_nonblocking(true) {
+                output.push(PlatformEvent::Error {
+                    resource: ResourceId::Listener(listener),
+                    error: PlatformError::from(error),
+                });
+                return;
+            }
+
+            let peer_addr = match stream.peer_addr() {
+                Ok(peer_addr) => peer_addr,
+                Err(error) => {
+                    output.push(PlatformEvent::Error {
+                        resource: ResourceId::Listener(listener),
+                        error: PlatformError::from(error),
+                    });
+                    return;
+                }
+            };
+
+            listener_state
+                .completed_accepts
+                .push_back(WindowsCompletedAccept { stream, peer_addr });
+            if listener_state.readable_interest {
+                output.push(PlatformEvent::ListenerAcceptReady { listener });
             }
         }
     }
 
     impl TransportPlatform for WindowsTransportPlatform {
+        fn native_event_provider(&self) -> NativeEventProvider {
+            NativeEventProvider::Iocp
+        }
+
         fn capabilities(&self) -> PlatformCapabilities {
             PlatformCapabilities {
                 supports_half_close: true,
                 supports_vectored_write: true,
                 supports_zero_copy_send: false,
                 supports_native_timers: false,
-                supports_native_wakeups: false,
+                supports_native_wakeups: true,
             }
         }
 
@@ -1812,29 +2352,37 @@ pub mod windows {
             options: ListenerOptions,
         ) -> Result<ListenerId, PlatformError> {
             let BindAddress::Ip(address) = address;
-            let socket = Socket::new(
-                Self::socket_domain(address),
-                Type::STREAM,
-                Some(Protocol::TCP),
-            )?;
+            let domain = Self::socket_domain(address);
+            let socket = Socket::new(domain, Type::STREAM, Some(Protocol::TCP))?;
             Self::configure_listener_socket(&socket, address, options)?;
             socket.bind(&address.into())?;
             socket.listen(options.backlog.min(i32::MAX as u32) as i32)?;
             socket.set_nonblocking(true)?;
+            let accept_ex = Self::load_accept_ex(raw_socket_value(socket.as_raw_socket()))?;
 
             let listener: TcpListener = socket.into();
             let id = ListenerId(self.alloc_token());
+            self.associate_listener(&listener, id)?;
+            self.register_resource(id.0, ResourceId::Listener(id));
             self.listeners.insert(
                 id,
-                ListenerState {
+                WindowsListenerState {
                     socket: listener,
                     defaults: ListenerStateDefaults {
                         nodelay: options.nodelay_default,
                         keepalive: options.keepalive_default,
                     },
                     readable_interest: true,
+                    domain,
+                    accept_ex,
+                    accept_queue_depth: (options.backlog as usize)
+                        .max(1)
+                        .min(WINDOWS_MAX_PENDING_ACCEPTS),
+                    pending_accepts: 0,
+                    completed_accepts: VecDeque::new(),
                 },
             );
+            self.replenish_accepts(id)?;
             Ok(id)
         }
 
@@ -1844,7 +2392,7 @@ pub mod windows {
                 .ok_or(PlatformError::InvalidResource)?
                 .socket
                 .local_addr()
-                .map_err(PlatformError::from)
+                .map_err(|error| PlatformError::Io(format!("read listener local_addr: {error}")))
         }
 
         fn set_listener_interest(
@@ -1856,6 +2404,9 @@ pub mod windows {
                 .get_mut(&listener)
                 .ok_or(PlatformError::InvalidResource)?
                 .readable_interest = readable;
+            if readable {
+                self.replenish_accepts(listener)?;
+            }
             Ok(())
         }
 
@@ -1865,28 +2416,35 @@ pub mod windows {
         ) -> Result<Option<AcceptedStream>, PlatformError> {
             let state = self
                 .listeners
-                .get(&listener)
+                .get_mut(&listener)
                 .ok_or(PlatformError::InvalidResource)?;
-            match state.socket.accept() {
-                Ok((stream, peer_addr)) => {
-                    stream.set_nonblocking(true)?;
-                    Self::configure_stream_defaults(&stream, state.defaults)?;
-                    let id = StreamId(self.alloc_token());
-                    self.streams.insert(
-                        id,
-                        StreamState {
-                            socket: stream,
-                            interest: StreamInterest::none(),
-                        },
-                    );
-                    Ok(Some(AcceptedStream {
-                        stream: id,
-                        peer_addr,
-                    }))
-                }
-                Err(error) if error.kind() == io::ErrorKind::WouldBlock => Ok(None),
-                Err(error) => Err(PlatformError::from(error)),
-            }
+            let Some(accepted) = state.completed_accepts.pop_front() else {
+                return Ok(None);
+            };
+            let defaults = state.defaults;
+            let WindowsCompletedAccept { stream, peer_addr } = accepted;
+
+            Self::configure_stream_defaults(&stream, defaults)?;
+            let id = StreamId(self.alloc_token());
+            self.associate_stream(&stream, id)?;
+            self.register_resource(id.0, ResourceId::Stream(id));
+            self.streams.insert(
+                id,
+                WindowsStreamState {
+                    socket: stream,
+                    interest: StreamInterest::none(),
+                    read_buffer_size: WINDOWS_IO_BUFFER_SIZE,
+                    pending_read: None,
+                    completed_reads: VecDeque::new(),
+                    pending_write: None,
+                    completed_writes: VecDeque::new(),
+                    read_closed: false,
+                },
+            );
+            Ok(Some(AcceptedStream {
+                stream: id,
+                peer_addr,
+            }))
         }
 
         fn configure_stream(
@@ -1907,6 +2465,7 @@ pub mod windows {
             }
             if let Some(size) = options.recv_buffer_size {
                 socket.set_recv_buffer_size(size)?;
+                state.read_buffer_size = size.max(1);
             }
             if let Some(size) = options.send_buffer_size {
                 socket.set_send_buffer_size(size)?;
@@ -1919,10 +2478,19 @@ pub mod windows {
             stream: StreamId,
             interest: StreamInterest,
         ) -> Result<(), PlatformError> {
-            self.streams
+            let state = self
+                .streams
                 .get_mut(&stream)
-                .ok_or(PlatformError::InvalidResource)?
-                .interest = interest;
+                .ok_or(PlatformError::InvalidResource)?;
+            let previous = state.interest;
+            state.interest = interest;
+            let should_nudge_writable = interest.writable && !previous.writable;
+            self.queue_read_if_needed(stream)?;
+            if should_nudge_writable {
+                self.completion_port
+                    .post(0, stream.0 as usize, ptr::null_mut())
+                    .map_err(PlatformError::from)?;
+            }
             Ok(())
         }
 
@@ -1935,12 +2503,26 @@ pub mod windows {
                 .streams
                 .get_mut(&stream)
                 .ok_or(PlatformError::InvalidResource)?;
-            match state.socket.read(buffer) {
-                Ok(0) => Ok(ReadOutcome::Closed),
-                Ok(n) => Ok(ReadOutcome::Read(n)),
-                Err(error) if error.kind() == ErrorKind::WouldBlock => Ok(ReadOutcome::WouldBlock),
-                Err(error) => Err(PlatformError::from(error)),
+
+            if let Some(mut completed) = state.completed_reads.pop_front() {
+                let n = completed.len().min(buffer.len());
+                buffer[..n].copy_from_slice(&completed[..n]);
+                if n < completed.len() {
+                    let remainder = completed.split_off(n);
+                    state.completed_reads.push_front(remainder);
+                }
+                let _ = state;
+                self.queue_read_if_needed(stream)?;
+                return Ok(ReadOutcome::Read(n));
             }
+
+            if state.read_closed {
+                return Ok(ReadOutcome::Closed);
+            }
+
+            let _ = state;
+            self.queue_read_if_needed(stream)?;
+            Ok(ReadOutcome::WouldBlock)
         }
 
         fn write(
@@ -1952,12 +2534,22 @@ pub mod windows {
                 .streams
                 .get_mut(&stream)
                 .ok_or(PlatformError::InvalidResource)?;
-            match state.socket.write(buffer) {
-                Ok(0) => Ok(WriteOutcome::Closed),
-                Ok(n) => Ok(WriteOutcome::Wrote(n)),
-                Err(error) if error.kind() == ErrorKind::WouldBlock => Ok(WriteOutcome::WouldBlock),
-                Err(error) => Err(PlatformError::from(error)),
+
+            if let Some(n) = state.completed_writes.pop_front() {
+                return if n == 0 {
+                    Ok(WriteOutcome::Closed)
+                } else {
+                    Ok(WriteOutcome::Wrote(n.min(buffer.len())))
+                };
             }
+
+            if state.pending_write.is_some() {
+                return Ok(WriteOutcome::WouldBlock);
+            }
+
+            let _ = state;
+            self.queue_send(stream, buffer.to_vec())?;
+            Ok(WriteOutcome::WouldBlock)
         }
 
         fn write_vectored(
@@ -1965,16 +2557,15 @@ pub mod windows {
             stream: StreamId,
             buffers: &[IoSlice<'_>],
         ) -> Result<WriteOutcome, PlatformError> {
-            let state = self
-                .streams
-                .get_mut(&stream)
-                .ok_or(PlatformError::InvalidResource)?;
-            match state.socket.write_vectored(buffers) {
-                Ok(0) => Ok(WriteOutcome::Closed),
-                Ok(n) => Ok(WriteOutcome::Wrote(n)),
-                Err(error) if error.kind() == ErrorKind::WouldBlock => Ok(WriteOutcome::WouldBlock),
-                Err(error) => Err(PlatformError::from(error)),
+            if buffers.is_empty() {
+                return Ok(WriteOutcome::Wrote(0));
             }
+            let total = buffers.iter().map(|buffer| buffer.len()).sum();
+            let mut flattened = Vec::with_capacity(total);
+            for buffer in buffers {
+                flattened.extend_from_slice(buffer);
+            }
+            self.write(stream, &flattened)
         }
 
         fn shutdown_read(&mut self, stream: StreamId) -> Result<(), PlatformError> {
@@ -1996,21 +2587,26 @@ pub mod windows {
         }
 
         fn close_stream(&mut self, stream: StreamId) -> Result<(), PlatformError> {
-            self.streams
-                .remove(&stream)
-                .map(|_| ())
-                .ok_or(PlatformError::InvalidResource)
+            if self.streams.remove(&stream).is_some() {
+                self.unregister_resource(stream.0);
+                Ok(())
+            } else {
+                Err(PlatformError::InvalidResource)
+            }
         }
 
         fn close_listener(&mut self, listener: ListenerId) -> Result<(), PlatformError> {
-            self.listeners
-                .remove(&listener)
-                .map(|_| ())
-                .ok_or(PlatformError::InvalidResource)
+            if self.listeners.remove(&listener).is_some() {
+                self.unregister_resource(listener.0);
+                Ok(())
+            } else {
+                Err(PlatformError::InvalidResource)
+            }
         }
 
         fn create_timer(&mut self) -> Result<TimerId, PlatformError> {
             let id = TimerId(self.alloc_token());
+            self.register_resource(id.0, ResourceId::Timer(id));
             self.timers.insert(id, WindowsTimerState { deadline: None });
             Ok(id)
         }
@@ -2033,22 +2629,18 @@ pub mod windows {
 
         fn create_wakeup(&mut self) -> Result<WakeupId, PlatformError> {
             let id = WakeupId(self.alloc_token());
-            let (reader, writer) = Self::create_wakeup_pair()?;
-            self.wakeups
-                .insert(id, WindowsWakeupState { reader, writer });
+            self.register_resource(id.0, ResourceId::Wakeup(id));
+            self.wakeups.insert(id, WindowsWakeupState);
             Ok(id)
         }
 
         fn wake(&mut self, wakeup: WakeupId) -> Result<(), PlatformError> {
-            let state = self
-                .wakeups
-                .get_mut(&wakeup)
+            self.wakeups
+                .get(&wakeup)
                 .ok_or(PlatformError::InvalidResource)?;
-            match state.writer.write(&[1]) {
-                Ok(_) => Ok(()),
-                Err(error) if error.kind() == ErrorKind::WouldBlock => Ok(()),
-                Err(error) => Err(PlatformError::from(error)),
-            }
+            self.completion_port
+                .post(0, wakeup.0 as usize, ptr::null_mut())
+                .map_err(PlatformError::from)
         }
 
         fn poll(
@@ -2058,99 +2650,47 @@ pub mod windows {
         ) -> Result<(), PlatformError> {
             output.clear();
             let effective_timeout = self.effective_timeout(timeout);
-            let mut entries = self.build_poll_entries();
 
-            if entries.is_empty() {
-                if let Some(duration) = effective_timeout {
-                    thread::sleep(duration);
-                } else {
-                    thread::sleep(Duration::from_millis(10));
-                }
-                self.collect_due_timers(output);
-                return Ok(());
-            }
-
-            let timeout_ms = match effective_timeout {
-                Some(duration) => duration.as_millis().min(i32::MAX as u128) as i32,
-                None => -1,
-            };
-            let result = unsafe {
-                WSAPoll(
-                    entries.as_mut_ptr().cast(),
-                    entries.len() as Ulong,
-                    timeout_ms,
-                )
-            };
-            if result == -1 {
-                return Err(PlatformError::from(io::Error::last_os_error()));
-            }
-
-            for entry in &mut entries {
-                let revents = entry.fd.revents;
-                if revents == 0 {
-                    continue;
-                }
-                match entry.resource {
-                    ResourceId::Listener(listener) => {
-                        if (revents & (POLLERR | POLLNVAL)) != 0 {
-                            output.push(PlatformEvent::Error {
-                                resource: entry.resource,
-                                error: PlatformError::ProviderFault(format!(
-                                    "WSAPoll listener revents=0x{:x}",
-                                    revents
-                                )),
-                            });
-                        }
-                        if (revents & POLLIN) != 0 {
-                            output.push(PlatformEvent::ListenerAcceptReady { listener });
-                        }
-                    }
-                    ResourceId::Stream(stream) => {
-                        if (revents & (POLLERR | POLLNVAL)) != 0 {
-                            output.push(PlatformEvent::Error {
-                                resource: entry.resource,
-                                error: PlatformError::ProviderFault(format!(
-                                    "WSAPoll stream revents=0x{:x}",
-                                    revents
-                                )),
-                            });
-                        }
-                        if (revents & POLLIN) != 0 {
-                            output.push(PlatformEvent::StreamReadable { stream });
-                        }
-                        if (revents & POLLOUT) != 0 {
-                            output.push(PlatformEvent::StreamWritable { stream });
-                        }
-                        if (revents & POLLHUP) != 0 {
-                            output.push(PlatformEvent::StreamClosed {
-                                stream,
-                                kind: CloseKind::FullyClosed,
-                            });
-                        }
-                    }
-                    ResourceId::Wakeup(wakeup) => {
-                        if (revents & POLLIN) != 0 {
-                            if let Some(state) = self.wakeups.get_mut(&wakeup) {
-                                Self::drain_wakeup(&mut state.reader)?;
-                            }
-                            output.push(PlatformEvent::Wakeup { wakeup });
-                        }
-                        if (revents & (POLLERR | POLLNVAL)) != 0 {
-                            output.push(PlatformEvent::Error {
-                                resource: entry.resource,
-                                error: PlatformError::ProviderFault(format!(
-                                    "WSAPoll wakeup revents=0x{:x}",
-                                    revents
-                                )),
-                            });
-                        }
-                    }
-                    ResourceId::Timer(_) => {}
-                }
-            }
-
+            self.replenish_all_accepts()?;
+            let _ = self.wait_for_iocp_packet(effective_timeout, output)?;
             self.collect_due_timers(output);
+            self.drain_iocp_now(output)?;
+
+            for (&listener, state) in &self.listeners {
+                if state.readable_interest && !state.completed_accepts.is_empty() {
+                    output.push(PlatformEvent::ListenerAcceptReady { listener });
+                }
+            }
+
+            for (&stream, state) in &self.streams {
+                if !state.completed_reads.is_empty() {
+                    output.push(PlatformEvent::StreamReadable { stream });
+                }
+                if !state.completed_writes.is_empty() {
+                    output.push(PlatformEvent::StreamWritable { stream });
+                }
+            }
+
+            self.replenish_all_accepts()?;
             Ok(())
+        }
+    }
+
+    fn raw_socket_handle(raw: std::os::windows::io::RawSocket) -> *mut c_void {
+        raw as usize as *mut c_void
+    }
+
+    fn raw_socket_value(raw: std::os::windows::io::RawSocket) -> RawSocketValue {
+        raw as usize
+    }
+
+    fn zeroed_overlapped() -> iocp::Overlapped {
+        iocp::Overlapped {
+            internal: 0,
+            internal_high: 0,
+            offset: 0,
+            offset_high: 0,
+            h_event: ptr::null_mut(),
         }
     }
 }
@@ -2314,15 +2854,11 @@ mod tests {
         assert_eq!(&buffer[..4], b"PONG");
 
         assert_eq!(
-            platform
-                .write(stream_a, b"+PONG\r\n")
-                .expect("write stream a"),
+            write_until_progress(platform, stream_a, b"+PONG\r\n"),
             WriteOutcome::Wrote(7)
         );
         assert_eq!(
-            platform
-                .write(stream_b, b"+OK\r\n")
-                .expect("write stream b"),
+            write_until_progress(platform, stream_b, b"+OK\r\n"),
             WriteOutcome::Wrote(5)
         );
 
@@ -2331,6 +2867,27 @@ mod tests {
         assert_eq!(&reply[..7], b"+PONG\r\n");
         client_b.read_exact(&mut reply[..5]).expect("reply b");
         assert_eq!(&reply[..5], b"+OK\r\n");
+    }
+
+    fn write_until_progress<P: TransportPlatform>(
+        platform: &mut P,
+        stream: StreamId,
+        bytes: &[u8],
+    ) -> WriteOutcome {
+        let deadline = Instant::now() + Duration::from_secs(1);
+        while Instant::now() < deadline {
+            match platform.write(stream, bytes).expect("write stream") {
+                WriteOutcome::WouldBlock => {
+                    let _ = poll_until(platform, Duration::from_millis(50), |events| {
+                        events.iter().any(
+                            |event| matches!(event, PlatformEvent::StreamWritable { stream: id } if *id == stream),
+                        )
+                    });
+                }
+                outcome => return outcome,
+            }
+        }
+        panic!("stream write did not complete before the deadline");
     }
 
     fn assert_timer_and_wakeup_generate_events<P: TransportPlatform>(platform: &mut P) {
@@ -2451,6 +3008,10 @@ mod tests {
         #[test]
         fn accepts_reads_and_writes_multiple_streams() {
             let mut platform = KqueueTransportPlatform::new().expect("create platform");
+            assert_eq!(
+                platform.native_event_provider(),
+                NativeEventProvider::Kqueue
+            );
             assert_accepts_reads_and_writes_multiple_streams(&mut platform);
         }
 
@@ -2508,6 +3069,7 @@ mod tests {
         #[test]
         fn accepts_reads_and_writes_multiple_streams() {
             let mut platform = EpollTransportPlatform::new().expect("create platform");
+            assert_eq!(platform.native_event_provider(), NativeEventProvider::Epoll);
             assert_accepts_reads_and_writes_multiple_streams(&mut platform);
         }
 
@@ -2538,6 +3100,8 @@ mod tests {
         #[test]
         fn accepts_reads_and_writes_multiple_streams() {
             let mut platform = WindowsTransportPlatform::new().expect("create platform");
+            assert_eq!(platform.native_event_provider(), NativeEventProvider::Iocp);
+            assert!(platform.capabilities().supports_native_wakeups);
             assert_accepts_reads_and_writes_multiple_streams(&mut platform);
         }
 

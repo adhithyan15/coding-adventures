@@ -1,0 +1,63 @@
+# @version 1
+
+# ISO/Core Prolog token grammar.
+#
+# This file starts as an explicit dialect fork of the current Prolog subset.
+# Keep dialect-specific lexical changes here instead of adding conditional logic
+# to the generic prolog-lexer package.
+
+# Prolog's lexer is where the language first becomes "logic-shaped":
+# lowercase words are atoms, uppercase words are variables, and a few
+# punctuation sequences like ?- and :- carry structural meaning for queries
+# and rules.
+#
+# This first grammar intentionally focuses on the subset needed for:
+# - facts
+# - rules
+# - top-level queries
+# - list syntax
+# - symbolic operator atoms used in ordinary programs
+
+skip:
+  WHITESPACE = /[ \t\r\n]+/
+  COMMENT    = /%[^\n]*/
+
+# Multi-character structural tokens must come before symbolic atoms.
+DCG          = "-->"
+QUERY        = "?-"
+RULE         = ":-"
+
+# Common dedicated punctuation tokens for the first parser pass.
+LPAREN       = "("
+RPAREN       = ")"
+LBRACKET     = "["
+RBRACKET     = "]"
+LCURLY       = "{"
+RCURLY       = "}"
+BAR          = "|"
+COMMA        = ","
+SEMICOLON    = ";"
+CUT          = "!"
+DOT          = "."
+
+# Numeric literals.
+FLOAT        = /[0-9]+\.[0-9]+([eE][-+]?[0-9]+)?/
+INTEGER      = /[0-9]+/
+
+# Textual values.
+STRING       = /"([^"\\]|\\.)*"/
+QUOTED_ATOM  = /'([^'\\]|\\.)*'/ -> ATOM
+
+# Variables and atoms.
+#
+# ``_`` is the anonymous variable, but names like ``_Tmp`` and ``_State42``
+# are ordinary variables. The negative lookahead keeps the single underscore
+# distinct without chopping longer names into ``ANON_VAR`` plus leftovers.
+ANON_VAR      = /_(?![A-Za-z0-9_])/
+VARIABLE      = /(?:[A-Z][A-Za-z0-9_]*|_[A-Za-z0-9_]+)/
+ATOM          = /[a-z][A-Za-z0-9_]*/
+
+# Symbolic operators in Prolog are atoms too. The punctuation tokens above are
+# listed first so they win for structural uses like ".", ":-", "?-", ";", and
+# "|" before this catch-all symbolic atom rule is tried.
+ATOM_SYMBOLIC = /[#$&*+\-\/:<=>?@\\^~]+/ -> ATOM

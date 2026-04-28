@@ -16,14 +16,14 @@
 //! |-------------------|-------------------------------------------------|
 //! | `PaintRect`       | Fully implemented — solid-colour filled rects   |
 //! | `PaintLine`       | Fully implemented — rendered via pen + LineTo   |
-//! | `PaintGroup`      | Fully implemented — recurses into children      |
+//! | `PaintGroup`      | Implemented — direct render + opacity/transform  |
 //! | `PaintClip`       | Fully implemented — IntersectClipRect + restore |
-//! | `PaintGlyphRun`   | Planned — ExtTextOutW                           |
-//! | `PaintEllipse`    | Planned — Ellipse()                             |
-//! | `PaintPath`       | Planned — BeginPath/PolyBezierTo                |
-//! | `PaintLayer`      | Planned — offscreen DC + BitBlt                 |
+//! | `PaintGlyphRun`   | Implemented — ExtTextOutW + ETO_GLYPH_INDEX     |
+//! | `PaintEllipse`    | Implemented — Ellipse()                         |
+//! | `PaintPath`       | Implemented — BeginPath/PolyBezierTo            |
+//! | `PaintLayer`      | Implemented — isolated offscreen compositing    |
 //! | `PaintGradient`   | Planned — GradientFill (limited)                |
-//! | `PaintImage`      | Planned — StretchDIBits / AlphaBlend            |
+//! | `PaintImage`      | Implemented — WIC decode + AlphaBlend           |
 //!
 //! ## GDI pipeline
 //!
@@ -64,7 +64,9 @@
 pub const VERSION: &str = "0.1.0";
 
 use paint_instructions::{
-    PaintClip, PaintInstruction, PaintLine, PaintRect, PaintScene, PixelContainer,
+    FillRule, ImageSrc, PaintClip, PaintEllipse, PaintGlyphRun, PaintGroup, PaintImage,
+    PaintInstruction, PaintLayer, PaintLine, PaintPath, PaintRect, PaintScene, PaintText,
+    PathCommand, PixelContainer, TextAlign, Transform2D,
 };
 
 // ---------------------------------------------------------------------------
@@ -72,7 +74,9 @@ use paint_instructions::{
 // ---------------------------------------------------------------------------
 
 #[cfg(not(target_os = "windows"))]
-compile_error!("paint-vm-gdi requires Windows. Use paint-metal on macOS or paint-vm-cairo on Linux.");
+compile_error!(
+    "paint-vm-gdi requires Windows. Use paint-metal on macOS or paint-vm-cairo on Linux."
+);
 
 // ---------------------------------------------------------------------------
 // Windows API imports
@@ -84,13 +88,32 @@ compile_error!("paint-vm-gdi requires Windows. Use paint-metal on macOS or paint
 // whose pixel memory we can read directly).
 
 #[cfg(target_os = "windows")]
-use windows::Win32::Foundation::RECT;
+use windows::core::PCWSTR;
+#[cfg(target_os = "windows")]
+use windows::Win32::Foundation::{GENERIC_ACCESS_RIGHTS, POINT, RECT};
 #[cfg(target_os = "windows")]
 use windows::Win32::Graphics::Gdi::{
-    CreateCompatibleDC, CreateDIBSection, CreatePen, CreateSolidBrush, DeleteDC, DeleteObject,
-    FillRect, GetStockObject, IntersectClipRect, LineTo, MoveToEx, RestoreDC, SaveDC,
-    SelectObject, BITMAPINFO, BITMAPINFOHEADER, BI_RGB, DIB_RGB_COLORS, NULL_BRUSH,
-    PS_SOLID,
+    AlphaBlend, BeginPath, CloseFigure, CreateCompatibleDC, CreateDIBSection, CreateFontW,
+    CreatePen, CreateSolidBrush, DeleteDC, DeleteObject, Ellipse, EndPath, ExtCreatePen,
+    ExtTextOutW, FillPath, FillRect, GetStockObject, GetWorldTransform, IntersectClipRect, LineTo,
+    MoveToEx, PolyBezierTo, Rectangle, RestoreDC, RoundRect, SaveDC, SelectObject, SetBkMode,
+    SetGraphicsMode, SetPolyFillMode, SetTextAlign, SetTextColor, SetWorldTransform,
+    StrokeAndFillPath, StrokePath, AC_SRC_ALPHA, AC_SRC_OVER, ALTERNATE, BITMAPINFO,
+    BITMAPINFOHEADER, BI_RGB, BLENDFUNCTION, BS_SOLID, CLEARTYPE_QUALITY, CLIP_DEFAULT_PRECIS,
+    DEFAULT_CHARSET, DEFAULT_PITCH, DIB_RGB_COLORS, ETO_GLYPH_INDEX, GM_ADVANCED, HBITMAP, HDC,
+    HGDIOBJ, LOGBRUSH, NULL_BRUSH, NULL_PEN, OUT_DEFAULT_PRECIS, PS_ENDCAP_FLAT, PS_GEOMETRIC,
+    PS_JOIN_MITER, PS_SOLID, PS_USERSTYLE, TA_BASELINE, TA_CENTER, TA_LEFT, TA_RIGHT, TRANSPARENT,
+    WINDING, XFORM,
+};
+#[cfg(target_os = "windows")]
+use windows::Win32::Graphics::Imaging::{
+    CLSID_WICImagingFactory, GUID_WICPixelFormat32bppPBGRA, IWICFormatConverter,
+    IWICImagingFactory, WICBitmapDitherTypeNone, WICBitmapPaletteTypeCustom,
+    WICDecodeMetadataCacheOnLoad,
+};
+#[cfg(target_os = "windows")]
+use windows::Win32::System::Com::{
+    CoCreateInstance, CoInitializeEx, CLSCTX_INPROC_SERVER, COINIT_MULTITHREADED,
 };
 
 // ---------------------------------------------------------------------------
@@ -101,18 +124,42 @@ use windows::Win32::Graphics::Gdi::{
 // by paint-metal — duplicated here so paint-vm-gdi has no dependency on
 // paint-metal.
 
-/// Parse a hex colour string to RGBA floats in the range 0.0–1.0.
+/// Parse a CSS colour string to RGBA floats in the range 0.0–1.0.
 ///
 /// Supported formats:
 /// - `"#rrggbb"`   → (r, g, b, 1.0)
 /// - `"#rrggbbaa"` → (r, g, b, a)
 /// - `"#rgb"`      → expanded to `#rrggbb`
+/// - `"rgb(r,g,b)"` / `"rgba(r,g,b,a)"`
 /// - `"transparent"` / anything else → (0.0, 0.0, 0.0, 0.0)
 ///
 /// Returns `(0.0, 0.0, 0.0, 1.0)` for unrecognised non-transparent input.
-fn parse_hex_color(s: &str) -> (f64, f64, f64, f64) {
-    if s == "transparent" {
+fn parse_css_color(s: &str) -> (f64, f64, f64, f64) {
+    let s = s.trim();
+    if s == "transparent" || s == "none" {
         return (0.0, 0.0, 0.0, 0.0);
+    }
+    if let Some(inner) = s.strip_prefix("rgba(").and_then(|v| v.strip_suffix(')')) {
+        let parts: Vec<&str> = inner.split(',').map(str::trim).collect();
+        if parts.len() == 4 {
+            return (
+                parse_css_channel(parts[0]),
+                parse_css_channel(parts[1]),
+                parse_css_channel(parts[2]),
+                parts[3].parse::<f64>().unwrap_or(1.0).clamp(0.0, 1.0),
+            );
+        }
+    }
+    if let Some(inner) = s.strip_prefix("rgb(").and_then(|v| v.strip_suffix(')')) {
+        let parts: Vec<&str> = inner.split(',').map(str::trim).collect();
+        if parts.len() == 3 {
+            return (
+                parse_css_channel(parts[0]),
+                parse_css_channel(parts[1]),
+                parse_css_channel(parts[2]),
+                1.0,
+            );
+        }
     }
     let hex = s.trim_start_matches('#');
     let hex = if hex.len() == 3 {
@@ -140,6 +187,149 @@ fn parse_hex_color(s: &str) -> (f64, f64, f64, f64) {
     (r, g, b, a)
 }
 
+fn parse_css_channel(s: &str) -> f64 {
+    s.parse::<f64>().unwrap_or(0.0).clamp(0.0, 255.0) / 255.0
+}
+
+fn parse_hex_color(s: &str) -> (f64, f64, f64, f64) {
+    parse_css_color(s)
+}
+
+#[cfg(target_os = "windows")]
+#[derive(Clone, Debug)]
+struct GdiFontSpec {
+    family: String,
+    weight: i32,
+    italic: bool,
+}
+
+#[cfg(target_os = "windows")]
+fn font_spec_for_ref(font_ref: &str) -> GdiFontSpec {
+    if let Some(spec) = parse_directwrite_font_ref(font_ref) {
+        return spec;
+    }
+    if let Some(spec) = parse_canvas_font_ref(font_ref) {
+        return spec;
+    }
+    GdiFontSpec {
+        family: "Segoe UI".to_string(),
+        weight: 400,
+        italic: false,
+    }
+}
+
+#[cfg(target_os = "windows")]
+fn font_spec_for_optional_ref(font_ref: Option<&String>) -> GdiFontSpec {
+    match font_ref {
+        Some(font_ref) => font_spec_for_ref(font_ref),
+        None => GdiFontSpec {
+            family: "Segoe UI".to_string(),
+            weight: 400,
+            italic: false,
+        },
+    }
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn create_hfont(spec: &GdiFontSpec, font_size: f64) -> windows::Win32::Graphics::Gdi::HFONT {
+    let height = -(font_size.max(1.0).round() as i32);
+    let family_w = wide_null(&spec.family);
+    CreateFontW(
+        height,
+        0,
+        0,
+        0,
+        spec.weight,
+        spec.italic as u32,
+        0,
+        0,
+        DEFAULT_CHARSET.0 as u32,
+        OUT_DEFAULT_PRECIS.0 as u32,
+        CLIP_DEFAULT_PRECIS.0 as u32,
+        CLEARTYPE_QUALITY.0 as u32,
+        DEFAULT_PITCH.0 as u32,
+        PCWSTR(family_w.as_ptr()),
+    )
+}
+
+#[cfg(target_os = "windows")]
+fn parse_directwrite_font_ref(font_ref: &str) -> Option<GdiFontSpec> {
+    let body = font_ref.strip_prefix("directwrite:")?;
+    let (family_part, rest) = body.split_once('@')?;
+    let mut weight = 400i32;
+    let mut italic = false;
+    for part in rest.split(';').skip(1) {
+        if let Some(value) = part.strip_prefix("w=") {
+            weight = value.parse().unwrap_or(weight);
+        } else if let Some(value) = part.strip_prefix("style=") {
+            italic = matches!(value, "italic" | "oblique");
+        }
+    }
+    Some(GdiFontSpec {
+        family: map_font_family(&unescape_ref_component(family_part)),
+        weight,
+        italic,
+    })
+}
+
+#[cfg(target_os = "windows")]
+fn parse_canvas_font_ref(font_ref: &str) -> Option<GdiFontSpec> {
+    let body = font_ref.strip_prefix("canvas:")?;
+    let (family_part, rest) = body.split_once('@')?;
+    let mut weight = 400i32;
+    let mut italic = false;
+    let parts: Vec<&str> = rest.split(':').collect();
+    if let Some(value) = parts.get(1) {
+        weight = value.parse().unwrap_or(weight);
+    }
+    if let Some(value) = parts.get(2) {
+        italic = matches!((*value).trim(), "italic" | "oblique");
+    }
+    Some(GdiFontSpec {
+        family: map_font_family(family_part),
+        weight,
+        italic,
+    })
+}
+
+#[cfg(target_os = "windows")]
+fn map_font_family(family: &str) -> String {
+    match family.trim().to_ascii_lowercase().as_str() {
+        "system-ui" | "ui-sans-serif" => "Segoe UI".to_string(),
+        other => {
+            if other.is_empty() {
+                "Segoe UI".to_string()
+            } else {
+                family.trim().to_string()
+            }
+        }
+    }
+}
+
+#[cfg(target_os = "windows")]
+fn unescape_ref_component(s: &str) -> String {
+    let mut out = String::with_capacity(s.len());
+    let bytes = s.as_bytes();
+    let mut i = 0;
+    while i < bytes.len() {
+        if bytes[i] == b'%' && i + 2 < bytes.len() {
+            if let Ok(v) = u8::from_str_radix(&s[i + 1..i + 3], 16) {
+                out.push(v as char);
+                i += 3;
+                continue;
+            }
+        }
+        out.push(bytes[i] as char);
+        i += 1;
+    }
+    out
+}
+
+#[cfg(target_os = "windows")]
+fn wide_null(s: &str) -> Vec<u16> {
+    s.encode_utf16().chain(std::iter::once(0)).collect()
+}
+
 /// Convert RGBA floats (0.0–1.0) to a Win32 COLORREF (0x00BBGGRR).
 ///
 /// GDI's COLORREF stores colours as a 32-bit integer with the format:
@@ -162,6 +352,518 @@ fn color_to_colorref(r: f64, g: f64, b: f64) -> u32 {
     ri | (gi << 8) | (bi << 16)
 }
 
+#[cfg(target_os = "windows")]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum RenderMode {
+    Normal,
+    Coverage,
+}
+
+#[cfg(target_os = "windows")]
+fn parse_colorref_for_mode(
+    s: &str,
+    mode: RenderMode,
+) -> Option<windows::Win32::Foundation::COLORREF> {
+    let (r, g, b, a) = parse_hex_color(s);
+    if a == 0.0 {
+        return None;
+    }
+    let (r, g, b) = match mode {
+        RenderMode::Normal => (r, g, b),
+        RenderMode::Coverage => (1.0, 1.0, 1.0),
+    };
+    Some(windows::Win32::Foundation::COLORREF(color_to_colorref(
+        r, g, b,
+    )))
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn create_pen_for_stroke(
+    colorref: windows::Win32::Foundation::COLORREF,
+    width: Option<f64>,
+    dash: Option<&[f64]>,
+) -> windows::Win32::Graphics::Gdi::HPEN {
+    let width_px = width.unwrap_or(1.0).max(1.0).round() as u32;
+    if let Some(pattern) = dash.filter(|pattern| !pattern.is_empty()) {
+        let styles: Vec<u32> = pattern
+            .iter()
+            .map(|value| value.max(1.0).round() as u32)
+            .collect();
+        let brush = LOGBRUSH {
+            lbStyle: BS_SOLID,
+            lbColor: colorref,
+            lbHatch: 0,
+        };
+        ExtCreatePen(
+            windows::Win32::Graphics::Gdi::PEN_STYLE(
+                PS_GEOMETRIC.0 | PS_USERSTYLE.0 | PS_ENDCAP_FLAT.0 | PS_JOIN_MITER.0,
+            ),
+            width_px,
+            &brush,
+            Some(&styles),
+        )
+    } else {
+        CreatePen(PS_SOLID, width_px as i32, colorref)
+    }
+}
+
+#[cfg(target_os = "windows")]
+struct GdiSurface {
+    hdc: HDC,
+    hbitmap: HBITMAP,
+    old_bitmap: HGDIOBJ,
+    bits_ptr: *mut u8,
+    width: u32,
+    height: u32,
+}
+
+#[cfg(target_os = "windows")]
+impl GdiSurface {
+    fn byte_len(&self) -> usize {
+        self.width as usize * self.height as usize * 4
+    }
+
+    unsafe fn pixels(&self) -> &[u8] {
+        std::slice::from_raw_parts(self.bits_ptr, self.byte_len())
+    }
+
+    unsafe fn pixels_mut(&mut self) -> &mut [u8] {
+        std::slice::from_raw_parts_mut(self.bits_ptr, self.byte_len())
+    }
+}
+
+#[cfg(target_os = "windows")]
+impl Drop for GdiSurface {
+    fn drop(&mut self) {
+        unsafe {
+            let _ = SelectObject(self.hdc, self.old_bitmap);
+            let _ = DeleteObject(self.hbitmap);
+            let _ = DeleteDC(self.hdc);
+        }
+    }
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn create_surface(width: u32, height: u32) -> Option<GdiSurface> {
+    if width == 0 || height == 0 {
+        return None;
+    }
+    let hdc = CreateCompatibleDC(None);
+    if hdc.is_invalid() {
+        return None;
+    }
+
+    let bmi = BITMAPINFO {
+        bmiHeader: BITMAPINFOHEADER {
+            biSize: std::mem::size_of::<BITMAPINFOHEADER>() as u32,
+            biWidth: width as i32,
+            biHeight: -(height as i32),
+            biPlanes: 1,
+            biBitCount: 32,
+            biCompression: BI_RGB.0 as u32,
+            biSizeImage: 0,
+            biXPelsPerMeter: 0,
+            biYPelsPerMeter: 0,
+            biClrUsed: 0,
+            biClrImportant: 0,
+        },
+        bmiColors: [Default::default()],
+    };
+
+    let mut bits_ptr: *mut std::ffi::c_void = std::ptr::null_mut();
+    let Ok(hbitmap) = CreateDIBSection(hdc, &bmi, DIB_RGB_COLORS, &mut bits_ptr, None, 0) else {
+        let _ = DeleteDC(hdc);
+        return None;
+    };
+    if bits_ptr.is_null() {
+        let _ = DeleteObject(hbitmap);
+        let _ = DeleteDC(hdc);
+        return None;
+    }
+    let old_bitmap = SelectObject(hdc, hbitmap);
+    Some(GdiSurface {
+        hdc,
+        hbitmap,
+        old_bitmap,
+        bits_ptr: bits_ptr as *mut u8,
+        width,
+        height,
+    })
+}
+
+#[cfg(target_os = "windows")]
+fn rgba_to_pbgra_bytes(rgba: &[u8]) -> Vec<u8> {
+    let mut pbgra = Vec::with_capacity(rgba.len());
+    for pixel in rgba.chunks_exact(4) {
+        let a = pixel[3] as u16;
+        pbgra.push(((pixel[2] as u16 * a + 127) / 255) as u8);
+        pbgra.push(((pixel[1] as u16 * a + 127) / 255) as u8);
+        pbgra.push(((pixel[0] as u16 * a + 127) / 255) as u8);
+        pbgra.push(pixel[3]);
+    }
+    pbgra
+}
+
+#[cfg(target_os = "windows")]
+fn percent_decode_component(text: &str) -> String {
+    fn hex_value(byte: u8) -> Option<u8> {
+        match byte {
+            b'0'..=b'9' => Some(byte - b'0'),
+            b'a'..=b'f' => Some(byte - b'a' + 10),
+            b'A'..=b'F' => Some(byte - b'A' + 10),
+            _ => None,
+        }
+    }
+
+    let bytes = text.as_bytes();
+    let mut out = Vec::with_capacity(bytes.len());
+    let mut i = 0;
+    while i < bytes.len() {
+        if bytes[i] == b'%' && i + 2 < bytes.len() {
+            if let (Some(hi), Some(lo)) = (hex_value(bytes[i + 1]), hex_value(bytes[i + 2])) {
+                out.push((hi << 4) | lo);
+                i += 3;
+                continue;
+            }
+        }
+        out.push(bytes[i]);
+        i += 1;
+    }
+    String::from_utf8_lossy(&out).into_owned()
+}
+
+#[cfg(target_os = "windows")]
+fn resolve_image_uri_path(uri: &str) -> Option<String> {
+    if let Some(path) = uri.strip_prefix("file:///") {
+        return Some(percent_decode_component(path));
+    }
+    if let Some(path) = uri.strip_prefix("file://") {
+        return Some(format!(
+            r"\\{}",
+            percent_decode_component(path).replace('/', "\\")
+        ));
+    }
+    if uri.contains("://") {
+        return None;
+    }
+    Some(uri.to_string())
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn decode_uri_to_pbgra(uri: &str) -> Option<(u32, u32, Vec<u8>)> {
+    const GENERIC_READ_ACCESS: u32 = 0x8000_0000;
+
+    let path = resolve_image_uri_path(uri)?;
+    let _ = CoInitializeEx(None, COINIT_MULTITHREADED);
+    let factory: IWICImagingFactory =
+        CoCreateInstance(&CLSID_WICImagingFactory, None, CLSCTX_INPROC_SERVER).ok()?;
+    let wide = wide_null(&path);
+    let decoder = factory
+        .CreateDecoderFromFilename(
+            PCWSTR(wide.as_ptr()),
+            None,
+            GENERIC_ACCESS_RIGHTS(GENERIC_READ_ACCESS),
+            WICDecodeMetadataCacheOnLoad,
+        )
+        .ok()?;
+    let frame = decoder.GetFrame(0).ok()?;
+    let converter: IWICFormatConverter = factory.CreateFormatConverter().ok()?;
+    converter
+        .Initialize(
+            &frame,
+            &GUID_WICPixelFormat32bppPBGRA,
+            WICBitmapDitherTypeNone,
+            None,
+            0.0,
+            WICBitmapPaletteTypeCustom,
+        )
+        .ok()?;
+    let mut width = 0;
+    let mut height = 0;
+    converter.GetSize(&mut width, &mut height).ok()?;
+    let stride = width.checked_mul(4)?;
+    let mut pixels = vec![0u8; stride as usize * height as usize];
+    converter
+        .CopyPixels(std::ptr::null(), stride, &mut pixels)
+        .ok()?;
+    Some((width, height, pixels))
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn alpha_blend_surface(
+    dest_hdc: HDC,
+    src_surface: &GdiSurface,
+    dest_x: i32,
+    dest_y: i32,
+    dest_width: i32,
+    dest_height: i32,
+    opacity: Option<f64>,
+) {
+    let alpha = (opacity.unwrap_or(1.0).clamp(0.0, 1.0) * 255.0).round() as u8;
+    if alpha == 0 || dest_width <= 0 || dest_height <= 0 {
+        return;
+    }
+    let blend = BLENDFUNCTION {
+        BlendOp: AC_SRC_OVER as u8,
+        BlendFlags: 0,
+        SourceConstantAlpha: alpha,
+        AlphaFormat: AC_SRC_ALPHA as u8,
+    };
+    let _ = AlphaBlend(
+        dest_hdc,
+        dest_x,
+        dest_y,
+        dest_width,
+        dest_height,
+        src_surface.hdc,
+        0,
+        0,
+        src_surface.width as i32,
+        src_surface.height as i32,
+        blend,
+    );
+}
+
+#[cfg(target_os = "windows")]
+fn is_identity_transform(transform: Option<&Transform2D>) -> bool {
+    transform.is_none_or(|t| {
+        (t[0] - 1.0).abs() <= f64::EPSILON
+            && t[1].abs() <= f64::EPSILON
+            && t[2].abs() <= f64::EPSILON
+            && (t[3] - 1.0).abs() <= f64::EPSILON
+            && t[4].abs() <= f64::EPSILON
+            && t[5].abs() <= f64::EPSILON
+    })
+}
+
+#[cfg(target_os = "windows")]
+fn xform_identity() -> XFORM {
+    XFORM {
+        eM11: 1.0,
+        eM12: 0.0,
+        eM21: 0.0,
+        eM22: 1.0,
+        eDx: 0.0,
+        eDy: 0.0,
+    }
+}
+
+#[cfg(target_os = "windows")]
+fn xform_from_transform(transform: &Transform2D) -> XFORM {
+    XFORM {
+        eM11: transform[0] as f32,
+        eM12: transform[1] as f32,
+        eM21: transform[2] as f32,
+        eM22: transform[3] as f32,
+        eDx: transform[4] as f32,
+        eDy: transform[5] as f32,
+    }
+}
+
+#[cfg(target_os = "windows")]
+fn multiply_xform(a: XFORM, b: XFORM) -> XFORM {
+    XFORM {
+        eM11: a.eM11 * b.eM11 + a.eM12 * b.eM21,
+        eM12: a.eM11 * b.eM12 + a.eM12 * b.eM22,
+        eM21: a.eM21 * b.eM11 + a.eM22 * b.eM21,
+        eM22: a.eM21 * b.eM12 + a.eM22 * b.eM22,
+        eDx: a.eDx * b.eM11 + a.eDy * b.eM21 + b.eDx,
+        eDy: a.eDx * b.eM12 + a.eDy * b.eM22 + b.eDy,
+    }
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn with_transform<F>(hdc: HDC, transform: Option<&Transform2D>, f: F)
+where
+    F: FnOnce(),
+{
+    if is_identity_transform(transform) {
+        f();
+        return;
+    }
+    let saved = SaveDC(hdc);
+    let _ = SetGraphicsMode(hdc, GM_ADVANCED);
+    let mut current = xform_identity();
+    let _ = GetWorldTransform(hdc, &mut current);
+    let combined = multiply_xform(current, xform_from_transform(transform.unwrap()));
+    let _ = SetWorldTransform(hdc, &combined);
+    f();
+    let _ = RestoreDC(hdc, saved);
+}
+
+#[cfg(target_os = "windows")]
+fn pbgra_to_white_alpha(pbgra: &mut [u8]) {
+    for pixel in pbgra.chunks_exact_mut(4) {
+        let alpha = pixel[3];
+        pixel[0] = alpha;
+        pixel[1] = alpha;
+        pixel[2] = alpha;
+    }
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn finalize_surface_alpha(color_surface: &mut GdiSurface, coverage_surface: &GdiSurface) {
+    let coverage = coverage_surface.pixels();
+    let color = color_surface.pixels_mut();
+    for (color_px, coverage_px) in color.chunks_exact_mut(4).zip(coverage.chunks_exact(4)) {
+        let alpha = coverage_px[0].max(coverage_px[1]).max(coverage_px[2]);
+        color_px[3] = alpha;
+        color_px[0] = color_px[0].min(alpha);
+        color_px[1] = color_px[1].min(alpha);
+        color_px[2] = color_px[2].min(alpha);
+    }
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn render_offscreen_composited(
+    dest_hdc: HDC,
+    instructions: &[PaintInstruction],
+    scene_width: u32,
+    scene_height: u32,
+    transform: Option<&Transform2D>,
+    opacity: f64,
+    mode: RenderMode,
+) {
+    if scene_width == 0 || scene_height == 0 || opacity <= 0.0 {
+        return;
+    }
+    let Some(mut color_surface) = create_surface(scene_width, scene_height) else {
+        return;
+    };
+    let Some(mut coverage_surface) = create_surface(scene_width, scene_height) else {
+        return;
+    };
+
+    color_surface.pixels_mut().fill(0);
+    coverage_surface.pixels_mut().fill(0);
+
+    with_transform(color_surface.hdc, transform, || {
+        render_instructions(
+            color_surface.hdc,
+            instructions,
+            scene_width,
+            scene_height,
+            mode,
+        );
+    });
+    with_transform(coverage_surface.hdc, transform, || {
+        render_instructions(
+            coverage_surface.hdc,
+            instructions,
+            scene_width,
+            scene_height,
+            RenderMode::Coverage,
+        );
+    });
+
+    finalize_surface_alpha(&mut color_surface, &coverage_surface);
+    alpha_blend_surface(
+        dest_hdc,
+        &color_surface,
+        0,
+        0,
+        scene_width as i32,
+        scene_height as i32,
+        Some(opacity),
+    );
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn render_group(
+    hdc: HDC,
+    group: &PaintGroup,
+    scene_width: u32,
+    scene_height: u32,
+    mode: RenderMode,
+) {
+    let opacity = group.opacity.unwrap_or(1.0).clamp(0.0, 1.0);
+    if opacity <= 0.0 {
+        return;
+    }
+    if opacity < 1.0 {
+        render_offscreen_composited(
+            hdc,
+            &group.children,
+            scene_width,
+            scene_height,
+            group.transform.as_ref(),
+            opacity,
+            mode,
+        );
+    } else {
+        with_transform(hdc, group.transform.as_ref(), || {
+            render_instructions(hdc, &group.children, scene_width, scene_height, mode);
+        });
+    }
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn render_layer(
+    hdc: HDC,
+    layer: &PaintLayer,
+    scene_width: u32,
+    scene_height: u32,
+    mode: RenderMode,
+) {
+    let opacity = layer.opacity.unwrap_or(1.0).clamp(0.0, 1.0);
+    if opacity <= 0.0 {
+        return;
+    }
+    render_offscreen_composited(
+        hdc,
+        &layer.children,
+        scene_width,
+        scene_height,
+        layer.transform.as_ref(),
+        opacity,
+        mode,
+    );
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn render_image(hdc: HDC, image: &PaintImage, mode: RenderMode) {
+    if image.width <= 0.0 || image.height <= 0.0 {
+        return;
+    }
+
+    let decoded = match &image.src {
+        ImageSrc::Pixels(pixels) => {
+            if pixels.width == 0 || pixels.height == 0 {
+                return;
+            }
+            if pixels.data.len() < pixels.width as usize * pixels.height as usize * 4 {
+                return;
+            }
+            Some((
+                pixels.width,
+                pixels.height,
+                rgba_to_pbgra_bytes(&pixels.data),
+            ))
+        }
+        ImageSrc::Uri(uri) => decode_uri_to_pbgra(uri),
+    };
+    let Some((src_width, src_height, pbgra)) = decoded else {
+        return;
+    };
+    let mut pbgra = pbgra;
+    if mode == RenderMode::Coverage {
+        pbgra_to_white_alpha(&mut pbgra);
+    }
+    let Some(mut surface) = create_surface(src_width, src_height) else {
+        return;
+    };
+    surface.pixels_mut().copy_from_slice(&pbgra);
+    alpha_blend_surface(
+        hdc,
+        &surface,
+        image.x.round() as i32,
+        image.y.round() as i32,
+        image.width.round() as i32,
+        image.height.round() as i32,
+        image.opacity,
+    );
+}
+
 // ---------------------------------------------------------------------------
 // Instruction dispatch — PaintInstruction → GDI calls
 // ---------------------------------------------------------------------------
@@ -172,71 +874,206 @@ fn color_to_colorref(r: f64, g: f64, b: f64) -> u32 {
 
 /// Render a list of [`PaintInstruction`]s into a GDI device context.
 ///
-/// This is the core dispatch loop. It recursively handles Group and Clip
-/// nodes, and dispatches Rect and Line to their respective GDI calls.
+/// This is the core dispatch loop. It recursively handles Group, Layer, and
+/// Clip nodes and dispatches each primitive to its corresponding GDI call.
 /// Unimplemented instruction types are silently skipped (same as paint-metal).
 #[cfg(target_os = "windows")]
 unsafe fn render_instructions(
     hdc: windows::Win32::Graphics::Gdi::HDC,
     instructions: &[PaintInstruction],
+    scene_width: u32,
+    scene_height: u32,
+    mode: RenderMode,
 ) {
     for instr in instructions {
         match instr {
-            PaintInstruction::Rect(rect) => render_rect(hdc, rect),
-            PaintInstruction::Line(line) => render_line(hdc, line),
+            PaintInstruction::Rect(rect) => render_rect(hdc, rect, mode),
+            PaintInstruction::Line(line) => render_line(hdc, line, mode),
             PaintInstruction::Group(group) => {
-                // PaintGroup: render children directly into the same DC.
-                // Transform support (SetWorldTransform) is deferred — for
-                // barcodes, groups are used purely for logical containment.
-                render_instructions(hdc, &group.children);
+                render_group(hdc, group, scene_width, scene_height, mode)
             }
-            PaintInstruction::Clip(clip) => render_clip(hdc, clip),
+            PaintInstruction::Clip(clip) => render_clip(hdc, clip, scene_width, scene_height, mode),
+            PaintInstruction::Text(text) => render_text(hdc, text, mode),
+            PaintInstruction::GlyphRun(run) => render_glyph_run(hdc, run, mode),
+            PaintInstruction::Ellipse(ellipse) => render_ellipse(hdc, ellipse, mode),
+            PaintInstruction::Path(path) => render_path(hdc, path, mode),
+            PaintInstruction::Layer(layer) => {
+                render_layer(hdc, layer, scene_width, scene_height, mode)
+            }
+            PaintInstruction::Image(image) => render_image(hdc, image, mode),
             // Planned but not yet implemented — same skip list as paint-metal:
-            PaintInstruction::GlyphRun(_)
-            | PaintInstruction::Ellipse(_)
-            | PaintInstruction::Path(_)
-            | PaintInstruction::Layer(_)
-            | PaintInstruction::Gradient(_)
-            | PaintInstruction::Image(_) => {
+            PaintInstruction::Gradient(_) => {
                 // No-op for now. Barcodes only need Rect/Line/Group/Clip.
             }
         }
     }
 }
 
-/// Render a [`PaintRect`] as a filled rectangle.
-///
-/// GDI's `FillRect` takes a `RECT` (left, top, right, bottom) and an HBRUSH.
-/// The rectangle is filled but NOT outlined — there is no stroke. If the rect
-/// has no fill or is transparent, we skip it entirely.
-///
-/// ```text
-/// (left, top) ────── (right, top)
-///      │                    │
-///      │   FillRect area    │
-///      │                    │
-/// (left, bottom) ── (right, bottom)
-/// ```
 #[cfg(target_os = "windows")]
-unsafe fn render_rect(hdc: windows::Win32::Graphics::Gdi::HDC, rect: &PaintRect) {
-    let fill = rect.fill.as_deref().unwrap_or("transparent");
-    let (r, g, b, a) = parse_hex_color(fill);
-    if a == 0.0 {
-        return; // Fully transparent — nothing to draw.
+unsafe fn render_text(hdc: HDC, text: &PaintText, mode: RenderMode) {
+    if text.text.is_empty() {
+        return;
     }
 
-    let colorref = color_to_colorref(r, g, b);
-    let brush = CreateSolidBrush(windows::Win32::Foundation::COLORREF(colorref));
+    let fill = text.fill.as_deref().unwrap_or("#000000");
+    let (r, g, b, a) = parse_hex_color(fill);
+    if a == 0.0 {
+        return;
+    }
 
-    let gdi_rect = RECT {
-        left: rect.x.round() as i32,
-        top: rect.y.round() as i32,
-        right: (rect.x + rect.width).round() as i32,
-        bottom: (rect.y + rect.height).round() as i32,
+    let spec = font_spec_for_optional_ref(text.font_ref.as_ref());
+    let hfont = create_hfont(&spec, text.font_size);
+    if hfont.is_invalid() {
+        return;
+    }
+
+    let utf16: Vec<u16> = text.text.encode_utf16().collect();
+    let align_flag = match text.text_align.as_ref().unwrap_or(&TextAlign::Left) {
+        TextAlign::Left => TA_LEFT,
+        TextAlign::Center => TA_CENTER,
+        TextAlign::Right => TA_RIGHT,
     };
 
-    let _ = FillRect(hdc, &gdi_rect, brush);
-    let _ = DeleteObject(brush);
+    let old_font = SelectObject(hdc, hfont);
+    let _ = SetTextAlign(
+        hdc,
+        windows::Win32::Graphics::Gdi::TEXT_ALIGN_OPTIONS(align_flag.0 | TA_BASELINE.0),
+    );
+    let _ = SetBkMode(hdc, TRANSPARENT);
+    let (r, g, b) = match mode {
+        RenderMode::Normal => (r, g, b),
+        RenderMode::Coverage => (1.0, 1.0, 1.0),
+    };
+    let colorref = color_to_colorref(r, g, b);
+    let _ = SetTextColor(hdc, windows::Win32::Foundation::COLORREF(colorref));
+    let _ = ExtTextOutW(
+        hdc,
+        text.x.round() as i32,
+        text.y.round() as i32,
+        Default::default(),
+        None,
+        PCWSTR(utf16.as_ptr()),
+        utf16.len() as u32,
+        None,
+    );
+    let _ = SelectObject(hdc, old_font);
+    let _ = DeleteObject(hfont);
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn render_glyph_run(
+    hdc: windows::Win32::Graphics::Gdi::HDC,
+    run: &PaintGlyphRun,
+    mode: RenderMode,
+) {
+    if run.glyphs.is_empty() {
+        return;
+    }
+
+    let fill = run.fill.as_deref().unwrap_or("#000000");
+    let (r, g, b, a) = parse_hex_color(fill);
+    if a == 0.0 {
+        return;
+    }
+
+    let spec = font_spec_for_ref(&run.font_ref);
+    let hfont = create_hfont(&spec, run.font_size);
+    if hfont.is_invalid() {
+        return;
+    }
+
+    let old_font = SelectObject(hdc, hfont);
+    let _ = SetTextAlign(
+        hdc,
+        windows::Win32::Graphics::Gdi::TEXT_ALIGN_OPTIONS(TA_LEFT.0 | TA_BASELINE.0),
+    );
+    let _ = SetBkMode(hdc, TRANSPARENT);
+    let (r, g, b) = match mode {
+        RenderMode::Normal => (r, g, b),
+        RenderMode::Coverage => (1.0, 1.0, 1.0),
+    };
+    let colorref = color_to_colorref(r, g, b);
+    let _ = SetTextColor(hdc, windows::Win32::Foundation::COLORREF(colorref));
+
+    for glyph in &run.glyphs {
+        let Ok(glyph_index) = u16::try_from(glyph.glyph_id) else {
+            continue;
+        };
+        let glyphs = [glyph_index];
+        let _ = ExtTextOutW(
+            hdc,
+            glyph.x.round() as i32,
+            glyph.y.round() as i32,
+            ETO_GLYPH_INDEX,
+            None,
+            PCWSTR(glyphs.as_ptr()),
+            glyphs.len() as u32,
+            None,
+        );
+    }
+
+    let _ = SelectObject(hdc, old_font);
+    let _ = DeleteObject(hfont);
+}
+
+/// Render a [`PaintRect`] as a filled rectangle.
+///
+/// GDI's `Rectangle` / `RoundRect` can paint fill and stroke in one pass using
+/// the currently selected brush and pen.
+#[cfg(target_os = "windows")]
+unsafe fn render_rect(hdc: windows::Win32::Graphics::Gdi::HDC, rect: &PaintRect, mode: RenderMode) {
+    let fill_color = rect
+        .fill
+        .as_deref()
+        .and_then(|fill| parse_colorref_for_mode(fill, mode));
+    let stroke_color = rect
+        .stroke
+        .as_deref()
+        .and_then(|stroke| parse_colorref_for_mode(stroke, mode));
+    if fill_color.is_none() && stroke_color.is_none() {
+        return;
+    }
+
+    let mut owned_brush = None;
+    let brush_obj = if let Some(colorref) = fill_color {
+        let brush = CreateSolidBrush(colorref);
+        owned_brush = Some(brush);
+        brush.into()
+    } else {
+        GetStockObject(NULL_BRUSH)
+    };
+
+    let mut owned_pen = None;
+    let pen_obj = if let Some(colorref) = stroke_color {
+        let pen = create_pen_for_stroke(colorref, rect.stroke_width, rect.stroke_dash.as_deref());
+        owned_pen = Some(pen);
+        pen.into()
+    } else {
+        GetStockObject(NULL_PEN)
+    };
+
+    let old_pen = SelectObject(hdc, pen_obj);
+    let old_brush = SelectObject(hdc, brush_obj);
+    let left = rect.x.round() as i32;
+    let top = rect.y.round() as i32;
+    let right = (rect.x + rect.width).round() as i32;
+    let bottom = (rect.y + rect.height).round() as i32;
+    let radius = rect.corner_radius.unwrap_or(0.0).max(0.0).round() as i32;
+    if radius > 0 {
+        let diameter = (radius * 2).max(1);
+        let _ = RoundRect(hdc, left, top, right, bottom, diameter, diameter);
+    } else {
+        let _ = Rectangle(hdc, left, top, right, bottom);
+    }
+
+    let _ = SelectObject(hdc, old_pen);
+    let _ = SelectObject(hdc, old_brush);
+    if let Some(pen) = owned_pen {
+        let _ = DeleteObject(pen);
+    }
+    if let Some(brush) = owned_brush {
+        let _ = DeleteObject(brush);
+    }
 }
 
 /// Render a [`PaintLine`] using GDI's pen + MoveToEx/LineTo.
@@ -254,15 +1091,11 @@ unsafe fn render_rect(hdc: windows::Win32::Graphics::Gdi::HDC, rect: &PaintRect)
 ///         ← pen width →
 /// ```
 #[cfg(target_os = "windows")]
-unsafe fn render_line(hdc: windows::Win32::Graphics::Gdi::HDC, line: &PaintLine) {
-    let (r, g, b, a) = parse_hex_color(&line.stroke);
-    if a == 0.0 {
+unsafe fn render_line(hdc: windows::Win32::Graphics::Gdi::HDC, line: &PaintLine, mode: RenderMode) {
+    let Some(colorref) = parse_colorref_for_mode(&line.stroke, mode) else {
         return;
-    }
-
-    let colorref = color_to_colorref(r, g, b);
-    let width = line.stroke_width.unwrap_or(1.0).round() as i32;
-    let pen = CreatePen(PS_SOLID, width, windows::Win32::Foundation::COLORREF(colorref));
+    };
+    let pen = create_pen_for_stroke(colorref, line.stroke_width, line.stroke_dash.as_deref());
 
     let old_pen = SelectObject(hdc, pen);
     let null_brush = GetStockObject(NULL_BRUSH);
@@ -276,6 +1109,223 @@ unsafe fn render_line(hdc: windows::Win32::Graphics::Gdi::HDC, line: &PaintLine)
     let _ = DeleteObject(pen);
 }
 
+#[cfg(target_os = "windows")]
+unsafe fn render_ellipse(
+    hdc: windows::Win32::Graphics::Gdi::HDC,
+    ellipse: &PaintEllipse,
+    mode: RenderMode,
+) {
+    let fill_color = ellipse
+        .fill
+        .as_deref()
+        .and_then(|fill| parse_colorref_for_mode(fill, mode));
+    let stroke_color = ellipse
+        .stroke
+        .as_deref()
+        .and_then(|stroke| parse_colorref_for_mode(stroke, mode));
+    if fill_color.is_none() && stroke_color.is_none() {
+        return;
+    }
+
+    let mut owned_brush = None;
+    let brush_obj = if let Some(colorref) = fill_color {
+        let brush = CreateSolidBrush(colorref);
+        owned_brush = Some(brush);
+        brush.into()
+    } else {
+        GetStockObject(NULL_BRUSH)
+    };
+
+    let mut owned_pen = None;
+    let pen_obj = if let Some(colorref) = stroke_color {
+        let pen = create_pen_for_stroke(
+            colorref,
+            ellipse.stroke_width,
+            ellipse.stroke_dash.as_deref(),
+        );
+        owned_pen = Some(pen);
+        pen.into()
+    } else {
+        GetStockObject(NULL_PEN)
+    };
+
+    let old_pen = SelectObject(hdc, pen_obj);
+    let old_brush = SelectObject(hdc, brush_obj);
+    let left = (ellipse.cx - ellipse.rx).round() as i32;
+    let top = (ellipse.cy - ellipse.ry).round() as i32;
+    let right = (ellipse.cx + ellipse.rx).round() as i32;
+    let bottom = (ellipse.cy + ellipse.ry).round() as i32;
+    let _ = Ellipse(hdc, left, top, right, bottom);
+
+    let _ = SelectObject(hdc, old_pen);
+    let _ = SelectObject(hdc, old_brush);
+    if let Some(pen) = owned_pen {
+        let _ = DeleteObject(pen);
+    }
+    if let Some(brush) = owned_brush {
+        let _ = DeleteObject(brush);
+    }
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn render_path(hdc: windows::Win32::Graphics::Gdi::HDC, path: &PaintPath, mode: RenderMode) {
+    let fill_color = path
+        .fill
+        .as_deref()
+        .and_then(|fill| parse_colorref_for_mode(fill, mode));
+    let stroke_color = path
+        .stroke
+        .as_deref()
+        .and_then(|stroke| parse_colorref_for_mode(stroke, mode));
+    if fill_color.is_none() && stroke_color.is_none() {
+        return;
+    }
+
+    let saved = SaveDC(hdc);
+    let old_fill_mode = SetPolyFillMode(
+        hdc,
+        match path.fill_rule.as_ref().unwrap_or(&FillRule::NonZero) {
+            FillRule::EvenOdd => ALTERNATE,
+            FillRule::NonZero => WINDING,
+        },
+    );
+
+    let mut owned_brush = None;
+    let brush_obj = if let Some(colorref) = fill_color {
+        let brush = CreateSolidBrush(colorref);
+        owned_brush = Some(brush);
+        brush.into()
+    } else {
+        GetStockObject(NULL_BRUSH)
+    };
+
+    let mut owned_pen = None;
+    let pen_obj = if let Some(colorref) = stroke_color {
+        let pen = create_pen_for_stroke(colorref, path.stroke_width, path.stroke_dash.as_deref());
+        owned_pen = Some(pen);
+        pen.into()
+    } else {
+        GetStockObject(NULL_PEN)
+    };
+
+    let _ = SelectObject(hdc, pen_obj);
+    let _ = SelectObject(hdc, brush_obj);
+    let _ = BeginPath(hdc);
+
+    let mut current: Option<(f64, f64)> = None;
+    let mut subpath_start: Option<(f64, f64)> = None;
+    for command in &path.commands {
+        match *command {
+            PathCommand::MoveTo { x, y } => {
+                let _ = MoveToEx(hdc, x.round() as i32, y.round() as i32, None);
+                current = Some((x, y));
+                subpath_start = Some((x, y));
+            }
+            PathCommand::LineTo { x, y } => {
+                if current.is_none() {
+                    let _ = MoveToEx(hdc, x.round() as i32, y.round() as i32, None);
+                    subpath_start = Some((x, y));
+                } else {
+                    let _ = LineTo(hdc, x.round() as i32, y.round() as i32);
+                }
+                current = Some((x, y));
+            }
+            PathCommand::QuadTo { cx, cy, x, y } => {
+                let (sx, sy) = current.unwrap_or((x, y));
+                let cubic = [
+                    POINT {
+                        x: (sx + (2.0 / 3.0) * (cx - sx)).round() as i32,
+                        y: (sy + (2.0 / 3.0) * (cy - sy)).round() as i32,
+                    },
+                    POINT {
+                        x: (x + (2.0 / 3.0) * (cx - x)).round() as i32,
+                        y: (y + (2.0 / 3.0) * (cy - y)).round() as i32,
+                    },
+                    POINT {
+                        x: x.round() as i32,
+                        y: y.round() as i32,
+                    },
+                ];
+                if current.is_none() {
+                    let _ = MoveToEx(hdc, sx.round() as i32, sy.round() as i32, None);
+                    subpath_start = Some((sx, sy));
+                }
+                let _ = PolyBezierTo(hdc, &cubic);
+                current = Some((x, y));
+            }
+            PathCommand::CubicTo {
+                cx1,
+                cy1,
+                cx2,
+                cy2,
+                x,
+                y,
+            } => {
+                if current.is_none() {
+                    let _ = MoveToEx(hdc, x.round() as i32, y.round() as i32, None);
+                    subpath_start = Some((x, y));
+                } else {
+                    let points = [
+                        POINT {
+                            x: cx1.round() as i32,
+                            y: cy1.round() as i32,
+                        },
+                        POINT {
+                            x: cx2.round() as i32,
+                            y: cy2.round() as i32,
+                        },
+                        POINT {
+                            x: x.round() as i32,
+                            y: y.round() as i32,
+                        },
+                    ];
+                    let _ = PolyBezierTo(hdc, &points);
+                }
+                current = Some((x, y));
+            }
+            PathCommand::ArcTo { x, y, .. } => {
+                if current.is_none() {
+                    let _ = MoveToEx(hdc, x.round() as i32, y.round() as i32, None);
+                    subpath_start = Some((x, y));
+                } else {
+                    let _ = LineTo(hdc, x.round() as i32, y.round() as i32);
+                }
+                current = Some((x, y));
+            }
+            PathCommand::Close => {
+                let _ = CloseFigure(hdc);
+                current = subpath_start;
+            }
+        }
+    }
+
+    let _ = EndPath(hdc);
+    match (fill_color.is_some(), stroke_color.is_some()) {
+        (true, true) => {
+            let _ = StrokeAndFillPath(hdc);
+        }
+        (true, false) => {
+            let _ = FillPath(hdc);
+        }
+        (false, true) => {
+            let _ = StrokePath(hdc);
+        }
+        (false, false) => {}
+    }
+
+    let _ = SetPolyFillMode(
+        hdc,
+        windows::Win32::Graphics::Gdi::CREATE_POLYGON_RGN_MODE(old_fill_mode),
+    );
+    let _ = RestoreDC(hdc, saved);
+    if let Some(pen) = owned_pen {
+        let _ = DeleteObject(pen);
+    }
+    if let Some(brush) = owned_brush {
+        let _ = DeleteObject(brush);
+    }
+}
+
 /// Render a [`PaintClip`] using GDI's clip region save/restore.
 ///
 /// GDI clip flow:
@@ -286,7 +1336,13 @@ unsafe fn render_line(hdc: windows::Win32::Graphics::Gdi::HDC, line: &PaintLine)
 ///
 /// This correctly nests: inner clips intersect with outer clips.
 #[cfg(target_os = "windows")]
-unsafe fn render_clip(hdc: windows::Win32::Graphics::Gdi::HDC, clip: &PaintClip) {
+unsafe fn render_clip(
+    hdc: windows::Win32::Graphics::Gdi::HDC,
+    clip: &PaintClip,
+    scene_width: u32,
+    scene_height: u32,
+    mode: RenderMode,
+) {
     let _ = SaveDC(hdc);
 
     let _ = IntersectClipRect(
@@ -297,7 +1353,7 @@ unsafe fn render_clip(hdc: windows::Win32::Graphics::Gdi::HDC, clip: &PaintClip)
         (clip.y + clip.height).round() as i32,
     );
 
-    render_instructions(hdc, &clip.children);
+    render_instructions(hdc, &clip.children, scene_width, scene_height, mode);
 
     let _ = RestoreDC(hdc, -1);
 }
@@ -416,10 +1472,7 @@ unsafe fn render_unsafe(scene: &PaintScene, width: u32, height: u32) -> PixelCon
 
     let mut bits_ptr: *mut std::ffi::c_void = std::ptr::null_mut();
     let hbitmap = CreateDIBSection(hdc, &bmi, DIB_RGB_COLORS, &mut bits_ptr, None, 0);
-    assert!(
-        !hbitmap.is_err(),
-        "Failed to create DIBSection"
-    );
+    assert!(!hbitmap.is_err(), "Failed to create DIBSection");
     let hbitmap = hbitmap.unwrap();
     assert!(!bits_ptr.is_null(), "DIBSection pixel pointer is null");
 
@@ -440,7 +1493,7 @@ unsafe fn render_unsafe(scene: &PaintScene, width: u32, height: u32) -> PixelCon
     let _ = DeleteObject(bg_brush);
 
     // ── Step 5: Dispatch PaintInstructions ────────────────────────────────
-    render_instructions(hdc, &scene.instructions);
+    render_instructions(hdc, &scene.instructions, width, height, RenderMode::Normal);
 
     // ── Step 6: Read back pixels (BGRA → RGBA) ──────────────────────────
     //
@@ -472,7 +1525,34 @@ unsafe fn render_unsafe(scene: &PaintScene, width: u32, height: u32) -> PixelCon
 #[cfg(test)]
 mod tests {
     use super::*;
-    use paint_instructions::{PaintBase, PaintGroup, PaintInstruction, PaintRect, PaintScene};
+    use image_codec_bmp::encode_bmp;
+    use paint_codec_png::encode_png;
+    use paint_instructions::{
+        ImageSrc, PaintBase, PaintEllipse, PaintGroup, PaintImage, PaintInstruction, PaintLayer,
+        PaintPath, PaintRect, PaintScene, PaintText, PathCommand, TextAlign,
+    };
+
+    #[cfg(target_os = "windows")]
+    fn dark_pixel_bounds(pixels: &PixelContainer) -> Option<(u32, u32, u32, u32)> {
+        let mut min_x = u32::MAX;
+        let mut min_y = u32::MAX;
+        let mut max_x = 0;
+        let mut max_y = 0;
+        let mut found = false;
+        for y in 0..pixels.height {
+            for x in 0..pixels.width {
+                let (r, g, b, a) = pixels.pixel_at(x, y);
+                if a > 0 && (r < 245 || g < 245 || b < 245) {
+                    found = true;
+                    min_x = min_x.min(x);
+                    min_y = min_y.min(y);
+                    max_x = max_x.max(x);
+                    max_y = max_y.max(y);
+                }
+            }
+        }
+        found.then_some((min_x, min_y, max_x, max_y))
+    }
 
     #[test]
     fn version_exists() {
@@ -507,8 +1587,35 @@ mod tests {
     }
 
     #[test]
+    fn parse_css_rgb() {
+        let (r, g, b, a) = parse_hex_color("rgb(255, 128, 0)");
+        assert!((r - 1.0).abs() < 0.01);
+        assert!((g - (128.0 / 255.0)).abs() < 0.01);
+        assert!((b - 0.0).abs() < 0.01);
+        assert!((a - 1.0).abs() < 0.01);
+    }
+
+    #[test]
+    fn parse_css_rgba() {
+        let (r, g, b, a) = parse_hex_color("rgba(0, 255, 0, 0.5)");
+        assert!((r - 0.0).abs() < 0.01);
+        assert!((g - 1.0).abs() < 0.01);
+        assert!((b - 0.0).abs() < 0.01);
+        assert!((a - 0.5).abs() < 0.01);
+    }
+
+    #[test]
     fn parse_transparent() {
         let (r, g, b, a) = parse_hex_color("transparent");
+        assert_eq!(a, 0.0);
+        assert_eq!(r, 0.0);
+        assert_eq!(g, 0.0);
+        assert_eq!(b, 0.0);
+    }
+
+    #[test]
+    fn parse_none_as_transparent() {
+        let (r, g, b, a) = parse_hex_color("none");
         assert_eq!(a, 0.0);
         assert_eq!(r, 0.0);
         assert_eq!(g, 0.0);
@@ -558,9 +1665,11 @@ mod tests {
     #[test]
     fn render_red_rect_on_white() {
         let mut scene = PaintScene::new(100.0, 100.0);
-        scene.instructions.push(PaintInstruction::Rect(
-            PaintRect::filled(10.0, 10.0, 80.0, 80.0, "#ff0000"),
-        ));
+        scene
+            .instructions
+            .push(PaintInstruction::Rect(PaintRect::filled(
+                10.0, 10.0, 80.0, 80.0, "#ff0000",
+            )));
 
         let pixels = render(&scene);
         assert_eq!(pixels.width, 100);
@@ -596,14 +1705,33 @@ mod tests {
         assert_eq!(b, 0, "green bg: b should be 0");
     }
 
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn render_css_rgb_background() {
+        let mut scene = PaintScene::new(50.0, 50.0);
+        scene.background = "rgb(255, 255, 255)".to_string();
+
+        let pixels = render(&scene);
+        let (r, g, b, _a) = pixels.pixel_at(25, 25);
+        assert_eq!(r, 255, "rgb bg: r should be 255");
+        assert_eq!(g, 255, "rgb bg: g should be 255");
+        assert_eq!(b, 255, "rgb bg: b should be 255");
+    }
+
     /// Transparent rects should not draw anything — background shows through.
     #[cfg(target_os = "windows")]
     #[test]
     fn transparent_rect_is_invisible() {
         let mut scene = PaintScene::new(50.0, 50.0);
-        scene.instructions.push(PaintInstruction::Rect(
-            PaintRect::filled(0.0, 0.0, 50.0, 50.0, "transparent"),
-        ));
+        scene
+            .instructions
+            .push(PaintInstruction::Rect(PaintRect::filled(
+                0.0,
+                0.0,
+                50.0,
+                50.0,
+                "transparent",
+            )));
 
         let pixels = render(&scene);
         // Should be white background everywhere
@@ -611,6 +1739,347 @@ mod tests {
         assert_eq!(r, 255);
         assert_eq!(g, 255);
         assert_eq!(b, 255);
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn rect_stroke_and_fill_render() {
+        let mut scene = PaintScene::new(80.0, 80.0);
+        scene.instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: 10.0,
+            y: 10.0,
+            width: 60.0,
+            height: 60.0,
+            fill: Some("#00ff00".to_string()),
+            stroke: Some("#ff0000".to_string()),
+            stroke_width: Some(2.0),
+            corner_radius: Some(8.0),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let pixels = render(&scene);
+        let (r, g, b, _a) = pixels.pixel_at(40, 40);
+        assert_eq!(r, 0, "center should preserve fill color");
+        assert_eq!(g, 255);
+        assert_eq!(b, 0);
+
+        let (r, g, b, _a) = pixels.pixel_at(10, 40);
+        assert_eq!(r, 255, "left edge should draw stroke");
+        assert_eq!(g, 0);
+        assert_eq!(b, 0);
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn ellipse_fill_and_stroke_render() {
+        let mut scene = PaintScene::new(80.0, 80.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Ellipse(PaintEllipse {
+                base: PaintBase::default(),
+                cx: 40.0,
+                cy: 40.0,
+                rx: 20.0,
+                ry: 15.0,
+                fill: Some("#0000ff".to_string()),
+                stroke: Some("#ff0000".to_string()),
+                stroke_width: Some(2.0),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }));
+
+        let pixels = render(&scene);
+        let (r, g, b, _a) = pixels.pixel_at(40, 40);
+        assert_eq!(r, 0, "ellipse center should keep fill color");
+        assert_eq!(g, 0);
+        assert_eq!(b, 255);
+
+        let (r, g, b, _a) = pixels.pixel_at(40, 25);
+        assert_eq!(r, 255, "ellipse top edge should draw stroke");
+        assert_eq!(g, 0);
+        assert_eq!(b, 0);
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn stroked_path_with_none_fill_keeps_interior_clear() {
+        let mut scene = PaintScene::new(50.0, 50.0);
+        scene.instructions.push(PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: 25.0, y: 5.0 },
+                PathCommand::LineTo { x: 45.0, y: 45.0 },
+                PathCommand::LineTo { x: 5.0, y: 45.0 },
+                PathCommand::Close,
+            ],
+            fill: Some("none".to_string()),
+            fill_rule: None,
+            stroke: Some("#000000".to_string()),
+            stroke_width: Some(1.0),
+            stroke_cap: None,
+            stroke_join: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let pixels = render(&scene);
+        let (r, g, b, _a) = pixels.pixel_at(25, 25);
+        assert_eq!(r, 255, "triangle interior should remain background");
+        assert_eq!(g, 255);
+        assert_eq!(b, 255);
+
+        let (r, g, b, _a) = pixels.pixel_at(25, 5);
+        assert_eq!(r, 0, "triangle edge should draw stroke");
+        assert_eq!(g, 0);
+        assert_eq!(b, 0);
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn dashed_path_renders_gaps() {
+        let mut scene = PaintScene::new(100.0, 40.0);
+        scene.instructions.push(PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: 5.0, y: 20.0 },
+                PathCommand::LineTo { x: 95.0, y: 20.0 },
+            ],
+            fill: Some("none".to_string()),
+            fill_rule: None,
+            stroke: Some("#000000".to_string()),
+            stroke_width: Some(1.0),
+            stroke_cap: None,
+            stroke_join: None,
+            stroke_dash: Some(vec![4.0, 4.0]),
+            stroke_dash_offset: None,
+        }));
+
+        let pixels = render(&scene);
+        let (r, g, b, _a) = pixels.pixel_at(7, 20);
+        assert_eq!(r, 0, "first dash should draw");
+        assert_eq!(g, 0);
+        assert_eq!(b, 0);
+
+        let (r, g, b, _a) = pixels.pixel_at(11, 20);
+        assert_eq!(r, 255, "gap between dashes should stay background");
+        assert_eq!(g, 255);
+        assert_eq!(b, 255);
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn pixel_image_renders_and_blends_with_opacity() {
+        let mut source = PixelContainer::new(2, 2);
+        source.fill(0, 0, 0, 0);
+        source.set_pixel(0, 0, 255, 0, 0, 255);
+        source.set_pixel(1, 0, 0, 255, 0, 255);
+        source.set_pixel(0, 1, 0, 0, 255, 255);
+        source.set_pixel(1, 1, 255, 255, 0, 255);
+
+        let mut scene = PaintScene::new(40.0, 40.0);
+        scene.instructions.push(PaintInstruction::Image(PaintImage {
+            base: PaintBase::default(),
+            x: 0.0,
+            y: 0.0,
+            width: 40.0,
+            height: 40.0,
+            src: ImageSrc::Pixels(source.clone()),
+            opacity: None,
+        }));
+
+        let pixels = render(&scene);
+        let (r, g, b, _a) = pixels.pixel_at(10, 10);
+        assert_eq!((r, g, b), (255, 0, 0), "top-left quadrant should be red");
+        let (r, g, b, _a) = pixels.pixel_at(30, 10);
+        assert_eq!((r, g, b), (0, 255, 0), "top-right quadrant should be green");
+        let (r, g, b, _a) = pixels.pixel_at(10, 30);
+        assert_eq!(
+            (r, g, b),
+            (0, 0, 255),
+            "bottom-left quadrant should be blue"
+        );
+        let (r, g, b, _a) = pixels.pixel_at(30, 30);
+        assert_eq!(
+            (r, g, b),
+            (255, 255, 0),
+            "bottom-right quadrant should be yellow"
+        );
+
+        let mut translucent_scene = PaintScene::new(20.0, 20.0);
+        translucent_scene
+            .instructions
+            .push(PaintInstruction::Image(PaintImage {
+                base: PaintBase::default(),
+                x: 0.0,
+                y: 0.0,
+                width: 20.0,
+                height: 20.0,
+                src: ImageSrc::Pixels(PixelContainer::from_data(1, 1, vec![255, 0, 0, 255])),
+                opacity: Some(0.5),
+            }));
+        let blended = render(&translucent_scene);
+        let (r, g, b, _a) = blended.pixel_at(10, 10);
+        assert!(r >= 250, "half-opacity red over white should keep red high");
+        assert!(
+            (120..=136).contains(&g),
+            "half-opacity red should soften green"
+        );
+        assert!(
+            (120..=136).contains(&b),
+            "half-opacity red should soften blue"
+        );
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn file_uri_image_loads_via_wic() {
+        let mut source = PixelContainer::new(2, 1);
+        source.set_pixel(0, 0, 255, 0, 255, 255);
+        source.set_pixel(1, 0, 0, 255, 255, 255);
+        let bmp = encode_bmp(&source);
+
+        let mut path = std::env::temp_dir();
+        let unique = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        path.push(format!("paint-vm-gdi-image-{unique}.bmp"));
+        std::fs::write(&path, bmp).unwrap();
+
+        let uri = format!("file:///{}", path.display().to_string().replace('\\', "/"));
+        let mut scene = PaintScene::new(40.0, 20.0);
+        scene.instructions.push(PaintInstruction::Image(PaintImage {
+            base: PaintBase::default(),
+            x: 0.0,
+            y: 0.0,
+            width: 40.0,
+            height: 20.0,
+            src: ImageSrc::Uri(uri),
+            opacity: None,
+        }));
+
+        let pixels = render(&scene);
+        let _ = std::fs::remove_file(&path);
+
+        let (r, g, b, _a) = pixels.pixel_at(10, 10);
+        assert_eq!((r, g, b), (255, 0, 255), "left half should be magenta");
+        let (r, g, b, _a) = pixels.pixel_at(30, 10);
+        assert_eq!((r, g, b), (0, 255, 255), "right half should be cyan");
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn png_file_uri_with_percent_encoding_loads_via_wic() {
+        let mut source = PixelContainer::new(1, 1);
+        source.set_pixel(0, 0, 12, 34, 56, 255);
+        let png = encode_png(&source);
+
+        let mut path = std::env::temp_dir();
+        let unique = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        path.push(format!("paint vm gdi png {unique}.png"));
+        std::fs::write(&path, png).unwrap();
+
+        let path_for_uri = path
+            .display()
+            .to_string()
+            .replace('\\', "/")
+            .replace(' ', "%20");
+        let uri = format!("file:///{path_for_uri}");
+        let mut scene = PaintScene::new(8.0, 8.0);
+        scene.instructions.push(PaintInstruction::Image(PaintImage {
+            base: PaintBase::default(),
+            x: 0.0,
+            y: 0.0,
+            width: 8.0,
+            height: 8.0,
+            src: ImageSrc::Uri(uri),
+            opacity: None,
+        }));
+
+        let pixels = render(&scene);
+        let _ = std::fs::remove_file(&path);
+
+        let (r, g, b, _a) = pixels.pixel_at(4, 4);
+        assert_eq!(
+            (r, g, b),
+            (12, 34, 56),
+            "png file URI should decode via WIC"
+        );
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn render_text_draws_visible_pixels() {
+        let mut scene = PaintScene::new(160.0, 80.0);
+        scene.instructions.push(PaintInstruction::Text(PaintText {
+            base: PaintBase::default(),
+            x: 16.0,
+            y: 52.0,
+            text: "Paint VM".to_string(),
+            font_ref: Some("directwrite:Segoe UI@windows;w=400;style=normal".to_string()),
+            font_size: 28.0,
+            fill: Some("#000000".to_string()),
+            text_align: Some(TextAlign::Left),
+        }));
+
+        let pixels = render(&scene);
+        let Some((min_x, min_y, max_x, max_y)) = dark_pixel_bounds(&pixels) else {
+            panic!("expected text rendering to produce visible pixels");
+        };
+        assert!(max_x > min_x, "text should occupy width");
+        assert!(max_y > min_y, "text should occupy height");
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn text_alignment_changes_anchor_position() {
+        fn render_bounds(alignment: TextAlign) -> (u32, u32) {
+            let mut scene = PaintScene::new(220.0, 80.0);
+            scene.instructions.push(PaintInstruction::Text(PaintText {
+                base: PaintBase::default(),
+                x: 110.0,
+                y: 52.0,
+                text: "Align".to_string(),
+                font_ref: Some("directwrite:Segoe UI@windows;w=400;style=normal".to_string()),
+                font_size: 28.0,
+                fill: Some("#000000".to_string()),
+                text_align: Some(alignment),
+            }));
+            let pixels = render(&scene);
+            let (min_x, _, max_x, _) =
+                dark_pixel_bounds(&pixels).expect("alignment case should draw pixels");
+            (min_x, max_x)
+        }
+
+        let (left_min, left_max) = render_bounds(TextAlign::Left);
+        let (center_min, center_max) = render_bounds(TextAlign::Center);
+        let (right_min, right_max) = render_bounds(TextAlign::Right);
+
+        assert!(
+            left_min > center_min,
+            "center alignment should start left of left alignment"
+        );
+        assert!(
+            center_min > right_min,
+            "right alignment should start furthest left"
+        );
+        assert!(
+            left_max >= 110,
+            "left alignment should extend to the right of anchor"
+        );
+        assert!(
+            center_min < 110 && center_max > 110,
+            "center alignment should straddle anchor"
+        );
+        assert!(
+            right_max <= 110,
+            "right alignment should end at or before anchor"
+        );
     }
 
     /// Group should recurse into children and render both rects.
@@ -642,6 +2111,97 @@ mod tests {
         assert_eq!(r, 0, "right half should be blue");
         assert_eq!(g, 0);
         assert_eq!(b, 255);
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn group_opacity_blends_children() {
+        let mut scene = PaintScene::new(20.0, 20.0);
+        scene.instructions.push(PaintInstruction::Group(PaintGroup {
+            base: PaintBase::default(),
+            children: vec![PaintInstruction::Rect(PaintRect::filled(
+                0.0, 0.0, 20.0, 20.0, "#000000",
+            ))],
+            transform: None,
+            opacity: Some(0.5),
+        }));
+
+        let pixels = render(&scene);
+        let (r, g, b, _a) = pixels.pixel_at(10, 10);
+        assert!(
+            (120..=136).contains(&r),
+            "group opacity should blend red over white"
+        );
+        assert!(
+            (120..=136).contains(&g),
+            "group opacity should blend green over white"
+        );
+        assert!(
+            (120..=136).contains(&b),
+            "group opacity should blend blue over white"
+        );
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn group_transform_translates_children() {
+        let mut scene = PaintScene::new(40.0, 30.0);
+        scene.instructions.push(PaintInstruction::Group(PaintGroup {
+            base: PaintBase::default(),
+            children: vec![PaintInstruction::Rect(PaintRect::filled(
+                0.0, 0.0, 10.0, 10.0, "#ff0000",
+            ))],
+            transform: Some([1.0, 0.0, 0.0, 1.0, 20.0, 10.0]),
+            opacity: None,
+        }));
+
+        let pixels = render(&scene);
+        let (r, g, b, _a) = pixels.pixel_at(5, 5);
+        assert_eq!(
+            (r, g, b),
+            (255, 255, 255),
+            "untranslated origin should remain background"
+        );
+        let (r, g, b, _a) = pixels.pixel_at(25, 15);
+        assert_eq!(
+            (r, g, b),
+            (255, 0, 0),
+            "transform should move child geometry"
+        );
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn layer_renders_children_with_opacity_and_transform() {
+        let mut scene = PaintScene::new(50.0, 40.0);
+        scene.instructions.push(PaintInstruction::Layer(PaintLayer {
+            base: PaintBase::default(),
+            children: vec![PaintInstruction::Rect(PaintRect::filled(
+                0.0, 0.0, 12.0, 12.0, "#0000ff",
+            ))],
+            filters: None,
+            blend_mode: None,
+            opacity: Some(0.5),
+            transform: Some([1.0, 0.0, 0.0, 1.0, 24.0, 14.0]),
+        }));
+
+        let pixels = render(&scene);
+        let (r, g, b, _a) = pixels.pixel_at(6, 6);
+        assert_eq!(
+            (r, g, b),
+            (255, 255, 255),
+            "layer should not paint before translation"
+        );
+        let (r, g, b, _a) = pixels.pixel_at(30, 20);
+        assert!(
+            (120..=136).contains(&r),
+            "layer opacity should soften red channel"
+        );
+        assert!(
+            (120..=136).contains(&g),
+            "layer opacity should soften green channel"
+        );
+        assert!(b >= 250, "layer opacity should keep blue channel high");
     }
 
     /// Clip should restrict drawing to the clip rectangle.
@@ -686,9 +2246,15 @@ mod tests {
         // 10 black bars (even indices), each 10px wide, 80px tall
         for i in 0..20u32 {
             if i % 2 == 0 {
-                scene.instructions.push(PaintInstruction::Rect(
-                    PaintRect::filled(i as f64 * 10.0, 0.0, 10.0, 80.0, "#000000"),
-                ));
+                scene
+                    .instructions
+                    .push(PaintInstruction::Rect(PaintRect::filled(
+                        i as f64 * 10.0,
+                        0.0,
+                        10.0,
+                        80.0,
+                        "#000000",
+                    )));
             }
         }
 
@@ -725,13 +2291,15 @@ mod tests {
         for row in 0..4u32 {
             for col in 0..4u32 {
                 if (row + col) % 2 == 0 {
-                    scene.instructions.push(PaintInstruction::Rect(PaintRect::filled(
-                        col as f64 * module_size,
-                        row as f64 * module_size,
-                        module_size,
-                        module_size,
-                        "#000000",
-                    )));
+                    scene
+                        .instructions
+                        .push(PaintInstruction::Rect(PaintRect::filled(
+                            col as f64 * module_size,
+                            row as f64 * module_size,
+                            module_size,
+                            module_size,
+                            "#000000",
+                        )));
                 }
             }
         }
@@ -745,5 +2313,55 @@ mod tests {
         assert_eq!(r, 0, "black module should have r=0");
         assert_eq!(g, 0, "black module should have g=0");
         assert_eq!(b, 0, "black module should have b=0");
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn render_directwrite_glyph_run_draws_text_pixels() {
+        use paint_instructions::{GlyphPosition, PaintGlyphRun};
+        use text_interfaces::{FontQuery, FontResolver, ShapeOptions, TextShaper};
+        use text_native::{NativeResolver, NativeShaper};
+
+        let resolver = NativeResolver::new();
+        let shaper = NativeShaper::new();
+        let handle = resolver.resolve(&FontQuery::named("Segoe UI")).unwrap();
+        let shaped = shaper
+            .shape("Hi", &handle, 32.0, &ShapeOptions::default())
+            .unwrap();
+        let run = &shaped.runs[0];
+
+        let mut x = 12.0;
+        let glyphs: Vec<GlyphPosition> = run
+            .glyphs
+            .iter()
+            .map(|g| {
+                let positioned = GlyphPosition {
+                    glyph_id: g.glyph_id,
+                    x,
+                    y: 46.0,
+                };
+                x += g.x_advance as f64;
+                positioned
+            })
+            .collect();
+
+        let mut scene = PaintScene::new(100.0, 64.0);
+        scene
+            .instructions
+            .push(PaintInstruction::GlyphRun(PaintGlyphRun {
+                base: PaintBase::default(),
+                glyphs,
+                font_ref: run.font_ref.clone(),
+                font_size: 32.0,
+                fill: Some("#000000".to_string()),
+            }));
+
+        let pixels = render(&scene);
+        let dark_pixels = pixels
+            .data
+            .chunks_exact(4)
+            .filter(|px| px[0] < 128 && px[1] < 128 && px[2] < 128 && px[3] > 0)
+            .count();
+        assert!(dark_pixels > 20, "expected visible glyph pixels");
     }
 }

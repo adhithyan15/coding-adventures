@@ -435,7 +435,7 @@ impl NFA {
             self.alphabet.clone(),
             dfa_transitions,
             state_set_name(
-                &state_map
+                state_map
                     .values()
                     .find(|v| {
                         let initial_set: HashSet<String> =

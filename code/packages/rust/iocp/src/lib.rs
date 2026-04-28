@@ -61,12 +61,16 @@ mod imp {
         pub bytes_transferred: u32,
         pub completion_key: usize,
         pub overlapped: *mut Overlapped,
+        pub error: Option<i32>,
     }
 
     #[derive(Debug)]
     pub struct CompletionPort {
         handle: Handle,
     }
+
+    unsafe impl Send for CompletionPort {}
+    unsafe impl Sync for CompletionPort {}
 
     impl CompletionPort {
         pub fn new(concurrency: u32) -> io::Result<Self> {
@@ -136,6 +140,13 @@ mod imp {
                         io::ErrorKind::TimedOut,
                         "IOCP wait timed out",
                     ))
+                } else if !overlapped.is_null() {
+                    Ok(CompletionPacket {
+                        bytes_transferred: bytes,
+                        completion_key: key,
+                        overlapped,
+                        error: error.raw_os_error(),
+                    })
                 } else {
                     Err(error)
                 }
@@ -144,6 +155,7 @@ mod imp {
                     bytes_transferred: bytes,
                     completion_key: key,
                     overlapped,
+                    error: None,
                 })
             }
         }
@@ -175,6 +187,7 @@ mod imp {
             assert_eq!(packet.bytes_transferred, 5);
             assert_eq!(packet.completion_key, 9);
             assert!(packet.overlapped.is_null());
+            assert_eq!(packet.error, None);
         }
     }
 }
@@ -201,6 +214,7 @@ mod imp {
         pub bytes_transferred: u32,
         pub completion_key: usize,
         pub overlapped: *mut Overlapped,
+        pub error: Option<i32>,
     }
 
     #[derive(Debug)]

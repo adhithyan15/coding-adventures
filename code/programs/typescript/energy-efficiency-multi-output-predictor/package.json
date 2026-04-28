@@ -1,0 +1,26 @@
+{
+  "name": "energy-efficiency-multi-output-predictor",
+  "version": "0.1.0",
+  "description": "Multi-output regression example using the UCI Energy Efficiency dataset",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "npx ts-node --transpileOnly src/index.ts",
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "coding-adventures-feature-normalization": "file:../../../packages/typescript/feature-normalization",
+    "coding-adventures-single-layer-network": "file:../../../packages/typescript/single-layer-network",
+    "matrix": "file:../../../packages/typescript/matrix"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

@@ -1,0 +1,17 @@
+[package]
+name = "conduit_native"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+embeddable-http-server = { path = "../../../../rust/embeddable-http-server" }
+http-core = { path = "../../../../rust/http-core" }
+ruby-bridge = { path = "../../../../rust/ruby-bridge" }
+transport-platform = { path = "../../../../rust/transport-platform" }
+web-core = { path = "../../../../rust/web-core" }
+
+[build-dependencies]

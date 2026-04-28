@@ -65,6 +65,7 @@ LP18 Batch C search control and real cut
 LP18 Batch D1 CLP(FD) foundation
 LP18 Batch D2/D3 CLP(FD) arithmetic and all-different
 LP18 Batch D4 CLP(FD) examples and labeling ergonomics
+LP18 Batch D5 CLP(FD) n-ary sum ergonomics
 PR00 Prolog lexer
 ```
 
@@ -265,6 +266,7 @@ CLP(FD) is being delivered in a few sub-batches:
 - D2: arithmetic expression constraints
 - D3: global constraints such as `all_differento`
 - D4: real-world examples, solver ergonomics, and performance tuning
+- D5: modeling ergonomics such as n-ary sums for allocation and scheduling
 
 ## Detailed Batch A Semantics
 
@@ -525,6 +527,23 @@ D4 non-goals:
 - no search strategy API beyond the default smallest-domain labeling heuristic
 - no global-constraint algorithms beyond the current singleton pruning
 
+D5 implementation shape:
+
+- `fd_sumo(terms, total)` constrains a Python sequence or proper logic list of
+  finite-domain terms so their sum equals `total`
+- the sum relation should support concrete totals, finite-domain result
+  variables, and the empty-sum identity where `sum([]) = 0`
+- the propagator may use safe interval pruning for broad domains, while
+  concrete assignments are checked exactly
+- examples should show resource-allocation or scheduling-style models that are
+  much clearer with an n-ary sum than with nested binary `fd_addo` helpers
+
+D5 non-goals:
+
+- no symbolic linear-expression DSL yet
+- no weighted scalar-product API yet
+- no complete subset-sum or pseudo-Boolean propagator
+
 ## PR Sizing Recommendation
 
 Use this implementation sequence:
@@ -536,7 +555,8 @@ PR 3: Batch C - real cut and search control
 PR 4: Batch D1 - CLP(FD) foundation
 PR 5: Batch D2/D3 - arithmetic propagation and all-different
 PR 6: Batch D4 - larger examples and labeling ergonomics
-PR 7+: later CLP(FD) extensions, parser integration, or advanced propagation
+PR 7: Batch D5 - n-ary sum ergonomics
+PR 8+: later CLP(FD) extensions, parser integration, or advanced propagation
 ```
 
 This is the fewest practical set of large PRs without forcing unrelated solver
@@ -568,6 +588,8 @@ Batch-specific tests:
 - Batch D: labeling enumerates only assignments that satisfy all constraints
 - Batch D2/D3: arithmetic constraints prune domains before labeling
 - Batch D2/D3: `all_differento` solves a small Latin-square-style problem
+- Batch D5: `fd_sumo` handles Python sequences, logic lists, result variables,
+  empty sums, and a resource-allocation example
 
 ## Security and Robustness Notes
 
@@ -590,6 +612,6 @@ few big batches rather than many tiny PRs.
 
 Batch A completed the pure metaprogramming loop, Batch B added runtime dynamic
 predicates, Batch C added real cut, and Batch D now covers finite domains,
-arithmetic constraints, all-different, and practical examples. Later CLP(FD)
-work can deepen propagation, add reification, or connect parser syntax onto the
-same Python-first runtime.
+arithmetic constraints, all-different, practical examples, and n-ary sums.
+Later CLP(FD) work can deepen propagation, add reification, or connect parser
+syntax onto the same Python-first runtime.

@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.13.0] - 2026-04-22
+
+### Added
+
+- `fd_sumo(terms, total)` for CLP(FD)-style n-ary sum constraints over Python
+  sequences or proper logic lists
+- domain-pruning tests for concrete totals, result variables, empty sums, and
+  a resource-allocation example that reads like a small planning model
+
 ## [0.12.0] - 2026-04-22
 
 ### Added

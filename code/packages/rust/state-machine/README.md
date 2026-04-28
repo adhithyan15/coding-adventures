@@ -12,6 +12,7 @@ Formal automata from DFA to PDA, implemented in Rust. A port of the Python `stat
 | `minimize` | Hopcroft's DFA minimization algorithm                     |
 | `pda`      | Pushdown Automaton (finite automaton + stack)              |
 | `modal`    | Modal State Machine (multiple DFA sub-machines with mode switching) |
+| `transducer` | Ordered effectful state machine for tokenizer-style runtimes |
 | `definitions` | Format-agnostic typed definitions for export/compiler inputs |
 
 ## Where it fits in the stack
@@ -20,12 +21,14 @@ Formal automata from DFA to PDA, implemented in Rust. A port of the Python `stat
 Layer D10: State Machines
 ├── DFA/NFA          — recognize regular languages (regex, tokenizers)
 ├── PDA              — recognize context-free languages (parsers)
-└── Modal            — context-sensitive tokenization (HTML mode switching)
+├── Modal            — context-sensitive mode switching
+└── Transducer       — emit effects while transitioning (HTML tokenization)
 ```
 
 The 2-bit branch predictor (D02) is a DFA. The CPU pipeline (D04) is a linear DFA.
 Regex engines convert patterns to NFAs, then to DFAs via subset construction.
-Parsers use PDAs. HTML tokenizers use modal state machines.
+Parsers use PDAs. HTML tokenizers use effectful transducers, with modal
+machines available for simpler mode-switching examples.
 
 The `definitions` module is the bridge between hand-built machines and the
 build-time compiler pipeline. It exports deterministic snapshots of DFAs, NFAs,
@@ -94,6 +97,40 @@ definition into `.states.toml` text. Use the sibling
 into a typed definition before calling `DFA::from_definition`,
 `NFA::from_definition`, or `PushdownAutomaton::from_definition`.
 
+## Effectful Transducers
+
+```rust
+use std::collections::HashSet;
+use state_machine::{
+    EffectfulInput, EffectfulMatcher, EffectfulStateMachine, EffectfulTransition,
+};
+
+let mut machine = EffectfulStateMachine::new(
+    HashSet::from(["data".into(), "done".into()]),
+    HashSet::from(["x".into()]),
+    vec![
+        EffectfulTransition::new("data", EffectfulMatcher::Any, "data")
+            .with_effects(&["append_text(current)"]),
+        EffectfulTransition::new("data", EffectfulMatcher::End, "done")
+            .with_effects(&["flush_text", "emit(EOF)"])
+            .consuming(false),
+    ],
+    "data".into(),
+    HashSet::from(["done".into()]),
+).unwrap();
+
+let text = machine.process(EffectfulInput::event("x")).unwrap();
+assert_eq!(text.effects, vec!["append_text(current)".to_string()]);
+
+let eof = machine.process(EffectfulInput::end()).unwrap();
+assert_eq!(eof.effects, vec!["flush_text".to_string(), "emit(EOF)".to_string()]);
+assert_eq!(machine.current_state(), "done");
+```
+
+This is the primitive we use for HTML-shaped tokenizer work: definitions name
+portable effects, while wrapper packages interpret those effects into concrete
+tokens and diagnostics.
+
 ## Building and testing
 
 ```bash
@@ -110,6 +147,8 @@ cargo test -p state-machine -- --nocapture
 - **pda**: 17 unit + 33 integration tests
 - **modal**: 13 unit + 23 integration tests
 - **definitions**: 18 integration tests
+- **transducer**: HTML-tokenizer skeleton and definition round-trip tests
 
 Classic examples tested: turnstile, binary divisibility-by-3, 2-bit branch predictor,
-balanced parentheses PDA, a^n b^n PDA, HTML tokenizer modal machine.
+balanced parentheses PDA, a^n b^n PDA, HTML tokenizer modal machine, and an
+effectful HTML tokenizer skeleton.

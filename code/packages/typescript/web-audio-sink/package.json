@@ -1,0 +1,17 @@
+{
+  "name": "@coding-adventures/web-audio-sink",
+  "version": "0.1.0",
+  "description": "Browser Web Audio sink for mono signed 16-bit PCM buffers",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "node node_modules/typescript/bin/tsc",
+    "test": "node node_modules/typescript/bin/tsc -p tsconfig.test.json && node --test dist-test/tests/web-audio-sink.test.js"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}

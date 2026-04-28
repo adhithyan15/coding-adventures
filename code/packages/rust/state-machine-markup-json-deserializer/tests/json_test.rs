@@ -1,8 +1,8 @@
 use std::collections::{HashMap, HashSet};
 
 use state_machine::{
-    MachineKind, PDATransition, PushdownAutomaton, StateDefinition, StateMachineDefinition,
-    TransitionDefinition, DFA, EPSILON, NFA,
+    MachineKind, MatcherDefinition, PDATransition, PushdownAutomaton, StateDefinition,
+    StateMachineDefinition, TransitionDefinition, DFA, EPSILON, NFA,
 };
 use state_machine_markup_deserializer::StateMachineMarkupError;
 use state_machine_markup_json_deserializer::{
@@ -36,6 +36,58 @@ fn compact_root(states: &str, transitions: &str) -> String {
     format!(
         r#"{{"format":"state-machine/v1","name":"many","kind":"dfa","initial":"q0","alphabet":["a"],"states":[{states}],"transitions":[{transitions}]}}"#
     )
+}
+
+#[test]
+fn json_deserializer_parses_lexer_profile_matchers_and_sections() {
+    let source = r#"{
+  "format": "state-machine/v1",
+  "profile": "lexer/v1",
+  "name": "html-skeleton-lexer",
+  "kind": "transducer",
+  "version": "0.1.0",
+  "runtime_min": "state-machine-tokenizer/0.1",
+  "initial": "data",
+  "done": "done",
+  "includes": [],
+  "tokens": [
+    {"name": "Text", "fields": ["data"]},
+    {"name": "EOF", "fields": []}
+  ],
+  "registers": [
+    {"id": "text_buffer", "type": "string"}
+  ],
+  "inputs": [
+    {"id": "ascii_alpha", "matcher": {"one_of": "abc"}}
+  ],
+  "states": [
+    {"id": "data", "initial": true},
+    {"id": "done", "final": true}
+  ],
+  "transitions": [
+    {"from": "data", "matcher": {"literal": "<"}, "to": "data", "actions": ["append_text(<)"]},
+    {"from": "data", "matcher": {"eof": true}, "to": "done", "actions": ["emit(EOF)"], "consume": false}
+  ],
+  "fixtures": [
+    {"name": "plain", "input": "", "tokens": ["EOF"]}
+  ]
+}"#;
+
+    let definition = from_states_json(source).unwrap();
+
+    assert_eq!(definition.profile.as_deref(), Some("lexer/v1"));
+    assert_eq!(definition.tokens.len(), 2);
+    assert_eq!(definition.inputs.len(), 1);
+    assert_eq!(definition.fixtures.len(), 1);
+    assert_eq!(
+        definition.transitions[0].matcher,
+        Some(MatcherDefinition::Literal("<".to_string()))
+    );
+    assert_eq!(definition.transitions[1].on, None);
+    assert_eq!(
+        definition.transitions[1].matcher,
+        Some(MatcherDefinition::Eof)
+    );
 }
 
 #[test]
@@ -418,7 +470,7 @@ fn json_deserializer_rejects_type_errors_and_missing_fields() {
 }"#
         )
         .unwrap_err(),
-        StateMachineMarkupJsonError::MissingField { .. }
+        StateMachineMarkupJsonError::Validation(_)
     ));
     assert!(matches!(
         from_states_json(
@@ -585,9 +637,13 @@ fn manual_definition_serializes_then_deserializes_flags() {
     definition.transitions = vec![TransitionDefinition {
         from: "q0".to_string(),
         on: Some("a".to_string()),
+        matcher: None,
         to: vec!["q0".to_string()],
+        guard: None,
         stack_pop: Some("$".to_string()),
         stack_push: vec!["$".to_string()],
+        actions: Vec::new(),
+        consume: true,
     }];
 
     let parsed = from_states_json(&definition.to_states_json()).unwrap();

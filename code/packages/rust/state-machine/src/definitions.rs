@@ -49,6 +49,82 @@ impl MachineKind {
     }
 }
 
+/// Named token shape declared by a lexer-profile definition.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct TokenDefinition {
+    /// Stable token identifier.
+    pub name: String,
+    /// Named fields carried by this token.
+    pub fields: Vec<String>,
+}
+
+impl TokenDefinition {
+    /// Create a token declaration with no fields.
+    pub fn new(name: impl Into<String>) -> Self {
+        Self {
+            name: name.into(),
+            fields: Vec::new(),
+        }
+    }
+}
+
+/// Typed matcher object used by lexer-profile definitions.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum MatcherDefinition {
+    /// Match one literal event or code point.
+    Literal(String),
+    /// Match end-of-input.
+    Eof,
+    /// Match any non-EOF input.
+    Anything,
+    /// Match one named input class.
+    Class(String),
+    /// Match any character from a one-of set.
+    OneOf(String),
+    /// Match any character in the inclusive range.
+    Range { start: String, end: String },
+    /// Match any member of the listed named classes.
+    AnyOfClasses(Vec<String>),
+    /// Match only if the nested matcher succeeds without consuming input.
+    Lookahead(Box<MatcherDefinition>),
+}
+
+/// Named reusable input matcher.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct InputDefinition {
+    /// Stable input class identifier.
+    pub id: String,
+    /// Matcher definition lowered from the authoring surface.
+    pub matcher: MatcherDefinition,
+}
+
+/// Named runtime storage slot declared by a lexer-profile definition.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RegisterDefinition {
+    /// Stable register identifier.
+    pub id: String,
+    /// Portable register type name.
+    pub type_name: String,
+}
+
+/// Named guard declaration used by transitions.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct GuardDefinition {
+    /// Stable guard identifier.
+    pub id: String,
+}
+
+/// Build-time fixture embedded in a lexer-profile definition.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct FixtureDefinition {
+    /// Stable fixture identifier.
+    pub name: String,
+    /// Input text to feed into the lexer.
+    pub input: String,
+    /// Expected token summaries.
+    pub tokens: Vec<String>,
+}
+
 /// A state entry in the typed definition layer.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct StateDefinition {
@@ -84,12 +160,28 @@ pub struct TransitionDefinition {
     pub from: String,
     /// Input event. `None` represents epsilon in the in-memory model.
     pub on: Option<String>,
+    /// Typed matcher lowered from profile-specific authoring formats.
+    pub matcher: Option<MatcherDefinition>,
     /// Target states. DFA/PDA transitions use one target; NFA may use many.
     pub to: Vec<String>,
+    /// Optional named guard call.
+    pub guard: Option<String>,
     /// PDA stack symbol that must be read/popped.
     pub stack_pop: Option<String>,
     /// PDA stack symbols to push, ordered deepest-to-topmost.
     pub stack_push: Vec<String>,
+    /// Portable effect/action identifiers executed when this transition fires.
+    ///
+    /// Recognition-only machines such as DFA, NFA, and PDA definitions leave
+    /// this empty.  Tokenizers and other transducers use it to name effects
+    /// like `flush_text`, `append_tag_name(current)`, or `emit_current_token`
+    /// without embedding host-language callbacks in the definition layer.
+    pub actions: Vec<String>,
+    /// Whether this transition consumes the current input symbol.
+    ///
+    /// Traditional automata consume by default.  Tokenizer-style machines can
+    /// set this to `false` for EOF, lookahead, or reconsume-style transitions.
+    pub consume: bool,
 }
 
 impl TransitionDefinition {
@@ -98,9 +190,13 @@ impl TransitionDefinition {
         Self {
             from: from.into(),
             on,
+            matcher: None,
             to,
+            guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: true,
         }
     }
 }
@@ -110,16 +206,36 @@ impl TransitionDefinition {
 pub struct StateMachineDefinition {
     /// Human-readable machine name.
     pub name: String,
+    /// Optional authoring artifact version.
+    pub version: Option<String>,
+    /// Optional profile identifier layered on top of the base format.
+    pub profile: Option<String>,
     /// Machine family.
     pub kind: MachineKind,
+    /// Minimum runtime capability string needed by this definition.
+    pub runtime_min: Option<String>,
     /// Input alphabet.
     pub alphabet: Vec<String>,
     /// Stack alphabet for PDA definitions.
     pub stack_alphabet: Vec<String>,
     /// Initial state.
     pub initial: Option<String>,
+    /// Terminal EOF state for lexer-profile documents.
+    pub done: Option<String>,
     /// Initial stack marker for PDA definitions.
     pub initial_stack: Option<String>,
+    /// Build-time include paths.
+    pub includes: Vec<String>,
+    /// Token declarations for lexer-profile documents.
+    pub tokens: Vec<TokenDefinition>,
+    /// Named input classes for lexer-profile documents.
+    pub inputs: Vec<InputDefinition>,
+    /// Register declarations for lexer-profile documents.
+    pub registers: Vec<RegisterDefinition>,
+    /// Guard declarations shared by transitions.
+    pub guards: Vec<GuardDefinition>,
+    /// Inline fixtures for build-time smoke tests.
+    pub fixtures: Vec<FixtureDefinition>,
     /// State declarations.
     pub states: Vec<StateDefinition>,
     /// Transition declarations.
@@ -131,11 +247,21 @@ impl StateMachineDefinition {
     pub fn new(name: impl Into<String>, kind: MachineKind) -> Self {
         Self {
             name: name.into(),
+            version: None,
+            profile: None,
             kind,
+            runtime_min: None,
             alphabet: Vec::new(),
             stack_alphabet: Vec::new(),
             initial: None,
+            done: None,
             initial_stack: None,
+            includes: Vec::new(),
+            tokens: Vec::new(),
+            inputs: Vec::new(),
+            registers: Vec::new(),
+            guards: Vec::new(),
+            fixtures: Vec::new(),
             states: Vec::new(),
             transitions: Vec::new(),
         }

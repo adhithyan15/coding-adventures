@@ -33,6 +33,18 @@ All notable changes to this package will be documented in this file.
 - Executed Phase 6 direct local labels and `goto` statements through the
   unstructured IR-to-WASM lowering path, covering forward jumps, backward
   jumps, and terminal labels.
+- Executed Phase 7a local switch selections and conditional designational
+  `goto` forms through the WASM path, including conditional switch entries.
+- Executed Phase 7b direct nonlocal block `goto` statements through the WASM
+  path with frame restoration before later block entry.
+- Executed chained assignments, ALGOL-left-associative exponentiation with
+  integer exponents, and branch-selected conditional expressions through the
+  full WASM path.
+- Accepted trailing and repeated semicolons in ALGOL block and compound
+  statement lists.
+- Added a convergence golden fixture that combines conditional expressions,
+  exponentiation, chained assignment, by-name array summation, real arithmetic,
+  and output in one end-to-end program.
 
 ## [0.1.0] - 2026-04-20
 

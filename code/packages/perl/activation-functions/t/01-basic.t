@@ -4,10 +4,12 @@ use Test2::V0;
 use POSIX qw();
 
 use CodingAdventures::ActivationFunctions qw(
+    linear              linear_derivative
     sigmoid             sigmoid_derivative
     relu                relu_derivative
     tanh_activation     tanh_derivative
     leaky_relu          leaky_relu_derivative
+    softplus            softplus_derivative
     elu                 elu_derivative
     softmax             softmax_derivative
 );
@@ -44,6 +46,22 @@ sub array_sum {
     $s += $_ for @_;
     return $s;
 }
+
+# ===========================================================================
+# LINEAR
+# ===========================================================================
+
+subtest 'linear' => sub {
+    ok near(linear(-3), -3.0), 'linear(-3) = -3';
+    ok near(linear(0), 0.0), 'linear(0) = 0';
+    ok near(linear(5), 5.0), 'linear(5) = 5';
+};
+
+subtest 'linear_derivative' => sub {
+    for my $x (-3, 0, 5) {
+        ok near(linear_derivative($x), 1.0), "linear_derivative($x) = 1";
+    }
+};
 
 # ===========================================================================
 # SIGMOID
@@ -166,6 +184,27 @@ subtest 'leaky_relu_derivative' => sub {
     my $fd = fd_deriv(sub { leaky_relu($_[0]) }, 2);
     ok near(leaky_relu_derivative(2), $fd, 1e-4),
         'matches finite difference at x=2';
+};
+
+# ===========================================================================
+# SOFTPLUS
+# ===========================================================================
+
+subtest 'softplus' => sub {
+    ok near(softplus(0), log(2.0)), 'softplus(0) = log(2)';
+    ok near(softplus(1), 1.3132616875182228), 'softplus(1) golden value';
+    ok near(softplus(-1), 0.31326168751822286), 'softplus(-1) golden value';
+    ok softplus(1000) > 999.0, 'softplus remains stable for large positives';
+};
+
+subtest 'softplus_derivative' => sub {
+    ok near(softplus_derivative(0), 0.5), 'softplus_derivative(0) = 0.5';
+    ok near(softplus_derivative(1), sigmoid(1)), 'softplus derivative equals sigmoid at x=1';
+    ok near(softplus_derivative(-1), sigmoid(-1)), 'softplus derivative equals sigmoid at x=-1';
+
+    my $fd = fd_deriv(\&softplus, 1);
+    ok near(softplus_derivative(1), $fd, 1e-5),
+        'matches finite difference at x=1';
 };
 
 # ===========================================================================

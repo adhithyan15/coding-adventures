@@ -33,10 +33,16 @@ from __future__ import annotations
 from lang_parser import ASTNode
 from lexer import Token
 from symbolic_ir import (
+    ACOS,
+    ACOSH,
     ADD,
+    ASIN,
+    ASINH,
     ASSIGN,
     ATAN,
+    ATANH,
     COS,
+    COSH,
     DEFINE,
     DIV,
     EQUAL,
@@ -54,9 +60,11 @@ from symbolic_ir import (
     NOT_EQUAL,
     POW,
     SIN,
+    SINH,
     SQRT,
     SUB,
     TAN,
+    TANH,
     D,
     IRApply,
     IRFloat,
@@ -66,6 +74,14 @@ from symbolic_ir import (
     IRSymbol,
 )
 from symbolic_ir.nodes import AND, OR
+
+# Statement-terminator wrappers. The compiler emits one of these around
+# every top-level statement so the REPL can distinguish ``;`` (display
+# the result) from ``$`` (suppress). The macsyma-runtime backend
+# installs identity handlers for both, so non-REPL consumers (e.g.
+# tests that drive the VM directly) don't have to think about them.
+DISPLAY = IRSymbol("Display")
+SUPPRESS = IRSymbol("Suppress")
 
 # ---------------------------------------------------------------------------
 # Errors
@@ -114,7 +130,15 @@ _STANDARD_FUNCTIONS: dict[str, IRSymbol] = {
     "sin": SIN,
     "cos": COS,
     "tan": TAN,
+    "asin": ASIN,
+    "acos": ACOS,
     "atan": ATAN,
+    "sinh": SINH,
+    "cosh": COSH,
+    "tanh": TANH,
+    "asinh": ASINH,
+    "acosh": ACOSH,
+    "atanh": ATANH,
     "log": LOG,
     "exp": EXP,
     "sqrt": SQRT,
@@ -164,7 +188,18 @@ class Compiler:
     The class carries no mutable state; it is a namespace for the
     recursive compilation methods. Every ``_compile_*`` method returns
     an ``IRNode``.
+
+    Set ``wrap_terminators=True`` (default ``False``) to have every
+    top-level statement wrapped in either ``Display(expr)`` (for ``;``)
+    or ``Suppress(expr)`` (for ``$``) so a REPL can later distinguish
+    the two. The wrappers are off by default to preserve compatibility
+    with consumers that drive the VM directly without a REPL — they
+    can leave ``wrap_terminators=False`` and continue to receive raw
+    expressions.
     """
+
+    def __init__(self, *, wrap_terminators: bool = False) -> None:
+        self._wrap_terminators = wrap_terminators
 
     def compile_program(self, root: ASTNode) -> list[IRNode]:
         """Compile a ``program`` AST into a list of IR statements.
@@ -189,11 +224,33 @@ class Compiler:
 
     def _compile_statement(self, node: ASTNode) -> IRNode:
         # `statement = expression ( SEMI | DOLLAR ) ;`
+        #
         # The expression is always child 0; the terminator is child 1.
+        # If ``wrap_terminators`` is enabled (REPL mode), wrap the
+        # expression in ``Display(expr)`` or ``Suppress(expr)`` so the
+        # REPL can decide whether to print the result. Otherwise,
+        # return the inner expression directly — downstream consumers
+        # that don't care about ``;`` vs ``$`` see the same shape they
+        # always have.
+        if not node.children:
+            raise CompileError("statement has no children")
         expr_node = node.children[0]
         if not isinstance(expr_node, ASTNode):
             raise CompileError("statement's first child must be an AST node")
-        return self._compile_node(expr_node)
+        inner = self._compile_node(expr_node)
+
+        if not self._wrap_terminators:
+            return inner
+
+        if len(node.children) >= 2 and isinstance(node.children[1], Token):
+            term_type = _token_type_name(node.children[1])
+            if term_type == "DOLLAR":
+                return IRApply(SUPPRESS, (inner,))
+            if term_type == "SEMI":
+                return IRApply(DISPLAY, (inner,))
+        # Defensive fallback if the grammar ever lets a terminator slip
+        # past — pick Display so the user sees the result.
+        return IRApply(DISPLAY, (inner,))
 
     def _compile_node(self, node: ASTNode | Token) -> IRNode:
         """Dispatch to the handler for this node's rule or token type."""
@@ -489,17 +546,24 @@ class Compiler:
 # ---------------------------------------------------------------------------
 
 
-def compile_macsyma(ast: ASTNode) -> list[IRNode]:
+def compile_macsyma(
+    ast: ASTNode, *, wrap_terminators: bool = False
+) -> list[IRNode]:
     """Compile a MACSYMA ``program`` AST to a list of IR statements.
 
     Args:
         ast: The root ``ASTNode`` produced by ``parse_macsyma``.
+        wrap_terminators: If True, every top-level statement is wrapped
+            in ``Display(expr)`` (for ``;``) or ``Suppress(expr)`` (for
+            ``$``). The MACSYMA REPL passes True; consumers that drive
+            the VM directly (e.g. test harnesses for substrate handlers)
+            leave it False to receive raw expressions.
 
     Returns:
         One ``IRNode`` per top-level statement. Empty programs return
         an empty list.
     """
-    return Compiler().compile_program(ast)
+    return Compiler(wrap_terminators=wrap_terminators).compile_program(ast)
 
 
 def compile_expression(ast: ASTNode | Token) -> IRNode:

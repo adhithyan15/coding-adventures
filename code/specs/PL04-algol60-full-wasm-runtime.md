@@ -956,9 +956,8 @@ Within one lowered function and one active frame, a local `goto` lowers to:
 The completed Phase 6 implementation uses the repository's unstructured IR
 control-flow path. It accepts direct labels and direct `goto` targets within the
 same active ALGOL frame, including forward jumps, backward jumps, and terminal
-labels on empty statements. It continues to reject conditional designational
-expressions, switch selections, and nonlocal jumps until Phase 7 has frame
-unwinding and switch descriptors.
+labels on empty statements. Phase 7a extends that local path to conditional
+designational expressions and switch selections.
 
 ### Nonlocal Goto
 
@@ -972,8 +971,12 @@ Lowering must:
 4. restore display entries if displays are used
 5. transfer control to the target label
 
-Initial implementation should reject nonlocal `goto` until frame cleanup and
-dispatch are both implemented.
+The completed Phase 7b-1 implementation accepts direct nonlocal block gotos
+that stay inside one lowered function. It unwinds each exited block by
+restoring the block's heap mark, dynamic current frame, and stack pointer, then
+jumps to the target label. Procedure-crossing gotos, nonlocal conditional
+designational branches, and nonlocal switch selections remain guarded until
+the runtime has procedure escape propagation.
 
 ### Dispatch Loop Lowering
 
@@ -1024,6 +1027,18 @@ Each entry may be:
 - nested switch selection
 
 The first switch phase may support only direct-label entries.
+
+The completed Phase 7a implementation keeps switch descriptors in semantic
+metadata rather than runtime memory. Local switch declarations may contain
+direct labels and conditional designational expressions over local labels. A
+`goto s[i]` evaluates `i` once, uses ALGOL's one-based switch entry numbering,
+and jumps through the selected designational entry. Indexes outside the
+declared switch range follow the existing runtime-failure path and return `0`.
+Switch selections may cross ALGOL frame boundaries by evaluating the chosen
+entry in the switch's declaring scope while still using the active execution
+scope for frame unwinding and pending-goto propagation. Switch entries may
+select another switch when that expansion does not recurse back to the same
+switch.
 
 ## Expressions
 
@@ -1344,26 +1359,36 @@ Acceptance:
 - forward and backward local gotos work
 - labels on empty statements work
 - invalid label references are rejected
-- nonlocal gotos and conditional/switch designational expressions are rejected
-  with targeted diagnostics
+- unsupported nonlocal and conditional/switch designational forms are rejected
+  with targeted diagnostics until their later phases land
 
 ### Phase 7: Nonlocal Goto and Switches
 
 Goal: Support designational expressions across block boundaries.
 
+Status: Phase 7a is complete for local switch declarations, local switch
+selections, and local conditional designational `goto` forms. Phase 7b-1 is
+complete for direct nonlocal block `goto` statements inside one lowered
+function. Procedure-crossing `goto`, nonlocal conditional designational
+branches, nonlocal switch selections, and nested non-recursive switch entries
+now execute through the same pending goto machinery and designational
+evaluation model.
+
 Deliverables:
 
-- nonlocal target analysis
-- frame unwinding
-- switch descriptors
-- direct-label switch entries
-- conditional designational expressions
+- switch descriptors (complete for local switches)
+- direct-label switch entries (complete for local switches)
+- conditional designational expressions (complete for local jumps)
+- nonlocal target analysis (complete for direct block gotos)
+- frame unwinding (complete for direct block gotos)
+- procedure escape propagation
 
 Acceptance:
 
-- nonlocal goto exits nested frames correctly
-- direct switch selection works
-- conditional designational expression jumps to the chosen label
+- direct local switch selection works
+- conditional designational expression jumps to the chosen local label
+- direct nonlocal block goto exits nested frames correctly
+- procedure-crossing goto exits called procedures correctly
 
 ### Phase 8: Rich Scalar Types
 

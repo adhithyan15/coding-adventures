@@ -7,7 +7,7 @@
 
 use std::collections::{BTreeMap, VecDeque};
 use std::net::SocketAddr;
-use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 use transport_platform::{
@@ -70,10 +70,12 @@ impl StreamHandlerResult {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone)]
 pub struct StreamReactorOptions {
     pub listener: ListenerOptions,
     pub stream: StreamOptions,
+    /// Shared counter used by sharded reactors to allocate unique connection IDs.
+    pub connection_id_seed: Option<Arc<AtomicU64>>,
     pub read_buffer_size: usize,
     pub max_connections: usize,
     pub max_pending_write_bytes: usize,
@@ -85,6 +87,7 @@ impl Default for StreamReactorOptions {
         Self {
             listener: ListenerOptions::default(),
             stream: StreamOptions::default(),
+            connection_id_seed: None,
             read_buffer_size: DEFAULT_READ_BUFFER_SIZE,
             max_connections: DEFAULT_MAX_CONNECTIONS,
             max_pending_write_bytes: DEFAULT_MAX_PENDING_WRITE_BYTES,
@@ -92,6 +95,20 @@ impl Default for StreamReactorOptions {
         }
     }
 }
+
+impl PartialEq for StreamReactorOptions {
+    fn eq(&self, other: &Self) -> bool {
+        self.listener == other.listener
+            && self.stream == other.stream
+            && self.connection_id_seed.is_some() == other.connection_id_seed.is_some()
+            && self.read_buffer_size == other.read_buffer_size
+            && self.max_connections == other.max_connections
+            && self.max_pending_write_bytes == other.max_pending_write_bytes
+            && self.poll_timeout == other.poll_timeout
+    }
+}
+
+impl Eq for StreamReactorOptions {}
 
 #[derive(Clone)]
 pub struct StopHandle(Arc<AtomicBool>);
@@ -211,6 +228,7 @@ pub struct StreamReactor<P, S = ()> {
     max_pending_write_bytes: usize,
     poll_timeout: Duration,
     stream_options: StreamOptions,
+    connection_id_seed: Option<Arc<AtomicU64>>,
     state_init: StateInit<S>,
     handler: StatefulHandler<S>,
     on_close: CloseHandler<S>,
@@ -251,9 +269,19 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
         F: Fn(StreamConnectionInfo, &mut S, &[u8]) -> StreamHandlerResult + Send + Sync + 'static,
         C: Fn(StreamConnectionInfo, S) + Send + Sync + 'static,
     {
-        let listener = platform.bind_listener(address, options.listener)?;
-        let listener_addr = platform.local_addr(listener)?;
-        platform.set_listener_interest(listener, true)?;
+        let listener = platform
+            .bind_listener(address, options.listener)
+            .map_err(|error| {
+                PlatformError::ProviderFault(format!("bind listener resource: {error}"))
+            })?;
+        let listener_addr = platform.local_addr(listener).map_err(|error| {
+            PlatformError::ProviderFault(format!("read listener address: {error}"))
+        })?;
+        platform
+            .set_listener_interest(listener, true)
+            .map_err(|error| {
+                PlatformError::ProviderFault(format!("enable listener interest: {error}"))
+            })?;
 
         Ok(Self {
             platform,
@@ -269,6 +297,7 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
             max_pending_write_bytes: options.max_pending_write_bytes.max(1),
             poll_timeout: options.poll_timeout,
             stream_options: options.stream,
+            connection_id_seed: options.connection_id_seed,
             state_init: Arc::new(init),
             handler: Arc::new(handler),
             on_close: Arc::new(on_close),
@@ -350,8 +379,13 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
                     self.platform
                         .set_stream_interest(accepted.stream, StreamInterest::readable())?;
 
-                    let connection_id = ConnectionId(self.next_connection_id);
-                    self.next_connection_id += 1;
+                    let connection_id = if let Some(seed) = &self.connection_id_seed {
+                        ConnectionId(seed.fetch_add(1, Ordering::SeqCst))
+                    } else {
+                        let id = ConnectionId(self.next_connection_id);
+                        self.next_connection_id += 1;
+                        id
+                    };
                     self.connection_index.insert(connection_id, accepted.stream);
                     self.connections.insert(
                         accepted.stream,

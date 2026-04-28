@@ -9,6 +9,10 @@ The core `state-machine` crate exposes executable automata and
 definitions into deterministic `.states.json` text for build tooling, source
 compiler snapshots, and cross-language package tests.
 
+Transducer transition `actions` and non-default `consume` flags are preserved in
+the canonical JSON output so tokenizer definitions can round-trip through the
+same typed model as DFA/NFA/PDA machines.
+
 This package intentionally only writes JSON. Reading JSON is a separate
 deserializer concern because parsed files are an untrusted boundary and need
 their own size limits, validation, and diagnostics.

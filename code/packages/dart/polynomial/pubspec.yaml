@@ -1,0 +1,14 @@
+name: coding_adventures_polynomial
+version: 0.1.0
+description: >
+  Coefficient-array polynomial arithmetic for Reed-Solomon error correction.
+  Implements the MA00 polynomial spec with normalize, degree, add, subtract,
+  multiply, divmod, evaluate, and gcd.
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dev_dependencies:
+  test: ^1.25.0

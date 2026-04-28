@@ -121,6 +121,31 @@ func TestValidateBuildFilesFailsMissingStandalonePrereq(t *testing.T) {
 	}
 }
 
+func TestValidateBuildFilesAllowsIntentionalPlatformSkip(t *testing.T) {
+	pkgs := makePackages(t, []struct {
+		name     string
+		relPath  string
+		lang     string
+		commands []string
+	}{
+		{name: "perl/a", relPath: "code/packages/perl/a", lang: "perl"},
+		{
+			name:    "perl/b",
+			relPath: "code/packages/perl/b",
+			lang:    "perl",
+			commands: []string{
+				`echo Perl testing is not supported on Windows - skipping`,
+			},
+		},
+	})
+
+	graph := graphWithEdges([2]string{"perl/a", "perl/b"})
+
+	if err := ValidateBuildFiles(pkgs, graph); err != nil {
+		t.Fatalf("expected platform skip to pass validation, got %v", err)
+	}
+}
+
 func TestValidateBuildFilesFailsHiddenReference(t *testing.T) {
 	pkgs := makePackages(t, []struct {
 		name     string

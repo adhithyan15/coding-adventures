@@ -22,6 +22,7 @@ from compiler_ir import (
     OP_NAMES,
     IDGenerator,
     IrDataDecl,
+    IrFloatImmediate,
     IrImmediate,
     IrInstruction,
     IrLabel,
@@ -81,10 +82,25 @@ class TestIrOp:
         assert IrOp.XOR == 29
         assert IrOp.XOR_IMM == 30
         assert IrOp.NOT == 31
+        assert IrOp.LOAD_F64_IMM == 32
+        assert IrOp.LOAD_F64 == 33
+        assert IrOp.STORE_F64 == 34
+        assert IrOp.F64_ADD == 35
+        assert IrOp.F64_SUB == 36
+        assert IrOp.F64_MUL == 37
+        assert IrOp.F64_DIV == 38
+        assert IrOp.F64_CMP_EQ == 39
+        assert IrOp.F64_CMP_NE == 40
+        assert IrOp.F64_CMP_LT == 41
+        assert IrOp.F64_CMP_GT == 42
+        assert IrOp.F64_CMP_LE == 43
+        assert IrOp.F64_CMP_GE == 44
+        assert IrOp.F64_FROM_I32 == 45
+        assert IrOp.I32_TRUNC_FROM_F64 == 46
 
     def test_total_opcode_count(self) -> None:
-        """There are exactly 32 opcodes (0–26, plus five bitwise ops at 27–31)."""
-        assert len(IrOp) == 32
+        """There are exactly 47 opcodes after adding f64-to-i32 truncation."""
+        assert len(IrOp) == 47
 
     def test_name_to_op_roundtrip(self) -> None:
         """NAME_TO_OP[op.name] == op for every opcode."""
@@ -184,6 +200,25 @@ class TestIrLabel:
         lbl = IrLabel("x")
         with pytest.raises(Exception):
             lbl.name = "y"  # type: ignore[misc]
+
+
+class TestIrFloatImmediate:
+    """Tests for IrFloatImmediate operands."""
+
+    def test_str_positive(self) -> None:
+        assert str(IrFloatImmediate(1.5)) == "1.5"
+
+    def test_str_negative(self) -> None:
+        assert str(IrFloatImmediate(-0.25)) == "-0.25"
+
+    def test_equality(self) -> None:
+        assert IrFloatImmediate(3.5) == IrFloatImmediate(3.5)
+        assert IrFloatImmediate(3.5) != IrFloatImmediate(4.5)
+
+    def test_frozen(self) -> None:
+        imm = IrFloatImmediate(2.5)
+        with pytest.raises(Exception):
+            imm.value = 6.0  # type: ignore[misc]
 
 
 # =============================================================================
@@ -514,6 +549,13 @@ class TestParseIr:
         prog = parse_ir(text)
         instr = prog.instructions[0]
         assert instr.operands[2] == IrImmediate(-1)
+
+    def test_float_immediate_parsed(self) -> None:
+        text = ".version 1\n.entry _start\n  LOAD_F64_IMM v2, 1.5 ; #7\n"
+        prog = parse_ir(text)
+        instr = prog.instructions[0]
+        assert instr.opcode == IrOp.LOAD_F64_IMM
+        assert instr.operands == [IrRegister(2), IrFloatImmediate(1.5)]
 
     def test_label_operand_parsed(self) -> None:
         text = ".version 1\n.entry _start\n  JUMP       loop_0_start  ; #7\n"
@@ -949,6 +991,21 @@ class TestAllOpcodesPrintParse:
             IrOp.XOR:        [IrRegister(3), IrRegister(1), IrRegister(2)],
             IrOp.XOR_IMM:    [IrRegister(2), IrRegister(2), IrImmediate(0xFF)],
             IrOp.NOT:        [IrRegister(2), IrRegister(1)],
+            IrOp.LOAD_F64_IMM: [IrRegister(2), IrFloatImmediate(1.5)],
+            IrOp.LOAD_F64:     [IrRegister(2), IrRegister(0), IrRegister(1)],
+            IrOp.STORE_F64:    [IrRegister(2), IrRegister(0), IrRegister(1)],
+            IrOp.F64_ADD:      [IrRegister(3), IrRegister(1), IrRegister(2)],
+            IrOp.F64_SUB:      [IrRegister(3), IrRegister(1), IrRegister(2)],
+            IrOp.F64_MUL:      [IrRegister(3), IrRegister(1), IrRegister(2)],
+            IrOp.F64_DIV:      [IrRegister(3), IrRegister(1), IrRegister(2)],
+            IrOp.F64_CMP_EQ:   [IrRegister(4), IrRegister(1), IrRegister(2)],
+            IrOp.F64_CMP_NE:   [IrRegister(4), IrRegister(1), IrRegister(2)],
+            IrOp.F64_CMP_LT:   [IrRegister(4), IrRegister(1), IrRegister(2)],
+            IrOp.F64_CMP_GT:   [IrRegister(4), IrRegister(1), IrRegister(2)],
+            IrOp.F64_CMP_LE:   [IrRegister(4), IrRegister(1), IrRegister(2)],
+            IrOp.F64_CMP_GE:   [IrRegister(4), IrRegister(1), IrRegister(2)],
+            IrOp.F64_FROM_I32: [IrRegister(2), IrRegister(1)],
+            IrOp.I32_TRUNC_FROM_F64: [IrRegister(2), IrRegister(1)],
         }
         for idx, op in enumerate(IrOp):
             operands = operands_by_opcode[op]
