@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.2.0] - 2026-04-27
+
+### Added — Phase 8: Window Functions (OVER / PARTITION BY)
+
+- **`WinFunc` enum** — `ROW_NUMBER`, `RANK`, `DENSE_RANK`, `SUM`, `COUNT`,
+  `COUNT_STAR`, `AVG`, `MIN`, `MAX`, `FIRST_VALUE`, `LAST_VALUE`.
+- **`WinFuncSpec` IR dataclass** — `func: WinFunc`, `arg_col: str | None`,
+  `partition_cols`, `order_cols`, `result_col`.
+- **`ComputeWindowFunctions` instruction** — post-processing instruction
+  (analogous to `SortResult` / `LimitResult`) that runs after all rows are
+  materialised.  Carries `specs` and `output_cols`.
+- **`_compile_plan` special case for `WindowAgg`** — emits
+  `SetResultSchema(inner_schema) + inner_instrs + ComputeWindowFunctions`.
+  Prepending `SetResultSchema(inner_schema)` is critical: it ensures
+  `result.columns` reflects the inner column layout (not the outer
+  `output_cols`) when `ComputeWindowFunctions` looks up arg/partition/order
+  columns by name.
+- **`_compile_core` case for `WindowAgg`** — same logic for when `WindowAgg`
+  is wrapped inside `Sort` / `Limit` / `Distinct`.
+- **`_schema_of` case for `WindowAgg`** — returns `output_cols`.
+- **`_to_ir_win_spec()` helper** — maps `PlanWindowFuncSpec` → `WinFuncSpec`,
+  resolving `arg_expr` to a column name in the inner schema.
+- All new types exported via `__all__`.
+
 ## [1.1.0] - 2026-04-27
 
 ### Added — Phase 5b: Recursive CTEs

@@ -917,7 +917,14 @@ PARSER_GRAMMAR = ParserGrammar(
                 Literal(value='TRUE'),
                 Literal(value='FALSE'),
                 RuleReference(name='case_expr', is_token=False),
+                RuleReference(name='window_func_call', is_token=False),
                 RuleReference(name='function_call', is_token=False),
+                Sequence(elements=[
+                    Literal(value='EXISTS'),
+                    Literal(value='('),
+                    RuleReference(name='query_stmt', is_token=False),
+                    Literal(value=')'),
+                ]),
                 Sequence(elements=[
                     Literal(value='('),
                     RuleReference(name='query_stmt', is_token=False),
@@ -1016,6 +1023,57 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='expr', is_token=False),
             ]),
             line_number=166,
+        ),
+        GrammarRule(
+            name='window_func_call',
+            body=
+            Sequence(elements=[
+                RuleReference(name='NAME', is_token=True),
+                Literal(value='('),
+                Group(element=
+                    Alternation(choices=[
+                        RuleReference(name='STAR', is_token=True),
+                        Optional(element=
+                            RuleReference(name='value_list', is_token=False),
+                        ),
+                    ]),
+                ),
+                Literal(value=')'),
+                Literal(value='OVER'),
+                Literal(value='('),
+                RuleReference(name='window_spec', is_token=False),
+                Literal(value=')'),
+            ]),
+            line_number=192,
+        ),
+        GrammarRule(
+            name='window_spec',
+            body=
+            Sequence(elements=[
+                Optional(element=
+                    RuleReference(name='partition_clause', is_token=False),
+                ),
+                Optional(element=
+                    RuleReference(name='order_clause', is_token=False),
+                ),
+            ]),
+            line_number=193,
+        ),
+        GrammarRule(
+            name='partition_clause',
+            body=
+            Sequence(elements=[
+                Literal(value='PARTITION'),
+                Literal(value='BY'),
+                RuleReference(name='expr', is_token=False),
+                Repetition(element=
+                    Sequence(elements=[
+                        Literal(value=','),
+                        RuleReference(name='expr', is_token=False),
+                    ]),
+                ),
+            ]),
+            line_number=194,
         ),
     ],
 )

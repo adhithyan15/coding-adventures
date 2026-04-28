@@ -287,6 +287,45 @@ class ExistsSubquery:
     query: object  # SelectStmt before _resolve; LogicalPlan after _resolve
 
 
+@dataclass(frozen=True, slots=True)
+class WindowFuncExpr:
+    """A window (analytic) function: ``func([arg]) OVER (PARTITION BY … ORDER BY …)``.
+
+    Window functions differ from aggregate functions:
+    - They do *not* collapse rows — one output row per input row.
+    - They operate over a "window" of related rows defined by the OVER clause.
+    - They may appear only in SELECT lists (not WHERE, GROUP BY, or HAVING).
+
+    Fields
+    ------
+    func:
+        Function name in lower-case (``"row_number"``, ``"sum"``, …).
+        The planner normalises to lower-case; codegen maps to :class:`WinFunc`.
+    arg:
+        The single expression argument, or ``None`` for arg-free functions
+        (``ROW_NUMBER``, ``RANK``, ``DENSE_RANK``).  ``COUNT(*)`` passes
+        ``arg=None`` with ``func="count_star"``.
+    partition_by:
+        Tuple of partition key expressions.  Rows with equal partition keys
+        are placed in the same window group.  Empty tuple means the whole
+        result set is one partition.
+    order_by:
+        Tuple of ``(expr, descending)`` sort keys within each partition.
+        Required for ranking functions; optional for aggregating functions.
+
+    Lifecycle
+    ---------
+    Created by the adapter with raw ``Column`` references.  ``_resolve()``
+    in the planner qualifies each expression against the current scope,
+    producing a fully-resolved tree that codegen can emit directly.
+    """
+
+    func: str                                    # e.g. "row_number", "sum"
+    arg: "Expr | None"                           # None for arg-free funcs
+    partition_by: tuple["Expr", ...] = ()
+    order_by: tuple[tuple["Expr", bool], ...] = ()  # (expr, descending)
+
+
 # The type union every non-specialized consumer should match on. Order
 # doesn't matter for correctness, but we keep the union sorted to help
 # anyone eyeballing pattern matches.
@@ -307,6 +346,7 @@ Expr = (
     | CaseExpr
     | AggregateExpr
     | ExistsSubquery
+    | WindowFuncExpr
 )
 
 
@@ -348,6 +388,10 @@ def contains_aggregate(expr: Expr) -> bool:
             # The inner query is independently scoped; from the outer
             # expression's perspective EXISTS is a boolean atom, not an
             # aggregate.
+            return False
+        case WindowFuncExpr():
+            # Window functions are handled by a separate WindowAgg plan node.
+            # They are not aggregates from the planner's perspective.
             return False
         case _:
             return False
@@ -403,5 +447,12 @@ def _collect_columns(expr: Expr, out: list[Column]) -> None:
             # Inner query columns are independently scoped — not visible to
             # projection-pruning or column-resolution in the outer query.
             pass
+        case WindowFuncExpr(_, arg, partition_by, order_by):
+            if arg is not None:
+                _collect_columns(arg, out)
+            for e in partition_by:
+                _collect_columns(e, out)
+            for e, _ in order_by:
+                _collect_columns(e, out)
         case _:
             pass

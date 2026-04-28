@@ -91,6 +91,7 @@ from sql_planner import (
     UnionStmt,
     UpdateStmt,
     Wildcard,
+    WindowFuncExpr,
 )
 from sql_planner.expr import Expr
 
@@ -1034,6 +1035,8 @@ def _primary(node: ASTNode, state: _PlaceholderCounter) -> Expr:
                         raise ProgrammingError("EXISTS subquery must be a SELECT statement")
                     return ExistsSubquery(query=inner_stmt)
         elif isinstance(c, ASTNode):
+            if c.rule_name == "window_func_call":
+                return _window_func_call(c, state)
             if c.rule_name == "function_call":
                 return _function_call(c, state)
             if c.rule_name == "column_ref":
@@ -1076,6 +1079,86 @@ def _function_call(node: ASTNode, state: _PlaceholderCounter) -> Expr:
             raise ProgrammingError(f"{upper}: expected 1 argument, got {len(args)}")
         return AggregateExpr(func=agg_map[upper], arg=args[0])
     return FunctionCall(name=name, args=tuple(args))
+
+
+def _window_func_call(node: ASTNode, state: _PlaceholderCounter) -> WindowFuncExpr:
+    """Translate a ``window_func_call`` node into a :class:`WindowFuncExpr`.
+
+    Grammar::
+
+        window_func_call = NAME "(" ( STAR | [ value_list ] ) ")" "OVER" "(" window_spec ")" ;
+        window_spec      = [ partition_clause ] [ order_clause ] ;
+        partition_clause = "PARTITION" "BY" expr { "," expr } ;
+        order_clause     = "ORDER" "BY" order_item { "," order_item } ;
+        order_item       = expr [ "ASC" | "DESC" ] ;
+
+    Supported functions and their arg requirements:
+
+    - Arg-free (no argument):   ROW_NUMBER, RANK, DENSE_RANK
+    - COUNT(*) (star arg):      COUNT — maps to "count_star"
+    - Single-arg:               SUM, COUNT(col), AVG, MIN, MAX, FIRST_VALUE, LAST_VALUE
+
+    All function names are normalised to lower-case.
+    """
+    # Extract the function name.
+    name_tok = next(c for c in node.children if isinstance(c, Token) and _token_type(c) == "NAME")
+    func_name = name_tok.value.lower()
+
+    # Extract argument (star, value_list, or empty).
+    star = any(_is_token(c, type_="STAR") for c in node.children)
+    vl = _maybe_child(node, "value_list")
+    arg: Expr | None = None
+
+    if star:
+        # COUNT(*) OVER (...) → func="count_star", arg=None
+        func_name = "count_star"
+    elif vl is not None:
+        exprs = [c for c in vl.children if isinstance(c, ASTNode) and c.rule_name == "expr"]
+        if exprs:
+            arg = _expr(exprs[0], state)
+    # Arg-free ranking functions keep func_name as-is (row_number, rank, dense_rank).
+
+    # Extract the window_spec node.
+    ws = _maybe_child(node, "window_spec")
+
+    # PARTITION BY clause.
+    partition_exprs: list[Expr] = []
+    if ws is not None:
+        pc = _maybe_child(ws, "partition_clause")
+        if pc is not None:
+            partition_exprs = [
+                _expr(c, state)
+                for c in pc.children
+                if isinstance(c, ASTNode) and c.rule_name == "expr"
+            ]
+
+    # ORDER BY clause — reuse the shared _order_items helper.
+    order_keys: list[tuple[Expr, bool]] = []
+    if ws is not None:
+        oc = _maybe_child(ws, "order_clause")
+        if oc is not None:
+            for oi in _child_nodes(oc, "order_item"):
+                oi_exprs = [
+                    c for c in oi.children
+                    if isinstance(c, ASTNode) and c.rule_name == "expr"
+                ]
+                if not oi_exprs:
+                    continue
+                oi_expr = _expr(oi_exprs[0], state)
+                desc = any(
+                    _is_token(c, type_="KEYWORD")
+                    and isinstance(c, Token)
+                    and c.value.upper() == "DESC"
+                    for c in oi.children
+                )
+                order_keys.append((oi_expr, desc))
+
+    return WindowFuncExpr(
+        func=func_name,
+        arg=arg,
+        partition_by=tuple(partition_exprs),
+        order_by=tuple(order_keys),
+    )
 
 
 def _case_expr(node: ASTNode, state: _PlaceholderCounter) -> CaseExpr:

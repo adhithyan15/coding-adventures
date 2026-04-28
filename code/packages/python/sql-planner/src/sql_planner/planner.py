@@ -111,6 +111,7 @@ from .expr import (
     NotLike,
     UnaryExpr,
     Wildcard,
+    WindowFuncExpr,
     contains_aggregate,
 )
 from .schema_provider import SchemaProvider
@@ -231,8 +232,66 @@ def _plan_select(
     if having is not None:
         tree = P.Having(input=tree, predicate=having)
 
-    # 5. Projection — always present. A SELECT always has at least one item.
-    tree = P.Project(input=tree, items=resolved_items)
+    # 5. Window functions — if any SELECT item is a WindowFuncExpr, emit a
+    #    WindowAgg node instead of a plain Project.
+    #
+    #    Design: the inner Project materialises all columns needed by the
+    #    window expressions (non-window SELECT items + any extra dependency
+    #    columns).  WindowAgg post-processes the materialised result buffer to
+    #    append the window function output columns.
+    win_items = [it for it in resolved_items if isinstance(it.expr, WindowFuncExpr)]
+    if win_items:
+        win_names_set = [id(it) for it in win_items]  # identity-based dedup guard
+        specs: list[P.WindowFuncSpec] = []
+        for i, it in enumerate(win_items):
+            wf: WindowFuncExpr = it.expr  # type: ignore[assignment]
+            alias = it.alias or f"window_{i + 1}"
+            specs.append(
+                P.WindowFuncSpec(
+                    func=wf.func,
+                    arg_expr=wf.arg,
+                    partition_by=wf.partition_by,
+                    order_by=wf.order_by,
+                    alias=alias,
+                )
+            )
+
+        non_win_items = [it for it in resolved_items if not isinstance(it.expr, WindowFuncExpr)]
+
+        # Track which (table, col) pairs are already covered by the non-window
+        # projection so we don't add redundant extra columns.
+        covered: set[tuple[str | None, str]] = {
+            (it.expr.table, it.expr.col)
+            for it in non_win_items
+            if isinstance(it.expr, Column)
+        }
+        extra: list[P.ProjectionItem] = []
+        for spec in specs:
+            for dep in _win_spec_columns(spec):
+                key = (dep.table, dep.col)
+                if key not in covered:
+                    covered.add(key)
+                    extra.append(P.ProjectionItem(expr=dep, alias=dep.col))
+
+        inner_items = tuple(non_win_items) + tuple(extra)
+        inner_projection = P.Project(input=tree, items=inner_items)
+
+        # Final output: non-window item names first, then window alias names.
+        non_win_out = tuple(
+            it.alias if it.alias is not None
+            else (it.expr.col if isinstance(it.expr, Column) else f"column_{i + 1}")
+            for i, it in enumerate(non_win_items)
+        )
+        output_cols = non_win_out + tuple(s.alias for s in specs)
+
+        tree = P.WindowAgg(
+            input=inner_projection,
+            specs=tuple(specs),
+            output_cols=output_cols,
+        )
+    else:
+        # 5 (normal path). Projection — always present.
+        tree = P.Project(input=tree, items=resolved_items)
 
     # 6. DISTINCT — simple wrapper.
     if stmt.distinct:
@@ -248,6 +307,19 @@ def _plan_select(
         tree = P.Limit(input=tree, count=stmt.limit.count, offset=stmt.limit.offset)
 
     return tree
+
+
+def _win_spec_columns(spec: P.WindowFuncSpec) -> list[Column]:
+    """Collect all Column references from a WindowFuncSpec's expressions."""
+    from .expr import collect_columns as _cc
+    cols: list[Column] = []
+    if spec.arg_expr is not None:
+        cols.extend(_cc(spec.arg_expr))
+    for e in spec.partition_by:
+        cols.extend(_cc(e))
+    for e, _ in spec.order_by:
+        cols.extend(_cc(e))
+    return cols
 
 
 def _build_from_tree(
@@ -476,6 +548,18 @@ def _resolve(
                 raise InternalError(message="schema required to plan EXISTS subquery")
             inner_plan = _plan_select(stmt, schema)  # type: ignore[arg-type]
             return ExistsSubquery(query=inner_plan)
+        case WindowFuncExpr(func, arg, partition_by, order_by):
+            new_arg = _resolve(arg, scope, schema) if arg is not None else None
+            new_partition_by = tuple(_resolve(e, scope, schema) for e in partition_by)
+            new_order_by = tuple(
+                (_resolve(e, scope, schema), desc) for e, desc in order_by
+            )
+            return WindowFuncExpr(
+                func=func,
+                arg=new_arg,
+                partition_by=new_partition_by,
+                order_by=new_order_by,
+            )
     raise AmbiguousColumn(column="<internal>", tables=[])  # unreachable
 
 

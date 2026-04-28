@@ -111,6 +111,8 @@ keywords:
   SAVEPOINT
   RELEASE
   TO
+  OVER
+  PARTITION
 
 skip:
   WHITESPACE    = /[ \t\r\n]+/

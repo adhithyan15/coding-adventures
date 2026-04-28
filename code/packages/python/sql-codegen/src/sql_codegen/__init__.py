@@ -89,6 +89,9 @@ from .ir import (
     UnaryOpCode,
     UpdateAgg,
     UpdateRows,
+    WinFunc,
+    WinFuncSpec,
+    ComputeWindowFunctions,
 )
 from .ir import (
     AggFunc as IrAggFunc,
@@ -166,6 +169,9 @@ __all__ = [
     "UnsupportedNode",
     "UpdateAgg",
     "UpdateRows",
+    "WinFunc",
+    "WinFuncSpec",
+    "ComputeWindowFunctions",
     "compile",
     "compile_expr",
 ]

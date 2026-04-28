@@ -1,5 +1,31 @@
 # Changelog
 
+## [1.5.0] - 2026-04-27
+
+### Added — Phase 8: Window Functions (OVER / PARTITION BY)
+
+- **`_window_func_call()` adapter function** — translates a `window_func_call`
+  parse-tree node into a `WindowFuncExpr`.  Handles `COUNT(*)` (becomes
+  `func="count_star"` with `arg=None`), standard `func(expr)` calls, and
+  arg-free functions like `ROW_NUMBER()`.  Parses `PARTITION BY` and window
+  `ORDER BY` (DESC keyword detected via token inspection).
+- **`_primary()` extension** — the `window_func_call` branch is tested before
+  `function_call` (matching the grammar's PEG priority rule).
+- **`test_tier3_window.py`** — 41 new tests covering:
+  - Grammar: parser produces `window_func_call` nodes (7 tests)
+  - Adapter: `_window_func_call()` produces correct `WindowFuncExpr` (13 tests)
+  - Planner: `WindowAgg` plan node structure (5 tests)
+  - Integration: end-to-end SQL via `:memory:` connection (16 tests)
+- **`pyproject.toml` coverage `omit`** — excludes legacy `* 2.py` duplicate
+  files from coverage measurement so the 80% threshold reflects real code.
+
+### Functions supported end-to-end
+
+`ROW_NUMBER()`, `RANK()`, `DENSE_RANK()`, `SUM(col)`, `COUNT(*)`,
+`COUNT(col)`, `AVG(col)`, `MIN(col)`, `MAX(col)`, `FIRST_VALUE(col)`,
+`LAST_VALUE(col)` — all with optional `PARTITION BY` and/or `ORDER BY`
+inside the `OVER (…)` clause.
+
 ## [1.4.0] - 2026-04-27
 
 ### Added — Phase 7: SAVEPOINT / RELEASE / ROLLBACK TO

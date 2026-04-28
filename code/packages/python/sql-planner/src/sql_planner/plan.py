@@ -519,6 +519,60 @@ class IndexScan:
     residual: Expr | None = None
 
 
+@dataclass(frozen=True, slots=True)
+class WindowFuncSpec:
+    """Specification for a single window function inside a :class:`WindowAgg` node.
+
+    One ``WindowFuncSpec`` is created per window function appearing in the
+    SELECT list.  The planner collects all window specs from resolved SELECT
+    items and emits a single ``WindowAgg`` node that post-processes every
+    window function in one pass.
+
+    Fields
+    ------
+    func:
+        Lower-case function name (``"row_number"``, ``"sum"``, …).
+    arg_expr:
+        The resolved argument expression, or ``None`` for arg-free functions
+        and ``COUNT(*)``.
+    partition_by:
+        Tuple of resolved partition key expressions.
+    order_by:
+        Tuple of ``(resolved_expr, descending)`` sort keys.
+    alias:
+        Output column name — the SELECT-item alias or a generated name.
+    """
+
+    func: str
+    arg_expr: "Expr | None"
+    partition_by: tuple["Expr", ...]
+    order_by: tuple[tuple["Expr", bool], ...]
+    alias: str
+
+
+@dataclass(frozen=True, slots=True)
+class WindowAgg:
+    """Post-process a materialised result buffer to compute window functions.
+
+    The ``input`` plan is compiled normally and its rows are collected into
+    the result buffer.  The VM then executes :class:`ComputeWindowFunctions`
+    which walks the buffer, groups rows by partition key, and evaluates each
+    window function to produce an additional output column.
+
+    ``output_cols`` is the final ordered column list the query presents to the
+    caller — it equals the inner projection columns *plus* the window function
+    alias columns.
+
+    Wrapper nodes (Sort, Limit, Distinct) may appear above WindowAgg; the
+    codegen correctly wraps ``ComputeWindowFunctions`` before those
+    post-processing steps.
+    """
+
+    input: "LogicalPlan"
+    specs: tuple[WindowFuncSpec, ...]
+    output_cols: tuple[str, ...]  # inner cols + window alias cols
+
+
 # The root union. Every plan function returns one of these.
 LogicalPlan = (
     Scan
@@ -538,6 +592,7 @@ LogicalPlan = (
     | Union
     | Intersect
     | Except
+    | WindowAgg
     | Begin
     | Commit
     | Rollback
@@ -582,7 +637,7 @@ def children(node: LogicalPlan) -> tuple[LogicalPlan, ...]:
             return (a, r)
         case (
             Filter() | Project() | Aggregate() | Having()
-            | Sort() | Limit() | Distinct()
+            | Sort() | Limit() | Distinct() | WindowAgg()
         ):
             return (node.input,)
         case Join() | Union() | Intersect() | Except():

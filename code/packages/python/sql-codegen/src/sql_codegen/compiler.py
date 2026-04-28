@@ -111,10 +111,15 @@ from sql_planner import (
 from sql_planner import (
     UnaryOp as AstUnaryOp,
 )
+from sql_planner import (
+    WindowAgg as PlanWindowAgg,
+)
 from sql_planner.ast import ColumnDef as AstColumnDef
 from sql_planner.expr import AggregateExpr
+from sql_planner.expr import WindowFuncExpr as PlanWindowFuncExpr
 from sql_planner.plan import AggFunc as PlanAggFunc
 from sql_planner.plan import Limit as PlanLimit
+from sql_planner.plan import WindowFuncSpec as PlanWindowFuncSpec
 
 from .errors import UnsupportedNode
 from .ir import (
@@ -176,6 +181,9 @@ from .ir import (
     UnaryOpCode,
     UpdateAgg,
     UpdateRows,
+    WinFunc,
+    WinFuncSpec,
+    ComputeWindowFunctions,
 )
 from .ir import (
     AggFunc as IrAggFunc,
@@ -312,6 +320,25 @@ def _compile_plan(p: LogicalPlan, ctx: _Ctx) -> tuple[list[Instruction], tuple[s
         case Rollback():
             return [RollbackTransaction()], ()
 
+        case PlanWindowAgg(input=inner, specs=specs, output_cols=output_cols):
+            # Window aggregation: compile the inner plan (which emits the
+            # scan loop), then append ComputeWindowFunctions.  We prepend
+            # SetResultSchema(inner_schema) so result.columns correctly
+            # reflects the INNER column layout when ComputeWindowFunctions
+            # looks up arg/partition/order column names.  ComputeWindowFunctions
+            # itself sets result.columns = output_cols at the end.
+            inner_instrs, inner_schema = _compile_plan(inner, ctx)
+            ir_specs = tuple(_to_ir_win_spec(s) for s in specs)
+            win_instr = ComputeWindowFunctions(
+                specs=ir_specs,
+                output_cols=output_cols,
+            )
+            return (
+                [SetResultSchema(columns=inner_schema)]
+                + inner_instrs
+                + [win_instr]
+            ), output_cols
+
         case _:
             # Read-only query path: emit SetResultSchema, then build the
             # scan/join/filter/aggregate/project stack. The outermost
@@ -351,6 +378,8 @@ def _schema_of(p: LogicalPlan) -> tuple[str, ...]:
         # Set operations: output schema follows the left side's columns.
         case Union(left=left_plan) | Intersect(left=left_plan) | Except(left=left_plan):
             return _schema_of(left_plan)
+        case PlanWindowAgg(output_cols=cols):
+            return cols
         case _:
             return ()
 
@@ -451,6 +480,30 @@ def _compile_core(p: LogicalPlan, ctx: _Ctx) -> list[Instruction]:
             out.extend(_compile_read(right_plan, ctx))
             out.append(ExceptResult(all=all_flag))
             return out
+
+        case PlanWindowAgg(input=inner, specs=specs, output_cols=output_cols):
+            # Compile the inner plan, then append ComputeWindowFunctions.
+            #
+            # Critical invariant: when ComputeWindowFunctions executes,
+            # result.columns must reflect the INNER schema (the columns
+            # emitted by the scan loop) so it can look up arg/partition/order
+            # columns by name.  The outer _compile_plan catch-all has already
+            # emitted SetResultSchema(output_cols), so we prepend an explicit
+            # SetResultSchema(inner_schema) to override it.  This override is
+            # always correct:
+            #   - non-empty inner_schema: inner_instrs also starts with
+            #     SetResultSchema(inner_schema), so we get a harmless duplicate.
+            #   - empty inner_schema (window-only SELECT with no non-window
+            #     items): inner_instrs emits no SetResultSchema (because the
+            #     catch-all skips it for empty schemas), so the prepend is the
+            #     only one and is required.
+            inner_instrs, inner_schema = _compile_plan(inner, ctx)
+            ir_specs = tuple(_to_ir_win_spec(s) for s in specs)
+            return (
+                [SetResultSchema(columns=inner_schema)]
+                + inner_instrs
+                + [ComputeWindowFunctions(specs=ir_specs, output_cols=output_cols)]
+            )
 
         case _:
             # Project(Filter(Join/Scan)) — the ordinary SELECT shape.
@@ -1118,3 +1171,55 @@ def _to_sort_key(k: object) -> SortKey:
     direction = Direction.DESC if k.descending else Direction.ASC
     nulls = NullsOrder.FIRST if k.nulls_first else NullsOrder.LAST
     return SortKey(column=col, direction=direction, nulls=nulls)
+
+
+# Map lower-case window function names to the IR WinFunc enum values.
+_WIN_FUNC_MAP: dict[str, WinFunc] = {
+    "row_number": WinFunc.ROW_NUMBER,
+    "rank": WinFunc.RANK,
+    "dense_rank": WinFunc.DENSE_RANK,
+    "sum": WinFunc.SUM,
+    "count": WinFunc.COUNT,
+    "count_star": WinFunc.COUNT_STAR,
+    "avg": WinFunc.AVG,
+    "min": WinFunc.MIN,
+    "max": WinFunc.MAX,
+    "first_value": WinFunc.FIRST_VALUE,
+    "last_value": WinFunc.LAST_VALUE,
+}
+
+
+def _to_ir_win_spec(spec: PlanWindowFuncSpec) -> WinFuncSpec:
+    """Convert a planner-level WindowFuncSpec to an IR WinFuncSpec.
+
+    All expression arguments in the planner spec are expected to be simple
+    :class:`Column` nodes — the planner ensures dependency columns are
+    present in the inner projection with matching names.  Complex
+    sub-expressions are not supported in this release.
+    """
+    func_key = spec.func.lower()
+    ir_func = _WIN_FUNC_MAP.get(func_key)
+    if ir_func is None:
+        raise UnsupportedNode(f"unknown window function: {spec.func!r}")
+
+    def _col_name(e: object) -> str:
+        if isinstance(e, Column):
+            return e.col
+        raise UnsupportedNode(
+            f"window function partition/order/arg must be a column reference, got {type(e).__name__}"
+        )
+
+    arg_col: str | None = None
+    if spec.arg_expr is not None:
+        arg_col = _col_name(spec.arg_expr)
+
+    partition_cols = tuple(_col_name(e) for e in spec.partition_by)
+    order_cols = tuple((_col_name(e), desc) for e, desc in spec.order_by)
+
+    return WinFuncSpec(
+        func=ir_func,
+        arg_col=arg_col,
+        partition_cols=partition_cols,
+        order_cols=order_cols,
+        result_col=spec.alias,
+    )

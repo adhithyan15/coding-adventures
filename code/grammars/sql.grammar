@@ -169,16 +169,21 @@ unary             = "-" unary | primary ;
 # primary: order matters for PEG backtracking.
 #   1. Simple literals
 #   2. CASE expression (starts with "CASE" keyword)
-#   3. Function call (NAME "(" — checked before bare column_ref)
-#   4. EXISTS subquery — starts with KEYWORD "EXISTS", unambiguous
-#   5. Scalar subquery "(SELECT ...)" — tried before plain "(" expr ")"
+#   3. Window function call — NAME "(" … ")" "OVER" "(" … )" — tried BEFORE
+#      plain function_call because both start with NAME "(" but only the window
+#      form has the trailing OVER keyword; PEG will backtrack to function_call
+#      if OVER is absent.
+#   4. Function call (NAME "(" — checked before bare column_ref)
+#   5. EXISTS subquery — starts with KEYWORD "EXISTS", unambiguous
+#   6. Scalar subquery "(SELECT ...)" — tried before plain "(" expr ")"
 #      because query_stmt starts with "SELECT" which is a KEYWORD, not valid
 #      as a plain expression; backtrack if the first token inside "(" is not
 #      "SELECT".
-#   6. Bare column reference NAME [. NAME]
-#   7. Parenthesised expression "(" expr ")"
+#   7. Bare column reference NAME [. NAME]
+#   8. Parenthesised expression "(" expr ")"
 primary           = NUMBER | STRING | "NULL" | "TRUE" | "FALSE"
                   | case_expr
+                  | window_func_call
                   | function_call
                   | "EXISTS" "(" query_stmt ")"
                   | "(" query_stmt ")"
@@ -187,6 +192,37 @@ primary           = NUMBER | STRING | "NULL" | "TRUE" | "FALSE"
 
 column_ref        = NAME [ "." NAME ] ;
 function_call     = NAME "(" ( STAR | [ value_list ] ) ")" ;
+
+# ── WINDOW FUNCTIONS ──────────────────────────────────────────────────────────
+#
+# Window (analytic) functions compute a value across a set of rows related to
+# the current row — the "window" — without collapsing rows the way GROUP BY
+# does.  Every window function call carries an OVER clause that defines the
+# window frame: an optional PARTITION BY partitions rows into independent
+# groups and an optional ORDER BY orders rows within each partition.
+#
+# Supported functions:
+#   ROW_NUMBER()          — sequential integer rank within partition (1-based)
+#   RANK()                — rank with gaps for ties
+#   DENSE_RANK()          — rank without gaps
+#   SUM(expr) / COUNT(expr) / COUNT(*) / AVG(expr) / MIN(expr) / MAX(expr)
+#               — running aggregate over the full partition
+#   FIRST_VALUE(expr)     — first value in the ordered partition
+#   LAST_VALUE(expr)      — last value in the ordered partition
+#
+# Grammar:
+#   window_func_call  — the full call site (function name + args + OVER spec)
+#   window_spec       — the parenthesised window frame definition
+#   partition_clause  — PARTITION BY expr { , expr }  (optional)
+#   order_clause      — ORDER BY order_item { , order_item }  (already defined)
+#
+# window_func_call is tried before plain function_call in the primary rule;
+# PEG backtracking ensures NAME "(" without a following OVER falls through to
+# function_call.
+
+window_func_call  = NAME "(" ( STAR | [ value_list ] ) ")" "OVER" "(" window_spec ")" ;
+window_spec       = [ partition_clause ] [ order_clause ] ;
+partition_clause  = "PARTITION" "BY" expr { "," expr } ;
 value_list        = expr { "," expr } ;
 
 # ── CASE expression ───────────────────────────────────────────────────────────

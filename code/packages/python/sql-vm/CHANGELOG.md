@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.3.0 — 2026-04-27
+
+### Added — Phase 8: Window Functions (OVER / PARTITION BY)
+
+- **`_do_compute_window()` handler** — dispatched when the VM encounters a
+  `ComputeWindowFunctions` instruction.  Two-pass algorithm:
+  1. Converts the result buffer rows to dicts keyed by `result.columns`.
+  2. Groups rows into partitions by `partition_cols` (empty key = global window).
+  3. Sorts each partition by `order_cols` using a NULL-first `_win_sort_key()`.
+  4. Evaluates each `WinFuncSpec` in order:
+     - Ranking: `ROW_NUMBER`, `RANK`, `DENSE_RANK`
+     - Aggregate: `SUM`, `COUNT` (skips NULLs), `COUNT_STAR`, `AVG`, `MIN`, `MAX`
+     - Value: `FIRST_VALUE`, `LAST_VALUE`
+  5. Projects rows to `output_cols` and updates `result.columns`.
+- **`_win_sort_key()` / `_Descending` helpers** — NULL-first sort key; wraps
+  non-NULL values in `_Descending` for DESC columns.
+- **`_order_vals()` helper** — extracts ordered column values from a row dict.
+
 ## 1.2.0 — 2026-04-27
 
 ### Added — Phase 5b: Recursive CTEs

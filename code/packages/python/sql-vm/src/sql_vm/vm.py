@@ -97,6 +97,9 @@ from sql_codegen import (
     UnaryOp,
     UpdateAgg,
     UpdateRows,
+    WinFunc,
+    WinFuncSpec,
+    ComputeWindowFunctions,
 )
 from sql_codegen import IrAggFunc as AggFunc
 
@@ -476,6 +479,9 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
         return
     if isinstance(ins, DistinctResult):
         _do_distinct(st)
+        return
+    if isinstance(ins, ComputeWindowFunctions):
+        _do_compute_window(ins, st)
         return
 
     # DML / DDL -----------------------------------------------------------
@@ -1055,6 +1061,214 @@ def _do_distinct(st: _VmState) -> None:
             seen.add(row)
             out.append(row)
     st.result.rows = out
+
+
+def _do_compute_window(ins: ComputeWindowFunctions, st: _VmState) -> None:
+    """Evaluate all window functions against the materialised result buffer.
+
+    Algorithm
+    ---------
+    1. Convert each result tuple to a ``dict[str, SqlValue]`` keyed by the
+       current ``result.columns``.
+    2. For each :class:`WinFuncSpec`:
+       a. Build partitions — a dict mapping a frozen tuple of partition-key
+          values to the list of row dicts in that partition.
+       b. Sort each partition by the spec's ``order_cols``.
+       c. Evaluate the window function across each sorted partition.
+       d. Write the result value into each row dict under ``result_col``.
+    3. Project each dict to ``ins.output_cols`` and rebuild the rows list.
+    4. Update ``result.columns``.
+
+    Partition sort key
+    ------------------
+    NULL sorts before all other values (SQLite BINARY collation for ORDER BY
+    within window frames).  We use the same ``_sql_sort_key`` helper as the
+    index scan code so behaviour is consistent.
+    """
+    columns = st.result.columns
+
+    # Convert tuples → dicts for easy column access.
+    rows: list[dict[str, SqlValue]] = [
+        dict(zip(columns, row, strict=True))
+        for row in st.result.rows
+    ]
+
+    for spec in ins.specs:
+        # --- Build partitions -------------------------------------------
+        partitions: dict[tuple[SqlValue, ...], list[dict[str, SqlValue]]] = {}
+        for row in rows:
+            pk = tuple(row.get(c) for c in spec.partition_cols)
+            if pk not in partitions:
+                partitions[pk] = []
+            partitions[pk].append(row)
+
+        for partition in partitions.values():
+            # --- Sort within partition -----------------------------------
+            if spec.order_cols:
+                def _sort_key(r: dict[str, SqlValue], cols: tuple[tuple[str, bool], ...]) -> tuple[object, ...]:
+                    result_key: list[object] = []
+                    for col, desc in cols:
+                        v = r.get(col)
+                        k = _win_sort_key(v)
+                        result_key.append(_Descending(k) if desc else k)
+                    return tuple(result_key)
+
+                order_cols = spec.order_cols
+                partition.sort(key=lambda r: _sort_key(r, order_cols))
+
+            # --- Evaluate window function --------------------------------
+            func = spec.func
+            arg_col = spec.arg_col
+            result_col = spec.result_col
+
+            if func == WinFunc.ROW_NUMBER:
+                for i, row in enumerate(partition, start=1):
+                    row[result_col] = i
+
+            elif func == WinFunc.RANK:
+                rank = 1
+                for i, row in enumerate(partition):
+                    if i == 0:
+                        row[result_col] = 1
+                    else:
+                        prev = partition[i - 1]
+                        if _order_vals(prev, spec.order_cols) == _order_vals(row, spec.order_cols):
+                            row[result_col] = prev[result_col]
+                        else:
+                            rank = i + 1
+                            row[result_col] = rank
+
+            elif func == WinFunc.DENSE_RANK:
+                rank = 1
+                for i, row in enumerate(partition):
+                    if i == 0:
+                        row[result_col] = 1
+                    else:
+                        prev = partition[i - 1]
+                        if _order_vals(prev, spec.order_cols) == _order_vals(row, spec.order_cols):
+                            row[result_col] = prev[result_col]
+                        else:
+                            rank += 1
+                            row[result_col] = rank
+
+            elif func == WinFunc.SUM:
+                total: SqlValue = None
+                for row in partition:
+                    v = row.get(arg_col) if arg_col else None
+                    if v is not None:
+                        if total is None:
+                            total = v
+                        else:
+                            total = total + v  # type: ignore[operator]
+                for row in partition:
+                    row[result_col] = total
+
+            elif func == WinFunc.COUNT:
+                count = sum(1 for row in partition if arg_col and row.get(arg_col) is not None)
+                for row in partition:
+                    row[result_col] = count
+
+            elif func == WinFunc.COUNT_STAR:
+                count = len(partition)
+                for row in partition:
+                    row[result_col] = count
+
+            elif func == WinFunc.AVG:
+                vals = [row.get(arg_col) for row in partition if arg_col and row.get(arg_col) is not None]
+                avg: SqlValue = None
+                if vals:
+                    s = sum(float(v) for v in vals)  # type: ignore[arg-type]
+                    avg = s / len(vals)
+                for row in partition:
+                    row[result_col] = avg
+
+            elif func == WinFunc.MIN:
+                def _min_key(v: SqlValue) -> tuple[int, object]:
+                    return _win_sort_key(v)
+                vals = [row.get(arg_col) for row in partition if arg_col] if arg_col else []
+                non_null = [v for v in vals if v is not None]
+                min_val: SqlValue = min(non_null, key=_min_key) if non_null else None  # type: ignore[arg-type]
+                for row in partition:
+                    row[result_col] = min_val
+
+            elif func == WinFunc.MAX:
+                def _max_key(v: SqlValue) -> tuple[int, object]:
+                    return _win_sort_key(v)
+                vals = [row.get(arg_col) for row in partition if arg_col] if arg_col else []
+                non_null = [v for v in vals if v is not None]
+                max_val: SqlValue = max(non_null, key=_max_key) if non_null else None  # type: ignore[arg-type]
+                for row in partition:
+                    row[result_col] = max_val
+
+            elif func == WinFunc.FIRST_VALUE:
+                first = partition[0].get(arg_col) if partition and arg_col else None
+                for row in partition:
+                    row[result_col] = first
+
+            elif func == WinFunc.LAST_VALUE:
+                last = partition[-1].get(arg_col) if partition and arg_col else None
+                for row in partition:
+                    row[result_col] = last
+
+    # Project rows to output_cols and rebuild tuples.
+    out_cols = ins.output_cols
+    st.result.rows = [
+        tuple(row.get(c) for c in out_cols)
+        for row in rows
+    ]
+    st.result.columns = out_cols
+
+
+def _win_sort_key(v: SqlValue) -> tuple[int, object]:
+    """Return a sort key for a SQL value using NULL-first ordering.
+
+    Matches the ``_sql_sort_key`` convention used by ``InMemoryBackend``
+    for index scans: NULL < numbers < strings < bytes.
+    """
+    if v is None:
+        return (0, b"")
+    if isinstance(v, bool):
+        return (1, int(v))
+    if isinstance(v, (int, float)):
+        return (1, v)
+    if isinstance(v, str):
+        return (2, v)
+    if isinstance(v, bytes):
+        return (3, v)
+    return (4, repr(v))
+
+
+class _Descending:
+    """Wrapper that reverses comparison for descending sort.
+
+    Python's ``sort`` is ascending-only; wrapping a key in this class
+    inverts the comparison so the sort behaves as descending.
+    """
+
+    __slots__ = ("key",)
+
+    def __init__(self, key: tuple[int, object]) -> None:
+        self.key = key
+
+    def __lt__(self, other: _Descending) -> bool:
+        return self.key > other.key
+
+    def __le__(self, other: _Descending) -> bool:
+        return self.key >= other.key
+
+    def __gt__(self, other: _Descending) -> bool:
+        return self.key < other.key
+
+    def __ge__(self, other: _Descending) -> bool:
+        return self.key <= other.key
+
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, _Descending) and self.key == other.key
+
+
+def _order_vals(row: dict[str, SqlValue], order_cols: tuple[tuple[str, bool], ...]) -> tuple[SqlValue, ...]:
+    """Extract the ORDER BY key values from a row dict."""
+    return tuple(row.get(col) for col, _ in order_cols)
 
 
 # --------------------------------------------------------------------------
