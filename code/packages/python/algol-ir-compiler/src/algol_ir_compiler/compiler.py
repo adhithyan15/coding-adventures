@@ -84,6 +84,7 @@ _THUNK_STORE_LABEL = "_fn_algol_store_thunk"
 _THUNK_EVAL_REAL_LABEL = "_fn_algol_eval_real_thunk"
 _THUNK_STORE_REAL_LABEL = "_fn_algol_store_real_thunk"
 _SWITCH_EVAL_LABEL = "_fn_algol_eval_switch"
+_PROCEDURE_CALL_LABEL = "_fn_algol_call_procedure"
 _THUNK_DESCRIPTOR_SIZE = 12
 _THUNK_CODE_ID_OFFSET = 0
 _THUNK_CALLER_FRAME_OFFSET = 4
@@ -93,6 +94,9 @@ _THUNK_FLAG_STORE = 1
 _SWITCH_DESCRIPTOR_SIZE = 8
 _SWITCH_DESCRIPTOR_ID_OFFSET = 0
 _SWITCH_DESCRIPTOR_CALLER_FRAME_OFFSET = 4
+_PROCEDURE_DESCRIPTOR_SIZE = 8
+_PROCEDURE_DESCRIPTOR_ID_OFFSET = 0
+_PROCEDURE_DESCRIPTOR_STATIC_LINK_OFFSET = 4
 _MAX_EVAL_THUNKS = 256
 _INTEGER_TYPE = "integer"
 _BOOLEAN_TYPE = "boolean"
@@ -237,6 +241,7 @@ class AlgolIrCompiler:
         self.eval_thunks: list[_EvalThunk] = []
         self.has_by_name_parameters = False
         self.has_switch_parameters = False
+        self.has_procedure_parameters = False
         self.string_literal_offsets: dict[str, int] = {}
 
     def compile(self, typed: TypeCheckResult | ASTNode) -> CompileResult:
@@ -266,6 +271,7 @@ class AlgolIrCompiler:
         self.eval_thunks = []
         self.has_by_name_parameters = False
         self.has_switch_parameters = False
+        self.has_procedure_parameters = False
         self.string_literal_offsets = {}
         self.semantic_blocks = list(type_result.semantic.blocks)
         self.semantic_blocks_by_ast = {
@@ -336,6 +342,11 @@ class AlgolIrCompiler:
             for procedure in type_result.semantic.procedures
             for parameter in procedure.parameters
         )
+        self.has_procedure_parameters = any(
+            parameter.kind == "procedure"
+            for procedure in type_result.semantic.procedures
+            for parameter in procedure.parameters
+        )
         self.arrays = {
             array.array_id: array for array in type_result.semantic.arrays
         }
@@ -354,7 +365,12 @@ class AlgolIrCompiler:
                     *(
                         _INTEGER_TYPE
                         if parameter.mode == _NAME_MODE
-                        or parameter.kind in {"array", "label", "switch"}
+                        or parameter.kind in {
+                            "array",
+                            "label",
+                            "switch",
+                            "procedure",
+                        }
                         else parameter.type_name
                         for parameter in procedure.parameters
                     ),
@@ -387,6 +403,11 @@ class AlgolIrCompiler:
         if self.has_switch_parameters:
             self.procedure_signatures[_SWITCH_EVAL_LABEL] = ProcedureSignaturePlan(
                 param_types=(_INTEGER_TYPE, _INTEGER_TYPE, _INTEGER_TYPE),
+                return_type=_INTEGER_TYPE,
+            )
+        if self.has_procedure_parameters:
+            self.procedure_signatures[_PROCEDURE_CALL_LABEL] = ProcedureSignaturePlan(
+                param_types=(_INTEGER_TYPE, _INTEGER_TYPE),
                 return_type=_INTEGER_TYPE,
             )
         self.frame_offsets = self._layout_frames(self.semantic_blocks)
@@ -498,6 +519,8 @@ class AlgolIrCompiler:
             )
         if self.has_switch_parameters:
             self._compile_switch_eval_dispatcher()
+        if self.has_procedure_parameters:
+            self._compile_procedure_call_dispatcher()
 
         return CompileResult(
             program=self.program,
@@ -2398,6 +2421,8 @@ class AlgolIrCompiler:
         call = self._require_procedure_call(name, role)
         if call.label in {_BUILTIN_PRINT_LABEL, _BUILTIN_OUTPUT_LABEL}:
             return self._compile_builtin_output(node, scope)
+        if call.parameter_symbol_id is not None:
+            return self._compile_procedure_parameter_call(node, call, scope)
         procedure = self.procedures[call.procedure_id]
         static_link = self._emit_static_link_for_call(call, scope)
         actuals = _direct_nodes(_first_direct_node(node, "actual_params"), "expression")
@@ -2411,7 +2436,7 @@ class AlgolIrCompiler:
             for index, (argument, parameter) in enumerate(
                 zip(actuals, procedure.parameters, strict=True)
             )
-            if parameter.kind not in {"array", "label", "switch"}
+            if parameter.kind not in {"array", "label", "switch", "procedure"}
             and parameter.mode == _NAME_MODE
             and self._requires_by_name_thunk_descriptor(argument)
         ]
@@ -2421,6 +2446,13 @@ class AlgolIrCompiler:
                 zip(actuals, procedure.parameters, strict=True)
             )
             if parameter.kind == "switch"
+        ]
+        procedure_actuals = [
+            (index, argument, parameter)
+            for index, (argument, parameter) in enumerate(
+                zip(actuals, procedure.parameters, strict=True)
+            )
+            if parameter.kind == "procedure"
         ]
         for _, argument, parameter in thunk_actuals:
             variable = _single_variable_expr(argument)
@@ -2447,6 +2479,8 @@ class AlgolIrCompiler:
                 continue
             if parameter.kind == "switch":
                 continue
+            if parameter.kind == "procedure":
+                continue
             if parameter.mode == _VALUE_MODE:
                 value = self._compile_expr(argument, scope)
                 arguments[index] = self._coerce_reg_to_type(
@@ -2458,6 +2492,7 @@ class AlgolIrCompiler:
         temp_descriptor_bytes = (
             len(thunk_actuals) * _THUNK_DESCRIPTOR_SIZE
             + len(switch_actuals) * _SWITCH_DESCRIPTOR_SIZE
+            + len(procedure_actuals) * _PROCEDURE_DESCRIPTOR_SIZE
         )
         descriptor_heap_mark = (
             self._emit_reserve_temp_descriptor_space(temp_descriptor_bytes, scope)
@@ -2488,6 +2523,16 @@ class AlgolIrCompiler:
                 switch_actuals
             )
         }
+        procedure_descriptor_offsets = {
+            argument_index: (
+                len(thunk_actuals) * _THUNK_DESCRIPTOR_SIZE
+                + len(switch_actuals) * _SWITCH_DESCRIPTOR_SIZE
+                + descriptor_index * _PROCEDURE_DESCRIPTOR_SIZE
+            )
+            for descriptor_index, (argument_index, _, _) in enumerate(
+                procedure_actuals
+            )
+        }
         for index, (argument, parameter) in enumerate(
             zip(actuals, procedure.parameters, strict=True)
         ):
@@ -2499,12 +2544,31 @@ class AlgolIrCompiler:
                 continue
             if parameter.kind == "switch":
                 descriptor = None
-                if descriptor_heap_mark is not None and index in switch_descriptor_offsets:
+                if (
+                    descriptor_heap_mark is not None
+                    and index in switch_descriptor_offsets
+                ):
                     descriptor = self._emit_descriptor_at(
                         descriptor_heap_mark,
                         switch_descriptor_offsets[index],
                     )
                 arguments[index] = self._compile_switch_actual_pointer(
+                    argument,
+                    scope,
+                    descriptor,
+                )
+                continue
+            if parameter.kind == "procedure":
+                descriptor = None
+                if (
+                    descriptor_heap_mark is not None
+                    and index in procedure_descriptor_offsets
+                ):
+                    descriptor = self._emit_descriptor_at(
+                        descriptor_heap_mark,
+                        procedure_descriptor_offsets[index],
+                    )
+                arguments[index] = self._compile_procedure_actual_pointer(
                     argument,
                     scope,
                     descriptor,
@@ -2550,6 +2614,43 @@ class AlgolIrCompiler:
             dst=result,
             src=_REAL_RESULT_REG if call.return_type == _REAL_TYPE else _RESULT_REG,
         )
+        return result
+
+    def _compile_procedure_parameter_call(
+        self,
+        node: ASTNode,
+        call: ResolvedProcedureCall,
+        scope: _FrameScope,
+    ) -> int:
+        actuals = _direct_nodes(_first_direct_node(node, "actual_params"), "expression")
+        if actuals:
+            raise CompileError(
+                f"procedure parameter {call.name!r} expects no arguments in this phase"
+            )
+        descriptor_pointer = self._compile_procedure_parameter_pointer(
+            call.name,
+            scope,
+        )
+        if descriptor_pointer is None:
+            raise CompileError(
+                f"procedure parameter {call.name!r} was not resolved"
+            )
+        active_thunk_heap_mark = (
+            scope.active_thunk_heap_mark_reg
+            if scope.active_thunk_heap_mark_reg is not None
+            else self._const_reg(0)
+        )
+        self._emit(
+            IrOp.CALL,
+            IrLabel(_PROCEDURE_CALL_LABEL),
+            IrRegister(descriptor_pointer),
+            IrRegister(active_thunk_heap_mark),
+        )
+        if scope.helper_failure:
+            self._emit_helper_return_on_thunk_failure(scope)
+        self._emit_handle_pending_goto_after_call(scope)
+        result = self._fresh_reg()
+        self._copy_reg(dst=result, src=_RESULT_REG)
         return result
 
     def _compile_builtin_output(self, node: ASTNode, scope: _FrameScope) -> int:
@@ -3128,6 +3229,61 @@ class AlgolIrCompiler:
         )
         return descriptor
 
+    def _compile_procedure_actual_pointer(
+        self,
+        argument: ASTNode,
+        scope: _FrameScope,
+        descriptor: int | None,
+    ) -> int:
+        variable = _single_variable_expr(argument)
+        if variable is None or _variable_subscripts(variable):
+            raise CompileError("procedure parameter actual must be a direct procedure")
+        name = _variable_name(variable)
+        if name is None:
+            raise CompileError("procedure parameter actual is missing a name")
+        resolved = self._resolve_symbol_in_scope_chain(name.value, scope)
+        if resolved is None:
+            raise CompileError(f"procedure actual {name.value!r} was not resolved")
+        symbol, lexical_depth_delta = resolved
+        if symbol.kind == "procedure_parameter":
+            if symbol.slot_offset is None:
+                raise CompileError(
+                    f"procedure parameter actual {name.value!r} has no planned "
+                    "frame slot"
+                )
+            frame_reg = self._emit_frame_for_lexical_depth(scope, lexical_depth_delta)
+            pointer = self._fresh_reg()
+            self._emit(
+                IrOp.LOAD_WORD,
+                IrRegister(pointer),
+                IrRegister(frame_reg),
+                IrRegister(self._const_reg(symbol.slot_offset)),
+            )
+            return pointer
+        if symbol.kind != "procedure" or symbol.procedure_id is None:
+            raise CompileError(
+                f"procedure parameter actual {name.value!r} is not a procedure"
+            )
+        procedure = self.procedures.get(symbol.procedure_id)
+        if procedure is None:
+            raise CompileError(f"procedure actual {name.value!r} has no descriptor")
+        if procedure.return_type is not None or procedure.parameters:
+            raise CompileError(
+                f"procedure parameter actual {name.value!r} must be a no-argument "
+                "statement procedure"
+            )
+        if descriptor is None:
+            raise CompileError(
+                f"missing reserved descriptor for procedure actual {name.value!r}"
+            )
+        static_link = self._emit_frame_for_lexical_depth(scope, lexical_depth_delta)
+        self._emit_write_procedure_descriptor(
+            descriptor,
+            procedure.procedure_id,
+            static_link,
+        )
+        return descriptor
+
     def _compile_label_actual_value(
         self,
         argument: ASTNode,
@@ -3165,6 +3321,31 @@ class AlgolIrCompiler:
         if label is None:
             raise CompileError(f"label actual {name.value!r} has no descriptor")
         return self._const_reg(label.label_id)
+
+    def _compile_procedure_parameter_pointer(
+        self,
+        name: str,
+        scope: _FrameScope,
+    ) -> int | None:
+        resolved = self._resolve_symbol_in_scope_chain(name, scope)
+        if resolved is None:
+            return None
+        symbol, lexical_depth_delta = resolved
+        if symbol.kind != "procedure_parameter":
+            return None
+        if symbol.slot_offset is None:
+            raise CompileError(
+                f"procedure parameter {name!r} has no planned frame slot"
+            )
+        frame_reg = self._emit_frame_for_lexical_depth(scope, lexical_depth_delta)
+        descriptor_pointer = self._fresh_reg()
+        self._emit(
+            IrOp.LOAD_WORD,
+            IrRegister(descriptor_pointer),
+            IrRegister(frame_reg),
+            IrRegister(self._const_reg(symbol.slot_offset)),
+        )
+        return descriptor_pointer
 
     def _emit_call_switch_eval(
         self,
@@ -3354,6 +3535,23 @@ class AlgolIrCompiler:
             value_reg=caller_frame_reg,
             base_reg=descriptor,
             offset=_SWITCH_DESCRIPTOR_CALLER_FRAME_OFFSET,
+        )
+
+    def _emit_write_procedure_descriptor(
+        self,
+        descriptor: int,
+        procedure_id: int,
+        static_link_reg: int,
+    ) -> None:
+        self._store_word_const(
+            descriptor,
+            _PROCEDURE_DESCRIPTOR_ID_OFFSET,
+            procedure_id,
+        )
+        self._store_word_reg(
+            value_reg=static_link_reg,
+            base_reg=descriptor,
+            offset=_PROCEDURE_DESCRIPTOR_STATIC_LINK_OFFSET,
         )
 
     def _compile_procedures(
@@ -3578,6 +3776,55 @@ class AlgolIrCompiler:
             self._label(else_label)
             self._label(end_label)
         self._store_runtime_state(_RUNTIME_THUNK_FAILURE_OFFSET, self._const_reg(1))
+        self._emit_zero_result_reg()
+        self._emit(IrOp.RET)
+        self.current_function_return_type = previous_return_type
+
+    def _compile_procedure_call_dispatcher(self) -> None:
+        previous_return_type = self.current_function_return_type
+        self.current_function_return_type = _INTEGER_TYPE
+        self._label(_PROCEDURE_CALL_LABEL)
+        descriptor = _STATIC_LINK_PARAM_REG
+        active_thunk_heap_mark = _THUNK_HEAP_MARK_PARAM_REG
+        procedure_id = self._fresh_reg()
+        static_link = self._fresh_reg()
+        self._emit(
+            IrOp.LOAD_WORD,
+            IrRegister(procedure_id),
+            IrRegister(descriptor),
+            IrRegister(self._const_reg(_PROCEDURE_DESCRIPTOR_ID_OFFSET)),
+        )
+        self._emit(
+            IrOp.LOAD_WORD,
+            IrRegister(static_link),
+            IrRegister(descriptor),
+            IrRegister(self._const_reg(_PROCEDURE_DESCRIPTOR_STATIC_LINK_OFFSET)),
+        )
+        for procedure in self.procedures.values():
+            if procedure.return_type is not None or procedure.parameters:
+                continue
+            index = self.if_count
+            self.if_count += 1
+            else_label = f"if_{index}_else"
+            end_label = f"if_{index}_end"
+            matches = self._fresh_reg()
+            self._emit(
+                IrOp.CMP_EQ,
+                IrRegister(matches),
+                IrRegister(procedure_id),
+                IrRegister(self._const_reg(procedure.procedure_id)),
+            )
+            self._emit(IrOp.BRANCH_Z, IrRegister(matches), IrLabel(else_label))
+            self._emit(
+                IrOp.CALL,
+                IrLabel(procedure.label),
+                IrRegister(static_link),
+                IrRegister(active_thunk_heap_mark),
+            )
+            self._emit(IrOp.RET)
+            self._emit(IrOp.JUMP, IrLabel(end_label))
+            self._label(else_label)
+            self._label(end_label)
         self._emit_zero_result_reg()
         self._emit(IrOp.RET)
         self.current_function_return_type = previous_return_type

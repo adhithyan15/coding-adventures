@@ -753,6 +753,34 @@ class TestAlgolIrCompiler:
             for instruction in calls
         )
 
+    def test_compiles_procedure_parameter_call_and_dispatcher(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "procedure twice(p); procedure p; begin p; p end; "
+                "procedure bump; begin result := result + 1 end; "
+                "result := 0; twice(bump) "
+                "end"
+            )
+        )
+        labels = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.LABEL
+        ]
+        calls = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+
+        assert result.procedure_signatures["_fn_algol_call_procedure"].param_count == 2
+        assert "_fn_algol_call_procedure" in labels
+        assert any(
+            instruction.operands[0].name == "_fn_algol_call_procedure"
+            for instruction in calls
+        )
+
     def test_compiles_dynamic_multidimensional_array_bounds(self) -> None:
         result = compile_algol(
             parse_algol(

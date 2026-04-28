@@ -36,14 +36,14 @@ switch selections and nonlocal conditional/switch designational branches remain
 guarded with targeted diagnostics. Switch entries that recursively select
 another switch are also guarded until the later dispatch-lowering phase.
 
-Unsupported ALGOL 60 features, including switch- and procedure-valued
-parameters, are reported as diagnostics instead of being silently accepted by
-the compiled pipeline. By-name parameters are accepted in the semantic model,
-while later lowering packages now implement scalar call-by-name, typed
-whole-array formals, label formals, and switch formals. The checker keeps
-guarding the remaining full-ALGOL gaps, including non-assignable actuals
-passed to written by-name formals, non-integer by-name types, value
-array/label/switch parameters, and procedure-valued parameters.
+Unsupported ALGOL 60 features are reported as diagnostics instead of being
+silently accepted by the compiled pipeline. By-name parameters are accepted in
+the semantic model, while later lowering packages now implement scalar
+call-by-name, typed whole-array formals, label formals, switch formals, and
+no-argument statement procedure formals. The checker keeps guarding the
+remaining full-ALGOL gaps, including non-assignable actuals passed to written
+by-name formals, value array/label/switch/procedure parameters, and richer
+procedure-valued parameters with arguments or return values.
 
 ```python
 from algol_parser import parse_algol
