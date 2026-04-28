@@ -129,7 +129,8 @@ The package includes end-to-end stress tests for:
 - DCG expansion with `phrase/3`
 - arithmetic evaluation and comparison
 - collection predicates such as `findall/3`
-- common list predicates such as `member/2`, `append/3`, and `length/2`
+- common list predicates such as `member/2`, `append/3`, `length/2`,
+  `sort/2`, and `msort/2`
 - dynamic predicates seeded by initialization directives
 - named Python answer bindings
 - loader term/goal expansion before VM compilation

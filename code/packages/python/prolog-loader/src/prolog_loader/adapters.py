@@ -78,9 +78,11 @@ from logic_stdlib import (
     lengtho,
     listo,
     membero,
+    msorto,
     permuteo,
     reverseo,
     selecto,
+    sorto,
 )
 from prolog_core import expand_dcg_phrase
 
@@ -161,8 +163,10 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         "last": lasto,
         "length": lengtho,
         "member": membero,
+        "msort": msorto,
         "permutation": permuteo,
         "reverse": reverseo,
+        "sort": sorto,
     }
     if goal.relation.arity == 2 and name in binary_list_builtins:
         return binary_list_builtins[name](args[0], args[1])
