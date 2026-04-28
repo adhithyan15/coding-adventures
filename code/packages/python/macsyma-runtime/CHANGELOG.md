@@ -1,5 +1,29 @@
 # Changelog
 
+## 1.12.0 — 2026-04-28
+
+**Phase G (control-flow grammar) — tests and stale-comment cleanup.**
+
+Control-flow constructs (`if/then/else`, `for…thru`, `for…in`, `while…do`,
+`block([locals], …)`, `return()`) were already fully implemented across the
+grammar, lexer, parser, compiler, and VM layers.  This release completes the
+Phase G story for `macsyma-runtime`:
+
+- `tests/test_control_flow.py` (**NEW**): 42 end-to-end tests that drive
+  every control-flow construct through the full pipeline
+  `parse_macsyma → compile_macsyma (with extended name table) → VM(MacsymaBackend)`.
+  Covers interaction with CAS operations (factor, solve, length, etc.),
+  multi-statement programs, function definitions inside blocks, and
+  `MacsymaBackend`-specific features (history, kill).
+- `src/macsyma_runtime/heads.py`: corrected stale comment on `BLOCK`
+  ("reserved for Phase G; not yet handled" → "handled by symbolic-vm's
+  `block_` handler").
+- `pyproject.toml`: bumped `symbolic-vm` floor to `>=0.34.0`.
+
+Total tests: **177** (up from 135). Coverage: **98.71 %**.
+
+---
+
 ## 1.11.0 — 2026-04-28
 
 **Add Group E matrix operation names to the MACSYMA name table.**
