@@ -1226,6 +1226,18 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
 
+    def test_integer_division_by_zero_returns_zero(self) -> None:
+        result = compile_source(
+            "begin integer result, divisor; divisor := 0; result := 10 div divisor end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
+
+    def test_integer_modulo_by_zero_returns_zero(self) -> None:
+        result = compile_source(
+            "begin integer result, divisor; divisor := 0; result := 10 mod divisor end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
+
     def test_array_failure_in_procedure_unwinds_before_caller_continues(self) -> None:
         result = compile_source(
             "begin integer result, i; "

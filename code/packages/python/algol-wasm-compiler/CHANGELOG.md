@@ -44,6 +44,8 @@ All notable changes to this package will be documented in this file.
   including by-name actuals that re-evaluate through eval thunks.
 - Accepted trailing and repeated semicolons in ALGOL block and compound
   statement lists.
+- Returned `0` for integer `div` or `mod` by zero through the ALGOL runtime
+  failure path instead of leaking a host WASM trap.
 - Added a convergence golden fixture that combines conditional expressions,
   exponentiation, chained assignment, by-name array summation, real arithmetic,
   and output in one end-to-end program.

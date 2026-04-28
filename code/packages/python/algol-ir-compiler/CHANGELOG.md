@@ -49,6 +49,8 @@ All notable changes to this package will be documented in this file.
   exponents.
 - Lowered bare no-argument typed procedure names as expression calls, including
   use inside read-only by-name eval thunks.
+- Lowered integer `div` and `mod` zero-divisor checks through the existing
+  runtime-failure guard so WASM execution returns `0` instead of trapping.
 
 ## [0.1.0] - 2026-04-20
 

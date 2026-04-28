@@ -1609,6 +1609,7 @@ class AlgolIrCompiler:
                 loop_reference.type_name,
                 step_value,
                 step_type,
+                scope,
             )
             next_type = self._result_type_for_numeric_operator(
                 "+",
@@ -1725,6 +1726,7 @@ class AlgolIrCompiler:
             loop_reference.type_name,
             step_value,
             step_type,
+            scope,
         )
         next_type = self._result_type_for_numeric_operator(
             "+",
@@ -2258,6 +2260,7 @@ class AlgolIrCompiler:
                 current_type,
                 right,
                 right_type,
+                scope,
             )
             current_type = self._result_type_for_numeric_operator(
                 operator.value,
@@ -2455,6 +2458,7 @@ class AlgolIrCompiler:
         left_type: str,
         right: int,
         right_type: str,
+        scope: _FrameScope,
     ) -> int:
         dst = self._fresh_reg()
         result_type = self._result_type_for_numeric_operator(
@@ -2511,10 +2515,12 @@ class AlgolIrCompiler:
         elif operator == "*":
             self._emit(IrOp.MUL, IrRegister(dst), IrRegister(left), IrRegister(right))
         elif operator == "div":
+            self._emit_integer_zero_divisor_guard(right, scope)
             self._emit(IrOp.DIV, IrRegister(dst), IrRegister(left), IrRegister(right))
         elif operator == "mod":
             quotient = self._fresh_reg()
             product = self._fresh_reg()
+            self._emit_integer_zero_divisor_guard(right, scope)
             self._emit(
                 IrOp.DIV, IrRegister(quotient), IrRegister(left), IrRegister(right)
             )
@@ -2525,6 +2531,18 @@ class AlgolIrCompiler:
         else:
             raise CompileError(f"numeric operator {operator!r} is not supported")
         return dst
+
+    def _emit_integer_zero_divisor_guard(
+        self, divisor: int, scope: _FrameScope
+    ) -> None:
+        failed = self._fresh_reg()
+        self._emit(
+            IrOp.CMP_EQ,
+            IrRegister(failed),
+            IrRegister(divisor),
+            IrRegister(_ZERO_REG),
+        )
+        self._emit_runtime_failure_guard(failed, scope)
 
     def _emit_power(self, base: int, base_type: str, exponent: int) -> int:
         if base_type == _REAL_TYPE:

@@ -514,6 +514,16 @@ class TestAlgolIrCompiler:
         assert IrOp.MUL in opcodes
         assert opcodes.count(IrOp.SUB) >= 2
 
+    def test_integer_division_emits_zero_divisor_guard(self) -> None:
+        result = compile_algol(
+            parse_algol("begin integer result, divisor; result := 10 div divisor end")
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+
+        assert IrOp.CMP_EQ in opcodes
+        assert IrOp.BRANCH_Z in opcodes
+        assert opcodes.index(IrOp.CMP_EQ) < opcodes.index(IrOp.DIV)
+
     def test_compiles_boolean_not_or_and_comparison_forms(self) -> None:
         result = compile_algol(
             parse_algol(
