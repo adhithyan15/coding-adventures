@@ -223,7 +223,7 @@ for_elem     = arith_expr "step" arith_expr "until" arith_expr
 #     addition / subtraction
 #     multiplication / division / div / mod
 #     exponentiation (left-associative per ALGOL 60 report)
-#     primary (literal, variable, call, parenthesised expression)
+#     primary (literal, call, variable, parenthesised expression)
 #
 # Only the `expression` rule (used in assignments and actual parameters)
 # needs the full unified hierarchy.  Rules used in type-specific contexts
@@ -273,8 +273,8 @@ factor       = primary { ( CARET | POWER ) primary } ;
 primary      = INTEGER_LIT
              | REAL_LIT
              | STRING_LIT
-             | variable
              | proc_call
+             | variable
              | LPAREN arith_expr RPAREN ;
 
 # Boolean expression.
