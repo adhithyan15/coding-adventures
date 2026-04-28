@@ -54,6 +54,8 @@ All notable changes to this package will be documented in this file.
 - Lowered integer divide-overflow checks, real division zero-divisor checks,
   and zero-real-base negative exponent checks through the same runtime-failure
   guard path.
+- Lowered `value` whole-array parameters by allocating a callee-local copy of
+  the array descriptor, bounds metadata, and element storage at procedure entry.
 
 ## [0.1.0] - 2026-04-20
 

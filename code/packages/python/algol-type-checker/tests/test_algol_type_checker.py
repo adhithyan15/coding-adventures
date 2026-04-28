@@ -736,17 +736,21 @@ class TestAlgolTypeChecker:
         assert parameter.type_name == "integer"
         assert any(access.role == "actual" for access in result.semantic.array_accesses)
 
-    def test_rejects_value_array_parameter_in_this_phase(self) -> None:
+    def test_accepts_value_array_parameter_copy_mode(self) -> None:
         ast = parse_algol(
             "begin integer result; "
-            "procedure probe(a); value a; integer a; array a; begin end; "
-            "result := 0 "
+            "integer array xs[1:2]; "
+            "procedure probe(a); value a; integer a; array a; begin a[1] := 9 end; "
+            "probe(xs); result := xs[1] "
             "end"
         )
         result = check_algol(ast)
 
-        assert not result.ok
-        assert "cannot be an array in this phase" in result.diagnostics[0].message
+        assert result.ok
+        assert result.semantic is not None
+        parameter = result.semantic.procedures[0].parameters[0]
+        assert parameter.kind == "array"
+        assert parameter.mode == "value"
 
     def test_accepts_label_parameter_and_direct_label_actual(self) -> None:
         ast = parse_algol(

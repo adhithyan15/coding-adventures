@@ -934,6 +934,47 @@ class AlgolIrCompiler:
         self._emit(IrOp.JUMP, IrLabel(loop_label))
         self._label(end_label)
 
+    def _emit_copy_memory(
+        self, source_pointer: int, target_pointer: int, byte_count: int
+    ) -> None:
+        index = self.loop_count
+        self.loop_count += 1
+        loop_label = f"loop_{index}_start"
+        end_label = f"loop_{index}_end"
+        cursor = self._fresh_reg()
+        done = self._fresh_reg()
+
+        self._copy_reg(dst=cursor, src=_ZERO_REG)
+        self._label(loop_label)
+        self._emit(
+            IrOp.CMP_EQ,
+            IrRegister(done),
+            IrRegister(cursor),
+            IrRegister(byte_count),
+        )
+        self._emit(IrOp.BRANCH_NZ, IrRegister(done), IrLabel(end_label))
+        byte = self._fresh_reg()
+        self._emit(
+            IrOp.LOAD_BYTE,
+            IrRegister(byte),
+            IrRegister(source_pointer),
+            IrRegister(cursor),
+        )
+        self._emit(
+            IrOp.STORE_BYTE,
+            IrRegister(byte),
+            IrRegister(target_pointer),
+            IrRegister(cursor),
+        )
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(cursor),
+            IrRegister(cursor),
+            IrImmediate(1),
+        )
+        self._emit(IrOp.JUMP, IrLabel(loop_label))
+        self._label(end_label)
+
     def _compile_statement(self, statement: ASTNode, scope: _FrameScope) -> None:
         label = self.labels.get(id(statement))
         if label is not None:
@@ -2782,10 +2823,6 @@ class AlgolIrCompiler:
             zip(actuals, procedure.parameters, strict=True)
         ):
             if parameter.kind == "array":
-                if parameter.mode == _VALUE_MODE:
-                    raise CompileError(
-                        f"value array parameter {parameter.name!r} is not supported yet"
-                    )
                 continue
             if parameter.kind == "label":
                 arguments[index] = self._compile_label_actual_value(argument, scope)
@@ -4336,7 +4373,13 @@ class AlgolIrCompiler:
         )
         self._initialize_scalar_slots(scope)
         for index, parameter in enumerate(procedure.parameters):
-            if parameter.kind == "array" or parameter.mode == _NAME_MODE:
+            if parameter.kind == "array":
+                self._store_array_parameter(
+                    parameter,
+                    _VALUE_PARAM_BASE_REG + index,
+                    scope,
+                )
+            elif parameter.mode == _NAME_MODE:
                 self._store_word_reg(
                     value_reg=_VALUE_PARAM_BASE_REG + index,
                     base_reg=scope.frame_base_reg,
@@ -4369,6 +4412,168 @@ class AlgolIrCompiler:
         self._emit_leave_frame(scope)
         self._emit(IrOp.RET)
         self.current_function_return_type = previous_return_type
+
+    def _store_array_parameter(
+        self,
+        parameter: ProcedureParameter,
+        source_descriptor: int,
+        scope: _FrameScope,
+    ) -> None:
+        descriptor = source_descriptor
+        if parameter.mode == _VALUE_MODE:
+            descriptor = self._copy_value_array_descriptor(source_descriptor, scope)
+        self._store_word_reg(
+            value_reg=descriptor,
+            base_reg=scope.frame_base_reg,
+            offset=parameter.slot_offset,
+        )
+
+    def _copy_value_array_descriptor(
+        self,
+        source_descriptor: int,
+        scope: _FrameScope,
+    ) -> int:
+        element_type = self._fresh_reg()
+        dimension_count = self._fresh_reg()
+        total_count = self._fresh_reg()
+        element_width = self._fresh_reg()
+        source_data_pointer = self._fresh_reg()
+        source_bounds_pointer = self._fresh_reg()
+        self._emit_load_scalar(
+            _INTEGER_TYPE,
+            element_type,
+            source_descriptor,
+            0,
+        )
+        self._emit_load_scalar(
+            _INTEGER_TYPE,
+            dimension_count,
+            source_descriptor,
+            _ARRAY_DIMENSION_COUNT_OFFSET,
+        )
+        self._emit_load_scalar(
+            _INTEGER_TYPE,
+            total_count,
+            source_descriptor,
+            _ARRAY_TOTAL_COUNT_OFFSET,
+        )
+        self._emit_load_scalar(
+            _INTEGER_TYPE,
+            element_width,
+            source_descriptor,
+            _ARRAY_ELEMENT_WIDTH_OFFSET,
+        )
+        self._emit_load_scalar(
+            _INTEGER_TYPE,
+            source_data_pointer,
+            source_descriptor,
+            _ARRAY_DATA_POINTER_OFFSET,
+        )
+        self._emit_load_scalar(
+            _INTEGER_TYPE,
+            source_bounds_pointer,
+            source_descriptor,
+            _ARRAY_BOUNDS_POINTER_OFFSET,
+        )
+
+        bounds_bytes = self._fresh_reg()
+        self._emit(
+            IrOp.MUL,
+            IrRegister(bounds_bytes),
+            IrRegister(dimension_count),
+            IrRegister(self._const_reg(_ARRAY_DIMENSION_ENTRY_SIZE)),
+        )
+        data_bytes = self._fresh_reg()
+        self._emit(
+            IrOp.MUL,
+            IrRegister(data_bytes),
+            IrRegister(total_count),
+            IrRegister(element_width),
+        )
+        tail_bytes = self._fresh_reg()
+        self._emit(
+            IrOp.ADD,
+            IrRegister(tail_bytes),
+            IrRegister(bounds_bytes),
+            IrRegister(data_bytes),
+        )
+        allocation_size = self._fresh_reg()
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(allocation_size),
+            IrRegister(tail_bytes),
+            IrImmediate(_ARRAY_DESCRIPTOR_SIZE),
+        )
+
+        heap_pointer = self._fresh_reg()
+        heap_limit = self._fresh_reg()
+        self._load_runtime_state(_RUNTIME_HEAP_POINTER_OFFSET, heap_pointer)
+        self._load_runtime_state(_RUNTIME_HEAP_LIMIT_OFFSET, heap_limit)
+        new_heap_pointer = self._fresh_reg()
+        self._emit(
+            IrOp.ADD,
+            IrRegister(new_heap_pointer),
+            IrRegister(heap_pointer),
+            IrRegister(allocation_size),
+        )
+        heap_exhausted = self._fresh_reg()
+        self._emit(
+            IrOp.CMP_GT,
+            IrRegister(heap_exhausted),
+            IrRegister(new_heap_pointer),
+            IrRegister(heap_limit),
+        )
+        self._emit_runtime_failure_guard(heap_exhausted, scope)
+        self._store_runtime_state(_RUNTIME_HEAP_POINTER_OFFSET, new_heap_pointer)
+
+        bounds_pointer = self._fresh_reg()
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(bounds_pointer),
+            IrRegister(heap_pointer),
+            IrImmediate(_ARRAY_DESCRIPTOR_SIZE),
+        )
+        data_pointer = self._fresh_reg()
+        self._emit(
+            IrOp.ADD,
+            IrRegister(data_pointer),
+            IrRegister(bounds_pointer),
+            IrRegister(bounds_bytes),
+        )
+
+        self._store_word_reg(
+            value_reg=element_type,
+            base_reg=heap_pointer,
+            offset=0,
+        )
+        self._store_word_reg(
+            value_reg=dimension_count,
+            base_reg=heap_pointer,
+            offset=_ARRAY_DIMENSION_COUNT_OFFSET,
+        )
+        self._store_word_reg(
+            value_reg=total_count,
+            base_reg=heap_pointer,
+            offset=_ARRAY_TOTAL_COUNT_OFFSET,
+        )
+        self._store_word_reg(
+            value_reg=element_width,
+            base_reg=heap_pointer,
+            offset=_ARRAY_ELEMENT_WIDTH_OFFSET,
+        )
+        self._store_word_reg(
+            value_reg=data_pointer,
+            base_reg=heap_pointer,
+            offset=_ARRAY_DATA_POINTER_OFFSET,
+        )
+        self._store_word_reg(
+            value_reg=bounds_pointer,
+            base_reg=heap_pointer,
+            offset=_ARRAY_BOUNDS_POINTER_OFFSET,
+        )
+        self._emit_copy_memory(source_bounds_pointer, bounds_pointer, bounds_bytes)
+        self._emit_copy_memory(source_data_pointer, data_pointer, data_bytes)
+        return heap_pointer
 
     def _compile_array_load(self, variable: ASTNode, scope: _FrameScope) -> int:
         name = _variable_head_name(variable)
