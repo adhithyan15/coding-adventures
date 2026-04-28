@@ -70,5 +70,23 @@ separate package" for the rationale.
 
 - ✅ Compiler: AST → IIRModule, FULLY_TYPED, full test coverage
 - ✅ VM wrapper: interpreted execution, u8 wrap, builtin-wired stdio
-- ⏭️ JIT: `BrainfuckVM(jit=True)` deferred to BF05 (raises
-  `NotImplementedError` for now with a pointer to the spec)
+- ✅ JIT (BF05): `BrainfuckVM(jit=True)` lowers `main` to WebAssembly
+  via the in-house WASM stack (`cir-to-compiler-ir` → `ir-to-wasm-compiler`
+  → `wasm-runtime`).  Programs without I/O JIT successfully on first
+  call (FULLY_TYPED, threshold 0).  Programs with `.` / `,` silently
+  deopt to the interpreter — see [BF05 spec](../../../specs/BF05-brainfuck-jit-wasm.md).
+- ⏭️ JIT for I/O programs (BF06): wire `call_builtin "putchar"` /
+  `"getchar"` to WASI `fd_write` / `fd_read`.
+
+## Quick start with JIT
+
+```python
+from brainfuck_iir_compiler import BrainfuckVM
+
+vm = BrainfuckVM(jit=True)
+vm.run("+++[->+++<]")    # JIT compiles and runs natively (cell 1 := 9)
+print(vm.is_jit_compiled) # True
+
+vm.run("+++.")            # `.` triggers deopt; interpreter runs it
+print(vm.is_jit_compiled) # False — but output is still b"\x03"
+```

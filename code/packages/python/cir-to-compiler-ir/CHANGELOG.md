@@ -3,6 +3,20 @@
 All notable changes to this package will be documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.2.0] — 2026-04-28
+
+### Added
+
+- **Lowerings for `load_mem` and `store_mem`** (BF05).  Both ops are
+  passthrough in `jit-core.specialise` — they keep their bare names
+  and carry the value width in `CIRInstr.type`.  The lowering maps
+  them to the static IR's three-operand byte-access form
+  (`LOAD_BYTE` / `STORE_BYTE`) by synthesising a fresh scratch
+  register that holds the constant `0` as the memory base address.
+  Brainfuck's tape lives at WASM linear-memory address 0, so
+  `mem[base + offset] == mem[ptr]`.  Non-integer types are rejected
+  with `CIRLoweringError`.  Six new tests cover the new lowerings.
+
 ## [0.1.1] — 2026-04-27
 
 ### Changed

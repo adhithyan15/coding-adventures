@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-cir-to-compiler-ir"
-version = "0.1.0"
+version = "0.2.0"
 description = "LANG21 bridge: lowers list[CIRInstr] to IrProgram for any ir-to-* backend"
 requires-python = ">=3.12"
 license = "MIT"

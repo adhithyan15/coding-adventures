@@ -18,13 +18,29 @@ means three things:
    common "lazy infinite tape" Brainfuck convention) and out-of-bounds
    writes raise :class:`BrainfuckError`.
 
+JIT mode (``jit=True``)
+=======================
+Constructed with ``jit=True``, the wrapper attaches ``jit-core`` (LANG03)
+with the in-house ``WASMBackend`` and tries to specialise ``main`` to
+WebAssembly bytes that run on the in-house ``wasm-runtime``.  Brainfuck
+functions are FULLY_TYPED, so tier-up happens before the first
+interpreted call (threshold 0).
+
+For programs whose IIR uses only ``const`` / arithmetic / ``load_mem`` /
+``store_mem`` / control flow, JIT compilation succeeds and the binary
+runs natively.  For programs that use ``call_builtin "putchar"`` /
+``"getchar"`` (i.e. anything with ``.`` or ``,``), the lowering pipeline
+returns ``None``; ``WASMBackend.compile`` reports failure; ``jit-core``
+falls through to the interpreter.  This deopt is silent and observable
+only via ``is_jit_compiled``.
+
+Wiring host I/O so I/O programs also JIT (via WASI ``fd_write`` /
+``fd_read``) is BF06.
+
 Why not just use ``vm-core`` directly?
 ======================================
 You can.  ``BrainfuckVM`` is a convenience: it gives you a one-call
-``run(source) -> bytes`` that is the natural shape for Brainfuck.  Once
-the JIT and AOT integrations land (BF05+), this same wrapper grows the
-``jit=True`` and ``aot=True`` knobs without changing its surface — the
-host code that already calls ``run()`` does not need to change.
+``run(source) -> bytes`` that is the natural shape for Brainfuck.
 
 Why ``call_builtin`` rather than ``io_in``/``io_out``?
 ======================================================
@@ -83,21 +99,20 @@ class BrainfuckVM:
         tape_size: int = _DEFAULT_TAPE_SIZE,
         max_steps: int | None = None,
     ) -> None:
-        if jit:
-            raise NotImplementedError(
-                "BrainfuckVM(jit=True) is not yet wired — see "
-                "code/specs/BF04-brainfuck-iir-compiler.md §'Out of scope' "
-                "and the BF05 follow-up spec.  Call with jit=False for now."
-            )
         if tape_size <= 0:
             raise ValueError("tape_size must be positive")
         if max_steps is not None and max_steps <= 0:
             raise ValueError("max_steps must be positive when provided")
 
+        self._jit_enabled: bool = jit
         self._tape_size: int = tape_size
         self._max_steps: int | None = max_steps
         self._last_metrics: VMMetrics | None = None
         self._vm: VMCore | None = None
+        # Updated each run when jit=True: True iff the JIT successfully
+        # produced a native binary for ``main``.  Tests assert against
+        # this to confirm the JIT path actually fired.
+        self._last_jit_compiled: bool = False
 
     # ------------------------------------------------------------------
     # Public API
@@ -205,12 +220,78 @@ class BrainfuckVM:
         vm.register_builtin("getchar", getchar)
         self._vm = vm
 
+        # ──────────────────────────────────────────────────────────────
+        # JIT path (BF05).  When jit=True we attempt to compile ``main``
+        # to WebAssembly via WASMBackend before falling back to the
+        # interpreter.  Failure modes (call_builtin in source, lowering
+        # error, codegen error) silently deopt to the interpreter — see
+        # BF05 §"Scope of this PR".
+        # ──────────────────────────────────────────────────────────────
+        self._last_jit_compiled = False
+        if self._jit_enabled and self._try_jit_run(vm, module):
+            # JIT ran to completion.  ``output`` is empty for I/O-free
+            # programs (the only ones that succeed here in BF05 V1) —
+            # they perform their work entirely in linear memory.
+            self._last_metrics = vm.metrics()
+            return bytes(output)
+
         try:
             vm.execute(module, fn="main")
         finally:
             self._last_metrics = vm.metrics()
 
         return bytes(output)
+
+    # ------------------------------------------------------------------
+    # JIT helpers
+    # ------------------------------------------------------------------
+
+    def _try_jit_run(self, vm: VMCore, module: IIRModule) -> bool:
+        """Try compiling ``main`` to WASM and running the binary.
+
+        Returns ``True`` if the JIT produced a binary that ran to
+        completion, ``False`` if anything in the pipeline failed.  On
+        ``False`` the caller should fall back to the interpreter.
+
+        The ``jit-core`` / ``wasm-backend`` / ``wasm-runtime`` packages
+        are imported lazily so that test environments without the WASM
+        stack still load this module — a missing import simply forces
+        a deopt, which is the correct behaviour anyway.
+        """
+        try:
+            from jit_core import JITCore
+            from wasm_backend import WASMBackend
+        except ImportError:
+            return False
+
+        try:
+            jit = JITCore(
+                vm,
+                WASMBackend(),
+                threshold_fully_typed=0,
+                threshold_partial=10,
+                threshold_untyped=100,
+            )
+            # Setting the module is required before ``compile()``;
+            # ``execute_with_jit()`` would do it but also runs the
+            # interpreter in Phase 2, which is not what we want for an
+            # entry-point-JIT scenario.  Touching the private attribute
+            # here is a deliberate V1 trade-off; LANG22 (multi-function
+            # calling convention) is the natural place to add a public
+            # "compile then run from cache" entry point.
+            jit._module = module
+            if not jit.compile("main"):
+                return False
+            entry = jit._cache.get("main")
+            if entry is None:
+                return False
+            jit._backend.run(entry.binary, [])
+        except Exception:
+            # Any backend / runtime failure → deopt to interpreter.
+            return False
+
+        self._last_jit_compiled = True
+        return True
 
     # ------------------------------------------------------------------
     # Read-only properties
@@ -229,3 +310,19 @@ class BrainfuckVM:
     @property
     def tape_size(self) -> int:
         return self._tape_size
+
+    @property
+    def jit_enabled(self) -> bool:
+        """Whether the wrapper was constructed with ``jit=True``."""
+        return self._jit_enabled
+
+    @property
+    def is_jit_compiled(self) -> bool:
+        """Whether the most recent run JIT-compiled ``main`` successfully.
+
+        ``False`` when the wrapper was constructed with ``jit=False``,
+        when no run has been performed yet, or when the JIT path was
+        attempted but deopted (e.g. because the program contains I/O,
+        which is not yet wired through WASI — see BF05 / BF06).
+        """
+        return self._last_jit_compiled

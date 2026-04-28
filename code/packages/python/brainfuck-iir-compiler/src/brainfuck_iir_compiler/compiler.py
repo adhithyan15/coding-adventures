@@ -293,30 +293,44 @@ class _Compiler:
     # ------------------------------------------------------------------
 
     def _emit_loop(self, node: ASTNode) -> None:
-        """Compile ``[ body ]`` into a label/branch/label sandwich.
+        """Compile ``[ body ]`` into a structured WASM-friendly loop.
 
         IIR layout::
 
-            label   bf_loop_N_start
+            label   loop_N_start
             load    c, ptr           ; read the current cell
-            jmp_if_false c, bf_loop_N_end
+            jmp_if_false c, loop_N_end
             ... body ...
-            load    c, ptr           ; re-read at the back-edge
-            jmp_if_true  c, bf_loop_N_start
-            label   bf_loop_N_end
+            jmp     loop_N_start     ; unconditional back-edge
+            label   loop_N_end
 
-        Why re-read the cell at the back edge?  Because the body can
-        change ``ptr`` (via ``>`` / ``<``) and can mutate the cell, so the
-        value at the loop entry is not in general the value at the loop
-        exit.  Re-loading is cheap and avoids any "is this register still
-        live?" analysis that would otherwise be needed.
+        Why this exact shape?
+        ``ir-to-wasm-compiler`` recognises structured loops via the
+        regex ``^loop_\\d+_start$`` plus a fixed pattern: a single
+        forward conditional branch (``BRANCH_Z`` / ``BRANCH_NZ``) to the
+        ``_end`` label, followed by an unconditional ``JUMP`` back to
+        ``_start``.  Conditional back-edges are not supported.  Emitting
+        the loop in this canonical shape is what makes Brainfuck JIT to
+        WASM today (BF05) — see
+        ``ir_to_wasm_compiler.compiler._emit_loop``.
+
+        Brainfuck semantics ("loop while cell is non-zero") are
+        preserved by the top-of-loop test: each iteration begins by
+        re-loading and testing the cell, so any body that walks the
+        pointer and re-points it before the back-edge runs (e.g. the
+        canonical ``[->+<]``) reads the *new* current cell on the
+        next iteration.
+
+        The interpreter path does not care about label format or branch
+        shape — it executes whatever IIR the compiler emits.  This shape
+        works equally well there.
         """
         loop_id = self._loop_counter
         self._loop_counter += 1
-        start_label = f"bf_loop_{loop_id}_start"
-        end_label = f"bf_loop_{loop_id}_end"
+        start_label = f"loop_{loop_id}_start"
+        end_label = f"loop_{loop_id}_end"
 
-        # Loop entry — guard the first iteration.
+        # Loop entry + per-iteration guard.
         self._emit("label", None, [start_label], type_hint="void")
         self._emit("load_mem", _COND, [_PTR], type_hint="u8")
         self._emit("jmp_if_false", None, [_COND, end_label], type_hint="void")
@@ -327,9 +341,10 @@ class _Compiler:
             if isinstance(child, ASTNode):
                 self._emit_node(child)
 
-        # Loop back-edge — re-test the cell after the body.
-        self._emit("load_mem", _COND, [_PTR], type_hint="u8")
-        self._emit("jmp_if_true", None, [_COND, start_label], type_hint="void")
+        # Unconditional back-edge — the next iteration's top-of-loop
+        # ``load_mem`` + ``jmp_if_false`` is what actually decides
+        # whether to keep going.
+        self._emit("jmp", None, [start_label], type_hint="void")
         self._emit("label", None, [end_label], type_hint="void")
 
 

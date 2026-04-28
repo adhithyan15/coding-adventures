@@ -17,10 +17,23 @@ from brainfuck_iir_compiler import BrainfuckError, BrainfuckVM
 # ---------------------------------------------------------------------------
 
 
-def test_jit_true_raises_not_implemented_until_bf05() -> None:
-    with pytest.raises(NotImplementedError) as excinfo:
-        BrainfuckVM(jit=True)
-    assert "BF05" in str(excinfo.value)
+def test_jit_true_constructor_succeeds() -> None:
+    """BF05 wires the JIT path — ``jit=True`` is now a valid constructor.
+
+    Unlike BF04 (where it raised ``NotImplementedError``), the wrapper
+    now accepts ``jit=True`` and routes execution through ``WASMBackend``
+    when the program lowers cleanly.  Programs that don't lower
+    (anything with I/O — see BF06) silently deopt to the interpreter.
+    """
+    vm = BrainfuckVM(jit=True)
+    assert vm.jit_enabled is True
+    assert vm.is_jit_compiled is False  # nothing run yet
+
+
+def test_jit_false_default() -> None:
+    vm = BrainfuckVM()
+    assert vm.jit_enabled is False
+    assert vm.is_jit_compiled is False
 
 
 def test_invalid_tape_size_rejected() -> None:
