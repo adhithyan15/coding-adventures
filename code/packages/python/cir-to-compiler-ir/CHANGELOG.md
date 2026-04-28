@@ -3,6 +3,44 @@
 All notable changes to this package will be documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.1.1] — 2026-04-27
+
+### Changed
+
+- **`cmp_le_{int}` / `cmp_ge_{int}` synthesis** — changed from 2-instruction
+  `NOT(CMP_GT)` to 3-instruction `CMP_EQ(CMP_GT, 0)`.  `IrOp.NOT` is bitwise
+  complement (XOR 0xFFFFFFFF in the WASM backend), so `NOT(0)` returns -1 not
+  1.  The new `CMP_EQ(..., 0)` pattern is universally correct: it yields 1 when
+  the intermediate comparison is 0 (condition true) and 0 otherwise.  Truth
+  table for `cmp_le_i32(a, b)` via `CMP_EQ(CMP_GT(a, b), 0)`:
+  - `a=1, b=2`: `CMP_GT=0` → `CMP_EQ(0,0)=1` ✓  (1 ≤ 2)
+  - `a=2, b=2`: `CMP_GT=0` → `CMP_EQ(0,0)=1` ✓  (2 ≤ 2)
+  - `a=3, b=2`: `CMP_GT=1` → `CMP_EQ(1,0)=0` ✓  (3 > 2)
+
+- **Binary arithmetic with immediate operands** — the JIT specialiser emits
+  instructions like `add_u8 _acc [_acc, 2]` where `2` is a literal integer,
+  not a variable name.  The lowerer now handles this by:
+  - Using `ADD_IMM` / `AND_IMM` / `OR_IMM` / `XOR_IMM` when src1 is an
+    integer literal and the op has an immediate variant.
+  - Loading src1 into a fresh scratch register when the op has no immediate
+    variant (`SUB`, `MUL`, `DIV`), then using the register-register form.
+  - Loading src0 into scratch when it is a literal (preserving correctness for
+    non-commutative ops like `SUB`).
+
+### Added
+
+- **`tetrad.move` lowering** — the JIT specialiser emits `tetrad.move dest [src]`
+  as a register-to-register copy during specialisation.  This op is not part of
+  the stable CIR opcode set but appears in JIT output for moves that would
+  otherwise require SSA φ-nodes (e.g., `6 * 7` expansion).  Lowering:
+  - Variable src → `ADD_IMM dest, src, 0` (MOV via add-zero pattern)
+  - Literal src  → `LOAD_IMM dest, literal`
+- 4 new tests for `tetrad.move` (66 tests total, 90% coverage).
+
+### Fixed
+
+- `cmp_le` / `cmp_ge` integration tests updated to match 3-instruction synthesis.
+
 ## [0.1.0] — 2026-04-27
 
 ### Added
