@@ -713,6 +713,42 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
 
+    def test_procedure_parameter_statement_call_passes_read_only_by_name_argument(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure invoke(p); procedure p; begin p(result + 3) end; "
+            "procedure set(x); integer x; begin result := x end; "
+            "result := 2; invoke(set) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [5]
+
+    def test_procedure_parameter_statement_call_passes_writable_by_name_argument(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure invoke(p); procedure p; "
+            "begin integer y; y := 3; p(y); result := y end; "
+            "procedure bump(x); integer x; begin x := x + 4 end; "
+            "invoke(bump) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_formal_procedure_by_name_argument_remains_lazy(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer procedure next; begin result := result + 1; next := result end; "
+            "procedure invoke(p); procedure p; begin p(next) end; "
+            "procedure use(x); integer x; begin result := x + x end; "
+            "result := 0; invoke(use) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [3]
+
     def test_forwarded_procedure_parameter_with_argument_uses_static_link(
         self,
     ) -> None:

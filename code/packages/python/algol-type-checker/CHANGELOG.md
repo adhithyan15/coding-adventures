@@ -46,6 +46,9 @@ All notable changes to this package will be documented in this file.
   procedure parameters, matching scalar integer-to-real promotion.
 - Accepted switch declaration entries that target labels in lexical parent
   blocks while continuing to reject recursive self-selection.
+- Accepted procedure-valued actuals with scalar by-name parameters for formal
+  procedure parameters, while rejecting call shapes that would pass a
+  non-assignable actual to a written by-name parameter.
 
 ## [0.1.0] - 2026-04-20
 

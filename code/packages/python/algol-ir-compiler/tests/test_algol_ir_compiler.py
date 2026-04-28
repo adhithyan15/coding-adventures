@@ -872,6 +872,27 @@ class TestAlgolIrCompiler:
             for instruction in calls
         )
 
+    def test_compiles_procedure_parameter_call_with_by_name_actual(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "procedure invoke(p); procedure p; "
+                "begin integer y; y := 3; p(y); result := y end; "
+                "procedure bump(x); integer x; begin x := x + 4 end; "
+                "invoke(bump) "
+                "end"
+            )
+        )
+        labels = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.LABEL
+        ]
+        opcodes = [instruction.opcode for instruction in result.program.instructions]
+
+        assert "_fn_algol_call_procedure_i32" in labels
+        assert IrOp.AND_IMM in opcodes
+
     def test_compiles_value_procedure_parameter_call_with_value_argument(self) -> None:
         result = compile_algol(
             parse_algol(
