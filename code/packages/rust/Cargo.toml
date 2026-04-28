@@ -380,4 +380,5 @@ members = [
     "rng",
     "feature-normalization",
     "single-layer-network",
+    "two-layer-network",
 ]
