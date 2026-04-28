@@ -2,6 +2,18 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.7.0] - 2026-04-27
+
+### Added — Phase 5b: Recursive CTEs
+
+- `with_clause` rule extended with an optional `RECURSIVE` keyword between
+  `WITH` and the first `cte_def`: `"WITH" [ "RECURSIVE" ] cte_def { "," cte_def }`.
+  When present the adapter uses it as a signal to parse the CTE body as a
+  recursive definition (anchor UNION [ALL] recursive) rather than a plain
+  subquery.
+- `_grammar.py` (auto-generated compiled grammar cache) updated to reflect
+  the `with_clause` change.
+
 ## [0.6.0] - 2026-04-27
 
 ### Added — Phase 5a: Non-recursive CTEs

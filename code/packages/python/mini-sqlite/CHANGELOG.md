@@ -1,5 +1,35 @@
 # Changelog
 
+## [1.2.0] - 2026-04-27
+
+### Added — Phase 5b: Recursive CTEs
+
+- **End-to-end `WITH RECURSIVE` support** — `adapter._query_stmt()` detects a
+  `RECURSIVE` keyword in the `with_clause` node and, when the CTE body contains
+  a `set_op_clause` (UNION / UNION ALL), parses it as a `RecursiveCTERef`
+  instead of a plain `SelectStmt`.  The adapter parses the anchor sub-select
+  first (with the CTE name in scope for other CTEs but not for self), then
+  parses the recursive body with the CTE name excluded from `active_ctes` so
+  that the self-reference resolves to a plain `TableRef` for the planner.
+- **`adapter._table_ref` handles `RecursiveCTERef` entries** — when a table
+  name matches a `RecursiveCTERef` key in `active_ctes`, the ref is returned
+  directly (with alias applied) rather than being wrapped in a `DerivedTableRef`.
+  The planner's `RecursiveCTERef` path then produces a `RecursiveCTE` plan node.
+- **`adapter._select` / `_join_clause`** — `ctes` parameter type extended to
+  `dict[str, SelectStmt | RecursiveCTERef] | None` so recursive CTE refs flow
+  through JOIN right-hand-side table references as well.
+- **22 new tests** in `tests/test_tier3_recursive_cte.py`:
+  - `TestRecursiveCTEGrammar` (6 tests) — grammar and adapter: `RecursiveCTERef`
+    production, anchor/recursive field contents, `union_all` flag, alias
+    propagation, self-reference left as `TableRef`.
+  - `TestRecursiveCTEIntegration` (11 tests) — end-to-end: simple tree traversal,
+    subtree starting at a node, org-chart depth computation, UNION vs UNION ALL,
+    empty anchor, leaf-only query, multiple roots, ORDER BY and LIMIT on
+    recursive results, COUNT aggregate over CTE.
+  - `TestRecursiveCTEErrors` (5 tests) — error handling: unknown table in
+    anchor, unknown column in anchor, type mismatch in WHERE, non-existent
+    recursive column, LIMIT before recursion completes.
+
 ## [1.1.0] - 2026-04-27
 
 ### Added — Phase 5a: Non-recursive CTEs

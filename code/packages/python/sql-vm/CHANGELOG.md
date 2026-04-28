@@ -1,5 +1,34 @@
 # Changelog
 
+## 1.2.0 — 2026-04-27
+
+### Added — Phase 5b: Recursive CTEs
+
+- **`_VmState.working_set_data: list[dict[str, SqlValue]]`** — stores the
+  current working-set rows for the recursive iteration; populated by
+  `_execute_with_cursors` before each recursive step.
+- **`_execute_with_cursors(program, backend, working_set_rows)`** — private
+  helper that runs a sub-program with a pre-loaded working set.  Sets
+  `state.working_set_data` rather than directly populating cursor 0, so
+  `OpenWorkingSetScan` can re-create a fresh cursor on each inner-loop
+  entry (crucial for correctness when the self-reference appears inside a JOIN).
+- **`RunRecursiveCTE` dispatch** — `_do_run_recursive_cte` implements the
+  fixed-point algorithm:
+  1. Execute anchor program via `execute()`; collect anchor rows as the initial
+     working set.
+  2. Repeat: run `recursive_program` via `_execute_with_cursors(working_rows)`;
+     collect new rows; if `union_all=False` deduplicate against a `seen` set.
+  3. Terminate when the working set is empty.
+  4. Populate `st.cursors[cursor_id]` with a `_SubqueryCursor` over all
+     accumulated rows.
+- **`OpenWorkingSetScan` dispatch** — handler creates a fresh
+  `_SubqueryCursor(rows=st.working_set_data)` bound to `cursor_id`.
+  Each call produces an independent cursor so JOIN outer loops can exhaust
+  and reopen without interfering with each other.
+- **Column name normalisation** — output column names always come from the
+  anchor's `result.columns`, matching the SQL standard rule that UNION output
+  names are taken from the leftmost SELECT.
+
 ## 1.1.0 — 2026-04-27
 
 ### Added — Phase 4b: FOREIGN KEY constraints

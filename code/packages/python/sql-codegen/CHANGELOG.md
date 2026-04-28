@@ -1,5 +1,32 @@
 # Changelog
 
+## [1.1.0] - 2026-04-27
+
+### Added — Phase 5b: Recursive CTEs
+
+- **`OpenWorkingSetScan` IR instruction** — opens a fresh cursor over the
+  current working-set rows stored in `_VmState.working_set_data`.  Emitted
+  at the top of each `WorkingSetScan` loop so that self-references inside a
+  JOIN (which close and reopen the inner cursor on each outer iteration) work
+  correctly without exhausting the cursor.
+- **`RunRecursiveCTE` IR instruction** — drives the fixed-point iteration:
+  runs `anchor_program` once, then runs `recursive_program` against the
+  previous working set until the recursive step produces zero new rows.
+  Carries `cursor_id`, `anchor_program`, `recursive_program`,
+  `working_cursor_id`, and `union_all` flag.
+- **`WorkingSetScan` compiler case** in `_compile_source` — emits
+  `OpenWorkingSetScan` + loop scaffolding (identical shape to `Scan` / derived
+  table, but opening from the VM's working set rather than a backend table).
+- **`RecursiveCTE` compiler case** in `_compile_source` — compiles anchor and
+  recursive sub-programs in isolated `_Ctx` instances (recursive ctx reserves
+  cursor 0 for the working set), resolves labels, wraps both as `Program`
+  objects, emits `RunRecursiveCTE`, and adds the outer advance/loop/close
+  scaffolding for the caller to iterate results.
+- **`_Ctx.working_set_cursor_id`** — optional int used by `WorkingSetScan` to
+  know which cursor id to emit `OpenWorkingSetScan` for (defaults to 0 in the
+  recursive sub-program context).
+- Both new IR instructions exported from `sql_codegen.__init__`.
+
 ## [1.0.0] - 2026-04-27
 
 ### Added — Phase 4b: FOREIGN KEY constraints

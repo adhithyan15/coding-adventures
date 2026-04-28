@@ -83,10 +83,12 @@ from sql_codegen import (
     NullsOrder,
     OpenIndexScan,
     OpenScan,
+    OpenWorkingSetScan,
     Pop,
     Program,
     RollbackTransaction,
     RunExistsSubquery,
+    RunRecursiveCTE,
     RunSubquery,
     SaveGroupKey,
     ScanAllColumns,
@@ -253,6 +255,10 @@ class _VmState:
     # parent_col=None means "the parent's PRIMARY KEY column".
     fk_child: dict[str, list[tuple[str, str, str | None]]] = field(default_factory=dict)
     fk_parent: dict[str, list[tuple[str, str, str | None]]] = field(default_factory=dict)
+    # Working-set rows for recursive CTEs.  Populated by _execute_with_cursors
+    # before running the recursive sub-program; read by OpenWorkingSetScan to
+    # create a fresh _SubqueryCursor on each loop entry (handles JOIN context).
+    working_set_data: list[dict[str, SqlValue]] = field(default_factory=list)
     # Scan telemetry — populated during execution; used to build QueryEvent.
     # Only the *first* scan per execute() call is recorded (one event per call).
     scan_table: str = ""
@@ -522,6 +528,12 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
     if isinstance(ins, RunExistsSubquery):
         _do_run_exists_subquery(ins, st)
         return
+    if isinstance(ins, RunRecursiveCTE):
+        _do_run_recursive_cte(ins, st)
+        return
+    if isinstance(ins, OpenWorkingSetScan):
+        st.cursors[ins.cursor_id] = _SubqueryCursor(rows=st.working_set_data)
+        return
 
     # Transactions --------------------------------------------------------
     if isinstance(ins, BeginTransaction):
@@ -715,6 +727,100 @@ def _do_run_exists_subquery(ins: RunExistsSubquery, st: _VmState) -> None:
     """
     sub_result = execute(ins.sub_program, st.backend)
     st.push(len(sub_result.rows) > 0)
+
+
+def _execute_with_cursors(
+    program: Program,
+    backend: Backend,
+    working_set_rows: list[dict[str, SqlValue]],
+) -> QueryResult:
+    """Execute ``program`` with a pre-loaded working set.
+
+    Used by the recursive CTE handler to supply the current working set before
+    running the recursive step.  Rather than pre-populating a cursor (which
+    would be exhausted after the first JOIN outer-loop iteration), the rows are
+    stored in ``VmState.working_set_data``.  The compiled
+    ``OpenWorkingSetScan`` instruction then creates a brand-new
+    :class:`_SubqueryCursor` from that data on every entry into the
+    WorkingSetScan loop, so even a JOIN-based recursive step works correctly.
+
+    A fresh :class:`_VmState` is created so that the recursive program's stack,
+    agg_table, and result buffer are isolated from the caller's state.
+    """
+    state = _VmState(program=program, backend=backend)
+    state.working_set_data = working_set_rows
+    instructions = program.instructions
+    n = len(instructions)
+    while state.pc < n:
+        ins = instructions[state.pc]
+        state.pc += 1
+        if isinstance(ins, Halt):
+            break
+        _dispatch(ins, state)
+    return state.result.freeze()
+
+
+def _do_run_recursive_cte(ins: RunRecursiveCTE, st: _VmState) -> None:
+    """Execute anchor, then iterate the recursive step until a fixed point.
+
+    The anchor runs once to produce the initial working set.  The recursive
+    step then runs in a loop, with cursor ``working_cursor_id`` pre-loaded
+    with the current working set rows.  Each iteration's output becomes the
+    next working set.  The loop stops when the recursive step returns zero
+    new rows (fixed-point / empty step).
+
+    For UNION ALL: all rows from every iteration are accumulated.
+    For UNION: duplicate rows (compared as sorted key-value tuples) are
+    discarded, which also prevents infinite loops in cyclic graphs.
+
+    The accumulated rows are materialised as a :class:`_SubqueryCursor` under
+    ``cursor_id`` so the outer scan loop's ``AdvanceCursor`` / ``LoadColumn`` /
+    ``CloseScan`` instructions work without any special casing.
+    """
+    # --- Anchor phase -------------------------------------------------------
+    anchor_result = execute(ins.anchor_program, st.backend)
+    anchor_cols = anchor_result.columns
+
+    working_rows: list[dict[str, SqlValue]] = [
+        dict(zip(anchor_cols, row, strict=False)) for row in anchor_result.rows
+    ]
+    all_rows: list[dict[str, SqlValue]] = list(working_rows)
+
+    # For UNION (deduplicated): track seen rows to prevent cycles.
+    seen: set[tuple[tuple[str, SqlValue], ...]] = set()
+    if not ins.union_all:
+        for row in all_rows:
+            seen.add(tuple(sorted(row.items())))
+
+    # --- Recursive phase (fixed-point iteration) ----------------------------
+    while working_rows:
+        recursive_result = _execute_with_cursors(
+            ins.recursive_program,
+            st.backend,
+            working_rows,
+        )
+        # Relabel with anchor column names (SQL standard: UNION output names
+        # from the leftmost / anchor SELECT).
+        new_rows: list[dict[str, SqlValue]] = [
+            dict(zip(anchor_cols, row, strict=False)) for row in recursive_result.rows
+        ]
+
+        if ins.union_all:
+            working_rows = new_rows
+        else:
+            # Only keep rows not already seen (cycle safety for UNION).
+            next_working: list[dict[str, SqlValue]] = []
+            for row in new_rows:
+                key = tuple(sorted(row.items()))
+                if key not in seen:
+                    seen.add(key)
+                    next_working.append(row)
+            working_rows = next_working
+
+        all_rows.extend(working_rows)
+
+    # Materialise accumulated result as a cursor for the outer scan loop.
+    st.cursors[ins.cursor_id] = _SubqueryCursor(rows=all_rows)
 
 
 def _do_open(ins: OpenScan, st: _VmState) -> None:

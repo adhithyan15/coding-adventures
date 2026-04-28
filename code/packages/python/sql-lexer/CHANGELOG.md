@@ -2,6 +2,14 @@
 
 All notable changes to the SQL lexer package will be documented in this file.
 
+## [0.6.0] - 2026-04-27
+
+### Added — Phase 5b: Recursive CTEs
+
+- `RECURSIVE` registered as a SQL keyword in `sql.tokens` and the compiled
+  `_grammar.py`, enabling `WITH RECURSIVE name AS (...)` to tokenize `RECURSIVE`
+  as KEYWORD rather than NAME.
+
 ## [0.5.0] - 2026-04-27
 
 ### Added — Phase 5a: Non-recursive CTEs

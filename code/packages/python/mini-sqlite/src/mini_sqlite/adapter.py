@@ -74,6 +74,7 @@ from sql_planner import (
     Literal,
     NotIn,
     NotLike,
+    RecursiveCTERef,
     RollbackStmt,
     SelectItem,
     SelectStmt,
@@ -175,14 +176,14 @@ def _stmt_dispatch(stmt: ASTNode) -> Statement:
 
 def _query_stmt(
     node: ASTNode,
-    ctes: dict[str, SelectStmt] | None = None,
+    ctes: dict[str, SelectStmt | RecursiveCTERef] | None = None,
 ) -> Statement:
     """Translate ``query_stmt = [ with_clause ] select_stmt { set_op_clause }`` to a Statement.
 
     When a ``with_clause`` is present, each ``cte_def`` is parsed into a
-    ``SelectStmt`` and stored by name.  The resulting ``ctes`` dict is passed
-    into ``_select`` so that bare table references matching a CTE name are
-    rewritten to ``DerivedTableRef`` at parse time — no new plan nodes needed.
+    ``SelectStmt`` (non-recursive) or ``RecursiveCTERef`` (WITH RECURSIVE) and
+    stored by name.  The resulting dict is passed into ``_select`` so that bare
+    table references matching a CTE name are substituted at parse time.
 
     A ``query_stmt`` wraps a bare ``select_stmt`` with zero or more
     UNION/INTERSECT/EXCEPT tails.  When no tails are present this is
@@ -190,21 +191,55 @@ def _query_stmt(
     set-operation tree.
     """
     # Accumulate CTEs: outer dict (if any) merged with any new WITH clause.
-    active_ctes: dict[str, SelectStmt] = dict(ctes) if ctes else {}
+    active_ctes: dict[str, SelectStmt | RecursiveCTERef] = dict(ctes) if ctes else {}
     with_node = _maybe_child(node, "with_clause")
     if with_node is not None:
+        # Check whether the WITH clause carries the RECURSIVE keyword.
+        is_recursive = any(_is_keyword(c, "RECURSIVE") for c in with_node.children)
+
         for cte_node in _child_nodes(with_node, "cte_def"):
             name_tok = _first_token(cte_node, kind="NAME")
             if name_tok is None:
                 raise ProgrammingError("cte_def: missing CTE name")
+            cte_name = name_tok.value
             inner_q = _child_node(cte_node, "query_stmt")
-            inner_stmt = _query_stmt(inner_q, ctes=active_ctes)
-            if not isinstance(inner_stmt, SelectStmt):
-                raise ProgrammingError(
-                    f"CTE '{name_tok.value}' body must be a plain SELECT, not a set operation"
+
+            if is_recursive and _child_nodes(inner_q, "set_op_clause"):
+                # Recursive CTE: body is "anchor UNION [ALL] recursive_step".
+                # Parse anchor with the CTEs accumulated so far.
+                anchor_node = _child_node(inner_q, "select_stmt")
+                anchor_stmt = _select(anchor_node, ctes=active_ctes)
+
+                # Parse the recursive step WITHOUT this CTE in active_ctes so
+                # the self-reference stays as a plain TableRef.  The planner's
+                # working_set mechanism converts it to WorkingSetScan.
+                ctes_without_self = {k: v for k, v in active_ctes.items() if k != cte_name}
+                set_op_nodes = _child_nodes(inner_q, "set_op_clause")
+                union_all = True
+                rec_stmt: SelectStmt | None = None
+                for sop in set_op_nodes:
+                    op, all_flag, right_sel_node = _set_op_clause(sop)
+                    if op == "UNION":
+                        union_all = all_flag
+                        rec_stmt = _select(right_sel_node, ctes=ctes_without_self)
+                if rec_stmt is None:
+                    raise ProgrammingError(
+                        f"RECURSIVE CTE '{cte_name}' must have a UNION [ALL] recursive step"
+                    )
+                active_ctes[cte_name] = RecursiveCTERef(
+                    name=cte_name,
+                    anchor=anchor_stmt,
+                    recursive=rec_stmt,
+                    union_all=union_all,
                 )
-            # Make this CTE visible to subsequent CTEs and the main query.
-            active_ctes[name_tok.value] = inner_stmt
+            else:
+                inner_stmt = _query_stmt(inner_q, ctes=active_ctes)
+                if not isinstance(inner_stmt, SelectStmt):
+                    raise ProgrammingError(
+                        f"CTE '{cte_name}' body must be a plain SELECT, not a set operation"
+                    )
+                # Make this CTE visible to subsequent CTEs and the main query.
+                active_ctes[cte_name] = inner_stmt
 
     select_node = _child_node(node, "select_stmt")
     left: Statement = _select(select_node, ctes=active_ctes)
@@ -252,7 +287,7 @@ def _set_op_clause(node: ASTNode) -> tuple[str, bool, ASTNode]:
 
 def _select(
     node: ASTNode,
-    ctes: dict[str, SelectStmt] | None = None,
+    ctes: dict[str, SelectStmt | RecursiveCTERef] | None = None,
 ) -> SelectStmt:
     state = _PlaceholderCounter()
 
@@ -310,8 +345,8 @@ def _select_item(node: ASTNode, state: _PlaceholderCounter) -> SelectItem:
 
 def _table_ref(
     node: ASTNode,
-    ctes: dict[str, SelectStmt] | None = None,
-) -> TableRef | DerivedTableRef:
+    ctes: dict[str, SelectStmt | RecursiveCTERef] | None = None,
+) -> TableRef | DerivedTableRef | RecursiveCTERef:
     """Translate a table_ref node.
 
     The grammar has two forms::
@@ -320,8 +355,10 @@ def _table_ref(
                   | table_name [ "AS" NAME ]        -- plain table
 
     We detect the derived-table form by checking for a ``query_stmt`` child.
-    When the plain-table form names a CTE, we substitute a DerivedTableRef
-    so the planner and downstream stages see it as an inline subquery.
+    When the plain-table form names a non-recursive CTE, we substitute a
+    DerivedTableRef.  For recursive CTEs we return RecursiveCTERef (with the
+    alias updated from the usage site) so the planner can build the correct
+    fixed-point iteration plan.
     """
     # Derived-table form: "(" query_stmt ")" "AS" NAME
     q = _maybe_child(node, "query_stmt")
@@ -353,10 +390,20 @@ def _table_ref(
             if isinstance(nxt, Token):
                 alias = nxt.value
 
-    # CTE substitution: if the table name matches a known CTE, replace with
-    # a DerivedTableRef so the planner/codegen see it as an inline subquery.
+    # CTE substitution: if the table name matches a known CTE, replace it.
     if ctes and table in ctes:
-        return DerivedTableRef(select=ctes[table], alias=alias if alias is not None else table)
+        entry = ctes[table]
+        if isinstance(entry, RecursiveCTERef):
+            # Propagate alias from the usage site (the CTE name is used as the
+            # effective alias when no explicit alias is given).
+            return RecursiveCTERef(
+                name=entry.name,
+                anchor=entry.anchor,
+                recursive=entry.recursive,
+                union_all=entry.union_all,
+                alias=alias if alias is not None else table,
+            )
+        return DerivedTableRef(select=entry, alias=alias if alias is not None else table)
 
     return TableRef(table=table, alias=alias)
 
@@ -364,7 +411,7 @@ def _table_ref(
 def _join_clause(
     node: ASTNode,
     state: _PlaceholderCounter,
-    ctes: dict[str, SelectStmt] | None = None,
+    ctes: dict[str, SelectStmt | RecursiveCTERef] | None = None,
 ) -> JoinClause:
     # join_clause = join_type "JOIN" table_ref [ "ON" expr ]
     jt = _child_node(node, "join_type")

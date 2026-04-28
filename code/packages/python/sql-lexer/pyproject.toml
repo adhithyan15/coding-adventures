@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-sql-lexer"
-version = "0.5.0"
+version = "0.6.0"
 description = "Tokenizes SQL text using the grammar-driven lexer — a thin wrapper that loads sql.tokens"
 requires-python = ">=3.12"
 license = "MIT"
