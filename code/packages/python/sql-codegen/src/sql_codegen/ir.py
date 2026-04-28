@@ -683,6 +683,113 @@ class Halt:
 
 
 # --------------------------------------------------------------------------
+# Window functions
+# --------------------------------------------------------------------------
+
+
+class WinFunc(Enum):
+    """Supported window (analytic) functions.
+
+    Ranking functions
+    -----------------
+    ROW_NUMBER   — 1-based sequential integer within the ordered partition.
+                   Ties get different numbers depending on order.
+    RANK         — like ROW_NUMBER but identical ORDER BY values share the same
+                   rank; the next rank after a tie jumps (1, 1, 3, …).
+    DENSE_RANK   — like RANK but without gaps (1, 1, 2, …).
+
+    Aggregate-style functions
+    -------------------------
+    SUM / COUNT / COUNT_STAR / AVG / MIN / MAX
+        — cumulate over the *entire* partition (the full-partition frame is
+          used, which is the default when no ROWS/RANGE clause is given).
+          ``COUNT_STAR`` is ``COUNT(*)`` — no arg column, always counts rows.
+
+    Value functions
+    ---------------
+    FIRST_VALUE  — the value of ``arg_col`` in the first row of the partition.
+    LAST_VALUE   — the value of ``arg_col`` in the last row of the partition.
+    """
+
+    ROW_NUMBER = "ROW_NUMBER"
+    RANK = "RANK"
+    DENSE_RANK = "DENSE_RANK"
+    SUM = "SUM"
+    COUNT = "COUNT"
+    COUNT_STAR = "COUNT_STAR"
+    AVG = "AVG"
+    MIN = "MIN"
+    MAX = "MAX"
+    FIRST_VALUE = "FIRST_VALUE"
+    LAST_VALUE = "LAST_VALUE"
+
+
+@dataclass(frozen=True, slots=True)
+class WinFuncSpec:
+    """Column-level specification for one window function call.
+
+    The IR represents all arguments as column names (strings) because at
+    codegen time every expression has already been compiled into the inner
+    projection's output schema.  The VM looks up ``arg_col`` /
+    ``partition_cols`` / ``order_cols`` in ``result.columns`` to find the
+    correct positional index.
+
+    Fields
+    ------
+    func:
+        Which window function to evaluate.
+    arg_col:
+        Name of the column in the result buffer that holds the function's
+        argument (e.g. ``"salary"`` for ``SUM(salary)``).  ``None`` for
+        arg-free functions (``ROW_NUMBER``, ``RANK``, ``DENSE_RANK``) and
+        ``COUNT_STAR``.
+    partition_cols:
+        Ordered tuple of column names to partition by.  An empty tuple means
+        the whole result is one partition.
+    order_cols:
+        Ordered tuple of ``(column_name, descending)`` pairs that define the
+        ordering within each partition.  Required for ranking functions.
+    result_col:
+        The output column name for this window function (the SELECT alias).
+    """
+
+    func: WinFunc
+    arg_col: str | None
+    partition_cols: tuple[str, ...]
+    order_cols: tuple[tuple[str, bool], ...]
+    result_col: str
+
+
+@dataclass(frozen=True, slots=True)
+class ComputeWindowFunctions:
+    """Post-process the result buffer to evaluate window functions.
+
+    Execution model
+    ---------------
+    By the time this instruction executes, the inner scan loop has finished
+    and ``vm_state.result.rows`` holds every output row as a positional
+    tuple.  ``ComputeWindowFunctions`` works entirely on that buffer:
+
+    1. Convert each row tuple to a dict keyed by ``result.columns``.
+    2. For each :class:`WinFuncSpec` in ``specs``:
+       a. Group rows into partitions by the values of ``partition_cols``.
+       b. Sort each partition by ``order_cols`` (stable sort).
+       c. Evaluate the window function over the sorted partition, assigning
+          a value to each row.
+       d. Store the value in ``result_col`` on each dict.
+    3. Project each dict down to ``output_cols`` (in order) and convert back
+       to tuples.
+    4. Replace ``result.rows`` and set ``result.columns = output_cols``.
+
+    This single-pass design avoids materialising multiple intermediate
+    buffers and is correct for non-nested window functions.
+    """
+
+    specs: tuple[WinFuncSpec, ...]
+    output_cols: tuple[str, ...]  # final column projection after all specs
+
+
+# --------------------------------------------------------------------------
 # Discriminated union — every Instruction variant.
 # --------------------------------------------------------------------------
 
@@ -693,6 +800,7 @@ Instruction = (
     | BeginRow | EmitColumn | EmitRow | SetResultSchema | ScanAllColumns
     | InitAgg | UpdateAgg | FinalizeAgg | SaveGroupKey | LoadGroupKey | AdvanceGroupKey
     | SortResult | LimitResult | DistinctResult
+    | ComputeWindowFunctions
     | InsertRow | InsertFromResult | UpdateRows | DeleteRows | CreateTable | DropTable | AlterTable
     | CreateIndex | DropIndex | OpenIndexScan
     | CaptureLeftResult | IntersectResult | ExceptResult

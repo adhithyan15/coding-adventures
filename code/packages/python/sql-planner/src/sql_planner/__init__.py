@@ -66,6 +66,7 @@ from .expr import (
     UnaryExpr,
     UnaryOp,
     Wildcard,
+    WindowFuncExpr,
     collect_columns,
     contains_aggregate,
 )
@@ -100,6 +101,8 @@ from .plan import (
     Sort,
     Union,
     Update,
+    WindowAgg,
+    WindowFuncSpec,
     WorkingSetScan,
     children,
 )
@@ -169,6 +172,7 @@ __all__ = [
     "UnaryExpr",
     "UnaryOp",
     "Wildcard",
+    "WindowFuncExpr",
     "collect_columns",
     "contains_aggregate",
     # Logical plan (output)
@@ -203,6 +207,8 @@ __all__ = [
     "Sort",
     "Union",
     "Update",
+    "WindowAgg",
+    "WindowFuncSpec",
     "children",
     # Errors
     "AmbiguousColumn",

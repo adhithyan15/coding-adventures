@@ -40,6 +40,7 @@ from .ir import (
     CloseScan,
     Coalesce,
     CommitTransaction,
+    ComputeWindowFunctions,
     CreateIndex,
     CreateTable,
     DeleteRows,
@@ -89,6 +90,8 @@ from .ir import (
     UnaryOpCode,
     UpdateAgg,
     UpdateRows,
+    WinFunc,
+    WinFuncSpec,
 )
 from .ir import (
     AggFunc as IrAggFunc,
@@ -166,6 +169,9 @@ __all__ = [
     "UnsupportedNode",
     "UpdateAgg",
     "UpdateRows",
+    "WinFunc",
+    "WinFuncSpec",
+    "ComputeWindowFunctions",
     "compile",
     "compile_expr",
 ]

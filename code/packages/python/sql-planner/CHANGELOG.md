@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.11.0] - 2026-04-27
+
+### Added — Phase 8: Window Functions (OVER / PARTITION BY)
+
+- **`WindowFuncExpr` AST expression** — frozen dataclass with `func: str`,
+  `arg: Expr | None`, `partition_by: tuple[Expr, ...]`, and
+  `order_by: tuple[tuple[Expr, bool], ...]` (expr, descending).  Added to
+  the `Expr` union.  `contains_aggregate()` returns `False` for it;
+  `_collect_columns()` walks all sub-expressions.
+- **`WindowFuncSpec` plan node** — frozen dataclass capturing one window
+  function: `func`, `arg_expr`, `partition_by`, `order_by`, `alias`.
+- **`WindowAgg` logical plan node** — `input: LogicalPlan`,
+  `specs: tuple[WindowFuncSpec, ...]`, `output_cols: tuple[str, ...]`.
+  Added to the `LogicalPlan` union.
+- **`_plan_select()` window path** — detects `WindowFuncExpr` items in the
+  SELECT list, builds an inner `Project` materialising non-window columns
+  plus dependency columns (arg / partition_by / order_by refs), then wraps
+  it in `WindowAgg`.  `output_cols` = non-window output names + window
+  alias names.
+- **`_resolve()` extension** — handles `WindowFuncExpr`, recursively
+  resolving its sub-expressions against the FROM scope.
+- All new types exported via `__all__`.
+
 ## [0.10.0] - 2026-04-27
 
 ### Added — Phase 7: SAVEPOINT / RELEASE / ROLLBACK TO

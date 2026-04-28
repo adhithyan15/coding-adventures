@@ -6,6 +6,8 @@ import pytest
 from sql_backend.in_memory import InMemoryBackend
 from sql_backend.schema import ColumnDef
 
+collect_ignore_glob = ["* 2.py"]
+
 
 @pytest.fixture
 def employees() -> InMemoryBackend:

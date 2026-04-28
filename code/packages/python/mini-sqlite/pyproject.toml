@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-mini-sqlite"
-version = "1.4.0"
+version = "1.5.0"
 description = "PEP 249 DB-API 2.0 facade over the sql-lexer / parser / planner / optimizer / codegen / vm / backend stack."
 requires-python = ">=3.12"
 license = "MIT"
@@ -52,6 +52,9 @@ packages = ["src/mini_sqlite"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "--cov=mini_sqlite --cov-report=term-missing --cov-fail-under=80"
+
+[tool.coverage.run]
+omit = ["**/mini_sqlite/* 2.py", "**/tests/* 2.py"]
 
 [tool.ruff]
 target-version = "py312"

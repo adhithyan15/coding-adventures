@@ -2,6 +2,19 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.10.0] - 2026-04-27
+
+### Added — Phase 8: Window Functions (OVER / PARTITION BY)
+
+- **`window_func_call` grammar rule** — matches `NAME "(" (STAR | [value_list]) ")" "OVER" "(" window_spec ")"`.
+  Placed before `function_call` in the `primary` alternation so the PEG parser
+  tries the window form first (both share the `NAME "("` prefix; window adds
+  trailing `"OVER" "("`).
+- **`window_spec` grammar rule** — `[ partition_clause ] [ order_clause ]`.
+- **`partition_clause` grammar rule** — `"PARTITION" "BY" expr { "," expr }`.
+- `_grammar.py` updated with all three new `GrammarRule` objects and the
+  updated `primary` alternation.
+
 ## [0.9.0] - 2026-04-27
 
 ### Added — Phase 7: SAVEPOINT / RELEASE / ROLLBACK TO

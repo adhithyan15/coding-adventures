@@ -2,6 +2,14 @@
 
 All notable changes to the SQL lexer package will be documented in this file.
 
+## [0.9.0] - 2026-04-27
+
+### Added — Phase 8: Window Functions (OVER / PARTITION BY)
+
+- `OVER` and `PARTITION` registered as SQL keywords in `sql.tokens` and the
+  compiled `_grammar.py`, so these words tokenize as KEYWORD rather than NAME
+  when they appear in window-function expressions.
+
 ## [0.8.0] - 2026-04-27
 
 ### Added — Phase 7: SAVEPOINT / RELEASE / ROLLBACK TO
