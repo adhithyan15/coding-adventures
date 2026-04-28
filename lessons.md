@@ -631,6 +631,35 @@ When a BUILD file references a sibling package (e.g., `cd ../json-rpc`), the bui
 
 ---
 
+### 2026-04-27: Structural protocol test deps must be installed in BUILD — but protocol adapters don't need them at runtime
+
+When a package implements a structural protocol from a sibling package (e.g., `codegen-core`'s
+`CodeGenerator`) and its TESTS import that sibling for `isinstance()` checks, that sibling must
+be installed in the BUILD venv even though the production code never imports it.
+
+**Symptom:** CI fails with `ModuleNotFoundError: No module named 'codegen_core'` in test
+collection, even though the adapter code itself does not import `codegen_core`.
+
+**Root cause:** The `test_codegen_generator.py` files do `from codegen_core import CodeGenerator`
+for `isinstance(gen, CodeGenerator)` checks.  Without `codegen-core` in the BUILD, the test
+module cannot be collected.
+
+**Fix:** Add the protocol package (and its transitive local deps) to the BUILD install line.
+Also declare it in `pyproject.toml` `[project.optional-dependencies]` dev so the build
+validator's `undeclared local package refs` check passes.
+
+**Transitive deps must be explicit:** uv does not auto-install local editable transitive deps
+from PyPI-registered names.  If `codegen-core` depends on `interpreter-ir` and `ir-optimizer`
+(also local-only packages), you must add `-e ../interpreter-ir -e ../ir-optimizer` to the BUILD
+explicitly — they cannot be resolved from PyPI.
+
+**Order matters:** install in leaf-to-root order:
+  1. `interpreter-ir` (no internal deps)
+  2. `ir-optimizer` (depends on compiler-ir, already present)
+  3. `codegen-core` (depends on 1, 2, and compiler-ir)
+
+---
+
 ### 2026-04-17: Python build validation only whitelists sibling refs that appear in dependency metadata
 
 For Python packages, adding a sibling path only under `[tool.uv.sources]` is not enough to satisfy the build validator's `undeclared local package refs` check. If a BUILD script installs a sibling package for tests or tooling, that sibling must also appear in `dependencies` or an appropriate `[project.optional-dependencies]` group so the validator can see the edge in the package metadata.
