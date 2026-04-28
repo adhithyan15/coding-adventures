@@ -49,9 +49,10 @@ Unsupported ALGOL 60 features are reported as diagnostics instead of being
 silently accepted by the compiled pipeline. By-name parameters are accepted in
 the semantic model, while later lowering packages now implement scalar
 call-by-name, typed whole-array formals, label formals, switch formals, and
-no-argument statement procedure formals. The checker keeps guarding the
+no-argument statement procedure formals. `value` whole-array parameters are
+also accepted and lowered as copy formals. The checker keeps guarding the
 remaining full-ALGOL gaps, including non-assignable actuals passed to written
-by-name formals, value array/label/switch/procedure parameters, and richer
+by-name formals, value label/switch/procedure parameters, and richer
 procedure-valued parameters with arguments or return values.
 
 ```python
