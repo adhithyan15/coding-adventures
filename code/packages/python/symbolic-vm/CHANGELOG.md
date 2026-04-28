@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.32.3 — 2026-04-27
+
+**Wire `cas-laplace` into `SymbolicBackend`.**
+
+- Added `from cas_laplace import build_laplace_handler_table as _build_laplace`
+  to `cas_handlers.py`.
+- Added `**_build_laplace()` to the `build_cas_handler_table()` return dict.
+- Added `"coding-adventures-cas-laplace>=0.1.0"` to `pyproject.toml` dependencies.
+
+This wires `Laplace(f, t, s)`, `ILT(F, s, t)`, `DiracDelta(x)`, and `UnitStep(x)`
+into the symbolic VM. All four operations follow the graceful fall-through contract.
+
+---
+
 ## 0.32.2 — 2026-04-27
 
 **Wire `cas-mnewton` into `SymbolicBackend`.**

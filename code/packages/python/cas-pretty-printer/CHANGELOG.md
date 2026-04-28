@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.4.1 — 2026-04-27
+
+**Add Laplace transform display names to `_DEFAULT_FUNCTION_NAMES`.**
+
+Added four entries to `_DEFAULT_FUNCTION_NAMES` in `dialect.py`:
+
+- `"Laplace": "laplace"` — forward Laplace transform
+- `"ILT": "ilt"` — inverse Laplace transform
+- `"DiracDelta": "delta"` — Dirac delta, using MACSYMA surface name
+- `"UnitStep": "hstep"` — Heaviside step, using MACSYMA surface name
+
+These ensure that unevaluated Laplace expressions pretty-print as valid
+MACSYMA syntax that can be re-parsed.
+
+---
+
 ## 0.4.0 — 2026-04-27
 
 **2D box-model layout engine and `MNewton` function name.**

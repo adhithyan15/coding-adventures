@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.6.0 — 2026-04-27
+
+**Add Laplace transform operations to the MACSYMA name table.**
+
+- Imported `LAPLACE`, `ILT`, `DIRAC_DELTA`, `UNIT_STEP` from `symbolic_ir` into
+  `name_table.py`.
+- Added five entries to `MACSYMA_NAME_TABLE`:
+  - `"laplace": LAPLACE`
+  - `"ilt": ILT`
+  - `"delta": DIRAC_DELTA` — Dirac delta δ(t), MACSYMA convention
+  - `"hstep": UNIT_STEP` — Heaviside step H(t), MACSYMA convention
+  - `"unit_step": UNIT_STEP` — common alias
+
+Now MACSYMA users can write e.g. `laplace(sin(t), t, s)` and get `1/(s^2+1)`.
+
+---
+
 ## 1.5.0 — 2026-04-27
 
 **Add `mnewton` to the MACSYMA name table.**

@@ -41,6 +41,7 @@ from symbolic_ir.nodes import (
     COS,
     COSH,
     DEFINE,
+    DIRAC_DELTA,
     DIV,
     EQUAL,
     EXP,
@@ -49,8 +50,10 @@ from symbolic_ir.nodes import (
     GREATER,
     GREATER_EQUAL,
     IF,
+    ILT,
     INTEGRATE,
     INV,
+    LAPLACE,
     LESS,
     LESS_EQUAL,
     LIST,
@@ -70,6 +73,7 @@ from symbolic_ir.nodes import (
     SUB,
     TAN,
     TANH,
+    UNIT_STEP,
     WHILE,
     D,
     IRApply,
@@ -136,4 +140,9 @@ __all__ = [
     "RETURN",
     # Numeric root-finding
     "MNEWTON",
+    # Laplace / Fourier transforms
+    "DIRAC_DELTA",
+    "UNIT_STEP",
+    "LAPLACE",
+    "ILT",
 ]

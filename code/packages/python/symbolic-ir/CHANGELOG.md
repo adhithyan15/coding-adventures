@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.7.2 — 2026-04-27
+
+**Add `DIRAC_DELTA`, `UNIT_STEP`, `LAPLACE`, `ILT` head symbols for Laplace transforms.**
+
+Added four new IR head constants to the "Laplace / Fourier transforms" group at the bottom
+of `nodes.py`, and exported all four from `__init__.py`:
+
+- `DIRAC_DELTA = IRSymbol("DiracDelta")` — Dirac delta distribution δ(t)
+- `UNIT_STEP = IRSymbol("UnitStep")` — Heaviside unit step function u(t)
+- `LAPLACE = IRSymbol("Laplace")` — forward Laplace transform head
+- `ILT = IRSymbol("ILT")` — inverse Laplace transform head
+
+Required by `cas-laplace` 0.1.0 and `symbolic-vm` 0.32.3.
+
+---
+
 ## 0.7.1 — 2026-04-27
 
 **Add `MNEWTON` head symbol for Newton's method root finder.**

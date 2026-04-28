@@ -215,6 +215,11 @@ _DEFAULT_FUNCTION_NAMES: dict[str, str] = {
     "JacobiSymbol": "jacobi",
     "ChineseRemainder": "chineseremainder",
     "IntegerLength": "integerlength",
+    # ---- Laplace transforms -------------------------------------------------
+    "Laplace": "laplace",
+    "ILT": "ilt",
+    "DiracDelta": "delta",
+    "UnitStep": "hstep",
 }
 
 

@@ -17,7 +17,13 @@ compiler change required.
 
 from __future__ import annotations
 
-from symbolic_ir import IRSymbol
+from symbolic_ir import (
+    DIRAC_DELTA,
+    ILT,
+    LAPLACE,
+    IRSymbol,
+    UNIT_STEP,
+)
 
 # IR heads from substrate packages that may not exist yet — define
 # them here as :class:`IRSymbol` singletons so the table can reference
@@ -83,6 +89,9 @@ INTEGER_LENGTH = IRSymbol("IntegerLength")
 
 # Numeric root-finding (Newton's method)
 MNEWTON = IRSymbol("MNewton")
+
+# Laplace transforms (D-remaining)
+# LAPLACE, ILT, DIRAC_DELTA, UNIT_STEP imported from symbolic_ir above.
 
 # Trig transformation heads (B1)
 TRIG_SIMPLIFY = IRSymbol("TrigSimplify")
@@ -198,6 +207,12 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "carg": ARG,
     "rectform": RECT_FORM,
     "polarform": POLAR_FORM,
+    # Laplace transforms
+    "laplace": LAPLACE,
+    "ilt": ILT,
+    "delta": DIRAC_DELTA,   # Dirac delta δ(t)
+    "hstep": UNIT_STEP,     # Heaviside step H(t)
+    "unit_step": UNIT_STEP,  # alias
     # Runtime-owned operations
     "kill": KILL,
     "ev": EV,

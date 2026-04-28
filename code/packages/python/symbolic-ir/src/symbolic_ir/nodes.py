@@ -265,3 +265,14 @@ RETURN = IRSymbol("Return")
 
 # Numeric root-finding
 MNEWTON = IRSymbol("MNewton")
+
+# Laplace / Fourier transforms (cas-laplace, cas-fourier)
+#
+# DiracDelta and UnitStep are canonical here; any future transform package
+# that needs them imports from cas_laplace.heads (which re-exports them).
+# They are also registered here so that symbolic-ir consumers can import
+# them without depending on cas-laplace.
+DIRAC_DELTA = IRSymbol("DiracDelta")  # δ(t) — Dirac delta distribution
+UNIT_STEP = IRSymbol("UnitStep")      # u(t) — Heaviside unit step function
+LAPLACE = IRSymbol("Laplace")         # L{f(t)} — Laplace transform head
+ILT = IRSymbol("ILT")                 # L⁻¹{F(s)} — inverse Laplace transform
