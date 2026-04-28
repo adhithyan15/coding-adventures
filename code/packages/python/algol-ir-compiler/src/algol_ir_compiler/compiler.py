@@ -236,7 +236,10 @@ class AlgolIrCompiler:
         self.variable_slots: dict[str, int] = {}
         self.legacy_variable_slots: dict[str, int] = {}
         self.procedure_signatures: dict[str, ProcedureSignaturePlan] = {}
-        self.procedure_parameter_dispatchers: dict[tuple[str, ...], str] = {}
+        self.procedure_parameter_dispatchers: dict[
+            tuple[str | None, tuple[str, ...]],
+            str,
+        ] = {}
         self.expression_types: dict[int, str] = {}
         self.current_function_return_type: str | None = _INTEGER_TYPE
         self.eval_thunks: list[_EvalThunk] = []
@@ -525,16 +528,17 @@ class AlgolIrCompiler:
             self._compile_procedure_call_dispatcher(
                 argument_types=tuple(),
                 label=_PROCEDURE_CALL_LABEL,
+                return_type=None,
             )
-            for argument_types, label in sorted(
+            for (return_type, argument_types), label in sorted(
                 self.procedure_parameter_dispatchers.items(),
-                key=lambda item: (len(item[0]), item[0]),
+                key=lambda item: (item[0][0] or "", len(item[0][1]), item[0][1]),
             ):
-                if argument_types:
-                    self._compile_procedure_call_dispatcher(
-                        argument_types=argument_types,
-                        label=label,
-                    )
+                self._compile_procedure_call_dispatcher(
+                    argument_types=argument_types,
+                    label=label,
+                    return_type=return_type,
+                )
 
         return CompileResult(
             program=self.program,
@@ -2890,7 +2894,10 @@ class AlgolIrCompiler:
             if scope.active_thunk_heap_mark_reg is not None
             else self._const_reg(0)
         )
-        dispatch_label = self._procedure_parameter_dispatch_label(argument_types)
+        dispatch_label = self._procedure_parameter_dispatch_label(
+            argument_types,
+            return_type=call.return_type,
+        )
         self._emit(
             IrOp.CALL,
             IrLabel(dispatch_label),
@@ -2902,14 +2909,20 @@ class AlgolIrCompiler:
             self._emit_helper_return_on_thunk_failure(scope)
         self._emit_handle_pending_goto_after_call(scope)
         result = self._fresh_reg()
-        self._copy_reg(dst=result, src=_RESULT_REG)
+        self._copy_scalar_reg(
+            type_name=call.return_type or _INTEGER_TYPE,
+            dst=result,
+            src=_REAL_RESULT_REG if call.return_type == _REAL_TYPE else _RESULT_REG,
+        )
         return result
 
     def _procedure_parameter_dispatch_label(
         self,
         argument_types: tuple[str, ...],
+        *,
+        return_type: str | None,
     ) -> str:
-        if not argument_types:
+        if not argument_types and return_type is None:
             self.procedure_signatures.setdefault(
                 _PROCEDURE_CALL_LABEL,
                 ProcedureSignaturePlan(
@@ -2918,21 +2931,28 @@ class AlgolIrCompiler:
                 ),
             )
             return _PROCEDURE_CALL_LABEL
-        label = self.procedure_parameter_dispatchers.get(argument_types)
+        key = (return_type, argument_types)
+        label = self.procedure_parameter_dispatchers.get(key)
         if label is None:
             suffix = "_".join(
                 _procedure_parameter_dispatch_type_tag(type_name)
                 for type_name in argument_types
             )
-            label = f"{_PROCEDURE_CALL_LABEL}_{suffix}"
-            self.procedure_parameter_dispatchers[argument_types] = label
+            if return_type is None:
+                label = f"{_PROCEDURE_CALL_LABEL}_{suffix}"
+            else:
+                return_tag = _procedure_parameter_dispatch_type_tag(return_type)
+                label = f"{_PROCEDURE_CALL_LABEL}_{return_tag}_result"
+                if suffix:
+                    label = f"{label}_{suffix}"
+            self.procedure_parameter_dispatchers[key] = label
             self.procedure_signatures[label] = ProcedureSignaturePlan(
                 param_types=(
                     _INTEGER_TYPE,
                     _INTEGER_TYPE,
                     *argument_types,
                 ),
-                return_type=_INTEGER_TYPE,
+                return_type=return_type or _INTEGER_TYPE,
             )
         return label
 
@@ -3550,11 +3570,6 @@ class AlgolIrCompiler:
         procedure = self.procedures.get(symbol.procedure_id)
         if procedure is None:
             raise CompileError(f"procedure actual {name.value!r} has no descriptor")
-        if procedure.return_type is not None:
-            raise CompileError(
-                f"procedure parameter actual {name.value!r} must be a statement "
-                "procedure"
-            )
         if descriptor is None:
             raise CompileError(
                 f"missing reserved descriptor for procedure actual {name.value!r}"
@@ -4068,9 +4083,10 @@ class AlgolIrCompiler:
         *,
         argument_types: tuple[str, ...],
         label: str,
+        return_type: str | None,
     ) -> None:
         previous_return_type = self.current_function_return_type
-        self.current_function_return_type = _INTEGER_TYPE
+        self.current_function_return_type = return_type or _INTEGER_TYPE
         self._label(label)
         descriptor = _STATIC_LINK_PARAM_REG
         active_thunk_heap_mark = _THUNK_HEAP_MARK_PARAM_REG
@@ -4092,6 +4108,7 @@ class AlgolIrCompiler:
             if not self._procedure_matches_dispatch_shape(
                 procedure,
                 argument_types,
+                return_type=return_type,
             ):
                 continue
             index = self.if_count
@@ -4123,6 +4140,22 @@ class AlgolIrCompiler:
                 IrRegister(active_thunk_heap_mark),
                 *(IrRegister(argument) for argument in call_arguments),
             )
+            if return_type is not None:
+                result_source = (
+                    _REAL_RESULT_REG
+                    if procedure.return_type == _REAL_TYPE
+                    else _RESULT_REG
+                )
+                result_value = self._coerce_reg_to_type(
+                    result_source,
+                    procedure.return_type or _INTEGER_TYPE,
+                    expected_type=return_type,
+                )
+                self._copy_scalar_reg(
+                    type_name=return_type,
+                    dst=_RESULT_REG,
+                    src=result_value,
+                )
             self._emit(IrOp.RET)
             self._emit(IrOp.JUMP, IrLabel(end_label))
             self._label(else_label)
@@ -4135,8 +4168,16 @@ class AlgolIrCompiler:
         self,
         procedure: ProcedureDescriptor,
         argument_types: tuple[str, ...],
+        *,
+        return_type: str | None,
     ) -> bool:
-        if procedure.return_type is not None:
+        if return_type is None:
+            if procedure.return_type is not None:
+                return False
+        elif not _procedure_return_type_satisfies(
+            expected_type=return_type,
+            actual_type=procedure.return_type,
+        ):
             return False
         if len(procedure.parameters) != len(argument_types):
             return False
@@ -5628,3 +5669,13 @@ def _procedure_parameter_dispatch_type_tag(type_name: str) -> str:
         raise CompileError(
             f"unsupported procedure parameter dispatch type {type_name!r}"
         ) from exc
+
+
+def _procedure_return_type_satisfies(
+    *,
+    expected_type: str,
+    actual_type: str | None,
+) -> bool:
+    if actual_type is None:
+        return False
+    return expected_type == actual_type

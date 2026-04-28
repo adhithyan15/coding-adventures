@@ -823,6 +823,24 @@ class TestAlgolIrCompiler:
             for instruction in calls
         )
 
+    def test_compiles_typed_procedure_parameter_expression_call(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; real y; "
+                "procedure invoke(f); real f; procedure f; "
+                "begin y := f(2); if y = 4 then result := 1 else result := 0 end; "
+                "real procedure twice(x); value x; real x; begin twice := x * 2 end; "
+                "invoke(twice) "
+                "end"
+            )
+        )
+        signature = result.procedure_signatures[
+            "_fn_algol_call_procedure_f64_result_i32"
+        ]
+
+        assert signature.param_types == ("integer", "integer", "integer")
+        assert signature.return_type == "real"
+
     def test_compiles_dynamic_multidimensional_array_bounds(self) -> None:
         result = compile_algol(
             parse_algol(

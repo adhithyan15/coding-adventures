@@ -809,6 +809,23 @@ class TestAlgolTypeChecker:
         parameter = result.semantic.procedures[0].parameters[0]
         assert parameter.procedure_call_shapes[0].argument_types == ("integer",)
 
+    def test_accepts_typed_procedure_parameter_expression_actual(self) -> None:
+        ast = parse_algol(
+            "begin integer result; real y; "
+            "procedure invoke(f); real f; procedure f; "
+            "begin y := f(2); if y = 4 then result := 1 else result := 0 end; "
+            "real procedure twice(x); value x; real x; begin twice := x * 2 end; "
+            "invoke(twice) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        parameter = result.semantic.procedures[0].parameters[0]
+        assert parameter.type_name == "real"
+        assert parameter.procedure_call_shapes[0].return_type == "real"
+
     def test_rejects_procedure_parameter_actual_with_mismatched_arity(
         self,
     ) -> None:
@@ -844,6 +861,19 @@ class TestAlgolTypeChecker:
             "expects a procedure actual with scalar value parameters"
             in result.diagnostics[0].message
         )
+
+    def test_rejects_typed_procedure_parameter_void_actual(self) -> None:
+        ast = parse_algol(
+            "begin integer result; real y; "
+            "procedure invoke(f); real f; procedure f; begin y := f(2) end; "
+            "procedure set(x); value x; integer x; begin result := x end; "
+            "invoke(set) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "expects a real procedure actual" in result.diagnostics[0].message
 
     def test_rejects_value_procedure_parameter_in_this_phase(self) -> None:
         ast = parse_algol(
