@@ -61,7 +61,10 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='drop_view_stmt', is_token=False),
                 RuleReference(name='begin_stmt', is_token=False),
                 RuleReference(name='commit_stmt', is_token=False),
+                RuleReference(name='rollback_to_stmt', is_token=False),
                 RuleReference(name='rollback_stmt', is_token=False),
+                RuleReference(name='savepoint_stmt', is_token=False),
+                RuleReference(name='release_stmt', is_token=False),
             ]),
             line_number=12,
         ),
@@ -690,6 +693,40 @@ PARSER_GRAMMAR = ParserGrammar(
                 ),
             ]),
             line_number=103,
+        ),
+        GrammarRule(
+            name='savepoint_stmt',
+            body=
+            Sequence(elements=[
+                Literal(value='SAVEPOINT'),
+                RuleReference(name='NAME', is_token=True),
+            ]),
+            line_number=126,
+        ),
+        GrammarRule(
+            name='release_stmt',
+            body=
+            Sequence(elements=[
+                Literal(value='RELEASE'),
+                Optional(element=
+                    Literal(value='SAVEPOINT'),
+                ),
+                RuleReference(name='NAME', is_token=True),
+            ]),
+            line_number=127,
+        ),
+        GrammarRule(
+            name='rollback_to_stmt',
+            body=
+            Sequence(elements=[
+                Literal(value='ROLLBACK'),
+                Literal(value='TO'),
+                Optional(element=
+                    Literal(value='SAVEPOINT'),
+                ),
+                RuleReference(name='NAME', is_token=True),
+            ]),
+            line_number=128,
         ),
         GrammarRule(
             name='expr',

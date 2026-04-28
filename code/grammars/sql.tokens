@@ -108,6 +108,9 @@ keywords:
   COMMIT
   ROLLBACK
   TRANSACTION
+  SAVEPOINT
+  RELEASE
+  TO
 
 skip:
   WHITESPACE    = /[ \t\r\n]+/

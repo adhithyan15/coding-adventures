@@ -77,7 +77,10 @@ from sql_planner import (
     NotIn,
     NotLike,
     RecursiveCTERef,
+    ReleaseSavepointStmt,
     RollbackStmt,
+    RollbackToStmt,
+    SavepointStmt,
     SelectItem,
     SelectStmt,
     SortKey,
@@ -182,6 +185,12 @@ def _stmt_dispatch(
             return CommitStmt()
         case "rollback_stmt":
             return RollbackStmt()
+        case "savepoint_stmt":
+            return _savepoint(inner)
+        case "release_stmt":
+            return _release_savepoint(inner)
+        case "rollback_to_stmt":
+            return _rollback_to(inner)
     raise ProgrammingError(f"unsupported statement: {inner.rule_name}")
 
 
@@ -806,6 +815,50 @@ def _drop_view(node: ASTNode) -> DropViewStmt:
     if name_tok is None:
         raise ProgrammingError("drop_view_stmt: expected view name")
     return DropViewStmt(name=name_tok.value, if_exists=if_exists)
+
+
+# --------------------------------------------------------------------------
+# SAVEPOINT / RELEASE / ROLLBACK TO.
+# --------------------------------------------------------------------------
+
+
+def _savepoint(node: ASTNode) -> SavepointStmt:
+    """Translate ``savepoint_stmt`` into :class:`SavepointStmt`.
+
+    Grammar::
+
+        savepoint_stmt = "SAVEPOINT" NAME ;
+    """
+    name_tok = _first_token(node, kind="NAME")
+    if name_tok is None:
+        raise ProgrammingError("savepoint_stmt: expected savepoint name")
+    return SavepointStmt(name=name_tok.value)
+
+
+def _release_savepoint(node: ASTNode) -> ReleaseSavepointStmt:
+    """Translate ``release_stmt`` into :class:`ReleaseSavepointStmt`.
+
+    Grammar::
+
+        release_stmt = "RELEASE" [ "SAVEPOINT" ] NAME ;
+    """
+    name_tok = _first_token(node, kind="NAME")
+    if name_tok is None:
+        raise ProgrammingError("release_stmt: expected savepoint name")
+    return ReleaseSavepointStmt(name=name_tok.value)
+
+
+def _rollback_to(node: ASTNode) -> RollbackToStmt:
+    """Translate ``rollback_to_stmt`` into :class:`RollbackToStmt`.
+
+    Grammar::
+
+        rollback_to_stmt = "ROLLBACK" "TO" [ "SAVEPOINT" ] NAME ;
+    """
+    name_tok = _first_token(node, kind="NAME")
+    if name_tok is None:
+        raise ProgrammingError("rollback_to_stmt: expected savepoint name")
+    return RollbackToStmt(name=name_tok.value)
 
 
 # --------------------------------------------------------------------------

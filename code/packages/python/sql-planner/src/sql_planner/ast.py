@@ -385,6 +385,41 @@ class DropViewStmt:
     if_exists: bool = False
 
 
+@dataclass(frozen=True, slots=True)
+class SavepointStmt:
+    """SAVEPOINT name.
+
+    Creates a named savepoint within the active transaction.  Intercepted by
+    the engine before the planner — the VM never sees this statement.
+    """
+
+    name: str
+
+
+@dataclass(frozen=True, slots=True)
+class ReleaseSavepointStmt:
+    """RELEASE [SAVEPOINT] name.
+
+    Destroys the named savepoint (and all savepoints created after it),
+    making changes since that savepoint permanent within the outer transaction.
+    Intercepted by the engine.
+    """
+
+    name: str
+
+
+@dataclass(frozen=True, slots=True)
+class RollbackToStmt:
+    """ROLLBACK TO [SAVEPOINT] name.
+
+    Rolls back all changes made after the named savepoint was created, but
+    keeps the savepoint alive so it can be rolled back to again.
+    Intercepted by the engine.
+    """
+
+    name: str
+
+
 # The type union every Statement consumer matches on.
 Statement = (
     SelectStmt
@@ -405,4 +440,7 @@ Statement = (
     | RollbackStmt
     | CreateViewStmt
     | DropViewStmt
+    | SavepointStmt
+    | ReleaseSavepointStmt
+    | RollbackToStmt
 )

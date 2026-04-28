@@ -2,6 +2,16 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.9.0] - 2026-04-27
+
+### Added — Phase 7: SAVEPOINT / RELEASE / ROLLBACK TO
+
+- `savepoint_stmt`, `release_stmt`, and `rollback_to_stmt` rules added to
+  `sql.grammar`.  The statement alternation places `rollback_to_stmt` before
+  `rollback_stmt` so the PEG parser tries the longer form first.
+- `_grammar.py` updated with three new `GrammarRule` objects and the updated
+  `statement` `Alternation`.
+
 ## [0.8.0] - 2026-04-27
 
 ### Added — Phase 6: CREATE / DROP VIEW

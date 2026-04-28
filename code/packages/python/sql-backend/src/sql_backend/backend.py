@@ -338,6 +338,45 @@ class Backend(ABC):
         """
         return None
 
+    # --- Savepoints --------------------------------------------------------
+    # Non-abstract: the default raises Unsupported so backends that don't
+    # support savepoints inherit a clear error instead of a silent no-op.
+
+    def create_savepoint(self, name: str) -> None:
+        """Create a named savepoint within the active transaction.
+
+        The default implementation raises :class:`Unsupported`. Override in
+        backends that support partial rollback.
+
+        Raises :class:`Unsupported` if savepoints are not supported.
+        """
+        from .errors import Unsupported  # local import avoids circular dep
+        raise Unsupported(operation="savepoints")
+
+    def release_savepoint(self, name: str) -> None:
+        """Release (destroy) the named savepoint.
+
+        Per SQL/SQLite semantics, releasing a savepoint also releases all
+        savepoints created after it.  Changes are kept — the outer transaction
+        still needs to be committed or rolled back.
+
+        The default implementation raises :class:`Unsupported`.
+        """
+        from .errors import Unsupported
+        raise Unsupported(operation="savepoints")
+
+    def rollback_to_savepoint(self, name: str) -> None:
+        """Roll back all changes made after the named savepoint.
+
+        Unlike a full rollback, the savepoint itself remains alive after this
+        call — the caller may roll back to it again, or release it later.
+        Savepoints created after the named one are destroyed.
+
+        The default implementation raises :class:`Unsupported`.
+        """
+        from .errors import Unsupported
+        raise Unsupported(operation="savepoints")
+
 
 class SchemaProvider(ABC):
     """Minimal schema interface consumed by the planner.

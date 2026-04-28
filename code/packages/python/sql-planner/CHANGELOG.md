@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.10.0] - 2026-04-27
+
+### Added — Phase 7: SAVEPOINT / RELEASE / ROLLBACK TO
+
+- **`SavepointStmt` AST node** — frozen dataclass with `name: str`.
+  Represents `SAVEPOINT name`.
+- **`ReleaseSavepointStmt` AST node** — `name: str`.
+  Represents `RELEASE [SAVEPOINT] name`.
+- **`RollbackToStmt` AST node** — `name: str`.
+  Represents `ROLLBACK TO [SAVEPOINT] name`.
+- All three types added to the `Statement` union and exported via `__all__`.
+
 ## [0.9.0] - 2026-04-27
 
 ### Added — Phase 6: CREATE / DROP VIEW

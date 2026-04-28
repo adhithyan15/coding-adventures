@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.4.0] - 2026-04-27
+
+### Added — Phase 7: SAVEPOINT / RELEASE / ROLLBACK TO
+
+- **`SAVEPOINT name`** — creates a named savepoint within the active
+  transaction (implicitly begins a transaction if none is open, matching
+  SQLite semantics).
+- **`RELEASE [SAVEPOINT] name`** — destroys the named savepoint and all
+  savepoints created after it; changes since the savepoint are kept in the
+  outer transaction.
+- **`ROLLBACK TO [SAVEPOINT] name`** — rolls back all changes made after
+  the named savepoint.  The savepoint itself survives and can be rolled
+  back to again.
+- **cursor `_tcl_keyword()` fix** — `ROLLBACK TO …` is no longer
+  intercepted by the TCL fast-path; it passes through to the full engine
+  pipeline so the grammar can extract the savepoint name.
+- **`Connection._savepoints`** — live `list[str]` tracking active
+  savepoints; cleared automatically on `COMMIT` or `ROLLBACK`.
+- **27 new tests** in `tests/test_tier3_savepoint.py` covering grammar,
+  adapter, end-to-end integration, and error handling.
+
 ## [1.3.0] - 2026-04-27
 
 ### Added — Phase 6: CREATE / DROP VIEW
