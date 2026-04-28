@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- preserve source query variables across `goal_expansion/2` rewrites
+- rewrite module-qualified callable arguments inside `findall/3`, `bagof/3`,
+  `setof/3`, and `forall/2`
+- expand builtin adaptation for truth/failure/cut, arithmetic, collections,
+  `forall/2`, and `copy_term/2`
+
 ## 0.1.0
 
 - add `LoadedPrologSource` as a shared loader result over dialect parser outputs

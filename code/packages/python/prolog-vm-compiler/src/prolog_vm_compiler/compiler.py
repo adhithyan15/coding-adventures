@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterator
+from collections.abc import Iterator, Mapping
 from dataclasses import dataclass
+from types import MappingProxyType
 
 from logic_engine import (
     Clause,
@@ -16,6 +17,7 @@ from logic_engine import (
     Program,
     Relation,
     RelationCall,
+    State,
     Term,
     relation,
     succeed,
@@ -52,6 +54,16 @@ class CompiledPrologVMProgram:
     instructions: InstructionProgram
     initialization_query_count: int = 0
     source_query_count: int = 0
+    source_query_variables: tuple[tuple[str, ...], ...] = ()
+
+    def __post_init__(self) -> None:
+        if self.source_query_variables:
+            return
+        object.__setattr__(
+            self,
+            "source_query_variables",
+            tuple(() for _ in range(self.source_query_count)),
+        )
 
     @property
     def query_count(self) -> int:
@@ -69,6 +81,38 @@ class CompiledPrologVMProgram:
             msg = f"source query index {source_query_index} is out of range"
             raise IndexError(msg)
         return self.initialization_query_count + source_query_index
+
+    def source_query_variable_names(
+        self,
+        source_query_index: int = 0,
+    ) -> tuple[str, ...]:
+        """Return visible variable names for one source-level query."""
+
+        self.source_query_vm_index(source_query_index)
+        return self.source_query_variables[source_query_index]
+
+
+@dataclass(frozen=True, slots=True)
+class PrologAnswer:
+    """A named source-level answer produced by the compiled Prolog VM path."""
+
+    bindings: Mapping[str, Term]
+
+    def __post_init__(self) -> None:
+        object.__setattr__(
+            self,
+            "bindings",
+            MappingProxyType(dict(self.bindings)),
+        )
+
+    def as_dict(self) -> dict[str, Term]:
+        """Return answer bindings as a plain dictionary."""
+
+        return dict(self.bindings)
+
+
+class PrologVMInitializationError(RuntimeError):
+    """Raised when a compiled initialization query cannot be proven."""
 
 
 def compile_loaded_prolog_source(
@@ -151,6 +195,24 @@ def run_compiled_prolog_query(
     )
 
 
+def run_compiled_prolog_query_answers(
+    compiled_program: CompiledPrologVMProgram,
+    source_query_index: int = 0,
+    limit: int | None = None,
+) -> list[PrologAnswer]:
+    """Run one source query and return bindings keyed by Prolog variable name."""
+
+    return _answers_from_results(
+        compiled_program,
+        source_query_index,
+        run_compiled_prolog_query(
+            compiled_program,
+            source_query_index=source_query_index,
+            limit=limit,
+        ),
+    )
+
+
 def run_compiled_prolog_queries(
     compiled_program: CompiledPrologVMProgram,
     *,
@@ -166,6 +228,51 @@ def run_compiled_prolog_queries(
         )
         for index in range(compiled_program.source_query_count)
     ]
+
+
+def run_compiled_prolog_initializations(
+    compiled_program: CompiledPrologVMProgram,
+    *,
+    state: State | None = None,
+) -> State:
+    """Run compiled initialization query slots in order and return final state."""
+
+    vm = load_compiled_prolog_vm(compiled_program)
+    return _run_initializations_on_vm(vm, compiled_program, state=state)
+
+
+def run_initialized_compiled_prolog_query(
+    compiled_program: CompiledPrologVMProgram,
+    source_query_index: int = 0,
+    limit: int | None = None,
+) -> list[Term | tuple[Term, ...]]:
+    """Run initializations, then execute one source query from that state."""
+
+    vm = load_compiled_prolog_vm(compiled_program)
+    initialized_state = _run_initializations_on_vm(vm, compiled_program)
+    return vm.run_query_from(
+        initialized_state,
+        query_index=compiled_program.source_query_vm_index(source_query_index),
+        limit=limit,
+    )
+
+
+def run_initialized_compiled_prolog_query_answers(
+    compiled_program: CompiledPrologVMProgram,
+    source_query_index: int = 0,
+    limit: int | None = None,
+) -> list[PrologAnswer]:
+    """Run initializations and return named bindings for one source query."""
+
+    return _answers_from_results(
+        compiled_program,
+        source_query_index,
+        run_initialized_compiled_prolog_query(
+            compiled_program,
+            source_query_index=source_query_index,
+            limit=limit,
+        ),
+    )
 
 
 def _compile_loaded_prolog(
@@ -230,6 +337,9 @@ def _compile_loaded_prolog(
         instructions=compiled_instructions,
         initialization_query_count=len(adapted_initialization_goals),
         source_query_count=len(adapted_source_queries),
+        source_query_variables=tuple(
+            tuple(query_value.variables) for query_value in adapted_source_queries
+        ),
     )
 
 
@@ -318,3 +428,35 @@ def _iter_relation_calls(goal_value: GoalExpr) -> Iterator[RelationCall]:
 def _query_outputs(query_value: ParsedQuery) -> tuple[Term, ...] | None:
     outputs = tuple(query_value.variables.values())
     return outputs or None
+
+
+def _run_initializations_on_vm(
+    vm: LogicVM,
+    compiled_program: CompiledPrologVMProgram,
+    *,
+    state: State | None = None,
+) -> State:
+    current_state = State() if state is None else state
+    for query_index in range(compiled_program.initialization_query_count):
+        next_state = next(vm.solve_query_from(current_state, query_index), None)
+        if next_state is None:
+            msg = f"initialization query {query_index + 1} failed"
+            raise PrologVMInitializationError(msg)
+        current_state = next_state
+    return current_state
+
+
+def _answers_from_results(
+    compiled_program: CompiledPrologVMProgram,
+    source_query_index: int,
+    results: list[Term | tuple[Term, ...]],
+) -> list[PrologAnswer]:
+    names = compiled_program.source_query_variable_names(source_query_index)
+    if not names:
+        return [PrologAnswer({}) for _result in results]
+
+    answers: list[PrologAnswer] = []
+    for result in results:
+        values = result if isinstance(result, tuple) else (result,)
+        answers.append(PrologAnswer(dict(zip(names, values, strict=True))))
+    return answers
