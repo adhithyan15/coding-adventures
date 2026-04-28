@@ -477,6 +477,20 @@
       "diagnostics": [
         "nested-comment"
       ]
+    },
+    {
+      "id": "html5lib-smoke-39",
+      "description": "incorrectly closed comment end bang",
+      "input": "Before<!--x--!>After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=x)",
+        "Text(data=After)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "incorrectly-closed-comment"
+      ]
     }
   ],
   "skipped": []

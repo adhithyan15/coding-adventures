@@ -29,7 +29,8 @@ Comment tokenization includes the standard start-dash recovery cases for empty
 HTML comments such as `<!-->` and `<!--->`, while still preserving normal
 Mosaic-era `<!--note-->` comments. Nested-looking `<!--` sequences inside an
 open comment remain literal comment data and surface a recoverable
-`nested-comment` diagnostic.
+`nested-comment` diagnostic. Comment endings also recover from `--!>` with an
+`incorrectly-closed-comment` diagnostic while preserving non-closing `--!` text.
 The generated HTML1 machine also exposes `RCDATA`, `RAWTEXT`, `PLAINTEXT`,
 `CDATA section`, `script_data`, `script_data_escaped`, and
 `script_data_double_escaped` entry states for parser-controlled tokenizer

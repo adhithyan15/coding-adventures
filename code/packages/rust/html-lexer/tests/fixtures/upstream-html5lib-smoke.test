@@ -425,6 +425,18 @@
       "errors": [
         {"code": "nested-comment", "line": 1, "col": 17}
       ]
+    },
+    {
+      "description": "incorrectly closed comment end bang",
+      "input": "Before<!--x--!>After",
+      "output": [
+        ["Character", "Before"],
+        ["Comment", "x"],
+        ["Character", "After"]
+      ],
+      "errors": [
+        {"code": "incorrectly-closed-comment", "line": 1, "col": 15}
+      ]
     }
   ]
 }

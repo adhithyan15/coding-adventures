@@ -81,3 +81,5 @@ documented in this file.
   recovery and `<!--->` empty-comment closure.
 - HTML comment less-than-sign handling for nested-looking `<!--` sequences
   inside open comments, preserving the text while reporting `nested-comment`.
+- HTML comment end-bang handling for `--!>` recovery and non-closing `--!`
+  text preservation.
