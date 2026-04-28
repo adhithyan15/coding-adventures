@@ -57,6 +57,7 @@ from sql_planner import (
     DropIndexStmt,
     DropTableStmt,
     ExceptStmt,
+    ExistsSubquery,
     FuncArg,
     FunctionCall,
     In,
@@ -770,6 +771,15 @@ def _primary(node: ASTNode, state: _PlaceholderCounter) -> Expr:
                     return Literal(value=True)
                 if kw == "FALSE":
                     return Literal(value=False)
+                if kw == "EXISTS":
+                    # EXISTS "(" query_stmt ")" — find the query_stmt sibling.
+                    q = _maybe_child(node, "query_stmt")
+                    if q is None:
+                        raise ProgrammingError("EXISTS requires a subquery")
+                    inner_stmt = _query_stmt(q)
+                    if not isinstance(inner_stmt, SelectStmt):
+                        raise ProgrammingError("EXISTS subquery must be a SELECT statement")
+                    return ExistsSubquery(query=inner_stmt)
         elif isinstance(c, ASTNode):
             if c.rule_name == "function_call":
                 return _function_call(c, state)

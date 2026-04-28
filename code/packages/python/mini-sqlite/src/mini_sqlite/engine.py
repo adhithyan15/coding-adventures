@@ -163,10 +163,20 @@ def _flatten_project_over_aggregate(p: LogicalPlan) -> LogicalPlan:
     while isinstance(cur, (Sort, Distinct, PlanLimit)):
         stack.append(cur)
         cur = cur.input
-    if not isinstance(cur, Project) or not isinstance(cur.input, Aggregate):
+    if not isinstance(cur, Project):
         return p
+
+    # Determine whether the inner plan is a bare Aggregate or Having(Aggregate).
+    having_node: Having | None = None
+    if isinstance(cur.input, Having) and isinstance(cur.input.input, Aggregate):
+        having_node = cur.input
+        aggregate: Aggregate = cur.input.input
+    elif isinstance(cur.input, Aggregate):
+        aggregate = cur.input
+    else:
+        return p
+
     project: Project = cur
-    aggregate: Aggregate = cur.input
 
     # Pair each aggregate slot with the projection item that consumes it.
     # The planner emits one AggregateItem per AggregateExpr in the SELECT
@@ -190,9 +200,10 @@ def _flatten_project_over_aggregate(p: LogicalPlan) -> LogicalPlan:
 
     new_aggregate = replace(aggregate, aggregates=tuple(renamed))
 
-    # Re-wrap with any Sort/Distinct/Limit stack we peeled off. Rewrite
-    # sort/limit/distinct inputs to point at the flattened Aggregate.
-    out: LogicalPlan = new_aggregate
+    # Re-wrap Having if it was present, then Sort/Distinct/Limit stack.
+    out: LogicalPlan = (
+        replace(having_node, input=new_aggregate) if having_node is not None else new_aggregate
+    )
     for wrap in reversed(stack):
         out = replace(wrap, input=out)
     return out
