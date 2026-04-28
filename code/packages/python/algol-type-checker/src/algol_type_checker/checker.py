@@ -914,7 +914,10 @@ class AlgolTypeChecker:
                 parameter_type = LABEL
             elif parameter_kind == SWITCH:
                 parameter_type = SWITCH
-            elif parameter_kind == "procedure":
+            elif (
+                parameter_kind == "procedure"
+                and parameter_type not in {INTEGER, BOOLEAN, REAL, STRING}
+            ):
                 parameter_type = "procedure"
             param_symbol = Symbol(
                 name=formal.value,
@@ -1983,11 +1986,11 @@ class AlgolTypeChecker:
                     f"procedure parameter {name_token.value!r} argument must be "
                     f"integer, boolean, real, or string, got {actual_type}",
                 )
-        if role == "expression":
+        return_type = descriptor.return_type
+        if role == "expression" and return_type is None:
             self._error(
                 name_token,
-                f"procedure parameter {name_token.value!r} cannot be called as an "
-                "expression in this phase",
+                f"procedure parameter {name_token.value!r} does not return a value",
             )
         elif ERROR not in argument_types and descriptor.parameter_symbol_id is not None:
             self._record_procedure_parameter_call_shape(
@@ -1995,7 +1998,7 @@ class AlgolTypeChecker:
                 ProcedureFormalCallShape(
                     role=role,
                     argument_types=tuple(argument_types),
-                    return_type=None,
+                    return_type=return_type if role == "expression" else None,
                 ),
             )
         call = ResolvedProcedureCall(
@@ -2008,7 +2011,7 @@ class AlgolTypeChecker:
             declaration_block_id=declaring_scope.block_id,
             lexical_depth_delta=lexical_depth_delta,
             argument_count=len(arguments),
-            return_type=None,
+            return_type=return_type,
             line=name_token.line,
             column=name_token.column,
             parameter_symbol_id=descriptor.parameter_symbol_id,
@@ -2196,19 +2199,46 @@ class AlgolTypeChecker:
         descriptor: ProcedureDescriptor,
         parameter: ProcedureParameter,
     ) -> bool:
-        if descriptor.return_type is not None:
-            self._error(
-                token,
-                f"procedure parameter {parameter.name!r} expects a statement "
-                "procedure actual in this phase",
-            )
-            return False
         for shape in parameter.procedure_call_shapes:
-            if shape.role != "statement":
+            if shape.role == "expression":
+                if shape.return_type is None:
+                    self._error(
+                        token,
+                        f"procedure parameter {parameter.name!r} has no typed "
+                        "expression result",
+                    )
+                    return False
+                if descriptor.return_type is None:
+                    self._error(
+                        token,
+                        f"procedure parameter {parameter.name!r} expects a "
+                        f"{shape.return_type} procedure actual",
+                    )
+                    return False
+                if not self._procedure_return_type_satisfies(
+                    expected_type=shape.return_type,
+                    actual_type=descriptor.return_type,
+                ):
+                    self._error(
+                        token,
+                        f"procedure parameter {parameter.name!r} expects a "
+                        f"{shape.return_type} procedure actual, got "
+                        f"{descriptor.return_type}",
+                    )
+                    return False
+            elif shape.role == "statement":
+                if descriptor.return_type is not None:
+                    self._error(
+                        token,
+                        f"procedure parameter {parameter.name!r} expects a "
+                        "statement procedure actual",
+                    )
+                    return False
+            else:
                 self._error(
                     token,
-                    f"procedure parameter {parameter.name!r} cannot accept "
-                    "expression procedure actuals in this phase",
+                    f"procedure parameter {parameter.name!r} has unsupported "
+                    f"{shape.role} call shape",
                 )
                 return False
             if len(descriptor.parameters) != len(shape.argument_types):
@@ -2258,6 +2288,14 @@ class AlgolTypeChecker:
                     )
                     return False
         return True
+
+    def _procedure_return_type_satisfies(
+        self,
+        *,
+        expected_type: str,
+        actual_type: str,
+    ) -> bool:
+        return expected_type == actual_type
 
     def _resolve_builtin_procedure(
         self,
@@ -2319,6 +2357,11 @@ class AlgolTypeChecker:
                     return None
                 return descriptor, current, lexical_depth_delta
             if symbol is not None and symbol.kind == "procedure_parameter":
+                return_type = (
+                    symbol.type_name
+                    if symbol.type_name in {INTEGER, BOOLEAN, REAL, STRING}
+                    else None
+                )
                 return (
                     ProcedureDescriptor(
                         procedure_id=-2,
@@ -2327,7 +2370,7 @@ class AlgolTypeChecker:
                         declaring_block_id=current.block_id,
                         body_block_id=current.block_id,
                         body_node_id=-1,
-                        return_type=None,
+                        return_type=return_type,
                         parameters=tuple(),
                         line=token.line,
                         column=token.column,

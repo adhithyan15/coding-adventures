@@ -657,6 +657,32 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
 
+    def test_typed_procedure_parameter_expression_call_returns_real(self) -> None:
+        result = compile_source(
+            "begin integer result; real y; "
+            "procedure invoke(f); real f; procedure f; "
+            "begin y := f(2); if y = 4 then result := 1 else result := 0 end; "
+            "real procedure twice(x); value x; real x; begin twice := x * 2 end; "
+            "invoke(twice) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
+
+    def test_forwarded_typed_procedure_parameter_expression_uses_static_link(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result, base; real y; "
+            "procedure invoke(f); real f; procedure f; "
+            "begin y := f(2); if y = 7 then result := 1 else result := 0 end; "
+            "procedure relay(f); real f; procedure f; begin invoke(f) end; "
+            "real procedure addbase(x); value x; real x; "
+            "begin addbase := base + x end; "
+            "base := 5; relay(addbase) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
+
     def test_repeated_switch_designational_gotos_use_distinct_dispatch(self) -> None:
         result = compile_source(
             "begin integer result, i; "
