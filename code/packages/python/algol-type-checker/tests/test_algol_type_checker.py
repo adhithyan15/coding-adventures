@@ -930,7 +930,7 @@ class TestAlgolTypeChecker:
             in result.diagnostics[0].message
         )
 
-    def test_rejects_procedure_parameter_actual_with_by_name_formal(
+    def test_accepts_procedure_parameter_actual_with_read_only_by_name_formal(
         self,
     ) -> None:
         ast = parse_algol(
@@ -942,11 +942,25 @@ class TestAlgolTypeChecker:
         )
         result = check_algol(ast)
 
-        assert not result.ok
-        assert (
-            "expects a procedure actual with scalar value parameters"
-            in result.diagnostics[0].message
+        assert result.ok
+        assert result.semantic is not None
+        parameter = result.semantic.procedures[0].parameters[0]
+        assert parameter.procedure_call_shapes[0].argument_assignable == (False,)
+
+    def test_rejects_procedure_parameter_actual_with_written_literal_by_name_formal(
+        self,
+    ) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure invoke(p); procedure p; begin p(7) end; "
+            "procedure set(x); integer x; begin x := x + 1 end; "
+            "invoke(set) "
+            "end"
         )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "non-assignable actual" in result.diagnostics[0].message
 
     def test_rejects_typed_procedure_parameter_void_actual(self) -> None:
         ast = parse_algol(

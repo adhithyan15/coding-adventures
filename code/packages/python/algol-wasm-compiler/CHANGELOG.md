@@ -66,6 +66,8 @@ All notable changes to this package will be documented in this file.
   integer `result` return convention when present.
 - Executed switch entries that target labels in lexical parent blocks,
   including procedure-crossing escapes to the first label in a program.
+- Executed formal procedure calls whose actual procedure expects scalar
+  by-name parameters, preserving lazy reads and writable caller variables.
 - Added a convergence golden fixture that combines conditional expressions,
   exponentiation, chained assignment, by-name array summation, real arithmetic,
   and output in one end-to-end program.

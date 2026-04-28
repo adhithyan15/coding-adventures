@@ -72,6 +72,9 @@ All notable changes to this package will be documented in this file.
   blocks through the same frame-unwind and pending-goto paths as direct gotos.
 - Tagged pending procedure-crossing label ids so label id `0` no longer
   collides with the no-pending-goto sentinel.
+- Lowered formal procedure dispatch arguments as lazy storage pointers or
+  thunk descriptors, allowing actual procedures with scalar by-name parameters
+  to read or assign through the original argument.
 
 ## [0.1.0] - 2026-04-20
 

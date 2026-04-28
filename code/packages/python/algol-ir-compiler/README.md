@@ -61,10 +61,13 @@ re-evaluate in the caller's declaring scope; these label/switch descriptor
 paths also cover `value` formals. Procedure formals pass descriptor closures
 containing the callee procedure id and static link; formal calls dispatch
 through generated helpers for statement calls and typed expression calls with
-scalar value arguments, so forwarded procedure formals keep the original
-environment in value or by-name mode. Real-valued formal procedure calls can
-accept integer-returning actual procedures and promote the dispatched result.
-Full ALGOL forms such as escaping thunk descriptors remain future work.
+scalar arguments. The dispatch helpers pass each actual argument as a lazy
+storage pointer or thunk descriptor, evaluating it once for target `value`
+parameters and forwarding it directly for target by-name parameters, so
+forwarded procedure formals keep the original environment in value or by-name
+mode. Real-valued formal procedure calls can accept integer-returning actual
+procedures and promote the dispatched result. Full ALGOL forms such as escaping
+thunk descriptors remain future work.
 
 Direct `goto` statements lower to ordinary IR `JUMP` instructions targeting
 generated ALGOL labels. Local jumps emit the jump directly. Direct nonlocal
