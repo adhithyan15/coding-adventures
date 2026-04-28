@@ -528,14 +528,66 @@ impl Tokenizer {
                     self.attribute_mut(action)?.value.push(ch);
                 }
                 "append_named_character_reference_to_text" => {
-                    let replacement = named_character_reference(&self.temporary_buffer);
+                    let replacement =
+                        named_character_reference(&self.temporary_buffer).unwrap_or("\u{FFFD}");
                     self.temporary_buffer.clear();
                     self.text_buffer.push_str(replacement);
                 }
                 "append_named_character_reference_to_attribute_value" => {
-                    let replacement = named_character_reference(&self.temporary_buffer);
+                    let replacement =
+                        named_character_reference(&self.temporary_buffer).unwrap_or("\u{FFFD}");
                     self.temporary_buffer.clear();
                     self.attribute_mut(action)?.value.push_str(replacement);
+                }
+                "append_named_character_reference_or_temporary_buffer_to_text" => {
+                    if let Some(replacement) = named_character_reference(&self.temporary_buffer) {
+                        self.text_buffer.push_str(replacement);
+                        self.temporary_buffer.clear();
+                    } else {
+                        self.text_buffer.push_str(&self.temporary_buffer);
+                        self.temporary_buffer.clear();
+                    }
+                }
+                "append_named_character_reference_or_temporary_buffer_to_attribute_value" => {
+                    if let Some(replacement) = named_character_reference(&self.temporary_buffer) {
+                        self.temporary_buffer.clear();
+                        self.attribute_mut(action)?.value.push_str(replacement);
+                    } else {
+                        let temporary_buffer = std::mem::take(&mut self.temporary_buffer);
+                        self.attribute_mut(action)?
+                            .value
+                            .push_str(&temporary_buffer);
+                    }
+                }
+                "recover_named_character_reference_to_text" => {
+                    if let Some(replacement) = named_character_reference(&self.temporary_buffer) {
+                        self.temporary_buffer.clear();
+                        self.text_buffer.push_str(replacement);
+                        self.diagnostics.push(Diagnostic {
+                            code: "missing-semicolon-after-character-reference".to_string(),
+                            position,
+                            state: state.to_string(),
+                        });
+                    } else {
+                        self.text_buffer.push_str(&self.temporary_buffer);
+                        self.temporary_buffer.clear();
+                    }
+                }
+                "recover_named_character_reference_to_attribute_value" => {
+                    if let Some(replacement) = named_character_reference(&self.temporary_buffer) {
+                        self.temporary_buffer.clear();
+                        self.attribute_mut(action)?.value.push_str(replacement);
+                        self.diagnostics.push(Diagnostic {
+                            code: "missing-semicolon-after-character-reference".to_string(),
+                            position,
+                            state: state.to_string(),
+                        });
+                    } else {
+                        let temporary_buffer = std::mem::take(&mut self.temporary_buffer);
+                        self.attribute_mut(action)?
+                            .value
+                            .push_str(&temporary_buffer);
+                    }
                 }
                 "discard_current_token" => {
                     self.current_token = None;
@@ -909,16 +961,20 @@ fn numeric_character_reference(buffer: &str) -> char {
         .unwrap_or('\u{FFFD}')
 }
 
-fn named_character_reference(buffer: &str) -> &'static str {
-    match buffer.strip_prefix('&').unwrap_or(buffer) {
-        "amp" => "&",
-        "apos" => "'",
-        "copy" => "\u{00A9}",
-        "gt" => ">",
-        "lt" => "<",
-        "nbsp" => "\u{00A0}",
-        "quot" => "\"",
-        "reg" => "\u{00AE}",
-        _ => "\u{FFFD}",
+fn named_character_reference(buffer: &str) -> Option<&'static str> {
+    match buffer
+        .strip_prefix('&')
+        .unwrap_or(buffer)
+        .trim_end_matches(';')
+    {
+        "amp" => Some("&"),
+        "apos" => Some("'"),
+        "copy" => Some("\u{00A9}"),
+        "gt" => Some(">"),
+        "lt" => Some("<"),
+        "nbsp" => Some("\u{00A0}"),
+        "quot" => Some("\""),
+        "reg" => Some("\u{00AE}"),
+        _ => None,
     }
 }

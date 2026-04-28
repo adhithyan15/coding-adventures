@@ -193,6 +193,24 @@
       "last_start_tag": "title"
     },
     {
+      "id": "html-named-character-reference-fallback-data",
+      "description": "Named character references resolve case-insensitively and unknown references stay literal in data state",
+      "input": "Known &AMP; unknown &madeup;",
+      "tokens": [
+        "Text(data=Known & unknown &madeup;)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-named-character-reference-fallback-attributes",
+      "description": "Unknown named character references stay literal inside attributes",
+      "input": "<a title=\"&copy;\" bogus=&madeup;>",
+      "tokens": [
+        "StartTag(name=a, attributes=[title=\u00A9, bogus=&madeup;], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
       "id": "html-numeric-character-references-data",
       "description": "Decimal and hexadecimal numeric character references resolve in data state",
       "input": "Letters: &#65; &#x42; &#X43; &#0;",

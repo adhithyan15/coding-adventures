@@ -79,8 +79,9 @@ one 64 KiB WASM page, and keeps array descriptors plus element storage inside a
 separate 64 KiB heap segment. Larger semantic frame plans raise `CompileError`
 before the WASM data encoder can materialize the memory image, dynamic
 procedure recursion stops at the bounded frame stack, and invalid array bounds,
-out-of-bounds subscripts, integer `div`/`mod` by zero, oversized arrays, or
-heap exhaustion return `0`.
+out-of-bounds subscripts, integer `div`/`mod` by zero or signed divide
+overflow, real division by zero, zero-real-base negative exponentiation,
+oversized arrays, or heap exhaustion return `0`.
 
 ```python
 from algol_ir_compiler import compile_algol

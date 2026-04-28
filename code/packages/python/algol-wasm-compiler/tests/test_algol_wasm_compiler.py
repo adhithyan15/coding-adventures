@@ -1238,6 +1238,42 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
 
+    def test_integer_division_overflow_returns_zero(self) -> None:
+        result = compile_source(
+            "begin integer result, low, divisor; "
+            "low := 0 - 2147483647 - 1; "
+            "divisor := 0 - 1; "
+            "result := low div divisor "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
+
+    def test_integer_modulo_overflow_returns_zero(self) -> None:
+        result = compile_source(
+            "begin integer result, low, divisor; "
+            "low := 0 - 2147483647 - 1; "
+            "divisor := 0 - 1; "
+            "result := low mod divisor "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
+
+    def test_real_division_by_zero_returns_zero(self) -> None:
+        result = compile_source(
+            "begin integer result; real x, divisor; "
+            "divisor := 0.0; x := 1.0 / divisor; result := 7 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
+
+    def test_zero_real_base_negative_exponent_returns_zero(self) -> None:
+        result = compile_source(
+            "begin integer result; real x; "
+            "x := 0.0 ^ (0 - 1); result := 7 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
+
     def test_array_failure_in_procedure_unwinds_before_caller_continues(self) -> None:
         result = compile_source(
             "begin integer result, i; "

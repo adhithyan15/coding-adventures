@@ -12,6 +12,8 @@ export enum GraphRepr {
   ADJACENCY_MATRIX = "adjacency_matrix",
 }
 
+export type GraphPropertyValue = string | number | boolean | null;
+export type GraphPropertyBag = Record<string, GraphPropertyValue>;
 export type WeightedEdge<T> = readonly [T, T, number];
 
 function nodeSortKey(node: unknown): string {
@@ -52,6 +54,9 @@ export class Graph<T> {
   private readonly _nodeList: T[];
   private readonly _nodeIndex: Map<T, number>;
   private readonly _matrix: Array<Array<number | null>>;
+  private readonly _graphProperties: GraphPropertyBag;
+  private readonly _nodeProperties: Map<T, GraphPropertyBag>;
+  private readonly _edgeProperties: Map<string, GraphPropertyBag>;
 
   constructor(repr: GraphRepr = GraphRepr.ADJACENCY_LIST) {
     this._repr = repr;
@@ -59,6 +64,9 @@ export class Graph<T> {
     this._nodeList = [];
     this._nodeIndex = new Map();
     this._matrix = [];
+    this._graphProperties = {};
+    this._nodeProperties = new Map();
+    this._edgeProperties = new Map();
   }
 
   get repr(): GraphRepr {
@@ -71,21 +79,26 @@ export class Graph<T> {
       : this._nodeList.length;
   }
 
-  addNode(node: T): void {
+  addNode(node: T, properties: GraphPropertyBag = {}): void {
     if (this._repr === GraphRepr.ADJACENCY_LIST) {
       if (!this._adj.has(node)) {
         this._adj.set(node, new Map());
+        this._nodeProperties.set(node, {});
       }
+      this.mergeNodeProperties(node, properties);
       return;
     }
 
     if (this._nodeIndex.has(node)) {
+      this.mergeNodeProperties(node, properties);
       return;
     }
 
     const index = this._nodeList.length;
     this._nodeList.push(node);
     this._nodeIndex.set(node, index);
+    this._nodeProperties.set(node, {});
+    this.mergeNodeProperties(node, properties);
 
     for (const row of this._matrix) {
       row.push(null);
@@ -102,15 +115,21 @@ export class Graph<T> {
 
       for (const neighbor of Array.from(neighbors.keys())) {
         this._adj.get(neighbor)?.delete(node);
+        this._edgeProperties.delete(edgeKey(node, neighbor));
       }
 
       this._adj.delete(node);
+      this._nodeProperties.delete(node);
       return;
     }
 
     const index = this._nodeIndex.get(node);
     if (index === undefined) {
       throw new Error(`Node not found: ${String(node)}`);
+    }
+
+    for (const other of this._nodeList) {
+      this._edgeProperties.delete(edgeKey(node, other));
     }
 
     this._nodeIndex.delete(node);
@@ -123,6 +142,7 @@ export class Graph<T> {
     for (let i = index; i < this._nodeList.length; i++) {
       this._nodeIndex.set(this._nodeList[i], i);
     }
+    this._nodeProperties.delete(node);
   }
 
   hasNode(node: T): boolean {
@@ -137,13 +157,20 @@ export class Graph<T> {
       : new Set(this._nodeList);
   }
 
-  addEdge(left: T, right: T, weight = 1.0): void {
+  addEdge(
+    left: T,
+    right: T,
+    weight = 1.0,
+    properties: GraphPropertyBag = {}
+  ): void {
     this.addNode(left);
     this.addNode(right);
+    this.validateWeight(weight);
 
     if (this._repr === GraphRepr.ADJACENCY_LIST) {
       this._adj.get(left)!.set(right, weight);
       this._adj.get(right)!.set(left, weight);
+      this.mergeEdgeProperties(left, right, { ...properties, weight });
       return;
     }
 
@@ -151,6 +178,7 @@ export class Graph<T> {
     const rightIndex = this._nodeIndex.get(right)!;
     this._matrix[leftIndex][rightIndex] = weight;
     this._matrix[rightIndex][leftIndex] = weight;
+    this.mergeEdgeProperties(left, right, { ...properties, weight });
   }
 
   removeEdge(left: T, right: T): void {
@@ -165,6 +193,7 @@ export class Graph<T> {
 
       leftNeighbors.delete(right);
       rightNeighbors.delete(left);
+      this._edgeProperties.delete(edgeKey(left, right));
       return;
     }
 
@@ -179,6 +208,7 @@ export class Graph<T> {
 
     this._matrix[leftIndex][rightIndex] = null;
     this._matrix[rightIndex][leftIndex] = null;
+    this._edgeProperties.delete(edgeKey(left, right));
   }
 
   hasEdge(left: T, right: T): boolean {
@@ -262,6 +292,65 @@ export class Graph<T> {
     return weight;
   }
 
+  graphProperties(): GraphPropertyBag {
+    return { ...this._graphProperties };
+  }
+
+  setGraphProperty(key: string, value: GraphPropertyValue): void {
+    this._graphProperties[key] = value;
+  }
+
+  removeGraphProperty(key: string): void {
+    delete this._graphProperties[key];
+  }
+
+  nodeProperties(node: T): GraphPropertyBag {
+    this.assertNode(node);
+    return { ...(this._nodeProperties.get(node) ?? {}) };
+  }
+
+  setNodeProperty(node: T, key: string, value: GraphPropertyValue): void {
+    this.assertNode(node);
+    this._nodeProperties.get(node)![key] = value;
+  }
+
+  removeNodeProperty(node: T, key: string): void {
+    this.assertNode(node);
+    delete this._nodeProperties.get(node)![key];
+  }
+
+  edgeProperties(left: T, right: T): GraphPropertyBag {
+    this.assertEdge(left, right);
+    const properties = this._edgeProperties.get(edgeKey(left, right)) ?? {};
+    return { ...properties, weight: this.edgeWeight(left, right) };
+  }
+
+  setEdgeProperty(
+    left: T,
+    right: T,
+    key: string,
+    value: GraphPropertyValue
+  ): void {
+    this.assertEdge(left, right);
+    if (key === "weight") {
+      if (typeof value !== "number") {
+        throw new Error("Edge property 'weight' must be a number");
+      }
+      this.setEdgeWeight(left, right, value);
+    }
+    this.mergeEdgeProperties(left, right, { [key]: value });
+  }
+
+  removeEdgeProperty(left: T, right: T, key: string): void {
+    this.assertEdge(left, right);
+    if (key === "weight") {
+      this.setEdgeWeight(left, right, 1.0);
+      this.mergeEdgeProperties(left, right, { weight: 1.0 });
+      return;
+    }
+    delete this._edgeProperties.get(edgeKey(left, right))?.[key];
+  }
+
   neighbors(node: T): ReadonlySet<T> {
     if (this._repr === GraphRepr.ADJACENCY_LIST) {
       const neighbors = this._adj.get(node);
@@ -315,5 +404,57 @@ export class Graph<T> {
 
   toString(): string {
     return `Graph(nodes=${this.size}, edges=${this.edges().length}, repr=${this._repr})`;
+  }
+
+  private assertNode(node: T): void {
+    if (!this.hasNode(node)) {
+      throw new Error(`Node not found: ${String(node)}`);
+    }
+  }
+
+  private assertEdge(left: T, right: T): void {
+    if (!this.hasEdge(left, right)) {
+      throw new Error(`Edge not found: ${String(left)} -- ${String(right)}`);
+    }
+  }
+
+  private mergeNodeProperties(node: T, properties: GraphPropertyBag): void {
+    const existing = this._nodeProperties.get(node);
+    if (existing === undefined) {
+      return;
+    }
+    Object.assign(existing, properties);
+  }
+
+  private mergeEdgeProperties(
+    left: T,
+    right: T,
+    properties: GraphPropertyBag
+  ): void {
+    const key = edgeKey(left, right);
+    const existing = this._edgeProperties.get(key) ?? {};
+    Object.assign(existing, properties);
+    this._edgeProperties.set(key, existing);
+  }
+
+  private validateWeight(weight: number): void {
+    if (typeof weight !== "number" || Number.isNaN(weight)) {
+      throw new Error("Edge weight must be a number");
+    }
+  }
+
+  private setEdgeWeight(left: T, right: T, weight: number): void {
+    this.validateWeight(weight);
+
+    if (this._repr === GraphRepr.ADJACENCY_LIST) {
+      this._adj.get(left)!.set(right, weight);
+      this._adj.get(right)!.set(left, weight);
+      return;
+    }
+
+    const leftIndex = this._nodeIndex.get(left)!;
+    const rightIndex = this._nodeIndex.get(right)!;
+    this._matrix[leftIndex][rightIndex] = weight;
+    this._matrix[rightIndex][leftIndex] = weight;
   }
 }
