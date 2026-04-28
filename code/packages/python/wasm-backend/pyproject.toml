@@ -1,0 +1,51 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "coding-adventures-wasm-backend"
+version = "0.1.0"
+description = "WebAssembly 1.0 BackendProtocol implementation for the LANG JIT/AOT pipeline"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "coding-adventures-codegen-core",
+    "coding-adventures-compiler-ir",
+    "coding-adventures-cir-to-compiler-ir",
+    "coding-adventures-ir-to-wasm-compiler",
+    "coding-adventures-wasm-module-encoder",
+    "coding-adventures-wasm-runtime",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "ruff>=0.1",
+    "coding-adventures-tetrad-runtime",
+    "coding-adventures-jit-core",
+    "coding-adventures-vm-core",
+    "coding-adventures-virtual-machine",
+    "coding-adventures-interpreter-ir",
+    "coding-adventures-tetrad-lexer",
+    "coding-adventures-tetrad-parser",
+    "coding-adventures-tetrad-type-checker",
+    "coding-adventures-tetrad-compiler",
+    "coding-adventures-simulator-protocol",
+    "coding-adventures-intel4004-simulator",
+    "coding-adventures-intel4004-backend",
+    "coding-adventures-debug-sidecar",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/wasm_backend"]
+
+[tool.pytest.ini_options]
+addopts = "--cov=wasm_backend --cov-report=term-missing --cov-fail-under=80"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]

@@ -288,17 +288,55 @@ class TestIntComparisons:
         self._cmp("gt", IrOp.CMP_GT)
 
     def test_cmp_le_synthesised(self):
-        """cmp_le_i32 → CMP_GT + NOT (two instructions)."""
-        prog = self._cmp("le", IrOp.CMP_GT, [IrOp.NOT])
-        # The NOT result lands in the dest register (r)
-        not_instr = prog.instructions[4]
-        assert not_instr.opcode == IrOp.NOT
+        """cmp_le_i32 → CMP_GT + LOAD_IMM(0) + CMP_EQ (three instructions).
+
+        IrOp.NOT is bitwise complement, not logical NOT.  Bitwise NOT of 0
+        gives -1 (0xFFFFFFFF), not 1.  To get a correct 0/1 result we use:
+            gt   = CMP_GT(a, b)      # → 0 or 1
+            zero = LOAD_IMM(0)
+            dest = CMP_EQ(gt, zero)  # → 1 if gt==0 (i.e. a≤b), else 0
+        """
+        instrs = [
+            CIRInstr("const_i32",  "a", [1], "i32"),
+            CIRInstr("const_i32",  "b", [2], "i32"),
+            CIRInstr("cmp_le_i32", "r", ["a", "b"], "i32"),
+            CIRInstr("ret_void", None, [], "void"),
+        ]
+        prog = lower_cir_to_ir_program(instrs)
+        # Instructions: LABEL, LOAD_IMM a, LOAD_IMM b, CMP_GT tmp, LOAD_IMM zero, CMP_EQ r, HALT
+        cmp_gt_instr  = prog.instructions[3]
+        load_zero     = prog.instructions[4]
+        cmp_eq_instr  = prog.instructions[5]
+
+        assert cmp_gt_instr.opcode == IrOp.CMP_GT
+        assert cmp_gt_instr.operands[1] == IrRegister(0)  # a
+        assert cmp_gt_instr.operands[2] == IrRegister(1)  # b
+
+        assert load_zero.opcode == IrOp.LOAD_IMM
+        assert load_zero.operands[1] == IrImmediate(0)
+
+        assert cmp_eq_instr.opcode == IrOp.CMP_EQ
+        # CMP_EQ dest = r (register 2), srcs = gt_scratch, zero_scratch
+        assert cmp_eq_instr.operands[0] == IrRegister(2)  # r
 
     def test_cmp_ge_synthesised(self):
-        """cmp_ge_i32 → CMP_LT + NOT (two instructions)."""
-        prog = self._cmp("ge", IrOp.CMP_LT, [IrOp.NOT])
-        not_instr = prog.instructions[4]
-        assert not_instr.opcode == IrOp.NOT
+        """cmp_ge_i32 → CMP_LT + LOAD_IMM(0) + CMP_EQ (three instructions)."""
+        instrs = [
+            CIRInstr("const_i32",  "a", [5], "i32"),
+            CIRInstr("const_i32",  "b", [3], "i32"),
+            CIRInstr("cmp_ge_i32", "r", ["a", "b"], "i32"),
+            CIRInstr("ret_void", None, [], "void"),
+        ]
+        prog = lower_cir_to_ir_program(instrs)
+        cmp_lt_instr = prog.instructions[3]
+        load_zero    = prog.instructions[4]
+        cmp_eq_instr = prog.instructions[5]
+
+        assert cmp_lt_instr.opcode == IrOp.CMP_LT
+        assert load_zero.opcode == IrOp.LOAD_IMM
+        assert load_zero.operands[1] == IrImmediate(0)
+        assert cmp_eq_instr.opcode == IrOp.CMP_EQ
+        assert cmp_eq_instr.operands[0] == IrRegister(2)  # r
 
     def test_cmp_le_semantics(self):
         """Verify the truth table for synthesised cmp_le.
@@ -307,14 +345,13 @@ class TestIntComparisons:
           a <= b  →  1   (True)
           a >  b  →  0   (False)
 
-        The lowering is:  tmp = CMP_GT(a, b); dest = NOT(tmp)
-          a=1, b=2: CMP_GT=0 → NOT=1 ✓
-          a=2, b=2: CMP_GT=0 → NOT=1 ✓
-          a=3, b=2: CMP_GT=1 → NOT=0 ✓
+        The lowering is: gt=CMP_GT(a,b); zero=LOAD_IMM(0); dest=CMP_EQ(gt,zero)
+          a=1, b=2: CMP_GT=0 → CMP_EQ(0,0)=1 ✓  (1 ≤ 2 is true)
+          a=2, b=2: CMP_GT=0 → CMP_EQ(0,0)=1 ✓  (2 ≤ 2 is true)
+          a=3, b=2: CMP_GT=1 → CMP_EQ(1,0)=0 ✓  (3 ≤ 2 is false)
 
         We check the instruction structure — not runtime semantics — since
-        we don't execute IR here.  The correctness of the transform follows
-        from De Morgan's law: ¬(a > b) ≡ a ≤ b for integers.
+        we don't execute IR here.
         """
         instrs = [
             CIRInstr("const_i32",  "a", [1], "i32"),
@@ -324,16 +361,22 @@ class TestIntComparisons:
         ]
         prog = lower_cir_to_ir_program(instrs)
         cmp_gt_instr = prog.instructions[3]
-        not_instr    = prog.instructions[4]
+        load_zero    = prog.instructions[4]
+        cmp_eq_instr = prog.instructions[5]
 
         assert cmp_gt_instr.opcode == IrOp.CMP_GT
         assert cmp_gt_instr.operands[1] == IrRegister(0)  # a
         assert cmp_gt_instr.operands[2] == IrRegister(1)  # b
 
-        assert not_instr.opcode == IrOp.NOT
-        # NOT's src is the scratch register used for CMP_GT result
-        scratch = cmp_gt_instr.operands[0]
-        assert not_instr.operands[1] == scratch
+        assert load_zero.opcode == IrOp.LOAD_IMM
+        assert load_zero.operands[1] == IrImmediate(0)
+
+        assert cmp_eq_instr.opcode == IrOp.CMP_EQ
+        # CMP_EQ compares gt_scratch against zero_scratch
+        gt_scratch   = cmp_gt_instr.operands[0]
+        zero_scratch = load_zero.operands[0]
+        assert cmp_eq_instr.operands[1] == gt_scratch
+        assert cmp_eq_instr.operands[2] == zero_scratch
 
 
 # ---------------------------------------------------------------------------
@@ -693,6 +736,80 @@ class TestInstructionIds:
 # ---------------------------------------------------------------------------
 # 17. Round-trip: CIR → IrProgram → backend validator
 # ---------------------------------------------------------------------------
+
+class TestTetradMove:
+    """tetrad.move — Tetrad VM register-to-register copy instruction.
+
+    The JIT specialiser emits ``tetrad.move`` to copy a value from one
+    virtual register to another.  This op is not part of the stable CIR
+    opcode set but appears frequently in JIT-specialised output (e.g., for
+    the 6 * 7 multiply which needs three register assignments).
+
+    Lowering strategy: ``ADD_IMM dest, src, 0`` (MOV via add-zero).
+    When src is a literal, ``LOAD_IMM`` is used instead.
+    """
+
+    def test_tetrad_move_register_to_register(self):
+        """tetrad.move with a variable source emits ADD_IMM dst, src, 0."""
+        instrs = [
+            CIRInstr("const_i32", "x", [42], "i32"),
+            CIRInstr("tetrad.move", "y", ["x"], "i32"),
+            CIRInstr("ret_void", None, [], "void"),
+        ]
+        prog = lower_cir_to_ir_program(instrs)
+        # Instruction 1 = entry LABEL "_start"
+        # Instruction 2 = LOAD_IMM x
+        # Instruction 3 = ADD_IMM y, x, 0  (the tetrad.move)
+        # Instruction 4 = HALT
+        move_instr = prog.instructions[2]
+        assert move_instr.opcode == IrOp.ADD_IMM
+        dst = move_instr.operands[0]
+        src = move_instr.operands[1]
+        imm = move_instr.operands[2]
+        assert isinstance(dst, IrRegister)
+        assert isinstance(src, IrRegister)
+        assert isinstance(imm, IrImmediate)
+        assert imm.value == 0
+
+    def test_tetrad_move_preserves_value(self):
+        """The moved value is accessible in the destination register."""
+        instrs = [
+            CIRInstr("const_i32", "a", [99], "i32"),
+            CIRInstr("tetrad.move", "b", ["a"], "i32"),
+            CIRInstr("tetrad.move", "c", ["b"], "i32"),  # chain of moves
+            CIRInstr("ret_void", None, [], "void"),
+        ]
+        prog = lower_cir_to_ir_program(instrs)
+        # Should compile without error (all instructions valid ADD_IMM ops)
+        opcodes = [ins.opcode for ins in prog.instructions]
+        assert IrOp.ADD_IMM in opcodes
+
+    def test_tetrad_move_literal_source_emits_load_imm(self):
+        """tetrad.move with a literal integer source emits LOAD_IMM."""
+        instrs = [
+            CIRInstr("tetrad.move", "dst", [7], "i32"),  # src is int literal
+            CIRInstr("ret_void", None, [], "void"),
+        ]
+        prog = lower_cir_to_ir_program(instrs)
+        move_instr = prog.instructions[1]  # after LABEL
+        assert move_instr.opcode == IrOp.LOAD_IMM
+        imm = move_instr.operands[1]
+        assert isinstance(imm, IrImmediate)
+        assert imm.value == 7
+
+    def test_tetrad_move_wasm_round_trip(self):
+        """Programs with tetrad.move pass WASM validation (all ops supported)."""
+        from ir_to_wasm_compiler import validate_for_wasm
+
+        instrs = [
+            CIRInstr("const_i32", "a", [6], "i32"),
+            CIRInstr("tetrad.move", "b", ["a"], "i32"),
+            CIRInstr("ret_void", None, [], "void"),
+        ]
+        prog = lower_cir_to_ir_program(instrs)
+        errors = validate_for_wasm(prog)
+        assert errors == [], f"WASM validation failed after tetrad.move: {errors}"
+
 
 class TestRoundTrip:
     """Verify that lowered programs pass the WASM and JVM validators.
