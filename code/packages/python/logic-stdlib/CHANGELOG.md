@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.5.0] - 2026-04-28
+
+### Added
+
+- finite `lengtho` relation for counting proper lists and generating known-size
+  list skeletons
+- pytest coverage for counting, validation, skeleton generation, and rejection
+  of improper lists or negative lengths
+
 ## [0.4.0] - 2026-04-18
 
 ### Added

@@ -130,7 +130,10 @@ class TestPrologVMStress:
             ?- member(Item, [tea, cake]),
                append([Item], [jam], Combined),
                reverse(Combined, Reversed),
-               select(Item, [tea, cake, jam], Remainder).
+               select(Item, [tea, cake, jam], Remainder),
+               length(Reversed, Count),
+               length(Pair, 2),
+               Pair = [left, right].
             """,
         )
 
@@ -142,12 +145,16 @@ class TestPrologVMStress:
                 "Combined": logic_list(["tea", "jam"]),
                 "Reversed": logic_list(["jam", "tea"]),
                 "Remainder": logic_list(["cake", "jam"]),
+                "Count": num(2),
+                "Pair": logic_list(["left", "right"]),
             },
             {
                 "Item": atom("cake"),
                 "Combined": logic_list(["cake", "jam"]),
                 "Reversed": logic_list(["jam", "cake"]),
                 "Remainder": logic_list(["tea", "jam"]),
+                "Count": num(2),
+                "Pair": logic_list(["left", "right"]),
             },
         ]
 
