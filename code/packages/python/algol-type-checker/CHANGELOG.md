@@ -30,6 +30,9 @@ All notable changes to this package will be documented in this file.
   designational branches guarded.
 - Added semantic checking for chained assignments, ALGOL conditional
   expressions, and numeric exponentiation with integer exponents.
+- Added semantic resolution for bare no-argument typed procedure names used as
+  expressions, while keeping written by-name actuals from treating those calls
+  as assignable scalar storage.
 - Accepted parser-tolerated repeated/trailing semicolons through existing
   statement-list traversal.
 

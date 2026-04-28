@@ -28,6 +28,9 @@ Procedure declarations receive semantic descriptors with generated function
 labels, parameter slots, value-vs-name parameter modes, conservative by-name
 write metadata, result slots for typed procedures, and resolved call sites
 carrying the static-link delta needed by code generation.
+Bare no-argument typed procedure names used in expressions are resolved as
+procedure calls, matching ALGOL's omitted-parentheses call syntax, while
+procedure result variables inside their own bodies still resolve as storage.
 Integer array declarations receive descriptor slots in their declaring frame,
 dimension metadata for lower/upper bound expressions, and resolved read/write
 accesses that preserve the static-link delta and subscript count needed by the

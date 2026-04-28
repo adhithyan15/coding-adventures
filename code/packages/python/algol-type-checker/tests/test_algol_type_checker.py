@@ -587,6 +587,45 @@ class TestAlgolTypeChecker:
         assert body_block.scope.symbols["inc"].kind == "procedure_result"
         assert body_block.scope.symbols["x"].kind == "parameter"
 
+    def test_accepts_bare_no_argument_typed_procedure_expression(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer procedure seven; begin seven := 7 end; "
+            "result := seven "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        call = next(
+            call
+            for call in result.semantic.procedure_calls
+            if call.name == "seven" and call.role == "expression"
+        )
+        assert call.argument_count == 0
+        assert call.return_type == "integer"
+        assert not any(
+            reference.name == "seven" and reference.role == "read"
+            for reference in result.semantic.references
+        )
+
+    def test_rejects_bare_typed_procedure_expression_with_required_argument(
+        self,
+    ) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer procedure inc(x); value x; integer x; begin inc := x + 1 end; "
+            "result := inc "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "procedure 'inc' expects 1 argument(s), got 0" in result.diagnostics[
+            0
+        ].message
+
     def test_records_procedure_call_static_link_delta(self) -> None:
         ast = parse_algol(
             "begin integer result; "
@@ -1060,6 +1099,19 @@ class TestAlgolTypeChecker:
             "integer procedure inc(n); value n; integer n; begin inc := n + 1 end; "
             "procedure put(x); integer x; begin x := 7 end; "
             "put(inc(1)) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "actual expression is not assignable" in result.diagnostics[0].message
+
+    def test_rejects_bare_procedure_actual_for_written_by_name_parameter(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer procedure seven; begin seven := 7 end; "
+            "procedure put(x); integer x; begin x := 9 end; "
+            "put(seven) "
             "end"
         )
         result = check_algol(ast)

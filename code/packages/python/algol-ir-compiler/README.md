@@ -14,6 +14,10 @@ Value-only integer procedures lower to generated `_fn_algol_...` functions.
 Calls pass an explicit static link followed by value arguments, procedure frames
 are allocated from the module frame stack, and typed procedures return through
 their procedure-name result slot.
+Parameterless typed procedures can also be used by bare name in expression
+positions, following ALGOL's omitted-parentheses call syntax; read-only by-name
+actuals of that form lower through eval thunks so each formal read re-runs the
+procedure.
 
 Integer arrays lower to frame-stored descriptors backed by a separate bounded
 ALGOL heap segment. The compiler evaluates integer lower/upper bounds once at

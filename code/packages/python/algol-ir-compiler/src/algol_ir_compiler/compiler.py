@@ -2086,6 +2086,8 @@ class AlgolIrCompiler:
             name = _variable_name(expr)
             if name is None:
                 raise CompileError("variable is missing a name")
+            if self.procedure_calls.get((id(name), "expression")) is not None:
+                return self._compile_procedure_call(expr, scope)
             reference = self._require_reference(name, "read")
             return self._emit_load_reference(reference, scope)
 
@@ -3432,7 +3434,13 @@ class AlgolIrCompiler:
 
     def _requires_by_name_thunk_descriptor(self, argument: ASTNode) -> bool:
         variable = _single_variable_expr(argument)
-        return variable is None or bool(_variable_subscripts(variable))
+        if variable is None or _variable_subscripts(variable):
+            return True
+        name = _variable_name(variable)
+        return (
+            name is not None
+            and self.procedure_calls.get((id(name), "expression")) is not None
+        )
 
     def _compile_by_name_actual_pointer(
         self,
@@ -3467,6 +3475,18 @@ class AlgolIrCompiler:
         name = _variable_name(variable)
         if name is None:
             raise CompileError("by-name scalar actual is missing a name")
+        if self.procedure_calls.get((id(name), "expression")) is not None:
+            if descriptor is None:
+                raise CompileError(
+                    "missing reserved eval thunk descriptor for by-name procedure "
+                    "expression"
+                )
+            return self._compile_eval_thunk_actual(
+                argument,
+                parameter,
+                scope,
+                descriptor,
+            )
         reference = self._require_reference(name, "read")
         return self._emit_reference_pointer(reference, scope)
 
