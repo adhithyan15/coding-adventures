@@ -72,7 +72,16 @@ from logic_engine import (
     relation,
     term,
 )
-from logic_stdlib import appendo, lasto, listo, membero, permuteo, reverseo, selecto
+from logic_stdlib import (
+    appendo,
+    lasto,
+    lengtho,
+    listo,
+    membero,
+    permuteo,
+    reverseo,
+    selecto,
+)
 from prolog_core import expand_dcg_phrase
 
 _PREDICATE_INDICATOR = relation("/", 2)
@@ -150,6 +159,7 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
 
     binary_list_builtins: dict[str, Callable[[object, object], GoalExpr]] = {
         "last": lasto,
+        "length": lengtho,
         "member": membero,
         "permutation": permuteo,
         "reverse": reverseo,

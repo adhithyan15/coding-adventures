@@ -20,7 +20,7 @@ It keeps parsing side-effect free, then exposes helpers to:
 - adapt Prolog control constructs such as `->/2` and
   `(If -> Then ; Else)` into executable builtin goals
 - adapt common list predicates such as `member/2`, `append/3`, `select/3`,
-  `permutation/2`, `reverse/2`, `last/2`, and `is_list/1` into relational
+  `permutation/2`, `reverse/2`, `last/2`, `length/2`, and `is_list/1` into relational
   standard-library goals
 - load SWI-Prolog source graphs from real `.pl` files through relative
   `consult/1`, `ensure_loaded/1`, and file-backed `use_module/1,2`

@@ -20,6 +20,7 @@ from logic_engine import (
     eq,
     fresh,
     logic_list,
+    num,
     program,
     reify,
     relation,
@@ -802,6 +803,10 @@ class TestPrologGoalAdapter:
                 term(".", atom("tea"), term(".", atom("cake"), atom("[]"))),
                 atom("cake"),
             ),
+            relation("length", 2)(
+                term(".", atom("tea"), term(".", atom("cake"), atom("[]"))),
+                2,
+            ),
             relation("member", 2)(
                 atom("tea"),
                 term(".", atom("tea"), term(".", atom("cake"), atom("[]"))),
@@ -900,7 +905,8 @@ class TestPrologGoalAdapter:
         parsed = parse_swi_query(
             "?- member(Item, [tea, cake]), "
             "append([Item], [jam], Combined), "
-            "reverse(Combined, Reversed).",
+            "reverse(Combined, Reversed), "
+            "length(Reversed, Count).",
         )
 
         adapted = adapt_prolog_goal(parsed.goal)
@@ -911,6 +917,7 @@ class TestPrologGoalAdapter:
                 parsed.variables["Item"],
                 parsed.variables["Combined"],
                 parsed.variables["Reversed"],
+                parsed.variables["Count"],
             ),
             adapted,
         ) == [
@@ -918,11 +925,13 @@ class TestPrologGoalAdapter:
                 atom("tea"),
                 logic_list(["tea", "jam"]),
                 logic_list(["jam", "tea"]),
+                num(2),
             ),
             (
                 atom("cake"),
                 logic_list(["cake", "jam"]),
                 logic_list(["jam", "cake"]),
+                num(2),
             ),
         ]
 

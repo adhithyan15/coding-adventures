@@ -14,6 +14,7 @@ The first slice includes:
 - `heado(...)`
 - `tailo(...)`
 - `lasto(...)`
+- `lengtho(...)`
 - `listo(...)`
 - `membero(...)`
 - `appendo(...)`
@@ -25,8 +26,8 @@ The first slice includes:
 ## Quick Start
 
 ```python
-from logic_engine import atom, conj, eq, logic_list, program, solve_all, solve_n, var
-from logic_stdlib import appendo, lasto, listo, membero, permuteo, reverseo, subsequenceo
+from logic_engine import atom, conj, eq, logic_list, num, program, solve_all, solve_n, var
+from logic_stdlib import appendo, lasto, lengtho, listo, membero, permuteo, reverseo, subsequenceo
 
 X = var("X")
 Prefix = var("Prefix")
@@ -78,6 +79,12 @@ assert solve_all(
     X,
     lasto(logic_list(["tea", "cake", "jam"]), X),
 ) == [atom("jam")]
+
+assert solve_all(
+    program(),
+    X,
+    lengtho(logic_list(["tea", "cake", "jam"]), X),
+) == [num(3)]
 
 assert solve_all(
     program(),
