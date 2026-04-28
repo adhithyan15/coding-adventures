@@ -36,10 +36,10 @@ runtime has a real `pow` implementation instead of an approximation shortcut.
 Scalar by-name parameters lower through a one-word cell in the callee frame.
 Passing a scalar variable as a by-name actual gives the callee a storage pointer,
 so assignments to the formal write back to the caller slot while value
-parameters still remain isolated copies. Read-only integer expression actuals
+parameters still remain isolated copies. Read-only scalar expression actuals
 lower to tagged, bounded eval thunk descriptors. Formal reads dispatch through a
 generated helper that re-evaluates the expression against the caller frame each
-time. Integer array-element actuals lower to tagged descriptors as well; formal
+time. Array-element actuals lower to tagged descriptors as well; formal
 reads re-compute the element address through the eval helper, and writable
 formals call a generated store helper that re-locates the element before storing
 the new value. Read-only expression thunks can also read array elements; helper
@@ -48,7 +48,7 @@ frame and thunk-region unwind. Procedure calls inside read-only expression
 thunks are supported, including nested by-name descriptor allocation and runtime
 failure propagation from callees back to the by-name formal read. Stores through
 read-only expression thunks still raise targeted `CompileError` diagnostics
-until Phase 5 grows full store-helper coverage. The supported integer by-name
+until Phase 5 grows full store-helper coverage. The supported scalar by-name
 surface is covered by the WASM acceptance suite, including typed whole-array
 formals passed as descriptor pointers. `value` whole-array formals allocate a
 callee-local descriptor, bounds table, and element storage copy at procedure

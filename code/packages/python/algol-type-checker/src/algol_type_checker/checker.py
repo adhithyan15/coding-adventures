@@ -23,6 +23,7 @@ SWITCH = "switch"
 STATIC = "static"
 PARAMETER_STORAGE = "parameter"
 MAX_ARRAY_DIMENSIONS = 4
+_READ_ONLY_BUILTINS = {"print", "output"}
 
 
 @dataclass(frozen=True)
@@ -3000,6 +3001,8 @@ def _callee_may_write_argument(
 ) -> bool:
     if callee_name is None:
         return True
+    if callee_name in _READ_ONLY_BUILTINS:
+        return False
     procedure = known_procedures.get(callee_name)
     if procedure is None or argument_index >= len(procedure.parameters):
         return True

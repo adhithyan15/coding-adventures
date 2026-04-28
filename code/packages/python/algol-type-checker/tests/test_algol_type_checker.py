@@ -1101,6 +1101,39 @@ class TestAlgolTypeChecker:
         assert parameter.mode == "name"
         assert not parameter.may_write
 
+    def test_builtin_output_does_not_make_by_name_formal_writable(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure emit(s); string s; begin print(s); result := 7 end; "
+            "emit('Hi') "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        parameter = result.semantic.procedures[0].parameters[0]
+        assert parameter.type_name == "string"
+        assert parameter.mode == "name"
+        assert not parameter.may_write
+
+    def test_accepts_boolean_expression_by_name_parameter(self) -> None:
+        ast = parse_algol(
+            "begin integer result; boolean flag; "
+            "procedure test(b); boolean b; "
+            "begin if b then result := 9 else result := 0 end; "
+            "flag := false; test(not flag) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        parameter = result.semantic.procedures[0].parameters[0]
+        assert parameter.type_name == "boolean"
+        assert parameter.mode == "name"
+        assert not parameter.may_write
+
     def test_accepts_assignable_scalar_actual_for_written_by_name_parameter(
         self,
     ) -> None:

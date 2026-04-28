@@ -4,10 +4,10 @@ Type checker for the first ALGOL 60 compiler subset.
 
 This package consumes the generic AST from `algol-parser` and validates the
 structured integer subset described by `code/specs/PL03-algol60-wasm-compiler.md`.
-It currently supports integer scalar declarations, assignments, arithmetic,
+It currently supports scalar declarations, assignments, arithmetic,
 comparisons, boolean conditions, nested blocks, `if` statements,
-`for ... step ... until ... do` loops, integer value/by-name procedures, and
-descriptor metadata for integer arrays with integer bounds. Direct labels and
+`for ... step ... until ... do` loops, value/by-name procedures, and
+descriptor metadata for typed arrays with integer bounds. Direct labels and
 direct local `goto` statements are accepted within one active ALGOL frame, as
 are direct nonlocal block `goto` statements that stay inside the same lowered
 function. Local switch declarations, switch selections, and conditional
@@ -27,7 +27,9 @@ static links a later WASM lowering pass must walk.
 Procedure declarations receive semantic descriptors with generated function
 labels, parameter slots, value-vs-name parameter modes, conservative by-name
 write metadata, result slots for typed procedures, and resolved call sites
-carrying the static-link delta needed by code generation.
+carrying the static-link delta needed by code generation. Builtin output calls
+are treated as read-only by the write analysis, so formals that are only
+printed can still accept expression actuals.
 Bare no-argument typed procedure names used in expressions are resolved as
 procedure calls, matching ALGOL's omitted-parentheses call syntax, while
 procedure result variables inside their own bodies still resolve as storage.
