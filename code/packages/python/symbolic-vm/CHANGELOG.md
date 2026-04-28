@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.32.6 — 2026-04-28
+
+**Bump `cas-factor` dependency to 0.3.0 (BZH Phase 3).**
+
+No source changes to `symbolic-vm` itself. The upgraded `cas-factor 0.3.0`
+adds Berlekamp-Zassenhaus-Hensel factoring as a fallback for monic polynomials
+of degree ≥ 4 that Kronecker misses. This means `factor(x^5 - 1)`,
+`factor(x^8 - 1)`, `factor(x^9 - 1)`, and other high-degree cyclotomic
+polynomials now factor correctly through the MACSYMA `factor(...)` surface
+syntax without any VM changes.
+
+---
+
 ## 0.32.5 — 2026-04-27
 
 **Wire `cas-ode` into `SymbolicBackend`; add `ODE2` to held heads.**

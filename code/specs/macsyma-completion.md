@@ -37,7 +37,7 @@ syntax differences go in the frontend name table and backend subclass.
 | Lambda / closures   | `lambda([params], body)` β-reduction            | `symbolic-vm` (built-in) |
 | Simplification      | `Simplify Expand Collect Together RatSimplify Apart` | `cas-simplify`, `symbolic-vm` |
 | Substitution        | `Subst`                                         | `cas-substitution` |
-| Factoring           | `Factor` (rational-root + Kronecker)            | `cas-factor` (0.2.0) |
+| Factoring           | `Factor` (rational-root + Kronecker + BZH)      | `cas-factor` (0.3.0) |
 | Solving             | `Solve` (deg 1–4 + linear systems), `NSolve`   | `cas-solve` (0.6.0) |
 | List operations     | `Length First Rest Last Append Reverse Range Map Apply Select Sort Part Flatten Join MakeList` | `cas-list-operations` |
 | Matrix operations   | `Matrix Transpose Determinant Inverse`          | `cas-matrix` |
@@ -61,16 +61,14 @@ syntax differences go in the frontend name table and backend subclass.
 
 ### A1 · `cas-factor` — Polynomial factoring over Z
 
-**Status: ✅ Complete** (rational-root + Kronecker, `cas-factor` 0.2.0)
+**Status: ✅ Complete** (rational-root + Kronecker + BZH, `cas-factor` 0.3.0)
 
-The Kronecker algorithm correctly handles all common cases:
-- `factor(x^4-4)` → `(x^2+2)*(x^2-2)`
-- `factor(x^6-1)` → `(x-1)*(x+1)*(x^2+x+1)*(x^2-x+1)`
-- `factor(x^4+1)` → `x^4+1` (correctly left unevaluated — irreducible over Q)
-
-**Deferred**: Berlekamp-Zassenhaus-Hensel (Phase 4) for arbitrary-degree
-polynomials with non-linear irreducible factors. This handles a narrow
-edge case and is **not blocking any current MACSYMA use case**.
+Phase 1 (rational-root), Phase 2 (Kronecker), and Phase 3 (BZH) are all shipped.
+New BZH cases (previously unevaluated):
+- `factor(x^5-1)` → `(x-1)*(x^4+x^3+x^2+x+1)`
+- `factor(x^8-1)` → `(x-1)*(x+1)*(x^2+1)*(x^4+1)`
+- `factor(x^9-1)` → `(x-1)*(x^2+x+1)*(x^6+x^3+1)`
+- `factor(x^4+1)` → `x^4+1` (confirmed irreducible over Q by both Kronecker and BZH)
 
 ---
 
@@ -192,9 +190,6 @@ non-homogeneous 2nd order (method of undetermined coefficients).
 
 | Feature | Plan |
 |---------|------|
-| `laplace` / `ilt` | Table-driven + partial fractions — `cas-laplace` 0.1.0 |
-| `fourier` / `ifourier` | Shares DiracDelta/UnitStep with laplace — `cas-fourier` 0.1.0 |
-| `cas-factor` Phase 4 (BZH) | Berlekamp–Zassenhaus–Hensel for degree ≥ 5 |
 | Algebraic number extensions | `Q[√2]` factoring using BZH lift — `cas-algebraic` 0.1.0 |
 | Multivariate `factor`/`solve` | Gröbner bases (Buchberger) — `cas-multivariate` 0.1.0 |
 

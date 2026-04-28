@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-cas-factor"
-version = "0.2.0"
-description = "Univariate polynomial factoring over Z (Phase 1 rational-root + Phase 2 Kronecker algorithm)."
+version = "0.3.0"
+description = "Univariate polynomial factoring over Z (rational-root + Kronecker + BZH for high-degree)."
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
