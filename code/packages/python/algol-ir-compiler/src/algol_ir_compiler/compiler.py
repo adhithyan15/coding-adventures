@@ -102,6 +102,8 @@ _INTEGER_TYPE = "integer"
 _BOOLEAN_TYPE = "boolean"
 _REAL_TYPE = "real"
 _STRING_TYPE = "string"
+_I32_MIN = -(1 << 31)
+_I32_NEG_ONE = -1
 _STRING_DESCRIPTOR_LENGTH_OFFSET = 0
 _STRING_DESCRIPTOR_DATA_POINTER_OFFSET = 4
 _STRING_DESCRIPTOR_SIZE = 8
@@ -2288,7 +2290,7 @@ class AlgolIrCompiler:
             exponent_type = self._expr_type(children[index + 1])
             if exponent_type != _INTEGER_TYPE:
                 raise CompileError("exponentiation exponent must be integer")
-            current = self._emit_power(current, current_type, exponent)
+            current = self._emit_power(current, current_type, exponent, scope)
             current_type = (
                 _REAL_TYPE if current_type == _REAL_TYPE else _INTEGER_TYPE
             )
@@ -2499,6 +2501,7 @@ class AlgolIrCompiler:
                     IrRegister(right),
                 )
             elif operator == "/":
+                self._emit_real_zero_divisor_guard(right, scope)
                 self._emit(
                     IrOp.F64_DIV,
                     IrRegister(dst),
@@ -2515,12 +2518,12 @@ class AlgolIrCompiler:
         elif operator == "*":
             self._emit(IrOp.MUL, IrRegister(dst), IrRegister(left), IrRegister(right))
         elif operator == "div":
-            self._emit_integer_zero_divisor_guard(right, scope)
+            self._emit_integer_division_failure_guard(left, right, scope)
             self._emit(IrOp.DIV, IrRegister(dst), IrRegister(left), IrRegister(right))
         elif operator == "mod":
             quotient = self._fresh_reg()
             product = self._fresh_reg()
-            self._emit_integer_zero_divisor_guard(right, scope)
+            self._emit_integer_division_failure_guard(left, right, scope)
             self._emit(
                 IrOp.DIV, IrRegister(quotient), IrRegister(left), IrRegister(right)
             )
@@ -2532,21 +2535,64 @@ class AlgolIrCompiler:
             raise CompileError(f"numeric operator {operator!r} is not supported")
         return dst
 
-    def _emit_integer_zero_divisor_guard(
-        self, divisor: int, scope: _FrameScope
+    def _emit_integer_division_failure_guard(
+        self, dividend: int, divisor: int, scope: _FrameScope
     ) -> None:
-        failed = self._fresh_reg()
+        zero_divisor = self._fresh_reg()
         self._emit(
             IrOp.CMP_EQ,
-            IrRegister(failed),
+            IrRegister(zero_divisor),
             IrRegister(divisor),
             IrRegister(_ZERO_REG),
         )
+        min_dividend = self._fresh_reg()
+        self._emit(
+            IrOp.CMP_EQ,
+            IrRegister(min_dividend),
+            IrRegister(dividend),
+            IrRegister(self._const_reg(_I32_MIN)),
+        )
+        negative_one_divisor = self._fresh_reg()
+        self._emit(
+            IrOp.CMP_EQ,
+            IrRegister(negative_one_divisor),
+            IrRegister(divisor),
+            IrRegister(self._const_reg(_I32_NEG_ONE)),
+        )
+        overflowing_division = self._fresh_reg()
+        self._emit(
+            IrOp.AND,
+            IrRegister(overflowing_division),
+            IrRegister(min_dividend),
+            IrRegister(negative_one_divisor),
+        )
+        failed = self._fresh_reg()
+        self._emit(
+            IrOp.OR,
+            IrRegister(failed),
+            IrRegister(zero_divisor),
+            IrRegister(overflowing_division),
+        )
         self._emit_runtime_failure_guard(failed, scope)
 
-    def _emit_power(self, base: int, base_type: str, exponent: int) -> int:
+    def _emit_real_zero_divisor_guard(
+        self, divisor: int, scope: _FrameScope
+    ) -> None:
+        zero = self._const_f64_reg(0.0)
+        failed = self._fresh_reg()
+        self._emit(
+            IrOp.F64_CMP_EQ,
+            IrRegister(failed),
+            IrRegister(divisor),
+            IrRegister(zero),
+        )
+        self._emit_runtime_failure_guard(failed, scope)
+
+    def _emit_power(
+        self, base: int, base_type: str, exponent: int, scope: _FrameScope
+    ) -> int:
         if base_type == _REAL_TYPE:
-            return self._emit_real_integer_power(base, exponent)
+            return self._emit_real_integer_power(base, exponent, scope)
         return self._emit_integer_power(base, exponent)
 
     def _emit_integer_power(self, base: int, exponent: int) -> int:
@@ -2597,7 +2643,9 @@ class AlgolIrCompiler:
         self._label(end_label)
         return result
 
-    def _emit_real_integer_power(self, base: int, exponent: int) -> int:
+    def _emit_real_integer_power(
+        self, base: int, exponent: int, scope: _FrameScope
+    ) -> int:
         index = self.if_count
         self.if_count += 1
         negative_label = f"pow_{index}_negative"
@@ -2618,6 +2666,7 @@ class AlgolIrCompiler:
         self._emit(IrOp.BRANCH_NZ, IrRegister(negative), IrLabel(negative_label))
         self._emit(IrOp.JUMP, IrLabel(prepare_loop_label))
         self._label(negative_label)
+        self._emit_real_zero_divisor_guard(base, scope)
         zero = self._const_reg(0)
         absolute = self._fresh_reg()
         self._emit(
