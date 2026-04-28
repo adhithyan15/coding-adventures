@@ -52,7 +52,7 @@ from interpreter_ir import IIRFunction, IIRModule
 from interpreter_ir.function import FunctionTypeStatus
 from vm_core import VMCore
 
-from jit_core import optimizer
+from codegen_core import CIROptimizer, CodegenPipeline
 from jit_core.backend import BackendProtocol
 from jit_core.cache import JITCache, JITCacheEntry
 from jit_core.errors import UnspecializableError
@@ -97,6 +97,12 @@ class JITCore:
     ) -> None:
         self._vm = vm
         self._backend = backend
+        # Build the codegen pipeline: CIR optimizer → backend.
+        # CodegenPipeline[list[CIRInstr]] is the unified optimize+compile
+        # abstraction from codegen-core (LANG19).
+        self._pipeline: CodegenPipeline = CodegenPipeline(
+            backend=backend, optimizer=CIROptimizer()
+        )
         self._cache = JITCache()
         self._module: IIRModule | None = None
         self._unspecializable: set[str] = set()
@@ -280,31 +286,35 @@ class JITCore:
                 self._compile_fn(iir_fn)
 
     def _compile_fn(self, fn: IIRFunction) -> bool:
-        """Specialise, optimise, and compile ``fn`` via the backend.
+        """Specialise, optimise, and compile ``fn`` via the CodegenPipeline.
+
+        The pipeline (built in ``__init__``) runs ``CIROptimizer`` then
+        calls ``backend.compile()``.  Using ``compile_with_stats()`` gives
+        us the post-optimization IR snapshot and timing metadata for the
+        JIT cache entry without any extra bookkeeping here.
 
         Returns ``True`` on success, ``False`` on any failure.  On success,
         registers a JIT handler with ``vm-core``.
         """
-        t0 = JITCache.now_ns()
         try:
             cir = specialise(fn, min_observations=self._min_observations)
-            cir = optimizer.run(cir)
-            binary = self._backend.compile(cir)
+            result = self._pipeline.compile_with_stats(cir)
         except Exception:
             return False
 
-        if binary is None:
+        if not result.success:
             return False
 
-        t1 = JITCache.now_ns()
+        binary = result.binary
+        assert binary is not None  # guarded by result.success check above
 
         entry = JITCacheEntry(
             fn_name=fn.name,
             binary=binary,
-            backend_name=self._backend.name,
+            backend_name=result.backend_name,
             param_count=len(fn.params),
-            ir=cir,
-            compilation_time_ns=t1 - t0,
+            ir=result.ir,
+            compilation_time_ns=result.compilation_time_ns,
         )
         self._cache.put(entry)
 

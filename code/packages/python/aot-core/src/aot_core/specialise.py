@@ -34,7 +34,8 @@ type information at the CIR level and are copied verbatim.
 from __future__ import annotations
 
 from interpreter_ir import IIRFunction, IIRInstr
-from jit_core.cir import CIRInstr
+
+from codegen_core import CIRInstr
 
 # ---------------------------------------------------------------------------
 # Op tables (mirrors jit-core/specialise.py)
