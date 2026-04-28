@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.4.0 — 2026-04-27
+
+**Bump dependency pins to pick up Phase G control flow and Phase 13 hyperbolic functions.**
+
+No source changes to `macsyma-runtime` itself. The two upstream dependencies are
+pinned higher so that installing this package pulls in all recently-landed VM
+capabilities:
+
+- `coding-adventures-symbolic-ir>=0.7.0` — picks up the Phase 13 IR heads for
+  hyperbolic functions (`Sinh`, `Cosh`, `Tanh`, `Asinh`, `Acosh`, `Atanh`) and
+  their evaluation, differentiation, and integration rules.
+- `coding-adventures-symbolic-vm>=0.32.0` — picks up Phase G control-flow VM
+  handlers: `while`-loop, `for..thru`/`for..in`, `block` with local scope,
+  `return`, and `if/elseif/else`. These are compiled by the grammar-level
+  Phase G keywords and require no name-table additions here.
+
+Test count and coverage unchanged (135 tests, ≥80 %).
+
 ## 1.3.0 — 2026-04-27
 
 **Add `is_prime` alias for `primep` in the MACSYMA name table.**
