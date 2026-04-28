@@ -69,6 +69,10 @@ Temporary buffers and controlled state changes:
 - `append_numeric_character_reference_to_attribute_value`
 - `append_named_character_reference_to_text`
 - `append_named_character_reference_to_attribute_value`
+- `append_named_character_reference_or_temporary_buffer_to_text`
+- `append_named_character_reference_or_temporary_buffer_to_attribute_value`
+- `recover_named_character_reference_to_text`
+- `recover_named_character_reference_to_attribute_value`
 - `discard_current_token`
 - `set_return_state(state)`
 - `switch_to(state)`

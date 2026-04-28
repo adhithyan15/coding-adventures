@@ -55,3 +55,5 @@ documented in this file.
   and attribute values.
 - Missing-semicolon recovery for legacy named character references `nbsp`,
   `copy`, and `reg` before delimiters and EOF.
+- Generic named character reference scanning with literal fallback for unknown
+  names, reducing the need to hand-author one state path per entity.

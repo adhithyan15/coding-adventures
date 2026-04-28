@@ -208,6 +208,23 @@
       ]
     },
     {
+      "description": "data state named character reference fallback",
+      "input": "Known &AMP; unknown &madeup;",
+      "output": [
+        ["Character", "Known "],
+        ["Character", "&"],
+        ["Character", " unknown "],
+        ["Character", "&madeup;"]
+      ]
+    },
+    {
+      "description": "attribute named character reference fallback",
+      "input": "<a title=\"&copy;\" bogus=&madeup;>",
+      "output": [
+        ["StartTag", "a", {"title": "\u00A9", "bogus": "&madeup;"}]
+      ]
+    },
+    {
       "description": "data state numeric character references",
       "input": "Letters: &#65; &#x42; &#X43; &#0;",
       "output": [
