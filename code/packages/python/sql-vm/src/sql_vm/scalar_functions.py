@@ -49,11 +49,13 @@ SQLite compat notes
 
 from __future__ import annotations
 
+import calendar
 import math
 import os
 import re
 import struct
 from collections.abc import Callable
+from datetime import UTC, datetime, timedelta
 
 from sql_backend.values import SqlValue
 
@@ -1168,3 +1170,424 @@ def _last_insert_rowid() -> SqlValue:
     release; for now this returns NULL rather than raising.
     """
     return None
+
+
+# ---------------------------------------------------------------------------
+# Scalar MAX(a, b) and MIN(a, b) — two-argument forms
+# ---------------------------------------------------------------------------
+#
+# SQLite overloads MAX and MIN: with one argument they are aggregates (handled
+# by InitAgg/FinalizeAgg opcodes); with two or more arguments they are scalar
+# functions that return the greatest/least value.  NULL is treated as less than
+# any non-null value — so MAX(x, NULL) → x, MIN(x, NULL) → x.
+
+
+def _sql_compare(a: SqlValue, b: SqlValue) -> int:
+    """Return -1, 0, or 1 for a < b, a == b, a > b under SQLite ordering.
+
+    NULL is less than every non-null value.  Comparison between different
+    non-null types follows SQLite's type ordering: integer/real < text < blob.
+    """
+    if a is None and b is None:
+        return 0
+    if a is None:
+        return -1
+    if b is None:
+        return 1
+    # Same broad type: compare directly.
+    a_num = isinstance(a, (int, float)) and not isinstance(a, bool)
+    b_num = isinstance(b, (int, float)) and not isinstance(b, bool)
+    if a_num and b_num:
+        return 0 if a == b else (-1 if a < b else 1)  # type: ignore[operator]
+    a_text = isinstance(a, str)
+    b_text = isinstance(b, str)
+    if a_text and b_text:
+        return 0 if a == b else (-1 if a < b else 1)  # type: ignore[operator]
+    a_blob = isinstance(a, (bytes, bytearray))
+    b_blob = isinstance(b, (bytes, bytearray))
+    if a_blob and b_blob:
+        return 0 if a == b else (-1 if a < b else 1)  # type: ignore[operator]
+    # Cross-type: numeric < text < blob (SQLite affinity ordering).
+    _rank = {int: 0, float: 0, str: 1, bytes: 2, bytearray: 2}
+    ar = _rank.get(type(a), 1)
+    br = _rank.get(type(b), 1)
+    return 0 if ar == br else (-1 if ar < br else 1)
+
+
+@register("max")
+def _max_scalar(*args: SqlValue) -> SqlValue:
+    """Scalar MAX — return the greatest of two or more arguments.
+
+    When called with exactly one argument inside a GROUP BY context the
+    planner routes to the aggregate opcode instead; this registry entry
+    handles the two-or-more-argument scalar form.
+
+    NULL is treated as less than any non-null value (SQLite semantics).
+
+    Examples::
+
+        MAX(3, 5)           → 5
+        MAX('apple', 'fig') → 'fig'
+        MAX(1, NULL)        → 1
+        MAX(NULL, NULL)     → NULL
+    """
+    if not args:
+        return None
+    result = args[0]
+    for a in args[1:]:
+        if _sql_compare(a, result) > 0:
+            result = a
+    return result
+
+
+@register("min")
+def _min_scalar(*args: SqlValue) -> SqlValue:
+    """Scalar MIN — return the least of two or more arguments.
+
+    NULL is treated as less than any non-null value, so MIN(x, NULL) → NULL
+    only when all arguments are NULL.
+
+    Examples::
+
+        MIN(3, 5)    → 3
+        MIN(1, NULL) → NULL   (NULL wins because it's "smallest")
+        MIN(NULL, NULL) → NULL
+    """
+    if not args:
+        return None
+    result = args[0]
+    for a in args[1:]:
+        if _sql_compare(a, result) < 0:
+            result = a
+    return result
+
+
+# ---------------------------------------------------------------------------
+# Date/time functions
+# ---------------------------------------------------------------------------
+#
+# SQLite supports six date/time scalar functions, all sharing a common
+# "time value" input format and an optional list of modifier strings.
+#
+# Time value forms accepted:
+#   'now'              → current UTC datetime
+#   'YYYY-MM-DD'       → date only (time = 00:00:00 UTC)
+#   'YYYY-MM-DD HH:MM' → date + hours/minutes
+#   'YYYY-MM-DD HH:MM:SS[.SSS]' → full datetime
+#   <float>            → Julian Day Number
+#   <int>              → Unix epoch seconds
+#
+# Modifiers (applied in order, left to right):
+#   '+N days' / '-N days'      (also hours, minutes, seconds)
+#   '+N months' / '-N months'
+#   '+N years' / '-N years'
+#   'start of day'
+#   'start of month'
+#   'start of year'
+#   'localtime'   → convert UTC to local time
+#   'utc'         → convert local time to UTC
+
+
+def _parse_timevalue(tv: SqlValue) -> datetime | None:
+    """Convert a SQLite time value to an aware UTC datetime, or None on error."""
+    if tv is None:
+        return None
+
+    if isinstance(tv, str):
+        s = tv.strip()
+        if s.lower() == "now":
+            return datetime.now(tz=UTC).replace(microsecond=0)
+        # ISO-8601 date only: YYYY-MM-DD
+        for fmt in (
+            "%Y-%m-%d %H:%M:%S",
+            "%Y-%m-%d %H:%M",
+            "%Y-%m-%dT%H:%M:%S",
+            "%Y-%m-%dT%H:%M",
+            "%Y-%m-%d",
+        ):
+            try:
+                dt = datetime.strptime(s[:len(fmt) + 2], fmt)
+                return dt.replace(tzinfo=UTC)
+            except ValueError:
+                pass
+        # Allow fractional seconds: YYYY-MM-DD HH:MM:SS.sss
+        m = re.match(
+            r"^(\d{4}-\d{2}-\d{2})[T ](\d{2}:\d{2}:\d{2})\.\d+$", s
+        )
+        if m:
+            try:
+                dt = datetime.strptime(f"{m.group(1)} {m.group(2)}", "%Y-%m-%d %H:%M:%S")
+                return dt.replace(tzinfo=UTC)
+            except ValueError:
+                pass
+        return None
+
+    if isinstance(tv, float):
+        # Julian Day Number → datetime.
+        # JD 2440587.5 = 1970-01-01 00:00:00 UTC
+        unix_seconds = (tv - 2440587.5) * 86400.0
+        try:
+            return datetime.fromtimestamp(unix_seconds, tz=UTC).replace(microsecond=0)
+        except (ValueError, OSError, OverflowError):
+            return None
+
+    if isinstance(tv, int) and not isinstance(tv, bool):
+        # Unix epoch seconds.
+        try:
+            return datetime.fromtimestamp(tv, tz=UTC).replace(microsecond=0)
+        except (ValueError, OSError, OverflowError):
+            return None
+
+    return None
+
+
+def _apply_modifier(dt: datetime, modifier: str) -> datetime | None:
+    """Apply one SQLite datetime modifier to *dt*.
+
+    Returns None for unrecognised modifiers, matching SQLite's NULL propagation.
+    """
+    m_lower = modifier.strip().lower()
+
+    if m_lower == "now":
+        return datetime.now(tz=UTC).replace(microsecond=0)
+    if m_lower == "start of day":
+        return dt.replace(hour=0, minute=0, second=0, microsecond=0)
+    if m_lower == "start of month":
+        return dt.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    if m_lower == "start of year":
+        return dt.replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)
+    if m_lower == "localtime":
+        return dt.astimezone().replace(tzinfo=UTC)
+    if m_lower == "utc":
+        return dt  # already UTC in our model
+
+    # Numeric offset: [+-]N unit
+    pat = re.match(
+        r"^([+-]?\d+(?:\.\d+)?)\s+"
+        r"(year|month|day|hour|minute|second)s?$",
+        m_lower,
+    )
+    if pat:
+        amount_s, unit = pat.group(1), pat.group(2)
+        try:
+            amount = float(amount_s)
+        except ValueError:
+            return None
+
+        if unit in ("day", "days"):
+            return dt + timedelta(days=amount)
+        if unit in ("hour", "hours"):
+            return dt + timedelta(hours=amount)
+        if unit in ("minute", "minutes"):
+            return dt + timedelta(minutes=amount)
+        if unit in ("second", "seconds"):
+            return dt + timedelta(seconds=amount)
+
+        # Month and year adjustments — no timedelta for these; adjust calendar.
+        n = int(amount)
+        if unit in ("month", "months"):
+            month = dt.month - 1 + n
+            year = dt.year + month // 12
+            month = month % 12 + 1
+            # Clamp day to the last valid day of the resulting month.
+            day = min(dt.day, calendar.monthrange(year, month)[1])
+            return dt.replace(year=year, month=month, day=day)
+        if unit in ("year", "years"):
+            year = dt.year + n
+            # Clamp Feb 29 → Feb 28 in non-leap years.
+            day = min(dt.day, calendar.monthrange(year, dt.month)[1])
+            return dt.replace(year=year, day=day)
+
+    return None  # unrecognised modifier → NULL propagation
+
+
+def _resolve_datetime(args: list[SqlValue], skip_first: bool = False) -> datetime | None:
+    """Parse time value from args[0] (or args[1] if skip_first), apply modifiers."""
+    offset = 1 if skip_first else 0
+    if len(args) <= offset:
+        return None
+    dt = _parse_timevalue(args[offset])
+    if dt is None:
+        return None
+    for mod in args[offset + 1:]:
+        if mod is None:
+            return None
+        if not isinstance(mod, str):
+            return None
+        dt = _apply_modifier(dt, mod)
+        if dt is None:
+            return None
+    return dt
+
+
+@register("date")
+def _date(*args: SqlValue) -> SqlValue:
+    """Return an ISO-8601 date string for the given time value and modifiers.
+
+    ``DATE(timevalue [, modifier...])`` → ``'YYYY-MM-DD'``
+
+    Time value forms: ``'now'``, ISO-8601 string, Julian Day float, Unix int.
+
+    Examples::
+
+        DATE('now')                   → '2024-03-15'  (today's date)
+        DATE('2024-01-31', '+1 month')→ '2024-02-29'  (leap-year clamp)
+        DATE('2024-03-15', 'start of month') → '2024-03-01'
+        DATE(NULL)                    → NULL
+    """
+    if not args:
+        return None
+    dt = _resolve_datetime(list(args))
+    if dt is None:
+        return None
+    return dt.strftime("%Y-%m-%d")
+
+
+@register("time")
+def _time(*args: SqlValue) -> SqlValue:
+    """Return a time string for the given time value and modifiers.
+
+    ``TIME(timevalue [, modifier...])`` → ``'HH:MM:SS'``
+
+    Examples::
+
+        TIME('now')                  → '14:30:00'
+        TIME('now', '+1 hour')       → '15:30:00'
+        TIME(NULL)                   → NULL
+    """
+    if not args:
+        return None
+    dt = _resolve_datetime(list(args))
+    if dt is None:
+        return None
+    return dt.strftime("%H:%M:%S")
+
+
+@register("datetime")
+def _datetime(*args: SqlValue) -> SqlValue:
+    """Return a datetime string for the given time value and modifiers.
+
+    ``DATETIME(timevalue [, modifier...])`` → ``'YYYY-MM-DD HH:MM:SS'``
+
+    Examples::
+
+        DATETIME('now')                      → '2024-03-15 14:30:00'
+        DATETIME('now', 'start of year')     → '2024-01-01 00:00:00'
+        DATETIME('now', '-1 day')            → yesterday at same time
+        DATETIME(NULL)                       → NULL
+    """
+    if not args:
+        return None
+    dt = _resolve_datetime(list(args))
+    if dt is None:
+        return None
+    return dt.strftime("%Y-%m-%d %H:%M:%S")
+
+
+@register("julianday")
+def _julianday(*args: SqlValue) -> SqlValue:
+    """Return the Julian Day Number for the given time value and modifiers.
+
+    ``JULIANDAY(timevalue [, modifier...])`` → float
+
+    JDN 2451544.5 corresponds to 2000-01-01 00:00:00 UTC.
+
+    Examples::
+
+        JULIANDAY('2000-01-01')  → 2451544.5
+        JULIANDAY('now')         → ~2460384.6  (varies)
+        JULIANDAY(NULL)          → NULL
+    """
+    if not args:
+        return None
+    dt = _resolve_datetime(list(args))
+    if dt is None:
+        return None
+    # Convert UTC datetime to Unix epoch seconds, then to Julian Day.
+    unix_ts = dt.timestamp()
+    return 2440587.5 + unix_ts / 86400.0
+
+
+@register("unixepoch")
+def _unixepoch(*args: SqlValue) -> SqlValue:
+    """Return the Unix epoch (seconds since 1970-01-01 00:00:00 UTC) as integer.
+
+    ``UNIXEPOCH(timevalue [, modifier...])`` → int
+
+    Examples::
+
+        UNIXEPOCH('1970-01-01')   → 0
+        UNIXEPOCH('2000-01-01')   → 946684800
+        UNIXEPOCH('now')          → current Unix timestamp
+        UNIXEPOCH(NULL)           → NULL
+    """
+    if not args:
+        return None
+    dt = _resolve_datetime(list(args))
+    if dt is None:
+        return None
+    return int(dt.timestamp())
+
+
+# Pre-compiled substitution map for STRFTIME's SQLite-specific specifiers.
+# Python's strftime does not support %f (SQLite = SS.SSS) or %s (epoch) or %J.
+_STRFTIME_PREPROCESS = re.compile(r"%[fJjsW]")
+
+
+def _sqlite_strftime(fmt: str, dt: datetime) -> str:
+    """Format *dt* using SQLite's strftime specifiers, delegating to Python."""
+    def _replace(m: re.Match) -> str:  # type: ignore[type-arg]
+        spec = m.group(0)
+        if spec == "%f":
+            # SQLite %f = SS.SSS (3 decimal places)
+            return f"{dt.second:02d}.{dt.microsecond // 1000:03d}"
+        if spec == "%s":
+            return str(int(dt.timestamp()))
+        if spec == "%J":
+            unix_ts = dt.timestamp()
+            return str(2440587.5 + unix_ts / 86400.0)
+        if spec == "%j":
+            return f"{dt.timetuple().tm_yday:03d}"
+        if spec == "%W":
+            # Week number (Monday as first day, 00–53)
+            return f"{dt.isocalendar()[1] - 1:02d}"
+        return spec
+
+    processed = _STRFTIME_PREPROCESS.sub(_replace, fmt)
+    return dt.strftime(processed)
+
+
+@register("strftime")
+def _strftime(*args: SqlValue) -> SqlValue:
+    """Format a time value using C-style strftime format specifiers.
+
+    ``STRFTIME(format, timevalue [, modifier...])`` → text
+
+    SQLite-specific extensions beyond standard strftime:
+
+    - ``%f`` → ``SS.SSS`` (seconds with 3-decimal-place fraction)
+    - ``%s`` → Unix epoch as decimal integer string
+    - ``%J`` → Julian Day number as float string
+
+    Examples::
+
+        STRFTIME('%Y-%m', 'now')              → '2024-03'
+        STRFTIME('%s', '2000-01-01')          → '946684800'
+        STRFTIME('%Y-%m-%d', 'now', '-7 days')→ last week's date
+        STRFTIME(NULL, 'now')                 → NULL
+        STRFTIME('%Y', NULL)                  → NULL
+    """
+    if len(args) < 2:
+        return None
+    fmt = args[0]
+    if fmt is None:
+        return None
+    if not isinstance(fmt, str):
+        return None
+    dt = _resolve_datetime(list(args), skip_first=True)
+    if dt is None:
+        return None
+    try:
+        return _sqlite_strftime(fmt, dt)
+    except (ValueError, OSError):
+        return None
