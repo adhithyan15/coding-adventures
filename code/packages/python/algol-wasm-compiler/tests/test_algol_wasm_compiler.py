@@ -619,6 +619,44 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [5]
 
+    def test_procedure_parameter_statement_call_passes_value_argument(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure invoke(p); procedure p; begin p(7) end; "
+            "procedure set(x); value x; integer x; begin result := x end; "
+            "invoke(set) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_forwarded_procedure_parameter_with_argument_uses_static_link(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result, base; "
+            "procedure invoke(p); procedure p; begin p(7) end; "
+            "procedure relay(p); procedure p; begin invoke(p) end; "
+            "procedure add(x); value x; integer x; begin result := base + x end; "
+            "base := 5; relay(add) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [12]
+
+    def test_procedure_parameter_dispatch_coerces_integer_to_real(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure invoke(p); procedure p; begin p(1) end; "
+            "procedure set(x); value x; real x; "
+            "begin if x = 1 then result := 9 end; "
+            "invoke(set) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
+
     def test_repeated_switch_designational_gotos_use_distinct_dispatch(self) -> None:
         result = compile_source(
             "begin integer result, i; "
