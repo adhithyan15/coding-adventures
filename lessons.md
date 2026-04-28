@@ -4,34 +4,43 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
-### 2026-04-27: Python BUILD files must not explicitly reference transitive local deps
+### 2026-04-27 (updated): Python BUILD files — two separate rules for two separate tools
 
-The build-tool's `-validate-build-files` flag checks that every `../xxx` reference
-in a Python BUILD file is either:
-1. A **transitive predecessor** of the package in the dependency graph (declared via
-   pyproject.toml runtime deps, which chain transitively), OR
-2. Listed in `[project.optional-dependencies]` in pyproject.toml.
+There are **two independent checks** that must both pass, and they pull in opposite
+directions if misunderstood:
 
-If a BUILD file installs `../intel4004-simulator` but `intel4004-simulator` is NOT
-in pyproject.toml and NOT in optional-deps, CI fails with:
-`undeclared local package refs: python/intel4004-simulator`
+#### 1. Build-tool `-validate-build-files` (rejects undeclared refs)
+Every `../xxx` in a BUILD file must be reachable through the transitive dependency
+graph starting from the package's own `pyproject.toml`. The build-tool traverses
+`[project.dependencies]` chains to build the allowed set.
+- **ALLOWED:** packages that ARE in the transitive closure (direct or indirect deps)
+- **REJECTED:** packages that are NOT reachable at all (e.g. `../jvm-class-file` for a
+  WASM-only package that has no JVM dep anywhere in its graph)
 
-**Root cause pattern:** A BUILD file was copied from a "kitchen-sink" install list
-(e.g. from `tetrad-runtime/BUILD`) that installs ALL transitive deps explicitly.
-But in the new package's own pyproject.toml, only a subset is declared — so the
-build-tool doesn't see the rest as legal references.
+#### 2. `uv pip install` (needs explicit local package paths for every local dep)
+When uv resolves a local package like `-e ../tetrad-runtime`, it reads
+`tetrad-runtime/pyproject.toml` and finds dependencies like
+`coding-adventures-intel4004-backend`. Since this package is **not on PyPI**, uv cannot
+find it unless it was also listed with `-e ../intel4004-backend` in the same install
+command. uv does NOT automatically traverse `../` paths transitively.
 
-**Fix:**
-- Only list packages in the BUILD file that are either:
-  - Direct runtime/dev deps in pyproject.toml (these become prereqs)
-  - In `[project.optional-dependencies]`
-- Remove any packages that are **only** transitive (e.g. `intel4004-backend` declares
-  `intel4004-simulator`, so installing `intel4004-backend` installs the simulator too)
-- Never copy a BUILD file verbatim from a deeper package without auditing the ref list.
+#### The rule: list ALL local packages in BUILD, in leaf-to-root order
+Even if the build-tool would technically allow omitting an intermediate package (since
+it's only "indirectly" declared), **uv will fail to resolve it**. Always include every
+local package in the install chain, ordered deepest-leaf first.
 
-**Example:** `wasm-backend` references tetrad-runtime (a dev dep). tetrad-runtime
-depends on intel4004-backend → intel4004-simulator. The wasm-backend BUILD must
-NOT list `../intel4004-simulator` directly — it gets installed transitively.
+**To find the full list for a package P:** check `P/BUILD` — it lists exactly what is
+needed. Then recursively check each dep's BUILD for any local packages not already
+listed.
+
+**What the build-tool rejects (correctly):** packages that are NOT in P's transitive
+dependency graph at all (e.g. `../jvm-class-file` for `wasm-backend`). Remove those.
+
+**Example:** `wasm-backend` → `tetrad-runtime` → `intel4004-backend` → `intel4004-simulator`
+                                               → `debug-sidecar`
+The wasm-backend BUILD MUST explicitly list all four:
+`-e ../intel4004-simulator -e ../intel4004-backend -e ../debug-sidecar -e ../tetrad-runtime`
+in leaf-to-root order, so uv can resolve each before the one that depends on it.
 
 ---
 
