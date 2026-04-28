@@ -125,6 +125,43 @@ fn default_html_lexer_reports_nested_comment_opener() {
 }
 
 #[test]
+fn default_html_lexer_recovers_incorrectly_closed_comment() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("Before<!--x--!>After").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("Before".to_string()),
+            Token::Comment("x".to_string()),
+            Token::Text("After".to_string()),
+            Token::Eof,
+        ]
+    );
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "incorrectly-closed-comment"));
+}
+
+#[test]
+fn default_html_lexer_preserves_bang_after_comment_end_when_not_closing() {
+    let tokens = lex_html("Before<!--x--!y-->After").unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Text("Before".to_string()),
+            Token::Comment("x--!y".to_string()),
+            Token::Text("After".to_string()),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_chunked_input_and_unicode_any_matcher() {
     let mut lexer = create_html_lexer().unwrap();
 

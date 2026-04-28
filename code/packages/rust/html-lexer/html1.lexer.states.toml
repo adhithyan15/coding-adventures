@@ -491,6 +491,9 @@ id = "comment_end_dash"
 id = "comment_end"
 
 [[states]]
+id = "comment_end_bang"
+
+[[states]]
 id = "bogus_comment"
 
 [[states]]
@@ -4525,6 +4528,11 @@ actions = ["append_comment(-)", "append_comment(current)"]
 
 [[transitions]]
 from = "comment_end"
+matcher = { literal = "!" }
+to = "comment_end_bang"
+
+[[transitions]]
+from = "comment_end"
 matcher = { literal = ">" }
 to = "data"
 actions = ["emit_current_token"]
@@ -4552,6 +4560,37 @@ from = "comment_end"
 matcher = { anything = true }
 to = "comment"
 actions = ["append_comment(--)", "append_comment(current)"]
+
+[[transitions]]
+from = "comment_end_bang"
+matcher = { literal = "-" }
+to = "comment_end_dash"
+actions = ["append_comment(--!)"]
+
+[[transitions]]
+from = "comment_end_bang"
+matcher = { literal = ">" }
+to = "data"
+actions = ["parse_error(incorrectly-closed-comment)", "emit_current_token"]
+
+[[transitions]]
+from = "comment_end_bang"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-comment)",
+  "append_comment(--!)",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "comment_end_bang"
+matcher = { anything = true }
+to = "comment"
+consume = false
+actions = ["append_comment(--!)"]
 
 [[transitions]]
 from = "bogus_comment"

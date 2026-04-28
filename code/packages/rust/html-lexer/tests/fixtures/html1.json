@@ -93,6 +93,20 @@
       ]
     },
     {
+      "id": "comment-incorrectly-closed-bang",
+      "description": "Comment end bang before > closes the comment with an incorrectly-closed-comment diagnostic",
+      "input": "Before<!--x--!>After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=x)",
+        "Text(data=After)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "incorrectly-closed-comment"
+      ]
+    },
+    {
       "id": "mosaic-title-rcdata-end-tag",
       "description": "Seeded title RCDATA context emits the matching end tag",
       "input": "Hello</title>",
