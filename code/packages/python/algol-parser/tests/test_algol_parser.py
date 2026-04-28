@@ -625,6 +625,32 @@ class TestProcedureCall:
         )
         assert ast.rule_name == "program"
 
+    def test_procedure_call_in_relation_left_operand(self) -> None:
+        """Procedure calls remain calls inside arithmetic relation operands."""
+        ast = parse(
+            "begin integer result; "
+            "integer procedure twice(x); value x; integer x; begin twice := x * 2 end; "
+            "if twice(2) = 4 then result := 1 else result := 0 "
+            "end"
+        )
+
+        assert ast.rule_name == "program"
+        assert find_nodes(ast, "relation")
+        assert find_nodes(ast, "proc_call")
+
+    def test_procedure_call_in_array_subscript(self) -> None:
+        """Subscripts use arith_expr, so calls must parse there too."""
+        ast = parse(
+            "begin integer result; integer array a[1:4]; "
+            "integer procedure idx(x); value x; integer x; begin idx := x end; "
+            "a[idx(2)] := 7; result := a[idx(2)] "
+            "end"
+        )
+
+        assert ast.rule_name == "program"
+        assert find_nodes(ast, "subscripts")
+        assert find_nodes(ast, "proc_call")
+
 
 # ---------------------------------------------------------------------------
 # Compound statement tests

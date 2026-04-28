@@ -683,6 +683,24 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
 
+    def test_procedure_call_can_be_relation_operand(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer procedure twice(x); value x; integer x; begin twice := x * 2 end; "
+            "if twice(2) = 4 then result := 1 else result := 0 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
+
+    def test_procedure_call_can_be_array_subscript(self) -> None:
+        result = compile_source(
+            "begin integer result; integer array a[1:4]; "
+            "integer procedure idx(x); value x; integer x; begin idx := x end; "
+            "a[idx(2)] := 7; result := a[idx(2)] "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
     def test_repeated_switch_designational_gotos_use_distinct_dispatch(self) -> None:
         result = compile_source(
             "begin integer result, i; "
