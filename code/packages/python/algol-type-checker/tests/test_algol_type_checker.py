@@ -206,6 +206,19 @@ class TestAlgolTypeChecker:
         assert selection.use_block_id != selection.declaration_block_id
         assert selection.lexical_depth_delta == 1
 
+    def test_accepts_switch_entry_targeting_nonlocal_label(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "begin switch s := done; goto s[1] end; "
+            "done: result := 1 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        assert len(result.semantic.switches) == 1
+
     def test_accepts_nested_switch_selection_entries(self) -> None:
         ast = parse_algol(
             "begin integer result, i; "
@@ -917,7 +930,7 @@ class TestAlgolTypeChecker:
             in result.diagnostics[0].message
         )
 
-    def test_rejects_procedure_parameter_actual_with_by_name_formal(
+    def test_accepts_procedure_parameter_actual_with_read_only_by_name_formal(
         self,
     ) -> None:
         ast = parse_algol(
@@ -929,11 +942,25 @@ class TestAlgolTypeChecker:
         )
         result = check_algol(ast)
 
-        assert not result.ok
-        assert (
-            "expects a procedure actual with scalar value parameters"
-            in result.diagnostics[0].message
+        assert result.ok
+        assert result.semantic is not None
+        parameter = result.semantic.procedures[0].parameters[0]
+        assert parameter.procedure_call_shapes[0].argument_assignable == (False,)
+
+    def test_rejects_procedure_parameter_actual_with_written_literal_by_name_formal(
+        self,
+    ) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure invoke(p); procedure p; begin p(7) end; "
+            "procedure set(x); integer x; begin x := x + 1 end; "
+            "invoke(set) "
+            "end"
         )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "non-assignable actual" in result.diagnostics[0].message
 
     def test_rejects_typed_procedure_parameter_void_actual(self) -> None:
         ast = parse_algol(

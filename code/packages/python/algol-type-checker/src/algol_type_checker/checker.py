@@ -191,6 +191,7 @@ class ProcedureFormalCallShape:
 
     role: str
     argument_types: tuple[str, ...]
+    argument_assignable: tuple[bool, ...] = ()
     return_type: str | None = None
 
 
@@ -743,7 +744,7 @@ class AlgolTypeChecker:
             self._check_designational(
                 entry,
                 scope,
-                allow_nonlocal_label=False,
+                allow_nonlocal_label=True,
                 allow_switch_selection=True,
                 active_switch_id=switch_id,
             )
@@ -2021,9 +2022,14 @@ class AlgolTypeChecker:
         role: str,
     ) -> ResolvedProcedureCall:
         argument_types: list[str] = []
+        argument_assignable: list[bool] = []
         for argument in arguments:
             actual_type = self._infer_expr(argument, scope)
             argument_types.append(actual_type)
+            argument_assignable.append(
+                _is_assignable_actual(argument)
+                and self._resolved_bare_procedure_expression(argument) is None
+            )
             if actual_type != ERROR and actual_type not in {
                 INTEGER,
                 BOOLEAN,
@@ -2047,6 +2053,7 @@ class AlgolTypeChecker:
                 ProcedureFormalCallShape(
                     role=role,
                     argument_types=tuple(argument_types),
+                    argument_assignable=tuple(argument_assignable),
                     return_type=return_type if role == "expression" else None,
                 ),
             )
@@ -2307,24 +2314,34 @@ class AlgolTypeChecker:
                         f"argument(s), got {actual}",
                     )
                 return False
-            for actual_parameter, actual_type in zip(
-                descriptor.parameters,
-                shape.argument_types,
-                strict=True,
+            for argument_index, (actual_parameter, actual_type) in enumerate(
+                zip(
+                    descriptor.parameters,
+                    shape.argument_types,
+                    strict=True,
+                )
             ):
-                if (
-                    actual_parameter.kind != "scalar"
-                    or actual_parameter.mode != VALUE
-                ):
+                argument_assignable = (
+                    shape.argument_assignable[argument_index]
+                    if argument_index < len(shape.argument_assignable)
+                    else False
+                )
+                if actual_parameter.kind != "scalar":
                     self._error(
                         token,
                         f"procedure parameter {parameter.name!r} expects a "
-                        "procedure actual with scalar value parameters in this "
-                        "phase",
+                        "procedure actual with scalar parameters",
+                    )
+                    return False
+                if actual_parameter.mode not in {VALUE, NAME}:
+                    self._error(
+                        token,
+                        f"procedure parameter {parameter.name!r} expects a "
+                        "procedure actual with scalar value or name parameters",
                     )
                     return False
                 if not self._parameter_accepts_type(
-                    VALUE,
+                    actual_parameter.mode,
                     actual_parameter.type_name,
                     actual_type,
                 ):
@@ -2334,6 +2351,16 @@ class AlgolTypeChecker:
                         f"{actual_type} to actual parameter "
                         f"{actual_parameter.name!r} expecting "
                         f"{actual_parameter.type_name}",
+                    )
+                    return False
+                if actual_parameter.mode == NAME and (
+                    actual_parameter.may_write and not argument_assignable
+                ):
+                    self._error(
+                        token,
+                        f"procedure parameter {parameter.name!r} passes a "
+                        f"non-assignable actual to written by-name parameter "
+                        f"{actual_parameter.name!r}",
                     )
                     return False
         return True

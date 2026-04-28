@@ -61,10 +61,13 @@ re-evaluate in the caller's declaring scope; these label/switch descriptor
 paths also cover `value` formals. Procedure formals pass descriptor closures
 containing the callee procedure id and static link; formal calls dispatch
 through generated helpers for statement calls and typed expression calls with
-scalar value arguments, so forwarded procedure formals keep the original
-environment in value or by-name mode. Real-valued formal procedure calls can
-accept integer-returning actual procedures and promote the dispatched result.
-Full ALGOL forms such as escaping thunk descriptors remain future work.
+scalar arguments. The dispatch helpers pass each actual argument as a lazy
+storage pointer or thunk descriptor, evaluating it once for target `value`
+parameters and forwarding it directly for target by-name parameters, so
+forwarded procedure formals keep the original environment in value or by-name
+mode. Real-valued formal procedure calls can accept integer-returning actual
+procedures and promote the dispatched result. Full ALGOL forms such as escaping
+thunk descriptors remain future work.
 
 Direct `goto` statements lower to ordinary IR `JUMP` instructions targeting
 generated ALGOL labels. Local jumps emit the jump directly. Direct nonlocal
@@ -75,12 +78,12 @@ control-flow lowering handles forward, backward, and nonlocal block jumps.
 Local conditional designational expressions now lower as condition-controlled
 branch points that only evaluate the selected target. Local switch selections
 evaluate their integer index once, compare against one-based switch entries,
-and lower the chosen designational entry into the same local jump path. An
-out-of-range switch index follows the existing runtime-failure path and returns
-`0`. Switch declaration entries that select another switch remain guarded
-before IR lowering so recursive switch descriptors cannot expand without
-bound. Procedure-crossing gotos and nonlocal switch/designational forms remain
-guarded before IR generation.
+and lower the chosen designational entry into the same jump path. Switch entries
+may target labels in lexical parent blocks; those entries unwind exited frames
+or propagate pending procedure-crossing gotos just like direct designational
+gotos. An out-of-range switch index follows the existing runtime-failure path
+and returns `0`. Recursive switch self-selection remains guarded before IR
+lowering so descriptors cannot expand without bound.
 
 This phase keeps ALGOL frame memory and its 32-byte runtime state bounded to
 one 64 KiB WASM page, and keeps array descriptors plus element storage inside a

@@ -132,6 +132,10 @@ class TestPrologVMStress:
                reverse(Combined, Reversed),
                select(Item, [tea, cake, jam], Remainder),
                length(Reversed, Count),
+               sort([Item, jam, Item], UniqueSorted),
+               msort([Item, jam, Item], Sorted),
+               nth0(1, Reversed, ZeroBased),
+               nth1(2, Reversed, OneBased),
                length(Pair, 2),
                Pair = [left, right].
             """,
@@ -146,6 +150,10 @@ class TestPrologVMStress:
                 "Reversed": logic_list(["jam", "tea"]),
                 "Remainder": logic_list(["cake", "jam"]),
                 "Count": num(2),
+                "UniqueSorted": logic_list(["jam", "tea"]),
+                "Sorted": logic_list(["jam", "tea", "tea"]),
+                "ZeroBased": atom("tea"),
+                "OneBased": atom("tea"),
                 "Pair": logic_list(["left", "right"]),
             },
             {
@@ -154,6 +162,10 @@ class TestPrologVMStress:
                 "Reversed": logic_list(["jam", "cake"]),
                 "Remainder": logic_list(["tea", "jam"]),
                 "Count": num(2),
+                "UniqueSorted": logic_list(["cake", "jam"]),
+                "Sorted": logic_list(["cake", "cake", "jam"]),
+                "ZeroBased": atom("cake"),
+                "OneBased": atom("cake"),
                 "Pair": logic_list(["left", "right"]),
             },
         ]

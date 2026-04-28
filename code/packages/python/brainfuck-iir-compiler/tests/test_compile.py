@@ -149,14 +149,14 @@ def test_loop_emits_label_branch_label() -> None:
     (fn,) = module.functions
     body = fn.instructions[1:-1]  # strip prologue/epilogue
     ops = [i.op for i in body]
-    # label, load, jmp_if_false, [body for +: load, const, add, store],
-    # load, jmp_if_true, label
+    # label, load_mem, jmp_if_false, [body for +], jmp, label
+    # Unconditional back-edge (BF05) — required for ir-to-wasm-compiler
+    # to recognise the loop as structured.
     assert ops[0] == "label"
     assert ops[1] == "load_mem"
     assert ops[2] == "jmp_if_false"
     assert ops[-1] == "label"
-    assert ops[-2] == "jmp_if_true"
-    assert ops[-3] == "load_mem"
+    assert ops[-2] == "jmp"
 
 
 def test_nested_loops_get_unique_labels() -> None:
@@ -172,11 +172,14 @@ def test_loop_jump_targets_are_consistent() -> None:
     module = compile_source("[+]")
     (fn,) = module.functions
     label_names = {i.srcs[0] for i in fn.instructions if i.op == "label"}
-    jump_targets = {
-        i.srcs[1]
-        for i in fn.instructions
-        if i.op in {"jmp_if_true", "jmp_if_false", "jmp"}
-    }
+    # Conditional branches store the target label at srcs[1]; unconditional
+    # ``jmp`` stores it at srcs[0].  Collect both forms.
+    jump_targets: set[str] = set()
+    for i in fn.instructions:
+        if i.op in {"jmp_if_true", "jmp_if_false"}:
+            jump_targets.add(i.srcs[1])
+        elif i.op == "jmp":
+            jump_targets.add(i.srcs[0])
     assert jump_targets <= label_names, (
         f"jump targets {jump_targets - label_names} have no matching label"
     )

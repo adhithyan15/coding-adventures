@@ -423,6 +423,30 @@ class TestAlgolIrCompiler:
         assert opcodes.count(IrOp.RET) >= 2
         assert any(label.startswith("algol_label_") for label in labels)
 
+    def test_compiles_nonlocal_switch_entry_label_with_frame_unwind(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "result := 0; "
+                "begin switch s := done; result := 5; goto s[1]; result := 99 end; "
+                "done: result := result + 2 "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+
+        assert IrOp.CMP_EQ in opcodes
+        assert any(label.startswith("switch_0_1_next") for label in labels)
+        assert any(
+            label.startswith("algol_label_") and label.endswith("_done")
+            for label in labels
+        )
+
     def test_compiles_nested_switch_selection_entry(self) -> None:
         result = compile_algol(
             parse_algol(
@@ -847,6 +871,27 @@ class TestAlgolIrCompiler:
             instruction.operands[0].name == "_fn_algol_call_procedure_i32"
             for instruction in calls
         )
+
+    def test_compiles_procedure_parameter_call_with_by_name_actual(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "procedure invoke(p); procedure p; "
+                "begin integer y; y := 3; p(y); result := y end; "
+                "procedure bump(x); integer x; begin x := x + 4 end; "
+                "invoke(bump) "
+                "end"
+            )
+        )
+        labels = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.LABEL
+        ]
+        opcodes = [instruction.opcode for instruction in result.program.instructions]
+
+        assert "_fn_algol_call_procedure_i32" in labels
+        assert IrOp.AND_IMM in opcodes
 
     def test_compiles_value_procedure_parameter_call_with_value_argument(self) -> None:
         result = compile_algol(

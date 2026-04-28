@@ -11,6 +11,7 @@ from typing import Any
 
 
 SUPPORTED_INITIAL_STATES = {
+    "CDATA section state",
     "Data state",
     "PLAINTEXT state",
     "RCDATA state",

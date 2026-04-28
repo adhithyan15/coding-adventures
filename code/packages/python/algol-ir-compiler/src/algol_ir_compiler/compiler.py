@@ -386,26 +386,7 @@ class AlgolIrCompiler:
             for procedure in type_result.semantic.procedures
         }
         if self.has_by_name_parameters:
-            self.procedure_signatures[_THUNK_EVAL_LABEL] = ProcedureSignaturePlan(
-                param_types=(_INTEGER_TYPE, _INTEGER_TYPE),
-                return_type=_INTEGER_TYPE,
-            )
-            self.procedure_signatures[_THUNK_STORE_LABEL] = ProcedureSignaturePlan(
-                param_types=(_INTEGER_TYPE, _INTEGER_TYPE, _INTEGER_TYPE),
-                return_type=_INTEGER_TYPE,
-            )
-            self.procedure_signatures[_THUNK_EVAL_REAL_LABEL] = (
-                ProcedureSignaturePlan(
-                    param_types=(_INTEGER_TYPE, _INTEGER_TYPE),
-                    return_type=_REAL_TYPE,
-                )
-            )
-            self.procedure_signatures[_THUNK_STORE_REAL_LABEL] = (
-                ProcedureSignaturePlan(
-                    param_types=(_INTEGER_TYPE, _INTEGER_TYPE, _REAL_TYPE),
-                    return_type=_INTEGER_TYPE,
-                )
-            )
+            self._ensure_thunk_signatures()
         if self.has_switch_parameters:
             self.procedure_signatures[_SWITCH_EVAL_LABEL] = ProcedureSignaturePlan(
                 param_types=(_INTEGER_TYPE, _INTEGER_TYPE, _INTEGER_TYPE),
@@ -502,7 +483,8 @@ class AlgolIrCompiler:
         self._emit_program_result(root_scope)
         self._emit(IrOp.HALT)
         self._compile_procedures(type_result.semantic.procedures)
-        if self.has_by_name_parameters:
+        if self.has_by_name_parameters or self.eval_thunks:
+            self._ensure_thunk_signatures()
             self._compile_eval_thunk_dispatcher(
                 label=_THUNK_EVAL_LABEL,
                 thunk_kind="word",
@@ -546,6 +528,24 @@ class AlgolIrCompiler:
             frame_memory_label=_FRAME_MEMORY_LABEL,
             heap_memory_label=_HEAP_MEMORY_LABEL,
             procedure_signatures=dict(self.procedure_signatures),
+        )
+
+    def _ensure_thunk_signatures(self) -> None:
+        self.procedure_signatures[_THUNK_EVAL_LABEL] = ProcedureSignaturePlan(
+            param_types=(_INTEGER_TYPE, _INTEGER_TYPE),
+            return_type=_INTEGER_TYPE,
+        )
+        self.procedure_signatures[_THUNK_STORE_LABEL] = ProcedureSignaturePlan(
+            param_types=(_INTEGER_TYPE, _INTEGER_TYPE, _INTEGER_TYPE),
+            return_type=_INTEGER_TYPE,
+        )
+        self.procedure_signatures[_THUNK_EVAL_REAL_LABEL] = ProcedureSignaturePlan(
+            param_types=(_INTEGER_TYPE, _INTEGER_TYPE),
+            return_type=_REAL_TYPE,
+        )
+        self.procedure_signatures[_THUNK_STORE_REAL_LABEL] = ProcedureSignaturePlan(
+            param_types=(_INTEGER_TYPE, _INTEGER_TYPE, _REAL_TYPE),
+            return_type=_INTEGER_TYPE,
         )
 
     def _compile_block(self, block: ASTNode, parent: _FrameScope | None) -> _FrameScope:
@@ -2969,8 +2969,7 @@ class AlgolIrCompiler:
     ) -> int:
         actuals = _direct_nodes(_first_direct_node(node, "actual_params"), "expression")
         argument_types = tuple(self._expr_type(actual) for actual in actuals)
-        argument_regs: list[int] = []
-        for actual, actual_type in zip(actuals, argument_types, strict=True):
+        for actual_type in argument_types:
             if actual_type not in {
                 _INTEGER_TYPE,
                 _BOOLEAN_TYPE,
@@ -2981,7 +2980,47 @@ class AlgolIrCompiler:
                     f"procedure parameter {call.name!r} cannot pass "
                     f"{actual_type} argument"
                 )
-            argument_regs.append(self._compile_expr(actual, scope))
+        thunk_actuals = [
+            (index, argument, actual_type)
+            for index, (argument, actual_type) in enumerate(
+                zip(actuals, argument_types, strict=True)
+            )
+            if self._requires_by_name_thunk_descriptor(argument)
+        ]
+        descriptor_heap_mark = (
+            self._emit_reserve_eval_thunk_descriptors(len(thunk_actuals), scope)
+            if thunk_actuals
+            else None
+        )
+        descriptor_offsets = {
+            argument_index: descriptor_index * _THUNK_DESCRIPTOR_SIZE
+            for descriptor_index, (argument_index, _, _) in enumerate(thunk_actuals)
+        }
+        argument_regs: list[int] = []
+        for index, (actual, actual_type) in enumerate(
+            zip(actuals, argument_types, strict=True)
+        ):
+            descriptor = None
+            if descriptor_heap_mark is not None and index in descriptor_offsets:
+                descriptor = self._emit_descriptor_at(
+                    descriptor_heap_mark,
+                    descriptor_offsets[index],
+                )
+            argument_regs.append(
+                self._compile_by_name_actual_pointer(
+                    actual,
+                    ProcedureParameter(
+                        name=f"{call.name}_argument_{index}",
+                        type_name=actual_type,
+                        mode=_NAME_MODE,
+                        symbol_id=-1,
+                        slot_offset=0,
+                        may_write=True,
+                    ),
+                    scope,
+                    descriptor,
+                )
+            )
         descriptor_pointer = self._compile_procedure_parameter_pointer(
             call.name,
             scope,
@@ -2991,9 +3030,13 @@ class AlgolIrCompiler:
                 f"procedure parameter {call.name!r} was not resolved"
             )
         active_thunk_heap_mark = (
-            scope.active_thunk_heap_mark_reg
-            if scope.active_thunk_heap_mark_reg is not None
-            else self._const_reg(0)
+            descriptor_heap_mark
+            if descriptor_heap_mark is not None
+            else (
+                scope.active_thunk_heap_mark_reg
+                if scope.active_thunk_heap_mark_reg is not None
+                else self._const_reg(0)
+            )
         )
         dispatch_label = self._procedure_parameter_dispatch_label(
             argument_types,
@@ -3006,8 +3049,14 @@ class AlgolIrCompiler:
             IrRegister(active_thunk_heap_mark),
             *(IrRegister(argument) for argument in argument_regs),
         )
+        if descriptor_heap_mark is not None:
+            self._store_runtime_state(
+                _RUNTIME_HEAP_POINTER_OFFSET,
+                descriptor_heap_mark,
+            )
         if scope.helper_failure:
             self._emit_helper_return_on_thunk_failure(scope)
+        self._emit_propagate_thunk_failure(scope)
         self._emit_handle_pending_goto_after_call(scope)
         result = self._fresh_reg()
         self._copy_scalar_reg(
@@ -3051,7 +3100,7 @@ class AlgolIrCompiler:
                 param_types=(
                     _INTEGER_TYPE,
                     _INTEGER_TYPE,
-                    *argument_types,
+                    *(_INTEGER_TYPE for _ in argument_types),
                 ),
                 return_type=return_type or _INTEGER_TYPE,
             )
@@ -4246,16 +4295,26 @@ class AlgolIrCompiler:
                 IrRegister(self._const_reg(procedure.procedure_id)),
             )
             self._emit(IrOp.BRANCH_Z, IrRegister(matches), IrLabel(else_label))
-            call_arguments = [
-                self._coerce_reg_to_type(
-                    _VALUE_PARAM_BASE_REG + arg_index,
+            call_arguments: list[int] = []
+            for arg_index, (argument_type, parameter) in enumerate(
+                zip(argument_types, procedure.parameters, strict=True)
+            ):
+                argument_pointer = _VALUE_PARAM_BASE_REG + arg_index
+                if parameter.mode == _NAME_MODE:
+                    call_arguments.append(argument_pointer)
+                    continue
+                argument_value = self._emit_load_by_name_argument_value(
+                    argument_pointer,
                     argument_type,
-                    expected_type=parameter.type_name,
+                    active_thunk_heap_mark,
                 )
-                for arg_index, (argument_type, parameter) in enumerate(
-                    zip(argument_types, procedure.parameters, strict=True)
+                call_arguments.append(
+                    self._coerce_reg_to_type(
+                        argument_value,
+                        argument_type,
+                        expected_type=parameter.type_name,
+                    )
                 )
-            ]
             self._emit(
                 IrOp.CALL,
                 IrLabel(procedure.label),
@@ -4309,14 +4368,95 @@ class AlgolIrCompiler:
             argument_types,
             strict=True,
         ):
-            if parameter.kind != "scalar" or parameter.mode != _VALUE_MODE:
+            if parameter.kind != "scalar":
                 return False
-            if parameter.type_name == argument_type:
-                continue
-            if parameter.type_name == _REAL_TYPE and argument_type == _INTEGER_TYPE:
-                continue
+            if parameter.mode == _VALUE_MODE:
+                if parameter.type_name == argument_type:
+                    continue
+                if parameter.type_name == _REAL_TYPE and argument_type == _INTEGER_TYPE:
+                    continue
+                return False
+            if parameter.mode == _NAME_MODE:
+                if parameter.type_name == argument_type:
+                    continue
+                return False
             return False
         return True
+
+    def _emit_load_by_name_argument_value(
+        self,
+        pointer: int,
+        type_name: str,
+        active_thunk_heap_mark: int,
+    ) -> int:
+        tag = self._fresh_reg()
+        index = self.if_count
+        self.if_count += 1
+        storage_label = f"if_{index}_else"
+        end_label = f"if_{index}_end"
+        dst = self._fresh_reg()
+        self._emit(
+            IrOp.AND_IMM,
+            IrRegister(tag),
+            IrRegister(pointer),
+            IrImmediate(_THUNK_DESCRIPTOR_TAG),
+        )
+        self._emit(IrOp.BRANCH_Z, IrRegister(tag), IrLabel(storage_label))
+        descriptor = self._fresh_reg()
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(descriptor),
+            IrRegister(pointer),
+            IrImmediate(-_THUNK_DESCRIPTOR_TAG),
+        )
+        self._emit(
+            IrOp.CALL,
+            IrLabel(
+                _THUNK_EVAL_REAL_LABEL
+                if type_name == _REAL_TYPE
+                else _THUNK_EVAL_LABEL
+            ),
+            IrRegister(descriptor),
+            IrRegister(active_thunk_heap_mark),
+        )
+        self._emit_dispatcher_return_on_runtime_transfer()
+        self._copy_scalar_reg(
+            type_name=type_name,
+            dst=dst,
+            src=_REAL_RESULT_REG if type_name == _REAL_TYPE else _RESULT_REG,
+        )
+        self._emit(IrOp.JUMP, IrLabel(end_label))
+        self._label(storage_label)
+        self._emit_load_scalar(type_name, dst, pointer, 0)
+        self._label(end_label)
+        return dst
+
+    def _emit_dispatcher_return_on_runtime_transfer(self) -> None:
+        failed = self._fresh_reg()
+        self._load_runtime_state(_RUNTIME_THUNK_FAILURE_OFFSET, failed)
+        pending_label = self._fresh_reg()
+        self._load_runtime_state(_RUNTIME_PENDING_GOTO_LABEL_OFFSET, pending_label)
+        should_return = self._fresh_reg()
+        self._emit(
+            IrOp.ADD,
+            IrRegister(should_return),
+            IrRegister(failed),
+            IrRegister(pending_label),
+        )
+        index = self.if_count
+        self.if_count += 1
+        continue_label = f"if_{index}_else"
+        end_label = f"if_{index}_end"
+        self._emit(
+            IrOp.BRANCH_Z,
+            IrRegister(should_return),
+            IrLabel(continue_label),
+        )
+        self._emit_zero_result_reg()
+        self._emit(IrOp.RET)
+        self._emit(IrOp.JUMP, IrLabel(end_label))
+        self._label(continue_label)
+        self._label(end_label)
 
     def _compile_procedure(self, procedure: ProcedureDescriptor) -> None:
         body = self._find_ast_by_id(procedure.body_node_id)
@@ -5390,9 +5530,16 @@ class AlgolIrCompiler:
         scope: _FrameScope,
         label_reg: int,
     ) -> None:
+        tagged_label = self._fresh_reg()
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(tagged_label),
+            IrRegister(label_reg),
+            IrImmediate(1),
+        )
         self._store_runtime_state(
             _RUNTIME_PENDING_GOTO_LABEL_OFFSET,
-            label_reg,
+            tagged_label,
         )
         self._emit_zero_result_reg()
         if not scope.helper_failure:
@@ -5433,7 +5580,7 @@ class AlgolIrCompiler:
                 IrOp.CMP_EQ,
                 IrRegister(matches),
                 IrRegister(pending_label),
-                IrRegister(self._const_reg(label.label_id)),
+                IrRegister(self._const_reg(label.label_id + 1)),
             )
             self._emit(IrOp.BRANCH_Z, IrRegister(matches), IrLabel(next_label))
             self._store_runtime_state(_RUNTIME_PENDING_GOTO_LABEL_OFFSET, _ZERO_REG)

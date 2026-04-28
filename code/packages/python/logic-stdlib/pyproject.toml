@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-logic-stdlib"
-version = "0.5.0"
+version = "0.7.0"
 description = "Relational standard library helpers, combinators, and sequence relations built on top of logic-engine"
 requires-python = ">=3.12"
 license = "MIT"

@@ -38,7 +38,7 @@ Leaving the format open is what makes the interface portable.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Final
+from typing import Final, Literal
 
 from .values import SqlValue
 
@@ -114,3 +114,22 @@ class ColumnDef:
     def has_default(self) -> bool:
         """True iff a DEFAULT clause was specified (even if that default is NULL)."""
         return self.default is not NO_DEFAULT
+
+
+@dataclass(eq=True)
+class TriggerDef:
+    """Definition of a CREATE TRIGGER object stored in the backend.
+
+    ``body`` is the raw SQL text of the trigger body statements (without
+    the outer BEGIN…END wrapper), with individual statements separated by
+    semicolons.  The VM re-parses and re-compiles the body on each firing.
+
+    ``timing`` is ``"BEFORE"`` or ``"AFTER"``.
+    ``event`` is ``"INSERT"``, ``"UPDATE"``, or ``"DELETE"``.
+    """
+
+    name: str
+    table: str
+    timing: Literal["BEFORE", "AFTER"]
+    event: Literal["INSERT", "UPDATE", "DELETE"]
+    body: str
