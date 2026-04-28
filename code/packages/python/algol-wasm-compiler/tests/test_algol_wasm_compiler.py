@@ -596,6 +596,19 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
 
+    def test_value_switch_parameter_dispatches_actual(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure escape(sw); value sw; switch sw; begin goto sw[1] end; "
+            "switch s := second; "
+            "escape(s); result := 0; "
+            "first: result := 1; goto done; "
+            "second: result := 8; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
+
     def test_procedure_parameter_statement_call_dispatches_actual(self) -> None:
         result = compile_source(
             "begin integer result; "
@@ -618,6 +631,28 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [5]
+
+    def test_value_procedure_parameter_statement_call_dispatches_actual(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure twice(p); value p; procedure p; begin p; p end; "
+            "procedure bump; begin result := result + 1 end; "
+            "result := 0; twice(bump) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_value_procedure_parameter_statement_call_passes_value_argument(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure invoke(p); value p; procedure p; begin p(7) end; "
+            "procedure set(x); value x; integer x; begin result := x end; "
+            "invoke(set) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
 
     def test_procedure_parameter_statement_call_passes_value_argument(
         self,
@@ -661,6 +696,17 @@ class TestAlgolWasmCompiler:
         result = compile_source(
             "begin integer result; real y; "
             "procedure invoke(f); real f; procedure f; "
+            "begin y := f(2); if y = 4 then result := 1 else result := 0 end; "
+            "real procedure twice(x); value x; real x; begin twice := x * 2 end; "
+            "invoke(twice) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
+
+    def test_value_typed_procedure_parameter_expression_call_returns_real(self) -> None:
+        result = compile_source(
+            "begin integer result; real y; "
+            "procedure invoke(f); value f; real f; procedure f; "
             "begin y := f(2); if y = 4 then result := 1 else result := 0 end; "
             "real procedure twice(x); value x; real x; begin twice := x * 2 end; "
             "invoke(twice) "
@@ -902,6 +948,17 @@ class TestAlgolWasmCompiler:
         result = compile_source(
             "begin integer result; "
             "procedure jump(target); label target; begin goto target end; "
+            "jump(done); result := 1; "
+            "done: result := 7 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_value_label_parameter_jumps_to_caller_label(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure jump(target); value target; label target; "
+            "begin goto target end; "
             "jump(done); result := 1; "
             "done: result := 7 "
             "end"

@@ -7,7 +7,11 @@ from compiler_ir import IrOp
 from lang_parser import ASTNode
 
 from algol_ir_compiler import CompileError, __version__, compile_algol
-from algol_ir_compiler.compiler import _MAX_STRING_OUTPUT_BYTES, _MAX_TOTAL_OUTPUT_BYTES
+from algol_ir_compiler.compiler import (
+    _MAX_STRING_OUTPUT_BYTES,
+    _MAX_TOTAL_OUTPUT_BYTES,
+    _VALUE_PARAM_BASE_REG,
+)
 
 
 class TestVersion:
@@ -844,6 +848,31 @@ class TestAlgolIrCompiler:
             for instruction in calls
         )
 
+    def test_compiles_value_procedure_parameter_call_with_value_argument(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "procedure invoke(p); value p; procedure p; begin p(7) end; "
+                "procedure set(x); value x; integer x; begin result := x end; "
+                "invoke(set) "
+                "end"
+            )
+        )
+        calls = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+
+        assert (
+            result.procedure_signatures["_fn_algol_call_procedure_i32"].param_types
+            == ("integer", "integer", "integer")
+        )
+        assert any(
+            instruction.operands[0].name == "_fn_algol_call_procedure_i32"
+            for instruction in calls
+        )
+
     def test_compiles_typed_procedure_parameter_expression_call(self) -> None:
         result = compile_algol(
             parse_algol(
@@ -861,6 +890,33 @@ class TestAlgolIrCompiler:
 
         assert signature.param_types == ("integer", "integer", "integer")
         assert signature.return_type == "real"
+
+    def test_compiles_value_typed_procedure_parameter_expression_call(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; real y; "
+                "procedure invoke(f); value f; real f; procedure f; "
+                "begin y := f(2); if y = 4 then result := 1 else result := 0 end; "
+                "real procedure twice(x); value x; real x; begin twice := x * 2 end; "
+                "invoke(twice) "
+                "end"
+            )
+        )
+        signature = result.procedure_signatures[
+            "_fn_algol_call_procedure_f64_result_i32"
+        ]
+        stores = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.STORE_WORD
+        ]
+
+        assert signature.param_types == ("integer", "integer", "integer")
+        assert signature.return_type == "real"
+        assert any(
+            instruction.operands[0].index == _VALUE_PARAM_BASE_REG
+            for instruction in stores
+        )
 
     def test_compiles_dynamic_multidimensional_array_bounds(self) -> None:
         result = compile_algol(

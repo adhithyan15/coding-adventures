@@ -54,11 +54,13 @@ formals passed as descriptor pointers. `value` whole-array formals allocate a
 callee-local descriptor, bounds table, and element storage copy at procedure
 entry, so writes to the formal do not alias the caller's array. Label formals
 pass pending-goto targets, and switch formals pass descriptor closures that
-re-evaluate in the caller's declaring scope. No-argument statement procedure formals pass
-descriptor closures containing the callee procedure id and static link; formal
-calls dispatch through a generated helper so forwarded procedure formals keep
-the original environment. Full ALGOL forms such as typed or argument-taking
-procedure formals and escaping thunk descriptors remain future work.
+re-evaluate in the caller's declaring scope; these label/switch descriptor
+paths also cover `value` formals. Procedure formals pass descriptor closures
+containing the callee procedure id and static link; formal calls dispatch
+through generated helpers for statement calls and typed expression calls with
+scalar value arguments, so forwarded procedure formals keep the original
+environment in value or by-name mode. Full ALGOL forms such as escaping thunk
+descriptors remain future work.
 
 Direct `goto` statements lower to ordinary IR `JUMP` instructions targeting
 generated ALGOL labels. Local jumps emit the jump directly. Direct nonlocal
