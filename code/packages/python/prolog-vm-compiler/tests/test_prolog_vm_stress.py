@@ -124,6 +124,40 @@ class TestPrologVMStress:
             {"Chosen": atom("first"), "Fallback": atom("none")},
         ]
 
+    def test_list_stdlib_predicates_run_through_vm(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            ?- member(Item, [tea, cake]),
+               append([Item], [jam], Combined),
+               reverse(Combined, Reversed),
+               select(Item, [tea, cake, jam], Remainder),
+               length(Reversed, Count),
+               length(Pair, 2),
+               Pair = [left, right].
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert [answer.as_dict() for answer in answers] == [
+            {
+                "Item": atom("tea"),
+                "Combined": logic_list(["tea", "jam"]),
+                "Reversed": logic_list(["jam", "tea"]),
+                "Remainder": logic_list(["cake", "jam"]),
+                "Count": num(2),
+                "Pair": logic_list(["left", "right"]),
+            },
+            {
+                "Item": atom("cake"),
+                "Combined": logic_list(["cake", "jam"]),
+                "Reversed": logic_list(["jam", "cake"]),
+                "Remainder": logic_list(["tea", "jam"]),
+                "Count": num(2),
+                "Pair": logic_list(["left", "right"]),
+            },
+        ]
+
     def test_initialized_named_answers_keep_runtime_assertions_visible(self) -> None:
         compiled = compile_swi_prolog_source(
             """

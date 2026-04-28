@@ -499,12 +499,7 @@ class AlgolIrCompiler:
         self.current_function_return_type = _INTEGER_TYPE
         root_scope = self._compile_block(block, parent=None)
 
-        result_symbol = root_scope.semantic_block.scope.symbols.get("result")
-        if result_symbol is None:
-            raise CompileError(
-                "compiled ALGOL programs must declare integer variable 'result'"
-            )
-        self._emit_load_symbol(result_symbol, root_scope, _RESULT_REG)
+        self._emit_program_result(root_scope)
         self._emit(IrOp.HALT)
         self._compile_procedures(type_result.semantic.procedures)
         if self.has_by_name_parameters:
@@ -4046,7 +4041,11 @@ class AlgolIrCompiler:
                 )
             else:
                 value = self._compile_expr(thunk.expression, thunk_scope)
-            self._copy_scalar_reg(type_name=thunk.type_name, dst=_RESULT_REG, src=value)
+            self._copy_scalar_reg(
+                type_name=thunk.type_name,
+                dst=self._result_reg_for_type(thunk.type_name),
+                src=value,
+            )
             self._emit_leave_thunk_helper()
             self._emit(IrOp.RET)
             self._emit(IrOp.JUMP, IrLabel(end_label))
@@ -4277,7 +4276,7 @@ class AlgolIrCompiler:
                 )
                 self._copy_scalar_reg(
                     type_name=return_type,
-                    dst=_RESULT_REG,
+                    dst=self._result_reg_for_type(return_type),
                     src=result_value,
                 )
             self._emit(IrOp.RET)
@@ -4410,7 +4409,11 @@ class AlgolIrCompiler:
                 raise CompileError(
                     f"procedure {procedure.name!r} has no result slot"
                 )
-            self._emit_load_symbol(result_symbol, scope, _RESULT_REG)
+            self._emit_load_symbol(
+                result_symbol,
+                scope,
+                self._result_reg_for_type(procedure.return_type),
+            )
         else:
             self._emit(IrOp.LOAD_IMM, IrRegister(_RESULT_REG), IrImmediate(0))
         self._emit_leave_frame(scope)
@@ -5102,6 +5105,17 @@ class AlgolIrCompiler:
             IrRegister(offset_reg),
         )
 
+    def _emit_program_result(self, scope: _FrameScope) -> None:
+        result_symbol = scope.semantic_block.scope.symbols.get("result")
+        if (
+            result_symbol is not None
+            and result_symbol.kind == "scalar"
+            and result_symbol.type_name == _INTEGER_TYPE
+        ):
+            self._emit_load_symbol(result_symbol, scope, _RESULT_REG)
+            return
+        self._emit(IrOp.LOAD_IMM, IrRegister(_RESULT_REG), IrImmediate(0))
+
     def _emit_load_scalar(
         self,
         type_name: str,
@@ -5326,11 +5340,14 @@ class AlgolIrCompiler:
         if self.current_function_return_type == _REAL_TYPE:
             self._emit(
                 IrOp.LOAD_F64_IMM,
-                IrRegister(_RESULT_REG),
+                IrRegister(_REAL_RESULT_REG),
                 IrFloatImmediate(0.0),
             )
             return
         self._emit(IrOp.LOAD_IMM, IrRegister(_RESULT_REG), IrImmediate(0))
+
+    def _result_reg_for_type(self, type_name: str | None) -> int:
+        return _REAL_RESULT_REG if type_name == _REAL_TYPE else _RESULT_REG
 
     def _emit_stack_overflow_guard(self, overflow_reg: int) -> None:
         index = self.if_count
@@ -5974,4 +5991,6 @@ def _procedure_return_type_satisfies(
 ) -> bool:
     if actual_type is None:
         return False
+    if expected_type == _REAL_TYPE and actual_type == _INTEGER_TYPE:
+        return True
     return expected_type == actual_type

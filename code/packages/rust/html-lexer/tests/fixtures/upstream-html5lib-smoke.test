@@ -105,6 +105,16 @@
       ]
     },
     {
+      "description": "script data escaped matching end tag emits end tag token",
+      "initialStates": ["Script data escaped state"],
+      "lastStartTag": "script",
+      "input": "if (a < b) </script>",
+      "output": [
+        ["Character", "if (a < b) "],
+        ["EndTag", "script"]
+      ]
+    },
+    {
       "description": "data state named character references",
       "input": "Fish &amp; &lt;b&gt; &quot;quote&quot; &apos;ok&apos;",
       "output": [
@@ -348,6 +358,18 @@
       "errors": [
         {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 10},
         {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 16}
+      ]
+    },
+    {
+      "description": "script data double escaped state keeps first script end tag literal",
+      "initialStates": ["Script data double escaped state"],
+      "lastStartTag": "script",
+      "input": "x </script> y --></script>",
+      "output": [
+        ["Character", "x "],
+        ["Character", "</script>"],
+        ["Character", " y -->"],
+        ["EndTag", "script"]
       ]
     }
   ]

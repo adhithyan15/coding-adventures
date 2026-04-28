@@ -19,6 +19,8 @@ from logic_engine import (
     disj,
     eq,
     fresh,
+    logic_list,
+    num,
     program,
     reify,
     relation,
@@ -794,6 +796,39 @@ class TestPrologGoalAdapter:
             relation("setof", 3)(atom("ok"), term("memo", atom("ok")), LogicVar(id=13)),
             relation("forall", 2)(term("memo", atom("ok")), term("memo", atom("ok"))),
             relation("copy_term", 2)(term("box", LogicVar(id=15)), LogicVar(id=14)),
+            relation("is_list", 1)(
+                term(".", atom("tea"), term(".", atom("cake"), atom("[]"))),
+            ),
+            relation("last", 2)(
+                term(".", atom("tea"), term(".", atom("cake"), atom("[]"))),
+                atom("cake"),
+            ),
+            relation("length", 2)(
+                term(".", atom("tea"), term(".", atom("cake"), atom("[]"))),
+                2,
+            ),
+            relation("member", 2)(
+                atom("tea"),
+                term(".", atom("tea"), term(".", atom("cake"), atom("[]"))),
+            ),
+            relation("permutation", 2)(
+                term(".", atom("tea"), term(".", atom("cake"), atom("[]"))),
+                LogicVar(id=16),
+            ),
+            relation("reverse", 2)(
+                term(".", atom("tea"), term(".", atom("cake"), atom("[]"))),
+                LogicVar(id=17),
+            ),
+            relation("append", 3)(
+                term(".", atom("tea"), atom("[]")),
+                term(".", atom("cake"), atom("[]")),
+                LogicVar(id=18),
+            ),
+            relation("select", 3)(
+                atom("tea"),
+                term(".", atom("tea"), term(".", atom("cake"), atom("[]"))),
+                LogicVar(id=19),
+            ),
         ],
     )
     def test_adapt_prolog_goal_rewrites_supported_relation_calls(
@@ -865,6 +900,40 @@ class TestPrologGoalAdapter:
             parsed.variables["Result"],
             adapted,
         ) == [atom("else")]
+
+    def test_adapt_prolog_goal_rewrites_common_list_predicates(self) -> None:
+        parsed = parse_swi_query(
+            "?- member(Item, [tea, cake]), "
+            "append([Item], [jam], Combined), "
+            "reverse(Combined, Reversed), "
+            "length(Reversed, Count).",
+        )
+
+        adapted = adapt_prolog_goal(parsed.goal)
+
+        assert solve_all(
+            program(),
+            (
+                parsed.variables["Item"],
+                parsed.variables["Combined"],
+                parsed.variables["Reversed"],
+                parsed.variables["Count"],
+            ),
+            adapted,
+        ) == [
+            (
+                atom("tea"),
+                logic_list(["tea", "jam"]),
+                logic_list(["jam", "tea"]),
+                num(2),
+            ),
+            (
+                atom("cake"),
+                logic_list(["cake", "jam"]),
+                logic_list(["jam", "cake"]),
+                num(2),
+            ),
+        ]
 
     def test_adapt_prolog_goal_preserves_unsupported_shapes(self) -> None:
         variable_indicator = LogicVar(id=1)

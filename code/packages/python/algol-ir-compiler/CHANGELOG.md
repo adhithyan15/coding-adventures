@@ -26,6 +26,8 @@ All notable changes to this package will be documented in this file.
 - Lowered read-only integer expression actuals to tagged eval thunk descriptors
   with bounded call-scoped heap allocation and generated eval dispatch that
   re-evaluates against the caller frame on every formal read.
+- Covered read-only boolean and string expression actuals through the same word
+  eval-thunk path used by integer expressions.
 - Lowered integer array-element by-name actuals to tagged descriptors with
   generated eval/store helpers that re-compute the element address on every
   formal read or assignment.
@@ -58,6 +60,14 @@ All notable changes to this package will be documented in this file.
   the array descriptor, bounds metadata, and element storage at procedure entry.
 - Stored label, switch, and procedure formals as copied ids or descriptor
   pointers at procedure entry even when they are declared in `value` mode.
+- Allowed real-valued formal procedure dispatchers to accept integer-returning
+  procedure actuals and promote their result through the existing real coercion
+  path.
+- Emitted real-returning procedures, eval thunks, and procedure-parameter
+  dispatchers through the WASM backend's dedicated f64 result register so they
+  can also call integer-returning procedures safely.
+- Allowed top-level ALGOL programs without a root integer `result` scalar to
+  compile by returning `0` from the WASM `_start` wrapper.
 
 ## [0.1.0] - 2026-04-20
 

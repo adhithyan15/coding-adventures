@@ -1,5 +1,85 @@
 # Changelog
 
+## 0.7.6 — 2026-04-28
+
+**Add `Groebner`, `PolyReduce`, `IdealSolve` head symbols (cas-multivariate).**
+
+- `GROEBNER = IRSymbol("Groebner")` — Gröbner basis computation head
+- `POLY_REDUCE = IRSymbol("PolyReduce")` — polynomial reduction head
+- `IDEAL_SOLVE = IRSymbol("IdealSolve")` — polynomial system solver head
+
+All three exported from `symbolic_ir.__init__`.
+
+---
+
+## 0.7.5 — 2026-04-27
+
+**Add `ALG_FACTOR` head symbol for algebraic-extension factoring.**
+
+Added `ALG_FACTOR = IRSymbol("AlgFactor")` in the new "Algebraic factoring"
+group at the bottom of `nodes.py`, and exported it from `__init__.py`.
+
+Required by `cas-algebraic` 0.1.0 and `symbolic-vm` 0.32.7, which implement
+`algfactor(poly, sqrt(d))` — factoring of univariate polynomials over
+quadratic algebraic extensions Q[√d].
+
+---
+
+## 0.7.4 — 2026-04-27
+
+**Add `ODE2`, `C_CONST`, `C1`, `C2` head symbols for ODE solving.**
+
+Added four new IR head constants to `nodes.py` for the `cas-ode` package (D3):
+
+- `ODE2 = IRSymbol("ODE2")` — head for `ode2(eqn, y, x)` ODE solver.
+- `C_CONST = IRSymbol("%c")` — first-order ODE integration constant.
+- `C1 = IRSymbol("%c1")` — first integration constant for 2nd-order ODEs.
+- `C2 = IRSymbol("%c2")` — second integration constant for 2nd-order ODEs.
+
+All four are exported from `__init__.py`.
+
+---
+
+## 0.7.3 — 2026-04-27
+
+**Add `FOURIER`, `IFOURIER` head symbols for Fourier transforms.**
+
+Added two new IR head constants to the "Laplace / Fourier transforms" group at the bottom
+of `nodes.py`, and exported both from `__init__.py`:
+
+- `FOURIER = IRSymbol("Fourier")` — forward Fourier transform head F{f(t)}
+- `IFOURIER = IRSymbol("IFourier")` — inverse Fourier transform head F⁻¹{F(ω)}
+
+Required by `cas-fourier` 0.1.0 and `symbolic-vm` 0.32.4.
+
+---
+
+## 0.7.2 — 2026-04-27
+
+**Add `DIRAC_DELTA`, `UNIT_STEP`, `LAPLACE`, `ILT` head symbols for Laplace transforms.**
+
+Added four new IR head constants to the "Laplace / Fourier transforms" group at the bottom
+of `nodes.py`, and exported all four from `__init__.py`:
+
+- `DIRAC_DELTA = IRSymbol("DiracDelta")` — Dirac delta distribution δ(t)
+- `UNIT_STEP = IRSymbol("UnitStep")` — Heaviside unit step function u(t)
+- `LAPLACE = IRSymbol("Laplace")` — forward Laplace transform head
+- `ILT = IRSymbol("ILT")` — inverse Laplace transform head
+
+Required by `cas-laplace` 0.1.0 and `symbolic-vm` 0.32.3.
+
+---
+
+## 0.7.1 — 2026-04-27
+
+**Add `MNEWTON` head symbol for Newton's method root finder.**
+
+Added `MNEWTON = IRSymbol("MNewton")` to the "Numeric root-finding" group
+at the bottom of `nodes.py`, and exported it from `__init__.py`. Required
+by `cas-mnewton` 0.1.0 and `symbolic-vm` 0.32.2.
+
+---
+
 ## 0.7.0 — 2026-04-27
 
 **Phase 13 — Hyperbolic function head symbols.**

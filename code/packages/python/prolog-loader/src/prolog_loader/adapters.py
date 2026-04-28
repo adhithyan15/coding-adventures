@@ -72,6 +72,16 @@ from logic_engine import (
     relation,
     term,
 )
+from logic_stdlib import (
+    appendo,
+    lasto,
+    lengtho,
+    listo,
+    membero,
+    permuteo,
+    reverseo,
+    selecto,
+)
 from prolog_core import expand_dcg_phrase
 
 _PREDICATE_INDICATOR = relation("/", 2)
@@ -129,6 +139,12 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
     if goal.relation.arity == 1 and name in unary_term_builtins:
         return unary_term_builtins[name](args[0])
 
+    unary_list_builtins: dict[str, Callable[[object], GoalExpr]] = {
+        "is_list": listo,
+    }
+    if goal.relation.arity == 1 and name in unary_list_builtins:
+        return unary_list_builtins[name](args[0])
+
     binary_arithmetic_builtins: dict[str, Callable[[object, object], GoalExpr]] = {
         "is": iso,
         "=:=": numeqo,
@@ -140,6 +156,23 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
     }
     if goal.relation.arity == 2 and name in binary_arithmetic_builtins:
         return binary_arithmetic_builtins[name](args[0], args[1])
+
+    binary_list_builtins: dict[str, Callable[[object, object], GoalExpr]] = {
+        "last": lasto,
+        "length": lengtho,
+        "member": membero,
+        "permutation": permuteo,
+        "reverse": reverseo,
+    }
+    if goal.relation.arity == 2 and name in binary_list_builtins:
+        return binary_list_builtins[name](args[0], args[1])
+
+    ternary_list_builtins: dict[str, Callable[[object, object, object], GoalExpr]] = {
+        "append": appendo,
+        "select": selecto,
+    }
+    if goal.relation.arity == 3 and name in ternary_list_builtins:
+        return ternary_list_builtins[name](*args)
 
     if name == "call" and goal.relation.arity == 1:
         return _adapt_callable_goal(args[0])

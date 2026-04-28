@@ -135,6 +135,44 @@ id = "rawtext_less_than_sign"
 id = "script_data_less_than_sign"
 
 [[states]]
+id = "script_data_escape_start"
+
+[[states]]
+id = "script_data_escape_start_dash"
+
+[[states]]
+id = "script_data_escaped"
+external_entry = true
+
+[[states]]
+id = "script_data_escaped_dash"
+
+[[states]]
+id = "script_data_escaped_dash_dash"
+
+[[states]]
+id = "script_data_escaped_less_than_sign"
+
+[[states]]
+id = "script_data_double_escape_start"
+
+[[states]]
+id = "script_data_double_escaped"
+external_entry = true
+
+[[states]]
+id = "script_data_double_escaped_dash"
+
+[[states]]
+id = "script_data_double_escaped_dash_dash"
+
+[[states]]
+id = "script_data_double_escaped_less_than_sign"
+
+[[states]]
+id = "script_data_double_escape_end"
+
+[[states]]
 id = "rcdata_end_tag_open"
 
 [[states]]
@@ -144,6 +182,9 @@ id = "rawtext_end_tag_open"
 id = "script_data_end_tag_open"
 
 [[states]]
+id = "script_data_escaped_end_tag_open"
+
+[[states]]
 id = "rcdata_end_tag_name"
 
 [[states]]
@@ -151,6 +192,9 @@ id = "rawtext_end_tag_name"
 
 [[states]]
 id = "script_data_end_tag_name"
+
+[[states]]
+id = "script_data_escaped_end_tag_name"
 
 [[states]]
 id = "rcdata_character_reference"
@@ -597,6 +641,12 @@ actions = ["clear_temporary_buffer"]
 
 [[transitions]]
 from = "script_data_less_than_sign"
+matcher = { literal = "!" }
+to = "script_data_escape_start"
+actions = ["append_text(<)", "append_text(current)"]
+
+[[transitions]]
+from = "script_data_less_than_sign"
 matcher = { eof = true }
 to = "done"
 consume = false
@@ -608,6 +658,332 @@ matcher = { anything = true }
 to = "script_data"
 consume = false
 actions = ["append_text(<)"]
+
+[[transitions]]
+from = "script_data_escape_start"
+matcher = { literal = "-" }
+to = "script_data_escape_start_dash"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "script_data_escape_start"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "script_data_escape_start"
+matcher = { anything = true }
+to = "script_data"
+consume = false
+
+[[transitions]]
+from = "script_data_escape_start_dash"
+matcher = { literal = "-" }
+to = "script_data_escaped_dash_dash"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "script_data_escape_start_dash"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "script_data_escape_start_dash"
+matcher = { anything = true }
+to = "script_data"
+consume = false
+
+[[transitions]]
+from = "script_data_escaped"
+matcher = { literal = "-" }
+to = "script_data_escaped_dash"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "script_data_escaped"
+matcher = { literal = "<" }
+to = "script_data_escaped_less_than_sign"
+
+[[transitions]]
+from = "script_data_escaped"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "script_data_escaped"
+matcher = { anything = true }
+to = "script_data_escaped"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "script_data_escaped_dash"
+matcher = { literal = "-" }
+to = "script_data_escaped_dash_dash"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "script_data_escaped_dash"
+matcher = { literal = "<" }
+to = "script_data_escaped_less_than_sign"
+
+[[transitions]]
+from = "script_data_escaped_dash"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "script_data_escaped_dash"
+matcher = { anything = true }
+to = "script_data_escaped"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "script_data_escaped_dash_dash"
+matcher = { literal = "-" }
+to = "script_data_escaped_dash_dash"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "script_data_escaped_dash_dash"
+matcher = { literal = "<" }
+to = "script_data_escaped_less_than_sign"
+
+[[transitions]]
+from = "script_data_escaped_dash_dash"
+matcher = { literal = ">" }
+to = "script_data"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "script_data_escaped_dash_dash"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "script_data_escaped_dash_dash"
+matcher = { anything = true }
+to = "script_data_escaped"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "script_data_escaped_less_than_sign"
+matcher = { literal = "/" }
+to = "script_data_escaped_end_tag_open"
+actions = ["clear_temporary_buffer"]
+
+[[transitions]]
+from = "script_data_escaped_less_than_sign"
+matcher = { range = ["A", "Z"] }
+to = "script_data_double_escape_start"
+actions = [
+  "append_text(<)",
+  "append_text(current)",
+  "clear_temporary_buffer",
+  "append_temporary_buffer(current_lowercase)",
+]
+
+[[transitions]]
+from = "script_data_escaped_less_than_sign"
+matcher = { range = ["a", "z"] }
+to = "script_data_double_escape_start"
+actions = [
+  "append_text(<)",
+  "append_text(current)",
+  "clear_temporary_buffer",
+  "append_temporary_buffer(current_lowercase)",
+]
+
+[[transitions]]
+from = "script_data_escaped_less_than_sign"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_text(<)", "flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "script_data_escaped_less_than_sign"
+matcher = { anything = true }
+to = "script_data_escaped"
+consume = false
+actions = ["append_text(<)"]
+
+[[transitions]]
+from = "script_data_double_escape_start"
+matcher = { one_of = " \n\t\r/>" }
+to = "script_data_escaped"
+actions = [
+  "append_text(current)",
+  "switch_to_if_temporary_buffer_equals(script, script_data_double_escaped, script_data_escaped)",
+]
+
+[[transitions]]
+from = "script_data_double_escape_start"
+matcher = { range = ["A", "Z"] }
+to = "script_data_double_escape_start"
+actions = ["append_text(current)", "append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "script_data_double_escape_start"
+matcher = { range = ["a", "z"] }
+to = "script_data_double_escape_start"
+actions = ["append_text(current)", "append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "script_data_double_escape_start"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "script_data_double_escape_start"
+matcher = { anything = true }
+to = "script_data_escaped"
+consume = false
+
+[[transitions]]
+from = "script_data_double_escaped"
+matcher = { literal = "-" }
+to = "script_data_double_escaped_dash"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "script_data_double_escaped"
+matcher = { literal = "<" }
+to = "script_data_double_escaped_less_than_sign"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "script_data_double_escaped"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "script_data_double_escaped"
+matcher = { anything = true }
+to = "script_data_double_escaped"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "script_data_double_escaped_dash"
+matcher = { literal = "-" }
+to = "script_data_double_escaped_dash_dash"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "script_data_double_escaped_dash"
+matcher = { literal = "<" }
+to = "script_data_double_escaped_less_than_sign"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "script_data_double_escaped_dash"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "script_data_double_escaped_dash"
+matcher = { anything = true }
+to = "script_data_double_escaped"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "script_data_double_escaped_dash_dash"
+matcher = { literal = "-" }
+to = "script_data_double_escaped_dash_dash"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "script_data_double_escaped_dash_dash"
+matcher = { literal = "<" }
+to = "script_data_double_escaped_less_than_sign"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "script_data_double_escaped_dash_dash"
+matcher = { literal = ">" }
+to = "script_data_double_escaped"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "script_data_double_escaped_dash_dash"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "script_data_double_escaped_dash_dash"
+matcher = { anything = true }
+to = "script_data_double_escaped"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "script_data_double_escaped_less_than_sign"
+matcher = { literal = "/" }
+to = "script_data_double_escape_end"
+actions = ["clear_temporary_buffer", "append_text(current)"]
+
+[[transitions]]
+from = "script_data_double_escaped_less_than_sign"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "script_data_double_escaped_less_than_sign"
+matcher = { anything = true }
+to = "script_data_double_escaped"
+consume = false
+
+[[transitions]]
+from = "script_data_double_escape_end"
+matcher = { one_of = " \n\t\r/>" }
+to = "script_data_double_escaped"
+actions = [
+  "append_text(current)",
+  "switch_to_if_temporary_buffer_equals(script, script_data_escaped, script_data_double_escaped)",
+]
+
+[[transitions]]
+from = "script_data_double_escape_end"
+matcher = { range = ["A", "Z"] }
+to = "script_data_double_escape_end"
+actions = ["append_text(current)", "append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "script_data_double_escape_end"
+matcher = { range = ["a", "z"] }
+to = "script_data_double_escape_end"
+actions = ["append_text(current)", "append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "script_data_double_escape_end"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "script_data_double_escape_end"
+matcher = { anything = true }
+to = "script_data_double_escaped"
+consume = false
 
 [[transitions]]
 from = "rcdata_end_tag_open"
@@ -654,6 +1030,23 @@ actions = ["append_text(</)", "flush_text", "emit(EOF)"]
 from = "script_data_end_tag_open"
 matcher = { anything = true }
 to = "script_data_end_tag_name"
+actions = [
+  "create_end_tag",
+  "append_tag_name(current_lowercase)",
+  "append_temporary_buffer(current_lowercase)",
+]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_open"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_text(</)", "flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_open"
+matcher = { anything = true }
+to = "script_data_escaped_end_tag_name"
 actions = [
   "create_end_tag",
   "append_tag_name(current_lowercase)",
@@ -739,6 +1132,34 @@ actions = [
 from = "script_data_end_tag_name"
 matcher = { anything = true }
 to = "script_data_end_tag_name"
+actions = [
+  "append_tag_name(current_lowercase)",
+  "append_temporary_buffer(current_lowercase)",
+]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_name"
+matcher = { literal = ">" }
+to = "script_data_escaped"
+actions = ["emit_rcdata_end_tag_or_text"]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_name"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "discard_current_token",
+  "append_text(</)",
+  "append_temporary_buffer_to_text",
+  "flush_text",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_name"
+matcher = { anything = true }
+to = "script_data_escaped_end_tag_name"
 actions = [
   "append_tag_name(current_lowercase)",
   "append_temporary_buffer(current_lowercase)",

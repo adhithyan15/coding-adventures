@@ -13,7 +13,28 @@ describe relations, not one-way deterministic computations.
 
 from __future__ import annotations
 
-from logic_engine import GoalExpr, conj, defer, disj, eq, fresh, logic_list, term
+from collections.abc import Iterator
+
+from logic_engine import (
+    Atom,
+    Compound,
+    GoalExpr,
+    LogicVar,
+    Number,
+    Program,
+    State,
+    Term,
+    conj,
+    defer,
+    disj,
+    eq,
+    fresh,
+    logic_list,
+    native_goal,
+    num,
+    solve_from,
+    term,
+)
 
 __all__ = [
     "appendo",
@@ -21,6 +42,7 @@ __all__ = [
     "emptyo",
     "heado",
     "lasto",
+    "lengtho",
     "listo",
     "membero",
     "permuteo",
@@ -70,6 +92,23 @@ def lasto(items: object, last: object) -> GoalExpr:
     )
 
 
+def lengtho(items: object, length: object) -> GoalExpr:
+    """Relate a proper finite list to its length.
+
+    This intentionally covers the practical finite cases first:
+
+    - counting an already proper list
+    - validating a list against a known non-negative integer length
+    - creating a fresh list skeleton for a known non-negative integer length
+
+    When both sides are unknown, the relation fails instead of enumerating an
+    infinite stream of longer and longer lists. Full open-ended generation
+    belongs with a future CLP(FD)/fair-search story.
+    """
+
+    return native_goal(_lengtho_runner, items, length)
+
+
 def listo(value: object) -> GoalExpr:
     """Succeed exactly when ``value`` is a proper finite list.
 
@@ -89,6 +128,55 @@ def listo(value: object) -> GoalExpr:
             ),
         ),
     )
+
+
+def _lengtho_runner(
+    program_value: Program,
+    state: State,
+    args: tuple[Term, ...],
+) -> Iterator[State]:
+    items, length = args
+    walked_length = state.substitution.walk(length)
+
+    if isinstance(walked_length, Number):
+        length_value = walked_length.value
+        if not isinstance(length_value, int) or length_value < 0:
+            return
+        yield from solve_from(
+            program_value,
+            fresh(
+                length_value,
+                lambda *elements: eq(items, logic_list(list(elements))),
+            ),
+            state,
+        )
+        return
+
+    known_length = _proper_list_length(items, state)
+    if known_length is None:
+        return
+
+    yield from solve_from(program_value, eq(length, num(known_length)), state)
+
+
+def _proper_list_length(items: Term, state: State) -> int | None:
+    count = 0
+    current = state.substitution.walk(items)
+
+    while True:
+        if isinstance(current, Atom) and current.symbol.name == "[]":
+            return count
+        if (
+            isinstance(current, Compound)
+            and current.functor.name == "."
+            and len(current.args) == 2
+        ):
+            count += 1
+            current = state.substitution.walk(current.args[1])
+            continue
+        if isinstance(current, LogicVar):
+            return None
+        return None
 
 
 def membero(member: object, items: object) -> GoalExpr:

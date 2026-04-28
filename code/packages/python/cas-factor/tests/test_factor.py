@@ -5,7 +5,6 @@ from __future__ import annotations
 from cas_factor import factor_integer_polynomial
 from cas_factor.polynomial import evaluate
 
-
 # ---------------------------------------------------------------------------
 # Phase 1 regression tests
 # ---------------------------------------------------------------------------

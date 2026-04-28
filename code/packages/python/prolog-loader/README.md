@@ -19,6 +19,9 @@ It keeps parsing side-effect free, then exposes helpers to:
   meta-goal forms like `call/1`, `once/1`, `not/1`, `\\+/1`, and `phrase/2,3`
 - adapt Prolog control constructs such as `->/2` and
   `(If -> Then ; Else)` into executable builtin goals
+- adapt common list predicates such as `member/2`, `append/3`, `select/3`,
+  `permutation/2`, `reverse/2`, `last/2`, `length/2`, and `is_list/1` into relational
+  standard-library goals
 - load SWI-Prolog source graphs from real `.pl` files through relative
   `consult/1`, `ensure_loaded/1`, and file-backed `use_module/1,2`
 - splice `include/1` targets into the including source before project linking

@@ -1,5 +1,42 @@
 # Changelog
 
+## 0.3.0 — 2026-04-28
+
+**Phase 3 — Berlekamp-Zassenhaus-Hensel (BZH) for arbitrary-degree factoring.**
+
+Adds `cas_factor/bzh.py` implementing the full BZH pipeline for monic primitive
+polynomials over Z:
+
+1. **Prime selection** — find the smallest prime p < 200 such that `f mod p` is
+   squarefree (via `gcd(f mod p, f' mod p) = 1` in GF(p)).
+2. **Berlekamp mod p** — build the Frobenius Q-matrix, compute the null space of
+   `(Q − I)` over GF(p) via Gaussian elimination, then split using `gcd(f, v − s)`.
+3. **Hensel lifting** — linear Newton lift from mod p to mod p^k where
+   `p^k > 2 * Mignotte_bound(f)`. Multi-factor splitting uses divide-and-conquer.
+4. **Zassenhaus recombination** — try all subsets of lifted factors and test exact
+   divisibility in Z[x].
+
+Updates `factor.py`:
+- `_factor_residual` now calls `bzh_factor` as a fallback when Kronecker returns
+  `None` and the residual is monic of degree ≥ 4. Both algorithms are tried before
+  declaring a polynomial irreducible.
+
+New cases correctly handled (previously returned unevaluated):
+- `x^5 − 1 = (x−1)(x^4+x^3+x^2+x+1)` — cyclotomic Φ_5
+- `x^8 − 1 = (x−1)(x+1)(x^2+1)(x^4+1)` — full factorization
+- `x^6 − 1` and `x^9 − 1` — iterated cyclotomic
+- `x^4 + 1` → confirmed irreducible over Q
+
+Limitations (explicitly documented):
+- Restricted to **monic** polynomials; non-monic falls through to Kronecker.
+- Degree cap MAX_DEGREE = 20.
+
+New tests: `tests/test_bzh.py` — 74 new tests covering GF(p) arithmetic,
+Berlekamp, Hensel lifting, factor combination, public API, edge cases, and
+integrated pipeline tests.
+
+Total test count: 135 (61 existing + 74 new). Coverage: 90%.
+
 ## 0.2.0 — 2026-04-27
 
 **Phase 2 — Kronecker's algorithm for non-linear irreducible factors.**

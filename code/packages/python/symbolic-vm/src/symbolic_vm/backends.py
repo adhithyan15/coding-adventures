@@ -83,6 +83,12 @@ from symbolic_vm.integrate import integrate
 # Return is NOT held: the VM evaluates its single argument (producing
 # the return value) before the handler receives it and raises the
 # _ReturnSignal exception.
+#
+# ODE2 is held because its first argument is an ODE expression that
+# contains ``D(y, x)`` (derivative) nodes.  If the VM pre-evaluated
+# those, ``D(y, x)`` would be reduced to ``0`` (since ``y`` is an
+# unbound symbol, not a known function of ``x``), destroying the ODE
+# structure before the solver can inspect it.
 _HELD_HEADS = frozenset({
     ASSIGN.name,
     DEFINE.name,
@@ -91,6 +97,8 @@ _HELD_HEADS = frozenset({
     FOR_RANGE.name,
     FOR_EACH.name,
     BLOCK.name,
+    "ODE2",      # D(y, x) in args must not be pre-evaluated to 0.
+    "AlgFactor", # Sqrt(d) in second arg must not be pre-evaluated to a float.
 })
 
 

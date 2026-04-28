@@ -1,5 +1,91 @@
 # Changelog
 
+## 1.10.0 — 2026-04-28
+
+**Add Gröbner basis and multivariate solve operations to the MACSYMA name table.**
+
+- Imported `GROEBNER`, `POLY_REDUCE`, `IDEAL_SOLVE` from `symbolic_ir`.
+- Added `"groebner": GROEBNER`, `"poly_reduce": POLY_REDUCE`,
+  `"ideal_solve": IDEAL_SOLVE` to `MACSYMA_NAME_TABLE`.
+- Bumped `symbolic-ir` dependency to `>=0.7.6` and `symbolic-vm` to `>=0.32.8`.
+
+MACSYMA users can now write:
+- `groebner([x^2+y-1, x+y^2-1], [x,y])` → Gröbner basis
+- `ideal_solve([x+y-1, x-y], [x,y])` → `[Rule(x,1/2), Rule(y,1/2)]`
+- `poly_reduce(f, [g1,...], [x,y])` → reduced polynomial
+
+---
+
+## 1.9.0 — 2026-04-27
+
+**Add `algfactor` to the MACSYMA name table (D5 — cas-algebraic).**
+
+- `name_table.py`: added `ALG_FACTOR = IRSymbol("AlgFactor")` and the mapping
+  `"algfactor": ALG_FACTOR` so MACSYMA users can write
+  `algfactor(x^4+1, sqrt(2))` and have it compile to `AlgFactor(x^4+1, Sqrt(2))`
+  IR, which the `cas-algebraic` handler then factors over Q[√d].
+- Bumped `symbolic-ir` dependency to `>=0.7.5` and `symbolic-vm` to `>=0.32.7`.
+
+---
+
+## 1.8.0 — 2026-04-27
+
+**Add `ode2` to the MACSYMA name table (D3).**
+
+- `name_table.py`: added `ODE2 = IRSymbol("ODE2")` and the mapping
+  `"ode2": ODE2` so MACSYMA users can write `ode2(eqn, y, x)` and have
+  it compile to `ODE2(eqn, y, x)` IR, which the `cas-ode` handler then
+  solves.
+
+---
+
+## 1.7.0 — 2026-04-27
+
+**Add Fourier transform operations to the MACSYMA name table.**
+
+- Imported `FOURIER` and `IFOURIER` from `symbolic_ir` (added in 0.7.3).
+- Added `"fourier": FOURIER` and `"ifourier": IFOURIER` to `MACSYMA_NAME_TABLE`.
+- Bumped `symbolic-ir` dependency to `>=0.7.3` and `symbolic-vm` to `>=0.32.4`.
+
+MACSYMA users can now write `fourier(f, t, omega)` and `ifourier(F, omega, t)`.
+
+---
+
+## 1.6.0 — 2026-04-27
+
+**Add Laplace transform operations to the MACSYMA name table.**
+
+- Imported `LAPLACE`, `ILT`, `DIRAC_DELTA`, `UNIT_STEP` from `symbolic_ir` into
+  `name_table.py`.
+- Added five entries to `MACSYMA_NAME_TABLE`:
+  - `"laplace": LAPLACE`
+  - `"ilt": ILT`
+  - `"delta": DIRAC_DELTA` — Dirac delta δ(t), MACSYMA convention
+  - `"hstep": UNIT_STEP` — Heaviside step H(t), MACSYMA convention
+  - `"unit_step": UNIT_STEP` — common alias
+
+Now MACSYMA users can write e.g. `laplace(sin(t), t, s)` and get `1/(s^2+1)`.
+
+---
+
+## 1.5.0 — 2026-04-27
+
+**Add `mnewton` to the MACSYMA name table.**
+
+- Added `MNEWTON = IRSymbol("MNewton")` to `name_table.py`.
+- Added `"mnewton": MNEWTON` to `MACSYMA_NAME_TABLE` in the numeric/solve
+  section so `mnewton(f, x, x0)` MACSYMA surface syntax compiles to the
+  canonical `MNewton(f, x, x0)` IR head handled by `cas-mnewton`.
+- Bumped `coding-adventures-symbolic-vm>=0.32.2` to pull in the MNewton
+  handler wired in 0.32.2.
+
+Usage in MACSYMA::
+
+    mnewton(x^2 - 2, x, 1.5);    → 1.4142135623730951
+    mnewton(sin(x), x, 3.0);      → 3.141592653589793
+
+---
+
 ## 1.4.0 — 2026-04-27
 
 **Bump dependency pins to pick up Phase G control flow and Phase 13 hyperbolic functions.**

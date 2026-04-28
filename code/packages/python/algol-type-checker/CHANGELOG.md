@@ -39,6 +39,11 @@ All notable changes to this package will be documented in this file.
   preserving element-type validation at call sites.
 - Accepted `value` label, switch, and procedure parameters now that the
   lowering path treats those formals as copied label ids or descriptors.
+- Treated builtin `print`/`output` calls as read-only during by-name formal
+  write analysis, so expression actuals remain valid when a formal is only
+  printed.
+- Accepted integer-returning procedure actuals for real-valued formal
+  procedure parameters, matching scalar integer-to-real promotion.
 
 ## [0.1.0] - 2026-04-20
 

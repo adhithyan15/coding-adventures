@@ -8,6 +8,7 @@ from logic_engine import (
     conj,
     eq,
     logic_list,
+    num,
     program,
     solve_all,
     solve_n,
@@ -21,6 +22,7 @@ from logic_stdlib import (
     emptyo,
     heado,
     lasto,
+    lengtho,
     listo,
     membero,
     permuteo,
@@ -35,9 +37,9 @@ class TestVersion:
     """Verify the package is importable and wired to the engine layer."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.4.0"
+        assert __version__ == "0.5.0"
         engine_major, engine_minor, _engine_patch = logic_engine_version.split(".")
-        assert (int(engine_major), int(engine_minor)) >= (0, 4)
+        assert (int(engine_major), int(engine_minor)) >= (0, 10)
 
 
 class TestListRelations:
@@ -120,6 +122,56 @@ class TestListRelations:
             last,
             lasto(logic_list(["tea"]), last),
         ) == [atom("tea")]
+
+    def test_lengtho_counts_a_proper_list(self) -> None:
+        length = var("Length")
+
+        assert solve_all(
+            program(),
+            length,
+            lengtho(logic_list(["tea", "cake", "jam"]), length),
+        ) == [num(3)]
+
+    def test_lengtho_validates_a_known_non_negative_length(self) -> None:
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(
+                eq(marker, "ok"),
+                lengtho(logic_list(["tea", "cake"]), 2),
+            ),
+        ) == [atom("ok")]
+
+    def test_lengtho_creates_a_fresh_skeleton_for_known_lengths(self) -> None:
+        items = var("Items")
+
+        assert solve_all(
+            program(),
+            items,
+            conj(
+                lengtho(items, 2),
+                eq(items, logic_list(["tea", "cake"])),
+            ),
+        ) == [logic_list(["tea", "cake"])]
+
+    def test_lengtho_rejects_improper_lists_and_negative_lengths(self) -> None:
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(
+                eq(marker, "ok"),
+                lengtho(logic_list(["tea"], tail="cake"), marker),
+            ),
+        ) == []
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), lengtho(logic_list(["tea"]), -1)),
+        ) == []
 
     def test_membero_enumerates_members_of_a_concrete_list(self) -> None:
         item = var("Item")

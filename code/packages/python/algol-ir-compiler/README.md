@@ -6,14 +6,17 @@ The compiler accepts a checked ALGOL AST and emits `compiler_ir.IrProgram`
 instructions that the existing structured IR-to-WASM lowerer can consume.
 The outermost ALGOL block becomes `_start`. Integer variables live in planned
 activation-frame slots, and scalar reads/writes lower to `LOAD_WORD` and
-`STORE_WORD` through the semantic model's static-link metadata. The variable
-named `result` is loaded into `v1` before `HALT` so the generated WASM function
-returns it.
+`STORE_WORD` through the semantic model's static-link metadata. If the root
+block declares an integer scalar named `result`, it is loaded into `v1` before
+`HALT` so the generated WASM function returns it; otherwise `_start` returns
+`0`.
 
 Value-only integer procedures lower to generated `_fn_algol_...` functions.
 Calls pass an explicit static link followed by value arguments, procedure frames
 are allocated from the module frame stack, and typed procedures return through
-their procedure-name result slot.
+their procedure-name result slot. Integer and boolean procedure results flow
+through `v1`; real procedure results flow through the WASM backend's dedicated
+f64 result register, `v31`.
 Parameterless typed procedures can also be used by bare name in expression
 positions, following ALGOL's omitted-parentheses call syntax; read-only by-name
 actuals of that form lower through eval thunks so each formal read re-runs the
@@ -36,10 +39,10 @@ runtime has a real `pow` implementation instead of an approximation shortcut.
 Scalar by-name parameters lower through a one-word cell in the callee frame.
 Passing a scalar variable as a by-name actual gives the callee a storage pointer,
 so assignments to the formal write back to the caller slot while value
-parameters still remain isolated copies. Read-only integer expression actuals
+parameters still remain isolated copies. Read-only scalar expression actuals
 lower to tagged, bounded eval thunk descriptors. Formal reads dispatch through a
 generated helper that re-evaluates the expression against the caller frame each
-time. Integer array-element actuals lower to tagged descriptors as well; formal
+time. Array-element actuals lower to tagged descriptors as well; formal
 reads re-compute the element address through the eval helper, and writable
 formals call a generated store helper that re-locates the element before storing
 the new value. Read-only expression thunks can also read array elements; helper
@@ -48,7 +51,7 @@ frame and thunk-region unwind. Procedure calls inside read-only expression
 thunks are supported, including nested by-name descriptor allocation and runtime
 failure propagation from callees back to the by-name formal read. Stores through
 read-only expression thunks still raise targeted `CompileError` diagnostics
-until Phase 5 grows full store-helper coverage. The supported integer by-name
+until Phase 5 grows full store-helper coverage. The supported scalar by-name
 surface is covered by the WASM acceptance suite, including typed whole-array
 formals passed as descriptor pointers. `value` whole-array formals allocate a
 callee-local descriptor, bounds table, and element storage copy at procedure
@@ -59,8 +62,9 @@ paths also cover `value` formals. Procedure formals pass descriptor closures
 containing the callee procedure id and static link; formal calls dispatch
 through generated helpers for statement calls and typed expression calls with
 scalar value arguments, so forwarded procedure formals keep the original
-environment in value or by-name mode. Full ALGOL forms such as escaping thunk
-descriptors remain future work.
+environment in value or by-name mode. Real-valued formal procedure calls can
+accept integer-returning actual procedures and promote the dispatched result.
+Full ALGOL forms such as escaping thunk descriptors remain future work.
 
 Direct `goto` statements lower to ordinary IR `JUMP` instructions targeting
 generated ALGOL labels. Local jumps emit the jump directly. Direct nonlocal

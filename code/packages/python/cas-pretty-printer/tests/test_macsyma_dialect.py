@@ -331,8 +331,9 @@ def test_unknown_node_type_raises() -> None:
 
 
 def test_unsupported_style_raises() -> None:
+    # "2d" is now a valid style; use a truly unknown style instead.
     with pytest.raises(ValueError):
-        pretty(IRInteger(1), D_MAC, style="2d")
+        pretty(IRInteger(1), D_MAC, style="3d")
 
 
 # ---- MACSYMA-specific function-name aliases --------------------------------

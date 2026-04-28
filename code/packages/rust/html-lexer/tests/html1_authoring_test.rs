@@ -26,6 +26,14 @@ fn html1_authoring_artifact_parses_as_mosaic_era_floor() {
         .states
         .iter()
         .any(|state| state.id == "script_data"));
+    assert!(definition
+        .states
+        .iter()
+        .any(|state| state.id == "script_data_escaped"));
+    assert!(definition
+        .states
+        .iter()
+        .any(|state| state.id == "script_data_double_escaped"));
 }
 
 #[test]
@@ -103,6 +111,54 @@ fn html1_authoring_supports_seeded_script_data_state() {
         lexer.drain_tokens(),
         vec![
             Token::Text("if (a < b) alert('&amp;');".to_string()),
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn html1_authoring_supports_seeded_script_data_escaped_state() {
+    let definition = from_states_toml(HTML1_LEXER_TOML).unwrap();
+    let machine = EffectfulStateMachine::from_definition(&definition).unwrap();
+    let mut lexer = HtmlLexer::new(machine);
+
+    lexer.set_initial_state("script_data_escaped").unwrap();
+    lexer.set_last_start_tag("script");
+    lexer.push("if (a < b) </script>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("if (a < b) ".to_string()),
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn html1_authoring_supports_seeded_script_data_double_escaped_state() {
+    let definition = from_states_toml(HTML1_LEXER_TOML).unwrap();
+    let machine = EffectfulStateMachine::from_definition(&definition).unwrap();
+    let mut lexer = HtmlLexer::new(machine);
+
+    lexer
+        .set_initial_state("script_data_double_escaped")
+        .unwrap();
+    lexer.set_last_start_tag("script");
+    lexer.push("x </script> y --></script>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("x </script> y -->".to_string()),
             Token::EndTag {
                 name: "script".to_string()
             },

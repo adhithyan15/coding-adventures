@@ -19,6 +19,9 @@ All notable changes to this package will be documented in this file.
 - Executed read-only integer expression actuals through tagged eval thunk
   descriptors, including repeated formal reads that observe caller-frame
   mutations between evaluations.
+- Executed read-only boolean and string expression actuals through the same
+  bounded word eval-thunk path, including string literals passed to formals
+  that are only printed.
 - Executed integer array-element by-name actuals through eval/store thunk
   helpers so repeated formal reads and assignments re-locate the current
   element, including Jensen-style index mutation between formal uses.
@@ -53,6 +56,14 @@ All notable changes to this package will be documented in this file.
   element copies so assignments inside the procedure do not alias the caller.
 - Executed `value` label, switch, and procedure formals through the same copied
   label-id and descriptor paths as their by-name counterparts.
+- Executed real-valued formal procedure calls with integer-returning procedure
+  actuals by promoting the dispatched result to real before storing it.
+- Executed real-returning procedures that call integer-returning procedures by
+  keeping integer call results and real function returns in separate WASM
+  virtual registers.
+- Compiled top-level ALGOL programs without a root integer `result` scalar by
+  returning `0` from the WASM `_start` wrapper while preserving the existing
+  integer `result` return convention when present.
 - Added a convergence golden fixture that combines conditional expressions,
   exponentiation, chained assignment, by-name array summation, real arithmetic,
   and output in one end-to-end program.

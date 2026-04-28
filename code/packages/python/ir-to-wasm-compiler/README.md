@@ -23,3 +23,9 @@ module = IrToWasmCompiler().compile(
     ],
 )
 ```
+
+## Register Conventions
+
+Generated functions return `i32` values through virtual register `v1` and
+`f64` values through virtual register `v31`. Calls mirror the same convention:
+integer results are copied into `v1`, while real results are copied into `v31`.

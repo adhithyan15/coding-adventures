@@ -45,6 +45,22 @@ class TestAlgolWasmCompiler:
             compile_source("begin integer result; result := false end")
         assert raised.value.stage == "type-check"
 
+    def test_program_without_result_variable_returns_zero(self) -> None:
+        compiled = compile_source("begin print('Hi') end")
+        captured: list[str] = []
+        runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
+
+        assert runtime.load_and_run(compiled.binary, "_start", []) == [0]
+        assert "".join(captured) == "Hi"
+
+    def test_non_integer_result_name_returns_zero(self) -> None:
+        compiled = compile_source("begin real result; result := 2.5; print(result) end")
+        captured: list[str] = []
+        runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
+
+        assert runtime.load_and_run(compiled.binary, "_start", []) == [0]
+        assert "".join(captured) == "2.500"
+
     def test_procedure_call_expression_by_name_runs_through_eval_thunk(
         self,
     ) -> None:
@@ -703,6 +719,31 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
 
+    def test_real_procedure_parameter_accepts_integer_return_actual(self) -> None:
+        result = compile_source(
+            "begin integer result; real y; "
+            "procedure invoke(f); real f; procedure f; "
+            "begin y := f(2); if y = 4.0 then result := 1 else result := 0 end; "
+            "integer procedure twice(x); value x; integer x; "
+            "begin twice := x * 2 end; "
+            "invoke(twice) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
+
+    def test_real_procedure_can_call_integer_procedure(self) -> None:
+        result = compile_source(
+            "begin integer result; real y; "
+            "integer procedure twice(x); value x; integer x; "
+            "begin twice := x * 2 end; "
+            "real procedure wrap(x); value x; integer x; "
+            "begin wrap := twice(x) end; "
+            "y := wrap(2); "
+            "if y = 4.0 then result := 1 else result := 0 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
+
     def test_value_typed_procedure_parameter_expression_call_returns_real(self) -> None:
         result = compile_source(
             "begin integer result; real y; "
@@ -1163,6 +1204,31 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_read_only_boolean_by_name_expression_runs_through_eval_thunk(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; boolean flag; "
+            "procedure test(b); boolean b; "
+            "begin if b then result := 9 else result := 0 end; "
+            "flag := false; test(not flag) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
+
+    def test_read_only_string_by_name_literal_runs_through_eval_thunk(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure emit(s); string s; begin print(s); result := 7 end; "
+            "emit('Hi') "
+            "end"
+        )
+        captured: list[str] = []
+        runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
+
+        assert runtime.load_and_run(result.binary, "_start", []) == [7]
+        assert "".join(captured) == "Hi"
 
     def test_real_by_name_scalar_write_through_storage_pointer(self) -> None:
         result = compile_source(
