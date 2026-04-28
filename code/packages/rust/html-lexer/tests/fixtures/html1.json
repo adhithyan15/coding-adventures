@@ -54,6 +54,31 @@
       ]
     },
     {
+      "id": "comment-abrupt-empty-close",
+      "description": "HTML comment opener <!--> emits an empty comment with an abrupt close diagnostic",
+      "input": "Before<!-->After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=)",
+        "Text(data=After)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "abrupt-closing-of-empty-comment"
+      ]
+    },
+    {
+      "id": "comment-dash-prefixed-empty-close",
+      "description": "HTML comment opener <!---> closes as an empty comment before returning to data",
+      "input": "Before<!--->After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=)",
+        "Text(data=After)",
+        "EOF"
+      ]
+    },
+    {
       "id": "mosaic-title-rcdata-end-tag",
       "description": "Seeded title RCDATA context emits the matching end tag",
       "input": "Hello</title>",

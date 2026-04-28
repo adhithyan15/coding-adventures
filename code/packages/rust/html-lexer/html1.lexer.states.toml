@@ -467,6 +467,9 @@ id = "cdata_open_cdata"
 id = "comment_start"
 
 [[states]]
+id = "comment_start_dash"
+
+[[states]]
 id = "comment"
 
 [[states]]
@@ -4325,7 +4328,7 @@ actions = [
 [[transitions]]
 from = "comment_start"
 matcher = { literal = "-" }
-to = "comment"
+to = "comment_start_dash"
 
 [[transitions]]
 from = "comment_start"
@@ -4348,6 +4351,33 @@ from = "comment_start"
 matcher = { anything = true }
 to = "bogus_comment"
 actions = ["append_comment(-)", "append_comment(current)"]
+
+[[transitions]]
+from = "comment_start_dash"
+matcher = { literal = ">" }
+to = "data"
+actions = [
+  "parse_error(abrupt-closing-of-empty-comment)",
+  "emit_current_token",
+]
+
+[[transitions]]
+from = "comment_start_dash"
+matcher = { literal = "-" }
+to = "comment_end"
+
+[[transitions]]
+from = "comment_start_dash"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(eof-in-comment)", "emit_current_token", "emit(EOF)"]
+
+[[transitions]]
+from = "comment_start_dash"
+matcher = { anything = true }
+to = "comment"
+actions = ["append_comment(current)"]
 
 [[transitions]]
 from = "comment"
