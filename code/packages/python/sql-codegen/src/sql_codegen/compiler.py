@@ -48,6 +48,7 @@ from sql_planner import (
     Distinct,
     EmptyResult,
     Except,
+    ExistsSubquery,
     Expr,
     Filter,
     FunctionCall,
@@ -154,6 +155,7 @@ from .ir import (
     OpenScan,
     Program,
     RollbackTransaction,
+    RunExistsSubquery,
     RunSubquery,
     SaveGroupKey,
     ScanAllColumns,
@@ -719,7 +721,7 @@ def _compile_aggregate(
         # by the predicate on demand. In this v1 we take a simpler approach
         # and ask the VM to run the whole post block per group, discarding
         # rows for which the predicate is false.
-        post.extend(_compile_having(having, group_by, aggregates, slots))
+        post.extend(_compile_having(having, group_by, aggregates, slots, ctx))
         post.append(JumpIfFalse(label=emit_next))
 
     # Build the output row: group keys first, then finalized aggregates.
@@ -745,14 +747,15 @@ def _compile_having(
     group_by: tuple[Expr, ...],
     aggregates: tuple[object, ...],
     slots: list[int],
+    ctx: _Ctx,
 ) -> list[Instruction]:
     """Compile a HAVING predicate — aggregates reference slots; plain
     columns reference the saved group key by position.
 
-    Supports a small predicate subset (enough for COUNT(*) > N style
-    expressions). Everything else falls through to plain expression
-    compilation, which raises UnsupportedNode for aggregates outside the
-    slot map.
+    AggregateExpr and Column references are handled via the slot/group-key
+    maps. All other expressions (including EXISTS subqueries, unary ops,
+    and binary comparisons) are delegated to _compile_expr so the full
+    expression language is available in HAVING predicates.
     """
     # Build a lookup: aggregate expression → slot, and column → group-key index.
     group_lookup = {_column_display_name(e): i for i, e in enumerate(group_by)}
@@ -780,7 +783,9 @@ def _compile_having(
             case BinaryExpr(op=op, left=l_, right=r_):
                 return walk(l_) + walk(r_) + [BinaryOp(op=_binop_to_ir(op))]
             case _:
-                raise UnsupportedNode(f"HAVING: {type(e).__name__}")
+                # Delegate to general expression compiler for EXISTS, UnaryExpr,
+                # and any other expression that doesn't reference aggregate slots.
+                return _compile_expr(e, ctx)
 
     return walk(having)
 
@@ -870,6 +875,20 @@ def _compile_expr(e: Expr, ctx: _Ctx) -> list[Instruction]:
                 out.append(LoadConst(value=None))
             out.append(Label(name=end_lbl))
             return out
+        case ExistsSubquery(query=inner_plan):
+            # Compile the inner LogicalPlan to a standalone sub-program.
+            # The inner program runs against the same backend but with its
+            # own cursor/label namespace so there is no state leakage.
+            inner_ctx = _Ctx()
+            inner_instrs, _ = _compile_plan(inner_plan, inner_ctx)  # type: ignore[arg-type]
+            inner_instrs.append(Halt())
+            inner_resolved = _resolve_labels(inner_instrs)
+            sub = Program(
+                instructions=tuple(inner_instrs),
+                labels=inner_resolved,
+                result_schema=(),
+            )
+            return [RunExistsSubquery(sub_program=sub)]
         case AggregateExpr():
             # At this point in compilation we're inside an aggregate node's
             # HAVING or projection; direct emission isn't possible without

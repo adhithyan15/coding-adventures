@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.30.0 — 2026-04-27
+
+**`Cbrt` evaluation handler — exact cube-root simplification.**
+
+Added `cbrt_handler` and `_integer_cbrt` helper to `cas_handlers.py`,
+registered under the `"Cbrt"` key in `build_cas_handler_table()`.
+
+Evaluation rules:
+- **Perfect integer cubes**: `Cbrt(8) → 2`, `Cbrt(-27) → -3`,
+  `Cbrt(0) → 0`, `Cbrt(1) → 1`.
+- **Exact rational**: `Cbrt(8/27) → 2/3`, `Cbrt(-8/27) → -2/3`.
+  Both numerator and denominator must be perfect cubes; otherwise the
+  node is left unevaluated.
+- **Float**: `Cbrt(8.0) → 2.0`, `Cbrt(-27.0) → -3.0` (uses
+  `n^(1/3)` with sign-aware handling for negatives).
+- **Symbolic / imperfect**: `Cbrt(x)`, `Cbrt(2)`, `Cbrt(1/2)` all
+  pass through unevaluated.
+
+`_integer_cbrt(n)` uses a float estimate plus ±1 probe to find the
+exact integer cube root without floating-point rounding errors.
+
+20 new tests in `test_cas_handlers.py` covering every branch (positive
+perfect cubes, zero, negative cubes, rational exact, rational imperfect
+passthrough, float positive, float negative, symbolic passthrough).
+Total test count 864; coverage 86 %.
+
 ## 0.29.0 — 2026-04-27
 
 **REPL quality fixes — lambda beta-reduction and transcendental Taylor.**

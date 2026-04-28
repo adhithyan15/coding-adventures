@@ -185,6 +185,15 @@ class ResolvedReference:
 
 
 @dataclass(frozen=True)
+class ProcedureFormalCallShape:
+    """A call shape required by a formal procedure parameter."""
+
+    role: str
+    argument_types: tuple[str, ...]
+    return_type: str | None = None
+
+
+@dataclass(frozen=True)
 class ProcedureParameter:
     """A procedure parameter planned as a frame slot in an activation."""
 
@@ -196,6 +205,7 @@ class ProcedureParameter:
     kind: str = "scalar"
     may_write: bool = False
     write_reason: str | None = None
+    procedure_call_shapes: tuple[ProcedureFormalCallShape, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -391,6 +401,10 @@ class AlgolTypeChecker:
         self.semantic_symbols: list[Symbol] = []
         self.resolved_references: list[ResolvedReference] = []
         self.semantic_procedures: list[ProcedureDescriptor] = []
+        self.procedure_parameter_call_shapes: dict[
+            int,
+            list[ProcedureFormalCallShape],
+        ] = {}
         self.resolved_procedure_calls: list[ResolvedProcedureCall] = []
         self.semantic_arrays: list[ArrayDescriptor] = []
         self.resolved_array_accesses: list[ResolvedArrayAccess] = []
@@ -413,6 +427,7 @@ class AlgolTypeChecker:
         self.semantic_symbols = []
         self.resolved_references = []
         self.semantic_procedures = []
+        self.procedure_parameter_call_shapes = {}
         self.resolved_procedure_calls = []
         self.semantic_arrays = []
         self.resolved_array_accesses = []
@@ -996,6 +1011,7 @@ class AlgolTypeChecker:
             line=name_token.line,
             column=name_token.column,
         )
+        descriptor_index = len(self.semantic_procedures)
         self.semantic_procedures.append(descriptor)
 
         if body_inner.rule_name == "block":
@@ -1003,6 +1019,46 @@ class AlgolTypeChecker:
         else:
             self._collect_statement_labels(body_inner, proc_scope)
             self._check_statement(body_inner, proc_scope)
+        updated_parameters = tuple(
+            self._procedure_parameter_with_call_shapes(parameter)
+            for parameter in parameters
+        )
+        if updated_parameters != descriptor.parameters:
+            self.semantic_procedures[descriptor_index] = ProcedureDescriptor(
+                procedure_id=descriptor.procedure_id,
+                name=descriptor.name,
+                label=descriptor.label,
+                declaring_block_id=descriptor.declaring_block_id,
+                body_block_id=descriptor.body_block_id,
+                body_node_id=descriptor.body_node_id,
+                return_type=descriptor.return_type,
+                parameters=updated_parameters,
+                line=descriptor.line,
+                column=descriptor.column,
+            )
+
+    def _procedure_parameter_with_call_shapes(
+        self,
+        parameter: ProcedureParameter,
+    ) -> ProcedureParameter:
+        if parameter.kind != "procedure":
+            return parameter
+        shapes = tuple(
+            self.procedure_parameter_call_shapes.get(parameter.symbol_id, ())
+        )
+        if shapes == parameter.procedure_call_shapes:
+            return parameter
+        return ProcedureParameter(
+            name=parameter.name,
+            type_name=parameter.type_name,
+            mode=parameter.mode,
+            symbol_id=parameter.symbol_id,
+            slot_offset=parameter.slot_offset,
+            kind=parameter.kind,
+            may_write=parameter.may_write,
+            write_reason=parameter.write_reason,
+            procedure_call_shapes=shapes,
+        )
 
     def _collect_statement_labels(self, statement: ASTNode, scope: Scope) -> None:
         label_node = _first_direct_node(statement, "label")
@@ -1803,6 +1859,16 @@ class AlgolTypeChecker:
             _first_direct_node(node, "actual_params"),
             "expression",
         )
+        if descriptor.parameter_symbol_id is not None:
+            return self._check_formal_procedure_call(
+                name_token,
+                descriptor,
+                declaring_scope,
+                lexical_depth_delta,
+                arguments,
+                scope,
+                role=role,
+            )
         if len(arguments) != len(descriptor.parameters):
             self._error(
                 name_token,
@@ -1890,6 +1956,74 @@ class AlgolTypeChecker:
         )
         self.resolved_procedure_calls.append(call)
         return call
+
+    def _check_formal_procedure_call(
+        self,
+        name_token: Token,
+        descriptor: ProcedureDescriptor,
+        declaring_scope: Scope,
+        lexical_depth_delta: int,
+        arguments: list[ASTNode],
+        scope: Scope,
+        *,
+        role: str,
+    ) -> ResolvedProcedureCall:
+        argument_types: list[str] = []
+        for argument in arguments:
+            actual_type = self._infer_expr(argument, scope)
+            argument_types.append(actual_type)
+            if actual_type != ERROR and actual_type not in {
+                INTEGER,
+                BOOLEAN,
+                REAL,
+                STRING,
+            }:
+                self._error(
+                    argument,
+                    f"procedure parameter {name_token.value!r} argument must be "
+                    f"integer, boolean, real, or string, got {actual_type}",
+                )
+        if role == "expression":
+            self._error(
+                name_token,
+                f"procedure parameter {name_token.value!r} cannot be called as an "
+                "expression in this phase",
+            )
+        elif ERROR not in argument_types and descriptor.parameter_symbol_id is not None:
+            self._record_procedure_parameter_call_shape(
+                descriptor.parameter_symbol_id,
+                ProcedureFormalCallShape(
+                    role=role,
+                    argument_types=tuple(argument_types),
+                    return_type=None,
+                ),
+            )
+        call = ResolvedProcedureCall(
+            token_id=id(name_token),
+            name=name_token.value,
+            role=role,
+            procedure_id=descriptor.procedure_id,
+            label=descriptor.label,
+            use_block_id=scope.block_id,
+            declaration_block_id=declaring_scope.block_id,
+            lexical_depth_delta=lexical_depth_delta,
+            argument_count=len(arguments),
+            return_type=None,
+            line=name_token.line,
+            column=name_token.column,
+            parameter_symbol_id=descriptor.parameter_symbol_id,
+        )
+        self.resolved_procedure_calls.append(call)
+        return call
+
+    def _record_procedure_parameter_call_shape(
+        self,
+        symbol_id: int,
+        shape: ProcedureFormalCallShape,
+    ) -> None:
+        shapes = self.procedure_parameter_call_shapes.setdefault(symbol_id, [])
+        if shape not in shapes:
+            shapes.append(shape)
 
     def _check_array_parameter_actual(
         self,
@@ -2028,6 +2162,8 @@ class AlgolTypeChecker:
             return None
         symbol, _, _ = resolved
         if symbol.kind == "procedure_parameter":
+            for shape in parameter.procedure_call_shapes:
+                self._record_procedure_parameter_call_shape(symbol.symbol_id, shape)
             return symbol
         if symbol.kind != "procedure" or symbol.procedure_id is None:
             self._error(
@@ -2046,14 +2182,82 @@ class AlgolTypeChecker:
         if descriptor is None:
             self._error(name, f"procedure {name.value!r} has no descriptor")
             return None
-        if descriptor.return_type is not None or descriptor.parameters:
-            self._error(
-                name,
-                f"procedure parameter {parameter.name!r} expects a no-argument "
-                "statement procedure actual in this phase",
-            )
+        if not self._procedure_actual_satisfies_formal_shapes(
+            name,
+            descriptor,
+            parameter,
+        ):
             return None
         return symbol
+
+    def _procedure_actual_satisfies_formal_shapes(
+        self,
+        token: Token,
+        descriptor: ProcedureDescriptor,
+        parameter: ProcedureParameter,
+    ) -> bool:
+        if descriptor.return_type is not None:
+            self._error(
+                token,
+                f"procedure parameter {parameter.name!r} expects a statement "
+                "procedure actual in this phase",
+            )
+            return False
+        for shape in parameter.procedure_call_shapes:
+            if shape.role != "statement":
+                self._error(
+                    token,
+                    f"procedure parameter {parameter.name!r} cannot accept "
+                    "expression procedure actuals in this phase",
+                )
+                return False
+            if len(descriptor.parameters) != len(shape.argument_types):
+                expected = len(shape.argument_types)
+                actual = len(descriptor.parameters)
+                if expected == 0:
+                    self._error(
+                        token,
+                        f"procedure parameter {parameter.name!r} expects a "
+                        "no-argument statement procedure actual",
+                    )
+                else:
+                    self._error(
+                        token,
+                        f"procedure parameter {parameter.name!r} expects a "
+                        f"statement procedure actual accepting {expected} "
+                        f"argument(s), got {actual}",
+                    )
+                return False
+            for actual_parameter, actual_type in zip(
+                descriptor.parameters,
+                shape.argument_types,
+                strict=True,
+            ):
+                if (
+                    actual_parameter.kind != "scalar"
+                    or actual_parameter.mode != VALUE
+                ):
+                    self._error(
+                        token,
+                        f"procedure parameter {parameter.name!r} expects a "
+                        "procedure actual with scalar value parameters in this "
+                        "phase",
+                    )
+                    return False
+                if not self._parameter_accepts_type(
+                    VALUE,
+                    actual_parameter.type_name,
+                    actual_type,
+                ):
+                    self._error(
+                        token,
+                        f"procedure parameter {parameter.name!r} passes "
+                        f"{actual_type} to actual parameter "
+                        f"{actual_parameter.name!r} expecting "
+                        f"{actual_parameter.type_name}",
+                    )
+                    return False
+        return True
 
     def _resolve_builtin_procedure(
         self,

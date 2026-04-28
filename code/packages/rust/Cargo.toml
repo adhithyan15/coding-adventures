@@ -381,6 +381,7 @@ members = [
     "zeroize",
     "zip",
     "zstd",
+    "two-layer-network",
     "symbolic-ir",
     "symbolic-vm",
     "cas-pattern-matching",

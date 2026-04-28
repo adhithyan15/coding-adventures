@@ -317,3 +317,23 @@ aot-core/
 The Tetrad pipeline uses **both**: the `tetrad-jit` package is the JIT path;
 `aot-core` + `intel4004-backend` is the AOT path that produces `.aot` files
 that run directly on `Intel4004Simulator` with no Python required at run time.
+
+---
+
+## Relationship to codegen-core (LANG19)
+
+LANG19 extracted the shared optimize-then-compile pipeline from `jit-core`
+into `codegen-core`, eliminating `aot-core`'s backwards dependency on
+`jit-core`:
+
+- `aot_core.specialise` now imports `CIRInstr` from `codegen_core` (not `jit_core.cir`).
+- `AOTCore.__init__` builds a `self._pipeline: CodegenPipeline[list[CIRInstr]]`
+  with `CIROptimizer()` attached when `optimization_level > 0`.
+- `AOTCore._compile_fn` calls `self._pipeline.compile(cir)` instead of
+  manually calling `optimizer.run(cir)` + `backend.compile(cir)`.
+- `AOTCore._optimize()` is removed — optimization is the pipeline's responsibility.
+- `pyproject.toml`: `coding-adventures-jit-core` replaced by
+  `coding-adventures-codegen-core`.
+
+**Result**: `aot-core` depends on `codegen-core` and `interpreter-ir` only.
+It no longer imports any JIT-specific code.

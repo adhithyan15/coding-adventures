@@ -511,6 +511,12 @@ impl Tokenizer {
                     self.text_buffer.push_str(&self.temporary_buffer);
                     self.temporary_buffer.clear();
                 }
+                "append_temporary_buffer_to_attribute_value" => {
+                    let temporary_buffer = std::mem::take(&mut self.temporary_buffer);
+                    self.attribute_mut(action)?
+                        .value
+                        .push_str(&temporary_buffer);
+                }
                 "discard_current_token" => {
                     self.current_token = None;
                     self.current_attribute = None;

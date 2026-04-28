@@ -192,6 +192,56 @@ fn transducer_definition_emits_effect_tables_and_constructor() {
 }
 
 #[test]
+fn transducer_source_preserves_transition_order() {
+    let mut definition = StateMachineDefinition::new("ordered-tokenizer", MachineKind::Transducer);
+    definition.initial = Some("data".to_string());
+    definition.alphabet = vec!["<".to_string()];
+    definition.states = vec![
+        StateDefinition {
+            initial: true,
+            ..StateDefinition::new("data")
+        },
+        StateDefinition {
+            final_state: true,
+            ..StateDefinition::new("done")
+        },
+    ];
+    definition.transitions = vec![
+        TransitionDefinition {
+            from: "data".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("<".to_string())),
+            to: vec!["done".to_string()],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec!["literal-first".to_string()],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "data".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Anything),
+            to: vec!["data".to_string()],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec!["fallback-second".to_string()],
+            consume: true,
+        },
+    ];
+
+    let source = to_rust_source(&definition).unwrap();
+    let literal = source.find("\"literal-first\".to_string()").unwrap();
+    let fallback = source.find("\"fallback-second\".to_string()").unwrap();
+
+    assert!(
+        literal < fallback,
+        "ordered transducers must keep specific matchers before fallbacks"
+    );
+}
+
+#[test]
 fn html1_toml_compiles_to_rust_source() {
     let definition = from_states_toml(HTML1_LEXER_TOML).unwrap();
     let source = to_rust_source(&definition).unwrap();

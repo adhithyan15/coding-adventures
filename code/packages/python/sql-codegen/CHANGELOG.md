@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.7.0] - 2026-04-27
+
+### Added — Phase 2: EXISTS / NOT EXISTS subquery expressions
+
+- **`RunExistsSubquery` IR instruction** (`sql_codegen.ir`) — new instruction
+  that carries a fully-resolved inner `sub_program`.  The VM executes the
+  sub-program and pushes `True` if it produced at least one row, `False`
+  otherwise.  Separate from `RunSubquery` so the VM can short-circuit after
+  the first row without materialising the full result set.
+
+- **`ExistsSubquery` compilation in `_compile_expr`** — when the compiler
+  encounters a post-planner `ExistsSubquery(query=LogicalPlan)`, it compiles
+  the inner plan to a standalone `Program` (fresh `_Ctx` so cursor/label IDs
+  don't collide with the outer program) and emits a `RunExistsSubquery`
+  instruction.
+
+- **`_compile_having` accepts `ctx` parameter** — the function's `walk`
+  inner closure now falls back to `_compile_expr(e, ctx)` for any expression
+  not covered by the dedicated aggregate/column/literal/binary cases.  This
+  enables `EXISTS (subquery)`, `NOT EXISTS`, and arbitrary boolean
+  sub-expressions in `HAVING` predicates.  The call site in
+  `_compile_aggregate` passes `ctx` accordingly.
+
+- **`RunExistsSubquery` exported** — added to `sql_codegen.__init__` import
+  block and `__all__`.
+
 ## [0.6.0] - 2026-04-23
 
 ### Changed — Phase 9.7: Composite (multi-column) automatic index support (IX-8)
