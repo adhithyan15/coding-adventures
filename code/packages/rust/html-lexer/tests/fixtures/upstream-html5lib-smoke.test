@@ -85,6 +85,46 @@
         ["Character", "body { color: red; }"],
         ["EndTag", "style"]
       ]
+    },
+    {
+      "description": "data state named character references",
+      "input": "Fish &amp; &lt;b&gt; &quot;quote&quot; &apos;ok&apos;",
+      "output": [
+        ["Character", "Fish "],
+        ["Character", "&"],
+        ["Character", " "],
+        ["Character", "<"],
+        ["Character", "b"],
+        ["Character", ">"],
+        ["Character", " "],
+        ["Character", "\""],
+        ["Character", "quote"],
+        ["Character", "\""],
+        ["Character", " "],
+        ["Character", "'"],
+        ["Character", "ok"],
+        ["Character", "'"]
+      ]
+    },
+    {
+      "description": "attribute named character references",
+      "input": "<a title=\"Fish &amp; Chips\" data-x='&lt;ok&gt;' note=&quot;hi&quot;>",
+      "output": [
+        ["StartTag", "a", {"title": "Fish & Chips", "data-x": "<ok>", "note": "\"hi\""}]
+      ]
+    },
+    {
+      "description": "rcdata named character references remain text",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "Fish &amp; &lt;/title>",
+      "output": [
+        ["Character", "Fish "],
+        ["Character", "&"],
+        ["Character", " "],
+        ["Character", "<"],
+        ["Character", "/title>"]
+      ]
     }
   ]
 }

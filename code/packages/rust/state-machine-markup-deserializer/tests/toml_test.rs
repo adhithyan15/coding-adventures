@@ -141,7 +141,7 @@ fn lexer_profile_html1_toml_parses_into_typed_definition() {
         .actions
         .iter()
         .any(|action| action == "emit_rcdata_end_tag_or_text")));
-    assert_eq!(definition.fixtures.len(), 5);
+    assert_eq!(definition.fixtures.len(), 6);
 }
 
 #[test]
