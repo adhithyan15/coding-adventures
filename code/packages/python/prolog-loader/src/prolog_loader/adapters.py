@@ -28,6 +28,8 @@ from logic_builtins import (
     geqo,
     groundo,
     gto,
+    ifthenelseo,
+    iftheno,
     iso,
     leqo,
     lto,
@@ -73,6 +75,7 @@ from logic_engine import (
 from prolog_core import expand_dcg_phrase
 
 _PREDICATE_INDICATOR = relation("/", 2)
+_IF_THEN = "->"
 type IndicatorBuilder = Callable[[Term, Term], GoalExpr]
 
 
@@ -88,6 +91,9 @@ def adapt_prolog_goal(goal: GoalExpr) -> GoalExpr:
     if isinstance(goal, ConjExpr):
         return conj(*(adapt_prolog_goal(child) for child in goal.goals))
     if isinstance(goal, DisjExpr):
+        if_then_else = _adapt_if_then_else(goal)
+        if if_then_else is not None:
+            return if_then_else
         return disj(*(adapt_prolog_goal(child) for child in goal.goals))
     if isinstance(goal, FreshExpr):
         return FreshExpr(
@@ -149,6 +155,8 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
             return goal
     if name == "once" and goal.relation.arity == 1:
         return onceo(_adapt_callable_goal(args[0]))
+    if name == _IF_THEN and goal.relation.arity == 2:
+        return iftheno(_adapt_callable_goal(args[0]), _adapt_callable_goal(args[1]))
     if name in {"not", "\\+"} and goal.relation.arity == 1:
         return noto(_adapt_callable_goal(args[0]))
     if name == "findall" and goal.relation.arity == 3:
@@ -203,6 +211,24 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         return goal if property_goal is None else property_goal
 
     return goal
+
+
+def _adapt_if_then_else(goal: DisjExpr) -> GoalExpr | None:
+    if len(goal.goals) != 2:
+        return None
+    condition_then, else_goal = goal.goals
+    if (
+        not isinstance(condition_then, RelationCall)
+        or condition_then.relation.symbol.name != _IF_THEN
+        or condition_then.relation.arity != 2
+    ):
+        return None
+    condition, then_goal = condition_then.args
+    return ifthenelseo(
+        _adapt_callable_goal(condition),
+        _adapt_callable_goal(then_goal),
+        adapt_prolog_goal(else_goal),
+    )
 
 
 def _adapt_callable_goal(term_value: Term) -> GoalExpr:

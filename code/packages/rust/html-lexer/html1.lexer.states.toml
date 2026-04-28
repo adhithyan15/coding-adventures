@@ -118,10 +118,21 @@ id = "rawtext"
 external_entry = true
 
 [[states]]
+id = "plaintext"
+external_entry = true
+
+[[states]]
+id = "script_data"
+external_entry = true
+
+[[states]]
 id = "rcdata_less_than_sign"
 
 [[states]]
 id = "rawtext_less_than_sign"
+
+[[states]]
+id = "script_data_less_than_sign"
 
 [[states]]
 id = "rcdata_end_tag_open"
@@ -130,10 +141,16 @@ id = "rcdata_end_tag_open"
 id = "rawtext_end_tag_open"
 
 [[states]]
+id = "script_data_end_tag_open"
+
+[[states]]
 id = "rcdata_end_tag_name"
 
 [[states]]
 id = "rawtext_end_tag_name"
+
+[[states]]
+id = "script_data_end_tag_name"
 
 [[states]]
 id = "rcdata_character_reference"
@@ -502,6 +519,37 @@ to = "rawtext"
 actions = ["append_text(current)"]
 
 [[transitions]]
+from = "plaintext"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "plaintext"
+matcher = { anything = true }
+to = "plaintext"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "script_data"
+matcher = { literal = "<" }
+to = "script_data_less_than_sign"
+
+[[transitions]]
+from = "script_data"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "script_data"
+matcher = { anything = true }
+to = "script_data"
+actions = ["append_text(current)"]
+
+[[transitions]]
 from = "rcdata_less_than_sign"
 matcher = { literal = "/" }
 to = "rcdata_end_tag_open"
@@ -542,6 +590,26 @@ consume = false
 actions = ["append_text(<)"]
 
 [[transitions]]
+from = "script_data_less_than_sign"
+matcher = { literal = "/" }
+to = "script_data_end_tag_open"
+actions = ["clear_temporary_buffer"]
+
+[[transitions]]
+from = "script_data_less_than_sign"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_text(<)", "flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "script_data_less_than_sign"
+matcher = { anything = true }
+to = "script_data"
+consume = false
+actions = ["append_text(<)"]
+
+[[transitions]]
 from = "rcdata_end_tag_open"
 matcher = { eof = true }
 to = "done"
@@ -569,6 +637,23 @@ actions = ["append_text(</)", "flush_text", "emit(EOF)"]
 from = "rawtext_end_tag_open"
 matcher = { anything = true }
 to = "rawtext_end_tag_name"
+actions = [
+  "create_end_tag",
+  "append_tag_name(current_lowercase)",
+  "append_temporary_buffer(current_lowercase)",
+]
+
+[[transitions]]
+from = "script_data_end_tag_open"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_text(</)", "flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "script_data_end_tag_open"
+matcher = { anything = true }
+to = "script_data_end_tag_name"
 actions = [
   "create_end_tag",
   "append_tag_name(current_lowercase)",
@@ -632,16 +717,44 @@ actions = [
 ]
 
 [[transitions]]
+from = "script_data_end_tag_name"
+matcher = { literal = ">" }
+to = "script_data"
+actions = ["emit_rcdata_end_tag_or_text"]
+
+[[transitions]]
+from = "script_data_end_tag_name"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "discard_current_token",
+  "append_text(</)",
+  "append_temporary_buffer_to_text",
+  "flush_text",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "script_data_end_tag_name"
+matcher = { anything = true }
+to = "script_data_end_tag_name"
+actions = [
+  "append_tag_name(current_lowercase)",
+  "append_temporary_buffer(current_lowercase)",
+]
+
+[[transitions]]
 from = "text_character_reference"
 matcher = { range = ["A", "Z"] }
 to = "text_named_character_reference"
-actions = ["append_temporary_buffer(current_lowercase)"]
+actions = ["append_temporary_buffer(current)"]
 
 [[transitions]]
 from = "text_character_reference"
 matcher = { range = ["a", "z"] }
 to = "text_named_character_reference"
-actions = ["append_temporary_buffer(current_lowercase)"]
+actions = ["append_temporary_buffer(current)"]
 
 [[transitions]]
 from = "text_character_reference"
@@ -903,13 +1016,13 @@ actions = [
 from = "text_named_character_reference"
 matcher = { range = ["A", "Z"] }
 to = "text_named_character_reference"
-actions = ["append_temporary_buffer(current_lowercase)"]
+actions = ["append_temporary_buffer(current)"]
 
 [[transitions]]
 from = "text_named_character_reference"
 matcher = { range = ["a", "z"] }
 to = "text_named_character_reference"
-actions = ["append_temporary_buffer(current_lowercase)"]
+actions = ["append_temporary_buffer(current)"]
 
 [[transitions]]
 from = "text_named_character_reference"
@@ -2166,13 +2279,13 @@ actions = ["append_attribute_value(current)"]
 from = "attribute_character_reference"
 matcher = { range = ["A", "Z"] }
 to = "attribute_named_character_reference"
-actions = ["append_temporary_buffer(current_lowercase)"]
+actions = ["append_temporary_buffer(current)"]
 
 [[transitions]]
 from = "attribute_character_reference"
 matcher = { range = ["a", "z"] }
 to = "attribute_named_character_reference"
-actions = ["append_temporary_buffer(current_lowercase)"]
+actions = ["append_temporary_buffer(current)"]
 
 [[transitions]]
 from = "attribute_character_reference"
@@ -2465,13 +2578,13 @@ actions = [
 from = "attribute_named_character_reference"
 matcher = { range = ["A", "Z"] }
 to = "attribute_named_character_reference"
-actions = ["append_temporary_buffer(current_lowercase)"]
+actions = ["append_temporary_buffer(current)"]
 
 [[transitions]]
 from = "attribute_named_character_reference"
 matcher = { range = ["a", "z"] }
 to = "attribute_named_character_reference"
-actions = ["append_temporary_buffer(current_lowercase)"]
+actions = ["append_temporary_buffer(current)"]
 
 [[transitions]]
 from = "attribute_named_character_reference"

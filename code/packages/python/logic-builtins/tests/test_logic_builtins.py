@@ -184,6 +184,28 @@ class TestAdvancedControlBuiltins:
             ),
         ) == [atom("else")]
 
+    def test_ifthenelseo_freshens_rule_local_variables(self) -> None:
+        candidate = relation("candidate", 1)
+        chosen = relation("chosen", 1)
+        choice = var("Choice")
+        result = var("Result")
+        output = var("Output")
+
+        prog = program(
+            fact(candidate("first")),
+            fact(candidate("second")),
+            rule(
+                chosen(result),
+                ifthenelseo(
+                    candidate(choice),
+                    eq(result, choice),
+                    eq(result, "none"),
+                ),
+            ),
+        )
+
+        assert solve_all(prog, output, chosen(output)) == [atom("first")]
+
     def test_forallo_succeeds_when_every_generated_proof_passes(self) -> None:
         marker = var("Marker")
         item = var("Item")

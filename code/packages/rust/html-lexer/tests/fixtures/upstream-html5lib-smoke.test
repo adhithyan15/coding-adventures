@@ -87,6 +87,24 @@
       ]
     },
     {
+      "description": "plaintext state literalizes markup and character references",
+      "initialStates": ["PLAINTEXT state"],
+      "input": "hello <b>still text</b> &amp; literal",
+      "output": [
+        ["Character", "hello <b>still text</b> &amp; literal"]
+      ]
+    },
+    {
+      "description": "script data matching end tag emits end tag token",
+      "initialStates": ["Script data state"],
+      "lastStartTag": "script",
+      "input": "if (a < b) alert('&amp;');</script>",
+      "output": [
+        ["Character", "if (a < b) alert('&amp;');"],
+        ["EndTag", "script"]
+      ]
+    },
+    {
       "description": "data state named character references",
       "input": "Fish &amp; &lt;b&gt; &quot;quote&quot; &apos;ok&apos;",
       "output": [
@@ -155,6 +173,37 @@
         ["Character", "\u00A0"],
         ["Character", "\u00A9"],
         ["Character", "\u00AE"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
+      "description": "data state Latin-1 named character references",
+      "input": "Latin-1: &Agrave;&agrave; &frac12; &yen;",
+      "output": [
+        ["Character", "Latin-1: "],
+        ["Character", "\u00C0"],
+        ["Character", "\u00E0"],
+        ["Character", " "],
+        ["Character", "\u00BD"],
+        ["Character", " "],
+        ["Character", "\u00A5"]
+      ]
+    },
+    {
+      "description": "attribute Latin-1 named character references",
+      "input": "<a title=\"&AElig;&aelig;\" currency=&pound;>",
+      "output": [
+        ["StartTag", "a", {"title": "\u00C6\u00E6", "currency": "\u00A3"}]
+      ]
+    },
+    {
+      "description": "rcdata Latin-1 named character references remain text",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&Ntilde;&ntilde;</title>",
+      "output": [
+        ["Character", "\u00D1"],
+        ["Character", "\u00F1"],
         ["EndTag", "title"]
       ]
     },

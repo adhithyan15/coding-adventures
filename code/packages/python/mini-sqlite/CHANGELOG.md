@@ -1,5 +1,58 @@
 # Changelog
 
+## [1.3.0] - 2026-04-27
+
+### Added — Phase 6: CREATE / DROP VIEW
+
+- **`CREATE VIEW [IF NOT EXISTS] name AS query`** — the engine intercepts
+  `CreateViewStmt` before calling `plan()` and stores the view's defining
+  `SelectStmt` in the connection's `_view_defs` dict.  `IF NOT EXISTS` silently
+  skips the operation when the view already exists; without the flag an existing
+  view name raises `ProgrammingError`.
+- **`DROP VIEW [IF EXISTS] name`** — removes the named view from `_view_defs`.
+  `IF EXISTS` is a no-op when the view is absent; without the flag a missing
+  name raises `ProgrammingError("no such view: …")`.
+- **View expansion in the adapter** — `to_statement()` now accepts a
+  `view_defs: dict[str, SelectStmt] | None` parameter that is threaded through
+  `_query_stmt` → `_select` → `_table_ref` / `_join_clause`.  A plain table
+  reference whose name matches an entry in `view_defs` is expanded inline to a
+  `DerivedTableRef`, exactly like a non-recursive CTE.  CTEs take priority over
+  views with the same name.
+- **`adapter._create_view` / `_drop_view`** helper functions parse the two new
+  statement forms and produce the matching planner AST nodes.
+- **23 new tests** in `tests/test_tier3_views.py` covering grammar parsing,
+  adapter AST construction, view expansion, and end-to-end SQL execution.
+
+## [1.2.0] - 2026-04-27
+
+### Added — Phase 5b: Recursive CTEs
+
+- **End-to-end `WITH RECURSIVE` support** — `adapter._query_stmt()` detects a
+  `RECURSIVE` keyword in the `with_clause` node and, when the CTE body contains
+  a `set_op_clause` (UNION / UNION ALL), parses it as a `RecursiveCTERef`
+  instead of a plain `SelectStmt`.  The adapter parses the anchor sub-select
+  first (with the CTE name in scope for other CTEs but not for self), then
+  parses the recursive body with the CTE name excluded from `active_ctes` so
+  that the self-reference resolves to a plain `TableRef` for the planner.
+- **`adapter._table_ref` handles `RecursiveCTERef` entries** — when a table
+  name matches a `RecursiveCTERef` key in `active_ctes`, the ref is returned
+  directly (with alias applied) rather than being wrapped in a `DerivedTableRef`.
+  The planner's `RecursiveCTERef` path then produces a `RecursiveCTE` plan node.
+- **`adapter._select` / `_join_clause`** — `ctes` parameter type extended to
+  `dict[str, SelectStmt | RecursiveCTERef] | None` so recursive CTE refs flow
+  through JOIN right-hand-side table references as well.
+- **22 new tests** in `tests/test_tier3_recursive_cte.py`:
+  - `TestRecursiveCTEGrammar` (6 tests) — grammar and adapter: `RecursiveCTERef`
+    production, anchor/recursive field contents, `union_all` flag, alias
+    propagation, self-reference left as `TableRef`.
+  - `TestRecursiveCTEIntegration` (11 tests) — end-to-end: simple tree traversal,
+    subtree starting at a node, org-chart depth computation, UNION vs UNION ALL,
+    empty anchor, leaf-only query, multiple roots, ORDER BY and LIMIT on
+    recursive results, COUNT aggregate over CTE.
+  - `TestRecursiveCTEErrors` (5 tests) — error handling: unknown table in
+    anchor, unknown column in anchor, type mismatch in WHERE, non-existent
+    recursive column, LIMIT before recursion completes.
+
 ## [1.1.0] - 2026-04-27
 
 ### Added — Phase 5a: Non-recursive CTEs

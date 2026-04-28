@@ -149,6 +149,7 @@ class Cursor:
             check_registry=self._connection._check_registry,
             fk_child=self._connection._fk_child,
             fk_parent=self._connection._fk_parent,
+            view_defs=self._connection._view_defs,
         )
 
         # For DDL (CREATE/DROP/ALTER), auto-commit the single-statement

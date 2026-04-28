@@ -136,6 +136,10 @@ class Connection:
         # FOREIGN KEY registries — child (forward) and parent (reverse).
         self._fk_child: dict = {}
         self._fk_parent: dict = {}
+        # View definitions: name → SelectStmt. Populated by CREATE VIEW,
+        # removed by DROP VIEW, and threaded through the adapter so that bare
+        # view names in FROM/JOIN are expanded to DerivedTableRef at parse time.
+        self._view_defs: dict = {}
 
     # ------------------------------------------------------------------
     # Cursor + shortcut methods.

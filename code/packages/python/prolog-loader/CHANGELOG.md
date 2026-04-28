@@ -5,6 +5,10 @@
 - preserve source query variables across `goal_expansion/2` rewrites
 - rewrite module-qualified callable arguments inside `findall/3`, `bagof/3`,
   `setof/3`, and `forall/2`
+- expose `rewrite_loaded_prolog_query(...)` for ad-hoc queries that need a
+  linked project's module/import context
+- adapt Prolog `->/2` and `(If -> Then ; Else)` control constructs into the
+  executable logic builtin layer
 - expand builtin adaptation for truth/failure/cut, arithmetic, collections,
   `forall/2`, and `copy_term/2`
 

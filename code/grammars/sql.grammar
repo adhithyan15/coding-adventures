@@ -13,6 +13,7 @@ statement         = query_stmt | insert_stmt | update_stmt
                   | delete_stmt | create_table_stmt | drop_table_stmt
                   | alter_table_stmt
                   | create_index_stmt | drop_index_stmt
+                  | create_view_stmt | drop_view_stmt
                   | begin_stmt | commit_stmt | rollback_stmt ;
 
 # ── QUERY (SELECT + set operations) ──────────────────────────────────────────
@@ -26,7 +27,7 @@ statement         = query_stmt | insert_stmt | update_stmt
 # associative equals; ANSI-compliant precedence can be added later.
 
 query_stmt        = [ with_clause ] select_stmt { set_op_clause } ;
-with_clause       = "WITH" cte_def { "," cte_def } ;
+with_clause       = "WITH" [ "RECURSIVE" ] cte_def { "," cte_def } ;
 cte_def           = NAME "AS" "(" query_stmt ")" ;
 set_op_clause     = ( "UNION" | "INTERSECT" | "EXCEPT" ) [ "ALL" ] select_stmt ;
 
@@ -102,6 +103,16 @@ create_index_stmt = "CREATE" [ "UNIQUE" ] "INDEX" [ "IF" "NOT" "EXISTS" ] NAME
                     "ON" NAME "(" NAME { "," NAME } ")" ;
 
 drop_index_stmt   = "DROP" "INDEX" [ "IF" "EXISTS" ] NAME ;
+
+# ── CREATE VIEW / DROP VIEW ───────────────────────────────────────────────────
+#
+# Views are named, persistent queries that expand to their defining SELECT
+# when referenced in FROM / JOIN.  The body is any full query_stmt (WITH,
+# UNION, etc. are allowed).
+
+create_view_stmt  = "CREATE" "VIEW" [ "IF" "NOT" "EXISTS" ] NAME "AS" query_stmt ;
+
+drop_view_stmt    = "DROP" "VIEW" [ "IF" "EXISTS" ] NAME ;
 
 # ── TRANSACTIONS ──────────────────────────────────────────────────────────────
 #

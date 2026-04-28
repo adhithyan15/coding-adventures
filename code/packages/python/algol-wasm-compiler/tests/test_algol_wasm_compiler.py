@@ -596,6 +596,19 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
 
+    def test_value_switch_parameter_dispatches_actual(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure escape(sw); value sw; switch sw; begin goto sw[1] end; "
+            "switch s := second; "
+            "escape(s); result := 0; "
+            "first: result := 1; goto done; "
+            "second: result := 8; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
+
     def test_procedure_parameter_statement_call_dispatches_actual(self) -> None:
         result = compile_source(
             "begin integer result; "
@@ -618,6 +631,28 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [5]
+
+    def test_value_procedure_parameter_statement_call_dispatches_actual(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure twice(p); value p; procedure p; begin p; p end; "
+            "procedure bump; begin result := result + 1 end; "
+            "result := 0; twice(bump) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_value_procedure_parameter_statement_call_passes_value_argument(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure invoke(p); value p; procedure p; begin p(7) end; "
+            "procedure set(x); value x; integer x; begin result := x end; "
+            "invoke(set) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
 
     def test_procedure_parameter_statement_call_passes_value_argument(
         self,
@@ -661,6 +696,17 @@ class TestAlgolWasmCompiler:
         result = compile_source(
             "begin integer result; real y; "
             "procedure invoke(f); real f; procedure f; "
+            "begin y := f(2); if y = 4 then result := 1 else result := 0 end; "
+            "real procedure twice(x); value x; real x; begin twice := x * 2 end; "
+            "invoke(twice) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
+
+    def test_value_typed_procedure_parameter_expression_call_returns_real(self) -> None:
+        result = compile_source(
+            "begin integer result; real y; "
+            "procedure invoke(f); value f; real f; procedure f; "
             "begin y := f(2); if y = 4 then result := 1 else result := 0 end; "
             "real procedure twice(x); value x; real x; begin twice := x * 2 end; "
             "invoke(twice) "
@@ -866,6 +912,27 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
 
+    def test_value_array_parameter_copies_descriptor_and_elements(self) -> None:
+        result = compile_source(
+            "begin integer array xs[2:3]; integer result; "
+            "procedure setfirst(a); value a; integer a; array a; "
+            "begin result := a[2]; a[2] := 9; result := result * 10 + a[2] end; "
+            "xs[2] := 4; setfirst(xs); result := result * 10 + xs[2] "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [494]
+
+    def test_real_value_array_parameter_copies_without_aliasing(self) -> None:
+        result = compile_source(
+            "begin real array xs[1:1]; integer result; "
+            "procedure bump(a); value a; real a; array a; "
+            "begin a[1] := a[1] + 1.5; if a[1] > 3.0 then result := 7 end; "
+            "xs[1] := 2.0; bump(xs); "
+            "if xs[1] < 3.0 then result := result + 1 else result := 0 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
+
     def test_array_parameter_runtime_dimension_mismatch_returns_from_callee(
         self,
     ) -> None:
@@ -881,6 +948,17 @@ class TestAlgolWasmCompiler:
         result = compile_source(
             "begin integer result; "
             "procedure jump(target); label target; begin goto target end; "
+            "jump(done); result := 1; "
+            "done: result := 7 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_value_label_parameter_jumps_to_caller_label(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure jump(target); value target; label target; "
+            "begin goto target end; "
             "jump(done); result := 1; "
             "done: result := 7 "
             "end"
@@ -1235,6 +1313,42 @@ class TestAlgolWasmCompiler:
     def test_integer_modulo_by_zero_returns_zero(self) -> None:
         result = compile_source(
             "begin integer result, divisor; divisor := 0; result := 10 mod divisor end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
+
+    def test_integer_division_overflow_returns_zero(self) -> None:
+        result = compile_source(
+            "begin integer result, low, divisor; "
+            "low := 0 - 2147483647 - 1; "
+            "divisor := 0 - 1; "
+            "result := low div divisor "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
+
+    def test_integer_modulo_overflow_returns_zero(self) -> None:
+        result = compile_source(
+            "begin integer result, low, divisor; "
+            "low := 0 - 2147483647 - 1; "
+            "divisor := 0 - 1; "
+            "result := low mod divisor "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
+
+    def test_real_division_by_zero_returns_zero(self) -> None:
+        result = compile_source(
+            "begin integer result; real x, divisor; "
+            "divisor := 0.0; x := 1.0 / divisor; result := 7 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
+
+    def test_zero_real_base_negative_exponent_returns_zero(self) -> None:
+        result = compile_source(
+            "begin integer result; real x; "
+            "x := 0.0 ^ (0 - 1); result := 7 "
+            "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
 

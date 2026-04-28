@@ -104,8 +104,21 @@ assert [answer.as_dict() for answer in runtime.query("ancestor(homer, Who)")] ==
 ]
 ```
 
-For linked file graphs with source-level `?-` queries, use
-`compile_swi_prolog_project_from_files(...)` and the compiled query helpers.
+For linked file graphs, use `create_swi_prolog_project_file_runtime(...)`.
+Pass `query_module=...` when later ad-hoc queries should resolve through a
+module's imports:
+
+```python
+from logic_engine import atom
+from prolog_vm_compiler import create_swi_prolog_project_file_runtime
+
+runtime = create_swi_prolog_project_file_runtime("app.pl", query_module="app")
+
+assert [answer.as_dict() for answer in runtime.query("ancestor(homer, Who)")] == [
+    {"Who": atom("bart")},
+    {"Who": atom("lisa")},
+]
+```
 
 ## Stress Coverage
 

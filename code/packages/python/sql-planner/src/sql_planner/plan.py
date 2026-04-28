@@ -262,7 +262,46 @@ class Except:
     all: bool = False
 
 
-# ---- Derived table (subquery in FROM) -------------------------------------
+# ---- Derived table (subquery in FROM) and recursive CTEs ------------------
+
+
+@dataclass(frozen=True, slots=True)
+class WorkingSetScan:
+    """Leaf: scans the current iteration's working set inside a recursive CTE.
+
+    Used inside the recursive query plan where the CTE's self-reference appears.
+    The codegen emits only the ``AdvanceCursor`` loop — no ``OpenScan`` or
+    ``RunSubquery`` — because the VM's ``RunRecursiveCTE`` handler pre-populates
+    the cursor before each iteration.
+
+    ``alias`` matches the CTE name; ``columns`` is the anchor's output schema.
+    """
+
+    alias: str
+    columns: tuple[str, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class RecursiveCTE:
+    """Fixed-point iteration: anchor ∪ recursive(working_set) until working_set empty.
+
+    The planner produces this node when a SELECT's FROM clause references a
+    ``WITH RECURSIVE`` CTE.  The codegen compiles it to a ``RunRecursiveCTE``
+    instruction; the VM executes the fixed-point loop at runtime.
+
+    ``anchor`` is the base-case plan (evaluated once).  ``recursive`` contains
+    a :class:`WorkingSetScan` as its leaf, representing the self-reference.
+    ``columns`` is the anchor's output schema — used by the outer query to
+    resolve column references without executing anything.  ``union_all`` is
+    True for ``UNION ALL`` (keep all rows) and False for ``UNION``
+    (deduplicate accumulated rows after each iteration).
+    """
+
+    anchor: LogicalPlan
+    recursive: LogicalPlan
+    alias: str
+    columns: tuple[str, ...]
+    union_all: bool = True
 
 
 @dataclass(frozen=True, slots=True)
@@ -486,6 +525,8 @@ LogicalPlan = (
     | IndexScan
     | EmptyResult
     | DerivedTable
+    | WorkingSetScan
+    | RecursiveCTE
     | Filter
     | Project
     | Join
@@ -533,8 +574,12 @@ def children(node: LogicalPlan) -> tuple[LogicalPlan, ...]:
             return ()
         case Begin() | Commit() | Rollback():
             return ()
+        case WorkingSetScan():
+            return ()
         case DerivedTable(query=q, alias=_, columns=_):
             return (q,)
+        case RecursiveCTE(anchor=a, recursive=r):
+            return (a, r)
         case (
             Filter() | Project() | Aggregate() | Having()
             | Sort() | Limit() | Distinct()

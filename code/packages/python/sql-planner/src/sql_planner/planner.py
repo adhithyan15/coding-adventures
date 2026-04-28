@@ -55,9 +55,6 @@ from __future__ import annotations
 
 from . import plan as P
 from .ast import (
-    Assignment as AstAssignment,
-)
-from .ast import (
     AlterTableStmt,
     BeginStmt,
     CommitStmt,
@@ -73,6 +70,7 @@ from .ast import (
     IntersectStmt,
     JoinClause,
     JoinKind,
+    RecursiveCTERef,
     RollbackStmt,
     SelectItem,
     SelectStmt,
@@ -80,6 +78,9 @@ from .ast import (
     TableRef,
     UnionStmt,
     UpdateStmt,
+)
+from .ast import (
+    Assignment as AstAssignment,
 )
 from .ast import (
     SortKey as AstSortKey,
@@ -173,11 +174,16 @@ def plan_all(asts: list[Statement], schema: SchemaProvider) -> list[P.LogicalPla
 # --------------------------------------------------------------------------
 
 
-def _plan_select(stmt: SelectStmt, schema: SchemaProvider) -> P.LogicalPlan:
+def _plan_select(
+    stmt: SelectStmt,
+    schema: SchemaProvider,
+    *,
+    working_set: tuple[str, tuple[str, ...]] | None = None,
+) -> P.LogicalPlan:
     # 1. Build the scan / join tree from FROM + JOINs, and the column scope
     #    it exposes. Column resolution later qualifies bare references
     #    against this scope.
-    tree, scope = _build_from_tree(stmt.from_, stmt.joins, schema)
+    tree, scope = _build_from_tree(stmt.from_, stmt.joins, schema, working_set=working_set)
 
     # 2. WHERE — single Filter above the scan tree. Aggregates are forbidden
     #    inside WHERE (SQL forbids this — WHERE runs per-row before grouping).
@@ -191,10 +197,7 @@ def _plan_select(stmt: SelectStmt, schema: SchemaProvider) -> P.LogicalPlan:
         # DerivedTable) — composite sources can't be accelerated this way.
         if isinstance(tree, P.Scan):
             idx_node = _try_index_scan(where, tree, schema)
-            if idx_node is not None:
-                tree = idx_node
-            else:
-                tree = P.Filter(input=tree, predicate=where)
+            tree = idx_node if idx_node is not None else P.Filter(input=tree, predicate=where)
         else:
             tree = P.Filter(input=tree, predicate=where)
 
@@ -248,31 +251,53 @@ def _plan_select(stmt: SelectStmt, schema: SchemaProvider) -> P.LogicalPlan:
 
 
 def _build_from_tree(
-    root: TableRef | DerivedTableRef,
+    root: TableRef | DerivedTableRef | RecursiveCTERef,
     joins: tuple[JoinClause, ...],
     schema: SchemaProvider,
+    *,
+    working_set: tuple[str, tuple[str, ...]] | None = None,
 ) -> tuple[P.LogicalPlan, Scope]:
     """Build a nested Join tree out of FROM + JOIN clauses. Return tree + scope.
 
-    The root may be either a plain :class:`TableRef` (common case — a named
-    backend table) or a :class:`DerivedTableRef` (a subquery used as a table
-    source, ``(SELECT …) AS alias``).  For derived tables we plan the inner
-    query recursively, compute its output column list via
-    :func:`_output_columns`, and wrap it in a :class:`P.DerivedTable` leaf.
+    ``working_set`` is ``(cte_name, columns)`` when planning the recursive body
+    of a WITH RECURSIVE CTE — any ``TableRef(cte_name)`` becomes a
+    :class:`P.WorkingSetScan` rather than a backend :class:`P.Scan`.
     """
     scope: Scope = {}
-    if isinstance(root, DerivedTableRef):
+    if isinstance(root, RecursiveCTERef):
+        # Plan anchor normally; derive its output schema.
+        anchor_plan = _plan_select(root.anchor, schema)
+        anchor_cols = _output_columns(anchor_plan)
+        # Plan recursive with working_set so the self-reference becomes WorkingSetScan.
+        ws_alias = root.alias or root.name
+        recursive_plan = _plan_select(
+            root.recursive, schema, working_set=(root.name, anchor_cols)
+        )
+        _add_to_scope(scope, ws_alias, list(anchor_cols))
+        tree: P.LogicalPlan = P.RecursiveCTE(
+            anchor=anchor_plan,
+            recursive=recursive_plan,
+            alias=ws_alias,
+            columns=anchor_cols,
+            union_all=root.union_all,
+        )
+    elif isinstance(root, DerivedTableRef):
         inner_plan = _plan_select(root.select, schema)
         cols = _output_columns(inner_plan)
         _add_to_scope(scope, root.alias, list(cols))
-        tree: P.LogicalPlan = P.DerivedTable(
+        tree = P.DerivedTable(
             query=inner_plan, alias=root.alias, columns=cols
         )
     else:
-        # Plain TableRef — ensure the table exists.
-        root_cols = schema.columns(root.table)
-        _add_to_scope(scope, root.alias or root.table, root_cols)
-        tree = P.Scan(table=root.table, alias=root.alias)
+        # Plain TableRef — check if it's a working-set self-reference first.
+        if working_set is not None and root.table == working_set[0]:
+            ws_alias = root.alias or root.table
+            _add_to_scope(scope, ws_alias, list(working_set[1]))
+            tree = P.WorkingSetScan(alias=ws_alias, columns=working_set[1])
+        else:
+            root_cols = schema.columns(root.table)
+            _add_to_scope(scope, root.alias or root.table, root_cols)
+            tree = P.Scan(table=root.table, alias=root.alias)
 
     for j in joins:
         if isinstance(j.right, DerivedTableRef):
@@ -282,10 +307,17 @@ def _build_from_tree(
             right_node: P.LogicalPlan = P.DerivedTable(
                 query=inner_plan, alias=j.right.alias, columns=cols
             )
+        elif isinstance(j.right, TableRef) and (
+            working_set is not None and j.right.table == working_set[0]
+        ):
+            # Working-set self-reference in a JOIN (e.g. INNER JOIN cte ON ...)
+            ws_alias = j.right.alias or j.right.table
+            _add_to_scope(scope, ws_alias, list(working_set[1]))
+            right_node = P.WorkingSetScan(alias=ws_alias, columns=working_set[1])
         else:
-            right_cols = schema.columns(j.right.table)
-            _add_to_scope(scope, j.right.alias or j.right.table, right_cols)
-            right_node = P.Scan(table=j.right.table, alias=j.right.alias)
+            right_cols = schema.columns(j.right.table)  # type: ignore[union-attr]
+            _add_to_scope(scope, j.right.alias or j.right.table, right_cols)  # type: ignore[union-attr]
+            right_node = P.Scan(table=j.right.table, alias=j.right.alias)  # type: ignore[union-attr]
         # ON clause is resolved against the merged scope so it can reference
         # columns from both sides.
         condition = _resolve(j.on, scope, schema) if j.on is not None else None
@@ -970,13 +1002,11 @@ def _extract_index_bounds(
         """True when *expr* is a Column reference to ``alias.col``."""
         return isinstance(expr, Column) and expr.table == alias and expr.col == col
 
-    if isinstance(predicate, Between):
-        # col BETWEEN lo_lit AND hi_lit  →  closed range
-        if (
-            is_our_col(predicate.operand)
-            and isinstance(predicate.low, Literal)
-            and isinstance(predicate.high, Literal)
-        ):
+    if isinstance(predicate, Between) and (
+        is_our_col(predicate.operand)
+        and isinstance(predicate.low, Literal)
+        and isinstance(predicate.high, Literal)
+    ):
             return (predicate.low.value, True, predicate.high.value, True, None)
 
     if isinstance(predicate, BinaryExpr):

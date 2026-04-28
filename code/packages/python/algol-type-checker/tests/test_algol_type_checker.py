@@ -736,17 +736,21 @@ class TestAlgolTypeChecker:
         assert parameter.type_name == "integer"
         assert any(access.role == "actual" for access in result.semantic.array_accesses)
 
-    def test_rejects_value_array_parameter_in_this_phase(self) -> None:
+    def test_accepts_value_array_parameter_copy_mode(self) -> None:
         ast = parse_algol(
             "begin integer result; "
-            "procedure probe(a); value a; integer a; array a; begin end; "
-            "result := 0 "
+            "integer array xs[1:2]; "
+            "procedure probe(a); value a; integer a; array a; begin a[1] := 9 end; "
+            "probe(xs); result := xs[1] "
             "end"
         )
         result = check_algol(ast)
 
-        assert not result.ok
-        assert "cannot be an array in this phase" in result.diagnostics[0].message
+        assert result.ok
+        assert result.semantic is not None
+        parameter = result.semantic.procedures[0].parameters[0]
+        assert parameter.kind == "array"
+        assert parameter.mode == "value"
 
     def test_accepts_label_parameter_and_direct_label_actual(self) -> None:
         ast = parse_algol(
@@ -764,17 +768,22 @@ class TestAlgolTypeChecker:
         assert parameter.kind == "label"
         assert parameter.type_name == "label"
 
-    def test_rejects_value_label_parameter_in_this_phase(self) -> None:
+    def test_accepts_value_label_parameter_and_direct_label_actual(self) -> None:
         ast = parse_algol(
             "begin integer result; "
-            "procedure jump(target); value target; label target; begin end; "
-            "result := 0 "
+            "procedure jump(target); value target; label target; "
+            "begin goto target end; "
+            "jump(done); "
+            "done: result := 7 "
             "end"
         )
         result = check_algol(ast)
 
-        assert not result.ok
-        assert "cannot be a label in this phase" in result.diagnostics[0].message
+        assert result.ok
+        assert result.semantic is not None
+        parameter = result.semantic.procedures[0].parameters[0]
+        assert parameter.kind == "label"
+        assert parameter.mode == "value"
 
     def test_accepts_switch_parameter_and_direct_switch_actual(self) -> None:
         ast = parse_algol(
@@ -799,17 +808,22 @@ class TestAlgolTypeChecker:
             for selection in result.semantic.switch_selections
         )
 
-    def test_rejects_value_switch_parameter_in_this_phase(self) -> None:
+    def test_accepts_value_switch_parameter_and_direct_switch_actual(self) -> None:
         ast = parse_algol(
             "begin integer result; "
-            "procedure escape(sw); value sw; switch sw; begin end; "
-            "result := 0 "
+            "procedure escape(sw); value sw; switch sw; begin goto sw[1] end; "
+            "switch s := done; "
+            "escape(s); result := 0; "
+            "done: result := 7 "
             "end"
         )
         result = check_algol(ast)
 
-        assert not result.ok
-        assert "cannot be a switch in this phase" in result.diagnostics[0].message
+        assert result.ok
+        assert result.semantic is not None
+        parameter = result.semantic.procedures[0].parameters[0]
+        assert parameter.kind == "switch"
+        assert parameter.mode == "value"
 
     def test_accepts_procedure_parameter_and_direct_procedure_actual(self) -> None:
         ast = parse_algol(
@@ -914,17 +928,57 @@ class TestAlgolTypeChecker:
         assert not result.ok
         assert "expects a real procedure actual" in result.diagnostics[0].message
 
-    def test_rejects_value_procedure_parameter_in_this_phase(self) -> None:
+    def test_accepts_value_procedure_parameter(self) -> None:
         ast = parse_algol(
             "begin integer result; "
-            "procedure invoke(p); value p; procedure p; begin end; "
-            "result := 0 "
+            "procedure invoke(p); value p; procedure p; begin p end; "
+            "procedure bump; begin result := result + 1 end; "
+            "result := 0; invoke(bump) "
             "end"
         )
         result = check_algol(ast)
 
-        assert not result.ok
-        assert "cannot be a procedure in this phase" in result.diagnostics[0].message
+        assert result.ok
+        assert result.semantic is not None
+        parameter = result.semantic.procedures[0].parameters[0]
+        assert parameter.kind == "procedure"
+        assert parameter.mode == "value"
+
+    def test_accepts_value_procedure_parameter_with_value_argument_actual(
+        self,
+    ) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure invoke(p); value p; procedure p; begin p(7) end; "
+            "procedure set(x); value x; integer x; begin result := x end; "
+            "invoke(set) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        parameter = result.semantic.procedures[0].parameters[0]
+        assert parameter.mode == "value"
+        assert parameter.procedure_call_shapes[0].argument_types == ("integer",)
+
+    def test_accepts_value_typed_procedure_parameter_expression_actual(self) -> None:
+        ast = parse_algol(
+            "begin integer result; real y; "
+            "procedure invoke(f); value f; real f; procedure f; "
+            "begin y := f(2); if y = 4 then result := 1 else result := 0 end; "
+            "real procedure twice(x); value x; real x; begin twice := x * 2 end; "
+            "invoke(twice) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        parameter = result.semantic.procedures[0].parameters[0]
+        assert parameter.type_name == "real"
+        assert parameter.mode == "value"
+        assert parameter.procedure_call_shapes[0].return_type == "real"
 
     def test_accepts_integer_array_descriptor_and_accesses(self) -> None:
         ast = parse_algol(

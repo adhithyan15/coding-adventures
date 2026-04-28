@@ -50,13 +50,17 @@ failure propagation from callees back to the by-name formal read. Stores through
 read-only expression thunks still raise targeted `CompileError` diagnostics
 until Phase 5 grows full store-helper coverage. The supported integer by-name
 surface is covered by the WASM acceptance suite, including typed whole-array
-formals passed as descriptor pointers, label formals passed as pending-goto
-targets, and switch formals passed as descriptor closures that re-evaluate in
-the caller's declaring scope. No-argument statement procedure formals pass
-descriptor closures containing the callee procedure id and static link; formal
-calls dispatch through a generated helper so forwarded procedure formals keep
-the original environment. Full ALGOL forms such as typed or argument-taking
-procedure formals and escaping thunk descriptors remain future work.
+formals passed as descriptor pointers. `value` whole-array formals allocate a
+callee-local descriptor, bounds table, and element storage copy at procedure
+entry, so writes to the formal do not alias the caller's array. Label formals
+pass pending-goto targets, and switch formals pass descriptor closures that
+re-evaluate in the caller's declaring scope; these label/switch descriptor
+paths also cover `value` formals. Procedure formals pass descriptor closures
+containing the callee procedure id and static link; formal calls dispatch
+through generated helpers for statement calls and typed expression calls with
+scalar value arguments, so forwarded procedure formals keep the original
+environment in value or by-name mode. Full ALGOL forms such as escaping thunk
+descriptors remain future work.
 
 Direct `goto` statements lower to ordinary IR `JUMP` instructions targeting
 generated ALGOL labels. Local jumps emit the jump directly. Direct nonlocal
@@ -79,8 +83,9 @@ one 64 KiB WASM page, and keeps array descriptors plus element storage inside a
 separate 64 KiB heap segment. Larger semantic frame plans raise `CompileError`
 before the WASM data encoder can materialize the memory image, dynamic
 procedure recursion stops at the bounded frame stack, and invalid array bounds,
-out-of-bounds subscripts, integer `div`/`mod` by zero, oversized arrays, or
-heap exhaustion return `0`.
+out-of-bounds subscripts, integer `div`/`mod` by zero or signed divide
+overflow, real division by zero, zero-real-base negative exponentiation,
+oversized arrays, or heap exhaustion return `0`.
 
 ```python
 from algol_ir_compiler import compile_algol
