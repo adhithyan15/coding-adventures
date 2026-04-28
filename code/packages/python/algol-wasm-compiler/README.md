@@ -17,6 +17,8 @@ already supports a substantial ALGOL 60 surface:
 - `own` scalars and arrays with static lifetime
 - arrays of `integer`, `boolean`, `real`, and `string` values with runtime
   bounds and checked element access
+- chained assignment, conditional expressions, tolerant trailing/repeated
+  semicolons, and ALGOL-left-associative exponentiation for integer exponents
 - value and by-name parameters, including Jensen-style expression thunks and
   typed whole-array, label, switch, and no-argument statement procedure formals
 - labels, local and nonlocal `goto`, switch designators, and conditional
@@ -71,6 +73,8 @@ local WASM runtime. Those fixtures cover:
 - mixed scalar and array computation with output
 - Jensen-style by-name procedure calls
 - switch dispatch, procedure-formal dispatch, and procedure-crossing `goto`
+- conditional expressions, chained assignment, and exponentiation in the same
+  end-to-end program
 
 ## Dependencies
 

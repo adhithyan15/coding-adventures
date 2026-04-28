@@ -22,6 +22,13 @@ checked element loads/stores through the descriptor. Block and procedure exits
 restore the heap pointer to the activation's entry mark, so dynamic arrays keep
 ALGOL block lifetime instead of leaking through loops or recursive calls.
 
+Expression lowering includes mixed integer/real arithmetic, boolean operators,
+comparisons, chained assignment targets, branch-selected conditional
+expressions, and ALGOL-left-associative exponentiation when the exponent is an
+integer. Real bases with negative integer exponents are lowered through a
+reciprocal path; arbitrary real exponents remain outside this phase until the
+runtime has a real `pow` implementation instead of an approximation shortcut.
+
 Scalar by-name parameters lower through a one-word cell in the callee frame.
 Passing a scalar variable as a by-name actual gives the callee a storage pointer,
 so assignments to the formal write back to the caller slot while value

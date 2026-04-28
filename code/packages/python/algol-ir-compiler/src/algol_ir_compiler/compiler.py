@@ -999,7 +999,11 @@ class AlgolIrCompiler:
         simple = _first_direct_node(node, "simple_desig")
         if simple is None:
             raise CompileError("unsupported designational expression")
-        self._compile_simple_designational(simple, scope, execution_scope=execution_scope)
+        self._compile_simple_designational(
+            simple,
+            scope,
+            execution_scope=execution_scope,
+        )
 
     def _compile_simple_designational(
         self,
@@ -1172,7 +1176,10 @@ class AlgolIrCompiler:
         descriptor = self.switches.get(selection.switch_id)
         if descriptor is None:
             raise CompileError(f"switch {selection.name!r} has no descriptor")
-        entry_scope = self._active_scope_for_block(selection.declaration_block_id, scope)
+        entry_scope = self._active_scope_for_block(
+            selection.declaration_block_id,
+            scope,
+        )
         dispatch_index = self.switch_count
         self.switch_count += 1
         for entry_index, entry_node_id in enumerate(descriptor.entry_node_ids, start=1):
@@ -1349,34 +1356,52 @@ class AlgolIrCompiler:
         )
 
     def _compile_assignment(self, assign: ASTNode, scope: _FrameScope) -> None:
-        left_part = _first_direct_node(assign, "left_part")
+        left_parts = _direct_nodes(assign, "left_part")
         expr = _first_direct_node(assign, "expression")
-        variable = _first_node(left_part, "variable") if left_part is not None else None
-        if variable is None or expr is None:
+        if not left_parts or expr is None:
             raise CompileError("assignment needs a variable target and expression")
         value = self._compile_expr(expr, scope)
+        expr_type = self._expr_type(expr)
+        for left_part in reversed(left_parts):
+            variable = _first_node(left_part, "variable")
+            if variable is None:
+                raise CompileError("assignment target must be a variable")
+            self._compile_assignment_target(
+                variable,
+                value,
+                expr_type,
+                scope,
+            )
+
+    def _compile_assignment_target(
+        self,
+        variable: ASTNode,
+        value: int,
+        value_type: str,
+        scope: _FrameScope,
+    ) -> None:
         if _variable_subscripts(variable):
             name = _variable_head_name(variable)
             if name is None:
                 raise CompileError("array assignment target is missing a name")
             access = self._require_array_access(name, "write")
-            value = self._coerce_reg_to_type(
+            coerced = self._coerce_reg_to_type(
                 value,
-                self._expr_type(expr),
+                value_type,
                 expected_type=self.arrays[access.array_id].element_type,
             )
-            self._compile_array_store(variable, scope, value)
+            self._compile_array_store(variable, scope, coerced)
             return
         name = _variable_name(variable)
         if name is None:
             raise CompileError("only scalar assignments are supported")
         target = self._require_reference(name, "write")
-        value = self._coerce_reg_to_type(
+        coerced = self._coerce_reg_to_type(
             value,
-            self._expr_type(expr),
+            value_type,
             expected_type=target.type_name,
         )
-        self._emit_store_reference(target, scope, value)
+        self._emit_store_reference(target, scope, coerced)
 
     def _compile_if(self, cond: ASTNode, scope: _FrameScope) -> None:
         index = self.if_count
@@ -2049,6 +2074,18 @@ class AlgolIrCompiler:
         meaningful = _meaningful_children(expr)
         if not meaningful:
             raise CompileError(f"empty expression node {expr.rule_name}")
+
+        conditional = _conditional_expression_parts(meaningful)
+        if conditional is not None:
+            condition, then_expr, else_expr = conditional
+            return self._compile_conditional_expression(
+                expr,
+                condition,
+                then_expr,
+                else_expr,
+                scope,
+            )
+
         if len(meaningful) == 1:
             return self._compile_expr(meaningful[0], scope)
 
@@ -2117,17 +2154,57 @@ class AlgolIrCompiler:
             "expression",
             "arith_expr",
             "bool_expr",
-            "expr_pow",
-            "factor",
         }:
+            return self._compile_expr(meaningful[0], scope)
+
+        if expr.rule_name in {"expr_pow", "factor"}:
             if any(
                 isinstance(child, Token) and child.value in {"**", "^"}
                 for child in meaningful
             ):
-                raise CompileError("exponentiation is not supported yet")
+                return self._compile_power_chain(meaningful, scope)
             return self._compile_expr(meaningful[0], scope)
 
         return self._compile_expr(meaningful[0], scope)
+
+    def _compile_conditional_expression(
+        self,
+        node: ASTNode,
+        condition: ASTNode,
+        then_expr: ASTNode,
+        else_expr: ASTNode,
+        scope: _FrameScope,
+    ) -> int:
+        index = self.if_count
+        self.if_count += 1
+        else_label = f"if_{index}_else"
+        end_label = f"if_{index}_end"
+        result_type = self._expr_type(node)
+        result = self._fresh_reg()
+
+        condition_reg = self._compile_expr(condition, scope)
+        self._emit(IrOp.BRANCH_Z, IrRegister(condition_reg), IrLabel(else_label))
+
+        then_value = self._compile_expr(then_expr, scope)
+        then_value = self._coerce_reg_to_type(
+            then_value,
+            self._expr_type(then_expr),
+            expected_type=result_type,
+        )
+        self._copy_scalar_reg(type_name=result_type, dst=result, src=then_value)
+        self._emit(IrOp.JUMP, IrLabel(end_label))
+
+        self._label(else_label)
+        else_value = self._compile_expr(else_expr, scope)
+        else_value = self._coerce_reg_to_type(
+            else_value,
+            self._expr_type(else_expr),
+            expected_type=result_type,
+        )
+        self._copy_scalar_reg(type_name=result_type, dst=result, src=else_value)
+
+        self._label(end_label)
+        return result
 
     def _compile_token(self, token: Token, scope: _FrameScope) -> int:
         if token.type_name == "INTEGER_LIT":
@@ -2166,6 +2243,31 @@ class AlgolIrCompiler:
                 operator.value,
                 current_type,
                 right_type,
+            )
+            index += 2
+        return current
+
+    def _compile_power_chain(
+        self, children: list[ASTNode | Token], scope: _FrameScope
+    ) -> int:
+        current = self._compile_expr(children[0], scope)
+        current_type = self._expr_type(children[0])
+        index = 1
+        while index < len(children):
+            operator = children[index]
+            exponent = self._compile_expr(children[index + 1], scope)
+            if not isinstance(operator, Token):
+                raise CompileError("expected exponentiation operator")
+            if operator.value not in {"**", "^"}:
+                raise CompileError(
+                    f"numeric operator {operator.value!r} is not supported"
+                )
+            exponent_type = self._expr_type(children[index + 1])
+            if exponent_type != _INTEGER_TYPE:
+                raise CompileError("exponentiation exponent must be integer")
+            current = self._emit_power(current, current_type, exponent)
+            current_type = (
+                _REAL_TYPE if current_type == _REAL_TYPE else _INTEGER_TYPE
             )
             index += 2
         return current
@@ -2403,6 +2505,130 @@ class AlgolIrCompiler:
         else:
             raise CompileError(f"numeric operator {operator!r} is not supported")
         return dst
+
+    def _emit_power(self, base: int, base_type: str, exponent: int) -> int:
+        if base_type == _REAL_TYPE:
+            return self._emit_real_integer_power(base, exponent)
+        return self._emit_integer_power(base, exponent)
+
+    def _emit_integer_power(self, base: int, exponent: int) -> int:
+        index = self.if_count
+        self.if_count += 1
+        negative_label = f"pow_{index}_negative"
+        loop_label = f"pow_{index}_loop"
+        end_label = f"pow_{index}_end"
+        result = self._const_reg(1)
+        remaining = self._fresh_reg()
+        self._copy_reg(dst=remaining, src=exponent)
+        is_negative = self._fresh_reg()
+        self._emit(
+            IrOp.CMP_LT,
+            IrRegister(is_negative),
+            IrRegister(remaining),
+            IrRegister(_ZERO_REG),
+        )
+        self._emit(IrOp.BRANCH_NZ, IrRegister(is_negative), IrLabel(negative_label))
+        self._label(loop_label)
+        done = self._fresh_reg()
+        self._emit(
+            IrOp.CMP_EQ,
+            IrRegister(done),
+            IrRegister(remaining),
+            IrRegister(_ZERO_REG),
+        )
+        self._emit(IrOp.BRANCH_NZ, IrRegister(done), IrLabel(end_label))
+        next_result = self._fresh_reg()
+        self._emit(
+            IrOp.MUL,
+            IrRegister(next_result),
+            IrRegister(result),
+            IrRegister(base),
+        )
+        self._copy_reg(dst=result, src=next_result)
+        next_remaining = self._fresh_reg()
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(next_remaining),
+            IrRegister(remaining),
+            IrImmediate(-1),
+        )
+        self._copy_reg(dst=remaining, src=next_remaining)
+        self._emit(IrOp.JUMP, IrLabel(loop_label))
+        self._label(negative_label)
+        self._copy_reg(dst=result, src=_ZERO_REG)
+        self._label(end_label)
+        return result
+
+    def _emit_real_integer_power(self, base: int, exponent: int) -> int:
+        index = self.if_count
+        self.if_count += 1
+        negative_label = f"pow_{index}_negative"
+        prepare_loop_label = f"pow_{index}_prepare_loop"
+        loop_label = f"pow_{index}_loop"
+        reciprocal_label = f"pow_{index}_reciprocal"
+        end_label = f"pow_{index}_end"
+        result = self._const_f64_reg(1.0)
+        remaining = self._fresh_reg()
+        self._copy_reg(dst=remaining, src=exponent)
+        negative = self._fresh_reg()
+        self._emit(
+            IrOp.CMP_LT,
+            IrRegister(negative),
+            IrRegister(remaining),
+            IrRegister(_ZERO_REG),
+        )
+        self._emit(IrOp.BRANCH_NZ, IrRegister(negative), IrLabel(negative_label))
+        self._emit(IrOp.JUMP, IrLabel(prepare_loop_label))
+        self._label(negative_label)
+        zero = self._const_reg(0)
+        absolute = self._fresh_reg()
+        self._emit(
+            IrOp.SUB,
+            IrRegister(absolute),
+            IrRegister(zero),
+            IrRegister(remaining),
+        )
+        self._copy_reg(dst=remaining, src=absolute)
+        self._label(prepare_loop_label)
+        self._label(loop_label)
+        done = self._fresh_reg()
+        self._emit(
+            IrOp.CMP_EQ,
+            IrRegister(done),
+            IrRegister(remaining),
+            IrRegister(_ZERO_REG),
+        )
+        self._emit(IrOp.BRANCH_NZ, IrRegister(done), IrLabel(reciprocal_label))
+        next_result = self._fresh_reg()
+        self._emit(
+            IrOp.F64_MUL,
+            IrRegister(next_result),
+            IrRegister(result),
+            IrRegister(base),
+        )
+        self._copy_scalar_reg(type_name=_REAL_TYPE, dst=result, src=next_result)
+        next_remaining = self._fresh_reg()
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(next_remaining),
+            IrRegister(remaining),
+            IrImmediate(-1),
+        )
+        self._copy_reg(dst=remaining, src=next_remaining)
+        self._emit(IrOp.JUMP, IrLabel(loop_label))
+        self._label(reciprocal_label)
+        self._emit(IrOp.BRANCH_Z, IrRegister(negative), IrLabel(end_label))
+        one = self._const_f64_reg(1.0)
+        reciprocal = self._fresh_reg()
+        self._emit(
+            IrOp.F64_DIV,
+            IrRegister(reciprocal),
+            IrRegister(one),
+            IrRegister(result),
+        )
+        self._copy_scalar_reg(type_name=_REAL_TYPE, dst=result, src=reciprocal)
+        self._label(end_label)
+        return result
 
     def _invert_bool(self, source: int) -> int:
         dst = self._fresh_reg()
@@ -4413,7 +4639,12 @@ class AlgolIrCompiler:
                 IrRegister(base_reg),
                 IrLabel(_STATIC_MEMORY_LABEL),
             )
-            self._emit_load_scalar(symbol.type_name, dst_reg, base_reg, symbol.slot_offset)
+            self._emit_load_scalar(
+                symbol.type_name,
+                dst_reg,
+                base_reg,
+                symbol.slot_offset,
+            )
             return
         if symbol.declaring_block_id != scope.block_id:
             raise CompileError(f"symbol {symbol.name!r} does not belong to root block")
@@ -5141,6 +5372,45 @@ def _meaningful_children(node: ASTNode) -> list[ASTNode | Token]:
         for child in node.children
         if not (isinstance(child, Token) and child.value in {"(", ")"})
     ]
+
+
+def _conditional_expression_parts(
+    children: list[ASTNode | Token],
+) -> tuple[ASTNode, ASTNode, ASTNode] | None:
+    first = children[0] if children else None
+    if not isinstance(first, Token) or first.value != "if":
+        return None
+    then_index = _keyword_child_index(children, "then")
+    else_index = _keyword_child_index(children, "else")
+    if then_index is None or else_index is None or then_index >= else_index:
+        return None
+    condition = _first_ast_child_between(children, 1, then_index)
+    then_expr = _first_ast_child_between(children, then_index + 1, else_index)
+    else_expr = _first_ast_child_between(children, else_index + 1, len(children))
+    if condition is None or then_expr is None or else_expr is None:
+        return None
+    return condition, then_expr, else_expr
+
+
+def _keyword_child_index(
+    children: list[ASTNode | Token],
+    keyword: str,
+) -> int | None:
+    for index, child in enumerate(children):
+        if isinstance(child, Token) and child.value == keyword:
+            return index
+    return None
+
+
+def _first_ast_child_between(
+    children: list[ASTNode | Token],
+    start: int,
+    end: int,
+) -> ASTNode | None:
+    return next(
+        (child for child in children[start:end] if isinstance(child, ASTNode)),
+        None,
+    )
 
 
 def _first_node(node: ASTNode, rule_name: str) -> ASTNode | None:
