@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-symbolic-vm"
-version = "0.31.0"
+version = "0.32.0"
 description = "Pluggable symbolic VM — evaluates symbolic-ir trees through swappable backends (strict numeric vs. Mathematica-style symbolic rewriting)."
 requires-python = ">=3.12"
 license = "MIT"
@@ -12,7 +12,7 @@ authors = [{ name = "Adhithya Rajasekaran" }]
 readme = "README.md"
 keywords = ["symbolic", "vm", "interpreter", "cas", "term-rewriting", "education"]
 dependencies = [
-    "coding-adventures-symbolic-ir>=0.6.0",
+    "coding-adventures-symbolic-ir>=0.7.0",
     "coding-adventures-polynomial",
     "coding-adventures-macsyma-parser",
     "coding-adventures-macsyma-compiler",
