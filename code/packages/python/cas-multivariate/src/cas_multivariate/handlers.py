@@ -187,6 +187,15 @@ def _ir_to_mpoly(node: IRNode, var_list: list[str]) -> MPoly:
                 )
             if exp_val == 0:
                 return MPoly.constant(Fraction(1), nvars)
+            # Cap exponent to prevent DoS via adversarial Pow(x, 1_000_000).
+            # This is consistent with the _MAX_DEGREE = 8 cap in groebner.py.
+            # An exponent > 20 would produce monomials of total degree > 20
+            # which far exceeds the practical limit anyway.
+            if exp_val > 20:
+                raise ConversionError(
+                    f"Pow exponent {exp_val} exceeds maximum allowed (20) "
+                    "for polynomial conversion"
+                )
             base_poly = _ir_to_mpoly(base_node, var_list)
             result = MPoly.constant(Fraction(1), nvars)
             for _ in range(exp_val):

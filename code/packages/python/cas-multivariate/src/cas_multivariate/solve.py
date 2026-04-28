@@ -114,10 +114,27 @@ def _rational_roots(coeffs: list[Fraction]) -> list[Fraction]:
         roots.extend(_rational_roots([Fraction(c) for c in trimmed]))
         return roots
 
-    # Candidates: ±p/q for p | const_term, q | leading_coeff
+    # Candidates: ±p/q for p | const_term, q | leading_coeff.
+    # Use trial-division up to √n so large integers don't cause O(n) iteration.
     def _divisors(n: int) -> list[int]:
+        """Return all positive divisors of abs(n) in sorted order.
+
+        Uses trial division up to ``⌊√n⌋``, giving O(√n) complexity rather than
+        O(n).  This prevents a denial-of-service if Buchberger reduction produces
+        a univariate polynomial with a very large integer constant term.
+        """
+        import math
+
         n = abs(n)
-        return [d for d in range(1, n + 1) if n % d == 0]
+        if n == 0:
+            return []
+        result: list[int] = []
+        for d in range(1, math.isqrt(n) + 1):
+            if n % d == 0:
+                result.append(d)
+                if d != n // d:
+                    result.append(n // d)
+        return sorted(result)
 
     p_divs = _divisors(const_term)
     q_divs = _divisors(leading_coeff)
