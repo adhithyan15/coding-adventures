@@ -343,6 +343,18 @@
       ],
       "initial_state": "Script data escaped state",
       "last_start_tag": "script"
+    },
+    {
+      "id": "html-script-data-double-escaped-state-end-tag",
+      "description": "Seeded script data double escaped context keeps the first script end tag literal until the double escape closes",
+      "input": "x </script> y --></script>",
+      "tokens": [
+        "Text(data=x </script> y -->)",
+        "EndTag(name=script)",
+        "EOF"
+      ],
+      "initial_state": "Script data double escaped state",
+      "last_start_tag": "script"
     }
   ]
 }

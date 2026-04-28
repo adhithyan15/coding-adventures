@@ -271,6 +271,52 @@ fn default_html_lexer_supports_seeded_script_data_escaped_state() {
 }
 
 #[test]
+fn default_html_lexer_supports_script_data_double_escaped_text() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("script_data").unwrap();
+    lexer.set_last_start_tag("script");
+
+    lexer
+        .push("<!-- <script>ignored </script> still escaped --></script>")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("<!-- <script>ignored </script> still escaped -->".to_string()),
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_script_data_double_escaped_state() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer
+        .set_initial_state("script_data_double_escaped")
+        .unwrap();
+    lexer.set_last_start_tag("script");
+
+    lexer.push("x </script> y --></script>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("x </script> y -->".to_string()),
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_seeded_plaintext_state() {
     let mut lexer = create_html_lexer().unwrap();
     lexer.set_initial_state("plaintext").unwrap();

@@ -359,6 +359,18 @@
         {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 10},
         {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 16}
       ]
+    },
+    {
+      "description": "script data double escaped state keeps first script end tag literal",
+      "initialStates": ["Script data double escaped state"],
+      "lastStartTag": "script",
+      "input": "x </script> y --></script>",
+      "output": [
+        ["Character", "x "],
+        ["Character", "</script>"],
+        ["Character", " y -->"],
+        ["EndTag", "script"]
+      ]
     }
   ]
 }
