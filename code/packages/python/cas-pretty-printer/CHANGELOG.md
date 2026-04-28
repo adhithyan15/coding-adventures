@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.3.0 — 2026-04-27
+
+**Complete MACSYMA function-name alias coverage.**
+
+Two related improvements to make the pretty-printer round-trippable for
+every IR head that appears in the MACSYMA completion roadmap:
+
+1. **`_DEFAULT_FUNCTION_NAMES` expansion** (`dialect.py`): Added ~40 missing
+   IR-head-to-surface-name entries for heads that can appear unevaluated in
+   partially-evaluated trees.  New entries cover: `Cbrt`, `Last`, `Append`,
+   `Reverse`, `Range`, `Sort`, `Part`, `Flatten`, `Join`, `MakeList`,
+   `Matrix`, `Transpose`, `Determinant`, `Inverse`, `Gcd`, `Lcm`, `Mod`,
+   `Floor`, `Ceiling`, `Lhs`, `Rhs`, `At`, `NSolve`, `Collect`, `Together`,
+   `RatSimplify`, `Apart`, `TrigSimplify`, `TrigExpand`, `TrigReduce`, `Re`,
+   `Im`, `Conjugate`, `Arg`, `RectForm`, `PolarForm`, `IsPrime`, `NextPrime`,
+   `PrevPrime`, `FactorInteger`, `Divisors`, `Totient`, `MoebiusMu`,
+   `JacobiSymbol`, `ChineseRemainder`, `IntegerLength`.
+
+2. **`MacsymaDialect` MACSYMA-specific overrides** (`macsyma.py`): Updated
+   the dialect's `function_names` dict to `{**_DEFAULT_FUNCTION_NAMES, ...}`
+   so it inherits all generic spellings and then overrides with MACSYMA names:
+   `Select→sublist`, `Inverse→invert`, `RatSimplify→ratsimp`,
+   `Apart→partfrac`, `TrigSimplify/TrigExpand/TrigReduce` as before,
+   `Re→realpart`, `Im→imagpart`, `Arg→carg`, `IsPrime→primep`,
+   `NextPrime→next_prime`, `PrevPrime→prev_prime`, `FactorInteger→ifactor`,
+   `MoebiusMu→moebius`, `ChineseRemainder→chinese`, `IntegerLength→numdigits`.
+
+23 new alias tests added to `test_macsyma_dialect.py` verifying each
+MACSYMA-specific surface spelling.  Total test count 84 across all dialect
+modules; coverage 96 %.
+
 ## 0.2.0 — 2026-04-27
 
 **Smarter negative-number display and new MACSYMA sugar rules.**
