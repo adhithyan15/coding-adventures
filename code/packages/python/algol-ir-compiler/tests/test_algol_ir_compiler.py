@@ -893,6 +893,40 @@ class TestAlgolIrCompiler:
         assert "_fn_algol_call_procedure_i32" in labels
         assert IrOp.AND_IMM in opcodes
 
+    def test_compiles_procedure_parameter_call_with_array_argument(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; integer array a[1:2]; "
+                "procedure invoke(p); procedure p; begin p(a) end; "
+                "procedure first(xs); integer xs; array xs; "
+                "begin result := xs[1] end; "
+                "a[1] := 9; invoke(first) "
+                "end"
+            )
+        )
+        labels = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.LABEL
+        ]
+        calls = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+
+        assert "_fn_algol_call_procedure_array_i32" in labels
+        assert (
+            result.procedure_signatures[
+                "_fn_algol_call_procedure_array_i32"
+            ].param_types
+            == ("integer", "integer", "integer")
+        )
+        assert any(
+            instruction.operands[0].name == "_fn_algol_call_procedure_array_i32"
+            for instruction in calls
+        )
+
     def test_compiles_value_procedure_parameter_call_with_value_argument(self) -> None:
         result = compile_algol(
             parse_algol(
@@ -935,6 +969,27 @@ class TestAlgolIrCompiler:
 
         assert signature.param_types == ("integer", "integer", "integer")
         assert signature.return_type == "real"
+
+    def test_compiles_typed_procedure_parameter_call_with_array_argument(
+        self,
+    ) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; integer array a[1:2]; "
+                "procedure invoke(f); integer f; procedure f; "
+                "begin result := f(a) end; "
+                "integer procedure first(xs); integer xs; array xs; "
+                "begin first := xs[1] end; "
+                "a[1] := 11; invoke(first) "
+                "end"
+            )
+        )
+        signature = result.procedure_signatures[
+            "_fn_algol_call_procedure_i32_result_array_i32"
+        ]
+
+        assert signature.param_types == ("integer", "integer", "integer")
+        assert signature.return_type == "integer"
 
     def test_compiles_integer_return_actual_for_real_procedure_parameter(self) -> None:
         result = compile_algol(

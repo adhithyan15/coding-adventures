@@ -738,6 +738,28 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
 
+    def test_procedure_parameter_statement_call_passes_array_argument(self) -> None:
+        result = compile_source(
+            "begin integer result; integer array a[1:2]; "
+            "procedure invoke(p); procedure p; begin p(a) end; "
+            "procedure first(xs); integer xs; array xs; "
+            "begin result := xs[1] end; "
+            "a[1] := 9; invoke(first) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
+
+    def test_formal_procedure_array_argument_honors_value_array_copy(self) -> None:
+        result = compile_source(
+            "begin integer result; integer array a[1:2]; "
+            "procedure invoke(p); procedure p; begin p(a) end; "
+            "procedure mutate(xs); value xs; integer xs; array xs; "
+            "begin xs[1] := 5 end; "
+            "a[1] := 9; invoke(mutate); result := a[1] "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
+
     def test_formal_procedure_by_name_argument_remains_lazy(self) -> None:
         result = compile_source(
             "begin integer result; "
@@ -785,6 +807,20 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
+
+    def test_typed_procedure_parameter_expression_call_passes_array_argument(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; integer array a[1:2]; "
+            "procedure invoke(f); integer f; procedure f; "
+            "begin result := f(a) end; "
+            "integer procedure first(xs); integer xs; array xs; "
+            "begin first := xs[1] end; "
+            "a[1] := 11; invoke(first) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [11]
 
     def test_real_procedure_parameter_accepts_integer_return_actual(self) -> None:
         result = compile_source(

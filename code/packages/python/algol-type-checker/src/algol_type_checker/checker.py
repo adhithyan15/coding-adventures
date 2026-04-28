@@ -191,6 +191,7 @@ class ProcedureFormalCallShape:
 
     role: str
     argument_types: tuple[str, ...]
+    argument_kinds: tuple[str, ...] = ()
     argument_assignable: tuple[bool, ...] = ()
     return_type: str | None = None
 
@@ -2022,10 +2023,18 @@ class AlgolTypeChecker:
         role: str,
     ) -> ResolvedProcedureCall:
         argument_types: list[str] = []
+        argument_kinds: list[str] = []
         argument_assignable: list[bool] = []
         for argument in arguments:
+            array_type = self._formal_array_argument_type(argument, scope)
+            if array_type is not None:
+                argument_types.append(array_type)
+                argument_kinds.append(ARRAY)
+                argument_assignable.append(False)
+                continue
             actual_type = self._infer_expr(argument, scope)
             argument_types.append(actual_type)
+            argument_kinds.append("scalar")
             argument_assignable.append(
                 _is_assignable_actual(argument)
                 and self._resolved_bare_procedure_expression(argument) is None
@@ -2053,6 +2062,7 @@ class AlgolTypeChecker:
                 ProcedureFormalCallShape(
                     role=role,
                     argument_types=tuple(argument_types),
+                    argument_kinds=tuple(argument_kinds),
                     argument_assignable=tuple(argument_assignable),
                     return_type=return_type if role == "expression" else None,
                 ),
@@ -2074,6 +2084,38 @@ class AlgolTypeChecker:
         )
         self.resolved_procedure_calls.append(call)
         return call
+
+    def _formal_array_argument_type(
+        self,
+        argument: ASTNode,
+        scope: Scope,
+    ) -> str | None:
+        variable = _single_variable_expr(argument)
+        if variable is None or _variable_subscripts(variable):
+            return None
+        name = _variable_head_name(variable)
+        if name is None:
+            return None
+        resolved = scope.resolve_with_scope(name.value)
+        if resolved is None or resolved[0].kind != ARRAY:
+            return None
+        access = self._check_array_access(
+            variable,
+            scope,
+            role="actual",
+            allow_whole=True,
+        )
+        if access is None:
+            return ERROR
+        descriptor = next(
+            (
+                array
+                for array in self.semantic_arrays
+                if array.array_id == access.array_id
+            ),
+            None,
+        )
+        return ERROR if descriptor is None else descriptor.element_type
 
     def _record_procedure_parameter_call_shape(
         self,
@@ -2321,11 +2363,35 @@ class AlgolTypeChecker:
                     strict=True,
                 )
             ):
+                argument_kind = (
+                    shape.argument_kinds[argument_index]
+                    if argument_index < len(shape.argument_kinds)
+                    else "scalar"
+                )
                 argument_assignable = (
                     shape.argument_assignable[argument_index]
                     if argument_index < len(shape.argument_assignable)
                     else False
                 )
+                if argument_kind == ARRAY:
+                    if actual_parameter.kind != ARRAY:
+                        self._error(
+                            token,
+                            f"procedure parameter {parameter.name!r} passes an "
+                            "array to a scalar actual parameter "
+                            f"{actual_parameter.name!r}",
+                        )
+                        return False
+                    if actual_parameter.type_name != actual_type:
+                        self._error(
+                            token,
+                            f"procedure parameter {parameter.name!r} passes "
+                            f"{actual_type} array to actual parameter "
+                            f"{actual_parameter.name!r} expecting "
+                            f"{actual_parameter.type_name}",
+                        )
+                        return False
+                    continue
                 if actual_parameter.kind != "scalar":
                     self._error(
                         token,

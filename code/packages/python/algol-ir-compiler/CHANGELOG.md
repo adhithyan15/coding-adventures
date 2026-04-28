@@ -75,6 +75,8 @@ All notable changes to this package will be documented in this file.
 - Lowered formal procedure dispatch arguments as lazy storage pointers or
   thunk descriptors, allowing actual procedures with scalar by-name parameters
   to read or assign through the original argument.
+- Lowered whole-array arguments through formal procedure dispatchers by passing
+  descriptor pointers to actual procedures that declare matching array formals.
 
 ## [0.1.0] - 2026-04-20
 

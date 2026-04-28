@@ -892,6 +892,28 @@ class TestAlgolTypeChecker:
         assert parameter.type_name == "real"
         assert parameter.procedure_call_shapes[0].return_type == "real"
 
+    def test_accepts_typed_procedure_parameter_with_array_argument_actual(
+        self,
+    ) -> None:
+        ast = parse_algol(
+            "begin integer result; integer array a[1:2]; "
+            "procedure invoke(f); integer f; procedure f; "
+            "begin result := f(a) end; "
+            "integer procedure first(xs); integer xs; array xs; "
+            "begin first := xs[1] end; "
+            "invoke(first) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        parameter = result.semantic.procedures[0].parameters[0]
+        shape = parameter.procedure_call_shapes[0]
+        assert shape.return_type == "integer"
+        assert shape.argument_kinds == ("array",)
+        assert shape.argument_types == ("integer",)
+
     def test_accepts_integer_procedure_actual_for_real_procedure_parameter(
         self,
     ) -> None:
@@ -946,6 +968,39 @@ class TestAlgolTypeChecker:
         assert result.semantic is not None
         parameter = result.semantic.procedures[0].parameters[0]
         assert parameter.procedure_call_shapes[0].argument_assignable == (False,)
+
+    def test_accepts_procedure_parameter_actual_with_array_formal(self) -> None:
+        ast = parse_algol(
+            "begin integer result; integer array a[1:2]; "
+            "procedure invoke(p); procedure p; begin p(a) end; "
+            "procedure first(xs); integer xs; array xs; "
+            "begin result := xs[1] end; "
+            "invoke(first) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        parameter = result.semantic.procedures[0].parameters[0]
+        shape = parameter.procedure_call_shapes[0]
+        assert shape.argument_kinds == ("array",)
+        assert shape.argument_types == ("integer",)
+        assert any(access.role == "actual" for access in result.semantic.array_accesses)
+
+    def test_rejects_procedure_parameter_actual_with_wrong_array_type(self) -> None:
+        ast = parse_algol(
+            "begin integer result; real array a[1:2]; "
+            "procedure invoke(p); procedure p; begin p(a) end; "
+            "procedure first(xs); integer xs; array xs; "
+            "begin result := xs[1] end; "
+            "invoke(first) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "passes real array" in result.diagnostics[0].message
 
     def test_rejects_procedure_parameter_actual_with_written_literal_by_name_formal(
         self,

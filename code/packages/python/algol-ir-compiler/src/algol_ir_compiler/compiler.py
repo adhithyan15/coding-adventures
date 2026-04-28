@@ -239,7 +239,7 @@ class AlgolIrCompiler:
         self.legacy_variable_slots: dict[str, int] = {}
         self.procedure_signatures: dict[str, ProcedureSignaturePlan] = {}
         self.procedure_parameter_dispatchers: dict[
-            tuple[str | None, tuple[str, ...]],
+            tuple[str | None, tuple[str, ...], tuple[str, ...]],
             str,
         ] = {}
         self.expression_types: dict[int, str] = {}
@@ -505,15 +505,22 @@ class AlgolIrCompiler:
             self._compile_switch_eval_dispatcher()
         if self.has_procedure_parameters:
             self._compile_procedure_call_dispatcher(
+                argument_kinds=tuple(),
                 argument_types=tuple(),
                 label=_PROCEDURE_CALL_LABEL,
                 return_type=None,
             )
-            for (return_type, argument_types), label in sorted(
+            for (return_type, argument_kinds, argument_types), label in sorted(
                 self.procedure_parameter_dispatchers.items(),
-                key=lambda item: (item[0][0] or "", len(item[0][1]), item[0][1]),
+                key=lambda item: (
+                    item[0][0] or "",
+                    len(item[0][2]),
+                    item[0][1],
+                    item[0][2],
+                ),
             ):
                 self._compile_procedure_call_dispatcher(
+                    argument_kinds=argument_kinds,
                     argument_types=argument_types,
                     label=label,
                     return_type=return_type,
@@ -2968,8 +2975,14 @@ class AlgolIrCompiler:
         scope: _FrameScope,
     ) -> int:
         actuals = _direct_nodes(_first_direct_node(node, "actual_params"), "expression")
-        argument_types = tuple(self._expr_type(actual) for actual in actuals)
-        for actual_type in argument_types:
+        argument_kinds, argument_types = self._formal_argument_shapes(actuals, scope)
+        for argument_kind, actual_type in zip(
+            argument_kinds,
+            argument_types,
+            strict=True,
+        ):
+            if argument_kind == "array":
+                continue
             if actual_type not in {
                 _INTEGER_TYPE,
                 _BOOLEAN_TYPE,
@@ -2985,7 +2998,8 @@ class AlgolIrCompiler:
             for index, (argument, actual_type) in enumerate(
                 zip(actuals, argument_types, strict=True)
             )
-            if self._requires_by_name_thunk_descriptor(argument)
+            if argument_kinds[index] == "scalar"
+            and self._requires_by_name_thunk_descriptor(argument)
         ]
         descriptor_heap_mark = (
             self._emit_reserve_eval_thunk_descriptors(len(thunk_actuals), scope)
@@ -2997,9 +3011,12 @@ class AlgolIrCompiler:
             for descriptor_index, (argument_index, _, _) in enumerate(thunk_actuals)
         }
         argument_regs: list[int] = []
-        for index, (actual, actual_type) in enumerate(
-            zip(actuals, argument_types, strict=True)
+        for index, (actual, actual_type, argument_kind) in enumerate(
+            zip(actuals, argument_types, argument_kinds, strict=True)
         ):
+            if argument_kind == "array":
+                argument_regs.append(self._compile_array_actual_pointer(actual, scope))
+                continue
             descriptor = None
             if descriptor_heap_mark is not None and index in descriptor_offsets:
                 descriptor = self._emit_descriptor_at(
@@ -3039,6 +3056,7 @@ class AlgolIrCompiler:
             )
         )
         dispatch_label = self._procedure_parameter_dispatch_label(
+            argument_kinds,
             argument_types,
             return_type=call.return_type,
         )
@@ -3068,10 +3086,13 @@ class AlgolIrCompiler:
 
     def _procedure_parameter_dispatch_label(
         self,
+        argument_kinds: tuple[str, ...],
         argument_types: tuple[str, ...],
         *,
         return_type: str | None,
     ) -> str:
+        if len(argument_kinds) != len(argument_types):
+            raise CompileError("procedure parameter dispatch shape is inconsistent")
         if not argument_types and return_type is None:
             self.procedure_signatures.setdefault(
                 _PROCEDURE_CALL_LABEL,
@@ -3081,12 +3102,12 @@ class AlgolIrCompiler:
                 ),
             )
             return _PROCEDURE_CALL_LABEL
-        key = (return_type, argument_types)
+        key = (return_type, argument_kinds, argument_types)
         label = self.procedure_parameter_dispatchers.get(key)
         if label is None:
             suffix = "_".join(
-                _procedure_parameter_dispatch_type_tag(type_name)
-                for type_name in argument_types
+                _procedure_parameter_dispatch_type_tag(type_name, kind=kind)
+                for kind, type_name in zip(argument_kinds, argument_types, strict=True)
             )
             if return_type is None:
                 label = f"{_PROCEDURE_CALL_LABEL}_{suffix}"
@@ -3105,6 +3126,43 @@ class AlgolIrCompiler:
                 return_type=return_type or _INTEGER_TYPE,
             )
         return label
+
+    def _formal_argument_shapes(
+        self,
+        actuals: list[ASTNode],
+        scope: _FrameScope,
+    ) -> tuple[tuple[str, ...], tuple[str, ...]]:
+        argument_kinds: list[str] = []
+        argument_types: list[str] = []
+        for actual in actuals:
+            array_type = self._formal_array_argument_type(actual, scope)
+            if array_type is not None:
+                argument_kinds.append("array")
+                argument_types.append(array_type)
+                continue
+            argument_kinds.append("scalar")
+            argument_types.append(self._expr_type(actual))
+        return tuple(argument_kinds), tuple(argument_types)
+
+    def _formal_array_argument_type(
+        self,
+        argument: ASTNode,
+        scope: _FrameScope,
+    ) -> str | None:
+        variable = _single_variable_expr(argument)
+        if variable is None or _variable_subscripts(variable):
+            return None
+        name = _variable_name(variable)
+        if name is None:
+            return None
+        resolved = self._resolve_symbol_in_scope_chain(name.value, scope)
+        if resolved is None or resolved[0].kind != "array":
+            return None
+        access = self._require_array_access(name, "actual")
+        descriptor = self.arrays.get(access.array_id)
+        if descriptor is None:
+            raise CompileError(f"array actual {name.value!r} has no descriptor")
+        return descriptor.element_type
 
     def _compile_builtin_output(self, node: ASTNode, scope: _FrameScope) -> int:
         actuals = _direct_nodes(_first_direct_node(node, "actual_params"), "expression")
@@ -4253,6 +4311,7 @@ class AlgolIrCompiler:
     def _compile_procedure_call_dispatcher(
         self,
         *,
+        argument_kinds: tuple[str, ...],
         argument_types: tuple[str, ...],
         label: str,
         return_type: str | None,
@@ -4279,6 +4338,7 @@ class AlgolIrCompiler:
         for procedure in self.procedures.values():
             if not self._procedure_matches_dispatch_shape(
                 procedure,
+                argument_kinds,
                 argument_types,
                 return_type=return_type,
             ):
@@ -4296,10 +4356,13 @@ class AlgolIrCompiler:
             )
             self._emit(IrOp.BRANCH_Z, IrRegister(matches), IrLabel(else_label))
             call_arguments: list[int] = []
-            for arg_index, (argument_type, parameter) in enumerate(
-                zip(argument_types, procedure.parameters, strict=True)
+            for arg_index, (argument_kind, argument_type, parameter) in enumerate(
+                zip(argument_kinds, argument_types, procedure.parameters, strict=True)
             ):
                 argument_pointer = _VALUE_PARAM_BASE_REG + arg_index
+                if argument_kind == "array":
+                    call_arguments.append(argument_pointer)
+                    continue
                 if parameter.mode == _NAME_MODE:
                     call_arguments.append(argument_pointer)
                     continue
@@ -4349,6 +4412,7 @@ class AlgolIrCompiler:
     def _procedure_matches_dispatch_shape(
         self,
         procedure: ProcedureDescriptor,
+        argument_kinds: tuple[str, ...],
         argument_types: tuple[str, ...],
         *,
         return_type: str | None,
@@ -4361,13 +4425,24 @@ class AlgolIrCompiler:
             actual_type=procedure.return_type,
         ):
             return False
+        if len(argument_kinds) != len(argument_types):
+            return False
         if len(procedure.parameters) != len(argument_types):
             return False
-        for parameter, argument_type in zip(
+        for argument_kind, parameter, argument_type in zip(
+            argument_kinds,
             procedure.parameters,
             argument_types,
             strict=True,
         ):
+            if argument_kind == "array":
+                if parameter.kind != "array":
+                    return False
+                if parameter.type_name != argument_type:
+                    return False
+                continue
+            if argument_kind != "scalar":
+                return False
             if parameter.kind != "scalar":
                 return False
             if parameter.mode == _VALUE_MODE:
@@ -6116,19 +6191,30 @@ def _has_comparison(children: list[ASTNode | Token]) -> bool:
     )
 
 
-def _procedure_parameter_dispatch_type_tag(type_name: str) -> str:
+def _procedure_parameter_dispatch_type_tag(
+    type_name: str,
+    *,
+    kind: str = "scalar",
+) -> str:
     tags = {
         _INTEGER_TYPE: "i32",
         _BOOLEAN_TYPE: "bool",
         _REAL_TYPE: "f64",
         _STRING_TYPE: "str",
     }
+    if kind not in {"array", "scalar"}:
+        raise CompileError(
+            f"unsupported procedure parameter dispatch argument kind {kind!r}"
+        )
     try:
-        return tags[type_name]
+        tag = tags[type_name]
     except KeyError as exc:
         raise CompileError(
             f"unsupported procedure parameter dispatch type {type_name!r}"
         ) from exc
+    if kind == "array":
+        return f"array_{tag}"
+    return tag
 
 
 def _procedure_return_type_satisfies(

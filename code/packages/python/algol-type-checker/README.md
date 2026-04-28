@@ -53,12 +53,13 @@ call-by-name, typed whole-array formals, label formals, switch formals, and
 no-argument statement procedure formals. `value` whole-array parameters are
 also accepted and lowered as copy formals, while `value` label, switch, and
 procedure formals use copied ids or descriptors. Formal procedure parameters
-accept procedure-valued actuals with scalar `value` or by-name parameters,
-rejecting only call shapes that would pass a non-assignable actual to a written
-by-name parameter. Real-valued formal procedure parameters accept
-integer-returning procedure actuals via the same numeric promotion rule used by
-scalar calls. The checker keeps guarding the remaining full-ALGOL gaps,
-including non-scalar parameters on procedure-valued actuals.
+accept procedure-valued actuals with scalar `value` or by-name parameters and
+whole-array parameters, rejecting only call shapes that would pass a
+non-assignable actual to a written by-name parameter. Real-valued formal
+procedure parameters accept integer-returning procedure actuals via the same
+numeric promotion rule used by scalar calls. The checker keeps guarding the
+remaining full-ALGOL gaps, including label, switch, procedure, and other
+non-array non-scalar parameters on procedure-valued actuals.
 
 ```python
 from algol_parser import parse_algol
