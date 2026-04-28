@@ -51,6 +51,7 @@ from sql_codegen import (
     CloseScan,
     Coalesce,
     CommitTransaction,
+    ComputeWindowFunctions,
     CreateIndex,
     CreateTable,
     DeleteRows,
@@ -98,8 +99,6 @@ from sql_codegen import (
     UpdateAgg,
     UpdateRows,
     WinFunc,
-    WinFuncSpec,
-    ComputeWindowFunctions,
 )
 from sql_codegen import IrAggFunc as AggFunc
 
@@ -1105,7 +1104,9 @@ def _do_compute_window(ins: ComputeWindowFunctions, st: _VmState) -> None:
         for partition in partitions.values():
             # --- Sort within partition -----------------------------------
             if spec.order_cols:
-                def _sort_key(r: dict[str, SqlValue], cols: tuple[tuple[str, bool], ...]) -> tuple[object, ...]:
+                def _sort_key(
+                    r: dict[str, SqlValue], cols: tuple[tuple[str, bool], ...]
+                ) -> tuple[object, ...]:
                     result_key: list[object] = []
                     for col, desc in cols:
                         v = r.get(col)
@@ -1156,10 +1157,7 @@ def _do_compute_window(ins: ComputeWindowFunctions, st: _VmState) -> None:
                 for row in partition:
                     v = row.get(arg_col) if arg_col else None
                     if v is not None:
-                        if total is None:
-                            total = v
-                        else:
-                            total = total + v  # type: ignore[operator]
+                        total = v if total is None else total + v  # type: ignore[operator]
                 for row in partition:
                     row[result_col] = total
 
@@ -1174,7 +1172,10 @@ def _do_compute_window(ins: ComputeWindowFunctions, st: _VmState) -> None:
                     row[result_col] = count
 
             elif func == WinFunc.AVG:
-                vals = [row.get(arg_col) for row in partition if arg_col and row.get(arg_col) is not None]
+                vals = [
+                    row.get(arg_col) for row in partition
+                    if arg_col and row.get(arg_col) is not None
+                ]
                 avg: SqlValue = None
                 if vals:
                     s = sum(float(v) for v in vals)  # type: ignore[arg-type]
@@ -1266,7 +1267,9 @@ class _Descending:
         return isinstance(other, _Descending) and self.key == other.key
 
 
-def _order_vals(row: dict[str, SqlValue], order_cols: tuple[tuple[str, bool], ...]) -> tuple[SqlValue, ...]:
+def _order_vals(
+    row: dict[str, SqlValue], order_cols: tuple[tuple[str, bool], ...]
+) -> tuple[SqlValue, ...]:
     """Extract the ORDER BY key values from a row dict."""
     return tuple(row.get(col) for col, _ in order_cols)
 

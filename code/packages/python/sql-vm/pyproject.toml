@@ -54,6 +54,7 @@ addopts = "--cov=sql_vm --cov-report=term-missing --cov-fail-under=80"
 
 [tool.coverage.run]
 source = ["src/sql_vm"]
+omit = ["**/sql_vm/* 2.py"]
 
 [tool.coverage.report]
 fail_under = 80
