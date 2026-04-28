@@ -66,6 +66,8 @@ All notable changes to this package will be documented in this file.
 - Emitted real-returning procedures, eval thunks, and procedure-parameter
   dispatchers through the WASM backend's dedicated f64 result register so they
   can also call integer-returning procedures safely.
+- Allowed top-level ALGOL programs without a root integer `result` scalar to
+  compile by returning `0` from the WASM `_start` wrapper.
 
 ## [0.1.0] - 2026-04-20
 

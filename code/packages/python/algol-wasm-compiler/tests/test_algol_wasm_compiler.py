@@ -45,6 +45,22 @@ class TestAlgolWasmCompiler:
             compile_source("begin integer result; result := false end")
         assert raised.value.stage == "type-check"
 
+    def test_program_without_result_variable_returns_zero(self) -> None:
+        compiled = compile_source("begin print('Hi') end")
+        captured: list[str] = []
+        runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
+
+        assert runtime.load_and_run(compiled.binary, "_start", []) == [0]
+        assert "".join(captured) == "Hi"
+
+    def test_non_integer_result_name_returns_zero(self) -> None:
+        compiled = compile_source("begin real result; result := 2.5; print(result) end")
+        captured: list[str] = []
+        runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
+
+        assert runtime.load_and_run(compiled.binary, "_start", []) == [0]
+        assert "".join(captured) == "2.500"
+
     def test_procedure_call_expression_by_name_runs_through_eval_thunk(
         self,
     ) -> None:

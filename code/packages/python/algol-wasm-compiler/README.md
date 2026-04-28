@@ -8,9 +8,10 @@ This package is the orchestration layer for the first ALGOL 60 compiled lane:
 ALGOL source -> parse -> type-check -> IR -> WASM module -> WASM bytes
 ```
 
-Programs still declare an integer variable named `result`; `_start` returns
-that value after the outer block finishes. Within that shape, the current lane
-already supports a substantial ALGOL 60 surface:
+When the root block declares an integer scalar named `result`, `_start` returns
+that value after the outer block finishes. Programs without that compatibility
+variable now compile normally and return `0` from `_start`. Within that shape,
+the current lane already supports a substantial ALGOL 60 surface:
 
 - nested blocks and nested procedures with lexical access through static links
 - `integer`, `boolean`, `real`, and `string` scalar values
@@ -42,6 +43,12 @@ from wasm_runtime import WasiConfig, WasiHost, WasmRuntime
 compiled = compile_source("begin integer result; result := 7 end")
 assert WasmRuntime().load_and_run(compiled.binary, "_start", []) == [7]
 
+print_only = compile_source("begin print('Hi') end")
+captured_print: list[str] = []
+runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured_print.append)))
+assert runtime.load_and_run(print_only.binary, "_start", []) == [0]
+assert "".join(captured_print) == "Hi"
+
 with_array = compile_source(
     "begin integer result; integer array a[1:3]; "
     "a[2] := 9; result := a[2] end"
@@ -61,11 +68,11 @@ showcase = compile_source(
     "result := a[2] + a[3] "
     "end"
 )
-captured: list[str] = []
-runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
+captured_showcase: list[str] = []
+runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured_showcase.append)))
 
 assert runtime.load_and_run(showcase.binary, "_start", []) == [12]
-assert "".join(captured) == "ALGOL 2 7.000"
+assert "".join(captured_showcase) == "ALGOL 2 7.000"
 ```
 
 ## Golden Fixtures

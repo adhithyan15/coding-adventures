@@ -499,12 +499,7 @@ class AlgolIrCompiler:
         self.current_function_return_type = _INTEGER_TYPE
         root_scope = self._compile_block(block, parent=None)
 
-        result_symbol = root_scope.semantic_block.scope.symbols.get("result")
-        if result_symbol is None:
-            raise CompileError(
-                "compiled ALGOL programs must declare integer variable 'result'"
-            )
-        self._emit_load_symbol(result_symbol, root_scope, _RESULT_REG)
+        self._emit_program_result(root_scope)
         self._emit(IrOp.HALT)
         self._compile_procedures(type_result.semantic.procedures)
         if self.has_by_name_parameters:
@@ -5109,6 +5104,17 @@ class AlgolIrCompiler:
             IrRegister(scope.frame_base_reg),
             IrRegister(offset_reg),
         )
+
+    def _emit_program_result(self, scope: _FrameScope) -> None:
+        result_symbol = scope.semantic_block.scope.symbols.get("result")
+        if (
+            result_symbol is not None
+            and result_symbol.kind == "scalar"
+            and result_symbol.type_name == _INTEGER_TYPE
+        ):
+            self._emit_load_symbol(result_symbol, scope, _RESULT_REG)
+            return
+        self._emit(IrOp.LOAD_IMM, IrRegister(_RESULT_REG), IrImmediate(0))
 
     def _emit_load_scalar(
         self,

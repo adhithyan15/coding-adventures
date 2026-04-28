@@ -61,6 +61,9 @@ All notable changes to this package will be documented in this file.
 - Executed real-returning procedures that call integer-returning procedures by
   keeping integer call results and real function returns in separate WASM
   virtual registers.
+- Compiled top-level ALGOL programs without a root integer `result` scalar by
+  returning `0` from the WASM `_start` wrapper while preserving the existing
+  integer `result` return convention when present.
 - Added a convergence golden fixture that combines conditional expressions,
   exponentiation, chained assignment, by-name array summation, real arithmetic,
   and output in one end-to-end program.
