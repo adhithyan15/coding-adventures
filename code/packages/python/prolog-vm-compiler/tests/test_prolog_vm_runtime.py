@@ -2,13 +2,20 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 from logic_engine import atom
 
 from prolog_vm_compiler import (
+    compile_swi_prolog_project_from_files,
     compile_swi_prolog_source,
     create_prolog_vm_runtime,
+    create_swi_prolog_file_runtime,
+    create_swi_prolog_project_file_runtime,
+    create_swi_prolog_project_runtime,
     create_swi_prolog_vm_runtime,
+    run_compiled_prolog_query_answers,
 )
 
 
@@ -85,6 +92,94 @@ class TestPrologVMRuntime:
 
         assert [answer.as_dict() for answer in runtime.query("parent(homer, Who)")] == [
             {"Who": atom("bart")},
+        ]
+
+    def test_file_runtime_loads_includes_and_answers_ad_hoc_queries(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        facts_path = tmp_path / "facts.pl"
+        facts_path.write_text(
+            "parent(homer, bart).\nparent(homer, lisa).\n",
+            encoding="utf-8",
+        )
+        app_path = tmp_path / "app.pl"
+        app_path.write_text(
+            ":- include('facts.pl').\n"
+            "ancestor(X, Y) :- parent(X, Y).\n",
+            encoding="utf-8",
+        )
+
+        runtime = create_swi_prolog_file_runtime(app_path)
+
+        answers = runtime.query("ancestor(homer, Who)")
+
+        assert [answer.as_dict() for answer in answers] == [
+            {"Who": atom("bart")},
+            {"Who": atom("lisa")},
+        ]
+
+    def test_project_file_compiler_runs_linked_module_source_queries(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        family_path = tmp_path / "family.pl"
+        family_path.write_text(
+            ":- module(family, [ancestor/2]).\n"
+            "ancestor(homer, bart).\n"
+            "ancestor(homer, lisa).\n",
+            encoding="utf-8",
+        )
+        app_path = tmp_path / "app.pl"
+        app_path.write_text(
+            ":- module(app, [run/1]).\n"
+            ":- use_module(family, [ancestor/2]).\n"
+            "run(Who) :- ancestor(homer, Who).\n"
+            "?- run(Who).\n",
+            encoding="utf-8",
+        )
+
+        compiled = compile_swi_prolog_project_from_files(app_path)
+
+        assert [
+            answer.as_dict() for answer in run_compiled_prolog_query_answers(compiled)
+        ] == [
+            {"Who": atom("bart")},
+            {"Who": atom("lisa")},
+        ]
+
+    def test_project_runtime_answers_global_ad_hoc_queries(self) -> None:
+        runtime = create_swi_prolog_project_runtime(
+            """
+            parent(homer, bart).
+            """,
+            """
+            parent(homer, lisa).
+            """,
+        )
+
+        assert [answer.as_dict() for answer in runtime.query("parent(homer, Who)")] == [
+            {"Who": atom("bart")},
+            {"Who": atom("lisa")},
+        ]
+
+    def test_project_file_runtime_answers_consulted_global_queries(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        facts_path = tmp_path / "facts.pl"
+        facts_path.write_text(
+            "parent(homer, bart).\nparent(homer, lisa).\n",
+            encoding="utf-8",
+        )
+        app_path = tmp_path / "app.pl"
+        app_path.write_text(":- consult(facts).\n", encoding="utf-8")
+
+        runtime = create_swi_prolog_project_file_runtime(app_path)
+
+        assert [answer.as_dict() for answer in runtime.query("parent(homer, Who)")] == [
+            {"Who": atom("bart")},
+            {"Who": atom("lisa")},
         ]
 
     def test_runtime_rejects_empty_and_negative_limited_queries(self) -> None:

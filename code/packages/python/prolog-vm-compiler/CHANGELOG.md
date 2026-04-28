@@ -9,6 +9,8 @@
   executing source queries.
 - Add a stateful SWI Prolog VM runtime for repeated ad-hoc query strings,
   initialized dynamic state, optional query commits, and raw query values.
+- Add file-backed Prolog VM compile/runtime helpers for loading `.pl` files and
+  linked project file graphs through `prolog-loader`.
 
 ## 0.1.0
 
