@@ -4,6 +4,37 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-27: Python BUILD files must not explicitly reference transitive local deps
+
+The build-tool's `-validate-build-files` flag checks that every `../xxx` reference
+in a Python BUILD file is either:
+1. A **transitive predecessor** of the package in the dependency graph (declared via
+   pyproject.toml runtime deps, which chain transitively), OR
+2. Listed in `[project.optional-dependencies]` in pyproject.toml.
+
+If a BUILD file installs `../intel4004-simulator` but `intel4004-simulator` is NOT
+in pyproject.toml and NOT in optional-deps, CI fails with:
+`undeclared local package refs: python/intel4004-simulator`
+
+**Root cause pattern:** A BUILD file was copied from a "kitchen-sink" install list
+(e.g. from `tetrad-runtime/BUILD`) that installs ALL transitive deps explicitly.
+But in the new package's own pyproject.toml, only a subset is declared — so the
+build-tool doesn't see the rest as legal references.
+
+**Fix:**
+- Only list packages in the BUILD file that are either:
+  - Direct runtime/dev deps in pyproject.toml (these become prereqs)
+  - In `[project.optional-dependencies]`
+- Remove any packages that are **only** transitive (e.g. `intel4004-backend` declares
+  `intel4004-simulator`, so installing `intel4004-backend` installs the simulator too)
+- Never copy a BUILD file verbatim from a deeper package without auditing the ref list.
+
+**Example:** `wasm-backend` references tetrad-runtime (a dev dep). tetrad-runtime
+depends on intel4004-backend → intel4004-simulator. The wasm-backend BUILD must
+NOT list `../intel4004-simulator` directly — it gets installed transitively.
+
+---
+
 ### 2026-04-23: QR format info `write_format_info` — bit ordering is MSB-first in row 8
 
 ISO/IEC 18004 places format information bits **MSB-first** (f14 → f9) going
