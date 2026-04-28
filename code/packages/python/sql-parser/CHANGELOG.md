@@ -2,6 +2,15 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.8.0] - 2026-04-27
+
+### Added — Phase 6: CREATE / DROP VIEW
+
+- `create_view_stmt` and `drop_view_stmt` rules added to `sql.grammar` and
+  wired into the top-level `statement` alternation.
+- `_grammar.py` (compiled grammar cache) updated with the two new
+  `GrammarRule` objects and updated `statement` `Alternation`.
+
 ## [0.7.0] - 2026-04-27
 
 ### Added — Phase 5b: Recursive CTEs

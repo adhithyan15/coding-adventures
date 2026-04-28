@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.3.0] - 2026-04-27
+
+### Added — Phase 6: CREATE / DROP VIEW
+
+- **`CREATE VIEW [IF NOT EXISTS] name AS query`** — the engine intercepts
+  `CreateViewStmt` before calling `plan()` and stores the view's defining
+  `SelectStmt` in the connection's `_view_defs` dict.  `IF NOT EXISTS` silently
+  skips the operation when the view already exists; without the flag an existing
+  view name raises `ProgrammingError`.
+- **`DROP VIEW [IF EXISTS] name`** — removes the named view from `_view_defs`.
+  `IF EXISTS` is a no-op when the view is absent; without the flag a missing
+  name raises `ProgrammingError("no such view: …")`.
+- **View expansion in the adapter** — `to_statement()` now accepts a
+  `view_defs: dict[str, SelectStmt] | None` parameter that is threaded through
+  `_query_stmt` → `_select` → `_table_ref` / `_join_clause`.  A plain table
+  reference whose name matches an entry in `view_defs` is expanded inline to a
+  `DerivedTableRef`, exactly like a non-recursive CTE.  CTEs take priority over
+  views with the same name.
+- **`adapter._create_view` / `_drop_view`** helper functions parse the two new
+  statement forms and produce the matching planner AST nodes.
+- **23 new tests** in `tests/test_tier3_views.py` covering grammar parsing,
+  adapter AST construction, view expansion, and end-to-end SQL execution.
+
 ## [1.2.0] - 2026-04-27
 
 ### Added — Phase 5b: Recursive CTEs
