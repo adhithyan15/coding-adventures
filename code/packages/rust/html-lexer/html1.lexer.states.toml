@@ -4903,7 +4903,12 @@ from = "doctype_name"
 matcher = { eof = true }
 to = "done"
 consume = false
-actions = ["parse_error(eof-in-doctype)", "emit_current_token", "emit(EOF)"]
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
 
 [[transitions]]
 from = "doctype_name"
@@ -4942,7 +4947,12 @@ from = "after_doctype_name"
 matcher = { eof = true }
 to = "done"
 consume = false
-actions = ["parse_error(eof-in-doctype)", "emit_current_token", "emit(EOF)"]
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
 
 [[transitions]]
 from = "after_doctype_name"

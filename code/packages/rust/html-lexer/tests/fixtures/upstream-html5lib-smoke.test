@@ -49,6 +49,16 @@
       ]
     },
     {
+      "description": "doctype name eof force quirks",
+      "input": "<!DOCTYPE html",
+      "output": [
+        ["DOCTYPE", "html", null, null, false]
+      ],
+      "errors": [
+        {"code": "eof-in-doctype", "line": 1, "col": 15}
+      ]
+    },
+    {
       "description": "self closing start tag uses html5lib boolean slot",
       "input": "<br/>",
       "output": [
