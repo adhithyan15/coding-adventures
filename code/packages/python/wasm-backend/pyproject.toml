@@ -32,6 +32,9 @@ dev = [
     "coding-adventures-tetrad-type-checker",
     "coding-adventures-tetrad-compiler",
     "coding-adventures-simulator-protocol",
+    "coding-adventures-intel4004-simulator",
+    "coding-adventures-intel4004-backend",
+    "coding-adventures-debug-sidecar",
 ]
 
 [tool.hatch.build.targets.wheel]
