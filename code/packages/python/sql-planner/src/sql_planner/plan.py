@@ -544,9 +544,9 @@ class WindowFuncSpec:
     """
 
     func: str
-    arg_expr: "Expr | None"
-    partition_by: tuple["Expr", ...]
-    order_by: tuple[tuple["Expr", bool], ...]
+    arg_expr: Expr | None
+    partition_by: tuple[Expr, ...]
+    order_by: tuple[tuple[Expr, bool], ...]
     alias: str
 
 
@@ -568,7 +568,7 @@ class WindowAgg:
     post-processing steps.
     """
 
-    input: "LogicalPlan"
+    input: LogicalPlan
     specs: tuple[WindowFuncSpec, ...]
     output_cols: tuple[str, ...]  # inner cols + window alias cols
 

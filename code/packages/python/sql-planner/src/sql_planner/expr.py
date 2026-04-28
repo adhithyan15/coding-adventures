@@ -321,9 +321,9 @@ class WindowFuncExpr:
     """
 
     func: str                                    # e.g. "row_number", "sum"
-    arg: "Expr | None"                           # None for arg-free funcs
-    partition_by: tuple["Expr", ...] = ()
-    order_by: tuple[tuple["Expr", bool], ...] = ()  # (expr, descending)
+    arg: Expr | None                           # None for arg-free funcs
+    partition_by: tuple[Expr, ...] = ()
+    order_by: tuple[tuple[Expr, bool], ...] = ()  # (expr, descending)
 
 
 # The type union every non-specialized consumer should match on. Order

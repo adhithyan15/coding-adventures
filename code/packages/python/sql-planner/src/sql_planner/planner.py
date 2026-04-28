@@ -241,7 +241,6 @@ def _plan_select(
     #    append the window function output columns.
     win_items = [it for it in resolved_items if isinstance(it.expr, WindowFuncExpr)]
     if win_items:
-        win_names_set = [id(it) for it in win_items]  # identity-based dedup guard
         specs: list[P.WindowFuncSpec] = []
         for i, it in enumerate(win_items):
             wf: WindowFuncExpr = it.expr  # type: ignore[assignment]
