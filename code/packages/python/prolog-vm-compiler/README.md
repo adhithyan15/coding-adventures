@@ -1,0 +1,92 @@
+# prolog-vm-compiler
+
+`prolog-vm-compiler` lowers loaded Prolog artifacts into standardized
+`logic-instructions` programs that can run through `logic-vm`.
+
+It is the bridge between the Prolog frontend stack and the Logic VM:
+
+- parse and load source with `prolog-loader`
+- collect relation declarations, dynamic declarations, clauses, and queries
+- compile ground Prolog facts to `FACT`
+- compile Prolog rules and variable-bearing facts to `RULE`
+- preserve source queries as VM `QUERY` instructions
+- optionally adapt supported Prolog builtins into executable logic builtin goals
+- run source queries with named answer bindings
+- run initialization query slots before later source queries when callers want
+  stateful dynamic startup behavior
+
+## Quick Start
+
+```python
+from logic_engine import atom
+from prolog_vm_compiler import compile_swi_prolog_source, run_compiled_prolog_query
+
+compiled = compile_swi_prolog_source(
+    """
+    parent(homer, bart).
+    parent(homer, lisa).
+    ancestor(X, Y) :- parent(X, Y).
+    ancestor(X, Y) :- parent(X, Z), ancestor(Z, Y).
+
+    ?- ancestor(homer, Who).
+    """,
+)
+
+assert run_compiled_prolog_query(compiled) == [atom("bart"), atom("lisa")]
+```
+
+## Named Answers And Initialization
+
+```python
+from logic_engine import atom
+from prolog_vm_compiler import (
+    compile_swi_prolog_source,
+    run_initialized_compiled_prolog_query_answers,
+)
+
+compiled = compile_swi_prolog_source(
+    """
+    :- initialization(dynamic(seen/1)).
+    :- initialization(assertz(seen(alpha))).
+
+    ?- seen(Name).
+    """,
+)
+
+answers = run_initialized_compiled_prolog_query_answers(compiled)
+
+assert [answer.as_dict() for answer in answers] == [{"Name": atom("alpha")}]
+```
+
+## Stress Coverage
+
+The package includes end-to-end stress tests for:
+
+- recursive graph/path search
+- linked modules and imported predicates
+- DCG expansion with `phrase/3`
+- arithmetic evaluation and comparison
+- collection predicates such as `findall/3`
+- dynamic predicates seeded by initialization directives
+- named Python answer bindings
+- loader term/goal expansion before VM compilation
+
+## Layer Position
+
+```text
+Prolog dialect parser
+    ↓
+prolog-loader
+    ↓
+prolog-vm-compiler
+    ↓
+logic-instructions
+    ↓
+logic-vm
+```
+
+## Development
+
+```bash
+bash BUILD
+```

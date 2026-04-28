@@ -11,6 +11,8 @@ Public surface
 ``TypeMapper``          — type alias for a runtime-value → type-string callable.
 ``default_type_mapper`` — the Python-primitive default type mapper.
 ``BuiltinRegistry``     — maps builtin names to host callables.
+``DebugHooks``          — callback interface for debug adapters (LANG06).
+``StepMode``            — step granularity enum (IN, OVER, OUT).
 ``VMError``             — base exception.
 ``UnknownOpcodeError``, ``FrameOverflowError``, ``UndefinedVariableError``,
 ``VMInterrupt``         — specific error types.
@@ -18,6 +20,7 @@ Public surface
 
 from vm_core.builtins import BuiltinRegistry
 from vm_core.core import VMCore
+from vm_core.debug import DebugHooks, StepMode
 from vm_core.errors import (
     FrameOverflowError,
     UndefinedVariableError,
@@ -42,6 +45,8 @@ __all__ = [
     "TypeMapper",
     "default_type_mapper",
     "BuiltinRegistry",
+    "DebugHooks",
+    "StepMode",
     "VMError",
     "UnknownOpcodeError",
     "FrameOverflowError",

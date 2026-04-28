@@ -64,6 +64,10 @@ _ONCE = sym("once")
 _NOT = sym("not")
 _NEGATION = sym("\\+")
 _PHRASE = sym("phrase")
+_FINDALL = sym("findall")
+_BAGOF = sym("bagof")
+_SETOF = sym("setof")
+_FORALL = sym("forall")
 
 
 class ParsedSourceLike(Protocol):
@@ -576,8 +580,48 @@ def _expand_query(
     )
     return ParsedQuery(
         goal=_goal_from_expanded_term(expanded_goal_term),
-        variables=query_value.variables,
+        variables=_expanded_query_variables(query_value.variables, expanded_goal_term),
     )
+
+
+def _expanded_query_variables(
+    original_variables: dict[str, LogicVar],
+    expanded_goal_term: Term,
+) -> dict[str, LogicVar]:
+    expanded_by_name = _term_variables_by_display_name(expanded_goal_term)
+    return {
+        name: expanded_by_name.get(name, variable_value)
+        for name, variable_value in original_variables.items()
+    }
+
+
+def _term_variables_by_display_name(term_value: Term) -> dict[str, LogicVar]:
+    variables: dict[str, LogicVar] = {}
+    for variable_value in _term_variables_in_order(term_value):
+        variables.setdefault(variable_value.display_name.name, variable_value)
+    return variables
+
+
+def _term_variables_in_order(term_value: Term) -> tuple[LogicVar, ...]:
+    ordered: list[LogicVar] = []
+    seen: set[LogicVar] = set()
+    _collect_term_variables_in_order(term_value, seen, ordered)
+    return tuple(ordered)
+
+
+def _collect_term_variables_in_order(
+    term_value: Term,
+    seen: set[LogicVar],
+    ordered: list[LogicVar],
+) -> None:
+    if isinstance(term_value, LogicVar):
+        if term_value not in seen:
+            seen.add(term_value)
+            ordered.append(term_value)
+        return
+    if isinstance(term_value, Compound):
+        for argument in term_value.args:
+            _collect_term_variables_in_order(argument, seen, ordered)
 
 
 def _expand_goal_term(
@@ -634,7 +678,7 @@ def _apply_expansion(
     replacement: Term,
 ) -> Term | None:
     fresh_pattern, fresh_replacement = _freshen_expansion_terms(pattern, replacement)
-    substitution = unify(term_value, fresh_pattern)
+    substitution = unify(fresh_pattern, term_value)
     if substitution is None:
         return None
     return reify(fresh_replacement, substitution)
@@ -843,10 +887,10 @@ def _merge_predicate_registries(
             )
         for directive_value in registry.initialization_directives:
             merged = merged.add_initialization(directive_value)
-        for expansion_value in registry.term_expansions:
-            merged = merged.add_term_expansion(expansion_value)
-        for expansion_value in registry.goal_expansions:
-            merged = merged.add_goal_expansion(expansion_value)
+        for term_expansion in registry.term_expansions:
+            merged = merged.add_term_expansion(term_expansion)
+        for goal_expansion in registry.goal_expansions:
+            merged = merged.add_goal_expansion(goal_expansion)
     return merged
 
 
@@ -1327,6 +1371,21 @@ def _rewrite_goal_term(
             *term_value.args[1:],
         )
         return term(term_value.functor, *rewritten_args)
+
+    if term_value.functor in {_FINDALL, _BAGOF, _SETOF} and len(term_value.args) == 3:
+        return term(
+            term_value.functor,
+            term_value.args[0],
+            _rewrite_goal_term(term_value.args[1], resolver, module_resolvers),
+            term_value.args[2],
+        )
+
+    if term_value.functor == _FORALL and len(term_value.args) == 2:
+        return term(
+            term_value.functor,
+            _rewrite_goal_term(term_value.args[0], resolver, module_resolvers),
+            _rewrite_goal_term(term_value.args[1], resolver, module_resolvers),
+        )
 
     resolved_relation = resolver(
         Relation(symbol=term_value.functor, arity=len(term_value.args)),

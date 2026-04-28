@@ -22,6 +22,13 @@ checked element loads/stores through the descriptor. Block and procedure exits
 restore the heap pointer to the activation's entry mark, so dynamic arrays keep
 ALGOL block lifetime instead of leaking through loops or recursive calls.
 
+Expression lowering includes mixed integer/real arithmetic, boolean operators,
+comparisons, chained assignment targets, branch-selected conditional
+expressions, and ALGOL-left-associative exponentiation when the exponent is an
+integer. Real bases with negative integer exponents are lowered through a
+reciprocal path; arbitrary real exponents remain outside this phase until the
+runtime has a real `pow` implementation instead of an approximation shortcut.
+
 Scalar by-name parameters lower through a one-word cell in the callee frame.
 Passing a scalar variable as a by-name actual gives the callee a storage pointer,
 so assignments to the formal write back to the caller slot while value
@@ -41,8 +48,11 @@ until Phase 5 grows full store-helper coverage. The supported integer by-name
 surface is covered by the WASM acceptance suite, including typed whole-array
 formals passed as descriptor pointers, label formals passed as pending-goto
 targets, and switch formals passed as descriptor closures that re-evaluate in
-the caller's declaring scope. Full ALGOL forms such as procedure-valued
-formals and escaping thunk descriptors remain future work.
+the caller's declaring scope. No-argument statement procedure formals pass
+descriptor closures containing the callee procedure id and static link; formal
+calls dispatch through a generated helper so forwarded procedure formals keep
+the original environment. Full ALGOL forms such as typed or argument-taking
+procedure formals and escaping thunk descriptors remain future work.
 
 Direct `goto` statements lower to ordinary IR `JUMP` instructions targeting
 generated ALGOL labels. Local jumps emit the jump directly. Direct nonlocal

@@ -28,6 +28,10 @@ All notable changes to this package will be documented in this file.
 - Added Phase 7b direct nonlocal block `goto` resolution within one
   procedure/function, while keeping procedure-crossing jumps and nonlocal
   designational branches guarded.
+- Added semantic checking for chained assignments, ALGOL conditional
+  expressions, and numeric exponentiation with integer exponents.
+- Accepted parser-tolerated repeated/trailing semicolons through existing
+  statement-list traversal.
 
 ## [0.1.0] - 2026-04-20
 
