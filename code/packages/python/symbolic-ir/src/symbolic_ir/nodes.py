@@ -278,3 +278,13 @@ LAPLACE = IRSymbol("Laplace")         # L{f(t)} — Laplace transform head
 ILT = IRSymbol("ILT")                 # L⁻¹{F(s)} — inverse Laplace transform
 FOURIER = IRSymbol("Fourier")         # F{f(t)} — Fourier transform head
 IFOURIER = IRSymbol("IFourier")       # F⁻¹{F(ω)} — inverse Fourier transform
+
+# ODE solving (cas-ode)
+#
+# ODE2 is the head for MACSYMA's ode2(eqn, y, x) operation.
+# C_CONST, C1, C2 are the integration constants for first- and second-order
+# ODEs respectively, matching MACSYMA's %c, %c1, %c2 naming convention.
+ODE2 = IRSymbol("ODE2")        # ode2(eqn, y, x) — ODE solver head
+C_CONST = IRSymbol("%c")       # integration constant for first-order ODEs
+C1 = IRSymbol("%c1")           # first  integration constant for 2nd-order ODEs
+C2 = IRSymbol("%c2")           # second integration constant for 2nd-order ODEs

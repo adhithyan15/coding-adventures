@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.7.4 — 2026-04-27
+
+**Add `ODE2`, `C_CONST`, `C1`, `C2` head symbols for ODE solving.**
+
+Added four new IR head constants to `nodes.py` for the `cas-ode` package (D3):
+
+- `ODE2 = IRSymbol("ODE2")` — head for `ode2(eqn, y, x)` ODE solver.
+- `C_CONST = IRSymbol("%c")` — first-order ODE integration constant.
+- `C1 = IRSymbol("%c1")` — first integration constant for 2nd-order ODEs.
+- `C2 = IRSymbol("%c2")` — second integration constant for 2nd-order ODEs.
+
+All four are exported from `__init__.py`.
+
+---
+
 ## 0.7.3 — 2026-04-27
 
 **Add `FOURIER`, `IFOURIER` head symbols for Fourier transforms.**

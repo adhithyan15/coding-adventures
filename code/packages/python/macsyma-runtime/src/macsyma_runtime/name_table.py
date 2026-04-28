@@ -98,6 +98,9 @@ MNEWTON = IRSymbol("MNewton")
 # Fourier transforms (D — cas-fourier)
 # FOURIER, IFOURIER imported from symbolic_ir above.
 
+# ODE solving (D3 — cas-ode)
+ODE2 = IRSymbol("ODE2")
+
 # Trig transformation heads (B1)
 TRIG_SIMPLIFY = IRSymbol("TrigSimplify")
 TRIG_EXPAND = IRSymbol("TrigExpand")
@@ -221,6 +224,8 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     # Fourier transforms
     "fourier": FOURIER,     # Forward Fourier transform
     "ifourier": IFOURIER,   # Inverse Fourier transform
+    # ODE solving (D3 — cas-ode)
+    "ode2": ODE2,           # ode2(eqn, y, x) — symbolic ODE solver
     # Runtime-owned operations
     "kill": KILL,
     "ev": EV,

@@ -77,6 +77,7 @@ from cas_matrix import (
 from cas_fourier import build_fourier_handler_table as _build_fourier
 from cas_laplace import build_laplace_handler_table as _build_laplace
 from cas_mnewton import build_mnewton_handler_table as _build_mnewton
+from cas_ode import build_ode_handler_table as _build_ode
 from cas_number_theory.handlers import build_number_theory_handler_table as _build_nt
 from cas_simplify import canonical, simplify
 from cas_solve import ALL, solve_linear, solve_quadratic
@@ -1691,6 +1692,8 @@ def build_cas_handler_table() -> dict[str, Handler]:
         **_build_laplace(),
         # --- cas-fourier (Fourier and inverse Fourier transforms) ------------
         **_build_fourier(),
+        # --- cas-ode (ODE solver: separable, linear, 2nd-order const-coeff) -
+        **_build_ode(),
     }
 
 

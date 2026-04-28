@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.32.5 — 2026-04-27
+
+**Wire `cas-ode` into `SymbolicBackend`; add `ODE2` to held heads.**
+
+- `cas_handlers.py`: imports `build_ode_handler_table` from `cas_ode` and
+  merges it into the handler table at the end of `build_cas_handler_table()`.
+- `backends.py`: added `"ODE2"` to `_HELD_HEADS` so that `D(y, x)` inside
+  the ODE expression argument is not pre-evaluated to zero before the ODE
+  handler sees it. This is the correct semantic: the ODE solver needs to
+  inspect the derivative structure of the equation.
+- Added `coding-adventures-cas-ode>=0.1.0` as a dependency.
+
+---
+
 ## 0.32.4 — 2026-04-27
 
 **Wire `cas-fourier` into `SymbolicBackend`.**

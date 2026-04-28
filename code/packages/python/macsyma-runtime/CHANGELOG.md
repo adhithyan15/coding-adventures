@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.8.0 — 2026-04-27
+
+**Add `ode2` to the MACSYMA name table (D3).**
+
+- `name_table.py`: added `ODE2 = IRSymbol("ODE2")` and the mapping
+  `"ode2": ODE2` so MACSYMA users can write `ode2(eqn, y, x)` and have
+  it compile to `ODE2(eqn, y, x)` IR, which the `cas-ode` handler then
+  solves.
+
+---
+
 ## 1.7.0 — 2026-04-27
 
 **Add Fourier transform operations to the MACSYMA name table.**

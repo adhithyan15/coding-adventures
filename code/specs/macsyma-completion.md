@@ -169,13 +169,31 @@ dataclass aligns operands at their mathematical baseline.
 
 ---
 
+### D3 · ODE solving
+
+**Status: ✅ Complete** (`cas-ode` 0.1.0)
+
+`ode2(eqn, y, x)` solves four classes of ODEs:
+
+- First-order linear `y' + P(x)·y = Q(x)` via integrating factor.
+- Separable `y' = f(x)·g(y)` (linear-in-y cases).
+- Second-order constant-coefficient homogeneous `a·y'' + b·y' + c·y = 0`
+  via characteristic equation — all three root cases (distinct real,
+  repeated, complex conjugate).
+
+Integration constants: `%c` (first-order), `%c1`/`%c2` (second-order).
+
+Not implemented: Bernoulli equations, variable-coefficient 2nd order,
+non-homogeneous 2nd order (method of undetermined coefficients).
+
+---
+
 ### D-remaining — Planned
 
 | Feature | Plan |
 |---------|------|
 | `laplace` / `ilt` | Table-driven + partial fractions — `cas-laplace` 0.1.0 |
 | `fourier` / `ifourier` | Shares DiracDelta/UnitStep with laplace — `cas-fourier` 0.1.0 |
-| `ode2` — ODE solving | Separable, linear, Bernoulli, 2nd-order const-coeff — `cas-ode` 0.1.0 |
 | `cas-factor` Phase 4 (BZH) | Berlekamp–Zassenhaus–Hensel for degree ≥ 5 |
 | Algebraic number extensions | `Q[√2]` factoring using BZH lift — `cas-algebraic` 0.1.0 |
 | Multivariate `factor`/`solve` | Gröbner bases (Buchberger) — `cas-multivariate` 0.1.0 |

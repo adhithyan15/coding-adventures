@@ -38,6 +38,9 @@ from symbolic_ir.nodes import (
     ATAN,
     ATANH,
     BLOCK,
+    C1,
+    C2,
+    C_CONST,
     COS,
     COSH,
     DEFINE,
@@ -65,6 +68,7 @@ from symbolic_ir.nodes import (
     NEG,
     NOT,
     NOT_EQUAL,
+    ODE2,
     OR,
     POW,
     RETURN,
@@ -149,4 +153,9 @@ __all__ = [
     "ILT",
     "FOURIER",
     "IFOURIER",
+    # ODE solving (cas-ode)
+    "ODE2",
+    "C_CONST",
+    "C1",
+    "C2",
 ]
