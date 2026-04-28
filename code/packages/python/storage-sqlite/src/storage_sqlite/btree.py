@@ -181,7 +181,7 @@ _INTERIOR_HDR: int = 12
 _CELL_PTR: int = 2
 """Bytes per entry in the cell pointer array."""
 
-# ── Overflow thresholds ───────────────────────────────────────────────────────
+# ── Overflow thresholds (for reference — 4 096-byte default) ─────────────────
 
 # SQLite formulas (§2.3.4 of the file-format spec):
 #   usableSize  = pageSize - reservedSize  (reservedSize = 0 in v1)
@@ -191,6 +191,10 @@ _CELL_PTR: int = 2
 # For 4 096-byte pages:
 #   maxLocal = 4061
 #   minLocal = floor(4084 * 32 / 255) - 23 = 512 - 23 = 489
+#
+# These module-level constants document the 4 096 case.  The helper
+# functions below accept an explicit ``page_size`` parameter so that
+# non-default page sizes work correctly.
 
 _USABLE: int = PAGE_SIZE  # 4 096
 _MAX_LOCAL: int = _USABLE - 35  # 4 061
@@ -227,12 +231,13 @@ class DuplicateRowidError(BTreeError):
 # ── Internal helpers ──────────────────────────────────────────────────────────
 
 
-def _local_payload_size(total: int) -> int:
+def _local_payload_size(total: int, page_size: int = PAGE_SIZE) -> int:
     """Compute how many bytes of ``total`` stay on the leaf page.
 
     Returns ``total`` unchanged when no overflow is needed. When overflow
     is needed, returns the local portion per the SQLite formula — always
-    ≤ ``_MAX_LOCAL`` and always ≥ ``_MIN_LOCAL``.
+    ≤ ``max_local`` and always ≥ ``min_local`` (both derived from
+    *page_size*).
 
     The formula is designed so that adjacent overflow pages are used
     efficiently: the local portion is the largest value of the form
@@ -240,10 +245,13 @@ def _local_payload_size(total: int) -> int:
     total payload. In practice this pushes as much as possible inline
     while keeping overflow pages close to full.
     """
-    if total <= _MAX_LOCAL:
+    max_local = page_size - 35
+    min_local = ((page_size - 12) * 32) // 255 - 23
+    overflow_usable = page_size - 4
+    if total <= max_local:
         return total
-    local = _MIN_LOCAL + (total - _MIN_LOCAL) % _OVERFLOW_USABLE
-    return _MIN_LOCAL if local > _MAX_LOCAL else local
+    local = min_local + (total - min_local) % overflow_usable
+    return min_local if local > max_local else local
 
 
 def _cell_rowid_only(page_data: bytes, ptr: int) -> int:
@@ -259,13 +267,13 @@ def _cell_rowid_only(page_data: bytes, ptr: int) -> int:
     return rowid
 
 
-def _cell_size_on_page(rowid: int, total_payload: int) -> int:
+def _cell_size_on_page(rowid: int, total_payload: int, page_size: int = PAGE_SIZE) -> int:
     """Return the number of bytes a cell occupies on the leaf page.
 
     This is the varint for total-payload, plus the varint for rowid, plus
     the local payload portion, plus 4 if there is an overflow pointer.
     """
-    local = _local_payload_size(total_payload)
+    local = _local_payload_size(total_payload, page_size)
     overflow = total_payload > local
     return (
         len(varint_encode(total_payload))
@@ -369,7 +377,9 @@ def _ptr_array_base(hdr_off: int) -> int:
     return hdr_off + _LEAF_HDR
 
 
-def _read_ptrs(page_data: bytes | bytearray, hdr_off: int, ncells: int) -> list[int]:
+def _read_ptrs(
+    page_data: bytes | bytearray, hdr_off: int, ncells: int, page_size: int = PAGE_SIZE
+) -> list[int]:
     """Return the cell pointer array as a list of absolute page offsets (leaf).
 
     Guards against corrupt page data in two ways:
@@ -381,7 +391,7 @@ def _read_ptrs(page_data: bytes | bytearray, hdr_off: int, ncells: int) -> list[
 
     2. **pointer range** — each u16 pointer must land *inside* the cell
        content area, i.e. strictly after the pointer array itself and
-       strictly before ``PAGE_SIZE``.  A pointer aimed at the page header,
+       strictly before *page_size*.  A pointer aimed at the page header,
        the pointer array, or beyond the page boundary would silently
        mis-decode cell data or produce out-of-bounds reads.
 
@@ -391,7 +401,7 @@ def _read_ptrs(page_data: bytes | bytearray, hdr_off: int, ncells: int) -> list[
     base = _ptr_array_base(hdr_off)
 
     # Maximum number of 2-byte pointers that can possibly fit on the page.
-    max_possible: int = (PAGE_SIZE - hdr_off - _LEAF_HDR) // _CELL_PTR
+    max_possible: int = (page_size - hdr_off - _LEAF_HDR) // _CELL_PTR
     if ncells > max_possible:
         raise CorruptDatabaseError(
             f"ncells={ncells} exceeds maximum possible {max_possible} "
@@ -405,17 +415,17 @@ def _read_ptrs(page_data: bytes | bytearray, hdr_off: int, ncells: int) -> list[
     ptrs: list[int] = []
     for i in range(ncells):
         (ptr,) = struct.unpack_from(">H", page_data, base + i * _CELL_PTR)
-        if ptr < ptr_array_end or ptr >= PAGE_SIZE:
+        if ptr < ptr_array_end or ptr >= page_size:
             raise CorruptDatabaseError(
                 f"cell pointer[{i}]={ptr} is outside valid cell-content range "
-                f"[{ptr_array_end}, {PAGE_SIZE})"
+                f"[{ptr_array_end}, {page_size})"
             )
         ptrs.append(ptr)
     return ptrs
 
 
 def _read_interior_ptrs(
-    page_data: bytes | bytearray, hdr_off: int, ncells: int
+    page_data: bytes | bytearray, hdr_off: int, ncells: int, page_size: int = PAGE_SIZE
 ) -> list[int]:
     """Return the cell pointer array for an *interior* page.
 
@@ -425,7 +435,7 @@ def _read_interior_ptrs(
     """
     base = hdr_off + _INTERIOR_HDR
 
-    max_possible: int = (PAGE_SIZE - hdr_off - _INTERIOR_HDR) // _CELL_PTR
+    max_possible: int = (page_size - hdr_off - _INTERIOR_HDR) // _CELL_PTR
     if ncells > max_possible:
         raise CorruptDatabaseError(
             f"interior page ncells={ncells} exceeds maximum possible "
@@ -436,10 +446,10 @@ def _read_interior_ptrs(
     ptrs: list[int] = []
     for i in range(ncells):
         (ptr,) = struct.unpack_from(">H", page_data, base + i * _CELL_PTR)
-        if ptr < ptr_array_end or ptr >= PAGE_SIZE:
+        if ptr < ptr_array_end or ptr >= page_size:
             raise CorruptDatabaseError(
                 f"interior cell pointer[{i}]={ptr} is outside valid range "
-                f"[{ptr_array_end}, {PAGE_SIZE})"
+                f"[{ptr_array_end}, {page_size})"
             )
         ptrs.append(ptr)
     return ptrs
@@ -468,11 +478,13 @@ def _interior_cell_encode(left_child: int, sep_rowid: int) -> bytes:
     return struct.pack(">I", left_child) + varint_encode_signed(sep_rowid)
 
 
-def _interior_cells_fit(hdr_off: int, cells: list[tuple[int, int]]) -> bool:
+def _interior_cells_fit(
+    hdr_off: int, cells: list[tuple[int, int]], page_size: int = PAGE_SIZE
+) -> bool:
     """Return ``True`` if *cells* fit on an interior page with header at *hdr_off*.
 
     The usable space on an interior page is
-    ``PAGE_SIZE - hdr_off - _INTERIOR_HDR`` bytes.  Each cell consumes
+    ``page_size - hdr_off - _INTERIOR_HDR`` bytes.  Each cell consumes
     2 bytes in the pointer array plus its raw cell bytes.
 
     This is called by :meth:`BTree._push_separator_up` to decide whether
@@ -486,7 +498,7 @@ def _interior_cells_fit(hdr_off: int, cells: list[tuple[int, int]]) -> bool:
         cells_511 = cells_510 + [(511, 51100)]
         assert not _interior_cells_fit(0, cells_511)  # at capacity, False
     """
-    avail = PAGE_SIZE - hdr_off - _INTERIOR_HDR
+    avail = page_size - hdr_off - _INTERIOR_HDR
     needed = sum(
         _CELL_PTR + len(_interior_cell_encode(lc, sep))
         for lc, sep in cells
@@ -501,9 +513,9 @@ def _write_ptrs(buf: bytearray, hdr_off: int, ptrs: list[int]) -> None:
         struct.pack_into(">H", buf, base + i * _CELL_PTR, ptr)
 
 
-def _init_leaf_page(buf: bytearray, hdr_off: int = 0) -> None:
+def _init_leaf_page(buf: bytearray, hdr_off: int = 0, page_size: int = PAGE_SIZE) -> None:
     """Write a fresh empty leaf table page header into *buf*."""
-    _write_hdr(buf, hdr_off, ncells=0, content_start=PAGE_SIZE)
+    _write_hdr(buf, hdr_off, ncells=0, content_start=page_size)
 
 
 # ── BTree ─────────────────────────────────────────────────────────────────────
@@ -588,7 +600,7 @@ class BTree:
         """
         pgno = freelist.allocate() if freelist is not None else pager.allocate()
         buf = bytearray(pager.read(pgno))
-        _init_leaf_page(buf, header_offset)
+        _init_leaf_page(buf, header_offset, pager.page_size)
         pager.write(pgno, bytes(buf))
         return cls(pager, pgno, header_offset=header_offset, freelist=freelist)
 
@@ -637,7 +649,7 @@ class BTree:
         if self._freelist is not None:
             self._freelist.free(pgno)
         else:
-            self._pager.write(pgno, b"\x00" * PAGE_SIZE)
+            self._pager.write(pgno, b"\x00" * self._pager.page_size)
 
     # ── Public operations ─────────────────────────────────────────────────────
 
@@ -670,21 +682,22 @@ class BTree:
         # of interior ancestors from root to the leaf's parent.
         path, leaf_pgno, leaf_hdr_off = self._find_leaf_with_path(rowid)
 
+        ps = self._pager.page_size
         page_data = bytearray(self._pager.read(leaf_pgno))
         hdr = _read_hdr(page_data, leaf_hdr_off)
         ncells = hdr["ncells"]
         content_start = hdr["content_start"]
-        ptrs = _read_ptrs(page_data, leaf_hdr_off, ncells)
+        ptrs = _read_ptrs(page_data, leaf_hdr_off, ncells, ps)
 
         # Validate content_start before using it as a write cursor.  A
         # corrupt header could give a value that overlaps the pointer array
         # (too low) or points beyond the page (too high).  Either would
         # silently produce a corrupt page.
         ptr_array_end_now: int = _ptr_array_base(leaf_hdr_off) + ncells * _CELL_PTR
-        if content_start > PAGE_SIZE or content_start < ptr_array_end_now:
+        if content_start > ps or content_start < ptr_array_end_now:
             raise CorruptDatabaseError(
                 f"content_start={content_start} is out of valid range "
-                f"[{ptr_array_end_now}, {PAGE_SIZE}] on page {leaf_pgno}"
+                f"[{ptr_array_end_now}, {ps}] on page {leaf_pgno}"
             )
 
         # Duplicate check + sorted insert position (raises DuplicateRowidError).
@@ -693,7 +706,7 @@ class BTree:
         # Calculate how much on-page space the new cell needs *without*
         # writing the overflow chain yet, so we can test free space first.
         total = len(payload)
-        cell_size = _cell_size_on_page(rowid, total)
+        cell_size = _cell_size_on_page(rowid, total, ps)
 
         ptr_array_end: int = _ptr_array_base(leaf_hdr_off) + (ncells + 1) * _CELL_PTR
         new_content_start = content_start - cell_size
@@ -717,7 +730,7 @@ class BTree:
             return
 
         # Leaf has room: now write the overflow chain (if needed).
-        local = _local_payload_size(total)
+        local = _local_payload_size(total, ps)
         overflow_pgno = 0
         if total > local:
             overflow_pgno = self._write_overflow(payload, local)
@@ -763,7 +776,7 @@ class BTree:
         leaf_pgno, leaf_hdr_off = self._find_leaf_page(rowid)
         page_data = self._pager.read(leaf_pgno)
         hdr = _read_hdr(page_data, leaf_hdr_off)
-        ptrs = _read_ptrs(page_data, leaf_hdr_off, hdr["ncells"])
+        ptrs = _read_ptrs(page_data, leaf_hdr_off, hdr["ncells"], self._pager.page_size)
 
         lo, hi = 0, len(ptrs)
         while lo < hi:
@@ -801,7 +814,7 @@ class BTree:
         leaf_pgno, leaf_hdr_off = self._find_leaf_page(rowid)
         page_data = bytearray(self._pager.read(leaf_pgno))
         hdr = _read_hdr(page_data, leaf_hdr_off)
-        ptrs = _read_ptrs(page_data, leaf_hdr_off, hdr["ncells"])
+        ptrs = _read_ptrs(page_data, leaf_hdr_off, hdr["ncells"], self._pager.page_size)
 
         # Binary search for the target rowid.
         lo, hi = 0, len(ptrs)
@@ -888,7 +901,7 @@ class BTree:
 
             # Walk the interior cells to find which child to descend into,
             # recording the index so _push_separator_up can find it later.
-            ptrs = _read_interior_ptrs(page_data, hdr_off, hdr["ncells"])
+            ptrs = _read_interior_ptrs(page_data, hdr_off, hdr["ncells"], self._pager.page_size)
             chosen_child = hdr["rightmost_child"]
             chosen_idx = -1  # -1 means rightmost_child was chosen
             for i, ptr in enumerate(ptrs):
@@ -946,12 +959,13 @@ class BTree:
         page_data = self._pager.read(pgno)
         hdr = _read_hdr(page_data, hdr_off)
 
+        ps = self._pager.page_size
         if hdr["page_type"] == PAGE_TYPE_LEAF_TABLE:
-            for ptr in _read_ptrs(page_data, hdr_off, hdr["ncells"]):
+            for ptr in _read_ptrs(page_data, hdr_off, hdr["ncells"], ps):
                 yield self._read_cell(page_data, ptr)
 
         elif hdr["page_type"] == PAGE_TYPE_INTERIOR_TABLE:
-            ptrs = _read_interior_ptrs(page_data, hdr_off, hdr["ncells"])
+            ptrs = _read_interior_ptrs(page_data, hdr_off, hdr["ncells"], ps)
             for ptr in ptrs:
                 left_child, _ = _read_interior_cell(page_data, ptr)
                 if left_child == 0 or left_child > self._pager.size_pages:
@@ -990,7 +1004,7 @@ class BTree:
                 f"page {pgno} has unexpected type 0x{hdr['page_type']:02x}"
             )
 
-        ptrs = _read_interior_ptrs(page_data, hdr_off, hdr["ncells"])
+        ptrs = _read_interior_ptrs(page_data, hdr_off, hdr["ncells"], self._pager.page_size)
         total = 0
         for ptr in ptrs:
             left_child, _ = _read_interior_cell(page_data, ptr)
@@ -1036,8 +1050,9 @@ class BTree:
         self._write_cells_to_leaf(right_pgno, 0, right_cells)
 
         # Rewrite the root as an interior page.
+        ps = self._pager.page_size
         hdr_off = self._header_offset
-        root_buf = bytearray(PAGE_SIZE)
+        root_buf = bytearray(ps)
 
         # Preserve any bytes before hdr_off (e.g. the 100-byte SQLite
         # database header on page 1; those bytes must not be zeroed out).
@@ -1047,7 +1062,7 @@ class BTree:
 
         # Single interior cell: [left_pgno u32][separator_rowid varint].
         cell = _interior_cell_encode(left_pgno, separator_rowid)
-        cell_off = PAGE_SIZE - len(cell)
+        cell_off = ps - len(cell)
 
         _write_interior_hdr(
             root_buf,
@@ -1122,12 +1137,13 @@ class BTree:
         rightmost_child:
             Page number of the rightmost (largest-key) child.
         """
-        buf = bytearray(PAGE_SIZE)
+        ps = self._pager.page_size
+        buf = bytearray(ps)
         if hdr_off > 0:
             orig = self._pager.read(pgno)
             buf[:hdr_off] = orig[:hdr_off]
 
-        content_offset = PAGE_SIZE
+        content_offset = ps
         ptrs: list[int] = []
         for left_child, sep_rowid in cells:
             cell = _interior_cell_encode(left_child, sep_rowid)
@@ -1212,14 +1228,15 @@ class BTree:
         self._write_interior_page(right_pgno, 0, right_cells, rightmost_child)
 
         # Rewrite the root with a single separator cell.
+        ps = self._pager.page_size
         hdr_off = self._header_offset
-        root_buf = bytearray(PAGE_SIZE)
+        root_buf = bytearray(ps)
         if hdr_off > 0:
             orig = self._pager.read(self._root_page)
             root_buf[:hdr_off] = orig[:hdr_off]
 
         cell = _interior_cell_encode(left_pgno, median_sep)
-        cell_off = PAGE_SIZE - len(cell)
+        cell_off = ps - len(cell)
         _write_interior_hdr(
             root_buf,
             hdr_off,
@@ -1279,7 +1296,7 @@ class BTree:
         parent_data = self._pager.read(parent_pgno)
         parent_hdr = _read_hdr(parent_data, parent_hdr_off)
         ncells = parent_hdr["ncells"]
-        old_ptrs = _read_interior_ptrs(parent_data, parent_hdr_off, ncells)
+        old_ptrs = _read_interior_ptrs(parent_data, parent_hdr_off, ncells, self._pager.page_size)
         old_cells = [_read_interior_cell(parent_data, ptr) for ptr in old_ptrs]
         old_rightmost = parent_hdr["rightmost_child"]
 
@@ -1303,7 +1320,7 @@ class BTree:
             new_rightmost = right_pgno
 
         # Write the parent if the new cell list fits.
-        if _interior_cells_fit(parent_hdr_off, new_cells):
+        if _interior_cells_fit(parent_hdr_off, new_cells, self._pager.page_size):
             self._write_interior_page(parent_pgno, parent_hdr_off, new_cells, new_rightmost)
             return
 
@@ -1338,7 +1355,8 @@ class BTree:
         rowid, n = varint_decode_signed(page_data, offset)
         offset += n
 
-        local = _local_payload_size(total)
+        ps = self._pager.page_size
+        local = _local_payload_size(total, ps)
         local_bytes = bytes(page_data[offset : offset + local])
         offset += local
 
@@ -1347,6 +1365,7 @@ class BTree:
 
         (overflow_pgno,) = struct.unpack_from(">I", page_data, offset)
         remaining = total - local
+        overflow_usable = ps - 4
         chunks: list[bytes] = [local_bytes]
         visited: set[int] = set()
         while overflow_pgno != 0 and remaining > 0:
@@ -1363,7 +1382,7 @@ class BTree:
             visited.add(overflow_pgno)
             ov_data = self._pager.read(overflow_pgno)
             (next_pgno,) = struct.unpack_from(">I", ov_data, 0)
-            chunk_size = min(remaining, _OVERFLOW_USABLE)
+            chunk_size = min(remaining, overflow_usable)
             chunks.append(bytes(ov_data[4 : 4 + chunk_size]))
             remaining -= chunk_size
             overflow_pgno = next_pgno
@@ -1380,10 +1399,12 @@ class BTree:
         prev_pgno = 0
         prev_buf: bytearray | None = None
 
+        overflow_usable = self._pager.page_size - 4
+        ps = self._pager.page_size
         while remaining:
             pgno = self._allocate_page()
-            buf = bytearray(PAGE_SIZE)
-            chunk = remaining[:_OVERFLOW_USABLE]
+            buf = bytearray(ps)
+            chunk = remaining[:overflow_usable]
             buf[4 : 4 + len(chunk)] = chunk
             struct.pack_into(">I", buf, 0, 0)  # next pointer = 0 (last)
             remaining = remaining[len(chunk):]
@@ -1417,7 +1438,7 @@ class BTree:
         offset += n
         _, n = varint_decode_signed(page_data, offset)  # skip rowid
         offset += n
-        local = _local_payload_size(total)
+        local = _local_payload_size(total, self._pager.page_size)
         if total <= local:
             return
 
@@ -1461,18 +1482,19 @@ class BTree:
         database header on page 1) are preserved by reading the existing
         page first.
         """
-        buf = bytearray(PAGE_SIZE)
+        ps = self._pager.page_size
+        buf = bytearray(ps)
         # Preserve the database header or any other prefix bytes.
         if hdr_off > 0:
             orig = self._pager.read(pgno)
             buf[:hdr_off] = orig[:hdr_off]
 
-        content_offset = PAGE_SIZE  # grows down
+        content_offset = ps  # grows down
         new_ptrs: list[int] = []
 
         for rowid, payload in cells:
             total = len(payload)
-            local = _local_payload_size(total)
+            local = _local_payload_size(total, ps)
             overflow_pgno = 0
             if total > local:
                 overflow_pgno = self._write_overflow(payload, local)
@@ -1606,7 +1628,7 @@ class BTree:
         hdr = _read_hdr(page_data, hdr_off)
 
         if hdr["page_type"] == PAGE_TYPE_LEAF_TABLE:
-            ptrs = _read_ptrs(page_data, hdr_off, hdr["ncells"])
+            ptrs = _read_ptrs(page_data, hdr_off, hdr["ncells"], self._pager.page_size)
             for ptr in ptrs:
                 self._free_overflow(page_data, ptr)
             # Page 1 is the database header — it is never freed.
@@ -1614,7 +1636,7 @@ class BTree:
                 self._free_page(pgno)
 
         elif hdr["page_type"] == PAGE_TYPE_INTERIOR_TABLE:
-            ptrs = _read_interior_ptrs(page_data, hdr_off, hdr["ncells"])
+            ptrs = _read_interior_ptrs(page_data, hdr_off, hdr["ncells"], self._pager.page_size)
             for ptr in ptrs:
                 left_child, _ = _read_interior_cell(page_data, ptr)
                 self._free_subtree(left_child, 0, visited)

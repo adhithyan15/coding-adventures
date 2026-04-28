@@ -849,3 +849,51 @@ class TestUpdateTableSql:
         schema.update_table_sql("t", "CREATE TABLE t (id INTEGER, extra TEXT)")
         assert schema.get_schema_cookie() == cookie_before + 1
         pager.close()
+
+
+# ---------------------------------------------------------------------------
+# Configurable page sizes — integration tests
+# ---------------------------------------------------------------------------
+
+
+class TestNonDefaultPageSize:
+    """End-to-end: initialize, create table, write rows, close, reopen."""
+
+    @pytest.mark.parametrize("ps", [1024, 8192])
+    def test_initialize_reports_correct_page_size(self, tmp_path, ps: int) -> None:
+        """initialize_new_database writes the page size into the header."""
+        path = str(tmp_path / "db.db")
+        pager = Pager.create(path, page_size=ps)
+        initialize_new_database(pager)
+        page1 = pager.read(1)
+        hdr = Header.from_bytes(page1[:100])
+        assert hdr.page_size == ps
+        pager.close()
+
+    @pytest.mark.parametrize("ps", [1024, 8192])
+    def test_reopen_detects_page_size(self, tmp_path, ps: int) -> None:
+        """Pager.open detects the page size from the SQLite header on reopen."""
+        path = str(tmp_path / "db.db")
+        with Pager.create(path, page_size=ps) as pager:
+            initialize_new_database(pager)
+            pager.commit()
+
+        with Pager.open(path) as pager2:
+            assert pager2.page_size == ps
+
+    @pytest.mark.parametrize("ps", [1024, 8192])
+    def test_create_table_and_reopen(self, tmp_path, ps: int) -> None:
+        """Create a table in a non-4096 database, close, reopen, verify it survives."""
+        path = str(tmp_path / "db.db")
+        with Pager.create(path, page_size=ps) as pager:
+            schema = initialize_new_database(pager)
+            schema.create_table("users", "CREATE TABLE users (id INTEGER, name TEXT)")
+            pager.commit()
+
+        with Pager.open(path) as pager2:
+            assert pager2.page_size == ps
+            schema2 = Schema(pager2)
+            assert schema2.list_tables() == ["users"]
+            _, root, sql = schema2.find_table("users")
+            assert "users" in sql
+            assert root > 1

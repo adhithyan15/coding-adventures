@@ -1,5 +1,58 @@
 # Changelog
 
+## [0.13.0] - 2026-04-28
+
+### Added
+
+**Configurable page sizes (512–65536 bytes)**
+
+Every layer of the storage stack now uses the actual page size read from the
+database header rather than the module-level `PAGE_SIZE = 4096` constant.
+Valid page sizes are the same powers-of-two that SQLite supports: 512, 1024,
+2048, 4096, 8192, 16384, 32768, and 65536.
+
+- **`Pager.create(page_size=…)`** — new keyword argument; defaults to 4096.
+  Validates against the set of SQLite-valid sizes and raises `ValueError` for
+  anything else.
+- **`Pager.page_size` property** — returns `self._page_size`, an instance
+  attribute set on construction / open instead of the module constant.
+- **`Pager.open`** — reads the page size from bytes 16–17 of the database
+  header on open (the standard SQLite field).  The encoded value 1 is decoded
+  as 65536 per the SQLite spec.  An out-of-spec value raises
+  `CorruptDatabaseError`.  Files without the SQLite magic bytes (e.g. raw
+  pager-only test files) fall back to the default 4096.
+- **`freelist.trunk_capacity(page_size)`** — new public function; computes
+  the maximum leaf entries per trunk page for an arbitrary page size (was a
+  module constant `TRUNK_CAPACITY = 1022` for 4096-byte pages only).  The
+  constant is kept for backward compatibility.
+
+### Changed
+
+- **`Pager`** — `_open_file` now reads the SQLite magic and page-size field
+  via a short-lived probe file handle that is closed before the main `_f`
+  handle is opened.  This prevents Python's buffered I/O read-ahead from
+  masking short-read detection after external file truncation (a behaviour
+  difference observed on macOS).
+- **`BTree`, `IndexTree`** — all module-level helper functions
+  (`_local_payload_size`, `_cell_size_on_page`, `_read_ptrs`, …) gained a
+  `page_size: int = PAGE_SIZE` parameter.  Class methods derive the page size
+  from `self._pager.page_size` on every call.
+- **`Freelist`** — `allocate` and `free` use `self._pager.page_size` and the
+  new `trunk_capacity()` function.
+- **`Schema` / `initialize_new_database`** — replaced the hard-coded `PAGE_SIZE`
+  import with `pager.page_size` throughout.  `initialize_new_database` writes
+  the correct page-size field into the SQLite header for any page size.
+
+### Tests added
+
+- `test_pager.py` — `test_create_with_1024_page_size`,
+  `test_create_with_8192_page_size`, `test_create_rejects_invalid_page_size`,
+  `test_open_reads_page_size_from_sqlite_header` (parametrised over all 7
+  non-default valid sizes), `test_open_rejects_sqlite_header_with_bad_page_size`,
+  `test_multi_page_roundtrip_small_pages`.
+- `test_schema.py` — `TestNonDefaultPageSize`: initialize + create table +
+  close + reopen round-trip at 1024 and 8192 bytes.
+
 ## [0.12.0] - 2026-04-28
 
 ### Added
