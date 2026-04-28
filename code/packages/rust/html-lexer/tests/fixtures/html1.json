@@ -67,6 +67,30 @@
       ]
     },
     {
+      "id": "doctype-name-eof-quirks",
+      "description": "DOCTYPE name cut off by EOF emits the current name and marks force-quirks",
+      "input": "<!DOCTYPE html",
+      "tokens": [
+        "Doctype(name=html, force_quirks=true)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "eof-in-doctype"
+      ]
+    },
+    {
+      "id": "doctype-after-name-eof-quirks",
+      "description": "DOCTYPE after-name state cut off by EOF marks force-quirks",
+      "input": "<!DOCTYPE html ",
+      "tokens": [
+        "Doctype(name=html, force_quirks=true)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "eof-in-doctype"
+      ]
+    },
+    {
       "id": "comment-eof-recovery",
       "input": "<!--open",
       "tokens": [

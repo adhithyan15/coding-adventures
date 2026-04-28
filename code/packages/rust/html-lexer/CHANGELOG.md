@@ -85,3 +85,5 @@ documented in this file.
   text preservation.
 - Missing-name DOCTYPE recovery now marks force-quirks mode for `<!DOCTYPE>`
   and whitespace-only DOCTYPE names.
+- DOCTYPE declarations cut off by EOF after a name now emit the current name
+  with force-quirks mode enabled.

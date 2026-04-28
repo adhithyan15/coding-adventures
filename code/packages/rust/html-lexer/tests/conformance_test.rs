@@ -92,14 +92,14 @@ fn fixture_manifests_parse() {
     assert_eq!(html1.format, "venture-html-lexer-fixtures/v1");
     assert_eq!(html1.suite, "html1");
     assert!(!html1.description.is_empty());
-    assert_eq!(html1.cases.len(), 40);
+    assert_eq!(html1.cases.len(), 42);
 }
 
 #[test]
 fn html5lib_smoke_fixture_file_parses() {
     let file = load_html5lib_file(HTML5LIB_RAW_FIXTURES);
 
-    assert_eq!(file.tests.len(), 40);
+    assert_eq!(file.tests.len(), 41);
     assert_eq!(
         file.tests[0].description,
         "simple start and end tag in data state"
@@ -108,23 +108,24 @@ fn html5lib_smoke_fixture_file_parses() {
     assert!(file.tests[0].last_start_tag.is_none());
     assert_eq!(file.tests[2].initial_states, vec!["Data state".to_string()]);
     assert_eq!(file.tests[4].errors[0].code, "missing-doctype-name");
-    assert_eq!(file.tests[6].errors[0].code, "eof-in-comment");
-    assert_eq!(file.tests[6].errors[0].line, 1);
-    assert_eq!(file.tests[6].errors[0].col, 9);
+    assert_eq!(file.tests[5].errors[0].code, "eof-in-doctype");
+    assert_eq!(file.tests[7].errors[0].code, "eof-in-comment");
+    assert_eq!(file.tests[7].errors[0].line, 1);
+    assert_eq!(file.tests[7].errors[0].col, 9);
     assert_eq!(
-        file.tests[7].errors[0].code,
+        file.tests[8].errors[0].code,
         "abrupt-closing-of-empty-comment"
     );
     assert_eq!(
-        file.tests[9].initial_states,
+        file.tests[10].initial_states,
         vec!["RCDATA state".to_string()]
     );
-    assert_eq!(file.tests[9].last_start_tag.as_deref(), Some("title"));
+    assert_eq!(file.tests[10].last_start_tag.as_deref(), Some("title"));
     assert_eq!(
-        file.tests[11].initial_states,
+        file.tests[12].initial_states,
         vec!["RAWTEXT state".to_string()]
     );
-    assert_eq!(file.tests[11].last_start_tag.as_deref(), Some("style"));
+    assert_eq!(file.tests[12].last_start_tag.as_deref(), Some("style"));
 }
 
 #[test]
@@ -149,21 +150,20 @@ fn normalized_html5lib_fixture_parses_with_importer_metadata() {
             "Script data state".to_string()
         ]
     );
-    assert_eq!(normalized.cases.len(), 40);
+    assert_eq!(normalized.cases.len(), 41);
     assert!(normalized.skipped.is_empty());
     assert_eq!(
         normalized.cases[4].diagnostics,
         vec!["missing-doctype-name".to_string()]
     );
     assert_eq!(
-        normalized.cases[7].diagnostics,
-        vec!["abrupt-closing-of-empty-comment".to_string()]
+        normalized.cases[5].diagnostics,
+        vec!["eof-in-doctype".to_string()]
     );
     assert_eq!(
-        normalized.cases[9].initial_state.as_deref(),
-        Some("RCDATA state")
+        normalized.cases[8].diagnostics,
+        vec!["abrupt-closing-of-empty-comment".to_string()]
     );
-    assert_eq!(normalized.cases[9].last_start_tag.as_deref(), Some("title"));
     assert_eq!(
         normalized.cases[10].initial_state.as_deref(),
         Some("RCDATA state")
@@ -174,10 +174,18 @@ fn normalized_html5lib_fixture_parses_with_importer_metadata() {
     );
     assert_eq!(
         normalized.cases[11].initial_state.as_deref(),
-        Some("RAWTEXT state")
+        Some("RCDATA state")
     );
     assert_eq!(
         normalized.cases[11].last_start_tag.as_deref(),
+        Some("title")
+    );
+    assert_eq!(
+        normalized.cases[12].initial_state.as_deref(),
+        Some("RAWTEXT state")
+    );
+    assert_eq!(
+        normalized.cases[12].last_start_tag.as_deref(),
         Some("style")
     );
 }
@@ -221,7 +229,7 @@ fn normalized_html5lib_cases_match_default_wrapper() {
 
     assert_eq!(suite.format, "venture-html-lexer-fixtures/v1");
     assert_eq!(suite.suite, "html5lib-smoke");
-    assert_eq!(suite.cases.len(), 40);
+    assert_eq!(suite.cases.len(), 41);
 
     run_fixture_suite(&suite, |case| {
         let mut lexer = create_html_lexer().map_err(|error| format!("{error:?}"))?;

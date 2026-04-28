@@ -105,6 +105,45 @@ fn default_html_lexer_marks_whitespace_only_doctype_force_quirks() {
 }
 
 #[test]
+fn default_html_lexer_marks_doctype_name_eof_force_quirks() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("<!DOCTYPE html").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                force_quirks: true,
+            },
+            Token::Eof,
+        ]
+    );
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "eof-in-doctype"));
+}
+
+#[test]
+fn default_html_lexer_marks_after_doctype_name_eof_force_quirks() {
+    let tokens = lex_html("<!DOCTYPE html ").unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                force_quirks: true,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_recovers_abrupt_empty_html_comment() {
     let mut lexer = create_html_lexer().unwrap();
 
