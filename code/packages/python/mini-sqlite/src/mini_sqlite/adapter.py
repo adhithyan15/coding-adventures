@@ -173,20 +173,45 @@ def _stmt_dispatch(stmt: ASTNode) -> Statement:
 # --------------------------------------------------------------------------
 
 
-def _query_stmt(node: ASTNode) -> Statement:
-    """Translate ``query_stmt = select_stmt { set_op_clause }`` to a Statement.
+def _query_stmt(
+    node: ASTNode,
+    ctes: dict[str, SelectStmt] | None = None,
+) -> Statement:
+    """Translate ``query_stmt = [ with_clause ] select_stmt { set_op_clause }`` to a Statement.
+
+    When a ``with_clause`` is present, each ``cte_def`` is parsed into a
+    ``SelectStmt`` and stored by name.  The resulting ``ctes`` dict is passed
+    into ``_select`` so that bare table references matching a CTE name are
+    rewritten to ``DerivedTableRef`` at parse time — no new plan nodes needed.
 
     A ``query_stmt`` wraps a bare ``select_stmt`` with zero or more
     UNION/INTERSECT/EXCEPT tails.  When no tails are present this is
     equivalent to a plain SELECT; otherwise we build a left-associative
     set-operation tree.
     """
+    # Accumulate CTEs: outer dict (if any) merged with any new WITH clause.
+    active_ctes: dict[str, SelectStmt] = dict(ctes) if ctes else {}
+    with_node = _maybe_child(node, "with_clause")
+    if with_node is not None:
+        for cte_node in _child_nodes(with_node, "cte_def"):
+            name_tok = _first_token(cte_node, kind="NAME")
+            if name_tok is None:
+                raise ProgrammingError("cte_def: missing CTE name")
+            inner_q = _child_node(cte_node, "query_stmt")
+            inner_stmt = _query_stmt(inner_q, ctes=active_ctes)
+            if not isinstance(inner_stmt, SelectStmt):
+                raise ProgrammingError(
+                    f"CTE '{name_tok.value}' body must be a plain SELECT, not a set operation"
+                )
+            # Make this CTE visible to subsequent CTEs and the main query.
+            active_ctes[name_tok.value] = inner_stmt
+
     select_node = _child_node(node, "select_stmt")
-    left: Statement = _select(select_node)
+    left: Statement = _select(select_node, ctes=active_ctes)
     set_ops = _child_nodes(node, "set_op_clause")
     for op_node in set_ops:
         op, all_flag, right_select_node = _set_op_clause(op_node)
-        right_stmt = _select(right_select_node)
+        right_stmt = _select(right_select_node, ctes=active_ctes)
         # Build a left-associative tree: after the first iteration ``left``
         # will already be a UnionStmt/IntersectStmt/ExceptStmt.  The AST
         # types accept any set-op stmt on the left side, and the planner
@@ -225,7 +250,10 @@ def _set_op_clause(node: ASTNode) -> tuple[str, bool, ASTNode]:
 # --------------------------------------------------------------------------
 
 
-def _select(node: ASTNode) -> SelectStmt:
+def _select(
+    node: ASTNode,
+    ctes: dict[str, SelectStmt] | None = None,
+) -> SelectStmt:
     state = _PlaceholderCounter()
 
     distinct = _has_keyword_child(node, "DISTINCT")
@@ -233,8 +261,8 @@ def _select(node: ASTNode) -> SelectStmt:
 
     # FROM + JOINs.
     from_node = _child_node(node, "table_ref")
-    from_ref = _table_ref(from_node)
-    joins = tuple(_join_clause(c, state) for c in _child_nodes(node, "join_clause"))
+    from_ref = _table_ref(from_node, ctes=ctes)
+    joins = tuple(_join_clause(c, state, ctes=ctes) for c in _child_nodes(node, "join_clause"))
 
     # WHERE / GROUP BY / HAVING / ORDER BY / LIMIT — all optional.
     where = _maybe_expr(node, "where_clause", state, skip=1)
@@ -280,7 +308,10 @@ def _select_item(node: ASTNode, state: _PlaceholderCounter) -> SelectItem:
     return SelectItem(expr=expr, alias=alias)
 
 
-def _table_ref(node: ASTNode) -> TableRef | DerivedTableRef:
+def _table_ref(
+    node: ASTNode,
+    ctes: dict[str, SelectStmt] | None = None,
+) -> TableRef | DerivedTableRef:
     """Translate a table_ref node.
 
     The grammar has two forms::
@@ -289,11 +320,13 @@ def _table_ref(node: ASTNode) -> TableRef | DerivedTableRef:
                   | table_name [ "AS" NAME ]        -- plain table
 
     We detect the derived-table form by checking for a ``query_stmt`` child.
+    When the plain-table form names a CTE, we substitute a DerivedTableRef
+    so the planner and downstream stages see it as an inline subquery.
     """
     # Derived-table form: "(" query_stmt ")" "AS" NAME
     q = _maybe_child(node, "query_stmt")
     if q is not None:
-        inner_stmt = _query_stmt(q)
+        inner_stmt = _query_stmt(q, ctes=ctes)
         if not isinstance(inner_stmt, SelectStmt):
             raise ProgrammingError("derived table must be a plain SELECT, not a set operation")
         # The mandatory alias comes after the "AS" keyword.
@@ -319,17 +352,25 @@ def _table_ref(node: ASTNode) -> TableRef | DerivedTableRef:
             nxt = node.children[i + 1]
             if isinstance(nxt, Token):
                 alias = nxt.value
+
+    # CTE substitution: if the table name matches a known CTE, replace with
+    # a DerivedTableRef so the planner/codegen see it as an inline subquery.
+    if ctes and table in ctes:
+        return DerivedTableRef(select=ctes[table], alias=alias if alias is not None else table)
+
     return TableRef(table=table, alias=alias)
 
 
-def _join_clause(node: ASTNode, state: _PlaceholderCounter) -> JoinClause:
-    # join_clause = join_type "JOIN" table_ref "ON" expr
+def _join_clause(
+    node: ASTNode,
+    state: _PlaceholderCounter,
+    ctes: dict[str, SelectStmt] | None = None,
+) -> JoinClause:
+    # join_clause = join_type "JOIN" table_ref [ "ON" expr ]
     jt = _child_node(node, "join_type")
     kind = _join_kind(jt)
-    right = _table_ref(_child_node(node, "table_ref"))
-    # The grammar requires ON for every join kind (including CROSS). We
-    # translate the predicate through so INNER/LEFT can use it; CROSS
-    # joins ignore it semantically.
+    right = _table_ref(_child_node(node, "table_ref"), ctes=ctes)
+    # The grammar makes ON optional (required only for non-CROSS joins).
     expr_node = _maybe_child(node, "expr")
     on = _expr(expr_node, state) if expr_node is not None else None
     return JoinClause(kind=kind, right=right, on=on)

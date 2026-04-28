@@ -2,6 +2,13 @@
 
 All notable changes to the SQL lexer package will be documented in this file.
 
+## [0.5.0] - 2026-04-27
+
+### Added — Phase 5a: Non-recursive CTEs
+
+- `WITH` registered as a SQL keyword so `WITH name AS (...)` common table
+  expressions tokenize `WITH` as KEYWORD rather than NAME.
+
 ## [0.4.0] - 2026-04-27
 
 ### Added — Phase 4b: FOREIGN KEY constraints

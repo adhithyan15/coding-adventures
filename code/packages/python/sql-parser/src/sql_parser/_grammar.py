@@ -67,12 +67,42 @@ PARSER_GRAMMAR = ParserGrammar(
             name='query_stmt',
             body=
             Sequence(elements=[
+                Optional(element=
+                    RuleReference(name='with_clause', is_token=False),
+                ),
                 RuleReference(name='select_stmt', is_token=False),
                 Repetition(element=
                     RuleReference(name='set_op_clause', is_token=False),
                 ),
             ]),
             line_number=27,
+        ),
+        GrammarRule(
+            name='with_clause',
+            body=
+            Sequence(elements=[
+                Literal(value='WITH'),
+                RuleReference(name='cte_def', is_token=False),
+                Repetition(element=
+                    Sequence(elements=[
+                        Literal(value=','),
+                        RuleReference(name='cte_def', is_token=False),
+                    ]),
+                ),
+            ]),
+            line_number=28,
+        ),
+        GrammarRule(
+            name='cte_def',
+            body=
+            Sequence(elements=[
+                RuleReference(name='NAME', is_token=True),
+                Literal(value='AS'),
+                Literal(value='('),
+                RuleReference(name='query_stmt', is_token=False),
+                Literal(value=')'),
+            ]),
+            line_number=29,
         ),
         GrammarRule(
             name='set_op_clause',

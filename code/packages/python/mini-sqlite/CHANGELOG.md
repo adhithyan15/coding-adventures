@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.1.0] - 2026-04-27
+
+### Added — Phase 5a: Non-recursive CTEs
+
+- **`adapter._query_stmt()`** extended to detect an optional `with_clause`
+  child node in the parse tree.  Each `cte_def` is parsed into a `SelectStmt`
+  and recorded in an `active_ctes` dict that accumulates left-to-right so
+  later CTEs can reference earlier ones.
+- **`adapter._table_ref(ctes=)`** — when a plain table name matches a key in
+  `active_ctes`, it is rewritten to a `DerivedTableRef` (alias defaults to the
+  CTE name if no explicit `AS` is given).  This means CTEs are resolved
+  entirely at the adapter layer; the planner, codegen, and VM see ordinary
+  derived-table (subquery) nodes and require no changes.
+- **`adapter._select(ctes=)` / `_join_clause(ctes=)`** — `ctes` parameter
+  threaded through so JOIN right-hand-side table refs are also resolved.
+- **`test_tier3_cte.py`** — 18 new tests: 5 grammar / adapter unit tests,
+  9 end-to-end integration tests, and 4 error / edge-case tests.
+
 ## [1.0.0] - 2026-04-27
 
 ### Added — Phase 4b: FOREIGN KEY constraints
