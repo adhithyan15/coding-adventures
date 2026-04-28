@@ -145,6 +145,47 @@
       ],
       "initial_state": "RCDATA state",
       "last_start_tag": "title"
+    },
+    {
+      "id": "html-missing-semicolon-numeric-character-references-data",
+      "description": "Numeric character references recover when the semicolon is missing in data state",
+      "input": "Letters: &#65 &#x42Z",
+      "tokens": [
+        "Text(data=Letters: A BZ)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference"
+      ]
+    },
+    {
+      "id": "html-missing-semicolon-numeric-character-references-attributes",
+      "description": "Numeric character references recover when the semicolon is missing in attributes",
+      "input": "<a title=&#65 data-x=&#x42>",
+      "tokens": [
+        "StartTag(name=a, attributes=[title=A, data-x=B], self_closing=false)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference"
+      ]
+    },
+    {
+      "id": "html-missing-semicolon-numeric-character-references-rcdata",
+      "description": "Seeded title RCDATA context recovers numeric character references with missing semicolons",
+      "input": "Fish &#38 &#x3C/title>",
+      "tokens": [
+        "Text(data=Fish & </title>)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
     }
   ]
 }

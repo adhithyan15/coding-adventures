@@ -183,6 +183,47 @@
       "diagnostics": [],
       "initial_state": "RCDATA state",
       "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-16",
+      "description": "data state numeric character references missing semicolons",
+      "input": "Letters: &#65 &#x42Z",
+      "tokens": [
+        "Text(data=Letters: A BZ)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference"
+      ]
+    },
+    {
+      "id": "html5lib-smoke-17",
+      "description": "attribute numeric character references missing semicolons",
+      "input": "<a title=&#65 data-x=&#x42>",
+      "tokens": [
+        "StartTag(name=a, attributes=[title=A, data-x=B], self_closing=false)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference"
+      ]
+    },
+    {
+      "id": "html5lib-smoke-18",
+      "description": "rcdata numeric character references missing semicolons",
+      "input": "Fish &#38 &#x3C/title>",
+      "tokens": [
+        "Text(data=Fish & </title>)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
     }
   ],
   "skipped": []

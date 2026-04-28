@@ -184,6 +184,14 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
                 "EOF".to_string(),
             ],
         },
+        FixtureDefinition {
+            name: "html-missing-semicolon-numeric-character-references".to_string(),
+            input: "Letters: &#65 &#x42Z".to_string(),
+            tokens: vec![
+                "Text(data=Letters: A BZ)".to_string(),
+                "EOF".to_string(),
+            ],
+        },
     ];
     definition.states = vec![
         StateDefinition {
@@ -1431,7 +1439,8 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "append_temporary_buffer_to_text".to_string(),
+                "append_numeric_character_reference_to_text".to_string(),
+                "parse_error(missing-semicolon-after-character-reference)".to_string(),
                 "flush_text".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -1446,7 +1455,8 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "append_temporary_buffer_to_text".to_string(),
+                "append_numeric_character_reference_to_text".to_string(),
+                "parse_error(missing-semicolon-after-character-reference)".to_string(),
                 "switch_to_return_state".to_string(),
             ],
             consume: false,
@@ -1488,7 +1498,8 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "append_temporary_buffer_to_text".to_string(),
+                "append_numeric_character_reference_to_text".to_string(),
+                "parse_error(missing-semicolon-after-character-reference)".to_string(),
                 "flush_text".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -1503,7 +1514,8 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "append_temporary_buffer_to_text".to_string(),
+                "append_numeric_character_reference_to_text".to_string(),
+                "parse_error(missing-semicolon-after-character-reference)".to_string(),
                 "switch_to_return_state".to_string(),
             ],
             consume: false,
@@ -3529,7 +3541,8 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "append_temporary_buffer_to_attribute_value".to_string(),
+                "append_numeric_character_reference_to_attribute_value".to_string(),
+                "parse_error(missing-semicolon-after-character-reference)".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
                 "commit_attribute".to_string(),
                 "emit_current_token".to_string(),
@@ -3546,7 +3559,8 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "append_temporary_buffer_to_attribute_value".to_string(),
+                "append_numeric_character_reference_to_attribute_value".to_string(),
+                "parse_error(missing-semicolon-after-character-reference)".to_string(),
                 "switch_to_return_state".to_string(),
             ],
             consume: false,
@@ -3588,7 +3602,8 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "append_temporary_buffer_to_attribute_value".to_string(),
+                "append_numeric_character_reference_to_attribute_value".to_string(),
+                "parse_error(missing-semicolon-after-character-reference)".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
                 "commit_attribute".to_string(),
                 "emit_current_token".to_string(),
@@ -3605,7 +3620,8 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "append_temporary_buffer_to_attribute_value".to_string(),
+                "append_numeric_character_reference_to_attribute_value".to_string(),
+                "parse_error(missing-semicolon-after-character-reference)".to_string(),
                 "switch_to_return_state".to_string(),
             ],
             consume: false,

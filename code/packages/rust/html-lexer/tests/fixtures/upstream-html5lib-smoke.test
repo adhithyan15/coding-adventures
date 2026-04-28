@@ -159,6 +159,49 @@
         ["Character", "<"],
         ["Character", "/title>"]
       ]
+    },
+    {
+      "description": "data state numeric character references missing semicolons",
+      "input": "Letters: &#65 &#x42Z",
+      "output": [
+        ["Character", "Letters: "],
+        ["Character", "A"],
+        ["Character", " "],
+        ["Character", "B"],
+        ["Character", "Z"]
+      ],
+      "errors": [
+        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 14},
+        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 20}
+      ]
+    },
+    {
+      "description": "attribute numeric character references missing semicolons",
+      "input": "<a title=&#65 data-x=&#x42>",
+      "output": [
+        ["StartTag", "a", {"title": "A", "data-x": "B"}]
+      ],
+      "errors": [
+        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 14},
+        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 27}
+      ]
+    },
+    {
+      "description": "rcdata numeric character references missing semicolons",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "Fish &#38 &#x3C/title>",
+      "output": [
+        ["Character", "Fish "],
+        ["Character", "&"],
+        ["Character", " "],
+        ["Character", "<"],
+        ["Character", "/title>"]
+      ],
+      "errors": [
+        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 10},
+        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 16}
+      ]
     }
   ]
 }

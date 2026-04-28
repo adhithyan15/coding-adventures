@@ -49,3 +49,5 @@ documented in this file.
 - Decimal and hexadecimal numeric character references in data, RCDATA, and
   attribute values, including replacement-character fallback for null or
   invalid scalar values.
+- Missing-semicolon recovery for decimal and hexadecimal numeric character
+  references in data, RCDATA, and attribute values.

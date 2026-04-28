@@ -295,6 +295,48 @@ fn default_html_lexer_supports_seeded_rcdata_numeric_character_references() {
 }
 
 #[test]
+fn default_html_lexer_supports_missing_semicolon_numeric_character_references() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer
+        .push("Letters: &#65 &#x42Z <a title=&#67 data-x=&#x44>")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("Letters: A BZ ".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "title".to_string(),
+                        value: "C".to_string(),
+                    },
+                    Attribute {
+                        name: "data-x".to_string(),
+                        value: "D".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| {
+                diagnostic.code == "missing-semicolon-after-character-reference"
+            })
+            .count(),
+        4
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_seeded_rcdata_character_references() {
     let mut lexer = create_html_lexer().unwrap();
     lexer.set_initial_state("rcdata").unwrap();
@@ -338,7 +380,7 @@ fn html1_generated_definition_preserves_lexer_profile_metadata() {
         .registers
         .iter()
         .any(|register| register.id == "temporary_buffer"));
-    assert_eq!(definition.fixtures.len(), 7);
+    assert_eq!(definition.fixtures.len(), 8);
 }
 
 #[test]
