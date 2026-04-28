@@ -28,12 +28,10 @@ from sql_backend.schema import ColumnDef
 from sql_codegen import (
     ComputeWindowFunctions,
     WinFunc,
-    WinFuncSpec,
     compile,
 )
 from sql_planner import (
     Column,
-    Literal,
     Project,
     ProjectionItem,
     Scan,
