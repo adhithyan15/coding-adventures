@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.32.1 — 2026-04-27
+
+**Bug fix — hyperbolic differentiation via `derivative.py` pathway.**
+
+Phase 13 added differentiation rules for `sinh/cosh/tanh/asinh/acosh/atanh` to
+`integrate.py`'s `_diff_ir` helper, but the standalone `derivative.py` module
+(used when callers invoke `diff` directly rather than through the integrator) was
+not updated.  Without this fix, `diff(sinh(x), x)` called through `derivative.py`
+entered infinite recursion and raised `RecursionError`.
+
+Added chain-rule branches to `derivative.py` for all six hyperbolic heads:
+
+- `Sinh(u)` → `Cosh(u) · u'`
+- `Cosh(u)` → `Sinh(u) · u'`
+- `Tanh(u)` → `u' / Cosh(u)²`
+- `Asinh(u)` → `u' / √(u²+1)`
+- `Acosh(u)` → `u' / √(u²−1)`
+- `Atanh(u)` → `u' / (1−u²)`
+
+---
+
 ## 0.32.0 — 2026-04-27
 
 **Phase 13 — Hyperbolic function evaluation, differentiation, and integration.**

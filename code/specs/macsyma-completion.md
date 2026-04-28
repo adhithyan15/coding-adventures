@@ -26,7 +26,7 @@ syntax differences go in the frontend name table and backend subclass.
 
 ---
 
-## Current status (as of symbolic-vm 0.30.0 / macsyma-runtime 1.3.0)
+## Current status (as of symbolic-vm 0.32.0 / macsyma-runtime 1.4.0)
 
 ### Fully working end-to-end
 
