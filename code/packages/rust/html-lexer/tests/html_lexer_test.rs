@@ -360,6 +360,42 @@ fn default_html_lexer_supports_seeded_cdata_section_state() {
 }
 
 #[test]
+fn default_html_lexer_supports_markup_cdata_section_flow() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer
+        .push("Before<![CDATA[<not-markup> &amp; ]]>After")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("Before".to_string()),
+            Token::Text("<not-markup> &amp; After".to_string()),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_recovers_malformed_cdata_open_as_bogus_comment() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("<![CDX>after").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Comment("[CDX".to_string()),
+            Token::Text("after".to_string()),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_keeps_unclosed_cdata_brackets_as_text_at_eof() {
     let mut lexer = create_html_lexer().unwrap();
     lexer.set_initial_state("cdata_section").unwrap();
