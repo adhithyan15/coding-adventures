@@ -148,6 +148,51 @@
       "last_start_tag": "title"
     },
     {
+      "id": "html-semicolonless-legacy-character-references-data",
+      "description": "Legacy named character references recover when the semicolon is missing in data state",
+      "input": "Legacy&nbsp symbols: &copy/&reg",
+      "tokens": [
+        "Text(data=Legacy\u00A0 symbols: \u00A9/\u00AE)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference"
+      ]
+    },
+    {
+      "id": "html-semicolonless-legacy-character-references-attributes",
+      "description": "Legacy named character references recover when the semicolon is missing in attributes",
+      "input": "<a title=\"A&nbsp B\" copy=&copy reg=&reg>",
+      "tokens": [
+        "StartTag(name=a, attributes=[title=A\u00A0 B, copy=\u00A9, reg=\u00AE], self_closing=false)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference"
+      ]
+    },
+    {
+      "id": "html-semicolonless-legacy-character-references-rcdata",
+      "description": "Seeded title RCDATA context recovers legacy named character references with missing semicolons",
+      "input": "Venture&nbsp &copy &reg</title>",
+      "tokens": [
+        "Text(data=Venture\u00A0 \u00A9 \u00AE)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
       "id": "html-numeric-character-references-data",
       "description": "Decimal and hexadecimal numeric character references resolve in data state",
       "input": "Letters: &#65; &#x42; &#X43; &#0;",

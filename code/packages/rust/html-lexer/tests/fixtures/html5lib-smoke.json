@@ -187,6 +187,51 @@
     },
     {
       "id": "html5lib-smoke-16",
+      "description": "data state legacy named character references missing semicolons",
+      "input": "Legacy&nbsp symbols: &copy/&reg",
+      "tokens": [
+        "Text(data=Legacy\u00a0 symbols: \u00a9/\u00ae)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference"
+      ]
+    },
+    {
+      "id": "html5lib-smoke-17",
+      "description": "attribute legacy named character references missing semicolons",
+      "input": "<a title=\"A&nbsp B\" copy=&copy reg=&reg>",
+      "tokens": [
+        "StartTag(name=a, attributes=[title=A\u00a0 B, copy=\u00a9, reg=\u00ae], self_closing=false)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference"
+      ]
+    },
+    {
+      "id": "html5lib-smoke-18",
+      "description": "rcdata legacy named character references missing semicolons",
+      "input": "Venture&nbsp &copy &reg</title>",
+      "tokens": [
+        "Text(data=Venture\u00a0 \u00a9 \u00ae)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-19",
       "description": "data state numeric character references",
       "input": "Letters: &#65; &#x42; &#X43; &#0;",
       "tokens": [
@@ -196,7 +241,7 @@
       "diagnostics": []
     },
     {
-      "id": "html5lib-smoke-17",
+      "id": "html5lib-smoke-20",
       "description": "attribute numeric character references",
       "input": "<a title=\"&#65;&#x42;\" data-x='&#X43;' note=&#0;>",
       "tokens": [
@@ -206,7 +251,7 @@
       "diagnostics": []
     },
     {
-      "id": "html5lib-smoke-18",
+      "id": "html5lib-smoke-21",
       "description": "rcdata numeric character references remain text",
       "input": "Fish &#38; &#x3C;/title>",
       "tokens": [
@@ -218,7 +263,7 @@
       "last_start_tag": "title"
     },
     {
-      "id": "html5lib-smoke-19",
+      "id": "html5lib-smoke-22",
       "description": "data state numeric character references missing semicolons",
       "input": "Letters: &#65 &#x42Z",
       "tokens": [
@@ -231,7 +276,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-20",
+      "id": "html5lib-smoke-23",
       "description": "attribute numeric character references missing semicolons",
       "input": "<a title=&#65 data-x=&#x42>",
       "tokens": [
@@ -244,7 +289,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-21",
+      "id": "html5lib-smoke-24",
       "description": "rcdata numeric character references missing semicolons",
       "input": "Fish &#38 &#x3C/title>",
       "tokens": [

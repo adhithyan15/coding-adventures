@@ -159,6 +159,55 @@
       ]
     },
     {
+      "description": "data state legacy named character references missing semicolons",
+      "input": "Legacy&nbsp symbols: &copy/&reg",
+      "output": [
+        ["Character", "Legacy"],
+        ["Character", "\u00A0"],
+        ["Character", " symbols: "],
+        ["Character", "\u00A9"],
+        ["Character", "/"],
+        ["Character", "\u00AE"]
+      ],
+      "errors": [
+        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 12},
+        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 27},
+        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 32}
+      ]
+    },
+    {
+      "description": "attribute legacy named character references missing semicolons",
+      "input": "<a title=\"A&nbsp B\" copy=&copy reg=&reg>",
+      "output": [
+        ["StartTag", "a", {"title": "A\u00A0 B", "copy": "\u00A9", "reg": "\u00AE"}]
+      ],
+      "errors": [
+        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 15},
+        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 29},
+        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 38}
+      ]
+    },
+    {
+      "description": "rcdata legacy named character references missing semicolons",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "Venture&nbsp &copy &reg</title>",
+      "output": [
+        ["Character", "Venture"],
+        ["Character", "\u00A0"],
+        ["Character", " "],
+        ["Character", "\u00A9"],
+        ["Character", " "],
+        ["Character", "\u00AE"],
+        ["EndTag", "title"]
+      ],
+      "errors": [
+        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 13},
+        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 19},
+        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 24}
+      ]
+    },
+    {
       "description": "data state numeric character references",
       "input": "Letters: &#65; &#x42; &#X43; &#0;",
       "output": [

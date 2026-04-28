@@ -301,6 +301,83 @@ fn default_html_lexer_supports_seeded_rcdata_legacy_named_character_references()
 }
 
 #[test]
+fn default_html_lexer_supports_semicolonless_legacy_named_character_references() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer
+        .push("Legacy&nbsp symbols: &copy/&reg <a title=\"A&nbsp B\" copy=&copy reg=&reg>")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("Legacy\u{00A0} symbols: \u{00A9}/\u{00AE} ".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "title".to_string(),
+                        value: "A\u{00A0} B".to_string(),
+                    },
+                    Attribute {
+                        name: "copy".to_string(),
+                        value: "\u{00A9}".to_string(),
+                    },
+                    Attribute {
+                        name: "reg".to_string(),
+                        value: "\u{00AE}".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| {
+                diagnostic.code == "missing-semicolon-after-character-reference"
+            })
+            .count(),
+        6
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_rcdata_semicolonless_legacy_named_character_references() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rcdata").unwrap();
+    lexer.set_last_start_tag("title");
+
+    lexer.push("Venture&nbsp &copy &reg</title>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("Venture\u{00A0} \u{00A9} \u{00AE}".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| {
+                diagnostic.code == "missing-semicolon-after-character-reference"
+            })
+            .count(),
+        3
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_numeric_character_references_in_data() {
     let tokens = lex_html("Letters: &#65; &#x42; &#X43; &#0;").unwrap();
 
@@ -444,7 +521,7 @@ fn html1_generated_definition_preserves_lexer_profile_metadata() {
         .registers
         .iter()
         .any(|register| register.id == "temporary_buffer"));
-    assert_eq!(definition.fixtures.len(), 9);
+    assert_eq!(definition.fixtures.len(), 10);
 }
 
 #[test]
