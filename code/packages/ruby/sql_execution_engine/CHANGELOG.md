@@ -1,5 +1,13 @@
 # Changelog — coding_adventures_sql_execution_engine
 
+## Unreleased
+
+### Fixed
+
+- `IN` and `NOT IN` expression evaluation now locates the parsed
+  `value_list` node directly, so multi-value predicates evaluate every listed
+  value instead of only the first one.
+
 ## [0.1.1] - 2026-03-31
 
 ### Fixed

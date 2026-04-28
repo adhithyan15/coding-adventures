@@ -195,7 +195,7 @@ module CodingAdventures
 
         # IN (value_list)
         if second_kw == "IN"
-          values = eval_value_list(children[3], row_ctx)
+          values = eval_value_list(find_child_rule(children, "value_list") || children[3], row_ctx)
           return nil if left.nil?
           return values.include?(left)
         end
@@ -217,7 +217,7 @@ module CodingAdventures
             return nil if left.nil? || low.nil? || high.nil?
             return !(low <= left && left <= high)
           when "IN"
-            values = eval_value_list(children[4], row_ctx)
+            values = eval_value_list(find_child_rule(children, "value_list") || children[4], row_ctx)
             return nil if left.nil?
             return !values.include?(left)
           when "LIKE"
@@ -248,11 +248,27 @@ module CodingAdventures
       end
 
       def self.eval_value_list(node, row_ctx)
+        return [] if node.nil?
         if node.is_a?(Token)
           return [eval_expr(node, row_ctx)]
         end
-        node.children.reject { |c| c.is_a?(Token) && c.value == "," }
-            .map { |c| eval_expr(c, row_ctx) }
+        unless node.rule_name == "value_list"
+          return [eval_expr(node, row_ctx)]
+        end
+
+        node.children.each_with_object([]) do |child, values|
+          next if child.is_a?(Token) && child.value == ","
+
+          values.concat(
+            child.is_a?(ASTNode) && child.rule_name == "value_list" ?
+              eval_value_list(child, row_ctx) :
+              [eval_expr(child, row_ctx)]
+          )
+        end
+      end
+
+      def self.find_child_rule(children, rule_name)
+        children.find { |child| child.is_a?(ASTNode) && child.rule_name == rule_name }
       end
 
       # SQL LIKE pattern matching — supports % wildcard only.
