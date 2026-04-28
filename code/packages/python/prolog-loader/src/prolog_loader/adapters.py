@@ -79,6 +79,8 @@ from logic_stdlib import (
     listo,
     membero,
     msorto,
+    nth0o,
+    nth1o,
     permuteo,
     reverseo,
     selecto,
@@ -173,6 +175,8 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
 
     ternary_list_builtins: dict[str, Callable[[object, object, object], GoalExpr]] = {
         "append": appendo,
+        "nth0": nth0o,
+        "nth1": nth1o,
         "select": selecto,
     }
     if goal.relation.arity == 3 and name in ternary_list_builtins:

@@ -832,6 +832,16 @@ class TestPrologGoalAdapter:
                 term(".", atom("cake"), atom("[]")),
                 LogicVar(id=18),
             ),
+            relation("nth0", 3)(
+                1,
+                term(".", atom("tea"), term(".", atom("cake"), atom("[]"))),
+                LogicVar(id=22),
+            ),
+            relation("nth1", 3)(
+                2,
+                term(".", atom("tea"), term(".", atom("cake"), atom("[]"))),
+                LogicVar(id=23),
+            ),
             relation("select", 3)(
                 atom("tea"),
                 term(".", atom("tea"), term(".", atom("cake"), atom("[]"))),
@@ -916,6 +926,8 @@ class TestPrologGoalAdapter:
             "reverse(Combined, Reversed), "
             "sort([Item, jam, Item], UniqueSorted), "
             "msort([Item, jam, Item], Sorted), "
+            "nth0(1, Reversed, ZeroBased), "
+            "nth1(2, Reversed, OneBased), "
             "length(Reversed, Count).",
         )
 
@@ -929,6 +941,8 @@ class TestPrologGoalAdapter:
                 parsed.variables["Reversed"],
                 parsed.variables["UniqueSorted"],
                 parsed.variables["Sorted"],
+                parsed.variables["ZeroBased"],
+                parsed.variables["OneBased"],
                 parsed.variables["Count"],
             ),
             adapted,
@@ -939,6 +953,8 @@ class TestPrologGoalAdapter:
                 logic_list(["jam", "tea"]),
                 logic_list(["jam", "tea"]),
                 logic_list(["jam", "tea", "tea"]),
+                atom("tea"),
+                atom("tea"),
                 num(2),
             ),
             (
@@ -947,6 +963,8 @@ class TestPrologGoalAdapter:
                 logic_list(["jam", "cake"]),
                 logic_list(["cake", "jam"]),
                 logic_list(["cake", "cake", "jam"]),
+                atom("cake"),
+                atom("cake"),
                 num(2),
             ),
         ]

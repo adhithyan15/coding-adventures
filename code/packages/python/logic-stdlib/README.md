@@ -18,6 +18,8 @@ The first slice includes:
 - `listo(...)`
 - `membero(...)`
 - `msorto(...)`
+- `nth0o(...)`
+- `nth1o(...)`
 - `appendo(...)`
 - `selecto(...)`
 - `permuteo(...)`
@@ -36,6 +38,8 @@ from logic_stdlib import (
     listo,
     membero,
     msorto,
+    nth0o,
+    nth1o,
     permuteo,
     reverseo,
     sorto,
@@ -110,6 +114,18 @@ assert solve_all(
     Order,
     msorto(logic_list(["tea", "cake", "tea"]), Order),
 ) == [logic_list(["cake", "tea", "tea"])]
+
+assert solve_all(
+    program(),
+    X,
+    nth0o(1, logic_list(["tea", "cake", "jam"]), X),
+) == [atom("cake")]
+
+assert solve_all(
+    program(),
+    X,
+    nth1o(2, logic_list(["tea", "cake", "jam"]), X),
+) == [atom("cake")]
 
 assert solve_all(
     program(),

@@ -47,6 +47,8 @@ __all__ = [
     "lengtho",
     "listo",
     "membero",
+    "nth0o",
+    "nth1o",
     "permuteo",
     "reverseo",
     "selecto",
@@ -130,6 +132,18 @@ def msorto(items: object, sorted_items: object) -> GoalExpr:
     """Relate a proper finite list to its sorted ordering while keeping duplicates."""
 
     return native_goal(_msorto_runner, items, sorted_items)
+
+
+def nth0o(index: object, items: object, element: object) -> GoalExpr:
+    """Relate a zero-based index to an element of a proper finite list."""
+
+    return native_goal(_ntho_runner, index, items, element, 0)
+
+
+def nth1o(index: object, items: object, element: object) -> GoalExpr:
+    """Relate a one-based index to an element of a proper finite list."""
+
+    return native_goal(_ntho_runner, index, items, element, 1)
 
 
 def listo(value: object) -> GoalExpr:
@@ -240,6 +254,48 @@ def _msorto_runner(
         eq(sorted_items, logic_list(sorted_values)),
         state,
     )
+
+
+def _ntho_runner(
+    program_value: Program,
+    state: State,
+    args: tuple[Term, ...],
+) -> Iterator[State]:
+    index, items, element, base_term = args
+    if not isinstance(base_term, Number) or not isinstance(base_term.value, int):
+        return
+    base = base_term.value
+    values = _proper_list_items(items, state)
+    if values is None:
+        return
+
+    index_value = _integer_index(index, state)
+    if index_value is not None:
+        offset = index_value - base
+        if offset < 0 or offset >= len(values):
+            return
+        yield from solve_from(program_value, eq(element, values[offset]), state)
+        return
+
+    walked_index = state.substitution.walk(index)
+    if not isinstance(walked_index, LogicVar):
+        return
+
+    for offset, value in enumerate(values):
+        yield from solve_from(
+            program_value,
+            conj(eq(index, num(offset + base)), eq(element, value)),
+            state,
+        )
+
+
+def _integer_index(index: Term, state: State) -> int | None:
+    walked = state.substitution.walk(index)
+    if not isinstance(walked, Number):
+        return None
+    if not isinstance(walked.value, int):
+        return None
+    return walked.value
 
 
 def _proper_list_items(items: Term, state: State) -> list[Term] | None:

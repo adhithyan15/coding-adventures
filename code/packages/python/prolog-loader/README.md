@@ -21,7 +21,7 @@ It keeps parsing side-effect free, then exposes helpers to:
   `(If -> Then ; Else)` into executable builtin goals
 - adapt common list predicates such as `member/2`, `append/3`, `select/3`,
   `permutation/2`, `reverse/2`, `last/2`, `length/2`, `sort/2`, `msort/2`,
-  and `is_list/1` into relational standard-library goals
+  `nth0/3`, `nth1/3`, and `is_list/1` into relational standard-library goals
 - load SWI-Prolog source graphs from real `.pl` files through relative
   `consult/1`, `ensure_loaded/1`, and file-backed `use_module/1,2`
 - splice `include/1` targets into the including source before project linking

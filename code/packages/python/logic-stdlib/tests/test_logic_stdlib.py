@@ -26,6 +26,8 @@ from logic_stdlib import (
     listo,
     membero,
     msorto,
+    nth0o,
+    nth1o,
     permuteo,
     reverseo,
     selecto,
@@ -39,7 +41,7 @@ class TestVersion:
     """Verify the package is importable and wired to the engine layer."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.6.0"
+        assert __version__ == "0.7.0"
         engine_major, engine_minor, _engine_patch = logic_engine_version.split(".")
         assert (int(engine_major), int(engine_minor)) >= (0, 10)
 
@@ -202,6 +204,55 @@ class TestListRelations:
             conj(
                 eq(marker, "ok"),
                 sorto(logic_list(["tea"], tail="cake"), var("Sorted")),
+            ),
+        ) == []
+
+    def test_nth0o_finds_zero_based_elements(self) -> None:
+        item = var("Item")
+
+        assert solve_all(
+            program(),
+            item,
+            nth0o(1, logic_list(["tea", "cake", "jam"]), item),
+        ) == [atom("cake")]
+
+    def test_nth1o_finds_one_based_elements(self) -> None:
+        item = var("Item")
+
+        assert solve_all(
+            program(),
+            item,
+            nth1o(2, logic_list(["tea", "cake", "jam"]), item),
+        ) == [atom("cake")]
+
+    def test_ntho_enumerates_index_element_pairs_for_proper_lists(self) -> None:
+        index = var("Index")
+        item = var("Item")
+
+        assert solve_all(
+            program(),
+            (index, item),
+            nth0o(index, logic_list(["tea", "cake", "jam"]), item),
+        ) == [
+            (num(0), atom("tea")),
+            (num(1), atom("cake")),
+            (num(2), atom("jam")),
+        ]
+
+    def test_ntho_rejects_out_of_range_and_improper_lists(self) -> None:
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), nth0o(3, logic_list(["tea"]), var("Item"))),
+        ) == []
+        assert solve_all(
+            program(),
+            marker,
+            conj(
+                eq(marker, "ok"),
+                nth0o(0, logic_list(["tea"], tail="cake"), var("Item")),
             ),
         ) == []
 
