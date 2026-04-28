@@ -68,6 +68,7 @@ __all__ = [
     "argo",
     "atomico",
     "atomo",
+    "betweeno",
     "callo",
     "callableo",
     "calltermo",
@@ -171,6 +172,7 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("atomico", 1),
     ("atomo", 1),
     ("bagofo", 3),
+    ("betweeno", 3),
     ("callableo", 1),
     ("callo", 1),
     ("calltermo", 1),
@@ -380,6 +382,12 @@ def _integer_value(term_value: object) -> int | None:
     if isinstance(term_value, int):
         return term_value
     return None
+
+
+def _reified_integer(term_value: Term, state: State) -> int | None:
+    """Read one reified term as a concrete non-bool integer."""
+
+    return _integer_value(_reified(term_value, state))
 
 
 def _domain_from_items(items: Iterable[object]) -> frozenset[int]:
@@ -1633,6 +1641,32 @@ def geqo(left: object, right: object) -> GoalExpr:
         right,
         lambda left_value, right_value: left_value >= right_value,
     )
+
+
+def betweeno(low: object, high: object, value: object) -> GoalExpr:
+    """Generate or validate an integer between two finite inclusive bounds."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        low_term, high_term, value_term = args
+        low_value = _reified_integer(low_term, state)
+        high_value = _reified_integer(high_term, state)
+        if low_value is None or high_value is None or high_value < low_value:
+            return
+
+        value_reified = _reified(value_term, state)
+        value_integer = _integer_value(value_reified)
+        if value_integer is not None:
+            if low_value <= value_integer <= high_value:
+                yield state
+            return
+
+        if not isinstance(value_reified, LogicVar):
+            return
+
+        for candidate in range(low_value, high_value + 1):
+            yield from solve_from(program_value, eq(value_term, num(candidate)), state)
+
+    return native_goal(run, low, high, value)
 
 
 def callo(goal: object) -> GoalExpr:

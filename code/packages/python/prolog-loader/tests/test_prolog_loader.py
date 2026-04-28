@@ -787,6 +787,7 @@ class TestPrologGoalAdapter:
             relation("=<", 2)(1, 1),
             relation(">", 2)(2, 1),
             relation(">=", 2)(2, 2),
+            relation("between", 3)(1, 3, LogicVar(id=28)),
             relation("findall", 3)(
                 atom("ok"),
                 term("memo", atom("ok")),
@@ -930,6 +931,18 @@ class TestPrologGoalAdapter:
             parsed.variables["Result"],
             adapted,
         ) == [atom("else")]
+
+    def test_adapt_prolog_goal_rewrites_between_generator(self) -> None:
+        parsed = parse_swi_query(
+            "?- between(1, 4, Value), Value > 2.",
+        )
+
+        adapted = adapt_prolog_goal(parsed.goal)
+
+        assert solve_all(program(), parsed.variables["Value"], adapted) == [
+            num(3),
+            num(4),
+        ]
 
     def test_adapt_prolog_goal_rewrites_common_list_predicates(self) -> None:
         parsed = parse_swi_query(

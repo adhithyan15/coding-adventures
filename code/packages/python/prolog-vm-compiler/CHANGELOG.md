@@ -15,6 +15,8 @@
   `query_module=...`.
 - Run Prolog `->/2` and `(If -> Then ; Else)` control constructs through the
   VM path with committed condition semantics.
+- Run Prolog `between/3` through the VM path for finite integer generation and
+  validation.
 - Run common Prolog list predicates, including finite `length/2`, `sort/2`,
   `msort/2`, `nth0/3`, `nth1/3`, `nth0/4`, and `nth1/4`, through the VM path
   by adapting them to `logic-stdlib` relations.

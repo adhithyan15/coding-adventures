@@ -44,6 +44,7 @@ ordinary logic goal expressions.
 - arithmetic expression constructors: `add`, `sub`, `mul`, `div`, `floordiv`, `mod`, and `neg`
 - `iso(result, expression)` for Prolog-style evaluative arithmetic
 - `numeqo(left, right)`, `numneqo(left, right)`, `lto(left, right)`, `leqo(left, right)`, `gto(left, right)`, and `geqo(left, right)`
+- `betweeno(low, high, value)` for finite inclusive integer generation
 - `findallo(template, goal, results)`, `bagofo(template, goal, results)`, and `setofo(template, goal, results)`
 
 ## Quick Start
@@ -53,6 +54,7 @@ from logic_builtins import (
     add,
     assertzo,
     argo,
+    betweeno,
     calltermo,
     clauseo,
     compare_termo,
@@ -114,6 +116,7 @@ memo = relation("memo", 1)
 family = program(rule(child(X, Name), parent(Name, X)))
 
 assert solve_all(program(), X, onceo(eq(X, "first"))) == [atom("first")]
+assert solve_all(program(), X, betweeno(1, 3, X)) == [num(1), num(2), num(3)]
 assert solve_all(
     program(),
     X,

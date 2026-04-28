@@ -16,6 +16,7 @@ from logic_builtins.builtins import (
     atomico,
     atomo,
     bagofo,
+    betweeno,
     callableo,
     callo,
     calltermo,
@@ -88,6 +89,7 @@ __all__ = [
     "atomico",
     "atomo",
     "bagofo",
+    "betweeno",
     "callo",
     "callableo",
     "calltermo",
@@ -151,4 +153,4 @@ __all__ = [
     "varo",
 ]
 
-__version__ = "0.13.0"
+__version__ = "0.14.0"

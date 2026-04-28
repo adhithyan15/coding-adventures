@@ -4,6 +4,11 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+### Added
+
+- `betweeno(low, high, value)` for finite inclusive integer generation and
+  validation, matching the common Prolog `between/3` use case.
+
 ### Fixed
 
 - `iftheno(...)` and `ifthenelseo(...)` now preserve rule-local variable

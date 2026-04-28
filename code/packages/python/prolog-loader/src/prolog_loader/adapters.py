@@ -12,6 +12,7 @@ from logic_builtins import (
     atomico,
     atomo,
     bagofo,
+    betweeno,
     callableo,
     calltermo,
     clauseo,
@@ -162,6 +163,15 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
     }
     if goal.relation.arity == 2 and name in binary_arithmetic_builtins:
         return binary_arithmetic_builtins[name](args[0], args[1])
+
+    ternary_arithmetic_builtins: dict[
+        str,
+        Callable[[object, object, object], GoalExpr],
+    ] = {
+        "between": betweeno,
+    }
+    if goal.relation.arity == 3 and name in ternary_arithmetic_builtins:
+        return ternary_arithmetic_builtins[name](*args)
 
     binary_list_builtins: dict[str, Callable[[object, object], GoalExpr]] = {
         "last": lasto,
