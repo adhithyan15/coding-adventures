@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.3.0 — 2026-04-27
+
+**Add `is_prime` alias for `primep` in the MACSYMA name table.**
+
+MACSYMA's canonical name for the primality predicate is `primep`, but
+interactive users often type `is_prime` (following Python/Julia/etc. naming
+conventions). The runtime's name table now maps both identifiers to the same
+`IsPrime` IR head, so `is_prime(17)` evaluates to `True` instead of returning
+the expression unevaluated.
+
+2 new pipeline tests added (`test_pipeline_is_prime_alias_true/false`);
+total test count 135, coverage maintained at ≥ 80 %.
+
 ## 1.2.0 — 2026-04-27
 
 **Wire `ratsimp` and `trigsimp` flags in `ev` handler (A3 + B1).**

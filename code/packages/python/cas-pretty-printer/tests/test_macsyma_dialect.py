@@ -153,6 +153,78 @@ def test_neg_via_minus_one_sugar() -> None:
     assert fmt(expr) == "-x"
 
 
+def test_negative_coeff_no_parens() -> None:
+    """Mul(-2, x) prints as `-2*x`, not `(-2)*x`."""
+    x = IRSymbol("x")
+    expr = IRApply(MUL, (IRInteger(-2), x))
+    assert fmt(expr) == "-2*x"
+
+
+def test_negative_coeff_in_pow_keeps_parens() -> None:
+    """Pow(x, -3) still wraps the exponent: `x^(-3)`."""
+    x = IRSymbol("x")
+    expr = IRApply(POW, (x, IRInteger(-3)))
+    assert fmt(expr) == "x^(-3)"
+
+
+def test_add_neg_literal_first_arg() -> None:
+    """Add(-1, y) sugars to `y - 1`."""
+    y = IRSymbol("y")
+    expr = IRApply(ADD, (IRInteger(-1), y))
+    assert fmt(expr) == "y - 1"
+
+
+def test_add_neg_literal_first_arg_large() -> None:
+    """Add(-5, x) sugars to `x - 5`."""
+    x = IRSymbol("x")
+    expr = IRApply(ADD, (IRInteger(-5), x))
+    assert fmt(expr) == "x - 5"
+
+
+def test_mul_with_neg_second_arg() -> None:
+    """Mul(a, Neg(b)) sugars to `-(a*b)`."""
+    a, b = IRSymbol("a"), IRSymbol("b")
+    expr = IRApply(MUL, (a, IRApply(NEG, (b,))))
+    assert fmt(expr) == "-(a*b)"
+
+
+def test_add_of_mul_with_neg_second_arg() -> None:
+    """Add(a, Mul(b, Neg(c))) sugars to `a - b*c`.
+
+    This exercises the one-level recursive sugar peek in the Add rule:
+    the walker spots that Mul(b, Neg(c)) is Neg under sugar, then emits
+    a Sub instead of ``a + -(b*c)``.
+    """
+    a, b, c = IRSymbol("a"), IRSymbol("b"), IRSymbol("c")
+    inner = IRApply(MUL, (b, IRApply(NEG, (c,))))
+    expr = IRApply(ADD, (a, inner))
+    # Should be a - b*c, not a + -(b*c)
+    result = fmt(expr)
+    assert result == "a - b*c"
+
+
+def test_diff_product_rule_display() -> None:
+    """cos(y)*cos(y) + sin(y)*Neg(sin(y)) → `cos(y)*cos(y) - sin(y)*sin(y)`.
+
+    This models the output of diff(sin(y)*cos(y), y): the VM produces
+    Add(Mul(Cos(y), Cos(y)), Mul(Sin(y), Neg(Sin(y)))).  The sugar
+    pipeline should fold this to a Sub with clean operands.
+    """
+    from symbolic_ir import COS
+    from symbolic_ir import SIN as SIN_SYM
+
+    y = IRSymbol("y")
+    inner_c = IRApply(COS, (y,))
+    inner_s = IRApply(SIN_SYM, (y,))
+    # Add(cos(y)*cos(y),  sin(y)*(-sin(y)))
+    expr = IRApply(ADD, (
+        IRApply(MUL, (inner_c, inner_c)),
+        IRApply(MUL, (inner_s, IRApply(NEG, (inner_s,)))),
+    ))
+    result = fmt(expr)
+    assert result == "cos(y)*cos(y) - sin(y)*sin(y)"
+
+
 # ---- containers ------------------------------------------------------------
 
 
