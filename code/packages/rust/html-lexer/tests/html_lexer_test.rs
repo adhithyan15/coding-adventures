@@ -229,6 +229,48 @@ fn default_html_lexer_keeps_non_matching_script_end_tags_as_text() {
 }
 
 #[test]
+fn default_html_lexer_supports_script_data_escaped_comment_text() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("script_data").unwrap();
+    lexer.set_last_start_tag("script");
+
+    lexer.push("<!-- if (a < b) --></script>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("<!-- if (a < b) -->".to_string()),
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_script_data_escaped_state() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("script_data_escaped").unwrap();
+    lexer.set_last_start_tag("script");
+
+    lexer.push("if (a < b) </script>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("if (a < b) ".to_string()),
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_seeded_plaintext_state() {
     let mut lexer = create_html_lexer().unwrap();
     lexer.set_initial_state("plaintext").unwrap();

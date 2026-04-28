@@ -65,3 +65,6 @@ documented in this file.
   literal in that submode.
 - Seeded `script_data` tokenizer-state support with matching end-tag recovery
   and fixture coverage that keeps character references literal in script text.
+- First script-data escaped tokenizer states, covering `<!-- ... -->` style
+  script text and matching `</script>` end-tag emission from escaped script
+  text.
