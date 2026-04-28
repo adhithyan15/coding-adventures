@@ -675,6 +675,81 @@ class _CIRLowerer:
                 self._emit(IrOp.ADD_IMM, dest_reg, src_operand, IrImmediate(0))
             return
 
+        # ── Memory access ────────────────────────────────────────────────────
+        #
+        # Brainfuck (and any other byte-tape language) compiles to ``load_mem``
+        # / ``store_mem`` against a single address operand — the data pointer.
+        # ``jit-core`` keeps these in ``_PASSTHROUGH_OPS``, so they arrive
+        # here with their bare names and the value width stored in
+        # ``CIRInstr.type``.
+        #
+        # The static IR's byte-access form is three-operand:
+        #
+        #   LOAD_BYTE  dst, base, offset   ; dst = mem[base + offset] & 0xFF
+        #   STORE_BYTE src, base, offset   ; mem[base + offset] = src & 0xFF
+        #
+        # Brainfuck's tape lives at WASM linear-memory address 0, so we
+        # synthesise a ``base = 0`` register on each access.  An IR-level
+        # optimiser could hoist the redundant zero-load out of the inner
+        # loop, but for V1 mechanical correctness wins over micro-perf.
+        #
+        # Type handling
+        # -------------
+        # We accept any integer type in ``instr.type`` — ``LOAD_BYTE`` /
+        # ``STORE_BYTE`` mask to a byte regardless of the requested width.
+        # Wider memory ops (``LOAD_WORD`` / ``STORE_WORD``) are out of
+        # scope until a language wider than Brainfuck needs them.
+
+        if op == "load_mem":
+            if instr.type not in _INT_TYPES:
+                raise CIRLoweringError(
+                    f"unsupported load_mem type {instr.type!r}: "
+                    "expected an integer width"
+                )
+            assert dest is not None, "load_mem must have a dest"
+            dest_reg = self._var(dest)
+            ptr_operand = self._operand(instr.srcs[0])
+
+            # The IR's LOAD_BYTE wants the offset in a register.  If the CIR
+            # gave us an immediate pointer (rare but possible after constant
+            # folding), materialise it into a scratch first.
+            if isinstance(ptr_operand, IrImmediate):
+                ptr_reg = self._fresh()
+                self._emit(IrOp.LOAD_IMM, ptr_reg, ptr_operand)
+            else:
+                ptr_reg = ptr_operand
+
+            base = self._fresh()
+            self._emit(IrOp.LOAD_IMM, base, IrImmediate(0))
+            self._emit(IrOp.LOAD_BYTE, dest_reg, base, ptr_reg)
+            return
+
+        if op == "store_mem":
+            if instr.type not in _INT_TYPES:
+                raise CIRLoweringError(
+                    f"unsupported store_mem type {instr.type!r}: "
+                    "expected an integer width"
+                )
+            ptr_operand = self._operand(instr.srcs[0])
+            val_operand = self._operand(instr.srcs[1])
+
+            if isinstance(ptr_operand, IrImmediate):
+                ptr_reg = self._fresh()
+                self._emit(IrOp.LOAD_IMM, ptr_reg, ptr_operand)
+            else:
+                ptr_reg = ptr_operand
+
+            if isinstance(val_operand, IrImmediate):
+                val_reg = self._fresh()
+                self._emit(IrOp.LOAD_IMM, val_reg, val_operand)
+            else:
+                val_reg = val_operand
+
+            base = self._fresh()
+            self._emit(IrOp.LOAD_IMM, base, IrImmediate(0))
+            self._emit(IrOp.STORE_BYTE, val_reg, base, ptr_reg)
+            return
+
         # ── Unsupported ops ──────────────────────────────────────────────────
 
         if op == "call_runtime":

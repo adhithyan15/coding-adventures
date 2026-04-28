@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-brainfuck-iir-compiler"
-version = "0.1.0"
+version = "0.2.0"
 description = "Brainfuck → InterpreterIR compiler and BrainfuckVM wrapper around vm-core"
 requires-python = ">=3.12"
 license = "MIT"
@@ -25,12 +25,16 @@ dependencies = [
     "coding-adventures-brainfuck",
     "coding-adventures-interpreter-ir",
     "coding-adventures-vm-core",
+    "coding-adventures-jit-core",
+    "coding-adventures-wasm-backend",
 ]
 
 [tool.uv.sources]
 coding-adventures-brainfuck = { path = "../brainfuck", editable = true }
 coding-adventures-interpreter-ir = { path = "../interpreter-ir", editable = true }
 coding-adventures-vm-core = { path = "../vm-core", editable = true }
+coding-adventures-jit-core = { path = "../jit-core", editable = true }
+coding-adventures-wasm-backend = { path = "../wasm-backend", editable = true }
 
 [project.urls]
 Homepage = "https://github.com/adhithyan15/coding-adventures"

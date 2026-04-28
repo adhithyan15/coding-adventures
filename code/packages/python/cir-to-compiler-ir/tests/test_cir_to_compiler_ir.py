@@ -540,6 +540,104 @@ class TestTypeAssert:
 
 
 # ---------------------------------------------------------------------------
+# 11b. Memory access  (load_mem / store_mem)
+# ---------------------------------------------------------------------------
+#
+# Brainfuck (and any byte-tape language) compiles to ``load_mem`` and
+# ``store_mem`` against a single pointer operand — the data pointer.  These
+# are passthrough ops in jit-core's specialiser (they keep their bare
+# names; the type lives in CIRInstr.type) and lower to the static IR's
+# three-operand byte-access ops with a synthesised ``base = 0`` register.
+
+class TestMemoryAccess:
+    def test_load_mem_u8_emits_zero_base_then_load_byte(self):
+        instrs = [
+            CIRInstr("const_u32", "ptr", [0], "u32"),
+            CIRInstr("load_mem", "v", ["ptr"], "u8"),
+            CIRInstr("ret_void", None, [], "void"),
+        ]
+        prog = lower_cir_to_ir_program(instrs)
+        # Expected:
+        #   LABEL _start
+        #   LOAD_IMM ptr=0           ; const_u32 ptr=0
+        #   LOAD_IMM base_scratch=0  ; synthesised zero-base
+        #   LOAD_BYTE v, base, ptr   ; v = mem[base + ptr]
+        #   HALT
+        assert _instrs(prog) == _ops(
+            IrOp.LOAD_IMM, IrOp.LOAD_IMM, IrOp.LOAD_BYTE, IrOp.HALT
+        )
+        load_byte = prog.instructions[3]
+        # operands[0] = dest (v, register 1), operands[1] = base, operands[2] = offset (ptr)
+        assert load_byte.operands[0] == IrRegister(index=1)  # dest = v
+        assert load_byte.operands[2] == IrRegister(index=0)  # offset = ptr (first var)
+
+    def test_store_mem_u8_emits_zero_base_then_store_byte(self):
+        instrs = [
+            CIRInstr("const_u32", "ptr", [0], "u32"),
+            CIRInstr("const_u8",  "v",   [42], "u8"),
+            CIRInstr("store_mem", None, ["ptr", "v"], "u8"),
+            CIRInstr("ret_void",  None, [], "void"),
+        ]
+        prog = lower_cir_to_ir_program(instrs)
+        # Expected:
+        #   LABEL _start
+        #   LOAD_IMM ptr
+        #   LOAD_IMM v
+        #   LOAD_IMM base_scratch=0
+        #   STORE_BYTE v, base, ptr
+        #   HALT
+        assert _instrs(prog) == _ops(
+            IrOp.LOAD_IMM, IrOp.LOAD_IMM, IrOp.LOAD_IMM, IrOp.STORE_BYTE, IrOp.HALT
+        )
+        store_byte = prog.instructions[4]
+        # operands[0] = src value (v, register 1), [2] = offset (ptr, register 0)
+        assert store_byte.operands[0] == IrRegister(index=1)  # src = v
+        assert store_byte.operands[2] == IrRegister(index=0)  # offset = ptr
+
+    def test_load_mem_with_immediate_pointer_materialises_into_scratch(self):
+        # Constant folding could in principle leave a literal in srcs[0].
+        # The lowering must materialise it into a register so LOAD_BYTE has
+        # a register to read.
+        instrs = [
+            CIRInstr("load_mem", "v", [3], "u8"),
+            CIRInstr("ret_void", None, [], "void"),
+        ]
+        prog = lower_cir_to_ir_program(instrs)
+        # LOAD_IMM ptr_scratch=3; LOAD_IMM base=0; LOAD_BYTE v, base, ptr_scratch
+        assert _instrs(prog) == _ops(
+            IrOp.LOAD_IMM, IrOp.LOAD_IMM, IrOp.LOAD_BYTE, IrOp.HALT
+        )
+
+    def test_store_mem_with_immediate_value_materialises_into_scratch(self):
+        instrs = [
+            CIRInstr("const_u32", "ptr", [0], "u32"),
+            CIRInstr("store_mem", None, ["ptr", 99], "u8"),
+            CIRInstr("ret_void", None, [], "void"),
+        ]
+        prog = lower_cir_to_ir_program(instrs)
+        # const_u32 ptr; LOAD_IMM val_scratch=99; LOAD_IMM base=0; STORE_BYTE
+        assert _instrs(prog) == _ops(
+            IrOp.LOAD_IMM, IrOp.LOAD_IMM, IrOp.LOAD_IMM, IrOp.STORE_BYTE, IrOp.HALT
+        )
+
+    def test_load_mem_rejects_non_integer_type(self):
+        instrs = [
+            CIRInstr("load_mem", "x", ["ptr"], "f64"),
+            CIRInstr("ret_void", None, [], "void"),
+        ]
+        with pytest.raises(CIRLoweringError, match="load_mem"):
+            lower_cir_to_ir_program(instrs)
+
+    def test_store_mem_rejects_non_integer_type(self):
+        instrs = [
+            CIRInstr("store_mem", None, ["ptr", "v"], "any"),
+            CIRInstr("ret_void", None, [], "void"),
+        ]
+        with pytest.raises(CIRLoweringError, match="store_mem"):
+            lower_cir_to_ir_program(instrs)
+
+
+# ---------------------------------------------------------------------------
 # 12. Error cases
 # ---------------------------------------------------------------------------
 
