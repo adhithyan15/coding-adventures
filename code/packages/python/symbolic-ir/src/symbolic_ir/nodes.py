@@ -223,3 +223,42 @@ LIST = IRSymbol("List")
 ASSIGN = IRSymbol("Assign")  # x : expr  — evaluate rhs, bind
 DEFINE = IRSymbol("Define")  # f(x) := expr  — delayed, for functions
 RULE = IRSymbol("Rule")  # pattern -> replacement (rewrite rules)
+
+# Control flow (Phase G — MACSYMA grammar extensions)
+#
+# These five heads implement the structured-programming forms that let
+# MACSYMA programs do something beyond single-expression evaluation.
+#
+#   While(condition, body)
+#       Evaluate ``body`` repeatedly as long as ``condition`` is truthy.
+#       Returns the last value of ``body`` (or ``False`` if the loop
+#       never executes).
+#
+#   ForRange(var, start, step, end, body)
+#       Equivalent to ``for var: start step step thru end do body``.
+#       Binds ``var`` to ``start``, ``start+step``, … up to ``end``
+#       (inclusive), evaluating ``body`` on each iteration.  Returns
+#       the last body value.
+#
+#   ForEach(var, list, body)
+#       Equivalent to ``for var in list do body``.
+#       Binds ``var`` to each element of ``list`` in turn.
+#       Returns the last body value.
+#
+#   Block(locals_list, stmt1, stmt2, …, stmtN)
+#       Creates a local scope, evaluates statements in order, returns
+#       the value of the last statement.  ``locals_list`` is an
+#       ``IRApply(List, ...)`` whose elements are either
+#       ``IRSymbol`` (declare, initialize to False) or
+#       ``IRApply(Assign, sym, rhs)`` (declare, initialize to rhs).
+#       Local bindings are restored on exit (even via Return).
+#
+#   Return(value)
+#       Immediately exits the enclosing Block/While/ForRange/ForEach
+#       with ``value``.  Implemented via a Python exception so it
+#       unwinds cleanly through arbitrary nesting.
+WHILE = IRSymbol("While")
+FOR_RANGE = IRSymbol("ForRange")
+FOR_EACH = IRSymbol("ForEach")
+BLOCK = IRSymbol("Block")
+RETURN = IRSymbol("Return")

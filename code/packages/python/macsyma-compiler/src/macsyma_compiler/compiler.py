@@ -41,14 +41,18 @@ from symbolic_ir import (
     ASSIGN,
     ATAN,
     ATANH,
+    BLOCK,
     COS,
     COSH,
     DEFINE,
     DIV,
     EQUAL,
     EXP,
+    FOR_EACH,
+    FOR_RANGE,
     GREATER,
     GREATER_EQUAL,
+    IF,
     INTEGRATE,
     LESS,
     LESS_EQUAL,
@@ -59,12 +63,14 @@ from symbolic_ir import (
     NOT,
     NOT_EQUAL,
     POW,
+    RETURN,
     SIN,
     SINH,
     SQRT,
     SUB,
     TAN,
     TANH,
+    WHILE,
     D,
     IRApply,
     IRFloat,
@@ -522,6 +528,242 @@ class Compiler:
             raise CompileError("atom with non-1 children")
         return self._compile_node(node.children[0])  # type: ignore[arg-type]
 
+    # ---- control flow (Phase G) ------------------------------------------
+    #
+    # Grammar productions added by ``macsyma-grammar-extensions.md``.
+    # Each handler below mirrors its grammar rule closely so the mapping
+    # is easy to verify.
+
+    def _compile_if_expr(self, node: ASTNode) -> IRNode:
+        """Compile `if c then t { elseif c2 then t2 } [ else e ]`.
+
+        Produces a right-nested chain of ``If(cond, then, else)`` IR
+        nodes.  With no ``else`` the deepest ``If`` gets 2 args; the
+        existing ``if_`` handler returns ``False`` for the unmatched
+        case, matching MACSYMA semantics.
+
+        Example::
+
+            if x > 0 then x elseif x < 0 then -x else 0
+            → If(x>0, x, If(x<0, Neg(x), 0))
+        """
+        children = node.children
+        i = 0
+
+        def is_kw(idx: int, word: str) -> bool:
+            child = children[idx]
+            return isinstance(child, Token) and child.value == word
+
+        # Skip "if"
+        i += 1
+        # Main condition
+        conditions: list[IRNode] = [self._compile_node(children[i])]  # type: ignore[arg-type]
+        i += 1
+        # Skip "then"
+        i += 1
+        branches: list[IRNode] = [self._compile_node(children[i])]  # type: ignore[arg-type]
+        i += 1
+        else_branch: IRNode | None = None
+
+        while i < len(children):
+            if is_kw(i, "elseif"):
+                i += 1
+                conditions.append(self._compile_node(children[i]))  # type: ignore[arg-type]
+                i += 1
+                i += 1  # skip "then"
+                branches.append(self._compile_node(children[i]))  # type: ignore[arg-type]
+                i += 1
+            elif is_kw(i, "else"):
+                i += 1
+                else_branch = self._compile_node(children[i])  # type: ignore[arg-type]
+                i += 1
+            else:
+                break
+
+        # Build nested If right-to-left.
+        # ``If(c, t)`` — 2-arg form — when there is truly no else at
+        # the last position; this signals the ``if_`` handler to return
+        # False on a missed predicate, matching MACSYMA behaviour.
+        result: IRNode
+        if else_branch is not None:
+            result = else_branch
+            for cond, then in reversed(
+                list(zip(conditions, branches, strict=True))
+            ):
+                result = IRApply(IF, (cond, then, result))
+        else:
+            # Start from the innermost: only the last pair is 2-arg.
+            result = IRApply(IF, (conditions[-1], branches[-1]))
+            for cond, then in reversed(
+                list(zip(conditions[:-1], branches[:-1], strict=True))
+            ):
+                result = IRApply(IF, (cond, then, result))
+
+        return result
+
+    def _compile_for_each_expr(self, node: ASTNode) -> IRNode:
+        """Compile `for NAME in list do body` → ``ForEach(var, list, body)``.
+
+        Grammar::
+
+            for_each_expr = "for" NAME "in" expression "do" expression ;
+
+        Children: KEYWORD("for"), NAME, KEYWORD("in"), expr, KEYWORD("do"), expr
+        """
+        # Walk: skip keywords, collect NAME token and two expressions.
+        exprs: list[IRNode] = []
+        var: IRSymbol | None = None
+        for child in node.children:
+            if isinstance(child, Token):
+                if _token_type_name(child) == "NAME":
+                    var = IRSymbol(child.value)
+            else:
+                exprs.append(self._compile_node(child))  # type: ignore[arg-type]
+        if var is None:
+            raise CompileError("for_each_expr: missing loop variable")
+        if len(exprs) != 2:
+            raise CompileError(
+                f"for_each_expr: expected 2 expressions, got {len(exprs)}"
+            )
+        list_ir, body_ir = exprs
+        return IRApply(FOR_EACH, (var, list_ir, body_ir))
+
+    def _compile_for_range_expr(self, node: ASTNode) -> IRNode:
+        """Compile `for NAME [:start] [step s] (thru|while|unless) end do body`.
+
+        Grammar::
+
+            for_range_expr = "for" NAME [ ":" expression ] [ "step" expression ]
+                             ( "thru" | "while" | "unless" ) expression
+                             "do" expression ;
+
+        Produces ``ForRange(var, start, step, end, body)``.
+
+        Defaults: ``start = 1``, ``step = 1`` when the optional arms are
+        absent.  The ``thru``/``while``/``unless`` keyword is consumed
+        but not stored — its distinction (count-to-end vs. loop-while
+        vs. loop-until) is resolved by the VM handler via the type of
+        the ``end`` argument.
+        """
+        children = node.children
+        i = 0
+
+        def tok_type(idx: int) -> str:
+            c = children[idx]
+            return _token_type_name(c) if isinstance(c, Token) else ""
+
+        def tok_val(idx: int) -> str:
+            c = children[idx]
+            return c.value if isinstance(c, Token) else ""
+
+        # Skip "for"
+        i += 1
+
+        # NAME → loop variable
+        if tok_type(i) != "NAME":
+            raise CompileError("for_range_expr: expected NAME after 'for'")
+        var = IRSymbol(children[i].value)  # type: ignore[union-attr]
+        i += 1
+
+        # Optional ":" expression  (start)
+        ONE = IRInteger(1)
+        start: IRNode = ONE
+        if i < len(children) and tok_type(i) == "COLON":
+            i += 1  # skip ":"
+            start = self._compile_node(children[i])  # type: ignore[arg-type]
+            i += 1
+
+        # Optional "step" expression
+        step: IRNode = ONE
+        if i < len(children) and tok_val(i) == "step":
+            i += 1  # skip "step"
+            step = self._compile_node(children[i])  # type: ignore[arg-type]
+            i += 1
+
+        # ("thru" | "while" | "unless") — consume the keyword, keep no info
+        if i < len(children) and tok_val(i) in ("thru", "while", "unless"):
+            i += 1
+        else:
+            raise CompileError(
+                "for_range_expr: expected 'thru', 'while', or 'unless'"
+            )
+
+        # end/condition expression
+        end = self._compile_node(children[i])  # type: ignore[arg-type]
+        i += 1
+
+        # "do"
+        i += 1  # skip "do"
+
+        # body expression
+        body = self._compile_node(children[i])  # type: ignore[arg-type]
+
+        return IRApply(FOR_RANGE, (var, start, step, end, body))
+
+    def _compile_while_expr(self, node: ASTNode) -> IRNode:
+        """Compile `while cond do body` → ``While(cond, body)``.
+
+        Grammar::
+
+            while_expr = "while" expression "do" expression ;
+
+        Children: KEYWORD("while"), expr, KEYWORD("do"), expr
+        """
+        exprs: list[IRNode] = []
+        for child in node.children:
+            if not isinstance(child, Token):
+                exprs.append(self._compile_node(child))  # type: ignore[arg-type]
+        if len(exprs) != 2:
+            raise CompileError(f"while_expr: expected 2 expressions, got {len(exprs)}")
+        cond_ir, body_ir = exprs
+        return IRApply(WHILE, (cond_ir, body_ir))
+
+    def _compile_block_expr(self, node: ASTNode) -> IRNode:
+        """Compile `block([locals], s1, s2, …)` → ``Block(List(locals), s1, …)``.
+
+        Grammar::
+
+            block_expr = "block" "(" [ arglist ] ")" ;
+
+        If the first argument is a ``[…]`` list literal, it is used as
+        the locals-declaration list; the compiler does NOT enforce that
+        the list contains only symbols or ``Assign`` nodes — that is the
+        VM handler's responsibility at evaluation time.
+
+        If the first argument is not a list literal, an empty locals list
+        (``List()``) is prepended and all arguments become statements.
+        This lets you write ``block(stmt1, stmt2)`` without a locals list.
+        """
+        args: tuple[IRNode, ...] = ()
+        for child in node.children:
+            if isinstance(child, ASTNode) and child.rule_name == "arglist":
+                args = self._compile_arglist(child)
+        # Determine locals and statement list.
+        if args and isinstance(args[0], IRApply) and args[0].head == LIST:
+            # Explicit locals list: Block(List(…), stmt1, …)
+            return IRApply(BLOCK, args)
+        # No explicit locals list: prepend empty List().
+        return IRApply(BLOCK, (IRApply(LIST, ()), *args))
+
+    def _compile_return_expr(self, node: ASTNode) -> IRNode:
+        """Compile `return(expr)` → ``Return(expr)``.
+
+        Grammar::
+
+            return_expr = "return" "(" expression ")" ;
+
+        ``return`` is a keyword, so it is not captured by the ``postfix``
+        rule's atom production; this explicit rule handles the call form.
+        """
+        exprs: list[IRNode] = []
+        for child in node.children:
+            # Skip token children (the "return", "(", ")" keywords/punctuation).
+            if not isinstance(child, Token):
+                exprs.append(self._compile_node(child))  # type: ignore[arg-type]
+        if len(exprs) != 1:
+            raise CompileError(f"return_expr: expected 1 expression, got {len(exprs)}")
+        return IRApply(RETURN, (exprs[0],))
+
     # ---- dispatch table --------------------------------------------------
 
     _handlers: dict[str, callable] = {  # type: ignore[type-arg]
@@ -538,6 +780,13 @@ class Compiler:
         "atom": _compile_atom,
         "group": _compile_group,
         "list": _compile_list,
+        # Control flow (Phase G — macsyma-grammar-extensions)
+        "if_expr": _compile_if_expr,
+        "for_each_expr": _compile_for_each_expr,
+        "for_range_expr": _compile_for_range_expr,
+        "while_expr": _compile_while_expr,
+        "block_expr": _compile_block_expr,
+        "return_expr": _compile_return_expr,
     }
 
 

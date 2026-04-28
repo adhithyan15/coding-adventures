@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.6.0 — 2026-04-27
+
+**Phase G — Control-flow head symbols.**
+
+Added five new IR head constants to `nodes.py` (after `RULE`) and exported
+all five from `__init__.py`:
+
+- `WHILE = IRSymbol("While")` — `While(condition, body)` loop.
+- `FOR_RANGE = IRSymbol("ForRange")` — `for x: a step s thru b do body`
+  (5-ary: var, start, step, end, body).
+- `FOR_EACH = IRSymbol("ForEach")` — `for x in list do body`
+  (3-ary: var, list, body).
+- `BLOCK = IRSymbol("Block")` — local scope with statement sequence
+  (`Block(locals_list, stmt1, …, stmtN)`).
+- `RETURN = IRSymbol("Return")` — early exit from a block/loop
+  (`Return(value)`).
+
+Required by the MACSYMA grammar extensions spec (`macsyma-grammar-extensions.md`)
+and implemented in `symbolic-vm` 0.31.0 / `macsyma-compiler` 0.6.0.
+
 ## 0.5.0 — 2026-04-23
 
 - Added `SINH = IRSymbol("Sinh")`, `COSH = IRSymbol("Cosh")`,

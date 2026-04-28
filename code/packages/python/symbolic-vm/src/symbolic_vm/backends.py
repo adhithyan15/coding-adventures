@@ -41,7 +41,18 @@ from cas_complex.handlers import (
     exp_complex_handler as _exp_complex_handler,
 )
 from cas_trig.handlers import build_trig_handler_table as _build_trig
-from symbolic_ir import ASSIGN, DEFINE, IF, IRApply, IRNode, IRSymbol
+from symbolic_ir import (
+    ASSIGN,
+    BLOCK,
+    DEFINE,
+    FOR_EACH,
+    FOR_RANGE,
+    IF,
+    WHILE,
+    IRApply,
+    IRNode,
+    IRSymbol,
+)
 
 from symbolic_vm.backend import Backend, Handler
 from symbolic_vm.cas_handlers import (
@@ -57,7 +68,30 @@ from symbolic_vm.integrate import integrate
 # by both backends — neither strict nor symbolic evaluation wants to
 # pre-evaluate a function body being defined, or pre-evaluate the lhs
 # of an assignment, or pre-evaluate both branches of an if.
-_HELD_HEADS = frozenset({ASSIGN.name, DEFINE.name, IF.name})
+#
+# Control-flow heads added in Phase G:
+#
+#   While   — condition and body are re-evaluated on each iteration;
+#             the VM must not evaluate them once up-front.
+#   ForRange — start/step/end are evaluated once by the handler (after
+#             it has saved the loop variable's old binding), and the
+#             body is evaluated on every iteration.
+#   ForEach — the list is evaluated once; body is evaluated per element.
+#   Block   — the handler manually walks the locals list so it can save
+#             and restore bindings rather than side-effecting globally.
+#
+# Return is NOT held: the VM evaluates its single argument (producing
+# the return value) before the handler receives it and raises the
+# _ReturnSignal exception.
+_HELD_HEADS = frozenset({
+    ASSIGN.name,
+    DEFINE.name,
+    IF.name,
+    WHILE.name,
+    FOR_RANGE.name,
+    FOR_EACH.name,
+    BLOCK.name,
+})
 
 
 class _BaseBackend(Backend):
@@ -77,6 +111,15 @@ class _BaseBackend(Backend):
 
     def bind(self, name: str, value: IRNode) -> None:
         self._env[name] = value
+
+    def unbind(self, name: str) -> None:
+        """Remove the binding for ``name``, if present.
+
+        Used by the ``Block`` handler to restore the environment to its
+        pre-block state when a local variable was unbound before the
+        block was entered.
+        """
+        self._env.pop(name, None)
 
     def hold_heads(self) -> frozenset[str]:
         return _HELD_HEADS
