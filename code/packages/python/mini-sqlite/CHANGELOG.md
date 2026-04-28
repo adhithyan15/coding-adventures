@@ -1,5 +1,42 @@
 # Changelog
 
+## [1.6.0] - 2026-04-28
+
+### Added — Phase 9: SQL Triggers (BEFORE/AFTER INSERT/UPDATE/DELETE)
+
+- **`_create_trigger()` / `_drop_trigger()` adapter functions** — translate
+  `create_trigger_stmt` / `drop_trigger_stmt` AST nodes into
+  `CreateTriggerStmt` / `DropTriggerStmt` planner statements.
+- **`_node_to_sql()` helper** — reconstructs body SQL from the trigger body
+  AST.  Re-adds single quotes around `STRING` token values (which the lexer
+  strips), normalises `new`/`old` NAME tokens to uppercase, and escapes
+  embedded single quotes using SQL-standard doubling.
+- **`_inject_pseudo_refs()` / `_make_trigger_executor()`** — parameter-
+  substitution approach for `NEW.col` / `OLD.col` references: replaces them
+  with `?` placeholders bound to the actual pre/post-update row values before
+  executing the body SQL.  This avoids the cursor-lookup problem that would
+  arise from creating real pseudo-tables.
+- **`_split_body_sql()`** — splits trigger body SQL on the `" ; "` separator
+  emitted by `_node_to_sql` for multi-statement trigger bodies.
+- **`run()` new parameters** — `trigger_executor` and `trigger_depth` are
+  forwarded to `sql_vm.execute()`; the executor is auto-created on top-level
+  calls and re-used for nested trigger body executions.
+- **`test_tier3_triggers.py`** — 44 new tests covering:
+  - Grammar: parser produces `create_trigger_stmt` / `drop_trigger_stmt` nodes
+    (9 tests)
+  - Adapter: correct `CreateTriggerStmt` / `DropTriggerStmt` output (8 tests)
+  - Backend: `InMemoryBackend` trigger storage and retrieval (8 tests)
+  - Integration: end-to-end trigger correctness via `:memory:` connection
+    (19 tests) including BEFORE/AFTER INSERT/UPDATE/DELETE, NEW/OLD value
+    access, multi-statement bodies, trigger ordering, DROP TRIGGER, and
+    transaction rollback of trigger effects.
+
+### Fixed
+
+- **`sql-vm`: `_do_update` old-row snapshot** — `current_row` was captured as
+  a mutable reference, causing AFTER UPDATE triggers to receive the
+  post-update dict in `old_row`.  Fixed by copying the dict before mutation.
+
 ## [1.5.0] - 2026-04-27
 
 ### Added — Phase 8: Window Functions (OVER / PARTITION BY)

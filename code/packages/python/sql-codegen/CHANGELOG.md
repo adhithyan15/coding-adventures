@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.3.0] - 2026-04-28
+
+### Added — Phase 9: SQL Triggers
+
+- **`CreateTriggerDef` IR instruction** — carries `name`, `timing`, `event`,
+  `table`, `body_sql`; emitted by the compiler for `CreateTrigger` plan nodes.
+- **`DropTriggerDef` IR instruction** — carries `name`, `if_exists`; emitted
+  for `DropTrigger` plan nodes.
+- Both exported from `sql_codegen.__init__` and added to the `Instruction`
+  type union in `ir.py`.
+
 ## [1.2.0] - 2026-04-27
 
 ### Added — Phase 8: Window Functions (OVER / PARTITION BY)

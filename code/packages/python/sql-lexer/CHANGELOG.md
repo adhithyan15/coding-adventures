@@ -2,6 +2,14 @@
 
 All notable changes to the SQL lexer package will be documented in this file.
 
+## [0.10.0] - 2026-04-28
+
+### Added — Phase 9: SQL Triggers
+
+- **6 new keyword tokens** — `TRIGGER`, `BEFORE`, `AFTER`, `FOR`, `EACH`, `ROW`
+  added to `sql.tokens`.  `NEW` and `OLD` remain `NAME` tokens (not keywords)
+  so they can still be used as table or column aliases without quoting.
+
 ## [0.9.0] - 2026-04-27
 
 ### Added — Phase 8: Window Functions (OVER / PARTITION BY)
