@@ -33,6 +33,9 @@ from symbolic_ir.nodes import (
     ADD,
     ALG_FACTOR,
     AND,
+    GROEBNER,
+    IDEAL_SOLVE,
+    POLY_REDUCE,
     ASIN,
     ASINH,
     ASSIGN,
@@ -160,4 +163,8 @@ __all__ = [
     "C_CONST",
     "C1",
     "C2",
+    # Multivariate polynomial operations (cas-multivariate)
+    "GROEBNER",
+    "POLY_REDUCE",
+    "IDEAL_SOLVE",
 ]

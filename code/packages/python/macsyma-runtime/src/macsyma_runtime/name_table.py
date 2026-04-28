@@ -104,6 +104,11 @@ ODE2 = IRSymbol("ODE2")
 # Algebraic extension factoring (D5 — cas-algebraic)
 ALG_FACTOR = IRSymbol("AlgFactor")
 
+# Multivariate polynomial operations (D6 — cas-multivariate)
+GROEBNER = IRSymbol("Groebner")       # groebner(polys, vars) — Gröbner basis
+POLY_REDUCE = IRSymbol("PolyReduce")  # poly_reduce(f, polys, vars) — reduction
+IDEAL_SOLVE = IRSymbol("IdealSolve")  # ideal_solve(polys, vars) — solve system
+
 # Trig transformation heads (B1)
 TRIG_SIMPLIFY = IRSymbol("TrigSimplify")
 TRIG_EXPAND = IRSymbol("TrigExpand")
@@ -231,6 +236,10 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "ode2": ODE2,           # ode2(eqn, y, x) — symbolic ODE solver
     # Algebraic extension factoring (D5 — cas-algebraic)
     "algfactor": ALG_FACTOR,  # algfactor(poly, sqrt(d)) — factor over Q[√d]
+    # Multivariate polynomial operations (D6 — cas-multivariate)
+    "groebner": GROEBNER,           # groebner(polys, vars) — Gröbner basis
+    "poly_reduce": POLY_REDUCE,     # poly_reduce(f, polys, vars) — reduction
+    "ideal_solve": IDEAL_SOLVE,     # ideal_solve(polys, vars) — solve system
     # Runtime-owned operations
     "kill": KILL,
     "ev": EV,

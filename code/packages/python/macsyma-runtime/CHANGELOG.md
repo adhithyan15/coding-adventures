@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.10.0 — 2026-04-28
+
+**Add Gröbner basis and multivariate solve operations to the MACSYMA name table.**
+
+- Imported `GROEBNER`, `POLY_REDUCE`, `IDEAL_SOLVE` from `symbolic_ir`.
+- Added `"groebner": GROEBNER`, `"poly_reduce": POLY_REDUCE`,
+  `"ideal_solve": IDEAL_SOLVE` to `MACSYMA_NAME_TABLE`.
+- Bumped `symbolic-ir` dependency to `>=0.7.6` and `symbolic-vm` to `>=0.32.8`.
+
+MACSYMA users can now write:
+- `groebner([x^2+y-1, x+y^2-1], [x,y])` → Gröbner basis
+- `ideal_solve([x+y-1, x-y], [x,y])` → `[Rule(x,1/2), Rule(y,1/2)]`
+- `poly_reduce(f, [g1,...], [x,y])` → reduced polynomial
+
+---
+
 ## 1.9.0 — 2026-04-27
 
 **Add `algfactor` to the MACSYMA name table (D5 — cas-algebraic).**

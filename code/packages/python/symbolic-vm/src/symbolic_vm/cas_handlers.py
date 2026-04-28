@@ -40,6 +40,7 @@ from fractions import Fraction
 from typing import TYPE_CHECKING
 
 from cas_algebraic import build_alg_factor_handler_table as _build_algebraic
+from cas_multivariate import build_multivariate_handler_table as _build_multivariate
 from cas_complex import IMAGINARY_UNIT as _IMAGINARY_UNIT
 from cas_complex import build_complex_handler_table as _build_complex
 from cas_complex.handlers import (
@@ -1697,6 +1698,8 @@ def build_cas_handler_table() -> dict[str, Handler]:
         **_build_ode(),
         # --- cas-algebraic (polynomial factoring over Q[√d]) ----------------
         **_build_algebraic(),
+        # --- cas-multivariate (Gröbner bases and ideal solving) -------------
+        **_build_multivariate(),
     }
 
 

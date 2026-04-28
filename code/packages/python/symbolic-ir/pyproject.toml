@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-symbolic-ir"
-version = "0.7.5"
+version = "0.7.6"
 description = "Universal symbolic expression IR — the shared tree representation that every CAS frontend compiles to and every CAS backend consumes."
 requires-python = ">=3.12"
 license = "MIT"

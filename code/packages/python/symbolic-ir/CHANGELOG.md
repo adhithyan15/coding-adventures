@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.7.6 — 2026-04-28
+
+**Add `Groebner`, `PolyReduce`, `IdealSolve` head symbols (cas-multivariate).**
+
+- `GROEBNER = IRSymbol("Groebner")` — Gröbner basis computation head
+- `POLY_REDUCE = IRSymbol("PolyReduce")` — polynomial reduction head
+- `IDEAL_SOLVE = IRSymbol("IdealSolve")` — polynomial system solver head
+
+All three exported from `symbolic_ir.__init__`.
+
+---
+
 ## 0.7.5 — 2026-04-27
 
 **Add `ALG_FACTOR` head symbol for algebraic-extension factoring.**

@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.32.8 — 2026-04-28
+
+**Wire `cas-multivariate` into `SymbolicBackend` (Gröbner bases).**
+
+- `cas_handlers.py`: imports `build_multivariate_handler_table` from `cas_multivariate`
+  and merges it into the handler table via `**_build_multivariate()`.
+- `pyproject.toml`: added `"coding-adventures-cas-multivariate>=0.1.0"` as a dependency.
+
+This wires `Groebner(List(polys), List(vars))`, `PolyReduce(f, List(polys), List(vars))`,
+and `IdealSolve(List(polys), List(vars))` into the symbolic VM.
+
+---
+
 ## 0.32.7 — 2026-04-27
 
 **Wire `cas-algebraic` into `SymbolicBackend`; add `AlgFactor` to held heads.**

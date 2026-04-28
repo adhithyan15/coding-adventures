@@ -3,17 +3,16 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "coding-adventures-macsyma-runtime"
-version = "1.10.0"
-description = "MACSYMA-specific runtime layer on top of the symbolic VM — history, $/; terminators, kill, ev, name table."
+name = "coding-adventures-cas-multivariate"
+version = "0.1.0"
+description = "Multivariate polynomial operations and Gröbner bases (Buchberger's algorithm) for the MACSYMA CAS."
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
 readme = "README.md"
-keywords = ["macsyma", "maxima", "cas", "symbolic", "runtime", "education"]
+keywords = ["cas", "groebner", "buchberger", "polynomial", "multivariate", "ideal", "education"]
 dependencies = [
-    "coding-adventures-symbolic-ir>=0.7.5",
-    "coding-adventures-symbolic-vm>=0.32.7",
+    "coding-adventures-symbolic-ir>=0.7.6",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -33,7 +32,7 @@ Repository = "https://github.com/adhithyan15/coding-adventures"
 dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4", "mypy>=1.10"]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/macsyma_runtime"]
+packages = ["src/cas_multivariate"]
 
 [tool.ruff]
 target-version = "py312"
@@ -44,7 +43,7 @@ select = ["E", "W", "F", "I", "UP", "B", "SIM"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "--cov=macsyma_runtime --cov-report=term-missing --cov-fail-under=80"
+addopts = "--cov=cas_multivariate --cov-report=term-missing --cov-fail-under=80"
 
 [tool.coverage.report]
 fail_under = 80

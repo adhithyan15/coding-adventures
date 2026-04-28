@@ -205,11 +205,28 @@ Surface syntax: `algfactor(x^4+1, sqrt(2))` → `(x^2+sqrt(2)*x+1)*(x^2-sqrt(2)*
 
 ---
 
-### D-remaining — Planned
+### D6 — ✅ Complete
 
-| Feature | Plan |
-|---------|------|
-| Multivariate `factor`/`solve` | Gröbner bases (Buchberger) — `cas-multivariate` 0.1.0 |
+**Multivariate polynomial operations**: `cas-multivariate` 0.1.0 — Gröbner bases
+(Buchberger's algorithm), polynomial reduction, and ideal solving.
+
+- `MPoly`: sparse multivariate polynomial over Q (Fraction coefficients), dict-based.
+- Monomial orderings: grlex (default for Buchberger), lex (for back-substitution),
+  grevlex.
+- `s_poly(f, g)`: S-polynomial computation — the core of Buchberger's algorithm.
+- `reduce_poly(f, G)`: multivariate polynomial reduction (normal form).
+- `buchberger(F)`: full Buchberger algorithm with inter-reduction to canonical basis.
+  Safety cap: degree ≤ 8, basis size ≤ 50.
+- `ideal_solve(polys)`: lex Gröbner basis + back-substitution for exact rational
+  solutions of polynomial systems.
+- `GROEBNER`, `POLY_REDUCE`, `IDEAL_SOLVE` heads added to `symbolic-ir` 0.7.6.
+- Handlers registered in `symbolic-vm` 0.32.8.
+- `"groebner"`, `"poly_reduce"`, `"ideal_solve"` added to `macsyma-runtime` 1.10.0.
+
+Surface syntax:
+- `groebner([x^2+y-1, x+y^2-1], [x, y])` → `List(g1, g2, ...)` (reduced Gröbner basis)
+- `poly_reduce(x^2, [x-1], [x])` → `1`
+- `ideal_solve([x+y-1, x-y], [x, y])` → `List(List(Rule(x, 1/2), Rule(y, 1/2)))`
 
 ---
 
