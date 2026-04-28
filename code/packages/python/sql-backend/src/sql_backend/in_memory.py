@@ -62,11 +62,13 @@ from .errors import (
     IndexNotFound,
     TableAlreadyExists,
     TableNotFound,
+    TriggerAlreadyExists,
+    TriggerNotFound,
     Unsupported,
 )
 from .index import IndexDef
 from .row import Cursor, ListCursor, ListRowIterator, Row, RowIterator
-from .schema import ColumnDef
+from .schema import ColumnDef, TriggerDef
 from .values import SqlValue
 
 # ---------------------------------------------------------------------------
@@ -147,6 +149,10 @@ class InMemoryBackend(Backend):
         # in-memory index structures); scan_index does a linear scan at
         # call time.  This is fine for a pedagogical reference backend.
         self._indexes: dict[str, IndexDef] = {}
+        # Trigger stores: name → TriggerDef (for uniqueness checks and DROP),
+        # and table → ordered list of TriggerDef (for firing order).
+        self._triggers: dict[str, TriggerDef] = {}
+        self._triggers_by_table: dict[str, list[TriggerDef]] = {}
         # Snapshot for the currently-active transaction, if any. ``None``
         # means no transaction is open. We store a full deep copy rather
         # than a diff log because it is dramatically simpler and the data
@@ -417,6 +423,37 @@ class InMemoryBackend(Backend):
             if self._savepoint_stack[i][0] == name:
                 return i
         return None
+
+    # --- Triggers ----------------------------------------------------------
+
+    def create_trigger(self, defn: TriggerDef) -> None:
+        """Store a trigger definition.
+
+        Raises :class:`TriggerAlreadyExists` if a trigger with the same name
+        already exists.
+        """
+        if defn.name in self._triggers:
+            raise TriggerAlreadyExists(name=defn.name)
+        self._triggers[defn.name] = defn
+        self._triggers_by_table.setdefault(defn.table, []).append(defn)
+
+    def drop_trigger(self, name: str, if_exists: bool = False) -> None:
+        """Remove a trigger definition by name.
+
+        Raises :class:`TriggerNotFound` when *name* is absent and
+        ``if_exists=False``.
+        """
+        if name not in self._triggers:
+            if if_exists:
+                return
+            raise TriggerNotFound(name=name)
+        defn = self._triggers.pop(name)
+        table_list = self._triggers_by_table.get(defn.table, [])
+        self._triggers_by_table[defn.table] = [t for t in table_list if t.name != name]
+
+    def list_triggers(self, table: str) -> list[TriggerDef]:
+        """Return all triggers for *table* in creation order."""
+        return list(self._triggers_by_table.get(table, []))
 
     # --- Indexes ----------------------------------------------------------
 

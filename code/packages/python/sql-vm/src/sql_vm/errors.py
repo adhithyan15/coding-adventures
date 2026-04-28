@@ -231,3 +231,21 @@ class WrongNumberOfArguments(VmError):
             f"wrong number of arguments to {self.name!r}: "
             f"expected {self.expected}, got {self.got}"
         )
+
+
+@dataclass(eq=True)
+class TriggerDepthError(VmError):
+    """Raised when trigger recursion exceeds the maximum depth (16).
+
+    Recursive triggers — where a trigger body causes the same trigger to
+    fire again — are supported up to depth 16.  Beyond that the engine
+    stops and raises this error to prevent infinite recursion.
+
+    ``trigger_name`` is the name of the trigger whose firing pushed the
+    recursion past the limit.
+    """
+
+    trigger_name: str
+
+    def __str__(self) -> str:
+        return f"trigger recursion depth exceeded in {self.trigger_name!r}"

@@ -88,10 +88,16 @@ from sql_planner import (
     CreateTable as PlanCreateTable,
 )
 from sql_planner import (
+    CreateTrigger as PlanCreateTrigger,
+)
+from sql_planner import (
     DropIndex as PlanDropIndex,
 )
 from sql_planner import (
     DropTable as PlanDropTable,
+)
+from sql_planner import (
+    DropTrigger as PlanDropTrigger,
 )
 from sql_planner import (
     IsNotNull as AstIsNotNull,
@@ -137,11 +143,13 @@ from .ir import (
     ComputeWindowFunctions,
     CreateIndex,
     CreateTable,
+    CreateTriggerDef,
     DeleteRows,
     Direction,
     DistinctResult,
     DropIndex,
     DropTable,
+    DropTriggerDef,
     EmitColumn,
     EmitRow,
     ExceptResult,
@@ -299,6 +307,18 @@ def _compile_plan(p: LogicalPlan, ctx: _Ctx) -> tuple[list[Instruction], tuple[s
 
         case PlanDropIndex(name=name, if_exists=ie):
             return [DropIndex(name=name, if_exists=ie)], ()
+
+        case PlanCreateTrigger(
+            name=name, timing=timing, event=event, table=table, body_sql=body
+        ):
+            return [
+                CreateTriggerDef(
+                    name=name, timing=timing, event=event, table=table, body_sql=body
+                ),
+            ], ()
+
+        case PlanDropTrigger(name=name, if_exists=ie):
+            return [DropTriggerDef(name=name, if_exists=ie)], ()
 
         case Insert():
             return _compile_insert(p, ctx), ()

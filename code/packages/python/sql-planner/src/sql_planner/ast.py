@@ -420,6 +420,31 @@ class RollbackToStmt:
     name: str
 
 
+@dataclass(frozen=True, slots=True)
+class CreateTriggerStmt:
+    """CREATE TRIGGER statement.
+
+    ``body_sql`` is the raw SQL text of the body statements (without the
+    surrounding BEGIN…END), with individual statements joined by semicolons.
+    The VM re-parses and re-compiles the body at fire time, injecting
+    single-row ``NEW`` and ``OLD`` pseudo-tables into the backend.
+    """
+
+    name: str
+    timing: str  # "BEFORE" | "AFTER"
+    event: str   # "INSERT" | "UPDATE" | "DELETE"
+    table: str
+    body_sql: str
+
+
+@dataclass(frozen=True, slots=True)
+class DropTriggerStmt:
+    """DROP TRIGGER [IF EXISTS] name."""
+
+    name: str
+    if_exists: bool = False
+
+
 # The type union every Statement consumer matches on.
 Statement = (
     SelectStmt
@@ -443,4 +468,6 @@ Statement = (
     | SavepointStmt
     | ReleaseSavepointStmt
     | RollbackToStmt
+    | CreateTriggerStmt
+    | DropTriggerStmt
 )

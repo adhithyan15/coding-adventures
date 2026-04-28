@@ -62,7 +62,7 @@ from typing import NewType
 
 from .index import IndexDef
 from .row import Cursor, Row, RowIterator
-from .schema import ColumnDef
+from .schema import ColumnDef, TriggerDef
 from .values import SqlValue
 
 # Transactions are represented as opaque tokens — an integer handle. Backends
@@ -376,6 +376,46 @@ class Backend(ABC):
         """
         from .errors import Unsupported
         raise Unsupported(operation="savepoints")
+
+    # --- Triggers ------------------------------------------------------------
+    # Non-abstract: default implementations raise Unsupported so backends that
+    # don't support triggers inherit a clear error rather than a silent no-op.
+
+    def create_trigger(self, defn: TriggerDef) -> None:
+        """Store a trigger definition.
+
+        The trigger fires on ``defn.event`` (INSERT / UPDATE / DELETE) at
+        ``defn.timing`` (BEFORE / AFTER) for ``defn.table``.
+
+        Raises :class:`~sql_backend.errors.TriggerAlreadyExists` if a trigger
+        with the same name already exists.
+
+        The default implementation raises :class:`Unsupported`.
+        """
+        from .errors import Unsupported
+        raise Unsupported(operation="triggers")
+
+    def drop_trigger(self, name: str, if_exists: bool = False) -> None:
+        """Remove a trigger definition by name.
+
+        When ``if_exists=True`` and the trigger does not exist, this is a
+        silent no-op.  Otherwise raises
+        :class:`~sql_backend.errors.TriggerNotFound`.
+
+        The default implementation raises :class:`Unsupported`.
+        """
+        from .errors import Unsupported
+        raise Unsupported(operation="triggers")
+
+    def list_triggers(self, table: str) -> list[TriggerDef]:
+        """Return all triggers for *table* in creation order.
+
+        Returns an empty list when no triggers exist (not an error).
+
+        The default implementation returns an empty list so backends that do
+        not support triggers simply never fire any.
+        """
+        return []
 
 
 class SchemaProvider(ABC):

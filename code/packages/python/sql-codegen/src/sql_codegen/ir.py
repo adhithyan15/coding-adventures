@@ -534,6 +534,32 @@ class DropIndex:
 
 
 @dataclass(frozen=True, slots=True)
+class CreateTriggerDef:
+    """Store a trigger definition in the backend.
+
+    ``body_sql`` is the raw SQL text of the body statements (without the
+    surrounding BEGIN…END), with individual statements separated by
+    semicolons.  At fire time the VM re-parses and re-compiles the body.
+    """
+    name: str
+    timing: str    # "BEFORE" | "AFTER"
+    event: str     # "INSERT" | "UPDATE" | "DELETE"
+    table: str
+    body_sql: str
+
+
+@dataclass(frozen=True, slots=True)
+class DropTriggerDef:
+    """Remove a trigger definition from the backend.
+
+    If ``if_exists=True`` and the trigger does not exist, the instruction is
+    silently skipped.  Otherwise ``TriggerNotFound`` is raised.
+    """
+    name: str
+    if_exists: bool = False
+
+
+@dataclass(frozen=True, slots=True)
 class OpenIndexScan:
     """Materialise rowids from an index range scan into ``cursor_id``.
 
@@ -803,6 +829,7 @@ Instruction = (
     | ComputeWindowFunctions
     | InsertRow | InsertFromResult | UpdateRows | DeleteRows | CreateTable | DropTable | AlterTable
     | CreateIndex | DropIndex | OpenIndexScan
+    | CreateTriggerDef | DropTriggerDef
     | CaptureLeftResult | IntersectResult | ExceptResult
     | BeginTransaction | CommitTransaction | RollbackTransaction
     | RunSubquery

@@ -113,6 +113,12 @@ keywords:
   TO
   OVER
   PARTITION
+  TRIGGER
+  BEFORE
+  AFTER
+  FOR
+  EACH
+  ROW
 
 skip:
   WHITESPACE    = /[ \t\r\n]+/

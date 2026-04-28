@@ -180,3 +180,23 @@ class IndexNotFound(BackendError):
 
     def __str__(self) -> str:
         return f"index not found: {self.index!r}"
+
+
+@dataclass(eq=True)
+class TriggerAlreadyExists(BackendError):
+    """Raised by ``create_trigger`` when a trigger with the same name already exists."""
+
+    name: str
+
+    def __str__(self) -> str:
+        return f"trigger already exists: {self.name!r}"
+
+
+@dataclass(eq=True)
+class TriggerNotFound(BackendError):
+    """Raised by ``drop_trigger(if_exists=False)`` when the trigger does not exist."""
+
+    name: str
+
+    def __str__(self) -> str:
+        return f"trigger not found: {self.name!r}"
