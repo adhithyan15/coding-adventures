@@ -13,7 +13,7 @@ readme = "README.md"
 keywords = ["macsyma", "maxima", "cas", "symbolic", "runtime", "education"]
 dependencies = [
     "coding-adventures-symbolic-ir>=0.7.0",
-    "coding-adventures-symbolic-vm>=0.32.0",
+    "coding-adventures-symbolic-vm>=0.32.1",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",

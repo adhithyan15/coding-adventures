@@ -11,10 +11,11 @@ capabilities:
 - `coding-adventures-symbolic-ir>=0.7.0` — picks up the Phase 13 IR heads for
   hyperbolic functions (`Sinh`, `Cosh`, `Tanh`, `Asinh`, `Acosh`, `Atanh`) and
   their evaluation, differentiation, and integration rules.
-- `coding-adventures-symbolic-vm>=0.32.0` — picks up Phase G control-flow VM
-  handlers: `while`-loop, `for..thru`/`for..in`, `block` with local scope,
-  `return`, and `if/elseif/else`. These are compiled by the grammar-level
-  Phase G keywords and require no name-table additions here.
+- `coding-adventures-symbolic-vm>=0.32.1` — picks up Phase G control-flow VM
+  handlers (`while`-loop, `for..thru`/`for..in`, `block` with local scope,
+  `return`, `if/elseif/else`) and the 0.32.1 bug fix: missing hyperbolic
+  differentiation rules in `derivative.py` that caused `diff(sinh(x),x)` to
+  raise `RecursionError`.
 
 Test count and coverage unchanged (135 tests, ≥80 %).
 
