@@ -13,6 +13,8 @@ INVERSE = IRSymbol("Inverse")
 IDENTITY_MATRIX = IRSymbol("IdentityMatrix")
 ZERO_MATRIX = IRSymbol("ZeroMatrix")
 TRACE = IRSymbol("Trace")
+RANK = IRSymbol("Rank")
+ROW_REDUCE = IRSymbol("RowReduce")
 
 # Re-exported for convenience.
 LIST = IRSymbol("List")

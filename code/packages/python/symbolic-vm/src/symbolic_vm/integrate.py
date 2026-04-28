@@ -1,4 +1,4 @@
-"""Symbolic integration — the ``Integrate`` handler (Phases 1–13).
+"""Symbolic integration — the ``Integrate`` handler (Phases 1–14).
 
 The handler tries two routes, in order:
 
@@ -112,6 +112,7 @@ from symbolic_vm.asinh_poly_integral import acosh_poly_integral, asinh_poly_inte
 from symbolic_vm.atan_poly_integral import atan_poly_integral
 from symbolic_vm.backend import Handler
 from symbolic_vm.exp_integral import exp_integral
+from symbolic_vm.exp_hyp_integral import exp_cosh_integral, exp_sinh_integral
 from symbolic_vm.exp_trig_integral import exp_cos_integral, exp_sin_integral
 from symbolic_vm.hermite import hermite_reduce
 from symbolic_vm.log_integral import log_poly_integral
@@ -123,6 +124,11 @@ from symbolic_vm.polynomial_bridge import (
     to_rational,
 )
 from symbolic_vm.rothstein_trager import rothstein_trager
+from symbolic_vm.hyp_power_integral import (
+    cosh_power_integral,
+    sinh_power_integral,
+    sinh_times_cosh_power,
+)
 from symbolic_vm.sinh_poly_integral import cosh_poly_integral, sinh_poly_integral
 from symbolic_vm.trig_poly_integral import trig_cos_integral, trig_sin_integral
 
@@ -435,6 +441,14 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
         result = _try_acosh_product(a, b, x) or _try_acosh_product(b, a, x)
         if result is not None:
             return result
+        # Phase 14a: exp(linear) × sinh/cosh(linear) — double-IBP closed form.
+        result = _try_exp_hyp(a, b, x) or _try_exp_hyp(b, a, x)
+        if result is not None:
+            return result
+        # Phase 14b: Pow(Sinh, m) × Pow(Cosh, n) — u-substitution (odd exponent).
+        result = _try_sinh_cosh_product(a, b, x)
+        if result is not None:
+            return result
         # Phase 4b: trig × trig via product-to-sum identities.
         result = _try_trig_trig(a, b, x) or _try_trig_trig(b, a, x)
         if result is not None:
@@ -507,6 +521,10 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
             return _integrate(base, x)
         # Phase 5b/5c: sinⁿ, cosⁿ, tanⁿ reduction formulas.
         result = _try_trig_power(base, exponent, x)
+        if result is not None:
+            return result
+        # Phase 14: sinhⁿ, coshⁿ reduction formulas.
+        result = _try_hyp_power(base, exponent, x)
         if result is not None:
             return result
         # Phase 8 bonus: ∫ (ax+b)^n dx = (ax+b)^(n+1)/((n+1)·a) or log(ax+b)/a.
@@ -1065,6 +1083,140 @@ def _try_trig_product(
     if trig.head == SIN:
         return trig_sin_integral(poly, a_frac, b_frac, x)
     return trig_cos_integral(poly, a_frac, b_frac, x)
+
+
+def _try_hyp_power(base: IRNode, exponent: IRNode, x: IRSymbol) -> IRNode | None:
+    """Return ``∫ sinh^n(linear) dx`` or ``∫ cosh^n(linear) dx``, or ``None``.
+
+    Phase 14 — hyperbolic power reduction.
+
+    Fires when:
+    - ``base`` is ``IRApply(SINH, (linear,))`` or ``IRApply(COSH, (linear,))``.
+    - ``exponent`` is ``IRInteger(n)`` with ``n ≥ 2``.
+    - The argument of sinh/cosh is a non-constant linear expression.
+
+    Returns ``None`` for non-hyperbolic bases or non-integer exponents.
+    """
+    if not isinstance(base, IRApply):
+        return None
+    if base.head not in {SINH, COSH}:
+        return None
+    if not isinstance(exponent, IRInteger) or exponent.value < 2:
+        return None
+    n = exponent.value
+    if len(base.args) != 1:
+        return None
+    lin = _try_linear(base.args[0], x)
+    if lin is None:
+        return None
+    a_frac, b_frac = lin
+    if a_frac == Fraction(0):
+        return None
+    if base.head == SINH:
+        return sinh_power_integral(n, a_frac, b_frac, x)
+    return cosh_power_integral(n, a_frac, b_frac, x)
+
+
+def _try_exp_hyp(exp_node: IRNode, hyp_node: IRNode, x: IRSymbol) -> IRNode | None:
+    """Return ``∫ exp(linear) · sinh/cosh(linear) dx`` or ``None``.
+
+    Phase 14a — exp × hyperbolic double-IBP closed form.
+
+    Uses the formulas:
+        ∫ e^(ax+b)·sinh(cx+d) dx = e^(ax+b)·[a·sinh−c·cosh] / (a²−c²)
+        ∫ e^(ax+b)·cosh(cx+d) dx = e^(ax+b)·[a·cosh−c·sinh] / (a²−c²)
+
+    Falls through (returns ``None``) when ``a² = c²`` (degenerate case).
+    """
+    if not isinstance(exp_node, IRApply) or exp_node.head != EXP:
+        return None
+    if not isinstance(hyp_node, IRApply) or hyp_node.head not in {SINH, COSH}:
+        return None
+    lin_exp = _try_linear(exp_node.args[0], x)
+    lin_hyp = _try_linear(hyp_node.args[0], x)
+    if lin_exp is None or lin_hyp is None:
+        return None
+    a_frac, b_frac = lin_exp
+    c_frac, d_frac = lin_hyp
+    if a_frac == 0 or c_frac == 0:
+        return None
+    D = a_frac * a_frac - c_frac * c_frac
+    if D == Fraction(0):
+        return None  # Degenerate — fall through
+    if hyp_node.head == SINH:
+        return exp_sinh_integral(a_frac, b_frac, c_frac, d_frac, x)
+    return exp_cosh_integral(a_frac, b_frac, c_frac, d_frac, x)
+
+
+def _try_sinh_cosh_product(f1: IRNode, f2: IRNode, x: IRSymbol) -> IRNode | None:
+    """Return ``∫ sinh^m · cosh^n dx`` via u-substitution when one exponent is 1.
+
+    Phase 14b.
+
+    Handles the patterns:
+    - ``Sinh(linear) × Pow(Cosh(same linear), n)`` → ``cosh^(n+1)/(n+1)/a``
+    - ``Pow(Sinh(linear), m) × Cosh(same linear)`` → ``sinh^(m+1)/(m+1)/a``
+    - ``Sinh(linear) × Cosh(same linear)``           → ``sinh²/(2a)``
+
+    Both arguments may be in either order since this function is called once
+    (not mirrored like the exp handlers).  It tries all four orderings
+    internally.
+
+    Returns ``None`` if neither factor is a bare sinh or cosh (both are Pow).
+    """
+    from fractions import Fraction as _F
+
+    def _extract_hyp_pow(
+        node: IRNode,
+    ) -> tuple[IRSymbol, int, _F, _F] | None:
+        """Return ``(head, exp, a, b)`` if node is Sinh/Cosh(ax+b)^n, else None."""
+        if not isinstance(node, IRApply):
+            return None
+        if node.head in {SINH, COSH}:
+            lin = _try_linear(node.args[0], x) if node.args else None
+            if lin is None:
+                return None
+            a_f, b_f = lin
+            if a_f == _F(0):
+                return None
+            return (node.head, 1, a_f, b_f)  # type: ignore[return-value]
+        if node.head == POW and len(node.args) == 2:
+            base_, exp_ = node.args
+            if not isinstance(base_, IRApply) or base_.head not in {SINH, COSH}:
+                return None
+            if not isinstance(exp_, IRInteger) or exp_.value < 1:
+                return None
+            lin = _try_linear(base_.args[0], x) if base_.args else None
+            if lin is None:
+                return None
+            a_f, b_f = lin
+            if a_f == _F(0):
+                return None
+            return (base_.head, exp_.value, a_f, b_f)  # type: ignore[return-value]
+        return None
+
+    h1 = _extract_hyp_pow(f1)
+    h2 = _extract_hyp_pow(f2)
+    if h1 is None or h2 is None:
+        return None
+
+    head1, n1, a1, b1 = h1
+    head2, n2, a2, b2 = h2
+
+    # Arguments must be the same linear expression.
+    if a1 != a2 or b1 != b2:
+        return None
+
+    # Pattern: one is SINH and the other is COSH, at least one has power 1.
+    if not ({head1, head2} == {SINH, COSH}):
+        return None
+
+    if head1 == SINH:
+        m, n = n1, n2
+    else:
+        m, n = n2, n1
+
+    return sinh_times_cosh_power(m, n, a1, b1, x)
 
 
 def _try_trig_trig(f1: IRNode, f2: IRNode, x: IRSymbol) -> IRNode | None:

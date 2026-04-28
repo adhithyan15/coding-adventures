@@ -1,5 +1,86 @@
 # Changelog
 
+## 0.33.0 — 2026-04-28
+
+**Group E: complete matrix handler set + Phase 14 hyperbolic integration.**
+
+### Group E — matrix operation completeness
+
+All seven remaining matrix handlers wired into `SymbolicBackend` via
+`cas_handlers.py`:
+
+| Handler | Operation |
+|---------|-----------|
+| `Dot(A, B)` | Matrix product (rows of A × cols of B) |
+| `Trace(M)` | Sum of main diagonal; left-folded into binary ADDs |
+| `Dimensions(M)` | `List(rows, cols)` shape query |
+| `IdentityMatrix(n)` | n×n identity matrix |
+| `ZeroMatrix(m, n)` / `ZeroMatrix(n)` | m×n (or n×n) zero matrix |
+| `Rank(M)` | Rank via forward REF over `Fraction` (exact arithmetic) |
+| `RowReduce(M)` | Reduced row-echelon form via Gauss-Jordan elimination |
+
+`trace_handler` now left-folds any n-ary `IRApply(ADD, ...)` returned by
+`cas_matrix.trace` into a chain of binary additions to stay within the VM's
+binary-ADD contract.
+
+### Phase 14 — hyperbolic power and exp×hyperbolic integration
+
+Three new integration families added to `integrate.py`:
+
+**14a: `∫ exp(ax+b)·sinh(cx+d) dx` and `∫ exp(ax+b)·cosh(cx+d) dx`**
+
+New file: `exp_hyp_integral.py`.  Uses the exponential expansion of sinh/cosh
+to reduce to two pure-exponential integrals, then recombines:
+
+```
+∫ e^(ax+b)·sinh(cx+d) dx = e^(ax+b)·[a·sinh(cx+d) − c·cosh(cx+d)] / (a²−c²)
+∫ e^(ax+b)·cosh(cx+d) dx = e^(ax+b)·[a·cosh(cx+d) − c·sinh(cx+d)] / (a²−c²)
+```
+
+Falls through (returns unevaluated) when `a² = c²` (degenerate denominator).
+
+**14b: `∫ sinh^n(ax+b) dx` and `∫ cosh^n(ax+b) dx`** (n ≥ 2)
+
+New file: `hyp_power_integral.py`.  Recursive IBP reduction formulas:
+
+```
+I_n(sinh) = (1/(na))·sinh^(n-1)·cosh − (n-1)/n · I_{n-2}   (−)
+I_n(cosh) = (1/(na))·cosh^(n-1)·sinh + (n-1)/n · I_{n-2}   (+)
+```
+
+**14c: `∫ sinh^m · cosh^n dx`** when min(m,n) = 1
+
+u-substitution: if m=1, u=cosh → cosh^(n+1)/(n+1)/a; if n=1, u=sinh →
+sinh^(m+1)/(m+1)/a.  Returns `None` (falls through) when both m,n ≥ 2.
+
+### Dispatcher functions added to `integrate.py`
+
+- `_try_hyp_power(base, exponent, x)` — fires for `Pow(Sinh/Cosh(linear), n≥2)`
+- `_try_exp_hyp(exp_node, hyp_node, x)` — fires for `exp(linear)×sinh/cosh(linear)`
+- `_try_sinh_cosh_product(f1, f2, x)` — fires for `sinh^m × cosh^n` (m or n = 1)
+
+### Tests
+
+New `tests/test_phase14.py` with 62 tests covering:
+- `TestPhase14_ExpSinh` (7) — exp×sinh integration cases
+- `TestPhase14_ExpCosh` (5) — exp×cosh integration cases
+- `TestPhase14_SinhPowers` (7) — sinh^n for n=2..5, linear args
+- `TestPhase14_CoshPowers` (7) — cosh^n for n=2..5, linear args
+- `TestPhase14_SinhCoshProduct` (7) — u-sub mixed products
+- `TestPhase14_MatrixOps` (12) — all 7 new matrix handlers
+- `TestPhase14_Fallthroughs` (6) — degenerate/unsupported cases
+- `TestPhase14_Regressions` (5) — Phases 1/4/12/13 still work
+- `TestPhase14_Macsyma` (4) — end-to-end via Macsyma string interface
+
+`test_phase13.py`: removed `test_sinh_squared` fallthrough (Phase 14 now
+evaluates `∫ sinh²(x) dx` via the reduction formula).
+
+### Version
+
+- Bumped to **0.33.0**; `cas-matrix>=0.2.0` dependency floor raised.
+
+---
+
 ## 0.32.8 — 2026-04-28
 
 **Wire `cas-multivariate` into `SymbolicBackend` (Gröbner bases).**
