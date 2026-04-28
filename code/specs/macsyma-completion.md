@@ -186,11 +186,29 @@ non-homogeneous 2nd order (method of undetermined coefficients).
 
 ---
 
+### D5 — ✅ Complete
+
+**Algebraic number extensions**: `cas-algebraic` 0.1.0 — factoring univariate
+polynomials over quadratic algebraic extensions Q[√d].
+
+- Pattern 1: depressed monic quartics x⁴ + p·x² + q → two monic quadratics
+  over Q[√d] when q is a perfect rational square and (2s−p)/d is also a
+  perfect rational square.
+- Pattern 2: monic quadratics x² + bx + c → two linear factors when
+  discriminant b²−4c = d·(2β)² for rational β.
+- `ALG_FACTOR = IRSymbol("AlgFactor")` head added to `symbolic-ir` 0.7.5.
+- `alg_factor_handler` registered in `symbolic-vm` 0.32.7.
+- `"algfactor": ALG_FACTOR` added to `macsyma-runtime` 1.9.0 name table.
+- `"AlgFactor"` added to `_HELD_HEADS` so `Sqrt(d)` arg is not pre-evaluated.
+
+Surface syntax: `algfactor(x^4+1, sqrt(2))` → `(x^2+sqrt(2)*x+1)*(x^2-sqrt(2)*x+1)`.
+
+---
+
 ### D-remaining — Planned
 
 | Feature | Plan |
 |---------|------|
-| Algebraic number extensions | `Q[√2]` factoring using BZH lift — `cas-algebraic` 0.1.0 |
 | Multivariate `factor`/`solve` | Gröbner bases (Buchberger) — `cas-multivariate` 0.1.0 |
 
 ---

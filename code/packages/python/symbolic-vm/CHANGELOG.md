@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.32.7 — 2026-04-27
+
+**Wire `cas-algebraic` into `SymbolicBackend`; add `AlgFactor` to held heads.**
+
+- `cas_handlers.py`: imports `build_alg_factor_handler_table` from `cas_algebraic`
+  and merges it into the handler table via `**_build_algebraic()`.
+- `backends.py`: added `"AlgFactor"` to `_HELD_HEADS` so the `Sqrt(d)` second
+  argument is not pre-evaluated to a float before the handler can inspect it.
+  This is the same pattern used for `"ODE2"`.
+- `pyproject.toml`: added `"coding-adventures-cas-algebraic>=0.1.0"` as a dependency.
+
+This wires `AlgFactor(poly, Sqrt(d))` into the symbolic VM so that
+`algfactor(x^4+1, sqrt(2))` compiles to `AlgFactor(x^4+1, Sqrt(2))` IR and
+evaluates to `(x^2+sqrt(2)*x+1)*(x^2-sqrt(2)*x+1)`.
+
+---
+
 ## 0.32.6 — 2026-04-28
 
 **Bump `cas-factor` dependency to 0.3.0 (BZH Phase 3).**

@@ -97,7 +97,8 @@ _HELD_HEADS = frozenset({
     FOR_RANGE.name,
     FOR_EACH.name,
     BLOCK.name,
-    "ODE2",  # D(y, x) in args must not be pre-evaluated to 0.
+    "ODE2",      # D(y, x) in args must not be pre-evaluated to 0.
+    "AlgFactor", # Sqrt(d) in second arg must not be pre-evaluated to a float.
 })
 
 

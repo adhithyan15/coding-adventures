@@ -31,6 +31,7 @@ from symbolic_ir.nodes import (
     ACOS,
     ACOSH,
     ADD,
+    ALG_FACTOR,
     AND,
     ASIN,
     ASINH,
@@ -101,6 +102,7 @@ __all__ = [
     "IRApply",
     # Standard head symbols
     "ACOS",
+    "ALG_FACTOR",
     "ACOSH",
     "ASIN",
     "ASINH",

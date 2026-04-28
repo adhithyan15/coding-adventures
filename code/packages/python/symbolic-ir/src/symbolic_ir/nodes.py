@@ -288,3 +288,11 @@ ODE2 = IRSymbol("ODE2")        # ode2(eqn, y, x) — ODE solver head
 C_CONST = IRSymbol("%c")       # integration constant for first-order ODEs
 C1 = IRSymbol("%c1")           # first  integration constant for 2nd-order ODEs
 C2 = IRSymbol("%c2")           # second integration constant for 2nd-order ODEs
+
+# Algebraic factoring (cas-algebraic)
+#
+# AlgFactor is the head for MACSYMA's algfactor(poly, sqrt(d)) operation.
+# It factors a univariate polynomial over the algebraic number field Q[√d].
+#
+# Example: AlgFactor(x^4+1, Sqrt(2)) → (x^2+√2x+1)(x^2−√2x+1)
+ALG_FACTOR = IRSymbol("AlgFactor")  # algfactor(poly, sqrt(d)) head

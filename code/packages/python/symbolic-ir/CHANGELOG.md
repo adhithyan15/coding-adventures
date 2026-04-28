@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.7.5 — 2026-04-27
+
+**Add `ALG_FACTOR` head symbol for algebraic-extension factoring.**
+
+Added `ALG_FACTOR = IRSymbol("AlgFactor")` in the new "Algebraic factoring"
+group at the bottom of `nodes.py`, and exported it from `__init__.py`.
+
+Required by `cas-algebraic` 0.1.0 and `symbolic-vm` 0.32.7, which implement
+`algfactor(poly, sqrt(d))` — factoring of univariate polynomials over
+quadratic algebraic extensions Q[√d].
+
+---
+
 ## 0.7.4 — 2026-04-27
 
 **Add `ODE2`, `C_CONST`, `C1`, `C2` head symbols for ODE solving.**

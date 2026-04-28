@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.9.0 — 2026-04-27
+
+**Add `algfactor` to the MACSYMA name table (D5 — cas-algebraic).**
+
+- `name_table.py`: added `ALG_FACTOR = IRSymbol("AlgFactor")` and the mapping
+  `"algfactor": ALG_FACTOR` so MACSYMA users can write
+  `algfactor(x^4+1, sqrt(2))` and have it compile to `AlgFactor(x^4+1, Sqrt(2))`
+  IR, which the `cas-algebraic` handler then factors over Q[√d].
+- Bumped `symbolic-ir` dependency to `>=0.7.5` and `symbolic-vm` to `>=0.32.7`.
+
+---
+
 ## 1.8.0 — 2026-04-27
 
 **Add `ode2` to the MACSYMA name table (D3).**

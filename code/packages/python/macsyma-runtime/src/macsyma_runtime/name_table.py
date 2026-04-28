@@ -23,8 +23,8 @@ from symbolic_ir import (
     IFOURIER,
     ILT,
     LAPLACE,
-    IRSymbol,
     UNIT_STEP,
+    IRSymbol,
 )
 
 # IR heads from substrate packages that may not exist yet — define
@@ -100,6 +100,9 @@ MNEWTON = IRSymbol("MNewton")
 
 # ODE solving (D3 — cas-ode)
 ODE2 = IRSymbol("ODE2")
+
+# Algebraic extension factoring (D5 — cas-algebraic)
+ALG_FACTOR = IRSymbol("AlgFactor")
 
 # Trig transformation heads (B1)
 TRIG_SIMPLIFY = IRSymbol("TrigSimplify")
@@ -226,6 +229,8 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "ifourier": IFOURIER,   # Inverse Fourier transform
     # ODE solving (D3 — cas-ode)
     "ode2": ODE2,           # ode2(eqn, y, x) — symbolic ODE solver
+    # Algebraic extension factoring (D5 — cas-algebraic)
+    "algfactor": ALG_FACTOR,  # algfactor(poly, sqrt(d)) — factor over Q[√d]
     # Runtime-owned operations
     "kill": KILL,
     "ev": EV,
