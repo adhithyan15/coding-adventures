@@ -371,6 +371,17 @@
         ["Character", " y -->"],
         ["EndTag", "script"]
       ]
+    },
+    {
+      "description": "CDATA section state literalizes markup until delimiter",
+      "initialStates": ["CDATA section state"],
+      "input": "<not-markup> &amp; ]]><p>x</p>",
+      "output": [
+        ["Character", "<not-markup> &amp; "],
+        ["StartTag", "p", {}],
+        ["Character", "x"],
+        ["EndTag", "p"]
+      ]
     }
   ]
 }

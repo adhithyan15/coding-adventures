@@ -71,3 +71,6 @@ documented in this file.
 - Script-data double-escaped tokenizer states, so nested-looking
   `<script>...</script>` text inside escaped script comments does not
   prematurely emit the outer script end tag.
+- Seeded CDATA section tokenizer-state support for future parser-controlled
+  foreign-content tokenization, keeping markup and character references literal
+  until the `]]>` delimiter returns the lexer to data state.
