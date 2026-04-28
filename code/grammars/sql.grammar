@@ -131,15 +131,17 @@ unary             = "-" unary | primary ;
 #   1. Simple literals
 #   2. CASE expression (starts with "CASE" keyword)
 #   3. Function call (NAME "(" — checked before bare column_ref)
-#   4. Scalar subquery "(SELECT ...)" — tried before plain "(" expr ")"
+#   4. EXISTS subquery — starts with KEYWORD "EXISTS", unambiguous
+#   5. Scalar subquery "(SELECT ...)" — tried before plain "(" expr ")"
 #      because query_stmt starts with "SELECT" which is a KEYWORD, not valid
 #      as a plain expression; backtrack if the first token inside "(" is not
 #      "SELECT".
-#   5. Bare column reference NAME [. NAME]
-#   6. Parenthesised expression "(" expr ")"
+#   6. Bare column reference NAME [. NAME]
+#   7. Parenthesised expression "(" expr ")"
 primary           = NUMBER | STRING | "NULL" | "TRUE" | "FALSE"
                   | case_expr
                   | function_call
+                  | "EXISTS" "(" query_stmt ")"
                   | "(" query_stmt ")"
                   | column_ref
                   | "(" expr ")" ;

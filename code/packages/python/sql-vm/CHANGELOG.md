@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.8.0 — 2026-04-27
+
+### Added — Phase 2: EXISTS / NOT EXISTS subquery expressions
+
+- **`RunExistsSubquery` dispatch** — the VM's main dispatch loop now handles
+  `RunExistsSubquery` instructions.  The handler calls `execute(ins.sub_program,
+  st.backend)` in a sub-state, then pushes `True` onto the value stack if the
+  result set contains at least one row, `False` otherwise.  Because `NOT
+  EXISTS` is represented as `UnaryExpr(NOT, ExistsSubquery(...))`, the
+  existing `NOT` unary instruction handles inversion without any extra VM
+  logic.
+
 ## 0.7.0 — 2026-04-27
 
 ### Added — Date/time scalar functions + scalar MAX/MIN
