@@ -68,6 +68,8 @@ All notable changes to this package will be documented in this file.
   including procedure-crossing escapes to the first label in a program.
 - Executed formal procedure calls whose actual procedure expects scalar
   by-name parameters, preserving lazy reads and writable caller variables.
+- Executed formal procedure calls that forward whole-array arguments to actual
+  procedures, preserving descriptor aliasing and existing `value` array copies.
 - Added a convergence golden fixture that combines conditional expressions,
   exponentiation, chained assignment, by-name array summation, real arithmetic,
   and output in one end-to-end program.

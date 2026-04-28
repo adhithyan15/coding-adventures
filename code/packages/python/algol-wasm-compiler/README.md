@@ -21,9 +21,10 @@ the current lane already supports a substantial ALGOL 60 surface:
 - chained assignment, conditional expressions, tolerant trailing/repeated
   semicolons, numeric runtime failure guards, and
   ALGOL-left-associative exponentiation for integer exponents
-- value and by-name parameters, including Jensen-style expression thunks and
-  typed whole-array formals with copy or aliasing semantics, plus label,
-  switch, and procedure formals in value or by-name mode
+- value and by-name parameters, including Jensen-style expression thunks,
+  typed whole-array formals with copy or aliasing semantics, and formal
+  procedure calls that forward scalar or whole-array arguments
+- label, switch, and procedure formals in value or by-name mode
 - bare no-argument typed procedure names as expression calls, matching ALGOL's
   omitted-parentheses call syntax for parameterless procedures
 - labels, local and nonlocal `goto`, switch designators, and conditional

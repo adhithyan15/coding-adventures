@@ -49,6 +49,8 @@ All notable changes to this package will be documented in this file.
 - Accepted procedure-valued actuals with scalar by-name parameters for formal
   procedure parameters, while rejecting call shapes that would pass a
   non-assignable actual to a written by-name parameter.
+- Accepted procedure-valued actuals with whole-array parameters for formal
+  procedure parameters, recording array argument call shapes for lowering.
 
 ## [0.1.0] - 2026-04-20
 
