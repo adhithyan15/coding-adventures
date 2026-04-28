@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-brainfuck-iir-compiler"
-version = "0.2.0"
+version = "0.3.0"
 description = "Brainfuck → InterpreterIR compiler and BrainfuckVM wrapper around vm-core"
 requires-python = ">=3.12"
 license = "MIT"

@@ -638,6 +638,61 @@ class TestMemoryAccess:
 
 
 # ---------------------------------------------------------------------------
+# 11c. Byte-level WASI I/O  (call_builtin "putchar" / "getchar") — BF06
+# ---------------------------------------------------------------------------
+
+class TestCallBuiltinIO:
+    def test_putchar_lowers_to_syscall_1(self):
+        instrs = [
+            CIRInstr("const_u8", "v", [65], "u8"),
+            CIRInstr("call_builtin", None, ["putchar", "v"], "void"),
+            CIRInstr("ret_void", None, [], "void"),
+        ]
+        prog = lower_cir_to_ir_program(instrs)
+        sysc = next(i for i in prog.instructions if i.opcode == IrOp.SYSCALL)
+        assert sysc.operands[0] == IrImmediate(value=1)  # fd_write
+        assert isinstance(sysc.operands[1], IrRegister)
+
+    def test_getchar_lowers_to_syscall_2(self):
+        instrs = [
+            CIRInstr("call_builtin", "v", ["getchar"], "u8"),
+            CIRInstr("ret_void", None, [], "void"),
+        ]
+        prog = lower_cir_to_ir_program(instrs)
+        sysc = next(i for i in prog.instructions if i.opcode == IrOp.SYSCALL)
+        assert sysc.operands[0] == IrImmediate(value=2)  # fd_read
+
+    def test_putchar_with_immediate_materialises_into_scratch(self):
+        instrs = [
+            CIRInstr("call_builtin", None, ["putchar", 65], "void"),
+            CIRInstr("ret_void", None, [], "void"),
+        ]
+        prog = lower_cir_to_ir_program(instrs)
+        # LOAD_IMM scratch=65; SYSCALL 1, scratch; HALT
+        assert _instrs(prog) == _ops(IrOp.LOAD_IMM, IrOp.SYSCALL, IrOp.HALT)
+
+    def test_putchar_missing_value_raises(self):
+        instrs = [CIRInstr("call_builtin", None, ["putchar"], "void")]
+        with pytest.raises(CIRLoweringError, match="putchar"):
+            lower_cir_to_ir_program(instrs)
+
+    def test_getchar_without_dest_raises(self):
+        instrs = [CIRInstr("call_builtin", None, ["getchar"], "u8")]
+        with pytest.raises(CIRLoweringError, match="getchar"):
+            lower_cir_to_ir_program(instrs)
+
+    def test_unknown_builtin_falls_through_to_unknown_op(self):
+        # "alloc_cons" is the canonical Twig cons-cell allocator — it has
+        # no WASI lowering today, so it must hit the unknown-op path,
+        # which the JIT backend translates into a graceful deopt.
+        instrs = [
+            CIRInstr("call_builtin", "h", ["alloc_cons", "a", "b"], "any"),
+        ]
+        with pytest.raises(CIRLoweringError):
+            lower_cir_to_ir_program(instrs)
+
+
+# ---------------------------------------------------------------------------
 # 12. Error cases
 # ---------------------------------------------------------------------------
 
