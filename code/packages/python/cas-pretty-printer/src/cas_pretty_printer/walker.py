@@ -94,12 +94,20 @@ def pretty(node: IRNode, dialect: Dialect, *, style: str = "linear") -> str:
         node: The IR tree.
         dialect: A :class:`Dialect` instance (typically a subclass of
             :class:`BaseDialect`).
-        style: Reserved for future ``"2d"`` ASCII output. Currently only
-            ``"linear"`` is supported.
+        style: ``"linear"`` (default) for a single-line string, or
+            ``"2d"`` for a multi-line ASCII layout using the box engine.
 
     Returns:
-        A single-line (linear style) string.
+        A single-line string for ``style="linear"``, or a multi-line
+        string (rows joined by ``\\n``) for ``style="2d"``.
+
+    Raises:
+        ValueError: For any style other than ``"linear"`` or ``"2d"``.
     """
+    if style == "2d":
+        from cas_pretty_printer.box import pretty_2d
+
+        return pretty_2d(node, dialect)
     if style != "linear":
         raise ValueError(f"unsupported style {style!r}")
     return _format(node, dialect, min_prec=0)

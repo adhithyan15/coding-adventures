@@ -26,7 +26,7 @@ syntax differences go in the frontend name table and backend subclass.
 
 ---
 
-## Current status (as of symbolic-vm 0.32.0 / macsyma-runtime 1.4.0)
+## Current status (as of symbolic-vm 0.32.2 / macsyma-runtime 1.5.0)
 
 ### Fully working end-to-end
 
@@ -37,7 +37,7 @@ syntax differences go in the frontend name table and backend subclass.
 | Lambda / closures   | `lambda([params], body)` β-reduction            | `symbolic-vm` (built-in) |
 | Simplification      | `Simplify Expand Collect Together RatSimplify Apart` | `cas-simplify`, `symbolic-vm` |
 | Substitution        | `Subst`                                         | `cas-substitution` |
-| Factoring           | `Factor` (rational-root + Kronecker)            | `cas-factor` (0.2.0) |
+| Factoring           | `Factor` (rational-root + Kronecker + BZH)      | `cas-factor` (0.3.0) |
 | Solving             | `Solve` (deg 1–4 + linear systems), `NSolve`   | `cas-solve` (0.6.0) |
 | List operations     | `Length First Rest Last Append Reverse Range Map Apply Select Sort Part Flatten Join MakeList` | `cas-list-operations` |
 | Matrix operations   | `Matrix Transpose Determinant Inverse`          | `cas-matrix` |
@@ -52,6 +52,8 @@ syntax differences go in the frontend name table and backend subclass.
 | Constants           | `%pi %e %i`                                     | `macsyma-runtime` |
 | REPL mechanics      | `;` / `$` terminators, history `%/%iN/%oN`, `kill`, `ev(numer/expand/factor/trigsimp)`, `at`, `lhs`, `rhs`, `makelist` | `macsyma-runtime` (1.3.0) |
 | Pretty printing     | MACSYMA / Mathematica / Maple / Lisp dialects   | `cas-pretty-printer` (0.2.0) |
+| 2D pretty printing  | `display2d` fraction bars / superscripts / sqrt | `cas-pretty-printer` (0.4.0) |
+| Newton's method     | `MNewton` (`mnewton(f, x, x0)`)                 | `cas-mnewton` (0.1.0) |
 
 ---
 
@@ -59,16 +61,14 @@ syntax differences go in the frontend name table and backend subclass.
 
 ### A1 · `cas-factor` — Polynomial factoring over Z
 
-**Status: ✅ Complete** (rational-root + Kronecker, `cas-factor` 0.2.0)
+**Status: ✅ Complete** (rational-root + Kronecker + BZH, `cas-factor` 0.3.0)
 
-The Kronecker algorithm correctly handles all common cases:
-- `factor(x^4-4)` → `(x^2+2)*(x^2-2)`
-- `factor(x^6-1)` → `(x-1)*(x+1)*(x^2+x+1)*(x^2-x+1)`
-- `factor(x^4+1)` → `x^4+1` (correctly left unevaluated — irreducible over Q)
-
-**Deferred**: Berlekamp-Zassenhaus-Hensel (Phase 4) for arbitrary-degree
-polynomials with non-linear irreducible factors. This handles a narrow
-edge case and is **not blocking any current MACSYMA use case**.
+Phase 1 (rational-root), Phase 2 (Kronecker), and Phase 3 (BZH) are all shipped.
+New BZH cases (previously unevaluated):
+- `factor(x^5-1)` → `(x-1)*(x^4+x^3+x^2+x+1)`
+- `factor(x^8-1)` → `(x-1)*(x+1)*(x^2+1)*(x^4+1)`
+- `factor(x^9-1)` → `(x-1)*(x^2+x+1)*(x^6+x^3+1)`
+- `factor(x^4+1)` → `x^4+1` (confirmed irreducible over Q by both Kronecker and BZH)
 
 ---
 
@@ -145,18 +145,88 @@ in `SymbolicBackend`.  Full `Re/Im/Conjugate/Arg/RectForm/PolarForm` handlers.
 
 ---
 
-## Group D — Deferred (out of scope)
+## Group D — In Progress
 
-| Feature | Reason deferred |
-|---------|-----------------|
-| `ode2` — ODE solving | Requires `cas-ode` spec; variation of parameters, Lie symmetries |
-| `laplace` / `ilt` | Needs `cas-complex` residue algorithm + distribution theory |
-| 2D pretty printing | `display2d` fraction bars / superscripts; UI concern |
-| `fourier` / `ifourier` | Symbolic Fourier transform; distribution theory required |
-| `mnewton` | Newton's method; numeric, not blocking anything |
-| Multivariate `factor`/`solve` | Gröbner bases (Buchberger); future `cas-multivariate` |
-| Algebraic number extensions | Factoring over `Q[√2]` etc.; needs BZH lift |
-| `cas-factor` Phase 4 (BZH) | Berlekamp-Zassenhaus-Hensel for arbitrary-degree; not blocking |
+### D1 · `mnewton` — Newton's method numeric root finder
+
+**Status: ✅ Complete** (`cas-mnewton` 0.1.0)
+
+`mnewton(f, x, x0)` iterates Newton's method `x_{n+1} = x_n − f(x_n)/f'(x_n)`.
+Returns `IRFloat(root)` on convergence; falls through to unevaluated on
+zero-derivative or non-numeric input.
+
+---
+
+### D2 · 2D pretty printing
+
+**Status: ✅ Complete** (`cas-pretty-printer` 0.4.0)
+
+`pretty(node, dialect, style="2d")` uses a box-model layout engine (fractions
+with `─` bars, superscript exponents, `√` radicals). The `Box(lines, baseline)`
+dataclass aligns operands at their mathematical baseline.
+
+---
+
+### D3 · ODE solving
+
+**Status: ✅ Complete** (`cas-ode` 0.1.0)
+
+`ode2(eqn, y, x)` solves four classes of ODEs:
+
+- First-order linear `y' + P(x)·y = Q(x)` via integrating factor.
+- Separable `y' = f(x)·g(y)` (linear-in-y cases).
+- Second-order constant-coefficient homogeneous `a·y'' + b·y' + c·y = 0`
+  via characteristic equation — all three root cases (distinct real,
+  repeated, complex conjugate).
+
+Integration constants: `%c` (first-order), `%c1`/`%c2` (second-order).
+
+Not implemented: Bernoulli equations, variable-coefficient 2nd order,
+non-homogeneous 2nd order (method of undetermined coefficients).
+
+---
+
+### D5 — ✅ Complete
+
+**Algebraic number extensions**: `cas-algebraic` 0.1.0 — factoring univariate
+polynomials over quadratic algebraic extensions Q[√d].
+
+- Pattern 1: depressed monic quartics x⁴ + p·x² + q → two monic quadratics
+  over Q[√d] when q is a perfect rational square and (2s−p)/d is also a
+  perfect rational square.
+- Pattern 2: monic quadratics x² + bx + c → two linear factors when
+  discriminant b²−4c = d·(2β)² for rational β.
+- `ALG_FACTOR = IRSymbol("AlgFactor")` head added to `symbolic-ir` 0.7.5.
+- `alg_factor_handler` registered in `symbolic-vm` 0.32.7.
+- `"algfactor": ALG_FACTOR` added to `macsyma-runtime` 1.9.0 name table.
+- `"AlgFactor"` added to `_HELD_HEADS` so `Sqrt(d)` arg is not pre-evaluated.
+
+Surface syntax: `algfactor(x^4+1, sqrt(2))` → `(x^2+sqrt(2)*x+1)*(x^2-sqrt(2)*x+1)`.
+
+---
+
+### D6 — ✅ Complete
+
+**Multivariate polynomial operations**: `cas-multivariate` 0.1.0 — Gröbner bases
+(Buchberger's algorithm), polynomial reduction, and ideal solving.
+
+- `MPoly`: sparse multivariate polynomial over Q (Fraction coefficients), dict-based.
+- Monomial orderings: grlex (default for Buchberger), lex (for back-substitution),
+  grevlex.
+- `s_poly(f, g)`: S-polynomial computation — the core of Buchberger's algorithm.
+- `reduce_poly(f, G)`: multivariate polynomial reduction (normal form).
+- `buchberger(F)`: full Buchberger algorithm with inter-reduction to canonical basis.
+  Safety cap: degree ≤ 8, basis size ≤ 50.
+- `ideal_solve(polys)`: lex Gröbner basis + back-substitution for exact rational
+  solutions of polynomial systems.
+- `GROEBNER`, `POLY_REDUCE`, `IDEAL_SOLVE` heads added to `symbolic-ir` 0.7.6.
+- Handlers registered in `symbolic-vm` 0.32.8.
+- `"groebner"`, `"poly_reduce"`, `"ideal_solve"` added to `macsyma-runtime` 1.10.0.
+
+Surface syntax:
+- `groebner([x^2+y-1, x+y^2-1], [x, y])` → `List(g1, g2, ...)` (reduced Gröbner basis)
+- `poly_reduce(x^2, [x-1], [x])` → `1`
+- `ideal_solve([x+y-1, x-y], [x, y])` → `List(List(Rule(x, 1/2), Rule(y, 1/2)))`
 
 ---
 

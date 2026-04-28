@@ -39,6 +39,8 @@ import math
 from fractions import Fraction
 from typing import TYPE_CHECKING
 
+from cas_algebraic import build_alg_factor_handler_table as _build_algebraic
+from cas_multivariate import build_multivariate_handler_table as _build_multivariate
 from cas_complex import IMAGINARY_UNIT as _IMAGINARY_UNIT
 from cas_complex import build_complex_handler_table as _build_complex
 from cas_complex.handlers import (
@@ -52,6 +54,8 @@ from cas_complex.handlers import (
 )
 from cas_complex.normalize import contains_imaginary as _contains_imaginary
 from cas_factor import factor_integer_polynomial
+from cas_fourier import build_fourier_handler_table as _build_fourier
+from cas_laplace import build_laplace_handler_table as _build_laplace
 from cas_limit_series import PolynomialError, limit_direct, taylor_polynomial
 from cas_list_operations import (
     ListOperationError,
@@ -74,7 +78,9 @@ from cas_matrix import (
     matrix,
     transpose,
 )
+from cas_mnewton import build_mnewton_handler_table as _build_mnewton
 from cas_number_theory.handlers import build_number_theory_handler_table as _build_nt
+from cas_ode import build_ode_handler_table as _build_ode
 from cas_simplify import canonical, simplify
 from cas_solve import ALL, solve_linear, solve_quadratic
 from cas_solve import nsolve_fraction_poly as _nsolve_fraction_poly
@@ -1682,6 +1688,18 @@ def build_cas_handler_table() -> dict[str, Handler]:
         **_build_complex(),
         # --- atan2 (numeric two-argument arctangent) -------------------------
         "Atan2": _atan2_handler,
+        # --- cas-mnewton (Newton's method numeric root finder) ---------------
+        **_build_mnewton(),
+        # --- cas-laplace (Laplace and inverse Laplace transforms) ------------
+        **_build_laplace(),
+        # --- cas-fourier (Fourier and inverse Fourier transforms) ------------
+        **_build_fourier(),
+        # --- cas-ode (ODE solver: separable, linear, 2nd-order const-coeff) -
+        **_build_ode(),
+        # --- cas-algebraic (polynomial factoring over Q[√d]) ----------------
+        **_build_algebraic(),
+        # --- cas-multivariate (Gröbner bases and ideal solving) -------------
+        **_build_multivariate(),
     }
 
 

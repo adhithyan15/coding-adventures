@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from fractions import Fraction
+
 from cas_factor.kronecker import (
     _divides_exactly,
     _eval_points,
@@ -10,8 +12,6 @@ from cas_factor.kronecker import (
     kronecker_factor,
 )
 from cas_factor.polynomial import degree, evaluate, normalize
-from fractions import Fraction
-
 
 # ---------------------------------------------------------------------------
 # Helper: eval_points
@@ -206,7 +206,8 @@ def test_kronecker_quadratic_with_content_one() -> None:
     if result is not None:
         f1, f2 = result
         for x_val in range(-5, 6):
-            assert evaluate(f1, x_val) * evaluate(f2, x_val) == evaluate([-1, 0, 1], x_val)
+            product = evaluate(f1, x_val) * evaluate(f2, x_val)
+            assert product == evaluate([-1, 0, 1], x_val)
     # Alternatively the algo might find no factor (linear roots are
     # found by find_integer_roots; Kronecker is allowed to also find them
     # but is not required to).

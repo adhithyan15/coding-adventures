@@ -17,7 +17,15 @@ compiler change required.
 
 from __future__ import annotations
 
-from symbolic_ir import IRSymbol
+from symbolic_ir import (
+    DIRAC_DELTA,
+    FOURIER,
+    IFOURIER,
+    ILT,
+    LAPLACE,
+    UNIT_STEP,
+    IRSymbol,
+)
 
 # IR heads from substrate packages that may not exist yet — define
 # them here as :class:`IRSymbol` singletons so the table can reference
@@ -80,6 +88,26 @@ MOEBIUS_MU = IRSymbol("MoebiusMu")
 JACOBI_SYMBOL = IRSymbol("JacobiSymbol")
 CHINESE_REMAINDER = IRSymbol("ChineseRemainder")
 INTEGER_LENGTH = IRSymbol("IntegerLength")
+
+# Numeric root-finding (Newton's method)
+MNEWTON = IRSymbol("MNewton")
+
+# Laplace transforms (D-remaining)
+# LAPLACE, ILT, DIRAC_DELTA, UNIT_STEP imported from symbolic_ir above.
+
+# Fourier transforms (D — cas-fourier)
+# FOURIER, IFOURIER imported from symbolic_ir above.
+
+# ODE solving (D3 — cas-ode)
+ODE2 = IRSymbol("ODE2")
+
+# Algebraic extension factoring (D5 — cas-algebraic)
+ALG_FACTOR = IRSymbol("AlgFactor")
+
+# Multivariate polynomial operations (D6 — cas-multivariate)
+GROEBNER = IRSymbol("Groebner")       # groebner(polys, vars) — Gröbner basis
+POLY_REDUCE = IRSymbol("PolyReduce")  # poly_reduce(f, polys, vars) — reduction
+IDEAL_SOLVE = IRSymbol("IdealSolve")  # ideal_solve(polys, vars) — solve system
 
 # Trig transformation heads (B1)
 TRIG_SIMPLIFY = IRSymbol("TrigSimplify")
@@ -147,6 +175,8 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "transpose": TRANSPOSE,
     "determinant": DETERMINANT,
     "invert": INVERSE,
+    # Newton's method numeric root finder
+    "mnewton": MNEWTON,
     # Number-theoretic
     "gcd": GCD,
     "lcm": LCM,
@@ -193,6 +223,23 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "carg": ARG,
     "rectform": RECT_FORM,
     "polarform": POLAR_FORM,
+    # Laplace transforms
+    "laplace": LAPLACE,
+    "ilt": ILT,
+    "delta": DIRAC_DELTA,   # Dirac delta δ(t)
+    "hstep": UNIT_STEP,     # Heaviside step H(t)
+    "unit_step": UNIT_STEP,  # alias
+    # Fourier transforms
+    "fourier": FOURIER,     # Forward Fourier transform
+    "ifourier": IFOURIER,   # Inverse Fourier transform
+    # ODE solving (D3 — cas-ode)
+    "ode2": ODE2,           # ode2(eqn, y, x) — symbolic ODE solver
+    # Algebraic extension factoring (D5 — cas-algebraic)
+    "algfactor": ALG_FACTOR,  # algfactor(poly, sqrt(d)) — factor over Q[√d]
+    # Multivariate polynomial operations (D6 — cas-multivariate)
+    "groebner": GROEBNER,           # groebner(polys, vars) — Gröbner basis
+    "poly_reduce": POLY_REDUCE,     # poly_reduce(f, polys, vars) — reduction
+    "ideal_solve": IDEAL_SOLVE,     # ideal_solve(polys, vars) — solve system
     # Runtime-owned operations
     "kill": KILL,
     "ev": EV,

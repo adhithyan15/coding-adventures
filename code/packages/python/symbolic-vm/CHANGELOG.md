@@ -1,5 +1,105 @@
 # Changelog
 
+## 0.32.8 — 2026-04-28
+
+**Wire `cas-multivariate` into `SymbolicBackend` (Gröbner bases).**
+
+- `cas_handlers.py`: imports `build_multivariate_handler_table` from `cas_multivariate`
+  and merges it into the handler table via `**_build_multivariate()`.
+- `pyproject.toml`: added `"coding-adventures-cas-multivariate>=0.1.0"` as a dependency.
+
+This wires `Groebner(List(polys), List(vars))`, `PolyReduce(f, List(polys), List(vars))`,
+and `IdealSolve(List(polys), List(vars))` into the symbolic VM.
+
+---
+
+## 0.32.7 — 2026-04-27
+
+**Wire `cas-algebraic` into `SymbolicBackend`; add `AlgFactor` to held heads.**
+
+- `cas_handlers.py`: imports `build_alg_factor_handler_table` from `cas_algebraic`
+  and merges it into the handler table via `**_build_algebraic()`.
+- `backends.py`: added `"AlgFactor"` to `_HELD_HEADS` so the `Sqrt(d)` second
+  argument is not pre-evaluated to a float before the handler can inspect it.
+  This is the same pattern used for `"ODE2"`.
+- `pyproject.toml`: added `"coding-adventures-cas-algebraic>=0.1.0"` as a dependency.
+
+This wires `AlgFactor(poly, Sqrt(d))` into the symbolic VM so that
+`algfactor(x^4+1, sqrt(2))` compiles to `AlgFactor(x^4+1, Sqrt(2))` IR and
+evaluates to `(x^2+sqrt(2)*x+1)*(x^2-sqrt(2)*x+1)`.
+
+---
+
+## 0.32.6 — 2026-04-28
+
+**Bump `cas-factor` dependency to 0.3.0 (BZH Phase 3).**
+
+No source changes to `symbolic-vm` itself. The upgraded `cas-factor 0.3.0`
+adds Berlekamp-Zassenhaus-Hensel factoring as a fallback for monic polynomials
+of degree ≥ 4 that Kronecker misses. This means `factor(x^5 - 1)`,
+`factor(x^8 - 1)`, `factor(x^9 - 1)`, and other high-degree cyclotomic
+polynomials now factor correctly through the MACSYMA `factor(...)` surface
+syntax without any VM changes.
+
+---
+
+## 0.32.5 — 2026-04-27
+
+**Wire `cas-ode` into `SymbolicBackend`; add `ODE2` to held heads.**
+
+- `cas_handlers.py`: imports `build_ode_handler_table` from `cas_ode` and
+  merges it into the handler table at the end of `build_cas_handler_table()`.
+- `backends.py`: added `"ODE2"` to `_HELD_HEADS` so that `D(y, x)` inside
+  the ODE expression argument is not pre-evaluated to zero before the ODE
+  handler sees it. This is the correct semantic: the ODE solver needs to
+  inspect the derivative structure of the equation.
+- Added `coding-adventures-cas-ode>=0.1.0` as a dependency.
+
+---
+
+## 0.32.4 — 2026-04-27
+
+**Wire `cas-fourier` into `SymbolicBackend`.**
+
+- Added `from cas_fourier import build_fourier_handler_table as _build_fourier`
+  to `cas_handlers.py`.
+- Added `**_build_fourier()` to the `build_cas_handler_table()` return dict.
+- Added `"coding-adventures-cas-fourier>=0.1.0"` to `pyproject.toml` dependencies.
+
+This wires `Fourier(f, t, ω)` and `IFourier(F, ω, t)` into the symbolic VM.
+Both operations follow the graceful fall-through contract: unknown inputs return
+the expression unevaluated.
+
+---
+
+## 0.32.3 — 2026-04-27
+
+**Wire `cas-laplace` into `SymbolicBackend`.**
+
+- Added `from cas_laplace import build_laplace_handler_table as _build_laplace`
+  to `cas_handlers.py`.
+- Added `**_build_laplace()` to the `build_cas_handler_table()` return dict.
+- Added `"coding-adventures-cas-laplace>=0.1.0"` to `pyproject.toml` dependencies.
+
+This wires `Laplace(f, t, s)`, `ILT(F, s, t)`, `DiracDelta(x)`, and `UnitStep(x)`
+into the symbolic VM. All four operations follow the graceful fall-through contract.
+
+---
+
+## 0.32.2 — 2026-04-27
+
+**Wire `cas-mnewton` into `SymbolicBackend`.**
+
+- Added `from cas_mnewton import build_mnewton_handler_table as _build_mnewton`
+  to `cas_handlers.py`.
+- Added `**_build_mnewton()` to the `build_cas_handler_table()` return dict
+  so `MNewton(f, x, x0)` is handled by every `SymbolicBackend`-derived VM.
+- Added `coding-adventures-cas-mnewton` to `pyproject.toml` dependencies.
+- `MNewton(f, x, x0)` now evaluates to `IRFloat(root)` for numeric x0, and
+  falls through to unevaluated on non-numeric input or zero-derivative.
+
+---
+
 ## 0.32.1 — 2026-04-27
 
 **Bug fix — hyperbolic differentiation via `derivative.py` pathway.**
