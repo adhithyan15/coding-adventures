@@ -1164,6 +1164,31 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
 
+    def test_read_only_boolean_by_name_expression_runs_through_eval_thunk(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; boolean flag; "
+            "procedure test(b); boolean b; "
+            "begin if b then result := 9 else result := 0 end; "
+            "flag := false; test(not flag) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
+
+    def test_read_only_string_by_name_literal_runs_through_eval_thunk(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure emit(s); string s; begin print(s); result := 7 end; "
+            "emit('Hi') "
+            "end"
+        )
+        captured: list[str] = []
+        runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
+
+        assert runtime.load_and_run(result.binary, "_start", []) == [7]
+        assert "".join(captured) == "Hi"
+
     def test_real_by_name_scalar_write_through_storage_pointer(self) -> None:
         result = compile_source(
             "begin integer result; real y; "

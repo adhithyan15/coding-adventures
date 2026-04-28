@@ -19,6 +19,9 @@ All notable changes to this package will be documented in this file.
 - Executed read-only integer expression actuals through tagged eval thunk
   descriptors, including repeated formal reads that observe caller-frame
   mutations between evaluations.
+- Executed read-only boolean and string expression actuals through the same
+  bounded word eval-thunk path, including string literals passed to formals
+  that are only printed.
 - Executed integer array-element by-name actuals through eval/store thunk
   helpers so repeated formal reads and assignments re-locate the current
   element, including Jensen-style index mutation between formal uses.
