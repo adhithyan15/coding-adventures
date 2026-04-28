@@ -743,7 +743,7 @@ class AlgolTypeChecker:
             self._check_designational(
                 entry,
                 scope,
-                allow_nonlocal_label=False,
+                allow_nonlocal_label=True,
                 allow_switch_selection=True,
                 active_switch_id=switch_id,
             )

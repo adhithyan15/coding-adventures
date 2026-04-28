@@ -423,6 +423,30 @@ class TestAlgolIrCompiler:
         assert opcodes.count(IrOp.RET) >= 2
         assert any(label.startswith("algol_label_") for label in labels)
 
+    def test_compiles_nonlocal_switch_entry_label_with_frame_unwind(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "result := 0; "
+                "begin switch s := done; result := 5; goto s[1]; result := 99 end; "
+                "done: result := result + 2 "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+
+        assert IrOp.CMP_EQ in opcodes
+        assert any(label.startswith("switch_0_1_next") for label in labels)
+        assert any(
+            label.startswith("algol_label_") and label.endswith("_done")
+            for label in labels
+        )
+
     def test_compiles_nested_switch_selection_entry(self) -> None:
         result = compile_algol(
             parse_algol(

@@ -68,6 +68,10 @@ All notable changes to this package will be documented in this file.
   can also call integer-returning procedures safely.
 - Allowed top-level ALGOL programs without a root integer `result` scalar to
   compile by returning `0` from the WASM `_start` wrapper.
+- Lowered switch declaration entries that target labels in lexical parent
+  blocks through the same frame-unwind and pending-goto paths as direct gotos.
+- Tagged pending procedure-crossing label ids so label id `0` no longer
+  collides with the no-pending-goto sentinel.
 
 ## [0.1.0] - 2026-04-20
 

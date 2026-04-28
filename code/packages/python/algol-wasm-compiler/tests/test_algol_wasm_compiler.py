@@ -462,6 +462,16 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
 
+    def test_procedure_crossing_goto_can_target_first_label(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure escape; begin result := 4; goto done; result := 99 end; "
+            "result := 0; escape; result := 1; "
+            "done: result := result + 3 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
     def test_procedure_crossing_goto_propagates_through_intermediate_procedure(
         self,
     ) -> None:
@@ -529,6 +539,27 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_switch_entry_can_target_nonlocal_label(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "result := 0; "
+            "begin switch s := done; result := 5; goto s[1]; result := 99 end; "
+            "done: result := result + 2 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_procedure_switch_entry_can_escape_to_outer_label(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure escape; "
+            "begin switch s := done; result := 4; goto s[1]; result := 99 end; "
+            "result := 0; escape; result := 1; "
+            "done: result := result + 3 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
 
     def test_switch_entry_can_be_conditional_designational(self) -> None:
         result = compile_source(
