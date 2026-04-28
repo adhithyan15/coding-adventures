@@ -26,7 +26,7 @@ statement         = query_stmt | insert_stmt | update_stmt
 # associative equals; ANSI-compliant precedence can be added later.
 
 query_stmt        = [ with_clause ] select_stmt { set_op_clause } ;
-with_clause       = "WITH" cte_def { "," cte_def } ;
+with_clause       = "WITH" [ "RECURSIVE" ] cte_def { "," cte_def } ;
 cte_def           = NAME "AS" "(" query_stmt ")" ;
 set_op_clause     = ( "UNION" | "INTERSECT" | "EXCEPT" ) [ "ALL" ] select_stmt ;
 

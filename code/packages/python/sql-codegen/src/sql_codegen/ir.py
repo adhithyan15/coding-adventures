@@ -603,6 +603,53 @@ class RunExistsSubquery:
     sub_program: Program   # fully compiled inner SELECT program
 
 
+@dataclass(frozen=True, slots=True)
+class RunRecursiveCTE:
+    """Execute a WITH RECURSIVE CTE via fixed-point iteration.
+
+    Algorithm (see VM ``_do_run_recursive_cte``):
+
+    1. Run ``anchor_program`` once → initial working set.
+    2. Loop while working set is non-empty:
+       a. Run ``recursive_program`` with cursor ``working_cursor_id``
+          pre-populated from the current working set.
+       b. Relabel result rows with the anchor's output column names
+          (SQL rule: UNION ALL names come from the left/anchor side).
+       c. If ``union_all`` is False, discard rows already in the
+          accumulated set (UNION semantics — cycle prevention).
+       d. Extend the accumulated result; update working set.
+    3. Wrap the accumulated rows in a :class:`~sql_vm.vm._SubqueryCursor`
+       and store under ``cursor_id`` for the outer scan loop.
+
+    ``working_cursor_id`` is the cursor slot pre-allocated inside
+    ``recursive_program`` for the working-set scan (always cursor 0 in the
+    recursive sub-program, because the recursive FROM source is compiled
+    first).
+    """
+
+    cursor_id: int
+    anchor_program: Program
+    recursive_program: Program
+    working_cursor_id: int
+    union_all: bool = True
+
+
+@dataclass(frozen=True, slots=True)
+class OpenWorkingSetScan:
+    """Open a fresh cursor over the recursive working-set rows.
+
+    Used inside recursive sub-programs so that ``WorkingSetScan`` loops work
+    correctly when the CTE self-reference appears inside a JOIN.  Each time
+    this instruction executes, it materialises a brand-new
+    :class:`~sql_vm.vm._SubqueryCursor` from ``vm_state.working_set_data``
+    and stores it under ``cursor_id``.  The subsequent ``AdvanceCursor`` /
+    ``CloseScan`` loop iterates that fresh cursor — so even if the outer JOIN
+    loop calls this many times, each iteration starts from row zero.
+    """
+
+    cursor_id: int
+
+
 # ---- Control flow -------------------------------------------------------
 
 
@@ -652,6 +699,8 @@ Instruction = (
     | BeginTransaction | CommitTransaction | RollbackTransaction
     | RunSubquery
     | RunExistsSubquery
+    | RunRecursiveCTE
+    | OpenWorkingSetScan
     | Label | Jump | JumpIfFalse | JumpIfTrue | Halt
 )
 

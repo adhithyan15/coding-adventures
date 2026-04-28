@@ -82,6 +82,7 @@ PARSER_GRAMMAR = ParserGrammar(
             body=
             Sequence(elements=[
                 Literal(value='WITH'),
+                Optional(element=Literal(value='RECURSIVE')),
                 RuleReference(name='cte_def', is_token=False),
                 Repetition(element=
                     Sequence(elements=[
