@@ -2,6 +2,14 @@
 
 All notable changes to the SQL lexer package will be documented in this file.
 
+## [0.3.0] - 2026-04-27
+
+### Added — Phase 4a: CHECK constraints
+
+- `CHECK` registered as a SQL keyword in `sql.tokens` and the compiled
+  `_grammar.py`, enabling `CHECK (expr)` column constraints to tokenize as
+  KEYWORD rather than NAME.
+
 ## [0.2.0] - 2026-04-27
 
 ### Added

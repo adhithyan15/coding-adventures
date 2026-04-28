@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.9.0] - 2026-04-27
+
+### Added — Phase 4a: CHECK constraints
+
+- **`Connection._check_registry: dict`** — mutable dict initialized to `{}` on
+  connection creation and threaded through `Cursor → engine.run() → vm.execute()`.
+  Mutations from `CREATE TABLE` persist in this dict across `execute()` calls.
+- **`engine.run()` `check_registry` parameter** — forwarded to `vm.execute()` so
+  the same dict is used for both registration (CREATE TABLE) and enforcement
+  (INSERT/UPDATE).
+- **`adapter._col_def()` CHECK parsing** — recognises the `CHECK ( expr )` grammar
+  variant and passes the parsed expression as `check_expr` on the `ColumnDef`.
+- **20 new tests** in `tests/test_tier3_check_constraints.py`:
+  - `TestCheckConstraintPipeline` — unit tests for grammar, adapter, planner, codegen.
+  - `TestCheckConstraintIntegration` — valid inserts, boundary values, NULL semantics,
+    UPDATE enforcement, multi-column checks, compound `AND` range check.
+  - `TestCheckConstraintErrors` — violation on INSERT and UPDATE, error message
+    mentions the column name, compound lower/upper bound violations.
+
 ## [0.8.0] - 2026-04-27
 
 ### Added — Phase 3: ALTER TABLE ADD COLUMN

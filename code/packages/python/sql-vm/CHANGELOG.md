@@ -1,5 +1,28 @@
 # Changelog
 
+## 1.0.0 — 2026-04-27
+
+### Added — Phase 4a: CHECK constraints
+
+- **`check_registry` parameter on `execute()`** — a mutable `dict` passed in from
+  `Connection` so CHECK state registered by `CREATE TABLE` persists across calls.
+  The dict maps `table_name → list[(col_name, check_instrs)]`.
+- **`_do_create_table` populates `check_registry`** — for each column whose IR
+  `ColumnDef.check_instrs` is non-empty, an entry is written into the registry so
+  subsequent INSERT/UPDATE calls can enforce it.
+- **`_check_constraints()` helper** — iterates over the registry entry for the
+  target table, temporarily sets `st.current_row[CHECK_CURSOR_ID] = row`, runs the
+  pre-compiled instruction sequence, pops the result, and raises `ConstraintViolation`
+  when the result is `False`.  NULL results pass (SQL three-valued-logic).
+- **`ConstraintViolation` exports `table` and `column`** — the raised exception
+  carries enough detail for the mini-sqlite layer to produce an informative error.
+- **INSERT and UPDATE enforcement** — `_do_insert` validates the to-be-inserted row
+  before writing; `_do_update` merges pending assignments with the current row and
+  validates the merged dict before writing, preserving transactional rollback on
+  violation.
+- **Tests** — 4 new tests in `test_dml_ddl.py` covering valid INSERT, violating
+  INSERT, violating UPDATE, and NULL passthrough.
+
 ## 0.9.0 — 2026-04-27
 
 ### Added

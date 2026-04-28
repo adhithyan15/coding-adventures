@@ -507,7 +507,7 @@ def _alter_table(node: ASTNode) -> AlterTableStmt:
     assert table_tok is not None
     col_node = _maybe_child(node, "col_def")
     assert col_node is not None, "alter_table_stmt: missing col_def"
-    col = _col_def(col_node)
+    col = _col_def(col_node, _PlaceholderCounter())
     return AlterTableStmt(table=table_tok.value, column=col)
 
 
@@ -523,11 +523,12 @@ def _create_table(node: ASTNode) -> CreateTableStmt:
     if_not_exists = _has_keyword_sequence(node, ("IF", "NOT", "EXISTS"))
     table_tok = _first_token(node, kind="NAME")
     assert table_tok is not None
-    cols = tuple(_col_def(c) for c in _child_nodes(node, "col_def"))
+    state = _PlaceholderCounter()
+    cols = tuple(_col_def(c, state) for c in _child_nodes(node, "col_def"))
     return CreateTableStmt(table=table_tok.value, columns=cols, if_not_exists=if_not_exists)
 
 
-def _col_def(node: ASTNode) -> BackendColumnDef:
+def _col_def(node: ASTNode, state: _PlaceholderCounter | None = None) -> BackendColumnDef:
     # col_def = NAME NAME { col_constraint }
     names = [c for c in node.children if isinstance(c, Token) and _token_type(c) == "NAME"]
     col_name = names[0].value
@@ -536,6 +537,8 @@ def _col_def(node: ASTNode) -> BackendColumnDef:
     not_null = False
     primary_key = False
     unique = False
+    check_expression = None
+    _state = state or _PlaceholderCounter()
     for c in _child_nodes(node, "col_constraint"):
         kw_seq = tuple(
             t.value.upper()
@@ -549,6 +552,10 @@ def _col_def(node: ASTNode) -> BackendColumnDef:
             not_null = True  # PRIMARY KEY implies NOT NULL.
         elif kw_seq == ("UNIQUE",):
             unique = True
+        elif kw_seq[0:1] == ("CHECK",):
+            expr_node = _maybe_child(c, "expr")
+            if expr_node is not None:
+                check_expression = _expr(expr_node, _state)
         # DEFAULT and NULL left alone; the backend's default is already NULL-OK.
     return BackendColumnDef(
         name=col_name,
@@ -556,6 +563,7 @@ def _col_def(node: ASTNode) -> BackendColumnDef:
         not_null=not_null,
         primary_key=primary_key,
         unique=unique,
+        check_expr=check_expression,
     )
 
 

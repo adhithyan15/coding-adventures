@@ -486,6 +486,14 @@ PARSER_GRAMMAR = ParserGrammar(
                         RuleReference(name='primary', is_token=False),
                     ]),
                 ),
+                Group(element=
+                    Sequence(elements=[
+                        Literal(value='CHECK'),
+                        Literal(value='('),
+                        RuleReference(name='expr', is_token=False),
+                        Literal(value=')'),
+                    ]),
+                ),
             ]),
             line_number=80,
         ),

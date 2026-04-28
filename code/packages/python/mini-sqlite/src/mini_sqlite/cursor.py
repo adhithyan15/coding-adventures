@@ -146,6 +146,7 @@ class Cursor:
             sql,
             parameters,
             advisor=self._connection._advisor,
+            check_registry=self._connection._check_registry,
         )
 
         # For DDL (CREATE/DROP/ALTER), auto-commit the single-statement

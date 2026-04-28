@@ -38,6 +38,7 @@ from sql_backend.index import IndexDef
 from sql_backend.row import RowIterator
 from sql_backend.values import SqlValue, sql_type_name
 from sql_codegen import (
+    CHECK_CURSOR_ID,
     AdvanceCursor,
     AdvanceGroupKey,
     AlterTable,
@@ -241,6 +242,11 @@ class _VmState:
     # Handle returned by backend.begin_transaction(); None when no explicit
     # transaction is active.
     transaction_handle: TransactionHandle | None = None
+    # Per-table CHECK constraint registry: table → [(col_name, instrs)].
+    # Populated at CreateTable time; consulted before every INSERT/UPDATE.
+    check_registry: dict[str, list[tuple[str, tuple[Instruction, ...]]]] = field(
+        default_factory=dict
+    )
     # Scan telemetry — populated during execution; used to build QueryEvent.
     # Only the *first* scan per execute() call is recorded (one event per call).
     scan_table: str = ""
@@ -274,6 +280,7 @@ def execute(
     program: Program,
     backend: Backend,
     *,
+    check_registry: dict[str, list[tuple[str, tuple[Instruction, ...]]]] | None = None,
     event_cb: Callable[[QueryEvent], None] | None = None,
     filtered_columns: list[str] | None = None,
 ) -> QueryResult:
@@ -295,7 +302,12 @@ def execute(
     import time
 
     _t0 = time.perf_counter()
-    state = _VmState(program=program, backend=backend)
+    # Use the caller-supplied registry if provided so that CHECK constraints
+    # registered by a prior CREATE TABLE statement persist across execute() calls.
+    registry: dict[str, list[tuple[str, tuple[Instruction, ...]]]] = (
+        check_registry if check_registry is not None else {}
+    )
+    state = _VmState(program=program, backend=backend, check_registry=registry)
     instructions = program.instructions
     n = len(instructions)
     while state.pc < n:
@@ -945,6 +957,7 @@ def _translate_backend_error(e: be.BackendError) -> Exception:
 def _do_insert(ins: InsertRow, st: _VmState) -> None:
     values = st.pop_n(len(ins.columns))
     row = dict(zip(ins.columns, values, strict=True))
+    _check_constraints(ins.table, row, st)
     try:
         st.backend.insert(ins.table, row)
     except be.BackendError as e:
@@ -958,6 +971,10 @@ def _do_update(ins: UpdateRows, st: _VmState) -> None:
     cursor = st.cursors.get(ins.cursor_id)
     if cursor is None:
         raise InternalError(message=f"update: cursor {ins.cursor_id} not open")
+    # Evaluate CHECK constraints against the post-update row: merge the current
+    # row values with the incoming assignments before writing to the backend.
+    current = st.current_row.get(ins.cursor_id, {})
+    _check_constraints(ins.table, {**current, **assignments}, st)
     try:
         st.backend.update(ins.table, cursor, assignments)
     except be.BackendError as e:
@@ -992,7 +1009,40 @@ def _do_create_table(ins: CreateTable, st: _VmState) -> None:
         st.backend.create_table(ins.table, col_defs, ins.if_not_exists)
     except be.BackendError as e:
         raise _translate_backend_error(e) from e
+    # Register any CHECK constraints so _do_insert/_do_update can enforce them.
+    checks = [(c.name, c.check_instrs) for c in ins.columns if c.check_instrs]
+    if checks:
+        st.check_registry[ins.table] = checks
     st.result.rows_affected = 0
+
+
+def _check_constraints(table: str, row: dict[str, SqlValue], st: _VmState) -> None:
+    """Evaluate every CHECK constraint for *table* against *row*.
+
+    The check instructions are evaluated using ``CHECK_CURSOR_ID`` as a
+    synthetic cursor so ``LoadColumn`` can resolve column names.  NULL
+    result is treated as passing (standard SQL behaviour).  ``False`` raises
+    :class:`ConstraintViolation`.
+    """
+    constraints = st.check_registry.get(table)
+    if not constraints:
+        return
+    st.current_row[CHECK_CURSOR_ID] = row
+    try:
+        for col_name, instrs in constraints:
+            depth_before = len(st.stack)
+            for instr in instrs:
+                _dispatch(instr, st)
+            result = st.pop()
+            assert len(st.stack) == depth_before, "CHECK expr left extra values on stack"
+            if result is False:
+                raise ConstraintViolation(
+                    table=table,
+                    column=col_name,
+                    message=f"CHECK constraint failed: {table}.{col_name}",
+                )
+    finally:
+        st.current_row.pop(CHECK_CURSOR_ID, None)
 
 
 def _do_drop_table(ins: DropTable, st: _VmState) -> None:

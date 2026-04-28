@@ -130,6 +130,9 @@ class Connection:
         self._advisor: IndexAdvisor | None = (
             IndexAdvisor(backend) if auto_index else None
         )
+        # CHECK constraint registry persisted across execute() calls.
+        # Populated by CREATE TABLE statements, consulted on INSERT/UPDATE.
+        self._check_registry: dict = {}
 
     # ------------------------------------------------------------------
     # Cursor + shortcut methods.

@@ -70,6 +70,7 @@ def run(
     parameters: Sequence[Any] = (),
     *,
     advisor: IndexAdvisor | None = None,
+    check_registry: dict | None = None,
 ) -> QueryResult:
     """Execute a single SQL statement and return the :class:`QueryResult`.
 
@@ -119,6 +120,7 @@ def run(
         return execute(
             program,
             backend,
+            check_registry=check_registry,
             event_cb=event_cb,
             filtered_columns=_filtered,
         )

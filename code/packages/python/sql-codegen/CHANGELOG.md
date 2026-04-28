@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.9.0] - 2026-04-27
+
+### Added — Phase 4a: CHECK constraints
+
+- **`CHECK_CURSOR_ID = -1`** — sentinel cursor id used in check-expression
+  instructions.  The VM temporarily maps this id to the incoming row dict so
+  `LoadColumn(cursor_id=-1, column="score")` resolves to the correct value.
+- **`ColumnDef.check_instrs: tuple[Instruction, ...]`** — IR ColumnDef carries the
+  pre-compiled instruction sequence for its CHECK constraint; empty tuple when there
+  is no constraint.
+- **`compiler._to_ir_col` CHECK compilation** — when `AstColumnDef.check_expr` is
+  not `None`, a fresh `_Ctx` is created with `alias_to_cursor[""] = CHECK_CURSOR_ID`
+  so all unqualified column references in the expression map to the sentinel cursor;
+  the compiled instructions are frozen into `check_instrs`.
+- **`CHECK_CURSOR_ID` and `IrColumnDef` exported** from `sql_codegen.__init__`.
+
 ## [0.8.0] - 2026-04-27
 
 ### Added

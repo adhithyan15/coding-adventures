@@ -459,12 +459,24 @@ class RollbackTransaction:
     """Call ``backend.rollback(handle)`` and clear the stored handle."""
 
 
+# Sentinel cursor_id used when the VM evaluates CHECK constraint expressions.
+# Normal cursors are allocated starting from 0, so -1 is guaranteed distinct.
+CHECK_CURSOR_ID: int = -1
+
+
 @dataclass(frozen=True, slots=True)
 class ColumnDef:
-    """One column in a CREATE TABLE — mirrors planner's ColumnDef."""
+    """One column in a CREATE TABLE — mirrors planner's ColumnDef.
+
+    ``check_instrs`` is a pre-compiled sequence of IR instructions that
+    leaves a boolean (or NULL) on the stack when executed. The VM evaluates
+    these against a new/updated row using the sentinel cursor id
+    ``CHECK_CURSOR_ID``.  Empty tuple means no CHECK constraint.
+    """
     name: str
     type: str
     nullable: bool = True
+    check_instrs: tuple[Instruction, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)
