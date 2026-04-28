@@ -57,6 +57,8 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='drop_table_stmt', is_token=False),
                 RuleReference(name='create_index_stmt', is_token=False),
                 RuleReference(name='drop_index_stmt', is_token=False),
+                RuleReference(name='create_view_stmt', is_token=False),
+                RuleReference(name='drop_view_stmt', is_token=False),
                 RuleReference(name='begin_stmt', is_token=False),
                 RuleReference(name='commit_stmt', is_token=False),
                 RuleReference(name='rollback_stmt', is_token=False),
@@ -82,6 +84,7 @@ PARSER_GRAMMAR = ParserGrammar(
             body=
             Sequence(elements=[
                 Literal(value='WITH'),
+                Optional(element=Literal(value='RECURSIVE')),
                 RuleReference(name='cte_def', is_token=False),
                 Repetition(element=
                     Sequence(elements=[
@@ -619,6 +622,41 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='NAME', is_token=True),
             ]),
             line_number=95,
+        ),
+        GrammarRule(
+            name='create_view_stmt',
+            body=
+            Sequence(elements=[
+                Literal(value='CREATE'),
+                Literal(value='VIEW'),
+                Optional(element=
+                    Sequence(elements=[
+                        Literal(value='IF'),
+                        Literal(value='NOT'),
+                        Literal(value='EXISTS'),
+                    ]),
+                ),
+                RuleReference(name='NAME', is_token=True),
+                Literal(value='AS'),
+                RuleReference(name='query_stmt', is_token=False),
+            ]),
+            line_number=108,
+        ),
+        GrammarRule(
+            name='drop_view_stmt',
+            body=
+            Sequence(elements=[
+                Literal(value='DROP'),
+                Literal(value='VIEW'),
+                Optional(element=
+                    Sequence(elements=[
+                        Literal(value='IF'),
+                        Literal(value='EXISTS'),
+                    ]),
+                ),
+                RuleReference(name='NAME', is_token=True),
+            ]),
+            line_number=110,
         ),
         GrammarRule(
             name='begin_stmt',

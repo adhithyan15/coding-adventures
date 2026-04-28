@@ -514,15 +514,26 @@ class TestAlgolIrCompiler:
         assert IrOp.MUL in opcodes
         assert opcodes.count(IrOp.SUB) >= 2
 
-    def test_integer_division_emits_zero_divisor_guard(self) -> None:
+    def test_integer_division_emits_runtime_failure_guard(self) -> None:
         result = compile_algol(
             parse_algol("begin integer result, divisor; result := 10 div divisor end")
         )
         opcodes = [instr.opcode for instr in result.program.instructions]
 
         assert IrOp.CMP_EQ in opcodes
+        assert IrOp.OR in opcodes
         assert IrOp.BRANCH_Z in opcodes
         assert opcodes.index(IrOp.CMP_EQ) < opcodes.index(IrOp.DIV)
+
+    def test_real_division_emits_zero_divisor_guard(self) -> None:
+        result = compile_algol(
+            parse_algol("begin integer result; real x, y; x := 1.0 / y end")
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+
+        assert IrOp.F64_CMP_EQ in opcodes
+        assert IrOp.BRANCH_Z in opcodes
+        assert opcodes.index(IrOp.F64_CMP_EQ) < opcodes.index(IrOp.F64_DIV)
 
     def test_compiles_boolean_not_or_and_comparison_forms(self) -> None:
         result = compile_algol(
@@ -995,6 +1006,22 @@ class TestAlgolIrCompiler:
 
         assert signature.param_count == 3
         assert signature.param_types == ("integer", "integer", "integer")
+
+    def test_compiles_value_array_parameter_copy(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer array xs[1:2]; integer result; "
+                "procedure setfirst(a); value a; integer a; array a; "
+                "begin a[1] := 9 end; "
+                "xs[1] := 4; setfirst(xs); result := xs[1] "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+
+        assert IrOp.LOAD_BYTE in opcodes
+        assert IrOp.STORE_BYTE in opcodes
+        assert IrOp.CMP_GT in opcodes
 
     def test_compiles_array_parameter_dimension_guard(self) -> None:
         result = compile_algol(

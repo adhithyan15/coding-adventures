@@ -18,10 +18,11 @@ already supports a substantial ALGOL 60 surface:
 - arrays of `integer`, `boolean`, `real`, and `string` values with runtime
   bounds and checked element access
 - chained assignment, conditional expressions, tolerant trailing/repeated
-  semicolons, integer `div`/`mod` runtime failure guards, and
+  semicolons, numeric runtime failure guards, and
   ALGOL-left-associative exponentiation for integer exponents
 - value and by-name parameters, including Jensen-style expression thunks and
-  typed whole-array, label, switch, and no-argument statement procedure formals
+  typed whole-array formals with copy or aliasing semantics, plus label,
+  switch, and no-argument statement procedure formals
 - bare no-argument typed procedure names as expression calls, matching ALGOL's
   omitted-parentheses call syntax for parameterless procedures
 - labels, local and nonlocal `goto`, switch designators, and conditional

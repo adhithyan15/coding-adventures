@@ -341,16 +341,6 @@ def link_loaded_prolog_sources(
 ) -> LoadedPrologProject:
     """Link loaded sources into one namespace-aware executable project."""
 
-    module_sources: dict[Symbol, LoadedPrologSource] = {}
-    for loaded_source in loaded_sources:
-        if loaded_source.module_spec is None:
-            continue
-        module_name = loaded_source.module_spec.name
-        if module_name in module_sources:
-            msg = f"duplicate module declaration for {module_name}"
-            raise ValueError(msg)
-        module_sources[module_name] = loaded_source
-
     linked_clauses: list[Clause] = []
     linked_queries: list[ParsedQuery] = []
     linked_modules: list[PrologModule] = []
@@ -358,38 +348,12 @@ def link_loaded_prolog_sources(
     initialization_terms: list[Term] = []
     initialization_goals: list[GoalExpr] = []
     dynamic_relations: list[Relation] = []
-    source_resolvers: dict[int, RelationResolver] = {}
-    module_resolvers: dict[Symbol, RelationResolver] = {}
+    source_resolvers, module_resolvers = _resolvers_for_sources(loaded_sources)
 
     for loaded_source in loaded_sources:
         if loaded_source.module_spec is not None:
             linked_modules.append(loaded_source.module_spec)
 
-        current_module = (
-            loaded_source.module_spec.name
-            if loaded_source.module_spec is not None
-            else _USER_MODULE
-        )
-        qualify_local = loaded_source.module_spec is not None
-        local_keys = {
-            clause_value.head.relation.key() for clause_value in loaded_source.clauses
-        }
-        import_resolution = _import_resolution(
-            loaded_source,
-            local_keys,
-            module_sources,
-        )
-        resolver = _resolver_for_source(
-            current_module,
-            qualify_local=qualify_local,
-            local_keys=local_keys,
-            import_resolution=import_resolution,
-        )
-        source_resolvers[id(loaded_source)] = resolver
-        if loaded_source.module_spec is not None:
-            module_resolvers[loaded_source.module_spec.name] = resolver
-
-    for loaded_source in loaded_sources:
         resolver = source_resolvers[id(loaded_source)]
 
         linked_clauses.extend(
@@ -420,6 +384,23 @@ def link_loaded_prolog_sources(
         initialization_terms=tuple(initialization_terms),
         initialization_goals=tuple(initialization_goals),
     )
+
+
+def rewrite_loaded_prolog_query(
+    loaded_project: LoadedPrologProject,
+    query_value: ParsedQuery,
+    *,
+    module: str | Symbol | None = None,
+) -> ParsedQuery:
+    """Rewrite an ad-hoc query through a linked project's module context."""
+
+    _, module_resolvers = _resolvers_for_sources(loaded_project.sources)
+    module_name = _query_module_name(loaded_project, module)
+    resolver = module_resolvers.get(module_name)
+    if resolver is None:
+        msg = f"query module {module_name.name} is not part of the loaded project"
+        raise ValueError(msg)
+    return _rewrite_query(query_value, resolver, module_resolvers)
 
 
 def run_initialization_goals(
@@ -1195,6 +1176,64 @@ def _qualified_relation(module_name: Symbol, relation_value: Relation) -> Relati
         symbol=sym(f"{module_name.name}:{relation_value.symbol.name}"),
         arity=relation_value.arity,
     )
+
+
+def _resolvers_for_sources(
+    loaded_sources: tuple[LoadedPrologSource, ...],
+) -> tuple[dict[int, RelationResolver], dict[Symbol, RelationResolver]]:
+    module_sources: dict[Symbol, LoadedPrologSource] = {}
+    for loaded_source in loaded_sources:
+        if loaded_source.module_spec is None:
+            continue
+        module_name = loaded_source.module_spec.name
+        if module_name in module_sources:
+            msg = f"duplicate module declaration for {module_name}"
+            raise ValueError(msg)
+        module_sources[module_name] = loaded_source
+
+    source_resolvers: dict[int, RelationResolver] = {}
+    module_resolvers: dict[Symbol, RelationResolver] = {}
+    for loaded_source in loaded_sources:
+        current_module = (
+            loaded_source.module_spec.name
+            if loaded_source.module_spec is not None
+            else _USER_MODULE
+        )
+        qualify_local = loaded_source.module_spec is not None
+        local_keys = {
+            clause_value.head.relation.key() for clause_value in loaded_source.clauses
+        }
+        import_resolution = _import_resolution(
+            loaded_source,
+            local_keys,
+            module_sources,
+        )
+        resolver = _resolver_for_source(
+            current_module,
+            qualify_local=qualify_local,
+            local_keys=local_keys,
+            import_resolution=import_resolution,
+        )
+        source_resolvers[id(loaded_source)] = resolver
+        module_resolvers[current_module] = resolver
+
+    return source_resolvers, module_resolvers
+
+
+def _query_module_name(
+    loaded_project: LoadedPrologProject,
+    module: str | Symbol | None,
+) -> Symbol:
+    if isinstance(module, Symbol):
+        return module
+    if module is not None:
+        return sym(module)
+    if not loaded_project.sources:
+        return _USER_MODULE
+    first_source = loaded_project.sources[0]
+    if first_source.module_spec is None:
+        return _USER_MODULE
+    return first_source.module_spec.name
 
 
 def _import_resolution(

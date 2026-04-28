@@ -796,12 +796,6 @@ class AlgolTypeChecker:
             parameter_kind = parameter_spec.kind
             parameter_type = parameter_spec.type_name
             if parameter_kind == ARRAY:
-                if mode == VALUE:
-                    self._error(
-                        formal,
-                        f"value parameter {formal.value!r} cannot be an array in "
-                        "this phase",
-                    )
                 if parameter_type is None:
                     parameter_type = REAL
             elif parameter_kind == LABEL:

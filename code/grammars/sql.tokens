@@ -41,6 +41,7 @@ DOT           = "."
 
 keywords:
   WITH
+  RECURSIVE
   SELECT
   FROM
   WHERE
@@ -102,6 +103,7 @@ keywords:
   CHECK
   REFERENCES
   DEFAULT
+  VIEW
   BEGIN
   COMMIT
   ROLLBACK

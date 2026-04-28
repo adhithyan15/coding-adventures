@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-sql-parser"
-version = "0.6.0"
+version = "0.8.0"
 description = "Parses SQL text into ASTs using the grammar-driven parser — a thin wrapper that loads sql.grammar"
 requires-python = ">=3.12"
 license = "MIT"

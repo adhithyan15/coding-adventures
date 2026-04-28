@@ -866,6 +866,27 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
 
+    def test_value_array_parameter_copies_descriptor_and_elements(self) -> None:
+        result = compile_source(
+            "begin integer array xs[2:3]; integer result; "
+            "procedure setfirst(a); value a; integer a; array a; "
+            "begin result := a[2]; a[2] := 9; result := result * 10 + a[2] end; "
+            "xs[2] := 4; setfirst(xs); result := result * 10 + xs[2] "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [494]
+
+    def test_real_value_array_parameter_copies_without_aliasing(self) -> None:
+        result = compile_source(
+            "begin real array xs[1:1]; integer result; "
+            "procedure bump(a); value a; real a; array a; "
+            "begin a[1] := a[1] + 1.5; if a[1] > 3.0 then result := 7 end; "
+            "xs[1] := 2.0; bump(xs); "
+            "if xs[1] < 3.0 then result := result + 1 else result := 0 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
+
     def test_array_parameter_runtime_dimension_mismatch_returns_from_callee(
         self,
     ) -> None:
@@ -1235,6 +1256,42 @@ class TestAlgolWasmCompiler:
     def test_integer_modulo_by_zero_returns_zero(self) -> None:
         result = compile_source(
             "begin integer result, divisor; divisor := 0; result := 10 mod divisor end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
+
+    def test_integer_division_overflow_returns_zero(self) -> None:
+        result = compile_source(
+            "begin integer result, low, divisor; "
+            "low := 0 - 2147483647 - 1; "
+            "divisor := 0 - 1; "
+            "result := low div divisor "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
+
+    def test_integer_modulo_overflow_returns_zero(self) -> None:
+        result = compile_source(
+            "begin integer result, low, divisor; "
+            "low := 0 - 2147483647 - 1; "
+            "divisor := 0 - 1; "
+            "result := low mod divisor "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
+
+    def test_real_division_by_zero_returns_zero(self) -> None:
+        result = compile_source(
+            "begin integer result; real x, divisor; "
+            "divisor := 0.0; x := 1.0 / divisor; result := 7 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
+
+    def test_zero_real_base_negative_exponent_returns_zero(self) -> None:
+        result = compile_source(
+            "begin integer result; real x; "
+            "x := 0.0 ^ (0 - 1); result := 7 "
+            "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
 

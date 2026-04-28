@@ -193,6 +193,23 @@ fn default_html_lexer_keeps_ampersands_literal_in_seeded_rawtext() {
 }
 
 #[test]
+fn default_html_lexer_supports_seeded_plaintext_state() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("plaintext").unwrap();
+
+    lexer.push("hello <b>still text</b> &amp; literal").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("hello <b>still text</b> &amp; literal".to_string()),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_named_character_references_in_data() {
     let tokens = lex_html("Fish &amp; &lt;b&gt; &quot;quote&quot; &apos;ok&apos;").unwrap();
 
@@ -301,6 +318,66 @@ fn default_html_lexer_supports_seeded_rcdata_legacy_named_character_references()
 }
 
 #[test]
+fn default_html_lexer_supports_latin1_named_character_references_in_data() {
+    let tokens = lex_html("Latin-1: &Agrave;&agrave; &frac12; &yen;").unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Text("Latin-1: \u{00C0}\u{00E0} \u{00BD} \u{00A5}".to_string()),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_latin1_named_character_references_in_attributes() {
+    let tokens = lex_html("<a title=\"&AElig;&aelig;\" currency=&pound;>").unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "title".to_string(),
+                        value: "\u{00C6}\u{00E6}".to_string(),
+                    },
+                    Attribute {
+                        name: "currency".to_string(),
+                        value: "\u{00A3}".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_rcdata_latin1_named_character_references() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rcdata").unwrap();
+    lexer.set_last_start_tag("title");
+
+    lexer.push("&Ntilde;&ntilde;</title>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("\u{00D1}\u{00F1}".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_semicolonless_legacy_named_character_references() {
     let mut lexer = create_html_lexer().unwrap();
 
@@ -374,6 +451,34 @@ fn default_html_lexer_supports_seeded_rcdata_semicolonless_legacy_named_characte
             })
             .count(),
         3
+    );
+}
+
+#[test]
+fn default_html_lexer_falls_back_for_unknown_named_character_references() {
+    let tokens =
+        lex_html("Known &AMP; unknown &madeup; <a title=\"&copy;\" bogus=&madeup;>").unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Text("Known & unknown &madeup; ".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "title".to_string(),
+                        value: "\u{00A9}".to_string(),
+                    },
+                    Attribute {
+                        name: "bogus".to_string(),
+                        value: "&madeup;".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
     );
 }
 
@@ -521,7 +626,7 @@ fn html1_generated_definition_preserves_lexer_profile_metadata() {
         .registers
         .iter()
         .any(|register| register.id == "temporary_buffer"));
-    assert_eq!(definition.fixtures.len(), 10);
+    assert_eq!(definition.fixtures.len(), 11);
 }
 
 #[test]

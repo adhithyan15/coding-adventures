@@ -118,6 +118,10 @@ id = "rawtext"
 external_entry = true
 
 [[states]]
+id = "plaintext"
+external_entry = true
+
+[[states]]
 id = "rcdata_less_than_sign"
 
 [[states]]
@@ -146,6 +150,9 @@ id = "rcdata_character_reference_lt"
 
 [[states]]
 id = "text_character_reference"
+
+[[states]]
+id = "text_named_character_reference"
 
 [[states]]
 id = "text_numeric_character_reference"
@@ -236,6 +243,9 @@ id = "text_named_character_reference_reg"
 
 [[states]]
 id = "attribute_character_reference"
+
+[[states]]
+id = "attribute_named_character_reference"
 
 [[states]]
 id = "attribute_numeric_character_reference"
@@ -496,6 +506,19 @@ to = "rawtext"
 actions = ["append_text(current)"]
 
 [[transitions]]
+from = "plaintext"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "plaintext"
+matcher = { anything = true }
+to = "plaintext"
+actions = ["append_text(current)"]
+
+[[transitions]]
 from = "rcdata_less_than_sign"
 matcher = { literal = "/" }
 to = "rcdata_end_tag_open"
@@ -624,6 +647,18 @@ actions = [
   "append_tag_name(current_lowercase)",
   "append_temporary_buffer(current_lowercase)",
 ]
+
+[[transitions]]
+from = "text_character_reference"
+matcher = { range = ["A", "Z"] }
+to = "text_named_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "text_character_reference"
+matcher = { range = ["a", "z"] }
+to = "text_named_character_reference"
+actions = ["append_temporary_buffer(current)"]
 
 [[transitions]]
 from = "text_character_reference"
@@ -878,6 +913,55 @@ consume = false
 actions = [
   "append_numeric_character_reference_to_text",
   "parse_error(missing-semicolon-after-character-reference)",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "text_named_character_reference"
+matcher = { range = ["A", "Z"] }
+to = "text_named_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "text_named_character_reference"
+matcher = { range = ["a", "z"] }
+to = "text_named_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "text_named_character_reference"
+matcher = { range = ["0", "9"] }
+to = "text_named_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "text_named_character_reference"
+matcher = { literal = ";" }
+to = "data"
+actions = [
+  "append_temporary_buffer(current)",
+  "append_named_character_reference_or_temporary_buffer_to_text",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "text_named_character_reference"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "recover_named_character_reference_to_text",
+  "flush_text",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "text_named_character_reference"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = [
+  "recover_named_character_reference_to_text",
   "switch_to_return_state",
 ]
 
@@ -2097,6 +2181,18 @@ actions = ["append_attribute_value(current)"]
 
 [[transitions]]
 from = "attribute_character_reference"
+matcher = { range = ["A", "Z"] }
+to = "attribute_named_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "attribute_character_reference"
+matcher = { range = ["a", "z"] }
+to = "attribute_named_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "attribute_character_reference"
 matcher = { literal = "A" }
 to = "attribute_named_character_reference_a"
 actions = ["append_temporary_buffer(current_lowercase)"]
@@ -2379,6 +2475,57 @@ consume = false
 actions = [
   "append_numeric_character_reference_to_attribute_value",
   "parse_error(missing-semicolon-after-character-reference)",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference"
+matcher = { range = ["A", "Z"] }
+to = "attribute_named_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "attribute_named_character_reference"
+matcher = { range = ["a", "z"] }
+to = "attribute_named_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "attribute_named_character_reference"
+matcher = { range = ["0", "9"] }
+to = "attribute_named_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "attribute_named_character_reference"
+matcher = { literal = ";" }
+to = "attribute_value_unquoted"
+actions = [
+  "append_temporary_buffer(current)",
+  "append_named_character_reference_or_temporary_buffer_to_attribute_value",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "recover_named_character_reference_to_attribute_value",
+  "parse_error(eof-in-tag)",
+  "commit_attribute",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference"
+matcher = { anything = true }
+to = "attribute_value_unquoted"
+consume = false
+actions = [
+  "recover_named_character_reference_to_attribute_value",
   "switch_to_return_state",
 ]
 
@@ -3987,6 +4134,11 @@ tokens = ["Text(data=Legacy\u00A0symbols: \u00A9 \u00AE)", "EOF"]
 name = "html-semicolonless-legacy-character-references"
 input = "Legacy&nbsp symbols: &copy/&reg"
 tokens = ["Text(data=Legacy\u00A0 symbols: \u00A9/\u00AE)", "EOF"]
+
+[[fixtures]]
+name = "html-named-character-reference-fallback"
+input = "Known &AMP; unknown &madeup;"
+tokens = ["Text(data=Known & unknown &madeup;)", "EOF"]
 
 [[fixtures]]
 name = "html-numeric-character-references"

@@ -528,14 +528,66 @@ impl Tokenizer {
                     self.attribute_mut(action)?.value.push(ch);
                 }
                 "append_named_character_reference_to_text" => {
-                    let replacement = named_character_reference(&self.temporary_buffer);
+                    let replacement =
+                        named_character_reference(&self.temporary_buffer).unwrap_or("\u{FFFD}");
                     self.temporary_buffer.clear();
                     self.text_buffer.push_str(replacement);
                 }
                 "append_named_character_reference_to_attribute_value" => {
-                    let replacement = named_character_reference(&self.temporary_buffer);
+                    let replacement =
+                        named_character_reference(&self.temporary_buffer).unwrap_or("\u{FFFD}");
                     self.temporary_buffer.clear();
                     self.attribute_mut(action)?.value.push_str(replacement);
+                }
+                "append_named_character_reference_or_temporary_buffer_to_text" => {
+                    if let Some(replacement) = named_character_reference(&self.temporary_buffer) {
+                        self.text_buffer.push_str(replacement);
+                        self.temporary_buffer.clear();
+                    } else {
+                        self.text_buffer.push_str(&self.temporary_buffer);
+                        self.temporary_buffer.clear();
+                    }
+                }
+                "append_named_character_reference_or_temporary_buffer_to_attribute_value" => {
+                    if let Some(replacement) = named_character_reference(&self.temporary_buffer) {
+                        self.temporary_buffer.clear();
+                        self.attribute_mut(action)?.value.push_str(replacement);
+                    } else {
+                        let temporary_buffer = std::mem::take(&mut self.temporary_buffer);
+                        self.attribute_mut(action)?
+                            .value
+                            .push_str(&temporary_buffer);
+                    }
+                }
+                "recover_named_character_reference_to_text" => {
+                    if let Some(replacement) = named_character_reference(&self.temporary_buffer) {
+                        self.temporary_buffer.clear();
+                        self.text_buffer.push_str(replacement);
+                        self.diagnostics.push(Diagnostic {
+                            code: "missing-semicolon-after-character-reference".to_string(),
+                            position,
+                            state: state.to_string(),
+                        });
+                    } else {
+                        self.text_buffer.push_str(&self.temporary_buffer);
+                        self.temporary_buffer.clear();
+                    }
+                }
+                "recover_named_character_reference_to_attribute_value" => {
+                    if let Some(replacement) = named_character_reference(&self.temporary_buffer) {
+                        self.temporary_buffer.clear();
+                        self.attribute_mut(action)?.value.push_str(replacement);
+                        self.diagnostics.push(Diagnostic {
+                            code: "missing-semicolon-after-character-reference".to_string(),
+                            position,
+                            state: state.to_string(),
+                        });
+                    } else {
+                        let temporary_buffer = std::mem::take(&mut self.temporary_buffer);
+                        self.attribute_mut(action)?
+                            .value
+                            .push_str(&temporary_buffer);
+                    }
                 }
                 "discard_current_token" => {
                     self.current_token = None;
@@ -909,16 +961,114 @@ fn numeric_character_reference(buffer: &str) -> char {
         .unwrap_or('\u{FFFD}')
 }
 
-fn named_character_reference(buffer: &str) -> &'static str {
-    match buffer.strip_prefix('&').unwrap_or(buffer) {
-        "amp" => "&",
-        "apos" => "'",
-        "copy" => "\u{00A9}",
-        "gt" => ">",
-        "lt" => "<",
-        "nbsp" => "\u{00A0}",
-        "quot" => "\"",
-        "reg" => "\u{00AE}",
-        _ => "\u{FFFD}",
+fn named_character_reference(buffer: &str) -> Option<&'static str> {
+    match buffer
+        .strip_prefix('&')
+        .unwrap_or(buffer)
+        .trim_end_matches(';')
+    {
+        "AElig" => Some("\u{00C6}"),
+        "Aacute" => Some("\u{00C1}"),
+        "Acirc" => Some("\u{00C2}"),
+        "Agrave" => Some("\u{00C0}"),
+        "Aring" => Some("\u{00C5}"),
+        "Atilde" => Some("\u{00C3}"),
+        "Auml" => Some("\u{00C4}"),
+        "Ccedil" => Some("\u{00C7}"),
+        "COPY" | "copy" => Some("\u{00A9}"),
+        "ETH" => Some("\u{00D0}"),
+        "Eacute" => Some("\u{00C9}"),
+        "Ecirc" => Some("\u{00CA}"),
+        "Egrave" => Some("\u{00C8}"),
+        "Euml" => Some("\u{00CB}"),
+        "GT" | "gt" => Some(">"),
+        "Iacute" => Some("\u{00CD}"),
+        "Icirc" => Some("\u{00CE}"),
+        "Igrave" => Some("\u{00CC}"),
+        "Iuml" => Some("\u{00CF}"),
+        "LT" | "lt" => Some("<"),
+        "NBSP" | "nbsp" => Some("\u{00A0}"),
+        "Ntilde" => Some("\u{00D1}"),
+        "Oacute" => Some("\u{00D3}"),
+        "Ocirc" => Some("\u{00D4}"),
+        "Ograve" => Some("\u{00D2}"),
+        "Oslash" => Some("\u{00D8}"),
+        "Otilde" => Some("\u{00D5}"),
+        "Ouml" => Some("\u{00D6}"),
+        "QUOT" | "quot" => Some("\""),
+        "REG" | "reg" => Some("\u{00AE}"),
+        "THORN" => Some("\u{00DE}"),
+        "Uacute" => Some("\u{00DA}"),
+        "Ucirc" => Some("\u{00DB}"),
+        "Ugrave" => Some("\u{00D9}"),
+        "Uuml" => Some("\u{00DC}"),
+        "Yacute" => Some("\u{00DD}"),
+        "aacute" => Some("\u{00E1}"),
+        "acirc" => Some("\u{00E2}"),
+        "acute" => Some("\u{00B4}"),
+        "aelig" => Some("\u{00E6}"),
+        "amp" => Some("&"),
+        "AMP" => Some("&"),
+        "apos" | "APOS" => Some("'"),
+        "agrave" => Some("\u{00E0}"),
+        "aring" => Some("\u{00E5}"),
+        "atilde" => Some("\u{00E3}"),
+        "auml" => Some("\u{00E4}"),
+        "brvbar" => Some("\u{00A6}"),
+        "ccedil" => Some("\u{00E7}"),
+        "cedil" => Some("\u{00B8}"),
+        "cent" => Some("\u{00A2}"),
+        "curren" => Some("\u{00A4}"),
+        "deg" => Some("\u{00B0}"),
+        "divide" => Some("\u{00F7}"),
+        "eacute" => Some("\u{00E9}"),
+        "ecirc" => Some("\u{00EA}"),
+        "egrave" => Some("\u{00E8}"),
+        "eth" => Some("\u{00F0}"),
+        "euml" => Some("\u{00EB}"),
+        "frac12" => Some("\u{00BD}"),
+        "frac14" => Some("\u{00BC}"),
+        "frac34" => Some("\u{00BE}"),
+        "iacute" => Some("\u{00ED}"),
+        "icirc" => Some("\u{00EE}"),
+        "iexcl" => Some("\u{00A1}"),
+        "igrave" => Some("\u{00EC}"),
+        "iquest" => Some("\u{00BF}"),
+        "iuml" => Some("\u{00EF}"),
+        "laquo" => Some("\u{00AB}"),
+        "macr" => Some("\u{00AF}"),
+        "micro" => Some("\u{00B5}"),
+        "middot" => Some("\u{00B7}"),
+        "not" => Some("\u{00AC}"),
+        "ntilde" => Some("\u{00F1}"),
+        "oacute" => Some("\u{00F3}"),
+        "ocirc" => Some("\u{00F4}"),
+        "ograve" => Some("\u{00F2}"),
+        "ordf" => Some("\u{00AA}"),
+        "ordm" => Some("\u{00BA}"),
+        "oslash" => Some("\u{00F8}"),
+        "otilde" => Some("\u{00F5}"),
+        "ouml" => Some("\u{00F6}"),
+        "para" => Some("\u{00B6}"),
+        "plusmn" => Some("\u{00B1}"),
+        "pound" => Some("\u{00A3}"),
+        "raquo" => Some("\u{00BB}"),
+        "sect" => Some("\u{00A7}"),
+        "shy" => Some("\u{00AD}"),
+        "sup1" => Some("\u{00B9}"),
+        "sup2" => Some("\u{00B2}"),
+        "sup3" => Some("\u{00B3}"),
+        "szlig" => Some("\u{00DF}"),
+        "thorn" => Some("\u{00FE}"),
+        "times" => Some("\u{00D7}"),
+        "uacute" => Some("\u{00FA}"),
+        "ucirc" => Some("\u{00FB}"),
+        "ugrave" => Some("\u{00F9}"),
+        "uml" => Some("\u{00A8}"),
+        "uuml" => Some("\u{00FC}"),
+        "yacute" => Some("\u{00FD}"),
+        "yen" => Some("\u{00A5}"),
+        "yuml" => Some("\u{00FF}"),
+        _ => None,
     }
 }

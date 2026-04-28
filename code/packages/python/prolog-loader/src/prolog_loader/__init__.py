@@ -18,6 +18,7 @@ from prolog_loader.loader import (
     load_swi_prolog_project,
     load_swi_prolog_project_from_files,
     load_swi_prolog_source,
+    rewrite_loaded_prolog_query,
     run_initialization_goals,
     run_prolog_initialization_goals,
 )
@@ -40,6 +41,7 @@ __all__ = [
     "load_swi_prolog_project_from_files",
     "load_swi_prolog_source",
     "link_loaded_prolog_sources",
+    "rewrite_loaded_prolog_query",
     "run_initialization_goals",
     "run_prolog_initialization_goals",
 ]

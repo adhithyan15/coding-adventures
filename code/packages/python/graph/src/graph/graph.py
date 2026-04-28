@@ -51,9 +51,15 @@ This is the key invariant that makes Graph undirected.
 from __future__ import annotations
 
 from enum import Enum
-from typing import Generic, TypeVar
+from typing import Generic, TypeAlias, TypeVar
 
 T = TypeVar("T")  # Node type — must be hashable
+PropertyValue: TypeAlias = str | int | float | bool | None
+PropertyBag: TypeAlias = dict[str, PropertyValue]
+
+
+def _edge_key(u: T, v: T) -> tuple[T, T]:
+    return (u, v) if repr(u) <= repr(v) else (v, u)
 
 
 # ---------------------------------------------------------------------------
@@ -93,6 +99,9 @@ class Graph(Generic[T]):
 
     def __init__(self, repr: GraphRepr = GraphRepr.ADJACENCY_LIST) -> None:
         self._repr = repr
+        self._graph_properties: PropertyBag = {}
+        self._node_properties: dict[T, PropertyBag] = {}
+        self._edge_properties: dict[tuple[T, T], PropertyBag] = {}
 
         if repr is GraphRepr.ADJACENCY_LIST:
             # adj[u][v] = weight for every edge {u, v}.
@@ -111,20 +120,24 @@ class Graph(Generic[T]):
     # Node operations
     # ------------------------------------------------------------------
 
-    def add_node(self, node: T) -> None:
+    def add_node(self, node: T, properties: PropertyBag | None = None) -> None:
         """Add a node to the graph.  No-op if the node already exists."""
         if self._repr is GraphRepr.ADJACENCY_LIST:
             if node not in self._adj:
                 self._adj[node] = {}
+                self._node_properties[node] = {}
         else:
             if node not in self._node_idx:
                 idx = len(self._node_list)
                 self._node_list.append(node)
                 self._node_idx[node] = idx
+                self._node_properties[node] = {}
                 # Add a new row and column of zeros.
                 for row in self._matrix:
                     row.append(0.0)
                 self._matrix.append([0.0] * (idx + 1))
+        if properties is not None:
+            self._node_properties[node].update(properties)
 
     def remove_node(self, node: T) -> None:
         """Remove a node and all edges incident to it.
@@ -137,12 +150,17 @@ class Graph(Generic[T]):
             # Remove all edges that touch this node.
             for neighbour in list(self._adj[node]):
                 del self._adj[neighbour][node]
+                self._edge_properties.pop(_edge_key(node, neighbour), None)
             del self._adj[node]
+            del self._node_properties[node]
         else:
             if node not in self._node_idx:
                 raise KeyError(node)
+            for other in list(self._node_list):
+                self._edge_properties.pop(_edge_key(node, other), None)
             idx = self._node_idx.pop(node)
             self._node_list.pop(idx)
+            del self._node_properties[node]
             # Update indices for nodes that shifted down.
             for n in self._node_list[idx:]:
                 self._node_idx[n] -= 1
@@ -168,7 +186,13 @@ class Graph(Generic[T]):
     # Edge operations
     # ------------------------------------------------------------------
 
-    def add_edge(self, u: T, v: T, weight: float = 1.0) -> None:
+    def add_edge(
+        self,
+        u: T,
+        v: T,
+        weight: float = 1.0,
+        properties: PropertyBag | None = None,
+    ) -> None:
         """Add an undirected edge between u and v with the given weight.
 
         Both nodes are added automatically if they do not already exist.
@@ -176,6 +200,7 @@ class Graph(Generic[T]):
         """
         self.add_node(u)
         self.add_node(v)
+        self._validate_weight(weight)
 
         if self._repr is GraphRepr.ADJACENCY_LIST:
             self._adj[u][v] = weight
@@ -184,6 +209,9 @@ class Graph(Generic[T]):
             i, j = self._node_idx[u], self._node_idx[v]
             self._matrix[i][j] = weight
             self._matrix[j][i] = weight
+        merged = dict(properties or {})
+        merged["weight"] = weight
+        self._edge_properties.setdefault(_edge_key(u, v), {}).update(merged)
 
     def remove_edge(self, u: T, v: T) -> None:
         """Remove the edge between u and v.
@@ -195,6 +223,7 @@ class Graph(Generic[T]):
                 raise KeyError((u, v))
             del self._adj[u][v]
             del self._adj[v][u]
+            self._edge_properties.pop(_edge_key(u, v), None)
         else:
             if u not in self._node_idx or v not in self._node_idx:
                 raise KeyError((u, v))
@@ -203,6 +232,7 @@ class Graph(Generic[T]):
                 raise KeyError((u, v))
             self._matrix[i][j] = 0.0
             self._matrix[j][i] = 0.0
+            self._edge_properties.pop(_edge_key(u, v), None)
 
     def has_edge(self, u: T, v: T) -> bool:
         """Return True if an edge exists between u and v."""
@@ -256,6 +286,74 @@ class Graph(Generic[T]):
         return w
 
     # ------------------------------------------------------------------
+    # Property bags
+    # ------------------------------------------------------------------
+
+    def graph_properties(self) -> PropertyBag:
+        """Return a copy of graph-level properties."""
+        return dict(self._graph_properties)
+
+    def set_graph_property(self, key: str, value: PropertyValue) -> None:
+        """Set one graph-level property."""
+        self._graph_properties[key] = value
+
+    def remove_graph_property(self, key: str) -> None:
+        """Remove one graph-level property if present."""
+        self._graph_properties.pop(key, None)
+
+    def node_properties(self, node: T) -> PropertyBag:
+        """Return a copy of properties attached to ``node``."""
+        if not self.has_node(node):
+            raise KeyError(node)
+        return dict(self._node_properties[node])
+
+    def set_node_property(self, node: T, key: str, value: PropertyValue) -> None:
+        """Set one property on ``node``."""
+        if not self.has_node(node):
+            raise KeyError(node)
+        self._node_properties[node][key] = value
+
+    def remove_node_property(self, node: T, key: str) -> None:
+        """Remove one property from ``node`` if present."""
+        if not self.has_node(node):
+            raise KeyError(node)
+        self._node_properties[node].pop(key, None)
+
+    def edge_properties(self, u: T, v: T) -> PropertyBag:
+        """Return a copy of properties attached to edge {u, v}."""
+        if not self.has_edge(u, v):
+            raise KeyError((u, v))
+        properties = dict(self._edge_properties.get(_edge_key(u, v), {}))
+        properties["weight"] = self.edge_weight(u, v)
+        return properties
+
+    def set_edge_property(
+        self,
+        u: T,
+        v: T,
+        key: str,
+        value: PropertyValue,
+    ) -> None:
+        """Set one property on edge {u, v}."""
+        if not self.has_edge(u, v):
+            raise KeyError((u, v))
+        if key == "weight":
+            if not isinstance(value, (int, float)) or isinstance(value, bool):
+                raise ValueError("edge property 'weight' must be numeric")
+            self._set_edge_weight(u, v, float(value))
+        self._edge_properties.setdefault(_edge_key(u, v), {})[key] = value
+
+    def remove_edge_property(self, u: T, v: T, key: str) -> None:
+        """Remove one property from edge {u, v} if present."""
+        if not self.has_edge(u, v):
+            raise KeyError((u, v))
+        if key == "weight":
+            self._set_edge_weight(u, v, 1.0)
+            self._edge_properties.setdefault(_edge_key(u, v), {})["weight"] = 1.0
+            return
+        self._edge_properties.setdefault(_edge_key(u, v), {}).pop(key, None)
+
+    # ------------------------------------------------------------------
     # Neighbourhood queries
     # ------------------------------------------------------------------
 
@@ -301,6 +399,20 @@ class Graph(Generic[T]):
         Raises KeyError if the node does not exist.
         """
         return len(self.neighbors(node))
+
+    def _validate_weight(self, weight: float) -> None:
+        if not isinstance(weight, (int, float)) or isinstance(weight, bool):
+            raise ValueError("edge weight must be numeric")
+
+    def _set_edge_weight(self, u: T, v: T, weight: float) -> None:
+        self._validate_weight(weight)
+        if self._repr is GraphRepr.ADJACENCY_LIST:
+            self._adj[u][v] = weight
+            self._adj[v][u] = weight
+            return
+        i, j = self._node_idx[u], self._node_idx[v]
+        self._matrix[i][j] = weight
+        self._matrix[j][i] = weight
 
     # ------------------------------------------------------------------
     # Python dunder methods

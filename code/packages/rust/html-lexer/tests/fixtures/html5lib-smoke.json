@@ -6,6 +6,7 @@
   "generator": "normalize_html5lib_fixtures.py",
   "supported_initial_states": [
     "Data state",
+    "PLAINTEXT state",
     "RAWTEXT state",
     "RCDATA state"
   ],
@@ -122,6 +123,17 @@
     },
     {
       "id": "html5lib-smoke-10",
+      "description": "plaintext state literalizes markup and character references",
+      "input": "hello <b>still text</b> &amp; literal",
+      "tokens": [
+        "Text(data=hello <b>still text</b> &amp; literal)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-11",
       "description": "data state named character references",
       "input": "Fish &amp; &lt;b&gt; &quot;quote&quot; &apos;ok&apos;",
       "tokens": [
@@ -131,7 +143,7 @@
       "diagnostics": []
     },
     {
-      "id": "html5lib-smoke-11",
+      "id": "html5lib-smoke-12",
       "description": "attribute named character references",
       "input": "<a title=\"Fish &amp; Chips\" data-x='&lt;ok&gt;' note=&quot;hi&quot;>",
       "tokens": [
@@ -141,7 +153,7 @@
       "diagnostics": []
     },
     {
-      "id": "html5lib-smoke-12",
+      "id": "html5lib-smoke-13",
       "description": "rcdata named character references remain text",
       "input": "Fish &amp; &lt;/title>",
       "tokens": [
@@ -153,7 +165,7 @@
       "last_start_tag": "title"
     },
     {
-      "id": "html5lib-smoke-13",
+      "id": "html5lib-smoke-14",
       "description": "data state legacy named character references",
       "input": "Legacy&nbsp;symbols: &copy; &reg;",
       "tokens": [
@@ -163,7 +175,7 @@
       "diagnostics": []
     },
     {
-      "id": "html5lib-smoke-14",
+      "id": "html5lib-smoke-15",
       "description": "attribute legacy named character references",
       "input": "<a title=\"A&nbsp;B\" copy='&copy;' reg=&reg;>",
       "tokens": [
@@ -173,7 +185,7 @@
       "diagnostics": []
     },
     {
-      "id": "html5lib-smoke-15",
+      "id": "html5lib-smoke-16",
       "description": "rcdata legacy named character references remain text",
       "input": "Venture&nbsp;&copy;&reg;</title>",
       "tokens": [
@@ -186,7 +198,40 @@
       "last_start_tag": "title"
     },
     {
-      "id": "html5lib-smoke-16",
+      "id": "html5lib-smoke-17",
+      "description": "data state Latin-1 named character references",
+      "input": "Latin-1: &Agrave;&agrave; &frac12; &yen;",
+      "tokens": [
+        "Text(data=Latin-1: \u00c0\u00e0 \u00bd \u00a5)",
+        "EOF"
+      ],
+      "diagnostics": []
+    },
+    {
+      "id": "html5lib-smoke-18",
+      "description": "attribute Latin-1 named character references",
+      "input": "<a title=\"&AElig;&aelig;\" currency=&pound;>",
+      "tokens": [
+        "StartTag(name=a, attributes=[title=\u00c6\u00e6, currency=\u00a3], self_closing=false)",
+        "EOF"
+      ],
+      "diagnostics": []
+    },
+    {
+      "id": "html5lib-smoke-19",
+      "description": "rcdata Latin-1 named character references remain text",
+      "input": "&Ntilde;&ntilde;</title>",
+      "tokens": [
+        "Text(data=\u00d1\u00f1)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-20",
       "description": "data state legacy named character references missing semicolons",
       "input": "Legacy&nbsp symbols: &copy/&reg",
       "tokens": [
@@ -200,7 +245,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-17",
+      "id": "html5lib-smoke-21",
       "description": "attribute legacy named character references missing semicolons",
       "input": "<a title=\"A&nbsp B\" copy=&copy reg=&reg>",
       "tokens": [
@@ -214,7 +259,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-18",
+      "id": "html5lib-smoke-22",
       "description": "rcdata legacy named character references missing semicolons",
       "input": "Venture&nbsp &copy &reg</title>",
       "tokens": [
@@ -231,7 +276,27 @@
       "last_start_tag": "title"
     },
     {
-      "id": "html5lib-smoke-19",
+      "id": "html5lib-smoke-23",
+      "description": "data state named character reference fallback",
+      "input": "Known &AMP; unknown &madeup;",
+      "tokens": [
+        "Text(data=Known & unknown &madeup;)",
+        "EOF"
+      ],
+      "diagnostics": []
+    },
+    {
+      "id": "html5lib-smoke-24",
+      "description": "attribute named character reference fallback",
+      "input": "<a title=\"&copy;\" bogus=&madeup;>",
+      "tokens": [
+        "StartTag(name=a, attributes=[title=\u00a9, bogus=&madeup;], self_closing=false)",
+        "EOF"
+      ],
+      "diagnostics": []
+    },
+    {
+      "id": "html5lib-smoke-25",
       "description": "data state numeric character references",
       "input": "Letters: &#65; &#x42; &#X43; &#0;",
       "tokens": [
@@ -241,7 +306,7 @@
       "diagnostics": []
     },
     {
-      "id": "html5lib-smoke-20",
+      "id": "html5lib-smoke-26",
       "description": "attribute numeric character references",
       "input": "<a title=\"&#65;&#x42;\" data-x='&#X43;' note=&#0;>",
       "tokens": [
@@ -251,7 +316,7 @@
       "diagnostics": []
     },
     {
-      "id": "html5lib-smoke-21",
+      "id": "html5lib-smoke-27",
       "description": "rcdata numeric character references remain text",
       "input": "Fish &#38; &#x3C;/title>",
       "tokens": [
@@ -263,7 +328,7 @@
       "last_start_tag": "title"
     },
     {
-      "id": "html5lib-smoke-22",
+      "id": "html5lib-smoke-28",
       "description": "data state numeric character references missing semicolons",
       "input": "Letters: &#65 &#x42Z",
       "tokens": [
@@ -276,7 +341,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-23",
+      "id": "html5lib-smoke-29",
       "description": "attribute numeric character references missing semicolons",
       "input": "<a title=&#65 data-x=&#x42>",
       "tokens": [
@@ -289,7 +354,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-24",
+      "id": "html5lib-smoke-30",
       "description": "rcdata numeric character references missing semicolons",
       "input": "Fish &#38 &#x3C/title>",
       "tokens": [

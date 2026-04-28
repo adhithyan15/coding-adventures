@@ -163,6 +163,27 @@ class TestPrologVMRuntime:
             {"Who": atom("lisa")},
         ]
 
+    def test_project_runtime_resolves_ad_hoc_queries_in_module_context(self) -> None:
+        runtime = create_swi_prolog_project_runtime(
+            """
+            :- module(family, [ancestor/2]).
+            ancestor(homer, bart).
+            ancestor(homer, lisa).
+            """,
+            """
+            :- module(app, []).
+            :- use_module(family, [ancestor/2]).
+            """,
+            query_module="app",
+        )
+
+        answers = runtime.query("ancestor(homer, Who)")
+
+        assert [answer.as_dict() for answer in answers] == [
+            {"Who": atom("bart")},
+            {"Who": atom("lisa")},
+        ]
+
     def test_project_file_runtime_answers_consulted_global_queries(
         self,
         tmp_path: Path,
@@ -178,6 +199,36 @@ class TestPrologVMRuntime:
         runtime = create_swi_prolog_project_file_runtime(app_path)
 
         assert [answer.as_dict() for answer in runtime.query("parent(homer, Who)")] == [
+            {"Who": atom("bart")},
+            {"Who": atom("lisa")},
+        ]
+
+    def test_project_file_runtime_resolves_ad_hoc_queries_in_module_context(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        family_path = tmp_path / "family.pl"
+        family_path.write_text(
+            ":- module(family, [ancestor/2]).\n"
+            "ancestor(homer, bart).\n"
+            "ancestor(homer, lisa).\n",
+            encoding="utf-8",
+        )
+        app_path = tmp_path / "app.pl"
+        app_path.write_text(
+            ":- module(app, []).\n"
+            ":- use_module(family, [ancestor/2]).\n",
+            encoding="utf-8",
+        )
+
+        runtime = create_swi_prolog_project_file_runtime(
+            app_path,
+            query_module="app",
+        )
+
+        answers = runtime.query("ancestor(homer, Who)")
+
+        assert [answer.as_dict() for answer in answers] == [
             {"Who": atom("bart")},
             {"Who": atom("lisa")},
         ]

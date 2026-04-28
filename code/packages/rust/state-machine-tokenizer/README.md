@@ -15,6 +15,11 @@ HTML-specific machine constructors live in `coding-adventures-html-lexer`. This
 package stays generic: it interprets lexer actions for any statically linked
 machine that uses the portable action vocabulary below.
 
+The current built-in named-character-reference table covers the core HTML
+entities plus the classic Latin-1 set. The scanner preserves case, so callers
+can model legacy names like `Agrave` separately from `agrave` while still adding
+explicit aliases such as `AMP` where the HTML layer needs them.
+
 ## Lexer Action Vocabulary
 
 The runtime interprets a bounded portable action vocabulary. Definitions stay
@@ -69,6 +74,10 @@ Temporary buffers and controlled state changes:
 - `append_numeric_character_reference_to_attribute_value`
 - `append_named_character_reference_to_text`
 - `append_named_character_reference_to_attribute_value`
+- `append_named_character_reference_or_temporary_buffer_to_text`
+- `append_named_character_reference_or_temporary_buffer_to_attribute_value`
+- `recover_named_character_reference_to_text`
+- `recover_named_character_reference_to_attribute_value`
 - `discard_current_token`
 - `set_return_state(state)`
 - `switch_to(state)`

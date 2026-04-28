@@ -10,7 +10,7 @@ fn html1_authoring_artifact_parses_as_mosaic_era_floor() {
 
     assert_eq!(definition.name, "html1-lexer");
     assert_eq!(definition.profile.as_deref(), Some("lexer/v1"));
-    assert_eq!(definition.fixtures.len(), 10);
+    assert_eq!(definition.fixtures.len(), 11);
     assert!(definition.states.iter().any(|state| state.id == "comment"));
     assert!(definition
         .states
@@ -18,6 +18,10 @@ fn html1_authoring_artifact_parses_as_mosaic_era_floor() {
         .any(|state| state.id == "doctype_name"));
     assert!(definition.states.iter().any(|state| state.id == "rcdata"));
     assert!(definition.states.iter().any(|state| state.id == "rawtext"));
+    assert!(definition
+        .states
+        .iter()
+        .any(|state| state.id == "plaintext"));
 }
 
 #[test]
@@ -59,6 +63,25 @@ fn html1_authoring_reports_comment_eof_diagnostic() {
         .diagnostics()
         .iter()
         .any(|diagnostic| diagnostic.code == "eof-in-comment"));
+}
+
+#[test]
+fn html1_authoring_supports_seeded_plaintext_state() {
+    let definition = from_states_toml(HTML1_LEXER_TOML).unwrap();
+    let machine = EffectfulStateMachine::from_definition(&definition).unwrap();
+    let mut lexer = HtmlLexer::new(machine);
+
+    lexer.set_initial_state("plaintext").unwrap();
+    lexer.push("<p>literal &amp; text</p>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("<p>literal &amp; text</p>".to_string()),
+            Token::Eof,
+        ]
+    );
 }
 
 fn token_summary(token: Token) -> String {

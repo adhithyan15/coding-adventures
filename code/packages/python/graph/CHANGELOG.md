@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- Graph, node, and edge property bags with canonical `weight` edge metadata.
+
 ## 0.1.0 — 2026-04-08
 
 ### Added

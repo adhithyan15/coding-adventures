@@ -102,6 +102,8 @@ _INTEGER_TYPE = "integer"
 _BOOLEAN_TYPE = "boolean"
 _REAL_TYPE = "real"
 _STRING_TYPE = "string"
+_I32_MIN = -(1 << 31)
+_I32_NEG_ONE = -1
 _STRING_DESCRIPTOR_LENGTH_OFFSET = 0
 _STRING_DESCRIPTOR_DATA_POINTER_OFFSET = 4
 _STRING_DESCRIPTOR_SIZE = 8
@@ -922,6 +924,47 @@ class AlgolIrCompiler:
             IrRegister(zero),
             IrRegister(cursor),
             IrRegister(_ZERO_REG),
+        )
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(cursor),
+            IrRegister(cursor),
+            IrImmediate(1),
+        )
+        self._emit(IrOp.JUMP, IrLabel(loop_label))
+        self._label(end_label)
+
+    def _emit_copy_memory(
+        self, source_pointer: int, target_pointer: int, byte_count: int
+    ) -> None:
+        index = self.loop_count
+        self.loop_count += 1
+        loop_label = f"loop_{index}_start"
+        end_label = f"loop_{index}_end"
+        cursor = self._fresh_reg()
+        done = self._fresh_reg()
+
+        self._copy_reg(dst=cursor, src=_ZERO_REG)
+        self._label(loop_label)
+        self._emit(
+            IrOp.CMP_EQ,
+            IrRegister(done),
+            IrRegister(cursor),
+            IrRegister(byte_count),
+        )
+        self._emit(IrOp.BRANCH_NZ, IrRegister(done), IrLabel(end_label))
+        byte = self._fresh_reg()
+        self._emit(
+            IrOp.LOAD_BYTE,
+            IrRegister(byte),
+            IrRegister(source_pointer),
+            IrRegister(cursor),
+        )
+        self._emit(
+            IrOp.STORE_BYTE,
+            IrRegister(byte),
+            IrRegister(target_pointer),
+            IrRegister(cursor),
         )
         self._emit(
             IrOp.ADD_IMM,
@@ -2288,7 +2331,7 @@ class AlgolIrCompiler:
             exponent_type = self._expr_type(children[index + 1])
             if exponent_type != _INTEGER_TYPE:
                 raise CompileError("exponentiation exponent must be integer")
-            current = self._emit_power(current, current_type, exponent)
+            current = self._emit_power(current, current_type, exponent, scope)
             current_type = (
                 _REAL_TYPE if current_type == _REAL_TYPE else _INTEGER_TYPE
             )
@@ -2499,6 +2542,7 @@ class AlgolIrCompiler:
                     IrRegister(right),
                 )
             elif operator == "/":
+                self._emit_real_zero_divisor_guard(right, scope)
                 self._emit(
                     IrOp.F64_DIV,
                     IrRegister(dst),
@@ -2515,12 +2559,12 @@ class AlgolIrCompiler:
         elif operator == "*":
             self._emit(IrOp.MUL, IrRegister(dst), IrRegister(left), IrRegister(right))
         elif operator == "div":
-            self._emit_integer_zero_divisor_guard(right, scope)
+            self._emit_integer_division_failure_guard(left, right, scope)
             self._emit(IrOp.DIV, IrRegister(dst), IrRegister(left), IrRegister(right))
         elif operator == "mod":
             quotient = self._fresh_reg()
             product = self._fresh_reg()
-            self._emit_integer_zero_divisor_guard(right, scope)
+            self._emit_integer_division_failure_guard(left, right, scope)
             self._emit(
                 IrOp.DIV, IrRegister(quotient), IrRegister(left), IrRegister(right)
             )
@@ -2532,21 +2576,64 @@ class AlgolIrCompiler:
             raise CompileError(f"numeric operator {operator!r} is not supported")
         return dst
 
-    def _emit_integer_zero_divisor_guard(
-        self, divisor: int, scope: _FrameScope
+    def _emit_integer_division_failure_guard(
+        self, dividend: int, divisor: int, scope: _FrameScope
     ) -> None:
-        failed = self._fresh_reg()
+        zero_divisor = self._fresh_reg()
         self._emit(
             IrOp.CMP_EQ,
-            IrRegister(failed),
+            IrRegister(zero_divisor),
             IrRegister(divisor),
             IrRegister(_ZERO_REG),
         )
+        min_dividend = self._fresh_reg()
+        self._emit(
+            IrOp.CMP_EQ,
+            IrRegister(min_dividend),
+            IrRegister(dividend),
+            IrRegister(self._const_reg(_I32_MIN)),
+        )
+        negative_one_divisor = self._fresh_reg()
+        self._emit(
+            IrOp.CMP_EQ,
+            IrRegister(negative_one_divisor),
+            IrRegister(divisor),
+            IrRegister(self._const_reg(_I32_NEG_ONE)),
+        )
+        overflowing_division = self._fresh_reg()
+        self._emit(
+            IrOp.AND,
+            IrRegister(overflowing_division),
+            IrRegister(min_dividend),
+            IrRegister(negative_one_divisor),
+        )
+        failed = self._fresh_reg()
+        self._emit(
+            IrOp.OR,
+            IrRegister(failed),
+            IrRegister(zero_divisor),
+            IrRegister(overflowing_division),
+        )
         self._emit_runtime_failure_guard(failed, scope)
 
-    def _emit_power(self, base: int, base_type: str, exponent: int) -> int:
+    def _emit_real_zero_divisor_guard(
+        self, divisor: int, scope: _FrameScope
+    ) -> None:
+        zero = self._const_f64_reg(0.0)
+        failed = self._fresh_reg()
+        self._emit(
+            IrOp.F64_CMP_EQ,
+            IrRegister(failed),
+            IrRegister(divisor),
+            IrRegister(zero),
+        )
+        self._emit_runtime_failure_guard(failed, scope)
+
+    def _emit_power(
+        self, base: int, base_type: str, exponent: int, scope: _FrameScope
+    ) -> int:
         if base_type == _REAL_TYPE:
-            return self._emit_real_integer_power(base, exponent)
+            return self._emit_real_integer_power(base, exponent, scope)
         return self._emit_integer_power(base, exponent)
 
     def _emit_integer_power(self, base: int, exponent: int) -> int:
@@ -2597,7 +2684,9 @@ class AlgolIrCompiler:
         self._label(end_label)
         return result
 
-    def _emit_real_integer_power(self, base: int, exponent: int) -> int:
+    def _emit_real_integer_power(
+        self, base: int, exponent: int, scope: _FrameScope
+    ) -> int:
         index = self.if_count
         self.if_count += 1
         negative_label = f"pow_{index}_negative"
@@ -2618,6 +2707,7 @@ class AlgolIrCompiler:
         self._emit(IrOp.BRANCH_NZ, IrRegister(negative), IrLabel(negative_label))
         self._emit(IrOp.JUMP, IrLabel(prepare_loop_label))
         self._label(negative_label)
+        self._emit_real_zero_divisor_guard(base, scope)
         zero = self._const_reg(0)
         absolute = self._fresh_reg()
         self._emit(
@@ -2733,10 +2823,6 @@ class AlgolIrCompiler:
             zip(actuals, procedure.parameters, strict=True)
         ):
             if parameter.kind == "array":
-                if parameter.mode == _VALUE_MODE:
-                    raise CompileError(
-                        f"value array parameter {parameter.name!r} is not supported yet"
-                    )
                 continue
             if parameter.kind == "label":
                 arguments[index] = self._compile_label_actual_value(argument, scope)
@@ -4287,7 +4373,13 @@ class AlgolIrCompiler:
         )
         self._initialize_scalar_slots(scope)
         for index, parameter in enumerate(procedure.parameters):
-            if parameter.kind == "array" or parameter.mode == _NAME_MODE:
+            if parameter.kind == "array":
+                self._store_array_parameter(
+                    parameter,
+                    _VALUE_PARAM_BASE_REG + index,
+                    scope,
+                )
+            elif parameter.mode == _NAME_MODE:
                 self._store_word_reg(
                     value_reg=_VALUE_PARAM_BASE_REG + index,
                     base_reg=scope.frame_base_reg,
@@ -4320,6 +4412,168 @@ class AlgolIrCompiler:
         self._emit_leave_frame(scope)
         self._emit(IrOp.RET)
         self.current_function_return_type = previous_return_type
+
+    def _store_array_parameter(
+        self,
+        parameter: ProcedureParameter,
+        source_descriptor: int,
+        scope: _FrameScope,
+    ) -> None:
+        descriptor = source_descriptor
+        if parameter.mode == _VALUE_MODE:
+            descriptor = self._copy_value_array_descriptor(source_descriptor, scope)
+        self._store_word_reg(
+            value_reg=descriptor,
+            base_reg=scope.frame_base_reg,
+            offset=parameter.slot_offset,
+        )
+
+    def _copy_value_array_descriptor(
+        self,
+        source_descriptor: int,
+        scope: _FrameScope,
+    ) -> int:
+        element_type = self._fresh_reg()
+        dimension_count = self._fresh_reg()
+        total_count = self._fresh_reg()
+        element_width = self._fresh_reg()
+        source_data_pointer = self._fresh_reg()
+        source_bounds_pointer = self._fresh_reg()
+        self._emit_load_scalar(
+            _INTEGER_TYPE,
+            element_type,
+            source_descriptor,
+            0,
+        )
+        self._emit_load_scalar(
+            _INTEGER_TYPE,
+            dimension_count,
+            source_descriptor,
+            _ARRAY_DIMENSION_COUNT_OFFSET,
+        )
+        self._emit_load_scalar(
+            _INTEGER_TYPE,
+            total_count,
+            source_descriptor,
+            _ARRAY_TOTAL_COUNT_OFFSET,
+        )
+        self._emit_load_scalar(
+            _INTEGER_TYPE,
+            element_width,
+            source_descriptor,
+            _ARRAY_ELEMENT_WIDTH_OFFSET,
+        )
+        self._emit_load_scalar(
+            _INTEGER_TYPE,
+            source_data_pointer,
+            source_descriptor,
+            _ARRAY_DATA_POINTER_OFFSET,
+        )
+        self._emit_load_scalar(
+            _INTEGER_TYPE,
+            source_bounds_pointer,
+            source_descriptor,
+            _ARRAY_BOUNDS_POINTER_OFFSET,
+        )
+
+        bounds_bytes = self._fresh_reg()
+        self._emit(
+            IrOp.MUL,
+            IrRegister(bounds_bytes),
+            IrRegister(dimension_count),
+            IrRegister(self._const_reg(_ARRAY_DIMENSION_ENTRY_SIZE)),
+        )
+        data_bytes = self._fresh_reg()
+        self._emit(
+            IrOp.MUL,
+            IrRegister(data_bytes),
+            IrRegister(total_count),
+            IrRegister(element_width),
+        )
+        tail_bytes = self._fresh_reg()
+        self._emit(
+            IrOp.ADD,
+            IrRegister(tail_bytes),
+            IrRegister(bounds_bytes),
+            IrRegister(data_bytes),
+        )
+        allocation_size = self._fresh_reg()
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(allocation_size),
+            IrRegister(tail_bytes),
+            IrImmediate(_ARRAY_DESCRIPTOR_SIZE),
+        )
+
+        heap_pointer = self._fresh_reg()
+        heap_limit = self._fresh_reg()
+        self._load_runtime_state(_RUNTIME_HEAP_POINTER_OFFSET, heap_pointer)
+        self._load_runtime_state(_RUNTIME_HEAP_LIMIT_OFFSET, heap_limit)
+        new_heap_pointer = self._fresh_reg()
+        self._emit(
+            IrOp.ADD,
+            IrRegister(new_heap_pointer),
+            IrRegister(heap_pointer),
+            IrRegister(allocation_size),
+        )
+        heap_exhausted = self._fresh_reg()
+        self._emit(
+            IrOp.CMP_GT,
+            IrRegister(heap_exhausted),
+            IrRegister(new_heap_pointer),
+            IrRegister(heap_limit),
+        )
+        self._emit_runtime_failure_guard(heap_exhausted, scope)
+        self._store_runtime_state(_RUNTIME_HEAP_POINTER_OFFSET, new_heap_pointer)
+
+        bounds_pointer = self._fresh_reg()
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(bounds_pointer),
+            IrRegister(heap_pointer),
+            IrImmediate(_ARRAY_DESCRIPTOR_SIZE),
+        )
+        data_pointer = self._fresh_reg()
+        self._emit(
+            IrOp.ADD,
+            IrRegister(data_pointer),
+            IrRegister(bounds_pointer),
+            IrRegister(bounds_bytes),
+        )
+
+        self._store_word_reg(
+            value_reg=element_type,
+            base_reg=heap_pointer,
+            offset=0,
+        )
+        self._store_word_reg(
+            value_reg=dimension_count,
+            base_reg=heap_pointer,
+            offset=_ARRAY_DIMENSION_COUNT_OFFSET,
+        )
+        self._store_word_reg(
+            value_reg=total_count,
+            base_reg=heap_pointer,
+            offset=_ARRAY_TOTAL_COUNT_OFFSET,
+        )
+        self._store_word_reg(
+            value_reg=element_width,
+            base_reg=heap_pointer,
+            offset=_ARRAY_ELEMENT_WIDTH_OFFSET,
+        )
+        self._store_word_reg(
+            value_reg=data_pointer,
+            base_reg=heap_pointer,
+            offset=_ARRAY_DATA_POINTER_OFFSET,
+        )
+        self._store_word_reg(
+            value_reg=bounds_pointer,
+            base_reg=heap_pointer,
+            offset=_ARRAY_BOUNDS_POINTER_OFFSET,
+        )
+        self._emit_copy_memory(source_bounds_pointer, bounds_pointer, bounds_bytes)
+        self._emit_copy_memory(source_data_pointer, data_pointer, data_bytes)
+        return heap_pointer
 
     def _compile_array_load(self, variable: ASTNode, scope: _FrameScope) -> int:
         name = _variable_head_name(variable)

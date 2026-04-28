@@ -70,6 +70,7 @@ from sql_planner import (
     Union,
     Update,
     Wildcard,
+    WorkingSetScan,
 )
 from sql_planner import (
     AlterTable as PlanAlterTable,
@@ -103,6 +104,9 @@ from sql_planner import (
 )
 from sql_planner import (
     NotLike as AstNotLike,
+)
+from sql_planner import (
+    RecursiveCTE as PlanRecursiveCTE,
 )
 from sql_planner import (
     UnaryOp as AstUnaryOp,
@@ -157,9 +161,11 @@ from .ir import (
     NullsOrder,
     OpenIndexScan,
     OpenScan,
+    OpenWorkingSetScan,
     Program,
     RollbackTransaction,
     RunExistsSubquery,
+    RunRecursiveCTE,
     RunSubquery,
     SaveGroupKey,
     ScanAllColumns,
@@ -196,6 +202,7 @@ class _Ctx:
     label_counter: int = 0
     agg_counter: int = 0
     alias_to_cursor: dict[str, int] = field(default_factory=dict)
+    working_set_cursor_id: int | None = None
 
     def new_cursor(self, alias: str) -> int:
         cid = self.cursor_counter
@@ -633,6 +640,71 @@ def _compile_source(
                 return out_
 
             return _compile_source(inner, wrapped, ctx)
+
+        case WorkingSetScan(alias=alias, columns=_):
+            # The VM stores the working set rows in VmState.working_set_data.
+            # OpenWorkingSetScan creates a fresh _SubqueryCursor from those
+            # rows each time it executes — critical for correctness when the
+            # CTE self-reference appears inside a JOIN (the outer loop would
+            # otherwise exhaust the cursor on the first row and leave nothing
+            # for subsequent rows).
+            cid = ctx.working_set_cursor_id if ctx.working_set_cursor_id is not None else 0
+            ctx.alias_to_cursor[alias] = cid
+            loop = ctx.new_label("wss_loop")
+            end = ctx.new_label("wss_end")
+            out = [
+                OpenWorkingSetScan(cursor_id=cid),
+                Label(name=loop),
+                AdvanceCursor(cursor_id=cid, on_exhausted=end),
+            ]
+            out.extend(body(ctx))
+            out.extend([Jump(label=loop), Label(name=end), CloseScan(cursor_id=cid)])
+            return out
+
+        case PlanRecursiveCTE(
+            anchor=anchor_plan,
+            recursive=recursive_plan,
+            alias=alias,
+            columns=_,
+            union_all=union_all,
+        ):
+            # Compile anchor as an independent sub-program.
+            anchor_ctx = _Ctx()
+            anchor_instrs, anchor_schema = _compile_plan(anchor_plan, anchor_ctx)
+            anchor_instrs.append(Halt())
+            anchor_prog = Program(
+                instructions=tuple(anchor_instrs),
+                labels=_resolve_labels(anchor_instrs),
+                result_schema=anchor_schema,
+            )
+            # Compile recursive step: cursor 0 is pre-reserved for the working
+            # set cursor (VM pre-populates it before each iteration), so we
+            # start assigning other cursors from 1.
+            recursive_ctx = _Ctx(cursor_counter=1, working_set_cursor_id=0)
+            recursive_instrs, recursive_schema = _compile_plan(recursive_plan, recursive_ctx)
+            recursive_instrs.append(Halt())
+            recursive_prog = Program(
+                instructions=tuple(recursive_instrs),
+                labels=_resolve_labels(recursive_instrs),
+                result_schema=recursive_schema,
+            )
+            cid = ctx.new_cursor(alias)
+            loop = ctx.new_label("rcte_loop")
+            end = ctx.new_label("rcte_end")
+            out = [
+                RunRecursiveCTE(
+                    cursor_id=cid,
+                    anchor_program=anchor_prog,
+                    recursive_program=recursive_prog,
+                    working_cursor_id=0,
+                    union_all=union_all,
+                ),
+                Label(name=loop),
+                AdvanceCursor(cursor_id=cid, on_exhausted=end),
+            ]
+            out.extend(body(ctx))
+            out.extend([Jump(label=loop), Label(name=end), CloseScan(cursor_id=cid)])
+            return out
 
         case _:
             raise UnsupportedNode(type(p).__name__)

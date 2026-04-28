@@ -87,6 +87,14 @@
       ]
     },
     {
+      "description": "plaintext state literalizes markup and character references",
+      "initialStates": ["PLAINTEXT state"],
+      "input": "hello <b>still text</b> &amp; literal",
+      "output": [
+        ["Character", "hello <b>still text</b> &amp; literal"]
+      ]
+    },
+    {
       "description": "data state named character references",
       "input": "Fish &amp; &lt;b&gt; &quot;quote&quot; &apos;ok&apos;",
       "output": [
@@ -159,6 +167,37 @@
       ]
     },
     {
+      "description": "data state Latin-1 named character references",
+      "input": "Latin-1: &Agrave;&agrave; &frac12; &yen;",
+      "output": [
+        ["Character", "Latin-1: "],
+        ["Character", "\u00C0"],
+        ["Character", "\u00E0"],
+        ["Character", " "],
+        ["Character", "\u00BD"],
+        ["Character", " "],
+        ["Character", "\u00A5"]
+      ]
+    },
+    {
+      "description": "attribute Latin-1 named character references",
+      "input": "<a title=\"&AElig;&aelig;\" currency=&pound;>",
+      "output": [
+        ["StartTag", "a", {"title": "\u00C6\u00E6", "currency": "\u00A3"}]
+      ]
+    },
+    {
+      "description": "rcdata Latin-1 named character references remain text",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&Ntilde;&ntilde;</title>",
+      "output": [
+        ["Character", "\u00D1"],
+        ["Character", "\u00F1"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
       "description": "data state legacy named character references missing semicolons",
       "input": "Legacy&nbsp symbols: &copy/&reg",
       "output": [
@@ -205,6 +244,23 @@
         {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 13},
         {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 19},
         {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 24}
+      ]
+    },
+    {
+      "description": "data state named character reference fallback",
+      "input": "Known &AMP; unknown &madeup;",
+      "output": [
+        ["Character", "Known "],
+        ["Character", "&"],
+        ["Character", " unknown "],
+        ["Character", "&madeup;"]
+      ]
+    },
+    {
+      "description": "attribute named character reference fallback",
+      "input": "<a title=\"&copy;\" bogus=&madeup;>",
+      "output": [
+        ["StartTag", "a", {"title": "\u00A9", "bogus": "&madeup;"}]
       ]
     },
     {

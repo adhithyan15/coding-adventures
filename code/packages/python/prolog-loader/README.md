@@ -24,6 +24,8 @@ It keeps parsing side-effect free, then exposes helpers to:
   source references like `library(...)` without hard-coding one search policy
 - apply explicit `term_expansion/2` and `goal_expansion/2` passes during load
   without making parsing itself stateful or magical
+- rewrite ad-hoc parsed queries through a linked project's module/import
+  context
 - expose a convenience runner for executing initialization goals with the shared
   Prolog builtin adapter enabled
 

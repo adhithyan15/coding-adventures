@@ -148,6 +148,36 @@
       "last_start_tag": "title"
     },
     {
+      "id": "html-latin1-character-references-data",
+      "description": "Classic Latin-1 named character references resolve in data state with case-sensitive names",
+      "input": "Latin-1: &Agrave;&agrave; &frac12; &yen;",
+      "tokens": [
+        "Text(data=Latin-1: \u00C0\u00E0 \u00BD \u00A5)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-latin1-character-references-attributes",
+      "description": "Classic Latin-1 named character references resolve inside quoted and unquoted attribute values",
+      "input": "<a title=\"&AElig;&aelig;\" currency=&pound;>",
+      "tokens": [
+        "StartTag(name=a, attributes=[title=\u00C6\u00E6, currency=\u00A3], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-latin1-character-references-rcdata",
+      "description": "Seeded title RCDATA context resolves classic Latin-1 named character references as text",
+      "input": "&Ntilde;&ntilde;</title>",
+      "tokens": [
+        "Text(data=\u00D1\u00F1)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
       "id": "html-semicolonless-legacy-character-references-data",
       "description": "Legacy named character references recover when the semicolon is missing in data state",
       "input": "Legacy&nbsp symbols: &copy/&reg",
@@ -191,6 +221,24 @@
       ],
       "initial_state": "RCDATA state",
       "last_start_tag": "title"
+    },
+    {
+      "id": "html-named-character-reference-fallback-data",
+      "description": "Named character references resolve known uppercase aliases and unknown references stay literal in data state",
+      "input": "Known &AMP; unknown &madeup;",
+      "tokens": [
+        "Text(data=Known & unknown &madeup;)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-named-character-reference-fallback-attributes",
+      "description": "Unknown named character references stay literal inside attributes",
+      "input": "<a title=\"&copy;\" bogus=&madeup;>",
+      "tokens": [
+        "StartTag(name=a, attributes=[title=\u00A9, bogus=&madeup;], self_closing=false)",
+        "EOF"
+      ]
     },
     {
       "id": "html-numeric-character-references-data",
@@ -261,6 +309,16 @@
       ],
       "initial_state": "RCDATA state",
       "last_start_tag": "title"
+    },
+    {
+      "id": "html-plaintext-state-literalizes-markup",
+      "description": "Seeded PLAINTEXT context treats markup and character references as literal text",
+      "input": "hello <b>still text</b> &amp; literal",
+      "tokens": [
+        "Text(data=hello <b>still text</b> &amp; literal)",
+        "EOF"
+      ],
+      "initial_state": "PLAINTEXT state"
     }
   ]
 }

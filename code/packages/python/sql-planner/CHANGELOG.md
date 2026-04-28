@@ -1,5 +1,37 @@
 # Changelog
 
+## [0.9.0] - 2026-04-27
+
+### Added — Phase 6: CREATE / DROP VIEW
+
+- **`CreateViewStmt` AST node** (`sql_planner.ast`) — frozen dataclass
+  carrying `name: str`, `query: SelectStmt`, and `if_not_exists: bool`.
+  Represents `CREATE [IF NOT EXISTS] VIEW name AS query`.
+- **`DropViewStmt` AST node** (`sql_planner.ast`) — frozen dataclass with
+  `name: str` and `if_exists: bool`.  Represents `DROP VIEW [IF EXISTS] name`.
+- Both types added to the `Statement` type union and exported from
+  `sql_planner.__init__`.
+
+## [0.8.0] - 2026-04-27
+
+### Added — Phase 5b: Recursive CTEs
+
+- **`RecursiveCTERef` AST node** (`sql_planner.ast`) — structured representation
+  of a `WITH RECURSIVE name AS (anchor UNION [ALL] recursive)` CTE reference.
+  Carries `name`, `anchor: SelectStmt`, `recursive: SelectStmt`, `union_all: bool`,
+  and an optional `alias` that defaults to the CTE name.
+- **`WorkingSetScan` plan node** (`sql_planner.plan`) — represents a self-reference
+  inside a recursive CTE body.  Holds `alias` and `columns`.  The VM maps this to
+  the current working set produced by the previous iteration.
+- **`RecursiveCTE` plan node** (`sql_planner.plan`) — wraps `anchor`, `recursive`
+  sub-plans, `alias`, `columns`, and `union_all` flag.  Produced when the planner
+  encounters a `RecursiveCTERef` in the FROM / JOIN tree.
+- **Planner dispatch for `RecursiveCTERef`** — `_plan_table_ref` detects a
+  `RecursiveCTERef` entry, plans the anchor without the self-reference in scope
+  and plans the recursive body with the CTE name mapped to a `WorkingSetScan`,
+  then wraps both in a `RecursiveCTE` plan node.
+- **All three types exported** from `sql_planner.__init__`.
+
 ## [0.7.0] - 2026-04-27
 
 ### Added

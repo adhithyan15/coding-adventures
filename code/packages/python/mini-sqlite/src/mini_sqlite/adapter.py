@@ -53,10 +53,12 @@ from sql_planner import (
     CommitStmt,
     CreateIndexStmt,
     CreateTableStmt,
+    CreateViewStmt,
     DeleteStmt,
     DerivedTableRef,
     DropIndexStmt,
     DropTableStmt,
+    DropViewStmt,
     ExceptStmt,
     ExistsSubquery,
     FuncArg,
@@ -74,6 +76,7 @@ from sql_planner import (
     Literal,
     NotIn,
     NotLike,
+    RecursiveCTERef,
     RollbackStmt,
     SelectItem,
     SelectStmt,
@@ -113,7 +116,10 @@ class _Placeholder:
 # --------------------------------------------------------------------------
 
 
-def to_statement(ast: ASTNode) -> Statement:
+def to_statement(
+    ast: ASTNode,
+    view_defs: dict[str, SelectStmt] | None = None,
+) -> Statement:
     """Convert a parsed ``program`` ASTNode to a planner ``Statement``.
 
     The grammar's top rule is ``program = statement { ";" statement } [";"]``.
@@ -121,10 +127,14 @@ def to_statement(ast: ASTNode) -> Statement:
     both sqlite3's semantics and our own spec — so the driver slices on ``;``
     before calling us. Here we just walk down past ``program`` and
     ``statement`` to the actual statement node.
+
+    ``view_defs`` maps each view name to its defining ``SelectStmt`` so that
+    bare table references that name a view can be expanded inline, exactly
+    like non-recursive CTEs.
     """
     prog = _child_node(ast, "program") if ast.rule_name != "program" else ast
     statement = _only_child_node(prog, "statement")
-    return _stmt_dispatch(statement)
+    return _stmt_dispatch(statement, view_defs=view_defs)
 
 
 # --------------------------------------------------------------------------
@@ -132,17 +142,20 @@ def to_statement(ast: ASTNode) -> Statement:
 # --------------------------------------------------------------------------
 
 
-def _stmt_dispatch(stmt: ASTNode) -> Statement:
+def _stmt_dispatch(
+    stmt: ASTNode,
+    view_defs: dict[str, SelectStmt] | None = None,
+) -> Statement:
     # ``statement`` has exactly one child, which is the real statement node.
     inner = _single_child(stmt)
     if not isinstance(inner, ASTNode):
         raise ProgrammingError(f"unexpected statement shape: {inner}")
     match inner.rule_name:
         case "query_stmt":
-            return _query_stmt(inner)
+            return _query_stmt(inner, view_defs=view_defs)
         case "select_stmt":
             # Legacy: old grammar emitted select_stmt directly under statement.
-            return _select(inner)
+            return _select(inner, view_defs=view_defs)
         case "insert_stmt":
             return _insert(inner)
         case "update_stmt":
@@ -159,6 +172,10 @@ def _stmt_dispatch(stmt: ASTNode) -> Statement:
             return _create_index(inner)
         case "drop_index_stmt":
             return _drop_index(inner)
+        case "create_view_stmt":
+            return _create_view(inner)
+        case "drop_view_stmt":
+            return _drop_view(inner)
         case "begin_stmt":
             return BeginStmt()
         case "commit_stmt":
@@ -175,14 +192,15 @@ def _stmt_dispatch(stmt: ASTNode) -> Statement:
 
 def _query_stmt(
     node: ASTNode,
-    ctes: dict[str, SelectStmt] | None = None,
+    ctes: dict[str, SelectStmt | RecursiveCTERef] | None = None,
+    view_defs: dict[str, SelectStmt] | None = None,
 ) -> Statement:
     """Translate ``query_stmt = [ with_clause ] select_stmt { set_op_clause }`` to a Statement.
 
     When a ``with_clause`` is present, each ``cte_def`` is parsed into a
-    ``SelectStmt`` and stored by name.  The resulting ``ctes`` dict is passed
-    into ``_select`` so that bare table references matching a CTE name are
-    rewritten to ``DerivedTableRef`` at parse time — no new plan nodes needed.
+    ``SelectStmt`` (non-recursive) or ``RecursiveCTERef`` (WITH RECURSIVE) and
+    stored by name.  The resulting dict is passed into ``_select`` so that bare
+    table references matching a CTE name are substituted at parse time.
 
     A ``query_stmt`` wraps a bare ``select_stmt`` with zero or more
     UNION/INTERSECT/EXCEPT tails.  When no tails are present this is
@@ -190,28 +208,62 @@ def _query_stmt(
     set-operation tree.
     """
     # Accumulate CTEs: outer dict (if any) merged with any new WITH clause.
-    active_ctes: dict[str, SelectStmt] = dict(ctes) if ctes else {}
+    active_ctes: dict[str, SelectStmt | RecursiveCTERef] = dict(ctes) if ctes else {}
     with_node = _maybe_child(node, "with_clause")
     if with_node is not None:
+        # Check whether the WITH clause carries the RECURSIVE keyword.
+        is_recursive = any(_is_keyword(c, "RECURSIVE") for c in with_node.children)
+
         for cte_node in _child_nodes(with_node, "cte_def"):
             name_tok = _first_token(cte_node, kind="NAME")
             if name_tok is None:
                 raise ProgrammingError("cte_def: missing CTE name")
+            cte_name = name_tok.value
             inner_q = _child_node(cte_node, "query_stmt")
-            inner_stmt = _query_stmt(inner_q, ctes=active_ctes)
-            if not isinstance(inner_stmt, SelectStmt):
-                raise ProgrammingError(
-                    f"CTE '{name_tok.value}' body must be a plain SELECT, not a set operation"
+
+            if is_recursive and _child_nodes(inner_q, "set_op_clause"):
+                # Recursive CTE: body is "anchor UNION [ALL] recursive_step".
+                # Parse anchor with the CTEs accumulated so far.
+                anchor_node = _child_node(inner_q, "select_stmt")
+                anchor_stmt = _select(anchor_node, ctes=active_ctes)
+
+                # Parse the recursive step WITHOUT this CTE in active_ctes so
+                # the self-reference stays as a plain TableRef.  The planner's
+                # working_set mechanism converts it to WorkingSetScan.
+                ctes_without_self = {k: v for k, v in active_ctes.items() if k != cte_name}
+                set_op_nodes = _child_nodes(inner_q, "set_op_clause")
+                union_all = True
+                rec_stmt: SelectStmt | None = None
+                for sop in set_op_nodes:
+                    op, all_flag, right_sel_node = _set_op_clause(sop)
+                    if op == "UNION":
+                        union_all = all_flag
+                        rec_stmt = _select(right_sel_node, ctes=ctes_without_self)
+                if rec_stmt is None:
+                    raise ProgrammingError(
+                        f"RECURSIVE CTE '{cte_name}' must have a UNION [ALL] recursive step"
+                    )
+                active_ctes[cte_name] = RecursiveCTERef(
+                    name=cte_name,
+                    anchor=anchor_stmt,
+                    recursive=rec_stmt,
+                    union_all=union_all,
                 )
-            # Make this CTE visible to subsequent CTEs and the main query.
-            active_ctes[name_tok.value] = inner_stmt
+            else:
+                inner_stmt = _query_stmt(inner_q, ctes=active_ctes, view_defs=view_defs)
+                if not isinstance(inner_stmt, SelectStmt):
+                    raise ProgrammingError(
+                        f"CTE '{cte_name}' body must be a plain SELECT, not a set operation"
+                    )
+                # Make this CTE visible to subsequent CTEs and the main query.
+                active_ctes[cte_name] = inner_stmt
 
     select_node = _child_node(node, "select_stmt")
-    left: Statement = _select(select_node, ctes=active_ctes)
+    left: Statement = _select(select_node, ctes=active_ctes, view_defs=view_defs)
     set_ops = _child_nodes(node, "set_op_clause")
     for op_node in set_ops:
         op, all_flag, right_select_node = _set_op_clause(op_node)
-        right_stmt = _select(right_select_node, ctes=active_ctes)
+        right_stmt = _select(right_select_node, ctes=active_ctes, view_defs=view_defs)
         # Build a left-associative tree: after the first iteration ``left``
         # will already be a UnionStmt/IntersectStmt/ExceptStmt.  The AST
         # types accept any set-op stmt on the left side, and the planner
@@ -252,7 +304,8 @@ def _set_op_clause(node: ASTNode) -> tuple[str, bool, ASTNode]:
 
 def _select(
     node: ASTNode,
-    ctes: dict[str, SelectStmt] | None = None,
+    ctes: dict[str, SelectStmt | RecursiveCTERef] | None = None,
+    view_defs: dict[str, SelectStmt] | None = None,
 ) -> SelectStmt:
     state = _PlaceholderCounter()
 
@@ -261,8 +314,11 @@ def _select(
 
     # FROM + JOINs.
     from_node = _child_node(node, "table_ref")
-    from_ref = _table_ref(from_node, ctes=ctes)
-    joins = tuple(_join_clause(c, state, ctes=ctes) for c in _child_nodes(node, "join_clause"))
+    from_ref = _table_ref(from_node, ctes=ctes, view_defs=view_defs)
+    joins = tuple(
+        _join_clause(c, state, ctes=ctes, view_defs=view_defs)
+        for c in _child_nodes(node, "join_clause")
+    )
 
     # WHERE / GROUP BY / HAVING / ORDER BY / LIMIT — all optional.
     where = _maybe_expr(node, "where_clause", state, skip=1)
@@ -310,8 +366,9 @@ def _select_item(node: ASTNode, state: _PlaceholderCounter) -> SelectItem:
 
 def _table_ref(
     node: ASTNode,
-    ctes: dict[str, SelectStmt] | None = None,
-) -> TableRef | DerivedTableRef:
+    ctes: dict[str, SelectStmt | RecursiveCTERef] | None = None,
+    view_defs: dict[str, SelectStmt] | None = None,
+) -> TableRef | DerivedTableRef | RecursiveCTERef:
     """Translate a table_ref node.
 
     The grammar has two forms::
@@ -320,13 +377,15 @@ def _table_ref(
                   | table_name [ "AS" NAME ]        -- plain table
 
     We detect the derived-table form by checking for a ``query_stmt`` child.
-    When the plain-table form names a CTE, we substitute a DerivedTableRef
-    so the planner and downstream stages see it as an inline subquery.
+    When the plain-table form names a non-recursive CTE, we substitute a
+    DerivedTableRef.  For recursive CTEs we return RecursiveCTERef (with the
+    alias updated from the usage site) so the planner can build the correct
+    fixed-point iteration plan.
     """
     # Derived-table form: "(" query_stmt ")" "AS" NAME
     q = _maybe_child(node, "query_stmt")
     if q is not None:
-        inner_stmt = _query_stmt(q, ctes=ctes)
+        inner_stmt = _query_stmt(q, ctes=ctes, view_defs=view_defs)
         if not isinstance(inner_stmt, SelectStmt):
             raise ProgrammingError("derived table must be a plain SELECT, not a set operation")
         # The mandatory alias comes after the "AS" keyword.
@@ -353,10 +412,28 @@ def _table_ref(
             if isinstance(nxt, Token):
                 alias = nxt.value
 
-    # CTE substitution: if the table name matches a known CTE, replace with
-    # a DerivedTableRef so the planner/codegen see it as an inline subquery.
+    # CTE substitution: if the table name matches a known CTE, replace it.
     if ctes and table in ctes:
-        return DerivedTableRef(select=ctes[table], alias=alias if alias is not None else table)
+        entry = ctes[table]
+        if isinstance(entry, RecursiveCTERef):
+            # Propagate alias from the usage site (the CTE name is used as the
+            # effective alias when no explicit alias is given).
+            return RecursiveCTERef(
+                name=entry.name,
+                anchor=entry.anchor,
+                recursive=entry.recursive,
+                union_all=entry.union_all,
+                alias=alias if alias is not None else table,
+            )
+        return DerivedTableRef(select=entry, alias=alias if alias is not None else table)
+
+    # View substitution: expand named views into inline derived tables, exactly
+    # like non-recursive CTEs.  CTEs take priority (checked above first).
+    if view_defs and table in view_defs:
+        return DerivedTableRef(
+            select=view_defs[table],
+            alias=alias if alias is not None else table,
+        )
 
     return TableRef(table=table, alias=alias)
 
@@ -364,12 +441,13 @@ def _table_ref(
 def _join_clause(
     node: ASTNode,
     state: _PlaceholderCounter,
-    ctes: dict[str, SelectStmt] | None = None,
+    ctes: dict[str, SelectStmt | RecursiveCTERef] | None = None,
+    view_defs: dict[str, SelectStmt] | None = None,
 ) -> JoinClause:
     # join_clause = join_type "JOIN" table_ref [ "ON" expr ]
     jt = _child_node(node, "join_type")
     kind = _join_kind(jt)
-    right = _table_ref(_child_node(node, "table_ref"), ctes=ctes)
+    right = _table_ref(_child_node(node, "table_ref"), ctes=ctes, view_defs=view_defs)
     # The grammar makes ON optional (required only for non-CROSS joins).
     expr_node = _maybe_child(node, "expr")
     on = _expr(expr_node, state) if expr_node is not None else None
@@ -685,6 +763,49 @@ def _drop_index(node: ASTNode) -> DropIndexStmt:
     if name_tok is None:
         raise ProgrammingError("drop_index_stmt: expected index name")
     return DropIndexStmt(name=name_tok.value, if_exists=if_exists)
+
+
+# --------------------------------------------------------------------------
+# CREATE VIEW / DROP VIEW.
+# --------------------------------------------------------------------------
+
+
+def _create_view(node: ASTNode) -> CreateViewStmt:
+    """Translate ``create_view_stmt`` into :class:`CreateViewStmt`.
+
+    Grammar::
+
+        create_view_stmt = "CREATE" "VIEW" [ "IF" "NOT" "EXISTS" ] NAME "AS" query_stmt ;
+
+    The view body is a full ``query_stmt`` (SELECT, WITH, set operations).
+    Only plain SELECT bodies are accepted — the engine will reject set-op
+    views when it tries to store them as a ``SelectStmt``.
+    """
+    if_not_exists = _has_keyword_sequence(node, ("IF", "NOT", "EXISTS"))
+    name_tok = _first_token(node, kind="NAME")
+    if name_tok is None:
+        raise ProgrammingError("create_view_stmt: expected view name")
+    q = _maybe_child(node, "query_stmt")
+    if q is None:
+        raise ProgrammingError("create_view_stmt: expected query body")
+    inner_stmt = _query_stmt(q)
+    if not isinstance(inner_stmt, SelectStmt):
+        raise ProgrammingError("CREATE VIEW body must be a plain SELECT, not a set operation")
+    return CreateViewStmt(name=name_tok.value, query=inner_stmt, if_not_exists=if_not_exists)
+
+
+def _drop_view(node: ASTNode) -> DropViewStmt:
+    """Translate ``drop_view_stmt`` into :class:`DropViewStmt`.
+
+    Grammar::
+
+        drop_view_stmt = "DROP" "VIEW" [ "IF" "EXISTS" ] NAME ;
+    """
+    if_exists = _has_keyword_sequence(node, ("IF", "EXISTS"))
+    name_tok = _first_token(node, kind="NAME")
+    if name_tok is None:
+        raise ProgrammingError("drop_view_stmt: expected view name")
+    return DropViewStmt(name=name_tok.value, if_exists=if_exists)
 
 
 # --------------------------------------------------------------------------
