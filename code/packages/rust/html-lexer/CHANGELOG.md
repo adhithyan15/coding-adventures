@@ -63,3 +63,5 @@ documented in this file.
 - Seeded `PLAINTEXT` tokenizer-state support, including shared Venture and
   html5lib-style fixture coverage proving markup and character references stay
   literal in that submode.
+- Seeded `script_data` tokenizer-state support with matching end-tag recovery
+  and fixture coverage that keeps character references literal in script text.
