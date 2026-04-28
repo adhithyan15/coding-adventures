@@ -13,6 +13,12 @@ are direct nonlocal block `goto` statements that stay inside the same lowered
 function. Local switch declarations, switch selections, and conditional
 designational `goto` forms are also supported.
 
+The expression checker also accepts chained assignments, ALGOL conditional
+expressions, tolerant trailing/repeated semicolons from the parser, and
+left-associative exponentiation for numeric bases with integer exponents.
+Mixed integer/real conditional branches resolve to `real`; incompatible branch
+types are still rejected before IR lowering.
+
 The checker also builds the first ALGOL 60 full-runtime semantic model. Each
 source block receives a stable block id, lexical depth, static-parent id, and a
 planned frame layout. Scalar declarations are assigned explicit frame slots,

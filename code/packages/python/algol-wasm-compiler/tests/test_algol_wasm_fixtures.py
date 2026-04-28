@@ -25,6 +25,7 @@ _GOLDEN_FIXTURES = (
     GoldenFixture(name="showcase", result=[12], stdout="ALGOL 2 7.000"),
     GoldenFixture(name="jensens-device", result=[30], stdout=""),
     GoldenFixture(name="control-flow", result=[7], stdout="FLOW 7"),
+    GoldenFixture(name="convergence", result=[39], stdout="CONVERGE 39"),
 )
 
 

@@ -149,22 +149,25 @@ def write_wasm_file(source: str, output_path: str | Path) -> AlgolWasmResult:
 
 def _wasm_lowering_strategy(program: IrProgram) -> str:
     for instruction in program.instructions:
-        if instruction.opcode != IrOp.LABEL:
+        if instruction.opcode not in (IrOp.BRANCH_NZ, IrOp.BRANCH_Z, IrOp.JUMP):
             continue
         if (
             instruction.operands
-            and isinstance(instruction.operands[0], IrLabel)
+            and isinstance(instruction.operands[-1], IrLabel)
+            and not _structured_lowerer_target(instruction.operands[-1].name)
         ):
-            label_name = instruction.operands[0].name
-            if label_name.startswith("algol_label_"):
-                return "dispatch_loop"
-            if label_name.startswith("loop_") and "_dispatch" in label_name:
-                return "dispatch_loop"
-            if label_name.startswith("loop_") and (
-                "_positive" in label_name or "_negative" in label_name
-            ):
-                return "dispatch_loop"
+            return "dispatch_loop"
     return "structured"
+
+
+def _structured_lowerer_target(label_name: str) -> bool:
+    parts = label_name.split("_")
+    if len(parts) != 3 or not parts[1].isdigit():
+        return False
+    prefix, _index, suffix = parts
+    return (prefix == "if" and suffix in {"else", "end"}) or (
+        prefix == "loop" and suffix in {"start", "end"}
+    )
 
 
 def _wasm_value_type(type_name: str | None) -> ValueType:

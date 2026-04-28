@@ -67,6 +67,53 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [10]
 
+    def test_chained_assignment_stores_right_to_left(self) -> None:
+        result = compile_source(
+            "begin integer result, other; result := other := 7; "
+            "result := result + other end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [14]
+
+    def test_integer_exponentiation_is_left_associative(self) -> None:
+        result = compile_source("begin integer result; result := 2 ** 3 ** 2 end")
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [64]
+
+    def test_real_base_integer_exponentiation_runs_in_wasm(self) -> None:
+        result = compile_source(
+            "begin integer result; real x; x := 2.0 ^ (0 - 3); "
+            "if x < 0.126 then result := 8 else result := 0 end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
+
+    def test_conditional_expression_assigns_selected_branch(self) -> None:
+        result = compile_source(
+            "begin integer result; result := if false then 1 else 7 end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_conditional_expression_only_evaluates_selected_branch(self) -> None:
+        result = compile_source(
+            "begin integer result; integer array a[1:1]; "
+            "result := if true then 7 else a[2] "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_conditional_expression_promotes_integer_branch_to_real(self) -> None:
+        result = compile_source(
+            "begin integer result; real x; "
+            "x := if false then 1 else 2.5; "
+            "if x > 2.0 then result := 9 else result := 0 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
+
+    def test_statement_lists_allow_trailing_and_repeated_semicolons(self) -> None:
+        result = compile_source(
+            "begin integer result; ; result := 1;; result := 2; end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
     def test_simple_for_element_executes_once(self) -> None:
         result = compile_source(
             "begin integer result, i; "
@@ -219,7 +266,8 @@ class TestAlgolWasmCompiler:
     def test_own_integer_array_persists_across_procedure_calls(self) -> None:
         result = compile_source(
             "begin own integer array counts[1:1]; integer result; "
-            "procedure bump; begin counts[1] := counts[1] + 1; result := counts[1] end; "
+            "procedure bump; "
+            "begin counts[1] := counts[1] + 1; result := counts[1] end; "
             "counts[1] := 4; bump; bump "
             "end"
         )
@@ -451,7 +499,9 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
 
-    def test_nested_switch_selection_entry_dispatches_through_inner_switch(self) -> None:
+    def test_nested_switch_selection_entry_dispatches_through_inner_switch(
+        self,
+    ) -> None:
         result = compile_source(
             "begin integer result, i; "
             "switch inner := first, second; "
@@ -715,7 +765,9 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
 
-    def test_array_parameter_runtime_dimension_mismatch_returns_from_callee(self) -> None:
+    def test_array_parameter_runtime_dimension_mismatch_returns_from_callee(
+        self,
+    ) -> None:
         result = compile_source(
             "begin integer array xs[1:2]; integer result; "
             "procedure probe(a); integer a; array a; begin result := a[1, 1] end; "
