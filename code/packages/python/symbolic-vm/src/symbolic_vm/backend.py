@@ -66,6 +66,15 @@ class Backend(ABC):
     def bind(self, name: str, value: IRNode) -> None:
         """Install or update a binding for ``name``."""
 
+    def unbind(self, name: str) -> None:  # noqa: B027
+        """Remove any binding for ``name``.
+
+        Called by the ``Block`` handler when a local variable exits
+        scope and the name was unbound before the block started.  The
+        default is a no-op so minimal custom backends don't have to
+        implement it; real backends backed by a dict should override.
+        """
+
     # ------------------------------------------------------------------
     # Evaluation policy
     # ------------------------------------------------------------------

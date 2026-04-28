@@ -117,6 +117,7 @@ keywords:
   do
   for
   while
+  unless
   in
   step
   thru
