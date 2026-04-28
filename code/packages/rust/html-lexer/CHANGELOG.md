@@ -79,3 +79,5 @@ documented in this file.
   bogus comments.
 - HTML comment start-dash handling, including `<!-->` abrupt empty-comment
   recovery and `<!--->` empty-comment closure.
+- HTML comment less-than-sign handling for nested-looking `<!--` sequences
+  inside open comments, preserving the text while reporting `nested-comment`.
