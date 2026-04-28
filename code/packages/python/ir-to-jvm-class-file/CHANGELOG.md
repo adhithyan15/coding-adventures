@@ -1,5 +1,32 @@
 # ir-to-jvm-class-file
 
+## 0.6.0 — 2026-04-27
+
+### Added — LANG20: `JVMCodeGenerator` — `CodeGenerator[IrProgram, JVMClassArtifact]` adapter
+
+**New module: `ir_to_jvm_class_file.generator`**
+
+- `JVMCodeGenerator` — thin adapter satisfying the
+  `CodeGenerator[IrProgram, JVMClassArtifact]` structural protocol (LANG20).
+
+  - `name = "jvm"` — unique backend identifier.
+  - `validate(ir) -> list[str]` — delegates to `validate_for_jvm()`.  Never
+    raises; returns `[]` for valid programs.
+  - `generate(ir) -> JVMClassArtifact` — delegates to
+    `lower_ir_to_jvm_class_file(ir, config)`.  Raises on invalid IR.
+  - Optional `config: JvmBackendConfig` — forwarded to the underlying compiler.
+
+- `JVMCodeGenerator` exported from `ir_to_jvm_class_file.__init__`.
+
+**New tests: `tests/test_codegen_generator.py`** — 14 tests covering: `name`,
+`isinstance(gen, CodeGenerator)` structural check, `validate()` on valid / bad-
+SYSCALL / overflow-constant IR, `generate()` returns `JVMClassArtifact`,
+`class_bytes` starts with JVM magic `0xCAFEBABE`, `class_bytes` non-empty,
+`generate()` raises on invalid IR, custom config accepted, round-trip, export
+check.
+
+---
+
 ## [Unreleased]
 
 ### Added

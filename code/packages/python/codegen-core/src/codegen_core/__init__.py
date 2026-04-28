@@ -1,4 +1,4 @@
-"""codegen-core — the universal IR-to-native compilation layer (LANG19).
+"""codegen-core — the universal IR-to-native compilation layer (LANG19/LANG20).
 
 ``codegen-core`` is the single shared package for lowering any typed IR
 to a native binary.  Every compilation path in this repository passes
@@ -22,6 +22,7 @@ through it:
 
     IrProgram
       → IrProgramOptimizer.run()  → IrProgram   (DCE + CF + peephole)
+      → CodeGenerator.generate()  → Assembly     (LANG20)
       → Backend.compile()         → bytes
 
 Public API
@@ -34,6 +35,15 @@ Public API
     Structural protocol for any backend.  Generic over the IR type.
     ``BackendProtocol`` is an alias kept for backwards compatibility with
     callers that imported it from ``jit_core.backend``.
+
+``CodeGenerator[IR, Assembly]``
+    Fine-grained protocol introduced in LANG20.  Covers only the validate
+    and generate-assembly steps — does NOT assemble, package, or execute.
+    All six ``ir-to-*`` compiler packages implement this protocol.
+
+``CodeGeneratorRegistry``
+    Name-to-generator mapping.  Register all available code generators at
+    startup; retrieve them by name at generation time.
 
 ``CodegenPipeline[IR]``
     Composes an optional ``Optimizer[IR]`` with a ``Backend[IR]``.
@@ -63,6 +73,7 @@ from __future__ import annotations
 
 from codegen_core.backend import Backend, BackendProtocol, CIRBackend
 from codegen_core.cir import CIRInstr
+from codegen_core.codegen import CodeGenerator, CodeGeneratorRegistry
 from codegen_core.optimizer.cir_optimizer import CIROptimizer
 from codegen_core.optimizer.ir_program import IrProgramOptimizer
 from codegen_core.pipeline import CodegenPipeline, Optimizer
@@ -76,6 +87,8 @@ __all__ = [
     "CIRBackend",
     "CIRInstr",
     "CIROptimizer",
+    "CodeGenerator",
+    "CodeGeneratorRegistry",
     "CodegenPipeline",
     "CodegenResult",
     "IrProgramOptimizer",
