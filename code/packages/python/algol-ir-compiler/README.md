@@ -50,9 +50,11 @@ failure propagation from callees back to the by-name formal read. Stores through
 read-only expression thunks still raise targeted `CompileError` diagnostics
 until Phase 5 grows full store-helper coverage. The supported integer by-name
 surface is covered by the WASM acceptance suite, including typed whole-array
-formals passed as descriptor pointers, label formals passed as pending-goto
-targets, and switch formals passed as descriptor closures that re-evaluate in
-the caller's declaring scope. No-argument statement procedure formals pass
+formals passed as descriptor pointers. `value` whole-array formals allocate a
+callee-local descriptor, bounds table, and element storage copy at procedure
+entry, so writes to the formal do not alias the caller's array. Label formals
+pass pending-goto targets, and switch formals pass descriptor closures that
+re-evaluate in the caller's declaring scope. No-argument statement procedure formals pass
 descriptor closures containing the callee procedure id and static link; formal
 calls dispatch through a generated helper so forwarded procedure formals keep
 the original environment. Full ALGOL forms such as typed or argument-taking

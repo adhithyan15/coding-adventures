@@ -1315,7 +1315,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
-            actions: vec!["append_temporary_buffer(current_lowercase)".to_string()],
+            actions: vec!["append_temporary_buffer(current)".to_string()],
             consume: true,
         },
         TransitionDefinition {
@@ -1329,7 +1329,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
-            actions: vec!["append_temporary_buffer(current_lowercase)".to_string()],
+            actions: vec!["append_temporary_buffer(current)".to_string()],
             consume: true,
         },
         TransitionDefinition {
@@ -1819,7 +1819,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
-            actions: vec!["append_temporary_buffer(current_lowercase)".to_string()],
+            actions: vec!["append_temporary_buffer(current)".to_string()],
             consume: true,
         },
         TransitionDefinition {
@@ -1833,7 +1833,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
-            actions: vec!["append_temporary_buffer(current_lowercase)".to_string()],
+            actions: vec!["append_temporary_buffer(current)".to_string()],
             consume: true,
         },
         TransitionDefinition {
@@ -4176,7 +4176,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
-            actions: vec!["append_temporary_buffer(current_lowercase)".to_string()],
+            actions: vec!["append_temporary_buffer(current)".to_string()],
             consume: true,
         },
         TransitionDefinition {
@@ -4190,7 +4190,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
-            actions: vec!["append_temporary_buffer(current_lowercase)".to_string()],
+            actions: vec!["append_temporary_buffer(current)".to_string()],
             consume: true,
         },
         TransitionDefinition {
@@ -4690,7 +4690,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
-            actions: vec!["append_temporary_buffer(current_lowercase)".to_string()],
+            actions: vec!["append_temporary_buffer(current)".to_string()],
             consume: true,
         },
         TransitionDefinition {
@@ -4704,7 +4704,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
-            actions: vec!["append_temporary_buffer(current_lowercase)".to_string()],
+            actions: vec!["append_temporary_buffer(current)".to_string()],
             consume: true,
         },
         TransitionDefinition {

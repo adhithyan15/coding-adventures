@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterable, Iterator, Mapping
+from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass
 from pathlib import Path
 from types import MappingProxyType
@@ -47,6 +47,7 @@ from prolog_loader import (
     load_swi_prolog_project,
     load_swi_prolog_project_from_files,
     load_swi_prolog_source,
+    rewrite_loaded_prolog_query,
 )
 from prolog_parser import ParsedQuery
 from swi_prolog_parser import parse_swi_query
@@ -132,6 +133,7 @@ class PrologVMRuntime:
     state: State
     operator_table: OperatorTable | None = None
     adapt_builtins: bool = True
+    query_rewriter: Callable[[ParsedQuery], ParsedQuery] | None = None
 
     def query(
         self,
@@ -143,6 +145,8 @@ class PrologVMRuntime:
         """Run an ad-hoc query and return source-variable bindings."""
 
         parsed_query = self._parse_query(source)
+        if self.query_rewriter is not None:
+            parsed_query = self.query_rewriter(parsed_query)
         goal = _adapt_goal(parsed_query.goal, adapt_builtins=self.adapt_builtins)
         outputs = tuple(parsed_query.variables.values())
         proof_states = solve_from(self.vm.assembled_program(), goal, self.state)
@@ -302,6 +306,7 @@ def create_prolog_vm_runtime(
     initialize: bool = True,
     operator_table: OperatorTable | None = None,
     adapt_builtins: bool = True,
+    query_rewriter: Callable[[ParsedQuery], ParsedQuery] | None = None,
 ) -> PrologVMRuntime:
     """Create a stateful ad-hoc query runtime from a compiled program."""
 
@@ -312,6 +317,7 @@ def create_prolog_vm_runtime(
         state=State(),
         operator_table=operator_table,
         adapt_builtins=adapt_builtins,
+        query_rewriter=query_rewriter,
     )
     if initialize:
         runtime.run_initializations()
@@ -361,6 +367,7 @@ def create_swi_prolog_file_runtime(
 
 def create_swi_prolog_project_runtime(
     *sources: str,
+    query_module: str | Symbol | None = None,
     initialize: bool = True,
     adapt_builtins: bool = True,
 ) -> PrologVMRuntime:
@@ -375,12 +382,18 @@ def create_swi_prolog_project_runtime(
         initialize=initialize,
         operator_table=_project_operator_table(loaded_project),
         adapt_builtins=adapt_builtins,
+        query_rewriter=lambda query_value: rewrite_loaded_prolog_query(
+            loaded_project,
+            query_value,
+            module=query_module,
+        ),
     )
 
 
 def create_swi_prolog_project_file_runtime(
     *entry_paths: str | Path,
     source_resolver: SourceResolver | None = None,
+    query_module: str | Symbol | None = None,
     initialize: bool = True,
     adapt_builtins: bool = True,
 ) -> PrologVMRuntime:
@@ -398,6 +411,11 @@ def create_swi_prolog_project_file_runtime(
         initialize=initialize,
         operator_table=_project_operator_table(loaded_project),
         adapt_builtins=adapt_builtins,
+        query_rewriter=lambda query_value: rewrite_loaded_prolog_query(
+            loaded_project,
+            query_value,
+            module=query_module,
+        ),
     )
 
 

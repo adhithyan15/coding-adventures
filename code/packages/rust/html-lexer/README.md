@@ -22,6 +22,9 @@ checked-in generated Rust modules built to match the output shape of
 compatibility floor for Venture's Mosaic-era target: it is not the end state of
 the project, but the first real HTML authoring artifact that must keep HTML
 1.0-era content working as the lexer grows forward toward newer standards.
+The default lexer already resolves the core named character references and the
+classic Latin-1 entity set, preserving entity-name case so legacy names such as
+`Agrave` and `agrave` remain distinct.
 `html-skeleton.lexer.states.toml` remains in the crate as a smaller bootstrap
 machine for comparisons and narrow debugging.
 

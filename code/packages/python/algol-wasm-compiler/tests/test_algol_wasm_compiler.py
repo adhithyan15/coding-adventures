@@ -866,6 +866,27 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
 
+    def test_value_array_parameter_copies_descriptor_and_elements(self) -> None:
+        result = compile_source(
+            "begin integer array xs[2:3]; integer result; "
+            "procedure setfirst(a); value a; integer a; array a; "
+            "begin result := a[2]; a[2] := 9; result := result * 10 + a[2] end; "
+            "xs[2] := 4; setfirst(xs); result := result * 10 + xs[2] "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [494]
+
+    def test_real_value_array_parameter_copies_without_aliasing(self) -> None:
+        result = compile_source(
+            "begin real array xs[1:1]; integer result; "
+            "procedure bump(a); value a; real a; array a; "
+            "begin a[1] := a[1] + 1.5; if a[1] > 3.0 then result := 7 end; "
+            "xs[1] := 2.0; bump(xs); "
+            "if xs[1] < 3.0 then result := result + 1 else result := 0 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
+
     def test_array_parameter_runtime_dimension_mismatch_returns_from_callee(
         self,
     ) -> None:

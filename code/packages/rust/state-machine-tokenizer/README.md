@@ -15,6 +15,11 @@ HTML-specific machine constructors live in `coding-adventures-html-lexer`. This
 package stays generic: it interprets lexer actions for any statically linked
 machine that uses the portable action vocabulary below.
 
+The current built-in named-character-reference table covers the core HTML
+entities plus the classic Latin-1 set. The scanner preserves case, so callers
+can model legacy names like `Agrave` separately from `agrave` while still adding
+explicit aliases such as `AMP` where the HTML layer needs them.
+
 ## Lexer Action Vocabulary
 
 The runtime interprets a bounded portable action vocabulary. Definitions stay

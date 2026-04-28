@@ -35,6 +35,8 @@ All notable changes to this package will be documented in this file.
   as assignable scalar storage.
 - Accepted parser-tolerated repeated/trailing semicolons through existing
   statement-list traversal.
+- Accepted `value` array parameters as checked whole-array copy formals while
+  preserving element-type validation at call sites.
 
 ## [0.1.0] - 2026-04-20
 

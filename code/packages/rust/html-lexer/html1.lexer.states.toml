@@ -635,13 +635,13 @@ actions = [
 from = "text_character_reference"
 matcher = { range = ["A", "Z"] }
 to = "text_named_character_reference"
-actions = ["append_temporary_buffer(current_lowercase)"]
+actions = ["append_temporary_buffer(current)"]
 
 [[transitions]]
 from = "text_character_reference"
 matcher = { range = ["a", "z"] }
 to = "text_named_character_reference"
-actions = ["append_temporary_buffer(current_lowercase)"]
+actions = ["append_temporary_buffer(current)"]
 
 [[transitions]]
 from = "text_character_reference"
@@ -903,13 +903,13 @@ actions = [
 from = "text_named_character_reference"
 matcher = { range = ["A", "Z"] }
 to = "text_named_character_reference"
-actions = ["append_temporary_buffer(current_lowercase)"]
+actions = ["append_temporary_buffer(current)"]
 
 [[transitions]]
 from = "text_named_character_reference"
 matcher = { range = ["a", "z"] }
 to = "text_named_character_reference"
-actions = ["append_temporary_buffer(current_lowercase)"]
+actions = ["append_temporary_buffer(current)"]
 
 [[transitions]]
 from = "text_named_character_reference"
@@ -2166,13 +2166,13 @@ actions = ["append_attribute_value(current)"]
 from = "attribute_character_reference"
 matcher = { range = ["A", "Z"] }
 to = "attribute_named_character_reference"
-actions = ["append_temporary_buffer(current_lowercase)"]
+actions = ["append_temporary_buffer(current)"]
 
 [[transitions]]
 from = "attribute_character_reference"
 matcher = { range = ["a", "z"] }
 to = "attribute_named_character_reference"
-actions = ["append_temporary_buffer(current_lowercase)"]
+actions = ["append_temporary_buffer(current)"]
 
 [[transitions]]
 from = "attribute_character_reference"
@@ -2465,13 +2465,13 @@ actions = [
 from = "attribute_named_character_reference"
 matcher = { range = ["A", "Z"] }
 to = "attribute_named_character_reference"
-actions = ["append_temporary_buffer(current_lowercase)"]
+actions = ["append_temporary_buffer(current)"]
 
 [[transitions]]
 from = "attribute_named_character_reference"
 matcher = { range = ["a", "z"] }
 to = "attribute_named_character_reference"
-actions = ["append_temporary_buffer(current_lowercase)"]
+actions = ["append_temporary_buffer(current)"]
 
 [[transitions]]
 from = "attribute_named_character_reference"
