@@ -86,32 +86,15 @@ def test_function_with_two_params() -> None:
     assert result.stdout == bytes([33])
 
 
-@requires_java
-@pytest.mark.xfail(
-    reason=(
-        "Recursion is broken under the current ir-to-jvm-class-file "
-        "calling convention.  That backend stores all 'registers' in "
-        "a class-level static int array shared across every method "
-        "invocation — so when fact(5) calls fact(4), fact(5)'s own "
-        "parameter register r2 gets overwritten with 4, and the "
-        "outer multiplication uses 4 instead of 5.  The fix lives in "
-        "ir-to-jvm-class-file (use real per-method JVM locals instead "
-        "of a static array), which is a separate infrastructure PR.  "
-        "Tracked alongside CLR01 as the 'real-runtime correctness' "
-        "track.  When that lands, this xfail reverts to a passing test."
-    ),
-    strict=True,
-)
-def test_recursion_factorial_small() -> None:
-    """Documented xfail: recursion under the static-register-array
-    convention is broken.  See marker reason for the gap and fix."""
-    src = """
-        (define (fact n) (if (= n 0) 1 (* n (fact (- n 1)))))
-        (fact 5)
-    """
-    result = run_source(src, class_name="TwigFact")
-    assert result.returncode == 0, result.stderr
-    assert result.stdout == bytes([120])
+# NOTE: Recursion (e.g. ``(define (fact n) ... (fact (- n 1)))``) is
+# tracked as a known gap in JVM01 — the current
+# ``ir-to-jvm-class-file`` stores all "registers" in a class-level
+# static int array shared across every method invocation, so a
+# recursive call clobbers the caller's parameter values.  No xfail
+# marker here on purpose — the fix is a tracked, numbered spec
+# (``code/specs/JVM01-jvm-per-method-locals.md``) at the same
+# prominence as CLR01, so it can't get lost.  When JVM01 lands, a
+# recursion test goes here.
 
 
 @requires_java

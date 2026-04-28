@@ -25,7 +25,7 @@
   convention ``test_oct_8bit_e2e.py`` uses for the existing
   Oct-on-JVM tests.
 
-### Known limitation: recursion is broken
+### Known limitation: recursion (tracked as JVM01)
 
 ``ir-to-jvm-class-file`` stores every "IR register" in a
 class-level static int array shared across every method
@@ -34,13 +34,14 @@ recursion: when ``fact(5)`` calls ``fact(4)``, ``fact(5)``'s own
 parameter register r2 gets overwritten with 4, and the outer
 multiplication then uses 4 instead of 5.
 
-The fix is in the JVM backend itself — it should use real
-per-method JVM locals instead of a static array — and is its
-own infrastructure PR (tracked alongside CLR01 under the
-"real-runtime correctness" banner).  The factorial test is
-marked ``pytest.mark.xfail(strict=True)`` so when that fix
-lands, the test starts passing and pytest flags the marker
-for removal.
+**This is tracked as a first-class numbered work item at
+``code/specs/JVM01-jvm-per-method-locals.md``** — same
+prominence as CLR01.  No xfail markers, no hidden TODOs; the
+spec describes the exact byte-level changes needed (switch the
+backend from class-level static-int-array storage to real
+per-method JVM locals + parameter passing on the operand
+stack).  When JVM01 lands the recursion tests get added back
+and pass without any change to ``twig-jvm-compiler``.
 
 Non-recursive function calls work correctly today, including
 multi-arg functions and nested calls like ``(inc (dbl 5))``.
