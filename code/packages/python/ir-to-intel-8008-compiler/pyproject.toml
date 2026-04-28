@@ -23,7 +23,7 @@ coding-adventures-interpreter-ir = { path = "../interpreter-ir", editable = true
 coding-adventures-ir-optimizer = { path = "../ir-optimizer", editable = true }
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4", "coding-adventures-codegen-core"]
+dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4", "coding-adventures-interpreter-ir", "coding-adventures-ir-optimizer", "coding-adventures-codegen-core"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ir_to_intel_8008_compiler"]

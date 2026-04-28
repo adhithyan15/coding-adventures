@@ -69,6 +69,8 @@ dev = [
     "coding-adventures-state-machine",
     "coding-adventures-type-checker-protocol",
     "coding-adventures-virtual-machine",
+    "coding-adventures-interpreter-ir",
+    "coding-adventures-ir-optimizer",
     "coding-adventures-codegen-core",
     "pytest>=8.0",
     "pytest-cov>=5.0",

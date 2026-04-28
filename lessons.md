@@ -648,10 +648,17 @@ module cannot be collected.
 Also declare it in `pyproject.toml` `[project.optional-dependencies]` dev so the build
 validator's `undeclared local package refs` check passes.
 
-**Transitive deps must be explicit:** uv does not auto-install local editable transitive deps
-from PyPI-registered names.  If `codegen-core` depends on `interpreter-ir` and `ir-optimizer`
-(also local-only packages), you must add `-e ../interpreter-ir -e ../ir-optimizer` to the BUILD
-explicitly — they cannot be resolved from PyPI.
+**Transitive deps must be explicit — in BOTH BUILD and pyproject.toml:**
+uv does not auto-install local editable transitive deps from PyPI-registered names.  If
+`codegen-core` depends on `interpreter-ir` and `ir-optimizer` (also local-only packages),
+you must:
+  1. Add `-e ../interpreter-ir -e ../ir-optimizer` to the BUILD install line explicitly.
+  2. ALSO add `coding-adventures-interpreter-ir` and `coding-adventures-ir-optimizer` directly
+     to dev extras in pyproject.toml.
+
+Declaring `codegen-core` in dev extras is NOT sufficient to satisfy the build validator for
+packages it in turn depends on — every package referenced directly by a `-e ../pkg` in a
+BUILD file must be directly declared in the package's own pyproject.toml metadata.
 
 **Order matters:** install in leaf-to-root order:
   1. `interpreter-ir` (no internal deps)

@@ -43,6 +43,8 @@ dev = [
     "pytest-cov>=5.0",
     "ruff>=0.4",
     "mypy>=1.10",
+    "coding-adventures-interpreter-ir",
+    "coding-adventures-ir-optimizer",
     "coding-adventures-codegen-core",
 ]
 
