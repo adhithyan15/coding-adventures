@@ -12,6 +12,7 @@ alphabet = [
   ">",
   "/",
   "&",
+  "#",
   ";",
   "=",
   "!",
@@ -38,6 +39,24 @@ alphabet = [
   "p",
   "E",
   "e",
+  "A",
+  "a",
+  "M",
+  "m",
+  "G",
+  "g",
+  "Q",
+  "q",
+  "U",
+  "u",
+  "N",
+  "n",
+  "B",
+  "b",
+  "S",
+  "s",
+  "X",
+  "x",
 ]
 
 [[tokens]]
@@ -122,6 +141,120 @@ id = "rcdata_character_reference_l"
 
 [[states]]
 id = "rcdata_character_reference_lt"
+
+[[states]]
+id = "text_character_reference"
+
+[[states]]
+id = "text_numeric_character_reference"
+
+[[states]]
+id = "text_numeric_hex_character_reference_start"
+
+[[states]]
+id = "text_numeric_hex_character_reference"
+
+[[states]]
+id = "text_numeric_decimal_character_reference"
+
+[[states]]
+id = "text_named_character_reference_a"
+
+[[states]]
+id = "text_named_character_reference_am"
+
+[[states]]
+id = "text_named_character_reference_amp"
+
+[[states]]
+id = "text_named_character_reference_ap"
+
+[[states]]
+id = "text_named_character_reference_apo"
+
+[[states]]
+id = "text_named_character_reference_apos"
+
+[[states]]
+id = "text_named_character_reference_g"
+
+[[states]]
+id = "text_named_character_reference_gt"
+
+[[states]]
+id = "text_named_character_reference_l"
+
+[[states]]
+id = "text_named_character_reference_lt"
+
+[[states]]
+id = "text_named_character_reference_q"
+
+[[states]]
+id = "text_named_character_reference_qu"
+
+[[states]]
+id = "text_named_character_reference_quo"
+
+[[states]]
+id = "text_named_character_reference_quot"
+
+[[states]]
+id = "attribute_character_reference"
+
+[[states]]
+id = "attribute_numeric_character_reference"
+
+[[states]]
+id = "attribute_numeric_hex_character_reference_start"
+
+[[states]]
+id = "attribute_numeric_hex_character_reference"
+
+[[states]]
+id = "attribute_numeric_decimal_character_reference"
+
+[[states]]
+id = "attribute_named_character_reference_a"
+
+[[states]]
+id = "attribute_named_character_reference_am"
+
+[[states]]
+id = "attribute_named_character_reference_amp"
+
+[[states]]
+id = "attribute_named_character_reference_ap"
+
+[[states]]
+id = "attribute_named_character_reference_apo"
+
+[[states]]
+id = "attribute_named_character_reference_apos"
+
+[[states]]
+id = "attribute_named_character_reference_g"
+
+[[states]]
+id = "attribute_named_character_reference_gt"
+
+[[states]]
+id = "attribute_named_character_reference_l"
+
+[[states]]
+id = "attribute_named_character_reference_lt"
+
+[[states]]
+id = "attribute_named_character_reference_q"
+
+[[states]]
+id = "attribute_named_character_reference_qu"
+
+[[states]]
+id = "attribute_named_character_reference_quo"
+
+[[states]]
+id = "attribute_named_character_reference_quot"
 
 [[states]]
 id = "tag_open"
@@ -225,6 +358,16 @@ actions = ["flush_text"]
 
 [[transitions]]
 from = "data"
+matcher = { literal = "&" }
+to = "text_character_reference"
+actions = [
+  "set_return_state(data)",
+  "clear_temporary_buffer",
+  "append_temporary_buffer(&)",
+]
+
+[[transitions]]
+from = "data"
 matcher = { eof = true }
 to = "done"
 consume = false
@@ -245,8 +388,12 @@ actions = ["flush_text"]
 [[transitions]]
 from = "rcdata"
 matcher = { literal = "&" }
-to = "rcdata_character_reference"
-actions = ["clear_temporary_buffer", "append_temporary_buffer(&)"]
+to = "text_character_reference"
+actions = [
+  "set_return_state(rcdata)",
+  "clear_temporary_buffer",
+  "append_temporary_buffer(&)",
+]
 
 [[transitions]]
 from = "rcdata"
@@ -409,6 +556,554 @@ actions = [
   "append_tag_name(current_lowercase)",
   "append_temporary_buffer(current_lowercase)",
 ]
+
+[[transitions]]
+from = "text_character_reference"
+matcher = { literal = "A" }
+to = "text_named_character_reference_a"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "text_character_reference"
+matcher = { literal = "a" }
+to = "text_named_character_reference_a"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "text_character_reference"
+matcher = { literal = "G" }
+to = "text_named_character_reference_g"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "text_character_reference"
+matcher = { literal = "g" }
+to = "text_named_character_reference_g"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "text_character_reference"
+matcher = { literal = "L" }
+to = "text_named_character_reference_l"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "text_character_reference"
+matcher = { literal = "l" }
+to = "text_named_character_reference_l"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "text_character_reference"
+matcher = { literal = "Q" }
+to = "text_named_character_reference_q"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "text_character_reference"
+matcher = { literal = "q" }
+to = "text_named_character_reference_q"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "text_character_reference"
+matcher = { literal = "#" }
+to = "text_numeric_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "text_character_reference"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_temporary_buffer_to_text", "flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "text_character_reference"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["append_temporary_buffer_to_text", "switch_to_return_state"]
+
+[[transitions]]
+from = "text_numeric_character_reference"
+matcher = { literal = "x" }
+to = "text_numeric_hex_character_reference_start"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "text_numeric_character_reference"
+matcher = { literal = "X" }
+to = "text_numeric_hex_character_reference_start"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "text_numeric_character_reference"
+matcher = { range = ["0", "9"] }
+to = "text_numeric_decimal_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "text_numeric_character_reference"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_temporary_buffer_to_text", "flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "text_numeric_character_reference"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["append_temporary_buffer_to_text", "switch_to_return_state"]
+
+[[transitions]]
+from = "text_numeric_hex_character_reference_start"
+matcher = { range = ["0", "9"] }
+to = "text_numeric_hex_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "text_numeric_hex_character_reference_start"
+matcher = { range = ["A", "F"] }
+to = "text_numeric_hex_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "text_numeric_hex_character_reference_start"
+matcher = { range = ["a", "f"] }
+to = "text_numeric_hex_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "text_numeric_hex_character_reference_start"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_temporary_buffer_to_text", "flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "text_numeric_hex_character_reference_start"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["append_temporary_buffer_to_text", "switch_to_return_state"]
+
+[[transitions]]
+from = "text_numeric_hex_character_reference"
+matcher = { range = ["0", "9"] }
+to = "text_numeric_hex_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "text_numeric_hex_character_reference"
+matcher = { range = ["A", "F"] }
+to = "text_numeric_hex_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "text_numeric_hex_character_reference"
+matcher = { range = ["a", "f"] }
+to = "text_numeric_hex_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "text_numeric_hex_character_reference"
+matcher = { literal = ";" }
+to = "data"
+actions = [
+  "append_numeric_character_reference_to_text",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "text_numeric_hex_character_reference"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_temporary_buffer_to_text", "flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "text_numeric_hex_character_reference"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["append_temporary_buffer_to_text", "switch_to_return_state"]
+
+[[transitions]]
+from = "text_numeric_decimal_character_reference"
+matcher = { range = ["0", "9"] }
+to = "text_numeric_decimal_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "text_numeric_decimal_character_reference"
+matcher = { literal = ";" }
+to = "data"
+actions = [
+  "append_numeric_character_reference_to_text",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "text_numeric_decimal_character_reference"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_temporary_buffer_to_text", "flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "text_numeric_decimal_character_reference"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["append_temporary_buffer_to_text", "switch_to_return_state"]
+
+[[transitions]]
+from = "text_named_character_reference_a"
+matcher = { literal = "M" }
+to = "text_named_character_reference_am"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "text_named_character_reference_a"
+matcher = { literal = "m" }
+to = "text_named_character_reference_am"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "text_named_character_reference_a"
+matcher = { literal = "P" }
+to = "text_named_character_reference_ap"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "text_named_character_reference_a"
+matcher = { literal = "p" }
+to = "text_named_character_reference_ap"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "text_named_character_reference_a"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_temporary_buffer_to_text", "flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "text_named_character_reference_a"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["append_temporary_buffer_to_text", "switch_to_return_state"]
+
+[[transitions]]
+from = "text_named_character_reference_am"
+matcher = { literal = "P" }
+to = "text_named_character_reference_amp"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "text_named_character_reference_am"
+matcher = { literal = "p" }
+to = "text_named_character_reference_amp"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "text_named_character_reference_am"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_temporary_buffer_to_text", "flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "text_named_character_reference_am"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["append_temporary_buffer_to_text", "switch_to_return_state"]
+
+[[transitions]]
+from = "text_named_character_reference_amp"
+matcher = { literal = ";" }
+to = "data"
+actions = ["clear_temporary_buffer", "append_text(&)", "switch_to_return_state"]
+
+[[transitions]]
+from = "text_named_character_reference_amp"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_temporary_buffer_to_text", "flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "text_named_character_reference_amp"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["append_temporary_buffer_to_text", "switch_to_return_state"]
+
+[[transitions]]
+from = "text_named_character_reference_ap"
+matcher = { literal = "O" }
+to = "text_named_character_reference_apo"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "text_named_character_reference_ap"
+matcher = { literal = "o" }
+to = "text_named_character_reference_apo"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "text_named_character_reference_ap"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_temporary_buffer_to_text", "flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "text_named_character_reference_ap"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["append_temporary_buffer_to_text", "switch_to_return_state"]
+
+[[transitions]]
+from = "text_named_character_reference_apo"
+matcher = { literal = "S" }
+to = "text_named_character_reference_apos"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "text_named_character_reference_apo"
+matcher = { literal = "s" }
+to = "text_named_character_reference_apos"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "text_named_character_reference_apo"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_temporary_buffer_to_text", "flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "text_named_character_reference_apo"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["append_temporary_buffer_to_text", "switch_to_return_state"]
+
+[[transitions]]
+from = "text_named_character_reference_apos"
+matcher = { literal = ";" }
+to = "data"
+actions = ["clear_temporary_buffer", "append_text(')", "switch_to_return_state"]
+
+[[transitions]]
+from = "text_named_character_reference_apos"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_temporary_buffer_to_text", "flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "text_named_character_reference_apos"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["append_temporary_buffer_to_text", "switch_to_return_state"]
+
+[[transitions]]
+from = "text_named_character_reference_g"
+matcher = { literal = "T" }
+to = "text_named_character_reference_gt"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "text_named_character_reference_g"
+matcher = { literal = "t" }
+to = "text_named_character_reference_gt"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "text_named_character_reference_g"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_temporary_buffer_to_text", "flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "text_named_character_reference_g"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["append_temporary_buffer_to_text", "switch_to_return_state"]
+
+[[transitions]]
+from = "text_named_character_reference_gt"
+matcher = { literal = ";" }
+to = "data"
+actions = ["clear_temporary_buffer", "append_text(>)", "switch_to_return_state"]
+
+[[transitions]]
+from = "text_named_character_reference_gt"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_temporary_buffer_to_text", "flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "text_named_character_reference_gt"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["append_temporary_buffer_to_text", "switch_to_return_state"]
+
+[[transitions]]
+from = "text_named_character_reference_l"
+matcher = { literal = "T" }
+to = "text_named_character_reference_lt"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "text_named_character_reference_l"
+matcher = { literal = "t" }
+to = "text_named_character_reference_lt"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "text_named_character_reference_l"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_temporary_buffer_to_text", "flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "text_named_character_reference_l"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["append_temporary_buffer_to_text", "switch_to_return_state"]
+
+[[transitions]]
+from = "text_named_character_reference_lt"
+matcher = { literal = ";" }
+to = "data"
+actions = ["clear_temporary_buffer", "append_text(<)", "switch_to_return_state"]
+
+[[transitions]]
+from = "text_named_character_reference_lt"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_temporary_buffer_to_text", "flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "text_named_character_reference_lt"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["append_temporary_buffer_to_text", "switch_to_return_state"]
+
+[[transitions]]
+from = "text_named_character_reference_q"
+matcher = { literal = "U" }
+to = "text_named_character_reference_qu"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "text_named_character_reference_q"
+matcher = { literal = "u" }
+to = "text_named_character_reference_qu"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "text_named_character_reference_q"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_temporary_buffer_to_text", "flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "text_named_character_reference_q"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["append_temporary_buffer_to_text", "switch_to_return_state"]
+
+[[transitions]]
+from = "text_named_character_reference_qu"
+matcher = { literal = "O" }
+to = "text_named_character_reference_quo"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "text_named_character_reference_qu"
+matcher = { literal = "o" }
+to = "text_named_character_reference_quo"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "text_named_character_reference_qu"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_temporary_buffer_to_text", "flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "text_named_character_reference_qu"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["append_temporary_buffer_to_text", "switch_to_return_state"]
+
+[[transitions]]
+from = "text_named_character_reference_quo"
+matcher = { literal = "T" }
+to = "text_named_character_reference_quot"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "text_named_character_reference_quo"
+matcher = { literal = "t" }
+to = "text_named_character_reference_quot"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "text_named_character_reference_quo"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_temporary_buffer_to_text", "flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "text_named_character_reference_quo"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["append_temporary_buffer_to_text", "switch_to_return_state"]
+
+[[transitions]]
+from = "text_named_character_reference_quot"
+matcher = { literal = ";" }
+to = "data"
+actions = ["clear_temporary_buffer", "append_text(\")", "switch_to_return_state"]
+
+[[transitions]]
+from = "text_named_character_reference_quot"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_temporary_buffer_to_text", "flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "text_named_character_reference_quot"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["append_temporary_buffer_to_text", "switch_to_return_state"]
 
 [[transitions]]
 from = "rcdata_character_reference"
@@ -807,6 +1502,16 @@ actions = [
 
 [[transitions]]
 from = "before_attribute_value"
+matcher = { literal = "&" }
+to = "attribute_character_reference"
+actions = [
+  "set_return_state(attribute_value_unquoted)",
+  "clear_temporary_buffer",
+  "append_temporary_buffer(&)",
+]
+
+[[transitions]]
+from = "before_attribute_value"
 matcher = { anything = true }
 to = "attribute_value_unquoted"
 actions = ["append_attribute_value(current)"]
@@ -831,6 +1536,16 @@ actions = [
 
 [[transitions]]
 from = "attribute_value_double_quoted"
+matcher = { literal = "&" }
+to = "attribute_character_reference"
+actions = [
+  "set_return_state(attribute_value_double_quoted)",
+  "clear_temporary_buffer",
+  "append_temporary_buffer(&)",
+]
+
+[[transitions]]
+from = "attribute_value_double_quoted"
 matcher = { anything = true }
 to = "attribute_value_double_quoted"
 actions = ["append_attribute_value(current)"]
@@ -851,6 +1566,16 @@ actions = [
   "commit_attribute",
   "emit_current_token",
   "emit(EOF)",
+]
+
+[[transitions]]
+from = "attribute_value_single_quoted"
+matcher = { literal = "&" }
+to = "attribute_character_reference"
+actions = [
+  "set_return_state(attribute_value_single_quoted)",
+  "clear_temporary_buffer",
+  "append_temporary_buffer(&)",
 ]
 
 [[transitions]]
@@ -909,9 +1634,758 @@ actions = [
 
 [[transitions]]
 from = "attribute_value_unquoted"
+matcher = { literal = "&" }
+to = "attribute_character_reference"
+actions = [
+  "set_return_state(attribute_value_unquoted)",
+  "clear_temporary_buffer",
+  "append_temporary_buffer(&)",
+]
+
+[[transitions]]
+from = "attribute_value_unquoted"
 matcher = { anything = true }
 to = "attribute_value_unquoted"
 actions = ["append_attribute_value(current)"]
+
+[[transitions]]
+from = "attribute_character_reference"
+matcher = { literal = "A" }
+to = "attribute_named_character_reference_a"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "attribute_character_reference"
+matcher = { literal = "a" }
+to = "attribute_named_character_reference_a"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "attribute_character_reference"
+matcher = { literal = "G" }
+to = "attribute_named_character_reference_g"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "attribute_character_reference"
+matcher = { literal = "g" }
+to = "attribute_named_character_reference_g"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "attribute_character_reference"
+matcher = { literal = "L" }
+to = "attribute_named_character_reference_l"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "attribute_character_reference"
+matcher = { literal = "l" }
+to = "attribute_named_character_reference_l"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "attribute_character_reference"
+matcher = { literal = "Q" }
+to = "attribute_named_character_reference_q"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "attribute_character_reference"
+matcher = { literal = "q" }
+to = "attribute_named_character_reference_q"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "attribute_character_reference"
+matcher = { literal = "#" }
+to = "attribute_numeric_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "attribute_character_reference"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "parse_error(eof-in-tag)",
+  "commit_attribute",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "attribute_character_reference"
+matcher = { anything = true }
+to = "attribute_value_unquoted"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_numeric_character_reference"
+matcher = { literal = "x" }
+to = "attribute_numeric_hex_character_reference_start"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "attribute_numeric_character_reference"
+matcher = { literal = "X" }
+to = "attribute_numeric_hex_character_reference_start"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "attribute_numeric_character_reference"
+matcher = { range = ["0", "9"] }
+to = "attribute_numeric_decimal_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "attribute_numeric_character_reference"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "parse_error(eof-in-tag)",
+  "commit_attribute",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "attribute_numeric_character_reference"
+matcher = { anything = true }
+to = "attribute_value_unquoted"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_numeric_hex_character_reference_start"
+matcher = { range = ["0", "9"] }
+to = "attribute_numeric_hex_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "attribute_numeric_hex_character_reference_start"
+matcher = { range = ["A", "F"] }
+to = "attribute_numeric_hex_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "attribute_numeric_hex_character_reference_start"
+matcher = { range = ["a", "f"] }
+to = "attribute_numeric_hex_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "attribute_numeric_hex_character_reference_start"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "parse_error(eof-in-tag)",
+  "commit_attribute",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "attribute_numeric_hex_character_reference_start"
+matcher = { anything = true }
+to = "attribute_value_unquoted"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_numeric_hex_character_reference"
+matcher = { range = ["0", "9"] }
+to = "attribute_numeric_hex_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "attribute_numeric_hex_character_reference"
+matcher = { range = ["A", "F"] }
+to = "attribute_numeric_hex_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "attribute_numeric_hex_character_reference"
+matcher = { range = ["a", "f"] }
+to = "attribute_numeric_hex_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "attribute_numeric_hex_character_reference"
+matcher = { literal = ";" }
+to = "attribute_value_unquoted"
+actions = [
+  "append_numeric_character_reference_to_attribute_value",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_numeric_hex_character_reference"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "parse_error(eof-in-tag)",
+  "commit_attribute",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "attribute_numeric_hex_character_reference"
+matcher = { anything = true }
+to = "attribute_value_unquoted"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_numeric_decimal_character_reference"
+matcher = { range = ["0", "9"] }
+to = "attribute_numeric_decimal_character_reference"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "attribute_numeric_decimal_character_reference"
+matcher = { literal = ";" }
+to = "attribute_value_unquoted"
+actions = [
+  "append_numeric_character_reference_to_attribute_value",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_numeric_decimal_character_reference"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "parse_error(eof-in-tag)",
+  "commit_attribute",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "attribute_numeric_decimal_character_reference"
+matcher = { anything = true }
+to = "attribute_value_unquoted"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_a"
+matcher = { literal = "M" }
+to = "attribute_named_character_reference_am"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "attribute_named_character_reference_a"
+matcher = { literal = "m" }
+to = "attribute_named_character_reference_am"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "attribute_named_character_reference_a"
+matcher = { literal = "P" }
+to = "attribute_named_character_reference_ap"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "attribute_named_character_reference_a"
+matcher = { literal = "p" }
+to = "attribute_named_character_reference_ap"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "attribute_named_character_reference_a"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "parse_error(eof-in-tag)",
+  "commit_attribute",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_a"
+matcher = { anything = true }
+to = "attribute_value_unquoted"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_am"
+matcher = { literal = "P" }
+to = "attribute_named_character_reference_amp"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "attribute_named_character_reference_am"
+matcher = { literal = "p" }
+to = "attribute_named_character_reference_amp"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "attribute_named_character_reference_am"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "parse_error(eof-in-tag)",
+  "commit_attribute",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_am"
+matcher = { anything = true }
+to = "attribute_value_unquoted"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_amp"
+matcher = { literal = ";" }
+to = "attribute_value_unquoted"
+actions = [
+  "clear_temporary_buffer",
+  "append_attribute_value(&)",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_amp"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "parse_error(eof-in-tag)",
+  "commit_attribute",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_amp"
+matcher = { anything = true }
+to = "attribute_value_unquoted"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_ap"
+matcher = { literal = "O" }
+to = "attribute_named_character_reference_apo"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "attribute_named_character_reference_ap"
+matcher = { literal = "o" }
+to = "attribute_named_character_reference_apo"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "attribute_named_character_reference_ap"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "parse_error(eof-in-tag)",
+  "commit_attribute",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_ap"
+matcher = { anything = true }
+to = "attribute_value_unquoted"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_apo"
+matcher = { literal = "S" }
+to = "attribute_named_character_reference_apos"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "attribute_named_character_reference_apo"
+matcher = { literal = "s" }
+to = "attribute_named_character_reference_apos"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "attribute_named_character_reference_apo"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "parse_error(eof-in-tag)",
+  "commit_attribute",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_apo"
+matcher = { anything = true }
+to = "attribute_value_unquoted"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_apos"
+matcher = { literal = ";" }
+to = "attribute_value_unquoted"
+actions = [
+  "clear_temporary_buffer",
+  "append_attribute_value(')",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_apos"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "parse_error(eof-in-tag)",
+  "commit_attribute",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_apos"
+matcher = { anything = true }
+to = "attribute_value_unquoted"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_g"
+matcher = { literal = "T" }
+to = "attribute_named_character_reference_gt"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "attribute_named_character_reference_g"
+matcher = { literal = "t" }
+to = "attribute_named_character_reference_gt"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "attribute_named_character_reference_g"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "parse_error(eof-in-tag)",
+  "commit_attribute",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_g"
+matcher = { anything = true }
+to = "attribute_value_unquoted"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_gt"
+matcher = { literal = ";" }
+to = "attribute_value_unquoted"
+actions = [
+  "clear_temporary_buffer",
+  "append_attribute_value(>)",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_gt"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "parse_error(eof-in-tag)",
+  "commit_attribute",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_gt"
+matcher = { anything = true }
+to = "attribute_value_unquoted"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_l"
+matcher = { literal = "T" }
+to = "attribute_named_character_reference_lt"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "attribute_named_character_reference_l"
+matcher = { literal = "t" }
+to = "attribute_named_character_reference_lt"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "attribute_named_character_reference_l"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "parse_error(eof-in-tag)",
+  "commit_attribute",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_l"
+matcher = { anything = true }
+to = "attribute_value_unquoted"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_lt"
+matcher = { literal = ";" }
+to = "attribute_value_unquoted"
+actions = [
+  "clear_temporary_buffer",
+  "append_attribute_value(<)",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_lt"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "parse_error(eof-in-tag)",
+  "commit_attribute",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_lt"
+matcher = { anything = true }
+to = "attribute_value_unquoted"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_q"
+matcher = { literal = "U" }
+to = "attribute_named_character_reference_qu"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "attribute_named_character_reference_q"
+matcher = { literal = "u" }
+to = "attribute_named_character_reference_qu"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "attribute_named_character_reference_q"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "parse_error(eof-in-tag)",
+  "commit_attribute",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_q"
+matcher = { anything = true }
+to = "attribute_value_unquoted"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_qu"
+matcher = { literal = "O" }
+to = "attribute_named_character_reference_quo"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "attribute_named_character_reference_qu"
+matcher = { literal = "o" }
+to = "attribute_named_character_reference_quo"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "attribute_named_character_reference_qu"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "parse_error(eof-in-tag)",
+  "commit_attribute",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_qu"
+matcher = { anything = true }
+to = "attribute_value_unquoted"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_quo"
+matcher = { literal = "T" }
+to = "attribute_named_character_reference_quot"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "attribute_named_character_reference_quo"
+matcher = { literal = "t" }
+to = "attribute_named_character_reference_quot"
+actions = ["append_temporary_buffer(current_lowercase)"]
+
+[[transitions]]
+from = "attribute_named_character_reference_quo"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "parse_error(eof-in-tag)",
+  "commit_attribute",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_quo"
+matcher = { anything = true }
+to = "attribute_value_unquoted"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_quot"
+matcher = { literal = ";" }
+to = "attribute_value_unquoted"
+actions = [
+  "clear_temporary_buffer",
+  "append_attribute_value(\")",
+  "switch_to_return_state",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_quot"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "parse_error(eof-in-tag)",
+  "commit_attribute",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_quot"
+matcher = { anything = true }
+to = "attribute_value_unquoted"
+consume = false
+actions = [
+  "append_temporary_buffer_to_attribute_value",
+  "switch_to_return_state",
+]
 
 [[transitions]]
 from = "after_attribute_value_quoted"
@@ -1599,3 +3073,13 @@ tokens = [
 name = "comment-eof-recovery"
 input = "<!--open"
 tokens = ["Comment(data=open)", "EOF"]
+
+[[fixtures]]
+name = "html-character-references"
+input = "Fish &amp; &lt;b&gt; &quot;quote&quot; &apos;ok&apos;"
+tokens = ["Text(data=Fish & <b> \"quote\" 'ok')", "EOF"]
+
+[[fixtures]]
+name = "html-numeric-character-references"
+input = "Letters: &#65; &#x42; &#X43; &#0;"
+tokens = ["Text(data=Letters: A B C \uFFFD)", "EOF"]

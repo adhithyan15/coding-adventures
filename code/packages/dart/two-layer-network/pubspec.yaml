@@ -1,0 +1,12 @@
+name: coding_adventures_two_layer_network
+version: 0.1.0
+description: Two-layer neural network primitives for hidden-layer examples.
+repository: https://github.com/adhithyan15/coding-adventures
+
+environment:
+  sdk: ^3.0.0
+
+dependencies: {}
+
+dev_dependencies:
+  test: ^1.25.0

@@ -119,6 +119,70 @@
       "diagnostics": [],
       "initial_state": "RAWTEXT state",
       "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-10",
+      "description": "data state named character references",
+      "input": "Fish &amp; &lt;b&gt; &quot;quote&quot; &apos;ok&apos;",
+      "tokens": [
+        "Text(data=Fish & <b> \"quote\" 'ok')",
+        "EOF"
+      ],
+      "diagnostics": []
+    },
+    {
+      "id": "html5lib-smoke-11",
+      "description": "attribute named character references",
+      "input": "<a title=\"Fish &amp; Chips\" data-x='&lt;ok&gt;' note=&quot;hi&quot;>",
+      "tokens": [
+        "StartTag(name=a, attributes=[title=Fish & Chips, data-x=<ok>, note=\"hi\"], self_closing=false)",
+        "EOF"
+      ],
+      "diagnostics": []
+    },
+    {
+      "id": "html5lib-smoke-12",
+      "description": "rcdata named character references remain text",
+      "input": "Fish &amp; &lt;/title>",
+      "tokens": [
+        "Text(data=Fish & </title>)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-13",
+      "description": "data state numeric character references",
+      "input": "Letters: &#65; &#x42; &#X43; &#0;",
+      "tokens": [
+        "Text(data=Letters: A B C \ufffd)",
+        "EOF"
+      ],
+      "diagnostics": []
+    },
+    {
+      "id": "html5lib-smoke-14",
+      "description": "attribute numeric character references",
+      "input": "<a title=\"&#65;&#x42;\" data-x='&#X43;' note=&#0;>",
+      "tokens": [
+        "StartTag(name=a, attributes=[title=AB, data-x=C, note=\ufffd], self_closing=false)",
+        "EOF"
+      ],
+      "diagnostics": []
+    },
+    {
+      "id": "html5lib-smoke-15",
+      "description": "rcdata numeric character references remain text",
+      "input": "Fish &#38; &#x3C;/title>",
+      "tokens": [
+        "Text(data=Fish & </title>)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
     }
   ],
   "skipped": []

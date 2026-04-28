@@ -72,6 +72,10 @@ currently supports:
 - `initialStates: ["RAWTEXT state"]` together with `lastStartTag`
 - `StartTag`, `EndTag`, `Character`, `Comment`, and `DOCTYPE` output tokens
 - html5lib start-tag self-closing booleans
+- named character references in data, RCDATA, and attribute values for the
+  current shared entity subset
+- semicolon-terminated decimal and hexadecimal numeric character references in
+  data, RCDATA, and attribute values
 - tokenizer error codes lowered into Venture diagnostics
 
 Unsupported raw cases are skipped into metadata in the generated file rather

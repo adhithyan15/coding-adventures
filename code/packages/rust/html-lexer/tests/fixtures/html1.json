@@ -87,6 +87,64 @@
       ],
       "initial_state": "RAWTEXT state",
       "last_start_tag": "style"
+    },
+    {
+      "id": "html-character-references-data",
+      "description": "Named character references resolve in data state",
+      "input": "Fish &amp; &lt;b&gt; &quot;quote&quot; &apos;ok&apos;",
+      "tokens": [
+        "Text(data=Fish & <b> \"quote\" 'ok')",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-character-references-attributes",
+      "description": "Named character references resolve inside quoted and unquoted attribute values",
+      "input": "<a title=\"Fish &amp; Chips\" data-x='&lt;ok&gt;' note=&quot;hi&quot;>",
+      "tokens": [
+        "StartTag(name=a, attributes=[title=Fish & Chips, data-x=<ok>, note=\"hi\"], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-character-references-rcdata",
+      "description": "Seeded title RCDATA context resolves named character references as text",
+      "input": "Fish &amp; &lt;/title>",
+      "tokens": [
+        "Text(data=Fish & </title>)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html-numeric-character-references-data",
+      "description": "Decimal and hexadecimal numeric character references resolve in data state",
+      "input": "Letters: &#65; &#x42; &#X43; &#0;",
+      "tokens": [
+        "Text(data=Letters: A B C \uFFFD)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-numeric-character-references-attributes",
+      "description": "Numeric character references resolve inside quoted and unquoted attribute values",
+      "input": "<a title=\"&#65;&#x42;\" data-x='&#X43;' note=&#0;>",
+      "tokens": [
+        "StartTag(name=a, attributes=[title=AB, data-x=C, note=\uFFFD], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-numeric-character-references-rcdata",
+      "description": "Seeded title RCDATA context resolves numeric character references as text",
+      "input": "Fish &#38; &#x3C;/title>",
+      "tokens": [
+        "Text(data=Fish & </title>)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
     }
   ]
 }

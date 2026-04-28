@@ -43,3 +43,9 @@ documented in this file.
 - RAWTEXT support in the authored `html1` machine, the html5lib importer, and
   the Rust conformance harness, so seeded style-like tokenizer cases now
   execute through the generated static wrapper instead of being skipped.
+- Named character reference support for the current generated Rust lexer in
+  data, RCDATA, and attribute values, covering `amp`, `lt`, `gt`, `quot`, and
+  `apos` as the first shared entity set.
+- Decimal and hexadecimal numeric character references in data, RCDATA, and
+  attribute values, including replacement-character fallback for null or
+  invalid scalar values.

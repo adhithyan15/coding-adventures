@@ -64,6 +64,9 @@ Temporary buffers and controlled state changes:
 - `append_temporary_buffer(current_lowercase)`
 - `append_temporary_buffer(literal)`
 - `append_temporary_buffer_to_text`
+- `append_temporary_buffer_to_attribute_value`
+- `append_numeric_character_reference_to_text`
+- `append_numeric_character_reference_to_attribute_value`
 - `discard_current_token`
 - `set_return_state(state)`
 - `switch_to(state)`

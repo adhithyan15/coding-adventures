@@ -511,6 +511,22 @@ impl Tokenizer {
                     self.text_buffer.push_str(&self.temporary_buffer);
                     self.temporary_buffer.clear();
                 }
+                "append_temporary_buffer_to_attribute_value" => {
+                    let temporary_buffer = std::mem::take(&mut self.temporary_buffer);
+                    self.attribute_mut(action)?
+                        .value
+                        .push_str(&temporary_buffer);
+                }
+                "append_numeric_character_reference_to_text" => {
+                    let ch = numeric_character_reference(&self.temporary_buffer);
+                    self.temporary_buffer.clear();
+                    self.text_buffer.push(ch);
+                }
+                "append_numeric_character_reference_to_attribute_value" => {
+                    let ch = numeric_character_reference(&self.temporary_buffer);
+                    self.temporary_buffer.clear();
+                    self.attribute_mut(action)?.value.push(ch);
+                }
                 "discard_current_token" => {
                     self.current_token = None;
                     self.current_attribute = None;
@@ -854,4 +870,31 @@ fn push_lowercase(target: &mut String, ch: char) {
     for lowered in ch.to_lowercase() {
         target.push(lowered);
     }
+}
+
+fn numeric_character_reference(buffer: &str) -> char {
+    let Some(raw_digits) = buffer.strip_prefix("&#") else {
+        return '\u{FFFD}';
+    };
+    let (radix, digits) = match raw_digits
+        .strip_prefix('x')
+        .or_else(|| raw_digits.strip_prefix('X'))
+    {
+        Some(hex_digits) => (16, hex_digits),
+        None => (10, raw_digits),
+    };
+    if digits.is_empty() {
+        return '\u{FFFD}';
+    }
+
+    u32::from_str_radix(digits, radix)
+        .ok()
+        .and_then(|value| {
+            if value == 0 {
+                None
+            } else {
+                char::from_u32(value)
+            }
+        })
+        .unwrap_or('\u{FFFD}')
 }

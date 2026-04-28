@@ -380,6 +380,7 @@ members = [
     "rng",
     "feature-normalization",
     "single-layer-network",
+    "two-layer-network",
     "symbolic-ir",
     "symbolic-vm",
     "cas-pattern-matching",
