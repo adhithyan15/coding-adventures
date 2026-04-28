@@ -891,6 +891,25 @@ class TestAlgolIrCompiler:
         assert signature.param_types == ("integer", "integer", "integer")
         assert signature.return_type == "real"
 
+    def test_compiles_integer_return_actual_for_real_procedure_parameter(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; real y; "
+                "procedure invoke(f); real f; procedure f; "
+                "begin y := f(2); if y = 4.0 then result := 1 else result := 0 end; "
+                "integer procedure twice(x); value x; integer x; "
+                "begin twice := x * 2 end; "
+                "invoke(twice) "
+                "end"
+            )
+        )
+        signature = result.procedure_signatures[
+            "_fn_algol_call_procedure_f64_result_i32"
+        ]
+
+        assert signature.param_types == ("integer", "integer", "integer")
+        assert signature.return_type == "real"
+
     def test_compiles_value_typed_procedure_parameter_expression_call(self) -> None:
         result = compile_algol(
             parse_algol(

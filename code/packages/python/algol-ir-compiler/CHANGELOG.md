@@ -60,6 +60,12 @@ All notable changes to this package will be documented in this file.
   the array descriptor, bounds metadata, and element storage at procedure entry.
 - Stored label, switch, and procedure formals as copied ids or descriptor
   pointers at procedure entry even when they are declared in `value` mode.
+- Allowed real-valued formal procedure dispatchers to accept integer-returning
+  procedure actuals and promote their result through the existing real coercion
+  path.
+- Emitted real-returning procedures, eval thunks, and procedure-parameter
+  dispatchers through the WASM backend's dedicated f64 result register so they
+  can also call integer-returning procedures safely.
 
 ## [0.1.0] - 2026-04-20
 

@@ -13,7 +13,9 @@ returns it.
 Value-only integer procedures lower to generated `_fn_algol_...` functions.
 Calls pass an explicit static link followed by value arguments, procedure frames
 are allocated from the module frame stack, and typed procedures return through
-their procedure-name result slot.
+their procedure-name result slot. Integer and boolean procedure results flow
+through `v1`; real procedure results flow through the WASM backend's dedicated
+f64 result register, `v31`.
 Parameterless typed procedures can also be used by bare name in expression
 positions, following ALGOL's omitted-parentheses call syntax; read-only by-name
 actuals of that form lower through eval thunks so each formal read re-runs the
@@ -59,8 +61,9 @@ paths also cover `value` formals. Procedure formals pass descriptor closures
 containing the callee procedure id and static link; formal calls dispatch
 through generated helpers for statement calls and typed expression calls with
 scalar value arguments, so forwarded procedure formals keep the original
-environment in value or by-name mode. Full ALGOL forms such as escaping thunk
-descriptors remain future work.
+environment in value or by-name mode. Real-valued formal procedure calls can
+accept integer-returning actual procedures and promote the dispatched result.
+Full ALGOL forms such as escaping thunk descriptors remain future work.
 
 Direct `goto` statements lower to ordinary IR `JUMP` instructions targeting
 generated ALGOL labels. Local jumps emit the jump directly. Direct nonlocal
