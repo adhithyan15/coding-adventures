@@ -630,11 +630,12 @@ class TestPhase13_Fallthrough:
         _is_unevaluated(f, F)
 
     def test_atanh_times_x(self) -> None:
-        """∫ x·atanh(x) dx — poly×atanh deferred, unevaluated."""
+        """∫ x·atanh(x) dx — now closed-form via Phase 14c IBP."""
         vm = _make_vm()
         f = _mul(X, _atanh(X))
         F = _integrate_ir(vm, f)
-        _is_unevaluated(f, F)
+        _was_evaluated(f, F)
+        _check_antiderivative(f, F, test_points=_TP_ATANH)
 
 
 # ---------------------------------------------------------------------------
