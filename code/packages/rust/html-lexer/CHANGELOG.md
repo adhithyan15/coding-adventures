@@ -68,3 +68,6 @@ documented in this file.
 - First script-data escaped tokenizer states, covering `<!-- ... -->` style
   script text and matching `</script>` end-tag emission from escaped script
   text.
+- Script-data double-escaped tokenizer states, so nested-looking
+  `<script>...</script>` text inside escaped script comments does not
+  prematurely emit the outer script end tag.

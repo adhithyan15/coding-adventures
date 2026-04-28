@@ -603,6 +603,25 @@ impl Tokenizer {
                         .set_current_state(return_state)
                         .map_err(TokenizerError::Machine)?;
                 }
+                _ if action.starts_with("switch_to_if_temporary_buffer_equals(")
+                    && action.ends_with(')') =>
+                {
+                    let arguments = action
+                        .trim_start_matches("switch_to_if_temporary_buffer_equals(")
+                        .trim_end_matches(')');
+                    let parts = arguments.split(',').map(str::trim).collect::<Vec<_>>();
+                    if parts.len() != 3 || parts.iter().any(|part| part.is_empty()) {
+                        return Err(TokenizerError::UnknownAction(action.clone()));
+                    }
+                    let target = if self.temporary_buffer == parts[0] {
+                        parts[1]
+                    } else {
+                        parts[2]
+                    };
+                    self.machine
+                        .set_current_state(target.to_string())
+                        .map_err(TokenizerError::Machine)?;
+                }
                 "emit_current_token" => self.emit_current_token(action)?,
                 "emit_rcdata_end_tag_or_text" => self.emit_rcdata_end_tag_or_text(action)?,
                 "emit(EOF)" => self.tokens.push_back(Token::Eof),

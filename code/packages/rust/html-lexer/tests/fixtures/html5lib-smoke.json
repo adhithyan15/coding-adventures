@@ -9,6 +9,7 @@
     "PLAINTEXT state",
     "RAWTEXT state",
     "RCDATA state",
+    "Script data double escaped state",
     "Script data escaped state",
     "Script data state"
   ],
@@ -395,6 +396,19 @@
       ],
       "initial_state": "RCDATA state",
       "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-33",
+      "description": "script data double escaped state keeps first script end tag literal",
+      "input": "x </script> y --></script>",
+      "tokens": [
+        "Text(data=x </script> y -->)",
+        "EndTag(name=script)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data double escaped state",
+      "last_start_tag": "script"
     }
   ],
   "skipped": []

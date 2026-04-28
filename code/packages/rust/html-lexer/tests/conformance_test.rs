@@ -92,14 +92,14 @@ fn fixture_manifests_parse() {
     assert_eq!(html1.format, "venture-html-lexer-fixtures/v1");
     assert_eq!(html1.suite, "html1");
     assert!(!html1.description.is_empty());
-    assert_eq!(html1.cases.len(), 31);
+    assert_eq!(html1.cases.len(), 32);
 }
 
 #[test]
 fn html5lib_smoke_fixture_file_parses() {
     let file = load_html5lib_file(HTML5LIB_RAW_FIXTURES);
 
-    assert_eq!(file.tests.len(), 32);
+    assert_eq!(file.tests.len(), 33);
     assert_eq!(
         file.tests[0].description,
         "simple start and end tag in data state"
@@ -138,11 +138,12 @@ fn normalized_html5lib_fixture_parses_with_importer_metadata() {
             "PLAINTEXT state".to_string(),
             "RAWTEXT state".to_string(),
             "RCDATA state".to_string(),
+            "Script data double escaped state".to_string(),
             "Script data escaped state".to_string(),
             "Script data state".to_string()
         ]
     );
-    assert_eq!(normalized.cases.len(), 32);
+    assert_eq!(normalized.cases.len(), 33);
     assert!(normalized.skipped.is_empty());
     assert_eq!(
         normalized.cases[6].initial_state.as_deref(),
@@ -200,7 +201,7 @@ fn normalized_html5lib_cases_match_default_wrapper() {
 
     assert_eq!(suite.format, "venture-html-lexer-fixtures/v1");
     assert_eq!(suite.suite, "html5lib-smoke");
-    assert_eq!(suite.cases.len(), 32);
+    assert_eq!(suite.cases.len(), 33);
 
     run_fixture_suite(&suite, |case| {
         let mut lexer = create_html_lexer().map_err(|error| format!("{error:?}"))?;
@@ -275,6 +276,7 @@ fn is_supported_by_current_runtime(case: &FixtureCase) -> bool {
         Some("PLAINTEXT state") => case.last_start_tag.is_none(),
         Some("RCDATA state") => case.last_start_tag.is_some(),
         Some("RAWTEXT state") => case.last_start_tag.is_some(),
+        Some("Script data double escaped state") => case.last_start_tag.is_some(),
         Some("Script data escaped state") => case.last_start_tag.is_some(),
         Some("Script data state") => case.last_start_tag.is_some(),
         Some(_) => false,
@@ -339,6 +341,7 @@ fn machine_state_for_fixture(state: &str) -> &str {
         "PLAINTEXT state" => "plaintext",
         "RCDATA state" => "rcdata",
         "RAWTEXT state" => "rawtext",
+        "Script data double escaped state" => "script_data_double_escaped",
         "Script data escaped state" => "script_data_escaped",
         "Script data state" => "script_data",
         other => panic!("unsupported fixture state `{other}`"),

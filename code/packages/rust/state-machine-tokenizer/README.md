@@ -81,6 +81,7 @@ Temporary buffers and controlled state changes:
 - `discard_current_token`
 - `set_return_state(state)`
 - `switch_to(state)`
+- `switch_to_if_temporary_buffer_equals(value, equal_state, fallback_state)`
 - `switch_to_return_state`
 - `emit_rcdata_end_tag_or_text`
 

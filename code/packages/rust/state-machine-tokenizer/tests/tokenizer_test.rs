@@ -611,6 +611,46 @@ fn tokenizer_supports_return_state_round_trips() {
 }
 
 #[test]
+fn tokenizer_supports_temporary_buffer_conditional_state_switches() {
+    fn tokenizer() -> Tokenizer {
+        Tokenizer::new(
+            EffectfulStateMachine::new(
+                set(&["data", "collect", "matched", "fallback"]),
+                set(&[">"]),
+                vec![
+                    EffectfulTransition::new("data", EffectfulMatcher::Any, "collect")
+                        .with_effects(&[
+                            "clear_temporary_buffer",
+                            "append_temporary_buffer(current_lowercase)",
+                        ]),
+                    EffectfulTransition::new(
+                        "collect",
+                        EffectfulMatcher::Event(">".to_string()),
+                        "fallback",
+                    )
+                    .with_effects(&[
+                        "switch_to_if_temporary_buffer_equals(script, matched, fallback)",
+                    ]),
+                    EffectfulTransition::new("collect", EffectfulMatcher::Any, "collect")
+                        .with_effects(&["append_temporary_buffer(current_lowercase)"]),
+                ],
+                "data".to_string(),
+                set(&[]),
+            )
+            .unwrap(),
+        )
+    }
+
+    let mut matched = tokenizer();
+    matched.push("script>").unwrap();
+    assert_eq!(matched.current_state(), "matched");
+
+    let mut fallback = tokenizer();
+    fallback.push("style>").unwrap();
+    assert_eq!(fallback.current_state(), "fallback");
+}
+
+#[test]
 fn tokenizer_can_seed_initial_state_and_last_start_tag() {
     let mut tokenizer = Tokenizer::new(
         EffectfulStateMachine::new(

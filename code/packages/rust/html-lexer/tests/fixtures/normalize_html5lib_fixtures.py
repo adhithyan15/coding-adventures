@@ -15,6 +15,7 @@ SUPPORTED_INITIAL_STATES = {
     "PLAINTEXT state",
     "RCDATA state",
     "RAWTEXT state",
+    "Script data double escaped state",
     "Script data escaped state",
     "Script data state",
 }
@@ -80,6 +81,7 @@ def is_supported(test: dict[str, Any]) -> tuple[bool, str]:
     if initial_states in (
         ["RCDATA state"],
         ["RAWTEXT state"],
+        ["Script data double escaped state"],
         ["Script data escaped state"],
         ["Script data state"],
     ) and not isinstance(last_start_tag, str):
@@ -90,6 +92,7 @@ def is_supported(test: dict[str, Any]) -> tuple[bool, str]:
         not in (
             ["RCDATA state"],
             ["RAWTEXT state"],
+            ["Script data double escaped state"],
             ["Script data escaped state"],
             ["Script data state"],
         )

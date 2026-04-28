@@ -749,6 +749,15 @@ fn validate_action(action: &str, token_names: &HashSet<String>) -> Result<()> {
     if action.starts_with("switch_to(") && action.ends_with(')') {
         return Ok(());
     }
+    if action.starts_with("switch_to_if_temporary_buffer_equals(") && action.ends_with(')') {
+        let arguments = action
+            .trim_start_matches("switch_to_if_temporary_buffer_equals(")
+            .trim_end_matches(')');
+        let parts = arguments.split(',').map(str::trim).collect::<Vec<_>>();
+        if parts.len() == 3 && parts.iter().all(|part| !part.is_empty()) {
+            return Ok(());
+        }
+    }
     if action.starts_with("emit(") && action.ends_with(')') {
         let token = action
             .trim_start_matches("emit(")
