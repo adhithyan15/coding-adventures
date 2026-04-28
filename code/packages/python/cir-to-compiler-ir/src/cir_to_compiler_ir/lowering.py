@@ -113,6 +113,25 @@ _INT_TYPES: frozenset[str] = frozenset(
 
 _FLOAT_TYPES: frozenset[str] = frozenset({"f32", "f64"})
 
+# ---------------------------------------------------------------------------
+# Heap base offset for ``load_mem`` / ``store_mem`` lowering.
+# ---------------------------------------------------------------------------
+#
+# When the WASM backend compiles a program that uses both byte-tape
+# memory ops AND WASI ``fd_write`` / ``fd_read`` (BF06: Brainfuck's
+# `.` / `,`), it places a 16-byte WASI scratch region at the bottom of
+# linear memory.  A naive ``base = 0`` for tape access would alias the
+# tape's first 16 cells with that scratch — every ``putchar`` would
+# trample tape cells 0..15.
+#
+# Fix: pad past the WASI scratch.  ``_HEAP_BASE_OFFSET`` reserves the
+# first 16 bytes of linear memory for backend use; tape cell N lives
+# at WASM linear-memory address ``_HEAP_BASE_OFFSET + N``.  This costs
+# 16 bytes per program and zero ops at runtime (the offset is a
+# compile-time constant), and cleanly avoids the collision regardless
+# of whether the final program uses WASI.
+_HEAP_BASE_OFFSET = 16
+
 
 # ---------------------------------------------------------------------------
 # _CIRLowerer — the actual lowering engine
@@ -720,7 +739,7 @@ class _CIRLowerer:
                 ptr_reg = ptr_operand
 
             base = self._fresh()
-            self._emit(IrOp.LOAD_IMM, base, IrImmediate(0))
+            self._emit(IrOp.LOAD_IMM, base, IrImmediate(_HEAP_BASE_OFFSET))
             self._emit(IrOp.LOAD_BYTE, dest_reg, base, ptr_reg)
             return
 
@@ -746,9 +765,64 @@ class _CIRLowerer:
                 val_reg = val_operand
 
             base = self._fresh()
-            self._emit(IrOp.LOAD_IMM, base, IrImmediate(0))
+            self._emit(IrOp.LOAD_IMM, base, IrImmediate(_HEAP_BASE_OFFSET))
             self._emit(IrOp.STORE_BYTE, val_reg, base, ptr_reg)
             return
+
+        # ── WASI byte-level I/O (BF06) ──────────────────────────────────────
+        #
+        # ``call_builtin`` is a generic host-call seam in IIR.  Different
+        # languages register different host callables behind it (Brainfuck:
+        # ``putchar`` / ``getchar``; Twig: ``cons`` / ``car`` / ``cdr`` /
+        # ``apply_closure`` / …).  ``ir-to-wasm-compiler`` already knows
+        # how to emit WASI ``fd_write`` / ``fd_read`` sequences from the
+        # ``IrOp.SYSCALL`` opcode — see
+        # ``ir_to_wasm_compiler.compiler._emit_wasi_write`` /
+        # ``_emit_wasi_read``.  So for the byte-I/O builtins we lower
+        # ``call_builtin`` straight to ``SYSCALL`` and inherit the WASI
+        # plumbing for free.
+        #
+        # CIR shapes:
+        #   call_builtin dest=None  srcs=["putchar", "v"]   type="void"
+        #     →   SYSCALL imm=1, val_reg
+        #
+        #   call_builtin dest="v"   srcs=["getchar"]        type="u8"
+        #     →   SYSCALL imm=2, dest_reg
+        #
+        # Every other ``call_builtin`` name still falls through to the
+        # generic "unknown op" path below, which causes the JIT to deopt
+        # to the interpreter — that's the documented contract.
+
+        if op == "call_builtin" and instr.srcs:
+            builtin = str(instr.srcs[0])
+            if builtin == "putchar":
+                if len(instr.srcs) < 2:
+                    raise CIRLoweringError(
+                        "call_builtin 'putchar' expects 1 value argument"
+                    )
+                val_operand = self._operand(instr.srcs[1])
+                if isinstance(val_operand, IrImmediate):
+                    val_reg = self._fresh()
+                    self._emit(IrOp.LOAD_IMM, val_reg, val_operand)
+                else:
+                    val_reg = val_operand
+                self._emit(IrOp.SYSCALL, IrImmediate(1), val_reg)
+                return
+
+            if builtin == "getchar":
+                if dest is None:
+                    raise CIRLoweringError(
+                        "call_builtin 'getchar' must have a dest register"
+                    )
+                dest_reg = self._var(dest)
+                self._emit(IrOp.SYSCALL, IrImmediate(2), dest_reg)
+                return
+
+            # Fall through — other builtin names hit the unknown-op branch
+            # below.  This is the deliberate deopt path: the JIT backend
+            # converts ``CIRLoweringError`` into a "deopt to interpreter"
+            # signal so unsupported builtins simply slow down rather than
+            # crash.
 
         # ── Unsupported ops ──────────────────────────────────────────────────
 

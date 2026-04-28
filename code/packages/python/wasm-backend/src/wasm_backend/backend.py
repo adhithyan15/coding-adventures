@@ -186,8 +186,29 @@ class WASMBackend:
     #: for diagnostics (stored in ``CodegenResult.backend_name``).
     name: str = "wasm"
 
-    def __init__(self, *, entry_label: str = "_start") -> None:
+    def __init__(
+        self,
+        *,
+        entry_label: str = "_start",
+        host: Any = None,
+    ) -> None:
+        """Construct a WASM JIT backend.
+
+        Parameters
+        ----------
+        entry_label:
+            The exported WASM function name to invoke on ``run()``.
+        host:
+            Optional ``wasm_runtime.WasiHost`` instance.  When supplied,
+            ``run()`` instantiates ``WasmRuntime`` with this host so
+            programs that emit WASI ``fd_write`` / ``fd_read`` calls
+            (BF06: Brainfuck `.` / `,`) can route stdout/stdin through
+            caller-supplied callbacks.  ``None`` preserves the
+            BF05-era behaviour: a fresh default ``WasmRuntime`` per
+            run, with stdout discarded and stdin returning EOF.
+        """
         self.entry_label = entry_label
+        self._host = host
 
     # ------------------------------------------------------------------
     # BackendProtocol — compile()
@@ -331,7 +352,12 @@ class WASMBackend:
         try:
             from wasm_runtime import WasmRuntime
 
-            results = WasmRuntime().load_and_run(binary, self.entry_label, args)
+            runtime = (
+                WasmRuntime(host=self._host)
+                if self._host is not None
+                else WasmRuntime()
+            )
+            results = runtime.load_and_run(binary, self.entry_label, args)
             return results[0] if results else None
         except Exception:
             return None

@@ -5,6 +5,20 @@ All notable changes to `brainfuck-iir-compiler` are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.3.0] — BF06: JIT for I/O programs (WASI fd_write / fd_read)
+
+### Added
+
+- **JIT path for programs with `.` / `,`.**  ``BrainfuckVM(jit=True)``
+  now constructs a per-run ``WasiHost`` whose ``stdout`` / ``stdin``
+  callbacks share the same ``output`` bytearray and ``input_buffer``
+  the interpreter path uses.  Programs that previously deopted because
+  ``cir-to-compiler-ir`` lacked a ``call_builtin`` lowering (Hello
+  World et al.) now JIT end-to-end via WASI.
+- ``Heap base offset = 16`` in the load_mem / store_mem lowering so the
+  Brainfuck tape no longer aliases the WASI scratch region the WASM
+  compiler reserves at the bottom of linear memory.
+
 ## [0.2.0] — BF05: JIT to WebAssembly
 
 ### Added

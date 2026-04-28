@@ -3,6 +3,30 @@
 All notable changes to this package will be documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.3.0] — 2026-04-28 (BF06)
+
+### Added
+
+- **Lowerings for `call_builtin "putchar"` and `"getchar"`.**  Both
+  map to the static IR's ``IrOp.SYSCALL`` (1 = ``fd_write``,
+  2 = ``fd_read``), which ``ir-to-wasm-compiler`` already emits as
+  WASI imports.  Lowering ``call_builtin`` to ``SYSCALL`` is what
+  makes Brainfuck programs with ``.`` / ``,`` JIT to WebAssembly via
+  the in-house ``wasm-runtime`` (BF06).
+- Other ``call_builtin`` names (anything except ``putchar`` /
+  ``getchar``) still hit the unknown-op path, which the JIT backend
+  catches as ``CIRLoweringError`` and treats as a graceful deopt.
+
+### Changed
+
+- **`load_mem` / `store_mem` use a 16-byte heap-base offset.**  The
+  WASM backend places a 16-byte WASI scratch region at the bottom of
+  linear memory whenever a program emits SYSCALL.  Lowering tape
+  access to ``mem[0 + offset]`` aliased the tape's first 16 cells
+  with that scratch and produced corrupted output for any non-trivial
+  I/O program.  The lowering now uses ``mem[16 + offset]``, costing
+  16 bytes of unused linear memory but cleanly avoiding the collision.
+
 ## [0.2.0] — 2026-04-28
 
 ### Added

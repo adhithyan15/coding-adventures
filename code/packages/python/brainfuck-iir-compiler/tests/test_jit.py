@@ -65,44 +65,53 @@ def test_zero_cell_idiom_jits() -> None:
 
 
 # ---------------------------------------------------------------------------
-# I/O programs gracefully deopt
+# I/O programs JIT through WASI (BF06)
 # ---------------------------------------------------------------------------
 #
-# These programs include `.` or `,`, which compile to ``call_builtin``.
-# ``cir-to-compiler-ir`` does not yet lower ``call_builtin`` (BF06).
-# The JIT path's exception handler catches the lowering failure and
-# falls back to the interpreter — so the user-visible behaviour is
-# identical to ``jit=False``.
+# `.` and `,` compile to ``call_builtin "putchar"`` / ``"getchar"``.
+# ``cir-to-compiler-ir`` lowers those to ``IrOp.SYSCALL`` (1 / 2),
+# which ``ir-to-wasm-compiler`` emits as WASI ``fd_write`` / ``fd_read``
+# imports.  ``BrainfuckVM`` constructs a per-run ``WasiHost`` that
+# routes those imports back to the same ``output`` / ``input_buffer``
+# the interpreter uses.
 
 
-def test_putchar_program_deopts_and_runs_interpreted() -> None:
+def test_putchar_program_jits() -> None:
     vm = BrainfuckVM(jit=True)
     out = vm.run("+++.")
-    assert out == b"\x03"  # interpreter ran correctly
-    assert vm.is_jit_compiled is False, (
-        "programs with `.` should deopt because call_builtin is not yet "
-        "lowered (BF06)"
+    assert out == b"\x03"
+    assert vm.is_jit_compiled is True, (
+        "programs with `.` now JIT via WASI fd_write (BF06)"
     )
 
 
-def test_getchar_program_deopts_and_runs_interpreted() -> None:
+def test_getchar_program_jits() -> None:
     vm = BrainfuckVM(jit=True)
     out = vm.run(",.", input_bytes=b"X")
-    assert out == b"X"  # interpreter ran correctly
-    assert vm.is_jit_compiled is False
+    assert out == b"X"
+    assert vm.is_jit_compiled is True
 
 
-def test_hello_world_deopts_and_runs_interpreted() -> None:
-    """The classic Hello World — uses many `.` calls — must deopt
-    cleanly and produce the right bytes via the interpreter.
-    """
+def test_hello_world_jits_via_wasi() -> None:
+    """The classic Hello World — runs JIT'd via WASI fd_write."""
     hello = (
         "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>."
         ">---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++."
     )
     vm = BrainfuckVM(jit=True)
     assert vm.run(hello) == b"Hello World!\n"
-    assert vm.is_jit_compiled is False
+    assert vm.is_jit_compiled is True
+
+
+def test_high_byte_output_round_trips_through_latin1() -> None:
+    """WASI decodes bytes as Latin-1 before invoking the stdout
+    callback, so non-ASCII bytes (128-255) must round-trip cleanly.
+    """
+    # 200 increments wraps to byte 200 (0xC8).  Output it.
+    source = ("+" * 200) + "."
+    vm = BrainfuckVM(jit=True)
+    assert vm.run(source) == b"\xc8"
+    assert vm.is_jit_compiled is True
 
 
 # ---------------------------------------------------------------------------
@@ -132,14 +141,19 @@ def test_jit_and_interpreted_produce_same_output_for_io_programs() -> None:
 def test_is_jit_compiled_resets_on_each_run() -> None:
     """A successful JIT run sets is_jit_compiled True; a subsequent
     run that deopts must reset it to False (and vice versa).
+
+    With BF06 wired, both ``+++`` and ``+++.`` JIT, so to exercise the
+    deopt direction we use ``jit=False`` for the middle run.
     """
-    vm = BrainfuckVM(jit=True)
+    vm_jit = BrainfuckVM(jit=True)
+    vm_jit.run("+++")
+    assert vm_jit.is_jit_compiled is True
 
-    vm.run("+++")
-    assert vm.is_jit_compiled is True
+    # Same wrapper, second run still JITs.
+    vm_jit.run("+++.")
+    assert vm_jit.is_jit_compiled is True
 
-    vm.run("+++.")
-    assert vm.is_jit_compiled is False
-
-    vm.run("++>+<")
-    assert vm.is_jit_compiled is True
+    # A wrapper with jit=False never JITs, regardless of program.
+    vm_no_jit = BrainfuckVM(jit=False)
+    vm_no_jit.run("+++.")
+    assert vm_no_jit.is_jit_compiled is False

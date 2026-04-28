@@ -221,17 +221,22 @@ class BrainfuckVM:
         self._vm = vm
 
         # ──────────────────────────────────────────────────────────────
-        # JIT path (BF05).  When jit=True we attempt to compile ``main``
-        # to WebAssembly via WASMBackend before falling back to the
-        # interpreter.  Failure modes (call_builtin in source, lowering
-        # error, codegen error) silently deopt to the interpreter — see
-        # BF05 §"Scope of this PR".
+        # JIT path (BF05+BF06).  When jit=True we attempt to compile
+        # ``main`` to WebAssembly via WASMBackend before falling back
+        # to the interpreter.  BF06 wired ``call_builtin "putchar"`` /
+        # ``"getchar"`` through WASI ``fd_write`` / ``fd_read``, so
+        # I/O-using programs JIT too — provided the host can supply
+        # stdout / stdin callbacks.  We construct a per-run WasiHost
+        # bound to the same ``output`` bytearray and ``input_buffer``
+        # the interpreter path already manages.
         # ──────────────────────────────────────────────────────────────
         self._last_jit_compiled = False
-        if self._jit_enabled and self._try_jit_run(vm, module):
-            # JIT ran to completion.  ``output`` is empty for I/O-free
-            # programs (the only ones that succeed here in BF05 V1) —
-            # they perform their work entirely in linear memory.
+        if self._jit_enabled and self._try_jit_run(
+            vm, module, output, input_buffer
+        ):
+            # JIT ran to completion.  ``output`` may now contain bytes
+            # the WASM binary emitted via fd_write — those were
+            # appended by the WasiHost callback we wired in below.
             self._last_metrics = vm.metrics()
             return bytes(output)
 
@@ -246,7 +251,13 @@ class BrainfuckVM:
     # JIT helpers
     # ------------------------------------------------------------------
 
-    def _try_jit_run(self, vm: VMCore, module: IIRModule) -> bool:
+    def _try_jit_run(
+        self,
+        vm: VMCore,
+        module: IIRModule,
+        output: bytearray,
+        input_buffer: list[int],
+    ) -> bool:
         """Try compiling ``main`` to WASM and running the binary.
 
         Returns ``True`` if the JIT produced a binary that ran to
@@ -257,17 +268,42 @@ class BrainfuckVM:
         are imported lazily so that test environments without the WASM
         stack still load this module — a missing import simply forces
         a deopt, which is the correct behaviour anyway.
+
+        ``output`` and ``input_buffer`` are the same buffers the
+        interpreter path uses.  Wiring them through a ``WasiHost``
+        means a JIT'd Hello World writes bytes to ``output`` exactly
+        as the interpreter would, and ``,`` reads pop from
+        ``input_buffer``.
         """
         try:
             from jit_core import JITCore
             from wasm_backend import WASMBackend
+            from wasm_runtime import WasiHost
+            from wasm_runtime.wasi_host import WasiConfig
         except ImportError:
             return False
 
+        # ── BF06: route stdout/stdin through the same buffers used by
+        # the interpreter path.  WASI fd_write decodes bytes as Latin-1
+        # before calling stdout (1 byte → 1 char), so the round-trip
+        # back to bytes via ``encode("latin-1")`` is exact.
+        def stdout_cb(text: str) -> None:
+            output.extend(text.encode("latin-1"))
+
+        def stdin_cb(n: int) -> bytes:
+            chunk = bytes(input_buffer[:n])
+            del input_buffer[:n]
+            return chunk
+
         try:
+            # ``WasiHost`` only takes stdout/stderr as keyword args; stdin
+            # must come through a ``WasiConfig``.  Build a minimal config
+            # with both callbacks wired and let the host wrap it.
+            config = WasiConfig(stdin=stdin_cb, stdout=stdout_cb)
+            host = WasiHost(config)
             jit = JITCore(
                 vm,
-                WASMBackend(),
+                WASMBackend(host=host),
                 threshold_fully_typed=0,
                 threshold_partial=10,
                 threshold_untyped=100,
