@@ -12,7 +12,7 @@ It keeps parsing side-effect free, then exposes helpers to:
 - run those initialization goals explicitly against the loaded `Program`
 - adapt parsed Prolog builtin calls like `call/1`, `dynamic/1`, `assertz/1`,
   and `predicate_property/2` into runtime goals before execution
-- adapt finite integer generation with `between/3`
+- adapt finite integer builtins such as `integer/1`, `between/3`, and `succ/2`
 - adapt `phrase/2` and `phrase/3` into executable DCG runtime calls
 - link multiple loaded sources into one namespace-aware runnable project with
   module-local predicates and weak imports

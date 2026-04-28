@@ -69,6 +69,7 @@ from logic_builtins import (
     gto,
     ifthenelseo,
     iftheno,
+    integero,
     iso,
     labelingo,
     leqo,
@@ -89,6 +90,7 @@ from logic_builtins import (
     setofo,
     stringo,
     sub,
+    succo,
     termo_geqo,
     termo_gto,
     termo_leqo,
@@ -103,7 +105,7 @@ class TestVersion:
     """Verify the package is importable and versioned."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.14.0"
+        assert __version__ == "0.15.0"
 
 
 class TestAdvancedControlBuiltins:
@@ -492,6 +494,46 @@ class TestArithmeticBuiltins:
         assert solve_all(program(), value, betweeno(5, 2, value)) == []
         assert solve_all(program(), value, betweeno(1.5, 3, value)) == []
         assert solve_all(program(), value, betweeno(1, 3, "tea")) == []
+
+    def test_integero_accepts_integer_numbers_only(self) -> None:
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), integero(3)),
+        ) == [atom("ok")]
+        assert solve_all(program(), marker, conj(eq(marker, "ok"), integero(3.5))) == []
+        assert solve_all(program(), marker, conj(eq(marker, "ok"), integero("3"))) == []
+
+    def test_succo_validates_and_generates_successors(self) -> None:
+        value = var("Value")
+        predecessor = var("Predecessor")
+
+        assert solve_all(program(), value, succo(2, value)) == [num(3)]
+        assert solve_all(program(), predecessor, succo(predecessor, 3)) == [num(2)]
+        assert solve_all(
+            program(),
+            value,
+            conj(eq(value, "ok"), succo(2, 3)),
+        ) == [atom("ok")]
+
+    def test_succo_rejects_negative_non_integer_and_too_open_cases(self) -> None:
+        left = var("Left")
+        right = var("Right")
+        marker = var("Marker")
+
+        assert solve_all(program(), marker, conj(eq(marker, "ok"), succo(-1, 0))) == []
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), succo(1.5, 2.5)),
+        ) == []
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), succo(left, right)),
+        ) == []
 
     def test_arithmetic_goals_compose_with_relation_search(self) -> None:
         score = relation("score", 2)

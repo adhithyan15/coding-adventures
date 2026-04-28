@@ -31,6 +31,7 @@ from logic_builtins import (
     gto,
     ifthenelseo,
     iftheno,
+    integero,
     iso,
     leqo,
     lto,
@@ -46,6 +47,7 @@ from logic_builtins import (
     same_termo,
     setofo,
     stringo,
+    succo,
     termo_geqo,
     termo_gto,
     termo_leqo,
@@ -138,6 +140,7 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         "ground": groundo,
         "atom": atomo,
         "atomic": atomico,
+        "integer": integero,
         "number": numbero,
         "string": stringo,
         "compound": compoundo,
@@ -154,6 +157,7 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
 
     binary_arithmetic_builtins: dict[str, Callable[[object, object], GoalExpr]] = {
         "is": iso,
+        "succ": succo,
         "=:=": numeqo,
         "=\\=": numneqo,
         "<": lto,

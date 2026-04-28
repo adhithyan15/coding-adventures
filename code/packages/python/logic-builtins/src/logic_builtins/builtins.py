@@ -102,6 +102,7 @@ __all__ = [
     "groundo",
     "ifthenelseo",
     "iftheno",
+    "integero",
     "iso",
     "leqo",
     "labelingo",
@@ -127,6 +128,7 @@ __all__ = [
     "clauseo",
     "stringo",
     "sub",
+    "succo",
     "termo_geqo",
     "termo_gto",
     "termo_leqo",
@@ -203,6 +205,7 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("gto", 2),
     ("ifthenelseo", 3),
     ("iftheno", 2),
+    ("integero", 1),
     ("iso", 2),
     ("labelingo", 1),
     ("leqo", 2),
@@ -219,6 +222,7 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("same_termo", 2),
     ("setofo", 3),
     ("stringo", 1),
+    ("succo", 2),
     ("termo_geqo", 2),
     ("termo_gto", 2),
     ("termo_leqo", 2),
@@ -1669,6 +1673,43 @@ def betweeno(low: object, high: object, value: object) -> GoalExpr:
     return native_goal(run, low, high, value)
 
 
+def succo(predecessor: object, successor: object) -> GoalExpr:
+    """Relate a non-negative integer to its successor."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        predecessor_term, successor_term = args
+        predecessor_reified = _reified(predecessor_term, state)
+        successor_reified = _reified(successor_term, state)
+        predecessor_value = _integer_value(predecessor_reified)
+        successor_value = _integer_value(successor_reified)
+
+        if predecessor_value is not None and successor_value is not None:
+            if predecessor_value >= 0 and successor_value == predecessor_value + 1:
+                yield state
+            return
+
+        if predecessor_value is not None:
+            if predecessor_value < 0 or not isinstance(successor_reified, LogicVar):
+                return
+            yield from solve_from(
+                program_value,
+                eq(successor_term, num(predecessor_value + 1)),
+                state,
+            )
+            return
+
+        if successor_value is not None:
+            if successor_value <= 0 or not isinstance(predecessor_reified, LogicVar):
+                return
+            yield from solve_from(
+                program_value,
+                eq(predecessor_term, num(successor_value - 1)),
+                state,
+            )
+
+    return native_goal(run, predecessor, successor)
+
+
 def callo(goal: object) -> GoalExpr:
     """Run a goal supplied as data.
 
@@ -1781,6 +1822,16 @@ def numbero(term_value: object) -> GoalExpr:
     """Succeed when the current value is a number."""
 
     return _type_checko(term_value, Number)
+
+
+def integero(term_value: object) -> GoalExpr:
+    """Succeed when the current value is a non-bool integer."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        (target,) = args
+        yield from _succeed_if(_reified_integer(target, state) is not None, state)
+
+    return native_goal(run, term_value)
 
 
 def stringo(term_value: object) -> GoalExpr:
