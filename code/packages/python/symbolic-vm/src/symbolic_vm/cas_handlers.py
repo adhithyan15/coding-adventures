@@ -74,9 +74,16 @@ from cas_list_operations import (
 from cas_matrix import (
     MatrixError,
     determinant,
+    dimensions,
+    dot,
+    identity_matrix,
     inverse,
     matrix,
+    rank,
+    row_reduce,
+    trace,
     transpose,
+    zero_matrix,
 )
 from cas_mnewton import build_mnewton_handler_table as _build_mnewton
 from cas_number_theory.handlers import build_number_theory_handler_table as _build_nt
@@ -1041,6 +1048,10 @@ def join_handler(_vm: VM, expr: IRApply) -> IRNode:
 
 # ===========================================================================
 # Section 6: cas_matrix handlers
+#
+# Wired operations:
+#   Matrix, Transpose, Determinant, Inverse (0.1.0)
+#   Dot, Trace, Dimensions, IdentityMatrix, ZeroMatrix, Rank, RowReduce (0.2.0)
 # ===========================================================================
 
 
@@ -1095,6 +1106,144 @@ def inverse_handler(_vm: VM, expr: IRApply) -> IRNode:
         return expr
     try:
         return inverse(expr.args[0])
+    except MatrixError:
+        return expr
+
+
+def dot_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Dot(A, B)`` → matrix product.
+
+    Computes the symbolic matrix product and passes the result through
+    ``vm.eval()`` so that numeric sub-expressions collapse.
+
+    Shape mismatch (``cols(A) ≠ rows(B)``) falls through to unevaluated.
+    """
+    if len(expr.args) != 2:
+        return expr
+    try:
+        return vm.eval(dot(expr.args[0], expr.args[1]))
+    except MatrixError:
+        return expr
+
+
+def trace_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Trace(M)`` → scalar sum of diagonal entries.
+
+    Evaluates numerically when all diagonal entries are numeric.
+    Falls through to unevaluated for non-square or non-matrix input.
+
+    Implementation note: ``cas_matrix.trace`` may return an n-ary
+    ``IRApply(ADD, (e₁, e₂, …, eₙ))`` for matrices larger than 2×2.
+    The VM's ADD handler is strictly binary (``_binary_args`` enforces
+    arity == 2), so we left-fold the diagonal entries into a chain of
+    binary additions::
+
+        ((e₁ + e₂) + e₃) + …
+
+    This preserves the exact same numeric result while staying inside
+    the binary IR contract.
+    """
+    if len(expr.args) != 1:
+        return expr
+    try:
+        diag_expr = trace(expr.args[0])
+        # Fold any n-ary ADD from trace() into a chain of binary ADDs.
+        if (
+            isinstance(diag_expr, IRApply)
+            and diag_expr.head == ADD
+            and len(diag_expr.args) > 2
+        ):
+            acc: IRNode = vm.eval(diag_expr.args[0])
+            for term in diag_expr.args[1:]:
+                acc = vm.eval(IRApply(ADD, (acc, vm.eval(term))))
+            return acc
+        return vm.eval(diag_expr)
+    except MatrixError:
+        return expr
+
+
+def dimensions_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Dimensions(M)`` → ``List(rows, cols)`` as integer literals."""
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return dimensions(expr.args[0])
+    except MatrixError:
+        return expr
+
+
+def identity_matrix_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``IdentityMatrix(n)`` → n×n identity matrix.
+
+    ``n`` must evaluate to a positive ``IRInteger``.  Any other shape
+    falls through to unevaluated.
+    """
+    if len(expr.args) != 1:
+        return expr
+    n_node = expr.args[0]
+    if not isinstance(n_node, IRInteger) or n_node.value < 0:
+        return expr
+    try:
+        return identity_matrix(n_node.value)
+    except MatrixError:
+        return expr
+
+
+def zero_matrix_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``ZeroMatrix(rows, cols)`` → all-zero matrix.
+
+    Both arguments must be non-negative ``IRInteger`` values.  One-argument
+    form ``ZeroMatrix(n)`` builds an n×n zero matrix.  Falls through on
+    invalid arguments.
+    """
+    if len(expr.args) == 1:
+        n_node = expr.args[0]
+        if not isinstance(n_node, IRInteger) or n_node.value < 0:
+            return expr
+        try:
+            return zero_matrix(n_node.value, n_node.value)
+        except MatrixError:
+            return expr
+    if len(expr.args) == 2:
+        r_node, c_node = expr.args
+        if (
+            not isinstance(r_node, IRInteger)
+            or not isinstance(c_node, IRInteger)
+            or r_node.value < 0
+            or c_node.value < 0
+        ):
+            return expr
+        try:
+            return zero_matrix(r_node.value, c_node.value)
+        except MatrixError:
+            return expr
+    return expr
+
+
+def rank_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Rank(M)`` → ``IRInteger(r)`` where ``r`` is the matrix rank.
+
+    Uses Gaussian elimination over the rationals.  Falls through on
+    symbolic entries or non-matrix input.
+    """
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return rank(expr.args[0])
+    except MatrixError:
+        return expr
+
+
+def row_reduce_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``RowReduce(M)`` → reduced row echelon form (RREF) of matrix M.
+
+    Uses Gauss-Jordan elimination over the rationals (exact arithmetic).
+    Falls through on symbolic entries or non-matrix input.
+    """
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return row_reduce(expr.args[0])
     except MatrixError:
         return expr
 
@@ -1658,6 +1807,13 @@ def build_cas_handler_table() -> dict[str, Handler]:
         "Transpose": transpose_handler,
         "Determinant": determinant_handler,
         "Inverse": inverse_handler,
+        "Dot": dot_handler,
+        "Trace": trace_handler,
+        "Dimensions": dimensions_handler,
+        "IdentityMatrix": identity_matrix_handler,
+        "ZeroMatrix": zero_matrix_handler,
+        "Rank": rank_handler,
+        "RowReduce": row_reduce_handler,
         # --- cas_limit_series -----------------------------------------------
         "Limit": limit_handler,
         "Taylor": taylor_handler,

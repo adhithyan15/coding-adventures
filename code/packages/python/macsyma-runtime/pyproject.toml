@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-macsyma-runtime"
-version = "1.10.0"
+version = "1.11.0"
 description = "MACSYMA-specific runtime layer on top of the symbolic VM — history, $/; terminators, kill, ev, name table."
 requires-python = ">=3.12"
 license = "MIT"
@@ -13,7 +13,7 @@ readme = "README.md"
 keywords = ["macsyma", "maxima", "cas", "symbolic", "runtime", "education"]
 dependencies = [
     "coding-adventures-symbolic-ir>=0.7.5",
-    "coding-adventures-symbolic-vm>=0.32.7",
+    "coding-adventures-symbolic-vm>=0.33.0",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",

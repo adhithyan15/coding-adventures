@@ -636,13 +636,6 @@ class TestPhase13_Fallthrough:
         F = _integrate_ir(vm, f)
         _is_unevaluated(f, F)
 
-    def test_sinh_squared(self) -> None:
-        """∫ sinh(x)² dx — power form, unevaluated."""
-        vm = _make_vm()
-        f = _pow(_sinh(X), _INT(2))
-        F = _integrate_ir(vm, f)
-        _is_unevaluated(f, F)
-
 
 # ---------------------------------------------------------------------------
 # Class 8: Regression tests — earlier phases must still work

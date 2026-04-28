@@ -2,12 +2,14 @@
 
 Quick start::
 
-    from cas_matrix import matrix, determinant, transpose, dot
+    from cas_matrix import matrix, determinant, transpose, dot, rank, row_reduce
     from symbolic_ir import IRInteger, IRSymbol
 
     M = matrix([[IRInteger(1), IRInteger(2)],
                 [IRInteger(3), IRInteger(4)]])
     determinant(M)  # un-simplified IR; pass through cas_simplify to reduce
+    rank(M)         # IRInteger(2)
+    row_reduce(M)   # identity matrix (RREF)
 """
 
 from cas_matrix.arithmetic import (
@@ -29,6 +31,8 @@ from cas_matrix.heads import (
     INVERSE,
     LIST,
     MATRIX,
+    RANK,
+    ROW_REDUCE,
     TRACE,
     TRANSPOSE,
     ZERO_MATRIX,
@@ -42,6 +46,7 @@ from cas_matrix.matrix import (
     num_cols,
     num_rows,
 )
+from cas_matrix.rowreduce import rank, row_reduce
 
 __all__ = [
     "DETERMINANT",
@@ -52,6 +57,8 @@ __all__ = [
     "LIST",
     "MATRIX",
     "MatrixError",
+    "RANK",
+    "ROW_REDUCE",
     "TRACE",
     "TRANSPOSE",
     "ZERO_MATRIX",
@@ -66,6 +73,8 @@ __all__ = [
     "matrix",
     "num_cols",
     "num_rows",
+    "rank",
+    "row_reduce",
     "scalar_multiply",
     "sub_matrices",
     "trace",

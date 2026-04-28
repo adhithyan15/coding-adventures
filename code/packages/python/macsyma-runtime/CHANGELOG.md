@@ -1,5 +1,37 @@
 # Changelog
 
+## 1.11.0 — 2026-04-28
+
+**Add Group E matrix operation names to the MACSYMA name table.**
+
+- `name_table.py`: added seven new `IRSymbol` singletons:
+  `DOT`, `TRACE`, `DIMENSIONS`, `IDENTITY_MATRIX`, `ZERO_MATRIX`, `RANK`,
+  `ROW_REDUCE`.
+- Added seven new entries to `MACSYMA_NAME_TABLE`:
+
+  | MACSYMA name | IR head |
+  |---|---|
+  | `dot` | `Dot` |
+  | `mattrace` | `Trace` |
+  | `matrix_size` | `Dimensions` |
+  | `ident` | `IdentityMatrix` |
+  | `zeromatrix` | `ZeroMatrix` |
+  | `rank` | `Rank` |
+  | `rowreduce` | `RowReduce` |
+
+MACSYMA users can now write:
+- `dot(A, B)` → matrix product
+- `mattrace(M)` → sum of diagonal (MACSYMA canonical spelling is `mattrace`)
+- `matrix_size(M)` → `[rows, cols]` shape
+- `ident(n)` → n×n identity matrix
+- `zeromatrix(m, n)` → m×n zero matrix
+- `rank(M)` → rank of matrix (integer)
+- `rowreduce(M)` → reduced row-echelon form
+
+Bumped `symbolic-vm` dependency floor to `>=0.33.0`.
+
+---
+
 ## 1.10.0 — 2026-04-28
 
 **Add Gröbner basis and multivariate solve operations to the MACSYMA name table.**
