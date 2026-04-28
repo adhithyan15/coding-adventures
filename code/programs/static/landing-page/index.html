@@ -506,6 +506,7 @@
       <nav class="topnav" aria-label="Primary">
         <a class="nav-link" href="#stack">Explore the stack</a>
         <a class="nav-link" href="#languages">Languages and tooling</a>
+        <a class="nav-link" href="#apps">Apps and experiments</a>
         <a
           class="nav-link"
           href="https://github.com/adhithyan15/coding-adventures"
@@ -766,6 +767,106 @@
             <span class="tag">Code39</span>
             <span class="tag">SVG</span>
             <span class="tag">Draw instructions</span>
+          </div>
+        </a>
+
+        <a class="card" href="/coding-adventures/engram-docs/" aria-label="Open Engram Docs">
+          <div class="card-meta">
+            <span class="card-badge">Browser docs</span>
+            <span class="card-arrow" aria-hidden="true">-></span>
+          </div>
+          <div class="card-title">Engram Docs</div>
+          <p class="card-desc">
+            Browser-rendered documentation site for the Engram product experiment, built on the
+            same in-house Markdown and document-AST infrastructure as the rest of the rendering track.
+          </p>
+          <div class="tags">
+            <span class="tag">Docs site</span>
+            <span class="tag">CommonMark</span>
+            <span class="tag">Document AST</span>
+          </div>
+        </a>
+
+        <a class="card" href="/coding-adventures/electronics-visualizers/" aria-label="Open Electronics Visualizers">
+          <div class="card-meta">
+            <span class="card-badge">Circuits</span>
+            <span class="card-arrow" aria-hidden="true">-></span>
+          </div>
+          <div class="card-title">Electronics Visualizers</div>
+          <p class="card-desc">
+            Circuit-level visualizers that back the architecture track — see resistors, capacitors,
+            diodes, and small subcircuits behave under live controls before they aggregate into gates.
+          </p>
+          <div class="tags">
+            <span class="tag">Circuits</span>
+            <span class="tag">Components</span>
+            <span class="tag">Live controls</span>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section class="section" id="apps">
+      <div class="section-header">
+        <div>
+          <div class="section-label">Apps and Experiments</div>
+          <h2 class="section-title">Product surfaces and ML demos.</h2>
+        </div>
+        <p class="section-copy">
+          The repo is also a product sandbox. These are end-user-facing experiments built on the
+          same package lab — UI sitting on top of the same parsers, runtimes, and ML primitives.
+        </p>
+      </div>
+
+      <div class="cards">
+        <a class="card" href="/coding-adventures/engram/" aria-label="Open Engram App">
+          <div class="card-meta">
+            <span class="card-badge">App</span>
+            <span class="card-arrow" aria-hidden="true">-></span>
+          </div>
+          <div class="card-title">Engram</div>
+          <p class="card-desc">
+            A spaced-repetition product experiment using the repo's own document AST, sanitizer,
+            and storage primitives — a working app that doubles as a stress test for the underlying packages.
+          </p>
+          <div class="tags">
+            <span class="tag">Memory</span>
+            <span class="tag">Document AST</span>
+            <span class="tag">Storage</span>
+          </div>
+        </a>
+
+        <a class="card" href="/coding-adventures/journal/" aria-label="Open Journal App">
+          <div class="card-meta">
+            <span class="card-badge">App</span>
+            <span class="card-arrow" aria-hidden="true">-></span>
+          </div>
+          <div class="card-title">Journal</div>
+          <p class="card-desc">
+            A daily journaling surface with Markdown editing, browser-side persistence, and a UI
+            built on the in-house CommonMark renderer rather than a third-party Markdown component.
+          </p>
+          <div class="tags">
+            <span class="tag">Journaling</span>
+            <span class="tag">Markdown</span>
+            <span class="tag">IndexedDB</span>
+          </div>
+        </a>
+
+        <a class="card" href="/coding-adventures/ml-learning/" aria-label="Open ML Learning Demos">
+          <div class="card-meta">
+            <span class="card-badge">ML demos</span>
+            <span class="card-arrow" aria-hidden="true">-></span>
+          </div>
+          <div class="card-title">ML Learning Lab</div>
+          <p class="card-desc">
+            Browser-runnable ML demonstrations — single-layer perceptrons, hidden-layer XOR
+            learning, feature normalization sweeps — backed by the repo's own gradient-descent and matrix packages.
+          </p>
+          <div class="tags">
+            <span class="tag">Perceptron</span>
+            <span class="tag">Gradient descent</span>
+            <span class="tag">Matrix math</span>
           </div>
         </a>
       </div>
