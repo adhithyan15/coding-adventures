@@ -36,8 +36,8 @@ from sql_backend.backend import Backend, TransactionHandle
 from sql_backend.errors import IndexAlreadyExists, IndexNotFound
 from sql_backend.index import IndexDef
 from sql_backend.row import RowIterator
-from sql_backend.values import SqlValue, sql_type_name
 from sql_backend.schema import TriggerDef as BackendTriggerDef
+from sql_backend.values import SqlValue, sql_type_name
 from sql_codegen import (
     CHECK_CURSOR_ID,
     AdvanceCursor,
