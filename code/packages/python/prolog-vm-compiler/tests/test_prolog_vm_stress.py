@@ -136,6 +136,8 @@ class TestPrologVMStress:
                msort([Item, jam, Item], Sorted),
                nth0(1, Reversed, ZeroBased),
                nth1(2, Reversed, OneBased),
+               nth0(1, Reversed, ZeroRestBased, ZeroRest),
+               nth1(2, Reversed, OneRestBased, OneRest),
                length(Pair, 2),
                Pair = [left, right].
             """,
@@ -154,6 +156,10 @@ class TestPrologVMStress:
                 "Sorted": logic_list(["jam", "tea", "tea"]),
                 "ZeroBased": atom("tea"),
                 "OneBased": atom("tea"),
+                "ZeroRestBased": atom("tea"),
+                "ZeroRest": logic_list(["jam"]),
+                "OneRestBased": atom("tea"),
+                "OneRest": logic_list(["jam"]),
                 "Pair": logic_list(["left", "right"]),
             },
             {
@@ -166,6 +172,10 @@ class TestPrologVMStress:
                 "Sorted": logic_list(["cake", "cake", "jam"]),
                 "ZeroBased": atom("cake"),
                 "OneBased": atom("cake"),
+                "ZeroRestBased": atom("cake"),
+                "ZeroRest": logic_list(["jam"]),
+                "OneRestBased": atom("cake"),
+                "OneRest": logic_list(["jam"]),
                 "Pair": logic_list(["left", "right"]),
             },
         ]

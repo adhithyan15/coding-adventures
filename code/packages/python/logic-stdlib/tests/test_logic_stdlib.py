@@ -26,7 +26,9 @@ from logic_stdlib import (
     listo,
     membero,
     msorto,
+    nth0_resto,
     nth0o,
+    nth1_resto,
     nth1o,
     permuteo,
     reverseo,
@@ -41,7 +43,7 @@ class TestVersion:
     """Verify the package is importable and wired to the engine layer."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.7.0"
+        assert __version__ == "0.8.0"
         engine_major, engine_minor, _engine_patch = logic_engine_version.split(".")
         assert (int(engine_major), int(engine_minor)) >= (0, 10)
 
@@ -253,6 +255,66 @@ class TestListRelations:
             conj(
                 eq(marker, "ok"),
                 nth0o(0, logic_list(["tea"], tail="cake"), var("Item")),
+            ),
+        ) == []
+
+    def test_nth0_resto_removes_zero_based_selected_element(self) -> None:
+        item = var("Item")
+        rest = var("Rest")
+
+        assert solve_all(
+            program(),
+            (item, rest),
+            nth0_resto(1, logic_list(["tea", "cake", "jam"]), item, rest),
+        ) == [(atom("cake"), logic_list(["tea", "jam"]))]
+
+    def test_nth1_resto_removes_one_based_selected_element(self) -> None:
+        item = var("Item")
+        rest = var("Rest")
+
+        assert solve_all(
+            program(),
+            (item, rest),
+            nth1_resto(2, logic_list(["tea", "cake", "jam"]), item, rest),
+        ) == [(atom("cake"), logic_list(["tea", "jam"]))]
+
+    def test_nth_resto_enumerates_index_element_rest_triples(self) -> None:
+        index = var("Index")
+        item = var("Item")
+        rest = var("Rest")
+
+        assert solve_all(
+            program(),
+            (index, item, rest),
+            nth0_resto(index, logic_list(["tea", "cake", "jam"]), item, rest),
+        ) == [
+            (num(0), atom("tea"), logic_list(["cake", "jam"])),
+            (num(1), atom("cake"), logic_list(["tea", "jam"])),
+            (num(2), atom("jam"), logic_list(["tea", "cake"])),
+        ]
+
+    def test_nth_resto_rejects_out_of_range_and_improper_lists(self) -> None:
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(
+                eq(marker, "ok"),
+                nth0_resto(3, logic_list(["tea"]), var("Item"), var("Rest")),
+            ),
+        ) == []
+        assert solve_all(
+            program(),
+            marker,
+            conj(
+                eq(marker, "ok"),
+                nth0_resto(
+                    0,
+                    logic_list(["tea"], tail="cake"),
+                    var("Item"),
+                    var("Rest"),
+                ),
             ),
         ) == []
 
