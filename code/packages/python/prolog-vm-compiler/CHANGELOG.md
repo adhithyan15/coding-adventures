@@ -11,6 +11,8 @@
   initialized dynamic state, optional query commits, and raw query values.
 - Add file-backed Prolog VM compile/runtime helpers for loading `.pl` files and
   linked project file graphs through `prolog-loader`.
+- Add module-aware ad-hoc query rewriting for project runtimes via
+  `query_module=...`.
 
 ## 0.1.0
 
