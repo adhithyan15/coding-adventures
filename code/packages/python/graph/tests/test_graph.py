@@ -249,6 +249,89 @@ class TestEdgeOperations:
 
 
 # ---------------------------------------------------------------------------
+# TestPropertyBags
+# ---------------------------------------------------------------------------
+
+
+class TestPropertyBags:
+    """Graph, node, and edge property bags."""
+
+    @pytest.mark.parametrize("repr", list(GraphRepr))
+    def test_graph_properties(self, repr: GraphRepr) -> None:
+        g: Graph[str] = Graph(repr=repr)
+        g.set_graph_property("name", "city-map")
+        g.set_graph_property("version", 1)
+        assert g.graph_properties() == {"name": "city-map", "version": 1}
+
+        g.remove_graph_property("version")
+        assert g.graph_properties() == {"name": "city-map"}
+
+    @pytest.mark.parametrize("repr", list(GraphRepr))
+    def test_node_properties_merge_and_copy(self, repr: GraphRepr) -> None:
+        g: Graph[str] = Graph(repr=repr)
+        g.add_node("A", {"kind": "input"})
+        g.add_node("A", {"trainable": False})
+        g.set_node_property("A", "slot", 0)
+        assert g.node_properties("A") == {
+            "kind": "input",
+            "trainable": False,
+            "slot": 0,
+        }
+
+        copy = g.node_properties("A")
+        copy["kind"] = "mutated"
+        assert g.node_properties("A")["kind"] == "input"
+
+        g.remove_node_property("A", "slot")
+        assert g.node_properties("A") == {
+            "kind": "input",
+            "trainable": False,
+        }
+
+    @pytest.mark.parametrize("repr", list(GraphRepr))
+    def test_edge_properties_include_canonical_weight(self, repr: GraphRepr) -> None:
+        g: Graph[str] = Graph(repr=repr)
+        g.add_edge("A", "B", weight=2.5, properties={"role": "distance"})
+
+        assert g.edge_properties("A", "B") == {
+            "role": "distance",
+            "weight": 2.5,
+        }
+        assert g.edge_properties("B", "A") == {
+            "role": "distance",
+            "weight": 2.5,
+        }
+
+        g.set_edge_property("B", "A", "weight", 7)
+        assert g.edge_weight("A", "B") == 7.0
+        assert g.edge_properties("A", "B")["weight"] == 7
+
+        g.set_edge_property("A", "B", "trainable", True)
+        g.remove_edge_property("A", "B", "role")
+        assert g.edge_properties("A", "B") == {
+            "trainable": True,
+            "weight": 7.0,
+        }
+
+    @pytest.mark.parametrize("repr", list(GraphRepr))
+    def test_removing_structure_removes_properties(self, repr: GraphRepr) -> None:
+        g: Graph[str] = Graph(repr=repr)
+        g.add_node("A", {"kind": "input"})
+        g.add_edge("A", "B", weight=3, properties={"role": "data"})
+
+        g.remove_edge("A", "B")
+        with pytest.raises(KeyError):
+            g.edge_properties("A", "B")
+
+        g.add_edge("A", "B", weight=3, properties={"role": "data"})
+        g.remove_node("A")
+        with pytest.raises(KeyError):
+            g.node_properties("A")
+        with pytest.raises(KeyError):
+            g.edge_properties("A", "B")
+
+
+# ---------------------------------------------------------------------------
 # TestNeighborhood
 # ---------------------------------------------------------------------------
 

@@ -8,6 +8,11 @@ directed graphs the right model for any relationship that flows one way: depende
 imports, causality, state transitions. DT01 builds on DT00 (Graph) by adding a second
 adjacency map that tracks predecessors, enabling O(1) lookup in both directions.
 
+DT01 inherits the DT00 property model. Nodes, directed edges, and the graph itself can
+carry property bags. This is deliberately part of the graph foundation rather than a
+neural-network-specific layer, so packages such as state machines, build graphs, graph
+visualizers, and future neural graphs all share the same metadata contract.
+
 ## Layer Position
 
 ```
@@ -100,6 +105,54 @@ When you remove edge A→B:
 
 This doubles memory usage but pays off enormously: many graph algorithms need to
 walk edges in reverse (e.g., finding everything that depends on a changed file).
+
+### Directed edge properties
+
+Directed edge properties are attached to the ordered edge `(u, v)`. Unlike DT00,
+the reverse edge `(v, u)` is different and has its own property bag:
+
+```
+graph.add_edge("A", "B", properties: {"role": "forward"})
+graph.add_edge("B", "A", properties: {"role": "reverse"})
+
+graph.edge_properties("A", "B")["role"] == "forward"
+graph.edge_properties("B", "A")["role"] == "reverse"
+```
+
+This distinction matters for neural graphs:
+
+```
+InputA -> Hidden1   weight: 0.42, trainable: true
+Hidden1 -> Output   weight: 1.20, trainable: true
+```
+
+Both edges may connect related concepts, but their direction, weights, gradients, and
+runtime traces are independent.
+
+Directed graph implementations must expose the same property operations as DT00 using
+language-idiomatic names:
+
+```
+add_node(node, properties = {})
+add_edge(from, to, weight = 1.0, properties = {})
+
+graph_properties() -> PropertyBag
+node_properties(node) -> PropertyBag
+edge_properties(from, to) -> PropertyBag
+
+set_graph_property(key, value)
+set_node_property(node, key, value)
+set_edge_property(from, to, key, value)
+
+remove_graph_property(key)
+remove_node_property(node, key)
+remove_edge_property(from, to, key)
+```
+
+If a directed-graph package internally composes or inherits from DT00 graph, it should
+delegate this behavior to DT00 rather than duplicating a second metadata system. If a
+language currently has a standalone directed graph implementation, it must still match
+the DT00 property semantics so higher-level packages can target one graph contract.
 
 ### Directed Acyclic Graph (DAG)
 
@@ -220,6 +273,22 @@ Valid build order: app → server → auth → db-driver → logger
 ```
 
 Time: O(V + E).
+
+### Multi-directed graph extension
+
+DT01 intentionally keeps one edge per ordered `(from, to)` pair. A future
+`multi-directed-graph` package should build on the same concepts but assign each edge a
+stable edge id so multiple parallel edges can exist between the same nodes:
+
+```
+edge1: A -> B, properties: {"channel": "data", "weight": 0.4}
+edge2: A -> B, properties: {"channel": "trace", "weight": 1.0}
+```
+
+That package should relax the "one ordered pair, one edge" constraint without changing
+the node property, edge property, graph property, traversal, or serialization vocabulary.
+In other words: DT01 is the simple directed graph. `multi-directed-graph` is the same
+semantic model with edge identity added.
 
 ### Strongly Connected Components (Kosaraju's algorithm)
 
