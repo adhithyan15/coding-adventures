@@ -382,6 +382,16 @@
         ["Character", "x"],
         ["EndTag", "p"]
       ]
+    },
+    {
+      "description": "markup declaration CDATA opener enters CDATA section",
+      "input": "<![CDATA[<not-markup> &amp; ]]><p>After</p>",
+      "output": [
+        ["Character", "<not-markup> &amp; "],
+        ["StartTag", "p", {}],
+        ["Character", "After"],
+        ["EndTag", "p"]
+      ]
     }
   ]
 }

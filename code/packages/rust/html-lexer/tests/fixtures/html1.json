@@ -368,6 +368,16 @@
         "EOF"
       ],
       "initial_state": "CDATA section state"
+    },
+    {
+      "id": "html-cdata-markup-opener-enters-cdata-section",
+      "description": "Markup declaration <![CDATA[ enters CDATA section text until ]]>, then returns to data",
+      "input": "Before<![CDATA[<not-markup> &amp; ]]>After",
+      "tokens": [
+        "Text(data=Before)",
+        "Text(data=<not-markup> &amp; After)",
+        "EOF"
+      ]
     }
   ]
 }

@@ -28,7 +28,10 @@ classic Latin-1 entity set, preserving entity-name case so legacy names such as
 The generated HTML1 machine also exposes `RCDATA`, `RAWTEXT`, `PLAINTEXT`,
 `CDATA section`, `script_data`, `script_data_escaped`, and
 `script_data_double_escaped` entry states for parser-controlled tokenizer
-submodes.
+submodes. The markup declaration path also recognizes `<![CDATA[` and enters
+the CDATA section state so the generated lexer can exercise that tokenizer
+subflow end to end; a future parser can still decide when that opener is valid
+for foreign-content contexts.
 `html-skeleton.lexer.states.toml` remains in the crate as a smaller bootstrap
 machine for comparisons and narrow debugging.
 

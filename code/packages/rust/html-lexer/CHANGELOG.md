@@ -74,3 +74,6 @@ documented in this file.
 - Seeded CDATA section tokenizer-state support for future parser-controlled
   foreign-content tokenization, keeping markup and character references literal
   until the `]]>` delimiter returns the lexer to data state.
+- Markup declaration `<![CDATA[` opener support that reaches the CDATA section
+  state from data-state lexing while preserving malformed partial openers as
+  bogus comments.

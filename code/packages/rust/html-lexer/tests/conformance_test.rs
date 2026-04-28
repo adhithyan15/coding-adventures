@@ -92,14 +92,14 @@ fn fixture_manifests_parse() {
     assert_eq!(html1.format, "venture-html-lexer-fixtures/v1");
     assert_eq!(html1.suite, "html1");
     assert!(!html1.description.is_empty());
-    assert_eq!(html1.cases.len(), 33);
+    assert_eq!(html1.cases.len(), 34);
 }
 
 #[test]
 fn html5lib_smoke_fixture_file_parses() {
     let file = load_html5lib_file(HTML5LIB_RAW_FIXTURES);
 
-    assert_eq!(file.tests.len(), 34);
+    assert_eq!(file.tests.len(), 35);
     assert_eq!(
         file.tests[0].description,
         "simple start and end tag in data state"
@@ -144,7 +144,7 @@ fn normalized_html5lib_fixture_parses_with_importer_metadata() {
             "Script data state".to_string()
         ]
     );
-    assert_eq!(normalized.cases.len(), 34);
+    assert_eq!(normalized.cases.len(), 35);
     assert!(normalized.skipped.is_empty());
     assert_eq!(
         normalized.cases[6].initial_state.as_deref(),
@@ -202,7 +202,7 @@ fn normalized_html5lib_cases_match_default_wrapper() {
 
     assert_eq!(suite.format, "venture-html-lexer-fixtures/v1");
     assert_eq!(suite.suite, "html5lib-smoke");
-    assert_eq!(suite.cases.len(), 34);
+    assert_eq!(suite.cases.len(), 35);
 
     run_fixture_suite(&suite, |case| {
         let mut lexer = create_html_lexer().map_err(|error| format!("{error:?}"))?;

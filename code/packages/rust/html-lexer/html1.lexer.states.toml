@@ -446,6 +446,24 @@ id = "self_closing_start_tag"
 id = "markup_declaration_open"
 
 [[states]]
+id = "cdata_open_bracket"
+
+[[states]]
+id = "cdata_open_c"
+
+[[states]]
+id = "cdata_open_cd"
+
+[[states]]
+id = "cdata_open_cda"
+
+[[states]]
+id = "cdata_open_cdat"
+
+[[states]]
+id = "cdata_open_cdata"
+
+[[states]]
 id = "comment_start"
 
 [[states]]
@@ -4123,6 +4141,11 @@ actions = ["create_doctype"]
 
 [[transitions]]
 from = "markup_declaration_open"
+matcher = { literal = "[" }
+to = "cdata_open_bracket"
+
+[[transitions]]
+from = "markup_declaration_open"
 matcher = { eof = true }
 to = "done"
 consume = false
@@ -4138,6 +4161,166 @@ from = "markup_declaration_open"
 matcher = { anything = true }
 to = "bogus_comment"
 actions = ["create_comment", "append_comment(current)"]
+
+[[transitions]]
+from = "cdata_open_bracket"
+matcher = { literal = "C" }
+to = "cdata_open_c"
+
+[[transitions]]
+from = "cdata_open_bracket"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-comment)",
+  "create_comment",
+  "append_comment([)",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "cdata_open_bracket"
+matcher = { anything = true }
+to = "bogus_comment"
+actions = ["create_comment", "append_comment([)", "append_comment(current)"]
+
+[[transitions]]
+from = "cdata_open_c"
+matcher = { literal = "D" }
+to = "cdata_open_cd"
+
+[[transitions]]
+from = "cdata_open_c"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-comment)",
+  "create_comment",
+  "append_comment([C)",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "cdata_open_c"
+matcher = { anything = true }
+to = "bogus_comment"
+actions = ["create_comment", "append_comment([C)", "append_comment(current)"]
+
+[[transitions]]
+from = "cdata_open_cd"
+matcher = { literal = "A" }
+to = "cdata_open_cda"
+
+[[transitions]]
+from = "cdata_open_cd"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-comment)",
+  "create_comment",
+  "append_comment([CD)",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "cdata_open_cd"
+matcher = { anything = true }
+to = "bogus_comment"
+actions = [
+  "create_comment",
+  "append_comment([CD)",
+  "append_comment(current)",
+]
+
+[[transitions]]
+from = "cdata_open_cda"
+matcher = { literal = "T" }
+to = "cdata_open_cdat"
+
+[[transitions]]
+from = "cdata_open_cda"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-comment)",
+  "create_comment",
+  "append_comment([CDA)",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "cdata_open_cda"
+matcher = { anything = true }
+to = "bogus_comment"
+actions = [
+  "create_comment",
+  "append_comment([CDA)",
+  "append_comment(current)",
+]
+
+[[transitions]]
+from = "cdata_open_cdat"
+matcher = { literal = "A" }
+to = "cdata_open_cdata"
+
+[[transitions]]
+from = "cdata_open_cdat"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-comment)",
+  "create_comment",
+  "append_comment([CDAT)",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "cdata_open_cdat"
+matcher = { anything = true }
+to = "bogus_comment"
+actions = [
+  "create_comment",
+  "append_comment([CDAT)",
+  "append_comment(current)",
+]
+
+[[transitions]]
+from = "cdata_open_cdata"
+matcher = { literal = "[" }
+to = "cdata_section"
+
+[[transitions]]
+from = "cdata_open_cdata"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-comment)",
+  "create_comment",
+  "append_comment([CDATA)",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "cdata_open_cdata"
+matcher = { anything = true }
+to = "bogus_comment"
+actions = [
+  "create_comment",
+  "append_comment([CDATA)",
+  "append_comment(current)",
+]
 
 [[transitions]]
 from = "comment_start"

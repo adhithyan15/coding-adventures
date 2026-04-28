@@ -424,6 +424,19 @@
       ],
       "diagnostics": [],
       "initial_state": "CDATA section state"
+    },
+    {
+      "id": "html5lib-smoke-35",
+      "description": "markup declaration CDATA opener enters CDATA section",
+      "input": "<![CDATA[<not-markup> &amp; ]]><p>After</p>",
+      "tokens": [
+        "Text(data=<not-markup> &amp; )",
+        "StartTag(name=p, attributes=[], self_closing=false)",
+        "Text(data=After)",
+        "EndTag(name=p)",
+        "EOF"
+      ],
+      "diagnostics": []
     }
   ],
   "skipped": []
