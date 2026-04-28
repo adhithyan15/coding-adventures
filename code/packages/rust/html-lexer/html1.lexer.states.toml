@@ -1319,7 +1319,23 @@ from = "text_named_character_reference_copy"
 matcher = { eof = true }
 to = "done"
 consume = false
-actions = ["append_temporary_buffer_to_text", "flush_text", "emit(EOF)"]
+actions = [
+  "append_named_character_reference_to_text",
+  "parse_error(missing-semicolon-after-character-reference)",
+  "flush_text",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "text_named_character_reference_copy"
+matcher = { one_of = " \n\t\r<>/\"'" }
+to = "data"
+consume = false
+actions = [
+  "append_named_character_reference_to_text",
+  "parse_error(missing-semicolon-after-character-reference)",
+  "switch_to_return_state",
+]
 
 [[transitions]]
 from = "text_named_character_reference_copy"
@@ -1420,7 +1436,23 @@ from = "text_named_character_reference_nbsp"
 matcher = { eof = true }
 to = "done"
 consume = false
-actions = ["append_temporary_buffer_to_text", "flush_text", "emit(EOF)"]
+actions = [
+  "append_named_character_reference_to_text",
+  "parse_error(missing-semicolon-after-character-reference)",
+  "flush_text",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "text_named_character_reference_nbsp"
+matcher = { one_of = " \n\t\r<>/\"'" }
+to = "data"
+consume = false
+actions = [
+  "append_named_character_reference_to_text",
+  "parse_error(missing-semicolon-after-character-reference)",
+  "switch_to_return_state",
+]
 
 [[transitions]]
 from = "text_named_character_reference_nbsp"
@@ -1495,7 +1527,23 @@ from = "text_named_character_reference_reg"
 matcher = { eof = true }
 to = "done"
 consume = false
-actions = ["append_temporary_buffer_to_text", "flush_text", "emit(EOF)"]
+actions = [
+  "append_named_character_reference_to_text",
+  "parse_error(missing-semicolon-after-character-reference)",
+  "flush_text",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "text_named_character_reference_reg"
+matcher = { one_of = " \n\t\r<>/\"'" }
+to = "data"
+consume = false
+actions = [
+  "append_named_character_reference_to_text",
+  "parse_error(missing-semicolon-after-character-reference)",
+  "switch_to_return_state",
+]
 
 [[transitions]]
 from = "text_named_character_reference_reg"
@@ -2946,11 +2994,23 @@ matcher = { eof = true }
 to = "done"
 consume = false
 actions = [
-  "append_temporary_buffer_to_attribute_value",
+  "append_named_character_reference_to_attribute_value",
+  "parse_error(missing-semicolon-after-character-reference)",
   "parse_error(eof-in-tag)",
   "commit_attribute",
   "emit_current_token",
   "emit(EOF)",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_copy"
+matcher = { one_of = " \n\t\r>/\"'" }
+to = "attribute_value_unquoted"
+consume = false
+actions = [
+  "append_named_character_reference_to_attribute_value",
+  "parse_error(missing-semicolon-after-character-reference)",
+  "switch_to_return_state",
 ]
 
 [[transitions]]
@@ -3083,11 +3143,23 @@ matcher = { eof = true }
 to = "done"
 consume = false
 actions = [
-  "append_temporary_buffer_to_attribute_value",
+  "append_named_character_reference_to_attribute_value",
+  "parse_error(missing-semicolon-after-character-reference)",
   "parse_error(eof-in-tag)",
   "commit_attribute",
   "emit_current_token",
   "emit(EOF)",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_nbsp"
+matcher = { one_of = " \n\t\r>/\"'" }
+to = "attribute_value_unquoted"
+consume = false
+actions = [
+  "append_named_character_reference_to_attribute_value",
+  "parse_error(missing-semicolon-after-character-reference)",
+  "switch_to_return_state",
 ]
 
 [[transitions]]
@@ -3185,11 +3257,23 @@ matcher = { eof = true }
 to = "done"
 consume = false
 actions = [
-  "append_temporary_buffer_to_attribute_value",
+  "append_named_character_reference_to_attribute_value",
+  "parse_error(missing-semicolon-after-character-reference)",
   "parse_error(eof-in-tag)",
   "commit_attribute",
   "emit_current_token",
   "emit(EOF)",
+]
+
+[[transitions]]
+from = "attribute_named_character_reference_reg"
+matcher = { one_of = " \n\t\r>/\"'" }
+to = "attribute_value_unquoted"
+consume = false
+actions = [
+  "append_named_character_reference_to_attribute_value",
+  "parse_error(missing-semicolon-after-character-reference)",
+  "switch_to_return_state",
 ]
 
 [[transitions]]
@@ -3898,6 +3982,11 @@ tokens = ["Text(data=Fish & <b> \"quote\" 'ok')", "EOF"]
 name = "html-legacy-character-references"
 input = "Legacy&nbsp;symbols: &copy; &reg;"
 tokens = ["Text(data=Legacy\u00A0symbols: \u00A9 \u00AE)", "EOF"]
+
+[[fixtures]]
+name = "html-semicolonless-legacy-character-references"
+input = "Legacy&nbsp symbols: &copy/&reg"
+tokens = ["Text(data=Legacy\u00A0 symbols: \u00A9/\u00AE)", "EOF"]
 
 [[fixtures]]
 name = "html-numeric-character-references"

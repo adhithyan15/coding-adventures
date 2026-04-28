@@ -20,7 +20,7 @@ Consider the full pipeline after LANG19:
 
 ```
 Frontend (Nib, BF, Algol, BASIC, Tetrad)
-    ↓ IrProgram  (or list[CIRInstr] — via future LANG21 bridge)
+    ↓ IrProgram  (or list[CIRInstr] — via LANG21 bridge (shipped))
 [Optimizer] — optional IR → IR transformation
     ↓
 [Backend] — validate + generate + assemble + run   ← LANG19 monolith
@@ -195,16 +195,18 @@ The two Intel backends use `IrValidator` objects that return
 - **Packager** (binary → executable): deferred to the AOT pipeline spec.
 - **JIT runner** (assemble + execute immediately): deferred to JIT pipeline spec.
 - **Simulator pipeline**: orthogonal; takes Assembly and runs it directly.
-- **`CIRInstr → IrProgram` bridge**: LANG21. Needed before Tetrad can use
-  `CodeGenerator[IrProgram, Assembly]`.
+- **`CIRInstr → IrProgram` bridge**: **LANG21 (shipped)** — the
+  `cir-to-compiler-ir` package provides `lower_cir_to_ir_program()`.
+  Tetrad programs can now be compiled end-to-end through any of the six
+  `CodeGenerator[IrProgram, Assembly]` adapters.
 
 ---
 
 ## Out of scope (future specs)
 
-| Spec | Topic |
-|------|-------|
-| LANG21 | `CIRInstr → IrProgram` lowering bridge |
-| LANG22 | AOT pipeline: `CodeGenerator` → Assembler → Packager → binary |
-| LANG23 | JIT pipeline: `CodeGenerator` → Assembler → execute |
-| LANG24 | Simulator pipeline: Assembly → run directly on simulator |
+| Spec | Topic | Status |
+|------|-------|--------|
+| LANG21 | `CIRInstr → IrProgram` lowering bridge | ✅ **Shipped** |
+| LANG22 | AOT pipeline: `CodeGenerator` → Assembler → Packager → binary | Planned |
+| LANG23 | JIT pipeline: `CodeGenerator` → Assembler → execute | Planned |
+| LANG24 | Simulator pipeline: Assembly → run directly on simulator | Planned |
