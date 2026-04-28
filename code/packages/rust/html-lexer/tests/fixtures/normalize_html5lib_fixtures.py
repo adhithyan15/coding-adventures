@@ -10,7 +10,12 @@ from pathlib import Path
 from typing import Any
 
 
-SUPPORTED_INITIAL_STATES = {"Data state", "RCDATA state", "RAWTEXT state"}
+SUPPORTED_INITIAL_STATES = {
+    "Data state",
+    "PLAINTEXT state",
+    "RCDATA state",
+    "RAWTEXT state",
+}
 
 
 def parse_args() -> argparse.Namespace:

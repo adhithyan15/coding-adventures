@@ -309,6 +309,16 @@
       ],
       "initial_state": "RCDATA state",
       "last_start_tag": "title"
+    },
+    {
+      "id": "html-plaintext-state-literalizes-markup",
+      "description": "Seeded PLAINTEXT context treats markup and character references as literal text",
+      "input": "hello <b>still text</b> &amp; literal",
+      "tokens": [
+        "Text(data=hello <b>still text</b> &amp; literal)",
+        "EOF"
+      ],
+      "initial_state": "PLAINTEXT state"
     }
   ]
 }
