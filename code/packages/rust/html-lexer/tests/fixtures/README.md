@@ -74,6 +74,8 @@ currently supports:
 - html5lib start-tag self-closing booleans
 - named character references in data, RCDATA, and attribute values for the
   current shared entity subset
+- legacy named character references `nbsp`, `copy`, and `reg` in data, RCDATA,
+  and attribute values
 - semicolon-terminated decimal and hexadecimal numeric character references in
   data, RCDATA, and attribute values
 - missing-semicolon decimal and hexadecimal numeric character reference

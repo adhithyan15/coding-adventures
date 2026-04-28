@@ -118,6 +118,36 @@
       "last_start_tag": "title"
     },
     {
+      "id": "html-legacy-character-references-data",
+      "description": "Legacy named character references resolve in data state",
+      "input": "Legacy&nbsp;symbols: &copy; &reg;",
+      "tokens": [
+        "Text(data=Legacy\u00A0symbols: \u00A9 \u00AE)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-legacy-character-references-attributes",
+      "description": "Legacy named character references resolve inside quoted and unquoted attribute values",
+      "input": "<a title=\"A&nbsp;B\" copy='&copy;' reg=&reg;>",
+      "tokens": [
+        "StartTag(name=a, attributes=[title=A\u00A0B, copy=\u00A9, reg=\u00AE], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-legacy-character-references-rcdata",
+      "description": "Seeded title RCDATA context resolves legacy named character references as text",
+      "input": "Venture&nbsp;&copy;&reg;</title>",
+      "tokens": [
+        "Text(data=Venture\u00A0\u00A9\u00AE)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
       "id": "html-numeric-character-references-data",
       "description": "Decimal and hexadecimal numeric character references resolve in data state",
       "input": "Letters: &#65; &#x42; &#X43; &#0;",
