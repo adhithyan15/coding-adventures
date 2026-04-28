@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.7.0 — 2026-04-27
+
+**Phase 13 — Hyperbolic function compiler mappings.**
+
+No new compiler logic was needed — `"sinh": SINH`, `"cosh": COSH`,
+`"tanh": TANH`, `"asinh": ASINH`, `"acosh": ACOSH`, and `"atanh": ATANH`
+were already added to `_STANDARD_FUNCTIONS` in 0.5.0. This release bumps the
+version to align with Phase 13 of the symbolic VM (0.32.0), and updates the
+`symbolic-ir` dependency to `>=0.7.0`.
+
 ## 0.6.0 — 2026-04-27
 
 **Phase G — Control-flow AST → IR compilation.**

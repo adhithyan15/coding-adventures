@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.7.0 — 2026-04-27
+
+**Phase 13 — Hyperbolic function head symbols.**
+
+No new nodes were needed — `SINH`, `COSH`, `TANH`, `ASINH`, `ACOSH`, and
+`ATANH` were already added in 0.5.0. This release bumps the version to align
+with Phase 13 of the symbolic VM (0.32.0) and macsyma-compiler (0.7.0), which
+fully implement hyperbolic function evaluation, differentiation, and
+integration. Consumers that declare `symbolic-ir>=0.7.0` are guaranteed all
+six hyperbolic head symbols are present and exported.
+
 ## 0.6.0 — 2026-04-27
 
 **Phase G — Control-flow head symbols.**

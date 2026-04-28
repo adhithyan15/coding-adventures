@@ -1,5 +1,54 @@
 # Changelog
 
+## 0.32.0 — 2026-04-27
+
+**Phase 13 — Hyperbolic function evaluation, differentiation, and integration.**
+
+New evaluation handlers (six `_elementary`-based handlers in `handlers.py`,
+registered in `build_handler_table`):
+
+- `sinh(simplify)` — `Sinh(u)`, exact identity `Sinh(0) = 0`.
+- `cosh(simplify)` — `Cosh(u)`, exact identity `Cosh(0) = 1`.
+- `tanh(simplify)` — `Tanh(u)`, exact identity `Tanh(0) = 0`.
+- `asinh(simplify)` — `Asinh(u)`, exact identity `Asinh(0) = 0`.
+- `acosh(simplify)` — `Acosh(u)`, exact identity `Acosh(1) = 0`.
+- `atanh(simplify)` — `Atanh(u)`, exact identity `Atanh(0) = 0`.
+
+New integration modules:
+
+- `sinh_poly_integral.py` — tabular IBP for `∫ P(x)·sinh(ax+b) dx` and
+  `∫ P(x)·cosh(ax+b) dx`. Sign alternation `(−1)^k` (period 2, vs trig's
+  period 4). Public API: `sinh_poly_integral`, `cosh_poly_integral`.
+- `asinh_poly_integral.py` — reduction IBP for `∫ P(x)·asinh(ax+b) dx` and
+  `∫ P(x)·acosh(ax+b) dx`. Uses the reduction formula
+  `Iₙ = (1/n)·tⁿ⁻¹·√(t²±1) ∓ (n−1)/n · Iₙ₋₂`. Public API:
+  `asinh_poly_integral`, `acosh_poly_integral`.
+
+Changes to `integrate.py` (9 change sites):
+
+1. Imports: added `SINH`, `COSH`, `TANH`, `ASINH`, `ACOSH`, `ATANH` and
+   the two new module imports.
+2. Phase 1 head set: added all six hyperbolic heads.
+3. Phase 3 head set: added all six.
+4. Bare dispatch: `SINH`/`COSH` → tabular IBP; `TANH` → `log(cosh(ax+b))/a`;
+   `ASINH`/`ACOSH` → reduction IBP; `ATANH` → inline IBP formula.
+5. Dispatcher functions: `_try_sinh_product`, `_try_cosh_product`,
+   `_try_asinh_product`, `_try_acosh_product`.
+6. Phase 13 MUL hooks wired in after Phase 12 block.
+7. Diff rules in `_diff_ir`: all six hyperbolic functions.
+8. Helper functions: `_tanh_integral`, `_atanh_integral`.
+
+New test file `tests/test_phase13.py` with 55 tests across 9 classes:
+`TestPhase13_SinhCanonical` (8), `TestPhase13_CoshCanonical` (7),
+`TestPhase13_LinearHyp` (8), `TestPhase13_AsinhCanonical` (8),
+`TestPhase13_AcoshCanonical` (5), `TestPhase13_BareAtanhTanh` (4),
+`TestPhase13_Fallthrough` (4), `TestPhase13_Regressions` (6),
+`TestPhase13_Macsyma` (5).
+
+Bumped `symbolic-ir` dependency to `>=0.7.0`.
+
+New spec: `code/specs/phase13-hyperbolic.md`.
+
 ## 0.31.0 — 2026-04-27
 
 **Phase G — Control-flow VM handlers.**
