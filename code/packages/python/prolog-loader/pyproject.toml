@@ -14,6 +14,7 @@ dependencies = [
     "coding-adventures-iso-prolog-parser>=0.1.0",
     "coding-adventures-logic-builtins>=0.13.0",
     "coding-adventures-logic-engine>=0.10.0",
+    "coding-adventures-logic-stdlib>=0.4.0",
     "coding-adventures-prolog-core>=0.1.0",
     "coding-adventures-prolog-parser>=0.1.0",
     "coding-adventures-swi-prolog-parser>=0.1.0",
@@ -37,6 +38,7 @@ Documentation = "https://github.com/adhithyan15/coding-adventures/tree/main/code
 [project.optional-dependencies]
 dev = [
     "coding-adventures-logic-builtins>=0.13.0",
+    "coding-adventures-logic-stdlib>=0.4.0",
     "pytest>=8.0",
     "pytest-cov>=5.0",
     "ruff>=0.4",
@@ -47,6 +49,7 @@ dev = [
 coding-adventures-iso-prolog-parser = { path = "../iso-prolog-parser", editable = true }
 coding-adventures-logic-builtins = { path = "../logic-builtins", editable = true }
 coding-adventures-logic-engine = { path = "../logic-engine", editable = true }
+coding-adventures-logic-stdlib = { path = "../logic-stdlib", editable = true }
 coding-adventures-prolog-core = { path = "../prolog-core", editable = true }
 coding-adventures-prolog-parser = { path = "../prolog-parser", editable = true }
 coding-adventures-swi-prolog-parser = { path = "../swi-prolog-parser", editable = true }
