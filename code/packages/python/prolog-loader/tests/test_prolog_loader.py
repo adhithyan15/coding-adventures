@@ -26,6 +26,7 @@ from logic_engine import (
     term,
     visible_clauses_for,
 )
+from swi_prolog_parser import parse_swi_query
 
 from prolog_loader import (
     LoadedPrologProject,
@@ -40,6 +41,7 @@ from prolog_loader import (
     load_swi_prolog_project,
     load_swi_prolog_project_from_files,
     load_swi_prolog_source,
+    rewrite_loaded_prolog_query,
     run_initialization_goals,
     run_prolog_initialization_goals,
 )
@@ -296,6 +298,44 @@ class TestPrologLoader:
             atom("bart"),
             atom("lisa"),
         ]
+
+    def test_rewrite_loaded_prolog_query_uses_module_import_context(self) -> None:
+        project = load_swi_prolog_project(
+            """
+            :- module(family, [ancestor/2]).
+            ancestor(homer, bart).
+            ancestor(homer, lisa).
+            """,
+            """
+            :- module(app, []).
+            :- use_module(family, [ancestor/2]).
+            """,
+        )
+
+        query = rewrite_loaded_prolog_query(
+            project,
+            parse_swi_query("?- ancestor(homer, Who)."),
+            module="app",
+        )
+
+        assert solve_all(project.program, query.variables["Who"], query.goal) == [
+            atom("bart"),
+            atom("lisa"),
+        ]
+
+    def test_rewrite_loaded_prolog_query_rejects_unknown_query_module(self) -> None:
+        project = load_swi_prolog_project(
+            """
+            :- module(app, []).
+            """,
+        )
+
+        with pytest.raises(ValueError, match="query module missing"):
+            rewrite_loaded_prolog_query(
+                project,
+                parse_swi_query("?- anything."),
+                module="missing",
+            )
 
     def test_load_swi_prolog_project_keeps_local_definitions_over_imports(self) -> None:
         project = load_swi_prolog_project(
