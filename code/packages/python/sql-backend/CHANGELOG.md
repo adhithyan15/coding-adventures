@@ -5,6 +5,22 @@ All notable changes to the `sql-backend` Python package are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.0] - 2026-04-27
+
+### Added — Phase 7: SAVEPOINT / RELEASE / ROLLBACK TO
+
+- **`Backend.create_savepoint(name)`** — non-abstract method; default raises
+  `Unsupported("savepoints")`.  Override in backends that support partial rollback.
+- **`Backend.release_savepoint(name)`** — removes the named savepoint (and
+  all savepoints after it) without changing the current data state.
+- **`Backend.rollback_to_savepoint(name)`** — restores data to the snapshot
+  taken at the named savepoint, but keeps the savepoint alive so it can be
+  re-used.
+- **`InMemoryBackend._savepoint_stack`** — `list[tuple[str, tables_snap, indexes_snap]]`
+  tracking all active savepoints.  `create_savepoint` pushes a deep-copy;
+  `release_savepoint` pops; `rollback_to_savepoint` restores and trims.
+  Implicitly begins a transaction if one is not already active.
+
 ## [0.6.0] - 2026-04-27
 
 ### Added — Phase 4b: FOREIGN KEY constraints
