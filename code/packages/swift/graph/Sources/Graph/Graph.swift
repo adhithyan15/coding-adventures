@@ -7,6 +7,15 @@ public enum GraphRepr: String, CaseIterable, Sendable {
 
 public typealias WeightedEdge = (String, String, Double)
 
+public enum GraphPropertyValue: Equatable, Sendable {
+    case string(String)
+    case number(Double)
+    case bool(Bool)
+    case null
+}
+
+public typealias GraphPropertyBag = [String: GraphPropertyValue]
+
 public struct NodeNotFoundError: Error, CustomStringConvertible {
     public let node: String
     public var description: String { "Node not found: '\(node)'" }
@@ -28,6 +37,9 @@ public struct Graph: Sendable {
     private var nodeList: [String]
     private var nodeIndex: [String: Int]
     private var matrix: [[Double?]]
+    private var graphPropertiesStore: GraphPropertyBag
+    private var nodePropertiesStore: [String: GraphPropertyBag]
+    private var edgePropertiesStore: [String: GraphPropertyBag]
 
     public init(repr: GraphRepr = .adjacencyList) {
         self.repr = repr
@@ -35,21 +47,26 @@ public struct Graph: Sendable {
         self.nodeList = []
         self.nodeIndex = [:]
         self.matrix = []
+        self.graphPropertiesStore = [:]
+        self.nodePropertiesStore = [:]
+        self.edgePropertiesStore = [:]
     }
 
     public var size: Int {
         repr == .adjacencyList ? adj.count : nodeList.count
     }
 
-    public mutating func addNode(_ node: String) {
+    public mutating func addNode(_ node: String, properties: GraphPropertyBag = [:]) {
         if repr == .adjacencyList {
             if adj[node] == nil {
                 adj[node] = [:]
             }
+            mergeNodeProperties(node, properties)
             return
         }
 
         if nodeIndex[node] != nil {
+            mergeNodeProperties(node, properties)
             return
         }
 
@@ -60,6 +77,7 @@ public struct Graph: Sendable {
             matrix[row].append(nil)
         }
         matrix.append(Array(repeating: nil, count: index + 1))
+        mergeNodeProperties(node, properties)
     }
 
     public mutating func removeNode(_ node: String) throws {
@@ -69,8 +87,10 @@ public struct Graph: Sendable {
             }
             for neighbor in neighbors.keys {
                 adj[neighbor]?.removeValue(forKey: node)
+                edgePropertiesStore.removeValue(forKey: edgeKey(node, neighbor))
             }
             adj.removeValue(forKey: node)
+            nodePropertiesStore.removeValue(forKey: node)
             return
         }
 
@@ -78,6 +98,10 @@ public struct Graph: Sendable {
             throw NodeNotFoundError(node: node)
         }
 
+        for other in nodeList {
+            edgePropertiesStore.removeValue(forKey: edgeKey(node, other))
+        }
+        nodePropertiesStore.removeValue(forKey: node)
         nodeIndex.removeValue(forKey: node)
         nodeList.remove(at: index)
         matrix.remove(at: index)
@@ -96,13 +120,14 @@ public struct Graph: Sendable {
         return values.sorted()
     }
 
-    public mutating func addEdge(_ left: String, _ right: String, weight: Double = 1.0) {
+    public mutating func addEdge(_ left: String, _ right: String, weight: Double = 1.0, properties: GraphPropertyBag = [:]) {
         addNode(left)
         addNode(right)
 
         if repr == .adjacencyList {
             adj[left, default: [:]][right] = weight
             adj[right, default: [:]][left] = weight
+            mergeEdgeProperties(left, right, weight: weight, properties: properties)
             return
         }
 
@@ -110,6 +135,7 @@ public struct Graph: Sendable {
         let rightIndex = nodeIndex[right]!
         matrix[leftIndex][rightIndex] = weight
         matrix[rightIndex][leftIndex] = weight
+        mergeEdgeProperties(left, right, weight: weight, properties: properties)
     }
 
     public mutating func removeEdge(_ left: String, _ right: String) throws {
@@ -119,6 +145,7 @@ public struct Graph: Sendable {
             }
             adj[left]?.removeValue(forKey: right)
             adj[right]?.removeValue(forKey: left)
+            edgePropertiesStore.removeValue(forKey: edgeKey(left, right))
             return
         }
 
@@ -128,6 +155,7 @@ public struct Graph: Sendable {
 
         matrix[leftIndex][rightIndex] = nil
         matrix[rightIndex][leftIndex] = nil
+        edgePropertiesStore.removeValue(forKey: edgeKey(left, right))
     }
 
     public func hasEdge(_ left: String, _ right: String) -> Bool {
@@ -228,6 +256,101 @@ public struct Graph: Sendable {
 
     public func degree(of node: String) throws -> Int {
         try neighbors(of: node).count
+    }
+
+    public func graphProperties() -> GraphPropertyBag {
+        graphPropertiesStore
+    }
+
+    public mutating func setGraphProperty(_ key: String, value: GraphPropertyValue) {
+        graphPropertiesStore[key] = value
+    }
+
+    public mutating func removeGraphProperty(_ key: String) {
+        graphPropertiesStore.removeValue(forKey: key)
+    }
+
+    public func nodeProperties(_ node: String) throws -> GraphPropertyBag {
+        guard hasNode(node) else {
+            throw NodeNotFoundError(node: node)
+        }
+        return nodePropertiesStore[node] ?? [:]
+    }
+
+    public mutating func setNodeProperty(_ node: String, _ key: String, value: GraphPropertyValue) throws {
+        guard hasNode(node) else {
+            throw NodeNotFoundError(node: node)
+        }
+        nodePropertiesStore[node, default: [:]][key] = value
+    }
+
+    public mutating func removeNodeProperty(_ node: String, _ key: String) throws {
+        guard hasNode(node) else {
+            throw NodeNotFoundError(node: node)
+        }
+        nodePropertiesStore[node]?.removeValue(forKey: key)
+    }
+
+    public func edgeProperties(_ left: String, _ right: String) throws -> GraphPropertyBag {
+        guard hasEdge(left, right) else {
+            throw EdgeNotFoundError(left: left, right: right)
+        }
+        var properties = edgePropertiesStore[edgeKey(left, right)] ?? [:]
+        properties["weight"] = .number(try edgeWeight(left, right))
+        return properties
+    }
+
+    public mutating func setEdgeProperty(_ left: String, _ right: String, _ key: String, value: GraphPropertyValue) throws {
+        guard hasEdge(left, right) else {
+            throw EdgeNotFoundError(left: left, right: right)
+        }
+
+        if key == "weight" {
+            guard case let .number(weight) = value else {
+                throw EdgeNotFoundError(left: "weight", right: "numeric property")
+            }
+            setEdgeWeight(left, right, weight: weight)
+        }
+
+        edgePropertiesStore[edgeKey(left, right), default: [:]][key] = value
+    }
+
+    public mutating func removeEdgeProperty(_ left: String, _ right: String, _ key: String) throws {
+        guard hasEdge(left, right) else {
+            throw EdgeNotFoundError(left: left, right: right)
+        }
+
+        if key == "weight" {
+            setEdgeWeight(left, right, weight: 1.0)
+            edgePropertiesStore[edgeKey(left, right), default: [:]]["weight"] = .number(1.0)
+            return
+        }
+
+        edgePropertiesStore[edgeKey(left, right)]?.removeValue(forKey: key)
+    }
+
+    private mutating func mergeNodeProperties(_ node: String, _ properties: GraphPropertyBag) {
+        nodePropertiesStore[node, default: [:]].merge(properties) { _, next in next }
+    }
+
+    private mutating func mergeEdgeProperties(_ left: String, _ right: String, weight: Double, properties: GraphPropertyBag) {
+        var next = edgePropertiesStore[edgeKey(left, right)] ?? [:]
+        next.merge(properties) { _, value in value }
+        next["weight"] = .number(weight)
+        edgePropertiesStore[edgeKey(left, right)] = next
+    }
+
+    private mutating func setEdgeWeight(_ left: String, _ right: String, weight: Double) {
+        if repr == .adjacencyList {
+            adj[left, default: [:]][right] = weight
+            adj[right, default: [:]][left] = weight
+            return
+        }
+
+        let leftIndex = nodeIndex[left]!
+        let rightIndex = nodeIndex[right]!
+        matrix[leftIndex][rightIndex] = weight
+        matrix[rightIndex][leftIndex] = weight
     }
 }
 
@@ -330,6 +453,11 @@ public func minimumSpanningTree(_ graph: Graph) throws -> [WeightedEdge] {
 
 private func canonical(_ left: String, _ right: String) -> (String, String) {
     left <= right ? (left, right) : (right, left)
+}
+
+private func edgeKey(_ left: String, _ right: String) -> String {
+    let ordered = canonical(left, right)
+    return "\(ordered.0)\u{0}\(ordered.1)"
 }
 
 private func visitCycle(_ graph: Graph, _ node: String, parent: String?, visited: inout Set<String>) -> Bool {

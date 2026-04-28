@@ -214,6 +214,45 @@ public sealed class GraphTests
     }
 
     [Fact]
+    public void PropertyBagsTrackGraphNodeAndEdgeMetadata()
+    {
+        foreach (var repr in Representations())
+        {
+            var graph = new Graph<string>(repr);
+
+            graph.SetGraphProperty("name", "city-map");
+            graph.SetGraphProperty("version", 1);
+            Assert.Equal("city-map", graph.GraphProperties()["name"]);
+            Assert.Equal(1, graph.GraphProperties()["version"]);
+            graph.RemoveGraphProperty("version");
+            Assert.False(graph.GraphProperties().ContainsKey("version"));
+
+            graph.AddNode("A", new Dictionary<string, object?> { ["kind"] = "input" });
+            graph.AddNode("A", new Dictionary<string, object?> { ["trainable"] = false });
+            graph.SetNodeProperty("A", "slot", 0);
+            var nodeProperties = graph.NodeProperties("A");
+            Assert.Equal("input", nodeProperties["kind"]);
+            Assert.Equal(false, nodeProperties["trainable"]);
+            Assert.Equal(0, nodeProperties["slot"]);
+            graph.RemoveNodeProperty("A", "slot");
+            Assert.False(graph.NodeProperties("A").ContainsKey("slot"));
+
+            graph.AddEdge("A", "B", 2.5, new Dictionary<string, object?> { ["role"] = "distance" });
+            Assert.Equal("distance", graph.EdgeProperties("B", "A")["role"]);
+            Assert.Equal(2.5, graph.EdgeProperties("B", "A")["weight"]);
+            graph.SetEdgeProperty("B", "A", "weight", 7.0);
+            Assert.Equal(7.0, graph.EdgeWeight("A", "B"));
+            graph.SetEdgeProperty("A", "B", "trainable", true);
+            graph.RemoveEdgeProperty("A", "B", "role");
+            Assert.Equal(true, graph.EdgeProperties("A", "B")["trainable"]);
+            Assert.False(graph.EdgeProperties("A", "B").ContainsKey("role"));
+
+            graph.RemoveEdge("A", "B");
+            Assert.Throws<KeyNotFoundException>(() => graph.EdgeProperties("A", "B"));
+        }
+    }
+
+    [Fact]
     public void NumericNodesAreSupported()
     {
         foreach (var repr in Representations())
