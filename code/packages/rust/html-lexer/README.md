@@ -25,6 +25,8 @@ the project, but the first real HTML authoring artifact that must keep HTML
 The default lexer already resolves the core named character references and the
 classic Latin-1 entity set, preserving entity-name case so legacy names such as
 `Agrave` and `agrave` remain distinct.
+The generated HTML1 machine also exposes `RCDATA`, `RAWTEXT`, and `PLAINTEXT`
+entry states for parser-controlled tokenizer submodes.
 `html-skeleton.lexer.states.toml` remains in the crate as a smaller bootstrap
 machine for comparisons and narrow debugging.
 
@@ -50,10 +52,11 @@ without coupling the shared harness to upstream file formats or requiring raw
 fixture normalization logic to live forever inside the Rust tests.
 
 The normalized corpus now carries optional tokenizer-context metadata such as
-`initial_state` and `last_start_tag`, so upstream RCDATA and RAWTEXT cases can already live
-in the shared Venture fixture format. Current Rust conformance tests now seed
-that context into the generated lexer so the first RCDATA and RAWTEXT cases execute through
-the same static Rust wrapper as the data-state corpus.
+`initial_state` and `last_start_tag`, so upstream RCDATA, RAWTEXT, and
+PLAINTEXT cases can already live in the shared Venture fixture format. Current
+Rust conformance tests now seed that context into the generated lexer so the
+first non-data-state cases execute through the same static Rust wrapper as the
+data-state corpus.
 
 The intended WHATWG/WPT path is to normalize upstream tokenizer cases into this
 same schema rather than teaching the Rust harness to parse raw upstream files

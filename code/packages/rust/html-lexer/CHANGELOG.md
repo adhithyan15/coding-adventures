@@ -60,3 +60,6 @@ documented in this file.
 - Classic Latin-1 named character references in data, RCDATA, and attribute
   values, with case-preserving entity-name scanning for names such as
   `Agrave` and `agrave`.
+- Seeded `PLAINTEXT` tokenizer-state support, including shared Venture and
+  html5lib-style fixture coverage proving markup and character references stay
+  literal in that submode.

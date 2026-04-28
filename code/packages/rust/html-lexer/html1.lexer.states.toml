@@ -118,6 +118,10 @@ id = "rawtext"
 external_entry = true
 
 [[states]]
+id = "plaintext"
+external_entry = true
+
+[[states]]
 id = "rcdata_less_than_sign"
 
 [[states]]
@@ -499,6 +503,19 @@ actions = ["flush_text", "emit(EOF)"]
 from = "rawtext"
 matcher = { anything = true }
 to = "rawtext"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "plaintext"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "plaintext"
+matcher = { anything = true }
+to = "plaintext"
 actions = ["append_text(current)"]
 
 [[transitions]]

@@ -193,6 +193,23 @@ fn default_html_lexer_keeps_ampersands_literal_in_seeded_rawtext() {
 }
 
 #[test]
+fn default_html_lexer_supports_seeded_plaintext_state() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("plaintext").unwrap();
+
+    lexer.push("hello <b>still text</b> &amp; literal").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("hello <b>still text</b> &amp; literal".to_string()),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_named_character_references_in_data() {
     let tokens = lex_html("Fish &amp; &lt;b&gt; &quot;quote&quot; &apos;ok&apos;").unwrap();
 
