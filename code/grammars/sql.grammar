@@ -79,7 +79,8 @@ create_table_stmt = "CREATE" "TABLE" [ "IF" "NOT" "EXISTS" ] NAME
                     "(" col_def { "," col_def } ")" ;
 col_def           = NAME NAME { col_constraint } ;
 col_constraint    = ( "NOT" "NULL" ) | "NULL" | ( "PRIMARY" "KEY" )
-                  | "UNIQUE" | ( "DEFAULT" primary ) ;
+                  | "UNIQUE" | ( "DEFAULT" primary )
+                  | ( "CHECK" "(" expr ")" ) ;
 
 drop_table_stmt   = "DROP" "TABLE" [ "IF" "EXISTS" ] NAME ;
 

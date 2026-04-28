@@ -1017,10 +1017,20 @@ def _plan_agg_to_ir(f: PlanAggFunc) -> IrAggFunc:
 
 
 def _to_ir_col(c: AstColumnDef) -> IrColumnDef:
+    check_instrs: tuple[Instruction, ...] = ()
+    if c.check_expr is not None:
+        # Compile the CHECK expression using a synthetic context where every
+        # unqualified column reference resolves to the sentinel CHECK_CURSOR_ID.
+        # The VM will bind this cursor to the incoming row at validation time.
+        from .ir import CHECK_CURSOR_ID
+        check_ctx = _Ctx()
+        check_ctx.alias_to_cursor[""] = CHECK_CURSOR_ID
+        check_instrs = tuple(_compile_expr(c.check_expr, check_ctx))  # type: ignore[arg-type]
     return IrColumnDef(
         name=c.name,
         type=c.type_name,
         nullable=not c.effective_not_null(),
+        check_instrs=check_instrs,
     )
 
 

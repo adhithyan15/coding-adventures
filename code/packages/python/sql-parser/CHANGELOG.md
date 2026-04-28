@@ -2,6 +2,14 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.4.0] - 2026-04-27
+
+### Added — Phase 4a: CHECK constraints
+
+- `col_constraint` alternation extended with `CHECK ( expr )` — the parser
+  now accepts per-column CHECK constraints and includes the expression node
+  in the parse tree under the `col_constraint` → `expr` rule reference.
+
 ## [0.3.0] - 2026-04-27
 
 ### Added

@@ -98,6 +98,7 @@ class ColumnDef:
     primary_key: bool = False
     unique: bool = False
     default: ColumnDefault = field(default=NO_DEFAULT)
+    check_expr: object = field(default=None, compare=False, hash=False)
 
     def effective_not_null(self) -> bool:
         """PRIMARY KEY implies NOT NULL. Convenience for the constraint enforcer."""

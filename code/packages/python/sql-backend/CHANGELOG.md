@@ -5,6 +5,15 @@ All notable changes to the `sql-backend` Python package are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2026-04-27
+
+### Added — Phase 4a: CHECK constraints
+
+- **`ColumnDef.check_expr: object`** — new optional field on the backend `ColumnDef`,
+  typed as `object` to avoid a circular import with the planner's `Expr` hierarchy.
+  `compare=False, hash=False` so existing equality and hash behaviour is unaffected.
+  Carries the planner expression tree from the adapter layer through to codegen.
+
 ## [0.4.0] - 2026-04-27
 
 ### Added

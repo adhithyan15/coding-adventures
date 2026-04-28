@@ -187,3 +187,124 @@ def test_insert_unknown_table_raises() -> None:
     )
     with pytest.raises(TableNotFound):
         execute(compile(plan), be)
+
+
+# --------------------------------------------------------------------------
+# CHECK constraint tests — VM-level enforcement via check_registry.
+# --------------------------------------------------------------------------
+
+
+def _make_check_table(be: InMemoryBackend, check: object) -> None:
+    """Create table t(id INTEGER, val INTEGER CHECK(<check>)) in be."""
+    plan = CreateTable(
+        table="t",
+        columns=(
+            AstColumnDef(name="id", type_name="INTEGER", check_expr=None),
+            AstColumnDef(name="val", type_name="INTEGER", check_expr=check),
+        ),
+    )
+    registry: dict = {}
+    execute(compile(plan), be, check_registry=registry)
+    return registry
+
+
+def test_check_constraint_insert_valid() -> None:
+    """INSERT satisfying CHECK (val > 0) succeeds."""
+    be = InMemoryBackend()
+    # val > 0
+    check_expr = BinaryExpr(op=BinaryOp.GT, left=Column(None, "val"), right=Literal(0))
+    registry: dict = {}
+    plan_create = CreateTable(
+        table="t",
+        columns=(
+            AstColumnDef(name="id", type_name="INTEGER"),
+            AstColumnDef(name="val", type_name="INTEGER", check_expr=check_expr),
+        ),
+    )
+    execute(compile(plan_create), be, check_registry=registry)
+
+    plan_insert = Insert(
+        table="t",
+        columns=("id", "val"),
+        source=InsertSource(values=((Literal(1), Literal(5)),)),
+    )
+    result = execute(compile(plan_insert), be, check_registry=registry)
+    assert result.rows_affected == 1
+    rows = _scan_rows(be, "t")
+    assert rows == [{"id": 1, "val": 5}]
+
+
+def test_check_constraint_insert_violates() -> None:
+    """INSERT violating CHECK (val > 0) raises ConstraintViolation."""
+    from sql_vm import ConstraintViolation
+
+    be = InMemoryBackend()
+    check_expr = BinaryExpr(op=BinaryOp.GT, left=Column(None, "val"), right=Literal(0))
+    registry: dict = {}
+    plan_create = CreateTable(
+        table="t",
+        columns=(
+            AstColumnDef(name="id", type_name="INTEGER"),
+            AstColumnDef(name="val", type_name="INTEGER", check_expr=check_expr),
+        ),
+    )
+    execute(compile(plan_create), be, check_registry=registry)
+
+    plan_insert = Insert(
+        table="t",
+        columns=("id", "val"),
+        source=InsertSource(values=((Literal(1), Literal(-1)),)),
+    )
+    with pytest.raises(ConstraintViolation) as exc_info:
+        execute(compile(plan_insert), be, check_registry=registry)
+    assert "CHECK constraint failed" in str(exc_info.value)
+
+
+def test_check_constraint_update_violates() -> None:
+    """UPDATE violating CHECK (val > 0) raises ConstraintViolation."""
+    from sql_vm import ConstraintViolation
+
+    be = InMemoryBackend()
+    check_expr = BinaryExpr(op=BinaryOp.GT, left=Column(None, "val"), right=Literal(0))
+    registry: dict = {}
+    plan_create = CreateTable(
+        table="t",
+        columns=(
+            AstColumnDef(name="id", type_name="INTEGER"),
+            AstColumnDef(name="val", type_name="INTEGER", check_expr=check_expr),
+        ),
+    )
+    execute(compile(plan_create), be, check_registry=registry)
+    be.insert("t", {"id": 1, "val": 10})
+
+    plan_update = Update(
+        table="t",
+        assignments=(Assignment(column="val", value=Literal(-99)),),
+    )
+    with pytest.raises(ConstraintViolation):
+        execute(compile(plan_update), be, check_registry=registry)
+    # Row should be unchanged.
+    assert _scan_rows(be, "t") == [{"id": 1, "val": 10}]
+
+
+def test_check_null_passes() -> None:
+    """NULL satisfies CHECK (val > 0) by SQL three-valued-logic convention."""
+    be = InMemoryBackend()
+    check_expr = BinaryExpr(op=BinaryOp.GT, left=Column(None, "val"), right=Literal(0))
+    registry: dict = {}
+    plan_create = CreateTable(
+        table="t",
+        columns=(
+            AstColumnDef(name="id", type_name="INTEGER"),
+            AstColumnDef(name="val", type_name="INTEGER", check_expr=check_expr),
+        ),
+    )
+    execute(compile(plan_create), be, check_registry=registry)
+
+    plan_insert = Insert(
+        table="t",
+        columns=("id", "val"),
+        source=InsertSource(values=((Literal(1), Literal(None)),)),
+    )
+    result = execute(compile(plan_insert), be, check_registry=registry)
+    assert result.rows_affected == 1

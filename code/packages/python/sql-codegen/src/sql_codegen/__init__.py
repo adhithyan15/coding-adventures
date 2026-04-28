@@ -26,6 +26,7 @@ from __future__ import annotations
 from .compiler import compile, compile_expr  # noqa: A004 — shadowing builtin is intentional
 from .errors import CodegenError, InternalError, UnsupportedNode
 from .ir import (
+    CHECK_CURSOR_ID,
     AdvanceCursor,
     AdvanceGroupKey,
     AlterTable,
@@ -90,6 +91,9 @@ from .ir import (
 from .ir import (
     AggFunc as IrAggFunc,
 )
+from .ir import (
+    ColumnDef as IrColumnDef,
+)
 
 __all__ = [
     "AdvanceCursor",
@@ -125,7 +129,9 @@ __all__ = [
     "Instruction",
     "IntersectResult",
     "InternalError",
+    "CHECK_CURSOR_ID",
     "IrAggFunc",
+    "IrColumnDef",
     "IsNotNull",
     "IsNull",
     "Jump",
