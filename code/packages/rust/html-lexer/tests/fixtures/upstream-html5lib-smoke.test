@@ -125,6 +125,40 @@
         ["Character", "<"],
         ["Character", "/title>"]
       ]
+    },
+    {
+      "description": "data state numeric character references",
+      "input": "Letters: &#65; &#x42; &#X43; &#0;",
+      "output": [
+        ["Character", "Letters: "],
+        ["Character", "A"],
+        ["Character", " "],
+        ["Character", "B"],
+        ["Character", " "],
+        ["Character", "C"],
+        ["Character", " "],
+        ["Character", "\uFFFD"]
+      ]
+    },
+    {
+      "description": "attribute numeric character references",
+      "input": "<a title=\"&#65;&#x42;\" data-x='&#X43;' note=&#0;>",
+      "output": [
+        ["StartTag", "a", {"title": "AB", "data-x": "C", "note": "\uFFFD"}]
+      ]
+    },
+    {
+      "description": "rcdata numeric character references remain text",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "Fish &#38; &#x3C;/title>",
+      "output": [
+        ["Character", "Fish "],
+        ["Character", "&"],
+        ["Character", " "],
+        ["Character", "<"],
+        ["Character", "/title>"]
+      ]
     }
   ]
 }

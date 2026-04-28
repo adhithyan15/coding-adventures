@@ -230,6 +230,59 @@ fn effectful_machine_imports_typed_matcher_definitions() {
 }
 
 #[test]
+fn effectful_machine_executes_range_and_one_of_matchers() {
+    let mut definition = StateMachineDefinition::new(
+        "numeric-character-reference",
+        state_machine::MachineKind::Transducer,
+    );
+    definition.initial = Some("data".to_string());
+    definition.states = vec![
+        StateDefinition {
+            initial: true,
+            ..StateDefinition::new("data")
+        },
+        StateDefinition::new("hex"),
+    ];
+    definition.transitions = vec![
+        TransitionDefinition {
+            from: "data".to_string(),
+            to: vec!["data".to_string()],
+            on: None,
+            consume: true,
+            actions: vec!["append_digit".to_string()],
+            matcher: Some(MatcherDefinition::Range {
+                start: "0".to_string(),
+                end: "9".to_string(),
+            }),
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+        },
+        TransitionDefinition {
+            from: "data".to_string(),
+            to: vec!["hex".to_string()],
+            on: None,
+            consume: true,
+            actions: vec!["switch_to_hex".to_string()],
+            matcher: Some(MatcherDefinition::OneOf("xX".to_string())),
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+        },
+    ];
+
+    let mut machine = EffectfulStateMachine::from_definition(&definition).unwrap();
+
+    let digit = machine.process(EffectfulInput::event("7")).unwrap();
+    assert_eq!(digit.effects, vec!["append_digit".to_string()]);
+    assert_eq!(machine.current_state(), "data");
+
+    let hex = machine.process(EffectfulInput::event("X")).unwrap();
+    assert_eq!(hex.effects, vec!["switch_to_hex".to_string()]);
+    assert_eq!(machine.current_state(), "hex");
+}
+
+#[test]
 fn effectful_machine_rejects_consuming_eof_transition() {
     let error = EffectfulStateMachine::new(
         set(&["data", "done"]),

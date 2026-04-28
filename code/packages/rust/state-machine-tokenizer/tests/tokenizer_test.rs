@@ -350,6 +350,56 @@ fn tokenizer_appends_temporary_buffer_to_attribute_value() {
 }
 
 #[test]
+fn tokenizer_decodes_numeric_character_references_from_temporary_buffer() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["T", "A"]),
+            vec![
+                EffectfulTransition::new("data", EffectfulMatcher::Event("T".to_string()), "data")
+                    .with_effects(&[
+                        "clear_temporary_buffer",
+                        "append_temporary_buffer(&#x41)",
+                        "append_numeric_character_reference_to_text",
+                        "flush_text",
+                    ]),
+                EffectfulTransition::new("data", EffectfulMatcher::Event("A".to_string()), "done")
+                    .with_effects(&[
+                        "create_start_tag",
+                        "append_tag_name(current_lowercase)",
+                        "start_attribute",
+                        "append_attribute_name(title)",
+                        "append_temporary_buffer(&#65)",
+                        "append_numeric_character_reference_to_attribute_value",
+                        "commit_attribute",
+                        "emit_current_token",
+                    ]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("TA").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![
+            Token::Text("A".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![Attribute {
+                    name: "title".to_string(),
+                    value: "A".to_string(),
+                }],
+                self_closing: false,
+            },
+        ]
+    );
+}
+
+#[test]
 fn tokenizer_supports_switch_to_with_reconsume() {
     let mut tokenizer = Tokenizer::new(
         EffectfulStateMachine::new(

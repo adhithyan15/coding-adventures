@@ -237,6 +237,64 @@ fn default_html_lexer_supports_named_character_references_in_attributes() {
 }
 
 #[test]
+fn default_html_lexer_supports_numeric_character_references_in_data() {
+    let tokens = lex_html("Letters: &#65; &#x42; &#X43; &#0;").unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Text("Letters: A B C \u{FFFD}".to_string()),
+            Token::Eof
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_numeric_character_references_in_attributes() {
+    let tokens = lex_html("<a title=\"&#65;&#x42;\" data-x='&#X43;' note=&#0;>").unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "title".to_string(),
+                        value: "AB".to_string(),
+                    },
+                    Attribute {
+                        name: "data-x".to_string(),
+                        value: "C".to_string(),
+                    },
+                    Attribute {
+                        name: "note".to_string(),
+                        value: "\u{FFFD}".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_rcdata_numeric_character_references() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rcdata").unwrap();
+    lexer.set_last_start_tag("title");
+
+    lexer.push("Fish &#38; &#x3C;/title>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![Token::Text("Fish & </title>".to_string()), Token::Eof]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_seeded_rcdata_character_references() {
     let mut lexer = create_html_lexer().unwrap();
     lexer.set_initial_state("rcdata").unwrap();
@@ -280,7 +338,7 @@ fn html1_generated_definition_preserves_lexer_profile_metadata() {
         .registers
         .iter()
         .any(|register| register.id == "temporary_buffer"));
-    assert_eq!(definition.fixtures.len(), 6);
+    assert_eq!(definition.fixtures.len(), 7);
 }
 
 #[test]

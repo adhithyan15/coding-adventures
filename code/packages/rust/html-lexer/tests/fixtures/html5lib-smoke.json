@@ -151,6 +151,38 @@
       "diagnostics": [],
       "initial_state": "RCDATA state",
       "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-13",
+      "description": "data state numeric character references",
+      "input": "Letters: &#65; &#x42; &#X43; &#0;",
+      "tokens": [
+        "Text(data=Letters: A B C \ufffd)",
+        "EOF"
+      ],
+      "diagnostics": []
+    },
+    {
+      "id": "html5lib-smoke-14",
+      "description": "attribute numeric character references",
+      "input": "<a title=\"&#65;&#x42;\" data-x='&#X43;' note=&#0;>",
+      "tokens": [
+        "StartTag(name=a, attributes=[title=AB, data-x=C, note=\ufffd], self_closing=false)",
+        "EOF"
+      ],
+      "diagnostics": []
+    },
+    {
+      "id": "html5lib-smoke-15",
+      "description": "rcdata numeric character references remain text",
+      "input": "Fish &#38; &#x3C;/title>",
+      "tokens": [
+        "Text(data=Fish & </title>)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
     }
   ],
   "skipped": []

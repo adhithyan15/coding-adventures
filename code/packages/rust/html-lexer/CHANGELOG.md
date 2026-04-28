@@ -46,3 +46,6 @@ documented in this file.
 - Named character reference support for the current generated Rust lexer in
   data, RCDATA, and attribute values, covering `amp`, `lt`, `gt`, `quot`, and
   `apos` as the first shared entity set.
+- Decimal and hexadecimal numeric character references in data, RCDATA, and
+  attribute values, including replacement-character fallback for null or
+  invalid scalar values.
