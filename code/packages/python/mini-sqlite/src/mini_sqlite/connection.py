@@ -140,6 +140,10 @@ class Connection:
         # removed by DROP VIEW, and threaded through the adapter so that bare
         # view names in FROM/JOIN are expanded to DerivedTableRef at parse time.
         self._view_defs: dict = {}
+        # Savepoint name stack. Kept in sync with backend.create_savepoint /
+        # release_savepoint / rollback_to_savepoint by engine.run().
+        # Cleared when the enclosing transaction commits or rolls back.
+        self._savepoints: list[str] = []
 
     # ------------------------------------------------------------------
     # Cursor + shortcut methods.
@@ -175,6 +179,7 @@ class Connection:
             raise translate(e) from e
         finally:
             self._txn = None
+            self._savepoints.clear()
 
     def rollback(self) -> None:
         self._assert_open()
@@ -186,6 +191,7 @@ class Connection:
             raise translate(e) from e
         finally:
             self._txn = None
+            self._savepoints.clear()
 
     # ------------------------------------------------------------------
     # Explicit TCL — called by Cursor when it detects BEGIN/COMMIT/ROLLBACK
@@ -232,6 +238,7 @@ class Connection:
             raise translate(e) from e
         finally:
             self._txn = None
+            self._savepoints.clear()
 
     def _tcl_rollback(self) -> None:
         """Handle an explicit ``ROLLBACK [TRANSACTION]`` statement.
@@ -250,6 +257,7 @@ class Connection:
             raise translate(e) from e
         finally:
             self._txn = None
+            self._savepoints.clear()
 
     # ------------------------------------------------------------------
     # Lifecycle.

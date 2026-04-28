@@ -158,6 +158,10 @@ class InMemoryBackend(Backend):
         # this way an old handle will never match a new transaction.
         self._next_handle: int = 1
         self._active_handle: int | None = None
+        # Savepoint stack: list of (name, tables_snapshot, indexes_snapshot).
+        # Each SAVEPOINT pushes a deep-copy; RELEASE pops; ROLLBACK TO
+        # restores from a snapshot but keeps the entry so it can be reused.
+        self._savepoint_stack: list[tuple[str, dict[str, _Table], dict[str, IndexDef]]] = []
 
     # --- Construction helpers ---------------------------------------------
 
@@ -352,6 +356,67 @@ class InMemoryBackend(Backend):
         if self._active_handle is None:
             return None
         return TransactionHandle(self._active_handle)
+
+    def create_savepoint(self, name: str) -> None:
+        """Push a deep-copy snapshot of the current tables and indexes.
+
+        Each SAVEPOINT call appends to the stack; multiple savepoints with the
+        same name stack independently (SQLite allows this).  If a transaction
+        is not already active, ``create_savepoint`` implicitly begins one so
+        the savepoint has something to anchor to.
+
+        Deep-copying is O(data size) but acceptable for the pedagogical scale
+        this backend targets.
+        """
+        if self._active_handle is None:
+            # Implicitly begin a transaction so the savepoint is anchored.
+            self.begin_transaction()
+        snap_tables = copy.deepcopy(self._tables)
+        snap_indexes = copy.deepcopy(self._indexes)
+        self._savepoint_stack.append((name, snap_tables, snap_indexes))
+
+    def release_savepoint(self, name: str) -> None:
+        """Remove the named savepoint (and all savepoints after it).
+
+        Finds the *last* entry in the stack with the given name, removes it
+        and every entry that was pushed after it.  The current table state is
+        not changed — this is a "partial commit" up to the release point.
+
+        Raises :class:`~sql_backend.errors.Unsupported` if no savepoint with
+        that name exists.
+        """
+        idx = self._find_savepoint(name)
+        if idx is None:
+            raise Unsupported(operation=f"RELEASE {name!r}: no such savepoint")
+        del self._savepoint_stack[idx:]
+
+    def rollback_to_savepoint(self, name: str) -> None:
+        """Restore the database to the state it was in when *name* was created.
+
+        Finds the *last* savepoint with the given name, restores tables and
+        indexes from its snapshot, and removes all savepoints pushed after it.
+        The named savepoint itself is kept in the stack so the caller may roll
+        back to it again or release it later.
+
+        Raises :class:`~sql_backend.errors.Unsupported` if no savepoint with
+        that name exists.
+        """
+        idx = self._find_savepoint(name)
+        if idx is None:
+            raise Unsupported(operation=f"ROLLBACK TO {name!r}: no such savepoint")
+        _name, snap_tables, snap_indexes = self._savepoint_stack[idx]
+        # Restore state from the snapshot.
+        self._tables = copy.deepcopy(snap_tables)
+        self._indexes = copy.deepcopy(snap_indexes)
+        # Drop all savepoints created after this one; keep this one alive.
+        del self._savepoint_stack[idx + 1:]
+
+    def _find_savepoint(self, name: str) -> int | None:
+        """Return the index of the *last* savepoint named *name*, or ``None``."""
+        for i in range(len(self._savepoint_stack) - 1, -1, -1):
+            if self._savepoint_stack[i][0] == name:
+                return i
+        return None
 
     # --- Indexes ----------------------------------------------------------
 

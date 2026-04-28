@@ -14,7 +14,8 @@ statement         = query_stmt | insert_stmt | update_stmt
                   | alter_table_stmt
                   | create_index_stmt | drop_index_stmt
                   | create_view_stmt | drop_view_stmt
-                  | begin_stmt | commit_stmt | rollback_stmt ;
+                  | begin_stmt | commit_stmt | rollback_to_stmt | rollback_stmt
+                  | savepoint_stmt | release_stmt ;
 
 # ── QUERY (SELECT + set operations) ──────────────────────────────────────────
 #
@@ -121,6 +122,24 @@ drop_view_stmt    = "DROP" "VIEW" [ "IF" "EXISTS" ] NAME ;
 begin_stmt        = "BEGIN"    [ "TRANSACTION" ] ;
 commit_stmt       = "COMMIT"   [ "TRANSACTION" ] ;
 rollback_stmt     = "ROLLBACK" [ "TRANSACTION" ] ;
+
+# ── SAVEPOINTS ────────────────────────────────────────────────────────────────
+#
+# SAVEPOINT / RELEASE / ROLLBACK TO let a transaction be partially rolled back
+# to a named point without discarding all outstanding changes.
+#
+# rollback_to_stmt uses "ROLLBACK" "TO" (no TRANSACTION) to distinguish it from
+# rollback_stmt. rollback_to_stmt must appear BEFORE rollback_stmt in the
+# statement alternation so the PEG parser tries it first.
+#
+# SQLite-compatible syntax:
+#   SAVEPOINT name
+#   RELEASE [SAVEPOINT] name
+#   ROLLBACK TO [SAVEPOINT] name
+
+savepoint_stmt    = "SAVEPOINT" NAME ;
+release_stmt      = "RELEASE" [ "SAVEPOINT" ] NAME ;
+rollback_to_stmt  = "ROLLBACK" "TO" [ "SAVEPOINT" ] NAME ;
 
 # ── Expressions ───────────────────────────────────────────────────────────────
 

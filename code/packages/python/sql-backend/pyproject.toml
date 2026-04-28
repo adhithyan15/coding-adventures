@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-sql-backend"
-version = "0.6.0"
+version = "0.7.0"
 description = "Pluggable data-source interface for the SQL pipeline — ships the Backend ABC, supporting types, an InMemoryBackend reference, and conformance test helpers."
 requires-python = ">=3.12"
 license = "MIT"

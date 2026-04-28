@@ -36,6 +36,9 @@ from sql_planner import (
     DropViewStmt,
     IndexScan,
     InsertValuesStmt,
+    ReleaseSavepointStmt,
+    RollbackToStmt,
+    SavepointStmt,
     Scan,
     plan,
 )
@@ -76,6 +79,7 @@ def run(
     fk_child: dict | None = None,
     fk_parent: dict | None = None,
     view_defs: dict | None = None,
+    savepoints: list[str] | None = None,
 ) -> QueryResult:
     """Execute a single SQL statement and return the :class:`QueryResult`.
 
@@ -116,6 +120,26 @@ def run(
                     del view_defs[stmt.name]
                 elif not stmt.if_exists:
                     raise ProgrammingError(f"no such view: {stmt.name}")
+            return QueryResult(rows_affected=0)
+        # SAVEPOINT / RELEASE / ROLLBACK TO are intercepted here.
+        # The planner and VM never see them — the engine calls the backend
+        # directly and keeps the connection's savepoints list in sync.
+        if isinstance(stmt, SavepointStmt):
+            backend.create_savepoint(stmt.name)
+            if savepoints is not None:
+                savepoints.append(stmt.name)
+            return QueryResult(rows_affected=0)
+        if isinstance(stmt, ReleaseSavepointStmt):
+            backend.release_savepoint(stmt.name)
+            if savepoints is not None and stmt.name in savepoints:
+                idx = len(savepoints) - 1 - savepoints[::-1].index(stmt.name)
+                del savepoints[idx:]
+            return QueryResult(rows_affected=0)
+        if isinstance(stmt, RollbackToStmt):
+            backend.rollback_to_savepoint(stmt.name)
+            if savepoints is not None and stmt.name in savepoints:
+                idx = len(savepoints) - 1 - savepoints[::-1].index(stmt.name)
+                del savepoints[idx + 1:]
             return QueryResult(rows_affected=0)
         # ``INSERT INTO t VALUES (...)`` without an explicit column list
         # means "all columns, in declaration order" — the downstream
