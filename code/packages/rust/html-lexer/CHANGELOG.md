@@ -51,3 +51,5 @@ documented in this file.
   invalid scalar values.
 - Missing-semicolon recovery for decimal and hexadecimal numeric character
   references in data, RCDATA, and attribute values.
+- Legacy named character references `nbsp`, `copy`, and `reg` in data, RCDATA,
+  and attribute values.

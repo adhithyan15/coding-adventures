@@ -127,6 +127,38 @@
       ]
     },
     {
+      "description": "data state legacy named character references",
+      "input": "Legacy&nbsp;symbols: &copy; &reg;",
+      "output": [
+        ["Character", "Legacy"],
+        ["Character", "\u00A0"],
+        ["Character", "symbols: "],
+        ["Character", "\u00A9"],
+        ["Character", " "],
+        ["Character", "\u00AE"]
+      ]
+    },
+    {
+      "description": "attribute legacy named character references",
+      "input": "<a title=\"A&nbsp;B\" copy='&copy;' reg=&reg;>",
+      "output": [
+        ["StartTag", "a", {"title": "A\u00A0B", "copy": "\u00A9", "reg": "\u00AE"}]
+      ]
+    },
+    {
+      "description": "rcdata legacy named character references remain text",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "Venture&nbsp;&copy;&reg;</title>",
+      "output": [
+        ["Character", "Venture"],
+        ["Character", "\u00A0"],
+        ["Character", "\u00A9"],
+        ["Character", "\u00AE"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
       "description": "data state numeric character references",
       "input": "Letters: &#65; &#x42; &#X43; &#0;",
       "output": [

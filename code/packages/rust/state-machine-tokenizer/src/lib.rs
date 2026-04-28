@@ -527,6 +527,16 @@ impl Tokenizer {
                     self.temporary_buffer.clear();
                     self.attribute_mut(action)?.value.push(ch);
                 }
+                "append_named_character_reference_to_text" => {
+                    let replacement = named_character_reference(&self.temporary_buffer);
+                    self.temporary_buffer.clear();
+                    self.text_buffer.push_str(replacement);
+                }
+                "append_named_character_reference_to_attribute_value" => {
+                    let replacement = named_character_reference(&self.temporary_buffer);
+                    self.temporary_buffer.clear();
+                    self.attribute_mut(action)?.value.push_str(replacement);
+                }
                 "discard_current_token" => {
                     self.current_token = None;
                     self.current_attribute = None;
@@ -897,4 +907,18 @@ fn numeric_character_reference(buffer: &str) -> char {
             }
         })
         .unwrap_or('\u{FFFD}')
+}
+
+fn named_character_reference(buffer: &str) -> &'static str {
+    match buffer.strip_prefix('&').unwrap_or(buffer) {
+        "amp" => "&",
+        "apos" => "'",
+        "copy" => "\u{00A9}",
+        "gt" => ">",
+        "lt" => "<",
+        "nbsp" => "\u{00A0}",
+        "quot" => "\"",
+        "reg" => "\u{00AE}",
+        _ => "\u{FFFD}",
+    }
 }
