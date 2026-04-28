@@ -87,6 +87,26 @@ assert [answer.as_dict() for answer in runtime.query("memo(Value)")] == [
 ]
 ```
 
+## File Runtime
+
+Use `create_swi_prolog_file_runtime(...)` to load a `.pl` file once and query it
+through the same stateful VM runtime:
+
+```python
+from logic_engine import atom
+from prolog_vm_compiler import create_swi_prolog_file_runtime
+
+runtime = create_swi_prolog_file_runtime("app.pl")
+
+assert [answer.as_dict() for answer in runtime.query("ancestor(homer, Who)")] == [
+    {"Who": atom("bart")},
+    {"Who": atom("lisa")},
+]
+```
+
+For linked file graphs with source-level `?-` queries, use
+`compile_swi_prolog_project_from_files(...)` and the compiled query helpers.
+
 ## Stress Coverage
 
 The package includes end-to-end stress tests for:

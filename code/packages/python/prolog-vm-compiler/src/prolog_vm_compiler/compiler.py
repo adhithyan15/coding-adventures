@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable, Iterator, Mapping
 from dataclasses import dataclass
+from pathlib import Path
 from types import MappingProxyType
 
 from logic_engine import (
@@ -40,8 +41,11 @@ from prolog_core import OperatorTable
 from prolog_loader import (
     LoadedPrologProject,
     LoadedPrologSource,
+    SourceResolver,
     adapt_prolog_goal,
+    load_swi_prolog_file,
     load_swi_prolog_project,
+    load_swi_prolog_project_from_files,
     load_swi_prolog_source,
 )
 from prolog_parser import ParsedQuery
@@ -241,6 +245,20 @@ def compile_swi_prolog_source(
     )
 
 
+def compile_swi_prolog_file(
+    path: str | Path,
+    *,
+    source_resolver: SourceResolver | None = None,
+    adapt_builtins: bool = True,
+) -> CompiledPrologVMProgram:
+    """Read, load, and compile one SWI-compatible Prolog source file."""
+
+    return compile_loaded_prolog_source(
+        load_swi_prolog_file(path, source_resolver=source_resolver),
+        adapt_builtins=adapt_builtins,
+    )
+
+
 def compile_swi_prolog_project(
     *sources: str,
     adapt_builtins: bool = True,
@@ -249,6 +267,22 @@ def compile_swi_prolog_project(
 
     return compile_loaded_prolog_project(
         load_swi_prolog_project(*sources),
+        adapt_builtins=adapt_builtins,
+    )
+
+
+def compile_swi_prolog_project_from_files(
+    *entry_paths: str | Path,
+    source_resolver: SourceResolver | None = None,
+    adapt_builtins: bool = True,
+) -> CompiledPrologVMProgram:
+    """Load, link, and compile a SWI-compatible Prolog file graph."""
+
+    return compile_loaded_prolog_project(
+        load_swi_prolog_project_from_files(
+            *entry_paths,
+            source_resolver=source_resolver,
+        ),
         adapt_builtins=adapt_builtins,
     )
 
@@ -300,6 +334,69 @@ def create_swi_prolog_vm_runtime(
         ),
         initialize=initialize,
         operator_table=loaded_source.operator_table,
+        adapt_builtins=adapt_builtins,
+    )
+
+
+def create_swi_prolog_file_runtime(
+    path: str | Path,
+    *,
+    source_resolver: SourceResolver | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+) -> PrologVMRuntime:
+    """Create a stateful query runtime from one SWI-compatible Prolog file."""
+
+    loaded_source = load_swi_prolog_file(path, source_resolver=source_resolver)
+    return create_prolog_vm_runtime(
+        compile_loaded_prolog_source(
+            loaded_source,
+            adapt_builtins=adapt_builtins,
+        ),
+        initialize=initialize,
+        operator_table=loaded_source.operator_table,
+        adapt_builtins=adapt_builtins,
+    )
+
+
+def create_swi_prolog_project_runtime(
+    *sources: str,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+) -> PrologVMRuntime:
+    """Create a stateful query runtime from linked SWI-compatible sources."""
+
+    loaded_project = load_swi_prolog_project(*sources)
+    return create_prolog_vm_runtime(
+        compile_loaded_prolog_project(
+            loaded_project,
+            adapt_builtins=adapt_builtins,
+        ),
+        initialize=initialize,
+        operator_table=_project_operator_table(loaded_project),
+        adapt_builtins=adapt_builtins,
+    )
+
+
+def create_swi_prolog_project_file_runtime(
+    *entry_paths: str | Path,
+    source_resolver: SourceResolver | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+) -> PrologVMRuntime:
+    """Create a stateful query runtime from a SWI-compatible Prolog file graph."""
+
+    loaded_project = load_swi_prolog_project_from_files(
+        *entry_paths,
+        source_resolver=source_resolver,
+    )
+    return create_prolog_vm_runtime(
+        compile_loaded_prolog_project(
+            loaded_project,
+            adapt_builtins=adapt_builtins,
+        ),
+        initialize=initialize,
+        operator_table=_project_operator_table(loaded_project),
         adapt_builtins=adapt_builtins,
     )
 
@@ -489,6 +586,12 @@ def _adapt_query(query_value: ParsedQuery, *, adapt_builtins: bool) -> ParsedQue
         goal=adapt_prolog_goal(goal_value),
         variables=query_value.variables,
     )
+
+
+def _project_operator_table(project: LoadedPrologProject) -> OperatorTable | None:
+    if not project.sources:
+        return None
+    return project.sources[0].operator_table
 
 
 def _collect_relations(
