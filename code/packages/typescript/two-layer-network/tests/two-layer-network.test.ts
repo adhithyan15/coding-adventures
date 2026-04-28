@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
   TwoLayerNetwork,
+  createSeededParameters,
   createXorWarmStartParameters,
   forwardTwoLayer,
   trainOneEpochTwoLayer,
   traceExampleTwoLayer,
+  type MatrixData,
 } from "../src/index.js";
 
 const XOR_INPUTS = [
@@ -118,5 +120,29 @@ describe("two-layer network", () => {
 
     expect(history.length).toBeGreaterThan(0);
     expect(history[history.length - 1]!.epoch).toBe(10);
+  });
+
+  it("runs the hidden-layer teaching examples through one training step", () => {
+    const cases: Array<{ name: string; inputs: MatrixData; targets: MatrixData; hiddenCount: number }> = [
+      { name: "XNOR", inputs: XOR_INPUTS, targets: [[1], [0], [0], [1]], hiddenCount: 3 },
+      { name: "absolute value", inputs: [[-1], [-0.5], [0], [0.5], [1]], targets: [[1], [0.5], [0], [0.5], [1]], hiddenCount: 4 },
+      { name: "piecewise pricing", inputs: [[0.1], [0.3], [0.5], [0.7], [0.9]], targets: [[0.12], [0.25], [0.55], [0.88], [0.88]], hiddenCount: 4 },
+      { name: "circle classifier", inputs: [[0, 0], [0.5, 0], [1, 1], [-0.5, 0.5], [-1, 0]], targets: [[1], [1], [0], [1], [0]], hiddenCount: 5 },
+      { name: "two moons", inputs: [[1, 0], [0, 0.5], [0.5, 0.85], [0.5, -0.35], [-1, 0], [2, 0.5]], targets: [[0], [1], [0], [1], [0], [1]], hiddenCount: 5 },
+      { name: "interaction features", inputs: [[0.2, 0.25, 0], [0.6, 0.5, 1], [1, 0.75, 1], [1, 1, 0]], targets: [[0.08], [0.72], [0.96], [0.76]], hiddenCount: 5 },
+    ];
+
+    for (const item of cases) {
+      const step = trainOneEpochTwoLayer(
+        item.inputs,
+        item.targets,
+        createSeededParameters(item.inputs[0]!.length, item.hiddenCount, 1, item.hiddenCount, 0.8),
+        0.4,
+      );
+
+      expect(step.loss, item.name).toBeGreaterThanOrEqual(0);
+      expect(step.inputToHiddenWeightGradients, item.name).toHaveLength(item.inputs[0]!.length);
+      expect(step.hiddenToOutputWeightGradients, item.name).toHaveLength(item.hiddenCount);
+    }
   });
 });
