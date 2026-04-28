@@ -116,7 +116,6 @@ from sql_planner import (
 )
 from sql_planner.ast import ColumnDef as AstColumnDef
 from sql_planner.expr import AggregateExpr
-from sql_planner.expr import WindowFuncExpr as PlanWindowFuncExpr
 from sql_planner.plan import AggFunc as PlanAggFunc
 from sql_planner.plan import Limit as PlanLimit
 from sql_planner.plan import WindowFuncSpec as PlanWindowFuncSpec
@@ -135,6 +134,7 @@ from .ir import (
     CaptureLeftResult,
     CloseScan,
     CommitTransaction,
+    ComputeWindowFunctions,
     CreateIndex,
     CreateTable,
     DeleteRows,
@@ -183,7 +183,6 @@ from .ir import (
     UpdateRows,
     WinFunc,
     WinFuncSpec,
-    ComputeWindowFunctions,
 )
 from .ir import (
     AggFunc as IrAggFunc,
@@ -1206,7 +1205,8 @@ def _to_ir_win_spec(spec: PlanWindowFuncSpec) -> WinFuncSpec:
         if isinstance(e, Column):
             return e.col
         raise UnsupportedNode(
-            f"window function partition/order/arg must be a column reference, got {type(e).__name__}"
+            "window function partition/order/arg must be a column reference, "
+            f"got {type(e).__name__}"
         )
 
     arg_col: str | None = None

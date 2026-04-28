@@ -40,6 +40,7 @@ from .ir import (
     CloseScan,
     Coalesce,
     CommitTransaction,
+    ComputeWindowFunctions,
     CreateIndex,
     CreateTable,
     DeleteRows,
@@ -91,7 +92,6 @@ from .ir import (
     UpdateRows,
     WinFunc,
     WinFuncSpec,
-    ComputeWindowFunctions,
 )
 from .ir import (
     AggFunc as IrAggFunc,
