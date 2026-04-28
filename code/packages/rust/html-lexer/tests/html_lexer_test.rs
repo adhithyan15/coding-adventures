@@ -66,6 +66,45 @@ fn default_html_lexer_supports_html1_attributes_comments_and_doctypes() {
 }
 
 #[test]
+fn default_html_lexer_marks_missing_doctype_name_force_quirks() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("<!DOCTYPE>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Doctype {
+                name: None,
+                force_quirks: true,
+            },
+            Token::Eof,
+        ]
+    );
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "missing-doctype-name"));
+}
+
+#[test]
+fn default_html_lexer_marks_whitespace_only_doctype_force_quirks() {
+    let tokens = lex_html("<!DOCTYPE >").unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Doctype {
+                name: None,
+                force_quirks: true,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_recovers_abrupt_empty_html_comment() {
     let mut lexer = create_html_lexer().unwrap();
 

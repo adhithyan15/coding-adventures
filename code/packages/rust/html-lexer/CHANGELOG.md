@@ -83,3 +83,5 @@ documented in this file.
   inside open comments, preserving the text while reporting `nested-comment`.
 - HTML comment end-bang handling for `--!>` recovery and non-closing `--!`
   text preservation.
+- Missing-name DOCTYPE recovery now marks force-quirks mode for `<!DOCTYPE>`
+  and whitespace-only DOCTYPE names.
