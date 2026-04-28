@@ -133,6 +133,9 @@ class Connection:
         # CHECK constraint registry persisted across execute() calls.
         # Populated by CREATE TABLE statements, consulted on INSERT/UPDATE.
         self._check_registry: dict = {}
+        # FOREIGN KEY registries — child (forward) and parent (reverse).
+        self._fk_child: dict = {}
+        self._fk_parent: dict = {}
 
     # ------------------------------------------------------------------
     # Cursor + shortcut methods.

@@ -1,5 +1,30 @@
 # Changelog
 
+## 1.1.0 — 2026-04-27
+
+### Added — Phase 4b: FOREIGN KEY constraints
+
+- **`fk_child` / `fk_parent` parameters on `execute()`** — mutable dicts passed
+  from `Connection` so FK registrations from `CREATE TABLE` persist across calls.
+  `fk_child`: child_table → [(child_col, parent_table, parent_col_or_None)].
+  `fk_parent`: parent_table → [(child_table, child_col, parent_col_or_None)].
+- **`_VmState.fk_child` / `fk_parent`** — two new `field(default_factory=dict)`
+  fields carrying both directions of the FK graph.
+- **`_do_create_table` populates both registries** — for every column with a
+  non-None `foreign_key` tuple, writes forward (child→parent) and reverse
+  (parent→child) entries using `dict.setdefault`.
+- **`_check_fk_child()`** — scans the parent table and raises `ConstraintViolation`
+  when a non-NULL FK value has no matching row.  NULL passes unconditionally
+  (SQL standard: NULL reference is not an error).
+- **`_check_fk_parent()`** — scans the child table and raises `ConstraintViolation`
+  (RESTRICT) when deleting a parent row that is still referenced.
+- **`_fk_find_pk()` / `_fk_row_exists()`** — helpers: PK column discovery and
+  O(n) scan predicate.
+- **INSERT, UPDATE, DELETE enforcement** — `_do_insert` and `_do_update` call
+  `_check_fk_child` after CHECK; `_do_delete` calls `_check_fk_parent` before
+  the backend write.
+- **6 new VM-level tests** in `test_dml_ddl.py`.
+
 ## 1.0.0 — 2026-04-27
 
 ### Added — Phase 4a: CHECK constraints

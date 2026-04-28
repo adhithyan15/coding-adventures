@@ -71,6 +71,8 @@ def run(
     *,
     advisor: IndexAdvisor | None = None,
     check_registry: dict | None = None,
+    fk_child: dict | None = None,
+    fk_parent: dict | None = None,
 ) -> QueryResult:
     """Execute a single SQL statement and return the :class:`QueryResult`.
 
@@ -121,6 +123,8 @@ def run(
             program,
             backend,
             check_registry=check_registry,
+            fk_child=fk_child,
+            fk_parent=fk_parent,
             event_cb=event_cb,
             filtered_columns=_filtered,
         )

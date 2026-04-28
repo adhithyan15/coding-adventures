@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.0.0] - 2026-04-27
+
+### Added — Phase 4b: FOREIGN KEY constraints
+
+- **`IrColumnDef.foreign_key: tuple[str, str | None] | None`** — carries the
+  `(ref_table, ref_col_or_None)` FK reference into the VM.
+- **`_to_ir_col()` passes `foreign_key` through** — reads `c.foreign_key` from
+  the AST/backend `ColumnDef` and copies it into the IR struct.
+
 ## [0.9.0] - 2026-04-27
 
 ### Added — Phase 4a: CHECK constraints

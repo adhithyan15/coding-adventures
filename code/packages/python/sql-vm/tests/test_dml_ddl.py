@@ -308,3 +308,141 @@ def test_check_null_passes() -> None:
     )
     result = execute(compile(plan_insert), be, check_registry=registry)
     assert result.rows_affected == 1
+
+
+# --------------------------------------------------------------------------
+# FOREIGN KEY constraint tests — VM-level enforcement via fk_child/fk_parent.
+# --------------------------------------------------------------------------
+
+
+def _make_fk_tables(
+    be: InMemoryBackend,
+) -> tuple[dict, dict]:
+    """Create parents(id PK) and children(id, parent_id → parents.id).
+
+    Returns (fk_child, fk_parent) registries populated by execute().
+    """
+    fk_c: dict = {}
+    fk_p: dict = {}
+
+    plan_parent = CreateTable(
+        table="parents",
+        columns=(
+            AstColumnDef(name="id", type_name="INTEGER", primary_key=True),
+        ),
+    )
+    execute(compile(plan_parent), be, fk_child=fk_c, fk_parent=fk_p)
+
+    plan_child = CreateTable(
+        table="children",
+        columns=(
+            AstColumnDef(name="id", type_name="INTEGER"),
+            AstColumnDef(
+                name="parent_id",
+                type_name="INTEGER",
+                foreign_key=("parents", "id"),
+            ),
+        ),
+    )
+    execute(compile(plan_child), be, fk_child=fk_c, fk_parent=fk_p)
+    return fk_c, fk_p
+
+
+def test_fk_insert_valid() -> None:
+    """INSERT child with existing parent row passes."""
+    be = InMemoryBackend()
+    fk_c, fk_p = _make_fk_tables(be)
+    be.insert("parents", {"id": 1})
+
+    plan = Insert(
+        table="children",
+        columns=("id", "parent_id"),
+        source=InsertSource(values=((Literal(10), Literal(1)),)),
+    )
+    result = execute(compile(plan), be, fk_child=fk_c, fk_parent=fk_p)
+    assert result.rows_affected == 1
+    assert _scan_rows(be, "children") == [{"id": 10, "parent_id": 1}]
+
+
+def test_fk_insert_violates() -> None:
+    """INSERT child with missing parent raises ConstraintViolation."""
+    from sql_vm import ConstraintViolation
+
+    be = InMemoryBackend()
+    fk_c, fk_p = _make_fk_tables(be)
+
+    plan = Insert(
+        table="children",
+        columns=("id", "parent_id"),
+        source=InsertSource(values=((Literal(1), Literal(99)),)),
+    )
+    with pytest.raises(ConstraintViolation) as exc_info:
+        execute(compile(plan), be, fk_child=fk_c, fk_parent=fk_p)
+    assert "FOREIGN KEY" in str(exc_info.value)
+
+
+def test_fk_null_child_passes() -> None:
+    """NULL FK value is allowed (unknown reference)."""
+    be = InMemoryBackend()
+    fk_c, fk_p = _make_fk_tables(be)
+
+    plan = Insert(
+        table="children",
+        columns=("id", "parent_id"),
+        source=InsertSource(values=((Literal(1), Literal(None)),)),
+    )
+    result = execute(compile(plan), be, fk_child=fk_c, fk_parent=fk_p)
+    assert result.rows_affected == 1
+
+
+def test_fk_update_child_violates() -> None:
+    """UPDATE child FK to non-existent parent raises ConstraintViolation."""
+    from sql_vm import ConstraintViolation
+
+    be = InMemoryBackend()
+    fk_c, fk_p = _make_fk_tables(be)
+    be.insert("parents", {"id": 1})
+    be.insert("children", {"id": 10, "parent_id": 1})
+
+    plan = Update(
+        table="children",
+        assignments=(Assignment(column="parent_id", value=Literal(999)),),
+    )
+    with pytest.raises(ConstraintViolation):
+        execute(compile(plan), be, fk_child=fk_c, fk_parent=fk_p)
+    assert _scan_rows(be, "children") == [{"id": 10, "parent_id": 1}]
+
+
+def test_fk_delete_parent_restricted() -> None:
+    """DELETE parent row that has referencing children raises ConstraintViolation."""
+    from sql_vm import ConstraintViolation
+
+    be = InMemoryBackend()
+    fk_c, fk_p = _make_fk_tables(be)
+    be.insert("parents", {"id": 1})
+    be.insert("children", {"id": 10, "parent_id": 1})
+
+    plan = Delete(
+        table="parents",
+        predicate=BinaryExpr(op=BinaryOp.EQ, left=Column("parents", "id"), right=Literal(1)),
+    )
+    with pytest.raises(ConstraintViolation) as exc_info:
+        execute(compile(plan), be, fk_child=fk_c, fk_parent=fk_p)
+    assert "FOREIGN KEY" in str(exc_info.value)
+    assert _scan_rows(be, "parents") == [{"id": 1}]
+
+
+def test_fk_delete_parent_no_children() -> None:
+    """DELETE parent row with no children succeeds."""
+    be = InMemoryBackend()
+    fk_c, fk_p = _make_fk_tables(be)
+    be.insert("parents", {"id": 1})
+    be.insert("parents", {"id": 2})
+
+    plan = Delete(
+        table="parents",
+        predicate=BinaryExpr(op=BinaryOp.EQ, left=Column("parents", "id"), right=Literal(1)),
+    )
+    result = execute(compile(plan), be, fk_child=fk_c, fk_parent=fk_p)
+    assert result.rows_affected == 1
+    assert _scan_rows(be, "parents") == [{"id": 2}]

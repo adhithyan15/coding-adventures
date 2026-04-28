@@ -99,6 +99,7 @@ keywords:
   UNIQUE
   INDEX
   CHECK
+  REFERENCES
   DEFAULT
   BEGIN
   COMMIT

@@ -477,6 +477,8 @@ class ColumnDef:
     type: str
     nullable: bool = True
     check_instrs: tuple[Instruction, ...] = ()
+    # (ref_table, ref_col_or_None) where None means "reference the parent PK".
+    foreign_key: tuple[str, str | None] | None = None
 
 
 @dataclass(frozen=True, slots=True)

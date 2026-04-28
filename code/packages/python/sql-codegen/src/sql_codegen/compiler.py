@@ -1026,11 +1026,15 @@ def _to_ir_col(c: AstColumnDef) -> IrColumnDef:
         check_ctx = _Ctx()
         check_ctx.alias_to_cursor[""] = CHECK_CURSOR_ID
         check_instrs = tuple(_compile_expr(c.check_expr, check_ctx))  # type: ignore[arg-type]
+    fk: tuple[str, str | None] | None = None
+    if c.foreign_key is not None:
+        fk = c.foreign_key  # type: ignore[assignment]
     return IrColumnDef(
         name=c.name,
         type=c.type_name,
         nullable=not c.effective_not_null(),
         check_instrs=check_instrs,
+        foreign_key=fk,
     )
 
 

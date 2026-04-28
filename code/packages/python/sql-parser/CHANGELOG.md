@@ -2,6 +2,14 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.5.0] - 2026-04-27
+
+### Added — Phase 4b: FOREIGN KEY constraints
+
+- `col_constraint` alternation extended with `REFERENCES NAME [ ( NAME ) ]` —
+  the optional column list `(col)` is wrapped in an `Optional(Group(...))` so
+  both `REFERENCES customers` and `REFERENCES customers(id)` parse correctly.
+
 ## [0.4.0] - 2026-04-27
 
 ### Added — Phase 4a: CHECK constraints

@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.0.0] - 2026-04-27
+
+### Added — Phase 4b: FOREIGN KEY constraints
+
+- **`Connection._fk_child` / `_fk_parent: dict`** — two mutable dicts
+  initialized in `__init__` and threaded through every `Cursor.execute()` →
+  `engine.run()` → `vm.execute()` call so FK registrations from `CREATE TABLE`
+  persist for subsequent DML.
+- **`engine.run()` `fk_child` / `fk_parent` parameters** — forwarded to
+  `vm.execute()`.
+- **`adapter._col_def()` REFERENCES parsing** — recognises `REFERENCES table`
+  and `REFERENCES table(col)` grammar variants; stores `(ref_table, ref_col)`
+  tuple as `ColumnDef.foreign_key` (ref_col is `None` when not specified).
+- **18 new tests** in `tests/test_tier3_foreign_keys.py`:
+  - `TestForeignKeyPipeline` — grammar, adapter, codegen pipeline unit tests.
+  - `TestForeignKeyIntegration` — valid inserts, NULL FK passthrough, multi-child,
+    delete-after-child-removed, table-survival.
+  - `TestForeignKeyErrors` — missing parent on INSERT/UPDATE, RESTRICT on DELETE,
+    error message content, multi-FK column enforcement.
+
 ## [0.9.0] - 2026-04-27
 
 ### Added — Phase 4a: CHECK constraints
