@@ -89,6 +89,32 @@
     },
     {
       "id": "html5lib-smoke-7",
+      "description": "abrupt empty comment close",
+      "input": "Before<!-->After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=)",
+        "Text(data=After)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "abrupt-closing-of-empty-comment"
+      ]
+    },
+    {
+      "id": "html5lib-smoke-8",
+      "description": "dash prefixed empty comment close",
+      "input": "Before<!--->After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=)",
+        "Text(data=After)",
+        "EOF"
+      ],
+      "diagnostics": []
+    },
+    {
+      "id": "html5lib-smoke-9",
       "description": "rcdata matching end tag emits end tag token",
       "input": "Hello</title>",
       "tokens": [
@@ -101,7 +127,7 @@
       "last_start_tag": "title"
     },
     {
-      "id": "html5lib-smoke-8",
+      "id": "html5lib-smoke-10",
       "description": "rcdata non matching end tag stays text",
       "input": "Hello&lt;/title>",
       "tokens": [
@@ -113,7 +139,7 @@
       "last_start_tag": "title"
     },
     {
-      "id": "html5lib-smoke-9",
+      "id": "html5lib-smoke-11",
       "description": "rawtext matching end tag emits end tag token",
       "input": "body { color: red; }</style>",
       "tokens": [
@@ -126,7 +152,7 @@
       "last_start_tag": "style"
     },
     {
-      "id": "html5lib-smoke-10",
+      "id": "html5lib-smoke-12",
       "description": "plaintext state literalizes markup and character references",
       "input": "hello <b>still text</b> &amp; literal",
       "tokens": [
@@ -137,7 +163,7 @@
       "initial_state": "PLAINTEXT state"
     },
     {
-      "id": "html5lib-smoke-11",
+      "id": "html5lib-smoke-13",
       "description": "script data matching end tag emits end tag token",
       "input": "if (a < b) alert('&amp;');</script>",
       "tokens": [
@@ -150,7 +176,7 @@
       "last_start_tag": "script"
     },
     {
-      "id": "html5lib-smoke-12",
+      "id": "html5lib-smoke-14",
       "description": "script data escaped matching end tag emits end tag token",
       "input": "if (a < b) </script>",
       "tokens": [
@@ -163,7 +189,7 @@
       "last_start_tag": "script"
     },
     {
-      "id": "html5lib-smoke-13",
+      "id": "html5lib-smoke-15",
       "description": "data state named character references",
       "input": "Fish &amp; &lt;b&gt; &quot;quote&quot; &apos;ok&apos;",
       "tokens": [
@@ -173,7 +199,7 @@
       "diagnostics": []
     },
     {
-      "id": "html5lib-smoke-14",
+      "id": "html5lib-smoke-16",
       "description": "attribute named character references",
       "input": "<a title=\"Fish &amp; Chips\" data-x='&lt;ok&gt;' note=&quot;hi&quot;>",
       "tokens": [
@@ -183,7 +209,7 @@
       "diagnostics": []
     },
     {
-      "id": "html5lib-smoke-15",
+      "id": "html5lib-smoke-17",
       "description": "rcdata named character references remain text",
       "input": "Fish &amp; &lt;/title>",
       "tokens": [
@@ -195,7 +221,7 @@
       "last_start_tag": "title"
     },
     {
-      "id": "html5lib-smoke-16",
+      "id": "html5lib-smoke-18",
       "description": "data state legacy named character references",
       "input": "Legacy&nbsp;symbols: &copy; &reg;",
       "tokens": [
@@ -205,7 +231,7 @@
       "diagnostics": []
     },
     {
-      "id": "html5lib-smoke-17",
+      "id": "html5lib-smoke-19",
       "description": "attribute legacy named character references",
       "input": "<a title=\"A&nbsp;B\" copy='&copy;' reg=&reg;>",
       "tokens": [
@@ -215,7 +241,7 @@
       "diagnostics": []
     },
     {
-      "id": "html5lib-smoke-18",
+      "id": "html5lib-smoke-20",
       "description": "rcdata legacy named character references remain text",
       "input": "Venture&nbsp;&copy;&reg;</title>",
       "tokens": [
@@ -228,7 +254,7 @@
       "last_start_tag": "title"
     },
     {
-      "id": "html5lib-smoke-19",
+      "id": "html5lib-smoke-21",
       "description": "data state Latin-1 named character references",
       "input": "Latin-1: &Agrave;&agrave; &frac12; &yen;",
       "tokens": [
@@ -238,7 +264,7 @@
       "diagnostics": []
     },
     {
-      "id": "html5lib-smoke-20",
+      "id": "html5lib-smoke-22",
       "description": "attribute Latin-1 named character references",
       "input": "<a title=\"&AElig;&aelig;\" currency=&pound;>",
       "tokens": [
@@ -248,7 +274,7 @@
       "diagnostics": []
     },
     {
-      "id": "html5lib-smoke-21",
+      "id": "html5lib-smoke-23",
       "description": "rcdata Latin-1 named character references remain text",
       "input": "&Ntilde;&ntilde;</title>",
       "tokens": [
@@ -261,7 +287,7 @@
       "last_start_tag": "title"
     },
     {
-      "id": "html5lib-smoke-22",
+      "id": "html5lib-smoke-24",
       "description": "data state legacy named character references missing semicolons",
       "input": "Legacy&nbsp symbols: &copy/&reg",
       "tokens": [
@@ -275,7 +301,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-23",
+      "id": "html5lib-smoke-25",
       "description": "attribute legacy named character references missing semicolons",
       "input": "<a title=\"A&nbsp B\" copy=&copy reg=&reg>",
       "tokens": [
@@ -289,7 +315,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-24",
+      "id": "html5lib-smoke-26",
       "description": "rcdata legacy named character references missing semicolons",
       "input": "Venture&nbsp &copy &reg</title>",
       "tokens": [
@@ -306,7 +332,7 @@
       "last_start_tag": "title"
     },
     {
-      "id": "html5lib-smoke-25",
+      "id": "html5lib-smoke-27",
       "description": "data state named character reference fallback",
       "input": "Known &AMP; unknown &madeup;",
       "tokens": [
@@ -316,7 +342,7 @@
       "diagnostics": []
     },
     {
-      "id": "html5lib-smoke-26",
+      "id": "html5lib-smoke-28",
       "description": "attribute named character reference fallback",
       "input": "<a title=\"&copy;\" bogus=&madeup;>",
       "tokens": [
@@ -326,7 +352,7 @@
       "diagnostics": []
     },
     {
-      "id": "html5lib-smoke-27",
+      "id": "html5lib-smoke-29",
       "description": "data state numeric character references",
       "input": "Letters: &#65; &#x42; &#X43; &#0;",
       "tokens": [
@@ -336,7 +362,7 @@
       "diagnostics": []
     },
     {
-      "id": "html5lib-smoke-28",
+      "id": "html5lib-smoke-30",
       "description": "attribute numeric character references",
       "input": "<a title=\"&#65;&#x42;\" data-x='&#X43;' note=&#0;>",
       "tokens": [
@@ -346,7 +372,7 @@
       "diagnostics": []
     },
     {
-      "id": "html5lib-smoke-29",
+      "id": "html5lib-smoke-31",
       "description": "rcdata numeric character references remain text",
       "input": "Fish &#38; &#x3C;/title>",
       "tokens": [
@@ -358,7 +384,7 @@
       "last_start_tag": "title"
     },
     {
-      "id": "html5lib-smoke-30",
+      "id": "html5lib-smoke-32",
       "description": "data state numeric character references missing semicolons",
       "input": "Letters: &#65 &#x42Z",
       "tokens": [
@@ -371,7 +397,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-31",
+      "id": "html5lib-smoke-33",
       "description": "attribute numeric character references missing semicolons",
       "input": "<a title=&#65 data-x=&#x42>",
       "tokens": [
@@ -384,7 +410,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-32",
+      "id": "html5lib-smoke-34",
       "description": "rcdata numeric character references missing semicolons",
       "input": "Fish &#38 &#x3C/title>",
       "tokens": [
@@ -399,7 +425,7 @@
       "last_start_tag": "title"
     },
     {
-      "id": "html5lib-smoke-33",
+      "id": "html5lib-smoke-35",
       "description": "script data double escaped state keeps first script end tag literal",
       "input": "x </script> y --></script>",
       "tokens": [
@@ -412,7 +438,7 @@
       "last_start_tag": "script"
     },
     {
-      "id": "html5lib-smoke-34",
+      "id": "html5lib-smoke-36",
       "description": "CDATA section state literalizes markup until delimiter",
       "input": "<not-markup> &amp; ]]><p>x</p>",
       "tokens": [
@@ -426,7 +452,7 @@
       "initial_state": "CDATA section state"
     },
     {
-      "id": "html5lib-smoke-35",
+      "id": "html5lib-smoke-37",
       "description": "markup declaration CDATA opener enters CDATA section",
       "input": "<![CDATA[<not-markup> &amp; ]]><p>After</p>",
       "tokens": [

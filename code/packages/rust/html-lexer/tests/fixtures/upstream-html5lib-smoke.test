@@ -56,6 +56,27 @@
       ]
     },
     {
+      "description": "abrupt empty comment close",
+      "input": "Before<!-->After",
+      "output": [
+        ["Character", "Before"],
+        ["Comment", ""],
+        ["Character", "After"]
+      ],
+      "errors": [
+        {"code": "abrupt-closing-of-empty-comment", "line": 1, "col": 11}
+      ]
+    },
+    {
+      "description": "dash prefixed empty comment close",
+      "input": "Before<!--->After",
+      "output": [
+        ["Character", "Before"],
+        ["Comment", ""],
+        ["Character", "After"]
+      ]
+    },
+    {
       "description": "rcdata matching end tag emits end tag token",
       "initialStates": ["RCDATA state"],
       "lastStartTag": "title",

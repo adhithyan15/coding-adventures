@@ -615,6 +615,13 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             external_entry: false,
         },
         StateDefinition {
+            id: "comment_start_dash".to_string(),
+            initial: false,
+            accepting: false,
+            final_state: false,
+            external_entry: false,
+        },
+        StateDefinition {
             id: "data".to_string(),
             initial: true,
             accepting: false,
@@ -9124,7 +9131,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             on: None,
             matcher: Some(MatcherDefinition::Literal("-".to_string())),
             to: vec![
-                "comment".to_string(),
+                "comment_start_dash".to_string(),
             ],
             guard: None,
             stack_pop: None,
@@ -9177,6 +9184,67 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "append_comment(-)".to_string(),
+                "append_comment(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "comment_start_dash".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal(">".to_string())),
+            to: vec![
+                "data".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(abrupt-closing-of-empty-comment)".to_string(),
+                "emit_current_token".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "comment_start_dash".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("-".to_string())),
+            to: vec![
+                "comment_end".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "comment_start_dash".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Eof),
+            to: vec![
+                "done".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(eof-in-comment)".to_string(),
+                "emit_current_token".to_string(),
+                "emit(EOF)".to_string(),
+            ],
+            consume: false,
+        },
+        TransitionDefinition {
+            from: "comment_start_dash".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Anything),
+            to: vec![
+                "comment".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
                 "append_comment(current)".to_string(),
             ],
             consume: true,

@@ -25,6 +25,9 @@ the project, but the first real HTML authoring artifact that must keep HTML
 The default lexer already resolves the core named character references and the
 classic Latin-1 entity set, preserving entity-name case so legacy names such as
 `Agrave` and `agrave` remain distinct.
+Comment tokenization includes the standard start-dash recovery cases for empty
+HTML comments such as `<!-->` and `<!--->`, while still preserving normal
+Mosaic-era `<!--note-->` comments.
 The generated HTML1 machine also exposes `RCDATA`, `RAWTEXT`, `PLAINTEXT`,
 `CDATA section`, `script_data`, `script_data_escaped`, and
 `script_data_double_escaped` entry states for parser-controlled tokenizer

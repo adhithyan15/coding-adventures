@@ -77,3 +77,5 @@ documented in this file.
 - Markup declaration `<![CDATA[` opener support that reaches the CDATA section
   state from data-state lexing while preserving malformed partial openers as
   bogus comments.
+- HTML comment start-dash handling, including `<!-->` abrupt empty-comment
+  recovery and `<!--->` empty-comment closure.
