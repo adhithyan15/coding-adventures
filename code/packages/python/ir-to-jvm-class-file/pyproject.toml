@@ -43,6 +43,9 @@ coding-adventures-parser = { path = "../parser", editable = true }
 coding-adventures-state-machine = { path = "../state-machine", editable = true }
 coding-adventures-type-checker-protocol = { path = "../type-checker-protocol", editable = true }
 coding-adventures-virtual-machine = { path = "../virtual-machine", editable = true }
+coding-adventures-codegen-core = { path = "../codegen-core", editable = true }
+coding-adventures-interpreter-ir = { path = "../interpreter-ir", editable = true }
+coding-adventures-ir-optimizer = { path = "../ir-optimizer", editable = true }
 
 [project.urls]
 Homepage = "https://github.com/adhithyan15/coding-adventures"
@@ -66,6 +69,9 @@ dev = [
     "coding-adventures-state-machine",
     "coding-adventures-type-checker-protocol",
     "coding-adventures-virtual-machine",
+    "coding-adventures-interpreter-ir",
+    "coding-adventures-ir-optimizer",
+    "coding-adventures-codegen-core",
     "pytest>=8.0",
     "pytest-cov>=5.0",
     "ruff>=0.4",

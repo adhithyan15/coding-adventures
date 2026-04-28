@@ -235,3 +235,14 @@ compiler-ir    ◄── ir-optimizer ──────────► codegen-
 
 Zero test changes in any existing package — the refactor is internal
 plumbing, with re-exports preserving all public APIs.
+
+---
+
+## Follow-on: LANG20
+
+LANG20 (``CodeGenerator[IR, Assembly]`` Protocol) adds a finer-grained
+split within the codegen concern.  Where ``Backend[IR]`` bundles validate +
+generate + assemble + run, ``CodeGenerator[IR, Assembly]`` covers only the
+validate-and-generate-assembly step.  All six ``ir-to-*`` compiler packages
+implement ``CodeGenerator`` as thin adapter classes.  See
+``code/specs/LANG20-codegen-generator.md``.

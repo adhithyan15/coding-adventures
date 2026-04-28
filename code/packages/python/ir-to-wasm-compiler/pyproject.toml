@@ -28,6 +28,9 @@ coding-adventures-wasm-types = { path = "../wasm-types", editable = true }
 coding-adventures-wasm-module-encoder = { path = "../wasm-module-encoder", editable = true }
 coding-adventures-wasm-runtime = { path = "../wasm-runtime", editable = true }
 coding-adventures-wasm-validator = { path = "../wasm-validator", editable = true }
+coding-adventures-codegen-core = { path = "../codegen-core", editable = true }
+coding-adventures-interpreter-ir = { path = "../interpreter-ir", editable = true }
+coding-adventures-ir-optimizer = { path = "../ir-optimizer", editable = true }
 
 [project.optional-dependencies]
 dev = [
@@ -37,6 +40,9 @@ dev = [
     "coding-adventures-wasm-module-parser",
     "coding-adventures-wasm-runtime",
     "coding-adventures-wasm-validator",
+    "coding-adventures-interpreter-ir",
+    "coding-adventures-ir-optimizer",
+    "coding-adventures-codegen-core",
     "pytest>=8.0",
     "pytest-cov>=5.0",
     "ruff>=0.4",

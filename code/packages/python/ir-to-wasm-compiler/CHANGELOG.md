@@ -1,5 +1,36 @@
 # Changelog
 
+## [0.6.0] — 2026-04-27
+
+### Added — LANG20: `WASMCodeGenerator` — `CodeGenerator[IrProgram, WasmModule]` adapter
+
+**New module: `ir_to_wasm_compiler.generator`**
+
+- `WASMCodeGenerator` — thin adapter satisfying the
+  `CodeGenerator[IrProgram, WasmModule]` structural protocol (LANG20).
+
+  ```
+  [Optimizer] → [WASMCodeGenerator] → WasmModule
+                                        ├─→ encode() → bytes → .wasm file  (AOT)
+                                        └─→ [WASM runtime / Wasmer]        (JIT/sim)
+  ```
+
+  - `name = "wasm"` — unique backend identifier.
+  - `validate(ir) -> list[str]` — delegates to `validate_for_wasm()`.  Never
+    raises; returns `[]` for valid programs.
+  - `generate(ir) -> WasmModule` — delegates to `IrToWasmCompiler().compile(ir)`.
+    Returns a structured WASM 1.0 module; call `.encode()` for raw bytes.
+
+- `WASMCodeGenerator` exported from `ir_to_wasm_compiler.__init__`.
+
+**New tests: `tests/test_codegen_generator.py`** — 11 tests covering: `name`,
+`isinstance(gen, CodeGenerator)` structural check, `validate()` on valid /
+bad-opcode / unsupported-SYSCALL IR, `generate()` returns `WasmModule`,
+encoded bytes start with WASM magic `\x00asm`, non-empty encoded output,
+round-trip, export check.
+
+---
+
 ## [Unreleased]
 
 ### Added

@@ -1,8 +1,39 @@
 # Changelog
 
-## [Unreleased]
+## 0.3.0 — 2026-04-27
 
-### Added
+### Added — LANG20: `CILCodeGenerator` — `CodeGenerator[IrProgram, CILProgramArtifact]` adapter
+
+**New module: `ir_to_cil_bytecode.generator`**
+
+- `CILCodeGenerator` — thin adapter satisfying the
+  `CodeGenerator[IrProgram, CILProgramArtifact]` structural protocol (LANG20).
+
+  ```
+  [Optimizer] → [CILCodeGenerator] → CILProgramArtifact
+                                       ├─→ PE packager → .exe/.dll  (AOT)
+                                       └─→ CLR simulator            (sim)
+  ```
+
+  - `name = "cil"` — unique backend identifier.
+  - `validate(ir) -> list[str]` — delegates to `validate_for_clr()`.  Never
+    raises; returns `[]` for valid programs.  Three rules: opcode support,
+    int32 constant range, valid SYSCALL numbers (1/2/10 only).
+  - `generate(ir) -> CILProgramArtifact` — delegates to
+    `lower_ir_to_cil_bytecode(ir, config)`.  Raises `CILBackendError` on
+    invalid IR.
+  - Optional `config: CILBackendConfig` — forwarded to the underlying compiler.
+
+- `CILCodeGenerator` exported from `ir_to_cil_bytecode.__init__`.
+
+**New tests: `tests/test_codegen_generator.py`** — 14 tests covering: `name`,
+`isinstance(gen, CodeGenerator)` structural check, `validate()` on valid /
+bad-SYSCALL / overflow-constant IR, `generate()` returns `CILProgramArtifact`,
+artifact has correct `entry_label`, artifact has `>= 1` method, each
+`method.body` is `bytes`, `generate()` raises `CILBackendError` on invalid IR,
+custom `CILBackendConfig` accepted, round-trip, export check.
+
+### Added — pre-flight validator (released with this version)
 
 - **`validate_for_clr(program)` pre-flight validator**: inspects an `IrProgram`
   for CLR backend incompatibilities *before* any bytecode is generated.  Returns
@@ -30,6 +61,8 @@
   `"IR program failed CLR pre-flight validation"`.  Previously, unsupported
   SYSCALL numbers would pass through to the PE binary and only be caught at
   runtime by the CLR VM.
+
+---
 
 ## 0.2.0
 

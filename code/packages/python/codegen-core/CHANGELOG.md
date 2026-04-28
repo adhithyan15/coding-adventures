@@ -4,6 +4,44 @@ All notable changes to this package will be documented in this file.
 
 ---
 
+## [0.2.0] — 2026-04-27
+
+### Added — LANG20: `CodeGenerator[IR, Assembly]` protocol
+
+**New module: `codegen_core.codegen`**
+
+- `CodeGenerator[IR, Assembly]` — fine-grained structural protocol for the
+  validate-and-generate step.  Doubly generic: `IR` is the input intermediate
+  representation; `Assembly` is the output assembly form.
+
+  Unlike `Backend[IR]` (which bundles compile + run), `CodeGenerator` covers
+  only the codegen boundary:
+
+  ```
+  [Optimizer] → [CodeGenerator] → Assembly
+                                   ├─→ [Assembler → Packager] → binary  (AOT)
+                                   ├─→ [JIT runner] → execute            (JIT)
+                                   └─→ [Simulator] → run directly        (sim)
+  ```
+
+  Assembly types vary by target: `str` (Intel 4004/8008 text assembly),
+  `bytes` (GE-225 binary, JVM class file), `WasmModule` (structured WASM
+  1.0), `CILProgramArtifact` (multi-method CIL artifact).
+
+  `@runtime_checkable` enables `isinstance(obj, CodeGenerator)` checks.
+
+- `CodeGeneratorRegistry` — name-to-generator mapping, analogous to
+  `BackendRegistry`.  Methods: `register()`, `get()`, `get_or_raise()`,
+  `names()`, `all()`, `__len__`, `__contains__`.
+
+**Updated top-level exports:** `CodeGenerator`, `CodeGeneratorRegistry`.
+
+**New tests: `tests/test_codegen_generator.py`** — 21 tests covering
+protocol `isinstance` checks, `CodeGeneratorRegistry` all operations, and
+round-trip validate→generate with a mock generator.
+
+---
+
 ## [0.1.0] — 2026-04-27
 
 ### Added — LANG19: Initial release — unified IR-to-native compilation layer
