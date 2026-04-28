@@ -32,6 +32,8 @@ from sql_optimizer import optimize
 from sql_parser import parse_sql
 from sql_planner import (
     AggregateExpr,
+    CreateViewStmt,
+    DropViewStmt,
     IndexScan,
     InsertValuesStmt,
     Scan,
@@ -73,6 +75,7 @@ def run(
     check_registry: dict | None = None,
     fk_child: dict | None = None,
     fk_parent: dict | None = None,
+    view_defs: dict | None = None,
 ) -> QueryResult:
     """Execute a single SQL statement and return the :class:`QueryResult`.
 
@@ -82,11 +85,38 @@ def run(
     ``advisor``, when provided, receives the optimised plan via
     :meth:`~mini_sqlite.advisor.IndexAdvisor.observe_plan` so it can
     auto-create indexes based on observed query patterns.
+
+    ``view_defs``, when provided, is a live ``dict[str, SelectStmt]`` owned
+    by the :class:`~mini_sqlite.connection.Connection`.  It is passed to the
+    adapter so that view names in FROM/JOIN clauses are expanded inline.
+    ``CREATE VIEW`` and ``DROP VIEW`` statements update this dict directly;
+    they never reach the planner or VM.
     """
     bound = substitute(sql, parameters)
     try:
         ast = parse_sql(bound)
-        stmt = to_statement(ast)
+        stmt = to_statement(ast, view_defs=view_defs)
+
+        # CREATE VIEW / DROP VIEW are intercepted here — the planner and VM
+        # never see them.  We update the connection's view registry and return
+        # an empty DDL result immediately.
+        if isinstance(stmt, CreateViewStmt):
+            if view_defs is not None:
+                if stmt.name in view_defs:
+                    if stmt.if_not_exists:
+                        pass  # IF NOT EXISTS: silently skip duplicate
+                    else:
+                        raise ProgrammingError(f"view already exists: {stmt.name}")
+                else:
+                    view_defs[stmt.name] = stmt.query
+            return QueryResult(rows_affected=0)
+        if isinstance(stmt, DropViewStmt):
+            if view_defs is not None:
+                if stmt.name in view_defs:
+                    del view_defs[stmt.name]
+                elif not stmt.if_exists:
+                    raise ProgrammingError(f"no such view: {stmt.name}")
+            return QueryResult(rows_affected=0)
         # ``INSERT INTO t VALUES (...)`` without an explicit column list
         # means "all columns, in declaration order" — the downstream
         # pipeline expects the list to be populated explicitly, so we

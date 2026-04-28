@@ -2,6 +2,14 @@
 
 All notable changes to the SQL lexer package will be documented in this file.
 
+## [0.7.0] - 2026-04-27
+
+### Added — Phase 6: CREATE / DROP VIEW
+
+- `VIEW` registered as a SQL keyword in `sql.tokens` and the compiled
+  `_grammar.py`, enabling `CREATE VIEW` and `DROP VIEW` to tokenize `VIEW`
+  as KEYWORD rather than NAME.
+
 ## [0.6.0] - 2026-04-27
 
 ### Added — Phase 5b: Recursive CTEs

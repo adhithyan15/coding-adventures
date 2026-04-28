@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.9.0] - 2026-04-27
+
+### Added — Phase 6: CREATE / DROP VIEW
+
+- **`CreateViewStmt` AST node** (`sql_planner.ast`) — frozen dataclass
+  carrying `name: str`, `query: SelectStmt`, and `if_not_exists: bool`.
+  Represents `CREATE [IF NOT EXISTS] VIEW name AS query`.
+- **`DropViewStmt` AST node** (`sql_planner.ast`) — frozen dataclass with
+  `name: str` and `if_exists: bool`.  Represents `DROP VIEW [IF EXISTS] name`.
+- Both types added to the `Statement` type union and exported from
+  `sql_planner.__init__`.
+
 ## [0.8.0] - 2026-04-27
 
 ### Added — Phase 5b: Recursive CTEs

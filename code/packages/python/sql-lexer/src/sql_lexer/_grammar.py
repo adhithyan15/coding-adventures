@@ -163,7 +163,7 @@ TOKEN_GRAMMAR = TokenGrammar(
             alias=None,
         ),
     ],
-    keywords=['WITH', 'RECURSIVE', 'SELECT', 'FROM', 'WHERE', 'GROUP', 'BY', 'HAVING', 'ORDER', 'LIMIT', 'OFFSET', 'INSERT', 'INTO', 'VALUES', 'UPDATE', 'SET', 'DELETE', 'ALTER', 'ADD', 'COLUMN', 'CREATE', 'DROP', 'TABLE', 'IF', 'EXISTS', 'NOT', 'AND', 'OR', 'NULL', 'IS', 'IN', 'BETWEEN', 'LIKE', 'AS', 'DISTINCT', 'ALL', 'UNION', 'INTERSECT', 'EXCEPT', 'JOIN', 'INNER', 'LEFT', 'RIGHT', 'OUTER', 'CROSS', 'FULL', 'ON', 'ASC', 'DESC', 'TRUE', 'FALSE', 'CASE', 'WHEN', 'THEN', 'ELSE', 'END', 'PRIMARY', 'KEY', 'UNIQUE', 'CHECK', 'REFERENCES', 'DEFAULT'],
+    keywords=['WITH', 'RECURSIVE', 'SELECT', 'FROM', 'WHERE', 'GROUP', 'BY', 'HAVING', 'ORDER', 'LIMIT', 'OFFSET', 'INSERT', 'INTO', 'VALUES', 'UPDATE', 'SET', 'DELETE', 'ALTER', 'ADD', 'COLUMN', 'CREATE', 'DROP', 'TABLE', 'IF', 'EXISTS', 'NOT', 'AND', 'OR', 'NULL', 'IS', 'IN', 'BETWEEN', 'LIKE', 'AS', 'DISTINCT', 'ALL', 'UNION', 'INTERSECT', 'EXCEPT', 'JOIN', 'INNER', 'LEFT', 'RIGHT', 'OUTER', 'CROSS', 'FULL', 'ON', 'ASC', 'DESC', 'TRUE', 'FALSE', 'CASE', 'WHEN', 'THEN', 'ELSE', 'END', 'PRIMARY', 'KEY', 'UNIQUE', 'CHECK', 'REFERENCES', 'DEFAULT', 'VIEW'],
     mode=None,
     escape_mode=None,
     skip_definitions=[

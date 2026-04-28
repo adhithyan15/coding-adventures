@@ -358,6 +358,33 @@ class DropIndexStmt:
     if_exists: bool = False
 
 
+@dataclass(frozen=True, slots=True)
+class CreateViewStmt:
+    """CREATE VIEW [IF NOT EXISTS] name AS query.
+
+    Views are stored in the Connection's view registry and expanded to
+    DerivedTableRef at parse time when referenced in subsequent queries.
+    The planner never sees this statement directly — the engine intercepts
+    it before calling plan().
+    """
+
+    name: str
+    query: SelectStmt
+    if_not_exists: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class DropViewStmt:
+    """DROP VIEW [IF EXISTS] name.
+
+    Removes the named view from the Connection's view registry.
+    Like CreateViewStmt, this is intercepted by the engine before the planner.
+    """
+
+    name: str
+    if_exists: bool = False
+
+
 # The type union every Statement consumer matches on.
 Statement = (
     SelectStmt
@@ -376,4 +403,6 @@ Statement = (
     | BeginStmt
     | CommitStmt
     | RollbackStmt
+    | CreateViewStmt
+    | DropViewStmt
 )
