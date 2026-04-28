@@ -3,7 +3,7 @@
 import pytest
 from algol_parser import parse_algol
 from algol_type_checker import FRAME_WORD_SIZE, FrameSlot, check_algol
-from compiler_ir import IrOp
+from compiler_ir import IrImmediate, IrOp, IrRegister
 from lang_parser import ASTNode
 
 from algol_ir_compiler import CompileError, __version__, compile_algol
@@ -1181,9 +1181,29 @@ class TestAlgolIrCompiler:
         with pytest.raises(CompileError, match="must contain a block"):
             compile_algol(ASTNode("program", []))
 
-    def test_raises_for_missing_result_variable(self) -> None:
-        with pytest.raises(CompileError, match="result"):
-            compile_algol(parse_algol("begin integer x; x := 1 end"))
+    def test_compiles_without_result_variable(self) -> None:
+        result = compile_algol(parse_algol("begin integer x; x := 1 end"))
+        halt_index = next(
+            index
+            for index, instruction in enumerate(result.program.instructions)
+            if instruction.opcode == IrOp.HALT
+        )
+
+        fallback = result.program.instructions[halt_index - 1]
+        assert fallback.opcode == IrOp.LOAD_IMM
+        assert fallback.operands == [IrRegister(1), IrImmediate(0)]
+
+    def test_non_integer_result_name_does_not_drive_program_return(self) -> None:
+        result = compile_algol(parse_algol("begin real result; result := 2.5 end"))
+        halt_index = next(
+            index
+            for index, instruction in enumerate(result.program.instructions)
+            if instruction.opcode == IrOp.HALT
+        )
+
+        fallback = result.program.instructions[halt_index - 1]
+        assert fallback.opcode == IrOp.LOAD_IMM
+        assert fallback.operands == [IrRegister(1), IrImmediate(0)]
 
     def test_compiles_integer_exponentiation_loop(self) -> None:
         result = compile_algol(
