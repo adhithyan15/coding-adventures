@@ -842,6 +842,18 @@ class TestPrologGoalAdapter:
                 term(".", atom("tea"), term(".", atom("cake"), atom("[]"))),
                 LogicVar(id=23),
             ),
+            relation("nth0", 4)(
+                1,
+                term(".", atom("tea"), term(".", atom("cake"), atom("[]"))),
+                LogicVar(id=24),
+                LogicVar(id=25),
+            ),
+            relation("nth1", 4)(
+                2,
+                term(".", atom("tea"), term(".", atom("cake"), atom("[]"))),
+                LogicVar(id=26),
+                LogicVar(id=27),
+            ),
             relation("select", 3)(
                 atom("tea"),
                 term(".", atom("tea"), term(".", atom("cake"), atom("[]"))),
@@ -928,6 +940,8 @@ class TestPrologGoalAdapter:
             "msort([Item, jam, Item], Sorted), "
             "nth0(1, Reversed, ZeroBased), "
             "nth1(2, Reversed, OneBased), "
+            "nth0(1, Reversed, ZeroRestBased, ZeroRest), "
+            "nth1(2, Reversed, OneRestBased, OneRest), "
             "length(Reversed, Count).",
         )
 
@@ -943,6 +957,10 @@ class TestPrologGoalAdapter:
                 parsed.variables["Sorted"],
                 parsed.variables["ZeroBased"],
                 parsed.variables["OneBased"],
+                parsed.variables["ZeroRestBased"],
+                parsed.variables["ZeroRest"],
+                parsed.variables["OneRestBased"],
+                parsed.variables["OneRest"],
                 parsed.variables["Count"],
             ),
             adapted,
@@ -955,6 +973,10 @@ class TestPrologGoalAdapter:
                 logic_list(["jam", "tea", "tea"]),
                 atom("tea"),
                 atom("tea"),
+                atom("tea"),
+                logic_list(["jam"]),
+                atom("tea"),
+                logic_list(["jam"]),
                 num(2),
             ),
             (
@@ -965,6 +987,10 @@ class TestPrologGoalAdapter:
                 logic_list(["cake", "cake", "jam"]),
                 atom("cake"),
                 atom("cake"),
+                atom("cake"),
+                logic_list(["jam"]),
+                atom("cake"),
+                logic_list(["jam"]),
                 num(2),
             ),
         ]

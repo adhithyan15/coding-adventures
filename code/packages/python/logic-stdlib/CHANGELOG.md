@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.8.0] - 2026-04-28
+
+### Added
+
+- finite `nth0_resto` and `nth1_resto` relations for positional selection with
+  the remaining list
+- pytest coverage for zero-based selection, one-based selection, enumeration,
+  out-of-range failure, and improper-list rejection
+
 ## [0.7.0] - 2026-04-28
 
 ### Added

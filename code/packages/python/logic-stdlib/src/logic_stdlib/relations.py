@@ -47,7 +47,9 @@ __all__ = [
     "lengtho",
     "listo",
     "membero",
+    "nth0_resto",
     "nth0o",
+    "nth1_resto",
     "nth1o",
     "permuteo",
     "reverseo",
@@ -140,10 +142,32 @@ def nth0o(index: object, items: object, element: object) -> GoalExpr:
     return native_goal(_ntho_runner, index, items, element, 0)
 
 
+def nth0_resto(
+    index: object,
+    items: object,
+    element: object,
+    rest: object,
+) -> GoalExpr:
+    """Relate zero-based selection to the list with that element removed."""
+
+    return native_goal(_nth_resto_runner, index, items, element, rest, 0)
+
+
 def nth1o(index: object, items: object, element: object) -> GoalExpr:
     """Relate a one-based index to an element of a proper finite list."""
 
     return native_goal(_ntho_runner, index, items, element, 1)
+
+
+def nth1_resto(
+    index: object,
+    items: object,
+    element: object,
+    rest: object,
+) -> GoalExpr:
+    """Relate one-based selection to the list with that element removed."""
+
+    return native_goal(_nth_resto_runner, index, items, element, rest, 1)
 
 
 def listo(value: object) -> GoalExpr:
@@ -285,6 +309,49 @@ def _ntho_runner(
         yield from solve_from(
             program_value,
             conj(eq(index, num(offset + base)), eq(element, value)),
+            state,
+        )
+
+
+def _nth_resto_runner(
+    program_value: Program,
+    state: State,
+    args: tuple[Term, ...],
+) -> Iterator[State]:
+    index, items, element, rest, base_term = args
+    if not isinstance(base_term, Number) or not isinstance(base_term.value, int):
+        return
+    base = base_term.value
+    values = _proper_list_items(items, state)
+    if values is None:
+        return
+
+    index_value = _integer_index(index, state)
+    if index_value is not None:
+        offset = index_value - base
+        if offset < 0 or offset >= len(values):
+            return
+        remaining = [*values[:offset], *values[offset + 1 :]]
+        yield from solve_from(
+            program_value,
+            conj(eq(element, values[offset]), eq(rest, logic_list(remaining))),
+            state,
+        )
+        return
+
+    walked_index = state.substitution.walk(index)
+    if not isinstance(walked_index, LogicVar):
+        return
+
+    for offset, value in enumerate(values):
+        remaining = [*values[:offset], *values[offset + 1 :]]
+        yield from solve_from(
+            program_value,
+            conj(
+                eq(index, num(offset + base)),
+                eq(element, value),
+                eq(rest, logic_list(remaining)),
+            ),
             state,
         )
 

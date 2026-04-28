@@ -79,7 +79,9 @@ from logic_stdlib import (
     listo,
     membero,
     msorto,
+    nth0_resto,
     nth0o,
+    nth1_resto,
     nth1o,
     permuteo,
     reverseo,
@@ -181,6 +183,16 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
     }
     if goal.relation.arity == 3 and name in ternary_list_builtins:
         return ternary_list_builtins[name](*args)
+
+    quaternary_list_builtins: dict[
+        str,
+        Callable[[object, object, object, object], GoalExpr],
+    ] = {
+        "nth0": nth0_resto,
+        "nth1": nth1_resto,
+    }
+    if goal.relation.arity == 4 and name in quaternary_list_builtins:
+        return quaternary_list_builtins[name](*args)
 
     if name == "call" and goal.relation.arity == 1:
         return _adapt_callable_goal(args[0])
