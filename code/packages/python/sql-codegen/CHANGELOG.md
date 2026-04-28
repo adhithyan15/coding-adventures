@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.4.0] - 2026-04-28
+
+### Added
+
+- **`RunScalarSubquery(sub_program)` IR instruction** — compiles a
+  `ScalarSubquery` plan expression into an embedded sub-program that is
+  executed at runtime; the VM pushes the single result value or NULL.
+- **`primary_key: bool` on `ColumnDef`** — IR column definition now carries
+  the primary key flag so the VM can pass it to the backend on `CREATE TABLE`.
+
+### Fixed
+
+- **`_compile_core` handles `Project(Aggregate)`** — scalar subquery inner
+  plans contain an unflattenened `Project(Aggregate(...))` shape. Added two
+  match cases before the default fall-through so aggregate sub-programs
+  compile correctly without requiring `_flatten_project_over_aggregate`.
+
 ## [1.3.0] - 2026-04-28
 
 ### Added — Phase 9: SQL Triggers

@@ -249,3 +249,20 @@ class TriggerDepthError(VmError):
 
     def __str__(self) -> str:
         return f"trigger recursion depth exceeded in {self.trigger_name!r}"
+
+
+@dataclass(eq=True)
+class CardinalityError(VmError):
+    """Raised when a scalar subquery returns more than one row.
+
+    SQL requires a scalar subquery — ``(SELECT expr FROM …)`` used in an
+    expression position — to return *at most one row*.  When the inner query
+    produces two or more rows the result is undefined in SQL and a runtime
+    error in this implementation.  Returning zero rows is not an error; the
+    value is ``NULL`` in that case.
+    """
+
+    message: str = "scalar subquery returned more than one row"
+
+    def __str__(self) -> str:
+        return self.message

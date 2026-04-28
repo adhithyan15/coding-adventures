@@ -1,0 +1,133 @@
+"""
+sql-codegen — compile LogicalPlan trees into flat IR bytecode.
+
+Pipeline position::
+
+    LogicalPlan (from sql-planner, rewritten by sql-optimizer)
+        │  sql_codegen.compile()
+        ▼
+    Program {
+      instructions: tuple[Instruction, ...],
+      labels: dict[str,int],
+      result_schema: tuple[str,...],
+    }
+        │  sql-vm (next stage)
+        ▼
+    QueryResult
+
+The code generator is pure — no I/O, no side effects. It is a simple
+recursive post-order traversal that emits a flat instruction stream,
+wraps children in loop scaffolding, and runs a single label-resolution
+pass at the end.
+"""
+
+from __future__ import annotations
+
+from .compiler import compile, compile_expr  # noqa: A004 — shadowing builtin is intentional
+from .errors import CodegenError, InternalError, UnsupportedNode
+from .ir import (
+    AdvanceCursor,
+    AdvanceGroupKey,
+    BeginRow,
+    Between,
+    BinaryOp,
+    BinaryOpCode,
+    CloseScan,
+    Coalesce,
+    CreateTable,
+    DeleteRows,
+    Direction,
+    DistinctResult,
+    DropTable,
+    EmitColumn,
+    EmitRow,
+    FinalizeAgg,
+    Halt,
+    InitAgg,
+    InList,
+    InsertRow,
+    Instruction,
+    IsNotNull,
+    IsNull,
+    Jump,
+    JumpIfFalse,
+    JumpIfTrue,
+    Label,
+    Like,
+    LimitResult,
+    LoadColumn,
+    LoadConst,
+    LoadGroupKey,
+    NullsOrder,
+    OpenScan,
+    Pop,
+    Program,
+    SaveGroupKey,
+    ScanAllColumns,
+    SetResultSchema,
+    SortKey,
+    SortResult,
+    SqlValue,
+    UnaryOp,
+    UnaryOpCode,
+    UpdateAgg,
+    UpdateRows,
+)
+from .ir import (
+    AggFunc as IrAggFunc,
+)
+
+__all__ = [
+    "AdvanceCursor",
+    "AdvanceGroupKey",
+    "BeginRow",
+    "BinaryOp",
+    "BinaryOpCode",
+    "Between",
+    "CloseScan",
+    "Coalesce",
+    "CodegenError",
+    "CreateTable",
+    "DeleteRows",
+    "Direction",
+    "DistinctResult",
+    "DropTable",
+    "EmitColumn",
+    "EmitRow",
+    "FinalizeAgg",
+    "Halt",
+    "InList",
+    "InitAgg",
+    "InsertRow",
+    "Instruction",
+    "InternalError",
+    "IrAggFunc",
+    "IsNotNull",
+    "IsNull",
+    "Jump",
+    "JumpIfFalse",
+    "JumpIfTrue",
+    "Label",
+    "Like",
+    "LimitResult",
+    "LoadColumn",
+    "LoadConst",
+    "LoadGroupKey",
+    "NullsOrder",
+    "OpenScan",
+    "Pop",
+    "Program",
+    "SaveGroupKey",
+    "ScanAllColumns",
+    "SetResultSchema",
+    "SortKey",
+    "SortResult",
+    "SqlValue",
+    "UnaryOp",
+    "UnaryOpCode",
+    "UnsupportedNode",
+    "UpdateAgg",
+    "UpdateRows",
+    "compile",
+    "compile_expr",
+]

@@ -93,6 +93,7 @@ from sql_codegen import (
     RollbackTransaction,
     RunExistsSubquery,
     RunRecursiveCTE,
+    RunScalarSubquery,
     RunSubquery,
     SaveGroupKey,
     ScanAllColumns,
@@ -107,6 +108,7 @@ from sql_codegen import IrAggFunc as AggFunc
 
 from .errors import (
     BackendError,
+    CardinalityError,
     ColumnAlreadyExists,
     ColumnNotFound,
     ConstraintViolation,
@@ -276,6 +278,10 @@ class _VmState:
     # Nesting depth of the current VM invocation within trigger bodies.
     # 0 = top-level statement; > 0 = inside a trigger body.
     trigger_depth: int = 0
+    # User-registered scalar functions: lower-cased name → (nargs, callable).
+    # nargs=-1 means variadic.  Checked before the built-in registry so users
+    # can override built-ins (e.g. to shim behaviour in tests).
+    user_functions: dict[str, tuple[int, Callable]] | None = None
     # Scan telemetry — populated during execution; used to build QueryEvent.
     # Only the *first* scan per execute() call is recorded (one event per call).
     scan_table: str = ""
@@ -316,6 +322,7 @@ def execute(
     filtered_columns: list[str] | None = None,
     trigger_executor: Callable | None = None,
     trigger_depth: int = 0,
+    user_functions: dict[str, tuple[int, Callable]] | None = None,
 ) -> QueryResult:
     """Execute ``program`` against ``backend`` and return the result.
 
@@ -331,6 +338,12 @@ def execute(
         Optional list of column names that appeared in the WHERE predicate of
         the executing statement.  Passed through verbatim to the
         :class:`QueryEvent`.  When ``None`` the event carries an empty list.
+
+    ``user_functions``:
+        Optional dict mapping lower-cased SQL function names to
+        ``(nargs, callable)`` pairs registered via
+        :meth:`~mini_sqlite.Connection.create_function`.  Checked before the
+        built-in scalar registry so users can shadow built-in functions.
     """
     import time
 
@@ -350,6 +363,7 @@ def execute(
         fk_parent=fk_p,
         trigger_executor=trigger_executor,
         trigger_depth=trigger_depth,
+        user_functions=user_functions,
     )
     instructions = program.instructions
     n = len(instructions)
@@ -558,6 +572,9 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
     if isinstance(ins, RunExistsSubquery):
         _do_run_exists_subquery(ins, st)
         return
+    if isinstance(ins, RunScalarSubquery):
+        _do_run_scalar_subquery(ins, st)
+        return
     if isinstance(ins, RunRecursiveCTE):
         _do_run_recursive_cte(ins, st)
         return
@@ -712,6 +729,19 @@ def _do_call_scalar(ins: CallScalar, st: _VmState) -> None:
         CallScalar("coalesce", 2)  → pushes 42
     """
     args = st.pop_n(ins.n_args)
+    # User-registered functions take precedence over built-ins, allowing
+    # callers to shadow or extend the function set at the connection level.
+    if st.user_functions is not None:
+        entry = st.user_functions.get(ins.func.lower())
+        if entry is not None:
+            nargs, fn = entry
+            if nargs != -1 and nargs != len(args):
+                from .errors import WrongNumberOfArguments
+                raise WrongNumberOfArguments(
+                    name=ins.func, expected=str(nargs), got=len(args)
+                )
+            st.push(fn(*args))
+            return
     result = _call_scalar(ins.func, args)
     st.push(result)
 
@@ -757,6 +787,28 @@ def _do_run_exists_subquery(ins: RunExistsSubquery, st: _VmState) -> None:
     """
     sub_result = execute(ins.sub_program, st.backend)
     st.push(len(sub_result.rows) > 0)
+
+
+def _do_run_scalar_subquery(ins: RunScalarSubquery, st: _VmState) -> None:
+    """Execute the scalar sub-program and push the single result value.
+
+    Runs the inner program against the same backend as the outer query.
+
+    - Zero rows: ``NULL`` is pushed.
+    - One row: the first column's value is pushed.
+    - Two or more rows: :class:`~sql_vm.errors.CardinalityError` is raised.
+
+    The inner program always returns exactly one column — the optimizer
+    and codegen ensure this at compile time.
+    """
+    sub_result = execute(ins.sub_program, st.backend)
+    rows = sub_result.rows
+    if len(rows) == 0:
+        st.push(None)
+    elif len(rows) > 1:
+        raise CardinalityError()
+    else:
+        st.push(rows[0][0] if rows[0] else None)
 
 
 def _execute_with_cursors(
@@ -1435,7 +1487,12 @@ def _do_create_table(ins: CreateTable, st: _VmState) -> None:
     from sql_backend.schema import ColumnDef as BackendColumnDef
 
     col_defs = [
-        BackendColumnDef(name=c.name, type_name=c.type, not_null=not c.nullable)
+        BackendColumnDef(
+            name=c.name,
+            type_name=c.type,
+            not_null=not c.nullable,
+            primary_key=c.primary_key,
+        )
         for c in ins.columns
     ]
     try:

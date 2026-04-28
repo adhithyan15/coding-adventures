@@ -2,6 +2,13 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.12.0] - 2026-04-28
+
+### Added
+
+- **BLOB in primary expressions** — the `primary` grammar rule now accepts a
+  `BLOB` token, enabling `x'hex'` literals in all expression positions.
+
 ## [0.11.0] - 2026-04-28
 
 ### Added — Phase 9: SQL Triggers

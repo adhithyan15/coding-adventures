@@ -169,6 +169,7 @@ class Cursor:
             fk_parent=self._connection._fk_parent,
             view_defs=self._connection._view_defs,
             savepoints=self._connection._savepoints,
+            user_functions=self._connection._user_functions,
         )
 
         # For DDL (CREATE/DROP/ALTER), auto-commit the single-statement

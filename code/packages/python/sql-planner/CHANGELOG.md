@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.13.0] - 2026-04-28
+
+### Added
+
+- **`ScalarSubquery(query)` expression** (`expr.py`) — represents a
+  `(SELECT ...)` in expression position. Contains the resolved inner
+  `LogicalPlan`. Returns `False` from `contains_aggregate()` and is a no-op
+  in `collect_columns()`.
+
 ## [0.12.0] - 2026-04-28
 
 ### Added — Phase 9: SQL Triggers

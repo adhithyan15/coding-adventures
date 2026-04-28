@@ -28,6 +28,7 @@ from dataclasses import replace
 from typing import TYPE_CHECKING, Any
 
 from sql_backend import Backend, backend_as_schema_provider
+from sql_backend.schema import ColumnDef as BackendColumnDef
 from sql_codegen import compile as codegen_compile
 from sql_optimizer import optimize
 from sql_parser import parse_sql
@@ -83,6 +84,7 @@ def run(
     savepoints: list[str] | None = None,
     trigger_executor: Any | None = None,
     trigger_depth: int = 0,
+    user_functions: dict | None = None,
 ) -> QueryResult:
     """Execute a single SQL statement and return the :class:`QueryResult`.
 
@@ -101,6 +103,10 @@ def run(
     """
     bound = substitute(sql, parameters)
     try:
+        # PRAGMA statements are intercepted before parsing — they query backend
+        # metadata and return formatted rows without going through the planner.
+        if re.match(r"\s*PRAGMA\b", bound, re.IGNORECASE):
+            return _run_pragma(backend, bound, fk_child=fk_child)
         ast = parse_sql(bound)
         stmt = to_statement(ast, view_defs=view_defs)
 
@@ -186,6 +192,7 @@ def run(
                 fk_child=fk_child,
                 fk_parent=fk_parent,
                 view_defs=view_defs,
+                user_functions=user_functions,
             )
         return execute(
             program,
@@ -197,6 +204,7 @@ def run(
             filtered_columns=_filtered,
             trigger_executor=_trigger_executor,
             trigger_depth=trigger_depth,
+            user_functions=user_functions or None,
         )
     except ProgrammingError:
         # Already-translated errors raised from our own code pass through.
@@ -372,6 +380,118 @@ def _extract_scan_info(plan: LogicalPlan) -> tuple[str, list[str]]:
 
 
 # --------------------------------------------------------------------------
+# PRAGMA handler — returns backend metadata as a QueryResult.
+# --------------------------------------------------------------------------
+
+# Matches: PRAGMA name  or  PRAGMA name('arg')  or  PRAGMA name("arg")
+_PRAGMA_RE = re.compile(
+    r"""
+    \s* PRAGMA \s+
+    (?P<name>[A-Za-z_][A-Za-z0-9_]*)   # pragma name
+    (?:                                  # optional argument
+        \s* \(
+            \s* ["']? (?P<arg>[A-Za-z_][A-Za-z0-9_]*) ["']? \s*
+        \)
+    )?
+    \s* ;? \s* $
+    """,
+    re.IGNORECASE | re.VERBOSE,
+)
+
+
+def _run_pragma(backend: Backend, sql: str, *, fk_child: dict | None = None) -> QueryResult:
+    """Handle a PRAGMA statement by querying backend metadata.
+
+    Supported pragmas (matching SQLite output format):
+
+    ``PRAGMA table_info('t')``
+        One row per column: ``(cid, name, type, notnull, dflt_value, pk)``.
+
+    ``PRAGMA index_list('t')``
+        One row per index on table *t*: ``(seq, name, unique)``.
+
+    ``PRAGMA foreign_key_list('t')``
+        One row per FK on table *t*:
+        ``(id, seq, table, from, to, on_update, on_delete, match)``.
+
+    ``PRAGMA table_list``
+        One row per table in the schema: ``(schema, name, type)``.
+    """
+    m = _PRAGMA_RE.match(sql)
+    if m is None:
+        raise ProgrammingError(f"invalid PRAGMA syntax: {sql!r}")
+    name = m.group("name").lower()
+    arg = m.group("arg")  # may be None
+
+    if name == "table_info":
+        if not arg:
+            raise ProgrammingError("PRAGMA table_info requires a table name")
+        try:
+            cols = backend.columns(arg)
+        except Exception:  # noqa: BLE001 — unknown table returns empty
+            return QueryResult(
+                columns=("cid", "name", "type", "notnull", "dflt_value", "pk"),
+                rows=(),
+            )
+        rows = []
+        for i, col in enumerate(cols):
+            if isinstance(col, BackendColumnDef):
+                not_null = int(col.effective_not_null())
+                pk = int(col.primary_key)
+                type_name = col.type_name
+                dflt = col.default if col.has_default() else None
+                name_str = col.name
+            else:
+                not_null = 0
+                pk = 0
+                type_name = "TEXT"
+                dflt = None
+                name_str = str(col)
+            rows.append((i, name_str, type_name, not_null, dflt, pk))
+        return QueryResult(
+            columns=("cid", "name", "type", "notnull", "dflt_value", "pk"),
+            rows=tuple(rows),
+        )
+
+    if name == "index_list":
+        if not arg:
+            raise ProgrammingError("PRAGMA index_list requires a table name")
+        try:
+            indexes = backend.list_indexes(table=arg)
+        except Exception:  # noqa: BLE001
+            indexes = []
+        return QueryResult(
+            columns=("seq", "name", "unique"),
+            rows=tuple((seq, idx.name, int(idx.unique)) for seq, idx in enumerate(indexes)),
+        )
+
+    if name == "foreign_key_list":
+        if not arg:
+            raise ProgrammingError("PRAGMA foreign_key_list requires a table name")
+        fk_rows = []
+        if fk_child:
+            for fk_id, (from_col, ref_table, ref_col) in enumerate(fk_child.get(arg, [])):
+                fk_rows.append((
+                    fk_id, 0, ref_table, from_col,
+                    ref_col or "", "NO ACTION", "NO ACTION", "NONE",
+                ))
+        return QueryResult(
+            columns=("id", "seq", "table", "from", "to", "on_update", "on_delete", "match"),
+            rows=tuple(fk_rows),
+        )
+
+    if name == "table_list":
+        tables = backend.tables()
+        return QueryResult(
+            columns=("schema", "name", "type"),
+            rows=tuple(("main", t, "table") for t in tables),
+        )
+
+    # Unknown PRAGMA — return empty result rather than error, matching SQLite.
+    return QueryResult(columns=(), rows=())
+
+
+# --------------------------------------------------------------------------
 # Trigger executor — fires trigger body SQL with NEW/OLD value injection.
 # --------------------------------------------------------------------------
 
@@ -420,6 +540,7 @@ def _make_trigger_executor(
     fk_child: dict | None,
     fk_parent: dict | None,
     view_defs: dict | None,
+    user_functions: dict | None = None,
 ) -> Any:
     """Return a callable suitable for passing as ``trigger_executor`` to :func:`execute`.
 
@@ -449,6 +570,7 @@ def _make_trigger_executor(
                 view_defs=view_defs,
                 trigger_executor=executor,
                 trigger_depth=depth,
+                user_functions=user_functions,
             )
 
     return executor

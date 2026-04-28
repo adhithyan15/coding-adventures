@@ -1,5 +1,34 @@
 # Changelog
 
+## [1.7.0] - 2026-04-28
+
+### Added — SQL Extras: Scalar Subqueries, BLOB, PRAGMA, UDFs
+
+- **Scalar subqueries** — `(SELECT expr FROM ...)` expressions now work in
+  SELECT list, WHERE, and other expression positions. Returns NULL when
+  the subquery finds no rows; raises `CardinalityError` when it returns
+  more than one row.
+- **BLOB type** — binary data via `x'DEADBEEF'` / `X'...'` hex literal
+  syntax. `SqlValue` extended to include `bytes`; `sql_type_name()` returns
+  `"BLOB"` for byte values.
+- **PRAGMA statements** — engine-level interception for:
+  - `PRAGMA table_info(t)` — column metadata (cid, name, type, notnull,
+    dflt_value, pk)
+  - `PRAGMA index_list(t)` — index names and uniqueness flags
+  - `PRAGMA foreign_key_list(t)` — FK constraints from the live fk_child
+    registry
+  - `PRAGMA table_list` — all table names in the schema
+- **User-defined functions (UDFs)** — `conn.create_function(name, nargs, fn)`
+  registers a Python callable; nargs=-1 for variadic. UDFs take precedence
+  over built-ins.
+
+### Fixed
+
+- **`primary_key` now flows through to backend** — `CREATE TABLE ... PRIMARY
+  KEY` column constraint was lost in the IR → VM → backend pipeline.
+  `IrColumnDef` now carries `primary_key: bool`; `_do_create_table` passes it
+  to `BackendColumnDef`, so `PRAGMA table_info` correctly reports pk=1.
+
 ## [1.6.0] - 2026-04-28
 
 ### Added — Phase 9: SQL Triggers (BEFORE/AFTER INSERT/UPDATE/DELETE)

@@ -182,7 +182,7 @@ unary             = "-" unary | primary ;
 #      "SELECT".
 #   7. Bare column reference NAME [. NAME]
 #   8. Parenthesised expression "(" expr ")"
-primary           = NUMBER | STRING | "NULL" | "TRUE" | "FALSE"
+primary           = NUMBER | STRING | BLOB | "NULL" | "TRUE" | "FALSE"
                   | case_expr
                   | window_func_call
                   | function_call
