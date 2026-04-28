@@ -37,6 +37,8 @@ All notable changes to this package will be documented in this file.
   statement-list traversal.
 - Accepted `value` array parameters as checked whole-array copy formals while
   preserving element-type validation at call sites.
+- Accepted `value` label, switch, and procedure parameters now that the
+  lowering path treats those formals as copied label ids or descriptors.
 
 ## [0.1.0] - 2026-04-20
 

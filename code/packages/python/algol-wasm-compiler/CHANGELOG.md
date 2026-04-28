@@ -51,6 +51,8 @@ All notable changes to this package will be documented in this file.
   failure path.
 - Executed `value` whole-array parameters as callee-local descriptor and
   element copies so assignments inside the procedure do not alias the caller.
+- Executed `value` label, switch, and procedure formals through the same copied
+  label-id and descriptor paths as their by-name counterparts.
 - Added a convergence golden fixture that combines conditional expressions,
   exponentiation, chained assignment, by-name array summation, real arithmetic,
   and output in one end-to-end program.
