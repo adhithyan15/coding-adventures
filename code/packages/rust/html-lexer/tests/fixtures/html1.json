@@ -43,6 +43,30 @@
       ]
     },
     {
+      "id": "doctype-missing-name-quirks",
+      "description": "DOCTYPE without a name emits a force-quirks doctype",
+      "input": "<!DOCTYPE>",
+      "tokens": [
+        "Doctype(name=null, force_quirks=true)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-doctype-name"
+      ]
+    },
+    {
+      "id": "doctype-whitespace-only-name-quirks",
+      "description": "DOCTYPE with only whitespace before > emits a force-quirks doctype",
+      "input": "<!DOCTYPE >",
+      "tokens": [
+        "Doctype(name=null, force_quirks=true)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-doctype-name"
+      ]
+    },
+    {
       "id": "comment-eof-recovery",
       "input": "<!--open",
       "tokens": [

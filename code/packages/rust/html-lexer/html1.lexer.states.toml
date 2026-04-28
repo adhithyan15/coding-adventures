@@ -4797,14 +4797,23 @@ to = "before_doctype_name"
 from = "doctype_after_keyword"
 matcher = { literal = ">" }
 to = "data"
-actions = ["emit_current_token"]
+actions = [
+  "parse_error(missing-doctype-name)",
+  "mark_force_quirks",
+  "emit_current_token",
+]
 
 [[transitions]]
 from = "doctype_after_keyword"
 matcher = { eof = true }
 to = "done"
 consume = false
-actions = ["parse_error(eof-in-doctype)", "emit_current_token", "emit(EOF)"]
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
 
 [[transitions]]
 from = "doctype_after_keyword"
@@ -4839,14 +4848,23 @@ to = "before_doctype_name"
 from = "before_doctype_name"
 matcher = { literal = ">" }
 to = "data"
-actions = ["parse_error(missing-doctype-name)", "emit_current_token"]
+actions = [
+  "parse_error(missing-doctype-name)",
+  "mark_force_quirks",
+  "emit_current_token",
+]
 
 [[transitions]]
 from = "before_doctype_name"
 matcher = { eof = true }
 to = "done"
 consume = false
-actions = ["parse_error(eof-in-doctype)", "emit_current_token", "emit(EOF)"]
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
 
 [[transitions]]
 from = "before_doctype_name"

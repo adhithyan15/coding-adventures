@@ -31,6 +31,8 @@ Mosaic-era `<!--note-->` comments. Nested-looking `<!--` sequences inside an
 open comment remain literal comment data and surface a recoverable
 `nested-comment` diagnostic. Comment endings also recover from `--!>` with an
 `incorrectly-closed-comment` diagnostic while preserving non-closing `--!` text.
+DOCTYPE tokenization reports missing names and marks force-quirks mode for
+inputs such as `<!DOCTYPE>` and `<!DOCTYPE >`.
 The generated HTML1 machine also exposes `RCDATA`, `RAWTEXT`, `PLAINTEXT`,
 `CDATA section`, `script_data`, `script_data_escaped`, and
 `script_data_double_escaped` entry states for parser-controlled tokenizer

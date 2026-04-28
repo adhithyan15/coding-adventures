@@ -131,7 +131,8 @@ def normalize_case(index: int, test: dict[str, Any]) -> dict[str, Any]:
             tokens.append(f"Comment(data={token[1]})")
         elif kind == "DOCTYPE":
             force_quirks = not bool(token[4])
-            tokens.append(f"Doctype(name={token[1]}, force_quirks={str(force_quirks).lower()})")
+            name = "null" if token[1] is None else token[1]
+            tokens.append(f"Doctype(name={name}, force_quirks={str(force_quirks).lower()})")
 
     if pending_text:
         tokens.append(f"Text(data={pending_text})")
