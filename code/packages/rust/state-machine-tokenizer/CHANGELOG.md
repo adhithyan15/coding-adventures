@@ -15,3 +15,5 @@ All notable changes to the `state-machine-tokenizer` crate will be documented in
 - Expanded the portable lexer action vocabulary with comment, doctype,
   attribute, temporary-buffer, self-closing, and return-state actions so
   future HTML lexer definitions can stay declarative without host callbacks.
+- Expanded the built-in HTML named-character-reference table through the
+  classic Latin-1 entity set used by early web content.
