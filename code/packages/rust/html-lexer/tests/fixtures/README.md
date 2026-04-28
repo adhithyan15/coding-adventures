@@ -76,6 +76,8 @@ currently supports:
   current shared entity subset
 - legacy named character references `nbsp`, `copy`, and `reg` in data, RCDATA,
   and attribute values
+- missing-semicolon recovery for legacy named character references `nbsp`,
+  `copy`, and `reg` before delimiters and EOF
 - semicolon-terminated decimal and hexadecimal numeric character references in
   data, RCDATA, and attribute values
 - missing-semicolon decimal and hexadecimal numeric character reference

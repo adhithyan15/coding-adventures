@@ -53,3 +53,5 @@ documented in this file.
   references in data, RCDATA, and attribute values.
 - Legacy named character references `nbsp`, `copy`, and `reg` in data, RCDATA,
   and attribute values.
+- Missing-semicolon recovery for legacy named character references `nbsp`,
+  `copy`, and `reg` before delimiters and EOF.
