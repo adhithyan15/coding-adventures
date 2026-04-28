@@ -1010,6 +1010,18 @@ This caused repeated CI failures across Python, Ruby, and Go during the S-series
 uv pip install -e ../directed-graph -e ../state-machine -e ../branch-predictor -e ../core -e ".[dev]"
 ```
 
+**CRITICAL — put uv pip install on ONE line.** The build tool executes BUILD files line-by-line. Backslash line continuations (`\`) are NOT supported — the build tool treats the `\` as a literal character and appends it to the path, producing a broken URL like `file:///path/to/package/%5C`. This causes "Distribution not found" errors on Ubuntu CI. Always write the entire `uv pip install` command on a single line, no matter how long it gets:
+```bash
+# BAD — breaks on Ubuntu CI:
+uv pip install \
+  -e ../compiler-ir \
+  -e ../codegen-core \
+  -e ".[dev]" --quiet
+
+# GOOD — works everywhere:
+uv pip install -e ../compiler-ir -e ../codegen-core -e ".[dev]" --quiet
+```
+
 **Ruby:** Gemfiles must list ALL transitive path dependencies. If `riscv_simulator` depends on `cpu_simulator`, then any package depending on `riscv_simulator` must also have:
 ```ruby
 gem "coding_adventures_cpu_simulator", path: "../cpu_simulator"
