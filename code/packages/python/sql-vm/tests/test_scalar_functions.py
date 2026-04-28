@@ -1028,3 +1028,255 @@ class TestVmCallScalar:
         )
         result = execute(prog, InMemoryBackend())
         assert result.rows == ((None,),)
+
+
+# ===========================================================================
+# Scalar MAX / MIN (two-argument forms)
+# ===========================================================================
+
+
+class TestScalarMinMax:
+    """Scalar MAX(a, b) and MIN(a, b) — two-argument forms."""
+
+    def test_max_integers(self) -> None:
+        assert fn("max", 3, 5) == 5
+
+    def test_max_integers_reversed(self) -> None:
+        assert fn("max", 5, 3) == 5
+
+    def test_max_equal(self) -> None:
+        assert fn("max", 4, 4) == 4
+
+    def test_min_integers(self) -> None:
+        assert fn("min", 3, 5) == 3
+
+    def test_min_equal(self) -> None:
+        assert fn("min", 7, 7) == 7
+
+    def test_max_floats(self) -> None:
+        assert fn("max", 1.5, 2.5) == 2.5
+
+    def test_min_floats(self) -> None:
+        assert fn("min", 1.5, 2.5) == 1.5
+
+    def test_max_strings(self) -> None:
+        assert fn("max", "apple", "fig") == "fig"
+
+    def test_min_strings(self) -> None:
+        assert fn("min", "apple", "fig") == "apple"
+
+    def test_max_with_null_returns_non_null(self) -> None:
+        # NULL is "less than everything" so MAX(x, NULL) → x
+        assert fn("max", 1, None) == 1
+        assert fn("max", None, 1) == 1
+
+    def test_min_with_null_returns_null(self) -> None:
+        # NULL is "less than everything" so MIN(x, NULL) → NULL
+        assert fn("min", 1, None) is None
+        assert fn("min", None, 1) is None
+
+    def test_max_all_null(self) -> None:
+        assert fn("max", None, None) is None
+
+    def test_min_all_null(self) -> None:
+        assert fn("min", None, None) is None
+
+    def test_max_negative_numbers(self) -> None:
+        assert fn("max", -5, -1) == -1
+
+    def test_min_negative_numbers(self) -> None:
+        assert fn("min", -5, -1) == -5
+
+    def test_max_mixed_int_float(self) -> None:
+        assert fn("max", 2, 1.5) == 2
+
+    def test_min_mixed_int_float(self) -> None:
+        assert fn("min", 2, 1.5) == 1.5
+
+
+# ===========================================================================
+# Date/time functions
+# ===========================================================================
+
+
+class TestDateTimeFunctions:
+    """DATE, TIME, DATETIME, JULIANDAY, UNIXEPOCH, STRFTIME."""
+
+    # ------------------------------------------------------------------
+    # NULL propagation
+    # ------------------------------------------------------------------
+
+    def test_date_null(self) -> None:
+        assert fn("date", None) is None
+
+    def test_time_null(self) -> None:
+        assert fn("time", None) is None
+
+    def test_datetime_null(self) -> None:
+        assert fn("datetime", None) is None
+
+    def test_julianday_null(self) -> None:
+        assert fn("julianday", None) is None
+
+    def test_unixepoch_null(self) -> None:
+        assert fn("unixepoch", None) is None
+
+    def test_strftime_null_format(self) -> None:
+        assert fn("strftime", None, "now") is None
+
+    def test_strftime_null_timevalue(self) -> None:
+        assert fn("strftime", "%Y", None) is None
+
+    # ------------------------------------------------------------------
+    # 'now' → correct format
+    # ------------------------------------------------------------------
+
+    def test_date_now_format(self) -> None:
+        import re
+        result = fn("date", "now")
+        assert isinstance(result, str)
+        assert re.match(r"^\d{4}-\d{2}-\d{2}$", result), f"bad format: {result!r}"
+
+    def test_time_now_format(self) -> None:
+        import re
+        result = fn("time", "now")
+        assert isinstance(result, str)
+        assert re.match(r"^\d{2}:\d{2}:\d{2}$", result), f"bad format: {result!r}"
+
+    def test_datetime_now_format(self) -> None:
+        import re
+        result = fn("datetime", "now")
+        assert isinstance(result, str)
+        assert re.match(r"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$", result), f"bad format: {result!r}"
+
+    def test_julianday_now_is_float(self) -> None:
+        result = fn("julianday", "now")
+        assert isinstance(result, float)
+        # Julian Day for 2024+ should be > 2451544 (year 2000)
+        assert result > 2451544.0
+
+    def test_unixepoch_now_is_positive_int(self) -> None:
+        result = fn("unixepoch", "now")
+        assert isinstance(result, int)
+        assert result > 946684800  # > year 2000
+
+    # ------------------------------------------------------------------
+    # Known fixed time values
+    # ------------------------------------------------------------------
+
+    def test_date_iso_string(self) -> None:
+        assert fn("date", "2024-03-15") == "2024-03-15"
+
+    def test_time_from_datetime_string(self) -> None:
+        assert fn("time", "2024-03-15 14:30:45") == "14:30:45"
+
+    def test_datetime_from_string(self) -> None:
+        assert fn("datetime", "2024-03-15 14:30:00") == "2024-03-15 14:30:00"
+
+    def test_julianday_known_constant(self) -> None:
+        # 2000-01-01 00:00:00 UTC = JD 2451544.5 (well-known constant)
+        result = fn("julianday", "2000-01-01")
+        assert isinstance(result, float)
+        assert abs(result - 2451544.5) < 1e-6
+
+    def test_unixepoch_epoch(self) -> None:
+        assert fn("unixepoch", "1970-01-01") == 0
+
+    def test_unixepoch_known_date(self) -> None:
+        # 2000-01-01 00:00:00 UTC = 946684800
+        assert fn("unixepoch", "2000-01-01") == 946684800
+
+    def test_unixepoch_julian_day_input(self) -> None:
+        # Julian Day 2440587.5 = 1970-01-01 UTC
+        result = fn("unixepoch", 2440587.5)
+        assert result == 0
+
+    def test_date_from_unix_epoch_int(self) -> None:
+        # Unix timestamp 0 → 1970-01-01
+        assert fn("date", 0) == "1970-01-01"
+
+    def test_date_from_julian_day_float(self) -> None:
+        # JD 2451544.5 → 2000-01-01
+        assert fn("date", 2451544.5) == "2000-01-01"
+
+    # ------------------------------------------------------------------
+    # Modifiers
+    # ------------------------------------------------------------------
+
+    def test_date_plus_days(self) -> None:
+        assert fn("date", "2024-03-15", "+1 days") == "2024-03-16"
+
+    def test_date_minus_days(self) -> None:
+        assert fn("date", "2024-03-15", "-1 days") == "2024-03-14"
+
+    def test_date_plus_months(self) -> None:
+        assert fn("date", "2024-02-15", "+1 months") == "2024-03-15"
+
+    def test_date_plus_month_leap_year_clamp(self) -> None:
+        # Jan 31 + 1 month → Feb 29 (2024 is a leap year)
+        assert fn("date", "2024-01-31", "+1 months") == "2024-02-29"
+
+    def test_date_plus_month_non_leap_clamp(self) -> None:
+        # Jan 31 + 1 month → Feb 28 (2023 is NOT a leap year)
+        assert fn("date", "2023-01-31", "+1 months") == "2023-02-28"
+
+    def test_date_start_of_month(self) -> None:
+        assert fn("date", "2024-03-15", "start of month") == "2024-03-01"
+
+    def test_date_start_of_year(self) -> None:
+        assert fn("date", "2024-07-04", "start of year") == "2024-01-01"
+
+    def test_datetime_start_of_day(self) -> None:
+        assert fn("datetime", "2024-03-15 14:30:00", "start of day") == "2024-03-15 00:00:00"
+
+    def test_datetime_compound_modifiers(self) -> None:
+        # +1 day then -2 hours: net +22 hours from 2024-03-15 12:00:00
+        result = fn("datetime", "2024-03-15 12:00:00", "+1 days", "-2 hours")
+        assert result == "2024-03-16 10:00:00"
+
+    def test_date_plus_years(self) -> None:
+        assert fn("date", "2020-03-15", "+2 years") == "2022-03-15"
+
+    def test_date_minus_months(self) -> None:
+        assert fn("date", "2024-03-15", "-2 months") == "2024-01-15"
+
+    def test_time_plus_minutes(self) -> None:
+        assert fn("time", "2024-03-15 12:00:00", "+30 minutes") == "12:30:00"
+
+    def test_time_plus_seconds(self) -> None:
+        assert fn("time", "2024-03-15 12:00:00", "+90 seconds") == "12:01:30"
+
+    # ------------------------------------------------------------------
+    # STRFTIME
+    # ------------------------------------------------------------------
+
+    def test_strftime_year_month(self) -> None:
+        assert fn("strftime", "%Y-%m", "2024-03-15") == "2024-03"
+
+    def test_strftime_full_date(self) -> None:
+        assert fn("strftime", "%Y-%m-%d", "2024-03-15") == "2024-03-15"
+
+    def test_strftime_epoch_of_known_date(self) -> None:
+        # 2000-01-01 00:00:00 UTC = 946684800
+        assert fn("strftime", "%s", "2000-01-01") == "946684800"
+
+    def test_strftime_day_of_year(self) -> None:
+        # 2024-01-01 is day 001 of the year
+        assert fn("strftime", "%j", "2024-01-01") == "001"
+        # 2024-12-31 is day 366 (2024 is a leap year)
+        assert fn("strftime", "%j", "2024-12-31") == "366"
+
+    def test_strftime_time_components(self) -> None:
+        assert fn("strftime", "%H:%M:%S", "2024-03-15 14:30:45") == "14:30:45"
+
+    def test_strftime_with_modifier(self) -> None:
+        result = fn("strftime", "%Y-%m-%d", "2024-03-15", "-7 days")
+        assert result == "2024-03-08"
+
+    def test_strftime_percent_literal(self) -> None:
+        assert fn("strftime", "100%%", "2024-03-15") == "100%"
+
+    def test_strftime_fractional_seconds(self) -> None:
+        # %f = SS.SSS; no sub-second input → 00.000
+        result = fn("strftime", "%f", "2024-03-15 14:30:45")
+        assert result == "45.000"

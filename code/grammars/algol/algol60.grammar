@@ -50,7 +50,8 @@ program      = block ;
 # The grammar enforces declaration-before-use at the block level.
 # Blocks can nest: any statement position can hold another block.
 # The statement list is optional — `begin end` is a valid empty block.
-block        = "begin" { declaration SEMICOLON } [ statement { SEMICOLON statement } ] "end" ;
+block        = "begin" { declaration SEMICOLON } { SEMICOLON }
+               [ statement { SEMICOLON [ statement ] } ] "end" ;
 
 # ---------------------------------------------------------------------------
 # Declarations
@@ -166,7 +167,8 @@ cond_stmt    = "if" bool_expr "then" unlabeled_stmt [ "else" statement ] ;
 
 # A compound statement is begin...end with only statements, no declarations.
 # Use a full block when declarations are needed.
-compound_stmt = "begin" statement { SEMICOLON statement } "end" ;
+compound_stmt = "begin" { SEMICOLON }
+                [ statement { SEMICOLON [ statement ] } ] "end" ;
 
 # Assignment. Multiple left-hand sides assign the same value right-to-left.
 #   x := 0          simple assignment
@@ -227,7 +229,8 @@ for_elem     = arith_expr "step" arith_expr "until" arith_expr
 # needs the full unified hierarchy.  Rules used in type-specific contexts
 # (arith_expr for bounds/subscripts, bool_expr for conditionals) are
 # kept as-is.
-expression   = expr_eqv ;
+expression   = "if" bool_expr "then" expression "else" expression
+             | expr_eqv ;
 
 expr_eqv     = expr_impl { "eqv" expr_impl } ;
 expr_impl    = expr_or { "impl" expr_or } ;

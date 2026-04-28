@@ -335,6 +335,18 @@ def test_pipeline_primep_false() -> None:
     assert result == _sym("False")
 
 
+def test_pipeline_is_prime_alias_true() -> None:
+    """is_prime(17) → True (alias for primep)."""
+    result = _eval("is_prime(17)")
+    assert result == _sym("True")
+
+
+def test_pipeline_is_prime_alias_false() -> None:
+    """is_prime(15) → False (alias for primep)."""
+    result = _eval("is_prime(15)")
+    assert result == _sym("False")
+
+
 def test_pipeline_next_prime() -> None:
     """next_prime(10) → 11."""
     result = _eval("next_prime(10)")

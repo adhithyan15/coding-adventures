@@ -160,7 +160,8 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     # Point evaluation — At(expr, Equal(var, val)) (C4)
     "at": AT,
     # Number theory (B3)
-    "primep": IS_PRIME,
+    "primep": IS_PRIME,   # canonical MACSYMA name
+    "is_prime": IS_PRIME,  # common alias used in interactive sessions
     "next_prime": NEXT_PRIME,
     "prev_prime": PREV_PRIME,
     "ifactor": FACTOR_INTEGER,

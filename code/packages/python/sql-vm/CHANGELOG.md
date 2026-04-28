@@ -1,5 +1,53 @@
 # Changelog
 
+## 0.7.0 — 2026-04-27
+
+### Added — Date/time scalar functions + scalar MAX/MIN
+
+- **`DATE(timevalue [, modifier...])`** — returns ISO-8601 date string
+  (`YYYY-MM-DD`).  Accepts `'now'`, ISO-8601 strings, Julian Day floats,
+  and Unix epoch integers as time values.
+
+- **`TIME(timevalue [, modifier...])`** — returns time string (`HH:MM:SS`).
+
+- **`DATETIME(timevalue [, modifier...])`** — returns combined datetime string
+  (`YYYY-MM-DD HH:MM:SS`).
+
+- **`JULIANDAY(timevalue [, modifier...])`** — returns Julian Day Number as
+  float.  `JULIANDAY('2000-01-01')` → `2451544.5` (well-known constant).
+
+- **`UNIXEPOCH(timevalue [, modifier...])`** — returns Unix epoch seconds as
+  integer.  `UNIXEPOCH('1970-01-01')` → `0`.
+
+- **`STRFTIME(format, timevalue [, modifier...])`** — formats a time value
+  using C-style format specifiers.  Supports all standard `%Y`, `%m`, `%d`,
+  `%H`, `%M`, `%S` plus SQLite extensions `%f` (SS.SSS), `%s` (epoch
+  integer), `%J` (Julian Day), `%j` (day of year), `%W` (week number).
+
+- **Modifiers supported** for all six functions:
+  `+N days/hours/minutes/seconds/months/years`,
+  `-N days/…`, `start of day/month/year`, `localtime`, `utc`.
+  Leap-year clamping applied when adding months (`2024-01-31 + 1 month` →
+  `2024-02-29`).
+
+- **`MAX(a, b)`** (scalar form) — returns the greater of two arguments using
+  SQLite type ordering.  NULL is treated as "less than everything":
+  `MAX(1, NULL)` → `1`, `MAX(NULL, NULL)` → `NULL`.
+
+- **`MIN(a, b)`** (scalar form) — returns the lesser of two arguments.
+  `MIN(1, NULL)` → `NULL`, `MIN(NULL, NULL)` → `NULL`.
+
+  The scalar two-argument forms are dispatched via `CallScalar` and do not
+  conflict with the single-argument aggregate forms handled by
+  `InitAgg`/`FinalizeAgg` opcodes.
+
+- **`tests/test_scalar_functions.py`** — 69 new tests in `TestScalarMinMax`
+  and `TestDateTimeFunctions` classes covering: format correctness, NULL
+  propagation, known constants (`JULIANDAY('2000-01-01')` → `2451544.5`,
+  `UNIXEPOCH('1970-01-01')` → `0`), all six modifier types, leap-year
+  clamping, compound modifiers, and `STRFTIME` specifiers including `%f`,
+  `%s`, `%j`.
+
 ## 0.6.0 — 2026-04-23
 
 ### Changed — Phase 9.7: Composite (multi-column) automatic index support (IX-8)

@@ -1,6 +1,35 @@
 # Changelog
 
-## 0.27.0 — 2026-04-27
+## 0.29.0 — 2026-04-27
+
+**REPL quality fixes — lambda beta-reduction and transcendental Taylor.**
+
+Two VM-level bugs fixed, one import alias added in `derivative.py`:
+
+1. **Lambda beta-reduction** (`vm.py`): `map(lambda([z], z^2), [1,2,3])`
+   previously returned unevaluated because the VM's `_eval_apply` only
+   handled named function calls (via `Define` records) and never dispatched
+   when the head was itself an `IRApply(lambda, ...)`.  A new `_apply_lambda`
+   method and a step 4b in `_eval_apply` now detect inline lambdas and perform
+   the parameter substitution, making `Map` + `Select` + direct lambda calls
+   all work correctly.
+
+2. **Transcendental Taylor** (`cas_handlers.py`): `taylor(sin(y), y, 0, 4)`
+   previously returned the expression unevaluated because
+   `cas_limit_series.taylor_polynomial` only handles polynomial inputs.  The
+   handler now falls back to `_taylor_derivative_fallback`, which computes each
+   coefficient `f^(k)(a)/k!` via successive symbolic differentiation (using the
+   existing `_diff` from `derivative.py`) followed by point-substitution.
+   `_symbolic_diff` import added at module level.  Both polynomial and
+   transcendental paths are tested.
+
+3 new lambda tests (`test_map_with_lambda`, `test_lambda_direct_call`,
+`test_lambda_two_params`) and 1 updated Taylor test
+(`test_taylor_transcendental_sin`) added.  Total test count 850, coverage 86 %.
+
+## 0.28.0 — 2026-04-27
+
+**Phase 13 — Hyperbolic functions (sinh, cosh, tanh, asinh, acosh, atanh).**
 
 **Roadmap item A1 — Kronecker polynomial factoring (Phase 2) wired through `cas-factor 0.2.0`.**
 
