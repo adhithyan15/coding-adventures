@@ -25,7 +25,9 @@ statement         = query_stmt | insert_stmt | update_stmt
 # UNION/EXCEPT.  For the educational subset we treat all three as left-
 # associative equals; ANSI-compliant precedence can be added later.
 
-query_stmt        = select_stmt { set_op_clause } ;
+query_stmt        = [ with_clause ] select_stmt { set_op_clause } ;
+with_clause       = "WITH" cte_def { "," cte_def } ;
+cte_def           = NAME "AS" "(" query_stmt ")" ;
 set_op_clause     = ( "UNION" | "INTERSECT" | "EXCEPT" ) [ "ALL" ] select_stmt ;
 
 # ── SELECT ───────────────────────────────────────────────────────────────────

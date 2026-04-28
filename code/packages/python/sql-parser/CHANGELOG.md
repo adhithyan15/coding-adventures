@@ -2,6 +2,18 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.6.0] - 2026-04-27
+
+### Added — Phase 5a: Non-recursive CTEs
+
+- `query_stmt` extended with a leading `Optional(RuleReference('with_clause'))`
+  so `WITH name AS (...) SELECT ...` is now valid wherever a query is accepted.
+- New `with_clause` rule: `"WITH" cte_def { "," cte_def }` — allows one or
+  more comma-separated CTE definitions.
+- New `cte_def` rule: `NAME "AS" "(" query_stmt ")"` — each CTE is a named
+  subquery; the body is itself a full `query_stmt` supporting all SELECT
+  features.
+
 ## [0.5.0] - 2026-04-27
 
 ### Added — Phase 4b: FOREIGN KEY constraints
