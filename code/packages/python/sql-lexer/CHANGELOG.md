@@ -2,6 +2,13 @@
 
 All notable changes to the SQL lexer package will be documented in this file.
 
+## [0.4.0] - 2026-04-27
+
+### Added — Phase 4b: FOREIGN KEY constraints
+
+- `REFERENCES` registered as a SQL keyword so `REFERENCES table(col)` column
+  constraints tokenize as KEYWORD rather than NAME.
+
 ## [0.3.0] - 2026-04-27
 
 ### Added — Phase 4a: CHECK constraints

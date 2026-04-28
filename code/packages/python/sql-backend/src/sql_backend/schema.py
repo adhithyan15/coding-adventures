@@ -99,6 +99,9 @@ class ColumnDef:
     unique: bool = False
     default: ColumnDefault = field(default=NO_DEFAULT)
     check_expr: object = field(default=None, compare=False, hash=False)
+    # (ref_table, ref_col_or_None) — None ref_col means "reference the PK".
+    # Typed as object to avoid circular import with planner types.
+    foreign_key: object = field(default=None, compare=False, hash=False)
 
     def effective_not_null(self) -> bool:
         """PRIMARY KEY implies NOT NULL. Convenience for the constraint enforcer."""

@@ -538,6 +538,7 @@ def _col_def(node: ASTNode, state: _PlaceholderCounter | None = None) -> Backend
     primary_key = False
     unique = False
     check_expression = None
+    foreign_key: tuple[str, str | None] | None = None
     _state = state or _PlaceholderCounter()
     for c in _child_nodes(node, "col_constraint"):
         kw_seq = tuple(
@@ -556,6 +557,16 @@ def _col_def(node: ASTNode, state: _PlaceholderCounter | None = None) -> Backend
             expr_node = _maybe_child(c, "expr")
             if expr_node is not None:
                 check_expression = _expr(expr_node, _state)
+        elif kw_seq[0:1] == ("REFERENCES",):
+            # Collect the NAME tokens: first is ref_table, second (if present) is ref_col.
+            ref_names = [
+                t.value
+                for t in c.children
+                if isinstance(t, Token) and _token_type(t) == "NAME"
+            ]
+            ref_table = ref_names[0] if ref_names else ""
+            ref_col: str | None = ref_names[1] if len(ref_names) > 1 else None
+            foreign_key = (ref_table, ref_col)
         # DEFAULT and NULL left alone; the backend's default is already NULL-OK.
     return BackendColumnDef(
         name=col_name,
@@ -564,6 +575,7 @@ def _col_def(node: ASTNode, state: _PlaceholderCounter | None = None) -> Backend
         primary_key=primary_key,
         unique=unique,
         check_expr=check_expression,
+        foreign_key=foreign_key,
     )
 
 

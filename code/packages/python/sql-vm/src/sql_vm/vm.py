@@ -247,6 +247,12 @@ class _VmState:
     check_registry: dict[str, list[tuple[str, tuple[Instruction, ...]]]] = field(
         default_factory=dict
     )
+    # FOREIGN KEY registries — both populated at CreateTable time.
+    # fk_child: child_table → [(child_col, parent_table, parent_col_or_None)]
+    # fk_parent: parent_table → [(child_table, child_col, parent_col_or_None)]
+    # parent_col=None means "the parent's PRIMARY KEY column".
+    fk_child: dict[str, list[tuple[str, str, str | None]]] = field(default_factory=dict)
+    fk_parent: dict[str, list[tuple[str, str, str | None]]] = field(default_factory=dict)
     # Scan telemetry — populated during execution; used to build QueryEvent.
     # Only the *first* scan per execute() call is recorded (one event per call).
     scan_table: str = ""
@@ -281,6 +287,8 @@ def execute(
     backend: Backend,
     *,
     check_registry: dict[str, list[tuple[str, tuple[Instruction, ...]]]] | None = None,
+    fk_child: dict[str, list[tuple[str, str, str | None]]] | None = None,
+    fk_parent: dict[str, list[tuple[str, str, str | None]]] | None = None,
     event_cb: Callable[[QueryEvent], None] | None = None,
     filtered_columns: list[str] | None = None,
 ) -> QueryResult:
@@ -302,12 +310,20 @@ def execute(
     import time
 
     _t0 = time.perf_counter()
-    # Use the caller-supplied registry if provided so that CHECK constraints
-    # registered by a prior CREATE TABLE statement persist across execute() calls.
+    # Use the caller-supplied registries so constraints registered by a prior
+    # CREATE TABLE statement persist across execute() calls.
     registry: dict[str, list[tuple[str, tuple[Instruction, ...]]]] = (
         check_registry if check_registry is not None else {}
     )
-    state = _VmState(program=program, backend=backend, check_registry=registry)
+    fk_c: dict[str, list[tuple[str, str, str | None]]] = fk_child if fk_child is not None else {}
+    fk_p: dict[str, list[tuple[str, str, str | None]]] = fk_parent if fk_parent is not None else {}
+    state = _VmState(
+        program=program,
+        backend=backend,
+        check_registry=registry,
+        fk_child=fk_c,
+        fk_parent=fk_p,
+    )
     instructions = program.instructions
     n = len(instructions)
     while state.pc < n:
@@ -958,6 +974,7 @@ def _do_insert(ins: InsertRow, st: _VmState) -> None:
     values = st.pop_n(len(ins.columns))
     row = dict(zip(ins.columns, values, strict=True))
     _check_constraints(ins.table, row, st)
+    _check_fk_child(ins.table, row, st)
     try:
         st.backend.insert(ins.table, row)
     except be.BackendError as e:
@@ -971,10 +988,11 @@ def _do_update(ins: UpdateRows, st: _VmState) -> None:
     cursor = st.cursors.get(ins.cursor_id)
     if cursor is None:
         raise InternalError(message=f"update: cursor {ins.cursor_id} not open")
-    # Evaluate CHECK constraints against the post-update row: merge the current
-    # row values with the incoming assignments before writing to the backend.
+    # Evaluate CHECK and FK constraints against the post-update row.
     current = st.current_row.get(ins.cursor_id, {})
-    _check_constraints(ins.table, {**current, **assignments}, st)
+    merged = {**current, **assignments}
+    _check_constraints(ins.table, merged, st)
+    _check_fk_child(ins.table, merged, st)
     try:
         st.backend.update(ins.table, cursor, assignments)
     except be.BackendError as e:
@@ -990,6 +1008,9 @@ def _do_delete(ins: DeleteRows, st: _VmState) -> None:
     cursor = st.cursors.get(ins.cursor_id)
     if cursor is None:
         raise InternalError(message=f"delete: cursor {ins.cursor_id} not open")
+    # Check RESTRICT: reject deletion if any child table references this row.
+    current = st.current_row.get(ins.cursor_id, {})
+    _check_fk_parent(ins.table, current, st)
     try:
         st.backend.delete(ins.table, cursor)
     except be.BackendError as e:
@@ -1009,10 +1030,19 @@ def _do_create_table(ins: CreateTable, st: _VmState) -> None:
         st.backend.create_table(ins.table, col_defs, ins.if_not_exists)
     except be.BackendError as e:
         raise _translate_backend_error(e) from e
-    # Register any CHECK constraints so _do_insert/_do_update can enforce them.
+    # Register CHECK constraints.
     checks = [(c.name, c.check_instrs) for c in ins.columns if c.check_instrs]
     if checks:
         st.check_registry[ins.table] = checks
+    # Register FOREIGN KEY constraints — both child (forward) and parent (reverse).
+    for col in ins.columns:
+        if col.foreign_key is None:
+            continue
+        ref_table, ref_col = col.foreign_key
+        # Forward: child_table → parent lookups on INSERT/UPDATE
+        st.fk_child.setdefault(ins.table, []).append((col.name, ref_table, ref_col))
+        # Reverse: parent_table → restrict on DELETE
+        st.fk_parent.setdefault(ref_table, []).append((ins.table, col.name, ref_col))
     st.result.rows_affected = 0
 
 
@@ -1043,6 +1073,84 @@ def _check_constraints(table: str, row: dict[str, SqlValue], st: _VmState) -> No
                 )
     finally:
         st.current_row.pop(CHECK_CURSOR_ID, None)
+
+
+def _fk_find_pk(table: str, backend: object) -> str:
+    """Return the PRIMARY KEY column name for *table*, falling back to 'id'."""
+    try:
+        cols = backend.columns(table)  # type: ignore[union-attr]
+    except Exception:  # noqa: BLE001
+        return "id"
+    for c in cols:
+        if getattr(c, "primary_key", False):
+            return c.name
+    return "id"
+
+
+def _fk_row_exists(table: str, col: str, value: object, backend: object) -> bool:
+    """Return True if any row in *table* has *col* == *value*."""
+    cur = backend.scan(table)  # type: ignore[union-attr]
+    try:
+        while True:
+            row = cur.next()
+            if row is None:
+                return False
+            if row.get(col) == value:
+                return True
+    finally:
+        cur.close()
+
+
+def _check_fk_child(table: str, row: dict, st: _VmState) -> None:
+    """Verify every FOREIGN KEY on the child *table* is satisfied by *row*.
+
+    NULL FK values pass unconditionally (SQL standard: unknown reference is
+    not an error).  Non-NULL values must have a matching row in the parent.
+    """
+    fks = st.fk_child.get(table)
+    if not fks:
+        return
+    for child_col, parent_table, parent_col in fks:
+        value = row.get(child_col)
+        if value is None:
+            continue
+        ref_col = parent_col if parent_col is not None else _fk_find_pk(parent_table, st.backend)
+        if not _fk_row_exists(parent_table, ref_col, value, st.backend):
+            raise ConstraintViolation(
+                table=table,
+                column=child_col,
+                message=(
+                    f"FOREIGN KEY constraint failed: "
+                    f"{table}.{child_col} → {parent_table}.{ref_col} = {value!r}"
+                ),
+            )
+
+
+def _check_fk_parent(table: str, row: dict, st: _VmState) -> None:
+    """Enforce RESTRICT on deletion: reject if any child row references *row*.
+
+    Only the columns registered in ``fk_parent`` are checked.  NULL values in
+    the parent's referenced column cannot be referenced by any child (because
+    child NULL passes unconditionally in :func:`_check_fk_child`), so we skip.
+    """
+    refs = st.fk_parent.get(table)
+    if not refs:
+        return
+    for child_table, child_col, parent_col in refs:
+        ref_col = parent_col if parent_col is not None else _fk_find_pk(table, st.backend)
+        value = row.get(ref_col)
+        if value is None:
+            continue
+        if _fk_row_exists(child_table, child_col, value, st.backend):
+            raise ConstraintViolation(
+                table=table,
+                column=ref_col,
+                message=(
+                    f"FOREIGN KEY constraint failed: "
+                    f"cannot delete {table}.{ref_col} = {value!r}, "
+                    f"referenced by {child_table}.{child_col}"
+                ),
+            )
 
 
 def _do_drop_table(ins: DropTable, st: _VmState) -> None:
