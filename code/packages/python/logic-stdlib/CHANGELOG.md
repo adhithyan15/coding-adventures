@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.7.0] - 2026-04-28
+
+### Added
+
+- finite `nth0o` and `nth1o` relations for indexing proper lists
+- pytest coverage for zero-based lookup, one-based lookup, index enumeration,
+  out-of-range failure, and improper-list rejection
+
 ## [0.6.0] - 2026-04-28
 
 ### Added

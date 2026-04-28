@@ -16,8 +16,8 @@
 - Run Prolog `->/2` and `(If -> Then ; Else)` control constructs through the
   VM path with committed condition semantics.
 - Run common Prolog list predicates, including finite `length/2`, `sort/2`,
-  and `msort/2`, through the VM path by adapting them to `logic-stdlib`
-  relations.
+  `msort/2`, `nth0/3`, and `nth1/3`, through the VM path by adapting them to
+  `logic-stdlib` relations.
 
 ## 0.1.0
 

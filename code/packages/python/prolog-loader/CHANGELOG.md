@@ -11,7 +11,7 @@
   executable logic builtin layer
 - adapt common Prolog list predicates (`member/2`, `append/3`, `select/3`,
   `permutation/2`, `reverse/2`, `last/2`, `length/2`, `sort/2`, `msort/2`, and
-  `is_list/1`) into the relational standard library
+  `nth0/3`, `nth1/3`, and `is_list/1`) into the relational standard library
 - expand builtin adaptation for truth/failure/cut, arithmetic, collections,
   `forall/2`, and `copy_term/2`
 
