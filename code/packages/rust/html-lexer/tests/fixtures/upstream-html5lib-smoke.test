@@ -105,6 +105,16 @@
       ]
     },
     {
+      "description": "script data escaped matching end tag emits end tag token",
+      "initialStates": ["Script data escaped state"],
+      "lastStartTag": "script",
+      "input": "if (a < b) </script>",
+      "output": [
+        ["Character", "if (a < b) "],
+        ["EndTag", "script"]
+      ]
+    },
+    {
       "description": "data state named character references",
       "input": "Fish &amp; &lt;b&gt; &quot;quote&quot; &apos;ok&apos;",
       "output": [

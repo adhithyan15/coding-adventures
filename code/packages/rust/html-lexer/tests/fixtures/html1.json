@@ -331,6 +331,18 @@
       ],
       "initial_state": "Script data state",
       "last_start_tag": "script"
+    },
+    {
+      "id": "html-script-data-escaped-state-end-tag",
+      "description": "Seeded script data escaped context emits the matching script end tag",
+      "input": "if (a < b) </script>",
+      "tokens": [
+        "Text(data=if (a < b) )",
+        "EndTag(name=script)",
+        "EOF"
+      ],
+      "initial_state": "Script data escaped state",
+      "last_start_tag": "script"
     }
   ]
 }
