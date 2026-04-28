@@ -333,3 +333,166 @@ def test_unknown_node_type_raises() -> None:
 def test_unsupported_style_raises() -> None:
     with pytest.raises(ValueError):
         pretty(IRInteger(1), D_MAC, style="2d")
+
+
+# ---- MACSYMA-specific function-name aliases --------------------------------
+#
+# These tests verify that IR heads which have MACSYMA-specific surface
+# spellings (different from the generic lowercase defaults) are rendered
+# correctly by MacsymaDialect.  Each test builds a minimal unevaluated
+# IRApply and checks the printed surface form.
+
+
+def test_alias_ratsimp() -> None:
+    """RatSimplify head → ``ratsimp``."""
+    x = IRSymbol("x")
+    head = IRSymbol("RatSimplify")
+    assert fmt(IRApply(head, (x,))) == "ratsimp(x)"
+
+
+def test_alias_partfrac() -> None:
+    """Apart head → ``partfrac`` in MACSYMA (not ``apart``)."""
+    x = IRSymbol("x")
+    head = IRSymbol("Apart")
+    assert fmt(IRApply(head, (x, x))) == "partfrac(x, x)"
+
+
+def test_alias_trigsimp() -> None:
+    """TrigSimplify head → ``trigsimp``."""
+    x = IRSymbol("x")
+    head = IRSymbol("TrigSimplify")
+    assert fmt(IRApply(head, (x,))) == "trigsimp(x)"
+
+
+def test_alias_trigexpand() -> None:
+    """TrigExpand head → ``trigexpand``."""
+    x = IRSymbol("x")
+    head = IRSymbol("TrigExpand")
+    assert fmt(IRApply(head, (x,))) == "trigexpand(x)"
+
+
+def test_alias_trigreduce() -> None:
+    """TrigReduce head → ``trigreduce``."""
+    x = IRSymbol("x")
+    head = IRSymbol("TrigReduce")
+    assert fmt(IRApply(head, (x,))) == "trigreduce(x)"
+
+
+def test_alias_realpart() -> None:
+    """Re head → ``realpart`` in MACSYMA (not ``re``)."""
+    x = IRSymbol("x")
+    head = IRSymbol("Re")
+    assert fmt(IRApply(head, (x,))) == "realpart(x)"
+
+
+def test_alias_imagpart() -> None:
+    """Im head → ``imagpart`` in MACSYMA (not ``im``)."""
+    x = IRSymbol("x")
+    head = IRSymbol("Im")
+    assert fmt(IRApply(head, (x,))) == "imagpart(x)"
+
+
+def test_alias_carg() -> None:
+    """Arg head → ``carg`` in MACSYMA (not ``arg``)."""
+    x = IRSymbol("x")
+    head = IRSymbol("Arg")
+    assert fmt(IRApply(head, (x,))) == "carg(x)"
+
+
+def test_alias_primep() -> None:
+    """IsPrime head → ``primep`` in MACSYMA."""
+    head = IRSymbol("IsPrime")
+    assert fmt(IRApply(head, (IRInteger(7),))) == "primep(7)"
+
+
+def test_alias_next_prime() -> None:
+    """NextPrime head → ``next_prime`` in MACSYMA."""
+    head = IRSymbol("NextPrime")
+    assert fmt(IRApply(head, (IRInteger(7),))) == "next_prime(7)"
+
+
+def test_alias_prev_prime() -> None:
+    """PrevPrime head → ``prev_prime`` in MACSYMA."""
+    head = IRSymbol("PrevPrime")
+    assert fmt(IRApply(head, (IRInteger(11),))) == "prev_prime(11)"
+
+
+def test_alias_ifactor() -> None:
+    """FactorInteger head → ``ifactor`` in MACSYMA."""
+    head = IRSymbol("FactorInteger")
+    assert fmt(IRApply(head, (IRInteger(12),))) == "ifactor(12)"
+
+
+def test_alias_moebius() -> None:
+    """MoebiusMu head → ``moebius`` in MACSYMA."""
+    head = IRSymbol("MoebiusMu")
+    assert fmt(IRApply(head, (IRInteger(6),))) == "moebius(6)"
+
+
+def test_alias_chinese() -> None:
+    """ChineseRemainder head → ``chinese`` in MACSYMA."""
+    head = IRSymbol("ChineseRemainder")
+    a, b = IRInteger(2), IRInteger(3)
+    assert fmt(IRApply(head, (a, b))) == "chinese(2, 3)"
+
+
+def test_alias_numdigits() -> None:
+    """IntegerLength head → ``numdigits`` in MACSYMA."""
+    head = IRSymbol("IntegerLength")
+    assert fmt(IRApply(head, (IRInteger(1000),))) == "numdigits(1000)"
+
+
+def test_alias_sublist() -> None:
+    """Select head → ``sublist`` in MACSYMA (not ``select``)."""
+    head = IRSymbol("Select")
+    f = IRSymbol("evenp")
+    lst = IRApply(IRSymbol("List"), (IRInteger(1), IRInteger(2)))
+    assert fmt(IRApply(head, (lst, f))) == "sublist([1, 2], evenp)"
+
+
+def test_alias_invert() -> None:
+    """Inverse head → ``invert`` in MACSYMA (not ``inverse``)."""
+    head = IRSymbol("Inverse")
+    m = IRSymbol("M")
+    assert fmt(IRApply(head, (m,))) == "invert(M)"
+
+
+def test_alias_cbrt() -> None:
+    """Cbrt head → ``cbrt`` (same in all dialects; present in default table)."""
+    head = IRSymbol("Cbrt")
+    assert fmt(IRApply(head, (IRInteger(2),))) == "cbrt(2)"
+
+
+def test_alias_conjugate() -> None:
+    """Conjugate head → ``conjugate``."""
+    x = IRSymbol("x")
+    head = IRSymbol("Conjugate")
+    assert fmt(IRApply(head, (x,))) == "conjugate(x)"
+
+
+def test_alias_rectform() -> None:
+    """RectForm head → ``rectform``."""
+    x = IRSymbol("x")
+    head = IRSymbol("RectForm")
+    assert fmt(IRApply(head, (x,))) == "rectform(x)"
+
+
+def test_alias_polarform() -> None:
+    """PolarForm head → ``polarform``."""
+    x = IRSymbol("x")
+    head = IRSymbol("PolarForm")
+    assert fmt(IRApply(head, (x,))) == "polarform(x)"
+
+
+def test_alias_determinant() -> None:
+    """Determinant head → ``determinant``."""
+    m = IRSymbol("M")
+    head = IRSymbol("Determinant")
+    assert fmt(IRApply(head, (m,))) == "determinant(M)"
+
+
+def test_alias_transpose() -> None:
+    """Transpose head → ``transpose``."""
+    m = IRSymbol("M")
+    head = IRSymbol("Transpose")
+    assert fmt(IRApply(head, (m,))) == "transpose(M)"

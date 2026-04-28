@@ -1461,3 +1461,111 @@ def test_apart_non_symbol_var_passthrough() -> None:
     inner = IRApply(DIV, (IRInteger(1), IRApply(ADD, (x, IRInteger(1)))))
     expr = IRApply(_APART, (inner, IRInteger(3)))
     assert vm.eval(expr) == expr
+
+
+# ===========================================================================
+# Section 15: Cbrt — cube-root handler
+# ===========================================================================
+#
+# Cbrt(n) should:
+#   - Return an exact integer when n is a perfect cube (including negatives).
+#   - Return an exact rational when num and denom are both perfect cubes.
+#   - Return an IRFloat for float inputs (computed as n^(1/3)).
+#   - Leave the node unevaluated when the argument is symbolic or when no
+#     exact integer cube-root exists.
+
+_CBRT = IRSymbol("Cbrt")
+
+
+def test_cbrt_perfect_cube_positive() -> None:
+    """Cbrt(8) → 2."""
+    vm, _ = make_vm()
+    assert vm.eval(IRApply(_CBRT, (IRInteger(8),))) == IRInteger(2)
+
+
+def test_cbrt_perfect_cube_27() -> None:
+    """Cbrt(27) → 3."""
+    vm, _ = make_vm()
+    assert vm.eval(IRApply(_CBRT, (IRInteger(27),))) == IRInteger(3)
+
+
+def test_cbrt_perfect_cube_1() -> None:
+    """Cbrt(1) → 1."""
+    vm, _ = make_vm()
+    assert vm.eval(IRApply(_CBRT, (IRInteger(1),))) == IRInteger(1)
+
+
+def test_cbrt_zero() -> None:
+    """Cbrt(0) → 0."""
+    vm, _ = make_vm()
+    assert vm.eval(IRApply(_CBRT, (IRInteger(0),))) == IRInteger(0)
+
+
+def test_cbrt_negative_cube() -> None:
+    """Cbrt(-27) → -3 (real cube root of a negative perfect cube)."""
+    vm, _ = make_vm()
+    assert vm.eval(IRApply(_CBRT, (IRInteger(-27),))) == IRInteger(-3)
+
+
+def test_cbrt_negative_8() -> None:
+    """Cbrt(-8) → -2."""
+    vm, _ = make_vm()
+    assert vm.eval(IRApply(_CBRT, (IRInteger(-8),))) == IRInteger(-2)
+
+
+def test_cbrt_rational_both_perfect() -> None:
+    """Cbrt(8/27) → 2/3 (both numerator and denominator are perfect cubes)."""
+    vm, _ = make_vm()
+    result = vm.eval(IRApply(_CBRT, (IRRational(8, 27),)))
+    assert result == IRRational(2, 3)
+
+
+def test_cbrt_rational_negative_num() -> None:
+    """Cbrt(-8/27) → -2/3."""
+    vm, _ = make_vm()
+    result = vm.eval(IRApply(_CBRT, (IRRational(-8, 27),)))
+    assert result == IRRational(-2, 3)
+
+
+def test_cbrt_rational_imperfect_passthrough() -> None:
+    """Cbrt(1/2) — denominator 2 is not a perfect cube → unevaluated."""
+    vm, _ = make_vm()
+    expr = IRApply(_CBRT, (IRRational(1, 2),))
+    assert vm.eval(expr) == expr
+
+
+def test_cbrt_float() -> None:
+    """Cbrt(8.0) → IRFloat close to 2.0."""
+    vm, _ = make_vm()
+    result = vm.eval(IRApply(_CBRT, (IRFloat(8.0),)))
+    assert isinstance(result, IRFloat)
+    assert abs(result.value - 2.0) < 1e-10
+
+
+def test_cbrt_float_negative() -> None:
+    """Cbrt(-27.0) → IRFloat close to -3.0 (real cube root)."""
+    vm, _ = make_vm()
+    result = vm.eval(IRApply(_CBRT, (IRFloat(-27.0),)))
+    assert isinstance(result, IRFloat)
+    assert abs(result.value - (-3.0)) < 1e-10
+
+
+def test_cbrt_imperfect_integer_passthrough() -> None:
+    """Cbrt(2) — not a perfect cube → unevaluated (stays symbolic)."""
+    vm, _ = make_vm()
+    expr = IRApply(_CBRT, (IRInteger(2),))
+    assert vm.eval(expr) == expr
+
+
+def test_cbrt_imperfect_integer_10_passthrough() -> None:
+    """Cbrt(10) — not a perfect cube → unevaluated."""
+    vm, _ = make_vm()
+    expr = IRApply(_CBRT, (IRInteger(10),))
+    assert vm.eval(expr) == expr
+
+
+def test_cbrt_symbolic_passthrough() -> None:
+    """Cbrt(x) — symbolic argument → unevaluated."""
+    vm, _ = make_vm()
+    expr = IRApply(_CBRT, (x,))
+    assert vm.eval(expr) == expr

@@ -1299,6 +1299,85 @@ def abs_handler(vm: VM, expr: IRApply) -> IRNode:
     return _numeric_unary(expr, abs)
 
 
+def cbrt_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Cbrt(x)`` → exact or numeric cube root.
+
+    Simplification rules
+    --------------------
+    1. **Perfect-cube integers**: ``Cbrt(8)`` → ``2``, ``Cbrt(-27)`` → ``-3``.
+       We test |n|^(1/3) rounded to the nearest integer and verify by
+       cubing.  This preserves exact arithmetic when possible.
+
+    2. **Exact rationals with perfect-cube numerator *and* denominator**:
+       ``Cbrt(8/27)`` → ``2/3``.
+
+    3. **Float inputs**: ``Cbrt(2.0)`` → the floating-point cube root via
+       ``x**(1/3)`` with correct sign handling for negative values.
+
+    4. **Everything else** (symbolic, irrational integers, rational
+       non-cubes): left unevaluated so the caller can display
+       ``Cbrt(2)`` instead of an approximation.
+
+    This handler is primarily useful for the output of Cardano's cubic
+    formula in :mod:`cas_solve.cubic`, which emits ``Cbrt(discriminant)``
+    when the discriminant is not a perfect cube.
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = expr.args[0]
+    n = to_number(arg)
+    if n is None:
+        return expr  # symbolic — leave unevaluated
+
+    # ---- float path --------------------------------------------------------
+    if isinstance(n, float):
+        # math.cbrt is only available in Python 3.11+; use **1/3 with sign.
+        if n >= 0:
+            return from_number(n ** (1.0 / 3.0))
+        return from_number(-((-n) ** (1.0 / 3.0)))
+
+    # ---- exact rational path -----------------------------------------------
+    # n is a Fraction at this point (to_number never returns bare int/float).
+    assert isinstance(n, Fraction)
+    p, q = n.numerator, n.denominator
+    # Check if both numerator and denominator are perfect cubes.
+    cp = _integer_cbrt(p)
+    cq = _integer_cbrt(q)
+    if cp is not None and cq is not None:
+        result = Fraction(cp, cq)
+        return from_number(result)
+
+    # Non-exact — leave unevaluated (don't return a float approximation).
+    return expr
+
+
+def _integer_cbrt(n: int) -> int | None:
+    """Return the integer cube root of ``n`` if ``n`` is a perfect cube.
+
+    Works for both positive and negative integers.  Returns ``None`` if
+    ``n`` is not a perfect cube.
+
+    Examples::
+
+        _integer_cbrt(27)  → 3
+        _integer_cbrt(-8)  → -2
+        _integer_cbrt(1)   → 1
+        _integer_cbrt(0)   → 0
+        _integer_cbrt(2)   → None
+    """
+    if n == 0:
+        return 0
+    sign = 1 if n > 0 else -1
+    m = abs(n)
+    # Integer cube root via Newton's method on integers.
+    r = round(m ** (1.0 / 3.0))
+    # Check r-1, r, r+1 to handle floating-point rounding.
+    for candidate in (r - 1, r, r + 1):
+        if candidate >= 0 and candidate**3 == m:
+            return sign * candidate
+    return None
+
+
 def floor_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Floor(x)`` → greatest integer ≤ x."""
     return _numeric_unary(expr, lambda n: Fraction(math.floor(n)))
@@ -1578,6 +1657,7 @@ def build_cas_handler_table() -> dict[str, Handler]:
         "Taylor": taylor_handler,
         # --- numeric/arithmetic ---------------------------------------------
         "Abs": abs_handler,
+        "Cbrt": cbrt_handler,
         "Floor": floor_handler,
         "Ceiling": ceiling_handler,
         "Mod": mod_handler,

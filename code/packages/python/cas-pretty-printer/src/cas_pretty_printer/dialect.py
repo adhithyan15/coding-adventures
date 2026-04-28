@@ -121,13 +121,20 @@ _DEFAULT_UNARY: dict[str, str] = {
 
 # Function-name aliasing — IR head name → surface name. Most dialects
 # use lowercase versions of the IR heads; Mathematica is one exception.
+#
+# Every CAS head that may appear in an un-evaluated or partially-evaluated
+# IR tree should have an entry here so that the pretty-printer produces a
+# round-trippable surface spelling.  Dialect subclasses can override
+# individual entries (e.g. MACSYMA uses ``realpart`` instead of ``re``).
 _DEFAULT_FUNCTION_NAMES: dict[str, str] = {
+    # ---- elementary functions -----------------------------------------------
     "Sin": "sin",
     "Cos": "cos",
     "Tan": "tan",
     "Exp": "exp",
     "Log": "log",
     "Sqrt": "sqrt",
+    "Cbrt": "cbrt",          # cube root — Cbrt(8) = 2
     "Abs": "abs",
     "Asin": "asin",
     "Acos": "acos",
@@ -138,20 +145,74 @@ _DEFAULT_FUNCTION_NAMES: dict[str, str] = {
     "Asinh": "asinh",
     "Acosh": "acosh",
     "Atanh": "atanh",
+    # ---- calculus / algebra -------------------------------------------------
     "D": "diff",
     "Integrate": "integrate",
     "Simplify": "simplify",
     "Expand": "expand",
     "Factor": "factor",
+    "Collect": "collect",
+    "Together": "together",
+    "RatSimplify": "ratsimp",
+    "Apart": "apart",
     "Subst": "subst",
     "Solve": "solve",
+    "NSolve": "nsolve",
     "Limit": "limit",
     "Taylor": "taylor",
+    # ---- trig simplification ------------------------------------------------
+    "TrigSimplify": "trigsimp",
+    "TrigExpand": "trigexpand",
+    "TrigReduce": "trigreduce",
+    # ---- list operations ----------------------------------------------------
     "Length": "length",
     "First": "first",
     "Rest": "rest",
+    "Last": "last",
+    "Append": "append",
+    "Reverse": "reverse",
+    "Range": "range",
     "Map": "map",
     "Apply": "apply",
+    "Select": "select",
+    "Sort": "sort",
+    "Part": "part",
+    "Flatten": "flatten",
+    "Join": "join",
+    "MakeList": "makelist",
+    # ---- matrix operations --------------------------------------------------
+    "Matrix": "matrix",
+    "Transpose": "transpose",
+    "Determinant": "determinant",
+    "Inverse": "inverse",
+    # ---- arithmetic / numeric helpers ---------------------------------------
+    "Gcd": "gcd",
+    "Lcm": "lcm",
+    "Mod": "mod",
+    "Floor": "floor",
+    "Ceiling": "ceiling",
+    # ---- equation helpers ---------------------------------------------------
+    "Lhs": "lhs",
+    "Rhs": "rhs",
+    "At": "at",
+    # ---- complex number operations ------------------------------------------
+    "Re": "re",
+    "Im": "im",
+    "Conjugate": "conjugate",
+    "Arg": "arg",
+    "RectForm": "rectform",
+    "PolarForm": "polarform",
+    # ---- number theory ------------------------------------------------------
+    "IsPrime": "isprime",
+    "NextPrime": "nextprime",
+    "PrevPrime": "prevprime",
+    "FactorInteger": "factorinteger",
+    "Divisors": "divisors",
+    "Totient": "totient",
+    "MoebiusMu": "moebiusmu",
+    "JacobiSymbol": "jacobi",
+    "ChineseRemainder": "chineseremainder",
+    "IntegerLength": "integerlength",
 }
 
 
