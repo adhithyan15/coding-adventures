@@ -355,6 +355,19 @@
       ],
       "initial_state": "Script data double escaped state",
       "last_start_tag": "script"
+    },
+    {
+      "id": "html-cdata-section-state-literalizes-markup",
+      "description": "Seeded CDATA section context treats markup and character references as literal text until ]]>, then returns to data",
+      "input": "<not-markup> &amp; ]]><p>x</p>",
+      "tokens": [
+        "Text(data=<not-markup> &amp; )",
+        "StartTag(name=p, attributes=[], self_closing=false)",
+        "Text(data=x)",
+        "EndTag(name=p)",
+        "EOF"
+      ],
+      "initial_state": "CDATA section state"
     }
   ]
 }

@@ -25,6 +25,10 @@ fn html1_authoring_artifact_parses_as_mosaic_era_floor() {
     assert!(definition
         .states
         .iter()
+        .any(|state| state.id == "cdata_section"));
+    assert!(definition
+        .states
+        .iter()
         .any(|state| state.id == "script_data"));
     assert!(definition
         .states
@@ -91,6 +95,34 @@ fn html1_authoring_supports_seeded_plaintext_state() {
         lexer.drain_tokens(),
         vec![
             Token::Text("<p>literal &amp; text</p>".to_string()),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn html1_authoring_supports_seeded_cdata_section_state() {
+    let definition = from_states_toml(HTML1_LEXER_TOML).unwrap();
+    let machine = EffectfulStateMachine::from_definition(&definition).unwrap();
+    let mut lexer = HtmlLexer::new(machine);
+
+    lexer.set_initial_state("cdata_section").unwrap();
+    lexer.push("<not-markup> &amp; ]]><p>x</p>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("<not-markup> &amp; ".to_string()),
+            Token::StartTag {
+                name: "p".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("x".to_string()),
+            Token::EndTag {
+                name: "p".to_string()
+            },
             Token::Eof,
         ]
     );

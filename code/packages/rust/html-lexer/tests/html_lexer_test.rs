@@ -334,6 +334,46 @@ fn default_html_lexer_supports_seeded_plaintext_state() {
 }
 
 #[test]
+fn default_html_lexer_supports_seeded_cdata_section_state() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("cdata_section").unwrap();
+
+    lexer.push("a <b> &amp; ]]><p>x</p>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("a <b> &amp; ".to_string()),
+            Token::StartTag {
+                name: "p".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("x".to_string()),
+            Token::EndTag {
+                name: "p".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_keeps_unclosed_cdata_brackets_as_text_at_eof() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("cdata_section").unwrap();
+
+    lexer.push("a]]").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![Token::Text("a]]".to_string()), Token::Eof]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_named_character_references_in_data() {
     let tokens = lex_html("Fish &amp; &lt;b&gt; &quot;quote&quot; &apos;ok&apos;").unwrap();
 

@@ -17,6 +17,8 @@ alphabet = [
   "=",
   "!",
   "-",
+  "[",
+  "]",
   "\"",
   "'",
   " ",
@@ -120,6 +122,16 @@ external_entry = true
 [[states]]
 id = "plaintext"
 external_entry = true
+
+[[states]]
+id = "cdata_section"
+external_entry = true
+
+[[states]]
+id = "cdata_section_bracket"
+
+[[states]]
+id = "cdata_section_end"
 
 [[states]]
 id = "script_data"
@@ -574,6 +586,68 @@ from = "plaintext"
 matcher = { anything = true }
 to = "plaintext"
 actions = ["append_text(current)"]
+
+[[transitions]]
+from = "cdata_section"
+matcher = { literal = "]" }
+to = "cdata_section_bracket"
+
+[[transitions]]
+from = "cdata_section"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "cdata_section"
+matcher = { anything = true }
+to = "cdata_section"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "cdata_section_bracket"
+matcher = { literal = "]" }
+to = "cdata_section_end"
+
+[[transitions]]
+from = "cdata_section_bracket"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_text(])", "flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "cdata_section_bracket"
+matcher = { anything = true }
+to = "cdata_section"
+consume = false
+actions = ["append_text(])"]
+
+[[transitions]]
+from = "cdata_section_end"
+matcher = { literal = ">" }
+to = "data"
+
+[[transitions]]
+from = "cdata_section_end"
+matcher = { literal = "]" }
+to = "cdata_section_end"
+actions = ["append_text(])"]
+
+[[transitions]]
+from = "cdata_section_end"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_text(]])", "flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "cdata_section_end"
+matcher = { anything = true }
+to = "cdata_section"
+consume = false
+actions = ["append_text(]])"]
 
 [[transitions]]
 from = "script_data"
