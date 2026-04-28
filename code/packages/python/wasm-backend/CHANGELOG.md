@@ -3,6 +3,52 @@
 All notable changes to this package will be documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.1.1] — 2026-04-27
+
+### Added
+
+- **`TestJITTypeInference` test class (4 tests)** — demonstrates the full JIT
+  type-inference loop for untyped Tetrad programs:
+  - `test_untyped_helper_compiled_after_100_calls`: an untyped `sum_pair(a,b)`
+    function is called 100× in a `while` loop inside `main()`.  After one
+    `execute_with_jit`, `_promote_hot_functions()` sees the 100-call count
+    (≥ UNTYPED threshold), trusts the profiler's `u8` observations (≥
+    `min_observations=5`), specialises to `add_u8` CIR, and compiles to WASM.
+    Cross-validates that `sum_pair` is compiled and the result is correct
+    (sum 0…99 = 4950 → 86 mod 256).
+  - `test_below_threshold_not_compiled`: 50 iterations → 50 calls → below
+    threshold (100) → no JIT compilation.  Verifies the gate works correctly.
+  - `test_jit_result_matches_interpreter`: confirms the Phase 2 interpreter
+    result equals `TetradRuntime.run()` (pure interpreter), and verifies the
+    post-compilation CIR contains `add_u8` (type inference succeeded).
+    Documents the architectural limitation: subroutine JIT handlers cannot
+    receive arguments in the current `param_count=0` model.
+  - `test_complex_multi_helper_program`: three-function call graph.  Leaf
+    functions (`double`, `add`) compile to WASM; `compute` (which calls both)
+    does not — WASMBackend creates standalone single-function modules and
+    cannot link cross-function `IrOp.CALL` references.  Verifies `main`
+    result matches the interpreter.
+
+### Changed
+
+- Test count increased from 53 → 57; coverage unchanged at 94%.
+
+### Implementation notes
+
+- **TETRAD_OPCODE_EXTENSIONS required for untyped programs**: tests that use
+  `JITCore` with untyped Tetrad programs MUST create the VM via
+  `TetradRuntime()._make_vm()` (not bare `VMCore(opcodes={})`).  The Tetrad
+  IIR translator emits `tetrad.move` instructions (register-to-register copies)
+  that have no handler in the bare dispatch table.  TETRAD_OPCODE_EXTENSIONS
+  registers this handler.
+
+- **Standalone WASM module limit**: `WASMBackend.compile()` wraps the CIR in
+  a single-function WASM module.  Functions that contain `call` CIR opcodes
+  (which LANG21 lowers to `IrOp.CALL`) cannot be compiled — the WASM linker
+  has no other function in the module to call.  This limits JIT compilation
+  to *leaf functions* (pure arithmetic, no sub-calls).  A future extension
+  would compile the entire call graph into a multi-function WASM module.
+
 ## [0.1.0] — 2026-04-27
 
 ### Added

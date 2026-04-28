@@ -754,3 +754,406 @@ class TestRegisterFixup:
             CIRInstr("ret_i32", None, ["result"], "i32"),
         ]
         assert _compile_and_run(cir) == 42
+
+
+# ============================================================================
+# Section 6: JIT type inference over many interpreter iterations
+# ============================================================================
+#
+# The three-tier JIT threshold system
+# ------------------------------------
+# JITCore assigns each function a compilation threshold based on how typed
+# it is at compile time:
+#
+#   FunctionTypeStatus.FULLY_TYPED      → threshold = 0   (eager, Phase 1)
+#   FunctionTypeStatus.PARTIALLY_TYPED  → threshold = 10
+#   FunctionTypeStatus.UNTYPED          → threshold = 100
+#
+# An UNTYPED function (no type annotations at all) must be called at least
+# 100 times via the interpreter before JITCore trusts the profiler's
+# observed types and compiles it to the target backend.
+#
+# The ``min_observations`` parameter adds a second gate: for the JIT to
+# trust that a feedback slot has type T, that slot must have been observed
+# at least ``min_observations`` times with type T.  The default is 5.
+#
+# Key implementation detail — TETRAD_OPCODE_EXTENSIONS
+# -----------------------------------------------------
+# The Tetrad IIR translator emits a Tetrad-specific opcode, ``tetrad.move``,
+# as a register-to-register copy (used in the IIR translation layer, not
+# the CIR specialisation layer).  The bare ``VMCore`` dispatch table has no
+# handler for it.  ``TetradRuntime._make_vm()`` configures the VM with
+# ``TETRAD_OPCODE_EXTENSIONS``, which registers the handler.  All tests in
+# this class MUST use ``rt._make_vm()`` — using raw ``VMCore(opcodes={})``
+# raises ``UnknownOpcodeError`` the first time the interpreter encounters
+# ``tetrad.move``.
+# ============================================================================
+
+
+class TestJITTypeInference:
+    """JIT type inference for untyped Tetrad programs via repeated observation.
+
+    The central demo: an untyped helper function ``sum_pair(a, b)`` is called
+    100 times in a tight loop inside ``main()``.  After the first
+    ``execute_with_jit`` call:
+
+    1.  The interpreter runs ``main()`` end-to-end via the TETRAD-extended VM.
+    2.  ``sum_pair`` accumulates 100 call-site observations in the profiler.
+    3.  After the run, ``_promote_hot_functions()`` sees ``sum_pair`` at count
+        100 (≥ ``threshold_untyped=100``).
+    4.  Each feedback slot has been seen 100 times with type ``u8``
+        (≥ ``min_observations=5``) → types are trusted.
+    5.  JITCore specialises ``sum_pair`` to ``add_u8`` CIR, lowers through
+        LANG21, and compiles to a WASM binary.
+    6.  Subsequent calls to ``sum_pair`` fire the WASM JIT handler instead
+        of the interpreter.
+
+    Contrast with ``FULLY_TYPED`` functions (e.g. ``fn main() -> u8 { ... }``),
+    which are compiled eagerly in Phase 1 before any interpreted call — no
+    interpreter warmup needed at all.
+    """
+
+    def _make_jit(
+        self,
+        *,
+        threshold_untyped: int = 100,
+        min_observations: int = 5,
+    ) -> tuple:
+        """Create a Tetrad-extended VM and JITCore with WASMBackend.
+
+        Returns ``(rt, jit)`` where ``rt`` is the ``TetradRuntime`` instance
+        (kept alive so the VM stays configured) and ``jit`` is the
+        ``JITCore``.
+
+        Using ``rt._make_vm()`` instead of bare ``VMCore()`` is *required* so
+        that the interpreter has handlers for the ``tetrad.move`` IIR opcode.
+        """
+        from jit_core import JITCore
+        from tetrad_runtime import TetradRuntime
+
+        rt = TetradRuntime()
+        vm = rt._make_vm()
+        jit = JITCore(
+            vm,
+            WASMBackend(),
+            threshold_untyped=threshold_untyped,
+            min_observations=min_observations,
+        )
+        return rt, jit
+
+    def test_untyped_helper_compiled_after_100_calls(self) -> None:
+        """An untyped helper called 100× in a loop gets JIT-compiled to WASM.
+
+        Program
+        -------
+        ::
+
+            fn sum_pair(a, b) {      # UNTYPED — no type annotations at all
+                return a + b;
+            }
+
+            fn main() {              # UNTYPED — no annotations
+                let acc = 0;
+                let i = 0;
+                while i < 100 {
+                    acc = sum_pair(acc, i);
+                    i = i + 1;
+                }
+                return acc;
+            }
+
+        Observation timeline
+        --------------------
+        After one ``execute_with_jit`` call:
+
+        - ``sum_pair`` has been called 100 times (once per loop iteration).
+        - Every ``a`` and ``b`` slot was observed as ``u8`` all 100 times.
+        - Call count (100) ≥ ``threshold_untyped`` (100) → compilation triggers.
+        - ``min_observations`` (5) is met many times over → types are trusted.
+        - JITCore specialises to ``add_u8``, lowers through LANG21, compiles
+          to WASM via the ir-to-wasm-compiler.
+
+        Result: sum(0..99) with u8 wrapping.
+        Using modular arithmetic: 0+1+…+99 = 4950, 4950 mod 256 = 86.
+        (Each intermediate add wraps to u8, but modular arithmetic is
+        associative so the final result equals the naive sum mod 256.)
+        """
+        from interpreter_ir.function import FunctionTypeStatus
+        from tetrad_runtime import compile_to_iir
+
+        source = """
+        fn sum_pair(a, b) {
+            return a + b;
+        }
+        fn main() {
+            let acc = 0;
+            let i = 0;
+            while i < 100 {
+                acc = sum_pair(acc, i);
+                i = i + 1;
+            }
+            return acc;
+        }
+        """
+
+        rt, jit = self._make_jit()
+        module = compile_to_iir(source)
+
+        # Verify both functions are UNTYPED — the JIT won't compile them
+        # eagerly (that's only for FULLY_TYPED functions, threshold = 0).
+        main_fn = module.get_function("main")
+        sum_fn = module.get_function("sum_pair")
+        assert main_fn is not None and sum_fn is not None
+        assert main_fn.type_status == FunctionTypeStatus.UNTYPED, (
+            "main() has no type annotations → must be UNTYPED"
+        )
+        assert sum_fn.type_status == FunctionTypeStatus.UNTYPED, (
+            "sum_pair() has no type annotations → must be UNTYPED"
+        )
+
+        # Nothing compiled before the first execution.
+        assert not jit.is_compiled("main")
+        assert not jit.is_compiled("sum_pair")
+
+        # Execute once: interpreter runs main(), sum_pair is called 100 times.
+        # After the run, _promote_hot_functions() compiles sum_pair to WASM.
+        result = jit.execute_with_jit(module, fn="main")
+
+        # sum_pair crossed the 100-call threshold → JIT-compiled to WASM.
+        assert jit.is_compiled("sum_pair"), (
+            "sum_pair should be compiled to WASM after 100 loop iterations "
+            "(call count 100 ≥ UNTYPED threshold 100)"
+        )
+        # main was called only once → still below its own threshold (100).
+        assert not jit.is_compiled("main"), (
+            "main() was called once; it needs 100 calls to cross the UNTYPED threshold"
+        )
+
+        # Result: sum(0..99) = 4950, wrapped by u8 → 86.
+        assert result == 86, (
+            f"expected 86 (= 4950 mod 256) but got {result!r}"
+        )
+
+    def test_below_threshold_not_compiled(self) -> None:
+        """50 loop iterations → below the 100-call threshold → no JIT.
+
+        With the same program structure but only 50 loop iterations,
+        ``sum_pair`` is called 50 times — below the UNTYPED threshold of 100.
+        JITCore must NOT compile it; it stays interpreted.
+
+        Expected: sum(0..49) = 1225, 1225 mod 256 = 201.
+        """
+        from tetrad_runtime import compile_to_iir
+
+        source = """
+        fn sum_pair(a, b) {
+            return a + b;
+        }
+        fn main() {
+            let acc = 0;
+            let i = 0;
+            while i < 50 {
+                acc = sum_pair(acc, i);
+                i = i + 1;
+            }
+            return acc;
+        }
+        """
+
+        rt, jit = self._make_jit()
+        module = compile_to_iir(source)
+
+        result = jit.execute_with_jit(module, fn="main")
+
+        # 50 calls < threshold (100) → sum_pair stays interpreted.
+        assert not jit.is_compiled("sum_pair"), (
+            "sum_pair should NOT be compiled after only 50 calls "
+            "(threshold is 100 for UNTYPED functions)"
+        )
+
+        # sum(0..49) = 1225 → 1225 mod 256 = 201.
+        assert result == 201, f"expected 201 (= 1225 mod 256) but got {result!r}"
+
+    def test_jit_result_matches_interpreter(self) -> None:
+        """Cross-validate: execute_with_jit gives the same answer as the interpreter.
+
+        The ``execute_with_jit`` Phase 2 run uses the pure interpreter (no JIT
+        handlers are active for untyped functions yet — they're registered in
+        Phase 3, *after* the interpreter run).  So the JIT result must equal
+        the pure ``TetradRuntime.run()`` result.
+
+        This test also verifies that type specialisation produced correct CIR:
+        after the run, ``dump_ir("sum_pair")`` must show a type-specific opcode
+        (``add_u8``) that the JIT inferred from 100 ``u8`` observations.
+
+        Architecture note — subroutine argument passing
+        ------------------------------------------------
+        The current ``WASMBackend`` compiles functions as *standalone WASM
+        entry points* with ``param_count=0``.  A compiled subroutine's WASM
+        binary has no mechanism to receive arguments from the interpreter's
+        call convention.  This means a *second* run that tries to use the WASM
+        JIT handler for ``sum_pair`` would receive zero-initialised registers
+        instead of the actual ``(acc, i)`` arguments — producing incorrect
+        results.
+
+        A future extension (WASM calling convention in WASMBackend) is required
+        to make subroutine JIT handlers work correctly on subsequent calls.
+        For now this test validates the compilation and first-run correctness.
+        """
+        from tetrad_runtime import TetradRuntime, compile_to_iir
+
+        source = """
+        fn sum_pair(a, b) {
+            return a + b;
+        }
+        fn main() {
+            let acc = 0;
+            let i = 0;
+            while i < 100 {
+                acc = sum_pair(acc, i);
+                i = i + 1;
+            }
+            return acc;
+        }
+        """
+
+        # Path A: pure interpreter (reference result).
+        rt_interp = TetradRuntime()
+        interpreted = rt_interp.run(source)
+
+        # Path B: JIT path (interpreter for Phase 2, WASM compiled in Phase 3).
+        rt, jit = self._make_jit()
+        module = compile_to_iir(source)
+
+        # Phase 2 runs the pure interpreter (JIT handlers not active yet for
+        # untyped functions).  Phase 3 compiles sum_pair after the run.
+        jit_result = jit.execute_with_jit(module, fn="main")
+
+        # Result from the interpreter phase must match the reference.
+        assert jit_result == interpreted, (
+            f"JIT path result ({jit_result!r}) must match "
+            f"interpreter ({interpreted!r})"
+        )
+
+        # After the run, sum_pair must be compiled.
+        assert jit.is_compiled("sum_pair"), (
+            "sum_pair should be compiled to WASM in Phase 3"
+        )
+
+        # The JIT inferred u8 from 100 observations — CIR must use add_u8.
+        cir_dump = jit.dump_ir("sum_pair")
+        assert "add_u8" in cir_dump, (
+            f"JIT should have specialised to add_u8 (u8 observed 100×); "
+            f"got CIR:\n{cir_dump}"
+        )
+
+    def test_complex_multi_helper_program(self) -> None:
+        """Untyped leaf helpers get JIT-compiled; non-leaf callers don't.
+
+        Program
+        -------
+        ::
+
+            fn double(x)   { return x + x; }
+            # Leaf: no sub-calls, pure arithmetic → WASMBackend can compile it
+
+            fn add(a, b)   { return a + b; }
+            # Leaf: no sub-calls, pure arithmetic → WASMBackend can compile it
+
+            fn compute(n)  { return double(add(n, n)); }
+            # Non-leaf: CIR contains CALL instructions → WASMBackend cannot
+            # compile (standalone single-function WASM module has no linked fns)
+
+            fn main() {
+                let result = 0;
+                let i = 0;
+                while i < 100 {
+                    result = add(result, compute(i));
+                    i = i + 1;
+                }
+                return result;
+            }
+
+        Call counts after one main() execution
+        ---------------------------------------
+        ::
+
+            double:  100×  (via compute) → compiled   (leaf, CIR has no CALL)
+            add:     200×  (100 via compute + 100 in main) → compiled (leaf)
+            compute: 100×  → NOT compiled (CIR has IrOp.CALL → WasmLoweringError)
+            main:      1×  → NOT compiled (1 call < UNTYPED threshold 100)
+
+        WASMBackend compilation constraint
+        -----------------------------------
+        ``WASMBackend`` wraps the CIR in a standalone WASM module with a
+        single exported function ``_start``.  When ``compute``'s CIR contains
+        ``call add [...]`` and ``call double [...]``, LANG21 emits
+        ``IrOp.CALL``.  The WASM compiler then looks up ``add`` / ``double``
+        in the module's function table — they don't exist — and raises
+        ``WasmLoweringError``.  ``WASMBackend.compile()`` catches this and
+        returns ``None`` (the deopt signal).  ``compute`` stays interpreted.
+
+        Leaf functions (no CALL in their CIR) compile cleanly.
+
+        The Phase 2 interpreter result is cross-validated against the pure
+        interpreter to confirm correctness of the full untyped execution.
+        """
+        from tetrad_runtime import TetradRuntime, compile_to_iir
+
+        source = """
+        fn double(x) {
+            return x + x;
+        }
+        fn add(a, b) {
+            return a + b;
+        }
+        fn compute(n) {
+            return double(add(n, n));
+        }
+        fn main() {
+            let result = 0;
+            let i = 0;
+            while i < 100 {
+                result = add(result, compute(i));
+                i = i + 1;
+            }
+            return result;
+        }
+        """
+
+        # Reference: pure interpreter.
+        rt_ref = TetradRuntime()
+        expected = rt_ref.run(source)
+
+        # JIT run.
+        rt, jit = self._make_jit()
+        module = compile_to_iir(source)
+
+        # Phase 2: interpreter runs everything (no JIT handlers yet).
+        # Phase 3: compiles leaf functions double and add; compute fails.
+        jit_result = jit.execute_with_jit(module, fn="main")
+
+        # Leaf functions: pure arithmetic CIR → compilable to WASM.
+        assert jit.is_compiled("double"), (
+            "double() is a leaf function called 100× → must be compiled"
+        )
+        assert jit.is_compiled("add"), (
+            "add() is a leaf function called 200× → must be compiled"
+        )
+
+        # Non-leaf: compute's CIR has IrOp.CALL → WasmLoweringError → deopt.
+        assert not jit.is_compiled("compute"), (
+            "compute() contains CALL instructions; WASMBackend (standalone "
+            "single-function WASM) cannot compile cross-function calls"
+        )
+
+        # main: 1 call < UNTYPED threshold (100).
+        assert not jit.is_compiled("main"), (
+            "main() called only once → below UNTYPED threshold (100)"
+        )
+
+        # Phase 2 result (interpreter) must equal the reference.
+        assert jit_result == expected, (
+            f"complex program: JIT-path result {jit_result!r} ≠ "
+            f"pure interpreter {expected!r}"
+        )
