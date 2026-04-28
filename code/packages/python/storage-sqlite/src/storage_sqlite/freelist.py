@@ -127,10 +127,27 @@ _LEAF_ENTRY_SIZE: int = 4
 """Bytes per leaf entry (a u32 page number)."""
 
 TRUNK_CAPACITY: int = (PAGE_SIZE - _TRUNK_LEAVES_OFFSET) // _LEAF_ENTRY_SIZE
-"""Maximum leaf entries per trunk page (1 022 for 4 096-byte pages).
+"""Maximum leaf entries per trunk page for the default 4 096-byte page size.
 
-Exposed for testing.  Formula: ``(PAGE_SIZE - 8) // 4``.
+Exposed for testing.  Formula: ``(PAGE_SIZE - 8) // 4 == 1022``.
+
+For other page sizes use :func:`trunk_capacity`.
 """
+
+
+def trunk_capacity(page_size: int) -> int:
+    """Return the maximum leaf entries per trunk page for *page_size*.
+
+    ``(page_size - 8) // 4`` — matches SQLite's formula.  For the default
+    4 096-byte pages this equals 1 022 (== :data:`TRUNK_CAPACITY`).
+
+    Examples::
+
+        trunk_capacity(512)    # 126
+        trunk_capacity(4096)   # 1022
+        trunk_capacity(65536)  # 16382
+    """
+    return (page_size - _TRUNK_LEAVES_OFFSET) // _LEAF_ENTRY_SIZE
 
 
 # ---------------------------------------------------------------------------
@@ -212,7 +229,7 @@ class Freelist:
             # Update the header total.
             self._write_header_fields(first_trunk, total - 1)
             # Zero-fill the leaf page so callers receive a clean slate.
-            self._pager.write(leaf_pgno, b"\x00" * PAGE_SIZE)
+            self._pager.write(leaf_pgno, b"\x00" * self._pager.page_size)
             return leaf_pgno
 
         else:
@@ -220,7 +237,7 @@ class Freelist:
             # Advance the header's first-trunk pointer to the next trunk.
             self._write_header_fields(next_trunk, total - 1)
             # Zero-fill the old trunk page.
-            self._pager.write(first_trunk, b"\x00" * PAGE_SIZE)
+            self._pager.write(first_trunk, b"\x00" * self._pager.page_size)
             return first_trunk
 
     def free(self, pgno: int) -> None:
@@ -254,7 +271,7 @@ class Freelist:
         if first_trunk != 0:
             trunk_data = bytearray(self._pager.read(first_trunk))
             (count,) = struct.unpack_from(">I", trunk_data, _TRUNK_COUNT_OFFSET)
-            if count < TRUNK_CAPACITY:
+            if count < trunk_capacity(self._pager.page_size):
                 # There is room in the current trunk: append *pgno* as a leaf.
                 leaf_offset = _TRUNK_LEAVES_OFFSET + count * _LEAF_ENTRY_SIZE
                 struct.pack_into(">I", trunk_data, leaf_offset, pgno)
@@ -265,7 +282,7 @@ class Freelist:
 
         # No trunk exists, or the current trunk is full.
         # Promote *pgno* to a new trunk page that points to the old trunk.
-        new_trunk = bytearray(PAGE_SIZE)
+        new_trunk = bytearray(self._pager.page_size)
         struct.pack_into(">I", new_trunk, _TRUNK_NEXT_OFFSET, first_trunk)
         struct.pack_into(">I", new_trunk, _TRUNK_COUNT_OFFSET, 0)
         self._pager.write(pgno, bytes(new_trunk))

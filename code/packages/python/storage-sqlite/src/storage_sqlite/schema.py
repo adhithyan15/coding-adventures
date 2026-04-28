@@ -92,7 +92,7 @@ from storage_sqlite import record
 from storage_sqlite.btree import BTree
 from storage_sqlite.errors import StorageError
 from storage_sqlite.header import Header
-from storage_sqlite.pager import PAGE_SIZE, Pager
+from storage_sqlite.pager import Pager
 
 if TYPE_CHECKING:
     from storage_sqlite.freelist import Freelist
@@ -155,14 +155,15 @@ def initialize_new_database(pager: Pager) -> Schema:
     pager.allocate()  # claims page 1
 
     # Build the initial page 1: 100-byte header + empty sqlite_schema leaf.
-    buf = bytearray(PAGE_SIZE)
-    buf[:100] = Header.new_database().to_bytes()
+    ps = pager.page_size
+    buf = bytearray(ps)
+    buf[:100] = Header.new_database(page_size=ps).to_bytes()
 
     # Empty leaf page header at offset 100.
     # Format: page_type(1) freeblock(2) ncells(2) content_start(2) fragmented(1)
-    # content_start = PAGE_SIZE when the content area is empty.
+    # content_start = page_size when the content area is empty.
     buf[100] = 0x0D  # PAGE_TYPE_LEAF_TABLE
-    struct.pack_into(">HHHB", buf, 101, 0, 0, PAGE_SIZE, 0)
+    struct.pack_into(">HHHB", buf, 101, 0, 0, ps, 0)
 
     pager.write(1, bytes(buf))
     return Schema(pager)
@@ -335,7 +336,7 @@ class Schema:
             # No freelist: at least zero the root page so it doesn't hold
             # stale data. A full traversal to zero every page would be
             # expensive with no benefit — callers should use a Freelist.
-            self._pager.write(root_pgno, b"\x00" * PAGE_SIZE)
+            self._pager.write(root_pgno, b"\x00" * self._pager.page_size)
 
         # Remove the schema row.
         self._btree.delete(row_rowid)
@@ -606,7 +607,7 @@ class Schema:
             idx_tree.free_all(self._freelist)
         else:
             # No freelist: zero the root page so it does not hold stale data.
-            self._pager.write(root_pgno, b"\x00" * PAGE_SIZE)
+            self._pager.write(root_pgno, b"\x00" * self._pager.page_size)
 
         self._btree.delete(row_rowid)
         self._bump_schema_cookie()

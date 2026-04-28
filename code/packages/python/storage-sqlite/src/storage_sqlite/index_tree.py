@@ -290,17 +290,20 @@ def _cmp_keys_partial(k1: list[SqlValue], k2: list[SqlValue]) -> int:
 # ── Overflow size formula (same as table B-trees) ─────────────────────────────
 
 
-def _local_payload_size(total: int) -> int:
+def _local_payload_size(total: int, page_size: int = PAGE_SIZE) -> int:
     """How many bytes of a *total*-byte payload stay on the leaf page.
 
-    Identical to the table B-tree formula — same page size, same page-format
-    constants.  Values ≤ 4 061 are stored fully inline; larger payloads spill
-    to overflow pages, keeping between 489 and 4 061 bytes inline.
+    Identical to the table B-tree formula. Values ≤ ``max_local`` are stored
+    fully inline; larger payloads spill to overflow pages.  All thresholds
+    are derived from *page_size*.
     """
-    if total <= _MAX_LOCAL:
+    max_local = page_size - 35
+    min_local = ((page_size - 12) * 32) // 255 - 23
+    overflow_usable = page_size - 4
+    if total <= max_local:
         return total
-    local = _MIN_LOCAL + (total - _MIN_LOCAL) % _OVERFLOW_USABLE
-    return _MIN_LOCAL if local > _MAX_LOCAL else local
+    local = min_local + (total - min_local) % overflow_usable
+    return min_local if local > max_local else local
 
 
 # ── Page header I/O (index variants) ─────────────────────────────────────────
@@ -390,7 +393,7 @@ def _ptr_array_base(hdr_off: int) -> int:
 
 
 def _read_leaf_ptrs(
-    page_data: bytes | bytearray, hdr_off: int, ncells: int
+    page_data: bytes | bytearray, hdr_off: int, ncells: int, page_size: int = PAGE_SIZE
 ) -> list[int]:
     """Return the cell pointer array for a leaf index page.
 
@@ -398,7 +401,7 @@ def _read_leaf_ptrs(
     validate each pointer is inside the cell-content area.
     """
     base = _ptr_array_base(hdr_off)
-    max_possible: int = (PAGE_SIZE - hdr_off - _LEAF_HDR) // _CELL_PTR
+    max_possible: int = (page_size - hdr_off - _LEAF_HDR) // _CELL_PTR
     if ncells > max_possible:
         raise CorruptDatabaseError(
             f"index leaf ncells={ncells} exceeds maximum {max_possible}"
@@ -407,21 +410,21 @@ def _read_leaf_ptrs(
     ptrs: list[int] = []
     for i in range(ncells):
         (ptr,) = struct.unpack_from(">H", page_data, base + i * _CELL_PTR)
-        if ptr < ptr_array_end or ptr >= PAGE_SIZE:
+        if ptr < ptr_array_end or ptr >= page_size:
             raise CorruptDatabaseError(
                 f"index leaf cell pointer[{i}]={ptr} outside valid range "
-                f"[{ptr_array_end}, {PAGE_SIZE})"
+                f"[{ptr_array_end}, {page_size})"
             )
         ptrs.append(ptr)
     return ptrs
 
 
 def _read_interior_ptrs(
-    page_data: bytes | bytearray, hdr_off: int, ncells: int
+    page_data: bytes | bytearray, hdr_off: int, ncells: int, page_size: int = PAGE_SIZE
 ) -> list[int]:
     """Return the cell pointer array for an interior index page."""
     base = hdr_off + _INTERIOR_HDR
-    max_possible: int = (PAGE_SIZE - hdr_off - _INTERIOR_HDR) // _CELL_PTR
+    max_possible: int = (page_size - hdr_off - _INTERIOR_HDR) // _CELL_PTR
     if ncells > max_possible:
         raise CorruptDatabaseError(
             f"index interior ncells={ncells} exceeds maximum {max_possible}"
@@ -430,10 +433,10 @@ def _read_interior_ptrs(
     ptrs: list[int] = []
     for i in range(ncells):
         (ptr,) = struct.unpack_from(">H", page_data, base + i * _CELL_PTR)
-        if ptr < ptr_array_end or ptr >= PAGE_SIZE:
+        if ptr < ptr_array_end or ptr >= page_size:
             raise CorruptDatabaseError(
                 f"index interior cell pointer[{i}]={ptr} outside valid range "
-                f"[{ptr_array_end}, {PAGE_SIZE})"
+                f"[{ptr_array_end}, {page_size})"
             )
         ptrs.append(ptr)
     return ptrs
@@ -541,7 +544,7 @@ def _idx_separator_record(key_vals: list[SqlValue], rowid: int) -> bytes:
 
 
 def _idx_interior_cells_fit(
-    hdr_off: int, cells: list[tuple[int, bytes]]
+    hdr_off: int, cells: list[tuple[int, bytes]], page_size: int = PAGE_SIZE
 ) -> bool:
     """Return True if *cells* fit on an interior index page.
 
@@ -550,9 +553,9 @@ def _idx_interior_cells_fit(
     * 4 bytes for the left-child u32
     * ``len(sep_record)`` bytes for the separator record
 
-    The available space is ``PAGE_SIZE - hdr_off - _INTERIOR_HDR``.
+    The available space is ``page_size - hdr_off - _INTERIOR_HDR``.
     """
-    avail = PAGE_SIZE - hdr_off - _INTERIOR_HDR
+    avail = page_size - hdr_off - _INTERIOR_HDR
     needed = sum(_CELL_PTR + 4 + len(sep) for _, sep in cells)
     return needed <= avail
 
@@ -619,8 +622,9 @@ class IndexTree:
         database uses.
         """
         pgno = freelist.allocate() if freelist is not None else pager.allocate()
-        buf = bytearray(PAGE_SIZE)
-        _write_idx_leaf_hdr(buf, 0, ncells=0, content_start=PAGE_SIZE)
+        ps = pager.page_size
+        buf = bytearray(ps)
+        _write_idx_leaf_hdr(buf, 0, ncells=0, content_start=ps)
         pager.write(pgno, bytes(buf))
         return cls(pager, pgno, freelist=freelist)
 
@@ -655,7 +659,7 @@ class IndexTree:
         if self._freelist is not None:
             self._freelist.free(pgno)
         else:
-            self._pager.write(pgno, b"\x00" * PAGE_SIZE)
+            self._pager.write(pgno, b"\x00" * self._pager.page_size)
 
     # ── Public operations ─────────────────────────────────────────────────────
 
@@ -684,10 +688,12 @@ class IndexTree:
         # — the local bytes on the leaf must include the complete record, or
         # at least the complete type header plus all values up to the rowid).
         # In v2 we enforce that index records always fit inline entirely.
-        if total > _MAX_LOCAL:
+        ps = self._pager.page_size
+        max_local = ps - 35
+        if total > max_local:
             raise IndexTreeError(
                 f"index key payload ({total} bytes) exceeds inline limit "
-                f"({_MAX_LOCAL} bytes); oversized keys not supported in v2"
+                f"({max_local} bytes); oversized keys not supported in v2"
             )
 
         path, leaf_pgno = self._find_leaf_with_path(key, rowid)
@@ -696,14 +702,15 @@ class IndexTree:
         hdr = _read_idx_hdr(page_data, 0)
         ncells = hdr["ncells"]
         content_start = hdr["content_start"]
-        ptrs = _read_leaf_ptrs(page_data, 0, ncells)
+        ptrs = _read_leaf_ptrs(page_data, 0, ncells, ps)
 
         # Validate content_start.
         ptr_array_end_now = _ptr_array_base(0) + ncells * _CELL_PTR
-        if content_start > PAGE_SIZE or content_start < ptr_array_end_now:
+        if content_start > ps or content_start < ptr_array_end_now:
             raise CorruptDatabaseError(
                 f"content_start={content_start} out of valid range on page {leaf_pgno}"
             )
+
 
         insert_idx = self._bisect(page_data, ptrs, key, rowid)
 
@@ -761,7 +768,7 @@ class IndexTree:
         _, leaf_pgno = self._find_leaf_with_path(key, rowid)
         page_data = bytearray(self._pager.read(leaf_pgno))
         hdr = _read_idx_hdr(page_data, 0)
-        ptrs = _read_leaf_ptrs(page_data, 0, hdr["ncells"])
+        ptrs = _read_leaf_ptrs(page_data, 0, hdr["ncells"], self._pager.page_size)
 
         # Binary search for the exact (key, rowid) pair.
         lo, hi = 0, len(ptrs)
@@ -903,7 +910,7 @@ class IndexTree:
                 )
 
             # Walk interior cells to find the child to descend into.
-            ptrs = _read_interior_ptrs(page_data, 0, hdr["ncells"])
+            ptrs = _read_interior_ptrs(page_data, 0, hdr["ncells"], self._pager.page_size)
             chosen_child = hdr["rightmost_child"]
             chosen_idx = -1
             for i, ptr in enumerate(ptrs):
@@ -947,13 +954,14 @@ class IndexTree:
         page_data = self._pager.read(pgno)
         hdr = _read_idx_hdr(page_data, hdr_off)
 
+        ps = self._pager.page_size
         if hdr["page_type"] == PAGE_TYPE_LEAF_INDEX:
-            ptrs = _read_leaf_ptrs(page_data, hdr_off, hdr["ncells"])
+            ptrs = _read_leaf_ptrs(page_data, hdr_off, hdr["ncells"], ps)
             for ptr in ptrs:
                 yield _decode_leaf_cell_key_rowid(page_data, ptr)
 
         elif hdr["page_type"] == PAGE_TYPE_INTERIOR_INDEX:
-            ptrs = _read_interior_ptrs(page_data, hdr_off, hdr["ncells"])
+            ptrs = _read_interior_ptrs(page_data, hdr_off, hdr["ncells"], ps)
             for ptr in ptrs:
                 left_child, _, _ = _idx_interior_cell_decode(page_data, ptr)
                 if left_child == 0 or left_child > self._pager.size_pages:
@@ -1002,9 +1010,10 @@ class IndexTree:
         self._write_cells_to_leaf(right_pgno, right_cells)
 
         # Rewrite root as an interior page with one cell.
-        root_buf = bytearray(PAGE_SIZE)
+        ps = self._pager.page_size
+        root_buf = bytearray(ps)
         cell = _idx_interior_cell_encode(left_pgno, sep_record)
-        cell_off = PAGE_SIZE - len(cell)
+        cell_off = ps - len(cell)
 
         _write_idx_interior_hdr(
             root_buf, 0, ncells=1, content_start=cell_off, rightmost_child=right_pgno
@@ -1050,8 +1059,9 @@ class IndexTree:
         Cells are written downward from ``PAGE_SIZE``; pointer array upward
         from offset ``_INTERIOR_HDR``.
         """
-        buf = bytearray(PAGE_SIZE)
-        content_offset = PAGE_SIZE
+        ps = self._pager.page_size
+        buf = bytearray(ps)
+        content_offset = ps
         ptrs: list[int] = []
         for left_child, sep_record in cells:
             cell = _idx_interior_cell_encode(left_child, sep_record)
@@ -1123,9 +1133,10 @@ class IndexTree:
         self._write_interior_page(left_pgno, left_cells, median_lc)
         self._write_interior_page(right_pgno, right_cells, rightmost_child)
 
-        root_buf = bytearray(PAGE_SIZE)
+        ps = self._pager.page_size
+        root_buf = bytearray(ps)
         cell = _idx_interior_cell_encode(left_pgno, median_sep)
-        cell_off = PAGE_SIZE - len(cell)
+        cell_off = ps - len(cell)
         _write_idx_interior_hdr(
             root_buf, 0, ncells=1, content_start=cell_off, rightmost_child=right_pgno
         )
@@ -1165,7 +1176,7 @@ class IndexTree:
 
         parent_data = self._pager.read(parent_pgno)
         parent_hdr = _read_idx_hdr(parent_data, 0)
-        ptrs = _read_interior_ptrs(parent_data, 0, parent_hdr["ncells"])
+        ptrs = _read_interior_ptrs(parent_data, 0, parent_hdr["ncells"], self._pager.page_size)
         old_cells: list[tuple[int, bytes]] = []
         for ptr in ptrs:
             lc, sk, sr = _idx_interior_cell_decode(parent_data, ptr)
@@ -1188,7 +1199,7 @@ class IndexTree:
             new_cells = list(old_cells) + [(left_pgno, sep_record)]
             new_rightmost = right_pgno
 
-        if _idx_interior_cells_fit(0, new_cells):
+        if _idx_interior_cells_fit(0, new_cells, self._pager.page_size):
             self._write_interior_page(parent_pgno, new_cells, new_rightmost)
             return
 
@@ -1219,8 +1230,9 @@ class IndexTree:
         inline limit (which should not happen given the insert-time check in
         :meth:`insert`).
         """
-        buf = bytearray(PAGE_SIZE)
-        content_offset = PAGE_SIZE
+        ps = self._pager.page_size
+        buf = bytearray(ps)
+        content_offset = ps
         new_ptrs: list[int] = []
 
         for key_vals, rowid in cells:
@@ -1294,7 +1306,7 @@ class IndexTree:
                 self._free_page(pgno)
 
         elif hdr["page_type"] == PAGE_TYPE_INTERIOR_INDEX:
-            ptrs = _read_interior_ptrs(page_data, hdr_off, hdr["ncells"])
+            ptrs = _read_interior_ptrs(page_data, hdr_off, hdr["ncells"], self._pager.page_size)
             for ptr in ptrs:
                 left_child, _, _ = _idx_interior_cell_decode(page_data, ptr)
                 self._free_subtree(left_child, 0, visited)
@@ -1323,7 +1335,7 @@ class IndexTree:
                 f"index page {pgno} has unexpected type 0x{hdr['page_type']:02x}"
             )
 
-        ptrs = _read_interior_ptrs(page_data, hdr_off, hdr["ncells"])
+        ptrs = _read_interior_ptrs(page_data, hdr_off, hdr["ncells"], self._pager.page_size)
         total = 0
         for ptr in ptrs:
             left_child, _, _ = _idx_interior_cell_decode(page_data, ptr)
