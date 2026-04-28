@@ -446,6 +446,133 @@ class Schema:
 
         return root_pgno
 
+    # ── Trigger read operations ───────────────────────────────────────────────
+
+    def find_trigger(self, name: str) -> tuple[int, str, str | None] | None:
+        """Return ``(rowid, tbl_name, sql)`` for the trigger named *name*, or ``None``.
+
+        Performs a full scan of ``sqlite_schema`` looking for entries with
+        ``type = 'trigger'`` and ``name = name``.  Returns ``None`` when no
+        such trigger exists.
+
+        The ``sql`` element is the full ``CREATE TRIGGER`` statement stored
+        verbatim, or ``None`` for rows written without a SQL field.
+
+        Example::
+
+            result = schema.find_trigger("trg_orders_after_insert")
+            if result is not None:
+                row_rowid, tbl_name, sql = result
+        """
+        for rowid, payload in self._btree.scan():
+            cols, _ = record.decode(payload)
+            if cols[0] == "trigger" and cols[1] == name:
+                sql_val = cols[4]
+                return rowid, str(cols[2]), (str(sql_val) if sql_val is not None else None)
+        return None
+
+    def list_triggers(
+        self, table: str | None = None
+    ) -> list[tuple[str, str, str | None]]:
+        """Return ``[(name, tbl_name, sql)]`` for all triggers.
+
+        Each tuple describes one ``type = 'trigger'`` row in ``sqlite_schema``.
+        If *table* is provided, only triggers whose ``tbl_name`` matches are
+        returned.  Results are in insertion (ascending rowid) order.
+
+        The ``sql`` element is the full ``CREATE TRIGGER`` statement or
+        ``None`` for trigger rows written without a SQL field.
+
+        Example::
+
+            rows = schema.list_triggers("orders")
+            # [("trg_after_insert", "orders", 5, "CREATE TRIGGER ...")]
+        """
+        result: list[tuple[str, str, str | None]] = []
+        for _, payload in self._btree.scan():
+            cols, _ = record.decode(payload)
+            if cols[0] != "trigger":
+                continue
+            tbl_name = str(cols[2])
+            if table is not None and tbl_name != table:
+                continue
+            sql_val = cols[4]
+            sql_str = str(sql_val) if sql_val is not None else None
+            result.append((str(cols[1]), tbl_name, sql_str))
+        return result
+
+    # ── Trigger write operations ──────────────────────────────────────────────
+
+    def create_trigger(self, name: str, table: str, sql: str) -> None:
+        """Insert a ``type = 'trigger'`` row into ``sqlite_schema``.
+
+        Triggers do not own a B-tree, so ``rootpage`` is stored as ``0`` —
+        the same convention used by the real ``sqlite3`` CLI for trigger rows.
+        The full ``CREATE TRIGGER`` statement is stored in ``sql`` for
+        round-trip fidelity.
+
+        Raises :class:`SchemaError` if a trigger with *name* already exists.
+
+        Example::
+
+            schema.create_trigger(
+                "trg_after_insert", "orders",
+                "CREATE TRIGGER trg_after_insert AFTER INSERT ON orders BEGIN ... END"
+            )
+        """
+        if self.find_trigger(name) is not None:
+            raise SchemaError(f"trigger {name!r} already exists")
+
+        rowid = self._next_rowid()
+        payload = record.encode(["trigger", name, table, 0, sql])
+        self._btree.insert(rowid, payload)
+        self._bump_schema_cookie()
+
+    def drop_trigger(self, name: str) -> None:
+        """Drop a trigger: delete its ``sqlite_schema`` row, bump cookie.
+
+        Raises :class:`SchemaError` if no trigger named *name* exists.
+
+        Example::
+
+            schema.drop_trigger("trg_after_insert")
+            assert schema.find_trigger("trg_after_insert") is None
+        """
+        result = self.find_trigger(name)
+        if result is None:
+            raise SchemaError(f"trigger {name!r} does not exist")
+
+        row_rowid, _, _ = result
+        self._btree.delete(row_rowid)
+        self._bump_schema_cookie()
+
+    # ── Table-level mutations ─────────────────────────────────────────────────
+
+    def update_table_sql(self, name: str, new_sql: str) -> None:
+        """Rewrite the ``sql`` column of the ``sqlite_schema`` row for *name*.
+
+        Used by ALTER TABLE ADD COLUMN to update the stored ``CREATE TABLE``
+        statement without allocating a new root page.  The ``rootpage`` field
+        is preserved unchanged.
+
+        Raises :class:`SchemaError` if the table does not exist.
+
+        Example::
+
+            schema.update_table_sql(
+                "users",
+                "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, age INTEGER)"
+            )
+        """
+        result = self.find_table(name)
+        if result is None:
+            raise SchemaError(f"table {name!r} does not exist")
+
+        row_rowid, rootpage, _ = result
+        payload = record.encode(["table", name, name, rootpage, new_sql])
+        self._btree.update(row_rowid, payload)
+        self._bump_schema_cookie()
+
     def drop_index(self, name: str) -> None:
         """Drop an index: free its B-tree pages, delete schema row, bump cookie.
 
