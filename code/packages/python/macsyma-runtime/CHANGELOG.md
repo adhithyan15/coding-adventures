@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.7.0 — 2026-04-27
+
+**Add Fourier transform operations to the MACSYMA name table.**
+
+- Imported `FOURIER` and `IFOURIER` from `symbolic_ir` (added in 0.7.3).
+- Added `"fourier": FOURIER` and `"ifourier": IFOURIER` to `MACSYMA_NAME_TABLE`.
+- Bumped `symbolic-ir` dependency to `>=0.7.3` and `symbolic-vm` to `>=0.32.4`.
+
+MACSYMA users can now write `fourier(f, t, omega)` and `ifourier(F, omega, t)`.
+
+---
+
 ## 1.6.0 — 2026-04-27
 
 **Add Laplace transform operations to the MACSYMA name table.**

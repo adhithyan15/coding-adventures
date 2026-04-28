@@ -47,9 +47,11 @@ from symbolic_ir.nodes import (
     EXP,
     FOR_EACH,
     FOR_RANGE,
+    FOURIER,
     GREATER,
     GREATER_EQUAL,
     IF,
+    IFOURIER,
     ILT,
     INTEGRATE,
     INV,
@@ -145,4 +147,6 @@ __all__ = [
     "UNIT_STEP",
     "LAPLACE",
     "ILT",
+    "FOURIER",
+    "IFOURIER",
 ]

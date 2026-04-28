@@ -276,3 +276,5 @@ DIRAC_DELTA = IRSymbol("DiracDelta")  # δ(t) — Dirac delta distribution
 UNIT_STEP = IRSymbol("UnitStep")      # u(t) — Heaviside unit step function
 LAPLACE = IRSymbol("Laplace")         # L{f(t)} — Laplace transform head
 ILT = IRSymbol("ILT")                 # L⁻¹{F(s)} — inverse Laplace transform
+FOURIER = IRSymbol("Fourier")         # F{f(t)} — Fourier transform head
+IFOURIER = IRSymbol("IFourier")       # F⁻¹{F(ω)} — inverse Fourier transform

@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.32.4 — 2026-04-27
+
+**Wire `cas-fourier` into `SymbolicBackend`.**
+
+- Added `from cas_fourier import build_fourier_handler_table as _build_fourier`
+  to `cas_handlers.py`.
+- Added `**_build_fourier()` to the `build_cas_handler_table()` return dict.
+- Added `"coding-adventures-cas-fourier>=0.1.0"` to `pyproject.toml` dependencies.
+
+This wires `Fourier(f, t, ω)` and `IFourier(F, ω, t)` into the symbolic VM.
+Both operations follow the graceful fall-through contract: unknown inputs return
+the expression unevaluated.
+
+---
+
 ## 0.32.3 — 2026-04-27
 
 **Wire `cas-laplace` into `SymbolicBackend`.**

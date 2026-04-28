@@ -19,6 +19,8 @@ from __future__ import annotations
 
 from symbolic_ir import (
     DIRAC_DELTA,
+    FOURIER,
+    IFOURIER,
     ILT,
     LAPLACE,
     IRSymbol,
@@ -92,6 +94,9 @@ MNEWTON = IRSymbol("MNewton")
 
 # Laplace transforms (D-remaining)
 # LAPLACE, ILT, DIRAC_DELTA, UNIT_STEP imported from symbolic_ir above.
+
+# Fourier transforms (D — cas-fourier)
+# FOURIER, IFOURIER imported from symbolic_ir above.
 
 # Trig transformation heads (B1)
 TRIG_SIMPLIFY = IRSymbol("TrigSimplify")
@@ -213,6 +218,9 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "delta": DIRAC_DELTA,   # Dirac delta δ(t)
     "hstep": UNIT_STEP,     # Heaviside step H(t)
     "unit_step": UNIT_STEP,  # alias
+    # Fourier transforms
+    "fourier": FOURIER,     # Forward Fourier transform
+    "ifourier": IFOURIER,   # Inverse Fourier transform
     # Runtime-owned operations
     "kill": KILL,
     "ev": EV,

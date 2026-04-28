@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.4.2 — 2026-04-27
+
+**Add Fourier transform display names to `_DEFAULT_FUNCTION_NAMES`.**
+
+Added two entries to the `_DEFAULT_FUNCTION_NAMES` table in `dialect.py`:
+
+- `"Fourier": "fourier"` — renders the forward FT head as `fourier(...)`
+- `"IFourier": "ifourier"` — renders the inverse FT head as `ifourier(...)`
+
+These names are consistent with the MACSYMA name table bindings added
+in `macsyma-runtime` 1.7.0.
+
+---
+
 ## 0.4.1 — 2026-04-27
 
 **Add Laplace transform display names to `_DEFAULT_FUNCTION_NAMES`.**

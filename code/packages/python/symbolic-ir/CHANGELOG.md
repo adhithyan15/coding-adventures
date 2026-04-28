@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.7.3 — 2026-04-27
+
+**Add `FOURIER`, `IFOURIER` head symbols for Fourier transforms.**
+
+Added two new IR head constants to the "Laplace / Fourier transforms" group at the bottom
+of `nodes.py`, and exported both from `__init__.py`:
+
+- `FOURIER = IRSymbol("Fourier")` — forward Fourier transform head F{f(t)}
+- `IFOURIER = IRSymbol("IFourier")` — inverse Fourier transform head F⁻¹{F(ω)}
+
+Required by `cas-fourier` 0.1.0 and `symbolic-vm` 0.32.4.
+
+---
+
 ## 0.7.2 — 2026-04-27
 
 **Add `DIRAC_DELTA`, `UNIT_STEP`, `LAPLACE`, `ILT` head symbols for Laplace transforms.**

@@ -74,6 +74,7 @@ from cas_matrix import (
     matrix,
     transpose,
 )
+from cas_fourier import build_fourier_handler_table as _build_fourier
 from cas_laplace import build_laplace_handler_table as _build_laplace
 from cas_mnewton import build_mnewton_handler_table as _build_mnewton
 from cas_number_theory.handlers import build_number_theory_handler_table as _build_nt
@@ -1688,6 +1689,8 @@ def build_cas_handler_table() -> dict[str, Handler]:
         **_build_mnewton(),
         # --- cas-laplace (Laplace and inverse Laplace transforms) ------------
         **_build_laplace(),
+        # --- cas-fourier (Fourier and inverse Fourier transforms) ------------
+        **_build_fourier(),
     }
 
 

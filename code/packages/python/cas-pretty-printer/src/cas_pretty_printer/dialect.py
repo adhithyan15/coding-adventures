@@ -220,6 +220,9 @@ _DEFAULT_FUNCTION_NAMES: dict[str, str] = {
     "ILT": "ilt",
     "DiracDelta": "delta",
     "UnitStep": "hstep",
+    # ---- Fourier transforms -------------------------------------------------
+    "Fourier": "fourier",
+    "IFourier": "ifourier",
 }
 
 
