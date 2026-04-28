@@ -219,6 +219,7 @@ A condensed quick-reference of mistakes made during development, grouped by cate
 - **Intel 4004 has no AND instruction.** `AND_IMM vR, vR, 15` and `AND_IMM vR, vR, 255` are no-ops on a 4-bit machine; emit a comment, not an opcode. Other masks would need a RAM lookup table.
 - **Intel 4004 R1 corruption.** When `_emit_add_imm`'s source virtual register maps to physical R1, don't clobber R1 as scratch — use R14. Special-case `k=0` as a pure copy: `LD Rsrc; XCH Rdst`.
 - **Intel 4004 simulator halt**: emit `HLT` (opcode 0x01) — `JUN $` self-loop is not detected as halt and runs out of `max_steps`.
+- **IBM 704 index-register family** (LXA/LXD/SXA/SXD/PAX/PDX/PXA): the tag selects the source/destination register only; the address field is used directly with NO `(Y - C(T))` subtraction. "Store IRA at Y" must not shift Y by IRA. Always test register-family ops with a non-zero index value to catch this; tag=1 with IRA=0 is silently correct either way.
 
 ## Repo policy / workflow reminders
 
