@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>CodingAdventures.MicroQR.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>ISO/IEC 18004:2015 Annex E-compliant Micro QR Code encoder for F# — produces a ModuleGrid scannable by any standard decoder</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../gf256/CodingAdventures.Gf256.fsproj" />
+    <ProjectReference Include="../barcode-2d/CodingAdventures.Barcode2D.fsproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MicroQR.fs" />
+  </ItemGroup>
+</Project>

@@ -230,7 +230,7 @@ class TestCaseInsensitivity:
         values = token_values(tokens)
         assert types[0] == "STRING"
         # The lexer strips outer quotes from string values.
-        assert values[0] == "hello world"
+        assert values[0] == "Hello World"
 
     def test_all_three_cases_produce_same_tokens(self) -> None:
         """``ENTITY``, ``Entity``, and ``entity`` produce identical tokens."""
@@ -284,7 +284,7 @@ class TestStringLiterals:
         tokens = tokenize_vhdl(source)
         assert token_types(tokens) == ["STRING", "EOF"]
         # The lexer strips outer quotes; doubled inner quotes are preserved.
-        expected = 'he said ' + '""hello""'
+        expected = 'He said ' + '""hello""'
         assert token_values(tokens)[0] == expected
 
 

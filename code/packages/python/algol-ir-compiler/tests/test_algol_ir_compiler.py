@@ -2,12 +2,12 @@
 
 import pytest
 from algol_parser import parse_algol
-from algol_ir_compiler.compiler import _MAX_STRING_OUTPUT_BYTES, _MAX_TOTAL_OUTPUT_BYTES
 from algol_type_checker import FRAME_WORD_SIZE, FrameSlot, check_algol
 from compiler_ir import IrOp
 from lang_parser import ASTNode
 
 from algol_ir_compiler import CompileError, __version__, compile_algol
+from algol_ir_compiler.compiler import _MAX_STRING_OUTPUT_BYTES, _MAX_TOTAL_OUTPUT_BYTES
 
 
 class TestVersion:
@@ -40,6 +40,15 @@ class TestAlgolIrCompiler:
         )
         opcodes = [instr.opcode for instr in result.program.instructions]
         assert opcodes.index(IrOp.MUL) < opcodes.index(IrOp.ADD)
+
+    def test_compiles_conditional_expression_value(self) -> None:
+        result = compile_algol(
+            parse_algol("begin integer result; result := if true then 1 else 2 end")
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+        assert IrOp.BRANCH_Z in opcodes
+        assert IrOp.JUMP in opcodes
+        assert opcodes.count(IrOp.STORE_WORD) >= 1
 
     def test_compiles_structured_if_labels(self) -> None:
         result = compile_algol(
@@ -117,7 +126,9 @@ class TestAlgolIrCompiler:
 
     def test_compiles_own_scalar_to_static_storage(self) -> None:
         result = compile_algol(
-            parse_algol("begin own integer counter; integer result; result := counter end")
+            parse_algol(
+                "begin own integer counter; integer result; result := counter end"
+            )
         )
         data_labels = [decl.label for decl in result.program.data]
         load_addr_labels = [
@@ -184,9 +195,13 @@ class TestAlgolIrCompiler:
         assert "loop_0_start" in labels
         assert "loop_0_end" in labels
 
-    def test_compiles_string_variable_assignment_to_static_literal_descriptor(self) -> None:
+    def test_compiles_string_variable_assignment_to_static_literal_descriptor(
+        self,
+    ) -> None:
         result = compile_algol(
-            parse_algol("begin string msg; integer result; msg := 'Hi'; result := 1 end")
+            parse_algol(
+                "begin string msg; integer result; msg := 'Hi'; result := 1 end"
+            )
         )
         opcodes = [instr.opcode for instr in result.program.instructions]
         data_labels = [decl.label for decl in result.program.data]
@@ -204,7 +219,8 @@ class TestAlgolIrCompiler:
     def test_compiles_string_variable_output_to_descriptor_loop(self) -> None:
         result = compile_algol(
             parse_algol(
-                "begin string msg; integer result; msg := 'Hi'; print(msg); result := 1 end"
+                "begin string msg; integer result; msg := 'Hi'; "
+                "print(msg); result := 1 end"
             )
         )
         opcodes = [instr.opcode for instr in result.program.instructions]
@@ -221,7 +237,8 @@ class TestAlgolIrCompiler:
     def test_compiles_string_output_guards_for_length_and_total_bytes(self) -> None:
         result = compile_algol(
             parse_algol(
-                "begin string msg; integer result; msg := 'Hi'; print(msg); result := 1 end"
+                "begin string msg; integer result; msg := 'Hi'; "
+                "print(msg); result := 1 end"
             )
         )
         opcodes = [instr.opcode for instr in result.program.instructions]
@@ -753,6 +770,34 @@ class TestAlgolIrCompiler:
             for instruction in calls
         )
 
+    def test_compiles_procedure_parameter_call_and_dispatcher(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "procedure twice(p); procedure p; begin p; p end; "
+                "procedure bump; begin result := result + 1 end; "
+                "result := 0; twice(bump) "
+                "end"
+            )
+        )
+        labels = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.LABEL
+        ]
+        calls = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+
+        assert result.procedure_signatures["_fn_algol_call_procedure"].param_count == 2
+        assert "_fn_algol_call_procedure" in labels
+        assert any(
+            instruction.operands[0].name == "_fn_algol_call_procedure"
+            for instruction in calls
+        )
+
     def test_compiles_dynamic_multidimensional_array_bounds(self) -> None:
         result = compile_algol(
             parse_algol(
@@ -967,9 +1012,27 @@ class TestAlgolIrCompiler:
         with pytest.raises(CompileError, match="result"):
             compile_algol(parse_algol("begin integer x; x := 1 end"))
 
-    def test_raises_for_unsupported_exponentiation(self) -> None:
-        with pytest.raises(CompileError):
-            compile_algol(parse_algol("begin integer result; result := 2 ** 3 end"))
+    def test_compiles_integer_exponentiation_loop(self) -> None:
+        result = compile_algol(
+            parse_algol("begin integer result; result := 2 ** 3 end")
+        )
+
+        assert any(
+            instruction.opcode == IrOp.MUL
+            for instruction in result.program.instructions
+        )
+
+    def test_compiles_chained_assignment_right_to_left(self) -> None:
+        result = compile_algol(
+            parse_algol("begin integer result, other; result := other := 1 end")
+        )
+
+        stores = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.STORE_WORD
+        ]
+        assert len(stores) >= 2
 
     def test_compiles_scalar_by_name_parameter_as_storage_pointer(self) -> None:
         result = compile_algol(

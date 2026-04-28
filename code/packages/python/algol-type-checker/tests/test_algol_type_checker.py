@@ -318,11 +318,10 @@ class TestAlgolTypeChecker:
         )
         assert check_algol(ast).ok
 
-    def test_reports_chained_assignment(self) -> None:
+    def test_accepts_chained_assignment(self) -> None:
         ast = parse_algol("begin integer result, other; result := other := 1 end")
         result = check_algol(ast)
-        assert not result.ok
-        assert "chained assignment" in result.diagnostics[0].message
+        assert result.ok
 
     def test_accepts_real_division_and_integer_to_real_assignment(self) -> None:
         ast = parse_algol(
@@ -333,11 +332,45 @@ class TestAlgolTypeChecker:
         result = check_algol(ast)
         assert result.ok
 
-    def test_reports_unsupported_exponentiation(self) -> None:
+    def test_accepts_integer_exponentiation(self) -> None:
         ast = parse_algol("begin integer result; result := 2 ** 3 end")
         result = check_algol(ast)
+        assert result.ok
+
+    def test_rejects_real_exponent_for_exponentiation(self) -> None:
+        ast = parse_algol("begin real result; result := 2.0 ** 3.5 end")
+        result = check_algol(ast)
         assert not result.ok
-        assert "exponentiation is not supported" in result.diagnostics[0].message
+        assert (
+            "exponentiation exponent must be integer"
+            in result.diagnostics[0].message
+        )
+
+    def test_accepts_conditional_expression_assignment(self) -> None:
+        ast = parse_algol("begin integer result; result := if true then 1 else 2 end")
+        result = check_algol(ast)
+        assert result.ok
+
+    def test_accepts_mixed_numeric_conditional_expression_as_real(self) -> None:
+        ast = parse_algol(
+            "begin integer result; real x; "
+            "x := if false then 1 else 2.5; "
+            "if x > 2.0 then result := 1 else result := 0 "
+            "end"
+        )
+        result = check_algol(ast)
+        assert result.ok
+
+    def test_rejects_incompatible_conditional_expression_branches(self) -> None:
+        ast = parse_algol(
+            "begin integer result; result := if true then 1 else false end"
+        )
+        result = check_algol(ast)
+        assert not result.ok
+        assert (
+            "conditional expression branches must have compatible types"
+            in result.diagnostics[0].message
+        )
 
     def test_accepts_simple_for_element(self) -> None:
         ast = parse_algol("begin integer result, i; for i := 1 do result := i end")
@@ -738,6 +771,58 @@ class TestAlgolTypeChecker:
 
         assert not result.ok
         assert "cannot be a switch in this phase" in result.diagnostics[0].message
+
+    def test_accepts_procedure_parameter_and_direct_procedure_actual(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure twice(p); procedure p; begin p; p end; "
+            "procedure bump; begin result := result + 1 end; "
+            "result := 0; twice(bump) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        parameter = result.semantic.procedures[0].parameters[0]
+        assert parameter.kind == "procedure"
+        assert parameter.type_name == "procedure"
+        formal_call = next(
+            call
+            for call in result.semantic.procedure_calls
+            if call.name == "p"
+        )
+        assert formal_call.parameter_symbol_id == parameter.symbol_id
+
+    def test_rejects_procedure_parameter_with_argument_actual_in_this_phase(
+        self,
+    ) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure invoke(p); procedure p; begin p end; "
+            "procedure set(x); value x; integer x; begin result := x end; "
+            "invoke(set) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert (
+            "expects a no-argument statement procedure actual in this phase"
+            in result.diagnostics[0].message
+        )
+
+    def test_rejects_value_procedure_parameter_in_this_phase(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure invoke(p); value p; procedure p; begin end; "
+            "result := 0 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "cannot be a procedure in this phase" in result.diagnostics[0].message
 
     def test_accepts_integer_array_descriptor_and_accesses(self) -> None:
         ast = parse_algol(
@@ -1246,7 +1331,10 @@ class TestAlgolTypeChecker:
         assert result.root_scope.children[0].symbols["msg"].type_name == "string"
 
     def test_accepts_builtin_print_with_string_variable(self) -> None:
-        ast = parse_algol("begin string msg; integer result; msg := 'Hi'; print(msg); result := 1 end")
+        ast = parse_algol(
+            "begin string msg; integer result; msg := 'Hi'; "
+            "print(msg); result := 1 end"
+        )
         result = check_algol(ast)
 
         assert result.ok

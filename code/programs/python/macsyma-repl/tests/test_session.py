@@ -204,3 +204,50 @@ def test_simplify_repl() -> None:
     assert len(result_lines) == 1
     line = result_lines[0]
     assert "x" in line
+
+
+# ---------------------------------------------------------------------------
+# Regression tests for REPL quality fixes
+# ---------------------------------------------------------------------------
+
+
+def test_is_prime_alias_repl() -> None:
+    """is_prime(17) → True  (alias for primep, not unevaluated)."""
+    out = _run(["is_prime(17);", ":quit"])
+    result_lines = [line for line in out if line.startswith("(%o1)")]
+    assert len(result_lines) == 1
+    assert "True" in result_lines[0]
+
+
+def test_map_lambda_repl() -> None:
+    """map(lambda([z], z^2), [1, 2, 3]) → [1, 4, 9]."""
+    out = _run(["map(lambda([z], z^2), [1, 2, 3]);", ":quit"])
+    result_lines = [line for line in out if line.startswith("(%o1)")]
+    assert len(result_lines) == 1
+    line = result_lines[0]
+    # Must not come back as the unevaluated Map(lambda(...), ...) form.
+    assert "lambda" not in line
+    assert "1" in line and "4" in line and "9" in line
+
+
+def test_taylor_sin_repl() -> None:
+    """taylor(sin(y), y, 0, 3) produces a polynomial, not unevaluated."""
+    out = _run(["taylor(sin(y), y, 0, 3);", ":quit"])
+    result_lines = [line for line in out if line.startswith("(%o1)")]
+    assert len(result_lines) == 1
+    line = result_lines[0]
+    # Must not come back as the unevaluated Taylor(sin(y), y, 0, 3).
+    assert "Taylor(" not in line
+    assert "y" in line  # Should contain y (the linear/cubic terms)
+
+
+def test_diff_product_pretty_output() -> None:
+    """diff(sin(y)*cos(y), y) uses subtraction, not ``+`` followed by a minus."""
+    out = _run(["diff(sin(y)*cos(y), y);", ":quit"])
+    result_lines = [line for line in out if line.startswith("(%o1)")]
+    assert len(result_lines) == 1
+    line = result_lines[0]
+    # The result should contain subtraction somewhere.
+    assert " - " in line, f"Expected subtraction in output, got: {line!r}"
+    # Should not contain the ugly 'f*-g' pattern.
+    assert "*-" not in line, f"Unexpected raw '*-' in output: {line!r}"

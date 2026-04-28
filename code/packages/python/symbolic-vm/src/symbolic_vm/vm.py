@@ -112,6 +112,18 @@ class VM:
             if _is_define_record(bound):
                 return self._apply_user_function(bound, new_args)
 
+        # 4b. Inline lambda application?  Head is an IRApply whose own
+        #     head is the symbol ``lambda`` — produced by the MACSYMA
+        #     compiler for ``lambda([x, y], body)`` expressions.  The
+        #     canonical shape is ``lambda(List(params...), body)``.
+        #     Beta-reduce by substituting the actual args for the params.
+        if (
+            isinstance(node.head, IRApply)
+            and isinstance(node.head.head, IRSymbol)
+            and node.head.head.name == "lambda"
+        ):
+            return self._apply_lambda(node.head, new_args)
+
         # 5. No handler, no function — fall back per backend policy.
         return self.backend.on_unknown_head(expr)
 
@@ -142,6 +154,50 @@ class VM:
         if len(param_names) != len(args):
             raise TypeError(
                 f"arity mismatch: function expects {len(param_names)} "
+                f"args, got {len(args)}"
+            )
+        substitution = dict(zip(param_names, args, strict=True))
+        return self.eval(_substitute(body, substitution))
+
+    def _apply_lambda(
+        self, lambda_expr: IRApply, args: tuple[IRNode, ...]
+    ) -> IRNode:
+        """Beta-reduce an inline lambda application.
+
+        MACSYMA ``lambda([x, y], body)`` compiles to
+        ``IRApply(IRSymbol("lambda"), (List(x, y), body))``.  When that
+        expression is used as the head of a call (e.g. via :func:`map`),
+        this method performs the substitution and evaluates the body.
+
+        This is the anonymous-function analog of
+        :meth:`_apply_user_function`: same mechanism, different IR shape
+        (an inline node rather than a named ``Define`` record).
+
+        Parameters
+        ----------
+        lambda_expr:
+            The ``lambda(List(params), body)`` IR node acting as the head.
+        args:
+            Already-evaluated actual arguments.
+
+        Returns
+        -------
+        IRNode
+            The fully evaluated body after parameter substitution, or the
+            backend's unknown-head result if the lambda is malformed.
+        """
+        if len(lambda_expr.args) != 2:
+            # Malformed — not enough arguments in the lambda node itself.
+            return self.backend.on_unknown_head(IRApply(lambda_expr, args))
+        params, body = lambda_expr.args
+        if not (isinstance(params, IRApply) and params.head == LIST):
+            return self.backend.on_unknown_head(IRApply(lambda_expr, args))
+        param_names = tuple(
+            p.name for p in params.args if isinstance(p, IRSymbol)
+        )
+        if len(param_names) != len(args):
+            raise TypeError(
+                f"arity mismatch: lambda expects {len(param_names)} "
                 f"args, got {len(args)}"
             )
         substitution = dict(zip(param_names, args, strict=True))

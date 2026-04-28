@@ -220,6 +220,7 @@ class ProcedureDescriptor:
     parameters: tuple[ProcedureParameter, ...]
     line: int
     column: int
+    parameter_symbol_id: int | None = None
 
 
 @dataclass(frozen=True)
@@ -238,6 +239,7 @@ class ResolvedProcedureCall:
     return_type: str | None
     line: int
     column: int
+    parameter_symbol_id: int | None = None
 
 
 @dataclass(frozen=True)
@@ -804,10 +806,13 @@ class AlgolTypeChecker:
                     )
                 parameter_type = SWITCH
             elif parameter_kind == "procedure":
-                self._error(
-                    formal,
-                    f"{parameter_kind} parameter {formal.value!r} is not supported yet",
-                )
+                if mode == VALUE:
+                    self._error(
+                        formal,
+                        f"value parameter {formal.value!r} cannot be a procedure in "
+                        "this phase",
+                    )
+                parameter_type = "procedure"
             elif mode == NAME and parameter_type not in {
                 INTEGER,
                 BOOLEAN,
@@ -895,13 +900,13 @@ class AlgolTypeChecker:
             elif parameter_kind == SWITCH:
                 parameter_type = SWITCH
             elif parameter_kind == "procedure":
-                parameter_kind = "scalar"
+                parameter_type = "procedure"
             param_symbol = Symbol(
                 name=formal.value,
                 type_name=(
                     parameter_type
                     if parameter_type
-                    in {INTEGER, BOOLEAN, REAL, STRING, LABEL, SWITCH}
+                    in {INTEGER, BOOLEAN, REAL, STRING, LABEL, SWITCH, "procedure"}
                     else INTEGER
                 ),
                 line=formal.line,
@@ -910,6 +915,8 @@ class AlgolTypeChecker:
                 kind=(
                     parameter_kind
                     if parameter_kind in {ARRAY, LABEL, SWITCH}
+                    else "procedure_parameter"
+                    if parameter_kind == "procedure"
                     else "parameter"
                 ),
                 storage_class=(
@@ -1337,56 +1344,60 @@ class AlgolTypeChecker:
 
     def _check_assignment(self, assign: ASTNode, scope: Scope) -> None:
         left_parts = _direct_nodes(assign, "left_part")
-        if len(left_parts) != 1:
-            self._error(assign, "chained assignment is not supported yet")
+        if not left_parts:
+            self._error(assign, "assignment needs at least one target")
             return
-
-        variable = _first_node(left_parts[0], "variable")
-        if variable is None:
-            self._error(left_parts[0], "assignment target must be a variable")
-            return
-
-        name = _variable_head_name(variable)
-        if name is None:
-            self._error(left_parts[0], "assignment target is missing a name")
-            return
-
-        if _variable_subscripts(variable):
-            access = self._check_array_access(variable, scope, role="write")
-            if access is None:
-                target_type = ERROR
-            else:
-                descriptor = next(
-                    (
-                        array
-                        for array in self.semantic_arrays
-                        if array.array_id == access.array_id
-                    ),
-                    None,
-                )
-                target_type = ERROR if descriptor is None else descriptor.element_type
-        else:
-            symbol = self._resolve_name(name, scope, role="write")
-            if symbol is not None and symbol.kind == ARRAY:
-                self._error(name, f"array {name.value!r} requires subscripts")
-                target_type = ERROR
-            elif symbol is not None and symbol.kind == LABEL:
-                self._error(name, f"label {name.value!r} is not assignable")
-                target_type = ERROR
-            else:
-                target_type = ERROR if symbol is None else symbol.type_name
 
         expr = _first_direct_node(assign, "expression")
         value_type = self._infer_expr(expr, scope) if expr is not None else ERROR
-        if (
-            target_type != ERROR
-            and value_type != ERROR
-            and not self._can_assign(target_type, value_type)
-        ):
-            self._error(
-                name,
-                f"cannot assign {value_type} to {target_type} variable {name.value!r}",
-            )
+        for left_part in left_parts:
+            variable = _first_node(left_part, "variable")
+            if variable is None:
+                self._error(left_part, "assignment target must be a variable")
+                continue
+
+            name = _variable_head_name(variable)
+            if name is None:
+                self._error(left_part, "assignment target is missing a name")
+                continue
+
+            if _variable_subscripts(variable):
+                access = self._check_array_access(variable, scope, role="write")
+                if access is None:
+                    target_type = ERROR
+                else:
+                    descriptor = next(
+                        (
+                            array
+                            for array in self.semantic_arrays
+                            if array.array_id == access.array_id
+                        ),
+                        None,
+                    )
+                    target_type = (
+                        ERROR if descriptor is None else descriptor.element_type
+                    )
+            else:
+                symbol = self._resolve_name(name, scope, role="write")
+                if symbol is not None and symbol.kind == ARRAY:
+                    self._error(name, f"array {name.value!r} requires subscripts")
+                    target_type = ERROR
+                elif symbol is not None and symbol.kind == LABEL:
+                    self._error(name, f"label {name.value!r} is not assignable")
+                    target_type = ERROR
+                else:
+                    target_type = ERROR if symbol is None else symbol.type_name
+
+            if (
+                target_type != ERROR
+                and value_type != ERROR
+                and not self._can_assign(target_type, value_type)
+            ):
+                self._error(
+                    name,
+                    f"cannot assign {value_type} to {target_type} variable "
+                    f"{name.value!r}",
+                )
 
     def _check_cond(self, cond: ASTNode, scope: Scope) -> None:
         bool_expr = _first_direct_node(cond, "bool_expr")
@@ -1426,7 +1437,10 @@ class AlgolTypeChecker:
             bool_node = _first_direct_node(elem, "bool_expr")
             if bool_node is not None:
                 if len(arith_nodes) != 1:
-                    self._error(elem, "for while-element must have one value expression")
+                    self._error(
+                        elem,
+                        "for while-element must have one value expression",
+                    )
                     continue
                 start_type = self._infer_expr(arith_nodes[0], scope)
                 if (
@@ -1441,7 +1455,10 @@ class AlgolTypeChecker:
                     )
                 condition_type = self._infer_expr(bool_node, scope)
                 if condition_type != ERROR and condition_type != BOOLEAN:
-                    self._error(bool_node, "for while-element condition must be boolean")
+                    self._error(
+                        bool_node,
+                        "for while-element condition must be boolean",
+                    )
                 continue
             if len(arith_nodes) == 1:
                 value_type = self._infer_expr(arith_nodes[0], scope)
@@ -1548,6 +1565,17 @@ class AlgolTypeChecker:
         if not meaningful:
             return ERROR
 
+        conditional = _conditional_expression_parts(meaningful)
+        if conditional is not None:
+            condition, then_expr, else_expr = conditional
+            return self._infer_conditional_expression(
+                expr,
+                condition,
+                then_expr,
+                else_expr,
+                scope,
+            )
+
         if len(meaningful) == 1:
             return self._infer_expr(meaningful[0], scope)
 
@@ -1592,8 +1620,7 @@ class AlgolTypeChecker:
                 isinstance(child, Token) and child.value in {"**", "^"}
                 for child in meaningful
             ):
-                self._error(expr, "exponentiation is not supported yet")
-                return ERROR
+                return self._infer_power_chain(expr, meaningful, scope)
             return self._infer_expr(meaningful[0], scope)
 
         if expr.rule_name in {"expr_atom", "primary", "bool_primary"}:
@@ -1615,6 +1642,35 @@ class AlgolTypeChecker:
             return self._infer_expr(meaningful[0], scope)
 
         return self._infer_expr(meaningful[0], scope)
+
+    def _infer_conditional_expression(
+        self,
+        node: ASTNode,
+        condition: ASTNode,
+        then_expr: ASTNode,
+        else_expr: ASTNode,
+        scope: Scope,
+    ) -> str:
+        condition_type = self._infer_expr(condition, scope)
+        then_type = self._infer_expr(then_expr, scope)
+        else_type = self._infer_expr(else_expr, scope)
+        if condition_type != ERROR and condition_type != BOOLEAN:
+            self._error(
+                node,
+                "conditional expression requires boolean condition, got "
+                f"{condition_type}",
+            )
+            return ERROR
+        if then_type == ERROR or else_type == ERROR:
+            return ERROR
+        result_type = _conditional_branch_type(then_type, else_type)
+        if result_type is None:
+            self._error(
+                node,
+                "conditional expression branches must have compatible types",
+            )
+            return ERROR
+        return result_type
 
     def _infer_token(self, token: Token, scope: Scope) -> str:
         if token.type_name == "INTEGER_LIT":
@@ -1763,6 +1819,9 @@ class AlgolTypeChecker:
             if parameter.kind == SWITCH:
                 self._check_switch_parameter_actual(argument, scope, parameter)
                 continue
+            if parameter.kind == "procedure":
+                self._check_procedure_parameter_actual(argument, scope, parameter)
+                continue
             actual_type = self._infer_expr(argument, scope)
             if descriptor.procedure_id == -1:
                 if actual_type != ERROR and actual_type not in {
@@ -1827,6 +1886,7 @@ class AlgolTypeChecker:
             return_type=descriptor.return_type,
             line=name_token.line,
             column=name_token.column,
+            parameter_symbol_id=descriptor.parameter_symbol_id,
         )
         self.resolved_procedure_calls.append(call)
         return call
@@ -1940,6 +2000,61 @@ class AlgolTypeChecker:
             return None
         return symbol
 
+    def _check_procedure_parameter_actual(
+        self,
+        argument: ASTNode,
+        scope: Scope,
+        parameter: ProcedureParameter,
+    ) -> Symbol | None:
+        variable = _single_variable_expr(argument)
+        if variable is None or _variable_subscripts(variable):
+            self._error(
+                argument,
+                f"procedure parameter {parameter.name!r} expects a direct "
+                "procedure actual",
+            )
+            return None
+        name = _variable_head_name(variable)
+        if name is None:
+            self._error(argument, "procedure actual is missing a name")
+            return None
+        resolved = scope.resolve_with_scope(name.value)
+        if resolved is None:
+            self._error(
+                name,
+                f"{name.value!r} is not declared in block {scope.block_id} "
+                "or its lexical parents",
+            )
+            return None
+        symbol, _, _ = resolved
+        if symbol.kind == "procedure_parameter":
+            return symbol
+        if symbol.kind != "procedure" or symbol.procedure_id is None:
+            self._error(
+                name,
+                f"procedure parameter {parameter.name!r} expects a procedure actual",
+            )
+            return None
+        descriptor = next(
+            (
+                procedure
+                for procedure in self.semantic_procedures
+                if procedure.procedure_id == symbol.procedure_id
+            ),
+            None,
+        )
+        if descriptor is None:
+            self._error(name, f"procedure {name.value!r} has no descriptor")
+            return None
+        if descriptor.return_type is not None or descriptor.parameters:
+            self._error(
+                name,
+                f"procedure parameter {parameter.name!r} expects a no-argument "
+                "statement procedure actual in this phase",
+            )
+            return None
+        return symbol
+
     def _resolve_builtin_procedure(
         self,
         token: Token,
@@ -1999,6 +2114,24 @@ class AlgolTypeChecker:
                 if descriptor is None:
                     return None
                 return descriptor, current, lexical_depth_delta
+            if symbol is not None and symbol.kind == "procedure_parameter":
+                return (
+                    ProcedureDescriptor(
+                        procedure_id=-2,
+                        name=token.value,
+                        label="__algol_dynamic_procedure_parameter",
+                        declaring_block_id=current.block_id,
+                        body_block_id=current.block_id,
+                        body_node_id=-1,
+                        return_type=None,
+                        parameters=tuple(),
+                        line=token.line,
+                        column=token.column,
+                        parameter_symbol_id=symbol.symbol_id,
+                    ),
+                    current,
+                    lexical_depth_delta,
+                )
             current = current.parent
             lexical_depth_delta += 1
         return None
@@ -2124,6 +2257,42 @@ class AlgolTypeChecker:
             index += 2
         return current_type if saw_operator else self._infer_expr(children[0], scope)
 
+    def _infer_power_chain(
+        self,
+        node: ASTNode,
+        children: list[ASTNode | Token],
+        scope: Scope,
+    ) -> str:
+        current_type = self._infer_expr(children[0], scope)
+        if current_type == ERROR:
+            return ERROR
+        if not _is_numeric_type(current_type):
+            self._error(node, f"operator requires numeric operand, got {current_type}")
+            return ERROR
+
+        index = 1
+        while index < len(children):
+            operator = children[index]
+            exponent = children[index + 1]
+            exponent_type = self._infer_expr(exponent, scope)
+            if exponent_type == ERROR:
+                return ERROR
+            if not isinstance(operator, Token):
+                self._error(node, "expected exponentiation operator")
+                return ERROR
+            if operator.value not in {"**", "^"}:
+                self._error(
+                    node,
+                    f"numeric operator {operator.value!r} is not supported",
+                )
+                return ERROR
+            if exponent_type != INTEGER:
+                self._error(node, "exponentiation exponent must be integer")
+                return ERROR
+            current_type = REAL if current_type == REAL else INTEGER
+            index += 2
+        return current_type
+
     def _infer_numeric_comparison(
         self,
         node: ASTNode,
@@ -2186,6 +2355,14 @@ def check_algol(ast: ASTNode) -> TypeCheckResult:
 
 def _is_numeric_type(type_name: str) -> bool:
     return type_name in {INTEGER, REAL}
+
+
+def _conditional_branch_type(then_type: str, else_type: str) -> str | None:
+    if then_type == else_type:
+        return then_type
+    if _is_numeric_type(then_type) and _is_numeric_type(else_type):
+        return REAL if REAL in {then_type, else_type} else INTEGER
+    return None
 
 
 def check(ast: ASTNode) -> TypeCheckResult:
@@ -2262,6 +2439,45 @@ def _meaningful_children(node: ASTNode) -> list[ASTNode | Token]:
         for child in node.children
         if not (isinstance(child, Token) and child.value in {"(", ")"})
     ]
+
+
+def _conditional_expression_parts(
+    children: list[ASTNode | Token],
+) -> tuple[ASTNode, ASTNode, ASTNode] | None:
+    first = children[0] if children else None
+    if not isinstance(first, Token) or first.value != "if":
+        return None
+    then_index = _keyword_child_index(children, "then")
+    else_index = _keyword_child_index(children, "else")
+    if then_index is None or else_index is None or then_index >= else_index:
+        return None
+    condition = _first_ast_child_between(children, 1, then_index)
+    then_expr = _first_ast_child_between(children, then_index + 1, else_index)
+    else_expr = _first_ast_child_between(children, else_index + 1, len(children))
+    if condition is None or then_expr is None or else_expr is None:
+        return None
+    return condition, then_expr, else_expr
+
+
+def _keyword_child_index(
+    children: list[ASTNode | Token],
+    keyword: str,
+) -> int | None:
+    for index, child in enumerate(children):
+        if isinstance(child, Token) and child.value == keyword:
+            return index
+    return None
+
+
+def _first_ast_child_between(
+    children: list[ASTNode | Token],
+    start: int,
+    end: int,
+) -> ASTNode | None:
+    return next(
+        (child for child in children[start:end] if isinstance(child, ASTNode)),
+        None,
+    )
 
 
 def _first_node(node: ASTNode, rule_name: str) -> ASTNode | None:
@@ -2405,13 +2621,13 @@ def _by_name_formal_write_reasons(
             active_names = active_names - hidden
 
         if node.rule_name == "assign_stmt":
-            left_part = _first_direct_node(node, "left_part")
-            variable = _first_node(left_part, "variable") if left_part else None
-            record(
-                _variable_head_name_value(variable),
-                "local assignment",
-                active_names,
-            )
+            for left_part in _direct_nodes(node, "left_part"):
+                variable = _first_node(left_part, "variable")
+                record(
+                    _variable_head_name_value(variable),
+                    "local assignment",
+                    active_names,
+                )
         elif node.rule_name == "for_stmt":
             loop_token = next(
                 (token for token in _direct_tokens(node) if token.type_name == "NAME"),

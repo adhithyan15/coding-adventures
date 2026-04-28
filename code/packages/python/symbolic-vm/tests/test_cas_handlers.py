@@ -572,6 +572,54 @@ def test_map_add_one() -> None:
     assert result == ilist(IRInteger(2), IRInteger(3), IRInteger(4))
 
 
+def test_map_with_lambda() -> None:
+    """Map(lambda([z], z^2), [1, 2, 3, 4]) → [1, 4, 9, 16].
+
+    The lambda is an inline IRApply used as the function head.
+    The VM's ``_apply_lambda`` method performs beta-reduction.
+    """
+    from symbolic_ir import LIST
+
+    z = IRSymbol("z")
+    # lambda([z], z^2)
+    lambda_node = IRApply(
+        IRSymbol("lambda"),
+        (IRApply(LIST, (z,)), IRApply(POW, (z, IRInteger(2)))),
+    )
+    lst = ilist(IRInteger(1), IRInteger(2), IRInteger(3), IRInteger(4))
+    vm, _ = make_vm()
+    result = vm.eval(IRApply(_MAP, (lambda_node, lst)))
+    assert result == ilist(IRInteger(1), IRInteger(4), IRInteger(9), IRInteger(16))
+
+
+def test_lambda_direct_call() -> None:
+    """IRApply(lambda([z], z+1), (5,)) β-reduces to 6."""
+    from symbolic_ir import LIST
+
+    z = IRSymbol("z")
+    lambda_node = IRApply(
+        IRSymbol("lambda"),
+        (IRApply(LIST, (z,)), IRApply(ADD, (z, IRInteger(1)))),
+    )
+    vm, _ = make_vm()
+    result = vm.eval(IRApply(lambda_node, (IRInteger(5),)))
+    assert result == IRInteger(6)
+
+
+def test_lambda_two_params() -> None:
+    """lambda([a, b], a + b) applied to (3, 4) → 7."""
+    from symbolic_ir import LIST
+
+    a_sym, b_sym = IRSymbol("a"), IRSymbol("b")
+    lambda_node = IRApply(
+        IRSymbol("lambda"),
+        (IRApply(LIST, (a_sym, b_sym)), IRApply(ADD, (a_sym, b_sym))),
+    )
+    vm, _ = make_vm()
+    result = vm.eval(IRApply(lambda_node, (IRInteger(3), IRInteger(4))))
+    assert result == IRInteger(7)
+
+
 def test_apply_add() -> None:
     """Apply(Add, [3, 4]) evaluates to 7.
 
@@ -723,16 +771,36 @@ def test_taylor_full_quadratic() -> None:
         assert result.head != _TAYLOR
 
 
-def test_taylor_transcendental_passthrough() -> None:
-    """Taylor of a transcendental (Sin) stays unevaluated."""
-    from symbolic_ir import SIN
+def test_taylor_transcendental_sin() -> None:
+    """Taylor(sin(x), x, 0, 4) expands via symbolic diff fallback.
+
+    The polynomial-based path raises PolynomialError; the derivative
+    fallback computes each coefficient f^(k)(0)/k! symbolically.
+    Numerically verified at x=0.4 (well inside radius of convergence).
+    """
+    from cas_substitution import subst as _subst
+    from symbolic_ir import SIN, IRFloat
 
     vm, _ = make_vm()
     body = IRApply(SIN, (x,))
-    expr = IRApply(_TAYLOR, (body, x, IRInteger(0), IRInteger(3)))
+    expr = IRApply(_TAYLOR, (body, x, IRInteger(0), IRInteger(4)))
     result = vm.eval(expr)
-    # Should fall through (PolynomialError caught).
-    assert result == expr
+
+    # Must not come back as the unevaluated Taylor head.
+    assert not (isinstance(result, IRApply) and result.head == _TAYLOR), (
+        f"Expected expanded polynomial, got unevaluated: {result}"
+    )
+
+    # Numerically verify: T(0.4) ≈ sin(0.4).
+    pt = IRFloat(0.4)
+    num_result = vm.eval(_subst(pt, x, result))
+    assert hasattr(num_result, "value"), (
+        f"Expected numeric result after substitution, got {num_result}"
+    )
+    assert abs(num_result.value - math.sin(0.4)) < 1e-3, (
+        f"Taylor(sin(x),x,0,4) at x=0.4: got {num_result.value}, "
+        f"expected ≈{math.sin(0.4)}"
+    )
 
 
 # ===========================================================================
