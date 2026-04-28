@@ -38,7 +38,6 @@ from sql_backend.index import IndexDef
 from sql_backend.row import RowIterator
 from sql_backend.schema import TriggerDef as BackendTriggerDef
 from sql_backend.values import SqlValue, sql_type_name
-from sql_backend.schema import TriggerDef as BackendTriggerDef
 from sql_codegen import (
     CHECK_CURSOR_ID,
     AdvanceCursor,
