@@ -56,6 +56,8 @@ All notable changes to this package will be documented in this file.
   guard path.
 - Lowered `value` whole-array parameters by allocating a callee-local copy of
   the array descriptor, bounds metadata, and element storage at procedure entry.
+- Stored label, switch, and procedure formals as copied ids or descriptor
+  pointers at procedure entry even when they are declared in `value` mode.
 
 ## [0.1.0] - 2026-04-20
 

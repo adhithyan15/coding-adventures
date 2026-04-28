@@ -799,28 +799,10 @@ class AlgolTypeChecker:
                 if parameter_type is None:
                     parameter_type = REAL
             elif parameter_kind == LABEL:
-                if mode == VALUE:
-                    self._error(
-                        formal,
-                        f"value parameter {formal.value!r} cannot be a label in "
-                        "this phase",
-                    )
                 parameter_type = LABEL
             elif parameter_kind == SWITCH:
-                if mode == VALUE:
-                    self._error(
-                        formal,
-                        f"value parameter {formal.value!r} cannot be a switch in "
-                        "this phase",
-                    )
                 parameter_type = SWITCH
             elif parameter_kind == "procedure":
-                if mode == VALUE:
-                    self._error(
-                        formal,
-                        f"value parameter {formal.value!r} cannot be a procedure in "
-                        "this phase",
-                    )
                 parameter_type = "procedure"
             elif mode == NAME and parameter_type not in {
                 INTEGER,

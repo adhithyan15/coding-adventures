@@ -87,6 +87,24 @@
       ]
     },
     {
+      "description": "plaintext state literalizes markup and character references",
+      "initialStates": ["PLAINTEXT state"],
+      "input": "hello <b>still text</b> &amp; literal",
+      "output": [
+        ["Character", "hello <b>still text</b> &amp; literal"]
+      ]
+    },
+    {
+      "description": "script data matching end tag emits end tag token",
+      "initialStates": ["Script data state"],
+      "lastStartTag": "script",
+      "input": "if (a < b) alert('&amp;');</script>",
+      "output": [
+        ["Character", "if (a < b) alert('&amp;');"],
+        ["EndTag", "script"]
+      ]
+    },
+    {
       "description": "data state named character references",
       "input": "Fish &amp; &lt;b&gt; &quot;quote&quot; &apos;ok&apos;",
       "output": [

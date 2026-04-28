@@ -373,6 +373,20 @@ class _CIRLowerer:
         # Pattern: {family}_{type}  where family ∈ {add, sub, mul, div,
         #                                           and, or, xor}
         # All produce [dest, src0, src1].
+        #
+        # Immediate-operand handling
+        # --------------------------
+        # The JIT specialiser may emit a CIR instruction where one of the
+        # source operands is a literal integer rather than a variable name.
+        # For example:
+        #   add_u8 _acc [_acc, 2]   # src1 = 2 (int, not a variable name)
+        #
+        # Most IR backends require both arithmetic sources to be registers.
+        # IrOp has immediate variants for some operations (ADD_IMM, AND_IMM,
+        # OR_IMM, XOR_IMM) — we prefer these when src1 is a literal.
+        # For operations without an immediate variant (SUB, MUL, DIV), we
+        # load the literal into a fresh scratch register first.
+        # The same applies when src0 is a literal (commute or load-then-op).
 
         _BINARY_INT_MAP: dict[str, IrOp] = {
             "add": IrOp.ADD,
@@ -382,6 +396,14 @@ class _CIRLowerer:
             "and": IrOp.AND,
             "or":  IrOp.OR,
             "xor": IrOp.XOR,
+        }
+
+        # Operations that have a [dest, src_reg, src_imm] immediate variant.
+        _BINARY_INT_IMM_MAP: dict[str, IrOp] = {
+            "add": IrOp.ADD_IMM,
+            "and": IrOp.AND_IMM,
+            "or":  IrOp.OR_IMM,
+            "xor": IrOp.XOR_IMM,
         }
 
         _BINARY_FLOAT_MAP: dict[str, IrOp] = {
@@ -397,10 +419,49 @@ class _CIRLowerer:
         parts = op.split("_", 1)
         if len(parts) == 2 and parts[0] in _BINARY_INT_MAP and parts[1] in _INT_TYPES:
             assert dest is not None
-            ir_op = _BINARY_INT_MAP[parts[0]]
+            family = parts[0]
+            ir_op = _BINARY_INT_MAP[family]
             dest_reg = self._var(dest)
-            src0 = self._operand(instr.srcs[0])
-            src1 = self._operand(instr.srcs[1])
+            raw0 = instr.srcs[0]
+            raw1 = instr.srcs[1]
+            src0 = self._operand(raw0)
+            src1 = self._operand(raw1)
+
+            # ── Case: src1 is an immediate ───────────────────────────────────
+            if isinstance(src1, IrImmediate):
+                imm_op = _BINARY_INT_IMM_MAP.get(family)
+                if imm_op is not None:
+                    # Use the immediate variant: ADD_IMM, AND_IMM, etc.
+                    # src0 must be a register here.
+                    if isinstance(src0, IrImmediate):
+                        # Both immediates: load src0 into a scratch first.
+                        s = self._fresh()
+                        self._emit(IrOp.LOAD_IMM, s, src0)
+                        self._emit(imm_op, dest_reg, s, src1)
+                    else:
+                        self._emit(imm_op, dest_reg, src0, src1)
+                else:
+                    # No immediate variant: load src1 into a scratch register.
+                    s = self._fresh()
+                    self._emit(IrOp.LOAD_IMM, s, src1)
+                    if isinstance(src0, IrImmediate):
+                        s0 = self._fresh()
+                        self._emit(IrOp.LOAD_IMM, s0, src0)
+                        self._emit(ir_op, dest_reg, s0, s)
+                    else:
+                        self._emit(ir_op, dest_reg, src0, s)
+                return
+
+            # ── Case: src0 is an immediate (src1 is a register) ─────────────
+            if isinstance(src0, IrImmediate):
+                # Load src0 into a scratch; commutative ops could swap but
+                # we always load to preserve correctness for non-commutative ops.
+                s = self._fresh()
+                self._emit(IrOp.LOAD_IMM, s, src0)
+                self._emit(ir_op, dest_reg, s, src1)
+                return
+
+            # ── Normal register-register case ────────────────────────────────
             self._emit(ir_op, dest_reg, src0, src1)
             return
 
@@ -454,14 +515,30 @@ class _CIRLowerer:
         #
         # Pattern: cmp_{rel}_{int_type}
         # IrOp has: CMP_EQ, CMP_NE, CMP_LT, CMP_GT — but NO CMP_LE or CMP_GE.
-        # cmp_le and cmp_ge are synthesised:
-        #   cmp_le(a, b) = NOT(CMP_GT(a, b))
-        #   cmp_ge(a, b) = NOT(CMP_LT(a, b))
+        # cmp_le and cmp_ge are synthesised using three instructions:
         #
-        # Truth table for cmp_le_i32 synthesisation:
-        #   a=1, b=2 → CMP_GT(1,2)=0 → NOT(0)=1 ✓  (1 <= 2 is true)
-        #   a=2, b=2 → CMP_GT(2,2)=0 → NOT(0)=1 ✓  (2 <= 2 is true)
-        #   a=3, b=2 → CMP_GT(3,2)=1 → NOT(1)=0 ✓  (3 <= 2 is false)
+        #   cmp_le(a, b):
+        #     gt   = CMP_GT(a, b)      # → 0 or 1
+        #     zero = LOAD_IMM(0)
+        #     dest = CMP_EQ(gt, zero)  # → 1 if a≤b (gt==0), else 0
+        #
+        #   cmp_ge(a, b):
+        #     lt   = CMP_LT(a, b)
+        #     zero = LOAD_IMM(0)
+        #     dest = CMP_EQ(lt, zero)  # → 1 if a≥b (lt==0), else 0
+        #
+        # Why NOT is not used here
+        # -------------------------
+        # IrOp.NOT is bitwise complement (XOR with 0xFFFFFFFF in WASM).
+        # Bitwise NOT of 0 is -1 (0xFFFFFFFF), not 1 — so NOT cannot be used
+        # to negate a boolean 0/1 value reliably across all backends.
+        # CMP_EQ with zero is the universally correct "logical NOT" for
+        # comparison results that are guaranteed to be 0 or 1.
+        #
+        # Truth table for cmp_le_i32 (via CMP_EQ(CMP_GT, 0)):
+        #   a=1, b=2: CMP_GT(1,2)=0 → CMP_EQ(0,0)=1 ✓  (1 ≤ 2 is true)
+        #   a=2, b=2: CMP_GT(2,2)=0 → CMP_EQ(0,0)=1 ✓  (2 ≤ 2 is true)
+        #   a=3, b=2: CMP_GT(3,2)=1 → CMP_EQ(1,0)=0 ✓  (3 ≤ 2 is false)
 
         _CMP_INT_MAP: dict[str, IrOp] = {
             "eq": IrOp.CMP_EQ,
@@ -487,17 +564,21 @@ class _CIRLowerer:
                         return
 
                     if rel == "le":
-                        # Synthesise: tmp = CMP_GT(src0, src1); dest = NOT(tmp)
-                        tmp = self._fresh()
-                        self._emit(IrOp.CMP_GT, tmp, src0, src1)
-                        self._emit(IrOp.NOT, dest_reg, tmp)
+                        # Synthesise: gt=CMP_GT(a,b); zero=0; dest=CMP_EQ(gt,zero)
+                        gt = self._fresh()
+                        zero = self._fresh()
+                        self._emit(IrOp.CMP_GT, gt, src0, src1)
+                        self._emit(IrOp.LOAD_IMM, zero, IrImmediate(0))
+                        self._emit(IrOp.CMP_EQ, dest_reg, gt, zero)
                         return
 
                     if rel == "ge":
-                        # Synthesise: tmp = CMP_LT(src0, src1); dest = NOT(tmp)
-                        tmp = self._fresh()
-                        self._emit(IrOp.CMP_LT, tmp, src0, src1)
-                        self._emit(IrOp.NOT, dest_reg, tmp)
+                        # Synthesise: lt=CMP_LT(a,b); zero=0; dest=CMP_EQ(lt,zero)
+                        lt = self._fresh()
+                        zero = self._fresh()
+                        self._emit(IrOp.CMP_LT, lt, src0, src1)
+                        self._emit(IrOp.LOAD_IMM, zero, IrImmediate(0))
+                        self._emit(IrOp.CMP_EQ, dest_reg, lt, zero)
                         return
 
                 # Float comparisons — IrOp has all six variants directly
@@ -567,6 +648,31 @@ class _CIRLowerer:
                 IrOp.COMMENT,
                 IrLabel(f"type_assert {var_name} : {type_name}"),
             )
+            return
+
+        # ── Tetrad VM move instruction ───────────────────────────────────────
+        #
+        # The Tetrad VM and JIT specialiser emit ``tetrad.move`` as an
+        # explicit register-to-register copy during specialisation.  It is
+        # not part of the stable CIR opcode set defined in LANG21's spec, but
+        # the specialiser produces it for temporary value moves that would
+        # otherwise require SSA φ-nodes.
+        #
+        # Lowering strategy: ``ADD_IMM dest, src, 0`` (the canonical
+        # "MOV via add-zero" pattern used throughout the IrProgram backends).
+        # If the source is a literal (unusual but possible), we fall back to
+        # ``LOAD_IMM`` instead.
+
+        if op == "tetrad.move":
+            assert dest is not None, "tetrad.move must have a dest"
+            dest_reg = self._var(dest)
+            src_operand = self._operand(instr.srcs[0])
+            if isinstance(src_operand, IrImmediate):
+                # Literal source — just load it directly.
+                self._emit(IrOp.LOAD_IMM, dest_reg, src_operand)
+            else:
+                # Register source — copy via ADD_IMM with zero.
+                self._emit(IrOp.ADD_IMM, dest_reg, src_operand, IrImmediate(0))
             return
 
         # ── Unsupported ops ──────────────────────────────────────────────────

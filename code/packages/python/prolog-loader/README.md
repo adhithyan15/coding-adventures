@@ -17,6 +17,8 @@ It keeps parsing side-effect free, then exposes helpers to:
   module-local predicates and weak imports
 - rewrite explicit `module:goal` qualification during linking, including common
   meta-goal forms like `call/1`, `once/1`, `not/1`, `\\+/1`, and `phrase/2,3`
+- adapt Prolog control constructs such as `->/2` and
+  `(If -> Then ; Else)` into executable builtin goals
 - load SWI-Prolog source graphs from real `.pl` files through relative
   `consult/1`, `ensure_loaded/1`, and file-backed `use_module/1,2`
 - splice `include/1` targets into the including source before project linking

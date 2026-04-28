@@ -102,6 +102,28 @@ class TestPrologVMStress:
             {"Chosen": atom("first")},
         ]
 
+    def test_if_then_else_commits_to_first_condition_solution(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            candidate(first).
+            candidate(second).
+
+            chosen(Value) :-
+                (candidate(Candidate) -> Value = Candidate ; Value = none).
+
+            fallback(Value) :-
+                (missing(Candidate) -> Value = Candidate ; Value = none).
+
+            ?- chosen(Chosen), fallback(Fallback).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert [answer.as_dict() for answer in answers] == [
+            {"Chosen": atom("first"), "Fallback": atom("none")},
+        ]
+
     def test_initialized_named_answers_keep_runtime_assertions_visible(self) -> None:
         compiled = compile_swi_prolog_source(
             """

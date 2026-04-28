@@ -4379,7 +4379,11 @@ class AlgolIrCompiler:
                     _VALUE_PARAM_BASE_REG + index,
                     scope,
                 )
-            elif parameter.mode == _NAME_MODE:
+            elif parameter.mode == _NAME_MODE or parameter.kind in {
+                "label",
+                "switch",
+                "procedure",
+            }:
                 self._store_word_reg(
                     value_reg=_VALUE_PARAM_BASE_REG + index,
                     base_reg=scope.frame_base_reg,
