@@ -20,9 +20,14 @@ from fractions import Fraction
 from symbolic_ir import (
     ADD,
     MUL,
+    NEG,
+    POW,
     SQRT,
+    SUB,
     IRApply,
     IRInteger,
+    IRNode,
+    IRRational,
     IRSymbol,
 )
 
@@ -33,7 +38,11 @@ from cas_algebraic.algebraic import (
     _try_split_quadratic,
 )
 from cas_algebraic.handlers import (
+    _alg_coeff_to_ir,
     _extract_d,
+    _ir_to_poly_coeffs,
+    _poly_add,
+    _poly_mul,
     build_alg_factor_handler_table,
 )
 
@@ -44,19 +53,61 @@ from cas_algebraic.handlers import (
 x = IRSymbol("x")
 
 
-def _make_vm():
-    """Return a fresh SymbolicBackend VM for handler tests."""
-    # Import here so the module can be tested without symbolic-vm in early
-    # unit tests (the algebraic core itself has no vm dep).
-    from symbolic_vm.backends import SymbolicBackend
-    from symbolic_vm.vm import VM
+class _MinimalVM:
+    """Minimal recursive VM stub — no symbolic_vm dependency.
 
-    backend = SymbolicBackend()
-    # Register AlgFactor handler.
+    Evaluates an IR tree bottom-up: first eval each argument, then dispatch
+    to a registered handler.  Handlers are keyed by head name (string).
+
+    This mirrors the real VM's evaluation order without pulling in the full
+    symbolic_vm stack.  The same pattern is used in cas-complex tests to
+    avoid the circular-dependency: symbolic_vm → cas_algebraic → symbolic_vm.
+
+    The ``AlgFactor`` head is treated as a *held* head — its arguments are
+    NOT pre-evaluated before the handler is called.  (In the real VM this is
+    done via ``_HELD_HEADS``.)  For the current test expressions (which are
+    already in canonical form) this makes no difference, but it matches the
+    intended semantics.
+    """
+
+    # Heads whose arguments should NOT be recursively evaluated before
+    # dispatching to the registered handler (mirrors _HELD_HEADS in the
+    # real SymbolicBackend).
+    _held: frozenset[str] = frozenset({"AlgFactor"})
+
+    def __init__(self) -> None:
+        self._handlers: dict = {}
+
+    def eval(self, node: IRNode) -> IRNode:
+        if not isinstance(node, IRApply):
+            return node
+        if not isinstance(node.head, IRSymbol):
+            return node
+        head_name = node.head.name
+        # For held heads, pass the original args to the handler unchanged.
+        if head_name not in self._held:
+            evaled_args = tuple(self.eval(a) for a in node.args)
+            if evaled_args != node.args:
+                node = IRApply(node.head, evaled_args)
+        handler = self._handlers.get(head_name)
+        if handler is not None:
+            result = handler(self, node)
+            if result is not node:
+                return result
+        return node
+
+
+def _make_vm() -> _MinimalVM:
+    """Build a MinimalVM wired with the AlgFactor handler.
+
+    No symbolic_vm import — the AlgFactor handler now uses its own
+    _ir_to_poly_coeffs helper instead of symbolic_vm.polynomial_bridge.
+    """
     from cas_algebraic import build_alg_factor_handler_table
 
-    backend._handlers.update(build_alg_factor_handler_table())
-    return VM(backend)
+    vm = _MinimalVM()
+    vm._handlers.update(build_alg_factor_handler_table())
+    return vm
 
 
 def _sqrt(d: int) -> IRApply:
@@ -465,3 +516,193 @@ class TestAlgFactorHandler:
         expr = IRApply(IRSymbol("AlgFactor"), (poly_ir, _sqrt(4)))
         result = vm.eval(expr)
         assert result == expr
+
+    def test_non_polynomial_input_unevaluated(self):
+        """If the poly_ir is not a polynomial (contains non-poly head) → unevaluated."""
+        vm = _make_vm()
+        # Sin(x) is not a polynomial — _ir_to_poly_coeffs returns None.
+        sin_x = IRApply(IRSymbol("Sin"), (x,))
+        expr = IRApply(IRSymbol("AlgFactor"), (sin_x, _sqrt(2)))
+        result = vm.eval(expr)
+        assert result == expr
+
+    def test_pow_polynomial_evaluates(self):
+        """AlgFactor(x^2 - 2, Sqrt(2)) uses Pow node → two linear factors."""
+        vm = _make_vm()
+        # x^2 - 2 using Pow IR: Sub(Pow(x, 2), 2)
+        poly_ir = IRApply(SUB, (IRApply(POW, (x, IRInteger(2))), IRInteger(2)))
+        expr = _alg_factor_expr(poly_ir, 2)
+        result = vm.eval(expr)
+        # Should factor as (x - sqrt(2))(x + sqrt(2)).
+        assert isinstance(result, IRApply)
+        assert result.head == MUL
+
+    def test_neg_polynomial_evaluates(self):
+        """AlgFactor(Neg(x^2+1), Sqrt(2)) — Neg node handled by _ir_to_poly_coeffs."""
+        vm = _make_vm()
+        # Neg(x^2 + 1) — irreducible over Q[√2], so returns unevaluated.
+        pos_poly = IRApply(ADD, (IRApply(MUL, (x, x)), IRInteger(1)))
+        neg_poly = IRApply(NEG, (pos_poly,))
+        expr = _alg_factor_expr(neg_poly, 2)
+        result = vm.eval(expr)
+        # x^2+1 is irreducible; Neg(...) is also irreducible.
+        assert isinstance(result, IRApply)
+        assert result.head == IRSymbol("AlgFactor")
+
+
+# ===========================================================================
+# Section 8: _poly_add, _poly_mul — polynomial arithmetic helpers
+# ===========================================================================
+
+
+class TestPolyHelpers:
+    """Unit tests for the polynomial arithmetic helpers."""
+
+    def test_poly_add_equal_length(self):
+        """Add two polynomials of the same degree."""
+        a = [Fraction(1), Fraction(2)]   # 1 + 2x
+        b = [Fraction(3), Fraction(4)]   # 3 + 4x
+        assert _poly_add(a, b) == [Fraction(4), Fraction(6)]  # 4 + 6x
+
+    def test_poly_add_unequal_length(self):
+        """Shorter polynomial is zero-padded."""
+        a = [Fraction(1), Fraction(2), Fraction(3)]  # 1 + 2x + 3x^2
+        b = [Fraction(10)]                            # 10
+        result = _poly_add(a, b)
+        assert result == [Fraction(11), Fraction(2), Fraction(3)]
+
+    def test_poly_mul_constants(self):
+        """Multiplying two constants gives a constant."""
+        assert _poly_mul([Fraction(3)], [Fraction(4)]) == [Fraction(12)]
+
+    def test_poly_mul_degree_1(self):
+        """(1 + x)(1 - x) = 1 - x^2."""
+        a = [Fraction(1), Fraction(1)]   # 1 + x
+        b = [Fraction(1), Fraction(-1)]  # 1 - x
+        result = _poly_mul(a, b)
+        assert result == [Fraction(1), Fraction(0), Fraction(-1)]
+
+    def test_poly_mul_empty_returns_zero(self):
+        """Multiplying by empty list returns [0]."""
+        assert _poly_mul([], [Fraction(2)]) == [Fraction(0)]
+
+
+# ===========================================================================
+# Section 9: _ir_to_poly_coeffs — IR → polynomial coefficient extraction
+# ===========================================================================
+
+
+class TestIrToPolyCoeffs:
+    """Unit tests for the _ir_to_poly_coeffs IR → polynomial converter."""
+
+    def test_integer_constant(self):
+        """IRInteger maps to a constant polynomial."""
+        assert _ir_to_poly_coeffs(IRInteger(5), x) == [Fraction(5)]
+
+    def test_rational_constant(self):
+        """IRRational maps to a constant polynomial with Fraction value."""
+        node = IRRational(1, 2)
+        result = _ir_to_poly_coeffs(node, x)
+        assert result == [Fraction(1, 2)]
+
+    def test_variable_x(self):
+        """IRSymbol(x) → [0, 1] (the polynomial x)."""
+        assert _ir_to_poly_coeffs(x, x) == [Fraction(0), Fraction(1)]
+
+    def test_other_symbol_returns_none(self):
+        """A symbol that is not x → None (unknown variable)."""
+        y = IRSymbol("y")
+        assert _ir_to_poly_coeffs(y, x) is None
+
+    def test_sub_polynomial(self):
+        """Sub(x, 1) → x - 1 = [-1, 1]."""
+        node = IRApply(SUB, (x, IRInteger(1)))
+        assert _ir_to_poly_coeffs(node, x) == [Fraction(-1), Fraction(1)]
+
+    def test_pow_polynomial(self):
+        """Pow(x, 2) → x^2 = [0, 0, 1]."""
+        node = IRApply(POW, (x, IRInteger(2)))
+        assert _ir_to_poly_coeffs(node, x) == [Fraction(0), Fraction(0), Fraction(1)]
+
+    def test_pow_zero_exponent(self):
+        """Pow(x, 0) → 1 = [1]."""
+        node = IRApply(POW, (x, IRInteger(0)))
+        assert _ir_to_poly_coeffs(node, x) == [Fraction(1)]
+
+    def test_pow_negative_exponent_returns_none(self):
+        """Pow(x, -1) is a rational function → None."""
+        node = IRApply(POW, (x, IRInteger(-1)))
+        assert _ir_to_poly_coeffs(node, x) is None
+
+    def test_neg_polynomial(self):
+        """Neg(x + 1) → -x - 1 = [-1, -1]."""
+        plus = IRApply(ADD, (x, IRInteger(1)))
+        node = IRApply(NEG, (plus,))
+        assert _ir_to_poly_coeffs(node, x) == [Fraction(-1), Fraction(-1)]
+
+    def test_unknown_head_returns_none(self):
+        """An IR head not handled (e.g. Sin) → None."""
+        node = IRApply(IRSymbol("Sin"), (x,))
+        assert _ir_to_poly_coeffs(node, x) is None
+
+    def test_add_with_none_subexpr_returns_none(self):
+        """If either sub-expression of Add is not a polynomial → None."""
+        sin_x = IRApply(IRSymbol("Sin"), (x,))
+        node = IRApply(ADD, (sin_x, IRInteger(1)))
+        assert _ir_to_poly_coeffs(node, x) is None
+
+    def test_mul_with_none_subexpr_returns_none(self):
+        """Mul where one factor is non-polynomial → None."""
+        y = IRSymbol("y")
+        node = IRApply(MUL, (x, y))  # x*y — two variables
+        assert _ir_to_poly_coeffs(node, x) is None
+
+    def test_pow_with_non_integer_exponent_returns_none(self):
+        """Pow(x, x) — symbolic exponent → None."""
+        node = IRApply(POW, (x, x))
+        assert _ir_to_poly_coeffs(node, x) is None
+
+    def test_pow_with_none_base_returns_none(self):
+        """Pow(Sin(x), 2) — non-polynomial base → None."""
+        sin_x = IRApply(IRSymbol("Sin"), (x,))
+        node = IRApply(POW, (sin_x, IRInteger(2)))
+        assert _ir_to_poly_coeffs(node, x) is None
+
+
+# ===========================================================================
+# Section 10: _alg_coeff_to_ir — algebraic coefficient → IR
+# ===========================================================================
+
+
+class TestAlgCoeffToIr:
+    """Unit tests for _alg_coeff_to_ir edge cases not covered by main tests."""
+
+    def test_fractional_rational_coefficient(self):
+        """rational=1/2, radical=0 → IRRational(1, 2)."""
+        sqrt_ir = IRApply(SQRT, (IRInteger(2),))
+        result = _alg_coeff_to_ir(Fraction(1, 2), Fraction(0), sqrt_ir)
+        assert isinstance(result, IRRational)
+        assert result.numer == 1
+        assert result.denom == 2
+
+    def test_non_unit_radical_coefficient(self):
+        """rational=0, radical=3/2 → Mul(3/2, Sqrt(2))."""
+        sqrt_ir = IRApply(SQRT, (IRInteger(2),))
+        result = _alg_coeff_to_ir(Fraction(0), Fraction(3, 2), sqrt_ir)
+        # Should be Mul(IRRational(3,2), sqrt_ir)
+        assert isinstance(result, IRApply)
+        assert result.head == MUL
+
+    def test_negative_unit_radical(self):
+        """rational=0, radical=-1 → Neg(Sqrt(2))."""
+        sqrt_ir = IRApply(SQRT, (IRInteger(2),))
+        result = _alg_coeff_to_ir(Fraction(0), Fraction(-1), sqrt_ir)
+        assert isinstance(result, IRApply)
+        assert result.head == IRSymbol("Neg")
+
+    def test_both_rational_and_radical(self):
+        """rational=1, radical=1 → Add(1, Sqrt(2))."""
+        sqrt_ir = IRApply(SQRT, (IRInteger(2),))
+        result = _alg_coeff_to_ir(Fraction(1), Fraction(1), sqrt_ir)
+        assert isinstance(result, IRApply)
+        assert result.head == ADD

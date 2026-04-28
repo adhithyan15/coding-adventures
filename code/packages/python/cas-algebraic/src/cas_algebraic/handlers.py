@@ -56,8 +56,10 @@ from typing import TYPE_CHECKING
 from symbolic_ir import (
     ADD,
     MUL,
+    NEG,
     POW,
     SQRT,
+    SUB,
     IRApply,
     IRInteger,
     IRNode,
@@ -256,26 +258,19 @@ def alg_factor_handler(vm: VM, expr: IRApply) -> IRNode:
     if x is None:
         return expr
 
-    # Convert IR to rational polynomial.
-    from symbolic_vm.polynomial_bridge import to_rational
-
-    rational = to_rational(poly_ir, x)
-    if rational is None:
+    # Convert IR to polynomial coefficient list (no symbolic_vm dependency).
+    frac_coeffs = _ir_to_poly_coeffs(poly_ir, x)
+    if frac_coeffs is None:
         return expr
 
-    num_frac, den_frac = rational
-    _ONE_FRAC: tuple[Fraction, ...] = (Fraction(1),)
-    if den_frac != _ONE_FRAC:
-        return expr  # Rational function — not a polynomial.
-
-    # Convert Fraction coefficients → integers (clear denominators).
-    denoms = [c.denominator for c in num_frac]
+    # Clear denominators to get integer coefficients for factor_over_extension.
     import math as _math
 
+    denoms = [c.denominator for c in frac_coeffs]
     lcm = denoms[0]
     for dn in denoms[1:]:
         lcm = lcm * dn // _math.gcd(lcm, dn)
-    int_coeffs = [int(c * lcm) for c in num_frac]
+    int_coeffs = [int(c * lcm) for c in frac_coeffs]
 
     # Attempt factoring over Q[√d].
     factors = factor_over_extension(int_coeffs, d)
@@ -299,6 +294,151 @@ def alg_factor_handler(vm: VM, expr: IRApply) -> IRNode:
     for f_ir in factor_irs[1:]:
         acc_ir = IRApply(MUL, (acc_ir, f_ir))
     return acc_ir
+
+
+# ---------------------------------------------------------------------------
+# IR → univariate polynomial helper (no symbolic_vm dependency)
+# ---------------------------------------------------------------------------
+
+
+def _poly_add(a: list[Fraction], b: list[Fraction]) -> list[Fraction]:
+    """Add two polynomials represented as ascending-degree coefficient lists.
+
+    Pad the shorter list with zeros on the right so lengths match, then
+    sum element-wise.
+
+    Example::
+
+        _poly_add([1, 2], [3, 0, 5])  →  [4, 2, 5]  # (1+2x) + (3+5x²)
+    """
+    n = max(len(a), len(b))
+    result = []
+    for i in range(n):
+        ai = a[i] if i < len(a) else Fraction(0)
+        bi = b[i] if i < len(b) else Fraction(0)
+        result.append(ai + bi)
+    return result
+
+
+def _poly_mul(a: list[Fraction], b: list[Fraction]) -> list[Fraction]:
+    """Multiply two polynomials via the schoolbook algorithm.
+
+    Coefficient lists are in ascending degree:  ``coeffs[k]`` is the
+    coefficient of  x^k.  The output has degree = deg(a) + deg(b).
+
+    Example::
+
+        _poly_mul([0, 1], [0, 1])  →  [0, 0, 1]  # x * x = x²
+    """
+    if not a or not b:
+        return [Fraction(0)]
+    result = [Fraction(0)] * (len(a) + len(b) - 1)
+    for i, ai in enumerate(a):
+        for j, bj in enumerate(b):
+            result[i + j] += ai * bj
+    return result
+
+
+def _ir_to_poly_coeffs(node: IRNode, x: IRSymbol) -> list[Fraction] | None:
+    """Convert a univariate polynomial IR expression to a coefficient list.
+
+    Returns ascending-degree coefficient list ``[c₀, c₁, …, cₙ]`` such that
+    the polynomial equals ``Σ cₖ · xᵏ``.  Returns ``None`` if the expression
+    is not a polynomial in ``x`` with rational coefficients, or if it
+    involves other free variables, or contains negative/fractional exponents.
+
+    Supported IR shapes
+    -------------------
+    - ``IRInteger(n)``              → constant ``[Fraction(n)]``
+    - ``IRRational(p, q)``          → constant ``[Fraction(p, q)]``
+    - ``IRSymbol`` equal to ``x``   → ``[0, 1]``
+    - ``Add(a, b)``                 → coefficient-wise sum
+    - ``Sub(a, b)``                 → coefficient-wise difference
+    - ``Mul(a, b)``                 → convolution (polynomial product)
+    - ``Pow(base, IRInteger(k≥0))`` → base raised to k by repeated squaring
+    - ``Neg(a)``                    → negated coefficients
+
+    Any unsupported node shape returns ``None``.
+
+    Example::
+
+        x = IRSymbol("x")
+        _ir_to_poly_coeffs(IRApply(ADD, (IRApply(POW, (x, IRInteger(2))),
+                                         IRInteger(1))), x)
+        # → [Fraction(1), Fraction(0), Fraction(1)]   # x² + 1
+    """
+    if isinstance(node, IRInteger):
+        return [Fraction(node.value)]
+
+    if isinstance(node, IRRational):
+        return [Fraction(node.numer, node.denom)]
+
+    if isinstance(node, IRSymbol):
+        if node == x:
+            return [Fraction(0), Fraction(1)]  # x itself
+        return None  # Other symbol → not a Q-coefficient polynomial.
+
+    if not isinstance(node, IRApply):
+        return None  # IRFloat, etc. not handled.
+
+    head = node.head
+    args = node.args
+
+    if head == ADD:
+        if len(args) != 2:
+            return None
+        a = _ir_to_poly_coeffs(args[0], x)
+        b = _ir_to_poly_coeffs(args[1], x)
+        if a is None or b is None:
+            return None
+        return _poly_add(a, b)
+
+    if head == SUB:
+        if len(args) != 2:
+            return None
+        a = _ir_to_poly_coeffs(args[0], x)
+        b = _ir_to_poly_coeffs(args[1], x)
+        if a is None or b is None:
+            return None
+        return _poly_add(a, [-c for c in b])
+
+    if head == MUL:
+        if len(args) != 2:
+            return None
+        a = _ir_to_poly_coeffs(args[0], x)
+        b = _ir_to_poly_coeffs(args[1], x)
+        if a is None or b is None:
+            return None
+        return _poly_mul(a, b)
+
+    if head == POW:
+        if len(args) != 2 or not isinstance(args[1], IRInteger):
+            return None
+        exp = int(args[1].value)
+        if exp < 0:
+            return None  # Negative exponent → rational function, not poly.
+        base_coeffs = _ir_to_poly_coeffs(args[0], x)
+        if base_coeffs is None:
+            return None
+        # Binary exponentiation to keep O(n² deg²) instead of O(n deg³).
+        result: list[Fraction] = [Fraction(1)]
+        b = list(base_coeffs)
+        while exp > 0:
+            if exp % 2 == 1:
+                result = _poly_mul(result, b)
+            b = _poly_mul(b, b)
+            exp //= 2
+        return result
+
+    if head == NEG:
+        if len(args) != 1:
+            return None
+        a = _ir_to_poly_coeffs(args[0], x)
+        if a is None:
+            return None
+        return [-c for c in a]
+
+    return None  # Unknown head — not a polynomial we can handle.
 
 
 # ---------------------------------------------------------------------------
