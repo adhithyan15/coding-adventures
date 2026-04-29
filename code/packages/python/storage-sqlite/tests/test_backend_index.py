@@ -763,3 +763,157 @@ class TestRuntimeIndexMaintenance:
         with SqliteFileBackend(path) as b2:
             assert list(b2.scan_index("idx_email", ["a@x.com"], ["a@x.com"])) == [1]
             assert list(b2.scan_index("idx_email", ["b@x.com"], ["b@x.com"])) == [2]
+
+
+# ---------------------------------------------------------------------------
+# Auto-created UNIQUE indexes for UNIQUE columns
+# ---------------------------------------------------------------------------
+
+
+class TestAutoUniqueIndex:
+    """``CREATE TABLE`` with UNIQUE columns auto-creates UNIQUE indexes."""
+
+    def test_unique_column_creates_auto_index(self, tmp_path: Path) -> None:
+        path = str(tmp_path / "au1.db")
+        with SqliteFileBackend(path) as b:
+            b.create_table(
+                "users",
+                [
+                    ColumnDef("id", "INTEGER", primary_key=True),
+                    ColumnDef("email", "TEXT", unique=True),
+                ],
+                if_not_exists=False,
+            )
+            idxs = b.list_indexes("users")
+            assert len(idxs) == 1
+            assert idxs[0].name == "sqlite_autoindex_users_1"
+            assert idxs[0].columns == ["email"]
+            assert idxs[0].unique is True
+            assert idxs[0].auto is True
+
+    def test_no_auto_index_for_ipk_column(self, tmp_path: Path) -> None:
+        """The INTEGER PRIMARY KEY column is the rowid — no auto-index."""
+        path = str(tmp_path / "au2.db")
+        with SqliteFileBackend(path) as b:
+            b.create_table(
+                "items",
+                [
+                    ColumnDef("id", "INTEGER", primary_key=True),
+                    ColumnDef("name", "TEXT"),
+                ],
+                if_not_exists=False,
+            )
+            assert b.list_indexes("items") == []
+
+    def test_auto_index_for_non_ipk_primary_key(self, tmp_path: Path) -> None:
+        """A TEXT PRIMARY KEY is not an IPK, so it gets an auto-index."""
+        path = str(tmp_path / "au3.db")
+        with SqliteFileBackend(path) as b:
+            b.create_table(
+                "kv",
+                [
+                    ColumnDef("key", "TEXT", primary_key=True),
+                    ColumnDef("value", "TEXT"),
+                ],
+                if_not_exists=False,
+            )
+            idxs = b.list_indexes("kv")
+            assert len(idxs) == 1
+            assert idxs[0].columns == ["key"]
+            assert idxs[0].unique is True
+
+    def test_multiple_unique_columns_each_get_an_index(self, tmp_path: Path) -> None:
+        path = str(tmp_path / "au4.db")
+        with SqliteFileBackend(path) as b:
+            b.create_table(
+                "people",
+                [
+                    ColumnDef("id", "INTEGER", primary_key=True),
+                    ColumnDef("email", "TEXT", unique=True),
+                    ColumnDef("ssn", "TEXT", unique=True),
+                ],
+                if_not_exists=False,
+            )
+            idxs = b.list_indexes("people")
+            names = sorted(i.name for i in idxs)
+            assert names == ["sqlite_autoindex_people_1", "sqlite_autoindex_people_2"]
+            cols = sorted(i.columns[0] for i in idxs)
+            assert cols == ["email", "ssn"]
+            assert all(i.unique for i in idxs)
+
+    def test_auto_index_enforces_uniqueness_at_runtime(self, tmp_path: Path) -> None:
+        """Inserting a duplicate UNIQUE column value raises ConstraintViolation."""
+        from sql_backend import ConstraintViolation
+        path = str(tmp_path / "au5.db")
+        with SqliteFileBackend(path) as b:
+            b.create_table(
+                "users",
+                [
+                    ColumnDef("id", "INTEGER", primary_key=True),
+                    ColumnDef("email", "TEXT", unique=True),
+                ],
+                if_not_exists=False,
+            )
+            b.insert("users", {"id": 1, "email": "alice@x.com"})
+            with pytest.raises(ConstraintViolation, match="UNIQUE"):
+                b.insert("users", {"id": 2, "email": "alice@x.com"})
+
+    def test_auto_index_allows_multiple_nulls(self, tmp_path: Path) -> None:
+        """NULLs in a UNIQUE column do not conflict (SQLite semantics)."""
+        path = str(tmp_path / "au6.db")
+        with SqliteFileBackend(path) as b:
+            b.create_table(
+                "users",
+                [
+                    ColumnDef("id", "INTEGER", primary_key=True),
+                    ColumnDef("email", "TEXT", unique=True),
+                ],
+                if_not_exists=False,
+            )
+            b.insert("users", {"id": 1})  # email = NULL
+            b.insert("users", {"id": 2})  # email = NULL
+            b.insert("users", {"id": 3, "email": "alice@x.com"})
+            cursor = b.scan("users")
+            ids = []
+            while (r := cursor.next()) is not None:
+                ids.append(r["id"])
+            assert sorted(ids) == [1, 2, 3]
+
+    def test_auto_index_survives_reopen(self, tmp_path: Path) -> None:
+        path = str(tmp_path / "au7.db")
+        with SqliteFileBackend(path) as b:
+            b.create_table(
+                "users",
+                [
+                    ColumnDef("id", "INTEGER", primary_key=True),
+                    ColumnDef("email", "TEXT", unique=True),
+                ],
+                if_not_exists=False,
+            )
+            h = b.begin_transaction()
+            b.commit(h)
+        with SqliteFileBackend(path) as b2:
+            idxs = b2.list_indexes("users")
+            assert len(idxs) == 1
+            assert idxs[0].name == "sqlite_autoindex_users_1"
+            assert idxs[0].unique is True
+
+    def test_auto_index_enforces_on_update(self, tmp_path: Path) -> None:
+        """Updating a UNIQUE column to an existing value raises."""
+        from sql_backend import ConstraintViolation
+        path = str(tmp_path / "au8.db")
+        with SqliteFileBackend(path) as b:
+            b.create_table(
+                "users",
+                [
+                    ColumnDef("id", "INTEGER", primary_key=True),
+                    ColumnDef("email", "TEXT", unique=True),
+                ],
+                if_not_exists=False,
+            )
+            b.insert("users", {"id": 1, "email": "a@x.com"})
+            b.insert("users", {"id": 2, "email": "b@x.com"})
+            cursor = b.scan("users")
+            cursor.next()  # row 1
+            with pytest.raises(ConstraintViolation, match="UNIQUE"):
+                b.update("users", cursor, {"email": "b@x.com"})

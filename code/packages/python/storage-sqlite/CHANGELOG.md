@@ -1,5 +1,51 @@
 # Changelog
 
+## [0.16.0] - 2026-04-28
+
+### Added
+
+**Auto-created UNIQUE indexes for UNIQUE / PRIMARY KEY columns (IX-13)**
+
+`CREATE TABLE` now auto-creates a UNIQUE index for every column declared
+`UNIQUE` or non-IPK `PRIMARY KEY`, matching SQLite's own behaviour.  These
+indexes use the SQLite-standard ``sqlite_autoindex_<table>_<n>`` naming
+convention and provide O(log n) UNIQUE enforcement on every
+insert/update via the IX-12 runtime maintenance path.
+
+- **`SqliteFileBackend.create_table`** — after writing the table schema,
+  scans the column list and calls `create_index` for each column that
+  satisfies `effective_unique() and not _is_ipk(col)`.  Auto-indexes are
+  named `sqlite_autoindex_<table>_<n>` (1-indexed by appearance) and
+  marked `unique=True, auto=True`.  Integer PRIMARY KEY columns are
+  skipped — uniqueness is enforced by the rowid B-tree itself.
+- **`SqliteFileBackend.list_indexes`** — `auto` detection now recognises
+  both naming conventions: `auto_*` (IndexAdvisor) and `sqlite_autoindex_*`
+  (UNIQUE auto-indexes).
+
+### Removed
+
+- **`_check_unique`** — the O(n) per-insert UNIQUE constraint scan is
+  gone.  Auto-created UNIQUE indexes provide the same enforcement at
+  O(log n) via the IX-12 runtime maintenance path.  Behaviour is
+  unchanged from a user perspective: the same `ConstraintViolation` is
+  raised on a UNIQUE collision, only faster.
+
+### Tests added
+
+- `test_backend_index.py::TestAutoUniqueIndex` — 8 tests: UNIQUE column
+  creates auto-index, no auto-index for IPK column, auto-index for
+  non-IPK PRIMARY KEY (e.g. `TEXT PRIMARY KEY`), multiple UNIQUE columns
+  each get an index, runtime enforcement on insert, NULLs do not
+  conflict, persistence across reopen, runtime enforcement on update.
+
+### Notes
+
+- This effectively closes the loop on the IX-11/12 series: any column
+  declared `UNIQUE` in `CREATE TABLE` is now enforced via an index from
+  the moment the table is created — no separate `CREATE UNIQUE INDEX`
+  statement needed.
+- 636 total tests pass (628 + 8 new); ruff clean.
+
 ## [0.15.0] - 2026-04-28
 
 ### Added

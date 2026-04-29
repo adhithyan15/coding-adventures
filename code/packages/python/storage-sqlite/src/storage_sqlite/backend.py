@@ -665,50 +665,6 @@ def _check_not_null(table: str, row: Row, columns: list[ColumnDef]) -> None:
             )
 
 
-def _check_unique(
-    table: str,
-    row: Row,
-    columns: list[ColumnDef],
-    tree: BTree,
-    tree_columns: list[ColumnDef],
-    ignore_rowid: int | None = None,
-) -> None:
-    """Raise :class:`~sql_backend.ConstraintViolation` if a UNIQUE column
-    already contains the value being inserted/updated.
-
-    NULL values never conflict (SQL semantics). *ignore_rowid* is the rowid
-    of the row being updated so it is not compared against itself.
-
-    This is O(n) per unique column. Acceptable for v1; future versions can
-    add in-memory uniqueness indexes.
-    """
-    unique_cols = [c for c in columns if c.effective_unique()]
-    if not unique_cols:
-        return
-
-    new_vals = {col.name: row.get(col.name) for col in unique_cols}
-    # Optimisation: if none of the unique-column values are non-NULL we can
-    # skip the scan entirely.
-    if all(v is None for v in new_vals.values()):
-        return
-
-    for existing_rowid, payload in tree.scan():
-        if existing_rowid == ignore_rowid:
-            continue
-        existing_row = _decode_row(existing_rowid, payload, tree_columns)
-        for col in unique_cols:
-            new_val = new_vals[col.name]
-            if new_val is None:
-                continue  # NULL never conflicts
-            if existing_row.get(col.name) == new_val:
-                label = "PRIMARY KEY" if col.primary_key else "UNIQUE"
-                raise ConstraintViolation(
-                    table=table,
-                    column=col.name,
-                    message=f"{label} constraint failed: {table}.{col.name}",
-                )
-
-
 # ---------------------------------------------------------------------------
 # BTreeCursor
 # ---------------------------------------------------------------------------
@@ -963,15 +919,15 @@ class SqliteFileBackend(Backend):
         # Determine the rowid and check primary-key uniqueness.
         rowid = _choose_rowid(full_row, columns, tree)
 
-        # For non-IPK UNIQUE columns, scan for duplicates before inserting.
-        non_pk_unique = [c for c in columns if c.effective_unique() and not _is_ipk(c)]
-        if non_pk_unique:
-            _check_unique(table, full_row, non_pk_unique, tree, columns)
-
         # Pre-validate UNIQUE indexes before mutating anything: walk every
         # index on this table and reject the row if any UNIQUE index would
         # be violated.  Doing this BEFORE the table insert means failures
         # leave the database byte-for-byte unchanged.
+        #
+        # Per-column UNIQUE / non-IPK PRIMARY KEY constraints declared in
+        # CREATE TABLE are enforced via auto-created UNIQUE indexes (named
+        # ``sqlite_autoindex_<table>_<n>``), so the index walk below covers
+        # them automatically — no separate O(n) scan is needed.
         indexes = self._open_indexes_for(table)
         for idx_name, idx_cols, idx_tree in indexes:
             if not idx_tree.is_unique:
@@ -1132,6 +1088,14 @@ class SqliteFileBackend(Backend):
         Generates the ``CREATE TABLE`` SQL, stores it in ``sqlite_schema``,
         and allocates a fresh root page for the new B-tree.
 
+        For every column with ``effective_unique()`` (i.e. ``UNIQUE`` or
+        non-IPK ``PRIMARY KEY``), a UNIQUE auto-index is also created with
+        the SQLite-standard ``sqlite_autoindex_<table>_<n>`` name.  These
+        indexes provide O(log n) UNIQUE enforcement on every insert/update
+        via the IX-12 runtime maintenance path.  Integer PRIMARY KEY
+        columns (the IPK case) are skipped — their uniqueness is already
+        enforced by the rowid B-tree itself.
+
         If *if_not_exists* is ``True`` and the table already exists, this is a
         no-op. Otherwise raises :class:`~sql_backend.TableAlreadyExists`.
         """
@@ -1142,6 +1106,23 @@ class SqliteFileBackend(Backend):
 
         sql = _columns_to_sql(table, columns)
         self._schema.create_table(table, sql)
+
+        # Auto-create UNIQUE indexes for every column declared UNIQUE or
+        # non-IPK PRIMARY KEY.  The table is empty so backfill is a no-op;
+        # subsequent inserts will populate the index via runtime maintenance
+        # (see :meth:`insert`).
+        auto_idx_n = 0
+        for col in columns:
+            if not col.effective_unique() or _is_ipk(col):
+                continue
+            auto_idx_n += 1
+            auto_name = f"sqlite_autoindex_{table}_{auto_idx_n}"
+            self.create_index(
+                IndexDef(
+                    name=auto_name, table=table,
+                    columns=[col.name], unique=True, auto=True,
+                )
+            )
 
     def drop_table(self, table: str, if_exists: bool) -> None:
         """Drop *table*, freeing all its pages.
@@ -1498,7 +1479,13 @@ class SqliteFileBackend(Backend):
         for name, tbl_name, _, sql in rows:
             columns = _parse_index_columns(sql) if sql else []
             unique = _parse_index_unique(sql)
-            auto = name.startswith("auto_")
+            # Two auto-index naming conventions:
+            #   * ``auto_*`` — IndexAdvisor (IX-7/8) auto-created indexes for
+            #     query acceleration.
+            #   * ``sqlite_autoindex_*`` — UNIQUE auto-indexes created by
+            #     ``create_table`` for ``UNIQUE`` / non-IPK ``PRIMARY KEY``
+            #     columns (SQLite naming convention).
+            auto = name.startswith("auto_") or name.startswith("sqlite_autoindex_")
             result.append(
                 IndexDef(
                     name=name, table=tbl_name, columns=columns,
