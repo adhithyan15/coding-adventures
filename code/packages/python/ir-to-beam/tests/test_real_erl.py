@@ -89,12 +89,16 @@ def _drop_and_run(
 
 @requires_erl
 def test_identity_returns_42(tmp_path: Path) -> None:
-    """``identity()`` returns the constant 42."""
+    """``identity()`` returns the constant 42.
+
+    TW03 Phase 1 convention: the result lands in ``r1``
+    (``_REG_HALT_RESULT``) before ``RET``.
+    """
     gen = IDGenerator()
     program = IrProgram(entry_label="identity")
     program.add_instruction(IrInstruction(IrOp.LABEL, [_label("identity")], id=-1))
     program.add_instruction(
-        IrInstruction(IrOp.LOAD_IMM, [_reg(0), _imm(42)], id=gen.next())
+        IrInstruction(IrOp.LOAD_IMM, [_reg(1), _imm(42)], id=gen.next())
     )
     program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
 
@@ -115,13 +119,13 @@ def test_add_returns_42(tmp_path: Path) -> None:
     program = IrProgram(entry_label="add")
     program.add_instruction(IrInstruction(IrOp.LABEL, [_label("add")], id=-1))
     program.add_instruction(
-        IrInstruction(IrOp.LOAD_IMM, [_reg(0), _imm(17)], id=gen.next())
+        IrInstruction(IrOp.LOAD_IMM, [_reg(2), _imm(17)], id=gen.next())
     )
     program.add_instruction(
-        IrInstruction(IrOp.LOAD_IMM, [_reg(1), _imm(25)], id=gen.next())
+        IrInstruction(IrOp.LOAD_IMM, [_reg(3), _imm(25)], id=gen.next())
     )
     program.add_instruction(
-        IrInstruction(IrOp.ADD, [_reg(0), _reg(0), _reg(1)], id=gen.next())
+        IrInstruction(IrOp.ADD, [_reg(1), _reg(2), _reg(3)], id=gen.next())
     )
     program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
 
@@ -142,13 +146,13 @@ def test_multiplication_returns_42(tmp_path: Path) -> None:
     program = IrProgram(entry_label="mul")
     program.add_instruction(IrInstruction(IrOp.LABEL, [_label("mul")], id=-1))
     program.add_instruction(
-        IrInstruction(IrOp.LOAD_IMM, [_reg(0), _imm(6)], id=gen.next())
+        IrInstruction(IrOp.LOAD_IMM, [_reg(2), _imm(6)], id=gen.next())
     )
     program.add_instruction(
-        IrInstruction(IrOp.LOAD_IMM, [_reg(1), _imm(7)], id=gen.next())
+        IrInstruction(IrOp.LOAD_IMM, [_reg(3), _imm(7)], id=gen.next())
     )
     program.add_instruction(
-        IrInstruction(IrOp.MUL, [_reg(0), _reg(0), _reg(1)], id=gen.next())
+        IrInstruction(IrOp.MUL, [_reg(1), _reg(2), _reg(3)], id=gen.next())
     )
     program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
 
@@ -157,3 +161,100 @@ def test_multiplication_returns_42(tmp_path: Path) -> None:
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout.strip() == "42"
+
+
+@requires_erl
+def test_recursive_factorial_returns_120(tmp_path: Path) -> None:
+    """The headline TW03 Phase 1 BEAM test: ``fact(5) → 120`` on real ``erl``.
+
+    Hand-built IR mirroring what twig-beam-compiler will eventually
+    emit, exercising:
+    - allocate / deallocate y-register frame
+    - x-register arg passing at CALL sites
+    - BRANCH_Z + JUMP for the if/else of the base case
+    - CMP_EQ + arithmetic across recursive call boundary
+    """
+    gen = IDGenerator()
+    program = IrProgram(entry_label="main")
+
+    # fact(n):
+    #   if n == 0 -> return 1
+    #   else      -> return n * fact(n - 1)
+    program.add_instruction(IrInstruction(IrOp.LABEL, [_label("fact")], id=-1))
+    # r2 = arg n (placed by entry-shuffle).  Compare with 0 → r10.
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [_reg(11), _imm(0)], id=gen.next())
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.CMP_EQ, [_reg(10), _reg(2), _reg(11)], id=gen.next()
+        )
+    )
+    # if (r10 == 0): jump to else_label  (BRANCH_Z r10 → jump if zero)
+    program.add_instruction(
+        IrInstruction(
+            IrOp.BRANCH_Z, [_reg(10), _label("_else")], id=gen.next()
+        )
+    )
+    # then-branch: r1 = 1; jump end
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [_reg(1), _imm(1)], id=gen.next())
+    )
+    program.add_instruction(
+        IrInstruction(IrOp.JUMP, [_label("_end")], id=gen.next())
+    )
+    # else-branch: compute n * fact(n-1)
+    program.add_instruction(IrInstruction(IrOp.LABEL, [_label("_else")], id=-1))
+    # r12 = n - 1
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [_reg(13), _imm(1)], id=gen.next())
+    )
+    program.add_instruction(
+        IrInstruction(IrOp.SUB, [_reg(12), _reg(2), _reg(13)], id=gen.next())
+    )
+    # Stage arg in r2 for the recursive call (Twig calling convention).
+    program.add_instruction(
+        IrInstruction(IrOp.ADD_IMM, [_reg(14), _reg(2), _imm(0)], id=gen.next())
+    )  # save n
+    program.add_instruction(
+        IrInstruction(IrOp.ADD_IMM, [_reg(2), _reg(12), _imm(0)], id=gen.next())
+    )
+    program.add_instruction(IrInstruction(IrOp.CALL, [_label("fact")], id=gen.next()))
+    # Result of fact(n-1) is in r1.  r1 = saved_n * r1.
+    program.add_instruction(
+        IrInstruction(IrOp.MUL, [_reg(1), _reg(14), _reg(1)], id=gen.next())
+    )
+    program.add_instruction(IrInstruction(IrOp.LABEL, [_label("_end")], id=-1))
+    program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+
+    # main(): r2 = 5; call fact; result lands in r1.
+    program.add_instruction(IrInstruction(IrOp.LABEL, [_label("main")], id=-1))
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [_reg(2), _imm(5)], id=gen.next())
+    )
+    program.add_instruction(IrInstruction(IrOp.CALL, [_label("fact")], id=gen.next()))
+    program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+
+    config = BEAMBackendConfig(
+        module_name="rec_fact",
+        arity_overrides={"fact": 1, "main": 0},
+    )
+    beam = encode_beam(lower_ir_to_beam(program, config))
+    (tmp_path / "rec_fact.beam").write_bytes(beam)
+    eval_expr = textwrap.dedent("""
+        {module, _} = code:load_file(rec_fact),
+        Result = rec_fact:main(),
+        io:format("~p~n", [Result]),
+        init:stop().
+    """).strip()
+    result = subprocess.run(
+        ["erl", "-noshell", "-pa", str(tmp_path), "-eval", eval_expr],
+        capture_output=True,
+        text=True,
+        timeout=15,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == "120", (
+        f"factorial result mismatch — stdout={result.stdout!r}, "
+        f"stderr={result.stderr!r}"
+    )

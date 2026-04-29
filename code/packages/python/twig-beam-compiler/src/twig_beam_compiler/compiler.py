@@ -7,31 +7,48 @@ Pipeline
     Twig source
         ↓ parse + extract     (twig package)
     typed AST
-        ↓ Compiler.compile()  (this module)
+        ↓ Compiler.compile()  (this module — Twig → compiler-IR)
     IrProgram
         ↓ ir-optimizer
     IrProgram (optimised)
-        ↓ lower_ir_to_beam
+        ↓ lower_ir_to_beam    (ir-to-beam)
     BEAMModule
-        ↓ encode_beam
+        ↓ encode_beam         (beam-bytecode-encoder)
     .beam bytes
         ↓ erl -noshell -eval ...
-    program output
+    program output (printed by io:format)
 
-Why this is intentionally narrow
-================================
+TW03 Phase 1 surface (this version)
+===================================
 
-The v1 surface is *just* what ``ir-to-beam`` Phase 3 supports plus
-the boilerplate to wrap an expression as a ``main/0`` function.
-That means: integer literals, binary arithmetic (+, -, *, /),
-single-binding ``let``, and a ``begin`` for sequencing.  Top-level
-``define`` and ``if`` need branch lowering in ``ir-to-beam`` (a
-follow-up PR).
+Mirrors the twig-jvm-compiler / twig-clr-compiler frontends so
+all three real-runtime Twig tracks share IR shape:
 
-The contract: ``main/0`` returns the value of the program's last
-top-level expression.  Real ``erl`` then prints that value via
-``-eval 'io:format("~p~n", [<module>:main()])'``, which the
-``run_source`` helper does for us.
+- Integer literals (positive)
+- Binary arithmetic: ``+``, ``-``, ``*``, ``/``
+- Comparison: ``=``, ``<``, ``>``
+- ``let`` (single + multi binding), ``begin``, ``if``
+- Top-level ``define`` for both functions and value constants
+- Function calls (incl. nested) and **recursion**
+
+The contract: ``run_source`` invokes
+``erl -noshell -eval 'io:format("~p~n", [<module>:main()])'``,
+printing the value of the program's final top-level expression
+to stdout.  ``BeamRunResult.stdout`` carries that printed value.
+
+Register convention (shared with JVM/CLR compilers)
+===================================================
+
+* ``register 0`` — scratch.
+* ``register 1`` — function return value / HALT result.
+* ``registers 2..N`` — function parameter slots
+  (param ``i`` → register ``_REG_PARAM_BASE + i = 2 + i``).
+* ``registers 10..`` — compiler-allocated holding registers for
+  intermediate values.  Using a high base keeps them clear of
+  the param window so nested calls don't clobber.
+
+ir-to-beam translates this convention to the BEAM x/y register
+files (see that package's docs).
 """
 
 from __future__ import annotations
@@ -65,11 +82,14 @@ from twig import (
 from twig.ast_nodes import (
     Apply,
     Begin,
+    BoolLit,
     Define,
     Expr,
+    If,
     IntLit,
     Lambda,
     Let,
+    NilLit,
     Program,
     SymLit,
     VarRef,
@@ -120,54 +140,35 @@ class BeamPackageError(TwigError):
 
 
 # ---------------------------------------------------------------------------
-# Builtins recognised in v1
+# Builtins
 # ---------------------------------------------------------------------------
 
 
-# Map a Twig builtin name to the ``IrOp`` for its single-instruction
-# emission.  Only binary numeric ops are in v1.
 _BINARY_OPS: dict[str, IrOp] = {
     "+": IrOp.ADD,
     "-": IrOp.SUB,
     "*": IrOp.MUL,
     "/": IrOp.DIV,
+    "=": IrOp.CMP_EQ,
+    "<": IrOp.CMP_LT,
+    ">": IrOp.CMP_GT,
 }
 
-# Twig builtins we don't yet support on BEAM.  Everything else
-# falls through to the generic "unsupported" error.
 _V1_REJECTED_BUILTINS: frozenset[str] = frozenset(
-    {
-        # Comparison/logic — needs branching.
-        "=",
-        "<",
-        ">",
-        # Cons/list/symbol — heap-side machinery, not yet wired.
-        "cons",
-        "car",
-        "cdr",
-        "null?",
-        "pair?",
-        "number?",
-        "symbol?",
-        "print",
-    }
+    {"cons", "car", "cdr", "null?", "pair?", "number?", "symbol?", "print"}
 )
 
 
-# Register convention.  We use only x-registers (compiler-IR
-# ``IrRegister`` indices map directly to BEAM's ``x{i}``).  Reg 0
-# is the ``main/0`` return value (matching BEAM's "x0 holds the
-# return" convention).
-_REG_RETURN: int = 0
-_REG_HOLDING_BASE: int = 1
+# Register convention — see module docstring.
+_REG_HALT_RESULT: Final = 1
+_REG_PARAM_BASE: Final = 2
+_REG_HOLDING_BASE: Final = 10
 
-# A safe Erlang atom name — strict allowlist (lowercase ASCII
-# start, alnum + underscore tail, length 1..64).  We use this to
-# block code-injection through ``module_name``: ``run_source``
-# interpolates ``module_name`` into the ``erl -eval`` Erlang source
-# string, so an unvalidated value lets a caller execute arbitrary
-# Erlang (e.g. ``os:cmd("...")``).  The same allowlist also
-# protects the on-disk ``.beam`` filename from path traversal.
+
+# Strict allowlist for ``module_name``.  Used as the on-disk
+# ``.beam`` filename AND interpolated into the ``erl -eval``
+# Erlang source string in ``run_source`` — so untrusted values
+# would let a caller execute arbitrary Erlang.
 _SAFE_MODULE_NAME_RE: Final = re.compile(r"^[a-z][a-zA-Z0-9_]{0,63}$")
 
 
@@ -190,12 +191,7 @@ def _validate_module_name(name: str) -> None:
 
 @dataclass
 class _FnCtx:
-    """Mutable state during compilation of one IR region.
-
-    ``locals_`` maps Twig names introduced by ``let`` bindings to
-    the IR register that holds the bound value.  ``next_holding``
-    is the next intermediate-value register to allocate.
-    """
+    """Mutable state during compilation of one IR region."""
 
     locals_: dict[str, IrRegister]
     next_holding: int = _REG_HOLDING_BASE
@@ -207,49 +203,106 @@ class _FnCtx:
 
 
 class _Compiler:
-    """Walk the typed Twig AST and emit a single ``IrProgram`` whose
-    sole region is ``main``.
-
-    v1 only handles top-level expressions (no ``define``).  The
-    last top-level expression's value lands in ``x0`` (the BEAM
-    return-value register) and the region closes with ``RET``.
+    """Walk the typed Twig AST → ``IrProgram`` with one region per
+    top-level function plus a synthesised ``main`` for top-level
+    expressions.  Mirrors twig-jvm-compiler / twig-clr-compiler.
     """
 
     def __init__(self) -> None:
         self._program = IrProgram(entry_label="main")
         self._gen = IDGenerator()
+        self._value_consts: dict[str, int] = {}
+        self._fn_params: dict[str, list[str]] = {}
+        # Program-wide label counter.  Per-region counters would
+        # produce duplicate ``_else_0`` etc. across functions, and
+        # the BEAM backend rejects duplicate label names just like
+        # the CIL backend does.
+        self._next_label_id = 0
 
     # ------------------------------------------------------------------
 
     def compile(self, program: Program) -> IrProgram:
-        # v1 forbids top-level ``define`` (function or value).
-        # When we add ``define`` support we'll either inline value
-        # defines like the JVM compiler does, or emit them as
-        # additional BEAM functions.
+        top_level_exprs: list[Expr] = []
+        function_defs: list[tuple[str, Lambda]] = []
         for form in program.forms:
             if isinstance(form, Define):
-                raise TwigCompileError(
-                    "(define ...) is not yet supported by the BEAM backend "
-                    "v1 — only top-level expressions.  See BEAM01 Phase 4 "
-                    "for the planned roadmap."
-                )
+                self._classify_define(form)
+                if isinstance(form.expr, Lambda):
+                    function_defs.append((form.name, form.expr))
+            else:
+                top_level_exprs.append(form)
 
+        for name, lam in function_defs:
+            self._emit_function(name, lam)
+
+        self._emit_main(top_level_exprs)
+        return self._program
+
+    # ------------------------------------------------------------------
+
+    def _classify_define(self, form: Define) -> None:
+        if isinstance(form.expr, Lambda):
+            self._fn_params[form.name] = list(form.expr.params)
+            return
+
+        if isinstance(form.expr, IntLit):
+            self._value_consts[form.name] = int(form.expr.value)
+            return
+        if isinstance(form.expr, BoolLit):
+            self._value_consts[form.name] = 1 if form.expr.value else 0
+            return
+
+        raise TwigCompileError(
+            f"(define {form.name} ...) — v1 only supports literal "
+            "RHS for value defines.  Use a top-level function for "
+            "computed values."
+        )
+
+    # ------------------------------------------------------------------
+    # Function emission
+    # ------------------------------------------------------------------
+
+    def _emit_function(self, name: str, lam: Lambda) -> None:
+        self._emit(IrOp.LABEL, IrLabel(name=name), id=-1)
+
+        # Copy each parameter out of its arrival register
+        # (``_REG_PARAM_BASE + i``) into a fresh body-local
+        # holding register.  Mirrors the JVM01 paired fix +
+        # twig-clr-compiler convention.  ir-to-beam handles the
+        # x→y register dance internally (see its docstring), so
+        # this front-end stays IR-shaped identically across all
+        # three Twig backends.
+        ctx = _FnCtx(locals_={})
+        for i, param in enumerate(lam.params):
+            arrival = IrRegister(index=_REG_PARAM_BASE + i)
+            body_local = self._fresh_holding(ctx)
+            self._emit_move(body_local, arrival)
+            ctx.locals_[param] = body_local
+
+        last: IrRegister | None = None
+        for expr in lam.body:
+            last = self._compile_expr(expr, ctx)
+        if last is None:
+            raise TwigCompileError(f"function {name!r} has empty body")
+
+        self._emit_move(IrRegister(_REG_HALT_RESULT), last)
+        self._emit(IrOp.RET)
+
+    def _emit_main(self, exprs: list[Expr]) -> None:
         self._emit(IrOp.LABEL, IrLabel(name="main"), id=-1)
         ctx = _FnCtx(locals_={})
 
         last: IrRegister | None = None
-        for expr in program.forms:
+        for expr in exprs:
             last = self._compile_expr(expr, ctx)
 
         if last is None:
-            # Empty program → return 0.
             zero = self._fresh_holding(ctx)
             self._emit(IrOp.LOAD_IMM, zero, IrImmediate(0))
             last = zero
 
-        self._emit_move(IrRegister(_REG_RETURN), last)
+        self._emit_move(IrRegister(_REG_HALT_RESULT), last)
         self._emit(IrOp.RET)
-        return self._program
 
     # ------------------------------------------------------------------
     # Expression compilation
@@ -261,13 +314,31 @@ class _Compiler:
             self._emit(IrOp.LOAD_IMM, reg, IrImmediate(int(expr.value)))
             return reg
 
+        if isinstance(expr, BoolLit):
+            reg = self._fresh_holding(ctx)
+            self._emit(IrOp.LOAD_IMM, reg, IrImmediate(1 if expr.value else 0))
+            return reg
+
+        if isinstance(expr, NilLit):
+            reg = self._fresh_holding(ctx)
+            self._emit(IrOp.LOAD_IMM, reg, IrImmediate(0))
+            return reg
+
         if isinstance(expr, VarRef):
-            try:
+            if expr.name in ctx.locals_:
                 return ctx.locals_[expr.name]
-            except KeyError as exc:
-                raise TwigCompileError(
-                    f"unbound name: {expr.name!r}"
-                ) from exc
+            if expr.name in self._value_consts:
+                reg = self._fresh_holding(ctx)
+                self._emit(
+                    IrOp.LOAD_IMM,
+                    reg,
+                    IrImmediate(self._value_consts[expr.name]),
+                )
+                return reg
+            raise TwigCompileError(f"unbound name: {expr.name!r}")
+
+        if isinstance(expr, If):
+            return self._compile_if(expr, ctx)
 
         if isinstance(expr, Let):
             return self._compile_let(expr, ctx)
@@ -280,42 +351,61 @@ class _Compiler:
 
         if isinstance(expr, Lambda):
             raise TwigCompileError(
-                "lambdas are not yet supported by the BEAM backend "
-                "v1 — see BEAM01 Phase 4+ for closures."
+                "anonymous lambdas are not yet supported by the BEAM "
+                "backend — see TW03 Phase 2 for closures."
             )
 
         if isinstance(expr, SymLit):
             raise TwigCompileError(
                 "quoted symbols are not yet supported by the BEAM "
-                "backend v1 — atoms-as-values needs heap support."
+                "backend — see TW03 Phase 3."
             )
 
         msg = f"unsupported Twig form for BEAM v1: {type(expr).__name__}"
         raise TwigCompileError(msg)
 
-    def _compile_let(self, expr: Let, ctx: _FnCtx) -> IrRegister:
-        # v1: single-binding ``let`` only — no shadowing concerns.
-        if len(expr.bindings) != 1:
-            raise TwigCompileError(
-                "(let ((name expr) ...) body) with multiple bindings "
-                "is not yet supported — v1 only handles a single binding"
-            )
-        name, value_expr = expr.bindings[0]
-        bound_reg = self._compile_expr(value_expr, ctx)
+    def _compile_if(self, expr: If, ctx: _FnCtx) -> IrRegister:
+        cond = self._compile_expr(expr.cond, ctx)
+        else_label = self._fresh_label("else")
+        end_label = self._fresh_label("endif")
+        result = self._fresh_holding(ctx)
 
-        # Save and restore the binding so the let scope is correct.
-        previous = ctx.locals_.get(name)
-        ctx.locals_[name] = bound_reg
-        try:
-            last = self._compile_expr(expr.body[0], ctx)
-            for body_expr in expr.body[1:]:
-                last = self._compile_expr(body_expr, ctx)
-            return last
-        finally:
-            if previous is None:
+        self._emit(IrOp.BRANCH_Z, cond, IrLabel(else_label))
+
+        then_v = self._compile_expr(expr.then_branch, ctx)
+        self._emit_move(result, then_v)
+        self._emit(IrOp.JUMP, IrLabel(end_label))
+
+        self._emit(IrOp.LABEL, IrLabel(else_label), id=-1)
+        else_v = self._compile_expr(expr.else_branch, ctx)
+        self._emit_move(result, else_v)
+
+        self._emit(IrOp.LABEL, IrLabel(end_label), id=-1)
+        return result
+
+    def _compile_let(self, expr: Let, ctx: _FnCtx) -> IrRegister:
+        binding_regs: list[tuple[str, IrRegister]] = []
+        for name, rhs in expr.bindings:
+            v = self._compile_expr(rhs, ctx)
+            binding_regs.append((name, v))
+
+        saved: dict[str, IrRegister | None] = {}
+        for name, reg in binding_regs:
+            saved[name] = ctx.locals_.get(name)
+            ctx.locals_[name] = reg
+
+        last: IrRegister | None = None
+        for e in expr.body:
+            last = self._compile_expr(e, ctx)
+        assert last is not None
+
+        for name, prior in saved.items():
+            if prior is None:
                 del ctx.locals_[name]
             else:
-                ctx.locals_[name] = previous
+                ctx.locals_[name] = prior
+
+        return last
 
     def _compile_begin(self, expr: Begin, ctx: _FnCtx) -> IrRegister:
         last: IrRegister | None = None
@@ -330,65 +420,85 @@ class _Compiler:
     def _compile_apply(self, expr: Apply, ctx: _FnCtx) -> IrRegister:
         if not isinstance(expr.fn, VarRef):
             raise TwigCompileError(
-                "v1 only supports calls to named builtins (no first-class "
-                "function values yet)"
+                "v1 only supports direct calls of top-level names"
             )
         name = expr.fn.name
+
         if name in _V1_REJECTED_BUILTINS:
             raise TwigCompileError(
                 f"builtin {name!r} is not yet supported by the BEAM "
-                "backend v1 — needs branching / heap / I/O support"
+                "backend — see TW03 Phase 3 for heap primitives."
             )
-        if name not in _BINARY_OPS:
-            raise TwigCompileError(
-                f"unknown builtin: {name!r}"
-            )
-        if len(expr.args) != 2:
-            raise TwigCompileError(
-                f"{name!r} expects exactly 2 arguments, got {len(expr.args)}"
-            )
-        lhs = self._compile_expr(expr.args[0], ctx)
-        rhs = self._compile_expr(expr.args[1], ctx)
-        result = self._fresh_holding(ctx)
-        self._emit(_BINARY_OPS[name], result, lhs, rhs)
-        return result
+
+        if name in _BINARY_OPS:
+            if len(expr.args) != 2:
+                raise TwigCompileError(
+                    f"{name!r} expects 2 arguments, got {len(expr.args)}"
+                )
+            left = self._compile_expr(expr.args[0], ctx)
+            right = self._compile_expr(expr.args[1], ctx)
+            dest = self._fresh_holding(ctx)
+            self._emit(_BINARY_OPS[name], dest, left, right)
+            return dest
+
+        if name in self._fn_params:
+            params = self._fn_params[name]
+            if len(expr.args) != len(params):
+                raise TwigCompileError(
+                    f"function {name!r} takes {len(params)} arguments, "
+                    f"got {len(expr.args)}"
+                )
+
+            arg_regs: list[IrRegister] = [
+                self._compile_expr(a, ctx) for a in expr.args
+            ]
+
+            for i, src in enumerate(arg_regs):
+                self._emit_move(IrRegister(_REG_PARAM_BASE + i), src)
+
+            self._emit(IrOp.CALL, IrLabel(name))
+
+            dest = self._fresh_holding(ctx)
+            self._emit_move(dest, IrRegister(_REG_HALT_RESULT))
+            return dest
+
+        raise TwigCompileError(
+            f"unknown function {name!r}.  v1 supports binary builtins "
+            "(+, -, *, /, =, <, >) and top-level (define (f ...) ...)."
+        )
 
     # ------------------------------------------------------------------
-    # Low-level emit helpers
+    # IR-emission helpers
     # ------------------------------------------------------------------
 
-    def _emit(self, op: IrOp, *operands: object, id: int | None = None) -> None:
+    def _emit(
+        self,
+        opcode: IrOp,
+        *operands: object,
+        id: int | None = None,
+    ) -> None:
         self._program.add_instruction(
             IrInstruction(
-                op,
-                list(operands),
+                opcode=opcode,
+                operands=list(operands),
                 id=self._gen.next() if id is None else id,
             )
         )
 
     def _emit_move(self, dst: IrRegister, src: IrRegister) -> None:
-        # Lower a "move" as an ADD_IMM 0 — the IR has no MOVE op
-        # but ADD_IMM with immediate 0 is the canonical idiom in
-        # the existing twig-jvm-compiler.  Here we go even simpler:
-        # if dst == src already, no instruction needed.
-        if dst.index == src.index:
+        if dst == src:
             return
-        # We don't have ADD_IMM in our ir-to-beam v1 op set, so use
-        # a load-and-add-zero pattern:
-        zero = self._fresh_holding_for_move()
-        self._emit(IrOp.LOAD_IMM, zero, IrImmediate(0))
-        self._emit(IrOp.ADD, dst, src, zero)
+        self._emit(IrOp.ADD_IMM, dst, src, IrImmediate(0))
 
     def _fresh_holding(self, ctx: _FnCtx) -> IrRegister:
-        reg = IrRegister(index=ctx.next_holding)
+        idx = ctx.next_holding
         ctx.next_holding += 1
-        return reg
+        return IrRegister(index=idx)
 
-    def _fresh_holding_for_move(self) -> IrRegister:
-        # Use a high-numbered scratch register the rest of the
-        # compiler doesn't allocate from.  Picking 1000 is arbitrary
-        # but well above anything the tests will exercise.
-        return IrRegister(index=1000)
+    def _fresh_label(self, prefix: str) -> str:
+        idx = self._next_label_id
+        self._next_label_id += 1
+        return f"_{prefix}_{idx}"
 
 
 # ---------------------------------------------------------------------------
@@ -397,7 +507,7 @@ class _Compiler:
 
 
 def compile_to_ir(source: str) -> IrProgram:
-    """Compile Twig source into an unoptimised ``IrProgram``."""
+    """Compile Twig source into an unoptimised :class:`IrProgram`."""
     ast = parse_twig(source)
     program = extract_program(ast)
     return _Compiler().compile(program)
@@ -418,7 +528,8 @@ def compile_source(
         raise BeamPackageError("parse", str(exc), exc) from exc
 
     try:
-        raw_ir = _Compiler().compile(twig_program)
+        compiler = _Compiler()
+        raw_ir = compiler.compile(twig_program)
     except TwigCompileError:
         raise
     except Exception as exc:  # pragma: no cover
@@ -431,10 +542,21 @@ def compile_source(
         optimization = OptimizationResult(program=raw_ir)
         optimized_ir = raw_ir
 
+    # Build arity overrides for every top-level function the
+    # compiler discovered.  ``ir-to-beam`` needs these to emit
+    # the right ``call N, label`` arity at each call site and to
+    # declare the right parameter count per function.
+    arity_overrides = {
+        name: len(params) for name, params in compiler._fn_params.items()  # noqa: SLF001
+    }
+
     try:
         beam_module = lower_ir_to_beam(
             optimized_ir,
-            BEAMBackendConfig(module_name=module_name),
+            BEAMBackendConfig(
+                module_name=module_name,
+                arity_overrides=arity_overrides,
+            ),
         )
         beam_bytes = encode_beam(beam_module)
     except Exception as exc:
@@ -477,8 +599,8 @@ def run_source(
     """Compile and execute on the **real** ``erl`` runtime.
 
     Drops the ``.beam`` to a fresh temp dir and uses ``erl -eval``
-    to call ``<module>:main()`` and ``io:format`` its return value
-    to stdout, then ``init:stop()``.
+    to call ``<module>:main()`` and ``io:format`` its return
+    value to stdout, then ``init:stop()``.
     """
     compilation = compile_source(
         source, module_name=module_name, optimize=optimize
