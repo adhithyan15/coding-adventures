@@ -1,5 +1,24 @@
 # ir-to-jvm-class-file
 
+## 0.6.1 — 2026-04-28
+
+### Fixed — JVM01: caller-saves around `IrOp.CALL` so recursion works on real `java`
+
+The "register" model uses a class-level static `int[]` array
+shared across every `invokestatic`, so a recursive call would
+clobber the caller's register values.  `IrOp.CALL` emission now
+snapshots every register slot into JVM locals immediately before
+the `invokestatic` and restores them immediately after (skipping
+`r1`, the return-value slot).  Each callable's `max_locals` is
+bumped to `reg_count` to cover the snapshot stash.
+
+This is the minimal-diff path described in
+`code/specs/JVM01-jvm-per-method-locals.md` — the bigger
+descriptor rewrite stays as a future cleanup option.
+
+Regression test:
+`tests/test_oct_8bit_e2e.py::test_call_preserves_caller_registers`.
+
 ## 0.6.0 — 2026-04-27
 
 ### Added — LANG20: `JVMCodeGenerator` — `CodeGenerator[IrProgram, JVMClassArtifact]` adapter

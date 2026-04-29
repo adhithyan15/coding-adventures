@@ -364,7 +364,8 @@ class _JvmClassLowerer:
             self._build_syscall_method(),
         ]
         methods.extend(
-            self._build_callable_method(region) for region in callable_regions
+            self._build_callable_method(region, reg_count)
+            for region in callable_regions
         )
         if self.config.emit_main_wrapper:
             methods.append(self._build_main_method())
@@ -564,6 +565,60 @@ class _JvmClassLowerer:
             _OP_INVOKESTATIC,
             self._method_ref(self._helper_reg_set, _DESC_INT_INT_TO_VOID),
         )
+
+    # ------------------------------------------------------------------
+    # JVM01 — caller-saves convention around CALL
+    # ------------------------------------------------------------------
+    #
+    # The static ``__ca_regs`` array holds every "IR register" and is
+    # shared across method invocations.  That breaks recursion: when
+    # ``fact(5)`` calls ``fact(4)``, ``fact(5)``'s own parameter
+    # register r2 (= 5) is overwritten by the call setup writing 4
+    # there.  When ``fact(4)`` returns, the outer multiplication
+    # reads r2 = 4 instead of 5.
+    #
+    # Fix: each ``IrOp.CALL`` sandwich ``save → invoke → restore``.
+    # The save sequence snapshots the entire static array into JVM
+    # locals 0..N-1 (per-method, isolated by the JVM frame
+    # discipline).  The restore sequence writes everything back
+    # *except* register 1 — that's the convention HALT/RET use to
+    # carry the callee's return value back to the caller.
+    #
+    # Cost: 2 × N bytecode pairs per CALL.  N is small (the IR's
+    # max register index + 1) so the overhead is bounded.
+
+    def _emit_caller_save_registers(
+        self, builder: _BytecodeBuilder, reg_count: int
+    ) -> None:
+        """Snapshot static-array regs 0..reg_count-1 → JVM locals 0..N-1."""
+        for reg_idx in range(reg_count):
+            builder.emit_u2_instruction(
+                _OP_GETSTATIC,
+                self._field_ref(self._helper_reg_field, _DESC_INT_ARRAY),
+            )
+            self._emit_push_int(builder, reg_idx)
+            builder.emit_opcode(_OP_IALOAD)
+            self._emit_istore(builder, reg_idx)
+
+    def _emit_caller_restore_registers(
+        self, builder: _BytecodeBuilder, reg_count: int
+    ) -> None:
+        """Write JVM locals 0..N-1 back to static-array regs.
+
+        Skips index 1 — the callee's return value lives there per the
+        existing HALT/RET convention, and we want the caller to see
+        the new value, not the saved-pre-call one.
+        """
+        for reg_idx in range(reg_count):
+            if reg_idx == 1:
+                continue  # preserve callee's return value
+            builder.emit_u2_instruction(
+                _OP_GETSTATIC,
+                self._field_ref(self._helper_reg_field, _DESC_INT_ARRAY),
+            )
+            self._emit_push_int(builder, reg_idx)
+            self._emit_iload(builder, reg_idx)
+            builder.emit_opcode(_OP_IASTORE)
 
     def _build_class_initializer(
         self,
@@ -877,8 +932,15 @@ class _JvmClassLowerer:
             max_locals=3,          # 0=syscall_num, 1=arg_reg, 2=read_byte
         )
 
-    def _build_callable_method(self, region: _CallableRegion) -> _MethodSpec:
+    def _build_callable_method(
+        self, region: _CallableRegion, reg_count: int
+    ) -> _MethodSpec:
         builder = _BytecodeBuilder()
+        # ``reg_count`` is the program-wide max register count; the
+        # caller-saves CALL convention (JVM01) uses JVM locals
+        # 0..reg_count-1 to snapshot the static-array register state
+        # across nested calls.  We pass it through so the method's
+        # ``max_locals`` can be set high enough below.
 
         for instruction in region.instructions:
             if instruction.opcode == IrOp.LABEL:
@@ -1132,6 +1194,23 @@ class _JvmClassLowerer:
 
             if instruction.opcode == IrOp.CALL:
                 label = _as_label(instruction.operands[0], "CALL target")
+                # ── JVM01: caller-saves convention around CALL ────────
+                # All "IR registers" live in a class-level static int
+                # array (``__ca_regs``).  Without intervention, a
+                # recursive call clobbers the caller's register state
+                # — fact(5)'s own param r2 = 5 gets overwritten when
+                # fact(4) is set up.
+                #
+                # Fix: snapshot the entire static array into JVM locals
+                # before the call, restore everything except register 1
+                # afterwards (register 1 carries the callee's return
+                # value, by long-standing convention with HALT/RET).
+                #
+                # JVM locals are per-method (the JVM spec guarantees
+                # fresh frames per invokestatic), so the snapshot is
+                # private to each invocation — this is what makes
+                # recursion work.
+                self._emit_caller_save_registers(builder, reg_count)
                 self._emit_push_int(builder, 1)
                 builder.emit_u2_instruction(
                     _OP_INVOKESTATIC,
@@ -1141,6 +1220,7 @@ class _JvmClassLowerer:
                     _OP_INVOKESTATIC,
                     self._method_ref(self._helper_reg_set, _DESC_INT_INT_TO_VOID),
                 )
+                self._emit_caller_restore_registers(builder, reg_count)
                 continue
 
             if instruction.opcode == IrOp.RET or instruction.opcode == IrOp.HALT:
@@ -1179,7 +1259,11 @@ class _JvmClassLowerer:
             descriptor=_DESC_NOARGS_INT,
             code=code,
             max_stack=16,
-            max_locals=0,
+            # JVM01: caller-saves convention uses JVM locals
+            # 0..reg_count-1 as snapshot storage across CALL
+            # boundaries.  Reserve at least ``reg_count`` locals so
+            # the JVM verifier accepts the method.
+            max_locals=reg_count,
         )
 
     def _build_main_method(self) -> _MethodSpec:
