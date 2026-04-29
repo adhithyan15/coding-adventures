@@ -236,17 +236,19 @@ class TestAlgolTypeChecker:
         assert result.semantic is not None
         assert len(result.semantic.switch_selections) == 2
 
-    def test_rejects_self_recursive_switch_selection_entry(self) -> None:
+    def test_accepts_self_recursive_switch_selection_entry(self) -> None:
         ast = parse_algol(
-            "begin integer result; "
-            "switch s := s[1]; "
-            "goto s[1] "
+            "begin integer result, i; "
+            "switch s := done, if i = 0 then done else s[i]; "
+            "i := 1; goto s[2]; "
+            "done: result := 7 "
             "end"
         )
         result = check_algol(ast)
 
-        assert not result.ok
-        assert "cannot select itself recursively" in result.diagnostics[0].message
+        assert result.ok
+        assert result.semantic is not None
+        assert len(result.semantic.switch_selections) == 2
 
     def test_accepts_nonlocal_conditional_designational_goto(self) -> None:
         ast = parse_algol(

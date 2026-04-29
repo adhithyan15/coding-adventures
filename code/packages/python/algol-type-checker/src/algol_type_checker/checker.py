@@ -1343,12 +1343,6 @@ class AlgolTypeChecker:
         if symbol.kind != SWITCH:
             self._error(name_token, f"{name_token.value!r} is not a switch")
             return
-        if active_switch_id is not None and symbol.switch_id == active_switch_id:
-            self._error(
-                name_token,
-                f"switch {name_token.value!r} cannot select itself recursively",
-            )
-            return
 
         indexes = _direct_nodes(node, "arith_expr")
         if len(indexes) != 1:
