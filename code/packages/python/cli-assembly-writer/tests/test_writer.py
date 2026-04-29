@@ -80,7 +80,12 @@ def test_write_ir_lowered_fat_method_with_locals_and_internal_call() -> None:
     callee = assembly.resolve_method_definition(0x06000002)
     body = disassemble_clr_method(assembly, entry)
 
-    assert assembly.type_definitions[0].method_tokens == (0x06000001, 0x06000002)
+    # CLR01: TypeDef row 0 is the ECMA-335 ``<Module>`` pseudo-type
+    # (no methods); the user TypeDef is now at row 1 and owns every
+    # MethodDef.
+    assert assembly.type_definitions[0].full_name == "<Module>"
+    assert assembly.type_definitions[0].method_tokens == ()
+    assert assembly.type_definitions[1].method_tokens == (0x06000001, 0x06000002)
     assert entry.header.format == "fat"
     assert entry.local_count == 2
     assert callee.name == "callee"
