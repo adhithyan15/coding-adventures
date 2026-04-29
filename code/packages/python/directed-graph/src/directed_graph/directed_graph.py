@@ -73,7 +73,7 @@ from __future__ import annotations
 
 from typing import Generic, TypeVar
 
-from graph import Graph, GraphRepr
+from graph import Graph, GraphRepr, PropertyBag, PropertyValue
 
 # ---------------------------------------------------------------------------
 # Type variable
@@ -150,7 +150,7 @@ class DirectedGraph(Graph[T]):
     # Node operations (overrides)
     # ------------------------------------------------------------------
 
-    def add_node(self, node: T) -> None:
+    def add_node(self, node: T, properties: PropertyBag | None = None) -> None:
         """Add a node to the graph.  No-op if the node already exists.
 
         Overrides Graph.add_node to also initialise the reverse adjacency
@@ -159,16 +159,22 @@ class DirectedGraph(Graph[T]):
         Example::
 
             g = DirectedGraph()
-            g.add_node("A")
+            g.add_node("A", {"kind": "input"})
             g.has_node("A")  # True
             g.successors("A")    # frozenset()
             g.predecessors("A")  # frozenset()
         """
+        existed = node in self._adj
+        super().add_node(node, properties)
+
+        if existed:
+            return
+
         if node not in self._adj:
-            # Let the base class initialise _adj[node] = {}
-            super().add_node(node)
-            # Mirror the entry in _reverse
-            self._reverse[node] = {}
+            return
+
+        # Mirror the entry in _reverse.
+        self._reverse[node] = {}
 
     def remove_node(self, node: T) -> None:
         """Remove a node and all its incident edges (both in and out).
@@ -194,21 +200,30 @@ class DirectedGraph(Graph[T]):
         # remove `node` from _reverse[v] (i.e., node no longer points to v).
         for successor in list(self._adj[node]):
             del self._reverse[successor][node]
+            self._edge_properties.pop((node, successor), None)
 
         # Clean up _adj of predecessors: for each predecessor u of `node`,
         # remove the forward edge u → node.
         for predecessor in list(self._reverse[node]):
             del self._adj[predecessor][node]
+            self._edge_properties.pop((predecessor, node), None)
 
         # Remove the node's own entries.
         del self._adj[node]
         del self._reverse[node]
+        del self._node_properties[node]
 
     # ------------------------------------------------------------------
     # Edge operations (overrides)
     # ------------------------------------------------------------------
 
-    def add_edge(self, u: T, v: T, weight: float = 1.0) -> None:
+    def add_edge(
+        self,
+        u: T,
+        v: T,
+        weight: float = 1.0,
+        properties: PropertyBag | None = None,
+    ) -> None:
         """Add a directed edge u → v with the given weight.
 
         Overrides Graph.add_edge to store a DIRECTED edge only (u→v, not v→u).
@@ -233,6 +248,7 @@ class DirectedGraph(Graph[T]):
                 f"Self-loops are not allowed: {u!r} -> {v!r}. "
                 f"Pass allow_self_loops=True to permit them."
             )
+        self._validate_weight(weight)
 
         # Ensure both nodes exist (with their _reverse entries).
         self.add_node(u)
@@ -244,6 +260,10 @@ class DirectedGraph(Graph[T]):
         self._adj[u][v] = weight
         # Update reverse dict.
         self._reverse[v][u] = weight
+
+        merged = dict(properties or {})
+        merged["weight"] = weight
+        self._edge_properties.setdefault((u, v), {}).update(merged)
 
     def remove_edge(self, u: T, v: T) -> None:
         """Remove the directed edge u → v.
@@ -268,6 +288,7 @@ class DirectedGraph(Graph[T]):
 
         del self._adj[u][v]
         del self._reverse[v][u]
+        self._edge_properties.pop((u, v), None)
 
     # ------------------------------------------------------------------
     # Neighbor queries (override + new methods)
@@ -402,6 +423,53 @@ class DirectedGraph(Graph[T]):
             for v, w in neighbours.items():
                 result.add((u, v, w))
         return frozenset(result)
+
+    # ------------------------------------------------------------------
+    # Property bags (override for directed edge identity)
+    # ------------------------------------------------------------------
+
+    def edge_properties(self, u: T, v: T) -> PropertyBag:
+        """Return a copy of properties attached to directed edge u → v."""
+        if not self.has_edge(u, v):
+            raise KeyError((u, v))
+        properties = dict(self._edge_properties.get((u, v), {}))
+        properties["weight"] = self.edge_weight(u, v)
+        return properties
+
+    def set_edge_property(
+        self,
+        u: T,
+        v: T,
+        key: str,
+        value: PropertyValue,
+    ) -> None:
+        """Set one property on directed edge u → v.
+
+        Setting ``weight`` also updates both the forward and reverse adjacency
+        maps while preserving directed semantics.
+        """
+        if not self.has_edge(u, v):
+            raise KeyError((u, v))
+        if key == "weight":
+            if not isinstance(value, (int, float)) or isinstance(value, bool):
+                raise ValueError("edge property 'weight' must be numeric")
+            self._set_directed_edge_weight(u, v, float(value))
+        self._edge_properties.setdefault((u, v), {})[key] = value
+
+    def remove_edge_property(self, u: T, v: T, key: str) -> None:
+        """Remove one property from directed edge u → v if present."""
+        if not self.has_edge(u, v):
+            raise KeyError((u, v))
+        if key == "weight":
+            self._set_directed_edge_weight(u, v, 1.0)
+            self._edge_properties.setdefault((u, v), {})["weight"] = 1.0
+            return
+        self._edge_properties.setdefault((u, v), {}).pop(key, None)
+
+    def _set_directed_edge_weight(self, u: T, v: T, weight: float) -> None:
+        self._validate_weight(weight)
+        self._adj[u][v] = weight
+        self._reverse[v][u] = weight
 
     # ------------------------------------------------------------------
     # Dunder methods
