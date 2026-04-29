@@ -270,6 +270,7 @@ members = [
     "paint-vm-direct2d-c",
     "paint-vm-direct2d",
     "paint-vm-gdi",
+    "paint-vm-gpu-core",
     "paint-vm-mesa",
     "paint-vm-metal-c",
     "paint-vm-opencl",
