@@ -405,4 +405,5 @@ members = [
     "cas-trig",
     "codegen-core",
     "aot-core",
+    "ir-to-beam",
 ]
