@@ -29,6 +29,7 @@ The opcodes are grouped by category:
   Control Flow: LABEL, JUMP, BRANCH_Z, BRANCH_NZ, CALL, RET
   System:       SYSCALL, HALT
   Meta:         NOP, COMMENT
+  Closures:     MAKE_CLOSURE, APPLY_CLOSURE   (TW03 Phase 2)
 
 Text Names
 ----------
@@ -257,6 +258,46 @@ class IrOp(IntEnum):
     # Useful for debugging IR output.
     #   COMMENT "load tape base address"
     COMMENT = 24
+
+    # ── Closures (TW03 Phase 2 — cross-backend Lisp closure support) ─────
+    # Construct a closure value that captures values from the enclosing
+    # lexical scope.  The closure can later be invoked via APPLY_CLOSURE.
+    #
+    # Operand layout:
+    #   MAKE_CLOSURE dst, fn_label, num_captured, capt0, capt1, ...
+    # where:
+    #   - ``dst``         — register receiving the resulting closure handle
+    #   - ``fn_label``    — IR label of the lifted lambda body (a top-level
+    #                       region just like a user-defined function)
+    #   - ``num_captured`` — IrImmediate count of captured values
+    #   - ``capt0..captN-1`` — registers holding the captured values
+    #
+    # Backend lowering strategies (see TW03 spec):
+    #   - JVM/CLR:  allocate a closure object whose fields hold the captures;
+    #               the resulting reference is the "closure handle".
+    #   - BEAM:     emit ``make_fun2`` referencing a FunT-table entry whose
+    #               free-variable list maps to the captured registers.
+    #   - vm-core:  delegate to the host-side ``make_closure`` builtin
+    #               (already implemented in TW00).
+    MAKE_CLOSURE = 25
+
+    # Apply a closure value to zero or more arguments.
+    #
+    # Operand layout:
+    #   APPLY_CLOSURE dst, closure_reg, num_args, arg0, arg1, ...
+    # where:
+    #   - ``dst``         — register receiving the call's return value
+    #   - ``closure_reg`` — register holding the closure handle from
+    #                        a prior MAKE_CLOSURE
+    #   - ``num_args``    — IrImmediate count of arguments
+    #   - ``arg0..argN-1`` — registers holding the argument values
+    #
+    # Backend lowering strategies:
+    #   - JVM/CLR:  invoke the closure object's ``apply(int...)`` method.
+    #   - BEAM:     emit ``call_fun`` (or ``call_fun2``) on the closure
+    #               handle.
+    #   - vm-core:  delegate to the host-side ``apply_closure`` builtin.
+    APPLY_CLOSURE = 26
 
 
 # Canonical name → opcode mapping. Built from the enum at module load time.
