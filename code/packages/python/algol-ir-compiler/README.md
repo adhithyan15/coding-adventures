@@ -69,7 +69,8 @@ actuals pass descriptor pointers, and label actuals pass label ids, so
 forwarded procedure formals keep the original environment in value, by-name,
 array, label, switch, or procedure mode. Real-valued formal procedure calls can
 accept integer-returning actual procedures and promote the dispatched result.
-Richer nested procedure-parameter contract propagation remains future work.
+Concrete procedure actuals forwarded through a formal procedure call retain
+enough type-checker metadata to validate nested procedure-parameter contracts.
 
 Direct `goto` statements lower to ordinary IR `JUMP` instructions targeting
 generated ALGOL labels. Local jumps emit the jump directly. Direct nonlocal
