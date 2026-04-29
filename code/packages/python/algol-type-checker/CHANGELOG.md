@@ -53,6 +53,8 @@ All notable changes to this package will be documented in this file.
   procedure parameters, recording array argument call shapes for lowering.
 - Accepted procedure-valued actuals with label, switch, and procedure
   parameters for formal procedure parameters.
+- Validated nested procedure-parameter call-shape contracts when a formal
+  procedure call forwards a concrete procedure actual.
 
 ## [0.1.0] - 2026-04-20
 

@@ -1050,6 +1050,41 @@ class TestAlgolTypeChecker:
         shape = result.semantic.procedures[1].parameters[0].procedure_call_shapes[0]
         assert shape.argument_kinds == ("procedure",)
         assert shape.argument_types == ("procedure",)
+        assert shape.procedure_argument_ids == (
+            result.semantic.procedures[0].procedure_id,
+        )
+
+    def test_rejects_procedure_parameter_actual_with_nested_arity_mismatch(
+        self,
+    ) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure bump; begin result := result + 1 end; "
+            "procedure invoke(p); procedure p; begin p(bump) end; "
+            "procedure use(q); procedure q; begin q(1) end; "
+            "invoke(use) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "accepting 1 argument(s), got 0" in result.diagnostics[0].message
+
+    def test_rejects_procedure_parameter_actual_with_nested_result_mismatch(
+        self,
+    ) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure bump; begin result := result + 1 end; "
+            "procedure invoke(p); procedure p; begin p(bump) end; "
+            "procedure use(f); integer f; procedure f; begin result := f end; "
+            "invoke(use) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "expects a integer procedure actual" in result.diagnostics[0].message
 
     def test_rejects_procedure_parameter_actual_with_wrong_label_formal(
         self,

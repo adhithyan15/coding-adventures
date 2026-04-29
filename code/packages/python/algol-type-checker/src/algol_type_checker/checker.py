@@ -193,6 +193,7 @@ class ProcedureFormalCallShape:
     argument_types: tuple[str, ...]
     argument_kinds: tuple[str, ...] = ()
     argument_assignable: tuple[bool, ...] = ()
+    procedure_argument_ids: tuple[int | None, ...] = ()
     return_type: str | None = None
 
 
@@ -2025,19 +2026,22 @@ class AlgolTypeChecker:
         argument_types: list[str] = []
         argument_kinds: list[str] = []
         argument_assignable: list[bool] = []
+        procedure_argument_ids: list[int | None] = []
         for argument in arguments:
             array_type = self._formal_array_argument_type(argument, scope)
             if array_type is not None:
                 argument_types.append(array_type)
                 argument_kinds.append(ARRAY)
                 argument_assignable.append(False)
+                procedure_argument_ids.append(None)
                 continue
             nonscalar = self._formal_nonscalar_argument_shape(argument, scope)
             if nonscalar is not None:
-                argument_kind, argument_type = nonscalar
+                argument_kind, argument_type, procedure_id = nonscalar
                 argument_types.append(argument_type)
                 argument_kinds.append(argument_kind)
                 argument_assignable.append(False)
+                procedure_argument_ids.append(procedure_id)
                 continue
             actual_type = self._infer_expr(argument, scope)
             argument_types.append(actual_type)
@@ -2046,6 +2050,7 @@ class AlgolTypeChecker:
                 _is_assignable_actual(argument)
                 and self._resolved_bare_procedure_expression(argument) is None
             )
+            procedure_argument_ids.append(None)
             if actual_type != ERROR and actual_type not in {
                 INTEGER,
                 BOOLEAN,
@@ -2071,6 +2076,7 @@ class AlgolTypeChecker:
                     argument_types=tuple(argument_types),
                     argument_kinds=tuple(argument_kinds),
                     argument_assignable=tuple(argument_assignable),
+                    procedure_argument_ids=tuple(procedure_argument_ids),
                     return_type=return_type if role == "expression" else None,
                 ),
             )
@@ -2128,7 +2134,7 @@ class AlgolTypeChecker:
         self,
         argument: ASTNode,
         scope: Scope,
-    ) -> tuple[str, str] | None:
+    ) -> tuple[str, str, int | None] | None:
         variable = _single_variable_expr(argument)
         if variable is None or _variable_subscripts(variable):
             return None
@@ -2140,9 +2146,9 @@ class AlgolTypeChecker:
             return None
         symbol, _, _ = resolved
         if symbol.kind == LABEL:
-            return LABEL, LABEL
+            return LABEL, LABEL, None
         if symbol.kind == SWITCH:
-            return SWITCH, SWITCH
+            return SWITCH, SWITCH, None
         if symbol.kind == "procedure":
             descriptor = next(
                 (
@@ -2158,9 +2164,9 @@ class AlgolTypeChecker:
                 and not descriptor.parameters
             ):
                 return None
-            return "procedure", symbol.type_name
+            return "procedure", symbol.type_name, symbol.procedure_id
         if symbol.kind == "procedure_parameter" and symbol.type_name == "procedure":
-            return "procedure", symbol.type_name
+            return "procedure", symbol.type_name, None
         return None
 
     def _record_procedure_parameter_call_shape(
@@ -2419,6 +2425,11 @@ class AlgolTypeChecker:
                     if argument_index < len(shape.argument_assignable)
                     else False
                 )
+                procedure_argument_id = (
+                    shape.procedure_argument_ids[argument_index]
+                    if argument_index < len(shape.procedure_argument_ids)
+                    else None
+                )
                 if argument_kind == ARRAY:
                     if actual_parameter.kind != ARRAY:
                         self._error(
@@ -2467,6 +2478,23 @@ class AlgolTypeChecker:
                             f"{actual_parameter.name!r}",
                         )
                         return False
+                    if procedure_argument_id is not None:
+                        descriptor = self._procedure_descriptor_for_id(
+                            procedure_argument_id
+                        )
+                        if descriptor is None:
+                            self._error(
+                                token,
+                                f"procedure parameter {parameter.name!r} passes a "
+                                "procedure actual with no descriptor",
+                            )
+                            return False
+                        if not self._procedure_actual_satisfies_formal_shapes(
+                            token,
+                            descriptor,
+                            actual_parameter,
+                        ):
+                            return False
                     if not self._procedure_parameter_type_satisfies(
                         expected_type=actual_parameter.type_name,
                         actual_type=actual_type,
@@ -2526,6 +2554,19 @@ class AlgolTypeChecker:
                     return False
                 continue
         return True
+
+    def _procedure_descriptor_for_id(
+        self,
+        procedure_id: int,
+    ) -> ProcedureDescriptor | None:
+        return next(
+            (
+                procedure
+                for procedure in self.semantic_procedures
+                if procedure.procedure_id == procedure_id
+            ),
+            None,
+        )
 
     def _procedure_parameter_type_satisfies(
         self,

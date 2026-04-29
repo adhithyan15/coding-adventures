@@ -72,6 +72,8 @@ All notable changes to this package will be documented in this file.
   procedures, preserving descriptor aliasing and existing `value` array copies.
 - Executed formal procedure calls that forward label, switch, and procedure
   arguments to actual procedures.
+- Rejected formal procedure forwarding when a concrete procedure argument does
+  not satisfy the nested procedure formal contract expected by the receiver.
 - Added a convergence golden fixture that combines conditional expressions,
   exponentiation, chained assignment, by-name array summation, real arithmetic,
   and output in one end-to-end program.
