@@ -63,11 +63,13 @@
 
 pub const VERSION: &str = "0.1.0";
 
+use arc2d::SvgArc;
 use paint_instructions::{
     FillRule, ImageSrc, PaintClip, PaintEllipse, PaintGlyphRun, PaintGroup, PaintImage,
     PaintInstruction, PaintLayer, PaintLine, PaintPath, PaintRect, PaintScene, PaintText,
     PathCommand, PixelContainer, TextAlign, Transform2D,
 };
+use point2d::Point as Point2D;
 
 // ---------------------------------------------------------------------------
 // Platform gate — this crate only compiles on Windows
@@ -1283,12 +1285,52 @@ unsafe fn render_path(hdc: windows::Win32::Graphics::Gdi::HDC, path: &PaintPath,
                 }
                 current = Some((x, y));
             }
-            PathCommand::ArcTo { x, y, .. } => {
-                if current.is_none() {
+            PathCommand::ArcTo {
+                rx,
+                ry,
+                x_rotation,
+                large_arc,
+                sweep,
+                x,
+                y,
+            } => {
+                let Some((sx, sy)) = current else {
                     let _ = MoveToEx(hdc, x.round() as i32, y.round() as i32, None);
+                    current = Some((x, y));
                     subpath_start = Some((x, y));
-                } else {
+                    continue;
+                };
+
+                let arc = SvgArc::new(
+                    Point2D::new(sx, sy),
+                    Point2D::new(x, y),
+                    rx,
+                    ry,
+                    x_rotation.to_radians(),
+                    large_arc,
+                    sweep,
+                );
+                let beziers = arc.to_cubic_beziers();
+                if beziers.is_empty() {
                     let _ = LineTo(hdc, x.round() as i32, y.round() as i32);
+                } else {
+                    for bezier in beziers {
+                        let points = [
+                            POINT {
+                                x: bezier.p1.x.round() as i32,
+                                y: bezier.p1.y.round() as i32,
+                            },
+                            POINT {
+                                x: bezier.p2.x.round() as i32,
+                                y: bezier.p2.y.round() as i32,
+                            },
+                            POINT {
+                                x: bezier.p3.x.round() as i32,
+                                y: bezier.p3.y.round() as i32,
+                            },
+                        ];
+                        let _ = PolyBezierTo(hdc, &points);
+                    }
                 }
                 current = Some((x, y));
             }
@@ -1834,6 +1876,46 @@ mod tests {
         assert_eq!(r, 0, "triangle edge should draw stroke");
         assert_eq!(g, 0);
         assert_eq!(b, 0);
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn arc_to_renders_curve_instead_of_chord() {
+        let mut scene = PaintScene::new(100.0, 80.0);
+        scene.instructions.push(PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: 20.0, y: 50.0 },
+                PathCommand::ArcTo {
+                    rx: 30.0,
+                    ry: 30.0,
+                    x_rotation: 0.0,
+                    large_arc: false,
+                    sweep: true,
+                    x: 80.0,
+                    y: 50.0,
+                },
+            ],
+            fill: Some("none".to_string()),
+            fill_rule: None,
+            stroke: Some("#000000".to_string()),
+            stroke_width: Some(3.0),
+            stroke_cap: None,
+            stroke_join: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let pixels = render(&scene);
+        let (r, g, b, _a) = pixels.pixel_at(50, 20);
+        assert_eq!((r, g, b), (0, 0, 0), "top of arc should draw");
+
+        let (r, g, b, _a) = pixels.pixel_at(50, 50);
+        assert_eq!(
+            (r, g, b),
+            (255, 255, 255),
+            "arc should not degrade to the straight chord"
+        );
     }
 
     #[cfg(target_os = "windows")]
