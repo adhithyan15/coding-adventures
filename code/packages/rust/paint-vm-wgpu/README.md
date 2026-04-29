@@ -34,9 +34,9 @@ Producer (barcode, Mermaid, layout, HTML)
 | Group transform / opacity | Implemented by the shared GPU plan |
 | Layer transform / opacity | Implemented by the shared GPU plan |
 | Offscreen readback | Implemented with padded row-copy handling |
+| Images | Implemented for `ImageSrc::Pixels` through RGBA texture upload/sampling |
 | Gradients | Degraded by `paint-vm-gpu-core` to first-stop solid fills |
 | Text / glyph runs | Not implemented until glyph atlas and shaping strategy lands |
-| Images | Not implemented until texture upload and sampling path lands |
 | Filters / blend modes | Not implemented |
 
 ## Runtime Use
@@ -52,7 +52,6 @@ Cairo, Skia, or future GPU backends until WGPU grows those paths.
 
 ## Next Steps
 
-- Add texture upload and sampling for `PaintImage`.
 - Add gradient uniforms or small ramp textures instead of first-stop fallback.
 - Add glyph atlas planning once the shared text shaping and font metric pipeline
   is ready.
