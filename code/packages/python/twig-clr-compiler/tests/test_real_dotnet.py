@@ -1,20 +1,8 @@
 """End-to-end Twig source → real ``dotnet`` execution tests.
 
-These tests require ``dotnet`` on PATH.  They are the headline
-proof that the Twig → CLR pipeline works end-to-end on real
-.NET 9.0+ — completing the Twig real-runtime trilogy alongside
-JVM and BEAM.
-
-Note on the result channel
-==========================
-
-For v1 the program's last expression value flows to the **process
-exit code** (matching how a C# ``static int Main()`` program works).
-That keeps the v1 surface tiny — no stdout / Console.WriteLine
-needed.  v2 adds explicit I/O.
-
-Exit codes are 32-bit signed integers, so we limit our v1 tests to
-small positive results.
+Headline TW03 Phase 1 proof: ``define``, ``if``, comparison,
+recursion all work on real .NET 9.0 — completing CLR parity
+with JVM01's factorial test on real ``java``.
 """
 
 from __future__ import annotations
@@ -29,49 +17,148 @@ requires_dotnet = pytest.mark.skipif(
 )
 
 
+# ── Arithmetic ─────────────────────────────────────────────────────────────
+
+
 @requires_dotnet
 def test_addition() -> None:
-    """``(+ 1 2)`` exits 3 from real dotnet."""
     result = run_source("(+ 1 2)", assembly_name="ClrAdd")
-    assert result.returncode == 3, (
-        f"dotnet rejected the assembly or returned wrong code:\n"
-        f"  exit={result.returncode}\n"
-        f"  stderr={result.stderr!r}"
-    )
+    assert result.returncode == 3, result.stderr
 
 
 @requires_dotnet
 def test_multiplication() -> None:
-    """``(* 6 7)`` exits 42."""
     result = run_source("(* 6 7)", assembly_name="ClrMul")
     assert result.returncode == 42, result.stderr
 
 
 @requires_dotnet
 def test_subtraction() -> None:
-    """``(- 10 3)`` exits 7."""
     result = run_source("(- 10 3)", assembly_name="ClrSub")
     assert result.returncode == 7, result.stderr
 
 
 @requires_dotnet
 def test_division() -> None:
-    """``(/ 10 2)`` exits 5."""
     result = run_source("(/ 10 2)", assembly_name="ClrDiv")
     assert result.returncode == 5, result.stderr
 
 
 @requires_dotnet
 def test_let_binding() -> None:
-    """``(let ((x 5)) (* x x))`` exits 25."""
     result = run_source("(let ((x 5)) (* x x))", assembly_name="ClrLet")
     assert result.returncode == 25, result.stderr
 
 
 @requires_dotnet
 def test_nested_arithmetic() -> None:
-    """``(+ (* 6 7) (* 2 3))`` exits 48."""
     result = run_source(
         "(+ (* 6 7) (* 2 3))", assembly_name="ClrNested"
     )
     assert result.returncode == 48, result.stderr
+
+
+# ── if / comparison ────────────────────────────────────────────────────────
+
+
+@requires_dotnet
+def test_if_taken_branch() -> None:
+    result = run_source("(if (= 1 1) 100 200)", assembly_name="ClrIfT")
+    assert result.returncode == 100, result.stderr
+
+
+@requires_dotnet
+def test_if_not_taken_branch() -> None:
+    result = run_source("(if (= 1 2) 100 200)", assembly_name="ClrIfF")
+    assert result.returncode == 200, result.stderr
+
+
+@requires_dotnet
+def test_comparison_lt() -> None:
+    result = run_source("(if (< 3 5) 1 0)", assembly_name="ClrLt")
+    assert result.returncode == 1, result.stderr
+
+
+@requires_dotnet
+def test_comparison_gt() -> None:
+    result = run_source("(if (> 3 5) 1 0)", assembly_name="ClrGt")
+    assert result.returncode == 0, result.stderr
+
+
+# ── define + function calls ────────────────────────────────────────────────
+
+
+@requires_dotnet
+def test_top_level_function() -> None:
+    """``(define (square x) (* x x)) (square 7) → 49``."""
+    result = run_source(
+        "(define (square x) (* x x)) (square 7)",
+        assembly_name="ClrSquare",
+    )
+    assert result.returncode == 49, result.stderr
+
+
+@requires_dotnet
+def test_two_param_function() -> None:
+    result = run_source(
+        "(define (add3 a b) (+ a (+ b 3))) (add3 10 20)",
+        assembly_name="ClrAdd3",
+    )
+    assert result.returncode == 33, result.stderr
+
+
+@requires_dotnet
+def test_top_level_value_define_inlined() -> None:
+    result = run_source("(define x 42) x", assembly_name="ClrVal")
+    assert result.returncode == 42, result.stderr
+
+
+@requires_dotnet
+def test_nested_function_calls() -> None:
+    result = run_source(
+        """
+        (define (inc x) (+ x 1))
+        (define (dbl x) (* x 2))
+        (inc (dbl 5))
+        """,
+        assembly_name="ClrNestedFn",
+    )
+    assert result.returncode == 11, result.stderr
+
+
+# ── recursion ──────────────────────────────────────────────────────────────
+
+
+@requires_dotnet
+def test_recursion_factorial() -> None:
+    """``(fact 5) → 120`` — the headline TW03 Phase 1 test.
+
+    Proves recursion works on real ``dotnet``, completing parity
+    with JVM01's ``test_recursion_factorial`` on real ``java``.
+    """
+    result = run_source(
+        """
+        (define (fact n)
+          (if (= n 0) 1 (* n (fact (- n 1)))))
+        (fact 5)
+        """,
+        assembly_name="ClrFact",
+    )
+    assert result.returncode == 120, (
+        f"factorial mismatch — exit {result.returncode}, "
+        f"stderr={result.stderr!r}"
+    )
+
+
+@requires_dotnet
+def test_mutual_recursion_even_odd() -> None:
+    """``(even? 4) → 1``."""
+    result = run_source(
+        """
+        (define (even? n) (if (= n 0) 1 (odd? (- n 1))))
+        (define (odd? n) (if (= n 0) 0 (even? (- n 1))))
+        (even? 4)
+        """,
+        assembly_name="ClrEvenOdd",
+    )
+    assert result.returncode == 1, result.stderr

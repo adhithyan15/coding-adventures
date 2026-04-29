@@ -1,8 +1,8 @@
-"""Compile-time tests — no ``dotnet`` required.
+"""Compile-time tests for the upgraded twig-clr-compiler.
 
-Verifies the Twig → IR lowering produces sensible IR and rejects
-out-of-scope forms with clear error messages.  Real-``dotnet``
-end-to-end tests live in ``test_real_dotnet.py``.
+Verifies the Twig → IR lowering produces sensible IR for the
+TW03 Phase 1 surface (define, recursion, if, comparison) and
+rejects the still-out-of-scope forms with clear errors.
 """
 
 from __future__ import annotations
@@ -51,45 +51,115 @@ class TestSupportedSurface:
         ops = [ins.opcode for ins in ir.instructions]
         assert IrOp.MUL in ops
 
+    def test_if_emits_branch(self) -> None:
+        ir = compile_to_ir("(if (= 1 1) 100 200)")
+        ops = [ins.opcode for ins in ir.instructions]
+        assert IrOp.BRANCH_Z in ops
+        assert IrOp.JUMP in ops
+        assert IrOp.CMP_EQ in ops
+
+    @pytest.mark.parametrize(
+        ("src", "op"),
+        [
+            ("(= 1 1)", IrOp.CMP_EQ),
+            ("(< 1 2)", IrOp.CMP_LT),
+            ("(> 2 1)", IrOp.CMP_GT),
+        ],
+    )
+    def test_comparison_emits_cmp(self, src: str, op: IrOp) -> None:
+        ir = compile_to_ir(src)
+        ops = [ins.opcode for ins in ir.instructions]
+        assert op in ops
+
+    def test_define_function_emits_call(self) -> None:
+        ir = compile_to_ir("(define (square x) (* x x)) (square 7)")
+        ops = [ins.opcode for ins in ir.instructions]
+        assert IrOp.CALL in ops
+        # Two LABELs: one for square, one for main.
+        assert ops.count(IrOp.LABEL) >= 2
+
+    def test_recursive_function_compiles(self) -> None:
+        ir = compile_to_ir(
+            "(define (fact n) (if (= n 0) 1 (* n (fact (- n 1)))))"
+            "(fact 5)"
+        )
+        ops = [ins.opcode for ins in ir.instructions]
+        # At least 2 CALLs: the inner ``fact`` recursive call and
+        # the outer ``(fact 5)``.
+        assert ops.count(IrOp.CALL) >= 2
+        assert IrOp.BRANCH_Z in ops
+
+    def test_value_define_inlined(self) -> None:
+        ir = compile_to_ir("(define x 42) x")
+        ops = [ins.opcode for ins in ir.instructions]
+        # Value defines fold to compile-time constants — no extra
+        # callable region.  Just one LABEL for main.
+        assert ops.count(IrOp.LABEL) == 1
+
+    def test_mutual_recursion_compiles(self) -> None:
+        ir = compile_to_ir(
+            """
+            (define (even? n) (if (= n 0) 1 (odd? (- n 1))))
+            (define (odd? n) (if (= n 0) 0 (even? (- n 1))))
+            (even? 4)
+            """
+        )
+        # Confirm three callable regions (even?, odd?, main) by
+        # filtering for region-entry labels (no underscore prefix).
+        # Every ``if`` adds two synthetic ``_else_*`` / ``_endif_*``
+        # labels, so the raw LABEL count is much higher.
+        from compiler_ir import IrLabel
+        region_labels = [
+            ins.operands[0].name
+            for ins in ir.instructions
+            if ins.opcode is IrOp.LABEL
+            and isinstance(ins.operands[0], IrLabel)
+            and not ins.operands[0].name.startswith("_")
+        ]
+        assert region_labels == ["even?", "odd?", "main"]
+
 
 class TestRejectedSurface:
-    def test_define_rejected(self) -> None:
-        with pytest.raises(TwigCompileError, match="not yet supported"):
-            compile_to_ir("(define x 1)")
-
     def test_lambda_rejected(self) -> None:
         with pytest.raises(TwigCompileError, match="not yet supported"):
             compile_to_ir("(lambda (x) x)")
-
-    def test_comparison_rejected(self) -> None:
-        with pytest.raises(TwigCompileError, match="not yet supported"):
-            compile_to_ir("(= 1 1)")
 
     def test_unbound_name_rejected(self) -> None:
         with pytest.raises(TwigCompileError, match="unbound name"):
             compile_to_ir("foo")
 
-    def test_unknown_builtin_rejected(self) -> None:
-        with pytest.raises(TwigCompileError, match="unknown builtin"):
+    def test_unknown_function_rejected(self) -> None:
+        with pytest.raises(TwigCompileError, match="unknown function"):
             compile_to_ir("(weirdop 1 2)")
 
     def test_arity_mismatch_rejected(self) -> None:
-        with pytest.raises(TwigCompileError, match="expects exactly 2"):
+        with pytest.raises(TwigCompileError, match="expects 2 arguments"):
             compile_to_ir("(+ 1 2 3)")
 
-    def test_multi_binding_let_rejected(self) -> None:
-        with pytest.raises(TwigCompileError, match="multiple bindings"):
-            compile_to_ir("(let ((x 1) (y 2)) (+ x y))")
+    def test_function_arity_mismatch_rejected(self) -> None:
+        with pytest.raises(TwigCompileError, match="takes 1 arguments"):
+            compile_to_ir("(define (id x) x) (id 1 2)")
 
     def test_quoted_symbol_rejected(self) -> None:
         with pytest.raises(TwigCompileError, match="quoted symbols"):
             compile_to_ir("'foo")
 
+    def test_cons_rejected(self) -> None:
+        with pytest.raises(TwigCompileError, match="not yet supported"):
+            compile_to_ir("(cons 1 2)")
+
+    def test_print_rejected(self) -> None:
+        with pytest.raises(TwigCompileError, match="not yet supported"):
+            compile_to_ir("(print 42)")
+
+    def test_non_literal_value_define_rejected(self) -> None:
+        with pytest.raises(TwigCompileError, match="literal RHS"):
+            compile_to_ir("(define x (+ 1 2))")
+
 
 class TestCompileSourceShape:
     def test_returns_pe_bytes(self) -> None:
         result = compile_source("(+ 1 2)")
-        # PE/CLI files start with the MS-DOS ``MZ`` signature.
         assert result.assembly_bytes[:2] == b"MZ"
         assert result.assembly_name == "TwigProgram"
 
@@ -107,9 +177,7 @@ class TestCompileSourceShape:
 
 
 class TestAssemblyNameSecurity:
-    """Defends against path-traversal and CLR-name violations via
-    ``assembly_name``.  Same allowlist pattern as
-    ``twig-beam-compiler``'s ``module_name`` validation."""
+    """Defends against path-traversal and CLR-name violations."""
 
     def test_legal_name_accepted(self) -> None:
         result = compile_source("(+ 1 2)", assembly_name="Answer42")
@@ -118,12 +186,12 @@ class TestAssemblyNameSecurity:
     @pytest.mark.parametrize(
         "bad",
         [
-            "../etc_passwd",      # path-traversal style
-            "1Bad",                # digit start
-            "Has Space",           # space
-            "with;semicolon",      # punctuation
-            "",                     # empty
-            "a" * 65,              # too long
+            "../etc_passwd",
+            "1Bad",
+            "Has Space",
+            "with;semicolon",
+            "",
+            "a" * 65,
         ],
     )
     def test_unsafe_names_rejected(self, bad: str) -> None:
