@@ -177,6 +177,48 @@ type GraphTests() =
             Assert.Throws<InvalidOperationException>(fun () -> GraphAlgorithms.minimumSpanningTree disconnected |> ignore) |> ignore
 
     [<Fact>]
+    member _.``Property bags track graph node and edge metadata``() =
+        for repr in GraphTests.Representations do
+            let graph = Graph<string>(repr)
+
+            graph.SetGraphProperty("name", box "city-map")
+            graph.SetGraphProperty("version", box 1)
+            Assert.Equal(box "city-map", graph.GraphProperties().["name"])
+            Assert.Equal(box 1, graph.GraphProperties().["version"])
+            graph.RemoveGraphProperty("version")
+            Assert.False(graph.GraphProperties().ContainsKey("version"))
+
+            let nodeProperties = Dictionary<string, obj>(StringComparer.Ordinal)
+            nodeProperties.["kind"] <- box "input"
+            graph.AddNode("A", nodeProperties)
+
+            let nextNodeProperties = Dictionary<string, obj>(StringComparer.Ordinal)
+            nextNodeProperties.["trainable"] <- box false
+            graph.AddNode("A", nextNodeProperties)
+
+            graph.SetNodeProperty("A", "slot", box 0)
+            Assert.Equal(box "input", graph.NodeProperties("A").["kind"])
+            Assert.Equal(box false, graph.NodeProperties("A").["trainable"])
+            Assert.Equal(box 0, graph.NodeProperties("A").["slot"])
+            graph.RemoveNodeProperty("A", "slot")
+            Assert.False(graph.NodeProperties("A").ContainsKey("slot"))
+
+            let edgeProperties = Dictionary<string, obj>(StringComparer.Ordinal)
+            edgeProperties.["role"] <- box "distance"
+            graph.AddEdge("A", "B", 2.5, edgeProperties)
+            Assert.Equal(box "distance", graph.EdgeProperties("B", "A").["role"])
+            Assert.Equal(box 2.5, graph.EdgeProperties("B", "A").["weight"])
+            graph.SetEdgeProperty("B", "A", "weight", box 7.0)
+            Assert.Equal(7.0, graph.EdgeWeight("A", "B"))
+            graph.SetEdgeProperty("A", "B", "trainable", box true)
+            graph.RemoveEdgeProperty("A", "B", "role")
+            Assert.Equal(box true, graph.EdgeProperties("A", "B").["trainable"])
+            Assert.False(graph.EdgeProperties("A", "B").ContainsKey("role"))
+
+            graph.RemoveEdge("A", "B")
+            Assert.Throws<KeyNotFoundException>(fun () -> graph.EdgeProperties("A", "B") |> ignore) |> ignore
+
+    [<Fact>]
     member _.``Numeric nodes are supported``() =
         for repr in GraphTests.Representations do
             let graph = Graph<int>(repr)

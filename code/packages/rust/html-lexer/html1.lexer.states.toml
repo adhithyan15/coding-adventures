@@ -5941,7 +5941,10 @@ from = "after_doctype_system_identifier"
 matcher = { anything = true }
 to = "bogus_doctype"
 consume = false
-actions = ["parse_error(unexpected-character-after-doctype-system-identifier)"]
+actions = [
+  "parse_error(unexpected-character-after-doctype-system-identifier)",
+  "mark_force_quirks",
+]
 
 [[transitions]]
 from = "bogus_doctype"

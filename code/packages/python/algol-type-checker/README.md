@@ -57,9 +57,9 @@ accept procedure-valued actuals with scalar `value` or by-name parameters and
 whole-array, label, switch, or procedure parameters, rejecting only call shapes
 that would pass a non-assignable actual to a written by-name parameter.
 Real-valued formal procedure parameters accept integer-returning procedure
-actuals via the same numeric promotion rule used by scalar calls. The checker
-keeps guarding the remaining full-ALGOL gaps, including richer nested
-procedure-parameter contract propagation through procedure-valued actuals.
+actuals via the same numeric promotion rule used by scalar calls. When a
+formal procedure call forwards a concrete procedure actual into another
+procedure formal, the checker also validates the nested call-shape contract.
 
 ```python
 from algol_parser import parse_algol

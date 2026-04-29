@@ -6,6 +6,7 @@ All notable changes to this package will be documented in this file.
 
 ### Changed
 
+- Added graph, node, and edge property bags with synchronized `weight` edge metadata
 - Expanded `Graph.cs` into the repo's literate-programming style with design
   commentary about representations, traversal order, shortest path selection,
   and Kruskal's MST algorithm

@@ -18,12 +18,18 @@ type WeightedEdge struct {
 	Weight float64
 }
 
+type PropertyValue any
+type PropertyBag map[string]PropertyValue
+
 type Graph struct {
-	repr      GraphRepr
-	adj       map[string]map[string]float64
-	nodeList  []string
-	nodeIndex map[string]int
-	matrix    [][]float64
+	repr            GraphRepr
+	adj             map[string]map[string]float64
+	nodeList        []string
+	nodeIndex       map[string]int
+	matrix          [][]float64
+	graphProperties PropertyBag
+	nodeProperties  map[string]PropertyBag
+	edgeProperties  map[string]PropertyBag
 }
 
 func New(repr GraphRepr) *Graph {
@@ -31,11 +37,14 @@ func New(repr GraphRepr) *Graph {
 		repr = AdjacencyList
 	}
 	return &Graph{
-		repr:      repr,
-		adj:       make(map[string]map[string]float64),
-		nodeList:  []string{},
-		nodeIndex: make(map[string]int),
-		matrix:    [][]float64{},
+		repr:            repr,
+		adj:             make(map[string]map[string]float64),
+		nodeList:        []string{},
+		nodeIndex:       make(map[string]int),
+		matrix:          [][]float64{},
+		graphProperties: make(PropertyBag),
+		nodeProperties:  make(map[string]PropertyBag),
+		edgeProperties:  make(map[string]PropertyBag),
 	}
 }
 
@@ -43,21 +52,26 @@ func (g *Graph) Repr() GraphRepr {
 	return g.repr
 }
 
-func (g *Graph) AddNode(node string) {
+func (g *Graph) AddNode(node string, properties ...PropertyBag) {
 	if g.repr == AdjacencyList {
 		if _, ok := g.adj[node]; !ok {
 			g.adj[node] = make(map[string]float64)
+			g.nodeProperties[node] = make(PropertyBag)
 		}
+		g.mergeNodeProperties(node, properties...)
 		return
 	}
 
 	if _, ok := g.nodeIndex[node]; ok {
+		g.mergeNodeProperties(node, properties...)
 		return
 	}
 
 	index := len(g.nodeList)
 	g.nodeList = append(g.nodeList, node)
 	g.nodeIndex[node] = index
+	g.nodeProperties[node] = make(PropertyBag)
+	g.mergeNodeProperties(node, properties...)
 	for i := range g.matrix {
 		g.matrix[i] = append(g.matrix[i], 0)
 	}
@@ -72,8 +86,10 @@ func (g *Graph) RemoveNode(node string) error {
 		}
 		for neighbor := range neighbors {
 			delete(g.adj[neighbor], node)
+			delete(g.edgeProperties, edgeKey(node, neighbor))
 		}
 		delete(g.adj, node)
+		delete(g.nodeProperties, node)
 		return nil
 	}
 
@@ -81,8 +97,12 @@ func (g *Graph) RemoveNode(node string) error {
 	if !ok {
 		return &NodeNotFoundError{Node: node}
 	}
+	for _, other := range g.nodeList {
+		delete(g.edgeProperties, edgeKey(node, other))
+	}
 
 	delete(g.nodeIndex, node)
+	delete(g.nodeProperties, node)
 	g.nodeList = append(g.nodeList[:index], g.nodeList[index+1:]...)
 	g.matrix = append(g.matrix[:index], g.matrix[index+1:]...)
 	for i := range g.matrix {
@@ -115,7 +135,7 @@ func (g *Graph) Nodes() []string {
 	return append([]string(nil), g.nodeList...)
 }
 
-func (g *Graph) AddEdge(left, right string, weight float64) {
+func (g *Graph) AddEdge(left, right string, weight float64, properties ...PropertyBag) {
 	if weight == 0 {
 		weight = 1
 	}
@@ -125,6 +145,7 @@ func (g *Graph) AddEdge(left, right string, weight float64) {
 	if g.repr == AdjacencyList {
 		g.adj[left][right] = weight
 		g.adj[right][left] = weight
+		g.mergeEdgeProperties(left, right, weight, properties...)
 		return
 	}
 
@@ -132,6 +153,7 @@ func (g *Graph) AddEdge(left, right string, weight float64) {
 	rightIndex := g.nodeIndex[right]
 	g.matrix[leftIndex][rightIndex] = weight
 	g.matrix[rightIndex][leftIndex] = weight
+	g.mergeEdgeProperties(left, right, weight, properties...)
 }
 
 func (g *Graph) RemoveEdge(left, right string) error {
@@ -145,6 +167,7 @@ func (g *Graph) RemoveEdge(left, right string) error {
 		}
 		delete(g.adj[left], right)
 		delete(g.adj[right], left)
+		delete(g.edgeProperties, edgeKey(left, right))
 		return nil
 	}
 
@@ -155,6 +178,7 @@ func (g *Graph) RemoveEdge(left, right string) error {
 	}
 	g.matrix[leftIndex][rightIndex] = 0
 	g.matrix[rightIndex][leftIndex] = 0
+	delete(g.edgeProperties, edgeKey(left, right))
 	return nil
 }
 
@@ -297,6 +321,90 @@ func (g *Graph) Degree(node string) (int, error) {
 	return len(neighbors), nil
 }
 
+func (g *Graph) GraphProperties() PropertyBag {
+	return copyPropertyBag(g.graphProperties)
+}
+
+func (g *Graph) SetGraphProperty(key string, value PropertyValue) {
+	g.graphProperties[key] = value
+}
+
+func (g *Graph) RemoveGraphProperty(key string) {
+	delete(g.graphProperties, key)
+}
+
+func (g *Graph) NodeProperties(node string) (PropertyBag, error) {
+	if !g.HasNode(node) {
+		return nil, &NodeNotFoundError{Node: node}
+	}
+	return copyPropertyBag(g.nodeProperties[node]), nil
+}
+
+func (g *Graph) SetNodeProperty(node, key string, value PropertyValue) error {
+	if !g.HasNode(node) {
+		return &NodeNotFoundError{Node: node}
+	}
+	g.nodeProperties[node][key] = value
+	return nil
+}
+
+func (g *Graph) RemoveNodeProperty(node, key string) error {
+	if !g.HasNode(node) {
+		return &NodeNotFoundError{Node: node}
+	}
+	delete(g.nodeProperties[node], key)
+	return nil
+}
+
+func (g *Graph) EdgeProperties(left, right string) (PropertyBag, error) {
+	if !g.HasEdge(left, right) {
+		return nil, &EdgeNotFoundError{Left: left, Right: right}
+	}
+	properties := copyPropertyBag(g.edgeProperties[edgeKey(left, right)])
+	weight, err := g.EdgeWeight(left, right)
+	if err != nil {
+		return nil, err
+	}
+	properties["weight"] = weight
+	return properties, nil
+}
+
+func (g *Graph) SetEdgeProperty(left, right, propertyKey string, value PropertyValue) error {
+	if !g.HasEdge(left, right) {
+		return &EdgeNotFoundError{Left: left, Right: right}
+	}
+	if propertyKey == "weight" {
+		weight, ok := numericValue(value)
+		if !ok {
+			return fmt.Errorf("edge property %q must be numeric", propertyKey)
+		}
+		g.setEdgeWeight(left, right, weight)
+	}
+	edgeID := edgeKey(left, right)
+	if _, ok := g.edgeProperties[edgeID]; !ok {
+		g.edgeProperties[edgeID] = make(PropertyBag)
+	}
+	g.edgeProperties[edgeID][propertyKey] = value
+	return nil
+}
+
+func (g *Graph) RemoveEdgeProperty(left, right, key string) error {
+	if !g.HasEdge(left, right) {
+		return &EdgeNotFoundError{Left: left, Right: right}
+	}
+	if key == "weight" {
+		g.setEdgeWeight(left, right, 1)
+		edgeID := edgeKey(left, right)
+		if _, ok := g.edgeProperties[edgeID]; !ok {
+			g.edgeProperties[edgeID] = make(PropertyBag)
+		}
+		g.edgeProperties[edgeID]["weight"] = float64(1)
+		return nil
+	}
+	delete(g.edgeProperties[edgeKey(left, right)], key)
+	return nil
+}
+
 func (g *Graph) Size() int {
 	if g.repr == AdjacencyList {
 		return len(g.adj)
@@ -313,4 +421,84 @@ func canonicalEndpoints(left, right string) (string, string) {
 		return left, right
 	}
 	return right, left
+}
+
+func edgeKey(left, right string) string {
+	keyLeft, keyRight := canonicalEndpoints(left, right)
+	return keyLeft + "\x00" + keyRight
+}
+
+func copyPropertyBag(properties PropertyBag) PropertyBag {
+	result := make(PropertyBag, len(properties))
+	for key, value := range properties {
+		result[key] = value
+	}
+	return result
+}
+
+func (g *Graph) mergeNodeProperties(node string, properties ...PropertyBag) {
+	for _, propertyBag := range properties {
+		for key, value := range propertyBag {
+			g.nodeProperties[node][key] = value
+		}
+	}
+}
+
+func (g *Graph) mergeEdgeProperties(left, right string, weight float64, properties ...PropertyBag) {
+	edgeID := edgeKey(left, right)
+	if _, ok := g.edgeProperties[edgeID]; !ok {
+		g.edgeProperties[edgeID] = make(PropertyBag)
+	}
+	for _, propertyBag := range properties {
+		for propertyKey, value := range propertyBag {
+			g.edgeProperties[edgeID][propertyKey] = value
+		}
+	}
+	g.edgeProperties[edgeID]["weight"] = weight
+}
+
+func (g *Graph) setEdgeWeight(left, right string, weight float64) {
+	if weight == 0 {
+		weight = 1
+	}
+	if g.repr == AdjacencyList {
+		g.adj[left][right] = weight
+		g.adj[right][left] = weight
+		return
+	}
+	leftIndex := g.nodeIndex[left]
+	rightIndex := g.nodeIndex[right]
+	g.matrix[leftIndex][rightIndex] = weight
+	g.matrix[rightIndex][leftIndex] = weight
+}
+
+func numericValue(value PropertyValue) (float64, bool) {
+	switch typed := value.(type) {
+	case int:
+		return float64(typed), true
+	case int8:
+		return float64(typed), true
+	case int16:
+		return float64(typed), true
+	case int32:
+		return float64(typed), true
+	case int64:
+		return float64(typed), true
+	case uint:
+		return float64(typed), true
+	case uint8:
+		return float64(typed), true
+	case uint16:
+		return float64(typed), true
+	case uint32:
+		return float64(typed), true
+	case uint64:
+		return float64(typed), true
+	case float32:
+		return float64(typed), true
+	case float64:
+		return typed, true
+	default:
+		return 0, false
+	}
 }

@@ -3,6 +3,7 @@ package CodingAdventures::Graph;
 use strict;
 use warnings;
 use List::Util qw(sum);
+use Scalar::Util qw(looks_like_number);
 
 our $VERSION = '0.01';
 
@@ -18,6 +19,9 @@ sub new {
         _node_list  => [],
         _node_index => {},
         _matrix     => [],
+        _graph_properties => {},
+        _node_properties  => {},
+        _edge_properties  => {},
     }, $class;
 }
 
@@ -25,19 +29,25 @@ sub repr { $_[0]->{_repr} }
 sub size { $_[0]->{_repr} eq 'adjacency_list' ? scalar(keys %{ $_[0]->{_adj} }) : scalar(@{ $_[0]->{_node_list} }) }
 
 sub add_node {
-    my ($self, $node) = @_;
+    my ($self, $node, $properties) = @_;
+    $properties //= {};
     if ($self->{_repr} eq 'adjacency_list') {
         $self->{_adj}{$node} //= {};
+        _merge_properties($self->{_node_properties}, $node, $properties);
         return 1;
     }
 
-    return 1 if exists $self->{_node_index}{$node};
+    if (exists $self->{_node_index}{$node}) {
+        _merge_properties($self->{_node_properties}, $node, $properties);
+        return 1;
+    }
 
     my $index = scalar @{ $self->{_node_list} };
     push @{ $self->{_node_list} }, $node;
     $self->{_node_index}{$node} = $index;
     push @$_, undef for @{ $self->{_matrix} };
     push @{ $self->{_matrix} }, [ (undef) x ($index + 1) ];
+    _merge_properties($self->{_node_properties}, $node, $properties);
     return 1;
 }
 
@@ -49,12 +59,16 @@ sub remove_node {
         my $neighbors = $self->{_adj}{$node};
         for my $neighbor (keys %$neighbors) {
             delete $self->{_adj}{$neighbor}{$node};
+            delete $self->{_edge_properties}{_edge_key($node, $neighbor)};
         }
         delete $self->{_adj}{$node};
+        delete $self->{_node_properties}{$node};
         return 1;
     }
 
     my $index = delete $self->{_node_index}{$node};
+    delete $self->{_edge_properties}{_edge_key($node, $_)} for @{ $self->{_node_list} };
+    delete $self->{_node_properties}{$node};
     splice @{ $self->{_node_list} }, $index, 1;
     splice @{ $self->{_matrix} }, $index, 1;
     for my $row (@{ $self->{_matrix} }) {
@@ -80,14 +94,16 @@ sub nodes {
 }
 
 sub add_edge {
-    my ($self, $left, $right, $weight) = @_;
+    my ($self, $left, $right, $weight, $properties) = @_;
     $weight = 1 unless defined $weight;
+    $properties //= {};
     $self->add_node($left);
     $self->add_node($right);
 
     if ($self->{_repr} eq 'adjacency_list') {
         $self->{_adj}{$left}{$right} = $weight;
         $self->{_adj}{$right}{$left} = $weight;
+        _merge_edge_properties($self, $left, $right, $weight, $properties);
         return 1;
     }
 
@@ -95,6 +111,7 @@ sub add_edge {
     my $ri = $self->{_node_index}{$right};
     $self->{_matrix}[$li][$ri] = $weight;
     $self->{_matrix}[$ri][$li] = $weight;
+    _merge_edge_properties($self, $left, $right, $weight, $properties);
     return 1;
 }
 
@@ -105,6 +122,7 @@ sub remove_edge {
     if ($self->{_repr} eq 'adjacency_list') {
         delete $self->{_adj}{$left}{$right};
         delete $self->{_adj}{$right}{$left};
+        delete $self->{_edge_properties}{_edge_key($left, $right)};
         return 1;
     }
 
@@ -112,6 +130,7 @@ sub remove_edge {
     my $ri = $self->{_node_index}{$right};
     $self->{_matrix}[$li][$ri] = undef;
     $self->{_matrix}[$ri][$li] = undef;
+    delete $self->{_edge_properties}{_edge_key($left, $right)};
     return 1;
 }
 
@@ -131,6 +150,78 @@ sub edge_weight {
         return $self->{_adj}{$left}{$right};
     }
     return $self->{_matrix}[ $self->{_node_index}{$left} ][ $self->{_node_index}{$right} ];
+}
+
+sub graph_properties {
+    my ($self) = @_;
+    return { %{ $self->{_graph_properties} } };
+}
+
+sub set_graph_property {
+    my ($self, $key, $value) = @_;
+    $self->{_graph_properties}{$key} = $value;
+    return 1;
+}
+
+sub remove_graph_property {
+    my ($self, $key) = @_;
+    delete $self->{_graph_properties}{$key};
+    return 1;
+}
+
+sub node_properties {
+    my ($self, $node) = @_;
+    die "node not found: '$node'" unless $self->has_node($node);
+    return { %{ $self->{_node_properties}{$node} // {} } };
+}
+
+sub set_node_property {
+    my ($self, $node, $key, $value) = @_;
+    die "node not found: '$node'" unless $self->has_node($node);
+    $self->{_node_properties}{$node} //= {};
+    $self->{_node_properties}{$node}{$key} = $value;
+    return 1;
+}
+
+sub remove_node_property {
+    my ($self, $node, $key) = @_;
+    die "node not found: '$node'" unless $self->has_node($node);
+    delete $self->{_node_properties}{$node}{$key};
+    return 1;
+}
+
+sub edge_properties {
+    my ($self, $left, $right) = @_;
+    die "edge not found: '$left' -- '$right'" unless $self->has_edge($left, $right);
+    return {
+        %{ $self->{_edge_properties}{_edge_key($left, $right)} // {} },
+        weight => $self->edge_weight($left, $right),
+    };
+}
+
+sub set_edge_property {
+    my ($self, $left, $right, $key, $value) = @_;
+    die "edge not found: '$left' -- '$right'" unless $self->has_edge($left, $right);
+    if ($key eq 'weight') {
+        die "edge property 'weight' must be numeric" unless looks_like_number($value);
+        _set_edge_weight($self, $left, $right, $value + 0);
+    }
+    $self->{_edge_properties}{_edge_key($left, $right)} //= {};
+    $self->{_edge_properties}{_edge_key($left, $right)}{$key} = $value;
+    return 1;
+}
+
+sub remove_edge_property {
+    my ($self, $left, $right, $key) = @_;
+    die "edge not found: '$left' -- '$right'" unless $self->has_edge($left, $right);
+    if ($key eq 'weight') {
+        _set_edge_weight($self, $left, $right, 1);
+        $self->{_edge_properties}{_edge_key($left, $right)} //= {};
+        $self->{_edge_properties}{_edge_key($left, $right)}{weight} = 1;
+    } else {
+        delete $self->{_edge_properties}{_edge_key($left, $right)}{$key};
+    }
+    return 1;
 }
 
 sub edges {
@@ -392,6 +483,43 @@ sub _union {
 
     $parent->{$right_root} = $left_root;
     $rank->{$left_root}++ if $rank->{$left_root} == $rank->{$right_root};
+}
+
+sub _edge_key {
+    my ($left, $right) = @_;
+    return $left le $right ? "$left\0$right" : "$right\0$left";
+}
+
+sub _merge_properties {
+    my ($property_map, $owner, $properties) = @_;
+    $property_map->{$owner} //= {};
+    for my $key (keys %$properties) {
+        $property_map->{$owner}{$key} = $properties->{$key};
+    }
+}
+
+sub _merge_edge_properties {
+    my ($self, $left, $right, $weight, $properties) = @_;
+    my $key = _edge_key($left, $right);
+    $self->{_edge_properties}{$key} //= {};
+    for my $property_key (keys %$properties) {
+        $self->{_edge_properties}{$key}{$property_key} = $properties->{$property_key};
+    }
+    $self->{_edge_properties}{$key}{weight} = $weight;
+}
+
+sub _set_edge_weight {
+    my ($self, $left, $right, $weight) = @_;
+    if ($self->{_repr} eq 'adjacency_list') {
+        $self->{_adj}{$left}{$right} = $weight;
+        $self->{_adj}{$right}{$left} = $weight;
+        return;
+    }
+
+    my $li = $self->{_node_index}{$left};
+    my $ri = $self->{_node_index}{$right};
+    $self->{_matrix}[$li][$ri] = $weight;
+    $self->{_matrix}[$ri][$li] = $weight;
 }
 
 1;

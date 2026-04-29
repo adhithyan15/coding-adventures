@@ -1,0 +1,12 @@
+[package]
+name = "vm-core"
+version = "0.1.0"
+edition = "2021"
+description = "Generic register interpreter for InterpreterIR — the vm-core of the LANG pipeline"
+
+[lib]
+name = "vm_core"
+path = "src/lib.rs"
+
+[dependencies]
+interpreter-ir = { path = "../interpreter-ir" }

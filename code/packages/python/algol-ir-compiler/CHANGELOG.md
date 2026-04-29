@@ -79,6 +79,8 @@ All notable changes to this package will be documented in this file.
   descriptor pointers to actual procedures that declare matching array formals.
 - Lowered label, switch, and procedure arguments through formal procedure
   dispatchers by forwarding label ids and descriptor pointers.
+- Preserved concrete procedure ids in formal procedure call-shape metadata so
+  nested procedure-parameter contracts are checked before IR lowering.
 
 ## [0.1.0] - 2026-04-20
 

@@ -797,6 +797,21 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
 
+    def test_formal_procedure_nested_procedure_argument_rejects_mismatch(
+        self,
+    ) -> None:
+        with pytest.raises(AlgolWasmError) as excinfo:
+            compile_source(
+                "begin integer result; "
+                "procedure bump; begin result := result + 1 end; "
+                "procedure invoke(p); procedure p; begin p(bump) end; "
+                "procedure use(q); procedure q; begin q(1) end; "
+                "invoke(use) "
+                "end"
+            )
+
+        assert "accepting 1 argument(s), got 0" in str(excinfo.value)
+
     def test_formal_procedure_by_name_argument_remains_lazy(self) -> None:
         result = compile_source(
             "begin integer result; "
