@@ -31,10 +31,11 @@ import subprocess
 from pathlib import Path
 
 import pytest
-from cil_bytecode_builder import (
-    CILBuilder,
+from cil_bytecode_builder import CILBytecodeBuilder
+from ir_to_cil_bytecode import (
     CILMethodArtifact,
     CILProgramArtifact,
+    SequentialCILTokenProvider,
 )
 from cli_assembly_writer import CLIAssemblyConfig, write_cli_assembly
 
@@ -86,10 +87,10 @@ def _build_minimal_return_n_program(n: int) -> CILProgramArtifact:
     Used as the target of the conformance fix — nothing else exercises
     cli-assembly-writer's metadata layout more directly.
     """
-    builder = CILBuilder()
+    builder = CILBytecodeBuilder()
     builder.emit_ldc_i4(n)
     builder.emit_ret()
-    body = builder.body()
+    body = builder.assemble()
 
     method = CILMethodArtifact(
         name="Main",
@@ -102,8 +103,10 @@ def _build_minimal_return_n_program(n: int) -> CILProgramArtifact:
     return CILProgramArtifact(
         entry_label="Main",
         methods=(method,),
-        helper_specs=(),
         data_offsets={},
+        data_size=0,
+        helper_specs=(),
+        token_provider=SequentialCILTokenProvider(("Main",)),
     )
 
 

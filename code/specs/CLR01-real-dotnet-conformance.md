@@ -1,5 +1,67 @@
 # CLR01 — Real-`dotnet` conformance for `cli-assembly-writer`
 
+## Status (2026-04-28)
+
+Phase 1 of the spec — *every byte-level fix the original spec listed*
+— has landed in `cli-assembly-writer/src/cli_assembly_writer/writer.py`
+and verified against the simulator (all existing
+brainfuck-clr / oct-clr / nib-clr / clr-vm-simulator tests still
+pass).  Concretely shipped:
+
+1. ✅ Chunk 1: 64-byte canonical MS-DOS stub at file offset 0x40.
+2. ✅ Chunk 2: `<Module>` pseudo-TypeDef as TypeDef row 1 (real-.NET
+   loader requirement per ECMA-335 §II.22.37).
+3. ✅ Chunk 3: AssemblyRef table for System.Runtime + System.Object
+   TypeRef + ResolutionScope wired on every existing TypeRef +
+   user TypeDef's `Extends` column points at System.Object.
+4. ✅ Bonus: `#GUID` metadata stream + Module Mvid pointing at it
+   (real .NET refuses Module rows with `Mvid = 0`).
+5. ✅ Bonus: COFF Characteristics flag set to `0x22` (matches
+   real-C# AnyCPU output) instead of legacy `IMAGE_FILE_32BIT_MACHINE`.
+6. ✅ Bonus: tables with zero rows are no longer flagged in the
+   `Valid` mask (real .NET rejects empty tables).
+
+Real `dotnet` *still* rejects the assembly with
+`BadImageFormatException (0x8013110E)` after all of the above.  The
+remaining gap is finer-grained than the original spec anticipated —
+the loader's "file is corrupt" message doesn't pinpoint a specific
+field — and pursuing it further requires a deeper diff against a
+real C# build.  See **CLR02** below for the next-step spec capturing
+this remaining work.  All simulator tests still pass.
+
+The Phase-1 fixes are independently valuable: they bring our PE/CLI
+output much closer to ECMA-335 conformance and the `clr-vm-simulator`
+inherits the cleaner metadata for free.
+
+## CLR02 (next-step spec — to be opened separately)
+
+Outstanding gap: real `dotnet 9.0.313` rejects the assembly even
+with all Phase-1 fixes applied.  The diagnostic dump shows:
+
+- 5 metadata streams in correct order (#~, #Strings, #US, #GUID,
+  #Blob) — matches real C#.
+- COFF Characteristics, COR header flags, table valid-mask all
+  match real C# byte-for-byte.
+- Module / TypeRef / TypeDef / MethodDef / Assembly / AssemblyRef
+  tables all populated with the right shape.
+
+The remaining failure is almost certainly one of:
+
+- **PE relocations missing.**  Real .NET PE images have a `.reloc`
+  section.  Even for ILOnly assemblies, the loader on some paths
+  expects the relocation table.
+- **Method body header verification.**  Our minimal tiny-format
+  body might fail an obscure CLR verifier check.
+- **Module table layout subtle bug.**  Generation/EncId/EncBaseId
+  encoding could be off in a way the loader checks at load time.
+
+Investigation strategy for CLR02:
+1. Build the smallest possible non-trivial reference assembly with
+   `dotnet build -c Release` and a custom `Program.cs`.
+2. Compare every byte in the metadata stream against ours — not
+   just the table headers but the per-row payloads.
+3. Try a minimal `ilasm`-produced assembly as a third reference.
+
 ## Why this spec exists
 
 Every CLR backend in the repo today
