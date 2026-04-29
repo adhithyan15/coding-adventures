@@ -1002,6 +1002,70 @@ class TestAlgolTypeChecker:
         assert not result.ok
         assert "passes real array" in result.diagnostics[0].message
 
+    def test_accepts_procedure_parameter_actual_with_label_formal(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure invoke(p); procedure p; begin p(done) end; "
+            "procedure jump(l); label l; begin result := 9; goto l end; "
+            "invoke(jump); done: "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        shape = result.semantic.procedures[0].parameters[0].procedure_call_shapes[0]
+        assert shape.argument_kinds == ("label",)
+        assert shape.argument_types == ("label",)
+
+    def test_accepts_procedure_parameter_actual_with_switch_formal(self) -> None:
+        ast = parse_algol(
+            "begin integer result; switch s := done; "
+            "procedure invoke(p); procedure p; begin p(s) end; "
+            "procedure jump(sw); switch sw; begin goto sw[1] end; "
+            "invoke(jump); done: "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        shape = result.semantic.procedures[0].parameters[0].procedure_call_shapes[0]
+        assert shape.argument_kinds == ("switch",)
+        assert shape.argument_types == ("switch",)
+
+    def test_accepts_procedure_parameter_actual_with_procedure_formal(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure bump; begin result := result + 1 end; "
+            "procedure invoke(p); procedure p; begin p(bump) end; "
+            "procedure use(q); procedure q; begin q end; "
+            "invoke(use) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        shape = result.semantic.procedures[1].parameters[0].procedure_call_shapes[0]
+        assert shape.argument_kinds == ("procedure",)
+        assert shape.argument_types == ("procedure",)
+
+    def test_rejects_procedure_parameter_actual_with_wrong_label_formal(
+        self,
+    ) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure invoke(p); procedure p; begin p(done) end; "
+            "procedure set(x); value x; integer x; begin result := x end; "
+            "invoke(set); done: "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "passes a label" in result.diagnostics[0].message
+
     def test_rejects_procedure_parameter_actual_with_written_literal_by_name_formal(
         self,
     ) -> None:

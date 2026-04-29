@@ -2032,6 +2032,13 @@ class AlgolTypeChecker:
                 argument_kinds.append(ARRAY)
                 argument_assignable.append(False)
                 continue
+            nonscalar = self._formal_nonscalar_argument_shape(argument, scope)
+            if nonscalar is not None:
+                argument_kind, argument_type = nonscalar
+                argument_types.append(argument_type)
+                argument_kinds.append(argument_kind)
+                argument_assignable.append(False)
+                continue
             actual_type = self._infer_expr(argument, scope)
             argument_types.append(actual_type)
             argument_kinds.append("scalar")
@@ -2116,6 +2123,45 @@ class AlgolTypeChecker:
             None,
         )
         return ERROR if descriptor is None else descriptor.element_type
+
+    def _formal_nonscalar_argument_shape(
+        self,
+        argument: ASTNode,
+        scope: Scope,
+    ) -> tuple[str, str] | None:
+        variable = _single_variable_expr(argument)
+        if variable is None or _variable_subscripts(variable):
+            return None
+        name = _variable_head_name(variable)
+        if name is None:
+            return None
+        resolved = scope.resolve_with_scope(name.value)
+        if resolved is None:
+            return None
+        symbol, _, _ = resolved
+        if symbol.kind == LABEL:
+            return LABEL, LABEL
+        if symbol.kind == SWITCH:
+            return SWITCH, SWITCH
+        if symbol.kind == "procedure":
+            descriptor = next(
+                (
+                    procedure
+                    for procedure in self.semantic_procedures
+                    if procedure.procedure_id == symbol.procedure_id
+                ),
+                None,
+            )
+            if (
+                descriptor is not None
+                and descriptor.return_type is not None
+                and not descriptor.parameters
+            ):
+                return None
+            return "procedure", symbol.type_name
+        if symbol.kind == "procedure_parameter" and symbol.type_name == "procedure":
+            return "procedure", symbol.type_name
+        return None
 
     def _record_procedure_parameter_call_shape(
         self,
@@ -2392,6 +2438,55 @@ class AlgolTypeChecker:
                         )
                         return False
                     continue
+                if argument_kind == LABEL:
+                    if actual_parameter.kind != LABEL:
+                        self._error(
+                            token,
+                            f"procedure parameter {parameter.name!r} passes a "
+                            "label to non-label actual parameter "
+                            f"{actual_parameter.name!r}",
+                        )
+                        return False
+                    continue
+                if argument_kind == SWITCH:
+                    if actual_parameter.kind != SWITCH:
+                        self._error(
+                            token,
+                            f"procedure parameter {parameter.name!r} passes a "
+                            "switch to non-switch actual parameter "
+                            f"{actual_parameter.name!r}",
+                        )
+                        return False
+                    continue
+                if argument_kind == "procedure":
+                    if actual_parameter.kind != "procedure":
+                        self._error(
+                            token,
+                            f"procedure parameter {parameter.name!r} passes a "
+                            "procedure to non-procedure actual parameter "
+                            f"{actual_parameter.name!r}",
+                        )
+                        return False
+                    if not self._procedure_parameter_type_satisfies(
+                        expected_type=actual_parameter.type_name,
+                        actual_type=actual_type,
+                    ):
+                        self._error(
+                            token,
+                            f"procedure parameter {parameter.name!r} passes "
+                            f"{actual_type} procedure to actual parameter "
+                            f"{actual_parameter.name!r} expecting "
+                            f"{actual_parameter.type_name}",
+                        )
+                        return False
+                    continue
+                if argument_kind != "scalar":
+                    self._error(
+                        token,
+                        f"procedure parameter {parameter.name!r} has unsupported "
+                        f"{argument_kind} argument shape",
+                    )
+                    return False
                 if actual_parameter.kind != "scalar":
                     self._error(
                         token,
@@ -2429,7 +2524,21 @@ class AlgolTypeChecker:
                         f"{actual_parameter.name!r}",
                     )
                     return False
+                continue
         return True
+
+    def _procedure_parameter_type_satisfies(
+        self,
+        *,
+        expected_type: str,
+        actual_type: str,
+    ) -> bool:
+        if expected_type == "procedure" or actual_type == "procedure":
+            return expected_type == actual_type
+        return self._procedure_return_type_satisfies(
+            expected_type=expected_type,
+            actual_type=actual_type,
+        )
 
     def _procedure_return_type_satisfies(
         self,

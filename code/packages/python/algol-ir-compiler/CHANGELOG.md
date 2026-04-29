@@ -77,6 +77,8 @@ All notable changes to this package will be documented in this file.
   to read or assign through the original argument.
 - Lowered whole-array arguments through formal procedure dispatchers by passing
   descriptor pointers to actual procedures that declare matching array formals.
+- Lowered label, switch, and procedure arguments through formal procedure
+  dispatchers by forwarding label ids and descriptor pointers.
 
 ## [0.1.0] - 2026-04-20
 
