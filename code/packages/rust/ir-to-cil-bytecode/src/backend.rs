@@ -287,6 +287,8 @@ const CLR_SUPPORTED_OPS: &[IrOp] = &[
     IrOp::Add,
     IrOp::AddImm,
     IrOp::Sub,
+    IrOp::Mul,
+    IrOp::Div,
     IrOp::And,
     IrOp::AndImm,
     IrOp::CmpEq,
@@ -697,6 +699,33 @@ fn emit_instruction(
             b.emit_raw(encode_ldloc(lhs as u16));
             b.emit_raw(encode_ldloc(rhs as u16));
             b.emit_sub();
+            b.emit_raw(encode_stloc(dst as u16));
+        }
+
+        // ── MUL  dst, lhs, rhs ────────────────────────────────────────────
+        // CIL: ldloc lhs; ldloc rhs; mul; stloc dst
+
+        IrOp::Mul => {
+            let dst = reg(0).ok_or_else(|| CILBackendError("MUL: missing dst".into()))?;
+            let lhs = reg(1).ok_or_else(|| CILBackendError("MUL: missing lhs".into()))?;
+            let rhs = reg(2).ok_or_else(|| CILBackendError("MUL: missing rhs".into()))?;
+            b.emit_raw(encode_ldloc(lhs as u16));
+            b.emit_raw(encode_ldloc(rhs as u16));
+            b.emit_mul();
+            b.emit_raw(encode_stloc(dst as u16));
+        }
+
+        // ── DIV  dst, lhs, rhs ────────────────────────────────────────────
+        // CIL: ldloc lhs; ldloc rhs; div; stloc dst
+        // CIL `div` truncates toward zero — matches IrOp::Div semantics.
+
+        IrOp::Div => {
+            let dst = reg(0).ok_or_else(|| CILBackendError("DIV: missing dst".into()))?;
+            let lhs = reg(1).ok_or_else(|| CILBackendError("DIV: missing lhs".into()))?;
+            let rhs = reg(2).ok_or_else(|| CILBackendError("DIV: missing rhs".into()))?;
+            b.emit_raw(encode_ldloc(lhs as u16));
+            b.emit_raw(encode_ldloc(rhs as u16));
+            b.emit_div();
             b.emit_raw(encode_stloc(dst as u16));
         }
 

@@ -420,6 +420,8 @@ pub fn lower_ir_to_beam(
     let plus_idx   = atoms.intern("+");                 // 4
     let minus_idx  = atoms.intern("-");                 // 5
     let band_idx   = atoms.intern("band");              // 6
+    let times_idx  = atoms.intern("*");                 // 7 — for Mul
+    let div_idx    = atoms.intern("div");               // 8 — for Div (Erlang integer div)
 
     // ── Import table setup ────────────────────────────────────────────────
     // Pre-register arithmetic BIFs so their indices are stable.
@@ -427,6 +429,8 @@ pub fn lower_ir_to_beam(
     let import_plus  = imports.intern(erlang_idx, plus_idx, 2);
     let import_minus = imports.intern(erlang_idx, minus_idx, 2);
     let import_band  = imports.intern(erlang_idx, band_idx, 2);
+    let import_times = imports.intern(erlang_idx, times_idx, 2);
+    let import_div   = imports.intern(erlang_idx, div_idx, 2);
 
     // ── Label first-pass ──────────────────────────────────────────────────
     // Assign BEAM label numbers starting at 3 (1 and 2 are reserved for
@@ -514,6 +518,25 @@ pub fn lower_ir_to_beam(
                 let src1 = reg_idx(&instr.operands[1])? as u8;
                 let src2 = reg_idx(&instr.operands[2])? as u8;
                 instrs.push(emit_gc_bif2(import_minus, live, src1, src2, dst));
+            }
+
+            // ── Multiplication ─────────────────────────────────────────────
+            // MUL v_dst, v_src1, v_src2  →  gc_bif2 erlang:*/2 src1 src2 dst
+            IrOp::Mul => {
+                let dst  = reg_idx(&instr.operands[0])? as u8;
+                let src1 = reg_idx(&instr.operands[1])? as u8;
+                let src2 = reg_idx(&instr.operands[2])? as u8;
+                instrs.push(emit_gc_bif2(import_times, live, src1, src2, dst));
+            }
+
+            // ── Integer division ───────────────────────────────────────────
+            // DIV v_dst, v_src1, v_src2  →  gc_bif2 erlang:div/2 src1 src2 dst
+            // Erlang's `div` operator truncates toward zero, matching IR semantics.
+            IrOp::Div => {
+                let dst  = reg_idx(&instr.operands[0])? as u8;
+                let src1 = reg_idx(&instr.operands[1])? as u8;
+                let src2 = reg_idx(&instr.operands[2])? as u8;
+                instrs.push(emit_gc_bif2(import_div, live, src1, src2, dst));
             }
 
             // ── Bitwise AND ────────────────────────────────────────────────

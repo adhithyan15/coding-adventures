@@ -50,6 +50,8 @@ const OP_BASTORE: u8 = 0x54;
 const OP_POP: u8 = 0x57;
 const OP_IADD: u8 = 0x60;
 const OP_ISUB: u8 = 0x64;
+const OP_IMUL: u8 = 0x68;
+const OP_IDIV: u8 = 0x6c;
 const OP_ISHL: u8 = 0x78;
 const OP_ISHR: u8 = 0x7a;
 const OP_IAND: u8 = 0x7e;
@@ -1053,7 +1055,7 @@ impl<'a> JvmClassLowerer<'a> {
                         self.method_ref(self.helper_store_word, DESC_INT_INT_TO_VOID)?,
                     );
                 }
-                IrOp::Add | IrOp::Sub | IrOp::And => {
+                IrOp::Add | IrOp::Sub | IrOp::Mul | IrOp::Div | IrOp::And => {
                     let dst = as_register(instruction.operands.first(), "binary dst")?;
                     let lhs = as_register(instruction.operands.get(1), "binary lhs")?;
                     let rhs = as_register(instruction.operands.get(2), "binary rhs")?;
@@ -1063,6 +1065,10 @@ impl<'a> JvmClassLowerer<'a> {
                     match instruction.opcode {
                         IrOp::Add => builder.emit_opcode(OP_IADD),
                         IrOp::Sub => builder.emit_opcode(OP_ISUB),
+                        // JVM `imul` is signed integer multiply (truncates to int width).
+                        IrOp::Mul => builder.emit_opcode(OP_IMUL),
+                        // JVM `idiv` truncates toward zero — matches IrOp::Div semantics.
+                        IrOp::Div => builder.emit_opcode(OP_IDIV),
                         IrOp::And => builder.emit_opcode(OP_IAND),
                         _ => unreachable!(),
                     }

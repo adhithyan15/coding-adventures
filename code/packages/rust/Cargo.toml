@@ -227,6 +227,7 @@ members = [
     "segment-tree",
     "dartmouth-basic-lexer",
     "dartmouth-basic-parser",
+    "dartmouth-basic-ir-compiler",
     "affine2d",
     "algol-lexer",
     "algol-parser",
