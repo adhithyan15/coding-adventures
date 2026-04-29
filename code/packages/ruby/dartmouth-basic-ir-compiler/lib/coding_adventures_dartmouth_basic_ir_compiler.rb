@@ -1,0 +1,5 @@
+# frozen_string_literal: true
+
+require_relative "coding_adventures/dartmouth_basic_ir_compiler/version"
+require_relative "coding_adventures/dartmouth_basic_ir_compiler/compiler"
+require_relative "coding_adventures/dartmouth_basic_ir_compiler/runtime"

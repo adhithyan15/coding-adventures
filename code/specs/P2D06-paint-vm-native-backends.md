@@ -7,6 +7,10 @@ through native platform rendering APIs on Windows and Linux. Each crate plugs
 into the PaintVM dispatch-table architecture (P2D01) — it registers handlers for
 the 10 instruction kinds and translates them into the platform's drawing calls.
 
+For the larger backend convergence roadmap, including Cairo, Skia, Vulkan,
+OpenGL, WGPU, CoreGraphics, capability reporting, and automatic backend
+selection, see `P2D09-paint-vm-backend-convergence.md`.
+
 Think of it like hiring three different sign painters. You hand each of them the
 same blueprint (a PaintScene). One works in oil paint (Direct2D — rich, modern,
 GPU-accelerated). One works in house paint (GDI — available everywhere, gets the
