@@ -366,6 +366,33 @@ class TestAlgolTypeChecker:
         result = check_algol(ast)
         assert result.ok
 
+    def test_accepts_standard_numeric_builtin_functions(self) -> None:
+        ast = parse_algol(
+            "begin integer result; real x; "
+            "result := abs(0 - 3) + sign(x) + entier(2.5) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        calls = {
+            call.name: call.return_type
+            for call in result.semantic.procedure_calls
+        }
+        assert calls["abs"] == "integer"
+        assert calls["sign"] == "integer"
+        assert calls["entier"] == "integer"
+
+    def test_rejects_boolean_actual_for_numeric_builtin_function(self) -> None:
+        ast = parse_algol("begin integer result; result := abs(false) end")
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "builtin function 'abs' expects integer or real" in (
+            result.diagnostics[0].message
+        )
+
     def test_rejects_real_exponent_for_exponentiation(self) -> None:
         ast = parse_algol("begin real result; result := 2.0 ** 3.5 end")
         result = check_algol(ast)

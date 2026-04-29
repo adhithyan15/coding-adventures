@@ -23,7 +23,9 @@ SWITCH = "switch"
 STATIC = "static"
 PARAMETER_STORAGE = "parameter"
 MAX_ARRAY_DIMENSIONS = 4
-_READ_ONLY_BUILTINS = {"print", "output"}
+_OUTPUT_BUILTINS = {"print", "output"}
+_NUMERIC_BUILTINS = {"abs", "entier", "sign"}
+_READ_ONLY_BUILTINS = _OUTPUT_BUILTINS | _NUMERIC_BUILTINS
 
 
 @dataclass(frozen=True)
@@ -1902,6 +1904,36 @@ class AlgolTypeChecker:
                 f"procedure {name_token.value!r} expects "
                 f"{len(descriptor.parameters)} argument(s), got {len(arguments)}",
             )
+        if descriptor.procedure_id == -1:
+            return_type = self._check_builtin_procedure_call(
+                name_token,
+                arguments,
+                scope,
+                role=role,
+            )
+            if role == "expression" and return_type is None:
+                self._error(
+                    name_token,
+                    f"procedure {name_token.value!r} does not return a value",
+                )
+            call = ResolvedProcedureCall(
+                token_id=id(name_token),
+                name=name_token.value,
+                role=role,
+                procedure_id=descriptor.procedure_id,
+                label=descriptor.label,
+                use_block_id=scope.block_id,
+                declaration_block_id=declaring_scope.block_id,
+                lexical_depth_delta=lexical_depth_delta,
+                argument_count=len(arguments),
+                return_type=return_type,
+                line=name_token.line,
+                column=name_token.column,
+                parameter_symbol_id=descriptor.parameter_symbol_id,
+            )
+            self.resolved_procedure_calls.append(call)
+            return call
+
         for argument, parameter in zip(arguments, descriptor.parameters, strict=False):
             if parameter.kind == ARRAY:
                 self._check_array_parameter_actual(argument, scope, parameter)
@@ -1916,19 +1948,6 @@ class AlgolTypeChecker:
                 self._check_procedure_parameter_actual(argument, scope, parameter)
                 continue
             actual_type = self._infer_expr(argument, scope)
-            if descriptor.procedure_id == -1:
-                if actual_type != ERROR and actual_type not in {
-                    INTEGER,
-                    BOOLEAN,
-                    REAL,
-                    STRING,
-                }:
-                    self._error(
-                        argument,
-                        f"builtin procedure {name_token.value!r} expects integer, "
-                        f"boolean, real, or string, got {actual_type}",
-                    )
-                continue
             if actual_type != ERROR and not self._parameter_accepts_type(
                 parameter.mode,
                 parameter.type_name,
@@ -1986,6 +2005,43 @@ class AlgolTypeChecker:
         )
         self.resolved_procedure_calls.append(call)
         return call
+
+    def _check_builtin_procedure_call(
+        self,
+        name_token: Token,
+        arguments: list[ASTNode],
+        scope: Scope,
+        *,
+        role: str,
+    ) -> str | None:
+        if not arguments:
+            return None
+        actual_type = self._infer_expr(arguments[0], scope)
+        if name_token.value in _OUTPUT_BUILTINS:
+            if actual_type != ERROR and actual_type not in {
+                INTEGER,
+                BOOLEAN,
+                REAL,
+                STRING,
+            }:
+                self._error(
+                    arguments[0],
+                    f"builtin procedure {name_token.value!r} expects integer, "
+                    f"boolean, real, or string, got {actual_type}",
+                )
+            return None
+        if actual_type != ERROR and not _is_numeric_type(actual_type):
+            self._error(
+                arguments[0],
+                f"builtin function {name_token.value!r} expects integer or real, "
+                f"got {actual_type}",
+            )
+            return ERROR
+        if name_token.value == "abs":
+            return actual_type
+        if name_token.value in {"entier", "sign"}:
+            return INTEGER
+        return ERROR
 
     def _resolved_bare_procedure_expression(
         self,
@@ -2590,8 +2646,9 @@ class AlgolTypeChecker:
         token: Token,
         scope: Scope,
     ) -> tuple[ProcedureDescriptor, Scope, int] | None:
-        if token.value not in {"print", "output"}:
+        if token.value not in _READ_ONLY_BUILTINS:
             return None
+        return_type = INTEGER if token.value in _NUMERIC_BUILTINS else None
         descriptor = ProcedureDescriptor(
             procedure_id=-1,
             name=token.value,
@@ -2599,7 +2656,7 @@ class AlgolTypeChecker:
             declaring_block_id=scope.block_id,
             body_block_id=scope.block_id,
             body_node_id=-1,
-            return_type=None,
+            return_type=return_type,
             parameters=(
                 ProcedureParameter(
                     name="value",

@@ -168,6 +168,25 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [3]
 
+    def test_standard_numeric_builtin_functions_execute(self) -> None:
+        result = compile_source(
+            "begin integer result; real x, y; "
+            "x := 0.0 - 2.5; y := abs(x); "
+            "if y > 2.4 then result := 10 else result := 0; "
+            "result := result + abs(0 - 7) + sign(x) + sign(0) + sign(5) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [17]
+
+    def test_entier_floors_positive_and_negative_reals(self) -> None:
+        result = compile_source(
+            "begin integer result; real x; "
+            "x := 0.0 - 2.1; "
+            "result := entier(2.9) * 10 + entier(x) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [17]
+
     def test_builtin_print_string_literal_writes_stdout(self) -> None:
         result = compile_source("begin integer result; print('Hi'); result := 7 end")
         captured: list[str] = []

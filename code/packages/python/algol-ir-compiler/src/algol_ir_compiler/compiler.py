@@ -111,6 +111,9 @@ _MAX_STRING_OUTPUT_BYTES = 4096
 _MAX_TOTAL_OUTPUT_BYTES = 8192
 _BUILTIN_PRINT_LABEL = "__algol_builtin_print"
 _BUILTIN_OUTPUT_LABEL = "__algol_builtin_output"
+_BUILTIN_ABS_LABEL = "__algol_builtin_abs"
+_BUILTIN_ENTIER_LABEL = "__algol_builtin_entier"
+_BUILTIN_SIGN_LABEL = "__algol_builtin_sign"
 _WRITE_SYSCALL = 1
 
 
@@ -2828,6 +2831,12 @@ class AlgolIrCompiler:
         call = self._require_procedure_call(name, role)
         if call.label in {_BUILTIN_PRINT_LABEL, _BUILTIN_OUTPUT_LABEL}:
             return self._compile_builtin_output(node, scope)
+        if call.label in {
+            _BUILTIN_ABS_LABEL,
+            _BUILTIN_ENTIER_LABEL,
+            _BUILTIN_SIGN_LABEL,
+        }:
+            return self._compile_builtin_numeric(node, call, scope)
         if call.parameter_symbol_id is not None:
             return self._compile_procedure_parameter_call(node, call, scope)
         procedure = self.procedures[call.procedure_id]
@@ -3352,6 +3361,184 @@ class AlgolIrCompiler:
         if saved_arg_reg is not None:
             self._copy_reg(dst=_VALUE_PARAM_BASE_REG, src=saved_arg_reg)
         return _ZERO_REG
+
+    def _compile_builtin_numeric(
+        self,
+        node: ASTNode,
+        call: ResolvedProcedureCall,
+        scope: _FrameScope,
+    ) -> int:
+        actuals = _direct_nodes(_first_direct_node(node, "actual_params"), "expression")
+        if len(actuals) != 1:
+            raise CompileError(f"builtin {call.name} expects exactly 1 argument")
+        actual = actuals[0]
+        actual_type = self._expr_type(actual)
+        value = self._compile_expr(actual, scope)
+        if call.label == _BUILTIN_ABS_LABEL:
+            return self._emit_builtin_abs(value, actual_type)
+        if call.label == _BUILTIN_ENTIER_LABEL:
+            return self._emit_builtin_entier(value, actual_type)
+        if call.label == _BUILTIN_SIGN_LABEL:
+            return self._emit_builtin_sign(value, actual_type)
+        raise CompileError(f"unknown builtin numeric function {call.name!r}")
+
+    def _emit_builtin_abs(self, value: int, actual_type: str) -> int:
+        index = self.if_count
+        self.if_count += 1
+        nonnegative_label = f"builtin_abs_{index}_nonnegative"
+        end_label = f"builtin_abs_{index}_end"
+        result = self._fresh_reg()
+        negative = self._fresh_reg()
+        if actual_type == _REAL_TYPE:
+            self._emit(
+                IrOp.F64_CMP_LT,
+                IrRegister(negative),
+                IrRegister(value),
+                IrRegister(self._const_f64_reg(0.0)),
+            )
+            self._emit(IrOp.BRANCH_Z, IrRegister(negative), IrLabel(nonnegative_label))
+            self._emit(
+                IrOp.F64_SUB,
+                IrRegister(result),
+                IrRegister(self._const_f64_reg(0.0)),
+                IrRegister(value),
+            )
+            self._emit(IrOp.JUMP, IrLabel(end_label))
+            self._label(nonnegative_label)
+            self._copy_scalar_reg(type_name=_REAL_TYPE, dst=result, src=value)
+            self._label(end_label)
+            return result
+
+        if actual_type != _INTEGER_TYPE:
+            raise CompileError(f"builtin abs does not support {actual_type}")
+        self._emit(
+            IrOp.CMP_LT,
+            IrRegister(negative),
+            IrRegister(value),
+            IrRegister(_ZERO_REG),
+        )
+        self._emit(IrOp.BRANCH_Z, IrRegister(negative), IrLabel(nonnegative_label))
+        self._emit(
+            IrOp.SUB,
+            IrRegister(result),
+            IrRegister(_ZERO_REG),
+            IrRegister(value),
+        )
+        self._emit(IrOp.JUMP, IrLabel(end_label))
+        self._label(nonnegative_label)
+        self._copy_reg(dst=result, src=value)
+        self._label(end_label)
+        return result
+
+    def _emit_builtin_entier(self, value: int, actual_type: str) -> int:
+        if actual_type == _INTEGER_TYPE:
+            result = self._fresh_reg()
+            self._copy_reg(dst=result, src=value)
+            return result
+        if actual_type != _REAL_TYPE:
+            raise CompileError(f"builtin entier does not support {actual_type}")
+
+        index = self.if_count
+        self.if_count += 1
+        maybe_adjust_label = f"builtin_entier_{index}_maybe_adjust"
+        end_label = f"builtin_entier_{index}_end"
+        result = self._fresh_reg()
+        self._emit(IrOp.I32_TRUNC_FROM_F64, IrRegister(result), IrRegister(value))
+        negative = self._fresh_reg()
+        self._emit(
+            IrOp.F64_CMP_LT,
+            IrRegister(negative),
+            IrRegister(value),
+            IrRegister(self._const_f64_reg(0.0)),
+        )
+        self._emit(IrOp.BRANCH_NZ, IrRegister(negative), IrLabel(maybe_adjust_label))
+        self._emit(IrOp.JUMP, IrLabel(end_label))
+        self._label(maybe_adjust_label)
+        truncated_as_real = self._fresh_reg()
+        exact = self._fresh_reg()
+        self._emit(
+            IrOp.F64_FROM_I32,
+            IrRegister(truncated_as_real),
+            IrRegister(result),
+        )
+        self._emit(
+            IrOp.F64_CMP_EQ,
+            IrRegister(exact),
+            IrRegister(truncated_as_real),
+            IrRegister(value),
+        )
+        self._emit(IrOp.BRANCH_NZ, IrRegister(exact), IrLabel(end_label))
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(result),
+            IrRegister(result),
+            IrImmediate(-1),
+        )
+        self._label(end_label)
+        return result
+
+    def _emit_builtin_sign(self, value: int, actual_type: str) -> int:
+        index = self.if_count
+        self.if_count += 1
+        nonnegative_label = f"builtin_sign_{index}_nonnegative"
+        zero_label = f"builtin_sign_{index}_zero"
+        end_label = f"builtin_sign_{index}_end"
+        result = self._fresh_reg()
+        negative = self._fresh_reg()
+        positive = self._fresh_reg()
+        if actual_type == _REAL_TYPE:
+            zero = self._const_f64_reg(0.0)
+            self._emit(
+                IrOp.F64_CMP_LT,
+                IrRegister(negative),
+                IrRegister(value),
+                IrRegister(zero),
+            )
+            self._emit(IrOp.BRANCH_Z, IrRegister(negative), IrLabel(nonnegative_label))
+            self._emit(
+                IrOp.LOAD_IMM,
+                IrRegister(result),
+                IrImmediate(-1),
+            )
+            self._emit(IrOp.JUMP, IrLabel(end_label))
+            self._label(nonnegative_label)
+            self._emit(
+                IrOp.F64_CMP_GT,
+                IrRegister(positive),
+                IrRegister(value),
+                IrRegister(zero),
+            )
+        elif actual_type == _INTEGER_TYPE:
+            self._emit(
+                IrOp.CMP_LT,
+                IrRegister(negative),
+                IrRegister(value),
+                IrRegister(_ZERO_REG),
+            )
+            self._emit(IrOp.BRANCH_Z, IrRegister(negative), IrLabel(nonnegative_label))
+            self._emit(
+                IrOp.LOAD_IMM,
+                IrRegister(result),
+                IrImmediate(-1),
+            )
+            self._emit(IrOp.JUMP, IrLabel(end_label))
+            self._label(nonnegative_label)
+            self._emit(
+                IrOp.CMP_GT,
+                IrRegister(positive),
+                IrRegister(value),
+                IrRegister(_ZERO_REG),
+            )
+        else:
+            raise CompileError(f"builtin sign does not support {actual_type}")
+
+        self._emit(IrOp.BRANCH_Z, IrRegister(positive), IrLabel(zero_label))
+        self._emit(IrOp.LOAD_IMM, IrRegister(result), IrImmediate(1))
+        self._emit(IrOp.JUMP, IrLabel(end_label))
+        self._label(zero_label)
+        self._copy_reg(dst=result, src=_ZERO_REG)
+        self._label(end_label)
+        return result
 
     def _emit_output_chars(self, text: str, scope: _FrameScope) -> None:
         for char in text:

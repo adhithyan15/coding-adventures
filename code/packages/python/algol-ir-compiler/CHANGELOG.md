@@ -85,6 +85,8 @@ All notable changes to this package will be documented in this file.
   dispatch rather than compile-time descriptor expansion.
 - Lowered `go to` statements through the same direct and designational goto
   paths as the compact `goto` spelling.
+- Lowered standard numeric builtin functions `abs`, `sign`, and `entier` using
+  existing integer/f64 IR operations.
 
 ## [0.1.0] - 2026-04-20
 
