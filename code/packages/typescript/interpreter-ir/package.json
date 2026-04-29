@@ -1,0 +1,20 @@
+{
+  "name": "@coding-adventures/interpreter-ir",
+  "version": "0.1.0",
+  "description": "Typed LANG VM interpreter IR shared by dynamic language frontends",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

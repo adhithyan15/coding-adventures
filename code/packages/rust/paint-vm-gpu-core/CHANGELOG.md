@@ -8,3 +8,5 @@
   groups, layers, images, text, and glyph runs.
 - Added diagnostics for degraded GPU-core gaps such as path arcs, gradients,
   filters, blend modes, dashed strokes, and exact fill rules.
+- Added linear gradient ramp textures with linear sampling metadata for GPU
+  backends that support texture sampling.

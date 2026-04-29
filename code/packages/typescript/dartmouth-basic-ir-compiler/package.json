@@ -1,0 +1,25 @@
+{
+  "name": "@coding-adventures/dartmouth-basic-ir-compiler",
+  "version": "0.1.0",
+  "description": "Dartmouth BASIC frontend and runtime on top of the TypeScript LANG VM",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/interpreter-ir": "file:../interpreter-ir",
+    "@coding-adventures/vm-core": "file:../vm-core",
+    "@coding-adventures/codegen-core": "file:../codegen-core",
+    "@coding-adventures/jit-core": "file:../jit-core"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

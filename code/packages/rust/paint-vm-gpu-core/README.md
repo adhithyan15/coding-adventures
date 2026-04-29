@@ -8,6 +8,7 @@ Instead, it converts `paint-instructions::PaintScene` into a backend-neutral
 
 - Solid vector primitives become indexed triangle meshes.
 - Pixel images become texture-upload records plus textured quads.
+- Linear gradients become sampled ramp textures plus gradient UVs on meshes.
 - Rectangular clips become push/pop clip commands.
 - Text and glyph runs are preserved as explicit commands so backend-specific
   glyph atlas and shaping strategies can evolve without losing IR fidelity.
@@ -30,11 +31,11 @@ backend interprets the PaintScene geometry.
 | `PaintImage` | Texture upload plus textured quad |
 | `PaintText` | Preserved text command |
 | `PaintGlyphRun` | Preserved positioned glyph command |
-| `PaintGradient` | Referenced gradient fills degrade to first stop with diagnostics |
+| `PaintGradient` | Linear fills become ramp textures; radial fills degrade to first stop with diagnostics |
 
 ## Next Steps
 
 - Replace simple fan path filling with a robust tessellator.
 - Add stroke joins, caps, and dashed stroke expansion.
-- Add gradient uniforms/textures instead of first-stop fallback.
+- Add radial gradient textures instead of first-stop fallback.
 - Add glyph atlas planning once text shaping/font metrics are finalized.
