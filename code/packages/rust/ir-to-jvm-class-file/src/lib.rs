@@ -8,6 +8,8 @@
 //! is a feature, because boring bytecode is easy for both the JVM verifier and
 //! GraalVM Native Image to accept.
 
+pub mod codegen;
+
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::ffi::CString;
 use std::fmt;

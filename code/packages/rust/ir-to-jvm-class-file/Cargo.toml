@@ -5,6 +5,7 @@ edition = "2021"
 description = "Lower compiler-ir programs into conservative JVM class files"
 
 [dependencies]
+codegen-core = { path = "../codegen-core" }
 compiler-ir = { path = "../compiler-ir" }
 jvm-class-file = { path = "../jvm-class-file" }
 libc = "0.2"
