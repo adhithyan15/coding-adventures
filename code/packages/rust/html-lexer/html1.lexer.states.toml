@@ -63,6 +63,7 @@ alphabet = [
   "s",
   "X",
   "x",
+  "?",
 ]
 
 [[tokens]]
@@ -2412,6 +2413,13 @@ to = "end_tag_open"
 from = "tag_open"
 matcher = { literal = "!" }
 to = "markup_declaration_open"
+
+[[transitions]]
+from = "tag_open"
+matcher = { literal = "?" }
+to = "bogus_comment"
+consume = false
+actions = ["parse_error(unexpected-question-mark-instead-of-tag-name)", "create_comment"]
 
 [[transitions]]
 from = "tag_open"
