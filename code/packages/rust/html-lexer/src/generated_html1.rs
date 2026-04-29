@@ -33,6 +33,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         "<".to_string(),
         "=".to_string(),
         ">".to_string(),
+        "?".to_string(),
         "A".to_string(),
         "B".to_string(),
         "C".to_string(),
@@ -5457,6 +5458,22 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: Vec::new(),
             consume: true,
+        },
+        TransitionDefinition {
+            from: "tag_open".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("?".to_string())),
+            to: vec![
+                "bogus_comment".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-question-mark-instead-of-tag-name)".to_string(),
+                "create_comment".to_string(),
+            ],
+            consume: false,
         },
         TransitionDefinition {
             from: "tag_open".to_string(),

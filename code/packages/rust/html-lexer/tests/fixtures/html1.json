@@ -566,6 +566,20 @@
         "Text(data=<not-markup> &amp; After)",
         "EOF"
       ]
+    },
+    {
+      "id": "question-mark-tag-open-bogus-comment",
+      "description": "Processing-instruction-looking markup recovers as a bogus comment",
+      "input": "Before<?xml version=\"1.0\"?>After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=?xml version=\"1.0\"?)",
+        "Text(data=After)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "unexpected-question-mark-instead-of-tag-name"
+      ]
     }
   ]
 }

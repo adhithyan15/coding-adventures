@@ -31,6 +31,9 @@ Mosaic-era `<!--note-->` comments. Nested-looking `<!--` sequences inside an
 open comment remain literal comment data and surface a recoverable
 `nested-comment` diagnostic. Comment endings also recover from `--!>` with an
 `incorrectly-closed-comment` diagnostic while preserving non-closing `--!` text.
+Processing-instruction-looking markup such as `<?xml ...?>` now follows HTML
+bogus-comment recovery instead of being mistaken for a start tag, preserving
+legacy document prologs without polluting the tag stream.
 DOCTYPE tokenization reports missing names and marks force-quirks mode for
 inputs such as `<!DOCTYPE>` and `<!DOCTYPE >`, and EOF recovery after a name
 or inside the `DOCTYPE` keyword emits a force-quirks token. Malformed

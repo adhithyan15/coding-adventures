@@ -528,6 +528,18 @@
       "errors": [
         {"code": "incorrectly-closed-comment", "line": 1, "col": 15}
       ]
+    },
+    {
+      "description": "question mark after tag open recovers as bogus comment",
+      "input": "Before<?xml version=\"1.0\"?>After",
+      "output": [
+        ["Character", "Before"],
+        ["Comment", "?xml version=\"1.0\"?"],
+        ["Character", "After"]
+      ],
+      "errors": [
+        {"code": "unexpected-question-mark-instead-of-tag-name", "line": 1, "col": 8}
+      ]
     }
   ]
 }

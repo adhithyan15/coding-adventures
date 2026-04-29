@@ -605,6 +605,20 @@
       "diagnostics": [
         "incorrectly-closed-comment"
       ]
+    },
+    {
+      "id": "html5lib-smoke-50",
+      "description": "question mark after tag open recovers as bogus comment",
+      "input": "Before<?xml version=\"1.0\"?>After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=?xml version=\"1.0\"?)",
+        "Text(data=After)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "unexpected-question-mark-instead-of-tag-name"
+      ]
     }
   ],
   "skipped": []

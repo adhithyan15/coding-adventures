@@ -336,6 +336,28 @@ fn default_html_lexer_marks_trailing_junk_after_system_identifier_force_quirks()
 }
 
 #[test]
+fn default_html_lexer_recovers_question_mark_tag_open_as_bogus_comment() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("Before<?xml version=\"1.0\"?>After").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("Before".to_string()),
+            Token::Comment("?xml version=\"1.0\"?".to_string()),
+            Token::Text("After".to_string()),
+            Token::Eof,
+        ]
+    );
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "unexpected-question-mark-instead-of-tag-name"));
+}
+
+#[test]
 fn default_html_lexer_recovers_abrupt_empty_html_comment() {
     let mut lexer = create_html_lexer().unwrap();
 
