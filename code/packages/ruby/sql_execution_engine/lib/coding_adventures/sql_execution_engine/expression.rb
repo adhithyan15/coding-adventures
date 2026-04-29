@@ -195,7 +195,7 @@ module CodingAdventures
 
         # IN (value_list)
         if second_kw == "IN"
-          values = eval_value_list(find_child_rule(children, "value_list") || children[3], row_ctx)
+          values = eval_value_list(find_descendant_rule(children, "value_list") || children[3], row_ctx)
           return nil if left.nil?
           return values.include?(left)
         end
@@ -217,7 +217,7 @@ module CodingAdventures
             return nil if left.nil? || low.nil? || high.nil?
             return !(low <= left && left <= high)
           when "IN"
-            values = eval_value_list(find_child_rule(children, "value_list") || children[4], row_ctx)
+            values = eval_value_list(find_descendant_rule(children, "value_list") || children[4], row_ctx)
             return nil if left.nil?
             return !values.include?(left)
           when "LIKE"
@@ -267,8 +267,16 @@ module CodingAdventures
         end
       end
 
-      def self.find_child_rule(children, rule_name)
-        children.find { |child| child.is_a?(ASTNode) && child.rule_name == rule_name }
+      def self.find_descendant_rule(children, rule_name)
+        children.each do |child|
+          next unless child.is_a?(ASTNode)
+          return child if child.rule_name == rule_name
+
+          descendant = find_descendant_rule(child.children, rule_name)
+          return descendant if descendant
+        end
+
+        nil
       end
 
       # SQL LIKE pattern matching — supports % wildcard only.
