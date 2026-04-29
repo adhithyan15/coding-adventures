@@ -18,12 +18,13 @@
 //! | `PaintLine`       | Fully implemented — DrawLine with stroke width      |
 //! | `PaintGroup`      | Fully implemented — recurses into children          |
 //! | `PaintClip`       | Fully implemented — PushAxisAlignedClip / Pop       |
-//! | `PaintGlyphRun`   | Planned — IDWriteFactory + DrawGlyphRun             |
-//! | `PaintEllipse`    | Planned — FillEllipse                               |
-//! | `PaintPath`       | Planned — ID2D1PathGeometry                         |
-//! | `PaintLayer`      | Planned — PushLayer / PopLayer                      |
+//! | `PaintText`       | Implemented - DirectWrite text layout + DrawTextLayout |
+//! | `PaintGlyphRun`   | Implemented - IDWriteFactory + DrawGlyphRun         |
+//! | `PaintEllipse`    | Implemented - FillEllipse / DrawEllipse             |
+//! | `PaintPath`       | Implemented - ID2D1PathGeometry                     |
+//! | `PaintLayer`      | Implemented - PushLayer / PopLayer with opacity     |
 //! | `PaintGradient`   | Planned — CreateLinearGradientBrush                 |
-//! | `PaintImage`      | Planned — ID2D1Bitmap from PixelContainer           |
+//! | `PaintImage`      | Implemented - ID2D1Bitmap from PixelContainer       |
 //!
 //! ## Direct2D pipeline (offscreen, no HWND)
 //!
@@ -74,8 +75,8 @@ pub const VERSION: &str = "0.1.0";
 
 use paint_instructions::{
     FillRule, ImageSrc, PaintClip, PaintEllipse, PaintGlyphRun, PaintGroup, PaintImage,
-    PaintInstruction, PaintLayer, PaintLine, PaintPath, PaintRect, PaintScene, PathCommand,
-    PixelContainer,
+    PaintInstruction, PaintLayer, PaintLine, PaintPath, PaintRect, PaintScene, PaintText,
+    PathCommand, PixelContainer, TextAlign,
 };
 #[cfg(target_os = "windows")]
 use std::collections::HashMap;
@@ -117,22 +118,25 @@ use windows::Win32::Graphics::Direct2D::Common::{
 use windows::Win32::Graphics::Direct2D::{
     D2D1CreateFactory, ID2D1Factory, ID2D1RenderTarget, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
     D2D1_ARC_SEGMENT, D2D1_ARC_SIZE_LARGE, D2D1_ARC_SIZE_SMALL,
-    D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, D2D1_BITMAP_PROPERTIES, D2D1_ELLIPSE,
-    D2D1_FACTORY_TYPE_SINGLE_THREADED, D2D1_HWND_RENDER_TARGET_PROPERTIES, D2D1_LAYER_OPTIONS_NONE,
-    D2D1_LAYER_PARAMETERS, D2D1_PRESENT_OPTIONS_NONE, D2D1_QUADRATIC_BEZIER_SEGMENT,
-    D2D1_RENDER_TARGET_PROPERTIES, D2D1_RENDER_TARGET_TYPE_DEFAULT, D2D1_RENDER_TARGET_USAGE_NONE,
-    D2D1_ROUNDED_RECT, D2D1_SWEEP_DIRECTION_CLOCKWISE, D2D1_SWEEP_DIRECTION_COUNTER_CLOCKWISE,
+    D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, D2D1_BITMAP_PROPERTIES, D2D1_DRAW_TEXT_OPTIONS_NONE,
+    D2D1_ELLIPSE, D2D1_FACTORY_TYPE_SINGLE_THREADED, D2D1_HWND_RENDER_TARGET_PROPERTIES,
+    D2D1_LAYER_OPTIONS_NONE, D2D1_LAYER_PARAMETERS, D2D1_PRESENT_OPTIONS_NONE,
+    D2D1_QUADRATIC_BEZIER_SEGMENT, D2D1_RENDER_TARGET_PROPERTIES, D2D1_RENDER_TARGET_TYPE_DEFAULT,
+    D2D1_RENDER_TARGET_USAGE_NONE, D2D1_ROUNDED_RECT, D2D1_SWEEP_DIRECTION_CLOCKWISE,
+    D2D1_SWEEP_DIRECTION_COUNTER_CLOCKWISE,
 };
 #[cfg(target_os = "windows")]
 use windows::Win32::Graphics::DirectWrite::{
     DWriteCreateFactory, IDWriteFactory, IDWriteFontCollection, IDWriteFontFace,
-    DWRITE_FACTORY_TYPE_SHARED, DWRITE_FONT_STRETCH, DWRITE_FONT_STRETCH_CONDENSED,
-    DWRITE_FONT_STRETCH_EXPANDED, DWRITE_FONT_STRETCH_EXTRA_CONDENSED,
-    DWRITE_FONT_STRETCH_EXTRA_EXPANDED, DWRITE_FONT_STRETCH_NORMAL,
-    DWRITE_FONT_STRETCH_SEMI_CONDENSED, DWRITE_FONT_STRETCH_SEMI_EXPANDED,
-    DWRITE_FONT_STRETCH_ULTRA_CONDENSED, DWRITE_FONT_STRETCH_ULTRA_EXPANDED, DWRITE_FONT_STYLE,
-    DWRITE_FONT_STYLE_ITALIC, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STYLE_OBLIQUE,
-    DWRITE_FONT_WEIGHT, DWRITE_GLYPH_OFFSET, DWRITE_GLYPH_RUN, DWRITE_MEASURING_MODE_NATURAL,
+    DWRITE_FACTORY_TYPE_SHARED, DWRITE_FONT_METRICS, DWRITE_FONT_STRETCH,
+    DWRITE_FONT_STRETCH_CONDENSED, DWRITE_FONT_STRETCH_EXPANDED,
+    DWRITE_FONT_STRETCH_EXTRA_CONDENSED, DWRITE_FONT_STRETCH_EXTRA_EXPANDED,
+    DWRITE_FONT_STRETCH_NORMAL, DWRITE_FONT_STRETCH_SEMI_CONDENSED,
+    DWRITE_FONT_STRETCH_SEMI_EXPANDED, DWRITE_FONT_STRETCH_ULTRA_CONDENSED,
+    DWRITE_FONT_STRETCH_ULTRA_EXPANDED, DWRITE_FONT_STYLE, DWRITE_FONT_STYLE_ITALIC,
+    DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STYLE_OBLIQUE, DWRITE_FONT_WEIGHT, DWRITE_GLYPH_OFFSET,
+    DWRITE_GLYPH_RUN, DWRITE_MEASURING_MODE_NATURAL, DWRITE_TEXT_METRICS,
+    DWRITE_WORD_WRAPPING_NO_WRAP,
 };
 #[cfg(target_os = "windows")]
 use windows::Win32::Graphics::Dxgi::Common::{DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_UNKNOWN};
@@ -246,6 +250,7 @@ fn to_d2d_color(r: f64, g: f64, b: f64, a: f64) -> D2D1_COLOR_F {
 #[cfg(target_os = "windows")]
 struct RenderContext {
     factory: ID2D1Factory,
+    dwrite_factory: IDWriteFactory,
     font_collection: IDWriteFontCollection,
     font_cache: HashMap<String, IDWriteFontFace>,
     scene_bounds: D2D_RECT_F,
@@ -262,6 +267,7 @@ impl RenderContext {
             .expect("Failed to get system font collection");
         Self {
             factory,
+            dwrite_factory,
             font_collection: font_collection.expect("system font collection"),
             font_cache: HashMap::new(),
             scene_bounds: D2D_RECT_F {
@@ -278,20 +284,12 @@ impl RenderContext {
             return Some(face.clone());
         }
 
-        let spec = parse_directwrite_font_ref(font_ref).unwrap_or_else(|| DWriteFontRef {
-            family: "Segoe UI".to_string(),
-            weight: 400,
-            style: DWRITE_FONT_STYLE_NORMAL,
-            stretch: DWRITE_FONT_STRETCH_NORMAL,
-        });
-        let face = self.resolve_font_face(&spec).or_else(|| {
-            self.resolve_font_face(&DWriteFontRef {
-                family: "Segoe UI".to_string(),
-                weight: 400,
-                style: DWRITE_FONT_STYLE_NORMAL,
-                stretch: DWRITE_FONT_STRETCH_NORMAL,
-            })
-        })?;
+        let spec = parse_directwrite_font_ref(font_ref)
+            .or_else(|| parse_canvas_font_ref(font_ref))
+            .unwrap_or_else(default_dwrite_font_ref);
+        let face = self
+            .resolve_font_face(&spec)
+            .or_else(|| self.resolve_font_face(&default_dwrite_font_ref()))?;
         self.font_cache.insert(font_ref.to_string(), face.clone());
         Some(face)
     }
@@ -316,6 +314,21 @@ impl RenderContext {
             .ok()?;
         font.CreateFontFace().ok()
     }
+
+    unsafe fn font_ascent(&self, spec: &DWriteFontRef, font_size: f64) -> f32 {
+        let face = self
+            .resolve_font_face(spec)
+            .or_else(|| self.resolve_font_face(&default_dwrite_font_ref()));
+        let Some(face) = face else {
+            return (font_size * 0.8) as f32;
+        };
+        let mut metrics = DWRITE_FONT_METRICS::default();
+        face.GetMetrics(&mut metrics);
+        if metrics.designUnitsPerEm == 0 {
+            return (font_size * 0.8) as f32;
+        }
+        metrics.ascent as f32 / metrics.designUnitsPerEm as f32 * font_size as f32
+    }
 }
 
 #[cfg(target_os = "windows")]
@@ -324,6 +337,25 @@ struct DWriteFontRef {
     weight: u16,
     style: DWRITE_FONT_STYLE,
     stretch: DWRITE_FONT_STRETCH,
+}
+
+#[cfg(target_os = "windows")]
+fn default_dwrite_font_ref() -> DWriteFontRef {
+    DWriteFontRef {
+        family: "Segoe UI".to_string(),
+        weight: 400,
+        style: DWRITE_FONT_STYLE_NORMAL,
+        stretch: DWRITE_FONT_STRETCH_NORMAL,
+    }
+}
+
+#[cfg(target_os = "windows")]
+fn dwrite_font_ref_for_text(font_ref: Option<&str>) -> DWriteFontRef {
+    font_ref
+        .and_then(|font_ref| {
+            parse_directwrite_font_ref(font_ref).or_else(|| parse_canvas_font_ref(font_ref))
+        })
+        .unwrap_or_else(default_dwrite_font_ref)
 }
 
 /// Render a list of [`PaintInstruction`]s into a Direct2D render target.
@@ -352,7 +384,7 @@ unsafe fn render_instructions(
             PaintInstruction::Path(path) => render_path(ctx, rt, path),
             PaintInstruction::Layer(layer) => render_layer(ctx, rt, layer),
             PaintInstruction::Image(image) => render_image(rt, image),
-            PaintInstruction::Text(_) => {}
+            PaintInstruction::Text(text) => render_text(ctx, rt, text),
             PaintInstruction::Gradient(_) => {}
         }
     }
@@ -663,6 +695,59 @@ unsafe fn render_glyph_run(ctx: &mut RenderContext, rt: &ID2D1RenderTarget, run:
 }
 
 #[cfg(target_os = "windows")]
+unsafe fn render_text(ctx: &mut RenderContext, rt: &ID2D1RenderTarget, text: &PaintText) {
+    if text.text.is_empty() || text.font_size <= 0.0 {
+        return;
+    }
+    let Some(brush) = solid_brush(rt, text.fill.as_deref().unwrap_or("#000000")) else {
+        return;
+    };
+
+    let spec = dwrite_font_ref_for_text(text.font_ref.as_deref());
+    let family_w = wide_null(&spec.family);
+    let locale_w = wide_null("en-us");
+    let Ok(format) = ctx.dwrite_factory.CreateTextFormat(
+        PCWSTR(family_w.as_ptr()),
+        Some(&ctx.font_collection),
+        DWRITE_FONT_WEIGHT(spec.weight as i32),
+        spec.style,
+        spec.stretch,
+        text.font_size as f32,
+        PCWSTR(locale_w.as_ptr()),
+    ) else {
+        return;
+    };
+    let _ = format.SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);
+
+    let utf16: Vec<u16> = text.text.encode_utf16().collect();
+    let Ok(layout) = ctx
+        .dwrite_factory
+        .CreateTextLayout(&utf16, &format, 1_000_000.0, 1_000_000.0)
+    else {
+        return;
+    };
+
+    let mut metrics = DWRITE_TEXT_METRICS::default();
+    if layout.GetMetrics(&mut metrics).is_err() {
+        return;
+    }
+    let width = metrics.widthIncludingTrailingWhitespace.max(metrics.width);
+    let x = match text.text_align.as_ref().unwrap_or(&TextAlign::Left) {
+        TextAlign::Left => text.x as f32,
+        TextAlign::Center => text.x as f32 - width / 2.0,
+        TextAlign::Right => text.x as f32 - width,
+    };
+    let y = text.y as f32 - ctx.font_ascent(&spec, text.font_size);
+
+    rt.DrawTextLayout(
+        D2D_POINT_2F { x, y },
+        &layout,
+        &brush,
+        D2D1_DRAW_TEXT_OPTIONS_NONE,
+    );
+}
+
+#[cfg(target_os = "windows")]
 unsafe fn render_image(rt: &ID2D1RenderTarget, image: &PaintImage) {
     let ImageSrc::Pixels(pixels) = &image.src else {
         return;
@@ -856,6 +941,49 @@ fn parse_directwrite_font_ref(font_ref: &str) -> Option<DWriteFontRef> {
         style,
         stretch: stretch_from_rank(stretch_rank),
     })
+}
+
+#[cfg(target_os = "windows")]
+fn parse_canvas_font_ref(font_ref: &str) -> Option<DWriteFontRef> {
+    let body = font_ref.strip_prefix("canvas:")?;
+    let (family_part, rest) = body.split_once('@')?;
+    let mut weight = 400u16;
+    let mut style = DWRITE_FONT_STYLE_NORMAL;
+    let parts: Vec<&str> = rest.split(':').collect();
+    if let Some(value) = parts.get(1) {
+        weight = parse_font_weight(value, weight);
+    }
+    if let Some(value) = parts.get(2) {
+        style = match value.trim() {
+            "italic" => DWRITE_FONT_STYLE_ITALIC,
+            "oblique" => DWRITE_FONT_STYLE_OBLIQUE,
+            _ => DWRITE_FONT_STYLE_NORMAL,
+        };
+    }
+    Some(DWriteFontRef {
+        family: map_font_family(family_part),
+        weight,
+        style,
+        stretch: DWRITE_FONT_STRETCH_NORMAL,
+    })
+}
+
+#[cfg(target_os = "windows")]
+fn parse_font_weight(value: &str, fallback: u16) -> u16 {
+    match value.trim() {
+        "normal" => 400,
+        "bold" => 700,
+        other => other.parse().unwrap_or(fallback),
+    }
+}
+
+#[cfg(target_os = "windows")]
+fn map_font_family(family: &str) -> String {
+    match family.trim().to_ascii_lowercase().as_str() {
+        "system-ui" | "ui-sans-serif" => "Segoe UI".to_string(),
+        other if other.is_empty() => "Segoe UI".to_string(),
+        _ => family.trim().to_string(),
+    }
 }
 
 #[cfg(target_os = "windows")]
@@ -1207,8 +1335,30 @@ mod tests {
     use super::*;
     use paint_instructions::{
         GlyphPosition, PaintBase, PaintGlyphRun, PaintGroup, PaintInstruction, PaintRect,
-        PaintScene,
+        PaintScene, PaintText, TextAlign,
     };
+
+    #[cfg(target_os = "windows")]
+    fn dark_pixel_bounds(pixels: &PixelContainer) -> Option<(u32, u32, u32, u32)> {
+        let mut min_x = u32::MAX;
+        let mut min_y = u32::MAX;
+        let mut max_x = 0;
+        let mut max_y = 0;
+        let mut found = false;
+        for y in 0..pixels.height {
+            for x in 0..pixels.width {
+                let (r, g, b, a) = pixels.pixel_at(x, y);
+                if a > 0 && (r < 245 || g < 245 || b < 245) {
+                    found = true;
+                    min_x = min_x.min(x);
+                    min_y = min_y.min(y);
+                    max_x = max_x.max(x);
+                    max_y = max_y.max(y);
+                }
+            }
+        }
+        found.then_some((min_x, min_y, max_x, max_y))
+    }
 
     #[test]
     fn version_exists() {
@@ -1471,6 +1621,76 @@ mod tests {
         assert_eq!(r, 0, "black module should have r=0");
         assert_eq!(g, 0, "black module should have g=0");
         assert_eq!(b, 0, "black module should have b=0");
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn render_text_draws_visible_pixels() {
+        let mut scene = PaintScene::new(180.0, 80.0);
+        scene.instructions.push(PaintInstruction::Text(PaintText {
+            base: PaintBase::default(),
+            x: 16.0,
+            y: 52.0,
+            text: "Paint VM".to_string(),
+            font_ref: Some("canvas:system-ui@28:400".to_string()),
+            font_size: 28.0,
+            fill: Some("#000000".to_string()),
+            text_align: Some(TextAlign::Left),
+        }));
+
+        let pixels = render(&scene);
+        let Some((min_x, min_y, max_x, max_y)) = dark_pixel_bounds(&pixels) else {
+            panic!("expected PaintText to produce visible pixels");
+        };
+        assert!(max_x > min_x, "text should occupy width");
+        assert!(max_y > min_y, "text should occupy height");
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn text_alignment_changes_anchor_position() {
+        fn render_bounds(alignment: TextAlign) -> (u32, u32) {
+            let mut scene = PaintScene::new(220.0, 80.0);
+            scene.instructions.push(PaintInstruction::Text(PaintText {
+                base: PaintBase::default(),
+                x: 110.0,
+                y: 52.0,
+                text: "Align".to_string(),
+                font_ref: Some("directwrite:Segoe UI@windows;w=400;style=normal".to_string()),
+                font_size: 28.0,
+                fill: Some("#000000".to_string()),
+                text_align: Some(alignment),
+            }));
+            let pixels = render(&scene);
+            let (min_x, _, max_x, _) =
+                dark_pixel_bounds(&pixels).expect("alignment case should draw pixels");
+            (min_x, max_x)
+        }
+
+        let (left_min, left_max) = render_bounds(TextAlign::Left);
+        let (center_min, center_max) = render_bounds(TextAlign::Center);
+        let (right_min, right_max) = render_bounds(TextAlign::Right);
+
+        assert!(
+            left_min > center_min,
+            "center alignment should start left of left alignment"
+        );
+        assert!(
+            center_min > right_min,
+            "right alignment should start furthest left"
+        );
+        assert!(
+            left_max >= 110,
+            "left alignment should extend to the right of anchor"
+        );
+        assert!(
+            center_min < 110 && center_max > 110,
+            "center alignment should straddle anchor"
+        );
+        assert!(
+            right_max <= 110,
+            "right alignment should end at or before anchor"
+        );
     }
 
     #[cfg(target_os = "windows")]

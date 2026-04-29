@@ -92,6 +92,7 @@ fn dispatch(instruction: &PaintInstruction, ctx: &mut PlatformContext) {
         PaintInstruction::Rect(r)      => handle_rect(r, ctx),
         PaintInstruction::Ellipse(e)   => handle_ellipse(e, ctx),
         PaintInstruction::Path(p)      => handle_path(p, ctx),
+        PaintInstruction::Text(t)      => handle_text(t, ctx),
         PaintInstruction::GlyphRun(g)  => handle_glyph_run(g, ctx),
         PaintInstruction::Group(g)     => handle_group(g, ctx),   // recurses
         PaintInstruction::Layer(l)     => handle_layer(l, ctx),   // recurses
@@ -264,6 +265,7 @@ for the codec pipeline (render → PixelContainer → PNG via paint-codec-png).
 | rect        | `FillRectangle` / `DrawRectangle` with `ID2D1SolidColorBrush`; use `ID2D1RoundedRectangleGeometry` when `corner_radius > 0` |
 | ellipse     | `FillEllipse` / `DrawEllipse`                                                       |
 | path        | `ID2D1PathGeometry` with `ID2D1GeometrySink`: `BeginFigure`, `AddLine`, `AddBezier`, `EndFigure` map directly to PaintPath segments (MoveTo, LineTo, BezierTo, Close) |
+| text        | `IDWriteFactory::CreateTextLayout` + `ID2D1RenderTarget::DrawTextLayout`; map PaintText baseline and alignment before drawing |
 | glyph_run   | `DrawGlyphRun` using `IDWriteFactory` + `IDWriteTextFormat` for font selection      |
 | group       | `GetTransform` / `SetTransform` (save current, multiply by `PaintGroup.transform`, restore after children) |
 | layer       | `PushLayer` / `PopLayer` with `ID2D1Layer` for offscreen compositing with opacity   |

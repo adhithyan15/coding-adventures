@@ -286,7 +286,6 @@ Required behavior:
 
 Convergence work still needed:
 
-- Direct2D should implement `PaintText` since GDI now supports it.
 - GDI and Direct2D should share font-ref parsing rules where possible.
 - Cairo should support `pango:` glyph bindings and optionally `PaintText` via
   Pango layout.
@@ -502,14 +501,14 @@ Only Tier 2 and above should be candidates for automatic pipeline selection.
 
 ## Current Gaps to Close
 
-Known gaps after the GDI arc convergence work:
+Known gaps after the Direct2D `PaintText` convergence work:
 
 | Area | Status |
 |------|--------|
 | GDI `PathCommand::ArcTo` | Implemented by converting SVG arcs to cubic Beziers and rendering them through the existing GDI path pipeline. |
 | GDI gradients | Not implemented. |
 | GDI layer filters and blend modes | Layer opacity/transform works; filters/blend modes are not implemented. |
-| Direct2D `PaintText` | Still skipped even though GDI supports it. |
+| Direct2D `PaintText` | Implemented with DirectWrite text layout, baseline positioning, alignment, and `directwrite:`/`canvas:` font-ref parsing. |
 | Direct2D gradients | Not implemented. |
 | Direct2D layer filters and blend modes | Layer opacity works; full effects/blend modes are not implemented. |
 | Metal text | Still partial. Glyph/text convergence remains a larger font-system project. |
@@ -517,15 +516,14 @@ Known gaps after the GDI arc convergence work:
 
 Recommended immediate order:
 
-1. Direct2D `PaintText`, to restore symmetry with GDI for the string-text path.
-2. Direct2D and GDI gradients.
-3. Cairo Tier 1.
-4. Skia Tier 1, then Tier 2.
-5. Shared `paint-vm-gpu-core`.
-6. WGPU Tier 1.
-7. Vulkan Tier 1.
-8. OpenGL Tier 1.
-9. Filters and advanced blend modes across GPU-capable backends.
+1. Direct2D and GDI gradients.
+2. Cairo Tier 1.
+3. Skia Tier 1, then Tier 2.
+4. Shared `paint-vm-gpu-core`.
+5. WGPU Tier 1.
+6. Vulkan Tier 1.
+7. OpenGL Tier 1.
+8. Filters and advanced blend modes across GPU-capable backends.
 
 ---
 
