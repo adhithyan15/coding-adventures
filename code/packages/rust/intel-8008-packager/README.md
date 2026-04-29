@@ -97,12 +97,16 @@ Both functions return `Err(PackagerError)` on invalid input:
 | Empty binary | "binary must be non-empty" |
 | Origin > 0xFFFF | "origin must be 0–65535, got …" |
 | origin + len > 65536 | "image overflows 16-bit address space" |
+| Line longer than 1024 chars | "line N: line too long (M chars, maximum 1024)" |
 | Missing `:` | "line N: expected ':'" |
 | Non-hex characters | "line N: invalid hex data" |
 | Record too short | "line N: record claims X data bytes but …" |
 | Checksum mismatch | "line N: checksum mismatch (expected …, got …)" |
 | Unsupported type (≥ 0x02) | "line N: unsupported record type 0xNN" |
 | Image > 16 KB | "decoded image too large: N bytes (maximum …)" |
+| Missing EOF record | "missing EOF record (type 0x01) — file may be truncated" |
+| Overlapping records (in-order) | "line N: record at 0xAAAA overlaps previous record (ends at 0xBBBB)" |
+| Overlapping records (out-of-order) | "line N: record at 0xAAAA (ends at 0xBBBB) overlaps next record at 0xCCCC" |
 
 ---
 
@@ -112,4 +116,4 @@ Both functions return `Err(PackagerError)` on invalid input:
 cargo test -p intel-8008-packager
 ```
 
-38 tests (33 unit + 5 doc-tests), all passing. Zero external dependencies.
+43 tests (38 unit + 5 doc-tests), all passing. Zero external dependencies.

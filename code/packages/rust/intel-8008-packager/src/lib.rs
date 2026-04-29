@@ -206,19 +206,36 @@ fn eof_record() -> &'static str {
     ":00000001FF\n"
 }
 
+/// Maximum permitted line length in Intel HEX input.
+///
+/// A well-formed data record with 255 data bytes encodes as:
+///   1 (`:`) + 2 (LL) + 4 (AAAA) + 2 (TT) + 510 (255 × 2 hex chars) + 2 (CS) = 521 chars
+/// We allow up to 1 024 chars to accommodate any plausible valid record.
+/// Lines longer than this cannot be valid Intel HEX; rejecting them early avoids
+/// a transient O(n) char-iterator allocation for adversarially long lines.
+const MAX_HEX_LINE_LEN: usize = 1024;
+
 /// Decode a hex string slice into bytes.
 ///
 /// Returns `Err(())` if the string has odd length or contains non-hex chars.
+/// Does **not** allocate an intermediate `Vec<char>` — iterates directly over
+/// char pairs to keep memory bounded to the output slice length.
 fn parse_hex_bytes(s: &str) -> Result<Vec<u8>, ()> {
     if s.len() % 2 != 0 {
         return Err(());
     }
     let mut bytes = Vec::with_capacity(s.len() / 2);
-    let chars: Vec<char> = s.chars().collect();
-    for pair in chars.chunks(2) {
-        let hi = pair[0].to_digit(16).ok_or(())?;
-        let lo = pair[1].to_digit(16).ok_or(())?;
-        bytes.push((hi * 16 + lo) as u8);
+    let mut iter = s.chars();
+    loop {
+        match (iter.next(), iter.next()) {
+            (Some(hi), Some(lo)) => {
+                let hi_val = hi.to_digit(16).ok_or(())?;
+                let lo_val = lo.to_digit(16).ok_or(())?;
+                bytes.push((hi_val * 16 + lo_val) as u8);
+            }
+            (None, _) => break,
+            _ => return Err(()), // odd number of chars (shouldn't happen after len check)
+        }
     }
     Ok(bytes)
 }
@@ -330,6 +347,16 @@ pub fn decode_hex(text: &str) -> Result<DecodedHex, PackagerError> {
         if line.is_empty() {
             continue;
         }
+        // Guard against adversarially long lines before doing any allocation.
+        // A maximum-payload data record (255 bytes) encodes as 521 chars.
+        // We allow up to MAX_HEX_LINE_LEN (1 024) to cover all valid records;
+        // anything longer cannot be a well-formed Intel HEX record.
+        if line.len() > MAX_HEX_LINE_LEN {
+            return Err(PackagerError(format!(
+                "line {line_num}: line too long ({} chars, maximum {MAX_HEX_LINE_LEN})",
+                line.len()
+            )));
+        }
         if !line.starts_with(':') {
             return Err(PackagerError(format!(
                 "line {line_num}: expected ':', got {:?}",
@@ -404,6 +431,20 @@ pub fn decode_hex(text: &str) -> Result<DecodedHex, PackagerError> {
                 return Err(PackagerError(format!(
                     "line {line_num}: record at {address:#06x} overlaps \
                      previous record (ends at {prev_end:#06x})"
+                )));
+            }
+        }
+
+        // Also check whether this record would overlap a *later* record already
+        // inserted (possible if records arrive out of address order).  We look
+        // up the first key that is strictly greater than `address` and verify
+        // that the current record ends at or before that key.
+        if let Some((&next_addr, _)) = segments.range((address + 1)..).next() {
+            let current_end = address + byte_count;
+            if current_end > next_addr {
+                return Err(PackagerError(format!(
+                    "line {line_num}: record at {address:#06x} (ends at {current_end:#06x}) \
+                     overlaps next record at {next_addr:#06x}"
                 )));
             }
         }
@@ -807,6 +848,48 @@ mod tests {
         let combined = format!("{dup_record}\n{dup_record}\n:00000001FF\n");
         let result = decode_hex(&combined);
         assert!(result.is_err(), "expected error for duplicate address records");
+    }
+
+    #[test]
+    fn decode_out_of_order_overlapping_records_errors() {
+        // Records delivered in *descending* address order: B (0x0005) before A (0x0000).
+        // The backward overlap check cannot catch this case because when B is processed
+        // the BTreeMap is empty — B is inserted first with no prior record to compare
+        // against.  When A (16 bytes at 0x0000, ending at 0x0010) is processed next,
+        // the *forward* overlap check finds B already at 0x0005 and rejects.
+        //
+        // Record B: 1 byte at 0x0005, value=0x00
+        //   fields = [0x01, 0x00, 0x05, 0x00, 0x00]  sum=0x06 → cs=(0x100-0x06)=0xFA
+        let record_b = ":0100050000FA";
+
+        // Record A: 16 bytes at 0x0000, built via encode_hex for a correct checksum.
+        // address=0x0000, byte_count=16, current_end=0x0010.
+        // Forward check: next key > 0x0000 is 0x0005; 0x0010 > 0x0005 → overlap error.
+        let binary_a: Vec<u8> = vec![0u8; 16];
+        let hex_a = encode_hex(&binary_a, 0x0000).unwrap();
+        let data_record_a = hex_a.lines().next().unwrap(); // the 16-byte record at 0x0000
+
+        let combined = format!("{record_b}\n{data_record_a}\n:00000001FF\n");
+        let result = decode_hex(&combined);
+        assert!(result.is_err(), "expected error for out-of-order overlapping records");
+        assert!(
+            result.unwrap_err().to_string().contains("overlap"),
+            "error message should mention overlap"
+        );
+    }
+
+    #[test]
+    fn decode_line_too_long_errors() {
+        // Craft a line that exceeds MAX_HEX_LINE_LEN (1024 chars).
+        // We don't need a valid record — just a very long line starting with ':'.
+        let long_line = format!(":{}", "AA".repeat(600)); // 1 + 1200 = 1201 chars
+        let input = format!("{long_line}\n:00000001FF\n");
+        let result = decode_hex(&input);
+        assert!(result.is_err(), "expected error for line exceeding MAX_HEX_LINE_LEN");
+        assert!(
+            result.unwrap_err().to_string().contains("long"),
+            "error message should mention line length"
+        );
     }
 
     // ------------------------------------------------------------------
