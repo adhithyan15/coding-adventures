@@ -2,8 +2,8 @@
 //!
 //! This backend consumes the shared `paint-vm-gpu-core` render plan and draws
 //! solid meshes into an offscreen WGPU texture. It is the first concrete GPU
-//! consumer of the shared tessellation layer; glyph atlases, exact gradients,
-//! and filters remain deliberately outside this Tier 1 slice.
+//! consumer of the shared tessellation layer; glyph atlases and filters remain
+//! deliberately outside this Tier 1 slice.
 
 use std::sync::mpsc;
 
@@ -50,7 +50,7 @@ pub fn descriptor() -> PaintBackendDescriptor {
             layer_filters: SupportLevel::Unsupported,
             layer_blend_modes: SupportLevel::Unsupported,
             linear_gradient: SupportLevel::Supported,
-            radial_gradient: SupportLevel::Degraded,
+            radial_gradient: SupportLevel::Supported,
             antialiasing: SupportLevel::Unsupported,
             offscreen_pixels: SupportLevel::Supported,
         },
@@ -68,6 +68,7 @@ pub fn profile() -> GpuBackendProfile {
     );
     profile.supports_texture_sampling = true;
     profile.supports_linear_gradients = true;
+    profile.supports_radial_gradients = true;
     profile
 }
 
@@ -696,6 +697,10 @@ mod tests {
             descriptor.capabilities.linear_gradient,
             SupportLevel::Supported
         );
+        assert_eq!(
+            descriptor.capabilities.radial_gradient,
+            SupportLevel::Supported
+        );
     }
 
     #[test]
@@ -707,6 +712,7 @@ mod tests {
         assert_eq!(profile.readback, GpuReadbackStrategy::TextureCopyToBuffer);
         assert!(profile.supports_texture_sampling);
         assert!(profile.supports_linear_gradients);
+        assert!(profile.supports_radial_gradients);
     }
 
     #[test]
@@ -806,6 +812,25 @@ mod tests {
             stroke_dash: None,
             stroke_dash_offset: None,
         }));
+
+        let selected = registry
+            .select(
+                &scene,
+                PaintRenderOptions {
+                    preference: PaintBackendPreference::Named("paint-vm-wgpu".to_string()),
+                    ..PaintRenderOptions::default()
+                },
+            )
+            .unwrap();
+        assert_eq!(selected.descriptor().id, "paint-vm-wgpu");
+    }
+
+    #[test]
+    fn runtime_selects_wgpu_for_radial_gradient_scene() {
+        let backend = renderer();
+        let mut registry = PaintBackendRegistry::new();
+        registry.register(&backend);
+        let scene = radial_gradient_scene(8.0, 8.0, 4.0);
 
         let selected = registry
             .select(
@@ -937,6 +962,30 @@ mod tests {
         assert!(right.0 > left.0);
     }
 
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn renders_radial_gradient_when_adapter_is_available() {
+        let scene = radial_gradient_scene(16.0, 16.0, 8.0);
+
+        let pixels = match render(&scene) {
+            Ok(pixels) => pixels,
+            Err(PaintRenderError::BackendUnavailable { .. }) => return,
+            Err(err) => panic!("unexpected WGPU render failure: {err:?}"),
+        };
+        let center = pixels.pixel_at(8, 8);
+        let corner = pixels.pixel_at(0, 0);
+
+        assert!(
+            center.0 < 80,
+            "expected dark radial gradient center, got {center:?}"
+        );
+        assert!(
+            corner.0 > 170,
+            "expected bright radial gradient edge, got {corner:?}"
+        );
+        assert!(corner.0 > center.0);
+    }
+
     #[test]
     fn runtime_rejects_text_without_exact_glyph_atlas_support() {
         let backend = renderer();
@@ -963,5 +1012,46 @@ mod tests {
                 },
             )
             .is_err());
+    }
+
+    fn radial_gradient_scene(width: f64, height: f64, radius: f64) -> PaintScene {
+        let mut scene = PaintScene::new(width, height);
+        scene
+            .instructions
+            .push(PaintInstruction::Gradient(PaintGradient {
+                base: PaintBase {
+                    id: Some("fade".to_string()),
+                    metadata: None,
+                },
+                kind: GradientKind::Radial {
+                    cx: width / 2.0,
+                    cy: height / 2.0,
+                    r: radius,
+                },
+                stops: vec![
+                    GradientStop {
+                        offset: 0.0,
+                        color: "#000000".to_string(),
+                    },
+                    GradientStop {
+                        offset: 1.0,
+                        color: "#ffffff".to_string(),
+                    },
+                ],
+            }));
+        scene.instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: 0.0,
+            y: 0.0,
+            width,
+            height,
+            fill: Some("url(#fade)".to_string()),
+            stroke: None,
+            stroke_width: None,
+            corner_radius: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+        scene
     }
 }
