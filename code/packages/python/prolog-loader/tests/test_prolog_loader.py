@@ -1012,6 +1012,20 @@ class TestPrologGoalAdapter:
             (num(2), num(3), num(6)),
         ]
 
+    def test_adapt_prolog_goal_honors_labeling_order_options(self) -> None:
+        parsed = parse_swi_query(
+            "?- X in 1..3, "
+            "labeling([down], [X]).",
+        )
+
+        adapted = adapt_prolog_goal(parsed.goal)
+
+        assert solve_all(
+            program(),
+            parsed.variables["X"],
+            adapted,
+        ) == [num(3), num(2), num(1)]
+
     def test_adapt_prolog_goal_rewrites_common_list_predicates(self) -> None:
         parsed = parse_swi_query(
             "?- member(Item, [tea, cake]), "

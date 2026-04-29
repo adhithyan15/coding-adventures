@@ -165,6 +165,17 @@ class FiniteDomainStore:
     constraints: tuple[FiniteDomainConstraint, ...] = ()
 
 
+@dataclass(frozen=True, slots=True)
+class LabelingOptions:
+    """Small, deterministic subset of Prolog CLP(FD) labeling options."""
+
+    variable_order: str = "ff"
+    value_order: str = "up"
+
+
+_DEFAULT_LABELING_OPTIONS = LabelingOptions()
+
+
 _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("abolisho", 2),
     ("all_differento", 1),
@@ -207,6 +218,7 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("iftheno", 2),
     ("integero", 1),
     ("iso", 2),
+    ("labeling_optionso", 2),
     ("labelingo", 1),
     ("leqo", 2),
     ("lto", 2),
@@ -1256,12 +1268,15 @@ def _label_fd_terms(
     program_value: Program,
     state: State,
     terms: tuple[Term, ...],
+    options: LabelingOptions = _DEFAULT_LABELING_OPTIONS,
 ) -> Iterator[State]:
     """Enumerate concrete values for requested FD variables.
 
     Labeling is the point where the constraint store becomes concrete search.
-    Choose the smallest currently-known domain first to reduce branching while
-    preserving the caller's variable order as a deterministic tie-breaker.
+    By default, choose the smallest currently-known domain first to reduce
+    branching while preserving the caller's variable order as a deterministic
+    tie-breaker. Options can switch to Prolog's leftmost selection or descending
+    value order.
     """
 
     normalized_state = _normalize_fd_state(state)
@@ -1285,15 +1300,59 @@ def _label_fd_terms(
         yield normalized_state
         return
 
-    _, _, value, domain = min(candidates, key=lambda candidate: candidate[:2])
+    if options.variable_order == "leftmost":
+        _, _, value, domain = min(candidates, key=lambda candidate: candidate[1])
+    else:
+        _, _, value, domain = min(candidates, key=lambda candidate: candidate[:2])
 
-    for choice in sorted(domain):
+    for choice in sorted(domain, reverse=options.value_order == "down"):
         for assigned_state in solve_from(
             program_value,
             eq(value, num(choice)),
             normalized_state,
         ):
-            yield from _label_fd_terms(program_value, assigned_state, terms)
+            yield from _label_fd_terms(program_value, assigned_state, terms, options)
+
+
+def _sequence_items(term_value: object) -> list[Term] | None:
+    if isinstance(term_value, list | tuple):
+        return list(term_value)
+    if isinstance(term_value, Atom | Compound):
+        return _proper_list_items(term_value)
+    return None
+
+
+def _labeling_option_name(option: Term) -> str | None:
+    if isinstance(option, str):
+        return option
+    if (
+        isinstance(option, Atom)
+        and option.symbol.namespace is None
+    ):
+        return option.symbol.name
+    return None
+
+
+def _labeling_options_from_items(items: list[Term]) -> LabelingOptions | None:
+    options = LabelingOptions()
+    for item in items:
+        name = _labeling_option_name(item)
+        if name in {"ff", "leftmost"}:
+            options = LabelingOptions(
+                variable_order=name,
+                value_order=options.value_order,
+            )
+            continue
+        if name in {"up", "down"}:
+            options = LabelingOptions(
+                variable_order=options.variable_order,
+                value_order=name,
+            )
+            continue
+        if name in {"enum", "step"}:
+            continue
+        return None
+    return options
 
 
 def labelingo(vars_value: object) -> GoalExpr:
@@ -1321,6 +1380,77 @@ def labelingo(vars_value: object) -> GoalExpr:
         yield from _label_fd_terms(program_value, state, tuple(items))
 
     return native_goal(run_logic_list, vars_value)
+
+
+def labeling_optionso(options_value: object, vars_value: object) -> GoalExpr:
+    """Enumerate finite-domain variables with a small labeling option subset."""
+
+    if isinstance(options_value, list | tuple):
+        options = _labeling_options_from_items(list(options_value))
+        if options is None:
+            return failo()
+
+        if isinstance(vars_value, list | tuple):
+            def run_sequence(
+                program_value: Program,
+                state: State,
+                args: NativeArgs,
+            ) -> Iterator[State]:
+                yield from _label_fd_terms(program_value, state, args, options)
+
+            return native_goal(run_sequence, *vars_value)
+
+        def run_logic_vars(
+            program_value: Program,
+            state: State,
+            args: NativeArgs,
+        ) -> Iterator[State]:
+            (vars_term,) = args
+            var_items = _sequence_items(_reified(vars_term, state))
+            if var_items is None:
+                return
+            yield from _label_fd_terms(program_value, state, tuple(var_items), options)
+
+        return native_goal(run_logic_vars, vars_value)
+
+    if isinstance(vars_value, list | tuple):
+        def run_options_with_sequence(
+            program_value: Program,
+            state: State,
+            args: NativeArgs,
+        ) -> Iterator[State]:
+            options_term, *var_terms = args
+            option_items = _sequence_items(_reified(options_term, state))
+            if option_items is None:
+                return
+            options = _labeling_options_from_items(option_items)
+            if options is None:
+                return
+            yield from _label_fd_terms(
+                program_value,
+                state,
+                tuple(var_terms),
+                options,
+            )
+
+        return native_goal(run_options_with_sequence, options_value, *vars_value)
+
+    def run(
+        program_value: Program,
+        state: State,
+        args: NativeArgs,
+    ) -> Iterator[State]:
+        options_term, vars_term = args
+        option_items = _sequence_items(_reified(options_term, state))
+        var_items = _sequence_items(_reified(vars_term, state))
+        if option_items is None or var_items is None:
+            return
+        options = _labeling_options_from_items(option_items)
+        if options is None:
+            return
+        yield from _label_fd_terms(program_value, state, tuple(var_items), options)
+
+    return native_goal(run, options_value, vars_value)
 
 
 def iftheno(condition: object, then_goal: object) -> GoalExpr:

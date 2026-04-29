@@ -40,8 +40,8 @@ ordinary logic goal expressions.
   `fd_lto(left, right)`, `fd_leqo(left, right)`, `fd_gto(left, right)`,
   `fd_geqo(left, right)`, `fd_addo(left, right, result)`,
   `fd_subo(left, right, result)`, `fd_mulo(left, right, result)`,
-  `fd_sumo(vars, total)`, `all_differento(vars)`, and `labelingo(vars)` for
-  finite-domain integer constraints
+  `fd_sumo(vars, total)`, `all_differento(vars)`, `labelingo(vars)`, and
+  `labeling_optionso(options, vars)` for finite-domain integer constraints
 - arithmetic expression constructors: `add`, `sub`, `mul`, `div`, `floordiv`, `mod`, and `neg`
 - `iso(result, expression)` for Prolog-style evaluative arithmetic
 - `numeqo(left, right)`, `numneqo(left, right)`, `lto(left, right)`, `leqo(left, right)`, `gto(left, right)`, and `geqo(left, right)`

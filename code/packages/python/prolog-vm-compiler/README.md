@@ -131,6 +131,7 @@ The package includes end-to-end stress tests for:
 - finite integer builtins such as `integer/1`, `between/3`, and `succ/2`
 - callable, natural infix, and nested additive CLP(FD) forms for finite-domain
   puzzles
+- CLP(FD) labeling options such as descending value order
 - collection predicates such as `findall/3`
 - common list predicates such as `member/2`, `append/3`, `length/2`,
   `sort/2`, `msort/2`, `nth0/3`, `nth1/3`, `nth0/4`, and `nth1/4`
