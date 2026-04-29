@@ -15,6 +15,8 @@ All notable changes to the `state-machine-tokenizer` crate will be documented in
 - Expanded the portable lexer action vocabulary with comment, doctype,
   attribute, temporary-buffer, self-closing, and return-state actions so
   future HTML lexer definitions can stay declarative without host callbacks.
+- Added portable DOCTYPE public/system identifier actions and token fields so
+  declarative HTML lexer definitions can retain legacy declaration identifiers.
 - Added a temporary-buffer conditional state-switch action for tokenizer states
   that need declarative branch decisions after scanning a keyword.
 - Expanded the built-in HTML named-character-reference table through the

@@ -87,3 +87,6 @@ documented in this file.
   and whitespace-only DOCTYPE names.
 - DOCTYPE declarations cut off by EOF after a name now emit the current name
   with force-quirks mode enabled.
+- DOCTYPE `PUBLIC` and `SYSTEM` identifier states now preserve quoted public
+  and system identifiers on emitted tokens, including force-quirks recovery for
+  missing identifiers.

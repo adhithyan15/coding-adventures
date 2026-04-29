@@ -33,7 +33,10 @@ open comment remain literal comment data and surface a recoverable
 `incorrectly-closed-comment` diagnostic while preserving non-closing `--!` text.
 DOCTYPE tokenization reports missing names and marks force-quirks mode for
 inputs such as `<!DOCTYPE>` and `<!DOCTYPE >`, and EOF recovery after a name
-also emits the current name in force-quirks mode.
+also emits the current name in force-quirks mode. Mosaic-era `PUBLIC` and
+`SYSTEM` identifiers are preserved on emitted DOCTYPE tokens, so legacy
+declarations such as `<!DOCTYPE html PUBLIC "...">` keep the information the
+future tree-construction/parser layer will need for compatibility decisions.
 The generated HTML1 machine also exposes `RCDATA`, `RAWTEXT`, `PLAINTEXT`,
 `CDATA section`, `script_data`, `script_data_escaped`, and
 `script_data_double_escaped` entry states for parser-controlled tokenizer
