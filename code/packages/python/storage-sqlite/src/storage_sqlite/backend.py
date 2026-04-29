@@ -113,6 +113,12 @@ from storage_sqlite.index_tree import DuplicateIndexKeyError, IndexTree
 from storage_sqlite.pager import Pager
 from storage_sqlite.schema import Schema, SchemaError, initialize_new_database
 
+# Name of the system table that tracks AUTOINCREMENT high-water marks per
+# table.  Created lazily on first ``CREATE TABLE ... AUTOINCREMENT``.  Schema:
+# ``CREATE TABLE sqlite_sequence (name TEXT, seq INTEGER)``.
+_SEQUENCE_TABLE: str = "sqlite_sequence"
+
+
 # ---------------------------------------------------------------------------
 # SQL column-definition helpers
 # ---------------------------------------------------------------------------
@@ -161,6 +167,9 @@ def _columns_to_sql(table: str, columns: list[ColumnDef]) -> str:
         tokens: list[str] = [col.name, col.type_name]
         if col.primary_key:
             tokens.append("PRIMARY KEY")
+            # AUTOINCREMENT may only follow PRIMARY KEY in SQLite syntax.
+            if col.autoincrement:
+                tokens.append("AUTOINCREMENT")
         # NOT NULL: emit only when not implied by PRIMARY KEY to match sqlite3's
         # output style; PRIMARY KEY already implies NOT NULL in SQLite.
         if col.not_null and not col.primary_key:
@@ -286,6 +295,7 @@ def _parse_one_column(col_sql: str) -> ColumnDef | None:
     not_null = False
     primary_key = False
     unique = False
+    autoincrement = False
     default: object = NO_DEFAULT
 
     i = 2
@@ -294,6 +304,9 @@ def _parse_one_column(col_sql: str) -> ColumnDef | None:
         if tok_upper == "PRIMARY" and i + 1 < len(tokens) and tokens[i + 1].upper() == "KEY":
             primary_key = True
             i += 2
+        elif tok_upper == "AUTOINCREMENT":
+            autoincrement = True
+            i += 1
         elif tok_upper == "NOT" and i + 1 < len(tokens) and tokens[i + 1].upper() == "NULL":
             not_null = True
             i += 2
@@ -304,7 +317,7 @@ def _parse_one_column(col_sql: str) -> ColumnDef | None:
             default = _parse_literal(tokens[i + 1])
             i += 2
         else:
-            i += 1  # skip unknown token (e.g. AUTO_INCREMENT, REFERENCES, …)
+            i += 1  # skip unknown token (e.g. REFERENCES, COLLATE, …)
 
     return ColumnDef(
         name=name,
@@ -312,6 +325,7 @@ def _parse_one_column(col_sql: str) -> ColumnDef | None:
         not_null=not_null,
         primary_key=primary_key,
         unique=unique,
+        autoincrement=autoincrement,
         default=default,
     )
 
@@ -605,15 +619,25 @@ def _find_max_rowid(tree: BTree) -> int:
     return max_rid
 
 
-def _choose_rowid(row: Row, columns: list[ColumnDef], tree: BTree) -> int:
+def _choose_rowid(
+    row: Row,
+    columns: list[ColumnDef],
+    tree: BTree,
+    *,
+    current_seq: int = 0,
+) -> int:
     """Determine the rowid to use when inserting *row*.
 
     Rules (mirroring SQLite's behaviour):
 
     1. If the table has an INTEGER PRIMARY KEY column AND the row supplies a
        non-NULL value for it, use that value as the rowid.
-    2. Otherwise (no IPK, or IPK column is absent/NULL in this row), assign
-       ``max_existing_rowid + 1``.
+    2. Otherwise (no IPK, or IPK column is absent/NULL in this row):
+       - For plain ``INTEGER PRIMARY KEY``: ``max_existing_rowid + 1``.
+       - For ``INTEGER PRIMARY KEY AUTOINCREMENT`` (caller supplies
+         *current_seq* > 0): ``max(max_existing_rowid, current_seq) + 1``.
+         This makes deleted rowids never reusable — the monotonicity
+         guarantee that AUTOINCREMENT provides over plain IPK.
     """
     for col in columns:
         if _is_ipk(col):
@@ -623,7 +647,13 @@ def _choose_rowid(row: Row, columns: list[ColumnDef], tree: BTree) -> int:
             # IPK absent or NULL → fall through to auto-assign.
             break
 
-    return _find_max_rowid(tree) + 1
+    max_rid = _find_max_rowid(tree)
+    return max(max_rid, current_seq) + 1
+
+
+def _has_autoincrement(columns: list[ColumnDef]) -> bool:
+    """Return ``True`` if any column in *columns* is declared AUTOINCREMENT."""
+    return any(c.autoincrement for c in columns)
 
 
 # ---------------------------------------------------------------------------
@@ -825,6 +855,78 @@ class SqliteFileBackend(Backend):
         """Open a B-tree for *rootpage* with the freelist attached."""
         return BTree.open(self._pager, rootpage, freelist=self._freelist)
 
+    # ── AUTOINCREMENT / sqlite_sequence helpers ───────────────────────────────
+
+    def _ensure_sequence_table(self) -> None:
+        """Create ``sqlite_sequence`` if it doesn't already exist.
+
+        Idempotent — does nothing when the table is already present.  The
+        schema matches real SQLite's: two columns, ``name TEXT`` and
+        ``seq INTEGER``.  Called on demand from :meth:`create_table` when
+        an ``AUTOINCREMENT`` column is declared.
+        """
+        if self._schema.find_table(_SEQUENCE_TABLE) is not None:
+            return
+        cols = [
+            ColumnDef(name="name", type_name="TEXT"),
+            ColumnDef(name="seq", type_name="INTEGER"),
+        ]
+        sql = _columns_to_sql(_SEQUENCE_TABLE, cols)
+        self._schema.create_table(_SEQUENCE_TABLE, sql)
+
+    def _seq_columns(self) -> list[ColumnDef]:
+        """Return the column list for the ``sqlite_sequence`` table."""
+        return [
+            ColumnDef(name="name", type_name="TEXT"),
+            ColumnDef(name="seq", type_name="INTEGER"),
+        ]
+
+    def _get_seq(self, table: str) -> int:
+        """Return the current sequence value for *table*, or 0 if absent.
+
+        Reads the ``sqlite_sequence`` row whose ``name`` matches *table*.
+        Missing table or missing row both return 0 — the caller treats 0
+        as "no rows have ever been inserted, start from 1".
+        """
+        if self._schema.find_table(_SEQUENCE_TABLE) is None:
+            return 0
+        rootpage, _ = self._require_table(_SEQUENCE_TABLE)
+        tree = self._open_tree(rootpage)
+        for _rowid, payload in tree.scan():
+            row = _decode_row(_rowid, payload, self._seq_columns())
+            if row.get("name") == table:
+                seq = row.get("seq")
+                return int(seq) if isinstance(seq, int) else 0
+        return 0
+
+    def _set_seq(self, table: str, value: int) -> None:
+        """Update or insert the ``sqlite_sequence`` row for *table*.
+
+        If a row with ``name == table`` already exists, its ``seq`` field
+        is rewritten to *value*; otherwise a new row is appended.  Bypasses
+        :meth:`insert` to avoid recursion through the AUTOINCREMENT path
+        (the sequence table is itself never an AUTOINCREMENT table).
+        """
+        rootpage, _ = self._require_table(_SEQUENCE_TABLE)
+        tree = self._open_tree(rootpage)
+        seq_cols = self._seq_columns()
+        # Update an existing row in place if one is found.
+        for rowid, payload in tree.scan():
+            row = _decode_row(rowid, payload, seq_cols)
+            if row.get("name") == table:
+                new_payload = _encode_row(
+                    rowid, {"name": table, "seq": value}, seq_cols
+                )
+                tree.update(rowid, new_payload)
+                return
+        # Otherwise insert a new row.  Use max-rowid + 1 directly — the
+        # sequence table is not itself AUTOINCREMENT.
+        new_rowid = _find_max_rowid(tree) + 1
+        new_payload = _encode_row(
+            new_rowid, {"name": table, "seq": value}, seq_cols
+        )
+        tree.insert(new_rowid, new_payload)
+
     def _open_indexes_for(
         self, table: str
     ) -> list[tuple[str, list[str], IndexTree]]:
@@ -911,13 +1013,29 @@ class SqliteFileBackend(Backend):
             if key not in known:
                 raise ColumnNotFound(table=table, column=key)
 
-        # Constraint checks.
-        _check_not_null(table, full_row, columns)
-
         tree = self._open_tree(rootpage)
 
-        # Determine the rowid and check primary-key uniqueness.
-        rowid = _choose_rowid(full_row, columns, tree)
+        # Determine the rowid.  For AUTOINCREMENT tables, the chosen rowid
+        # must be strictly greater than every rowid that has *ever* lived
+        # in the table — even ones that have since been deleted — so we
+        # consult ``sqlite_sequence`` for the high-water mark.
+        autoinc = _has_autoincrement(columns)
+        current_seq = self._get_seq(table) if autoinc else 0
+        rowid = _choose_rowid(full_row, columns, tree, current_seq=current_seq)
+
+        # Write the chosen rowid back into the IPK column so the NOT NULL
+        # check below sees the auto-assigned value, not the NULL placeholder
+        # left there by _apply_defaults.  PRIMARY KEY implies NOT NULL, so
+        # without this step every "INSERT without explicit IPK value" would
+        # fail the constraint check before the auto-assign got a chance.
+        for col in columns:
+            if _is_ipk(col):
+                full_row[col.name] = rowid
+                break
+
+        # Constraint checks (run after rowid assignment for the IPK reason
+        # above; the order doesn't matter for non-IPK columns).
+        _check_not_null(table, full_row, columns)
 
         # Pre-validate UNIQUE indexes before mutating anything: walk every
         # index on this table and reject the row if any UNIQUE index would
@@ -964,6 +1082,12 @@ class SqliteFileBackend(Backend):
         for _idx_name, idx_cols, idx_tree in indexes:
             key_vals = [full_row.get(c) for c in idx_cols]  # type: ignore[misc]
             idx_tree.insert(key_vals, rowid)
+
+        # AUTOINCREMENT bookkeeping: bump the sqlite_sequence high-water
+        # mark whenever the new rowid exceeds it.  Explicit-rowid inserts
+        # that overshoot the sequence also bump it (matches SQLite).
+        if autoinc and rowid > current_seq:
+            self._set_seq(table, rowid)
 
     def update(
         self,
@@ -1106,6 +1230,12 @@ class SqliteFileBackend(Backend):
 
         sql = _columns_to_sql(table, columns)
         self._schema.create_table(table, sql)
+
+        # Bootstrap sqlite_sequence on first use of AUTOINCREMENT — matches
+        # SQLite's lazy-creation behaviour (the table appears in `.tables`
+        # once any AUTOINCREMENT table has been declared).
+        if _has_autoincrement(columns):
+            self._ensure_sequence_table()
 
         # Auto-create UNIQUE indexes for every column declared UNIQUE or
         # non-IPK PRIMARY KEY.  The table is empty so backfill is a no-op;

@@ -79,6 +79,18 @@
       ]
     },
     {
+      "id": "doctype-keyword-eof-quirks",
+      "description": "DOCTYPE keyword cut off by EOF emits a force-quirks doctype",
+      "input": "<!DOC",
+      "tokens": [
+        "Doctype(name=null, force_quirks=true)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "eof-in-doctype"
+      ]
+    },
+    {
       "id": "doctype-after-name-eof-quirks",
       "description": "DOCTYPE after-name state cut off by EOF marks force-quirks",
       "input": "<!DOCTYPE html ",
