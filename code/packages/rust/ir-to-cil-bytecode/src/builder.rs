@@ -274,32 +274,45 @@ pub fn encode_ldc_i4(value: i32) -> Vec<u8> {
 
 /// Encode the shortest `ldloc` instruction for a local variable index.
 ///
-/// Indices 0–3 use the short 1-byte form (`ldloc.0`–`ldloc.3`), indices
-/// 4–65535 use the 2-byte `ldloc.s` form.
-///
-/// # Panics
-///
-/// Panics if `index > 65535` (the CLR limit for local variable indices).
+/// | Index range | Encoding | Size |
+/// |-------------|----------|------|
+/// | 0–3         | `ldloc.0`–`ldloc.3` | 1 byte |
+/// | 4–255       | `ldloc.s idx` | 2 bytes |
+/// | 256–65535   | `ldloc 0xFE 0x0C idx_lo idx_hi` (wide form) | 4 bytes |
 pub fn encode_ldloc(index: u16) -> Vec<u8> {
     match index {
         0 => vec![CILOpcode::LdLoc0 as u8],
         1 => vec![CILOpcode::LdLoc1 as u8],
         2 => vec![CILOpcode::LdLoc2 as u8],
         3 => vec![CILOpcode::LdLoc3 as u8],
-        i => vec![CILOpcode::LdLocS as u8, i as u8],
+        i if i <= 255 => vec![CILOpcode::LdLocS as u8, i as u8],
+        i => {
+            // Wide form: `ldloc` = 0xFE 0x0C + uint16 (little-endian)
+            let [lo, hi] = i.to_le_bytes();
+            vec![CILOpcode::PrefixFe as u8, 0x0C, lo, hi]
+        }
     }
 }
 
 /// Encode the shortest `stloc` instruction for a local variable index.
 ///
-/// Mirrors [`encode_ldloc`].
+/// | Index range | Encoding | Size |
+/// |-------------|----------|------|
+/// | 0–3         | `stloc.0`–`stloc.3` | 1 byte |
+/// | 4–255       | `stloc.s idx` | 2 bytes |
+/// | 256–65535   | `stloc 0xFE 0x0E idx_lo idx_hi` (wide form) | 4 bytes |
 pub fn encode_stloc(index: u16) -> Vec<u8> {
     match index {
         0 => vec![CILOpcode::StLoc0 as u8],
         1 => vec![CILOpcode::StLoc1 as u8],
         2 => vec![CILOpcode::StLoc2 as u8],
         3 => vec![CILOpcode::StLoc3 as u8],
-        i => vec![CILOpcode::StLocS as u8, i as u8],
+        i if i <= 255 => vec![CILOpcode::StLocS as u8, i as u8],
+        i => {
+            // Wide form: `stloc` = 0xFE 0x0E + uint16 (little-endian)
+            let [lo, hi] = i.to_le_bytes();
+            vec![CILOpcode::PrefixFe as u8, 0x0E, lo, hi]
+        }
     }
 }
 

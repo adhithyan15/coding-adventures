@@ -116,8 +116,17 @@ static HELPER_SPECS: &[(CILHelper, CILHelperSpec)] = &[
 ];
 
 /// Returns the helper spec for a given `CILHelper`.
+///
+/// Uses an exhaustive `match` so the compiler will catch any new `CILHelper`
+/// variant that hasn't been registered in `HELPER_SPECS`.
 pub fn helper_spec(h: CILHelper) -> &'static CILHelperSpec {
-    HELPER_SPECS.iter().find(|(k, _)| *k == h).map(|(_, v)| v).unwrap()
+    match h {
+        CILHelper::MemLoadByte  => &HELPER_SPECS[0].1,
+        CILHelper::MemStoreByte => &HELPER_SPECS[1].1,
+        CILHelper::LoadWord     => &HELPER_SPECS[2].1,
+        CILHelper::StoreWord    => &HELPER_SPECS[3].1,
+        CILHelper::Syscall      => &HELPER_SPECS[4].1,
+    }
 }
 
 // ===========================================================================
@@ -175,10 +184,16 @@ pub struct SequentialCILTokenProvider {
 
 impl SequentialCILTokenProvider {
     /// Build a token map for the given list of callable labels.
+    ///
+    /// Panics if the number of callable labels overflows `u32` (which would
+    /// require billions of methods — impossible in practice).
     pub fn new(callable_labels: &[&str]) -> Self {
         let mut method_map = HashMap::new();
         for (i, label) in callable_labels.iter().enumerate() {
-            method_map.insert((*label).to_string(), 0x0600_0001 + i as u32);
+            let token = 0x0600_0001u32.checked_add(
+                u32::try_from(i).expect("callable label count overflows u32")
+            ).expect("method token overflows u32");
+            method_map.insert((*label).to_string(), token);
         }
         Self { method_map }
     }
@@ -583,7 +598,10 @@ fn emit_instruction(
             let offset = plan.data_offsets.get(name)
                 .copied()
                 .ok_or_else(|| CILBackendError(format!("LOAD_ADDR: unknown data label {name}")))?;
-            b.emit_raw(encode_ldc_i4(offset as i32));
+            let offset_i32 = i32::try_from(offset).map_err(|_| {
+                CILBackendError(format!("LOAD_ADDR: data offset for '{name}' overflows i32"))
+            })?;
+            b.emit_raw(encode_ldc_i4(offset_i32));
             b.emit_raw(encode_stloc(dst as u16));
         }
 
