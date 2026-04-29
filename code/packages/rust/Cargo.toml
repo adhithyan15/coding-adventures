@@ -346,6 +346,7 @@ members = [
     "ir-to-wasm-validator",
     "intel-4004-ir-validator",
     "ir-to-intel-4004-compiler",
+    "ir-to-cil-bytecode",
     "intel-4004-assembler",
     "intel-4004-packager",
     "code-packager",
