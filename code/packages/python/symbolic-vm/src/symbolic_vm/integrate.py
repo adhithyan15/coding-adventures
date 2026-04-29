@@ -140,6 +140,7 @@ from symbolic_vm.recip_hyp_power_integral import (
     coth_power_integral,
     csch_power_integral,
     sech_power_integral,
+    tanh_power_integral,
 )
 from symbolic_vm.rothstein_trager import rothstein_trager
 from symbolic_vm.sinh_poly_integral import cosh_poly_integral, sinh_poly_integral
@@ -1186,22 +1187,24 @@ def _try_hyp_power(base: IRNode, exponent: IRNode, x: IRSymbol) -> IRNode | None
 
 
 def _try_recip_hyp_power(base: IRNode, exponent: IRNode, x: IRSymbol) -> IRNode | None:
-    """Return ``∫ sech^n(linear) dx``, ``∫ csch^n(linear) dx``, or
-    ``∫ coth^n(linear) dx``, or ``None``.
+    """Return ``∫ sech^n(linear) dx``, ``∫ csch^n(linear) dx``,
+    ``∫ coth^n(linear) dx``, ``∫ tanh^n(linear) dx``, or ``None``.
 
-    Phase 16 — reciprocal hyperbolic power reduction.
+    Phase 16/17 — hyperbolic identity power reduction.
 
     Fires when:
-    - ``base`` is ``IRApply(SECH/CSCH/COTH, (linear,))``.
+    - ``base`` is ``IRApply(SECH/CSCH/COTH/TANH, (linear,))``.
     - ``exponent`` is ``IRInteger(n)`` with ``n ≥ 2``.
     - The argument of the function is a non-constant linear expression ``ax+b``.
 
-    Returns ``None`` for non-reciprocal-hyperbolic bases or non-integer exponents.
-    Falls through for ``n < 2`` (bare n=1 case is handled in Phase 15 dispatch).
+    Returns ``None`` for other bases or non-integer exponents.
+    Falls through for ``n < 2`` (bare n=1 cases handled in Phase 13/15 dispatch).
+
+    Phase 17 adds TANH to the handled set alongside Phase 16's SECH/CSCH/COTH.
     """
     if not isinstance(base, IRApply):
         return None
-    if base.head not in {SECH, CSCH, COTH}:
+    if base.head not in {SECH, CSCH, COTH, TANH}:
         return None
     if not isinstance(exponent, IRInteger) or exponent.value < 2:
         return None
@@ -1218,6 +1221,8 @@ def _try_recip_hyp_power(base: IRNode, exponent: IRNode, x: IRSymbol) -> IRNode 
         return sech_power_integral(n, a_frac, b_frac, x)
     if base.head == CSCH:
         return csch_power_integral(n, a_frac, b_frac, x)
+    if base.head == TANH:
+        return tanh_power_integral(n, a_frac, b_frac, x)
     return coth_power_integral(n, a_frac, b_frac, x)
 
 
