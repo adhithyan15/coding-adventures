@@ -20,8 +20,8 @@ Type mapping — the output must parse as a valid SQL literal:
     True / False          → 1 / 0   (sqlite3 convention)
     int / float           → repr-style numeric literal
     str                   → single-quoted, with embedded ``'`` doubled
-    bytes / bytearray     → not supported in v1 (PEP 249 allows a driver
-                            to raise NotSupportedError for BLOB)
+    bytes / bytearray /   → ``X'<hex>'`` SQLite blob-literal form
+    memoryview              (lower-case hex; empty bytes → ``X''``)
 """
 
 from __future__ import annotations
@@ -31,7 +31,7 @@ import re
 from collections.abc import Mapping, Sequence
 from typing import Any
 
-from .errors import NotSupportedError, ProgrammingError
+from .errors import ProgrammingError
 
 # A named parameter is ``:identifier`` where identifier follows Python-ish
 # identifier rules (letter or underscore, then letters/digits/underscores).
@@ -204,5 +204,8 @@ def _to_sql_literal(value: Any) -> str:
         escaped = s.replace("\\", "\\\\").replace("'", "\\'")
         return f"'{escaped}'"
     if isinstance(value, bytes | bytearray | memoryview):
-        raise NotSupportedError("BLOB parameters are not supported in v1")
+        # SQLite blob-literal syntax: X'<hex>' (lowercase hex by convention).
+        # bytes(value) coerces bytearray and memoryview into a fresh bytes
+        # object so a hostile subclass cannot override .hex().
+        return f"X'{bytes(value).hex()}'"
     raise ProgrammingError(f"cannot bind value of type {type(value).__name__}")
