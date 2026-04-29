@@ -49,5 +49,8 @@
 - `TwigCompileError { message, line, column }` with
   `From<TwigParseError>` so callers handle a single error type at
   the public entry point.
-- 30+ unit tests verifying instruction shape, dispatch decisions,
+- `MAX_COMPILE_DEPTH = 256` cap in `compile_expr` — defence-in-depth
+  against stack overflow on hand-built ASTs (the parser already
+  caps source-paren-depth at 64 before reaching the compiler).
+- 45 unit tests verifying instruction shape, dispatch decisions,
   closure layout, recursion, and error paths.

@@ -1,12 +1,14 @@
 # twig-parser
 
-Parses a [Twig](../../specs/TW00-twig-language.md) token stream (from [`twig-lexer`](../twig-lexer)) into a typed AST. This is the second stage of the Rust Twig pipeline:
+Rust binding to [`code/grammars/twig.grammar`](../../grammars/twig.grammar) — wraps the generic [`GrammarParser`](../parser) and lifts the resulting `GrammarASTNode` tree into a typed Twig AST.
 
 ```
 Twig source --> [twig-lexer] --> tokens --> [twig-parser] --> AST --> [twig-ir-compiler] --> IIRModule
 ```
 
-## Grammar (one screen)
+Same pattern as every other Rust language frontend (`brainfuck`, `dartmouth-basic`, …) and as the Python [`twig` package](../../python/twig)'s `parser.py` + `ast_extract.py` pair.
+
+## Grammar (one screen, lives in `code/grammars/twig.grammar`)
 
 ```text
 program     = { form } ;
@@ -28,7 +30,7 @@ apply       = LPAREN expr { expr } RPAREN ;
 
 ## Typed AST
 
-The parser emits a small, exhaustive set of variants — one per semantic shape:
+The crate's `ast_extract` module walks the generic `GrammarASTNode` tree and lifts each meaningful subtree into one of these typed variants:
 
 | Type      | Used for                         |
 |-----------|----------------------------------|
@@ -44,9 +46,9 @@ The parser emits a small, exhaustive set of variants — one per semantic shape:
 | `Apply`   | `(fn arg0 arg1 ...)`             |
 | `Define`  | `(define name expr)` (top-level) |
 
-The function-sugar form `(define (f x) body+)` parses to `Define { name: "f", expr: Lambda { params: ["x"], body } }` — sugar is desugared at parse time so downstream code only ever sees the lambda shape.
+The function-sugar form `(define (f x) body+)` lowers to `Define { name: "f", expr: Lambda { params: ["x"], body } }` during extraction — downstream code only ever sees the lambda shape.  Both quote forms (`'foo` and `(quote foo)`) collapse to a single `SymLit`.
 
-Every node carries 1-indexed `line` / `column` of its source location. The IR compiler propagates these into error messages.
+Every node carries 1-indexed `line` / `column` of its source location, propagated from the underlying tokens.
 
 ## Usage
 
@@ -63,12 +65,15 @@ match &p.forms[0] {
 }
 ```
 
-## Why typed AST instead of generic `ASTNode`?
+For lower-level access:
+- `parse_to_ast(source)` returns the generic `GrammarASTNode`.
+- `create_twig_parser(source)` returns the underlying `GrammarParser`.
 
-The Python parser builds a generic `ASTNode` tree and uses a separate `ast_extract.py` pass to lift it into typed dataclasses. The Rust parser folds those passes together — recursive descent into the typed shape directly. Two reasons:
+## Stack-overflow defence
 
-1. **Exhaustive `match` everywhere downstream.** Adding a new compound form means adding a variant to `Expr`, which the type system flags in every match arm.
-2. **No `isinstance` ladders.** The IR compiler dispatches on enum discriminants (a single jump table), not chained type checks.
+The `GrammarParser` is recursive (one stack frame per matched rule).  Pathological untrusted input like `(((...))))` with deep nesting would exhaust the OS thread stack and abort the process — Rust does not catch stack overflow.
+
+`parse()` pre-scans the token stream for LPAREN depth and rejects sources whose nesting exceeds [`MAX_PAREN_DEPTH`](src/lib.rs) (64) before invoking the parser.  The AST extractor adds its own depth bound via [`MAX_AST_DEPTH`](src/ast_extract.rs) for callers that bypass `parse()` and feed in a hand-built `GrammarASTNode`.
 
 ## Tests
 
@@ -76,4 +81,4 @@ The Python parser builds a generic `ASTNode` tree and uses a separate `ast_extra
 cargo test -p twig-parser
 ```
 
-Coverage: every form, the function-sugar lowering, multi-expression bodies, position tracking, and error paths (unmatched parens, integer overflow, nested defines, empty applications).
+31 unit tests covering every form, the function-sugar lowering, multi-expression bodies, position tracking, and error/depth-cap paths.

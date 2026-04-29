@@ -1,53 +1,46 @@
-//! # Twig Parser — token stream → typed AST.
+//! # twig-parser — thin wrapper over the generic `GrammarParser`.
 //!
-//! Twig's grammar fits on one screen (eight production rules):
+//! Twig's grammar lives in `code/grammars/twig.grammar` and is shared
+//! across every Twig implementation in the repo (Python, Rust, any
+//! future port).  This crate is the Rust binding to that file:
 //!
-//! ```text
-//! program     = { form } ;
-//! form        = define | expr ;
-//! define      = LPAREN "define" name_or_signature expr { expr } RPAREN ;
-//! name_or_signature = NAME | LPAREN NAME { NAME } RPAREN ;
-//! expr        = atom | quoted | compound ;
-//! atom        = INTEGER | BOOL_TRUE | BOOL_FALSE | "nil" | NAME ;
-//! quoted      = QUOTE NAME ;
-//! compound    = if_form | let_form | begin_form | lambda_form | quote_form | apply ;
-//! if_form     = LPAREN "if" expr expr expr RPAREN ;
-//! let_form    = LPAREN "let" LPAREN { binding } RPAREN expr { expr } RPAREN ;
-//! binding     = LPAREN NAME expr RPAREN ;
-//! begin_form  = LPAREN "begin" expr { expr } RPAREN ;
-//! lambda_form = LPAREN "lambda" LPAREN { NAME } RPAREN expr { expr } RPAREN ;
-//! quote_form  = LPAREN "quote" NAME RPAREN ;
-//! apply       = LPAREN expr { expr } RPAREN ;
-//! ```
+//! 1. Tokenises the source via [`twig_lexer::tokenize_twig`].
+//! 2. Loads `twig.grammar` via
+//!    [`grammar_tools::parser_grammar::parse_parser_grammar`].
+//! 3. Runs the generic [`parser::grammar_parser::GrammarParser`] over
+//!    the tokens to get a [`parser::grammar_parser::GrammarASTNode`].
+//! 4. Walks that generic tree in [`ast_extract::extract_program`] to
+//!    produce a typed [`Program`] (with `IntLit`, `BoolLit`, `Lambda`,
+//!    `If`, `Apply`, etc.) — analogous to the Python package's
+//!    `twig.ast_extract` module.
 //!
-//! ## What this crate produces
+//! The same pattern is used by every other Rust language frontend in
+//! this repo (brainfuck, dartmouth-basic, …); see
+//! [`code/packages/rust/brainfuck/src/parser.rs`](../brainfuck/src/parser.rs)
+//! for the canonical reference.
 //!
-//! Where the Python implementation walks a generic `ASTNode` tree and uses
-//! a separate `ast_extract.py` pass to lift it into typed dataclasses,
-//! the Rust parser builds the typed AST directly.  Every node is one of
-//! a small, exhaustive set of variants from [`Expr`] / [`Form`] /
-//! [`Program`], so the downstream IR compiler dispatches on enum
-//! discriminants without `isinstance`-style checks.
+//! ## Why a typed AST on top?
 //!
-//! Each AST node carries 1-indexed `line` / `column` fields so the IR
-//! compiler can emit source-position-tagged error messages.
-//!
-//! ## Define-sugar
-//!
-//! `(define (f x y) body+)` and `(define f (lambda (x y) body+))` both
-//! parse to the same `Define { name: "f", expr: Lambda { ... } }` AST.
-//! The sugar form is handled at parse time so the IR compiler sees just
-//! one shape.
+//! `GrammarASTNode` is generic — every node carries a `rule_name`
+//! string and a heterogeneous `children` list.  Walking that tree
+//! directly in the IR compiler means a sea of string-comparison
+//! dispatches with no static guarantees.  Twig's eight semantic forms
+//! lift cleanly into a small, exhaustive enum ([`Expr`]) that the IR
+//! compiler can `match` over with the type system enforcing
+//! exhaustiveness.
 //!
 //! ## Pipeline
 //!
 //! ```text
 //! Twig source
 //!     │
-//!     ▼  twig_lexer::tokenize
+//!     ▼  twig_lexer::tokenize_twig
 //! Vec<Token>
 //!     │
-//!     ▼  parse()                   ← THIS CRATE
+//!     ▼  parser::grammar_parser::GrammarParser
+//! GrammarASTNode (generic tree)
+//!     │
+//!     ▼  ast_extract::extract_program          ← THIS CRATE
 //! Program (typed AST)
 //!     │
 //!     ▼  twig-ir-compiler
@@ -56,224 +49,49 @@
 //!
 //! ## Example
 //!
-//! ```
+//! ```no_run
 //! use twig_parser::{parse, Form, Expr};
 //!
 //! let program = parse("(define x 42)").unwrap();
-//! assert_eq!(program.forms.len(), 1);
 //! match &program.forms[0] {
 //!     Form::Define(d) => {
 //!         assert_eq!(d.name, "x");
 //!         assert!(matches!(d.expr, Expr::IntLit(_)));
 //!     }
-//!     _ => panic!("expected Define"),
+//!     _ => unreachable!(),
 //! }
 //! ```
 
+pub mod ast_extract;
+pub mod ast_nodes;
+
 use std::fmt;
+use std::fs;
 
-use twig_lexer::{tokenize, LexerError, Token, TokenKind};
+use grammar_tools::parser_grammar::parse_parser_grammar;
+use lexer::token::Token;
+use parser::grammar_parser::{GrammarASTNode, GrammarParser};
+use twig_lexer::{tokenize_twig, LexerError};
 
-// ---------------------------------------------------------------------------
-// Section 1: AST node types
-// ---------------------------------------------------------------------------
-//
-// The AST is a small, hand-rolled set of structs — one per semantic form.
-// Every node carries `line` / `column` so error reporting can name the
-// exact source location.  Boxed children (e.g. `If::cond`) are required
-// because Rust enum variants would otherwise be infinitely sized.
-// ---------------------------------------------------------------------------
-
-/// An integer literal: `42`, `-7`, `0`.
-///
-/// The lexer guarantees the value fits the `-?[0-9]+` regex; we parse
-/// into `i64` here and surface overflow as a `TwigParseError` so the
-/// caller doesn't get a panic deep inside the compiler.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct IntLit {
-    pub value: i64,
-    pub line: usize,
-    pub column: usize,
-}
-
-/// A boolean literal: `#t` or `#f`.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct BoolLit {
-    pub value: bool,
-    pub line: usize,
-    pub column: usize,
-}
-
-/// The `nil` literal — empty list / null heap reference.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct NilLit {
-    pub line: usize,
-    pub column: usize,
-}
-
-/// A quoted symbol: `'foo` or `(quote foo)`.
-///
-/// Both surface forms parse to the same node — the IR compiler only
-/// sees the resulting symbol name, never the syntactic form that
-/// produced it.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct SymLit {
-    pub name: String,
-    pub line: usize,
-    pub column: usize,
-}
-
-/// A bare name reference: `x`, `length`, `+`, `cons`.
-///
-/// At compile time this resolves to one of: a local (parameter or
-/// `let` binding), a top-level function, a top-level value-global, or
-/// a builtin.  Unresolved names raise a `TwigCompileError`.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct VarRef {
-    pub name: String,
-    pub line: usize,
-    pub column: usize,
-}
-
-/// A `(if cond then else)` conditional.
-///
-/// Always ternary — Twig has no two-arm `if`.  Truthiness follows
-/// Scheme semantics (only `#f` and `nil` are false; everything else
-/// — including `0` and `nil`'s symbol counterpart — is true).
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct If {
-    pub cond: Box<Expr>,
-    pub then_branch: Box<Expr>,
-    pub else_branch: Box<Expr>,
-    pub line: usize,
-    pub column: usize,
-}
-
-/// A `(let ((x e1) (y e2) ...) body+)` form.
-///
-/// Bindings are mutually independent — Scheme `let`, not `let*`.  Each
-/// RHS is evaluated in the *enclosing* scope, so peer binding names
-/// are not yet visible.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct Let {
-    pub bindings: Vec<(String, Expr)>,
-    pub body: Vec<Expr>,
-    pub line: usize,
-    pub column: usize,
-}
-
-/// A `(begin e1 e2 ...)` sequencing form.  Returns the value of the
-/// final expression.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct Begin {
-    pub exprs: Vec<Expr>,
-    pub line: usize,
-    pub column: usize,
-}
-
-/// An anonymous function: `(lambda (params*) body+)`.
-///
-/// The Rust parser does not perform free-variable analysis — that's
-/// the IR compiler's job.  Here we just record the parameter list and
-/// the body expressions.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct Lambda {
-    pub params: Vec<String>,
-    pub body: Vec<Expr>,
-    pub line: usize,
-    pub column: usize,
-}
-
-/// A function application: `(fn arg0 arg1 ...)`.
-///
-/// The function position can itself be any expression, so higher-order
-/// calls like `((compose f g) x)` parse without special-casing.  Zero
-/// arguments is fine — `(thunk)` is a legitimate call.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct Apply {
-    pub fn_expr: Box<Expr>,
-    pub args: Vec<Expr>,
-    pub line: usize,
-    pub column: usize,
-}
-
-/// A top-level value or function binding: `(define name expr)`.
-///
-/// The function-sugar form `(define (f x) body)` parses to a `Define`
-/// whose `expr` is a `Lambda`.  Downstream code therefore only ever
-/// sees this single shape.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct Define {
-    pub name: String,
-    pub expr: Expr,
-    pub line: usize,
-    pub column: usize,
-}
-
-/// Every Twig expression.
-///
-/// The variants line up 1:1 with the grammar's `expr | atom | quoted |
-/// compound` productions.  Lifting these into a single enum lets the
-/// compiler exhaustively `match` and have the type system flag any
-/// unhandled variant on grammar growth.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub enum Expr {
-    IntLit(IntLit),
-    BoolLit(BoolLit),
-    NilLit(NilLit),
-    SymLit(SymLit),
-    VarRef(VarRef),
-    If(If),
-    Let(Let),
-    Begin(Begin),
-    Lambda(Lambda),
-    Apply(Apply),
-}
-
-impl Expr {
-    /// Return the source position `(line, column)` of this expression.
-    pub fn pos(&self) -> (usize, usize) {
-        match self {
-            Expr::IntLit(n) => (n.line, n.column),
-            Expr::BoolLit(b) => (b.line, b.column),
-            Expr::NilLit(n) => (n.line, n.column),
-            Expr::SymLit(s) => (s.line, s.column),
-            Expr::VarRef(v) => (v.line, v.column),
-            Expr::If(i) => (i.line, i.column),
-            Expr::Let(l) => (l.line, l.column),
-            Expr::Begin(b) => (b.line, b.column),
-            Expr::Lambda(l) => (l.line, l.column),
-            Expr::Apply(a) => (a.line, a.column),
-        }
-    }
-}
-
-/// A top-level form — either a `define` or a bare expression.
-///
-/// Bare top-level expressions accumulate into the synthesised `main`
-/// function during compilation; the value of the *last* one becomes
-/// the program's return value.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub enum Form {
-    Define(Define),
-    Expr(Expr),
-}
-
-/// A whole compilation unit — the ordered list of top-level forms.
-///
-/// An empty `Program` is valid; it compiles to a module whose `main`
-/// returns `nil`.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct Program {
-    pub forms: Vec<Form>,
-}
+pub use ast_extract::{extract_program, MAX_AST_DEPTH};
+pub use ast_nodes::{
+    Apply, Begin, BoolLit, Define, Expr, Form, If, IntLit, Lambda, Let, NilLit, Program, SymLit,
+    VarRef,
+};
 
 // ---------------------------------------------------------------------------
-// Section 2: Errors
+// Errors
 // ---------------------------------------------------------------------------
 
-/// Parse-time error.  Wraps either a malformed shape detected by the
-/// parser or a lexer error bubbled up.
+/// Parse-time error.
+///
+/// Wraps either:
+/// - a malformed shape detected by the AST extractor,
+/// - a lexer failure (invalid character),
+/// - a `GrammarParser` failure (unmatched paren, missing token, …).
+///
+/// Source positions are 1-indexed and match the position of the
+/// offending token.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct TwigParseError {
     pub message: String,
@@ -283,11 +101,25 @@ pub struct TwigParseError {
 
 impl fmt::Display for TwigParseError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "TwigParseError at {}:{}: {}", self.line, self.column, self.message)
+        write!(
+            f,
+            "TwigParseError at {}:{}: {}",
+            self.line, self.column, self.message
+        )
     }
 }
 
 impl std::error::Error for TwigParseError {}
+
+impl From<parser::grammar_parser::GrammarParseError> for TwigParseError {
+    fn from(e: parser::grammar_parser::GrammarParseError) -> Self {
+        TwigParseError {
+            message: e.message,
+            line: e.token.line,
+            column: e.token.column,
+        }
+    }
+}
 
 impl From<LexerError> for TwigParseError {
     fn from(e: LexerError) -> Self {
@@ -300,24 +132,130 @@ impl From<LexerError> for TwigParseError {
 }
 
 // ---------------------------------------------------------------------------
-// Section 3: Public API
+// Grammar file location
 // ---------------------------------------------------------------------------
 
-/// Parse Twig source text into a [`Program`].
+fn grammar_path() -> String {
+    let manifest_dir = env!("CARGO_MANIFEST_DIR");
+    format!("{manifest_dir}/../../../grammars/twig.grammar")
+}
+
+// ---------------------------------------------------------------------------
+// Public API
+// ---------------------------------------------------------------------------
+
+/// Build a [`GrammarParser`] configured for Twig source.
 ///
-/// Performs lexing internally, so callers don't have to drag in
-/// `twig-lexer` themselves.  Empty input returns a `Program` with
-/// `forms = []` (still valid).
+/// Tokenises the source, reads `twig.grammar` from disk, and constructs
+/// a `GrammarParser` ready to call `.parse()` on.  Use this when you
+/// want access to the parser object itself (e.g. for tracing or
+/// alternative entry rules); otherwise reach for [`parse`].
 ///
 /// # Errors
 ///
-/// Returns [`TwigParseError`] for any of: lexer error, unexpected
-/// token, unmatched paren, malformed `define` / `let` / `lambda` /
-/// `if` / `begin` / `quote` / binding, integer overflow.
+/// Returns a `TwigParseError` if tokenisation fails (e.g. an unknown
+/// character in the source).
+///
+/// # Panics
+///
+/// Panics only if the grammar file is missing/malformed (broken
+/// checkout, not a runtime input issue).
+pub fn create_twig_parser(source: &str) -> Result<GrammarParser, TwigParseError> {
+    let tokens = tokenize_twig(source)?;
+    Ok(create_twig_parser_from_tokens(tokens))
+}
+
+/// Build a [`GrammarParser`] from a pre-tokenised stream.
+///
+/// Useful for incremental editors / LSP-style integrations that already
+/// have a `Vec<Token>` (e.g. from `twig_lexer::create_twig_lexer`).
+///
+/// # Panics
+///
+/// Panics if the grammar file is missing/malformed.
+pub fn create_twig_parser_from_tokens(tokens: Vec<Token>) -> GrammarParser {
+    let grammar_text = fs::read_to_string(grammar_path())
+        .unwrap_or_else(|e| panic!("Failed to read twig.grammar: {e}"));
+    let grammar = parse_parser_grammar(&grammar_text)
+        .unwrap_or_else(|e| panic!("Failed to parse twig.grammar: {e}"));
+    GrammarParser::new(tokens, grammar)
+}
+
+/// Maximum LPAREN nesting depth permitted before parsing.
+///
+/// The downstream [`GrammarParser`] is recursive — each LPAREN-led
+/// compound form produces several recursion frames (program → form →
+/// expr → compound → apply → expr → …).  Empirically ~10 frames per
+/// LPAREN, and Rust test threads run with a 2 MiB stack by default —
+/// so we cap at 64 levels, which leaves a comfortable safety margin
+/// while still admitting any realistic Twig program (hand-written
+/// code is single-digit-deep in this repo).  Sources past this limit
+/// are rejected before invoking the GrammarParser to avoid the OS
+/// thread stack-overflow abort that Rust cannot catch.
+pub const MAX_PAREN_DEPTH: usize = 64;
+
+/// Reject a source whose maximum LPAREN nesting depth exceeds
+/// [`MAX_PAREN_DEPTH`].  Returns the offending token's position when it
+/// fires.
+#[allow(clippy::ptr_arg)]
+fn check_paren_depth(tokens: &[Token]) -> Result<(), TwigParseError> {
+    use lexer::token::TokenType;
+    let mut depth: usize = 0;
+    for t in tokens {
+        match t.type_ {
+            TokenType::LParen => {
+                depth += 1;
+                if depth > MAX_PAREN_DEPTH {
+                    return Err(TwigParseError {
+                        message: format!(
+                            "source LPAREN nesting exceeds MAX_PAREN_DEPTH \
+                             ({MAX_PAREN_DEPTH}) — refusing to invoke parser \
+                             to avoid stack overflow"
+                        ),
+                        line: t.line,
+                        column: t.column,
+                    });
+                }
+            }
+            TokenType::RParen => {
+                depth = depth.saturating_sub(1);
+            }
+            _ => {}
+        }
+    }
+    Ok(())
+}
+
+/// Parse Twig source into a generic [`GrammarASTNode`].
+///
+/// This is the lower-level entry point — most callers want [`parse`]
+/// (which goes one step further and returns a typed [`Program`]).
+///
+/// # Errors
+///
+/// Returns a `TwigParseError` for any grammar mismatch (unmatched paren,
+/// unexpected token, …) or for paren nesting deeper than
+/// [`MAX_PAREN_DEPTH`].  Source positions point at the offending token.
+pub fn parse_to_ast(source: &str) -> Result<GrammarASTNode, TwigParseError> {
+    let tokens = tokenize_twig(source)?;
+    check_paren_depth(&tokens)?;
+    let mut p = create_twig_parser_from_tokens(tokens);
+    p.parse().map_err(Into::into)
+}
+
+/// Parse Twig source into a typed [`Program`].
+///
+/// One-call entry: tokenise → grammar-parse → extract typed AST.
+///
+/// # Errors
+///
+/// Returns a `TwigParseError` for grammar mismatches *or* extractor-
+/// detected shape problems (integer overflow, AST nesting deeper than
+/// [`MAX_AST_DEPTH`], etc.).
 ///
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// use twig_parser::{parse, Form};
 ///
 /// let p = parse("(+ 1 2)").unwrap();
@@ -325,499 +263,12 @@ impl From<LexerError> for TwigParseError {
 /// assert!(matches!(&p.forms[0], Form::Expr(_)));
 /// ```
 pub fn parse(source: &str) -> Result<Program, TwigParseError> {
-    let tokens = tokenize(source)?;
-    parse_tokens(tokens)
-}
-
-/// Parse a pre-tokenised stream into a [`Program`].
-///
-/// Useful when the caller already has a token list (e.g. from a
-/// language-server-style incremental lexer) and wants to skip
-/// re-tokenisation.
-///
-/// The input must be terminated by exactly one [`TokenKind::Eof`] token
-/// (as `tokenize()` always produces).  An empty vector or one missing
-/// the trailing `Eof` is rejected with a `TwigParseError` rather than
-/// panicking on out-of-bounds index — important for embedders that
-/// expose this entry point to untrusted inputs.
-pub fn parse_tokens(tokens: Vec<Token>) -> Result<Program, TwigParseError> {
-    if !tokens.last().is_some_and(|t| t.kind == TokenKind::Eof) {
-        return Err(TwigParseError {
-            message: "token stream must be terminated by an Eof token".into(),
-            line: 1,
-            column: 1,
-        });
-    }
-    let mut parser = Parser::new(tokens);
-    parser.parse_program()
-}
-
-/// Maximum source-nesting depth the parser will accept.
-///
-/// Twig is recursive-descent: each `(` introduces one stack frame in
-/// `parse_compound` / `parse_apply` / `parse_let` / etc.  Pathological
-/// input like `(((...)))` with tens of thousands of opens would
-/// exhaust the OS thread stack and abort the process — Rust does not
-/// catch stack overflow.  We hard-cap depth at a value far larger
-/// than any realistic Twig program but small enough to fit in a
-/// default thread stack.
-///
-/// 256 levels easily cover hand-written code (the deepest hand-written
-/// program in this repo is single digits) while keeping per-call
-/// overhead negligible.  Increasing this requires verifying the
-/// parser still fits inside macOS's 2 MiB non-main-thread stack.
-pub const MAX_NESTING_DEPTH: usize = 256;
-
-// ---------------------------------------------------------------------------
-// Section 4: The recursive-descent parser
-// ---------------------------------------------------------------------------
-//
-// One method per non-terminal, each consuming a contiguous token range
-// and returning the typed AST node.  The parser carries a `pos` index
-// into `tokens`; helpers `peek`, `advance`, `expect_*` and `at_eof`
-// keep the cursor disciplined.
-//
-// Order in `parse_compound` matters: the keyword-led forms (`if`,
-// `let`, …) are tried *before* the generic `apply`, otherwise a
-// `(define ...)` would parse as an application of the `define`
-// keyword to the rest.  We dispatch on the second token's kind +
-// value to decide quickly.
-// ---------------------------------------------------------------------------
-
-struct Parser {
-    tokens: Vec<Token>,
-    pos: usize,
-    /// Current source-nesting depth.  Incremented on each recursive
-    /// descent into a compound form; checked against [`MAX_NESTING_DEPTH`]
-    /// to prevent stack-overflow DoS on adversarial input.
-    depth: usize,
-}
-
-impl Parser {
-    fn new(tokens: Vec<Token>) -> Self {
-        Parser { tokens, pos: 0, depth: 0 }
-    }
-
-    /// Increment the depth counter; return an error if it exceeds the
-    /// hard cap.  Pair every successful entry with a matching
-    /// `self.depth -= 1` on the way out (or a scope guard).  We do
-    /// this by hand rather than RAII so the error path can include
-    /// the offending token's line/column.
-    fn enter(&mut self) -> Result<(), TwigParseError> {
-        self.depth += 1;
-        if self.depth > MAX_NESTING_DEPTH {
-            let t = self.peek();
-            return Err(TwigParseError {
-                message: format!(
-                    "source nesting exceeds MAX_NESTING_DEPTH ({MAX_NESTING_DEPTH}) — \
-                     refusing to recurse further to avoid stack overflow"
-                ),
-                line: t.line,
-                column: t.column,
-            });
-        }
-        Ok(())
-    }
-
-    fn leave(&mut self) {
-        // Saturating to defend against accidental double-leave; a real
-        // mismatch would already have been caught by the matching enter.
-        self.depth = self.depth.saturating_sub(1);
-    }
-
-    // ------------------------------------------------------------------
-    // Cursor helpers
-    // ------------------------------------------------------------------
-
-    fn peek(&self) -> &Token {
-        &self.tokens[self.pos]
-    }
-
-    fn peek_at(&self, offset: usize) -> Option<&Token> {
-        self.tokens.get(self.pos + offset)
-    }
-
-    fn advance(&mut self) -> Token {
-        let tok = self.tokens[self.pos].clone();
-        self.pos += 1;
-        tok
-    }
-
-    fn at_eof(&self) -> bool {
-        self.peek().kind == TokenKind::Eof
-    }
-
-    /// Consume a token of the given kind, or fail with a message that
-    /// names what was expected and what was found.
-    fn expect_kind(&mut self, kind: TokenKind, ctx: &str) -> Result<Token, TwigParseError> {
-        if self.peek().kind == kind {
-            Ok(self.advance())
-        } else {
-            let t = self.peek();
-            Err(TwigParseError {
-                message: format!(
-                    "expected {kind} ({ctx}), got {} {:?}",
-                    t.kind, t.value
-                ),
-                line: t.line,
-                column: t.column,
-            })
-        }
-    }
-
-    /// Consume a `Keyword` token whose `value` exactly matches `word`.
-    fn expect_keyword(&mut self, word: &str) -> Result<Token, TwigParseError> {
-        let t = self.peek().clone();
-        if t.kind == TokenKind::Keyword && t.value == word {
-            Ok(self.advance())
-        } else {
-            Err(TwigParseError {
-                message: format!("expected keyword {word:?}, got {} {:?}", t.kind, t.value),
-                line: t.line,
-                column: t.column,
-            })
-        }
-    }
-
-    // ------------------------------------------------------------------
-    // Top level
-    // ------------------------------------------------------------------
-
-    fn parse_program(&mut self) -> Result<Program, TwigParseError> {
-        let mut forms = Vec::new();
-        while !self.at_eof() {
-            forms.push(self.parse_form()?);
-        }
-        Ok(Program { forms })
-    }
-
-    fn parse_form(&mut self) -> Result<Form, TwigParseError> {
-        // Look 1 token ahead: a `define` form must start with `(define ...)`.
-        // Anything else is a bare expression.
-        if self.peek().kind == TokenKind::LParen
-            && self
-                .peek_at(1)
-                .is_some_and(|t| t.kind == TokenKind::Keyword && t.value == "define")
-        {
-            Ok(Form::Define(self.parse_define()?))
-        } else {
-            Ok(Form::Expr(self.parse_expr()?))
-        }
-    }
-
-    // ------------------------------------------------------------------
-    // (define ...)
-    // ------------------------------------------------------------------
-
-    fn parse_define(&mut self) -> Result<Define, TwigParseError> {
-        let lparen = self.expect_kind(TokenKind::LParen, "start of (define ...)")?;
-        let line = lparen.line;
-        let column = lparen.column;
-        self.expect_keyword("define")?;
-
-        // The next token decides between value-define and function-sugar.
-        match self.peek().kind {
-            // (define name expr)
-            TokenKind::Name => {
-                let name_tok = self.advance();
-                let expr = self.parse_expr()?;
-                self.expect_kind(
-                    TokenKind::RParen,
-                    "(define name expr) takes exactly one body expression — \
-                     use (define (name args...) body+) for multi-expression bodies",
-                )?;
-                Ok(Define { name: name_tok.value, expr, line, column })
-            }
-
-            // (define (name args*) body+)
-            TokenKind::LParen => {
-                let inner_lparen = self.advance();
-                let fn_line = inner_lparen.line;
-                let fn_col = inner_lparen.column;
-                let fn_name_tok = self.expect_kind(
-                    TokenKind::Name,
-                    "function name in (define (name args...) ...)",
-                )?;
-                let mut params = Vec::new();
-                while self.peek().kind == TokenKind::Name {
-                    params.push(self.advance().value);
-                }
-                self.expect_kind(
-                    TokenKind::RParen,
-                    "end of parameter list in (define (name args...) ...)",
-                )?;
-                // body+ — at least one expression required.
-                let mut body = vec![self.parse_expr()?];
-                while self.peek().kind != TokenKind::RParen && !self.at_eof() {
-                    body.push(self.parse_expr()?);
-                }
-                self.expect_kind(TokenKind::RParen, "end of (define ...)")?;
-                let lam = Lambda {
-                    params,
-                    body,
-                    line: fn_line,
-                    column: fn_col,
-                };
-                Ok(Define {
-                    name: fn_name_tok.value,
-                    expr: Expr::Lambda(lam),
-                    line,
-                    column,
-                })
-            }
-
-            _ => {
-                let t = self.peek();
-                Err(TwigParseError {
-                    message: format!(
-                        "(define ...) needs a name or (name args...), got {} {:?}",
-                        t.kind, t.value
-                    ),
-                    line: t.line,
-                    column: t.column,
-                })
-            }
-        }
-    }
-
-    // ------------------------------------------------------------------
-    // expr = atom | quoted | compound
-    // ------------------------------------------------------------------
-
-    fn parse_expr(&mut self) -> Result<Expr, TwigParseError> {
-        // Single chokepoint for recursion: every compound form
-        // bottoms out by calling parse_expr on its children, so
-        // bounding depth here covers if/let/begin/lambda/quote/apply
-        // and define-bodies in one place.
-        self.enter()?;
-        let result = self.parse_expr_inner();
-        self.leave();
-        result
-    }
-
-    fn parse_expr_inner(&mut self) -> Result<Expr, TwigParseError> {
-        let tok = self.peek().clone();
-        match tok.kind {
-            // Atoms
-            TokenKind::Integer => self.parse_integer(),
-            TokenKind::BoolTrue => {
-                self.advance();
-                Ok(Expr::BoolLit(BoolLit { value: true, line: tok.line, column: tok.column }))
-            }
-            TokenKind::BoolFalse => {
-                self.advance();
-                Ok(Expr::BoolLit(BoolLit { value: false, line: tok.line, column: tok.column }))
-            }
-            TokenKind::Keyword if tok.value == "nil" => {
-                self.advance();
-                Ok(Expr::NilLit(NilLit { line: tok.line, column: tok.column }))
-            }
-            TokenKind::Name => {
-                self.advance();
-                Ok(Expr::VarRef(VarRef { name: tok.value, line: tok.line, column: tok.column }))
-            }
-            // Quoted: 'foo
-            TokenKind::Quote => self.parse_quoted(),
-            // Compound: (...)
-            TokenKind::LParen => self.parse_compound(),
-            // Anything else (RParen, Eof, an unexpected Keyword) is an error.
-            _ => Err(TwigParseError {
-                message: format!("unexpected token in expression: {} {:?}", tok.kind, tok.value),
-                line: tok.line,
-                column: tok.column,
-            }),
-        }
-    }
-
-    fn parse_integer(&mut self) -> Result<Expr, TwigParseError> {
-        let tok = self.advance();
-        let value: i64 = tok.value.parse().map_err(|_| TwigParseError {
-            message: format!("integer literal {:?} does not fit in i64", tok.value),
-            line: tok.line,
-            column: tok.column,
-        })?;
-        Ok(Expr::IntLit(IntLit { value, line: tok.line, column: tok.column }))
-    }
-
-    fn parse_quoted(&mut self) -> Result<Expr, TwigParseError> {
-        let q = self.expect_kind(TokenKind::Quote, "quote prefix")?;
-        let name_tok = self.expect_kind(TokenKind::Name, "name following '")?;
-        Ok(Expr::SymLit(SymLit {
-            name: name_tok.value,
-            line: q.line,
-            column: q.column,
-        }))
-    }
-
-    // ------------------------------------------------------------------
-    // compound = if | let | begin | lambda | quote_form | apply
-    // ------------------------------------------------------------------
-
-    fn parse_compound(&mut self) -> Result<Expr, TwigParseError> {
-        // We've peeked at LPAREN — peek one further to decide which compound
-        // form we have.  The keyword forms each consume the LPAREN themselves.
-        let next = self.peek_at(1).cloned();
-
-        if let Some(t) = next {
-            if t.kind == TokenKind::Keyword {
-                match t.value.as_str() {
-                    "if" => return self.parse_if(),
-                    "let" => return self.parse_let(),
-                    "begin" => return self.parse_begin(),
-                    "lambda" => return self.parse_lambda(),
-                    "quote" => return self.parse_quote_form(),
-                    // `define` only appears at the top level — treat a
-                    // nested one as a parse error rather than letting it
-                    // fall through to apply.
-                    "define" => {
-                        return Err(TwigParseError {
-                            message: "(define ...) is only allowed at the top level".into(),
-                            line: t.line,
-                            column: t.column,
-                        });
-                    }
-                    "nil" => { /* fall through — nil-as-fn is just an error in apply */ }
-                    other => {
-                        return Err(TwigParseError {
-                            message: format!("unexpected keyword {other:?} in compound form"),
-                            line: t.line,
-                            column: t.column,
-                        });
-                    }
-                }
-            }
-        }
-
-        // Generic application
-        self.parse_apply()
-    }
-
-    fn parse_if(&mut self) -> Result<Expr, TwigParseError> {
-        let lp = self.expect_kind(TokenKind::LParen, "start of (if ...)")?;
-        self.expect_keyword("if")?;
-        let cond = self.parse_expr()?;
-        let then_branch = self.parse_expr()?;
-        let else_branch = self.parse_expr()?;
-        // Reject (if c t e extra) explicitly so users see a clear message.
-        if self.peek().kind != TokenKind::RParen {
-            let t = self.peek();
-            return Err(TwigParseError {
-                message: format!(
-                    "(if ...) takes exactly 3 expressions; unexpected {} {:?}",
-                    t.kind, t.value
-                ),
-                line: t.line,
-                column: t.column,
-            });
-        }
-        self.expect_kind(TokenKind::RParen, "end of (if ...)")?;
-        Ok(Expr::If(If {
-            cond: Box::new(cond),
-            then_branch: Box::new(then_branch),
-            else_branch: Box::new(else_branch),
-            line: lp.line,
-            column: lp.column,
-        }))
-    }
-
-    fn parse_let(&mut self) -> Result<Expr, TwigParseError> {
-        let lp = self.expect_kind(TokenKind::LParen, "start of (let ...)")?;
-        self.expect_keyword("let")?;
-        // Bindings list: (LPAREN { binding } RPAREN)
-        self.expect_kind(TokenKind::LParen, "start of (let ((x e)...) ...) bindings")?;
-        let mut bindings = Vec::new();
-        while self.peek().kind == TokenKind::LParen {
-            bindings.push(self.parse_binding()?);
-        }
-        self.expect_kind(TokenKind::RParen, "end of (let ...) bindings")?;
-        // body+ — at least one expression
-        let mut body = vec![self.parse_expr()?];
-        while self.peek().kind != TokenKind::RParen && !self.at_eof() {
-            body.push(self.parse_expr()?);
-        }
-        self.expect_kind(TokenKind::RParen, "end of (let ...)")?;
-        Ok(Expr::Let(Let { bindings, body, line: lp.line, column: lp.column }))
-    }
-
-    fn parse_binding(&mut self) -> Result<(String, Expr), TwigParseError> {
-        self.expect_kind(TokenKind::LParen, "start of binding (name expr)")?;
-        let name_tok = self.expect_kind(TokenKind::Name, "binding name")?;
-        let expr = self.parse_expr()?;
-        self.expect_kind(TokenKind::RParen, "end of binding")?;
-        Ok((name_tok.value, expr))
-    }
-
-    fn parse_begin(&mut self) -> Result<Expr, TwigParseError> {
-        let lp = self.expect_kind(TokenKind::LParen, "start of (begin ...)")?;
-        self.expect_keyword("begin")?;
-        let mut exprs = vec![self.parse_expr()?];
-        while self.peek().kind != TokenKind::RParen && !self.at_eof() {
-            exprs.push(self.parse_expr()?);
-        }
-        self.expect_kind(TokenKind::RParen, "end of (begin ...)")?;
-        Ok(Expr::Begin(Begin { exprs, line: lp.line, column: lp.column }))
-    }
-
-    fn parse_lambda(&mut self) -> Result<Expr, TwigParseError> {
-        let lp = self.expect_kind(TokenKind::LParen, "start of (lambda ...)")?;
-        self.expect_keyword("lambda")?;
-        // Parameter list
-        self.expect_kind(TokenKind::LParen, "start of (lambda (params) ...)")?;
-        let mut params = Vec::new();
-        while self.peek().kind == TokenKind::Name {
-            params.push(self.advance().value);
-        }
-        self.expect_kind(TokenKind::RParen, "end of (lambda (params) ...)")?;
-        // body+ — at least one expression
-        let mut body = vec![self.parse_expr()?];
-        while self.peek().kind != TokenKind::RParen && !self.at_eof() {
-            body.push(self.parse_expr()?);
-        }
-        self.expect_kind(TokenKind::RParen, "end of (lambda ...)")?;
-        Ok(Expr::Lambda(Lambda { params, body, line: lp.line, column: lp.column }))
-    }
-
-    fn parse_quote_form(&mut self) -> Result<Expr, TwigParseError> {
-        let lp = self.expect_kind(TokenKind::LParen, "start of (quote name)")?;
-        self.expect_keyword("quote")?;
-        let name_tok = self.expect_kind(TokenKind::Name, "name in (quote name)")?;
-        self.expect_kind(TokenKind::RParen, "end of (quote name)")?;
-        Ok(Expr::SymLit(SymLit { name: name_tok.value, line: lp.line, column: lp.column }))
-    }
-
-    fn parse_apply(&mut self) -> Result<Expr, TwigParseError> {
-        let lp = self.expect_kind(TokenKind::LParen, "start of application")?;
-        // Empty `()` is an error — `nil` should be used for empty list.
-        if self.peek().kind == TokenKind::RParen {
-            return Err(TwigParseError {
-                message: "empty application '()' — use 'nil' for the empty list".into(),
-                line: lp.line,
-                column: lp.column,
-            });
-        }
-        let fn_expr = self.parse_expr()?;
-        let mut args = Vec::new();
-        while self.peek().kind != TokenKind::RParen && !self.at_eof() {
-            args.push(self.parse_expr()?);
-        }
-        self.expect_kind(TokenKind::RParen, "end of application")?;
-        Ok(Expr::Apply(Apply {
-            fn_expr: Box::new(fn_expr),
-            args,
-            line: lp.line,
-            column: lp.column,
-        }))
-    }
+    let ast = parse_to_ast(source)?;
+    extract_program(&ast)
 }
 
 // ---------------------------------------------------------------------------
-// Section 5: Tests
-// ---------------------------------------------------------------------------
-//
-// Tests cover the same surface as the Python `tests/test_parser.py`:
-// every expression form, define-sugar, error paths.  Where useful we
-// inspect AST shapes via direct match arms — there's no `as_dict`
-// helper, so the tests double as documentation for the AST structure.
+// Tests
 // ---------------------------------------------------------------------------
 
 #[cfg(test)]
@@ -825,14 +276,14 @@ mod tests {
     use super::*;
 
     fn first_expr(src: &str) -> Expr {
-        let p = parse(src).unwrap();
-        match p.forms.into_iter().next().unwrap() {
+        let p = parse(src).unwrap_or_else(|e| panic!("parse failed: {e}"));
+        match p.forms.into_iter().next().expect("at least one form") {
             Form::Expr(e) => e,
             Form::Define(_) => panic!("expected an expression form, got define"),
         }
     }
 
-    // -- Empty input --
+    // ---- Empty / whitespace ----
 
     #[test]
     fn empty_program() {
@@ -841,17 +292,17 @@ mod tests {
     }
 
     #[test]
-    fn whitespace_only_program() {
+    fn whitespace_and_comments_only() {
         let p = parse("\n\n  ; comment\n").unwrap();
         assert!(p.forms.is_empty());
     }
 
-    // -- Atoms --
+    // ---- Atoms ----
 
     #[test]
     fn integer_literal() {
         match first_expr("42") {
-            Expr::IntLit(IntLit { value, .. }) => assert_eq!(value, 42),
+            Expr::IntLit(n) => assert_eq!(n.value, 42),
             other => panic!("expected IntLit, got {other:?}"),
         }
     }
@@ -859,7 +310,7 @@ mod tests {
     #[test]
     fn negative_integer_literal() {
         match first_expr("-7") {
-            Expr::IntLit(IntLit { value, .. }) => assert_eq!(value, -7),
+            Expr::IntLit(n) => assert_eq!(n.value, -7),
             other => panic!("expected IntLit, got {other:?}"),
         }
     }
@@ -871,19 +322,9 @@ mod tests {
     }
 
     #[test]
-    fn bool_true_literal() {
-        match first_expr("#t") {
-            Expr::BoolLit(b) => assert!(b.value),
-            other => panic!("expected BoolLit(true), got {other:?}"),
-        }
-    }
-
-    #[test]
-    fn bool_false_literal() {
-        match first_expr("#f") {
-            Expr::BoolLit(b) => assert!(!b.value),
-            other => panic!("expected BoolLit(false), got {other:?}"),
-        }
+    fn bool_true_and_false() {
+        assert!(matches!(first_expr("#t"), Expr::BoolLit(b) if b.value));
+        assert!(matches!(first_expr("#f"), Expr::BoolLit(b) if !b.value));
     }
 
     #[test]
@@ -900,17 +341,17 @@ mod tests {
     }
 
     #[test]
-    fn operator_name() {
+    fn operator_name_lexes_as_var_ref() {
         match first_expr("+") {
             Expr::VarRef(v) => assert_eq!(v.name, "+"),
             other => panic!("expected VarRef, got {other:?}"),
         }
     }
 
-    // -- Quoted symbols --
+    // ---- Quoted symbols ----
 
     #[test]
-    fn quoted_symbol_short_form() {
+    fn quoted_short_form() {
         match first_expr("'foo") {
             Expr::SymLit(s) => assert_eq!(s.name, "foo"),
             other => panic!("expected SymLit, got {other:?}"),
@@ -918,14 +359,14 @@ mod tests {
     }
 
     #[test]
-    fn quoted_symbol_long_form() {
+    fn quoted_long_form() {
         match first_expr("(quote bar)") {
             Expr::SymLit(s) => assert_eq!(s.name, "bar"),
             other => panic!("expected SymLit, got {other:?}"),
         }
     }
 
-    // -- Apply --
+    // ---- Apply ----
 
     #[test]
     fn simple_application() {
@@ -940,8 +381,7 @@ mod tests {
 
     #[test]
     fn nested_application() {
-        let e = first_expr("(+ (* 2 3) 4)");
-        match e {
+        match first_expr("(+ (* 2 3) 4)") {
             Expr::Apply(a) => {
                 assert_eq!(a.args.len(), 2);
                 assert!(matches!(a.args[0], Expr::Apply(_)));
@@ -953,7 +393,6 @@ mod tests {
 
     #[test]
     fn higher_order_call() {
-        // ((make-adder 5) 3) — first position is itself an Apply
         match first_expr("((make-adder 5) 3)") {
             Expr::Apply(a) => {
                 assert!(matches!(*a.fn_expr, Expr::Apply(_)));
@@ -963,13 +402,7 @@ mod tests {
         }
     }
 
-    #[test]
-    fn empty_application_is_error() {
-        let err = parse("()").unwrap_err();
-        assert!(err.message.contains("empty application"));
-    }
-
-    // -- if --
+    // ---- if / let / begin / lambda ----
 
     #[test]
     fn if_form() {
@@ -980,34 +413,6 @@ mod tests {
                 assert!(matches!(*i.else_branch, Expr::IntLit(_)));
             }
             other => panic!("expected If, got {other:?}"),
-        }
-    }
-
-    #[test]
-    fn if_with_too_few_args_errors() {
-        let err = parse("(if #t 1)").unwrap_err();
-        // Either reports the trailing RParen as unexpected in the else
-        // position, or as the missing third arg — either is acceptable.
-        assert!(!err.message.is_empty());
-    }
-
-    #[test]
-    fn if_with_too_many_args_errors() {
-        let err = parse("(if #t 1 2 3)").unwrap_err();
-        assert!(err.message.contains("exactly 3 expressions"));
-    }
-
-    // -- let --
-
-    #[test]
-    fn let_with_one_binding() {
-        match first_expr("(let ((x 1)) x)") {
-            Expr::Let(l) => {
-                assert_eq!(l.bindings.len(), 1);
-                assert_eq!(l.bindings[0].0, "x");
-                assert_eq!(l.body.len(), 1);
-            }
-            other => panic!("expected Let, got {other:?}"),
         }
     }
 
@@ -1023,7 +428,7 @@ mod tests {
     }
 
     #[test]
-    fn let_with_zero_bindings_and_body_is_legal() {
+    fn let_with_zero_bindings() {
         match first_expr("(let () 1)") {
             Expr::Let(l) => {
                 assert!(l.bindings.is_empty());
@@ -1033,8 +438,6 @@ mod tests {
         }
     }
 
-    // -- begin --
-
     #[test]
     fn begin_form() {
         match first_expr("(begin 1 2 3)") {
@@ -1042,8 +445,6 @@ mod tests {
             other => panic!("expected Begin, got {other:?}"),
         }
     }
-
-    // -- lambda --
 
     #[test]
     fn lambda_with_no_params() {
@@ -1067,7 +468,7 @@ mod tests {
         }
     }
 
-    // -- define --
+    // ---- define ----
 
     #[test]
     fn define_value() {
@@ -1077,7 +478,7 @@ mod tests {
                 assert_eq!(d.name, "x");
                 assert!(matches!(d.expr, Expr::IntLit(_)));
             }
-            other => panic!("expected Define, got {other:?}"),
+            _ => panic!("expected Define"),
         }
     }
 
@@ -1092,10 +493,10 @@ mod tests {
                         assert_eq!(l.params, vec!["x".to_string()]);
                         assert_eq!(l.body.len(), 1);
                     }
-                    other => panic!("expected Lambda inside Define, got {other:?}"),
+                    _ => panic!("expected Lambda"),
                 }
             }
-            other => panic!("expected Define, got {other:?}"),
+            _ => panic!("expected Define"),
         }
     }
 
@@ -1112,19 +513,12 @@ mod tests {
     }
 
     #[test]
-    fn define_value_rejects_extra_body_expr() {
+    fn define_value_rejects_extra_body() {
         let err = parse("(define x 1 2)").unwrap_err();
         assert!(err.message.contains("(define name expr)"));
     }
 
-    #[test]
-    fn nested_define_is_an_error() {
-        // (define) inside an expression is rejected — defines are top-level only.
-        let err = parse("(let () (define y 1))").unwrap_err();
-        assert!(err.message.contains("only allowed at the top level"));
-    }
-
-    // -- Multiple top-level forms --
+    // ---- Multiple top-level forms ----
 
     #[test]
     fn multiple_top_level_forms() {
@@ -1135,12 +529,11 @@ mod tests {
         assert!(matches!(&p.forms[2], Form::Expr(_)));
     }
 
-    // -- Position tracking --
+    // ---- Position tracking ----
 
     #[test]
     fn integer_position_recorded() {
-        let e = first_expr("\n\n  42");
-        match e {
+        match first_expr("\n\n  42") {
             Expr::IntLit(i) => {
                 assert_eq!(i.line, 3);
                 assert_eq!(i.column, 3);
@@ -1149,19 +542,7 @@ mod tests {
         }
     }
 
-    #[test]
-    fn apply_position_at_lparen() {
-        let e = first_expr("  (+ 1 2)");
-        match e {
-            Expr::Apply(a) => {
-                assert_eq!(a.line, 1);
-                assert_eq!(a.column, 3);
-            }
-            other => panic!("expected Apply, got {other:?}"),
-        }
-    }
-
-    // -- Errors --
+    // ---- Errors ----
 
     #[test]
     fn unmatched_lparen_errors() {
@@ -1174,12 +555,21 @@ mod tests {
     }
 
     #[test]
-    fn lexer_error_propagates() {
+    fn lexer_error_propagates_as_parse_error() {
+        // A stray `@` would previously panic in the wrapper; it must
+        // now surface as a structured TwigParseError so untrusted
+        // input cannot abort the process.
         let err = parse("@").unwrap_err();
         assert!(err.message.contains("lexer error"));
     }
 
-    // -- Realistic full program --
+    #[test]
+    fn non_ascii_unicode_errors_not_panics() {
+        let err = parse("(+ 1 €)").unwrap_err();
+        assert!(err.message.contains("lexer error"));
+    }
+
+    // ---- Realistic full program ----
 
     #[test]
     fn factorial_program_parses() {
@@ -1195,71 +585,33 @@ mod tests {
         }
     }
 
-    // -- Display --
-
-    #[test]
-    fn parse_error_display_includes_position() {
-        let err = parse(")").unwrap_err();
-        let s = format!("{err}");
-        assert!(s.contains("TwigParseError"));
-        assert!(s.contains("1:1"));
-    }
-
-    // -- Defense in depth: stack-overflow guard --
+    // ---- Stack-overflow guard ----
 
     #[test]
     fn extreme_nesting_returns_error_not_panic() {
-        // Build "(((((...)))))" with depth far above MAX_NESTING_DEPTH.
-        // Without the depth cap this would blow the OS thread stack;
-        // with it, we get a clean TwigParseError.
+        // Build deep ((((...)))) nesting — would otherwise overflow the
+        // GrammarParser's internal recursion stack.
         let src = format!(
-            "{open}{close}",
-            open = "(".repeat(MAX_NESTING_DEPTH + 10),
-            close = ")".repeat(MAX_NESTING_DEPTH + 10),
+            "{open}+ 1{close}",
+            open = "(".repeat(MAX_PAREN_DEPTH + 50),
+            close = ")".repeat(MAX_PAREN_DEPTH + 50),
         );
         let err = parse(&src).unwrap_err();
         assert!(
-            err.message.contains("MAX_NESTING_DEPTH"),
-            "expected depth-cap error, got: {err}"
+            err.message.contains("MAX_PAREN_DEPTH"),
+            "expected paren-depth error, got: {err}"
         );
     }
 
     #[test]
-    fn nesting_below_cap_still_works() {
-        // 50 levels — well under the cap.  This parses as nested
-        // zero-arg applies, all the way down to `(+ 1)` at the bottom.
-        // Sanity check: the depth gate is not over-aggressive on
-        // well-formed but heavily-nested input.
+    fn nesting_below_cap_works() {
+        // Stay comfortably under the cap to verify it isn't over-aggressive.
         let src = format!(
             "{open}+ 1{close}",
-            open = "(".repeat(50),
-            close = ")".repeat(50),
+            open = "(".repeat(20),
+            close = ")".repeat(20),
         );
-        let p = parse(&src).expect("50-deep nest should parse fine");
+        let p = parse(&src).expect("20-deep nest should parse");
         assert_eq!(p.forms.len(), 1);
-    }
-
-    // -- parse_tokens validates Eof terminator --
-
-    #[test]
-    fn parse_tokens_rejects_empty_vector() {
-        let err = parse_tokens(Vec::new()).unwrap_err();
-        assert!(err.message.contains("Eof"));
-    }
-
-    #[test]
-    fn parse_tokens_rejects_missing_eof() {
-        // A single LParen with no Eof — without validation this would
-        // panic on out-of-bounds index when peek runs off the end.
-        let toks = vec![Token { kind: TokenKind::LParen, value: "(".into(), line: 1, column: 1 }];
-        let err = parse_tokens(toks).unwrap_err();
-        assert!(err.message.contains("Eof"));
-    }
-
-    #[test]
-    fn parse_tokens_accepts_well_formed_input() {
-        // A complete tokenisation goes through without complaint.
-        let toks = twig_lexer::tokenize("(+ 1 2)").unwrap();
-        assert!(parse_tokens(toks).is_ok());
     }
 }

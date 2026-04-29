@@ -5,27 +5,38 @@
 ### Added
 
 - Initial Rust implementation of the Twig parser (TW00).
-- Recursive-descent parser with one method per grammar non-terminal.
+- Thin wrapper around the generic [`parser::grammar_parser::GrammarParser`](../parser),
+  driven by `code/grammars/twig.grammar` — the canonical Twig parser
+  grammar shared with the Python implementation.
+- Public entries:
+  - `parse(source) -> Result<Program, TwigParseError>` — lex + grammar-parse
+    + extract typed AST in one call.
+  - `parse_to_ast(source) -> Result<GrammarASTNode, TwigParseError>` —
+    stop at the generic AST tree.
+  - `create_twig_parser(source) -> GrammarParser` — for callers that
+    want the parser object (tracing, alternative entry rules).
+  - `create_twig_parser_from_tokens(tokens) -> GrammarParser` — pre-tokenised
+    input for LSP-style flows.
 - Typed AST: `Program`, `Form`, `Define`, `Expr` (with `IntLit`,
   `BoolLit`, `NilLit`, `SymLit`, `VarRef`, `If`, `Let`, `Begin`,
   `Lambda`, `Apply` variants).
-- `parse(source)` — lex + parse Twig source in one call.
-- `parse_tokens(tokens)` — parse a pre-tokenised stream.
-- Define-sugar lowering at parse time: `(define (f x) body+)` →
+- `ast_extract` module walks the generic `GrammarASTNode` tree → typed
+  AST.  Mirrors the Python package's `ast_extract.py`.
+- Define-sugar lowering at extraction time: `(define (f x) body+)` →
   `Define { name: "f", expr: Lambda { params: ["x"], body } }`.
 - Both quote forms (`'foo` and `(quote foo)`) collapse to a single
-  `SymLit { name: "foo" }` AST node.
+  `SymLit { name: "foo" }`.
 - Source-position tracking on every AST node (1-indexed `line` /
-  `column`), inherited from `twig-lexer` tokens.
-- `TwigParseError { message, line, column }` with `From<LexerError>`
-  conversion so lexer errors propagate transparently.
-- Strict shape validation: `(if ...)` requires exactly 3 expressions,
-  `(define name expr)` requires exactly one body, `(let ((..)) body+)`
-  / `(begin body+)` / `(lambda () body+)` all require at least one
-  body expression, empty `()` is a hard error.
-- Nested `(define ...)` is rejected at parse time with a clear message
-  ("only allowed at the top level") so users don't get a confusing
-  compile-time error later.
-- 30 unit tests covering atoms, quotes, applies, `if` / `let` /
-  `begin` / `lambda` / `define`, sugar lowering, position tracking,
-  and error paths.
+  `column`), propagated from the underlying tokens.
+- `TwigParseError { message, line, column }` with
+  `From<GrammarParseError>` so grammar errors propagate transparently.
+- **Stack-overflow defence** — `MAX_PAREN_DEPTH = 64` cap pre-scans
+  the token stream and rejects deeply-nested untrusted input before
+  invoking the recursive `GrammarParser`.  Without this cap a
+  pathological source like `(((...)))` with thousands of opens would
+  abort the process via OS thread stack-overflow (Rust does not catch
+  stack overflow).
+- `MAX_AST_DEPTH = 256` cap in the extractor bounds recursion when
+  callers bypass `parse()` and feed in a hand-built AST.
+- 31 unit tests covering every form, sugar lowering, position
+  tracking, depth cap, and error paths.

@@ -2,6 +2,8 @@
 name = "twig-lexer"
 version = "0.1.0"
 edition = "2021"
-description = "Twig (Lisp-precursor) lexer — tokenises source into parens, integers, booleans, quotes, keywords, and names"
+description = "Twig (Lisp-precursor) lexer — thin wrapper over GrammarLexer driven by code/grammars/twig.tokens"
 
 [dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer         = { path = "../lexer" }

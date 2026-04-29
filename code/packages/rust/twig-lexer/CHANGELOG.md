@@ -5,19 +5,22 @@
 ### Added
 
 - Initial Rust implementation of the Twig lexer (TW00).
-- Token kinds: `LParen`, `RParen`, `Quote`, `BoolTrue`, `BoolFalse`,
-  `Integer`, `Keyword`, `Name`, `Eof`.
-- `tokenize(source)` — hand-written scanner that converts Twig source
-  text into a `Vec<Token>` ending with `Eof`.
-- 1-indexed `(line, column)` position tracking on every token, including
-  `Eof` (positioned one column past the last consumed character).
+- Thin wrapper around [`lexer::grammar_lexer::GrammarLexer`](../lexer)
+  driven by `code/grammars/twig.tokens` — the canonical Twig token
+  grammar shared with the Python implementation.
+- `tokenize_twig(source) -> Vec<Token>` — convenience entry that
+  reads the grammar from disk, builds the lexer, and tokenises in
+  one call.
+- `create_twig_lexer(source) -> GrammarLexer` — for callers that
+  want the lexer object itself (incremental tokenisation, custom
+  error handling).
+- Token kinds (per `twig.tokens`): `LPAREN`, `RPAREN`, `QUOTE`,
+  `BOOL_TRUE`, `BOOL_FALSE`, `INTEGER`, `KEYWORD`, `NAME`, plus
+  the trailing `Eof` sentinel.
 - Keyword promotion for `define`, `lambda`, `let`, `if`, `begin`,
-  `quote`, `nil` — these match before `Name`, so the parser can dispatch
-  on token kind directly.
-- `;`-to-end-of-line comments and ASCII whitespace are silently skipped.
-- Disambiguation for `-`: bare `-` lexes as `Name`; `-` followed by a
-  digit starts a signed-`Integer` literal.
-- `LexerError { message, line, column }` type for unexpected characters,
-  including a clear path for stray `#` (must be followed by `t` or `f`).
-- 35 unit tests covering atoms, parens, quotes, booleans, comments,
-  multi-line position tracking, keyword promotion, and error cases.
+  `quote`, `nil` — the parser dispatches on `KEYWORD` tokens.
+- 1-indexed `(line, column)` position tracking propagated through
+  `Token` (provided by the `GrammarLexer`).
+- 16 unit tests covering every token kind, comment/whitespace
+  skipping, keyword promotion, negative-integer disambiguation,
+  and realistic shapes.
