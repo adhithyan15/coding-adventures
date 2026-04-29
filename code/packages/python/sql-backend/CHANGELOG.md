@@ -5,6 +5,16 @@ All notable changes to the `sql-backend` Python package are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.10.0] - 2026-04-28
+
+### Added
+
+- **`ColumnDef.autoincrement`** — new boolean field, defaults to `False`.
+  Set on a column declared `INTEGER PRIMARY KEY AUTOINCREMENT` to request
+  monotonic rowid assignment (no reuse of deleted rowids).  The
+  constraint is enforced by `storage-sqlite` 0.17+ via the
+  `sqlite_sequence` table; in-memory backends may treat it as a hint.
+
 ## [0.9.0] - 2026-04-28
 
 ### Added

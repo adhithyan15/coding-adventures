@@ -97,6 +97,7 @@ class ColumnDef:
     not_null: bool = False
     primary_key: bool = False
     unique: bool = False
+    autoincrement: bool = False
     default: ColumnDefault = field(default=NO_DEFAULT)
     check_expr: object = field(default=None, compare=False, hash=False)
     # (ref_table, ref_col_or_None) — None ref_col means "reference the PK".

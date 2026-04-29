@@ -1153,3 +1153,168 @@ def _scan_all(backend: SqliteFileBackend, table: str) -> list[dict]:
             break
         rows.append(row)
     return rows
+
+
+# ---------------------------------------------------------------------------
+# AUTOINCREMENT — sqlite_sequence high-water tracking
+# ---------------------------------------------------------------------------
+
+
+class TestAutoincrement:
+    """``INTEGER PRIMARY KEY AUTOINCREMENT`` never reuses deleted rowids."""
+
+    def _autoinc_columns(self) -> list[ColumnDef]:
+        return [
+            ColumnDef(
+                name="id", type_name="INTEGER",
+                primary_key=True, autoincrement=True,
+            ),
+            ColumnDef(name="name", type_name="TEXT"),
+        ]
+
+    def test_creating_autoincrement_table_creates_sqlite_sequence(
+        self, tmp_path: Path
+    ) -> None:
+        path = str(tmp_path / "ai1.db")
+        with SqliteFileBackend(path) as b:
+            assert "sqlite_sequence" not in b.tables()
+            b.create_table("items", self._autoinc_columns(), if_not_exists=False)
+            assert "sqlite_sequence" in b.tables()
+
+    def test_no_sqlite_sequence_for_plain_ipk(self, tmp_path: Path) -> None:
+        """Plain INTEGER PRIMARY KEY (no AUTOINCREMENT) does NOT bootstrap."""
+        path = str(tmp_path / "ai2.db")
+        with SqliteFileBackend(path) as b:
+            b.create_table(
+                "items",
+                [
+                    ColumnDef(name="id", type_name="INTEGER", primary_key=True),
+                    ColumnDef(name="name", type_name="TEXT"),
+                ],
+                if_not_exists=False,
+            )
+            assert "sqlite_sequence" not in b.tables()
+
+    def test_autoinc_assigns_rowids_sequentially(self, tmp_path: Path) -> None:
+        path = str(tmp_path / "ai3.db")
+        with SqliteFileBackend(path) as b:
+            b.create_table("items", self._autoinc_columns(), if_not_exists=False)
+            b.insert("items", {"name": "a"})
+            b.insert("items", {"name": "b"})
+            b.insert("items", {"name": "c"})
+            rows = sorted(_scan_all(b, "items"), key=lambda r: r["id"])
+            assert [r["id"] for r in rows] == [1, 2, 3]
+
+    def test_autoinc_does_not_reuse_deleted_rowid(self, tmp_path: Path) -> None:
+        """The whole point of AUTOINCREMENT vs plain IPK."""
+        path = str(tmp_path / "ai4.db")
+        with SqliteFileBackend(path) as b:
+            b.create_table("items", self._autoinc_columns(), if_not_exists=False)
+            b.insert("items", {"name": "a"})  # id=1
+            b.insert("items", {"name": "b"})  # id=2
+            b.insert("items", {"name": "c"})  # id=3
+
+            cursor = b.scan("items")
+            while (r := cursor.next()) is not None:
+                if r["id"] == 3:
+                    b.delete("items", cursor)
+                    break
+
+            b.insert("items", {"name": "d"})  # MUST be id=4, not id=3
+            rows = sorted(_scan_all(b, "items"), key=lambda r: r["id"])
+            assert [r["id"] for r in rows] == [1, 2, 4]
+
+    def test_plain_ipk_does_reuse_deleted_rowid_at_max(self, tmp_path: Path) -> None:
+        """Without AUTOINCREMENT, deleting the max rowid lets it be reused.
+
+        This is the legacy SQLite behaviour for plain INTEGER PRIMARY KEY —
+        and is the contrast that motivates AUTOINCREMENT.
+        """
+        path = str(tmp_path / "ai5.db")
+        with SqliteFileBackend(path) as b:
+            b.create_table(
+                "items",
+                [
+                    ColumnDef(name="id", type_name="INTEGER", primary_key=True),
+                    ColumnDef(name="name", type_name="TEXT"),
+                ],
+                if_not_exists=False,
+            )
+            b.insert("items", {"name": "a"})  # id=1
+            b.insert("items", {"name": "b"})  # id=2
+            cursor = b.scan("items")
+            while (r := cursor.next()) is not None:
+                if r["id"] == 2:
+                    b.delete("items", cursor)
+                    break
+            b.insert("items", {"name": "c"})  # id=2 (reused)
+            rows = sorted(_scan_all(b, "items"), key=lambda r: r["id"])
+            assert [r["id"] for r in rows] == [1, 2]
+
+    def test_autoinc_explicit_rowid_bumps_sequence(self, tmp_path: Path) -> None:
+        """Inserting an explicit rowid above the sequence bumps it."""
+        path = str(tmp_path / "ai6.db")
+        with SqliteFileBackend(path) as b:
+            b.create_table("items", self._autoinc_columns(), if_not_exists=False)
+            b.insert("items", {"id": 100, "name": "explicit"})
+            b.insert("items", {"name": "next"})  # MUST be id=101
+            rows = sorted(_scan_all(b, "items"), key=lambda r: r["id"])
+            assert [r["id"] for r in rows] == [100, 101]
+
+    def test_autoinc_persists_across_reopen(self, tmp_path: Path) -> None:
+        """The high-water seq is stored in sqlite_sequence so it survives reopen."""
+        path = str(tmp_path / "ai7.db")
+        with SqliteFileBackend(path) as b:
+            b.create_table("items", self._autoinc_columns(), if_not_exists=False)
+            b.insert("items", {"name": "a"})
+            b.insert("items", {"name": "b"})
+            cursor = b.scan("items")
+            while (r := cursor.next()) is not None:
+                if r["id"] == 2:
+                    b.delete("items", cursor)
+                    break
+            h = b.begin_transaction()
+            b.commit(h)
+
+        with SqliteFileBackend(path) as b2:
+            b2.insert("items", {"name": "after-reopen"})
+            rows = sorted(_scan_all(b2, "items"), key=lambda r: r["id"])
+            # First row (id=1) survives, deleted id=2 is NOT reused.
+            assert [r["id"] for r in rows] == [1, 3]
+
+    def test_autoincrement_round_trips_through_create_table_sql(
+        self, tmp_path: Path
+    ) -> None:
+        """Closing and reopening must preserve the AUTOINCREMENT flag in the schema."""
+        path = str(tmp_path / "ai8.db")
+        with SqliteFileBackend(path) as b:
+            b.create_table("items", self._autoinc_columns(), if_not_exists=False)
+            h = b.begin_transaction()
+            b.commit(h)
+
+        with SqliteFileBackend(path) as b2:
+            cols = b2.columns("items")
+            id_col = next(c for c in cols if c.name == "id")
+            assert id_col.primary_key is True
+            assert id_col.autoincrement is True
+
+    def test_columns_to_sql_emits_autoincrement(self) -> None:
+        """The CREATE TABLE SQL emitter wraps AUTOINCREMENT after PRIMARY KEY."""
+        from storage_sqlite.backend import _columns_to_sql
+        sql = _columns_to_sql(
+            "t",
+            [
+                ColumnDef(
+                    name="id", type_name="INTEGER",
+                    primary_key=True, autoincrement=True,
+                ),
+            ],
+        )
+        assert "PRIMARY KEY AUTOINCREMENT" in sql
+
+    def test_parse_one_column_recognises_autoincrement(self) -> None:
+        from storage_sqlite.backend import _parse_one_column
+        col = _parse_one_column("id INTEGER PRIMARY KEY AUTOINCREMENT")
+        assert col is not None
+        assert col.primary_key is True
+        assert col.autoincrement is True

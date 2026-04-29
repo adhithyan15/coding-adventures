@@ -1,5 +1,53 @@
 # Changelog
 
+## [0.17.0] - 2026-04-28
+
+### Added
+
+**AUTOINCREMENT (IX-14)**
+
+`INTEGER PRIMARY KEY AUTOINCREMENT` is now supported and matches real
+SQLite's monotonicity guarantee: rowids assigned by the system are
+strictly greater than every rowid that has *ever* lived in the table,
+even ones that have been deleted.  Plain `INTEGER PRIMARY KEY`
+(without `AUTOINCREMENT`) keeps its existing rowid-reuse behaviour.
+
+- **`SqliteFileBackend.create_table`** — when any column is declared
+  `AUTOINCREMENT`, lazily creates the `sqlite_sequence` system table
+  (schema `(name TEXT, seq INTEGER)`).  This matches SQLite's behaviour
+  where the table appears in `.tables` once any AUTOINCREMENT table
+  exists.
+- **`SqliteFileBackend._get_seq(table)` / `_set_seq(table, value)`** —
+  new private helpers that read/write `sqlite_sequence` directly via
+  the table's B-tree, bypassing the public `insert` to avoid recursion.
+- **`_choose_rowid(..., current_seq=0)`** — gained an optional
+  `current_seq` keyword.  When non-zero, the returned rowid is
+  `max(max_existing_rowid, current_seq) + 1`, guaranteeing monotonicity.
+- **`SqliteFileBackend.insert`** — for AUTOINCREMENT tables, fetches
+  `current_seq` from `sqlite_sequence`, picks a rowid that exceeds it,
+  and bumps the seq after a successful insert.  Explicit-rowid inserts
+  that overshoot the sequence also bump it (matches SQLite).
+- **`_columns_to_sql`** — emits `AUTOINCREMENT` after `PRIMARY KEY` so
+  the flag round-trips through `sqlite_schema`.
+- **`_parse_one_column`** — recognises the `AUTOINCREMENT` keyword.
+
+### Fixed
+
+- **NOT NULL on auto-assigned IPK columns** — pre-existing latent bug:
+  `INSERT` without an explicit value for an `INTEGER PRIMARY KEY` column
+  would fail the `NOT NULL` check before `_choose_rowid` could fill in
+  the auto-assigned rowid.  Now `_check_not_null` runs after rowid
+  assignment, so `INSERT INTO items (name) VALUES ('x')` works on
+  IPK tables (with or without `AUTOINCREMENT`).
+
+### Tests added
+
+- `test_backend.py::TestAutoincrement` — 10 tests: lazy
+  `sqlite_sequence` creation, no creation for plain IPK, sequential
+  rowid assignment, deleted-rowid not reused under AUTOINCREMENT,
+  contrast test (plain IPK does reuse), explicit rowid bumps sequence,
+  persistence across reopen, schema round-trip, SQL emit, parser.
+
 ## [0.16.0] - 2026-04-28
 
 ### Added
