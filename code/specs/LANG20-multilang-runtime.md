@@ -192,6 +192,160 @@ Two rules govern the layering:
    uninitialised.  Tiers communicate through slots, not through tier-
    specific side channels.
 
+> The diagram above shows the **LANG-runtime path** only — it is not the
+> only path from IIR to execution.  The next section ("Compilation
+> paths") makes the orthogonality with host-runtime backends (JVM, CLR,
+> BEAM, WASM) explicit.
+
+---
+
+## Compilation paths: LANG runtime vs. host runtimes
+
+LANG20 specifies the architecture for the **LANG-runtime path** —
+where IIR is executed by `vm-core` / `jit-core` / `aot-core` against
+a `LangBinding` and the heap/GC machinery in `lang-runtime-core` (per
+LANG16).  This is the V8 × GraalVM target.
+
+But IIR is **also** a portable interchange format that lowers to
+*host* runtimes — JVM, CLR, BEAM, WebAssembly — through dedicated
+backends that bypass the LANG runtime entirely.  The existing crates
+`twig-jvm-compiler`, `twig-clr-compiler`, `twig-beam-compiler`,
+`twig-jit-wasm`, and the generic `ir-to-jvm-class-file`,
+`ir-to-cil-bytecode`, `ir-to-beam`, `ir-to-wasm-compiler` already do
+this for Twig today.  LANG20 explicitly preserves this divergence —
+both paths must remain first-class.
+
+### Two paths from one IIR
+
+```text
+       Twig / Lisp / Ruby / JS / Smalltalk / Perl source
+                              │
+                              ▼
+                          typed AST
+                              │
+                              ▼
+                         IIRModule  ◄─ universal interchange
+                              │
+       ┌──────────────────────┴────────────────────────┐
+       │                                               │
+       ▼                                               ▼
+┌──────────────────────────┐                ┌────────────────────────────┐
+│   LANG-runtime path      │                │    Host-runtime path       │
+│   (LANG20)               │                │    (existing per-target)   │
+│                          │                │                            │
+│   vm-core / jit-core /   │                │  ir-to-jvm-class-file      │
+│   aot-core               │                │    → real `java`           │
+│                          │                │  ir-to-cil-bytecode        │
+│   + lang-runtime-core    │                │    → real `dotnet`         │
+│     (GC, IC, deopt,      │                │  ir-to-beam                │
+│      stack maps, ABI)    │                │    → real `erl`            │
+│                          │                │  ir-to-wasm-compiler       │
+│   + LangBinding          │                │    → real WASM runtime     │
+│                          │                │                            │
+│   Heap, GC, JIT, AOT     │                │  Host JVM/CLR/BEAM/WASM    │
+│   are OUR code           │                │  handles GC, dispatch,     │
+│                          │                │  class loading, JIT, etc.  │
+└──────────────────────────┘                └────────────────────────────┘
+```
+
+### Which IIR features each path consumes
+
+| IIR feature | LANG-runtime path | Host-runtime path |
+|-------------|:-----------------:|:-----------------:|
+| LANG01 base opcodes (`const`, `add`, `cmp_*`, `call`, `call_builtin`, `jmp_*`, `ret`, `label`, `load_mem`, `store_mem`, …) | ✓ | ✓ |
+| LANG01 type hints (`u8`, `u32`, `bool`, `any`, …) | ✓ (drives JIT specialisation) | ✓ (drives backend type lowering) |
+| LANG01 `observed_slot` (feedback) | ✓ (drives JIT) | ⌀ (host runtime profiles itself) |
+| LANG16 alloc opcodes (`alloc`, `box`, `unbox`, `field_load`, `field_store`, `is_null`, `safepoint`) | ✓ (calls `lang-runtime-core` GC) | ✓ (lowers to host `new`, `getfield`, `putfield`, …) |
+| LANG16 `ref<T>` type | ✓ (heap handle in our GC) | ✓ (lowers to host reference type) |
+| LANG20 `send` / `load_property` / `store_property` opcodes | ✓ (calls `LangBinding`) | ✓ (lowers to `invokevirtual` / `callvirt` / `apply` / `call_indirect`) |
+| LANG20 `ic_slot` field | ✓ (drives IC machinery) | ⌀ (host runtime has its own ICs) |
+| LANG20 frame descriptors / deopt anchors | ✓ (`rt_deopt`) | ⌀ (host runtime handles its own deopt) |
+| LANG20 feedback-slot taxonomy (CallSiteSlot, MethodSiteSlot, …) | ✓ (JIT + AOT-PGO consume) | ⌀ (host JIT profiles itself) |
+
+The host-runtime path **ignores** the LANG-runtime-only fields
+(feedback slots, IC slots, deopt anchors, frame descriptors).  These
+are populated when a frontend wants the LANG-runtime path's tier-up
+benefits and cost nothing to ignore — every host backend just walks
+the IIR's primary opcode/operand structure and never touches the
+profiling side-tables.
+
+### Why both paths matter
+
+- **The LANG-runtime path** delivers the V8 × GraalVM combination:
+  tiered execution, closed-world AOT, every language gets all tiers
+  from one implementation.  Best when there is no good host runtime
+  for the target environment — embedded, constrained ISAs like Intel
+  4004 / Intel 8080 / RV32, custom hardware, bare metal.
+- **The host-runtime path** lets a Twig program ship as a `.jar` that
+  runs on production JVMs (HotSpot's GC, C2 JIT, profiler, the entire
+  observability ecosystem), or as a `.beam` that runs on Erlang's
+  BEAM (preemptive scheduling, distributed messaging, hot code
+  reload), or as a `.dll` on .NET (CoreCLR's tiered compilation,
+  NuGet ecosystem), or as `.wasm` (browser, edge runtimes,
+  capability-secure sandboxes).  Best when an existing runtime
+  offers something we don't want to rebuild.
+
+A frontend **does not have to choose**.  Twig already targets both:
+
+| Twig spec | Path | Status |
+|-----------|------|--------|
+| TW00 | LANG-runtime (vm-core today; jit/aot tomorrow) | Lexer/parser/IR-compiler shipped (PR #1741) |
+| TW02 | Host JVM (`twig-jvm-compiler` → real `java`) | Shipped |
+| TW03 | Host CLR / BEAM / WASM cross-backend roadmap | In progress |
+| TW04 (future) | Host WASM with custom GC | Planned per TW03 |
+
+The same IIR feeds every backend.  Adding a Ruby frontend automatically
+gives it both paths: the LANG-runtime path (via `RubyBinding`) *and* the
+JVM path (via `ir-to-jvm-class-file` lowering ruby's IIR to JRuby-style
+bytecode), without writing path-specific frontend code.
+
+### Constraint LANG20 imposes on its own additions
+
+To keep both paths first-class, LANG20 imposes one rule on every
+opcode, field, or convention it adds:
+
+> **LANG20-specific IIR additions must lower cleanly to host runtimes
+> via existing backend mechanisms (`invokevirtual`, `callvirt`,
+> `apply` on BEAM, `call_indirect` on WASM) without requiring the
+> host backend to understand IC, deopt, or profile-feedback
+> machinery.**
+
+Concretely the three new opcodes (§"IIR additions") lower as:
+
+| LANG20 opcode | JVM (`ir-to-jvm-class-file`) | CLR (`ir-to-cil-bytecode`) | BEAM (`ir-to-beam`) | WASM (`ir-to-wasm-compiler`) |
+|---------------|------------------------------|----------------------------|---------------------|------------------------------|
+| `send recv sel args…` | `invokevirtual` (selector → method ref) | `callvirt` (selector → MethodRef) | apply (selector → atom) | `call_indirect` (selector → table index) |
+| `load_property obj key` | `getfield` or `invokevirtual getXxx` | `ldfld` or `callvirt get_Xxx` | `element/2` or map-get | struct.get (WASM-GC) or memory-load + offset table |
+| `store_property obj key val` | `putfield` or `invokevirtual setXxx` | `stfld` or `callvirt set_Xxx` | map-put / record update | struct.set or memory-store |
+
+`apply_callable` (the `call_indirect` opcode's runtime semantics)
+lowers to JVM `invokeinterface`, CLR `calli`, BEAM apply,
+WASM `call_indirect`.  Frame descriptors / feedback slots / IC slots
+are simply not emitted into the host artefact.
+
+If a future LANG20 extension genuinely cannot lower to host runtimes,
+it goes behind an explicit `IIRModule.requires_lang_runtime: bool`
+flag that host backends refuse.  But the rule should hold by
+construction — every LANG20 addition is an *optimisation
+opportunity* the LANG-runtime path takes and that host runtimes
+ignore (or implement themselves through their own mechanisms).
+
+### Where each path's spec lives
+
+| Concern | LANG-runtime path spec | Host-runtime path spec |
+|---------|------------------------|------------------------|
+| Interpreter | LANG02 (vm-core) | n/a — host runtime |
+| JIT | LANG03 (jit-core) | n/a — host JIT |
+| AOT | LANG04 (aot-core) | per-target (JVM02, CLR01, BEAM01, …) |
+| GC | LANG16 (gc-core) | host GC (JVM, CLR, BEAM, WASM-GC) |
+| IC + deopt | LANG20 (this spec) | n/a — host handles |
+| Calling convention | LANG15 (vm-runtime C ABI), LANG20 §"C ABI extensions" | per-target host ABI (JVM stack, CLR stack, BEAM registers, WASM linear stack) |
+
+LANG20 does **not** spec the host-runtime path; per-target specs (TW02
+for JVM, CLR01 for CLR, BEAM01 for BEAM, the future TW04 for WASM)
+already do.  This document only commits to *not breaking* the
+host-runtime path with anything it adds.
+
 ---
 
 ## Part 1: The `LangBinding` trait
@@ -1135,6 +1289,24 @@ v0 = send(recv, "to_s") : any        [ic=3 mono(class=String, target=String#to_s
 The `[ic=…]` annotation is rendered when the IC is non-Uninit and
 elided otherwise.
 
+### Host-backend lowering for the new opcodes
+
+The three new opcodes must remain lowerable by every host-runtime
+backend (per §"Compilation paths"), without those backends needing to
+understand IC or feedback machinery.  This is the lowering contract:
+
+| Opcode | JVM | CLR | BEAM | WASM |
+|--------|-----|-----|------|------|
+| `send` | `invokevirtual` (selector → MethodRef in constant pool) | `callvirt` (selector → MethodRef metadata) | `apply/3` (atom-encoded selector + arity) | `call_indirect` (selector → table index resolved at link time) |
+| `load_property` | `getfield` for known offset; `invokevirtual getXxx` for accessor | `ldfld` for known offset; `callvirt get_Xxx` for property | map-get / record `element/2` | `struct.get` (WASM-GC) or memory-load + offset table |
+| `store_property` | `putfield` for known offset; `invokevirtual setXxx` | `stfld` for known offset; `callvirt set_Xxx` | map-put / record update | `struct.set` or memory-store |
+
+`ic_slot` and `observed_slot` (LANG01 + LANG20 fields) are **dropped
+on the floor** by host backends — the host runtime has its own type
+profiling and inline cache machinery (HotSpot's profile counters,
+CoreCLR's tiered JIT feedback, BEAM's inline-cache-free apply, V8's
+own ICs when running WASM-GC).
+
 ---
 
 ## Part 9: Tier interaction matrix
@@ -1277,6 +1449,10 @@ This document satisfies all eight.
 - **Specific JIT codegen** — that's per-backend (LANG05).  LANG20
   specifies the *contracts* the codegen must satisfy (frame
   descriptors, IC layout) but not the codegen itself.
+- **Host-runtime backends** (JVM, CLR, BEAM, WASM lowerings) —
+  covered by per-target specs (TW02, CLR01, BEAM01, …) and their
+  associated `ir-to-<host>` crates.  LANG20 only commits to *not
+  breaking* them; see §"Compilation paths".
 
 ---
 
