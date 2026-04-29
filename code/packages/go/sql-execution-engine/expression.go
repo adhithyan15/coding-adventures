@@ -365,28 +365,24 @@ func evalComparisonKeywordOp(lhs interface{}, nodes []*parser.ASTNode, tokens []
 
 	case firstTok == "IN":
 		// IN (value_list): true if lhs equals any value in the list
-		for _, n := range nodes[1:] {
-			if n.RuleName == "value_list" {
-				vals := evalValueList(n, rowCtx)
-				return evalIn(lhs, vals)
-			}
+		if valueList := findRuleInNodes(nodes[1:], "value_list"); valueList != nil {
+			vals := evalValueList(valueList, rowCtx)
+			return evalIn(lhs, vals)
 		}
 		return nil
 
 	case firstTok == "NOT" && len(tokens) >= 2 && strings.ToUpper(tokens[1].Value) == "IN":
 		// NOT IN (value_list)
-		for _, n := range nodes[1:] {
-			if n.RuleName == "value_list" {
-				vals := evalValueList(n, rowCtx)
-				result := evalIn(lhs, vals)
-				if result == nil {
-					return nil
-				}
-				if b, ok := result.(bool); ok {
-					return !b
-				}
+		if valueList := findRuleInNodes(nodes[1:], "value_list"); valueList != nil {
+			vals := evalValueList(valueList, rowCtx)
+			result := evalIn(lhs, vals)
+			if result == nil {
 				return nil
 			}
+			if b, ok := result.(bool); ok {
+				return !b
+			}
+			return nil
 		}
 		return nil
 
@@ -484,14 +480,22 @@ func evalBetween(val, low, high interface{}) interface{} {
 // value_list = expr { "," expr }
 func evalValueList(node *parser.ASTNode, rowCtx map[string]interface{}) []interface{} {
 	var vals []interface{}
+	collectValueListValues(node, rowCtx, &vals)
+	return vals
+}
+
+func collectValueListValues(node *parser.ASTNode, rowCtx map[string]interface{}, vals *[]interface{}) {
 	for _, child := range node.Children {
 		childNode, ok := child.(*parser.ASTNode)
 		if !ok {
-			continue // skip comma tokens
+			continue
 		}
-		vals = append(vals, evalExpr(childNode, rowCtx))
+		if childNode.RuleName == "expr" {
+			*vals = append(*vals, evalExpr(childNode, rowCtx))
+			continue
+		}
+		collectValueListValues(childNode, rowCtx, vals)
 	}
-	return vals
 }
 
 // evalIn implements the IN predicate.
@@ -858,7 +862,8 @@ func parseNumber(s string) interface{} {
 //
 // For single-table queries: "salary" → rowCtx["salary"]
 // For multi-table queries: "e.salary" → rowCtx["employees.salary"] (if "e" is
-//   the alias for "employees"), or rowCtx["e.salary"]
+//
+//	the alias for "employees"), or rowCtx["e.salary"]
 //
 // Resolution order:
 //  1. Qualified name exactly as written: "dept.name" → rowCtx["dept.name"]
@@ -1013,7 +1018,9 @@ func isTruthy(v interface{}) bool {
 
 // collectRuleChildren returns all child ASTNodes with the given rule name.
 // This is used to collect operands in binary operator chains like:
-//   or_expr = and_expr { "OR" and_expr }
+//
+//	or_expr = and_expr { "OR" and_expr }
+//
 // where we need just the and_expr children, skipping "OR" tokens.
 func collectRuleChildren(node *parser.ASTNode, ruleName string) []*parser.ASTNode {
 	var result []*parser.ASTNode
@@ -1027,6 +1034,15 @@ func collectRuleChildren(node *parser.ASTNode, ruleName string) []*parser.ASTNod
 		}
 	}
 	return result
+}
+
+func findRuleInNodes(nodes []*parser.ASTNode, ruleName string) *parser.ASTNode {
+	for _, node := range nodes {
+		if found := findChildDeep(node, ruleName); found != nil {
+			return found
+		}
+	}
+	return nil
 }
 
 // findChild searches the direct children of node for an ASTNode with the
