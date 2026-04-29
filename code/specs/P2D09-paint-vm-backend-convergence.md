@@ -515,21 +515,21 @@ Known gaps after the GDI runtime adapter work:
 | Direct2D gradients | Not implemented. |
 | Direct2D layer filters and blend modes | Layer opacity works; full effects/blend modes are not implemented. |
 | Metal text | Still partial. Glyph/text convergence remains a larger font-system project. |
-| Cairo/Skia/Vulkan/OpenGL/WGPU/OpenCL/Mesa/CoreGraphics | Scaffold crates exist for all except CoreGraphics; drawing implementations are not yet wired. |
+| Cairo | Tier 1 native path implemented on Linux/BSD via `cairo-rs`; text/glyphs are degraded until Pango/HarfBuzz shaping is connected; gradients and SVG `ArcTo` lowering remain open. |
+| Skia/Vulkan/OpenGL/WGPU/OpenCL/Mesa/CoreGraphics | Scaffold crates exist for all except CoreGraphics; drawing implementations are not yet wired. |
 
 Recommended immediate order:
 
-1. Direct2D `PaintText`, to restore symmetry with GDI for the string-text path.
-2. Direct2D runtime adapter once `PaintText` lands.
-3. Direct2D and GDI gradients.
-4. Cairo Tier 1.
-5. Skia Tier 1, then Tier 2.
-6. Shared `paint-vm-gpu-core`.
-7. WGPU Tier 1.
-8. Vulkan Tier 1.
-9. OpenGL and Mesa-backed Tier 1.
-10. OpenCL compute raster experiments for filters/software paths.
-11. Filters and advanced blend modes across GPU-capable backends.
+1. Direct2D runtime adapter now that `PaintText` has landed.
+2. Direct2D and GDI gradients.
+3. Cairo Pango/HarfBuzz text and SVG `ArcTo` lowering.
+4. Skia Tier 1, then Tier 2.
+5. Shared `paint-vm-gpu-core`.
+6. WGPU Tier 1.
+7. Vulkan Tier 1.
+8. OpenGL and Mesa-backed Tier 1.
+9. OpenCL compute raster experiments for filters/software paths.
+10. Filters and advanced blend modes across GPU-capable backends.
 
 ---
 
@@ -573,7 +573,7 @@ Backends should be isolated so CI can build what the machine supports:
 |---------|----------------|
 | Direct2D | Build and test on Windows runners. |
 | GDI | Build and test on Windows runners. |
-| Cairo | Build and test on Linux runners with Cairo/Pango packages installed. |
+| Cairo | Build and test on Linux runners with Cairo headers installed; add Pango packages when text shaping lands. |
 | Skia | Build on all major OSes if cache/build time is acceptable; otherwise nightly or opt-in CI. |
 | Vulkan | Build everywhere with loader headers; hardware tests opt-in. |
 | OpenGL | Build everywhere; pixel tests require software GL or platform context setup. |
