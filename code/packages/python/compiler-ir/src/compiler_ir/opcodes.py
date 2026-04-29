@@ -279,7 +279,7 @@ class IrOp(IntEnum):
     #               free-variable list maps to the captured registers.
     #   - vm-core:  delegate to the host-side ``make_closure`` builtin
     #               (already implemented in TW00).
-    MAKE_CLOSURE = 25
+    MAKE_CLOSURE = 47
 
     # Apply a closure value to zero or more arguments.
     #
@@ -297,7 +297,7 @@ class IrOp(IntEnum):
     #   - BEAM:     emit ``call_fun`` (or ``call_fun2``) on the closure
     #               handle.
     #   - vm-core:  delegate to the host-side ``apply_closure`` builtin.
-    APPLY_CLOSURE = 26
+    APPLY_CLOSURE = 48
 
 
 # Canonical name → opcode mapping. Built from the enum at module load time.

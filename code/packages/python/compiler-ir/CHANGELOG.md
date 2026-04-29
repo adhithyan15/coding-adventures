@@ -4,10 +4,10 @@
 
 ### Added — TW03 Phase 2 closure ops
 
-- **``IrOp.MAKE_CLOSURE`` (25)** — construct a closure value
+- **``IrOp.MAKE_CLOSURE`` (47)** — construct a closure value
   capturing free variables from the enclosing scope.  Operand
   layout: ``MAKE_CLOSURE dst, fn_label, num_captured, capt0, capt1, ...``
-- **``IrOp.APPLY_CLOSURE`` (26)** — invoke a closure value with
+- **``IrOp.APPLY_CLOSURE`` (48)** — invoke a closure value with
   zero or more arguments.  Operand layout:
   ``APPLY_CLOSURE dst, closure_reg, num_args, arg0, arg1, ...``
 

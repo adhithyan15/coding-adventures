@@ -99,8 +99,9 @@ class TestIrOp:
         assert IrOp.I32_TRUNC_FROM_F64 == 46
 
     def test_total_opcode_count(self) -> None:
-        """There are exactly 47 opcodes after adding f64-to-i32 truncation."""
-        assert len(IrOp) == 47
+        """There are exactly 49 opcodes after adding TW03 Phase 2 closure ops
+        (MAKE_CLOSURE = 47, APPLY_CLOSURE = 48) on top of the existing 47."""
+        assert len(IrOp) == 49
 
     def test_name_to_op_roundtrip(self) -> None:
         """NAME_TO_OP[op.name] == op for every opcode."""
@@ -1006,6 +1007,21 @@ class TestAllOpcodesPrintParse:
             IrOp.F64_CMP_GE:   [IrRegister(4), IrRegister(1), IrRegister(2)],
             IrOp.F64_FROM_I32: [IrRegister(2), IrRegister(1)],
             IrOp.I32_TRUNC_FROM_F64: [IrRegister(2), IrRegister(1)],
+            # MAKE_CLOSURE dst, fn_label, num_captured, capt0, capt1
+            IrOp.MAKE_CLOSURE: [
+                IrRegister(0),
+                IrLabel("_lambda_0"),
+                IrImmediate(2),
+                IrRegister(1),
+                IrRegister(2),
+            ],
+            # APPLY_CLOSURE dst, closure_reg, num_args, arg0
+            IrOp.APPLY_CLOSURE: [
+                IrRegister(0),
+                IrRegister(3),
+                IrImmediate(1),
+                IrRegister(4),
+            ],
         }
         for idx, op in enumerate(IrOp):
             operands = operands_by_opcode[op]

@@ -100,12 +100,45 @@ class TestSupportedSurface:
         # Value defines fold to compile-time constants — only main.
         assert region_labels == ["main"]
 
+    def test_lambda_lifts_to_top_level_region(self) -> None:
+        """An anonymous lambda becomes a fresh ``_lambda_N`` region
+        and the use site emits MAKE_CLOSURE referencing it."""
+        ir = compile_to_ir(
+            "(define (make-adder n) (lambda (x) (+ x n))) (make-adder 7)"
+        )
+        labels = [
+            ins.operands[0].name
+            for ins in ir.instructions
+            if ins.opcode is IrOp.LABEL
+            and isinstance(ins.operands[0], IrLabel)
+        ]
+        assert "make-adder" in labels
+        assert "main" in labels
+        assert "_lambda_0" in labels
+
+        # MAKE_CLOSURE for _lambda_0 with 1 capture should appear
+        # inside make-adder's body.
+        mk = [i for i in ir.instructions if i.opcode is IrOp.MAKE_CLOSURE]
+        assert len(mk) == 1
+        assert mk[0].operands[1].name == "_lambda_0"
+        # operand 2 is the IrImmediate num_captured
+        assert mk[0].operands[2].value == 1
+
+    def test_closure_call_emits_apply_closure(self) -> None:
+        """A call whose function position is itself an Apply (so
+        the result is a closure value, not a known top-level
+        function) lowers to APPLY_CLOSURE."""
+        ir = compile_to_ir(
+            "(define (make-adder n) (lambda (x) (+ x n)))"
+            "((make-adder 7) 35)"
+        )
+        ap = [i for i in ir.instructions if i.opcode is IrOp.APPLY_CLOSURE]
+        assert len(ap) == 1
+        # APPLY_CLOSURE dst, closure_reg, IrImmediate(num_args), arg0
+        assert ap[0].operands[2].value == 1
+
 
 class TestRejectedSurface:
-    def test_lambda_rejected(self) -> None:
-        with pytest.raises(TwigCompileError, match="not yet supported"):
-            compile_to_ir("(lambda (x) x)")
-
     def test_unbound_name_rejected(self) -> None:
         with pytest.raises(TwigCompileError, match="unbound name"):
             compile_to_ir("foo")

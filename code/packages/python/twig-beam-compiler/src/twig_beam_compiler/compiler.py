@@ -94,7 +94,7 @@ from twig.ast_nodes import (
     SymLit,
     VarRef,
 )
-
+from twig.free_vars import free_vars
 
 # ---------------------------------------------------------------------------
 # Result types
@@ -218,6 +218,15 @@ class _Compiler:
         # the BEAM backend rejects duplicate label names just like
         # the CIL backend does.
         self._next_label_id = 0
+        # TW03 Phase 2: lifted lambdas.  Each anonymous Lambda
+        # encountered during expression compilation gets a fresh
+        # name like ``_lambda_0`` and is appended here as
+        # (lifted_name, captures, lambda_node) so we can emit its
+        # body region after the user functions.  The closure
+        # value-side machinery (MAKE_CLOSURE / APPLY_CLOSURE) is
+        # emitted at the use site.
+        self._lifted_lambdas: list[tuple[str, list[str], Lambda]] = []
+        self._lambda_counter = 0
 
     # ------------------------------------------------------------------
 
@@ -236,6 +245,20 @@ class _Compiler:
             self._emit_function(name, lam)
 
         self._emit_main(top_level_exprs)
+
+        # Lifted-lambda regions go AFTER ``main`` so ``main`` is
+        # unambiguously the program's entry point in the IR
+        # instruction stream.  ``_compile_expr`` may have appended
+        # to ``self._lifted_lambdas`` while compiling earlier
+        # functions / main; lifted lambdas can also be nested
+        # (lambda inside lambda) so the list grows during this
+        # final pass — iterate by index.
+        i = 0
+        while i < len(self._lifted_lambdas):
+            lifted_name, captures, lam = self._lifted_lambdas[i]
+            self._emit_lifted_lambda(lifted_name, captures, lam)
+            i += 1
+
         return self._program
 
     # ------------------------------------------------------------------
@@ -350,10 +373,7 @@ class _Compiler:
             return self._compile_apply(expr, ctx)
 
         if isinstance(expr, Lambda):
-            raise TwigCompileError(
-                "anonymous lambdas are not yet supported by the BEAM "
-                "backend — see TW03 Phase 2 for closures."
-            )
+            return self._compile_anonymous_lambda(expr, ctx)
 
         if isinstance(expr, SymLit):
             raise TwigCompileError(
@@ -418,54 +438,159 @@ class _Compiler:
         return last
 
     def _compile_apply(self, expr: Apply, ctx: _FnCtx) -> IrRegister:
-        if not isinstance(expr.fn, VarRef):
-            raise TwigCompileError(
-                "v1 only supports direct calls of top-level names"
-            )
-        name = expr.fn.name
-
-        if name in _V1_REJECTED_BUILTINS:
-            raise TwigCompileError(
-                f"builtin {name!r} is not yet supported by the BEAM "
-                "backend — see TW03 Phase 3 for heap primitives."
-            )
-
-        if name in _BINARY_OPS:
-            if len(expr.args) != 2:
+        # The fast path: a direct VarRef to a known builtin or
+        # top-level function compiles to ``CALL`` (or an arithmetic
+        # opcode).  Anything else — a Lambda in expression position,
+        # a let-bound closure, the result of a function-returning
+        # call — falls through to the closure path which uses
+        # ``APPLY_CLOSURE`` and dispatches via ``erlang:apply/3``.
+        if isinstance(expr.fn, VarRef):
+            name = expr.fn.name
+            if name in _V1_REJECTED_BUILTINS:
                 raise TwigCompileError(
-                    f"{name!r} expects 2 arguments, got {len(expr.args)}"
+                    f"builtin {name!r} is not yet supported by the BEAM "
+                    "backend — see TW03 Phase 3 for heap primitives."
                 )
-            left = self._compile_expr(expr.args[0], ctx)
-            right = self._compile_expr(expr.args[1], ctx)
-            dest = self._fresh_holding(ctx)
-            self._emit(_BINARY_OPS[name], dest, left, right)
-            return dest
+            if name in _BINARY_OPS:
+                if len(expr.args) != 2:
+                    raise TwigCompileError(
+                        f"{name!r} expects 2 arguments, got {len(expr.args)}"
+                    )
+                left = self._compile_expr(expr.args[0], ctx)
+                right = self._compile_expr(expr.args[1], ctx)
+                dest = self._fresh_holding(ctx)
+                self._emit(_BINARY_OPS[name], dest, left, right)
+                return dest
 
-        if name in self._fn_params:
-            params = self._fn_params[name]
-            if len(expr.args) != len(params):
+            if name in self._fn_params:
+                params = self._fn_params[name]
+                if len(expr.args) != len(params):
+                    raise TwigCompileError(
+                        f"function {name!r} takes {len(params)} arguments, "
+                        f"got {len(expr.args)}"
+                    )
+
+                arg_regs: list[IrRegister] = [
+                    self._compile_expr(a, ctx) for a in expr.args
+                ]
+
+                for i, src in enumerate(arg_regs):
+                    self._emit_move(IrRegister(_REG_PARAM_BASE + i), src)
+
+                self._emit(IrOp.CALL, IrLabel(name))
+
+                dest = self._fresh_holding(ctx)
+                self._emit_move(dest, IrRegister(_REG_HALT_RESULT))
+                return dest
+
+            # Fall through to closure-apply only if the name is
+            # actually bound locally (a let-binding holding a
+            # closure value).  Unbound names are user errors.
+            if name not in ctx.locals_:
                 raise TwigCompileError(
-                    f"function {name!r} takes {len(params)} arguments, "
-                    f"got {len(expr.args)}"
+                    f"unknown function {name!r}.  Supported: binary "
+                    "builtins (+, -, *, /, =, <, >), top-level "
+                    "(define (f ...) ...), and closure values bound "
+                    "via let or returned from another function."
                 )
 
-            arg_regs: list[IrRegister] = [
-                self._compile_expr(a, ctx) for a in expr.args
-            ]
-
-            for i, src in enumerate(arg_regs):
-                self._emit_move(IrRegister(_REG_PARAM_BASE + i), src)
-
-            self._emit(IrOp.CALL, IrLabel(name))
-
-            dest = self._fresh_holding(ctx)
-            self._emit_move(dest, IrRegister(_REG_HALT_RESULT))
-            return dest
-
-        raise TwigCompileError(
-            f"unknown function {name!r}.  v1 supports binary builtins "
-            "(+, -, *, /, =, <, >) and top-level (define (f ...) ...)."
+        # Closure path: compile fn to a register holding a closure
+        # value, then APPLY_CLOSURE with the explicit args.
+        closure_reg = self._compile_expr(expr.fn, ctx)
+        arg_regs = [self._compile_expr(a, ctx) for a in expr.args]
+        dest = self._fresh_holding(ctx)
+        self._emit(
+            IrOp.APPLY_CLOSURE,
+            dest,
+            closure_reg,
+            IrImmediate(len(arg_regs)),
+            *arg_regs,
         )
+        return dest
+
+    # ------------------------------------------------------------------
+    # Closure compilation (TW03 Phase 2)
+    # ------------------------------------------------------------------
+
+    def _compile_anonymous_lambda(
+        self, lam: Lambda, outer: _FnCtx
+    ) -> IrRegister:
+        """Lift ``lam`` to a fresh top-level function and emit a
+        ``MAKE_CLOSURE`` at the use site.
+
+        Free-variable analysis (``twig.free_vars``) determines what
+        the lambda captures from its enclosing scope.  Each
+        capture must already be bound in ``outer.locals_`` —
+        otherwise we'd be referring to a name that doesn't resolve.
+        """
+        globals_ = (
+            set(self._fn_params)
+            | set(self._value_consts)
+            | set(_BINARY_OPS)
+            | _V1_REJECTED_BUILTINS
+        )
+        captures = free_vars(lam, globals_)
+
+        for c in captures:
+            if c not in outer.locals_:
+                raise TwigCompileError(
+                    f"unbound name {c!r} captured by lambda — "
+                    "did you forget a (define) or a (let ...) binding?"
+                )
+
+        lifted_name = f"_lambda_{self._lambda_counter}"
+        self._lambda_counter += 1
+        self._lifted_lambdas.append((lifted_name, captures, lam))
+
+        # Materialise MAKE_CLOSURE at the use site.  The IR op
+        # carries the captured values as their *current* IR
+        # registers in ``outer``.
+        capture_regs = [outer.locals_[c] for c in captures]
+        dest = self._fresh_holding(outer)
+        self._emit(
+            IrOp.MAKE_CLOSURE,
+            dest,
+            IrLabel(lifted_name),
+            IrImmediate(len(captures)),
+            *capture_regs,
+        )
+        return dest
+
+    def _emit_lifted_lambda(
+        self,
+        lifted_name: str,
+        captures: list[str],
+        lam: Lambda,
+    ) -> None:
+        """Emit a callable region for a lifted lambda body.
+
+        Captures-first parameter layout (matching the
+        ``[Caps... | Args...]`` arglist that ir-to-beam stages
+        when calling via apply/3): the lifted function's IR
+        register layout is
+
+            r2..r{1+num_free}                    — captures
+            r{2+num_free}..r{1+num_free+arity}   — explicit params
+            r{10+}                               — body holding regs
+        """
+        self._emit(IrOp.LABEL, IrLabel(name=lifted_name), id=-1)
+        ctx = _FnCtx(locals_={})
+
+        all_params = captures + list(lam.params)
+        for i, param in enumerate(all_params):
+            arrival = IrRegister(index=_REG_PARAM_BASE + i)
+            body_local = self._fresh_holding(ctx)
+            self._emit_move(body_local, arrival)
+            ctx.locals_[param] = body_local
+
+        last: IrRegister | None = None
+        for expr in lam.body:
+            last = self._compile_expr(expr, ctx)
+        if last is None:
+            raise TwigCompileError(f"lambda {lifted_name!r} has empty body")
+
+        self._emit_move(IrRegister(_REG_HALT_RESULT), last)
+        self._emit(IrOp.RET)
 
     # ------------------------------------------------------------------
     # IR-emission helpers
@@ -545,10 +670,18 @@ def compile_source(
     # Build arity overrides for every top-level function the
     # compiler discovered.  ``ir-to-beam`` needs these to emit
     # the right ``call N, label`` arity at each call site and to
-    # declare the right parameter count per function.
+    # declare the right parameter count per function.  For
+    # lifted lambdas, ``arity_overrides`` carries the EXPLICIT
+    # arity (the ``(lambda (x) ...)``-level count) — the BEAM
+    # backend widens this internally to ``num_free + explicit``
+    # using ``closure_free_var_counts``.
     arity_overrides = {
         name: len(params) for name, params in compiler._fn_params.items()  # noqa: SLF001
     }
+    closure_free_var_counts: dict[str, int] = {}
+    for lifted_name, captures, lam in compiler._lifted_lambdas:  # noqa: SLF001
+        arity_overrides[lifted_name] = len(lam.params)
+        closure_free_var_counts[lifted_name] = len(captures)
 
     try:
         beam_module = lower_ir_to_beam(
@@ -556,6 +689,7 @@ def compile_source(
             BEAMBackendConfig(
                 module_name=module_name,
                 arity_overrides=arity_overrides,
+                closure_free_var_counts=closure_free_var_counts,
             ),
         )
         beam_bytes = encode_beam(beam_module)

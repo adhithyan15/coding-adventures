@@ -20,6 +20,7 @@ import pytest
 from beam_bytecode_encoder import (
     BEAMEncodeError,
     BEAMExport,
+    BEAMFun,
     BEAMImport,
     BEAMInstruction,
     BEAMModule,
@@ -257,3 +258,128 @@ class TestValidation:
                     label_count=1,
                 )
             )
+
+
+class TestFunT:
+    """``FunT`` chunk encoding for closures (BEAM02 Phase 2b)."""
+
+    def _module_with_fun(self, fun: BEAMFun) -> BEAMModule:
+        return BEAMModule(
+            name="m",
+            atoms=("m", "_lambda_0"),
+            instructions=(),
+            exports=(BEAMExport(1, 0, 1),),
+            funs=(fun,),
+            label_count=2,
+        )
+
+    def test_funt_chunk_emitted_when_funs_present(self) -> None:
+        module = self._module_with_fun(
+            BEAMFun(
+                function_atom_index=2,
+                arity=1,
+                code_label=2,
+                index=0,
+                num_free=1,
+                old_uniq=0xDEADBEEF,
+            )
+        )
+        chunks = _parse_chunks(encode_beam(module))
+        assert "FunT" in chunks
+
+    def test_funt_chunk_omitted_when_no_funs(self) -> None:
+        module = BEAMModule(
+            name="m",
+            atoms=("m",),
+            instructions=(),
+            exports=(BEAMExport(1, 0, 1),),
+            label_count=1,
+        )
+        chunks = _parse_chunks(encode_beam(module))
+        assert "FunT" not in chunks
+
+    def test_funt_row_layout(self) -> None:
+        module = self._module_with_fun(
+            BEAMFun(
+                function_atom_index=2,
+                arity=3,
+                code_label=2,
+                index=0,
+                num_free=2,
+                old_uniq=0x12345678,
+            )
+        )
+        chunks = _parse_chunks(encode_beam(module))
+        funt = chunks["FunT"]
+        # First 4 bytes: count.
+        assert struct.unpack(">I", funt[:4])[0] == 1
+        # Then 6 × u32 = 24 bytes per row.
+        row = struct.unpack(">IIIIII", funt[4:28])
+        assert row == (2, 3, 2, 0, 2, 0x12345678)
+
+    def test_funt_validation_rejects_bad_atom_index(self) -> None:
+        with pytest.raises(BEAMEncodeError, match="function_atom_index"):
+            encode_beam(
+                self._module_with_fun(
+                    BEAMFun(
+                        function_atom_index=99,  # out of bounds
+                        arity=1,
+                        code_label=2,
+                        index=0,
+                        num_free=0,
+                        old_uniq=0,
+                    )
+                )
+            )
+
+    def test_funt_validation_rejects_bad_label(self) -> None:
+        with pytest.raises(BEAMEncodeError, match="code_label"):
+            encode_beam(
+                self._module_with_fun(
+                    BEAMFun(
+                        function_atom_index=2,
+                        arity=1,
+                        code_label=99,  # exceeds label_count=2
+                        index=0,
+                        num_free=0,
+                        old_uniq=0,
+                    )
+                )
+            )
+
+    def test_funt_validation_rejects_non_sequential_index(self) -> None:
+        with pytest.raises(BEAMEncodeError, match="number rows sequentially"):
+            encode_beam(
+                self._module_with_fun(
+                    BEAMFun(
+                        function_atom_index=2,
+                        arity=1,
+                        code_label=2,
+                        index=5,  # should be 0 (first row)
+                        num_free=0,
+                        old_uniq=0,
+                    )
+                )
+            )
+
+    def test_funt_old_uniq_truncates_to_32_bits(self) -> None:
+        """A 64-bit ``old_uniq`` is silently truncated to 32 bits.
+
+        Useful when callers compute uniqs from a wider hash without
+        downcasting first.
+        """
+        module = self._module_with_fun(
+            BEAMFun(
+                function_atom_index=2,
+                arity=1,
+                code_label=2,
+                index=0,
+                num_free=0,
+                old_uniq=0x1_FFFFFFFF,  # > 32 bits
+            )
+        )
+        chunks = _parse_chunks(encode_beam(module))
+        funt = chunks["FunT"]
+        # Last u32 of the row is old_uniq.
+        old_uniq = struct.unpack(">I", funt[24:28])[0]
+        assert old_uniq == 0xFFFFFFFF
