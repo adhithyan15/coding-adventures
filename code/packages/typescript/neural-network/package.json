@@ -1,7 +1,7 @@
 {
-  "name": "@coding-adventures/neural-graph-vm",
+  "name": "@coding-adventures/neural-network",
   "version": "0.1.0",
-  "description": "Reference Neural Graph VM compiler and scalar bytecode interpreter",
+  "description": "Generic neural network primitives built on multi-directed graphs",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
@@ -12,8 +12,7 @@
   "license": "MIT",
   "author": "Adhithya Rajasekaran",
   "dependencies": {
-    "@coding-adventures/multi-directed-graph": "file:../multi-directed-graph",
-    "@coding-adventures/neural-network": "file:../neural-network"
+    "@coding-adventures/multi-directed-graph": "file:../multi-directed-graph"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

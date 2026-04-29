@@ -13,6 +13,58 @@ export interface WeightedInput {
   readonly properties?: GraphPropertyBag;
 }
 
+export class NeuralNetwork {
+  readonly graph: NeuralGraph;
+
+  constructor(name?: string, graph: NeuralGraph = createNeuralGraph(name)) {
+    this.graph = graph;
+  }
+
+  input(
+    node: string,
+    inputName: string = node,
+    properties: GraphPropertyBag = {}
+  ): this {
+    addInput(this.graph, node, inputName, properties);
+    return this;
+  }
+
+  weightedSum(
+    node: string,
+    inputs: readonly WeightedInput[],
+    properties: GraphPropertyBag = {}
+  ): this {
+    addWeightedSum(this.graph, node, inputs, properties);
+    return this;
+  }
+
+  activation(
+    node: string,
+    input: string,
+    activation: ActivationKind,
+    properties: GraphPropertyBag = {},
+    edgeId?: string
+  ): this {
+    addActivation(this.graph, node, input, activation, properties, edgeId);
+    return this;
+  }
+
+  output(
+    node: string,
+    input: string,
+    outputName: string = node,
+    properties: GraphPropertyBag = {},
+    edgeId?: string
+  ): this {
+    addOutput(this.graph, node, input, outputName, properties, edgeId);
+    return this;
+  }
+}
+
+export function createNeuralNetwork(name?: string): NeuralNetwork {
+  return new NeuralNetwork(name);
+}
+
 export function createNeuralGraph(name?: string): NeuralGraph {
   const graph = new MultiDirectedGraph<string>();
   graph.setGraphProperty("nn.version", "0");

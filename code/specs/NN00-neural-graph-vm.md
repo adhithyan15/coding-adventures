@@ -158,8 +158,9 @@ contract. Setting the `weight` edge property must update the edge weight API.
 ## Primitive Library
 
 Users should not have to hand-author raw metadata for common neural network
-building blocks. Each language port should expose a small primitive layer on top
-of the generic multi-directed graph.
+building blocks. Each language port should expose a generic `neural-network`
+package on top of the generic multi-directed graph. The VM compiler consumes
+that neural-network model or the graph metadata it produces.
 
 Required v0 primitives:
 

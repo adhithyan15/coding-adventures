@@ -1,18 +1,22 @@
-import { describe, expect, it } from "vitest";
-
 import {
-  NeuralGraphCompileError,
   addActivation,
   addInput,
   addOutput,
   addWeightedSum,
-  compileNeuralGraphToBytecode,
   createNeuralGraph,
+  createNeuralNetwork,
+  type NeuralGraph,
+} from "@coding-adventures/neural-network";
+import { describe, expect, it } from "vitest";
+
+import {
+  NeuralGraphCompileError,
+  compileNeuralGraphToBytecode,
+  compileNeuralNetworkToBytecode,
   runNeuralBytecodeForward,
 } from "../src/index.js";
-import { MultiDirectedGraph } from "@coding-adventures/multi-directed-graph";
 
-function makeTinyWeightedSumGraph(): MultiDirectedGraph<string> {
+function makeTinyWeightedSumGraph(): NeuralGraph {
   const graph = createNeuralGraph("tiny-weighted-sum");
 
   addInput(graph, "x0");
@@ -52,6 +56,22 @@ describe("neural graph vm", () => {
     ]);
   });
 
+  it("compiles a generic NeuralNetwork package model", () => {
+    const network = createNeuralNetwork("tiny-network")
+      .input("x0")
+      .input("x1")
+      .weightedSum("sum", [
+        { from: "x0", weight: 0.25, edgeId: "w0" },
+        { from: "x1", weight: 0.75, edgeId: "w1" },
+      ])
+      .output("out", "sum", "prediction", {}, "sum_to_out");
+
+    const bytecode = compileNeuralNetworkToBytecode(network);
+    const outputs = runNeuralBytecodeForward(bytecode, { x0: 4, x1: 8 });
+
+    expect(outputs).toEqual({ prediction: 7 });
+  });
+
   it("runs the forward bytecode through the scalar reference interpreter", () => {
     const bytecode = compileNeuralGraphToBytecode(makeTinyWeightedSumGraph());
     const outputs = runNeuralBytecodeForward(bytecode, { x0: 4, x1: 8 });
@@ -68,7 +88,7 @@ describe("neural graph vm", () => {
   });
 
   it("rejects unsupported neural graph ops", () => {
-    const graph = new MultiDirectedGraph();
+    const graph = createNeuralGraph();
     graph.addNode("custom", { "nn.op": "custom_kernel" });
 
     expect(() => compileNeuralGraphToBytecode(graph)).toThrow(

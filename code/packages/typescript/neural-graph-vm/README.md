@@ -8,25 +8,22 @@ WebGPU, Rust-native GPU, compute-unit simulator, and ASIC-style backends can
 lower from.
 
 ```typescript
+import { createNeuralNetwork } from "@coding-adventures/neural-network";
 import {
-  addInput,
-  addOutput,
-  addWeightedSum,
-  compileNeuralGraphToBytecode,
-  createNeuralGraph,
+  compileNeuralNetworkToBytecode,
   runNeuralBytecodeForward,
 } from "@coding-adventures/neural-graph-vm";
 
-const graph = createNeuralGraph("tiny-model");
-addInput(graph, "x0");
-addInput(graph, "x1");
-addWeightedSum(graph, "sum", [
-  { from: "x0", weight: 0.25, edgeId: "w0" },
-  { from: "x1", weight: 0.75, edgeId: "w1" },
-]);
-addOutput(graph, "out", "sum", "prediction");
+const network = createNeuralNetwork("tiny-model")
+  .input("x0")
+  .input("x1")
+  .weightedSum("sum", [
+    { from: "x0", weight: 0.25, edgeId: "w0" },
+    { from: "x1", weight: 0.75, edgeId: "w1" },
+  ])
+  .output("out", "sum", "prediction");
 
-const bytecode = compileNeuralGraphToBytecode(graph);
+const bytecode = compileNeuralNetworkToBytecode(network);
 const outputs = runNeuralBytecodeForward(bytecode, { x0: 4, x1: 8 });
 // { prediction: 7 }
 ```
@@ -43,7 +40,7 @@ Supported v0 graph ops:
 The interpreter is intentionally scalar and small. Its job is correctness,
 debuggability, and portability before optimized matrix lowering exists.
 
-`MultiDirectedGraph` remains generic and domain-neutral. This package is the
-neural primitive layer on top: helpers such as `addInput`, `addWeightedSum`,
-`addActivation`, and `addOutput` author the metadata that the compiler lowers
-into bytecode.
+`MultiDirectedGraph` remains generic and domain-neutral. The
+`@coding-adventures/neural-network` package is the neural primitive layer on top:
+helpers such as `input`, `weightedSum`, `activation`, and `output` author the
+metadata that this VM compiler lowers into bytecode.

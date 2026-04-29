@@ -1,0 +1,11 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## [0.1.0] - 2026-04-29
+
+### Added
+
+- Added a generic `NeuralNetwork` model backed by `MultiDirectedGraph<string>`.
+- Added primitive helpers for inputs, weighted sums, activations, and outputs.
+- Added reserved `nn.*` metadata authoring helpers for VM compiler consumption.

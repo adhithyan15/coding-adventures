@@ -1,7 +1,8 @@
 import {
-  MultiDirectedGraph,
   type GraphPropertyValue,
-} from "@coding-adventures/multi-directed-graph";
+  type NeuralNetwork,
+  type NeuralGraph,
+} from "@coding-adventures/neural-network";
 
 export type NeuralBytecodeOpcode =
   | "LOAD_INPUT"
@@ -61,7 +62,7 @@ export class NeuralGraphCompileError extends Error {
 }
 
 export function compileNeuralGraphToBytecode(
-  graph: MultiDirectedGraph
+  graph: NeuralGraph
 ): NeuralBytecodeModule {
   const order = graph.topologicalSort();
   const instructions: NeuralBytecodeInstruction[] = [];
@@ -178,6 +179,12 @@ export function compileNeuralGraphToBytecode(
   };
 }
 
+export function compileNeuralNetworkToBytecode(
+  network: NeuralNetwork
+): NeuralBytecodeModule {
+  return compileNeuralGraphToBytecode(network.graph);
+}
+
 export function runNeuralBytecodeForward(
   module: NeuralBytecodeModule,
   inputs: Record<string, number>
@@ -246,7 +253,7 @@ export function runNeuralBytecodeForward(
 }
 
 function singleInputValue(
-  graph: MultiDirectedGraph,
+  graph: NeuralGraph,
   values: Map<string, string>,
   node: string
 ): string {
