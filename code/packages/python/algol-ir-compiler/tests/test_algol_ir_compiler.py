@@ -583,6 +583,21 @@ class TestAlgolIrCompiler:
         assert IrOp.MUL in opcodes
         assert opcodes.count(IrOp.SUB) >= 2
 
+    def test_compiles_standard_numeric_builtin_functions(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; real x; "
+                "x := -2.5; result := abs(0 - 3) + sign(x) + entier(x) "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+
+        assert IrOp.CMP_LT in opcodes
+        assert IrOp.F64_CMP_LT in opcodes
+        assert IrOp.I32_TRUNC_FROM_F64 in opcodes
+        assert IrOp.F64_FROM_I32 in opcodes
+
     def test_integer_division_emits_runtime_failure_guard(self) -> None:
         result = compile_algol(
             parse_algol("begin integer result, divisor; result := 10 div divisor end")

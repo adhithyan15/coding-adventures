@@ -78,6 +78,8 @@ All notable changes to this package will be documented in this file.
   descriptor lookup through the switch-eval helper at runtime.
 - Executed the report-style `go to` spelling through the full parser,
   type-checker, IR, and WASM pipeline.
+- Executed standard numeric builtin functions `abs`, `sign`, and `entier`
+  through the full parser, type-checker, IR, and WASM pipeline.
 - Added a convergence golden fixture that combines conditional expressions,
   exponentiation, chained assignment, by-name array summation, real arithmetic,
   and output in one end-to-end program.

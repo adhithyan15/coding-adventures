@@ -59,6 +59,8 @@ All notable changes to this package will be documented in this file.
   designational dispatch can lower through the WASM pipeline.
 - Accepted `go to` as an alternate spelling for direct and designational
   `goto` statements.
+- Accepted standard numeric builtin functions `abs`, `sign`, and `entier` with
+  integer/real argument checking and read-only by-name analysis.
 
 ## [0.1.0] - 2026-04-20
 
