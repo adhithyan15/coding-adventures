@@ -195,7 +195,16 @@ pub fn pack(artifact: &CodeArtifact) -> Result<Vec<u8>, PackagerError> {
         )));
     }
 
-    let origin = artifact.metadata_int("origin", 0) as u16;
+    // Validate origin range: Intel HEX 8-bit mode uses 16-bit addresses [0, 65535].
+    // A negative or out-of-range value would silently truncate via `as u16`, producing
+    // records with a wrong start address that looks plausible but is incorrect.
+    let origin_i = artifact.metadata_int("origin", 0);
+    if !(0..=0xFFFF).contains(&origin_i) {
+        return Err(PackagerError::UnsupportedTarget(format!(
+            "intel_hex packager: origin {origin_i} is out of range [0, 65535]"
+        )));
+    }
+    let origin = origin_i as u16;
     let hex = encode_intel_hex(&artifact.native_bytes, origin);
     Ok(hex.into_bytes())
 }

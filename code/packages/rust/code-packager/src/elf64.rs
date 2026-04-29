@@ -126,7 +126,15 @@ pub fn pack(artifact: &CodeArtifact) -> Result<Vec<u8>, PackagerError> {
 
     // Read the load address from metadata or use the conventional Linux default.
     // 0x400000 is where Linux traditionally maps the first LOAD segment.
-    let load_addr = artifact.metadata_int("load_address", 0x400000) as u64;
+    // Reject negative values: a negative load_address would silently cast to
+    // a huge u64 (two's-complement), embedding a nonsensical virtual address.
+    let load_addr_i = artifact.metadata_int("load_address", 0x400000);
+    if load_addr_i < 0 {
+        return Err(PackagerError::UnsupportedTarget(format!(
+            "elf64 packager: load_address must be non-negative, got {load_addr_i}"
+        )));
+    }
+    let load_addr = load_addr_i as u64;
 
     let code_len = artifact.native_bytes.len() as u64;
     let file_size = HEADER_TOTAL + code_len; // p_filesz and p_memsz

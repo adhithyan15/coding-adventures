@@ -187,7 +187,15 @@ pub fn pack(artifact: &CodeArtifact) -> Result<Vec<u8>, PackagerError> {
     let (cputype, cpusubtype) = cpu_type(&artifact.target)?;
 
     // Default load address for macOS 64-bit = 0x100000000 (above 4 GiB boundary).
-    let load_addr = artifact.metadata_int("load_address", 0x100000000) as u64;
+    // Reject negative values: a negative load_address casts to an enormous u64,
+    // producing a nonsensical vmaddr in the LC_SEGMENT_64 header.
+    let load_addr_i = artifact.metadata_int("load_address", 0x100000000);
+    if load_addr_i < 0 {
+        return Err(PackagerError::UnsupportedTarget(format!(
+            "macho64 packager: load_address must be non-negative, got {load_addr_i}"
+        )));
+    }
+    let load_addr = load_addr_i as u64;
     let code_len = artifact.native_bytes.len() as u64;
     let vmsize = HEADER_TOTAL + code_len;
 

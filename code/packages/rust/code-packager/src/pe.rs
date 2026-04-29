@@ -157,13 +157,38 @@ fn validate(artifact: &CodeArtifact) -> Result<(), PackagerError> {
 pub fn pack(artifact: &CodeArtifact) -> Result<Vec<u8>, PackagerError> {
     validate(artifact)?;
 
-    let code_len = artifact.native_bytes.len() as u32;
+    // Validate that native_bytes fits in a PE32+ file (max ~4 GiB, constrained by u32 RVA
+    // and file-offset arithmetic).  Silently truncating via `as u32` would produce an
+    // undersized output buffer that panics on the copy_from_slice below.
+    let code_len = u32::try_from(artifact.native_bytes.len()).map_err(|_| {
+        PackagerError::UnsupportedTarget(
+            "pe packager: native_bytes length exceeds u32::MAX (4 GiB)".into(),
+        )
+    })?;
+    // Validate that entry_point fits in u32.  On a 64-bit host, usize can exceed u32::MAX;
+    // truncating would silently embed a wrong AddressOfEntryPoint in the header.
+    let entry_u32 = u32::try_from(artifact.entry_point).map_err(|_| {
+        PackagerError::UnsupportedTarget(
+            "pe packager: entry_point exceeds u32::MAX".into(),
+        )
+    })?;
     // On-disk size of the code section, rounded up to the next file-alignment boundary.
     let raw_code_size = align_to(code_len, FILE_ALIGNMENT);
     // In-memory image size: headers occupy [0, 0x1000), code occupies [0x1000, ...).
-    let size_of_image = align_to(TEXT_RVA + code_len, SECTION_ALIGNMENT);
+    let size_of_image = align_to(
+        TEXT_RVA.checked_add(code_len).ok_or_else(|| {
+            PackagerError::UnsupportedTarget(
+                "pe packager: TEXT_RVA + code_len overflows u32".into(),
+            )
+        })?,
+        SECTION_ALIGNMENT,
+    );
     // RVA of the entry point = start of .text + entry_point offset.
-    let address_of_entry_point = TEXT_RVA + artifact.entry_point as u32;
+    let address_of_entry_point = TEXT_RVA.checked_add(entry_u32).ok_or_else(|| {
+        PackagerError::UnsupportedTarget(
+            "pe packager: TEXT_RVA + entry_point overflows u32".into(),
+        )
+    })?;
 
     // Pre-allocate the full output buffer.
     let total_size = (TEXT_FILE_OFFSET + raw_code_size) as usize;
