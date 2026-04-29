@@ -41,9 +41,10 @@ and report `incorrectly-opened-comment`, matching the tokenizer error shape the
 future parser will rely on for compatibility diagnostics. That recovery
 reconsumes the first non-matching byte in bogus-comment state, so empty
 declarations such as `<!>` emit an empty comment and return to normal data
-lexing. One-dash declaration openers such as `<!->` and `<!-x>` use that same
-bogus-comment recovery instead of being mistaken for normal empty-comment
-syntax.
+lexing, and EOF after `<!` emits the same empty bogus-comment recovery instead
+of preserving the opener as text. One-dash declaration openers such as `<!->`
+and `<!-x>` use that same bogus-comment recovery instead of being mistaken for
+normal empty-comment syntax.
 The tag-open states now only begin normal tags when the next character is an
 ASCII letter; stray less-than signs such as `a < b` remain text, and malformed
 end-tag openers such as `</3>` recover as bogus comments with a tokenizer

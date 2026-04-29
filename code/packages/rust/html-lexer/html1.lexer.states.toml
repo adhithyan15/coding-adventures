@@ -4267,13 +4267,11 @@ to = "cdata_open_bracket"
 [[transitions]]
 from = "markup_declaration_open"
 matcher = { eof = true }
-to = "done"
+to = "bogus_comment"
 consume = false
 actions = [
-  "parse_error(eof-in-markup-declaration-open-state)",
-  "append_text(<!)",
-  "flush_text",
-  "emit(EOF)",
+  "parse_error(incorrectly-opened-comment)",
+  "create_comment",
 ]
 
 [[transitions]]

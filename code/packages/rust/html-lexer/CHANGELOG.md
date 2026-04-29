@@ -92,6 +92,9 @@ documented in this file.
 - Malformed markup declaration fallback now reconsumes the first non-matching
   byte in bogus-comment state, so `<!>` emits an empty comment and returns to
   data state.
+- EOF after a malformed markup declaration opener such as `<!` now emits an
+  empty bogus comment with `incorrectly-opened-comment` instead of preserving
+  the opener as text.
 - One-dash markup declarations such as `<!->` and `<!-x>` now use
   incorrectly-opened bogus-comment recovery instead of empty-comment recovery.
 - Invalid tag-open characters now follow HTML recovery: stray `<` text is

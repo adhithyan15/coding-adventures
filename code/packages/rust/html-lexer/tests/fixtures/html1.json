@@ -623,6 +623,19 @@
       ]
     },
     {
+      "id": "eof-incorrectly-opened-markup-declaration",
+      "description": "EOF after a markup declaration opener recovers as an empty bogus comment",
+      "input": "Before<!",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "incorrectly-opened-comment"
+      ]
+    },
+    {
       "id": "one-dash-markup-declaration-bogus-comment",
       "description": "Markup declarations with only one opening dash recover as bogus comments",
       "input": "Before<!->Middle<!-x>After<!-",
