@@ -1,0 +1,10 @@
+[package]
+name = "coding-adventures-mini-sqlite"
+version = "0.1.0"
+edition = "2021"
+description = "Mini SQLite facade for Rust, backed by an in-memory table store"
+
+[dependencies]
+coding-adventures-sql-execution-engine = { path = "../sql-execution-engine" }
+coding-adventures-sql-lexer = { path = "../sql-lexer" }
+lexer = { path = "../lexer" }
