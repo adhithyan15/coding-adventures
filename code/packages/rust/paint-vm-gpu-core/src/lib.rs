@@ -8,12 +8,13 @@
 use std::collections::HashMap;
 
 use paint_instructions::{
-    BlendMode, FillRule, ImageSrc, PaintClip, PaintEllipse, PaintGlyphRun, PaintGradient,
-    PaintGroup, PaintImage, PaintInstruction, PaintLayer, PaintLine, PaintPath, PaintRect,
-    PaintScene, PaintText, PathCommand, Transform2D, IDENTITY_TRANSFORM,
+    BlendMode, FillRule, GradientKind, GradientStop, ImageSrc, PaintClip, PaintEllipse,
+    PaintGlyphRun, PaintGradient, PaintGroup, PaintImage, PaintInstruction, PaintLayer, PaintLine,
+    PaintPath, PaintRect, PaintScene, PaintText, PathCommand, Transform2D, IDENTITY_TRANSFORM,
 };
 
 pub const VERSION: &str = "0.1.0";
+const GRADIENT_RAMP_WIDTH: u32 = 1024;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct GpuPaintPlan {
@@ -77,6 +78,13 @@ pub struct GpuImageUpload {
     pub width: u32,
     pub height: u32,
     pub data: Vec<u8>,
+    pub filter: GpuTextureFilter,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum GpuTextureFilter {
+    Nearest,
+    Linear,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -158,6 +166,7 @@ pub struct GpuBackendProfile {
     pub supports_indexed_meshes: bool,
     pub supports_scissor_clips: bool,
     pub supports_texture_sampling: bool,
+    pub supports_linear_gradients: bool,
     pub supports_glyph_atlas: bool,
     pub accepts_degraded_solid_gradients: bool,
 }
@@ -179,6 +188,7 @@ impl GpuBackendProfile {
             supports_indexed_meshes: true,
             supports_scissor_clips: true,
             supports_texture_sampling: false,
+            supports_linear_gradients: false,
             supports_glyph_atlas: false,
             accepts_degraded_solid_gradients: true,
         }
@@ -268,6 +278,44 @@ struct PlanBuilder {
     plan: GpuPaintPlan,
 }
 
+#[derive(Clone, Copy, Debug)]
+enum PaintBrush {
+    Solid(GpuColor),
+    LinearGradient {
+        texture_id: usize,
+        start: GpuPoint,
+        end: GpuPoint,
+    },
+}
+
+impl PaintBrush {
+    fn vertex(self, position: GpuPoint) -> GpuVertex {
+        match self {
+            PaintBrush::Solid(color) => vertex(position, color),
+            PaintBrush::LinearGradient {
+                texture_id: _,
+                start,
+                end,
+            } => vertex_uv(
+                position,
+                [linear_gradient_t(position, start, end), 0.5],
+                GpuColor::white(),
+            ),
+        }
+    }
+
+    fn texture_id(self) -> Option<usize> {
+        match self {
+            PaintBrush::Solid(_) => None,
+            PaintBrush::LinearGradient { texture_id, .. } => Some(texture_id),
+        }
+    }
+
+    fn is_transparent(self) -> bool {
+        matches!(self, PaintBrush::Solid(color) if color.a == 0.0)
+    }
+}
+
 impl PlanBuilder {
     fn plan_instructions(
         &mut self,
@@ -302,14 +350,14 @@ impl PlanBuilder {
                 "rounded rectangles are currently lowered as sharp rectangles",
             );
         }
-        if let Some(color) = self.paint_color(rect.fill.as_deref(), opacity) {
+        if let Some(brush) = self.paint_brush(rect.fill.as_deref(), opacity, transform) {
             self.add_rect_mesh(
                 rect.x,
                 rect.y,
                 rect.width,
                 rect.height,
                 transform,
-                color,
+                brush,
                 "rect",
             );
         }
@@ -339,24 +387,18 @@ impl PlanBuilder {
     }
 
     fn plan_ellipse(&mut self, ellipse: &PaintEllipse, transform: Transform2D, opacity: f32) {
-        if let Some(color) = self.paint_color(ellipse.fill.as_deref(), opacity) {
+        if let Some(brush) = self.paint_brush(ellipse.fill.as_deref(), opacity, transform) {
             let mut vertices = Vec::with_capacity(self.options.ellipse_segments + 1);
-            vertices.push(vertex(
-                apply_transform(point(ellipse.cx, ellipse.cy), transform),
-                color,
-            ));
+            vertices.push(brush.vertex(apply_transform(point(ellipse.cx, ellipse.cy), transform)));
             for i in 0..self.options.ellipse_segments {
                 let t = i as f32 / self.options.ellipse_segments as f32 * std::f32::consts::TAU;
-                vertices.push(vertex(
-                    apply_transform(
-                        GpuPoint {
-                            x: ellipse.cx as f32 + ellipse.rx as f32 * t.cos(),
-                            y: ellipse.cy as f32 + ellipse.ry as f32 * t.sin(),
-                        },
-                        transform,
-                    ),
-                    color,
-                ));
+                vertices.push(brush.vertex(apply_transform(
+                    GpuPoint {
+                        x: ellipse.cx as f32 + ellipse.rx as f32 * t.cos(),
+                        y: ellipse.cy as f32 + ellipse.ry as f32 * t.sin(),
+                    },
+                    transform,
+                )));
             }
             let mut indices = Vec::with_capacity(self.options.ellipse_segments * 3);
             for i in 1..=self.options.ellipse_segments {
@@ -368,7 +410,7 @@ impl PlanBuilder {
                     i as u32 + 1
                 });
             }
-            self.add_mesh(vertices, indices, None, "ellipse.fill");
+            self.add_mesh(vertices, indices, brush.texture_id(), "ellipse.fill");
         }
 
         if let Some(color) = self.stroke_color(ellipse.stroke.as_deref(), opacity) {
@@ -424,20 +466,20 @@ impl PlanBuilder {
                 "evenodd path filling is not exact in the simple GPU tessellator",
             );
         }
-        if let Some(color) = self.paint_color(path.fill.as_deref(), opacity) {
+        if let Some(brush) = self.paint_brush(path.fill.as_deref(), opacity, transform) {
             for contour in &contours {
                 if contour.points.len() >= 3 {
                     let base = contour.points[0];
                     let mut vertices = Vec::with_capacity(contour.points.len());
-                    vertices.push(vertex(apply_transform(base, transform), color));
+                    vertices.push(brush.vertex(apply_transform(base, transform)));
                     for point in contour.points.iter().skip(1) {
-                        vertices.push(vertex(apply_transform(*point, transform), color));
+                        vertices.push(brush.vertex(apply_transform(*point, transform)));
                     }
                     let mut indices = Vec::new();
                     for i in 1..vertices.len().saturating_sub(1) {
                         indices.extend_from_slice(&[0, i as u32, i as u32 + 1]);
                     }
-                    self.add_mesh(vertices, indices, None, "path.fill");
+                    self.add_mesh(vertices, indices, brush.texture_id(), "path.fill");
                 }
             }
         }
@@ -567,6 +609,7 @@ impl PlanBuilder {
             width: pixels.width,
             height: pixels.height,
             data: pixels.data.clone(),
+            filter: GpuTextureFilter::Nearest,
         });
         let color = GpuColor {
             r: 1.0,
@@ -590,6 +633,86 @@ impl PlanBuilder {
         self.add_mesh(vertices, vec![0, 1, 2, 0, 2, 3], Some(texture_id), "image");
     }
 
+    fn paint_brush(
+        &mut self,
+        paint: Option<&str>,
+        opacity: f32,
+        transform: Transform2D,
+    ) -> Option<PaintBrush> {
+        let paint = paint?;
+        if paint.trim().eq_ignore_ascii_case("none") {
+            return None;
+        }
+        if let Some(id) = gradient_ref(paint) {
+            return self.gradient_brush(id, opacity, transform);
+        }
+        let color = parse_color_with_opacity(paint, opacity);
+        (color.a > 0.0).then_some(PaintBrush::Solid(color))
+    }
+
+    fn gradient_brush(
+        &mut self,
+        id: &str,
+        opacity: f32,
+        transform: Transform2D,
+    ) -> Option<PaintBrush> {
+        let Some(gradient) = self.gradients.get(id).cloned() else {
+            self.diagnostic(
+                GpuPlanSeverity::Unsupported,
+                "gradient",
+                format!("gradient reference '{id}' does not resolve to a PaintGradient"),
+            );
+            return None;
+        };
+        if gradient.stops.is_empty() {
+            self.diagnostic(
+                GpuPlanSeverity::Unsupported,
+                "gradient",
+                format!("gradient reference '{id}' has no usable PaintGradient stop"),
+            );
+            return None;
+        }
+        match gradient.kind {
+            GradientKind::Linear { x1, y1, x2, y2 } => {
+                let start = apply_transform(point(x1, y1), transform);
+                let end = apply_transform(point(x2, y2), transform);
+                if same_point(start, end) {
+                    self.diagnostic(
+                        GpuPlanSeverity::Degraded,
+                        "gradient.linear",
+                        "zero-length linear gradient is lowered to its first stop color",
+                    );
+                    return gradient.stops.first().map(|stop| {
+                        PaintBrush::Solid(parse_color_with_opacity(&stop.color, opacity))
+                    });
+                }
+                let texture_id = self.plan.images.len();
+                self.plan.images.push(GpuImageUpload {
+                    width: GRADIENT_RAMP_WIDTH,
+                    height: 1,
+                    data: build_gradient_ramp(&gradient.stops, opacity),
+                    filter: GpuTextureFilter::Linear,
+                });
+                Some(PaintBrush::LinearGradient {
+                    texture_id,
+                    start,
+                    end,
+                })
+            }
+            GradientKind::Radial { .. } => {
+                self.diagnostic(
+                    GpuPlanSeverity::Degraded,
+                    "gradient.radial",
+                    "radial gradients are currently lowered to their first stop color",
+                );
+                gradient
+                    .stops
+                    .first()
+                    .map(|stop| PaintBrush::Solid(parse_color_with_opacity(&stop.color, opacity)))
+            }
+        }
+    }
+
     fn paint_color(&mut self, paint: Option<&str>, opacity: f32) -> Option<GpuColor> {
         let paint = paint?;
         if paint.trim().eq_ignore_ascii_case("none") {
@@ -611,8 +734,8 @@ impl PlanBuilder {
             };
             self.diagnostic(
                 GpuPlanSeverity::Degraded,
-                "gradient",
-                "gradient fills are currently lowered to their first stop color",
+                "gradient.stroke",
+                "gradient strokes are currently lowered to their first stop color",
             );
             return Some(parse_color_with_opacity(&first_stop_color, opacity));
         }
@@ -635,10 +758,11 @@ impl PlanBuilder {
         color: GpuColor,
     ) {
         let w = stroke_width;
-        self.add_rect_mesh(x, y, width, w, transform, color, "rect.stroke");
-        self.add_rect_mesh(x, y + height - w, width, w, transform, color, "rect.stroke");
-        self.add_rect_mesh(x, y, w, height, transform, color, "rect.stroke");
-        self.add_rect_mesh(x + width - w, y, w, height, transform, color, "rect.stroke");
+        let brush = PaintBrush::Solid(color);
+        self.add_rect_mesh(x, y, width, w, transform, brush, "rect.stroke");
+        self.add_rect_mesh(x, y + height - w, width, w, transform, brush, "rect.stroke");
+        self.add_rect_mesh(x, y, w, height, transform, brush, "rect.stroke");
+        self.add_rect_mesh(x + width - w, y, w, height, transform, brush, "rect.stroke");
     }
 
     fn add_rect_mesh(
@@ -648,10 +772,10 @@ impl PlanBuilder {
         width: f64,
         height: f64,
         transform: Transform2D,
-        color: GpuColor,
+        brush: PaintBrush,
         label: &'static str,
     ) {
-        if width <= 0.0 || height <= 0.0 || color.a == 0.0 {
+        if width <= 0.0 || height <= 0.0 || brush.is_transparent() {
             return;
         }
         let p0 = apply_transform(point(x, y), transform);
@@ -660,13 +784,13 @@ impl PlanBuilder {
         let p3 = apply_transform(point(x, y + height), transform);
         self.add_mesh(
             vec![
-                vertex(p0, color),
-                vertex(p1, color),
-                vertex(p2, color),
-                vertex(p3, color),
+                brush.vertex(p0),
+                brush.vertex(p1),
+                brush.vertex(p2),
+                brush.vertex(p3),
             ],
             vec![0, 1, 2, 0, 2, 3],
-            None,
+            brush.texture_id(),
             label,
         );
     }
@@ -888,6 +1012,89 @@ fn gradient_ref(value: &str) -> Option<&str> {
         .and_then(|value| value.strip_suffix(')'))
 }
 
+fn build_gradient_ramp(stops: &[GradientStop], opacity: f32) -> Vec<u8> {
+    let mut stops: Vec<(f32, GpuColor)> = stops
+        .iter()
+        .map(|stop| {
+            (
+                stop.offset.clamp(0.0, 1.0) as f32,
+                parse_color_with_opacity(&stop.color, opacity),
+            )
+        })
+        .collect();
+    stops.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap_or(std::cmp::Ordering::Equal));
+
+    let mut data = Vec::with_capacity(GRADIENT_RAMP_WIDTH as usize * 4);
+    for i in 0..GRADIENT_RAMP_WIDTH {
+        let t = if GRADIENT_RAMP_WIDTH <= 1 {
+            0.0
+        } else {
+            i as f32 / (GRADIENT_RAMP_WIDTH - 1) as f32
+        };
+        let color = sample_gradient_stops(&stops, t);
+        data.extend_from_slice(&color_to_rgba8(color));
+    }
+    data
+}
+
+fn sample_gradient_stops(stops: &[(f32, GpuColor)], t: f32) -> GpuColor {
+    if stops.is_empty() {
+        return GpuColor::transparent();
+    }
+    if t <= stops[0].0 {
+        return stops[0].1;
+    }
+    for pair in stops.windows(2) {
+        let (left_offset, left_color) = pair[0];
+        let (right_offset, right_color) = pair[1];
+        if t <= right_offset {
+            let width = (right_offset - left_offset).max(f32::EPSILON);
+            return mix_color(left_color, right_color, (t - left_offset) / width);
+        }
+    }
+    stops
+        .last()
+        .map(|(_, color)| *color)
+        .unwrap_or_else(GpuColor::transparent)
+}
+
+fn mix_color(a: GpuColor, b: GpuColor, t: f32) -> GpuColor {
+    let t = t.clamp(0.0, 1.0);
+    GpuColor {
+        r: a.r + (b.r - a.r) * t,
+        g: a.g + (b.g - a.g) * t,
+        b: a.b + (b.b - a.b) * t,
+        a: a.a + (b.a - a.a) * t,
+    }
+}
+
+fn color_to_rgba8(color: GpuColor) -> [u8; 4] {
+    [
+        float_to_u8(color.r),
+        float_to_u8(color.g),
+        float_to_u8(color.b),
+        float_to_u8(color.a),
+    ]
+}
+
+fn float_to_u8(value: f32) -> u8 {
+    (value.clamp(0.0, 1.0) * 255.0).round() as u8
+}
+
+fn linear_gradient_t(position: GpuPoint, start: GpuPoint, end: GpuPoint) -> f32 {
+    let dx = end.x - start.x;
+    let dy = end.y - start.y;
+    let len2 = dx * dx + dy * dy;
+    if len2 <= f32::EPSILON {
+        return 0.0;
+    }
+    (((position.x - start.x) * dx + (position.y - start.y) * dy) / len2).clamp(0.0, 1.0)
+}
+
+fn same_point(a: GpuPoint, b: GpuPoint) -> bool {
+    (a.x - b.x).abs() <= f32::EPSILON && (a.y - b.y).abs() <= f32::EPSILON
+}
+
 fn parse_color_with_opacity(color: &str, opacity: f32) -> GpuColor {
     let mut parsed = parse_color(color);
     parsed.a *= opacity.clamp(0.0, 1.0);
@@ -963,6 +1170,15 @@ impl GpuColor {
             g: 0.0,
             b: 0.0,
             a: 0.0,
+        }
+    }
+
+    pub const fn white() -> Self {
+        Self {
+            r: 1.0,
+            g: 1.0,
+            b: 1.0,
+            a: 1.0,
         }
     }
 }
@@ -1223,7 +1439,7 @@ mod tests {
     }
 
     #[test]
-    fn degrades_gradient_to_first_stop_with_diagnostic() {
+    fn lowers_linear_gradient_to_texture_ramp() {
         let mut scene = PaintScene::new(10.0, 10.0);
         scene
             .instructions
@@ -1237,6 +1453,55 @@ mod tests {
                     y1: 0.0,
                     x2: 10.0,
                     y2: 0.0,
+                },
+                stops: vec![
+                    GradientStop {
+                        offset: 0.0,
+                        color: "#ff0000".to_string(),
+                    },
+                    GradientStop {
+                        offset: 1.0,
+                        color: "#0000ff".to_string(),
+                    },
+                ],
+            }));
+        scene.instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: 0.0,
+            y: 0.0,
+            width: 10.0,
+            height: 10.0,
+            fill: Some("url(#fade)".to_string()),
+            stroke: None,
+            stroke_width: None,
+            corner_radius: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let plan = plan_scene(&scene);
+        assert_eq!(plan.images.len(), 1);
+        assert_eq!(plan.images[0].filter, GpuTextureFilter::Linear);
+        assert_eq!(plan.meshes[0].texture_id, Some(0));
+        assert_eq!(plan.meshes[0].vertices[0].uv[0], 0.0);
+        assert_eq!(plan.meshes[0].vertices[1].uv[0], 1.0);
+        assert!(plan.diagnostics.is_empty());
+    }
+
+    #[test]
+    fn degrades_radial_gradient_to_first_stop_with_diagnostic() {
+        let mut scene = PaintScene::new(10.0, 10.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Gradient(PaintGradient {
+                base: PaintBase {
+                    id: Some("fade".to_string()),
+                    metadata: None,
+                },
+                kind: GradientKind::Radial {
+                    cx: 5.0,
+                    cy: 5.0,
+                    r: 5.0,
                 },
                 stops: vec![GradientStop {
                     offset: 0.0,
@@ -1258,11 +1523,12 @@ mod tests {
         }));
 
         let plan = plan_scene(&scene);
+        assert_eq!(plan.images.len(), 0);
         assert_eq!(plan.meshes[0].vertices[0].color.r, 1.0);
         assert!(plan
             .diagnostics
             .iter()
-            .any(|diagnostic| diagnostic.feature == "gradient"));
+            .any(|diagnostic| diagnostic.feature == "gradient.radial"));
     }
 
     #[test]

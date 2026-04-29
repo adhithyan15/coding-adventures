@@ -10,7 +10,7 @@ use std::sync::mpsc;
 use paint_instructions::{PaintScene, PixelContainer};
 use paint_vm_gpu_core::{
     plan_scene, GpuApiFamily, GpuBackendProfile, GpuColor, GpuCommand, GpuImageUpload, GpuMesh,
-    GpuPaintPlan, GpuPlanSeverity, GpuReadbackStrategy, GpuRect, GpuRenderPath,
+    GpuPaintPlan, GpuPlanSeverity, GpuReadbackStrategy, GpuRect, GpuRenderPath, GpuTextureFilter,
 };
 use paint_vm_runtime::{
     PaintAcceleration, PaintBackendCapabilities, PaintBackendDescriptor, PaintBackendFamily,
@@ -49,7 +49,7 @@ pub fn descriptor() -> PaintBackendDescriptor {
             layer_opacity: SupportLevel::Supported,
             layer_filters: SupportLevel::Unsupported,
             layer_blend_modes: SupportLevel::Unsupported,
-            linear_gradient: SupportLevel::Degraded,
+            linear_gradient: SupportLevel::Supported,
             radial_gradient: SupportLevel::Degraded,
             antialiasing: SupportLevel::Unsupported,
             offscreen_pixels: SupportLevel::Supported,
@@ -67,6 +67,7 @@ pub fn profile() -> GpuBackendProfile {
         GpuReadbackStrategy::TextureCopyToBuffer,
     );
     profile.supports_texture_sampling = true;
+    profile.supports_linear_gradients = true;
     profile
 }
 
@@ -133,6 +134,7 @@ struct PreparedTexture {
     bind_group: wgpu::BindGroup,
     _texture: wgpu::Texture,
     _view: wgpu::TextureView,
+    _sampler: wgpu::Sampler,
 }
 
 fn render_scene(scene: &PaintScene) -> Result<PixelContainer, PaintRenderError> {
@@ -225,16 +227,6 @@ async fn render_plan(plan: GpuPaintPlan) -> Result<PixelContainer, PaintRenderEr
             resource: viewport_buffer.as_entire_binding(),
         }],
     });
-    let sampler = device.create_sampler(&wgpu::SamplerDescriptor {
-        label: Some("paint-vm-wgpu-nearest-sampler"),
-        address_mode_u: wgpu::AddressMode::ClampToEdge,
-        address_mode_v: wgpu::AddressMode::ClampToEdge,
-        address_mode_w: wgpu::AddressMode::ClampToEdge,
-        mag_filter: wgpu::FilterMode::Nearest,
-        min_filter: wgpu::FilterMode::Nearest,
-        mipmap_filter: wgpu::FilterMode::Nearest,
-        ..wgpu::SamplerDescriptor::default()
-    });
     let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
         label: Some("paint-vm-wgpu-pipeline-layout"),
         bind_group_layouts: &[&viewport_bind_group_layout, &texture_bind_group_layout],
@@ -287,13 +279,8 @@ async fn render_plan(plan: GpuPaintPlan) -> Result<PixelContainer, PaintRenderEr
     });
     let view = target.create_view(&wgpu::TextureViewDescriptor::default());
     let prepared_meshes = prepare_meshes(&device, &plan.meshes);
-    let (white_texture, prepared_textures) = prepare_textures(
-        &device,
-        &queue,
-        &texture_bind_group_layout,
-        &sampler,
-        &plan.images,
-    );
+    let (white_texture, prepared_textures) =
+        prepare_textures(&device, &queue, &texture_bind_group_layout, &plan.images);
     let row_bytes = plan.width * 4;
     let padded_row_bytes = align_to(row_bytes, wgpu::COPY_BYTES_PER_ROW_ALIGNMENT);
     let readback_size = padded_row_bytes as u64 * plan.height as u64;
@@ -491,18 +478,17 @@ fn prepare_textures(
     device: &wgpu::Device,
     queue: &wgpu::Queue,
     layout: &wgpu::BindGroupLayout,
-    sampler: &wgpu::Sampler,
     images: &[GpuImageUpload],
 ) -> (PreparedTexture, Vec<PreparedTexture>) {
     let white_texture = prepare_texture(
         device,
         queue,
         layout,
-        sampler,
         "paint-vm-wgpu-white-texture",
         1,
         1,
         &[255, 255, 255, 255],
+        GpuTextureFilter::Nearest,
     );
     let textures = images
         .iter()
@@ -512,11 +498,11 @@ fn prepare_textures(
                 device,
                 queue,
                 layout,
-                sampler,
                 texture_label(index),
                 image.width,
                 image.height,
                 &image.data,
+                image.filter,
             )
         })
         .collect();
@@ -527,11 +513,11 @@ fn prepare_texture(
     device: &wgpu::Device,
     queue: &wgpu::Queue,
     layout: &wgpu::BindGroupLayout,
-    sampler: &wgpu::Sampler,
     label: &'static str,
     width: u32,
     height: u32,
     data: &[u8],
+    filter: GpuTextureFilter,
 ) -> PreparedTexture {
     let texture = device.create_texture(&wgpu::TextureDescriptor {
         label: Some(label),
@@ -567,6 +553,20 @@ fn prepare_texture(
         },
     );
     let view = texture.create_view(&wgpu::TextureViewDescriptor::default());
+    let filter_mode = match filter {
+        GpuTextureFilter::Nearest => wgpu::FilterMode::Nearest,
+        GpuTextureFilter::Linear => wgpu::FilterMode::Linear,
+    };
+    let sampler = device.create_sampler(&wgpu::SamplerDescriptor {
+        label: Some(label),
+        address_mode_u: wgpu::AddressMode::ClampToEdge,
+        address_mode_v: wgpu::AddressMode::ClampToEdge,
+        address_mode_w: wgpu::AddressMode::ClampToEdge,
+        mag_filter: filter_mode,
+        min_filter: filter_mode,
+        mipmap_filter: wgpu::FilterMode::Nearest,
+        ..wgpu::SamplerDescriptor::default()
+    });
     let bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
         label: Some(label),
         layout,
@@ -577,7 +577,7 @@ fn prepare_texture(
             },
             wgpu::BindGroupEntry {
                 binding: 1,
-                resource: wgpu::BindingResource::Sampler(sampler),
+                resource: wgpu::BindingResource::Sampler(&sampler),
             },
         ],
     });
@@ -585,6 +585,7 @@ fn prepare_texture(
         bind_group,
         _texture: texture,
         _view: view,
+        _sampler: sampler,
     }
 }
 
@@ -678,7 +679,8 @@ fn fs_main(input: VertexOut) -> @location(0) vec4<f32> {
 mod tests {
     use super::*;
     use paint_instructions::{
-        ImageSrc, PaintBase, PaintImage, PaintInstruction, PaintRect, PaintText,
+        GradientKind, GradientStop, ImageSrc, PaintBase, PaintGradient, PaintImage,
+        PaintInstruction, PaintRect, PaintText,
     };
     use paint_vm_runtime::{PaintBackendPreference, PaintBackendRegistry, PaintRenderOptions};
 
@@ -690,6 +692,10 @@ mod tests {
         assert_eq!(descriptor.tier, PaintBackendTier::Tier1Smoke);
         assert_eq!(descriptor.capabilities.rect, SupportLevel::Supported);
         assert_eq!(descriptor.capabilities.image, SupportLevel::Supported);
+        assert_eq!(
+            descriptor.capabilities.linear_gradient,
+            SupportLevel::Supported
+        );
     }
 
     #[test]
@@ -700,6 +706,7 @@ mod tests {
         assert_eq!(profile.render_path, GpuRenderPath::GraphicsPipeline);
         assert_eq!(profile.readback, GpuReadbackStrategy::TextureCopyToBuffer);
         assert!(profile.supports_texture_sampling);
+        assert!(profile.supports_linear_gradients);
     }
 
     #[test]
@@ -742,6 +749,62 @@ mod tests {
             height: 4.0,
             src: ImageSrc::Pixels(pixels),
             opacity: None,
+        }));
+
+        let selected = registry
+            .select(
+                &scene,
+                PaintRenderOptions {
+                    preference: PaintBackendPreference::Named("paint-vm-wgpu".to_string()),
+                    ..PaintRenderOptions::default()
+                },
+            )
+            .unwrap();
+        assert_eq!(selected.descriptor().id, "paint-vm-wgpu");
+    }
+
+    #[test]
+    fn runtime_selects_wgpu_for_linear_gradient_scene() {
+        let backend = renderer();
+        let mut registry = PaintBackendRegistry::new();
+        registry.register(&backend);
+        let mut scene = PaintScene::new(8.0, 2.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Gradient(PaintGradient {
+                base: PaintBase {
+                    id: Some("fade".to_string()),
+                    metadata: None,
+                },
+                kind: GradientKind::Linear {
+                    x1: 0.0,
+                    y1: 0.0,
+                    x2: 8.0,
+                    y2: 0.0,
+                },
+                stops: vec![
+                    GradientStop {
+                        offset: 0.0,
+                        color: "#000000".to_string(),
+                    },
+                    GradientStop {
+                        offset: 1.0,
+                        color: "#ffffff".to_string(),
+                    },
+                ],
+            }));
+        scene.instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: 0.0,
+            y: 0.0,
+            width: 8.0,
+            height: 2.0,
+            fill: Some("url(#fade)".to_string()),
+            stroke: None,
+            stroke_width: None,
+            corner_radius: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
         }));
 
         let selected = registry
@@ -811,6 +874,67 @@ mod tests {
         assert_eq!(pixels.pixel_at(2, 1), (0, 255, 0, 255));
         assert_eq!(pixels.pixel_at(1, 2), (0, 0, 255, 255));
         assert_eq!(pixels.pixel_at(2, 2), (255, 255, 0, 255));
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn renders_linear_gradient_when_adapter_is_available() {
+        let mut scene = PaintScene::new(8.0, 2.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Gradient(PaintGradient {
+                base: PaintBase {
+                    id: Some("fade".to_string()),
+                    metadata: None,
+                },
+                kind: GradientKind::Linear {
+                    x1: 0.0,
+                    y1: 0.0,
+                    x2: 8.0,
+                    y2: 0.0,
+                },
+                stops: vec![
+                    GradientStop {
+                        offset: 0.0,
+                        color: "#000000".to_string(),
+                    },
+                    GradientStop {
+                        offset: 1.0,
+                        color: "#ffffff".to_string(),
+                    },
+                ],
+            }));
+        scene.instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: 0.0,
+            y: 0.0,
+            width: 8.0,
+            height: 2.0,
+            fill: Some("url(#fade)".to_string()),
+            stroke: None,
+            stroke_width: None,
+            corner_radius: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let pixels = match render(&scene) {
+            Ok(pixels) => pixels,
+            Err(PaintRenderError::BackendUnavailable { .. }) => return,
+            Err(err) => panic!("unexpected WGPU render failure: {err:?}"),
+        };
+        let left = pixels.pixel_at(0, 0);
+        let right = pixels.pixel_at(7, 0);
+
+        assert!(
+            left.0 < 80,
+            "expected dark left gradient edge, got {left:?}"
+        );
+        assert!(
+            right.0 > 170,
+            "expected bright right gradient edge, got {right:?}"
+        );
+        assert!(right.0 > left.0);
     }
 
     #[test]
