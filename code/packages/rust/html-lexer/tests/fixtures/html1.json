@@ -595,6 +595,20 @@
       ]
     },
     {
+      "id": "incorrectly-opened-markup-declaration",
+      "description": "Malformed markup declarations recover as bogus comments with a diagnostic",
+      "input": "Before<!foo>After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=foo)",
+        "Text(data=After)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "incorrectly-opened-comment"
+      ]
+    },
+    {
       "id": "invalid-tag-open-text-recovery",
       "description": "A less-than sign before non-tag text remains text instead of starting a tag",
       "input": "Before < after",

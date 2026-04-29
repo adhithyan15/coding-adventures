@@ -9104,6 +9104,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
+                "parse_error(incorrectly-opened-comment)".to_string(),
                 "create_comment".to_string(),
                 "append_comment(current)".to_string(),
             ],

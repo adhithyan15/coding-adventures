@@ -635,6 +635,20 @@
     },
     {
       "id": "html5lib-smoke-52",
+      "description": "incorrectly opened markup declaration reports tokenizer error",
+      "input": "Before<!foo>After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=foo)",
+        "Text(data=After)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "incorrectly-opened-comment"
+      ]
+    },
+    {
+      "id": "html5lib-smoke-53",
       "description": "invalid end tag opener recovers as bogus comment",
       "input": "Before</3>After",
       "tokens": [
