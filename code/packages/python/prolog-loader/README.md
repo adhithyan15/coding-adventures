@@ -15,6 +15,8 @@ It keeps parsing side-effect free, then exposes helpers to:
 - adapt finite integer builtins such as `integer/1`, `between/3`, and `succ/2`
 - adapt callable CLP(FD) forms such as `in/2`, `ins/2`, `#=/2`,
   `all_different/1`, and `labeling/2`
+- flatten nested additive CLP(FD) equality expressions such as
+  `Z #= X + Y + 1`
 - adapt `phrase/2` and `phrase/3` into executable DCG runtime calls
 - link multiple loaded sources into one namespace-aware runnable project with
   module-local predicates and weak imports
