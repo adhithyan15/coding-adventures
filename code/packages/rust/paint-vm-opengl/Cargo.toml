@@ -1,0 +1,9 @@
+[package]
+name = "paint-vm-opengl"
+version = "0.1.0"
+edition = "2021"
+description = "OpenGL backend scaffold for the Paint VM runtime"
+
+[dependencies]
+paint-instructions = { path = "../paint-instructions" }
+paint-vm-runtime = { path = "../paint-vm-runtime" }
