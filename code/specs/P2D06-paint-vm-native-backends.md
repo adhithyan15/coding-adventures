@@ -367,14 +367,25 @@ significant limitations:
 | Layer opacity        | Native          | Manual (offscreen blit)   |
 | Rounded rectangles   | Native geometry | Manual (RoundRect or arcs)|
 
-### P2D08 — paint-vm-cairo (Design Only)
+### P2D08 — paint-vm-cairo
 
 **Crate:** `paint-vm-cairo`
-**Platform:** Linux (GTK), BSDs, macOS (via Homebrew)
-**Dependencies:** `cairo-rs` crate, `pango` crate (for text)
-**Status:** Design only. Implementation deferred until Linux platform support begins.
+**Native platform:** Linux (GTK/headless), BSDs.
+
+**Portable fallback:** deterministic software smoke path on Windows/macOS.
+**Current dependencies:** `cairo-rs` crate on Linux/BSD.
+
+**Planned text dependencies:** `pango` / `pangocairo` once full native shaping
+is connected.
+**Status:** Tier 1 native image-surface renderer implemented for Linux/BSD.
 
 **Context type:** `cairo::Context` (wraps `*mut cairo_t`)
+
+The Rust crate now has a Tier 1 native Cairo image-surface renderer for
+Linux/BSD. It supports the core vector smoke path plus `ImageSrc::Pixels`,
+clips, group transforms, and layer opacity. `PaintText` and `PaintGlyphRun`
+are intentionally marked degraded because they use Cairo toy/glyph APIs rather
+than the final Pango/HarfBuzz shaping path.
 
 #### Handler Mapping
 

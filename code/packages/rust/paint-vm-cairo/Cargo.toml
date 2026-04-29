@@ -2,8 +2,11 @@
 name = "paint-vm-cairo"
 version = "0.1.0"
 edition = "2021"
-description = "Cairo backend scaffold for the Paint VM runtime"
+description = "Cairo backend for the Paint VM runtime"
 
 [dependencies]
 paint-instructions = { path = "../paint-instructions" }
 paint-vm-runtime = { path = "../paint-vm-runtime" }
+
+[target.'cfg(any(target_os = "linux", target_os = "freebsd", target_os = "openbsd", target_os = "netbsd"))'.dependencies]
+cairo-rs = { version = "0.20.12", default-features = false }
