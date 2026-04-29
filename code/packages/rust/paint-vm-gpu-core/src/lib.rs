@@ -15,6 +15,7 @@ use paint_instructions::{
 
 pub const VERSION: &str = "0.1.0";
 const GRADIENT_RAMP_WIDTH: u32 = 1024;
+const RADIAL_GRADIENT_TEXTURE_SIZE: u32 = 256;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct GpuPaintPlan {
@@ -79,12 +80,20 @@ pub struct GpuImageUpload {
     pub height: u32,
     pub data: Vec<u8>,
     pub filter: GpuTextureFilter,
+    pub kind: GpuTextureKind,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum GpuTextureFilter {
     Nearest,
     Linear,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum GpuTextureKind {
+    Image,
+    LinearGradient,
+    RadialGradient,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -167,6 +176,7 @@ pub struct GpuBackendProfile {
     pub supports_scissor_clips: bool,
     pub supports_texture_sampling: bool,
     pub supports_linear_gradients: bool,
+    pub supports_radial_gradients: bool,
     pub supports_glyph_atlas: bool,
     pub accepts_degraded_solid_gradients: bool,
 }
@@ -189,6 +199,7 @@ impl GpuBackendProfile {
             supports_scissor_clips: true,
             supports_texture_sampling: false,
             supports_linear_gradients: false,
+            supports_radial_gradients: false,
             supports_glyph_atlas: false,
             accepts_degraded_solid_gradients: true,
         }
@@ -240,10 +251,23 @@ pub fn unsupported_plan_features(
             _ => {}
         }
     }
-    if !profile.supports_texture_sampling
-        && (!plan.images.is_empty() || plan.meshes.iter().any(|mesh| mesh.texture_id.is_some()))
-    {
-        push_unique(&mut unsupported, "image")
+    for image in &plan.images {
+        match image.kind {
+            GpuTextureKind::Image if !profile.supports_texture_sampling => {
+                push_unique(&mut unsupported, "image")
+            }
+            GpuTextureKind::LinearGradient
+                if !profile.supports_texture_sampling || !profile.supports_linear_gradients =>
+            {
+                push_unique(&mut unsupported, "gradient.linear")
+            }
+            GpuTextureKind::RadialGradient
+                if !profile.supports_texture_sampling || !profile.supports_radial_gradients =>
+            {
+                push_unique(&mut unsupported, "gradient.radial")
+            }
+            _ => {}
+        }
     }
     unsupported
 }
@@ -286,6 +310,12 @@ enum PaintBrush {
         start: GpuPoint,
         end: GpuPoint,
     },
+    RadialGradient {
+        texture_id: usize,
+        center: GpuPoint,
+        axis_x: GpuPoint,
+        axis_y: GpuPoint,
+    },
 }
 
 impl PaintBrush {
@@ -301,6 +331,16 @@ impl PaintBrush {
                 [linear_gradient_t(position, start, end), 0.5],
                 GpuColor::white(),
             ),
+            PaintBrush::RadialGradient {
+                texture_id: _,
+                center,
+                axis_x,
+                axis_y,
+            } => vertex_uv(
+                position,
+                radial_gradient_uv(position, center, axis_x, axis_y),
+                GpuColor::white(),
+            ),
         }
     }
 
@@ -308,6 +348,7 @@ impl PaintBrush {
         match self {
             PaintBrush::Solid(_) => None,
             PaintBrush::LinearGradient { texture_id, .. } => Some(texture_id),
+            PaintBrush::RadialGradient { texture_id, .. } => Some(texture_id),
         }
     }
 
@@ -610,6 +651,7 @@ impl PlanBuilder {
             height: pixels.height,
             data: pixels.data.clone(),
             filter: GpuTextureFilter::Nearest,
+            kind: GpuTextureKind::Image,
         });
         let color = GpuColor {
             r: 1.0,
@@ -692,6 +734,7 @@ impl PlanBuilder {
                     height: 1,
                     data: build_gradient_ramp(&gradient.stops, opacity),
                     filter: GpuTextureFilter::Linear,
+                    kind: GpuTextureKind::LinearGradient,
                 });
                 Some(PaintBrush::LinearGradient {
                     texture_id,
@@ -699,16 +742,52 @@ impl PlanBuilder {
                     end,
                 })
             }
-            GradientKind::Radial { .. } => {
-                self.diagnostic(
-                    GpuPlanSeverity::Degraded,
-                    "gradient.radial",
-                    "radial gradients are currently lowered to their first stop color",
-                );
-                gradient
-                    .stops
-                    .first()
-                    .map(|stop| PaintBrush::Solid(parse_color_with_opacity(&stop.color, opacity)))
+            GradientKind::Radial { cx, cy, r } => {
+                if r <= f64::EPSILON {
+                    self.diagnostic(
+                        GpuPlanSeverity::Degraded,
+                        "gradient.radial",
+                        "zero-radius radial gradient is lowered to its first stop color",
+                    );
+                    return gradient.stops.first().map(|stop| {
+                        PaintBrush::Solid(parse_color_with_opacity(&stop.color, opacity))
+                    });
+                }
+                let center = apply_transform(point(cx, cy), transform);
+                let right = apply_transform(point(cx + r, cy), transform);
+                let bottom = apply_transform(point(cx, cy + r), transform);
+                let axis_x = GpuPoint {
+                    x: right.x - center.x,
+                    y: right.y - center.y,
+                };
+                let axis_y = GpuPoint {
+                    x: bottom.x - center.x,
+                    y: bottom.y - center.y,
+                };
+                if radial_basis_is_degenerate(axis_x, axis_y) {
+                    self.diagnostic(
+                        GpuPlanSeverity::Degraded,
+                        "gradient.radial",
+                        "degenerate transformed radial gradient is lowered to its first stop color",
+                    );
+                    return gradient.stops.first().map(|stop| {
+                        PaintBrush::Solid(parse_color_with_opacity(&stop.color, opacity))
+                    });
+                }
+                let texture_id = self.plan.images.len();
+                self.plan.images.push(GpuImageUpload {
+                    width: RADIAL_GRADIENT_TEXTURE_SIZE,
+                    height: RADIAL_GRADIENT_TEXTURE_SIZE,
+                    data: build_radial_gradient_texture(&gradient.stops, opacity),
+                    filter: GpuTextureFilter::Linear,
+                    kind: GpuTextureKind::RadialGradient,
+                });
+                Some(PaintBrush::RadialGradient {
+                    texture_id,
+                    center,
+                    axis_x,
+                    axis_y,
+                })
             }
         }
     }
@@ -1013,16 +1092,7 @@ fn gradient_ref(value: &str) -> Option<&str> {
 }
 
 fn build_gradient_ramp(stops: &[GradientStop], opacity: f32) -> Vec<u8> {
-    let mut stops: Vec<(f32, GpuColor)> = stops
-        .iter()
-        .map(|stop| {
-            (
-                stop.offset.clamp(0.0, 1.0) as f32,
-                parse_color_with_opacity(&stop.color, opacity),
-            )
-        })
-        .collect();
-    stops.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap_or(std::cmp::Ordering::Equal));
+    let stops = normalized_gradient_stops(stops, opacity);
 
     let mut data = Vec::with_capacity(GRADIENT_RAMP_WIDTH as usize * 4);
     for i in 0..GRADIENT_RAMP_WIDTH {
@@ -1035,6 +1105,37 @@ fn build_gradient_ramp(stops: &[GradientStop], opacity: f32) -> Vec<u8> {
         data.extend_from_slice(&color_to_rgba8(color));
     }
     data
+}
+
+fn build_radial_gradient_texture(stops: &[GradientStop], opacity: f32) -> Vec<u8> {
+    let stops = normalized_gradient_stops(stops, opacity);
+    let size = RADIAL_GRADIENT_TEXTURE_SIZE;
+    let mut data = Vec::with_capacity(size as usize * size as usize * 4);
+    for y in 0..size {
+        for x in 0..size {
+            let u = (x as f32 + 0.5) / size as f32;
+            let v = (y as f32 + 0.5) / size as f32;
+            let dx = u - 0.5;
+            let dy = v - 0.5;
+            let t = (dx * dx + dy * dy).sqrt() * 2.0;
+            data.extend_from_slice(&color_to_rgba8(sample_gradient_stops(&stops, t)));
+        }
+    }
+    data
+}
+
+fn normalized_gradient_stops(stops: &[GradientStop], opacity: f32) -> Vec<(f32, GpuColor)> {
+    let mut stops: Vec<(f32, GpuColor)> = stops
+        .iter()
+        .map(|stop| {
+            (
+                stop.offset.clamp(0.0, 1.0) as f32,
+                parse_color_with_opacity(&stop.color, opacity),
+            )
+        })
+        .collect();
+    stops.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap_or(std::cmp::Ordering::Equal));
+    stops
 }
 
 fn sample_gradient_stops(stops: &[(f32, GpuColor)], t: f32) -> GpuColor {
@@ -1089,6 +1190,31 @@ fn linear_gradient_t(position: GpuPoint, start: GpuPoint, end: GpuPoint) -> f32 
         return 0.0;
     }
     (((position.x - start.x) * dx + (position.y - start.y) * dy) / len2).clamp(0.0, 1.0)
+}
+
+fn radial_gradient_uv(
+    position: GpuPoint,
+    center: GpuPoint,
+    axis_x: GpuPoint,
+    axis_y: GpuPoint,
+) -> [f32; 2] {
+    let det = radial_basis_determinant(axis_x, axis_y);
+    if det.abs() <= f32::EPSILON {
+        return [0.5, 0.5];
+    }
+    let px = position.x - center.x;
+    let py = position.y - center.y;
+    let local_x = (px * axis_y.y - py * axis_y.x) / det;
+    let local_y = (axis_x.x * py - axis_x.y * px) / det;
+    [0.5 + local_x * 0.5, 0.5 + local_y * 0.5]
+}
+
+fn radial_basis_is_degenerate(axis_x: GpuPoint, axis_y: GpuPoint) -> bool {
+    radial_basis_determinant(axis_x, axis_y).abs() <= f32::EPSILON
+}
+
+fn radial_basis_determinant(axis_x: GpuPoint, axis_y: GpuPoint) -> f32 {
+    axis_x.x * axis_y.y - axis_x.y * axis_y.x
 }
 
 fn same_point(a: GpuPoint, b: GpuPoint) -> bool {
@@ -1366,6 +1492,8 @@ mod tests {
 
         let plan = plan_scene(&scene);
         assert_eq!(plan.images.len(), 1);
+        assert_eq!(plan.images[0].kind, GpuTextureKind::Image);
+        assert_eq!(plan.images[0].filter, GpuTextureFilter::Nearest);
         assert_eq!(plan.meshes[0].texture_id, Some(0));
         assert_eq!(plan.meshes[0].vertices[0].color.a, 0.75);
     }
@@ -1481,6 +1609,7 @@ mod tests {
 
         let plan = plan_scene(&scene);
         assert_eq!(plan.images.len(), 1);
+        assert_eq!(plan.images[0].kind, GpuTextureKind::LinearGradient);
         assert_eq!(plan.images[0].filter, GpuTextureFilter::Linear);
         assert_eq!(plan.meshes[0].texture_id, Some(0));
         assert_eq!(plan.meshes[0].vertices[0].uv[0], 0.0);
@@ -1489,7 +1618,7 @@ mod tests {
     }
 
     #[test]
-    fn degrades_radial_gradient_to_first_stop_with_diagnostic() {
+    fn lowers_radial_gradient_to_texture() {
         let mut scene = PaintScene::new(10.0, 10.0);
         scene
             .instructions
@@ -1502,6 +1631,63 @@ mod tests {
                     cx: 5.0,
                     cy: 5.0,
                     r: 5.0,
+                },
+                stops: vec![
+                    GradientStop {
+                        offset: 0.0,
+                        color: "#000000".to_string(),
+                    },
+                    GradientStop {
+                        offset: 1.0,
+                        color: "#ffffff".to_string(),
+                    },
+                ],
+            }));
+        scene.instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: 0.0,
+            y: 0.0,
+            width: 10.0,
+            height: 10.0,
+            fill: Some("url(#fade)".to_string()),
+            stroke: None,
+            stroke_width: None,
+            corner_radius: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let plan = plan_scene(&scene);
+        assert_eq!(plan.images.len(), 1);
+        assert_eq!(plan.images[0].kind, GpuTextureKind::RadialGradient);
+        assert_eq!(plan.images[0].filter, GpuTextureFilter::Linear);
+        assert_eq!(plan.images[0].width, RADIAL_GRADIENT_TEXTURE_SIZE);
+        assert_eq!(plan.images[0].height, RADIAL_GRADIENT_TEXTURE_SIZE);
+        assert_eq!(plan.meshes[0].texture_id, Some(0));
+        assert_eq!(plan.meshes[0].vertices[0].uv, [0.0, 0.0]);
+        assert_eq!(plan.meshes[0].vertices[2].uv, [1.0, 1.0]);
+        let center_index = ((RADIAL_GRADIENT_TEXTURE_SIZE / 2 * RADIAL_GRADIENT_TEXTURE_SIZE
+            + RADIAL_GRADIENT_TEXTURE_SIZE / 2)
+            * 4) as usize;
+        assert!(plan.images[0].data[center_index] < 5);
+        assert!(plan.images[0].data[0] > 240);
+        assert!(plan.diagnostics.is_empty());
+    }
+
+    #[test]
+    fn degrades_zero_radius_radial_gradient_to_first_stop_with_diagnostic() {
+        let mut scene = PaintScene::new(10.0, 10.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Gradient(PaintGradient {
+                base: PaintBase {
+                    id: Some("fade".to_string()),
+                    metadata: None,
+                },
+                kind: GradientKind::Radial {
+                    cx: 5.0,
+                    cy: 5.0,
+                    r: 0.0,
                 },
                 stops: vec![GradientStop {
                     offset: 0.0,
@@ -1550,6 +1736,59 @@ mod tests {
         let plan = plan_scene(&scene);
 
         assert!(unsupported_plan_features(profile, &plan).is_empty());
+    }
+
+    #[test]
+    fn tier1_solid_profile_rejects_gradient_textures() {
+        let mut scene = PaintScene::new(10.0, 10.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Gradient(PaintGradient {
+                base: PaintBase {
+                    id: Some("fade".to_string()),
+                    metadata: None,
+                },
+                kind: GradientKind::Radial {
+                    cx: 5.0,
+                    cy: 5.0,
+                    r: 5.0,
+                },
+                stops: vec![
+                    GradientStop {
+                        offset: 0.0,
+                        color: "#000000".to_string(),
+                    },
+                    GradientStop {
+                        offset: 1.0,
+                        color: "#ffffff".to_string(),
+                    },
+                ],
+            }));
+        scene.instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: 0.0,
+            y: 0.0,
+            width: 10.0,
+            height: 10.0,
+            fill: Some("url(#fade)".to_string()),
+            stroke: None,
+            stroke_width: None,
+            corner_radius: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+        let profile = GpuBackendProfile::tier1_solid(
+            "paint-vm-test-gpu",
+            GpuApiFamily::Wgpu,
+            GpuRenderPath::GraphicsPipeline,
+            "test-shader",
+            GpuReadbackStrategy::TextureCopyToBuffer,
+        );
+
+        let plan = plan_scene(&scene);
+        let unsupported = unsupported_plan_features(profile, &plan);
+
+        assert_eq!(unsupported, vec!["gradient.radial"]);
     }
 
     #[test]

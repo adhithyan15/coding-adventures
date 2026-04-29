@@ -10,3 +10,5 @@
   filters, blend modes, dashed strokes, and exact fill rules.
 - Added linear gradient ramp textures with linear sampling metadata for GPU
   backends that support texture sampling.
+- Added radial gradient 2D textures with radial UV lowering for GPU backends
+  that support sampled gradient textures.

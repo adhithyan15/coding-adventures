@@ -7,7 +7,9 @@
   `ImageSrc::Pixels`.
 - Added linear gradient rendering through shared ramp textures and linear
   filtering.
+- Added radial gradient rendering through shared 2D gradient textures and
+  linear filtering.
 - Added offscreen `Rgba8Unorm` render target creation and CPU readback.
 - Added WGPU scissor-stack support for rectangular clips.
-- Declared text, glyphs, filters, and radial gradients as unsupported or
-  degraded so runtime selection remains honest.
+- Declared text, glyphs, and filters as unsupported so runtime selection
+  remains honest.

@@ -12,7 +12,7 @@ can share the same scene lowering and tessellation model.
 
 This crate is intentionally Tier 1: it validates the backend plumbing, command
 ordering, solid mesh rendering, image textures, linear gradients, rectangular
-clips, and readback path without pretending that text, radial gradients, or
+clips, sampled gradients, and readback path without pretending that text or
 filters are already exact.
 
 ## Where It Fits
@@ -37,7 +37,7 @@ Producer (barcode, Mermaid, layout, HTML)
 | Offscreen readback | Implemented with padded row-copy handling |
 | Images | Implemented for `ImageSrc::Pixels` through RGBA texture upload/sampling |
 | Linear gradients | Implemented through shared ramp textures and gradient UVs |
-| Radial gradients | Degraded by `paint-vm-gpu-core` to first-stop solid fills |
+| Radial gradients | Implemented through shared 2D textures and radial UVs |
 | Text / glyph runs | Not implemented until glyph atlas and shaping strategy lands |
 | Filters / blend modes | Not implemented |
 
@@ -54,7 +54,6 @@ Skia, or future GPU backends until WGPU grows a glyph atlas and shaping path.
 
 ## Next Steps
 
-- Add radial gradient textures instead of first-stop fallback.
 - Add glyph atlas planning once the shared text shaping and font metric pipeline
   is ready.
 - Reuse the same WGPU plumbing as a reference implementation for native
