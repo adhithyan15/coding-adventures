@@ -79,6 +79,11 @@ use paint_instructions::{
     PathCommand, PixelContainer, TextAlign,
 };
 #[cfg(target_os = "windows")]
+use paint_vm_runtime::{
+    PaintAcceleration, PaintBackendCapabilities, PaintBackendDescriptor, PaintBackendFamily,
+    PaintBackendTier, PaintPlatformSupport, PaintRenderError, PaintRenderer, SupportLevel,
+};
+#[cfg(target_os = "windows")]
 use std::collections::HashMap;
 
 // ---------------------------------------------------------------------------
@@ -1090,6 +1095,61 @@ pub fn render(scene: &PaintScene) -> PixelContainer {
     unsafe { render_unsafe(scene, width, height) }
 }
 
+/// Runtime adapter for selecting Direct2D through `paint-vm-runtime`.
+#[cfg(target_os = "windows")]
+pub struct Direct2DPaintBackend;
+
+#[cfg(target_os = "windows")]
+pub fn descriptor() -> PaintBackendDescriptor {
+    PaintBackendDescriptor {
+        id: "paint-vm-direct2d",
+        display_name: "Paint VM Direct2D",
+        family: PaintBackendFamily::Direct2D,
+        acceleration: PaintAcceleration::Gpu,
+        tier: PaintBackendTier::Tier2NativeScenes,
+        platforms: PaintPlatformSupport::windows(),
+        capabilities: PaintBackendCapabilities {
+            rect: SupportLevel::Supported,
+            line: SupportLevel::Supported,
+            ellipse: SupportLevel::Supported,
+            path: SupportLevel::Supported,
+            path_arc_to: SupportLevel::Supported,
+            glyph_run: SupportLevel::Supported,
+            text: SupportLevel::Supported,
+            image: SupportLevel::Supported,
+            clip: SupportLevel::Supported,
+            group: SupportLevel::Supported,
+            group_transform: SupportLevel::Supported,
+            group_opacity: SupportLevel::Supported,
+            layer: SupportLevel::Supported,
+            layer_opacity: SupportLevel::Supported,
+            layer_filters: SupportLevel::Unsupported,
+            layer_blend_modes: SupportLevel::Unsupported,
+            linear_gradient: SupportLevel::Unsupported,
+            radial_gradient: SupportLevel::Unsupported,
+            antialiasing: SupportLevel::Supported,
+            offscreen_pixels: SupportLevel::Supported,
+        },
+        priority: 10,
+    }
+}
+
+#[cfg(target_os = "windows")]
+pub fn renderer() -> Direct2DPaintBackend {
+    Direct2DPaintBackend
+}
+
+#[cfg(target_os = "windows")]
+impl PaintRenderer for Direct2DPaintBackend {
+    fn descriptor(&self) -> PaintBackendDescriptor {
+        descriptor()
+    }
+
+    fn render(&self, scene: &PaintScene) -> Result<PixelContainer, PaintRenderError> {
+        Ok(crate::render(scene))
+    }
+}
+
 /// Render a [`PaintScene`] directly into an existing Win32 HWND.
 #[cfg(target_os = "windows")]
 pub unsafe fn render_to_hwnd(hwnd: HWND, scene: &PaintScene) -> windows::core::Result<()> {
@@ -1337,6 +1397,10 @@ mod tests {
         GlyphPosition, PaintBase, PaintGlyphRun, PaintGroup, PaintInstruction, PaintRect,
         PaintScene, PaintText, TextAlign,
     };
+    #[cfg(target_os = "windows")]
+    use paint_vm_runtime::{
+        PaintBackendPreference, PaintBackendRegistry, PaintRenderOptions, SupportLevel,
+    };
 
     #[cfg(target_os = "windows")]
     fn dark_pixel_bounds(pixels: &PixelContainer) -> Option<(u32, u32, u32, u32)> {
@@ -1363,6 +1427,52 @@ mod tests {
     #[test]
     fn version_exists() {
         assert_eq!(VERSION, "0.1.0");
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn descriptor_reports_direct2d_runtime_capabilities() {
+        let descriptor = descriptor();
+        assert_eq!(descriptor.id, "paint-vm-direct2d");
+        assert_eq!(descriptor.capabilities.text, SupportLevel::Supported);
+        assert_eq!(descriptor.capabilities.glyph_run, SupportLevel::Supported);
+        assert_eq!(descriptor.capabilities.path_arc_to, SupportLevel::Supported);
+        assert_eq!(
+            descriptor.capabilities.antialiasing,
+            SupportLevel::Supported
+        );
+        assert_eq!(
+            descriptor.capabilities.linear_gradient,
+            SupportLevel::Unsupported
+        );
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn runtime_registry_can_render_with_direct2d_backend() {
+        let backend = renderer();
+        let mut registry = PaintBackendRegistry::new();
+        registry.register(&backend);
+
+        let mut scene = PaintScene::new(32.0, 32.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Rect(PaintRect::filled(
+                4.0, 4.0, 20.0, 20.0, "#000000",
+            )));
+
+        let pixels = registry
+            .render_auto(
+                &scene,
+                PaintRenderOptions {
+                    preference: PaintBackendPreference::Named("paint-vm-direct2d".to_string()),
+                    ..PaintRenderOptions::default()
+                },
+            )
+            .expect("Direct2D should satisfy a rect-only scene");
+
+        let (r, g, b, a) = pixels.pixel_at(8, 8);
+        assert_eq!((r, g, b, a), (0, 0, 0, 255));
     }
 
     // ─── Colour parser tests ────────────────────────────────────────────────
