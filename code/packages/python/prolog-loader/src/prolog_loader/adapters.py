@@ -6,6 +6,7 @@ from collections.abc import Callable
 
 from logic_builtins import (
     abolisho,
+    all_differento,
     argo,
     assertao,
     assertzo,
@@ -23,6 +24,16 @@ from logic_builtins import (
     cuto,
     dynamico,
     failo,
+    fd_addo,
+    fd_eqo,
+    fd_geqo,
+    fd_gto,
+    fd_ino,
+    fd_leqo,
+    fd_lto,
+    fd_mulo,
+    fd_neqo,
+    fd_subo,
     findallo,
     forallo,
     functoro,
@@ -33,6 +44,7 @@ from logic_builtins import (
     iftheno,
     integero,
     iso,
+    labelingo,
     leqo,
     lto,
     nonvaro,
@@ -150,6 +162,8 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         return unary_term_builtins[name](args[0])
 
     unary_list_builtins: dict[str, Callable[[object], GoalExpr]] = {
+        "all_different": all_differento,
+        "all_distinct": all_differento,
         "is_list": listo,
     }
     if goal.relation.arity == 1 and name in unary_list_builtins:
@@ -167,6 +181,22 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
     }
     if goal.relation.arity == 2 and name in binary_arithmetic_builtins:
         return binary_arithmetic_builtins[name](args[0], args[1])
+
+    binary_fd_builtins: dict[str, Callable[[object, object], GoalExpr]] = {
+        "#\\=": fd_neqo,
+        "#<": fd_lto,
+        "#=<": fd_leqo,
+        "#>": fd_gto,
+        "#>=": fd_geqo,
+        "in": fd_ino,
+    }
+    if goal.relation.arity == 2 and name == "#=":
+        return _adapt_fd_equality(args[0], args[1])
+    if goal.relation.arity == 2 and name == "ins":
+        ins_goal = _adapt_fd_ins(args[0], args[1])
+        return goal if ins_goal is None else ins_goal
+    if goal.relation.arity == 2 and name in binary_fd_builtins:
+        return binary_fd_builtins[name](args[0], args[1])
 
     ternary_arithmetic_builtins: dict[
         str,
@@ -234,6 +264,10 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         return setofo(args[0], _adapt_callable_goal(args[1]), args[2])
     if name == "forall" and goal.relation.arity == 2:
         return forallo(_adapt_callable_goal(args[0]), _adapt_callable_goal(args[1]))
+    if name == "labeling" and goal.relation.arity == 2:
+        return labelingo(args[1])
+    if name == "label" and goal.relation.arity == 1:
+        return labelingo(args[0])
     if name == "functor" and goal.relation.arity == 3:
         return functoro(*args)
     if name == "arg" and goal.relation.arity == 3:
@@ -278,6 +312,41 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         return goal if property_goal is None else property_goal
 
     return goal
+
+
+def _adapt_fd_equality(left: Term, right: Term) -> GoalExpr:
+    right_expression = _adapt_fd_arithmetic_expression(right, left)
+    if right_expression is not None:
+        return right_expression
+
+    left_expression = _adapt_fd_arithmetic_expression(left, right)
+    if left_expression is not None:
+        return left_expression
+
+    return fd_eqo(left, right)
+
+
+def _adapt_fd_arithmetic_expression(expression: Term, result: Term) -> GoalExpr | None:
+    if not isinstance(expression, Compound) or len(expression.args) != 2:
+        return None
+    if expression.functor.namespace is not None:
+        return None
+
+    left, right = expression.args
+    if expression.functor.name == "+":
+        return fd_addo(left, right, result)
+    if expression.functor.name == "-":
+        return fd_subo(left, right, result)
+    if expression.functor.name == "*":
+        return fd_mulo(left, right, result)
+    return None
+
+
+def _adapt_fd_ins(targets: Term, domain: Term) -> GoalExpr | None:
+    items = _logic_list_items(targets)
+    if items is None:
+        return None
+    return conj(*(fd_ino(item, domain) for item in items))
 
 
 def _adapt_if_then_else(goal: DisjExpr) -> GoalExpr | None:

@@ -92,3 +92,5 @@ documented in this file.
   missing identifiers.
 - Standalone `SYSTEM` doctypes and trailing junk after system identifiers are
   now covered, with unexpected trailing junk marking force-quirks mode.
+- DOCTYPE declarations cut off while matching the `DOCTYPE` keyword now emit a
+  force-quirks token instead of a clean partial declaration.
