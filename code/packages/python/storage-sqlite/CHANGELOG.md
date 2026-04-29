@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.18.0] - 2026-04-28
+
+### Added
+
+**Database header field accessors (PRAGMA user_version / schema_version)**
+
+- **`Schema.get_user_version()` / `set_user_version(value)`** — read/write
+  the `user_version` field at byte offset 60 of the page-1 header
+  (`u32` BE).  Range-checked to `0 ≤ v ≤ 2³² − 1`.  The write is staged
+  via the pager and persisted on the next `commit`.
+- **`SqliteFileBackend.get_user_version()` / `set_user_version(value)` /
+  `get_schema_version()`** — backend-level wrappers that delegate to the
+  `Schema` object.  `get_schema_version()` returns the schema cookie
+  (offset 40), which is bumped automatically by every DDL operation.
+- New private constant `_USER_VERSION_OFFSET = 60` in `schema.py`.
+
+These methods are used by mini-sqlite's `PRAGMA user_version` /
+`PRAGMA schema_version` dispatch (added in mini-sqlite 1.9.0).
+
 ## [0.17.0] - 2026-04-28
 
 ### Added

@@ -966,6 +966,39 @@ class SqliteFileBackend(Backend):
         _, cols = self._require_table(table)
         return cols
 
+    # ── Header field accessors (PRAGMA user_version / schema_version) ────────
+
+    def get_user_version(self) -> int:
+        """Read the ``user_version`` field from the database header.
+
+        ``user_version`` is a 32-bit unsigned integer at byte offset 60
+        of the page-1 header.  It is opaque to the engine — applications
+        typically use it for schema-migration version tracking.  A fresh
+        database returns 0.
+        """
+        return self._schema.get_user_version()
+
+    def set_user_version(self, value: int) -> None:
+        """Write *value* into the ``user_version`` field.
+
+        *value* must fit in an unsigned 32-bit integer; otherwise raises
+        ``ValueError``.  The change is staged in the pager and persists
+        on the next ``commit``.  No transaction is auto-committed here —
+        the caller (typically the SQL VM) wraps the PRAGMA in its usual
+        transaction lifecycle.
+        """
+        self._schema.set_user_version(value)
+
+    def get_schema_version(self) -> int:
+        """Read the schema cookie from the database header.
+
+        The schema cookie (a 32-bit unsigned integer at byte offset 40)
+        is incremented automatically on every DDL operation
+        (``CREATE TABLE``, ``DROP TABLE``, ``ALTER TABLE``, etc.).
+        Read-only — applications cannot set it directly.
+        """
+        return self._schema.get_schema_cookie()
+
     # ── Backend interface: Read ───────────────────────────────────────────────
 
     def scan(self, table: str) -> RowIterator:

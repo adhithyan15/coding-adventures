@@ -4,6 +4,44 @@
 
 ### Added
 
+**`PRAGMA user_version` (read/write) and `PRAGMA schema_version` (read)**
+
+Two new PRAGMAs matching real SQLite's behaviour for header-field access:
+
+```sql
+PRAGMA user_version;             -- read: returns one row (user_version,)
+PRAGMA user_version = 7;         -- write: stores 7 in the header
+PRAGMA schema_version;           -- read: returns one row (schema_version,)
+```
+
+- **`PRAGMA user_version`** — application-defined `u32` (0 ≤ v ≤ 2³² − 1).
+  Read returns a one-row, one-column result `(user_version,)`.  Write
+  validates the range and stages the change on the backend; persistent
+  backends (`SqliteFileBackend`) flush via the next `commit`.  An
+  out-of-range value raises `ProgrammingError`.
+- **`PRAGMA schema_version`** — read-only.  Returns the schema cookie,
+  which is bumped automatically on every DDL operation (`CREATE TABLE`,
+  `DROP TABLE`, `CREATE INDEX`, `DROP INDEX`, …).  DML statements
+  (INSERT/UPDATE/DELETE) do *not* bump it.
+- **`_PRAGMA_RE` extension** — the engine's PRAGMA regex now also matches
+  the assignment form `PRAGMA name = <int>` (signed integer), with the
+  value captured into a new `set_value` named group.
+- Backend support: relies on
+  `Backend.get_user_version` / `set_user_version` /
+  `get_schema_version` (added in `sql-backend` 0.11.0 and
+  `storage-sqlite` 0.18.0).  Backends without these methods cause
+  `PRAGMA user_version` writes to raise
+  `ProgrammingError("backend does not support …")` rather than
+  AttributeError.
+
+### Tests added
+
+- `tests/test_tier3_pragma.py::TestUserVersion` — 8 tests: default,
+  description, set+read, overwrite, zero-is-valid, max u32, negative
+  rejected, overflow rejected.
+- `tests/test_tier3_pragma.py::TestSchemaVersion` — 6 tests: default,
+  description, CREATE TABLE bumps, DROP TABLE bumps, CREATE INDEX
+  bumps, DML does not bump.
 **Bytes (BLOB) parameter binding**
 
 `bytes`, `bytearray`, and `memoryview` parameters can now be bound to `?`

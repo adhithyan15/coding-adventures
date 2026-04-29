@@ -5,6 +5,19 @@ All notable changes to the `sql-backend` Python package are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.11.0] - 2026-04-28
+
+### Added
+
+- **`InMemoryBackend.get_user_version` / `set_user_version` /
+  `get_schema_version`** — three new methods exposing the SQLite header
+  fields used by `PRAGMA user_version` / `PRAGMA schema_version`.
+  - `_user_version`: a `u32` opaque to the engine (defaults to 0).
+  - `_schema_version`: a counter the backend bumps automatically on every
+    successful `create_table` / `drop_table` / `create_index` / `drop_index`.
+  - `set_user_version` validates `0 ≤ v ≤ 2³² − 1` and raises
+    `ValueError` otherwise.
+
 ## [0.10.0] - 2026-04-28
 
 ### Added
