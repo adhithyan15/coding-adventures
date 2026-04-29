@@ -161,7 +161,16 @@ const TEMP_BASE: usize = 287;
 /// assert_eq!(scalar_reg("Z9"), 286);
 /// ```
 pub fn scalar_reg(name: &str) -> usize {
+    // Guard against empty or non-alphabetic input: the first character must be
+    // A-Z (or a-z, which we normalise to uppercase).  An empty slice or a
+    // name whose first character is not a letter would cause an index-out-of-
+    // bounds panic at `upper[0]`, so we reject those inputs explicitly.
     let upper: Vec<char> = name.to_ascii_uppercase().chars().collect();
+    assert!(
+        !upper.is_empty() && upper[0].is_ascii_alphabetic(),
+        "scalar_reg: name must start with A-Z, got {:?}",
+        name
+    );
     if upper.len() == 1 {
         // A–Z → v1–v26
         VAR_BASE + (upper[0] as usize - 'A' as usize)
@@ -320,6 +329,16 @@ pub fn compile_basic_with_options(
     if int_bits < 2 {
         return Err(CompileError::new(format!(
             "int_bits must be >= 2; got {int_bits}"
+        )));
+    }
+    // i64 supports a maximum shift of 63 bits.  Allowing int_bits > 63 would
+    // cause `1i64 << (int_bits - 1)` to overflow (panic in debug, UB in
+    // release) inside `emit_print_number`.  Reject it here before we even
+    // construct the compiler so the caller gets a clear, actionable error
+    // rather than a panic or a garbled program.
+    if int_bits > 63 {
+        return Err(CompileError::new(format!(
+            "int_bits must be <= 63 for i64 arithmetic; got {int_bits}"
         )));
     }
     let ast = parse_dartmouth_basic(source);
@@ -1623,6 +1642,24 @@ mod tests {
     fn test_int_bits_too_small_errors() {
         let err = compile_basic_with_options("10 END\n", CharEncoding::Ge225, 1);
         assert!(err.is_err(), "int_bits < 2 should return error");
+    }
+
+    #[test]
+    fn test_int_bits_too_large_errors() {
+        // int_bits > 63 would overflow i64 inside emit_print_number.
+        // The public API must reject it before constructing the compiler.
+        let err = compile_basic_with_options("10 END\n", CharEncoding::Ge225, 64);
+        assert!(err.is_err(), "int_bits > 63 should return error");
+        let msg = err.unwrap_err().message;
+        assert!(msg.contains("63"), "error should mention the upper bound of 63");
+    }
+
+    #[test]
+    #[should_panic(expected = "scalar_reg: name must start with A-Z")]
+    fn test_scalar_reg_empty_panics() {
+        // An empty string would previously cause an index-out-of-bounds panic
+        // with a confusing message.  Now we assert early with a clear message.
+        scalar_reg("");
     }
 
     // ── char_encoding ASCII ──────────────────────────────────────────────
