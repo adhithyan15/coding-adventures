@@ -165,15 +165,28 @@ pub fn pack(artifact: &CodeArtifact) -> Result<Vec<u8>, PackagerError> {
             "pe packager: native_bytes length exceeds u32::MAX (4 GiB)".into(),
         )
     })?;
-    // Guard: align_to(code_len, FILE_ALIGNMENT) computes `code_len + FILE_ALIGNMENT - 1`
-    // in u32. If code_len is within FILE_ALIGNMENT-1 bytes of u32::MAX, this addition
-    // overflows u32 — panicking in debug, wrapping silently in release.  The wrap produces
-    // a far-too-small raw_code_size, which in turn makes the output buffer too small and
-    // causes the copy_from_slice below to panic.  Reject the pathological range early.
-    if code_len > u32::MAX - (FILE_ALIGNMENT - 1) {
-        return Err(PackagerError::UnsupportedTarget(
-            "pe packager: native_bytes too large to align to file boundary (within 511 bytes of 4 GiB)".into(),
-        ));
+    // Guard: both align_to calls below compute `val + alignment - 1` in u32.  We need
+    // to reject any code_len that would cause either of these additions to overflow:
+    //
+    //   1. raw_code_size  = align_to(code_len,            FILE_ALIGNMENT)
+    //      → requires code_len + FILE_ALIGNMENT - 1 ≤ u32::MAX
+    //      → code_len ≤ u32::MAX - (FILE_ALIGNMENT - 1)
+    //
+    //   2. size_of_image  = align_to(TEXT_RVA + code_len, SECTION_ALIGNMENT)
+    //      → requires TEXT_RVA + code_len + SECTION_ALIGNMENT - 1 ≤ u32::MAX
+    //      → code_len ≤ u32::MAX - TEXT_RVA - (SECTION_ALIGNMENT - 1)
+    //
+    // The second bound is tighter (0xFFFFE000 vs 0xFFFFFE00), so it subsumes the first.
+    // Using a single check here keeps the subsequent align_to calls unconditionally safe.
+    //
+    // Practical impact: the effective code limit is ~3.99 GiB — far larger than any
+    // reasonable compiled binary.
+    const MAX_CODE_LEN: u32 = u32::MAX - TEXT_RVA - (SECTION_ALIGNMENT - 1);
+    if code_len > MAX_CODE_LEN {
+        return Err(PackagerError::UnsupportedTarget(format!(
+            "pe packager: native_bytes length {code_len} exceeds maximum \
+             safe size {MAX_CODE_LEN} (required for 4 KiB section alignment)"
+        )));
     }
     // Validate that entry_point fits in u32.  On a 64-bit host, usize can exceed u32::MAX;
     // truncating would silently embed a wrong AddressOfEntryPoint in the header.
@@ -183,17 +196,12 @@ pub fn pack(artifact: &CodeArtifact) -> Result<Vec<u8>, PackagerError> {
         )
     })?;
     // On-disk size of the code section, rounded up to the next file-alignment boundary.
-    // Safe: code_len <= u32::MAX - (FILE_ALIGNMENT - 1) checked above.
+    // Safe: code_len ≤ MAX_CODE_LEN ≤ u32::MAX - (FILE_ALIGNMENT - 1).
     let raw_code_size = align_to(code_len, FILE_ALIGNMENT);
     // In-memory image size: headers occupy [0, 0x1000), code occupies [0x1000, ...).
-    let size_of_image = align_to(
-        TEXT_RVA.checked_add(code_len).ok_or_else(|| {
-            PackagerError::UnsupportedTarget(
-                "pe packager: TEXT_RVA + code_len overflows u32".into(),
-            )
-        })?,
-        SECTION_ALIGNMENT,
-    );
+    // Safe: TEXT_RVA + code_len ≤ TEXT_RVA + MAX_CODE_LEN = u32::MAX - (SECTION_ALIGNMENT-1),
+    // so align_to(TEXT_RVA + code_len, SECTION_ALIGNMENT) cannot overflow.
+    let size_of_image = align_to(TEXT_RVA + code_len, SECTION_ALIGNMENT);
     // RVA of the entry point = start of .text + entry_point offset.
     let address_of_entry_point = TEXT_RVA.checked_add(entry_u32).ok_or_else(|| {
         PackagerError::UnsupportedTarget(
