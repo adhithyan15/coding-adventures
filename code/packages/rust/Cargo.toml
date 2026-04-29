@@ -431,4 +431,5 @@ members = [
     "twig-lexer",
     "twig-parser",
     "twig-ir-compiler",
+    "lang-runtime-core",
 ]
