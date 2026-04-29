@@ -49,9 +49,35 @@ def test_too_many_params():
         substitute("VALUES (?)", (1, 2))
 
 
-def test_bytes_not_supported():
-    with pytest.raises(mini_sqlite.NotSupportedError):
-        substitute("VALUES (?)", (b"x",))
+def test_bytes_render_as_blob_literal():
+    """``bytes`` parameters render as the SQLite ``X'<hex>'`` blob literal."""
+    assert substitute("VALUES (?)", (b"\xde\xad\xbe\xef",)) == "VALUES (X'deadbeef')"
+
+
+def test_empty_bytes_render_as_empty_blob_literal():
+    assert substitute("VALUES (?)", (b"",)) == "VALUES (X'')"
+
+
+def test_bytearray_renders_same_as_bytes():
+    assert substitute("VALUES (?)", (bytearray(b"\x00\xff"),)) == "VALUES (X'00ff')"
+
+
+def test_memoryview_renders_same_as_bytes():
+    assert substitute("VALUES (?)", (memoryview(b"\xab\xcd"),)) == "VALUES (X'abcd')"
+
+
+def test_bytes_subclass_cannot_inject_via_hex():
+    """A ``bytes`` subclass overriding ``hex`` must not bypass the literal form.
+
+    The implementation calls ``bytes(value).hex()`` which materialises a
+    fresh ``bytes`` object, so a subclass-defined ``.hex`` is bypassed.
+    """
+    class Evil(bytes):
+        def hex(self, *a, **kw):  # noqa: ANN002, ANN003, ANN202
+            return "00'; DROP TABLE t--"
+
+    out = substitute("VALUES (?)", (Evil(b"\x01\x02"),))
+    assert out == "VALUES (X'0102')"
 
 
 def test_unsupported_type():

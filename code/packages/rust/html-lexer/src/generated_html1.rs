@@ -9984,6 +9984,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(invalid-doctype-keyword)".to_string(),
+                "mark_force_quirks".to_string(),
                 "append_doctype_name(d)".to_string(),
                 "append_doctype_name(current_lowercase)".to_string(),
             ],
@@ -10045,6 +10046,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(invalid-doctype-keyword)".to_string(),
+                "mark_force_quirks".to_string(),
                 "append_doctype_name(do)".to_string(),
                 "append_doctype_name(current_lowercase)".to_string(),
             ],
@@ -10106,6 +10108,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(invalid-doctype-keyword)".to_string(),
+                "mark_force_quirks".to_string(),
                 "append_doctype_name(doc)".to_string(),
                 "append_doctype_name(current_lowercase)".to_string(),
             ],
@@ -10167,6 +10170,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(invalid-doctype-keyword)".to_string(),
+                "mark_force_quirks".to_string(),
                 "append_doctype_name(doct)".to_string(),
                 "append_doctype_name(current_lowercase)".to_string(),
             ],
@@ -10228,6 +10232,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(invalid-doctype-keyword)".to_string(),
+                "mark_force_quirks".to_string(),
                 "append_doctype_name(docty)".to_string(),
                 "append_doctype_name(current_lowercase)".to_string(),
             ],
@@ -10289,6 +10294,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(invalid-doctype-keyword)".to_string(),
+                "mark_force_quirks".to_string(),
                 "append_doctype_name(doctyp)".to_string(),
                 "append_doctype_name(current_lowercase)".to_string(),
             ],

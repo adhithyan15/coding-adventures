@@ -172,3 +172,14 @@ def test_named_param_reused_in_same_statement():
     )
     names = sorted(row[0] for row in cur)
     assert names == ["Alice", "Bob"]
+
+
+def test_bytes_param_round_trip():
+    """``bytes`` parameters insert and read back as the same bytes (BLOB)."""
+    conn = mini_sqlite.connect(":memory:")
+    conn.execute("CREATE TABLE blobs (id INTEGER PRIMARY KEY, data BLOB)")
+    conn.execute("INSERT INTO blobs (id, data) VALUES (?, ?)", (1, b"\xde\xad\xbe\xef"))
+    conn.execute("INSERT INTO blobs (id, data) VALUES (?, ?)", (2, b""))
+    conn.commit()
+    rows = conn.execute("SELECT id, data FROM blobs ORDER BY id").fetchall()
+    assert rows == [(1, b"\xde\xad\xbe\xef"), (2, b"")]

@@ -161,6 +161,31 @@ fn default_html_lexer_marks_doctype_keyword_eof_force_quirks() {
 }
 
 #[test]
+fn default_html_lexer_marks_invalid_doctype_keyword_force_quirks() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("<!DOX>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Doctype {
+                name: Some("dox".to_string()),
+                public_identifier: None,
+                system_identifier: None,
+                force_quirks: true,
+            },
+            Token::Eof,
+        ]
+    );
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "invalid-doctype-keyword"));
+}
+
+#[test]
 fn default_html_lexer_marks_after_doctype_name_eof_force_quirks() {
     let tokens = lex_html("<!DOCTYPE html ").unwrap();
 

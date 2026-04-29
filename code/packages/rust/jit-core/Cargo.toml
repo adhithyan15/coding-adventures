@@ -1,0 +1,12 @@
+[package]
+name = "jit-core"
+version = "0.1.0"
+edition = "2021"
+description = "JIT compilation engine for InterpreterIR — specialises hot IIRFunctions into typed CIR and compiles them via a pluggable Backend."
+license = "MIT"
+
+[dependencies]
+interpreter-ir = { path = "../interpreter-ir" }
+vm-core        = { path = "../vm-core" }
+
+[dev-dependencies]

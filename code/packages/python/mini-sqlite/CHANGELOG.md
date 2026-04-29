@@ -42,6 +42,35 @@ PRAGMA schema_version;           -- read: returns one row (schema_version,)
 - `tests/test_tier3_pragma.py::TestSchemaVersion` — 6 tests: default,
   description, CREATE TABLE bumps, DROP TABLE bumps, CREATE INDEX
   bumps, DML does not bump.
+**Bytes (BLOB) parameter binding**
+
+`bytes`, `bytearray`, and `memoryview` parameters can now be bound to `?`
+placeholders.  They render as the SQLite blob-literal form `X'<hex>'`,
+which round-trips through the SQL lexer (it already accepts `X'...'`
+since the BLOB-type work in 1.7.0).
+
+```python
+conn.execute("INSERT INTO blobs (data) VALUES (?)", (b"\xde\xad\xbe\xef",))
+```
+
+- **`binding._to_sql_literal`** — the previous `NotSupportedError` for
+  byte parameters is replaced with `f"X'{bytes(value).hex()}'"`.  The
+  explicit `bytes(value)` coercion materialises a fresh object so a
+  hostile `bytes` subclass overriding `.hex()` cannot inject SQL.
+- **`bytearray` / `memoryview`** are coerced via `bytes(...)` and render
+  identically to `bytes`.
+- **Empty bytes** render as `X''` (parses as a zero-length blob).
+
+### Tests added
+
+- `tests/test_binding.py` — 5 new tests: bytes round-trip, empty bytes,
+  bytearray, memoryview, and a hostile-subclass injection-defense test.
+- `tests/test_cursor.py::test_bytes_param_round_trip` — end-to-end
+  insert + select of binary data through `Connection.execute`.
+
+### Removed
+
+- `test_bytes_not_supported` — replaced by the round-trip tests above.
 
 ## [1.8.0] - 2026-04-28
 

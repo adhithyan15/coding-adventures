@@ -69,6 +69,16 @@
       ]
     },
     {
+      "description": "doctype invalid keyword force quirks",
+      "input": "<!DOX>",
+      "output": [
+        ["DOCTYPE", "dox", null, null, false]
+      ],
+      "errors": [
+        {"code": "invalid-doctype-keyword", "line": 1, "col": 5}
+      ]
+    },
+    {
       "description": "doctype public identifier",
       "input": "<!DOCTYPE html PUBLIC \"-//IETF//DTD HTML//EN\">",
       "output": [
