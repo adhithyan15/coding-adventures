@@ -15,9 +15,9 @@ selection behavior without requiring Cairo DLL/framework installation.
 | Rect, line, ellipse, path | Implemented, except SVG `ArcTo` lowering |
 | Clip, group transform, layer opacity | Implemented natively |
 | Image pixels | Implemented for `ImageSrc::Pixels` |
+| Linear / radial gradients | Implemented for fills and strokes referenced by `url(#id)` |
 | Text | Degraded, uses Cairo toy text API |
 | Glyph runs | Degraded, uses Cairo glyph APIs without full shaping integration |
-| Gradients | Not implemented |
 | Layer filters / blend modes | Not implemented |
 
 ## Linux Dependencies

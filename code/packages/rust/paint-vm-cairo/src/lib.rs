@@ -5,6 +5,8 @@
 //! selection and compatibility fixtures can still exercise the Cairo-family
 //! backend without requiring Cairo DLLs/frameworks everywhere.
 
+use std::collections::HashMap;
+
 #[cfg(not(any(
     target_os = "linux",
     target_os = "freebsd",
@@ -13,9 +15,11 @@
 )))]
 use paint_instructions::{
     GlyphPosition, ImageSrc, PaintClip, PaintEllipse, PaintGlyphRun, PaintGroup, PaintImage,
-    PaintInstruction, PaintLayer, PaintPath, PaintRect, PaintText, PathCommand, TextAlign,
+    PaintLayer, PaintPath, PaintRect, PaintText, PathCommand, TextAlign,
 };
-use paint_instructions::{PaintScene, PixelContainer};
+use paint_instructions::{
+    GradientKind, GradientStop, PaintGradient, PaintInstruction, PaintScene, PixelContainer,
+};
 use paint_vm_runtime::{
     PaintAcceleration, PaintBackendCapabilities, PaintBackendDescriptor, PaintBackendFamily,
     PaintBackendTier, PaintPlatformSupport, PaintRenderError, PaintRenderer, SupportLevel,
@@ -41,18 +45,166 @@ impl Rgba {
         a: 0,
     };
 
-    #[cfg(not(any(
-        target_os = "linux",
-        target_os = "freebsd",
-        target_os = "openbsd",
-        target_os = "netbsd"
-    )))]
     fn with_alpha(self, opacity: f64) -> Self {
         Self {
             a: ((self.a as f64 * opacity.clamp(0.0, 1.0)).round() as u8),
             ..self
         }
     }
+}
+
+fn collect_gradients(instructions: &[PaintInstruction]) -> HashMap<String, PaintGradient> {
+    let mut gradients = HashMap::new();
+    collect_gradients_into(instructions, &mut gradients);
+    gradients
+}
+
+fn collect_gradients_into(
+    instructions: &[PaintInstruction],
+    gradients: &mut HashMap<String, PaintGradient>,
+) {
+    for instruction in instructions {
+        match instruction {
+            PaintInstruction::Gradient(gradient) => {
+                if let Some(id) = gradient.base.id.as_ref() {
+                    gradients.insert(id.clone(), gradient.clone());
+                }
+            }
+            PaintInstruction::Group(group) => collect_gradients_into(&group.children, gradients),
+            PaintInstruction::Layer(layer) => collect_gradients_into(&layer.children, gradients),
+            PaintInstruction::Clip(clip) => collect_gradients_into(&clip.children, gradients),
+            _ => {}
+        }
+    }
+}
+
+fn gradient_ref(value: &str) -> Option<&str> {
+    value
+        .trim()
+        .strip_prefix("url(#")
+        .and_then(|value| value.strip_suffix(')'))
+}
+
+fn gradient_stops(stops: &[GradientStop], opacity: f64) -> Vec<(f64, Rgba)> {
+    let mut stops: Vec<(f64, Rgba)> = stops
+        .iter()
+        .map(|stop| {
+            (
+                stop.offset.clamp(0.0, 1.0),
+                parse_css_color(&stop.color).with_alpha(opacity),
+            )
+        })
+        .collect();
+    stops.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap_or(std::cmp::Ordering::Equal));
+    stops
+}
+
+#[cfg(not(any(
+    target_os = "linux",
+    target_os = "freebsd",
+    target_os = "openbsd",
+    target_os = "netbsd"
+)))]
+fn sample_gradient_stops(stops: &[(f64, Rgba)], t: f64) -> Rgba {
+    if stops.is_empty() {
+        return Rgba::TRANSPARENT;
+    }
+    let t = t.clamp(0.0, 1.0);
+    if t <= stops[0].0 {
+        return stops[0].1;
+    }
+    for pair in stops.windows(2) {
+        let (left_offset, left_color) = pair[0];
+        let (right_offset, right_color) = pair[1];
+        if t <= right_offset {
+            let width = (right_offset - left_offset).max(f64::EPSILON);
+            return mix_rgba(left_color, right_color, (t - left_offset) / width);
+        }
+    }
+    stops
+        .last()
+        .map(|(_, color)| *color)
+        .unwrap_or(Rgba::TRANSPARENT)
+}
+
+#[cfg(not(any(
+    target_os = "linux",
+    target_os = "freebsd",
+    target_os = "openbsd",
+    target_os = "netbsd"
+)))]
+fn mix_rgba(a: Rgba, b: Rgba, t: f64) -> Rgba {
+    let t = t.clamp(0.0, 1.0);
+    let mix = |left: u8, right: u8| -> u8 {
+        (left as f64 + (right as f64 - left as f64) * t)
+            .round()
+            .clamp(0.0, 255.0) as u8
+    };
+    Rgba {
+        r: mix(a.r, b.r),
+        g: mix(a.g, b.g),
+        b: mix(a.b, b.b),
+        a: mix(a.a, b.a),
+    }
+}
+
+#[cfg(not(any(
+    target_os = "linux",
+    target_os = "freebsd",
+    target_os = "openbsd",
+    target_os = "netbsd"
+)))]
+fn linear_gradient_t(x: f64, y: f64, x1: f64, y1: f64, x2: f64, y2: f64) -> f64 {
+    let dx = x2 - x1;
+    let dy = y2 - y1;
+    let len2 = dx * dx + dy * dy;
+    if len2 <= f64::EPSILON {
+        return 0.0;
+    }
+    (((x - x1) * dx + (y - y1) * dy) / len2).clamp(0.0, 1.0)
+}
+
+#[cfg(not(any(
+    target_os = "linux",
+    target_os = "freebsd",
+    target_os = "openbsd",
+    target_os = "netbsd"
+)))]
+fn software_paint(
+    paint: &str,
+    opacity: f64,
+    gradients: &HashMap<String, PaintGradient>,
+) -> Result<Option<SoftwarePaint>, PaintRenderError> {
+    if paint.trim().eq_ignore_ascii_case("none") {
+        return Ok(None);
+    }
+    if let Some(id) = gradient_ref(paint) {
+        let Some(gradient) = gradients.get(id) else {
+            return Err(render_failed(format!(
+                "gradient reference '{id}' is not defined"
+            )));
+        };
+        let stops = gradient_stops(&gradient.stops, opacity);
+        if stops.is_empty() {
+            return Ok(Some(SoftwarePaint::Solid(Rgba::TRANSPARENT)));
+        }
+        if stops.len() == 1 {
+            return Ok(Some(SoftwarePaint::Solid(stops[0].1)));
+        }
+        return Ok(Some(match gradient.kind {
+            GradientKind::Linear { x1, y1, x2, y2 } => SoftwarePaint::Linear {
+                x1,
+                y1,
+                x2,
+                y2,
+                stops,
+            },
+            GradientKind::Radial { cx, cy, r } => SoftwarePaint::Radial { cx, cy, r, stops },
+        }));
+    }
+    Ok(Some(SoftwarePaint::Solid(
+        parse_css_color(paint).with_alpha(opacity),
+    )))
 }
 
 #[cfg(not(any(
@@ -137,8 +289,8 @@ pub fn descriptor() -> PaintBackendDescriptor {
         layer_opacity: SupportLevel::Supported,
         layer_filters: SupportLevel::Unsupported,
         layer_blend_modes: SupportLevel::Unsupported,
-        linear_gradient: SupportLevel::Unsupported,
-        radial_gradient: SupportLevel::Unsupported,
+        linear_gradient: SupportLevel::Supported,
+        radial_gradient: SupportLevel::Supported,
         antialiasing: SupportLevel::Supported,
         offscreen_pixels: SupportLevel::Supported,
     };
@@ -166,8 +318,8 @@ pub fn descriptor() -> PaintBackendDescriptor {
         layer_opacity: SupportLevel::Degraded,
         layer_filters: SupportLevel::Unsupported,
         layer_blend_modes: SupportLevel::Unsupported,
-        linear_gradient: SupportLevel::Unsupported,
-        radial_gradient: SupportLevel::Unsupported,
+        linear_gradient: SupportLevel::Supported,
+        radial_gradient: SupportLevel::Supported,
         antialiasing: SupportLevel::Degraded,
         offscreen_pixels: SupportLevel::Supported,
     };
@@ -231,13 +383,14 @@ fn render_software(scene: &PaintScene) -> Result<PixelContainer, PaintRenderErro
     let height = scene.height.ceil().max(0.0) as u32;
     let mut surface = SoftwareSurface::new(width, height);
     surface.clear(parse_css_color(&scene.background));
+    let gradients = collect_gradients(&scene.instructions);
 
     let state = RenderState {
         clip: ClipRect::full(width, height),
         opacity: 1.0,
     };
     for instruction in &scene.instructions {
-        surface.render_instruction(instruction, state)?;
+        surface.render_instruction(instruction, state, &gradients)?;
     }
 
     Ok(surface.into_pixels())
@@ -253,15 +406,16 @@ mod native_cairo {
     use super::{parse_css_color, render_failed, Rgba, BACKEND_ID};
     use cairo::{
         Context, FillRule as CairoFillRule, FontSlant, FontWeight, Format, Glyph, ImageSurface,
-        LineCap, LineJoin, Matrix, Operator,
+        LineCap, LineJoin, LinearGradient, Matrix, Operator, RadialGradient,
     };
     use paint_instructions::{
         FillRule as PaintFillRule, GlyphPosition, ImageSrc, PaintClip, PaintEllipse, PaintGlyphRun,
-        PaintGroup, PaintImage, PaintInstruction, PaintLayer, PaintLine, PaintPath, PaintRect,
-        PaintScene, PaintText, PathCommand, PixelContainer, StrokeCap, StrokeJoin, TextAlign,
-        Transform2D,
+        PaintGradient, PaintGroup, PaintImage, PaintInstruction, PaintLayer, PaintLine, PaintPath,
+        PaintRect, PaintScene, PaintText, PathCommand, PixelContainer, StrokeCap, StrokeJoin,
+        TextAlign, Transform2D,
     };
     use paint_vm_runtime::{PaintRenderError, SupportLevel};
+    use std::collections::HashMap;
 
     pub fn render(scene: &PaintScene) -> Result<PixelContainer, PaintRenderError> {
         let width = scene.width.ceil().max(0.0) as i32;
@@ -271,8 +425,9 @@ mod native_cairo {
         {
             let cr = Context::new(&surface).map_err(cairo_error)?;
             clear(&cr, parse_css_color(&scene.background))?;
+            let gradients = super::collect_gradients(&scene.instructions);
             for instruction in &scene.instructions {
-                render_instruction(&cr, instruction, 1.0)?;
+                render_instruction(&cr, instruction, 1.0, &gradients)?;
             }
         }
 
@@ -292,25 +447,29 @@ mod native_cairo {
         cr: &Context,
         instruction: &PaintInstruction,
         opacity: f64,
+        gradients: &HashMap<String, PaintGradient>,
     ) -> Result<(), PaintRenderError> {
         match instruction {
-            PaintInstruction::Rect(rect) => render_rect(cr, rect, opacity),
-            PaintInstruction::Line(line) => render_line(cr, line, opacity),
-            PaintInstruction::Ellipse(ellipse) => render_ellipse(cr, ellipse, opacity),
-            PaintInstruction::Path(path) => render_path(cr, path, opacity),
+            PaintInstruction::Rect(rect) => render_rect(cr, rect, opacity, gradients),
+            PaintInstruction::Line(line) => render_line(cr, line, opacity, gradients),
+            PaintInstruction::Ellipse(ellipse) => render_ellipse(cr, ellipse, opacity, gradients),
+            PaintInstruction::Path(path) => render_path(cr, path, opacity, gradients),
             PaintInstruction::Text(text) => render_text(cr, text, opacity),
             PaintInstruction::GlyphRun(run) => render_glyph_run(cr, run, opacity),
-            PaintInstruction::Group(group) => render_group(cr, group, opacity),
-            PaintInstruction::Layer(layer) => render_layer(cr, layer, opacity),
-            PaintInstruction::Clip(clip) => render_clip(cr, clip, opacity),
-            PaintInstruction::Gradient(_) => Err(render_failed(
-                "native Cairo renderer does not implement gradients yet",
-            )),
+            PaintInstruction::Group(group) => render_group(cr, group, opacity, gradients),
+            PaintInstruction::Layer(layer) => render_layer(cr, layer, opacity, gradients),
+            PaintInstruction::Clip(clip) => render_clip(cr, clip, opacity, gradients),
+            PaintInstruction::Gradient(_) => Ok(()),
             PaintInstruction::Image(image) => render_image(cr, image, opacity),
         }
     }
 
-    fn render_rect(cr: &Context, rect: &PaintRect, opacity: f64) -> Result<(), PaintRenderError> {
+    fn render_rect(
+        cr: &Context,
+        rect: &PaintRect,
+        opacity: f64,
+        gradients: &HashMap<String, PaintGradient>,
+    ) -> Result<(), PaintRenderError> {
         append_rounded_rect(
             cr,
             rect.x,
@@ -320,7 +479,7 @@ mod native_cairo {
             rect.corner_radius,
         );
         if let Some(fill) = &rect.fill {
-            set_source(cr, parse_css_color(fill), opacity);
+            set_paint_source(cr, fill, opacity, gradients)?;
             if rect.stroke.is_some() {
                 cr.fill_preserve().map_err(cairo_error)?;
             } else {
@@ -335,7 +494,7 @@ mod native_cairo {
                 rect.stroke_dash.as_deref(),
                 rect.stroke_dash_offset,
             );
-            set_source(cr, parse_css_color(stroke), opacity);
+            set_paint_source(cr, stroke, opacity, gradients)?;
             cr.stroke().map_err(cairo_error)?;
         } else {
             cr.new_path();
@@ -343,7 +502,12 @@ mod native_cairo {
         Ok(())
     }
 
-    fn render_line(cr: &Context, line: &PaintLine, opacity: f64) -> Result<(), PaintRenderError> {
+    fn render_line(
+        cr: &Context,
+        line: &PaintLine,
+        opacity: f64,
+        gradients: &HashMap<String, PaintGradient>,
+    ) -> Result<(), PaintRenderError> {
         cr.new_path();
         cr.move_to(line.x1, line.y1);
         cr.line_to(line.x2, line.y2);
@@ -354,7 +518,7 @@ mod native_cairo {
             line.stroke_dash.as_deref(),
             line.stroke_dash_offset,
         );
-        set_source(cr, parse_css_color(&line.stroke), opacity);
+        set_paint_source(cr, &line.stroke, opacity, gradients)?;
         cr.stroke().map_err(cairo_error)
     }
 
@@ -362,6 +526,7 @@ mod native_cairo {
         cr: &Context,
         ellipse: &PaintEllipse,
         opacity: f64,
+        gradients: &HashMap<String, PaintGradient>,
     ) -> Result<(), PaintRenderError> {
         if ellipse.rx <= 0.0 || ellipse.ry <= 0.0 {
             return Ok(());
@@ -374,7 +539,7 @@ mod native_cairo {
         cr.restore().map_err(cairo_error)?;
 
         if let Some(fill) = &ellipse.fill {
-            set_source(cr, parse_css_color(fill), opacity);
+            set_paint_source(cr, fill, opacity, gradients)?;
             if ellipse.stroke.is_some() {
                 cr.fill_preserve().map_err(cairo_error)?;
             } else {
@@ -389,7 +554,7 @@ mod native_cairo {
                 ellipse.stroke_dash.as_deref(),
                 ellipse.stroke_dash_offset,
             );
-            set_source(cr, parse_css_color(stroke), opacity);
+            set_paint_source(cr, stroke, opacity, gradients)?;
             cr.stroke().map_err(cairo_error)?;
         } else {
             cr.new_path();
@@ -397,7 +562,12 @@ mod native_cairo {
         Ok(())
     }
 
-    fn render_path(cr: &Context, path: &PaintPath, opacity: f64) -> Result<(), PaintRenderError> {
+    fn render_path(
+        cr: &Context,
+        path: &PaintPath,
+        opacity: f64,
+        gradients: &HashMap<String, PaintGradient>,
+    ) -> Result<(), PaintRenderError> {
         if path
             .commands
             .iter()
@@ -461,7 +631,7 @@ mod native_cairo {
         );
 
         if let Some(fill) = &path.fill {
-            set_source(cr, parse_css_color(fill), opacity);
+            set_paint_source(cr, fill, opacity, gradients)?;
             if path.stroke.is_some() {
                 cr.fill_preserve().map_err(cairo_error)?;
             } else {
@@ -483,7 +653,7 @@ mod native_cairo {
                     StrokeJoin::Bevel => LineJoin::Bevel,
                 });
             }
-            set_source(cr, parse_css_color(stroke), opacity);
+            set_paint_source(cr, stroke, opacity, gradients)?;
             cr.stroke().map_err(cairo_error)?;
         } else {
             cr.new_path();
@@ -547,6 +717,7 @@ mod native_cairo {
         cr: &Context,
         group: &PaintGroup,
         opacity: f64,
+        gradients: &HashMap<String, PaintGradient>,
     ) -> Result<(), PaintRenderError> {
         let opacity = opacity * group.opacity.unwrap_or(1.0).clamp(0.0, 1.0);
         cr.save().map_err(cairo_error)?;
@@ -554,7 +725,7 @@ mod native_cairo {
             apply_transform(cr, transform);
         }
         for child in &group.children {
-            render_instruction(cr, child, opacity)?;
+            render_instruction(cr, child, opacity, gradients)?;
         }
         cr.restore().map_err(cairo_error)
     }
@@ -563,6 +734,7 @@ mod native_cairo {
         cr: &Context,
         layer: &PaintLayer,
         opacity: f64,
+        gradients: &HashMap<String, PaintGradient>,
     ) -> Result<(), PaintRenderError> {
         if layer
             .filters
@@ -585,7 +757,7 @@ mod native_cairo {
         }
         cr.push_group();
         for child in &layer.children {
-            render_instruction(cr, child, 1.0)?;
+            render_instruction(cr, child, 1.0, gradients)?;
         }
         cr.pop_group_to_source().map_err(cairo_error)?;
         cr.paint_with_alpha(opacity * layer.opacity.unwrap_or(1.0).clamp(0.0, 1.0))
@@ -593,12 +765,17 @@ mod native_cairo {
         cr.restore().map_err(cairo_error)
     }
 
-    fn render_clip(cr: &Context, clip: &PaintClip, opacity: f64) -> Result<(), PaintRenderError> {
+    fn render_clip(
+        cr: &Context,
+        clip: &PaintClip,
+        opacity: f64,
+        gradients: &HashMap<String, PaintGradient>,
+    ) -> Result<(), PaintRenderError> {
         cr.save().map_err(cairo_error)?;
         cr.rectangle(clip.x, clip.y, clip.width, clip.height);
         cr.clip();
         for child in &clip.children {
-            render_instruction(cr, child, opacity)?;
+            render_instruction(cr, child, opacity, gradients)?;
         }
         cr.restore().map_err(cairo_error)
     }
@@ -717,6 +894,66 @@ mod native_cairo {
         );
     }
 
+    fn set_paint_source(
+        cr: &Context,
+        paint: &str,
+        opacity: f64,
+        gradients: &HashMap<String, PaintGradient>,
+    ) -> Result<(), PaintRenderError> {
+        if let Some(id) = super::gradient_ref(paint) {
+            let Some(gradient) = gradients.get(id) else {
+                return Err(render_failed(format!(
+                    "gradient reference '{id}' is not defined"
+                )));
+            };
+            set_gradient_source(cr, gradient, opacity)
+        } else {
+            set_source(cr, parse_css_color(paint), opacity);
+            Ok(())
+        }
+    }
+
+    fn set_gradient_source(
+        cr: &Context,
+        gradient: &PaintGradient,
+        opacity: f64,
+    ) -> Result<(), PaintRenderError> {
+        let stops = super::gradient_stops(&gradient.stops, opacity);
+        if stops.is_empty() {
+            set_source(cr, Rgba::TRANSPARENT, 1.0);
+            return Ok(());
+        }
+        if stops.len() == 1 {
+            set_source(cr, stops[0].1, 1.0);
+            return Ok(());
+        }
+        match gradient.kind {
+            super::GradientKind::Linear { x1, y1, x2, y2 } => {
+                let pattern = LinearGradient::new(x1, y1, x2, y2);
+                add_stops(&pattern, &stops);
+                cr.set_source(&pattern).map_err(cairo_error)
+            }
+            super::GradientKind::Radial { cx, cy, r } => {
+                let pattern = RadialGradient::new(cx, cy, 0.0, cx, cy, r.max(0.0));
+                add_stops(&pattern, &stops);
+                cr.set_source(&pattern).map_err(cairo_error)
+            }
+        }
+    }
+
+    fn add_stops(pattern: &impl AsRef<cairo::Gradient>, stops: &[(f64, Rgba)]) {
+        let pattern = pattern.as_ref();
+        for (offset, color) in stops {
+            pattern.add_color_stop_rgba(
+                *offset,
+                color.r as f64 / 255.0,
+                color.g as f64 / 255.0,
+                color.b as f64 / 255.0,
+                color.a as f64 / 255.0,
+            );
+        }
+    }
+
     fn font_family(font_ref: Option<&str>) -> String {
         let Some(font_ref) = font_ref else {
             return "Sans".to_string();
@@ -813,6 +1050,70 @@ mod native_cairo {
     target_os = "openbsd",
     target_os = "netbsd"
 )))]
+#[derive(Clone, Debug)]
+enum SoftwarePaint {
+    Solid(Rgba),
+    Linear {
+        x1: f64,
+        y1: f64,
+        x2: f64,
+        y2: f64,
+        stops: Vec<(f64, Rgba)>,
+    },
+    Radial {
+        cx: f64,
+        cy: f64,
+        r: f64,
+        stops: Vec<(f64, Rgba)>,
+    },
+}
+
+#[cfg(not(any(
+    target_os = "linux",
+    target_os = "freebsd",
+    target_os = "openbsd",
+    target_os = "netbsd"
+)))]
+impl SoftwarePaint {
+    fn sample(&self, x: f64, y: f64) -> Rgba {
+        match self {
+            Self::Solid(color) => *color,
+            Self::Linear {
+                x1,
+                y1,
+                x2,
+                y2,
+                stops,
+            } => sample_gradient_stops(stops, linear_gradient_t(x, y, *x1, *y1, *x2, *y2)),
+            Self::Radial { cx, cy, r, stops } => {
+                let dx = x - *cx;
+                let dy = y - *cy;
+                let t = if *r <= f64::EPSILON {
+                    0.0
+                } else {
+                    (dx * dx + dy * dy).sqrt() / *r
+                };
+                sample_gradient_stops(stops, t)
+            }
+        }
+    }
+
+    fn is_transparent(&self) -> bool {
+        match self {
+            Self::Solid(color) => color.a == 0,
+            Self::Linear { stops, .. } | Self::Radial { stops, .. } => {
+                stops.iter().all(|(_, color)| color.a == 0)
+            }
+        }
+    }
+}
+
+#[cfg(not(any(
+    target_os = "linux",
+    target_os = "freebsd",
+    target_os = "openbsd",
+    target_os = "netbsd"
+)))]
 struct SoftwareSurface {
     pixels: PixelContainer,
 }
@@ -842,31 +1143,32 @@ impl SoftwareSurface {
         &mut self,
         instruction: &PaintInstruction,
         state: RenderState,
+        gradients: &HashMap<String, PaintGradient>,
     ) -> Result<(), PaintRenderError> {
         match instruction {
-            PaintInstruction::Rect(rect) => self.render_rect(rect, state),
+            PaintInstruction::Rect(rect) => self.render_rect(rect, state, gradients),
             PaintInstruction::Line(line) => {
-                self.render_line(
-                    line.x1,
-                    line.y1,
-                    line.x2,
-                    line.y2,
-                    parse_css_color(&line.stroke).with_alpha(state.opacity),
-                    line.stroke_width.unwrap_or(1.0),
-                    state,
-                );
+                if let Some(paint) = software_paint(&line.stroke, state.opacity, gradients)? {
+                    self.render_line_paint(
+                        line.x1,
+                        line.y1,
+                        line.x2,
+                        line.y2,
+                        &paint,
+                        line.stroke_width.unwrap_or(1.0),
+                        state,
+                    );
+                }
                 Ok(())
             }
-            PaintInstruction::Ellipse(ellipse) => self.render_ellipse(ellipse, state),
-            PaintInstruction::Path(path) => self.render_path(path, state),
+            PaintInstruction::Ellipse(ellipse) => self.render_ellipse(ellipse, state, gradients),
+            PaintInstruction::Path(path) => self.render_path(path, state, gradients),
             PaintInstruction::Text(text) => self.render_text(text, state),
             PaintInstruction::GlyphRun(run) => self.render_glyph_run(run, state),
-            PaintInstruction::Group(group) => self.render_group(group, state),
-            PaintInstruction::Layer(layer) => self.render_layer(layer, state),
-            PaintInstruction::Clip(clip) => self.render_clip(clip, state),
-            PaintInstruction::Gradient(_) => Err(render_failed(
-                "Cairo smoke renderer does not implement gradients yet",
-            )),
+            PaintInstruction::Group(group) => self.render_group(group, state, gradients),
+            PaintInstruction::Layer(layer) => self.render_layer(layer, state, gradients),
+            PaintInstruction::Clip(clip) => self.render_clip(clip, state, gradients),
+            PaintInstruction::Gradient(_) => Ok(()),
             PaintInstruction::Image(image) => self.render_image(image, state),
         }
     }
@@ -875,22 +1177,28 @@ impl SoftwareSurface {
         &mut self,
         rect: &PaintRect,
         state: RenderState,
+        gradients: &HashMap<String, PaintGradient>,
     ) -> Result<(), PaintRenderError> {
         if let Some(fill) = &rect.fill {
-            self.fill_rect(
+            if let Some(paint) = software_paint(fill, state.opacity, gradients)? {
+                self.fill_rect_paint(rect.x, rect.y, rect.width, rect.height, &paint, state.clip);
+            }
+        }
+
+        if let Some(stroke) = &rect.stroke {
+            let Some(paint) = software_paint(stroke, state.opacity, gradients)? else {
+                return Ok(());
+            };
+            let width = rect.stroke_width.unwrap_or(1.0);
+            self.stroke_rect_paint(
                 rect.x,
                 rect.y,
                 rect.width,
                 rect.height,
-                parse_css_color(fill).with_alpha(state.opacity),
-                state.clip,
+                width,
+                &paint,
+                state,
             );
-        }
-
-        if let Some(stroke) = &rect.stroke {
-            let color = parse_css_color(stroke).with_alpha(state.opacity);
-            let width = rect.stroke_width.unwrap_or(1.0);
-            self.stroke_rect(rect.x, rect.y, rect.width, rect.height, width, color, state);
         }
 
         Ok(())
@@ -900,6 +1208,7 @@ impl SoftwareSurface {
         &mut self,
         ellipse: &PaintEllipse,
         state: RenderState,
+        gradients: &HashMap<String, PaintGradient>,
     ) -> Result<(), PaintRenderError> {
         if ellipse.rx <= 0.0 || ellipse.ry <= 0.0 {
             return Ok(());
@@ -911,28 +1220,40 @@ impl SoftwareSurface {
         let y1 = (ellipse.cy + ellipse.ry).ceil() as i32;
         let stroke_width = ellipse.stroke_width.unwrap_or(1.0).max(1.0);
         let stroke_band = (stroke_width / ellipse.rx.max(ellipse.ry)).max(0.01);
+        let fill = ellipse
+            .fill
+            .as_deref()
+            .map(|fill| software_paint(fill, state.opacity, gradients))
+            .transpose()?
+            .flatten();
+        let stroke = ellipse
+            .stroke
+            .as_deref()
+            .map(|stroke| software_paint(stroke, state.opacity, gradients))
+            .transpose()?
+            .flatten();
 
         for y in y0..y1 {
             for x in x0..x1 {
                 let nx = (x as f64 + 0.5 - ellipse.cx) / ellipse.rx;
                 let ny = (y as f64 + 0.5 - ellipse.cy) / ellipse.ry;
                 let distance = nx * nx + ny * ny;
-                if let Some(fill) = &ellipse.fill {
+                if let Some(fill) = &fill {
                     if distance <= 1.0 {
                         self.blend_pixel(
                             x,
                             y,
-                            parse_css_color(fill).with_alpha(state.opacity),
+                            fill.sample(x as f64 + 0.5, y as f64 + 0.5),
                             state.clip,
                         );
                     }
                 }
-                if let Some(stroke) = &ellipse.stroke {
+                if let Some(stroke) = &stroke {
                     if (1.0 - stroke_band..=1.0 + stroke_band).contains(&distance) {
                         self.blend_pixel(
                             x,
                             y,
-                            parse_css_color(stroke).with_alpha(state.opacity),
+                            stroke.sample(x as f64 + 0.5, y as f64 + 0.5),
                             state.clip,
                         );
                     }
@@ -947,6 +1268,7 @@ impl SoftwareSurface {
         &mut self,
         path: &PaintPath,
         state: RenderState,
+        gradients: &HashMap<String, PaintGradient>,
     ) -> Result<(), PaintRenderError> {
         if path
             .commands
@@ -960,12 +1282,16 @@ impl SoftwareSurface {
 
         let stroke = path
             .stroke
-            .as_ref()
-            .map(|stroke| parse_css_color(stroke).with_alpha(state.opacity));
+            .as_deref()
+            .map(|stroke| software_paint(stroke, state.opacity, gradients))
+            .transpose()?
+            .flatten();
         let fill = path
             .fill
-            .as_ref()
-            .map(|fill| parse_css_color(fill).with_alpha(state.opacity));
+            .as_deref()
+            .map(|fill| software_paint(fill, state.opacity, gradients))
+            .transpose()?
+            .flatten();
 
         let mut first = None::<(f64, f64)>;
         let mut cursor = None::<(f64, f64)>;
@@ -980,13 +1306,13 @@ impl SoftwareSurface {
                 }
                 PathCommand::LineTo { x, y } => {
                     if let Some((x0, y0)) = cursor {
-                        if let Some(color) = stroke {
-                            self.render_line(
+                        if let Some(paint) = &stroke {
+                            self.render_line_paint(
                                 x0,
                                 y0,
                                 x,
                                 y,
-                                color,
+                                paint,
                                 path.stroke_width.unwrap_or(1.0),
                                 state,
                             );
@@ -997,13 +1323,13 @@ impl SoftwareSurface {
                 }
                 PathCommand::Close => {
                     if let (Some((x0, y0)), Some((x1, y1))) = (cursor, first) {
-                        if let Some(color) = stroke {
-                            self.render_line(
+                        if let Some(paint) = &stroke {
+                            self.render_line_paint(
                                 x0,
                                 y0,
                                 x1,
                                 y1,
-                                color,
+                                paint,
                                 path.stroke_width.unwrap_or(1.0),
                                 state,
                             );
@@ -1012,13 +1338,13 @@ impl SoftwareSurface {
                 }
                 PathCommand::QuadTo { x, y, .. } | PathCommand::CubicTo { x, y, .. } => {
                     if let Some((x0, y0)) = cursor {
-                        if let Some(color) = stroke {
-                            self.render_line(
+                        if let Some(paint) = &stroke {
+                            self.render_line_paint(
                                 x0,
                                 y0,
                                 x,
                                 y,
-                                color,
+                                paint,
                                 path.stroke_width.unwrap_or(1.0),
                                 state,
                             );
@@ -1031,8 +1357,8 @@ impl SoftwareSurface {
             }
         }
 
-        if let Some(color) = fill {
-            self.fill_polygon_bounds(&points, color, state.clip);
+        if let Some(paint) = fill {
+            self.fill_polygon_bounds_paint(&points, &paint, state.clip);
         }
 
         Ok(())
@@ -1094,6 +1420,7 @@ impl SoftwareSurface {
         &mut self,
         group: &PaintGroup,
         state: RenderState,
+        gradients: &HashMap<String, PaintGradient>,
     ) -> Result<(), PaintRenderError> {
         if group.transform.is_some() {
             return Err(render_failed(
@@ -1105,7 +1432,7 @@ impl SoftwareSurface {
             ..state
         };
         for child in &group.children {
-            self.render_instruction(child, state)?;
+            self.render_instruction(child, state, gradients)?;
         }
         Ok(())
     }
@@ -1114,6 +1441,7 @@ impl SoftwareSurface {
         &mut self,
         layer: &PaintLayer,
         state: RenderState,
+        gradients: &HashMap<String, PaintGradient>,
     ) -> Result<(), PaintRenderError> {
         if layer.transform.is_some() {
             return Err(render_failed(
@@ -1139,7 +1467,7 @@ impl SoftwareSurface {
             ..state
         };
         for child in &layer.children {
-            self.render_instruction(child, state)?;
+            self.render_instruction(child, state, gradients)?;
         }
         Ok(())
     }
@@ -1148,6 +1476,7 @@ impl SoftwareSurface {
         &mut self,
         clip: &PaintClip,
         state: RenderState,
+        gradients: &HashMap<String, PaintGradient>,
     ) -> Result<(), PaintRenderError> {
         let clip_rect = ClipRect {
             x0: clip.x.floor() as i32,
@@ -1160,7 +1489,7 @@ impl SoftwareSurface {
             ..state
         };
         for child in &clip.children {
-            self.render_instruction(child, state)?;
+            self.render_instruction(child, state, gradients)?;
         }
         Ok(())
     }
@@ -1200,7 +1529,19 @@ impl SoftwareSurface {
     }
 
     fn fill_rect(&mut self, x: f64, y: f64, width: f64, height: f64, color: Rgba, clip: ClipRect) {
-        if color.a == 0 || width <= 0.0 || height <= 0.0 {
+        self.fill_rect_paint(x, y, width, height, &SoftwarePaint::Solid(color), clip);
+    }
+
+    fn fill_rect_paint(
+        &mut self,
+        x: f64,
+        y: f64,
+        width: f64,
+        height: f64,
+        paint: &SoftwarePaint,
+        clip: ClipRect,
+    ) {
+        if paint.is_transparent() || width <= 0.0 || height <= 0.0 {
             return;
         }
         let x0 = x.floor() as i32;
@@ -1209,53 +1550,53 @@ impl SoftwareSurface {
         let y1 = (y + height).ceil() as i32;
         for py in y0..y1 {
             for px in x0..x1 {
-                self.blend_pixel(px, py, color, clip);
+                self.blend_pixel(px, py, paint.sample(px as f64 + 0.5, py as f64 + 0.5), clip);
             }
         }
     }
 
-    fn stroke_rect(
+    fn stroke_rect_paint(
         &mut self,
         x: f64,
         y: f64,
         width: f64,
         height: f64,
         stroke_width: f64,
-        color: Rgba,
+        paint: &SoftwarePaint,
         state: RenderState,
     ) {
         let stroke_width = stroke_width.max(1.0);
-        self.fill_rect(x, y, width, stroke_width, color, state.clip);
-        self.fill_rect(
+        self.fill_rect_paint(x, y, width, stroke_width, paint, state.clip);
+        self.fill_rect_paint(
             x,
             y + height - stroke_width,
             width,
             stroke_width,
-            color,
+            paint,
             state.clip,
         );
-        self.fill_rect(x, y, stroke_width, height, color, state.clip);
-        self.fill_rect(
+        self.fill_rect_paint(x, y, stroke_width, height, paint, state.clip);
+        self.fill_rect_paint(
             x + width - stroke_width,
             y,
             stroke_width,
             height,
-            color,
+            paint,
             state.clip,
         );
     }
 
-    fn render_line(
+    fn render_line_paint(
         &mut self,
         x0: f64,
         y0: f64,
         x1: f64,
         y1: f64,
-        color: Rgba,
+        paint: &SoftwarePaint,
         stroke_width: f64,
         state: RenderState,
     ) {
-        if color.a == 0 {
+        if paint.is_transparent() {
             return;
         }
         let dx = x1 - x0;
@@ -1268,14 +1609,26 @@ impl SoftwareSurface {
             let y = (y0 + dy * t).round() as i32;
             for oy in -radius..=radius {
                 for ox in -radius..=radius {
-                    self.blend_pixel(x + ox, y + oy, color, state.clip);
+                    let px = x + ox;
+                    let py = y + oy;
+                    self.blend_pixel(
+                        px,
+                        py,
+                        paint.sample(px as f64 + 0.5, py as f64 + 0.5),
+                        state.clip,
+                    );
                 }
             }
         }
     }
 
-    fn fill_polygon_bounds(&mut self, points: &[(f64, f64)], color: Rgba, clip: ClipRect) {
-        if points.len() < 3 || color.a == 0 {
+    fn fill_polygon_bounds_paint(
+        &mut self,
+        points: &[(f64, f64)],
+        paint: &SoftwarePaint,
+        clip: ClipRect,
+    ) {
+        if points.len() < 3 || paint.is_transparent() {
             return;
         }
         let (mut x0, mut y0) = (f64::MAX, f64::MAX);
@@ -1286,7 +1639,7 @@ impl SoftwareSurface {
             x1 = x1.max(*x);
             y1 = y1.max(*y);
         }
-        self.fill_rect(x0, y0, x1 - x0, y1 - y0, color, clip);
+        self.fill_rect_paint(x0, y0, x1 - x0, y1 - y0, paint, clip);
     }
 
     fn blend_pixel(&mut self, x: i32, y: i32, color: Rgba, clip: ClipRect) {
@@ -1406,7 +1759,8 @@ fn parse_css_channel(s: &str) -> u8 {
 mod tests {
     use super::*;
     use paint_instructions::{
-        PaintBase, PaintClip, PaintInstruction, PaintRect, PaintText, TextAlign,
+        GradientKind, GradientStop, PaintBase, PaintClip, PaintGradient, PaintInstruction,
+        PaintRect, PaintText, TextAlign,
     };
     use paint_vm_runtime::{
         PaintBackendPreference, PaintBackendRegistry, PaintFeature, PaintRenderOptions,
@@ -1431,6 +1785,14 @@ mod tests {
         assert_eq!(descriptor.tier, PaintBackendTier::Tier1Smoke);
         assert_eq!(descriptor.capabilities.rect, SupportLevel::Supported);
         assert_eq!(descriptor.capabilities.text, SupportLevel::Degraded);
+        assert_eq!(
+            descriptor.capabilities.linear_gradient,
+            SupportLevel::Supported
+        );
+        assert_eq!(
+            descriptor.capabilities.radial_gradient,
+            SupportLevel::Supported
+        );
     }
 
     #[test]
@@ -1509,6 +1871,162 @@ mod tests {
             .expect("runtime should select Cairo for rect scenes");
 
         assert_eq!(pixels.pixel_at(1, 1), (17, 17, 17, 255));
+    }
+
+    #[test]
+    fn renders_linear_gradient_fills() {
+        let mut scene = transparent_scene(20.0, 4.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Gradient(PaintGradient {
+                base: PaintBase {
+                    id: Some("fade".to_string()),
+                    metadata: None,
+                },
+                kind: GradientKind::Linear {
+                    x1: 0.0,
+                    y1: 0.0,
+                    x2: 20.0,
+                    y2: 0.0,
+                },
+                stops: vec![
+                    GradientStop {
+                        offset: 0.0,
+                        color: "#000000".to_string(),
+                    },
+                    GradientStop {
+                        offset: 1.0,
+                        color: "#ffffff".to_string(),
+                    },
+                ],
+            }));
+        scene.instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: 0.0,
+            y: 0.0,
+            width: 20.0,
+            height: 4.0,
+            fill: Some("url(#fade)".to_string()),
+            stroke: None,
+            stroke_width: None,
+            corner_radius: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let pixels = render(&scene).expect("linear gradient scene renders");
+        let (left, _, _, _) = pixels.pixel_at(1, 2);
+        let (right, _, _, _) = pixels.pixel_at(18, 2);
+
+        assert!(left < 80, "expected dark left edge, got {left}");
+        assert!(right > 170, "expected bright right edge, got {right}");
+        assert!(left < right);
+    }
+
+    #[test]
+    fn renders_radial_gradient_fills() {
+        let mut scene = transparent_scene(16.0, 16.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Gradient(PaintGradient {
+                base: PaintBase {
+                    id: Some("spot".to_string()),
+                    metadata: None,
+                },
+                kind: GradientKind::Radial {
+                    cx: 8.0,
+                    cy: 8.0,
+                    r: 8.0,
+                },
+                stops: vec![
+                    GradientStop {
+                        offset: 0.0,
+                        color: "#000000".to_string(),
+                    },
+                    GradientStop {
+                        offset: 1.0,
+                        color: "#ffffff".to_string(),
+                    },
+                ],
+            }));
+        scene.instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: 0.0,
+            y: 0.0,
+            width: 16.0,
+            height: 16.0,
+            fill: Some("url(#spot)".to_string()),
+            stroke: None,
+            stroke_width: None,
+            corner_radius: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let pixels = render(&scene).expect("radial gradient scene renders");
+        let (center, _, _, _) = pixels.pixel_at(8, 8);
+        let (corner, _, _, _) = pixels.pixel_at(0, 0);
+
+        assert!(center < 80, "expected dark center, got {center}");
+        assert!(corner > 170, "expected bright corner, got {corner}");
+        assert!(center < corner);
+    }
+
+    #[test]
+    fn runtime_selects_cairo_for_exact_gradient_scenes() {
+        let backend = renderer();
+        let mut registry = PaintBackendRegistry::new();
+        registry.register(&backend);
+        let mut scene = transparent_scene(8.0, 2.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Gradient(PaintGradient {
+                base: PaintBase {
+                    id: Some("fade".to_string()),
+                    metadata: None,
+                },
+                kind: GradientKind::Linear {
+                    x1: 0.0,
+                    y1: 0.0,
+                    x2: 8.0,
+                    y2: 0.0,
+                },
+                stops: vec![
+                    GradientStop {
+                        offset: 0.0,
+                        color: "#000000".to_string(),
+                    },
+                    GradientStop {
+                        offset: 1.0,
+                        color: "#ffffff".to_string(),
+                    },
+                ],
+            }));
+        scene.instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: 0.0,
+            y: 0.0,
+            width: 8.0,
+            height: 2.0,
+            fill: Some("url(#fade)".to_string()),
+            stroke: None,
+            stroke_width: None,
+            corner_radius: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let selected = registry
+            .select(
+                &scene,
+                PaintRenderOptions {
+                    preference: PaintBackendPreference::Named(BACKEND_ID.to_string()),
+                    ..PaintRenderOptions::default()
+                },
+            )
+            .expect("Cairo should advertise exact gradient support");
+
+        assert_eq!(selected.descriptor().id, BACKEND_ID);
     }
 
     #[test]
