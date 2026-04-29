@@ -164,6 +164,8 @@ members = [
     "verilog-parser",
     "vhdl-lexer",
     "vhdl-parser",
+    "debug-sidecar",
+    "native-debug-info",
     "virtual-machine",
     "vm-core",
     "wasm-simulator",

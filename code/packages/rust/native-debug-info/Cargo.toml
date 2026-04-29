@@ -1,0 +1,9 @@
+[package]
+name = "native-debug-info"
+version = "0.1.0"
+edition = "2021"
+description = "DWARF 4 and CodeView 4 debug-section emitter for AOT binaries — embed source-level debug info into ELF, Mach-O, and PE binaries (LANG14)."
+license = "MIT"
+
+[dependencies]
+debug-sidecar = { path = "../debug-sidecar" }
