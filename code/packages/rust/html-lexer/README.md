@@ -37,6 +37,8 @@ also emits the current name in force-quirks mode. Mosaic-era `PUBLIC` and
 `SYSTEM` identifiers are preserved on emitted DOCTYPE tokens, so legacy
 declarations such as `<!DOCTYPE html PUBLIC "...">` keep the information the
 future tree-construction/parser layer will need for compatibility decisions.
+DOCTYPE system-identifier recovery marks force-quirks mode for missing
+identifiers and unexpected trailing junk.
 The generated HTML1 machine also exposes `RCDATA`, `RAWTEXT`, `PLAINTEXT`,
 `CDATA section`, `script_data`, `script_data_escaped`, and
 `script_data_double_escaped` entry states for parser-controlled tokenizer
