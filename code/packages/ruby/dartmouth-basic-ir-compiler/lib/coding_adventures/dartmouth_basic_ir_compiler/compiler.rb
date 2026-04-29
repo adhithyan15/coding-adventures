@@ -56,12 +56,13 @@ module CodingAdventures
       def compile_line(line_no, stmt)
         @instrs << IR::IIRInstr.new("label", nil, ["_line_#{line_no}"], "void")
         upper = stmt.upcase
+        assignment = parse_assignment(stmt)
         case upper
         when /\AREM\b/, ""
           nil
-        when /\A(?:LET\s+)?([A-Z][A-Z0-9]?)\s*=\s*(.+)\z/
-          name = Regexp.last_match(1)
-          value = compile_expr(Regexp.last_match(2))
+        when ->(_text) { assignment }
+          name, expr = assignment
+          value = compile_expr(expr)
           @var_names[name] = true
           @instrs << IR::IIRInstr.new("move", name, [value], "u64")
         when /\APRINT(?:\s+(.*))?\z/
@@ -84,6 +85,40 @@ module CodingAdventures
         else
           raise CompileError, "unsupported BASIC statement: #{stmt.inspect}"
         end
+      end
+
+      def parse_assignment(stmt)
+        text = stmt.strip
+        upper = text.upcase
+        if upper.start_with?("LET")
+          return nil unless upper.length == 3 || whitespace?(upper[3])
+
+          text = text[3..].lstrip
+        end
+
+        eq = text.index("=")
+        return nil unless eq
+
+        name = text[0...eq].strip.upcase
+        expr = text[(eq + 1)..].strip
+        return nil unless variable_name?(name) && !expr.empty?
+
+        [name, expr]
+      end
+
+      def variable_name?(name)
+        return false unless name.length.between?(1, 2)
+
+        first = name.getbyte(0)
+        return false unless first && first >= 65 && first <= 90
+        return true if name.length == 1
+
+        second = name.getbyte(1)
+        (second >= 65 && second <= 90) || (second >= 48 && second <= 57)
+      end
+
+      def whitespace?(char)
+        char == " " || char == "\t" || char == "\n" || char == "\r" || char == "\f"
       end
 
       def compile_print(arg)
