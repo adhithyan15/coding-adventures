@@ -390,9 +390,7 @@ func run() int {
 				if containsPath(changedFiles, gitdiff.CIWorkflowPath) {
 					ciChange := gitdiff.AnalyzeCIWorkflowChanges(repoRoot, *diffBase)
 					if ciChange.RequiresFullRebuild {
-						fmt.Println("Git diff: ci.yml changed in shared ways — rebuilding everything")
-						*force = true
-						affectedSet = nil
+						fmt.Println("Git diff: ci.yml changed in shared ways — keeping package-scoped PR selection")
 					} else {
 						ciToolchains = ciChange.Toolchains
 						if len(ciToolchains) > 0 {
@@ -591,11 +589,9 @@ func containsPath(paths []string, want string) bool {
 // in the format "needs_<lang>=true|false" to both stdout and $GITHUB_OUTPUT
 // (if the environment variable is set).
 //
-// Go is always needed because the build tool is written in Go.
-//
 // By the time this is called, shared-file detection has already run in run():
-// if shared files changed, force=true and affectedSet=nil. So here we only
-// need to check force/nil and then look at individual package languages.
+// if shared package inputs changed, force=true and affectedSet=nil. So here we
+// only need to check force/nil and then look at individual package languages.
 func detectNeededLanguages(
 	packages []discovery.Package,
 	affectedSet map[string]bool,
@@ -636,7 +632,7 @@ func detectNeededLanguages(
 // Extracted for reuse by both detectNeededLanguages and emitBuildPlan.
 //
 // Shared-file detection has already been applied in run() before this is called:
-// if shared files changed, force=true and affectedSet=nil.
+// if shared package inputs changed, force=true and affectedSet=nil.
 func computeLanguagesNeeded(
 	packages []discovery.Package,
 	affectedSet map[string]bool,
@@ -644,7 +640,6 @@ func computeLanguagesNeeded(
 	ciToolchains map[string]bool,
 ) map[string]bool {
 	needed := make(map[string]bool)
-	needed["go"] = true
 
 	if force || affectedSet == nil {
 		for _, lang := range allToolchains {

@@ -80,18 +80,23 @@ affected package list and rebuilds the selected shard.
 
 ## CI Shape
 
-The detect job emits `build_shards`, a compact JSON array for a GitHub Actions
-matrix. Build jobs combine the OS axis with the shard axis:
+Sharding is reserved for forced full builds on `main`. Pull requests and
+ordinary branch pushes continue to run the normal affected-package build plan
+without a shard index, because those builds are already narrow and should not
+wait on multiple macOS/Windows shard jobs.
+
+For `main` pushes, the detect job emits `build_shards`, a compact JSON array
+for a GitHub Actions matrix. The CI workflow turns those shard entries into
+Ubuntu runner jobs:
 
 ```yaml
 strategy:
   matrix:
-    os: ["ubuntu-latest", "macos-latest"]
-    shard: ${{ fromJSON(needs.detect.outputs.build_shards) }}
+    include: ${{ fromJSON(needs.detect.outputs.build_matrix) }}
 ```
 
-Each matrix job downloads the same `build-plan.json` and passes
-`-shard-index ${{ matrix.shard.shard_index }}`.
+Each sharded main job downloads the same `build-plan.json` and passes
+`-shard-index ${{ matrix.shard_index }}`.
 
 ## Scaling Notes
 
