@@ -14,6 +14,7 @@ The first batch includes:
 - `term_expansion_from_directive(...)` and `goal_expansion_from_directive(...)`
 - `expand_dcg_clause(...)` and `expand_dcg_phrase(...)`
 - default ISO/Core and SWI operator tables
+- SWI CLP(FD) operator defaults such as `#=/2`, `in/2`, `ins/2`, and `../2`
 
 Dialect parser packages can share these objects even when they keep separate
 lexer and parser packages.

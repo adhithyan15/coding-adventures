@@ -51,6 +51,11 @@ class TestOperatorTable:
         assert iso.get(":-", "xfx") is not None
         assert iso.get(":", "xfy") is None
         assert swi.get(":", "xfy") is not None
+        assert iso.get("#=", "xfx") is None
+        assert swi.get("#=", "xfx") is not None
+        assert swi.get("in", "xfx") is not None
+        assert swi.get("ins", "xfx") is not None
+        assert swi.get("..", "xfx") is not None
 
     def test_apply_op_directive_adds_and_removes_operator(self) -> None:
         table = empty_operator_table()

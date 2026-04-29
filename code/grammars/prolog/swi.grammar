@@ -18,9 +18,10 @@ fact_statement      = callable_term DOT ;
 goal          = disjunction ;
 disjunction   = conjunction { SEMICOLON conjunction } ;
 conjunction   = goal_primary { COMMA goal_primary } ;
-goal_primary  = CUT | grouped_goal | equality_goal | callable_goal ;
+goal_primary  = CUT | grouped_goal | clpfd_goal | equality_goal | callable_goal ;
 grouped_goal  = LPAREN goal RPAREN ;
 equality_goal = term equality_operator term ;
+clpfd_goal    = term clpfd_operator term ;
 callable_goal = callable_term ;
 
 dcg_body          = dcg_disjunction ;
@@ -32,10 +33,17 @@ grouped_dcg_body  = LPAREN dcg_body RPAREN ;
 braced_goal       = LCURLY goal RCURLY ;
 
 equality_operator = "=" | "\=" ;
+clpfd_operator    = "#=" | "#\=" | "#<" | "#=<" | "#>" | "#>="
+                  | "in" | "ins" ;
 
 callable_term = compound_term | atom_term ;
-term          = list_term | compound_term | atom_term | variable_term
-              | anonymous_term | number_term | string_term ;
+term          = range_term ;
+range_term    = additive_term [ range_operator additive_term ] ;
+additive_term = multiplicative_term { additive_operator multiplicative_term } ;
+multiplicative_term = simple_term { multiplicative_operator simple_term } ;
+simple_term   = list_term | compound_term | atom_term | variable_term
+              | anonymous_term | number_term | string_term | grouped_term ;
+grouped_term  = LPAREN term RPAREN ;
 
 compound_term  = atom_token LPAREN [ term_arguments ] RPAREN ;
 term_arguments = term { COMMA term } ;
@@ -49,3 +57,6 @@ variable_term  = VARIABLE ;
 anonymous_term = ANON_VAR ;
 number_term    = FLOAT | INTEGER ;
 string_term    = STRING ;
+range_operator = ".." ;
+additive_operator = "+" | "-" ;
+multiplicative_operator = "*" | "/" | "//" | "mod" ;
