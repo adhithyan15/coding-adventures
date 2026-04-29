@@ -81,6 +81,8 @@ All notable changes to this package will be documented in this file.
   dispatchers by forwarding label ids and descriptor pointers.
 - Preserved concrete procedure ids in formal procedure call-shape metadata so
   nested procedure-parameter contracts are checked before IR lowering.
+- Lowered recursive switch self-selection through runtime switch-eval descriptor
+  dispatch rather than compile-time descriptor expansion.
 
 ## [0.1.0] - 2026-04-20
 

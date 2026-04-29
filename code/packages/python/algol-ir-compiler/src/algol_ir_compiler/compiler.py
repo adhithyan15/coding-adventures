@@ -245,8 +245,10 @@ class AlgolIrCompiler:
         self.expression_types: dict[int, str] = {}
         self.current_function_return_type: str | None = _INTEGER_TYPE
         self.eval_thunks: list[_EvalThunk] = []
+        self.active_switch_selection_ids: list[int] = []
         self.has_by_name_parameters = False
         self.has_switch_parameters = False
+        self.has_recursive_switch_selections = False
         self.has_procedure_parameters = False
         self.string_literal_offsets: dict[str, int] = {}
 
@@ -275,8 +277,10 @@ class AlgolIrCompiler:
         self.heap_pointer_reg = -1
         self.heap_limit_reg = -1
         self.eval_thunks = []
+        self.active_switch_selection_ids = []
         self.has_by_name_parameters = False
         self.has_switch_parameters = False
+        self.has_recursive_switch_selections = False
         self.has_procedure_parameters = False
         self.string_literal_offsets = {}
         self.semantic_blocks = list(type_result.semantic.blocks)
@@ -348,6 +352,9 @@ class AlgolIrCompiler:
             for procedure in type_result.semantic.procedures
             for parameter in procedure.parameters
         )
+        self.has_recursive_switch_selections = (
+            self._has_recursive_switch_selection_cycle()
+        )
         self.has_procedure_parameters = any(
             parameter.kind == "procedure"
             for procedure in type_result.semantic.procedures
@@ -387,7 +394,7 @@ class AlgolIrCompiler:
         }
         if self.has_by_name_parameters:
             self._ensure_thunk_signatures()
-        if self.has_switch_parameters:
+        if self.has_switch_parameters or self.has_recursive_switch_selections:
             self.procedure_signatures[_SWITCH_EVAL_LABEL] = ProcedureSignaturePlan(
                 param_types=(_INTEGER_TYPE, _INTEGER_TYPE, _INTEGER_TYPE),
                 return_type=_INTEGER_TYPE,
@@ -501,7 +508,7 @@ class AlgolIrCompiler:
                 label=_THUNK_STORE_REAL_LABEL,
                 thunk_kind=_REAL_TYPE,
             )
-        if self.has_switch_parameters:
+        if self.has_switch_parameters or self.has_recursive_switch_selections:
             self._compile_switch_eval_dispatcher()
         if self.has_procedure_parameters:
             self._compile_procedure_call_dispatcher(
@@ -1129,6 +1136,19 @@ class AlgolIrCompiler:
             current = current.goto_parent
         return None
 
+    def _resolve_label_in_semantic_scope(
+        self,
+        name: str,
+        scope: _FrameScope,
+    ) -> LabelDescriptor | None:
+        resolved = self._resolve_symbol_in_scope_chain(name, scope)
+        if resolved is None:
+            return None
+        symbol, _ = resolved
+        if symbol.kind != "label" or symbol.parameter_mode is not None:
+            return None
+        return self.labels_by_symbol.get(symbol.symbol_id)
+
     def _compile_label_parameter_target(
         self,
         token: Token,
@@ -1239,34 +1259,49 @@ class AlgolIrCompiler:
         descriptor = self.switches.get(selection.switch_id)
         if descriptor is None:
             raise CompileError(f"switch {selection.name!r} has no descriptor")
+        if selection.switch_id in self.active_switch_selection_ids:
+            label_value = self._emit_call_concrete_switch_eval(
+                selection,
+                index_value,
+                scope,
+            )
+            self._emit_goto_label_value(label_value, execution_scope)
+            return
         entry_scope = self._active_scope_for_block(
             selection.declaration_block_id,
             scope,
         )
         dispatch_index = self.switch_count
         self.switch_count += 1
-        for entry_index, entry_node_id in enumerate(descriptor.entry_node_ids, start=1):
-            next_label = f"switch_{dispatch_index}_{entry_index}_next"
-            expected = self._const_reg(entry_index)
-            matches = self._fresh_reg()
-            self._emit(
-                IrOp.CMP_EQ,
-                IrRegister(matches),
-                IrRegister(index_value),
-                IrRegister(expected),
-            )
-            self._emit(IrOp.BRANCH_Z, IrRegister(matches), IrLabel(next_label))
-            entry = self._find_ast_by_id(entry_node_id)
-            if entry is None:
-                raise CompileError(
-                    f"switch {selection.name!r} entry {entry_index} is missing"
+        self.active_switch_selection_ids.append(selection.switch_id)
+        try:
+            for entry_index, entry_node_id in enumerate(
+                descriptor.entry_node_ids,
+                start=1,
+            ):
+                next_label = f"switch_{dispatch_index}_{entry_index}_next"
+                expected = self._const_reg(entry_index)
+                matches = self._fresh_reg()
+                self._emit(
+                    IrOp.CMP_EQ,
+                    IrRegister(matches),
+                    IrRegister(index_value),
+                    IrRegister(expected),
                 )
-            self._compile_designational(
-                entry,
-                entry_scope,
-                execution_scope=execution_scope,
-            )
-            self._label(next_label)
+                self._emit(IrOp.BRANCH_Z, IrRegister(matches), IrLabel(next_label))
+                entry = self._find_ast_by_id(entry_node_id)
+                if entry is None:
+                    raise CompileError(
+                        f"switch {selection.name!r} entry {entry_index} is missing"
+                    )
+                self._compile_designational(
+                    entry,
+                    entry_scope,
+                    execution_scope=execution_scope,
+                )
+                self._label(next_label)
+        finally:
+            self.active_switch_selection_ids.pop()
         failed = self._const_reg(1)
         self._emit_runtime_failure_guard(failed, execution_scope)
 
@@ -1319,6 +1354,9 @@ class AlgolIrCompiler:
             label_value = self._compile_label_parameter_target(direct, scope)
             if label_value is not None:
                 return label_value
+            label = self._resolve_label_in_semantic_scope(direct.value, scope)
+            if label is not None:
+                return self._const_reg(label.label_id)
             raise CompileError(f"goto target {direct.value!r} was not resolved")
 
         if any(token.value == "[" for token in _direct_tokens(node)):
@@ -1355,6 +1393,12 @@ class AlgolIrCompiler:
         descriptor = self.switches.get(selection.switch_id)
         if descriptor is None:
             raise CompileError(f"switch {selection.name!r} has no descriptor")
+        if selection.switch_id in self.active_switch_selection_ids:
+            return self._emit_call_concrete_switch_eval(
+                selection,
+                index_value,
+                scope,
+            )
         entry_scope = self._rebase_scope_for_selection(scope, selection)
         return self._compile_switch_entries_value(
             descriptor,
@@ -1374,25 +1418,32 @@ class AlgolIrCompiler:
         self.switch_count += 1
         result = self._const_reg(0)
         end_label = f"switch_value_{dispatch_index}_end"
-        for entry_index, entry_node_id in enumerate(descriptor.entry_node_ids, start=1):
-            next_label = f"switch_value_{dispatch_index}_{entry_index}_next"
-            expected = self._const_reg(entry_index)
-            matches = self._fresh_reg()
-            self._emit(
-                IrOp.CMP_EQ,
-                IrRegister(matches),
-                IrRegister(index_value),
-                IrRegister(expected),
-            )
-            self._emit(IrOp.BRANCH_Z, IrRegister(matches), IrLabel(next_label))
-            entry = self._find_ast_by_id(entry_node_id)
-            if entry is None:
-                raise CompileError(
-                    f"switch {selection.name!r} entry {entry_index} is missing"
+        self.active_switch_selection_ids.append(selection.switch_id)
+        try:
+            for entry_index, entry_node_id in enumerate(
+                descriptor.entry_node_ids,
+                start=1,
+            ):
+                next_label = f"switch_value_{dispatch_index}_{entry_index}_next"
+                expected = self._const_reg(entry_index)
+                matches = self._fresh_reg()
+                self._emit(
+                    IrOp.CMP_EQ,
+                    IrRegister(matches),
+                    IrRegister(index_value),
+                    IrRegister(expected),
                 )
-            result = self._compile_designational_value(entry, entry_scope)
-            self._emit(IrOp.JUMP, IrLabel(end_label))
-            self._label(next_label)
+                self._emit(IrOp.BRANCH_Z, IrRegister(matches), IrLabel(next_label))
+                entry = self._find_ast_by_id(entry_node_id)
+                if entry is None:
+                    raise CompileError(
+                        f"switch {selection.name!r} entry {entry_index} is missing"
+                    )
+                result = self._compile_designational_value(entry, entry_scope)
+                self._emit(IrOp.JUMP, IrLabel(end_label))
+                self._label(next_label)
+        finally:
+            self.active_switch_selection_ids.pop()
         failed = self._const_reg(1)
         self._emit_runtime_failure_guard(failed, entry_scope)
         self._label(end_label)
@@ -4003,6 +4054,73 @@ class AlgolIrCompiler:
         self._copy_reg(dst=result, src=_RESULT_REG)
         return result
 
+    def _emit_call_concrete_switch_eval(
+        self,
+        selection: ResolvedSwitchSelection,
+        index_value: int,
+        scope: _FrameScope,
+    ) -> int:
+        if selection.switch_id < 0:
+            raise CompileError("switch parameter selection has no concrete id")
+        descriptor_pointer = self._emit_reserve_temp_descriptor_space(
+            _SWITCH_DESCRIPTOR_SIZE,
+            scope,
+        )
+        declaration_scope = self._rebase_scope_for_selection(scope, selection)
+        self._emit_write_switch_descriptor(
+            descriptor_pointer,
+            selection.switch_id,
+            declaration_scope.frame_base_reg,
+        )
+        result = self._emit_call_switch_eval(descriptor_pointer, index_value, scope)
+        self._store_runtime_state(_RUNTIME_HEAP_POINTER_OFFSET, descriptor_pointer)
+        return result
+
+    def _emit_goto_label_value(
+        self,
+        label_value: int,
+        scope: _FrameScope,
+    ) -> None:
+        end_label = f"label_value_{self.if_count}_end"
+        self.if_count += 1
+        active_scopes = self._active_function_scopes(scope)
+        active_block_ids = {active_scope.block_id for active_scope in active_scopes}
+        for label in self.labels_by_id.values():
+            if label.declaring_block_id not in active_block_ids:
+                continue
+            next_label = f"label_value_{self.if_count}_next"
+            self.if_count += 1
+            matches = self._fresh_reg()
+            self._emit(
+                IrOp.CMP_EQ,
+                IrRegister(matches),
+                IrRegister(label_value),
+                IrRegister(self._const_reg(label.label_id)),
+            )
+            self._emit(IrOp.BRANCH_Z, IrRegister(matches), IrLabel(next_label))
+            self._emit_unwind_to_block(scope, label.declaring_block_id)
+            self._emit(IrOp.JUMP, IrLabel(label.ir_label))
+            self._emit(IrOp.JUMP, IrLabel(end_label))
+            self._label(next_label)
+
+        if scope.function_owner_procedure_id is not None or scope.helper_failure:
+            self._emit_pending_goto_return_reg(scope, label_value)
+        else:
+            tagged_label = self._fresh_reg()
+            self._emit(
+                IrOp.ADD_IMM,
+                IrRegister(tagged_label),
+                IrRegister(label_value),
+                IrImmediate(1),
+            )
+            self._store_runtime_state(
+                _RUNTIME_PENDING_GOTO_LABEL_OFFSET,
+                tagged_label,
+            )
+            self._emit_zero_result_reg()
+            self._emit(IrOp.HALT)
+        self._label(end_label)
+
     def _compile_eval_thunk_actual(
         self,
         argument: ASTNode,
@@ -5982,6 +6100,41 @@ class AlgolIrCompiler:
                 child for child in node.children if isinstance(child, ASTNode)
             )
         return None
+
+    def _has_recursive_switch_selection_cycle(self) -> bool:
+        edges: dict[int, set[int]] = {
+            switch_id: set() for switch_id in self.switches
+        }
+        for switch in self.switches.values():
+            for entry_node_id in switch.entry_node_ids:
+                entry = self._find_ast_by_id(entry_node_id)
+                if entry is None:
+                    continue
+                pending = [entry]
+                while pending:
+                    node = pending.pop()
+                    selection = self.switch_selections.get(id(node))
+                    if selection is not None and selection.switch_id >= 0:
+                        edges[switch.switch_id].add(selection.switch_id)
+                    pending.extend(_node_children(node))
+
+        visited: set[int] = set()
+        visiting: set[int] = set()
+
+        def visit(switch_id: int) -> bool:
+            if switch_id in visiting:
+                return True
+            if switch_id in visited:
+                return False
+            visiting.add(switch_id)
+            for next_switch_id in edges.get(switch_id, set()):
+                if next_switch_id in self.switches and visit(next_switch_id):
+                    return True
+            visiting.remove(switch_id)
+            visited.add(switch_id)
+            return False
+
+        return any(visit(switch_id) for switch_id in self.switches)
 
     def _layout_frames(self, blocks: list[SemanticBlock]) -> dict[int, int]:
         offsets: dict[int, int] = {}

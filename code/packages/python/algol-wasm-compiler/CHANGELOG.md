@@ -74,6 +74,8 @@ All notable changes to this package will be documented in this file.
   arguments to actual procedures.
 - Rejected formal procedure forwarding when a concrete procedure argument does
   not satisfy the nested procedure formal contract expected by the receiver.
+- Executed recursive switch self-selection entries by routing recursive
+  descriptor lookup through the switch-eval helper at runtime.
 - Added a convergence golden fixture that combines conditional expressions,
   exponentiation, chained assignment, by-name array summation, real arithmetic,
   and output in one end-to-end program.

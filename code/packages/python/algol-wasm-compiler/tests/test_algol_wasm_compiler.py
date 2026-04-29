@@ -540,6 +540,19 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
 
+    def test_self_recursive_switch_selection_entry_dispatches_at_runtime(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result, i; "
+            "switch s := done, if i = 0 then done else s[i]; "
+            "i := 1; goto s[2]; "
+            "result := 99; "
+            "done: result := 7 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
     def test_switch_entry_can_target_nonlocal_label(self) -> None:
         result = compile_source(
             "begin integer result; "

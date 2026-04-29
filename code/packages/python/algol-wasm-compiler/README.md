@@ -30,7 +30,7 @@ the current lane already supports a substantial ALGOL 60 surface:
   omitted-parentheses call syntax for parameterless procedures
 - labels, local and nonlocal `goto`, switch designators, and conditional
   designational expressions, including nonlocal branches and nested
-  non-recursive switch entries
+  recursive switch entries
 - builtin `print(...)` / `output(...)` for integers, booleans, reals, strings,
   and string variables
 

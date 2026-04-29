@@ -469,6 +469,33 @@ class TestAlgolIrCompiler:
         assert any(label.startswith("switch_0_1_next") for label in labels)
         assert any(label.startswith("switch_1_1_next") for label in labels)
 
+    def test_compiles_self_recursive_switch_selection_entry(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result, i; "
+                "switch s := done, if i = 0 then done else s[i]; "
+                "i := 1; goto s[2]; "
+                "done: result := 7 "
+                "end"
+            )
+        )
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+        calls = [
+            instr
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.CALL
+        ]
+
+        assert "_fn_algol_eval_switch" in labels
+        assert any(
+            instr.operands[0].name == "_fn_algol_eval_switch"
+            for instr in calls
+        )
+
     def test_compiles_nonlocal_conditional_designational_goto(self) -> None:
         result = compile_algol(
             parse_algol(

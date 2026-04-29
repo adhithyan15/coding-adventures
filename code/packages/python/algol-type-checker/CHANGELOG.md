@@ -55,6 +55,8 @@ All notable changes to this package will be documented in this file.
   parameters for formal procedure parameters.
 - Validated nested procedure-parameter call-shape contracts when a formal
   procedure call forwards a concrete procedure actual.
+- Accepted recursive switch self-selection entries so terminating recursive
+  designational dispatch can lower through the WASM pipeline.
 
 ## [0.1.0] - 2026-04-20
 
