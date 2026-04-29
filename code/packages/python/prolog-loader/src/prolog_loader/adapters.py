@@ -34,6 +34,7 @@ from logic_builtins import (
     fd_mulo,
     fd_neqo,
     fd_subo,
+    fd_sumo,
     findallo,
     forallo,
     functoro,
@@ -332,6 +333,10 @@ def _adapt_fd_arithmetic_expression(expression: Term, result: Term) -> GoalExpr 
     if expression.functor.namespace is not None:
         return None
 
+    sum_terms = _fd_sum_terms(expression)
+    if sum_terms is not None and len(sum_terms) > 2:
+        return fd_sumo(sum_terms, result)
+
     left, right = expression.args
     if expression.functor.name == "+":
         return fd_addo(left, right, result)
@@ -339,6 +344,30 @@ def _adapt_fd_arithmetic_expression(expression: Term, result: Term) -> GoalExpr 
         return fd_subo(left, right, result)
     if expression.functor.name == "*":
         return fd_mulo(left, right, result)
+    return None
+
+
+def _fd_sum_terms(expression: Term) -> tuple[Term, ...] | None:
+    if not isinstance(expression, Compound) or len(expression.args) != 2:
+        return (expression,)
+    if expression.functor.namespace is not None:
+        return None
+
+    left, right = expression.args
+    if expression.functor.name == "+":
+        left_terms = _fd_sum_terms(left)
+        right_terms = _fd_sum_terms(right)
+        if left_terms is None or right_terms is None:
+            return None
+        return (*left_terms, *right_terms)
+
+    if expression.functor.name == "-":
+        left_terms = _fd_sum_terms(left)
+        if left_terms is None:
+            return None
+        if isinstance(right, int):
+            return (*left_terms, -right)
+
     return None
 
 
