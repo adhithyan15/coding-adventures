@@ -124,6 +124,67 @@ pub struct GpuPlanOptions {
     pub curve_segments: usize,
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum GpuApiFamily {
+    Vulkan,
+    OpenGl,
+    Mesa,
+    OpenCl,
+    Wgpu,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum GpuRenderPath {
+    GraphicsPipeline,
+    ComputeRaster,
+    DriverProfile,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum GpuReadbackStrategy {
+    TextureCopyToBuffer,
+    FramebufferReadPixels,
+    StorageBufferReadback,
+    DelegatedToProfile,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct GpuBackendProfile {
+    pub id: &'static str,
+    pub family: GpuApiFamily,
+    pub render_path: GpuRenderPath,
+    pub shader_model: &'static str,
+    pub readback: GpuReadbackStrategy,
+    pub supports_indexed_meshes: bool,
+    pub supports_scissor_clips: bool,
+    pub supports_texture_sampling: bool,
+    pub supports_glyph_atlas: bool,
+    pub accepts_degraded_solid_gradients: bool,
+}
+
+impl GpuBackendProfile {
+    pub const fn tier1_solid(
+        id: &'static str,
+        family: GpuApiFamily,
+        render_path: GpuRenderPath,
+        shader_model: &'static str,
+        readback: GpuReadbackStrategy,
+    ) -> Self {
+        Self {
+            id,
+            family,
+            render_path,
+            shader_model,
+            readback,
+            supports_indexed_meshes: true,
+            supports_scissor_clips: true,
+            supports_texture_sampling: false,
+            supports_glyph_atlas: false,
+            accepts_degraded_solid_gradients: true,
+        }
+    }
+}
+
 impl Default for GpuPlanOptions {
     fn default() -> Self {
         Self {
@@ -135,6 +196,52 @@ impl Default for GpuPlanOptions {
 
 pub fn plan_scene(scene: &PaintScene) -> GpuPaintPlan {
     plan_scene_with_options(scene, GpuPlanOptions::default())
+}
+
+pub fn unsupported_plan_features(
+    profile: GpuBackendProfile,
+    plan: &GpuPaintPlan,
+) -> Vec<&'static str> {
+    let mut unsupported = Vec::new();
+    for diagnostic in &plan.diagnostics {
+        match diagnostic.severity {
+            GpuPlanSeverity::Unsupported => push_unique(&mut unsupported, diagnostic.feature),
+            GpuPlanSeverity::Degraded if !profile.accepts_degraded_solid_gradients => {
+                push_unique(&mut unsupported, diagnostic.feature)
+            }
+            GpuPlanSeverity::Info | GpuPlanSeverity::Degraded => {}
+        }
+    }
+    for command in &plan.commands {
+        match command {
+            GpuCommand::DrawMesh { .. } if !profile.supports_indexed_meshes => {
+                push_unique(&mut unsupported, "mesh")
+            }
+            GpuCommand::PushClip { .. } | GpuCommand::PopClip
+                if !profile.supports_scissor_clips =>
+            {
+                push_unique(&mut unsupported, "clip")
+            }
+            GpuCommand::DrawText(_) | GpuCommand::DrawGlyphRun(_)
+                if !profile.supports_glyph_atlas =>
+            {
+                push_unique(&mut unsupported, "text")
+            }
+            _ => {}
+        }
+    }
+    if !profile.supports_texture_sampling
+        && (!plan.images.is_empty() || plan.meshes.iter().any(|mesh| mesh.texture_id.is_some()))
+    {
+        push_unique(&mut unsupported, "image")
+    }
+    unsupported
+}
+
+fn push_unique(features: &mut Vec<&'static str>, feature: &'static str) {
+    if !features.contains(&feature) {
+        features.push(feature);
+    }
 }
 
 pub fn plan_scene_with_options(scene: &PaintScene, options: GpuPlanOptions) -> GpuPaintPlan {
@@ -1156,5 +1263,65 @@ mod tests {
             .diagnostics
             .iter()
             .any(|diagnostic| diagnostic.feature == "gradient"));
+    }
+
+    #[test]
+    fn tier1_solid_profile_accepts_basic_mesh_plan() {
+        let mut scene = PaintScene::new(20.0, 10.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Rect(PaintRect::filled(
+                1.0, 2.0, 8.0, 4.0, "#ff0000",
+            )));
+        let profile = GpuBackendProfile::tier1_solid(
+            "paint-vm-test-gpu",
+            GpuApiFamily::Wgpu,
+            GpuRenderPath::GraphicsPipeline,
+            "test-shader",
+            GpuReadbackStrategy::TextureCopyToBuffer,
+        );
+
+        let plan = plan_scene(&scene);
+
+        assert!(unsupported_plan_features(profile, &plan).is_empty());
+    }
+
+    #[test]
+    fn tier1_solid_profile_rejects_textures_and_text() {
+        let mut pixels = PixelContainer::new(1, 1);
+        pixels.set_pixel(0, 0, 12, 34, 56, 255);
+        let mut scene = PaintScene::new(20.0, 20.0);
+        scene.instructions.push(PaintInstruction::Image(PaintImage {
+            base: PaintBase::default(),
+            x: 0.0,
+            y: 0.0,
+            width: 10.0,
+            height: 10.0,
+            src: ImageSrc::Pixels(pixels),
+            opacity: None,
+        }));
+        scene.instructions.push(PaintInstruction::Text(PaintText {
+            base: PaintBase::default(),
+            x: 1.0,
+            y: 12.0,
+            text: "GPU".to_string(),
+            font_ref: None,
+            font_size: 12.0,
+            fill: Some("#000000".to_string()),
+            text_align: None,
+        }));
+        let profile = GpuBackendProfile::tier1_solid(
+            "paint-vm-test-gpu",
+            GpuApiFamily::Wgpu,
+            GpuRenderPath::GraphicsPipeline,
+            "test-shader",
+            GpuReadbackStrategy::TextureCopyToBuffer,
+        );
+
+        let plan = plan_scene(&scene);
+        let unsupported = unsupported_plan_features(profile, &plan);
+
+        assert!(unsupported.contains(&"image"));
+        assert!(unsupported.contains(&"text"));
     }
 }
