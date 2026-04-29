@@ -1,0 +1,10 @@
+[package]
+name = "twig-ir-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "TW00 — Twig (Lisp-precursor) → InterpreterIR (IIR) compiler"
+
+[dependencies]
+twig-parser    = { path = "../twig-parser" }
+twig-lexer     = { path = "../twig-lexer" }
+interpreter-ir = { path = "../interpreter-ir" }

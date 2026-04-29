@@ -1,0 +1,8 @@
+[package]
+name = "twig-parser"
+version = "0.1.0"
+edition = "2021"
+description = "Twig (Lisp-precursor) parser — turns a Twig token stream into a typed AST"
+
+[dependencies]
+twig-lexer = { path = "../twig-lexer" }

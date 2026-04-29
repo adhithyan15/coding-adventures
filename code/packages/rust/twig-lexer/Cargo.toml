@@ -1,0 +1,7 @@
+[package]
+name = "twig-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "Twig (Lisp-precursor) lexer — tokenises source into parens, integers, booleans, quotes, keywords, and names"
+
+[dependencies]

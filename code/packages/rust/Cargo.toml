@@ -428,4 +428,7 @@ members = [
     "aot-core",
     "brainfuck-iir-compiler",
     "ir-to-beam",
+    "twig-lexer",
+    "twig-parser",
+    "twig-ir-compiler",
 ]
