@@ -403,4 +403,5 @@ members = [
     "cas-number-theory",
     "cas-complex",
     "cas-trig",
+    "codegen-core",
 ]
