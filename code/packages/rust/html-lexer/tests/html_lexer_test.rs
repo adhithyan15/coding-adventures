@@ -136,6 +136,31 @@ fn default_html_lexer_marks_doctype_name_eof_force_quirks() {
 }
 
 #[test]
+fn default_html_lexer_marks_doctype_keyword_eof_force_quirks() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("<!DOC").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Doctype {
+                name: None,
+                public_identifier: None,
+                system_identifier: None,
+                force_quirks: true,
+            },
+            Token::Eof,
+        ]
+    );
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "eof-in-doctype"));
+}
+
+#[test]
 fn default_html_lexer_marks_after_doctype_name_eof_force_quirks() {
     let tokens = lex_html("<!DOCTYPE html ").unwrap();
 

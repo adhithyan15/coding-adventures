@@ -4694,7 +4694,12 @@ from = "doctype_keyword_o"
 matcher = { eof = true }
 to = "done"
 consume = false
-actions = ["parse_error(eof-in-doctype)", "emit_current_token", "emit(EOF)"]
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
 
 [[transitions]]
 from = "doctype_keyword_o"
@@ -4721,7 +4726,12 @@ from = "doctype_keyword_c"
 matcher = { eof = true }
 to = "done"
 consume = false
-actions = ["parse_error(eof-in-doctype)", "emit_current_token", "emit(EOF)"]
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
 
 [[transitions]]
 from = "doctype_keyword_c"
@@ -4748,7 +4758,12 @@ from = "doctype_keyword_t"
 matcher = { eof = true }
 to = "done"
 consume = false
-actions = ["parse_error(eof-in-doctype)", "emit_current_token", "emit(EOF)"]
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
 
 [[transitions]]
 from = "doctype_keyword_t"
@@ -4775,7 +4790,12 @@ from = "doctype_keyword_y"
 matcher = { eof = true }
 to = "done"
 consume = false
-actions = ["parse_error(eof-in-doctype)", "emit_current_token", "emit(EOF)"]
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
 
 [[transitions]]
 from = "doctype_keyword_y"
@@ -4802,7 +4822,12 @@ from = "doctype_keyword_p"
 matcher = { eof = true }
 to = "done"
 consume = false
-actions = ["parse_error(eof-in-doctype)", "emit_current_token", "emit(EOF)"]
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
 
 [[transitions]]
 from = "doctype_keyword_p"
@@ -4829,7 +4854,12 @@ from = "doctype_keyword_e"
 matcher = { eof = true }
 to = "done"
 consume = false
-actions = ["parse_error(eof-in-doctype)", "emit_current_token", "emit(EOF)"]
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
 
 [[transitions]]
 from = "doctype_keyword_e"
