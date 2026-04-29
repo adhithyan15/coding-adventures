@@ -152,26 +152,34 @@ const TEMP_BASE: usize = 287;
 /// Single-letter names (A–Z) map to v1–v26.
 /// Two-character names (A0–Z9) map to v27–v286.
 ///
+/// # Errors
+///
+/// Returns a [`CompileError`] if `name` is empty or does not start with an
+/// ASCII letter.  This makes the function safe to call with arbitrary
+/// user-supplied strings (e.g. variable names parsed from untrusted BASIC
+/// source) without the risk of an index-out-of-bounds panic.
+///
 /// # Examples
 /// ```
 /// use dartmouth_basic_ir_compiler::scalar_reg;
-/// assert_eq!(scalar_reg("A"), 1);
-/// assert_eq!(scalar_reg("Z"), 26);
-/// assert_eq!(scalar_reg("A0"), 27);
-/// assert_eq!(scalar_reg("Z9"), 286);
+/// assert_eq!(scalar_reg("A").unwrap(), 1);
+/// assert_eq!(scalar_reg("Z").unwrap(), 26);
+/// assert_eq!(scalar_reg("A0").unwrap(), 27);
+/// assert_eq!(scalar_reg("Z9").unwrap(), 286);
+/// assert!(scalar_reg("").is_err());
 /// ```
-pub fn scalar_reg(name: &str) -> usize {
-    // Guard against empty or non-alphabetic input: the first character must be
-    // A-Z (or a-z, which we normalise to uppercase).  An empty slice or a
-    // name whose first character is not a letter would cause an index-out-of-
-    // bounds panic at `upper[0]`, so we reject those inputs explicitly.
+pub fn scalar_reg(name: &str) -> Result<usize, CompileError> {
+    // Guard against empty or non-alphabetic input.  Returning an error here
+    // instead of panicking means callers can handle malformed variable names
+    // gracefully — important when compiling untrusted BASIC source text.
     let upper: Vec<char> = name.to_ascii_uppercase().chars().collect();
-    assert!(
-        !upper.is_empty() && upper[0].is_ascii_alphabetic(),
-        "scalar_reg: name must start with A-Z, got {:?}",
-        name
-    );
-    if upper.len() == 1 {
+    if upper.is_empty() || !upper[0].is_ascii_alphabetic() {
+        return Err(CompileError::new(format!(
+            "scalar_reg: variable name must start with A-Z, got {:?}",
+            name
+        )));
+    }
+    Ok(if upper.len() == 1 {
         // A–Z → v1–v26
         VAR_BASE + (upper[0] as usize - 'A' as usize)
     } else {
@@ -179,7 +187,7 @@ pub fn scalar_reg(name: &str) -> usize {
         let letter_idx = upper[0] as usize - 'A' as usize;
         let digit_idx  = upper[1].to_digit(10).unwrap_or(0) as usize;
         VAR_LETTER_DIGIT_BASE + letter_idx * 10 + digit_idx
-    }
+    })
 }
 
 /// Syscall number for "print the character in v0".
@@ -560,7 +568,7 @@ impl Compiler {
 
         let var_name = self.extract_var_name(var_node)
             .ok_or_else(|| CompileError::new("malformed LET: could not extract variable name"))?;
-        let v_var = scalar_reg(&var_name);
+        let v_var = scalar_reg(&var_name)?;
         let v_val = self.compile_expr(expr_node)?;
 
         // Copy expression result into the variable's register.
@@ -983,7 +991,7 @@ impl Compiler {
             return Err(CompileError::new("malformed FOR: expected at least start and limit expressions"));
         }
 
-        let v_var   = scalar_reg(&var_name);
+        let v_var   = scalar_reg(&var_name)?;
         let v_start = self.compile_expr(exprs[0])?;
         let v_limit = self.compile_expr(exprs[1])?;
 
@@ -1133,9 +1141,23 @@ impl Compiler {
         for child in &node.children {
             match child {
                 ASTNodeOrToken::Token(tok) if tok.effective_type_name() == "NUMBER" => {
-                    let val: i64 = tok.value.parse::<f64>()
-                        .map(|f| f as i64)
-                        .map_err(|_| CompileError::new(format!("invalid number literal: {:?}", tok.value)))?;
+                    // Parse number literals directly as i64 rather than going
+                    // through f64.  Parsing through f64 would silently lose
+                    // precision for integers larger than 2^53 — e.g. the
+                    // literal `9007199254740993` becomes `9007199254740992`
+                    // after an f64 round-trip, causing the compiled IR to
+                    // contain the wrong constant with no error.
+                    //
+                    // V1 supports integers only; floating-point literals are
+                    // rejected here rather than silently truncated.
+                    let val: i64 = tok.value.parse::<i64>().map_err(|_| {
+                        // Could be a float like "3.14" or an out-of-range value.
+                        CompileError::new(format!(
+                            "integer literal out of range or not a valid i64: {:?}; \
+                             V1 supports integers only (range {} to {})",
+                            tok.value, i64::MIN, i64::MAX
+                        ))
+                    })?;
                     let v = self.new_reg();
                     self.emit(IrOp::LoadImm, vec![
                         IrOperand::Register(v),
@@ -1168,7 +1190,7 @@ impl Compiler {
         }
         let name = self.extract_var_name(node)
             .ok_or_else(|| CompileError::new("could not extract variable name from AST"))?;
-        Ok(scalar_reg(&name))
+        scalar_reg(&name)
     }
 
     /// Compile a `unary` node (optional leading minus).
@@ -1388,17 +1410,17 @@ mod tests {
 
     #[test]
     fn test_scalar_reg_single_letter() {
-        assert_eq!(scalar_reg("A"), 1);
-        assert_eq!(scalar_reg("Z"), 26);
-        assert_eq!(scalar_reg("a"), 1); // lowercase OK
+        assert_eq!(scalar_reg("A").unwrap(), 1);
+        assert_eq!(scalar_reg("Z").unwrap(), 26);
+        assert_eq!(scalar_reg("a").unwrap(), 1); // lowercase OK
     }
 
     #[test]
     fn test_scalar_reg_two_char() {
-        assert_eq!(scalar_reg("A0"), 27);
-        assert_eq!(scalar_reg("A9"), 36);
-        assert_eq!(scalar_reg("B0"), 37);
-        assert_eq!(scalar_reg("Z9"), 286);
+        assert_eq!(scalar_reg("A0").unwrap(), 27);
+        assert_eq!(scalar_reg("A9").unwrap(), 36);
+        assert_eq!(scalar_reg("B0").unwrap(), 37);
+        assert_eq!(scalar_reg("Z9").unwrap(), 286);
     }
 
     // ── ascii_to_ge225 ──────────────────────────────────────────────────
@@ -1655,11 +1677,19 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(expected = "scalar_reg: name must start with A-Z")]
-    fn test_scalar_reg_empty_panics() {
-        // An empty string would previously cause an index-out-of-bounds panic
-        // with a confusing message.  Now we assert early with a clear message.
-        scalar_reg("");
+    fn test_scalar_reg_empty_returns_error() {
+        // Empty string should return a CompileError rather than panicking,
+        // so callers processing untrusted BASIC source can handle it gracefully.
+        let err = scalar_reg("").unwrap_err();
+        assert!(err.message.contains("A-Z"),
+                "error should mention A-Z requirement; got: {:?}", err.message);
+    }
+
+    #[test]
+    fn test_scalar_reg_non_alpha_returns_error() {
+        // A name starting with a digit is not a valid BASIC variable name.
+        assert!(scalar_reg("1A").is_err());
+        assert!(scalar_reg("$").is_err());
     }
 
     // ── char_encoding ASCII ──────────────────────────────────────────────

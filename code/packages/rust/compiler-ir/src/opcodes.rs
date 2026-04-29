@@ -69,8 +69,13 @@ pub enum IrOp {
     /// Register-register signed integer division. `DIV v3, v1, v2  →  v3 = v1 / v2`
     ///
     /// Truncates toward zero (C-style), consistent with Python's `//`
-    /// for non-negative operands.  Division by zero is undefined behaviour
-    /// in V1; backends may raise a trap or return 0.
+    /// for non-negative operands.
+    ///
+    /// **Division by zero**: backends MUST raise a hardware trap or software
+    /// fault on a zero divisor.  Silently returning 0 is explicitly forbidden
+    /// — doing so would produce wrong program results with no indication of
+    /// error, which can be exploited to bypass security-critical checks
+    /// (e.g. a guard that divides by a sentinel value to detect initialisation).
     Div,
     /// Register-register bitwise AND. `AND v3, v1, v2  →  v3 = v1 & v2`
     And,
@@ -260,17 +265,20 @@ mod tests {
     }
 
     #[test]
-    fn test_opcode_count_is_25() {
-        // Regression guard — we must have exactly 25 opcodes.
+    fn test_opcode_count_is_27() {
+        // Regression guard — we must have exactly 27 opcodes.
+        // 0.1.0: 25 opcodes (original set)
+        // 0.1.1: +Mul, +Div = 27
         let ops = [
             IrOp::LoadImm, IrOp::LoadAddr, IrOp::LoadByte, IrOp::StoreByte,
             IrOp::LoadWord, IrOp::StoreWord, IrOp::Add, IrOp::AddImm,
-            IrOp::Sub, IrOp::And, IrOp::AndImm, IrOp::CmpEq, IrOp::CmpNe,
-            IrOp::CmpLt, IrOp::CmpGt, IrOp::Label, IrOp::Jump, IrOp::BranchZ,
-            IrOp::BranchNz, IrOp::Call, IrOp::Ret, IrOp::Syscall, IrOp::Halt,
+            IrOp::Sub, IrOp::Mul, IrOp::Div, IrOp::And, IrOp::AndImm,
+            IrOp::CmpEq, IrOp::CmpNe, IrOp::CmpLt, IrOp::CmpGt,
+            IrOp::Label, IrOp::Jump, IrOp::BranchZ, IrOp::BranchNz,
+            IrOp::Call, IrOp::Ret, IrOp::Syscall, IrOp::Halt,
             IrOp::Nop, IrOp::Comment,
         ];
-        assert_eq!(ops.len(), 25);
+        assert_eq!(ops.len(), 27);
     }
 
     #[test]
