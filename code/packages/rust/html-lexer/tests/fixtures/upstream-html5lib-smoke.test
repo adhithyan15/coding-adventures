@@ -59,6 +59,16 @@
       ]
     },
     {
+      "description": "doctype keyword eof force quirks",
+      "input": "<!DOC",
+      "output": [
+        ["DOCTYPE", null, null, null, false]
+      ],
+      "errors": [
+        {"code": "eof-in-doctype", "line": 1, "col": 6}
+      ]
+    },
+    {
       "description": "doctype public identifier",
       "input": "<!DOCTYPE html PUBLIC \"-//IETF//DTD HTML//EN\">",
       "output": [
