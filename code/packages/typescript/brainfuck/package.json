@@ -12,10 +12,15 @@
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
   "dependencies": {
+    "@coding-adventures/directed-graph": "file:../directed-graph",
+    "@coding-adventures/state-machine": "file:../state-machine",
     "@coding-adventures/virtual-machine": "file:../virtual-machine",
     "@coding-adventures/lexer": "file:../lexer",
     "@coding-adventures/grammar-tools": "file:../grammar-tools",
-    "@coding-adventures/parser": "file:../parser"
+    "@coding-adventures/parser": "file:../parser",
+    "@coding-adventures/interpreter-ir": "file:../interpreter-ir",
+    "@coding-adventures/vm-core": "file:../vm-core",
+    "@coding-adventures/jit-core": "file:../jit-core"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

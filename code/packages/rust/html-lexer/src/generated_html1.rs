@@ -33,6 +33,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         "<".to_string(),
         "=".to_string(),
         ">".to_string(),
+        "?".to_string(),
         "A".to_string(),
         "B".to_string(),
         "C".to_string(),
@@ -5461,6 +5462,54 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "tag_open".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("?".to_string())),
+            to: vec![
+                "bogus_comment".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-question-mark-instead-of-tag-name)".to_string(),
+                "create_comment".to_string(),
+            ],
+            consume: false,
+        },
+        TransitionDefinition {
+            from: "tag_open".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Range { start: "A".to_string(), end: "Z".to_string() }),
+            to: vec![
+                "tag_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "create_start_tag".to_string(),
+                "append_tag_name(current_lowercase)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "tag_open".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Range { start: "a".to_string(), end: "z".to_string() }),
+            to: vec![
+                "tag_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "create_start_tag".to_string(),
+                "append_tag_name(current_lowercase)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "tag_open".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Eof),
             to: vec![
                 "done".to_string(),
@@ -5481,16 +5530,16 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             on: None,
             matcher: Some(MatcherDefinition::Anything),
             to: vec![
-                "tag_name".to_string(),
+                "data".to_string(),
             ],
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "create_start_tag".to_string(),
-                "append_tag_name(current_lowercase)".to_string(),
+                "parse_error(invalid-first-character-of-tag-name)".to_string(),
+                "append_text(<)".to_string(),
             ],
-            consume: true,
+            consume: false,
         },
         TransitionDefinition {
             from: "end_tag_open".to_string(),
@@ -5528,7 +5577,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "end_tag_open".to_string(),
             on: None,
-            matcher: Some(MatcherDefinition::Anything),
+            matcher: Some(MatcherDefinition::Range { start: "A".to_string(), end: "Z".to_string() }),
             to: vec![
                 "end_tag_name".to_string(),
             ],
@@ -5540,6 +5589,38 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
                 "append_tag_name(current_lowercase)".to_string(),
             ],
             consume: true,
+        },
+        TransitionDefinition {
+            from: "end_tag_open".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Range { start: "a".to_string(), end: "z".to_string() }),
+            to: vec![
+                "end_tag_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "create_end_tag".to_string(),
+                "append_tag_name(current_lowercase)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "end_tag_open".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Anything),
+            to: vec![
+                "bogus_comment".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(invalid-first-character-of-tag-name)".to_string(),
+                "create_comment".to_string(),
+            ],
+            consume: false,
         },
         TransitionDefinition {
             from: "tag_name".to_string(),
@@ -9023,6 +9104,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
+                "parse_error(incorrectly-opened-comment)".to_string(),
                 "create_comment".to_string(),
                 "append_comment(current)".to_string(),
             ],
@@ -9907,7 +9989,6 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "parse_error(eof-in-comment)".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],

@@ -63,6 +63,9 @@ jobs:
       needs_swift: ${{ steps.toolchains.outputs.needs_swift }}
       diff_base: ${{ steps.diff-base.outputs.base }}
       is_main: ${{ steps.detect-main.outputs.is_main }}
+      build_shards: ${{ steps.detect.outputs.build_shards }}
+      build_matrix: ${{ steps.build-matrix.outputs.build_matrix }}
+      shard_count: ${{ steps.build-matrix.outputs.shard_count }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -121,12 +124,20 @@ jobs:
           cd code/programs/go/build-tool
           go build -o ../../../../build-tool .
           cd ../../../..
+          force_flag=()
+          shard_flags=()
+          if [ "${{ steps.detect-main.outputs.is_main }}" = "true" ]; then
+            force_flag=(-force)
+            shard_flags=(-shard-count 5 -emit-shard-matrix)
+          fi
           ./build-tool \
             -root . \
             -diff-base "${{ steps.diff-base.outputs.base }}" \
+            "${force_flag[@]}" \
             -validate-build-files \
             -detect-languages \
-            -emit-plan build-plan.json
+            -emit-plan build-plan.json \
+            "${shard_flags[@]}"
 
       - name: Normalize toolchain requirements
         id: toolchains
@@ -171,6 +182,49 @@ jobs:
               'needs_swift=${{ steps.detect.outputs.needs_swift }}' >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Plan build matrix
+        id: build-matrix
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          IS_MAIN: ${{ steps.detect-main.outputs.is_main }}
+          BUILD_SHARDS: ${{ steps.detect.outputs.build_shards }}
+        run: |
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          import os
+
+          if os.environ["IS_MAIN"] == "true":
+            shards = json.loads(os.environ.get("BUILD_SHARDS") or "[]")
+            entries = [
+              {
+                "os": "ubuntu-latest",
+                "label": shard["label"],
+                "sharded": True,
+                "shard_index": shard["shard_index"],
+                "package_count": shard.get("package_count", 0),
+                "languages": shard.get("languages", []),
+              }
+              for shard in shards
+            ]
+            shard_count = len(entries)
+          elif os.environ["EVENT_NAME"] == "pull_request":
+            entries = [
+              {"os": "ubuntu-latest", "label": "ubuntu-latest", "sharded": False, "shard_index": -1},
+              {"os": "macos-latest", "label": "macos-latest", "sharded": False, "shard_index": -1},
+              {"os": "windows-latest", "label": "windows-latest", "sharded": False, "shard_index": -1},
+            ]
+            shard_count = 0
+          else:
+            entries = [
+              {"os": "ubuntu-latest", "label": "ubuntu-latest", "sharded": False, "shard_index": -1},
+            ]
+            shard_count = 0
+
+          print("build_matrix=" + json.dumps(entries, separators=(",", ":")))
+          print(f"shard_count={shard_count}")
+          PY
+
       - name: Upload build plan
         uses: actions/upload-artifact@v4
         with:
@@ -184,9 +238,10 @@ jobs:
   # compiles the build tool and runs the incremental build.
   build:
     needs: detect
+    name: build (${{ matrix.label }})
     strategy:
       matrix:
-        os: ${{ github.event_name == 'pull_request' && fromJSON('["ubuntu-latest", "macos-latest", "windows-latest"]') || fromJSON('["ubuntu-latest"]') }}
+        include: ${{ fromJSON(needs.detect.outputs.build_matrix) }}
       fail-fast: false
     runs-on: ${{ matrix.os }}
     permissions:
@@ -299,6 +354,12 @@ jobs:
       - name: Set up Rust
         if: needs.detect.outputs.needs_rust == 'true'
         uses: dtolnay/rust-toolchain@stable
+
+      - name: Install native Paint VM dependencies
+        if: needs.detect.outputs.needs_rust == 'true' && runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libcairo2-dev
 
       - name: Install cargo-tarpaulin
         if: needs.detect.outputs.needs_rust == 'true' && runner.os == 'Linux'
@@ -520,7 +581,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-plan
-        continue-on-error: true
 
       # ── Build the build tool ──────────────────────────────────
       - name: Compile build tool
@@ -533,6 +593,19 @@ jobs:
             go build -o ../../../../build-tool .
           fi
 
+      - name: Reclaim Linux runner disk
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Disk before cleanup:"
+          df -h /
+          sudo rm -rf /usr/local/lib/android || true
+          docker system prune --all --force || true
+          sudo apt-get clean
+          echo "Disk after cleanup:"
+          df -h /
+
       - name: Build and test affected Swift packages on Windows
         if: runner.os == 'Windows' && needs.detect.outputs.needs_swift == 'true'
         shell: pwsh
@@ -542,11 +615,15 @@ jobs:
             Write-Host 'Using pre-computed build plan'
             $planFlag = @('-plan-file', 'build-plan.json')
           }
-          & ./build-tool.exe -root . @planFlag -validate-build-files -language swift
+          $shardFlag = @()
+          if ('${{ matrix.sharded }}' -eq 'true') {
+            $shardFlag = @('-shard-index', '${{ matrix.shard_index }}')
+          }
+          & ./build-tool.exe -root . @planFlag @shardFlag -validate-build-files -language swift
 
       # ── Run the build ─────────────────────────────────────────
       - name: Build and test affected packages
-        if: runner.os != 'Windows' || (needs.detect.outputs.needs_swift == 'true' && false)
+        if: needs.detect.outputs.is_main != 'true' && (runner.os != 'Windows' || (needs.detect.outputs.needs_swift == 'true' && false))
         shell: bash
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
@@ -567,4 +644,4 @@ jobs:
         shell: bash
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
-          $BT -root . -force -validate-build-files -language all
+          $BT -root . -plan-file build-plan.json -shard-index "${{ matrix.shard_index }}" -force -validate-build-files -language all

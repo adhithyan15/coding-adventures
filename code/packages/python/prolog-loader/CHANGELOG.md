@@ -16,6 +16,8 @@
 - adapt callable CLP(FD) forms (`in/2`, `ins/2`, `#=/2`, `#\=/2`, `#</2`,
   `#=</2`, `#>/2`, `#>=/2`, `all_different/1`, `all_distinct/1`, `label/1`,
   and `labeling/2`) into the finite-domain builtin layer
+- flatten nested additive CLP(FD) equality expressions such as
+  `Z #= X + Y + 1` into n-ary finite-domain sum constraints
 - adapt common Prolog list predicates (`member/2`, `append/3`, `select/3`,
   `permutation/2`, `reverse/2`, `last/2`, `length/2`, `sort/2`, `msort/2`,
   `nth0/3`, `nth1/3`, `nth0/4`, `nth1/4`, and `is_list/1`) into the

@@ -1,5 +1,19 @@
 # Changelog — compiler-ir
 
+## [0.1.1] — 2026-04-28
+
+### Added
+
+- `IrOp::Mul` — register-register signed multiplication (`MUL v3, v1, v2 → v3 = v1 * v2`).
+- `IrOp::Div` — register-register signed integer division (`DIV v3, v1, v2 → v3 = v1 / v2`, truncates toward zero).
+- Both opcodes added to `Display` (`"MUL"`, `"DIV"`) and `parse_op()`.
+
+These opcodes are required by the Dartmouth BASIC IR compiler for the `*`/`/`
+operators and for the unrolled decimal digit-extraction routine used by
+`PRINT` of numeric expressions.
+
+---
+
 ## [0.1.0] — 2026-04-11
 
 Initial release: Rust port of the `compiler-ir` Go package.

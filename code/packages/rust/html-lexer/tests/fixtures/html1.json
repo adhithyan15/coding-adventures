@@ -566,6 +566,74 @@
         "Text(data=<not-markup> &amp; After)",
         "EOF"
       ]
+    },
+    {
+      "id": "question-mark-tag-open-bogus-comment",
+      "description": "Processing-instruction-looking markup recovers as a bogus comment",
+      "input": "Before<?xml version=\"1.0\"?>After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=?xml version=\"1.0\"?)",
+        "Text(data=After)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "unexpected-question-mark-instead-of-tag-name"
+      ]
+    },
+    {
+      "id": "question-mark-tag-open-bogus-comment-eof",
+      "description": "EOF in bogus-comment recovery emits the comment without eof-in-comment",
+      "input": "Before<?xml",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=?xml)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "unexpected-question-mark-instead-of-tag-name"
+      ]
+    },
+    {
+      "id": "incorrectly-opened-markup-declaration",
+      "description": "Malformed markup declarations recover as bogus comments with a diagnostic",
+      "input": "Before<!foo>After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=foo)",
+        "Text(data=After)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "incorrectly-opened-comment"
+      ]
+    },
+    {
+      "id": "invalid-tag-open-text-recovery",
+      "description": "A less-than sign before non-tag text remains text instead of starting a tag",
+      "input": "Before < after",
+      "tokens": [
+        "Text(data=Before )",
+        "Text(data=< after)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "invalid-first-character-of-tag-name"
+      ]
+    },
+    {
+      "id": "invalid-end-tag-open-bogus-comment",
+      "description": "An end-tag opener followed by a non-letter recovers as a bogus comment",
+      "input": "Before</3>After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=3)",
+        "Text(data=After)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "invalid-first-character-of-tag-name"
+      ]
     }
   ]
 }

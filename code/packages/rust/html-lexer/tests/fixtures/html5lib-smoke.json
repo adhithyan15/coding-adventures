@@ -605,6 +605,61 @@
       "diagnostics": [
         "incorrectly-closed-comment"
       ]
+    },
+    {
+      "id": "html5lib-smoke-50",
+      "description": "question mark after tag open recovers as bogus comment",
+      "input": "Before<?xml version=\"1.0\"?>After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=?xml version=\"1.0\"?)",
+        "Text(data=After)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "unexpected-question-mark-instead-of-tag-name"
+      ]
+    },
+    {
+      "id": "html5lib-smoke-51",
+      "description": "question mark bogus comment eof has no eof-in-comment error",
+      "input": "Before<?xml",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=?xml)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "unexpected-question-mark-instead-of-tag-name"
+      ]
+    },
+    {
+      "id": "html5lib-smoke-52",
+      "description": "incorrectly opened markup declaration reports tokenizer error",
+      "input": "Before<!foo>After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=foo)",
+        "Text(data=After)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "incorrectly-opened-comment"
+      ]
+    },
+    {
+      "id": "html5lib-smoke-53",
+      "description": "invalid end tag opener recovers as bogus comment",
+      "input": "Before</3>After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=3)",
+        "Text(data=After)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "invalid-first-character-of-tag-name"
+      ]
     }
   ],
   "skipped": []

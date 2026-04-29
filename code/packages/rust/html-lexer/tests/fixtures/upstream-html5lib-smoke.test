@@ -528,6 +528,53 @@
       "errors": [
         {"code": "incorrectly-closed-comment", "line": 1, "col": 15}
       ]
+    },
+    {
+      "description": "question mark after tag open recovers as bogus comment",
+      "input": "Before<?xml version=\"1.0\"?>After",
+      "output": [
+        ["Character", "Before"],
+        ["Comment", "?xml version=\"1.0\"?"],
+        ["Character", "After"]
+      ],
+      "errors": [
+        {"code": "unexpected-question-mark-instead-of-tag-name", "line": 1, "col": 8}
+      ]
+    },
+    {
+      "description": "question mark bogus comment eof has no eof-in-comment error",
+      "input": "Before<?xml",
+      "output": [
+        ["Character", "Before"],
+        ["Comment", "?xml"]
+      ],
+      "errors": [
+        {"code": "unexpected-question-mark-instead-of-tag-name", "line": 1, "col": 8}
+      ]
+    },
+    {
+      "description": "incorrectly opened markup declaration reports tokenizer error",
+      "input": "Before<!foo>After",
+      "output": [
+        ["Character", "Before"],
+        ["Comment", "foo"],
+        ["Character", "After"]
+      ],
+      "errors": [
+        {"code": "incorrectly-opened-comment", "line": 1, "col": 9}
+      ]
+    },
+    {
+      "description": "invalid end tag opener recovers as bogus comment",
+      "input": "Before</3>After",
+      "output": [
+        ["Character", "Before"],
+        ["Comment", "3"],
+        ["Character", "After"]
+      ],
+      "errors": [
+        {"code": "invalid-first-character-of-tag-name", "line": 1, "col": 9}
+      ]
     }
   ]
 }
