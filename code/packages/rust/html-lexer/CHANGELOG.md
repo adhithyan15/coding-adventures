@@ -89,6 +89,9 @@ documented in this file.
   an unrelated `eof-in-comment` diagnostic.
 - Malformed markup declarations such as `<!foo>` now report
   `incorrectly-opened-comment` while recovering as bogus comments.
+- Malformed markup declaration fallback now reconsumes the first non-matching
+  byte in bogus-comment state, so `<!>` emits an empty comment and returns to
+  data state.
 - One-dash markup declarations such as `<!->` and `<!-x>` now use
   incorrectly-opened bogus-comment recovery instead of empty-comment recovery.
 - Invalid tag-open characters now follow HTML recovery: stray `<` text is
