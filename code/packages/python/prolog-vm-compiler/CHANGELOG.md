@@ -19,6 +19,8 @@
   validation.
 - Run Prolog `integer/1` and `succ/2` through the VM path for integer type
   checks and successor relations.
+- Run callable CLP(FD) forms through the VM path, including finite domains,
+  arithmetic equality constraints, all-different, and labeling.
 - Run common Prolog list predicates, including finite `length/2`, `sort/2`,
   `msort/2`, `nth0/3`, `nth1/3`, `nth0/4`, and `nth1/4`, through the VM path
   by adapting them to `logic-stdlib` relations.

@@ -186,6 +186,26 @@ class TestPrologVMStress:
             },
         ]
 
+    def test_clpfd_callable_forms_run_through_vm(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            ?- ins([X,Y], [1,2,3]),
+               in(Z, [1,2,3,4,5,6]),
+               #<(X,Y),
+               #=(Z, +(X,Y)),
+               all_different([X,Y]),
+               labeling([], [X,Y,Z]).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert [answer.as_dict() for answer in answers] == [
+            {"X": num(1), "Y": num(2), "Z": num(3)},
+            {"X": num(1), "Y": num(3), "Z": num(4)},
+            {"X": num(2), "Y": num(3), "Z": num(5)},
+        ]
+
     def test_initialized_named_answers_keep_runtime_assertions_visible(self) -> None:
         compiled = compile_swi_prolog_source(
             """

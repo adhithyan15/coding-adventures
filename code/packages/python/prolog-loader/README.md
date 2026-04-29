@@ -13,6 +13,8 @@ It keeps parsing side-effect free, then exposes helpers to:
 - adapt parsed Prolog builtin calls like `call/1`, `dynamic/1`, `assertz/1`,
   and `predicate_property/2` into runtime goals before execution
 - adapt finite integer builtins such as `integer/1`, `between/3`, and `succ/2`
+- adapt callable CLP(FD) forms such as `in/2`, `ins/2`, `#=/2`,
+  `all_different/1`, and `labeling/2`
 - adapt `phrase/2` and `phrase/3` into executable DCG runtime calls
 - link multiple loaded sources into one namespace-aware runnable project with
   module-local predicates and weak imports

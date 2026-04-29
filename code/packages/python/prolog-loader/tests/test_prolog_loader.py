@@ -783,6 +783,25 @@ class TestPrologGoalAdapter:
             relation("!", 0)(),
             relation("is", 2)(LogicVar(id=10), term("+", 1, 2)),
             relation("succ", 2)(1, LogicVar(id=29)),
+            relation("#=", 2)(LogicVar(id=30), term("+", LogicVar(id=31), 1)),
+            relation("#\\=", 2)(LogicVar(id=32), LogicVar(id=33)),
+            relation("#<", 2)(LogicVar(id=34), LogicVar(id=35)),
+            relation("#=<", 2)(LogicVar(id=36), LogicVar(id=37)),
+            relation("#>", 2)(LogicVar(id=38), LogicVar(id=39)),
+            relation("#>=", 2)(LogicVar(id=40), LogicVar(id=41)),
+            relation("in", 2)(LogicVar(id=42), logic_list([1, 2, 3])),
+            relation("ins", 2)(
+                logic_list([LogicVar(id=43)]),
+                logic_list([1, 2, 3]),
+            ),
+            relation("all_different", 1)(
+                logic_list([LogicVar(id=44), LogicVar(id=45)])
+            ),
+            relation("all_distinct", 1)(
+                logic_list([LogicVar(id=46), LogicVar(id=47)])
+            ),
+            relation("labeling", 2)(logic_list([]), logic_list([LogicVar(id=48)])),
+            relation("label", 1)(logic_list([LogicVar(id=49)])),
             relation("=:=", 2)(term("+", 1, 2), 3),
             relation("=\\=", 2)(term("+", 1, 2), 4),
             relation("<", 2)(1, 2),
@@ -948,6 +967,28 @@ class TestPrologGoalAdapter:
         ) == [
             (num(3), num(4)),
             (num(4), num(5)),
+        ]
+
+    def test_adapt_prolog_goal_rewrites_clpfd_callable_forms(self) -> None:
+        parsed = parse_swi_query(
+            "?- ins([X,Y], [1,2,3]), "
+            "in(Z, [1,2,3,4,5,6]), "
+            "#<(X,Y), "
+            "#=(Z, +(X,Y)), "
+            "all_different([X,Y]), "
+            "labeling([], [X,Y,Z]).",
+        )
+
+        adapted = adapt_prolog_goal(parsed.goal)
+
+        assert solve_all(
+            program(),
+            (parsed.variables["X"], parsed.variables["Y"], parsed.variables["Z"]),
+            adapted,
+        ) == [
+            (num(1), num(2), num(3)),
+            (num(1), num(3), num(4)),
+            (num(2), num(3), num(5)),
         ]
 
     def test_adapt_prolog_goal_rewrites_common_list_predicates(self) -> None:
