@@ -1,5 +1,63 @@
 # Changelog
 
+## 0.36.0 — 2026-04-28
+
+**Phase 16 — Reciprocal hyperbolic power integrals: `sech^n`, `csch^n`, `coth^n`.**
+
+Closes the gap left by Phase 15, which deferred `∫ sech²(x) dx` and all higher
+powers of the three reciprocal hyperbolic functions.  Each family gets a full
+IBP (or identity-based) reduction formula valid for any non-negative integer `n`.
+
+### New module: `recip_hyp_power_integral.py`
+
+Exports three public functions, all pure-recursive with no back-calls into
+`integrate.py` (avoiding circular imports):
+
+| Function | Formula |
+|----------|---------|
+| `sech_power_integral(n,a,b,x)` | IBP: `I_n = sech^(n-2)·tanh/((n-1)a) + (n-2)/(n-1)·I_{n-2}` |
+| `csch_power_integral(n,a,b,x)` | IBP: `I_n = −csch^(n-2)·coth/((n-1)a) − (n-2)/(n-1)·I_{n-2}` |
+| `coth_power_integral(n,a,b,x)` | Identity: `I_n = I_{n-2} − coth^(n-1)/((n-1)a)` |
+
+**sech^n base cases:** `n=0→x`, `n=1→atan(sinh(ax+b))/a`, `n=2→tanh(ax+b)/a`.
+
+**csch^n base cases:** `n=0→x`, `n=1→log(tanh((ax+b)/2))/a`, `n=2→−coth(ax+b)/a`.
+
+**coth^n base cases:** `n=0→x`, `n=1→log(sinh(ax+b))/a`.
+
+The `coth^n` recursion is derived from `coth²=1+csch²` (Pythagorean identity)
+rather than IBP — it produces a cleaner telescoping result with no outer product.
+
+No new IR heads required; all output uses existing heads (`TANH`, `COTH`, `SINH`,
+`ATAN`, `LOG`).
+
+### `integrate.py` changes
+
+1. Imported the three new functions from `recip_hyp_power_integral`.
+2. Added `_try_recip_hyp_power(base, exponent, x)` dispatcher — fires for
+   `SECH`/`CSCH`/`COTH` base with integer exponent ≥ 2 and linear argument.
+3. Call site added immediately after `_try_hyp_power` (~line 544).
+
+### `test_phase15.py` update
+
+`test_sech_squared_unevaluated` renamed to `test_sech_squared_now_evaluates`
+and updated to assert `_was_evaluated` (previously asserted `_is_unevaluated`).
+
+### Tests (`test_phase16.py`) — 34 tests
+
+| Class | Tests | What is verified |
+|-------|-------|-----------------|
+| `TestPhase16_SechPowers` | 8 | n=2,3,4,5; a=2; b=1; a=1/2; Tanh in result |
+| `TestPhase16_CschPowers` | 8 | n=2,3,4,5; a=2; b=1; a=1/2; Coth in result |
+| `TestPhase16_CothPowers` | 8 | n=2,3,4,5; a=2; b=1; a=1/2; Coth power in result |
+| `TestPhase16_Fallthrough` | 3 | poly×sech², non-linear arg, mixed product |
+| `TestPhase16_Regressions` | 3 | Phase 15 bare, Phase 14 sinh^4, Phase 3 exp |
+| `TestPhase16_Macsyma` | 4 | end-to-end via MACSYMA string interface |
+
+Antiderivative correctness verified numerically at two test points per case.
+
+---
+
 ## 0.35.0 — 2026-04-28
 
 **Phase 15 — Reciprocal hyperbolic functions: `coth`, `sech`, `csch`.**

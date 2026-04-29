@@ -136,6 +136,11 @@ from symbolic_vm.polynomial_bridge import (
     rt_pairs_to_ir,
     to_rational,
 )
+from symbolic_vm.recip_hyp_power_integral import (
+    coth_power_integral,
+    csch_power_integral,
+    sech_power_integral,
+)
 from symbolic_vm.rothstein_trager import rothstein_trager
 from symbolic_vm.sinh_poly_integral import cosh_poly_integral, sinh_poly_integral
 from symbolic_vm.trig_poly_integral import trig_cos_integral, trig_sin_integral
@@ -537,6 +542,10 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
             return result
         # Phase 14: sinhⁿ, coshⁿ reduction formulas.
         result = _try_hyp_power(base, exponent, x)
+        if result is not None:
+            return result
+        # Phase 16: sechⁿ, cschⁿ, cothⁿ reduction formulas.
+        result = _try_recip_hyp_power(base, exponent, x)
         if result is not None:
             return result
         # Phase 8 bonus: ∫ (ax+b)^n dx = (ax+b)^(n+1)/((n+1)·a) or log(ax+b)/a.
@@ -1174,6 +1183,42 @@ def _try_hyp_power(base: IRNode, exponent: IRNode, x: IRSymbol) -> IRNode | None
     if base.head == SINH:
         return sinh_power_integral(n, a_frac, b_frac, x)
     return cosh_power_integral(n, a_frac, b_frac, x)
+
+
+def _try_recip_hyp_power(base: IRNode, exponent: IRNode, x: IRSymbol) -> IRNode | None:
+    """Return ``∫ sech^n(linear) dx``, ``∫ csch^n(linear) dx``, or
+    ``∫ coth^n(linear) dx``, or ``None``.
+
+    Phase 16 — reciprocal hyperbolic power reduction.
+
+    Fires when:
+    - ``base`` is ``IRApply(SECH/CSCH/COTH, (linear,))``.
+    - ``exponent`` is ``IRInteger(n)`` with ``n ≥ 2``.
+    - The argument of the function is a non-constant linear expression ``ax+b``.
+
+    Returns ``None`` for non-reciprocal-hyperbolic bases or non-integer exponents.
+    Falls through for ``n < 2`` (bare n=1 case is handled in Phase 15 dispatch).
+    """
+    if not isinstance(base, IRApply):
+        return None
+    if base.head not in {SECH, CSCH, COTH}:
+        return None
+    if not isinstance(exponent, IRInteger) or exponent.value < 2:
+        return None
+    n = exponent.value
+    if len(base.args) != 1:
+        return None
+    lin = _try_linear(base.args[0], x)
+    if lin is None:
+        return None
+    a_frac, b_frac = lin
+    if a_frac == Fraction(0):
+        return None
+    if base.head == SECH:
+        return sech_power_integral(n, a_frac, b_frac, x)
+    if base.head == CSCH:
+        return csch_power_integral(n, a_frac, b_frac, x)
+    return coth_power_integral(n, a_frac, b_frac, x)
 
 
 def _try_exp_hyp(exp_node: IRNode, hyp_node: IRNode, x: IRSymbol) -> IRNode | None:
