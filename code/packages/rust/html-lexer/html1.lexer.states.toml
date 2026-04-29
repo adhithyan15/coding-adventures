@@ -4705,7 +4705,7 @@ from = "bogus_comment"
 matcher = { eof = true }
 to = "done"
 consume = false
-actions = ["parse_error(eof-in-comment)", "emit_current_token", "emit(EOF)"]
+actions = ["emit_current_token", "emit(EOF)"]
 
 [[transitions]]
 from = "bogus_comment"

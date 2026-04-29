@@ -358,6 +358,31 @@ fn default_html_lexer_recovers_question_mark_tag_open_as_bogus_comment() {
 }
 
 #[test]
+fn default_html_lexer_does_not_report_eof_in_bogus_comment_state() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("Before<?xml").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("Before".to_string()),
+            Token::Comment("?xml".to_string()),
+            Token::Eof,
+        ]
+    );
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "unexpected-question-mark-instead-of-tag-name"));
+    assert!(!lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "eof-in-comment"));
+}
+
+#[test]
 fn default_html_lexer_recovers_invalid_tag_open_as_text() {
     let mut lexer = create_html_lexer().unwrap();
 

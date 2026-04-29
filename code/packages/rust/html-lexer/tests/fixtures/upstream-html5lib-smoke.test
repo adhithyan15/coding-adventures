@@ -542,6 +542,17 @@
       ]
     },
     {
+      "description": "question mark bogus comment eof has no eof-in-comment error",
+      "input": "Before<?xml",
+      "output": [
+        ["Character", "Before"],
+        ["Comment", "?xml"]
+      ],
+      "errors": [
+        {"code": "unexpected-question-mark-instead-of-tag-name", "line": 1, "col": 8}
+      ]
+    },
+    {
       "description": "invalid end tag opener recovers as bogus comment",
       "input": "Before</3>After",
       "output": [
