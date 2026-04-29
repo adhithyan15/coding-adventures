@@ -199,6 +199,9 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         return goal if ins_goal is None else ins_goal
     if goal.relation.arity == 2 and name in binary_fd_builtins:
         return binary_fd_builtins[name](args[0], args[1])
+    if goal.relation.arity == 3 and name == "sum":
+        sum_goal = _adapt_fd_sum(args[0], args[1], args[2])
+        return goal if sum_goal is None else sum_goal
 
     ternary_arithmetic_builtins: dict[
         str,
@@ -326,6 +329,16 @@ def _adapt_fd_equality(left: Term, right: Term) -> GoalExpr:
         return left_expression
 
     return fd_eqo(left, right)
+
+
+def _adapt_fd_sum(
+    terms_value: Term,
+    operator_value: Term,
+    result: Term,
+) -> GoalExpr | None:
+    if _atom_symbol_name(operator_value) != "#=":
+        return None
+    return fd_sumo(terms_value, result)
 
 
 def _adapt_fd_arithmetic_expression(expression: Term, result: Term) -> GoalExpr | None:
@@ -496,3 +509,11 @@ def _logic_list_items(term_value: Term) -> list[Term] | None:
             current = current.args[1]
             continue
         return None
+
+
+def _atom_symbol_name(term_value: Term) -> str | None:
+    if isinstance(term_value, Atom) and term_value.symbol.namespace is None:
+        return term_value.symbol.name
+    if isinstance(term_value, str):
+        return term_value
+    return None

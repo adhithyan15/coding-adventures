@@ -261,6 +261,23 @@ class TestPrologVMStress:
             {"X": num(1)},
         ]
 
+    def test_clpfd_sum_global_runs_through_vm(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            ?- [X,Y,Z] ins 1..4,
+               sum([X,Y,Z], #=, 6),
+               X #< Y,
+               Y #< Z,
+               labeling([], [X,Y,Z]).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert [answer.as_dict() for answer in answers] == [
+            {"X": num(1), "Y": num(2), "Z": num(3)},
+        ]
+
     def test_initialized_named_answers_keep_runtime_assertions_visible(self) -> None:
         compiled = compile_swi_prolog_source(
             """
