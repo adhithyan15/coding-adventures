@@ -38,9 +38,12 @@ comment recovery emits the recovered comment without adding an unrelated
 `eof-in-comment` diagnostic.
 Malformed markup declarations such as `<!foo>` also recover as bogus comments
 and report `incorrectly-opened-comment`, matching the tokenizer error shape the
-future parser will rely on for compatibility diagnostics. One-dash declaration
-openers such as `<!->` and `<!-x>` use that same bogus-comment recovery instead
-of being mistaken for normal empty-comment syntax.
+future parser will rely on for compatibility diagnostics. That recovery
+reconsumes the first non-matching byte in bogus-comment state, so empty
+declarations such as `<!>` emit an empty comment and return to normal data
+lexing. One-dash declaration openers such as `<!->` and `<!-x>` use that same
+bogus-comment recovery instead of being mistaken for normal empty-comment
+syntax.
 The tag-open states now only begin normal tags when the next character is an
 ASCII letter; stray less-than signs such as `a < b` remain text, and malformed
 end-tag openers such as `</3>` recover as bogus comments with a tokenizer

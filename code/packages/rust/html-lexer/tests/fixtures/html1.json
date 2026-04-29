@@ -609,6 +609,20 @@
       ]
     },
     {
+      "id": "empty-incorrectly-opened-markup-declaration",
+      "description": "Malformed empty declarations reconsume > in bogus comment recovery",
+      "input": "Before<!>After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=)",
+        "Text(data=After)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "incorrectly-opened-comment"
+      ]
+    },
+    {
       "id": "one-dash-markup-declaration-bogus-comment",
       "description": "Markup declarations with only one opening dash recover as bogus comments",
       "input": "Before<!->Middle<!-x>After<!-",

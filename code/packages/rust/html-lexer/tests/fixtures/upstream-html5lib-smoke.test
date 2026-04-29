@@ -565,6 +565,18 @@
       ]
     },
     {
+      "description": "empty incorrectly opened markup declaration reconsumes delimiter",
+      "input": "Before<!>After",
+      "output": [
+        ["Character", "Before"],
+        ["Comment", ""],
+        ["Character", "After"]
+      ],
+      "errors": [
+        {"code": "incorrectly-opened-comment", "line": 1, "col": 9}
+      ]
+    },
+    {
       "description": "one dash markup declaration recovers as bogus comment",
       "input": "Before<!->Middle<!-x>After<!-",
       "output": [

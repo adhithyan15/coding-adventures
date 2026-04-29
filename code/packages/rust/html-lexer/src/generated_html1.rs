@@ -9106,9 +9106,8 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "parse_error(incorrectly-opened-comment)".to_string(),
                 "create_comment".to_string(),
-                "append_comment(current)".to_string(),
             ],
-            consume: true,
+            consume: false,
         },
         TransitionDefinition {
             from: "cdata_open_bracket".to_string(),

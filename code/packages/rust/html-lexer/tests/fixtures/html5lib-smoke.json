@@ -649,6 +649,20 @@
     },
     {
       "id": "html5lib-smoke-53",
+      "description": "empty incorrectly opened markup declaration reconsumes delimiter",
+      "input": "Before<!>After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=)",
+        "Text(data=After)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "incorrectly-opened-comment"
+      ]
+    },
+    {
+      "id": "html5lib-smoke-54",
       "description": "one dash markup declaration recovers as bogus comment",
       "input": "Before<!->Middle<!-x>After<!-",
       "tokens": [
@@ -667,7 +681,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-54",
+      "id": "html5lib-smoke-55",
       "description": "invalid end tag opener recovers as bogus comment",
       "input": "Before</3>After",
       "tokens": [
