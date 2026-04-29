@@ -91,6 +91,18 @@
       ]
     },
     {
+      "id": "doctype-invalid-keyword-quirks",
+      "description": "Malformed DOCTYPE keyword text marks force-quirks",
+      "input": "<!DOX>",
+      "tokens": [
+        "Doctype(name=dox, force_quirks=true)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "invalid-doctype-keyword"
+      ]
+    },
+    {
       "id": "doctype-after-name-eof-quirks",
       "description": "DOCTYPE after-name state cut off by EOF marks force-quirks",
       "input": "<!DOCTYPE html ",

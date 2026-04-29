@@ -94,3 +94,5 @@ documented in this file.
   now covered, with unexpected trailing junk marking force-quirks mode.
 - DOCTYPE declarations cut off while matching the `DOCTYPE` keyword now emit a
   force-quirks token instead of a clean partial declaration.
+- Malformed `DOCTYPE` keyword text now marks force-quirks mode while preserving
+  the recovered keyword text as the best-effort DOCTYPE name.

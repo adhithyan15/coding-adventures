@@ -33,7 +33,8 @@ open comment remain literal comment data and surface a recoverable
 `incorrectly-closed-comment` diagnostic while preserving non-closing `--!` text.
 DOCTYPE tokenization reports missing names and marks force-quirks mode for
 inputs such as `<!DOCTYPE>` and `<!DOCTYPE >`, and EOF recovery after a name
-or inside the `DOCTYPE` keyword emits a force-quirks token. Mosaic-era `PUBLIC` and
+or inside the `DOCTYPE` keyword emits a force-quirks token. Malformed
+`DOCTYPE` keyword text also marks force-quirks mode. Mosaic-era `PUBLIC` and
 `SYSTEM` identifiers are preserved on emitted DOCTYPE tokens, so legacy
 declarations such as `<!DOCTYPE html PUBLIC "...">` keep the information the
 future tree-construction/parser layer will need for compatibility decisions.
