@@ -490,16 +490,28 @@ class CLIAssemblyWriter:
                 if layout.local_sig_token
             ],
             _ASSEMBLY_TABLE: [
+                # ECMA-335 §II.22.2 — Assembly row has 9 columns:
+                # HashAlgId(U32), MajorVersion(U16), MinorVersion(U16),
+                # BuildNumber(U16), RevisionNumber(U16), Flags(U32),
+                # PublicKey(Blob idx), Name(String idx), Culture(String idx).
+                # Total 22 bytes with narrow heaps.
+                #
+                # The pre-CLR01 row used format ``<IHHHHIHH`` (20 bytes,
+                # 8 fields) — missing the Culture column entirely, AND
+                # mis-mapped: ``assembly_name_index`` ended up in the
+                # PublicKey slot instead of the Name slot.  Real .NET's
+                # AssemblyRefTableReader reads past end-of-stream when
+                # the Assembly table is 2 bytes short, producing the
+                # cryptic ``BadImageFormatException: File is corrupt``
+                # we hit before this fix.
                 struct.pack(
-                    "<IHHHHIHH",
-                    0,
-                    1,
-                    0,
-                    0,
-                    0,
-                    0,
-                    assembly_name_index,
-                    0,
+                    "<IHHHHIHHH",
+                    0,                        # HashAlgId
+                    1, 0, 0, 0,               # 1.0.0.0
+                    0,                        # Flags
+                    0,                        # PublicKey blob (none)
+                    assembly_name_index,      # Name (string idx)
+                    0,                        # Culture (empty string idx)
                 ),
             ],
             # CLR01 chunk 3: AssemblyRef row pointing at

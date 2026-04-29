@@ -187,16 +187,12 @@ def test_return_zero_runs_on_real_dotnet(tmp_path: Path) -> None:
     )
 
 
-def test_diagnostic_current_failure_message(tmp_path: Path) -> None:
-    """Diagnostic-only — captures the *current* dotnet error message
-    as a baseline for tracking conformance progress.
-
-    This test does NOT skip on missing dotnet (it's also useful as a
-    pure unit test that the writer produces *some* output).  When
-    dotnet is present it asserts that the failure mode is
-    BadImageFormatException specifically — if a future CLR01 fix
-    breaks differently (e.g. METHOD_NOT_FOUND), that's a sign of
-    progress and this test is updated to reflect the new baseline.
+def test_writer_produces_nonempty_output() -> None:
+    """Pure unit test — the writer produces some PE bytes for a
+    minimal return-42 program.  Pre-CLR01 this test was where we
+    captured the BadImageFormat baseline; CLR01 has landed (real
+    dotnet now exits 42 — see the smoke tests above), so this is
+    just a non-emptiness check now.
     """
     program = _build_minimal_return_n_program(42)
     artifact = write_cli_assembly(
@@ -208,33 +204,4 @@ def test_diagnostic_current_failure_message(tmp_path: Path) -> None:
         ),
     )
     assert len(artifact.assembly_bytes) > 0
-
-    if not _DOTNET_AVAILABLE:
-        pytest.skip("dotnet not available — diagnostic stops at byte production")
-
-    asm_path = tmp_path / "Diagnostic.exe"
-    cfg_path = tmp_path / "Diagnostic.runtimeconfig.json"
-    asm_path.write_bytes(artifact.assembly_bytes)
-    cfg_path.write_text(_runtimeconfig_for_net9())
-
-    result = subprocess.run(
-        ["dotnet", str(asm_path)],
-        capture_output=True,
-        text=True,
-        timeout=30,
-        check=False,
-    )
-
-    # As of pre-CLR01: BadImageFormatException, exit code 134.
-    # When the fix lands and changes this, update the assertion.
-    if result.returncode != 42:
-        # Capture the failure mode for diagnostic purposes — if it
-        # changes, we know the fix is making progress.
-        assert "BadImageFormatException" in result.stderr or (
-            result.returncode == 134
-        ), (
-            "Expected the *current* failure to be a BadImageFormat / 134; "
-            f"got exit={result.returncode} stderr={result.stderr!r}.  "
-            "If dotnet now accepts the assembly, this test should be "
-            "removed and the smoke tests above will validate."
-        )
+    assert artifact.assembly_bytes[:2] == b"MZ"

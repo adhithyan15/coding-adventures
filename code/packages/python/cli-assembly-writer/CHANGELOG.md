@@ -1,14 +1,17 @@
 # Changelog
 
-## 0.2.0 — 2026-04-28
+## 0.2.0 — 2026-04-29
 
-### CLR01 Phase 1 — ECMA-335 conformance fixes
+### CLR01 — ECMA-335 conformance fixes (LANDED end-to-end)
 
-Brings the writer closer to real-`dotnet` loadability while keeping
-every existing simulator user (clr-vm-simulator, brainfuck-clr,
-oct-clr, nib-clr) green.  Real `dotnet 9.0.313` still rejects the
-output with `BadImageFormatException` — see `code/specs/CLR01...md`
-"Status (2026-04-28)" for what landed and what remains (CLR02).
+Real `dotnet 9.0.313` now executes our assemblies and returns the
+expected exit code.  All simulator users (clr-vm-simulator,
+brainfuck-clr, oct-clr, nib-clr) stay green.
+
+The previously-flagged "CLR02 follow-up" turned out to be **one
+bug**, not three: the pre-existing Assembly-table row encoding was
+2 bytes too short (missing the ECMA-335 §II.22.2 `Culture` column).
+Fixed in this same release.
 
 Concrete changes in `writer.py`:
 
@@ -33,6 +36,14 @@ Concrete changes in `writer.py`:
 - **Empty tables dropped from the Valid mask**: previously the
   MemberRef bit was set even with zero rows; real .NET rejects
   that as corrupt.
+- **Assembly row width fix (the actual root-cause)**: the format
+  changed from `<IHHHHIHH>` (8 fields = 20 bytes, missing the
+  Culture column) to `<IHHHHIHHH>` (9 fields = 22 bytes,
+  correctly mapped) per ECMA-335 §II.22.2.  Without this, the
+  AssemblyRef table that follows started 2 bytes early and
+  `System.Reflection.Metadata.AssemblyRefTableReader` read past
+  end-of-stream — that was the cryptic "BadImageFormatException:
+  File is corrupt" we'd been chasing.
 
 Test surface:
 
