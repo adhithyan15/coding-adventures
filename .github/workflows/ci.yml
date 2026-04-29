@@ -63,6 +63,8 @@ jobs:
       needs_swift: ${{ steps.toolchains.outputs.needs_swift }}
       diff_base: ${{ steps.diff-base.outputs.base }}
       is_main: ${{ steps.detect-main.outputs.is_main }}
+      build_shards: ${{ steps.detect.outputs.build_shards }}
+      shard_count: ${{ steps.detect.outputs.shard_count }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -121,12 +123,19 @@ jobs:
           cd code/programs/go/build-tool
           go build -o ../../../../build-tool .
           cd ../../../..
+          force_flag=()
+          if [ "${{ steps.detect-main.outputs.is_main }}" = "true" ]; then
+            force_flag=(-force)
+          fi
           ./build-tool \
             -root . \
             -diff-base "${{ steps.diff-base.outputs.base }}" \
+            "${force_flag[@]}" \
             -validate-build-files \
             -detect-languages \
-            -emit-plan build-plan.json
+            -emit-plan build-plan.json \
+            -shard-count 5 \
+            -emit-shard-matrix
 
       - name: Normalize toolchain requirements
         id: toolchains
@@ -184,9 +193,11 @@ jobs:
   # compiles the build tool and runs the incremental build.
   build:
     needs: detect
+    name: build (${{ matrix.os }}, ${{ matrix.shard.label }})
     strategy:
       matrix:
         os: ${{ github.event_name == 'pull_request' && fromJSON('["ubuntu-latest", "macos-latest", "windows-latest"]') || fromJSON('["ubuntu-latest"]') }}
+        shard: ${{ fromJSON(needs.detect.outputs.build_shards) }}
       fail-fast: false
     runs-on: ${{ matrix.os }}
     permissions:
@@ -520,7 +531,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-plan
-        continue-on-error: true
 
       # ── Build the build tool ──────────────────────────────────
       - name: Compile build tool
@@ -555,7 +565,7 @@ jobs:
             Write-Host 'Using pre-computed build plan'
             $planFlag = @('-plan-file', 'build-plan.json')
           }
-          & ./build-tool.exe -root . @planFlag -validate-build-files -language swift
+          & ./build-tool.exe -root . @planFlag -shard-index '${{ matrix.shard.shard_index }}' -validate-build-files -language swift
 
       # ── Run the build ─────────────────────────────────────────
       - name: Build and test affected packages
@@ -571,6 +581,7 @@ jobs:
           $BT \
             -root . \
             $PLAN_FLAG \
+            -shard-index "${{ matrix.shard.shard_index }}" \
             -validate-build-files \
             -language all
 
@@ -580,4 +591,4 @@ jobs:
         shell: bash
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
-          $BT -root . -force -validate-build-files -language all
+          $BT -root . -plan-file build-plan.json -shard-index "${{ matrix.shard.shard_index }}" -force -validate-build-files -language all

@@ -30,6 +30,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
@@ -146,6 +147,9 @@ func run() int {
 	detectLanguages := flag.Bool("detect-languages", false, "Output which language toolchains are needed based on git diff, then exit")
 	emitPlan := flag.String("emit-plan", "", "Write build plan JSON to this path (used by CI detect job)")
 	planFile := flag.String("plan-file", "", "Read build plan JSON, skip discovery/resolution/diff (used by CI build job)")
+	shardCount := flag.Int("shard-count", 0, "Split emitted build plans into this many CI shards")
+	shardIndex := flag.Int("shard-index", -1, "Run only the selected shard from a build plan")
+	emitShardMatrix := flag.Bool("emit-shard-matrix", false, "Output build_shards JSON for GitHub Actions matrix expansion")
 	validateBuildFiles := flag.Bool("validate-build-files", true, "Validate BUILD files against inferred dependency metadata and fail on mismatches")
 
 	flag.Parse()
@@ -238,7 +242,7 @@ func run() int {
 			}
 
 			// Reconstruct affected set.
-			if bp.Force {
+			if *force || bp.Force {
 				*force = true
 				affectedSet = nil
 			} else if bp.AffectedPackages == nil {
@@ -248,6 +252,48 @@ func run() int {
 				for _, name := range bp.AffectedPackages {
 					affectedSet[name] = true
 				}
+			}
+
+			if *shardIndex >= 0 {
+				if len(bp.Shards) == 0 {
+					bp.Shards = plan.ComputeShards(bp, *shardCount)
+				}
+
+				shard, ok := plan.FindShard(bp.Shards, *shardIndex)
+				if !ok {
+					fmt.Fprintf(os.Stderr, "Error: shard %d not found in build plan\n", *shardIndex)
+					return 1
+				}
+
+				shardSet := make(map[string]bool, len(shard.PackageNames))
+				for _, name := range shard.PackageNames {
+					shardSet[name] = true
+				}
+
+				filtered := make([]discovery.Package, 0, len(packages))
+				for _, pkg := range packages {
+					if shardSet[pkg.Name] {
+						filtered = append(filtered, pkg)
+					}
+				}
+				packages = filtered
+
+				if affectedSet != nil {
+					filteredAffected := make(map[string]bool)
+					for name := range affectedSet {
+						if shardSet[name] {
+							filteredAffected[name] = true
+						}
+					}
+					affectedSet = filteredAffected
+				}
+
+				fmt.Printf(
+					"Selected %s: %d assigned packages, %d packages including prerequisites\n",
+					shard.Name,
+					len(shard.AssignedPackages),
+					len(shard.PackageNames),
+				)
 			}
 
 			// Apply language filter if requested.
@@ -408,7 +454,19 @@ func run() int {
 	// These are early-exit modes that compute metadata but don't build.
 
 	if *emitPlan != "" {
-		return emitBuildPlan(packages, graph, affectedSet, *force, ciToolchains, *diffBase, repoRoot, *emitPlan, *detectLanguages)
+		return emitBuildPlan(
+			packages,
+			graph,
+			affectedSet,
+			*force,
+			ciToolchains,
+			*diffBase,
+			repoRoot,
+			*emitPlan,
+			*detectLanguages,
+			*shardCount,
+			*emitShardMatrix,
+		)
 	}
 
 	if *detectLanguages {
@@ -621,6 +679,8 @@ func emitBuildPlan(
 	repoRoot string,
 	outputPath string,
 	alsoDetectLanguages bool,
+	shardCount int,
+	alsoEmitShardMatrix bool,
 ) int {
 	// Build package entries with repo-root-relative paths.
 	entries := make([]plan.PackageEntry, len(packages))
@@ -673,12 +733,25 @@ func emitBuildPlan(
 		LanguagesNeeded:  languagesNeeded,
 	}
 
+	if shardCount > 0 {
+		bp.Shards = plan.ComputeShards(bp, shardCount)
+	}
+
 	if err := plan.Write(bp, outputPath); err != nil {
 		fmt.Fprintf(os.Stderr, "Error writing build plan: %v\n", err)
 		return 1
 	}
 
 	fmt.Printf("Build plan written to %s (%d packages)\n", outputPath, len(packages))
+
+	if alsoEmitShardMatrix {
+		if len(bp.Shards) == 0 {
+			bp.Shards = plan.ComputeShards(bp, shardCount)
+		}
+		if code := outputShardMatrix(bp.Shards); code != 0 {
+			return code
+		}
+	}
 
 	// If --detect-languages was also set, output language flags.
 	if alsoDetectLanguages {
@@ -712,5 +785,34 @@ func outputLanguageFlags(needed map[string]bool) int {
 		}
 	}
 
+	return 0
+}
+
+func outputShardMatrix(shards []plan.ShardEntry) int {
+	entries := plan.MatrixEntries(shards)
+	data, err := json.Marshal(entries)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error marshaling shard matrix: %v\n", err)
+		return 1
+	}
+
+	line := fmt.Sprintf("build_shards=%s", string(data))
+	fmt.Println(line)
+	fmt.Printf("shard_count=%d\n", len(entries))
+
+	ghOutput := os.Getenv("GITHUB_OUTPUT")
+	if ghOutput == "" {
+		return 0
+	}
+
+	ghFile, err := os.OpenFile(ghOutput, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Warning: could not open $GITHUB_OUTPUT: %v\n", err)
+		return 0
+	}
+	defer ghFile.Close()
+
+	fmt.Fprintln(ghFile, line)
+	fmt.Fprintf(ghFile, "shard_count=%d\n", len(entries))
 	return 0
 }

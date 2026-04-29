@@ -9,8 +9,8 @@ import (
 
 func TestRoundTrip(t *testing.T) {
 	bp := &BuildPlan{
-		DiffBase: "origin/main",
-		Force:    false,
+		DiffBase:         "origin/main",
+		Force:            false,
 		AffectedPackages: []string{"python/foo", "go/bar"},
 		Packages: []PackageEntry{
 			{
@@ -161,6 +161,91 @@ func TestVersionRejection(t *testing.T) {
 	}
 }
 
+func TestComputeShardsAddsTransitivePrerequisites(t *testing.T) {
+	bp := &BuildPlan{
+		AffectedPackages: []string{"ruby/app", "python/tool"},
+		Packages: []PackageEntry{
+			{Name: "ruby/core", Language: "ruby", BuildCommands: []string{"ruby test.rb"}},
+			{Name: "ruby/app", Language: "ruby", BuildCommands: []string{"ruby test.rb"}},
+			{Name: "python/base", Language: "python", BuildCommands: []string{"pytest"}},
+			{Name: "python/tool", Language: "python", BuildCommands: []string{"pytest"}},
+		},
+		DependencyEdges: [][2]string{
+			{"ruby/core", "ruby/app"},
+			{"python/base", "python/tool"},
+		},
+	}
+
+	shards := ComputeShards(bp, 2)
+	if len(shards) != 2 {
+		t.Fatalf("len(shards) = %d, want 2", len(shards))
+	}
+
+	for _, shard := range shards {
+		packages := asSet(shard.PackageNames)
+		for _, assigned := range shard.AssignedPackages {
+			switch assigned {
+			case "ruby/app":
+				if !packages["ruby/core"] {
+					t.Fatalf("ruby/app shard missing ruby/core prerequisite: %#v", shard.PackageNames)
+				}
+			case "python/tool":
+				if !packages["python/base"] {
+					t.Fatalf("python/tool shard missing python/base prerequisite: %#v", shard.PackageNames)
+				}
+			}
+		}
+	}
+}
+
+func TestComputeShardsForceUsesAllPackages(t *testing.T) {
+	bp := &BuildPlan{
+		Force:            true,
+		AffectedPackages: nil,
+		Packages: []PackageEntry{
+			{Name: "go/a", Language: "go"},
+			{Name: "go/b", Language: "go"},
+			{Name: "go/c", Language: "go"},
+		},
+	}
+
+	shards := ComputeShards(bp, 2)
+	seen := make(map[string]bool)
+	for _, shard := range shards {
+		for _, assigned := range shard.AssignedPackages {
+			seen[assigned] = true
+		}
+	}
+
+	for _, name := range []string{"go/a", "go/b", "go/c"} {
+		if !seen[name] {
+			t.Fatalf("force shard assignments missing %s", name)
+		}
+	}
+}
+
+func TestMatrixEntries(t *testing.T) {
+	shards := []ShardEntry{
+		{
+			Index:           0,
+			Name:            "shard-1-of-1",
+			PackageNames:    []string{"ruby/app"},
+			LanguagesNeeded: map[string]bool{"ruby": true},
+		},
+	}
+
+	entries := MatrixEntries(shards)
+	if len(entries) != 1 {
+		t.Fatalf("len(entries) = %d, want 1", len(entries))
+	}
+	if entries[0].ShardIndex != 0 || entries[0].ShardCount != 1 {
+		t.Fatalf("matrix entry = %#v, want shard 0 of 1", entries[0])
+	}
+	if len(entries[0].Languages) != 1 || entries[0].Languages[0] != "ruby" {
+		t.Fatalf("matrix languages = %#v, want [ruby]", entries[0].Languages)
+	}
+}
+
 func TestReadMissingFile(t *testing.T) {
 	_, err := Read("/nonexistent/plan.json")
 	if err == nil {
@@ -181,6 +266,14 @@ func TestReadMalformedJSON(t *testing.T) {
 
 func contains(s, substr string) bool {
 	return len(s) >= len(substr) && searchString(s, substr)
+}
+
+func asSet(values []string) map[string]bool {
+	set := make(map[string]bool, len(values))
+	for _, value := range values {
+		set[value] = true
+	}
+	return set
 }
 
 func searchString(s, substr string) bool {
