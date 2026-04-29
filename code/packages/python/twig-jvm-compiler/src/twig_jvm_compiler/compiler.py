@@ -287,11 +287,19 @@ class _Compiler:
         # Open the labelled region.
         self._emit(IrOp.LABEL, IrLabel(name=name), id=-1)
 
-        # Bind parameters to their fixed register slots.
-        ctx = _FnCtx(locals_={
-            param: IrRegister(index=_REG_PARAM_BASE + i)
-            for i, param in enumerate(lam.params)
-        })
+        # Copy each parameter out of its *arrival* register
+        # (``_REG_PARAM_BASE + i`` — the slot the caller wrote to)
+        # into a fresh body-local *holding* register (index ≥ 10).
+        # Why: subsequent ``CALL`` sites in the body marshal arguments
+        # into the same arrival slots, which would clobber the param
+        # value before recursive use.  Holding registers sit above the
+        # param window, so call-site arg setup never touches them.
+        ctx = _FnCtx(locals_={})
+        for i, param in enumerate(lam.params):
+            arrival = IrRegister(index=_REG_PARAM_BASE + i)
+            body_local = self._fresh_holding(ctx)
+            self._emit_move(body_local, arrival)
+            ctx.locals_[param] = body_local
 
         last: IrRegister | None = None
         for expr in lam.body:

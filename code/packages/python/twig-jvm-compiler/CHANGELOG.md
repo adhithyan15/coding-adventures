@@ -1,5 +1,30 @@
 # Changelog — twig-jvm-compiler
 
+## [0.1.1] — 2026-04-28
+
+### Fixed — JVM01 paired fix: copy params to body-local holding registers
+
+`_emit_function` now copies each parameter out of its arrival
+register (`r2`, `r3`, …) into a fresh body-local holding
+register at function entry.  Without this, a recursive body
+read of `n` happened against the same register the upcoming
+call's arg-marshalling overwrote — the caller-save in
+`ir-to-jvm-class-file` then snapshotted the *already-clobbered*
+value, defeating the fix.  Together with the
+`ir-to-jvm-class-file` 0.6.1 caller-saves change, recursion
+(e.g. `(fact 5) → 120`) now runs correctly on real `java`.
+
+### Added
+
+- `tests/test_real_jvm.py::test_recursion_factorial` — runs
+  `(define (fact n) (if (= n 0) 1 (* n (fact (- n 1))))) (fact 5)`
+  through real `java` and asserts stdout is byte 120.
+
+### Removed
+
+- "Known limitation: recursion (tracked as JVM01)" note — the
+  limitation is gone.
+
 ## [0.1.0] — TW02 v1
 
 ### Added
@@ -7,8 +32,8 @@
 - ``compile_to_ir(source)`` — Twig → ``IrProgram`` for the v1
   surface (integer arithmetic, ``if``/``let``/``begin``,
   top-level ``define`` for both values and functions,
-  non-recursive function calls — see "Known limitation" below
-  for the recursion gap).
+  function calls including recursion — see 0.1.1 for the
+  JVM01 recursion fix).
 - ``compile_source(source)`` — full pipeline: parse + extract +
   IR emit + ir-optimizer + lower_ir_to_jvm_class_file → .class
   bytes.
@@ -25,23 +50,7 @@
   convention ``test_oct_8bit_e2e.py`` uses for the existing
   Oct-on-JVM tests.
 
-### Known limitation: recursion (tracked as JVM01)
+### Note
 
-``ir-to-jvm-class-file`` stores every "IR register" in a
-class-level static int array shared across every method
-invocation.  That works for one-level calls but breaks
-recursion: when ``fact(5)`` calls ``fact(4)``, ``fact(5)``'s own
-parameter register r2 gets overwritten with 4, and the outer
-multiplication then uses 4 instead of 5.
-
-**This is tracked as a first-class numbered work item at
-``code/specs/JVM01-jvm-per-method-locals.md``** — same
-prominence as CLR01.  No xfail markers, no hidden TODOs; the
-spec describes the exact byte-level changes needed (switch the
-backend from class-level static-int-array storage to real
-per-method JVM locals + parameter passing on the operand
-stack).  When JVM01 lands the recursion tests get added back
-and pass without any change to ``twig-jvm-compiler``.
-
-Non-recursive function calls work correctly today, including
-multi-arg functions and nested calls like ``(inc (dbl 5))``.
+Recursion was a known limitation in 0.1.0 tracked as JVM01;
+0.1.1 lands the fix (see entry above).

@@ -1,5 +1,40 @@
 # JVM01 — Per-method JVM locals for `ir-to-jvm-class-file`
 
+> **Status (2026-04-28):** Landed via the *minimal-diff* path
+> described in "Implementation as landed" below.  The bigger
+> per-method-locals refactor in the original plan is no longer
+> required — keeping the spec for context, with a note on what
+> was actually shipped.
+
+## Implementation as landed
+
+Two cooperating changes made recursion correct on real `java`
+without rewriting every callable's descriptor:
+
+1. **Caller-saves at the JVM backend** —
+   `ir-to-jvm-class-file/backend.py` now snapshots every register
+   slot of the static `__ca_regs` array into JVM locals
+   immediately before each `IrOp.CALL`, then restores them
+   immediately after (skipping `r1`, the return-value slot).  This
+   gives every CALL the *effect* of per-method locals without
+   changing method descriptors or the helper-array contract.
+   Each callable's `max_locals` is bumped to `reg_count`.
+2. **Compiler-side param copy** — `twig-jvm-compiler/compiler.py`
+   `_emit_function` now copies each parameter out of its arrival
+   register (`r2`, `r3`, …) into a fresh body-local holding
+   register at function entry.  Without this, the body's read of
+   `n` happens against the same register the upcoming call's
+   arg-marshalling overwrites — the caller-save then snapshots
+   the *already-clobbered* value, defeating the fix.
+
+Regression tests:
+- `ir-to-jvm-class-file/tests/test_oct_8bit_e2e.py::test_call_preserves_caller_registers`
+- `twig-jvm-compiler/tests/test_real_jvm.py::test_recursion_factorial`
+
+The full per-method-locals refactor below is preserved as the
+"clean" target if we ever want to retire the static `__ca_regs`
+array entirely.
+
 ## Why this spec exists
 
 `ir-to-jvm-class-file` produces real-`java`-compatible class files,

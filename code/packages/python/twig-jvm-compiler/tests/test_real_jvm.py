@@ -86,15 +86,28 @@ def test_function_with_two_params() -> None:
     assert result.stdout == bytes([33])
 
 
-# NOTE: Recursion (e.g. ``(define (fact n) ... (fact (- n 1)))``) is
-# tracked as a known gap in JVM01 — the current
-# ``ir-to-jvm-class-file`` stores all "registers" in a class-level
-# static int array shared across every method invocation, so a
-# recursive call clobbers the caller's parameter values.  No xfail
-# marker here on purpose — the fix is a tracked, numbered spec
-# (``code/specs/JVM01-jvm-per-method-locals.md``) at the same
-# prominence as CLR01, so it can't get lost.  When JVM01 lands, a
-# recursion test goes here.
+@requires_java
+def test_recursion_factorial() -> None:
+    """Recursive ``fact`` — the JVM01 fix preserves param values
+    across a recursive call.  Two cooperating mechanisms:
+
+    1. ``ir-to-jvm-class-file`` snapshots the static register array
+       to JVM locals around every CALL and restores after (skipping
+       r1, the return-value slot).
+    2. ``twig-jvm-compiler`` copies each param out of its arrival
+       slot into a body-local holding register at function entry,
+       so call-site arg marshalling never clobbers the live param.
+
+    ``5! = 120`` and 120 = 0x78 = ``b'x'``.
+    """
+    src = """
+        (define (fact n)
+          (if (= n 0) 1 (* n (fact (- n 1)))))
+        (fact 5)
+    """
+    result = run_source(src, class_name="TwigFact")
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == bytes([120])
 
 
 @requires_java
