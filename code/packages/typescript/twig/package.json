@@ -1,7 +1,7 @@
 {
-  "name": "@coding-adventures/brainfuck",
+  "name": "@coding-adventures/twig",
   "version": "0.1.0",
-  "description": "Brainfuck interpreter built on the pluggable GenericVM",
+  "description": "Twig Lisp frontend and runtime on top of the TypeScript LANG VM",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
@@ -12,14 +12,9 @@
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
   "dependencies": {
-    "@coding-adventures/directed-graph": "file:../directed-graph",
-    "@coding-adventures/state-machine": "file:../state-machine",
-    "@coding-adventures/virtual-machine": "file:../virtual-machine",
-    "@coding-adventures/lexer": "file:../lexer",
-    "@coding-adventures/grammar-tools": "file:../grammar-tools",
-    "@coding-adventures/parser": "file:../parser",
     "@coding-adventures/interpreter-ir": "file:../interpreter-ir",
     "@coding-adventures/vm-core": "file:../vm-core",
+    "@coding-adventures/codegen-core": "file:../codegen-core",
     "@coding-adventures/jit-core": "file:../jit-core"
   },
   "devDependencies": {
