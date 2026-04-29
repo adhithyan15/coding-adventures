@@ -2,10 +2,11 @@
 
 ## Overview
 
-This spec covers three Rust crates that render PaintScene (P2D00) instructions
-through native platform rendering APIs on Windows and Linux. Each crate plugs
-into the PaintVM dispatch-table architecture (P2D01) — it registers handlers for
-the 10 instruction kinds and translates them into the platform's drawing calls.
+This spec covers the first native Rust crates that render PaintScene (P2D00)
+instructions through platform rendering APIs on Windows and Linux. The broader
+backend convergence/runtime contract is tracked in P2D09. Each crate plugs into
+the PaintVM dispatch-table architecture (P2D01) - it registers handlers for the
+instruction kinds and translates them into the platform's drawing calls.
 
 For the larger backend convergence roadmap, including Cairo, Skia, Vulkan,
 OpenGL, WGPU, CoreGraphics, capability reporting, and automatic backend
@@ -40,6 +41,7 @@ macOS/iOS. These three crates complete the picture for Windows and Linux:
 | paint-vm-direct2d  | Windows       | Direct2D      | This spec       |
 | paint-vm-gdi       | Windows       | GDI (Win32)   | This spec       |
 | paint-vm-cairo     | Linux / GTK   | Cairo + Pango | Design only     |
+| paint-vm-runtime   | Cross-platform| Selector      | See P2D09       |
 
 ---
 

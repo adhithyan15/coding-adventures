@@ -9,7 +9,7 @@ available backend that satisfies the scene's requirements.
 The backend should be an implementation detail. A QR renderer, Mermaid renderer,
 HTML layout pipeline, chart renderer, or document renderer should not care
 whether the final pixels came from Direct2D, GDI, Cairo, Skia, Vulkan, OpenGL,
-Metal, or a future backend.
+Mesa, OpenCL, WGPU, Metal, or a future backend.
 
 ```text
 Producer
@@ -30,8 +30,8 @@ capability reporting, backend selection, and the remaining Rust crates.
 
 1. Define a shared Rust backend interface for all pixel-producing Paint VMs.
 2. Define a capability model so the pipeline can choose a backend safely.
-3. Specify the remaining backend crates: Cairo, Skia, Vulkan, OpenGL, WGPU, and
-   CoreGraphics.
+3. Specify the remaining backend crates: Cairo, Skia, Vulkan, OpenGL, WGPU,
+   Mesa, OpenCL, and CoreGraphics.
 4. Define a compatibility test suite that every backend must pass before it is
    considered interchangeable.
 5. Keep paint dumb: text shaping, layout, DOM semantics, diagram semantics, and
@@ -65,10 +65,19 @@ The Paint VM family should eventually include these Rust crates:
 | `paint-vm-vulkan` | Vulkan | Windows, Linux, Android, BSD | Raw explicit GPU backend |
 | `paint-vm-opengl` | OpenGL | Broad legacy desktop support | Legacy GPU fallback |
 | `paint-vm-wgpu` | WGPU | Vulkan, Metal, DX12, WebGPU | Portable modern GPU backend |
+| `paint-vm-opencl` | OpenCL compute | Windows, Linux, macOS, vendor runtimes | Compute raster experiments |
+| `paint-vm-mesa` | Mesa profiles | Linux, BSD, Windows via Mesa3D | Software/driver profile routing for OpenGL/Vulkan |
 | `paint-vm-coregraphics` | CoreGraphics + CoreText | macOS, iOS | Apple CPU/native fallback |
+| `paint-vm-runtime` | Backend registry + selector | Cross-platform | Capability analysis and automatic backend choice |
 
 Existing TypeScript SVG and Canvas backends remain useful, but this spec is about
 Rust-native backends that can participate in the native pipeline.
+
+Mesa is modeled explicitly even though it is not a single drawing API. It gives
+the runtime a vocabulary for predictable software and driver profiles such as
+llvmpipe and lavapipe behind OpenGL/Vulkan paths. OpenCL is modeled as a compute
+raster backend rather than a vector API; it is useful for filters, software
+tessellation, and vendor-runtime experiments.
 
 ---
 
@@ -78,11 +87,16 @@ Every Rust backend should expose a small common surface:
 
 ```rust
 pub trait PaintRenderer {
-    fn name(&self) -> &'static str;
-    fn capabilities(&self) -> PaintBackendCapabilities;
-    fn render(&mut self, scene: &PaintScene) -> Result<PixelContainer, PaintRenderError>;
+    fn descriptor(&self) -> PaintBackendDescriptor;
+    fn render(&self, scene: &PaintScene) -> Result<PixelContainer, PaintRenderError>;
 }
 ```
+
+The shared contract lives in `paint-vm-runtime`. Backend crates implement this
+trait and return a `PaintBackendDescriptor` containing the backend id, family,
+platform support, acceleration type, maturity tier, and capability set. This
+lets applications build a registry without hard-coding backend-specific logic at
+the call site.
 
 Backends that can render into a live native surface may expose an additional
 surface API, but pixel export must be the common denominator. Pixel export gives
