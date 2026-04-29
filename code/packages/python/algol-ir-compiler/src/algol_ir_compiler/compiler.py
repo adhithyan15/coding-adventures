@@ -2981,7 +2981,7 @@ class AlgolIrCompiler:
             argument_types,
             strict=True,
         ):
-            if argument_kind == "array":
+            if argument_kind != "scalar":
                 continue
             if actual_type not in {
                 _INTEGER_TYPE,
@@ -3001,14 +3001,50 @@ class AlgolIrCompiler:
             if argument_kinds[index] == "scalar"
             and self._requires_by_name_thunk_descriptor(argument)
         ]
+        switch_actuals = [
+            (index, argument, actual_type)
+            for index, (argument, actual_type) in enumerate(
+                zip(actuals, argument_types, strict=True)
+            )
+            if argument_kinds[index] == "switch"
+        ]
+        procedure_actuals = [
+            (index, argument, actual_type)
+            for index, (argument, actual_type) in enumerate(
+                zip(actuals, argument_types, strict=True)
+            )
+            if argument_kinds[index] == "procedure"
+        ]
+        temp_descriptor_bytes = (
+            len(thunk_actuals) * _THUNK_DESCRIPTOR_SIZE
+            + len(switch_actuals) * _SWITCH_DESCRIPTOR_SIZE
+            + len(procedure_actuals) * _PROCEDURE_DESCRIPTOR_SIZE
+        )
         descriptor_heap_mark = (
-            self._emit_reserve_eval_thunk_descriptors(len(thunk_actuals), scope)
-            if thunk_actuals
+            self._emit_reserve_temp_descriptor_space(temp_descriptor_bytes, scope)
+            if temp_descriptor_bytes
             else None
         )
         descriptor_offsets = {
             argument_index: descriptor_index * _THUNK_DESCRIPTOR_SIZE
             for descriptor_index, (argument_index, _, _) in enumerate(thunk_actuals)
+        }
+        switch_descriptor_offsets = {
+            argument_index: (
+                len(thunk_actuals) * _THUNK_DESCRIPTOR_SIZE
+                + descriptor_index * _SWITCH_DESCRIPTOR_SIZE
+            )
+            for descriptor_index, (argument_index, _, _) in enumerate(switch_actuals)
+        }
+        procedure_descriptor_offsets = {
+            argument_index: (
+                len(thunk_actuals) * _THUNK_DESCRIPTOR_SIZE
+                + len(switch_actuals) * _SWITCH_DESCRIPTOR_SIZE
+                + descriptor_index * _PROCEDURE_DESCRIPTOR_SIZE
+            )
+            for descriptor_index, (argument_index, _, _) in enumerate(
+                procedure_actuals
+            )
         }
         argument_regs: list[int] = []
         for index, (actual, actual_type, argument_kind) in enumerate(
@@ -3016,6 +3052,37 @@ class AlgolIrCompiler:
         ):
             if argument_kind == "array":
                 argument_regs.append(self._compile_array_actual_pointer(actual, scope))
+                continue
+            if argument_kind == "label":
+                argument_regs.append(self._compile_label_actual_value(actual, scope))
+                continue
+            if argument_kind == "switch":
+                descriptor = None
+                if (
+                    descriptor_heap_mark is not None
+                    and index in switch_descriptor_offsets
+                ):
+                    descriptor = self._emit_descriptor_at(
+                        descriptor_heap_mark,
+                        switch_descriptor_offsets[index],
+                    )
+                argument_regs.append(
+                    self._compile_switch_actual_pointer(actual, scope, descriptor)
+                )
+                continue
+            if argument_kind == "procedure":
+                descriptor = None
+                if (
+                    descriptor_heap_mark is not None
+                    and index in procedure_descriptor_offsets
+                ):
+                    descriptor = self._emit_descriptor_at(
+                        descriptor_heap_mark,
+                        procedure_descriptor_offsets[index],
+                    )
+                argument_regs.append(
+                    self._compile_procedure_actual_pointer(actual, scope, descriptor)
+                )
                 continue
             descriptor = None
             if descriptor_heap_mark is not None and index in descriptor_offsets:
@@ -3140,6 +3207,12 @@ class AlgolIrCompiler:
                 argument_kinds.append("array")
                 argument_types.append(array_type)
                 continue
+            nonscalar = self._formal_nonscalar_argument_shape(actual, scope)
+            if nonscalar is not None:
+                argument_kind, argument_type = nonscalar
+                argument_kinds.append(argument_kind)
+                argument_types.append(argument_type)
+                continue
             argument_kinds.append("scalar")
             argument_types.append(self._expr_type(actual))
         return tuple(argument_kinds), tuple(argument_types)
@@ -3163,6 +3236,42 @@ class AlgolIrCompiler:
         if descriptor is None:
             raise CompileError(f"array actual {name.value!r} has no descriptor")
         return descriptor.element_type
+
+    def _formal_nonscalar_argument_shape(
+        self,
+        argument: ASTNode,
+        scope: _FrameScope,
+    ) -> tuple[str, str] | None:
+        variable = _single_variable_expr(argument)
+        if variable is None or _variable_subscripts(variable):
+            return None
+        name = _variable_name(variable)
+        if name is None:
+            return None
+        resolved = self._resolve_symbol_in_scope_chain(name.value, scope)
+        if resolved is None:
+            return None
+        symbol, _ = resolved
+        if symbol.kind == "label":
+            return "label", "label"
+        if symbol.kind == "switch":
+            return "switch", "switch"
+        if symbol.kind == "procedure":
+            procedure = (
+                self.procedures.get(symbol.procedure_id)
+                if symbol.procedure_id is not None
+                else None
+            )
+            if (
+                procedure is not None
+                and procedure.return_type is not None
+                and not procedure.parameters
+            ):
+                return None
+            return "procedure", symbol.type_name
+        if symbol.kind == "procedure_parameter" and symbol.type_name == "procedure":
+            return "procedure", symbol.type_name
+        return None
 
     def _compile_builtin_output(self, node: ASTNode, scope: _FrameScope) -> int:
         actuals = _direct_nodes(_first_direct_node(node, "actual_params"), "expression")
@@ -4360,7 +4469,7 @@ class AlgolIrCompiler:
                 zip(argument_kinds, argument_types, procedure.parameters, strict=True)
             ):
                 argument_pointer = _VALUE_PARAM_BASE_REG + arg_index
-                if argument_kind == "array":
+                if argument_kind in {"array", "label", "switch", "procedure"}:
                     call_arguments.append(argument_pointer)
                     continue
                 if parameter.mode == _NAME_MODE:
@@ -4439,6 +4548,23 @@ class AlgolIrCompiler:
                 if parameter.kind != "array":
                     return False
                 if parameter.type_name != argument_type:
+                    return False
+                continue
+            if argument_kind == "label":
+                if parameter.kind != "label":
+                    return False
+                continue
+            if argument_kind == "switch":
+                if parameter.kind != "switch":
+                    return False
+                continue
+            if argument_kind == "procedure":
+                if parameter.kind != "procedure":
+                    return False
+                if not _procedure_parameter_type_satisfies(
+                    expected_type=parameter.type_name,
+                    actual_type=argument_type,
+                ):
                     return False
                 continue
             if argument_kind != "scalar":
@@ -6202,6 +6328,19 @@ def _procedure_parameter_dispatch_type_tag(
         _REAL_TYPE: "f64",
         _STRING_TYPE: "str",
     }
+    if kind == "label":
+        return "label"
+    if kind == "switch":
+        return "switch"
+    if kind == "procedure":
+        if type_name == "procedure":
+            return "procedure"
+        try:
+            return f"procedure_{tags[type_name]}"
+        except KeyError as exc:
+            raise CompileError(
+                f"unsupported procedure parameter dispatch type {type_name!r}"
+            ) from exc
     if kind not in {"array", "scalar"}:
         raise CompileError(
             f"unsupported procedure parameter dispatch argument kind {kind!r}"
@@ -6215,6 +6354,19 @@ def _procedure_parameter_dispatch_type_tag(
     if kind == "array":
         return f"array_{tag}"
     return tag
+
+
+def _procedure_parameter_type_satisfies(
+    *,
+    expected_type: str,
+    actual_type: str,
+) -> bool:
+    if expected_type == "procedure" or actual_type == "procedure":
+        return expected_type == actual_type
+    return _procedure_return_type_satisfies(
+        expected_type=expected_type,
+        actual_type=actual_type,
+    )
 
 
 def _procedure_return_type_satisfies(

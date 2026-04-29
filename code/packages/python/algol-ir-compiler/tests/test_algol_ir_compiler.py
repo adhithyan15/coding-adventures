@@ -927,6 +927,57 @@ class TestAlgolIrCompiler:
             for instruction in calls
         )
 
+    def test_compiles_procedure_parameter_call_with_label_argument(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "procedure invoke(p); procedure p; begin p(done) end; "
+                "procedure jump(l); label l; begin result := 9; goto l end; "
+                "invoke(jump); done: "
+                "end"
+            )
+        )
+
+        assert (
+            result.procedure_signatures["_fn_algol_call_procedure_label"].param_types
+            == ("integer", "integer", "integer")
+        )
+
+    def test_compiles_procedure_parameter_call_with_switch_argument(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; switch s := done; "
+                "procedure invoke(p); procedure p; begin p(s) end; "
+                "procedure jump(sw); switch sw; begin goto sw[1] end; "
+                "invoke(jump); done: "
+                "end"
+            )
+        )
+
+        assert (
+            result.procedure_signatures["_fn_algol_call_procedure_switch"].param_types
+            == ("integer", "integer", "integer")
+        )
+
+    def test_compiles_procedure_parameter_call_with_procedure_argument(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "procedure bump; begin result := result + 1 end; "
+                "procedure invoke(p); procedure p; begin p(bump) end; "
+                "procedure use(q); procedure q; begin q; q end; "
+                "result := 0; invoke(use) "
+                "end"
+            )
+        )
+
+        assert (
+            result.procedure_signatures[
+                "_fn_algol_call_procedure_procedure"
+            ].param_types
+            == ("integer", "integer", "integer")
+        )
+
     def test_compiles_value_procedure_parameter_call_with_value_argument(self) -> None:
         result = compile_algol(
             parse_algol(

@@ -760,6 +760,43 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
 
+    def test_procedure_parameter_statement_call_passes_label_argument(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure invoke(p); procedure p; begin p(done) end; "
+            "procedure jump(l); label l; begin result := 9; goto l end; "
+            "invoke(jump); result := 0; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
+
+    def test_procedure_parameter_statement_call_passes_switch_argument(self) -> None:
+        result = compile_source(
+            "begin integer result; switch s := left, right; "
+            "procedure invoke(p); procedure p; begin p(s) end; "
+            "procedure jump(sw); switch sw; begin goto sw[2] end; "
+            "invoke(jump); result := 0; "
+            "left: result := 1; goto done; "
+            "right: result := 8; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
+
+    def test_procedure_parameter_statement_call_passes_procedure_argument(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure bump; begin result := result + 1 end; "
+            "procedure invoke(p); procedure p; begin p(bump) end; "
+            "procedure use(q); procedure q; begin q; q end; "
+            "result := 0; invoke(use) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
     def test_formal_procedure_by_name_argument_remains_lazy(self) -> None:
         result = compile_source(
             "begin integer result; "
@@ -821,6 +858,19 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [11]
+
+    def test_formal_procedure_call_passes_typed_procedure_argument(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer procedure twice(x); value x; integer x; "
+            "begin twice := x * 2 end; "
+            "procedure invoke(p); procedure p; begin p(twice) end; "
+            "procedure use(f); integer f; procedure f; "
+            "begin result := f(4) end; "
+            "invoke(use) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
 
     def test_real_procedure_parameter_accepts_integer_return_actual(self) -> None:
         result = compile_source(

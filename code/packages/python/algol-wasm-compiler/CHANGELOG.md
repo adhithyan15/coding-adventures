@@ -70,6 +70,8 @@ All notable changes to this package will be documented in this file.
   by-name parameters, preserving lazy reads and writable caller variables.
 - Executed formal procedure calls that forward whole-array arguments to actual
   procedures, preserving descriptor aliasing and existing `value` array copies.
+- Executed formal procedure calls that forward label, switch, and procedure
+  arguments to actual procedures.
 - Added a convergence golden fixture that combines conditional expressions,
   exponentiation, chained assignment, by-name array summation, real arithmetic,
   and output in one end-to-end program.
