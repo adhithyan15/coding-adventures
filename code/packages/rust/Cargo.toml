@@ -406,4 +406,5 @@ members = [
     "codegen-core",
     "cir-to-compiler-ir",
     "aot-core",
+    "ir-to-beam",
 ]
