@@ -542,16 +542,16 @@ class TestPhase15_Fallthrough:
         F = _integrate_ir(vm, f)
         _is_unevaluated(f, F)
 
-    def test_sech_squared_unevaluated(self) -> None:
-        """∫ sech²(x) dx is not wired in Phase 15 — returns unevaluated.
+    def test_sech_squared_now_evaluates(self) -> None:
+        """∫ sech²(x) dx = tanh(x) — wired in Phase 16 (IBP power reduction).
 
-        (∫ sech²(x) dx = tanh(x) is a known result; it belongs in a future
-        phase alongside hyperbolic power reductions.)
+        Updated from ``test_sech_squared_unevaluated`` when Phase 16 landed:
+        ``sech^n`` now dispatches through ``_try_recip_hyp_power`` for n ≥ 2.
         """
         vm = _make_vm()
         f = IRApply(POW, (IRApply(SECH, (X,)), IRInteger(2)))
         F = _integrate_ir(vm, f)
-        _is_unevaluated(f, F)
+        _was_evaluated(f, F)
 
 
 # ---------------------------------------------------------------------------
