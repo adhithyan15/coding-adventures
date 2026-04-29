@@ -165,6 +165,16 @@ pub fn pack(artifact: &CodeArtifact) -> Result<Vec<u8>, PackagerError> {
             "pe packager: native_bytes length exceeds u32::MAX (4 GiB)".into(),
         )
     })?;
+    // Guard: align_to(code_len, FILE_ALIGNMENT) computes `code_len + FILE_ALIGNMENT - 1`
+    // in u32. If code_len is within FILE_ALIGNMENT-1 bytes of u32::MAX, this addition
+    // overflows u32 — panicking in debug, wrapping silently in release.  The wrap produces
+    // a far-too-small raw_code_size, which in turn makes the output buffer too small and
+    // causes the copy_from_slice below to panic.  Reject the pathological range early.
+    if code_len > u32::MAX - (FILE_ALIGNMENT - 1) {
+        return Err(PackagerError::UnsupportedTarget(
+            "pe packager: native_bytes too large to align to file boundary (within 511 bytes of 4 GiB)".into(),
+        ));
+    }
     // Validate that entry_point fits in u32.  On a 64-bit host, usize can exceed u32::MAX;
     // truncating would silently embed a wrong AddressOfEntryPoint in the header.
     let entry_u32 = u32::try_from(artifact.entry_point).map_err(|_| {
@@ -173,6 +183,7 @@ pub fn pack(artifact: &CodeArtifact) -> Result<Vec<u8>, PackagerError> {
         )
     })?;
     // On-disk size of the code section, rounded up to the next file-alignment boundary.
+    // Safe: code_len <= u32::MAX - (FILE_ALIGNMENT - 1) checked above.
     let raw_code_size = align_to(code_len, FILE_ALIGNMENT);
     // In-memory image size: headers occupy [0, 0x1000), code occupies [0x1000, ...).
     let size_of_image = align_to(
@@ -191,7 +202,15 @@ pub fn pack(artifact: &CodeArtifact) -> Result<Vec<u8>, PackagerError> {
     })?;
 
     // Pre-allocate the full output buffer.
-    let total_size = (TEXT_FILE_OFFSET + raw_code_size) as usize;
+    // Use checked_add so that a near-u32::MAX raw_code_size cannot silently produce
+    // an underflowed total_size that is too small for the copy_from_slice below.
+    let total_size = TEXT_FILE_OFFSET
+        .checked_add(raw_code_size)
+        .ok_or_else(|| {
+            PackagerError::UnsupportedTarget(
+                "pe packager: total output size (headers + code) overflows u32".into(),
+            )
+        })? as usize;
     let mut out: Vec<u8> = vec![0u8; total_size];
 
     // ── DOS stub (64 bytes) ───────────────────────────────────────────────────
