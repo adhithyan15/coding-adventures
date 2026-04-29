@@ -245,6 +245,22 @@ class TestPrologVMStress:
             {"X": num(2), "Y": num(3), "Z": num(6)},
         ]
 
+    def test_clpfd_labeling_options_run_through_vm(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            ?- X in 1..3,
+               labeling([down], [X]).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert [answer.as_dict() for answer in answers] == [
+            {"X": num(3)},
+            {"X": num(2)},
+            {"X": num(1)},
+        ]
+
     def test_initialized_named_answers_keep_runtime_assertions_visible(self) -> None:
         compiled = compile_swi_prolog_source(
             """

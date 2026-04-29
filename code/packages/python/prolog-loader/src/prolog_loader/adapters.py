@@ -45,6 +45,7 @@ from logic_builtins import (
     iftheno,
     integero,
     iso,
+    labeling_optionso,
     labelingo,
     leqo,
     lto,
@@ -266,7 +267,7 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
     if name == "forall" and goal.relation.arity == 2:
         return forallo(_adapt_callable_goal(args[0]), _adapt_callable_goal(args[1]))
     if name == "labeling" and goal.relation.arity == 2:
-        return labelingo(args[1])
+        return labeling_optionso(args[0], args[1])
     if name == "label" and goal.relation.arity == 1:
         return labelingo(args[0])
     if name == "functor" and goal.relation.arity == 3:

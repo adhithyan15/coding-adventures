@@ -10,6 +10,8 @@ All notable changes to this package will be documented in this file.
   validation, matching the common Prolog `between/3` use case.
 - `integero(term)` for non-bool integer type checks and `succo(predecessor,
   successor)` for non-negative integer successor generation and validation.
+- `labeling_optionso(options, vars)` for a first CLP(FD) labeling option
+  subset, including `leftmost`, `ff`, `up`, and `down`.
 
 ### Fixed
 

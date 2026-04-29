@@ -71,6 +71,7 @@ from logic_builtins import (
     iftheno,
     integero,
     iso,
+    labeling_optionso,
     labelingo,
     leqo,
     lto,
@@ -897,6 +898,32 @@ class TestFiniteDomainBuiltins:
             (num(2), num(20)),
             (num(3), num(20)),
         ]
+
+    def test_labeling_optionso_supports_leftmost_and_down(self) -> None:
+        wide = var("Wide")
+        narrow = var("Narrow")
+
+        assert solve_all(
+            program(),
+            (wide, narrow),
+            conj(
+                fd_ino(wide, [1]),
+                fd_ino(narrow, [10, 20]),
+                labeling_optionso(["leftmost", "down"], [wide, narrow]),
+            ),
+        ) == [(num(1), num(20)), (num(1), num(10))]
+
+    def test_labeling_optionso_supports_logic_list_options(self) -> None:
+        value = var("Value")
+
+        assert solve_all(
+            program(),
+            value,
+            conj(
+                fd_ino(value, range(1, 4)),
+                labeling_optionso(logic_list(["down"]), logic_list([value])),
+            ),
+        ) == [num(3), num(2), num(1)]
 
     def test_fd_constraints_solve_australia_map_coloring(self) -> None:
         wa = var("WA")

@@ -18,6 +18,8 @@
   and `labeling/2`) into the finite-domain builtin layer
 - flatten nested additive CLP(FD) equality expressions such as
   `Z #= X + Y + 1` into n-ary finite-domain sum constraints
+- preserve supported `labeling/2` options (`leftmost`, `ff`, `up`, and `down`)
+  when adapting Prolog CLP(FD) queries into finite-domain goals
 - adapt common Prolog list predicates (`member/2`, `append/3`, `select/3`,
   `permutation/2`, `reverse/2`, `last/2`, `length/2`, `sort/2`, `msort/2`,
   `nth0/3`, `nth1/3`, `nth0/4`, `nth1/4`, and `is_list/1`) into the
