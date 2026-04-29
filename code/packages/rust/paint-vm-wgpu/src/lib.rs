@@ -2,14 +2,15 @@
 //!
 //! This backend consumes the shared `paint-vm-gpu-core` render plan and draws
 //! solid meshes into an offscreen WGPU texture. It is the first concrete GPU
-//! consumer of the shared tessellation layer; images, glyph atlases, gradients,
+//! consumer of the shared tessellation layer; glyph atlases, exact gradients,
 //! and filters remain deliberately outside this Tier 1 slice.
 
 use std::sync::mpsc;
 
 use paint_instructions::{PaintScene, PixelContainer};
 use paint_vm_gpu_core::{
-    plan_scene, GpuColor, GpuCommand, GpuMesh, GpuPaintPlan, GpuPlanSeverity, GpuRect,
+    plan_scene, GpuColor, GpuCommand, GpuImageUpload, GpuMesh, GpuPaintPlan, GpuPlanSeverity,
+    GpuRect,
 };
 use paint_vm_runtime::{
     PaintAcceleration, PaintBackendCapabilities, PaintBackendDescriptor, PaintBackendFamily,
@@ -39,7 +40,7 @@ pub fn descriptor() -> PaintBackendDescriptor {
             path_arc_to: SupportLevel::Unsupported,
             glyph_run: SupportLevel::Unsupported,
             text: SupportLevel::Unsupported,
-            image: SupportLevel::Unsupported,
+            image: SupportLevel::Supported,
             clip: SupportLevel::Supported,
             group: SupportLevel::Supported,
             group_transform: SupportLevel::Supported,
@@ -79,6 +80,7 @@ impl PaintRenderer for WgpuPaintBackend {
 #[repr(C)]
 struct Vertex {
     position: [f32; 2],
+    uv: [f32; 2],
     color: [f32; 4],
 }
 
@@ -96,6 +98,11 @@ impl Vertex {
                 wgpu::VertexAttribute {
                     offset: std::mem::size_of::<[f32; 2]>() as wgpu::BufferAddress,
                     shader_location: 1,
+                    format: wgpu::VertexFormat::Float32x2,
+                },
+                wgpu::VertexAttribute {
+                    offset: (std::mem::size_of::<[f32; 2]>() * 2) as wgpu::BufferAddress,
+                    shader_location: 2,
                     format: wgpu::VertexFormat::Float32x4,
                 },
             ],
@@ -107,6 +114,13 @@ struct PreparedMesh {
     vertex_buffer: wgpu::Buffer,
     index_buffer: wgpu::Buffer,
     index_count: u32,
+    texture_id: Option<usize>,
+}
+
+struct PreparedTexture {
+    bind_group: wgpu::BindGroup,
+    _texture: wgpu::Texture,
+    _view: wgpu::TextureView,
 }
 
 fn render_scene(scene: &PaintScene) -> Result<PixelContainer, PaintRenderError> {
@@ -147,42 +161,75 @@ async fn render_plan(plan: GpuPaintPlan) -> Result<PixelContainer, PaintRenderEr
         })?;
 
     let shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
-        label: Some("paint-vm-wgpu-solid-shader"),
-        source: wgpu::ShaderSource::Wgsl(SOLID_SHADER.into()),
+        label: Some("paint-vm-wgpu-textured-shader"),
+        source: wgpu::ShaderSource::Wgsl(TEXTURED_SHADER.into()),
     });
     let viewport_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
         label: Some("paint-vm-wgpu-viewport"),
         contents: bytemuck::cast_slice(&[plan.width as f32, plan.height as f32]),
         usage: wgpu::BufferUsages::UNIFORM,
     });
-    let bind_group_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
-        label: Some("paint-vm-wgpu-bind-group-layout"),
-        entries: &[wgpu::BindGroupLayoutEntry {
-            binding: 0,
-            visibility: wgpu::ShaderStages::VERTEX,
-            ty: wgpu::BindingType::Buffer {
-                ty: wgpu::BufferBindingType::Uniform,
-                has_dynamic_offset: false,
-                min_binding_size: None,
-            },
-            count: None,
-        }],
-    });
-    let bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
-        label: Some("paint-vm-wgpu-bind-group"),
-        layout: &bind_group_layout,
+    let viewport_bind_group_layout =
+        device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+            label: Some("paint-vm-wgpu-viewport-bind-group-layout"),
+            entries: &[wgpu::BindGroupLayoutEntry {
+                binding: 0,
+                visibility: wgpu::ShaderStages::VERTEX,
+                ty: wgpu::BindingType::Buffer {
+                    ty: wgpu::BufferBindingType::Uniform,
+                    has_dynamic_offset: false,
+                    min_binding_size: None,
+                },
+                count: None,
+            }],
+        });
+    let texture_bind_group_layout =
+        device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+            label: Some("paint-vm-wgpu-texture-bind-group-layout"),
+            entries: &[
+                wgpu::BindGroupLayoutEntry {
+                    binding: 0,
+                    visibility: wgpu::ShaderStages::FRAGMENT,
+                    ty: wgpu::BindingType::Texture {
+                        sample_type: wgpu::TextureSampleType::Float { filterable: true },
+                        view_dimension: wgpu::TextureViewDimension::D2,
+                        multisampled: false,
+                    },
+                    count: None,
+                },
+                wgpu::BindGroupLayoutEntry {
+                    binding: 1,
+                    visibility: wgpu::ShaderStages::FRAGMENT,
+                    ty: wgpu::BindingType::Sampler(wgpu::SamplerBindingType::Filtering),
+                    count: None,
+                },
+            ],
+        });
+    let viewport_bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
+        label: Some("paint-vm-wgpu-viewport-bind-group"),
+        layout: &viewport_bind_group_layout,
         entries: &[wgpu::BindGroupEntry {
             binding: 0,
             resource: viewport_buffer.as_entire_binding(),
         }],
     });
+    let sampler = device.create_sampler(&wgpu::SamplerDescriptor {
+        label: Some("paint-vm-wgpu-nearest-sampler"),
+        address_mode_u: wgpu::AddressMode::ClampToEdge,
+        address_mode_v: wgpu::AddressMode::ClampToEdge,
+        address_mode_w: wgpu::AddressMode::ClampToEdge,
+        mag_filter: wgpu::FilterMode::Nearest,
+        min_filter: wgpu::FilterMode::Nearest,
+        mipmap_filter: wgpu::FilterMode::Nearest,
+        ..wgpu::SamplerDescriptor::default()
+    });
     let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
         label: Some("paint-vm-wgpu-pipeline-layout"),
-        bind_group_layouts: &[&bind_group_layout],
+        bind_group_layouts: &[&viewport_bind_group_layout, &texture_bind_group_layout],
         push_constant_ranges: &[],
     });
     let pipeline = device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
-        label: Some("paint-vm-wgpu-solid-pipeline"),
+        label: Some("paint-vm-wgpu-textured-pipeline"),
         layout: Some(&pipeline_layout),
         vertex: wgpu::VertexState {
             module: &shader,
@@ -228,6 +275,13 @@ async fn render_plan(plan: GpuPaintPlan) -> Result<PixelContainer, PaintRenderEr
     });
     let view = target.create_view(&wgpu::TextureViewDescriptor::default());
     let prepared_meshes = prepare_meshes(&device, &plan.meshes);
+    let (white_texture, prepared_textures) = prepare_textures(
+        &device,
+        &queue,
+        &texture_bind_group_layout,
+        &sampler,
+        &plan.images,
+    );
     let row_bytes = plan.width * 4;
     let padded_row_bytes = align_to(row_bytes, wgpu::COPY_BYTES_PER_ROW_ALIGNMENT);
     let readback_size = padded_row_bytes as u64 * plan.height as u64;
@@ -257,7 +311,7 @@ async fn render_plan(plan: GpuPaintPlan) -> Result<PixelContainer, PaintRenderEr
             timestamp_writes: None,
         });
         pass.set_pipeline(&pipeline);
-        pass.set_bind_group(0, &bind_group, &[]);
+        pass.set_bind_group(0, &viewport_bind_group, &[]);
         pass.set_scissor_rect(0, 0, plan.width, plan.height);
         let mut clip_stack = vec![GpuRect {
             x: 0.0,
@@ -269,11 +323,16 @@ async fn render_plan(plan: GpuPaintPlan) -> Result<PixelContainer, PaintRenderEr
             match command {
                 GpuCommand::DrawMesh { mesh_id } => {
                     if let Some(mesh) = prepared_meshes.get(*mesh_id) {
+                        let texture = mesh
+                            .texture_id
+                            .and_then(|texture_id| prepared_textures.get(texture_id))
+                            .unwrap_or(&white_texture);
                         pass.set_vertex_buffer(0, mesh.vertex_buffer.slice(..));
                         pass.set_index_buffer(
                             mesh.index_buffer.slice(..),
                             wgpu::IndexFormat::Uint32,
                         );
+                        pass.set_bind_group(1, &texture.bind_group, &[]);
                         pass.draw_indexed(0..mesh.index_count, 0, 0..1);
                     }
                 }
@@ -375,13 +434,6 @@ fn validate_plan(plan: &GpuPaintPlan) -> Result<(), PaintRenderError> {
                 .to_string(),
         });
     }
-    if plan.images.len() > 0 || plan.meshes.iter().any(|mesh| mesh.texture_id.is_some()) {
-        return Err(PaintRenderError::RenderFailed {
-            backend: "paint-vm-wgpu",
-            message: "texture upload and sampling are not wired in the WGPU backend yet"
-                .to_string(),
-        });
-    }
     Ok(())
 }
 
@@ -394,6 +446,7 @@ fn prepare_meshes(device: &wgpu::Device, meshes: &[GpuMesh]) -> Vec<PreparedMesh
                 .iter()
                 .map(|vertex| Vertex {
                     position: [vertex.position.x, vertex.position.y],
+                    uv: vertex.uv,
                     color: [
                         vertex.color.r,
                         vertex.color.g,
@@ -416,9 +469,120 @@ fn prepare_meshes(device: &wgpu::Device, meshes: &[GpuMesh]) -> Vec<PreparedMesh
                 vertex_buffer,
                 index_buffer,
                 index_count: mesh.indices.len() as u32,
+                texture_id: mesh.texture_id,
             }
         })
         .collect()
+}
+
+fn prepare_textures(
+    device: &wgpu::Device,
+    queue: &wgpu::Queue,
+    layout: &wgpu::BindGroupLayout,
+    sampler: &wgpu::Sampler,
+    images: &[GpuImageUpload],
+) -> (PreparedTexture, Vec<PreparedTexture>) {
+    let white_texture = prepare_texture(
+        device,
+        queue,
+        layout,
+        sampler,
+        "paint-vm-wgpu-white-texture",
+        1,
+        1,
+        &[255, 255, 255, 255],
+    );
+    let textures = images
+        .iter()
+        .enumerate()
+        .map(|(index, image)| {
+            prepare_texture(
+                device,
+                queue,
+                layout,
+                sampler,
+                texture_label(index),
+                image.width,
+                image.height,
+                &image.data,
+            )
+        })
+        .collect();
+    (white_texture, textures)
+}
+
+fn prepare_texture(
+    device: &wgpu::Device,
+    queue: &wgpu::Queue,
+    layout: &wgpu::BindGroupLayout,
+    sampler: &wgpu::Sampler,
+    label: &'static str,
+    width: u32,
+    height: u32,
+    data: &[u8],
+) -> PreparedTexture {
+    let texture = device.create_texture(&wgpu::TextureDescriptor {
+        label: Some(label),
+        size: wgpu::Extent3d {
+            width,
+            height,
+            depth_or_array_layers: 1,
+        },
+        mip_level_count: 1,
+        sample_count: 1,
+        dimension: wgpu::TextureDimension::D2,
+        format: TARGET_FORMAT,
+        usage: wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::COPY_DST,
+        view_formats: &[],
+    });
+    queue.write_texture(
+        wgpu::ImageCopyTexture {
+            texture: &texture,
+            mip_level: 0,
+            origin: wgpu::Origin3d::ZERO,
+            aspect: wgpu::TextureAspect::All,
+        },
+        data,
+        wgpu::ImageDataLayout {
+            offset: 0,
+            bytes_per_row: Some(width * 4),
+            rows_per_image: Some(height),
+        },
+        wgpu::Extent3d {
+            width,
+            height,
+            depth_or_array_layers: 1,
+        },
+    );
+    let view = texture.create_view(&wgpu::TextureViewDescriptor::default());
+    let bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
+        label: Some(label),
+        layout,
+        entries: &[
+            wgpu::BindGroupEntry {
+                binding: 0,
+                resource: wgpu::BindingResource::TextureView(&view),
+            },
+            wgpu::BindGroupEntry {
+                binding: 1,
+                resource: wgpu::BindingResource::Sampler(sampler),
+            },
+        ],
+    });
+    PreparedTexture {
+        bind_group,
+        _texture: texture,
+        _view: view,
+    }
+}
+
+fn texture_label(index: usize) -> &'static str {
+    match index {
+        0 => "paint-vm-wgpu-image-texture-0",
+        1 => "paint-vm-wgpu-image-texture-1",
+        2 => "paint-vm-wgpu-image-texture-2",
+        _ => "paint-vm-wgpu-image-texture",
+    }
 }
 
 fn to_wgpu_color(color: GpuColor) -> wgpu::Color {
@@ -455,7 +619,7 @@ fn set_scissor(pass: &mut wgpu::RenderPass<'_>, rect: GpuRect, width: u32, heigh
     pass.set_scissor_rect(x, y, right.saturating_sub(x), bottom.saturating_sub(y));
 }
 
-const SOLID_SHADER: &str = r#"
+const TEXTURED_SHADER: &str = r#"
 struct Viewport {
     size: vec2<f32>,
 };
@@ -463,14 +627,22 @@ struct Viewport {
 @group(0) @binding(0)
 var<uniform> viewport: Viewport;
 
+@group(1) @binding(0)
+var image_texture: texture_2d<f32>;
+
+@group(1) @binding(1)
+var image_sampler: sampler;
+
 struct VertexIn {
     @location(0) position: vec2<f32>,
-    @location(1) color: vec4<f32>,
+    @location(1) uv: vec2<f32>,
+    @location(2) color: vec4<f32>,
 };
 
 struct VertexOut {
     @builtin(position) position: vec4<f32>,
-    @location(0) color: vec4<f32>,
+    @location(0) uv: vec2<f32>,
+    @location(1) color: vec4<f32>,
 };
 
 @vertex
@@ -479,20 +651,23 @@ fn vs_main(input: VertexIn) -> VertexOut {
     let clip_x = input.position.x / viewport.size.x * 2.0 - 1.0;
     let clip_y = 1.0 - input.position.y / viewport.size.y * 2.0;
     output.position = vec4<f32>(clip_x, clip_y, 0.0, 1.0);
+    output.uv = input.uv;
     output.color = input.color;
     return output;
 }
 
 @fragment
 fn fs_main(input: VertexOut) -> @location(0) vec4<f32> {
-    return input.color;
+    return input.color * textureSample(image_texture, image_sampler, input.uv);
 }
 "#;
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use paint_instructions::{PaintInstruction, PaintRect, PaintText};
+    use paint_instructions::{
+        ImageSrc, PaintBase, PaintImage, PaintInstruction, PaintRect, PaintText,
+    };
     use paint_vm_runtime::{PaintBackendPreference, PaintBackendRegistry, PaintRenderOptions};
 
     #[test]
@@ -502,7 +677,7 @@ mod tests {
         assert_eq!(descriptor.family, PaintBackendFamily::Wgpu);
         assert_eq!(descriptor.tier, PaintBackendTier::Tier1Smoke);
         assert_eq!(descriptor.capabilities.rect, SupportLevel::Supported);
-        assert_eq!(descriptor.capabilities.image, SupportLevel::Unsupported);
+        assert_eq!(descriptor.capabilities.image, SupportLevel::Supported);
     }
 
     #[test]
@@ -516,6 +691,36 @@ mod tests {
             .push(PaintInstruction::Rect(PaintRect::filled(
                 1.0, 1.0, 4.0, 4.0, "#000000",
             )));
+
+        let selected = registry
+            .select(
+                &scene,
+                PaintRenderOptions {
+                    preference: PaintBackendPreference::Named("paint-vm-wgpu".to_string()),
+                    ..PaintRenderOptions::default()
+                },
+            )
+            .unwrap();
+        assert_eq!(selected.descriptor().id, "paint-vm-wgpu");
+    }
+
+    #[test]
+    fn runtime_selects_wgpu_for_pixel_image_scene() {
+        let backend = renderer();
+        let mut registry = PaintBackendRegistry::new();
+        registry.register(&backend);
+        let mut pixels = PixelContainer::new(1, 1);
+        pixels.set_pixel(0, 0, 0, 128, 255, 255);
+        let mut scene = PaintScene::new(8.0, 8.0);
+        scene.instructions.push(PaintInstruction::Image(PaintImage {
+            base: PaintBase::default(),
+            x: 1.0,
+            y: 1.0,
+            width: 4.0,
+            height: 4.0,
+            src: ImageSrc::Pixels(pixels),
+            opacity: None,
+        }));
 
         let selected = registry
             .select(
@@ -552,6 +757,38 @@ mod tests {
             center.0 > 240 && center.1 < 20 && center.2 < 20 && center.3 == 255,
             "expected center pixel to be opaque red, got {center:?}"
         );
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn renders_pixel_image_when_adapter_is_available() {
+        let mut image = PixelContainer::new(2, 2);
+        image.set_pixel(0, 0, 255, 0, 0, 255);
+        image.set_pixel(1, 0, 0, 255, 0, 255);
+        image.set_pixel(0, 1, 0, 0, 255, 255);
+        image.set_pixel(1, 1, 255, 255, 0, 255);
+        let mut scene = PaintScene::new(4.0, 4.0);
+        scene.instructions.push(PaintInstruction::Image(PaintImage {
+            base: PaintBase::default(),
+            x: 1.0,
+            y: 1.0,
+            width: 2.0,
+            height: 2.0,
+            src: ImageSrc::Pixels(image),
+            opacity: None,
+        }));
+
+        let pixels = match render(&scene) {
+            Ok(pixels) => pixels,
+            Err(PaintRenderError::BackendUnavailable { .. }) => return,
+            Err(err) => panic!("unexpected WGPU render failure: {err:?}"),
+        };
+
+        assert_eq!(pixels.pixel_at(0, 0), (255, 255, 255, 255));
+        assert_eq!(pixels.pixel_at(1, 1), (255, 0, 0, 255));
+        assert_eq!(pixels.pixel_at(2, 1), (0, 255, 0, 255));
+        assert_eq!(pixels.pixel_at(1, 2), (0, 0, 255, 255));
+        assert_eq!(pixels.pixel_at(2, 2), (255, 255, 0, 255));
     }
 
     #[test]
