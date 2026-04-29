@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.38.0 — 2026-04-29
+
+**Phase 18 — `cas-ode` 0.2.0 dependency bump (Bernoulli · Exact · Non-homogeneous 2nd-order).**
+
+Bumps the `coding-adventures-cas-ode` minimum version from `>=0.1.0` to
+`>=0.2.0` to pull in the three new ODE solver classes added in `cas-ode`
+0.2.0.  No changes to `symbolic_vm` source code — this is a pure dependency
+upgrade so users get the improved `ode2(...)` evaluation automatically.
+
+### What changed in `cas-ode` 0.2.0
+
+- **Bernoulli ODE solver** (`y' + P(x)·y = Q(x)·y^n`, n ≠ 0,1):
+  substitution `v = y^(1−n)` reduces to first-order linear; returns
+  `Equal(y, v_sol^(1/(1−n)))`.
+- **Exact ODE solver** (`M dx + N dy = 0`, ∂M/∂y = ∂N/∂x):
+  computes potential F and returns the implicit solution `Equal(F + g, %c)`.
+  Exactness check uses numerical evaluation to handle structurally different
+  but mathematically equal IR trees.
+- **Second-order non-homogeneous solver** (`a·y'' + b·y' + c·y = f(x)`):
+  undetermined coefficients for constant, polynomial (≤ degree 2),
+  exponential, trig, and exp×trig forcing; full resonance handling
+  (s = 0, 1, 2 multiplicity shifts).
+- Dispatcher updated: non-homogeneous 2nd-order checked before homogeneous;
+  exact solver runs last to preserve explicit `Equal(y, f(x))` forms.
+- 47 new tests (135 total); combined coverage 82.89%.
+
+---
+
 ## 0.37.0 — 2026-04-28
 
 **Phase 17 — `∫ tanh^n(ax+b) dx` power reduction.**
