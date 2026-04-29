@@ -2,7 +2,8 @@
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
     "rootDir": "./src",
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "preserveSymlinks": true
   },
   "include": ["src/**/*.ts"],
   "exclude": ["tests", "dist", "node_modules", "vitest.config.ts"]

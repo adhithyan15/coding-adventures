@@ -254,6 +254,68 @@ class TestDirectedGraphBasic:
         assert len(g) == 3
 
 
+class TestDirectedGraphProperties:
+    """DT00 property bags with directed edge identity."""
+
+    def test_graph_node_and_edge_property_bags(self) -> None:
+        g: DirectedGraph[str] = DirectedGraph()
+
+        g.set_graph_property("name", "neural-dag")
+        g.set_graph_property("version", 1)
+        assert g.graph_properties() == {"name": "neural-dag", "version": 1}
+        g.remove_graph_property("version")
+        assert g.graph_properties() == {"name": "neural-dag"}
+
+        g.add_node("input", {"kind": "input"})
+        g.add_node("input", {"slot": 0})
+        assert g.node_properties("input") == {"kind": "input", "slot": 0}
+
+        node_properties = g.node_properties("input")
+        node_properties["kind"] = "mutated"
+        assert g.node_properties("input")["kind"] == "input"
+
+        g.add_edge("input", "sum", 0.5, {"trainable": True})
+        assert g.edge_properties("input", "sum") == {
+            "trainable": True,
+            "weight": 0.5,
+        }
+
+        g.set_edge_property("input", "sum", "weight", 0.75)
+        assert g.edge_weight("input", "sum") == 0.75
+        assert g._reverse["sum"]["input"] == 0.75
+
+        g.remove_edge_property("input", "sum", "trainable")
+        assert g.edge_properties("input", "sum") == {"weight": 0.75}
+
+    def test_reverse_edges_have_independent_properties(self) -> None:
+        g: DirectedGraph[str] = DirectedGraph()
+        g.add_edge("A", "B", 2.0, {"role": "forward"})
+        g.add_edge("B", "A", 3.0, {"role": "reverse"})
+
+        assert g.edge_properties("A", "B") == {"role": "forward", "weight": 2.0}
+        assert g.edge_properties("B", "A") == {"role": "reverse", "weight": 3.0}
+
+        g.set_edge_property("B", "A", "weight", 4.0)
+        assert g.edge_weight("A", "B") == 2.0
+        assert g.edge_weight("B", "A") == 4.0
+
+    def test_removing_structure_removes_properties(self) -> None:
+        g: DirectedGraph[str] = DirectedGraph()
+        g.add_node("A", {"kind": "input"})
+        g.add_edge("A", "B", 1.5, {"trainable": True})
+
+        g.remove_edge("A", "B")
+        with pytest.raises(KeyError):
+            g.edge_properties("A", "B")
+
+        g.add_edge("A", "B", 1.5, {"trainable": True})
+        g.remove_node("A")
+        with pytest.raises(KeyError):
+            g.node_properties("A")
+        with pytest.raises(KeyError):
+            g.edge_properties("A", "B")
+
+
 # ---------------------------------------------------------------------------
 # TestSuccessorsPredecessors
 # ---------------------------------------------------------------------------
