@@ -334,10 +334,39 @@ pub fn parse(source: &str) -> Result<Program, TwigParseError> {
 /// Useful when the caller already has a token list (e.g. from a
 /// language-server-style incremental lexer) and wants to skip
 /// re-tokenisation.
+///
+/// The input must be terminated by exactly one [`TokenKind::Eof`] token
+/// (as `tokenize()` always produces).  An empty vector or one missing
+/// the trailing `Eof` is rejected with a `TwigParseError` rather than
+/// panicking on out-of-bounds index — important for embedders that
+/// expose this entry point to untrusted inputs.
 pub fn parse_tokens(tokens: Vec<Token>) -> Result<Program, TwigParseError> {
+    if !tokens.last().is_some_and(|t| t.kind == TokenKind::Eof) {
+        return Err(TwigParseError {
+            message: "token stream must be terminated by an Eof token".into(),
+            line: 1,
+            column: 1,
+        });
+    }
     let mut parser = Parser::new(tokens);
     parser.parse_program()
 }
+
+/// Maximum source-nesting depth the parser will accept.
+///
+/// Twig is recursive-descent: each `(` introduces one stack frame in
+/// `parse_compound` / `parse_apply` / `parse_let` / etc.  Pathological
+/// input like `(((...)))` with tens of thousands of opens would
+/// exhaust the OS thread stack and abort the process — Rust does not
+/// catch stack overflow.  We hard-cap depth at a value far larger
+/// than any realistic Twig program but small enough to fit in a
+/// default thread stack.
+///
+/// 256 levels easily cover hand-written code (the deepest hand-written
+/// program in this repo is single digits) while keeping per-call
+/// overhead negligible.  Increasing this requires verifying the
+/// parser still fits inside macOS's 2 MiB non-main-thread stack.
+pub const MAX_NESTING_DEPTH: usize = 256;
 
 // ---------------------------------------------------------------------------
 // Section 4: The recursive-descent parser
@@ -358,11 +387,42 @@ pub fn parse_tokens(tokens: Vec<Token>) -> Result<Program, TwigParseError> {
 struct Parser {
     tokens: Vec<Token>,
     pos: usize,
+    /// Current source-nesting depth.  Incremented on each recursive
+    /// descent into a compound form; checked against [`MAX_NESTING_DEPTH`]
+    /// to prevent stack-overflow DoS on adversarial input.
+    depth: usize,
 }
 
 impl Parser {
     fn new(tokens: Vec<Token>) -> Self {
-        Parser { tokens, pos: 0 }
+        Parser { tokens, pos: 0, depth: 0 }
+    }
+
+    /// Increment the depth counter; return an error if it exceeds the
+    /// hard cap.  Pair every successful entry with a matching
+    /// `self.depth -= 1` on the way out (or a scope guard).  We do
+    /// this by hand rather than RAII so the error path can include
+    /// the offending token's line/column.
+    fn enter(&mut self) -> Result<(), TwigParseError> {
+        self.depth += 1;
+        if self.depth > MAX_NESTING_DEPTH {
+            let t = self.peek();
+            return Err(TwigParseError {
+                message: format!(
+                    "source nesting exceeds MAX_NESTING_DEPTH ({MAX_NESTING_DEPTH}) — \
+                     refusing to recurse further to avoid stack overflow"
+                ),
+                line: t.line,
+                column: t.column,
+            });
+        }
+        Ok(())
+    }
+
+    fn leave(&mut self) {
+        // Saturating to defend against accidental double-leave; a real
+        // mismatch would already have been caught by the matching enter.
+        self.depth = self.depth.saturating_sub(1);
     }
 
     // ------------------------------------------------------------------
@@ -525,6 +585,17 @@ impl Parser {
     // ------------------------------------------------------------------
 
     fn parse_expr(&mut self) -> Result<Expr, TwigParseError> {
+        // Single chokepoint for recursion: every compound form
+        // bottoms out by calling parse_expr on its children, so
+        // bounding depth here covers if/let/begin/lambda/quote/apply
+        // and define-bodies in one place.
+        self.enter()?;
+        let result = self.parse_expr_inner();
+        self.leave();
+        result
+    }
+
+    fn parse_expr_inner(&mut self) -> Result<Expr, TwigParseError> {
         let tok = self.peek().clone();
         match tok.kind {
             // Atoms
@@ -1132,5 +1203,63 @@ mod tests {
         let s = format!("{err}");
         assert!(s.contains("TwigParseError"));
         assert!(s.contains("1:1"));
+    }
+
+    // -- Defense in depth: stack-overflow guard --
+
+    #[test]
+    fn extreme_nesting_returns_error_not_panic() {
+        // Build "(((((...)))))" with depth far above MAX_NESTING_DEPTH.
+        // Without the depth cap this would blow the OS thread stack;
+        // with it, we get a clean TwigParseError.
+        let src = format!(
+            "{open}{close}",
+            open = "(".repeat(MAX_NESTING_DEPTH + 10),
+            close = ")".repeat(MAX_NESTING_DEPTH + 10),
+        );
+        let err = parse(&src).unwrap_err();
+        assert!(
+            err.message.contains("MAX_NESTING_DEPTH"),
+            "expected depth-cap error, got: {err}"
+        );
+    }
+
+    #[test]
+    fn nesting_below_cap_still_works() {
+        // 50 levels — well under the cap.  This parses as nested
+        // zero-arg applies, all the way down to `(+ 1)` at the bottom.
+        // Sanity check: the depth gate is not over-aggressive on
+        // well-formed but heavily-nested input.
+        let src = format!(
+            "{open}+ 1{close}",
+            open = "(".repeat(50),
+            close = ")".repeat(50),
+        );
+        let p = parse(&src).expect("50-deep nest should parse fine");
+        assert_eq!(p.forms.len(), 1);
+    }
+
+    // -- parse_tokens validates Eof terminator --
+
+    #[test]
+    fn parse_tokens_rejects_empty_vector() {
+        let err = parse_tokens(Vec::new()).unwrap_err();
+        assert!(err.message.contains("Eof"));
+    }
+
+    #[test]
+    fn parse_tokens_rejects_missing_eof() {
+        // A single LParen with no Eof — without validation this would
+        // panic on out-of-bounds index when peek runs off the end.
+        let toks = vec![Token { kind: TokenKind::LParen, value: "(".into(), line: 1, column: 1 }];
+        let err = parse_tokens(toks).unwrap_err();
+        assert!(err.message.contains("Eof"));
+    }
+
+    #[test]
+    fn parse_tokens_accepts_well_formed_input() {
+        // A complete tokenisation goes through without complaint.
+        let toks = twig_lexer::tokenize("(+ 1 2)").unwrap();
+        assert!(parse_tokens(toks).is_ok());
     }
 }

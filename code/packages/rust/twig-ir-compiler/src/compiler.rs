@@ -73,6 +73,16 @@ use twig_parser::{
 use crate::errors::TwigCompileError;
 use crate::free_vars::free_vars;
 
+/// Maximum AST-nesting depth the compiler will descend.
+///
+/// Mirrors `twig_parser::MAX_NESTING_DEPTH`.  The parser already caps
+/// nesting on its way in, so well-behaved inputs never hit this; the
+/// extra check protects against `compile_program` being called with a
+/// hand-built AST that bypasses the parser, and against future grammar
+/// changes that might decouple parse depth from compile depth (e.g. a
+/// macro-expansion pass that synthesises deeper trees).
+pub const MAX_COMPILE_DEPTH: usize = 256;
+
 // ---------------------------------------------------------------------------
 // Builtins
 // ---------------------------------------------------------------------------
@@ -114,6 +124,10 @@ struct FnCtx {
     locals: HashSet<String>,
     var_counter: usize,
     label_counter: usize,
+    /// Current AST-nesting depth.  Incremented on every entry to
+    /// `compile_expr` and checked against [`MAX_COMPILE_DEPTH`] to
+    /// guard against stack-overflow on adversarial input.
+    depth: usize,
 }
 
 impl FnCtx {
@@ -123,6 +137,7 @@ impl FnCtx {
             locals: HashSet::new(),
             var_counter: 0,
             label_counter: 0,
+            depth: 0,
         }
     }
 
@@ -412,6 +427,28 @@ impl Compiler {
     // ------------------------------------------------------------------
 
     fn compile_expr(&mut self, expr: &Expr, ctx: &mut FnCtx) -> Result<String, TwigCompileError> {
+        // Depth-bound the recursion at the single chokepoint.  Every
+        // compound form lowers by recursing through compile_expr on
+        // its children, so wrapping it here covers if / let / begin /
+        // lambda / apply / quoted-symbol-construction in one place.
+        ctx.depth += 1;
+        if ctx.depth > MAX_COMPILE_DEPTH {
+            let (line, column) = expr.pos();
+            return Err(TwigCompileError {
+                message: format!(
+                    "AST nesting exceeds MAX_COMPILE_DEPTH ({MAX_COMPILE_DEPTH}) — \
+                     refusing to recurse further to avoid stack overflow"
+                ),
+                line,
+                column,
+            });
+        }
+        let result = self.compile_expr_inner(expr, ctx);
+        ctx.depth = ctx.depth.saturating_sub(1);
+        result
+    }
+
+    fn compile_expr_inner(&mut self, expr: &Expr, ctx: &mut FnCtx) -> Result<String, TwigCompileError> {
         match expr {
             Expr::IntLit(IntLit { value, .. }) => {
                 let v = ctx.fresh_var("n");

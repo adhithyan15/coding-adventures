@@ -22,6 +22,15 @@ use std::collections::HashSet;
 
 use twig_parser::{Apply, Begin, Expr, If, Lambda, Let};
 
+/// Maximum AST depth the walker will descend before bailing out.
+///
+/// The parser already enforces its own depth cap so this is a
+/// belt-and-braces guard for callers that hand-build an `Expr` tree.
+/// Hitting this limit returns an empty capture list — safe-ish but
+/// unusual; callers that build trees deeper than this should bound
+/// depth themselves before calling `free_vars`.
+const MAX_WALK_DEPTH: usize = 256;
+
 /// Compute the free variables of `lam`, in stable insertion order.
 ///
 /// `globals` holds *all* names that count as already-bound at any
@@ -40,7 +49,7 @@ pub fn free_vars(lam: &Lambda, globals: &HashSet<String>) -> Vec<String> {
     let mut found: Vec<String> = Vec::new();
     let mut seen: HashSet<String> = HashSet::new();
     for e in &lam.body {
-        walk(e, &mut bound, globals, &mut found, &mut seen);
+        walk(e, &mut bound, globals, &mut found, &mut seen, 0);
     }
     found
 }
@@ -51,7 +60,15 @@ fn walk(
     globals: &HashSet<String>,
     found: &mut Vec<String>,
     seen: &mut HashSet<String>,
+    depth: usize,
 ) {
+    // Depth bound: silently stop descending if we exceed the cap.
+    // The compiler's own depth cap fires first on real inputs; this
+    // is for hand-built ASTs that bypass the parser.
+    if depth > MAX_WALK_DEPTH {
+        return;
+    }
+    let depth = depth + 1;
     match expr {
         // ------------------------------------------------------------------
         // Atoms with no embedded names
@@ -72,14 +89,14 @@ fn walk(
         }
 
         Expr::If(If { cond, then_branch, else_branch, .. }) => {
-            walk(cond, bound, globals, found, seen);
-            walk(then_branch, bound, globals, found, seen);
-            walk(else_branch, bound, globals, found, seen);
+            walk(cond, bound, globals, found, seen, depth);
+            walk(then_branch, bound, globals, found, seen, depth);
+            walk(else_branch, bound, globals, found, seen, depth);
         }
 
         Expr::Begin(Begin { exprs, .. }) => {
             for e in exprs {
-                walk(e, bound, globals, found, seen);
+                walk(e, bound, globals, found, seen, depth);
             }
         }
 
@@ -91,7 +108,7 @@ fn walk(
         // peers don't think they're shadowed.
         Expr::Let(Let { bindings, body, .. }) => {
             for (_, rhs) in bindings {
-                walk(rhs, bound, globals, found, seen);
+                walk(rhs, bound, globals, found, seen, depth);
             }
             let mut added: Vec<String> = Vec::new();
             for (n, _) in bindings {
@@ -100,7 +117,7 @@ fn walk(
                 }
             }
             for e in body {
-                walk(e, bound, globals, found, seen);
+                walk(e, bound, globals, found, seen, depth);
             }
             for n in added {
                 bound.remove(&n);
@@ -121,7 +138,7 @@ fn walk(
                 }
             }
             for e in &inner.body {
-                walk(e, bound, globals, found, seen);
+                walk(e, bound, globals, found, seen, depth);
             }
             for n in added {
                 bound.remove(&n);
@@ -129,9 +146,9 @@ fn walk(
         }
 
         Expr::Apply(Apply { fn_expr, args, .. }) => {
-            walk(fn_expr, bound, globals, found, seen);
+            walk(fn_expr, bound, globals, found, seen, depth);
             for a in args {
-                walk(a, bound, globals, found, seen);
+                walk(a, bound, globals, found, seen, depth);
             }
         }
     }

@@ -516,4 +516,20 @@ mod tests {
         let m = module("");
         assert!(m.functions[0].register_count >= 16);
     }
+
+    // ---- Defense in depth: stack-overflow guard ------------------------
+
+    #[test]
+    fn extreme_nesting_does_not_crash_the_compiler() {
+        // The parser will reject this first with its own depth cap,
+        // but exercising the path proves we never reach a panic.
+        let src = format!(
+            "{open}+ 1{close}",
+            open = "(".repeat(2000),
+            close = ")".repeat(2000),
+        );
+        // We expect *some* error (parser or compiler depth cap), and
+        // crucially: no panic / abort.
+        assert!(compile_source(&src, "deep").is_err());
+    }
 }
