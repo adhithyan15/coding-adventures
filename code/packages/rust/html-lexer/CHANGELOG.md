@@ -95,6 +95,9 @@ documented in this file.
 - EOF after a malformed markup declaration opener such as `<!` now emits an
   empty bogus comment with `incorrectly-opened-comment` instead of preserving
   the opener as text.
+- Duplicate attributes now follow HTML recovery by keeping the first attribute,
+  dropping later attributes with the same interpreted name, and reporting
+  `duplicate-attribute`.
 - One-dash markup declarations such as `<!->` and `<!-x>` now use
   incorrectly-opened bogus-comment recovery instead of empty-comment recovery.
 - Invalid tag-open characters now follow HTML recovery: stray `<` text is

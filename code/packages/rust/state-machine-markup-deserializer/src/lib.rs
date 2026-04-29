@@ -685,6 +685,7 @@ fn validate_action(action: &str, token_names: &HashSet<String>) -> Result<()> {
         | "create_doctype"
         | "start_attribute"
         | "commit_attribute"
+        | "commit_attribute_dedup"
         | "mark_self_closing"
         | "mark_force_quirks"
         | "set_doctype_public_identifier_empty"

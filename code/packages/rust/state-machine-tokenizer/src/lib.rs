@@ -474,6 +474,7 @@ impl Tokenizer {
                     self.append_attribute_value(action, ch)?;
                 }
                 "commit_attribute" => self.commit_attribute(action)?,
+                "commit_attribute_dedup" => self.commit_attribute_dedup(action, position, state)?,
                 "mark_self_closing" => self.mark_self_closing(action)?,
                 "append_comment(current)" => {
                     let ch = current.ok_or_else(|| TokenizerError::MissingCurrentCodePoint {
@@ -794,6 +795,47 @@ impl Tokenizer {
                 actual: other.kind_name(),
             }),
         }
+    }
+
+    fn commit_attribute_dedup(
+        &mut self,
+        action: &str,
+        position: SourcePosition,
+        state: &str,
+    ) -> Result<()> {
+        let attribute = self.current_attribute.take().ok_or_else(|| {
+            TokenizerError::MissingCurrentAttribute {
+                action: action.to_string(),
+            }
+        })?;
+        let duplicate = match self.current_token_mut(action)? {
+            CurrentToken::StartTag { attributes, .. } => {
+                if attributes
+                    .iter()
+                    .any(|existing| existing.name == attribute.name)
+                {
+                    true
+                } else {
+                    attributes.push(attribute);
+                    false
+                }
+            }
+            other => {
+                return Err(TokenizerError::InvalidCurrentToken {
+                    action: action.to_string(),
+                    expected: "start-tag",
+                    actual: other.kind_name(),
+                })
+            }
+        };
+        if duplicate {
+            self.diagnostics.push(Diagnostic {
+                code: "duplicate-attribute".to_string(),
+                position,
+                state: state.to_string(),
+            });
+        }
+        Ok(())
     }
 
     fn mark_self_closing(&mut self, action: &str) -> Result<()> {

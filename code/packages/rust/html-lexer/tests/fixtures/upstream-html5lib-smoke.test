@@ -199,6 +199,16 @@
       ]
     },
     {
+      "description": "duplicate attributes keep first value",
+      "input": "<a href=one HREF=two title=ok>",
+      "output": [
+        ["StartTag", "a", {"href": "one", "title": "ok"}]
+      ],
+      "errors": [
+        {"code": "duplicate-attribute", "line": 1, "col": 21}
+      ]
+    },
+    {
       "description": "plaintext state literalizes markup and character references",
       "initialStates": ["PLAINTEXT state"],
       "input": "hello <b>still text</b> &amp; literal",

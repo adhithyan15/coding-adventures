@@ -21,3 +21,6 @@ All notable changes to the `state-machine-tokenizer` crate will be documented in
   that need declarative branch decisions after scanning a keyword.
 - Expanded the built-in HTML named-character-reference table through the
   classic Latin-1 entity set used by early web content.
+- Added `commit_attribute_dedup` for lexer definitions that need HTML-style
+  duplicate attribute recovery while keeping plain `commit_attribute`
+  available for definitions that preserve duplicates.

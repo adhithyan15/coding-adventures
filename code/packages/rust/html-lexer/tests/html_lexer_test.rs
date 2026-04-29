@@ -68,6 +68,43 @@ fn default_html_lexer_supports_html1_attributes_comments_and_doctypes() {
 }
 
 #[test]
+fn default_html_lexer_reports_and_drops_duplicate_attributes() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("<a href=one HREF=two title=ok>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "href".to_string(),
+                        value: "one".to_string(),
+                    },
+                    Attribute {
+                        name: "title".to_string(),
+                        value: "ok".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "duplicate-attribute")
+            .count(),
+        1
+    );
+}
+
+#[test]
 fn default_html_lexer_marks_missing_doctype_name_force_quirks() {
     let mut lexer = create_html_lexer().unwrap();
 
