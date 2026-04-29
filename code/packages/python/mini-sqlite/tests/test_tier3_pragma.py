@@ -105,3 +105,108 @@ def test_pragma_table_info_order_by_cid(conn):
     rows = conn.execute("PRAGMA table_info(products)").fetchall()
     cids = [r[0] for r in rows]
     assert cids == list(range(len(rows)))
+
+
+# ---------------------------------------------------------------------------
+# PRAGMA user_version (read/write) and PRAGMA schema_version (read-only)
+# ---------------------------------------------------------------------------
+
+
+class TestUserVersion:
+    """``PRAGMA user_version`` — application-defined u32 in the header."""
+
+    def test_default_is_zero(self):
+        c = mini_sqlite.connect(":memory:")
+        rows = c.execute("PRAGMA user_version").fetchall()
+        assert rows == [(0,)]
+
+    def test_columns_label(self):
+        c = mini_sqlite.connect(":memory:")
+        cur = c.execute("PRAGMA user_version")
+        assert cur.description == (("user_version", None, None, None, None, None, None),)
+
+    def test_set_then_read(self):
+        c = mini_sqlite.connect(":memory:")
+        c.execute("PRAGMA user_version = 7")
+        rows = c.execute("PRAGMA user_version").fetchall()
+        assert rows == [(7,)]
+
+    def test_overwrite(self):
+        c = mini_sqlite.connect(":memory:")
+        c.execute("PRAGMA user_version = 1")
+        c.execute("PRAGMA user_version = 99")
+        rows = c.execute("PRAGMA user_version").fetchall()
+        assert rows == [(99,)]
+
+    def test_zero_is_a_valid_value(self):
+        c = mini_sqlite.connect(":memory:")
+        c.execute("PRAGMA user_version = 5")
+        c.execute("PRAGMA user_version = 0")
+        rows = c.execute("PRAGMA user_version").fetchall()
+        assert rows == [(0,)]
+
+    def test_max_u32(self):
+        c = mini_sqlite.connect(":memory:")
+        c.execute("PRAGMA user_version = 4294967295")  # 2^32 - 1
+        rows = c.execute("PRAGMA user_version").fetchall()
+        assert rows == [(4294967295,)]
+
+    def test_negative_value_rejected(self):
+        c = mini_sqlite.connect(":memory:")
+        with pytest.raises(mini_sqlite.ProgrammingError, match="u32"):
+            c.execute("PRAGMA user_version = -1")
+
+    def test_overflow_value_rejected(self):
+        c = mini_sqlite.connect(":memory:")
+        with pytest.raises(mini_sqlite.ProgrammingError, match="u32"):
+            c.execute("PRAGMA user_version = 4294967296")  # 2^32
+
+
+class TestSchemaVersion:
+    """``PRAGMA schema_version`` — read-only, bumps on every DDL."""
+
+    def test_default_is_zero(self):
+        c = mini_sqlite.connect(":memory:")
+        rows = c.execute("PRAGMA schema_version").fetchall()
+        assert rows == [(0,)]
+
+    def test_columns_label(self):
+        c = mini_sqlite.connect(":memory:")
+        cur = c.execute("PRAGMA schema_version")
+        assert cur.description == (
+            ("schema_version", None, None, None, None, None, None),
+        )
+
+    def test_create_table_bumps_schema_version(self):
+        c = mini_sqlite.connect(":memory:")
+        v0 = c.execute("PRAGMA schema_version").fetchall()[0][0]
+        c.execute("CREATE TABLE t (x INTEGER)")
+        v1 = c.execute("PRAGMA schema_version").fetchall()[0][0]
+        assert v1 == v0 + 1
+
+    def test_drop_table_bumps_schema_version(self):
+        c = mini_sqlite.connect(":memory:")
+        c.execute("CREATE TABLE t (x INTEGER)")
+        v1 = c.execute("PRAGMA schema_version").fetchall()[0][0]
+        c.execute("DROP TABLE t")
+        v2 = c.execute("PRAGMA schema_version").fetchall()[0][0]
+        assert v2 == v1 + 1
+
+    def test_create_index_bumps_schema_version(self):
+        c = mini_sqlite.connect(":memory:")
+        c.execute("CREATE TABLE t (x INTEGER, y INTEGER)")
+        v1 = c.execute("PRAGMA schema_version").fetchall()[0][0]
+        c.execute("CREATE INDEX idx_x ON t (x)")
+        v2 = c.execute("PRAGMA schema_version").fetchall()[0][0]
+        assert v2 == v1 + 1
+
+    def test_dml_does_not_bump_schema_version(self):
+        c = mini_sqlite.connect(":memory:")
+        c.execute("CREATE TABLE t (x INTEGER)")
+        v1 = c.execute("PRAGMA schema_version").fetchall()[0][0]
+        c.execute("INSERT INTO t VALUES (1)")
+        c.execute("INSERT INTO t VALUES (2)")
+        c.execute("UPDATE t SET x = 99 WHERE x = 1")
+        c.execute("DELETE FROM t WHERE x = 2")
+        v2 = c.execute("PRAGMA schema_version").fetchall()[0][0]
+        assert v2 == v1  # DML must not bump it

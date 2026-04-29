@@ -112,6 +112,13 @@ _SCHEMA_COOKIE_OFFSET: int = 40
 """Byte offset of the schema cookie (u32 BE) inside the 100-byte database
 header, which lives at the start of page 1."""
 
+_USER_VERSION_OFFSET: int = 60
+"""Byte offset of the user_version field (u32 BE) inside the page-1 header.
+
+Opaque to the engine — applications use it for schema-migration tracking
+or feature-version flags.  Read/written via
+:meth:`Schema.get_user_version` / :meth:`Schema.set_user_version`."""
+
 
 # ---------------------------------------------------------------------------
 # Exceptions
@@ -260,6 +267,38 @@ class Schema:
         page1 = self._pager.read(1)
         (cookie,) = struct.unpack_from(">I", page1, _SCHEMA_COOKIE_OFFSET)
         return cookie
+
+    def get_user_version(self) -> int:
+        """Read the user_version field from the page-1 header.
+
+        ``user_version`` is a u32 at byte offset 60 of the database header.
+        It is opaque to the engine — applications use it for whatever
+        versioning semantics they like (typically: schema-migration
+        version tracking).  Returns 0 on a fresh database.
+        """
+        page1 = self._pager.read(1)
+        (version,) = struct.unpack_from(">I", page1, _USER_VERSION_OFFSET)
+        return version
+
+    def set_user_version(self, value: int) -> None:
+        """Write *value* into the user_version field of the page-1 header.
+
+        *value* must fit in an unsigned 32-bit integer (0 ≤ v ≤ 2³² − 1);
+        anything else raises :class:`ValueError`.  The change is staged
+        in the pager's dirty-page table and persisted on the next
+        :meth:`~storage_sqlite.pager.Pager.commit`.
+
+        Unlike the schema cookie, ``user_version`` is *not* bumped
+        automatically — applications set it explicitly to mark schema
+        migrations or feature versions.
+        """
+        if not (0 <= value <= 0xFFFFFFFF):
+            raise ValueError(
+                f"user_version must fit in u32 (0 ≤ v ≤ {0xFFFFFFFF}), got {value}"
+            )
+        buf = bytearray(self._pager.read(1))
+        struct.pack_into(">I", buf, _USER_VERSION_OFFSET, value)
+        self._pager.write(1, bytes(buf))
 
     # ── Write operations ──────────────────────────────────────────────────────
 

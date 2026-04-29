@@ -389,15 +389,21 @@ def _extract_scan_info(plan: LogicalPlan) -> tuple[str, list[str]]:
 # PRAGMA handler — returns backend metadata as a QueryResult.
 # --------------------------------------------------------------------------
 
-# Matches: PRAGMA name  or  PRAGMA name('arg')  or  PRAGMA name("arg")
+# Matches one of these PRAGMA forms:
+#   PRAGMA name                       — read query
+#   PRAGMA name('arg')                — read with table-name argument
+#   PRAGMA name("arg")                — same, double-quoted
+#   PRAGMA name = <int>               — write (non-negative integer literal)
 _PRAGMA_RE = re.compile(
     r"""
     \s* PRAGMA \s+
     (?P<name>[A-Za-z_][A-Za-z0-9_]*)   # pragma name
-    (?:                                  # optional argument
+    (?:                                  # optional argument or assignment
         \s* \(
             \s* ["']? (?P<arg>[A-Za-z_][A-Za-z0-9_]*) ["']? \s*
         \)
+        |
+        \s* = \s* (?P<set_value>-?\d+)
     )?
     \s* ;? \s* $
     """,
@@ -422,12 +428,26 @@ def _run_pragma(backend: Backend, sql: str, *, fk_child: dict | None = None) -> 
 
     ``PRAGMA table_list``
         One row per table in the schema: ``(schema, name, type)``.
+
+    ``PRAGMA user_version``
+        Read the user-defined integer at byte offset 60 of the database
+        header.  Returns one row ``(user_version,)`` of an int.  A fresh
+        database returns 0.
+
+    ``PRAGMA user_version = <int>``
+        Write *<int>* into the user_version field.  Must fit in u32
+        (0 ≤ v ≤ 2³² − 1).  Produces an empty result.
+
+    ``PRAGMA schema_version``
+        Read-only — returns one row ``(schema_version,)`` of an int.
+        The schema cookie is bumped automatically on every DDL operation.
     """
     m = _PRAGMA_RE.match(sql)
     if m is None:
         raise ProgrammingError(f"invalid PRAGMA syntax: {sql!r}")
     name = m.group("name").lower()
     arg = m.group("arg")  # may be None
+    set_value = m.group("set_value")  # may be None — assignment form
 
     if name == "table_info":
         if not arg:
@@ -492,6 +512,34 @@ def _run_pragma(backend: Backend, sql: str, *, fk_child: dict | None = None) -> 
             columns=("schema", "name", "type"),
             rows=tuple(("main", t, "table") for t in tables),
         )
+
+    if name == "user_version":
+        if set_value is not None:
+            try:
+                backend.set_user_version(int(set_value))
+            except AttributeError as e:
+                # Backend without u32-header support (e.g. InMemoryBackend
+                # in some configurations) — surface as Unsupported rather
+                # than the bare AttributeError.
+                raise ProgrammingError(
+                    "backend does not support PRAGMA user_version write"
+                ) from e
+            except ValueError as e:
+                raise ProgrammingError(str(e)) from e
+            return QueryResult(rows_affected=0)
+        try:
+            v = backend.get_user_version()
+        except AttributeError:
+            v = 0  # backend has no header — return 0 by convention
+        return QueryResult(columns=("user_version",), rows=((v,),))
+
+    if name == "schema_version":
+        # Read-only.  Ignores any "= value" form (matches sqlite3 silently).
+        try:
+            v = backend.get_schema_version()
+        except AttributeError:
+            v = 0
+        return QueryResult(columns=("schema_version",), rows=((v,),))
 
     # Unknown PRAGMA — return empty result rather than error, matching SQLite.
     return QueryResult(columns=(), rows=())
