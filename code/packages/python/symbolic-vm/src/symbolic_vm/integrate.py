@@ -85,6 +85,8 @@ from symbolic_ir import (
     ATANH,
     COS,
     COSH,
+    COTH,
+    CSCH,
     DIV,
     EXP,
     INTEGRATE,
@@ -92,6 +94,7 @@ from symbolic_ir import (
     MUL,
     NEG,
     POW,
+    SECH,
     SIN,
     SINH,
     SQRT,
@@ -110,16 +113,21 @@ from symbolic_vm.arctan_integral import arctan_integral
 from symbolic_vm.asin_poly_integral import acos_poly_integral, asin_poly_integral
 from symbolic_vm.asinh_poly_integral import acosh_poly_integral, asinh_poly_integral
 from symbolic_vm.atan_poly_integral import atan_poly_integral
-from symbolic_vm.backend import Handler
-from symbolic_vm.exp_integral import exp_integral
 from symbolic_vm.atanh_poly_integral import atanh_poly_integral
+from symbolic_vm.backend import Handler
 from symbolic_vm.exp_hyp_integral import (
     exp_cosh_integral,
     exp_hyp_degenerate,
     exp_sinh_integral,
 )
+from symbolic_vm.exp_integral import exp_integral
 from symbolic_vm.exp_trig_integral import exp_cos_integral, exp_sin_integral
 from symbolic_vm.hermite import hermite_reduce
+from symbolic_vm.hyp_power_integral import (
+    cosh_power_integral,
+    sinh_power_integral,
+    sinh_times_cosh_power,
+)
 from symbolic_vm.log_integral import log_poly_integral
 from symbolic_vm.mixed_integral import mixed_integral
 from symbolic_vm.polynomial_bridge import (
@@ -129,11 +137,6 @@ from symbolic_vm.polynomial_bridge import (
     to_rational,
 )
 from symbolic_vm.rothstein_trager import rothstein_trager
-from symbolic_vm.hyp_power_integral import (
-    cosh_power_integral,
-    sinh_power_integral,
-    sinh_times_cosh_power,
-)
 from symbolic_vm.sinh_poly_integral import cosh_poly_integral, sinh_poly_integral
 from symbolic_vm.trig_poly_integral import trig_cos_integral, trig_sin_integral
 
@@ -592,6 +595,7 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
     if len(f.args) == 1 and head in {
         EXP, SIN, COS, LOG, TAN, ATAN, ASIN, ACOS,
         SINH, COSH, TANH, ASINH, ACOSH, ATANH,
+        COTH, SECH, CSCH,                           # Phase 15
     }:
         lin = _try_linear(f.args[0], x)
         if lin is not None:
@@ -661,6 +665,15 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
                 if head == ATANH:
                     # ∫ atanh(ax+b) dx = (ax+b)/a·atanh(ax+b) + (1/(2a))·log(1−(ax+b)²).
                     return _atanh_integral(a_frac, b_frac, f.args[0], x)
+                if head == COTH:
+                    # ∫ coth(ax+b) dx = (1/a)·log(sinh(ax+b)).
+                    return _coth_integral(a_frac, b_frac, x)
+                if head == SECH:
+                    # ∫ sech(ax+b) dx = (1/a)·atan(sinh(ax+b)).
+                    return _sech_integral(a_frac, b_frac, x)
+                if head == CSCH:
+                    # ∫ csch(ax+b) dx = (1/a)·log(tanh((ax+b)/2)).
+                    return _csch_integral(a_frac, b_frac, x)
 
     # Unknown shape — signal "no rule" to the caller.
     return None
@@ -1187,7 +1200,7 @@ def _try_exp_hyp(exp_node: IRNode, hyp_node: IRNode, x: IRSymbol) -> IRNode | No
     if a_frac == 0 or c_frac == 0:
         return None
     D = a_frac * a_frac - c_frac * c_frac
-    if D == Fraction(0):
+    if Fraction(0) == D:
         # a² = c² — expand into exponentials and integrate directly.
         return exp_hyp_degenerate(
             a_frac, b_frac, c_frac, d_frac,
@@ -1259,7 +1272,7 @@ def _try_sinh_cosh_product(f1: IRNode, f2: IRNode, x: IRSymbol) -> IRNode | None
         return None
 
     # Pattern: one is SINH and the other is COSH, at least one has power 1.
-    if not ({head1, head2} == {SINH, COSH}):
+    if {head1, head2} != {SINH, COSH}:
         return None
 
     if head1 == SINH:
@@ -1406,6 +1419,77 @@ def _atanh_integral(
         (IRApply(LOG, (inner,)), IRApply(MUL, (TWO, a_ir))),
     )
     return IRApply(ADD, (main_term, log_part))
+
+
+def _coth_integral(a: Fraction, b: Fraction, x: IRSymbol) -> IRNode:
+    """Return the IR for ``∫ coth(ax+b) dx = log(sinh(ax+b)) / a``.
+
+    Derivation:  d/dx log(sinh(ax+b)) = a·cosh(ax+b)/sinh(ax+b) = a·coth(ax+b).
+
+    The antiderivative is defined for ``sinh(ax+b) > 0``, i.e. ``ax+b > 0``.
+    As is conventional for a CAS, we omit the absolute value and return the
+    branch that covers the positive half-line.
+
+    Precondition: ``a ≠ 0``.
+    """
+    arg_ir = linear_to_ir(a, b, x)
+    log_sinh = IRApply(LOG, (IRApply(SINH, (arg_ir,)),))
+    if a == Fraction(1):
+        return log_sinh
+    return IRApply(DIV, (log_sinh, _frac_ir(a)))
+
+
+def _sech_integral(a: Fraction, b: Fraction, x: IRSymbol) -> IRNode:
+    """Return the IR for ``∫ sech(ax+b) dx = atan(sinh(ax+b)) / a``.
+
+    Derivation:
+      d/dx atan(sinh(ax+b))
+        = a·cosh(ax+b) / (1 + sinh²(ax+b))
+        = a·cosh(ax+b) / cosh²(ax+b)      [since 1 + sinh² = cosh²]
+        = a / cosh(ax+b)
+        = a·sech(ax+b).
+
+    Precondition: ``a ≠ 0``.
+    """
+    arg_ir = linear_to_ir(a, b, x)
+    atan_sinh = IRApply(ATAN, (IRApply(SINH, (arg_ir,)),))
+    if a == Fraction(1):
+        return atan_sinh
+    return IRApply(DIV, (atan_sinh, _frac_ir(a)))
+
+
+def _csch_integral(a: Fraction, b: Fraction, x: IRSymbol) -> IRNode:
+    """Return the IR for ``∫ csch(ax+b) dx = log(tanh((ax+b)/2)) / a``.
+
+    Derivation (for x such that ax+b > 0 so tanh((ax+b)/2) > 0):
+
+      Let u = ax+b, h = u/2.  Then:
+
+        d/dx [log(tanh(h))]
+          = (1/tanh(h)) · sech²(h) · (a/2)
+          = (a/2) · cosh(h) / (sinh(h) · cosh²(h))
+          = (a/2) · 1 / (sinh(h) · cosh(h))
+          = (a/2) · 2 / sinh(2h)            [since sinh(2h) = 2·sinh(h)·cosh(h)]
+          = a / sinh(u)
+          = a · csch(u).
+
+    The half-argument ``(ax+b)/2 = (a/2)·x + b/2`` is a linear expression
+    in ``x`` with ``Fraction`` coefficients, so ``linear_to_ir`` handles it
+    directly.
+
+    Note: ``−atanh(cosh(ax+b))`` is algebraically equivalent but requires
+    ``|cosh(ax+b)| < 1``, which is never true for real ``x``.  The tanh/2
+    form is real-valued and numerically safe for ``ax+b ≠ 0``.
+
+    Precondition: ``a ≠ 0``.
+    """
+    half_a = a / Fraction(2)
+    half_b = b / Fraction(2)
+    half_arg_ir = linear_to_ir(half_a, half_b, x)
+    log_tanh = IRApply(LOG, (IRApply(TANH, (half_arg_ir,)),))
+    if a == Fraction(1):
+        return log_tanh
+    return IRApply(DIV, (log_tanh, _frac_ir(a)))
 
 
 def _try_trig_power(
@@ -1863,6 +1947,31 @@ def _diff_ir(g: IRNode, x: IRSymbol) -> IRNode | None:
             if darg_is_one:
                 return IRApply(DIV, (ONE, denom))
             return IRApply(DIV, (darg, denom))
+
+        if head == COTH:
+            # d/dx coth(u) = −u'/sinh²(u)
+            # We express the derivative in terms of sinh (not coth/csch) so
+            # the simplifier and evaluator don't need to recurse through coth.
+            sinh_u = IRApply(SINH, (arg,))
+            denom = IRApply(POW, (sinh_u, TWO))
+            numer = ONE if darg_is_one else darg
+            return IRApply(NEG, (IRApply(DIV, (numer, denom)),))
+
+        if head == SECH:
+            # d/dx sech(u) = −u'·sinh(u)/cosh²(u)
+            sinh_u = IRApply(SINH, (arg,))
+            cosh_u = IRApply(COSH, (arg,))
+            numer = sinh_u if darg_is_one else IRApply(MUL, (darg, sinh_u))
+            denom = IRApply(POW, (cosh_u, TWO))
+            return IRApply(NEG, (IRApply(DIV, (numer, denom)),))
+
+        if head == CSCH:
+            # d/dx csch(u) = −u'·cosh(u)/sinh²(u)
+            cosh_u = IRApply(COSH, (arg,))
+            sinh_u = IRApply(SINH, (arg,))
+            numer = cosh_u if darg_is_one else IRApply(MUL, (darg, cosh_u))
+            denom = IRApply(POW, (sinh_u, TWO))
+            return IRApply(NEG, (IRApply(DIV, (numer, denom)),))
 
         if head == EXP:
             # d/dx exp(u) = exp(u)·u'

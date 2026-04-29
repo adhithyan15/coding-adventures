@@ -1,5 +1,73 @@
 # Changelog
 
+## 0.35.0 — 2026-04-28
+
+**Phase 15 — Reciprocal hyperbolic functions: `coth`, `sech`, `csch`.**
+
+Completes the hyperbolic set started in Phase 13 by adding the three reciprocal
+functions.  Each one gets a numeric evaluation handler, symbolic differentiation
+rules, and a closed-form bare integral.
+
+### New handlers (`handlers.py`)
+
+| Handler | `numeric_fn` | Exact identity |
+|---------|-------------|----------------|
+| `coth(simplify)` | `cosh(x)/sinh(x)` | none (pole at 0) |
+| `sech(simplify)` | `1/cosh(x)` | `sech(0) = 1` |
+| `csch(simplify)` | `1/sinh(x)` | none (pole at 0) |
+
+All three registered in `build_handler_table` after the existing ATANH entry.
+
+### Differentiation rules (`integrate.py`)
+
+```
+d/dx coth(u) = −u' / sinh²(u)
+d/dx sech(u) = −u'·sinh(u) / cosh²(u)
+d/dx csch(u) = −u'·cosh(u) / sinh²(u)
+```
+
+Derivatives are expressed via `SINH`/`COSH` to avoid self-referential recursion.
+When `u = x` (darg is the integer literal 1) the chain-rule factor is omitted.
+
+### Bare integration formulas (`integrate.py`)
+
+```
+∫ coth(ax+b) dx = (1/a)·log(sinh(ax+b))
+∫ sech(ax+b) dx = (1/a)·atan(sinh(ax+b))
+∫ csch(ax+b) dx = (1/a)·log(tanh((ax+b)/2))
+```
+
+Three private helpers added after `_atanh_integral`: `_coth_integral`,
+`_sech_integral`, `_csch_integral`.
+
+Note: `∫ csch(ax+b) dx = −atanh(cosh(ax+b))/a` is algebraically equivalent but
+not numerically safe on the reals (cosh ≥ 1 always, outside `atanh`'s domain).
+The `log(tanh(half_arg))` form is used instead.
+
+Poly×coth/sech/csch integration is deferred to a future phase.
+
+### Phase 3 head set extended
+
+`COTH`, `SECH`, `CSCH` added to the head-recognition set in Phase 3 of
+`_integrate`, enabling bare dispatch for any linear argument `ax+b`.
+
+### Tests (`test_phase15.py`) — 41 tests
+
+| Class | Tests |
+|-------|-------|
+| `TestPhase15_HandlerEval` | 6 |
+| `TestPhase15_Differentiation` | 9 |
+| `TestPhase15_CothIntegral` | 5 |
+| `TestPhase15_SechIntegral` | 5 |
+| `TestPhase15_CschIntegral` | 5 |
+| `TestPhase15_Fallthrough` | 3 |
+| `TestPhase15_Regressions` | 3 |
+| `TestPhase15_Macsyma` | 5 |
+
+Depends on `symbolic-ir >= 0.8.0`.
+
+---
+
 ## 0.34.0 — 2026-04-28
 
 **Phase 14 deferred fixes: exp×hyp degenerate case, sinh^m·cosh^n (both≥2), atanh×poly.**

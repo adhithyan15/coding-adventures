@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.8.0 — 2026-04-28
+
+**Add `Coth`, `Sech`, `Csch` head symbols — reciprocal hyperbolic functions (Phase 15).**
+
+Three new `IRSymbol` singletons in `nodes.py`, exported from `__init__.py`:
+
+- `COTH = IRSymbol("Coth")` — hyperbolic cotangent
+- `SECH = IRSymbol("Sech")` — hyperbolic secant
+- `CSCH = IRSymbol("Csch")` — hyperbolic cosecant
+
+These are first-class heads (not expressed as `Inv(Sinh(...))` etc.) so that
+evaluation handlers can short-circuit numerically and the differentiator can
+emit compact symbolic derivatives using the existing `Sinh`/`Cosh` heads.
+
+---
+
 ## 0.7.6 — 2026-04-28
 
 **Add `Groebner`, `PolyReduce`, `IdealSolve` head symbols (cas-multivariate).**
