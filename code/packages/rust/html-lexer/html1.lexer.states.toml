@@ -4707,6 +4707,7 @@ matcher = { anything = true }
 to = "doctype_name"
 actions = [
   "parse_error(invalid-doctype-keyword)",
+  "mark_force_quirks",
   "append_doctype_name(d)",
   "append_doctype_name(current_lowercase)",
 ]
@@ -4739,6 +4740,7 @@ matcher = { anything = true }
 to = "doctype_name"
 actions = [
   "parse_error(invalid-doctype-keyword)",
+  "mark_force_quirks",
   "append_doctype_name(do)",
   "append_doctype_name(current_lowercase)",
 ]
@@ -4771,6 +4773,7 @@ matcher = { anything = true }
 to = "doctype_name"
 actions = [
   "parse_error(invalid-doctype-keyword)",
+  "mark_force_quirks",
   "append_doctype_name(doc)",
   "append_doctype_name(current_lowercase)",
 ]
@@ -4803,6 +4806,7 @@ matcher = { anything = true }
 to = "doctype_name"
 actions = [
   "parse_error(invalid-doctype-keyword)",
+  "mark_force_quirks",
   "append_doctype_name(doct)",
   "append_doctype_name(current_lowercase)",
 ]
@@ -4835,6 +4839,7 @@ matcher = { anything = true }
 to = "doctype_name"
 actions = [
   "parse_error(invalid-doctype-keyword)",
+  "mark_force_quirks",
   "append_doctype_name(docty)",
   "append_doctype_name(current_lowercase)",
 ]
@@ -4867,6 +4872,7 @@ matcher = { anything = true }
 to = "doctype_name"
 actions = [
   "parse_error(invalid-doctype-keyword)",
+  "mark_force_quirks",
   "append_doctype_name(doctyp)",
   "append_doctype_name(current_lowercase)",
 ]
