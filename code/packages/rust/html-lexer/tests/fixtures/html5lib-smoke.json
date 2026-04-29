@@ -619,6 +619,20 @@
       "diagnostics": [
         "unexpected-question-mark-instead-of-tag-name"
       ]
+    },
+    {
+      "id": "html5lib-smoke-51",
+      "description": "invalid end tag opener recovers as bogus comment",
+      "input": "Before</3>After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=3)",
+        "Text(data=After)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "invalid-first-character-of-tag-name"
+      ]
     }
   ],
   "skipped": []

@@ -580,6 +580,33 @@
       "diagnostics": [
         "unexpected-question-mark-instead-of-tag-name"
       ]
+    },
+    {
+      "id": "invalid-tag-open-text-recovery",
+      "description": "A less-than sign before non-tag text remains text instead of starting a tag",
+      "input": "Before < after",
+      "tokens": [
+        "Text(data=Before )",
+        "Text(data=< after)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "invalid-first-character-of-tag-name"
+      ]
+    },
+    {
+      "id": "invalid-end-tag-open-bogus-comment",
+      "description": "An end-tag opener followed by a non-letter recovers as a bogus comment",
+      "input": "Before</3>After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=3)",
+        "Text(data=After)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "invalid-first-character-of-tag-name"
+      ]
     }
   ]
 }

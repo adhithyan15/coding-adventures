@@ -85,6 +85,8 @@ documented in this file.
   text preservation.
 - Processing-instruction-looking `<?...?>` markup now recovers as a bogus
   comment with `unexpected-question-mark-instead-of-tag-name`.
+- Invalid tag-open characters now follow HTML recovery: stray `<` text is
+  preserved and malformed end-tag openers recover as bogus comments.
 - Missing-name DOCTYPE recovery now marks force-quirks mode for `<!DOCTYPE>`
   and whitespace-only DOCTYPE names.
 - DOCTYPE declarations cut off by EOF after a name now emit the current name
