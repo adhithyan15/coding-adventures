@@ -91,6 +91,36 @@
       ]
     },
     {
+      "id": "doctype-public-identifier",
+      "description": "Mosaic-era PUBLIC doctypes preserve their public identifier",
+      "input": "<!DOCTYPE html PUBLIC \"-//IETF//DTD HTML//EN\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=-//IETF//DTD HTML//EN, system_identifier=null, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "doctype-public-and-system-identifiers",
+      "description": "DOCTYPE PUBLIC declarations preserve both public and system identifiers",
+      "input": "<!DOCTYPE html PUBLIC '-//W3C//DTD HTML 4.01//EN' \"about:legacy-compat\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=-//W3C//DTD HTML 4.01//EN, system_identifier=about:legacy-compat, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "doctype-missing-public-identifier-quirks",
+      "description": "DOCTYPE PUBLIC without an identifier marks force-quirks",
+      "input": "<!DOCTYPE html PUBLIC>",
+      "tokens": [
+        "Doctype(name=html, force_quirks=true)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-doctype-public-identifier"
+      ]
+    },
+    {
       "id": "comment-eof-recovery",
       "input": "<!--open",
       "tokens": [

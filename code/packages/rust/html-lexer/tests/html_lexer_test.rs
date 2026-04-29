@@ -37,6 +37,8 @@ fn default_html_lexer_supports_html1_attributes_comments_and_doctypes() {
         vec![
             Token::Doctype {
                 name: Some("html".to_string()),
+                public_identifier: None,
+                system_identifier: None,
                 force_quirks: false,
             },
             Token::StartTag {
@@ -77,6 +79,8 @@ fn default_html_lexer_marks_missing_doctype_name_force_quirks() {
         vec![
             Token::Doctype {
                 name: None,
+                public_identifier: None,
+                system_identifier: None,
                 force_quirks: true,
             },
             Token::Eof,
@@ -97,6 +101,8 @@ fn default_html_lexer_marks_whitespace_only_doctype_force_quirks() {
         vec![
             Token::Doctype {
                 name: None,
+                public_identifier: None,
+                system_identifier: None,
                 force_quirks: true,
             },
             Token::Eof,
@@ -116,6 +122,8 @@ fn default_html_lexer_marks_doctype_name_eof_force_quirks() {
         vec![
             Token::Doctype {
                 name: Some("html".to_string()),
+                public_identifier: None,
+                system_identifier: None,
                 force_quirks: true,
             },
             Token::Eof,
@@ -136,11 +144,76 @@ fn default_html_lexer_marks_after_doctype_name_eof_force_quirks() {
         vec![
             Token::Doctype {
                 name: Some("html".to_string()),
+                public_identifier: None,
+                system_identifier: None,
                 force_quirks: true,
             },
             Token::Eof,
         ]
     );
+}
+
+#[test]
+fn default_html_lexer_supports_public_doctype_identifier() {
+    let tokens = lex_html("<!DOCTYPE html PUBLIC \"-//IETF//DTD HTML//EN\">").unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: Some("-//IETF//DTD HTML//EN".to_string()),
+                system_identifier: None,
+                force_quirks: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_public_and_system_doctype_identifiers() {
+    let tokens =
+        lex_html("<!DOCTYPE html PUBLIC '-//W3C//DTD HTML 4.01//EN' \"about:legacy-compat\">")
+            .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: Some("-//W3C//DTD HTML 4.01//EN".to_string()),
+                system_identifier: Some("about:legacy-compat".to_string()),
+                force_quirks: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_marks_missing_public_identifier_force_quirks() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("<!DOCTYPE html PUBLIC>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: None,
+                system_identifier: None,
+                force_quirks: true,
+            },
+            Token::Eof,
+        ]
+    );
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "missing-doctype-public-identifier"));
 }
 
 #[test]
@@ -1051,11 +1124,30 @@ fn token_summary(token: Token) -> String {
         ),
         Token::EndTag { name } => format!("EndTag(name={name})"),
         Token::Comment(data) => format!("Comment(data={data})"),
-        Token::Doctype { name, force_quirks } => match name {
-            Some(name) => format!("Doctype(name={name}, force_quirks={force_quirks})"),
-            None => format!("Doctype(name=null, force_quirks={force_quirks})"),
-        },
+        Token::Doctype {
+            name,
+            public_identifier,
+            system_identifier,
+            force_quirks,
+        } => doctype_summary(name, public_identifier, system_identifier, force_quirks),
         Token::Eof => "EOF".to_string(),
+    }
+}
+
+fn doctype_summary(
+    name: Option<String>,
+    public_identifier: Option<String>,
+    system_identifier: Option<String>,
+    force_quirks: bool,
+) -> String {
+    let name = name.unwrap_or_else(|| "null".to_string());
+    match (public_identifier, system_identifier) {
+        (None, None) => format!("Doctype(name={name}, force_quirks={force_quirks})"),
+        (public_identifier, system_identifier) => format!(
+            "Doctype(name={name}, public_identifier={}, system_identifier={}, force_quirks={force_quirks})",
+            public_identifier.unwrap_or_else(|| "null".to_string()),
+            system_identifier.unwrap_or_else(|| "null".to_string())
+        ),
     }
 }
 

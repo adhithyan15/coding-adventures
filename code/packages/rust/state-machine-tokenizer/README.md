@@ -60,6 +60,12 @@ Comments and doctypes:
 - `append_doctype_name(current)`
 - `append_doctype_name(current_lowercase)`
 - `append_doctype_name(literal)`
+- `set_doctype_public_identifier_empty`
+- `append_doctype_public_identifier(current)`
+- `append_doctype_public_identifier(literal)`
+- `set_doctype_system_identifier_empty`
+- `append_doctype_system_identifier(current)`
+- `append_doctype_system_identifier(literal)`
 - `mark_force_quirks`
 
 Temporary buffers and controlled state changes:

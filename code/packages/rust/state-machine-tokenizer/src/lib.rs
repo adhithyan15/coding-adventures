@@ -36,6 +36,10 @@ pub enum Token {
     Doctype {
         /// Optional doctype name.
         name: Option<String>,
+        /// Optional public identifier.
+        public_identifier: Option<String>,
+        /// Optional system identifier.
+        system_identifier: Option<String>,
         /// Whether parse errors should force quirks mode.
         force_quirks: bool,
     },
@@ -427,6 +431,8 @@ impl Tokenizer {
                 "create_doctype" => {
                     self.current_token = Some(CurrentToken::Doctype {
                         name: None,
+                        public_identifier: None,
+                        system_identifier: None,
                         force_quirks: false,
                     });
                     self.current_attribute = None;
@@ -492,6 +498,24 @@ impl Tokenizer {
                         action: action.clone(),
                     })?;
                     self.append_doctype_name(action, ch, true)?;
+                }
+                "set_doctype_public_identifier_empty" => {
+                    self.set_doctype_public_identifier_empty(action)?
+                }
+                "append_doctype_public_identifier(current)" => {
+                    let ch = current.ok_or_else(|| TokenizerError::MissingCurrentCodePoint {
+                        action: action.clone(),
+                    })?;
+                    self.append_doctype_public_identifier(action, ch)?;
+                }
+                "set_doctype_system_identifier_empty" => {
+                    self.set_doctype_system_identifier_empty(action)?
+                }
+                "append_doctype_system_identifier(current)" => {
+                    let ch = current.ok_or_else(|| TokenizerError::MissingCurrentCodePoint {
+                        action: action.clone(),
+                    })?;
+                    self.append_doctype_system_identifier(action, ch)?;
                 }
                 "mark_force_quirks" => self.mark_force_quirks(action)?,
                 "clear_temporary_buffer" => self.temporary_buffer.clear(),
@@ -672,6 +696,24 @@ impl Tokenizer {
                         .trim_end_matches(')');
                     self.doctype_name_mut(action)?.push_str(literal);
                 }
+                _ if action.starts_with("append_doctype_public_identifier(")
+                    && action.ends_with(')') =>
+                {
+                    let literal = action
+                        .trim_start_matches("append_doctype_public_identifier(")
+                        .trim_end_matches(')');
+                    self.doctype_public_identifier_mut(action)?
+                        .push_str(literal);
+                }
+                _ if action.starts_with("append_doctype_system_identifier(")
+                    && action.ends_with(')') =>
+                {
+                    let literal = action
+                        .trim_start_matches("append_doctype_system_identifier(")
+                        .trim_end_matches(')');
+                    self.doctype_system_identifier_mut(action)?
+                        .push_str(literal);
+                }
                 _ if action.starts_with("append_temporary_buffer(") && action.ends_with(')') => {
                     let literal = action
                         .trim_start_matches("append_temporary_buffer(")
@@ -788,6 +830,48 @@ impl Tokenizer {
         Ok(())
     }
 
+    fn set_doctype_public_identifier_empty(&mut self, action: &str) -> Result<()> {
+        match self.current_token_mut(action)? {
+            CurrentToken::Doctype {
+                public_identifier, ..
+            } => {
+                public_identifier.get_or_insert_with(String::new);
+                Ok(())
+            }
+            other => Err(TokenizerError::InvalidCurrentToken {
+                action: action.to_string(),
+                expected: "doctype",
+                actual: other.kind_name(),
+            }),
+        }
+    }
+
+    fn append_doctype_public_identifier(&mut self, action: &str, ch: char) -> Result<()> {
+        self.doctype_public_identifier_mut(action)?.push(ch);
+        Ok(())
+    }
+
+    fn set_doctype_system_identifier_empty(&mut self, action: &str) -> Result<()> {
+        match self.current_token_mut(action)? {
+            CurrentToken::Doctype {
+                system_identifier, ..
+            } => {
+                system_identifier.get_or_insert_with(String::new);
+                Ok(())
+            }
+            other => Err(TokenizerError::InvalidCurrentToken {
+                action: action.to_string(),
+                expected: "doctype",
+                actual: other.kind_name(),
+            }),
+        }
+    }
+
+    fn append_doctype_system_identifier(&mut self, action: &str, ch: char) -> Result<()> {
+        self.doctype_system_identifier_mut(action)?.push(ch);
+        Ok(())
+    }
+
     fn mark_force_quirks(&mut self, action: &str) -> Result<()> {
         match self.current_token_mut(action)? {
             CurrentToken::Doctype { force_quirks, .. } => {
@@ -829,9 +913,17 @@ impl Tokenizer {
             }
             CurrentToken::EndTag { name } => self.tokens.push_back(Token::EndTag { name }),
             CurrentToken::Comment { data } => self.tokens.push_back(Token::Comment(data)),
-            CurrentToken::Doctype { name, force_quirks } => {
-                self.tokens.push_back(Token::Doctype { name, force_quirks })
-            }
+            CurrentToken::Doctype {
+                name,
+                public_identifier,
+                system_identifier,
+                force_quirks,
+            } => self.tokens.push_back(Token::Doctype {
+                name,
+                public_identifier,
+                system_identifier,
+                force_quirks,
+            }),
         }
         Ok(())
     }
@@ -905,6 +997,32 @@ impl Tokenizer {
         }
     }
 
+    fn doctype_public_identifier_mut(&mut self, action: &str) -> Result<&mut String> {
+        match self.current_token_mut(action)? {
+            CurrentToken::Doctype {
+                public_identifier, ..
+            } => Ok(public_identifier.get_or_insert_with(String::new)),
+            other => Err(TokenizerError::InvalidCurrentToken {
+                action: action.to_string(),
+                expected: "doctype",
+                actual: other.kind_name(),
+            }),
+        }
+    }
+
+    fn doctype_system_identifier_mut(&mut self, action: &str) -> Result<&mut String> {
+        match self.current_token_mut(action)? {
+            CurrentToken::Doctype {
+                system_identifier, ..
+            } => Ok(system_identifier.get_or_insert_with(String::new)),
+            other => Err(TokenizerError::InvalidCurrentToken {
+                action: action.to_string(),
+                expected: "doctype",
+                actual: other.kind_name(),
+            }),
+        }
+    }
+
     fn advance(&mut self, ch: char) {
         self.position.byte_offset += ch.len_utf8();
         self.position.char_offset += 1;
@@ -932,6 +1050,8 @@ enum CurrentToken {
     },
     Doctype {
         name: Option<String>,
+        public_identifier: Option<String>,
+        system_identifier: Option<String>,
         force_quirks: bool,
     },
 }

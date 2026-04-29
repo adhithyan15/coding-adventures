@@ -239,6 +239,8 @@ fn tokenizer_builds_doctypes_and_marks_force_quirks() {
         tokenizer.drain_tokens(),
         vec![Token::Doctype {
             name: Some("html".to_string()),
+            public_identifier: None,
+            system_identifier: None,
             force_quirks: true,
         }]
     );

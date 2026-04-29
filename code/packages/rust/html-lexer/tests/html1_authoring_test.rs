@@ -212,11 +212,30 @@ fn token_summary(token: Token) -> String {
         ),
         Token::EndTag { name } => format!("EndTag(name={name})"),
         Token::Comment(data) => format!("Comment(data={data})"),
-        Token::Doctype { name, force_quirks } => match name {
-            Some(name) => format!("Doctype(name={name}, force_quirks={force_quirks})"),
-            None => format!("Doctype(name=null, force_quirks={force_quirks})"),
-        },
+        Token::Doctype {
+            name,
+            public_identifier,
+            system_identifier,
+            force_quirks,
+        } => doctype_summary(name, public_identifier, system_identifier, force_quirks),
         Token::Eof => "EOF".to_string(),
+    }
+}
+
+fn doctype_summary(
+    name: Option<String>,
+    public_identifier: Option<String>,
+    system_identifier: Option<String>,
+    force_quirks: bool,
+) -> String {
+    let name = name.unwrap_or_else(|| "null".to_string());
+    match (public_identifier, system_identifier) {
+        (None, None) => format!("Doctype(name={name}, force_quirks={force_quirks})"),
+        (public_identifier, system_identifier) => format!(
+            "Doctype(name={name}, public_identifier={}, system_identifier={}, force_quirks={force_quirks})",
+            public_identifier.unwrap_or_else(|| "null".to_string()),
+            system_identifier.unwrap_or_else(|| "null".to_string())
+        ),
     }
 }
 

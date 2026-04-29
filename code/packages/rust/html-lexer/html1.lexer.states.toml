@@ -35,6 +35,8 @@ alphabet = [
   "t",
   "L",
   "l",
+  "I",
+  "i",
   "Y",
   "y",
   "P",
@@ -81,7 +83,7 @@ fields = ["data"]
 
 [[tokens]]
 name = "Doctype"
-fields = ["name", "force_quirks"]
+fields = ["name", "public_identifier", "system_identifier", "force_quirks"]
 
 [[tokens]]
 name = "EOF"
@@ -525,6 +527,72 @@ id = "doctype_name"
 
 [[states]]
 id = "after_doctype_name"
+
+[[states]]
+id = "doctype_public_keyword_u"
+
+[[states]]
+id = "doctype_public_keyword_b"
+
+[[states]]
+id = "doctype_public_keyword_l"
+
+[[states]]
+id = "doctype_public_keyword_i"
+
+[[states]]
+id = "doctype_public_keyword_c"
+
+[[states]]
+id = "after_doctype_public_keyword"
+
+[[states]]
+id = "before_doctype_public_identifier"
+
+[[states]]
+id = "doctype_public_identifier_double_quoted"
+
+[[states]]
+id = "doctype_public_identifier_single_quoted"
+
+[[states]]
+id = "after_doctype_public_identifier"
+
+[[states]]
+id = "between_doctype_public_and_system_identifiers"
+
+[[states]]
+id = "doctype_system_keyword_y"
+
+[[states]]
+id = "doctype_system_keyword_s"
+
+[[states]]
+id = "doctype_system_keyword_t"
+
+[[states]]
+id = "doctype_system_keyword_e"
+
+[[states]]
+id = "doctype_system_keyword_m"
+
+[[states]]
+id = "after_doctype_system_keyword"
+
+[[states]]
+id = "before_doctype_system_identifier"
+
+[[states]]
+id = "doctype_system_identifier_double_quoted"
+
+[[states]]
+id = "doctype_system_identifier_single_quoted"
+
+[[states]]
+id = "after_doctype_system_identifier"
+
+[[states]]
+id = "bogus_doctype"
 
 [[states]]
 id = "before_end_tag_close"
@@ -4956,9 +5024,942 @@ actions = [
 
 [[transitions]]
 from = "after_doctype_name"
+matcher = { literal = "P" }
+to = "doctype_public_keyword_u"
+
+[[transitions]]
+from = "after_doctype_name"
+matcher = { literal = "p" }
+to = "doctype_public_keyword_u"
+
+[[transitions]]
+from = "after_doctype_name"
+matcher = { literal = "S" }
+to = "doctype_system_keyword_y"
+
+[[transitions]]
+from = "after_doctype_name"
+matcher = { literal = "s" }
+to = "doctype_system_keyword_y"
+
+[[transitions]]
+from = "after_doctype_name"
 matcher = { anything = true }
-to = "after_doctype_name"
-actions = ["parse_error(unexpected-character-after-doctype-name)"]
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(invalid-character-sequence-after-doctype-name)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "doctype_public_keyword_u"
+matcher = { literal = "U" }
+to = "doctype_public_keyword_b"
+
+[[transitions]]
+from = "doctype_public_keyword_u"
+matcher = { literal = "u" }
+to = "doctype_public_keyword_b"
+
+[[transitions]]
+from = "doctype_public_keyword_b"
+matcher = { literal = "B" }
+to = "doctype_public_keyword_l"
+
+[[transitions]]
+from = "doctype_public_keyword_b"
+matcher = { literal = "b" }
+to = "doctype_public_keyword_l"
+
+[[transitions]]
+from = "doctype_public_keyword_l"
+matcher = { literal = "L" }
+to = "doctype_public_keyword_i"
+
+[[transitions]]
+from = "doctype_public_keyword_l"
+matcher = { literal = "l" }
+to = "doctype_public_keyword_i"
+
+[[transitions]]
+from = "doctype_public_keyword_i"
+matcher = { literal = "I" }
+to = "doctype_public_keyword_c"
+
+[[transitions]]
+from = "doctype_public_keyword_i"
+matcher = { literal = "i" }
+to = "doctype_public_keyword_c"
+
+[[transitions]]
+from = "doctype_public_keyword_c"
+matcher = { literal = "C" }
+to = "after_doctype_public_keyword"
+
+[[transitions]]
+from = "doctype_public_keyword_c"
+matcher = { literal = "c" }
+to = "after_doctype_public_keyword"
+
+[[transitions]]
+from = "doctype_public_keyword_u"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "doctype_public_keyword_b"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "doctype_public_keyword_l"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "doctype_public_keyword_i"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "doctype_public_keyword_c"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "doctype_public_keyword_u"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(invalid-character-sequence-after-doctype-name)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "doctype_public_keyword_b"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(invalid-character-sequence-after-doctype-name)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "doctype_public_keyword_l"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(invalid-character-sequence-after-doctype-name)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "doctype_public_keyword_i"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(invalid-character-sequence-after-doctype-name)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "doctype_public_keyword_c"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(invalid-character-sequence-after-doctype-name)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "doctype_system_keyword_y"
+matcher = { literal = "Y" }
+to = "doctype_system_keyword_s"
+
+[[transitions]]
+from = "doctype_system_keyword_y"
+matcher = { literal = "y" }
+to = "doctype_system_keyword_s"
+
+[[transitions]]
+from = "doctype_system_keyword_s"
+matcher = { literal = "S" }
+to = "doctype_system_keyword_t"
+
+[[transitions]]
+from = "doctype_system_keyword_s"
+matcher = { literal = "s" }
+to = "doctype_system_keyword_t"
+
+[[transitions]]
+from = "doctype_system_keyword_t"
+matcher = { literal = "T" }
+to = "doctype_system_keyword_e"
+
+[[transitions]]
+from = "doctype_system_keyword_t"
+matcher = { literal = "t" }
+to = "doctype_system_keyword_e"
+
+[[transitions]]
+from = "doctype_system_keyword_e"
+matcher = { literal = "E" }
+to = "doctype_system_keyword_m"
+
+[[transitions]]
+from = "doctype_system_keyword_e"
+matcher = { literal = "e" }
+to = "doctype_system_keyword_m"
+
+[[transitions]]
+from = "doctype_system_keyword_m"
+matcher = { literal = "M" }
+to = "after_doctype_system_keyword"
+
+[[transitions]]
+from = "doctype_system_keyword_m"
+matcher = { literal = "m" }
+to = "after_doctype_system_keyword"
+
+[[transitions]]
+from = "doctype_system_keyword_y"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "doctype_system_keyword_s"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "doctype_system_keyword_t"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "doctype_system_keyword_e"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "doctype_system_keyword_m"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "doctype_system_keyword_y"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(invalid-character-sequence-after-doctype-name)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "doctype_system_keyword_s"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(invalid-character-sequence-after-doctype-name)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "doctype_system_keyword_t"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(invalid-character-sequence-after-doctype-name)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "doctype_system_keyword_e"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(invalid-character-sequence-after-doctype-name)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "doctype_system_keyword_m"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(invalid-character-sequence-after-doctype-name)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "after_doctype_public_keyword"
+matcher = { literal = " " }
+to = "before_doctype_public_identifier"
+
+[[transitions]]
+from = "after_doctype_public_keyword"
+matcher = { literal = "\n" }
+to = "before_doctype_public_identifier"
+
+[[transitions]]
+from = "after_doctype_public_keyword"
+matcher = { literal = "\t" }
+to = "before_doctype_public_identifier"
+
+[[transitions]]
+from = "after_doctype_public_keyword"
+matcher = { literal = "\r" }
+to = "before_doctype_public_identifier"
+
+[[transitions]]
+from = "after_doctype_public_keyword"
+matcher = { literal = "\"" }
+to = "doctype_public_identifier_double_quoted"
+actions = [
+  "parse_error(missing-whitespace-after-doctype-public-keyword)",
+  "set_doctype_public_identifier_empty",
+]
+
+[[transitions]]
+from = "after_doctype_public_keyword"
+matcher = { literal = "'" }
+to = "doctype_public_identifier_single_quoted"
+actions = [
+  "parse_error(missing-whitespace-after-doctype-public-keyword)",
+  "set_doctype_public_identifier_empty",
+]
+
+[[transitions]]
+from = "after_doctype_public_keyword"
+matcher = { literal = ">" }
+to = "data"
+actions = [
+  "parse_error(missing-doctype-public-identifier)",
+  "mark_force_quirks",
+  "emit_current_token",
+]
+
+[[transitions]]
+from = "after_doctype_public_keyword"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "after_doctype_public_keyword"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(missing-quote-before-doctype-public-identifier)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "before_doctype_public_identifier"
+matcher = { literal = " " }
+to = "before_doctype_public_identifier"
+
+[[transitions]]
+from = "before_doctype_public_identifier"
+matcher = { literal = "\n" }
+to = "before_doctype_public_identifier"
+
+[[transitions]]
+from = "before_doctype_public_identifier"
+matcher = { literal = "\t" }
+to = "before_doctype_public_identifier"
+
+[[transitions]]
+from = "before_doctype_public_identifier"
+matcher = { literal = "\r" }
+to = "before_doctype_public_identifier"
+
+[[transitions]]
+from = "before_doctype_public_identifier"
+matcher = { literal = "\"" }
+to = "doctype_public_identifier_double_quoted"
+actions = ["set_doctype_public_identifier_empty"]
+
+[[transitions]]
+from = "before_doctype_public_identifier"
+matcher = { literal = "'" }
+to = "doctype_public_identifier_single_quoted"
+actions = ["set_doctype_public_identifier_empty"]
+
+[[transitions]]
+from = "before_doctype_public_identifier"
+matcher = { literal = ">" }
+to = "data"
+actions = [
+  "parse_error(missing-doctype-public-identifier)",
+  "mark_force_quirks",
+  "emit_current_token",
+]
+
+[[transitions]]
+from = "before_doctype_public_identifier"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "before_doctype_public_identifier"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(missing-quote-before-doctype-public-identifier)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "doctype_public_identifier_double_quoted"
+matcher = { literal = "\"" }
+to = "after_doctype_public_identifier"
+
+[[transitions]]
+from = "doctype_public_identifier_double_quoted"
+matcher = { literal = ">" }
+to = "data"
+actions = [
+  "parse_error(abrupt-doctype-public-identifier)",
+  "mark_force_quirks",
+  "emit_current_token",
+]
+
+[[transitions]]
+from = "doctype_public_identifier_double_quoted"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "doctype_public_identifier_double_quoted"
+matcher = { anything = true }
+to = "doctype_public_identifier_double_quoted"
+actions = ["append_doctype_public_identifier(current)"]
+
+[[transitions]]
+from = "doctype_public_identifier_single_quoted"
+matcher = { literal = "'" }
+to = "after_doctype_public_identifier"
+
+[[transitions]]
+from = "doctype_public_identifier_single_quoted"
+matcher = { literal = ">" }
+to = "data"
+actions = [
+  "parse_error(abrupt-doctype-public-identifier)",
+  "mark_force_quirks",
+  "emit_current_token",
+]
+
+[[transitions]]
+from = "doctype_public_identifier_single_quoted"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "doctype_public_identifier_single_quoted"
+matcher = { anything = true }
+to = "doctype_public_identifier_single_quoted"
+actions = ["append_doctype_public_identifier(current)"]
+
+[[transitions]]
+from = "after_doctype_public_identifier"
+matcher = { literal = " " }
+to = "between_doctype_public_and_system_identifiers"
+
+[[transitions]]
+from = "after_doctype_public_identifier"
+matcher = { literal = "\n" }
+to = "between_doctype_public_and_system_identifiers"
+
+[[transitions]]
+from = "after_doctype_public_identifier"
+matcher = { literal = "\t" }
+to = "between_doctype_public_and_system_identifiers"
+
+[[transitions]]
+from = "after_doctype_public_identifier"
+matcher = { literal = "\r" }
+to = "between_doctype_public_and_system_identifiers"
+
+[[transitions]]
+from = "after_doctype_public_identifier"
+matcher = { literal = ">" }
+to = "data"
+actions = ["emit_current_token"]
+
+[[transitions]]
+from = "after_doctype_public_identifier"
+matcher = { literal = "\"" }
+to = "doctype_system_identifier_double_quoted"
+actions = [
+  "parse_error(missing-whitespace-between-doctype-public-and-system-identifiers)",
+  "set_doctype_system_identifier_empty",
+]
+
+[[transitions]]
+from = "after_doctype_public_identifier"
+matcher = { literal = "'" }
+to = "doctype_system_identifier_single_quoted"
+actions = [
+  "parse_error(missing-whitespace-between-doctype-public-and-system-identifiers)",
+  "set_doctype_system_identifier_empty",
+]
+
+[[transitions]]
+from = "after_doctype_public_identifier"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "after_doctype_public_identifier"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(missing-quote-before-doctype-system-identifier)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "between_doctype_public_and_system_identifiers"
+matcher = { literal = " " }
+to = "between_doctype_public_and_system_identifiers"
+
+[[transitions]]
+from = "between_doctype_public_and_system_identifiers"
+matcher = { literal = "\n" }
+to = "between_doctype_public_and_system_identifiers"
+
+[[transitions]]
+from = "between_doctype_public_and_system_identifiers"
+matcher = { literal = "\t" }
+to = "between_doctype_public_and_system_identifiers"
+
+[[transitions]]
+from = "between_doctype_public_and_system_identifiers"
+matcher = { literal = "\r" }
+to = "between_doctype_public_and_system_identifiers"
+
+[[transitions]]
+from = "between_doctype_public_and_system_identifiers"
+matcher = { literal = ">" }
+to = "data"
+actions = ["emit_current_token"]
+
+[[transitions]]
+from = "between_doctype_public_and_system_identifiers"
+matcher = { literal = "\"" }
+to = "doctype_system_identifier_double_quoted"
+actions = ["set_doctype_system_identifier_empty"]
+
+[[transitions]]
+from = "between_doctype_public_and_system_identifiers"
+matcher = { literal = "'" }
+to = "doctype_system_identifier_single_quoted"
+actions = ["set_doctype_system_identifier_empty"]
+
+[[transitions]]
+from = "between_doctype_public_and_system_identifiers"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "between_doctype_public_and_system_identifiers"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(missing-quote-before-doctype-system-identifier)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "after_doctype_system_keyword"
+matcher = { literal = " " }
+to = "before_doctype_system_identifier"
+
+[[transitions]]
+from = "after_doctype_system_keyword"
+matcher = { literal = "\n" }
+to = "before_doctype_system_identifier"
+
+[[transitions]]
+from = "after_doctype_system_keyword"
+matcher = { literal = "\t" }
+to = "before_doctype_system_identifier"
+
+[[transitions]]
+from = "after_doctype_system_keyword"
+matcher = { literal = "\r" }
+to = "before_doctype_system_identifier"
+
+[[transitions]]
+from = "after_doctype_system_keyword"
+matcher = { literal = "\"" }
+to = "doctype_system_identifier_double_quoted"
+actions = [
+  "parse_error(missing-whitespace-after-doctype-system-keyword)",
+  "set_doctype_system_identifier_empty",
+]
+
+[[transitions]]
+from = "after_doctype_system_keyword"
+matcher = { literal = "'" }
+to = "doctype_system_identifier_single_quoted"
+actions = [
+  "parse_error(missing-whitespace-after-doctype-system-keyword)",
+  "set_doctype_system_identifier_empty",
+]
+
+[[transitions]]
+from = "after_doctype_system_keyword"
+matcher = { literal = ">" }
+to = "data"
+actions = [
+  "parse_error(missing-doctype-system-identifier)",
+  "mark_force_quirks",
+  "emit_current_token",
+]
+
+[[transitions]]
+from = "after_doctype_system_keyword"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "after_doctype_system_keyword"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(missing-quote-before-doctype-system-identifier)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "before_doctype_system_identifier"
+matcher = { literal = " " }
+to = "before_doctype_system_identifier"
+
+[[transitions]]
+from = "before_doctype_system_identifier"
+matcher = { literal = "\n" }
+to = "before_doctype_system_identifier"
+
+[[transitions]]
+from = "before_doctype_system_identifier"
+matcher = { literal = "\t" }
+to = "before_doctype_system_identifier"
+
+[[transitions]]
+from = "before_doctype_system_identifier"
+matcher = { literal = "\r" }
+to = "before_doctype_system_identifier"
+
+[[transitions]]
+from = "before_doctype_system_identifier"
+matcher = { literal = "\"" }
+to = "doctype_system_identifier_double_quoted"
+actions = ["set_doctype_system_identifier_empty"]
+
+[[transitions]]
+from = "before_doctype_system_identifier"
+matcher = { literal = "'" }
+to = "doctype_system_identifier_single_quoted"
+actions = ["set_doctype_system_identifier_empty"]
+
+[[transitions]]
+from = "before_doctype_system_identifier"
+matcher = { literal = ">" }
+to = "data"
+actions = [
+  "parse_error(missing-doctype-system-identifier)",
+  "mark_force_quirks",
+  "emit_current_token",
+]
+
+[[transitions]]
+from = "before_doctype_system_identifier"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "before_doctype_system_identifier"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(missing-quote-before-doctype-system-identifier)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "doctype_system_identifier_double_quoted"
+matcher = { literal = "\"" }
+to = "after_doctype_system_identifier"
+
+[[transitions]]
+from = "doctype_system_identifier_double_quoted"
+matcher = { literal = ">" }
+to = "data"
+actions = [
+  "parse_error(abrupt-doctype-system-identifier)",
+  "mark_force_quirks",
+  "emit_current_token",
+]
+
+[[transitions]]
+from = "doctype_system_identifier_double_quoted"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "doctype_system_identifier_double_quoted"
+matcher = { anything = true }
+to = "doctype_system_identifier_double_quoted"
+actions = ["append_doctype_system_identifier(current)"]
+
+[[transitions]]
+from = "doctype_system_identifier_single_quoted"
+matcher = { literal = "'" }
+to = "after_doctype_system_identifier"
+
+[[transitions]]
+from = "doctype_system_identifier_single_quoted"
+matcher = { literal = ">" }
+to = "data"
+actions = [
+  "parse_error(abrupt-doctype-system-identifier)",
+  "mark_force_quirks",
+  "emit_current_token",
+]
+
+[[transitions]]
+from = "doctype_system_identifier_single_quoted"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "doctype_system_identifier_single_quoted"
+matcher = { anything = true }
+to = "doctype_system_identifier_single_quoted"
+actions = ["append_doctype_system_identifier(current)"]
+
+[[transitions]]
+from = "after_doctype_system_identifier"
+matcher = { literal = " " }
+to = "after_doctype_system_identifier"
+
+[[transitions]]
+from = "after_doctype_system_identifier"
+matcher = { literal = "\n" }
+to = "after_doctype_system_identifier"
+
+[[transitions]]
+from = "after_doctype_system_identifier"
+matcher = { literal = "\t" }
+to = "after_doctype_system_identifier"
+
+[[transitions]]
+from = "after_doctype_system_identifier"
+matcher = { literal = "\r" }
+to = "after_doctype_system_identifier"
+
+[[transitions]]
+from = "after_doctype_system_identifier"
+matcher = { literal = ">" }
+to = "data"
+actions = ["emit_current_token"]
+
+[[transitions]]
+from = "after_doctype_system_identifier"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "after_doctype_system_identifier"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = ["parse_error(unexpected-character-after-doctype-system-identifier)"]
+
+[[transitions]]
+from = "bogus_doctype"
+matcher = { literal = ">" }
+to = "data"
+actions = ["emit_current_token"]
+
+[[transitions]]
+from = "bogus_doctype"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["emit_current_token", "emit(EOF)"]
+
+[[transitions]]
+from = "bogus_doctype"
+matcher = { anything = true }
+to = "bogus_doctype"
 
 [[transitions]]
 from = "before_end_tag_close"

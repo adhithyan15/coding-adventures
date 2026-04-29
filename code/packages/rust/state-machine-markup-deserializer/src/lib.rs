@@ -687,6 +687,8 @@ fn validate_action(action: &str, token_names: &HashSet<String>) -> Result<()> {
         | "commit_attribute"
         | "mark_self_closing"
         | "mark_force_quirks"
+        | "set_doctype_public_identifier_empty"
+        | "set_doctype_system_identifier_empty"
         | "clear_temporary_buffer"
         | "append_temporary_buffer_to_text"
         | "append_temporary_buffer_to_attribute_value"
@@ -720,6 +722,8 @@ fn validate_action(action: &str, token_names: &HashSet<String>) -> Result<()> {
             | "append_comment(current_lowercase)"
             | "append_doctype_name(current)"
             | "append_doctype_name(current_lowercase)"
+            | "append_doctype_public_identifier(current)"
+            | "append_doctype_system_identifier(current)"
             | "append_temporary_buffer(current)"
             | "append_temporary_buffer(current_lowercase)"
     ) {
@@ -735,6 +739,12 @@ fn validate_action(action: &str, token_names: &HashSet<String>) -> Result<()> {
         return Ok(());
     }
     if action.starts_with("append_doctype_name(") && action.ends_with(')') {
+        return Ok(());
+    }
+    if action.starts_with("append_doctype_public_identifier(") && action.ends_with(')') {
+        return Ok(());
+    }
+    if action.starts_with("append_doctype_system_identifier(") && action.ends_with(')') {
         return Ok(());
     }
     if action.starts_with("append_temporary_buffer(") && action.ends_with(')') {

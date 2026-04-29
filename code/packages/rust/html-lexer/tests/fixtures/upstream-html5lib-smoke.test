@@ -59,6 +59,30 @@
       ]
     },
     {
+      "description": "doctype public identifier",
+      "input": "<!DOCTYPE html PUBLIC \"-//IETF//DTD HTML//EN\">",
+      "output": [
+        ["DOCTYPE", "html", "-//IETF//DTD HTML//EN", null, true]
+      ]
+    },
+    {
+      "description": "doctype public and system identifiers",
+      "input": "<!DOCTYPE html PUBLIC '-//W3C//DTD HTML 4.01//EN' \"about:legacy-compat\">",
+      "output": [
+        ["DOCTYPE", "html", "-//W3C//DTD HTML 4.01//EN", "about:legacy-compat", true]
+      ]
+    },
+    {
+      "description": "doctype missing public identifier",
+      "input": "<!DOCTYPE html PUBLIC>",
+      "output": [
+        ["DOCTYPE", "html", null, null, false]
+      ],
+      "errors": [
+        {"code": "missing-doctype-public-identifier", "line": 1, "col": 23}
+      ]
+    },
+    {
       "description": "self closing start tag uses html5lib boolean slot",
       "input": "<br/>",
       "output": [
