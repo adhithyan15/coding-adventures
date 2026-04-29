@@ -31,7 +31,13 @@ threadsafety = 1
 """PEP 249: 1 = threads may share the module but not connections."""
 
 paramstyle = "qmark"
-"""PEP 249: ``?``-style placeholders. See ``binding.py`` for substitution."""
+"""PEP 249: declared paramstyle is ``qmark`` (``?`` placeholders).
+
+The driver also accepts ``:name`` placeholders when *parameters* is a
+mapping — matching the stdlib ``sqlite3`` module's behaviour, which also
+declares ``qmark`` while accepting both styles at runtime.  See
+``binding.py`` for substitution rules.
+"""
 
 
 __all__ = [

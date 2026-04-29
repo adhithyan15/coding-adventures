@@ -26,7 +26,7 @@ back on exception — matching sqlite3.
 from __future__ import annotations
 
 import contextlib
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from types import TracebackType
 from typing import Any
 
@@ -156,10 +156,18 @@ class Connection:
         self._assert_open()
         return Cursor(self)
 
-    def execute(self, sql: str, parameters: Sequence[Any] = ()) -> Cursor:
+    def execute(
+        self,
+        sql: str,
+        parameters: Sequence[Any] | Mapping[str, Any] = (),
+    ) -> Cursor:
         """Shortcut: create a cursor, run ``execute``, return the cursor.
 
         Non-standard but universally expected — sqlite3 exposes it too.
+
+        Accepts either a positional ``Sequence`` (qmark style, ``?``
+        placeholders) or a ``Mapping`` (named style, ``:identifier``
+        placeholders).  See :meth:`Cursor.execute` for details.
         """
         cur = self.cursor()
         return cur.execute(sql, parameters)
