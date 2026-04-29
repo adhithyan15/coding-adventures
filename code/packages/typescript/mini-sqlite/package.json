@@ -1,0 +1,30 @@
+{
+  "name": "@coding-adventures/mini-sqlite",
+  "version": "0.1.0",
+  "description": "Mini-SQLite facade for TypeScript backed by the SQL execution engine",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": ["sql", "sqlite", "database", "education"],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/sql-execution-engine": "file:../sql-execution-engine",
+    "coding-adventures-sql-parser": "file:../sql-parser",
+    "coding-adventures-sql-lexer": "file:../sql-lexer",
+    "@coding-adventures/lexer": "file:../lexer",
+    "@coding-adventures/grammar-tools": "file:../grammar-tools",
+    "@coding-adventures/parser": "file:../parser",
+    "@coding-adventures/directed-graph": "file:../directed-graph",
+    "@coding-adventures/state-machine": "file:../state-machine"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
