@@ -21,6 +21,8 @@
   checks and successor relations.
 - Run callable CLP(FD) forms through the VM path, including finite domains,
   arithmetic equality constraints, all-different, and labeling.
+- Run natural SWI CLP(FD) infix syntax through the VM path, including `1..N`
+  range domains and arithmetic equality constraints.
 - Run common Prolog list predicates, including finite `length/2`, `sort/2`,
   `msort/2`, `nth0/3`, `nth1/3`, `nth0/4`, and `nth1/4`, through the VM path
   by adapting them to `logic-stdlib` relations.

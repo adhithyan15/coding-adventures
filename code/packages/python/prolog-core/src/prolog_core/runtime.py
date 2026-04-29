@@ -985,4 +985,9 @@ def iso_operator_table() -> OperatorTable:
 def swi_operator_table() -> OperatorTable:
     """Return the first shared SWI-Prolog operator defaults."""
 
-    return iso_operator_table().define(600, "xfy", ":")
+    return (
+        iso_operator_table()
+        .define(700, "xfx", "#=", "#\\=", "#<", "#=<", "#>", "#>=", "in", "ins")
+        .define(600, "xfy", ":")
+        .define(450, "xfx", "..")
+    )
