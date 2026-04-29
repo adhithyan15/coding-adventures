@@ -260,20 +260,40 @@ defmodule CodingAdventures.SqlExecutionEngine.Expression do
         eval_between(lhs, low, high)
 
       # NOT BETWEEN — children: [lhs, Token("NOT"), Token("BETWEEN"), low, Token("AND"), high]
-      [lhs_node, %Token{value: "NOT"}, %Token{value: "BETWEEN"}, low_node, %Token{value: "AND"}, high_node] ->
+      [
+        lhs_node,
+        %Token{value: "NOT"},
+        %Token{value: "BETWEEN"},
+        low_node,
+        %Token{value: "AND"},
+        high_node
+      ] ->
         lhs = eval_expr(lhs_node, row_ctx)
         low = eval_expr(low_node, row_ctx)
         high = eval_expr(high_node, row_ctx)
         sql_not(eval_between(lhs, low, high))
 
       # IN (...) — children: [lhs, Token("IN"), Token("("), value_list_node, Token(")")]
-      [lhs_node, %Token{value: "IN"}, %Token{type: "LPAREN"}, value_list_node, %Token{type: "RPAREN"}] ->
+      [
+        lhs_node,
+        %Token{value: "IN"},
+        %Token{type: "LPAREN"},
+        value_list_node,
+        %Token{type: "RPAREN"}
+      ] ->
         lhs = eval_expr(lhs_node, row_ctx)
         values = eval_value_list(value_list_node, row_ctx)
         eval_in(lhs, values)
 
       # NOT IN (...) — children: [lhs, Token("NOT"), Token("IN"), Token("("), value_list_node, Token(")")]
-      [lhs_node, %Token{value: "NOT"}, %Token{value: "IN"}, %Token{type: "LPAREN"}, value_list_node, %Token{type: "RPAREN"}] ->
+      [
+        lhs_node,
+        %Token{value: "NOT"},
+        %Token{value: "IN"},
+        %Token{type: "LPAREN"},
+        value_list_node,
+        %Token{type: "RPAREN"}
+      ] ->
         lhs = eval_expr(lhs_node, row_ctx)
         values = eval_value_list(value_list_node, row_ctx)
         sql_not(eval_in(lhs, values))
@@ -413,7 +433,9 @@ defmodule CodingAdventures.SqlExecutionEngine.Expression do
       agg_key = build_agg_key(uname, rest)
 
       case Map.fetch(row_ctx, agg_key) do
-        {:ok, value} -> value
+        {:ok, value} ->
+          value
+
         :error ->
           # Aggregate not yet computed (this eval is used for the raw row,
           # not the aggregate result). Return nil as a sentinel — the Aggregate
@@ -479,6 +501,7 @@ defmodule CodingAdventures.SqlExecutionEngine.Expression do
   # We fold left: ((op1 OP op2) OP op3)
   defp eval_binary_op_chain([first | rest], op_value, row_ctx, combiner) do
     first_val = eval_expr(first, row_ctx)
+
     Enum.chunk_every(rest, 2)
     |> Enum.reduce(first_val, fn [%Token{value: ^op_value}, rhs_node], acc ->
       combiner.(acc, eval_expr(rhs_node, row_ctx))
@@ -488,6 +511,7 @@ defmodule CodingAdventures.SqlExecutionEngine.Expression do
   # Evaluate arithmetic chains: [operand, Token(op), operand, ...]
   defp eval_arithmetic_chain([first | rest], row_ctx) do
     first_val = eval_expr(first, row_ctx)
+
     Enum.chunk_every(rest, 2)
     |> Enum.reduce(first_val, fn [op_token, rhs_node], acc ->
       rhs = eval_expr(rhs_node, row_ctx)
@@ -538,7 +562,7 @@ defmodule CodingAdventures.SqlExecutionEngine.Expression do
       |> Enum.map(fn
         "%" -> ".*"
         "_" -> "."
-        c   -> Regex.escape(c)
+        c -> Regex.escape(c)
       end)
       |> Enum.join()
 
@@ -566,16 +590,21 @@ defmodule CodingAdventures.SqlExecutionEngine.Expression do
     end
   end
 
-  # Evaluate a list of expressions from a value_list node.
-  defp eval_value_list(%ASTNode{rule_name: "value_list", children: children}, row_ctx) do
+  # Evaluate a list of expressions from a value_list-like node.
+  defp eval_value_list(%ASTNode{children: children}, row_ctx) do
     # children: [expr, Token(","), expr, Token(","), expr, ...]
     children
     |> Enum.reject(fn
       %Token{type: "COMMA"} -> true
       _ -> false
     end)
-    |> Enum.map(&eval_expr(&1, row_ctx))
+    |> Enum.flat_map(fn
+      %ASTNode{rule_name: "value_list"} = node -> eval_value_list(node, row_ctx)
+      node -> [eval_expr(node, row_ctx)]
+    end)
   end
+
+  defp eval_value_list(%Token{} = token, row_ctx), do: [eval_expr(token, row_ctx)]
 
   # Build the aggregate key string that the Aggregate module stores in row_ctx.
   #
@@ -601,13 +630,20 @@ defmodule CodingAdventures.SqlExecutionEngine.Expression do
 
     arg_str =
       case args do
-        [] -> ""
-        [%Token{type: "STAR"}] -> "*"
-        [%Token{value: v}] -> v
+        [] ->
+          ""
+
+        [%Token{type: "STAR"}] ->
+          "*"
+
+        [%Token{value: v}] ->
+          v
+
         [%ASTNode{} = node] ->
           # Single AST node argument (e.g., value_list wrapping an expression).
           # Collect all leaf tokens and join their values.
           collect_tokens_for_key(node)
+
         nodes ->
           # Multiple nodes — collect all leaf tokens.
           nodes
