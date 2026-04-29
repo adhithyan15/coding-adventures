@@ -427,6 +427,31 @@ fn default_html_lexer_reconsumes_empty_incorrectly_opened_markup_declaration() {
 }
 
 #[test]
+fn default_html_lexer_recovers_markup_declaration_eof_as_empty_comment() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("Before<!").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("Before".to_string()),
+            Token::Comment(String::new()),
+            Token::Eof,
+        ]
+    );
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "incorrectly-opened-comment"));
+    assert!(!lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "eof-in-markup-declaration-open-state"));
+}
+
+#[test]
 fn default_html_lexer_reports_one_dash_markup_declaration_as_incorrectly_opened() {
     let mut lexer = create_html_lexer().unwrap();
 

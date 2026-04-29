@@ -577,6 +577,17 @@
       ]
     },
     {
+      "description": "markup declaration opener eof recovers as empty bogus comment",
+      "input": "Before<!",
+      "output": [
+        ["Character", "Before"],
+        ["Comment", ""]
+      ],
+      "errors": [
+        {"code": "incorrectly-opened-comment", "line": 1, "col": 9}
+      ]
+    },
+    {
       "description": "one dash markup declaration recovers as bogus comment",
       "input": "Before<!->Middle<!-x>After<!-",
       "output": [
