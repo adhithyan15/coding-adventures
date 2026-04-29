@@ -533,6 +533,19 @@ jobs:
             go build -o ../../../../build-tool .
           fi
 
+      - name: Reclaim Linux runner disk
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Disk before cleanup:"
+          df -h /
+          sudo rm -rf /usr/local/lib/android || true
+          docker system prune --all --force || true
+          sudo apt-get clean
+          echo "Disk after cleanup:"
+          df -h /
+
       - name: Build and test affected Swift packages on Windows
         if: runner.os == 'Windows' && needs.detect.outputs.needs_swift == 'true'
         shell: pwsh
@@ -546,7 +559,7 @@ jobs:
 
       # ── Run the build ─────────────────────────────────────────
       - name: Build and test affected packages
-        if: runner.os != 'Windows' || (needs.detect.outputs.needs_swift == 'true' && false)
+        if: needs.detect.outputs.is_main != 'true' && (runner.os != 'Windows' || (needs.detect.outputs.needs_swift == 'true' && false))
         shell: bash
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
