@@ -649,6 +649,25 @@
     },
     {
       "id": "html5lib-smoke-53",
+      "description": "one dash markup declaration recovers as bogus comment",
+      "input": "Before<!->Middle<!-x>After<!-",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=-)",
+        "Text(data=Middle)",
+        "Comment(data=-x)",
+        "Text(data=After)",
+        "Comment(data=-)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "incorrectly-opened-comment",
+        "incorrectly-opened-comment",
+        "incorrectly-opened-comment"
+      ]
+    },
+    {
+      "id": "html5lib-smoke-54",
       "description": "invalid end tag opener recovers as bogus comment",
       "input": "Before</3>After",
       "tokens": [

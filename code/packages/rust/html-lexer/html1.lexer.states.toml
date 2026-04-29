@@ -4456,7 +4456,8 @@ from = "comment_start"
 matcher = { literal = ">" }
 to = "data"
 actions = [
-  "parse_error(abrupt-closing-of-empty-comment)",
+  "parse_error(incorrectly-opened-comment)",
+  "append_comment(-)",
   "emit_current_token",
 ]
 
@@ -4465,13 +4466,22 @@ from = "comment_start"
 matcher = { eof = true }
 to = "done"
 consume = false
-actions = ["parse_error(eof-in-comment)", "emit_current_token", "emit(EOF)"]
+actions = [
+  "parse_error(incorrectly-opened-comment)",
+  "append_comment(-)",
+  "emit_current_token",
+  "emit(EOF)",
+]
 
 [[transitions]]
 from = "comment_start"
 matcher = { anything = true }
 to = "bogus_comment"
-actions = ["append_comment(-)", "append_comment(current)"]
+actions = [
+  "parse_error(incorrectly-opened-comment)",
+  "append_comment(-)",
+  "append_comment(current)",
+]
 
 [[transitions]]
 from = "comment_start_dash"

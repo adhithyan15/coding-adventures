@@ -609,6 +609,25 @@
       ]
     },
     {
+      "id": "one-dash-markup-declaration-bogus-comment",
+      "description": "Markup declarations with only one opening dash recover as bogus comments",
+      "input": "Before<!->Middle<!-x>After<!-",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=-)",
+        "Text(data=Middle)",
+        "Comment(data=-x)",
+        "Text(data=After)",
+        "Comment(data=-)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "incorrectly-opened-comment",
+        "incorrectly-opened-comment",
+        "incorrectly-opened-comment"
+      ]
+    },
+    {
       "id": "invalid-tag-open-text-recovery",
       "description": "A less-than sign before non-tag text remains text instead of starting a tag",
       "input": "Before < after",
