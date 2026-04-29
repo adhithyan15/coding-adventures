@@ -9988,7 +9988,6 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "parse_error(eof-in-comment)".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],

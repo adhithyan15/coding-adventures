@@ -33,7 +33,9 @@ open comment remain literal comment data and surface a recoverable
 `incorrectly-closed-comment` diagnostic while preserving non-closing `--!` text.
 Processing-instruction-looking markup such as `<?xml ...?>` now follows HTML
 bogus-comment recovery instead of being mistaken for a start tag, preserving
-legacy document prologs without polluting the tag stream.
+legacy document prologs without polluting the tag stream. EOF in that bogus
+comment recovery emits the recovered comment without adding an unrelated
+`eof-in-comment` diagnostic.
 The tag-open states now only begin normal tags when the next character is an
 ASCII letter; stray less-than signs such as `a < b` remain text, and malformed
 end-tag openers such as `</3>` recover as bogus comments with a tokenizer

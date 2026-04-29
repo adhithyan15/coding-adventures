@@ -622,6 +622,19 @@
     },
     {
       "id": "html5lib-smoke-51",
+      "description": "question mark bogus comment eof has no eof-in-comment error",
+      "input": "Before<?xml",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=?xml)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "unexpected-question-mark-instead-of-tag-name"
+      ]
+    },
+    {
+      "id": "html5lib-smoke-52",
       "description": "invalid end tag opener recovers as bogus comment",
       "input": "Before</3>After",
       "tokens": [

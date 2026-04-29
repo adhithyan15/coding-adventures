@@ -582,6 +582,19 @@
       ]
     },
     {
+      "id": "question-mark-tag-open-bogus-comment-eof",
+      "description": "EOF in bogus-comment recovery emits the comment without eof-in-comment",
+      "input": "Before<?xml",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=?xml)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "unexpected-question-mark-instead-of-tag-name"
+      ]
+    },
+    {
       "id": "invalid-tag-open-text-recovery",
       "description": "A less-than sign before non-tag text remains text instead of starting a tag",
       "input": "Before < after",

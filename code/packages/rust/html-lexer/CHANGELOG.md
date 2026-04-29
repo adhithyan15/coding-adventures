@@ -85,6 +85,8 @@ documented in this file.
   text preservation.
 - Processing-instruction-looking `<?...?>` markup now recovers as a bogus
   comment with `unexpected-question-mark-instead-of-tag-name`.
+- EOF in bogus-comment recovery now emits the recovered comment without adding
+  an unrelated `eof-in-comment` diagnostic.
 - Invalid tag-open characters now follow HTML recovery: stray `<` text is
   preserved and malformed end-tag openers recover as bogus comments.
 - Missing-name DOCTYPE recovery now marks force-quirks mode for `<!DOCTYPE>`
