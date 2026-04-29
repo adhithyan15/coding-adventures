@@ -9,8 +9,8 @@ use std::sync::mpsc;
 
 use paint_instructions::{PaintScene, PixelContainer};
 use paint_vm_gpu_core::{
-    plan_scene, GpuColor, GpuCommand, GpuImageUpload, GpuMesh, GpuPaintPlan, GpuPlanSeverity,
-    GpuRect,
+    plan_scene, GpuApiFamily, GpuBackendProfile, GpuColor, GpuCommand, GpuImageUpload, GpuMesh,
+    GpuPaintPlan, GpuPlanSeverity, GpuReadbackStrategy, GpuRect, GpuRenderPath,
 };
 use paint_vm_runtime::{
     PaintAcceleration, PaintBackendCapabilities, PaintBackendDescriptor, PaintBackendFamily,
@@ -56,6 +56,18 @@ pub fn descriptor() -> PaintBackendDescriptor {
         },
         priority: 55,
     }
+}
+
+pub fn profile() -> GpuBackendProfile {
+    let mut profile = GpuBackendProfile::tier1_solid(
+        "paint-vm-wgpu",
+        GpuApiFamily::Wgpu,
+        GpuRenderPath::GraphicsPipeline,
+        "WGSL",
+        GpuReadbackStrategy::TextureCopyToBuffer,
+    );
+    profile.supports_texture_sampling = true;
+    profile
 }
 
 pub fn renderer() -> WgpuPaintBackend {
@@ -678,6 +690,16 @@ mod tests {
         assert_eq!(descriptor.tier, PaintBackendTier::Tier1Smoke);
         assert_eq!(descriptor.capabilities.rect, SupportLevel::Supported);
         assert_eq!(descriptor.capabilities.image, SupportLevel::Supported);
+    }
+
+    #[test]
+    fn exposes_wgpu_gpu_profile() {
+        let profile = profile();
+        assert_eq!(profile.id, "paint-vm-wgpu");
+        assert_eq!(profile.family, GpuApiFamily::Wgpu);
+        assert_eq!(profile.render_path, GpuRenderPath::GraphicsPipeline);
+        assert_eq!(profile.readback, GpuReadbackStrategy::TextureCopyToBuffer);
+        assert!(profile.supports_texture_sampling);
     }
 
     #[test]
