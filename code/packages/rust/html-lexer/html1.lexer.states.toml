@@ -2423,6 +2423,18 @@ actions = ["parse_error(unexpected-question-mark-instead-of-tag-name)", "create_
 
 [[transitions]]
 from = "tag_open"
+matcher = { range = ["A", "Z"] }
+to = "tag_name"
+actions = ["create_start_tag", "append_tag_name(current_lowercase)"]
+
+[[transitions]]
+from = "tag_open"
+matcher = { range = ["a", "z"] }
+to = "tag_name"
+actions = ["create_start_tag", "append_tag_name(current_lowercase)"]
+
+[[transitions]]
+from = "tag_open"
 matcher = { eof = true }
 to = "done"
 consume = false
@@ -2436,8 +2448,9 @@ actions = [
 [[transitions]]
 from = "tag_open"
 matcher = { anything = true }
-to = "tag_name"
-actions = ["create_start_tag", "append_tag_name(current_lowercase)"]
+to = "data"
+consume = false
+actions = ["parse_error(invalid-first-character-of-tag-name)", "append_text(<)"]
 
 [[transitions]]
 from = "end_tag_open"
@@ -2459,9 +2472,22 @@ actions = [
 
 [[transitions]]
 from = "end_tag_open"
-matcher = { anything = true }
+matcher = { range = ["A", "Z"] }
 to = "end_tag_name"
 actions = ["create_end_tag", "append_tag_name(current_lowercase)"]
+
+[[transitions]]
+from = "end_tag_open"
+matcher = { range = ["a", "z"] }
+to = "end_tag_name"
+actions = ["create_end_tag", "append_tag_name(current_lowercase)"]
+
+[[transitions]]
+from = "end_tag_open"
+matcher = { anything = true }
+to = "bogus_comment"
+consume = false
+actions = ["parse_error(invalid-first-character-of-tag-name)", "create_comment"]
 
 [[transitions]]
 from = "tag_name"
