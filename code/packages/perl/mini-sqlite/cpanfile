@@ -1,5 +1,5 @@
 requires 'perl', '5.016';
-requires 'CodingAdventures::SqlExecutionEngine';
+requires 'coding-adventures-sql-execution-engine', '0.01';
 requires 'Scalar::Util';
 requires 'Storable';
 
