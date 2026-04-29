@@ -1,0 +1,11 @@
+[package]
+name = "twig-parser"
+version = "0.1.0"
+edition = "2021"
+description = "Twig (Lisp-precursor) parser — thin wrapper over GrammarParser plus a typed-AST extractor"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer         = { path = "../lexer" }
+parser        = { path = "../parser" }
+twig-lexer    = { path = "../twig-lexer" }
