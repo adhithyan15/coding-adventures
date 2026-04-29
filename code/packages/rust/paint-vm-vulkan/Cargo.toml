@@ -1,0 +1,9 @@
+[package]
+name = "paint-vm-vulkan"
+version = "0.1.0"
+edition = "2021"
+description = "Vulkan backend scaffold for the Paint VM runtime"
+
+[dependencies]
+paint-instructions = { path = "../paint-instructions" }
+paint-vm-runtime = { path = "../paint-vm-runtime" }
