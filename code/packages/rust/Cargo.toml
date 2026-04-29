@@ -352,6 +352,7 @@ members = [
     "ir-to-cil-bytecode",
     "intel-4004-assembler",
     "intel-4004-packager",
+    "intel-8008-assembler",
     "code-packager",
     "nib-compiler",
     "nib-jvm-compiler",
