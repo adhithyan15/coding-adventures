@@ -490,3 +490,123 @@ class TestOracleIndexVisible:
             # scan_index must yield correct rowids.
             rowids = list(b.scan_index("idx_score", [90], [90]))
             assert sorted(rowids) == [1, 3]
+
+
+# ---------------------------------------------------------------------------
+# UNIQUE index enforcement
+# ---------------------------------------------------------------------------
+
+
+class TestUniqueIndex:
+    """``IndexDef.unique=True`` is enforced at create_index and survives reopen."""
+
+    def _setup_users(self, b: SqliteFileBackend) -> None:
+        b.create_table(
+            "users",
+            [
+                ColumnDef("id", "INTEGER", primary_key=True),
+                ColumnDef("email", "TEXT"),
+                ColumnDef("name", "TEXT"),
+            ],
+            if_not_exists=False,
+        )
+
+    def test_create_unique_index_writes_unique_keyword(self, tmp_path: Path) -> None:
+        """list_indexes round-trips the unique flag."""
+        path = str(tmp_path / "u1.db")
+        with SqliteFileBackend(path) as b:
+            self._setup_users(b)
+            b.create_index(
+                IndexDef(name="idx_email", table="users", columns=["email"], unique=True)
+            )
+            idxs = b.list_indexes("users")
+            assert len(idxs) == 1
+            assert idxs[0].unique is True
+            assert idxs[0].name == "idx_email"
+
+    def test_create_non_unique_index_default(self, tmp_path: Path) -> None:
+        """Plain CREATE INDEX is non-unique."""
+        path = str(tmp_path / "u2.db")
+        with SqliteFileBackend(path) as b:
+            self._setup_users(b)
+            b.create_index(
+                IndexDef(name="idx_name", table="users", columns=["name"])
+            )
+            idxs = b.list_indexes("users")
+            assert idxs[0].unique is False
+
+    def test_create_unique_rejects_existing_duplicates(self, tmp_path: Path) -> None:
+        """Backfill of a UNIQUE index over duplicate data raises ConstraintViolation."""
+        from sql_backend import ConstraintViolation
+        path = str(tmp_path / "u3.db")
+        with SqliteFileBackend(path) as b:
+            self._setup_users(b)
+            b.insert("users", {"id": 1, "email": "alice@example.com", "name": "Alice"})
+            b.insert("users", {"id": 2, "email": "alice@example.com", "name": "Alice2"})
+            with pytest.raises(ConstraintViolation, match="UNIQUE INDEX"):
+                b.create_index(
+                    IndexDef(
+                        name="idx_email", table="users",
+                        columns=["email"], unique=True,
+                    )
+                )
+            # The schema must remain unchanged after the failure.
+            assert b.list_indexes("users") == []
+
+    def test_create_unique_succeeds_with_distinct_data(self, tmp_path: Path) -> None:
+        """Backfill succeeds when existing rows have unique values."""
+        path = str(tmp_path / "u4.db")
+        with SqliteFileBackend(path) as b:
+            self._setup_users(b)
+            b.insert("users", {"id": 1, "email": "a@example.com", "name": "A"})
+            b.insert("users", {"id": 2, "email": "b@example.com", "name": "B"})
+            b.create_index(
+                IndexDef(
+                    name="idx_email", table="users",
+                    columns=["email"], unique=True,
+                )
+            )
+            rowids = list(b.scan_index("idx_email", ["a@example.com"], ["a@example.com"]))
+            assert rowids == [1]
+
+    def test_create_unique_allows_null_duplicates(self, tmp_path: Path) -> None:
+        """Multiple rows with NULL in an indexed column do not conflict."""
+        path = str(tmp_path / "u5.db")
+        with SqliteFileBackend(path) as b:
+            self._setup_users(b)
+            b.insert("users", {"id": 1, "name": "alice"})  # email omitted → NULL
+            b.insert("users", {"id": 2, "name": "bob"})    # email omitted → NULL
+            # A UNIQUE index on email succeeds because NULLs are distinct.
+            b.create_index(
+                IndexDef(
+                    name="idx_email", table="users",
+                    columns=["email"], unique=True,
+                )
+            )
+            assert b.list_indexes("users")[0].unique is True
+
+    def test_unique_flag_survives_reopen(self, tmp_path: Path) -> None:
+        """After close + reopen, list_indexes still reports the unique flag."""
+        path = str(tmp_path / "u6.db")
+        with SqliteFileBackend(path) as b:
+            self._setup_users(b)
+            b.create_index(
+                IndexDef(
+                    name="idx_email", table="users",
+                    columns=["email"], unique=True,
+                )
+            )
+        with SqliteFileBackend(path) as b2:
+            idxs = b2.list_indexes("users")
+            assert len(idxs) == 1
+            assert idxs[0].unique is True
+
+    def test_parse_index_unique_helper(self) -> None:
+        """_parse_index_unique recognises CREATE UNIQUE INDEX (case-insensitive)."""
+        from storage_sqlite.backend import _parse_index_unique
+        assert _parse_index_unique('CREATE UNIQUE INDEX "x" ON "t" ("c")') is True
+        assert _parse_index_unique('create unique index "x" ON "t" ("c")') is True
+        assert _parse_index_unique('CREATE  UNIQUE  INDEX "x" ON "t" ("c")') is True
+        assert _parse_index_unique('CREATE INDEX "x" ON "t" ("c")') is False
+        assert _parse_index_unique(None) is False
+        assert _parse_index_unique("") is False

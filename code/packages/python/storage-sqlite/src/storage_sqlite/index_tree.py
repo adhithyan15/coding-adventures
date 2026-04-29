@@ -593,7 +593,7 @@ class IndexTree:
     full sort key is always unique — there are no ties at the leaf level.
     """
 
-    __slots__ = ("_freelist", "_pager", "_root_page")
+    __slots__ = ("_freelist", "_is_unique", "_pager", "_root_page")
 
     def __init__(
         self,
@@ -601,10 +601,12 @@ class IndexTree:
         root_page: int,
         *,
         freelist: Freelist | None = None,
+        is_unique: bool = False,
     ) -> None:
         self._pager: Pager = pager
         self._root_page: int = root_page
         self._freelist: Freelist | None = freelist
+        self._is_unique: bool = is_unique
 
     # ── Construction ──────────────────────────────────────────────────────────
 
@@ -614,19 +616,26 @@ class IndexTree:
         pager: Pager,
         *,
         freelist: Freelist | None = None,
+        is_unique: bool = False,
     ) -> IndexTree:
         """Allocate a fresh root page and return an attached IndexTree.
 
         The root page is initialised as an empty index leaf (type 0x0A).
         Pass the same *pager* and optional *freelist* that the rest of the
         database uses.
+
+        When *is_unique* is ``True``, :meth:`insert` rejects entries whose
+        key portion duplicates an existing entry, regardless of rowid.  Per
+        SQLite's UNIQUE-index semantics, ``NULL`` values are treated as
+        distinct from each other — multiple rows with ``NULL`` in any indexed
+        column do not conflict.
         """
         pgno = freelist.allocate() if freelist is not None else pager.allocate()
         ps = pager.page_size
         buf = bytearray(ps)
         _write_idx_leaf_hdr(buf, 0, ncells=0, content_start=ps)
         pager.write(pgno, bytes(buf))
-        return cls(pager, pgno, freelist=freelist)
+        return cls(pager, pgno, freelist=freelist, is_unique=is_unique)
 
     @classmethod
     def open(
@@ -635,9 +644,21 @@ class IndexTree:
         rootpage: int,
         *,
         freelist: Freelist | None = None,
+        is_unique: bool = False,
     ) -> IndexTree:
-        """Open an existing index B-tree rooted at *rootpage*."""
-        return cls(pager, rootpage, freelist=freelist)
+        """Open an existing index B-tree rooted at *rootpage*.
+
+        Pass ``is_unique=True`` for indexes created via ``CREATE UNIQUE
+        INDEX``.  The flag is not stored in the page format — the caller
+        (typically the schema layer) recovers it from the index's ``CREATE
+        INDEX`` SQL in ``sqlite_schema``.
+        """
+        return cls(pager, rootpage, freelist=freelist, is_unique=is_unique)
+
+    @property
+    def is_unique(self) -> bool:
+        """Whether this index enforces uniqueness on the key portion."""
+        return self._is_unique
 
     # ── Properties ────────────────────────────────────────────────────────────
 
@@ -670,7 +691,13 @@ class IndexTree:
         transparently at all tree levels.
 
         Raises :class:`DuplicateIndexKeyError` if the exact same
-        ``(key, rowid)`` pair already exists.
+        ``(key, rowid)`` pair already exists.  When this index was created
+        with ``is_unique=True``, also raises ``DuplicateIndexKeyError`` if
+        any existing entry shares the same *key* (independent of rowid),
+        unless any column in *key* is ``NULL`` — per SQLite, ``NULL``
+        values are considered distinct from each other in unique indexes,
+        so multiple entries with ``NULL`` in any indexed column are
+        permitted.
 
         Parameters
         ----------
@@ -680,6 +707,17 @@ class IndexTree:
         rowid:
             The table rowid that this index entry points to.
         """
+        # UNIQUE enforcement: check for an existing entry with the same key
+        # before doing any disk writes.  NULL-distinct semantics: skip the
+        # check when any key column is NULL, mirroring SQLite's behaviour.
+        if self._is_unique and not any(v is None for v in key):
+            existing = next(self.range_scan(key, key), None)
+            if existing is not None:
+                raise DuplicateIndexKeyError(
+                    f"UNIQUE constraint violated: key {key!r} already exists "
+                    f"in index (existing rowid {existing[1]})"
+                )
+
         # Build the leaf record: [*key_vals, rowid].
         payload = record_encode([*key, rowid])
         total = len(payload)

@@ -109,7 +109,7 @@ from sql_backend.schema import NO_DEFAULT, TriggerDef
 from storage_sqlite import record as _record
 from storage_sqlite.btree import BTree, DuplicateRowidError
 from storage_sqlite.freelist import Freelist
-from storage_sqlite.index_tree import IndexTree
+from storage_sqlite.index_tree import DuplicateIndexKeyError, IndexTree
 from storage_sqlite.pager import Pager
 from storage_sqlite.schema import Schema, SchemaError, initialize_new_database
 
@@ -409,19 +409,42 @@ def _parse_index_columns(sql: str) -> list[str]:
     return cols
 
 
-def _columns_to_index_sql(name: str, table: str, columns: list[str]) -> str:
+def _columns_to_index_sql(
+    name: str, table: str, columns: list[str], *, unique: bool = False
+) -> str:
     """Serialise an index definition as a quoted ``CREATE INDEX`` statement.
 
     All identifiers are double-quoted via :func:`_quote_identifier` to
     prevent DDL injection when user-supplied names contain SQL metacharacters.
-    The output is stored verbatim in ``sqlite_schema`` and is parseable by
-    both :func:`_parse_index_columns` and by the real ``sqlite3`` CLI::
+    When *unique* is ``True``, emits ``CREATE UNIQUE INDEX``.  The output is
+    stored verbatim in ``sqlite_schema`` and is parseable by both
+    :func:`_parse_index_columns` / :func:`_parse_index_unique` and by the real
+    ``sqlite3`` CLI::
 
         _columns_to_index_sql("idx_orders_user_id", "orders", ["user_id"])
         # → 'CREATE INDEX "idx_orders_user_id" ON "orders" ("user_id")'
+
+        _columns_to_index_sql("idx_users_email", "users", ["email"], unique=True)
+        # → 'CREATE UNIQUE INDEX "idx_users_email" ON "users" ("email")'
     """
     col_list = ", ".join(_quote_identifier(c) for c in columns)
-    return f"CREATE INDEX {_quote_identifier(name)} ON {_quote_identifier(table)} ({col_list})"
+    keyword = "CREATE UNIQUE INDEX" if unique else "CREATE INDEX"
+    return f"{keyword} {_quote_identifier(name)} ON {_quote_identifier(table)} ({col_list})"
+
+
+_UNIQUE_INDEX_RE = re.compile(r"\bCREATE\s+UNIQUE\s+INDEX\b", re.IGNORECASE)
+
+
+def _parse_index_unique(sql: str | None) -> bool:
+    """Return ``True`` if *sql* is a ``CREATE UNIQUE INDEX`` statement.
+
+    Tolerates extra whitespace and case variation.  Returns ``False`` for
+    ``None`` (rows written without an ``sql`` field) and for ``CREATE
+    INDEX`` (no ``UNIQUE`` keyword).
+    """
+    if sql is None:
+        return False
+    return _UNIQUE_INDEX_RE.search(sql) is not None
 
 
 # ---------------------------------------------------------------------------
@@ -1298,16 +1321,39 @@ class SqliteFileBackend(Backend):
                 raise ColumnNotFound(table=index.table, column=col)
 
         # 4. Allocate index storage and write the schema row.
-        sql = _columns_to_index_sql(index.name, index.table, index.columns)
+        sql = _columns_to_index_sql(
+            index.name, index.table, index.columns, unique=index.unique
+        )
         idx_rootpage = self._schema.create_index(index.name, index.table, sql)
 
-        # 5. Backfill existing rows.
+        # 5. Backfill existing rows.  When the index is UNIQUE,
+        #    ``IndexTree.insert`` raises :class:`DuplicateIndexKeyError` if a
+        #    duplicate is encountered during backfill — translate that to a
+        #    public :class:`~sql_backend.ConstraintViolation` so callers see
+        #    the same error type they would see from a runtime insert.
         table_tree = self._open_tree(rootpage)
-        idx_tree = IndexTree.open(self._pager, idx_rootpage, freelist=self._freelist)
-        for rowid, payload in table_tree.scan():
-            row = _decode_row(rowid, payload, columns)
-            key_vals: list[SqlValue] = [row.get(col) for col in index.columns]  # type: ignore[misc]
-            idx_tree.insert(key_vals, rowid)
+        idx_tree = IndexTree.open(
+            self._pager, idx_rootpage, freelist=self._freelist, is_unique=index.unique
+        )
+        try:
+            for rowid, payload in table_tree.scan():
+                row = _decode_row(rowid, payload, columns)
+                key_vals: list[SqlValue] = [row.get(col) for col in index.columns]  # type: ignore[misc]
+                idx_tree.insert(key_vals, rowid)
+        except DuplicateIndexKeyError as e:
+            # Backfill found pre-existing duplicates — abort the index
+            # creation by rolling back the pending writes (the schema row
+            # and any partial index pages) so the database is unchanged.
+            self._pager.rollback()
+            self._schema = Schema(self._pager, freelist=self._freelist)
+            raise ConstraintViolation(
+                table=index.table,
+                column=", ".join(index.columns),
+                message=(
+                    f"cannot create UNIQUE INDEX {index.name!r}: "
+                    f"existing rows contain duplicate values ({e})"
+                ),
+            ) from None
 
         # Commit the backfill so it is durable.
         self._update_commit_header()
@@ -1357,9 +1403,13 @@ class SqliteFileBackend(Backend):
         result: list[IndexDef] = []
         for name, tbl_name, _, sql in rows:
             columns = _parse_index_columns(sql) if sql else []
+            unique = _parse_index_unique(sql)
             auto = name.startswith("auto_")
             result.append(
-                IndexDef(name=name, table=tbl_name, columns=columns, unique=False, auto=auto)
+                IndexDef(
+                    name=name, table=tbl_name, columns=columns,
+                    unique=unique, auto=auto,
+                )
             )
         return result
 

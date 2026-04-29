@@ -1,5 +1,66 @@
 # Changelog
 
+## [0.14.0] - 2026-04-28
+
+### Added
+
+**UNIQUE index enforcement (IX-11)**
+
+`IndexDef.unique` is now an enforced constraint at index level, not a reserved
+field.  `CREATE UNIQUE INDEX` creates an index that rejects duplicate keys at
+both backfill time and (eventually) at runtime insert/update time.
+
+- **`IndexTree.create(..., is_unique=False)`** and **`IndexTree.open(...,
+  is_unique=False)`** — new keyword.  When `True`, `IndexTree.insert(key,
+  rowid)` raises `DuplicateIndexKeyError` if any existing entry shares the
+  same key (independent of rowid).  The check runs **before** any disk write,
+  so the tree is unchanged on rejection.
+- **`IndexTree.is_unique` property** — exposes the flag for callers that need
+  to introspect.
+- **NULL semantics** — per SQLite, `NULL` values in a UNIQUE index are
+  considered distinct from each other.  If any column in the key is `NULL`,
+  the duplicate check is skipped.  This lets multiple rows have `NULL` in a
+  UNIQUE column (single or composite).
+- **`SqliteFileBackend.create_index(IndexDef(unique=True))`** — emits
+  `CREATE UNIQUE INDEX` SQL into `sqlite_schema`, opens the index B-tree in
+  unique mode, and runs the backfill.  If existing rows contain duplicates,
+  the pending pager writes are rolled back and `ConstraintViolation` is
+  raised.  The database is unchanged on failure.
+- **`SqliteFileBackend.list_indexes`** — populates `IndexDef.unique` by
+  parsing the stored `CREATE INDEX` SQL via the new `_parse_index_unique`
+  helper.  The flag round-trips across close/reopen.
+- **`_columns_to_index_sql(name, table, columns, *, unique=False)`** — gained
+  a `unique` keyword that switches to `CREATE UNIQUE INDEX`.
+- **`_parse_index_unique(sql)`** — case-insensitive regex match for
+  `CREATE UNIQUE INDEX`.  Tolerates extra whitespace.
+
+### Spec
+
+- `code/specs/storage-sqlite-v3-auto-index.md` — added IX-11 to the phased
+  build order, documented the storage and backend layer changes, and
+  spelled out NULL-distinct semantics.  Removed the "UNIQUE deferred"
+  non-goal.
+
+### Tests added
+
+- `test_index_tree.py::TestUniqueIndex` — 7 tests: default non-unique,
+  distinct keys allowed, duplicate rejected, multiple NULLs allowed,
+  composite NULL semantics, multi-leaf rejection, round-trip via reopen.
+- `test_backend_index.py::TestUniqueIndex` — 7 tests: round-trip of unique
+  flag, default non-unique, backfill rejection on duplicates, success on
+  distinct data, NULL allowance, persistence across reopen, helper unit
+  test.
+
+### Limitations
+
+- Index maintenance on runtime `insert` / `update` / `delete` is still a
+  pre-existing gap in `SqliteFileBackend` — UNIQUE enforcement only fires
+  at backfill time today.  Once index maintenance lands, runtime UNIQUE
+  enforcement will work automatically with no further `IndexTree` changes.
+- The duplicate scan inside `IndexTree.insert` uses `range_scan` which is
+  O(N) worst case.  A dedicated O(log N) `_has_key` helper is a future
+  optimisation.
+
 ## [0.13.0] - 2026-04-28
 
 ### Added
