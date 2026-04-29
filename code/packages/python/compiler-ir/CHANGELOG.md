@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.4.0] — 2026-04-29
+
+### Added — TW03 Phase 2 closure ops
+
+- **``IrOp.MAKE_CLOSURE`` (25)** — construct a closure value
+  capturing free variables from the enclosing scope.  Operand
+  layout: ``MAKE_CLOSURE dst, fn_label, num_captured, capt0, capt1, ...``
+- **``IrOp.APPLY_CLOSURE`` (26)** — invoke a closure value with
+  zero or more arguments.  Operand layout:
+  ``APPLY_CLOSURE dst, closure_reg, num_args, arg0, arg1, ...``
+
+These ops are the **cross-backend interface** for TW03 Phase 2.
+Lowering strategies differ per backend:
+
+- JVM/CLR — closure becomes an object reference; per-lambda
+  class with captured fields + ``apply`` method.  See
+  ``code/specs/JVM02-phase2-multi-class-closure-lowering.md``.
+- BEAM — emit ``make_fun2`` referencing a ``FunT`` chunk row.
+- vm-core — delegate to the host-side ``make_closure`` /
+  ``apply_closure`` builtins (already implemented in TW00).
+
+Backends that don't yet support these ops should reject via
+their pre-flight validator with a clear "TW03 Phase 2: closures
+not yet implemented for this backend" message — never silently
+miscompile.
+
 ## [0.3.0] - 2026-04-20
 
 ### Added
