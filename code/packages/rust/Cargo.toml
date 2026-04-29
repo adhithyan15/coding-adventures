@@ -229,6 +229,7 @@ members = [
     "dartmouth-basic-lexer",
     "dartmouth-basic-parser",
     "dartmouth-basic-ir-compiler",
+    "dartmouth-basic-ge225-compiler",
     "affine2d",
     "algol-lexer",
     "algol-parser",

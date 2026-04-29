@@ -1,0 +1,10 @@
+[package]
+name = "dartmouth-basic-ge225-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "Dartmouth BASIC → GE-225 compiled pipeline: parse → IR compile → GE-225 codegen → simulate"
+
+[dependencies]
+dartmouth-basic-ir-compiler       = { path = "../dartmouth-basic-ir-compiler" }
+ir-to-ge225-compiler              = { path = "../ir-to-ge225-compiler" }
+coding-adventures-ge225-simulator = { path = "../ge225-simulator" }

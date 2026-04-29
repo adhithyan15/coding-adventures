@@ -51,13 +51,24 @@
 //!
 //! # Conditional branches
 //!
-//! GE-225 conditional branches (BZE/BNZ/BMI/BPL/BOD) are *skip-next-if-true*:
-//! when the condition holds they advance PC by 2 (skipping the next word).
-//! Far conditional jumps therefore require a two-word pair after the load:
+//! GE-225 conditional branches (BZE/BNZ/BMI/BOD) use **inhibit** semantics:
+//! the named condition *prevents* the skip; when the condition is FALSE the
+//! next word is skipped.  Equivalently: "the BRU executes when the condition
+//! is TRUE".
+//!
+//! | Instruction | Inhibit condition | BRU executes when… |
+//! |-------------|-------------------|--------------------|
+//! | `BZE`       | A == 0            | A == 0             |
+//! | `BNZ`       | A ≠ 0             | A ≠ 0              |
+//! | `BMI`       | A < 0             | A < 0              |
+//! | `BOD`       | A is odd          | A is odd           |
+//!
+//! Far conditional jumps therefore require a two-word pair after the load.
+//! For `BRANCH_Z` (jump when A == 0) use `BZE`:
 //!
 //! ```text
 //! LDA  spill(vN)
-//! BNZ              ; skip BRU when A ≠ 0  (don't jump)
+//! BZE              ; inhibited-by-zero → skip BRU when A ≠ 0
 //! BRU  target      ; executed only when A == 0
 //! ```
 //!
@@ -178,6 +189,8 @@ fn is_supported_opcode(op: IrOp) -> bool {
             | IrOp::AddImm
             | IrOp::Add
             | IrOp::Sub
+            | IrOp::Mul
+            | IrOp::Div
             | IrOp::AndImm
             | IrOp::CmpEq
             | IrOp::CmpNe
@@ -513,12 +526,9 @@ impl<'a> CodeGen<'a> {
     fn sta(&self, addr: usize) -> i32 {
         encode_instruction(OP_STA, 0, addr as i32).unwrap()
     }
-    // mpy/dvd helpers kept for future MUL/DIV opcode support (not yet in IrOp)
-    #[allow(dead_code)]
     fn mpy(&self, addr: usize) -> i32 {
         encode_instruction(OP_MPY, 0, addr as i32).unwrap()
     }
-    #[allow(dead_code)]
     fn dvd(&self, addr: usize) -> i32 {
         encode_instruction(OP_DVD, 0, addr as i32).unwrap()
     }
@@ -556,6 +566,11 @@ impl<'a> CodeGen<'a> {
 
             // LDA a; ADD/SUB b; STA dst  (3 words)
             IrOp::Add | IrOp::Sub => 3,
+
+            // MUL vDst, vA, vB → LDA; LQA; LDZ; MPY; LAQ; STA  (6 words)
+            IrOp::Mul => 6,
+            // DIV vDst, vA, vB → LDA; LQA; LDZ; DVD; STA        (5 words)
+            IrOp::Div => 5,
 
             // BOD-branch pattern for bit-0 extraction (7 words — see `emit_and_imm`)
             IrOp::AndImm => 7,
@@ -633,10 +648,9 @@ impl<'a> CodeGen<'a> {
         let w_bod  = assemble_fixed("BOD").unwrap();
         let w_san6 = assemble_shift("SAN", 6).unwrap();
         let w_typ  = assemble_fixed("TYP").unwrap();
-        // Suppress unused-variable warnings for words that are assembled for
-        // completeness/documentation but not yet consumed (MUL/DIV are not in
-        // the Rust IrOp enum yet).
-        let _ = (w_lqa, w_laq, w_bmi);
+        // BPL (branch on plus/non-negative) is assembled but replaced by BMI for
+        // signed comparisons — suppress the unused-variable warning.
+        let _ = w_bpl;
 
         let mut words: Vec<i32> = vec![w_ton]; // prologue at address 0
         let mut emit_addr: usize = 1; // address of the next word to be appended
@@ -646,8 +660,9 @@ impl<'a> CodeGen<'a> {
                 instr,
                 emit_addr,
                 w_nop, w_ldz, w_ldo,
-                w_ado, w_sbo, w_bpl, w_bze,
+                w_ado, w_sbo, w_bmi, w_bze,
                 w_bnz, w_bod, w_san6, w_typ,
+                w_lqa, w_laq,
             )?;
             emit_addr += new_words.len();
             words.extend(new_words);
@@ -689,8 +704,9 @@ impl<'a> CodeGen<'a> {
         instr: &IrInstruction,
         start_addr: usize,
         w_nop: i32, w_ldz: i32, w_ldo: i32,
-        w_ado: i32, w_sbo: i32, w_bpl: i32, w_bze: i32,
+        w_ado: i32, w_sbo: i32, w_bmi: i32, w_bze: i32,
         w_bnz: i32, w_bod: i32, w_san6: i32, w_typ: i32,
+        w_lqa: i32, w_laq: i32,
     ) -> Result<Vec<i32>, CodeGenError> {
         Ok(match instr.opcode {
             IrOp::Label | IrOp::Comment => vec![],
@@ -703,11 +719,13 @@ impl<'a> CodeGen<'a> {
             IrOp::AddImm => self.emit_add_imm(instr, w_ado, w_sbo)?,
             IrOp::Add => self.emit_binop(OP_ADD, instr)?,
             IrOp::Sub => self.emit_binop(OP_SUB, instr)?,
+            IrOp::Mul => self.emit_mul(instr, w_lqa, w_laq, w_ldz)?,
+            IrOp::Div => self.emit_div(instr, w_lqa, w_ldz)?,
             IrOp::AndImm => self.emit_and_imm(instr, start_addr, w_bod, w_ldz, w_ldo)?,
             IrOp::CmpEq => self.emit_cmp(instr, start_addr, true, false, w_bze, w_bnz, w_ldz, w_ldo)?,
             IrOp::CmpNe => self.emit_cmp(instr, start_addr, true, true, w_bze, w_bnz, w_ldz, w_ldo)?,
-            IrOp::CmpLt => self.emit_cmp_signed(instr, start_addr, false, w_bpl, w_ldz, w_ldo)?,
-            IrOp::CmpGt => self.emit_cmp_signed(instr, start_addr, true, w_bpl, w_ldz, w_ldo)?,
+            IrOp::CmpLt => self.emit_cmp_signed(instr, start_addr, false, w_bmi, w_ldz, w_ldo)?,
+            IrOp::CmpGt => self.emit_cmp_signed(instr, start_addr, true, w_bmi, w_ldz, w_ldo)?,
             IrOp::Jump => self.emit_jump(instr)?,
             IrOp::BranchZ => self.emit_branch(instr, true, w_bze, w_bnz)?,
             IrOp::BranchNz => self.emit_branch(instr, false, w_bze, w_bnz)?,
@@ -779,23 +797,98 @@ impl<'a> CodeGen<'a> {
         ])
     }
 
+    /// `MUL vDst, vA, vB` — signed multiply using MPY (6 words).
+    ///
+    /// The GE-225 `MPY` instruction computes `A,Q = Q × mem[ea] + A` (40-bit
+    /// accumulate multiply).  To multiply `vA × vB` and store the lower 20
+    /// bits of the product in `vDst`:
+    ///
+    /// ```text
+    /// LDA  spill(vA)   ; A = vA
+    /// LQA              ; Q = A = vA  (seed the Q register with vA)
+    /// LDZ              ; A = 0       (zero the accumulator — we want Q*vB+0)
+    /// MPY  spill(vB)   ; A,Q = Q*vB + A = vA*vB + 0  (40-bit result)
+    /// LAQ              ; A = Q  (take the lower 20-bit word of the product)
+    /// STA  spill(vDst)
+    /// ```
+    ///
+    /// V1 ignores overflow (products larger than 2^19 − 1 wrap silently).
+    fn emit_mul(
+        &self,
+        instr: &IrInstruction,
+        w_lqa: i32, w_laq: i32, w_ldz: i32,
+    ) -> Result<Vec<i32>, CodeGenError> {
+        let dst   = self.reg(instr, 0)?;
+        let reg_a = self.reg(instr, 1)?;
+        let reg_b = self.reg(instr, 2)?;
+        Ok(vec![
+            self.lda(self.spill(reg_a)),  // A = vA
+            w_lqa,                         // Q = A = vA
+            w_ldz,                         // A = 0
+            self.mpy(self.spill(reg_b)),  // A,Q = vA * vB
+            w_laq,                         // A = Q  (lower 20 bits of product)
+            self.sta(self.spill(dst)),    // spill(vDst) = A
+        ])
+    }
+
+    /// `DIV vDst, vA, vB` — signed integer division using DVD (5 words).
+    ///
+    /// The GE-225 `DVD` instruction divides the 40-bit value `(A,Q)` by
+    /// `mem[ea]`, placing the quotient in `A` and the remainder in `Q`.
+    /// To compute `vA ÷ vB` (integer quotient, truncates toward zero):
+    ///
+    /// ```text
+    /// LDA  spill(vA)   ; A = vA  (low word of 40-bit dividend)
+    /// LQA              ; Q = A = vA  (copy into Q as the low dividend word)
+    /// LDZ              ; A = 0       (high word — zero-extend the dividend)
+    /// DVD  spill(vB)   ; A = quotient; Q = remainder
+    /// STA  spill(vDst)
+    /// ```
+    ///
+    /// Division by zero propagates a runtime trap from the GE-225 simulator.
+    fn emit_div(
+        &self,
+        instr: &IrInstruction,
+        w_lqa: i32, w_ldz: i32,
+    ) -> Result<Vec<i32>, CodeGenError> {
+        let dst   = self.reg(instr, 0)?;
+        let reg_a = self.reg(instr, 1)?;
+        let reg_b = self.reg(instr, 2)?;
+        Ok(vec![
+            self.lda(self.spill(reg_a)),  // A = vA
+            w_lqa,                         // Q = A = vA  (dividend in Q)
+            w_ldz,                         // A = 0       (high word = 0)
+            self.dvd(self.spill(reg_b)),  // A = quotient
+            self.sta(self.spill(dst)),    // spill(vDst) = quotient
+        ])
+    }
+
     /// `AND_IMM vDst, vSrc, 1` — extract parity bit using BOD (7 words).
     ///
     /// The GE-225 has no general bitwise-AND. We use the BOD (branch-if-odd)
-    /// instruction which skips the next word when bit 0 of A is set.
+    /// instruction to test bit 0.
     ///
-    /// GE-225 branch-test semantics: `BOD` **skips** the next word when the
-    /// condition is TRUE (A is odd). Therefore when A is odd, the `BRU` at
-    /// offset +2 is skipped and execution falls to `LDO` at +3; when A is
-    /// even the `BRU` executes and jumps to `LDZ` at +5.
+    /// ## GE-225 branch-test "inhibit" semantics
+    ///
+    /// GE-225 skip instructions use **inhibit** semantics: the `cond` field says
+    /// what *prevents* the skip, not what causes it.  Concretely:
+    ///
+    /// - `BOD` — inhibited by odd. When A is odd `cond = true`, so `!cond = false`
+    ///   and the skip does **NOT** occur.  When A is even `!cond = true` and the
+    ///   next word **is** skipped.
+    ///
+    /// Therefore: BOD **skips the next word when A is EVEN** and
+    /// **does not skip when A is ODD**.
+    ///
+    /// ## Instruction layout
     ///
     /// ```text
     /// addr+0:  LDA  spill(vSrc)
-    /// addr+1:  BOD               ; skip next (BRU) if A is ODD
-    /// addr+2:  BRU  addr+5       ; A is EVEN → jump to LDZ
-    /// addr+3:  LDO               ; A is ODD (BOD skipped BRU) → A=1
+    /// addr+1:  BOD               ; skip +2 when A is EVEN (inhibited-by-odd)
+    /// addr+2:  BRU  addr+5       ; A is ODD (BOD did NOT skip) → jump to LDO
+    /// addr+3:  LDZ               ; A is EVEN (BOD skipped +2) → A=0
     /// addr+4:  BRU  addr+6       ; jump to STA
-    /// addr+5:  LDZ               ; A is EVEN → A=0
+    /// addr+5:  LDO               ; A is ODD → A=1
     /// addr+6:  STA  spill(vDst)
     /// ```
     fn emit_and_imm(
@@ -811,15 +904,18 @@ impl<'a> CodeGen<'a> {
                 imm
             )));
         }
-        let zero_addr = start_addr + 5; // LDZ (result=0) for EVEN inputs
+        // BOD skips when A is EVEN (inhibit = odd).
+        // Even path: BOD skips +2 → falls to LDZ (result=0) at +3.
+        // Odd  path: BOD does NOT skip → executes BRU to LDO (result=1) at +5.
+        let ldo_addr  = start_addr + 5; // LDO (result=1) for ODD inputs
         let done_addr = start_addr + 6; // STA
         Ok(vec![
             self.lda(self.spill(src)), // +0: load source
-            w_bod,                      // +1: skip +2 if A is ODD (TRUE)
-            self.bru(zero_addr),        // +2: A is EVEN → jump to LDZ
-            w_ldo,                      // +3: A is ODD (BOD skipped +2) → A=1
+            w_bod,                      // +1: BOD — skip +2 when A is EVEN
+            self.bru(ldo_addr),         // +2: A is ODD (not skipped) → jump to LDO
+            w_ldz,                      // +3: A is EVEN (BOD skipped +2) → A=0
             self.bru(done_addr),        // +4: jump to STA
-            w_ldz,                      // +5: A is EVEN → A=0
+            w_ldo,                      // +5: A is ODD → A=1
             self.sta(self.spill(dst)),  // +6: store result
         ])
     }
@@ -828,18 +924,26 @@ impl<'a> CodeGen<'a> {
     ///
     /// The GE-225 has no compare instruction. We subtract and test the result:
     ///
+    /// ## GE-225 branch-test "inhibit" semantics (recap)
+    ///
+    /// Skip instructions use **inhibit** semantics: the named condition
+    /// *prevents* the skip.  `BZE` is inhibited by zero (skip when A≠0);
+    /// `BNZ` is inhibited by non-zero (skip when A==0).
+    ///
+    /// ## `CMP_EQ` layout (result = 1 when equal, 0 otherwise)
+    ///
     /// ```text
     /// LDA  spill(vA)
     /// SUB  spill(vB)         ; A = vA - vB  (zero iff equal)
-    /// BNZ                    ; if A≠0 → skip next  (for CMP_EQ)
-    /// BRU  addr+6 (__true)
-    /// LDZ                    ; A==0 → result 0
+    /// BZE                    ; inhibited-by-zero → skip when A≠0
+    /// BRU  addr+6 (__true)   ; executed when A==0 (equal) → jump to LDO
+    /// LDZ                    ; A≠0 → result 0
     /// BRU  addr+7 (__done)
-    /// LDO                    ; A!=0 → result 1    [__true]
-    /// STA  spill(vDst)                             [__done]
+    /// LDO                    ; A==0 → result 1   [__true]
+    /// STA  spill(vDst)                            [__done]
     /// ```
     ///
-    /// For `CMP_NE`, swap the skip sense (`BZE` instead of `BNZ`) and the
+    /// For `CMP_NE`, swap the skip sense (`BNZ` instead of `BZE`) and the
     /// result labels.
     fn emit_cmp(
         &self, instr: &IrInstruction, start_addr: usize,
@@ -853,9 +957,11 @@ impl<'a> CodeGen<'a> {
         let true_addr = start_addr + 6;
         let done_addr = start_addr + 7;
 
-        // For CMP_EQ: BNZ skips when A≠0 (different → skip to BRU-true).
-        // For CMP_NE: BZE skips when A=0 (equal → skip to BRU-true).
-        let skip_word = if eq { w_bnz } else { w_bze };
+        // For CMP_EQ: BZE — inhibited by zero, so skips when A≠0;
+        //   BRU to __true is NOT skipped when A==0 (equal → result 1).
+        // For CMP_NE: BNZ — inhibited by non-zero, so skips when A==0;
+        //   BRU to __true is NOT skipped when A≠0 (different → result 1).
+        let skip_word = if eq { w_bze } else { w_bnz };
 
         // Result words: if negate (CMP_NE) swap 0 and 1.
         // zero_word = result when A==0 after SUB
@@ -877,23 +983,33 @@ impl<'a> CodeGen<'a> {
 
     /// `CMP_LT` or `CMP_GT` — signed integer comparison (8 words).
     ///
-    /// For `CMP_LT` (vA < vB): compute vA − vB; negative result means vA < vB:
+    /// For `CMP_LT` (vA < vB): compute vA − vB; negative result means vA < vB.
+    ///
+    /// ## GE-225 branch-test "inhibit" semantics (recap)
+    ///
+    /// `BMI` is **inhibited by minus** (inhibit = A<0): skip occurs when
+    /// `!cond = (A≥0)`.  Therefore:
+    /// - A < 0 (lhs < rhs → true): cond=true, skip **does NOT** occur → BRU
+    ///   executes → jump to LDO → result 1.
+    /// - A ≥ 0 (lhs ≥ rhs → false): cond=false, skip occurs → LDZ → result 0.
+    ///
+    /// ## Layout
     ///
     /// ```text
     /// LDA  spill(vA)
     /// SUB  spill(vB)         ; A = vA - vB
-    /// BPL                    ; if A>=0 → skip next (not less than)
-    /// BRU  addr+6 (__true)
-    /// LDZ                    ; >=0 → result 0
+    /// BMI                    ; inhibited by minus → skip when A≥0 (not less than)
+    /// BRU  addr+6 (__true)   ; A<0 → jump to LDO (result 1)
+    /// LDZ                    ; A≥0 → result 0
     /// BRU  addr+7 (__done)
-    /// LDO                    ; <0  → result 1   [__true]
+    /// LDO                    ; A<0 → result 1   [__true]
     /// STA  spill(vDst)                          [__done]
     /// ```
     ///
     /// For `CMP_GT` (vA > vB): swap vA and vB (vA > vB iff vB < vA).
     fn emit_cmp_signed(
         &self, instr: &IrInstruction, start_addr: usize,
-        gt_mode: bool, w_bpl: i32, w_ldz: i32, w_ldo: i32,
+        gt_mode: bool, w_bmi: i32, w_ldz: i32, w_ldo: i32,
     ) -> Result<Vec<i32>, CodeGenError> {
         let dst   = self.reg(instr, 0)?;
         let reg_a = self.reg(instr, 1)?;
@@ -907,14 +1023,15 @@ impl<'a> CodeGen<'a> {
         let lhs = if gt_mode { reg_b } else { reg_a };
         let rhs = if gt_mode { reg_a } else { reg_b };
 
-        // BPL skips when A >= 0 (not negative). When the difference is
-        // negative (lhs < rhs) we do NOT skip → BRU jumps to __true → LDO.
+        // BMI (inhibited-by-minus) skips when A≥0.
+        // When A<0 (lhs < rhs) → no skip → BRU to __true → result 1.
+        // When A≥0 (lhs ≥ rhs) → skip BRU → LDZ → result 0.
         Ok(vec![
             self.lda(self.spill(lhs)), // +0
             self.sub(self.spill(rhs)), // +1
-            w_bpl,                      // +2: skip next if A>=0 (not less)
-            self.bru(true_addr),        // +3: jump to true (A<0)
-            w_ldz,                      // +4: A>=0 → result 0
+            w_bmi,                      // +2: BMI — skip when A≥0 (not less)
+            self.bru(true_addr),        // +3: A<0 → jump to LDO
+            w_ldz,                      // +4: A≥0 → result 0
             self.bru(done_addr),        // +5
             w_ldo,                      // +6: A<0 → result 1  [__true]
             self.sta(self.spill(dst)), // +7  [__done]
@@ -929,26 +1046,35 @@ impl<'a> CodeGen<'a> {
 
     /// `BRANCH_Z` or `BRANCH_NZ` — conditional far branch (3 words).
     ///
-    /// The GE-225 conditional branches are *skip-next-if-true*, not
-    /// *jump-if-true*. A far conditional branch requires a two-word pair
-    /// after the load:
+    /// ## GE-225 branch-test "inhibit" semantics (recap)
+    ///
+    /// Skip instructions use **inhibit** semantics: the named condition
+    /// *prevents* the skip.
+    ///
+    /// - `BZE` — inhibited by zero (cond = A==0).  Skips when A≠0
+    ///   (i.e. the BRU at offset +1 is skipped when A is non-zero).
+    ///   Therefore the BRU **executes** when A==0.
+    /// - `BNZ` — inhibited by non-zero (cond = A≠0).  Skips when A==0.
+    ///   Therefore the BRU **executes** when A≠0.
+    ///
+    /// ## Layout for `BRANCH_Z` (jump when A==0)
     ///
     /// ```text
     /// LDA  spill(vN)
-    /// BNZ               ; BRANCH_Z:  skip BRU when A≠0 (fall through); execute BRU when A==0
-    /// BRU  target       ; executed only when A==0
+    /// BZE               ; inhibited-by-zero → skip BRU when A≠0 (don't jump)
+    /// BRU  target       ; executed only when A==0 → jump to target
     /// ; fall through when A≠0
     /// ```
     ///
-    /// For `BRANCH_NZ`, swap `BNZ → BZE`.
+    /// For `BRANCH_NZ` (jump when A≠0), swap `BZE → BNZ`.
     fn emit_branch(
         &self, instr: &IrInstruction, zero: bool, w_bze: i32, w_bnz: i32,
     ) -> Result<Vec<i32>, CodeGenError> {
         let reg_n  = self.reg(instr, 0)?;
         let target = self.resolve_label(instr, 1)?;
-        // To jump when A==0: use BNZ (skip when A!=0, so don't skip when A==0)
-        // To jump when A!=0: use BZE (skip when A==0, so don't skip when A!=0)
-        let skip_word = if zero { w_bnz } else { w_bze };
+        // BRANCH_Z (jump when A==0): BZE — inhibited by zero → BRU executes when A==0.
+        // BRANCH_NZ (jump when A≠0): BNZ — inhibited by non-zero → BRU executes when A≠0.
+        let skip_word = if zero { w_bze } else { w_bnz };
         Ok(vec![
             self.lda(self.spill(reg_n)),
             skip_word,
