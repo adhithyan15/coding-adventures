@@ -610,3 +610,156 @@ class TestUniqueIndex:
         assert _parse_index_unique('CREATE INDEX "x" ON "t" ("c")') is False
         assert _parse_index_unique(None) is False
         assert _parse_index_unique("") is False
+
+
+# ---------------------------------------------------------------------------
+# Runtime index maintenance (insert / update / delete keep indexes in sync)
+# ---------------------------------------------------------------------------
+
+
+class TestRuntimeIndexMaintenance:
+    """Indexes are updated transparently on every insert/update/delete."""
+
+    def _setup(self, b: SqliteFileBackend, *, unique: bool = False) -> None:
+        b.create_table(
+            "users",
+            [
+                ColumnDef("id", "INTEGER", primary_key=True),
+                ColumnDef("email", "TEXT"),
+                ColumnDef("age", "INTEGER"),
+            ],
+            if_not_exists=False,
+        )
+        b.create_index(
+            IndexDef(
+                name="idx_email", table="users",
+                columns=["email"], unique=unique,
+            )
+        )
+
+    def test_insert_populates_index(self, tmp_path: Path) -> None:
+        path = str(tmp_path / "rim1.db")
+        with SqliteFileBackend(path) as b:
+            self._setup(b)
+            b.insert("users", {"id": 1, "email": "a@x.com", "age": 30})
+            b.insert("users", {"id": 2, "email": "b@x.com", "age": 31})
+            assert list(b.scan_index("idx_email", ["a@x.com"], ["a@x.com"])) == [1]
+            assert list(b.scan_index("idx_email", ["b@x.com"], ["b@x.com"])) == [2]
+
+    def test_insert_unique_runtime_violation(self, tmp_path: Path) -> None:
+        from sql_backend import ConstraintViolation
+        path = str(tmp_path / "rim2.db")
+        with SqliteFileBackend(path) as b:
+            self._setup(b, unique=True)
+            b.insert("users", {"id": 1, "email": "a@x.com", "age": 30})
+            with pytest.raises(ConstraintViolation, match="UNIQUE constraint"):
+                b.insert("users", {"id": 2, "email": "a@x.com", "age": 31})
+            # Failed insert must leave the table and the index unchanged.
+            cursor = b.scan("users")
+            rows = []
+            while (r := cursor.next()) is not None:
+                rows.append(r)
+            assert [row["id"] for row in rows] == [1]
+            assert list(b.scan_index("idx_email", ["a@x.com"], ["a@x.com"])) == [1]
+
+    def test_insert_unique_allows_multiple_nulls(self, tmp_path: Path) -> None:
+        """NULLs in a UNIQUE index column do not conflict (SQLite semantics)."""
+        path = str(tmp_path / "rim3.db")
+        with SqliteFileBackend(path) as b:
+            self._setup(b, unique=True)
+            b.insert("users", {"id": 1, "age": 30})  # email = NULL
+            b.insert("users", {"id": 2, "age": 31})  # email = NULL
+            b.insert("users", {"id": 3, "age": 32})  # email = NULL
+            # All three rows are reachable via the table scan.
+            cursor = b.scan("users")
+            rows = []
+            while (r := cursor.next()) is not None:
+                rows.append(r)
+            assert sorted(row["id"] for row in rows) == [1, 2, 3]
+
+    def test_delete_removes_index_entry(self, tmp_path: Path) -> None:
+        path = str(tmp_path / "rim4.db")
+        with SqliteFileBackend(path) as b:
+            self._setup(b)
+            b.insert("users", {"id": 1, "email": "a@x.com", "age": 30})
+            b.insert("users", {"id": 2, "email": "b@x.com", "age": 31})
+            cursor = b.scan("users")
+            cursor.next()  # row 1
+            b.delete("users", cursor)
+            # Index must no longer reference the deleted row.
+            assert list(b.scan_index("idx_email", ["a@x.com"], ["a@x.com"])) == []
+            # The other row's entry must still be there.
+            assert list(b.scan_index("idx_email", ["b@x.com"], ["b@x.com"])) == [2]
+
+    def test_update_changes_index_entry(self, tmp_path: Path) -> None:
+        path = str(tmp_path / "rim5.db")
+        with SqliteFileBackend(path) as b:
+            self._setup(b)
+            b.insert("users", {"id": 1, "email": "old@x.com", "age": 30})
+            cursor = b.scan("users")
+            cursor.next()
+            b.update("users", cursor, {"email": "new@x.com"})
+            # Old key must be gone, new key present.
+            assert list(b.scan_index("idx_email", ["old@x.com"], ["old@x.com"])) == []
+            assert list(b.scan_index("idx_email", ["new@x.com"], ["new@x.com"])) == [1]
+
+    def test_update_non_indexed_column_skips_index(self, tmp_path: Path) -> None:
+        """Updating a non-indexed column must not touch the index B-tree."""
+        path = str(tmp_path / "rim6.db")
+        with SqliteFileBackend(path) as b:
+            self._setup(b)
+            b.insert("users", {"id": 1, "email": "a@x.com", "age": 30})
+            cursor = b.scan("users")
+            cursor.next()
+            b.update("users", cursor, {"age": 99})
+            assert list(b.scan_index("idx_email", ["a@x.com"], ["a@x.com"])) == [1]
+
+    def test_update_unique_runtime_violation(self, tmp_path: Path) -> None:
+        from sql_backend import ConstraintViolation
+        path = str(tmp_path / "rim7.db")
+        with SqliteFileBackend(path) as b:
+            self._setup(b, unique=True)
+            b.insert("users", {"id": 1, "email": "a@x.com", "age": 30})
+            b.insert("users", {"id": 2, "email": "b@x.com", "age": 31})
+            cursor = b.scan("users")
+            cursor.next()  # row 1 (email=a@x.com)
+            with pytest.raises(ConstraintViolation, match="UNIQUE constraint"):
+                b.update("users", cursor, {"email": "b@x.com"})
+            # State unchanged: row 1 keeps a@x.com, row 2 keeps b@x.com.
+            assert list(b.scan_index("idx_email", ["a@x.com"], ["a@x.com"])) == [1]
+            assert list(b.scan_index("idx_email", ["b@x.com"], ["b@x.com"])) == [2]
+
+    def test_multiple_indexes_all_maintained(self, tmp_path: Path) -> None:
+        """A table with two indexes: insert/delete updates both."""
+        path = str(tmp_path / "rim8.db")
+        with SqliteFileBackend(path) as b:
+            self._setup(b)
+            b.create_index(
+                IndexDef(name="idx_age", table="users", columns=["age"])
+            )
+            b.insert("users", {"id": 1, "email": "a@x.com", "age": 30})
+            b.insert("users", {"id": 2, "email": "b@x.com", "age": 30})
+            assert sorted(b.scan_index("idx_email", ["a@x.com"], ["a@x.com"])) == [1]
+            assert sorted(b.scan_index("idx_age", [30], [30])) == [1, 2]
+            # Delete row 1 — both indexes lose its entry.
+            cursor = b.scan("users")
+            cursor.next()
+            b.delete("users", cursor)
+            assert list(b.scan_index("idx_email", ["a@x.com"], ["a@x.com"])) == []
+            assert sorted(b.scan_index("idx_age", [30], [30])) == [2]
+
+    def test_index_persists_across_reopen(self, tmp_path: Path) -> None:
+        """Runtime-maintained index entries survive close + reopen."""
+        path = str(tmp_path / "rim9.db")
+        with SqliteFileBackend(path) as b:
+            self._setup(b)
+            b.insert("users", {"id": 1, "email": "a@x.com", "age": 30})
+            b.insert("users", {"id": 2, "email": "b@x.com", "age": 31})
+            # Flush dirty pages.  Pure DML inserts do not auto-commit; the
+            # backend assumes the caller (typically the SQL VM) wraps work
+            # in begin_transaction/commit boundaries.
+            h = b.begin_transaction()
+            b.commit(h)
+        with SqliteFileBackend(path) as b2:
+            assert list(b2.scan_index("idx_email", ["a@x.com"], ["a@x.com"])) == [1]
+            assert list(b2.scan_index("idx_email", ["b@x.com"], ["b@x.com"])) == [2]

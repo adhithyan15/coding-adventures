@@ -869,6 +869,31 @@ class SqliteFileBackend(Backend):
         """Open a B-tree for *rootpage* with the freelist attached."""
         return BTree.open(self._pager, rootpage, freelist=self._freelist)
 
+    def _open_indexes_for(
+        self, table: str
+    ) -> list[tuple[str, list[str], IndexTree]]:
+        """Return open ``IndexTree`` handles for every index on *table*.
+
+        Each tuple is ``(index_name, indexed_columns, idx_tree)`` where
+        ``idx_tree`` carries its UNIQUE flag (read from the stored
+        ``CREATE INDEX`` SQL).  Used by :meth:`insert`, :meth:`update`, and
+        :meth:`delete` to keep secondary indexes consistent with the table
+        B-tree.
+
+        Returns an empty list when the table has no indexes — the common
+        case for tables that the application has not explicitly indexed.
+        """
+        rows = self._schema.list_indexes(table)
+        result: list[tuple[str, list[str], IndexTree]] = []
+        for name, _tbl_name, rootpage, sql in rows:
+            cols = _parse_index_columns(sql) if sql else []
+            unique = _parse_index_unique(sql)
+            tree = IndexTree.open(
+                self._pager, rootpage, freelist=self._freelist, is_unique=unique
+            )
+            result.append((name, cols, tree))
+        return result
+
     # ── Backend interface: Schema ─────────────────────────────────────────────
 
     def tables(self) -> list[str]:
@@ -943,6 +968,27 @@ class SqliteFileBackend(Backend):
         if non_pk_unique:
             _check_unique(table, full_row, non_pk_unique, tree, columns)
 
+        # Pre-validate UNIQUE indexes before mutating anything: walk every
+        # index on this table and reject the row if any UNIQUE index would
+        # be violated.  Doing this BEFORE the table insert means failures
+        # leave the database byte-for-byte unchanged.
+        indexes = self._open_indexes_for(table)
+        for idx_name, idx_cols, idx_tree in indexes:
+            if not idx_tree.is_unique:
+                continue
+            key_vals: list[SqlValue] = [full_row.get(c) for c in idx_cols]  # type: ignore[misc]
+            if any(v is None for v in key_vals):
+                continue  # NULL-distinct: per SQLite, NULLs don't conflict
+            if next(idx_tree.range_scan(key_vals, key_vals), None) is not None:
+                raise ConstraintViolation(
+                    table=table,
+                    column=", ".join(idx_cols),
+                    message=(
+                        f"UNIQUE constraint failed: index {idx_name!r} "
+                        f"already has key {key_vals!r}"
+                    ),
+                )
+
         payload = _encode_row(rowid, full_row, columns)
         try:
             tree.insert(rowid, payload)
@@ -956,6 +1002,12 @@ class SqliteFileBackend(Backend):
                     message=f"PRIMARY KEY constraint failed: {table}.{pk_cols[0].name}",
                 ) from None
             raise  # Should not happen for non-IPK tables; propagate as-is.
+
+        # Maintain secondary indexes: insert (key_vals, rowid) into each.
+        # UNIQUE checks above ensure this cannot raise DuplicateIndexKeyError.
+        for _idx_name, idx_cols, idx_tree in indexes:
+            key_vals = [full_row.get(c) for c in idx_cols]  # type: ignore[misc]
+            idx_tree.insert(key_vals, rowid)
 
     def update(
         self,
@@ -995,8 +1047,41 @@ class SqliteFileBackend(Backend):
 
         tree = self._open_tree(rootpage)
         rowid = cursor._current_rowid  # noqa: SLF001
+
+        # Maintain secondary indexes.  For each index, decide whether the new
+        # row's key differs from the old; if so, the old entry must be
+        # deleted and the new entry inserted.  Pre-validate UNIQUE indexes
+        # *before* any mutation so a violation leaves state unchanged.
+        indexes = self._open_indexes_for(table)
+        index_changes: list[tuple[IndexTree, list[SqlValue], list[SqlValue]]] = []
+        for idx_name, idx_cols, idx_tree in indexes:
+            old_key: list[SqlValue] = [current_row.get(c) for c in idx_cols]  # type: ignore[misc]
+            new_key: list[SqlValue] = [proposed.get(c) for c in idx_cols]  # type: ignore[misc]
+            if old_key == new_key:
+                continue  # nothing to do for this index
+            index_changes.append((idx_tree, old_key, new_key))
+            # UNIQUE pre-check on the new key (NULL-distinct).
+            if (
+                idx_tree.is_unique
+                and not any(v is None for v in new_key)
+                and next(idx_tree.range_scan(new_key, new_key), None) is not None
+            ):
+                raise ConstraintViolation(
+                    table=table,
+                    column=", ".join(idx_cols),
+                    message=(
+                        f"UNIQUE constraint failed: index {idx_name!r} "
+                        f"already has key {new_key!r}"
+                    ),
+                )
+
         new_payload = _encode_row(rowid, proposed, columns)
         tree.update(rowid, new_payload)
+
+        # Apply the index entry rotations now that the table row is in place.
+        for idx_tree, old_key, new_key in index_changes:
+            idx_tree.delete(old_key, rowid)
+            idx_tree.insert(new_key, rowid)
 
         # Update cursor's cached row so further reads are consistent.
         cursor._current_row = proposed  # noqa: SLF001
@@ -1019,6 +1104,15 @@ class SqliteFileBackend(Backend):
         rootpage, _ = self._require_table(table)
         tree = self._open_tree(rootpage)
         rowid = cursor._current_rowid  # noqa: SLF001
+
+        # Remove this row's entries from every secondary index BEFORE the
+        # table row goes away, so we can still read the indexed column values
+        # from the cursor's cached row.
+        current_row: Row = cursor._current_row or {}  # noqa: SLF001
+        for _idx_name, idx_cols, idx_tree in self._open_indexes_for(table):
+            key_vals: list[SqlValue] = [current_row.get(c) for c in idx_cols]  # type: ignore[misc]
+            idx_tree.delete(key_vals, rowid)
+
         tree.delete(rowid)
 
         # Clear cursor position — the row no longer exists.

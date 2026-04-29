@@ -1,5 +1,51 @@
 # Changelog
 
+## [0.15.0] - 2026-04-28
+
+### Added
+
+**Runtime index maintenance (IX-12)**
+
+Secondary indexes are now kept in sync with the table B-tree on every
+DML operation, not only at `create_index` backfill time.  Combined with
+the IX-11 UNIQUE flag, this means `CREATE UNIQUE INDEX` actually rejects
+duplicate inserts at runtime — the IX-11 limitation note is gone.
+
+- **`SqliteFileBackend.insert`** — now walks every index on the target
+  table after the row is committed to the table B-tree, computing the
+  index key from the inserted row and inserting `(key_vals, rowid)` into
+  each index B-tree.  For UNIQUE indexes, a duplicate-key check (with
+  NULL-distinct semantics) runs *before* any mutation so a violation
+  leaves the database byte-for-byte unchanged.
+- **`SqliteFileBackend.update`** — for each index, compares the old key
+  (from the cursor's cached row) to the new key (from the proposed row).
+  If they differ, deletes the old `(key, rowid)` entry and inserts the
+  new one.  No-op for indexes whose columns weren't changed.  UNIQUE
+  pre-check on the new key matches `insert` semantics.
+- **`SqliteFileBackend.delete`** — removes the row's entry from every
+  index before deleting the table B-tree row, using the cursor's cached
+  row to recover the indexed column values.
+- **`SqliteFileBackend._open_indexes_for(table)`** — new private helper
+  that returns `[(name, columns, IndexTree)]` for every index on a
+  table, with each `IndexTree` opened in the right unique mode (parsed
+  from the stored `CREATE INDEX` SQL).
+
+### Tests added
+
+- `test_backend_index.py::TestRuntimeIndexMaintenance` — 9 tests:
+  insert populates index, runtime UNIQUE violation, multiple NULLs
+  allowed, delete removes index entry, update changes index entry,
+  update of non-indexed column skips index, runtime UNIQUE on update,
+  multiple-index maintenance, persistence across reopen.
+
+### Notes
+
+- This closes the IX-11 limitation where UNIQUE only fired at backfill.
+  All UNIQUE checks now occur on every `INSERT`/`UPDATE` automatically.
+- `INSERT` and `UPDATE` no longer auto-commit (unchanged behaviour); the
+  caller — typically the SQL VM — must wrap DML in
+  `begin_transaction`/`commit` to flush dirty pages.
+
 ## [0.14.0] - 2026-04-28
 
 ### Added
