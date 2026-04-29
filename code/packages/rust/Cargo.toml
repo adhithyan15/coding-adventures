@@ -404,4 +404,5 @@ members = [
     "cas-complex",
     "cas-trig",
     "codegen-core",
+    "cir-to-compiler-ir",
 ]

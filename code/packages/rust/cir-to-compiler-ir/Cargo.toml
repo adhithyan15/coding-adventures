@@ -1,0 +1,10 @@
+[package]
+name = "cir-to-compiler-ir"
+version = "0.1.0"
+edition = "2021"
+description = "Bridge: CIR (typed compiler IR from jit-core) → IrProgram (general-purpose AOT IR). Implements LANG21 of the Tetrad compilation pipeline."
+license = "MIT"
+
+[dependencies]
+jit-core    = { path = "../jit-core" }
+compiler-ir = { path = "../compiler-ir" }
