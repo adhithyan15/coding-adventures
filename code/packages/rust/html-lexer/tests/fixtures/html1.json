@@ -121,6 +121,39 @@
       ]
     },
     {
+      "id": "doctype-system-identifier",
+      "description": "DOCTYPE SYSTEM declarations preserve the system identifier",
+      "input": "<!DOCTYPE html SYSTEM \"about:legacy-compat\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=null, system_identifier=about:legacy-compat, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "doctype-missing-system-identifier-quirks",
+      "description": "DOCTYPE SYSTEM without an identifier marks force-quirks",
+      "input": "<!DOCTYPE html SYSTEM>",
+      "tokens": [
+        "Doctype(name=html, force_quirks=true)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-doctype-system-identifier"
+      ]
+    },
+    {
+      "id": "doctype-trailing-junk-after-system-identifier-quirks",
+      "description": "Unexpected text after a system identifier marks force-quirks",
+      "input": "<!DOCTYPE html SYSTEM \"about:legacy-compat\" junk>",
+      "tokens": [
+        "Doctype(name=html, public_identifier=null, system_identifier=about:legacy-compat, force_quirks=true)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "unexpected-character-after-doctype-system-identifier"
+      ]
+    },
+    {
       "id": "comment-eof-recovery",
       "input": "<!--open",
       "tokens": [

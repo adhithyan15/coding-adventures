@@ -83,6 +83,33 @@
       ]
     },
     {
+      "description": "doctype system identifier",
+      "input": "<!DOCTYPE html SYSTEM \"about:legacy-compat\">",
+      "output": [
+        ["DOCTYPE", "html", null, "about:legacy-compat", true]
+      ]
+    },
+    {
+      "description": "doctype missing system identifier",
+      "input": "<!DOCTYPE html SYSTEM>",
+      "output": [
+        ["DOCTYPE", "html", null, null, false]
+      ],
+      "errors": [
+        {"code": "missing-doctype-system-identifier", "line": 1, "col": 23}
+      ]
+    },
+    {
+      "description": "doctype trailing junk after system identifier",
+      "input": "<!DOCTYPE html SYSTEM \"about:legacy-compat\" junk>",
+      "output": [
+        ["DOCTYPE", "html", null, "about:legacy-compat", false]
+      ],
+      "errors": [
+        {"code": "unexpected-character-after-doctype-system-identifier", "line": 1, "col": 45}
+      ]
+    },
+    {
       "description": "self closing start tag uses html5lib boolean slot",
       "input": "<br/>",
       "output": [

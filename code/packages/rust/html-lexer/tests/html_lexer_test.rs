@@ -192,6 +192,24 @@ fn default_html_lexer_supports_public_and_system_doctype_identifiers() {
 }
 
 #[test]
+fn default_html_lexer_supports_standalone_system_doctype_identifier() {
+    let tokens = lex_html("<!DOCTYPE html SYSTEM \"about:legacy-compat\">").unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: None,
+                system_identifier: Some("about:legacy-compat".to_string()),
+                force_quirks: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_marks_missing_public_identifier_force_quirks() {
     let mut lexer = create_html_lexer().unwrap();
 
@@ -214,6 +232,57 @@ fn default_html_lexer_marks_missing_public_identifier_force_quirks() {
         .diagnostics()
         .iter()
         .any(|diagnostic| diagnostic.code == "missing-doctype-public-identifier"));
+}
+
+#[test]
+fn default_html_lexer_marks_missing_system_identifier_force_quirks() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("<!DOCTYPE html SYSTEM>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: None,
+                system_identifier: None,
+                force_quirks: true,
+            },
+            Token::Eof,
+        ]
+    );
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "missing-doctype-system-identifier"));
+}
+
+#[test]
+fn default_html_lexer_marks_trailing_junk_after_system_identifier_force_quirks() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer
+        .push("<!DOCTYPE html SYSTEM \"about:legacy-compat\" junk>")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: None,
+                system_identifier: Some("about:legacy-compat".to_string()),
+                force_quirks: true,
+            },
+            Token::Eof,
+        ]
+    );
+    assert!(lexer.diagnostics().iter().any(
+        |diagnostic| diagnostic.code == "unexpected-character-after-doctype-system-identifier"
+    ));
 }
 
 #[test]

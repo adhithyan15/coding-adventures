@@ -90,3 +90,5 @@ documented in this file.
 - DOCTYPE `PUBLIC` and `SYSTEM` identifier states now preserve quoted public
   and system identifiers on emitted tokens, including force-quirks recovery for
   missing identifiers.
+- Standalone `SYSTEM` doctypes and trailing junk after system identifiers are
+  now covered, with unexpected trailing junk marking force-quirks mode.
