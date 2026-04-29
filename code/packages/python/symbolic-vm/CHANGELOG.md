@@ -1,5 +1,51 @@
 # Changelog
 
+## 0.37.0 — 2026-04-28
+
+**Phase 17 — `∫ tanh^n(ax+b) dx` power reduction.**
+
+Completes the hyperbolic power-reduction suite (Phases 14 and 16 covered the
+other five functions; tanh was the only remaining gap).
+
+### Algorithm
+
+Uses the Pythagorean identity `tanh²(t) = 1 − sech²(t)`:
+
+```
+I_n = I_{n-2} − tanh^(n-1)(ax+b) / ((n-1)·a)
+
+Base cases:
+  n = 0  →  x
+  n = 1  →  log(cosh(ax+b)) / a      [Phase 13 bare tanh integral]
+```
+
+This is the direct analog of `coth^n` (Phase 16) — same recursion structure,
+different Pythagorean identity (`−sech²` vs `+csch²`).
+
+**Verification examples:**
+- n=2: `F = x − tanh(x)`.  `F' = 1 − sech² = tanh²`  ✓
+- n=3: `F = log(cosh) − tanh²/2`.  `F' = tanh − tanh·sech² = tanh³`  ✓
+- n=4: `F = x − tanh − tanh³/3`.  `F' = tanh²(1−sech²) = tanh⁴`  ✓
+
+### Implementation
+
+- `recip_hyp_power_integral.py` — new public function `tanh_power_integral(n, a, b, x)`;
+  `COSH` added to imports (needed for the n=1 base-case `log(cosh)/a`).
+- `integrate.py` — `_try_recip_hyp_power` extended to include `TANH` in the
+  handled-head set; `tanh_power_integral` added to the import block.
+
+### Tests (`test_phase17.py`) — 16 tests
+
+| Class | Tests | What is verified |
+|-------|-------|-----------------|
+| `TestPhase17_TanhPowers` | 10 | n=2,3,4,5; a=2; b=1; a=1/2; structural (Tanh/log(cosh)) |
+| `TestPhase17_Fallthrough` | 3 | poly×tanh², non-linear arg, poly×tanh (non-elementary) |
+| `TestPhase17_Regressions` | 3 | Phase 16 sech², Phase 13 tanh bare, Phase 14 sinh^4 |
+
+All antiderivatives verified numerically at two test points.
+
+---
+
 ## 0.36.0 — 2026-04-28
 
 **Phase 16 — Reciprocal hyperbolic power integrals: `sech^n`, `csch^n`, `coth^n`.**
