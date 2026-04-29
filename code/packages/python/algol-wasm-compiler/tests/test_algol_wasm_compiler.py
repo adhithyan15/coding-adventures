@@ -396,6 +396,16 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
 
+    def test_go_to_spelling_skips_statements_until_label(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "go to done; "
+            "result := 99; "
+            "done: result := 7 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
     def test_backward_goto_runs_local_loop(self) -> None:
         result = compile_source(
             "begin integer result, i; "

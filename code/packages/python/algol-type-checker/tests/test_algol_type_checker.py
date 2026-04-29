@@ -90,6 +90,20 @@ class TestAlgolTypeChecker:
         assert result.semantic.labels[0].name == "10"
         assert result.semantic.gotos[0].target_name == "10"
 
+    def test_accepts_go_to_spelling(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "go to done; "
+            "result := 99; "
+            "done: result := 7 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        assert result.semantic.gotos[0].target_name == "done"
+
     def test_rejects_missing_goto_label(self) -> None:
         ast = parse_algol("begin integer result; goto missing end")
         result = check_algol(ast)

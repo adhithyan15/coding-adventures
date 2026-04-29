@@ -72,7 +72,7 @@ accept integer-returning actual procedures and promote the dispatched result.
 Concrete procedure actuals forwarded through a formal procedure call retain
 enough type-checker metadata to validate nested procedure-parameter contracts.
 
-Direct `goto` statements lower to ordinary IR `JUMP` instructions targeting
+Direct `goto`/`go to` statements lower to ordinary IR `JUMP` instructions targeting
 generated ALGOL labels. Local jumps emit the jump directly. Direct nonlocal
 block jumps unwind each exited block with the same heap-pointer, current-frame,
 and stack-pointer restoration used by normal block exits before transferring

@@ -28,7 +28,7 @@ the current lane already supports a substantial ALGOL 60 surface:
 - label, switch, and procedure formals in value or by-name mode
 - bare no-argument typed procedure names as expression calls, matching ALGOL's
   omitted-parentheses call syntax for parameterless procedures
-- labels, local and nonlocal `goto`, switch designators, and conditional
+- labels, local and nonlocal `goto`/`go to`, switch designators, and conditional
   designational expressions, including nonlocal branches and nested
   recursive switch entries
 - builtin `print(...)` / `output(...)` for integers, booleans, reals, strings,

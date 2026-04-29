@@ -93,7 +93,7 @@ The parser covers the complete ALGOL 60 grammar:
 |----------|-------|
 | Top level | `program`, `block` |
 | Declarations | `type_decl`, `array_decl`, `switch_decl`, `procedure_decl` |
-| Statements | `assign_stmt`, `cond_stmt`, `for_stmt`, `goto_stmt`, `proc_stmt`, `compound_stmt`, `empty_stmt` |
+| Statements | `assign_stmt`, `cond_stmt`, `for_stmt`, `goto_stmt` (`goto` or `go to`), `proc_stmt`, `compound_stmt`, `empty_stmt` |
 | Arithmetic | `arith_expr`, `simple_arith`, `term`, `factor`, `primary` |
 | Boolean | `bool_expr`, `simple_bool`, `implication`, `bool_term`, `bool_factor`, `bool_secondary`, `bool_primary`, `relation` |
 | Designational | `desig_expr`, `simple_desig` |
