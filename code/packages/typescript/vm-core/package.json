@@ -1,0 +1,22 @@
+{
+  "name": "@coding-adventures/vm-core",
+  "version": "0.1.0",
+  "description": "Pure TypeScript executor for LANG VM interpreter IR",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/interpreter-ir": "file:../interpreter-ir"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
