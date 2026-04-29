@@ -18,6 +18,12 @@ class DartmouthBasicIrCompilerTest < Minitest::Test
     assert_equal "42\n", output
   end
 
+  def test_assignment_without_let
+    output = CodingAdventures::DartmouthBasicIrCompiler::Runtime.new.run("10 A = 7\n20 PRINT A\n30 END\n")
+
+    assert_equal "7\n", output
+  end
+
   def test_goto_and_if_lower_to_branches
     source = "10 LET A = 1\n20 IF A = 1 THEN 40\n30 PRINT 0\n40 PRINT 1\n50 END\n"
     output = CodingAdventures::DartmouthBasicIrCompiler::Runtime.new.run(source)
