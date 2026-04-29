@@ -15,7 +15,7 @@ Connection. ``commit`` and ``rollback`` are not cursor methods.
 
 from __future__ import annotations
 
-from collections.abc import Iterable, Iterator, Sequence
+from collections.abc import Iterable, Iterator, Mapping, Sequence
 from typing import TYPE_CHECKING, Any
 
 from .engine import run
@@ -126,8 +126,19 @@ class Cursor:
     # Execute.
     # ------------------------------------------------------------------
 
-    def execute(self, sql: str, parameters: Sequence[Any] = ()) -> Cursor:
+    def execute(
+        self,
+        sql: str,
+        parameters: Sequence[Any] | Mapping[str, Any] = (),
+    ) -> Cursor:
         """Execute a single SQL statement. Returns ``self`` for chaining.
+
+        ``parameters`` follows PEP 249 paramstyle:
+
+        * a ``Sequence`` (tuple, list, …) → qmark style; each ``?`` in
+          *sql* consumes the next positional value.
+        * a ``Mapping`` (dict, …) → named style; each ``:identifier`` in
+          *sql* is replaced by ``parameters[identifier]``.
 
         TCL fast-path
         ~~~~~~~~~~~~~

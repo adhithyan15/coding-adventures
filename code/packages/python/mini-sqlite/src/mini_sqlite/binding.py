@@ -1,18 +1,18 @@
 """
-Parameter binding — substitute ``?`` placeholders into SQL source text.
+Parameter binding — substitute placeholders into SQL source text.
 
-PEP 249 ``paramstyle = "qmark"``: the user writes SQL with ``?`` markers and
-passes a parameter tuple. We must bind those parameters before the SQL text
-is handed to the lexer — because the vendored SQL lexer has no QMARK token
-and extending the grammar here would be a larger change than this facade
-warrants.
+PEP 249 ``paramstyle``: this driver supports both ``"qmark"`` (``?``) and
+``"named"`` (``:name``) styles, matching the stdlib ``sqlite3`` module.
 
-The substitution runs a single left-to-right scan over the source. Inside
-string literals (``'...'``, including the ``''`` escape for embedded single
-quotes) and comments (``--...\\n`` and ``/* ... */``) the scanner does *not*
-count ``?`` characters — those aren't parameter markers. Everywhere else,
-each ``?`` is replaced with the SQL literal form of the corresponding
-parameter.
+* ``qmark``: caller passes a ``Sequence``.  Each ``?`` consumes the next
+  positional parameter.  Arity must match exactly.
+* ``named``: caller passes a ``Mapping``.  Each ``:identifier`` is replaced
+  by ``parameters[identifier]``.  A missing key raises ``ProgrammingError``.
+
+Mixing both styles in one statement is rejected — pick one paramstyle per
+statement.  Inside string literals (``'...'``, with backslash escapes) and
+comments (``--...\\n`` and ``/* ... */``) the scanner does *not* count
+placeholders — those aren't parameter markers.
 
 Type mapping — the output must parse as a valid SQL literal:
 
@@ -20,33 +20,52 @@ Type mapping — the output must parse as a valid SQL literal:
     True / False          → 1 / 0   (sqlite3 convention)
     int / float           → repr-style numeric literal
     str                   → single-quoted, with embedded ``'`` doubled
-    bytes                 → not supported in v1 (PEP 249 allows a driver
+    bytes / bytearray     → not supported in v1 (PEP 249 allows a driver
                             to raise NotSupportedError for BLOB)
-
-We validate arity up front: placeholders found in SQL must equal
-``len(parameters)``. Over- or under-supply raises ProgrammingError —
-matching sqlite3's behavior and PEP 249's expectations.
 """
 
 from __future__ import annotations
 
 import math
-from collections.abc import Sequence
+import re
+from collections.abc import Mapping, Sequence
 from typing import Any
 
 from .errors import NotSupportedError, ProgrammingError
 
+# A named parameter is ``:identifier`` where identifier follows Python-ish
+# identifier rules (letter or underscore, then letters/digits/underscores).
+# This matches sqlite3's accepted shape; SQLite's own grammar additionally
+# allows ``$identifier`` and ``@identifier`` but those are out of scope.
+_IDENT_START = re.compile(r"[A-Za-z_]")
+_IDENT_CONT = re.compile(r"[A-Za-z0-9_]")
 
-def substitute(sql: str, parameters: Sequence[Any]) -> str:
-    """Return ``sql`` with each ``?`` replaced by a SQL literal.
 
-    Raises :class:`ProgrammingError` if the count of ``?`` markers found in
-    the SQL doesn't match ``len(parameters)``.
+def substitute(sql: str, parameters: Sequence[Any] | Mapping[str, Any]) -> str:
+    """Return ``sql`` with each ``?`` or ``:name`` replaced by a SQL literal.
+
+    The paramstyle is decided from the type of *parameters*:
+
+    * ``Sequence`` (tuple, list, …) → qmark style.  Every ``?`` in the SQL
+      consumes one positional parameter; the count must match exactly.
+    * ``Mapping`` (dict, …) → named style.  Every ``:identifier`` is looked
+      up by key in *parameters*.  Missing keys raise ``ProgrammingError``.
+
+    Mixing ``?`` and ``:name`` markers in the same statement is rejected.
+
+    Raises :class:`ProgrammingError` on any of:
+      * arity mismatch (qmark)
+      * unknown key (named)
+      * mixed paramstyle in one statement
+      * unsupported parameter type
     """
+    is_mapping = isinstance(parameters, Mapping) and not isinstance(parameters, str | bytes)
     out: list[str] = []
     i = 0
     n = len(sql)
-    param_idx = 0
+    pos_idx = 0
+    seen_qmark = False
+    seen_named = False
 
     while i < n:
         ch = sql[i]
@@ -86,24 +105,72 @@ def substitute(sql: str, parameters: Sequence[Any]) -> str:
             out.append(sql[start:i])
             continue
 
-        # Placeholder.
+        # Qmark placeholder.
         if ch == "?":
-            if param_idx >= len(parameters):
+            if seen_named:
+                raise ProgrammingError(
+                    "cannot mix '?' and ':name' parameter styles in one statement"
+                )
+            seen_qmark = True
+            if is_mapping:
+                raise ProgrammingError(
+                    "SQL has '?' placeholders but parameters is a mapping; "
+                    "pass a sequence for qmark style"
+                )
+            if pos_idx >= len(parameters):
                 raise ProgrammingError(
                     f"not enough parameters supplied: SQL has at least "
-                    f"{param_idx + 1} placeholders, got {len(parameters)}"
+                    f"{pos_idx + 1} placeholders, got {len(parameters)}"
                 )
-            out.append(_to_sql_literal(parameters[param_idx]))
-            param_idx += 1
+            out.append(_to_sql_literal(parameters[pos_idx]))
+            pos_idx += 1
             i += 1
+            continue
+
+        # Named placeholder ``:identifier``.  Only treat as a placeholder if
+        # the next character looks like the start of an identifier.  This
+        # avoids false positives in expressions like ``a::INT`` (Postgres-
+        # style cast) or stray colons.
+        if (
+            ch == ":"
+            and i + 1 < n
+            and _IDENT_START.match(sql[i + 1])
+        ):
+            j = i + 1
+            while j < n and _IDENT_CONT.match(sql[j]):
+                j += 1
+            name = sql[i + 1 : j]
+            seen_named = True
+            if seen_qmark:
+                raise ProgrammingError(
+                    "cannot mix '?' and ':name' parameter styles in one statement"
+                )
+            if not is_mapping:
+                raise ProgrammingError(
+                    f"SQL has named parameter ':{name}' but parameters is not "
+                    f"a mapping; pass a dict for named style"
+                )
+            if name not in parameters:
+                raise ProgrammingError(
+                    f"no value supplied for named parameter ':{name}'"
+                )
+            out.append(_to_sql_literal(parameters[name]))
+            i = j
             continue
 
         out.append(ch)
         i += 1
 
-    if param_idx != len(parameters):
+    # Final arity check for qmark — too many positional params is also wrong.
+    if seen_qmark and pos_idx != len(parameters):
         raise ProgrammingError(
-            f"too many parameters supplied: SQL has {param_idx} placeholders, "
+            f"too many parameters supplied: SQL has {pos_idx} placeholders, "
+            f"got {len(parameters)}"
+        )
+    # For an empty SQL with a non-empty sequence, also flag.
+    if not seen_qmark and not seen_named and not is_mapping and len(parameters) > 0:
+        raise ProgrammingError(
+            f"too many parameters supplied: SQL has 0 placeholders, "
             f"got {len(parameters)}"
         )
     return "".join(out)

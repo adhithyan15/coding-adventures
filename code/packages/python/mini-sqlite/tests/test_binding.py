@@ -88,3 +88,101 @@ def test_non_finite_floats_rejected():
     for bad in (float("inf"), float("-inf"), float("nan")):
         with pytest.raises(mini_sqlite.ProgrammingError):
             substitute("VALUES (?)", (bad,))
+
+
+# ---------------------------------------------------------------------------
+# Named parameter style (``:name``)
+# ---------------------------------------------------------------------------
+
+
+class TestNamedParameters:
+    """``:identifier`` placeholders bound from a Mapping (PEP 249 'named')."""
+
+    def test_single_named_param(self):
+        assert substitute("SELECT :x", {"x": 42}) == "SELECT 42"
+
+    def test_multiple_distinct_named_params(self):
+        out = substitute(
+            "SELECT :a, :b, :c", {"a": 1, "b": 2.5, "c": "hi"}
+        )
+        assert out == "SELECT 1, 2.5, 'hi'"
+
+    def test_same_named_param_used_twice(self):
+        """A named placeholder may appear more than once with the same key."""
+        out = substitute(
+            "SELECT * FROM t WHERE x = :v OR y = :v", {"v": 7}
+        )
+        assert out == "SELECT * FROM t WHERE x = 7 OR y = 7"
+
+    def test_extra_dict_keys_are_ignored(self):
+        """Per sqlite3, unused dict keys are silently ignored."""
+        out = substitute("SELECT :x", {"x": 1, "unused": 999})
+        assert out == "SELECT 1"
+
+    def test_missing_key_raises(self):
+        with pytest.raises(mini_sqlite.ProgrammingError, match=":missing"):
+            substitute("SELECT :missing", {"x": 1})
+
+    def test_named_inside_string_literal_is_ignored(self):
+        # ``:x`` inside a literal must not consume the parameter.
+        out = substitute(
+            "SELECT ':x is not bound' WHERE y = :x", {"x": 5}
+        )
+        assert out == "SELECT ':x is not bound' WHERE y = 5"
+
+    def test_named_inside_line_comment_is_ignored(self):
+        out = substitute(
+            "SELECT 1 -- :ignored\nWHERE x = :x", {"x": 9}
+        )
+        assert out == "SELECT 1 -- :ignored\nWHERE x = 9"
+
+    def test_named_inside_block_comment_is_ignored(self):
+        out = substitute(
+            "SELECT /* :ignored */ :x", {"x": 9}
+        )
+        assert out == "SELECT /* :ignored */ 9"
+
+    def test_double_colon_is_not_a_placeholder(self):
+        """``a::INT`` (Postgres-style cast) must pass through untouched."""
+        out = substitute("SELECT a :: INT FROM t", {})
+        assert out == "SELECT a :: INT FROM t"
+
+    def test_underscore_in_identifier(self):
+        out = substitute("SELECT :user_id", {"user_id": 42})
+        assert out == "SELECT 42"
+
+    def test_digit_after_initial_letter(self):
+        out = substitute("SELECT :col1, :col2", {"col1": 1, "col2": 2})
+        assert out == "SELECT 1, 2"
+
+    def test_leading_digit_after_colon_is_not_named(self):
+        """``:1`` is *numeric* style — not supported here, must not consume."""
+        # We expect substitute to leave ``:1`` untouched (then parser will
+        # decide how to handle it).  The mapping has no key '1' anyway.
+        out = substitute("SELECT :1", {})
+        assert out == "SELECT :1"
+
+    def test_qmark_with_mapping_raises(self):
+        with pytest.raises(mini_sqlite.ProgrammingError, match="mapping"):
+            substitute("SELECT ?", {"x": 1})
+
+    def test_named_with_sequence_raises(self):
+        with pytest.raises(mini_sqlite.ProgrammingError, match="not a mapping"):
+            substitute("SELECT :x", (1,))
+
+    def test_mixed_paramstyles_raise(self):
+        # Order :name then ? with a mapping: :name binds first, then ? hits
+        # the "cannot mix" check before the wrong-container check.
+        with pytest.raises(mini_sqlite.ProgrammingError, match="mix"):
+            substitute("SELECT :x, ?", {"x": 1})
+
+    def test_named_value_types(self):
+        """All SQL value types render correctly through named binding."""
+        out = substitute(
+            "VALUES (:n, :i, :f, :t, :b)",
+            {"n": None, "i": 7, "f": 1.5, "t": "ok", "b": True},
+        )
+        assert out == "VALUES (NULL, 7, 1.5, 'ok', 1)"
+
+    def test_empty_mapping_with_no_placeholders(self):
+        assert substitute("SELECT 1", {}) == "SELECT 1"

@@ -23,7 +23,7 @@ is reached.
 from __future__ import annotations
 
 import re
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from dataclasses import replace
 from typing import TYPE_CHECKING, Any
 
@@ -74,7 +74,7 @@ if TYPE_CHECKING:
 def run(
     backend: Backend,
     sql: str,
-    parameters: Sequence[Any] = (),
+    parameters: Sequence[Any] | Mapping[str, Any] = (),
     *,
     advisor: IndexAdvisor | None = None,
     check_registry: dict | None = None,
@@ -88,8 +88,14 @@ def run(
 ) -> QueryResult:
     """Execute a single SQL statement and return the :class:`QueryResult`.
 
-    ``parameters`` is an ordered sequence matching the ``?`` placeholders
-    in ``sql``. Empty for un-parameterised statements.
+    ``parameters`` follows PEP 249 paramstyle:
+
+    * a ``Sequence`` (tuple, list, …) → qmark style; each ``?`` in *sql*
+      consumes the next positional value.
+    * a ``Mapping`` (dict, …) → named style; each ``:identifier`` in *sql*
+      is replaced by ``parameters[identifier]``.
+
+    Empty for un-parameterised statements.
 
     ``advisor``, when provided, receives the optimised plan via
     :meth:`~mini_sqlite.advisor.IndexAdvisor.observe_plan` so it can

@@ -134,3 +134,41 @@ def test_parameterised_select_with_qmark():
     cur = conn.execute("SELECT name FROM employees WHERE dept = ?", ("eng",))
     names = sorted(row[0] for row in cur)
     assert names == ["Alice", "Bob"]
+
+
+def test_parameterised_select_with_named_params():
+    """End-to-end: ``:name`` placeholders bound from a dict via execute."""
+    conn = _seeded()
+    cur = conn.execute(
+        "SELECT name FROM employees WHERE dept = :d", {"d": "eng"},
+    )
+    names = sorted(row[0] for row in cur)
+    assert names == ["Alice", "Bob"]
+
+
+def test_parameterised_insert_with_named_params():
+    conn = _seeded()
+    conn.execute(
+        "INSERT INTO employees (id, name, dept) VALUES (:id, :name, :dept)",
+        {"id": 99, "name": "Dan", "dept": "ops"},
+    )
+    cur = conn.execute("SELECT name FROM employees WHERE id = ?", (99,))
+    assert cur.fetchone() == ("Dan",)
+
+
+def test_named_params_missing_key_raises_programming_error():
+    conn = _seeded()
+    with pytest.raises(mini_sqlite.ProgrammingError, match=":dept"):
+        conn.execute(
+            "SELECT * FROM employees WHERE dept = :dept", {"other": "eng"},
+        )
+
+
+def test_named_param_reused_in_same_statement():
+    conn = _seeded()
+    cur = conn.execute(
+        "SELECT name FROM employees WHERE dept = :d OR name = :d",
+        {"d": "eng"},
+    )
+    names = sorted(row[0] for row in cur)
+    assert names == ["Alice", "Bob"]
