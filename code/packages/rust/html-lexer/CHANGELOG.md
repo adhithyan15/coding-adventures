@@ -87,6 +87,8 @@ documented in this file.
   comment with `unexpected-question-mark-instead-of-tag-name`.
 - EOF in bogus-comment recovery now emits the recovered comment without adding
   an unrelated `eof-in-comment` diagnostic.
+- Malformed markup declarations such as `<!foo>` now report
+  `incorrectly-opened-comment` while recovering as bogus comments.
 - Invalid tag-open characters now follow HTML recovery: stray `<` text is
   preserved and malformed end-tag openers recover as bogus comments.
 - Missing-name DOCTYPE recovery now marks force-quirks mode for `<!DOCTYPE>`

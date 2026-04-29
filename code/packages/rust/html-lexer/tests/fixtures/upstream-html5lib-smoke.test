@@ -553,6 +553,18 @@
       ]
     },
     {
+      "description": "incorrectly opened markup declaration reports tokenizer error",
+      "input": "Before<!foo>After",
+      "output": [
+        ["Character", "Before"],
+        ["Comment", "foo"],
+        ["Character", "After"]
+      ],
+      "errors": [
+        {"code": "incorrectly-opened-comment", "line": 1, "col": 9}
+      ]
+    },
+    {
       "description": "invalid end tag opener recovers as bogus comment",
       "input": "Before</3>After",
       "output": [
