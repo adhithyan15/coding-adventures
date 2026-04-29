@@ -1,10 +1,11 @@
-"""Reciprocal hyperbolic power integration — Phase 16.
+"""Reciprocal hyperbolic power integration — Phase 16 and 17.
 
-Computes antiderivatives for three families:
+Computes antiderivatives for four families:
 
 1. ``∫ sech^n(ax+b) dx``  — via IBP reduction formula (any integer n ≥ 0)
 2. ``∫ csch^n(ax+b) dx``  — via IBP reduction formula (any integer n ≥ 0)
 3. ``∫ coth^n(ax+b) dx``  — via the identity coth² = 1 + csch² (any integer n ≥ 0)
+4. ``∫ tanh^n(ax+b) dx``  — via the identity tanh² = 1 − sech² (any integer n ≥ 0)
 
 Reduction formulas
 ------------------
@@ -81,6 +82,7 @@ from fractions import Fraction
 from symbolic_ir import (
     ADD,
     ATAN,
+    COSH,
     COTH,
     CSCH,
     DIV,
@@ -316,6 +318,95 @@ def coth_power_integral(
     coeff = Fraction(1, n - 1) / a          # 1 / ((n-1)·a)
     power_term = IRApply(MUL, (_frac_ir(coeff), coth_pow))
     tail = coth_power_integral(n - 2, a, b, x)
+    return IRApply(SUB, (tail, power_term))
+
+
+def tanh_power_integral(
+    n: int,
+    a: Fraction,
+    b: Fraction,
+    x: IRSymbol,
+) -> IRNode:
+    """Return IR for ``∫ tanh^n(ax+b) dx``.
+
+    Uses the identity ``tanh²(t) = 1 − sech²(t)`` to derive the reduction:
+
+        I_n = I_{n-2} − tanh^(n-1)(ax+b) / ((n-1)·a)
+
+    Base cases:
+
+        I_0 = x
+        I_1 = log(cosh(ax+b)) / a           [Phase 13 tanh bare integral]
+
+    This is the direct analog of ``coth_power_integral`` — compare:
+
+    - coth: ``coth² = 1 + csch²``  →  ``I_n = I_{n-2} − coth^(n-1)/((n-1)a)``
+    - tanh: ``tanh² = 1 − sech²``  →  ``I_n = I_{n-2} − tanh^(n-1)/((n-1)a)``
+
+    Both have the same recursion structure; only the identity sign differs
+    (``+`` vs ``−``), and the bases differ.
+
+    **Derivation** — expand via ``tanh² = 1 − sech²``:
+
+    .. code-block:: text
+
+        ∫ tanh^n dt = ∫ tanh^(n-2)·tanh² dt
+                    = ∫ tanh^(n-2)·(1 − sech²) dt
+                    = I_{n-2} − ∫ tanh^(n-2)·sech² dt
+
+    For the last term, substitute u = tanh(t), du = sech²(t) dt:
+
+    .. code-block:: text
+
+        ∫ tanh^(n-2)·sech² dt = tanh^(n-1) / (n-1)
+
+    **Verification examples:**
+
+    - n=2: F = x − tanh.  F' = 1 − sech² = tanh²  ✓
+    - n=3: F = log(cosh) − tanh²/2.  F' = tanh(1−sech²) = tanh³  ✓
+    - n=4: F = x − tanh − tanh³/3.  F' = tanh²(1−sech²) = tanh⁴  ✓
+
+    Pre-conditions: ``n ≥ 0``, ``a ≠ 0``.
+
+    Parameters
+    ----------
+    n :
+        Non-negative integer power.
+    a, b :
+        Fraction coefficients of the linear argument ``ax+b``.
+    x :
+        Integration variable symbol.
+
+    Examples
+    --------
+    ::
+
+        # ∫ tanh²(x) dx = x − tanh(x)
+        tanh_power_integral(2, Fraction(1), Fraction(0), IRSymbol("x"))
+
+        # ∫ tanh³(x) dx = log(cosh(x)) − tanh²(x)/2
+        tanh_power_integral(3, Fraction(1), Fraction(0), IRSymbol("x"))
+    """
+    if n == 0:
+        return x
+    arg_ir = linear_to_ir(a, b, x)
+    if n == 1:
+        # ∫ tanh(ax+b) dx = log(cosh(ax+b)) / a
+        log_cosh = IRApply(LOG, (IRApply(COSH, (arg_ir,)),))
+        return log_cosh if a == Fraction(1) else IRApply(DIV, (log_cosh, _frac_ir(a)))
+
+    # n ≥ 2:  I_n = I_{n-2} − tanh^(n-1) / ((n-1)·a)
+    #
+    # When n-1 == 1 use TANH(arg_ir) directly (avoids POW(..., 1)).
+    tanh_ir = IRApply(TANH, (arg_ir,))
+    tanh_pow = (
+        tanh_ir
+        if n - 1 == 1
+        else IRApply(POW, (tanh_ir, IRInteger(n - 1)))
+    )
+    coeff = Fraction(1, n - 1) / a          # 1 / ((n-1)·a)
+    power_term = IRApply(MUL, (_frac_ir(coeff), tanh_pow))
+    tail = tanh_power_integral(n - 2, a, b, x)
     return IRApply(SUB, (tail, power_term))
 
 
