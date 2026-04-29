@@ -1,5 +1,13 @@
 # LANG03 — jit-core: Generic JIT Specialization Engine
 
+> **Forward reference:** LANG20 specifies the multi-language overlay:
+> the inline-cache machinery the JIT consumes for dynamic dispatch
+> sites, the deopt protocol (frame descriptors + materialisation) for
+> guard failures, and the per-language `LangBinding` trait the JIT
+> calls into for slow-path operations.  See
+> [LANG20 §"Inline cache machinery"](LANG20-multilang-runtime.md) and
+> [LANG20 §"Deopt protocol"](LANG20-multilang-runtime.md).
+
 ## Overview
 
 `jit-core` is a **language-agnostic JIT compiler** that monitors a `vm-core`
