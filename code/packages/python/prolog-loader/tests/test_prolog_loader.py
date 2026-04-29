@@ -1026,6 +1026,25 @@ class TestPrologGoalAdapter:
             adapted,
         ) == [num(3), num(2), num(1)]
 
+    def test_adapt_prolog_goal_rewrites_clpfd_sum_global(self) -> None:
+        parsed = parse_swi_query(
+            "?- [X,Y,Z] ins 1..4, "
+            "sum([X,Y,Z], #=, 6), "
+            "X #< Y, "
+            "Y #< Z, "
+            "labeling([], [X,Y,Z]).",
+        )
+
+        adapted = adapt_prolog_goal(parsed.goal)
+
+        assert solve_all(
+            program(),
+            (parsed.variables["X"], parsed.variables["Y"], parsed.variables["Z"]),
+            adapted,
+        ) == [
+            (num(1), num(2), num(3)),
+        ]
+
     def test_adapt_prolog_goal_rewrites_common_list_predicates(self) -> None:
         parsed = parse_swi_query(
             "?- member(Item, [tea, cake]), "
