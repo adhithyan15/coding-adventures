@@ -76,6 +76,8 @@ All notable changes to this package will be documented in this file.
   not satisfy the nested procedure formal contract expected by the receiver.
 - Executed recursive switch self-selection entries by routing recursive
   descriptor lookup through the switch-eval helper at runtime.
+- Executed the report-style `go to` spelling through the full parser,
+  type-checker, IR, and WASM pipeline.
 - Added a convergence golden fixture that combines conditional expressions,
   exponentiation, chained assignment, by-name array summation, real arithmetic,
   and output in one end-to-end program.

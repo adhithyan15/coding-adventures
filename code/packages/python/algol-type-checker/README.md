@@ -8,7 +8,7 @@ It currently supports scalar declarations, assignments, arithmetic,
 comparisons, boolean conditions, nested blocks, `if` statements,
 `for ... step ... until ... do` loops, value/by-name procedures, and
 descriptor metadata for typed arrays with integer bounds. Direct labels and
-direct local `goto` statements are accepted within one active ALGOL frame, as
+direct local `goto`/`go to` statements are accepted within one active ALGOL frame, as
 are direct nonlocal block `goto` statements that stay inside the same lowered
 function. Local switch declarations, switch selections, and conditional
 designational `goto` forms are also supported.
@@ -37,7 +37,7 @@ Integer array declarations receive descriptor slots in their declaring frame,
 dimension metadata for lower/upper bound expressions, and resolved read/write
 accesses that preserve the static-link delta and subscript count needed by the
 IR and WASM lowering stages.
-Labels receive stable label descriptors and direct local `goto` statements
+Labels receive stable label descriptors and direct local `goto`/`go to` statements
 resolve to those descriptors. Direct nonlocal block `goto` statements resolve
 to outer active blocks, and procedure-crossing transfers resolve to pending
 label ids that later lowering can propagate through calls. Switch declarations

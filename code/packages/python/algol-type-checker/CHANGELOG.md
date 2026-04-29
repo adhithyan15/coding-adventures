@@ -45,7 +45,7 @@ All notable changes to this package will be documented in this file.
 - Accepted integer-returning procedure actuals for real-valued formal
   procedure parameters, matching scalar integer-to-real promotion.
 - Accepted switch declaration entries that target labels in lexical parent
-  blocks while continuing to reject recursive self-selection.
+  blocks.
 - Accepted procedure-valued actuals with scalar by-name parameters for formal
   procedure parameters, while rejecting call shapes that would pass a
   non-assignable actual to a written by-name parameter.
@@ -57,6 +57,8 @@ All notable changes to this package will be documented in this file.
   procedure call forwards a concrete procedure actual.
 - Accepted recursive switch self-selection entries so terminating recursive
   designational dispatch can lower through the WASM pipeline.
+- Accepted `go to` as an alternate spelling for direct and designational
+  `goto` statements.
 
 ## [0.1.0] - 2026-04-20
 

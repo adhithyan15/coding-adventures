@@ -177,7 +177,10 @@ assign_stmt  = left_part { left_part } expression ;
 
 left_part    = variable ASSIGN ;
 
-goto_stmt    = "goto" desig_expr ;
+# ALGOL 60 accepted both spellings in common use: the single-word `goto` and
+# the report-style two-word `go to`.
+goto_stmt    = "goto" desig_expr
+             | "go" "to" desig_expr ;
 
 # Procedure call as a statement (return value, if any, is discarded).
 # Calls with no arguments omit the parentheses entirely.

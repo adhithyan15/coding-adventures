@@ -13,6 +13,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   as `if b then x else y` in assignment values and actual parameters.
 - Block and compound statement lists now tolerate repeated and trailing
   semicolons, matching common ALGOL dummy-statement style.
+- `goto_stmt` now accepts the report-style two-word `go to` spelling in
+  addition to the compact `goto` spelling.
 
 ## [0.1.0] — 2026-04-06
 

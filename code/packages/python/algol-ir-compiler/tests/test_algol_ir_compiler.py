@@ -309,6 +309,20 @@ class TestAlgolIrCompiler:
         assert opcodes.count(IrOp.LOAD_WORD) >= 1
         assert opcodes.count(IrOp.STORE_WORD) >= 1
 
+    def test_compiles_go_to_spelling(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "go to done; "
+                "result := 99; "
+                "done: result := 7 "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+
+        assert IrOp.JUMP in opcodes
+
     def test_compiles_procedure_crossing_goto_with_pending_transfer(self) -> None:
         result = compile_algol(
             parse_algol(

@@ -291,6 +291,27 @@ class TestIfStatement:
 
 
 # ---------------------------------------------------------------------------
+# Goto statement tests
+# ---------------------------------------------------------------------------
+
+
+class TestGotoStatement:
+    """Tests for ALGOL 60 direct goto syntax."""
+
+    def test_go_to_statement(self) -> None:
+        """The report-style ``go to`` spelling parses as a goto statement."""
+        ast = parse(
+            "begin integer result; "
+            "go to done; "
+            "result := 99; "
+            "done: result := 7 "
+            "end"
+        )
+        goto_nodes = find_nodes(ast, "goto_stmt")
+        assert len(goto_nodes) == 1
+
+
+# ---------------------------------------------------------------------------
 # For loop tests
 # ---------------------------------------------------------------------------
 

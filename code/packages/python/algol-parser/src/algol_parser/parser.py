@@ -1,4 +1,4 @@
-"""ALGOL 60 Parser — parses ALGOL 60 source text into ASTs using the grammar-driven approach.
+"""ALGOL 60 Parser — parses ALGOL 60 source text into ASTs.
 
 This module is a thin wrapper around the generic ``GrammarParser``. It loads
 the ``algol.grammar`` file from the ``code/grammars/`` directory, tokenizes
