@@ -346,6 +346,7 @@ members = [
     "ir-to-intel-4004-compiler",
     "intel-4004-assembler",
     "intel-4004-packager",
+    "code-packager",
     "nib-compiler",
     "nib-jvm-compiler",
     "bitset-c",
