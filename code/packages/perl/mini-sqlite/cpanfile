@@ -1,0 +1,8 @@
+requires 'perl', '5.016';
+requires 'CodingAdventures::SqlExecutionEngine';
+requires 'Scalar::Util';
+requires 'Storable';
+
+on test => sub {
+    requires 'Test2::V0';
+};
