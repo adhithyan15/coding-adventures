@@ -26,6 +26,7 @@ members = [
     "blas-library",
     "bootloader",
     "brainfuck",
+    "brainfuck-clr-compiler",
     "brainfuck-jvm-compiler",
     "branch-predictor",
     "bytecode-compiler",
