@@ -405,6 +405,43 @@ fn default_html_lexer_reports_incorrectly_opened_markup_declaration() {
 }
 
 #[test]
+fn default_html_lexer_reports_one_dash_markup_declaration_as_incorrectly_opened() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("Before<!->Middle<!-x>After<!-").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("Before".to_string()),
+            Token::Comment("-".to_string()),
+            Token::Text("Middle".to_string()),
+            Token::Comment("-x".to_string()),
+            Token::Text("After".to_string()),
+            Token::Comment("-".to_string()),
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "incorrectly-opened-comment")
+            .count(),
+        3
+    );
+    assert!(!lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "abrupt-closing-of-empty-comment"));
+    assert!(!lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "eof-in-comment"));
+}
+
+#[test]
 fn default_html_lexer_recovers_invalid_tag_open_as_text() {
     let mut lexer = create_html_lexer().unwrap();
 

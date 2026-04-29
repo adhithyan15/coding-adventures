@@ -565,6 +565,23 @@
       ]
     },
     {
+      "description": "one dash markup declaration recovers as bogus comment",
+      "input": "Before<!->Middle<!-x>After<!-",
+      "output": [
+        ["Character", "Before"],
+        ["Comment", "-"],
+        ["Character", "Middle"],
+        ["Comment", "-x"],
+        ["Character", "After"],
+        ["Comment", "-"]
+      ],
+      "errors": [
+        {"code": "incorrectly-opened-comment", "line": 1, "col": 9},
+        {"code": "incorrectly-opened-comment", "line": 1, "col": 19},
+        {"code": "incorrectly-opened-comment", "line": 1, "col": 29}
+      ]
+    },
+    {
       "description": "invalid end tag opener recovers as bogus comment",
       "input": "Before</3>After",
       "output": [
