@@ -288,7 +288,6 @@ Required behavior:
 
 Convergence work still needed:
 
-- Direct2D should implement `PaintText` since GDI now supports it.
 - GDI and Direct2D should share font-ref parsing rules where possible.
 - Cairo should support `pango:` glyph bindings and optionally `PaintText` via
   Pango layout.
@@ -512,7 +511,7 @@ Known gaps after the GDI runtime adapter work:
 | GDI `PathCommand::ArcTo` | Implemented by converting SVG arcs to cubic Beziers and rendering them through the existing GDI path pipeline. |
 | GDI gradients | Not implemented. |
 | GDI layer filters and blend modes | Layer opacity/transform works; filters/blend modes are not implemented. |
-| Direct2D `PaintText` | Still skipped even though GDI supports it. |
+| Direct2D `PaintText` | Implemented with DirectWrite text layout, baseline positioning, alignment, and `directwrite:`/`canvas:` font-ref parsing. |
 | Direct2D gradients | Not implemented. |
 | Direct2D layer filters and blend modes | Layer opacity works; full effects/blend modes are not implemented. |
 | Metal text | Still partial. Glyph/text convergence remains a larger font-system project. |
