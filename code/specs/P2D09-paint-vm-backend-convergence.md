@@ -140,23 +140,24 @@ pub struct PaintBackendCapabilities {
     pub text: SupportLevel,
     pub image: SupportLevel,
     pub clip: SupportLevel,
+    pub group: SupportLevel,
     pub group_transform: SupportLevel,
     pub group_opacity: SupportLevel,
+    pub layer: SupportLevel,
     pub layer_opacity: SupportLevel,
     pub layer_filters: SupportLevel,
     pub layer_blend_modes: SupportLevel,
     pub linear_gradient: SupportLevel,
     pub radial_gradient: SupportLevel,
-    pub subpixel_geometry: SupportLevel,
     pub antialiasing: SupportLevel,
+    pub offscreen_pixels: SupportLevel,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum SupportLevel {
-    Native,
-    Emulated,
-    Degraded,
     Unsupported,
+    Degraded,
+    Supported,
 }
 ```
 
@@ -164,10 +165,9 @@ Definitions:
 
 | Level | Meaning |
 |-------|---------|
-| `Native` | The platform API directly supports the feature. |
-| `Emulated` | The backend implements correct output through helper code, offscreen buffers, tessellation, or shaders. |
-| `Degraded` | The backend produces approximate output and documents the difference. |
 | `Unsupported` | The backend must reject the scene when strict rendering is requested. |
+| `Degraded` | The backend produces approximate output and may be selected only when the caller allows degradation. |
+| `Supported` | The backend should render the feature faithfully within its documented tolerances, whether natively or through correct emulation. |
 
 Development builds should prefer loud failures for `Unsupported`. Production
 callers may opt into degraded rendering, but that choice belongs to the caller
@@ -185,13 +185,15 @@ pub struct PaintSceneRequirements {
     pub uses_line: bool,
     pub uses_ellipse: bool,
     pub uses_path: bool,
-    pub uses_arc_to: bool,
+    pub uses_path_arc_to: bool,
     pub uses_glyph_run: bool,
     pub uses_text: bool,
     pub uses_image: bool,
     pub uses_clip: bool,
+    pub uses_group: bool,
     pub uses_group_transform: bool,
     pub uses_group_opacity: bool,
+    pub uses_layer: bool,
     pub uses_layer_opacity: bool,
     pub uses_layer_filters: bool,
     pub uses_layer_blend_modes: bool,
@@ -502,10 +504,11 @@ Only Tier 2 and above should be candidates for automatic pipeline selection.
 
 ## Current Gaps to Close
 
-Known gaps after the GDI arc convergence work:
+Known gaps after the GDI runtime adapter work:
 
 | Area | Status |
 |------|--------|
+| GDI runtime adapter | Implemented; `paint-vm-gdi` now exposes a `PaintRenderer` adapter, descriptor, capabilities, and runtime registry smoke test. |
 | GDI `PathCommand::ArcTo` | Implemented by converting SVG arcs to cubic Beziers and rendering them through the existing GDI path pipeline. |
 | GDI gradients | Not implemented. |
 | GDI layer filters and blend modes | Layer opacity/transform works; filters/blend modes are not implemented. |
@@ -513,19 +516,21 @@ Known gaps after the GDI arc convergence work:
 | Direct2D gradients | Not implemented. |
 | Direct2D layer filters and blend modes | Layer opacity works; full effects/blend modes are not implemented. |
 | Metal text | Still partial. Glyph/text convergence remains a larger font-system project. |
-| Cairo/Skia/Vulkan/OpenGL/WGPU/CoreGraphics | Crates not implemented yet. |
+| Cairo/Skia/Vulkan/OpenGL/WGPU/OpenCL/Mesa/CoreGraphics | Scaffold crates exist for all except CoreGraphics; drawing implementations are not yet wired. |
 
 Recommended immediate order:
 
 1. Direct2D `PaintText`, to restore symmetry with GDI for the string-text path.
-2. Direct2D and GDI gradients.
-3. Cairo Tier 1.
-4. Skia Tier 1, then Tier 2.
-5. Shared `paint-vm-gpu-core`.
-6. WGPU Tier 1.
-7. Vulkan Tier 1.
-8. OpenGL Tier 1.
-9. Filters and advanced blend modes across GPU-capable backends.
+2. Direct2D runtime adapter once `PaintText` lands.
+3. Direct2D and GDI gradients.
+4. Cairo Tier 1.
+5. Skia Tier 1, then Tier 2.
+6. Shared `paint-vm-gpu-core`.
+7. WGPU Tier 1.
+8. Vulkan Tier 1.
+9. OpenGL and Mesa-backed Tier 1.
+10. OpenCL compute raster experiments for filters/software paths.
+11. Filters and advanced blend modes across GPU-capable backends.
 
 ---
 
