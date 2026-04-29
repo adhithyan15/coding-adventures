@@ -1,5 +1,57 @@
 # Changelog
 
+## [1.8.0] - 2026-04-28
+
+### Added
+
+**Named parameter binding (`:name` style)**
+
+`Cursor.execute` and `Connection.execute` now accept a `Mapping` (e.g. `dict`)
+as the *parameters* argument, in addition to the existing `Sequence` form.
+When a mapping is passed, every `:identifier` placeholder in the SQL is
+replaced by `parameters[identifier]` — matching the stdlib `sqlite3`
+behaviour and PEP 249's `"named"` paramstyle.
+
+```python
+conn.execute(
+    "SELECT name FROM employees WHERE dept = :d AND active = :active",
+    {"d": "eng", "active": True},
+)
+```
+
+- **`binding.substitute(sql, parameters)`** — parameter type now
+  `Sequence | Mapping`.  Sequence → qmark style (`?`); mapping → named
+  style (`:name`).  Mixing the two styles in one statement raises
+  `ProgrammingError`.
+- **Identifier rules** — `:identifier` matches `[A-Za-z_][A-Za-z0-9_]*`.
+  Postgres-style casts like `a::INT` are NOT recognised as placeholders
+  (the `:` is followed by another `:`, not an identifier-start
+  character).  Numeric placeholders like `:1` are also NOT recognised
+  (PEP 249 calls those `"numeric"` style; not yet supported).
+- **NULL-safe placeholders inside literals/comments** — `:foo` inside
+  `'...'`, `--...`, or `/* ... */` is left untouched, matching the
+  existing `?` scanner behaviour.
+- **Extra dict keys are ignored** — only keys referenced by the SQL are
+  consumed; unused keys do not raise (matches `sqlite3`).
+- **`Connection.execute` / `Cursor.execute`** — type signature widened
+  to `Sequence[Any] | Mapping[str, Any] = ()`.
+- **`engine.run`** — same signature widening; forwards the mapping
+  through to `substitute`.
+- **`paramstyle`** docstring clarified — the module still declares
+  `"qmark"` (matching stdlib `sqlite3`) but accepts both styles at
+  runtime.
+
+### Tests added
+
+- `tests/test_binding.py::TestNamedParameters` — 17 unit tests
+  covering single/multi-named binding, repeated keys, extra-key
+  tolerance, missing-key error, scanner robustness inside literals
+  and comments, double-colon non-recognition, identifier rules,
+  paramstyle exclusivity (mixing, wrong container types), and value
+  type rendering.
+- `tests/test_cursor.py` — 4 end-to-end tests via `Connection.execute`:
+  named SELECT, named INSERT, missing-key error, repeated key.
+
 ## [1.7.0] - 2026-04-28
 
 ### Added — SQL Extras: Scalar Subqueries, BLOB, PRAGMA, UDFs
