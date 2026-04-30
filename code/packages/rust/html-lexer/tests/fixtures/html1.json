@@ -78,6 +78,23 @@
       ]
     },
     {
+      "id": "null-character-name-replacement",
+      "description": "NULL characters in tag and attribute names are replaced with U+FFFD",
+      "input": "<x\u0000 \u0000=v a\u0000b=1 first \u0000second=2></x\u0000>",
+      "tokens": [
+        "StartTag(name=x\uFFFD, attributes=[\uFFFD=v, a\uFFFDb=1, first=, \uFFFDsecond=2], self_closing=false)",
+        "EndTag(name=x\uFFFD)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "unexpected-null-character",
+        "unexpected-null-character",
+        "unexpected-null-character",
+        "unexpected-null-character",
+        "unexpected-null-character"
+      ]
+    },
+    {
       "id": "mosaic-doctype-and-heading",
       "input": "<!DOCTYPE HTML><H1 class=test>Hello</H1>",
       "tokens": [

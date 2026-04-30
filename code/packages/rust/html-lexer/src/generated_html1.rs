@@ -4,7 +4,11 @@
 //! Do not edit by hand.
 
 #[allow(unused_imports)]
-use state_machine::{EffectfulStateMachine, FixtureDefinition, GuardDefinition, InputDefinition, MachineKind, MatcherDefinition, RegisterDefinition, StateDefinition, StateMachineDefinition, TokenDefinition, TransitionDefinition};
+use state_machine::{
+    EffectfulStateMachine, FixtureDefinition, GuardDefinition, InputDefinition, MachineKind,
+    MatcherDefinition, RegisterDefinition, StateDefinition, StateMachineDefinition,
+    TokenDefinition, TransitionDefinition,
+};
 
 pub fn html1_lexer_definition() -> StateMachineDefinition {
     let mut definition = StateMachineDefinition::new("html1-lexer", MachineKind::Transducer);
@@ -76,9 +80,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
     definition.tokens = vec![
         TokenDefinition {
             name: "Text".to_string(),
-            fields: vec![
-                "data".to_string(),
-            ],
+            fields: vec!["data".to_string()],
         },
         TokenDefinition {
             name: "StartTag".to_string(),
@@ -90,15 +92,11 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         },
         TokenDefinition {
             name: "EndTag".to_string(),
-            fields: vec![
-                "name".to_string(),
-            ],
+            fields: vec!["name".to_string()],
         },
         TokenDefinition {
             name: "Comment".to_string(),
-            fields: vec![
-                "data".to_string(),
-            ],
+            fields: vec!["data".to_string()],
         },
         TokenDefinition {
             name: "Doctype".to_string(),
@@ -5628,6 +5626,23 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "tag_open".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "data".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "append_text(<)".to_string(),
+                "append_text_replacement".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "tag_open".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Anything),
             to: vec![
                 "data".to_string(),
@@ -5822,6 +5837,22 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "tag_name".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "tag_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "append_tag_name_replacement".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "tag_name".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Anything),
             to: vec![
                 "tag_name".to_string(),
@@ -5951,6 +5982,23 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "before_attribute_name".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "attribute_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "start_attribute".to_string(),
+                "append_attribute_name_replacement".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "before_attribute_name".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Anything),
             to: vec![
                 "attribute_name".to_string(),
@@ -6081,6 +6129,22 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "attribute_name".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "attribute_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "append_attribute_name_replacement".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "attribute_name".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Anything),
             to: vec![
                 "attribute_name".to_string(),
@@ -6206,6 +6270,24 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
                 "emit(EOF)".to_string(),
             ],
             consume: false,
+        },
+        TransitionDefinition {
+            from: "after_attribute_name".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "attribute_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "commit_attribute_dedup".to_string(),
+                "parse_error(unexpected-null-character)".to_string(),
+                "start_attribute".to_string(),
+                "append_attribute_name_replacement".to_string(),
+            ],
+            consume: true,
         },
         TransitionDefinition {
             from: "after_attribute_name".to_string(),
@@ -13072,6 +13154,22 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
                 "emit(EOF)".to_string(),
             ],
             consume: false,
+        },
+        TransitionDefinition {
+            from: "end_tag_name".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "end_tag_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "append_tag_name_replacement".to_string(),
+            ],
+            consume: true,
         },
         TransitionDefinition {
             from: "end_tag_name".to_string(),

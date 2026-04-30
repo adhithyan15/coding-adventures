@@ -2485,6 +2485,16 @@ actions = [
 
 [[transitions]]
 from = "tag_open"
+matcher = { literal = "\u0000" }
+to = "data"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "append_text(<)",
+  "append_text_replacement",
+]
+
+[[transitions]]
+from = "tag_open"
 matcher = { anything = true }
 to = "data"
 consume = false
@@ -2571,6 +2581,12 @@ actions = [
 
 [[transitions]]
 from = "tag_name"
+matcher = { literal = "\u0000" }
+to = "tag_name"
+actions = ["parse_error(unexpected-null-character)", "append_tag_name_replacement"]
+
+[[transitions]]
+from = "tag_name"
 matcher = { anything = true }
 to = "tag_name"
 actions = ["append_tag_name(current_lowercase)"]
@@ -2625,6 +2641,16 @@ actions = [
   "parse_error(eof-in-tag)",
   "emit_current_token",
   "emit(EOF)",
+]
+
+[[transitions]]
+from = "before_attribute_name"
+matcher = { literal = "\u0000" }
+to = "attribute_name"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "start_attribute",
+  "append_attribute_name_replacement",
 ]
 
 [[transitions]]
@@ -2684,6 +2710,15 @@ actions = [
 
 [[transitions]]
 from = "attribute_name"
+matcher = { literal = "\u0000" }
+to = "attribute_name"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "append_attribute_name_replacement",
+]
+
+[[transitions]]
+from = "attribute_name"
 matcher = { anything = true }
 to = "attribute_name"
 actions = ["append_attribute_name(current_lowercase)"]
@@ -2735,6 +2770,17 @@ actions = [
   "commit_attribute_dedup",
   "emit_current_token",
   "emit(EOF)",
+]
+
+[[transitions]]
+from = "after_attribute_name"
+matcher = { literal = "\u0000" }
+to = "attribute_name"
+actions = [
+  "commit_attribute_dedup",
+  "parse_error(unexpected-null-character)",
+  "start_attribute",
+  "append_attribute_name_replacement",
 ]
 
 [[transitions]]
@@ -6249,6 +6295,12 @@ actions = [
   "emit_current_token",
   "emit(EOF)",
 ]
+
+[[transitions]]
+from = "end_tag_name"
+matcher = { literal = "\u0000" }
+to = "end_tag_name"
+actions = ["parse_error(unexpected-null-character)", "append_tag_name_replacement"]
 
 [[transitions]]
 from = "end_tag_name"

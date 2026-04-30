@@ -40,10 +40,12 @@ Tag tokens:
 - `create_end_tag`
 - `append_tag_name(current)`
 - `append_tag_name(current_lowercase)`
+- `append_tag_name_replacement`
 - `start_attribute`
 - `append_attribute_name(current)`
 - `append_attribute_name(current_lowercase)`
 - `append_attribute_name(literal)`
+- `append_attribute_name_replacement`
 - `append_attribute_value(current)`
 - `append_attribute_value(literal)`
 - `append_attribute_value_replacement`

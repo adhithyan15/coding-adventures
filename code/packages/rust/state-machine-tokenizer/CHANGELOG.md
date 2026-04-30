@@ -26,3 +26,5 @@ All notable changes to the `state-machine-tokenizer` crate will be documented in
   available for definitions that preserve duplicates.
 - Added `append_attribute_value_replacement` so lexer definitions can recover
   invalid attribute-value code points with U+FFFD without host callbacks.
+- Added `append_tag_name_replacement` and `append_attribute_name_replacement`
+  so lexer definitions can recover invalid name code points with U+FFFD.

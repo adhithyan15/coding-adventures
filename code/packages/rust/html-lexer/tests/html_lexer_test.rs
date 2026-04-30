@@ -207,6 +207,56 @@ fn default_html_lexer_replaces_null_characters_in_text_and_attributes() {
 }
 
 #[test]
+fn default_html_lexer_replaces_null_characters_in_tag_and_attribute_names() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer
+        .push("<x\0 \0=v a\0b=1 first \0second=2></x\0>")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::StartTag {
+                name: "x\u{FFFD}".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "\u{FFFD}".to_string(),
+                        value: "v".to_string(),
+                    },
+                    Attribute {
+                        name: "a\u{FFFD}b".to_string(),
+                        value: "1".to_string(),
+                    },
+                    Attribute {
+                        name: "first".to_string(),
+                        value: String::new(),
+                    },
+                    Attribute {
+                        name: "\u{FFFD}second".to_string(),
+                        value: "2".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "x\u{FFFD}".to_string(),
+            },
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-null-character")
+            .count(),
+        5
+    );
+}
+
+#[test]
 fn default_html_lexer_marks_missing_doctype_name_force_quirks() {
     let mut lexer = create_html_lexer().unwrap();
 
