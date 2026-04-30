@@ -278,6 +278,22 @@ class TestPrologVMStress:
             {"X": num(1), "Y": num(2), "Z": num(3)},
         ]
 
+    def test_clpfd_scalar_product_runs_through_vm(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            ?- [X,Y] ins 0..4,
+               scalar_product([2,3], [X,Y], #=, 12),
+               X #< Y,
+               labeling([], [X,Y]).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert [answer.as_dict() for answer in answers] == [
+            {"X": num(0), "Y": num(4)},
+        ]
+
     def test_initialized_named_answers_keep_runtime_assertions_visible(self) -> None:
         compiled = compile_swi_prolog_source(
             """

@@ -33,6 +33,7 @@ from logic_builtins import (
     fd_lto,
     fd_mulo,
     fd_neqo,
+    fd_scalar_producto,
     fd_subo,
     fd_sumo,
     findallo,
@@ -202,6 +203,9 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
     if goal.relation.arity == 3 and name == "sum":
         sum_goal = _adapt_fd_sum(args[0], args[1], args[2])
         return goal if sum_goal is None else sum_goal
+    if goal.relation.arity == 4 and name == "scalar_product":
+        scalar_goal = _adapt_fd_scalar_product(args[0], args[1], args[2], args[3])
+        return goal if scalar_goal is None else scalar_goal
 
     ternary_arithmetic_builtins: dict[
         str,
@@ -339,6 +343,17 @@ def _adapt_fd_sum(
     if _atom_symbol_name(operator_value) != "#=":
         return None
     return fd_sumo(terms_value, result)
+
+
+def _adapt_fd_scalar_product(
+    coeffs_value: Term,
+    terms_value: Term,
+    operator_value: Term,
+    result: Term,
+) -> GoalExpr | None:
+    if _atom_symbol_name(operator_value) != "#=":
+        return None
+    return fd_scalar_producto(coeffs_value, terms_value, result)
 
 
 def _adapt_fd_arithmetic_expression(expression: Term, result: Term) -> GoalExpr | None:
