@@ -49,6 +49,8 @@ All notable changes to this package will be documented in this file.
 - Lowered chained assignments, branch-selected conditional expressions, and
   ALGOL-left-associative exponentiation for numeric bases with integer or real
   exponents.
+- Lowered boolean `and`, `or`, and `impl` through short-circuiting control
+  flow while keeping `eqv` strict.
 - Lowered bare no-argument typed procedure names as expression calls, including
   use inside read-only by-name eval thunks.
 - Lowered integer `div` and `mod` zero-divisor checks through the existing

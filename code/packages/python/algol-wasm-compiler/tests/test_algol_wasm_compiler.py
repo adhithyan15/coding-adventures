@@ -426,6 +426,22 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
 
+    def test_boolean_and_or_impl_short_circuit_rhs(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "boolean procedure mark; "
+            "begin result := result + 100; mark := false end; "
+            "result := 0; "
+            "if false and mark then result := result + 1 "
+            "else result := result + 7; "
+            "if true or mark then result := result + 11 "
+            "else result := result + 13; "
+            "if false impl mark then result := result + 17 "
+            "else result := result + 19 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [35]
+
     def test_boolean_equivalence_truth_table(self) -> None:
         result = compile_source(
             "begin integer result; "
@@ -437,6 +453,18 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [10]
+
+    def test_boolean_equivalence_remains_strict(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "boolean procedure mark; "
+            "begin result := result + 100; mark := false end; "
+            "result := 0; "
+            "if true eqv mark then result := result + 1 "
+            "else result := result + 7 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [107]
 
     def test_or_binds_tighter_than_implication(self) -> None:
         result = compile_source(

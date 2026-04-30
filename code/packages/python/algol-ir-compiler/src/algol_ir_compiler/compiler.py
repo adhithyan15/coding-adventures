@@ -2425,50 +2425,65 @@ class AlgolIrCompiler:
         index = 1
         while index < len(children):
             operator = children[index]
-            right = self._compile_expr(children[index + 1], scope)
             if not isinstance(operator, Token):
                 raise CompileError("expected boolean operator")
             value = operator.value
-            if value == "and":
-                dst = self._fresh_reg()
-                self._emit(
-                    IrOp.AND, IrRegister(dst), IrRegister(current), IrRegister(right)
+            right = children[index + 1]
+            if value in {"and", "or", "impl"}:
+                current = self._emit_short_circuit_bool(
+                    operator=value,
+                    left=current,
+                    right=right,
+                    scope=scope,
                 )
-                current = dst
-            elif value == "or":
-                summed = self._fresh_reg()
-                dst = self._fresh_reg()
-                self._emit(
-                    IrOp.ADD, IrRegister(summed), IrRegister(current), IrRegister(right)
-                )
-                self._emit(
-                    IrOp.CMP_NE, IrRegister(dst), IrRegister(summed), IrRegister(0)
-                )
-                current = dst
-            elif value == "impl":
-                inverted = self._invert_bool(current)
-                summed = self._fresh_reg()
-                dst = self._fresh_reg()
-                self._emit(
-                    IrOp.ADD,
-                    IrRegister(summed),
-                    IrRegister(inverted),
-                    IrRegister(right),
-                )
-                self._emit(
-                    IrOp.CMP_NE, IrRegister(dst), IrRegister(summed), IrRegister(0)
-                )
-                current = dst
             elif value == "eqv":
+                right_reg = self._compile_expr(right, scope)
                 dst = self._fresh_reg()
                 self._emit(
-                    IrOp.CMP_EQ, IrRegister(dst), IrRegister(current), IrRegister(right)
+                    IrOp.CMP_EQ,
+                    IrRegister(dst),
+                    IrRegister(current),
+                    IrRegister(right_reg),
                 )
                 current = dst
             else:
                 raise CompileError(f"boolean operator {value!r} is not supported yet")
             index += 2
         return current
+
+    def _emit_short_circuit_bool(
+        self,
+        *,
+        operator: str,
+        left: int,
+        right: ASTNode | Token,
+        scope: _FrameScope,
+    ) -> int:
+        index = self.if_count
+        self.if_count += 1
+        end_label = f"bool_{index}_{operator}_end"
+        result = self._fresh_reg()
+
+        if operator == "and":
+            self._emit(IrOp.LOAD_IMM, IrRegister(result), IrImmediate(0))
+            self._emit(IrOp.BRANCH_Z, IrRegister(left), IrLabel(end_label))
+            right_reg = self._compile_expr(right, scope)
+            self._copy_reg(dst=result, src=right_reg)
+        elif operator == "or":
+            self._emit(IrOp.LOAD_IMM, IrRegister(result), IrImmediate(1))
+            self._emit(IrOp.BRANCH_NZ, IrRegister(left), IrLabel(end_label))
+            right_reg = self._compile_expr(right, scope)
+            self._copy_reg(dst=result, src=right_reg)
+        elif operator == "impl":
+            self._emit(IrOp.LOAD_IMM, IrRegister(result), IrImmediate(1))
+            self._emit(IrOp.BRANCH_Z, IrRegister(left), IrLabel(end_label))
+            right_reg = self._compile_expr(right, scope)
+            self._copy_reg(dst=result, src=right_reg)
+        else:
+            raise CompileError(f"boolean operator {operator!r} is not supported yet")
+
+        self._label(end_label)
+        return result
 
     def _compile_comparison(
         self, children: list[ASTNode | Token], scope: _FrameScope

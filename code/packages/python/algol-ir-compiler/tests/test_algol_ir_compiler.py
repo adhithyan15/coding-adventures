@@ -638,7 +638,8 @@ class TestAlgolIrCompiler:
         )
         opcodes = [instr.opcode for instr in result.program.instructions]
         assert IrOp.CMP_GT in opcodes
-        assert IrOp.AND in opcodes
+        assert IrOp.BRANCH_Z in opcodes
+        assert IrOp.BRANCH_NZ in opcodes
 
     def test_compiles_boolean_implication_form(self) -> None:
         result = compile_algol(
@@ -651,8 +652,7 @@ class TestAlgolIrCompiler:
         opcodes = [instr.opcode for instr in result.program.instructions]
 
         assert IrOp.ADD_IMM in opcodes
-        assert IrOp.AND_IMM in opcodes
-        assert IrOp.CMP_NE in opcodes
+        assert IrOp.BRANCH_Z in opcodes
 
     def test_compiles_boolean_equivalence_form(self) -> None:
         result = compile_algol(
