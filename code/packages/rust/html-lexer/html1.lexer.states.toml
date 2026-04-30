@@ -1557,14 +1557,23 @@ from = "text_numeric_character_reference"
 matcher = { eof = true }
 to = "done"
 consume = false
-actions = ["append_temporary_buffer_to_text", "flush_text", "emit(EOF)"]
+actions = [
+  "append_temporary_buffer_to_text",
+  "parse_error(absence-of-digits-in-numeric-character-reference)",
+  "flush_text",
+  "emit(EOF)",
+]
 
 [[transitions]]
 from = "text_numeric_character_reference"
 matcher = { anything = true }
 to = "data"
 consume = false
-actions = ["append_temporary_buffer_to_text", "switch_to_return_state"]
+actions = [
+  "append_temporary_buffer_to_text",
+  "parse_error(absence-of-digits-in-numeric-character-reference)",
+  "switch_to_return_state",
+]
 
 [[transitions]]
 from = "text_numeric_hex_character_reference_start"
@@ -1589,14 +1598,23 @@ from = "text_numeric_hex_character_reference_start"
 matcher = { eof = true }
 to = "done"
 consume = false
-actions = ["append_temporary_buffer_to_text", "flush_text", "emit(EOF)"]
+actions = [
+  "append_temporary_buffer_to_text",
+  "parse_error(absence-of-digits-in-numeric-character-reference)",
+  "flush_text",
+  "emit(EOF)",
+]
 
 [[transitions]]
 from = "text_numeric_hex_character_reference_start"
 matcher = { anything = true }
 to = "data"
 consume = false
-actions = ["append_temporary_buffer_to_text", "switch_to_return_state"]
+actions = [
+  "append_temporary_buffer_to_text",
+  "parse_error(absence-of-digits-in-numeric-character-reference)",
+  "switch_to_return_state",
+]
 
 [[transitions]]
 from = "text_numeric_hex_character_reference"
@@ -3260,6 +3278,7 @@ to = "done"
 consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
+  "parse_error(absence-of-digits-in-numeric-character-reference)",
   "parse_error(eof-in-tag)",
   "commit_attribute_dedup",
   "emit_current_token",
@@ -3273,6 +3292,7 @@ to = "attribute_value_unquoted"
 consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
+  "parse_error(absence-of-digits-in-numeric-character-reference)",
   "switch_to_return_state",
 ]
 
@@ -3301,6 +3321,7 @@ to = "done"
 consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
+  "parse_error(absence-of-digits-in-numeric-character-reference)",
   "parse_error(eof-in-tag)",
   "commit_attribute_dedup",
   "emit_current_token",
@@ -3314,6 +3335,7 @@ to = "attribute_value_unquoted"
 consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
+  "parse_error(absence-of-digits-in-numeric-character-reference)",
   "switch_to_return_state",
 ]
 

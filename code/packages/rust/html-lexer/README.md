@@ -28,6 +28,8 @@ classic Latin-1 entity set, preserving entity-name case so legacy names such as
 Numeric character references report invalid-code-point diagnostics and recover
 with the HTML replacement/remapping rules for null, surrogate, out-of-range,
 noncharacter, and Windows-1252 control references.
+Digitless numeric references such as `&#;` and `&#x;` stay literal while
+reporting `absence-of-digits-in-numeric-character-reference`.
 Duplicate attributes recover with HTML semantics: the first attribute value is
 kept, later attributes with the same interpreted name are dropped, and a
 `duplicate-attribute` diagnostic is recorded.
