@@ -5182,6 +5182,16 @@ actions = [
 
 [[transitions]]
 from = "doctype_after_keyword"
+matcher = { literal = "\u0000" }
+to = "doctype_name"
+actions = [
+  "parse_error(missing-whitespace-before-doctype-name)",
+  "parse_error(unexpected-null-character)",
+  "append_doctype_name_replacement",
+]
+
+[[transitions]]
+from = "doctype_after_keyword"
 matcher = { anything = true }
 to = "doctype_name"
 actions = [
@@ -5233,6 +5243,12 @@ actions = [
 
 [[transitions]]
 from = "before_doctype_name"
+matcher = { literal = "\u0000" }
+to = "doctype_name"
+actions = ["parse_error(unexpected-null-character)", "append_doctype_name_replacement"]
+
+[[transitions]]
+from = "before_doctype_name"
 matcher = { anything = true }
 to = "doctype_name"
 actions = ["append_doctype_name(current_lowercase)"]
@@ -5274,6 +5290,12 @@ actions = [
   "emit_current_token",
   "emit(EOF)",
 ]
+
+[[transitions]]
+from = "doctype_name"
+matcher = { literal = "\u0000" }
+to = "doctype_name"
+actions = ["parse_error(unexpected-null-character)", "append_doctype_name_replacement"]
 
 [[transitions]]
 from = "doctype_name"
@@ -5832,6 +5854,15 @@ actions = [
 
 [[transitions]]
 from = "doctype_public_identifier_double_quoted"
+matcher = { literal = "\u0000" }
+to = "doctype_public_identifier_double_quoted"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "append_doctype_public_identifier_replacement",
+]
+
+[[transitions]]
+from = "doctype_public_identifier_double_quoted"
 matcher = { anything = true }
 to = "doctype_public_identifier_double_quoted"
 actions = ["append_doctype_public_identifier(current)"]
@@ -5861,6 +5892,15 @@ actions = [
   "mark_force_quirks",
   "emit_current_token",
   "emit(EOF)",
+]
+
+[[transitions]]
+from = "doctype_public_identifier_single_quoted"
+matcher = { literal = "\u0000" }
+to = "doctype_public_identifier_single_quoted"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "append_doctype_public_identifier_replacement",
 ]
 
 [[transitions]]
@@ -6158,6 +6198,15 @@ actions = [
 
 [[transitions]]
 from = "doctype_system_identifier_double_quoted"
+matcher = { literal = "\u0000" }
+to = "doctype_system_identifier_double_quoted"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "append_doctype_system_identifier_replacement",
+]
+
+[[transitions]]
+from = "doctype_system_identifier_double_quoted"
 matcher = { anything = true }
 to = "doctype_system_identifier_double_quoted"
 actions = ["append_doctype_system_identifier(current)"]
@@ -6187,6 +6236,15 @@ actions = [
   "mark_force_quirks",
   "emit_current_token",
   "emit(EOF)",
+]
+
+[[transitions]]
+from = "doctype_system_identifier_single_quoted"
+matcher = { literal = "\u0000" }
+to = "doctype_system_identifier_single_quoted"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "append_doctype_system_identifier_replacement",
 ]
 
 [[transitions]]
@@ -6255,6 +6313,12 @@ matcher = { eof = true }
 to = "done"
 consume = false
 actions = ["emit_current_token", "emit(EOF)"]
+
+[[transitions]]
+from = "bogus_doctype"
+matcher = { literal = "\u0000" }
+to = "bogus_doctype"
+actions = ["parse_error(unexpected-null-character)"]
 
 [[transitions]]
 from = "bogus_doctype"

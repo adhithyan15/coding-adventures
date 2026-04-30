@@ -276,6 +276,21 @@
       ]
     },
     {
+      "description": "null characters are replaced in doctype names and identifiers",
+      "input": "<!DOCTYPE\u0000><!DOCTYPE h\u0000 PUBLIC \"p\u0000\" \"s\u0000\">",
+      "output": [
+        ["DOCTYPE", "\uFFFD", null, null, true],
+        ["DOCTYPE", "h\uFFFD", "p\uFFFD", "s\uFFFD", true]
+      ],
+      "errors": [
+        {"code": "missing-whitespace-before-doctype-name", "line": 1, "col": 10},
+        {"code": "unexpected-null-character", "line": 1, "col": 10},
+        {"code": "unexpected-null-character", "line": 1, "col": 23},
+        {"code": "unexpected-null-character", "line": 1, "col": 34},
+        {"code": "unexpected-null-character", "line": 1, "col": 39}
+      ]
+    },
+    {
       "description": "plaintext state literalizes markup and character references",
       "initialStates": ["PLAINTEXT state"],
       "input": "hello <b>still text</b> &amp; literal",

@@ -119,6 +119,23 @@
       ]
     },
     {
+      "id": "null-character-doctype-replacement",
+      "description": "NULL characters in DOCTYPE names and identifiers are replaced with U+FFFD",
+      "input": "<!DOCTYPE\u0000><!DOCTYPE h\u0000 PUBLIC \"p\u0000\" \"s\u0000\">",
+      "tokens": [
+        "Doctype(name=\uFFFD, force_quirks=false)",
+        "Doctype(name=h\uFFFD, public_identifier=p\uFFFD, system_identifier=s\uFFFD, force_quirks=false)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-whitespace-before-doctype-name",
+        "unexpected-null-character",
+        "unexpected-null-character",
+        "unexpected-null-character",
+        "unexpected-null-character"
+      ]
+    },
+    {
       "id": "mosaic-doctype-and-heading",
       "input": "<!DOCTYPE HTML><H1 class=test>Hello</H1>",
       "tokens": [

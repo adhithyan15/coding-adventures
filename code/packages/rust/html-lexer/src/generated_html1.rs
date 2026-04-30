@@ -10899,6 +10899,23 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "doctype_after_keyword".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "doctype_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(missing-whitespace-before-doctype-name)".to_string(),
+                "parse_error(unexpected-null-character)".to_string(),
+                "append_doctype_name_replacement".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "doctype_after_keyword".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Anything),
             to: vec![
                 "doctype_name".to_string(),
@@ -11002,6 +11019,22 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "before_doctype_name".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "doctype_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "append_doctype_name_replacement".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "before_doctype_name".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Anything),
             to: vec![
                 "doctype_name".to_string(),
@@ -11098,6 +11131,22 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
                 "emit(EOF)".to_string(),
             ],
             consume: false,
+        },
+        TransitionDefinition {
+            from: "doctype_name".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "doctype_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "append_doctype_name_replacement".to_string(),
+            ],
+            consume: true,
         },
         TransitionDefinition {
             from: "doctype_name".to_string(),
@@ -12186,6 +12235,22 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "doctype_public_identifier_double_quoted".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "doctype_public_identifier_double_quoted".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "append_doctype_public_identifier_replacement".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "doctype_public_identifier_double_quoted".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Anything),
             to: vec![
                 "doctype_public_identifier_double_quoted".to_string(),
@@ -12245,6 +12310,22 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
                 "emit(EOF)".to_string(),
             ],
             consume: false,
+        },
+        TransitionDefinition {
+            from: "doctype_public_identifier_single_quoted".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "doctype_public_identifier_single_quoted".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "append_doctype_public_identifier_replacement".to_string(),
+            ],
+            consume: true,
         },
         TransitionDefinition {
             from: "doctype_public_identifier_single_quoted".to_string(),
@@ -12844,6 +12925,22 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "doctype_system_identifier_double_quoted".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "doctype_system_identifier_double_quoted".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "append_doctype_system_identifier_replacement".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "doctype_system_identifier_double_quoted".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Anything),
             to: vec![
                 "doctype_system_identifier_double_quoted".to_string(),
@@ -12903,6 +13000,22 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
                 "emit(EOF)".to_string(),
             ],
             consume: false,
+        },
+        TransitionDefinition {
+            from: "doctype_system_identifier_single_quoted".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "doctype_system_identifier_single_quoted".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "append_doctype_system_identifier_replacement".to_string(),
+            ],
+            consume: true,
         },
         TransitionDefinition {
             from: "doctype_system_identifier_single_quoted".to_string(),
@@ -13050,6 +13163,21 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
                 "emit(EOF)".to_string(),
             ],
             consume: false,
+        },
+        TransitionDefinition {
+            from: "bogus_doctype".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "bogus_doctype".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+            ],
+            consume: true,
         },
         TransitionDefinition {
             from: "bogus_doctype".to_string(),
