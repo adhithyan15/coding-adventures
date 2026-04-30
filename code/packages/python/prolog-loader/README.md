@@ -10,7 +10,7 @@ It keeps parsing side-effect free, then exposes helpers to:
   `use_module/1,2`
 - collect `initialization/1` directives in source order
 - run those initialization goals explicitly against the loaded `Program`
-- adapt parsed Prolog builtin calls like `call/1`, `dynamic/1`, `assertz/1`,
+- adapt parsed Prolog builtin calls like `call/1..8`, `dynamic/1`, `assertz/1`,
   and `predicate_property/2` into runtime goals before execution
 - adapt finite integer builtins such as `integer/1`, `between/3`, and `succ/2`
 - adapt callable CLP(FD) forms such as `in/2`, `ins/2`, `#=/2`,
@@ -22,7 +22,8 @@ It keeps parsing side-effect free, then exposes helpers to:
 - link multiple loaded sources into one namespace-aware runnable project with
   module-local predicates and weak imports
 - rewrite explicit `module:goal` qualification during linking, including common
-  meta-goal forms like `call/1`, `once/1`, `not/1`, `\\+/1`, and `phrase/2,3`
+  meta-goal forms like `call/1..8`, `once/1`, `not/1`, `\\+/1`, and
+  `phrase/2,3`
 - adapt Prolog control constructs such as `->/2` and
   `(If -> Then ; Else)` into executable builtin goals
 - adapt common list predicates such as `member/2`, `append/3`, `select/3`,

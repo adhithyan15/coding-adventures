@@ -19,6 +19,8 @@ All notable changes to this package will be documented in this file.
   `fd_elemento(index, vars, value)` for richer CLP(FD) modeling constraints.
 - `fd_reify_relationo(left, op, right, truth)` and boolean FD connectives for
   CLP(FD)-style reification and truth-table modeling.
+- variadic `calltermo(term_goal, *extra_args)` for Prolog-style meta-call
+  argument extension.
 
 ### Fixed
 

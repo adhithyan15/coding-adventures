@@ -529,6 +529,30 @@ class TestPrologLoader:
             atom("bart"),
         ]
 
+    def test_module_qualification_rewrites_call_n_meta_arguments(self) -> None:
+        project = load_swi_prolog_project(
+            """
+            :- module(family, [ancestor/2]).
+            ancestor(homer, bart).
+            ancestor(homer, lisa).
+            """,
+            """
+            :- module(app, []).
+            ?- call(family:ancestor, homer, Who).
+            """,
+        )
+
+        query = project.queries[0]
+
+        assert solve_all(
+            project.program,
+            query.variables["Who"],
+            adapt_prolog_goal(query.goal),
+        ) == [
+            atom("bart"),
+            atom("lisa"),
+        ]
+
     def test_module_qualified_initialization_goals_execute(self) -> None:
         project = load_swi_prolog_project(
             """
@@ -968,6 +992,19 @@ class TestPrologGoalAdapter:
             (num(3), num(4)),
             (num(4), num(5)),
         ]
+
+    def test_adapt_prolog_goal_rewrites_call_n(self) -> None:
+        parsed = parse_swi_query(
+            "?- call(member, Item, [tea, cake]).",
+        )
+
+        adapted = adapt_prolog_goal(parsed.goal)
+
+        assert solve_all(
+            program(),
+            parsed.variables["Item"],
+            adapted,
+        ) == [atom("tea"), atom("cake")]
 
     def test_adapt_prolog_goal_rewrites_clpfd_callable_forms(self) -> None:
         parsed = parse_swi_query(

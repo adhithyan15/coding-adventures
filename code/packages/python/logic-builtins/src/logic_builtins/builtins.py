@@ -200,6 +200,13 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("callableo", 1),
     ("callo", 1),
     ("calltermo", 1),
+    ("calltermo", 2),
+    ("calltermo", 3),
+    ("calltermo", 4),
+    ("calltermo", 5),
+    ("calltermo", 6),
+    ("calltermo", 7),
+    ("calltermo", 8),
     ("clauseo", 2),
     ("compare_termo", 3),
     ("compoundo", 1),
@@ -2504,18 +2511,63 @@ def callo(goal: object) -> GoalExpr:
     return native_goal(run)
 
 
-def calltermo(term_goal: object) -> GoalExpr:
-    """Execute a reified callable goal term in the current proof state."""
+def _append_callable_arguments(
+    callable_term: Term,
+    extra_args: tuple[Term, ...],
+) -> Term | None:
+    """Return ``callable_term`` with extra arguments appended, if callable."""
+
+    if not extra_args:
+        return callable_term
+    if isinstance(callable_term, RelationCall):
+        callable_term = callable_term.as_term()
+    if isinstance(callable_term, Atom) and callable_term.symbol.namespace is None:
+        return Compound(functor=callable_term.symbol, args=extra_args)
+    if isinstance(callable_term, Compound):
+        if (
+            callable_term.functor.namespace is None
+            and callable_term.functor.name == ":"
+            and len(callable_term.args) == 2
+        ):
+            qualified_goal = _append_callable_arguments(
+                callable_term.args[1],
+                extra_args,
+            )
+            if qualified_goal is None:
+                return None
+            return Compound(
+                functor=callable_term.functor,
+                args=(callable_term.args[0], qualified_goal),
+            )
+        return Compound(
+            functor=callable_term.functor,
+            args=(*callable_term.args, *extra_args),
+        )
+    return None
+
+
+def calltermo(term_goal: object, *extra_args: object) -> GoalExpr:
+    """Execute a reified callable term, optionally appending arguments."""
 
     def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
-        (goal_term,) = args
+        goal_term, *argument_terms = args
+        reified_args = tuple(
+            _reified(argument_term, state)
+            for argument_term in argument_terms
+        )
+        callable_term = _append_callable_arguments(
+            _reified(goal_term, state),
+            reified_args,
+        )
+        if callable_term is None:
+            return
         try:
-            called_goal = goal_from_term(_reified(goal_term, state))
+            called_goal = goal_from_term(callable_term)
         except TypeError:
             return
         yield from solve_from(program_value, called_goal, state)
 
-    return native_goal(run, _as_callable_term(term_goal))
+    return native_goal(run, _as_callable_term(term_goal), *extra_args)
 
 
 def onceo(goal: object) -> GoalExpr:

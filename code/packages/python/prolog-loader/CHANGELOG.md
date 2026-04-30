@@ -3,6 +3,8 @@
 ## Unreleased
 
 - preserve source query variables across `goal_expansion/2` rewrites
+- adapt Prolog `call/2..8` into variadic callable-term execution
+- preserve extra arguments while rewriting module-qualified `call/N` meta-goals
 - rewrite module-qualified callable arguments inside `findall/3`, `bagof/3`,
   `setof/3`, and `forall/2`
 - expose `rewrite_loaded_prolog_query(...)` for ad-hoc queries that need a
