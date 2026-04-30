@@ -1,33 +1,49 @@
 # =============================================================================
-# LANG-runtime safety CI — nightly Miri (full suite, twig-vm included)
+# LANG-runtime safety CI — deep Miri (post-merge + nightly)
 # =============================================================================
 #
-# Why this workflow exists (PR 7):
+# Why this workflow exists (PR 7, refined):
 #
 # `lang-runtime-safety.yml` runs Miri on `lang-runtime-core` +
 # `lispy-runtime` as a *blocking* check on every PR (~5 min, fast).
-# The `twig-vm` Miri suite has grown to 1h+ on Linux runners as the
-# dispatcher took on closures (PR 5), method dispatch (PR 6), and the
-# IC table (PR 7).  Per-PR Miri on twig-vm is now `continue-on-error:
-# true` (informational only) — it can't block merges, but it can
-# still flag regressions when it completes in time.
+# That covers all the unsafe code in the stack.  `twig-vm` has zero
+# unsafe of its own; its Miri value is the integration seam, which
+# is *already* exercised by lispy-runtime's own Miri suite plus a
+# local pre-push verification.  Running twig-vm Miri on every PR
+# was costing 1h+ wallclock per PR for redundant coverage —
+# blocking iteration speed.
 #
-# This nightly workflow runs the full twig-vm Miri suite at 03:00 UTC
-# every day, on the latest `main` branch.  If the run fails, the
-# workflow record stays in the Actions UI as a regression marker.
-# Engineers also run `scripts/miri-twig-vm.sh` locally before pushing
-# changes that touch the dispatcher; this nightly is the safety net
-# in case a PR slipped through without local verification.
+# **This workflow runs only post-merge** (push to main) **and
+# nightly** (cron).  Three reasons:
 #
-# Why no notification integration?  Out of scope for PR 7.  Workflow
-# UI history is sufficient; future PR can wire Slack/email when we
-# have a regression to fix.
+#   1. Post-merge runs catch regressions immediately after a PR
+#      lands, without slowing down the PR itself.
+#   2. The nightly cron is belt-and-braces against admin merges or
+#      force-pushes that bypass per-PR CI.
+#   3. **Nothing in this workflow is `blocking`.**  Even on main,
+#      if twig-vm Miri fails, the workflow record stays in the
+#      Actions UI as a regression marker but doesn't propagate to
+#      main's status badge — twig-vm has no unsafe, so a Miri
+#      failure here is an integration-seam regression to
+#      investigate, not a "main is broken" signal.
+#
+# Local pre-push: `scripts/miri-twig-vm.sh` is the canonical
+# verification engineers run before pushing changes that touch
+# twig-vm.  The post-merge run here is the safety net.
 
-name: LANG-runtime safety (nightly Miri)
+name: LANG-runtime safety (deep — post-merge + nightly)
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'code/packages/rust/lang-runtime-core/**'
+      - 'code/packages/rust/lispy-runtime/**'
+      - 'code/packages/rust/twig-vm/**'
+      - 'code/packages/rust/interpreter-ir/**'
+      - '.github/workflows/lang-runtime-safety-deep.yml'
   schedule:
-    # 03:00 UTC daily.  Off-cycle vs. main business hours so a
+    # 03:13 UTC daily.  Off-cycle vs. main business hours so a
     # regression is visible at the start of the next workday but
     # doesn't compete for runner capacity during peak push times.
     # Avoiding the :00 minute mark to spread load across runners.
@@ -40,9 +56,15 @@ permissions:
   contents: read
 
 jobs:
-  miri-twig-vm-nightly:
-    name: Miri — twig-vm (nightly, blocking when scheduled)
+  miri-twig-vm:
+    name: Miri — twig-vm (informational, never blocks)
     runs-on: ubuntu-latest
+    # Informational on main + nightly: even if Miri fails or times
+    # out, the workflow run stays in history as a regression marker
+    # but the result doesn't count as "main is broken".  twig-vm
+    # has zero unsafe code; a Miri failure here is an integration-
+    # seam signal worth investigating, not a release blocker.
+    continue-on-error: true
     timeout-minutes: 120
     env:
       # Why no `-Zmiri-strict-provenance`?

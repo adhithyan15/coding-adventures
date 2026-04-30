@@ -105,33 +105,40 @@ against).
 - The new opcodes don't add any unsafe; no cargo-geiger
   impact.
 
-### Miri CI restructure
+### Miri CI restructure (PR 7)
 
-Per-PR Miri on twig-vm hit 1h30m+ on Linux CI runners even at
-the 90-min cap from PR 5 — not a real bug, just runner
-wallclock.  The unsafe in this stack lives entirely in
-`lang-runtime-core` + `lispy-runtime`; twig-vm has zero unsafe
-of its own.  PR 7 splits the Miri job to keep the per-PR
-critical path fast:
+Per-PR Miri on twig-vm hit 1h30m+ on Linux CI runners — not a
+real bug, just runner wallclock.  Per-PR coverage of an
+unsafe-free crate isn't worth the iteration-speed cost.  The
+unsafe in this stack lives entirely in `lang-runtime-core` +
+`lispy-runtime`; PR 7 makes the per-PR check exclusively that.
 
-- **Per-PR `miri-blocking` (new)**: runs Miri on
-  `lang-runtime-core` + `lispy-runtime` only (~5 min total).
-  Required to merge.  Catches every UB regression in the
-  unsafe-bearing surface.
-- **Per-PR `miri-twig-vm` (informational)**: still runs the
-  twig-vm Miri suite on every PR but with
-  `continue-on-error: true` so a timeout doesn't block.
-  Useful when it completes; doesn't gate when it doesn't.
-- **Nightly `lang-runtime-safety-nightly.yml` (new)**: runs the
-  full twig-vm Miri suite at 03:13 UTC daily, plus a re-run of
-  the blocking suite for belt-and-braces against admin-merge
-  bypasses.  120 min budget.  Surfaces regressions that
-  slipped past local + per-PR checks.
-- **Local `scripts/miri-twig-vm.sh` (new)**: canonical pre-push
+Final structure:
+
+- **Per-PR (`lang-runtime-safety.yml`)**: only `miri-blocking`.
+  Runs Miri on `lang-runtime-core` + `lispy-runtime` (~5 min
+  total).  Required to merge.  Catches every UB regression in
+  the unsafe-bearing surface.  No twig-vm Miri on PRs at all.
+
+- **Post-merge to main + nightly (`lang-runtime-safety-deep.yml`)**:
+  runs the full twig-vm Miri suite on every push to main + at
+  03:13 UTC daily.  120 min budget.  `continue-on-error: true`
+  so a regression doesn't propagate to main's status badge —
+  twig-vm has zero unsafe, so a Miri failure here is an
+  integration-seam regression worth investigating, not a
+  "main is broken" signal.  The workflow run record IS the
+  regression marker.
+
+- **Local pre-push (`scripts/miri-twig-vm.sh`)**: canonical
   verification.  Runs the full Miri suite (lang-runtime-core +
   lispy-runtime + twig-vm) with the same flags as CI.
   Documented in `CLAUDE.md` and `lessons.md` as the
   "Before pushing code that touches twig-vm" step.
+
+The principle: fast PR iteration > 100% per-PR Miri coverage.
+For crates with zero unsafe, even main-side Miri stays
+non-blocking — workflow run history is the regression marker,
+not a status-badge gate.
 
 ## [0.4.0] — 2026-04-30
 

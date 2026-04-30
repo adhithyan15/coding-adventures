@@ -53,62 +53,73 @@ permissions:
 
 jobs:
   # ─────────────────────────────────────────────────────────────────────────
-  # Miri: run the test suites of `lang-runtime-core` and `lispy-runtime`
-  # under Miri to catch runtime UB.
+  # Per-PR Miri policy (refined in PR 7)
   #
-  # `cargo miri test` requires nightly + the `miri` rustup component.  It
-  # interprets the program (no native execution), so:
-  #   - `extern "C"` symbols defined in the same binary work fine (Miri
-  #     dispatches them itself).
-  #   - Calls to *foreign* C libraries (e.g. libc allocator internals) are
-  #     intercepted by Miri's shim.
-  #   - Tests that *rely* on platform-specific behaviour need `#[cfg(not(miri))]`
-  #     gates — none currently exist in these crates.
-  # ─────────────────────────────────────────────────────────────────────────
-  # ─────────────────────────────────────────────────────────────────────────
-  # Why two Miri jobs (split in PR 7)?
+  # Goal: fast PR iteration.  Miri belongs on **unsafe code only**
+  # in this workflow.  The unsafe in this stack lives in
+  # `lang-runtime-core` + `lispy-runtime` (tagged-pointer scheme,
+  # heap accessors, FFI).  `twig-vm` has zero unsafe of its own —
+  # its Miri value is the integration seam, which is *already*
+  # exercised by lispy-runtime's own Miri suite plus the local
+  # pre-push verification.  Per-PR twig-vm Miri was costing
+  # 1h+ wallclock per PR for redundant coverage, blocking
+  # iteration speed.
   #
-  # The `unsafe` in this stack lives in `lang-runtime-core` +
-  # `lispy-runtime` — tagged-pointer scheme, heap accessors, FFI.
-  # `twig-vm` has zero unsafe of its own.  Miri on twig-vm covers the
-  # **integration seam** (closure dispatch, IC table, recursion paths
-  # through unsafe lispy-runtime accessors) — useful but not
-  # safety-critical, since lispy-runtime's own Miri suite already
-  # exercises every `unsafe fn` directly.
+  # The new split:
   #
-  # PR 4 ran a single Miri job covering all three crates, with a 30
-  # min cap.  Closures (PR 5), method dispatch (PR 6), and the IC
-  # table (PR 7) each grew the twig-vm wallclock; the timeout was
-  # bumped to 90 min in PR 5 and the PR 7 run still timed out at
-  # 1h30m.
+  #   - **PR CI** (this workflow): only `miri-blocking` — runs
+  #     Miri on the unsafe-bearing crates only.  ~5 min.
+  #     Required to merge.
   #
-  # PR 7 splits Miri into two jobs:
+  #   - **Post-merge + nightly** (`lang-runtime-safety-deep.yml`):
+  #     runs the full twig-vm Miri suite on every push to
+  #     main + at 03:13 UTC daily.  `continue-on-error: true`
+  #     so a regression doesn't propagate to main's status
+  #     badge — the workflow run record IS the regression
+  #     signal.  Faster checks here (because main is the only
+  #     branch we deep-check) and we get coverage without
+  #     gating PRs.
   #
-  #   1. `miri-blocking`     — lang-runtime-core + lispy-runtime
-  #                            only.  ~13s + ~13s + setup ≈ 5 min.
-  #                            Required to merge.
-  #   2. `miri-twig-vm`      — twig-vm only.  Slow but covers the
-  #                            integration seam.  `continue-on-error:
-  #                            true` so a timeout doesn't gate
-  #                            merges; the result is informational.
+  #   - **Local pre-push**: `scripts/miri-twig-vm.sh` is the
+  #     canonical local check before pushing changes that
+  #     touch twig-vm.  Documented in CLAUDE.md.
   #
-  # A separate nightly workflow (`lang-runtime-safety-nightly.yml`)
-  # runs the full twig-vm Miri suite at 03:00 UTC daily and posts a
-  # workflow summary if it fails — picks up integration-seam
-  # regressions even when no PR triggered Miri.
-  #
-  # Local verification: developers run `scripts/miri-twig-vm.sh`
-  # before pushing changes that touch twig-vm.  See lessons.md.
+  # See lessons.md for the architectural rationale.
   # ─────────────────────────────────────────────────────────────────────────
 
   miri-blocking:
-    name: Miri (UB detection — blocking)
+    name: Miri (UB detection — unsafe-bearing crates only)
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      # See `lang-runtime-safety-nightly.yml` for the full rationale
-      # behind these flags (provenance, leak handling, the UB
-      # classes default Miri still catches).  Same flags here.
+      # Why no `-Zmiri-strict-provenance`?
+      #
+      # Strict provenance rejects ALL integer-to-pointer casts
+      # (including the official `with_exposed_provenance` escape
+      # hatch).  Fundamentally incompatible with tagged-pointer
+      # value reps — every JIT and dynamic-language runtime in
+      # existence (V8, JSC, CPython, MRI, BEAM) uses int↔ptr
+      # round-trips for tag bits.
+      #
+      # Why `-Zmiri-ignore-leaks`?
+      #
+      # PR 2 ships `lispy-runtime` with a `Box::leak`-based "non-
+      # collecting GC" — every `alloc_cons` / `alloc_closure`
+      # leaks intentionally because the real collector lands
+      # in PR 4+ (LANG16 wiring).  Miri correctly reports these
+      # as leaks; we tell it to ignore them so the runtime-UB
+      # checks (the actually-valuable signal) aren't drowned
+      # out.  Once the GC lands, this flag goes away and Miri
+      # starts enforcing the no-leaks-after-collection invariant.
+      #
+      # Default Miri (without strict provenance) still catches
+      # all the actually-exploitable UB classes:
+      #   - out-of-bounds reads / writes
+      #   - use-after-free
+      #   - misaligned access
+      #   - reads from uninitialized memory
+      #   - data races
+      #   - aliasing violations (Stacked / Tree Borrows)
       MIRIFLAGS: "-Zmiri-ignore-leaks"
       CARGO_INCREMENTAL: "0"
       RUST_BACKTRACE: "1"
@@ -129,34 +140,6 @@ jobs:
       - name: Miri — lispy-runtime
         working-directory: code/packages/rust
         run: cargo +nightly miri test -p lispy-runtime --no-fail-fast
-
-  miri-twig-vm:
-    name: Miri (UB detection — twig-vm, informational)
-    runs-on: ubuntu-latest
-    # Informational: doesn't block merge.  Catches regressions in the
-    # integration seam between safe twig-vm code and unsafe
-    # lispy-runtime primitives, but the unsafe itself is covered by
-    # `miri-blocking` on lispy-runtime.  Local pre-push verification
-    # via `scripts/miri-twig-vm.sh` is the canonical check.
-    continue-on-error: true
-    timeout-minutes: 90
-    env:
-      MIRIFLAGS: "-Zmiri-ignore-leaks"
-      CARGO_INCREMENTAL: "0"
-      RUST_BACKTRACE: "1"
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install Rust nightly with Miri
-        run: |
-          rustup toolchain install nightly --component miri
-          rustup +nightly component add rust-src
-          cargo +nightly miri --version
-
-      - name: Miri — twig-vm (informational, may time out)
-        working-directory: code/packages/rust
-        run: cargo +nightly miri test -p twig-vm --no-fail-fast
 
   # ─────────────────────────────────────────────────────────────────────────
   # Geiger: count unsafe code in our crates + dependencies.
