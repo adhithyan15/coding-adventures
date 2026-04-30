@@ -1,14 +1,16 @@
 //! # twig-parser build script — compile twig.grammar into Rust at build time.
 //!
-//! Mirror of `twig-lexer/build.rs` for the parser grammar.  See that
-//! file's docs for the rationale; this script does the same thing
-//! with `parse_parser_grammar` + `parser_grammar_to_rust_source`.
+//! Mirror of `twig-lexer/build.rs` for the parser grammar.  Uses
+//! `grammar_tools::compiler::compile_parser_grammar` to emit Rust
+//! source defining `pub fn parser_grammar() -> ParserGrammar`.
+//! The lib.rs wraps that in a `OnceLock<ParserGrammar>` so the
+//! struct is materialised once per process.
 
 use std::env;
 use std::fs;
 use std::path::PathBuf;
 
-use grammar_tools::codegen::parser_grammar_to_rust_source;
+use grammar_tools::compiler::compile_parser_grammar;
 use grammar_tools::parser_grammar::parse_parser_grammar;
 
 fn main() {
@@ -29,7 +31,7 @@ fn main() {
     let grammar = parse_parser_grammar(&grammar_text)
         .unwrap_or_else(|e| panic!("Failed to parse {grammar_path:?}: {e}"));
 
-    let rust = parser_grammar_to_rust_source(&grammar, "twig_parser_grammar");
+    let rust = compile_parser_grammar(&grammar, "twig.grammar");
     let out_dir = env::var("OUT_DIR").expect("OUT_DIR must be set by cargo");
     let out_path = PathBuf::from(&out_dir).join("twig_parser_grammar.rs");
     fs::write(&out_path, rust)

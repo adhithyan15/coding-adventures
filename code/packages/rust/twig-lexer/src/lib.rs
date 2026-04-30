@@ -49,6 +49,9 @@
 //! assert_eq!(tokens.len(), 6);
 //! ```
 
+use std::sync::OnceLock;
+
+use grammar_tools::token_grammar::TokenGrammar;
 use lexer::grammar_lexer::GrammarLexer;
 use lexer::token::Token;
 
@@ -57,7 +60,7 @@ use lexer::token::Token;
 pub use lexer::token::LexerError;
 
 // ---------------------------------------------------------------------------
-// Generated grammar (build.rs → grammar-tools → Rust)
+// Generated grammar (build.rs → grammar-tools::compiler → Rust)
 // ---------------------------------------------------------------------------
 //
 // Earlier drafts called `std::fs::read_to_string` on
@@ -72,17 +75,41 @@ pub use lexer::token::LexerError;
 //      blocks file-system access; running the test suite under Miri
 //      required `-Zmiri-disable-isolation`, defeating the sandbox.
 //
-// The fix: `build.rs` invokes `grammar_tools::token_grammar::parse_token_grammar`
-// at build time and `grammar_tools::codegen::token_grammar_to_rust_source`
-// to emit Rust source code that constructs the parsed `TokenGrammar`
-// as a `LazyLock<TokenGrammar>` static.  The runtime just borrows the
-// already-parsed static — zero file I/O, zero re-parsing, fully
-// Miri-compatible.
+// The fix: `build.rs` invokes
+// [`grammar_tools::compiler::compile_token_grammar`] at build time
+// to emit Rust source code that materialises the parsed
+// `TokenGrammar` as native struct literals.  The generated file
+// defines a `pub fn token_grammar() -> TokenGrammar` that constructs
+// the grammar from those literals.  We `include!` it inside a private
+// module and wrap the constructor in a `OnceLock<TokenGrammar>` so
+// the struct is materialised exactly **once** per process — every
+// `create_twig_lexer` call after the first is a pointer load.
 //
-// The generated module exposes `pub fn twig_token_grammar() ->
-// &'static TokenGrammar`.
+// The choice of `grammar_tools::compiler` (existing, shared) over
+// the custom `codegen` module an earlier draft of this PR added is
+// intentional: there is one canonical grammar-to-Rust compiler in
+// the repo, and twig joins it.
 
-include!(concat!(env!("OUT_DIR"), "/twig_token_grammar.rs"));
+mod generated_grammar {
+    // The build.rs writes this file; its contents define
+    // `pub fn token_grammar() -> TokenGrammar`.  The generated
+    // file already includes its own `use` statements for the
+    // grammar struct types and `HashMap`, so this module is
+    // intentionally empty other than the include.
+    include!(concat!(env!("OUT_DIR"), "/twig_token_grammar.rs"));
+}
+
+/// One-time-materialised Twig token grammar.
+///
+/// `OnceLock` ensures the generated `token_grammar()` constructor
+/// runs at most once — even though it produces struct literals
+/// (no parsing), constructing a `Vec` + `HashMap` on every lexer
+/// call would still be wasteful.
+static TWIG_TOKEN_GRAMMAR: OnceLock<TokenGrammar> = OnceLock::new();
+
+fn twig_token_grammar() -> &'static TokenGrammar {
+    TWIG_TOKEN_GRAMMAR.get_or_init(generated_grammar::token_grammar)
+}
 
 // ---------------------------------------------------------------------------
 // Public API

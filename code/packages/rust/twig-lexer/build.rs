@@ -2,45 +2,40 @@
 //!
 //! Reads `code/grammars/twig.tokens`, parses it via
 //! `grammar_tools::token_grammar::parse_token_grammar`, runs
-//! `grammar_tools::codegen::token_grammar_to_rust_source` to emit Rust
-//! source code that reconstructs the parsed `TokenGrammar`, and writes
-//! the result to `$OUT_DIR/twig_token_grammar.rs`.
+//! `grammar_tools::compiler::compile_token_grammar` to emit Rust
+//! source code that reconstructs the parsed `TokenGrammar`, and
+//! writes the result to `$OUT_DIR/twig_token_grammar.rs`.
 //!
-//! `lib.rs` `include!`s the generated file, exposing
-//! `pub fn twig_token_grammar() -> &'static TokenGrammar`.
+//! `lib.rs` `include!`s the generated file inside a private module
+//! and wraps the generated `token_grammar()` function in a
+//! `OnceLock<TokenGrammar>` so the struct is materialised exactly
+//! once per process — not on every `create_twig_lexer` call.
 //!
 //! ## Why a build.rs
 //!
-//! 1. **No runtime file I/O** — the grammar is baked into the binary.
-//!    Critical for Miri (which sandboxes FS access) and for shipping
-//!    the crate as a standalone library that doesn't ship a separate
-//!    grammar file.
-//! 2. **Build-time validation** — if `twig.tokens` is malformed, the
-//!    error fires at `cargo build` time, not at the first lexer call.
-//! 3. **One parse per build, not per lexer instance** — even with
-//!    `OnceLock` caching, "parse once at startup" beats "parse at
-//!    build time" for both speed and determinism.
+//! 1. **No runtime file I/O** — the grammar is baked into the
+//!    binary.  Critical for Miri (which sandboxes FS access) and
+//!    for shipping the crate as a standalone library.
+//! 2. **Build-time validation** — if `twig.tokens` is malformed,
+//!    the error fires at `cargo build` time, not at first lexer
+//!    call.
+//! 3. **One construction per process, not per call** — the
+//!    OnceLock wrapper caches the parsed grammar; the generated
+//!    `token_grammar()` body runs at most once.
 //!
 //! ## Cargo rerun signals
 //!
-//! `cargo:rerun-if-changed` tells Cargo to re-run this build script
-//! whenever:
-//!   - `build.rs` itself changes (Cargo's default; explicit here for clarity)
-//!   - the grammar source file changes
-//! Without these, edits to `twig.tokens` would not trigger a rebuild
-//! of this crate, and downstream consumers would see stale grammar.
+//! `cargo:rerun-if-changed` tells Cargo to re-run this build
+//! script whenever `build.rs` itself or the grammar file changes.
 
 use std::env;
 use std::fs;
 use std::path::PathBuf;
 
-use grammar_tools::codegen::token_grammar_to_rust_source;
+use grammar_tools::compiler::compile_token_grammar;
 use grammar_tools::token_grammar::parse_token_grammar;
 
 fn main() {
-    // Locate the grammar file.  CARGO_MANIFEST_DIR points at this
-    // crate's directory; the grammars folder is three levels up at
-    // `code/grammars/twig.tokens` per the repo layout.
     let manifest_dir = env::var("CARGO_MANIFEST_DIR")
         .expect("CARGO_MANIFEST_DIR must be set by cargo");
     let grammar_path = PathBuf::from(&manifest_dir)
@@ -58,9 +53,14 @@ fn main() {
     let grammar = parse_token_grammar(&grammar_text)
         .unwrap_or_else(|e| panic!("Failed to parse {grammar_path:?}: {e}"));
 
-    // Generate the Rust source that reconstructs `grammar` and writes
-    // it to OUT_DIR per the standard build-script convention.
-    let rust = token_grammar_to_rust_source(&grammar, "twig_token_grammar");
+    // `compile_token_grammar` produces Rust source that defines:
+    //
+    //     pub fn token_grammar() -> TokenGrammar { /* struct literal */ }
+    //
+    // The generated function constructs a fresh `TokenGrammar`
+    // each call.  We wrap it in a `OnceLock` at the consumer
+    // (lib.rs) so the construction runs exactly once per process.
+    let rust = compile_token_grammar(&grammar, "twig.tokens");
     let out_dir = env::var("OUT_DIR").expect("OUT_DIR must be set by cargo");
     let out_path = PathBuf::from(&out_dir).join("twig_token_grammar.rs");
     fs::write(&out_path, rust)

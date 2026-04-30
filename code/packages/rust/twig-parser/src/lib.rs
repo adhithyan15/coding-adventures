@@ -66,6 +66,7 @@ pub mod ast_extract;
 pub mod ast_nodes;
 
 use std::fmt;
+use std::sync::OnceLock;
 
 use grammar_tools::parser_grammar::ParserGrammar;
 use lexer::token::Token;
@@ -73,19 +74,29 @@ use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 use twig_lexer::{tokenize_twig, LexerError};
 
 // ---------------------------------------------------------------------------
-// Generated grammar (build.rs → grammar-tools → Rust)
+// Generated grammar (build.rs → grammar-tools::compiler → Rust)
 // ---------------------------------------------------------------------------
 //
-// Earlier drafts called `std::fs::read_to_string` on
-// `code/grammars/twig.grammar` at every parser construction.  The
-// build script (`build.rs`) now compiles the grammar to Rust source
-// at build time via `grammar_tools::codegen::parser_grammar_to_rust_source`,
-// and `lib.rs` `include!`s the generated code.  Result: zero runtime
-// file I/O, zero re-parsing after build, full Miri compatibility.
+// The build script (`build.rs`) compiles `code/grammars/twig.grammar`
+// at cargo-build time via
+// `grammar_tools::compiler::compile_parser_grammar`.  The output is
+// Rust source code that defines `pub fn parser_grammar() ->
+// ParserGrammar` returning a fresh struct.  We `include!` it in a
+// private module and wrap the constructor in `OnceLock<ParserGrammar>`
+// so the struct is materialised exactly once per process.
 //
-// The generated module exposes
-// `pub fn twig_parser_grammar() -> &'static ParserGrammar`.
-include!(concat!(env!("OUT_DIR"), "/twig_parser_grammar.rs"));
+// See twig-lexer/src/lib.rs for the matching pattern on the token
+// grammar side.
+
+mod generated_grammar {
+    include!(concat!(env!("OUT_DIR"), "/twig_parser_grammar.rs"));
+}
+
+static TWIG_PARSER_GRAMMAR: OnceLock<ParserGrammar> = OnceLock::new();
+
+fn twig_parser_grammar() -> &'static ParserGrammar {
+    TWIG_PARSER_GRAMMAR.get_or_init(generated_grammar::parser_grammar)
+}
 
 pub use ast_extract::{extract_program, MAX_AST_DEPTH};
 pub use ast_nodes::{

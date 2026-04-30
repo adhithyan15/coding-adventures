@@ -53,22 +53,19 @@
   `-Zmiri-disable-isolation`, builds catch malformed grammars
   early.
 
-### Added (in support: `grammar-tools`)
+### Uses (existing): `grammar_tools::compiler`
 
-- New `grammar_tools::codegen` module — emits Rust source from a
-  parsed `TokenGrammar` / `ParserGrammar`.  Functions:
-  - `token_grammar_to_rust_source(&TokenGrammar, fn_name) -> String`
-  - `parser_grammar_to_rust_source(&ParserGrammar, fn_name) -> String`
-  Both produce a `pub fn <fn_name>() -> &'static …` declaration
-  with `OnceLock`-cached initialisation.  Fully-qualified paths
-  (`::grammar_tools::…`) so generated code works regardless of
-  consumer-crate `use` statements.  Deterministic output:
-  HashMap iteration is sorted before emit so reproducible builds
-  hash to the same `.rs` file.
-  - 8 new unit tests in `grammar_tools::codegen::tests` covering
-    string escaping (incl. control chars), empty-field handling,
-    recursive `GrammarElement` types, deterministic ordering, and
-    output-shape sanity.
+- The build scripts call `grammar_tools::compiler::compile_token_grammar`
+  / `compile_parser_grammar` — the canonical grammar-to-Rust
+  compiler that already lived in the workspace.  An earlier draft
+  of this PR added a duplicate `codegen` module; that has been
+  removed in favour of using the existing one.  The lib.rs of
+  twig-lexer / twig-parser wraps the compiler-generated
+  `token_grammar()` / `parser_grammar()` constructors in a
+  `OnceLock<…>` so the struct is materialised exactly once per
+  process — the generated code constructs eagerly each call, so
+  the OnceLock ensures we don't redo it on every
+  `create_twig_lexer` / `create_twig_parser` invocation.
 
 ### Tests across the diff
 
