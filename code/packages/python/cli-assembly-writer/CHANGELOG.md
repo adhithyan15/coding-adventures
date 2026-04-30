@@ -1,5 +1,56 @@
 # Changelog
 
+## 0.3.0 — 2026-04-29 — CLR02 Phase 2b (multi-TypeDef metadata)
+
+### Added — extra TypeDefs alongside the user's main type
+
+Foundation for [CLR02 Phase 2 closures](../../../specs/CLR02-closure-lowering.md).
+The writer previously hardcoded exactly two TypeDef rows
+(`<Module>` + the user's main type).  It now accepts an arbitrary
+list of additional types via `CILProgramArtifact.extra_types`.
+
+Each extra type is a `CILTypeArtifact` carrying:
+
+* `name`, `namespace` — fully qualified type identifier.
+* `is_interface` — toggles between `Public + Class +
+  BeforeFieldInit` (0x00100001) and `Public + Interface +
+  Abstract` (0x000000A1) `TypeAttributes` flags.
+* `extends` — `"System.Object"` (resolves to the existing
+  TypeRef row 2), a same-module type's qualified name (resolves
+  to its `TypeDef` row), or `None` for interfaces.
+* `implements` — same-module interface qualified names; emits
+  `InterfaceImpl` table rows (0x09).
+* `fields` — list of `CILFieldArtifact` entries, each producing
+  a row in the `Field` table (0x04).
+* `methods` — list of `CILMethodArtifact` with new flags
+  `is_instance` (sets `HASTHIS` in the MethodSig),
+  `is_special_name` (used for `.ctor`), and `is_abstract`
+  (RVA=0, no body).
+
+### Validation
+
+- `implements` references that point at types not declared in
+  the same assembly are rejected.
+- `extends` values other than `"System.Object"` or a known
+  same-module TypeDef are rejected (CLR02 v1 doesn't yet wire up
+  cross-assembly base classes other than `System.Object`).
+
+### Tests
+
+- 2 new real-`dotnet` tests prove that an extra `IClosure`
+  interface, and an `IClosure` + a concrete `Closure_X`
+  implementing it with one `int32` field, both load and the
+  user's `Main` still returns 42.
+- 4 new structural tests cover the typedef table, method-table
+  growth, and the `extends` / `implements` validation paths.
+
+### Backwards compatibility
+
+`extra_types` defaults to `()`; callers that don't opt in get
+byte-identical output to 0.2.0.  All 97 upstream tests
+(`ir-to-cil-bytecode`, `twig-clr-compiler`) stay green without
+modification.
+
 ## 0.2.0 — 2026-04-29
 
 ### CLR01 — ECMA-335 conformance fixes (LANDED end-to-end)
