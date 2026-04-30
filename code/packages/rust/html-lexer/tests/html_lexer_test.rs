@@ -1044,6 +1044,72 @@ fn default_html_lexer_keeps_mismatched_text_mode_end_tag_solidus_literal() {
 }
 
 #[test]
+fn default_html_lexer_recovers_seeded_text_mode_end_tags_with_whitespace() {
+    for (initial_state, last_start_tag, text, close) in [
+        ("rcdata", "title", "Hello", "</title >"),
+        ("rawtext", "style", "body {}", "</style\t>"),
+        ("script_data", "script", "if (ready)", "</script\n>"),
+        (
+            "script_data_escaped",
+            "script",
+            "<!-- ok -->",
+            "</script\r>",
+        ),
+    ] {
+        let mut lexer = create_html_lexer().unwrap();
+        lexer.set_initial_state(initial_state).unwrap();
+        lexer.set_last_start_tag(last_start_tag);
+
+        lexer.push(&format!("{text}{close}")).unwrap();
+        lexer.finish().unwrap();
+
+        assert_eq!(
+            lexer.drain_tokens(),
+            vec![
+                Token::Text(text.to_string()),
+                Token::EndTag {
+                    name: last_start_tag.to_string()
+                },
+                Token::Eof,
+            ],
+            "state {initial_state} should emit the appropriate end tag"
+        );
+        assert!(
+            lexer
+                .diagnostics()
+                .iter()
+                .any(|diagnostic| diagnostic.code == "unexpected-whitespace-after-end-tag-name"),
+            "state {initial_state} should report whitespace recovery"
+        );
+    }
+}
+
+#[test]
+fn default_html_lexer_keeps_mismatched_text_mode_end_tag_whitespace_literal() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("script_data").unwrap();
+    lexer.set_last_start_tag("script");
+
+    lexer.push("x</style >y</script>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("x</style >y".to_string()),
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+    assert!(!lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "unexpected-whitespace-after-end-tag-name"));
+}
+
+#[test]
 fn default_html_lexer_supports_seeded_rcdata_lt_references() {
     let mut lexer = create_html_lexer().unwrap();
     lexer.set_initial_state("rcdata").unwrap();
