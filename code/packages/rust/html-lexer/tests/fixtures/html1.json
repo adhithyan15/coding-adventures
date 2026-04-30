@@ -44,6 +44,23 @@
       ]
     },
     {
+      "id": "unexpected-unquoted-attribute-value-characters",
+      "description": "Unexpected characters in unquoted attribute values are preserved with parse errors",
+      "input": "<a data=one=two sq=x'y lt=x<y eq=x=y tick=x`y dq=x\"y>",
+      "tokens": [
+        "StartTag(name=a, attributes=[data=one=two, sq=x'y, lt=x<y, eq=x=y, tick=x`y, dq=x\"y], self_closing=false)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "unexpected-character-in-unquoted-attribute-value",
+        "unexpected-character-in-unquoted-attribute-value",
+        "unexpected-character-in-unquoted-attribute-value",
+        "unexpected-character-in-unquoted-attribute-value",
+        "unexpected-character-in-unquoted-attribute-value",
+        "unexpected-character-in-unquoted-attribute-value"
+      ]
+    },
+    {
       "id": "mosaic-doctype-and-heading",
       "input": "<!DOCTYPE HTML><H1 class=test>Hello</H1>",
       "tokens": [

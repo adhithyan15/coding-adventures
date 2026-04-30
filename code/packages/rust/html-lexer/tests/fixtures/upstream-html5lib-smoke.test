@@ -209,6 +209,21 @@
       ]
     },
     {
+      "description": "unexpected unquoted attribute value characters are preserved",
+      "input": "<a data=one=two sq=x'y lt=x<y eq=x=y tick=x`y dq=x\"y>",
+      "output": [
+        ["StartTag", "a", {"data": "one=two", "sq": "x'y", "lt": "x<y", "eq": "x=y", "tick": "x`y", "dq": "x\"y"}]
+      ],
+      "errors": [
+        {"code": "unexpected-character-in-unquoted-attribute-value", "line": 1, "col": 12},
+        {"code": "unexpected-character-in-unquoted-attribute-value", "line": 1, "col": 22},
+        {"code": "unexpected-character-in-unquoted-attribute-value", "line": 1, "col": 30},
+        {"code": "unexpected-character-in-unquoted-attribute-value", "line": 1, "col": 38},
+        {"code": "unexpected-character-in-unquoted-attribute-value", "line": 1, "col": 48},
+        {"code": "unexpected-character-in-unquoted-attribute-value", "line": 1, "col": 56}
+      ]
+    },
+    {
       "description": "plaintext state literalizes markup and character references",
       "initialStates": ["PLAINTEXT state"],
       "input": "hello <b>still text</b> &amp; literal",
