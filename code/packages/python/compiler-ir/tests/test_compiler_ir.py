@@ -105,10 +105,20 @@ class TestIrOp:
         assert IrOp.F64_ATAN == 52
         assert IrOp.F64_LN == 53
         assert IrOp.F64_EXP == 54
+        assert IrOp.MAKE_CONS == 55
+        assert IrOp.CAR == 56
+        assert IrOp.CDR == 57
+        assert IrOp.IS_NULL == 58
+        assert IrOp.IS_PAIR == 59
+        assert IrOp.MAKE_SYMBOL == 60
+        assert IrOp.IS_SYMBOL == 61
+        assert IrOp.LOAD_NIL == 62
 
     def test_total_opcode_count(self) -> None:
-        """There are exactly 55 opcodes after adding f64 standard math."""
-        assert len(IrOp) == 55
+        """There are exactly 63 opcodes after adding TW03 Phase 3 heap
+        primitives (cons / car / cdr / is_null / is_pair / make_symbol /
+        is_symbol / load_nil)."""
+        assert len(IrOp) == 63
 
     def test_name_to_op_roundtrip(self) -> None:
         """NAME_TO_OP[op.name] == op for every opcode."""
@@ -1035,6 +1045,22 @@ class TestAllOpcodesPrintParse:
                 IrImmediate(1),
                 IrRegister(4),
             ],
+            # MAKE_CONS dst, head_reg, tail_reg
+            IrOp.MAKE_CONS:    [IrRegister(5), IrRegister(1), IrRegister(2)],
+            # CAR dst, src
+            IrOp.CAR:          [IrRegister(2), IrRegister(5)],
+            # CDR dst, src
+            IrOp.CDR:          [IrRegister(2), IrRegister(5)],
+            # IS_NULL dst, src
+            IrOp.IS_NULL:      [IrRegister(2), IrRegister(5)],
+            # IS_PAIR dst, src
+            IrOp.IS_PAIR:      [IrRegister(2), IrRegister(5)],
+            # MAKE_SYMBOL dst, name_label
+            IrOp.MAKE_SYMBOL:  [IrRegister(2), IrLabel("foo")],
+            # IS_SYMBOL dst, src
+            IrOp.IS_SYMBOL:    [IrRegister(2), IrRegister(5)],
+            # LOAD_NIL dst
+            IrOp.LOAD_NIL:     [IrRegister(2)],
         }
         for idx, op in enumerate(IrOp):
             operands = operands_by_opcode[op]

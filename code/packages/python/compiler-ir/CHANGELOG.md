@@ -2,7 +2,33 @@
 
 ## [Unreleased]
 
-### Added
+### Added — TW03 Phase 3a heap-primitive ops
+
+Eight new opcodes (55–62) introducing the cross-backend Lisp
+heap-primitive interface.  See
+[TW03-phase3-heap-primitives.md](../../../specs/TW03-phase3-heap-primitives.md)
+for the multi-backend lowering plan.
+
+- **`IrOp.MAKE_CONS` (55)** — allocate a cons cell.  Operand layout:
+  `MAKE_CONS dst, head_reg, tail_reg`.
+- **`IrOp.CAR` (56)** — read the head of a cons cell.
+  `CAR dst, src`.
+- **`IrOp.CDR` (57)** — read the tail of a cons cell.
+  `CDR dst, src`.
+- **`IrOp.IS_NULL` (58)** — sets `dst=1` if `src` is the nil sentinel,
+  else 0.  Result feeds straight into `BRANCH_Z` / `BRANCH_NZ`.
+- **`IrOp.IS_PAIR` (59)** — sets `dst=1` if `src` is a cons cell.
+- **`IrOp.MAKE_SYMBOL` (60)** — intern a symbol named by an `IrLabel`
+  (reuses the existing label round-trip path).  `MAKE_SYMBOL dst, name_label`.
+- **`IrOp.IS_SYMBOL` (61)** — sets `dst=1` if `src` is a symbol.
+- **`IrOp.LOAD_NIL` (62)** — store the nil sentinel into `dst`.
+
+These are the **cross-backend interface** for TW03 Phase 3.
+Per-backend lowering ships in subsequent phases (JVM03 / CLR03 /
+BEAM03).  Adding new opcodes does not touch existing 0–54 IDs, so
+older serialized IR text round-trips unchanged.
+
+### Added — earlier (rolled into 0.5.0)
 
 - **`IrOp.F64_SQRT` (49)** — unary 64-bit floating square root
   (`dst = sqrt(src)`) for frontends that need standard real math builtins.

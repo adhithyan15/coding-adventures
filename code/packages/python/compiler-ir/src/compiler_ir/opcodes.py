@@ -31,6 +31,8 @@ The opcodes are grouped by category:
   System:       SYSCALL, HALT
   Meta:         NOP, COMMENT
   Closures:     MAKE_CLOSURE, APPLY_CLOSURE   (TW03 Phase 2)
+  Heap:         MAKE_CONS, CAR, CDR, IS_NULL, IS_PAIR,
+                MAKE_SYMBOL, IS_SYMBOL, LOAD_NIL   (TW03 Phase 3)
 
 Text Names
 ----------
@@ -324,6 +326,84 @@ class IrOp(IntEnum):
 
     #   F64_EXP v1, v2    →  v1 = exp(v2)
     F64_EXP = 54
+
+    # ── Heap primitives (TW03 Phase 3 — Lisp cons / symbols / nil) ───────
+    # These ops introduce three new heap-allocated value kinds beyond the
+    # int and closure values we already have:
+    #
+    #   cons  — pair of (head, tail) heap references; produced by MAKE_CONS,
+    #           inspected by CAR / CDR / IS_PAIR.
+    #   symbol — interned identifier; produced by MAKE_SYMBOL, inspected by
+    #            IS_SYMBOL.  Two MAKE_SYMBOL with the same name yield refs
+    #            that compare equal under the host's equality semantics.
+    #   nil   — the empty-list sentinel; produced by LOAD_NIL, inspected by
+    #           IS_NULL.  Lispy code uses nil as both "false" and "end of
+    #           list", as is traditional in Scheme/Lisp.
+    #
+    # Backend lowering strategies (filled in by JVM03 / CLR03 / BEAM03
+    # sister specs):
+    #   - JVM/CLR: emit Cons / Symbol / Nil classes; allocations use ``new``;
+    #              the host GC reclaims unreachable heap nodes — no explicit
+    #              free / mark / sweep work for the compiler.
+    #   - BEAM:    cons cells map directly to Erlang lists (``put_list``);
+    #              symbols map to atoms; nil maps to ``[]``.  BEAM's own GC
+    #              handles reclamation.
+    #   - vm-core: delegates to the host-side ``twig.heap.Heap`` API
+    #              (already implemented in TW01).
+    #
+    # All seven ops follow the cross-backend "object-typed register"
+    # convention introduced for closures: backends with int-uniform
+    # registers must extend their typed pool to hold these new reference
+    # kinds (see CLR02 Phase 2c.5 / JVM02 Phase 2c.5 for the precedent).
+    #
+    # Numbered 55–62 so the existing 0–54 opcode IDs stay stable across
+    # serialized IR text files.
+    #
+    # MAKE_CONS dst, head_reg, tail_reg
+    #   Allocate a cons cell (head, tail) and store a reference to it
+    #   into ``dst``.  Both operands are register-valued; the cell holds
+    #   whatever those registers hold (int, cons, symbol, nil, closure).
+    MAKE_CONS = 55
+
+    # CAR dst, src
+    #   Read the head of the cons cell referenced by ``src`` into ``dst``.
+    #   Result type matches whatever was passed to MAKE_CONS as head.
+    #   Trapping behaviour on non-cons input is backend-defined; lowering
+    #   typically emits an unchecked field load (correctness obligation
+    #   on the frontend / type checker).
+    CAR = 56
+
+    # CDR dst, src
+    #   Read the tail of the cons cell referenced by ``src`` into ``dst``.
+    #   Counterpart to CAR.
+    CDR = 57
+
+    # IS_NULL dst, src
+    #   Set ``dst`` to 1 if ``src`` holds the nil value, else 0.  ``dst``
+    #   is an int-typed register so the result feeds straight into
+    #   BRANCH_Z / BRANCH_NZ.
+    IS_NULL = 58
+
+    # IS_PAIR dst, src
+    #   Set ``dst`` to 1 if ``src`` holds a cons cell, else 0.
+    IS_PAIR = 59
+
+    # MAKE_SYMBOL dst, name_label
+    #   Intern the symbol whose name is ``name_label`` (a label-encoded
+    #   identifier — chosen so the existing IR text format already
+    #   round-trips it) and store a reference to the interned symbol
+    #   into ``dst``.  Two MAKE_SYMBOL instructions with the same label
+    #   must yield references that compare equal.
+    MAKE_SYMBOL = 60
+
+    # IS_SYMBOL dst, src
+    #   Set ``dst`` to 1 if ``src`` holds a symbol, else 0.
+    IS_SYMBOL = 61
+
+    # LOAD_NIL dst
+    #   Store the nil value into ``dst``.  Used to terminate cons-cell
+    #   chains and as the canonical "false" / "empty-list" sentinel.
+    LOAD_NIL = 62
 
 
 # Canonical name → opcode mapping. Built from the enum at module load time.
