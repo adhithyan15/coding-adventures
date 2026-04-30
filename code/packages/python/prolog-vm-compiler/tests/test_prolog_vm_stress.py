@@ -148,6 +148,37 @@ class TestPrologVMStress:
             {"Name": atom("cake"), "Flavor": atom("savory")},
         ]
 
+    def test_higher_order_list_predicates_run_through_vm(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            small(1).
+            small(2).
+            increment(1, 2).
+            increment(2, 3).
+            increment(3, 4).
+            push(Item, Acc, [Item|Acc]).
+
+            ?- maplist(increment, [1,2,3], Ys),
+               include(small, [1,2,3], Small),
+               exclude(small, [1,2,3], Big),
+               partition(small, [1,2,3], Yes, No),
+               foldl(push, [a,b,c], [], Stack).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert [answer.as_dict() for answer in answers] == [
+            {
+                "Ys": logic_list([2, 3, 4]),
+                "Small": logic_list([1, 2]),
+                "Big": logic_list([3]),
+                "Yes": logic_list([1, 2]),
+                "No": logic_list([3]),
+                "Stack": logic_list(["c", "b", "a"]),
+            },
+        ]
+
     def test_list_stdlib_predicates_run_through_vm(self) -> None:
         compiled = compile_swi_prolog_source(
             """

@@ -30,6 +30,9 @@ It keeps parsing side-effect free, then exposes helpers to:
   `permutation/2`, `reverse/2`, `last/2`, `length/2`, `sort/2`, `msort/2`,
   `nth0/3`, `nth1/3`, `nth0/4`, `nth1/4`, and `is_list/1` into relational
   standard-library goals
+- adapt higher-order list predicates such as `maplist/2..4`, `include/3`,
+  `exclude/3`, `partition/4`, and `foldl/4` into callable-term-backed builtin
+  goals
 - load SWI-Prolog source graphs from real `.pl` files through relative
   `consult/1`, `ensure_loaded/1`, and file-backed `use_module/1,2`
 - splice `include/1` targets into the including source before project linking

@@ -13,6 +13,11 @@ ordinary logic goal expressions.
 - `callo(goal)`
 - `calltermo(term_goal, *extra_args)` for executing reified callable goal terms
   and Prolog-style `call/N` argument extension
+- `maplisto(closure, list)`, `maplisto(closure, left, right)`,
+  `maplisto(closure, first, second, third)`, `includeo(closure, items,
+  included)`, `excludeo(closure, items, excluded)`, `partitiono(closure, items,
+  included, excluded)`, and `foldlo(closure, items, accumulator, result)` for
+  higher-order list processing through callable terms
 - `onceo(goal)`
 - `cuto()` as the library form of Prolog `!/0`
 - `noto(goal)` for negation as failure
@@ -71,6 +76,7 @@ from logic_builtins import (
     current_predicateo,
     cuto,
     dynamico,
+    excludeo,
     all_differento,
     fd_addo,
     fd_ino,
@@ -79,16 +85,20 @@ from logic_builtins import (
     fd_neqo,
     fd_sumo,
     findallo,
+    foldlo,
     forallo,
     functoro,
     geqo,
     groundo,
     ifthenelseo,
+    includeo,
     integero,
     iso,
     labelingo,
+    maplisto,
     noto,
     onceo,
+    partitiono,
     predicate_propertyo,
     same_termo,
     succo,
@@ -101,6 +111,7 @@ from logic_engine import (
     disj,
     eq,
     fail,
+    fact,
     logic_list,
     num,
     program,
@@ -126,6 +137,17 @@ parent = relation("parent", 2)
 child = relation("child", 2)
 memo = relation("memo", 1)
 family = program(rule(child(X, Name), parent(Name, X)))
+increment = relation("increment", 2)
+small = relation("small", 1)
+push = relation("push", 3)
+higher_order = program(
+    fact(small(1)),
+    fact(small(2)),
+    fact(increment(1, 2)),
+    fact(increment(2, 3)),
+    fact(increment(3, 4)),
+    rule(push(X, Y, Results), eq(Results, term(".", X, Y))),
+)
 
 assert solve_all(program(), X, onceo(eq(X, "first"))) == [atom("first")]
 assert solve_all(program(), X, betweeno(1, 3, X)) == [num(1), num(2), num(3)]
@@ -184,6 +206,21 @@ assert solve_all(
     Body,
     conj(clauseo(child("bart", "homer"), Body), calltermo(Body)),
 ) == [term("parent", "homer", "bart")]
+assert solve_all(
+    higher_order,
+    Results,
+    maplisto("increment", logic_list([1, 2, 3]), Results),
+) == [logic_list([2, 3, 4])]
+assert solve_all(
+    higher_order,
+    (Name, Arity),
+    partitiono("small", logic_list([1, 2, 3]), Name, Arity),
+) == [(logic_list([1, 2]), logic_list([3]))]
+assert solve_all(
+    higher_order,
+    Results,
+    foldlo("push", logic_list(["a", "b", "c"]), logic_list([]), Results),
+) == [logic_list(["c", "b", "a"])]
 assert solve_all(program(), Order, compare_termo(Order, X, 7)) == [atom("<")]
 assert solve_all(program(), X, conj(eq(X, "ok"), termo_lto(X, term("box", "tea")))) == [
     atom("ok"),

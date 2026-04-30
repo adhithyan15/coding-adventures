@@ -48,6 +48,7 @@ from logic_builtins import (
     cuto,
     div,
     dynamico,
+    excludeo,
     failo,
     fd_addo,
     fd_bool_ando,
@@ -71,6 +72,7 @@ from logic_builtins import (
     fd_sumo,
     findallo,
     floordiv,
+    foldlo,
     forallo,
     functoro,
     geqo,
@@ -78,12 +80,14 @@ from logic_builtins import (
     gto,
     ifthenelseo,
     iftheno,
+    includeo,
     integero,
     iso,
     labeling_optionso,
     labelingo,
     leqo,
     lto,
+    maplisto,
     mod,
     mul,
     neg,
@@ -93,6 +97,7 @@ from logic_builtins import (
     numeqo,
     numneqo,
     onceo,
+    partitiono,
     predicate_propertyo,
     retractallo,
     retracto,
@@ -1405,6 +1410,75 @@ class TestCallableTermBuiltins:
             marker,
             conj(eq(marker, "ok"), calltermo(string("nope"))),
         ) == []
+
+
+class TestHigherOrderListBuiltins:
+    """Higher-order list helpers should compose with callable terms."""
+
+    def test_maplisto_applies_unary_and_binary_closures(self) -> None:
+        small = relation("small", 1)
+        increment = relation("increment", 2)
+        result = var("Result")
+        prog = program(
+            fact(small(1)),
+            fact(small(2)),
+            fact(increment(1, 2)),
+            fact(increment(2, 3)),
+            fact(increment(3, 4)),
+        )
+
+        assert solve_all(
+            prog,
+            result,
+            conj(
+                maplisto("small", logic_list([1, 2])),
+                maplisto("increment", logic_list([1, 2, 3]), result),
+            ),
+        ) == [logic_list([2, 3, 4])]
+
+    def test_partition_include_and_exclude_use_unary_closures(self) -> None:
+        small = relation("small", 1)
+        included = var("Included")
+        excluded = var("Excluded")
+        included_again = var("IncludedAgain")
+        excluded_again = var("ExcludedAgain")
+        prog = program(fact(small(1)), fact(small(2)))
+
+        assert solve_all(
+            prog,
+            (included, excluded, included_again, excluded_again),
+            conj(
+                partitiono("small", logic_list([1, 3, 2]), included, excluded),
+                includeo("small", logic_list([1, 3, 2]), included_again),
+                excludeo("small", logic_list([1, 3, 2]), excluded_again),
+            ),
+        ) == [
+            (
+                logic_list([1, 2]),
+                logic_list([3]),
+                logic_list([1, 2]),
+                logic_list([3]),
+            ),
+        ]
+
+    def test_foldlo_accumulates_with_a_ternary_closure(self) -> None:
+        push = relation("push", 3)
+        item = var("Item")
+        accumulator = var("Accumulator")
+        next_accumulator = var("NextAccumulator")
+        result = var("Result")
+        prog = program(
+            rule(
+                push(item, accumulator, next_accumulator),
+                eq(next_accumulator, term(".", item, accumulator)),
+            ),
+        )
+
+        assert solve_all(
+            prog,
+            result,
+            foldlo("push", logic_list(["a", "b", "c"]), logic_list([]), result),
+        ) == [logic_list(["c", "b", "a"])]
 
 
 class TestTermMetaprogrammingBuiltins:
