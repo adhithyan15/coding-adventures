@@ -306,7 +306,7 @@ function executeNeuralBytecodeForward(
         requireDst(instruction);
         writeValue(
           instruction.dst,
-          applyScalarActivation(
+          applyNeuralActivation(
             read(instruction.input),
             instruction.activation ?? "relu"
           )
@@ -410,7 +410,7 @@ function readValue(values: Map<string, number>, valueId: string | undefined): nu
   return values.get(valueId)!;
 }
 
-function applyScalarActivation(value: number, activation: string): number {
+export function applyNeuralActivation(value: number, activation: string): number {
   switch (activation) {
     case "relu":
       return Math.max(0, value);
