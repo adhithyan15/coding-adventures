@@ -97,10 +97,11 @@ class TestIrOp:
         assert IrOp.F64_CMP_GE == 44
         assert IrOp.F64_FROM_I32 == 45
         assert IrOp.I32_TRUNC_FROM_F64 == 46
+        assert IrOp.F64_SQRT == 47
 
     def test_total_opcode_count(self) -> None:
-        """There are exactly 47 opcodes after adding f64-to-i32 truncation."""
-        assert len(IrOp) == 47
+        """There are exactly 48 opcodes after adding f64 sqrt."""
+        assert len(IrOp) == 48
 
     def test_name_to_op_roundtrip(self) -> None:
         """NAME_TO_OP[op.name] == op for every opcode."""
@@ -1006,6 +1007,7 @@ class TestAllOpcodesPrintParse:
             IrOp.F64_CMP_GE:   [IrRegister(4), IrRegister(1), IrRegister(2)],
             IrOp.F64_FROM_I32: [IrRegister(2), IrRegister(1)],
             IrOp.I32_TRUNC_FROM_F64: [IrRegister(2), IrRegister(1)],
+            IrOp.F64_SQRT:     [IrRegister(2), IrRegister(1)],
         }
         for idx, op in enumerate(IrOp):
             operands = operands_by_opcode[op]

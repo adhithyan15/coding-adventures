@@ -35,6 +35,8 @@ round-trip, export check.
 
 ### Added
 
+- Lowered `IrOp.F64_SQRT` to the native WASM `f64.sqrt` instruction and
+  inferred its destination register as `f64`.
 - **Oct 8-bit arithmetic e2e tests** (`tests/test_oct_8bit_e2e.py`):
   7 end-to-end tests confirming the WASM backend correctly compiles and
   executes 8-bit integer arithmetic IR — the same IR that the Oct compiler
