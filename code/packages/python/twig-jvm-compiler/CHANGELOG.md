@@ -1,5 +1,52 @@
 # Changelog — twig-jvm-compiler
 
+## [0.2.0] — 2026-04-29 — JVM02 Phase 2d (closures from Twig source)
+
+Completes the JVM closure trilogy: anonymous lambdas in Twig
+source compile to a JAR that runs on stock `java -jar` and
+returns the expected exit code.  `((make-adder 7) 35) → 42`
+runs end-to-end on real `java`.
+
+Mirrors what twig-clr-compiler shipped for CLR Phase 2d (and
+twig-beam-compiler for BEAM Phase 2d) — same lambda-lifting +
+free-variable analysis approach, just routes to the JVM
+backend's Phase 2c.5 closure plumbing instead of the BEAM
+apply/3 or CLR typed-locals path.
+
+### Added — anonymous lambdas and closure invocation
+
+- Anonymous `(lambda (x) body)` forms in expression position
+  are lifted to fresh `_lambda_N` top-level regions via
+  `twig.free_vars`.  The use site emits `MAKE_CLOSURE`.
+- `Apply` whose `fn` slot is anything other than a known
+  builtin or top-level function name lowers to
+  `APPLY_CLOSURE`.  Covers chained calls like
+  `((make-adder 7) 35)` and let-bound closures.
+- `compile_source` populates
+  `JvmBackendConfig.closure_free_var_counts` so
+  ir-to-jvm-class-file emits the multi-class artifact
+  (main + Closure interface + per-lambda Closure_<name>
+  subclasses).
+- `PackageResult` gains an optional `multi_class_artifact:
+  JVMMultiClassArtifact | None` field — populated when the
+  program contains closures so callers can package the full
+  bundle.
+- `run_source` packages the multi-class artifact via
+  `jvm-jar-writer` and runs `java -jar` when closures are
+  present; falls back to the existing single-class +
+  `java -cp` flow for closure-free programs.
+
+### Test additions
+
+- `test_lambda_lifts_to_top_level_region` — IR-shape unit
+  test covering MAKE_CLOSURE emission for a captured value.
+- `test_closure_call_emits_apply_closure` — IR-shape unit
+  test for chained closure invocation.
+- `test_closure_make_adder` — end-to-end on real `java`:
+  `((make-adder 7) 35) → 42` (stdout = `b'*'`).
+- `test_closure_let_bound` — end-to-end:
+  `(let ((adder (make-adder 7))) (adder 35)) → 42`.
+
 ## [0.1.1] — 2026-04-28
 
 ### Fixed — JVM01 paired fix: copy params to body-local holding registers

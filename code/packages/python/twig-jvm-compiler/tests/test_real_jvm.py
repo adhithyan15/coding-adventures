@@ -132,3 +132,60 @@ def test_nested_function_calls() -> None:
     assert result.returncode == 0, result.stderr
     # dbl(5) = 10, inc(10) = 11
     assert result.stdout == bytes([11])
+
+
+# ── Closures (JVM02 Phase 2d) ────────────────────────────────────────────
+
+
+@requires_java
+def test_closure_make_adder() -> None:
+    """``((make-adder 7) 35) → 42`` — the headline JVM02 Phase 2d test.
+
+    Exercises the full closure pipeline from real Twig source on
+    real ``java -jar``:
+
+    * Free-variable analysis lifts the ``(lambda (x) (+ x n))``
+      to a top-level ``_lambda_0`` region.
+    * ``MAKE_CLOSURE`` instantiates a ``Closure__lambda_0``
+      subclass and stores it via the parallel ``Object[]
+      __ca_objregs`` static pool (Phase 2c.5).
+    * ``APPLY_CLOSURE`` dispatches via
+      ``invokeinterface Closure.apply([I)I``.
+    * The Closure subclass's ``apply`` forwards via
+      ``invokestatic`` to ``TwigClosure._lambda_0(I, I)I`` — the
+      lifted lambda lives as a public static method on the main
+      class with widened arity (Phase 2c.5).
+    * The Twig output convention writes the final value as a
+      byte to stdout; ``42 == 0x2a == b'*'``.
+    """
+    src = """
+        (define (make-adder n) (lambda (x) (+ x n)))
+        ((make-adder 7) 35)
+    """
+    result = run_source(src, class_name="TwigClosure")
+    assert result.returncode == 0, (
+        f"closure pipeline broke at runtime.\n"
+        f"  exit code: {result.returncode}\n"
+        f"  stdout: {result.stdout!r}\n"
+        f"  stderr: {result.stderr!r}"
+    )
+    assert result.stdout == b"*", (
+        f"expected b'*' (= 42), got {result.stdout!r}"
+    )
+
+
+@requires_java
+def test_closure_let_bound() -> None:
+    """``(let ((adder (make-adder 7))) (adder 35)) → 42``.
+
+    Exercises the let-bound closure path: ``adder`` is a local
+    binding (not in ``_fn_params``) holding a closure value;
+    the call ``(adder 35)`` falls through to APPLY_CLOSURE.
+    """
+    src = """
+        (define (make-adder n) (lambda (x) (+ x n)))
+        (let ((adder (make-adder 7))) (adder 35))
+    """
+    result = run_source(src, class_name="TwigLetClos")
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == b"*"

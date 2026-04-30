@@ -124,11 +124,6 @@ def test_mutual_recursion_compiles() -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_lambda_rejected() -> None:
-    with pytest.raises(TwigCompileError, match="lambda"):
-        compile_to_ir("(lambda (x) x)")
-
-
 def test_cons_rejected() -> None:
     with pytest.raises(TwigCompileError, match="cons"):
         compile_to_ir("(cons 1 2)")
@@ -168,3 +163,43 @@ def test_wrong_arity_rejected() -> None:
 def test_function_arity_mismatch_rejected() -> None:
     with pytest.raises(TwigCompileError, match="takes 1 arguments"):
         compile_to_ir("(define (f x) x) (f 1 2)")
+
+
+# ── Closures (JVM02 Phase 2d) ─────────────────────────────────────────────
+
+
+def test_lambda_lifts_to_top_level_region() -> None:
+    """An anonymous lambda becomes a fresh ``_lambda_N`` region
+    and the use site emits MAKE_CLOSURE referencing it."""
+    from compiler_ir import IrLabel, IrOp
+    ir = compile_to_ir(
+        "(define (make-adder n) (lambda (x) (+ x n))) (make-adder 7)"
+    )
+    labels = [
+        ins.operands[0].name
+        for ins in ir.instructions
+        if ins.opcode is IrOp.LABEL
+        and isinstance(ins.operands[0], IrLabel)
+    ]
+    assert "make-adder" in labels
+    assert "_start" in labels
+    assert "_lambda_0" in labels
+
+    mk = [i for i in ir.instructions if i.opcode is IrOp.MAKE_CLOSURE]
+    assert len(mk) == 1
+    assert mk[0].operands[1].name == "_lambda_0"
+    assert mk[0].operands[2].value == 1
+
+
+def test_closure_call_emits_apply_closure() -> None:
+    """A call whose function position is itself an Apply (so
+    the result is a closure value, not a known top-level
+    function) lowers to APPLY_CLOSURE."""
+    from compiler_ir import IrOp
+    ir = compile_to_ir(
+        "(define (make-adder n) (lambda (x) (+ x n)))"
+        "((make-adder 7) 35)"
+    )
+    ap = [i for i in ir.instructions if i.opcode is IrOp.APPLY_CLOSURE]
+    assert len(ap) == 1
+    assert ap[0].operands[2].value == 1

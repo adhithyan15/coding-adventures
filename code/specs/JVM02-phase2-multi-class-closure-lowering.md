@@ -235,11 +235,28 @@ This is a substantial change; suggested PR breakdown:
    land in a follow-up if twig-jvm-compiler exercises them.
 
 5. **Phase 2d** — ``twig-jvm-compiler`` accepts ``Lambda``.
-   Pending — now **unblocked**.
-   - Lambda lifting.
-   - Free-var analysis (re-use ``twig.free_vars``).
-   - JAR packaging via ``jvm-jar-writer``.
-   - Real-``java`` test: ``((make-adder 7) 35) → 42``.
+   **Shipped.**  Anonymous ``(lambda ...)`` forms lift to fresh
+   ``_lambda_N`` top-level regions via ``twig.free_vars``
+   analysis; the use site emits ``MAKE_CLOSURE``; ``Apply``
+   whose ``fn`` slot is a let-bound or chained-call value
+   lowers to ``APPLY_CLOSURE``.  ``compile_source`` populates
+   ``closure_free_var_counts`` so ir-to-jvm-class-file
+   auto-generates the ``Closure`` interface + per-lambda
+   ``Closure_<name>`` subclass.  ``run_source`` packages the
+   multi-class artifact via ``jvm-jar-writer`` and runs
+   ``java -jar`` when closures are present (existing
+   single-class + ``java -cp`` flow stays for closure-free
+   programs).  Real ``java`` runs ``((make-adder 7) 35) → 42``
+   end-to-end (stdout = ``b'*'``).
+
+## JVM closure trilogy is complete
+
+All five phases (2a–2d, including the Phase 2c.5 typed
+register pool) have shipped.  Twig source containing
+anonymous lambdas (with captures) compiles to a real JAR
+that runs on stock ``java`` and produces the expected exit
+code / output.  Cross-backend parity established with BEAM
+Phase 2 and CLR Phase 2.
 
 ## Risk register
 
