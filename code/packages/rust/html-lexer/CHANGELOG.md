@@ -109,6 +109,8 @@ documented in this file.
 - NULL characters in comments and bogus comments now recover with
   `unexpected-null-character` and append U+FFFD while preserving pending comment
   dashes.
+- NULL characters in DOCTYPE names and quoted public/system identifiers now
+  recover with `unexpected-null-character` and append U+FFFD.
 - One-dash markup declarations such as `<!->` and `<!-x>` now use
   incorrectly-opened bogus-comment recovery instead of empty-comment recovery.
 - Invalid tag-open characters now follow HTML recovery: stray `<` text is

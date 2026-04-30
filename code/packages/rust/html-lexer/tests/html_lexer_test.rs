@@ -257,6 +257,47 @@ fn default_html_lexer_replaces_null_characters_in_tag_and_attribute_names() {
 }
 
 #[test]
+fn default_html_lexer_replaces_null_characters_in_doctypes() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer
+        .push("<!DOCTYPE\0><!DOCTYPE h\0 PUBLIC \"p\0\" \"s\0\">")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Doctype {
+                name: Some("\u{FFFD}".to_string()),
+                public_identifier: None,
+                system_identifier: None,
+                force_quirks: false,
+            },
+            Token::Doctype {
+                name: Some("h\u{FFFD}".to_string()),
+                public_identifier: Some("p\u{FFFD}".to_string()),
+                system_identifier: Some("s\u{FFFD}".to_string()),
+                force_quirks: false,
+            },
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-null-character")
+            .count(),
+        4
+    );
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "missing-whitespace-before-doctype-name"));
+}
+
+#[test]
 fn default_html_lexer_marks_missing_doctype_name_force_quirks() {
     let mut lexer = create_html_lexer().unwrap();
 

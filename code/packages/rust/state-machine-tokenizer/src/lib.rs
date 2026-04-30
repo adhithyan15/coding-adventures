@@ -512,6 +512,9 @@ impl Tokenizer {
                     })?;
                     self.append_doctype_name(action, ch, true)?;
                 }
+                "append_doctype_name_replacement" => {
+                    self.append_doctype_name(action, '\u{FFFD}', false)?;
+                }
                 "set_doctype_public_identifier_empty" => {
                     self.set_doctype_public_identifier_empty(action)?
                 }
@@ -521,6 +524,9 @@ impl Tokenizer {
                     })?;
                     self.append_doctype_public_identifier(action, ch)?;
                 }
+                "append_doctype_public_identifier_replacement" => {
+                    self.append_doctype_public_identifier(action, '\u{FFFD}')?;
+                }
                 "set_doctype_system_identifier_empty" => {
                     self.set_doctype_system_identifier_empty(action)?
                 }
@@ -529,6 +535,9 @@ impl Tokenizer {
                         action: action.clone(),
                     })?;
                     self.append_doctype_system_identifier(action, ch)?;
+                }
+                "append_doctype_system_identifier_replacement" => {
+                    self.append_doctype_system_identifier(action, '\u{FFFD}')?;
                 }
                 "mark_force_quirks" => self.mark_force_quirks(action)?,
                 "clear_temporary_buffer" => self.temporary_buffer.clear(),

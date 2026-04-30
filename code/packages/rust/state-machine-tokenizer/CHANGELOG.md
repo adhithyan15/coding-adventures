@@ -30,3 +30,6 @@ All notable changes to the `state-machine-tokenizer` crate will be documented in
   so lexer definitions can recover invalid name code points with U+FFFD.
 - Added `append_comment_replacement` so lexer definitions can recover invalid
   comment data code points with U+FFFD.
+- Added DOCTYPE replacement actions for names, public identifiers, and system
+  identifiers so lexer definitions can recover invalid DOCTYPE code points with
+  U+FFFD.

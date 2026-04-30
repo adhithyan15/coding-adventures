@@ -41,6 +41,9 @@ leaking the raw code point into emitted tokens.
 Comments and bogus comments also replace raw NULL characters with U+FFFD while
 recording `unexpected-null-character`, including dash-sensitive comment end
 substates that must preserve their pending `-` or `--` text first.
+DOCTYPE names and quoted public/system identifiers use the same replacement
+path, so legacy declarations with embedded NULLs still emit structured
+DOCTYPE tokens with U+FFFD in the affected field.
 Comment tokenization includes the standard start-dash recovery cases for empty
 HTML comments such as `<!-->` and `<!--->`, while still preserving normal
 Mosaic-era `<!--note-->` comments. Nested-looking `<!--` sequences inside an

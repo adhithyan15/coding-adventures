@@ -336,6 +336,48 @@ fn tokenizer_builds_doctypes_and_marks_force_quirks() {
 }
 
 #[test]
+fn tokenizer_appends_replacement_character_to_doctype_fields() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["D"]),
+            vec![EffectfulTransition::new(
+                "data",
+                EffectfulMatcher::Event("D".to_string()),
+                "done",
+            )
+            .with_effects(&[
+                "create_doctype",
+                "append_doctype_name(html)",
+                "append_doctype_name_replacement",
+                "set_doctype_public_identifier_empty",
+                "append_doctype_public_identifier(pub)",
+                "append_doctype_public_identifier_replacement",
+                "set_doctype_system_identifier_empty",
+                "append_doctype_system_identifier(sys)",
+                "append_doctype_system_identifier_replacement",
+                "emit_current_token",
+            ])],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("D").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![Token::Doctype {
+            name: Some("html\u{FFFD}".to_string()),
+            public_identifier: Some("pub\u{FFFD}".to_string()),
+            system_identifier: Some("sys\u{FFFD}".to_string()),
+            force_quirks: false,
+        }]
+    );
+}
+
+#[test]
 fn tokenizer_uses_temporary_buffer_actions() {
     let mut tokenizer = Tokenizer::new(
         EffectfulStateMachine::new(
