@@ -3,6 +3,49 @@
 All notable changes to this package will be documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.0] — 2026-04-29 (TW04 Phase 4a — module form in parser/AST)
+
+### Added
+
+- **`(module name (export ...) (import ...))` form** at the top
+  of every Twig file.  Parser-only landing — no module resolution,
+  no cross-module IR, no per-backend lowering yet.
+- **`module`, `export`, `import` keywords** added to
+  `code/grammars/twig.tokens`.  These names are reserved as a
+  side effect.
+- **Grammar updates** (`code/grammars/twig.grammar`):
+  - `program = [ module_form ] { form } ;`
+  - `module_form = LPAREN "module" NAME { module_clause } RPAREN ;`
+  - `module_clause = export_clause | import_clause ;`
+  - `export_clause = LPAREN "export" { NAME } RPAREN ;`
+  - `import_clause = LPAREN "import" { NAME } RPAREN ;`
+  - The flat layout (module declaration as a self-contained
+    sibling of the file's defines) matches the spec example
+    in `code/specs/TW04-modules-and-host-package.md`.
+- **`Module` AST node** with `name`, `exports`, `imports`,
+  source position; **`Program.module: Module | None`** field
+  (defaults to `None` — implicit "default module" for
+  backward compatibility).
+- **Module-path NAME tokens** like `stdlib/io` and
+  `user/compiler/lexer` lex as a single NAME because the
+  Twig NAME regex already permits `/` inside identifiers.
+- **Duplicate-export and duplicate-import detection** at
+  AST-extraction time with positioned error messages.
+
+### Changed
+
+- `extract_program` now returns a `Program` with a populated
+  `module` when the file starts with `(module ...)`.  Existing
+  code that ignores `module` (every backend prior to TW04 Phase
+  4d/e/f) keeps working unchanged — it just reads `forms` as
+  before.
+
+### Notes
+
+- This phase intentionally stops at parser/AST.  TW04 Phase 4b
+  adds the resolver; 4c adds cross-module IR ops; 4d–4f wire
+  per-backend lowering; 4g writes the stdlib in Twig.
+
 ## [0.1.0] — 2026-04-28 (TW00 initial release)
 
 ### Added

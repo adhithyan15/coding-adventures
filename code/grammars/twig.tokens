@@ -80,6 +80,14 @@ keywords:
   begin
   quote
   nil
+  # TW04 Phase 4a — module form keywords.  Promoted to KEYWORD
+  # tokens so the grammar's literal-string match (``"module"``,
+  # ``"export"``, ``"import"``) wins.  These names become
+  # reserved as a side effect — Twig source can no longer use
+  # ``module`` / ``export`` / ``import`` as variable names.
+  module
+  export
+  import
 
 # ---------------------------------------------------------------------------
 # Skip patterns — consumed silently, never reach the parser

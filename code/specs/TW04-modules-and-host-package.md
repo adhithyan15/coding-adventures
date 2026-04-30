@@ -103,8 +103,11 @@ Output: `42\n42\n` on stdout, on every backend.
 ```scheme
 (module name
   (export name1 name2 ...)
-  (import other-module ...)
-  ...top-level forms...)
+  (import other-module ...))
+
+;; ...top-level forms come after the module declaration...
+(define (foo) ...)
+(define (bar) ...)
 ```
 
 - The `module` form must be the first form in the file.  Forms
@@ -112,13 +115,24 @@ Output: `42\n42\n` on stdout, on every backend.
 - `name` is a slash-separated path matching the file's location
   relative to a search-path root.  `stdlib/io.tw` → module
   `stdlib/io`.  Mismatch is a `TwigCompileError`.
+- The module declaration is **flat** — it carries the module's
+  name, exports, and imports, but its top-level forms (defines
+  and expressions) are siblings AFTER the module form, not
+  nested inside it.  Phase 4a chose this layout because it
+  retrofits cleanly onto every existing single-file Twig
+  program (just prepend a `(module ...)` declaration; no
+  re-indentation) and it matches the existing program shape
+  the parser already accepts.
 - `(export name1 ...)` declares the module's public surface.
   Names not in the export list are file-private.
 - `(import other-module)` brings every exported name from
   `other-module` into the current module's namespace, prefixed
   by the imported module's path: `(import host)` → use as
   `host/write-byte`, not bare `write-byte`.
-- Multiple `(import ...)` forms are allowed; order doesn't matter.
+- Multiple `(import ...)` forms are allowed; order doesn't
+  matter.  Multiple `(export ...)` clauses are similarly
+  concatenated.  Duplicate names within or across clauses
+  raise a `TwigParseError` at extraction time.
 
 The path prefix is mandatory — it eliminates ambiguity.  Want
 shorter names?  Use `let`-binding:
@@ -266,7 +280,9 @@ cleanly to anything.
    form to `twig.parser` and `twig.ast_extract`.  No code
    generation yet.  Programs without `(module ...)` get an
    implicit "default module" so existing single-file programs
-   keep working.
+   keep working.  **Status: shipped — `twig` v0.2.0.**  The
+   `Module` AST node attaches to `Program.module` (defaults to
+   `None`) and downstream backends ignore it for now.
 
 2. **Phase 4b — module resolution.**  New `twig.module_resolver`
    that takes (entry module name, search paths) and returns a
