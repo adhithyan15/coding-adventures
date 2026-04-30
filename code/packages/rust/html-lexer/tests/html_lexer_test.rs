@@ -786,6 +786,38 @@ fn default_html_lexer_recovers_end_tag_with_trailing_solidus() {
 }
 
 #[test]
+fn default_html_lexer_recovers_end_tag_with_attributes() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("Before</p class=x data-y>After").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("Before".to_string()),
+            Token::EndTag {
+                name: "p".to_string()
+            },
+            Token::Text("After".to_string()),
+            Token::Eof,
+        ]
+    );
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "unexpected-whitespace-after-end-tag-name"));
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "end-tag-with-attributes")
+            .count(),
+        1
+    );
+}
+
+#[test]
 fn default_html_lexer_recovers_abrupt_empty_html_comment() {
     let mut lexer = create_html_lexer().unwrap();
 
