@@ -1063,6 +1063,34 @@ class TestPrologGoalAdapter:
             (num(0), num(4)),
         ]
 
+    def test_adapt_prolog_goal_rewrites_clpfd_modeling_globals(self) -> None:
+        parsed = parse_swi_query(
+            "?- [I,X,Y,Z] ins 1..4, "
+            "I #= 2, "
+            "element(I, [X,Y,Z], 4), "
+            "sum([X,Y,Z], #=<, 8), "
+            "scalar_product([2,1,1], [X,Y,Z], #>, 8), "
+            "all_different([X,Y,Z]), "
+            "labeling([], [I,X,Y,Z]).",
+        )
+
+        adapted = adapt_prolog_goal(parsed.goal)
+
+        assert solve_all(
+            program(),
+            (
+                parsed.variables["I"],
+                parsed.variables["X"],
+                parsed.variables["Y"],
+                parsed.variables["Z"],
+            ),
+            adapted,
+        ) == [
+            (num(2), num(1), num(4), num(3)),
+            (num(2), num(2), num(4), num(1)),
+            (num(2), num(3), num(4), num(1)),
+        ]
+
     def test_adapt_prolog_goal_rewrites_common_list_predicates(self) -> None:
         parsed = parse_swi_query(
             "?- member(Item, [tea, cake]), "

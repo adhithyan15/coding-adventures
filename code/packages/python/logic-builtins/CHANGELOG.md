@@ -14,6 +14,9 @@ All notable changes to this package will be documented in this file.
   subset, including `leftmost`, `ff`, `up`, and `down`.
 - `fd_scalar_producto(coeffs, vars, total)` for CLP(FD)-style weighted sum
   constraints over Python sequences or proper logic lists.
+- `fd_sum_relationo(vars, op, total)`,
+  `fd_scalar_product_relationo(coeffs, vars, op, total)`, and
+  `fd_elemento(index, vars, value)` for richer CLP(FD) modeling constraints.
 
 ### Fixed
 
