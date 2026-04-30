@@ -46,6 +46,7 @@ import shutil
 import subprocess
 import tempfile
 from dataclasses import dataclass
+from pathlib import Path
 
 from compiler_ir import (
     IDGenerator,
@@ -60,7 +61,9 @@ from ir_optimizer import IrOptimizer, OptimizationResult
 from ir_to_jvm_class_file import (
     JvmBackendConfig,
     JVMClassArtifact,
+    JVMMultiClassArtifact,
     lower_ir_to_jvm_class_file,
+    lower_ir_to_jvm_classes,
     write_class_file,
 )
 from twig import (
@@ -84,6 +87,7 @@ from twig.ast_nodes import (
     SymLit,
     VarRef,
 )
+from twig.free_vars import free_vars
 
 # ---------------------------------------------------------------------------
 # Result types
@@ -92,7 +96,14 @@ from twig.ast_nodes import (
 
 @dataclass(frozen=True)
 class PackageResult:
-    """Aggregated artefacts from one compile run."""
+    """Aggregated artefacts from one compile run.
+
+    JVM02 Phase 2d: ``multi_class_artifact`` is populated when the
+    program contains closures (so it ships the auto-generated
+    ``Closure`` interface + per-lambda ``Closure_<name>``
+    subclasses).  Non-closure programs leave it ``None`` and
+    ``artifact`` carries the single main class as before.
+    """
 
     source: str
     class_name: str
@@ -102,6 +113,7 @@ class PackageResult:
     optimized_ir: IrProgram
     artifact: JVMClassArtifact
     class_bytes: bytes
+    multi_class_artifact: JVMMultiClassArtifact | None = None
 
 
 @dataclass(frozen=True)
@@ -218,6 +230,16 @@ class _Compiler:
         # convention.
         self._fn_params: dict[str, list[str]] = {}
 
+        # JVM02 Phase 2d: lifted lambdas.  Each anonymous Lambda
+        # encountered during expression compilation gets a fresh
+        # name like ``_lambda_0`` and is appended here as
+        # (lifted_name, captures, lambda_node) so we can emit its
+        # body region after the user functions.  The closure
+        # value-side machinery (MAKE_CLOSURE / APPLY_CLOSURE) is
+        # emitted at the use site.
+        self._lifted_lambdas: list[tuple[str, list[str], Lambda]] = []
+        self._lambda_counter = 0
+
     # ------------------------------------------------------------------
     # Top-level driver
     # ------------------------------------------------------------------
@@ -244,6 +266,19 @@ class _Compiler:
 
         # ── Emit the synthesised _start region ────────────────────────
         self._emit_start(top_level_exprs)
+
+        # JVM02 Phase 2d: lifted-lambda regions go AFTER ``_start`` so
+        # the entry point stays the program's _start.
+        # ``_compile_expr`` may have appended to ``self._lifted_lambdas``
+        # while compiling earlier functions / _start; lifted lambdas
+        # can also be nested (lambda inside lambda) so the list grows
+        # during this final pass — iterate by index.
+        i = 0
+        while i < len(self._lifted_lambdas):
+            lifted_name, captures, lam = self._lifted_lambdas[i]
+            self._emit_lifted_lambda(lifted_name, captures, lam)
+            i += 1
+
         return self._program
 
     # ------------------------------------------------------------------
@@ -370,10 +405,7 @@ class _Compiler:
             assert last is not None
             return last
         if isinstance(expr, Lambda):
-            raise TwigCompileError(
-                "lambdas are not yet supported by the JVM backend "
-                "(closure synthesis lands in TW02.5)"
-            )
+            return self._compile_anonymous_lambda(expr, ctx)
         if isinstance(expr, Apply):
             return self._compile_apply(expr, ctx)
         raise TwigCompileError(
@@ -476,70 +508,174 @@ class _Compiler:
           corresponding ``IrOp`` directly (one IR instruction).
         * ``(f a b)`` where ``f`` is a top-level function → emit
           the move-args-into-param-slots dance, then ``IrOp.CALL``.
-        * Anything else (locals being applied, unknown names) is
-          rejected — first-class function values come in TW02.5.
+        * ``((make-adder 7) 35)`` — the function position is itself
+          an Apply (or a let-bound name) holding a closure value;
+          falls through to ``APPLY_CLOSURE`` (JVM02 Phase 2d).
         """
-        if not isinstance(expr.fn, VarRef):
-            raise TwigCompileError(
-                "TW02 v1 only supports direct calls of top-level names"
-            )
-        name = expr.fn.name
+        if isinstance(expr.fn, VarRef):
+            name = expr.fn.name
 
-        if name in _V1_REJECTED_BUILTINS:
-            raise TwigCompileError(
-                f"builtin {name!r} is not yet supported by the JVM "
-                "backend — see TW02.5"
-            )
-
-        # Direct binary builtin
-        if name in _BINARY_OPS:
-            if len(expr.args) != 2:
+            if name in _V1_REJECTED_BUILTINS:
                 raise TwigCompileError(
-                    f"{name!r} expects 2 arguments in TW02 v1, got "
-                    f"{len(expr.args)}"
-                )
-            left = self._compile_expr(expr.args[0], ctx)
-            right = self._compile_expr(expr.args[1], ctx)
-            dest = self._fresh_holding(ctx)
-            self._emit(_BINARY_OPS[name], dest, left, right)
-            return dest
-
-        # Direct user-function call
-        if name in self._fn_params:
-            params = self._fn_params[name]
-            if len(expr.args) != len(params):
-                raise TwigCompileError(
-                    f"function {name!r} takes {len(params)} arguments, "
-                    f"got {len(expr.args)}"
+                    f"builtin {name!r} is not yet supported by the JVM "
+                    "backend — see TW02.5"
                 )
 
-            # Step 1: evaluate every argument into its own holding
-            # register.  We must NOT eval directly into r2/r3 —
-            # nested calls (g x) would clobber f's r2 with x.
-            arg_regs: list[IrRegister] = [
-                self._compile_expr(a, ctx) for a in expr.args
-            ]
+            # Direct binary builtin
+            if name in _BINARY_OPS:
+                if len(expr.args) != 2:
+                    raise TwigCompileError(
+                        f"{name!r} expects 2 arguments in TW02 v1, got "
+                        f"{len(expr.args)}"
+                    )
+                left = self._compile_expr(expr.args[0], ctx)
+                right = self._compile_expr(expr.args[1], ctx)
+                dest = self._fresh_holding(ctx)
+                self._emit(_BINARY_OPS[name], dest, left, right)
+                return dest
 
-            # Step 2: copy holding regs into the function's param
-            # slots (registers 2, 3, ...).
-            for i, src in enumerate(arg_regs):
-                self._emit_move(IrRegister(_REG_PARAM_BASE + i), src)
+            # Direct user-function call
+            if name in self._fn_params:
+                params = self._fn_params[name]
+                if len(expr.args) != len(params):
+                    raise TwigCompileError(
+                        f"function {name!r} takes {len(params)} arguments, "
+                        f"got {len(expr.args)}"
+                    )
 
-            # Step 3: invoke.
-            self._emit(IrOp.CALL, IrLabel(name))
+                # Step 1: evaluate every argument into its own holding
+                # register.  We must NOT eval directly into r2/r3 —
+                # nested calls (g x) would clobber f's r2 with x.
+                arg_regs: list[IrRegister] = [
+                    self._compile_expr(a, ctx) for a in expr.args
+                ]
 
-            # Step 4: result is in register 1.  Copy out so the
-            # caller can use it without worrying about a future
-            # call clobbering it.
-            dest = self._fresh_holding(ctx)
-            self._emit_move(dest, IrRegister(_REG_HALT_RESULT))
-            return dest
+                # Step 2: copy holding regs into the function's param
+                # slots (registers 2, 3, ...).
+                for i, src in enumerate(arg_regs):
+                    self._emit_move(IrRegister(_REG_PARAM_BASE + i), src)
 
-        raise TwigCompileError(
-            f"unknown function {name!r}.  TW02 v1 supports only the "
-            "binary builtins +, -, *, /, =, <, > and top-level "
-            "(define (f ...) ...) functions."
+                # Step 3: invoke.
+                self._emit(IrOp.CALL, IrLabel(name))
+
+                # Step 4: result is in register 1.  Copy out so the
+                # caller can use it without worrying about a future
+                # call clobbering it.
+                dest = self._fresh_holding(ctx)
+                self._emit_move(dest, IrRegister(_REG_HALT_RESULT))
+                return dest
+
+            # Fall through to closure-apply only if the name is
+            # actually bound locally (a let-binding holding a
+            # closure value).  Unbound names are user errors.
+            if name not in ctx.locals_:
+                raise TwigCompileError(
+                    f"unknown function {name!r}.  Supported: binary "
+                    "builtins (+, -, *, /, =, <, >), top-level "
+                    "(define (f ...) ...), and closure values bound "
+                    "via let or returned from another function."
+                )
+
+        # Closure path: compile fn to a register holding a closure
+        # value, then APPLY_CLOSURE with the explicit args.
+        closure_reg = self._compile_expr(expr.fn, ctx)
+        arg_regs = [self._compile_expr(a, ctx) for a in expr.args]
+        dest = self._fresh_holding(ctx)
+        self._emit(
+            IrOp.APPLY_CLOSURE,
+            dest,
+            closure_reg,
+            IrImmediate(len(arg_regs)),
+            *arg_regs,
         )
+        return dest
+
+    # ------------------------------------------------------------------
+    # Closure compilation (JVM02 Phase 2d)
+    # ------------------------------------------------------------------
+
+    def _compile_anonymous_lambda(
+        self, lam: Lambda, outer: _FnCtx
+    ) -> IrRegister:
+        """Lift ``lam`` to a fresh top-level function and emit a
+        ``MAKE_CLOSURE`` at the use site.
+
+        Free-variable analysis (``twig.free_vars``) determines what
+        the lambda captures from its enclosing scope.  Each
+        capture must already be bound in ``outer.locals_`` —
+        otherwise we'd be referring to a name that doesn't resolve.
+        """
+        globals_ = (
+            set(self._fn_params)
+            | set(self._value_consts)
+            | set(_BINARY_OPS)
+            | _V1_REJECTED_BUILTINS
+        )
+        captures = free_vars(lam, globals_)
+
+        for c in captures:
+            if c not in outer.locals_:
+                raise TwigCompileError(
+                    f"unbound name {c!r} captured by lambda — "
+                    "did you forget a (define) or a (let ...) binding?"
+                )
+
+        lifted_name = f"_lambda_{self._lambda_counter}"
+        self._lambda_counter += 1
+        self._lifted_lambdas.append((lifted_name, captures, lam))
+
+        # Materialise MAKE_CLOSURE at the use site.  The IR op
+        # carries the captured values as their *current* IR
+        # registers in ``outer``.
+        capture_regs = [outer.locals_[c] for c in captures]
+        dest = self._fresh_holding(outer)
+        self._emit(
+            IrOp.MAKE_CLOSURE,
+            dest,
+            IrLabel(lifted_name),
+            IrImmediate(len(captures)),
+            *capture_regs,
+        )
+        return dest
+
+    def _emit_lifted_lambda(
+        self,
+        lifted_name: str,
+        captures: list[str],
+        lam: Lambda,
+    ) -> None:
+        """Emit a callable region for a lifted lambda body.
+
+        Captures-first parameter layout (matches ir-to-jvm-class-file's
+        Phase 2c.5 lowering convention): the lifted region's IR
+        register layout is
+
+            r2..r{1+num_free}                    — captures
+            r{2+num_free}..r{1+num_free+arity}   — explicit params
+            r{10+}                               — body holding regs
+
+        ir-to-jvm-class-file's ``_build_lifted_lambda_method``
+        prepends a JVM-args → __ca_regs prologue so the body can
+        use the existing IR-body emitter unchanged.
+        """
+        self._emit(IrOp.LABEL, IrLabel(name=lifted_name), id=-1)
+        ctx = _FnCtx(locals_={})
+
+        all_params = captures + list(lam.params)
+        for i, param in enumerate(all_params):
+            arrival = IrRegister(index=_REG_PARAM_BASE + i)
+            body_local = self._fresh_holding(ctx)
+            self._emit_move(body_local, arrival)
+            ctx.locals_[param] = body_local
+
+        last: IrRegister | None = None
+        for expr in lam.body:
+            last = self._compile_expr(expr, ctx)
+        if last is None:
+            raise TwigCompileError(f"lambda {lifted_name!r} has empty body")
+
+        self._emit_move(IrRegister(_REG_HALT_RESULT), last)
+        self._emit(IrOp.RET)
 
     # ------------------------------------------------------------------
     # IR-emission helpers
@@ -609,7 +745,8 @@ def compile_source(
         raise PackageError("parse", str(exc), exc) from exc
 
     try:
-        raw_ir = _Compiler().compile(twig_program)
+        compiler = _Compiler()
+        raw_ir = compiler.compile(twig_program)
     except TwigCompileError:
         raise
     except Exception as exc:  # pragma: no cover
@@ -622,11 +759,30 @@ def compile_source(
         optimization = OptimizationResult(program=raw_ir)
         optimized_ir = raw_ir
 
+    # JVM02 Phase 2d: build closure_free_var_counts from the
+    # lifted-lambda table the compiler discovered during IR emission.
+    # ir-to-jvm-class-file uses this to detect closure regions and
+    # auto-generate the ``Closure`` interface + per-lambda
+    # ``Closure_<name>`` subclasses.
+    closure_free_var_counts: dict[str, int] = {}
+    for lifted_name, captures, _lam in compiler._lifted_lambdas:  # noqa: SLF001
+        closure_free_var_counts[lifted_name] = len(captures)
+
+    config = JvmBackendConfig(
+        class_name=class_name,
+        emit_main_wrapper=True,
+        closure_free_var_counts=closure_free_var_counts,
+    )
+
     try:
-        artifact = lower_ir_to_jvm_class_file(
-            optimized_ir,
-            JvmBackendConfig(class_name=class_name, emit_main_wrapper=True),
-        )
+        if closure_free_var_counts:
+            # Closure programs need the multi-class output: main class
+            # + Closure interface + per-lambda Closure_<name> subclasses.
+            multi = lower_ir_to_jvm_classes(optimized_ir, config)
+            artifact = multi.main
+        else:
+            multi = None
+            artifact = lower_ir_to_jvm_class_file(optimized_ir, config)
     except Exception as exc:
         raise PackageError("lower-jvm", str(exc), exc) from exc
 
@@ -639,6 +795,7 @@ def compile_source(
         optimized_ir=optimized_ir,
         artifact=artifact,
         class_bytes=artifact.class_bytes,
+        multi_class_artifact=multi,
     )
 
 
@@ -676,13 +833,33 @@ def run_source(
         source, class_name=class_name, optimize=optimize
     )
     with tempfile.TemporaryDirectory() as tmp:
-        write_class_file(compilation.artifact, tmp)
-        proc = subprocess.run(
-            ["java", "-cp", tmp, class_name],
-            capture_output=True,
-            timeout=timeout_seconds,
-            check=False,
-        )
+        # JVM02 Phase 2d: closure programs need the full multi-class
+        # bundle (main + Closure interface + per-lambda subclasses)
+        # in a JAR, then ``java -jar`` finds them all.  Non-closure
+        # programs use the existing single-class + ``java -cp`` flow.
+        if compilation.multi_class_artifact is not None:
+            from jvm_jar_writer import JarManifest, write_jar
+            classes = tuple(
+                (c.class_filename, c.class_bytes)
+                for c in compilation.multi_class_artifact.classes
+            )
+            jar_bytes = write_jar(classes, JarManifest(main_class=class_name))
+            jar_path = Path(tmp) / f"{class_name}.jar"
+            jar_path.write_bytes(jar_bytes)
+            proc = subprocess.run(
+                ["java", "-jar", str(jar_path)],
+                capture_output=True,
+                timeout=timeout_seconds,
+                check=False,
+            )
+        else:
+            write_class_file(compilation.artifact, tmp)
+            proc = subprocess.run(
+                ["java", "-cp", tmp, class_name],
+                capture_output=True,
+                timeout=timeout_seconds,
+                check=False,
+            )
     return ExecutionResult(
         compilation=compilation,
         stdout=proc.stdout,

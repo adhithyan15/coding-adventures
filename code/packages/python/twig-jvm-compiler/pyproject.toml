@@ -26,6 +26,7 @@ dependencies = [
     "coding-adventures-ir-optimizer",
     "coding-adventures-jvm-class-file",
     "coding-adventures-ir-to-jvm-class-file",
+    "coding-adventures-jvm-jar-writer",
 ]
 
 [tool.uv.sources]
@@ -34,6 +35,7 @@ coding-adventures-compiler-ir = { path = "../compiler-ir", editable = true }
 coding-adventures-ir-optimizer = { path = "../ir-optimizer", editable = true }
 coding-adventures-jvm-class-file = { path = "../jvm-class-file", editable = true }
 coding-adventures-ir-to-jvm-class-file = { path = "../ir-to-jvm-class-file", editable = true }
+coding-adventures-jvm-jar-writer = { path = "../jvm-jar-writer", editable = true }
 
 [project.urls]
 Homepage = "https://github.com/adhithyan15/coding-adventures"
