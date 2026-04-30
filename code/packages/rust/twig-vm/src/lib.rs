@@ -72,7 +72,10 @@ use interpreter_ir::IIRModule;
 use lispy_runtime::LispyBinding;
 use twig_ir_compiler::compile_source as compile_twig;
 
-pub use dispatch::{run, RunError, MAX_DISPATCH_DEPTH, MAX_INSTRUCTIONS_PER_RUN, MAX_REGISTERS_PER_FRAME};
+pub use dispatch::{
+    run, run_with_globals, run_with_state, Globals, ICTable, RunError, MAX_DISPATCH_DEPTH,
+    MAX_IC_FUNCTIONS, MAX_IC_SLOTS_PER_FUNCTION, MAX_INSTRUCTIONS_PER_RUN, MAX_REGISTERS_PER_FRAME,
+};
 pub use operand::operand_to_value;
 
 // Re-export the most-used types so callers don't need to depend

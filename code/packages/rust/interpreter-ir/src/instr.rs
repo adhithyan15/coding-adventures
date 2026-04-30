@@ -152,6 +152,27 @@ pub struct IIRInstr {
     /// Set by jit-core when emitting a type guard for this instruction.
     /// `None` means no guard has been emitted yet.
     pub deopt_anchor: Option<usize>,
+
+    /// Inline-cache slot id for this instruction (LANG20 PR 7).
+    ///
+    /// `Some(slot)` for instructions that own an inline cache —
+    /// `send`, `load_property`, `store_property`, and (eventually)
+    /// the call_site / arith call sites that JITs warm.  `None`
+    /// for instructions without ICs (arithmetic, control flow,
+    /// `const`, …).
+    ///
+    /// Slot ids are assigned by the language frontend per
+    /// IIRFunction (sequential 0, 1, 2, …); the runtime allocates
+    /// IC storage at function-load time based on the highest
+    /// assigned id.  See LANG20 §"Inline cache machinery".
+    ///
+    /// **Backward compatibility.**  IC-eligible instructions that
+    /// leave this field `None` get a stack-allocated fresh IC per
+    /// dispatch (the PR 6 behaviour).  This keeps hand-built
+    /// IIRModules in tests working without re-emitting them with
+    /// slot ids; new front-ends that want persistent ICs assign
+    /// slots via [`IIRInstr::with_ic_slot`].
+    pub ic_slot: Option<u32>,
 }
 
 impl IIRInstr {
@@ -172,7 +193,22 @@ impl IIRInstr {
             observed_type: None,
             observation_count: 0,
             deopt_anchor: None,
+            ic_slot: None,
         }
+    }
+
+    /// Builder: assign an inline-cache slot id to this instruction.
+    ///
+    /// Used by language frontends that emit IC-owning opcodes
+    /// (`send`, `load_property`, `store_property`).  The runtime
+    /// then allocates persistent IC storage indexed by `slot`.
+    ///
+    /// Calling this on a non-IC-owning opcode is harmless — the
+    /// slot is stored but the dispatcher only consults it for
+    /// IC-eligible opcodes.
+    pub fn with_ic_slot(mut self, slot: u32) -> Self {
+        self.ic_slot = Some(slot);
+        self
     }
 
     // ------------------------------------------------------------------
