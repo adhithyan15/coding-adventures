@@ -5,7 +5,12 @@ from __future__ import annotations
 import struct
 from dataclasses import dataclass
 
-from ir_to_cil_bytecode import CILHelper, CILMethodArtifact, CILProgramArtifact
+from ir_to_cil_bytecode import (
+    CILHelper,
+    CILMethodArtifact,
+    CILProgramArtifact,
+    CILTypeArtifact,
+)
 
 _FILE_ALIGNMENT = 0x200
 _SECTION_ALIGNMENT = 0x2000
@@ -32,11 +37,46 @@ assert len(_DOS_STUB) == _PE_OFFSET - 0x40, "DOS stub must fill 0x40..0x80"
 _MODULE_TABLE = 0x00
 _TYPE_REF_TABLE = 0x01
 _TYPE_DEF_TABLE = 0x02
+_FIELD_TABLE = 0x04
 _METHOD_DEF_TABLE = 0x06
+_INTERFACE_IMPL_TABLE = 0x09
 _MEMBER_REF_TABLE = 0x0A
 _STANDALONE_SIG_TABLE = 0x11
 _ASSEMBLY_TABLE = 0x20
 _ASSEMBLY_REF_TABLE = 0x23
+
+# Type flags (ECMA-335 §II.23.1.15).  See ``CILTypeArtifact`` docs.
+# Public + AutoLayout + Class + AnsiClass + BeforeFieldInit.
+_TYPE_FLAGS_PUBLIC_CLASS = 0x00100001
+# Public + Interface + Abstract + AnsiClass.
+_TYPE_FLAGS_PUBLIC_INTERFACE = 0x000000A1
+
+# Method flags (ECMA-335 §II.23.1.10).  Existing static methods use
+# 0x0016 = Public(0x6) + Static(0x10).  Instance methods drop Static
+# and add HideBySig.  Constructors add SpecialName + RTSpecialName.
+_METHOD_FLAGS_PUBLIC_STATIC = 0x0016
+# Public + Virtual + HideBySig + NewSlot + Final.  Used for
+# concrete instance methods on closure classes that *implement*
+# an interface method.  ``NewSlot`` puts the method into its own
+# vtable slot (rather than trying to override a parent class
+# slot, which doesn't exist for closure ``Apply``); ``Final``
+# prevents further overriding (closures are leaf types).
+_METHOD_FLAGS_PUBLIC_INSTANCE = 0x01E6
+# Public + HideBySig + SpecialName + RTSpecialName.
+_METHOD_FLAGS_PUBLIC_CTOR = 0x1886
+# Public + Virtual + HideBySig + NewSlot + Abstract.
+_METHOD_FLAGS_INTERFACE_ABSTRACT = 0x05C6
+
+# Method calling-convention bits (ECMA-335 §II.23.2.1).
+_SIG_CALLCONV_DEFAULT = 0x00
+_SIG_CALLCONV_HASTHIS = 0x20
+
+# Coded-index tag widths (ECMA-335 §II.24.2.6).  All packed in 2 bytes
+# while every referenced table stays under the relevant threshold.
+_TYPEDEFORREF_TAG_TYPEDEF = 0
+_TYPEDEFORREF_TAG_TYPEREF = 1
+_TYPEDEFORREF_TAG_TYPESPEC = 2
+_TYPEDEFORREF_TAG_BITS = 2
 
 # ECMA public-key token for the standard library assemblies
 # (mscorlib, System.Runtime, …).  Burnt into the runtime; treat as
@@ -211,10 +251,32 @@ class CLIAssemblyWriter:
         self,
         program: CILProgramArtifact,
     ) -> tuple[tuple[_MethodLayout, ...], bytes]:
+        """Lay out main-type methods first, then each extra-type's
+        methods in declaration order.  The output order corresponds
+        directly to MethodDef table row order, which the TypeDef
+        ``MethodList`` column uses as a 1-based starting index.
+        """
         layouts: list[_MethodLayout] = []
         out = bytearray()
         standalone_sig_row = 0
-        for method in program.methods:
+        ordered_methods: list[CILMethodArtifact] = list(program.methods)
+        for extra in program.extra_types:
+            ordered_methods.extend(extra.methods)
+        for method in ordered_methods:
+            if method.is_abstract:
+                # Abstract methods have no body; the MethodDef row's
+                # RVA column must be 0.  We still emit a layout entry
+                # so the row index lines up with the ordered method
+                # list.
+                layouts.append(
+                    _MethodLayout(
+                        method=method,
+                        rva=0,
+                        body=b"",
+                        local_sig_token=0,
+                    )
+                )
+                continue
             out.extend(b"\x00" * (_align(len(out), 4) - len(out)))
             if method.local_types:
                 standalone_sig_row += 1
@@ -281,6 +343,42 @@ class CLIAssemblyWriter:
         type_namespace_index = strings.add(self.config.type_namespace)
         assembly_name_index = strings.add(self.config.assembly_name)
 
+        # Index every extra type's name + namespace in the string
+        # heap up-front.  Used both for the TypeDef rows themselves
+        # and (via a name → TypeDef-row map) for resolving the
+        # ``implements`` / ``extends`` columns later.
+        extra_type_name_indices = [
+            (strings.add(t.namespace), strings.add(t.name))
+            for t in program.extra_types
+        ]
+        # Map "Namespace.Name" → 1-based TypeDef row.  Row 1 is the
+        # ``<Module>`` pseudo, row 2 is the main user type, rows 3+
+        # are the extras in declaration order.
+        typedef_row_for_name: dict[str, int] = {
+            _qualified_name(self.config.type_namespace, self.config.type_name): 2,
+        }
+        for offset, t in enumerate(program.extra_types):
+            typedef_row_for_name[_qualified_name(t.namespace, t.name)] = 3 + offset
+
+        # CLR02 Phase 2c: when any extra type extends ``System.Object``
+        # (i.e. a concrete closure class), the closure's .ctor body
+        # chains into ``Object::.ctor()``.  That requires a MemberRef
+        # row pointing at the existing System.Object TypeRef.  We
+        # always emit it at MemberRef row ``len(helper_specs) + 1``
+        # whenever the trigger fires, so the lowerer's deterministic
+        # token computation matches the actual emitted row.
+        needs_object_ctor_memberref = any(
+            (not t.is_interface) and t.extends == "System.Object"
+            for t in program.extra_types
+        )
+        ctor_string_index = strings.add(".ctor") if needs_object_ctor_memberref else 0
+        # ``HASTHIS | paramcount(0) | retType(void)`` per ECMA-335 §II.23.2.1
+        object_ctor_sig_index = (
+            blobs.add(bytes([_SIG_CALLCONV_HASTHIS, 0x00, 0x01]))
+            if needs_object_ctor_memberref
+            else 0
+        )
+
         helper_namespace, helper_name = _split_type_name(self.config.helper_type_name)
         helper_name_index = strings.add(helper_name)
         helper_namespace_index = strings.add(helper_namespace)
@@ -310,23 +408,31 @@ class CLIAssemblyWriter:
         system_object_name_index = strings.add("Object")
         system_namespace_index = strings.add("System")
 
-        method_name_indices = {
-            layout.method.name: strings.add(layout.method.name)
-            for layout in method_layouts
+        # Same keying decision as the sig table: MethodDef row (1-based).
+        # ``Apply`` / ``.ctor`` repeat across closure types and would
+        # collide on name.
+        method_name_indices: dict[int, int] = {
+            (idx + 1): strings.add(layout.method.name)
+            for idx, layout in enumerate(method_layouts)
         }
         helper_name_indices = {
             spec.helper: strings.add(spec.name)
             for spec in program.helper_specs
         }
 
-        method_sig_indices = {
-            layout.method.name: blobs.add(
+        # Method-sig blobs are keyed by MethodDef row (1-based) rather
+        # than method name because extra closure types can each have a
+        # method called ``Apply`` or ``.ctor`` — name-keying would
+        # silently fold them onto a single shared sig blob.
+        method_sig_indices: dict[int, int] = {
+            (idx + 1): blobs.add(
                 _method_signature(
                     layout.method.return_type,
                     layout.method.parameter_types,
+                    has_this=layout.method.is_instance,
                 )
             )
-            for layout in method_layouts
+            for idx, layout in enumerate(method_layouts)
         }
         helper_sig_indices = {
             spec.helper: blobs.add(
@@ -334,6 +440,17 @@ class CLIAssemblyWriter:
             )
             for spec in program.helper_specs
         }
+        # Field-sig blobs, keyed similarly by Field-table row (1-based).
+        # Walks extra_types in declaration order so the row indices
+        # match what the writer assigns when building the Field table.
+        field_sig_indices: dict[int, int] = {}
+        field_name_indices: dict[int, int] = {}
+        field_row = 0
+        for extra in program.extra_types:
+            for fld in extra.fields:
+                field_row += 1
+                field_sig_indices[field_row] = blobs.add(_field_signature(fld.type))
+                field_name_indices[field_row] = strings.add(fld.name)
         local_sig_indices = {
             layout.local_sig_token: blobs.add(
                 _local_signature(layout.method.local_types)
@@ -357,6 +474,13 @@ class CLIAssemblyWriter:
             helper_name_indices,
             helper_sig_indices,
             local_sig_indices,
+            extra_type_name_indices=tuple(extra_type_name_indices),
+            typedef_row_for_name=typedef_row_for_name,
+            field_name_indices=field_name_indices,
+            field_sig_indices=field_sig_indices,
+            ctor_string_index=ctor_string_index,
+            object_ctor_sig_index=object_ctor_sig_index,
+            needs_object_ctor_memberref=needs_object_ctor_memberref,
             mvid_index=mvid_index,
             system_runtime_name_index=system_runtime_name_index,
             empty_string_index=empty_string_index,
@@ -392,12 +516,19 @@ class CLIAssemblyWriter:
         assembly_name_index: int,
         helper_name_index: int,
         helper_namespace_index: int,
-        method_name_indices: dict[str, int],
-        method_sig_indices: dict[str, int],
+        method_name_indices: dict[int, int],
+        method_sig_indices: dict[int, int],
         helper_name_indices: dict[CILHelper, int],
         helper_sig_indices: dict[CILHelper, int],
         local_sig_indices: dict[int, int],
         *,
+        extra_type_name_indices: tuple[tuple[int, int], ...],
+        typedef_row_for_name: dict[str, int],
+        field_name_indices: dict[int, int],
+        field_sig_indices: dict[int, int],
+        ctor_string_index: int,
+        object_ctor_sig_index: int,
+        needs_object_ctor_memberref: bool,
         mvid_index: int,
         system_runtime_name_index: int,
         empty_string_index: int,
@@ -434,56 +565,43 @@ class CLIAssemblyWriter:
                     system_namespace_index,
                 ),
             ],
-            _TYPE_DEF_TABLE: [
-                # Row 1: the ``<Module>`` pseudo-TypeDef.  Flags=0,
-                # empty namespace, Extends=0, FieldList=1, MethodList=1.
-                # Owns no methods because the row 2 user TypeDef has
-                # the same MethodList=1 (and no rows follow).
-                struct.pack(
-                    "<IHHHHH",
-                    0,
-                    module_pseudo_name_index,
-                    0,
-                    0,
-                    1,
-                    1,
-                ),
-                # Row 2: the user-supplied TypeDef.  Owns all real
-                # methods starting at MethodDef row 1.  ``Extends`` is
-                # a TypeDefOrRef coded index pointing at TypeRef row
-                # 2 (System.Object); TypeRef tag = 1, row 2 →
-                # ``(2 << 2) | 1 = 9``.
-                struct.pack(
-                    "<IHHHHH",
-                    0x00100001,
-                    type_name_index,
-                    type_namespace_index,
-                    9,
-                    1,
-                    1,
-                ),
-            ],
+            _TYPE_DEF_TABLE: _build_typedef_rows(
+                program=program,
+                module_pseudo_name_index=module_pseudo_name_index,
+                type_name_index=type_name_index,
+                type_namespace_index=type_namespace_index,
+                extra_type_name_indices=extra_type_name_indices,
+                typedef_row_for_name=typedef_row_for_name,
+            ),
             _METHOD_DEF_TABLE: [
                 struct.pack(
                     "<IHHHHH",
                     layout.rva,
                     0,
-                    0x0016,
-                    method_name_indices[layout.method.name],
-                    method_sig_indices[layout.method.name],
-                    1,
+                    _method_def_flags(layout.method),
+                    method_name_indices[idx + 1],
+                    method_sig_indices[idx + 1],
+                    1,  # ParamList — params table omitted (always row 1)
                 )
-                for layout in method_layouts
+                for idx, layout in enumerate(method_layouts)
             ],
-            _MEMBER_REF_TABLE: [
-                struct.pack(
-                    "<HHH",
-                    (1 << 3) | 1,
-                    helper_name_indices[spec.helper],
-                    helper_sig_indices[spec.helper],
-                )
-                for spec in program.helper_specs
-            ],
+            _FIELD_TABLE: _build_field_rows(
+                program=program,
+                field_name_indices=field_name_indices,
+                field_sig_indices=field_sig_indices,
+            ),
+            _INTERFACE_IMPL_TABLE: _build_interfaceimpl_rows(
+                program=program,
+                typedef_row_for_name=typedef_row_for_name,
+            ),
+            _MEMBER_REF_TABLE: _build_memberref_rows(
+                program=program,
+                helper_name_indices=helper_name_indices,
+                helper_sig_indices=helper_sig_indices,
+                ctor_string_index=ctor_string_index,
+                object_ctor_sig_index=object_ctor_sig_index,
+                needs_object_ctor_memberref=needs_object_ctor_memberref,
+            ),
             _STANDALONE_SIG_TABLE: [
                 struct.pack("<H", local_sig_indices[layout.local_sig_token])
                 for layout in method_layouts
@@ -543,7 +661,12 @@ class CLIAssemblyWriter:
         # ECMA-335: a table with zero rows must NOT have its bit set
         # in the valid mask, otherwise real .NET rejects the file as
         # corrupt.  Drop empties.
-        for empty_table in (_STANDALONE_SIG_TABLE, _MEMBER_REF_TABLE):
+        for empty_table in (
+            _STANDALONE_SIG_TABLE,
+            _MEMBER_REF_TABLE,
+            _FIELD_TABLE,
+            _INTERFACE_IMPL_TABLE,
+        ):
             if not tables.get(empty_table):
                 tables.pop(empty_table, None)
 
@@ -577,6 +700,237 @@ def write_cli_assembly(
 ) -> CLIAssemblyArtifact:
     """Write a CIL program artifact into a minimal PE/CLI assembly."""
     return CLIAssemblyWriter(config).write(program)
+
+
+def _build_typedef_rows(
+    *,
+    program: CILProgramArtifact,
+    module_pseudo_name_index: int,
+    type_name_index: int,
+    type_namespace_index: int,
+    extra_type_name_indices: tuple[tuple[int, int], ...],
+    typedef_row_for_name: dict[str, int],
+) -> list[bytes]:
+    """Emit the TypeDef table rows.
+
+    Layout: ``Flags(U32), Name(StrIdx), Namespace(StrIdx),
+    Extends(TypeDefOrRef), FieldList(FieldIdx), MethodList(MethodIdx)``.
+
+    Row 1 is always ``<Module>`` (ECMA-335 §II.22.37).  Row 2 is the
+    user's main type.  Rows 3+ are the extras in declaration order.
+
+    ``FieldList`` and ``MethodList`` are running 1-based offsets into
+    the Field / MethodDef tables — each TypeDef owns the consecutive
+    rows starting at its declared offset, ending where the next
+    TypeDef's offset begins (or at end-of-table for the last row).
+    """
+    method_offset = 1 + len(program.methods)
+    field_offset = 1
+    rows: list[bytes] = [
+        # Row 1: <Module>.  No fields, no methods owned.
+        struct.pack(
+            "<IHHHHH",
+            0,
+            module_pseudo_name_index,
+            0,
+            0,
+            1,
+            1,
+        ),
+        # Row 2: the user's main type.  Owns MethodDef rows
+        # 1..len(program.methods), no fields.  ``Extends`` is
+        # System.Object — TypeRef row 2, TypeDefOrRef tag = 1
+        # (TypeRef), encoded as ``(2 << 2) | 1 = 9``.
+        struct.pack(
+            "<IHHHHH",
+            _TYPE_FLAGS_PUBLIC_CLASS,
+            type_name_index,
+            type_namespace_index,
+            9,
+            field_offset,
+            1,  # MethodList — main type starts at row 1
+        ),
+    ]
+
+    for (ns_idx, name_idx), extra in zip(
+        extra_type_name_indices, program.extra_types, strict=True,
+    ):
+        flags = (
+            _TYPE_FLAGS_PUBLIC_INTERFACE
+            if extra.is_interface
+            else _TYPE_FLAGS_PUBLIC_CLASS
+        )
+        extends_index = _resolve_extends(extra, typedef_row_for_name)
+        rows.append(
+            struct.pack(
+                "<IHHHHH",
+                flags,
+                name_idx,
+                ns_idx,
+                extends_index,
+                field_offset,
+                method_offset,
+            )
+        )
+        method_offset += len(extra.methods)
+        field_offset += len(extra.fields)
+
+    return rows
+
+
+def _resolve_extends(
+    extra: CILTypeArtifact,
+    typedef_row_for_name: dict[str, int],
+) -> int:
+    """Encode the ``Extends`` column as a ``TypeDefOrRef`` coded index.
+
+    Tag bits (low 2): 0 = TypeDef row, 1 = TypeRef row, 2 = TypeSpec
+    row.  We only resolve to TypeRef row 2 (System.Object) or to a
+    same-module TypeDef.  Interfaces have ``extends=None`` and the
+    column must be 0.
+    """
+    if extra.is_interface or extra.extends is None:
+        return 0
+    if extra.extends == "System.Object":
+        return (2 << _TYPEDEFORREF_TAG_BITS) | _TYPEDEFORREF_TAG_TYPEREF
+    if extra.extends in typedef_row_for_name:
+        row = typedef_row_for_name[extra.extends]
+        return (row << _TYPEDEFORREF_TAG_BITS) | _TYPEDEFORREF_TAG_TYPEDEF
+    msg = (
+        f"unsupported ``extends`` reference {extra.extends!r} on "
+        f"type {extra.name!r} — only ``System.Object`` and "
+        "same-module TypeDefs are resolvable in CLR02 v1"
+    )
+    raise CLIAssemblyWriterError(msg)
+
+
+def _build_field_rows(
+    *,
+    program: CILProgramArtifact,
+    field_name_indices: dict[int, int],
+    field_sig_indices: dict[int, int],
+) -> list[bytes]:
+    """Emit the Field table rows for every field on every extra type.
+
+    Row layout: ``Flags(U16), Name(StrIdx), Signature(BlobIdx)`` =
+    6 bytes with narrow heaps.  Public instance fields use flags
+    ``0x0006`` (Public + InstanceContract — i.e. not Static).
+    """
+    rows: list[bytes] = []
+    field_row = 0
+    for extra in program.extra_types:
+        for _fld in extra.fields:
+            field_row += 1
+            rows.append(
+                struct.pack(
+                    "<HHH",
+                    0x0006,  # Public, instance (no Static bit)
+                    field_name_indices[field_row],
+                    field_sig_indices[field_row],
+                )
+            )
+    return rows
+
+
+def _build_interfaceimpl_rows(
+    *,
+    program: CILProgramArtifact,
+    typedef_row_for_name: dict[str, int],
+) -> list[bytes]:
+    """Emit one InterfaceImpl row per ``(class, interface)`` pair.
+
+    Row layout: ``Class(TypeDefIdx), Interface(TypeDefOrRef)`` =
+    4 bytes.  ECMA-335 §II.22.23 mandates rows be sorted by Class
+    then Interface — we iterate ``extra_types`` in declaration
+    order, which gives ascending Class indices automatically; ties
+    inside one type are sorted by interface name.
+    """
+    rows: list[bytes] = []
+    for offset, extra in enumerate(program.extra_types):
+        if not extra.implements:
+            continue
+        class_row = 3 + offset  # extras start at TypeDef row 3
+        # Resolve and encode each interface, then sort within this
+        # type's group to satisfy the table ordering invariant.
+        encoded: list[int] = []
+        for iface_name in extra.implements:
+            if iface_name not in typedef_row_for_name:
+                msg = (
+                    f"interface {iface_name!r} on {extra.name!r} is not "
+                    "declared in this assembly's extra_types — only "
+                    "same-module interfaces are supported in CLR02 v1"
+                )
+                raise CLIAssemblyWriterError(msg)
+            iface_row = typedef_row_for_name[iface_name]
+            encoded.append(
+                (iface_row << _TYPEDEFORREF_TAG_BITS)
+                | _TYPEDEFORREF_TAG_TYPEDEF
+            )
+        for iface_coded in sorted(encoded):
+            rows.append(struct.pack("<HH", class_row, iface_coded))
+    return rows
+
+
+def _build_memberref_rows(
+    *,
+    program: CILProgramArtifact,
+    helper_name_indices: dict[CILHelper, int],
+    helper_sig_indices: dict[CILHelper, int],
+    ctor_string_index: int,
+    object_ctor_sig_index: int,
+    needs_object_ctor_memberref: bool,
+) -> list[bytes]:
+    """Emit the MemberRef table.
+
+    Helper rows go first (so their token positions stay stable for
+    CLR01 callers).  When any closure type is present (CLR02
+    Phase 2c), one additional row is appended for
+    ``[System.Runtime]System.Object::.ctor()`` so closure ctors can
+    chain into it via a deterministic ``0x0A...`` token.
+
+    Layout per row: ``Class(MemberRefParent), Name(StringIdx),
+    Signature(BlobIdx)`` = 6 bytes with narrow heaps.
+
+    ``MemberRefParent`` tag bits (low 3): TypeRef = 1.  Helper rows
+    point at TypeRef row 1 (the helper's TypeRef) → ``(1 << 3) | 1
+    = 9``.  System.Object::.ctor points at TypeRef row 2 →
+    ``(2 << 3) | 1 = 17``.
+    """
+    rows: list[bytes] = [
+        struct.pack(
+            "<HHH",
+            (1 << 3) | 1,
+            helper_name_indices[spec.helper],
+            helper_sig_indices[spec.helper],
+        )
+        for spec in program.helper_specs
+    ]
+    if needs_object_ctor_memberref:
+        rows.append(
+            struct.pack(
+                "<HHH",
+                (2 << 3) | 1,
+                ctor_string_index,
+                object_ctor_sig_index,
+            )
+        )
+    return rows
+
+
+def _method_def_flags(method: CILMethodArtifact) -> int:
+    """Pick the ECMA-335 ``MethodAttributes`` value for ``method``.
+
+    Default (``is_instance=False``, ``is_special_name=False``,
+    ``is_abstract=False``) is the existing static-method shape
+    (``0x0016``) so CLR01-era callers keep producing identical bytes.
+    """
+    if method.is_abstract:
+        return _METHOD_FLAGS_INTERFACE_ABSTRACT
+    if method.is_special_name:
+        return _METHOD_FLAGS_PUBLIC_CTOR
+    if not method.is_instance:
+        return _METHOD_FLAGS_PUBLIC_STATIC
+    return _METHOD_FLAGS_PUBLIC_INSTANCE
 
 
 def _validate_config(config: CLIAssemblyConfig) -> None:
@@ -751,13 +1105,40 @@ def _stream_header_size(name: str) -> int:
     return 8 + _align(len(name.encode("ascii")) + 1, 4)
 
 
-def _method_signature(return_type: str, parameter_types: tuple[str, ...]) -> bytes:
-    out = bytearray([0x00])
+def _method_signature(
+    return_type: str,
+    parameter_types: tuple[str, ...],
+    *,
+    has_this: bool = False,
+) -> bytes:
+    """Encode a CIL method signature blob (ECMA-335 §II.23.2.1).
+
+    The first byte is the calling convention.  ``HASTHIS`` (0x20)
+    flags the method as instance-bound (the first arg passed by the
+    runtime is the implicit ``this`` reference).  Existing static
+    methods leave it clear (0x00).
+    """
+    callconv = _SIG_CALLCONV_HASTHIS if has_this else _SIG_CALLCONV_DEFAULT
+    out = bytearray([callconv])
     out.extend(_compressed_uint(len(parameter_types)))
     out.extend(_type_signature(return_type))
     for parameter_type in parameter_types:
         out.extend(_type_signature(parameter_type))
     return bytes(out)
+
+
+def _field_signature(field_type: str) -> bytes:
+    """Encode a Field signature blob (ECMA-335 §II.23.2.4).
+
+    Layout: ``0x06 || TypeSig``.  We only emit value-type and ref-
+    type fields here; fancier modifiers (CMOD_REQD / CMOD_OPT) are
+    out of scope.
+    """
+    return bytes([0x06]) + _type_signature(field_type)
+
+
+def _qualified_name(namespace: str, name: str) -> str:
+    return f"{namespace}.{name}" if namespace else name
 
 
 def _local_signature(local_types: tuple[str, ...]) -> bytes:

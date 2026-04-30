@@ -199,6 +199,46 @@
       ]
     },
     {
+      "description": "duplicate attributes keep first value",
+      "input": "<a href=one HREF=two title=ok>",
+      "output": [
+        ["StartTag", "a", {"href": "one", "title": "ok"}]
+      ],
+      "errors": [
+        {"code": "duplicate-attribute", "line": 1, "col": 21}
+      ]
+    },
+    {
+      "description": "unexpected unquoted attribute value characters are preserved",
+      "input": "<a data=one=two sq=x'y lt=x<y eq=x=y tick=x`y dq=x\"y>",
+      "output": [
+        ["StartTag", "a", {"data": "one=two", "sq": "x'y", "lt": "x<y", "eq": "x=y", "tick": "x`y", "dq": "x\"y"}]
+      ],
+      "errors": [
+        {"code": "unexpected-character-in-unquoted-attribute-value", "line": 1, "col": 12},
+        {"code": "unexpected-character-in-unquoted-attribute-value", "line": 1, "col": 22},
+        {"code": "unexpected-character-in-unquoted-attribute-value", "line": 1, "col": 30},
+        {"code": "unexpected-character-in-unquoted-attribute-value", "line": 1, "col": 38},
+        {"code": "unexpected-character-in-unquoted-attribute-value", "line": 1, "col": 48},
+        {"code": "unexpected-character-in-unquoted-attribute-value", "line": 1, "col": 56}
+      ]
+    },
+    {
+      "description": "null characters are replaced in data and attributes",
+      "input": "A\u0000<a title=\"x\u0000y\" data=x\u0000y bare=\u0000>z",
+      "output": [
+        ["Character", "A\uFFFD"],
+        ["StartTag", "a", {"title": "x\uFFFDy", "data": "x\uFFFDy", "bare": "\uFFFD"}],
+        ["Character", "z"]
+      ],
+      "errors": [
+        {"code": "unexpected-null-character", "line": 1, "col": 2},
+        {"code": "unexpected-null-character", "line": 1, "col": 14},
+        {"code": "unexpected-null-character", "line": 1, "col": 24},
+        {"code": "unexpected-null-character", "line": 1, "col": 32}
+      ]
+    },
+    {
       "description": "plaintext state literalizes markup and character references",
       "initialStates": ["PLAINTEXT state"],
       "input": "hello <b>still text</b> &amp; literal",

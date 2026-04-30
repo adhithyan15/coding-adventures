@@ -152,15 +152,42 @@ container needed).
 
 Same staging as JVM02 Phase 2:
 
-- **CLR02 Phase 2a** — IR ops (already shipped via the
-  ``compiler-ir`` v0.4.0 release).
-- **CLR02 Phase 2b** — ``IClosure`` interface + multi-TypeDef
-  emission in ``cli-assembly-writer``.  Easier than JVM Phase 2b
-  because PE/CLI natively supports multi-class.
+- **CLR02 Phase 2a** — IR ops.  **Shipped** via the
+  ``compiler-ir`` v0.4.0 release.
+- **CLR02 Phase 2b** — multi-TypeDef metadata in
+  ``cli-assembly-writer``.  **Shipped.**  The writer now accepts
+  an arbitrary ``extra_types`` list on ``CILProgramArtifact``;
+  each entry produces one ``TypeDef`` row plus its ``Field`` /
+  ``MethodDef`` / ``InterfaceImpl`` rows.  Method signatures
+  support the ``HASTHIS`` flag (instance methods) and an
+  abstract-method codepath (RVA=0).  Two real-``dotnet`` tests
+  prove that an ``IClosure`` interface and a concrete closure-
+  shape class with a field round-trip and load.
 - **CLR02 Phase 2c** — ``MAKE_CLOSURE`` / ``APPLY_CLOSURE``
-  lowering in ``ir-to-cil-bytecode``.
+  lowering in ``ir-to-cil-bytecode``.  **Shipped (structural).**
+  The backend emits ``newobj`` / ``callvirt`` against
+  auto-generated ``IClosure`` + ``Closure_<name>`` TypeDefs,
+  with deterministic token assignment that matches the
+  writer's row layout.  Captures-first prologue copies
+  ``ldfld`` results into IR register slots.  V1 limitation:
+  arity-1 closures only (multi-arity needs ``int[]`` array
+  handling).  V1 limitation: end-to-end runtime semantics
+  blocked on a typed-register pool — closure refs are managed
+  pointers but the existing CLR backend uses an int32-uniform
+  local/parameter convention, so a closure ref stored into an
+  int32 local truncates the pointer.  The full ``((make-adder
+  7) 35) → 42`` test is committed as ``xfail(strict=True)`` so
+  it'll flip to passing the moment the typed pool lands.
+- **CLR02 Phase 2c.5** (added during 2c implementation) —
+  typed register pool: parallel ``object[]`` slots for
+  closure-flow registers, with a per-method analysis to
+  classify each register as int or object based on
+  MAKE_CLOSURE / CALL-of-closure-returning-method / ADD_IMM
+  copies.  Required to make Phase 2c semantics work end-to-end
+  on real ``dotnet``.  Pending.
 - **CLR02 Phase 2d** — ``twig-clr-compiler`` accepts ``Lambda``
-  + real-``dotnet`` factorial-closure test.
+  + real-``dotnet`` factorial-closure test.  Pending — gated
+  on Phase 2c.5.
 
 ## Risk register
 

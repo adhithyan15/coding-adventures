@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.9.0] - 2026-04-28
+## [1.10.0] - 2026-04-29
 
 ### Added
 
@@ -42,6 +42,11 @@ PRAGMA schema_version;           -- read: returns one row (schema_version,)
 - `tests/test_tier3_pragma.py::TestSchemaVersion` — 6 tests: default,
   description, CREATE TABLE bumps, DROP TABLE bumps, CREATE INDEX
   bumps, DML does not bump.
+
+## [1.9.0] - 2026-04-28
+
+### Added
+
 **Bytes (BLOB) parameter binding**
 
 `bytes`, `bytearray`, and `memoryview` parameters can now be bound to `?`

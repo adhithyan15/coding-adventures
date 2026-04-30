@@ -4,11 +4,7 @@
 //! Do not edit by hand.
 
 #[allow(unused_imports)]
-use state_machine::{
-    EffectfulStateMachine, FixtureDefinition, GuardDefinition, InputDefinition, MachineKind,
-    MatcherDefinition, RegisterDefinition, StateDefinition, StateMachineDefinition,
-    TokenDefinition, TransitionDefinition,
-};
+use state_machine::{EffectfulStateMachine, FixtureDefinition, GuardDefinition, InputDefinition, MachineKind, MatcherDefinition, RegisterDefinition, StateDefinition, StateMachineDefinition, TokenDefinition, TransitionDefinition};
 
 pub fn html1_lexer_definition() -> StateMachineDefinition {
     let mut definition = StateMachineDefinition::new("html1-lexer", MachineKind::Transducer);
@@ -18,6 +14,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
     definition.runtime_min = Some("state-machine-tokenizer/0.1".to_string());
     definition.done = Some("done".to_string());
     definition.alphabet = vec![
+        "\0".to_string(),
         "\t".to_string(),
         "\n".to_string(),
         "\r".to_string(),
@@ -55,6 +52,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         "Y".to_string(),
         "[".to_string(),
         "]".to_string(),
+        "`".to_string(),
         "a".to_string(),
         "b".to_string(),
         "c".to_string(),
@@ -78,7 +76,9 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
     definition.tokens = vec![
         TokenDefinition {
             name: "Text".to_string(),
-            fields: vec!["data".to_string()],
+            fields: vec![
+                "data".to_string(),
+            ],
         },
         TokenDefinition {
             name: "StartTag".to_string(),
@@ -90,11 +90,15 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         },
         TokenDefinition {
             name: "EndTag".to_string(),
-            fields: vec!["name".to_string()],
+            fields: vec![
+                "name".to_string(),
+            ],
         },
         TokenDefinition {
             name: "Comment".to_string(),
-            fields: vec!["data".to_string()],
+            fields: vec![
+                "data".to_string(),
+            ],
         },
         TokenDefinition {
             name: "Doctype".to_string(),
@@ -1394,6 +1398,22 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "data".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "data".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "append_text_replacement".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "data".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Eof),
             to: vec![
                 "done".to_string(),
@@ -1457,6 +1477,22 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "rcdata".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "rcdata".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "append_text_replacement".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "rcdata".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Eof),
             to: vec![
                 "done".to_string(),
@@ -1497,6 +1533,22 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "flush_text".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "rawtext".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "rawtext".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "append_text_replacement".to_string(),
             ],
             consume: true,
         },
@@ -1550,6 +1602,22 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "plaintext".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "plaintext".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "append_text_replacement".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "plaintext".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Anything),
             to: vec![
                 "plaintext".to_string(),
@@ -1573,6 +1641,22 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: Vec::new(),
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "cdata_section".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "cdata_section".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "append_text_replacement".to_string(),
+            ],
             consume: true,
         },
         TransitionDefinition {
@@ -1722,6 +1806,22 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: Vec::new(),
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "script_data".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "script_data".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "append_text_replacement".to_string(),
+            ],
             consume: true,
         },
         TransitionDefinition {
@@ -5927,7 +6027,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
             ],
             consume: true,
         },
@@ -5955,6 +6055,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
             ],
             consume: true,
@@ -5971,6 +6072,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(eof-in-tag)".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -6054,7 +6156,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
             ],
             consume: true,
         },
@@ -6082,7 +6184,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
             ],
             consume: true,
@@ -6099,7 +6201,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -6116,7 +6218,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "start_attribute".to_string(),
                 "append_attribute_name(current_lowercase)".to_string(),
             ],
@@ -6212,7 +6314,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(missing-attribute-value)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
             ],
             consume: true,
@@ -6229,7 +6331,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -6249,6 +6351,22 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
                 "set_return_state(attribute_value_unquoted)".to_string(),
                 "clear_temporary_buffer".to_string(),
                 "append_temporary_buffer(&)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "before_attribute_value".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "attribute_value_unquoted".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "append_attribute_value_replacement".to_string(),
             ],
             consume: true,
         },
@@ -6278,7 +6396,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
             ],
             consume: true,
         },
@@ -6294,7 +6412,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -6314,6 +6432,22 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
                 "set_return_state(attribute_value_double_quoted)".to_string(),
                 "clear_temporary_buffer".to_string(),
                 "append_temporary_buffer(&)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "attribute_value_double_quoted".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "attribute_value_double_quoted".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "append_attribute_value_replacement".to_string(),
             ],
             consume: true,
         },
@@ -6343,7 +6477,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
             ],
             consume: true,
         },
@@ -6359,7 +6493,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -6379,6 +6513,22 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
                 "set_return_state(attribute_value_single_quoted)".to_string(),
                 "clear_temporary_buffer".to_string(),
                 "append_temporary_buffer(&)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "attribute_value_single_quoted".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "attribute_value_single_quoted".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "append_attribute_value_replacement".to_string(),
             ],
             consume: true,
         },
@@ -6408,7 +6558,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
             ],
             consume: true,
         },
@@ -6423,7 +6573,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
             ],
             consume: true,
         },
@@ -6438,7 +6588,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
             ],
             consume: true,
         },
@@ -6453,7 +6603,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
             ],
             consume: true,
         },
@@ -6468,7 +6618,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
             ],
             consume: true,
         },
@@ -6483,7 +6633,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
             ],
             consume: true,
@@ -6500,7 +6650,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -6520,6 +6670,102 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
                 "set_return_state(attribute_value_unquoted)".to_string(),
                 "clear_temporary_buffer".to_string(),
                 "append_temporary_buffer(&)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "attribute_value_unquoted".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "attribute_value_unquoted".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "append_attribute_value_replacement".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "attribute_value_unquoted".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\"".to_string())),
+            to: vec![
+                "attribute_value_unquoted".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-character-in-unquoted-attribute-value)".to_string(),
+                "append_attribute_value(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "attribute_value_unquoted".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("'".to_string())),
+            to: vec![
+                "attribute_value_unquoted".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-character-in-unquoted-attribute-value)".to_string(),
+                "append_attribute_value(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "attribute_value_unquoted".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("<".to_string())),
+            to: vec![
+                "attribute_value_unquoted".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-character-in-unquoted-attribute-value)".to_string(),
+                "append_attribute_value(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "attribute_value_unquoted".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("=".to_string())),
+            to: vec![
+                "attribute_value_unquoted".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-character-in-unquoted-attribute-value)".to_string(),
+                "append_attribute_value(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "attribute_value_unquoted".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("`".to_string())),
+            to: vec![
+                "attribute_value_unquoted".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-character-in-unquoted-attribute-value)".to_string(),
+                "append_attribute_value(current)".to_string(),
             ],
             consume: true,
         },
@@ -6806,7 +7052,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "append_temporary_buffer_to_attribute_value".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -6886,7 +7132,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "append_temporary_buffer_to_attribute_value".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -6966,7 +7212,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "append_temporary_buffer_to_attribute_value".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -7063,7 +7309,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
                 "append_numeric_character_reference_to_attribute_value".to_string(),
                 "parse_error(missing-semicolon-after-character-reference)".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -7131,7 +7377,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
                 "append_numeric_character_reference_to_attribute_value".to_string(),
                 "parse_error(missing-semicolon-after-character-reference)".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -7229,7 +7475,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "recover_named_character_reference_to_attribute_value".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -7324,7 +7570,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "append_temporary_buffer_to_attribute_value".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -7389,7 +7635,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "append_temporary_buffer_to_attribute_value".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -7441,7 +7687,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "append_temporary_buffer_to_attribute_value".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -7506,7 +7752,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "append_temporary_buffer_to_attribute_value".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -7571,7 +7817,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "append_temporary_buffer_to_attribute_value".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -7623,7 +7869,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "append_temporary_buffer_to_attribute_value".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -7688,7 +7934,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "append_temporary_buffer_to_attribute_value".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -7740,7 +7986,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "append_temporary_buffer_to_attribute_value".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -7805,7 +8051,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "append_temporary_buffer_to_attribute_value".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -7857,7 +8103,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "append_temporary_buffer_to_attribute_value".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -7922,7 +8168,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "append_temporary_buffer_to_attribute_value".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -7987,7 +8233,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "append_temporary_buffer_to_attribute_value".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -8052,7 +8298,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "append_temporary_buffer_to_attribute_value".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -8104,7 +8350,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "append_temporary_buffer_to_attribute_value".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -8169,7 +8415,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "append_temporary_buffer_to_attribute_value".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -8234,7 +8480,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "append_temporary_buffer_to_attribute_value".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -8299,7 +8545,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "append_temporary_buffer_to_attribute_value".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -8351,7 +8597,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
                 "append_named_character_reference_to_attribute_value".to_string(),
                 "parse_error(missing-semicolon-after-character-reference)".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -8433,7 +8679,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "append_temporary_buffer_to_attribute_value".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -8498,7 +8744,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "append_temporary_buffer_to_attribute_value".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -8563,7 +8809,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "append_temporary_buffer_to_attribute_value".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -8615,7 +8861,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
                 "append_named_character_reference_to_attribute_value".to_string(),
                 "parse_error(missing-semicolon-after-character-reference)".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -8697,7 +8943,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "append_temporary_buffer_to_attribute_value".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -8762,7 +9008,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "append_temporary_buffer_to_attribute_value".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -8814,7 +9060,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
                 "append_named_character_reference_to_attribute_value".to_string(),
                 "parse_error(missing-semicolon-after-character-reference)".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute".to_string(),
+                "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],

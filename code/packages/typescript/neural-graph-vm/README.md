@@ -12,6 +12,7 @@ import { createNeuralNetwork } from "@coding-adventures/neural-network";
 import {
   compileNeuralNetworkToBytecode,
   runNeuralBytecodeForward,
+  runNeuralBytecodeForwardWithTrace,
 } from "@coding-adventures/neural-graph-vm";
 
 const network = createNeuralNetwork("tiny-model")
@@ -26,6 +27,9 @@ const network = createNeuralNetwork("tiny-model")
 const bytecode = compileNeuralNetworkToBytecode(network);
 const outputs = runNeuralBytecodeForward(bytecode, { x0: 4, x1: 8 });
 // { prediction: 7 }
+
+const trace = runNeuralBytecodeForwardWithTrace(bytecode, { x0: 4, x1: 8 });
+trace.instructions[0].sourceNode; // "x0"
 ```
 
 Supported v0 graph ops:
@@ -33,12 +37,18 @@ Supported v0 graph ops:
 | `nn.op` | Behavior |
 | --- | --- |
 | `input` | Loads a scalar runtime input. |
+| `constant` | Loads an immutable scalar from `nn.value`. |
 | `weighted_sum` | Multiplies incoming source values by edge weights and sums them. |
 | `activation` | Applies `relu`, `sigmoid`, `tanh`, or `none`. |
 | `output` | Stores a named scalar output. |
 
 The interpreter is intentionally scalar and small. Its job is correctness,
 debuggability, and portability before optimized matrix lowering exists.
+
+`runNeuralBytecodeForwardWithTrace` returns each instruction's value reads,
+value write, output write, and source graph node/edge metadata. Visualizers can
+use that to show how graph edges become bytecode operations without making the
+graph data structure own runtime behavior.
 
 `MultiDirectedGraph` remains generic and domain-neutral. The
 `@coding-adventures/neural-network` package is the neural primitive layer on top:

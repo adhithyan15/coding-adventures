@@ -15,9 +15,11 @@ from compiler_ir import (
 )
 from ir_to_cil_bytecode import (
     CILBackendConfig,
+    CILFieldArtifact,
     CILHelper,
     CILMethodArtifact,
     CILProgramArtifact,
+    CILTypeArtifact,
     SequentialCILTokenProvider,
     lower_ir_to_cil_bytecode,
 )
@@ -177,3 +179,97 @@ def _artifact(*methods: CILMethodArtifact) -> CILProgramArtifact:
             tuple(method.name for method in methods)
         ),
     )
+
+
+# ──────────────────────────────────────────────────────────────────────────
+# CLR02 Phase 2b — multi-TypeDef metadata structural tests
+# ──────────────────────────────────────────────────────────────────────────
+
+
+def _main_42() -> CILMethodArtifact:
+    """Trivial ``Main`` returning 42 — used as the entry point for
+    multi-TypeDef tests that focus on the extra-type plumbing."""
+    return CILMethodArtifact(
+        "Main",
+        bytes([0x1F, 42, 0x2A]),  # ldc.i4.s 42; ret
+        max_stack=8,
+        local_types=(),
+    )
+
+
+def _program_with(extra_types: tuple[CILTypeArtifact, ...]) -> CILProgramArtifact:
+    main = _main_42()
+    return CILProgramArtifact(
+        entry_label="Main",
+        methods=(main,),
+        data_offsets={},
+        data_size=0,
+        helper_specs=(),
+        token_provider=SequentialCILTokenProvider(("Main",)),
+        extra_types=extra_types,
+    )
+
+
+def test_extra_interface_appears_in_typedef_table() -> None:
+    """An ``is_interface=True`` extra type lands as a third TypeDef
+    row in the assembly metadata.
+
+    Method-less interface keeps the test independent of the
+    ``clr-pe-file`` decoder's handling of abstract-method RVA=0 —
+    the structural check we want here is that the TypeDef row
+    itself is emitted.  Real ``dotnet`` exercise of an abstract
+    interface lives in ``test_real_dotnet.py``.
+    """
+    iclosure = CILTypeArtifact(
+        name="IClosure",
+        namespace="CodingAdventures",
+        is_interface=True,
+        extends=None,
+    )
+    asm = decode_clr_pe_file(write_cli_assembly(_program_with((iclosure,))).assembly_bytes)
+    typedef_names = [t.full_name for t in asm.type_definitions]
+    assert "CodingAdventures.IClosure" in typedef_names
+
+
+def test_extra_class_method_appears_in_method_definitions() -> None:
+    """A concrete extra type's methods land in the MethodDef stream
+    after the main type's methods, in declaration order."""
+    placeholder = CILBytecodeBuilder()
+    placeholder.emit_ldc_i4(0).emit_ret()
+    closure = CILTypeArtifact(
+        name="Closure_X",
+        namespace="CodingAdventures",
+        extends="System.Object",
+        methods=(
+            CILMethodArtifact(
+                name="MarkerMethod",
+                body=placeholder.assemble(),
+                max_stack=8,
+                local_types=(),
+            ),
+        ),
+    )
+    asm = decode_clr_pe_file(write_cli_assembly(_program_with((closure,))).assembly_bytes)
+    method_names = [m.name for m in asm.method_definitions]
+    assert "Main" in method_names
+    assert "MarkerMethod" in method_names
+
+
+def test_implements_unresolved_interface_rejected() -> None:
+    closure = CILTypeArtifact(
+        name="Closure_X",
+        namespace="CodingAdventures",
+        implements=("CodingAdventures.NotDeclared",),
+    )
+    with pytest.raises(CLIAssemblyWriterError, match="not declared in this assembly"):
+        write_cli_assembly(_program_with((closure,)))
+
+
+def test_extends_unresolved_class_rejected() -> None:
+    weird = CILTypeArtifact(
+        name="Weird",
+        namespace="CodingAdventures",
+        extends="Some.External.Base",
+    )
+    with pytest.raises(CLIAssemblyWriterError, match="unsupported ``extends``"):
+        write_cli_assembly(_program_with((weird,)))

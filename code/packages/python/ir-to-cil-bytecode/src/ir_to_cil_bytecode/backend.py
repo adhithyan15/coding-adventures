@@ -9,7 +9,7 @@ placeholder tokens that are useful for tests and for composing later stages.
 from __future__ import annotations
 
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Protocol
 
@@ -47,17 +47,45 @@ class CILHelperSpec:
 
 @dataclass(frozen=True)
 class CILBackendConfig:
-    """Configuration for compiler IR to CIL bytecode lowering."""
+    """Configuration for compiler IR to CIL bytecode lowering.
+
+    ``closure_free_var_counts`` declares which IR regions are
+    lifted-lambda bodies (TW03 Phase 2 / CLR02 Phase 2c).  Each
+    entry maps a region's name to its number of captured free
+    variables.  Regions in this map are lowered as the ``Apply``
+    method on an auto-generated ``Closure_<name>`` TypeDef, with
+    a prologue that copies captures from instance fields and
+    arguments from the caller-passed ``int[]`` into the IR's
+    expected register slots.
+
+    The lambda body itself sees a captures-first IR register
+    layout (matches what twig-clr-compiler produces and what
+    BEAM Phase 2 already uses):
+
+      * ``r2..r{1+num_free}``                             — captures
+      * ``r{2+num_free}..r{1+num_free+explicit_arity}``   — explicit args
+    """
 
     syscall_arg_reg: int = 4
     max_static_data_bytes: int = _MAX_STATIC_DATA_BYTES
     method_max_stack: int = 16
     call_register_count: int | None = 0
+    closure_free_var_counts: dict[str, int] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
 class CILMethodArtifact:
-    """A lowered CIL method body and its method-level metadata needs."""
+    """A lowered CIL method body and its method-level metadata needs.
+
+    ``is_instance`` controls whether the method has the ``HASTHIS``
+    bit in its calling-convention byte.  Default ``False`` matches
+    the existing CLR01 surface (every method on the user's main
+    type is static).  CLR02 (closures) introduces instance methods
+    on lifted closure types — set ``is_instance=True`` for those.
+    Constructors additionally need ``is_special_name=True`` to set
+    the ``SpecialName`` and ``RTSpecialName`` flags so the loader
+    treats them as ``.ctor``.
+    """
 
     name: str
     body: bytes
@@ -65,6 +93,12 @@ class CILMethodArtifact:
     local_types: tuple[str, ...]
     return_type: str = "int32"
     parameter_types: tuple[str, ...] = ()
+    is_instance: bool = False
+    is_special_name: bool = False
+    # ``is_abstract`` marks the method as having no body (RVA=0) —
+    # required for interface methods.  Abstract methods imply
+    # ``is_instance=True`` and an empty ``body``.
+    is_abstract: bool = False
 
     @property
     def local_count(self) -> int:
@@ -73,8 +107,51 @@ class CILMethodArtifact:
 
 
 @dataclass(frozen=True)
+class CILFieldArtifact:
+    """An instance field on a closure / extra TypeDef.
+
+    Static fields are out of scope (the closure design uses
+    instance fields for captures).
+    """
+
+    name: str
+    type: str = "int32"
+
+
+@dataclass(frozen=True)
+class CILTypeArtifact:
+    """An extra ``TypeDef`` row to emit alongside the main user type.
+
+    Used for:
+    * ``IClosure`` — the abstract interface every closure
+      implements (``is_interface=True``, ``extends=None``).
+    * ``Closure_<lambda>`` — one concrete class per lifted
+      lambda (``is_interface=False``, ``extends="System.Object"``,
+      ``implements=("CodingAdventures.IClosure",)``).
+
+    Field and method order is preserved verbatim — the writer
+    assigns consecutive table rows in declaration order.
+    """
+
+    name: str
+    namespace: str = ""
+    is_interface: bool = False
+    extends: str | None = "System.Object"
+    implements: tuple[str, ...] = ()
+    fields: tuple[CILFieldArtifact, ...] = ()
+    methods: tuple[CILMethodArtifact, ...] = ()
+
+
+@dataclass(frozen=True)
 class CILProgramArtifact:
-    """The result of lowering a compiler IR program to CIL method bodies."""
+    """The result of lowering a compiler IR program to CIL method bodies.
+
+    ``methods`` are emitted on the main user TypeDef (configured via
+    ``CLIAssemblyConfig.type_name``).  ``extra_types`` are
+    additional TypeDef rows — closure types and the IClosure
+    interface for CLR02 Phase 2.  Empty by default for backwards
+    compat with CLR01 callers.
+    """
 
     entry_label: str
     methods: tuple[CILMethodArtifact, ...]
@@ -82,6 +159,7 @@ class CILProgramArtifact:
     data_size: int
     helper_specs: tuple[CILHelperSpec, ...]
     token_provider: CILTokenProvider
+    extra_types: tuple[CILTypeArtifact, ...] = ()
 
     @property
     def callable_labels(self) -> tuple[str, ...]:
@@ -107,21 +185,97 @@ class CILTokenProvider(Protocol):
     def helper_token(self, helper: CILHelper) -> int:
         """Return the MemberRef or MethodDef token for a runtime helper."""
 
+    # ── CLR02 Phase 2c — closure metadata tokens ────────────────────────
+    #
+    # All four return MethodDef / Field tokens (0x06xxxxxx / 0x04xxxxxx)
+    # for CLR02 Phase 2c closure lowering.  Implementations compute
+    # them deterministically from the closure ordering in the program.
+    # The ``cli-assembly-writer`` honours the same ordering so the
+    # tokens line up with the actual emitted rows.
+
+    def iclosure_apply_token(self) -> int:
+        """Return the MethodDef token for ``IClosure::Apply(int32) → int32``."""
+
+    def closure_ctor_token(self, closure_name: str) -> int:
+        """Return the MethodDef token for ``Closure_<closure_name>::.ctor``."""
+
+    def closure_apply_token(self, closure_name: str) -> int:
+        """Return the MethodDef token for ``Closure_<closure_name>::Apply``."""
+
+    def closure_field_token(self, closure_name: str, capture_index: int) -> int:
+        """Return the Field token for the ``capture_index``-th field
+        on ``Closure_<closure_name>``."""
+
+    def system_object_ctor_token(self) -> int:
+        """Return the MemberRef token for ``[System.Runtime]System.Object::.ctor()``."""
+
 
 class SequentialCILTokenProvider:
     """Deterministic token provider for standalone bytecode lowering.
 
-    Method tokens start at ``0x06000001`` in emitted callable order. Helper
-    tokens start at ``0x0A000001`` in ``CILHelper`` enum order.
+    Method tokens start at ``0x06000001`` in emitted callable order.
+    Helper tokens start at ``0x0A000001`` in ``CILHelper`` enum order.
+
+    For CLR02 Phase 2c, closure-related tokens follow a deterministic
+    layout that ``cli-assembly-writer`` mirrors:
+
+    * After the M main-method MethodDef rows comes one row for
+      ``IClosure::Apply`` (the abstract interface method) — token
+      ``0x06000001 + M``.
+    * Then for each closure k (0-indexed in declaration order),
+      two rows: ``.ctor`` at ``0x06000001 + M + 1 + 2k`` and
+      ``Apply`` at ``0x06000001 + M + 2 + 2k``.
+    * Field tokens (``0x04xxxxxx``) walk the closures in
+      declaration order, with one row per capture in declaration
+      order.
+    * The ``System.Object::.ctor`` MemberRef is emitted by the
+      writer at row ``len(helper_specs) + 1`` whenever any
+      closure type is present, giving a deterministic
+      ``0x0A000000 | (len(helper_specs) + 1)`` token.
     """
 
-    def __init__(self, method_names: tuple[str, ...]) -> None:
+    def __init__(
+        self,
+        method_names: tuple[str, ...],
+        *,
+        closure_names: tuple[str, ...] = (),
+        closure_free_var_counts: dict[str, int] | None = None,
+    ) -> None:
         self._method_tokens = {
             name: 0x06000001 + index for index, name in enumerate(method_names)
         }
         self._helper_tokens = {
             helper: 0x0A000001 + index for index, helper in enumerate(CILHelper)
         }
+
+        # Closure-method tokens.  Layout described in the class
+        # docstring: IClosure::Apply, then per-closure (ctor, Apply)
+        # pairs in ``closure_names`` order.
+        self._closure_names = closure_names
+        self._free_counts = closure_free_var_counts or {}
+        m = len(method_names)
+        self._iclosure_apply = 0x06000001 + m if closure_names else 0
+        self._closure_ctors: dict[str, int] = {}
+        self._closure_applies: dict[str, int] = {}
+        for k, name in enumerate(closure_names):
+            self._closure_ctors[name] = 0x06000001 + m + 1 + 2 * k
+            self._closure_applies[name] = 0x06000001 + m + 2 + 2 * k
+
+        # Field tokens.  One per capture, walking closures in
+        # declaration order.
+        self._closure_fields: dict[tuple[str, int], int] = {}
+        field_row = 0
+        for name in closure_names:
+            for i in range(self._free_counts.get(name, 0)):
+                field_row += 1
+                self._closure_fields[(name, i)] = 0x04000000 | field_row
+
+        # System.Object::.ctor MemberRef — present iff any closure
+        # is present (because closures are the only thing that needs
+        # to chain into the base ctor).  Row = helper count + 1.
+        self._object_ctor = (
+            0x0A000000 | (len(CILHelper) + 1) if closure_names else 0
+        )
 
     def method_token(self, method_name: str) -> int:
         """Return the deterministic MethodDef token for ``method_name``."""
@@ -139,6 +293,42 @@ class SequentialCILTokenProvider:
             msg = f"Unknown CIL helper token target: {helper}"
             raise CILBackendError(msg) from exc
 
+    def iclosure_apply_token(self) -> int:
+        if not self._iclosure_apply:
+            msg = "no closure regions registered with this token provider"
+            raise CILBackendError(msg)
+        return self._iclosure_apply
+
+    def closure_ctor_token(self, closure_name: str) -> int:
+        try:
+            return self._closure_ctors[closure_name]
+        except KeyError as exc:
+            msg = f"unknown closure region: {closure_name!r}"
+            raise CILBackendError(msg) from exc
+
+    def closure_apply_token(self, closure_name: str) -> int:
+        try:
+            return self._closure_applies[closure_name]
+        except KeyError as exc:
+            msg = f"unknown closure region: {closure_name!r}"
+            raise CILBackendError(msg) from exc
+
+    def closure_field_token(self, closure_name: str, capture_index: int) -> int:
+        try:
+            return self._closure_fields[(closure_name, capture_index)]
+        except KeyError as exc:
+            msg = (
+                f"unknown closure field: {closure_name!r} capture "
+                f"{capture_index}"
+            )
+            raise CILBackendError(msg) from exc
+
+    def system_object_ctor_token(self) -> int:
+        if not self._object_ctor:
+            msg = "no closure regions registered with this token provider"
+            raise CILBackendError(msg)
+        return self._object_ctor
+
 
 @dataclass(frozen=True)
 class _CallableRegion:
@@ -150,13 +340,23 @@ class _CallableRegion:
 
 @dataclass(frozen=True)
 class CILLoweringPlan:
-    """Validated lowering plan shared by composable pipeline stages."""
+    """Validated lowering plan shared by composable pipeline stages.
+
+    ``closure_names`` is the ordered tuple of region names that
+    are lifted-lambda bodies (CLR02 Phase 2c).  ``main_region_names``
+    contains the remaining regions — the methods that go on the
+    user's main TypeDef.  ``closure_free_var_counts`` repeats the
+    config knob so the lower stage doesn't need the config.
+    """
 
     regions: tuple[_CallableRegion, ...]
     data_offsets: dict[str, int]
     data_size: int
     local_count: int
     token_provider: CILTokenProvider
+    closure_names: tuple[str, ...] = ()
+    main_region_names: tuple[str, ...] = ()
+    closure_free_var_counts: dict[str, int] = field(default_factory=dict)
 
 
 AnalyzeProgramStage = Callable[[IrProgram, CILBackendConfig], CILLoweringPlan]
@@ -186,17 +386,27 @@ class CILLoweringPipeline:
         """Lower ``program`` to CIL method artifacts."""
         resolved_config = config or CILBackendConfig()
         plan = self._analyze_program(program, resolved_config)
-        methods = tuple(
-            self._lower_region(program, resolved_config, plan, region)
-            for region in plan.regions
-        )
+        # Main-type methods first (existing path); closures go into
+        # extra_types (CLR02 Phase 2c).
+        main_methods: list[CILMethodArtifact] = []
+        closure_apply_methods: dict[str, CILMethodArtifact] = {}
+        for region in plan.regions:
+            artifact = self._lower_region(program, resolved_config, plan, region)
+            if region.name in plan.closure_free_var_counts:
+                closure_apply_methods[region.name] = artifact
+            else:
+                main_methods.append(artifact)
+
+        extra_types = _build_closure_extra_types(plan, closure_apply_methods)
+
         return CILProgramArtifact(
             entry_label=program.entry_label,
-            methods=methods,
+            methods=tuple(main_methods),
             data_offsets=dict(plan.data_offsets),
             data_size=plan.data_size,
             helper_specs=HELPER_SPECS,
             token_provider=plan.token_provider,
+            extra_types=extra_types,
         )
 
 
@@ -263,6 +473,9 @@ _CLR_SUPPORTED_OPCODES: frozenset[IrOp] = frozenset({
     IrOp.BRANCH_NZ,
     IrOp.CALL,
     IrOp.SYSCALL,
+    # CLR02 Phase 2c — closures.
+    IrOp.MAKE_CLOSURE,
+    IrOp.APPLY_CLOSURE,
 })
 
 
@@ -402,8 +615,28 @@ def _analyze_program(
     regions = tuple(_discover_callable_regions(program, label_positions))
     data_offsets, data_size = _assign_data_offsets(program, config)
     local_count = max(_max_register_index(program) + 1, config.syscall_arg_reg + 1, 2)
+
+    # Split regions into "main" and "closure" buckets.  Closure
+    # regions become Apply methods on auto-generated Closure_<name>
+    # TypeDefs (CLR02 Phase 2c).  Main regions become methods on
+    # the user's main TypeDef (the existing CLR01 path).
+    closure_set = set(config.closure_free_var_counts)
+    unknown_closures = closure_set - {r.name for r in regions}
+    if unknown_closures:
+        msg = (
+            "closure_free_var_counts references regions that don't "
+            f"exist in the IR: {sorted(unknown_closures)}"
+        )
+        raise CILBackendError(msg)
+    main_region_names = tuple(r.name for r in regions if r.name not in closure_set)
+    # Closure ordering follows IR-region order so token assignment
+    # is deterministic.
+    closure_names = tuple(r.name for r in regions if r.name in closure_set)
+
     provider = token_provider or SequentialCILTokenProvider(
-        tuple(region.name for region in regions)
+        main_region_names,
+        closure_names=closure_names,
+        closure_free_var_counts=dict(config.closure_free_var_counts),
     )
     return CILLoweringPlan(
         regions=regions,
@@ -411,6 +644,9 @@ def _analyze_program(
         data_size=data_size,
         local_count=local_count,
         token_provider=provider,
+        closure_names=closure_names,
+        main_region_names=main_region_names,
+        closure_free_var_counts=dict(config.closure_free_var_counts),
     )
 
 
@@ -450,6 +686,15 @@ def _discover_callable_regions(
     for instruction in program.instructions:
         if instruction.opcode == IrOp.CALL:
             target = _as_label(instruction.operands[0], "CALL target")
+            callable_names.add(target.name)
+        elif instruction.opcode == IrOp.MAKE_CLOSURE:
+            # MAKE_CLOSURE dst, fn_label, num_captured, capt0, ...
+            # The lambda body is a callable region too, even though
+            # it's invoked indirectly via callvirt at the apply site
+            # rather than directly via CALL.
+            target = _as_label(
+                instruction.operands[1], "MAKE_CLOSURE fn_label",
+            )
             callable_names.add(target.name)
 
     if program.entry_label not in label_positions:
@@ -547,6 +792,9 @@ def _lower_region(
     plan: CILLoweringPlan,
     region: _CallableRegion,
 ) -> CILMethodArtifact:
+    if region.name in plan.closure_free_var_counts:
+        return _lower_closure_region(_program, config, plan, region)
+
     builder = CILBytecodeBuilder()
     call_register_count = _call_register_count(config, plan)
 
@@ -569,6 +817,156 @@ def _lower_region(
                 call_register_count if region.name != _program.entry_label else 0
             )
         ),
+    )
+
+
+# CLR02 Phase 2c — closure body lowering.
+#
+# A closure's lifted lambda becomes ``Apply(int32) → int32`` on a
+# per-lambda ``Closure_<name>`` TypeDef.  The instance method gets:
+#
+#   * Param 0 = ``this`` (the closure object)
+#   * Param 1 = the single explicit argument (v1 supports arity-1 only)
+#
+# The IR body uses the captures-first register convention shared with
+# the BEAM backend:
+#
+#   r2..r{1+num_free}                           — captures
+#   r{2+num_free}                               — explicit arg (arity-1)
+#
+# The Apply method's prologue copies captures from instance fields
+# and the explicit arg from ldarg.1 into those slots so the rest of
+# the IR body's lowering works unmodified.
+_CLR_CLOSURE_EXPLICIT_ARITY: int = 1
+_REG_PARAM_BASE: int = 2
+
+
+def _lower_closure_region(
+    _program: IrProgram,
+    config: CILBackendConfig,
+    plan: CILLoweringPlan,
+    region: _CallableRegion,
+) -> CILMethodArtifact:
+    builder = CILBytecodeBuilder()
+    num_free = plan.closure_free_var_counts[region.name]
+
+    # Prologue: captures from this.fieldI → r{2..1+num_free}
+    for i in range(num_free):
+        field_token = plan.token_provider.closure_field_token(region.name, i)
+        builder.emit_ldarg(0)  # this
+        builder.emit_token_instruction(0x7B, field_token)  # ldfld
+        builder.emit_stloc(_REG_PARAM_BASE + i)
+
+    # The single explicit arg (param 1) → r{2+num_free}.
+    builder.emit_ldarg(1)
+    builder.emit_stloc(_REG_PARAM_BASE + num_free)
+
+    for instruction in region.instructions:
+        _emit_instruction(builder, instruction, config, plan)
+
+    # Apply has fixed name on every closure type (overrides the
+    # IClosure interface's abstract method); the IR's region name
+    # (e.g. ``_lambda_0``) becomes the TypeDef name instead.
+    return CILMethodArtifact(
+        name="Apply",
+        body=builder.assemble(),
+        max_stack=max(config.method_max_stack, 2),
+        local_types=tuple("int32" for _ in range(plan.local_count)),
+        return_type="int32",
+        parameter_types=("int32",),
+        is_instance=True,
+    )
+
+
+def _build_closure_extra_types(
+    plan: CILLoweringPlan,
+    closure_apply_methods: dict[str, CILMethodArtifact],
+) -> tuple[CILTypeArtifact, ...]:
+    """Build the IClosure interface + one Closure_<name> TypeDef per
+    closure region.  Returns them in declaration order so the writer
+    assigns matching MethodDef row indices.
+    """
+    if not plan.closure_names:
+        return ()
+
+    iclosure = CILTypeArtifact(
+        name="IClosure",
+        namespace="CodingAdventures",
+        is_interface=True,
+        extends=None,
+        methods=(
+            CILMethodArtifact(
+                name="Apply",
+                body=b"",
+                max_stack=0,
+                local_types=(),
+                return_type="int32",
+                parameter_types=("int32",),
+                is_instance=True,
+                is_abstract=True,
+            ),
+        ),
+    )
+    extras: list[CILTypeArtifact] = [iclosure]
+
+    object_ctor_token = plan.token_provider.system_object_ctor_token()
+
+    for closure_name in plan.closure_names:
+        num_free = plan.closure_free_var_counts[closure_name]
+        # Fields: capt0, capt1, ...
+        fields = tuple(
+            CILFieldArtifact(name=f"capt{i}", type="int32")
+            for i in range(num_free)
+        )
+        ctor = _build_closure_ctor(
+            num_free, object_ctor_token,
+            field_token=lambda i, _name=closure_name: (
+                plan.token_provider.closure_field_token(_name, i)
+            ),
+        )
+        extras.append(
+            CILTypeArtifact(
+                name=f"Closure_{closure_name}",
+                namespace="CodingAdventures",
+                extends="System.Object",
+                implements=("CodingAdventures.IClosure",),
+                fields=fields,
+                methods=(ctor, closure_apply_methods[closure_name]),
+            )
+        )
+
+    return tuple(extras)
+
+
+def _build_closure_ctor(
+    num_free: int,
+    object_ctor_token: int,
+    *,
+    field_token: Callable[[int], int],
+) -> CILMethodArtifact:
+    """Synthesise a ``.ctor(int32, ..., int32)`` body that chains
+    into ``System.Object::.ctor()`` then stores each capture
+    parameter into its instance field.
+    """
+    builder = CILBytecodeBuilder()
+    # Chain into base ctor: ldarg.0; call instance void Object::.ctor()
+    builder.emit_ldarg(0)
+    builder.emit_call(object_ctor_token)
+    # For each capture i: ldarg.0; ldarg.{1+i}; stfld capt_i
+    for i in range(num_free):
+        builder.emit_ldarg(0)
+        builder.emit_ldarg(1 + i)
+        builder.emit_token_instruction(0x7D, field_token(i))  # stfld
+    builder.emit_ret()
+    return CILMethodArtifact(
+        name=".ctor",
+        body=builder.assemble(),
+        max_stack=2,
+        local_types=(),
+        return_type="void",
+        parameter_types=tuple("int32" for _ in range(num_free)),
+        is_instance=True,
+        is_special_name=True,
     )
 
 
@@ -727,6 +1125,92 @@ def _emit_instruction(
     if instruction.opcode in (IrOp.RET, IrOp.HALT):
         builder.emit_ldloc(1)
         builder.emit_ret()
+        return
+
+    if instruction.opcode == IrOp.MAKE_CLOSURE:
+        # MAKE_CLOSURE dst, fn_label, num_captured, capt0, ..., captN-1
+        # → ldloc capt0; ...; ldloc captN-1; newobj Closure_<fn>::.ctor(...);
+        #   stloc dst
+        if len(instruction.operands) < 3:
+            msg = (
+                f"MAKE_CLOSURE expects at least 3 operands "
+                f"(dst, fn_label, num_captured, capt...), got "
+                f"{len(instruction.operands)}"
+            )
+            raise CILBackendError(msg)
+        dst = _as_register(instruction.operands[0], "MAKE_CLOSURE dst")
+        fn_label = _as_label(instruction.operands[1], "MAKE_CLOSURE fn_label")
+        num_captured = _as_immediate(
+            instruction.operands[2], "MAKE_CLOSURE num_captured"
+        ).value
+        if num_captured != plan.closure_free_var_counts.get(fn_label.name):
+            msg = (
+                f"MAKE_CLOSURE for {fn_label.name!r}: num_captured="
+                f"{num_captured} but config.closure_free_var_counts says "
+                f"{plan.closure_free_var_counts.get(fn_label.name)}"
+            )
+            raise CILBackendError(msg)
+        if len(instruction.operands) != 3 + num_captured:
+            msg = (
+                f"MAKE_CLOSURE for {fn_label.name!r}: num_captured="
+                f"{num_captured} but {len(instruction.operands) - 3} "
+                "capture operands provided"
+            )
+            raise CILBackendError(msg)
+
+        for i in range(num_captured):
+            capt_reg = _as_register(
+                instruction.operands[3 + i],
+                f"MAKE_CLOSURE capture {i}",
+            )
+            builder.emit_ldloc(capt_reg.index)
+        # newobj instance void Closure_<fn>::.ctor(int32, ...)
+        builder.emit_token_instruction(
+            0x73, plan.token_provider.closure_ctor_token(fn_label.name),
+        )
+        builder.emit_stloc(dst.index)
+        return
+
+    if instruction.opcode == IrOp.APPLY_CLOSURE:
+        # APPLY_CLOSURE dst, closure_reg, num_args, arg0
+        # → ldloc closure; ldloc arg0;
+        #   callvirt instance int32 IClosure::Apply(int32);
+        #   stloc dst
+        # v1 supports exactly arity-1.
+        if len(instruction.operands) < 3:
+            msg = (
+                f"APPLY_CLOSURE expects at least 3 operands "
+                f"(dst, closure, num_args, args...), got "
+                f"{len(instruction.operands)}"
+            )
+            raise CILBackendError(msg)
+        dst = _as_register(instruction.operands[0], "APPLY_CLOSURE dst")
+        closure_reg = _as_register(
+            instruction.operands[1], "APPLY_CLOSURE closure_reg"
+        )
+        num_args = _as_immediate(
+            instruction.operands[2], "APPLY_CLOSURE num_args"
+        ).value
+        if num_args != _CLR_CLOSURE_EXPLICIT_ARITY:
+            msg = (
+                f"APPLY_CLOSURE: V1 CLR backend only supports "
+                f"arity-{_CLR_CLOSURE_EXPLICIT_ARITY} closures, got "
+                f"num_args={num_args}.  Multi-arity closures land in a "
+                "later phase."
+            )
+            raise CILBackendError(msg)
+        if len(instruction.operands) != 3 + num_args:
+            msg = (
+                f"APPLY_CLOSURE: num_args={num_args} but "
+                f"{len(instruction.operands) - 3} arg operands provided"
+            )
+            raise CILBackendError(msg)
+        arg_reg = _as_register(instruction.operands[3], "APPLY_CLOSURE arg 0")
+
+        builder.emit_ldloc(closure_reg.index)
+        builder.emit_ldloc(arg_reg.index)
+        builder.emit_callvirt(plan.token_provider.iclosure_apply_token())
+        builder.emit_stloc(dst.index)
         return
 
     if instruction.opcode == IrOp.SYSCALL:

@@ -1,5 +1,43 @@
 # Changelog — ir-to-beam
 
+## 0.3.0 — 2026-04-29 — TW03 Phase 2 (BEAM closures)
+
+### Added — ``MAKE_CLOSURE`` and ``APPLY_CLOSURE`` lowering
+
+- ``MAKE_CLOSURE dst, fn_label, num_captured, capt0, ..., captN-1``
+  lowers to a chain of ``put_list`` opcodes that build the closure
+  value as the cons cell ``[FnAtom | [capt0, capt1, ..., captN-1]]``
+  on the heap (preceded by a ``test_heap`` reservation).
+- ``APPLY_CLOSURE dst, closure, num_args, arg0, ..., argM-1``
+  lowers to: build args list, ``get_tl`` for captures,
+  ``erlang:'++'/2`` to glue them, ``get_hd`` for the function
+  atom, then ``erlang:apply/3`` for the dynamic dispatch.
+- ``BEAMBackendConfig.closure_free_var_counts`` — declares which
+  callable regions are lifted lambda bodies and how many captured
+  free variables each takes.  The backend widens
+  ``arity_overrides[name]`` to ``num_free + explicit`` so apply/3
+  can find the lifted lambda by its full arity.
+- Lifted lambdas are now exported (apply/3 needs to look them up
+  by atom name in the export table).
+
+### Why we don't use ``make_fun2`` / ``make_fun3``
+
+Real ``erlc`` emits ``make_fun3`` (opcode 171), which uses the
+z-tagged extended-list compact-term encoding our encoder doesn't
+yet support.  The older ``make_fun2`` (opcode 103) is rejected by
+Erlang/OTP 28 with "please re-compile with an OTP 28 compiler".
+Encoding closures as plain cons-cell lists + ``erlang:apply/3``
+side-steps both problems and uses only standard, well-supported
+opcodes.  The runtime cost is one ``apply`` indirection per
+invocation; the engineering benefit is a closure pipeline that
+loads cleanly under modern OTP.
+
+### Added tests
+
+- ``test_closure_make_adder_returns_42`` —
+  ``((make-adder 7) 35) → 42`` end-to-end on real ``erl``,
+  exercising MAKE_CLOSURE + APPLY_CLOSURE in the same module.
+
 ## 0.2.0 — 2026-04-29 — TW03 Phase 1 (BEAM)
 
 ### Added — branching, comparison, and recursion

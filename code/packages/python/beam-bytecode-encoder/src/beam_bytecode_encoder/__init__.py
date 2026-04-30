@@ -7,6 +7,7 @@ This is BEAM01 Phase 2.  See
 from beam_bytecode_encoder.encoder import (
     BEAMEncodeError,
     BEAMExport,
+    BEAMFun,
     BEAMImport,
     BEAMInstruction,
     BEAMModule,
@@ -19,6 +20,7 @@ from beam_bytecode_encoder.encoder import (
 __all__ = [
     "BEAMEncodeError",
     "BEAMExport",
+    "BEAMFun",
     "BEAMImport",
     "BEAMInstruction",
     "BEAMModule",

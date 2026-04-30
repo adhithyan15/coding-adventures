@@ -50,6 +50,37 @@ export interface NeuralBytecodeModule {
   readonly functions: readonly NeuralBytecodeFunction[];
 }
 
+export interface NeuralBytecodeValueRead {
+  readonly valueId: string;
+  readonly value: number;
+}
+
+export interface NeuralBytecodeValueWrite {
+  readonly valueId: string;
+  readonly value: number;
+}
+
+export interface NeuralBytecodeOutputWrite {
+  readonly outputName: string;
+  readonly value: number;
+}
+
+export interface NeuralBytecodeInstructionTrace {
+  readonly index: number;
+  readonly instruction: NeuralBytecodeInstruction;
+  readonly reads: readonly NeuralBytecodeValueRead[];
+  readonly write?: NeuralBytecodeValueWrite;
+  readonly output?: NeuralBytecodeOutputWrite;
+  readonly sourceNode?: string;
+  readonly sourceEdge?: string;
+}
+
+export interface NeuralBytecodeForwardTrace {
+  readonly outputs: Record<string, number>;
+  readonly values: Record<string, number>;
+  readonly instructions: readonly NeuralBytecodeInstructionTrace[];
+}
+
 export class NeuralGraphCompileError extends Error {
   constructor(
     message: string,
@@ -82,6 +113,18 @@ export function compileNeuralGraphToBytecode(
         op: "LOAD_INPUT",
         dst,
         inputName: stringProperty(properties["nn.input"], node),
+        sourceNode: node,
+      });
+      continue;
+    }
+
+    if (op === "constant") {
+      const dst = allocateValue();
+      values.set(node, dst);
+      instructions.push({
+        op: "LOAD_CONST",
+        dst,
+        value: numberProperty(properties["nn.value"], node, "nn.value"),
         sourceNode: node,
       });
       continue;
@@ -189,67 +232,113 @@ export function runNeuralBytecodeForward(
   module: NeuralBytecodeModule,
   inputs: Record<string, number>
 ): Record<string, number> {
+  return executeNeuralBytecodeForward(module, inputs, false).outputs;
+}
+
+export function runNeuralBytecodeForwardWithTrace(
+  module: NeuralBytecodeModule,
+  inputs: Record<string, number>
+): NeuralBytecodeForwardTrace {
+  return executeNeuralBytecodeForward(module, inputs, true);
+}
+
+function executeNeuralBytecodeForward(
+  module: NeuralBytecodeModule,
+  inputs: Record<string, number>,
+  collectTrace: boolean
+): NeuralBytecodeForwardTrace {
   const values = new Map<string, number>();
   const edgeWeights = new Map(
     module.graph.edges.map((edge) => [edge.id, edge.weight])
   );
   const outputs: Record<string, number> = {};
+  const traces: NeuralBytecodeInstructionTrace[] = [];
   const forward = module.functions.find((fn) => fn.kind === "forward");
   if (forward === undefined) {
     throw new Error("Neural bytecode module has no forward function");
   }
 
-  for (const instruction of forward.instructions) {
+  for (const [index, instruction] of forward.instructions.entries()) {
+    const reads: NeuralBytecodeValueRead[] = [];
+    let write: NeuralBytecodeValueWrite | undefined;
+    let output: NeuralBytecodeOutputWrite | undefined;
+    const read = (valueId: string | undefined): number => {
+      const value = readValue(values, valueId);
+      reads.push({ valueId: valueId!, value });
+      return value;
+    };
+    const writeValue = (valueId: string, value: number): void => {
+      values.set(valueId, value);
+      write = { valueId, value };
+    };
+
     switch (instruction.op) {
       case "LOAD_INPUT":
         requireDst(instruction);
-        values.set(instruction.dst, readInput(inputs, instruction.inputName));
+        writeValue(instruction.dst, readInput(inputs, instruction.inputName));
         break;
       case "LOAD_CONST":
         requireDst(instruction);
-        values.set(instruction.dst, instruction.value ?? 0);
+        writeValue(instruction.dst, instruction.value ?? 0);
         break;
       case "LOAD_EDGE_WEIGHT":
         requireDst(instruction);
-        values.set(instruction.dst, edgeWeights.get(instruction.edgeId ?? "") ?? 1);
+        writeValue(instruction.dst, edgeWeights.get(instruction.edgeId ?? "") ?? 1);
         break;
       case "MUL":
         requireDst(instruction);
-        values.set(
+        writeValue(
           instruction.dst,
-          readValue(values, instruction.left) * readValue(values, instruction.right)
+          read(instruction.left) * read(instruction.right)
         );
         break;
       case "ADD":
         requireDst(instruction);
-        values.set(
+        writeValue(
           instruction.dst,
           (instruction.inputs ?? []).reduce(
-            (sum, valueId) => sum + readValue(values, valueId),
+            (sum, valueId) => sum + read(valueId),
             0
           )
         );
         break;
       case "ACTIVATE":
         requireDst(instruction);
-        values.set(
+        writeValue(
           instruction.dst,
           applyScalarActivation(
-            readValue(values, instruction.input),
+            read(instruction.input),
             instruction.activation ?? "relu"
           )
         );
         break;
       case "STORE_OUTPUT":
-        outputs[instruction.outputName ?? "output"] = readValue(
-          values,
-          instruction.input
-        );
+        output = {
+          outputName: instruction.outputName ?? "output",
+          value: read(instruction.input),
+        };
+        outputs[output.outputName] = output.value;
         break;
+    }
+
+    if (collectTrace) {
+      traces.push({
+        index,
+        instruction,
+        reads,
+        write,
+        output,
+        sourceNode: instruction.sourceNode,
+        sourceEdge: instruction.sourceEdge,
+      });
     }
   }
 
-  return outputs;
+  return {
+    outputs,
+    values: Object.fromEntries(values),
+    instructions: traces,
+  };
 }
 
 function singleInputValue(
@@ -284,6 +373,20 @@ function stringProperty(
   fallback: string
 ): string {
   return typeof value === "string" ? value : fallback;
+}
+
+function numberProperty(
+  value: GraphPropertyValue | undefined,
+  node: string,
+  key: string
+): number {
+  if (typeof value !== "number" || !Number.isFinite(value)) {
+    throw new NeuralGraphCompileError(
+      `Expected numeric property ${key} on ${node}`,
+      node
+    );
+  }
+  return value;
 }
 
 function requireDst(instruction: NeuralBytecodeInstruction): asserts instruction is
