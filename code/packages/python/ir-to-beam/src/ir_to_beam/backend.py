@@ -1,9 +1,39 @@
 """Lower a ``compiler-ir`` ``IrProgram`` into a ``BEAMModule``.
 
-This is BEAM01 Phase 3 + TW03 Phase 1 (BEAM extension).  See
-``code/specs/BEAM01-twig-on-real-erl.md`` and
+This is BEAM01 Phase 3 + TW03 Phase 1 + Phase 2 (BEAM closures).
+See ``code/specs/BEAM01-twig-on-real-erl.md`` and
 ``code/specs/TW03-lisp-primitives-and-gc.md`` for the broader
 plan.
+
+Closure representation (Phase 2)
+================================
+
+Real ``erlc`` emits ``make_fun3`` (opcode 171, OTP 24+) which
+needs the z-tagged extended-list operand encoding our encoder
+doesn't yet support, and modern Erlang/OTP 28 refuses to load
+modules using the older ``make_fun2`` (103) — so we sidestep
+both by representing closures as plain cons cells:
+
+    Closure value = ``[FnAtom | CapturesList]``
+
+where ``FnAtom`` is the lifted lambda's name (an exported
+function in the same module) and ``CapturesList`` is the list
+of captured free-variable values in declaration order.
+
+* ``MAKE_CLOSURE`` lowers to a cascade of ``put_list`` opcodes
+  that consume captures in reverse, then prepends the function
+  atom.
+* ``APPLY_CLOSURE`` lowers to: build the explicit args list,
+  extract captures with ``get_tl``, concatenate with
+  ``erlang:'++'/2``, extract the function atom with ``get_hd``,
+  and dispatch via ``erlang:apply/3``.
+
+Lifted lambdas are exported with arity ``num_free + explicit``
+so ``apply/3`` can find them by name.  The lambda body sees
+``y2..y{1+num_free}`` as captures and
+``y{2+num_free}..y{1+num_free+explicit}`` as explicit args —
+captures-first matches the order we stage them in the apply
+arglist.
 
 Pipeline
 ========
@@ -100,7 +130,6 @@ from compiler_ir import (
     IrRegister,
 )
 
-
 # ---------------------------------------------------------------------------
 # BEAM opcodes we emit (subset of the full table)
 # ---------------------------------------------------------------------------
@@ -110,7 +139,9 @@ _OP_LABEL: Final[int] = 1
 _OP_FUNC_INFO: Final[int] = 2
 _OP_INT_CODE_END: Final[int] = 3
 _OP_CALL: Final[int] = 4
+_OP_CALL_EXT: Final[int] = 7         # call_ext arity import_idx  (preserves frame)
 _OP_ALLOCATE: Final[int] = 12
+_OP_TEST_HEAP: Final[int] = 16       # test_heap heap_need live  (heap reservation)
 _OP_DEALLOCATE: Final[int] = 18
 _OP_RETURN: Final[int] = 19
 _OP_IS_LT: Final[int] = 39           # is_lt fail src1 src2
@@ -118,8 +149,11 @@ _OP_IS_EQ_EXACT: Final[int] = 43     # is_eq_exact fail src1 src2
 _OP_IS_NE_EXACT: Final[int] = 44     # is_ne_exact fail src1 src2
 _OP_JUMP: Final[int] = 61
 _OP_MOVE: Final[int] = 64
+_OP_PUT_LIST: Final[int] = 69        # put_list head tail dst  (build cons cell)
 _OP_CALL_EXT_ONLY: Final[int] = 78
 _OP_GC_BIF2: Final[int] = 125
+_OP_GET_HD: Final[int] = 162         # get_hd src dst  (head of cons cell)
+_OP_GET_TL: Final[int] = 163         # get_tl src dst  (tail of cons cell)
 
 # Minimum ``max_opcode`` value the modern Erlang loader accepts.
 # Loader treats this as a "what BEAM dialect was this compiled
@@ -164,11 +198,29 @@ class BEAMBackendConfig:
     ``y_register_count`` declares how many y-registers each
     function body needs.  Auto-derived from the program's max IR
     register index when ``None`` (the typical case).
+
+    ``closure_free_var_counts`` declares the **lifted lambda**
+    regions: maps region-name → number of captured free
+    variables.  Presence in this dict marks a region as a
+    closure body; absence means a regular function.  For
+    closure regions, ``arity_overrides[name]`` declares the
+    EXPLICIT argument count (the ``(lambda (X) ...)``-level
+    arity, NOT counting captures).  The lifted lambda's full
+    arity (as seen in ``func_info`` / exports / apply) is
+    ``num_free + explicit``.
+
+    Closure body register layout (captures-first matches the
+    arg order ``apply/3`` produces):
+
+      - ``y2..y{1+num_free}``                          — captured free variables
+      - ``y{2+num_free}..y{1+num_free+explicit}``      — explicit args
+      - ``y{2+num_free+explicit}..``                   — body holding registers
     """
 
     module_name: str
     arity_overrides: dict[str, int] = field(default_factory=dict)
     y_register_count: int | None = None
+    closure_free_var_counts: dict[str, int] = field(default_factory=dict)
 
 
 # ---------------------------------------------------------------------------
@@ -261,17 +313,30 @@ class _Builder:
 
 
 def _discover_callable_names(program: IrProgram) -> set[str]:
-    """All region names that are CALL targets or the entry label.
+    """All region names that are CALL or MAKE_CLOSURE targets,
+    plus the entry label.
 
     Internal labels (``_else_0``, ``_endif_0``, etc.) are NOT
     callable — they're targets of branches/jumps within a single
     function, and they stay as ``label N`` opcodes inside that
     function's body.
+
+    ``MAKE_CLOSURE``'s ``fn_label`` operand also produces a
+    callable region (the lifted lambda body).  We treat it as
+    callable so it gets a func_info + label-target pair like
+    regular functions, even though it's invoked indirectly via
+    ``call_fun`` rather than ``call``.
     """
     callable_names: set[str] = {program.entry_label}
     for instr in program.instructions:
         if instr.opcode is IrOp.CALL:
             target = _operand_label(instr.operands[0], role="CALL target")
+            callable_names.add(target)
+        elif instr.opcode is IrOp.MAKE_CLOSURE:
+            # MAKE_CLOSURE dst, fn_label, num_captured, capt0, ...
+            target = _operand_label(
+                instr.operands[1], role="MAKE_CLOSURE fn_label"
+            )
             callable_names.add(target)
     return callable_names
 
@@ -640,6 +705,181 @@ def _emit_return(
     builder.emit(_OP_RETURN)
 
 
+def _emit_make_closure(
+    builder: _Builder,
+    instr: IrInstruction,
+    fn_atom_for: dict[str, int],
+) -> None:
+    """Lower MAKE_CLOSURE.
+
+    Operand layout (per ``compiler-ir`` docs)::
+
+        MAKE_CLOSURE dst, fn_label, num_captured, capt0, capt1, ...
+
+    Closure value: ``[FnAtom | CapturesList]`` (a single cons
+    cell whose head is the function atom and whose tail is the
+    captures list, in declaration order).
+
+    BEAM emission::
+
+        ; Reserve heap for num_captured + 1 cons cells (2 words each).
+        test_heap (2 * (num_captured + 1)) 0
+
+        ; Build the captures list bottom-up: start with [] in x0,
+        ; then prepend each capture starting from the LAST one so
+        ; that the final list reads capt0, capt1, ..., captN-1.
+        move {atom, 0}, {x, 0}                 ; x0 = []  ('nil' encoded as atom 0)
+        put_list {y, captN-1}, {x, 0}, {x, 0}  ; x0 = [captN-1]
+        ...
+        put_list {y, capt0},   {x, 0}, {x, 0}  ; x0 = [capt0, ..., captN-1]
+
+        ; Cons the function atom on the front and store in dst.
+        put_list {atom, FnAtom}, {x, 0}, {y, dst}
+    """
+    if len(instr.operands) < 3:
+        msg = (
+            f"MAKE_CLOSURE expects at least 3 operands "
+            f"(dst, fn_label, num_captured, capt...), got {len(instr.operands)}"
+        )
+        raise BEAMBackendError(msg)
+    dst = _operand_register(instr.operands[0], role="MAKE_CLOSURE dst")
+    fn_label = _operand_label(instr.operands[1], role="MAKE_CLOSURE fn_label")
+    num_captured = _operand_immediate(
+        instr.operands[2], role="MAKE_CLOSURE num_captured"
+    )
+
+    if fn_label not in fn_atom_for:
+        msg = (
+            f"MAKE_CLOSURE references {fn_label!r} but no closure region "
+            "with that name was declared in "
+            "BEAMBackendConfig.closure_free_var_counts"
+        )
+        raise BEAMBackendError(msg)
+    if len(instr.operands) != 3 + num_captured:
+        msg = (
+            f"MAKE_CLOSURE for {fn_label!r}: num_captured={num_captured} "
+            f"but {len(instr.operands) - 3} capture operands provided"
+        )
+        raise BEAMBackendError(msg)
+
+    fn_atom_idx = fn_atom_for[fn_label]
+    cons_count = num_captured + 1
+    builder.emit(_OP_TEST_HEAP, _u(2 * cons_count), _u(0))
+
+    # x0 = []  (nil = atom index 0).
+    builder.emit(_OP_MOVE, BEAMOperand(BEAMTag.A, 0), _x(0))
+
+    # Cons captures in reverse so the list reads capt0..captN-1.
+    for i in range(num_captured - 1, -1, -1):
+        capt_reg = _operand_register(
+            instr.operands[3 + i], role=f"MAKE_CLOSURE capture {i}"
+        )
+        builder.emit(_OP_PUT_LIST, _y(capt_reg), _x(0), _x(0))
+
+    # Final cons: prepend the function atom, store directly in dst.
+    builder.emit(
+        _OP_PUT_LIST,
+        BEAMOperand(BEAMTag.A, fn_atom_idx),
+        _x(0),
+        _y(dst),
+    )
+
+
+def _emit_apply_closure(
+    builder: _Builder,
+    instr: IrInstruction,
+    *,
+    module_atom_idx: int,
+    pp_import_idx: int,
+    apply_import_idx: int,
+) -> None:
+    """Lower APPLY_CLOSURE.
+
+    Operand layout::
+
+        APPLY_CLOSURE dst, closure_reg, num_args, arg0, arg1, ...
+
+    Closure value (per MAKE_CLOSURE): ``[FnAtom | CapturesList]``.
+    To invoke we need to call ``apply(ThisModule, FnAtom,
+    CapturesList ++ [arg0, ..., argM-1])``.
+
+    BEAM emission::
+
+        ; -- Heap reservation for the num_args explicit args list --
+        test_heap (2 * num_args) 0       ; only emitted if num_args > 0
+
+        ; -- Build the explicit args list directly into x1 --
+        move {atom, 0}, {x, 1}
+        put_list {y, argM-1}, {x, 1}, {x, 1}
+        ...
+        put_list {y, arg0},   {x, 1}, {x, 1}     ; x1 = [arg0, ..., argM-1]
+
+        ; -- Captures list into x0 --
+        get_tl {y, closure}, {x, 0}              ; x0 = CapturesList
+
+        ; -- erlang:'++'/2 to glue them: x0 = Captures ++ Args --
+        call_ext 2, pp_import_idx-1
+
+        ; -- Stage apply(M, F, FullArgs); use dst as scratch --
+        get_hd {y, closure}, {x, 1}              ; x1 = FnAtom
+        move {x, 0}, {y, dst}                    ; stash combined list
+        move {atom, ThisModule}, {x, 0}          ; x0 = module atom
+        move {y, dst}, {x, 2}                    ; x2 = full args list
+
+        ; -- erlang:apply/3 --
+        call_ext 3, apply_import_idx-1
+        move {x, 0}, {y, dst}                    ; result lands in dst
+
+    The "extract head AFTER ++ but BEFORE overwriting dst" order
+    matters in case ``dst`` aliases ``closure_reg``: once we write
+    the combined list into y{dst}, the closure pointer there is
+    gone, so we must read its head first.
+    """
+    if len(instr.operands) < 3:
+        msg = (
+            f"APPLY_CLOSURE expects at least 3 operands "
+            f"(dst, closure_reg, num_args, args...), got {len(instr.operands)}"
+        )
+        raise BEAMBackendError(msg)
+    dst = _operand_register(instr.operands[0], role="APPLY_CLOSURE dst")
+    closure_reg = _operand_register(
+        instr.operands[1], role="APPLY_CLOSURE closure_reg"
+    )
+    num_args = _operand_immediate(
+        instr.operands[2], role="APPLY_CLOSURE num_args"
+    )
+
+    if len(instr.operands) != 3 + num_args:
+        msg = (
+            f"APPLY_CLOSURE: num_args={num_args} but "
+            f"{len(instr.operands) - 3} arg operands provided"
+        )
+        raise BEAMBackendError(msg)
+
+    if num_args > 0:
+        builder.emit(_OP_TEST_HEAP, _u(2 * num_args), _u(0))
+
+    # Build args list in x1.
+    builder.emit(_OP_MOVE, BEAMOperand(BEAMTag.A, 0), _x(1))
+    for i in range(num_args - 1, -1, -1):
+        arg_reg = _operand_register(
+            instr.operands[3 + i], role=f"APPLY_CLOSURE arg {i}"
+        )
+        builder.emit(_OP_PUT_LIST, _y(arg_reg), _x(1), _x(1))
+
+    # Captures list into x0, then call ++.
+    builder.emit(_OP_GET_TL, _y(closure_reg), _x(0))
+    builder.emit(_OP_CALL_EXT, _u(2), _u(pp_import_idx - 1))
+
+    # Prepare apply/3 args.  Order matters in case dst == closure_reg.
+    builder.emit(_OP_GET_HD, _y(closure_reg), _x(1))
+    builder.emit(_OP_MOVE, _x(0), _y(dst))
+    builder.emit(_OP_MOVE, BEAMOperand(BEAMTag.A, module_atom_idx), _x(0))
+    builder.emit(_OP_MOVE, _y(dst), _x(2))
+    builder.emit(_OP_CALL_EXT, _u(3), _u(apply_import_idx - 1))
+    builder.emit(_OP_MOVE, _x(0), _y(dst))
+
+
 _HANDLERS: Final[set[IrOp]] = {
     IrOp.LOAD_IMM,
     IrOp.ADD,
@@ -655,7 +895,9 @@ _HANDLERS: Final[set[IrOp]] = {
     IrOp.CMP_EQ,
     IrOp.CMP_LT,
     IrOp.CMP_GT,
-    IrOp.LABEL,  # internal labels in body
+    IrOp.LABEL,           # internal labels in body
+    IrOp.MAKE_CLOSURE,    # BEAM02 Phase 2 — closure construction
+    IrOp.APPLY_CLOSURE,   # BEAM02 Phase 2 — closure invocation
 }
 
 
@@ -763,7 +1005,41 @@ def lower_ir_to_beam(
                 if internal_name not in label_for:
                     label_for[internal_name] = builder.fresh_label()
 
-    # Pass 3: emit each region's prologue + body + epilogue.
+    # Pre-pass 3: register lambda atoms.  Each closure region
+    # gets its name interned as an atom so MAKE_CLOSURE can
+    # cons-prepend it onto the captures list.  We also bump
+    # arity_for to its FULL value (explicit + num_free) — apply/3
+    # will call the lifted lambda with that many args, so the
+    # exported function's arity must match.  The IR's
+    # ``arity_overrides`` declares the EXPLICIT arity (e.g. 1 for
+    # ``(lambda (x) ...)``) and we widen here.
+    fn_atom_for: dict[str, int] = {}
+    for name, num_free in config.closure_free_var_counts.items():
+        if name not in label_for:
+            msg = (
+                f"closure_free_var_counts references {name!r} but no "
+                "callable region with that label exists in the IR"
+            )
+            raise BEAMBackendError(msg)
+        fn_atom_for[name] = builder.atoms.add(name)
+        arity_for[name] = arity_for[name] + num_free
+
+    # Imports used by APPLY_CLOSURE — declared up front so the
+    # import-table indices are stable regardless of code order.
+    needs_apply = any(
+        instr.opcode is IrOp.APPLY_CLOSURE for instr in program.instructions
+    )
+    if needs_apply:
+        erlang_atom_idx = builder.atoms.add("erlang")
+        pp_atom_idx = builder.atoms.add("++")
+        apply_atom_idx = builder.atoms.add("apply")
+        pp_import_idx = builder.imports.add(erlang_atom_idx, pp_atom_idx, 2)
+        apply_import_idx = builder.imports.add(erlang_atom_idx, apply_atom_idx, 3)
+    else:
+        pp_import_idx = 0
+        apply_import_idx = 0
+
+    # Pass 4: emit each region's prologue + body + epilogue.
     for name, body in regions:
         function_atom_idx = builder.atoms.add(name)
         builder.emit(_OP_LABEL, _u(func_info_label_for[name]))
@@ -778,21 +1054,31 @@ def lower_ir_to_beam(
         # Function entry: allocate y-register frame + copy args
         # from x-registers into the Twig param slots.
         builder.emit(_OP_ALLOCATE, _u(y_reg_count), _u(arity_for[name]))
-        for i in range(arity_for[name]):
+        arity = arity_for[name]
+        for i in range(arity):
             builder.emit(_OP_MOVE, _x(i), _y(_REG_PARAM_BASE + i))
 
-        # Body.
+        # Body.  Lifted lambdas need no special entry shuffle:
+        # arity_for[name] already includes captures, so the loop
+        # above copied ALL of x0..x{full_arity-1} into the
+        # captures-then-explicit slots in one pass, matching the
+        # apply-time arglist order ``[Caps... | Args...]``.
         for instr in body:
             _emit_body_instruction(
                 builder,
                 instr,
                 label_for=label_for,
                 arity_for=arity_for,
+                fn_atom_for=fn_atom_for,
+                module_atom_idx=module_atom_idx,
+                pp_import_idx=pp_import_idx,
+                apply_import_idx=apply_import_idx,
                 y_reg_count=y_reg_count,
             )
 
-        # Each user region is exported (Twig has no module-private
-        # functions in v1).
+        # Lifted lambdas MUST be exported because ``apply/3``
+        # looks up the function by atom name in the module's
+        # export table.  Regular user functions are also exported.
         builder.exports.append(
             BEAMExport(
                 function_atom_index=function_atom_idx,
@@ -842,6 +1128,7 @@ def lower_ir_to_beam(
         imports=builder.imports.as_tuple(),
         exports=tuple(builder.exports),
         locals_=(),
+        funs=(),
         label_count=builder.next_label,
         max_opcode=_MIN_RUNTIME_MAX_OPCODE,
         extra_chunks=(
@@ -857,12 +1144,16 @@ def _emit_body_instruction(
     *,
     label_for: dict[str, int],
     arity_for: dict[str, int],
+    fn_atom_for: dict[str, int],
+    module_atom_idx: int,
+    pp_import_idx: int,
+    apply_import_idx: int,
     y_reg_count: int,
 ) -> None:
     op = instr.opcode
     if op not in _HANDLERS:
         msg = (
-            f"unsupported IR op {op.name} for BEAM TW03 Phase 1 — "
+            f"unsupported IR op {op.name} for BEAM — "
             f"supported ops: {_supported_op_summary()}"
         )
         raise BEAMBackendError(msg)
@@ -893,6 +1184,18 @@ def _emit_body_instruction(
         return
     if op is IrOp.RET:
         _emit_return(builder, instr, y_reg_count=y_reg_count)
+        return
+    if op is IrOp.MAKE_CLOSURE:
+        _emit_make_closure(builder, instr, fn_atom_for)
+        return
+    if op is IrOp.APPLY_CLOSURE:
+        _emit_apply_closure(
+            builder,
+            instr,
+            module_atom_idx=module_atom_idx,
+            pp_import_idx=pp_import_idx,
+            apply_import_idx=apply_import_idx,
+        )
         return
     msg = f"internal: missing handler dispatch for {op.name}"
     raise BEAMBackendError(msg)

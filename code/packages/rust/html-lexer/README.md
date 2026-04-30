@@ -25,6 +25,16 @@ the project, but the first real HTML authoring artifact that must keep HTML
 The default lexer already resolves the core named character references and the
 classic Latin-1 entity set, preserving entity-name case so legacy names such as
 `Agrave` and `agrave` remain distinct.
+Duplicate attributes recover with HTML semantics: the first attribute value is
+kept, later attributes with the same interpreted name are dropped, and a
+`duplicate-attribute` diagnostic is recorded.
+Unquoted attribute values also preserve spec-defined unexpected characters
+such as `"`, `'`, `<`, `=`, and `` ` `` while reporting
+`unexpected-character-in-unquoted-attribute-value`.
+NULL characters in data/RCDATA/RAWTEXT/PLAINTEXT/CDATA/script data and
+attribute values recover by reporting `unexpected-null-character` and appending
+U+FFFD, matching the replacement behavior the future parser will expect from
+the lexer/tokenizer boundary.
 Comment tokenization includes the standard start-dash recovery cases for empty
 HTML comments such as `<!-->` and `<!--->`, while still preserving normal
 Mosaic-era `<!--note-->` comments. Nested-looking `<!--` sequences inside an

@@ -152,15 +152,21 @@ container needed).
 
 Same staging as JVM02 Phase 2:
 
-- **CLR02 Phase 2a** — IR ops (already shipped via the
-  ``compiler-ir`` v0.4.0 release).
-- **CLR02 Phase 2b** — ``IClosure`` interface + multi-TypeDef
-  emission in ``cli-assembly-writer``.  Easier than JVM Phase 2b
-  because PE/CLI natively supports multi-class.
+- **CLR02 Phase 2a** — IR ops.  **Shipped** via the
+  ``compiler-ir`` v0.4.0 release.
+- **CLR02 Phase 2b** — multi-TypeDef metadata in
+  ``cli-assembly-writer``.  **Shipped.**  The writer now accepts
+  an arbitrary ``extra_types`` list on ``CILProgramArtifact``;
+  each entry produces one ``TypeDef`` row plus its ``Field`` /
+  ``MethodDef`` / ``InterfaceImpl`` rows.  Method signatures
+  support the ``HASTHIS`` flag (instance methods) and an
+  abstract-method codepath (RVA=0).  Two real-``dotnet`` tests
+  prove that an ``IClosure`` interface and a concrete closure-
+  shape class with a field round-trip and load.
 - **CLR02 Phase 2c** — ``MAKE_CLOSURE`` / ``APPLY_CLOSURE``
-  lowering in ``ir-to-cil-bytecode``.
+  lowering in ``ir-to-cil-bytecode``.  Pending.
 - **CLR02 Phase 2d** — ``twig-clr-compiler`` accepts ``Lambda``
-  + real-``dotnet`` factorial-closure test.
+  + real-``dotnet`` factorial-closure test.  Pending.
 
 ## Risk register
 

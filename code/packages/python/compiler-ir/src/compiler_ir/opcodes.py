@@ -196,10 +196,6 @@ class IrOp(IntEnum):
     #   I32_TRUNC_FROM_F64 v1, v2  →  v1 = trunc(v2)
     I32_TRUNC_FROM_F64 = 46
 
-    # Compute the square root of an f64 value.
-    #   F64_SQRT v1, v2  →  v1 = sqrt(v2)
-    F64_SQRT = 47
-
     # ── Comparison ────────────────────────────────────────────────────────────
     # Set dst = 1 if lhs == rhs, else 0.
     #   CMP_EQ v4, v1, v2  →  v4 = (v1 == v2) ? 1 : 0
@@ -283,7 +279,7 @@ class IrOp(IntEnum):
     #               free-variable list maps to the captured registers.
     #   - vm-core:  delegate to the host-side ``make_closure`` builtin
     #               (already implemented in TW00).
-    MAKE_CLOSURE = 25
+    MAKE_CLOSURE = 47
 
     # Apply a closure value to zero or more arguments.
     #
@@ -301,7 +297,12 @@ class IrOp(IntEnum):
     #   - BEAM:     emit ``call_fun`` (or ``call_fun2``) on the closure
     #               handle.
     #   - vm-core:  delegate to the host-side ``apply_closure`` builtin.
-    APPLY_CLOSURE = 26
+    APPLY_CLOSURE = 48
+
+    # Compute the square root of an f64 value.
+    # Appended after the closure opcodes to preserve stable opcode values.
+    #   F64_SQRT v1, v2  →  v1 = sqrt(v2)
+    F64_SQRT = 49
 
 
 # Canonical name → opcode mapping. Built from the enum at module load time.

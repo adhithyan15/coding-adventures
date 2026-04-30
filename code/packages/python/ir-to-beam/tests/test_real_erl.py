@@ -258,3 +258,101 @@ def test_recursive_factorial_returns_120(tmp_path: Path) -> None:
         f"factorial result mismatch — stdout={result.stdout!r}, "
         f"stderr={result.stderr!r}"
     )
+
+
+@requires_erl
+def test_closure_make_adder_returns_42(tmp_path: Path) -> None:
+    """The headline BEAM02 Phase 2 test: ``((make-adder 7) 35) → 42``.
+
+    Hand-built IR mirroring what twig-beam-compiler will emit for
+    ``(define (make-adder n) (lambda (x) (+ x n))) ((make-adder 7) 35)``,
+    exercising the full closure pipeline end-to-end on real ``erl``:
+
+    - ``MAKE_CLOSURE`` lowering → cons-cell ``[FnAtom | Caps]``
+    - ``APPLY_CLOSURE`` lowering → ``erlang:'++'/2`` + ``erlang:apply/3``
+    - Captures-first register layout in the lifted lambda body
+    """
+    gen = IDGenerator()
+    program = IrProgram(entry_label="main")
+
+    # _lambda_0(N, X) — exported with full arity 2 (1 capture + 1 explicit).
+    # Captures-first layout: y2 = N (captured), y3 = X (explicit).
+    # Body: r1 = N + X.
+    program.add_instruction(
+        IrInstruction(IrOp.LABEL, [_label("_lambda_0")], id=-1)
+    )
+    program.add_instruction(
+        IrInstruction(IrOp.ADD, [_reg(1), _reg(2), _reg(3)], id=gen.next())
+    )
+    program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+
+    # make_adder(n).  Body: r1 = MAKE_CLOSURE(_lambda_0, [n]).
+    # Layout: y2 = arg n, y10 = closure ref.
+    program.add_instruction(
+        IrInstruction(IrOp.LABEL, [_label("make_adder")], id=-1)
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.MAKE_CLOSURE,
+            [_reg(1), _label("_lambda_0"), _imm(1), _reg(2)],
+            id=gen.next(),
+        )
+    )
+    program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+
+    # main().  Body: r1 = APPLY_CLOSURE(make_adder(7), [35]).
+    program.add_instruction(IrInstruction(IrOp.LABEL, [_label("main")], id=-1))
+    # call make_adder(7) — stage arg in r2
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [_reg(2), _imm(7)], id=gen.next())
+    )
+    program.add_instruction(
+        IrInstruction(IrOp.CALL, [_label("make_adder")], id=gen.next())
+    )
+    # The closure ref is in r1 after CALL.  Save it in r10 so the
+    # arg-staging dance (r2 = 35) doesn't clobber it.
+    program.add_instruction(
+        IrInstruction(IrOp.ADD_IMM, [_reg(10), _reg(1), _imm(0)], id=gen.next())
+    )
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [_reg(11), _imm(35)], id=gen.next())
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.APPLY_CLOSURE,
+            [_reg(1), _reg(10), _imm(1), _reg(11)],
+            id=gen.next(),
+        )
+    )
+    program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+
+    # arity_overrides for _lambda_0 declares the EXPLICIT arity (1 — the
+    # ``(lambda (x) ...)`` parameter). The backend widens it to 2 (1
+    # capture + 1 explicit) for func_info / exports / apply.
+    config = BEAMBackendConfig(
+        module_name="closure_adder",
+        arity_overrides={"_lambda_0": 1, "make_adder": 1, "main": 0},
+        closure_free_var_counts={"_lambda_0": 1},
+    )
+    beam = encode_beam(lower_ir_to_beam(program, config))
+    (tmp_path / "closure_adder.beam").write_bytes(beam)
+    eval_expr = textwrap.dedent("""
+        {module, _} = code:load_file(closure_adder),
+        Result = closure_adder:main(),
+        io:format("~p~n", [Result]),
+        init:stop().
+    """).strip()
+    result = subprocess.run(
+        ["erl", "-noshell", "-pa", str(tmp_path), "-eval", eval_expr],
+        capture_output=True,
+        text=True,
+        timeout=15,
+    )
+    assert result.returncode == 0, (
+        f"erl rejected the closure module:\n  stdout: {result.stdout!r}\n"
+        f"  stderr: {result.stderr!r}"
+    )
+    assert result.stdout.strip() == "42", (
+        f"closure result mismatch — stdout={result.stdout!r}, "
+        f"stderr={result.stderr!r}"
+    )

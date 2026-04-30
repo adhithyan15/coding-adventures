@@ -140,6 +140,64 @@ fn tokenizer_builds_start_tag_attributes_and_self_closing_markers() {
 }
 
 #[test]
+fn tokenizer_can_drop_duplicate_attributes_when_requested() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "tag_open", "attr", "done"]),
+            set(&["<", "A", "H", "1", "2", ">", " "]),
+            vec![
+                EffectfulTransition::new(
+                    "data",
+                    EffectfulMatcher::Event("<".to_string()),
+                    "tag_open",
+                ),
+                EffectfulTransition::new(
+                    "tag_open",
+                    EffectfulMatcher::Event("A".to_string()),
+                    "attr",
+                )
+                .with_effects(&["create_start_tag", "append_tag_name(current_lowercase)"]),
+                EffectfulTransition::new("attr", EffectfulMatcher::Event("H".to_string()), "attr")
+                    .with_effects(&[
+                        "start_attribute",
+                        "append_attribute_name(href)",
+                        "append_attribute_value(1)",
+                        "commit_attribute_dedup",
+                    ]),
+                EffectfulTransition::new("attr", EffectfulMatcher::Event("1".to_string()), "attr")
+                    .with_effects(&[
+                        "start_attribute",
+                        "append_attribute_name(href)",
+                        "append_attribute_value(2)",
+                        "commit_attribute_dedup",
+                    ]),
+                EffectfulTransition::new("attr", EffectfulMatcher::Event(">".to_string()), "done")
+                    .with_effects(&["emit_current_token"]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("<AH1>").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![Token::StartTag {
+            name: "a".to_string(),
+            attributes: vec![Attribute {
+                name: "href".to_string(),
+                value: "1".to_string(),
+            }],
+            self_closing: false,
+        }]
+    );
+    assert_eq!(tokenizer.diagnostics().len(), 1);
+    assert_eq!(tokenizer.diagnostics()[0].code, "duplicate-attribute");
+}
+
+#[test]
 fn tokenizer_builds_comment_tokens_with_current_and_literal_actions() {
     let mut tokenizer = Tokenizer::new(
         EffectfulStateMachine::new(
@@ -345,6 +403,47 @@ fn tokenizer_appends_temporary_buffer_to_attribute_value() {
             attributes: vec![Attribute {
                 name: "href".to_string(),
                 value: "&x".to_string(),
+            }],
+            self_closing: false,
+        }]
+    );
+}
+
+#[test]
+fn tokenizer_appends_replacement_character_to_attribute_value() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["A"]),
+            vec![EffectfulTransition::new(
+                "data",
+                EffectfulMatcher::Event("A".to_string()),
+                "done",
+            )
+            .with_effects(&[
+                "create_start_tag",
+                "append_tag_name(current_lowercase)",
+                "start_attribute",
+                "append_attribute_name(title)",
+                "append_attribute_value_replacement",
+                "commit_attribute",
+                "emit_current_token",
+            ])],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("A").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![Token::StartTag {
+            name: "a".to_string(),
+            attributes: vec![Attribute {
+                name: "title".to_string(),
+                value: "\u{FFFD}".to_string(),
             }],
             self_closing: false,
         }]

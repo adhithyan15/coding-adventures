@@ -312,3 +312,239 @@ class TestOpcodeChoices:
         assert 12 in used   # allocate
         assert 18 in used   # deallocate
         assert 4 in used    # call
+
+
+# ---------------------------------------------------------------------------
+# TW03 Phase 2 — closure lowering shape
+# ---------------------------------------------------------------------------
+
+
+class TestClosureLowering:
+    """Structural tests for MAKE_CLOSURE / APPLY_CLOSURE lowering.
+
+    These assert on the emitted BEAMModule (atoms / instructions /
+    exports / imports) rather than running anything against ``erl``,
+    so they cover the closure code paths in CI environments without
+    Erlang installed.  The end-to-end ``((make-adder 7) 35) → 42``
+    test against real ``erl`` lives in ``test_real_erl.py``.
+    """
+
+    def _build_closure_program(self) -> IrProgram:
+        """The hand-built closure_adder fixture used throughout —
+        ``make_adder(N) = lambda(X) -> X + N``, called as
+        ``main() = (make_adder(7))(35)``.
+        """
+        gen = IDGenerator()
+        program = IrProgram(entry_label="main")
+
+        # _lambda_0(N, X) — captures-first layout: y2=N, y3=X.
+        program.add_instruction(
+            IrInstruction(IrOp.LABEL, [_label("_lambda_0")], id=-1)
+        )
+        program.add_instruction(
+            IrInstruction(IrOp.ADD, [_reg(1), _reg(2), _reg(3)], id=gen.next())
+        )
+        program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+
+        # make_adder(n) -> closure capturing n.
+        program.add_instruction(
+            IrInstruction(IrOp.LABEL, [_label("make_adder")], id=-1)
+        )
+        program.add_instruction(
+            IrInstruction(
+                IrOp.MAKE_CLOSURE,
+                [_reg(1), _label("_lambda_0"), _imm(1), _reg(2)],
+                id=gen.next(),
+            )
+        )
+        program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+
+        # main(): call make_adder(7), then APPLY_CLOSURE with 35.
+        program.add_instruction(IrInstruction(IrOp.LABEL, [_label("main")], id=-1))
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [_reg(2), _imm(7)], id=gen.next())
+        )
+        program.add_instruction(
+            IrInstruction(IrOp.CALL, [_label("make_adder")], id=gen.next())
+        )
+        program.add_instruction(
+            IrInstruction(
+                IrOp.ADD_IMM, [_reg(10), _reg(1), _imm(0)], id=gen.next()
+            )
+        )
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [_reg(11), _imm(35)], id=gen.next())
+        )
+        program.add_instruction(
+            IrInstruction(
+                IrOp.APPLY_CLOSURE,
+                [_reg(1), _reg(10), _imm(1), _reg(11)],
+                id=gen.next(),
+            )
+        )
+        program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+
+        return program
+
+    def _config(self) -> BEAMBackendConfig:
+        # Lambda's explicit arity is 1 (X); the backend widens to 2
+        # internally because num_free=1 (N).
+        return BEAMBackendConfig(
+            module_name="closure_adder",
+            arity_overrides={"_lambda_0": 1, "make_adder": 1, "main": 0},
+            closure_free_var_counts={"_lambda_0": 1},
+        )
+
+    def test_apply_imports_pp_and_apply_3_bifs(self) -> None:
+        """``erlang:'++'/2`` and ``erlang:apply/3`` get wired into the
+        ImpT table when APPLY_CLOSURE appears anywhere in the IR."""
+        m = lower_ir_to_beam(self._build_closure_program(), self._config())
+        triples = {
+            (m.atoms[imp.module_atom_index - 1], m.atoms[imp.function_atom_index - 1], imp.arity)
+            for imp in m.imports
+        }
+        assert ("erlang", "++", 2) in triples
+        assert ("erlang", "apply", 3) in triples
+
+    def test_lifted_lambda_is_exported_with_full_arity(self) -> None:
+        """The lifted ``_lambda_0`` is exported (apply/3 looks it up
+        by atom name), and its arity equals ``num_free + explicit``
+        — for ``(lambda (x) ...)`` capturing 1 var, that's 2."""
+        m = lower_ir_to_beam(self._build_closure_program(), self._config())
+        exports = {
+            (m.atoms[ex.function_atom_index - 1], ex.arity) for ex in m.exports
+        }
+        assert ("_lambda_0", 2) in exports
+
+    def test_make_closure_emits_put_list_chain(self) -> None:
+        """MAKE_CLOSURE lowers to a chain of ``put_list`` opcodes
+        (69) preceded by a ``test_heap`` (16); no ``make_fun*``
+        opcode appears."""
+        m = lower_ir_to_beam(self._build_closure_program(), self._config())
+        opcodes = [ins.opcode for ins in m.instructions]
+        assert 16 in opcodes  # test_heap
+        assert 69 in opcodes  # put_list
+        assert 103 not in opcodes  # NO make_fun2
+        assert 171 not in opcodes  # NO make_fun3
+
+    def test_apply_closure_emits_get_hd_get_tl_call_ext(self) -> None:
+        """APPLY_CLOSURE lowers using ``get_hd`` (162), ``get_tl``
+        (163), and ``call_ext`` (7) for the apply/3 dispatch."""
+        m = lower_ir_to_beam(self._build_closure_program(), self._config())
+        opcodes = [ins.opcode for ins in m.instructions]
+        assert 162 in opcodes  # get_hd
+        assert 163 in opcodes  # get_tl
+        assert 7 in opcodes    # call_ext
+
+    def test_no_make_fun_nor_call_fun(self) -> None:
+        """Sanity: even though the Phase 2b FunT scaffolding exists,
+        the Phase 2c lowering deliberately avoids ``make_fun*`` and
+        ``call_fun`` because OTP 28 rejects the former and the
+        latter only pairs with funs."""
+        m = lower_ir_to_beam(self._build_closure_program(), self._config())
+        opcodes = {ins.opcode for ins in m.instructions}
+        assert 75 not in opcodes   # call_fun
+        assert 76 not in opcodes   # make_fun
+        assert 103 not in opcodes  # make_fun2
+        assert 171 not in opcodes  # make_fun3
+        # And no FunT chunk gets emitted — funs tuple is empty.
+        assert m.funs == ()
+
+    def test_make_closure_with_zero_captures(self) -> None:
+        """MAKE_CLOSURE with num_captured=0 (a function value with
+        no captures) still emits a 1-element list ``[FnAtom]``."""
+        gen = IDGenerator()
+        program = IrProgram(entry_label="main")
+        program.add_instruction(
+            IrInstruction(IrOp.LABEL, [_label("_lambda_0")], id=-1)
+        )
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [_reg(1), _imm(7)], id=gen.next())
+        )
+        program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+        program.add_instruction(IrInstruction(IrOp.LABEL, [_label("main")], id=-1))
+        program.add_instruction(
+            IrInstruction(
+                IrOp.MAKE_CLOSURE,
+                [_reg(1), _label("_lambda_0"), _imm(0)],
+                id=gen.next(),
+            )
+        )
+        program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+
+        m = lower_ir_to_beam(
+            program,
+            BEAMBackendConfig(
+                module_name="zero_caps",
+                arity_overrides={"_lambda_0": 0, "main": 0},
+                closure_free_var_counts={"_lambda_0": 0},
+            ),
+        )
+        opcodes = [ins.opcode for ins in m.instructions]
+        assert 69 in opcodes  # put_list — still needed for the [Fn] cons
+        assert 16 in opcodes  # test_heap reservation
+
+    def test_make_closure_unknown_lambda_rejected(self) -> None:
+        gen = IDGenerator()
+        program = IrProgram(entry_label="main")
+        program.add_instruction(IrInstruction(IrOp.LABEL, [_label("main")], id=-1))
+        program.add_instruction(
+            IrInstruction(
+                IrOp.MAKE_CLOSURE,
+                [_reg(1), _label("nope"), _imm(0)],
+                id=gen.next(),
+            )
+        )
+        program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+        with pytest.raises(BEAMBackendError, match="no closure region"):
+            lower_ir_to_beam(
+                program,
+                BEAMBackendConfig(
+                    module_name="bad",
+                    arity_overrides={"main": 0},
+                    # Note: closure_free_var_counts left empty so the
+                    # MAKE_CLOSURE target ``nope`` is unknown.
+                ),
+            )
+
+    def test_make_closure_capture_count_mismatch_rejected(self) -> None:
+        gen = IDGenerator()
+        program = IrProgram(entry_label="main")
+        program.add_instruction(
+            IrInstruction(IrOp.LABEL, [_label("_lambda_0")], id=-1)
+        )
+        program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+        program.add_instruction(IrInstruction(IrOp.LABEL, [_label("main")], id=-1))
+        # Says num_captured=2 but only 1 capture operand provided.
+        program.add_instruction(
+            IrInstruction(
+                IrOp.MAKE_CLOSURE,
+                [_reg(1), _label("_lambda_0"), _imm(2), _reg(2)],
+                id=gen.next(),
+            )
+        )
+        program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+        with pytest.raises(BEAMBackendError, match="capture operands"):
+            lower_ir_to_beam(
+                program,
+                BEAMBackendConfig(
+                    module_name="bad",
+                    arity_overrides={"_lambda_0": 0, "main": 0},
+                    closure_free_var_counts={"_lambda_0": 2},
+                ),
+            )
+
+    def test_closure_free_var_counts_unknown_region_rejected(self) -> None:
+        gen = IDGenerator()
+        program = IrProgram(entry_label="main")
+        program.add_instruction(IrInstruction(IrOp.LABEL, [_label("main")], id=-1))
+        program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+        with pytest.raises(BEAMBackendError, match="no\\s+callable region"):
+            lower_ir_to_beam(
+                program,
+                BEAMBackendConfig(
+                    module_name="bad",
+                    arity_overrides={"main": 0},
+                    closure_free_var_counts={"_ghost_lambda": 1},
+                ),
+            )

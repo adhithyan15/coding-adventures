@@ -57,7 +57,17 @@ class CILBackendConfig:
 
 @dataclass(frozen=True)
 class CILMethodArtifact:
-    """A lowered CIL method body and its method-level metadata needs."""
+    """A lowered CIL method body and its method-level metadata needs.
+
+    ``is_instance`` controls whether the method has the ``HASTHIS``
+    bit in its calling-convention byte.  Default ``False`` matches
+    the existing CLR01 surface (every method on the user's main
+    type is static).  CLR02 (closures) introduces instance methods
+    on lifted closure types — set ``is_instance=True`` for those.
+    Constructors additionally need ``is_special_name=True`` to set
+    the ``SpecialName`` and ``RTSpecialName`` flags so the loader
+    treats them as ``.ctor``.
+    """
 
     name: str
     body: bytes
@@ -65,6 +75,12 @@ class CILMethodArtifact:
     local_types: tuple[str, ...]
     return_type: str = "int32"
     parameter_types: tuple[str, ...] = ()
+    is_instance: bool = False
+    is_special_name: bool = False
+    # ``is_abstract`` marks the method as having no body (RVA=0) —
+    # required for interface methods.  Abstract methods imply
+    # ``is_instance=True`` and an empty ``body``.
+    is_abstract: bool = False
 
     @property
     def local_count(self) -> int:
@@ -73,8 +89,51 @@ class CILMethodArtifact:
 
 
 @dataclass(frozen=True)
+class CILFieldArtifact:
+    """An instance field on a closure / extra TypeDef.
+
+    Static fields are out of scope (the closure design uses
+    instance fields for captures).
+    """
+
+    name: str
+    type: str = "int32"
+
+
+@dataclass(frozen=True)
+class CILTypeArtifact:
+    """An extra ``TypeDef`` row to emit alongside the main user type.
+
+    Used for:
+    * ``IClosure`` — the abstract interface every closure
+      implements (``is_interface=True``, ``extends=None``).
+    * ``Closure_<lambda>`` — one concrete class per lifted
+      lambda (``is_interface=False``, ``extends="System.Object"``,
+      ``implements=("CodingAdventures.IClosure",)``).
+
+    Field and method order is preserved verbatim — the writer
+    assigns consecutive table rows in declaration order.
+    """
+
+    name: str
+    namespace: str = ""
+    is_interface: bool = False
+    extends: str | None = "System.Object"
+    implements: tuple[str, ...] = ()
+    fields: tuple[CILFieldArtifact, ...] = ()
+    methods: tuple[CILMethodArtifact, ...] = ()
+
+
+@dataclass(frozen=True)
 class CILProgramArtifact:
-    """The result of lowering a compiler IR program to CIL method bodies."""
+    """The result of lowering a compiler IR program to CIL method bodies.
+
+    ``methods`` are emitted on the main user TypeDef (configured via
+    ``CLIAssemblyConfig.type_name``).  ``extra_types`` are
+    additional TypeDef rows — closure types and the IClosure
+    interface for CLR02 Phase 2.  Empty by default for backwards
+    compat with CLR01 callers.
+    """
 
     entry_label: str
     methods: tuple[CILMethodArtifact, ...]
@@ -82,6 +141,7 @@ class CILProgramArtifact:
     data_size: int
     helper_specs: tuple[CILHelperSpec, ...]
     token_provider: CILTokenProvider
+    extra_types: tuple[CILTypeArtifact, ...] = ()
 
     @property
     def callable_labels(self) -> tuple[str, ...]:

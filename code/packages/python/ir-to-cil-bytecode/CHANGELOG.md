@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.4.0 — 2026-04-29 — CLR02 Phase 2b dataclasses
+
+### Added — closure-shape input to the writer
+
+Foundation for CLR02 Phase 2 closures (the lowering itself —
+MAKE_CLOSURE / APPLY_CLOSURE → newobj/callvirt — comes in
+Phase 2c).
+
+- `CILTypeArtifact` — describes one extra `TypeDef` row to emit
+  alongside the user's main type.  Fields: `name`, `namespace`,
+  `is_interface`, `extends`, `implements`, `fields`, `methods`.
+- `CILFieldArtifact` — instance field declaration on an extra
+  type.  Currently only `int32` and other supported `int*` /
+  `bool` / reference-typed fields are accepted.
+- `CILMethodArtifact` gains `is_instance` (sets `HASTHIS` in the
+  emitted MethodSig blob), `is_special_name` (used by `.ctor`),
+  and `is_abstract` (interface methods — RVA=0, no body).
+- `CILProgramArtifact.extra_types: tuple[CILTypeArtifact, ...]`
+  defaults to `()` so existing callers see no behavior change.
+
+These are pure data-shape additions; the lowering pass in
+`backend.py` does not yet emit closure types.
+
 ## 0.3.0 — 2026-04-27
 
 ### Added — LANG20: `CILCodeGenerator` — `CodeGenerator[IrProgram, CILProgramArtifact]` adapter
