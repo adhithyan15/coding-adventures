@@ -457,6 +457,9 @@ id = "tag_name"
 id = "end_tag_name"
 
 [[states]]
+id = "end_tag_attributes"
+
+[[states]]
 id = "before_attribute_name"
 
 [[states]]
@@ -6999,8 +7002,30 @@ actions = [
 [[transitions]]
 from = "before_end_tag_close"
 matcher = { anything = true }
-to = "before_end_tag_close"
-actions = ["parse_error(unexpected-character-after-end-tag-name)"]
+to = "end_tag_attributes"
+actions = ["parse_error(end-tag-with-attributes)"]
+
+[[transitions]]
+from = "end_tag_attributes"
+matcher = { literal = ">" }
+to = "data"
+actions = ["emit_current_token"]
+
+[[transitions]]
+from = "end_tag_attributes"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-end-tag-name-state)",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "end_tag_attributes"
+matcher = { anything = true }
+to = "end_tag_attributes"
 
 [[transitions]]
 from = "end_tag_name"

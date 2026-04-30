@@ -891,6 +891,13 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             external_entry: false,
         },
         StateDefinition {
+            id: "end_tag_attributes".to_string(),
+            initial: false,
+            accepting: false,
+            final_state: false,
+            external_entry: false,
+        },
+        StateDefinition {
             id: "end_tag_name".to_string(),
             initial: false,
             accepting: false,
@@ -14609,14 +14616,59 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             on: None,
             matcher: Some(MatcherDefinition::Anything),
             to: vec![
-                "before_end_tag_close".to_string(),
+                "end_tag_attributes".to_string(),
             ],
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "parse_error(unexpected-character-after-end-tag-name)".to_string(),
+                "parse_error(end-tag-with-attributes)".to_string(),
             ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "end_tag_attributes".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal(">".to_string())),
+            to: vec![
+                "data".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "emit_current_token".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "end_tag_attributes".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Eof),
+            to: vec![
+                "done".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(eof-in-end-tag-name-state)".to_string(),
+                "emit_current_token".to_string(),
+                "emit(EOF)".to_string(),
+            ],
+            consume: false,
+        },
+        TransitionDefinition {
+            from: "end_tag_attributes".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Anything),
+            to: vec![
+                "end_tag_attributes".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
             consume: true,
         },
         TransitionDefinition {
