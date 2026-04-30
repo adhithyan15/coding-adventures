@@ -1,5 +1,32 @@
 # Changelog — twig-clr-compiler
 
+## 0.4.0 — 2026-04-30 — recursive heap programs run on real dotnet
+
+Heap programs now run end-to-end on real `dotnet` from raw Twig
+source.  The headline TW03 Phase 3 acceptance criterion:
+
+```
+(define (length xs)
+  (if (null? xs) 0 (+ 1 (length (cdr xs)))))
+(length (cons 1 (cons 2 (cons 3 nil))))
+→ 3
+```
+
+This brings CLR to parity with JVM and BEAM for recursive heap
+programs.
+
+Was unblocked by ir-to-cil-bytecode v0.8.0 — per-region parameter
+typing + obj-source-read inference + obj-aware CALL marshalling.
+
+### Test additions (real-dotnet end-to-end)
+
+- `test_heap_car_of_singleton_returns_int` — `(car (cons 42 nil)) → 42`
+- `test_heap_function_with_cons_param` — `(define (head xs) (car xs)) (head (cons 42 nil)) → 42` (obj-typed parameter passing)
+- `test_heap_recursive_length_returns_3` — the headline `length`
+  test on real `dotnet`, returning exit code 3
+
+64/64 tests pass; 90% coverage.
+
 ## 0.3.0 — 2026-04-30 — TW03 Phase 3e (heap primitives from Twig source)
 
 Twig source containing `cons` / `car` / `cdr` / `null?` / `pair?` /

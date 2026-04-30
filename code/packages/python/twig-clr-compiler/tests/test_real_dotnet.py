@@ -217,3 +217,55 @@ def test_closure_let_bound() -> None:
         assembly_name="ClrLetClos",
     )
     assert result.returncode == 42, result.stderr
+
+
+# ── Heap primitives — recursive heap programs on real dotnet ──────────────
+
+
+@requires_dotnet
+def test_heap_car_of_singleton_returns_int() -> None:
+    """``(car (cons 42 nil)) → 42`` — non-recursive heap exit code."""
+    result = run_source(
+        "(car (cons 42 nil))", assembly_name="ClrCarOne",
+    )
+    assert result.returncode == 42, result.stderr
+
+
+@requires_dotnet
+def test_heap_function_with_cons_param() -> None:
+    """``(define (head xs) (car xs)) (head (cons 42 nil)) → 42``.
+
+    Exercises obj-typed parameter passing across a function call:
+    the cons cell built in main flows through the obj slot of
+    head's xs param.  Tests the per-region parameter typing
+    inference + obj-aware CALL-site arg ldloc.
+    """
+    result = run_source(
+        "(define (head xs) (car xs)) (head (cons 42 nil))",
+        assembly_name="ClrHead",
+    )
+    assert result.returncode == 42, result.stderr
+
+
+@requires_dotnet
+def test_heap_recursive_length_returns_3() -> None:
+    """``(length (cons 1 (cons 2 (cons 3 nil)))) → 3``.
+
+    The headline TW03 Phase 3 acceptance criterion on real
+    ``dotnet``.  Builds the cons-cell list via ``MAKE_CONS`` /
+    ``LOAD_NIL``, walks via ``CDR`` + ``IS_NULL``, recurses
+    through ``length``.  Exercises the full obj-flow chain:
+    obj-typed parameter passing (xs arrives as Object), seeded
+    type inference (so the param→holding-reg ``ADD_IMM-0`` move
+    propagates the obj slot from instruction 0 of the body),
+    and obj-aware CALL-site arg ldloc.
+    """
+    result = run_source(
+        """
+        (define (length xs)
+          (if (null? xs) 0 (+ 1 (length (cdr xs)))))
+        (length (cons 1 (cons 2 (cons 3 nil))))
+        """,
+        assembly_name="ClrLength",
+    )
+    assert result.returncode == 3, result.stderr

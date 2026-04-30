@@ -1,5 +1,78 @@
 # Changelog
 
+## 0.8.0 — 2026-04-30 — per-region parameter typing + obj-aware CALL marshalling
+
+Closes the heap-program runtime gap from Phase 3c.  Twig source
+that passes a cons cell (or any obj-typed value) across a function
+call now runs correctly on real `dotnet`:
+
+```
+(define (length xs)
+  (if (null? xs) 0 (+ 1 (length (cdr xs)))))
+(length (cons 1 (cons 2 (cons 3 nil)))) → 3
+```
+
+Was a NullReferenceException pre-fix because the CLR backend
+declared all method parameters as `int32` and ldloc'd args from
+the int slot at every CALL site — so any heap reference flowing
+through a parameter slot was lost.
+
+### Added — per-region parameter typing
+
+`CILLoweringPlan.function_parameter_types` maps each region name
+to a tuple of `"int32"` / `"object"` per parameter slot, computed
+by `_classify_function_parameter_types` during analysis.  The
+classifier scans each region's body for which slots are obj-typed
+and declares them `"object"`.
+
+### Added — obj-source-read inference
+
+`_collect_object_typed_registers` now also pulls in registers
+that are *read* as object operands (CAR/CDR/IS_NULL/IS_PAIR/
+IS_SYMBOL src; MAKE_CONS tail; APPLY_CLOSURE closure_reg).  This
+is critical for parameter slots that the body only ever reads —
+without it, the writes-only inference would miss them and the
+lowerer would emit `ldloc` from the int32 slot.
+
+### Added — back-prop fixed point through ADD_IMM-0
+
+If `ADD_IMM dst, src, 0` (Twig's canonical move idiom) has an
+obj-typed dst (because some downstream op reads dst as obj),
+back-propagate to mark src as obj too.  Iterates to a fixed
+point.  Catches the "param → holding-reg" copy at the top of
+the body — `length` opens with `ADD_IMM v10, v2, 0` where v10
+is later read by CDR; v2 (the xs param) needs to be classified
+obj so its slot gets declared `"object"` and ldarg → stloc-obj
+at function entry.
+
+### Added — seeded type inference from parameter types
+
+`_collect_object_typed_registers` accepts a `seed_types`
+keyword.  `_lower_region` seeds it with the region's classified
+parameter types so the body's first instruction sees the param
+type from the type pool.  Without the seed, `ADD_IMM v10, v2, 0`
+at the top of `length` would default v2 to int32 and the move
+would copy garbage from the int slot.
+
+### Added — obj-aware CALL marshalling
+
+`_emit_instruction`'s CALL branch now consults the callee's
+`function_parameter_types` and ldloc's each arg from the
+caller's obj slot when the callee declares that param `"object"`.
+Falls back to `ldnull` when the caller doesn't have the slot
+in its obj pool (well-formed Twig output always emits an
+obj-propagating move first, so the fallback is a safety net).
+
+### Added — obj-aware function entry shuffle
+
+`_lower_region`'s entry shuffle now stores ldarg for obj-typed
+params into the obj_local_for slot rather than the int slot,
+matching the per-param typing.
+
+### Tests
+
+All 97 ir-to-cil-bytecode tests still pass; coverage 92%.
+
 ## 0.7.0 — 2026-04-30 — TW03 Phase 3c (CLR heap primitives, structural)
 
 Adds CLR-side lowering for the eight TW03 Phase 3a heap opcodes
