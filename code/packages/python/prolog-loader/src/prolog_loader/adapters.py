@@ -25,6 +25,7 @@ from logic_builtins import (
     dynamico,
     failo,
     fd_addo,
+    fd_elemento,
     fd_eqo,
     fd_geqo,
     fd_gto,
@@ -33,8 +34,9 @@ from logic_builtins import (
     fd_lto,
     fd_mulo,
     fd_neqo,
-    fd_scalar_producto,
+    fd_scalar_product_relationo,
     fd_subo,
+    fd_sum_relationo,
     fd_sumo,
     findallo,
     forallo,
@@ -203,6 +205,8 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
     if goal.relation.arity == 3 and name == "sum":
         sum_goal = _adapt_fd_sum(args[0], args[1], args[2])
         return goal if sum_goal is None else sum_goal
+    if goal.relation.arity == 3 and name == "element":
+        return fd_elemento(args[0], args[1], args[2])
     if goal.relation.arity == 4 and name == "scalar_product":
         scalar_goal = _adapt_fd_scalar_product(args[0], args[1], args[2], args[3])
         return goal if scalar_goal is None else scalar_goal
@@ -340,9 +344,9 @@ def _adapt_fd_sum(
     operator_value: Term,
     result: Term,
 ) -> GoalExpr | None:
-    if _atom_symbol_name(operator_value) != "#=":
+    if _fd_relation_name(operator_value) is None:
         return None
-    return fd_sumo(terms_value, result)
+    return fd_sum_relationo(terms_value, operator_value, result)
 
 
 def _adapt_fd_scalar_product(
@@ -351,9 +355,14 @@ def _adapt_fd_scalar_product(
     operator_value: Term,
     result: Term,
 ) -> GoalExpr | None:
-    if _atom_symbol_name(operator_value) != "#=":
+    if _fd_relation_name(operator_value) is None:
         return None
-    return fd_scalar_producto(coeffs_value, terms_value, result)
+    return fd_scalar_product_relationo(
+        coeffs_value,
+        terms_value,
+        operator_value,
+        result,
+    )
 
 
 def _adapt_fd_arithmetic_expression(expression: Term, result: Term) -> GoalExpr | None:
@@ -531,4 +540,11 @@ def _atom_symbol_name(term_value: Term) -> str | None:
         return term_value.symbol.name
     if isinstance(term_value, str):
         return term_value
+    return None
+
+
+def _fd_relation_name(term_value: Term) -> str | None:
+    name = _atom_symbol_name(term_value)
+    if name in {"#=", "#\\=", "#<", "#=<", "#>", "#>="}:
+        return name
     return None

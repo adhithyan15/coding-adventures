@@ -50,6 +50,7 @@ from logic_builtins import (
     dynamico,
     failo,
     fd_addo,
+    fd_elemento,
     fd_eqo,
     fd_geqo,
     fd_gto,
@@ -58,8 +59,10 @@ from logic_builtins import (
     fd_lto,
     fd_mulo,
     fd_neqo,
+    fd_scalar_product_relationo,
     fd_scalar_producto,
     fd_subo,
+    fd_sum_relationo,
     fd_sumo,
     findallo,
     floordiv,
@@ -885,6 +888,84 @@ class TestFiniteDomainBuiltins:
                 labelingo([value]),
             ),
         ) == []
+
+    def test_fd_sum_relationo_supports_comparison_modes(self) -> None:
+        left = var("Left")
+        right = var("Right")
+
+        assert solve_all(
+            program(),
+            (left, right),
+            conj(
+                fd_ino(left, range(1, 5)),
+                fd_ino(right, range(1, 5)),
+                fd_sum_relationo([left, right], "lt", 5),
+                all_differento([left, right]),
+                labelingo([left, right]),
+            ),
+        ) == [
+            (num(1), num(2)),
+            (num(1), num(3)),
+            (num(2), num(1)),
+            (num(3), num(1)),
+        ]
+
+    def test_fd_scalar_product_relationo_supports_comparison_modes(self) -> None:
+        left = var("Left")
+        right = var("Right")
+
+        assert solve_all(
+            program(),
+            (left, right),
+            conj(
+                fd_ino(left, range(0, 4)),
+                fd_ino(right, range(0, 4)),
+                fd_scalar_product_relationo([2, 3], [left, right], "ge", 7),
+                fd_lto(left, right),
+                labelingo([left, right]),
+            ),
+        ) == [
+            (num(0), num(3)),
+            (num(1), num(2)),
+            (num(1), num(3)),
+            (num(2), num(3)),
+        ]
+
+    def test_fd_elemento_solves_index_and_value_constraints(self) -> None:
+        index = var("Index")
+        value = var("Value")
+
+        assert solve_all(
+            program(),
+            (index, value),
+            conj(
+                fd_ino(index, range(1, 4)),
+                fd_ino(value, range(2, 5)),
+                fd_elemento(index, [3, 1, 4], value),
+                labelingo([index, value]),
+            ),
+        ) == [(num(1), num(3)), (num(3), num(4))]
+
+    def test_fd_elemento_accepts_logic_lists_and_variable_items(self) -> None:
+        index = var("Index")
+        left = var("Left")
+        right = var("Right")
+
+        assert solve_all(
+            program(),
+            (index, left, right),
+            conj(
+                fd_ino(index, range(1, 3)),
+                fd_ino(left, range(1, 4)),
+                fd_ino(right, range(1, 4)),
+                fd_elemento(index, logic_list([left, right]), 3),
+                fd_lto(left, right),
+                labelingo([index, left, right]),
+            ),
+        ) == [
+            (num(2), num(1), num(3)),
+            (num(2), num(2), num(3)),
+        ]
 
     def test_all_differento_prunes_singleton_assignments(self) -> None:
         left = var("Left")

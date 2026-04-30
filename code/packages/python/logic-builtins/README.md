@@ -41,8 +41,10 @@ ordinary logic goal expressions.
   `fd_geqo(left, right)`, `fd_addo(left, right, result)`,
   `fd_subo(left, right, result)`, `fd_mulo(left, right, result)`,
   `fd_sumo(vars, total)`, `fd_scalar_producto(coeffs, vars, total)`,
-  `all_differento(vars)`, `labelingo(vars)`, and `labeling_optionso(options,
-  vars)` for finite-domain integer constraints
+  `fd_sum_relationo(vars, op, total)`, `fd_scalar_product_relationo(coeffs,
+  vars, op, total)`, `fd_elemento(index, vars, value)`,
+  `all_differento(vars)`, `labelingo(vars)`, and
+  `labeling_optionso(options, vars)` for finite-domain integer constraints
 - arithmetic expression constructors: `add`, `sub`, `mul`, `div`, `floordiv`, `mod`, and `neg`
 - `iso(result, expression)` for Prolog-style evaluative arithmetic
 - `numeqo(left, right)`, `numneqo(left, right)`, `lto(left, right)`, `leqo(left, right)`, `gto(left, right)`, and `geqo(left, right)`
@@ -231,8 +233,11 @@ predicates narrow domains as soon as enough information exists; and
 `labelingo([X, Y])` enumerates concrete assignments in ascending order.
 Arithmetic constraints currently cover addition, subtraction, and
 multiplication, plus `fd_sumo` for n-ary sums and `fd_scalar_producto` for
-weighted sums. `all_differento` includes duplicate checks and singleton
-pruning, while deeper Hall-set global-constraint pruning remains future work.
+weighted sums. Relation-aware variants support equality, disequality, and
+ordering comparisons for sums and scalar products. `fd_elemento` adds a
+1-based list-indexing global constraint. `all_differento` includes duplicate
+checks and singleton pruning, while deeper Hall-set global-constraint pruning
+remains future work.
 `labelingo` chooses the smallest current finite domain first and uses the
 caller-provided variable order as a stable tie-breaker.
 

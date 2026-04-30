@@ -80,6 +80,7 @@ __all__ = [
     "dynamico",
     "div",
     "fd_eqo",
+    "fd_elemento",
     "fd_geqo",
     "fd_gto",
     "fd_ino",
@@ -90,7 +91,9 @@ __all__ = [
     "fd_neqo",
     "fd_subo",
     "fd_scalar_producto",
+    "fd_scalar_product_relationo",
     "fd_sumo",
+    "fd_sum_relationo",
     "failo",
     "FiniteDomainConstraint",
     "FiniteDomainStore",
@@ -198,6 +201,7 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("cuto", 0),
     ("dynamico", 2),
     ("fd_eqo", 2),
+    ("fd_elemento", 3),
     ("fd_geqo", 2),
     ("fd_gto", 2),
     ("fd_ino", 2),
@@ -208,7 +212,9 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("fd_neqo", 2),
     ("fd_subo", 3),
     ("fd_scalar_producto", 3),
+    ("fd_scalar_product_relationo", 4),
     ("fd_sumo", 2),
+    ("fd_sum_relationo", 3),
     ("failo", 0),
     ("findallo", 3),
     ("forallo", 2),
@@ -514,6 +520,13 @@ def _fd_tuple_satisfies(
     if constraint.operator == "sum":
         *terms_value, result = values
         return sum(terms_value) == result
+    if constraint.operator.startswith("sum_"):
+        *terms_value, result = values
+        return _fd_compare(
+            constraint.operator.removeprefix("sum_"),
+            sum(terms_value),
+            result,
+        )
     if constraint.operator == "scalar_product":
         pair_count = (len(values) - 1) // 2
         if len(values) != (pair_count * 2) + 1:
@@ -525,6 +538,25 @@ def _fd_tuple_satisfies(
             coeff * term_value
             for coeff, term_value in zip(coeffs, terms_value, strict=True)
         ) == result
+    if constraint.operator.startswith("scalar_product_"):
+        pair_count = (len(values) - 1) // 2
+        if len(values) != (pair_count * 2) + 1:
+            return False
+        coeffs = values[:pair_count]
+        terms_value = values[pair_count:-1]
+        result = values[-1]
+        weighted_total = sum(
+            coeff * term_value
+            for coeff, term_value in zip(coeffs, terms_value, strict=True)
+        )
+        return _fd_compare(
+            constraint.operator.removeprefix("scalar_product_"),
+            weighted_total,
+            result,
+        )
+    if constraint.operator == "element":
+        index, *items, value = values
+        return 1 <= index <= len(items) and items[index - 1] == value
     if constraint.operator == "all_different":
         return len(set(values)) == len(values)
     msg = f"unknown finite-domain constraint {constraint.operator}"
@@ -742,6 +774,7 @@ def _revise_sum_constraint_domains(
     values: tuple[LogicVar | int, ...],
     value_domains: tuple[frozenset[int], ...],
     domains: dict[LogicVar, frozenset[int]],
+    relation: FdOperator = "eq",
 ) -> tuple[dict[LogicVar, frozenset[int]] | None, bool]:
     """Prune sum domains by checking each candidate against interval bounds."""
 
@@ -762,7 +795,12 @@ def _revise_sum_constraint_domains(
             allowed = frozenset(
                 candidate
                 for candidate in current_domain
-                if min_total <= candidate <= max_total
+                if _range_has_relation_support(
+                    min_total,
+                    max_total,
+                    relation,
+                    frozenset({candidate}),
+                )
             )
         else:
             other_min = min_total - term_mins[index]
@@ -770,9 +808,11 @@ def _revise_sum_constraint_domains(
             allowed = frozenset(
                 candidate
                 for candidate in current_domain
-                if any(
-                    other_min <= result - candidate <= other_max
-                    for result in result_domain
+                if _range_has_relation_support(
+                    other_min + candidate,
+                    other_max + candidate,
+                    relation,
+                    result_domain,
                 )
             )
         if not allowed:
@@ -782,6 +822,34 @@ def _revise_sum_constraint_domains(
             changed = True
 
     return updated, changed
+
+
+def _range_has_relation_support(
+    low: int,
+    high: int,
+    relation: FdOperator,
+    target_domain: frozenset[int],
+) -> bool:
+    """Return True if any integer in an interval can relate to a target."""
+
+    if relation == "eq":
+        return any(low <= target <= high for target in target_domain)
+    if relation == "neq":
+        return bool(target_domain) and (
+            low < high
+            or len(target_domain) > 1
+            or low not in target_domain
+        )
+    if relation == "lt":
+        return low < max(target_domain)
+    if relation == "le":
+        return low <= max(target_domain)
+    if relation == "gt":
+        return high > min(target_domain)
+    if relation == "ge":
+        return high >= min(target_domain)
+    msg = f"unknown finite-domain relation {relation}"
+    raise ValueError(msg)
 
 
 def _linear_bounds(coefficient: int, domain: frozenset[int]) -> tuple[int, int]:
@@ -796,6 +864,7 @@ def _revise_scalar_product_constraint_domains(
     values: tuple[LogicVar | int, ...],
     value_domains: tuple[frozenset[int], ...],
     domains: dict[LogicVar, frozenset[int]],
+    relation: FdOperator = "eq",
 ) -> tuple[dict[LogicVar, frozenset[int]] | None, bool]:
     """Prune weighted-sum domains with interval bounds."""
 
@@ -829,7 +898,12 @@ def _revise_scalar_product_constraint_domains(
         allowed_result = frozenset(
             candidate
             for candidate in result_domain
-            if min_total <= candidate <= max_total
+            if _range_has_relation_support(
+                min_total,
+                max_total,
+                relation,
+                frozenset({candidate}),
+            )
         )
         if not allowed_result:
             return None, False
@@ -848,15 +922,73 @@ def _revise_scalar_product_constraint_domains(
         allowed = frozenset(
             candidate
             for candidate in current_domain
-            if any(
-                other_min <= result - (coefficient * candidate) <= other_max
-                for result in result_domain
+            if _range_has_relation_support(
+                other_min + (coefficient * candidate),
+                other_max + (coefficient * candidate),
+                relation,
+                result_domain,
             )
         )
         if not allowed:
             return None, False
         if allowed != current_domain:
             updated[value] = allowed
+            changed = True
+
+    return updated, changed
+
+
+def _revise_element_constraint_domains(
+    values: tuple[LogicVar | int, ...],
+    value_domains: tuple[frozenset[int], ...],
+    domains: dict[LogicVar, frozenset[int]],
+) -> tuple[dict[LogicVar, frozenset[int]] | None, bool]:
+    """Prune domains for the 1-based CLP(FD) element global constraint."""
+
+    if len(values) < 3:
+        return None, False
+    index_value, *item_values, target_value = values
+    index_domain, *item_domains, target_domain = value_domains
+    indexed_items = tuple(enumerate(item_domains, start=1))
+    allowed_index = frozenset(
+        index
+        for index in index_domain
+        if 1 <= index <= len(item_domains)
+        and bool(item_domains[index - 1] & target_domain)
+    )
+    if not allowed_index:
+        return None, False
+
+    allowed_target = frozenset(
+        candidate
+        for candidate in target_domain
+        if any(
+            candidate in item_domain
+            for index, item_domain in indexed_items
+            if index in allowed_index
+        )
+    )
+    if not allowed_target:
+        return None, False
+
+    updated = dict(domains)
+    changed = False
+    if isinstance(index_value, LogicVar) and allowed_index != index_domain:
+        updated[index_value] = allowed_index
+        changed = True
+    if isinstance(target_value, LogicVar) and allowed_target != target_domain:
+        updated[target_value] = allowed_target
+        changed = True
+
+    if len(allowed_index) == 1:
+        (selected_index,) = allowed_index
+        item_value = item_values[selected_index - 1]
+        item_domain = item_domains[selected_index - 1]
+        allowed_item = item_domain & allowed_target
+        if not allowed_item:
+            return None, False
+        if isinstance(item_value, LogicVar) and allowed_item != item_domain:
+            updated[item_value] = allowed_item
             changed = True
 
     return updated, changed
@@ -946,12 +1078,28 @@ def _revise_constraint_domains(
         )
     if constraint.operator == "sum":
         return _revise_sum_constraint_domains(values, known_domains, domains)
+    if constraint.operator.startswith("sum_"):
+        return _revise_sum_constraint_domains(
+            values,
+            known_domains,
+            domains,
+            constraint.operator.removeprefix("sum_"),
+        )
     if constraint.operator == "scalar_product":
         return _revise_scalar_product_constraint_domains(
             values,
             known_domains,
             domains,
         )
+    if constraint.operator.startswith("scalar_product_"):
+        return _revise_scalar_product_constraint_domains(
+            values,
+            known_domains,
+            domains,
+            constraint.operator.removeprefix("scalar_product_"),
+        )
+    if constraint.operator == "element":
+        return _revise_element_constraint_domains(values, known_domains, domains)
 
     msg = f"unknown finite-domain constraint {constraint.operator}"
     raise ValueError(msg)
@@ -1301,59 +1449,115 @@ def fd_mulo(left: object, right: object, result: object) -> GoalExpr:
     return _fd_constrainto("mul", left, right, result)
 
 
-def _sum_terms_goal(terms_value: tuple[Term, ...], result: object) -> GoalExpr:
+_FD_RELATION_NAMES: dict[str, FdOperator] = {
+    "#=": "eq",
+    "=": "eq",
+    "eq": "eq",
+    "#\\=": "neq",
+    "neq": "neq",
+    "#<": "lt",
+    "lt": "lt",
+    "#=<": "le",
+    "le": "le",
+    "#>": "gt",
+    "gt": "gt",
+    "#>=": "ge",
+    "ge": "ge",
+}
+
+
+def _fd_relation_name(operator_value: object) -> FdOperator | None:
+    """Normalize a Prolog-style CLP(FD) relation operator."""
+
+    if isinstance(operator_value, str):
+        return _FD_RELATION_NAMES.get(operator_value)
+    if isinstance(operator_value, Atom) and operator_value.symbol.namespace is None:
+        return _FD_RELATION_NAMES.get(operator_value.symbol.name)
+    return None
+
+
+def _sum_terms_goal(
+    terms_value: tuple[Term, ...],
+    operator: FdOperator,
+    result: object,
+) -> GoalExpr:
     """Create a sum goal for already materialized finite-domain terms."""
 
-    return _fd_constrainto("sum", *terms_value, result)
+    constraint_operator = "sum" if operator == "eq" else f"sum_{operator}"
+    return _fd_constrainto(constraint_operator, *terms_value, result)
 
 
-def fd_sumo(terms_value: object, result: object) -> GoalExpr:
-    """Constrain finite-domain terms so their sum equals ``result``."""
+def fd_sum_relationo(
+    terms_value: object,
+    operator_value: object,
+    result: object,
+) -> GoalExpr:
+    """Constrain a finite-domain sum against ``result`` with a relation."""
+
+    operator = _fd_relation_name(operator_value)
+    if operator is None:
+        return failo()
 
     if isinstance(terms_value, list | tuple):
-        return _sum_terms_goal(tuple(terms_value), result)
+        return _sum_terms_goal(tuple(terms_value), operator, result)
 
     def run_logic_list(
         program_value: Program,
         state: State,
         args: NativeArgs,
     ) -> Iterator[State]:
-        terms_term, result_term = args
+        terms_term, _operator_term, result_term = args
         items = _proper_list_items(_reified(terms_term, state))
         if items is None:
             return
         yield from solve_from(
             program_value,
-            _sum_terms_goal(tuple(items), result_term),
+            _sum_terms_goal(tuple(items), operator, result_term),
             state,
         )
 
-    return native_goal(run_logic_list, terms_value, result)
+    return native_goal(run_logic_list, terms_value, operator_value, result)
+
+
+def fd_sumo(terms_value: object, result: object) -> GoalExpr:
+    """Constrain finite-domain terms so their sum equals ``result``."""
+
+    return fd_sum_relationo(terms_value, "eq", result)
 
 
 def _scalar_product_terms_goal(
     coeffs: tuple[Term, ...],
     terms_value: tuple[Term, ...],
+    operator: FdOperator,
     result: object,
 ) -> GoalExpr:
     """Create a weighted-sum goal for already materialized terms."""
 
     if len(coeffs) != len(terms_value):
         return failo()
-    return _fd_constrainto("scalar_product", *coeffs, *terms_value, result)
+    constraint_operator = (
+        "scalar_product" if operator == "eq" else f"scalar_product_{operator}"
+    )
+    return _fd_constrainto(constraint_operator, *coeffs, *terms_value, result)
 
 
-def fd_scalar_producto(
+def fd_scalar_product_relationo(
     coeffs_value: object,
     terms_value: object,
+    operator_value: object,
     result: object,
 ) -> GoalExpr:
-    """Constrain finite-domain terms so ``sum(Coeff * Term) == result``."""
+    """Constrain a weighted finite-domain sum with a relation."""
+
+    operator = _fd_relation_name(operator_value)
+    if operator is None:
+        return failo()
 
     if isinstance(coeffs_value, list | tuple) and isinstance(terms_value, list | tuple):
         return _scalar_product_terms_goal(
             tuple(coeffs_value),
             tuple(terms_value),
+            operator,
             result,
         )
 
@@ -1362,7 +1566,7 @@ def fd_scalar_producto(
         state: State,
         args: NativeArgs,
     ) -> Iterator[State]:
-        coeffs_term, terms_term, result_term = args
+        coeffs_term, terms_term, _operator_term, result_term = args
         coeff_items = _proper_list_items(_reified(coeffs_term, state))
         term_items = _proper_list_items(_reified(terms_term, state))
         if coeff_items is None or term_items is None:
@@ -1372,12 +1576,65 @@ def fd_scalar_producto(
             _scalar_product_terms_goal(
                 tuple(coeff_items),
                 tuple(term_items),
+                operator,
                 result_term,
             ),
             state,
         )
 
-    return native_goal(run_logic_lists, coeffs_value, terms_value, result)
+    return native_goal(
+        run_logic_lists,
+        coeffs_value,
+        terms_value,
+        operator_value,
+        result,
+    )
+
+
+def fd_scalar_producto(
+    coeffs_value: object,
+    terms_value: object,
+    result: object,
+) -> GoalExpr:
+    """Constrain finite-domain terms so ``sum(Coeff * Term) == result``."""
+
+    return fd_scalar_product_relationo(coeffs_value, terms_value, "eq", result)
+
+
+def _element_terms_goal(
+    index: object,
+    items: tuple[Term, ...],
+    value: object,
+) -> GoalExpr:
+    """Create an element goal for already materialized finite-domain terms."""
+
+    if not items:
+        return failo()
+    return _fd_constrainto("element", index, *items, value)
+
+
+def fd_elemento(index: object, items_value: object, value: object) -> GoalExpr:
+    """Constrain ``value`` to equal the 1-based element at ``index``."""
+
+    if isinstance(items_value, list | tuple):
+        return _element_terms_goal(index, tuple(items_value), value)
+
+    def run_logic_list(
+        program_value: Program,
+        state: State,
+        args: NativeArgs,
+    ) -> Iterator[State]:
+        index_term, items_term, value_term = args
+        items = _proper_list_items(_reified(items_term, state))
+        if items is None:
+            return
+        yield from solve_from(
+            program_value,
+            _element_terms_goal(index_term, tuple(items), value_term),
+            state,
+        )
+
+    return native_goal(run_logic_list, index, items_value, value)
 
 
 def _all_different_terms_goal(terms_value: tuple[Term, ...]) -> GoalExpr:

@@ -294,6 +294,27 @@ class TestPrologVMStress:
             {"X": num(0), "Y": num(4)},
         ]
 
+    def test_clpfd_modeling_globals_run_through_vm(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            ?- [I,X,Y,Z] ins 1..4,
+               I #= 2,
+               element(I, [X,Y,Z], 4),
+               sum([X,Y,Z], #=<, 8),
+               scalar_product([2,1,1], [X,Y,Z], #>, 8),
+               all_different([X,Y,Z]),
+               labeling([], [I,X,Y,Z]).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert [answer.as_dict() for answer in answers] == [
+            {"I": num(2), "X": num(1), "Y": num(4), "Z": num(3)},
+            {"I": num(2), "X": num(2), "Y": num(4), "Z": num(1)},
+            {"I": num(2), "X": num(3), "Y": num(4), "Z": num(1)},
+        ]
+
     def test_initialized_named_answers_keep_runtime_assertions_visible(self) -> None:
         compiled = compile_swi_prolog_source(
             """
