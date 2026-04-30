@@ -1,5 +1,55 @@
 # Changelog — ir-to-beam
 
+## 0.4.0 — 2026-04-30 — TW03 Phase 3d (BEAM heap primitives)
+
+Implements the BEAM-side lowering for the eight TW03 Phase 3a heap
+opcodes.  An IR program using any heap opcode now compiles to a
+real BEAM module that runs on stock `erl` and produces correct
+list-walking output.
+
+BEAM's the easiest of the three native backends here because cons
+cells and atoms are first-class BEAM terms with native opcodes.
+No "runtime classes" needed — we just emit the right opcode for
+each IR op.
+
+### Added — eight opcode lowerings
+
+| IR op | BEAM emission |
+|---|---|
+| `MAKE_CONS dst, head, tail` | `test_heap 2 0; put_list y{head}, y{tail}, y{dst}` |
+| `CAR dst, src` | `get_hd y{src}, y{dst}` |
+| `CDR dst, src` | `get_tl y{src}, y{dst}` |
+| `IS_NULL dst, src` | `is_nil F y{src}; move {integer,1}, y{dst}; jump END; F: move {integer,0}, y{dst}; END:` |
+| `IS_PAIR dst, src` | `is_nonempty_list F y{src}; …` (same true/false dance) |
+| `IS_SYMBOL dst, src` | `is_atom F y{src}; …` |
+| `MAKE_SYMBOL dst, name_label` | `move {atom, idx}, y{dst}` (atom interned via `builder.atoms.add`) |
+| `LOAD_NIL dst` | `move {atom, 0}, y{dst}` (atom 0 = nil) |
+
+### Added — three new BEAM opcode constants
+
+`_OP_IS_ATOM` (48), `_OP_IS_NIL` (52), `_OP_IS_NONEMPTY_LIST` (56).
+Names line up with `beam_opcode_metadata.catalog`.
+
+### Test additions
+
+- 8 new structural unit tests covering each opcode's lowering
+  shape (asserts on emitted opcode bytes + atom-table contents).
+- 2 new arity-validation tests (MAKE_CONS / LOAD_NIL with wrong
+  operand counts get a clear diagnostic).
+- 2 new real-`erl` end-to-end tests:
+  - `test_heap_list_of_ints_length_returns_3` — builds
+    `[1, 2, 3]` via MAKE_CONS / LOAD_NIL, walks via CDR /
+    IS_NULL, returns the integer 3.
+  - `test_heap_make_symbol_returns_atom` — `MAKE_SYMBOL` with
+    name `foo` returns the atom `foo` from real `erl`.
+- All 41 BEAM tests pass; coverage 88%.
+
+### Limitations
+
+None — BEAM atoms are global per VM (so symbol interning is
+free), nil is a first-class BEAM term, and cons cells get
+reclaimed by BEAM's own GC.  Phase 4 (GC) is automatic on BEAM.
+
 ## 0.3.0 — 2026-04-29 — TW03 Phase 2 (BEAM closures)
 
 ### Added — ``MAKE_CLOSURE`` and ``APPLY_CLOSURE`` lowering
