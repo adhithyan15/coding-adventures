@@ -1,18 +1,24 @@
 """
 Parameter binding — substitute placeholders into SQL source text.
 
-PEP 249 ``paramstyle``: this driver supports both ``"qmark"`` (``?``) and
-``"named"`` (``:name``) styles, matching the stdlib ``sqlite3`` module.
+PEP 249 ``paramstyle``: this driver supports all three positional /
+ordinal styles: ``"qmark"`` (``?``), ``"numeric"`` (``:N``), and
+``"named"`` (``:name``).  ``sqlite3`` itself accepts the same set.
 
-* ``qmark``: caller passes a ``Sequence``.  Each ``?`` consumes the next
+* ``qmark`` — caller passes a ``Sequence``.  Each ``?`` consumes the next
   positional parameter.  Arity must match exactly.
-* ``named``: caller passes a ``Mapping``.  Each ``:identifier`` is replaced
-  by ``parameters[identifier]``.  A missing key raises ``ProgrammingError``.
+* ``numeric`` — caller passes a ``Sequence``.  Each ``:N`` (1-indexed)
+  binds to ``parameters[N - 1]``.  ``N`` may be reused; out-of-range or
+  ``:0`` raises ``ProgrammingError``.
+* ``named`` — caller passes a ``Mapping``.  Each ``:identifier`` is
+  replaced by ``parameters[identifier]``.  Missing keys raise
+  ``ProgrammingError``.
 
-Mixing both styles in one statement is rejected — pick one paramstyle per
-statement.  Inside string literals (``'...'``, with backslash escapes) and
-comments (``--...\\n`` and ``/* ... */``) the scanner does *not* count
-placeholders — those aren't parameter markers.
+The three styles are mutually exclusive within a single statement —
+mixing them raises ``ProgrammingError``.  Inside string literals
+(``'...'``, with backslash escapes) and comments (``--...\\n`` and
+``/* ... */``) the scanner does *not* count placeholders — those aren't
+parameter markers.
 
 Type mapping — the output must parse as a valid SQL literal:
 
@@ -42,21 +48,23 @@ _IDENT_CONT = re.compile(r"[A-Za-z0-9_]")
 
 
 def substitute(sql: str, parameters: Sequence[Any] | Mapping[str, Any]) -> str:
-    """Return ``sql`` with each ``?`` or ``:name`` replaced by a SQL literal.
+    """Return ``sql`` with each placeholder replaced by a SQL literal.
 
     The paramstyle is decided from the type of *parameters*:
 
-    * ``Sequence`` (tuple, list, …) → qmark style.  Every ``?`` in the SQL
-      consumes one positional parameter; the count must match exactly.
-    * ``Mapping`` (dict, …) → named style.  Every ``:identifier`` is looked
-      up by key in *parameters*.  Missing keys raise ``ProgrammingError``.
-
-    Mixing ``?`` and ``:name`` markers in the same statement is rejected.
+    * ``Sequence`` (tuple, list, …) → qmark style (``?``) and/or numeric
+      style (``:N``, 1-indexed).  ``?`` consumes the next positional value;
+      ``:N`` looks up ``parameters[N - 1]``.  qmark and numeric cannot be
+      mixed in one statement.
+    * ``Mapping`` (dict, …) → named style (``:identifier``).
 
     Raises :class:`ProgrammingError` on any of:
       * arity mismatch (qmark)
+      * out-of-range index (numeric)
       * unknown key (named)
-      * mixed paramstyle in one statement
+      * mixed paramstyles in one statement (any pair of qmark/numeric/named)
+      * wrong container for a placeholder (mapping with ``?``/``:N``, or
+        sequence with ``:name``)
       * unsupported parameter type
     """
     is_mapping = isinstance(parameters, Mapping) and not isinstance(parameters, str | bytes)
@@ -65,6 +73,7 @@ def substitute(sql: str, parameters: Sequence[Any] | Mapping[str, Any]) -> str:
     n = len(sql)
     pos_idx = 0
     seen_qmark = False
+    seen_numeric = False
     seen_named = False
 
     while i < n:
@@ -107,9 +116,10 @@ def substitute(sql: str, parameters: Sequence[Any] | Mapping[str, Any]) -> str:
 
         # Qmark placeholder.
         if ch == "?":
-            if seen_named:
+            if seen_named or seen_numeric:
                 raise ProgrammingError(
-                    "cannot mix '?' and ':name' parameter styles in one statement"
+                    "cannot mix '?', ':N', and ':name' parameter styles "
+                    "in one statement"
                 )
             seen_qmark = True
             if is_mapping:
@@ -127,6 +137,41 @@ def substitute(sql: str, parameters: Sequence[Any] | Mapping[str, Any]) -> str:
             i += 1
             continue
 
+        # Numeric placeholder ``:N`` (1-indexed positional).  PEP 249 calls
+        # this the ``"numeric"`` paramstyle; ``sqlite3`` accepts it too.
+        # Disjoint from the named branch below — that branch requires the
+        # next char to be an identifier-start (letter or underscore), this
+        # one requires a digit.
+        if ch == ":" and i + 1 < n and sql[i + 1].isdigit():
+            j = i + 1
+            while j < n and sql[j].isdigit():
+                j += 1
+            number = int(sql[i + 1 : j])
+            if seen_qmark or seen_named:
+                raise ProgrammingError(
+                    "cannot mix '?', ':N', and ':name' parameter styles "
+                    "in one statement"
+                )
+            seen_numeric = True
+            if is_mapping:
+                raise ProgrammingError(
+                    f"SQL has numeric parameter ':{number}' but parameters "
+                    f"is a mapping; pass a sequence for numeric style"
+                )
+            if number < 1:
+                raise ProgrammingError(
+                    f"numeric parameter ':{number}' is invalid — "
+                    f"PEP 249 numeric placeholders are 1-indexed"
+                )
+            if number > len(parameters):
+                raise ProgrammingError(
+                    f"numeric parameter ':{number}' is out of range "
+                    f"(only {len(parameters)} parameters supplied)"
+                )
+            out.append(_to_sql_literal(parameters[number - 1]))
+            i = j
+            continue
+
         # Named placeholder ``:identifier``.  Only treat as a placeholder if
         # the next character looks like the start of an identifier.  This
         # avoids false positives in expressions like ``a::INT`` (Postgres-
@@ -140,11 +185,12 @@ def substitute(sql: str, parameters: Sequence[Any] | Mapping[str, Any]) -> str:
             while j < n and _IDENT_CONT.match(sql[j]):
                 j += 1
             name = sql[i + 1 : j]
-            seen_named = True
-            if seen_qmark:
+            if seen_qmark or seen_numeric:
                 raise ProgrammingError(
-                    "cannot mix '?' and ':name' parameter styles in one statement"
+                    "cannot mix '?', ':N', and ':name' parameter styles "
+                    "in one statement"
                 )
+            seen_named = True
             if not is_mapping:
                 raise ProgrammingError(
                     f"SQL has named parameter ':{name}' but parameters is not "
@@ -167,8 +213,16 @@ def substitute(sql: str, parameters: Sequence[Any] | Mapping[str, Any]) -> str:
             f"too many parameters supplied: SQL has {pos_idx} placeholders, "
             f"got {len(parameters)}"
         )
-    # For an empty SQL with a non-empty sequence, also flag.
-    if not seen_qmark and not seen_named and not is_mapping and len(parameters) > 0:
+    # For an empty SQL with a non-empty sequence, also flag.  ``seen_numeric``
+    # statements are exempt — numeric style does not consume sequentially,
+    # so "extra" trailing values are allowed (matching sqlite3 semantics).
+    if (
+        not seen_qmark
+        and not seen_named
+        and not seen_numeric
+        and not is_mapping
+        and len(parameters) > 0
+    ):
         raise ProgrammingError(
             f"too many parameters supplied: SQL has 0 placeholders, "
             f"got {len(parameters)}"

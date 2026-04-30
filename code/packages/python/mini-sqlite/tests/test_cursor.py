@@ -183,3 +183,34 @@ def test_bytes_param_round_trip():
     conn.commit()
     rows = conn.execute("SELECT id, data FROM blobs ORDER BY id").fetchall()
     assert rows == [(1, b"\xde\xad\xbe\xef"), (2, b"")]
+
+
+def test_parameterised_select_with_numeric_params():
+    """End-to-end: ``:N`` placeholders bound from a sequence (PEP 249 numeric)."""
+    conn = _seeded()
+    cur = conn.execute(
+        "SELECT name FROM employees WHERE dept = :1 OR dept = :2",
+        ("eng", "sales"),
+    )
+    names = sorted(row[0] for row in cur)
+    assert names == ["Alice", "Bob", "Carol"]
+
+
+def test_parameterised_insert_with_numeric_params():
+    conn = _seeded()
+    conn.execute(
+        "INSERT INTO employees (id, name, dept) VALUES (:1, :2, :3)",
+        (99, "Dan", "ops"),
+    )
+    cur = conn.execute("SELECT name FROM employees WHERE id = :1", (99,))
+    assert cur.fetchone() == ("Dan",)
+
+
+def test_numeric_param_reused_in_same_statement():
+    conn = _seeded()
+    cur = conn.execute(
+        "SELECT name FROM employees WHERE dept = :1 OR name = :1",
+        ("eng",),
+    )
+    names = sorted(row[0] for row in cur)
+    assert names == ["Alice", "Bob"]

@@ -181,12 +181,10 @@ class TestNamedParameters:
         out = substitute("SELECT :col1, :col2", {"col1": 1, "col2": 2})
         assert out == "SELECT 1, 2"
 
-    def test_leading_digit_after_colon_is_not_named(self):
-        """``:1`` is *numeric* style — not supported here, must not consume."""
-        # We expect substitute to leave ``:1`` untouched (then parser will
-        # decide how to handle it).  The mapping has no key '1' anyway.
-        out = substitute("SELECT :1", {})
-        assert out == "SELECT :1"
+    def test_leading_digit_with_mapping_raises(self):
+        """``:1`` is numeric style — using it with a Mapping raises."""
+        with pytest.raises(mini_sqlite.ProgrammingError, match="numeric"):
+            substitute("SELECT :1", {})
 
     def test_qmark_with_mapping_raises(self):
         with pytest.raises(mini_sqlite.ProgrammingError, match="mapping"):
@@ -212,3 +210,89 @@ class TestNamedParameters:
 
     def test_empty_mapping_with_no_placeholders(self):
         assert substitute("SELECT 1", {}) == "SELECT 1"
+
+
+# ---------------------------------------------------------------------------
+# Numeric parameter style (``:N``, 1-indexed)
+# ---------------------------------------------------------------------------
+
+
+class TestNumericParameters:
+    """``:N`` placeholders bound from a Sequence by 1-indexed position."""
+
+    def test_single_numeric_param(self):
+        assert substitute("SELECT :1", (42,)) == "SELECT 42"
+
+    def test_multiple_distinct_numeric_params(self):
+        out = substitute(
+            "SELECT :1, :2, :3", (1, 2.5, "hi"),
+        )
+        assert out == "SELECT 1, 2.5, 'hi'"
+
+    def test_same_numeric_param_used_twice(self):
+        """A numeric placeholder may appear more than once."""
+        out = substitute(
+            "SELECT * FROM t WHERE x = :1 OR y = :1", (7,),
+        )
+        assert out == "SELECT * FROM t WHERE x = 7 OR y = 7"
+
+    def test_extra_sequence_values_are_allowed(self):
+        """Numeric style does not require all values to be referenced.
+
+        Matches sqlite3 semantics: extra trailing values in the sequence
+        are silently ignored when only some indices are used.
+        """
+        out = substitute("SELECT :1", (5, 99, 100))
+        assert out == "SELECT 5"
+
+    def test_out_of_range_raises(self):
+        with pytest.raises(mini_sqlite.ProgrammingError, match="out of range"):
+            substitute("SELECT :3", (1, 2))
+
+    def test_zero_index_raises(self):
+        """Numeric style is 1-indexed; ``:0`` is invalid."""
+        with pytest.raises(mini_sqlite.ProgrammingError, match="1-indexed"):
+            substitute("SELECT :0", (1,))
+
+    def test_numeric_inside_string_literal_is_ignored(self):
+        out = substitute(
+            "SELECT ':1 is not bound' WHERE y = :1", (5,),
+        )
+        assert out == "SELECT ':1 is not bound' WHERE y = 5"
+
+    def test_numeric_inside_line_comment_is_ignored(self):
+        out = substitute(
+            "SELECT 1 -- :2\nWHERE x = :1", (9,),
+        )
+        assert out == "SELECT 1 -- :2\nWHERE x = 9"
+
+    def test_numeric_inside_block_comment_is_ignored(self):
+        out = substitute(
+            "SELECT /* :2 */ :1", (9,),
+        )
+        assert out == "SELECT /* :2 */ 9"
+
+    def test_multi_digit_index(self):
+        out = substitute("SELECT :12", tuple(range(20)))
+        assert out == "SELECT 11"  # 1-indexed → parameters[11]
+
+    def test_numeric_with_mapping_raises(self):
+        with pytest.raises(mini_sqlite.ProgrammingError, match="numeric"):
+            substitute("SELECT :1", {"1": "a"})
+
+    def test_numeric_mixed_with_qmark_raises(self):
+        with pytest.raises(mini_sqlite.ProgrammingError, match="mix"):
+            substitute("SELECT ?, :1", (1, 2))
+
+    def test_numeric_mixed_with_named_raises(self):
+        # ``:n`` (named) must come first so the mixing check fires before
+        # the wrong-container check.
+        with pytest.raises(mini_sqlite.ProgrammingError, match="mix"):
+            substitute("SELECT :n, :1", {"n": 5})
+
+    def test_numeric_value_types(self):
+        out = substitute(
+            "VALUES (:1, :2, :3, :4, :5)",
+            (None, 7, 1.5, "ok", True),
+        )
+        assert out == "VALUES (NULL, 7, 1.5, 'ok', 1)"

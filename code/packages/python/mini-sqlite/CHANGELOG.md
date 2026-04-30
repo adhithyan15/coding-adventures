@@ -1,5 +1,48 @@
 # Changelog
 
+## [1.11.0] - 2026-04-29
+
+### Added
+
+**Numeric parameter binding (`:N` style)**
+
+`Cursor.execute` and `Connection.execute` now accept the third PEP 249
+positional paramstyle: numeric `:N` placeholders bound from a `Sequence`.
+This completes the trio (`?`, `:N`, `:name`) supported by the stdlib
+`sqlite3` module.
+
+```python
+conn.execute(
+    "SELECT * FROM employees WHERE dept = :1 OR dept = :2",
+    ("eng", "sales"),
+)
+```
+
+- **`binding.substitute`** — recognises `:` followed by digits as a
+  numeric placeholder.  `N` is 1-indexed: `:1` → `parameters[0]`,
+  `:2` → `parameters[1]`, etc.
+- **Mutual exclusion** — qmark, numeric, and named styles cannot be
+  mixed in a single statement.  The error message now lists all three:
+  `"cannot mix '?', ':N', and ':name' parameter styles in one statement"`.
+- **Error cases** — `:0` raises `ProgrammingError("1-indexed")`;
+  `:N` with `N > len(parameters)` raises `out of range`; `:N` with a
+  mapping raises `numeric` (must be a sequence).
+- **Repeated indices** — `:1` may appear multiple times, all binding to
+  the same value.  Trailing unused values in the sequence are silently
+  ignored (matching `sqlite3`).
+- **`paramstyle`** docstring extended to mention all three runtime
+  styles; the declared value remains `"qmark"`.
+
+### Tests added
+
+- `tests/test_binding.py::TestNumericParameters` — 13 unit tests:
+  single/multi binding, repeated index, extra-value tolerance,
+  out-of-range, zero-index, scanner safe inside literals/comments,
+  multi-digit index, paramstyle exclusivity (mixing, mapping rejection),
+  value type rendering.
+- `tests/test_cursor.py` — 3 end-to-end tests via `Connection.execute`:
+  numeric SELECT, numeric INSERT, repeated index.
+
 ## [1.10.0] - 2026-04-29
 
 ### Added
