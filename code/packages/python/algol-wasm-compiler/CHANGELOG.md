@@ -83,6 +83,12 @@ All notable changes to this package will be documented in this file.
 - Executed standard real builtin function `sqrt` through the full parser,
   type-checker, IR, and WASM pipeline with negative-domain failure returning
   `0`.
+- Executed standard real builtin functions `sin`, `cos`, `arctan`, `ln`, and
+  `exp` through the full parser, type-checker, IR, and WASM pipeline using the
+  `compiler_math` host import ABI, with nonpositive `ln` arguments returning
+  `0` through the ALGOL runtime failure path.
+- Added a standard-real-math golden fixture covering imported real math and
+  output in one end-to-end program.
 - Added a convergence golden fixture that combines conditional expressions,
   exponentiation, chained assignment, by-name array summation, real arithmetic,
   and output in one end-to-end program.

@@ -25,6 +25,12 @@ can talk to the outside world through imported WASI functions.
   - random_get      — fill a buffer with cryptographically random bytes
   - sched_yield     — cooperative scheduler hint (no-op in single-thread)
 
+Compiler math imports
+─────────────────────
+The generic compiler pipeline may also import unary f64 math helpers from
+``compiler_math``. These are intentionally separate from WASI so generated
+modules have a small, explicit ABI for non-core WASM math operations.
+
 Design: pluggable clock and random
 ───────────────────────────────────
 Clock and random number generation are injected through abstract base
@@ -46,6 +52,7 @@ WASI uses numeric errno codes (same idea as POSIX):
 
 from __future__ import annotations
 
+import math
 import secrets
 import time
 from abc import ABC, abstractmethod
@@ -53,7 +60,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any
 
-from wasm_execution import LinearMemory, WasmValue, i32
+from wasm_execution import LinearMemory, WasmValue, f64, i32
 from wasm_types import FuncType, ValueType
 
 # ---------------------------------------------------------------------------
@@ -63,6 +70,15 @@ ESUCCESS = 0    # no error
 EBADF = 8       # bad file descriptor
 EINVAL = 28     # invalid argument  (e.g. unknown clock id)
 ENOSYS = 52     # function not (yet) implemented
+
+_COMPILER_MATH_MODULE = "compiler_math"
+_COMPILER_MATH_UNARY_F64: dict[str, Callable[[float], float]] = {
+    "f64_sin": math.sin,
+    "f64_cos": math.cos,
+    "f64_atan": math.atan,
+    "f64_ln": math.log,
+    "f64_exp": math.exp,
+}
 
 
 # ---------------------------------------------------------------------------
@@ -291,7 +307,9 @@ class WasiHost:
     # ------------------------------------------------------------------
 
     def resolve_function(self, module_name: str, name: str) -> Any | None:  # noqa: ANN401
-        """Return a _HostFunc for the named WASI function, or None."""
+        """Return a _HostFunc for a supported import, or None."""
+        if module_name == _COMPILER_MATH_MODULE:
+            return self._make_compiler_math(name)
         if module_name != "wasi_snapshot_preview1":
             return None
 
@@ -315,6 +333,19 @@ class WasiHost:
         # Everything else returns ENOSYS so the module can link but will
         # get an explicit "not implemented" error if called at runtime.
         return self._make_stub(name)
+
+    def _make_compiler_math(self, name: str) -> _HostFunc | None:
+        fn = _COMPILER_MATH_UNARY_F64.get(name)
+        if fn is None:
+            return None
+
+        def unary_f64_impl(args: list[WasmValue]) -> list[WasmValue]:
+            return [f64(fn(float(args[0].value)))]
+
+        return _HostFunc(
+            FuncType(params=(ValueType.F64,), results=(ValueType.F64,)),
+            unary_f64_impl,
+        )
 
     def resolve_global(self, _module_name: str, _name: str) -> Any | None:  # noqa: ANN401
         return None

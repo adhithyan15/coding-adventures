@@ -373,6 +373,52 @@ def test_compile_f64_sqrt() -> None:
     assert _runtime_result(module, "sqrt_real", [0.25]) == [0.5]
 
 
+@pytest.mark.parametrize(
+    ("opcode", "import_name", "arg", "expected"),
+    [
+        (IrOp.F64_SIN, "f64_sin", 0.0, 0.0),
+        (IrOp.F64_COS, "f64_cos", 0.0, 1.0),
+        (IrOp.F64_ATAN, "f64_atan", 1.0, 0.7853981633974483),
+        (IrOp.F64_LN, "f64_ln", 2.718281828459045, 1.0),
+        (IrOp.F64_EXP, "f64_exp", 1.0, 2.718281828459045),
+    ],
+)
+def test_compile_f64_unary_math_imports(
+    opcode: IrOp,
+    import_name: str,
+    arg: float,
+    expected: float,
+) -> None:
+    gen = IDGenerator()
+    program = IrProgram(entry_label="_fn_real_math")
+    program.add_instruction(
+        IrInstruction(IrOp.LABEL, [IrLabel("_fn_real_math")], id=-1)
+    )
+    program.add_instruction(
+        IrInstruction(opcode, [IrRegister(31), IrRegister(2)], id=gen.next())
+    )
+    program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+
+    module = IrToWasmCompiler().compile(
+        program,
+        function_signatures=[
+            FunctionSignature(
+                label="_fn_real_math",
+                param_count=1,
+                export_name="real_math",
+                param_types=(ValueType.F64,),
+                result_types=(ValueType.F64,),
+            )
+        ],
+    )
+
+    assert [(imp.module_name, imp.name) for imp in module.imports] == [
+        ("compiler_math", import_name)
+    ]
+    result = _runtime_result(module, "real_math", [arg], host=WasiHost())
+    assert result == pytest.approx([expected])
+
+
 def test_compile_function_call_and_run_it() -> None:
     gen = IDGenerator()
     program = IrProgram(entry_label="_start")

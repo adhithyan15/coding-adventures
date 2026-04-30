@@ -6,6 +6,10 @@
 
 - **`IrOp.F64_SQRT` (49)** — unary 64-bit floating square root
   (`dst = sqrt(src)`) for frontends that need standard real math builtins.
+- **`IrOp.F64_SIN` (50)**, **`IrOp.F64_COS` (51)**,
+  **`IrOp.F64_ATAN` (52)**, **`IrOp.F64_LN` (53)**, and
+  **`IrOp.F64_EXP` (54)** — unary 64-bit floating standard math operations
+  for frontends with real numeric libraries.
 
 ## [0.4.0] — 2026-04-29
 

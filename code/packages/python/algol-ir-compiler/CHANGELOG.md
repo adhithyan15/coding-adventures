@@ -89,6 +89,9 @@ All notable changes to this package will be documented in this file.
   existing integer/f64 IR operations.
 - Lowered standard real builtin function `sqrt` to integer-to-real promotion,
   a negative-domain runtime failure guard, and the `F64_SQRT` IR opcode.
+- Lowered standard real builtin functions `sin`, `cos`, `arctan`, `ln`, and
+  `exp` to integer-to-real promotion and the corresponding imported f64 math
+  IR opcodes, with nonpositive `ln` guarded by the runtime-failure path.
 
 ## [0.1.0] - 2026-04-20
 

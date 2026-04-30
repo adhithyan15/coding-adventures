@@ -35,9 +35,10 @@ expressions, and ALGOL-left-associative exponentiation when the exponent is an
 integer. Real bases with negative integer exponents are lowered through a
 reciprocal path; arbitrary real exponents remain outside this phase until the
 runtime has a real `pow` implementation instead of an approximation shortcut.
-Standard numeric functions `abs`, `sign`, `entier`, and `sqrt` lower directly
-to existing integer/f64 comparison, arithmetic, conversion, and square-root IR
-instructions.
+Standard numeric functions `abs`, `sign`, `entier`, `sqrt`, `sin`, `cos`,
+`arctan`, `ln`, and `exp` lower to existing integer/f64 comparison,
+arithmetic, conversion, native square-root IR, and imported standard real-math
+IR instructions.
 
 Scalar by-name parameters lower through a one-word cell in the callee frame.
 Passing a scalar variable as a by-name actual gives the callee a storage pointer,

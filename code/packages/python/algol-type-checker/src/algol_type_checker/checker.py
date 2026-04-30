@@ -24,7 +24,16 @@ STATIC = "static"
 PARAMETER_STORAGE = "parameter"
 MAX_ARRAY_DIMENSIONS = 4
 _OUTPUT_BUILTINS = {"print", "output"}
-_FIXED_RETURN_NUMERIC_BUILTINS = {"entier": INTEGER, "sign": INTEGER, "sqrt": REAL}
+_FIXED_RETURN_NUMERIC_BUILTINS = {
+    "entier": INTEGER,
+    "sign": INTEGER,
+    "sqrt": REAL,
+    "sin": REAL,
+    "cos": REAL,
+    "arctan": REAL,
+    "ln": REAL,
+    "exp": REAL,
+}
 _NUMERIC_BUILTINS = {"abs"} | set(_FIXED_RETURN_NUMERIC_BUILTINS)
 _READ_ONLY_BUILTINS = _OUTPUT_BUILTINS | _NUMERIC_BUILTINS
 

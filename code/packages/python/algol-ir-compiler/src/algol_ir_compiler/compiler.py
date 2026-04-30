@@ -115,6 +115,18 @@ _BUILTIN_ABS_LABEL = "__algol_builtin_abs"
 _BUILTIN_ENTIER_LABEL = "__algol_builtin_entier"
 _BUILTIN_SIGN_LABEL = "__algol_builtin_sign"
 _BUILTIN_SQRT_LABEL = "__algol_builtin_sqrt"
+_BUILTIN_SIN_LABEL = "__algol_builtin_sin"
+_BUILTIN_COS_LABEL = "__algol_builtin_cos"
+_BUILTIN_ARCTAN_LABEL = "__algol_builtin_arctan"
+_BUILTIN_LN_LABEL = "__algol_builtin_ln"
+_BUILTIN_EXP_LABEL = "__algol_builtin_exp"
+_BUILTIN_REAL_MATH_OPS = {
+    _BUILTIN_SIN_LABEL: IrOp.F64_SIN,
+    _BUILTIN_COS_LABEL: IrOp.F64_COS,
+    _BUILTIN_ARCTAN_LABEL: IrOp.F64_ATAN,
+    _BUILTIN_LN_LABEL: IrOp.F64_LN,
+    _BUILTIN_EXP_LABEL: IrOp.F64_EXP,
+}
 _WRITE_SYSCALL = 1
 
 
@@ -2837,6 +2849,7 @@ class AlgolIrCompiler:
             _BUILTIN_ENTIER_LABEL,
             _BUILTIN_SIGN_LABEL,
             _BUILTIN_SQRT_LABEL,
+            *_BUILTIN_REAL_MATH_OPS,
         }:
             return self._compile_builtin_numeric(node, call, scope)
         if call.parameter_symbol_id is not None:
@@ -3384,6 +3397,9 @@ class AlgolIrCompiler:
             return self._emit_builtin_sign(value, actual_type)
         if call.label == _BUILTIN_SQRT_LABEL:
             return self._emit_builtin_sqrt(value, actual_type, scope)
+        math_op = _BUILTIN_REAL_MATH_OPS.get(call.label)
+        if math_op is not None:
+            return self._emit_builtin_real_math(value, actual_type, math_op, scope)
         raise CompileError(f"unknown builtin numeric function {call.name!r}")
 
     def _emit_builtin_abs(self, value: int, actual_type: str) -> int:
@@ -3572,6 +3588,40 @@ class AlgolIrCompiler:
 
         result = self._fresh_reg()
         self._emit(IrOp.F64_SQRT, IrRegister(result), IrRegister(value))
+        return result
+
+    def _emit_builtin_real_math(
+        self,
+        value: int,
+        actual_type: str,
+        opcode: IrOp,
+        scope: _FrameScope,
+    ) -> int:
+        if actual_type == _INTEGER_TYPE:
+            real_value = self._fresh_reg()
+            self._emit(
+                IrOp.F64_FROM_I32,
+                IrRegister(real_value),
+                IrRegister(value),
+            )
+            value = real_value
+        elif actual_type != _REAL_TYPE:
+            raise CompileError(
+                f"builtin {opcode.name.lower()} does not support {actual_type}"
+            )
+
+        if opcode == IrOp.F64_LN:
+            nonpositive = self._fresh_reg()
+            self._emit(
+                IrOp.F64_CMP_LE,
+                IrRegister(nonpositive),
+                IrRegister(value),
+                IrRegister(self._const_f64_reg(0.0)),
+            )
+            self._emit_runtime_failure_guard(nonpositive, scope)
+
+        result = self._fresh_reg()
+        self._emit(opcode, IrRegister(result), IrRegister(value))
         return result
 
     def _emit_output_chars(self, text: str, scope: _FrameScope) -> None:
