@@ -682,6 +682,7 @@ fn validate_action(action: &str, token_names: &HashSet<String>) -> Result<()> {
         | "append_attribute_value_replacement"
         | "append_tag_name_replacement"
         | "append_attribute_name_replacement"
+        | "append_comment_replacement"
         | "create_start_tag"
         | "create_end_tag"
         | "create_comment"

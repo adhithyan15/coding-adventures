@@ -254,6 +254,28 @@
       ]
     },
     {
+      "description": "null characters are replaced in comments and bogus comments",
+      "input": "<!--a\u0000b--><!--\u0000--><!--a-\u0000b--><!--a--\u0000b--><!foo\u0000><!-\u0000>",
+      "output": [
+        ["Comment", "a\uFFFDb"],
+        ["Comment", "\uFFFD"],
+        ["Comment", "a-\uFFFDb"],
+        ["Comment", "a--\uFFFDb"],
+        ["Comment", "foo\uFFFD"],
+        ["Comment", "-\uFFFD"]
+      ],
+      "errors": [
+        {"code": "unexpected-null-character", "line": 1, "col": 6},
+        {"code": "unexpected-null-character", "line": 1, "col": 15},
+        {"code": "unexpected-null-character", "line": 1, "col": 25},
+        {"code": "unexpected-null-character", "line": 1, "col": 37},
+        {"code": "incorrectly-opened-comment", "line": 1, "col": 44},
+        {"code": "unexpected-null-character", "line": 1, "col": 47},
+        {"code": "incorrectly-opened-comment", "line": 1, "col": 52},
+        {"code": "unexpected-null-character", "line": 1, "col": 52}
+      ]
+    },
+    {
       "description": "plaintext state literalizes markup and character references",
       "initialStates": ["PLAINTEXT state"],
       "input": "hello <b>still text</b> &amp; literal",

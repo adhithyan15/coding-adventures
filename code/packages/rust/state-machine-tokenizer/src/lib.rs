@@ -497,6 +497,9 @@ impl Tokenizer {
                     })?;
                     self.append_comment(action, ch, true)?;
                 }
+                "append_comment_replacement" => {
+                    self.append_comment(action, '\u{FFFD}', false)?;
+                }
                 "append_doctype_name(current)" => {
                     let ch = current.ok_or_else(|| TokenizerError::MissingCurrentCodePoint {
                         action: action.clone(),

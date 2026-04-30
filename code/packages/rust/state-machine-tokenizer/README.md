@@ -60,6 +60,7 @@ Comments and doctypes:
 - `append_comment(current)`
 - `append_comment(current_lowercase)`
 - `append_comment(literal)`
+- `append_comment_replacement`
 - `create_doctype`
 - `append_doctype_name(current)`
 - `append_doctype_name(current_lowercase)`

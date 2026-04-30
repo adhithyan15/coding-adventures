@@ -4639,6 +4639,17 @@ actions = [
 
 [[transitions]]
 from = "comment_start"
+matcher = { literal = "\u0000" }
+to = "bogus_comment"
+actions = [
+  "parse_error(incorrectly-opened-comment)",
+  "parse_error(unexpected-null-character)",
+  "append_comment(-)",
+  "append_comment_replacement",
+]
+
+[[transitions]]
+from = "comment_start"
 matcher = { anything = true }
 to = "bogus_comment"
 actions = [
@@ -4670,6 +4681,12 @@ actions = ["parse_error(eof-in-comment)", "emit_current_token", "emit(EOF)"]
 
 [[transitions]]
 from = "comment_start_dash"
+matcher = { literal = "\u0000" }
+to = "comment"
+actions = ["parse_error(unexpected-null-character)", "append_comment_replacement"]
+
+[[transitions]]
+from = "comment_start_dash"
 matcher = { anything = true }
 to = "comment"
 actions = ["append_comment(current)"]
@@ -4691,6 +4708,12 @@ matcher = { eof = true }
 to = "done"
 consume = false
 actions = ["parse_error(eof-in-comment)", "emit_current_token", "emit(EOF)"]
+
+[[transitions]]
+from = "comment"
+matcher = { literal = "\u0000" }
+to = "comment"
+actions = ["parse_error(unexpected-null-character)", "append_comment_replacement"]
 
 [[transitions]]
 from = "comment"
@@ -4802,6 +4825,16 @@ actions = [
 
 [[transitions]]
 from = "comment_end_dash"
+matcher = { literal = "\u0000" }
+to = "comment"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "append_comment(-)",
+  "append_comment_replacement",
+]
+
+[[transitions]]
+from = "comment_end_dash"
 matcher = { anything = true }
 to = "comment"
 actions = ["append_comment(-)", "append_comment(current)"]
@@ -4833,6 +4866,16 @@ actions = [
   "append_comment(--)",
   "emit_current_token",
   "emit(EOF)",
+]
+
+[[transitions]]
+from = "comment_end"
+matcher = { literal = "\u0000" }
+to = "comment"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "append_comment(--)",
+  "append_comment_replacement",
 ]
 
 [[transitions]]
@@ -4884,6 +4927,12 @@ matcher = { eof = true }
 to = "done"
 consume = false
 actions = ["emit_current_token", "emit(EOF)"]
+
+[[transitions]]
+from = "bogus_comment"
+matcher = { literal = "\u0000" }
+to = "bogus_comment"
+actions = ["parse_error(unexpected-null-character)", "append_comment_replacement"]
 
 [[transitions]]
 from = "bogus_comment"

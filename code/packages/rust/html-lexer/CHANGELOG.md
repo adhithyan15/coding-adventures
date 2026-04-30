@@ -106,6 +106,9 @@ documented in this file.
   U+FFFD.
 - NULL characters in tag names and attribute names now recover with
   `unexpected-null-character` and append U+FFFD.
+- NULL characters in comments and bogus comments now recover with
+  `unexpected-null-character` and append U+FFFD while preserving pending comment
+  dashes.
 - One-dash markup declarations such as `<!->` and `<!-x>` now use
   incorrectly-opened bogus-comment recovery instead of empty-comment recovery.
 - Invalid tag-open characters now follow HTML recovery: stray `<` text is

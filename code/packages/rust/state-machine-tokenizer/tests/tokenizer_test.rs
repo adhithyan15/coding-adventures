@@ -250,6 +250,37 @@ fn tokenizer_builds_comment_tokens_with_current_and_literal_actions() {
 }
 
 #[test]
+fn tokenizer_appends_replacement_character_to_comments() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["!"]),
+            vec![EffectfulTransition::new(
+                "data",
+                EffectfulMatcher::Event("!".to_string()),
+                "done",
+            )
+            .with_effects(&[
+                "create_comment",
+                "append_comment(open)",
+                "append_comment_replacement",
+                "emit_current_token",
+            ])],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("!").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![Token::Comment("open\u{FFFD}".to_string())]
+    );
+}
+
+#[test]
 fn tokenizer_builds_doctypes_and_marks_force_quirks() {
     let mut tokenizer = Tokenizer::new(
         EffectfulStateMachine::new(
