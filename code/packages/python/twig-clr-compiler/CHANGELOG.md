@@ -1,5 +1,53 @@
 # Changelog — twig-clr-compiler
 
+## 0.3.0 — 2026-04-30 — TW03 Phase 3e (heap primitives from Twig source)
+
+Twig source containing `cons` / `car` / `cdr` / `null?` / `pair?` /
+`symbol?` / `'foo` / `nil` now compiles via the CLR backend.
+Builds on the Phase 3c heap-op lowering (which ships structural
+PE/CLI bytecode for the eight heap opcodes).
+
+End-to-end on real `dotnet` is deferred until CLR Phase 3c.5
+wires writer-side support for symbol-name string interning and
+the singleton Nil instance — until then heap programs compile to
+verifier-correct CIL but may not execute correctly.
+
+Mirrors twig-jvm-compiler v0.3.0 (TW03 Phase 3e for JVM) — same
+lambda-lifting + heap-builtin emission table, just routes to the
+CLR backend's Phase 3c lowering instead of the JVM Phase 3b path.
+
+### Added — heap-primitive emission
+
+- `nil` literal → `LOAD_NIL`.
+- `'foo` / `(quote foo)` → `MAKE_SYMBOL` with the symbol name as
+  an `IrLabel`.
+- `cons` → `MAKE_CONS dst, head, tail` (2 args).
+- `car` / `cdr` → `CAR` / `CDR` (1 arg each).
+- `null?` / `pair?` / `symbol?` → `IS_NULL` / `IS_PAIR` /
+  `IS_SYMBOL` (1 arg each, result is an int 0/1 ready to feed
+  BRANCH_Z).
+- `_HEAP_BUILTINS` table maps Twig source names to (op, arity)
+  pairs; the apply-site dispatches uniformly with arity validation.
+- Free-variable analysis treats `_HEAP_BUILTINS` as globals so
+  closures over `cons` / `car` / etc compile correctly.
+
+### Removed — obsolete rejection tests
+
+- `test_quoted_symbol_rejected` — now compiles to MAKE_SYMBOL.
+- `test_cons_rejected` — now compiles to MAKE_CONS.
+
+### Test additions
+
+- 8 new IR-shape tests covering each heap op's emission shape.
+- 2 new arity-validation tests.
+- All 61 tests pass; coverage 90%.
+
+### Limitations
+
+- End-to-end on real `dotnet` is deferred to Phase 3c.5 (writer-side
+  intern table for symbol names, singleton Nil instance).
+- `print` and `number?` builtins still raise (TW04 territory).
+
 ## 0.2.0 — 2026-04-29 — CLR02 Phase 2d (closures from Twig source)
 
 ### Added — anonymous lambdas and closure invocation
