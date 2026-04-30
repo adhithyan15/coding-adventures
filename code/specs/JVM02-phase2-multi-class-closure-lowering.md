@@ -189,13 +189,41 @@ This is a substantial change; suggested PR breakdown:
      and proves the JVM loads both without VerifyError.
 
 3. **Phase 2c** — ``MAKE_CLOSURE`` / ``APPLY_CLOSURE`` lowering
-   in ``ir-to-jvm-class-file``.  Pending.
-   - Object register pool extension.
-   - Per-lambda ``Closure_*.class`` emission.
-   - Bytecode for both new ops.
+   in ``ir-to-jvm-class-file``.  **Shipped (structural).**
+   - Per-lambda ``Closure_<name>.class`` artifacts via the new
+     ``build_closure_subclass_artifact()`` — fields per capture,
+     ``.ctor`` chains into ``Object::.ctor()`` and stores
+     captures, ``apply([I)I`` is a placeholder ``iconst_0;
+     ireturn``.
+   - ``MAKE_CLOSURE`` lowers to ``new Closure_<fn>; dup; iload
+     caps; invokespecial ctor`` then **pops the reference** —
+     int[] register convention can't hold object refs.
+   - ``APPLY_CLOSURE`` lowers to ``aconst_null; build int[] args;
+     invokeinterface Closure.apply([I)I; pop`` — the closure
+     ref isn't retrievable yet, so the placeholder null would
+     NPE at runtime.
+   - The full ``((make-adder 7) 35) → 42`` test ships as
+     ``xfail(strict=True)`` so the structural shape stays right
+     and it'll auto-flip to passing the moment the typed pool
+     lands.
 
-4. **Phase 2d** — ``twig-jvm-compiler`` accepts ``Lambda``.
-   Pending — gated on Phase 2c.
+4. **Phase 2c.5** (added during 2c implementation) — Object
+   register pool: parallel ``Object[] __ca_objregs`` static
+   field on the main class, public access so per-lambda
+   subclasses can read it.  Required for runtime end-to-end:
+   - MAKE_CLOSURE stores the new ref into ``__ca_objregs[dst]``
+     instead of popping.
+   - APPLY_CLOSURE reads ``aaload __ca_objregs[closure_reg]``
+     instead of pushing null.
+   - ADD_IMM 0 (the MOV idiom) copies the obj slot too.
+   - CALL caller-saves the obj slot like the int slot.
+   - Closure ``apply`` body wires through the lifted lambda's IR
+     (either via per-method local register frames or via
+     cross-class access to ``__ca_regs``).
+   Pending.
+
+5. **Phase 2d** — ``twig-jvm-compiler`` accepts ``Lambda``.
+   Pending — gated on Phase 2c.5.
    - Lambda lifting.
    - Free-var analysis (re-use ``twig.free_vars``).
    - JAR packaging via ``jvm-jar-writer``.

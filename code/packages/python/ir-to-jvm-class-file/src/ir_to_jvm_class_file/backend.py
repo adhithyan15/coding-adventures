@@ -12,7 +12,7 @@ import os
 import re
 import struct
 from contextlib import suppress
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Final
 
@@ -35,6 +35,7 @@ _CONSTANT_CLASS = 7
 _CONSTANT_STRING = 8
 _CONSTANT_FIELDREF = 9
 _CONSTANT_METHODREF = 10
+_CONSTANT_INTERFACE_METHODREF = 11
 _CONSTANT_NAME_AND_TYPE = 12
 
 _OP_ICONST_M1 = 0x02
@@ -57,6 +58,8 @@ _OP_BALOAD = 0x33
 _OP_IASTORE = 0x4F
 _OP_BASTORE = 0x54
 _OP_POP = 0x57
+_OP_DUP = 0x59
+_OP_ACONST_NULL = 0x01
 _OP_IADD = 0x60
 _OP_ISUB = 0x64
 _OP_IMUL = 0x68
@@ -78,9 +81,18 @@ _OP_IRETURN = 0xAC
 _OP_RETURN = 0xB1
 _OP_GETSTATIC = 0xB2
 _OP_PUTSTATIC = 0xB3
+_OP_GETFIELD = 0xB4
+_OP_PUTFIELD = 0xB5
 _OP_INVOKEVIRTUAL = 0xB6
+_OP_INVOKESPECIAL = 0xB7   # for chaining into super .ctor
 _OP_INVOKESTATIC = 0xB8
+_OP_INVOKEINTERFACE = 0xB9 # for closure apply dispatch (JVM02 Phase 2c)
+_OP_NEW = 0xBB             # for newobj of a closure subclass
 _OP_NEWARRAY = 0xBC
+_OP_ANEWARRAY = 0xBD       # reserved for closure pool init
+_OP_ALOAD_0 = 0x2A         # load `this` (or any aload short form)
+_OP_AASTORE = 0x53
+_OP_AALOAD = 0x32
 _OP_NOP = 0x00
 
 _ATYPE_INT = 10
@@ -111,13 +123,29 @@ class JvmBackendError(ValueError):
 
 @dataclass(frozen=True)
 class JvmBackendConfig:
-    """Configuration for JVM class-file lowering."""
+    """Configuration for JVM class-file lowering.
+
+    ``closure_free_var_counts`` declares which IR regions are
+    lifted-lambda bodies (TW03 Phase 2 / JVM02 Phase 2c).  Each
+    entry maps a region's name to its number of captured free
+    variables.  Regions in this map are routed to per-lambda
+    ``Closure_<name>`` subclasses via the multi-class output
+    instead of becoming methods on the main user class.
+
+    The lambda body sees a captures-first IR register layout
+    (matches what twig-jvm-compiler will produce and what BEAM
+    Phase 2 + CLR Phase 2c already use):
+
+      * ``r2..r{1+num_free}``                             — captures
+      * ``r{2+num_free}..r{1+num_free+explicit_arity}``   — explicit args
+    """
 
     class_name: str
     class_file_major: int = 49
     class_file_minor: int = 0
     emit_main_wrapper: bool = True
     syscall_arg_reg: int = 4  # register holding the SYSCALL print/read argument (Brainfuck=4, BASIC=0)
+    closure_free_var_counts: dict[str, int] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -295,6 +323,18 @@ class _ConstantPoolBuilder:
             + _u2(self.name_and_type(name, descriptor)),
         )
 
+    def interface_method_ref(
+        self, owner: str, name: str, descriptor: str,
+    ) -> int:
+        """``InterfaceMethodref`` constant — operand to
+        ``invokeinterface`` (JVMS §4.4.2)."""
+        return self._add(
+            ("InterfaceMethodref", owner, name, descriptor),
+            bytes([_CONSTANT_INTERFACE_METHODREF])
+            + _u2(self.class_ref(owner))
+            + _u2(self.name_and_type(name, descriptor)),
+        )
+
     def encode(self) -> bytes:
         return b"".join(self._entries)
 
@@ -424,9 +464,16 @@ class _JvmClassLowerer:
             self._build_store_word_method(),
             self._build_syscall_method(),
         ]
+        # Closure regions (lifted lambdas) become methods on their
+        # own ``Closure_<name>`` subclasses (built by
+        # ``build_closure_subclass_artifact`` in the multi-class
+        # path) — skip them here so the main user class doesn't
+        # double-host the body.
+        closure_region_names = set(self.config.closure_free_var_counts)
         methods.extend(
             self._build_callable_method(region, reg_count)
             for region in callable_regions
+            if region.name not in closure_region_names
         )
         if self.config.emit_main_wrapper:
             methods.append(self._build_main_method())
@@ -435,7 +482,10 @@ class _JvmClassLowerer:
         return JVMClassArtifact(
             class_name=self.config.class_name,
             class_bytes=class_bytes,
-            callable_labels=tuple(region.name for region in callable_regions),
+            callable_labels=tuple(
+                region.name for region in callable_regions
+                if region.name not in closure_region_names
+            ),
             data_offsets=data_offsets,
         )
 
@@ -467,6 +517,15 @@ class _JvmClassLowerer:
         for instruction in self.program.instructions:
             if instruction.opcode == IrOp.CALL:
                 target = _as_label(instruction.operands[0], "CALL target")
+                callable_names.add(target.name)
+            elif instruction.opcode == IrOp.MAKE_CLOSURE:
+                # MAKE_CLOSURE dst, fn_label, num_captured, capt0, ...
+                # The lambda body is a callable region too — invoked
+                # indirectly via ``invokeinterface Closure.apply([I)I``
+                # rather than directly via ``invokestatic``.
+                target = _as_label(
+                    instruction.operands[1], "MAKE_CLOSURE fn_label",
+                )
                 callable_names.add(target.name)
 
         if self.program.entry_label not in label_positions:
@@ -680,6 +739,149 @@ class _JvmClassLowerer:
             self._emit_push_int(builder, reg_idx)
             self._emit_iload(builder, reg_idx)
             builder.emit_opcode(_OP_IASTORE)
+
+    # ------------------------------------------------------------------
+    # JVM02 Phase 2c — closure op emission (structural)
+    # ------------------------------------------------------------------
+
+    def _emit_make_closure(
+        self,
+        builder: _BytecodeBuilder,
+        instruction: IrInstruction,
+    ) -> None:
+        """Emit ``new Closure_<fn>; dup; iload caps; invokespecial ctor``.
+
+        Phase 2c structural-only: the resulting reference is popped
+        because the existing register convention is int[] only and
+        can't hold an object reference.  Phase 2c.5 adds a parallel
+        ``Object[]`` pool to retain the reference; until then,
+        MAKE_CLOSURE compiles + verifies but the closure value is
+        not actually retrievable downstream.
+        """
+        if len(instruction.operands) < 3:
+            raise JvmBackendError(
+                f"MAKE_CLOSURE expects at least 3 operands "
+                f"(dst, fn_label, num_captured, capt...), got "
+                f"{len(instruction.operands)}"
+            )
+        # dst is unused at this phase — the reference is popped.
+        _as_register(instruction.operands[0], "MAKE_CLOSURE dst")
+        fn_label = _as_label(instruction.operands[1], "MAKE_CLOSURE fn_label")
+        num_captured = _as_immediate(
+            instruction.operands[2], "MAKE_CLOSURE num_captured",
+        ).value
+
+        configured = self.config.closure_free_var_counts.get(fn_label.name)
+        if configured is None:
+            raise JvmBackendError(
+                f"MAKE_CLOSURE references {fn_label.name!r} but no "
+                "closure region with that name is declared in "
+                "JvmBackendConfig.closure_free_var_counts"
+            )
+        if configured != num_captured:
+            raise JvmBackendError(
+                f"MAKE_CLOSURE for {fn_label.name!r}: num_captured="
+                f"{num_captured} but config.closure_free_var_counts "
+                f"says {configured}"
+            )
+        if len(instruction.operands) != 3 + num_captured:
+            raise JvmBackendError(
+                f"MAKE_CLOSURE for {fn_label.name!r}: num_captured="
+                f"{num_captured} but {len(instruction.operands) - 3} "
+                "capture operands provided"
+            )
+
+        sanitised = _sanitise_class_name_segment(fn_label.name)
+        closure_internal = f"coding_adventures/twig/runtime/Closure_{sanitised}"
+        ctor_descriptor = "(" + ("I" * num_captured) + ")V"
+
+        # new Closure_X
+        builder.emit_u2_instruction(
+            _OP_NEW, self.cp.class_ref(closure_internal),
+        )
+        # dup so the reference survives the ctor invocation
+        builder.emit_opcode(_OP_DUP)
+        # Push each capture by reading __ca_regs[capt_i].
+        for i in range(num_captured):
+            capt_reg = _as_register(
+                instruction.operands[3 + i], f"MAKE_CLOSURE capture {i}",
+            )
+            self._emit_reg_get(builder, capt_reg.index)
+        builder.emit_u2_instruction(
+            _OP_INVOKESPECIAL,
+            self.cp.method_ref(closure_internal, "<init>", ctor_descriptor),
+        )
+        # Phase 2c structural-only: discard the reference.  Phase 2c.5
+        # will replace this with an aastore into __ca_objregs[dst].
+        builder.emit_opcode(_OP_POP)
+
+    def _emit_apply_closure(
+        self,
+        builder: _BytecodeBuilder,
+        instruction: IrInstruction,
+    ) -> None:
+        """Emit closure-apply bytecode.
+
+        Phase 2c structural-only: pushes ``aconst_null`` instead of
+        the real closure reference (because the int[] register
+        convention can't hold one), then builds the int[] args
+        array and emits ``invokeinterface Closure.apply([I)I``.
+        The result is popped; ``dst`` is left unwritten.
+
+        At runtime this would NPE when the JVM tries to dispatch
+        through the null reference — that's why the integration
+        test for end-to-end semantics is xfail until Phase 2c.5.
+        The bytecode still verifies cleanly, which proves the
+        invokeinterface descriptor and the args-array construction
+        are correct.
+        """
+        if len(instruction.operands) < 3:
+            raise JvmBackendError(
+                f"APPLY_CLOSURE expects at least 3 operands "
+                f"(dst, closure, num_args, args...), got "
+                f"{len(instruction.operands)}"
+            )
+        # dst, closure_reg unused at this phase — see docstring.
+        _as_register(instruction.operands[0], "APPLY_CLOSURE dst")
+        _as_register(instruction.operands[1], "APPLY_CLOSURE closure_reg")
+        num_args = _as_immediate(
+            instruction.operands[2], "APPLY_CLOSURE num_args",
+        ).value
+
+        if len(instruction.operands) != 3 + num_args:
+            raise JvmBackendError(
+                f"APPLY_CLOSURE: num_args={num_args} but "
+                f"{len(instruction.operands) - 3} arg operands provided"
+            )
+
+        # Push placeholder closure reference.
+        builder.emit_opcode(_OP_ACONST_NULL)
+        # Build int[] args
+        self._emit_push_int(builder, num_args)
+        builder.emit_u1_instruction(_OP_NEWARRAY, _ATYPE_INT)
+        for i in range(num_args):
+            arg_reg = _as_register(
+                instruction.operands[3 + i], f"APPLY_CLOSURE arg {i}",
+            )
+            builder.emit_opcode(_OP_DUP)
+            self._emit_push_int(builder, i)
+            self._emit_reg_get(builder, arg_reg.index)
+            builder.emit_opcode(_OP_IASTORE)
+        # invokeinterface Closure.apply([I)I — count operand = 2
+        # (the receiver + the int[] arg, per JVMS §6.5.invokeinterface).
+        iface_method_ref = self.cp.interface_method_ref(
+            CLOSURE_INTERFACE_BINARY_NAME,
+            CLOSURE_INTERFACE_METHOD_NAME,
+            CLOSURE_INTERFACE_METHOD_DESCRIPTOR,
+        )
+        builder.emit_raw(
+            bytes([_OP_INVOKEINTERFACE])
+            + iface_method_ref.to_bytes(2, "big")
+            + bytes([2, 0])
+        )
+        # Phase 2c structural-only: discard the int result.  Phase 2c.5
+        # will store it into __ca_regs[dst].
+        builder.emit_opcode(_OP_POP)
 
     def _build_class_initializer(
         self,
@@ -1303,6 +1505,26 @@ class _JvmClassLowerer:
                 )
                 continue
 
+            if instruction.opcode == IrOp.MAKE_CLOSURE:
+                # MAKE_CLOSURE dst, fn_label, num_captured, capt0, ..., captN-1
+                # → new Closure_<fn>; dup; iload caps from __ca_regs;
+                #   invokespecial Closure_<fn>::<init>(I,...,I)V; pop ref
+                #
+                # Phase 2c structural-only: the resulting reference is
+                # popped (not stored) because the existing register
+                # convention is int[] only.  Phase 2c.5 will add the
+                # parallel Object[] pool to retain the reference.
+                self._emit_make_closure(builder, instruction)
+                continue
+
+            if instruction.opcode == IrOp.APPLY_CLOSURE:
+                # APPLY_CLOSURE dst, closure_reg, num_args, arg0
+                # → push closure (placeholder null until Phase 2c.5);
+                #   build int[] args; invokeinterface Closure.apply([I)I;
+                #   istore int into __ca_regs[dst]
+                self._emit_apply_closure(builder, instruction)
+                continue
+
             raise JvmBackendError(
                 "Unsupported IR opcode in prototype backend: "
                 f"{instruction.opcode}"
@@ -1458,6 +1680,9 @@ _JVM_SUPPORTED_OPCODES: frozenset[IrOp] = frozenset({
     IrOp.BRANCH_NZ,
     IrOp.CALL,
     IrOp.SYSCALL,
+    # JVM02 Phase 2c — closures.
+    IrOp.MAKE_CLOSURE,
+    IrOp.APPLY_CLOSURE,
 })
 
 
@@ -1607,21 +1832,246 @@ def lower_ir_to_jvm_classes(
 ) -> JVMMultiClassArtifact:
     """Lower ``program`` into one or more JVM class artifacts.
 
-    The result always contains the main user class as
-    ``classes[0]``.  When ``include_closure_interface=True`` the
-    shared ``Closure`` interface is appended so the caller can drop
-    both into a JAR.
+    Returns a ``JVMMultiClassArtifact`` whose ``classes[0]`` is
+    always the main user class.  The ``Closure`` interface is
+    appended when either:
 
-    Phase 2b only emits the main class + (optionally) the interface
-    — it does NOT yet emit per-lambda closure subclasses.
-    Phase 2c will fold those in once ``MAKE_CLOSURE`` /
-    ``APPLY_CLOSURE`` lowering lands.
+    * ``include_closure_interface=True`` (callers opt in
+      explicitly — the Phase 2b path), OR
+    * ``config.closure_free_var_counts`` is non-empty (the
+      program contains lifted lambdas, so the interface is
+      required for ``invokeinterface`` dispatch).
+
+    When closure regions are declared, one ``Closure_<name>``
+    subclass is appended per lambda — fields per capture, ``.ctor``
+    chaining into ``Object::.ctor()`` and storing captures, and
+    an ``apply(int[])`` method that reads back the captures and
+    runs the lifted body.
+
+    Phase 2c v1 ships this as **structural-only**: the bytecode
+    shape is verifier-correct, multi-class plumbing works, but
+    end-to-end runtime semantics for the captured-state and
+    ``Apply``-body data flow are wired in Phase 2c.5 (parallel
+    ``Object[]`` register pool + cross-class register access).
+    The placeholder ``apply`` body returns 0 so the class loads
+    and its method-resolution path is exercised even without
+    Phase 2c.5.
     """
     main = lower_ir_to_jvm_class_file(program, config)
     classes: list[JVMClassArtifact] = [main]
-    if include_closure_interface:
+
+    needs_interface = include_closure_interface or bool(
+        config.closure_free_var_counts
+    )
+    if needs_interface:
         classes.append(build_closure_interface_artifact())
+
+    for closure_name, num_free in config.closure_free_var_counts.items():
+        classes.append(
+            build_closure_subclass_artifact(closure_name, num_free=num_free)
+        )
+
     return JVMMultiClassArtifact(classes=tuple(classes))
+
+
+def build_closure_subclass_artifact(
+    closure_name: str,
+    *,
+    num_free: int,
+) -> JVMClassArtifact:
+    """Return one ``Closure_<closure_name>.class`` artifact.
+
+    The class:
+
+    * lives at ``coding_adventures/twig/runtime/Closure_<sanitised>``
+      — same package as the ``Closure`` interface for cross-class
+      simplicity.  IR labels with ``-``/``.``/``$`` are sanitised
+      to ``_`` so they map onto valid JVM binary names.
+    * implements ``coding_adventures/twig/runtime/Closure``.
+    * has one ``private final int captI`` field per capture
+      (``capt0``, ``capt1``, …).
+    * has a ``.ctor(int, int, …)V`` that calls
+      ``Object::.ctor()`` then stores each parameter into its
+      corresponding capture field.
+    * has a placeholder ``apply([I)I`` method that returns ``0``.
+
+    The placeholder ``apply`` is the Phase 2c structural-only
+    compromise: the class loads, ``Closure`` dispatch resolves to
+    it, but the lifted lambda's actual body is not yet wired
+    through.  Phase 2c.5 will fill in the body using either:
+
+    1. A new lowering path that uses JVM locals for the IR
+       register frame (instead of the main class's static
+       ``__ca_regs`` field), OR
+    2. Cross-class access to the main class's static helpers.
+
+    Either approach requires substantial refactoring of the
+    register-storage convention; doing it here would balloon the
+    Phase 2c PR.
+    """
+    sanitised = _sanitise_class_name_segment(closure_name)
+    package = "coding_adventures/twig/runtime"
+    binary_name = f"{package}/Closure_{sanitised}"
+
+    pool = _ConstantPoolBuilder()
+    this_class_index = pool.class_ref(binary_name)
+    super_class_index = pool.class_ref("java/lang/Object")
+    interface_class_index = pool.class_ref(CLOSURE_INTERFACE_BINARY_NAME)
+    object_ctor_ref = pool.method_ref(
+        "java/lang/Object", "<init>", "()V",
+    )
+
+    # Field UTF8 + name+type entries.
+    field_name_indices = [pool.utf8(f"capt{i}") for i in range(num_free)]
+    field_descriptor_index = pool.utf8("I")
+    field_refs = [
+        pool.field_ref(binary_name, f"capt{i}", "I") for i in range(num_free)
+    ]
+
+    code_attribute_name_index = pool.utf8("Code")
+
+    # ── ctor body ──────────────────────────────────────────────────────
+    # ldarg.0; invokespecial Object::<init>()V
+    # for each capture i: ldarg.0; ldarg{1+i}; putfield captI
+    # return
+    ctor_builder = _BytecodeBuilder()
+    ctor_builder.emit_opcode(_OP_ALOAD_0)
+    ctor_builder.emit_u2_instruction(_OP_INVOKESPECIAL, object_ctor_ref)
+    for i in range(num_free):
+        ctor_builder.emit_opcode(_OP_ALOAD_0)
+        # ldarg loads int — JVM has iload_1..3 short forms.
+        if i + 1 <= 3:
+            ctor_builder.emit_opcode(_OP_ILOAD_0 + (i + 1))
+        else:
+            ctor_builder.emit_u1_instruction(_OP_ILOAD, i + 1)
+        ctor_builder.emit_u2_instruction(_OP_PUTFIELD, field_refs[i])
+    ctor_builder.emit_opcode(_OP_RETURN)
+    ctor_code = ctor_builder.assemble()
+    ctor_descriptor = "(" + ("I" * num_free) + ")V"
+    ctor_name_index = pool.utf8("<init>")
+    ctor_descriptor_index = pool.utf8(ctor_descriptor)
+
+    # ── apply body — placeholder: iconst_0; ireturn ──────────────────
+    apply_builder = _BytecodeBuilder()
+    apply_builder.emit_opcode(_OP_ICONST_0)
+    apply_builder.emit_opcode(_OP_IRETURN)
+    apply_code = apply_builder.assemble()
+    apply_name_index = pool.utf8(CLOSURE_INTERFACE_METHOD_NAME)
+    apply_descriptor_index = pool.utf8(CLOSURE_INTERFACE_METHOD_DESCRIPTOR)
+
+    # Encode the class.
+    pool_bytes = pool.encode()
+    class_bytes_parts: list[bytes] = [
+        b"\xca\xfe\xba\xbe",
+        _u2(0),                      # minor_version
+        _u2(49),                     # major_version
+        _u2(pool.count),
+        pool_bytes,
+        _u2(ACC_PUBLIC | ACC_SUPER),
+        _u2(this_class_index),
+        _u2(super_class_index),
+        _u2(1),                      # interfaces_count
+        _u2(interface_class_index),
+        _u2(num_free),               # fields_count
+    ]
+    for name_index in field_name_indices:
+        class_bytes_parts.append(_u2(_ACC_PRIVATE | _ACC_FINAL))
+        class_bytes_parts.append(_u2(name_index))
+        class_bytes_parts.append(_u2(field_descriptor_index))
+        class_bytes_parts.append(_u2(0))  # 0 attributes per field
+
+    # Methods: ctor + apply.
+    class_bytes_parts.append(_u2(2))  # methods_count
+
+    # ctor
+    class_bytes_parts.append(
+        _build_method_info(
+            access_flags=ACC_PUBLIC,
+            name_index=ctor_name_index,
+            descriptor_index=ctor_descriptor_index,
+            code=ctor_code,
+            max_stack=2,
+            max_locals=1 + num_free,
+            code_attribute_name_index=code_attribute_name_index,
+        )
+    )
+    # apply
+    apply_access = ACC_PUBLIC
+    class_bytes_parts.append(
+        _build_method_info(
+            access_flags=apply_access,
+            name_index=apply_name_index,
+            descriptor_index=apply_descriptor_index,
+            code=apply_code,
+            max_stack=1,
+            max_locals=2,                 # this + int[] arg
+            code_attribute_name_index=code_attribute_name_index,
+        )
+    )
+
+    class_bytes_parts.append(_u2(0))  # 0 class attributes
+
+    return JVMClassArtifact(
+        class_name=binary_name.replace("/", "."),
+        class_bytes=b"".join(class_bytes_parts),
+        callable_labels=(closure_name,),
+        data_offsets={},
+    )
+
+
+# Sanitise IR labels (which may contain ``_lambda_0``, ``-``, ``.``, ``$``)
+# into JVM-safe class-name segments.  The JVMS §4.2.1 binary-name grammar
+# allows ``[A-Za-z_$][A-Za-z0-9_$]*`` per segment.
+_SANITISE_RE = re.compile(r"[^A-Za-z0-9_$]")
+
+
+def _sanitise_class_name_segment(label: str) -> str:
+    cleaned = _SANITISE_RE.sub("_", label)
+    if cleaned and cleaned[0].isdigit():
+        cleaned = "_" + cleaned
+    return cleaned or "_"
+
+
+def _build_method_info(
+    *,
+    access_flags: int,
+    name_index: int,
+    descriptor_index: int,
+    code: bytes,
+    max_stack: int,
+    max_locals: int,
+    code_attribute_name_index: int,
+) -> bytes:
+    """Build a ``method_info`` blob with one Code attribute.
+
+    Layout per JVMS §4.6 + §4.7.3.
+    """
+    code_attribute_body = b"".join(
+        [
+            _u2(max_stack),
+            _u2(max_locals),
+            _u4(len(code)),
+            code,
+            _u2(0),  # exception_table_length
+            _u2(0),  # attributes_count
+        ]
+    )
+    code_attribute = b"".join(
+        [
+            _u2(code_attribute_name_index),
+            _u4(len(code_attribute_body)),
+            code_attribute_body,
+        ]
+    )
+    return b"".join(
+        [
+            _u2(access_flags),
+            _u2(name_index),
+            _u2(descriptor_index),
+            _u2(1),  # 1 attribute (Code)
+            code_attribute,
+        ]
+    )
 
 
 def _build_interface_class_bytes(

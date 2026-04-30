@@ -1,5 +1,73 @@
 # ir-to-jvm-class-file
 
+## 0.8.0 — 2026-04-29 — JVM02 Phase 2c (closure lowering, structural)
+
+### Added — `MAKE_CLOSURE` and `APPLY_CLOSURE` lowering
+
+Builds on Phase 2b multi-class scaffolding.  The lowerer now:
+
+* **Auto-generates per-lambda `Closure_<name>.class`
+  artifacts** via `build_closure_subclass_artifact()` —
+  fields per capture (`capt0`, `capt1`, …),
+  `.ctor(int, …)V` chaining into `Object::.ctor()` and
+  storing each capture into its field, and a placeholder
+  `apply([I)I` body (`iconst_0; ireturn`).
+* **Lowers MAKE_CLOSURE** to `new Closure_<fn>; dup; iload
+  caps from __ca_regs; invokespecial ctor`.  The resulting
+  reference is **popped** (not stored) — the existing
+  static `int[] __ca_regs` register convention can't hold
+  object refs.  Phase 2c.5 will add a parallel `Object[]`
+  pool to retain the reference.
+* **Lowers APPLY_CLOSURE** to `aconst_null` (placeholder
+  receiver) `; build int[] args; invokeinterface
+  Closure.apply([I)I; pop`.  The `invokeinterface` operand
+  format (count = 2: receiver + int[]) is correct; the
+  bytecode verifies cleanly even though it would NPE at
+  runtime today.
+* **Routes closure regions away from the main user class** —
+  the lifted lambda body lives on the per-lambda
+  `Closure_<name>` subclass via the multi-class artifact,
+  not as a method on the main class.
+* `JvmBackendConfig.closure_free_var_counts` declares which
+  IR regions are lifted lambdas; the lowerer uses this to
+  detect closure regions, dispatch them to subclass emission,
+  and validate `MAKE_CLOSURE` operand counts.
+* `lower_ir_to_jvm_classes()` automatically appends the
+  `Closure` interface + per-lambda subclasses when
+  `closure_free_var_counts` is non-empty (no need to set
+  `include_closure_interface=True`).
+
+### V1 limitations (documented in the JVM02 spec)
+
+* **Runtime end-to-end is not yet wired.**  The headline
+  `((make-adder 7) 35) → 42` test ships as
+  `xfail(strict=True)` so the structural shape stays right
+  and it'll auto-flip to passing once Phase 2c.5 lands the
+  typed register pool + cross-class register access.
+* **Placeholder `apply` body**: every Closure subclass's
+  `apply` returns 0 today.  Phase 2c.5 wires the real body
+  through.
+
+### Tests (8 new, 75 total + 1 xfail at 86% coverage)
+
+* 8 structural tests cover multi-class artifact contents
+  (interface + subclass), `callable_labels` filtering of
+  lambda regions, subclass parsing through `jvm-class-file`,
+  zero-captures edge case, two validation paths
+  (unknown-lambda, capture-count mismatch), and bytecode
+  presence (`new` + `invokeinterface` opcodes appear in the
+  expected places).
+* 1 `xfail(strict=True)` real-`java` JAR test packs main +
+  interface + subclass and runs them through `java -jar`.
+* All Phase 2b tests continue to pass — the multi-class API
+  surface is purely additive.
+
+### Validator
+
+`validate_for_jvm` now accepts `MAKE_CLOSURE` and
+`APPLY_CLOSURE` opcodes (per-instruction validation runs in
+the lowerer instead).
+
 ## 0.7.0 — 2026-04-29 — JVM02 Phase 2b (multi-class scaffolding)
 
 ### Added — `JVMMultiClassArtifact` and the `Closure` interface
