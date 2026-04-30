@@ -1,5 +1,59 @@
 # Changelog — lispy-runtime
 
+## [0.2.0] — 2026-04-29
+
+### Added — supporting LANG20 PR 5 (twig-vm closures / globals / symbols)
+
+- **`builtins::make_symbol(name)`** — return the symbol named by
+  `name` (which is itself a symbol value under the dispatcher's
+  string-as-symbol convention).  Identity-with-type-check; the
+  IR compiler emits a call to it for every quoted-symbol
+  literal `'foo`.
+
+- **`builtins::make_closure(name, ...captures)`** — allocate a
+  user-fn closure capturing `captures*` over the IIRFunction
+  named `name`.  Routes through the existing `alloc_closure`
+  factory.
+
+- **`builtins::make_builtin_closure(name)`** — allocate a
+  closure-shaped wrapper around a builtin so it can be passed
+  in higher-order positions (e.g. `(define (apply-it f x) (f x))
+  (apply-it + 2 3)`).  No captures by construction; flagged via
+  `CLOSURE_FLAG_BUILTIN` so apply-time dispatch routes through
+  `LispyBinding::resolve_builtin` rather than the user-fn lookup
+  path.
+
+- **`heap::alloc_builtin_closure(name)`** — factory function
+  for builtin-wrapping closures.  Same Box::leak pattern as
+  `alloc_closure`.
+
+- **`heap::CLOSURE_FLAG_BUILTIN`** + **`Closure::is_builtin()`**
+  + **`Closure::new_builtin(name)`** — the ABI bit + Rust API
+  for distinguishing the two closure flavours at apply time.
+
+### Changed
+
+- **`Closure._reserved`** field renamed to **`Closure.flags`**
+  (still `u32`, same offset, same alignment — pure rename).
+  Bit 0 is now `CLOSURE_FLAG_BUILTIN`; higher bits remain
+  reserved (planned: arity hint).
+
+- **`LispyBinding::resolve_builtin`** extended with the three
+  new builtins (`make_symbol`, `make_closure`,
+  `make_builtin_closure`).  `apply_closure` / `global_set` /
+  `global_get` are deliberately NOT registered here — they
+  need access to per-VM state (globals table, module
+  reference, dispatcher recursion) and are handled inline in
+  `twig-vm::dispatch`.
+
+### Tests
+
+- 105 unit + 1 doc — unchanged at the test level; the new
+  builtins inherit the test scaffolding from the existing
+  builtins.  Closure-flag round-trip is exercised
+  transitively through `twig-vm::dispatch::tests` (which
+  passes under Miri).
+
 ## [0.1.0] — 2026-04-29
 
 ### Added

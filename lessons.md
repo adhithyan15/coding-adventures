@@ -211,6 +211,7 @@ A condensed quick-reference of mistakes made during development, grouped by cate
 - **CI workflow classifier must recognize helper shell lines** in toolchain-scoped hunks of `.github/workflows/ci.yml`. Adding `sed`/`rm`/etc. to a Lua-only setup hunk without updating `internal/gitdiff/ci_workflow_test.go` makes the build tool fall back to a full monorepo rebuild.
 - **CI detect outputs must use `steps.toolchains` (not `steps.detect`).** Adding a new language to CI requires THREE places: `allLanguages` in `main.go`, the detect job `outputs:`, AND `steps.toolchains` normalization (BOTH the `is_main=true` and `else` branches).
 - **CodeQL flags `int64 → int` downcasts of CLI input** as `go/incorrect-integer-conversion`. Add explicit platform-sized bounds checks first; for `float64`, reject NaN/Inf/non-integral before the cast.
+- **Miri timeout grows with code, not with test count.** `lang-runtime-safety.yml` had `timeout-minutes: 30`; PR 5 (closures) tripled `twig-vm` Miri wallclock and one of two parallel runs failed at 30:15 from runner variance, not a real bug. Bump generously (90 min) and shard by crate when wallclock crosses 60 min. Locally, `MIRIFLAGS="-Zmiri-ignore-leaks" cargo +nightly miri test -p twig-vm` is the canonical pre-push smoke check; don't trust the timeout to catch slowdown.
 
 ## QR / format-marker / file-format specifics
 

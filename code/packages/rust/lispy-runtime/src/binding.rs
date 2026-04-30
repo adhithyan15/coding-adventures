@@ -316,6 +316,21 @@ impl LangBinding for LispyBinding {
             // IIR for `if` and `let` forms.  See LANG20 PR 4.
             "_move" => Some(builtins::move_),
             "make_nil" => Some(builtins::make_nil),
+            // Closure / symbol / globals builtins (LANG20 PR 5).
+            // make_symbol      — quoted-symbol literal (`'foo`) lowering.
+            // make_closure     — `(lambda ...)` lowering — allocates a
+            //                    user-fn closure with captures.
+            // make_builtin_closure — wraps a bare builtin reference
+            //                    (`+`, `cons`, ...) so it can be passed
+            //                    in a higher-order position.
+            // global_set / global_get / apply_closure are NOT registered
+            // here — they need access to per-VM state (globals table,
+            // module reference, dispatcher recursion) and are handled
+            // as special opcodes in `twig-vm::dispatch` rather than as
+            // context-free builtin fn pointers.
+            "make_symbol" => Some(builtins::make_symbol),
+            "make_closure" => Some(builtins::make_closure),
+            "make_builtin_closure" => Some(builtins::make_builtin_closure),
             _ => None,
         }
     }

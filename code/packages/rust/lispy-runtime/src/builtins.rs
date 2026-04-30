@@ -315,6 +315,78 @@ pub fn make_nil(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
     Ok(LispyValue::NIL)
 }
 
+/// `(make_symbol name)` — return the symbol named by `name`.
+///
+/// In our value-space convention, `name` is itself a symbol value
+/// (the dispatcher interns string-literal `const` operands and
+/// stores them as symbols).  This builtin therefore acts as
+/// **identity-with-type-check** — it asserts the arg is a symbol
+/// and passes it through.  twig-ir-compiler emits a call to it
+/// for every `'foo` quoted-symbol literal in source; the explicit
+/// arity check here turns "wrong shape of args" into a clean
+/// `RuntimeError` rather than a silent miscompile.
+pub fn make_symbol(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
+    if args.len() != 1 {
+        return Err(arity_error("make_symbol", 1, args.len()));
+    }
+    if !args[0].is_symbol() {
+        return Err(RuntimeError::TypeError(format!(
+            "make_symbol: expected symbol arg, got {}",
+            args[0],
+        )));
+    }
+    Ok(args[0])
+}
+
+/// `(make_closure name capture0 capture1 ...)` — allocate a
+/// user-fn closure capturing `capture*` over the function named
+/// `name`.
+///
+/// `name` must be a symbol value (the IR compiler emits it via
+/// the same `const`-as-symbol path as quoted-symbol literals).
+/// At apply time, the dispatcher looks `name` up in the
+/// `IIRModule`'s functions table and prepends `captures` to the
+/// supplied arguments before recursing.
+pub fn make_closure(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
+    if args.is_empty() {
+        return Err(RuntimeError::TypeError(
+            "make_closure: expected at least 1 arg (function name)".into(),
+        ));
+    }
+    let name_id = args[0].as_symbol().ok_or_else(|| {
+        RuntimeError::TypeError(format!(
+            "make_closure: expected symbol name, got {}",
+            args[0],
+        ))
+    })?;
+    let captures: Vec<LispyValue> = args[1..].to_vec();
+    Ok(crate::heap::alloc_closure(name_id, captures))
+}
+
+/// `(make_builtin_closure name)` — allocate a closure wrapping
+/// the builtin named `name`.
+///
+/// Used by twig-ir-compiler when a bare builtin reference (`+`,
+/// `cons`, etc.) appears in a higher-order position — we wrap
+/// it in a closure-shaped value so it can be passed around like
+/// any other callable.  The closure carries no captures; at
+/// apply time the dispatcher detects the
+/// `CLOSURE_FLAG_BUILTIN` flag and routes through
+/// `LispyBinding::resolve_builtin` instead of the user-fn
+/// lookup path.
+pub fn make_builtin_closure(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
+    if args.len() != 1 {
+        return Err(arity_error("make_builtin_closure", 1, args.len()));
+    }
+    let name_id = args[0].as_symbol().ok_or_else(|| {
+        RuntimeError::TypeError(format!(
+            "make_builtin_closure: expected symbol name, got {}",
+            args[0],
+        ))
+    })?;
+    Ok(crate::heap::alloc_builtin_closure(name_id))
+}
+
 // ---------------------------------------------------------------------------
 // I/O
 // ---------------------------------------------------------------------------

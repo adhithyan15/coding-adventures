@@ -1,40 +1,48 @@
 //! # `dispatch` — the real interpreter dispatch loop for `twig-vm`.
 //!
-//! This module is **PR 4 of LANG20**.  It replaces the
-//! 1-instruction `evaluate_call_builtin` helper with a complete
-//! tree-walking dispatcher that runs an entire `IIRModule` end to
-//! end and returns a `LispyValue`.
+//! Originally LANG20 PR 4 (tree-walking dispatcher); extended in
+//! PR 5 to cover closures, top-level value defines, and quoted
+//! symbols.  Runs an entire `IIRModule` end to end and returns a
+//! `LispyValue`.
 //!
 //! ## Scope
 //!
-//! PR 4 covers the IIR subset emitted by `twig-ir-compiler` for
-//! programs **without closures or top-level value defines**.  That
-//! is exactly the set:
+//! PR 4 + PR 5 together cover the IIR subset emitted by
+//! `twig-ir-compiler` for **all programs without method dispatch
+//! (`send`/`load`/`store`)**.  The supported opcodes:
 //!
 //! | Opcode          | What it does                                      |
 //! |-----------------|---------------------------------------------------|
-//! | `const`         | bind register ← `Int` / `Bool` immediate          |
-//! | `call_builtin`  | look up Lispy builtin, materialise args, dispatch |
+//! | `const Int/Bool`| bind register ← `Int` / `Bool` immediate          |
+//! | `const Var(s)`  | bind register ← `LispyValue::symbol(intern(s))` (PR 5: string-via-symbol convention) |
+//! | `call_builtin`  | look up Lispy builtin OR special-case             |
 //! | `call`          | resolve callee in module, recurse into dispatcher |
 //! | `jmp`           | unconditional branch to label                     |
 //! | `jmp_if_false`  | branch if cond register is `false` or `nil`       |
 //! | `label`         | no-op marker (jump target)                        |
 //! | `ret`           | return value to caller                            |
 //!
+//! ### Special-cased `call_builtin` names (PR 5)
+//!
+//! Three builtin names need access to per-VM state (globals
+//! table, IIRModule, dispatcher recursion) and so are handled
+//! inline in `exec_call_builtin` rather than as context-free
+//! `BuiltinFn` pointers:
+//!
+//! | Name            | Behaviour                                          |
+//! |-----------------|----------------------------------------------------|
+//! | `apply_closure` | Extract `(fn_name, captures)` from the closure handle.  If the closure flag says builtin, dispatch via `LispyBinding::resolve_builtin`.  Else look `fn_name` up in `module.functions` and recurse into `dispatch` with `captures ++ args`. |
+//! | `global_set`    | Write `globals[name] = value` (name and value both supplied as srcs). |
+//! | `global_get`    | Read `globals[name]`; error if unset.              |
+//!
+//! All other `call_builtin` names route through
+//! `LispyBinding::resolve_builtin` exactly as before.
+//!
 //! Out of scope (later PRs):
 //!
-//! - `make_closure`, `apply_closure`, `make_builtin_closure` —
-//!   need closure heap layout and indirect dispatch (PR 5+)
-//! - `global_set`, `global_get` — need a per-process global table
-//! - `make_symbol` — needs a `Symbol` `LispyValue` constructor
-//!   from a runtime-string operand (lispy-runtime's `intern`
-//!   accepts `&str`, but the IR routes the name through a
-//!   `const` instruction which we'd need to track)
-//! - `send`, `load`, `store` — need IC machinery from PR 6+
-//!
-//! Programs using any of these emit an opcode this dispatcher
-//! refuses with a clear `UnsupportedOpcode` error, rather than
-//! silently producing wrong answers.
+//! - `send`, `load_property`, `store_property` IIR opcodes — need
+//!   IC machinery from PR 6+
+//! - JIT promotion, deopt — PR 7+
 //!
 //! ## Recursion model
 //!
@@ -62,8 +70,8 @@
 use std::collections::HashMap;
 
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
-use lang_runtime_core::RuntimeError;
-use lispy_runtime::{LispyBinding, LispyValue};
+use lang_runtime_core::{RuntimeError, SymbolId};
+use lispy_runtime::{intern, name_of, LispyBinding, LispyValue};
 
 use crate::operand::operand_to_value;
 
@@ -111,10 +119,9 @@ pub const MAX_REGISTERS_PER_FRAME: usize = 1 << 16;
 
 /// Errors the dispatcher can surface.
 ///
-/// Distinct from [`crate::EvaluateError`] — this is the
-/// full-program error type, returned by [`run`] and
-/// [`crate::TwigVM::run`].
+/// Returned by [`run`] and [`crate::TwigVM::run`].
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum RunError {
     /// The module's `entry_point` doesn't name any function in
     /// `module.functions`.  Should never happen for compiler-
@@ -177,6 +184,18 @@ pub enum RunError {
     /// `ret`.  Frontend bug — `twig-ir-compiler` always emits a
     /// trailing `ret`.
     FellOffEnd(String),
+
+    /// `global_get <name>` referenced a name that has never been
+    /// the target of a `global_set`.  In Twig source this is a
+    /// "use before define" — a forward reference to a top-level
+    /// `(define x ...)` from inside a function whose body runs
+    /// before the define.
+    UndefinedGlobal(String),
+
+    /// `apply_closure` was called on a value that isn't a closure
+    /// (heap-allocated with `class_or_kind == CLASS_CLOSURE`).
+    /// User-visible "<value> is not callable" surface.
+    NotCallable(String),
 }
 
 impl std::fmt::Display for RunError {
@@ -199,6 +218,8 @@ impl std::fmt::Display for RunError {
                 write!(f, "arity mismatch on call to {callee:?}: expected {expected}, got {got}")
             }
             RunError::FellOffEnd(name) => write!(f, "function {name:?} fell off end without ret"),
+            RunError::UndefinedGlobal(s) => write!(f, "undefined global: {s:?}"),
+            RunError::NotCallable(s) => write!(f, "not callable: {s}"),
         }
     }
 }
@@ -258,8 +279,83 @@ impl Frame {
         self.registers.get(name).copied()
     }
 
-    fn set(&mut self, name: String, value: LispyValue) {
+    /// Insert or update `name → value`.
+    ///
+    /// Errors if the frame already holds [`MAX_REGISTERS_PER_FRAME`]
+    /// distinct names and `name` is new.  Hand-built malformed IIR
+    /// could otherwise grow the per-frame `HashMap` unboundedly with
+    /// fresh names (one heap allocation per name); the per-run
+    /// instruction budget partially limits this but not strongly
+    /// enough to prevent multi-gigabyte allocation.  Found by
+    /// PR 5 security review (#10).
+    fn set(&mut self, name: String, value: LispyValue) -> Result<(), RunError> {
+        if !self.registers.contains_key(&name)
+            && self.registers.len() >= MAX_REGISTERS_PER_FRAME
+        {
+            return Err(RunError::MalformedInstruction(format!(
+                "frame register count exceeds MAX_REGISTERS_PER_FRAME ({MAX_REGISTERS_PER_FRAME})"
+            )));
+        }
         self.registers.insert(name, value);
+        Ok(())
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Globals
+// ---------------------------------------------------------------------------
+
+/// Top-level value-define table.  One per [`run`] invocation;
+/// shared across all `Frame`s within that run via a `&mut`
+/// reference threaded through `dispatch`.
+///
+/// Twig's `(define x value)` form lowers to
+/// `call_builtin "global_set" name value`; references to top-level
+/// values lower to `call_builtin "global_get" name`.  This struct
+/// is the storage backing both.
+///
+/// Keyed by [`SymbolId`] rather than `String` because the IR
+/// compiler interns names through `lispy-runtime::intern` already
+/// (the dispatcher's `const Var(text)` handler creates a symbol),
+/// so SymbolId comparisons stay O(1) integer-equality.
+///
+/// **Lifetime note.**  Globals are per-run, not per-process.
+/// Calling `TwigVM::run` twice gives two independent global
+/// tables.  When PR 6+ adds `LangVM`-level state, globals will
+/// move there and persist across runs — at that point this
+/// struct moves to a shared location.  The dispatcher API stays
+/// the same.
+#[derive(Debug, Default)]
+pub struct Globals {
+    map: HashMap<SymbolId, LispyValue>,
+}
+
+impl Globals {
+    /// Construct an empty globals table.
+    pub fn new() -> Self {
+        Globals { map: HashMap::new() }
+    }
+
+    /// Read a global by interned name.  Returns `None` if the name
+    /// has never been the target of a `set`.
+    pub fn get(&self, name: SymbolId) -> Option<LispyValue> {
+        self.map.get(&name).copied()
+    }
+
+    /// Write `value` to the global named `name`.  Overwrites any
+    /// prior value.
+    pub fn set(&mut self, name: SymbolId, value: LispyValue) {
+        self.map.insert(name, value);
+    }
+
+    /// Number of globals currently set.  Mostly for testing.
+    pub fn len(&self) -> usize {
+        self.map.len()
+    }
+
+    /// `true` if no globals are set.
+    pub fn is_empty(&self) -> bool {
+        self.map.is_empty()
     }
 }
 
@@ -314,6 +410,19 @@ fn build_label_index(func: &IIRFunction) -> Result<HashMap<String, usize>, RunEr
 /// runtime trap raised by a builtin, and any resource limit
 /// (depth, instruction count) all surface as a `RunError`.
 pub fn run(module: &IIRModule) -> Result<LispyValue, RunError> {
+    let mut globals = Globals::new();
+    run_with_globals(module, &mut globals)
+}
+
+/// Run an `IIRModule` against a caller-supplied globals table.
+///
+/// Used by tests that want to inspect the table after the run, or
+/// by future per-VM state (PR 6+) that wants globals to persist
+/// across multiple `run` calls.  Most callers should use [`run`].
+pub fn run_with_globals(
+    module: &IIRModule,
+    globals: &mut Globals,
+) -> Result<LispyValue, RunError> {
     let entry_name = module
         .entry_point
         .as_deref()
@@ -325,7 +434,7 @@ pub fn run(module: &IIRModule) -> Result<LispyValue, RunError> {
         .ok_or_else(|| RunError::NoEntryPoint(entry_name.to_string()))?;
 
     let mut budget = ExecutionBudget::new();
-    dispatch(module, entry, &[], 0, &mut budget)
+    dispatch(module, entry, &[], 0, &mut budget, globals)
 }
 
 // Per-run instruction counter — enforces
@@ -359,6 +468,7 @@ fn dispatch(
     args: &[LispyValue],
     depth: usize,
     budget: &mut ExecutionBudget,
+    globals: &mut Globals,
 ) -> Result<LispyValue, RunError> {
     if depth > MAX_DISPATCH_DEPTH {
         return Err(RunError::DepthExceeded);
@@ -378,11 +488,11 @@ fn dispatch(
                 pc += 1;
             }
             "call_builtin" => {
-                exec_call_builtin(instr, &mut frame)?;
+                exec_call_builtin(module, instr, &mut frame, depth, budget, globals)?;
                 pc += 1;
             }
             "call" => {
-                exec_call(module, instr, &mut frame, depth, budget)?;
+                exec_call(module, instr, &mut frame, depth, budget, globals)?;
                 pc += 1;
             }
             "jmp" => {
@@ -436,30 +546,49 @@ fn exec_const(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
                 "Lispy doesn't have flonums yet".into(),
             )));
         }
-        Operand::Var(_text) => {
-            // The IR compiler emits `const _s1 = "literal"` (with
-            // a Var operand carrying the string text) only when
-            // wiring up `make_closure` / `make_symbol` /
-            // `global_set` / `global_get` — all of which are out
-            // of scope for PR 4.  If we see this, it means the
-            // user wrote a Twig program that needs closures,
-            // globals, or quoted symbols; the frontend emitted
-            // valid IR for those features, but the dispatcher
-            // can't run them yet.
+        Operand::Var(text) => {
+            // PR 5: `const _s1 = "literal"` — the IR compiler emits
+            // these for the string-shaped arguments to
+            // `make_closure` / `make_builtin_closure` /
+            // `make_symbol` / `global_set` / `global_get`.  We
+            // intern the text and store the result as a symbol;
+            // downstream builtins read the symbol's name back via
+            // the intern table when they need the original string.
             //
-            // We surface this as UnsupportedOpcode (paramaterised
-            // with a hint) so callers see a clear "not yet" rather
-            // than a crash.
-            return Err(RunError::UnsupportedOpcode(
-                "const with string operand (closures / globals / symbols — PR 5+)".into(),
-            ));
+            // The "string-as-symbol" convention loses the user-
+            // facing distinction between strings and symbols.
+            // Intentional at PR 5: Lispy's surface syntax has
+            // only symbols (no string literal form).  When a
+            // proper string value lands in a future PR, this arm
+            // changes; the IR compiler already emits the right
+            // operand shape.
+            // Detect intern-table exhaustion eagerly — `intern`
+            // returns `SymbolId::NONE` when the table is full, and
+            // letting NONE flow through would surface as a confusing
+            // `MalformedInstruction("...unknown fn_name id...")`
+            // much later in `exec_apply_closure`.  Found by PR 5
+            // security review (#8).
+            let id = intern(text);
+            if id == SymbolId::NONE {
+                return Err(RunError::Runtime(RuntimeError::TypeError(format!(
+                    "intern table exhausted: cannot intern {text:?}"
+                ))));
+            }
+            LispyValue::symbol(id)
         }
     };
-    frame.set(dest.clone(), value);
+    frame.set(dest.clone(), value)?;
     Ok(())
 }
 
-fn exec_call_builtin(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+fn exec_call_builtin(
+    module: &IIRModule,
+    instr: &IIRInstr,
+    frame: &mut Frame,
+    depth: usize,
+    budget: &mut ExecutionBudget,
+    globals: &mut Globals,
+) -> Result<(), RunError> {
     let name = match instr.srcs.first() {
         Some(Operand::Var(s)) => s.as_str(),
         Some(_) => return Err(RunError::MalformedInstruction(
@@ -470,6 +599,23 @@ fn exec_call_builtin(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError
         )),
     };
 
+    // ── Special-cased builtins (PR 5) ────────────────────────────
+    //
+    // These names need access to per-VM state (globals table,
+    // module reference, dispatcher recursion) and so are handled
+    // inline here rather than as context-free `BuiltinFn`
+    // pointers.  Everything else falls through to the normal
+    // resolve_builtin path.
+    match name {
+        "global_set" => return exec_global_set(instr, frame, globals),
+        "global_get" => return exec_global_get(instr, frame, globals),
+        "apply_closure" => {
+            return exec_apply_closure(module, instr, frame, depth, budget, globals);
+        }
+        _ => {}
+    }
+
+    // ── Normal builtin path ──────────────────────────────────────
     let builtin = <LispyBinding as lang_runtime_core::LangBinding>::resolve_builtin(name)
         .ok_or_else(|| RunError::UnknownBuiltin(name.to_string()))?;
 
@@ -485,7 +631,7 @@ fn exec_call_builtin(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError
 
     let result = builtin(&call_args).map_err(RunError::Runtime)?;
     if let Some(d) = &instr.dest {
-        frame.set(d.clone(), result);
+        frame.set(d.clone(), result)?;
     }
     Ok(())
 }
@@ -496,6 +642,7 @@ fn exec_call(
     frame: &mut Frame,
     depth: usize,
     budget: &mut ExecutionBudget,
+    globals: &mut Globals,
 ) -> Result<(), RunError> {
     let callee_name = match instr.srcs.first() {
         Some(Operand::Var(s)) => s.as_str(),
@@ -521,9 +668,174 @@ fn exec_call(
         call_args.push(v);
     }
 
-    let result = dispatch(module, callee, &call_args, depth + 1, budget)?;
+    let result = dispatch(module, callee, &call_args, depth + 1, budget, globals)?;
     if let Some(d) = &instr.dest {
-        frame.set(d.clone(), result);
+        frame.set(d.clone(), result)?;
+    }
+    Ok(())
+}
+
+// ---------------------------------------------------------------------------
+// PR 5: special-cased builtins (need module / globals / recursion)
+// ---------------------------------------------------------------------------
+
+/// Handle `call_builtin "global_set" name value`.
+///
+/// `srcs[1]` is the global's name (must resolve to a symbol value
+/// — the IR compiler emits a `const`-via-symbol for it); `srcs[2]`
+/// is the value to store.  No dest (return value is discarded;
+/// the IR compiler emits these for top-level value-defines).
+fn exec_global_set(
+    instr: &IIRInstr,
+    frame: &mut Frame,
+    globals: &mut Globals,
+) -> Result<(), RunError> {
+    if instr.srcs.len() != 3 {
+        return Err(RunError::MalformedInstruction(format!(
+            "global_set expects 3 srcs (name, name_arg, value), got {}",
+            instr.srcs.len()
+        )));
+    }
+    let frame_ref = &*frame;
+    let name_v = operand_to_value(&instr.srcs[1], &|n| frame_ref.get(n))
+        .map_err(RunError::OperandConversion)?;
+    let value = operand_to_value(&instr.srcs[2], &|n| frame_ref.get(n))
+        .map_err(RunError::OperandConversion)?;
+    let name_id = name_v.as_symbol().ok_or_else(|| {
+        RuntimeError::TypeError(format!("global_set: expected symbol name, got {name_v}"))
+    }).map_err(RunError::Runtime)?;
+    globals.set(name_id, value);
+    Ok(())
+}
+
+/// Handle `call_builtin "global_get" name`.
+///
+/// `srcs[1]` is the global's name (symbol).  Returns the stored
+/// value; errors with `UndefinedGlobal` if the name has never been
+/// the target of a `global_set`.
+fn exec_global_get(
+    instr: &IIRInstr,
+    frame: &mut Frame,
+    globals: &Globals,
+) -> Result<(), RunError> {
+    if instr.srcs.len() != 2 {
+        return Err(RunError::MalformedInstruction(format!(
+            "global_get expects 2 srcs (\"global_get\", name_arg), got {}",
+            instr.srcs.len()
+        )));
+    }
+    let frame_ref = &*frame;
+    let name_v = operand_to_value(&instr.srcs[1], &|n| frame_ref.get(n))
+        .map_err(RunError::OperandConversion)?;
+    let name_id = name_v.as_symbol().ok_or_else(|| {
+        RuntimeError::TypeError(format!("global_get: expected symbol name, got {name_v}"))
+    }).map_err(RunError::Runtime)?;
+    let value = globals.get(name_id).ok_or_else(|| {
+        let s = name_of(name_id).unwrap_or_else(|| format!("<symbol {}>", name_id.0));
+        RunError::UndefinedGlobal(s)
+    })?;
+    if let Some(d) = &instr.dest {
+        frame.set(d.clone(), value)?;
+    }
+    Ok(())
+}
+
+/// Handle `call_builtin "apply_closure" handle arg0 arg1 ...`.
+///
+/// `srcs[1]` is the closure handle (must be a heap value with
+/// `class_or_kind == CLASS_CLOSURE`).  Remaining srcs are the
+/// user-supplied arguments.
+///
+/// **For builtin closures** (`CLOSURE_FLAG_BUILTIN`): look the
+/// closure's `fn_name` up via `LispyBinding::resolve_builtin` and
+/// call the resolved fn pointer with the user args.  Captures
+/// are guaranteed empty by construction.
+///
+/// **For user-fn closures**: look `fn_name` up in
+/// `module.functions`, recurse into `dispatch` with
+/// `captures ++ args` as the parameter list (Twig closures
+/// receive captures as the first parameters of the underlying
+/// function — see `twig-ir-compiler` §"Anonymous lambda").
+fn exec_apply_closure(
+    module: &IIRModule,
+    instr: &IIRInstr,
+    frame: &mut Frame,
+    depth: usize,
+    budget: &mut ExecutionBudget,
+    globals: &mut Globals,
+) -> Result<(), RunError> {
+    if instr.srcs.len() < 2 {
+        return Err(RunError::MalformedInstruction(format!(
+            "apply_closure expects at least 2 srcs (\"apply_closure\", handle), got {}",
+            instr.srcs.len()
+        )));
+    }
+
+    // Resolve the handle to a LispyValue and confirm it's a closure.
+    let frame_ref = &*frame;
+    let handle = operand_to_value(&instr.srcs[1], &|n| frame_ref.get(n))
+        .map_err(RunError::OperandConversion)?;
+    // SAFETY: closure values come from `make_closure` /
+    // `make_builtin_closure` which go through alloc_*_closure;
+    // those return properly-tagged heap pointers that live forever
+    // (PR 2 leak).  `as_closure` walks the header; safe to call.
+    let closure = unsafe { lispy_runtime::as_closure(handle) }.ok_or_else(|| {
+        RunError::NotCallable(format!("apply_closure: {handle} is not a closure"))
+    })?;
+    let fn_name_id = closure.fn_name;
+    let captures = closure.captures.clone();
+    let is_builtin = closure.is_builtin();
+
+    // Resolve user args.
+    let mut user_args: Vec<LispyValue> = Vec::with_capacity(instr.srcs.len() - 2);
+    for src in &instr.srcs[2..] {
+        let v = operand_to_value(src, &|n| frame_ref.get(n))
+            .map_err(RunError::OperandConversion)?;
+        user_args.push(v);
+    }
+
+    let result = if is_builtin {
+        // Defense-in-depth: a well-formed `make_builtin_closure`
+        // produces no captures, but we explicitly assert this so a
+        // malformed Closure (`flags = CLOSURE_FLAG_BUILTIN` AND
+        // non-empty captures via `Closure` field-level access) can't
+        // silently drop captures.  Found by PR 5 security review (#2).
+        debug_assert!(
+            captures.is_empty(),
+            "builtin closure must have no captures (got {})",
+            captures.len(),
+        );
+        // Builtin closure: dispatch via resolve_builtin.
+        let name_str = name_of(fn_name_id).ok_or_else(|| {
+            RunError::MalformedInstruction(format!(
+                "apply_closure: builtin closure has unknown fn_name id {}",
+                fn_name_id.0
+            ))
+        })?;
+        let builtin = <LispyBinding as lang_runtime_core::LangBinding>::resolve_builtin(&name_str)
+            .ok_or_else(|| RunError::UnknownBuiltin(name_str.clone()))?;
+        builtin(&user_args).map_err(RunError::Runtime)?
+    } else {
+        // User-fn closure: prepend captures, look up function,
+        // recurse into dispatch.
+        let mut all_args = captures;
+        all_args.extend(user_args);
+        let name_str = name_of(fn_name_id).ok_or_else(|| {
+            RunError::MalformedInstruction(format!(
+                "apply_closure: closure has unknown fn_name id {}",
+                fn_name_id.0
+            ))
+        })?;
+        let callee = module
+            .functions
+            .iter()
+            .find(|f| f.name == name_str)
+            .ok_or_else(|| RunError::UnknownFunction(name_str.clone()))?;
+        dispatch(module, callee, &all_args, depth + 1, budget, globals)?
+    };
+
+    if let Some(d) = &instr.dest {
+        frame.set(d.clone(), result)?;
     }
     Ok(())
 }
@@ -1009,5 +1321,280 @@ mod tests {
         // The MAX_INSTRUCTIONS_PER_RUN+1th tick should fail.
         let err = b.tick().unwrap_err();
         assert!(matches!(err, RunError::InstructionLimitExceeded));
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // PR 5: closures, top-level value defines, quoted symbols
+    // ─────────────────────────────────────────────────────────────────
+
+    // ── Quoted symbols ──────────────────────────────────────────────
+
+    #[test]
+    fn quoted_symbol_round_trips() {
+        // 'foo evaluates to a symbol value with name "foo".
+        let v = run_source("'foo").unwrap();
+        let sym_id = v.as_symbol().expect("expected symbol value");
+        let name = lispy_runtime::name_of(sym_id).unwrap();
+        assert_eq!(name, "foo");
+    }
+
+    #[test]
+    fn symbol_p_recognises_quoted_symbol() {
+        // (symbol? 'bar) is #t.
+        let v = run_source("(symbol? 'bar)").unwrap();
+        assert_eq!(v, LispyValue::TRUE);
+    }
+
+    // ── Anonymous lambdas + apply ───────────────────────────────────
+
+    #[test]
+    fn anonymous_lambda_no_capture() {
+        // ((lambda (x) (* x x)) 5)  → 25
+        assert_eq!(
+            run_source("((lambda (x) (* x x)) 5)").unwrap().as_int(),
+            Some(25),
+        );
+    }
+
+    #[test]
+    fn anonymous_lambda_two_params() {
+        // ((lambda (x y) (+ x y)) 3 4)  → 7
+        assert_eq!(
+            run_source("((lambda (x y) (+ x y)) 3 4)").unwrap().as_int(),
+            Some(7),
+        );
+    }
+
+    #[test]
+    fn lambda_captures_enclosing_let() {
+        // (let ((x 10)) ((lambda (y) (+ x y)) 5))  → 15
+        let src = "(let ((x 10)) ((lambda (y) (+ x y)) 5))";
+        assert_eq!(run_source(src).unwrap().as_int(), Some(15));
+    }
+
+    #[test]
+    fn lambda_captures_multiple_values() {
+        // Captures both x and y.
+        let src = "(let ((x 1) (y 2)) ((lambda (z) (+ x (+ y z))) 4))";
+        assert_eq!(run_source(src).unwrap().as_int(), Some(7));
+    }
+
+    #[test]
+    fn nested_lambdas() {
+        // Curried add: ((lambda (x) (lambda (y) (+ x y))) 3) returns
+        // a closure that adds 3 to its argument.  Apply that to 4.
+        let src = "(((lambda (x) (lambda (y) (+ x y))) 3) 4)";
+        assert_eq!(run_source(src).unwrap().as_int(), Some(7));
+    }
+
+    // ── Higher-order via builtin closure ────────────────────────────
+
+    #[test]
+    fn higher_order_passing_user_fn() {
+        // (define (apply-it f x y) (f x y))
+        // (apply-it (lambda (a b) (* a b)) 6 7)  → 42
+        let src = "
+            (define (apply-it f x y) (f x y))
+            (apply-it (lambda (a b) (* a b)) 6 7)
+        ";
+        assert_eq!(run_source(src).unwrap().as_int(), Some(42));
+    }
+
+    #[test]
+    fn higher_order_passing_builtin() {
+        // Pass `+` itself as a value.  Twig wraps it in
+        // `make_builtin_closure`; apply_closure routes through
+        // resolve_builtin.
+        let src = "
+            (define (apply-it f x y) (f x y))
+            (apply-it + 2 3)
+        ";
+        assert_eq!(run_source(src).unwrap().as_int(), Some(5));
+    }
+
+    // ── Top-level value defines ─────────────────────────────────────
+
+    #[test]
+    fn top_level_value_define_then_use() {
+        // (define x 42) x  → 42
+        assert_eq!(run_source("(define x 42) x").unwrap().as_int(), Some(42));
+    }
+
+    #[test]
+    fn top_level_value_define_used_in_function() {
+        // (define base 100)
+        // (define (bump n) (+ base n))
+        // (bump 5)  → 105
+        let src = "
+            (define base 100)
+            (define (bump n) (+ base n))
+            (bump 5)
+        ";
+        assert_eq!(run_source(src).unwrap().as_int(), Some(105));
+    }
+
+    #[test]
+    fn top_level_value_define_overwrites() {
+        // Last write wins.
+        assert_eq!(
+            run_source("(define x 1) (define x 99) x").unwrap().as_int(),
+            Some(99),
+        );
+    }
+
+    // ── Closure-returning functions ─────────────────────────────────
+
+    #[test]
+    fn function_returning_closure() {
+        // Make-adder pattern.  Tests that a closure returned from
+        // a function still has working captures after the maker
+        // returns (Box::leak ensures correctness).
+        let src = "
+            (define (make-adder x) (lambda (y) (+ x y)))
+            ((make-adder 10) 5)
+        ";
+        assert_eq!(run_source(src).unwrap().as_int(), Some(15));
+    }
+
+    // ── Error paths ─────────────────────────────────────────────────
+
+    #[test]
+    fn apply_closure_on_non_closure_errors() {
+        // Hand-craft a module that calls apply_closure on an int.
+        // The IR compiler can't generate this directly (it always
+        // wraps in make_closure first), but we test the dispatcher
+        // refuses the malformed input.
+        use interpreter_ir::function::{FunctionTypeStatus, IIRFunction};
+        let main = IIRFunction {
+            name: "main".into(),
+            params: vec![],
+            return_type: "any".into(),
+            register_count: 4,
+            instructions: vec![
+                IIRInstr::new(
+                    "const",
+                    Some("x".into()),
+                    vec![Operand::Int(7)],
+                    "any",
+                ),
+                IIRInstr::new(
+                    "call_builtin",
+                    Some("r".into()),
+                    vec![
+                        Operand::Var("apply_closure".into()),
+                        Operand::Var("x".into()),
+                    ],
+                    "any",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+            ],
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+        };
+        let module = IIRModule {
+            name: "test".into(),
+            functions: vec![main],
+            entry_point: Some("main".into()),
+            language: "twig".into(),
+        };
+        let err = run(&module).unwrap_err();
+        assert!(matches!(err, RunError::NotCallable(_)));
+    }
+
+    #[test]
+    fn global_get_undefined_errors() {
+        // Hand-craft a module that calls global_get on a name
+        // that was never set.  The IR compiler doesn't emit this
+        // directly (compile_var_ref errors at compile time on
+        // unbound names), but the dispatcher must refuse.
+        use interpreter_ir::function::{FunctionTypeStatus, IIRFunction};
+        let main = IIRFunction {
+            name: "main".into(),
+            params: vec![],
+            return_type: "any".into(),
+            register_count: 4,
+            instructions: vec![
+                IIRInstr::new(
+                    "const",
+                    Some("name".into()),
+                    vec![Operand::Var("ghost".into())],
+                    "any",
+                ),
+                IIRInstr::new(
+                    "call_builtin",
+                    Some("r".into()),
+                    vec![
+                        Operand::Var("global_get".into()),
+                        Operand::Var("name".into()),
+                    ],
+                    "any",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+            ],
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+        };
+        let module = IIRModule {
+            name: "test".into(),
+            functions: vec![main],
+            entry_point: Some("main".into()),
+            language: "twig".into(),
+        };
+        let err = run(&module).unwrap_err();
+        match err {
+            RunError::UndefinedGlobal(n) => assert_eq!(n, "ghost"),
+            other => panic!("expected UndefinedGlobal, got {other:?}"),
+        }
+    }
+
+    // ── Globals struct sanity ───────────────────────────────────────
+
+    #[test]
+    fn globals_set_and_get_round_trip() {
+        let mut g = Globals::new();
+        assert!(g.is_empty());
+        let id = lispy_runtime::intern("foo");
+        g.set(id, LispyValue::int(7));
+        assert_eq!(g.len(), 1);
+        assert_eq!(g.get(id), Some(LispyValue::int(7)));
+        assert_eq!(g.get(lispy_runtime::intern("bar")), None);
+    }
+
+    #[test]
+    fn run_with_globals_threads_the_table() {
+        // The Twig frontend rejects unbound name references at
+        // compile time, so a program that touches a pre-seeded
+        // global isn't expressible from source.  Instead we verify
+        // that `run_with_globals` accepts a non-empty seed table,
+        // runs a program that doesn't interfere with it, and
+        // leaves the table intact afterwards (so a future
+        // multi-run TwigVM can reuse it).
+        let mut g = Globals::new();
+        g.set(lispy_runtime::intern("seed"), LispyValue::int(99));
+        let module = compile_source("(+ 1 2)", "test").unwrap();
+        let v = run_with_globals(&module, &mut g).unwrap();
+        assert_eq!(v.as_int(), Some(3));
+        // Pre-seeded value is still there after the run.
+        assert_eq!(g.get(lispy_runtime::intern("seed")), Some(LispyValue::int(99)));
+    }
+
+    #[test]
+    fn defines_then_run_with_seeded_globals_writes_more() {
+        // (define x 5) (+ x 10) → 15.  Verifies that global_set
+        // works when the dispatcher receives a non-empty initial
+        // globals table, and that the new entry coexists with
+        // pre-seeded ones.
+        let mut g = Globals::new();
+        g.set(lispy_runtime::intern("seed"), LispyValue::int(99));
+        let module = compile_source("(define x 5) (+ x 10)", "test").unwrap();
+        let v = run_with_globals(&module, &mut g).unwrap();
+        assert_eq!(v.as_int(), Some(15));
+        // Both the seed and the program-defined x are present.
+        assert_eq!(g.get(lispy_runtime::intern("seed")), Some(LispyValue::int(99)));
+        assert_eq!(g.get(lispy_runtime::intern("x")), Some(LispyValue::int(5)));
     }
 }

@@ -144,14 +144,30 @@ impl ConsCell {
 pub struct Closure {
     /// LANG20 uniform 16-byte header.  `class_or_kind == CLASS_CLOSURE`.
     pub header: ObjectHeader,
-    /// Interned name of the underlying IIRFunction.
+    /// Interned name of the underlying IIRFunction (or builtin name,
+    /// when [`Self::flags`] bit 0 is set).
     pub fn_name: SymbolId,
-    /// Padding to keep the captures field 8-byte aligned.  Reserved
-    /// for future use (e.g. arity hint).
-    pub _reserved: u32,
+    /// Bitfield.  Bit 0 (`CLOSURE_FLAG_BUILTIN`) marks the closure as
+    /// wrapping a builtin rather than a user IIRFunction.  Higher
+    /// bits reserved (planned: arity hint).
+    pub flags: u32,
     /// Captured values, prepended to user args at apply time.
+    /// Always empty for builtin closures.
     pub captures: Vec<LispyValue>,
 }
+
+/// [`Closure::flags`] bit 0: this closure wraps a builtin
+/// (`make_builtin_closure`) rather than a user IIRFunction
+/// (`make_closure`).
+///
+/// Distinguishes the two at apply time:
+///
+/// - User-fn closure → look up `fn_name` in the IIRModule's
+///   functions table, dispatch with `captures ++ args`.
+/// - Builtin closure → look up `fn_name` via
+///   [`crate::LispyBinding::resolve_builtin`], dispatch with `args`
+///   (captures must be empty).
+pub const CLOSURE_FLAG_BUILTIN: u32 = 0b0001;
 
 impl std::fmt::Debug for Closure {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -174,14 +190,33 @@ impl Closure {
         Closure {
             header: ObjectHeader::new(CLASS_CLOSURE, std::mem::size_of::<Closure>() as u32),
             fn_name,
-            _reserved: 0,
+            flags: 0,
             captures,
+        }
+    }
+
+    /// Construct a builtin-wrapping closure.  No captures by
+    /// construction; sets the [`CLOSURE_FLAG_BUILTIN`] flag so apply
+    /// time can dispatch through `resolve_builtin` instead of the
+    /// user-fn lookup path.
+    pub fn new_builtin(fn_name: SymbolId) -> Closure {
+        Closure {
+            header: ObjectHeader::new(CLASS_CLOSURE, std::mem::size_of::<Closure>() as u32),
+            fn_name,
+            flags: CLOSURE_FLAG_BUILTIN,
+            captures: Vec::new(),
         }
     }
 
     /// Number of captured values.
     pub fn capture_count(&self) -> usize {
         self.captures.len()
+    }
+
+    /// Returns `true` if this closure wraps a builtin
+    /// (created via `make_builtin_closure`).
+    pub fn is_builtin(&self) -> bool {
+        self.flags & CLOSURE_FLAG_BUILTIN != 0
     }
 }
 
@@ -214,6 +249,20 @@ pub fn alloc_cons(car: LispyValue, cdr: LispyValue) -> LispyValue {
 /// Same PR 2 vs. future-PR contract as [`alloc_cons`].
 pub fn alloc_closure(fn_name: SymbolId, captures: Vec<LispyValue>) -> LispyValue {
     let clos = Box::new(Closure::new(fn_name, captures));
+    let ptr = Box::leak(clos) as *const Closure;
+    // SAFETY: Box::leak'd Closure is 8-aligned (const_assert) and lives forever.
+    unsafe { LispyValue::from_heap(ptr) }
+}
+
+/// Allocate a builtin-wrapping [`Closure`] (no captures, marked
+/// with [`CLOSURE_FLAG_BUILTIN`]) and return a tagged [`LispyValue`].
+///
+/// Used by `make_builtin_closure` so that bare builtin references
+/// like `(+) ` or `(cons)` can be passed as values into higher-order
+/// positions.  At apply time the dispatcher detects the flag and
+/// routes through `LispyBinding::resolve_builtin`.
+pub fn alloc_builtin_closure(fn_name: SymbolId) -> LispyValue {
+    let clos = Box::new(Closure::new_builtin(fn_name));
     let ptr = Box::leak(clos) as *const Closure;
     // SAFETY: Box::leak'd Closure is 8-aligned (const_assert) and lives forever.
     unsafe { LispyValue::from_heap(ptr) }

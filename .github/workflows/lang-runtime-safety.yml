@@ -68,7 +68,14 @@ jobs:
   miri:
     name: Miri (UB detection)
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # Bumped from 30 to 90 in PR 5: the twig-vm Miri suite alone
+    # takes ~40 min on a fast Mac (closure paths added in PR 5
+    # roughly tripled the work vs PR 4) and ~30 min on the GitHub
+    # Linux runner — right at the edge.  Add headroom so a slow
+    # runner doesn't fail the job at 30:15.  Subsequent PRs will
+    # likely push this further; consider sharding by crate when
+    # the wallclock crosses 60 min.
+    timeout-minutes: 90
     env:
       # Why no `-Zmiri-strict-provenance`?
       #
