@@ -21,6 +21,7 @@ alphabet = [
   "]",
   "\"",
   "'",
+  "`",
   " ",
   "\n",
   "\t",
@@ -2901,6 +2902,51 @@ actions = [
   "set_return_state(attribute_value_unquoted)",
   "clear_temporary_buffer",
   "append_temporary_buffer(&)",
+]
+
+[[transitions]]
+from = "attribute_value_unquoted"
+matcher = { literal = "\"" }
+to = "attribute_value_unquoted"
+actions = [
+  "parse_error(unexpected-character-in-unquoted-attribute-value)",
+  "append_attribute_value(current)",
+]
+
+[[transitions]]
+from = "attribute_value_unquoted"
+matcher = { literal = "'" }
+to = "attribute_value_unquoted"
+actions = [
+  "parse_error(unexpected-character-in-unquoted-attribute-value)",
+  "append_attribute_value(current)",
+]
+
+[[transitions]]
+from = "attribute_value_unquoted"
+matcher = { literal = "<" }
+to = "attribute_value_unquoted"
+actions = [
+  "parse_error(unexpected-character-in-unquoted-attribute-value)",
+  "append_attribute_value(current)",
+]
+
+[[transitions]]
+from = "attribute_value_unquoted"
+matcher = { literal = "=" }
+to = "attribute_value_unquoted"
+actions = [
+  "parse_error(unexpected-character-in-unquoted-attribute-value)",
+  "append_attribute_value(current)",
+]
+
+[[transitions]]
+from = "attribute_value_unquoted"
+matcher = { literal = "`" }
+to = "attribute_value_unquoted"
+actions = [
+  "parse_error(unexpected-character-in-unquoted-attribute-value)",
+  "append_attribute_value(current)",
 ]
 
 [[transitions]]

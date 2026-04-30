@@ -28,6 +28,9 @@ classic Latin-1 entity set, preserving entity-name case so legacy names such as
 Duplicate attributes recover with HTML semantics: the first attribute value is
 kept, later attributes with the same interpreted name are dropped, and a
 `duplicate-attribute` diagnostic is recorded.
+Unquoted attribute values also preserve spec-defined unexpected characters
+such as `"`, `'`, `<`, `=`, and `` ` `` while reporting
+`unexpected-character-in-unquoted-attribute-value`.
 Comment tokenization includes the standard start-dash recovery cases for empty
 HTML comments such as `<!-->` and `<!--->`, while still preserving normal
 Mosaic-era `<!--note-->` comments. Nested-looking `<!--` sequences inside an

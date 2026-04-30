@@ -105,6 +105,63 @@ fn default_html_lexer_reports_and_drops_duplicate_attributes() {
 }
 
 #[test]
+fn default_html_lexer_reports_unexpected_chars_in_unquoted_attribute_values() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer
+        .push("<a data=one=two sq=x'y lt=x<y eq=x=y tick=x`y dq=x\"y>")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "data".to_string(),
+                        value: "one=two".to_string(),
+                    },
+                    Attribute {
+                        name: "sq".to_string(),
+                        value: "x'y".to_string(),
+                    },
+                    Attribute {
+                        name: "lt".to_string(),
+                        value: "x<y".to_string(),
+                    },
+                    Attribute {
+                        name: "eq".to_string(),
+                        value: "x=y".to_string(),
+                    },
+                    Attribute {
+                        name: "tick".to_string(),
+                        value: "x`y".to_string(),
+                    },
+                    Attribute {
+                        name: "dq".to_string(),
+                        value: "x\"y".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| {
+                diagnostic.code == "unexpected-character-in-unquoted-attribute-value"
+            })
+            .count(),
+        6
+    );
+}
+
+#[test]
 fn default_html_lexer_marks_missing_doctype_name_force_quirks() {
     let mut lexer = create_html_lexer().unwrap();
 
