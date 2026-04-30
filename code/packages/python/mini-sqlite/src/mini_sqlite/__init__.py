@@ -33,10 +33,11 @@ threadsafety = 1
 paramstyle = "qmark"
 """PEP 249: declared paramstyle is ``qmark`` (``?`` placeholders).
 
-The driver also accepts ``:name`` placeholders when *parameters* is a
-mapping — matching the stdlib ``sqlite3`` module's behaviour, which also
-declares ``qmark`` while accepting both styles at runtime.  See
-``binding.py`` for substitution rules.
+The driver also accepts the other two SQLite paramstyles at runtime:
+``:N`` (numeric, 1-indexed) when *parameters* is a sequence, and
+``:name`` (named) when *parameters* is a mapping.  This matches the
+stdlib ``sqlite3`` module, which likewise declares ``qmark`` while
+accepting all three styles.  See ``binding.py`` for substitution rules.
 """
 
 
