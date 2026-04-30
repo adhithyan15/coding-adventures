@@ -13,7 +13,8 @@
   "author": "Adhithya Rajasekaran",
   "dependencies": {
     "@coding-adventures/multi-directed-graph": "file:../multi-directed-graph",
-    "@coding-adventures/neural-network": "file:../neural-network"
+    "@coding-adventures/neural-network": "file:../neural-network",
+    "matrix": "file:../matrix"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

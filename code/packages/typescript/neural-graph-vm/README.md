@@ -10,9 +10,11 @@ lower from.
 ```typescript
 import { createNeuralNetwork } from "@coding-adventures/neural-network";
 import {
+  compileBytecodeToMatrixPlan,
   compileNeuralNetworkToBytecode,
   runNeuralBytecodeForward,
   runNeuralBytecodeForwardWithTrace,
+  runNeuralMatrixForward,
 } from "@coding-adventures/neural-graph-vm";
 
 const network = createNeuralNetwork("tiny-model")
@@ -30,6 +32,13 @@ const outputs = runNeuralBytecodeForward(bytecode, { x0: 4, x1: 8 });
 
 const trace = runNeuralBytecodeForwardWithTrace(bytecode, { x0: 4, x1: 8 });
 trace.instructions[0].sourceNode; // "x0"
+
+const matrixPlan = compileBytecodeToMatrixPlan(bytecode);
+const batch = runNeuralMatrixForward(matrixPlan, {
+  x0: [4, 8],
+  x1: [8, 16],
+});
+// batch.outputs is { prediction: [7, 14] }
 ```
 
 Supported v0 graph ops:
@@ -43,12 +52,19 @@ Supported v0 graph ops:
 | `output` | Stores a named scalar output. |
 
 The interpreter is intentionally scalar and small. Its job is correctness,
-debuggability, and portability before optimized matrix lowering exists.
+debuggability, and portability.
 
 `runNeuralBytecodeForwardWithTrace` returns each instruction's value reads,
 value write, output write, and source graph node/edge metadata. Visualizers can
 use that to show how graph edges become bytecode operations without making the
 graph data structure own runtime behavior.
+
+`compileBytecodeToMatrixPlan` lowers scalar forward bytecode into a backend-
+neutral matrix plan. `runNeuralMatrixForward` executes that plan through a
+`MatrixBackend` interface, with `TypeScriptMatrixBackend` adapting the existing
+`matrix` package as the reference CPU implementation. Future GPU or WASM
+backends can implement the same interface without changing graph or bytecode
+compiler code.
 
 `MultiDirectedGraph` remains generic and domain-neutral. The
 `@coding-adventures/neural-network` package is the neural primitive layer on top:

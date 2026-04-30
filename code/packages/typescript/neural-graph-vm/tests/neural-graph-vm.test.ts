@@ -12,10 +12,14 @@ import { describe, expect, it } from "vitest";
 
 import {
   NeuralGraphCompileError,
+  compileBytecodeToMatrixPlan,
   compileNeuralGraphToBytecode,
   compileNeuralNetworkToBytecode,
   runNeuralBytecodeForward,
   runNeuralBytecodeForwardWithTrace,
+  runNeuralMatrixForward,
+  runNeuralMatrixForwardScalars,
+  type MatrixBackend,
 } from "../src/index.js";
 
 function makeTinyWeightedSumGraph(): NeuralGraph {
@@ -85,6 +89,103 @@ describe("neural graph vm", () => {
     const outputs = runNeuralBytecodeForward(bytecode, { x0: 4, x1: 8 });
 
     expect(outputs).toEqual({ prediction: 6 });
+  });
+
+  it("lowers forward bytecode into a matrix plan", () => {
+    const bytecode = compileNeuralGraphToBytecode(makeTinyWeightedSumGraph());
+    const plan = compileBytecodeToMatrixPlan(bytecode);
+
+    expect(plan.magic).toBe("CANM");
+    expect(plan.instructions.map((insn) => insn.op)).toEqual([
+      "LOAD_CONST_MATRIX",
+      "LOAD_INPUT_MATRIX",
+      "LOAD_INPUT_MATRIX",
+      "WEIGHTED_SUM_MATRIX",
+      "ACTIVATE_MATRIX",
+      "STORE_OUTPUT_MATRIX",
+    ]);
+    expect(plan.instructions[3].terms?.map((term) => term.edgeId)).toEqual([
+      "bias_to_sum",
+      "w0",
+      "w1",
+    ]);
+  });
+
+  it("runs lowered matrix plans through the default matrix backend", () => {
+    const bytecode = compileNeuralGraphToBytecode(makeTinyWeightedSumGraph());
+    const plan = compileBytecodeToMatrixPlan(bytecode);
+    const outputs = runNeuralMatrixForwardScalars(plan, { x0: 4, x1: 8 });
+
+    expect(outputs).toEqual({ prediction: 6 });
+  });
+
+  it("runs matrix plans across a small batch", () => {
+    const bytecode = compileNeuralNetworkToBytecode(createXorNetwork());
+    const plan = compileBytecodeToMatrixPlan(bytecode);
+    const result = runNeuralMatrixForward(plan, {
+      x0: [0, 0, 1, 1],
+      x1: [0, 1, 0, 1],
+    });
+    const predictions = result.outputs.prediction;
+
+    expect(predictions[0]).toBeLessThan(0.01);
+    expect(predictions[1]).toBeGreaterThan(0.99);
+    expect(predictions[2]).toBeGreaterThan(0.99);
+    expect(predictions[3]).toBeLessThan(0.01);
+  });
+
+  it("runs matrix plans against a swappable backend interface", () => {
+    const calls: string[] = [];
+    const backend: MatrixBackend<number[]> = {
+      fromRows(rows) {
+        calls.push("fromRows");
+        return rows.map((row) => row[0] ?? 0);
+      },
+      toRows(matrix) {
+        calls.push("toRows");
+        return matrix.map((value) => [value]);
+      },
+      column(values) {
+        calls.push("column");
+        return [...values];
+      },
+      constant(value, rows) {
+        calls.push("constant");
+        return Array(rows).fill(value);
+      },
+      add(left, right) {
+        calls.push("add");
+        return left.map((value, index) => value + right[index]);
+      },
+      scale(matrix, scalar) {
+        calls.push("scale");
+        return matrix.map((value) => value * scalar);
+      },
+      dot() {
+        calls.push("dot");
+        throw new Error("dot is not used by this v0 plan");
+      },
+      map(matrix, fn) {
+        calls.push("map");
+        return matrix.map(fn);
+      },
+      toColumn(matrix) {
+        calls.push("toColumn");
+        return [...matrix];
+      },
+    };
+    const bytecode = compileNeuralGraphToBytecode(makeTinyWeightedSumGraph());
+    const plan = compileBytecodeToMatrixPlan(bytecode);
+    const result = runNeuralMatrixForward(
+      plan,
+      { x0: [4, 8], x1: [8, 16] },
+      backend
+    );
+
+    expect(result.outputs).toEqual({ prediction: [6, 13] });
+    expect(calls).toContain("scale");
+    expect(calls).toContain("add");
+    expect(calls).toContain("map");
   });
 
   it("supports negative weighted sums through relu", () => {

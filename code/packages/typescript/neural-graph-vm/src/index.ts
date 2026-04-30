@@ -1,5 +1,6 @@
 export {
   NeuralGraphCompileError,
+  applyNeuralActivation,
   compileNeuralNetworkToBytecode,
   compileNeuralGraphToBytecode,
   runNeuralBytecodeForward,
@@ -14,3 +15,18 @@ export {
   type NeuralBytecodeValueRead,
   type NeuralBytecodeValueWrite,
 } from "./neural-graph-vm.js";
+
+export {
+  TypeScriptMatrixBackend,
+  compileBytecodeToMatrixPlan,
+  runNeuralMatrixForward,
+  runNeuralMatrixForwardScalars,
+  type MatrixBackend,
+  type NeuralMatrixForwardResult,
+  type NeuralMatrixInputValue,
+  type NeuralMatrixInputs,
+  type NeuralMatrixPlan,
+  type NeuralMatrixPlanInstruction,
+  type NeuralMatrixPlanOpcode,
+  type NeuralMatrixPlanTerm,
+} from "./matrix-plan.js";
