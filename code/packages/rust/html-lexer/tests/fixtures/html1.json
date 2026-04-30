@@ -95,6 +95,30 @@
       ]
     },
     {
+      "id": "null-character-comment-replacement",
+      "description": "NULL characters in comments and bogus comments are replaced with U+FFFD",
+      "input": "<!--a\u0000b--><!--\u0000--><!--a-\u0000b--><!--a--\u0000b--><!foo\u0000><!-\u0000>",
+      "tokens": [
+        "Comment(data=a\uFFFDb)",
+        "Comment(data=\uFFFD)",
+        "Comment(data=a-\uFFFDb)",
+        "Comment(data=a--\uFFFDb)",
+        "Comment(data=foo\uFFFD)",
+        "Comment(data=-\uFFFD)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "unexpected-null-character",
+        "unexpected-null-character",
+        "unexpected-null-character",
+        "unexpected-null-character",
+        "incorrectly-opened-comment",
+        "unexpected-null-character",
+        "incorrectly-opened-comment",
+        "unexpected-null-character"
+      ]
+    },
+    {
       "id": "mosaic-doctype-and-heading",
       "input": "<!DOCTYPE HTML><H1 class=test>Hello</H1>",
       "tokens": [

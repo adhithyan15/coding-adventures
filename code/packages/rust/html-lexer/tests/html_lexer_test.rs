@@ -817,6 +817,37 @@ fn default_html_lexer_preserves_bang_after_comment_end_when_not_closing() {
 }
 
 #[test]
+fn default_html_lexer_replaces_null_characters_in_comments() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer
+        .push("<!--a\0b--><!--\0--><!--a-\0b--><!--a--\0b--><!foo\0><!-\0>")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Comment("a\u{FFFD}b".to_string()),
+            Token::Comment("\u{FFFD}".to_string()),
+            Token::Comment("a-\u{FFFD}b".to_string()),
+            Token::Comment("a--\u{FFFD}b".to_string()),
+            Token::Comment("foo\u{FFFD}".to_string()),
+            Token::Comment("-\u{FFFD}".to_string()),
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-null-character")
+            .count(),
+        6
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_chunked_input_and_unicode_any_matcher() {
     let mut lexer = create_html_lexer().unwrap();
 

@@ -28,3 +28,5 @@ All notable changes to the `state-machine-tokenizer` crate will be documented in
   invalid attribute-value code points with U+FFFD without host callbacks.
 - Added `append_tag_name_replacement` and `append_attribute_name_replacement`
   so lexer definitions can recover invalid name code points with U+FFFD.
+- Added `append_comment_replacement` so lexer definitions can recover invalid
+  comment data code points with U+FFFD.

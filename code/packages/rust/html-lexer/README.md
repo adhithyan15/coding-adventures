@@ -38,6 +38,9 @@ the lexer/tokenizer boundary.
 Tag names and attribute names now use the same recovery shape, so a raw NULL in
 markup names becomes U+FFFD and records `unexpected-null-character` instead of
 leaking the raw code point into emitted tokens.
+Comments and bogus comments also replace raw NULL characters with U+FFFD while
+recording `unexpected-null-character`, including dash-sensitive comment end
+substates that must preserve their pending `-` or `--` text first.
 Comment tokenization includes the standard start-dash recovery cases for empty
 HTML comments such as `<!-->` and `<!--->`, while still preserving normal
 Mosaic-era `<!--note-->` comments. Nested-looking `<!--` sequences inside an
