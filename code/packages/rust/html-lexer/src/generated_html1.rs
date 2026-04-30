@@ -2129,6 +2129,22 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "script_data_escaped".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "script_data_escaped".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "append_text_replacement".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "script_data_escaped".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Eof),
             to: vec![
                 "done".to_string(),
@@ -2183,6 +2199,22 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: Vec::new(),
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "script_data_escaped_dash".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "script_data_escaped".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "append_text_replacement".to_string(),
+            ],
             consume: true,
         },
         TransitionDefinition {
@@ -2256,6 +2288,22 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "append_text(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "script_data_escaped_dash_dash".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "script_data_escaped".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "append_text_replacement".to_string(),
             ],
             consume: true,
         },
@@ -2483,6 +2531,22 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "script_data_double_escaped".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "script_data_double_escaped".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "append_text_replacement".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "script_data_double_escaped".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Eof),
             to: vec![
                 "done".to_string(),
@@ -2538,6 +2602,22 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "append_text(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "script_data_double_escaped_dash".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "script_data_double_escaped".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "append_text_replacement".to_string(),
             ],
             consume: true,
         },
@@ -2614,6 +2694,22 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "append_text(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "script_data_double_escaped_dash_dash".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "script_data_double_escaped".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "append_text_replacement".to_string(),
             ],
             consume: true,
         },

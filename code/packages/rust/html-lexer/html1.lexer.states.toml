@@ -927,6 +927,12 @@ to = "script_data_escaped_less_than_sign"
 
 [[transitions]]
 from = "script_data_escaped"
+matcher = { literal = "\u0000" }
+to = "script_data_escaped"
+actions = ["parse_error(unexpected-null-character)", "append_text_replacement"]
+
+[[transitions]]
+from = "script_data_escaped"
 matcher = { eof = true }
 to = "done"
 consume = false
@@ -948,6 +954,12 @@ actions = ["append_text(current)"]
 from = "script_data_escaped_dash"
 matcher = { literal = "<" }
 to = "script_data_escaped_less_than_sign"
+
+[[transitions]]
+from = "script_data_escaped_dash"
+matcher = { literal = "\u0000" }
+to = "script_data_escaped"
+actions = ["parse_error(unexpected-null-character)", "append_text_replacement"]
 
 [[transitions]]
 from = "script_data_escaped_dash"
@@ -978,6 +990,12 @@ from = "script_data_escaped_dash_dash"
 matcher = { literal = ">" }
 to = "script_data"
 actions = ["append_text(current)"]
+
+[[transitions]]
+from = "script_data_escaped_dash_dash"
+matcher = { literal = "\u0000" }
+to = "script_data_escaped"
+actions = ["parse_error(unexpected-null-character)", "append_text_replacement"]
 
 [[transitions]]
 from = "script_data_escaped_dash_dash"
@@ -1082,6 +1100,12 @@ actions = ["append_text(current)"]
 
 [[transitions]]
 from = "script_data_double_escaped"
+matcher = { literal = "\u0000" }
+to = "script_data_double_escaped"
+actions = ["parse_error(unexpected-null-character)", "append_text_replacement"]
+
+[[transitions]]
+from = "script_data_double_escaped"
 matcher = { eof = true }
 to = "done"
 consume = false
@@ -1104,6 +1128,12 @@ from = "script_data_double_escaped_dash"
 matcher = { literal = "<" }
 to = "script_data_double_escaped_less_than_sign"
 actions = ["append_text(current)"]
+
+[[transitions]]
+from = "script_data_double_escaped_dash"
+matcher = { literal = "\u0000" }
+to = "script_data_double_escaped"
+actions = ["parse_error(unexpected-null-character)", "append_text_replacement"]
 
 [[transitions]]
 from = "script_data_double_escaped_dash"
@@ -1135,6 +1165,12 @@ from = "script_data_double_escaped_dash_dash"
 matcher = { literal = ">" }
 to = "script_data_double_escaped"
 actions = ["append_text(current)"]
+
+[[transitions]]
+from = "script_data_double_escaped_dash_dash"
+matcher = { literal = "\u0000" }
+to = "script_data_double_escaped"
+actions = ["parse_error(unexpected-null-character)", "append_text_replacement"]
 
 [[transitions]]
 from = "script_data_double_escaped_dash_dash"
