@@ -564,14 +564,16 @@ impl Tokenizer {
                         .push_str(&temporary_buffer);
                 }
                 "append_numeric_character_reference_to_text" => {
-                    let ch = numeric_character_reference(&self.temporary_buffer);
+                    let reference = numeric_character_reference(&self.temporary_buffer);
                     self.temporary_buffer.clear();
-                    self.text_buffer.push(ch);
+                    self.text_buffer.push(reference.character);
+                    self.record_diagnostics(reference.diagnostics, position, state);
                 }
                 "append_numeric_character_reference_to_attribute_value" => {
-                    let ch = numeric_character_reference(&self.temporary_buffer);
+                    let reference = numeric_character_reference(&self.temporary_buffer);
                     self.temporary_buffer.clear();
-                    self.attribute_mut(action)?.value.push(ch);
+                    self.attribute_mut(action)?.value.push(reference.character);
+                    self.record_diagnostics(reference.diagnostics, position, state);
                 }
                 "append_named_character_reference_to_text" => {
                     let replacement =
@@ -949,6 +951,20 @@ impl Tokenizer {
         }
     }
 
+    fn record_diagnostics(
+        &mut self,
+        diagnostics: Vec<&'static str>,
+        position: SourcePosition,
+        state: &str,
+    ) {
+        self.diagnostics
+            .extend(diagnostics.into_iter().map(|code| Diagnostic {
+                code: code.to_string(),
+                position,
+                state: state.to_string(),
+            }));
+    }
+
     fn emit_current_token(&mut self, action: &str) -> Result<()> {
         if matches!(self.current_token, Some(CurrentToken::StartTag { .. }))
             && self.current_attribute.is_some()
@@ -1136,9 +1152,18 @@ fn push_lowercase(target: &mut String, ch: char) {
     }
 }
 
-fn numeric_character_reference(buffer: &str) -> char {
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct NumericCharacterReference {
+    character: char,
+    diagnostics: Vec<&'static str>,
+}
+
+fn numeric_character_reference(buffer: &str) -> NumericCharacterReference {
     let Some(raw_digits) = buffer.strip_prefix("&#") else {
-        return '\u{FFFD}';
+        return NumericCharacterReference {
+            character: '\u{FFFD}',
+            diagnostics: vec!["absence-of-digits-in-numeric-character-reference"],
+        };
     };
     let (radix, digits) = match raw_digits
         .strip_prefix('x')
@@ -1148,19 +1173,146 @@ fn numeric_character_reference(buffer: &str) -> char {
         None => (10, raw_digits),
     };
     if digits.is_empty() {
-        return '\u{FFFD}';
+        return NumericCharacterReference {
+            character: '\u{FFFD}',
+            diagnostics: vec!["absence-of-digits-in-numeric-character-reference"],
+        };
     }
 
-    u32::from_str_radix(digits, radix)
-        .ok()
-        .and_then(|value| {
-            if value == 0 {
-                None
-            } else {
-                char::from_u32(value)
-            }
-        })
-        .unwrap_or('\u{FFFD}')
+    let Ok(value) = u32::from_str_radix(digits, radix) else {
+        return NumericCharacterReference {
+            character: '\u{FFFD}',
+            diagnostics: vec!["character-reference-outside-unicode-range"],
+        };
+    };
+
+    if value == 0 {
+        return NumericCharacterReference {
+            character: '\u{FFFD}',
+            diagnostics: vec!["null-character-reference"],
+        };
+    }
+
+    if value > 0x10FFFF {
+        return NumericCharacterReference {
+            character: '\u{FFFD}',
+            diagnostics: vec!["character-reference-outside-unicode-range"],
+        };
+    }
+
+    if (0xD800..=0xDFFF).contains(&value) {
+        return NumericCharacterReference {
+            character: '\u{FFFD}',
+            diagnostics: vec!["surrogate-character-reference"],
+        };
+    }
+
+    let mut diagnostics = Vec::new();
+    if is_noncharacter(value) {
+        diagnostics.push("noncharacter-character-reference");
+    }
+
+    let character = if let Some(replacement) = windows_1252_control_replacement(value) {
+        diagnostics.push("control-character-reference");
+        replacement
+    } else {
+        let character = char::from_u32(value).unwrap_or('\u{FFFD}');
+        if is_control_character_reference(value) {
+            diagnostics.push("control-character-reference");
+        }
+        character
+    };
+
+    NumericCharacterReference {
+        character,
+        diagnostics,
+    }
+}
+
+fn is_noncharacter(value: u32) -> bool {
+    (0xFDD0..=0xFDEF).contains(&value)
+        || matches!(
+            value,
+            0xFFFE
+                | 0xFFFF
+                | 0x1FFFE
+                | 0x1FFFF
+                | 0x2FFFE
+                | 0x2FFFF
+                | 0x3FFFE
+                | 0x3FFFF
+                | 0x4FFFE
+                | 0x4FFFF
+                | 0x5FFFE
+                | 0x5FFFF
+                | 0x6FFFE
+                | 0x6FFFF
+                | 0x7FFFE
+                | 0x7FFFF
+                | 0x8FFFE
+                | 0x8FFFF
+                | 0x9FFFE
+                | 0x9FFFF
+                | 0xAFFFE
+                | 0xAFFFF
+                | 0xBFFFE
+                | 0xBFFFF
+                | 0xCFFFE
+                | 0xCFFFF
+                | 0xDFFFE
+                | 0xDFFFF
+                | 0xEFFFE
+                | 0xEFFFF
+                | 0xFFFFE
+                | 0xFFFFF
+                | 0x10FFFE
+                | 0x10FFFF
+        )
+}
+
+fn is_control_character_reference(value: u32) -> bool {
+    value == 0x0D || (is_control(value) && !is_ascii_whitespace_control(value))
+}
+
+fn is_control(value: u32) -> bool {
+    value <= 0x1F || (0x7F..=0x9F).contains(&value)
+}
+
+fn is_ascii_whitespace_control(value: u32) -> bool {
+    matches!(value, 0x09 | 0x0A | 0x0C | 0x20)
+}
+
+fn windows_1252_control_replacement(value: u32) -> Option<char> {
+    match value {
+        0x80 => Some('\u{20AC}'),
+        0x82 => Some('\u{201A}'),
+        0x83 => Some('\u{0192}'),
+        0x84 => Some('\u{201E}'),
+        0x85 => Some('\u{2026}'),
+        0x86 => Some('\u{2020}'),
+        0x87 => Some('\u{2021}'),
+        0x88 => Some('\u{02C6}'),
+        0x89 => Some('\u{2030}'),
+        0x8A => Some('\u{0160}'),
+        0x8B => Some('\u{2039}'),
+        0x8C => Some('\u{0152}'),
+        0x8E => Some('\u{017D}'),
+        0x91 => Some('\u{2018}'),
+        0x92 => Some('\u{2019}'),
+        0x93 => Some('\u{201C}'),
+        0x94 => Some('\u{201D}'),
+        0x95 => Some('\u{2022}'),
+        0x96 => Some('\u{2013}'),
+        0x97 => Some('\u{2014}'),
+        0x98 => Some('\u{02DC}'),
+        0x99 => Some('\u{2122}'),
+        0x9A => Some('\u{0161}'),
+        0x9B => Some('\u{203A}'),
+        0x9C => Some('\u{0153}'),
+        0x9E => Some('\u{017E}'),
+        0x9F => Some('\u{0178}'),
+        _ => None,
+    }
 }
 
 fn named_character_reference(buffer: &str) -> Option<&'static str> {

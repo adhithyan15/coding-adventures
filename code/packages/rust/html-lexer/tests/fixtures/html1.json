@@ -539,6 +539,9 @@
       "tokens": [
         "Text(data=Letters: A B C \uFFFD)",
         "EOF"
+      ],
+      "diagnostics": [
+        "null-character-reference"
       ]
     },
     {
@@ -548,6 +551,25 @@
       "tokens": [
         "StartTag(name=a, attributes=[title=AB, data-x=C, note=\uFFFD], self_closing=false)",
         "EOF"
+      ],
+      "diagnostics": [
+        "null-character-reference"
+      ]
+    },
+    {
+      "id": "html-invalid-numeric-character-reference-recovery",
+      "description": "Invalid numeric character references report spec diagnostics and use replacement or remapped characters",
+      "input": "<a data='&#0; &#xD800; &#x110000; &#xFDD0; &#x80;'>",
+      "tokens": [
+        "StartTag(name=a, attributes=[data=\uFFFD \uFFFD \uFFFD \uFDD0 \u20AC], self_closing=false)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "null-character-reference",
+        "surrogate-character-reference",
+        "character-reference-outside-unicode-range",
+        "noncharacter-character-reference",
+        "control-character-reference"
       ]
     },
     {

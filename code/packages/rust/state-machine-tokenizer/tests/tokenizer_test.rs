@@ -617,6 +617,65 @@ fn tokenizer_decodes_numeric_character_references_from_temporary_buffer() {
 }
 
 #[test]
+fn tokenizer_reports_invalid_numeric_character_references() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["N"]),
+            vec![EffectfulTransition::new(
+                "data",
+                EffectfulMatcher::Event("N".to_string()),
+                "done",
+            )
+            .with_effects(&[
+                "clear_temporary_buffer",
+                "append_temporary_buffer(&#0)",
+                "append_numeric_character_reference_to_text",
+                "append_text( )",
+                "append_temporary_buffer(&#xD800)",
+                "append_numeric_character_reference_to_text",
+                "append_text( )",
+                "append_temporary_buffer(&#x110000)",
+                "append_numeric_character_reference_to_text",
+                "append_text( )",
+                "append_temporary_buffer(&#xFDD0)",
+                "append_numeric_character_reference_to_text",
+                "append_text( )",
+                "append_temporary_buffer(&#x80)",
+                "append_numeric_character_reference_to_text",
+                "flush_text",
+            ])],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("N").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![Token::Text(
+            "\u{FFFD} \u{FFFD} \u{FFFD} \u{FDD0} \u{20AC}".to_string()
+        )]
+    );
+    assert_eq!(
+        tokenizer
+            .diagnostics()
+            .iter()
+            .map(|diagnostic| diagnostic.code.as_str())
+            .collect::<Vec<_>>(),
+        vec![
+            "null-character-reference",
+            "surrogate-character-reference",
+            "character-reference-outside-unicode-range",
+            "noncharacter-character-reference",
+            "control-character-reference",
+        ]
+    );
+}
+
+#[test]
 fn tokenizer_decodes_named_character_references_from_temporary_buffer() {
     let mut tokenizer = Tokenizer::new(
         EffectfulStateMachine::new(

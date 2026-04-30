@@ -33,3 +33,6 @@ All notable changes to the `state-machine-tokenizer` crate will be documented in
 - Added DOCTYPE replacement actions for names, public identifiers, and system
   identifiers so lexer definitions can recover invalid DOCTYPE code points with
   U+FFFD.
+- Numeric character-reference actions now report invalid-code-point diagnostics
+  and apply HTML replacement/remapping behavior for null, surrogate,
+  out-of-range, noncharacter, and Windows-1252 control references.

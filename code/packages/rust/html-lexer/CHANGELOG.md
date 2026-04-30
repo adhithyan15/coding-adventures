@@ -114,6 +114,9 @@ documented in this file.
 - NULL characters in script escaped and double-escaped substates now recover
   with `unexpected-null-character` and append U+FFFD while preserving their
   dash-sensitive state transitions.
+- Numeric character references now report invalid-code-point diagnostics and
+  recover with replacement/remapping behavior for null, surrogate,
+  out-of-range, noncharacter, and Windows-1252 control references.
 - One-dash markup declarations such as `<!->` and `<!-x>` now use
   incorrectly-opened bogus-comment recovery instead of empty-comment recovery.
 - Invalid tag-open characters now follow HTML recovery: stray `<` text is
