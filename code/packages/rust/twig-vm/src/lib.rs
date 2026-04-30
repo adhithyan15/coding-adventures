@@ -73,8 +73,10 @@ use lispy_runtime::LispyBinding;
 use twig_ir_compiler::compile_source as compile_twig;
 
 pub use dispatch::{
-    run, run_with_globals, run_with_state, Globals, ICTable, RunError, MAX_DISPATCH_DEPTH,
-    MAX_IC_FUNCTIONS, MAX_IC_SLOTS_PER_FUNCTION, MAX_INSTRUCTIONS_PER_RUN, MAX_REGISTERS_PER_FRAME,
+    run, run_with_globals, run_with_profile, run_with_state, Globals, ICTable, ProfileTable,
+    RunError, MAX_DISPATCH_DEPTH, MAX_IC_FUNCTIONS, MAX_IC_SLOTS_PER_FUNCTION,
+    MAX_INSTRUCTIONS_PER_RUN, MAX_PROFILED_FUNCTIONS, MAX_PROFILED_INSTRUCTION_SLOTS,
+    MAX_REGISTERS_PER_FRAME,
 };
 pub use operand::operand_to_value;
 

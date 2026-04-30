@@ -123,7 +123,7 @@
 
 use std::collections::HashMap;
 
-use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
+use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand, SlotState};
 use lang_runtime_core::{
     DispatchCx, InlineCache, LangBinding, RuntimeError, SymbolId,
 };
@@ -591,6 +591,204 @@ impl ICTable {
 }
 
 // ---------------------------------------------------------------------------
+// Profile table (PR 8)
+// ---------------------------------------------------------------------------
+
+/// Maximum number of distinct functions the profiler tracks.
+///
+/// Mirrors [`MAX_IC_FUNCTIONS`] — same defensive cap shape.
+/// Hand-built malformed IIR with millions of unique function
+/// names can't unboundedly grow the per-process profile state.
+pub const MAX_PROFILED_FUNCTIONS: usize = 1 << 16;
+
+/// Maximum number of `(function_name, instr_index)` slots the
+/// profiler tracks across all functions.
+///
+/// `MAX_PROFILED_FUNCTIONS × max_instructions_per_function` would
+/// be `2³² ≈ 4 billion` entries in the absolute worst case —
+/// roughly 150 GB of HashMap.  In practice the per-run
+/// instruction budget (`MAX_INSTRUCTIONS_PER_RUN = 2²⁰`) bounds a
+/// single run's growth, but `ProfileTable` is designed to be
+/// reused across multiple `run_with_profile` calls (the future
+/// per-VM state pattern).  This cap ensures even a long-lived
+/// table reused across many adversarial-IIR runs can't grow
+/// without bound.
+///
+/// 2²⁰ = ~1M slots is plenty for realistic Twig programs (a
+/// 1000-function program with 100 dest-producing instructions
+/// per function uses 100K slots — 10% of the cap).  Found by
+/// PR 8 security review (Medium #3).
+pub const MAX_PROFILED_INSTRUCTION_SLOTS: usize = 1 << 20;
+
+/// V8 Ignition-style profile data collected during dispatch.
+///
+/// The `IIRModule` is borrowed `&` by the dispatcher — multiple
+/// frames see the same module on the recursion stack — so the
+/// profiler can't mutate `IIRInstr::observed_slot` directly.
+/// Instead, observations live in a side-table here, keyed by
+/// `(function_name, instr_index)`.  Per-function call counts
+/// live in their own map.
+///
+/// **Lifetime.**  Per-run today (one [`ProfileTable`] per call
+/// to [`run`]); future PRs that introduce a long-lived `LangVM`
+/// will move it there so the cache survives across runs.  The
+/// public API stays the same.
+///
+/// **What feeds in.**
+///
+/// - On dispatch entry: increment `call_count` for `func.name`.
+/// - On every instruction with a `dest` that produced a value:
+///   classify the value via `LispyBinding::class_of` and call
+///   `SlotState::record(class_str)`.
+/// - On every IC consult: the binding's `note_hit` /
+///   `note_miss` already runs through the persistent IC table
+///   (PR 7); the profile table observes the *result* of those
+///   consults via the same `class_of` pass on the dest.
+///
+/// The IC table tracks per-call-site cache hit/miss; this
+/// table tracks per-instruction *result-type* observations and
+/// per-function *warmth*.  Together they answer the V8-style
+/// "is this site monomorphic, polymorphic, or megamorphic, and
+/// is the function hot enough to JIT?" question — the data
+/// feed for LANG22's `.ldp` profile artefact format.
+///
+/// **What's NOT here in PR 8.**  The `.ldp` binary serialiser
+/// (LANG22 PR 11d) and the JIT promotion threshold (LANG22
+/// PR 11f) consume this table.  PR 8 just collects.
+#[derive(Debug, Default)]
+pub struct ProfileTable {
+    /// Function name → call count.  Incremented once per call to
+    /// `dispatch()` for that function.  `u64` so even very long
+    /// production runs don't overflow.
+    call_counts: HashMap<String, u64>,
+    /// `(function_name, instr_index)` → SlotState.  Sparse:
+    /// only instructions that produced an observable result
+    /// have entries.
+    instruction_slots: HashMap<(String, usize), SlotState>,
+}
+
+impl ProfileTable {
+    /// Construct an empty profile table.
+    pub fn new() -> Self {
+        ProfileTable {
+            call_counts: HashMap::new(),
+            instruction_slots: HashMap::new(),
+        }
+    }
+
+    /// Increment the per-function call count.  Returns the new
+    /// value so JIT-promotion-threshold checks can branch on it
+    /// inline (future PR).
+    ///
+    /// Errors if `fn_name` is new and the table already holds
+    /// [`MAX_PROFILED_FUNCTIONS`] distinct names.  Re-incrementing
+    /// existing functions always succeeds.
+    pub fn note_call(&mut self, fn_name: &str) -> Result<u64, RunError> {
+        if !self.call_counts.contains_key(fn_name)
+            && self.call_counts.len() >= MAX_PROFILED_FUNCTIONS
+        {
+            return Err(RunError::MalformedInstruction(format!(
+                "ProfileTable function count exceeds MAX_PROFILED_FUNCTIONS ({MAX_PROFILED_FUNCTIONS})"
+            )));
+        }
+        let entry = self
+            .call_counts
+            .entry(fn_name.to_string())
+            .and_modify(|n| *n = n.saturating_add(1))
+            .or_insert(1);
+        Ok(*entry)
+    }
+
+    /// Record a runtime observation for `(fn_name, instr_index)`.
+    ///
+    /// Advances the V8-style state machine on the slot:
+    /// Uninitialized → Monomorphic → Polymorphic → Megamorphic.
+    /// `class_str` is the language-defined type tag (here
+    /// always one of "int", "nil", "bool", "symbol", "cons",
+    /// "closure" — the LispyClass kinds).
+    ///
+    /// Two caps are enforced:
+    ///
+    /// - If `fn_name` is new and the table already holds
+    ///   [`MAX_PROFILED_FUNCTIONS`] distinct names → reject.
+    /// - If the `(fn_name, instr_index)` slot is new and the
+    ///   table already holds [`MAX_PROFILED_INSTRUCTION_SLOTS`]
+    ///   slots → reject.  The second cap is the load-bearing
+    ///   one for `ProfileTable`s reused across many runs.
+    pub fn note_observation(
+        &mut self,
+        fn_name: &str,
+        instr_index: usize,
+        class_str: &str,
+    ) -> Result<(), RunError> {
+        if !self.call_counts.contains_key(fn_name)
+            && self.call_counts.len() >= MAX_PROFILED_FUNCTIONS
+        {
+            return Err(RunError::MalformedInstruction(format!(
+                "ProfileTable observation for new function exceeds MAX_PROFILED_FUNCTIONS ({MAX_PROFILED_FUNCTIONS})"
+            )));
+        }
+        let key = (fn_name.to_string(), instr_index);
+        if !self.instruction_slots.contains_key(&key)
+            && self.instruction_slots.len() >= MAX_PROFILED_INSTRUCTION_SLOTS
+        {
+            return Err(RunError::MalformedInstruction(format!(
+                "ProfileTable instruction-slot count exceeds MAX_PROFILED_INSTRUCTION_SLOTS ({MAX_PROFILED_INSTRUCTION_SLOTS})"
+            )));
+        }
+        let slot = self.instruction_slots.entry(key).or_insert_with(SlotState::new);
+        slot.record(class_str);
+        Ok(())
+    }
+
+    /// Read-only access to a function's call count.  Returns 0
+    /// for never-called functions.
+    pub fn call_count(&self, fn_name: &str) -> u64 {
+        self.call_counts.get(fn_name).copied().unwrap_or(0)
+    }
+
+    /// Read-only access to a single instruction's observation
+    /// slot.  Returns `None` if the instruction has never produced
+    /// an observation (e.g. it's a control-flow opcode, or
+    /// hasn't executed yet).
+    pub fn observed_slot(
+        &self,
+        fn_name: &str,
+        instr_index: usize,
+    ) -> Option<&SlotState> {
+        self.instruction_slots
+            .get(&(fn_name.to_string(), instr_index))
+    }
+
+    /// Number of distinct functions tracked.  Mostly for tests.
+    pub fn function_count(&self) -> usize {
+        self.call_counts.len()
+    }
+
+    /// Number of per-instruction slots tracked.  Mostly for tests.
+    pub fn instruction_slot_count(&self) -> usize {
+        self.instruction_slots.len()
+    }
+}
+
+/// Map a [`LispyValue`] to the canonical class-name string used
+/// by the profiler's [`SlotState::record`] and the future
+/// `.ldp` serialiser.  `None` for values whose class can't be
+/// determined (shouldn't happen in well-formed dispatch — every
+/// `LispyValue` has a class).
+fn lispy_class_str(value: LispyValue) -> Option<&'static str> {
+    use lispy_runtime::LispyClass;
+    match LispyBinding::class_of(value)? {
+        LispyClass::Int => Some("int"),
+        LispyClass::Nil => Some("nil"),
+        LispyClass::Bool => Some("bool"),
+        LispyClass::Symbol => Some("symbol"),
+        LispyClass::Cons => Some("cons"),
+        LispyClass::Closure => Some("closure"),
+    }
+}
+
+// ---------------------------------------------------------------------------
 // Run
 // ---------------------------------------------------------------------------
 
@@ -610,34 +808,57 @@ impl ICTable {
 pub fn run(module: &IIRModule) -> Result<LispyValue, RunError> {
     let mut globals = Globals::new();
     let mut ic_table = ICTable::new();
-    run_with_state(module, &mut globals, &mut ic_table)
+    let mut profile = ProfileTable::new();
+    run_with_profile(module, &mut globals, &mut ic_table, &mut profile)
 }
 
 /// Run an `IIRModule` against a caller-supplied globals table.
 ///
-/// Equivalent to [`run_with_state`] with a fresh IC table.
-/// Retained as a public entry point for backward compatibility
-/// (PR 5 callers); new callers that want the IC table should use
-/// [`run_with_state`].
+/// Equivalent to [`run_with_profile`] with fresh IC + profile
+/// tables.  Retained as a public entry point for backward
+/// compatibility (PR 5 callers); new callers that want IC or
+/// profile inspection should use [`run_with_profile`].
 pub fn run_with_globals(
     module: &IIRModule,
     globals: &mut Globals,
 ) -> Result<LispyValue, RunError> {
     let mut ic_table = ICTable::new();
-    run_with_state(module, globals, &mut ic_table)
+    let mut profile = ProfileTable::new();
+    run_with_profile(module, globals, &mut ic_table, &mut profile)
 }
 
 /// Run an `IIRModule` against caller-supplied globals + IC table.
 ///
-/// The persistent IC table accumulates inline-cache observations
-/// across the run (and, when this entry point is used by
-/// PR 8's `LangVM`, across runs).  Tests pass an external
-/// `ICTable` to inspect IC contents after the run; the JIT path
-/// (PR 8+) uses this to read warmth before promotion.
+/// Equivalent to [`run_with_profile`] with a fresh profile table.
+/// Retained as a public entry point for PR 7 callers that don't
+/// need profile observations.
 pub fn run_with_state(
     module: &IIRModule,
     globals: &mut Globals,
     ic_table: &mut ICTable,
+) -> Result<LispyValue, RunError> {
+    let mut profile = ProfileTable::new();
+    run_with_profile(module, globals, ic_table, &mut profile)
+}
+
+/// Run an `IIRModule` against caller-supplied globals, IC table,
+/// and profile table.
+///
+/// The profile table accumulates per-function call counts and
+/// per-instruction type observations across the run.  Tests pass
+/// an external `ProfileTable` to inspect observations after the
+/// run; the JIT promotion threshold (LANG22 PR 11f) reads this
+/// to decide which functions are hot enough to specialise.
+///
+/// This is the most-flexible entry point.  All three tables
+/// persist for the duration of the call — pass the same tables
+/// to a subsequent `run_with_profile` to accumulate across
+/// multiple runs (the future per-VM state pattern).
+pub fn run_with_profile(
+    module: &IIRModule,
+    globals: &mut Globals,
+    ic_table: &mut ICTable,
+    profile: &mut ProfileTable,
 ) -> Result<LispyValue, RunError> {
     let entry_name = module
         .entry_point
@@ -650,7 +871,7 @@ pub fn run_with_state(
         .ok_or_else(|| RunError::NoEntryPoint(entry_name.to_string()))?;
 
     let mut budget = ExecutionBudget::new();
-    dispatch(module, entry, &[], 0, &mut budget, globals, ic_table)
+    dispatch(module, entry, &[], 0, &mut budget, globals, ic_table, profile)
 }
 
 // Per-run instruction counter — enforces
@@ -686,10 +907,17 @@ fn dispatch(
     budget: &mut ExecutionBudget,
     globals: &mut Globals,
     ic_table: &mut ICTable,
+    profile: &mut ProfileTable,
 ) -> Result<LispyValue, RunError> {
     if depth > MAX_DISPATCH_DEPTH {
         return Err(RunError::DepthExceeded);
     }
+
+    // PR 8: increment per-function call count once per
+    // dispatch entry.  This is the JIT-promotion-threshold
+    // signal — `LANG20 §"Tier interaction matrix"` says
+    // Untyped functions promote at call_count > 100.
+    profile.note_call(&func.name)?;
 
     let mut frame = Frame::new(func, args)?;
     let labels = build_label_index(func)?;
@@ -698,6 +926,11 @@ fn dispatch(
     while pc < func.instructions.len() {
         budget.tick()?;
         let instr = &func.instructions[pc];
+        // Capture before the match — `pc` may be updated to an
+        // arbitrary label index by jmp / jmp_if_false, so we
+        // need the just-executed instruction's index recorded
+        // up-front for the post-match profile-recording site.
+        let instr_pc = pc;
 
         match instr.op.as_str() {
             "const" => {
@@ -705,11 +938,11 @@ fn dispatch(
                 pc += 1;
             }
             "call_builtin" => {
-                exec_call_builtin(module, instr, &mut frame, depth, budget, globals, ic_table)?;
+                exec_call_builtin(module, instr, &mut frame, depth, budget, globals, ic_table, profile)?;
                 pc += 1;
             }
             "call" => {
-                exec_call(module, instr, &mut frame, depth, budget, globals, ic_table)?;
+                exec_call(module, instr, &mut frame, depth, budget, globals, ic_table, profile)?;
                 pc += 1;
             }
             "send" => {
@@ -738,6 +971,33 @@ fn dispatch(
             }
             other => {
                 return Err(RunError::UnsupportedOpcode(other.to_string()));
+            }
+        }
+
+        // PR 8: profile the just-completed instruction.
+        //
+        // We observe the *result* of every dest-producing opcode —
+        // that's the "what type does this expression evaluate
+        // to" signal V8-style speculation needs.  Control-flow
+        // opcodes (jmp/label/ret) and side-effecting ones
+        // (store_property) have no dest; the `if let Some(dest)`
+        // guard short-circuits and nothing is recorded.
+        //
+        // **Why the just-completed instruction is `instr_pc` here?**
+        // The match arms above either incremented `pc` by 1
+        // (most cases) or set `pc` to a label index (jmp /
+        // jmp_if_false).  But the only opcodes that produce a
+        // dest are the `pc += 1` ones; those are the only paths
+        // that reach this branch.  `instr_pc` captured before
+        // the match holds the just-executed instruction's index
+        // unambiguously, so the recording site doesn't need to
+        // reason about post-match `pc` semantics.  Cleanup
+        // recommended by PR 8 security review (Low #2).
+        if let Some(dest) = &instr.dest {
+            if let Some(value) = frame.get(dest) {
+                if let Some(class_str) = lispy_class_str(value) {
+                    profile.note_observation(&func.name, instr_pc, class_str)?;
+                }
             }
         }
     }
@@ -818,6 +1078,7 @@ fn exec_call_builtin(
     budget: &mut ExecutionBudget,
     globals: &mut Globals,
     ic_table: &mut ICTable,
+    profile: &mut ProfileTable,
 ) -> Result<(), RunError> {
     let name = match instr.srcs.first() {
         Some(Operand::Var(s)) => s.as_str(),
@@ -840,7 +1101,7 @@ fn exec_call_builtin(
         "global_set" => return exec_global_set(instr, frame, globals),
         "global_get" => return exec_global_get(instr, frame, globals),
         "apply_closure" => {
-            return exec_apply_closure(module, instr, frame, depth, budget, globals, ic_table);
+            return exec_apply_closure(module, instr, frame, depth, budget, globals, ic_table, profile);
         }
         _ => {}
     }
@@ -874,6 +1135,7 @@ fn exec_call(
     budget: &mut ExecutionBudget,
     globals: &mut Globals,
     ic_table: &mut ICTable,
+    profile: &mut ProfileTable,
 ) -> Result<(), RunError> {
     let callee_name = match instr.srcs.first() {
         Some(Operand::Var(s)) => s.as_str(),
@@ -899,7 +1161,7 @@ fn exec_call(
         call_args.push(v);
     }
 
-    let result = dispatch(module, callee, &call_args, depth + 1, budget, globals, ic_table)?;
+    let result = dispatch(module, callee, &call_args, depth + 1, budget, globals, ic_table, profile)?;
     if let Some(d) = &instr.dest {
         frame.set(d.clone(), result)?;
     }
@@ -995,6 +1257,7 @@ fn exec_apply_closure(
     budget: &mut ExecutionBudget,
     globals: &mut Globals,
     ic_table: &mut ICTable,
+    profile: &mut ProfileTable,
 ) -> Result<(), RunError> {
     if instr.srcs.len() < 2 {
         return Err(RunError::MalformedInstruction(format!(
@@ -1063,7 +1326,7 @@ fn exec_apply_closure(
             .iter()
             .find(|f| f.name == name_str)
             .ok_or_else(|| RunError::UnknownFunction(name_str.clone()))?;
-        dispatch(module, callee, &all_args, depth + 1, budget, globals, ic_table)?
+        dispatch(module, callee, &all_args, depth + 1, budget, globals, ic_table, profile)?
     };
 
     if let Some(d) = &instr.dest {
@@ -2620,5 +2883,263 @@ mod tests {
     fn ic_slot_builder_sets_field() {
         let i = IIRInstr::new("send", None, vec![], "any").with_ic_slot(42);
         assert_eq!(i.ic_slot, Some(42));
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // PR 8: profiler (per-function call_count + per-instr SlotState)
+    // ─────────────────────────────────────────────────────────────────
+
+    use interpreter_ir::SlotKind;
+
+    // ── ProfileTable mechanics ──────────────────────────────────────
+
+    #[test]
+    fn profile_table_starts_empty() {
+        let p = ProfileTable::new();
+        assert_eq!(p.function_count(), 0);
+        assert_eq!(p.instruction_slot_count(), 0);
+        assert_eq!(p.call_count("anything"), 0);
+        assert!(p.observed_slot("anything", 0).is_none());
+    }
+
+    #[test]
+    fn profile_table_note_call_increments() {
+        let mut p = ProfileTable::new();
+        assert_eq!(p.note_call("f").unwrap(), 1);
+        assert_eq!(p.note_call("f").unwrap(), 2);
+        assert_eq!(p.note_call("f").unwrap(), 3);
+        assert_eq!(p.call_count("f"), 3);
+        assert_eq!(p.call_count("g"), 0);
+    }
+
+    #[test]
+    fn profile_table_note_observation_advances_slot() {
+        let mut p = ProfileTable::new();
+        // First observation: slot becomes monomorphic on "int".
+        p.note_observation("f", 0, "int").unwrap();
+        let slot = p.observed_slot("f", 0).unwrap();
+        assert_eq!(slot.kind, SlotKind::Monomorphic);
+        assert_eq!(slot.count, 1);
+
+        // Same type again: still mono, count goes up.
+        p.note_observation("f", 0, "int").unwrap();
+        let slot = p.observed_slot("f", 0).unwrap();
+        assert_eq!(slot.kind, SlotKind::Monomorphic);
+        assert_eq!(slot.count, 2);
+
+        // Distinct second type: poly.
+        p.note_observation("f", 0, "bool").unwrap();
+        let slot = p.observed_slot("f", 0).unwrap();
+        assert_eq!(slot.kind, SlotKind::Polymorphic);
+    }
+
+    #[test]
+    fn profile_table_separate_keys_dont_share() {
+        let mut p = ProfileTable::new();
+        p.note_observation("f", 0, "int").unwrap();
+        p.note_observation("f", 1, "bool").unwrap();
+        p.note_observation("g", 0, "cons").unwrap();
+        assert_eq!(p.observed_slot("f", 0).unwrap().observations, vec!["int"]);
+        assert_eq!(p.observed_slot("f", 1).unwrap().observations, vec!["bool"]);
+        assert_eq!(p.observed_slot("g", 0).unwrap().observations, vec!["cons"]);
+        assert_eq!(p.instruction_slot_count(), 3);
+    }
+
+    #[test]
+    fn profile_table_rejects_too_many_functions() {
+        let mut p = ProfileTable::new();
+        for i in 0..MAX_PROFILED_FUNCTIONS {
+            p.note_call(&format!("f{i}")).unwrap();
+        }
+        assert_eq!(p.function_count(), MAX_PROFILED_FUNCTIONS);
+        let err = p.note_call("overflow").unwrap_err();
+        assert!(matches!(
+            err,
+            RunError::MalformedInstruction(s) if s.contains("MAX_PROFILED_FUNCTIONS")
+        ));
+        // Existing functions still increment.
+        p.note_call("f0").unwrap();
+    }
+
+    #[test]
+    fn profile_table_rejects_too_many_instruction_slots() {
+        // PR 8 security review (Medium #3): cap on the per-instr
+        // slot map.  This prevents long-lived ProfileTables
+        // reused across many runs from growing without bound.
+        let mut p = ProfileTable::new();
+        // Use a single function name to hit the slot cap quickly.
+        p.note_call("f").unwrap();
+        for slot in 0..MAX_PROFILED_INSTRUCTION_SLOTS {
+            p.note_observation("f", slot, "int").unwrap();
+        }
+        assert_eq!(p.instruction_slot_count(), MAX_PROFILED_INSTRUCTION_SLOTS);
+        // Next distinct slot is rejected.
+        let err = p.note_observation("f", MAX_PROFILED_INSTRUCTION_SLOTS, "int").unwrap_err();
+        assert!(matches!(
+            err,
+            RunError::MalformedInstruction(s) if s.contains("MAX_PROFILED_INSTRUCTION_SLOTS")
+        ));
+        // Re-observing an existing slot still works (cap is on
+        // distinct slots, not on observations).
+        p.note_observation("f", 0, "bool").unwrap();
+    }
+
+    // ── Dispatcher records observations + call counts ────────────────
+
+    #[test]
+    fn dispatch_increments_call_count_for_main() {
+        let module = compile_source("(+ 1 2)", "test").unwrap();
+        let mut globals = Globals::new();
+        let mut ic_table = ICTable::new();
+        let mut profile = ProfileTable::new();
+        run_with_profile(&module, &mut globals, &mut ic_table, &mut profile).unwrap();
+        // `main` is called exactly once per `run_with_profile`.
+        assert_eq!(profile.call_count("main"), 1);
+    }
+
+    #[test]
+    fn dispatch_call_counts_grow_with_recursion() {
+        // (fact 5) recurses 6 times: fact(5), fact(4), fact(3),
+        // fact(2), fact(1), fact(0).
+        let src = "
+            (define (fact n)
+              (if (= n 0) 1 (* n (fact (- n 1)))))
+            (fact 5)
+        ";
+        let module = compile_source(src, "test").unwrap();
+        let mut globals = Globals::new();
+        let mut ic_table = ICTable::new();
+        let mut profile = ProfileTable::new();
+        run_with_profile(&module, &mut globals, &mut ic_table, &mut profile).unwrap();
+        assert_eq!(profile.call_count("main"), 1);
+        assert_eq!(profile.call_count("fact"), 6);
+    }
+
+    #[test]
+    fn dispatch_records_int_observations_for_arithmetic() {
+        // (+ 1 2) — main has these instructions:
+        //   const _n1 = 1
+        //   const _n2 = 2
+        //   call_builtin "+" _n1 _n2 -> _r3
+        //   ret _r3
+        // After one run, the call_builtin instr should have a
+        // monomorphic int observation.
+        let module = compile_source("(+ 1 2)", "test").unwrap();
+        let mut globals = Globals::new();
+        let mut ic_table = ICTable::new();
+        let mut profile = ProfileTable::new();
+        run_with_profile(&module, &mut globals, &mut ic_table, &mut profile).unwrap();
+
+        // Find a call_builtin instr with dest in main.  All three
+        // dest-producing instructions should have observations.
+        let main = module.functions.iter().find(|f| f.name == "main").unwrap();
+        let mut int_observations = 0;
+        for (i, instr) in main.instructions.iter().enumerate() {
+            if instr.dest.is_some() {
+                if let Some(slot) = profile.observed_slot("main", i) {
+                    if slot.observations.iter().any(|s| s == "int") {
+                        int_observations += 1;
+                    }
+                }
+            }
+        }
+        assert!(
+            int_observations >= 3,
+            "expected ≥3 int observations (2 const + 1 add result), got {int_observations}",
+        );
+    }
+
+    #[test]
+    fn dispatch_records_polymorphic_observation_across_recursive_calls() {
+        // fact(5) returns int every iteration, but the (if (= n 0) 1 ...)
+        // branches to either `1` (int) or `(* n ...)` (also int) — so
+        // the `_move` instructions inside `if` lowering should
+        // observe int monomorphically.  This test mostly verifies
+        // that the same slot accumulates observations across
+        // recursive calls.
+        let src = "
+            (define (fact n)
+              (if (= n 0) 1 (* n (fact (- n 1)))))
+            (fact 5)
+        ";
+        let module = compile_source(src, "test").unwrap();
+        let mut globals = Globals::new();
+        let mut ic_table = ICTable::new();
+        let mut profile = ProfileTable::new();
+        run_with_profile(&module, &mut globals, &mut ic_table, &mut profile).unwrap();
+
+        // Find any instr in fact that produced multiple
+        // observations.  The recursive call_builtin "*" should
+        // have run once per non-base-case iteration (5 times).
+        let fact = module.functions.iter().find(|f| f.name == "fact").unwrap();
+        let max_observation_count = (0..fact.instructions.len())
+            .filter_map(|i| profile.observed_slot("fact", i))
+            .map(|slot| slot.count)
+            .max()
+            .unwrap_or(0);
+        assert!(
+            max_observation_count >= 5,
+            "expected ≥5 observations on the most-hit instr, got {max_observation_count}",
+        );
+    }
+
+    #[test]
+    fn dispatch_does_not_observe_control_flow_opcodes() {
+        // jmp / label / ret have no dest — no observation should
+        // be recorded for those positions.
+        let module = compile_source("(if (< 1 2) 100 200)", "test").unwrap();
+        let mut globals = Globals::new();
+        let mut ic_table = ICTable::new();
+        let mut profile = ProfileTable::new();
+        run_with_profile(&module, &mut globals, &mut ic_table, &mut profile).unwrap();
+
+        let main = module.functions.iter().find(|f| f.name == "main").unwrap();
+        for (i, instr) in main.instructions.iter().enumerate() {
+            // Control-flow ops have no dest; the profiler must
+            // not have recorded an observation at this index.
+            if matches!(instr.op.as_str(), "jmp" | "jmp_if_false" | "label" | "ret") {
+                assert!(
+                    profile.observed_slot("main", i).is_none(),
+                    "{} at instr {i} should have no observation",
+                    instr.op,
+                );
+            }
+        }
+    }
+
+    // ── run/run_with_globals/run_with_state still work ──────────────
+
+    #[test]
+    fn run_creates_internal_profile_table_and_discards_it() {
+        // Backward compat: callers that don't care about the
+        // profile use `run` and get a freshly-allocated profile
+        // that's dropped on return.
+        assert_eq!(run(&compile_source("(+ 1 2)", "test").unwrap()).unwrap().as_int(), Some(3));
+    }
+
+    #[test]
+    fn run_with_state_creates_internal_profile_table() {
+        let module = compile_source("(+ 1 2)", "test").unwrap();
+        let mut globals = Globals::new();
+        let mut ic_table = ICTable::new();
+        run_with_state(&module, &mut globals, &mut ic_table).unwrap();
+        // Caller didn't ask for profile — IC table also stays empty
+        // since no IC-owning instructions ran.
+        assert_eq!(ic_table.total_slots(), 0);
+    }
+
+    #[test]
+    fn profile_persists_across_two_calls_to_run_with_profile() {
+        // Same `&mut ProfileTable` reused for two runs — call
+        // counts and observations accumulate.  This is the
+        // future per-VM state pattern (LANG22 §"Migration path").
+        let module = compile_source("(+ 1 2)", "test").unwrap();
+        let mut globals = Globals::new();
+        let mut ic_table = ICTable::new();
+        let mut profile = ProfileTable::new();
+        run_with_profile(&module, &mut globals, &mut ic_table, &mut profile).unwrap();
+        run_with_profile(&module, &mut globals, &mut ic_table, &mut profile).unwrap();
+        run_with_profile(&module, &mut globals, &mut ic_table, &mut profile).unwrap();
+        assert_eq!(profile.call_count("main"), 3);
     }
 }
