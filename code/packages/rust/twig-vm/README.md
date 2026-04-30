@@ -1,6 +1,6 @@
 # twig-vm
 
-**LANG20 PRs 3 + 4** — runtime wiring + dispatcher between the Twig frontend and the LANG-runtime substrate.
+**LANG20 PRs 3 – 5** — runtime wiring + dispatcher between the Twig frontend and the LANG-runtime substrate.  Runs the full Twig surface language end to end (closures, top-level value defines, quoted symbols, recursion, etc.).
 
 This crate is the bridge between:
 - the **Twig frontend** (`twig-lexer` → `twig-parser` → `twig-ir-compiler`) that produces an `IIRModule` from Twig source, and
@@ -13,7 +13,7 @@ It exposes [`TwigVM`](src/lib.rs) — a facade that compiles Twig source and dis
 | File | What |
 |------|------|
 | [`lib.rs`](src/lib.rs) | `TwigVM` facade: `compile()` + `compile_with_name()` + `resolve_builtin()` + `run()` |
-| [`dispatch.rs`](src/dispatch.rs) | Tree-walking dispatcher (PR 4): `const`, `call_builtin`, `call`, `jmp`, `jmp_if_false`, `label`, `ret` |
+| [`dispatch.rs`](src/dispatch.rs) | Tree-walking dispatcher (PR 4) + closures/globals/symbols (PR 5): `const`, `call_builtin`, `call`, `jmp`, `jmp_if_false`, `label`, `ret`; PR 5 adds inline handling of `apply_closure`, `global_set`, `global_get` and string-literal `const` operands |
 | [`operand.rs`](src/operand.rs) | `operand_to_value` — IIR `Operand` → `LispyValue`, the per-language seam |
 
 Plus build-time hardening (PR 3, retained):
@@ -46,27 +46,39 @@ let v = vm.run("
     (is_even 10)
 ").unwrap();
 assert!(v == twig_vm::LispyValue::TRUE);
+
+// Closures + higher-order
+let v = vm.run("
+    (define (make-adder x) (lambda (y) (+ x y)))
+    ((make-adder 10) 5)
+").unwrap();
+assert_eq!(v.as_int(), Some(15));
+
+// Top-level value defines + quoted symbols
+let v = vm.run("(define answer 42) answer").unwrap();
+assert_eq!(v.as_int(), Some(42));
 ```
 
-## Supported subset (PR 4)
+## Supported subset (PRs 4 + 5)
 
-The dispatcher covers the IIR opcodes emitted by `twig-ir-compiler` for programs without closures, top-level value defines, or quoted symbols:
+The dispatcher covers the IIR opcodes emitted by `twig-ir-compiler` for the full Twig surface language minus method dispatch:
 
-| Twig form                                | Status   |
-|------------------------------------------|----------|
-| Arithmetic (`+`, `-`, `*`, `/`)          | ✅       |
-| Comparison (`=`, `<`, `>`)               | ✅       |
-| Cons family (`cons`, `car`, `cdr`)       | ✅       |
-| Predicates (`null?`, `pair?`, `number?`) | ✅       |
-| `if`, `let`, `begin`                     | ✅       |
-| `(define (f args...) body)`              | ✅       |
-| Recursion + mutual recursion             | ✅       |
-| Bool / nil truthiness (Scheme semantics) | ✅       |
-| `lambda` / closures                      | PR 5+    |
-| `(define x value)` (top-level value)     | PR 5+    |
-| `'foo` (quoted symbols)                  | PR 5+    |
+| Twig form                                   | Status   |
+|---------------------------------------------|----------|
+| Arithmetic (`+`, `-`, `*`, `/`)             | ✅       |
+| Comparison (`=`, `<`, `>`)                  | ✅       |
+| Cons family (`cons`, `car`, `cdr`)          | ✅       |
+| Predicates (`null?`, `pair?`, `number?`)    | ✅       |
+| `if`, `let`, `begin`                        | ✅       |
+| `(define (f args...) body)`                 | ✅       |
+| Recursion + mutual recursion                | ✅       |
+| Bool / nil truthiness (Scheme semantics)    | ✅       |
+| `lambda` / closures                         | ✅ (PR 5) |
+| `(define x value)` (top-level value)        | ✅ (PR 5) |
+| `'foo` (quoted symbols)                     | ✅ (PR 5) |
+| Higher-order (passing fns + builtins)       | ✅ (PR 5) |
 | `send` / `load_property` / `store_property` | PR 6+    |
-| JIT promotion + IC machinery             | PR 7+    |
+| JIT promotion + IC machinery                | PR 7+    |
 
 Programs using unsupported features compile (the IR compiler emits valid IIR for them) but the dispatcher returns `RunError::UnsupportedOpcode` — explicit "not yet" rather than a silent miscompile.
 
@@ -87,10 +99,11 @@ LispyValue results
 
 ## Resource limits
 
-- `MAX_DISPATCH_DEPTH = 256` — caps recursion depth so adversarial input can't blow the host Rust stack.
+- `MAX_DISPATCH_DEPTH = 256` — caps recursion depth so adversarial input can't blow the host Rust stack.  Closures count toward this limit (`apply_closure` recurses through the same `dispatch` path as direct `call`).
 - `MAX_INSTRUCTIONS_PER_RUN = 2²⁰` — caps total instructions per top-level run as a backstop against infinite loops in hand-built malformed IIR.
+- `MAX_REGISTERS_PER_FRAME = 2¹⁶` — caps per-frame `HashMap` allocation so a hand-built module with `register_count = usize::MAX` can't abort the process at allocation time.
 
-Both are public constants (`twig_vm::MAX_DISPATCH_DEPTH`, `twig_vm::MAX_INSTRUCTIONS_PER_RUN`) so callers can verify the bounds; both have unit tests so a future change can't silently raise them.
+All three are public constants (`twig_vm::MAX_*`) so callers can verify the bounds; all have unit tests so a future change can't silently raise them.
 
 ## Tests
 
@@ -98,13 +111,14 @@ Both are public constants (`twig_vm::MAX_DISPATCH_DEPTH`, `twig_vm::MAX_INSTRUCT
 cargo test -p twig-vm
 ```
 
-**60 unit + 2 doc tests** covering:
+**80 unit + 2 doc tests** covering:
 - Compilation success + error propagation
-- Builtin resolution for every Lispy builtin
-- `Operand → LispyValue` round-trip (Int, Bool, Float errors, Var, nil)
+- Builtin resolution for every Lispy builtin (plus PR 5: `make_symbol`, `make_closure`, `make_builtin_closure`)
+- `Operand → LispyValue` round-trip (Int, Bool, Float errors, Var-as-symbol, nil)
 - Range checking (Lispy's tagged-int range is narrower than `i64`)
 - Full dispatcher: arithmetic, comparison, cons family, `if`, `let`, `begin`, user-defined functions, factorial, fibonacci, mutual recursion
-- Error paths: unsupported opcode, missing/invalid operands, unknown function/label/builtin, depth/instruction limits
+- **PR 5**: anonymous lambdas, lambda captures (single + multiple values), nested lambdas, curried-add pattern, higher-order via user-fn or builtin closure, top-level value defines (read, function-uses-global, overwrite), quoted symbols, `Globals` struct round-trip
+- Error paths: unsupported opcode, missing/invalid operands, unknown function/label/builtin, depth/instruction/register limits, undefined globals, apply on non-closure
 
 ```bash
 MIRIFLAGS="-Zmiri-ignore-leaks" cargo +nightly miri test -p twig-vm
@@ -118,8 +132,11 @@ The full suite passes under Miri — the dispatcher's integration with `lispy-ru
 LANG20 PR 1: lang-runtime-core           ← LangBinding trait
 LANG20 PR 2: lispy-runtime               ← LispyBinding (concrete impl)
 LANG20 PR 3: twig-vm  ← THIS CRATE        wires twig-frontend + lispy-runtime
-LANG20 PR 4: twig-vm  ← THIS CRATE        adds the dispatcher
-LANG20 PR 5: closures + globals + symbols    ← future
-LANG20 PR 6: send/load/store + IC machinery  ← future
-LANG20 PR 7: JIT promotion + deopt           ← future
+LANG20 PR 4: twig-vm  ← THIS CRATE        adds the dispatcher (call/jmp/ret)
+LANG20 PR 5: twig-vm  ← THIS CRATE        adds closures + globals + symbols
+LANG20 PR 6: send/load/store opcodes         ← next: method dispatch
+LANG20 PR 7: IC machinery                    ← inline caches
+LANG20 PR 8: vm-core profiler + JIT prep     ← profile-driven specialisation
 ```
+
+See [`LANG22-typing-spectrum-aot-jit.md`](../../specs/LANG22-typing-spectrum-aot-jit.md) for the unified AOT/JIT/PGO compilation story that builds on top of this stack.

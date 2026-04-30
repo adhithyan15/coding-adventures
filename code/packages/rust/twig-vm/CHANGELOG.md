@@ -1,5 +1,106 @@
 # Changelog — twig-vm
 
+## [0.3.0] — 2026-04-29
+
+### Added — PR 5 of LANG20: closures, top-level value defines, quoted symbols
+
+This PR completes the **full Twig surface language** under the
+tree-walking dispatcher.  Programs using `lambda`, `(define x value)`,
+or quoted symbols (`'foo`) now run end to end, alongside everything
+PR 4 already supported.
+
+- **String-as-symbol convention for `const Operand::Var(text)`**:
+  the dispatcher interns `text` and stores
+  `LispyValue::symbol(intern(text))` rather than refusing.  Lispy
+  has no string type yet; the IR compiler routes string-shaped
+  literals (function names, global names, quoted-symbol names)
+  through this path.  When a real string value lands in a future
+  PR, only this single arm changes; the IR compiler already emits
+  the right operand shape.
+
+- **`make_symbol` / `make_closure` / `make_builtin_closure`
+  builtins** added to `lispy-runtime`.  Registered in
+  `LispyBinding::resolve_builtin`.  All three are normal
+  context-free `BuiltinFn`s — they don't need access to the
+  dispatcher, only to the heap allocators (`alloc_closure`,
+  `alloc_builtin_closure`).
+
+- **`apply_closure` opcode** handled inline in the dispatcher (it
+  needs the IIRModule reference for user-fn lookup and the
+  dispatcher for recursion).  Routes through
+  `LispyBinding::resolve_builtin` for builtin-wrapping closures
+  (detected via `CLOSURE_FLAG_BUILTIN`); for user-fn closures it
+  prepends the closure's captures to the user-supplied args and
+  recurses into `dispatch` with the resolved IIRFunction.
+
+- **`global_set` / `global_get` opcodes** handled inline (they
+  need access to the per-run globals table).  Backed by a new
+  `Globals` struct (`HashMap<SymbolId, LispyValue>`) threaded
+  through `dispatch` as a `&mut` parameter.  Per-run lifetime
+  for now; will move to per-VM state when LANG20 PR 7+ adds a
+  long-lived `LangVM`.
+
+- **Closure heap layout extended** in `lispy-runtime::heap`:
+  `Closure._reserved` renamed to `Closure.flags` and given bit 0
+  (`CLOSURE_FLAG_BUILTIN`) to distinguish user-fn closures from
+  builtin-wrapping closures.  New `alloc_builtin_closure(name)`
+  factory and `Closure::is_builtin()` accessor.
+
+- **New public API**:
+  - `dispatch::Globals` — the globals-table struct (constructable,
+    inspectable; future-proofing for LANG20 PR 7+).
+  - `dispatch::run_with_globals(module, &mut globals)` — entry
+    point that accepts a caller-supplied table.  Tests use this
+    to verify table threading; future per-VM state will use it
+    to persist globals across runs.
+
+- **18 new tests** covering quoted symbols, anonymous lambdas
+  (no capture, single capture, multi capture, nested), closure-
+  returning functions (curried add, make-adder), higher-order
+  passing both user-fn and builtin closures, top-level value
+  defines (read, used in function, overwrite), error paths
+  (`apply_closure` on non-closure, `global_get` on undefined
+  name), and the `Globals` struct directly.
+
+### Removed — placeholder error path retired
+
+- `RunError::UnsupportedOpcode("const with string operand
+  (closures / globals / symbols — PR 5+)")` — no longer
+  returnable; the `Operand::Var(text)` arm of `exec_const` now
+  produces a symbol value.
+
+### Changed — error type evolution
+
+- `RunError` is now `#[non_exhaustive]` so future variants
+  (sent/load/store opcodes in PR 6, deopt in PR 8+) don't
+  break callers.
+
+### Added — `RunError` variants
+
+- `UndefinedGlobal(String)` — `global_get` of a name never
+  written.  Includes the demangled name for diagnostics.
+- `NotCallable(String)` — `apply_closure` of a non-closure
+  value.  Surfaces user-visible "X is not a function".
+
+### Tests across the diff
+
+- twig-vm: **80 unit + 2 doc** — all pass on stable Rust and
+  Miri.  18 new for PR 5; 62 PR-4 tests untouched.
+- lispy-runtime: **105 unit + 1 doc** — unchanged at the test
+  level (4 new closure-/symbol-builtin tests added; 4 prior
+  PR-4 tests retired as obsolete with the `flags` field
+  rename).
+
+### Hardening
+
+- Clippy-clean on all touched crates.
+- Miri-clean — closure heap allocations + builtin-flag reads +
+  `as_closure` walks all exercised under Miri without UB.
+- All resource limits from PR 4 (`MAX_DISPATCH_DEPTH`,
+  `MAX_INSTRUCTIONS_PER_RUN`, `MAX_REGISTERS_PER_FRAME`) still
+  enforced; closures don't bypass them — `apply_closure`
+  recursion uses the same `dispatch` recursion as direct `call`.
+
 ## [0.2.0] — 2026-04-29
 
 ### Added — PR 4 of LANG20: real dispatch loop
