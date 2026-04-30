@@ -93,6 +93,7 @@ from logic_builtins import (
     mul,
     neg,
     nonvaro,
+    not_same_termo,
     noto,
     numbero,
     numeqo,
@@ -1709,6 +1710,36 @@ class TestTermMetaprogrammingBuiltins:
             (left, right),
             conj(eq(left, right), same_termo(left, right)),
         ) == [(right, right)]
+
+    def test_not_same_termo_checks_strict_non_identity_without_unifying(self) -> None:
+        left = var("Left")
+        right = var("Right")
+
+        assert solve_all(program(), (left, right), not_same_termo(left, right)) == [
+            (left, right),
+        ]
+        assert solve_all(program(), left, not_same_termo(left, left)) == []
+        assert (
+            solve_all(
+                program(),
+                (left, right),
+                conj(eq(left, right), not_same_termo(left, right)),
+            )
+            == []
+        )
+        assert (
+            solve_all(
+                program(),
+                left,
+                not_same_termo(term("box", "tea"), term("box", "tea")),
+            )
+            == []
+        )
+        assert solve_all(
+            program(),
+            left,
+            not_same_termo(term("box", "tea"), term("box", "cake")),
+        ) == [left]
 
     def test_atomico_and_callableo_classify_reified_terms(self) -> None:
         value = var("Value")

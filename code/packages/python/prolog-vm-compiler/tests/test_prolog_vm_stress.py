@@ -104,6 +104,32 @@ class TestPrologVMStress:
             {"Chosen": atom("first")},
         ]
 
+    def test_term_equality_predicates_run_through_vm(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            ?- X = box(tea),
+               X == box(tea),
+               X \\== box(cake),
+               X \\= box(cake),
+               Result = ok.
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert [answer.as_dict() for answer in answers] == [
+            {"X": term("box", "tea"), "Result": atom("ok")},
+        ]
+
+    def test_term_equality_predicate_failures_run_through_vm(self) -> None:
+        unifiable = compile_swi_prolog_source("?- X \\= box(tea).")
+        identical = compile_swi_prolog_source("?- X = box(tea), X \\== box(tea).")
+        equal = compile_swi_prolog_source("?- X = box(tea), X \\= box(tea).")
+
+        assert run_compiled_prolog_query(unifiable) == []
+        assert run_compiled_prolog_query(identical) == []
+        assert run_compiled_prolog_query(equal) == []
+
     def test_if_then_else_commits_to_first_condition_solution(self) -> None:
         compiled = compile_swi_prolog_source(
             """

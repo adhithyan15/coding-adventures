@@ -32,6 +32,8 @@
   by adapting them to `logic-stdlib` relations.
 - Run module-imported apply-family closures through the VM path so higher-order
   list predicates can target predicates from linked modules.
+- Run Prolog term equality predicates `=/2`, `\\=/2`, `==/2`, and `\\==/2`
+  through the VM path.
 
 ## 0.1.0
 

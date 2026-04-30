@@ -19,6 +19,8 @@ It keeps parsing side-effect free, then exposes helpers to:
   `Z #= X + Y + 1`
 - preserve supported `labeling/2` options such as `down` and `leftmost`
 - adapt `phrase/2` and `phrase/3` into executable DCG runtime calls
+- adapt Prolog term equality predicates `=/2`, `\\=/2`, `==/2`, and `\\==/2`
+  into engine/builtin goals
 - link multiple loaded sources into one namespace-aware runnable project with
   module-local predicates and weak imports
 - rewrite explicit `module:goal` qualification during linking, including common

@@ -64,6 +64,7 @@ from logic_builtins import (
     lto,
     maplisto,
     nonvaro,
+    not_same_termo,
     noto,
     numbero,
     numeqo,
@@ -94,6 +95,7 @@ from logic_engine import (
     FreshExpr,
     GoalExpr,
     LogicVar,
+    NeqExpr,
     RelationCall,
     Term,
     atom,
@@ -145,6 +147,10 @@ def adapt_prolog_goal(goal: GoalExpr) -> GoalExpr:
         if if_then_else is not None:
             return if_then_else
         return disj(*(adapt_prolog_goal(child) for child in goal.goals))
+    if isinstance(goal, NeqExpr):
+        # Prolog \=/2 is immediate non-unifiability, unlike the engine's
+        # delayed disequality constraint.
+        return noto(eq(goal.left, goal.right))
     if isinstance(goal, FreshExpr):
         return FreshExpr(
             template_vars=goal.template_vars,
@@ -328,8 +334,14 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         return univo(*args)
     if name == "copy_term" and goal.relation.arity == 2:
         return copytermo(*args)
+    if name == "=" and goal.relation.arity == 2:
+        return eq(*args)
+    if name == "\\=" and goal.relation.arity == 2:
+        return noto(eq(*args))
     if name == "==" and goal.relation.arity == 2:
         return same_termo(*args)
+    if name == "\\==" and goal.relation.arity == 2:
+        return not_same_termo(*args)
     if name == "compare" and goal.relation.arity == 3:
         return compare_termo(*args)
     if name == "@<" and goal.relation.arity == 2:
