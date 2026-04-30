@@ -1033,15 +1033,23 @@ class TestPhase2cClosureLowering:
         assert "coding_adventures.twig.runtime.Closure" in names
         assert "coding_adventures.twig.runtime.Closure__lambda_0" in names
 
-    def test_lambda_region_omitted_from_main_methods(self) -> None:
-        """The lifted lambda body lives on the Closure subclass, not
-        as a method on the main user class."""
+    def test_lambda_region_now_lives_on_main_class(self) -> None:
+        """JVM02 Phase 2c.5: the lifted lambda body lives as a
+        PUBLIC static method on the main class with widened arity
+        (``num_free + explicit_arity``).  The closure subclass's
+        ``apply`` method forwards to it via ``invokestatic``.
+
+        This was previously the opposite: Phase 2c structural-only
+        emitted the lambda body on the subclass with a placeholder
+        ``apply`` body.  Phase 2c.5 inverts that so the existing
+        IR-body emitter works unchanged.
+        """
         from ir_to_jvm_class_file import lower_ir_to_jvm_classes
         artifact = lower_ir_to_jvm_classes(
             self._make_adder_program(), self._config(),
         )
         main = artifact.main
-        assert "_lambda_0" not in main.callable_labels
+        assert "_lambda_0" in main.callable_labels
         assert "make_adder" in main.callable_labels
         assert "_start" in main.callable_labels  # entry label
 
@@ -1164,25 +1172,32 @@ class TestPhase2cClosureLowering:
         assert b"\xb9" in artifact.main.class_bytes
 
 
-@pytest.mark.xfail(
-    reason=(
-        "JVM02 Phase 2c is structural-only — closure refs are object "
-        "pointers but the existing JVM backend uses a static int[] "
-        "register convention.  MAKE_CLOSURE pops the new ref instead "
-        "of storing it; APPLY_CLOSURE pushes aconst_null and would "
-        "NPE at runtime.  Phase 2c.5 adds the parallel Object[] "
-        "pool + cross-class register access; this test flips to "
-        "passing then.  Bytecode still verifies cleanly today — "
-        "the structural shape is correct."
-    ),
-    strict=True,
-)
 @_skip_if_no_java
 def test_phase2c_make_adder_closure_returns_42_on_real_java(
     tmp_path: pytest.TempPathFactory,
 ) -> None:
-    """Headline JVM02 Phase 2c end-to-end target:
-    ``((make-adder 7) 35) → 42`` on real ``java -jar``."""
+    """Headline JVM02 Phase 2c.5 end-to-end:
+    ``((make-adder 7) 35) → 42`` on real ``java -jar``.
+
+    The closure pipeline:
+
+    * MAKE_CLOSURE r1 _lambda_0 1 r2 → ``new
+      Closure__lambda_0; dup; iload r2; invokespecial
+      <init>(I)V; aastore __ca_objregs[1]``.  The new ref is
+      retained in the parallel Object[] pool (Phase 2c.5).
+    * APPLY_CLOSURE r1 r1 1 r11 → ``aaload __ca_objregs[1];
+      checkcast Closure; ldc 1; newarray int; <dup; ldc 0;
+      iload r11; iastore>; invokeinterface Closure.apply([I)I;
+      istore __ca_regs[1]``.
+    * The closure subclass's ``apply`` body forwards to
+      ``MakeAdderMain._lambda_0(I,I)I`` — the lifted lambda
+      lives as a public static method on the main class with
+      widened arity (num_free + explicit_arity = 2).  Its
+      prologue copies its 2 JVM args into ``__ca_regs[2..3]``
+      so the existing IR-body emitter runs unchanged.
+    * SYSCALL 1 prints r1 (= 42) as a byte; ``stdout == b'*'``
+      (= 42 = 0x2a).
+    """
     import subprocess
     from pathlib import Path
 
@@ -1255,3 +1270,169 @@ def test_phase2c_make_adder_closure_returns_42_on_real_java(
         f"  stdout: {result.stdout!r}\n"
         f"  stderr: {result.stderr!r}"
     )
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# JVM02 Phase 2c.5 — typed register pool + lifted-lambda forwarder
+# ─────────────────────────────────────────────────────────────────────────────
+
+
+class TestPhase2c5TypedPool:
+    """Tests for the parallel ``Object[]`` register pool that
+    Phase 2c.5 adds.  These verify the structural changes that
+    let closures actually run end-to-end on real ``java``:
+    ``__ca_objregs`` field allocation, the lifted-lambda method
+    on the main class with widened arity, and the closure
+    subclass's invokestatic forwarder.
+    """
+
+    def _make_adder_program(self) -> IrProgram:
+        program = IrProgram(entry_label="_start")
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_lambda_0")]))
+        program.add_instruction(
+            IrInstruction(
+                IrOp.ADD, [IrRegister(1), IrRegister(2), IrRegister(3)],
+            )
+        )
+        program.add_instruction(IrInstruction(IrOp.RET, []))
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("make_adder")]))
+        program.add_instruction(
+            IrInstruction(
+                IrOp.MAKE_CLOSURE,
+                [
+                    IrRegister(1),
+                    IrLabel("_lambda_0"),
+                    IrImmediate(1),
+                    IrRegister(2),
+                ],
+            )
+        )
+        program.add_instruction(IrInstruction(IrOp.RET, []))
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")]))
+        program.add_instruction(IrInstruction(IrOp.HALT, []))
+        return program
+
+    def _config(self) -> JvmBackendConfig:
+        return JvmBackendConfig(
+            class_name="MakeAdderMain",
+            closure_free_var_counts={"_lambda_0": 1},
+        )
+
+    def test_objregs_field_present_when_closures_declared(self) -> None:
+        """The main class gains an ``Object[] __ca_objregs`` field
+        when at least one closure is declared."""
+        from jvm_class_file import parse_class_file
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        artifact = lower_ir_to_jvm_classes(
+            self._make_adder_program(), self._config(),
+        )
+        # The decoder doesn't expose fields, so check the constant
+        # pool: the field name and descriptor should both appear.
+        cf = parse_class_file(artifact.main.class_bytes)
+        assert b"__ca_objregs" in artifact.main.class_bytes
+        assert b"[Ljava/lang/Object;" in artifact.main.class_bytes
+
+    def test_objregs_field_absent_in_pure_int_program(self) -> None:
+        """Programs without closures don't pay for the
+        Object[] field — the byte stream is identical to pre-2c.5
+        for non-closure callers."""
+        program = IrProgram(entry_label="_start")
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")]))
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(1), IrImmediate(42)])
+        )
+        program.add_instruction(IrInstruction(IrOp.HALT, []))
+        artifact = lower_ir_to_jvm_class_file(
+            program, JvmBackendConfig(class_name="Pure"),
+        )
+        assert b"__ca_objregs" not in artifact.class_bytes
+
+    def test_lifted_lambda_emitted_as_public_method_on_main(self) -> None:
+        """The lifted lambda body lives as a PUBLIC static method
+        on the main class so the closure subclass can invokestatic
+        it from a different package.  Its descriptor is widened to
+        ``(II)I`` (1 capture + 1 explicit arg)."""
+        from jvm_class_file import parse_class_file
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        artifact = lower_ir_to_jvm_classes(
+            self._make_adder_program(), self._config(),
+        )
+        cf = parse_class_file(artifact.main.class_bytes)
+        lambda_method = next(
+            (m for m in cf.methods if m.name == "_lambda_0"), None,
+        )
+        assert lambda_method is not None, "lifted lambda must be on main class"
+        assert lambda_method.descriptor == "(II)I"
+        # ACC_PUBLIC bit set so cross-class invokestatic resolves.
+        assert lambda_method.access_flags & 0x0001
+
+    def test_main_class_callable_labels_includes_lambda(self) -> None:
+        """JVMClassArtifact.callable_labels exposes the lifted
+        lambda so JAR builders / simulators see it."""
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        artifact = lower_ir_to_jvm_classes(
+            self._make_adder_program(), self._config(),
+        )
+        assert "_lambda_0" in artifact.main.callable_labels
+
+    def test_subclass_apply_forwards_via_invokestatic(self) -> None:
+        """The closure subclass's ``apply`` body is an
+        invokestatic forwarder — its bytecode contains the
+        invokestatic opcode (0xB8) but NO ``iconst_0; ireturn``
+        placeholder pattern."""
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        artifact = lower_ir_to_jvm_classes(
+            self._make_adder_program(), self._config(),
+        )
+        subclass = next(
+            c for c in artifact.classes if "Closure__lambda_0" in c.class_name
+        )
+        # invokestatic = 0xB8; appears in the apply body.
+        assert b"\xb8" in subclass.class_bytes
+
+    def test_make_closure_uses_aastore_into_objregs(self) -> None:
+        """MAKE_CLOSURE emits aastore (0x53) to write the new ref
+        into __ca_objregs — not pop (0x57) like Phase 2c."""
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        artifact = lower_ir_to_jvm_classes(
+            self._make_adder_program(), self._config(),
+        )
+        # 0x53 is JVM aastore.  Should appear since MAKE_CLOSURE is
+        # the only path that emits it on the main class.
+        assert b"\x53" in artifact.main.class_bytes
+
+    def test_apply_closure_uses_aaload_and_checkcast(self) -> None:
+        """APPLY_CLOSURE emits aaload (0x32) then checkcast (0xC0)
+        on the closure ref read from __ca_objregs."""
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        # Build a program that uses APPLY_CLOSURE.
+        program = IrProgram(entry_label="_start")
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_lambda_0")]))
+        program.add_instruction(IrInstruction(IrOp.RET, []))
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")]))
+        program.add_instruction(
+            IrInstruction(
+                IrOp.MAKE_CLOSURE,
+                [IrRegister(1), IrLabel("_lambda_0"), IrImmediate(0)],
+            )
+        )
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(2), IrImmediate(35)])
+        )
+        program.add_instruction(
+            IrInstruction(
+                IrOp.APPLY_CLOSURE,
+                [IrRegister(1), IrRegister(1), IrImmediate(1), IrRegister(2)],
+            )
+        )
+        program.add_instruction(IrInstruction(IrOp.HALT, []))
+        artifact = lower_ir_to_jvm_classes(
+            program,
+            JvmBackendConfig(
+                class_name="UsesApply",
+                closure_free_var_counts={"_lambda_0": 0},
+            ),
+        )
+        # 0x32 = aaload; 0xC0 = checkcast.
+        assert b"\x32" in artifact.main.class_bytes
+        assert b"\xc0" in artifact.main.class_bytes

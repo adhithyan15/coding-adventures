@@ -207,23 +207,35 @@ This is a substantial change; suggested PR breakdown:
      and it'll auto-flip to passing the moment the typed pool
      lands.
 
-4. **Phase 2c.5** (added during 2c implementation) — Object
-   register pool: parallel ``Object[] __ca_objregs`` static
-   field on the main class, public access so per-lambda
-   subclasses can read it.  Required for runtime end-to-end:
-   - MAKE_CLOSURE stores the new ref into ``__ca_objregs[dst]``
-     instead of popping.
-   - APPLY_CLOSURE reads ``aaload __ca_objregs[closure_reg]``
-     instead of pushing null.
-   - ADD_IMM 0 (the MOV idiom) copies the obj slot too.
-   - CALL caller-saves the obj slot like the int slot.
-   - Closure ``apply`` body wires through the lifted lambda's IR
-     (either via per-method local register frames or via
-     cross-class access to ``__ca_regs``).
-   Pending.
+4. **Phase 2c.5** — Object register pool + lifted-lambda
+   forwarder.  **Shipped.**  The headline ``((make-adder 7) 35)
+   → 42`` test now runs end-to-end on real ``java -jar``
+   (was previously ``xfail``).  Implementation choices:
+   - Parallel ``Object[] __ca_objregs`` static field on the
+     main class, initialized in ``<clinit>`` only when at
+     least one closure is declared.
+   - MAKE_CLOSURE stores the new ref into
+     ``__ca_objregs[dst]`` via ``getstatic + aastore``.
+   - APPLY_CLOSURE reads via ``getstatic + aaload + checkcast
+     Closure``, then builds the int[] args, invokeinterface,
+     and stores the int return into ``__ca_regs[dst]``.
+   - **Lifted lambdas live on the main class as PUBLIC static
+     methods** with widened arity (``num_free + explicit_arity``).
+     The closure subclass's ``apply`` body forwards to them
+     via ``invokestatic`` — pushes captures from ``this.captI``
+     fields, pushes explicit args from the ``int[]`` parameter,
+     ireturn the int.  This avoids the alternative of giving
+     the subclass cross-class access to ``__ca_regs``.
+   - The lifted lambda's prologue copies its JVM args into
+     ``__ca_regs[REG_PARAM_BASE+i]`` so the existing IR-body
+     emitter runs unchanged.
+   Limitation: caller-saves still only cover ``__ca_regs``
+   (not ``__ca_objregs``); fine for straight-line closure-flow
+   code.  ADD_IMM-0 obj-mov + multi-closure-in-flight scenarios
+   land in a follow-up if twig-jvm-compiler exercises them.
 
 5. **Phase 2d** — ``twig-jvm-compiler`` accepts ``Lambda``.
-   Pending — gated on Phase 2c.5.
+   Pending — now **unblocked**.
    - Lambda lifting.
    - Free-var analysis (re-use ``twig.free_vars``).
    - JAR packaging via ``jvm-jar-writer``.

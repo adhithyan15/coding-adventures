@@ -1,5 +1,80 @@
 # ir-to-jvm-class-file
 
+## 0.9.0 — 2026-04-29 — JVM02 Phase 2c.5 (typed register pool, end-to-end)
+
+Closes the loop on JVM02 Phase 2 closures.  The headline
+`((make-adder 7) 35) → 42` test now **actually runs** end-to-end
+on real `java -jar` — previously it shipped as
+`xfail(strict=True)` because the existing JVM backend used a
+static `int[] __ca_regs` shared across method invocations and
+storing a closure ref there truncated the pointer.
+
+### How it works
+
+* **Parallel `Object[] __ca_objregs` static field** on the main
+  class, initialized in `<clinit>` (only when at least one
+  closure is declared).  MAKE_CLOSURE writes the new ref into
+  `__ca_objregs[dst]`; APPLY_CLOSURE reads it back via
+  `aaload + checkcast Closure`.
+* **Lifted lambdas live on the main class** as PUBLIC static
+  methods with widened arity (`num_free + explicit_arity`,
+  matching the BEAM/CLR captures-first convention).  A
+  one-time prologue copies their JVM args into
+  `__ca_regs[REG_PARAM_BASE+i]` so the existing IR-body
+  emitter runs unchanged.
+* **Closure subclass `apply` body forwards** to the lifted
+  lambda via `invokestatic Main._lambda_N(I,I,…)I` — pushes
+  captures from `this.captI` fields, pushes explicit args from
+  the `int[]` parameter, calls, ireturns the int.  Cross-class
+  resolution works because the main-class lambda is public.
+* **MAKE_CLOSURE** emits `getstatic __ca_objregs; ldc dst;
+  new Closure_<fn>; dup; iload caps; invokespecial <init>;
+  aastore`.
+* **APPLY_CLOSURE** emits `getstatic __ca_objregs; ldc
+  closure_reg; aaload; checkcast Closure; build int[] args;
+  invokeinterface Closure.apply([I)I; ldc dst; swap;
+  invokestatic __ca_regSet`.
+
+### Backwards compatibility
+
+Pure-int programs (no `closure_free_var_counts` entries) get
+zero extra emission: no `__ca_objregs` field, no `<clinit>`
+initialization for it, no extra methods.  All existing JVM
+tests (75 pre-existing) continue to pass.
+
+### Tests (8 new, 83 total + 2 pre-existing brainfuck/nib failures at 87% coverage)
+
+* `test_objregs_field_present_when_closures_declared` — the
+  parallel `Object[]` field appears in the constant pool.
+* `test_objregs_field_absent_in_pure_int_program` — no extra
+  emission for non-closure programs.
+* `test_lifted_lambda_emitted_as_public_method_on_main` —
+  `_lambda_0` lives on the main class with descriptor `(II)I`
+  and `ACC_PUBLIC` set.
+* `test_main_class_callable_labels_includes_lambda` — JAR
+  builders see the lifted lambda in `callable_labels`.
+* `test_subclass_apply_forwards_via_invokestatic` — subclass
+  `apply` is a real forwarder, not the placeholder.
+* `test_make_closure_uses_aastore_into_objregs` — MAKE_CLOSURE
+  emits `aastore` (0x53).
+* `test_apply_closure_uses_aaload_and_checkcast` —
+  APPLY_CLOSURE emits `aaload` (0x32) + `checkcast` (0xC0).
+* `test_phase2c_make_adder_closure_returns_42_on_real_java`
+  is now a regular passing test (was `xfail(strict=True)`).
+
+### Limitations
+
+* **Caller-saves on the obj pool**: the existing JVM01
+  caller-saves (snapshot/restore around CALL) only covers
+  `__ca_regs`, not `__ca_objregs`.  For straight-line
+  closure-flow code (matches what twig-jvm-compiler will
+  produce for v1) this is fine — closure refs flow through
+  unique slots.  Multi-closure-in-flight scenarios would need
+  parallel obj-pool caller-saves; document this for the
+  follow-up.
+* **Arity-1 closures only** — APPLY_CLOSURE supports a single
+  explicit arg.  Multi-arity awaits Phase 2c.6.
+
 ## 0.8.0 — 2026-04-29 — JVM02 Phase 2c (closure lowering, structural)
 
 ### Added — `MAKE_CLOSURE` and `APPLY_CLOSURE` lowering

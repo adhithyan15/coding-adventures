@@ -59,7 +59,9 @@ _OP_IASTORE = 0x4F
 _OP_BASTORE = 0x54
 _OP_POP = 0x57
 _OP_DUP = 0x59
+_OP_SWAP = 0x5F
 _OP_ACONST_NULL = 0x01
+_OP_CHECKCAST = 0xC0
 _OP_IADD = 0x60
 _OP_ISUB = 0x64
 _OP_IMUL = 0x68
@@ -91,6 +93,7 @@ _OP_NEW = 0xBB             # for newobj of a closure subclass
 _OP_NEWARRAY = 0xBC
 _OP_ANEWARRAY = 0xBD       # reserved for closure pool init
 _OP_ALOAD_0 = 0x2A         # load `this` (or any aload short form)
+_OP_ALOAD_1 = 0x2B         # load arg slot 1 (used in closure Apply forwarder)
 _OP_AASTORE = 0x53
 _OP_AALOAD = 0x32
 _OP_NOP = 0x00
@@ -102,6 +105,9 @@ _DESC_INT = "I"
 _DESC_VOID = "V"
 _DESC_INT_ARRAY = "[I"
 _DESC_BYTE_ARRAY = "[B"
+_DESC_OBJECT = "Ljava/lang/Object;"
+_DESC_OBJECT_ARRAY = "[Ljava/lang/Object;"
+_DESC_CLOSURE_INTERFACE = "Lcoding_adventures/twig/runtime/Closure;"
 _DESC_MAIN = "([Ljava/lang/String;)V"
 _DESC_NOARGS_INT = "()I"
 _DESC_NOARGS_VOID = "()V"
@@ -115,6 +121,11 @@ _JAVA_BINARY_NAME_RE = re.compile(
     r"[A-Za-z_$][A-Za-z0-9_$]*(?:\.[A-Za-z_$][A-Za-z0-9_$]*)*"
 )
 _MAX_STATIC_DATA_BYTES = 16 * 1024 * 1024
+
+# JVM02 Phase 2c.5 — captures-first IR register layout for lifted
+# lambda bodies (matches BEAM/CLR closure conventions).
+_REG_PARAM_BASE: Final[int] = 2
+_CLR_CLOSURE_EXPLICIT_ARITY: Final[int] = 1  # Arity-1 closures only in v1.
 
 
 class JvmBackendError(ValueError):
@@ -421,6 +432,10 @@ class _JvmClassLowerer:
         self._fresh_label_id = 0
         self._helper_reg_field = "__ca_regs"
         self._helper_mem_field = "__ca_memory"
+        # JVM02 Phase 2c.5 — parallel object pool for closure refs.
+        # Allocated only when ``closure_free_var_counts`` is non-empty
+        # so non-closure programs see no extra fields / clinit work.
+        self._objreg_field = "__ca_objregs"
         self._helper_reg_get = "__ca_regGet"
         self._helper_reg_set = "__ca_regSet"
         self._helper_mem_load_byte = "__ca_memLoadByte"
@@ -441,6 +456,13 @@ class _JvmClassLowerer:
         # array must therefore be at least 2 elements long so index 1 is valid.
         reg_count = max(self._max_register_index() + 1, 2)
 
+        # JVM02 Phase 2c.5: when any closure is declared, allocate a
+        # parallel ``Object[]`` static field for closure refs and
+        # initialize it in <clinit>.  Non-closure programs see zero
+        # extra emission.
+        closure_region_names = set(self.config.closure_free_var_counts)
+        has_closures = bool(closure_region_names)
+
         fields = [
             _FieldSpec(
                 _ACC_PRIVATE | ACC_STATIC,
@@ -453,9 +475,17 @@ class _JvmClassLowerer:
                 _DESC_BYTE_ARRAY,
             ),
         ]
+        if has_closures:
+            fields.append(
+                _FieldSpec(
+                    _ACC_PRIVATE | ACC_STATIC,
+                    self._objreg_field,
+                    _DESC_OBJECT_ARRAY,
+                )
+            )
 
         methods = [
-            self._build_class_initializer(reg_count, data_offsets),
+            self._build_class_initializer(reg_count, data_offsets, has_closures),
             self._build_reg_get_method(),
             self._build_reg_set_method(),
             self._build_mem_load_byte_method(),
@@ -464,17 +494,26 @@ class _JvmClassLowerer:
             self._build_store_word_method(),
             self._build_syscall_method(),
         ]
-        # Closure regions (lifted lambdas) become methods on their
-        # own ``Closure_<name>`` subclasses (built by
-        # ``build_closure_subclass_artifact`` in the multi-class
-        # path) — skip them here so the main user class doesn't
-        # double-host the body.
-        closure_region_names = set(self.config.closure_free_var_counts)
-        methods.extend(
-            self._build_callable_method(region, reg_count)
-            for region in callable_regions
-            if region.name not in closure_region_names
-        )
+        # JVM02 Phase 2c.5: closure regions (lifted lambdas) are NOW
+        # emitted as PUBLIC static methods on the main class so the
+        # closure subclass's ``Apply`` method can invoke them via
+        # ``invokestatic`` from a different package.  Their arity is
+        # widened to ``num_free + explicit_arity`` (capture params +
+        # explicit lambda params) and a JVM-args → __ca_regs prologue
+        # gets prepended so the existing IR-body emitter can run
+        # unchanged.
+        for region in callable_regions:
+            if region.name in closure_region_names:
+                num_free = self.config.closure_free_var_counts[region.name]
+                methods.append(
+                    self._build_lifted_lambda_method(
+                        region, reg_count, num_free,
+                    )
+                )
+            else:
+                methods.append(
+                    self._build_callable_method(region, reg_count)
+                )
         if self.config.emit_main_wrapper:
             methods.append(self._build_main_method())
 
@@ -482,9 +521,12 @@ class _JvmClassLowerer:
         return JVMClassArtifact(
             class_name=self.config.class_name,
             class_bytes=class_bytes,
+            # JVM02 Phase 2c.5: lifted lambda regions ARE on the
+            # main class now (with widened arity), so include them
+            # in ``callable_labels`` so JAR builders / test
+            # harnesses can iterate every emitted method.
             callable_labels=tuple(
                 region.name for region in callable_regions
-                if region.name not in closure_region_names
             ),
             data_offsets=data_offsets,
         )
@@ -749,14 +791,12 @@ class _JvmClassLowerer:
         builder: _BytecodeBuilder,
         instruction: IrInstruction,
     ) -> None:
-        """Emit ``new Closure_<fn>; dup; iload caps; invokespecial ctor``.
+        """Emit ``new Closure_<fn>; dup; iload caps; invokespecial
+        ctor; aastore __ca_objregs[dst]``.
 
-        Phase 2c structural-only: the resulting reference is popped
-        because the existing register convention is int[] only and
-        can't hold an object reference.  Phase 2c.5 adds a parallel
-        ``Object[]`` pool to retain the reference; until then,
-        MAKE_CLOSURE compiles + verifies but the closure value is
-        not actually retrievable downstream.
+        Phase 2c.5: the new reference is now stored into the
+        parallel ``Object[]`` pool's slot ``dst`` so APPLY_CLOSURE
+        and ADD_IMM-mov can retrieve it later.
         """
         if len(instruction.operands) < 3:
             raise JvmBackendError(
@@ -764,8 +804,7 @@ class _JvmClassLowerer:
                 f"(dst, fn_label, num_captured, capt...), got "
                 f"{len(instruction.operands)}"
             )
-        # dst is unused at this phase — the reference is popped.
-        _as_register(instruction.operands[0], "MAKE_CLOSURE dst")
+        dst = _as_register(instruction.operands[0], "MAKE_CLOSURE dst")
         fn_label = _as_label(instruction.operands[1], "MAKE_CLOSURE fn_label")
         num_captured = _as_immediate(
             instruction.operands[2], "MAKE_CLOSURE num_captured",
@@ -795,13 +834,24 @@ class _JvmClassLowerer:
         closure_internal = f"coding_adventures/twig/runtime/Closure_{sanitised}"
         ctor_descriptor = "(" + ("I" * num_captured) + ")V"
 
-        # new Closure_X
+        # Phase 2c.5: build the closure + store into __ca_objregs.
+        # Emission shape:
+        #   getstatic __ca_objregs           ; push the static array
+        #   ldc dst                          ; push array index
+        #   new Closure_X                    ; allocate
+        #   dup                              ; reference for ctor
+        #   ldloc capt0..captN-1 (via __ca_regGet)
+        #   invokespecial Closure_X.<init>(I,...,I)V
+        #   aastore                          ; objregs[dst] = ref
+        builder.emit_u2_instruction(
+            _OP_GETSTATIC,
+            self._field_ref(self._objreg_field, _DESC_OBJECT_ARRAY),
+        )
+        self._emit_push_int(builder, dst.index)
         builder.emit_u2_instruction(
             _OP_NEW, self.cp.class_ref(closure_internal),
         )
-        # dup so the reference survives the ctor invocation
         builder.emit_opcode(_OP_DUP)
-        # Push each capture by reading __ca_regs[capt_i].
         for i in range(num_captured):
             capt_reg = _as_register(
                 instruction.operands[3 + i], f"MAKE_CLOSURE capture {i}",
@@ -811,9 +861,7 @@ class _JvmClassLowerer:
             _OP_INVOKESPECIAL,
             self.cp.method_ref(closure_internal, "<init>", ctor_descriptor),
         )
-        # Phase 2c structural-only: discard the reference.  Phase 2c.5
-        # will replace this with an aastore into __ca_objregs[dst].
-        builder.emit_opcode(_OP_POP)
+        builder.emit_opcode(_OP_AASTORE)
 
     def _emit_apply_closure(
         self,
@@ -822,18 +870,11 @@ class _JvmClassLowerer:
     ) -> None:
         """Emit closure-apply bytecode.
 
-        Phase 2c structural-only: pushes ``aconst_null`` instead of
-        the real closure reference (because the int[] register
-        convention can't hold one), then builds the int[] args
-        array and emits ``invokeinterface Closure.apply([I)I``.
-        The result is popped; ``dst`` is left unwritten.
-
-        At runtime this would NPE when the JVM tries to dispatch
-        through the null reference — that's why the integration
-        test for end-to-end semantics is xfail until Phase 2c.5.
-        The bytecode still verifies cleanly, which proves the
-        invokeinterface descriptor and the args-array construction
-        are correct.
+        Phase 2c.5: the closure reference is now read from
+        ``__ca_objregs[closure_reg]`` (instead of the placeholder
+        ``aconst_null`` Phase 2c shipped with), so the call
+        actually dispatches to the lifted lambda's body.  The
+        ``int`` return is stored into ``__ca_regs[dst]``.
         """
         if len(instruction.operands) < 3:
             raise JvmBackendError(
@@ -841,9 +882,10 @@ class _JvmClassLowerer:
                 f"(dst, closure, num_args, args...), got "
                 f"{len(instruction.operands)}"
             )
-        # dst, closure_reg unused at this phase — see docstring.
-        _as_register(instruction.operands[0], "APPLY_CLOSURE dst")
-        _as_register(instruction.operands[1], "APPLY_CLOSURE closure_reg")
+        dst = _as_register(instruction.operands[0], "APPLY_CLOSURE dst")
+        closure_reg = _as_register(
+            instruction.operands[1], "APPLY_CLOSURE closure_reg",
+        )
         num_args = _as_immediate(
             instruction.operands[2], "APPLY_CLOSURE num_args",
         ).value
@@ -854,8 +896,19 @@ class _JvmClassLowerer:
                 f"{len(instruction.operands) - 3} arg operands provided"
             )
 
-        # Push placeholder closure reference.
-        builder.emit_opcode(_OP_ACONST_NULL)
+        # Phase 2c.5: load the closure ref from __ca_objregs[closure_reg].
+        # The aaload returns Object so we checkcast to the Closure
+        # interface type before invokeinterface.
+        builder.emit_u2_instruction(
+            _OP_GETSTATIC,
+            self._field_ref(self._objreg_field, _DESC_OBJECT_ARRAY),
+        )
+        self._emit_push_int(builder, closure_reg.index)
+        builder.emit_opcode(_OP_AALOAD)
+        builder.emit_u2_instruction(
+            _OP_CHECKCAST,
+            self.cp.class_ref(CLOSURE_INTERFACE_BINARY_NAME),
+        )
         # Build int[] args
         self._emit_push_int(builder, num_args)
         builder.emit_u1_instruction(_OP_NEWARRAY, _ATYPE_INT)
@@ -879,14 +932,29 @@ class _JvmClassLowerer:
             + iface_method_ref.to_bytes(2, "big")
             + bytes([2, 0])
         )
-        # Phase 2c structural-only: discard the int result.  Phase 2c.5
-        # will store it into __ca_regs[dst].
-        builder.emit_opcode(_OP_POP)
+        # Phase 2c.5: store the int return value into __ca_regs[dst]
+        # via the existing helper.  Stack effect: invokeinterface
+        # leaves int on top; __ca_regSet expects (int idx, int val).
+        # We need idx UNDER val on the stack, so push idx first then
+        # swap.  Easier: emit a small helper sequence.
+        # Stack now: [int_result]
+        # Goal:     [] with __ca_regs[dst.index] = int_result
+        # We can avoid swap by computing idx into a local first OR
+        # by structuring as: ldc dst; swap; invokestatic regSet.
+        # `swap` swaps two single-slot stack entries (both ints) —
+        # safe here since both are int32.
+        self._emit_push_int(builder, dst.index)
+        builder.emit_opcode(_OP_SWAP)
+        builder.emit_u2_instruction(
+            _OP_INVOKESTATIC,
+            self._method_ref(self._helper_reg_set, _DESC_INT_INT_TO_VOID),
+        )
 
     def _build_class_initializer(
         self,
         reg_count: int,
         data_offsets: dict[str, int],
+        has_closures: bool = False,
     ) -> _MethodSpec:
         builder = _BytecodeBuilder()
 
@@ -914,6 +982,21 @@ class _JvmClassLowerer:
                 start=start,
                 size=declaration.size,
                 value=declaration.init,
+            )
+
+        # JVM02 Phase 2c.5: parallel ``Object[]`` for closure refs.
+        # ``anewarray Object`` allocates a fresh ``Object[reg_count]``
+        # initialised to all-null; the cells get populated by
+        # MAKE_CLOSURE / ADD_IMM-mov as the program runs.
+        if has_closures:
+            self._emit_push_int(builder, reg_count)
+            builder.emit_u2_instruction(
+                _OP_ANEWARRAY,
+                self.cp.class_ref("java/lang/Object"),
+            )
+            builder.emit_u2_instruction(
+                _OP_PUTSTATIC,
+                self._field_ref(self._objreg_field, _DESC_OBJECT_ARRAY),
             )
 
         builder.emit_opcode(_OP_RETURN)
@@ -1195,6 +1278,91 @@ class _JvmClassLowerer:
             max_locals=3,          # 0=syscall_num, 1=arg_reg, 2=read_byte
         )
 
+    def _build_lifted_lambda_method(
+        self,
+        region: _CallableRegion,
+        reg_count: int,
+        num_free: int,
+    ) -> _MethodSpec:
+        """JVM02 Phase 2c.5 — emit a lifted lambda's IR body as a
+        PUBLIC static method on the main class.
+
+        Two key differences from a normal callable:
+
+        1. The descriptor takes ``num_free + explicit_arity`` JVM
+           int args (instead of zero), so the closure subclass's
+           ``Apply`` method can ``invokestatic`` it from a
+           different package without poking at the main class's
+           private static ``__ca_regs`` array.
+        2. A prologue copies each ldarg.i → ``__ca_regs[REG_PARAM_BASE+i]``
+           so the existing IR-body emitter — which reads/writes
+           the static array via the ``__ca_regGet`` / ``__ca_regSet``
+           helpers — runs unchanged.
+        """
+        explicit_arity = _CLR_CLOSURE_EXPLICIT_ARITY  # currently 1
+        total_arity = num_free + explicit_arity
+
+        builder = _BytecodeBuilder()
+        # Prologue: ldarg.i; invokestatic __ca_regSet(REG_PARAM_BASE+i, val)
+        # The lambda body's IR uses captures-first layout: r2 holds
+        # capt0, r3 holds capt1, ..., r{2+num_free} holds explicit
+        # arg 0.  This matches what BEAM/CLR backends use.
+        for i in range(total_arity):
+            self._emit_push_int(builder, _REG_PARAM_BASE + i)
+            self._emit_jvm_iload_arg(builder, i)
+            builder.emit_u2_instruction(
+                _OP_INVOKESTATIC,
+                self._method_ref(self._helper_reg_set, _DESC_INT_INT_TO_VOID),
+            )
+
+        # Run the IR body (re-uses _build_callable_method's
+        # instruction-emission loop).  The body's RET reads
+        # __ca_regs[1] and ireturns.
+        self._emit_callable_body(builder, region, reg_count)
+
+        descriptor = "(" + "I" * total_arity + ")I"
+        return _MethodSpec(
+            access_flags=ACC_PUBLIC | ACC_STATIC,
+            name=region.name,
+            descriptor=descriptor,
+            code=builder.assemble(),
+            max_stack=16,
+            # max_locals = total_arity (for ldarg) + reg_count (for
+            # JVM01 caller-saves snapshots used inside the body).
+            max_locals=total_arity + reg_count,
+        )
+
+    def _emit_jvm_iload_arg(
+        self, builder: _BytecodeBuilder, arg_index: int,
+    ) -> None:
+        """Emit ``iload arg_index`` — picking the short form
+        (iload_0..3) when possible."""
+        if 0 <= arg_index <= 3:
+            builder.emit_opcode(_OP_ILOAD_0 + arg_index)
+        else:
+            builder.emit_u1_instruction(_OP_ILOAD, arg_index)
+
+    def _emit_callable_body(
+        self,
+        builder: _BytecodeBuilder,
+        region: _CallableRegion,
+        reg_count: int,
+    ) -> None:
+        """Emit just the IR-body instructions for ``region`` into
+        ``builder``.  Shared between ``_build_callable_method`` (for
+        normal regions) and ``_build_lifted_lambda_method`` (for
+        lifted lambdas, which prepend a JVM-args prologue first).
+
+        Body emission terminates at the first RET / HALT.
+        Implementation: delegate to ``_build_callable_method``'s
+        instruction-by-instruction emission via a slim wrapper —
+        avoids duplicating the dispatch table.
+        """
+        # Use the existing body emission by calling the same loop
+        # _build_callable_method uses.  We extract that loop into
+        # a helper so both call sites share it.
+        self._emit_region_instructions(builder, region, reg_count)
+
     def _build_callable_method(
         self, region: _CallableRegion, reg_count: int
     ) -> _MethodSpec:
@@ -1205,6 +1373,39 @@ class _JvmClassLowerer:
         # across nested calls.  We pass it through so the method's
         # ``max_locals`` can be set high enough below.
 
+        self._emit_region_instructions(builder, region, reg_count)
+
+        code = builder.assemble()
+        access_flags = (
+            ACC_PUBLIC | ACC_STATIC
+            if region.name == self.program.entry_label
+            else _ACC_PRIVATE | ACC_STATIC
+        )
+        return _MethodSpec(
+            access_flags=access_flags,
+            name=region.name,
+            descriptor=_DESC_NOARGS_INT,
+            code=code,
+            max_stack=16,
+            # JVM01: caller-saves convention uses JVM locals
+            # 0..reg_count-1 as snapshot storage across CALL
+            # boundaries.  Reserve at least ``reg_count`` locals so
+            # the JVM verifier accepts the method.
+            max_locals=reg_count,
+        )
+
+    def _emit_region_instructions(
+        self,
+        builder: _BytecodeBuilder,
+        region: _CallableRegion,
+        reg_count: int,
+    ) -> None:
+        """Emit one IR region's instructions into ``builder``.
+
+        Extracted from ``_build_callable_method`` so the lifted-
+        lambda method (Phase 2c.5) can prepend a JVM-args prologue
+        and re-use the same instruction-by-instruction emission.
+        """
         for instruction in region.instructions:
             if instruction.opcode == IrOp.LABEL:
                 label = _as_label(instruction.operands[0], "LABEL operand")
@@ -1530,25 +1731,6 @@ class _JvmClassLowerer:
                 f"{instruction.opcode}"
             )
 
-        code = builder.assemble()
-        access_flags = (
-            ACC_PUBLIC | ACC_STATIC
-            if region.name == self.program.entry_label
-            else _ACC_PRIVATE | ACC_STATIC
-        )
-        return _MethodSpec(
-            access_flags=access_flags,
-            name=region.name,
-            descriptor=_DESC_NOARGS_INT,
-            code=code,
-            max_stack=16,
-            # JVM01: caller-saves convention uses JVM locals
-            # 0..reg_count-1 as snapshot storage across CALL
-            # boundaries.  Reserve at least ``reg_count`` locals so
-            # the JVM verifier accepts the method.
-            max_locals=reg_count,
-        )
-
     def _build_main_method(self) -> _MethodSpec:
         builder = _BytecodeBuilder()
         builder.emit_u2_instruction(
@@ -1866,9 +2048,14 @@ def lower_ir_to_jvm_classes(
     if needs_interface:
         classes.append(build_closure_interface_artifact())
 
+    main_binary_name = config.class_name.replace(".", "/")
     for closure_name, num_free in config.closure_free_var_counts.items():
         classes.append(
-            build_closure_subclass_artifact(closure_name, num_free=num_free)
+            build_closure_subclass_artifact(
+                closure_name,
+                num_free=num_free,
+                main_class_binary_name=main_binary_name,
+            )
         )
 
     return JVMMultiClassArtifact(classes=tuple(classes))
@@ -1878,6 +2065,8 @@ def build_closure_subclass_artifact(
     closure_name: str,
     *,
     num_free: int,
+    main_class_binary_name: str | None = None,
+    explicit_arity: int = 1,
 ) -> JVMClassArtifact:
     """Return one ``Closure_<closure_name>.class`` artifact.
 
@@ -1893,21 +2082,22 @@ def build_closure_subclass_artifact(
     * has a ``.ctor(int, int, …)V`` that calls
       ``Object::.ctor()`` then stores each parameter into its
       corresponding capture field.
-    * has a placeholder ``apply([I)I`` method that returns ``0``.
+    * has an ``apply([I)I`` method whose body forwards to a
+      PUBLIC static method on the main user class
+      (``main_class_binary_name._closure_name``) — the lifted
+      lambda's IR body lives there.  Phase 2c.5 wired up this
+      forwarder so closures actually run end-to-end on real
+      ``java``.
 
-    The placeholder ``apply`` is the Phase 2c structural-only
-    compromise: the class loads, ``Closure`` dispatch resolves to
-    it, but the lifted lambda's actual body is not yet wired
-    through.  Phase 2c.5 will fill in the body using either:
-
-    1. A new lowering path that uses JVM locals for the IR
-       register frame (instead of the main class's static
-       ``__ca_regs`` field), OR
-    2. Cross-class access to the main class's static helpers.
-
-    Either approach requires substantial refactoring of the
-    register-storage convention; doing it here would balloon the
-    Phase 2c PR.
+    When ``main_class_binary_name`` is ``None`` (the Phase 2b
+    structural backward-compat path), ``apply`` falls back to
+    the placeholder ``iconst_0; ireturn`` body that lets the
+    class load + dispatch resolve.  ``ir-to-jvm-class-file``'s
+    high-level multi-class API
+    (``lower_ir_to_jvm_classes``) always passes the main class
+    name, so this fallback only matters for
+    ``build_closure_subclass_artifact()`` direct callers in
+    older test code.
     """
     sanitised = _sanitise_class_name_segment(closure_name)
     package = "coding_adventures/twig/runtime"
@@ -1951,10 +2141,52 @@ def build_closure_subclass_artifact(
     ctor_name_index = pool.utf8("<init>")
     ctor_descriptor_index = pool.utf8(ctor_descriptor)
 
-    # ── apply body — placeholder: iconst_0; ireturn ──────────────────
+    # ── apply body ────────────────────────────────────────────────────
+    # Phase 2c.5: forward to the main class's public static
+    # ``_<closure_name>`` method.  The forwarder pushes
+    # ``num_free + explicit_arity`` int args (captures from this.captI
+    # fields, then explicit args from the args[] parameter) and
+    # invokestatic's the lifted lambda.  Returns whatever int the
+    # lifted lambda returns.
+    #
+    # Phase 2b backward-compat: when no main class is provided,
+    # emit the placeholder body.  Real lowering always supplies it.
     apply_builder = _BytecodeBuilder()
-    apply_builder.emit_opcode(_OP_ICONST_0)
-    apply_builder.emit_opcode(_OP_IRETURN)
+    if main_class_binary_name is None:
+        apply_builder.emit_opcode(_OP_ICONST_0)
+        apply_builder.emit_opcode(_OP_IRETURN)
+        apply_max_stack = 1
+        apply_max_locals = 2
+    else:
+        # Push captures from instance fields.
+        for i in range(num_free):
+            apply_builder.emit_opcode(_OP_ALOAD_0)  # this
+            apply_builder.emit_u2_instruction(_OP_GETFIELD, field_refs[i])
+        # Push explicit args from the int[] parameter.
+        for i in range(explicit_arity):
+            apply_builder.emit_opcode(_OP_ALOAD_1)  # args
+            # ldc i; iaload
+            if i <= 5:
+                apply_builder.emit_opcode(_OP_ICONST_0 + i)
+            else:
+                apply_builder.emit_u1_instruction(_OP_BIPUSH, i)
+            apply_builder.emit_opcode(_OP_IALOAD)
+        # invokestatic Main._<closure_name>(I,I,...)I
+        total_arity = num_free + explicit_arity
+        lambda_descriptor = "(" + "I" * total_arity + ")I"
+        lambda_method_ref = pool.method_ref(
+            main_class_binary_name, closure_name, lambda_descriptor,
+        )
+        apply_builder.emit_u2_instruction(_OP_INVOKESTATIC, lambda_method_ref)
+        apply_builder.emit_opcode(_OP_IRETURN)
+        # Stack peaks during the args[i] loads: at the point we
+        # iaload arg_i with i captures already on the stack, we
+        # have (i captures so far) + (loaded captures up to now) +
+        # (args[] reference) + (index) on the stack — total is
+        # ``num_free + 2`` for the args[]+index pair.  Be generous:
+        # ``total_arity + 2`` covers all intermediate arrangements.
+        apply_max_stack = total_arity + 2
+        apply_max_locals = 2  # this + args[]
     apply_code = apply_builder.assemble()
     apply_name_index = pool.utf8(CLOSURE_INTERFACE_METHOD_NAME)
     apply_descriptor_index = pool.utf8(CLOSURE_INTERFACE_METHOD_DESCRIPTOR)
@@ -2003,8 +2235,8 @@ def build_closure_subclass_artifact(
             name_index=apply_name_index,
             descriptor_index=apply_descriptor_index,
             code=apply_code,
-            max_stack=1,
-            max_locals=2,                 # this + int[] arg
+            max_stack=apply_max_stack,
+            max_locals=apply_max_locals,
             code_attribute_name_index=code_attribute_name_index,
         )
     )
