@@ -118,6 +118,8 @@ members = [
     "markov-chain",
     "note-frequency",
     "matrix",
+    "neural-network",
+    "neural-graph-vm",
     "ml-framework-core",
     "ml-framework-keras",
     "ml-framework-tf",
