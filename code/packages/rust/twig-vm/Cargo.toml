@@ -1,8 +1,8 @@
 [package]
 name = "twig-vm"
-version = "0.4.0"
+version = "0.5.0"
 edition = "2021"
-description = "LANG20 PRs 3–6 — TwigVM: compiles Twig source and dispatches the IIR end to end including closures, top-level value defines, quoted symbols, and method-dispatch opcodes (send / load_property / store_property)"
+description = "LANG20 PRs 3–7 — TwigVM: compiles Twig source and dispatches the IIR end to end including closures, top-level value defines, quoted symbols, method-dispatch opcodes, and persistent inline-cache slot machinery"
 
 [dependencies]
 twig-ir-compiler  = { path = "../twig-ir-compiler" }

@@ -3,8 +3,12 @@
 //! Originally LANG20 PR 4 (tree-walking dispatcher); extended in
 //! PR 5 to cover closures, top-level value defines, and quoted
 //! symbols; extended in PR 6 to cover the method-dispatch
-//! opcodes `send`, `load_property`, `store_property`.  Runs an
-//! entire `IIRModule` end to end and returns a `LispyValue`.
+//! opcodes `send`, `load_property`, `store_property`; extended in
+//! PR 7 with **persistent inline-cache slots** so a hot
+//! `load_property` site shares one IC instance across all its
+//! activations (the V8-style IC machinery the JIT will speculate
+//! on).  Runs an entire `IIRModule` end to end and returns a
+//! `LispyValue`.
 //!
 //! ## Scope
 //!
@@ -64,17 +68,34 @@
 //! `twig-ir-compiler` doesn't emit them yet (no `(send obj msg
 //! ...)` form in Twig source).
 //!
-//! The IC parameter is allocated **fresh per dispatch** in PR 6
-//! (no caching across calls); PR 7 lands the IC machinery that
-//! makes the cache persistent + populated by the binding's
-//! `send_message` / `load_property` / `store_property`
-//! implementations.  Until then, the binding's IC handling is a
-//! no-op for Lispy and the cache fills nothing.
+//! ### IC slot lookup (PR 7)
+//!
+//! When the IIR compiler assigns `IIRInstr::ic_slot = Some(slot)`
+//! to an IC-owning instruction, the dispatcher routes through
+//! the **persistent [`ICTable`]** — a per-function vector of
+//! [`InlineCache<LispyICEntry>`] indexed by slot id.  Two
+//! activations of the same function hit the same IC instance,
+//! so a `load_property` that observes a class on call N can
+//! benefit on call N+1 (the V8-style fast-path the JIT
+//! eventually compiles against).
+//!
+//! When `ic_slot` is `None` (the PR 6 default), the dispatcher
+//! stack-allocates a fresh IC per dispatch — backwards-
+//! compatible with hand-built IIRModules in tests that don't
+//! assign slots.  New IC-owning frontends (Ruby, JS) emit slot
+//! ids; existing tests keep working.
+//!
+//! For Lispy specifically the binding's `send_message` etc. don't
+//! consult the IC (they error immediately), so the IC table
+//! mostly verifies plumbing.  The cache fills the moment a Ruby-
+//! or JS-binding's `send_message` calls
+//! `InlineCache::record(...)`.
 //!
 //! Out of scope (later PRs):
 //!
-//! - **Persistent IC slots** — PR 7 adds the per-call-site IC
-//!   table indexed by `IIRInstr::ic_slot` (LANG20 §"IIR additions").
+//! - **Profiler that reads IC observations** — PR 8 wires the
+//!   `vm-core` profiler that dumps `.ldp` artefacts (LANG22) from
+//!   IC contents.
 //! - **JIT promotion, deopt** — PR 8+.
 //!
 //! ## Recursion model
@@ -147,6 +168,34 @@ pub const MAX_INSTRUCTIONS_PER_RUN: u64 = 1 << 20;
 /// registers; the largest test case here uses ~30) and bounds
 /// the up-front allocation.
 pub const MAX_REGISTERS_PER_FRAME: usize = 1 << 16;
+
+/// Maximum inline-cache slots any single function can declare
+/// (LANG20 PR 7).
+///
+/// `IIRInstr::ic_slot: Option<u32>` permits values up to
+/// `u32::MAX`; `ICTable::get_or_alloc` calls
+/// `Vec::resize_with(slot + 1, …)` on first access, so a
+/// hand-built or malformed IIR with `ic_slot = Some(u32::MAX -
+/// 1)` would attempt a multi-hundred-GB allocation and OOM-abort
+/// the process.  Capping at 2¹⁶ matches the
+/// [`MAX_REGISTERS_PER_FRAME`] convention — a real-world Twig
+/// function won't approach it (most have <10 IC sites; the
+/// largest realistic case is <100).  Found by PR 7 security
+/// review.
+pub const MAX_IC_SLOTS_PER_FUNCTION: u32 = 1 << 16;
+
+/// Maximum number of distinct functions an [`ICTable`] will
+/// hold (LANG20 PR 7).
+///
+/// Bounds the outer HashMap's growth so a hand-built module
+/// declaring millions of functions can't unboundedly grow the
+/// per-process IC storage.  Matches the
+/// [`MAX_IC_SLOTS_PER_FUNCTION`] cap; combined the two limit
+/// total IC storage to ~2³² entries × ~64 bytes = ~256 GB
+/// which still permits every reasonable program but stops
+/// adversarial inputs at the boundary.  Found by PR 7
+/// security review.
+pub const MAX_IC_FUNCTIONS: usize = 1 << 16;
 
 // ---------------------------------------------------------------------------
 // RunError
@@ -428,6 +477,120 @@ fn build_label_index(func: &IIRFunction) -> Result<HashMap<String, usize>, RunEr
 }
 
 // ---------------------------------------------------------------------------
+// IC table (PR 7)
+// ---------------------------------------------------------------------------
+
+/// Persistent inline-cache storage indexed by `(function_name,
+/// ic_slot)`.
+///
+/// One [`InlineCache<LispyICEntry>`] per IC-owning instruction
+/// (`send`, `load_property`, `store_property`).  Two activations
+/// of the same function hit the **same IC instance**, so a hot
+/// site that observed a class on call N benefits on call N+1
+/// (the V8-style fast path the JIT eventually compiles
+/// against).
+///
+/// **Storage shape.**  `HashMap<String, Vec<InlineCache<...>>>`.
+/// The outer key is the function name (the IIR carries names,
+/// not numeric ids); the inner Vec is dense — slot N occupies
+/// index N.  Functions without IC-owning instructions never get
+/// an entry.
+///
+/// **Lifetime.**  Per-run today (one [`ICTable`] per call to
+/// [`run`]); PR 8+ moves it to per-VM state when `LangVM` lands,
+/// so the cache survives across multiple `run` calls.  The
+/// public API stays the same.
+///
+/// **Why string-keyed instead of function-id-indexed?**  The IIR
+/// already keys functions by name everywhere (`UnknownFunction`,
+/// `module.functions.find`); using the same key avoids
+/// introducing a separate identifier scheme.  When register
+/// allocation refactors functions to numeric ids in a future PR,
+/// this field migrates with them.
+#[derive(Debug, Default)]
+pub struct ICTable {
+    by_function: HashMap<String, Vec<InlineCache<LispyICEntry>>>,
+}
+
+impl ICTable {
+    /// Construct an empty IC table.
+    pub fn new() -> Self {
+        ICTable {
+            by_function: HashMap::new(),
+        }
+    }
+
+    /// Get a `&mut` reference to the IC at `(fn_name, slot)`,
+    /// growing the per-function vector if needed.
+    ///
+    /// First access to a slot allocates a fresh
+    /// [`InlineCache::new`] (state Uninit, zero entries, zero
+    /// counters).  Subsequent accesses return the existing
+    /// instance.  This is the API the dispatcher's IC-owning
+    /// opcode handlers use on every dispatch.
+    ///
+    /// Errors if `slot >= MAX_IC_SLOTS_PER_FUNCTION` or the
+    /// table already holds `MAX_IC_FUNCTIONS` distinct
+    /// functions and `fn_name` is new.  Both caps are defensive
+    /// against hand-built malformed IIR; well-formed input
+    /// never approaches them.
+    pub fn get_or_alloc(
+        &mut self,
+        fn_name: &str,
+        slot: u32,
+    ) -> Result<&mut InlineCache<LispyICEntry>, RunError> {
+        if slot >= MAX_IC_SLOTS_PER_FUNCTION {
+            return Err(RunError::MalformedInstruction(format!(
+                "ic_slot {slot} exceeds MAX_IC_SLOTS_PER_FUNCTION ({MAX_IC_SLOTS_PER_FUNCTION})"
+            )));
+        }
+        // Reject new function entries beyond MAX_IC_FUNCTIONS.
+        // `entry().or_default()` would silently grow past the
+        // cap; check membership first (cheap when the function
+        // is already present, the common case).
+        if !self.by_function.contains_key(fn_name)
+            && self.by_function.len() >= MAX_IC_FUNCTIONS
+        {
+            return Err(RunError::MalformedInstruction(format!(
+                "ICTable function count exceeds MAX_IC_FUNCTIONS ({MAX_IC_FUNCTIONS})"
+            )));
+        }
+        let entry = self.by_function.entry(fn_name.to_string()).or_default();
+        let slot_idx = slot as usize;
+        if entry.len() <= slot_idx {
+            entry.resize_with(slot_idx + 1, InlineCache::new);
+        }
+        Ok(&mut entry[slot_idx])
+    }
+
+    /// Read-only lookup.  Returns `None` if the slot has never
+    /// been accessed (either the function has no IC entries or
+    /// the slot is beyond the highest slot ever requested).
+    /// Tests use this to verify the table mechanics.
+    pub fn get(&self, fn_name: &str, slot: u32) -> Option<&InlineCache<LispyICEntry>> {
+        self.by_function
+            .get(fn_name)
+            .and_then(|v| v.get(slot as usize))
+    }
+
+    /// Number of slots currently allocated for `fn_name`.
+    /// Returns 0 for functions that have no IC entries.  Tests
+    /// use this to verify dense allocation.
+    pub fn slot_count(&self, fn_name: &str) -> usize {
+        self.by_function
+            .get(fn_name)
+            .map(|v| v.len())
+            .unwrap_or(0)
+    }
+
+    /// Total IC slots across all functions.  Mostly for testing
+    /// + future profile-artefact dumps.
+    pub fn total_slots(&self) -> usize {
+        self.by_function.values().map(|v| v.len()).sum()
+    }
+}
+
+// ---------------------------------------------------------------------------
 // Run
 // ---------------------------------------------------------------------------
 
@@ -446,17 +609,35 @@ fn build_label_index(func: &IIRFunction) -> Result<HashMap<String, usize>, RunEr
 /// (depth, instruction count) all surface as a `RunError`.
 pub fn run(module: &IIRModule) -> Result<LispyValue, RunError> {
     let mut globals = Globals::new();
-    run_with_globals(module, &mut globals)
+    let mut ic_table = ICTable::new();
+    run_with_state(module, &mut globals, &mut ic_table)
 }
 
 /// Run an `IIRModule` against a caller-supplied globals table.
 ///
-/// Used by tests that want to inspect the table after the run, or
-/// by future per-VM state (PR 6+) that wants globals to persist
-/// across multiple `run` calls.  Most callers should use [`run`].
+/// Equivalent to [`run_with_state`] with a fresh IC table.
+/// Retained as a public entry point for backward compatibility
+/// (PR 5 callers); new callers that want the IC table should use
+/// [`run_with_state`].
 pub fn run_with_globals(
     module: &IIRModule,
     globals: &mut Globals,
+) -> Result<LispyValue, RunError> {
+    let mut ic_table = ICTable::new();
+    run_with_state(module, globals, &mut ic_table)
+}
+
+/// Run an `IIRModule` against caller-supplied globals + IC table.
+///
+/// The persistent IC table accumulates inline-cache observations
+/// across the run (and, when this entry point is used by
+/// PR 8's `LangVM`, across runs).  Tests pass an external
+/// `ICTable` to inspect IC contents after the run; the JIT path
+/// (PR 8+) uses this to read warmth before promotion.
+pub fn run_with_state(
+    module: &IIRModule,
+    globals: &mut Globals,
+    ic_table: &mut ICTable,
 ) -> Result<LispyValue, RunError> {
     let entry_name = module
         .entry_point
@@ -469,7 +650,7 @@ pub fn run_with_globals(
         .ok_or_else(|| RunError::NoEntryPoint(entry_name.to_string()))?;
 
     let mut budget = ExecutionBudget::new();
-    dispatch(module, entry, &[], 0, &mut budget, globals)
+    dispatch(module, entry, &[], 0, &mut budget, globals, ic_table)
 }
 
 // Per-run instruction counter — enforces
@@ -504,6 +685,7 @@ fn dispatch(
     depth: usize,
     budget: &mut ExecutionBudget,
     globals: &mut Globals,
+    ic_table: &mut ICTable,
 ) -> Result<LispyValue, RunError> {
     if depth > MAX_DISPATCH_DEPTH {
         return Err(RunError::DepthExceeded);
@@ -523,23 +705,23 @@ fn dispatch(
                 pc += 1;
             }
             "call_builtin" => {
-                exec_call_builtin(module, instr, &mut frame, depth, budget, globals)?;
+                exec_call_builtin(module, instr, &mut frame, depth, budget, globals, ic_table)?;
                 pc += 1;
             }
             "call" => {
-                exec_call(module, instr, &mut frame, depth, budget, globals)?;
+                exec_call(module, instr, &mut frame, depth, budget, globals, ic_table)?;
                 pc += 1;
             }
             "send" => {
-                exec_send(instr, &mut frame)?;
+                exec_send(instr, &mut frame, ic_table, &func.name)?;
                 pc += 1;
             }
             "load_property" => {
-                exec_load_property(instr, &mut frame)?;
+                exec_load_property(instr, &mut frame, ic_table, &func.name)?;
                 pc += 1;
             }
             "store_property" => {
-                exec_store_property(instr, &mut frame)?;
+                exec_store_property(instr, &mut frame, ic_table, &func.name)?;
                 pc += 1;
             }
             "jmp" => {
@@ -635,6 +817,7 @@ fn exec_call_builtin(
     depth: usize,
     budget: &mut ExecutionBudget,
     globals: &mut Globals,
+    ic_table: &mut ICTable,
 ) -> Result<(), RunError> {
     let name = match instr.srcs.first() {
         Some(Operand::Var(s)) => s.as_str(),
@@ -657,7 +840,7 @@ fn exec_call_builtin(
         "global_set" => return exec_global_set(instr, frame, globals),
         "global_get" => return exec_global_get(instr, frame, globals),
         "apply_closure" => {
-            return exec_apply_closure(module, instr, frame, depth, budget, globals);
+            return exec_apply_closure(module, instr, frame, depth, budget, globals, ic_table);
         }
         _ => {}
     }
@@ -690,6 +873,7 @@ fn exec_call(
     depth: usize,
     budget: &mut ExecutionBudget,
     globals: &mut Globals,
+    ic_table: &mut ICTable,
 ) -> Result<(), RunError> {
     let callee_name = match instr.srcs.first() {
         Some(Operand::Var(s)) => s.as_str(),
@@ -715,7 +899,7 @@ fn exec_call(
         call_args.push(v);
     }
 
-    let result = dispatch(module, callee, &call_args, depth + 1, budget, globals)?;
+    let result = dispatch(module, callee, &call_args, depth + 1, budget, globals, ic_table)?;
     if let Some(d) = &instr.dest {
         frame.set(d.clone(), result)?;
     }
@@ -810,6 +994,7 @@ fn exec_apply_closure(
     depth: usize,
     budget: &mut ExecutionBudget,
     globals: &mut Globals,
+    ic_table: &mut ICTable,
 ) -> Result<(), RunError> {
     if instr.srcs.len() < 2 {
         return Err(RunError::MalformedInstruction(format!(
@@ -878,7 +1063,7 @@ fn exec_apply_closure(
             .iter()
             .find(|f| f.name == name_str)
             .ok_or_else(|| RunError::UnknownFunction(name_str.clone()))?;
-        dispatch(module, callee, &all_args, depth + 1, budget, globals)?
+        dispatch(module, callee, &all_args, depth + 1, budget, globals, ic_table)?
     };
 
     if let Some(d) = &instr.dest {
@@ -931,7 +1116,12 @@ fn read_symbol_arg(
 /// `LispyBinding::send_message`.  For Lispy this returns
 /// `RuntimeError::NoSuchMethod`, which is the correct behaviour
 /// for a language without method dispatch.
-fn exec_send(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+fn exec_send(
+    instr: &IIRInstr,
+    frame: &mut Frame,
+    ic_table: &mut ICTable,
+    fn_name: &str,
+) -> Result<(), RunError> {
     if instr.srcs.len() < 2 {
         return Err(RunError::MalformedInstruction(format!(
             "send expects at least 2 srcs (recv, selector), got {}",
@@ -961,15 +1151,23 @@ fn exec_send(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
         args.push(v);
     }
 
-    // Stack-allocated IC (LispyICEntry: Copy + small array of
-    // entries — no heap touch).  TODO(LANG20 PR 4-or-later):
-    // `DispatchCx::new_for_test` is the only constructor today;
-    // replace with the production constructor when the type grows
-    // real fields.
-    let mut ic: InlineCache<LispyICEntry> = InlineCache::new();
+    // PR 7: route IC through the persistent table when a slot is
+    // assigned; fall back to a stack-allocated fresh IC otherwise.
+    // TODO(LANG20 PR 8): `DispatchCx::new_for_test` is the only
+    // constructor today; replace with the production constructor
+    // when the type grows real fields.
+    let mut local_ic = InlineCache::<LispyICEntry>::new();
     let mut cx = DispatchCx::<LispyBinding>::new_for_test();
-    let result = LispyBinding::send_message(receiver, selector, &args, &mut ic, &mut cx)
-        .map_err(RunError::Runtime)?;
+    let result = match instr.ic_slot {
+        Some(slot) => {
+            let ic = ic_table.get_or_alloc(fn_name, slot)?;
+            LispyBinding::send_message(receiver, selector, &args, ic, &mut cx)
+        }
+        None => {
+            LispyBinding::send_message(receiver, selector, &args, &mut local_ic, &mut cx)
+        }
+    }
+    .map_err(RunError::Runtime)?;
 
     if let Some(d) = &instr.dest {
         frame.set(d.clone(), result)?;
@@ -980,10 +1178,16 @@ fn exec_send(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
 /// Handle the `load_property obj, key` IIR opcode.
 ///
 /// `srcs[0]` is the object; `srcs[1]` is the symbol-id register
-/// holding the property key.  Allocates a fresh per-instruction
-/// `InlineCache` and calls `LispyBinding::load_property`.  For
-/// Lispy this returns `RuntimeError::NoSuchProperty`.
-fn exec_load_property(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+/// holding the property key.  Routes through the persistent IC
+/// table when `ic_slot` is assigned (PR 7); falls back to a
+/// stack-allocated fresh IC otherwise (PR 6 backward compat).
+/// For Lispy returns `RuntimeError::NoSuchProperty`.
+fn exec_load_property(
+    instr: &IIRInstr,
+    frame: &mut Frame,
+    ic_table: &mut ICTable,
+    fn_name: &str,
+) -> Result<(), RunError> {
     if instr.srcs.len() != 2 {
         return Err(RunError::MalformedInstruction(format!(
             "load_property expects 2 srcs (obj, key), got {}",
@@ -994,9 +1198,15 @@ fn exec_load_property(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunErro
         .map_err(RunError::OperandConversion)?;
     let key = read_symbol_arg(&instr.srcs[1], frame, "load_property", 1)?;
 
-    let mut ic: InlineCache<LispyICEntry> = InlineCache::new();
-    let result = LispyBinding::load_property(obj, key, &mut ic)
-        .map_err(RunError::Runtime)?;
+    let mut local_ic = InlineCache::<LispyICEntry>::new();
+    let result = match instr.ic_slot {
+        Some(slot) => {
+            let ic = ic_table.get_or_alloc(fn_name, slot)?;
+            LispyBinding::load_property(obj, key, ic)
+        }
+        None => LispyBinding::load_property(obj, key, &mut local_ic),
+    }
+    .map_err(RunError::Runtime)?;
 
     if let Some(d) = &instr.dest {
         frame.set(d.clone(), result)?;
@@ -1009,8 +1219,14 @@ fn exec_load_property(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunErro
 /// `srcs[0]` is the object; `srcs[1]` is the symbol-id register
 /// holding the property key; `srcs[2]` is the value to write.
 /// No dest (`store_property` returns void; the IIR compiler
-/// emits this as a side-effecting instruction).
-fn exec_store_property(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+/// emits this as a side-effecting instruction).  Routes through
+/// the persistent IC table when `ic_slot` is assigned.
+fn exec_store_property(
+    instr: &IIRInstr,
+    frame: &mut Frame,
+    ic_table: &mut ICTable,
+    fn_name: &str,
+) -> Result<(), RunError> {
     if instr.srcs.len() != 3 {
         return Err(RunError::MalformedInstruction(format!(
             "store_property expects 3 srcs (obj, key, value), got {}",
@@ -1023,8 +1239,15 @@ fn exec_store_property(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunErr
     let value = operand_to_value(&instr.srcs[2], &|n| frame.get(n))
         .map_err(RunError::OperandConversion)?;
 
-    let mut ic: InlineCache<LispyICEntry> = InlineCache::new();
-    LispyBinding::store_property(obj, key, value, &mut ic).map_err(RunError::Runtime)?;
+    let mut local_ic = InlineCache::<LispyICEntry>::new();
+    match instr.ic_slot {
+        Some(slot) => {
+            let ic = ic_table.get_or_alloc(fn_name, slot)?;
+            LispyBinding::store_property(obj, key, value, ic)
+        }
+        None => LispyBinding::store_property(obj, key, value, &mut local_ic),
+    }
+    .map_err(RunError::Runtime)?;
     // store_property has no dest — the result is the side-effect.
     Ok(())
 }
@@ -2095,5 +2318,307 @@ mod tests {
             }
             other => panic!("expected Runtime(TypeError(...symbol...)), got {other:?}"),
         }
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // PR 7: persistent IC slot machinery
+    // ─────────────────────────────────────────────────────────────────
+    //
+    // The PR 6 path stack-allocated a fresh IC per dispatch.  PR 7
+    // adds the persistent table indexed by `IIRInstr::ic_slot` so a
+    // hot site shares one IC instance across activations — the V8-
+    // style fast path the JIT eventually compiles against.  Tests
+    // verify:
+    //
+    //   - ICTable mechanics in isolation (alloc, get, slot count)
+    //   - The dispatcher routes through the table when ic_slot is
+    //     Some(slot)
+    //   - Backward compat: ic_slot=None falls through to a fresh
+    //     stack IC (PR 6 behaviour) and the table stays empty
+    //   - The same instruction's IC is reused across two activations
+    //     of the same function (the hot-site invariant)
+
+    // ── ICTable in isolation ─────────────────────────────────────────
+
+    #[test]
+    fn ic_table_starts_empty() {
+        let t = ICTable::new();
+        assert_eq!(t.total_slots(), 0);
+        assert_eq!(t.slot_count("anything"), 0);
+        assert!(t.get("anything", 0).is_none());
+    }
+
+    #[test]
+    fn ic_table_allocates_on_first_access() {
+        let mut t = ICTable::new();
+        t.get_or_alloc("f", 0).unwrap();
+        assert_eq!(t.slot_count("f"), 1);
+        assert_eq!(t.total_slots(), 1);
+        assert!(t.get("f", 0).is_some());
+    }
+
+    #[test]
+    fn ic_table_is_dense_per_function() {
+        // Accessing slot 5 directly grows the function's vec to
+        // 6 entries (0..=5); the gap entries are pre-allocated
+        // empty ICs.  Tests the resize-with logic.
+        let mut t = ICTable::new();
+        t.get_or_alloc("f", 5).unwrap();
+        assert_eq!(t.slot_count("f"), 6);
+        for slot in 0..6 {
+            assert!(
+                t.get("f", slot).is_some(),
+                "slot {slot} should be allocated by gap-filling",
+            );
+        }
+    }
+
+    #[test]
+    fn ic_table_separate_functions_dont_share() {
+        let mut t = ICTable::new();
+        t.get_or_alloc("f", 0).unwrap();
+        t.get_or_alloc("g", 0).unwrap();
+        assert_eq!(t.slot_count("f"), 1);
+        assert_eq!(t.slot_count("g"), 1);
+        // Mutating one IC must not affect the other.
+        t.get_or_alloc("f", 0).unwrap().note_hit();
+        assert_eq!(t.get("f", 0).unwrap().hit_count(), 1);
+        assert_eq!(t.get("g", 0).unwrap().hit_count(), 0);
+    }
+
+    #[test]
+    fn ic_table_repeated_access_returns_same_instance() {
+        // Same IC across multiple `get_or_alloc` calls — verify
+        // by mutating once and reading the count back.
+        let mut t = ICTable::new();
+        t.get_or_alloc("f", 0).unwrap().note_hit();
+        t.get_or_alloc("f", 0).unwrap().note_hit();
+        t.get_or_alloc("f", 0).unwrap().note_hit();
+        assert_eq!(t.get("f", 0).unwrap().hit_count(), 3);
+    }
+
+    #[test]
+    fn ic_table_rejects_slot_at_max() {
+        // PR 7 security review (HIGH #1): ic_slot >= MAX_IC_SLOTS_PER_FUNCTION
+        // is rejected instead of attempting a multi-GB
+        // resize_with.  Test exactly the boundary.
+        let mut t = ICTable::new();
+        let err = t.get_or_alloc("f", MAX_IC_SLOTS_PER_FUNCTION).unwrap_err();
+        assert!(matches!(
+            err,
+            RunError::MalformedInstruction(s) if s.contains("MAX_IC_SLOTS_PER_FUNCTION")
+        ));
+        // The cap is exclusive — slot MAX-1 still works.
+        t.get_or_alloc("f", MAX_IC_SLOTS_PER_FUNCTION - 1).unwrap();
+    }
+
+    #[test]
+    fn ic_table_rejects_too_many_functions() {
+        // PR 7 security review (MEDIUM #2): adding the
+        // MAX_IC_FUNCTIONS+1th distinct function name fails.
+        // We don't actually allocate 65k entries (slow); just
+        // synthesize the invariant by populating up to the cap.
+        let mut t = ICTable::new();
+        for i in 0..MAX_IC_FUNCTIONS {
+            t.get_or_alloc(&format!("f{i}"), 0).unwrap();
+        }
+        assert_eq!(t.by_function.len(), MAX_IC_FUNCTIONS);
+        // The next distinct name is rejected.
+        let err = t.get_or_alloc("overflow", 0).unwrap_err();
+        assert!(matches!(
+            err,
+            RunError::MalformedInstruction(s) if s.contains("MAX_IC_FUNCTIONS")
+        ));
+        // But re-accessing an existing function still works (cap
+        // is on distinct names, not on accesses).
+        t.get_or_alloc("f0", 1).unwrap();
+    }
+
+    // ── Dispatcher routes through the table ──────────────────────────
+
+    #[test]
+    fn send_with_ic_slot_uses_table() {
+        // send instr with ic_slot=Some(0).  After running, the
+        // table should have a slot allocated for the current
+        // function.  For Lispy the binding errors before
+        // touching the IC, so hit/miss counts stay 0 — but the
+        // slot existence proves the table was consulted.
+        let instrs = vec![
+            IIRInstr::new("const", Some("recv".into()), vec![Operand::Int(1)], "any"),
+            IIRInstr::new("const", Some("sel".into()), vec![Operand::Var("m".into())], "any"),
+            IIRInstr::new(
+                "send",
+                Some("r".into()),
+                vec![Operand::Var("recv".into()), Operand::Var("sel".into())],
+                "any",
+            )
+            .with_ic_slot(0),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        let module = module_with_main(instrs, 4);
+        let mut globals = Globals::new();
+        let mut ic_table = ICTable::new();
+        let err = run_with_state(&module, &mut globals, &mut ic_table).unwrap_err();
+        // The send still surfaces NoSuchMethod for Lispy.
+        assert!(matches!(
+            err,
+            RunError::Runtime(RuntimeError::NoSuchMethod { .. })
+        ));
+        // Slot 0 was allocated on the `main` function.
+        assert_eq!(ic_table.slot_count("main"), 1);
+        assert!(ic_table.get("main", 0).is_some());
+    }
+
+    #[test]
+    fn load_property_without_ic_slot_skips_table() {
+        // Backward compat: ic_slot=None falls through to a
+        // stack-allocated IC.  The persistent table stays empty.
+        let instrs = vec![
+            IIRInstr::new("const", Some("obj".into()), vec![Operand::Int(0)], "any"),
+            IIRInstr::new("const", Some("k".into()), vec![Operand::Var("x".into())], "any"),
+            IIRInstr::new(
+                "load_property",
+                Some("r".into()),
+                vec![Operand::Var("obj".into()), Operand::Var("k".into())],
+                "any",
+            ), // no with_ic_slot — defaults to None
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        let module = module_with_main(instrs, 4);
+        let mut globals = Globals::new();
+        let mut ic_table = ICTable::new();
+        let _ = run_with_state(&module, &mut globals, &mut ic_table).unwrap_err();
+        assert_eq!(ic_table.total_slots(), 0);
+    }
+
+    #[test]
+    fn store_property_with_ic_slot_uses_table() {
+        let instrs = vec![
+            IIRInstr::new("const", Some("obj".into()), vec![Operand::Int(0)], "any"),
+            IIRInstr::new("const", Some("k".into()), vec![Operand::Var("x".into())], "any"),
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(7)], "any"),
+            IIRInstr::new(
+                "store_property",
+                None,
+                vec![
+                    Operand::Var("obj".into()),
+                    Operand::Var("k".into()),
+                    Operand::Var("v".into()),
+                ],
+                "void",
+            )
+            .with_ic_slot(2), // arbitrary slot id
+            IIRInstr::new("ret", None, vec![Operand::Int(0)], "any"),
+        ];
+        let module = module_with_main(instrs, 8);
+        let mut globals = Globals::new();
+        let mut ic_table = ICTable::new();
+        let _ = run_with_state(&module, &mut globals, &mut ic_table).unwrap_err();
+        // Slot 2 access pre-fills 0, 1, 2.
+        assert_eq!(ic_table.slot_count("main"), 3);
+    }
+
+    #[test]
+    fn ic_persists_across_two_calls_to_same_function() {
+        // Build a function `do-it` containing a single
+        // `load_property` with ic_slot=0.  Call it twice from
+        // `main`.  The IC for slot 0 in `do-it` should be the
+        // SAME instance both times — verifiable via hit count
+        // accumulation through note_hit() in the table itself
+        // (we manually note_hit between calls to simulate what
+        // a real binding's send_message would do).
+        let do_it_instrs = vec![
+            IIRInstr::new("const", Some("k".into()), vec![Operand::Var("x".into())], "any"),
+            IIRInstr::new(
+                "load_property",
+                Some("r".into()),
+                vec![Operand::Var("o".into()), Operand::Var("k".into())],
+                "any",
+            )
+            .with_ic_slot(0),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        let do_it = F {
+            name: "do-it".into(),
+            params: vec![("o".into(), "any".into())],
+            return_type: "any".into(),
+            register_count: 4,
+            instructions: do_it_instrs,
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+        };
+        let main_instrs = vec![
+            IIRInstr::new("const", Some("o1".into()), vec![Operand::Int(1)], "any"),
+            IIRInstr::new("call", Some("_unused".into()), vec![
+                Operand::Var("do-it".into()), Operand::Var("o1".into()),
+            ], "any"),
+            IIRInstr::new("ret", None, vec![Operand::Int(0)], "any"),
+        ];
+        let main = F {
+            name: "main".into(),
+            params: vec![],
+            return_type: "any".into(),
+            register_count: 4,
+            instructions: main_instrs,
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+        };
+        let module = IIRModule {
+            name: "test".into(),
+            functions: vec![do_it, main],
+            entry_point: Some("main".into()),
+            language: "twig".into(),
+        };
+
+        // First call.  load_property errors with NoSuchProperty
+        // (since Lispy doesn't have properties), but the IC slot
+        // for "do-it" gets allocated.
+        let mut globals = Globals::new();
+        let mut ic_table = ICTable::new();
+        let err = run_with_state(&module, &mut globals, &mut ic_table).unwrap_err();
+        assert!(matches!(
+            err,
+            RunError::Runtime(RuntimeError::NoSuchProperty { .. })
+        ));
+        assert_eq!(ic_table.slot_count("do-it"), 1);
+
+        // Manually note a hit on the slot to simulate what a
+        // real binding's load_property would do on a cache hit.
+        ic_table.get_or_alloc("do-it", 0).unwrap().note_hit();
+        assert_eq!(ic_table.get("do-it", 0).unwrap().hit_count(), 1);
+
+        // Second call (re-using the same ic_table).  The same
+        // IC instance is consulted — its hit count is still 1
+        // even though the dispatcher's IC access for this call
+        // didn't note a hit (Lispy errors before that path).
+        // The persistence is the test: the previous note_hit
+        // wasn't lost.
+        let _ = run_with_state(&module, &mut globals, &mut ic_table);
+        assert_eq!(
+            ic_table.get("do-it", 0).unwrap().hit_count(),
+            1,
+            "IC instance must persist across calls (the V8-style hot-site invariant)",
+        );
+
+        // Slot count unchanged — second call doesn't grow the table.
+        assert_eq!(ic_table.slot_count("do-it"), 1);
+    }
+
+    // ── ic_slot field round-trip on IIRInstr ─────────────────────────
+
+    #[test]
+    fn ic_slot_default_none() {
+        let i = IIRInstr::new("send", None, vec![], "any");
+        assert_eq!(i.ic_slot, None);
+    }
+
+    #[test]
+    fn ic_slot_builder_sets_field() {
+        let i = IIRInstr::new("send", None, vec![], "any").with_ic_slot(42);
+        assert_eq!(i.ic_slot, Some(42));
     }
 }

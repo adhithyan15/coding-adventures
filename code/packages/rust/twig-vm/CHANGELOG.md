@@ -1,5 +1,145 @@
 # Changelog — twig-vm
 
+## [0.5.0] — 2026-04-30
+
+### Added — PR 7 of LANG20: persistent inline-cache slot machinery
+
+Replaces the per-dispatch stack-allocated IC from PR 6 with a
+**persistent, per-call-site IC table** indexed by
+`IIRInstr::ic_slot`.  The hot-site invariant: two activations of
+the same `send` / `load_property` / `store_property` instruction
+share *one* IC instance, so an observation on call N benefits
+on call N+1 (the V8-style fast path the JIT eventually compiles
+against).
+
+- **`ICTable` struct** — `HashMap<String, Vec<InlineCache<LispyICEntry>>>`
+  keyed by `(function_name, ic_slot)`.  Dense vec per function
+  (slot N at index N); first access to a slot allocates a fresh
+  `InlineCache::new()`; subsequent accesses return the same
+  instance.  Public API: `new()`, `get_or_alloc()`, `get()`,
+  `slot_count()`, `total_slots()`.
+
+- **`run_with_state(module, &mut Globals, &mut ICTable)`** — new
+  entry point that accepts both per-VM tables.  Per-run lifetime
+  for now; PR 8+ moves both to a long-lived `LangVM` so the
+  cache survives across `run` calls.
+
+- **Dispatcher routes through the table** — `exec_send` /
+  `exec_load_property` / `exec_store_property` now take
+  `(ic_table, fn_name)`.  When `instr.ic_slot` is `Some(slot)`,
+  the handler calls `ic_table.get_or_alloc(fn_name, slot)` and
+  passes the resulting `&mut InlineCache` to the binding.  When
+  `None`, it falls back to a stack-allocated fresh IC (PR 6
+  behaviour, backwards-compatible).
+
+- **`run`** + **`run_with_globals`** retained as wrappers that
+  allocate a fresh `ICTable` and delegate to `run_with_state`.
+  No breaking change to existing PR 5/6 callers.
+
+### IIR additions (in `interpreter-ir`)
+
+- **`IIRInstr::ic_slot: Option<u32>`** field added per LANG20
+  §"IIR additions".  Defaults to `None` in `IIRInstr::new` —
+  every existing call site stays correct without modification.
+
+- **`IIRInstr::with_ic_slot(slot)`** builder method.  Used by
+  language frontends that emit IC-owning opcodes; tests use it
+  to verify the table-routing path.
+
+### Tests
+
+- twig-vm: **103 unit + 2 doc tests** (13 new for PR 7) — all
+  pass on stable Rust.  (11 PR-7 mechanics tests + 2 security-
+  review boundary tests for the new caps.)
+
+11 new tests cover:
+- `ICTable` mechanics in isolation: starts empty, allocates on
+  first access, dense-per-function, separate-functions-don't-
+  share, repeated-access-returns-same-instance.
+- Dispatcher routing: `send` / `load_property` / `store_property`
+  with `ic_slot=Some(...)` populates the table; `ic_slot=None`
+  leaves the table empty (backward-compat).
+- The hot-site invariant: a `load_property` in a function
+  called twice consults the same IC instance — verified via
+  `note_hit` persistence between calls.
+- `IIRInstr::ic_slot` round-trip: defaults to `None`,
+  `with_ic_slot` sets the field.
+
+### Security review fixes applied
+
+- **HIGH #1 — unbounded `ic_slot` permits ~256GB allocation**:
+  `ICTable::get_or_alloc(fn_name, slot)` previously called
+  `Vec::resize_with(slot + 1, …)` with no cap on `slot`;
+  `IIRInstr::ic_slot: Option<u32>` allows values up to
+  `u32::MAX`, so a malformed IIR with `ic_slot = u32::MAX - 1`
+  would attempt a multi-hundred-GB allocation.  Capped at
+  `MAX_IC_SLOTS_PER_FUNCTION = 2¹⁶` matching
+  `MAX_REGISTERS_PER_FRAME`.  `get_or_alloc` now returns
+  `Result<&mut InlineCache, RunError>` so callers explicitly
+  handle the cap; `?` propagation gives a clean
+  `MalformedInstruction` error.
+
+- **MEDIUM #2 — unbounded function-name HashMap growth**:
+  `ICTable::by_function: HashMap<String, _>` had no cap.
+  Capped at `MAX_IC_FUNCTIONS = 2¹⁶` distinct function names.
+  Re-accessing existing functions still works (cap is on
+  distinct keys, not on accesses).
+
+- **TODO comment for serialisation** — `ic_slot` is a static
+  field that probably should serialise to disk for AOT
+  pipelines, but the current `interpreter-ir::serialise`
+  module doesn't.  Documented as a follow-up for LANG22 AOT.
+
+### Hardening
+
+- Clippy-clean on twig-vm.  (Pre-existing `approx_constant`
+  warnings on PI literals in `interpreter-ir/serialise.rs`
+  predate this PR and are not addressed here.)
+- Three independent caps now defend the IC subsystem from
+  malformed IIR DoS:
+  - `MAX_IC_SLOTS_PER_FUNCTION = 2¹⁶` (per-function vec size)
+  - `MAX_IC_FUNCTIONS = 2¹⁶` (distinct function-name keys)
+  - `MAX_REGISTERS_PER_FRAME = 2¹⁶` (already enforced for
+    `send`/`call` srcs)
+- All resource limits from prior PRs still enforced.
+- The new opcodes don't add any unsafe; no cargo-geiger
+  impact.
+
+### Miri CI restructure (PR 7)
+
+Per-PR Miri on twig-vm hit 1h30m+ on Linux CI runners — not a
+real bug, just runner wallclock.  Per-PR coverage of an
+unsafe-free crate isn't worth the iteration-speed cost.  The
+unsafe in this stack lives entirely in `lang-runtime-core` +
+`lispy-runtime`; PR 7 makes the per-PR check exclusively that.
+
+Final structure:
+
+- **Per-PR (`lang-runtime-safety.yml`)**: only `miri-blocking`.
+  Runs Miri on `lang-runtime-core` + `lispy-runtime` (~5 min
+  total).  Required to merge.  Catches every UB regression in
+  the unsafe-bearing surface.  No twig-vm Miri on PRs at all.
+
+- **Post-merge to main + nightly (`lang-runtime-safety-deep.yml`)**:
+  runs the full twig-vm Miri suite on every push to main + at
+  03:13 UTC daily.  120 min budget.  `continue-on-error: true`
+  so a regression doesn't propagate to main's status badge —
+  twig-vm has zero unsafe, so a Miri failure here is an
+  integration-seam regression worth investigating, not a
+  "main is broken" signal.  The workflow run record IS the
+  regression marker.
+
+- **Local pre-push (`scripts/miri-twig-vm.sh`)**: canonical
+  verification.  Runs the full Miri suite (lang-runtime-core +
+  lispy-runtime + twig-vm) with the same flags as CI.
+  Documented in `CLAUDE.md` and `lessons.md` as the
+  "Before pushing code that touches twig-vm" step.
+
+The principle: fast PR iteration > 100% per-PR Miri coverage.
+For crates with zero unsafe, even main-side Miri stays
+non-blocking — workflow run history is the regression marker,
+not a status-badge gate.
+
 ## [0.4.0] — 2026-04-30
 
 ### Added — PR 6 of LANG20: send / load_property / store_property opcodes
