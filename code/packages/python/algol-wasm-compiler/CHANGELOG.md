@@ -96,6 +96,8 @@ All notable changes to this package will be documented in this file.
 - Added a convergence golden fixture that combines conditional expressions,
   exponentiation, chained assignment, by-name array summation, real arithmetic,
   and output in one end-to-end program.
+- Added a front-door ALGOL source-length limit to the WASM convenience APIs so
+  oversized untrusted source is rejected before parsing or semantic analysis.
 
 ## [0.1.0] - 2026-04-20
 

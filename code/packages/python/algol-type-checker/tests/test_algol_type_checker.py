@@ -8,6 +8,7 @@ from algol_type_checker import (
     FRAME_REAL_SIZE,
     FRAME_WORD_SIZE,
     TypeCheckError,
+    TypeCheckLimits,
     __version__,
     assert_algol_typed,
     check_algol,
@@ -50,6 +51,67 @@ class TestAlgolTypeChecker:
             assert "Line 1, Col" in str(exc)
         else:  # pragma: no cover
             raise AssertionError("assert_algol_typed should reject false assignment")
+
+    def test_rejects_ast_depth_past_configured_limit(self) -> None:
+        ast = ASTNode("leaf", [])
+        for _ in range(4):
+            ast = ASTNode("wrapper", [ast], start_line=1, start_column=1)
+
+        result = check_algol(ast, limits=TypeCheckLimits(max_ast_depth=3))
+
+        assert not result.ok
+        assert "AST depth 4 exceeds configured limit 3" in result.diagnostics[0].message
+        assert result.semantic is not None
+        assert result.semantic.root_block is None
+
+    def test_rejects_block_nesting_past_configured_limit(self) -> None:
+        ast = parse_algol(
+            "begin begin integer a; begin integer x; x := 1 end end end"
+        )
+
+        result = check_algol(
+            ast,
+            limits=TypeCheckLimits(max_block_nesting_depth=1),
+        )
+
+        assert not result.ok
+        assert "block nesting depth 2 exceeds configured limit 1" in (
+            result.diagnostics[0].message
+        )
+
+    def test_rejects_procedure_nesting_past_configured_limit(self) -> None:
+        ast = parse_algol(
+            "begin "
+            "procedure outer; "
+            "begin procedure inner; begin integer x; x := 1 end; inner end; "
+            "outer "
+            "end"
+        )
+
+        result = check_algol(
+            ast,
+            limits=TypeCheckLimits(max_procedure_nesting_depth=1),
+        )
+
+        assert not result.ok
+        assert "procedure nesting depth 2 exceeds configured limit 1" in (
+            result.diagnostics[0].message
+        )
+
+    def test_rejects_procedure_body_block_past_configured_limit(self) -> None:
+        ast = parse_algol(
+            "begin procedure worker; begin integer x; x := 1 end; worker end"
+        )
+
+        result = check_algol(
+            ast,
+            limits=TypeCheckLimits(max_block_nesting_depth=0),
+        )
+
+        assert not result.ok
+        assert "block nesting depth 1 exceeds configured limit 0" in (
+            result.diagnostics[0].message
+        )
 
     def test_accepts_if_else_and_for_loop(self) -> None:
         ast = parse_algol(

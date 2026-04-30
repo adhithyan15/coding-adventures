@@ -5,6 +5,7 @@ implementation of the computing stack from transistors to operating systems.
 """
 
 from algol_wasm_compiler.compiler import (
+    MAX_SOURCE_LENGTH,
     AlgolWasmCompiler,
     AlgolWasmError,
     AlgolWasmResult,
@@ -19,6 +20,7 @@ __all__ = [
     "AlgolWasmCompiler",
     "AlgolWasmError",
     "AlgolWasmResult",
+    "MAX_SOURCE_LENGTH",
     "compile_source",
     "pack_source",
     "write_wasm_file",

@@ -7,6 +7,7 @@ from algol_ir_compiler.compiler import _MAX_STRING_OUTPUT_BYTES, _MAX_TOTAL_OUTP
 from wasm_runtime import WasiConfig, WasiHost, WasmRuntime
 
 from algol_wasm_compiler import (
+    MAX_SOURCE_LENGTH,
     AlgolWasmError,
     __version__,
     compile_source,
@@ -44,6 +45,12 @@ class TestAlgolWasmCompiler:
         with pytest.raises(AlgolWasmError) as raised:
             compile_source("begin integer result; result := false end")
         assert raised.value.stage == "type-check"
+
+    def test_source_length_limit_reports_before_parse(self) -> None:
+        with pytest.raises(AlgolWasmError) as raised:
+            compile_source("x" * (MAX_SOURCE_LENGTH + 1))
+        assert raised.value.stage == "source"
+        assert "source length" in raised.value.message
 
     def test_program_without_result_variable_returns_zero(self) -> None:
         compiled = compile_source("begin print('Hi') end")

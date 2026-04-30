@@ -23,6 +23,9 @@ SWITCH = "switch"
 STATIC = "static"
 PARAMETER_STORAGE = "parameter"
 MAX_ARRAY_DIMENSIONS = 4
+MAX_AST_DEPTH = 512
+MAX_BLOCK_NESTING_DEPTH = 64
+MAX_PROCEDURE_NESTING_DEPTH = 64
 _OUTPUT_BUILTINS = {"print", "output"}
 _FIXED_RETURN_NUMERIC_BUILTINS = {
     "entier": INTEGER,
@@ -45,6 +48,15 @@ class Diagnostic:
     message: str
     line: int
     column: int
+
+
+@dataclass(frozen=True)
+class TypeCheckLimits:
+    """Resource limits for recursive ALGOL semantic analysis."""
+
+    max_ast_depth: int = MAX_AST_DEPTH
+    max_block_nesting_depth: int = MAX_BLOCK_NESTING_DEPTH
+    max_procedure_nesting_depth: int = MAX_PROCEDURE_NESTING_DEPTH
 
 
 @dataclass
@@ -410,7 +422,8 @@ class TypeCheckError(Exception):
 class AlgolTypeChecker:
     """Validate the first ALGOL 60 compiler subset."""
 
-    def __init__(self) -> None:
+    def __init__(self, limits: TypeCheckLimits | None = None) -> None:
+        self.limits = limits or TypeCheckLimits()
         self.diagnostics: list[Diagnostic] = []
         self.expression_types: dict[int, str] = {}
         self.semantic_blocks: list[SemanticBlock] = []
@@ -435,6 +448,7 @@ class AlgolTypeChecker:
         self._next_label_id = 0
         self._next_switch_id = 0
         self._next_static_offset = 0
+        self._procedure_nesting_depth = 0
 
     def check(self, ast: ASTNode) -> TypeCheckResult:
         self.diagnostics = []
@@ -458,12 +472,14 @@ class AlgolTypeChecker:
         self._next_label_id = 0
         self._next_switch_id = 0
         self._next_static_offset = 0
+        self._procedure_nesting_depth = 0
         root_scope = Scope()
-        block = _first_node(ast, "block")
-        if block is None:
-            self._error(ast, "ALGOL program must contain a block")
-        else:
-            self._check_block(block, root_scope)
+        if self._check_ast_depth(ast):
+            block = _first_node(ast, "block")
+            if block is None:
+                self._error(ast, "ALGOL program must contain a block")
+            else:
+                self._check_block(block, root_scope)
         semantic = SemanticProgram(
             ast=ast,
             root_block=self.semantic_blocks[0] if self.semantic_blocks else None,
@@ -488,7 +504,31 @@ class AlgolTypeChecker:
             semantic=semantic,
         )
 
+    def _check_ast_depth(self, ast: ASTNode) -> bool:
+        stack: list[tuple[ASTNode, int]] = [(ast, 1)]
+        while stack:
+            node, depth = stack.pop()
+            if depth > self.limits.max_ast_depth:
+                self._error(
+                    node,
+                    f"AST depth {depth} exceeds configured limit "
+                    f"{self.limits.max_ast_depth}",
+                )
+                return False
+            for child in reversed(node.children):
+                if isinstance(child, ASTNode):
+                    stack.append((child, depth + 1))
+        return True
+
     def _check_block(self, block: ASTNode, parent: Scope) -> Scope:
+        depth = parent.depth + 1 if parent.depth >= 0 else 0
+        if depth > self.limits.max_block_nesting_depth:
+            self._error(
+                block,
+                f"block nesting depth {depth} exceeds configured limit "
+                f"{self.limits.max_block_nesting_depth}",
+            )
+            return Scope(parent=parent, depth=depth)
         scope = self._new_block_scope(parent, ast_node=block)
         self._check_block_contents(block, scope)
         return scope
@@ -780,6 +820,15 @@ class AlgolTypeChecker:
             self._error(node, "procedure declaration is missing a name")
             return
 
+        procedure_depth = self._procedure_nesting_depth + 1
+        if procedure_depth > self.limits.max_procedure_nesting_depth:
+            self._error(
+                name_token,
+                f"procedure nesting depth {procedure_depth} exceeds configured "
+                f"limit {self.limits.max_procedure_nesting_depth}",
+            )
+            return
+
         return_type = _procedure_return_type(node)
         if return_type is not None and return_type not in {
             INTEGER,
@@ -868,6 +917,15 @@ class AlgolTypeChecker:
 
         if body_inner is None:
             self._error(node, "procedure declaration is missing a body")
+            return
+
+        body_depth = scope.depth + 1 if scope.depth >= 0 else 0
+        if body_depth > self.limits.max_block_nesting_depth:
+            self._error(
+                body_inner,
+                f"block nesting depth {body_depth} exceeds configured limit "
+                f"{self.limits.max_block_nesting_depth}",
+            )
             return
 
         proc_scope = self._new_block_scope(
@@ -1009,28 +1067,33 @@ class AlgolTypeChecker:
         descriptor_index = len(self.semantic_procedures)
         self.semantic_procedures.append(descriptor)
 
-        if body_inner.rule_name == "block":
-            self._check_block_contents(body_inner, proc_scope)
-        else:
-            self._collect_statement_labels(body_inner, proc_scope)
-            self._check_statement(body_inner, proc_scope)
-        updated_parameters = tuple(
-            self._procedure_parameter_with_call_shapes(parameter)
-            for parameter in parameters
-        )
-        if updated_parameters != descriptor.parameters:
-            self.semantic_procedures[descriptor_index] = ProcedureDescriptor(
-                procedure_id=descriptor.procedure_id,
-                name=descriptor.name,
-                label=descriptor.label,
-                declaring_block_id=descriptor.declaring_block_id,
-                body_block_id=descriptor.body_block_id,
-                body_node_id=descriptor.body_node_id,
-                return_type=descriptor.return_type,
-                parameters=updated_parameters,
-                line=descriptor.line,
-                column=descriptor.column,
+        previous_procedure_depth = self._procedure_nesting_depth
+        self._procedure_nesting_depth = procedure_depth
+        try:
+            if body_inner.rule_name == "block":
+                self._check_block_contents(body_inner, proc_scope)
+            else:
+                self._collect_statement_labels(body_inner, proc_scope)
+                self._check_statement(body_inner, proc_scope)
+            updated_parameters = tuple(
+                self._procedure_parameter_with_call_shapes(parameter)
+                for parameter in parameters
             )
+            if updated_parameters != descriptor.parameters:
+                self.semantic_procedures[descriptor_index] = ProcedureDescriptor(
+                    procedure_id=descriptor.procedure_id,
+                    name=descriptor.name,
+                    label=descriptor.label,
+                    declaring_block_id=descriptor.declaring_block_id,
+                    body_block_id=descriptor.body_block_id,
+                    body_node_id=descriptor.body_node_id,
+                    return_type=descriptor.return_type,
+                    parameters=updated_parameters,
+                    line=descriptor.line,
+                    column=descriptor.column,
+                )
+        finally:
+            self._procedure_nesting_depth = previous_procedure_depth
 
     def _procedure_parameter_with_call_shapes(
         self,
@@ -2966,8 +3029,11 @@ class AlgolTypeChecker:
         self.diagnostics.append(Diagnostic(message, *_position(obj)))
 
 
-def check_algol(ast: ASTNode) -> TypeCheckResult:
-    return AlgolTypeChecker().check(ast)
+def check_algol(
+    ast: ASTNode,
+    limits: TypeCheckLimits | None = None,
+) -> TypeCheckResult:
+    return AlgolTypeChecker(limits=limits).check(ast)
 
 
 def _is_numeric_type(type_name: str) -> bool:
@@ -2982,12 +3048,18 @@ def _conditional_branch_type(then_type: str, else_type: str) -> str | None:
     return None
 
 
-def check(ast: ASTNode) -> TypeCheckResult:
-    return check_algol(ast)
+def check(
+    ast: ASTNode,
+    limits: TypeCheckLimits | None = None,
+) -> TypeCheckResult:
+    return check_algol(ast, limits=limits)
 
 
-def assert_algol_typed(ast: ASTNode) -> TypeCheckResult:
-    result = check_algol(ast)
+def assert_algol_typed(
+    ast: ASTNode,
+    limits: TypeCheckLimits | None = None,
+) -> TypeCheckResult:
+    result = check_algol(ast, limits=limits)
     if not result.ok:
         details = "\n".join(
             f"Line {diag.line}, Col {diag.column}: {diag.message}"

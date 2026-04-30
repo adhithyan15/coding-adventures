@@ -65,6 +65,12 @@ actuals via the same numeric promotion rule used by scalar calls. When a
 formal procedure call forwards a concrete procedure actual into another
 procedure formal, the checker also validates the nested call-shape contract.
 
+Untrusted programs are checked under conservative recursive-analysis limits.
+By default the checker caps AST depth at 512 nodes, block nesting depth at 64,
+and procedure nesting depth at 64. Callers that need a different envelope can
+pass `TypeCheckLimits` to `check_algol`, `check`, or `assert_algol_typed`;
+limit violations are ordinary diagnostics and stop deeper recursive walking.
+
 ```python
 from algol_parser import parse_algol
 from algol_type_checker import check_algol

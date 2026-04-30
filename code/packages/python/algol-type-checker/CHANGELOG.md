@@ -66,6 +66,9 @@ All notable changes to this package will be documented in this file.
 - Accepted standard real builtin functions `sin`, `cos`, `arctan`, `ln`, and
   `exp`, returning `real` for integer or real arguments while preserving
   read-only by-name analysis.
+- Added configurable type-check resource limits for maximum AST depth, block
+  nesting depth, and procedure nesting depth so recursive semantic visitors
+  reject hostile inputs with diagnostics before walking too deeply.
 
 ## [0.1.0] - 2026-04-20
 
