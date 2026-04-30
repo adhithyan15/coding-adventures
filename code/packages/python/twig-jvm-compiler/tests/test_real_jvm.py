@@ -245,6 +245,34 @@ def test_mutual_recursion_even_odd() -> None:
 
 
 @requires_java
+def test_three_deep_curry() -> None:
+    """``(((mk2 a) b) c) → 42`` — closure that returns a closure
+    that returns an int.
+
+    Was a NullReferenceException pre-fix because APPLY_CLOSURE
+    only stored its int result into ``__ca_regs[dst]``.  When the
+    callee actually returned a closure ref, the lifted lambda's
+    body had propagated it into ``__ca_objregs[1]`` via the
+    obj-typed RET, but APPLY_CLOSURE didn't carry it onward to
+    ``__ca_objregs[dst]`` — so the next ``APPLY_CLOSURE
+    closure_reg=v13`` read null.
+
+    Fix (in ir-to-jvm-class-file): after APPLY_CLOSURE, when the
+    dst register is obj-typed in the current region, also copy
+    ``__ca_objregs[1] → __ca_objregs[dst]``.  Mirror of the
+    obj-pool caller-restore's "skip index 1" convention.
+    """
+    src = """
+        (define (mk2 a) (lambda (b) (lambda (c) (+ a (+ b c)))))
+        (((mk2 10) 20) 12)
+    """
+    result = run_source(src, class_name="TwCurry3")
+    assert result.returncode == 0, result.stderr
+    # 10 + 20 + 12 = 42 = 0x2a = b'*'
+    assert result.stdout == b"*"
+
+
+@requires_java
 def test_let_bound_closure_called_twice() -> None:
     """``(let ((add5 (mk-adder 5))) (+ (add5 10) (add5 27))) → 47``.
 

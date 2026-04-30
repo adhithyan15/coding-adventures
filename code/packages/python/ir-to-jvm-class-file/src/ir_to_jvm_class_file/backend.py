@@ -1170,6 +1170,31 @@ class _JvmClassLowerer:
             _OP_INVOKESTATIC,
             self._method_ref(self._helper_reg_set, _DESC_INT_INT_TO_VOID),
         )
+        # Closure-returning closure: when dst is obj-typed in this
+        # region (e.g. ((mk2 a) b) where the inner result is itself
+        # a closure that gets passed to a third APPLY_CLOSURE), the
+        # callee's RET propagated the obj ref into __ca_objregs[1]
+        # via the lifted lambda's ADD_IMM-0 obj propagation.  Copy
+        # __ca_objregs[1] → __ca_objregs[dst] so the next ADD_IMM-0
+        # / APPLY_CLOSURE can pick it up.
+        #
+        # Without this, IClosure.apply([I)I's int return type drops
+        # the obj-slot propagation chain at the call boundary and
+        # 3-deep curries like (((mk2 a) b) c) NPE on the second
+        # APPLY_CLOSURE.
+        if dst.index in self._region_obj_regs:
+            builder.emit_u2_instruction(
+                _OP_GETSTATIC,
+                self._field_ref(self._objreg_field, _DESC_OBJECT_ARRAY),
+            )
+            self._emit_push_int(builder, dst.index)
+            builder.emit_u2_instruction(
+                _OP_GETSTATIC,
+                self._field_ref(self._objreg_field, _DESC_OBJECT_ARRAY),
+            )
+            self._emit_push_int(builder, 1)
+            builder.emit_opcode(_OP_AALOAD)
+            builder.emit_opcode(_OP_AASTORE)
 
     # ------------------------------------------------------------------
     # TW03 Phase 3b — heap-primitive lowering (cons / symbol / nil)

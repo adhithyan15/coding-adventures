@@ -1,6 +1,16 @@
 # Changelog — twig-jvm-compiler
 
-## [0.5.0] — 2026-04-30 — mutual recursion + let-bound-twice closures
+## [0.5.0] — 2026-04-30 — mutual recursion + let-bound-twice + 3-deep curry
+
+Three cross-region bug fixes that bring more Twig source patterns
+to working state on real `java`:
+
+- `(define (mk2 a) (lambda (b) (lambda (c) ...))) (((mk2 10) 20) 12) → 42`
+  works (was a NullReferenceException on the second
+  APPLY_CLOSURE because closure-returning closures didn't
+  propagate the obj ref through APPLY_CLOSURE's int-only return).
+
+The fixes break down as:
 
 Two cross-region bug fixes that bring more Twig source patterns
 to working state on real `java`:

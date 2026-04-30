@@ -1,5 +1,26 @@
 # ir-to-jvm-class-file
 
+## 0.13.0 — 2026-04-30 — APPLY_CLOSURE obj-result propagation (3-deep curry)
+
+Closure-returning closures (e.g. `(((mk2 a) b) c)`) now run
+end-to-end on real `java`.
+
+### Bug
+
+APPLY_CLOSURE only stored its int result into `__ca_regs[dst]`.
+When the callee actually returned a closure ref, the lifted
+lambda's body had propagated it into `__ca_objregs[1]` via the
+obj-typed RET, but APPLY_CLOSURE didn't carry it onward to
+`__ca_objregs[dst]` — so the next
+`APPLY_CLOSURE closure_reg=v13` read null.
+
+### Fix
+
+After APPLY_CLOSURE, when the dst register is obj-typed in the
+current region (per `_collect_region_obj_regs`), also copy
+`__ca_objregs[1] → __ca_objregs[dst]`.  Mirrors the obj-pool
+caller-restore's "skip index 1" convention.
+
 ## 0.12.0 — 2026-04-30 — gate ADD_IMM-0 obj propagation on per-region typing
 
 Fixes a memory-safety class of bug in the previous obj-pool work:
