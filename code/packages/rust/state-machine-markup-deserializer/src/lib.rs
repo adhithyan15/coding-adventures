@@ -713,6 +713,7 @@ fn validate_action(action: &str, token_names: &HashSet<String>) -> Result<()> {
         | "emit_rcdata_end_tag_or_text"
         | "emit_rcdata_end_tag_with_trailing_solidus_or_text"
         | "emit_rcdata_end_tag_with_whitespace_or_text"
+        | "emit_rcdata_end_tag_with_attributes_or_text"
         | "emit_current_token" => return Ok(()),
         _ => {}
     }

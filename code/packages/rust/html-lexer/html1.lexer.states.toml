@@ -226,6 +226,18 @@ id = "script_data_end_tag_whitespace"
 id = "script_data_escaped_end_tag_whitespace"
 
 [[states]]
+id = "rcdata_end_tag_attributes"
+
+[[states]]
+id = "rawtext_end_tag_attributes"
+
+[[states]]
+id = "script_data_end_tag_attributes"
+
+[[states]]
+id = "script_data_escaped_end_tag_attributes"
+
+[[states]]
 id = "rcdata_self_closing_end_tag"
 
 [[states]]
@@ -1604,46 +1616,189 @@ actions = [
 [[transitions]]
 from = "rcdata_end_tag_whitespace"
 matcher = { anything = true }
+to = "rcdata_end_tag_attributes"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rawtext_end_tag_whitespace"
+matcher = { literal = " " }
+to = "rawtext_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rawtext_end_tag_whitespace"
+matcher = { literal = "\n" }
+to = "rawtext_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rawtext_end_tag_whitespace"
+matcher = { literal = "\t" }
+to = "rawtext_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rawtext_end_tag_whitespace"
+matcher = { literal = "\r" }
+to = "rawtext_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rawtext_end_tag_whitespace"
+matcher = { literal = ">" }
+to = "rawtext"
+actions = ["emit_rcdata_end_tag_with_whitespace_or_text"]
+
+[[transitions]]
+from = "rawtext_end_tag_whitespace"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "discard_current_token",
+  "append_text(</)",
+  "append_temporary_buffer_to_text",
+  "flush_text",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "rawtext_end_tag_whitespace"
+matcher = { anything = true }
+to = "rawtext_end_tag_attributes"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_end_tag_whitespace"
+matcher = { literal = " " }
+to = "script_data_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_end_tag_whitespace"
+matcher = { literal = "\n" }
+to = "script_data_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_end_tag_whitespace"
+matcher = { literal = "\t" }
+to = "script_data_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_end_tag_whitespace"
+matcher = { literal = "\r" }
+to = "script_data_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_end_tag_whitespace"
+matcher = { literal = ">" }
+to = "script_data"
+actions = ["emit_rcdata_end_tag_with_whitespace_or_text"]
+
+[[transitions]]
+from = "script_data_end_tag_whitespace"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "discard_current_token",
+  "append_text(</)",
+  "append_temporary_buffer_to_text",
+  "flush_text",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "script_data_end_tag_whitespace"
+matcher = { anything = true }
+to = "script_data_end_tag_attributes"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_whitespace"
+matcher = { literal = " " }
+to = "script_data_escaped_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_whitespace"
+matcher = { literal = "\n" }
+to = "script_data_escaped_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_whitespace"
+matcher = { literal = "\t" }
+to = "script_data_escaped_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_whitespace"
+matcher = { literal = "\r" }
+to = "script_data_escaped_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_whitespace"
+matcher = { literal = ">" }
+to = "script_data_escaped"
+actions = ["emit_rcdata_end_tag_with_whitespace_or_text"]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_whitespace"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "discard_current_token",
+  "append_text(</)",
+  "append_temporary_buffer_to_text",
+  "flush_text",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_whitespace"
+matcher = { anything = true }
+to = "script_data_escaped_end_tag_attributes"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rcdata_end_tag_attributes"
+matcher = { literal = ">" }
 to = "rcdata"
+actions = ["emit_rcdata_end_tag_with_attributes_or_text"]
+
+[[transitions]]
+from = "rcdata_end_tag_attributes"
+matcher = { eof = true }
+to = "done"
+consume = false
 actions = [
   "discard_current_token",
   "append_text(</)",
   "append_temporary_buffer_to_text",
-  "append_text(current)",
+  "flush_text",
+  "emit(EOF)",
 ]
 
 [[transitions]]
-from = "rawtext_end_tag_whitespace"
-matcher = { literal = " " }
-to = "rawtext_end_tag_whitespace"
+from = "rcdata_end_tag_attributes"
+matcher = { anything = true }
+to = "rcdata_end_tag_attributes"
 actions = ["append_temporary_buffer(current)"]
 
 [[transitions]]
-from = "rawtext_end_tag_whitespace"
-matcher = { literal = "\n" }
-to = "rawtext_end_tag_whitespace"
-actions = ["append_temporary_buffer(current)"]
-
-[[transitions]]
-from = "rawtext_end_tag_whitespace"
-matcher = { literal = "\t" }
-to = "rawtext_end_tag_whitespace"
-actions = ["append_temporary_buffer(current)"]
-
-[[transitions]]
-from = "rawtext_end_tag_whitespace"
-matcher = { literal = "\r" }
-to = "rawtext_end_tag_whitespace"
-actions = ["append_temporary_buffer(current)"]
-
-[[transitions]]
-from = "rawtext_end_tag_whitespace"
+from = "rawtext_end_tag_attributes"
 matcher = { literal = ">" }
 to = "rawtext"
-actions = ["emit_rcdata_end_tag_with_whitespace_or_text"]
+actions = ["emit_rcdata_end_tag_with_attributes_or_text"]
 
 [[transitions]]
-from = "rawtext_end_tag_whitespace"
+from = "rawtext_end_tag_attributes"
 matcher = { eof = true }
 to = "done"
 consume = false
@@ -1656,48 +1811,19 @@ actions = [
 ]
 
 [[transitions]]
-from = "rawtext_end_tag_whitespace"
+from = "rawtext_end_tag_attributes"
 matcher = { anything = true }
-to = "rawtext"
-actions = [
-  "discard_current_token",
-  "append_text(</)",
-  "append_temporary_buffer_to_text",
-  "append_text(current)",
-]
-
-[[transitions]]
-from = "script_data_end_tag_whitespace"
-matcher = { literal = " " }
-to = "script_data_end_tag_whitespace"
+to = "rawtext_end_tag_attributes"
 actions = ["append_temporary_buffer(current)"]
 
 [[transitions]]
-from = "script_data_end_tag_whitespace"
-matcher = { literal = "\n" }
-to = "script_data_end_tag_whitespace"
-actions = ["append_temporary_buffer(current)"]
-
-[[transitions]]
-from = "script_data_end_tag_whitespace"
-matcher = { literal = "\t" }
-to = "script_data_end_tag_whitespace"
-actions = ["append_temporary_buffer(current)"]
-
-[[transitions]]
-from = "script_data_end_tag_whitespace"
-matcher = { literal = "\r" }
-to = "script_data_end_tag_whitespace"
-actions = ["append_temporary_buffer(current)"]
-
-[[transitions]]
-from = "script_data_end_tag_whitespace"
+from = "script_data_end_tag_attributes"
 matcher = { literal = ">" }
 to = "script_data"
-actions = ["emit_rcdata_end_tag_with_whitespace_or_text"]
+actions = ["emit_rcdata_end_tag_with_attributes_or_text"]
 
 [[transitions]]
-from = "script_data_end_tag_whitespace"
+from = "script_data_end_tag_attributes"
 matcher = { eof = true }
 to = "done"
 consume = false
@@ -1710,48 +1836,19 @@ actions = [
 ]
 
 [[transitions]]
-from = "script_data_end_tag_whitespace"
+from = "script_data_end_tag_attributes"
 matcher = { anything = true }
-to = "script_data"
-actions = [
-  "discard_current_token",
-  "append_text(</)",
-  "append_temporary_buffer_to_text",
-  "append_text(current)",
-]
-
-[[transitions]]
-from = "script_data_escaped_end_tag_whitespace"
-matcher = { literal = " " }
-to = "script_data_escaped_end_tag_whitespace"
+to = "script_data_end_tag_attributes"
 actions = ["append_temporary_buffer(current)"]
 
 [[transitions]]
-from = "script_data_escaped_end_tag_whitespace"
-matcher = { literal = "\n" }
-to = "script_data_escaped_end_tag_whitespace"
-actions = ["append_temporary_buffer(current)"]
-
-[[transitions]]
-from = "script_data_escaped_end_tag_whitespace"
-matcher = { literal = "\t" }
-to = "script_data_escaped_end_tag_whitespace"
-actions = ["append_temporary_buffer(current)"]
-
-[[transitions]]
-from = "script_data_escaped_end_tag_whitespace"
-matcher = { literal = "\r" }
-to = "script_data_escaped_end_tag_whitespace"
-actions = ["append_temporary_buffer(current)"]
-
-[[transitions]]
-from = "script_data_escaped_end_tag_whitespace"
+from = "script_data_escaped_end_tag_attributes"
 matcher = { literal = ">" }
 to = "script_data_escaped"
-actions = ["emit_rcdata_end_tag_with_whitespace_or_text"]
+actions = ["emit_rcdata_end_tag_with_attributes_or_text"]
 
 [[transitions]]
-from = "script_data_escaped_end_tag_whitespace"
+from = "script_data_escaped_end_tag_attributes"
 matcher = { eof = true }
 to = "done"
 consume = false
@@ -1764,15 +1861,10 @@ actions = [
 ]
 
 [[transitions]]
-from = "script_data_escaped_end_tag_whitespace"
+from = "script_data_escaped_end_tag_attributes"
 matcher = { anything = true }
-to = "script_data_escaped"
-actions = [
-  "discard_current_token",
-  "append_text(</)",
-  "append_temporary_buffer_to_text",
-  "append_text(current)",
-]
+to = "script_data_escaped_end_tag_attributes"
+actions = ["append_temporary_buffer(current)"]
 
 [[transitions]]
 from = "rcdata_self_closing_end_tag"
