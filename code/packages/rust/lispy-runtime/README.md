@@ -38,7 +38,7 @@ ConsCell (32 bytes):                    Closure (≥ 48 bytes):
 │ ObjectHeader (16 bytes)     │          │ ObjectHeader (16 bytes)     │
 ├─────────────────────────────┤          ├─────────────────────────────┤
 │ car: LispyValue (8 bytes)   │          │ fn_name: SymbolId (4 bytes) │
-├─────────────────────────────┤          │ _reserved: u32 (4 bytes)    │
+├─────────────────────────────┤          │ flags:    u32 (4 bytes)     │
 │ cdr: LispyValue (8 bytes)   │          ├─────────────────────────────┤
 └─────────────────────────────┘          │ captures: Vec<LispyValue>   │
                                           └─────────────────────────────┘
