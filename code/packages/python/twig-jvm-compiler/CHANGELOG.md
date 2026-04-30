@@ -1,5 +1,59 @@
 # Changelog — twig-jvm-compiler
 
+## [0.3.0] — 2026-04-30 — TW03 Phase 3e (heap primitives from Twig source)
+
+Twig source containing `cons` / `car` / `cdr` / `null?` / `pair?` /
+`symbol?` / `'foo` / `nil` now compiles via the JVM backend
+(builds on the Phase 3b heap-op lowering work).  Non-recursive
+heap programs run end-to-end on real `java`; recursive heap
+programs hit a known JVM-backend obj-pool caller-saves
+limitation that's tracked as a follow-up.
+
+### Added — heap-primitive emission
+
+- `nil` literal lowers to `LOAD_NIL`.
+- `'foo` / `(quote foo)` lowers to `MAKE_SYMBOL` with the symbol
+  name as an `IrLabel`.
+- `cons` lowers to `MAKE_CONS dst, head, tail` (2 args).
+- `car` / `cdr` lower to `CAR` / `CDR` (1 arg each).
+- `null?` / `pair?` / `symbol?` lower to `IS_NULL` / `IS_PAIR` /
+  `IS_SYMBOL` (1 arg each, result is an int 0/1 ready to feed
+  BRANCH_Z).
+- `_HEAP_BUILTINS` table maps Twig-source names to (op, arity)
+  pairs; the apply-site dispatches uniformly.
+- `compile_source` auto-routes to `lower_ir_to_jvm_classes`
+  (the multi-class flow) when ANY heap opcode is present, not
+  just when there are closures.  Cons/Symbol/Nil runtime
+  classes get auto-included in the JAR.
+- Free-variable analysis treats `_HEAP_BUILTINS` as globals so
+  closures over `cons` / `car` / etc work.
+
+### Test additions
+
+- 8 new IR-shape tests covering each heap op's emission shape.
+- 2 new arity-validation tests (`cons` requires 2 args, `car`
+  requires 1).
+- Real-`java` end-to-end test:
+  `(car (cons 42 nil)) → 42` (passes).
+- Real-`java` xfail-strict test for the recursive headline case:
+  `(length (cons 1 (cons 2 (cons 3 nil)))) → 3`.  The IR shape
+  is correct but recursion exposes a JVM Phase 3b limitation:
+  CALL caller-saves only cover `__ca_regs` (int pool), not
+  `__ca_objregs` (object pool), so the cons ref in the obj
+  register gets clobbered before the recursive call returns.
+  Will auto-flip to passing once a follow-up extends caller-saves
+  to the obj pool — same shape as the JVM01 fix that unblocked
+  recursion through int registers.
+- All 45 tests pass + 1 xfail (strict).  91% coverage.
+
+### Limitations
+
+- Recursive heap programs hit the obj-pool caller-saves
+  limitation noted above; non-recursive heap programs work
+  end-to-end.
+- `number?` and `print` builtins still raise (not yet wired —
+  tracked separately in TW02.5).
+
 ## [0.2.0] — 2026-04-29 — JVM02 Phase 2d (closures from Twig source)
 
 Completes the JVM closure trilogy: anonymous lambdas in Twig
