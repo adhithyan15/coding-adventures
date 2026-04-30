@@ -1045,6 +1045,24 @@ class TestPrologGoalAdapter:
             (num(1), num(2), num(3)),
         ]
 
+    def test_adapt_prolog_goal_rewrites_clpfd_scalar_product(self) -> None:
+        parsed = parse_swi_query(
+            "?- [X,Y] ins 0..4, "
+            "scalar_product([2,3], [X,Y], #=, 12), "
+            "X #< Y, "
+            "labeling([], [X,Y]).",
+        )
+
+        adapted = adapt_prolog_goal(parsed.goal)
+
+        assert solve_all(
+            program(),
+            (parsed.variables["X"], parsed.variables["Y"]),
+            adapted,
+        ) == [
+            (num(0), num(4)),
+        ]
+
     def test_adapt_prolog_goal_rewrites_common_list_predicates(self) -> None:
         parsed = parse_swi_query(
             "?- member(Item, [tea, cake]), "

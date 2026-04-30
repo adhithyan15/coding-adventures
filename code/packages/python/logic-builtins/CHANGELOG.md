@@ -12,6 +12,8 @@ All notable changes to this package will be documented in this file.
   successor)` for non-negative integer successor generation and validation.
 - `labeling_optionso(options, vars)` for a first CLP(FD) labeling option
   subset, including `leftmost`, `ff`, `up`, and `down`.
+- `fd_scalar_producto(coeffs, vars, total)` for CLP(FD)-style weighted sum
+  constraints over Python sequences or proper logic lists.
 
 ### Fixed
 

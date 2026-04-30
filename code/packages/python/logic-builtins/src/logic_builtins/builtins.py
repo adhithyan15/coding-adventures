@@ -89,6 +89,7 @@ __all__ = [
     "fd_mulo",
     "fd_neqo",
     "fd_subo",
+    "fd_scalar_producto",
     "fd_sumo",
     "failo",
     "FiniteDomainConstraint",
@@ -206,6 +207,7 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("fd_mulo", 3),
     ("fd_neqo", 2),
     ("fd_subo", 3),
+    ("fd_scalar_producto", 3),
     ("fd_sumo", 2),
     ("failo", 0),
     ("findallo", 3),
@@ -512,6 +514,17 @@ def _fd_tuple_satisfies(
     if constraint.operator == "sum":
         *terms_value, result = values
         return sum(terms_value) == result
+    if constraint.operator == "scalar_product":
+        pair_count = (len(values) - 1) // 2
+        if len(values) != (pair_count * 2) + 1:
+            return False
+        coeffs = values[:pair_count]
+        terms_value = values[pair_count:-1]
+        result = values[-1]
+        return sum(
+            coeff * term_value
+            for coeff, term_value in zip(coeffs, terms_value, strict=True)
+        ) == result
     if constraint.operator == "all_different":
         return len(set(values)) == len(values)
     msg = f"unknown finite-domain constraint {constraint.operator}"
@@ -771,6 +784,84 @@ def _revise_sum_constraint_domains(
     return updated, changed
 
 
+def _linear_bounds(coefficient: int, domain: frozenset[int]) -> tuple[int, int]:
+    """Return min/max contribution for one weighted finite-domain term."""
+
+    low = coefficient * min(domain)
+    high = coefficient * max(domain)
+    return (min(low, high), max(low, high))
+
+
+def _revise_scalar_product_constraint_domains(
+    values: tuple[LogicVar | int, ...],
+    value_domains: tuple[frozenset[int], ...],
+    domains: dict[LogicVar, frozenset[int]],
+) -> tuple[dict[LogicVar, frozenset[int]] | None, bool]:
+    """Prune weighted-sum domains with interval bounds."""
+
+    pair_count = (len(values) - 1) // 2
+    if len(values) != (pair_count * 2) + 1:
+        return None, False
+
+    coeff_values = values[:pair_count]
+    term_values = values[pair_count:-1]
+    result_value = values[-1]
+    term_domains = value_domains[pair_count:-1]
+    result_domain = value_domains[-1]
+    if any(not isinstance(coefficient, int) for coefficient in coeff_values):
+        return domains, False
+
+    coeffs = tuple(
+        coefficient
+        for coefficient in coeff_values
+        if isinstance(coefficient, int)
+    )
+    contribution_bounds = tuple(
+        _linear_bounds(coefficient, domain)
+        for coefficient, domain in zip(coeffs, term_domains, strict=True)
+    )
+    min_total = sum(low for low, _ in contribution_bounds)
+    max_total = sum(high for _, high in contribution_bounds)
+
+    updated = dict(domains)
+    changed = False
+    if isinstance(result_value, LogicVar):
+        allowed_result = frozenset(
+            candidate
+            for candidate in result_domain
+            if min_total <= candidate <= max_total
+        )
+        if not allowed_result:
+            return None, False
+        if allowed_result != result_domain:
+            updated[result_value] = allowed_result
+            changed = True
+
+    for index, (value, coefficient, current_domain) in enumerate(
+        zip(term_values, coeffs, term_domains, strict=True),
+    ):
+        if not isinstance(value, LogicVar):
+            continue
+        contribution_low, contribution_high = contribution_bounds[index]
+        other_min = min_total - contribution_low
+        other_max = max_total - contribution_high
+        allowed = frozenset(
+            candidate
+            for candidate in current_domain
+            if any(
+                other_min <= result - (coefficient * candidate) <= other_max
+                for result in result_domain
+            )
+        )
+        if not allowed:
+            return None, False
+        if allowed != current_domain:
+            updated[value] = allowed
+            changed = True
+
+    return updated, changed
+
+
 def _revise_all_different_domains(
     values: tuple[LogicVar | int, ...],
     value_domains: tuple[frozenset[int] | None, ...],
@@ -855,6 +946,12 @@ def _revise_constraint_domains(
         )
     if constraint.operator == "sum":
         return _revise_sum_constraint_domains(values, known_domains, domains)
+    if constraint.operator == "scalar_product":
+        return _revise_scalar_product_constraint_domains(
+            values,
+            known_domains,
+            domains,
+        )
 
     msg = f"unknown finite-domain constraint {constraint.operator}"
     raise ValueError(msg)
@@ -1232,6 +1329,55 @@ def fd_sumo(terms_value: object, result: object) -> GoalExpr:
         )
 
     return native_goal(run_logic_list, terms_value, result)
+
+
+def _scalar_product_terms_goal(
+    coeffs: tuple[Term, ...],
+    terms_value: tuple[Term, ...],
+    result: object,
+) -> GoalExpr:
+    """Create a weighted-sum goal for already materialized terms."""
+
+    if len(coeffs) != len(terms_value):
+        return failo()
+    return _fd_constrainto("scalar_product", *coeffs, *terms_value, result)
+
+
+def fd_scalar_producto(
+    coeffs_value: object,
+    terms_value: object,
+    result: object,
+) -> GoalExpr:
+    """Constrain finite-domain terms so ``sum(Coeff * Term) == result``."""
+
+    if isinstance(coeffs_value, list | tuple) and isinstance(terms_value, list | tuple):
+        return _scalar_product_terms_goal(
+            tuple(coeffs_value),
+            tuple(terms_value),
+            result,
+        )
+
+    def run_logic_lists(
+        program_value: Program,
+        state: State,
+        args: NativeArgs,
+    ) -> Iterator[State]:
+        coeffs_term, terms_term, result_term = args
+        coeff_items = _proper_list_items(_reified(coeffs_term, state))
+        term_items = _proper_list_items(_reified(terms_term, state))
+        if coeff_items is None or term_items is None:
+            return
+        yield from solve_from(
+            program_value,
+            _scalar_product_terms_goal(
+                tuple(coeff_items),
+                tuple(term_items),
+                result_term,
+            ),
+            state,
+        )
+
+    return native_goal(run_logic_lists, coeffs_value, terms_value, result)
 
 
 def _all_different_terms_goal(terms_value: tuple[Term, ...]) -> GoalExpr:

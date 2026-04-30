@@ -58,6 +58,7 @@ from logic_builtins import (
     fd_lto,
     fd_mulo,
     fd_neqo,
+    fd_scalar_producto,
     fd_subo,
     fd_sumo,
     findallo,
@@ -827,6 +828,62 @@ class TestFiniteDomainBuiltins:
             program(),
             marker,
             conj(eq(marker, "ok"), fd_sumo([], 1)),
+        ) == []
+
+    def test_fd_scalar_producto_solves_weighted_sum_constraints(self) -> None:
+        left = var("Left")
+        right = var("Right")
+
+        assert solve_all(
+            program(),
+            (left, right),
+            conj(
+                fd_ino(left, range(0, 5)),
+                fd_ino(right, range(0, 5)),
+                fd_scalar_producto([2, 3], [left, right], 12),
+                fd_lto(left, right),
+                labelingo([left, right]),
+            ),
+        ) == [(num(0), num(4))]
+
+    def test_fd_scalar_producto_accepts_logic_lists_and_negative_coefficients(
+        self,
+    ) -> None:
+        left = var("Left")
+        right = var("Right")
+        total = var("Total")
+
+        assert solve_all(
+            program(),
+            (left, right, total),
+            conj(
+                fd_ino(left, range(0, 5)),
+                fd_ino(right, range(0, 5)),
+                fd_ino(total, range(-5, 6)),
+                fd_scalar_producto(
+                    logic_list([2, -1]),
+                    logic_list([left, right]),
+                    total,
+                ),
+                fd_eqo(total, 3),
+                labelingo([left, right, total]),
+            ),
+        ) == [
+            (num(2), num(1), num(3)),
+            (num(3), num(3), num(3)),
+        ]
+
+    def test_fd_scalar_producto_rejects_length_mismatches(self) -> None:
+        value = var("Value")
+
+        assert solve_all(
+            program(),
+            value,
+            conj(
+                fd_ino(value, range(0, 5)),
+                fd_scalar_producto([2, 3], [value], 4),
+                labelingo([value]),
+            ),
         ) == []
 
     def test_all_differento_prunes_singleton_assignments(self) -> None:
