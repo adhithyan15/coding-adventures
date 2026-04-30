@@ -553,6 +553,63 @@ class TestPrologLoader:
             atom("lisa"),
         ]
 
+    def test_module_qualification_rewrites_apply_family_closures(self) -> None:
+        project = load_swi_prolog_project(
+            """
+            :- module(apply_helpers, [
+                increment/2,
+                convert/2,
+                small/1,
+                pair_push/4,
+                push/3
+            ]).
+            increment(1, 2).
+            increment(2, 3).
+            convert(1, one).
+            convert(3, three).
+            small(1).
+            small(2).
+            pair_push(Left, Right, Acc, [pair(Left, Right)|Acc]).
+            push(Item, Acc, [Item|Acc]).
+            """,
+            """
+            :- module(app, []).
+            :- use_module(apply_helpers, [
+                increment/2,
+                convert/2,
+                small/1,
+                pair_push/4,
+                push/3
+            ]).
+            ?- maplist(increment, [1,2], Ys),
+               convlist(convert, [1,2,3], Converted),
+               include(small, [1,2,3], Small),
+               foldl(pair_push, [a,b], [x,y], [], Folded),
+               scanl(push, [a,b], [], Scanned).
+            """,
+        )
+        query = project.queries[0]
+
+        assert solve_all(
+            project.program,
+            (
+                query.variables["Ys"],
+                query.variables["Converted"],
+                query.variables["Small"],
+                query.variables["Folded"],
+                query.variables["Scanned"],
+            ),
+            adapt_prolog_goal(query.goal),
+        ) == [
+            (
+                logic_list([2, 3]),
+                logic_list(["one", "three"]),
+                logic_list([1, 2]),
+                logic_list([term("pair", "b", "y"), term("pair", "a", "x")]),
+                logic_list([logic_list(["a"]), logic_list(["b", "a"])]),
+            ),
+        ]
+
     def test_module_qualified_initialization_goals_execute(self) -> None:
         project = load_swi_prolog_project(
             """

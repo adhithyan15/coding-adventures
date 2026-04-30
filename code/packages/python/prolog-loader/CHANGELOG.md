@@ -7,6 +7,9 @@
 - preserve extra arguments while rewriting module-qualified `call/N` meta-goals
 - rewrite module-qualified callable arguments inside `findall/3`, `bagof/3`,
   `setof/3`, and `forall/2`
+- rewrite module-qualified and imported apply-family closures for `maplist/N`,
+  `convlist/3`, `include/3`, `exclude/3`, `partition/4`, `foldl/N`, and
+  `scanl/N`
 - expose `rewrite_loaded_prolog_query(...)` for ad-hoc queries that need a
   linked project's module/import context
 - adapt Prolog `->/2` and `(If -> Then ; Else)` control constructs into the
