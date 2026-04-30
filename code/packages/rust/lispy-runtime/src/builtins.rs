@@ -276,6 +276,46 @@ pub fn symbol_p(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
 }
 
 // ---------------------------------------------------------------------------
+// Infrastructure builtins (compiler-emitted, not user-callable)
+// ---------------------------------------------------------------------------
+//
+// twig-ir-compiler (and any other Lispy frontend) emits a few
+// "infrastructure" builtin calls that aren't user-facing — they're
+// part of the IR encoding for control-flow plumbing.  We register
+// them here so the dispatcher (LANG20 PR 4) resolves them through
+// the same `LangBinding::resolve_builtin` path as user builtins.
+//
+// `_move` — identity copy.  twig-ir-compiler emits this in `(if c
+// t e)` lowering: each arm computes a value into a fresh register,
+// then `_move` copies it into the shared result register.  The
+// indirection exists because a plain `add result, source, 0`
+// would coerce booleans to integers in some IIR dialects; `_move`
+// is a typed-preserving identity.
+//
+// `make_nil` — return the nil singleton.  twig-ir-compiler emits
+// `call_builtin "make_nil"` everywhere a nil literal is needed
+// (since `nil` doesn't have an `Operand::Var(name)` representation
+// — it's a heap-derived value in Python, but an immediate in our
+// LispyValue scheme).  We return `LispyValue::NIL` directly.
+
+/// `(_move x)` — return `x` unchanged.  Used by twig-ir-compiler
+/// for type-preserving register copies in `if` / `let` lowering.
+pub fn move_(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
+    if args.len() != 1 {
+        return Err(arity_error("_move", 1, args.len()));
+    }
+    Ok(args[0])
+}
+
+/// `(make_nil)` — return the nil singleton.
+pub fn make_nil(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
+    if !args.is_empty() {
+        return Err(arity_error("make_nil", 0, args.len()));
+    }
+    Ok(LispyValue::NIL)
+}
+
+// ---------------------------------------------------------------------------
 // I/O
 // ---------------------------------------------------------------------------
 
@@ -510,5 +550,34 @@ mod tests {
         assert_eq!(print(&[i(7)]).unwrap(), LispyValue::NIL);
         assert!(print(&[]).is_err());
         assert!(print(&[i(1), i(2)]).is_err());
+    }
+
+    // ── _move / make_nil ────────────────────────────────────────────
+
+    #[test]
+    fn move_is_identity() {
+        // _move preserves the exact bit pattern of its argument —
+        // including booleans, which would otherwise coerce to int
+        // through naive `add x 0` lowering.
+        assert_eq!(move_(&[i(7)]).unwrap(), i(7));
+        assert_eq!(move_(&[LispyValue::TRUE]).unwrap(), LispyValue::TRUE);
+        assert_eq!(move_(&[LispyValue::FALSE]).unwrap(), LispyValue::FALSE);
+        assert_eq!(move_(&[LispyValue::NIL]).unwrap(), LispyValue::NIL);
+    }
+
+    #[test]
+    fn move_rejects_wrong_arity() {
+        assert!(move_(&[]).is_err());
+        assert!(move_(&[i(1), i(2)]).is_err());
+    }
+
+    #[test]
+    fn make_nil_returns_nil() {
+        assert_eq!(make_nil(&[]).unwrap(), LispyValue::NIL);
+    }
+
+    #[test]
+    fn make_nil_rejects_args() {
+        assert!(make_nil(&[i(1)]).is_err());
     }
 }

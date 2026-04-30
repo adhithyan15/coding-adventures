@@ -1335,17 +1335,36 @@ LANG20 architecture happens in numbered PRs:
 |----|-------|----------|
 | 1 | Define `LangBinding` trait skeleton in `lang-runtime-core`; no implementations yet | Type-checking the design |
 | 2 | Implement `LispyBinding` in new `lispy-runtime` crate | Twig migration |
-| 3 | Refactor `twig-ir-compiler` → `twig-frontend` (pure compile) + new `twig-vm` (runtime wiring) | E2E execution test for Twig |
-| 4 | Wire `vm-core` to call LangBinding for `call_indirect`, `cmp_eq`, `is_truthy` | Twig E2E green |
-| 5 | Add `send` / `load_property` / `store_property` IIR opcodes + interpreter handlers | Ruby/JS frontend prep |
-| 6 | Implement IC machinery in `lang-runtime-core` | JIT specialization for dynamic dispatch |
-| 7 | Implement second binding (recommend `RubyBinding`, smallest gap from Lispy) | Validates trait design holds |
-| 8 | Implement deopt protocol in `jit-core` per LANG20 §"Deopt protocol" | Tier-up for dynamic languages |
-| 9 | Implement frame-descriptor emission in AOT codegen | AOT for dynamic languages |
-| 10 | PGO mode in AOT-core (consume profile artefact) | V8-style AOT-with-feedback |
+| 3 | New `twig-vm` crate that wires twig-ir-compiler with lispy-runtime; build-time grammar compilation | Compilation path from Twig source through to IIR + LispyBinding |
+| 4 | Tree-walking dispatcher in `twig-vm` (`const`, `call_builtin`, `call`, `jmp`, `jmp_if_false`, `label`, `ret`); `TwigVM::run` end-to-end API | Twig E2E green for closure-free programs |
+| 5 | Closures (`make_closure`, `apply_closure`), top-level value defines (`global_set` / `global_get`), quoted symbols (`make_symbol`) | Full Twig surface language runs |
+| 6 | Add `send` / `load_property` / `store_property` IIR opcodes + interpreter handlers | Ruby/JS frontend prep |
+| 7 | Implement IC machinery in `lang-runtime-core` | JIT specialization for dynamic dispatch |
+| 8 | Wire `vm-core` itself to call LangBinding for `call_indirect`, `cmp_eq`, `is_truthy` (replace twig-vm tree-walker for production hot-path) | Shared dispatch infrastructure across language frontends |
+| 9 | Implement second binding (recommend `RubyBinding`, smallest gap from Lispy) | Validates trait design holds |
+| 10 | Implement deopt protocol in `jit-core` per LANG20 §"Deopt protocol" | Tier-up for dynamic languages |
+| 11 | Implement frame-descriptor emission in AOT codegen | AOT for dynamic languages |
+| 12 | PGO mode in AOT-core (consume profile artefact) | V8-style AOT-with-feedback |
+
+### Divergence from earlier draft (PRs 3–4)
+
+The earlier draft of this table compressed the twig-vm work into one
+PR ("PR 3: refactor twig-ir-compiler → twig-frontend") and immediately
+tackled vm-core wiring in PR 4.  The realised sequence splits the
+work differently:
+
+- **PR 3** is the "wiring + build-time grammar compilation" PR —
+  it adds `twig-vm` as a new crate alongside (not in place of)
+  `twig-ir-compiler`, which keeps its existing public surface.
+- **PR 4** delivers a tree-walking dispatcher *inside* `twig-vm`
+  rather than wiring `vm-core` directly.  This sequence ships a
+  runnable Twig E2E green sooner, defers the cross-frontend
+  vm-core refactor to PR 8 once the LangBinding contract has
+  been exercised by closures + send/load/store, and keeps the
+  vm-core wiring reviewable in isolation when it lands.
 
 PRs 1–4 are required before anything Lispy can run end-to-end.
-PRs 5–7 unlock dynamic-language frontends.  PRs 8–10 deliver the
+PRs 5–7 unlock dynamic-language frontends.  PRs 8–12 deliver the
 "V8 × GraalVM" promise.
 
 Each PR includes acceptance tests — most importantly, the Twig

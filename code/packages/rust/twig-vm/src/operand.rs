@@ -146,7 +146,7 @@ mod tests {
 
     #[test]
     fn int_above_lispy_range_returns_error() {
-        let too_big = (1i64 << 60); // INT_MAX + 1
+        let too_big = 1i64 << 60; // INT_MAX + 1
         let err = operand_to_value(&Operand::Int(too_big), &no_lookup).unwrap_err();
         assert!(matches!(err, RuntimeError::TypeError(s) if s.contains("tagged-int range")));
     }
