@@ -227,6 +227,47 @@ def test_heap_list_of_ints_length() -> None:
 
 
 @requires_java
+def test_mutual_recursion_even_odd() -> None:
+    """``(evp 8) → 1`` via mutually-recursive ``evp`` / ``odp``.
+
+    Was a "Duplicate IR label" failure pre-fix because
+    twig-jvm-compiler's ``_fresh_label`` used a per-region counter
+    so ``evp``'s ``_else_0`` collided with ``odp``'s ``_else_0``.
+    """
+    src = """
+        (define (evp n) (if (= n 0) 1 (odp (- n 1))))
+        (define (odp n) (if (= n 0) 0 (evp (- n 1))))
+        (evp 8)
+    """
+    result = run_source(src, class_name="TwMutEvenOdd")
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == bytes([1])
+
+
+@requires_java
+def test_let_bound_closure_called_twice() -> None:
+    """``(let ((add5 (mk-adder 5))) (+ (add5 10) (add5 27))) → 47``.
+
+    Was a NullReferenceException pre-fix because the JVM
+    backend's ADD_IMM-0 obj-slot propagation fired
+    unconditionally — the lifted lambda body's
+    ``ADD_IMM v11, v3, 0`` (v3 is an int arg) would clobber
+    ``__ca_objregs[11]`` (the caller's closure-holding slot)
+    with null.  Fix: gate obj-slot propagation on per-region
+    obj-typed register analysis.
+    """
+    src = """
+        (define (mk-adder n) (lambda (x) (+ x n)))
+        (let ((add5 (mk-adder 5)))
+          (+ (add5 10) (add5 27)))
+    """
+    result = run_source(src, class_name="TwLetTwiceClos")
+    assert result.returncode == 0, result.stderr
+    # 15 + 32 = 47 = 0x2f = b'/'
+    assert result.stdout == b"/"
+
+
+@requires_java
 def test_heap_car_of_singleton_returns_int() -> None:
     """``(car (cons 42 nil)) → 42`` exercises the ``CAR`` int-read
     path: the cons head is written from an int register and CAR

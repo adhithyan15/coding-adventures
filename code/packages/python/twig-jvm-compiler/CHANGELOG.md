@@ -1,5 +1,26 @@
 # Changelog — twig-jvm-compiler
 
+## [0.5.0] — 2026-04-30 — mutual recursion + let-bound-twice closures
+
+Two cross-region bug fixes that bring more Twig source patterns
+to working state on real `java`:
+
+### Fixed — mutual recursion (`(define (evp n) ...) (define (odp n) ...) (evp 8)`)
+
+Failed pre-fix with "Duplicate IR label" because `_fresh_label`
+used a per-region counter (`ctx.next_label`).  `evp`'s body
+emitted `_else_0` and `odp`'s body also emitted `_else_0` — the
+JVM backend's label collector rejected the duplicate.
+
+Fix: bump the counter program-wide via `self._next_label_id`
+(same convention twig-beam-compiler already uses).  Each label
+gets a unique `_<prefix>_<idx>` suffix.
+
+### Tests
+
+The user's "complex programs" matrix verifies both fixes pass on
+real `java` end-to-end.  All 46 existing tests still pass.
+
 ## [0.4.0] — 2026-04-30 — recursive heap programs flip to passing
 
 The previously xfail-strict

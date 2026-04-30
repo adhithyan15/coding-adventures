@@ -217,9 +217,6 @@ class _FnCtx:
     # Next holding-register index to allocate for intermediate values.
     next_holding: int = _REG_HOLDING_BASE
 
-    # Fresh-label counter (per region, so labels don't collide).
-    next_label: int = 0
-
 
 # ---------------------------------------------------------------------------
 # Compiler
@@ -260,6 +257,13 @@ class _Compiler:
         # emitted at the use site.
         self._lifted_lambdas: list[tuple[str, list[str], Lambda]] = []
         self._lambda_counter = 0
+        # Program-wide fresh-label counter.  Per-region counters
+        # collide between functions (``evp``'s ``_else_0`` would
+        # clash with ``odp``'s ``_else_0`` and the JVM backend
+        # rejects duplicate labels).  Bumping it once per call
+        # keeps every emitted label name unique across the entire
+        # IR program — same convention twig-beam-compiler uses.
+        self._next_label_id = 0
 
     # ------------------------------------------------------------------
     # Top-level driver
@@ -751,9 +755,10 @@ class _Compiler:
         ctx.next_holding += 1
         return IrRegister(index=idx)
 
-    def _fresh_label(self, ctx: _FnCtx, prefix: str) -> str:
-        ctx.next_label += 1
-        return f"{prefix}_{ctx.next_label}"
+    def _fresh_label(self, _ctx: _FnCtx, prefix: str) -> str:
+        idx = self._next_label_id
+        self._next_label_id += 1
+        return f"_{prefix}_{idx}"
 
 
 # ---------------------------------------------------------------------------
