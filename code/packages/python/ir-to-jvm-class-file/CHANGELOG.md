@@ -1,5 +1,70 @@
 # ir-to-jvm-class-file
 
+## 0.13.0 — 2026-04-30 — APPLY_CLOSURE obj-result propagation (3-deep curry)
+
+Closure-returning closures (e.g. `(((mk2 a) b) c)`) now run
+end-to-end on real `java`.
+
+### Bug
+
+APPLY_CLOSURE only stored its int result into `__ca_regs[dst]`.
+When the callee actually returned a closure ref, the lifted
+lambda's body had propagated it into `__ca_objregs[1]` via the
+obj-typed RET, but APPLY_CLOSURE didn't carry it onward to
+`__ca_objregs[dst]` — so the next
+`APPLY_CLOSURE closure_reg=v13` read null.
+
+### Fix
+
+After APPLY_CLOSURE, when the dst register is obj-typed in the
+current region (per `_collect_region_obj_regs`), also copy
+`__ca_objregs[1] → __ca_objregs[dst]`.  Mirrors the obj-pool
+caller-restore's "skip index 1" convention.
+
+## 0.12.0 — 2026-04-30 — gate ADD_IMM-0 obj propagation on per-region typing
+
+Fixes a memory-safety class of bug in the previous obj-pool work:
+the unconditional ADD_IMM-0 obj-slot copy was clobbering caller's
+`__ca_objregs` slots when an int-typed source got moved.
+
+### Bug
+
+JVM uses a SHARED static `__ca_objregs` array.  v0.11.0's
+ADD_IMM-0 obj propagation copied `__ca_objregs[src] →
+__ca_objregs[dst]` whenever `_needs_objregs` was True and the
+immediate was 0 — regardless of whether the source was actually
+obj-typed in that region.
+
+Concrete failure: `(let ((add5 (mk-adder 5))) (+ (add5 10) (add5 27)))`.
+Inside the lifted lambda body: `ADD_IMM v11, v3, 0` (v3 is the
+explicit int arg).  Pre-fix this wrote `__ca_objregs[3] (= null)`
+into `__ca_objregs[11]`, clobbering the closure ref the CALLER
+had stored there.  Second `(add5 27)` then NPE'd reading
+`__ca_objregs[11]`.
+
+### Fix — `_collect_region_obj_regs`
+
+New per-region analysis (mirrors the CLR backend's typed-pool
+approach, just adapted to JVM's static layout).  Computes the
+set of registers each region uses obj-style by:
+
+* **Writes** producing object refs (MAKE_CLOSURE, MAKE_CONS,
+  MAKE_SYMBOL, LOAD_NIL, CDR).
+* **Reads** consuming object operands (CAR/CDR/IS_*/MAKE_CONS-tail/
+  APPLY_CLOSURE-closure_reg).
+* **Back-prop** through ADD_IMM-0 to a fixed point.
+
+ADD_IMM-0 obj propagation now fires only when SRC is in the
+region's obj_regs set — int-typed sources stop polluting the
+shared obj pool.
+
+### Tests
+
+All 113 ir-to-jvm-class-file tests pass; coverage 92%.  No new
+test cases — the fix's correctness is validated by the
+twig-jvm-compiler tests for closure / heap / mutual-recursion
+patterns that exercise the cross-region obj flow.
+
 ## 0.11.0 — 2026-04-30 — obj-pool caller-saves + ADD_IMM-0 obj propagation
 
 Closes the obj-pool gap left by JVM Phase 3b.  Recursive heap

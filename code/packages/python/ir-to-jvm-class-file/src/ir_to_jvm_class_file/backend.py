@@ -492,6 +492,11 @@ class _JvmClassLowerer:
         # appears.  Default False so methods that don't need obj-pool
         # caller-saves emit the original int-only sequence.
         self._needs_objregs = False
+        # Per-region set of registers used as object refs.  Set by
+        # ``_emit_region_instructions`` before each region's body
+        # emission.  Used by ADD_IMM-0 emission to gate obj-slot
+        # propagation (see ``_collect_region_obj_regs`` for why).
+        self._region_obj_regs: set[int] = set()
 
     def lower(self) -> JVMClassArtifact:
         self._validate_class_name()
@@ -900,6 +905,90 @@ class _JvmClassLowerer:
             self._emit_aload(builder, reg_count + reg_idx)
             builder.emit_opcode(_OP_AASTORE)
 
+    def _collect_region_obj_regs(
+        self, region: _CallableRegion,
+    ) -> set[int]:
+        """Compute the IR-register indices that ``region`` uses as
+        object refs (cons / symbol / nil / closure).
+
+        Used by ADD_IMM-0 emission to gate obj-slot propagation:
+        only copy ``__ca_objregs[src] → __ca_objregs[dst]`` when
+        ``src`` actually holds an object in this region's
+        type-flow.  Without this gate the canonical move idiom
+        would propagate junk (zeros) into the obj pool whenever
+        an int-typed source gets copied — and because
+        ``__ca_objregs`` is a SHARED static array, that junk
+        clobbers obj refs other parts of the program rely on.
+
+        Three sources of "obj-ness" contribute:
+
+        * **Writes** that produce object refs: MAKE_CLOSURE,
+          MAKE_CONS, MAKE_SYMBOL, LOAD_NIL, CDR.  Direct producers.
+        * **Reads** by ops that consume an object operand: CAR,
+          CDR, IS_NULL, IS_PAIR, IS_SYMBOL, MAKE_CONS-tail,
+          APPLY_CLOSURE-closure_reg.  Catches obj-typed parameter
+          slots that the body only ever reads (mirrors the CLR
+          backend's obj-source-read inference).
+        * **Back-prop** through ADD_IMM-0 (the move idiom): if
+          dst is obj-typed, src is too.  Iterated to a fixed
+          point.  Catches the param→holding-reg copy at the top
+          of the body.
+        """
+        obj_regs: set[int] = set()
+        for instr in region.instructions:
+            op = instr.opcode
+            if op in (
+                IrOp.MAKE_CLOSURE, IrOp.MAKE_CONS, IrOp.MAKE_SYMBOL,
+                IrOp.LOAD_NIL, IrOp.CDR,
+            ):
+                if instr.operands and isinstance(
+                    instr.operands[0], IrRegister,
+                ):
+                    obj_regs.add(instr.operands[0].index)
+            if op in (
+                IrOp.CAR, IrOp.CDR, IrOp.IS_NULL, IrOp.IS_PAIR, IrOp.IS_SYMBOL,
+            ):
+                if (
+                    len(instr.operands) >= 2
+                    and isinstance(instr.operands[1], IrRegister)
+                ):
+                    obj_regs.add(instr.operands[1].index)
+            if op is IrOp.MAKE_CONS:
+                if (
+                    len(instr.operands) >= 3
+                    and isinstance(instr.operands[2], IrRegister)
+                ):
+                    obj_regs.add(instr.operands[2].index)
+            if op is IrOp.APPLY_CLOSURE:
+                if (
+                    len(instr.operands) >= 2
+                    and isinstance(instr.operands[1], IrRegister)
+                ):
+                    obj_regs.add(instr.operands[1].index)
+        # Back-prop through ADD_IMM-0 to a fixed point.
+        changed = True
+        cap = len(region.instructions) + 4
+        while changed and cap > 0:
+            changed = False
+            cap -= 1
+            for instr in region.instructions:
+                if instr.opcode is not IrOp.ADD_IMM:
+                    continue
+                if len(instr.operands) < 3:
+                    continue
+                ops = instr.operands
+                if not (
+                    isinstance(ops[0], IrRegister)
+                    and isinstance(ops[1], IrRegister)
+                    and isinstance(ops[2], IrImmediate)
+                    and ops[2].value == 0
+                ):
+                    continue
+                if ops[0].index in obj_regs and ops[1].index not in obj_regs:
+                    obj_regs.add(ops[1].index)
+                    changed = True
+        return obj_regs
+
     def _emit_aload(self, builder: _BytecodeBuilder, index: int) -> None:
         """Load an object reference from JVM local slot ``index``."""
         if 0 <= index <= 3:
@@ -1081,6 +1170,31 @@ class _JvmClassLowerer:
             _OP_INVOKESTATIC,
             self._method_ref(self._helper_reg_set, _DESC_INT_INT_TO_VOID),
         )
+        # Closure-returning closure: when dst is obj-typed in this
+        # region (e.g. ((mk2 a) b) where the inner result is itself
+        # a closure that gets passed to a third APPLY_CLOSURE), the
+        # callee's RET propagated the obj ref into __ca_objregs[1]
+        # via the lifted lambda's ADD_IMM-0 obj propagation.  Copy
+        # __ca_objregs[1] → __ca_objregs[dst] so the next ADD_IMM-0
+        # / APPLY_CLOSURE can pick it up.
+        #
+        # Without this, IClosure.apply([I)I's int return type drops
+        # the obj-slot propagation chain at the call boundary and
+        # 3-deep curries like (((mk2 a) b) c) NPE on the second
+        # APPLY_CLOSURE.
+        if dst.index in self._region_obj_regs:
+            builder.emit_u2_instruction(
+                _OP_GETSTATIC,
+                self._field_ref(self._objreg_field, _DESC_OBJECT_ARRAY),
+            )
+            self._emit_push_int(builder, dst.index)
+            builder.emit_u2_instruction(
+                _OP_GETSTATIC,
+                self._field_ref(self._objreg_field, _DESC_OBJECT_ARRAY),
+            )
+            self._emit_push_int(builder, 1)
+            builder.emit_opcode(_OP_AALOAD)
+            builder.emit_opcode(_OP_AASTORE)
 
     # ------------------------------------------------------------------
     # TW03 Phase 3b — heap-primitive lowering (cons / symbol / nil)
@@ -1804,6 +1918,17 @@ class _JvmClassLowerer:
         lambda method (Phase 2c.5) can prepend a JVM-args prologue
         and re-use the same instruction-by-instruction emission.
         """
+        # Per-region obj-typed register analysis.  The JVM uses a
+        # SHARED static ``__ca_objregs`` array, so a method that
+        # writes garbage to slot N (e.g. an int-typed ADD_IMM-0
+        # propagating zeros into the obj pool) corrupts every
+        # caller's view of that slot.  Stash the set of registers
+        # this region uses obj-style so the ADD_IMM-0 obj
+        # propagation only fires when the source actually holds an
+        # object — same correctness rule the CLR backend's typed
+        # register pool enforces, just adapted to JVM's static
+        # shared layout.
+        self._region_obj_regs = self._collect_region_obj_regs(region)
         for instruction in region.instructions:
             if instruction.opcode == IrOp.LABEL:
                 label = _as_label(instruction.operands[0], "LABEL operand")
@@ -1991,6 +2116,17 @@ class _JvmClassLowerer:
                     self._needs_objregs
                     and instruction.opcode == IrOp.ADD_IMM
                     and imm.value == 0
+                    # Gate on per-region obj-typing — only propagate
+                    # the obj slot when SRC actually holds an object
+                    # in this region.  Without the gate, an int-typed
+                    # ADD_IMM-0 (e.g. ``ADD_IMM v11, v3, 0`` inside a
+                    # lambda body where v3 is an int arg) would write
+                    # null to ``__ca_objregs[v11]`` and clobber a
+                    # caller's obj-typed v11 slot — the JVM static
+                    # ``__ca_objregs`` pool is shared across method
+                    # invocations, so any unconditional write to an
+                    # obj slot is a memory-safety concern.
+                    and src.index in self._region_obj_regs
                 ):
                     builder.emit_u2_instruction(
                         _OP_GETSTATIC,

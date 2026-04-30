@@ -227,6 +227,75 @@ def test_heap_list_of_ints_length() -> None:
 
 
 @requires_java
+def test_mutual_recursion_even_odd() -> None:
+    """``(evp 8) → 1`` via mutually-recursive ``evp`` / ``odp``.
+
+    Was a "Duplicate IR label" failure pre-fix because
+    twig-jvm-compiler's ``_fresh_label`` used a per-region counter
+    so ``evp``'s ``_else_0`` collided with ``odp``'s ``_else_0``.
+    """
+    src = """
+        (define (evp n) (if (= n 0) 1 (odp (- n 1))))
+        (define (odp n) (if (= n 0) 0 (evp (- n 1))))
+        (evp 8)
+    """
+    result = run_source(src, class_name="TwMutEvenOdd")
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == bytes([1])
+
+
+@requires_java
+def test_three_deep_curry() -> None:
+    """``(((mk2 a) b) c) → 42`` — closure that returns a closure
+    that returns an int.
+
+    Was a NullReferenceException pre-fix because APPLY_CLOSURE
+    only stored its int result into ``__ca_regs[dst]``.  When the
+    callee actually returned a closure ref, the lifted lambda's
+    body had propagated it into ``__ca_objregs[1]`` via the
+    obj-typed RET, but APPLY_CLOSURE didn't carry it onward to
+    ``__ca_objregs[dst]`` — so the next ``APPLY_CLOSURE
+    closure_reg=v13`` read null.
+
+    Fix (in ir-to-jvm-class-file): after APPLY_CLOSURE, when the
+    dst register is obj-typed in the current region, also copy
+    ``__ca_objregs[1] → __ca_objregs[dst]``.  Mirror of the
+    obj-pool caller-restore's "skip index 1" convention.
+    """
+    src = """
+        (define (mk2 a) (lambda (b) (lambda (c) (+ a (+ b c)))))
+        (((mk2 10) 20) 12)
+    """
+    result = run_source(src, class_name="TwCurry3")
+    assert result.returncode == 0, result.stderr
+    # 10 + 20 + 12 = 42 = 0x2a = b'*'
+    assert result.stdout == b"*"
+
+
+@requires_java
+def test_let_bound_closure_called_twice() -> None:
+    """``(let ((add5 (mk-adder 5))) (+ (add5 10) (add5 27))) → 47``.
+
+    Was a NullReferenceException pre-fix because the JVM
+    backend's ADD_IMM-0 obj-slot propagation fired
+    unconditionally — the lifted lambda body's
+    ``ADD_IMM v11, v3, 0`` (v3 is an int arg) would clobber
+    ``__ca_objregs[11]`` (the caller's closure-holding slot)
+    with null.  Fix: gate obj-slot propagation on per-region
+    obj-typed register analysis.
+    """
+    src = """
+        (define (mk-adder n) (lambda (x) (+ x n)))
+        (let ((add5 (mk-adder 5)))
+          (+ (add5 10) (add5 27)))
+    """
+    result = run_source(src, class_name="TwLetTwiceClos")
+    assert result.returncode == 0, result.stderr
+    # 15 + 32 = 47 = 0x2f = b'/'
+    assert result.stdout == b"/"
+
+
+@requires_java
 def test_heap_car_of_singleton_returns_int() -> None:
     """``(car (cons 42 nil)) → 42`` exercises the ``CAR`` int-read
     path: the cons head is written from an int register and CAR
