@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- Added a `constant` primitive for scalar bias or literal nodes.
+- Added `createXorNetwork()` as an explicit hidden-layer graph example.
+
 ## [0.1.0] - 2026-04-29
 
 ### Added

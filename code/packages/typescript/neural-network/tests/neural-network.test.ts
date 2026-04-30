@@ -2,11 +2,13 @@ import { describe, expect, it } from "vitest";
 
 import {
   addActivation,
+  addConstant,
   addInput,
   addOutput,
   addWeightedSum,
   createNeuralGraph,
   createNeuralNetwork,
+  createXorNetwork,
 } from "../src/index.js";
 
 describe("neural-network primitives", () => {
@@ -24,9 +26,11 @@ describe("neural-network primitives", () => {
 
     addInput(graph, "x0");
     addInput(graph, "x1", "feature");
+    addConstant(graph, "bias", 1);
     addWeightedSum(graph, "sum", [
       { from: "x0", weight: 0.25, edgeId: "w0", properties: { "nn.trainable": true } },
       { from: "x1", weight: 0.75, edgeId: "w1" },
+      { from: "bias", weight: -0.1, edgeId: "bias_to_sum" },
     ]);
     addActivation(graph, "relu", "sum", "relu", {}, "sum_to_relu");
     addOutput(graph, "out", "relu", "prediction", {}, "relu_to_out");
@@ -41,6 +45,10 @@ describe("neural-network primitives", () => {
     });
     expect(graph.nodeProperties("sum")).toEqual({
       "nn.op": "weighted_sum",
+    });
+    expect(graph.nodeProperties("bias")).toEqual({
+      "nn.op": "constant",
+      "nn.value": 1,
     });
     expect(graph.nodeProperties("relu")).toEqual({
       "nn.op": "activation",
@@ -75,5 +83,23 @@ describe("neural-network primitives", () => {
       "relu",
       "out",
     ]);
+  });
+
+  it("authors an XOR network as explicit graph primitives", () => {
+    const network = createXorNetwork();
+
+    expect(network.graph.graphProperties()["nn.name"]).toBe("xor");
+    expect(network.graph.nodeProperties("bias")).toMatchObject({
+      "nn.op": "constant",
+      "nn.value": 1,
+    });
+    expect(network.graph.nodeProperties("h_or")).toMatchObject({
+      "nn.op": "activation",
+      "nn.activation": "sigmoid",
+    });
+    expect(network.graph.edgeProperties("bias_to_out")).toMatchObject({
+      weight: -30,
+    });
+    expect(network.graph.topologicalSort()).toContain("out");
   });
 });
