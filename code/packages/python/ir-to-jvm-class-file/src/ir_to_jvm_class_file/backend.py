@@ -14,6 +14,7 @@ import struct
 from contextlib import suppress
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Final
 
 from compiler_ir import (
     IrImmediate,
@@ -132,6 +133,66 @@ class JVMClassArtifact:
     def class_filename(self) -> str:
         """Return the relative class-file path inside a classpath root."""
         return self.class_name.replace(".", "/") + ".class"
+
+
+# JVM02 Phase 2b — multi-class output for closures.
+#
+# The single-class ``JVMClassArtifact`` is enough for IR programs that
+# don't use closures; closure-enabled programs emit a ``Closure``
+# interface plus one ``Closure_<lambda>`` class per lifted lambda
+# alongside the main user class.  ``JVMMultiClassArtifact`` is the
+# shape that future phases (2c lowering, 2d twig frontend) will
+# return.
+
+# The shared ``Closure`` interface that every closure object
+# implements.  Lives at a fixed binary name under the runtime
+# package so that ``coding_adventures.twig.<assembly>.Closure_<lambda>``
+# classes can reference it via a stable ``Closure`` symbol.
+CLOSURE_INTERFACE_BINARY_NAME: Final = (
+    "coding_adventures/twig/runtime/Closure"
+)
+
+# The single method on ``Closure``: ``int apply(int[] args)``.
+# Future closure-apply lowering uses ``invokeinterface`` against
+# this descriptor.
+CLOSURE_INTERFACE_METHOD_NAME: Final = "apply"
+CLOSURE_INTERFACE_METHOD_DESCRIPTOR: Final = "([I)I"
+
+
+@dataclass(frozen=True)
+class JVMMultiClassArtifact:
+    """A multi-class lowering result — the main user class plus any
+    closure-support classes.
+
+    JVM02 Phase 2b ships the data shape and the ``Closure`` interface;
+    Phase 2c populates ``classes`` with one ``Closure_<name>`` per
+    lifted lambda; Phase 2d wires the JAR packaging.
+
+    Invariant: ``classes[0]`` is always the main user class (whose
+    ``class_name`` matches ``JvmBackendConfig.class_name``).
+    Subsequent entries are runtime helpers / closure subclasses in
+    a deterministic order so callers can rely on the layout when
+    constructing JARs.
+    """
+
+    classes: tuple[JVMClassArtifact, ...]
+
+    @property
+    def main(self) -> JVMClassArtifact:
+        """The main user-program class — the JAR's ``Main-Class``."""
+        if not self.classes:
+            msg = (
+                "JVMMultiClassArtifact must contain at least the main "
+                "user class"
+            )
+            raise JvmBackendError(msg)
+        return self.classes[0]
+
+    @property
+    def class_filenames(self) -> tuple[str, ...]:
+        """Relative ``.class`` paths for every artifact, suitable for
+        passing to a JAR builder."""
+        return tuple(a.class_filename for a in self.classes)
 
 
 @dataclass(frozen=True)
@@ -1486,6 +1547,148 @@ def lower_ir_to_jvm_class_file(
             f"({len(errors)} error{'s' if len(errors) != 1 else ''}): {joined}"
         )
     return _JvmClassLowerer(program, config).lower()
+
+
+# JVM02 Phase 2b — interface and multi-class API.
+
+# JVM access flags for a public abstract interface (JVMS §4.1).
+_ACC_INTERFACE: Final[int] = 0x0200
+_ACC_ABSTRACT: Final[int] = 0x0400
+
+
+def build_closure_interface_artifact() -> JVMClassArtifact:
+    """Return the ``Closure`` interface as a ``JVMClassArtifact``.
+
+    The interface declares one abstract method
+    ``int apply(int[] args)``.  Closure subclasses (emitted in
+    Phase 2c, one per lifted lambda) implement it.  ``APPLY_CLOSURE``
+    sites lower to ``invokeinterface Closure.apply([I)I``, which
+    HotSpot can monomorphise at warm-up.
+
+    The class lives under
+    ``coding_adventures.twig.runtime.Closure`` (see
+    ``CLOSURE_INTERFACE_BINARY_NAME``) — a stable location every
+    closure-aware artifact references.
+
+    Phase 2b ships this as a standalone callable so that:
+      * tests can verify the interface bytecode loads cleanly under
+        real ``java`` (catches verifier complaints early);
+      * the Phase 2d JAR-packaging step can include it without the
+        full Phase 2c lowering being implemented yet.
+    """
+    interface_class_name = CLOSURE_INTERFACE_BINARY_NAME
+    super_class_name = "java/lang/Object"
+    method_name = CLOSURE_INTERFACE_METHOD_NAME
+    method_descriptor = CLOSURE_INTERFACE_METHOD_DESCRIPTOR
+
+    class_bytes = _build_interface_class_bytes(
+        class_name=interface_class_name,
+        super_class_name=super_class_name,
+        abstract_methods=((method_name, method_descriptor),),
+    )
+
+    # Restore dotted form for ``JVMClassArtifact.class_name`` so the
+    # ``class_filename`` property produces ``coding_adventures/twig/
+    # runtime/Closure.class`` correctly.
+    dotted_name = interface_class_name.replace("/", ".")
+    return JVMClassArtifact(
+        class_name=dotted_name,
+        class_bytes=class_bytes,
+        callable_labels=(),
+        data_offsets={},
+    )
+
+
+def lower_ir_to_jvm_classes(
+    program: IrProgram,
+    config: JvmBackendConfig,
+    *,
+    include_closure_interface: bool = False,
+) -> JVMMultiClassArtifact:
+    """Lower ``program`` into one or more JVM class artifacts.
+
+    The result always contains the main user class as
+    ``classes[0]``.  When ``include_closure_interface=True`` the
+    shared ``Closure`` interface is appended so the caller can drop
+    both into a JAR.
+
+    Phase 2b only emits the main class + (optionally) the interface
+    — it does NOT yet emit per-lambda closure subclasses.
+    Phase 2c will fold those in once ``MAKE_CLOSURE`` /
+    ``APPLY_CLOSURE`` lowering lands.
+    """
+    main = lower_ir_to_jvm_class_file(program, config)
+    classes: list[JVMClassArtifact] = [main]
+    if include_closure_interface:
+        classes.append(build_closure_interface_artifact())
+    return JVMMultiClassArtifact(classes=tuple(classes))
+
+
+def _build_interface_class_bytes(
+    *,
+    class_name: str,
+    super_class_name: str,
+    abstract_methods: tuple[tuple[str, str], ...],
+) -> bytes:
+    """Hand-roll a JVM interface ``.class`` byte stream.
+
+    ``build_minimal_class_file`` only knows how to emit a single
+    concrete method with a Code attribute, but interface methods
+    have no Code attribute and the class itself has the
+    ``ACC_INTERFACE | ACC_ABSTRACT`` flags.  Open-coding the layout
+    is small enough (~50 lines) that adding a new public API to
+    ``jvm-class-file`` would be heavier than just emitting bytes
+    directly here.
+
+    Layout per JVMS §4.1:
+
+        magic                       u4 = 0xCAFEBABE
+        minor_version               u2 = 0
+        major_version               u2 = 49 (Java 5; matches main class)
+        constant_pool_count         u2
+        constant_pool[]             cp_info...
+        access_flags                u2 = ACC_PUBLIC | ACC_INTERFACE | ACC_ABSTRACT
+        this_class                  u2 = CONSTANT_Class index
+        super_class                 u2 = CONSTANT_Class for java/lang/Object
+        interfaces_count            u2 = 0
+        fields_count                u2 = 0
+        methods_count               u2 = N
+        method_info[]               method_info...
+        attributes_count            u2 = 0
+    """
+    pool = _ConstantPoolBuilder()
+    this_class_index = pool.class_ref(class_name)
+    super_class_index = pool.class_ref(super_class_name)
+
+    method_blobs: list[bytes] = []
+    for name, descriptor in abstract_methods:
+        method_access = ACC_PUBLIC | _ACC_ABSTRACT
+        method_blobs.append(
+            _u2(method_access)
+            + _u2(pool.utf8(name))
+            + _u2(pool.utf8(descriptor))
+            + _u2(0)  # 0 attributes — abstract methods have no Code.
+        )
+
+    pool_bytes = pool.encode()
+    access_flags = ACC_PUBLIC | _ACC_INTERFACE | _ACC_ABSTRACT
+    return b"".join(
+        [
+            b"\xca\xfe\xba\xbe",
+            _u2(0),                          # minor_version
+            _u2(49),                         # major_version (Java 5)
+            _u2(pool.count),                 # constant_pool_count
+            pool_bytes,
+            _u2(access_flags),
+            _u2(this_class_index),
+            _u2(super_class_index),
+            _u2(0),                          # interfaces_count
+            _u2(0),                          # fields_count
+            _u2(len(method_blobs)),          # methods_count
+            *method_blobs,
+            _u2(0),                          # attributes_count
+        ]
+    )
 
 
 def write_class_file(artifact: JVMClassArtifact, output_dir: str | Path) -> Path:

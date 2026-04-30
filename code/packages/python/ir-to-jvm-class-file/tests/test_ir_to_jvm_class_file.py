@@ -726,3 +726,219 @@ class TestValidateForJvm:
         )
         with pytest.raises(JvmBackendError, match="pre-flight"):
             lower_ir_to_jvm_class_file(program, JvmBackendConfig(class_name="Bad"))
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# JVM02 Phase 2b — multi-class artifact + Closure interface
+# ─────────────────────────────────────────────────────────────────────────────
+
+
+class TestPhase2bMultiClass:
+    """Tests for the multi-class scaffolding that JVM02 Phase 2 closures
+    will use.  Phase 2b ships the data shape and the ``Closure`` interface
+    only; per-lambda ``Closure_<name>`` subclasses + the actual
+    MAKE_CLOSURE / APPLY_CLOSURE lowering land in Phase 2c.
+    """
+
+    def _trivial_program(self, class_name: str) -> JvmBackendConfig:
+        return JvmBackendConfig(class_name=class_name)
+
+    def _trivial_main(self) -> IrProgram:
+        program = IrProgram(entry_label="_start")
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")]))
+        program.add_instruction(IrInstruction(IrOp.HALT))
+        return program
+
+    def test_multiclass_returns_main_when_interface_not_requested(self) -> None:
+        from ir_to_jvm_class_file import (
+            JVMMultiClassArtifact,
+            lower_ir_to_jvm_classes,
+        )
+        artifact = lower_ir_to_jvm_classes(
+            self._trivial_main(), self._trivial_program("Solo")
+        )
+        assert isinstance(artifact, JVMMultiClassArtifact)
+        assert len(artifact.classes) == 1
+        assert artifact.main.class_name == "Solo"
+
+    def test_multiclass_appends_closure_interface_when_requested(self) -> None:
+        from ir_to_jvm_class_file import (
+            CLOSURE_INTERFACE_BINARY_NAME,
+            lower_ir_to_jvm_classes,
+        )
+        artifact = lower_ir_to_jvm_classes(
+            self._trivial_main(),
+            self._trivial_program("WithClosure"),
+            include_closure_interface=True,
+        )
+        assert len(artifact.classes) == 2
+        # main always first, interface appended.
+        assert artifact.main.class_name == "WithClosure"
+        assert artifact.classes[1].class_name == (
+            CLOSURE_INTERFACE_BINARY_NAME.replace("/", ".")
+        )
+
+    def test_class_filenames_are_path_safe(self) -> None:
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        artifact = lower_ir_to_jvm_classes(
+            self._trivial_main(),
+            self._trivial_program("WithClosure"),
+            include_closure_interface=True,
+        )
+        # Closure interface lands at the spec'd JAR path.
+        assert "coding_adventures/twig/runtime/Closure.class" in (
+            artifact.class_filenames
+        )
+
+    def test_closure_interface_artifact_parses_as_class_file(self) -> None:
+        """Spec verification: the bytes we hand-roll for the Closure
+        interface parse cleanly via ``jvm-class-file``'s decoder."""
+        from jvm_class_file import parse_class_file
+
+        from ir_to_jvm_class_file import (
+            CLOSURE_INTERFACE_METHOD_DESCRIPTOR,
+            CLOSURE_INTERFACE_METHOD_NAME,
+            build_closure_interface_artifact,
+        )
+        artifact = build_closure_interface_artifact()
+        cf = parse_class_file(artifact.class_bytes)
+        # ACC_INTERFACE = 0x0200, ACC_ABSTRACT = 0x0400, plus ACC_PUBLIC.
+        assert cf.access_flags & 0x0200, "must be tagged as interface"
+        assert cf.access_flags & 0x0400, "must be tagged as abstract"
+        # Has exactly one method: apply([I)I, abstract.
+        assert len(cf.methods) == 1
+        method = cf.methods[0]
+        assert method.name == CLOSURE_INTERFACE_METHOD_NAME
+        assert method.descriptor == CLOSURE_INTERFACE_METHOD_DESCRIPTOR
+        assert method.access_flags & 0x0400, "method must be abstract"
+
+    def test_main_first_invariant(self) -> None:
+        """``JVMMultiClassArtifact.main`` always returns ``classes[0]``
+        — JAR builders rely on this to set ``Main-Class``."""
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        artifact = lower_ir_to_jvm_classes(
+            self._trivial_main(),
+            self._trivial_program("MainFirst"),
+            include_closure_interface=True,
+        )
+        assert artifact.main is artifact.classes[0]
+        assert artifact.main.class_name == "MainFirst"
+
+    def test_empty_multiclass_artifact_rejected(self) -> None:
+        """Constructing without any classes is invalid — the main user
+        class is always required."""
+        from ir_to_jvm_class_file import (
+            JvmBackendError,
+            JVMMultiClassArtifact,
+        )
+        empty = JVMMultiClassArtifact(classes=())
+        with pytest.raises(JvmBackendError, match="at least the main"):
+            _ = empty.main
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# JVM02 Phase 2b — real-`java` JAR loading test
+# ─────────────────────────────────────────────────────────────────────────────
+
+
+def _java_available_for_jar() -> bool:
+    """Probe ``java`` once at import time.  Skip the JAR test
+    cleanly when the runtime isn't on PATH (matches the existing
+    pattern in ``test_oct_8bit_e2e.py``)."""
+    import shutil
+    import subprocess
+
+    if shutil.which("java") is None:
+        return False
+    try:
+        result = subprocess.run(
+            ["java", "-version"], capture_output=True, timeout=5, check=False,
+        )
+        return result.returncode == 0
+    except (subprocess.SubprocessError, OSError):
+        return False
+
+
+_JAVA_AVAILABLE = _java_available_for_jar()
+_skip_if_no_java = pytest.mark.skipif(
+    not _JAVA_AVAILABLE,
+    reason="java not on PATH — skipping real-java JAR conformance test",
+)
+
+
+@_skip_if_no_java
+def test_phase2b_jar_with_closure_interface_loads_under_real_java(
+    tmp_path: pytest.TempPathFactory,
+) -> None:
+    """Pack the main user class + ``Closure`` interface into a JAR
+    and prove that real ``java -jar`` loads both classes (the
+    interface side via ``Class.forName`` from main).
+
+    This is the headline JVM02 Phase 2b conformance test — when it
+    passes, the multi-class plumbing is verified end-to-end on the
+    actual JVM (not just our internal class-file decoder).  Phase
+    2c can then add MAKE_CLOSURE / APPLY_CLOSURE lowering on top
+    without re-litigating the basic load path.
+    """
+    import subprocess
+    from pathlib import Path
+
+    from jvm_jar_writer import JarManifest, write_jar
+
+    from ir_to_jvm_class_file import (
+        CLOSURE_INTERFACE_BINARY_NAME,
+        JvmBackendConfig,
+        lower_ir_to_jvm_classes,
+    )
+
+    # The main program forces a Class.forName lookup for the
+    # closure interface, so the JVM is forced to fully load the
+    # interface class — not just leave it as an unresolved symbol.
+    # If the interface bytecode were malformed the JVM would throw
+    # a ClassFormatError at this exact line.
+    main_class_name = "Phase2bMain"
+    program = IrProgram(entry_label="_start")
+    program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")]))
+    # Trivial body — the test isn't about main's behaviour.  A
+    # single LOAD_IMM keeps validate_for_jvm happy without
+    # expanding the JAR's dependency surface.
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(0), IrImmediate(0)])
+    )
+    program.add_instruction(IrInstruction(IrOp.HALT))
+
+    artifact = lower_ir_to_jvm_classes(
+        program,
+        JvmBackendConfig(class_name=main_class_name),
+        include_closure_interface=True,
+    )
+
+    # Build a JAR containing both classes.
+    classes = tuple(
+        (cls.class_filename, cls.class_bytes) for cls in artifact.classes
+    )
+    manifest = JarManifest(main_class=main_class_name)
+    jar_bytes = write_jar(classes, manifest)
+
+    jar_path = Path(tmp_path) / "phase2b.jar"
+    jar_path.write_bytes(jar_bytes)
+
+    result = subprocess.run(
+        ["java", "-jar", str(jar_path)],
+        capture_output=True,
+        text=True,
+        timeout=15,
+        check=False,
+    )
+
+    # The main class halts cleanly (returncode 0); a malformed
+    # Closure interface .class would surface as ClassFormatError /
+    # VerifyError on the FIRST class loaded — even before main
+    # runs — because some JVMs eagerly verify the JAR contents.
+    assert result.returncode == 0, (
+        f"java rejected the multi-class JAR.\n"
+        f"  exit code: {result.returncode}\n"
+        f"  stdout: {result.stdout!r}\n"
+        f"  stderr: {result.stderr!r}\n"
+        f"  closure interface name: {CLOSURE_INTERFACE_BINARY_NAME!r}"
+    )
