@@ -21,6 +21,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         "\0".to_string(),
         "\t".to_string(),
         "\n".to_string(),
+        "\u{C}".to_string(),
         "\r".to_string(),
         " ".to_string(),
         "!".to_string(),
@@ -3171,6 +3172,21 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "rcdata_end_tag_name".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\u{C}".to_string())),
+            to: vec![
+                "rcdata_end_tag_whitespace".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "rcdata_end_tag_name".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Literal("/".to_string())),
             to: vec![
                 "rcdata_self_closing_end_tag".to_string(),
@@ -3280,6 +3296,21 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             from: "rawtext_end_tag_name".to_string(),
             on: None,
             matcher: Some(MatcherDefinition::Literal("\r".to_string())),
+            to: vec![
+                "rawtext_end_tag_whitespace".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "rawtext_end_tag_name".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\u{C}".to_string())),
             to: vec![
                 "rawtext_end_tag_whitespace".to_string(),
             ],
@@ -3417,6 +3448,21 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "script_data_end_tag_name".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\u{C}".to_string())),
+            to: vec![
+                "script_data_end_tag_whitespace".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "script_data_end_tag_name".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Literal("/".to_string())),
             to: vec![
                 "script_data_self_closing_end_tag".to_string(),
@@ -3540,6 +3586,21 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "script_data_escaped_end_tag_name".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\u{C}".to_string())),
+            to: vec![
+                "script_data_escaped_end_tag_whitespace".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "script_data_escaped_end_tag_name".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Literal("/".to_string())),
             to: vec![
                 "script_data_escaped_self_closing_end_tag".to_string(),
@@ -3634,6 +3695,21 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             from: "rcdata_end_tag_whitespace".to_string(),
             on: None,
             matcher: Some(MatcherDefinition::Literal("\r".to_string())),
+            to: vec![
+                "rcdata_end_tag_whitespace".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "rcdata_end_tag_whitespace".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\u{C}".to_string())),
             to: vec![
                 "rcdata_end_tag_whitespace".to_string(),
             ],
@@ -3770,6 +3846,21 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "rawtext_end_tag_whitespace".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\u{C}".to_string())),
+            to: vec![
+                "rawtext_end_tag_whitespace".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "rawtext_end_tag_whitespace".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Literal(">".to_string())),
             to: vec![
                 "rawtext".to_string(),
@@ -3892,6 +3983,21 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "script_data_end_tag_whitespace".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\u{C}".to_string())),
+            to: vec![
+                "script_data_end_tag_whitespace".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "script_data_end_tag_whitespace".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Literal(">".to_string())),
             to: vec![
                 "script_data".to_string(),
@@ -4000,6 +4106,21 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             from: "script_data_escaped_end_tag_whitespace".to_string(),
             on: None,
             matcher: Some(MatcherDefinition::Literal("\r".to_string())),
+            to: vec![
+                "script_data_escaped_end_tag_whitespace".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "script_data_escaped_end_tag_whitespace".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\u{C}".to_string())),
             to: vec![
                 "script_data_escaped_end_tag_whitespace".to_string(),
             ],
@@ -7175,6 +7296,19 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "tag_name".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\u{C}".to_string())),
+            to: vec![
+                "before_attribute_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "tag_name".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Literal("/".to_string())),
             to: vec![
                 "self_closing_start_tag".to_string(),
@@ -7291,6 +7425,19 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             from: "before_attribute_name".to_string(),
             on: None,
             matcher: Some(MatcherDefinition::Literal("\r".to_string())),
+            to: vec![
+                "before_attribute_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "before_attribute_name".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\u{C}".to_string())),
             to: vec![
                 "before_attribute_name".to_string(),
             ],
@@ -7450,6 +7597,19 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "attribute_name".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\u{C}".to_string())),
+            to: vec![
+                "after_attribute_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "attribute_name".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Literal("/".to_string())),
             to: vec![
                 "self_closing_start_tag".to_string(),
@@ -7583,6 +7743,19 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             from: "after_attribute_name".to_string(),
             on: None,
             matcher: Some(MatcherDefinition::Literal("\r".to_string())),
+            to: vec![
+                "after_attribute_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "after_attribute_name".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\u{C}".to_string())),
             to: vec![
                 "after_attribute_name".to_string(),
             ],
@@ -7732,6 +7905,19 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             from: "before_attribute_value".to_string(),
             on: None,
             matcher: Some(MatcherDefinition::Literal("\r".to_string())),
+            to: vec![
+                "before_attribute_value".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "before_attribute_value".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\u{C}".to_string())),
             to: vec![
                 "before_attribute_value".to_string(),
             ],
@@ -8061,6 +8247,21 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             from: "attribute_value_unquoted".to_string(),
             on: None,
             matcher: Some(MatcherDefinition::Literal("\r".to_string())),
+            to: vec![
+                "before_attribute_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "commit_attribute_dedup".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "attribute_value_unquoted".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\u{C}".to_string())),
             to: vec![
                 "before_attribute_name".to_string(),
             ],
@@ -10623,6 +10824,19 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "after_attribute_value_quoted".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\u{C}".to_string())),
+            to: vec![
+                "before_attribute_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "after_attribute_value_quoted".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Literal("/".to_string())),
             to: vec![
                 "self_closing_start_tag".to_string(),
@@ -12251,6 +12465,19 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "doctype_after_keyword".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\u{C}".to_string())),
+            to: vec![
+                "before_doctype_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "doctype_after_keyword".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Literal(">".to_string())),
             to: vec![
                 "data".to_string(),
@@ -12371,6 +12598,19 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "before_doctype_name".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\u{C}".to_string())),
+            to: vec![
+                "before_doctype_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "before_doctype_name".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Literal(">".to_string())),
             to: vec![
                 "data".to_string(),
@@ -12489,6 +12729,19 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "doctype_name".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\u{C}".to_string())),
+            to: vec![
+                "after_doctype_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "doctype_name".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Literal(">".to_string())),
             to: vec![
                 "data".to_string(),
@@ -12593,6 +12846,19 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             from: "after_doctype_name".to_string(),
             on: None,
             matcher: Some(MatcherDefinition::Literal("\r".to_string())),
+            to: vec![
+                "after_doctype_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "after_doctype_name".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\u{C}".to_string())),
             to: vec![
                 "after_doctype_name".to_string(),
             ],
@@ -13358,6 +13624,19 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "after_doctype_public_keyword".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\u{C}".to_string())),
+            to: vec![
+                "before_doctype_public_identifier".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "after_doctype_public_keyword".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Literal("\"".to_string())),
             to: vec![
                 "doctype_public_identifier_double_quoted".to_string(),
@@ -13481,6 +13760,19 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             from: "before_doctype_public_identifier".to_string(),
             on: None,
             matcher: Some(MatcherDefinition::Literal("\r".to_string())),
+            to: vec![
+                "before_doctype_public_identifier".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "before_doctype_public_identifier".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\u{C}".to_string())),
             to: vec![
                 "before_doctype_public_identifier".to_string(),
             ],
@@ -13784,6 +14076,19 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "after_doctype_public_identifier".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\u{C}".to_string())),
+            to: vec![
+                "between_doctype_public_and_system_identifiers".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "after_doctype_public_identifier".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Literal(">".to_string())),
             to: vec![
                 "data".to_string(),
@@ -13917,6 +14222,19 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "between_doctype_public_and_system_identifiers".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\u{C}".to_string())),
+            to: vec![
+                "between_doctype_public_and_system_identifiers".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "between_doctype_public_and_system_identifiers".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Literal(">".to_string())),
             to: vec![
                 "data".to_string(),
@@ -14036,6 +14354,19 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             from: "after_doctype_system_keyword".to_string(),
             on: None,
             matcher: Some(MatcherDefinition::Literal("\r".to_string())),
+            to: vec![
+                "before_doctype_system_identifier".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "after_doctype_system_keyword".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\u{C}".to_string())),
             to: vec![
                 "before_doctype_system_identifier".to_string(),
             ],
@@ -14171,6 +14502,19 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             from: "before_doctype_system_identifier".to_string(),
             on: None,
             matcher: Some(MatcherDefinition::Literal("\r".to_string())),
+            to: vec![
+                "before_doctype_system_identifier".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "before_doctype_system_identifier".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\u{C}".to_string())),
             to: vec![
                 "before_doctype_system_identifier".to_string(),
             ],
@@ -14462,6 +14806,19 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             from: "after_doctype_system_identifier".to_string(),
             on: None,
             matcher: Some(MatcherDefinition::Literal("\r".to_string())),
+            to: vec![
+                "after_doctype_system_identifier".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "after_doctype_system_identifier".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\u{C}".to_string())),
             to: vec![
                 "after_doctype_system_identifier".to_string(),
             ],
@@ -14634,6 +14991,19 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "before_end_tag_close".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\u{C}".to_string())),
+            to: vec![
+                "before_end_tag_close".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "before_end_tag_close".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Literal(">".to_string())),
             to: vec![
                 "data".to_string(),
@@ -14787,6 +15157,21 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             from: "end_tag_name".to_string(),
             on: None,
             matcher: Some(MatcherDefinition::Literal("\r".to_string())),
+            to: vec![
+                "before_end_tag_close".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-whitespace-after-end-tag-name)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "end_tag_name".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\u{C}".to_string())),
             to: vec![
                 "before_end_tag_close".to_string(),
             ],

@@ -68,6 +68,35 @@ fn default_html_lexer_supports_html1_attributes_comments_and_doctypes() {
 }
 
 #[test]
+fn default_html_lexer_treats_form_feed_as_tag_whitespace() {
+    let tokens = lex_html("<p\u{000C}class=test\u{000C}data-x=one\u{000C}/></p\u{000C}>").unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::StartTag {
+                name: "p".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "class".to_string(),
+                        value: "test".to_string(),
+                    },
+                    Attribute {
+                        name: "data-x".to_string(),
+                        value: "one".to_string(),
+                    },
+                ],
+                self_closing: true,
+            },
+            Token::EndTag {
+                name: "p".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_reports_and_drops_duplicate_attributes() {
     let mut lexer = create_html_lexer().unwrap();
 
@@ -472,6 +501,27 @@ fn default_html_lexer_supports_public_and_system_doctype_identifiers() {
 }
 
 #[test]
+fn default_html_lexer_treats_form_feed_as_doctype_whitespace() {
+    let tokens = lex_html(
+        "<!DOCTYPE\u{000C}html\u{000C}PUBLIC\u{000C}'-//W3C//DTD HTML 4.01//EN'\u{000C}\"about:legacy-compat\"\u{000C}>",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: Some("-//W3C//DTD HTML 4.01//EN".to_string()),
+                system_identifier: Some("about:legacy-compat".to_string()),
+                force_quirks: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_standalone_system_doctype_identifier() {
     let tokens = lex_html("<!DOCTYPE html SYSTEM \"about:legacy-compat\">").unwrap();
 
@@ -818,6 +868,38 @@ fn default_html_lexer_recovers_end_tag_with_whitespace_then_trailing_solidus() {
 }
 
 #[test]
+fn default_html_lexer_recovers_end_tag_with_form_feed_then_trailing_solidus() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("Before</p\u{000C}/>After").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("Before".to_string()),
+            Token::EndTag {
+                name: "p".to_string()
+            },
+            Token::Text("After".to_string()),
+            Token::Eof,
+        ]
+    );
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "unexpected-whitespace-after-end-tag-name"));
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "end-tag-with-trailing-solidus"));
+    assert!(!lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "end-tag-with-attributes"));
+}
+
+#[test]
 fn default_html_lexer_recovers_end_tag_with_attributes() {
     let mut lexer = create_html_lexer().unwrap();
 
@@ -1121,6 +1203,82 @@ fn default_html_lexer_recovers_seeded_text_mode_end_tags_with_whitespace_then_tr
                 .iter()
                 .any(|diagnostic| diagnostic.code == "end-tag-with-attributes"),
             "state {initial_state} should not treat the solidus as attributes"
+        );
+    }
+}
+
+#[test]
+fn default_html_lexer_recovers_seeded_text_mode_end_tags_with_form_feed() {
+    for (initial_state, last_start_tag, text) in [
+        ("rcdata", "title", "Hello"),
+        ("rawtext", "style", "body {}"),
+        ("script_data", "script", "if (ready)"),
+        ("script_data_escaped", "script", "<!-- ok -->"),
+    ] {
+        let mut lexer = create_html_lexer().unwrap();
+        lexer.set_initial_state(initial_state).unwrap();
+        lexer.set_last_start_tag(last_start_tag);
+
+        lexer
+            .push(&format!("{text}</{last_start_tag}\u{000C}>"))
+            .unwrap();
+        lexer.finish().unwrap();
+
+        assert_eq!(
+            lexer.drain_tokens(),
+            vec![
+                Token::Text(text.to_string()),
+                Token::EndTag {
+                    name: last_start_tag.to_string()
+                },
+                Token::Eof,
+            ],
+            "state {initial_state} should emit the appropriate end tag"
+        );
+        assert!(
+            lexer
+                .diagnostics()
+                .iter()
+                .any(|diagnostic| diagnostic.code == "unexpected-whitespace-after-end-tag-name"),
+            "state {initial_state} should report form-feed whitespace recovery"
+        );
+    }
+}
+
+#[test]
+fn default_html_lexer_recovers_seeded_text_mode_end_tags_with_form_feed_then_trailing_solidus() {
+    for (initial_state, last_start_tag, text) in [
+        ("rcdata", "title", "Hello"),
+        ("rawtext", "style", "body {}"),
+        ("script_data", "script", "if (ready)"),
+        ("script_data_escaped", "script", "<!-- ok -->"),
+    ] {
+        let mut lexer = create_html_lexer().unwrap();
+        lexer.set_initial_state(initial_state).unwrap();
+        lexer.set_last_start_tag(last_start_tag);
+
+        lexer
+            .push(&format!("{text}</{last_start_tag}\u{000C}/>"))
+            .unwrap();
+        lexer.finish().unwrap();
+
+        assert_eq!(
+            lexer.drain_tokens(),
+            vec![
+                Token::Text(text.to_string()),
+                Token::EndTag {
+                    name: last_start_tag.to_string()
+                },
+                Token::Eof,
+            ],
+            "state {initial_state} should emit the appropriate end tag"
+        );
+        assert!(
+            lexer
+                .diagnostics()
+                .iter()
+                .any(|diagnostic| diagnostic.code == "end-tag-with-trailing-solidus"),
+            "state {initial_state} should report trailing solidus recovery"
         );
     }
 }
