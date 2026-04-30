@@ -1,5 +1,27 @@
 # Changelog — twig-jvm-compiler
 
+## [0.6.0] — 2026-04-29 — multi-arity closures
+
+Multi-arg lambdas like `(lambda (x y) (+ x y))` now run on real
+`java`.  Pre-fix, every closure was silently treated as arity-1:
+the closure subclass's `apply([I)I` only forwarded `args[0]` and
+the lifted lambda's static method was emitted with
+`num_free + 1` int params, dropping every arg past the first.
+
+Frontend now records each lifted lambda's source-level param
+count in `closure_explicit_arities` (parallel to
+`closure_free_var_counts`) so the JVM backend's lifted-lambda
+emission and per-closure `apply` forwarder reserve the right
+number of int slots.
+
+### Acceptance
+
+* `((lambda (x y) (+ x y)) 4 5) → 9`
+* `((lambda (a b c) (+ a (+ b c))) 1 2 3) → 6`
+* `((make-add-pair 10) 4 5) → 19`  (capture + 2 explicit args)
+
+All on real `java`.
+
 ## [0.5.0] — 2026-04-30 — mutual recursion + let-bound-twice + 3-deep curry
 
 Three cross-region bug fixes that bring more Twig source patterns

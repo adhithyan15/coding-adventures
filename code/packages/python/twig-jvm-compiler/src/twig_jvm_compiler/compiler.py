@@ -806,14 +806,25 @@ def compile_source(
     # ir-to-jvm-class-file uses this to detect closure regions and
     # auto-generate the ``Closure`` interface + per-lambda
     # ``Closure_<name>`` subclasses.
+    #
+    # Multi-arity follow-up: also record each lambda's explicit
+    # arity (its source-level param count, NOT counting captures)
+    # so the backend's lifted-lambda emission and the closure
+    # subclass's ``Apply`` forwarder reserve the right number of
+    # int-arg slots.  Without this every lambda would be treated
+    # as arity-1 — multi-arg lambdas like ``(lambda (x y) (+ x y))``
+    # would silently drop the second arg.
     closure_free_var_counts: dict[str, int] = {}
-    for lifted_name, captures, _lam in compiler._lifted_lambdas:  # noqa: SLF001
+    closure_explicit_arities: dict[str, int] = {}
+    for lifted_name, captures, lam in compiler._lifted_lambdas:  # noqa: SLF001
         closure_free_var_counts[lifted_name] = len(captures)
+        closure_explicit_arities[lifted_name] = len(lam.params)
 
     config = JvmBackendConfig(
         class_name=class_name,
         emit_main_wrapper=True,
         closure_free_var_counts=closure_free_var_counts,
+        closure_explicit_arities=closure_explicit_arities,
     )
 
     # TW03 Phase 3e: heap-primitive programs also need the multi-class

@@ -1,5 +1,54 @@
 # Changelog
 
+## 0.11.0 — 2026-04-29 — multi-arity closures (IClosure.Apply takes int32[])
+
+`IClosure.Apply` now takes `int32[]` (was `int32`) so closures
+of any arity share a single uniform call site.  The arity-1 hard
+limit on `APPLY_CLOSURE` is gone.
+
+### Interface signature change
+
+```csharp
+interface IClosure {
+    object Apply(int32[] args);   // was: object Apply(int32 arg)
+}
+```
+
+### Closure subclass prologue
+
+The Apply prologue now extracts each explicit arg from the
+`int32[]` parameter via `ldarg.1; ldc.i4 i; ldelem.i4` and stores
+into the captures-first slot `r{2 + num_free + i}`.  Per-closure
+explicit arity comes from `CILBackendConfig.closure_explicit_arities`
+(defaults to 1 for back-compat).
+
+### APPLY_CLOSURE call site
+
+```cil
+ldloc closure
+ldc.i4 num_args                       ; size of args[]
+newarr [System.Runtime]System.Int32   ; allocate int32[num_args]
+; for each arg i:
+dup
+ldc.i4 i
+ldloc arg_i
+stelem.i4
+callvirt instance object IClosure::Apply(int32[])
+```
+
+### CILBackendConfig
+
+New field `closure_explicit_arities: dict[str, int]` parallel to
+the existing `closure_free_var_counts`.  `twig-clr-compiler`
+populates both from each lifted lambda's source-level param list.
+
+### Mirrors JVM `apply([I)I`
+
+The CLR `IClosure.Apply(int32[])` shape mirrors the JVM
+`Closure.apply([I)I` interface that ir-to-jvm-class-file already
+ships.  Both backends now accept any-arity closures from a single
+uniform call site.
+
 ## 0.10.0 — 2026-04-30 — heterogeneous cons cells (Cons.head widened to object)
 
 `Cons.head` is now typed `object` (was `int32`) so cons cells can

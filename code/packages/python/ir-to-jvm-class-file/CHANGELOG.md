@@ -1,5 +1,34 @@
 # ir-to-jvm-class-file
 
+## 0.15.0 — 2026-04-29 — multi-arity closures (per-region explicit_arity)
+
+The lifted-lambda emission and per-closure subclass `apply([I)I`
+forwarder now honour each closure's explicit arity (was
+hard-coded arity 1 with a `_CLR_CLOSURE_EXPLICIT_ARITY` constant).
+
+### What changed
+
+* `JvmBackendConfig.closure_explicit_arities: dict[str, int]` — new
+  field, parallel to `closure_free_var_counts`.  Maps lifted lambda
+  region name → number of source-level explicit args (NOT counting
+  captures).  Defaults to 1 per region for back-compat.
+* `_build_lifted_lambda_method` reads `explicit_arity` from config
+  and emits the static method with `num_free + explicit_arity` int
+  params.
+* `build_closure_subclass_artifact(..., explicit_arity=1)` — new
+  kwarg.  The `apply([I)I` body's prologue forwards `args[0..n-1]`
+  for `n = explicit_arity` and `invokestatic`s the lifted lambda's
+  static method with the matching descriptor.
+* `lower_ir_to_jvm_classes` plumbs each closure's arity through to
+  `build_closure_subclass_artifact` from
+  `config.closure_explicit_arities`.
+
+### Frontend wiring
+
+`twig-jvm-compiler` now records each lifted lambda's source-level
+param count in `closure_explicit_arities` so multi-arg lambdas like
+`(lambda (x y) (+ x y))` no longer silently drop the second arg.
+
 ## 0.14.0 — 2026-04-30 — heterogeneous cons cells (Cons.head widened to Object)
 
 `Cons.head` is now typed `Object` (was `int`) so cons cells can

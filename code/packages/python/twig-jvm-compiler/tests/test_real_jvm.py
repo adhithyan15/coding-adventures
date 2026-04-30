@@ -341,3 +341,52 @@ def test_heap_car_of_nested_cons_succeeds() -> None:
     result = run_source(src, class_name="TwCarPair")
     assert result.returncode == 0, result.stderr
     assert result.stdout == bytes([1])
+
+
+# ── Multi-arity closures ─────────────────────────────────────────────────
+
+@requires_java
+def test_two_arg_lambda() -> None:
+    """``((lambda (x y) (+ x y)) 4 5) → 9``.
+
+    Multi-arity follow-up: pre-fix, every closure was treated as
+    arity-1 — the second arg was silently dropped because the
+    closure subclass's ``apply([I)I`` only forwarded ``args[0]``
+    and the lifted lambda's static method was emitted with
+    ``num_free + 1`` int slots.  Now the Twig frontend records
+    each lambda's source-level arity in ``closure_explicit_arities``
+    and the backend forwards all explicit args via ``args[i]``.
+    """
+    src = "((lambda (x y) (+ x y)) 4 5)"
+    result = run_source(src, class_name="TwTwoArgLam")
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == bytes([9])
+
+
+@requires_java
+def test_three_arg_lambda() -> None:
+    """``((lambda (a b c) (+ a (+ b c))) 1 2 3) → 6``."""
+    src = "((lambda (a b c) (+ a (+ b c))) 1 2 3)"
+    result = run_source(src, class_name="TwThreeArgLam")
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == bytes([6])
+
+
+@requires_java
+def test_two_arg_lambda_with_capture() -> None:
+    """``((make-add-pair 10) 4 5) → 19`` — capture + 2 explicit args.
+
+    Stresses both axes of the closure layout: ``num_free=1`` for
+    the captured ``base`` and ``explicit_arity=2`` for ``(x y)``.
+    The lifted lambda's static method takes 3 int params
+    ``(base, x, y)``; the closure subclass's apply forwards
+    ``capt0, args[0], args[1]``.
+    """
+    src = """
+        (define (make-add-pair base)
+          (lambda (x y) (+ base (+ x y))))
+        ((make-add-pair 10) 4 5)
+    """
+    result = run_source(src, class_name="TwAddPair")
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == bytes([19])
