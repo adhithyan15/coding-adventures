@@ -56,6 +56,14 @@ _F64_UNARY_MATH_IMPORT_NAMES: dict[IrOp, str] = {
     IrOp.F64_EXP: "f64_exp",
 }
 _F64_UNARY_MATH_OPS = frozenset(_F64_UNARY_MATH_IMPORT_NAMES)
+_F64_BINARY_MATH_IMPORT_NAMES: dict[IrOp, str] = {
+    IrOp.F64_POW: "f64_pow",
+}
+_F64_BINARY_MATH_OPS = frozenset(_F64_BINARY_MATH_IMPORT_NAMES)
+_F64_MATH_IMPORT_NAMES = {
+    **_F64_UNARY_MATH_IMPORT_NAMES,
+    **_F64_BINARY_MATH_IMPORT_NAMES,
+}
 
 _MEMORY_OPS = frozenset(
     {
@@ -168,6 +176,7 @@ _WASM_SUPPORTED_OPCODES: frozenset[IrOp] = frozenset({
     IrOp.F64_ATAN,
     IrOp.F64_LN,
     IrOp.F64_EXP,
+    IrOp.F64_POW,
     IrOp.F64_CMP_EQ,
     IrOp.F64_CMP_NE,
     IrOp.F64_CMP_LT,
@@ -328,6 +337,17 @@ class _ImportContext:
     syscall_function_indices: dict[int, int]
     math_function_indices: dict[IrOp, int]
     scratch_base: int | None
+
+
+def _compiler_math_func_type(opcode: IrOp) -> FuncType:
+    if opcode in _F64_UNARY_MATH_OPS:
+        return FuncType(params=(ValueType.F64,), results=(ValueType.F64,))
+    if opcode in _F64_BINARY_MATH_OPS:
+        return FuncType(
+            params=(ValueType.F64, ValueType.F64),
+            results=(ValueType.F64,),
+        )
+    raise WasmLoweringError(f"unsupported compiler math opcode: {opcode.name}")
 
 
 class IrToWasmCompiler:
@@ -492,7 +512,7 @@ class IrToWasmCompiler:
                 required_syscalls.add(
                     _expect_immediate(instruction.operands[0], "SYSCALL number").value
                 )
-            elif instruction.opcode in _F64_UNARY_MATH_OPS:
+            elif instruction.opcode in _F64_MATH_IMPORT_NAMES:
                 required_math_ops.add(instruction.opcode)
 
         ordered_imports = (
@@ -536,12 +556,11 @@ class IrToWasmCompiler:
         imports = [
             imp for imp in ordered_imports if imp.syscall_number in required_syscalls
         ]
-        math_type = FuncType(params=(ValueType.F64,), results=(ValueType.F64,))
         imports.extend(
             _FunctionImport(
                 module_name=_COMPILER_MATH_MODULE,
-                name=_F64_UNARY_MATH_IMPORT_NAMES[opcode],
-                func_type=math_type,
+                name=_F64_MATH_IMPORT_NAMES[opcode],
+                func_type=_compiler_math_func_type(opcode),
                 math_opcode=opcode,
             )
             for opcode in sorted(required_math_ops, key=int)
@@ -872,6 +891,8 @@ class _FunctionLowerer:
                 | IrOp.F64_EXP
             ):
                 self._emit_f64_unary_math_call(instruction)
+            case IrOp.F64_POW:
+                self._emit_f64_binary_math_call(instruction)
             case IrOp.CMP_EQ:
                 self._emit_binary_numeric("i32.eq", instruction)
             case IrOp.CMP_NE:
@@ -1075,6 +1096,30 @@ class _FunctionLowerer:
                 f"missing compiler math import for {name}"
             )
         self._emit_local_get(src.index)
+        self._emit_opcode("call")
+        self._emit_u32(function_index)
+        self._emit_local_set(dst.index)
+
+    def _emit_f64_binary_math_call(self, instruction: IrInstruction) -> None:
+        dst = _expect_register(
+            instruction.operands[0], f"{instruction.opcode.name} dst"
+        )
+        lhs = _expect_register(
+            instruction.operands[1], f"{instruction.opcode.name} lhs"
+        )
+        rhs = _expect_register(
+            instruction.operands[2], f"{instruction.opcode.name} rhs"
+        )
+        function_index = self.import_context.math_function_indices.get(
+            instruction.opcode
+        )
+        if function_index is None:
+            name = _F64_MATH_IMPORT_NAMES[instruction.opcode]
+            raise WasmLoweringError(
+                f"missing compiler math import for {name}"
+            )
+        self._emit_local_get(lhs.index)
+        self._emit_local_get(rhs.index)
         self._emit_opcode("call")
         self._emit_u32(function_index)
         self._emit_local_set(dst.index)
@@ -1576,6 +1621,7 @@ def _infer_register_types(
                 | IrOp.F64_ATAN
                 | IrOp.F64_LN
                 | IrOp.F64_EXP
+                | IrOp.F64_POW
                 | IrOp.F64_FROM_I32
             ):
                 dst = _expect_register(instruction.operands[0], f"{instruction.opcode.name} dst")

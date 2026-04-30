@@ -47,7 +47,7 @@ All notable changes to this package will be documented in this file.
 - Lowered Phase 7b direct nonlocal block `goto` statements by unwinding exited
   block frames before jumping to the outer ALGOL label.
 - Lowered chained assignments, branch-selected conditional expressions, and
-  ALGOL-left-associative exponentiation for numeric bases with integer
+  ALGOL-left-associative exponentiation for numeric bases with integer or real
   exponents.
 - Lowered bare no-argument typed procedure names as expression calls, including
   use inside read-only by-name eval thunks.
@@ -92,6 +92,9 @@ All notable changes to this package will be documented in this file.
 - Lowered standard real builtin functions `sin`, `cos`, `arctan`, `ln`, and
   `exp` to integer-to-real promotion and the corresponding imported f64 math
   IR opcodes, with nonpositive `ln` guarded by the runtime-failure path.
+- Lowered real exponentiation to integer-to-real promotion and the imported
+  `F64_POW` IR opcode, with NaN results routed through the runtime-failure
+  path.
 
 ## [0.1.0] - 2026-04-20
 

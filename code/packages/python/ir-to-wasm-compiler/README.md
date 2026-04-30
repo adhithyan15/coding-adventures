@@ -32,4 +32,4 @@ integer results are copied into `v1`, while real results are copied into `v31`.
 The f64 lowering path includes arithmetic, comparisons, integer conversion,
 truncation, unary square root via WASM `f64.sqrt`, and standard unary real
 math through typed `compiler_math` imports (`f64_sin`, `f64_cos`, `f64_atan`,
-`f64_ln`, `f64_exp`).
+`f64_ln`, `f64_exp`, `f64_pow`).

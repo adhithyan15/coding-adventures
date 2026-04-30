@@ -1430,6 +1430,15 @@ class TestAlgolIrCompiler:
             for instruction in result.program.instructions
         )
 
+    def test_compiles_real_exponentiation_to_pow_import(self) -> None:
+        result = compile_algol(
+            parse_algol("begin real x; x := 9.0 ** 0.5 end")
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+
+        assert IrOp.F64_POW in opcodes
+        assert IrOp.F64_CMP_NE in opcodes
+
     def test_compiles_chained_assignment_right_to_left(self) -> None:
         result = compile_algol(
             parse_algol("begin integer result, other; result := other := 1 end")

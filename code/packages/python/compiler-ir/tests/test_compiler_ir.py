@@ -113,12 +113,11 @@ class TestIrOp:
         assert IrOp.MAKE_SYMBOL == 60
         assert IrOp.IS_SYMBOL == 61
         assert IrOp.LOAD_NIL == 62
+        assert IrOp.F64_POW == 63
 
     def test_total_opcode_count(self) -> None:
-        """There are exactly 63 opcodes after adding TW03 Phase 3 heap
-        primitives (cons / car / cdr / is_null / is_pair / make_symbol /
-        is_symbol / load_nil)."""
-        assert len(IrOp) == 63
+        """There are exactly 64 opcodes after heap primitives and f64 pow."""
+        assert len(IrOp) == 64
 
     def test_name_to_op_roundtrip(self) -> None:
         """NAME_TO_OP[op.name] == op for every opcode."""
@@ -1030,6 +1029,7 @@ class TestAllOpcodesPrintParse:
             IrOp.F64_ATAN:     [IrRegister(2), IrRegister(1)],
             IrOp.F64_LN:       [IrRegister(2), IrRegister(1)],
             IrOp.F64_EXP:      [IrRegister(2), IrRegister(1)],
+            IrOp.F64_POW:      [IrRegister(3), IrRegister(1), IrRegister(2)],
             # MAKE_CLOSURE dst, fn_label, num_captured, capt0, capt1
             IrOp.MAKE_CLOSURE: [
                 IrRegister(0),

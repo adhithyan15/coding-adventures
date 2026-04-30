@@ -26,7 +26,7 @@ The opcodes are grouped by category:
   Comparison:   CMP_EQ, CMP_NE, CMP_LT, CMP_GT
   Floating:     LOAD_F64_IMM, LOAD_F64, STORE_F64, F64_ADD, ..., F64_FROM_I32,
                 I32_TRUNC_FROM_F64, F64_SQRT, F64_SIN, F64_COS, F64_ATAN,
-                F64_LN, F64_EXP
+                F64_LN, F64_EXP, F64_POW
   Control Flow: LABEL, JUMP, BRANCH_Z, BRANCH_NZ, CALL, RET
   System:       SYSCALL, HALT
   Meta:         NOP, COMMENT
@@ -404,6 +404,11 @@ class IrOp(IntEnum):
     #   Store the nil value into ``dst``.  Used to terminate cons-cell
     #   chains and as the canonical "false" / "empty-list" sentinel.
     LOAD_NIL = 62
+
+    # Binary real power for frontends that need a language-level math runtime.
+    # Appended after TW03 heap opcodes to preserve stable opcode values.
+    #   F64_POW v1, v2, v3 → v1 = pow(v2, v3)
+    F64_POW = 63
 
 
 # Canonical name → opcode mapping. Built from the enum at module load time.

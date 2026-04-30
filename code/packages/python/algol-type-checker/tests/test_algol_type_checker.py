@@ -366,6 +366,11 @@ class TestAlgolTypeChecker:
         result = check_algol(ast)
         assert result.ok
 
+    def test_accepts_real_exponentiation(self) -> None:
+        ast = parse_algol("begin integer result; real x; x := 4.0 ** 0.5 end")
+        result = check_algol(ast)
+        assert result.ok
+
     def test_accepts_standard_numeric_builtin_functions(self) -> None:
         ast = parse_algol(
             "begin integer result; real x, root; "
@@ -401,12 +406,12 @@ class TestAlgolTypeChecker:
             result.diagnostics[0].message
         )
 
-    def test_rejects_real_exponent_for_exponentiation(self) -> None:
-        ast = parse_algol("begin real result; result := 2.0 ** 3.5 end")
+    def test_rejects_non_numeric_exponent_for_exponentiation(self) -> None:
+        ast = parse_algol("begin real result; result := 2.0 ** false end")
         result = check_algol(ast)
         assert not result.ok
         assert (
-            "exponentiation exponent must be integer"
+            "operator requires numeric operand, got boolean"
             in result.diagnostics[0].message
         )
 
