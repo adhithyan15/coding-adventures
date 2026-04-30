@@ -25,6 +25,9 @@ the project, but the first real HTML authoring artifact that must keep HTML
 The default lexer already resolves the core named character references and the
 classic Latin-1 entity set, preserving entity-name case so legacy names such as
 `Agrave` and `agrave` remain distinct.
+Numeric character references report invalid-code-point diagnostics and recover
+with the HTML replacement/remapping rules for null, surrogate, out-of-range,
+noncharacter, and Windows-1252 control references.
 Duplicate attributes recover with HTML semantics: the first attribute value is
 kept, later attributes with the same interpreted name are dropped, and a
 `duplicate-attribute` diagnostic is recorded.

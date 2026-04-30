@@ -1640,6 +1640,47 @@ fn default_html_lexer_supports_numeric_character_references_in_attributes() {
 }
 
 #[test]
+fn default_html_lexer_reports_invalid_numeric_character_references() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer
+        .push("<a data='&#0; &#xD800; &#x110000; &#xFDD0; &#x80;'>")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![Attribute {
+                    name: "data".to_string(),
+                    value: "\u{FFFD} \u{FFFD} \u{FFFD} \u{FDD0} \u{20AC}".to_string(),
+                }],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+
+    let diagnostics = lexer
+        .diagnostics()
+        .iter()
+        .map(|diagnostic| diagnostic.code.as_str())
+        .collect::<Vec<_>>();
+    assert_eq!(
+        diagnostics,
+        vec![
+            "null-character-reference",
+            "surrogate-character-reference",
+            "character-reference-outside-unicode-range",
+            "noncharacter-character-reference",
+            "control-character-reference",
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_seeded_rcdata_numeric_character_references() {
     let mut lexer = create_html_lexer().unwrap();
     lexer.set_initial_state("rcdata").unwrap();
