@@ -1,5 +1,70 @@
 # Changelog
 
+## 0.6.0 — 2026-04-29 — CLR02 Phase 2c.5 (typed register pool)
+
+### Added — runtime-correct closure semantics
+
+Closes the loop on CLR02 Phase 2 closures.  The headline
+`((make-adder 7) 35) → 42` test now **actually runs**
+end-to-end on real `dotnet` — previously it shipped as
+`xfail(strict=True)` because the existing CLR backend used
+int32-uniform locals/parameters and storing a closure ref into
+an int32 local truncated the pointer.
+
+### How it works
+
+A new per-region register-typing pass (in
+`backend._classify_function_return_types` +
+`_collect_object_typed_registers`) walks the IR and computes:
+
+* For each function: does its `r1` register hold an object
+  ref at any RET point?  If yes, the function's
+  `return_type` is widened to `"object"` so callers can
+  `stloc` the result into an object-typed local.  Computed by
+  fixed-point iteration so cross-call dependencies converge.
+* For each region: which IR registers ever hold an object
+  ref?  Those registers get a parallel `object` local
+  appended after the existing int32 locals; the lowerer
+  picks the slot based on the IR register's type AT THAT
+  PROGRAM POINT.
+
+The MOV idiom `ADD_IMM dst, src, 0` propagates the obj-slot
+when src is currently object-typed, so closure refs flow
+through register copies cleanly.
+
+CALL emission stores the result into r1's obj slot when the
+callee returns object; RET reads from r1's obj slot when the
+function returns object.  MAKE_CLOSURE stores into the obj
+slot; APPLY_CLOSURE reads the closure ref from the obj slot
+and stores the int return into the int slot.
+
+### Backwards compatibility
+
+Pure-int functions (no MAKE_CLOSURE / closure-returning
+CALLs / object-typed MOVs) get zero object locals appended —
+their generated CIL is byte-identical to the pre-2c.5 path.
+All 50 twig-clr-compiler tests stay green; the 64
+ir-to-cil-bytecode tests pass at 93% coverage.
+
+### Tests
+
+* 6 new structural unit tests cover function return-type
+  inference, object-local allocation per region, and the
+  pure-int backward-compat path.
+* The previously-`xfail` real-`dotnet` test
+  `test_make_adder_closure_returns_42_on_real_dotnet` is now
+  a regular `@_skip_if_no_dotnet` test that passes.
+
+### Limitations
+
+* Per-region typing analysis is a single linear pass — it
+  doesn't yet handle branch-induced type ambiguity (e.g. an
+  `if` where one branch writes object and the other writes
+  int to the same register).  Closure-using programs
+  produced by twig-clr-compiler are straight-line in the
+  closure-flowing portion, so this is fine for v1; a proper
+  data-flow analysis lands when the frontend exercises it.
+
 ## 0.5.0 — 2026-04-29 — CLR02 Phase 2c lowering (structural)
 
 ### Added — `MAKE_CLOSURE` and `APPLY_CLOSURE` lowering

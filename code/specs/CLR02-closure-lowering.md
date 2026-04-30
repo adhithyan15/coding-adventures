@@ -179,15 +179,21 @@ Same staging as JVM02 Phase 2:
   7) 35) → 42`` test is committed as ``xfail(strict=True)`` so
   it'll flip to passing the moment the typed pool lands.
 - **CLR02 Phase 2c.5** (added during 2c implementation) —
-  typed register pool: parallel ``object[]`` slots for
+  typed register pool: parallel ``object`` slots for
   closure-flow registers, with a per-method analysis to
   classify each register as int or object based on
   MAKE_CLOSURE / CALL-of-closure-returning-method / ADD_IMM
-  copies.  Required to make Phase 2c semantics work end-to-end
-  on real ``dotnet``.  Pending.
+  copies.  **Shipped.**  Function return types are inferred
+  by fixed-point iteration; per-region register typing
+  appends ``object`` locals after the existing ``int32``
+  locals; CALL / RET / MAKE_CLOSURE / APPLY_CLOSURE /
+  ADD_IMM 0 emission picks the slot based on the IR
+  register's type at that program point.  The headline
+  ``((make-adder 7) 35) → 42`` test runs end-to-end on
+  real ``dotnet`` (was previously ``xfail``).
 - **CLR02 Phase 2d** — ``twig-clr-compiler`` accepts ``Lambda``
-  + real-``dotnet`` factorial-closure test.  Pending — gated
-  on Phase 2c.5.
+  + real-``dotnet`` factorial-closure test.  Pending — now
+  unblocked.
 
 ## Risk register
 

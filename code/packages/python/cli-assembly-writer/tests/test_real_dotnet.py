@@ -376,19 +376,6 @@ def test_concrete_class_with_field_and_interfaceimpl_loads(
 # ──────────────────────────────────────────────────────────────────────────
 
 
-@pytest.mark.xfail(
-    reason=(
-        "CLR02 Phase 2c lowering is structural only — closure refs are "
-        "managed pointers but the existing CLR backend uses int32-uniform "
-        "locals/args, so storing a closure ref into a local typed as "
-        "int32 either truncates the pointer or trips the GC.  The next "
-        "phase (typed register pool, parallel object-slot tracking) "
-        "wires the runtime end-to-end.  Test stays in the file so the "
-        "shape stays right; it'll flip to passing when the typed pool "
-        "lands."
-    ),
-    strict=True,
-)
 @_skip_if_no_dotnet
 def test_make_adder_closure_returns_42_on_real_dotnet(tmp_path: Path) -> None:
     """The headline CLR02 Phase 2c test:
@@ -398,8 +385,15 @@ def test_make_adder_closure_returns_42_on_real_dotnet(tmp_path: Path) -> None:
     emit for ``(define (make-adder n) (lambda (x) (+ x n)))
     ((make-adder 7) 35)``.  Exercises the full Phase 2c pipeline:
 
-    * MAKE_CLOSURE → ``newobj Closure_lambda::.ctor(int32)``.
-    * APPLY_CLOSURE → ``callvirt int32 IClosure::Apply(int32)``.
+    * MAKE_CLOSURE → ``newobj Closure_lambda::.ctor(int32)`` —
+      result lands in r1's object slot (Phase 2c.5 typed pool).
+    * The MOV idiom ``ADD_IMM r10, r1, 0`` propagates the
+      object-typed value to r10's object slot (Phase 2c.5).
+    * APPLY_CLOSURE → ``callvirt int32 IClosure::Apply(int32)``
+      — closure ref read from r10's object slot, result back in
+      r1's int slot.
+    * The make_adder method's return type is widened to ``object``
+      so the verifier accepts the cross-type call.
     * Auto-emitted IClosure interface + per-lambda Closure_lambda
       TypeDef with one int32 instance field, a ctor, and an Apply
       method whose body reads the captured ``n`` from the field.
