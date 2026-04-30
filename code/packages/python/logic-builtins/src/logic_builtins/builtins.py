@@ -16,6 +16,7 @@ from __future__ import annotations
 
 from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass
+from itertools import product
 
 from logic_engine import (
     Atom,
@@ -87,8 +88,14 @@ __all__ = [
     "fd_leqo",
     "fd_lto",
     "fd_addo",
+    "fd_bool_ando",
+    "fd_bool_equivo",
+    "fd_bool_implieso",
+    "fd_bool_noto",
+    "fd_bool_oro",
     "fd_mulo",
     "fd_neqo",
+    "fd_reify_relationo",
     "fd_subo",
     "fd_scalar_producto",
     "fd_scalar_product_relationo",
@@ -208,8 +215,14 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("fd_leqo", 2),
     ("fd_lto", 2),
     ("fd_addo", 3),
+    ("fd_bool_ando", 3),
+    ("fd_bool_equivo", 3),
+    ("fd_bool_implieso", 3),
+    ("fd_bool_noto", 2),
+    ("fd_bool_oro", 3),
     ("fd_mulo", 3),
     ("fd_neqo", 2),
+    ("fd_reify_relationo", 4),
     ("fd_subo", 3),
     ("fd_scalar_producto", 3),
     ("fd_scalar_product_relationo", 4),
@@ -494,6 +507,40 @@ def _fd_compare(operator: FdOperator, left: int, right: int) -> bool:
     raise ValueError(msg)
 
 
+_FD_RELATION_NEGATIONS: dict[FdOperator, FdOperator] = {
+    "eq": "neq",
+    "neq": "eq",
+    "lt": "ge",
+    "le": "gt",
+    "gt": "le",
+    "ge": "lt",
+}
+
+
+def _fd_boolean_tuple_satisfies(
+    operator: FdOperator,
+    values: tuple[int, ...],
+) -> bool:
+    """Evaluate one concrete truth-table constraint over CLP(FD) booleans."""
+
+    if any(value not in {0, 1} for value in values):
+        return False
+    if operator == "bool_not":
+        value, result = values
+        return result == 1 - value
+    left, right, result = values
+    if operator == "bool_and":
+        return result == int(left == 1 and right == 1)
+    if operator == "bool_or":
+        return result == int(left == 1 or right == 1)
+    if operator == "bool_implies":
+        return result == int(left == 0 or right == 1)
+    if operator == "bool_equiv":
+        return result == int(left == right)
+    msg = f"unknown finite-domain boolean operator {operator}"
+    raise ValueError(msg)
+
+
 def _fd_tuple_satisfies(
     constraint: FiniteDomainConstraint,
     values: tuple[int, ...],
@@ -508,6 +555,18 @@ def _fd_tuple_satisfies(
     if constraint.operator in {"neq", "lt", "le", "gt", "ge"}:
         left, right = values
         return _fd_compare(constraint.operator, left, right)
+    if constraint.operator.startswith("reify_"):
+        left, right, truth = values
+        relation = constraint.operator.removeprefix("reify_")
+        return truth in {0, 1} and _fd_compare(relation, left, right) == (truth == 1)
+    if constraint.operator in {
+        "bool_and",
+        "bool_or",
+        "bool_not",
+        "bool_implies",
+        "bool_equiv",
+    }:
+        return _fd_boolean_tuple_satisfies(constraint.operator, values)
     if constraint.operator == "add":
         left, right, result = values
         return left + right == result
@@ -662,6 +721,96 @@ def _revise_binary_constraint_domains(
     if isinstance(right_value, LogicVar) and allowed_right != right_domain:
         updated[right_value] = allowed_right
         changed = True
+
+    return updated, changed
+
+
+def _revise_reified_relation_domains(
+    constraint: FiniteDomainConstraint,
+    values: tuple[LogicVar | int, ...],
+    value_domains: tuple[frozenset[int], ...],
+    domains: dict[LogicVar, frozenset[int]],
+) -> tuple[dict[LogicVar, frozenset[int]] | None, bool]:
+    """Prune domains for ``Truth #<==> (Left Relation Right)``."""
+
+    left_value, right_value, truth_value = values
+    left_domain, right_domain, truth_domain = value_domains
+    relation = constraint.operator.removeprefix("reify_")
+
+    supports_true = any(
+        _fd_compare(relation, left, right)
+        for left in left_domain
+        for right in right_domain
+    )
+    supports_false = any(
+        not _fd_compare(relation, left, right)
+        for left in left_domain
+        for right in right_domain
+    )
+    allowed_truth = truth_domain & frozenset(
+        value
+        for value, supported in ((1, supports_true), (0, supports_false))
+        if supported
+    )
+    if not allowed_truth:
+        return None, False
+
+    updated = dict(domains)
+    changed = False
+    if isinstance(truth_value, LogicVar) and allowed_truth != truth_domain:
+        updated[truth_value] = allowed_truth
+        changed = True
+
+    if len(allowed_truth) != 1:
+        return updated, changed
+
+    (truth,) = allowed_truth
+    relation_to_enforce = (
+        relation if truth == 1 else _FD_RELATION_NEGATIONS[relation]
+    )
+    revised, revised_changed = _revise_binary_constraint_domains(
+        FiniteDomainConstraint(relation_to_enforce, constraint.terms[:2]),
+        (left_value, right_value),
+        (left_domain, right_domain),
+        updated,
+    )
+    if revised is None:
+        return None, False
+    return revised, changed or revised_changed
+
+
+def _revise_truth_table_constraint_domains(
+    constraint: FiniteDomainConstraint,
+    values: tuple[LogicVar | int, ...],
+    value_domains: tuple[frozenset[int], ...],
+    domains: dict[LogicVar, frozenset[int]],
+) -> tuple[dict[LogicVar, frozenset[int]] | None, bool]:
+    """Prune boolean FD domains by enumerating their tiny truth table."""
+
+    supported: list[set[int]] = [set() for _ in values]
+    for candidate_tuple in product(*value_domains):
+        if not _fd_boolean_tuple_satisfies(constraint.operator, candidate_tuple):
+            continue
+        for index, candidate in enumerate(candidate_tuple):
+            supported[index].add(candidate)
+
+    if any(not candidates for candidates in supported):
+        return None, False
+
+    updated = dict(domains)
+    changed = False
+    for value, current_domain, candidates in zip(
+        values,
+        value_domains,
+        supported,
+        strict=True,
+    ):
+        allowed = current_domain & frozenset(candidates)
+        if not allowed:
+            return None, False
+        if isinstance(value, LogicVar) and allowed != current_domain:
+            updated[value] = allowed
+            changed = True
 
     return updated, changed
 
@@ -1069,6 +1218,26 @@ def _revise_constraint_domains(
             known_domains,
             domains,
         )
+    if constraint.operator.startswith("reify_"):
+        return _revise_reified_relation_domains(
+            constraint,
+            values,
+            known_domains,
+            domains,
+        )
+    if constraint.operator in {
+        "bool_and",
+        "bool_or",
+        "bool_not",
+        "bool_implies",
+        "bool_equiv",
+    }:
+        return _revise_truth_table_constraint_domains(
+            constraint,
+            values,
+            known_domains,
+            domains,
+        )
     if constraint.operator in {"add", "sub", "mul"}:
         return _revise_arithmetic_constraint_domains(
             constraint,
@@ -1449,6 +1618,66 @@ def fd_mulo(left: object, right: object, result: object) -> GoalExpr:
     return _fd_constrainto("mul", left, right, result)
 
 
+def _fd_boolean_domaino(value: object) -> GoalExpr:
+    """Constrain one finite-domain term to the CLP(FD) boolean domain."""
+
+    return fd_ino(value, (0, 1))
+
+
+def fd_bool_noto(value: object, result: object) -> GoalExpr:
+    """Constrain ``result`` to the boolean negation of ``value``."""
+
+    return conj(
+        _fd_boolean_domaino(value),
+        _fd_boolean_domaino(result),
+        _fd_constrainto("bool_not", value, result),
+    )
+
+
+def fd_bool_ando(left: object, right: object, result: object) -> GoalExpr:
+    """Constrain ``result`` to the boolean conjunction of two FD booleans."""
+
+    return conj(
+        _fd_boolean_domaino(left),
+        _fd_boolean_domaino(right),
+        _fd_boolean_domaino(result),
+        _fd_constrainto("bool_and", left, right, result),
+    )
+
+
+def fd_bool_oro(left: object, right: object, result: object) -> GoalExpr:
+    """Constrain ``result`` to the boolean disjunction of two FD booleans."""
+
+    return conj(
+        _fd_boolean_domaino(left),
+        _fd_boolean_domaino(right),
+        _fd_boolean_domaino(result),
+        _fd_constrainto("bool_or", left, right, result),
+    )
+
+
+def fd_bool_implieso(left: object, right: object, result: object) -> GoalExpr:
+    """Constrain ``result`` to the material implication of two FD booleans."""
+
+    return conj(
+        _fd_boolean_domaino(left),
+        _fd_boolean_domaino(right),
+        _fd_boolean_domaino(result),
+        _fd_constrainto("bool_implies", left, right, result),
+    )
+
+
+def fd_bool_equivo(left: object, right: object, result: object) -> GoalExpr:
+    """Constrain ``result`` to true when two FD booleans are equal."""
+
+    return conj(
+        _fd_boolean_domaino(left),
+        _fd_boolean_domaino(right),
+        _fd_boolean_domaino(result),
+        _fd_constrainto("bool_equiv", left, right, result),
+    )
+
+
 _FD_RELATION_NAMES: dict[str, FdOperator] = {
     "#=": "eq",
     "=": "eq",
@@ -1474,6 +1703,23 @@ def _fd_relation_name(operator_value: object) -> FdOperator | None:
     if isinstance(operator_value, Atom) and operator_value.symbol.namespace is None:
         return _FD_RELATION_NAMES.get(operator_value.symbol.name)
     return None
+
+
+def fd_reify_relationo(
+    left: object,
+    operator_value: object,
+    right: object,
+    truth: object,
+) -> GoalExpr:
+    """Constrain ``truth`` to 1 iff ``left`` relates to ``right``."""
+
+    operator = _fd_relation_name(operator_value)
+    if operator is None:
+        return failo()
+    return conj(
+        _fd_boolean_domaino(truth),
+        _fd_constrainto(f"reify_{operator}", left, right, truth),
+    )
 
 
 def _sum_terms_goal(

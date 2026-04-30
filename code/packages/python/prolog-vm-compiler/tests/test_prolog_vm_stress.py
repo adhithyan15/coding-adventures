@@ -315,6 +315,31 @@ class TestPrologVMStress:
             {"I": num(2), "X": num(3), "Y": num(4), "Z": num(1)},
         ]
 
+    def test_clpfd_reification_and_booleans_run_through_vm(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            ?- [X,Y,Z] ins 1..3,
+               (X #< Y) #<==> A,
+               (Y #< Z) #<==> B,
+               (A #/\\ B) #<==> Chain,
+               Chain #= 1,
+               labeling([], [X,Y,Z,A,B,Chain]).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert [answer.as_dict() for answer in answers] == [
+            {
+                "X": num(1),
+                "Y": num(2),
+                "Z": num(3),
+                "A": num(1),
+                "B": num(1),
+                "Chain": num(1),
+            },
+        ]
+
     def test_initialized_named_answers_keep_runtime_assertions_visible(self) -> None:
         compiled = compile_swi_prolog_source(
             """

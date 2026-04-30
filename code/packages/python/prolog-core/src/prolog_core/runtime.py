@@ -988,6 +988,10 @@ def swi_operator_table() -> OperatorTable:
     return (
         iso_operator_table()
         .define(700, "xfx", "#=", "#\\=", "#<", "#=<", "#>", "#>=", "in", "ins")
+        .define(760, "xfy", "#==>", "#<==>")
+        .define(750, "yfx", "#\\/")
+        .define(740, "yfx", "#/\\")
+        .define(900, "fy", "#\\")
         .define(600, "xfy", ":")
         .define(450, "xfx", "..")
     )

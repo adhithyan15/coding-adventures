@@ -25,6 +25,11 @@ from logic_builtins import (
     dynamico,
     failo,
     fd_addo,
+    fd_bool_ando,
+    fd_bool_equivo,
+    fd_bool_implieso,
+    fd_bool_noto,
+    fd_bool_oro,
     fd_elemento,
     fd_eqo,
     fd_geqo,
@@ -34,6 +39,7 @@ from logic_builtins import (
     fd_lto,
     fd_mulo,
     fd_neqo,
+    fd_reify_relationo,
     fd_scalar_product_relationo,
     fd_subo,
     fd_sum_relationo,
@@ -112,6 +118,7 @@ from prolog_core import expand_dcg_phrase
 
 _PREDICATE_INDICATOR = relation("/", 2)
 _IF_THEN = "->"
+_FD_REIFIABLE_RELATIONS = frozenset({"#=", "#\\=", "#<", "#=<", "#>", "#>="})
 type IndicatorBuilder = Callable[[Term, Term], GoalExpr]
 
 
@@ -202,6 +209,11 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         return goal if ins_goal is None else ins_goal
     if goal.relation.arity == 2 and name in binary_fd_builtins:
         return binary_fd_builtins[name](args[0], args[1])
+    if name in {"#<==>", "#==>", "#/\\", "#\\/"} and goal.relation.arity == 2:
+        boolean_goal = _adapt_fd_boolean_goal(name, args)
+        return goal if boolean_goal is None else boolean_goal
+    if name == "#\\" and goal.relation.arity == 1:
+        return _adapt_fd_boolean_expr(args[0], 0)
     if goal.relation.arity == 3 and name == "sum":
         sum_goal = _adapt_fd_sum(args[0], args[1], args[2])
         return goal if sum_goal is None else sum_goal
@@ -363,6 +375,101 @@ def _adapt_fd_scalar_product(
         operator_value,
         result,
     )
+
+
+def _adapt_fd_boolean_goal(name: str, args: tuple[Term, ...]) -> GoalExpr | None:
+    if name == "#<==>":
+        left, right = args
+        left_expression = _is_fd_boolean_expression(left)
+        right_expression = _is_fd_boolean_expression(right)
+        if left_expression and not right_expression:
+            return _adapt_fd_boolean_expr(left, right)
+        if right_expression and not left_expression:
+            return _adapt_fd_boolean_expr(right, left)
+        return fresh(
+            2,
+            lambda left_truth, right_truth: conj(
+                _adapt_fd_boolean_expr(left, left_truth),
+                _adapt_fd_boolean_expr(right, right_truth),
+                fd_bool_equivo(left_truth, right_truth, 1),
+            ),
+        )
+
+    left, right = args
+    connective = {
+        "#/\\": fd_bool_ando,
+        "#\\/": fd_bool_oro,
+        "#==>": fd_bool_implieso,
+    }.get(name)
+    if connective is None:
+        return None
+    return fresh(
+        2,
+        lambda left_truth, right_truth: conj(
+            _adapt_fd_boolean_expr(left, left_truth),
+            _adapt_fd_boolean_expr(right, right_truth),
+            connective(left_truth, right_truth, 1),
+        ),
+    )
+
+
+def _adapt_fd_boolean_expr(expression: Term, truth: Term) -> GoalExpr:
+    parts = _callable_term_parts(expression)
+    if parts is None:
+        return fd_bool_equivo(expression, truth, 1)
+
+    name, args = parts
+    if name in _FD_REIFIABLE_RELATIONS and len(args) == 2:
+        return fd_reify_relationo(args[0], name, args[1], truth)
+    if name == "#\\" and len(args) == 1:
+        return fresh(
+            1,
+            lambda child_truth: conj(
+                _adapt_fd_boolean_expr(args[0], child_truth),
+                fd_bool_noto(child_truth, truth),
+            ),
+        )
+
+    connective = {
+        "#/\\": fd_bool_ando,
+        "#\\/": fd_bool_oro,
+        "#==>": fd_bool_implieso,
+        "#<==>": fd_bool_equivo,
+    }.get(name)
+    if connective is not None and len(args) == 2:
+        return fresh(
+            2,
+            lambda left_truth, right_truth: conj(
+                _adapt_fd_boolean_expr(args[0], left_truth),
+                _adapt_fd_boolean_expr(args[1], right_truth),
+                connective(left_truth, right_truth, truth),
+            ),
+        )
+
+    return fd_bool_equivo(expression, truth, 1)
+
+
+def _is_fd_boolean_expression(term_value: Term) -> bool:
+    parts = _callable_term_parts(term_value)
+    if parts is None:
+        return False
+    name, args = parts
+    if name in _FD_REIFIABLE_RELATIONS and len(args) == 2:
+        return True
+    if name == "#\\" and len(args) == 1:
+        return True
+    return name in {"#/\\", "#\\/", "#==>", "#<==>"} and len(args) == 2
+
+
+def _callable_term_parts(term_value: Term) -> tuple[str, tuple[Term, ...]] | None:
+    if isinstance(term_value, RelationCall):
+        symbol = term_value.relation.symbol
+        if symbol.namespace is None:
+            return (symbol.name, term_value.args)
+        return None
+    if isinstance(term_value, Compound) and term_value.functor.namespace is None:
+        return (term_value.functor.name, term_value.args)
+    return None
 
 
 def _adapt_fd_arithmetic_expression(expression: Term, result: Term) -> GoalExpr | None:

@@ -17,6 +17,8 @@ All notable changes to this package will be documented in this file.
 - `fd_sum_relationo(vars, op, total)`,
   `fd_scalar_product_relationo(coeffs, vars, op, total)`, and
   `fd_elemento(index, vars, value)` for richer CLP(FD) modeling constraints.
+- `fd_reify_relationo(left, op, right, truth)` and boolean FD connectives for
+  CLP(FD)-style reification and truth-table modeling.
 
 ### Fixed
 

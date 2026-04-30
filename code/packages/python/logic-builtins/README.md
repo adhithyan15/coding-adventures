@@ -43,6 +43,10 @@ ordinary logic goal expressions.
   `fd_sumo(vars, total)`, `fd_scalar_producto(coeffs, vars, total)`,
   `fd_sum_relationo(vars, op, total)`, `fd_scalar_product_relationo(coeffs,
   vars, op, total)`, `fd_elemento(index, vars, value)`,
+  `fd_reify_relationo(left, op, right, truth)`, `fd_bool_ando(left, right,
+  result)`, `fd_bool_oro(left, right, result)`, `fd_bool_noto(value, result)`,
+  `fd_bool_implieso(left, right, result)`, `fd_bool_equivo(left, right,
+  result)`,
   `all_differento(vars)`, `labelingo(vars)`, and
   `labeling_optionso(options, vars)` for finite-domain integer constraints
 - arithmetic expression constructors: `add`, `sub`, `mul`, `div`, `floordiv`, `mod`, and `neg`
