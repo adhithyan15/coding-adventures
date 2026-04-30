@@ -484,6 +484,15 @@ class CILLoweringPlan:
     main_region_names: tuple[str, ...] = ()
     closure_free_var_counts: dict[str, int] = field(default_factory=dict)
     function_return_types: dict[str, str] = field(default_factory=dict)
+    # TW03 Phase 3 follow-up: per-region parameter types — maps
+    # region name → tuple of "int32" or "object" per param slot.
+    # Computed by ``_classify_function_parameter_types`` once
+    # obj_regs is known per region.  CALL sites consult this to
+    # ldloc args from the right slot; function entries consult it
+    # to starg into the right slot.
+    function_parameter_types: dict[str, tuple[str, ...]] = field(
+        default_factory=dict,
+    )
 
 
 AnalyzeProgramStage = Callable[[IrProgram, CILBackendConfig], CILLoweringPlan]
@@ -812,6 +821,22 @@ def _analyze_program(
         regions, set(config.closure_free_var_counts),
     )
 
+    # TW03 Phase 3 follow-up: classify per-region parameter types so
+    # CALL sites can ldloc obj args from the obj slot and function
+    # entries can starg into the obj slot.
+    call_register_count = (
+        config.call_register_count
+        if config.call_register_count is not None
+        else local_count
+    )
+    function_parameter_types = _classify_function_parameter_types(
+        regions=regions,
+        closure_region_names=set(config.closure_free_var_counts),
+        return_types=function_return_types,
+        call_register_count=call_register_count,
+        entry_label=program.entry_label,
+    )
+
     return CILLoweringPlan(
         regions=regions,
         data_offsets=data_offsets,
@@ -822,7 +847,44 @@ def _analyze_program(
         main_region_names=main_region_names,
         closure_free_var_counts=dict(config.closure_free_var_counts),
         function_return_types=function_return_types,
+        function_parameter_types=function_parameter_types,
     )
+
+
+def _classify_function_parameter_types(
+    *,
+    regions: tuple[_CallableRegion, ...],
+    closure_region_names: set[str],
+    return_types: dict[str, str],
+    call_register_count: int,
+    entry_label: str,
+) -> dict[str, tuple[str, ...]]:
+    """For each non-closure region (other than the entry point),
+    classify each parameter slot as ``"int32"`` or ``"object"``.
+
+    The classifier reuses ``_collect_object_typed_registers`` to
+    discover which register indices are obj-typed in the body.
+    Param slots 0..call_register_count-1 that appear in obj_regs
+    get declared ``"object"``; everything else is ``"int32"``.
+
+    Closure regions are skipped — their parameter types are
+    governed by the ``IClosure::Apply(int32) → int32`` interface
+    contract (always int32).  The entry-point region also has no
+    explicit params (its descriptor is ``()V`` from main()).
+    """
+    out: dict[str, tuple[str, ...]] = {}
+    for region in regions:
+        if region.name in closure_region_names:
+            continue
+        if region.name == entry_label:
+            out[region.name] = ()
+            continue
+        obj_regs, _ = _collect_object_typed_registers(region, return_types)
+        out[region.name] = tuple(
+            "object" if i in obj_regs else "int32"
+            for i in range(call_register_count)
+        )
+    return out
 
 
 # ---------------------------------------------------------------------------
@@ -961,6 +1023,8 @@ def _infer_region_return_type(
 def _collect_object_typed_registers(
     region: _CallableRegion,
     return_types: dict[str, str],
+    *,
+    seed_types: dict[int, str] | None = None,
 ) -> tuple[set[int], list[dict[int, str]]]:
     """For ``region``, compute (a) the set of IR register indices
     that ever hold an object ref, and (b) a per-instruction list
@@ -969,17 +1033,115 @@ def _collect_object_typed_registers(
     The per-instruction map lets the lowerer choose the correct
     slot (int32 vs object) for each register at each program
     point.
+
+    Two sources contribute to ``obj_regs``:
+
+    * **Writes** that produce object refs (``MAKE_CONS``,
+      ``MAKE_SYMBOL``, ``LOAD_NIL``, ``CDR``, ``MAKE_CLOSURE``,
+      ``CALL`` of an object-returning function, ``ADD_IMM 0`` from
+      an object-typed source).  Tracked by
+      ``_instr_register_type_writes``.
+    * **Reads** by ops that consume an object operand (``CAR``,
+      ``CDR``, ``IS_NULL``, ``IS_PAIR``, ``IS_SYMBOL``,
+      ``MAKE_CONS``'s tail operand, ``APPLY_CLOSURE``'s closure
+      operand).  Tracked by ``_instr_obj_source_reads``.
+
+    The reads pass exists because **parameter slots** receive
+    values written by the caller, never by the body — so if the
+    body only READS them as obj refs (e.g. ``length``'s ``xs``
+    param consumed by ``CDR``), the writes-only inference would
+    miss them and the lowerer would emit ``ldloc`` from the
+    int32 slot.
     """
     obj_regs: set[int] = set()
     instr_types: list[dict[int, str]] = []
-    types: dict[int, str] = {}
+    # Seed with parameter types so the body's first ADD_IMM-0
+    # propagates the obj slot when the source is an obj-typed
+    # parameter (e.g. ``ADD_IMM v10, v2, 0`` at the top of
+    # ``length`` where v2 is the obj-typed xs param).  Without
+    # the seed, the type pool would default v2 to int32 and the
+    # move would copy garbage from the int slot.
+    types: dict[int, str] = dict(seed_types or {})
+    for reg_idx, type_name in types.items():
+        if type_name == "object":
+            obj_regs.add(reg_idx)
     for instr in region.instructions:
         types = _instr_register_type_writes(instr, types, return_types)
         instr_types.append(types)
         for reg_idx, type_name in types.items():
             if type_name == "object":
                 obj_regs.add(reg_idx)
+        # Obj-source reads also contribute (catches obj-typed
+        # parameter slots that the body only ever reads).
+        for reg_idx in _instr_obj_source_reads(instr):
+            obj_regs.add(reg_idx)
+
+    # Back-propagate through ADD_IMM-0 (the move idiom) to a
+    # fixed point.  If a register is obj-typed and reaches it via
+    # ``ADD_IMM dst, src, 0`` chains, the source registers must
+    # also be obj-typed — otherwise their slot would be read from
+    # the int pool and the move would propagate junk.
+    #
+    # Concrete pattern: ``length(xs)`` opens with
+    # ``ADD_IMM v10, v2, 0`` (Twig copies the param into a holding
+    # reg).  v10 gets classified obj (read by CDR), but v2 — the
+    # parameter — needs the back-prop pass to also become obj so
+    # the function signature declares it as object and the entry
+    # shuffle stores ldarg into v2's obj slot.
+    changed = True
+    cap = len(region.instructions) + 4
+    while changed and cap > 0:
+        changed = False
+        cap -= 1
+        for instr in region.instructions:
+            if instr.opcode is not IrOp.ADD_IMM:
+                continue
+            if len(instr.operands) < 3:
+                continue
+            if not isinstance(instr.operands[0], IrRegister):
+                continue
+            if not isinstance(instr.operands[1], IrRegister):
+                continue
+            if not isinstance(instr.operands[2], IrImmediate):
+                continue
+            if instr.operands[2].value != 0:
+                continue
+            dst_idx = instr.operands[0].index
+            src_idx = instr.operands[1].index
+            if dst_idx in obj_regs and src_idx not in obj_regs:
+                obj_regs.add(src_idx)
+                changed = True
     return obj_regs, instr_types
+
+
+def _instr_obj_source_reads(instr: IrInstruction) -> set[int]:
+    """Return register indices that ``instr`` reads as an object ref.
+
+    Distinct from ``_instr_register_type_writes`` (which tracks
+    written types) because the type pool needs to know about
+    read-as-obj registers too — most importantly parameter slots
+    that arrive from the caller and are only ever read.
+    """
+    op = instr.opcode
+    if op in (IrOp.CAR, IrOp.CDR, IrOp.IS_NULL, IrOp.IS_PAIR, IrOp.IS_SYMBOL):
+        # 2 operands: dst, src — src is obj.
+        if len(instr.operands) >= 2 and isinstance(
+            instr.operands[1], IrRegister,
+        ):
+            return {instr.operands[1].index}
+    elif op is IrOp.MAKE_CONS:
+        # MAKE_CONS dst, head_int, tail_obj — only tail is obj.
+        if len(instr.operands) >= 3 and isinstance(
+            instr.operands[2], IrRegister,
+        ):
+            return {instr.operands[2].index}
+    elif op is IrOp.APPLY_CLOSURE:
+        # APPLY_CLOSURE dst, closure_reg, num_args, args... — closure_reg is obj.
+        if len(instr.operands) >= 2 and isinstance(
+            instr.operands[1], IrRegister,
+        ):
+            return {instr.operands[1].index}
+    return set()
 
 
 def _validate_config(config: CILBackendConfig) -> None:
@@ -1134,19 +1296,42 @@ def _lower_region(
     # ``object`` locals for any register that ever holds an object
     # ref.  Map IR reg index → CIL local index (int slot is just
     # the IR index; object slot is plan.local_count + offset).
+    #
+    # Seed the analysis with the region's classified parameter
+    # types so reads of obj-typed param slots see "object" in the
+    # type pool from instruction 0 — needed for ADD_IMM-0 obj
+    # propagation right at the top of the body (the standard Twig
+    # idiom of moving the param into a holding reg).
+    seed = {
+        i: t
+        for i, t in enumerate(plan.function_parameter_types.get(region.name, ()))
+        if t == "object"
+    }
     obj_regs, instr_types = _collect_object_typed_registers(
-        region, plan.function_return_types,
+        region, plan.function_return_types, seed_types=seed,
     )
     obj_local_for: dict[int, int] = {
         reg_idx: plan.local_count + offset
         for offset, reg_idx in enumerate(sorted(obj_regs))
     }
     return_type = plan.function_return_types.get(region.name, "int32")
+    # Per-param typing — slot N is "object" iff N is obj-typed in
+    # the body (so the body's reads of that slot go through the
+    # obj_local_for path).  Entry shuffle below stores each arg
+    # into the matching slot.
+    region_param_types = plan.function_parameter_types.get(region.name, ())
 
     if region.name != _program.entry_label:
         for index in range(call_register_count):
             builder.emit_ldarg(index)
-            builder.emit_stloc(index)
+            if (
+                index < len(region_param_types)
+                and region_param_types[index] == "object"
+                and index in obj_local_for
+            ):
+                builder.emit_stloc(obj_local_for[index])
+            else:
+                builder.emit_stloc(index)
 
     ctx = _RegionEmitContext(
         plan=plan,
@@ -1165,18 +1350,25 @@ def _lower_region(
         "object" for _ in range(len(obj_regs))
     )
 
+    if region.name == _program.entry_label:
+        parameter_types: tuple[str, ...] = ()
+    else:
+        # Per-region: int32 by default, "object" for slots the body
+        # treats as obj-typed (e.g. a cons-cell parameter consumed
+        # by ``CDR``).  Falls back to all-int32 if the plan didn't
+        # classify (back-compat with callers that don't compute
+        # per-region param types).
+        parameter_types = region_param_types or tuple(
+            "int32" for _ in range(call_register_count)
+        )
+
     return CILMethodArtifact(
         name=region.name,
         body=builder.assemble(),
         max_stack=max(config.method_max_stack, call_register_count),
         local_types=local_types,
         return_type=return_type,
-        parameter_types=tuple(
-            "int32"
-            for _ in range(
-                call_register_count if region.name != _program.entry_label else 0
-            )
-        ),
+        parameter_types=parameter_types,
     )
 
 
@@ -1644,8 +1836,31 @@ def _emit_instruction(
 
     if instruction.opcode == IrOp.CALL:
         label = _as_label(instruction.operands[0], "CALL target")
+        # TW03 Phase 3 follow-up: per-arg ldloc picks int32 vs object
+        # slot based on the CALLEE's parameter typing.  Without this,
+        # cons / symbol / nil refs marshalled into a param slot via
+        # ``ADD_IMM dst, src, 0`` would be ldloc'd from the int slot
+        # (= 0) and the recursive call would receive a null reference.
+        callee_param_types: tuple[str, ...] = ()
+        if plan.function_parameter_types:
+            callee_param_types = plan.function_parameter_types.get(
+                label.name, (),
+            )
         for index in range(_call_register_count(config, plan)):
-            builder.emit_ldloc(index)
+            wants_obj = (
+                index < len(callee_param_types)
+                and callee_param_types[index] == "object"
+            )
+            if wants_obj and ctx is not None and index in ctx.obj_local_for:
+                builder.emit_ldloc(ctx.obj_local_for[index])
+            elif wants_obj:
+                # Caller doesn't have this slot in its obj pool — pass
+                # null.  In well-formed Twig output this shouldn't
+                # happen because the frontend always emits an
+                # obj-propagating move into the param slot first.
+                builder.emit_opcode(0x14)  # ldnull
+            else:
+                builder.emit_ldloc(index)
         builder.emit_call(plan.token_provider.method_token(label.name))
         # Phase 2c.5: if the callee returns an object (closure ref),
         # store the result into r1's object slot instead of its
