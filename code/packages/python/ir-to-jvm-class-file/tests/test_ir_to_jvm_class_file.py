@@ -1436,3 +1436,340 @@ class TestPhase2c5TypedPool:
         # 0x32 = aaload; 0xC0 = checkcast.
         assert b"\x32" in artifact.main.class_bytes
         assert b"\xc0" in artifact.main.class_bytes
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# TW03 Phase 3b — heap primitives (Cons / Symbol / Nil + 8 opcode lowerings)
+# ─────────────────────────────────────────────────────────────────────────
+
+class TestHeapRuntimeClasses:
+    """Tests for the three runtime classes auto-included whenever a
+    program uses any heap opcode (MAKE_CONS, CAR, CDR, IS_NULL, IS_PAIR,
+    MAKE_SYMBOL, IS_SYMBOL, LOAD_NIL).  Each artifact is parsed back via
+    ``jvm_class_file.parse_class_file`` to lock down the field/method
+    layout — the JVM verifier will reject anything malformed at load
+    time, so the parse-back also serves as a smoke test."""
+
+    def test_cons_class_layout(self) -> None:
+        from ir_to_jvm_class_file import (
+            CONS_BINARY_NAME,
+            build_cons_class_artifact,
+        )
+        artifact = build_cons_class_artifact()
+        assert artifact.class_name == CONS_BINARY_NAME.replace("/", ".")
+        cf = parse_class_file(artifact.class_bytes)
+        # Single ctor (I,LObject;)V.
+        method_descriptors = [m.descriptor for m in cf.methods]
+        assert "(ILjava/lang/Object;)V" in method_descriptors
+        # Field-name UTF8 entries — head + tail.
+        assert b"head" in artifact.class_bytes
+        assert b"tail" in artifact.class_bytes
+
+    def test_nil_class_layout(self) -> None:
+        from ir_to_jvm_class_file import (
+            NIL_BINARY_NAME,
+            build_nil_class_artifact,
+        )
+        artifact = build_nil_class_artifact()
+        assert artifact.class_name == NIL_BINARY_NAME.replace("/", ".")
+        cf = parse_class_file(artifact.class_bytes)
+        method_names = [m.name for m in cf.methods]
+        assert "<init>" in method_names
+        assert "<clinit>" in method_names
+        # Singleton field.
+        assert b"INSTANCE" in artifact.class_bytes
+
+    def test_symbol_class_layout(self) -> None:
+        from ir_to_jvm_class_file import (
+            SYMBOL_BINARY_NAME,
+            build_symbol_class_artifact,
+        )
+        artifact = build_symbol_class_artifact()
+        assert artifact.class_name == SYMBOL_BINARY_NAME.replace("/", ".")
+        cf = parse_class_file(artifact.class_bytes)
+        method_names = [m.name for m in cf.methods]
+        assert "<init>" in method_names
+        assert "<clinit>" in method_names
+        assert "intern" in method_names
+        intern = next(m for m in cf.methods if m.name == "intern")
+        assert intern.descriptor == (
+            "(Ljava/lang/String;)"
+            "Lcoding_adventures/twig/runtime/Symbol;"
+        )
+        # HashMap is referenced.
+        assert b"java/util/HashMap" in artifact.class_bytes
+
+
+class TestHeapOpLowering:
+    """Each new opcode should produce the specific JVM instruction
+    bytes that uniquely identify its lowering — relies on byte
+    fingerprints rather than a full disassembler."""
+
+    def _make_main_only_program(
+        self, instructions: list[IrInstruction],
+    ) -> IrProgram:
+        program = IrProgram(entry_label="_start")
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")]))
+        for ins in instructions:
+            program.add_instruction(ins)
+        program.add_instruction(IrInstruction(IrOp.HALT, []))
+        return program
+
+    def test_make_cons_emits_new_and_invokespecial(self) -> None:
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        program = self._make_main_only_program([
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(1), IrImmediate(7)]),
+            IrInstruction(
+                IrOp.MAKE_CONS,
+                [IrRegister(2), IrRegister(1), IrRegister(3)],
+            ),
+        ])
+        artifact = lower_ir_to_jvm_classes(
+            program, JvmBackendConfig(class_name="UsesCons"),
+        )
+        # Cons / Symbol / Nil runtime classes auto-included.
+        names = [a.class_name for a in artifact.classes]
+        assert "coding_adventures.twig.runtime.Cons" in names
+        assert "coding_adventures.twig.runtime.Nil" in names
+        assert "coding_adventures.twig.runtime.Symbol" in names
+        # 0xBB = new; 0xB7 = invokespecial; 0x53 = aastore.
+        body = artifact.main.class_bytes
+        assert b"\xbb" in body  # new Cons
+        assert b"\xb7" in body  # invokespecial Cons.<init>
+        assert b"\x53" in body  # aastore into __ca_objregs
+
+    def test_car_emits_getfield_int(self) -> None:
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        program = self._make_main_only_program([
+            IrInstruction(IrOp.CAR, [IrRegister(1), IrRegister(2)]),
+        ])
+        artifact = lower_ir_to_jvm_classes(
+            program, JvmBackendConfig(class_name="UsesCar"),
+        )
+        # 0xB4 = getfield; 0xC0 = checkcast.
+        assert b"\xb4" in artifact.main.class_bytes
+        assert b"\xc0" in artifact.main.class_bytes
+
+    def test_cdr_emits_getfield_object(self) -> None:
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        program = self._make_main_only_program([
+            IrInstruction(IrOp.CDR, [IrRegister(1), IrRegister(2)]),
+        ])
+        artifact = lower_ir_to_jvm_classes(
+            program, JvmBackendConfig(class_name="UsesCdr"),
+        )
+        assert b"\xb4" in artifact.main.class_bytes
+        assert b"\xc0" in artifact.main.class_bytes
+
+    def test_is_null_emits_if_acmpne(self) -> None:
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        program = self._make_main_only_program([
+            IrInstruction(IrOp.IS_NULL, [IrRegister(1), IrRegister(2)]),
+        ])
+        artifact = lower_ir_to_jvm_classes(
+            program, JvmBackendConfig(class_name="UsesIsNull"),
+        )
+        # 0xA6 = if_acmpne.
+        assert b"\xa6" in artifact.main.class_bytes
+
+    def test_is_pair_emits_instanceof(self) -> None:
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        program = self._make_main_only_program([
+            IrInstruction(IrOp.IS_PAIR, [IrRegister(1), IrRegister(2)]),
+        ])
+        artifact = lower_ir_to_jvm_classes(
+            program, JvmBackendConfig(class_name="UsesIsPair"),
+        )
+        # 0xC1 = instanceof.
+        assert b"\xc1" in artifact.main.class_bytes
+
+    def test_is_symbol_emits_instanceof(self) -> None:
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        program = self._make_main_only_program([
+            IrInstruction(IrOp.IS_SYMBOL, [IrRegister(1), IrRegister(2)]),
+        ])
+        artifact = lower_ir_to_jvm_classes(
+            program, JvmBackendConfig(class_name="UsesIsSym"),
+        )
+        assert b"\xc1" in artifact.main.class_bytes
+
+    def test_make_symbol_emits_intern_call(self) -> None:
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        program = self._make_main_only_program([
+            IrInstruction(
+                IrOp.MAKE_SYMBOL,
+                [IrRegister(1), IrLabel("foo")],
+            ),
+        ])
+        artifact = lower_ir_to_jvm_classes(
+            program, JvmBackendConfig(class_name="UsesMakeSym"),
+        )
+        # The literal "foo" UTF8 is in the constant pool.
+        assert b"foo" in artifact.main.class_bytes
+        # 0xB8 = invokestatic Symbol.intern.
+        assert b"\xb8" in artifact.main.class_bytes
+
+    def test_load_nil_emits_getstatic(self) -> None:
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        program = self._make_main_only_program([
+            IrInstruction(IrOp.LOAD_NIL, [IrRegister(1)]),
+        ])
+        artifact = lower_ir_to_jvm_classes(
+            program, JvmBackendConfig(class_name="UsesLoadNil"),
+        )
+        # 0xB2 = getstatic Nil.INSTANCE; 0x53 = aastore.
+        assert b"\xb2" in artifact.main.class_bytes
+        assert b"\x53" in artifact.main.class_bytes
+        # And the Nil class gets included.
+        names = [a.class_name for a in artifact.classes]
+        assert "coding_adventures.twig.runtime.Nil" in names
+
+    def test_heap_op_arity_validation(self) -> None:
+        """MAKE_CONS with the wrong operand count is rejected."""
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        program = self._make_main_only_program([
+            IrInstruction(IrOp.MAKE_CONS, [IrRegister(1)]),  # missing 2 ops
+        ])
+        with pytest.raises(JvmBackendError, match=r"MAKE_CONS expects"):
+            lower_ir_to_jvm_classes(
+                program, JvmBackendConfig(class_name="Bad"),
+            )
+
+
+# Real-java end-to-end — list-of-ints length.
+
+requires_java = pytest.mark.skipif(
+    subprocess.call(
+        ["java", "-version"],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    ) != 0
+    if os.environ.get("CODING_ADVENTURES_REQUIRE_JAVA") != "1"
+    else False,
+    reason="java runtime not available",
+)
+
+
+@requires_java
+def test_real_java_list_of_ints_length() -> None:
+    """Hand-written IR for the program::
+
+        (length (cons 1 (cons 2 (cons 3 nil))))
+
+    with ``length`` lowered as a CALL-recursive function that
+    increments r1 each step until ``IS_NULL`` of the list head
+    becomes 1.  Exits with the int length via SYSCALL 1.
+
+    This is an end-to-end smoke test that exercises:
+
+      * Cons / Nil / Symbol class loading
+      * MAKE_CONS lowering
+      * CDR lowering
+      * IS_NULL identity test
+      * BRANCH_Z fed by IS_NULL result
+      * The full multi-class JAR-shaped artifact (just spread on
+        a classpath here for simplicity since the test doesn't
+        depend on Main-Class manifest semantics).
+    """
+    from ir_to_jvm_class_file import (
+        JvmBackendConfig,
+        lower_ir_to_jvm_classes,
+        write_class_file,
+    )
+
+    program = IrProgram(entry_label="_start")
+    program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")]))
+    # Build the list (cons 1 (cons 2 (cons 3 nil))) backwards:
+    #   r10 = nil
+    #   r3 = 3; r10 = cons(3, nil)
+    #   r3 = 2; r10 = cons(2, r10)
+    #   r3 = 1; r10 = cons(1, r10)
+    program.add_instruction(IrInstruction(IrOp.LOAD_NIL, [IrRegister(10)]))
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(3), IrImmediate(3)])
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.MAKE_CONS,
+            [IrRegister(10), IrRegister(3), IrRegister(10)],
+        )
+    )
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(3), IrImmediate(2)])
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.MAKE_CONS,
+            [IrRegister(10), IrRegister(3), IrRegister(10)],
+        )
+    )
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(3), IrImmediate(1)])
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.MAKE_CONS,
+            [IrRegister(10), IrRegister(3), IrRegister(10)],
+        )
+    )
+    # Compute length iteratively in r1, walking r10.
+    #   r1 = 0
+    # loop:
+    #   r2 = is_null(r10)
+    #   branch_z r2, end
+    #   r1 = r1 + 1
+    #   r10 = cdr(r10)
+    #   jump loop
+    # end:
+    #   syscall 1, r1   ; print one byte
+    #   halt
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(1), IrImmediate(0)])
+    )
+    program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("loop")]))
+    program.add_instruction(
+        IrInstruction(IrOp.IS_NULL, [IrRegister(2), IrRegister(10)])
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.BRANCH_NZ, [IrRegister(2), IrLabel("end")],
+        )
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.ADD_IMM,
+            [IrRegister(1), IrRegister(1), IrImmediate(1)],
+        )
+    )
+    program.add_instruction(
+        IrInstruction(IrOp.CDR, [IrRegister(10), IrRegister(10)])
+    )
+    program.add_instruction(IrInstruction(IrOp.JUMP, [IrLabel("loop")]))
+    program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("end")]))
+    program.add_instruction(
+        IrInstruction(IrOp.SYSCALL, [IrImmediate(1), IrRegister(1)])
+    )
+    program.add_instruction(IrInstruction(IrOp.HALT, []))
+
+    artifact = lower_ir_to_jvm_classes(
+        program,
+        JvmBackendConfig(
+            class_name="ListLength", syscall_arg_reg=1,
+        ),
+    )
+
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp_path = Path(tmp)
+        for cls in artifact.classes:
+            write_class_file(cls, tmp_path)
+        result = subprocess.run(
+            ["java", "-cp", str(tmp_path), "ListLength"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            timeout=30,
+            check=False,
+        )
+
+    assert result.returncode == 0, result.stderr.decode("utf-8", "replace")
+    # Length 3 → SYSCALL prints byte 0x03 to stdout.
+    assert result.stdout == b"\x03", result.stdout
