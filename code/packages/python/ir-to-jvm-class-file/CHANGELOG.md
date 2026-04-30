@@ -1,5 +1,56 @@
 # ir-to-jvm-class-file
 
+## 0.7.0 — 2026-04-29 — JVM02 Phase 2b (multi-class scaffolding)
+
+### Added — `JVMMultiClassArtifact` and the `Closure` interface
+
+Foundation for [JVM02 Phase 2 closures](../../../specs/JVM02-phase2-multi-class-closure-lowering.md).
+The single-class `JVMClassArtifact` is enough for IR programs
+that don't use closures; closure-enabled programs need to ship
+a shared `Closure` interface plus per-lambda `Closure_<name>`
+subclasses alongside the user's main class.
+
+This phase ships the data shape + the interface; per-lambda
+subclass emission lands in Phase 2c (with the actual
+`MAKE_CLOSURE` / `APPLY_CLOSURE` IR-op lowering).
+
+* `JVMMultiClassArtifact` dataclass — wraps
+  `tuple[JVMClassArtifact, ...]` with a stable invariant that
+  `classes[0]` is always the main user class.  Exposes
+  `.main` and `.class_filenames` for JAR builders.
+* `build_closure_interface_artifact()` returns a
+  `JVMClassArtifact` for the `Closure` interface, byte-rolled
+  per JVMS §4.1 — `ACC_PUBLIC | ACC_INTERFACE | ACC_ABSTRACT`,
+  one abstract method `int apply(int[] args)`.  The class
+  binary name is fixed at
+  `coding_adventures/twig/runtime/Closure` so future
+  closure-aware artifacts can reference it via a stable symbol.
+* `lower_ir_to_jvm_classes(program, config, *,
+  include_closure_interface=False)` — multi-class API that
+  always returns the main class and, when opted in, appends
+  the `Closure` interface.
+
+Three new public constants exported from `__init__`:
+`CLOSURE_INTERFACE_BINARY_NAME`,
+`CLOSURE_INTERFACE_METHOD_NAME` (`"apply"`), and
+`CLOSURE_INTERFACE_METHOD_DESCRIPTOR` (`"([I)I"`).
+
+### Tests
+
+* 6 structural tests cover the multi-class artifact shape, the
+  `main`-first invariant, the `class_filenames` JAR-path
+  format, and round-tripping the interface bytecode through
+  `jvm-class-file`'s decoder.
+* 1 real-`java` JAR conformance test packs the main user
+  class + the `Closure` interface into a JAR via
+  `jvm-jar-writer` and proves real `java -jar` loads both
+  without `ClassFormatError` / `VerifyError`.
+
+### Backwards compatibility
+
+`lower_ir_to_jvm_class_file` is unchanged; existing tests
+stay green.  The new multi-class API is purely additive.
+
 ## 0.6.1 — 2026-04-28
 
 ### Fixed — JVM01: caller-saves around `IrOp.CALL` so recursion works on real `java`

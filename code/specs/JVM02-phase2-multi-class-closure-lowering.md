@@ -177,19 +177,25 @@ This is a substantial change; suggested PR breakdown:
    - This unblocks parallel work on JVM, CLR, BEAM.
 
 2. **Phase 2b** — the Closure base interface + multi-class
-   plumbing in ``ir-to-jvm-class-file``.
-   - Add ``JVMMultiClassArtifact`` data type.
-   - Emit ``Closure.class`` (interface) at JAR root.
-   - Allow the lowering API to return multiple class artifacts
-     instead of one.
+   plumbing in ``ir-to-jvm-class-file``.  **Shipped.**
+   - ``JVMMultiClassArtifact`` dataclass.
+   - ``build_closure_interface_artifact()`` returns the
+     ``coding_adventures.twig.runtime.Closure`` interface
+     ``.class`` bytes (ACC_PUBLIC | ACC_INTERFACE | ACC_ABSTRACT,
+     one abstract method ``int apply(int[])``).
+   - ``lower_ir_to_jvm_classes(program, config, *,
+     include_closure_interface=False)`` — multi-class API.
+   - Real-``java`` JAR conformance test packs main + interface
+     and proves the JVM loads both without VerifyError.
 
 3. **Phase 2c** — ``MAKE_CLOSURE`` / ``APPLY_CLOSURE`` lowering
-   in ``ir-to-jvm-class-file``.
+   in ``ir-to-jvm-class-file``.  Pending.
    - Object register pool extension.
    - Per-lambda ``Closure_*.class`` emission.
    - Bytecode for both new ops.
 
 4. **Phase 2d** — ``twig-jvm-compiler`` accepts ``Lambda``.
+   Pending — gated on Phase 2c.
    - Lambda lifting.
    - Free-var analysis (re-use ``twig.free_vars``).
    - JAR packaging via ``jvm-jar-writer``.
