@@ -1,5 +1,136 @@
 # Changelog — twig-vm
 
+## [0.6.0] — 2026-04-30
+
+### Added — PR 8 of LANG20: vm-core profiler
+
+The data feed for everything specialisation-related: per-function
+call counts (the JIT-promotion-threshold signal) and per-
+instruction `SlotState` observations (the V8-Ignition-style
+type-feedback signal that drives monomorphic / polymorphic /
+megamorphic specialisation).  The profiler is the producer; the
+JIT (future PR) and `aot-with-pgo` (LANG22 PR 11e/f) are the
+consumers via the shared `.ldp` profile artefact format
+(LANG22 PR 11d).
+
+- **`ProfileTable` struct** (in `twig-vm::dispatch`) — side-table
+  threaded through `dispatch()` like `Globals` and `ICTable`.
+  Two collections:
+  - `call_counts: HashMap<String, u64>` — incremented once per
+    `dispatch()` entry per function.
+  - `instruction_slots: HashMap<(String, usize), SlotState>` —
+    one slot per `(function_name, instruction_index)`, holding
+    the V8-style monomorphic→polymorphic→megamorphic state
+    machine plus the bounded list of observed type tags.
+
+- **`run_with_profile(module, &mut Globals, &mut ICTable, &mut
+  ProfileTable)`** — new public entry point that exposes the
+  profile to the caller.  Existing `run` / `run_with_globals` /
+  `run_with_state` retained as wrappers that allocate an
+  internal profile and discard it on return — backwards-
+  compatible.
+
+- **Dispatcher records observations after every dest-producing
+  opcode**.  Reads the dest's value from the frame, classifies
+  via `LispyBinding::class_of` → one of `int`/`nil`/`bool`/
+  `symbol`/`cons`/`closure`, and calls
+  `ProfileTable::note_observation`.  Control-flow opcodes
+  (`jmp`, `label`, `ret`) and side-effecting ones
+  (`store_property`) have no dest; nothing recorded.
+
+- **Per-function call count** incremented at the top of
+  `dispatch()` — once per activation.  `(fact 5)` produces
+  `fact` call_count = 6 (for n=5..0); `main` = 1.
+
+- **Resource caps** (two, found by PR 8 security review):
+  - `MAX_PROFILED_FUNCTIONS = 2¹⁶` — distinct function-name
+    keys across both maps.  `note_call` and `note_observation`
+    reject new names beyond the cap.
+  - `MAX_PROFILED_INSTRUCTION_SLOTS = 2²⁰` — total
+    `(function_name, instr_index)` slots in `instruction_slots`.
+    Bounds long-lived `ProfileTable`s reused across many
+    `run_with_profile` calls (the per-VM state pattern) so an
+    adversarial workload can't grow the map without bound.
+
+### Public API additions
+
+- `dispatch::ProfileTable` — the new side-table.
+- `dispatch::run_with_profile` — the new entry point.
+- `dispatch::MAX_PROFILED_FUNCTIONS` — the cap constant.
+
+All re-exported from `twig_vm` crate root.
+
+### Tests
+
+- twig-vm: **117 unit + 2 doc** (14 new for PR 8) — all pass on
+  stable Rust.
+
+14 new tests cover:
+- `ProfileTable` mechanics in isolation: starts empty, note_call
+  increments, note_observation advances the state machine
+  through Mono → Poly, separate keys don't share, both
+  resource caps fire correctly.
+- Dispatcher recording: `main` gets call_count = 1, recursive
+  factorial gets call_count = 6 for `fact`, instructions in
+  `(+ 1 2)` get int observations, the most-hit instr in fact
+  accumulates ≥5 observations across recursion.
+- Control-flow opcodes don't get observations recorded
+  (jmp/label/ret have no dest).
+- `run`/`run_with_state` still work (back-compat wrappers).
+- Profile persists across two `run_with_profile` calls (the
+  future per-VM state pattern).
+
+### Security review fixes applied
+
+- **Medium #3 — `instruction_slots` cap is implicit, not enforced**:
+  `instruction_slots: HashMap<(String, usize), SlotState>` had
+  no direct cap; the worst-case shape was `MAX_PROFILED_FUNCTIONS
+  × max_instructions_per_function` ≈ 4B entries (~150GB) when
+  reused across many runs.  Added `MAX_PROFILED_INSTRUCTION_SLOTS
+  = 2²⁰` cap with a check in `note_observation`.
+- **Low #2 — dead defensive `jmp`/`jmp_if_false` branch in the
+  recording site**: simplified by capturing `instr_pc = pc`
+  before the match arm executes (just-executed instr's index
+  is unambiguous).  The recording site now has no
+  control-flow-aware special-casing.
+
+### Hardening
+
+- Clippy-clean on twig-vm (pre-existing warnings in
+  `interpreter-ir/serialise.rs` and `directed-graph` are not
+  from this PR).
+- **Seven** public resource caps now bound the dispatcher:
+  `MAX_DISPATCH_DEPTH`, `MAX_INSTRUCTIONS_PER_RUN`,
+  `MAX_REGISTERS_PER_FRAME`, `MAX_IC_SLOTS_PER_FUNCTION`,
+  `MAX_IC_FUNCTIONS`, `MAX_PROFILED_FUNCTIONS`, **NEW**
+  `MAX_PROFILED_INSTRUCTION_SLOTS`.
+- No new unsafe; no cargo-geiger impact.
+- Per-PR CI Miri (LANG20 PR 7 split) runs on
+  lang-runtime-core + lispy-runtime only — the unsafe-bearing
+  crates.  PR 8 only adds pure safe Rust to twig-vm; the
+  post-merge / nightly twig-vm Miri job (also from PR 7)
+  catches integration-seam regressions.
+
+### Out of scope (PR 11d+)
+
+- **`.ldp` binary serialiser** — LANG22 PR 11d ships the
+  versioned binary format that turns `ProfileTable` into a
+  disk artefact.  PR 8 just collects.
+- **JIT promotion threshold** — LANG22 PR 11f reads
+  `ProfileTable::call_count` and triggers JIT compilation when
+  it crosses 100 (Untyped) / 10 (PartiallyTyped) / 0
+  (FullyTyped).  Threshold lives in jit-core, not twig-vm.
+- **`lang-perf-suggestions` tool** — LANG22 PR 11g consumes
+  `.ldp` artefacts to surface the developer-facing
+  "annotate `n: int` to skip 122ms warmup" reports.
+- **IC observation hooks** — `InlineCache::note_hit` /
+  `note_miss` are wired by the binding (LispyBinding currently
+  doesn't consult the IC for `send_message` / `load_property`
+  / `store_property` — Lispy has no method dispatch — so the
+  IC counters stay 0 for Lispy).  Real Ruby- or JS-bindings
+  will call the hooks; the data they write feeds the same
+  `ProfileTable`.
+
 ## [0.5.0] — 2026-04-30
 
 ### Added — PR 7 of LANG20: persistent inline-cache slot machinery
