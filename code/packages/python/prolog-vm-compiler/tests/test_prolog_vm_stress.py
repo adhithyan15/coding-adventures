@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from logic_engine import atom, logic_list, num
+from logic_engine import atom, logic_list, num, term
 
 from prolog_vm_compiler import (
     compile_swi_prolog_project,
@@ -176,6 +176,36 @@ class TestPrologVMStress:
                 "Yes": logic_list([1, 2]),
                 "No": logic_list([3]),
                 "Stack": logic_list(["c", "b", "a"]),
+            },
+        ]
+
+    def test_apply_family_predicates_run_through_vm(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            join4(A, B, C, joined(A, B, C)).
+            convert(1, one).
+            convert(3, three).
+            pair_push(Left, Right, Acc, [pair(Left, Right)|Acc]).
+            push(Item, Acc, [Item|Acc]).
+
+            ?- maplist(join4, [a,b], [x,y], [1,2], Joined),
+               convlist(convert, [1,2,3], Converted),
+               foldl(pair_push, [a,b], [x,y], [], Folded),
+               scanl(push, [a,b], [], Scanned).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert [answer.as_dict() for answer in answers] == [
+            {
+                "Joined": logic_list([
+                    term("joined", "a", "x", 1),
+                    term("joined", "b", "y", 2),
+                ]),
+                "Converted": logic_list(["one", "three"]),
+                "Folded": logic_list([term("pair", "b", "y"), term("pair", "a", "x")]),
+                "Scanned": logic_list([logic_list(["a"]), logic_list(["b", "a"])]),
             },
         ]
 

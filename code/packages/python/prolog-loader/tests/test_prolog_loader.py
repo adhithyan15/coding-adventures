@@ -1048,6 +1048,42 @@ class TestPrologGoalAdapter:
             ),
         ]
 
+    def test_adapt_prolog_goal_rewrites_apply_family_builtins(self) -> None:
+        loaded = load_swi_prolog_source(
+            """
+            join4(A, B, C, joined(A, B, C)).
+            convert(1, one).
+            convert(3, three).
+            pair_push(Left, Right, Acc, [pair(Left, Right)|Acc]).
+            push(Item, Acc, [Item|Acc]).
+
+            ?- maplist(join4, [a,b], [x,y], [1,2], Joined),
+               convlist(convert, [1,2,3], Converted),
+               foldl(pair_push, [a,b], [x,y], [], Folded),
+               scanl(push, [a,b], [], Scanned).
+            """,
+        )
+        query = loaded.queries[0]
+        adapted = adapt_prolog_goal(query.goal)
+
+        assert solve_all(
+            loaded.program,
+            (
+                query.variables["Joined"],
+                query.variables["Converted"],
+                query.variables["Folded"],
+                query.variables["Scanned"],
+            ),
+            adapted,
+        ) == [
+            (
+                logic_list([term("joined", "a", "x", 1), term("joined", "b", "y", 2)]),
+                logic_list(["one", "three"]),
+                logic_list([term("pair", "b", "y"), term("pair", "a", "x")]),
+                logic_list([logic_list(["a"]), logic_list(["b", "a"])]),
+            ),
+        ]
+
     def test_adapt_prolog_goal_rewrites_clpfd_callable_forms(self) -> None:
         parsed = parse_swi_query(
             "?- ins([X,Y], [1,2,3]), "

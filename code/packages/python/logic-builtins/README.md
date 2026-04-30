@@ -14,9 +14,11 @@ ordinary logic goal expressions.
 - `calltermo(term_goal, *extra_args)` for executing reified callable goal terms
   and Prolog-style `call/N` argument extension
 - `maplisto(closure, list)`, `maplisto(closure, left, right)`,
-  `maplisto(closure, first, second, third)`, `includeo(closure, items,
+  `maplisto(closure, first, second, third)`, `maplisto(closure, first, second,
+  third, fourth)`, `convlisto(closure, items, results)`, `scanlo(closure,
+  *lists_and_accumulators)`, `includeo(closure, items,
   included)`, `excludeo(closure, items, excluded)`, `partitiono(closure, items,
-  included, excluded)`, and `foldlo(closure, items, accumulator, result)` for
+  included, excluded)`, and `foldlo(closure, *lists_and_accumulators)` for
   higher-order list processing through callable terms
 - `onceo(goal)`
 - `cuto()` as the library form of Prolog `!/0`

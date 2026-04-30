@@ -19,6 +19,7 @@ from logic_builtins import (
     clauseo,
     compare_termo,
     compoundo,
+    convlisto,
     copytermo,
     current_predicateo,
     cuto,
@@ -73,6 +74,7 @@ from logic_builtins import (
     retractallo,
     retracto,
     same_termo,
+    scanlo,
     setofo,
     stringo,
     succo,
@@ -268,16 +270,20 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
     if goal.relation.arity == 4 and name in quaternary_list_builtins:
         return quaternary_list_builtins[name](*args)
 
-    if name == "maplist" and 2 <= goal.relation.arity <= 4:
+    if name == "maplist" and 2 <= goal.relation.arity <= 5:
         return maplisto(args[0], *args[1:])
+    if name == "convlist" and goal.relation.arity == 3:
+        return convlisto(*args)
     if name == "include" and goal.relation.arity == 3:
         return includeo(*args)
     if name == "exclude" and goal.relation.arity == 3:
         return excludeo(*args)
     if name == "partition" and goal.relation.arity == 4:
         return partitiono(*args)
-    if name == "foldl" and goal.relation.arity == 4:
+    if name == "foldl" and 4 <= goal.relation.arity <= 7:
         return foldlo(*args)
+    if name == "scanl" and 4 <= goal.relation.arity <= 7:
+        return scanlo(*args)
 
     if name == "call" and 1 <= goal.relation.arity <= 8:
         if goal.relation.arity > 1:

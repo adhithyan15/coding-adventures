@@ -77,6 +77,7 @@ __all__ = [
     "compoundo",
     "compare_termo",
     "copytermo",
+    "convlisto",
     "current_predicateo",
     "cuto",
     "dynamico",
@@ -141,6 +142,7 @@ __all__ = [
     "retractallo",
     "retracto",
     "same_termo",
+    "scanlo",
     "setofo",
     "clauseo",
     "stringo",
@@ -217,6 +219,7 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("compare_termo", 3),
     ("compoundo", 1),
     ("copytermo", 2),
+    ("convlisto", 3),
     ("current_predicateo", 2),
     ("cuto", 0),
     ("dynamico", 2),
@@ -245,6 +248,9 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("excludeo", 3),
     ("findallo", 3),
     ("foldlo", 4),
+    ("foldlo", 5),
+    ("foldlo", 6),
+    ("foldlo", 7),
     ("forallo", 2),
     ("functoro", 3),
     ("geqo", 2),
@@ -262,6 +268,7 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("maplisto", 2),
     ("maplisto", 3),
     ("maplisto", 4),
+    ("maplisto", 5),
     ("nonvaro", 1),
     ("noto", 1),
     ("numeqo", 2),
@@ -273,6 +280,10 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("retractallo", 1),
     ("retracto", 1),
     ("same_termo", 2),
+    ("scanlo", 4),
+    ("scanlo", 5),
+    ("scanlo", 6),
+    ("scanlo", 7),
     ("setofo", 3),
     ("stringo", 1),
     ("succo", 2),
@@ -2661,9 +2672,9 @@ def _run_maplist_rows(
 
 
 def maplisto(closure: object, *lists_value: object) -> GoalExpr:
-    """Apply a callable closure across one to three same-length lists."""
+    """Apply a callable closure across one to four same-length lists."""
 
-    if not 1 <= len(lists_value) <= 3:
+    if not 1 <= len(lists_value) <= 4:
         return failo()
 
     def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
@@ -2773,27 +2784,87 @@ def excludeo(closure: object, items_value: object, excluded_value: object) -> Go
     )
 
 
-def _run_foldl_items(
+def _run_convlist_items(
     program_value: Program,
     state: State,
     closure: Term,
     items: tuple[Term, ...],
-    accumulator: Term,
-    result: Term,
+    converted: tuple[Term, ...],
+    results: Term,
 ) -> Iterator[State]:
     if not items:
-        yield from solve_from(program_value, eq(accumulator, result), state)
+        yield from solve_from(program_value, eq(results, logic_list(converted)), state)
         return
 
     item, *tail = items
+    (converted_item,), next_var_id = _fresh_logic_vars(1, state.next_var_id)
+    reserved_state = _state_with_next_var_id(state, next_var_id)
+    called_state = _first_success_state(
+        program_value,
+        calltermo(closure, item, converted_item),
+        reserved_state,
+    )
+    if called_state is None:
+        yield from _run_convlist_items(
+            program_value,
+            state,
+            closure,
+            tuple(tail),
+            converted,
+            results,
+        )
+        return
+    yield from _run_convlist_items(
+        program_value,
+        called_state,
+        closure,
+        tuple(tail),
+        (*converted, converted_item),
+        results,
+    )
+
+
+def convlisto(closure: object, items_value: object, results_value: object) -> GoalExpr:
+    """Map and filter a proper list through a binary callable closure."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        closure_term, items_term, results_term = args
+        items = _proper_list_items(_reified(items_term, state))
+        if items is None:
+            return
+        yield from _run_convlist_items(
+            program_value,
+            state,
+            closure_term,
+            tuple(items),
+            (),
+            results_term,
+        )
+
+    return native_goal(run, _as_callable_term(closure), items_value, results_value)
+
+
+def _run_foldl_rows(
+    program_value: Program,
+    state: State,
+    closure: Term,
+    rows: tuple[tuple[Term, ...], ...],
+    accumulator: Term,
+    result: Term,
+) -> Iterator[State]:
+    if not rows:
+        yield from solve_from(program_value, eq(accumulator, result), state)
+        return
+
+    row, *tail = rows
     (next_accumulator,), next_var_id = _fresh_logic_vars(1, state.next_var_id)
     reserved_state = _state_with_next_var_id(state, next_var_id)
     for called_state in solve_from(
         program_value,
-        calltermo(closure, item, accumulator, next_accumulator),
+        calltermo(closure, *row, accumulator, next_accumulator),
         reserved_state,
     ):
-        yield from _run_foldl_items(
+        yield from _run_foldl_rows(
             program_value,
             called_state,
             closure,
@@ -2805,33 +2876,92 @@ def _run_foldl_items(
 
 def foldlo(
     closure: object,
-    items_value: object,
-    accumulator_value: object,
-    result_value: object,
+    *values: object,
 ) -> GoalExpr:
-    """Fold a list left-to-right with a ternary callable closure."""
+    """Fold one to four same-length lists through a callable closure."""
+
+    if not 3 <= len(values) <= 6:
+        return failo()
 
     def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
-        closure_term, items_term, accumulator_term, result_term = args
-        items = _proper_list_items(_reified(items_term, state))
-        if items is None:
-            return
-        yield from _run_foldl_items(
+        closure_term, *terms = args
+        *list_terms, accumulator_term, result_term = terms
+        for materialized_state, lists in _materialize_proper_list_args(
             program_value,
             state,
-            closure_term,
-            tuple(items),
-            accumulator_term,
-            result_term,
+            tuple(list_terms),
+        ):
+            rows = tuple(zip(*lists, strict=True))
+            yield from _run_foldl_rows(
+                program_value,
+                materialized_state,
+                closure_term,
+                rows,
+                accumulator_term,
+                result_term,
+            )
+
+    return native_goal(run, _as_callable_term(closure), *values)
+
+
+def _run_scanl_rows(
+    program_value: Program,
+    state: State,
+    closure: Term,
+    rows: tuple[tuple[Term, ...], ...],
+    accumulator: Term,
+    results: Term,
+    produced: tuple[Term, ...],
+) -> Iterator[State]:
+    if not rows:
+        yield from solve_from(program_value, eq(results, logic_list(produced)), state)
+        return
+
+    row, *tail = rows
+    (next_accumulator,), next_var_id = _fresh_logic_vars(1, state.next_var_id)
+    reserved_state = _state_with_next_var_id(state, next_var_id)
+    for called_state in solve_from(
+        program_value,
+        calltermo(closure, *row, accumulator, next_accumulator),
+        reserved_state,
+    ):
+        yield from _run_scanl_rows(
+            program_value,
+            called_state,
+            closure,
+            tuple(tail),
+            next_accumulator,
+            results,
+            (*produced, next_accumulator),
         )
 
-    return native_goal(
-        run,
-        _as_callable_term(closure),
-        items_value,
-        accumulator_value,
-        result_value,
-    )
+
+def scanlo(closure: object, *values: object) -> GoalExpr:
+    """Fold one to four same-length lists and collect intermediate accumulators."""
+
+    if not 3 <= len(values) <= 6:
+        return failo()
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        closure_term, *terms = args
+        *list_terms, accumulator_term, results_term = terms
+        for materialized_state, lists in _materialize_proper_list_args(
+            program_value,
+            state,
+            tuple(list_terms),
+        ):
+            rows = tuple(zip(*lists, strict=True))
+            yield from _run_scanl_rows(
+                program_value,
+                materialized_state,
+                closure_term,
+                rows,
+                accumulator_term,
+                results_term,
+                (),
+            )
+
+    return native_goal(run, _as_callable_term(closure), *values)
 
 
 def onceo(goal: object) -> GoalExpr:

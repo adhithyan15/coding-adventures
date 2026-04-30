@@ -43,6 +43,7 @@ from logic_builtins import (
     clauseo,
     compare_termo,
     compoundo,
+    convlisto,
     copytermo,
     current_predicateo,
     cuto,
@@ -102,6 +103,7 @@ from logic_builtins import (
     retractallo,
     retracto,
     same_termo,
+    scanlo,
     setofo,
     stringo,
     sub,
@@ -1418,23 +1420,42 @@ class TestHigherOrderListBuiltins:
     def test_maplisto_applies_unary_and_binary_closures(self) -> None:
         small = relation("small", 1)
         increment = relation("increment", 2)
+        join4 = relation("join4", 4)
         result = var("Result")
+        combined = var("Combined")
+        a = var("A")
+        b = var("B")
+        c = var("C")
+        d = var("D")
         prog = program(
             fact(small(1)),
             fact(small(2)),
             fact(increment(1, 2)),
             fact(increment(2, 3)),
             fact(increment(3, 4)),
+            rule(join4(a, b, c, d), eq(d, term("joined", a, b, c))),
         )
 
         assert solve_all(
             prog,
-            result,
+            (result, combined),
             conj(
                 maplisto("small", logic_list([1, 2])),
                 maplisto("increment", logic_list([1, 2, 3]), result),
+                maplisto(
+                    "join4",
+                    logic_list(["a", "b"]),
+                    logic_list(["x", "y"]),
+                    logic_list([1, 2]),
+                    combined,
+                ),
             ),
-        ) == [logic_list([2, 3, 4])]
+        ) == [
+            (
+                logic_list([2, 3, 4]),
+                logic_list([term("joined", "a", "x", 1), term("joined", "b", "y", 2)]),
+            ),
+        ]
 
     def test_partition_include_and_exclude_use_unary_closures(self) -> None:
         small = relation("small", 1)
@@ -1463,22 +1484,106 @@ class TestHigherOrderListBuiltins:
 
     def test_foldlo_accumulates_with_a_ternary_closure(self) -> None:
         push = relation("push", 3)
+        pair_push = relation("pair_push", 4)
         item = var("Item")
+        left = var("Left")
+        right = var("Right")
         accumulator = var("Accumulator")
         next_accumulator = var("NextAccumulator")
         result = var("Result")
+        pair_result = var("PairResult")
         prog = program(
             rule(
                 push(item, accumulator, next_accumulator),
                 eq(next_accumulator, term(".", item, accumulator)),
             ),
+            rule(
+                pair_push(left, right, accumulator, next_accumulator),
+                eq(next_accumulator, term(".", term("pair", left, right), accumulator)),
+            ),
+        )
+
+        assert solve_all(
+            prog,
+            (result, pair_result),
+            conj(
+                foldlo("push", logic_list(["a", "b", "c"]), logic_list([]), result),
+                foldlo(
+                    "pair_push",
+                    logic_list(["a", "b"]),
+                    logic_list(["x", "y"]),
+                    logic_list([]),
+                    pair_result,
+                ),
+            ),
+        ) == [
+            (
+                logic_list(["c", "b", "a"]),
+                logic_list([term("pair", "b", "y"), term("pair", "a", "x")]),
+            ),
+        ]
+
+    def test_convlisto_maps_successful_binary_closure_results(self) -> None:
+        convert = relation("convert", 2)
+        result = var("Result")
+        prog = program(
+            fact(convert(1, "one")),
+            fact(convert(3, "three")),
         )
 
         assert solve_all(
             prog,
             result,
-            foldlo("push", logic_list(["a", "b", "c"]), logic_list([]), result),
-        ) == [logic_list(["c", "b", "a"])]
+            convlisto("convert", logic_list([1, 2, 3]), result),
+        ) == [logic_list(["one", "three"])]
+
+    def test_scanlo_collects_intermediate_accumulators(self) -> None:
+        push = relation("push", 3)
+        pair_push = relation("pair_push", 4)
+        item = var("Item")
+        left = var("Left")
+        right = var("Right")
+        accumulator = var("Accumulator")
+        next_accumulator = var("NextAccumulator")
+        result = var("Result")
+        pair_result = var("PairResult")
+        prog = program(
+            rule(
+                push(item, accumulator, next_accumulator),
+                eq(next_accumulator, term(".", item, accumulator)),
+            ),
+            rule(
+                pair_push(left, right, accumulator, next_accumulator),
+                eq(next_accumulator, term(".", term("pair", left, right), accumulator)),
+            ),
+        )
+
+        assert solve_all(
+            prog,
+            (result, pair_result),
+            conj(
+                scanlo("push", logic_list(["a", "b", "c"]), logic_list([]), result),
+                scanlo(
+                    "pair_push",
+                    logic_list(["a", "b"]),
+                    logic_list(["x", "y"]),
+                    logic_list([]),
+                    pair_result,
+                ),
+            ),
+        ) == [
+            (
+                logic_list([
+                    logic_list(["a"]),
+                    logic_list(["b", "a"]),
+                    logic_list(["c", "b", "a"]),
+                ]),
+                logic_list([
+                    logic_list([term("pair", "a", "x")]),
+                    logic_list([term("pair", "b", "y"), term("pair", "a", "x")]),
+                ]),
+            ),
+        ]
 
 
 class TestTermMetaprogrammingBuiltins:
