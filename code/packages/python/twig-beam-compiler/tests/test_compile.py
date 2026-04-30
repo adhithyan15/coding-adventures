@@ -155,17 +155,62 @@ class TestRejectedSurface:
         with pytest.raises(TwigCompileError, match="takes 1 arguments"):
             compile_to_ir("(define (id x) x) (id 1 2)")
 
-    def test_cons_rejected(self) -> None:
-        with pytest.raises(TwigCompileError, match="not yet supported"):
-            compile_to_ir("(cons 1 2)")
-
     def test_print_rejected(self) -> None:
         with pytest.raises(TwigCompileError, match="not yet supported"):
             compile_to_ir("(print 42)")
 
-    def test_quoted_symbol_rejected(self) -> None:
-        with pytest.raises(TwigCompileError, match="quoted symbols"):
-            compile_to_ir("'foo")
+    # ── Heap primitives (TW03 Phase 3e for BEAM) ─────────────────────
+
+    def test_nil_emits_load_nil(self) -> None:
+        from compiler_ir import IrOp
+        ir = compile_to_ir("nil")
+        assert IrOp.LOAD_NIL in [i.opcode for i in ir.instructions]
+
+    def test_quoted_symbol_emits_make_symbol(self) -> None:
+        from compiler_ir import IrLabel, IrOp
+        ir = compile_to_ir("'foo")
+        mks = [i for i in ir.instructions if i.opcode is IrOp.MAKE_SYMBOL]
+        assert len(mks) == 1
+        assert isinstance(mks[0].operands[1], IrLabel)
+        assert mks[0].operands[1].name == "foo"
+
+    def test_cons_emits_make_cons(self) -> None:
+        from compiler_ir import IrOp
+        ir = compile_to_ir("(cons 1 nil)")
+        assert IrOp.MAKE_CONS in [i.opcode for i in ir.instructions]
+
+    def test_car_emits_car(self) -> None:
+        from compiler_ir import IrOp
+        ir = compile_to_ir("(car (cons 1 nil))")
+        assert IrOp.CAR in [i.opcode for i in ir.instructions]
+
+    def test_cdr_emits_cdr(self) -> None:
+        from compiler_ir import IrOp
+        ir = compile_to_ir("(cdr (cons 1 nil))")
+        assert IrOp.CDR in [i.opcode for i in ir.instructions]
+
+    def test_null_predicate_emits_is_null(self) -> None:
+        from compiler_ir import IrOp
+        ir = compile_to_ir("(null? nil)")
+        assert IrOp.IS_NULL in [i.opcode for i in ir.instructions]
+
+    def test_pair_predicate_emits_is_pair(self) -> None:
+        from compiler_ir import IrOp
+        ir = compile_to_ir("(pair? (cons 1 nil))")
+        assert IrOp.IS_PAIR in [i.opcode for i in ir.instructions]
+
+    def test_symbol_predicate_emits_is_symbol(self) -> None:
+        from compiler_ir import IrOp
+        ir = compile_to_ir("(symbol? 'foo)")
+        assert IrOp.IS_SYMBOL in [i.opcode for i in ir.instructions]
+
+    def test_cons_arity_validation(self) -> None:
+        with pytest.raises(TwigCompileError, match="cons"):
+            compile_to_ir("(cons 1)")
+
+    def test_car_arity_validation(self) -> None:
+        with pytest.raises(TwigCompileError, match="car"):
+            compile_to_ir("(car)")
 
     def test_non_literal_value_define_rejected(self) -> None:
         with pytest.raises(TwigCompileError, match="literal RHS"):

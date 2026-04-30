@@ -240,3 +240,56 @@ def test_closure_let_bound() -> None:
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout.strip() == b"42"
+
+
+# ── Heap primitives (TW03 Phase 3e for BEAM) ──────────────────────────────
+
+
+@requires_erl
+def test_heap_list_of_ints_length() -> None:
+    """``(length (cons 1 (cons 2 (cons 3 nil)))) → 3`` runs end-to-end
+    on real ``erl`` from raw Twig source.
+
+    The headline TW03 Phase 3 acceptance criterion — Twig parser
+    → IR emitter → BEAM lowering → real ``erl``.  Builds the
+    cons-cell list via ``MAKE_CONS``, walks via ``CDR`` + ``IS_NULL``
+    (lowered to BEAM ``get_tl`` + ``is_nil``), recurses through
+    ``length``.  BEAM cons cells are first-class native terms with
+    their own GC so this works without any JVM-style obj-pool
+    caller-saves workaround.
+    """
+    result = run_source(
+        """
+        (define (length xs)
+          (if (null? xs) 0 (+ 1 (length (cdr xs)))))
+        (length (cons 1 (cons 2 (cons 3 nil))))
+        """,
+        module_name="bm_length",
+    )
+    assert result.returncode == 0, (
+        f"length pipeline broke at runtime.\n"
+        f"  stdout: {result.stdout!r}\n"
+        f"  stderr: {result.stderr!r}"
+    )
+    assert result.stdout.strip() == b"3"
+
+
+@requires_erl
+def test_heap_car_returns_int() -> None:
+    """``(car (cons 42 nil)) → 42`` exercises the int-from-cons-head
+    path."""
+    result = run_source(
+        "(car (cons 42 nil))",
+        module_name="bm_carone",
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == b"42"
+
+
+@requires_erl
+def test_heap_quoted_symbol_returns_atom() -> None:
+    """``'foo`` returns the atom ``foo``.  Real ``erl`` prints atoms
+    unquoted when the name is a valid identifier."""
+    result = run_source("'foo", module_name="bm_symfoo")
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == b"foo"
