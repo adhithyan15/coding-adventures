@@ -1208,14 +1208,17 @@ class TestHeapExtraTypes:
         assert ("CodingAdventures", "Symbol") not in names
         assert ("CodingAdventures", "Nil") not in names
 
-    def test_cons_typedef_has_int_head_and_object_tail(self) -> None:
+    def test_cons_typedef_has_object_head_and_tail(self) -> None:
+        # Heterogeneous-cons follow-up: head is now object-typed
+        # (was int32) so cons cells can hold any Twig value (boxed
+        # Int32, Symbol, Nil, Cons, closure ref).
         program = self._heap_program([
             IrInstruction(IrOp.LOAD_NIL, [IrRegister(2)]),
         ])
         artifact = lower_ir_to_cil_bytecode(program)
         cons = next(t for t in artifact.extra_types if t.name == "Cons")
         field_types = {f.name: f.type for f in cons.fields}
-        assert field_types == {"head": "int32", "tail": "object"}
+        assert field_types == {"head": "object", "tail": "object"}
 
     def test_symbol_typedef_has_string_name(self) -> None:
         program = self._heap_program([

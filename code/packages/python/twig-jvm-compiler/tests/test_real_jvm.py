@@ -306,3 +306,38 @@ def test_heap_car_of_singleton_returns_int() -> None:
     assert result.returncode == 0, result.stderr
     # 42 = 0x2a = b'*'.
     assert result.stdout == b"*"
+
+
+@requires_java
+def test_heap_car_of_symbol_succeeds() -> None:
+    """``(symbol? (car (cons 'foo nil))) → 1``.
+
+    Heterogeneous-cons: head can hold a symbol (or any obj ref),
+    not just int.  Pre-fix, ``Cons.head`` was typed ``int`` and
+    storing a symbol ref into the int field truncated it to
+    garbage; the subsequent ``symbol?`` instanceof check failed.
+
+    Post-fix, head is ``Object``-typed.  MAKE_CONS detects the
+    head register's obj-typing in this region and stores the
+    Symbol ref directly; CAR's dst is obj-typed (because the
+    next op reads it as obj-source for IS_SYMBOL) so it's
+    loaded directly from the Object field.
+    """
+    src = "(if (symbol? (car (cons (quote foo) nil))) 1 0)"
+    result = run_source(src, class_name="TwCarSym")
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == bytes([1])
+
+
+@requires_java
+def test_heap_car_of_nested_cons_succeeds() -> None:
+    """``(pair? (car (cons (cons 1 nil) nil))) → 1``.
+
+    Heterogeneous-cons: head can hold another cons cell.  This
+    is the canonical AST-shaped data pattern that any real Lisp
+    program (including a self-hosted compiler) needs.
+    """
+    src = "(if (pair? (car (cons (cons 1 nil) nil))) 1 0)"
+    result = run_source(src, class_name="TwCarPair")
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == bytes([1])

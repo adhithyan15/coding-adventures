@@ -1,5 +1,39 @@
 # Changelog
 
+## 0.10.0 — 2026-04-30 — heterogeneous cons cells (Cons.head widened to object)
+
+`Cons.head` is now typed `object` (was `int32`) so cons cells can
+hold any Twig value — boxed Int32, Symbol, another cons, closure
+ref, nil.  Same shape as the parallel JVM heterogeneous-cons fix
+(ir-to-jvm-class-file v0.14.0).
+
+### Class-layout change
+
+```csharp
+public sealed class Cons : object {
+    public object head;   // was: int32 head
+    public object tail;
+    public Cons(object head, object tail) { ... }
+}
+```
+
+### MAKE_CONS lowering
+
+Head register: ldloc from obj slot if obj-typed in this region;
+else ldloc int and `box [System.Int32]` to wrap.  Tail is always
+object.  Reuses the System.Int32 TypeRef added in
+cli-assembly-writer v0.4.0 for the box opcode.
+
+### CAR lowering
+
+Read `Cons.head` (object).  If dst is obj-typed in this region,
+stloc directly into the obj slot.  Else `unbox.any [System.Int32]`
+to extract the int and stloc.
+
+### Tests
+
+All 97 ir-to-cil-bytecode tests pass; coverage 91%.
+
 ## 0.9.0 — 2026-04-30 — closure-returning closures (3-deep curry)
 
 Closure-returning closures now run end-to-end on real `dotnet`:

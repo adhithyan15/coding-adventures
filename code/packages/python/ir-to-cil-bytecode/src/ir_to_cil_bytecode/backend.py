@@ -1740,8 +1740,11 @@ def _build_heap_extra_types(
 
     Three TypeDefs are appended after any closure types:
 
-    * ``Cons`` — fields ``int32 head`` + ``object tail``; ctor takes
-      both and stores them.
+    * ``Cons`` — fields ``object head`` + ``object tail``; ctor takes
+      both and stores them.  Heterogeneous-cons follow-up: head is
+      now ``object``-typed (was ``int32``) so cons cells can hold
+      any Twig value (boxed Int32 for ints, Symbol/Nil/Cons refs
+      directly).
     * ``Symbol`` — field ``string name``; ctor takes a string and
       stores it.
     * ``Nil`` — empty class with a no-arg ctor; used as the
@@ -1780,7 +1783,7 @@ def _build_heap_extra_types(
         max_stack=2,
         local_types=(),
         return_type="void",
-        parameter_types=("int32", "object"),
+        parameter_types=("object", "object"),
         is_instance=True,
         is_special_name=True,
     )
@@ -1789,7 +1792,7 @@ def _build_heap_extra_types(
         namespace="CodingAdventures",
         extends="System.Object",
         fields=(
-            CILFieldArtifact(name="head", type="int32"),
+            CILFieldArtifact(name="head", type="object"),
             CILFieldArtifact(name="tail", type="object"),
         ),
         methods=(cons_ctor,),
@@ -2251,8 +2254,19 @@ def _emit_instruction(
         dst = _as_register(instruction.operands[0], "MAKE_CONS dst")
         head = _as_register(instruction.operands[1], "MAKE_CONS head")
         tail = _as_register(instruction.operands[2], "MAKE_CONS tail")
-        # head: int32 (from int slot); tail: object (from obj slot)
-        builder.emit_ldloc(head.index)
+        # Heterogeneous-cons: head is now object-typed (was int32).
+        # If the head register is obj-typed in this region, ldloc
+        # from the obj slot directly.  If int-typed, ldloc int and
+        # box [System.Int32] to wrap into Object.
+        if ctx is not None and head.index in ctx.obj_local_for:
+            builder.emit_ldloc(ctx.obj_local_for[head.index])
+        else:
+            builder.emit_ldloc(head.index)
+            # box [System.Runtime]System.Int32 — opcode 0x8C
+            builder.emit_token_instruction(
+                0x8C, plan.token_provider.system_int32_typeref_token(),
+            )
+        # Tail: always object — load from obj slot.
         if ctx is not None and tail.index in ctx.obj_local_for:
             builder.emit_ldloc(ctx.obj_local_for[tail.index])
         else:
@@ -2286,7 +2300,19 @@ def _emit_instruction(
         builder.emit_token_instruction(
             0x7B, plan.token_provider.heap_cons_head_token(),
         )
-        builder.emit_stloc(dst.index)  # int32 result → int slot
+        # Heterogeneous-cons: head is now Object.  If dst is
+        # obj-typed in this region, the head IS an obj ref —
+        # stloc directly into the obj slot.  If int-typed (the
+        # common list-of-ints case), unbox.any [System.Int32] to
+        # extract the int.
+        if ctx is not None and dst.index in ctx.obj_local_for:
+            builder.emit_stloc(ctx.obj_local_for[dst.index])
+        else:
+            # unbox.any [System.Int32] — opcode 0xA5
+            builder.emit_token_instruction(
+                0xA5, plan.token_provider.system_int32_typeref_token(),
+            )
+            builder.emit_stloc(dst.index)
         return
 
     if instruction.opcode == IrOp.CDR:
