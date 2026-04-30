@@ -46,6 +46,7 @@ Tag tokens:
 - `append_attribute_name(literal)`
 - `append_attribute_value(current)`
 - `append_attribute_value(literal)`
+- `append_attribute_value_replacement`
 - `commit_attribute`
 - `commit_attribute_dedup`
 - `mark_self_closing`

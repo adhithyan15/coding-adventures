@@ -101,6 +101,9 @@ documented in this file.
 - Unquoted attribute values now preserve unexpected characters such as `"`,
   `'`, `<`, `=`, and `` ` `` while reporting
   `unexpected-character-in-unquoted-attribute-value`.
+- NULL characters in data/RCDATA/RAWTEXT/PLAINTEXT/CDATA/script data and
+  attribute values now recover with `unexpected-null-character` and append
+  U+FFFD.
 - One-dash markup declarations such as `<!->` and `<!-x>` now use
   incorrectly-opened bogus-comment recovery instead of empty-comment recovery.
 - Invalid tag-open characters now follow HTML recovery: stray `<` text is

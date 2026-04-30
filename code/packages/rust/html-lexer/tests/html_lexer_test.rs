@@ -162,6 +162,51 @@ fn default_html_lexer_reports_unexpected_chars_in_unquoted_attribute_values() {
 }
 
 #[test]
+fn default_html_lexer_replaces_null_characters_in_text_and_attributes() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer
+        .push("A\0<a title=\"x\0y\" data=x\0y bare=\0>z")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("A\u{FFFD}".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "title".to_string(),
+                        value: "x\u{FFFD}y".to_string(),
+                    },
+                    Attribute {
+                        name: "data".to_string(),
+                        value: "x\u{FFFD}y".to_string(),
+                    },
+                    Attribute {
+                        name: "bare".to_string(),
+                        value: "\u{FFFD}".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Text("z".to_string()),
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-null-character")
+            .count(),
+        4
+    );
+}
+
+#[test]
 fn default_html_lexer_marks_missing_doctype_name_force_quirks() {
     let mut lexer = create_html_lexer().unwrap();
 
@@ -804,6 +849,38 @@ fn default_html_lexer_supports_seeded_rcdata_lt_references() {
         lexer.drain_tokens(),
         vec![Token::Text("Hello</title>".to_string()), Token::Eof]
     );
+}
+
+#[test]
+fn default_html_lexer_replaces_null_characters_in_text_submodes() {
+    for initial_state in [
+        "rcdata",
+        "rawtext",
+        "script_data",
+        "plaintext",
+        "cdata_section",
+    ] {
+        let mut lexer = create_html_lexer().unwrap();
+        lexer.set_initial_state(initial_state).unwrap();
+
+        lexer.push("a\0b").unwrap();
+        lexer.finish().unwrap();
+
+        assert_eq!(
+            lexer.drain_tokens(),
+            vec![Token::Text("a\u{FFFD}b".to_string()), Token::Eof],
+            "state {initial_state} should replace NULL characters"
+        );
+        assert_eq!(
+            lexer
+                .diagnostics()
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-null-character")
+                .count(),
+            1,
+            "state {initial_state} should report NULL recovery"
+        );
+    }
 }
 
 #[test]

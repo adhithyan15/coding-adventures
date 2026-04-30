@@ -400,6 +400,9 @@ impl Tokenizer {
                     }
                 })?),
                 "append_text_replacement" => self.text_buffer.push('\u{FFFD}'),
+                "append_attribute_value_replacement" => {
+                    self.attribute_mut(action)?.value.push('\u{FFFD}');
+                }
                 "flush_text" => self.flush_text(),
                 "emit_current_as_text" => {
                     let ch = current.ok_or_else(|| TokenizerError::MissingCurrentCodePoint {

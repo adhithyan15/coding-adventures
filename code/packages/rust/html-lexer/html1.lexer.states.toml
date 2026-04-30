@@ -22,6 +22,7 @@ alphabet = [
   "\"",
   "'",
   "`",
+  "\u0000",
   " ",
   "\n",
   "\t",
@@ -621,6 +622,12 @@ actions = [
 
 [[transitions]]
 from = "data"
+matcher = { literal = "\u0000" }
+to = "data"
+actions = ["parse_error(unexpected-null-character)", "append_text_replacement"]
+
+[[transitions]]
+from = "data"
 matcher = { eof = true }
 to = "done"
 consume = false
@@ -650,6 +657,12 @@ actions = [
 
 [[transitions]]
 from = "rcdata"
+matcher = { literal = "\u0000" }
+to = "rcdata"
+actions = ["parse_error(unexpected-null-character)", "append_text_replacement"]
+
+[[transitions]]
+from = "rcdata"
 matcher = { eof = true }
 to = "done"
 consume = false
@@ -666,6 +679,12 @@ from = "rawtext"
 matcher = { literal = "<" }
 to = "rawtext_less_than_sign"
 actions = ["flush_text"]
+
+[[transitions]]
+from = "rawtext"
+matcher = { literal = "\u0000" }
+to = "rawtext"
+actions = ["parse_error(unexpected-null-character)", "append_text_replacement"]
 
 [[transitions]]
 from = "rawtext"
@@ -689,6 +708,12 @@ actions = ["flush_text", "emit(EOF)"]
 
 [[transitions]]
 from = "plaintext"
+matcher = { literal = "\u0000" }
+to = "plaintext"
+actions = ["parse_error(unexpected-null-character)", "append_text_replacement"]
+
+[[transitions]]
+from = "plaintext"
 matcher = { anything = true }
 to = "plaintext"
 actions = ["append_text(current)"]
@@ -697,6 +722,12 @@ actions = ["append_text(current)"]
 from = "cdata_section"
 matcher = { literal = "]" }
 to = "cdata_section_bracket"
+
+[[transitions]]
+from = "cdata_section"
+matcher = { literal = "\u0000" }
+to = "cdata_section"
+actions = ["parse_error(unexpected-null-character)", "append_text_replacement"]
 
 [[transitions]]
 from = "cdata_section"
@@ -759,6 +790,12 @@ actions = ["append_text(]])"]
 from = "script_data"
 matcher = { literal = "<" }
 to = "script_data_less_than_sign"
+
+[[transitions]]
+from = "script_data"
+matcher = { literal = "\u0000" }
+to = "script_data"
+actions = ["parse_error(unexpected-null-character)", "append_text_replacement"]
 
 [[transitions]]
 from = "script_data"
@@ -2774,6 +2811,15 @@ actions = [
 
 [[transitions]]
 from = "before_attribute_value"
+matcher = { literal = "\u0000" }
+to = "attribute_value_unquoted"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "append_attribute_value_replacement",
+]
+
+[[transitions]]
+from = "before_attribute_value"
 matcher = { anything = true }
 to = "attribute_value_unquoted"
 actions = ["append_attribute_value(current)"]
@@ -2808,6 +2854,15 @@ actions = [
 
 [[transitions]]
 from = "attribute_value_double_quoted"
+matcher = { literal = "\u0000" }
+to = "attribute_value_double_quoted"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "append_attribute_value_replacement",
+]
+
+[[transitions]]
+from = "attribute_value_double_quoted"
 matcher = { anything = true }
 to = "attribute_value_double_quoted"
 actions = ["append_attribute_value(current)"]
@@ -2838,6 +2893,15 @@ actions = [
   "set_return_state(attribute_value_single_quoted)",
   "clear_temporary_buffer",
   "append_temporary_buffer(&)",
+]
+
+[[transitions]]
+from = "attribute_value_single_quoted"
+matcher = { literal = "\u0000" }
+to = "attribute_value_single_quoted"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "append_attribute_value_replacement",
 ]
 
 [[transitions]]
@@ -2902,6 +2966,15 @@ actions = [
   "set_return_state(attribute_value_unquoted)",
   "clear_temporary_buffer",
   "append_temporary_buffer(&)",
+]
+
+[[transitions]]
+from = "attribute_value_unquoted"
+matcher = { literal = "\u0000" }
+to = "attribute_value_unquoted"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "append_attribute_value_replacement",
 ]
 
 [[transitions]]
