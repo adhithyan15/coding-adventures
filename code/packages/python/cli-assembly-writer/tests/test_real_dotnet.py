@@ -187,6 +187,190 @@ def test_return_zero_runs_on_real_dotnet(tmp_path: Path) -> None:
     )
 
 
+# ──────────────────────────────────────────────────────────────────────────
+# CLR02 Phase 2b — multi-TypeDef metadata
+# ──────────────────────────────────────────────────────────────────────────
+
+
+def _build_main_returning_42_program(
+    extra_types: tuple[object, ...] = (),
+) -> CILProgramArtifact:
+    """Build a CLR01-shape program that returns 42, optionally with
+    extra TypeDefs alongside the main user type.
+
+    Used by the Phase 2b multi-TypeDef tests to verify that adding
+    extra interfaces / classes doesn't break the load path — the
+    user's main ``Main`` method still has to run and return 42.
+    """
+    builder = CILBytecodeBuilder()
+    builder.emit_ldc_i4(42)
+    builder.emit_ret()
+    body = builder.assemble()
+    main = CILMethodArtifact(
+        name="Main",
+        body=body,
+        return_type="int32",
+        parameter_types=(),
+        local_types=(),
+        max_stack=8,
+    )
+    return CILProgramArtifact(
+        entry_label="Main",
+        methods=(main,),
+        data_offsets={},
+        data_size=0,
+        helper_specs=(),
+        token_provider=SequentialCILTokenProvider(("Main",)),
+        extra_types=extra_types,
+    )
+
+
+@_skip_if_no_dotnet
+def test_extra_interface_typedef_loads_on_real_dotnet(tmp_path: Path) -> None:
+    """A second TypeDef row (an abstract IClosure interface) added
+    alongside the main user type — real ``dotnet`` must still load
+    and run ``Main`` for exit code 42.
+
+    This is the smallest possible multi-TypeDef test: it exercises
+    the variable TypeDef table layout, the abstract-method codepath
+    (RVA=0, ``MethodAttributes`` = abstract+virtual+newslot), the
+    interface ``Flags`` constant, and the instance ``MethodSig``
+    blob (``HASTHIS`` bit set).
+    """
+    from ir_to_cil_bytecode import CILTypeArtifact
+
+    iclosure = CILTypeArtifact(
+        name="IClosure",
+        namespace="CodingAdventures",
+        is_interface=True,
+        extends=None,
+        methods=(
+            CILMethodArtifact(
+                name="Apply",
+                body=b"",
+                max_stack=0,
+                local_types=(),
+                return_type="int32",
+                parameter_types=("int32",),
+                is_instance=True,
+                is_abstract=True,
+            ),
+        ),
+    )
+    program = _build_main_returning_42_program(extra_types=(iclosure,))
+    artifact = write_cli_assembly(
+        program,
+        CLIAssemblyConfig(
+            assembly_name="WithIClosure",
+            module_name="WithIClosure.exe",
+            type_name="WithIClosure",
+        ),
+    )
+    asm_path = tmp_path / "WithIClosure.exe"
+    cfg_path = tmp_path / "WithIClosure.runtimeconfig.json"
+    asm_path.write_bytes(artifact.assembly_bytes)
+    cfg_path.write_text(_runtimeconfig_for_net9())
+
+    result = subprocess.run(
+        ["dotnet", str(asm_path)],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+    assert result.returncode == 42, (
+        f"dotnet rejected the multi-TypeDef assembly.\n"
+        f"  exit code: {result.returncode}\n"
+        f"  stdout: {result.stdout!r}\n"
+        f"  stderr: {result.stderr!r}"
+    )
+
+
+@_skip_if_no_dotnet
+def test_concrete_class_with_field_and_interfaceimpl_loads(
+    tmp_path: Path,
+) -> None:
+    """An IClosure interface + a concrete class that ``Implements``
+    it, with one ``int32`` instance field.  Exercises the Field
+    table + InterfaceImpl table + same-module TypeDef-to-TypeDef
+    references.
+
+    The concrete class's ``Apply`` is emitted as a *static*
+    placeholder method that returns 42 — we're proving the metadata
+    plumbing here, not yet the semantic correctness of an instance
+    Apply.  Phase 2c will fill in the instance bodies.
+    """
+    from ir_to_cil_bytecode import CILFieldArtifact, CILTypeArtifact
+
+    iclosure = CILTypeArtifact(
+        name="IClosure",
+        namespace="CodingAdventures",
+        is_interface=True,
+        extends=None,
+        methods=(
+            CILMethodArtifact(
+                name="Apply",
+                body=b"",
+                max_stack=0,
+                local_types=(),
+                return_type="int32",
+                parameter_types=("int32",),
+                is_instance=True,
+                is_abstract=True,
+            ),
+        ),
+    )
+    placeholder = CILBytecodeBuilder()
+    placeholder.emit_ldc_i4(42)
+    placeholder.emit_ret()
+    closure = CILTypeArtifact(
+        name="Closure_lambda_0",
+        namespace="CodingAdventures",
+        extends="System.Object",
+        implements=("CodingAdventures.IClosure",),
+        fields=(CILFieldArtifact(name="n", type="int32"),),
+        methods=(
+            CILMethodArtifact(
+                name="ApplyStatic",
+                body=placeholder.assemble(),
+                max_stack=8,
+                local_types=(),
+                return_type="int32",
+                parameter_types=("int32",),
+            ),
+        ),
+    )
+    program = _build_main_returning_42_program(
+        extra_types=(iclosure, closure),
+    )
+    artifact = write_cli_assembly(
+        program,
+        CLIAssemblyConfig(
+            assembly_name="WithClosure",
+            module_name="WithClosure.exe",
+            type_name="WithClosure",
+        ),
+    )
+    asm_path = tmp_path / "WithClosure.exe"
+    cfg_path = tmp_path / "WithClosure.runtimeconfig.json"
+    asm_path.write_bytes(artifact.assembly_bytes)
+    cfg_path.write_text(_runtimeconfig_for_net9())
+
+    result = subprocess.run(
+        ["dotnet", str(asm_path)],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+    assert result.returncode == 42, (
+        f"dotnet rejected the assembly with closure class.\n"
+        f"  exit code: {result.returncode}\n"
+        f"  stdout: {result.stdout!r}\n"
+        f"  stderr: {result.stderr!r}"
+    )
+
+
 def test_writer_produces_nonempty_output() -> None:
     """Pure unit test — the writer produces some PE bytes for a
     minimal return-42 program.  Pre-CLR01 this test was where we
