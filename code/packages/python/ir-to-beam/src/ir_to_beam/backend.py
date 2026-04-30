@@ -147,6 +147,9 @@ _OP_RETURN: Final[int] = 19
 _OP_IS_LT: Final[int] = 39           # is_lt fail src1 src2
 _OP_IS_EQ_EXACT: Final[int] = 43     # is_eq_exact fail src1 src2
 _OP_IS_NE_EXACT: Final[int] = 44     # is_ne_exact fail src1 src2
+_OP_IS_ATOM: Final[int] = 48         # is_atom fail src  (TW03 Phase 3d)
+_OP_IS_NIL: Final[int] = 52          # is_nil fail src
+_OP_IS_NONEMPTY_LIST: Final[int] = 56  # is_nonempty_list fail src
 _OP_JUMP: Final[int] = 61
 _OP_MOVE: Final[int] = 64
 _OP_PUT_LIST: Final[int] = 69        # put_list head tail dst  (build cons cell)
@@ -880,6 +883,168 @@ def _emit_apply_closure(
     builder.emit(_OP_MOVE, _x(0), _y(dst))
 
 
+# ---------------------------------------------------------------------------
+# TW03 Phase 3d — heap primitives (cons / symbol / nil) on real BEAM
+# ---------------------------------------------------------------------------
+#
+# BEAM is the easiest of the three native backends here because cons cells
+# and atoms are first-class BEAM terms with native opcodes.  No new "runtime
+# classes" needed — we just emit the right BEAM opcode for each IR op.
+#
+# Mapping summary:
+#
+#   IR op           BEAM emission
+#   --------------  ----------------------------------------------------------
+#   MAKE_CONS       test_heap 2,0 ; put_list y{head}, y{tail}, y{dst}
+#   CAR             get_hd y{src}, y{dst}
+#   CDR             get_tl y{src}, y{dst}
+#   IS_NULL         is_nil F, y{src} ; move {integer,1}, y{dst} ; jump END ;
+#                   F: move {integer,0}, y{dst} ; END:
+#   IS_PAIR         is_nonempty_list F, y{src} ; same true/false dance
+#   IS_SYMBOL       is_atom F, y{src} ; same true/false dance
+#   MAKE_SYMBOL     move {atom, name_atom_idx}, y{dst}    (atom interned in
+#                   builder.atoms — BEAM's atom table is the global intern
+#                   table, so two MAKE_SYMBOL with the same name yield the
+#                   same atom index automatically)
+#   LOAD_NIL        move {atom, 0}, y{dst}                 (atom 0 = nil)
+
+
+def _emit_make_cons(builder: _Builder, instr: IrInstruction) -> None:
+    """Lower ``MAKE_CONS dst, head_reg, tail_reg`` to ``test_heap`` +
+    ``put_list``.
+
+    BEAM cons cells need a 2-word heap allocation; we bracket the
+    ``put_list`` with a ``test_heap 2 0`` so the GC knows to make
+    space (matches the closure-cons cascade pattern in
+    ``_emit_make_closure``)."""
+    if len(instr.operands) != 3:
+        msg = (
+            f"MAKE_CONS expects 3 operands (dst, head, tail), got "
+            f"{len(instr.operands)}"
+        )
+        raise BEAMBackendError(msg)
+    dst = _operand_register(instr.operands[0], role="MAKE_CONS dst")
+    head = _operand_register(instr.operands[1], role="MAKE_CONS head")
+    tail = _operand_register(instr.operands[2], role="MAKE_CONS tail")
+    builder.emit(_OP_TEST_HEAP, _u(2), _u(0))
+    builder.emit(_OP_PUT_LIST, _y(head), _y(tail), _y(dst))
+
+
+def _emit_car(builder: _Builder, instr: IrInstruction) -> None:
+    """Lower ``CAR dst, src`` to ``get_hd y{src}, y{dst}``."""
+    if len(instr.operands) != 2:
+        msg = f"CAR expects 2 operands (dst, src), got {len(instr.operands)}"
+        raise BEAMBackendError(msg)
+    dst = _operand_register(instr.operands[0], role="CAR dst")
+    src = _operand_register(instr.operands[1], role="CAR src")
+    builder.emit(_OP_GET_HD, _y(src), _y(dst))
+
+
+def _emit_cdr(builder: _Builder, instr: IrInstruction) -> None:
+    """Lower ``CDR dst, src`` to ``get_tl y{src}, y{dst}``."""
+    if len(instr.operands) != 2:
+        msg = f"CDR expects 2 operands (dst, src), got {len(instr.operands)}"
+        raise BEAMBackendError(msg)
+    dst = _operand_register(instr.operands[0], role="CDR dst")
+    src = _operand_register(instr.operands[1], role="CDR src")
+    builder.emit(_OP_GET_TL, _y(src), _y(dst))
+
+
+def _emit_type_test_to_bool(
+    builder: _Builder,
+    test_opcode: int,
+    src: int,
+    dst: int,
+) -> None:
+    """Shared template for IS_NULL / IS_PAIR / IS_SYMBOL.
+
+    BEAM type-test opcodes are conditional jumps: each takes a
+    fail-label and falls through if the test holds.  The pattern
+    here mirrors ``_emit_cmp`` exactly — emit the test, then a
+    true/false ``move`` flanked by a fresh label pair so the
+    final ``y{dst}`` is 1 if the test held and 0 otherwise."""
+    false_label = builder.fresh_label()
+    end_label = builder.fresh_label()
+    builder.emit(test_opcode, _f(false_label), _y(src))
+    builder.emit(_OP_MOVE, _i(1), _y(dst))
+    builder.emit(_OP_JUMP, _f(end_label))
+    builder.emit(_OP_LABEL, _u(false_label))
+    builder.emit(_OP_MOVE, _i(0), _y(dst))
+    builder.emit(_OP_LABEL, _u(end_label))
+
+
+def _emit_is_null(builder: _Builder, instr: IrInstruction) -> None:
+    if len(instr.operands) != 2:
+        msg = (
+            f"IS_NULL expects 2 operands (dst, src), got "
+            f"{len(instr.operands)}"
+        )
+        raise BEAMBackendError(msg)
+    dst = _operand_register(instr.operands[0], role="IS_NULL dst")
+    src = _operand_register(instr.operands[1], role="IS_NULL src")
+    _emit_type_test_to_bool(builder, _OP_IS_NIL, src, dst)
+
+
+def _emit_is_pair(builder: _Builder, instr: IrInstruction) -> None:
+    if len(instr.operands) != 2:
+        msg = (
+            f"IS_PAIR expects 2 operands (dst, src), got "
+            f"{len(instr.operands)}"
+        )
+        raise BEAMBackendError(msg)
+    dst = _operand_register(instr.operands[0], role="IS_PAIR dst")
+    src = _operand_register(instr.operands[1], role="IS_PAIR src")
+    _emit_type_test_to_bool(builder, _OP_IS_NONEMPTY_LIST, src, dst)
+
+
+def _emit_is_symbol(builder: _Builder, instr: IrInstruction) -> None:
+    if len(instr.operands) != 2:
+        msg = (
+            f"IS_SYMBOL expects 2 operands (dst, src), got "
+            f"{len(instr.operands)}"
+        )
+        raise BEAMBackendError(msg)
+    dst = _operand_register(instr.operands[0], role="IS_SYMBOL dst")
+    src = _operand_register(instr.operands[1], role="IS_SYMBOL src")
+    _emit_type_test_to_bool(builder, _OP_IS_ATOM, src, dst)
+
+
+def _emit_make_symbol(builder: _Builder, instr: IrInstruction) -> None:
+    """Lower ``MAKE_SYMBOL dst, name_label`` — intern ``name`` as a
+    BEAM atom (the BEAM atom table IS the intern table) and
+    ``move {atom, idx}, y{dst}``.
+
+    BEAM atom indices start at 1 in the atom table; index 0 is
+    reserved for the module's atom (the global "first" entry).
+    """
+    if len(instr.operands) != 2:
+        msg = (
+            f"MAKE_SYMBOL expects 2 operands (dst, name_label), got "
+            f"{len(instr.operands)}"
+        )
+        raise BEAMBackendError(msg)
+    dst = _operand_register(instr.operands[0], role="MAKE_SYMBOL dst")
+    name_label = _operand_label(instr.operands[1], role="MAKE_SYMBOL name_label")
+    atom_idx = builder.atoms.add(name_label)
+    builder.emit(_OP_MOVE, BEAMOperand(BEAMTag.A, atom_idx), _y(dst))
+
+
+def _emit_load_nil(builder: _Builder, instr: IrInstruction) -> None:
+    """Lower ``LOAD_NIL dst`` — ``move {atom, 0}, y{dst}``.
+
+    BEAM encodes ``[]`` (the empty list) as atom index 0; this
+    matches the convention already used by ``_emit_make_closure``
+    when building the captures list."""
+    if len(instr.operands) != 1:
+        msg = (
+            f"LOAD_NIL expects 1 operand (dst), got "
+            f"{len(instr.operands)}"
+        )
+        raise BEAMBackendError(msg)
+    dst = _operand_register(instr.operands[0], role="LOAD_NIL dst")
+    builder.emit(_OP_MOVE, BEAMOperand(BEAMTag.A, 0), _y(dst))
+
+
 _HANDLERS: Final[set[IrOp]] = {
     IrOp.LOAD_IMM,
     IrOp.ADD,
@@ -898,6 +1063,15 @@ _HANDLERS: Final[set[IrOp]] = {
     IrOp.LABEL,           # internal labels in body
     IrOp.MAKE_CLOSURE,    # BEAM02 Phase 2 — closure construction
     IrOp.APPLY_CLOSURE,   # BEAM02 Phase 2 — closure invocation
+    # TW03 Phase 3d — heap primitives.
+    IrOp.MAKE_CONS,
+    IrOp.CAR,
+    IrOp.CDR,
+    IrOp.IS_NULL,
+    IrOp.IS_PAIR,
+    IrOp.MAKE_SYMBOL,
+    IrOp.IS_SYMBOL,
+    IrOp.LOAD_NIL,
 }
 
 
@@ -1196,6 +1370,31 @@ def _emit_body_instruction(
             pp_import_idx=pp_import_idx,
             apply_import_idx=apply_import_idx,
         )
+        return
+    # TW03 Phase 3d — heap primitives.
+    if op is IrOp.MAKE_CONS:
+        _emit_make_cons(builder, instr)
+        return
+    if op is IrOp.CAR:
+        _emit_car(builder, instr)
+        return
+    if op is IrOp.CDR:
+        _emit_cdr(builder, instr)
+        return
+    if op is IrOp.IS_NULL:
+        _emit_is_null(builder, instr)
+        return
+    if op is IrOp.IS_PAIR:
+        _emit_is_pair(builder, instr)
+        return
+    if op is IrOp.IS_SYMBOL:
+        _emit_is_symbol(builder, instr)
+        return
+    if op is IrOp.MAKE_SYMBOL:
+        _emit_make_symbol(builder, instr)
+        return
+    if op is IrOp.LOAD_NIL:
+        _emit_load_nil(builder, instr)
         return
     msg = f"internal: missing handler dispatch for {op.name}"
     raise BEAMBackendError(msg)

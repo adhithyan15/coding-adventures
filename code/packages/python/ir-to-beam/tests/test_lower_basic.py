@@ -548,3 +548,173 @@ class TestClosureLowering:
                     closure_free_var_counts={"_ghost_lambda": 1},
                 ),
             )
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# TW03 Phase 3d — heap primitives (cons / symbol / nil) on BEAM
+# ─────────────────────────────────────────────────────────────────────────
+#
+# BEAM is the simplest of the three native backends here: cons cells and
+# atoms are first-class BEAM terms with native opcodes (put_list /
+# get_hd / get_tl / is_nil / is_nonempty_list / is_atom).  No "runtime
+# classes" needed.
+
+class TestHeapOpLowering:
+    """Each new heap opcode produces the specific BEAM opcode that
+    uniquely identifies its lowering.  Asserts on the emitted opcode
+    sequence rather than running real ``erl`` (those tests live in
+    ``test_real_erl.py``)."""
+
+    def _make_main_only_program(
+        self, instructions: list[IrInstruction],
+    ) -> IrProgram:
+        gen = IDGenerator()
+        program = IrProgram(entry_label="main")
+        program.add_instruction(
+            IrInstruction(IrOp.LABEL, [_label("main")], id=-1)
+        )
+        for ins in instructions:
+            if ins.id == -1 and ins.opcode is not IrOp.LABEL:
+                ins.id = gen.next()
+            program.add_instruction(ins)
+        program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+        return program
+
+    def _opcodes_in(self, instructions) -> list[int]:
+        return [instr.opcode for instr in instructions]
+
+    def test_make_cons_emits_test_heap_and_put_list(self) -> None:
+        program = self._make_main_only_program([
+            IrInstruction(
+                IrOp.MAKE_CONS,
+                [_reg(1), _reg(2), _reg(3)],
+                id=-1,
+            ),
+        ])
+        module = lower_ir_to_beam(
+            program, BEAMBackendConfig(
+                module_name="m", arity_overrides={"main": 0},
+            ),
+        )
+        opcodes = self._opcodes_in(module.instructions)
+        # _OP_TEST_HEAP = 16, _OP_PUT_LIST = 69
+        assert 16 in opcodes
+        assert 69 in opcodes
+
+    def test_car_emits_get_hd(self) -> None:
+        program = self._make_main_only_program([
+            IrInstruction(IrOp.CAR, [_reg(1), _reg(2)], id=-1),
+        ])
+        module = lower_ir_to_beam(
+            program, BEAMBackendConfig(
+                module_name="m", arity_overrides={"main": 0},
+            ),
+        )
+        # _OP_GET_HD = 162
+        assert 162 in self._opcodes_in(module.instructions)
+
+    def test_cdr_emits_get_tl(self) -> None:
+        program = self._make_main_only_program([
+            IrInstruction(IrOp.CDR, [_reg(1), _reg(2)], id=-1),
+        ])
+        module = lower_ir_to_beam(
+            program, BEAMBackendConfig(
+                module_name="m", arity_overrides={"main": 0},
+            ),
+        )
+        # _OP_GET_TL = 163
+        assert 163 in self._opcodes_in(module.instructions)
+
+    def test_is_null_emits_is_nil(self) -> None:
+        program = self._make_main_only_program([
+            IrInstruction(IrOp.IS_NULL, [_reg(1), _reg(2)], id=-1),
+        ])
+        module = lower_ir_to_beam(
+            program, BEAMBackendConfig(
+                module_name="m", arity_overrides={"main": 0},
+            ),
+        )
+        # _OP_IS_NIL = 52
+        assert 52 in self._opcodes_in(module.instructions)
+
+    def test_is_pair_emits_is_nonempty_list(self) -> None:
+        program = self._make_main_only_program([
+            IrInstruction(IrOp.IS_PAIR, [_reg(1), _reg(2)], id=-1),
+        ])
+        module = lower_ir_to_beam(
+            program, BEAMBackendConfig(
+                module_name="m", arity_overrides={"main": 0},
+            ),
+        )
+        # _OP_IS_NONEMPTY_LIST = 56
+        assert 56 in self._opcodes_in(module.instructions)
+
+    def test_is_symbol_emits_is_atom(self) -> None:
+        program = self._make_main_only_program([
+            IrInstruction(IrOp.IS_SYMBOL, [_reg(1), _reg(2)], id=-1),
+        ])
+        module = lower_ir_to_beam(
+            program, BEAMBackendConfig(
+                module_name="m", arity_overrides={"main": 0},
+            ),
+        )
+        # _OP_IS_ATOM = 48
+        assert 48 in self._opcodes_in(module.instructions)
+
+    def test_make_symbol_interns_atom(self) -> None:
+        program = self._make_main_only_program([
+            IrInstruction(
+                IrOp.MAKE_SYMBOL, [_reg(1), _label("foo")], id=-1,
+            ),
+        ])
+        module = lower_ir_to_beam(
+            program, BEAMBackendConfig(
+                module_name="m", arity_overrides={"main": 0},
+            ),
+        )
+        # The atom name "foo" is in the atom table.
+        assert "foo" in module.atoms
+
+    def test_load_nil_emits_move_atom_zero(self) -> None:
+        program = self._make_main_only_program([
+            IrInstruction(IrOp.LOAD_NIL, [_reg(1)], id=-1),
+        ])
+        module = lower_ir_to_beam(
+            program, BEAMBackendConfig(
+                module_name="m", arity_overrides={"main": 0},
+            ),
+        )
+        # _OP_MOVE = 64.  Plenty of moves in a typical module
+        # (entry/exit shuffle) — just check at least one move
+        # references atom 0 (nil) as the source operand.
+        moves = [
+            i for i in module.instructions if i.opcode == 64
+        ]
+        # BEAMTag.A is the atom-tagged operand.
+        assert any(
+            o.tag is BEAMTag.A and o.value == 0
+            for instr in moves
+            for o in instr.operands
+        )
+
+    def test_make_cons_arity_validation(self) -> None:
+        program = self._make_main_only_program([
+            IrInstruction(IrOp.MAKE_CONS, [_reg(1)], id=-1),
+        ])
+        with pytest.raises(BEAMBackendError, match="MAKE_CONS expects"):
+            lower_ir_to_beam(
+                program, BEAMBackendConfig(
+                    module_name="m", arity_overrides={"main": 0},
+                ),
+            )
+
+    def test_load_nil_arity_validation(self) -> None:
+        program = self._make_main_only_program([
+            IrInstruction(IrOp.LOAD_NIL, [_reg(1), _reg(2)], id=-1),
+        ])
+        with pytest.raises(BEAMBackendError, match="LOAD_NIL expects"):
+            lower_ir_to_beam(
+                program, BEAMBackendConfig(
+                    module_name="m", arity_overrides={"main": 0},
+                ),
+            )

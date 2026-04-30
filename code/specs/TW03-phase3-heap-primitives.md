@@ -116,16 +116,28 @@ Phase 2:
   namespace; `Symbol.Intern(string)` static method.
 - `IS_PAIR` / `IS_SYMBOL` lower to `isinst` + `ldnull; cgt.un`.
 
-### Phase 3d — BEAM heap primitives (BEAM03)
+### Phase 3d — BEAM heap primitives (BEAM03).  **Shipped.**
 
-- `MAKE_CONS` lowers to `put_list head, tail, dst`.
+- `MAKE_CONS` lowers to `test_heap 2 0; put_list y{head},
+  y{tail}, y{dst}`.
 - `CAR` / `CDR` lower to `get_hd` / `get_tl`.
-- `IS_NULL` lowers to `is_nil` test op (matches `[]`).
-- `IS_PAIR` lowers to `is_nonempty_list`.
-- `MAKE_SYMBOL` lowers to a literal atom in the atom table
-  (BEAM atoms are global per VM, so "interning" is free).
-- `IS_SYMBOL` lowers to `is_atom`.
-- `LOAD_NIL` lowers to `move nil dst` (the `[]` literal).
+- `IS_NULL` lowers to `is_nil` (BEAM opcode 52) wrapped in the
+  same true/false dance as `_emit_cmp` already uses for the
+  comparison opcodes.
+- `IS_PAIR` lowers to `is_nonempty_list` (56); `IS_SYMBOL`
+  lowers to `is_atom` (48).
+- `MAKE_SYMBOL` lowers to `move {atom, idx}, y{dst}` —
+  ``builder.atoms.add(name)`` interns through the BEAM atom
+  table (which is the global intern table, so two MAKE_SYMBOL
+  with the same name yield the same atom index automatically).
+- `LOAD_NIL` lowers to `move {atom, 0}, y{dst}` (atom 0 = nil).
+
+End-to-end proof on real `erl`:
+- `test_heap_list_of_ints_length_returns_3` — builds `[1, 2, 3]`
+  via MAKE_CONS / LOAD_NIL, walks via CDR / IS_NULL, returns
+  integer 3 from real `erl`.
+- `test_heap_make_symbol_returns_atom` — MAKE_SYMBOL with name
+  `foo` returns the atom `foo`.
 
 ### Phase 3e — Twig frontend acceptance
 
