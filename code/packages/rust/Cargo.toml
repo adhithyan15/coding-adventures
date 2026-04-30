@@ -432,4 +432,5 @@ members = [
     "twig-parser",
     "twig-ir-compiler",
     "lang-runtime-core",
+    "lispy-runtime",
 ]

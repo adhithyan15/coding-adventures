@@ -1,0 +1,8 @@
+[package]
+name = "lispy-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "LANG20 PR 2 — LispyBinding: shared LangBinding implementation for Lisp/Scheme/Twig/Clojure (tagged-i64 values, cons cells, immediate symbols, closures)"
+
+[dependencies]
+lang-runtime-core = { path = "../lang-runtime-core" }
