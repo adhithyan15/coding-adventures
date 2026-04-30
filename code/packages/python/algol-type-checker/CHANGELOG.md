@@ -29,7 +29,7 @@ All notable changes to this package will be documented in this file.
   procedure/function, while keeping procedure-crossing jumps and nonlocal
   designational branches guarded.
 - Added semantic checking for chained assignments, ALGOL conditional
-  expressions, and numeric exponentiation with integer exponents.
+  expressions, and numeric exponentiation with integer or real exponents.
 - Added semantic resolution for bare no-argument typed procedure names used as
   expressions, while keeping written by-name actuals from treating those calls
   as assignable scalar storage.

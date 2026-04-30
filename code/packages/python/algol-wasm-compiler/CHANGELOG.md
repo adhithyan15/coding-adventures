@@ -41,8 +41,8 @@ All notable changes to this package will be documented in this file.
 - Executed Phase 7b direct nonlocal block `goto` statements through the WASM
   path with frame restoration before later block entry.
 - Executed chained assignments, ALGOL-left-associative exponentiation with
-  integer exponents, and branch-selected conditional expressions through the
-  full WASM path.
+  integer or real exponents, and branch-selected conditional expressions
+  through the full WASM path.
 - Executed bare no-argument typed procedure names as expression calls,
   including by-name actuals that re-evaluate through eval thunks.
 - Accepted trailing and repeated semicolons in ALGOL block and compound
@@ -87,8 +87,10 @@ All notable changes to this package will be documented in this file.
   `exp` through the full parser, type-checker, IR, and WASM pipeline using the
   `compiler_math` host import ABI, with nonpositive `ln` arguments returning
   `0` through the ALGOL runtime failure path.
-- Added a standard-real-math golden fixture covering imported real math and
-  output in one end-to-end program.
+- Executed real exponentiation through the `compiler_math` `f64_pow` import,
+  including integer-base promotion and domain failures returning `0`.
+- Added a standard-real-math golden fixture covering imported real math,
+  real exponentiation, and output in one end-to-end program.
 - Added a convergence golden fixture that combines conditional expressions,
   exponentiation, chained assignment, by-name array summation, real arithmetic,
   and output in one end-to-end program.

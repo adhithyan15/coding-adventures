@@ -20,7 +20,7 @@ the current lane already supports a substantial ALGOL 60 surface:
   bounds and checked element access
 - chained assignment, conditional expressions, tolerant trailing/repeated
   semicolons, numeric runtime failure guards, and
-  ALGOL-left-associative exponentiation for integer exponents
+  ALGOL-left-associative exponentiation for integer or real exponents
 - standard numeric functions `abs`, `sign`, `entier`, `sqrt`, `sin`, `cos`,
   `arctan`, `ln`, and `exp`; non-native real math is imported through the
   runtime's `compiler_math` host ABI
@@ -62,10 +62,10 @@ assert WasmRuntime().load_and_run(with_array.binary, "_start", []) == [9]
 
 with_math = compile_source(
     "begin integer result; real x; "
-    "x := sin(0) + cos(0) + arctan(1) + ln(exp(1)); "
+    "x := sin(0) + cos(0) + arctan(1) + ln(exp(1)) + 4 ^ 0.5; "
     "result := entier(x * 100) end"
 )
-assert WasmRuntime(host=WasiHost()).load_and_run(with_math.binary, "_start", []) == [278]
+assert WasmRuntime(host=WasiHost()).load_and_run(with_math.binary, "_start", []) == [478]
 
 showcase = compile_source(
     "begin own integer counter; integer array a[1:3]; real average; "
