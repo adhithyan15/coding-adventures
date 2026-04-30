@@ -1091,6 +1091,32 @@ class TestPrologGoalAdapter:
             (num(2), num(3), num(4), num(1)),
         ]
 
+    def test_adapt_prolog_goal_rewrites_clpfd_reification(self) -> None:
+        parsed = parse_swi_query(
+            "?- [X,Y] ins 1..2, "
+            "(X #< Y) #<==> B, "
+            "(#\\ B) #<==> NB, "
+            "labeling([], [X,Y,B,NB]).",
+        )
+
+        adapted = adapt_prolog_goal(parsed.goal)
+
+        assert solve_all(
+            program(),
+            (
+                parsed.variables["X"],
+                parsed.variables["Y"],
+                parsed.variables["B"],
+                parsed.variables["NB"],
+            ),
+            adapted,
+        ) == [
+            (num(1), num(1), num(0), num(1)),
+            (num(1), num(2), num(1), num(0)),
+            (num(2), num(1), num(0), num(1)),
+            (num(2), num(2), num(0), num(1)),
+        ]
+
     def test_adapt_prolog_goal_rewrites_common_list_predicates(self) -> None:
         parsed = parse_swi_query(
             "?- member(Item, [tea, cake]), "

@@ -56,6 +56,11 @@ class TestOperatorTable:
         assert swi.get("in", "xfx") is not None
         assert swi.get("ins", "xfx") is not None
         assert swi.get("..", "xfx") is not None
+        assert swi.get("#<==>", "xfy") is not None
+        assert swi.get("#==>", "xfy") is not None
+        assert swi.get("#\\/", "yfx") is not None
+        assert swi.get("#/\\", "yfx") is not None
+        assert swi.get("#\\", "fy") is not None
 
     def test_apply_op_directive_adds_and_removes_operator(self) -> None:
         table = empty_operator_table()

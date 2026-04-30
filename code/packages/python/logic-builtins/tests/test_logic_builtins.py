@@ -50,6 +50,10 @@ from logic_builtins import (
     dynamico,
     failo,
     fd_addo,
+    fd_bool_ando,
+    fd_bool_implieso,
+    fd_bool_noto,
+    fd_bool_oro,
     fd_elemento,
     fd_eqo,
     fd_geqo,
@@ -59,6 +63,7 @@ from logic_builtins import (
     fd_lto,
     fd_mulo,
     fd_neqo,
+    fd_reify_relationo,
     fd_scalar_product_relationo,
     fd_scalar_producto,
     fd_subo,
@@ -660,6 +665,67 @@ class TestFiniteDomainBuiltins:
             conj(eq(marker, "ok"), fd_gto(4, 3), fd_geqo(4, 4)),
         ) == [atom("ok")]
         assert solve_all(program(), marker, conj(eq(marker, "ok"), fd_gto(3, 4))) == []
+
+    def test_fd_reify_relationo_enumerates_truth_values(self) -> None:
+        left = var("Left")
+        right = var("Right")
+        truth = var("Truth")
+
+        assert solve_all(
+            program(),
+            (left, right, truth),
+            conj(
+                fd_ino(left, range(1, 3)),
+                fd_ino(right, range(1, 3)),
+                fd_reify_relationo(left, "lt", right, truth),
+                labelingo([left, right, truth]),
+            ),
+        ) == [
+            (num(1), num(1), num(0)),
+            (num(1), num(2), num(1)),
+            (num(2), num(1), num(0)),
+            (num(2), num(2), num(0)),
+        ]
+
+    def test_fd_reify_relationo_truth_can_force_relation(self) -> None:
+        left = var("Left")
+        right = var("Right")
+
+        assert solve_all(
+            program(),
+            (left, right),
+            conj(
+                fd_ino(left, range(1, 4)),
+                fd_ino(right, range(1, 4)),
+                fd_reify_relationo(left, "lt", right, 1),
+                labelingo([left, right]),
+            ),
+        ) == [(num(1), num(2)), (num(1), num(3)), (num(2), num(3))]
+
+    def test_fd_boolean_connectives_enumerate_truth_tables(self) -> None:
+        left = var("Left")
+        right = var("Right")
+        both = var("Both")
+        either = var("Either")
+        not_both = var("NotBoth")
+        implies = var("Implies")
+
+        assert solve_all(
+            program(),
+            (left, right, both, either, not_both, implies),
+            conj(
+                fd_bool_ando(left, right, both),
+                fd_bool_oro(left, right, either),
+                fd_bool_noto(both, not_both),
+                fd_bool_implieso(left, right, implies),
+                labelingo([left, right, both, either, not_both, implies]),
+            ),
+        ) == [
+            (num(0), num(0), num(0), num(0), num(1), num(1)),
+            (num(0), num(1), num(0), num(1), num(1), num(1)),
+            (num(1), num(0), num(0), num(1), num(1), num(0)),
+            (num(1), num(1), num(1), num(1), num(0), num(1)),
+        ]
 
     def test_labelingo_accepts_logic_list_of_variables(self) -> None:
         left = var("Left")
