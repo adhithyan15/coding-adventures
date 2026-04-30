@@ -98,6 +98,7 @@ Temporary buffers and controlled state changes:
 - `switch_to_if_temporary_buffer_equals(value, equal_state, fallback_state)`
 - `switch_to_return_state`
 - `emit_rcdata_end_tag_or_text`
+- `emit_rcdata_end_tag_with_trailing_solidus_or_text`
 
 Diagnostics and stream control:
 
