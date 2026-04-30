@@ -66,12 +66,37 @@ pub mod ast_extract;
 pub mod ast_nodes;
 
 use std::fmt;
-use std::fs;
+use std::sync::OnceLock;
 
-use grammar_tools::parser_grammar::parse_parser_grammar;
+use grammar_tools::parser_grammar::ParserGrammar;
 use lexer::token::Token;
 use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 use twig_lexer::{tokenize_twig, LexerError};
+
+// ---------------------------------------------------------------------------
+// Generated grammar (build.rs → grammar-tools::compiler → Rust)
+// ---------------------------------------------------------------------------
+//
+// The build script (`build.rs`) compiles `code/grammars/twig.grammar`
+// at cargo-build time via
+// `grammar_tools::compiler::compile_parser_grammar`.  The output is
+// Rust source code that defines `pub fn parser_grammar() ->
+// ParserGrammar` returning a fresh struct.  We `include!` it in a
+// private module and wrap the constructor in `OnceLock<ParserGrammar>`
+// so the struct is materialised exactly once per process.
+//
+// See twig-lexer/src/lib.rs for the matching pattern on the token
+// grammar side.
+
+mod generated_grammar {
+    include!(concat!(env!("OUT_DIR"), "/twig_parser_grammar.rs"));
+}
+
+static TWIG_PARSER_GRAMMAR: OnceLock<ParserGrammar> = OnceLock::new();
+
+fn twig_parser_grammar() -> &'static ParserGrammar {
+    TWIG_PARSER_GRAMMAR.get_or_init(generated_grammar::parser_grammar)
+}
 
 pub use ast_extract::{extract_program, MAX_AST_DEPTH};
 pub use ast_nodes::{
@@ -132,34 +157,21 @@ impl From<LexerError> for TwigParseError {
 }
 
 // ---------------------------------------------------------------------------
-// Grammar file location
-// ---------------------------------------------------------------------------
-
-fn grammar_path() -> String {
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    format!("{manifest_dir}/../../../grammars/twig.grammar")
-}
-
-// ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
 
 /// Build a [`GrammarParser`] configured for Twig source.
 ///
-/// Tokenises the source, reads `twig.grammar` from disk, and constructs
-/// a `GrammarParser` ready to call `.parse()` on.  Use this when you
-/// want access to the parser object itself (e.g. for tracing or
-/// alternative entry rules); otherwise reach for [`parse`].
+/// Tokenises the source and constructs a `GrammarParser` over the
+/// build-time-compiled Twig parser grammar (no runtime file I/O).
+/// Use this when you want access to the parser object itself (e.g.
+/// for tracing or alternative entry rules); otherwise reach for
+/// [`parse`].
 ///
 /// # Errors
 ///
 /// Returns a `TwigParseError` if tokenisation fails (e.g. an unknown
 /// character in the source).
-///
-/// # Panics
-///
-/// Panics only if the grammar file is missing/malformed (broken
-/// checkout, not a runtime input issue).
 pub fn create_twig_parser(source: &str) -> Result<GrammarParser, TwigParseError> {
     let tokens = tokenize_twig(source)?;
     Ok(create_twig_parser_from_tokens(tokens))
@@ -170,15 +182,20 @@ pub fn create_twig_parser(source: &str) -> Result<GrammarParser, TwigParseError>
 /// Useful for incremental editors / LSP-style integrations that already
 /// have a `Vec<Token>` (e.g. from `twig_lexer::create_twig_lexer`).
 ///
-/// # Panics
-///
-/// Panics if the grammar file is missing/malformed.
+/// Uses the build-time-compiled grammar — no runtime file I/O, no
+/// re-parsing per parser construction.  `GrammarParser::new` takes
+/// ownership of the grammar, so we clone the static reference; the
+/// shared underlying parsed grammar is also reused across calls.
 pub fn create_twig_parser_from_tokens(tokens: Vec<Token>) -> GrammarParser {
-    let grammar_text = fs::read_to_string(grammar_path())
-        .unwrap_or_else(|e| panic!("Failed to read twig.grammar: {e}"));
-    let grammar = parse_parser_grammar(&grammar_text)
-        .unwrap_or_else(|e| panic!("Failed to parse twig.grammar: {e}"));
-    GrammarParser::new(tokens, grammar)
+    GrammarParser::new(tokens, twig_parser_grammar().clone())
+}
+
+/// Borrow the build-time-compiled Twig parser grammar.
+///
+/// Re-exported here for callers that need to inspect the rules (e.g.
+/// LSP-style introspection, debugger).
+pub fn twig_grammar() -> &'static ParserGrammar {
+    twig_parser_grammar()
 }
 
 /// Maximum LPAREN nesting depth permitted before parsing.
