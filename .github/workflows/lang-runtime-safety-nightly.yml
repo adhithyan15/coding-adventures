@@ -1,0 +1,104 @@
+# =============================================================================
+# LANG-runtime safety CI — nightly Miri (full suite, twig-vm included)
+# =============================================================================
+#
+# Why this workflow exists (PR 7):
+#
+# `lang-runtime-safety.yml` runs Miri on `lang-runtime-core` +
+# `lispy-runtime` as a *blocking* check on every PR (~5 min, fast).
+# The `twig-vm` Miri suite has grown to 1h+ on Linux runners as the
+# dispatcher took on closures (PR 5), method dispatch (PR 6), and the
+# IC table (PR 7).  Per-PR Miri on twig-vm is now `continue-on-error:
+# true` (informational only) — it can't block merges, but it can
+# still flag regressions when it completes in time.
+#
+# This nightly workflow runs the full twig-vm Miri suite at 03:00 UTC
+# every day, on the latest `main` branch.  If the run fails, the
+# workflow record stays in the Actions UI as a regression marker.
+# Engineers also run `scripts/miri-twig-vm.sh` locally before pushing
+# changes that touch the dispatcher; this nightly is the safety net
+# in case a PR slipped through without local verification.
+#
+# Why no notification integration?  Out of scope for PR 7.  Workflow
+# UI history is sufficient; future PR can wire Slack/email when we
+# have a regression to fix.
+
+name: LANG-runtime safety (nightly Miri)
+
+on:
+  schedule:
+    # 03:00 UTC daily.  Off-cycle vs. main business hours so a
+    # regression is visible at the start of the next workday but
+    # doesn't compete for runner capacity during peak push times.
+    # Avoiding the :00 minute mark to spread load across runners.
+    - cron: "13 3 * * *"
+  workflow_dispatch:
+    # Allow manual runs from the Actions UI for ad-hoc verification
+    # without waiting for the next scheduled run.
+
+permissions:
+  contents: read
+
+jobs:
+  miri-twig-vm-nightly:
+    name: Miri — twig-vm (nightly, blocking when scheduled)
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      # Why no `-Zmiri-strict-provenance`?
+      #
+      # Strict provenance rejects ALL integer-to-pointer casts
+      # (including the official `with_exposed_provenance` escape
+      # hatch).  That's fundamentally incompatible with tagged-
+      # pointer value reps — every JIT and dynamic-language runtime
+      # in existence (V8, JSC, CPython, MRI, BEAM) uses int↔ptr
+      # round-trips for tag bits.
+      #
+      # Why `-Zmiri-ignore-leaks`?
+      #
+      # PR 2 ships `lispy-runtime` with a `Box::leak`-based "non-
+      # collecting GC" — every `alloc_cons` / `alloc_closure` leaks
+      # intentionally because the real collector lands in PR 4+
+      # (LANG16 wiring).  Miri correctly reports these as leaks; we
+      # tell it to ignore them so the runtime-UB checks (the
+      # actually-valuable signal) aren't drowned out.  Once the GC
+      # lands, this flag goes away and Miri starts enforcing the
+      # no-leaks-after-collection invariant.
+      #
+      # Default Miri (without strict provenance) still catches all
+      # the actually-exploitable UB classes:
+      #   - out-of-bounds reads / writes
+      #   - use-after-free
+      #   - misaligned access
+      #   - reads from uninitialized memory
+      #   - data races
+      #   - aliasing violations (Stacked / Tree Borrows)
+      #
+      # That's the bar we hold the substrate to.
+      MIRIFLAGS: "-Zmiri-ignore-leaks"
+      CARGO_INCREMENTAL: "0"
+      RUST_BACKTRACE: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust nightly with Miri
+        run: |
+          rustup toolchain install nightly --component miri
+          rustup +nightly component add rust-src
+          cargo +nightly miri --version
+
+      - name: Miri — twig-vm (full suite, may take 60-90 min)
+        working-directory: code/packages/rust
+        run: cargo +nightly miri test -p twig-vm --no-fail-fast
+
+      # Belt-and-braces: also re-run the blocking suite on main
+      # nightly, so a regression introduced by a merge that
+      # bypassed CI (force-push, admin merge) shows up here.
+      - name: Miri — lang-runtime-core
+        working-directory: code/packages/rust
+        run: cargo +nightly miri test -p lang-runtime-core --no-fail-fast
+
+      - name: Miri — lispy-runtime
+        working-directory: code/packages/rust
+        run: cargo +nightly miri test -p lispy-runtime --no-fail-fast

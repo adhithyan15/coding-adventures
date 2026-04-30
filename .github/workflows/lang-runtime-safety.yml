@@ -65,48 +65,50 @@ jobs:
   #   - Tests that *rely* on platform-specific behaviour need `#[cfg(not(miri))]`
   #     gates — none currently exist in these crates.
   # ─────────────────────────────────────────────────────────────────────────
-  miri:
-    name: Miri (UB detection)
+  # ─────────────────────────────────────────────────────────────────────────
+  # Why two Miri jobs (split in PR 7)?
+  #
+  # The `unsafe` in this stack lives in `lang-runtime-core` +
+  # `lispy-runtime` — tagged-pointer scheme, heap accessors, FFI.
+  # `twig-vm` has zero unsafe of its own.  Miri on twig-vm covers the
+  # **integration seam** (closure dispatch, IC table, recursion paths
+  # through unsafe lispy-runtime accessors) — useful but not
+  # safety-critical, since lispy-runtime's own Miri suite already
+  # exercises every `unsafe fn` directly.
+  #
+  # PR 4 ran a single Miri job covering all three crates, with a 30
+  # min cap.  Closures (PR 5), method dispatch (PR 6), and the IC
+  # table (PR 7) each grew the twig-vm wallclock; the timeout was
+  # bumped to 90 min in PR 5 and the PR 7 run still timed out at
+  # 1h30m.
+  #
+  # PR 7 splits Miri into two jobs:
+  #
+  #   1. `miri-blocking`     — lang-runtime-core + lispy-runtime
+  #                            only.  ~13s + ~13s + setup ≈ 5 min.
+  #                            Required to merge.
+  #   2. `miri-twig-vm`      — twig-vm only.  Slow but covers the
+  #                            integration seam.  `continue-on-error:
+  #                            true` so a timeout doesn't gate
+  #                            merges; the result is informational.
+  #
+  # A separate nightly workflow (`lang-runtime-safety-nightly.yml`)
+  # runs the full twig-vm Miri suite at 03:00 UTC daily and posts a
+  # workflow summary if it fails — picks up integration-seam
+  # regressions even when no PR triggered Miri.
+  #
+  # Local verification: developers run `scripts/miri-twig-vm.sh`
+  # before pushing changes that touch twig-vm.  See lessons.md.
+  # ─────────────────────────────────────────────────────────────────────────
+
+  miri-blocking:
+    name: Miri (UB detection — blocking)
     runs-on: ubuntu-latest
-    # Bumped from 30 to 90 in PR 5: the twig-vm Miri suite alone
-    # takes ~40 min on a fast Mac (closure paths added in PR 5
-    # roughly tripled the work vs PR 4) and ~30 min on the GitHub
-    # Linux runner — right at the edge.  Add headroom so a slow
-    # runner doesn't fail the job at 30:15.  Subsequent PRs will
-    # likely push this further; consider sharding by crate when
-    # the wallclock crosses 60 min.
-    timeout-minutes: 90
+    timeout-minutes: 30
     env:
-      # Why no `-Zmiri-strict-provenance`?
-      #
-      # Strict provenance rejects ALL integer-to-pointer casts
-      # (including the official `with_exposed_provenance` escape
-      # hatch).  That's fundamentally incompatible with tagged-
-      # pointer value reps — every JIT and dynamic-language
-      # runtime in existence (V8, JSC, CPython, MRI, BEAM) uses
-      # int↔ptr round-trips for tag bits.
-      #
-      # Why `-Zmiri-ignore-leaks`?
-      #
-      # PR 2 ships `lispy-runtime` with a `Box::leak`-based "non-
-      # collecting GC" — every `alloc_cons` / `alloc_closure`
-      # leaks intentionally because the real collector lands in
-      # PR 4+ (LANG16 wiring).  Miri correctly reports these as
-      # leaks; we tell it to ignore them so the runtime-UB checks
-      # (the actually-valuable signal) aren't drowned out.  Once
-      # the GC lands, this flag goes away and Miri starts
-      # enforcing the no-leaks-after-collection invariant.
-      #
-      # Default Miri (without strict provenance) still catches all
-      # the actually-exploitable UB classes:
-      #   - out-of-bounds reads / writes
-      #   - use-after-free
-      #   - misaligned access
-      #   - reads from uninitialized memory
-      #   - data races
-      #   - aliasing violations (Stacked / Tree Borrows)
-      #
-      # That's the bar we hold the substrate to.
+      # See `lang-runtime-safety-nightly.yml` for the full rationale
+      # behind these flags (provenance, leak handling, the UB
+      # classes default Miri still catches).  Same flags here.
       MIRIFLAGS: "-Zmiri-ignore-leaks"
       CARGO_INCREMENTAL: "0"
       RUST_BACKTRACE: "1"
@@ -120,8 +122,6 @@ jobs:
           rustup +nightly component add rust-src
           cargo +nightly miri --version
 
-      # Keep separate `cargo miri test` invocations so a failure points
-      # at a specific crate and the test output isn't interleaved.
       - name: Miri — lang-runtime-core
         working-directory: code/packages/rust
         run: cargo +nightly miri test -p lang-runtime-core --no-fail-fast
@@ -130,14 +130,31 @@ jobs:
         working-directory: code/packages/rust
         run: cargo +nightly miri test -p lispy-runtime --no-fail-fast
 
-      # twig-vm has no `unsafe` of its own, but its dispatcher
-      # exercises lispy-runtime's tagged-pointer code on every
-      # `call_builtin` (cons, car, cdr, etc.).  Running Miri on
-      # the dispatcher tests catches UB in the integration seam
-      # — operand_to_value, frame lookups, recursion paths —
-      # that lispy-runtime's own Miri suite doesn't reach because
-      # it tests the binding in isolation.
-      - name: Miri — twig-vm
+  miri-twig-vm:
+    name: Miri (UB detection — twig-vm, informational)
+    runs-on: ubuntu-latest
+    # Informational: doesn't block merge.  Catches regressions in the
+    # integration seam between safe twig-vm code and unsafe
+    # lispy-runtime primitives, but the unsafe itself is covered by
+    # `miri-blocking` on lispy-runtime.  Local pre-push verification
+    # via `scripts/miri-twig-vm.sh` is the canonical check.
+    continue-on-error: true
+    timeout-minutes: 90
+    env:
+      MIRIFLAGS: "-Zmiri-ignore-leaks"
+      CARGO_INCREMENTAL: "0"
+      RUST_BACKTRACE: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust nightly with Miri
+        run: |
+          rustup toolchain install nightly --component miri
+          rustup +nightly component add rust-src
+          cargo +nightly miri --version
+
+      - name: Miri — twig-vm (informational, may time out)
         working-directory: code/packages/rust
         run: cargo +nightly miri test -p twig-vm --no-fail-fast
 

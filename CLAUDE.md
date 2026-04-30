@@ -39,6 +39,7 @@
 - Push early and often — create PRs as soon as a branch has meaningful work, keep pushing commits into the same PR as work progresses
 - Keep the todo list updated — check off items as they're completed, add new items as they're discovered
 - **Before pushing code, always run `/security-review` to have a sub-agent perform a security code review. Do not push until the review passes.**
+- **For changes that touch `twig-vm` or its deps**, also run `scripts/miri-twig-vm.sh` locally before pushing.  Per-PR CI runs Miri on `lang-runtime-core` + `lispy-runtime` (where the unsafe lives) as a blocking check; twig-vm Miri is informational on PRs and runs nightly, so the local script is the canonical verification.  Wallclock ~30-90 min; run in a separate terminal during code review.
 - **After creating or pushing to a PR, always run `/babysit-pr` to monitor CI status and merge conflicts until the PR is green**
 
 ## Build System

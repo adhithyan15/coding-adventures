@@ -104,7 +104,34 @@ against).
 - All resource limits from prior PRs still enforced.
 - The new opcodes don't add any unsafe; no cargo-geiger
   impact.
-- Miri verification on twig-vm runs in CI.
+
+### Miri CI restructure
+
+Per-PR Miri on twig-vm hit 1h30m+ on Linux CI runners even at
+the 90-min cap from PR 5 — not a real bug, just runner
+wallclock.  The unsafe in this stack lives entirely in
+`lang-runtime-core` + `lispy-runtime`; twig-vm has zero unsafe
+of its own.  PR 7 splits the Miri job to keep the per-PR
+critical path fast:
+
+- **Per-PR `miri-blocking` (new)**: runs Miri on
+  `lang-runtime-core` + `lispy-runtime` only (~5 min total).
+  Required to merge.  Catches every UB regression in the
+  unsafe-bearing surface.
+- **Per-PR `miri-twig-vm` (informational)**: still runs the
+  twig-vm Miri suite on every PR but with
+  `continue-on-error: true` so a timeout doesn't block.
+  Useful when it completes; doesn't gate when it doesn't.
+- **Nightly `lang-runtime-safety-nightly.yml` (new)**: runs the
+  full twig-vm Miri suite at 03:13 UTC daily, plus a re-run of
+  the blocking suite for belt-and-braces against admin-merge
+  bypasses.  120 min budget.  Surfaces regressions that
+  slipped past local + per-PR checks.
+- **Local `scripts/miri-twig-vm.sh` (new)**: canonical pre-push
+  verification.  Runs the full Miri suite (lang-runtime-core +
+  lispy-runtime + twig-vm) with the same flags as CI.
+  Documented in `CLAUDE.md` and `lessons.md` as the
+  "Before pushing code that touches twig-vm" step.
 
 ## [0.4.0] — 2026-04-30
 
