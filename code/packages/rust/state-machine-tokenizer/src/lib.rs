@@ -678,6 +678,9 @@ impl Tokenizer {
                 "emit_rcdata_end_tag_with_whitespace_or_text" => {
                     self.emit_rcdata_end_tag_with_whitespace_or_text(action, position, state)?
                 }
+                "emit_rcdata_end_tag_with_attributes_or_text" => {
+                    self.emit_rcdata_end_tag_with_attributes_or_text(action, position, state)?
+                }
                 "emit(EOF)" => self.tokens.push_back(Token::Eof),
                 _ if action.starts_with("set_return_state(") && action.ends_with(')') => {
                     let state = action
@@ -1110,6 +1113,47 @@ impl Tokenizer {
         if self.last_start_tag.as_deref() == Some(candidate.as_str()) {
             self.diagnostics.push(Diagnostic {
                 code: "unexpected-whitespace-after-end-tag-name".to_string(),
+                position,
+                state: state.to_string(),
+            });
+            self.flush_text();
+            self.emit_current_token("emit_current_token")?;
+        } else {
+            self.current_token = None;
+            self.current_attribute = None;
+            self.text_buffer.push_str("</");
+            self.text_buffer.push_str(&self.temporary_buffer);
+            self.text_buffer.push('>');
+        }
+        self.temporary_buffer.clear();
+        Ok(())
+    }
+
+    fn emit_rcdata_end_tag_with_attributes_or_text(
+        &mut self,
+        action: &str,
+        position: SourcePosition,
+        state: &str,
+    ) -> Result<()> {
+        let candidate = match self.current_token.as_ref() {
+            Some(CurrentToken::EndTag { name }) => name.clone(),
+            Some(other) => {
+                return Err(TokenizerError::InvalidCurrentToken {
+                    action: action.to_string(),
+                    expected: "end-tag",
+                    actual: other.kind_name(),
+                })
+            }
+            None => {
+                return Err(TokenizerError::MissingCurrentToken {
+                    action: action.to_string(),
+                })
+            }
+        };
+
+        if self.last_start_tag.as_deref() == Some(candidate.as_str()) {
+            self.diagnostics.push(Diagnostic {
+                code: "end-tag-with-attributes".to_string(),
                 position,
                 state: state.to_string(),
             });

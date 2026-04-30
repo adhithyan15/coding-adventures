@@ -926,6 +926,13 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             external_entry: true,
         },
         StateDefinition {
+            id: "rawtext_end_tag_attributes".to_string(),
+            initial: false,
+            accepting: false,
+            final_state: false,
+            external_entry: false,
+        },
+        StateDefinition {
             id: "rawtext_end_tag_name".to_string(),
             initial: false,
             accepting: false,
@@ -983,6 +990,13 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         },
         StateDefinition {
             id: "rcdata_character_reference_lt".to_string(),
+            initial: false,
+            accepting: false,
+            final_state: false,
+            external_entry: false,
+        },
+        StateDefinition {
+            id: "rcdata_end_tag_attributes".to_string(),
             initial: false,
             accepting: false,
             final_state: false,
@@ -1073,6 +1087,13 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             external_entry: false,
         },
         StateDefinition {
+            id: "script_data_end_tag_attributes".to_string(),
+            initial: false,
+            accepting: false,
+            final_state: false,
+            external_entry: false,
+        },
+        StateDefinition {
             id: "script_data_end_tag_name".to_string(),
             initial: false,
             accepting: false,
@@ -1123,6 +1144,13 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         },
         StateDefinition {
             id: "script_data_escaped_dash_dash".to_string(),
+            initial: false,
+            accepting: false,
+            final_state: false,
+            external_entry: false,
+        },
+        StateDefinition {
+            id: "script_data_escaped_end_tag_attributes".to_string(),
             initial: false,
             accepting: false,
             final_state: false,
@@ -3649,25 +3677,383 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             on: None,
             matcher: Some(MatcherDefinition::Anything),
             to: vec![
+                "rcdata_end_tag_attributes".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "rawtext_end_tag_whitespace".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal(" ".to_string())),
+            to: vec![
+                "rawtext_end_tag_whitespace".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "rawtext_end_tag_whitespace".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\n".to_string())),
+            to: vec![
+                "rawtext_end_tag_whitespace".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "rawtext_end_tag_whitespace".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\t".to_string())),
+            to: vec![
+                "rawtext_end_tag_whitespace".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "rawtext_end_tag_whitespace".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\r".to_string())),
+            to: vec![
+                "rawtext_end_tag_whitespace".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "rawtext_end_tag_whitespace".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal(">".to_string())),
+            to: vec![
+                "rawtext".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "emit_rcdata_end_tag_with_whitespace_or_text".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "rawtext_end_tag_whitespace".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Eof),
+            to: vec![
+                "done".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "discard_current_token".to_string(),
+                "append_text(</)".to_string(),
+                "append_temporary_buffer_to_text".to_string(),
+                "flush_text".to_string(),
+                "emit(EOF)".to_string(),
+            ],
+            consume: false,
+        },
+        TransitionDefinition {
+            from: "rawtext_end_tag_whitespace".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Anything),
+            to: vec![
+                "rawtext_end_tag_attributes".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "script_data_end_tag_whitespace".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal(" ".to_string())),
+            to: vec![
+                "script_data_end_tag_whitespace".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "script_data_end_tag_whitespace".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\n".to_string())),
+            to: vec![
+                "script_data_end_tag_whitespace".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "script_data_end_tag_whitespace".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\t".to_string())),
+            to: vec![
+                "script_data_end_tag_whitespace".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "script_data_end_tag_whitespace".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\r".to_string())),
+            to: vec![
+                "script_data_end_tag_whitespace".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "script_data_end_tag_whitespace".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal(">".to_string())),
+            to: vec![
+                "script_data".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "emit_rcdata_end_tag_with_whitespace_or_text".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "script_data_end_tag_whitespace".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Eof),
+            to: vec![
+                "done".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "discard_current_token".to_string(),
+                "append_text(</)".to_string(),
+                "append_temporary_buffer_to_text".to_string(),
+                "flush_text".to_string(),
+                "emit(EOF)".to_string(),
+            ],
+            consume: false,
+        },
+        TransitionDefinition {
+            from: "script_data_end_tag_whitespace".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Anything),
+            to: vec![
+                "script_data_end_tag_attributes".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "script_data_escaped_end_tag_whitespace".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal(" ".to_string())),
+            to: vec![
+                "script_data_escaped_end_tag_whitespace".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "script_data_escaped_end_tag_whitespace".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\n".to_string())),
+            to: vec![
+                "script_data_escaped_end_tag_whitespace".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "script_data_escaped_end_tag_whitespace".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\t".to_string())),
+            to: vec![
+                "script_data_escaped_end_tag_whitespace".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "script_data_escaped_end_tag_whitespace".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\r".to_string())),
+            to: vec![
+                "script_data_escaped_end_tag_whitespace".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "script_data_escaped_end_tag_whitespace".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal(">".to_string())),
+            to: vec![
+                "script_data_escaped".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "emit_rcdata_end_tag_with_whitespace_or_text".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "script_data_escaped_end_tag_whitespace".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Eof),
+            to: vec![
+                "done".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "discard_current_token".to_string(),
+                "append_text(</)".to_string(),
+                "append_temporary_buffer_to_text".to_string(),
+                "flush_text".to_string(),
+                "emit(EOF)".to_string(),
+            ],
+            consume: false,
+        },
+        TransitionDefinition {
+            from: "script_data_escaped_end_tag_whitespace".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Anything),
+            to: vec![
+                "script_data_escaped_end_tag_attributes".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "rcdata_end_tag_attributes".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal(">".to_string())),
+            to: vec![
                 "rcdata".to_string(),
             ],
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
+                "emit_rcdata_end_tag_with_attributes_or_text".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "rcdata_end_tag_attributes".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Eof),
+            to: vec![
+                "done".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
                 "discard_current_token".to_string(),
                 "append_text(</)".to_string(),
                 "append_temporary_buffer_to_text".to_string(),
-                "append_text(current)".to_string(),
+                "flush_text".to_string(),
+                "emit(EOF)".to_string(),
             ],
-            consume: true,
+            consume: false,
         },
         TransitionDefinition {
-            from: "rawtext_end_tag_whitespace".to_string(),
+            from: "rcdata_end_tag_attributes".to_string(),
             on: None,
-            matcher: Some(MatcherDefinition::Literal(" ".to_string())),
+            matcher: Some(MatcherDefinition::Anything),
             to: vec![
-                "rawtext_end_tag_whitespace".to_string(),
+                "rcdata_end_tag_attributes".to_string(),
             ],
             guard: None,
             stack_pop: None,
@@ -3678,52 +4064,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             consume: true,
         },
         TransitionDefinition {
-            from: "rawtext_end_tag_whitespace".to_string(),
-            on: None,
-            matcher: Some(MatcherDefinition::Literal("\n".to_string())),
-            to: vec![
-                "rawtext_end_tag_whitespace".to_string(),
-            ],
-            guard: None,
-            stack_pop: None,
-            stack_push: Vec::new(),
-            actions: vec![
-                "append_temporary_buffer(current)".to_string(),
-            ],
-            consume: true,
-        },
-        TransitionDefinition {
-            from: "rawtext_end_tag_whitespace".to_string(),
-            on: None,
-            matcher: Some(MatcherDefinition::Literal("\t".to_string())),
-            to: vec![
-                "rawtext_end_tag_whitespace".to_string(),
-            ],
-            guard: None,
-            stack_pop: None,
-            stack_push: Vec::new(),
-            actions: vec![
-                "append_temporary_buffer(current)".to_string(),
-            ],
-            consume: true,
-        },
-        TransitionDefinition {
-            from: "rawtext_end_tag_whitespace".to_string(),
-            on: None,
-            matcher: Some(MatcherDefinition::Literal("\r".to_string())),
-            to: vec![
-                "rawtext_end_tag_whitespace".to_string(),
-            ],
-            guard: None,
-            stack_pop: None,
-            stack_push: Vec::new(),
-            actions: vec![
-                "append_temporary_buffer(current)".to_string(),
-            ],
-            consume: true,
-        },
-        TransitionDefinition {
-            from: "rawtext_end_tag_whitespace".to_string(),
+            from: "rawtext_end_tag_attributes".to_string(),
             on: None,
             matcher: Some(MatcherDefinition::Literal(">".to_string())),
             to: vec![
@@ -3733,12 +4074,12 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "emit_rcdata_end_tag_with_whitespace_or_text".to_string(),
+                "emit_rcdata_end_tag_with_attributes_or_text".to_string(),
             ],
             consume: true,
         },
         TransitionDefinition {
-            from: "rawtext_end_tag_whitespace".to_string(),
+            from: "rawtext_end_tag_attributes".to_string(),
             on: None,
             matcher: Some(MatcherDefinition::Eof),
             to: vec![
@@ -3757,29 +4098,11 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             consume: false,
         },
         TransitionDefinition {
-            from: "rawtext_end_tag_whitespace".to_string(),
+            from: "rawtext_end_tag_attributes".to_string(),
             on: None,
             matcher: Some(MatcherDefinition::Anything),
             to: vec![
-                "rawtext".to_string(),
-            ],
-            guard: None,
-            stack_pop: None,
-            stack_push: Vec::new(),
-            actions: vec![
-                "discard_current_token".to_string(),
-                "append_text(</)".to_string(),
-                "append_temporary_buffer_to_text".to_string(),
-                "append_text(current)".to_string(),
-            ],
-            consume: true,
-        },
-        TransitionDefinition {
-            from: "script_data_end_tag_whitespace".to_string(),
-            on: None,
-            matcher: Some(MatcherDefinition::Literal(" ".to_string())),
-            to: vec![
-                "script_data_end_tag_whitespace".to_string(),
+                "rawtext_end_tag_attributes".to_string(),
             ],
             guard: None,
             stack_pop: None,
@@ -3790,52 +4113,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             consume: true,
         },
         TransitionDefinition {
-            from: "script_data_end_tag_whitespace".to_string(),
-            on: None,
-            matcher: Some(MatcherDefinition::Literal("\n".to_string())),
-            to: vec![
-                "script_data_end_tag_whitespace".to_string(),
-            ],
-            guard: None,
-            stack_pop: None,
-            stack_push: Vec::new(),
-            actions: vec![
-                "append_temporary_buffer(current)".to_string(),
-            ],
-            consume: true,
-        },
-        TransitionDefinition {
-            from: "script_data_end_tag_whitespace".to_string(),
-            on: None,
-            matcher: Some(MatcherDefinition::Literal("\t".to_string())),
-            to: vec![
-                "script_data_end_tag_whitespace".to_string(),
-            ],
-            guard: None,
-            stack_pop: None,
-            stack_push: Vec::new(),
-            actions: vec![
-                "append_temporary_buffer(current)".to_string(),
-            ],
-            consume: true,
-        },
-        TransitionDefinition {
-            from: "script_data_end_tag_whitespace".to_string(),
-            on: None,
-            matcher: Some(MatcherDefinition::Literal("\r".to_string())),
-            to: vec![
-                "script_data_end_tag_whitespace".to_string(),
-            ],
-            guard: None,
-            stack_pop: None,
-            stack_push: Vec::new(),
-            actions: vec![
-                "append_temporary_buffer(current)".to_string(),
-            ],
-            consume: true,
-        },
-        TransitionDefinition {
-            from: "script_data_end_tag_whitespace".to_string(),
+            from: "script_data_end_tag_attributes".to_string(),
             on: None,
             matcher: Some(MatcherDefinition::Literal(">".to_string())),
             to: vec![
@@ -3845,12 +4123,12 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "emit_rcdata_end_tag_with_whitespace_or_text".to_string(),
+                "emit_rcdata_end_tag_with_attributes_or_text".to_string(),
             ],
             consume: true,
         },
         TransitionDefinition {
-            from: "script_data_end_tag_whitespace".to_string(),
+            from: "script_data_end_tag_attributes".to_string(),
             on: None,
             matcher: Some(MatcherDefinition::Eof),
             to: vec![
@@ -3869,29 +4147,11 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             consume: false,
         },
         TransitionDefinition {
-            from: "script_data_end_tag_whitespace".to_string(),
+            from: "script_data_end_tag_attributes".to_string(),
             on: None,
             matcher: Some(MatcherDefinition::Anything),
             to: vec![
-                "script_data".to_string(),
-            ],
-            guard: None,
-            stack_pop: None,
-            stack_push: Vec::new(),
-            actions: vec![
-                "discard_current_token".to_string(),
-                "append_text(</)".to_string(),
-                "append_temporary_buffer_to_text".to_string(),
-                "append_text(current)".to_string(),
-            ],
-            consume: true,
-        },
-        TransitionDefinition {
-            from: "script_data_escaped_end_tag_whitespace".to_string(),
-            on: None,
-            matcher: Some(MatcherDefinition::Literal(" ".to_string())),
-            to: vec![
-                "script_data_escaped_end_tag_whitespace".to_string(),
+                "script_data_end_tag_attributes".to_string(),
             ],
             guard: None,
             stack_pop: None,
@@ -3902,52 +4162,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             consume: true,
         },
         TransitionDefinition {
-            from: "script_data_escaped_end_tag_whitespace".to_string(),
-            on: None,
-            matcher: Some(MatcherDefinition::Literal("\n".to_string())),
-            to: vec![
-                "script_data_escaped_end_tag_whitespace".to_string(),
-            ],
-            guard: None,
-            stack_pop: None,
-            stack_push: Vec::new(),
-            actions: vec![
-                "append_temporary_buffer(current)".to_string(),
-            ],
-            consume: true,
-        },
-        TransitionDefinition {
-            from: "script_data_escaped_end_tag_whitespace".to_string(),
-            on: None,
-            matcher: Some(MatcherDefinition::Literal("\t".to_string())),
-            to: vec![
-                "script_data_escaped_end_tag_whitespace".to_string(),
-            ],
-            guard: None,
-            stack_pop: None,
-            stack_push: Vec::new(),
-            actions: vec![
-                "append_temporary_buffer(current)".to_string(),
-            ],
-            consume: true,
-        },
-        TransitionDefinition {
-            from: "script_data_escaped_end_tag_whitespace".to_string(),
-            on: None,
-            matcher: Some(MatcherDefinition::Literal("\r".to_string())),
-            to: vec![
-                "script_data_escaped_end_tag_whitespace".to_string(),
-            ],
-            guard: None,
-            stack_pop: None,
-            stack_push: Vec::new(),
-            actions: vec![
-                "append_temporary_buffer(current)".to_string(),
-            ],
-            consume: true,
-        },
-        TransitionDefinition {
-            from: "script_data_escaped_end_tag_whitespace".to_string(),
+            from: "script_data_escaped_end_tag_attributes".to_string(),
             on: None,
             matcher: Some(MatcherDefinition::Literal(">".to_string())),
             to: vec![
@@ -3957,12 +4172,12 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "emit_rcdata_end_tag_with_whitespace_or_text".to_string(),
+                "emit_rcdata_end_tag_with_attributes_or_text".to_string(),
             ],
             consume: true,
         },
         TransitionDefinition {
-            from: "script_data_escaped_end_tag_whitespace".to_string(),
+            from: "script_data_escaped_end_tag_attributes".to_string(),
             on: None,
             matcher: Some(MatcherDefinition::Eof),
             to: vec![
@@ -3981,20 +4196,17 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             consume: false,
         },
         TransitionDefinition {
-            from: "script_data_escaped_end_tag_whitespace".to_string(),
+            from: "script_data_escaped_end_tag_attributes".to_string(),
             on: None,
             matcher: Some(MatcherDefinition::Anything),
             to: vec![
-                "script_data_escaped".to_string(),
+                "script_data_escaped_end_tag_attributes".to_string(),
             ],
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "discard_current_token".to_string(),
-                "append_text(</)".to_string(),
-                "append_temporary_buffer_to_text".to_string(),
-                "append_text(current)".to_string(),
+                "append_temporary_buffer(current)".to_string(),
             ],
             consume: true,
         },
