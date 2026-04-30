@@ -1,6 +1,6 @@
 //! # `twig-vm` — runtime wiring between Twig and the LANG-runtime.
 //!
-//! Implementation of LANG20 PR 3 from the
+//! Implementation of LANG20 PRs 3 + 4 from the
 //! [migration path](../../specs/LANG20-multilang-runtime.md).  This
 //! crate is the bridge between:
 //!
@@ -11,12 +11,16 @@
 //!   value representation, builtins, and `LangBinding` impl.
 //!
 //! It exposes [`TwigVM`] — a thin facade that holds the runtime
-//! state needed to compile and (eventually) execute Twig programs.
+//! state needed to compile and execute Twig programs.
 //!
-//! ## What this PR ships (PR 3)
+//! ## What this crate does (PRs 3 + 4)
 //!
 //! - **Compilation**: [`TwigVM::compile`] takes Twig source and
 //!   returns an `IIRModule` ready for execution.
+//! - **Execution**: [`TwigVM::run`] compiles + dispatches a Twig
+//!   program end to end, returning the value of the synthesised
+//!   `main` function.  See the [`dispatch`] module for the
+//!   supported opcode subset.
 //! - **Builtin resolution**: [`TwigVM::resolve_builtin`] proxies
 //!   through `LispyBinding::resolve_builtin` so callers see the
 //!   binding's resolved fn pointer.
@@ -24,22 +28,24 @@
 //!   IIR `Operand` (the universal-IR enum) into a `LispyValue`
 //!   (the Lispy runtime's tagged-i64 representation).  This is
 //!   the seam between the language-agnostic IIR and the
-//!   per-language value model — it's small but crucial.
-//! - **Integration tests**: a "1-instruction evaluator" that
-//!   takes a single `call_builtin` instruction, resolves the
-//!   builtin via the binding, and dispatches it.  Proves the
-//!   substrate composes end-to-end without yet needing vm-core.
+//!   per-language value model — small but crucial; the dispatcher
+//!   hits it on every `call_builtin` argument and `ret` operand.
 //!
-//! ## What this PR does NOT ship (PR 4+)
+//! ## What's NOT shipped yet (PR 5+)
 //!
-//! - **Real execution**: PR 4 wires `vm-core` against
-//!   `LangBinding`.  Until then, [`TwigVM::run`] is intentionally
-//!   absent — there's nothing to run *with* yet.  The
-//!   [`TwigVM::evaluate_call_builtin`] helper covers the
-//!   single-instruction case for tests.
-//! - **Closures / control flow / locals**: those need the full
-//!   interpreter dispatch loop (PR 4).  PR 3's evaluator handles
-//!   only `call_builtin` with [`Operand`]-form arguments.
+//! - **Closures**: `lambda`, `make_closure`, `apply_closure` —
+//!   need closure heap layout and indirect dispatch.
+//! - **Top-level value defines** (`global_set` / `global_get`) —
+//!   need a per-process global table.
+//! - **Quoted symbols** (`'foo`) — need a `Symbol` value
+//!   constructor from a runtime-string operand.
+//! - **Inline caches, send opcodes, JIT promotion, deopt** — full
+//!   LANG20 §"Hot-path tactics".
+//!
+//! Programs using any of those compile (the IR compiler emits
+//! valid IIR for them) but the dispatcher returns
+//! [`RunError::UnsupportedOpcode`] — explicit "not yet" rather than
+//! a silent miscompile.
 //!
 //! ## Pipeline
 //!
@@ -47,26 +53,26 @@
 //! Twig source
 //!     │
 //!     ▼  twig_lexer → twig_parser → twig_ir_compiler
-//! IIRModule  ◄────────────────────────────────  THIS CRATE COMPILES TO HERE
+//! IIRModule
 //!     │
-//!     ▼  vm-core (PR 4)
+//!     ▼  twig-vm::dispatch (PR 4)
 //! execution
 //!     │
-//!     ▼  LispyBinding (this crate's runtime tie-in)
+//!     ▼  LispyBinding (lispy-runtime)
 //! LispyValue results
 //! ```
 
 #![warn(missing_docs)]
 #![warn(rust_2018_idioms)]
 
-pub mod evaluate;
+pub mod dispatch;
 pub mod operand;
 
 use interpreter_ir::IIRModule;
 use lispy_runtime::LispyBinding;
 use twig_ir_compiler::compile_source as compile_twig;
 
-pub use evaluate::{evaluate_call_builtin, EvaluateError};
+pub use dispatch::{run, RunError, MAX_DISPATCH_DEPTH, MAX_INSTRUCTIONS_PER_RUN, MAX_REGISTERS_PER_FRAME};
 pub use operand::operand_to_value;
 
 // Re-export the most-used types so callers don't need to depend
@@ -81,16 +87,17 @@ pub use twig_ir_compiler::TwigCompileError;
 /// `TwigVM` is currently stateless; the binding itself
 /// ([`LispyBinding`]) is a unit struct, the heap allocator is
 /// process-global (PR 2's `Box::leak`), and the symbol intern
-/// table is process-global too.  The struct exists so that PR 4+
-/// can grow per-VM state (an interpreter dispatch context, a
-/// frame stack, a JIT cache) without breaking callers.
+/// table is process-global too.  The struct exists so that PR 5+
+/// can grow per-VM state (a JIT cache, a globals table, a
+/// profile-feedback cache) without breaking callers.
 ///
 /// # Lifecycle
 ///
 /// 1. Construct via [`TwigVM::new`].
 /// 2. Compile Twig source via [`TwigVM::compile`] — returns an
-///    `IIRModule` ready for the future interpreter.
-/// 3. (PR 4+) Run the module via `TwigVM::run`.
+///    `IIRModule` ready for execution.
+/// 3. Execute via [`TwigVM::run`] — compiles + dispatches in one
+///    shot, returning the program's value.
 ///
 /// # Example
 ///
@@ -98,22 +105,21 @@ pub use twig_ir_compiler::TwigCompileError;
 /// use twig_vm::TwigVM;
 ///
 /// let vm = TwigVM::new();
-/// let module = vm.compile("(+ 1 2)").unwrap();
-/// assert_eq!(module.functions.len(), 1); // synthesised `main`
+/// let v = vm.run("(+ 1 2)").unwrap();
+/// assert_eq!(v.as_int(), Some(3));
 /// ```
 #[derive(Debug, Default)]
 pub struct TwigVM {
-    // No fields yet.  PR 4 adds:
-    //   - frame stack
-    //   - register file scratch space
+    // No fields yet.  PR 5+ adds:
+    //   - globals table (for top-level value defines)
     //   - profile-feedback cache (LANG20 §"Feedback-slot taxonomy")
-    //   - JIT promotion thresholds
+    //   - JIT promotion thresholds and cache
     _private: (),
 }
 
 impl TwigVM {
     /// Construct a fresh VM.  All runtime state (intern table,
-    /// allocator) is process-global at PR 3, so this is cheap —
+    /// allocator) is process-global at PR 4, so this is cheap —
     /// callers can construct as many VMs as they want without
     /// leaking memory.
     pub fn new() -> Self {
@@ -139,30 +145,120 @@ impl TwigVM {
     /// Resolve a builtin by name through [`LispyBinding`].
     ///
     /// The returned [`BuiltinFn`] is a stable function pointer the
-    /// interpreter (PR 4) will dispatch to.  PR 3 callers use
-    /// this together with [`evaluate_call_builtin`] to exercise
-    /// the integration without a real interpreter.
+    /// dispatcher uses on every `call_builtin` opcode.  Callers
+    /// rarely need this directly — [`TwigVM::run`] handles the
+    /// resolution internally — but it's exposed for tooling
+    /// (linters, debuggers) that want to verify a name resolves
+    /// before execution.
     ///
     /// Returns `None` for names not in the Lispy builtin set.
     pub fn resolve_builtin(name: &str) -> Option<BuiltinFn<LispyBinding>> {
         LispyBinding::resolve_builtin(name)
+    }
+
+    /// Compile Twig `source` and execute it end-to-end, returning
+    /// the value produced by the synthesised `main` function.
+    ///
+    /// This is **PR 4 of LANG20** — the first version of the VM
+    /// that can actually run a Twig program.
+    ///
+    /// # Supported subset
+    ///
+    /// PR 4 covers the IIR opcodes emitted by `twig-ir-compiler`
+    /// for programs without closures, top-level value defines, or
+    /// quoted symbols.  In Twig source terms: `if`, `let`, `begin`,
+    /// `define`-of-functions, recursion, arithmetic, comparisons,
+    /// `cons` / `car` / `cdr`, and the predicates.
+    ///
+    /// Programs using `lambda`, `(define x value)`, or `'symbol`
+    /// will compile (the IR compiler emits valid IIR for them) but
+    /// the dispatcher returns
+    /// [`RunError::UnsupportedOpcode`](dispatch::RunError) — those
+    /// land in PR 5+.
+    ///
+    /// # Errors
+    ///
+    /// Returns [`TwigCompileError`] if compilation fails, or
+    /// [`RunError`](dispatch::RunError) if execution fails.  The
+    /// two error types are wrapped in [`TwigRunError`] so callers
+    /// don't need to mix two error families.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use twig_vm::TwigVM;
+    ///
+    /// let vm = TwigVM::new();
+    /// let v = vm.run("(+ 1 2)").unwrap();
+    /// assert_eq!(v.as_int(), Some(3));
+    ///
+    /// let v = vm.run("
+    ///     (define (fact n)
+    ///       (if (= n 0) 1 (* n (fact (- n 1)))))
+    ///     (fact 5)
+    /// ").unwrap();
+    /// assert_eq!(v.as_int(), Some(120));
+    /// ```
+    pub fn run(&self, source: &str) -> Result<LispyValue, TwigRunError> {
+        let module = self.compile(source).map_err(TwigRunError::Compile)?;
+        run(&module).map_err(TwigRunError::Run)
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Combined error type for `TwigVM::run`
+// ---------------------------------------------------------------------------
+
+/// Combined error type returned by [`TwigVM::run`].
+///
+/// Either compilation failed (the source was malformed) or
+/// execution failed (the IR was structurally fine but tripped a
+/// runtime trap).  Keeping the two variants distinct lets callers
+/// distinguish "user typo" from "user logic bug".
+#[derive(Debug)]
+pub enum TwigRunError {
+    /// Compilation failed — the source was malformed.
+    Compile(TwigCompileError),
+    /// Execution failed — see [`RunError`] for the variant table.
+    Run(RunError),
+}
+
+impl std::fmt::Display for TwigRunError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            TwigRunError::Compile(e) => write!(f, "compile error: {e}"),
+            TwigRunError::Run(e) => write!(f, "run error: {e}"),
+        }
+    }
+}
+
+impl std::error::Error for TwigRunError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            TwigRunError::Compile(e) => Some(e),
+            TwigRunError::Run(e) => Some(e),
+        }
     }
 }
 
 // ---------------------------------------------------------------------------
 // Crate-level integration tests
 // ---------------------------------------------------------------------------
+//
+// These tests exercise the public surface of `TwigVM` end to end —
+// `dispatch::tests` covers the dispatcher in isolation; here we
+// only test that the facade composes correctly.
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    /// Basic compile path works.
+    // ── Compile-only tests (preserved from PR 3) ────────────────────
+
     #[test]
     fn compile_returns_iir_module_with_main() {
         let vm = TwigVM::new();
         let m = vm.compile("(+ 1 2)").unwrap();
-        // The synthesised `main` is always present.
         assert!(m.functions.iter().any(|f| f.name == "main"));
         assert_eq!(m.entry_point.as_deref(), Some("main"));
         assert_eq!(m.language, "twig");
@@ -181,7 +277,8 @@ mod tests {
         assert!(vm.compile("(+ 1 2").is_err()); // unmatched paren
     }
 
-    /// Builtin resolution proxies through LispyBinding.
+    // ── Builtin resolution ──────────────────────────────────────────
+
     #[test]
     fn resolve_builtin_finds_arithmetic() {
         for name in ["+", "-", "*", "/", "=", "<", ">"] {
@@ -201,108 +298,84 @@ mod tests {
         assert!(TwigVM::resolve_builtin("does_not_exist").is_none());
     }
 
-    // ── End-to-end: Twig source → IIR → evaluate one builtin call ───
-    //
-    // These tests exercise the full PR 1+2+3 stack:
-    //   - twig-lexer / twig-parser / twig-ir-compiler produce IIR
-    //   - lispy-runtime's LispyBinding resolves the builtin
-    //   - twig-vm's evaluate_call_builtin dispatches
-    //
-    // What we DON'T do (yet) is interpret arbitrary IIR — that's
-    // PR 4's vm-core wiring.  We extract the relevant
-    // `call_builtin` instruction from the compiled module and
-    // evaluate it in isolation.
+    // ── End-to-end execution via TwigVM::run ────────────────────────
 
-    /// Find the first `call_builtin <name>` instruction in
-    /// `module`'s `main` function.
-    fn find_call_builtin<'a>(
-        module: &'a interpreter_ir::IIRModule,
-        name: &str,
-    ) -> Option<&'a interpreter_ir::IIRInstr> {
-        let main = module.functions.iter().find(|f| f.name == "main")?;
-        main.instructions.iter().find(|i| {
-            i.op == "call_builtin"
-                && matches!(
-                    i.srcs.first(),
-                    Some(interpreter_ir::Operand::Var(s)) if s == name,
-                )
-        })
+    #[test]
+    fn run_arithmetic_returns_value() {
+        let vm = TwigVM::new();
+        assert_eq!(vm.run("(+ 2 3)").unwrap().as_int(), Some(5));
     }
 
     #[test]
-    fn end_to_end_arithmetic_from_source() {
-        // The full pipeline: compile `(+ 2 3)`, find the
-        // `call_builtin "+"` instruction in the compiled main,
-        // and evaluate it.  Result should be LispyValue::int(5).
+    fn run_comparison_returns_bool() {
         let vm = TwigVM::new();
-        let module = vm.compile("(+ 2 3)").unwrap();
-
-        let instr = find_call_builtin(&module, "+")
-            .expect("compiled IR should contain a call_builtin \"+\" instruction");
-
-        // The compiled IIR uses register names (e.g. `_n1`, `_n2`)
-        // for the integer arguments — they're the dest of `const`
-        // instructions emitted earlier.  Walk those to populate
-        // the evaluator's frame.
-        let frame = build_const_frame(&module);
-        let result = evaluate::evaluate_call_builtin(instr, &|n| frame.get(n).copied()).unwrap();
-        assert_eq!(result.as_int(), Some(5));
+        assert_eq!(vm.run("(< 1 2)").unwrap(), LispyValue::TRUE);
     }
 
     #[test]
-    fn end_to_end_comparison_from_source() {
+    fn run_cons_returns_heap_value() {
         let vm = TwigVM::new();
-        let module = vm.compile("(< 1 2)").unwrap();
-        let instr = find_call_builtin(&module, "<").unwrap();
-        let frame = build_const_frame(&module);
-        let result = evaluate::evaluate_call_builtin(instr, &|n| frame.get(n).copied()).unwrap();
-        assert_eq!(result, LispyValue::TRUE);
+        assert!(vm.run("(cons 1 2)").unwrap().is_heap());
     }
 
     #[test]
-    fn end_to_end_cons_from_source() {
-        // (cons 1 2) → pair value
+    fn run_if_takes_correct_branch() {
         let vm = TwigVM::new();
-        let module = vm.compile("(cons 1 2)").unwrap();
-        let instr = find_call_builtin(&module, "cons").unwrap();
-        let frame = build_const_frame(&module);
-        let result = evaluate::evaluate_call_builtin(instr, &|n| frame.get(n).copied()).unwrap();
-        assert!(result.is_heap());
+        assert_eq!(vm.run("(if (< 1 2) 100 200)").unwrap().as_int(), Some(100));
     }
 
-    /// Walk every `const` instruction in main and populate a
-    /// frame map from `dest -> LispyValue` so subsequent
-    /// instructions can resolve their `Operand::Var` arguments.
-    ///
-    /// This is a tiny model of what vm-core's frame resolution
-    /// will do in PR 4.  Keeping it inline in tests rather than
-    /// shipping it in the public API because:
-    /// (a) PR 4's vm-core implements the real version,
-    /// (b) this version handles only `const`, not the full opcode
-    ///     set,
-    /// (c) shipping it would create a "two interpreters" maintenance
-    ///     burden.
-    fn build_const_frame(module: &interpreter_ir::IIRModule) -> std::collections::HashMap<String, LispyValue> {
-        let mut frame = std::collections::HashMap::new();
-        let main = match module.functions.iter().find(|f| f.name == "main") {
-            Some(m) => m,
-            None => return frame,
-        };
-        for instr in &main.instructions {
-            if instr.op != "const" {
-                continue;
-            }
-            let dest = match &instr.dest {
-                Some(d) => d.clone(),
-                None => continue,
-            };
-            let v = match instr.srcs.first() {
-                Some(interpreter_ir::Operand::Int(n)) => LispyValue::int(*n),
-                Some(interpreter_ir::Operand::Bool(b)) => LispyValue::bool(*b),
-                _ => continue,
-            };
-            frame.insert(dest, v);
-        }
-        frame
+    #[test]
+    fn run_let_binds_locals() {
+        let vm = TwigVM::new();
+        assert_eq!(vm.run("(let ((x 5)) (* x x))").unwrap().as_int(), Some(25));
+    }
+
+    #[test]
+    fn run_user_defined_function() {
+        let vm = TwigVM::new();
+        let src = "(define (square x) (* x x)) (square 7)";
+        assert_eq!(vm.run(src).unwrap().as_int(), Some(49));
+    }
+
+    #[test]
+    fn run_factorial_via_recursion() {
+        let vm = TwigVM::new();
+        let src = "
+            (define (fact n)
+              (if (= n 0) 1 (* n (fact (- n 1)))))
+            (fact 5)
+        ";
+        assert_eq!(vm.run(src).unwrap().as_int(), Some(120));
+    }
+
+    // ── Error paths through the facade ──────────────────────────────
+
+    #[test]
+    fn run_propagates_compile_error() {
+        let vm = TwigVM::new();
+        let err = vm.run("(+ 1 2").unwrap_err();
+        assert!(matches!(err, TwigRunError::Compile(_)));
+    }
+
+    #[test]
+    fn run_propagates_run_error() {
+        let vm = TwigVM::new();
+        // Division by zero — compiles fine, traps at runtime.
+        let err = vm.run("(/ 7 0)").unwrap_err();
+        assert!(matches!(err, TwigRunError::Run(RunError::Runtime(_))));
+    }
+
+    #[test]
+    fn twig_run_error_displays_compile_variant() {
+        let e = TwigRunError::Run(RunError::DepthExceeded);
+        let s = format!("{e}");
+        assert!(s.contains("run error"));
+    }
+
+    #[test]
+    fn twig_run_error_source_unwraps() {
+        use std::error::Error;
+        let e = TwigRunError::Run(RunError::DepthExceeded);
+        assert!(e.source().is_some(), "should expose underlying error");
     }
 }

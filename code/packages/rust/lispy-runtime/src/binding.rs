@@ -309,6 +309,13 @@ impl LangBinding for LispyBinding {
             "number?" => Some(builtins::number_p),
             "symbol?" => Some(builtins::symbol_p),
             "print" => Some(builtins::print),
+            // Infrastructure builtins emitted by the IIR compiler
+            // for type-preserving register copies (`_move`) and
+            // nil materialisation (`make_nil`).  These are not part
+            // of the Lispy surface language but appear in the lowered
+            // IIR for `if` and `let` forms.  See LANG20 PR 4.
+            "_move" => Some(builtins::move_),
+            "make_nil" => Some(builtins::make_nil),
             _ => None,
         }
     }

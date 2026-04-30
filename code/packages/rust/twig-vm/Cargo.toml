@@ -1,8 +1,8 @@
 [package]
 name = "twig-vm"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "LANG20 PR 3 — TwigVM: wires twig-ir-compiler with lispy-runtime so a Twig program can be compiled and (eventually, in PR 4) executed against the LANG runtime"
+description = "LANG20 PRs 3 + 4 — TwigVM: compiles Twig source, wires it through lispy-runtime, and dispatches the IIR end to end via a tree-walking interpreter"
 
 [dependencies]
 twig-ir-compiler  = { path = "../twig-ir-compiler" }

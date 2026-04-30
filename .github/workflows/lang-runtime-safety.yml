@@ -33,12 +33,14 @@ on:
     paths:
       - 'code/packages/rust/lang-runtime-core/**'
       - 'code/packages/rust/lispy-runtime/**'
+      - 'code/packages/rust/twig-vm/**'
       - '.github/workflows/lang-runtime-safety.yml'
   pull_request:
     branches: [main]
     paths:
       - 'code/packages/rust/lang-runtime-core/**'
       - 'code/packages/rust/lispy-runtime/**'
+      - 'code/packages/rust/twig-vm/**'
       - '.github/workflows/lang-runtime-safety.yml'
 
 # Cancel superseded runs on the same ref to save CI minutes.
@@ -120,6 +122,17 @@ jobs:
       - name: Miri — lispy-runtime
         working-directory: code/packages/rust
         run: cargo +nightly miri test -p lispy-runtime --no-fail-fast
+
+      # twig-vm has no `unsafe` of its own, but its dispatcher
+      # exercises lispy-runtime's tagged-pointer code on every
+      # `call_builtin` (cons, car, cdr, etc.).  Running Miri on
+      # the dispatcher tests catches UB in the integration seam
+      # — operand_to_value, frame lookups, recursion paths —
+      # that lispy-runtime's own Miri suite doesn't reach because
+      # it tests the binding in isolation.
+      - name: Miri — twig-vm
+        working-directory: code/packages/rust
+        run: cargo +nightly miri test -p twig-vm --no-fail-fast
 
   # ─────────────────────────────────────────────────────────────────────────
   # Geiger: count unsafe code in our crates + dependencies.
