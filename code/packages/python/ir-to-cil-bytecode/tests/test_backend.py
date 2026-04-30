@@ -1006,3 +1006,152 @@ class TestClosureLoweringStructure:
                 program,
                 CILBackendConfig(closure_free_var_counts={"_lambda_0": 2}),
             )
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# CLR02 Phase 2c.5 — typed register pool analysis
+# ─────────────────────────────────────────────────────────────────────────
+
+
+class TestTypedRegisterPool:
+    """Tests for the per-region register-typing pass that
+    Phase 2c.5 adds.  These verify the analysis classifies
+    registers correctly so the lowerer emits the right
+    int32-vs-object slot at each program point.
+    """
+
+    def _make_adder_program(self) -> IrProgram:
+        """The headline closure fixture — make-adder + Main applying
+        the resulting closure."""
+        program = IrProgram(entry_label="Main")
+        program.add_instruction(
+            IrInstruction(IrOp.LABEL, [IrLabel("_lambda_0")])
+        )
+        program.add_instruction(
+            IrInstruction(
+                IrOp.ADD, [IrRegister(1), IrRegister(2), IrRegister(3)],
+            )
+        )
+        program.add_instruction(IrInstruction(IrOp.RET, []))
+        program.add_instruction(
+            IrInstruction(IrOp.LABEL, [IrLabel("make_adder")])
+        )
+        program.add_instruction(
+            IrInstruction(
+                IrOp.MAKE_CLOSURE,
+                [
+                    IrRegister(1),
+                    IrLabel("_lambda_0"),
+                    IrImmediate(1),
+                    IrRegister(2),
+                ],
+            )
+        )
+        program.add_instruction(IrInstruction(IrOp.RET, []))
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("Main")]))
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(2), IrImmediate(7)])
+        )
+        program.add_instruction(
+            IrInstruction(IrOp.CALL, [IrLabel("make_adder")])
+        )
+        program.add_instruction(
+            IrInstruction(
+                IrOp.ADD_IMM, [IrRegister(10), IrRegister(1), IrImmediate(0)],
+            )
+        )
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(11), IrImmediate(35)])
+        )
+        program.add_instruction(
+            IrInstruction(
+                IrOp.APPLY_CLOSURE,
+                [
+                    IrRegister(1),
+                    IrRegister(10),
+                    IrImmediate(1),
+                    IrRegister(11),
+                ],
+            )
+        )
+        program.add_instruction(IrInstruction(IrOp.RET, []))
+        return program
+
+    def _config(self) -> CILBackendConfig:
+        return CILBackendConfig(
+            call_register_count=None,
+            closure_free_var_counts={"_lambda_0": 1},
+        )
+
+    def test_make_adder_returns_object(self) -> None:
+        """A function whose r1 is the dst of MAKE_CLOSURE returns
+        ``object``."""
+        artifact = lower_ir_to_cil_bytecode(
+            self._make_adder_program(), self._config()
+        )
+        make_adder = next(m for m in artifact.methods if m.name == "make_adder")
+        assert make_adder.return_type == "object"
+
+    def test_apply_returning_function_stays_int32(self) -> None:
+        """A function whose r1 receives only an APPLY_CLOSURE result
+        stays int32 — apply returns int per the IClosure contract."""
+        artifact = lower_ir_to_cil_bytecode(
+            self._make_adder_program(), self._config()
+        )
+        main = next(m for m in artifact.methods if m.name == "Main")
+        # Main's r1 ends up holding APPLY_CLOSURE's int return,
+        # so Main returns int32.
+        assert main.return_type == "int32"
+
+    def test_main_method_has_object_locals_for_closure_flow(self) -> None:
+        """Main's local table has parallel object locals for the
+        registers that ever hold a closure ref (r1 and r10)."""
+        artifact = lower_ir_to_cil_bytecode(
+            self._make_adder_program(), self._config()
+        )
+        main = next(m for m in artifact.methods if m.name == "Main")
+        # Should have at least 2 object slots appended after the
+        # int32 slots — for r1 and r10.
+        object_local_count = sum(1 for t in main.local_types if t == "object")
+        assert object_local_count >= 2
+
+    def test_make_adder_has_object_local_for_r1(self) -> None:
+        """make_adder's r1 holds the closure ref produced by
+        MAKE_CLOSURE — it needs an object local."""
+        artifact = lower_ir_to_cil_bytecode(
+            self._make_adder_program(), self._config()
+        )
+        make_adder = next(m for m in artifact.methods if m.name == "make_adder")
+        object_local_count = sum(
+            1 for t in make_adder.local_types if t == "object"
+        )
+        assert object_local_count >= 1
+
+    def test_pure_int_function_has_no_object_locals(self) -> None:
+        """A function with no MAKE_CLOSURE / closure-returning CALLs
+        / object-typed MOVs has zero object locals (backward-compat
+        with the pre-Phase-2c.5 emission shape)."""
+        program = IrProgram(entry_label="Main")
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("Main")]))
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(1), IrImmediate(42)])
+        )
+        program.add_instruction(IrInstruction(IrOp.RET, []))
+        artifact = lower_ir_to_cil_bytecode(program)
+        main = next(m for m in artifact.methods if m.name == "Main")
+        assert all(t == "int32" for t in main.local_types)
+        assert main.return_type == "int32"
+
+    def test_function_return_types_map_populated(self) -> None:
+        """The lowering plan exposes a function-return-types map so
+        callers can introspect the analysis."""
+        # Use the public lowering pipeline to get at the plan.
+        from ir_to_cil_bytecode.backend import (
+            CILLoweringPipeline,
+            _analyze_program,
+        )
+        plan = _analyze_program(self._make_adder_program(), self._config())
+        assert plan.function_return_types["make_adder"] == "object"
+        assert plan.function_return_types["Main"] == "int32"
+        # Closure regions always return int32 per the IClosure contract.
+        assert plan.function_return_types["_lambda_0"] == "int32"

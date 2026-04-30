@@ -11,7 +11,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from enum import StrEnum
-from typing import Protocol
+from typing import Final, Protocol
 
 from cil_bytecode_builder import CILBranchKind, CILBytecodeBuilder, CILOpcode
 from compiler_ir import IrImmediate, IrInstruction, IrLabel, IrOp, IrProgram, IrRegister
@@ -347,6 +347,14 @@ class CILLoweringPlan:
     contains the remaining regions — the methods that go on the
     user's main TypeDef.  ``closure_free_var_counts`` repeats the
     config knob so the lower stage doesn't need the config.
+
+    ``function_return_types`` (CLR02 Phase 2c.5) maps each region
+    name to its computed return type (``"int32"`` or
+    ``"object"``).  Functions whose ``r1`` register is object-typed
+    at any RET point return ``object``; everything else returns
+    ``int32``.  The map is computed by a fixed-point analysis in
+    ``_classify_function_return_types`` so callers know which
+    receiving-side stloc to emit.
     """
 
     regions: tuple[_CallableRegion, ...]
@@ -357,6 +365,7 @@ class CILLoweringPlan:
     closure_names: tuple[str, ...] = ()
     main_region_names: tuple[str, ...] = ()
     closure_free_var_counts: dict[str, int] = field(default_factory=dict)
+    function_return_types: dict[str, str] = field(default_factory=dict)
 
 
 AnalyzeProgramStage = Callable[[IrProgram, CILBackendConfig], CILLoweringPlan]
@@ -638,6 +647,11 @@ def _analyze_program(
         closure_names=closure_names,
         closure_free_var_counts=dict(config.closure_free_var_counts),
     )
+
+    function_return_types = _classify_function_return_types(
+        regions, set(config.closure_free_var_counts),
+    )
+
     return CILLoweringPlan(
         regions=regions,
         data_offsets=data_offsets,
@@ -647,7 +661,153 @@ def _analyze_program(
         closure_names=closure_names,
         main_region_names=main_region_names,
         closure_free_var_counts=dict(config.closure_free_var_counts),
+        function_return_types=function_return_types,
     )
+
+
+# ---------------------------------------------------------------------------
+# CLR02 Phase 2c.5 — typed register pool
+# ---------------------------------------------------------------------------
+#
+# Closure refs are managed pointers (object), but the existing CLR
+# backend uses int32-uniform locals/parameters.  Storing an object
+# ref into an int32 local truncates the pointer.  Phase 2c.5
+# resolves this with a per-region register-typing pass that
+# allocates parallel ``object`` locals for any IR register that
+# ever holds an object ref.  Operations choose between the int and
+# object slot based on the type they're producing/consuming.
+#
+# Algorithm sketch:
+#
+# 1. Compute ``function_return_types`` (region → "int32"|"object")
+#    by iterating to a fixed point.  A region returns object iff
+#    its r1 is object-typed at any RET site.  Closure regions
+#    (lifted lambda Apply methods) always return int32 per the
+#    IClosure contract.
+#
+# 2. For each region's lowering, run a linear pass over its
+#    instructions tracking the current type of each IR register.
+#    The set of registers that are object-typed at any point
+#    becomes the region's "object register" pool.
+#
+# 3. Allocate CIL locals: existing int32 slots 0..N-1, plus extra
+#    object slots N..N+M-1 (one per object-typed register).
+#
+# 4. Emit instructions choosing the slot based on the
+#    just-computed type at that program point.
+
+_REG_HALT_RESULT: Final = 1
+
+
+def _instr_register_type_writes(
+    instr: IrInstruction, current_types: dict[int, str],
+    function_return_types: dict[str, str],
+) -> dict[int, str]:
+    """Apply ``instr``'s effect to ``current_types`` and return
+    the new type map.  Pure function — does not mutate the input.
+
+    The type-tracking rules:
+
+    * ``MAKE_CLOSURE dst, ...`` — dst becomes object.
+    * ``APPLY_CLOSURE dst, ...`` — dst becomes int32 (apply
+      returns int32 per the IClosure interface contract).
+    * ``CALL target`` — r1 becomes ``function_return_types[target]``.
+    * ``ADD_IMM dst, src, 0`` — MOV idiom: dst inherits src's
+      current type (so closure refs propagate through register
+      moves cleanly).
+    * Other arithmetic / LOAD_IMM / etc — dst becomes int32.
+    """
+    new_types = dict(current_types)
+    op = instr.opcode
+    if op is IrOp.MAKE_CLOSURE:
+        dst = _as_register(instr.operands[0], "MAKE_CLOSURE dst")
+        new_types[dst.index] = "object"
+    elif op is IrOp.APPLY_CLOSURE:
+        dst = _as_register(instr.operands[0], "APPLY_CLOSURE dst")
+        new_types[dst.index] = "int32"
+    elif op is IrOp.CALL:
+        target = _as_label(instr.operands[0], "CALL target")
+        new_types[_REG_HALT_RESULT] = function_return_types.get(
+            target.name, "int32",
+        )
+    elif op is IrOp.ADD_IMM:
+        dst = _as_register(instr.operands[0], "ADD_IMM dst")
+        src = _as_register(instr.operands[1], "ADD_IMM src")
+        imm = _as_immediate(instr.operands[2], "ADD_IMM imm")
+        if imm.value == 0:
+            new_types[dst.index] = current_types.get(src.index, "int32")
+        else:
+            new_types[dst.index] = "int32"
+    elif op in (
+        IrOp.LOAD_IMM, IrOp.LOAD_ADDR, IrOp.LOAD_BYTE, IrOp.LOAD_WORD,
+        IrOp.ADD, IrOp.SUB, IrOp.AND, IrOp.AND_IMM, IrOp.OR, IrOp.OR_IMM,
+        IrOp.XOR, IrOp.XOR_IMM, IrOp.NOT, IrOp.MUL, IrOp.DIV,
+        IrOp.CMP_EQ, IrOp.CMP_NE, IrOp.CMP_LT, IrOp.CMP_GT,
+    ):
+        # All single-dst int-producing ops (operand 0 is the dst register).
+        if instr.operands and isinstance(instr.operands[0], IrRegister):
+            new_types[instr.operands[0].index] = "int32"
+    return new_types
+
+
+def _classify_function_return_types(
+    regions: tuple[_CallableRegion, ...],
+    closure_region_names: set[str],
+) -> dict[str, str]:
+    """Compute each region's return type by iterating to a fixed
+    point.  Closure regions (lambdas) always return int32 per the
+    IClosure interface contract.
+    """
+    return_types: dict[str, str] = {r.name: "int32" for r in regions}
+    changed = True
+    iteration_cap = len(regions) + 4
+    while changed and iteration_cap > 0:
+        changed = False
+        iteration_cap -= 1
+        for region in regions:
+            if region.name in closure_region_names:
+                continue
+            inferred = _infer_region_return_type(region, return_types)
+            if inferred != return_types[region.name]:
+                return_types[region.name] = inferred
+                changed = True
+    return return_types
+
+
+def _infer_region_return_type(
+    region: _CallableRegion,
+    return_types: dict[str, str],
+) -> str:
+    """Linear-trace inference: what type holds in r1 at the end
+    of the region?"""
+    types: dict[int, str] = {}
+    for instr in region.instructions:
+        types = _instr_register_type_writes(instr, types, return_types)
+    return types.get(_REG_HALT_RESULT, "int32")
+
+
+def _collect_object_typed_registers(
+    region: _CallableRegion,
+    return_types: dict[str, str],
+) -> tuple[set[int], list[dict[int, str]]]:
+    """For ``region``, compute (a) the set of IR register indices
+    that ever hold an object ref, and (b) a per-instruction list
+    of register-type maps (state AFTER each instruction).
+
+    The per-instruction map lets the lowerer choose the correct
+    slot (int32 vs object) for each register at each program
+    point.
+    """
+    obj_regs: set[int] = set()
+    instr_types: list[dict[int, str]] = []
+    types: dict[int, str] = {}
+    for instr in region.instructions:
+        types = _instr_register_type_writes(instr, types, return_types)
+        instr_types.append(types)
+        for reg_idx, type_name in types.items():
+            if type_name == "object":
+                obj_regs.add(reg_idx)
+    return obj_regs, instr_types
 
 
 def _validate_config(config: CILBackendConfig) -> None:
@@ -798,19 +958,47 @@ def _lower_region(
     builder = CILBytecodeBuilder()
     call_register_count = _call_register_count(config, plan)
 
+    # Phase 2c.5: per-region register typing.  Allocate parallel
+    # ``object`` locals for any register that ever holds an object
+    # ref.  Map IR reg index → CIL local index (int slot is just
+    # the IR index; object slot is plan.local_count + offset).
+    obj_regs, instr_types = _collect_object_typed_registers(
+        region, plan.function_return_types,
+    )
+    obj_local_for: dict[int, int] = {
+        reg_idx: plan.local_count + offset
+        for offset, reg_idx in enumerate(sorted(obj_regs))
+    }
+    return_type = plan.function_return_types.get(region.name, "int32")
+
     if region.name != _program.entry_label:
         for index in range(call_register_count):
             builder.emit_ldarg(index)
             builder.emit_stloc(index)
 
-    for instruction in region.instructions:
-        _emit_instruction(builder, instruction, config, plan)
+    ctx = _RegionEmitContext(
+        plan=plan,
+        config=config,
+        obj_local_for=obj_local_for,
+        instr_types=instr_types,
+        function_return_types=plan.function_return_types,
+        return_type=return_type,
+    )
+
+    for index, instruction in enumerate(region.instructions):
+        ctx.current_instr_index = index
+        _emit_instruction(builder, instruction, config, plan, ctx=ctx)
+
+    local_types = tuple("int32" for _ in range(plan.local_count)) + tuple(
+        "object" for _ in range(len(obj_regs))
+    )
 
     return CILMethodArtifact(
         name=region.name,
         body=builder.assemble(),
         max_stack=max(config.method_max_stack, call_register_count),
-        local_types=tuple("int32" for _ in range(plan.local_count)),
+        local_types=local_types,
+        return_type=return_type,
         parameter_types=tuple(
             "int32"
             for _ in range(
@@ -818,6 +1006,42 @@ def _lower_region(
             )
         ),
     )
+
+
+@dataclass
+class _RegionEmitContext:
+    """Per-region state threaded through ``_emit_instruction`` so
+    closure-typed register reads/writes can pick the right slot
+    (int32 vs object) without breaking the existing emission paths.
+
+    For non-closure regions ``obj_local_for`` is empty and every
+    register read/write goes through the int32 slot — exactly the
+    pre-Phase-2c.5 behaviour.
+    """
+
+    plan: CILLoweringPlan
+    config: CILBackendConfig
+    obj_local_for: dict[int, int]
+    instr_types: list[dict[int, str]]
+    function_return_types: dict[str, str]
+    return_type: str
+    current_instr_index: int = 0
+
+    def reg_type_after_current(self, reg_idx: int) -> str:
+        """Type of ``reg_idx`` as of *after* the current
+        instruction (i.e. once it's stored its result)."""
+        if not self.instr_types:
+            return "int32"
+        return self.instr_types[self.current_instr_index].get(reg_idx, "int32")
+
+    def reg_type_before_current(self, reg_idx: int) -> str:
+        """Type of ``reg_idx`` BEFORE the current instruction
+        runs — i.e. what slot to read from for an operand."""
+        if self.current_instr_index == 0:
+            return "int32"
+        return self.instr_types[self.current_instr_index - 1].get(
+            reg_idx, "int32",
+        )
 
 
 # CLR02 Phase 2c — closure body lowering.
@@ -975,6 +1199,8 @@ def _emit_instruction(
     instruction: IrInstruction,
     config: CILBackendConfig,
     plan: CILLoweringPlan,
+    *,
+    ctx: _RegionEmitContext | None = None,
 ) -> None:
     if instruction.opcode == IrOp.LABEL:
         label = _as_label(instruction.operands[0], "LABEL operand")
@@ -1056,6 +1282,20 @@ def _emit_instruction(
         dst = _as_register(instruction.operands[0], f"{instruction.opcode.name} dst")
         src = _as_register(instruction.operands[1], f"{instruction.opcode.name} src")
         imm = _as_immediate(instruction.operands[2], f"{instruction.opcode.name} imm")
+
+        # Phase 2c.5: ADD_IMM with imm=0 is the MOV idiom — when
+        # the source is currently object-typed, the move must
+        # propagate the obj-slot, not push int + 0 + add.
+        if (
+            instruction.opcode is IrOp.ADD_IMM
+            and imm.value == 0
+            and ctx is not None
+            and ctx.reg_type_before_current(src.index) == "object"
+        ):
+            builder.emit_ldloc(ctx.obj_local_for[src.index])
+            builder.emit_stloc(ctx.obj_local_for[dst.index])
+            return
+
         builder.emit_ldloc(src.index)
         builder.emit_ldc_i4(imm.value)
         _emit_binary_op(builder, instruction.opcode)
@@ -1119,11 +1359,26 @@ def _emit_instruction(
         for index in range(_call_register_count(config, plan)):
             builder.emit_ldloc(index)
         builder.emit_call(plan.token_provider.method_token(label.name))
+        # Phase 2c.5: if the callee returns an object (closure ref),
+        # store the result into r1's object slot instead of its
+        # int32 slot.  The callee's method signature already
+        # declares ``return_type="object"`` so the verifier is
+        # happy with the typed stloc.
+        if ctx is not None:
+            callee_return = ctx.function_return_types.get(label.name, "int32")
+            if callee_return == "object":
+                builder.emit_stloc(ctx.obj_local_for[1])
+                return
         builder.emit_stloc(1)
         return
 
     if instruction.opcode in (IrOp.RET, IrOp.HALT):
-        builder.emit_ldloc(1)
+        # Phase 2c.5: if the function returns object, ldloc from
+        # r1's object slot rather than its int32 slot.
+        if ctx is not None and ctx.return_type == "object":
+            builder.emit_ldloc(ctx.obj_local_for[1])
+        else:
+            builder.emit_ldloc(1)
         builder.emit_ret()
         return
 
@@ -1168,7 +1423,12 @@ def _emit_instruction(
         builder.emit_token_instruction(
             0x73, plan.token_provider.closure_ctor_token(fn_label.name),
         )
-        builder.emit_stloc(dst.index)
+        # Phase 2c.5: store the new closure ref into dst's object
+        # slot (managed pointers can't fit in an int32 local).
+        if ctx is not None and dst.index in ctx.obj_local_for:
+            builder.emit_stloc(ctx.obj_local_for[dst.index])
+        else:
+            builder.emit_stloc(dst.index)
         return
 
     if instruction.opcode == IrOp.APPLY_CLOSURE:
@@ -1207,7 +1467,13 @@ def _emit_instruction(
             raise CILBackendError(msg)
         arg_reg = _as_register(instruction.operands[3], "APPLY_CLOSURE arg 0")
 
-        builder.emit_ldloc(closure_reg.index)
+        # Phase 2c.5: closure_reg is an object-typed register —
+        # read it from the obj slot.  arg_reg is int32, dst is
+        # int32 (apply returns int32).
+        if ctx is not None and closure_reg.index in ctx.obj_local_for:
+            builder.emit_ldloc(ctx.obj_local_for[closure_reg.index])
+        else:
+            builder.emit_ldloc(closure_reg.index)
         builder.emit_ldloc(arg_reg.index)
         builder.emit_callvirt(plan.token_provider.iclosure_apply_token())
         builder.emit_stloc(dst.index)
