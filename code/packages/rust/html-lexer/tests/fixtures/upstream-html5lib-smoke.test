@@ -319,6 +319,36 @@
       ]
     },
     {
+      "description": "script data escaped state replaces null characters",
+      "initialStates": ["Script data escaped state"],
+      "lastStartTag": "script",
+      "input": "a\u0000-\u0000--\u0000></script>",
+      "output": [
+        ["Character", "a\uFFFd-\uFFFd--\uFFFd>"],
+        ["EndTag", "script"]
+      ],
+      "errors": [
+        {"code": "unexpected-null-character", "line": 1, "col": 2},
+        {"code": "unexpected-null-character", "line": 1, "col": 4},
+        {"code": "unexpected-null-character", "line": 1, "col": 7}
+      ]
+    },
+    {
+      "description": "script data double escaped state replaces null characters",
+      "initialStates": ["Script data double escaped state"],
+      "lastStartTag": "script",
+      "input": "a\u0000-\u0000--\u0000></script>x</script>",
+      "output": [
+        ["Character", "a\uFFFd-\uFFFd--\uFFFd></script>x"],
+        ["EndTag", "script"]
+      ],
+      "errors": [
+        {"code": "unexpected-null-character", "line": 1, "col": 2},
+        {"code": "unexpected-null-character", "line": 1, "col": 4},
+        {"code": "unexpected-null-character", "line": 1, "col": 7}
+      ]
+    },
+    {
       "description": "data state named character references",
       "input": "Fish &amp; &lt;b&gt; &quot;quote&quot; &apos;ok&apos;",
       "output": [

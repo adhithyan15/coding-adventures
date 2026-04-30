@@ -31,10 +31,10 @@ kept, later attributes with the same interpreted name are dropped, and a
 Unquoted attribute values also preserve spec-defined unexpected characters
 such as `"`, `'`, `<`, `=`, and `` ` `` while reporting
 `unexpected-character-in-unquoted-attribute-value`.
-NULL characters in data/RCDATA/RAWTEXT/PLAINTEXT/CDATA/script data and
-attribute values recover by reporting `unexpected-null-character` and appending
-U+FFFD, matching the replacement behavior the future parser will expect from
-the lexer/tokenizer boundary.
+NULL characters in data/RCDATA/RAWTEXT/PLAINTEXT/CDATA/script data, script
+escaped/double-escaped states, and attribute values recover by reporting
+`unexpected-null-character` and appending U+FFFD, matching the replacement
+behavior the future parser will expect from the lexer/tokenizer boundary.
 Tag names and attribute names now use the same recovery shape, so a raw NULL in
 markup names becomes U+FFFD and records `unexpected-null-character` instead of
 leaking the raw code point into emitted tokens.

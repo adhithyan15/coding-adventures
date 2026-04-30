@@ -1006,6 +1006,65 @@ fn default_html_lexer_replaces_null_characters_in_text_submodes() {
 }
 
 #[test]
+fn default_html_lexer_replaces_null_characters_in_script_escaped_substates() {
+    let mut escaped = create_html_lexer().unwrap();
+    escaped.set_initial_state("script_data_escaped").unwrap();
+    escaped.set_last_start_tag("script");
+
+    escaped.push("a\0-\0--\0></script>").unwrap();
+    escaped.finish().unwrap();
+
+    assert_eq!(
+        escaped.drain_tokens(),
+        vec![
+            Token::Text("a\u{FFFD}-\u{FFFD}--\u{FFFD}>".to_string()),
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        escaped
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-null-character")
+            .count(),
+        3
+    );
+
+    let mut double_escaped = create_html_lexer().unwrap();
+    double_escaped
+        .set_initial_state("script_data_double_escaped")
+        .unwrap();
+    double_escaped.set_last_start_tag("script");
+
+    double_escaped
+        .push("a\0-\0--\0></script>x</script>")
+        .unwrap();
+    double_escaped.finish().unwrap();
+
+    assert_eq!(
+        double_escaped.drain_tokens(),
+        vec![
+            Token::Text("a\u{FFFD}-\u{FFFD}--\u{FFFD}></script>x".to_string()),
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        double_escaped
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-null-character")
+            .count(),
+        3
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_seeded_rawtext_end_tags() {
     let mut lexer = create_html_lexer().unwrap();
     lexer.set_initial_state("rawtext").unwrap();
