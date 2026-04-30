@@ -27,6 +27,7 @@ alphabet = [
   "\n",
   "\t",
   "\r",
+  "\u000C",
   "D",
   "d",
   "O",
@@ -1377,6 +1378,12 @@ actions = ["append_temporary_buffer(current)"]
 
 [[transitions]]
 from = "rcdata_end_tag_name"
+matcher = { literal = "\u000C" }
+to = "rcdata_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rcdata_end_tag_name"
 matcher = { literal = "/" }
 to = "rcdata_self_closing_end_tag"
 
@@ -1429,6 +1436,12 @@ actions = ["append_temporary_buffer(current)"]
 [[transitions]]
 from = "rawtext_end_tag_name"
 matcher = { literal = "\r" }
+to = "rawtext_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rawtext_end_tag_name"
+matcher = { literal = "\u000C" }
 to = "rawtext_end_tag_whitespace"
 actions = ["append_temporary_buffer(current)"]
 
@@ -1491,6 +1504,12 @@ actions = ["append_temporary_buffer(current)"]
 
 [[transitions]]
 from = "script_data_end_tag_name"
+matcher = { literal = "\u000C" }
+to = "script_data_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_end_tag_name"
 matcher = { literal = "/" }
 to = "script_data_self_closing_end_tag"
 
@@ -1548,6 +1567,12 @@ actions = ["append_temporary_buffer(current)"]
 
 [[transitions]]
 from = "script_data_escaped_end_tag_name"
+matcher = { literal = "\u000C" }
+to = "script_data_escaped_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_name"
 matcher = { literal = "/" }
 to = "script_data_escaped_self_closing_end_tag"
 
@@ -1594,6 +1619,12 @@ actions = ["append_temporary_buffer(current)"]
 [[transitions]]
 from = "rcdata_end_tag_whitespace"
 matcher = { literal = "\r" }
+to = "rcdata_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rcdata_end_tag_whitespace"
+matcher = { literal = "\u000C" }
 to = "rcdata_end_tag_whitespace"
 actions = ["append_temporary_buffer(current)"]
 
@@ -1653,6 +1684,12 @@ actions = ["append_temporary_buffer(current)"]
 
 [[transitions]]
 from = "rawtext_end_tag_whitespace"
+matcher = { literal = "\u000C" }
+to = "rawtext_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rawtext_end_tag_whitespace"
 matcher = { literal = ">" }
 to = "rawtext"
 actions = ["emit_rcdata_end_tag_with_whitespace_or_text"]
@@ -1707,6 +1744,12 @@ actions = ["append_temporary_buffer(current)"]
 
 [[transitions]]
 from = "script_data_end_tag_whitespace"
+matcher = { literal = "\u000C" }
+to = "script_data_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_end_tag_whitespace"
 matcher = { literal = ">" }
 to = "script_data"
 actions = ["emit_rcdata_end_tag_with_whitespace_or_text"]
@@ -1756,6 +1799,12 @@ actions = ["append_temporary_buffer(current)"]
 [[transitions]]
 from = "script_data_escaped_end_tag_whitespace"
 matcher = { literal = "\r" }
+to = "script_data_escaped_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_whitespace"
+matcher = { literal = "\u000C" }
 to = "script_data_escaped_end_tag_whitespace"
 actions = ["append_temporary_buffer(current)"]
 
@@ -3212,6 +3261,11 @@ to = "before_attribute_name"
 
 [[transitions]]
 from = "tag_name"
+matcher = { literal = "\u000C" }
+to = "before_attribute_name"
+
+[[transitions]]
+from = "tag_name"
 matcher = { literal = "/" }
 to = "self_closing_start_tag"
 
@@ -3262,6 +3316,11 @@ to = "before_attribute_name"
 [[transitions]]
 from = "before_attribute_name"
 matcher = { literal = "\r" }
+to = "before_attribute_name"
+
+[[transitions]]
+from = "before_attribute_name"
+matcher = { literal = "\u000C" }
 to = "before_attribute_name"
 
 [[transitions]]
@@ -3334,6 +3393,11 @@ to = "after_attribute_name"
 
 [[transitions]]
 from = "attribute_name"
+matcher = { literal = "\u000C" }
+to = "after_attribute_name"
+
+[[transitions]]
+from = "attribute_name"
 matcher = { literal = "/" }
 to = "self_closing_start_tag"
 actions = ["commit_attribute_dedup"]
@@ -3394,6 +3458,11 @@ to = "after_attribute_name"
 [[transitions]]
 from = "after_attribute_name"
 matcher = { literal = "\r" }
+to = "after_attribute_name"
+
+[[transitions]]
+from = "after_attribute_name"
+matcher = { literal = "\u000C" }
 to = "after_attribute_name"
 
 [[transitions]]
@@ -3464,6 +3533,11 @@ to = "before_attribute_value"
 [[transitions]]
 from = "before_attribute_value"
 matcher = { literal = "\r" }
+to = "before_attribute_value"
+
+[[transitions]]
+from = "before_attribute_value"
+matcher = { literal = "\u000C" }
 to = "before_attribute_value"
 
 [[transitions]]
@@ -3630,6 +3704,12 @@ actions = ["commit_attribute_dedup"]
 [[transitions]]
 from = "attribute_value_unquoted"
 matcher = { literal = "\r" }
+to = "before_attribute_name"
+actions = ["commit_attribute_dedup"]
+
+[[transitions]]
+from = "attribute_value_unquoted"
+matcher = { literal = "\u000C" }
 to = "before_attribute_name"
 actions = ["commit_attribute_dedup"]
 
@@ -5007,6 +5087,11 @@ to = "before_attribute_name"
 
 [[transitions]]
 from = "after_attribute_value_quoted"
+matcher = { literal = "\u000C" }
+to = "before_attribute_name"
+
+[[transitions]]
+from = "after_attribute_value_quoted"
 matcher = { literal = "/" }
 to = "self_closing_start_tag"
 
@@ -5817,6 +5902,11 @@ to = "before_doctype_name"
 
 [[transitions]]
 from = "doctype_after_keyword"
+matcher = { literal = "\u000C" }
+to = "before_doctype_name"
+
+[[transitions]]
+from = "doctype_after_keyword"
 matcher = { literal = ">" }
 to = "data"
 actions = [
@@ -5878,6 +5968,11 @@ to = "before_doctype_name"
 
 [[transitions]]
 from = "before_doctype_name"
+matcher = { literal = "\u000C" }
+to = "before_doctype_name"
+
+[[transitions]]
+from = "before_doctype_name"
 matcher = { literal = ">" }
 to = "data"
 actions = [
@@ -5932,6 +6027,11 @@ to = "after_doctype_name"
 
 [[transitions]]
 from = "doctype_name"
+matcher = { literal = "\u000C" }
+to = "after_doctype_name"
+
+[[transitions]]
+from = "doctype_name"
 matcher = { literal = ">" }
 to = "data"
 actions = ["emit_current_token"]
@@ -5978,6 +6078,11 @@ to = "after_doctype_name"
 [[transitions]]
 from = "after_doctype_name"
 matcher = { literal = "\r" }
+to = "after_doctype_name"
+
+[[transitions]]
+from = "after_doctype_name"
+matcher = { literal = "\u000C" }
 to = "after_doctype_name"
 
 [[transitions]]
@@ -6370,6 +6475,11 @@ to = "before_doctype_public_identifier"
 
 [[transitions]]
 from = "after_doctype_public_keyword"
+matcher = { literal = "\u000C" }
+to = "before_doctype_public_identifier"
+
+[[transitions]]
+from = "after_doctype_public_keyword"
 matcher = { literal = "\"" }
 to = "doctype_public_identifier_double_quoted"
 actions = [
@@ -6436,6 +6546,11 @@ to = "before_doctype_public_identifier"
 [[transitions]]
 from = "before_doctype_public_identifier"
 matcher = { literal = "\r" }
+to = "before_doctype_public_identifier"
+
+[[transitions]]
+from = "before_doctype_public_identifier"
+matcher = { literal = "\u000C" }
 to = "before_doctype_public_identifier"
 
 [[transitions]]
@@ -6588,6 +6703,11 @@ to = "between_doctype_public_and_system_identifiers"
 
 [[transitions]]
 from = "after_doctype_public_identifier"
+matcher = { literal = "\u000C" }
+to = "between_doctype_public_and_system_identifiers"
+
+[[transitions]]
+from = "after_doctype_public_identifier"
 matcher = { literal = ">" }
 to = "data"
 actions = ["emit_current_token"]
@@ -6654,6 +6774,11 @@ to = "between_doctype_public_and_system_identifiers"
 
 [[transitions]]
 from = "between_doctype_public_and_system_identifiers"
+matcher = { literal = "\u000C" }
+to = "between_doctype_public_and_system_identifiers"
+
+[[transitions]]
+from = "between_doctype_public_and_system_identifiers"
 matcher = { literal = ">" }
 to = "data"
 actions = ["emit_current_token"]
@@ -6710,6 +6835,11 @@ to = "before_doctype_system_identifier"
 [[transitions]]
 from = "after_doctype_system_keyword"
 matcher = { literal = "\r" }
+to = "before_doctype_system_identifier"
+
+[[transitions]]
+from = "after_doctype_system_keyword"
+matcher = { literal = "\u000C" }
 to = "before_doctype_system_identifier"
 
 [[transitions]]
@@ -6780,6 +6910,11 @@ to = "before_doctype_system_identifier"
 [[transitions]]
 from = "before_doctype_system_identifier"
 matcher = { literal = "\r" }
+to = "before_doctype_system_identifier"
+
+[[transitions]]
+from = "before_doctype_system_identifier"
+matcher = { literal = "\u000C" }
 to = "before_doctype_system_identifier"
 
 [[transitions]]
@@ -6928,6 +7063,11 @@ to = "after_doctype_system_identifier"
 [[transitions]]
 from = "after_doctype_system_identifier"
 matcher = { literal = "\r" }
+to = "after_doctype_system_identifier"
+
+[[transitions]]
+from = "after_doctype_system_identifier"
+matcher = { literal = "\u000C" }
 to = "after_doctype_system_identifier"
 
 [[transitions]]
@@ -7004,6 +7144,11 @@ to = "before_end_tag_close"
 
 [[transitions]]
 from = "before_end_tag_close"
+matcher = { literal = "\u000C" }
+to = "before_end_tag_close"
+
+[[transitions]]
+from = "before_end_tag_close"
 matcher = { literal = ">" }
 to = "data"
 actions = ["emit_current_token"]
@@ -7074,6 +7219,12 @@ actions = ["parse_error(unexpected-whitespace-after-end-tag-name)"]
 [[transitions]]
 from = "end_tag_name"
 matcher = { literal = "\r" }
+to = "before_end_tag_close"
+actions = ["parse_error(unexpected-whitespace-after-end-tag-name)"]
+
+[[transitions]]
+from = "end_tag_name"
+matcher = { literal = "\u000C" }
 to = "before_end_tag_close"
 actions = ["parse_error(unexpected-whitespace-after-end-tag-name)"]
 
