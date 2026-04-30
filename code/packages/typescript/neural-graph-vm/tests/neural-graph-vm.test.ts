@@ -5,6 +5,7 @@ import {
   addWeightedSum,
   createNeuralGraph,
   createNeuralNetwork,
+  createXorNetwork,
   type NeuralGraph,
 } from "@coding-adventures/neural-network";
 import { describe, expect, it } from "vitest";
@@ -14,6 +15,7 @@ import {
   compileNeuralGraphToBytecode,
   compileNeuralNetworkToBytecode,
   runNeuralBytecodeForward,
+  runNeuralBytecodeForwardWithTrace,
 } from "../src/index.js";
 
 function makeTinyWeightedSumGraph(): NeuralGraph {
@@ -21,9 +23,11 @@ function makeTinyWeightedSumGraph(): NeuralGraph {
 
   addInput(graph, "x0");
   addInput(graph, "x1");
+  graph.addNode("bias", { "nn.op": "constant", "nn.value": 1 });
   addWeightedSum(graph, "sum", [
     { from: "x0", weight: 0.25, edgeId: "w0", properties: { "nn.trainable": true } },
     { from: "x1", weight: 0.75, edgeId: "w1", properties: { "nn.trainable": true } },
+    { from: "bias", weight: -1, edgeId: "bias_to_sum" },
   ]);
   addActivation(graph, "relu", "sum", "relu", {}, "sum_to_relu");
   addOutput(graph, "out", "relu", "prediction", {}, "relu_to_out");
@@ -40,12 +44,16 @@ describe("neural graph vm", () => {
     expect(bytecode.graph.edges.map((edge) => edge.id)).toEqual([
       "w0",
       "w1",
+      "bias_to_sum",
       "sum_to_relu",
       "relu_to_out",
     ]);
     expect(bytecode.functions[0].instructions.map((insn) => insn.op)).toEqual([
+      "LOAD_CONST",
       "LOAD_INPUT",
       "LOAD_INPUT",
+      "LOAD_EDGE_WEIGHT",
+      "MUL",
       "LOAD_EDGE_WEIGHT",
       "MUL",
       "LOAD_EDGE_WEIGHT",
@@ -76,7 +84,7 @@ describe("neural graph vm", () => {
     const bytecode = compileNeuralGraphToBytecode(makeTinyWeightedSumGraph());
     const outputs = runNeuralBytecodeForward(bytecode, { x0: 4, x1: 8 });
 
-    expect(outputs).toEqual({ prediction: 7 });
+    expect(outputs).toEqual({ prediction: 6 });
   });
 
   it("supports negative weighted sums through relu", () => {
@@ -85,6 +93,38 @@ describe("neural graph vm", () => {
     const outputs = runNeuralBytecodeForward(bytecode, { x0: -4, x1: -8 });
 
     expect(outputs).toEqual({ prediction: 0 });
+  });
+
+  it("runs XOR through compiled bytecode", () => {
+    const bytecode = compileNeuralNetworkToBytecode(createXorNetwork());
+    const predictions = [
+      runNeuralBytecodeForward(bytecode, { x0: 0, x1: 0 }).prediction,
+      runNeuralBytecodeForward(bytecode, { x0: 0, x1: 1 }).prediction,
+      runNeuralBytecodeForward(bytecode, { x0: 1, x1: 0 }).prediction,
+      runNeuralBytecodeForward(bytecode, { x0: 1, x1: 1 }).prediction,
+    ];
+
+    expect(predictions[0]).toBeLessThan(0.01);
+    expect(predictions[1]).toBeGreaterThan(0.99);
+    expect(predictions[2]).toBeGreaterThan(0.99);
+    expect(predictions[3]).toBeLessThan(0.01);
+  });
+
+  it("traces bytecode values back to graph nodes and edges", () => {
+    const bytecode = compileNeuralGraphToBytecode(makeTinyWeightedSumGraph());
+    const trace = runNeuralBytecodeForwardWithTrace(bytecode, { x0: 4, x1: 8 });
+    const biasLoad = trace.instructions.find((entry) => (
+      entry.instruction.op === "LOAD_CONST" && entry.sourceNode === "bias"
+    ));
+    const biasTerm = trace.instructions.find((entry) => (
+      entry.instruction.op === "MUL" && entry.sourceEdge === "bias_to_sum"
+    ));
+    const store = trace.instructions.find((entry) => entry.instruction.op === "STORE_OUTPUT");
+
+    expect(trace.outputs).toEqual({ prediction: 6 });
+    expect(biasLoad?.write?.value).toBe(1);
+    expect(biasTerm?.reads.map((read) => read.value)).toContain(-1);
+    expect(store?.output).toEqual({ outputName: "prediction", value: 6 });
   });
 
   it("rejects unsupported neural graph ops", () => {

@@ -29,6 +29,15 @@ export class NeuralNetwork {
     return this;
   }
 
+  constant(
+    node: string,
+    value: number,
+    properties: GraphPropertyBag = {}
+  ): this {
+    addConstant(this.graph, node, value, properties);
+    return this;
+  }
+
   weightedSum(
     node: string,
     inputs: readonly WeightedInput[],
@@ -87,6 +96,22 @@ export function addInput(
   });
 }
 
+export function addConstant(
+  graph: NeuralGraph,
+  node: string,
+  value: number,
+  properties: GraphPropertyBag = {}
+): void {
+  if (!Number.isFinite(value)) {
+    throw new Error("constant value must be finite");
+  }
+  graph.addNode(node, {
+    ...properties,
+    "nn.op": "constant",
+    "nn.value": value,
+  });
+}
+
 export function addWeightedSum(
   graph: NeuralGraph,
   node: string,
@@ -122,6 +147,43 @@ export function addActivation(
     "nn.activation": activation,
   });
   return graph.addEdge(input, node, 1.0, {}, edgeId);
+}
+
+export function createXorNetwork(name = "xor"): NeuralNetwork {
+  return createNeuralNetwork(name)
+    .input("x0")
+    .input("x1")
+    .constant("bias", 1, { "nn.role": "bias" })
+    .weightedSum("h_or_sum", [
+      { from: "x0", weight: 20, edgeId: "x0_to_h_or" },
+      { from: "x1", weight: 20, edgeId: "x1_to_h_or" },
+      { from: "bias", weight: -10, edgeId: "bias_to_h_or" },
+    ], { "nn.layer": "hidden", "nn.role": "weighted_sum" })
+    .activation("h_or", "h_or_sum", "sigmoid", {
+      "nn.layer": "hidden",
+      "nn.role": "activation",
+    }, "h_or_sum_to_h_or")
+    .weightedSum("h_nand_sum", [
+      { from: "x0", weight: -20, edgeId: "x0_to_h_nand" },
+      { from: "x1", weight: -20, edgeId: "x1_to_h_nand" },
+      { from: "bias", weight: 30, edgeId: "bias_to_h_nand" },
+    ], { "nn.layer": "hidden", "nn.role": "weighted_sum" })
+    .activation("h_nand", "h_nand_sum", "sigmoid", {
+      "nn.layer": "hidden",
+      "nn.role": "activation",
+    }, "h_nand_sum_to_h_nand")
+    .weightedSum("out_sum", [
+      { from: "h_or", weight: 20, edgeId: "h_or_to_out" },
+      { from: "h_nand", weight: 20, edgeId: "h_nand_to_out" },
+      { from: "bias", weight: -30, edgeId: "bias_to_out" },
+    ], { "nn.layer": "output", "nn.role": "weighted_sum" })
+    .activation("out_activation", "out_sum", "sigmoid", {
+      "nn.layer": "output",
+      "nn.role": "activation",
+    }, "out_sum_to_activation")
+    .output("out", "out_activation", "prediction", {
+      "nn.layer": "output",
+    }, "activation_to_out");
 }
 
 export function addOutput(

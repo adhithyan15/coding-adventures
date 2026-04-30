@@ -1,11 +1,13 @@
 export {
   NeuralNetwork,
   addActivation,
+  addConstant,
   addInput,
   addOutput,
   addWeightedSum,
   createNeuralGraph,
   createNeuralNetwork,
+  createXorNetwork,
   type ActivationKind,
   type NeuralGraph,
   type WeightedInput,
