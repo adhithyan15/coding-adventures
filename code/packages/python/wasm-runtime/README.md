@@ -84,6 +84,13 @@ class FakeClock(WasiClock):
 host = WasiHost(WasiConfig(clock=FakeClock()))
 ```
 
+### Compiler math imports
+
+`WasiHost` also resolves the generic compiler pipeline's `compiler_math`
+imports for standard unary f64 math: `f64_sin`, `f64_cos`, `f64_atan`,
+`f64_ln`, and `f64_exp`. These imports are intentionally separate from WASI
+so generated modules declare the non-core WASM math surface they need.
+
 ## WASI functions implemented
 
 | Function            | Tier | Description                                      |

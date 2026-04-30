@@ -25,7 +25,8 @@ The opcodes are grouped by category:
   Bitwise:      OR, OR_IMM, XOR, XOR_IMM, NOT
   Comparison:   CMP_EQ, CMP_NE, CMP_LT, CMP_GT
   Floating:     LOAD_F64_IMM, LOAD_F64, STORE_F64, F64_ADD, ..., F64_FROM_I32,
-                I32_TRUNC_FROM_F64, F64_SQRT
+                I32_TRUNC_FROM_F64, F64_SQRT, F64_SIN, F64_COS, F64_ATAN,
+                F64_LN, F64_EXP
   Control Flow: LABEL, JUMP, BRANCH_Z, BRANCH_NZ, CALL, RET
   System:       SYSCALL, HALT
   Meta:         NOP, COMMENT
@@ -305,6 +306,24 @@ class IrOp(IntEnum):
     # Appended after the closure opcodes to preserve stable opcode values.
     #   F64_SQRT v1, v2  →  v1 = sqrt(v2)
     F64_SQRT = 49
+
+    # Compute standard unary real functions for frontends that need a
+    # language-level math runtime. WASM core has no native sine/cosine/etc.,
+    # so WASM backends may lower these to typed host imports.
+    #   F64_SIN v1, v2    →  v1 = sin(v2)
+    F64_SIN = 50
+
+    #   F64_COS v1, v2    →  v1 = cos(v2)
+    F64_COS = 51
+
+    #   F64_ATAN v1, v2   →  v1 = arctan(v2)
+    F64_ATAN = 52
+
+    #   F64_LN v1, v2     →  v1 = ln(v2)
+    F64_LN = 53
+
+    #   F64_EXP v1, v2    →  v1 = exp(v2)
+    F64_EXP = 54
 
 
 # Canonical name → opcode mapping. Built from the enum at module load time.

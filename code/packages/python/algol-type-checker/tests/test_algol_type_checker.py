@@ -370,6 +370,7 @@ class TestAlgolTypeChecker:
         ast = parse_algol(
             "begin integer result; real x, root; "
             "root := sqrt(9); "
+            "root := sin(root) + cos(0) + arctan(1) + ln(exp(1)); "
             "result := abs(0 - 3) + sign(x) + entier(root) "
             "end"
         )
@@ -385,6 +386,11 @@ class TestAlgolTypeChecker:
         assert calls["sign"] == "integer"
         assert calls["entier"] == "integer"
         assert calls["sqrt"] == "real"
+        assert calls["sin"] == "real"
+        assert calls["cos"] == "real"
+        assert calls["arctan"] == "real"
+        assert calls["ln"] == "real"
+        assert calls["exp"] == "real"
 
     def test_rejects_boolean_actual_for_numeric_builtin_function(self) -> None:
         ast = parse_algol("begin integer result; result := abs(false) end")

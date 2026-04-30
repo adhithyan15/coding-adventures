@@ -23,6 +23,9 @@ All notable changes to this package will be documented in this file.
 - **`WasiConfig` dataclass** — collects all `WasiHost` options in one place: `args`, `env`, `stdout`, `stderr`, `clock`, `random`
 - All new classes exported from `wasm_runtime.__init__`
 - 32 new tests in `tests/test_wasi_tier3.py` covering happy paths, edge cases, no-memory guards, and the `clock_time_get` EINVAL path
+- **`compiler_math` host imports** — `WasiHost` now resolves `f64_sin`,
+  `f64_cos`, `f64_atan`, `f64_ln`, and `f64_exp` for generic compiler
+  pipeline modules that need non-core WASM real math.
 
 ### Changed
 

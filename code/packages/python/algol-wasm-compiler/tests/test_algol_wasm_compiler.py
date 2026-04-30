@@ -205,6 +205,28 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
 
+    def test_standard_real_math_builtins_execute_through_host_imports(self) -> None:
+        result = compile_source(
+            "begin integer result; real x; "
+            "x := sin(0) + cos(0) + arctan(1) + ln(exp(1)); "
+            "result := entier(x * 100) "
+            "end"
+        )
+        assert WasmRuntime(host=WasiHost()).load_and_run(
+            result.binary, "_start", []
+        ) == [278]
+
+    def test_ln_nonpositive_argument_returns_zero_through_runtime_failure(self) -> None:
+        result = compile_source(
+            "begin integer result; real x; "
+            "x := ln(0); "
+            "result := 7 "
+            "end"
+        )
+        assert WasmRuntime(host=WasiHost()).load_and_run(
+            result.binary, "_start", []
+        ) == [0]
+
     def test_builtin_print_string_literal_writes_stdout(self) -> None:
         result = compile_source("begin integer result; print('Hi'); result := 7 end")
         captured: list[str] = []

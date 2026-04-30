@@ -100,10 +100,15 @@ class TestIrOp:
         assert IrOp.MAKE_CLOSURE == 47
         assert IrOp.APPLY_CLOSURE == 48
         assert IrOp.F64_SQRT == 49
+        assert IrOp.F64_SIN == 50
+        assert IrOp.F64_COS == 51
+        assert IrOp.F64_ATAN == 52
+        assert IrOp.F64_LN == 53
+        assert IrOp.F64_EXP == 54
 
     def test_total_opcode_count(self) -> None:
-        """There are exactly 50 opcodes after adding f64 sqrt."""
-        assert len(IrOp) == 50
+        """There are exactly 55 opcodes after adding f64 standard math."""
+        assert len(IrOp) == 55
 
     def test_name_to_op_roundtrip(self) -> None:
         """NAME_TO_OP[op.name] == op for every opcode."""
@@ -1010,6 +1015,11 @@ class TestAllOpcodesPrintParse:
             IrOp.F64_FROM_I32: [IrRegister(2), IrRegister(1)],
             IrOp.I32_TRUNC_FROM_F64: [IrRegister(2), IrRegister(1)],
             IrOp.F64_SQRT:     [IrRegister(2), IrRegister(1)],
+            IrOp.F64_SIN:      [IrRegister(2), IrRegister(1)],
+            IrOp.F64_COS:      [IrRegister(2), IrRegister(1)],
+            IrOp.F64_ATAN:     [IrRegister(2), IrRegister(1)],
+            IrOp.F64_LN:       [IrRegister(2), IrRegister(1)],
+            IrOp.F64_EXP:      [IrRegister(2), IrRegister(1)],
             # MAKE_CLOSURE dst, fn_label, num_captured, capt0, capt1
             IrOp.MAKE_CLOSURE: [
                 IrRegister(0),
