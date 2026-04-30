@@ -158,9 +158,30 @@ _BINARY_OPS: dict[str, IrOp] = {
     ">": IrOp.CMP_GT,
 }
 
+# TW03 Phase 3e — heap-primitive builtins now compile (was rejected
+# in v1).  Each maps to its corresponding IR opcode below.  The
+# remaining rejected set is shrunk to opcodes still without a JVM
+# lowering: ``number?`` (would need a tagged-int discriminator the
+# Phase 3b heap pool doesn't have yet) and ``print`` (TW04
+# territory).
 _V1_REJECTED_BUILTINS: frozenset[str] = frozenset(
-    {"cons", "car", "cdr", "null?", "pair?", "number?", "symbol?", "print"}
+    {"number?", "print"}
 )
+
+# TW03 Phase 3e — Lisp heap-primitive builtins.  Each entry maps a
+# builtin name to its IR opcode + arity so the apply-site can
+# generate a uniform call sequence.  ``cons`` is the only 2-arg
+# heap op; the rest are 1-arg.  ``IS_NULL`` / ``IS_PAIR`` /
+# ``IS_SYMBOL`` write 0/1 into an int register so the result feeds
+# straight into BRANCH_Z (no boxing needed).
+_HEAP_BUILTINS: dict[str, tuple[IrOp, int]] = {
+    "cons":    (IrOp.MAKE_CONS, 2),
+    "car":     (IrOp.CAR, 1),
+    "cdr":     (IrOp.CDR, 1),
+    "null?":   (IrOp.IS_NULL, 1),
+    "pair?":   (IrOp.IS_PAIR, 1),
+    "symbol?": (IrOp.IS_SYMBOL, 1),
+}
 
 # Convention shared with the JVM backend's helper register array:
 #   register 0  — scratch zero (also the SYSCALL-arg slot for SYSCALL 1)
@@ -383,15 +404,15 @@ class _Compiler:
         if isinstance(expr, BoolLit):
             return self._compile_int(1 if expr.value else 0, ctx)
         if isinstance(expr, NilLit):
-            raise TwigCompileError(
-                "nil is not yet supported by the JVM backend (heap "
-                "objects come in TW02.5)"
-            )
+            # TW03 Phase 3e: lower nil to LOAD_NIL.
+            dest = self._fresh_holding(ctx)
+            self._emit(IrOp.LOAD_NIL, dest)
+            return dest
         if isinstance(expr, SymLit):
-            raise TwigCompileError(
-                "symbols are not yet supported by the JVM backend "
-                "(heap objects come in TW02.5)"
-            )
+            # TW03 Phase 3e: lower 'foo / (quote foo) to MAKE_SYMBOL.
+            dest = self._fresh_holding(ctx)
+            self._emit(IrOp.MAKE_SYMBOL, dest, IrLabel(expr.name))
+            return dest
         if isinstance(expr, VarRef):
             return self._compile_var_ref(expr, ctx)
         if isinstance(expr, If):
@@ -521,6 +542,21 @@ class _Compiler:
                     "backend — see TW02.5"
                 )
 
+            # TW03 Phase 3e — heap-primitive builtins.  Single-shape
+            # lowering: evaluate args, fresh holding reg for the
+            # result, emit the IR opcode.
+            if name in _HEAP_BUILTINS:
+                op, expected_arity = _HEAP_BUILTINS[name]
+                if len(expr.args) != expected_arity:
+                    raise TwigCompileError(
+                        f"{name!r} expects {expected_arity} arguments, "
+                        f"got {len(expr.args)}"
+                    )
+                arg_regs = [self._compile_expr(a, ctx) for a in expr.args]
+                dest = self._fresh_holding(ctx)
+                self._emit(op, dest, *arg_regs)
+                return dest
+
             # Direct binary builtin
             if name in _BINARY_OPS:
                 if len(expr.args) != 2:
@@ -610,6 +646,7 @@ class _Compiler:
             | set(self._value_consts)
             | set(_BINARY_OPS)
             | _V1_REJECTED_BUILTINS
+            | set(_HEAP_BUILTINS)
         )
         captures = free_vars(lam, globals_)
 
@@ -774,10 +811,23 @@ def compile_source(
         closure_free_var_counts=closure_free_var_counts,
     )
 
+    # TW03 Phase 3e: heap-primitive programs also need the multi-class
+    # output (Cons / Symbol / Nil runtime classes).  Detect either
+    # closures or heap ops in the IR and route to lower_ir_to_jvm_classes.
+    _HEAP_IR_OPS = frozenset({
+        IrOp.MAKE_CONS, IrOp.CAR, IrOp.CDR, IrOp.IS_NULL, IrOp.IS_PAIR,
+        IrOp.MAKE_SYMBOL, IrOp.IS_SYMBOL, IrOp.LOAD_NIL,
+    })
+    uses_heap_ir = any(
+        i.opcode in _HEAP_IR_OPS for i in optimized_ir.instructions
+    )
+
     try:
-        if closure_free_var_counts:
-            # Closure programs need the multi-class output: main class
-            # + Closure interface + per-lambda Closure_<name> subclasses.
+        if closure_free_var_counts or uses_heap_ir:
+            # Multi-class output: main class + Closure interface +
+            # per-lambda Closure_<name> subclasses + Cons/Symbol/Nil
+            # runtime classes (auto-included by lower_ir_to_jvm_classes
+            # when heap ops are detected).
             multi = lower_ir_to_jvm_classes(optimized_ir, config)
             artifact = multi.main
         else:
