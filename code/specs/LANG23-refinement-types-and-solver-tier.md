@@ -465,6 +465,44 @@ Same pass that already runs; one new visitor.  No second IR.
 
 ## Solver architecture
 
+> **AMENDED — see [LANG24](LANG24-constraint-vm.md).**
+>
+> The original LANG23 spec called for a `lang-smt` crate
+> bundled inside the refinement-types stack.  As soon as
+> a second consumer of constraint solving showed up — and
+> they're everywhere (property-based test generation,
+> semver resolvers, symbolic execution, the user-facing
+> `(solve …)` builtin, etc.) — bundling the solver inside
+> one consumer became a coupling problem.
+>
+> **LANG24 extracts the solver into a generic Constraint-VM**
+> with the same architectural shape as the existing Logic-VM
+> (LP00/07/08): `constraint-core` + `constraint-instructions`
+> + `constraint-engine` + `constraint-vm`.  Refinement
+> type-checking becomes one of N consumers — each consumer is
+> a thin lowering crate that emits ConstraintInstructions and
+> reads back SAT / UNSAT / model.
+>
+> **What this means for the LANG23 implementation:**
+>
+> - `lang-smt` is **removed** from the LANG23 crate list.
+> - A new crate `lang-refinement-checker` (already in the
+>   §"Crate structure" below) becomes a **consumer of LANG24**
+>   instead of owning solver code.  It lowers
+>   `RefinedType { kind, predicate }` to LANG24's
+>   `ConstraintInstructions`.
+> - The migration path's solver-related PRs (originally 23-B
+>   in this spec) move to LANG24 as PRs 24-A through 24-C.
+> - LANG23's MVP was originally PR 23-D (variable + function
+>   scope refinement).  After the LANG24 extraction, LANG23's
+>   MVP is **PR 24-D + LANG23 PR 23-D** — the constraint-vm
+>   ships in LANG24, the refinement consumer ships in LANG23.
+>
+> The text below describes the *original* design for
+> historical context.  When the discrepancy matters to the
+> reader, [LANG24](LANG24-constraint-vm.md) is the source of
+> truth for solver architecture.
+
 Two questions: (a) what theory does the solver support and
 (b) what's its implementation.
 
