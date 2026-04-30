@@ -3547,6 +3547,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "append_temporary_buffer_to_text".to_string(),
+                "parse_error(absence-of-digits-in-numeric-character-reference)".to_string(),
                 "flush_text".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -3564,6 +3565,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "append_temporary_buffer_to_text".to_string(),
+                "parse_error(absence-of-digits-in-numeric-character-reference)".to_string(),
                 "switch_to_return_state".to_string(),
             ],
             consume: false,
@@ -3625,6 +3627,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "append_temporary_buffer_to_text".to_string(),
+                "parse_error(absence-of-digits-in-numeric-character-reference)".to_string(),
                 "flush_text".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -3642,6 +3645,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "append_temporary_buffer_to_text".to_string(),
+                "parse_error(absence-of-digits-in-numeric-character-reference)".to_string(),
                 "switch_to_return_state".to_string(),
             ],
             consume: false,
@@ -7309,6 +7313,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "append_temporary_buffer_to_attribute_value".to_string(),
+                "parse_error(absence-of-digits-in-numeric-character-reference)".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
                 "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
@@ -7328,6 +7333,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "append_temporary_buffer_to_attribute_value".to_string(),
+                "parse_error(absence-of-digits-in-numeric-character-reference)".to_string(),
                 "switch_to_return_state".to_string(),
             ],
             consume: false,
@@ -7389,6 +7395,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "append_temporary_buffer_to_attribute_value".to_string(),
+                "parse_error(absence-of-digits-in-numeric-character-reference)".to_string(),
                 "parse_error(eof-in-tag)".to_string(),
                 "commit_attribute_dedup".to_string(),
                 "emit_current_token".to_string(),
@@ -7408,6 +7415,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "append_temporary_buffer_to_attribute_value".to_string(),
+                "parse_error(absence-of-digits-in-numeric-character-reference)".to_string(),
                 "switch_to_return_state".to_string(),
             ],
             consume: false,

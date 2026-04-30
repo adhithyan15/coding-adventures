@@ -559,6 +559,20 @@
       ]
     },
     {
+      "description": "numeric character references without digits stay literal",
+      "input": "Bad &#; &#x; <a title='&#x;' data=&#;>",
+      "output": [
+        ["Character", "Bad &#; &#x; "],
+        ["StartTag", "a", {"title": "&#x;", "data": "&#;"}]
+      ],
+      "errors": [
+        {"code": "absence-of-digits-in-numeric-character-reference", "line": 1, "col": 7},
+        {"code": "absence-of-digits-in-numeric-character-reference", "line": 1, "col": 12},
+        {"code": "absence-of-digits-in-numeric-character-reference", "line": 1, "col": 27},
+        {"code": "absence-of-digits-in-numeric-character-reference", "line": 1, "col": 37}
+      ]
+    },
+    {
       "description": "rcdata numeric character references remain text",
       "initialStates": ["RCDATA state"],
       "lastStartTag": "title",

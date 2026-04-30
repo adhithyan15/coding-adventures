@@ -573,6 +573,22 @@
       ]
     },
     {
+      "id": "html-absence-of-digits-numeric-character-reference-recovery",
+      "description": "Numeric character references without digits stay literal and report absence-of-digits diagnostics",
+      "input": "Bad &#; &#x; <a title='&#x;' data=&#;>",
+      "tokens": [
+        "Text(data=Bad &#; &#x; )",
+        "StartTag(name=a, attributes=[title=&#x;, data=&#;], self_closing=false)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "absence-of-digits-in-numeric-character-reference",
+        "absence-of-digits-in-numeric-character-reference",
+        "absence-of-digits-in-numeric-character-reference",
+        "absence-of-digits-in-numeric-character-reference"
+      ]
+    },
+    {
       "id": "html-numeric-character-references-rcdata",
       "description": "Seeded title RCDATA context resolves numeric character references as text",
       "input": "Fish &#38; &#x3C;/title>",

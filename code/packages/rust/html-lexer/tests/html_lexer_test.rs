@@ -1681,6 +1681,48 @@ fn default_html_lexer_reports_invalid_numeric_character_references() {
 }
 
 #[test]
+fn default_html_lexer_reports_numeric_character_references_without_digits() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer
+        .push("Bad &#; &#x; <a title='&#x;' data=&#;>")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("Bad &#; &#x; ".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "title".to_string(),
+                        value: "&#x;".to_string(),
+                    },
+                    Attribute {
+                        name: "data".to_string(),
+                        value: "&#;".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| {
+                diagnostic.code == "absence-of-digits-in-numeric-character-reference"
+            })
+            .count(),
+        4
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_seeded_rcdata_numeric_character_references() {
     let mut lexer = create_html_lexer().unwrap();
     lexer.set_initial_state("rcdata").unwrap();

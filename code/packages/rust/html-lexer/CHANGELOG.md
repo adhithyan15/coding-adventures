@@ -117,6 +117,8 @@ documented in this file.
 - Numeric character references now report invalid-code-point diagnostics and
   recover with replacement/remapping behavior for null, surrogate,
   out-of-range, noncharacter, and Windows-1252 control references.
+- Digitless numeric character references such as `&#;` and `&#x;` now report
+  `absence-of-digits-in-numeric-character-reference` while staying literal.
 - One-dash markup declarations such as `<!->` and `<!-x>` now use
   incorrectly-opened bogus-comment recovery instead of empty-comment recovery.
 - Invalid tag-open characters now follow HTML recovery: stray `<` text is
