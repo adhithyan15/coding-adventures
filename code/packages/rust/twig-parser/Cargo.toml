@@ -2,10 +2,14 @@
 name = "twig-parser"
 version = "0.1.0"
 edition = "2021"
-description = "Twig (Lisp-precursor) parser — thin wrapper over GrammarParser plus a typed-AST extractor"
+description = "Twig (Lisp-precursor) parser — thin wrapper over GrammarParser plus a typed-AST extractor; grammar is build-time-compiled to Rust via grammar_tools::codegen"
+build = "build.rs"
 
 [dependencies]
 grammar-tools = { path = "../grammar-tools" }
 lexer         = { path = "../lexer" }
 parser        = { path = "../parser" }
 twig-lexer    = { path = "../twig-lexer" }
+
+[build-dependencies]
+grammar-tools = { path = "../grammar-tools" }

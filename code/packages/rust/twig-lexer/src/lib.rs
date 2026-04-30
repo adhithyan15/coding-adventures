@@ -49,9 +49,6 @@
 //! assert_eq!(tokens.len(), 6);
 //! ```
 
-use std::fs;
-
-use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
 use lexer::token::Token;
 
@@ -60,28 +57,32 @@ use lexer::token::Token;
 pub use lexer::token::LexerError;
 
 // ---------------------------------------------------------------------------
-// Grammar file location
+// Generated grammar (build.rs → grammar-tools → Rust)
 // ---------------------------------------------------------------------------
+//
+// Earlier drafts called `std::fs::read_to_string` on
+// `code/grammars/twig.tokens` at every `create_twig_lexer` call.  That
+// had three problems:
+//
+//   1. Runtime file dependency — the deployed crate needed the
+//      grammar file at a known path on the host filesystem.
+//   2. Per-call parse cost — `parse_token_grammar` ran on every
+//      `create_twig_lexer`.
+//   3. Miri sandbox incompatibility — Miri's default isolation mode
+//      blocks file-system access; running the test suite under Miri
+//      required `-Zmiri-disable-isolation`, defeating the sandbox.
+//
+// The fix: `build.rs` invokes `grammar_tools::token_grammar::parse_token_grammar`
+// at build time and `grammar_tools::codegen::token_grammar_to_rust_source`
+// to emit Rust source code that constructs the parsed `TokenGrammar`
+// as a `LazyLock<TokenGrammar>` static.  The runtime just borrows the
+// already-parsed static — zero file I/O, zero re-parsing, fully
+// Miri-compatible.
+//
+// The generated module exposes `pub fn twig_token_grammar() ->
+// &'static TokenGrammar`.
 
-/// Path to the canonical Twig token grammar.
-///
-/// Built at compile time from `CARGO_MANIFEST_DIR`, which expands to this
-/// crate's directory (`code/packages/rust/twig-lexer/`).  The grammars
-/// directory sits three levels up:
-///
-/// ```text
-/// code/
-///   grammars/
-///     twig.tokens                  <-- target file
-///   packages/
-///     rust/
-///       twig-lexer/
-///         Cargo.toml               <-- CARGO_MANIFEST_DIR
-/// ```
-fn grammar_path() -> String {
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    format!("{manifest_dir}/../../../grammars/twig.tokens")
-}
+include!(concat!(env!("OUT_DIR"), "/twig_token_grammar.rs"));
 
 // ---------------------------------------------------------------------------
 // Public API
@@ -89,28 +90,16 @@ fn grammar_path() -> String {
 
 /// Build a [`GrammarLexer`] configured for Twig source.
 ///
-/// Reads `twig.tokens` from disk, parses it into a `TokenGrammar`, and
-/// constructs a `GrammarLexer` ready to call `.tokenize()` on.  Use this
-/// when you want access to the lexer object itself (e.g. for incremental
-/// tokenisation or custom error handling); otherwise reach for
-/// [`tokenize_twig`].
-///
-/// # Panics
-///
-/// Panics if the grammar file is missing or malformed.  This indicates a
-/// broken checkout, not a runtime input issue — the grammar is checked
-/// in and validated by `grammar-tools`'s own tests.
+/// Uses the build-time-compiled Twig token grammar — no filesystem
+/// access at runtime.  Use this when you want access to the lexer
+/// object itself (e.g. for incremental tokenisation or custom
+/// error handling); otherwise reach for [`tokenize_twig`].
 pub fn create_twig_lexer(source: &str) -> GrammarLexer<'_> {
-    let grammar_text = fs::read_to_string(grammar_path())
-        .unwrap_or_else(|e| panic!("Failed to read twig.tokens: {e}"));
-    let grammar = parse_token_grammar(&grammar_text)
-        .unwrap_or_else(|e| panic!("Failed to parse twig.tokens: {e}"));
-    // GrammarLexer stores a reference to the grammar; we leak it so the
-    // returned lexer owns its dependencies and the caller can move it
-    // freely.  Each call therefore allocates one TokenGrammar — fine for
-    // the educational interpreter use cases this crate targets.
-    let leaked: &'static _ = Box::leak(Box::new(grammar));
-    GrammarLexer::new(source, leaked)
+    // GrammarLexer borrows the grammar; the build.rs-generated
+    // static reference is `'static` so the lexer can outlive any
+    // local scope.  One parsed grammar shared across all calls —
+    // zero per-call allocation, zero file I/O.
+    GrammarLexer::new(source, twig_token_grammar())
 }
 
 /// Tokenise Twig source into a `Vec<Token>` ending with EOF.
