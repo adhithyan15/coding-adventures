@@ -10,6 +10,8 @@
   **`IrOp.F64_ATAN` (52)**, **`IrOp.F64_LN` (53)**, and
   **`IrOp.F64_EXP` (54)** — unary 64-bit floating standard math operations
   for frontends with real numeric libraries.
+- **`IrOp.F64_POW` (55)** — binary 64-bit floating power operation
+  (`dst = pow(base, exponent)`) for frontends with real exponentiation.
 
 ## [0.4.0] — 2026-04-29
 

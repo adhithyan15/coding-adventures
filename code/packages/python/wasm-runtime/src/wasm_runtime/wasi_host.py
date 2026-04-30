@@ -27,7 +27,7 @@ can talk to the outside world through imported WASI functions.
 
 Compiler math imports
 ─────────────────────
-The generic compiler pipeline may also import unary f64 math helpers from
+The generic compiler pipeline may also import f64 math helpers from
 ``compiler_math``. These are intentionally separate from WASI so generated
 modules have a small, explicit ABI for non-core WASM math operations.
 
@@ -79,6 +79,16 @@ _COMPILER_MATH_UNARY_F64: dict[str, Callable[[float], float]] = {
     "f64_ln": math.log,
     "f64_exp": math.exp,
 }
+_COMPILER_MATH_BINARY_F64: dict[str, Callable[[float, float], float]] = {
+    "f64_pow": math.pow,
+}
+
+
+def _math_result(fn: Callable[..., float], *args: float) -> WasmValue:
+    try:
+        return f64(fn(*args))
+    except (OverflowError, ValueError):
+        return f64(math.nan)
 
 
 # ---------------------------------------------------------------------------
@@ -335,17 +345,38 @@ class WasiHost:
         return self._make_stub(name)
 
     def _make_compiler_math(self, name: str) -> _HostFunc | None:
-        fn = _COMPILER_MATH_UNARY_F64.get(name)
-        if fn is None:
-            return None
+        unary_fn = _COMPILER_MATH_UNARY_F64.get(name)
+        if unary_fn is not None:
 
-        def unary_f64_impl(args: list[WasmValue]) -> list[WasmValue]:
-            return [f64(fn(float(args[0].value)))]
+            def unary_f64_impl(args: list[WasmValue]) -> list[WasmValue]:
+                return [_math_result(unary_fn, float(args[0].value))]
 
-        return _HostFunc(
-            FuncType(params=(ValueType.F64,), results=(ValueType.F64,)),
-            unary_f64_impl,
-        )
+            return _HostFunc(
+                FuncType(params=(ValueType.F64,), results=(ValueType.F64,)),
+                unary_f64_impl,
+            )
+
+        binary_fn = _COMPILER_MATH_BINARY_F64.get(name)
+        if binary_fn is not None:
+
+            def binary_f64_impl(args: list[WasmValue]) -> list[WasmValue]:
+                return [
+                    _math_result(
+                        binary_fn,
+                        float(args[0].value),
+                        float(args[1].value),
+                    )
+                ]
+
+            return _HostFunc(
+                FuncType(
+                    params=(ValueType.F64, ValueType.F64),
+                    results=(ValueType.F64,),
+                ),
+                binary_f64_impl,
+            )
+
+        return None
 
     def resolve_global(self, _module_name: str, _name: str) -> Any | None:  # noqa: ANN401
         return None

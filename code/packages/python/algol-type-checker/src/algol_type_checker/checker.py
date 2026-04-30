@@ -2898,10 +2898,15 @@ class AlgolTypeChecker:
                     f"numeric operator {operator.value!r} is not supported",
                 )
                 return ERROR
-            if exponent_type != INTEGER:
-                self._error(node, "exponentiation exponent must be integer")
+            if not _is_numeric_type(exponent_type):
+                self._error(
+                    node,
+                    f"operator requires numeric operand, got {exponent_type}",
+                )
                 return ERROR
-            current_type = REAL if current_type == REAL else INTEGER
+            current_type = (
+                REAL if REAL in {current_type, exponent_type} else INTEGER
+            )
             index += 2
         return current_type
 

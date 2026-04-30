@@ -31,10 +31,10 @@ ALGOL block lifetime instead of leaking through loops or recursive calls.
 
 Expression lowering includes mixed integer/real arithmetic, boolean operators,
 comparisons, chained assignment targets, branch-selected conditional
-expressions, and ALGOL-left-associative exponentiation when the exponent is an
-integer. Real bases with negative integer exponents are lowered through a
-reciprocal path; arbitrary real exponents remain outside this phase until the
-runtime has a real `pow` implementation instead of an approximation shortcut.
+expressions, and ALGOL-left-associative exponentiation. Integer exponents use
+the existing loop lowering, real bases with negative integer exponents use a
+reciprocal path, and real exponents lower through the imported real `pow`
+runtime with a domain-failure guard.
 Standard numeric functions `abs`, `sign`, `entier`, `sqrt`, `sin`, `cos`,
 `arctan`, `ln`, and `exp` lower to existing integer/f64 comparison,
 arithmetic, conversion, native square-root IR, and imported standard real-math

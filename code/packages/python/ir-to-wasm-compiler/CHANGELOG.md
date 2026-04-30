@@ -40,6 +40,8 @@ round-trip, export check.
 - Lowered `IrOp.F64_SIN`, `IrOp.F64_COS`, `IrOp.F64_ATAN`, `IrOp.F64_LN`,
   and `IrOp.F64_EXP` through typed `compiler_math` host imports and inferred
   their destination registers as `f64`.
+- Lowered `IrOp.F64_POW` through the typed binary `compiler_math.f64_pow`
+  host import and inferred its destination register as `f64`.
 - **Oct 8-bit arithmetic e2e tests** (`tests/test_oct_8bit_e2e.py`):
   7 end-to-end tests confirming the WASM backend correctly compiles and
   executes 8-bit integer arithmetic IR — the same IR that the Oct compiler

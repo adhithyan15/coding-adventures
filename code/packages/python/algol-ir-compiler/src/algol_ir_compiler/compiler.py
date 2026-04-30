@@ -2398,11 +2398,19 @@ class AlgolIrCompiler:
                     f"numeric operator {operator.value!r} is not supported"
                 )
             exponent_type = self._expr_type(children[index + 1])
-            if exponent_type != _INTEGER_TYPE:
-                raise CompileError("exponentiation exponent must be integer")
-            current = self._emit_power(current, current_type, exponent, scope)
+            if exponent_type not in {_INTEGER_TYPE, _REAL_TYPE}:
+                raise CompileError("exponentiation exponent must be numeric")
+            current = self._emit_power(
+                current,
+                current_type,
+                exponent,
+                exponent_type,
+                scope,
+            )
             current_type = (
-                _REAL_TYPE if current_type == _REAL_TYPE else _INTEGER_TYPE
+                _REAL_TYPE
+                if _REAL_TYPE in {current_type, exponent_type}
+                else _INTEGER_TYPE
             )
             index += 2
         return current
@@ -2699,11 +2707,47 @@ class AlgolIrCompiler:
         self._emit_runtime_failure_guard(failed, scope)
 
     def _emit_power(
-        self, base: int, base_type: str, exponent: int, scope: _FrameScope
+        self,
+        base: int,
+        base_type: str,
+        exponent: int,
+        exponent_type: str,
+        scope: _FrameScope,
     ) -> int:
+        if exponent_type == _REAL_TYPE:
+            return self._emit_real_power(base, base_type, exponent, scope)
         if base_type == _REAL_TYPE:
             return self._emit_real_integer_power(base, exponent, scope)
         return self._emit_integer_power(base, exponent)
+
+    def _emit_real_power(
+        self,
+        base: int,
+        base_type: str,
+        exponent: int,
+        scope: _FrameScope,
+    ) -> int:
+        base = self._coerce_reg_to_type(
+            base,
+            base_type,
+            expected_type=_REAL_TYPE,
+        )
+        result = self._fresh_reg()
+        self._emit(
+            IrOp.F64_POW,
+            IrRegister(result),
+            IrRegister(base),
+            IrRegister(exponent),
+        )
+        failed = self._fresh_reg()
+        self._emit(
+            IrOp.F64_CMP_NE,
+            IrRegister(failed),
+            IrRegister(result),
+            IrRegister(result),
+        )
+        self._emit_runtime_failure_guard(failed, scope)
+        return result
 
     def _emit_integer_power(self, base: int, exponent: int) -> int:
         index = self.if_count

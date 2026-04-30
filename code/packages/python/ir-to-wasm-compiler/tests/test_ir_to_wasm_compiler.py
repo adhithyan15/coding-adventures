@@ -419,6 +419,41 @@ def test_compile_f64_unary_math_imports(
     assert result == pytest.approx([expected])
 
 
+def test_compile_f64_pow_import() -> None:
+    gen = IDGenerator()
+    program = IrProgram(entry_label="_fn_real_pow")
+    program.add_instruction(
+        IrInstruction(IrOp.LABEL, [IrLabel("_fn_real_pow")], id=-1)
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.F64_POW,
+            [IrRegister(31), IrRegister(2), IrRegister(3)],
+            id=gen.next(),
+        )
+    )
+    program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+
+    module = IrToWasmCompiler().compile(
+        program,
+        function_signatures=[
+            FunctionSignature(
+                label="_fn_real_pow",
+                param_count=2,
+                export_name="real_pow",
+                param_types=(ValueType.F64, ValueType.F64),
+                result_types=(ValueType.F64,),
+            )
+        ],
+    )
+
+    assert [(imp.module_name, imp.name) for imp in module.imports] == [
+        ("compiler_math", "f64_pow")
+    ]
+    result = _runtime_result(module, "real_pow", [9.0, 0.5], host=WasiHost())
+    assert result == pytest.approx([3.0])
+
+
 def test_compile_function_call_and_run_it() -> None:
     gen = IDGenerator()
     program = IrProgram(entry_label="_start")

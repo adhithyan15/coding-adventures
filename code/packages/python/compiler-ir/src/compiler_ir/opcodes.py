@@ -26,7 +26,7 @@ The opcodes are grouped by category:
   Comparison:   CMP_EQ, CMP_NE, CMP_LT, CMP_GT
   Floating:     LOAD_F64_IMM, LOAD_F64, STORE_F64, F64_ADD, ..., F64_FROM_I32,
                 I32_TRUNC_FROM_F64, F64_SQRT, F64_SIN, F64_COS, F64_ATAN,
-                F64_LN, F64_EXP
+                F64_LN, F64_EXP, F64_POW
   Control Flow: LABEL, JUMP, BRANCH_Z, BRANCH_NZ, CALL, RET
   System:       SYSCALL, HALT
   Meta:         NOP, COMMENT
@@ -324,6 +324,9 @@ class IrOp(IntEnum):
 
     #   F64_EXP v1, v2    →  v1 = exp(v2)
     F64_EXP = 54
+
+    #   F64_POW v1, v2, v3 → v1 = pow(v2, v3)
+    F64_POW = 55
 
 
 # Canonical name → opcode mapping. Built from the enum at module load time.

@@ -26,7 +26,7 @@ _GOLDEN_FIXTURES = (
     GoldenFixture(name="jensens-device", result=[30], stdout=""),
     GoldenFixture(name="control-flow", result=[7], stdout="FLOW 7"),
     GoldenFixture(name="convergence", result=[39], stdout="CONVERGE 39"),
-    GoldenFixture(name="standard-real-math", result=[278], stdout="MATH 278"),
+    GoldenFixture(name="standard-real-math", result=[478], stdout="MATH 478"),
 )
 
 

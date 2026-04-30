@@ -6,11 +6,21 @@ resolve_function for known/unknown functions, resolve_global/memory/table.
 
 from __future__ import annotations
 
+import math
+from collections.abc import Callable
+
 import pytest
+from wasm_execution import LinearMemory, f64, i32
 
-from wasm_execution import LinearMemory, i32
-from wasm_runtime.wasi_host import EBADF, ENOSYS, ESUCCESS, ProcExitError, WasiConfig, WasiHost, _HostFunc
-
+from wasm_runtime.wasi_host import (
+    EBADF,
+    ENOSYS,
+    ESUCCESS,
+    ProcExitError,
+    WasiConfig,
+    WasiHost,
+    _HostFunc,
+)
 
 # ===========================================================================
 # ProcExitError
@@ -61,6 +71,22 @@ class TestWasiHostResolve:
         host = WasiHost()
         func = host.resolve_function("some_other_module", "fd_write")
         assert func is None
+
+    def test_resolve_compiler_math_pow(self) -> None:
+        host = WasiHost()
+        func = host.resolve_function("compiler_math", "f64_pow")
+        assert func is not None
+
+        result = func.call([f64(9.0), f64(0.5)])
+        assert result[0].value == pytest.approx(3.0)
+
+    def test_compiler_math_domain_error_returns_nan(self) -> None:
+        host = WasiHost()
+        func = host.resolve_function("compiler_math", "f64_pow")
+        assert func is not None
+
+        result = func.call([f64(-1.0), f64(0.5)])
+        assert math.isnan(result[0].value)
 
     def test_resolve_global_returns_none(self) -> None:
         host = WasiHost()
@@ -127,7 +153,7 @@ class TestFdWrite:
 class TestFdRead:
     def _setup_memory_with_read_iovec(
         self,
-        reader,
+        reader: Callable[[int], bytes],
     ) -> tuple[WasiHost, LinearMemory]:
         host = WasiHost(config=WasiConfig(stdin=reader))
         mem = LinearMemory(1)

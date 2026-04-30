@@ -101,6 +101,28 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
 
+    def test_real_exponentiation_runs_through_pow_import(self) -> None:
+        result = compile_source(
+            "begin integer result; real x; "
+            "x := 9.0 ^ 0.5; "
+            "result := entier(x * 10) "
+            "end"
+        )
+        assert WasmRuntime(host=WasiHost()).load_and_run(
+            result.binary, "_start", []
+        ) == [30]
+
+    def test_integer_base_real_exponentiation_promotes_to_real(self) -> None:
+        result = compile_source(
+            "begin integer result; real x; "
+            "x := 4 ^ 0.5; "
+            "result := entier(x * 10) "
+            "end"
+        )
+        assert WasmRuntime(host=WasiHost()).load_and_run(
+            result.binary, "_start", []
+        ) == [20]
+
     def test_conditional_expression_assigns_selected_branch(self) -> None:
         result = compile_source(
             "begin integer result; result := if false then 1 else 7 end"
@@ -1667,6 +1689,16 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
+
+    def test_real_pow_domain_error_returns_zero(self) -> None:
+        result = compile_source(
+            "begin integer result; real x; "
+            "x := (0.0 - 1.0) ^ 0.5; result := 7 "
+            "end"
+        )
+        assert WasmRuntime(host=WasiHost()).load_and_run(
+            result.binary, "_start", []
+        ) == [0]
 
     def test_array_failure_in_procedure_unwinds_before_caller_continues(self) -> None:
         result = compile_source(
