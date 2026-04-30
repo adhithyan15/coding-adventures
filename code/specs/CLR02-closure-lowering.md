@@ -192,8 +192,24 @@ Same staging as JVM02 Phase 2:
   ``((make-adder 7) 35) → 42`` test runs end-to-end on
   real ``dotnet`` (was previously ``xfail``).
 - **CLR02 Phase 2d** — ``twig-clr-compiler`` accepts ``Lambda``
-  + real-``dotnet`` factorial-closure test.  Pending — now
-  unblocked.
+  + real-``dotnet`` end-to-end closure test.  **Shipped.**
+  Anonymous ``(lambda ...)`` forms lift to fresh ``_lambda_N``
+  top-level regions via ``twig.free_vars`` analysis; the use
+  site emits ``MAKE_CLOSURE``; ``Apply`` whose ``fn`` slot is a
+  let-bound or chained-call value lowers to ``APPLY_CLOSURE``.
+  ``compile_source`` populates ``closure_free_var_counts`` from
+  the lifted-lambda table so ir-to-cil-bytecode auto-generates
+  the ``IClosure`` interface + per-lambda ``Closure_<name>``
+  TypeDef.  Real ``dotnet`` runs ``((make-adder 7) 35) → 42``
+  end-to-end.
+
+## CLR closure trilogy is complete
+
+All four phases have shipped.  Twig source containing
+anonymous lambdas (with captures) compiles to a real ``.exe``
+that runs on stock ``dotnet`` and produces the expected exit
+code.  Cross-backend parity established with BEAM Phase 2 and
+JVM Phase 2 (whose Phase 2d ships separately).
 
 ## Risk register
 

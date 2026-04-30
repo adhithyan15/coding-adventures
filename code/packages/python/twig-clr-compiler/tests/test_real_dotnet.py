@@ -162,3 +162,58 @@ def test_mutual_recursion_even_odd() -> None:
         assembly_name="ClrEvenOdd",
     )
     assert result.returncode == 1, result.stderr
+
+
+# ── closures (CLR02 Phase 2d) ────────────────────────────────────────────
+
+
+@requires_dotnet
+def test_closure_make_adder() -> None:
+    """``((make-adder 7) 35) → 42`` — the headline CLR02 Phase 2d test.
+
+    Exercises the full closure pipeline from real Twig source on
+    real ``dotnet``:
+
+    * Free-variable analysis lifts the ``(lambda (x) (+ x n))``
+      to a top-level ``_lambda_0`` region with captures-first
+      param layout.
+    * ``MAKE_CLOSURE`` allocates a ``Closure__lambda_0`` instance
+      and stores it via the parallel ``object`` local pool
+      (Phase 2c.5 typed register pool).
+    * ``APPLY_CLOSURE`` dispatches via
+      ``callvirt int32 IClosure::Apply(int32)``.
+    * The Closure subclass's ``Apply`` reads the captured ``n``
+      from its instance field, adds the explicit arg ``X``, and
+      returns the int.
+    """
+    result = run_source(
+        """
+        (define (make-adder n) (lambda (x) (+ x n)))
+        ((make-adder 7) 35)
+        """,
+        assembly_name="ClrClosure",
+    )
+    assert result.returncode == 42, (
+        f"closure pipeline broke at runtime.\n"
+        f"  exit code: {result.returncode}\n"
+        f"  stdout: {result.stdout!r}\n"
+        f"  stderr: {result.stderr!r}"
+    )
+
+
+@requires_dotnet
+def test_closure_let_bound() -> None:
+    """``(let ((adder (make-adder 7))) (adder 35)) → 42``.
+
+    Exercises the let-bound closure path: ``adder`` is a local
+    binding (not in ``_fn_params``) holding a closure value;
+    the call ``(adder 35)`` falls through to APPLY_CLOSURE.
+    """
+    result = run_source(
+        """
+        (define (make-adder n) (lambda (x) (+ x n)))
+        (let ((adder (make-adder 7))) (adder 35))
+        """,
+        assembly_name="ClrLetClos",
+    )
+    assert result.returncode == 42, result.stderr

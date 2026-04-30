@@ -100,7 +100,7 @@ from twig.ast_nodes import (
     SymLit,
     VarRef,
 )
-
+from twig.free_vars import free_vars
 
 # ---------------------------------------------------------------------------
 # Result types
@@ -227,6 +227,15 @@ class _Compiler:
         # ``_else_0`` labels for any program with two functions
         # that both contain ``if``.
         self._next_label_id = 0
+        # TW03 Phase 2 / CLR02 Phase 2d: lifted lambdas.  Each
+        # anonymous Lambda encountered during expression compilation
+        # gets a fresh name like ``_lambda_0`` and is appended here
+        # as (lifted_name, captures, lambda_node) so we can emit its
+        # body region after the user functions.  The closure
+        # value-side machinery (MAKE_CLOSURE / APPLY_CLOSURE) is
+        # emitted at the use site.
+        self._lifted_lambdas: list[tuple[str, list[str], Lambda]] = []
+        self._lambda_counter = 0
 
     # ------------------------------------------------------------------
 
@@ -245,6 +254,19 @@ class _Compiler:
             self._emit_function(name, lam)
 
         self._emit_main(top_level_exprs)
+
+        # CLR02 Phase 2d: lifted-lambda regions go AFTER ``main`` so
+        # ``main`` is the entry point of the IR instruction stream.
+        # ``_compile_expr`` may have appended to ``self._lifted_lambdas``
+        # while compiling earlier functions / main; lifted lambdas
+        # can also be nested (lambda inside lambda) so the list grows
+        # during this final pass — iterate by index.
+        i = 0
+        while i < len(self._lifted_lambdas):
+            lifted_name, captures, lam = self._lifted_lambdas[i]
+            self._emit_lifted_lambda(lifted_name, captures, lam)
+            i += 1
+
         return self._program
 
     # ------------------------------------------------------------------
@@ -360,10 +382,7 @@ class _Compiler:
             return self._compile_apply(expr, ctx)
 
         if isinstance(expr, Lambda):
-            raise TwigCompileError(
-                "anonymous lambdas are not yet supported by the CLR "
-                "backend — see TW03 Phase 2 for closures."
-            )
+            return self._compile_anonymous_lambda(expr, ctx)
 
         if isinstance(expr, SymLit):
             raise TwigCompileError(
@@ -428,54 +447,164 @@ class _Compiler:
         return last
 
     def _compile_apply(self, expr: Apply, ctx: _FnCtx) -> IrRegister:
-        if not isinstance(expr.fn, VarRef):
-            raise TwigCompileError(
-                "v1 only supports direct calls of top-level names"
-            )
-        name = expr.fn.name
-
-        if name in _V1_REJECTED_BUILTINS:
-            raise TwigCompileError(
-                f"builtin {name!r} is not yet supported by the CLR "
-                "backend — see TW03 Phase 3 for heap primitives."
-            )
-
-        if name in _BINARY_OPS:
-            if len(expr.args) != 2:
+        # The fast path: a direct VarRef to a known builtin or
+        # top-level function compiles to ``CALL`` (or an arithmetic
+        # opcode).  Anything else — a Lambda in expression position,
+        # a let-bound closure, the result of a function-returning
+        # call — falls through to the closure path which uses
+        # ``APPLY_CLOSURE`` and dispatches via the IClosure interface.
+        if isinstance(expr.fn, VarRef):
+            name = expr.fn.name
+            if name in _V1_REJECTED_BUILTINS:
                 raise TwigCompileError(
-                    f"{name!r} expects 2 arguments, got {len(expr.args)}"
-                )
-            left = self._compile_expr(expr.args[0], ctx)
-            right = self._compile_expr(expr.args[1], ctx)
-            dest = self._fresh_holding(ctx)
-            self._emit(_BINARY_OPS[name], dest, left, right)
-            return dest
-
-        if name in self._fn_params:
-            params = self._fn_params[name]
-            if len(expr.args) != len(params):
-                raise TwigCompileError(
-                    f"function {name!r} takes {len(params)} arguments, "
-                    f"got {len(expr.args)}"
+                    f"builtin {name!r} is not yet supported by the CLR "
+                    "backend — see TW03 Phase 3 for heap primitives."
                 )
 
-            arg_regs: list[IrRegister] = [
-                self._compile_expr(a, ctx) for a in expr.args
-            ]
+            if name in _BINARY_OPS:
+                if len(expr.args) != 2:
+                    raise TwigCompileError(
+                        f"{name!r} expects 2 arguments, got {len(expr.args)}"
+                    )
+                left = self._compile_expr(expr.args[0], ctx)
+                right = self._compile_expr(expr.args[1], ctx)
+                dest = self._fresh_holding(ctx)
+                self._emit(_BINARY_OPS[name], dest, left, right)
+                return dest
 
-            for i, src in enumerate(arg_regs):
-                self._emit_move(IrRegister(_REG_PARAM_BASE + i), src)
+            if name in self._fn_params:
+                params = self._fn_params[name]
+                if len(expr.args) != len(params):
+                    raise TwigCompileError(
+                        f"function {name!r} takes {len(params)} arguments, "
+                        f"got {len(expr.args)}"
+                    )
 
-            self._emit(IrOp.CALL, IrLabel(name))
+                arg_regs: list[IrRegister] = [
+                    self._compile_expr(a, ctx) for a in expr.args
+                ]
 
-            dest = self._fresh_holding(ctx)
-            self._emit_move(dest, IrRegister(_REG_HALT_RESULT))
-            return dest
+                for i, src in enumerate(arg_regs):
+                    self._emit_move(IrRegister(_REG_PARAM_BASE + i), src)
 
-        raise TwigCompileError(
-            f"unknown function {name!r}.  v1 supports binary builtins "
-            "(+, -, *, /, =, <, >) and top-level (define (f ...) ...)."
+                self._emit(IrOp.CALL, IrLabel(name))
+
+                dest = self._fresh_holding(ctx)
+                self._emit_move(dest, IrRegister(_REG_HALT_RESULT))
+                return dest
+
+            # Fall through to closure-apply only if the name is
+            # actually bound locally (a let-binding holding a
+            # closure value).  Unbound names are user errors.
+            if name not in ctx.locals_:
+                raise TwigCompileError(
+                    f"unknown function {name!r}.  Supported: binary "
+                    "builtins (+, -, *, /, =, <, >), top-level "
+                    "(define (f ...) ...), and closure values bound "
+                    "via let or returned from another function."
+                )
+
+        # Closure path: compile fn to a register holding a closure
+        # value, then APPLY_CLOSURE with the explicit args.
+        closure_reg = self._compile_expr(expr.fn, ctx)
+        arg_regs = [self._compile_expr(a, ctx) for a in expr.args]
+        dest = self._fresh_holding(ctx)
+        self._emit(
+            IrOp.APPLY_CLOSURE,
+            dest,
+            closure_reg,
+            IrImmediate(len(arg_regs)),
+            *arg_regs,
         )
+        return dest
+
+    # ------------------------------------------------------------------
+    # Closure compilation (CLR02 Phase 2d)
+    # ------------------------------------------------------------------
+
+    def _compile_anonymous_lambda(
+        self, lam: Lambda, outer: _FnCtx
+    ) -> IrRegister:
+        """Lift ``lam`` to a fresh top-level function and emit a
+        ``MAKE_CLOSURE`` at the use site.
+
+        Free-variable analysis (``twig.free_vars``) determines what
+        the lambda captures from its enclosing scope.  Each
+        capture must already be bound in ``outer.locals_`` —
+        otherwise we'd be referring to a name that doesn't resolve.
+        """
+        globals_ = (
+            set(self._fn_params)
+            | set(self._value_consts)
+            | set(_BINARY_OPS)
+            | _V1_REJECTED_BUILTINS
+        )
+        captures = free_vars(lam, globals_)
+
+        for c in captures:
+            if c not in outer.locals_:
+                raise TwigCompileError(
+                    f"unbound name {c!r} captured by lambda — "
+                    "did you forget a (define) or a (let ...) binding?"
+                )
+
+        lifted_name = f"_lambda_{self._lambda_counter}"
+        self._lambda_counter += 1
+        self._lifted_lambdas.append((lifted_name, captures, lam))
+
+        # Materialise MAKE_CLOSURE at the use site.  The IR op
+        # carries the captured values as their *current* IR
+        # registers in ``outer``.
+        capture_regs = [outer.locals_[c] for c in captures]
+        dest = self._fresh_holding(outer)
+        self._emit(
+            IrOp.MAKE_CLOSURE,
+            dest,
+            IrLabel(lifted_name),
+            IrImmediate(len(captures)),
+            *capture_regs,
+        )
+        return dest
+
+    def _emit_lifted_lambda(
+        self,
+        lifted_name: str,
+        captures: list[str],
+        lam: Lambda,
+    ) -> None:
+        """Emit a callable region for a lifted lambda body.
+
+        Captures-first parameter layout (matches ir-to-cil-bytecode's
+        Phase 2c lowering convention): the lifted region's IR
+        register layout is
+
+            r2..r{1+num_free}                    — captures
+            r{2+num_free}..r{1+num_free+arity}   — explicit params
+            r{10+}                               — body holding regs
+
+        ir-to-cil-bytecode's ``_lower_closure_region`` reads
+        captures from ``this.captI`` instance fields and the
+        explicit arg from ldarg.1 into those slots, then runs
+        the IR body unchanged.
+        """
+        self._emit(IrOp.LABEL, IrLabel(name=lifted_name), id=-1)
+        ctx = _FnCtx(locals_={})
+
+        all_params = captures + list(lam.params)
+        for i, param in enumerate(all_params):
+            arrival = IrRegister(index=_REG_PARAM_BASE + i)
+            body_local = self._fresh_holding(ctx)
+            self._emit_move(body_local, arrival)
+            ctx.locals_[param] = body_local
+
+        last: IrRegister | None = None
+        for expr in lam.body:
+            last = self._compile_expr(expr, ctx)
+        if last is None:
+            raise TwigCompileError(f"lambda {lifted_name!r} has empty body")
+
+        self._emit_move(IrRegister(_REG_HALT_RESULT), last)
+        self._emit(IrOp.RET)
 
     # ------------------------------------------------------------------
     # IR-emission helpers
@@ -539,7 +668,8 @@ def compile_source(
         raise ClrPackageError("parse", str(exc), exc) from exc
 
     try:
-        raw_ir = _Compiler().compile(twig_program)
+        compiler = _Compiler()
+        raw_ir = compiler.compile(twig_program)
     except TwigCompileError:
         raise
     except Exception as exc:  # pragma: no cover
@@ -552,6 +682,15 @@ def compile_source(
         optimization = OptimizationResult(program=raw_ir)
         optimized_ir = raw_ir
 
+    # CLR02 Phase 2d: build closure_free_var_counts from the
+    # lifted-lambda table the compiler discovered during IR
+    # emission.  ir-to-cil-bytecode uses this to detect closure
+    # regions and emit them as ``Apply`` methods on the
+    # auto-generated ``Closure_<name>`` TypeDefs.
+    closure_free_var_counts: dict[str, int] = {}
+    for lifted_name, captures, _lam in compiler._lifted_lambdas:  # noqa: SLF001
+        closure_free_var_counts[lifted_name] = len(captures)
+
     try:
         # ``call_register_count=None`` tells the CIL backend to
         # auto-derive the call-arg count from ``plan.local_count``.
@@ -563,7 +702,10 @@ def compile_source(
         # program that calls user-defined functions with args.
         cil_program = lower_ir_to_cil_bytecode(
             optimized_ir,
-            CILBackendConfig(call_register_count=None),
+            CILBackendConfig(
+                call_register_count=None,
+                closure_free_var_counts=closure_free_var_counts,
+            ),
         )
     except Exception as exc:
         raise ClrPackageError("lower-cil", str(exc), exc) from exc
