@@ -786,6 +786,38 @@ fn default_html_lexer_recovers_end_tag_with_trailing_solidus() {
 }
 
 #[test]
+fn default_html_lexer_recovers_end_tag_with_whitespace_then_trailing_solidus() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("Before</p />After").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("Before".to_string()),
+            Token::EndTag {
+                name: "p".to_string()
+            },
+            Token::Text("After".to_string()),
+            Token::Eof,
+        ]
+    );
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "unexpected-whitespace-after-end-tag-name"));
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "end-tag-with-trailing-solidus"));
+    assert!(!lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "end-tag-with-attributes"));
+}
+
+#[test]
 fn default_html_lexer_recovers_end_tag_with_attributes() {
     let mut lexer = create_html_lexer().unwrap();
 
@@ -1051,28 +1083,73 @@ fn default_html_lexer_recovers_seeded_text_mode_end_tags_with_trailing_solidus()
 }
 
 #[test]
+fn default_html_lexer_recovers_seeded_text_mode_end_tags_with_whitespace_then_trailing_solidus() {
+    for (initial_state, last_start_tag, text) in [
+        ("rcdata", "title", "Hello"),
+        ("rawtext", "style", "body {}"),
+        ("script_data", "script", "if (ready)"),
+        ("script_data_escaped", "script", "<!-- ok -->"),
+    ] {
+        let mut lexer = create_html_lexer().unwrap();
+        lexer.set_initial_state(initial_state).unwrap();
+        lexer.set_last_start_tag(last_start_tag);
+
+        lexer.push(&format!("{text}</{last_start_tag} />")).unwrap();
+        lexer.finish().unwrap();
+
+        assert_eq!(
+            lexer.drain_tokens(),
+            vec![
+                Token::Text(text.to_string()),
+                Token::EndTag {
+                    name: last_start_tag.to_string()
+                },
+                Token::Eof,
+            ],
+            "state {initial_state} should emit the appropriate end tag"
+        );
+        assert!(
+            lexer
+                .diagnostics()
+                .iter()
+                .any(|diagnostic| diagnostic.code == "end-tag-with-trailing-solidus"),
+            "state {initial_state} should report trailing solidus recovery"
+        );
+        assert!(
+            !lexer
+                .diagnostics()
+                .iter()
+                .any(|diagnostic| diagnostic.code == "end-tag-with-attributes"),
+            "state {initial_state} should not treat the solidus as attributes"
+        );
+    }
+}
+
+#[test]
 fn default_html_lexer_keeps_mismatched_text_mode_end_tag_solidus_literal() {
-    let mut lexer = create_html_lexer().unwrap();
-    lexer.set_initial_state("script_data").unwrap();
-    lexer.set_last_start_tag("script");
+    for close in ["</style/>", "</style />"] {
+        let mut lexer = create_html_lexer().unwrap();
+        lexer.set_initial_state("script_data").unwrap();
+        lexer.set_last_start_tag("script");
 
-    lexer.push("x</style/>y</script>").unwrap();
-    lexer.finish().unwrap();
+        lexer.push(&format!("x{close}y</script>")).unwrap();
+        lexer.finish().unwrap();
 
-    assert_eq!(
-        lexer.drain_tokens(),
-        vec![
-            Token::Text("x</style/>y".to_string()),
-            Token::EndTag {
-                name: "script".to_string()
-            },
-            Token::Eof,
-        ]
-    );
-    assert!(!lexer
-        .diagnostics()
-        .iter()
-        .any(|diagnostic| diagnostic.code == "end-tag-with-trailing-solidus"));
+        assert_eq!(
+            lexer.drain_tokens(),
+            vec![
+                Token::Text(format!("x{close}y")),
+                Token::EndTag {
+                    name: "script".to_string()
+                },
+                Token::Eof,
+            ]
+        );
+        assert!(!lexer
+            .diagnostics()
+            .iter()
+            .any(|diagnostic| diagnostic.code == "end-tag-with-trailing-solidus"));
+    }
 }
 
 #[test]

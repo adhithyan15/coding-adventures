@@ -3663,6 +3663,19 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "rcdata_end_tag_whitespace".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("/".to_string())),
+            to: vec![
+                "rcdata_self_closing_end_tag".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "rcdata_end_tag_whitespace".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Eof),
             to: vec![
                 "done".to_string(),
@@ -3767,6 +3780,19 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "emit_rcdata_end_tag_with_whitespace_or_text".to_string(),
             ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "rawtext_end_tag_whitespace".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("/".to_string())),
+            to: vec![
+                "rawtext_self_closing_end_tag".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
             consume: true,
         },
         TransitionDefinition {
@@ -3881,6 +3907,19 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "script_data_end_tag_whitespace".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("/".to_string())),
+            to: vec![
+                "script_data_self_closing_end_tag".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "script_data_end_tag_whitespace".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Eof),
             to: vec![
                 "done".to_string(),
@@ -3985,6 +4024,19 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "emit_rcdata_end_tag_with_whitespace_or_text".to_string(),
             ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "script_data_escaped_end_tag_whitespace".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("/".to_string())),
+            to: vec![
+                "script_data_escaped_self_closing_end_tag".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
             consume: true,
         },
         TransitionDefinition {
@@ -14610,6 +14662,21 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
                 "emit(EOF)".to_string(),
             ],
             consume: false,
+        },
+        TransitionDefinition {
+            from: "before_end_tag_close".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("/".to_string())),
+            to: vec![
+                "before_end_tag_close".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(end-tag-with-trailing-solidus)".to_string(),
+            ],
+            consume: true,
         },
         TransitionDefinition {
             from: "before_end_tag_close".to_string(),
