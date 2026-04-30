@@ -94,9 +94,15 @@ _OP_NEWARRAY = 0xBC
 _OP_ANEWARRAY = 0xBD       # reserved for closure pool init
 _OP_ALOAD_0 = 0x2A         # load `this` (or any aload short form)
 _OP_ALOAD_1 = 0x2B         # load arg slot 1 (used in closure Apply forwarder)
+_OP_ALOAD_2 = 0x2C         # load arg slot 2 (used in Cons ctor for tail param)
 _OP_AASTORE = 0x53
 _OP_AALOAD = 0x32
 _OP_NOP = 0x00
+_OP_ARETURN = 0xB0          # return a reference (used by Symbol.intern)
+_OP_INSTANCEOF = 0xC1       # for IS_PAIR / IS_SYMBOL
+_OP_IF_ACMPNE = 0xA6        # for IS_NULL identity test (vs Nil.INSTANCE)
+_OP_IFNONNULL = 0xC7        # for Symbol.intern fast-path branch
+_OP_ASTORE_1 = 0x4C         # store ref to local 1 (Symbol.intern temp)
 
 _ATYPE_INT = 10
 _ATYPE_BYTE = 8
@@ -196,6 +202,39 @@ CLOSURE_INTERFACE_BINARY_NAME: Final = (
 # this descriptor.
 CLOSURE_INTERFACE_METHOD_NAME: Final = "apply"
 CLOSURE_INTERFACE_METHOD_DESCRIPTOR: Final = "([I)I"
+
+# TW03 Phase 3b — heap-primitive runtime classes.
+#
+# Three additional classes ride alongside the closure runtime under
+# the same ``coding_adventures.twig.runtime`` package so the JAR's
+# class layout stays predictable.  Each is auto-included by
+# ``lower_ir_to_jvm_classes`` whenever the program uses any heap
+# opcode.
+#
+# Cons   — pair of ``int head`` and ``Object tail``.  Phase 3b v1
+#          targets list-of-ints (the spec acceptance criterion);
+#          a follow-up phase widens ``head`` to ``Object`` for fully
+#          polymorphic cells once typed-register inference covers
+#          the head slot.
+# Symbol — interned identifier; ``String name`` field plus a static
+#          ``intern(String) Symbol`` method backed by a static
+#          ``HashMap<String,Symbol>``.  Single-threaded — Twig has no
+#          concurrency surface today.
+# Nil    — singleton sentinel; one ``public static final Nil INSTANCE``
+#          plus a ``private`` no-arg ctor.  ``IS_NULL`` lowers to
+#          identity comparison against ``Nil.INSTANCE``.
+CONS_BINARY_NAME: Final = "coding_adventures/twig/runtime/Cons"
+SYMBOL_BINARY_NAME: Final = "coding_adventures/twig/runtime/Symbol"
+NIL_BINARY_NAME: Final = "coding_adventures/twig/runtime/Nil"
+_DESC_CONS = f"L{CONS_BINARY_NAME};"
+_DESC_SYMBOL = f"L{SYMBOL_BINARY_NAME};"
+_DESC_NIL = f"L{NIL_BINARY_NAME};"
+_DESC_STRING = "Ljava/lang/String;"
+_DESC_HASHMAP = "Ljava/util/HashMap;"
+_DESC_OBJECT_TO_OBJECT = "(Ljava/lang/Object;)Ljava/lang/Object;"
+_DESC_OBJECT_OBJECT_TO_OBJECT = (
+    "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+)
 
 
 @dataclass(frozen=True)
@@ -460,8 +499,15 @@ class _JvmClassLowerer:
         # parallel ``Object[]`` static field for closure refs and
         # initialize it in <clinit>.  Non-closure programs see zero
         # extra emission.
+        # TW03 Phase 3b extends this trigger: heap ops (cons / symbol /
+        # nil) also need the parallel object pool, so any HEAP_OPCODES
+        # opcode in the program flips the same flag.
         closure_region_names = set(self.config.closure_free_var_counts)
         has_closures = bool(closure_region_names)
+        uses_heap = any(
+            i.opcode in _HEAP_OPCODES for i in self.program.instructions
+        )
+        needs_objregs = has_closures or uses_heap
 
         fields = [
             _FieldSpec(
@@ -475,7 +521,7 @@ class _JvmClassLowerer:
                 _DESC_BYTE_ARRAY,
             ),
         ]
-        if has_closures:
+        if needs_objregs:
             fields.append(
                 _FieldSpec(
                     _ACC_PRIVATE | ACC_STATIC,
@@ -485,7 +531,7 @@ class _JvmClassLowerer:
             )
 
         methods = [
-            self._build_class_initializer(reg_count, data_offsets, has_closures),
+            self._build_class_initializer(reg_count, data_offsets, needs_objregs),
             self._build_reg_get_method(),
             self._build_reg_set_method(),
             self._build_mem_load_byte_method(),
@@ -950,11 +996,271 @@ class _JvmClassLowerer:
             self._method_ref(self._helper_reg_set, _DESC_INT_INT_TO_VOID),
         )
 
+    # ------------------------------------------------------------------
+    # TW03 Phase 3b — heap-primitive lowering (cons / symbol / nil)
+    # ------------------------------------------------------------------
+    #
+    # All eight heap ops route reference values through the parallel
+    # ``__ca_objregs`` array (allocated in <clinit> when ``needs_objregs``
+    # is true) so they sit alongside closure references in the same
+    # object pool.  Type-test ops (IS_NULL / IS_PAIR / IS_SYMBOL) write
+    # their 0/1 result into the int pool ``__ca_regs[dst]`` so the
+    # downstream BRANCH_Z / BRANCH_NZ doesn't need to know the value
+    # came from a reference test.
+    #
+    # Phase 3b v1 limitation: ``Cons.head`` is typed ``int`` and
+    # ``Cons.tail`` is typed ``Object``.  This matches the spec
+    # acceptance criterion (``length`` of a list-of-ints) while keeping
+    # the typed-register inference work scoped to a follow-up.
+    # ``MAKE_CONS head_reg`` is read from ``__ca_regs``; ``tail_reg`` is
+    # read from ``__ca_objregs``.  ``CAR`` writes to ``__ca_regs[dst]``;
+    # ``CDR`` writes to ``__ca_objregs[dst]``.
+
+    def _emit_objreg_load(
+        self, builder: _BytecodeBuilder, reg_index: int,
+    ) -> None:
+        """Push ``__ca_objregs[reg_index]`` (an ``Object`` ref) onto
+        the stack."""
+        builder.emit_u2_instruction(
+            _OP_GETSTATIC,
+            self._field_ref(self._objreg_field, _DESC_OBJECT_ARRAY),
+        )
+        self._emit_push_int(builder, reg_index)
+        builder.emit_opcode(_OP_AALOAD)
+
+    def _emit_objreg_store_top_ref(
+        self, builder: _BytecodeBuilder, dst_index: int,
+    ) -> None:
+        """Pop the ref currently on top of the stack into
+        ``__ca_objregs[dst_index]``.
+
+        Stack before: ``[..., ref]`` — after: ``[...]``.
+
+        Implementation: stash the ref into ``__ca_objregs[dst]`` via
+        ``getstatic; swap; ldc dst; swap; aastore`` would be ideal but
+        ``swap`` only handles single-slot values.  We instead pre-stage
+        the array+index *underneath* the ref by reorganising the stack
+        with a local-variable spill is verifier-safe but expensive;
+        the cheap pattern is:
+
+          [ref]                            ; entry
+          getstatic __ca_objregs           ; → [ref, arr]
+          swap                             ; → [arr, ref]
+          ldc dst                          ; → [arr, ref, dst]
+          swap                             ; → [arr, dst, ref]
+          aastore                          ; → []
+
+        Three single-slot swaps — verifier-clean and stack-effect-correct
+        because ``ref`` is one slot.
+        """
+        builder.emit_u2_instruction(
+            _OP_GETSTATIC,
+            self._field_ref(self._objreg_field, _DESC_OBJECT_ARRAY),
+        )
+        builder.emit_opcode(_OP_SWAP)
+        self._emit_push_int(builder, dst_index)
+        builder.emit_opcode(_OP_SWAP)
+        builder.emit_opcode(_OP_AASTORE)
+
+    def _emit_intreg_store_top_int(
+        self, builder: _BytecodeBuilder, dst_index: int,
+    ) -> None:
+        """Pop the int currently on top of the stack into
+        ``__ca_regs[dst_index]``.  Mirrors the pattern used by
+        APPLY_CLOSURE return-value handling above."""
+        self._emit_push_int(builder, dst_index)
+        builder.emit_opcode(_OP_SWAP)
+        builder.emit_u2_instruction(
+            _OP_INVOKESTATIC,
+            self._method_ref(self._helper_reg_set, _DESC_INT_INT_TO_VOID),
+        )
+
+    def _emit_make_cons(
+        self, builder: _BytecodeBuilder, instruction: IrInstruction,
+    ) -> None:
+        """Lower ``MAKE_CONS dst, head_reg, tail_reg``.
+
+        Phase 3b v1: head is read from the int pool, tail from the
+        object pool.  Cons fields are ``int head; Object tail``.
+        """
+        if len(instruction.operands) != 3:
+            raise JvmBackendError(
+                f"MAKE_CONS expects 3 operands (dst, head, tail), got "
+                f"{len(instruction.operands)}"
+            )
+        dst = _as_register(instruction.operands[0], "MAKE_CONS dst")
+        head_reg = _as_register(instruction.operands[1], "MAKE_CONS head")
+        tail_reg = _as_register(instruction.operands[2], "MAKE_CONS tail")
+        # new Cons; dup; iload head; aload tail; invokespecial ctor;
+        # then store the resulting ref into __ca_objregs[dst].
+        builder.emit_u2_instruction(_OP_NEW, self.cp.class_ref(CONS_BINARY_NAME))
+        builder.emit_opcode(_OP_DUP)
+        self._emit_reg_get(builder, head_reg.index)
+        self._emit_objreg_load(builder, tail_reg.index)
+        ctor_descriptor = "(I" + _DESC_OBJECT + ")V"
+        builder.emit_u2_instruction(
+            _OP_INVOKESPECIAL,
+            self.cp.method_ref(CONS_BINARY_NAME, "<init>", ctor_descriptor),
+        )
+        # Stack: [ref] → store into __ca_objregs[dst]
+        self._emit_objreg_store_top_ref(builder, dst.index)
+
+    def _emit_car(
+        self, builder: _BytecodeBuilder, instruction: IrInstruction,
+    ) -> None:
+        """Lower ``CAR dst, src`` — read ``Cons.head`` (int)."""
+        if len(instruction.operands) != 2:
+            raise JvmBackendError(
+                f"CAR expects 2 operands (dst, src), got "
+                f"{len(instruction.operands)}"
+            )
+        dst = _as_register(instruction.operands[0], "CAR dst")
+        src = _as_register(instruction.operands[1], "CAR src")
+        self._emit_objreg_load(builder, src.index)
+        builder.emit_u2_instruction(
+            _OP_CHECKCAST, self.cp.class_ref(CONS_BINARY_NAME),
+        )
+        builder.emit_u2_instruction(
+            _OP_GETFIELD,
+            self.cp.field_ref(CONS_BINARY_NAME, "head", _DESC_INT),
+        )
+        # Stack: [int] → __ca_regs[dst] via _emit_intreg_store_top_int.
+        self._emit_intreg_store_top_int(builder, dst.index)
+
+    def _emit_cdr(
+        self, builder: _BytecodeBuilder, instruction: IrInstruction,
+    ) -> None:
+        """Lower ``CDR dst, src`` — read ``Cons.tail`` (Object)."""
+        if len(instruction.operands) != 2:
+            raise JvmBackendError(
+                f"CDR expects 2 operands (dst, src), got "
+                f"{len(instruction.operands)}"
+            )
+        dst = _as_register(instruction.operands[0], "CDR dst")
+        src = _as_register(instruction.operands[1], "CDR src")
+        self._emit_objreg_load(builder, src.index)
+        builder.emit_u2_instruction(
+            _OP_CHECKCAST, self.cp.class_ref(CONS_BINARY_NAME),
+        )
+        builder.emit_u2_instruction(
+            _OP_GETFIELD,
+            self.cp.field_ref(CONS_BINARY_NAME, "tail", _DESC_OBJECT),
+        )
+        # Stack: [ref] → __ca_objregs[dst].
+        self._emit_objreg_store_top_ref(builder, dst.index)
+
+    def _emit_is_null(
+        self, builder: _BytecodeBuilder, instruction: IrInstruction,
+    ) -> None:
+        """Lower ``IS_NULL dst, src`` — identity test against
+        ``Nil.INSTANCE``.
+
+        Bytecode:
+          aload src; getstatic Nil.INSTANCE
+          if_acmpne <NOT_NULL>
+            iconst_1; goto END
+          NOT_NULL:
+            iconst_0
+          END:
+            → __ca_regs[dst]
+        """
+        if len(instruction.operands) != 2:
+            raise JvmBackendError(
+                f"IS_NULL expects 2 operands (dst, src), got "
+                f"{len(instruction.operands)}"
+            )
+        dst = _as_register(instruction.operands[0], "IS_NULL dst")
+        src = _as_register(instruction.operands[1], "IS_NULL src")
+        not_null_label = self._fresh_label("is_null_no")
+        end_label = self._fresh_label("is_null_end")
+        self._emit_objreg_load(builder, src.index)
+        builder.emit_u2_instruction(
+            _OP_GETSTATIC,
+            self.cp.field_ref(NIL_BINARY_NAME, "INSTANCE", _DESC_NIL),
+        )
+        builder.emit_branch(_OP_IF_ACMPNE, not_null_label)
+        builder.emit_opcode(_OP_ICONST_0 + 1)  # iconst_1
+        builder.emit_branch(_OP_GOTO, end_label)
+        builder.mark(not_null_label)
+        builder.emit_opcode(_OP_ICONST_0)
+        builder.mark(end_label)
+        self._emit_intreg_store_top_int(builder, dst.index)
+
+    def _emit_instanceof_test(
+        self,
+        builder: _BytecodeBuilder,
+        instruction: IrInstruction,
+        target_internal_name: str,
+        opname: str,
+    ) -> None:
+        """Shared lowering for IS_PAIR / IS_SYMBOL.
+
+        ``instanceof`` already returns 0 or 1 — feed straight into
+        ``__ca_regs[dst]``."""
+        if len(instruction.operands) != 2:
+            raise JvmBackendError(
+                f"{opname} expects 2 operands (dst, src), got "
+                f"{len(instruction.operands)}"
+            )
+        dst = _as_register(instruction.operands[0], f"{opname} dst")
+        src = _as_register(instruction.operands[1], f"{opname} src")
+        self._emit_objreg_load(builder, src.index)
+        builder.emit_u2_instruction(
+            _OP_INSTANCEOF, self.cp.class_ref(target_internal_name),
+        )
+        self._emit_intreg_store_top_int(builder, dst.index)
+
+    def _emit_make_symbol(
+        self, builder: _BytecodeBuilder, instruction: IrInstruction,
+    ) -> None:
+        """Lower ``MAKE_SYMBOL dst, name_label`` — call
+        ``Symbol.intern("<name>")`` and store the result ref."""
+        if len(instruction.operands) != 2:
+            raise JvmBackendError(
+                f"MAKE_SYMBOL expects 2 operands (dst, name_label), got "
+                f"{len(instruction.operands)}"
+            )
+        dst = _as_register(instruction.operands[0], "MAKE_SYMBOL dst")
+        name_label = _as_label(
+            instruction.operands[1], "MAKE_SYMBOL name_label",
+        )
+        # ldc "<name>"; invokestatic Symbol.intern(String) Symbol
+        string_index = self.cp.string(name_label.name)
+        if string_index <= 0xFF:
+            builder.emit_u1_instruction(_OP_LDC, string_index)
+        else:
+            builder.emit_u2_instruction(_OP_LDC_W, string_index)
+        builder.emit_u2_instruction(
+            _OP_INVOKESTATIC,
+            self.cp.method_ref(
+                SYMBOL_BINARY_NAME, "intern",
+                f"({_DESC_STRING}){_DESC_SYMBOL}",
+            ),
+        )
+        self._emit_objreg_store_top_ref(builder, dst.index)
+
+    def _emit_load_nil(
+        self, builder: _BytecodeBuilder, instruction: IrInstruction,
+    ) -> None:
+        """Lower ``LOAD_NIL dst`` — getstatic ``Nil.INSTANCE`` and
+        store the singleton ref into ``__ca_objregs[dst]``."""
+        if len(instruction.operands) != 1:
+            raise JvmBackendError(
+                f"LOAD_NIL expects 1 operand (dst), got "
+                f"{len(instruction.operands)}"
+            )
+        dst = _as_register(instruction.operands[0], "LOAD_NIL dst")
+        builder.emit_u2_instruction(
+            _OP_GETSTATIC,
+            self.cp.field_ref(NIL_BINARY_NAME, "INSTANCE", _DESC_NIL),
+        )
+        self._emit_objreg_store_top_ref(builder, dst.index)
+
     def _build_class_initializer(
         self,
         reg_count: int,
         data_offsets: dict[str, int],
-        has_closures: bool = False,
+        needs_objregs: bool = False,
     ) -> _MethodSpec:
         builder = _BytecodeBuilder()
 
@@ -984,11 +1290,13 @@ class _JvmClassLowerer:
                 value=declaration.init,
             )
 
-        # JVM02 Phase 2c.5: parallel ``Object[]`` for closure refs.
+        # JVM02 Phase 2c.5 / TW03 Phase 3b: parallel ``Object[]`` for
+        # closure refs and heap values (cons / symbol / nil).
         # ``anewarray Object`` allocates a fresh ``Object[reg_count]``
         # initialised to all-null; the cells get populated by
-        # MAKE_CLOSURE / ADD_IMM-mov as the program runs.
-        if has_closures:
+        # MAKE_CLOSURE / MAKE_CONS / MAKE_SYMBOL / LOAD_NIL /
+        # ADD_IMM-mov as the program runs.
+        if needs_objregs:
             self._emit_push_int(builder, reg_count)
             builder.emit_u2_instruction(
                 _OP_ANEWARRAY,
@@ -1726,6 +2034,36 @@ class _JvmClassLowerer:
                 self._emit_apply_closure(builder, instruction)
                 continue
 
+            # TW03 Phase 3b — heap-primitive dispatch.
+            if instruction.opcode == IrOp.MAKE_CONS:
+                self._emit_make_cons(builder, instruction)
+                continue
+            if instruction.opcode == IrOp.CAR:
+                self._emit_car(builder, instruction)
+                continue
+            if instruction.opcode == IrOp.CDR:
+                self._emit_cdr(builder, instruction)
+                continue
+            if instruction.opcode == IrOp.IS_NULL:
+                self._emit_is_null(builder, instruction)
+                continue
+            if instruction.opcode == IrOp.IS_PAIR:
+                self._emit_instanceof_test(
+                    builder, instruction, CONS_BINARY_NAME, "IS_PAIR",
+                )
+                continue
+            if instruction.opcode == IrOp.IS_SYMBOL:
+                self._emit_instanceof_test(
+                    builder, instruction, SYMBOL_BINARY_NAME, "IS_SYMBOL",
+                )
+                continue
+            if instruction.opcode == IrOp.MAKE_SYMBOL:
+                self._emit_make_symbol(builder, instruction)
+                continue
+            if instruction.opcode == IrOp.LOAD_NIL:
+                self._emit_load_nil(builder, instruction)
+                continue
+
             raise JvmBackendError(
                 "Unsupported IR opcode in prototype backend: "
                 f"{instruction.opcode}"
@@ -1865,6 +2203,32 @@ _JVM_SUPPORTED_OPCODES: frozenset[IrOp] = frozenset({
     # JVM02 Phase 2c — closures.
     IrOp.MAKE_CLOSURE,
     IrOp.APPLY_CLOSURE,
+    # TW03 Phase 3b — heap primitives (cons / symbol / nil).
+    IrOp.MAKE_CONS,
+    IrOp.CAR,
+    IrOp.CDR,
+    IrOp.IS_NULL,
+    IrOp.IS_PAIR,
+    IrOp.MAKE_SYMBOL,
+    IrOp.IS_SYMBOL,
+    IrOp.LOAD_NIL,
+})
+
+
+# TW03 Phase 3b — opcode set that triggers ``__ca_objregs`` allocation
+# alongside the existing closure trigger (``closure_free_var_counts``).
+# Any program containing any of these opcodes needs the parallel
+# ``Object[]`` register pool because cons cells, symbols, and nil values
+# are all heap-allocated references that ride in the object slots.
+_HEAP_OPCODES: frozenset[IrOp] = frozenset({
+    IrOp.MAKE_CONS,
+    IrOp.CAR,
+    IrOp.CDR,
+    IrOp.IS_NULL,
+    IrOp.IS_PAIR,
+    IrOp.MAKE_SYMBOL,
+    IrOp.IS_SYMBOL,
+    IrOp.LOAD_NIL,
 })
 
 
@@ -2058,6 +2422,15 @@ def lower_ir_to_jvm_classes(
             )
         )
 
+    # TW03 Phase 3b — auto-include heap-primitive runtime classes
+    # (Cons, Symbol, Nil) when the program uses any heap opcode.
+    # Programs that don't use them see zero extra class-file overhead.
+    uses_heap = any(i.opcode in _HEAP_OPCODES for i in program.instructions)
+    if uses_heap:
+        classes.append(build_cons_class_artifact())
+        classes.append(build_symbol_class_artifact())
+        classes.append(build_nil_class_artifact())
+
     return JVMMultiClassArtifact(classes=tuple(classes))
 
 
@@ -2247,6 +2620,410 @@ def build_closure_subclass_artifact(
         class_name=binary_name.replace("/", "."),
         class_bytes=b"".join(class_bytes_parts),
         callable_labels=(closure_name,),
+        data_offsets={},
+    )
+
+
+# ---------------------------------------------------------------------------
+# TW03 Phase 3b — heap-primitive runtime classes (Cons / Symbol / Nil)
+# ---------------------------------------------------------------------------
+#
+# These three builders mirror ``build_closure_interface_artifact`` /
+# ``build_closure_subclass_artifact`` from Phase 2 — each returns a
+# ``JVMClassArtifact`` with hand-rolled bytecode for the runtime class
+# the heap-op lowering instructions reference.
+#
+# The classes are deliberately tiny (one or two methods each) so:
+#   - Real ``java`` verifies them in microseconds.
+#   - Future polymorphic-cons / typed-symbol work can replace one
+#     class without churning the surrounding plumbing.
+#   - Tests can assert on byte-stable class layouts.
+
+def build_cons_class_artifact() -> JVMClassArtifact:
+    """Return the ``Cons`` class — pair of ``(int head, Object tail)``.
+
+    Phase 3b v1 design: ``head`` is typed ``int`` and ``tail`` is typed
+    ``Object``.  Matches the spec acceptance criterion (list-of-ints
+    terminated by ``Nil.INSTANCE``); a follow-up phase widens ``head``
+    once typed-register inference covers cons head slots.
+
+    Class layout::
+
+        public final class Cons {
+            public final int head;
+            public final Object tail;
+
+            public Cons(int head, Object tail) {
+                super();
+                this.head = head;
+                this.tail = tail;
+            }
+        }
+
+    No ``Nil``-injection at allocation time: it's the caller's job
+    (the lowering site) to ensure the tail is either another ``Cons``
+    or ``Nil.INSTANCE``.
+    """
+    pool = _ConstantPoolBuilder()
+    this_class_index = pool.class_ref(CONS_BINARY_NAME)
+    super_class_index = pool.class_ref("java/lang/Object")
+    object_ctor_ref = pool.method_ref("java/lang/Object", "<init>", "()V")
+
+    head_field_name = pool.utf8("head")
+    head_field_desc = pool.utf8(_DESC_INT)
+    tail_field_name = pool.utf8("tail")
+    tail_field_desc = pool.utf8(_DESC_OBJECT)
+    head_field_ref = pool.field_ref(CONS_BINARY_NAME, "head", _DESC_INT)
+    tail_field_ref = pool.field_ref(CONS_BINARY_NAME, "tail", _DESC_OBJECT)
+    code_attribute_name_index = pool.utf8("Code")
+
+    # ── ctor body ──────────────────────────────────────────────────────
+    ctor_builder = _BytecodeBuilder()
+    ctor_builder.emit_opcode(_OP_ALOAD_0)
+    ctor_builder.emit_u2_instruction(_OP_INVOKESPECIAL, object_ctor_ref)
+    ctor_builder.emit_opcode(_OP_ALOAD_0)
+    ctor_builder.emit_opcode(_OP_ILOAD_0 + 1)  # iload_1 — head arg
+    ctor_builder.emit_u2_instruction(_OP_PUTFIELD, head_field_ref)
+    ctor_builder.emit_opcode(_OP_ALOAD_0)
+    ctor_builder.emit_opcode(_OP_ALOAD_2)
+    ctor_builder.emit_u2_instruction(_OP_PUTFIELD, tail_field_ref)
+    ctor_builder.emit_opcode(_OP_RETURN)
+    ctor_code = ctor_builder.assemble()
+    ctor_descriptor = "(I" + _DESC_OBJECT + ")V"
+    ctor_name_index = pool.utf8("<init>")
+    ctor_descriptor_index = pool.utf8(ctor_descriptor)
+
+    pool_bytes = pool.encode()
+
+    # Two public final fields, one ctor.
+    class_bytes_parts: list[bytes] = [
+        b"\xca\xfe\xba\xbe",
+        _u2(0),                     # minor_version
+        _u2(49),                    # major_version
+        _u2(pool.count),
+        pool_bytes,
+        _u2(ACC_PUBLIC | ACC_SUPER | _ACC_FINAL),
+        _u2(this_class_index),
+        _u2(super_class_index),
+        _u2(0),                     # interfaces_count
+        _u2(2),                     # fields_count
+        _u2(ACC_PUBLIC | _ACC_FINAL),
+        _u2(head_field_name),
+        _u2(head_field_desc),
+        _u2(0),                     # 0 attributes
+        _u2(ACC_PUBLIC | _ACC_FINAL),
+        _u2(tail_field_name),
+        _u2(tail_field_desc),
+        _u2(0),
+        _u2(1),                     # methods_count (just the ctor)
+    ]
+    class_bytes_parts.append(
+        _build_method_info(
+            access_flags=ACC_PUBLIC,
+            name_index=ctor_name_index,
+            descriptor_index=ctor_descriptor_index,
+            code=ctor_code,
+            max_stack=2,
+            max_locals=3,           # this + head + tail
+            code_attribute_name_index=code_attribute_name_index,
+        )
+    )
+    class_bytes_parts.append(_u2(0))  # 0 class attributes
+
+    return JVMClassArtifact(
+        class_name=CONS_BINARY_NAME.replace("/", "."),
+        class_bytes=b"".join(class_bytes_parts),
+        callable_labels=(),
+        data_offsets={},
+    )
+
+
+def build_nil_class_artifact() -> JVMClassArtifact:
+    """Return the ``Nil`` sentinel class — singleton via static
+    ``INSTANCE`` field.
+
+    Class layout::
+
+        public final class Nil {
+            public static final Nil INSTANCE;
+            static { INSTANCE = new Nil(); }
+            private Nil() { super(); }
+        }
+
+    ``IS_NULL src`` lowering reads ``Nil.INSTANCE`` and identity-tests
+    the source register against it; ``LOAD_NIL dst`` simply reads the
+    static field and stores the ref into ``__ca_objregs[dst]``.
+    """
+    pool = _ConstantPoolBuilder()
+    this_class_index = pool.class_ref(NIL_BINARY_NAME)
+    super_class_index = pool.class_ref("java/lang/Object")
+    object_ctor_ref = pool.method_ref("java/lang/Object", "<init>", "()V")
+
+    instance_field_name = pool.utf8("INSTANCE")
+    instance_field_desc = pool.utf8(_DESC_NIL)
+    instance_field_ref = pool.field_ref(NIL_BINARY_NAME, "INSTANCE", _DESC_NIL)
+    code_attribute_name_index = pool.utf8("Code")
+
+    # ── ctor body (private, no-arg) ────────────────────────────────────
+    ctor_builder = _BytecodeBuilder()
+    ctor_builder.emit_opcode(_OP_ALOAD_0)
+    ctor_builder.emit_u2_instruction(_OP_INVOKESPECIAL, object_ctor_ref)
+    ctor_builder.emit_opcode(_OP_RETURN)
+    ctor_code = ctor_builder.assemble()
+    ctor_name_index = pool.utf8("<init>")
+    ctor_descriptor_index = pool.utf8("()V")
+
+    # ── <clinit> body — INSTANCE = new Nil() ──────────────────────────
+    clinit_builder = _BytecodeBuilder()
+    clinit_builder.emit_u2_instruction(_OP_NEW, this_class_index)
+    clinit_builder.emit_opcode(_OP_DUP)
+    nil_ctor_ref = pool.method_ref(NIL_BINARY_NAME, "<init>", "()V")
+    clinit_builder.emit_u2_instruction(_OP_INVOKESPECIAL, nil_ctor_ref)
+    clinit_builder.emit_u2_instruction(_OP_PUTSTATIC, instance_field_ref)
+    clinit_builder.emit_opcode(_OP_RETURN)
+    clinit_code = clinit_builder.assemble()
+    clinit_name_index = pool.utf8("<clinit>")
+    clinit_descriptor_index = pool.utf8("()V")
+
+    pool_bytes = pool.encode()
+
+    class_bytes_parts: list[bytes] = [
+        b"\xca\xfe\xba\xbe",
+        _u2(0),
+        _u2(49),
+        _u2(pool.count),
+        pool_bytes,
+        _u2(ACC_PUBLIC | ACC_SUPER | _ACC_FINAL),
+        _u2(this_class_index),
+        _u2(super_class_index),
+        _u2(0),                     # interfaces_count
+        _u2(1),                     # fields_count
+        _u2(ACC_PUBLIC | ACC_STATIC | _ACC_FINAL),
+        _u2(instance_field_name),
+        _u2(instance_field_desc),
+        _u2(0),
+        _u2(2),                     # methods_count: ctor + <clinit>
+    ]
+    class_bytes_parts.append(
+        _build_method_info(
+            access_flags=_ACC_PRIVATE,
+            name_index=ctor_name_index,
+            descriptor_index=ctor_descriptor_index,
+            code=ctor_code,
+            max_stack=1,
+            max_locals=1,
+            code_attribute_name_index=code_attribute_name_index,
+        )
+    )
+    class_bytes_parts.append(
+        _build_method_info(
+            access_flags=ACC_STATIC,
+            name_index=clinit_name_index,
+            descriptor_index=clinit_descriptor_index,
+            code=clinit_code,
+            max_stack=2,
+            max_locals=0,
+            code_attribute_name_index=code_attribute_name_index,
+        )
+    )
+    class_bytes_parts.append(_u2(0))
+
+    return JVMClassArtifact(
+        class_name=NIL_BINARY_NAME.replace("/", "."),
+        class_bytes=b"".join(class_bytes_parts),
+        callable_labels=(),
+        data_offsets={},
+    )
+
+
+def build_symbol_class_artifact() -> JVMClassArtifact:
+    """Return the ``Symbol`` class — interned identifier with a
+    static ``HashMap``-backed intern table.
+
+    Class layout::
+
+        public final class Symbol {
+            private final String name;
+            private static final HashMap INTERN_TABLE;
+            static { INTERN_TABLE = new HashMap(); }
+            private Symbol(String name) { super(); this.name = name; }
+            public static Symbol intern(String name) {
+                Symbol s = (Symbol) INTERN_TABLE.get(name);
+                if (s == null) {
+                    s = new Symbol(name);
+                    INTERN_TABLE.put(name, s);
+                }
+                return s;
+            }
+        }
+
+    Single-threaded — Twig has no concurrency surface today.  When a
+    threaded runtime spec lands, swap ``HashMap`` for
+    ``ConcurrentHashMap`` here without touching call sites.
+
+    Two ``Symbol.intern`` calls with the same ``name`` argument always
+    return the same reference — ``IS_SYMBOL`` instanceof tests rely
+    only on the type tag, not the identity, but other Lisp ops
+    (``eq?``) will eventually need this guarantee.
+    """
+    pool = _ConstantPoolBuilder()
+    this_class_index = pool.class_ref(SYMBOL_BINARY_NAME)
+    super_class_index = pool.class_ref("java/lang/Object")
+    object_ctor_ref = pool.method_ref("java/lang/Object", "<init>", "()V")
+
+    name_field_name = pool.utf8("name")
+    name_field_desc = pool.utf8(_DESC_STRING)
+    name_field_ref = pool.field_ref(SYMBOL_BINARY_NAME, "name", _DESC_STRING)
+
+    intern_table_field_name = pool.utf8("INTERN_TABLE")
+    intern_table_field_desc = pool.utf8(_DESC_HASHMAP)
+    intern_table_field_ref = pool.field_ref(
+        SYMBOL_BINARY_NAME, "INTERN_TABLE", _DESC_HASHMAP,
+    )
+
+    hashmap_class_index = pool.class_ref("java/util/HashMap")
+    hashmap_ctor_ref = pool.method_ref("java/util/HashMap", "<init>", "()V")
+    hashmap_get_ref = pool.method_ref(
+        "java/util/HashMap", "get", _DESC_OBJECT_TO_OBJECT,
+    )
+    hashmap_put_ref = pool.method_ref(
+        "java/util/HashMap", "put", _DESC_OBJECT_OBJECT_TO_OBJECT,
+    )
+
+    code_attribute_name_index = pool.utf8("Code")
+
+    # ── ctor body — Symbol(String name) ───────────────────────────────
+    ctor_builder = _BytecodeBuilder()
+    ctor_builder.emit_opcode(_OP_ALOAD_0)
+    ctor_builder.emit_u2_instruction(_OP_INVOKESPECIAL, object_ctor_ref)
+    ctor_builder.emit_opcode(_OP_ALOAD_0)
+    ctor_builder.emit_opcode(_OP_ALOAD_1)
+    ctor_builder.emit_u2_instruction(_OP_PUTFIELD, name_field_ref)
+    ctor_builder.emit_opcode(_OP_RETURN)
+    ctor_code = ctor_builder.assemble()
+    ctor_name_index = pool.utf8("<init>")
+    ctor_descriptor_index = pool.utf8(f"({_DESC_STRING})V")
+
+    # ── <clinit> body — INTERN_TABLE = new HashMap() ──────────────────
+    clinit_builder = _BytecodeBuilder()
+    clinit_builder.emit_u2_instruction(_OP_NEW, hashmap_class_index)
+    clinit_builder.emit_opcode(_OP_DUP)
+    clinit_builder.emit_u2_instruction(_OP_INVOKESPECIAL, hashmap_ctor_ref)
+    clinit_builder.emit_u2_instruction(_OP_PUTSTATIC, intern_table_field_ref)
+    clinit_builder.emit_opcode(_OP_RETURN)
+    clinit_code = clinit_builder.assemble()
+    clinit_name_index = pool.utf8("<clinit>")
+    clinit_descriptor_index = pool.utf8("()V")
+
+    # ── intern body — Symbol intern(String name) ──────────────────────
+    # locals: 0 = name, 1 = s
+    # bytecode:
+    #   getstatic INTERN_TABLE
+    #   aload_0                   ; name
+    #   invokevirtual HashMap.get(Object) Object
+    #   checkcast Symbol
+    #   astore_1                  ; s
+    #   aload_1
+    #   ifnonnull RETURN_S
+    #     new Symbol; dup; aload_0; invokespecial Symbol.<init>(String)
+    #     astore_1
+    #     getstatic INTERN_TABLE; aload_0; aload_1
+    #     invokevirtual HashMap.put(Object,Object) Object
+    #     pop
+    #   RETURN_S:
+    #     aload_1; areturn
+    intern_builder = _BytecodeBuilder()
+    return_label = "__sym_intern_ret"
+    intern_builder.emit_u2_instruction(_OP_GETSTATIC, intern_table_field_ref)
+    intern_builder.emit_opcode(_OP_ALOAD_0)
+    intern_builder.emit_u2_instruction(_OP_INVOKEVIRTUAL, hashmap_get_ref)
+    intern_builder.emit_u2_instruction(_OP_CHECKCAST, this_class_index)
+    intern_builder.emit_opcode(_OP_ASTORE_1)
+    intern_builder.emit_opcode(_OP_ALOAD_1)
+    intern_builder.emit_branch(_OP_IFNONNULL, return_label)
+    # cache miss: build a new Symbol and put it into the table.
+    intern_builder.emit_u2_instruction(_OP_NEW, this_class_index)
+    intern_builder.emit_opcode(_OP_DUP)
+    intern_builder.emit_opcode(_OP_ALOAD_0)
+    sym_ctor_ref = pool.method_ref(
+        SYMBOL_BINARY_NAME, "<init>", f"({_DESC_STRING})V",
+    )
+    intern_builder.emit_u2_instruction(_OP_INVOKESPECIAL, sym_ctor_ref)
+    intern_builder.emit_opcode(_OP_ASTORE_1)
+    intern_builder.emit_u2_instruction(_OP_GETSTATIC, intern_table_field_ref)
+    intern_builder.emit_opcode(_OP_ALOAD_0)
+    intern_builder.emit_opcode(_OP_ALOAD_1)
+    intern_builder.emit_u2_instruction(_OP_INVOKEVIRTUAL, hashmap_put_ref)
+    intern_builder.emit_opcode(_OP_POP)
+    intern_builder.mark(return_label)
+    intern_builder.emit_opcode(_OP_ALOAD_1)
+    intern_builder.emit_opcode(_OP_ARETURN)
+    intern_code = intern_builder.assemble()
+    intern_name_index = pool.utf8("intern")
+    intern_descriptor_index = pool.utf8(f"({_DESC_STRING}){_DESC_SYMBOL}")
+
+    pool_bytes = pool.encode()
+
+    class_bytes_parts: list[bytes] = [
+        b"\xca\xfe\xba\xbe",
+        _u2(0),
+        _u2(49),
+        _u2(pool.count),
+        pool_bytes,
+        _u2(ACC_PUBLIC | ACC_SUPER | _ACC_FINAL),
+        _u2(this_class_index),
+        _u2(super_class_index),
+        _u2(0),                     # interfaces_count
+        _u2(2),                     # fields_count
+        _u2(_ACC_PRIVATE | _ACC_FINAL),
+        _u2(name_field_name),
+        _u2(name_field_desc),
+        _u2(0),
+        _u2(_ACC_PRIVATE | ACC_STATIC | _ACC_FINAL),
+        _u2(intern_table_field_name),
+        _u2(intern_table_field_desc),
+        _u2(0),
+        _u2(3),                     # methods_count: ctor + <clinit> + intern
+    ]
+    class_bytes_parts.append(
+        _build_method_info(
+            access_flags=_ACC_PRIVATE,
+            name_index=ctor_name_index,
+            descriptor_index=ctor_descriptor_index,
+            code=ctor_code,
+            max_stack=2,
+            max_locals=2,
+            code_attribute_name_index=code_attribute_name_index,
+        )
+    )
+    class_bytes_parts.append(
+        _build_method_info(
+            access_flags=ACC_STATIC,
+            name_index=clinit_name_index,
+            descriptor_index=clinit_descriptor_index,
+            code=clinit_code,
+            max_stack=2,
+            max_locals=0,
+            code_attribute_name_index=code_attribute_name_index,
+        )
+    )
+    class_bytes_parts.append(
+        _build_method_info(
+            access_flags=ACC_PUBLIC | ACC_STATIC,
+            name_index=intern_name_index,
+            descriptor_index=intern_descriptor_index,
+            code=intern_code,
+            max_stack=3,
+            max_locals=2,
+            code_attribute_name_index=code_attribute_name_index,
+        )
+    )
+    class_bytes_parts.append(_u2(0))
+
+    return JVMClassArtifact(
+        class_name=SYMBOL_BINARY_NAME.replace("/", "."),
+        class_bytes=b"".join(class_bytes_parts),
+        callable_labels=(),
         data_offsets={},
     )
 
