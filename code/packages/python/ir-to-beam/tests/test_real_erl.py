@@ -356,3 +356,124 @@ def test_closure_make_adder_returns_42(tmp_path: Path) -> None:
         f"closure result mismatch — stdout={result.stdout!r}, "
         f"stderr={result.stderr!r}"
     )
+
+
+@requires_erl
+def test_heap_list_of_ints_length_returns_3(tmp_path: Path) -> None:
+    """End-to-end: build the list ``[1, 2, 3]`` via ``MAKE_CONS`` /
+    ``LOAD_NIL``, walk it with ``CDR`` + ``IS_NULL``, and return
+    the length.  Real ``erl`` must load the module and call
+    ``length()`` returning the integer ``3``.
+
+    Exercises:
+      * MAKE_CONS  → BEAM ``put_list``
+      * LOAD_NIL   → BEAM ``move {atom,0}, ...``
+      * IS_NULL    → BEAM ``is_nil`` + true/false dance
+      * CDR        → BEAM ``get_tl``
+      * BRANCH_NZ on the IS_NULL int result
+    """
+    gen = IDGenerator()
+    program = IrProgram(entry_label="length")
+    program.add_instruction(IrInstruction(IrOp.LABEL, [_label("length")], id=-1))
+    # Build (cons 1 (cons 2 (cons 3 nil))) into r10 backwards.
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_NIL, [_reg(10)], id=gen.next())
+    )
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [_reg(3), _imm(3)], id=gen.next())
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.MAKE_CONS, [_reg(10), _reg(3), _reg(10)], id=gen.next(),
+        )
+    )
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [_reg(3), _imm(2)], id=gen.next())
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.MAKE_CONS, [_reg(10), _reg(3), _reg(10)], id=gen.next(),
+        )
+    )
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [_reg(3), _imm(1)], id=gen.next())
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.MAKE_CONS, [_reg(10), _reg(3), _reg(10)], id=gen.next(),
+        )
+    )
+    # Iteratively count by walking r10.  r1 is the result reg per
+    # the TW03 Phase 1 convention.
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [_reg(1), _imm(0)], id=gen.next())
+    )
+    program.add_instruction(IrInstruction(IrOp.LABEL, [_label("loop")], id=-1))
+    program.add_instruction(
+        IrInstruction(
+            IrOp.IS_NULL, [_reg(2), _reg(10)], id=gen.next(),
+        )
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.BRANCH_NZ, [_reg(2), _label("end")], id=gen.next(),
+        )
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.ADD_IMM, [_reg(1), _reg(1), _imm(1)], id=gen.next(),
+        )
+    )
+    program.add_instruction(
+        IrInstruction(IrOp.CDR, [_reg(10), _reg(10)], id=gen.next())
+    )
+    program.add_instruction(
+        IrInstruction(IrOp.JUMP, [_label("loop")], id=gen.next())
+    )
+    program.add_instruction(IrInstruction(IrOp.LABEL, [_label("end")], id=-1))
+    program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+
+    result = _drop_and_run(
+        tmp_path, module="heap_length", entry="length", program=program,
+    )
+    assert result.returncode == 0, (
+        f"erl rejected the heap module:\n  stdout: {result.stdout!r}\n"
+        f"  stderr: {result.stderr!r}"
+    )
+    assert result.stdout.strip() == "3", (
+        f"length result mismatch — stdout={result.stdout!r}, "
+        f"stderr={result.stderr!r}"
+    )
+
+
+@requires_erl
+def test_heap_make_symbol_returns_atom(tmp_path: Path) -> None:
+    """``MAKE_SYMBOL`` lowers to a ``move {atom, idx}, ...`` so the
+    return value should be the atom ``foo`` when read back.
+
+    Real ``erl`` prints atoms unquoted (when they're a valid
+    Erlang identifier), so the test asserts the printed value is
+    exactly ``foo``."""
+    gen = IDGenerator()
+    program = IrProgram(entry_label="make_foo")
+    program.add_instruction(
+        IrInstruction(IrOp.LABEL, [_label("make_foo")], id=-1)
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.MAKE_SYMBOL, [_reg(1), _label("foo")], id=gen.next(),
+        )
+    )
+    program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+
+    result = _drop_and_run(
+        tmp_path, module="heap_sym", entry="make_foo", program=program,
+    )
+    assert result.returncode == 0, (
+        f"erl rejected the symbol module:\n  stdout: {result.stdout!r}\n"
+        f"  stderr: {result.stderr!r}"
+    )
+    assert result.stdout.strip() == "foo", (
+        f"symbol result mismatch — stdout={result.stdout!r}, "
+        f"stderr={result.stderr!r}"
+    )
