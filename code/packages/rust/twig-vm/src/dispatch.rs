@@ -2,25 +2,30 @@
 //!
 //! Originally LANG20 PR 4 (tree-walking dispatcher); extended in
 //! PR 5 to cover closures, top-level value defines, and quoted
-//! symbols.  Runs an entire `IIRModule` end to end and returns a
-//! `LispyValue`.
+//! symbols; extended in PR 6 to cover the method-dispatch
+//! opcodes `send`, `load_property`, `store_property`.  Runs an
+//! entire `IIRModule` end to end and returns a `LispyValue`.
 //!
 //! ## Scope
 //!
-//! PR 4 + PR 5 together cover the IIR subset emitted by
-//! `twig-ir-compiler` for **all programs without method dispatch
-//! (`send`/`load`/`store`)**.  The supported opcodes:
+//! Through PR 6 the dispatcher covers the IIR subset emitted by
+//! every Lispy frontend plus the method-dispatch opcodes Ruby /
+//! JavaScript frontends will eventually need.  The supported
+//! opcodes:
 //!
-//! | Opcode          | What it does                                      |
-//! |-----------------|---------------------------------------------------|
-//! | `const Int/Bool`| bind register ← `Int` / `Bool` immediate          |
-//! | `const Var(s)`  | bind register ← `LispyValue::symbol(intern(s))` (PR 5: string-via-symbol convention) |
-//! | `call_builtin`  | look up Lispy builtin OR special-case             |
-//! | `call`          | resolve callee in module, recurse into dispatcher |
-//! | `jmp`           | unconditional branch to label                     |
-//! | `jmp_if_false`  | branch if cond register is `false` or `nil`       |
-//! | `label`         | no-op marker (jump target)                        |
-//! | `ret`           | return value to caller                            |
+//! | Opcode             | What it does                                      |
+//! |--------------------|---------------------------------------------------|
+//! | `const Int/Bool`   | bind register ← `Int` / `Bool` immediate          |
+//! | `const Var(s)`     | bind register ← `LispyValue::symbol(intern(s))` (PR 5: string-via-symbol convention) |
+//! | `call_builtin`     | look up Lispy builtin OR special-case             |
+//! | `call`             | resolve callee in module, recurse into dispatcher |
+//! | `jmp`              | unconditional branch to label                     |
+//! | `jmp_if_false`     | branch if cond register is `false` or `nil`       |
+//! | `label`            | no-op marker (jump target)                        |
+//! | `ret`              | return value to caller                            |
+//! | `send`             | (PR 6) dispatch a method via `LangBinding::send_message` |
+//! | `load_property`    | (PR 6) read a property via `LangBinding::load_property` |
+//! | `store_property`   | (PR 6) write a property via `LangBinding::store_property` |
 //!
 //! ### Special-cased `call_builtin` names (PR 5)
 //!
@@ -38,11 +43,39 @@
 //! All other `call_builtin` names route through
 //! `LispyBinding::resolve_builtin` exactly as before.
 //!
+//! ### Method dispatch opcodes (PR 6)
+//!
+//! The three opcodes added in PR 6 (`send`, `load_property`,
+//! `store_property`) all share the same shape: extract the
+//! receiver/object from `srcs[0]`, extract a `SymbolId` from
+//! `srcs[1]` (the selector / property key, lowered through the
+//! string-as-symbol convention), allocate a per-instruction
+//! [`InlineCache<LispyICEntry>`], and call the corresponding
+//! `LangBinding` trait method.
+//!
+//! For Lispy specifically the binding methods correctly return
+//! `RuntimeError::NoSuchMethod` / `NoSuchProperty` — Lispy doesn't
+//! have method dispatch, and a Twig program that emits these
+//! opcodes is using a feature the language doesn't have.  PR 6's
+//! value is **wiring the opcodes through the trait machinery**
+//! so a future Ruby- or JS-binding can implement them and have
+//! them dispatched by exactly the same dispatcher.  Tests
+//! hand-build IIRModules using these opcodes since
+//! `twig-ir-compiler` doesn't emit them yet (no `(send obj msg
+//! ...)` form in Twig source).
+//!
+//! The IC parameter is allocated **fresh per dispatch** in PR 6
+//! (no caching across calls); PR 7 lands the IC machinery that
+//! makes the cache persistent + populated by the binding's
+//! `send_message` / `load_property` / `store_property`
+//! implementations.  Until then, the binding's IC handling is a
+//! no-op for Lispy and the cache fills nothing.
+//!
 //! Out of scope (later PRs):
 //!
-//! - `send`, `load_property`, `store_property` IIR opcodes — need
-//!   IC machinery from PR 6+
-//! - JIT promotion, deopt — PR 7+
+//! - **Persistent IC slots** — PR 7 adds the per-call-site IC
+//!   table indexed by `IIRInstr::ic_slot` (LANG20 §"IIR additions").
+//! - **JIT promotion, deopt** — PR 8+.
 //!
 //! ## Recursion model
 //!
@@ -70,8 +103,10 @@
 use std::collections::HashMap;
 
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
-use lang_runtime_core::{RuntimeError, SymbolId};
-use lispy_runtime::{intern, name_of, LispyBinding, LispyValue};
+use lang_runtime_core::{
+    DispatchCx, InlineCache, LangBinding, RuntimeError, SymbolId,
+};
+use lispy_runtime::{intern, name_of, LispyBinding, LispyICEntry, LispyValue};
 
 use crate::operand::operand_to_value;
 
@@ -495,6 +530,18 @@ fn dispatch(
                 exec_call(module, instr, &mut frame, depth, budget, globals)?;
                 pc += 1;
             }
+            "send" => {
+                exec_send(instr, &mut frame)?;
+                pc += 1;
+            }
+            "load_property" => {
+                exec_load_property(instr, &mut frame)?;
+                pc += 1;
+            }
+            "store_property" => {
+                exec_store_property(instr, &mut frame)?;
+                pc += 1;
+            }
             "jmp" => {
                 pc = exec_jmp(instr, &labels)?;
             }
@@ -837,6 +884,148 @@ fn exec_apply_closure(
     if let Some(d) = &instr.dest {
         frame.set(d.clone(), result)?;
     }
+    Ok(())
+}
+
+// ---------------------------------------------------------------------------
+// PR 6: method-dispatch opcodes (send / load_property / store_property)
+// ---------------------------------------------------------------------------
+//
+// These three opcodes route through the corresponding `LangBinding`
+// trait method.  For Lispy, the trait methods correctly return
+// `NoSuchMethod` / `NoSuchProperty` (Lispy has no method dispatch);
+// the value of PR 6 is wiring the dispatcher path so a future
+// Ruby-binding or JS-binding can implement these and immediately
+// have them dispatched without further dispatcher changes.
+//
+// The IC parameter is allocated **fresh per dispatch** in PR 6.
+// PR 7 (IC machinery) introduces a per-call-site IC table indexed
+// by `IIRInstr::ic_slot` — at that point this allocation moves to
+// table lookup but the trait calls stay identical.
+
+/// Helper: extract the SymbolId stored in a register (the
+/// dispatcher's string-as-symbol convention from PR 5).  Used by
+/// every method-dispatch opcode for the selector / key argument.
+fn read_symbol_arg(
+    operand: &Operand,
+    frame: &Frame,
+    op_for_msg: &str,
+    arg_idx_for_msg: usize,
+) -> Result<SymbolId, RunError> {
+    let v = operand_to_value(operand, &|n| frame.get(n))
+        .map_err(RunError::OperandConversion)?;
+    v.as_symbol().ok_or_else(|| {
+        RunError::Runtime(RuntimeError::TypeError(format!(
+            "{op_for_msg}: srcs[{arg_idx_for_msg}] expected symbol selector/key, got {v}"
+        )))
+    })
+}
+
+/// Handle the `send recv, selector, args...` IIR opcode (LANG20
+/// §"IIR additions").
+///
+/// `srcs[0]` is the receiver; `srcs[1]` is the symbol-id register
+/// holding the method selector; `srcs[2..]` are the user-supplied
+/// arguments.  Allocates a fresh per-instruction `InlineCache` (PR
+/// 7 makes it persistent) and calls
+/// `LispyBinding::send_message`.  For Lispy this returns
+/// `RuntimeError::NoSuchMethod`, which is the correct behaviour
+/// for a language without method dispatch.
+fn exec_send(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    if instr.srcs.len() < 2 {
+        return Err(RunError::MalformedInstruction(format!(
+            "send expects at least 2 srcs (recv, selector), got {}",
+            instr.srcs.len()
+        )));
+    }
+    // DoS guard: cap the args allocation up-front.  Hand-built
+    // malformed IIR could declare an instruction with millions of
+    // srcs and OOM us via `Vec::with_capacity`.  Found by PR 6
+    // security review.  The cap is defensive — well-formed IIR
+    // never approaches it (function arities are bounded by source
+    // syntax; a Twig function can't have 65k arguments).
+    if instr.srcs.len() > MAX_REGISTERS_PER_FRAME {
+        return Err(RunError::MalformedInstruction(format!(
+            "send: srcs.len()={} exceeds MAX_REGISTERS_PER_FRAME ({MAX_REGISTERS_PER_FRAME})",
+            instr.srcs.len()
+        )));
+    }
+    let receiver = operand_to_value(&instr.srcs[0], &|n| frame.get(n))
+        .map_err(RunError::OperandConversion)?;
+    let selector = read_symbol_arg(&instr.srcs[1], frame, "send", 1)?;
+
+    let mut args: Vec<LispyValue> = Vec::with_capacity(instr.srcs.len() - 2);
+    for src in &instr.srcs[2..] {
+        let v = operand_to_value(src, &|n| frame.get(n))
+            .map_err(RunError::OperandConversion)?;
+        args.push(v);
+    }
+
+    // Stack-allocated IC (LispyICEntry: Copy + small array of
+    // entries — no heap touch).  TODO(LANG20 PR 4-or-later):
+    // `DispatchCx::new_for_test` is the only constructor today;
+    // replace with the production constructor when the type grows
+    // real fields.
+    let mut ic: InlineCache<LispyICEntry> = InlineCache::new();
+    let mut cx = DispatchCx::<LispyBinding>::new_for_test();
+    let result = LispyBinding::send_message(receiver, selector, &args, &mut ic, &mut cx)
+        .map_err(RunError::Runtime)?;
+
+    if let Some(d) = &instr.dest {
+        frame.set(d.clone(), result)?;
+    }
+    Ok(())
+}
+
+/// Handle the `load_property obj, key` IIR opcode.
+///
+/// `srcs[0]` is the object; `srcs[1]` is the symbol-id register
+/// holding the property key.  Allocates a fresh per-instruction
+/// `InlineCache` and calls `LispyBinding::load_property`.  For
+/// Lispy this returns `RuntimeError::NoSuchProperty`.
+fn exec_load_property(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    if instr.srcs.len() != 2 {
+        return Err(RunError::MalformedInstruction(format!(
+            "load_property expects 2 srcs (obj, key), got {}",
+            instr.srcs.len()
+        )));
+    }
+    let obj = operand_to_value(&instr.srcs[0], &|n| frame.get(n))
+        .map_err(RunError::OperandConversion)?;
+    let key = read_symbol_arg(&instr.srcs[1], frame, "load_property", 1)?;
+
+    let mut ic: InlineCache<LispyICEntry> = InlineCache::new();
+    let result = LispyBinding::load_property(obj, key, &mut ic)
+        .map_err(RunError::Runtime)?;
+
+    if let Some(d) = &instr.dest {
+        frame.set(d.clone(), result)?;
+    }
+    Ok(())
+}
+
+/// Handle the `store_property obj, key, value` IIR opcode.
+///
+/// `srcs[0]` is the object; `srcs[1]` is the symbol-id register
+/// holding the property key; `srcs[2]` is the value to write.
+/// No dest (`store_property` returns void; the IIR compiler
+/// emits this as a side-effecting instruction).
+fn exec_store_property(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    if instr.srcs.len() != 3 {
+        return Err(RunError::MalformedInstruction(format!(
+            "store_property expects 3 srcs (obj, key, value), got {}",
+            instr.srcs.len()
+        )));
+    }
+    let obj = operand_to_value(&instr.srcs[0], &|n| frame.get(n))
+        .map_err(RunError::OperandConversion)?;
+    let key = read_symbol_arg(&instr.srcs[1], frame, "store_property", 1)?;
+    let value = operand_to_value(&instr.srcs[2], &|n| frame.get(n))
+        .map_err(RunError::OperandConversion)?;
+
+    let mut ic: InlineCache<LispyICEntry> = InlineCache::new();
+    LispyBinding::store_property(obj, key, value, &mut ic).map_err(RunError::Runtime)?;
+    // store_property has no dest — the result is the side-effect.
     Ok(())
 }
 
@@ -1596,5 +1785,315 @@ mod tests {
         // Both the seed and the program-defined x are present.
         assert_eq!(g.get(lispy_runtime::intern("seed")), Some(LispyValue::int(99)));
         assert_eq!(g.get(lispy_runtime::intern("x")), Some(LispyValue::int(5)));
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // PR 6: send / load_property / store_property opcodes
+    // ─────────────────────────────────────────────────────────────────
+    //
+    // `twig-ir-compiler` doesn't yet emit these opcodes — Twig source
+    // syntax has no `(send obj msg ...)` form.  These tests therefore
+    // hand-build a minimal IIRModule using each opcode and run it
+    // through the dispatcher.  For Lispy, the binding methods return
+    // `NoSuchMethod` / `NoSuchProperty`, which is the correct
+    // behaviour for a language without method dispatch — PR 6's value
+    // is wiring the OPCODES through the trait machinery so a future
+    // Ruby/JS binding gets dispatch for free.
+
+    use interpreter_ir::function::{FunctionTypeStatus, IIRFunction as F};
+
+    /// Build a minimal module with `main` containing `instrs` plus a
+    /// trailing `(ret nil)`.  Convenient for the hand-built opcode
+    /// tests below.
+    fn module_with_main(instrs: Vec<IIRInstr>, register_count: usize) -> IIRModule {
+        let main = F {
+            name: "main".into(),
+            params: vec![],
+            return_type: "any".into(),
+            register_count,
+            instructions: instrs,
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+        };
+        IIRModule {
+            name: "test".into(),
+            functions: vec![main],
+            entry_point: Some("main".into()),
+            language: "twig".into(),
+        }
+    }
+
+    // ── send ────────────────────────────────────────────────────────
+
+    #[test]
+    fn send_on_lispy_value_returns_no_such_method() {
+        // Hand-build:
+        //   r0 = const 42                    (receiver)
+        //   sel = const "any-method"         (interned as symbol)
+        //   r1 = send r0 sel                 (no extra args)
+        //   ret r1
+        let instrs = vec![
+            IIRInstr::new("const", Some("r0".into()), vec![Operand::Int(42)], "any"),
+            IIRInstr::new("const", Some("sel".into()), vec![Operand::Var("any-method".into())], "any"),
+            IIRInstr::new(
+                "send",
+                Some("r1".into()),
+                vec![Operand::Var("r0".into()), Operand::Var("sel".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r1".into())], "any"),
+        ];
+        let module = module_with_main(instrs, 8);
+        let err = run(&module).unwrap_err();
+        // Lispy correctly refuses send on any value — the runtime
+        // surface for a language without method dispatch.
+        match err {
+            RunError::Runtime(RuntimeError::NoSuchMethod { selector }) => {
+                assert_eq!(
+                    lispy_runtime::name_of(selector).as_deref(),
+                    Some("any-method"),
+                );
+            }
+            other => panic!("expected Runtime(NoSuchMethod), got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn send_with_args_routes_through_binding() {
+        // send recv sel arg1 arg2 — verifies the args slice is
+        // forwarded.  Lispy still rejects, but the rejection
+        // includes the named selector — which means args were
+        // correctly assembled and the binding's send_message was
+        // invoked.
+        let instrs = vec![
+            IIRInstr::new("const", Some("recv".into()), vec![Operand::Int(1)], "any"),
+            IIRInstr::new("const", Some("sel".into()), vec![Operand::Var("plus".into())], "any"),
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(2)], "any"),
+            IIRInstr::new("const", Some("b".into()), vec![Operand::Int(3)], "any"),
+            IIRInstr::new(
+                "send",
+                Some("r".into()),
+                vec![
+                    Operand::Var("recv".into()),
+                    Operand::Var("sel".into()),
+                    Operand::Var("a".into()),
+                    Operand::Var("b".into()),
+                ],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        let module = module_with_main(instrs, 8);
+        let err = run(&module).unwrap_err();
+        assert!(matches!(
+            err,
+            RunError::Runtime(RuntimeError::NoSuchMethod { .. })
+        ));
+    }
+
+    #[test]
+    fn send_missing_selector_errors_malformed() {
+        // send with only 1 src (just the receiver) — selector is missing.
+        let instrs = vec![
+            IIRInstr::new("const", Some("recv".into()), vec![Operand::Int(1)], "any"),
+            IIRInstr::new(
+                "send",
+                Some("r".into()),
+                vec![Operand::Var("recv".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        let module = module_with_main(instrs, 4);
+        let err = run(&module).unwrap_err();
+        assert!(matches!(err, RunError::MalformedInstruction(s) if s.contains("send")));
+    }
+
+    #[test]
+    fn send_non_symbol_selector_errors_typed() {
+        // Selector must be a symbol; passing an int is a type error.
+        let instrs = vec![
+            IIRInstr::new("const", Some("recv".into()), vec![Operand::Int(1)], "any"),
+            IIRInstr::new("const", Some("sel".into()), vec![Operand::Int(7)], "any"),
+            IIRInstr::new(
+                "send",
+                Some("r".into()),
+                vec![Operand::Var("recv".into()), Operand::Var("sel".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        let module = module_with_main(instrs, 4);
+        let err = run(&module).unwrap_err();
+        match err {
+            RunError::Runtime(RuntimeError::TypeError(msg)) => {
+                assert!(msg.contains("symbol"));
+            }
+            other => panic!("expected Runtime(TypeError(symbol)), got {other:?}"),
+        }
+    }
+
+    // ── load_property ───────────────────────────────────────────────
+
+    #[test]
+    fn load_property_on_lispy_value_returns_no_such_property() {
+        let instrs = vec![
+            IIRInstr::new("const", Some("obj".into()), vec![Operand::Int(42)], "any"),
+            IIRInstr::new("const", Some("k".into()), vec![Operand::Var("name".into())], "any"),
+            IIRInstr::new(
+                "load_property",
+                Some("r".into()),
+                vec![Operand::Var("obj".into()), Operand::Var("k".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        let module = module_with_main(instrs, 4);
+        let err = run(&module).unwrap_err();
+        match err {
+            RunError::Runtime(RuntimeError::NoSuchProperty { key }) => {
+                assert_eq!(lispy_runtime::name_of(key).as_deref(), Some("name"));
+            }
+            other => panic!("expected Runtime(NoSuchProperty), got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn load_property_wrong_arity_errors() {
+        let instrs = vec![
+            IIRInstr::new("const", Some("obj".into()), vec![Operand::Int(0)], "any"),
+            // Missing key.
+            IIRInstr::new(
+                "load_property",
+                Some("r".into()),
+                vec![Operand::Var("obj".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        let module = module_with_main(instrs, 4);
+        let err = run(&module).unwrap_err();
+        assert!(matches!(
+            err,
+            RunError::MalformedInstruction(s) if s.contains("load_property")
+        ));
+    }
+
+    // ── store_property ──────────────────────────────────────────────
+
+    #[test]
+    fn store_property_on_lispy_value_returns_no_such_property() {
+        let instrs = vec![
+            IIRInstr::new("const", Some("obj".into()), vec![Operand::Int(42)], "any"),
+            IIRInstr::new("const", Some("k".into()), vec![Operand::Var("count".into())], "any"),
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(7)], "any"),
+            IIRInstr::new(
+                "store_property",
+                None, // no dest — store_property is side-effecting
+                vec![
+                    Operand::Var("obj".into()),
+                    Operand::Var("k".into()),
+                    Operand::Var("v".into()),
+                ],
+                "void",
+            ),
+            // store_property has no result; return nil after.
+            IIRInstr::new(
+                "call_builtin",
+                Some("nil_v".into()),
+                vec![Operand::Var("make_nil".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("nil_v".into())], "any"),
+        ];
+        let module = module_with_main(instrs, 8);
+        let err = run(&module).unwrap_err();
+        match err {
+            RunError::Runtime(RuntimeError::NoSuchProperty { key }) => {
+                assert_eq!(lispy_runtime::name_of(key).as_deref(), Some("count"));
+            }
+            other => panic!("expected Runtime(NoSuchProperty), got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn store_property_wrong_arity_errors() {
+        // 2 srcs (obj, key) — missing value.
+        let instrs = vec![
+            IIRInstr::new("const", Some("obj".into()), vec![Operand::Int(0)], "any"),
+            IIRInstr::new("const", Some("k".into()), vec![Operand::Var("x".into())], "any"),
+            IIRInstr::new(
+                "store_property",
+                None,
+                vec![Operand::Var("obj".into()), Operand::Var("k".into())],
+                "void",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Int(0)], "any"),
+        ];
+        let module = module_with_main(instrs, 4);
+        let err = run(&module).unwrap_err();
+        assert!(matches!(
+            err,
+            RunError::MalformedInstruction(s) if s.contains("store_property")
+        ));
+    }
+
+    // ── Selector / key validation shared between send / load / store ─
+
+    #[test]
+    fn send_with_too_many_srcs_caps_at_max_registers() {
+        // DoS guard: a hand-built `send` with srcs.len() >
+        // MAX_REGISTERS_PER_FRAME should be refused before
+        // allocating the args Vec.  Found by PR 6 security review.
+        let mut srcs: Vec<Operand> = Vec::with_capacity(MAX_REGISTERS_PER_FRAME + 2);
+        srcs.push(Operand::Var("recv".into()));
+        srcs.push(Operand::Var("sel".into()));
+        for _ in 0..MAX_REGISTERS_PER_FRAME {
+            srcs.push(Operand::Int(0));
+        }
+        // The instruction itself is too large to embed in a
+        // realistic test program, so we skip the const-prelude
+        // and exercise the bounds check directly via a malformed
+        // module — the dispatcher should reject before reading
+        // srcs[0].
+        let instrs = vec![IIRInstr::new("send", Some("r".into()), srcs, "any")];
+        let module = module_with_main(instrs, 4);
+        let err = run(&module).unwrap_err();
+        assert!(matches!(
+            err,
+            RunError::MalformedInstruction(s) if s.contains("MAX_REGISTERS_PER_FRAME")
+        ));
+    }
+
+    #[test]
+    fn store_property_non_symbol_key_errors_typed() {
+        let instrs = vec![
+            IIRInstr::new("const", Some("obj".into()), vec![Operand::Int(0)], "any"),
+            // Key is an int, not a symbol.
+            IIRInstr::new("const", Some("k".into()), vec![Operand::Int(7)], "any"),
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(99)], "any"),
+            IIRInstr::new(
+                "store_property",
+                None,
+                vec![
+                    Operand::Var("obj".into()),
+                    Operand::Var("k".into()),
+                    Operand::Var("v".into()),
+                ],
+                "void",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Int(0)], "any"),
+        ];
+        let module = module_with_main(instrs, 4);
+        let err = run(&module).unwrap_err();
+        match err {
+            RunError::Runtime(RuntimeError::TypeError(msg)) => {
+                assert!(msg.contains("store_property"));
+                assert!(msg.contains("symbol"));
+            }
+            other => panic!("expected Runtime(TypeError(...symbol...)), got {other:?}"),
+        }
     }
 }

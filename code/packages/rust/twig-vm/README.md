@@ -1,6 +1,6 @@
 # twig-vm
 
-**LANG20 PRs 3 – 5** — runtime wiring + dispatcher between the Twig frontend and the LANG-runtime substrate.  Runs the full Twig surface language end to end (closures, top-level value defines, quoted symbols, recursion, etc.).
+**LANG20 PRs 3 – 6** — runtime wiring + dispatcher between the Twig frontend and the LANG-runtime substrate.  Runs the full Twig surface language end to end (closures, top-level value defines, quoted symbols, recursion, etc.) plus the method-dispatch opcodes (`send` / `load_property` / `store_property`) for future Ruby/JS bindings.
 
 This crate is the bridge between:
 - the **Twig frontend** (`twig-lexer` → `twig-parser` → `twig-ir-compiler`) that produces an `IIRModule` from Twig source, and
@@ -77,8 +77,9 @@ The dispatcher covers the IIR opcodes emitted by `twig-ir-compiler` for the full
 | `(define x value)` (top-level value)        | ✅ (PR 5) |
 | `'foo` (quoted symbols)                     | ✅ (PR 5) |
 | Higher-order (passing fns + builtins)       | ✅ (PR 5) |
-| `send` / `load_property` / `store_property` | PR 6+    |
-| JIT promotion + IC machinery                | PR 7+    |
+| `send` / `load_property` / `store_property` | ✅ (PR 6) — wired through `LangBinding`; Lispy returns NoSuchMethod / NoSuchProperty (correct for Lispy); future Ruby/JS bindings get dispatch for free |
+| Persistent IC slots                         | PR 7+    |
+| JIT promotion + deopt                       | PR 8+    |
 
 Programs using unsupported features compile (the IR compiler emits valid IIR for them) but the dispatcher returns `RunError::UnsupportedOpcode` — explicit "not yet" rather than a silent miscompile.
 
@@ -111,13 +112,14 @@ All three are public constants (`twig_vm::MAX_*`) so callers can verify the boun
 cargo test -p twig-vm
 ```
 
-**80 unit + 2 doc tests** covering:
+**90 unit + 2 doc tests** covering:
 - Compilation success + error propagation
 - Builtin resolution for every Lispy builtin (plus PR 5: `make_symbol`, `make_closure`, `make_builtin_closure`)
 - `Operand → LispyValue` round-trip (Int, Bool, Float errors, Var-as-symbol, nil)
 - Range checking (Lispy's tagged-int range is narrower than `i64`)
 - Full dispatcher: arithmetic, comparison, cons family, `if`, `let`, `begin`, user-defined functions, factorial, fibonacci, mutual recursion
 - **PR 5**: anonymous lambdas, lambda captures (single + multiple values), nested lambdas, curried-add pattern, higher-order via user-fn or builtin closure, top-level value defines (read, function-uses-global, overwrite), quoted symbols, `Globals` struct round-trip
+- **PR 6**: `send` / `load_property` / `store_property` opcodes through `LangBinding` — receiver/object + symbol-id selector/key extraction, IC allocation, NoSuchMethod / NoSuchProperty paths for Lispy, arity validation, non-symbol selector type errors
 - Error paths: unsupported opcode, missing/invalid operands, unknown function/label/builtin, depth/instruction/register limits, undefined globals, apply on non-closure
 
 ```bash
@@ -134,8 +136,8 @@ LANG20 PR 2: lispy-runtime               ← LispyBinding (concrete impl)
 LANG20 PR 3: twig-vm  ← THIS CRATE        wires twig-frontend + lispy-runtime
 LANG20 PR 4: twig-vm  ← THIS CRATE        adds the dispatcher (call/jmp/ret)
 LANG20 PR 5: twig-vm  ← THIS CRATE        adds closures + globals + symbols
-LANG20 PR 6: send/load/store opcodes         ← next: method dispatch
-LANG20 PR 7: IC machinery                    ← inline caches
+LANG20 PR 6: twig-vm  ← THIS CRATE        adds send/load/store opcodes via LangBinding
+LANG20 PR 7: IC machinery                    ← persistent inline caches
 LANG20 PR 8: vm-core profiler + JIT prep     ← profile-driven specialisation
 ```
 

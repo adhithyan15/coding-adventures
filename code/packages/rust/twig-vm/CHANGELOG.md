@@ -1,5 +1,89 @@
 # Changelog — twig-vm
 
+## [0.4.0] — 2026-04-30
+
+### Added — PR 6 of LANG20: send / load_property / store_property opcodes
+
+Wires the three method-dispatch opcodes through the existing
+`LangBinding` trait machinery.  For Lispy these surface as
+`NoSuchMethod` / `NoSuchProperty` runtime errors (correct
+behaviour for a language without method dispatch); the value of
+PR 6 is making the OPCODE PATH live, so a future Ruby-binding or
+JS-binding gets dispatch for free without further dispatcher
+changes.
+
+- **`send recv selector args...`** — extracts the receiver from
+  `srcs[0]`, the symbol-id selector from `srcs[1]` (lowered via
+  PR 5's string-as-symbol convention), and any remaining args
+  from `srcs[2..]`.  Allocates a per-instruction
+  `InlineCache<LispyICEntry>` (PR 7 makes it persistent), calls
+  `LispyBinding::send_message`, stores the result in `dest`.
+
+- **`load_property obj key`** — same shape with a single key.
+  Allocates a fresh IC, calls `LispyBinding::load_property`.
+
+- **`store_property obj key value`** — three-src side-effecting
+  opcode (no dest).  Allocates a fresh IC, calls
+  `LispyBinding::store_property`.
+
+- **`read_symbol_arg` helper** — shared by all three opcodes.
+  Reads a register's value, asserts it's a symbol, returns the
+  `SymbolId`.  A non-symbol selector / key surfaces as
+  `Runtime(TypeError(...))` with a descriptive message.
+
+- **10 new tests** covering all three opcodes' happy path
+  (returns NoSuchMethod / NoSuchProperty as appropriate),
+  arity validation (`send` requires 2+ srcs, `load_property`
+  requires exactly 2, `store_property` requires exactly 3),
+  type validation (selector / key must be a symbol), and a
+  DoS-guard test for `send` with `srcs.len() >
+  MAX_REGISTERS_PER_FRAME`.  Tests hand-build minimal
+  IIRModules since `twig-ir-compiler` doesn't emit these
+  opcodes yet (no `(send obj msg ...)` form in Twig source —
+  that's a future PR).
+
+### Security review fixes applied
+
+- **DoS via unbounded args allocation in `exec_send`**: a
+  hand-built `send` instruction with millions of srcs would
+  OOM via `Vec::with_capacity(srcs.len() - 2)` before the
+  per-arg loop.  Capped at `MAX_REGISTERS_PER_FRAME` (2¹⁶).
+  Well-formed IIR never approaches this — function arities
+  are bounded by source syntax and a Twig function can't have
+  65k arguments — so the cap is purely defensive.  Found by
+  PR 6 security review.
+- **`DispatchCx::new_for_test()` documented**: the only
+  constructor for `DispatchCx` today is doc-hidden and
+  test-suffixed.  Added a `TODO` comment noting that this
+  call site needs to migrate to the production constructor
+  when `DispatchCx` grows real fields (LANG20 PR 8+ — vm-core
+  wiring).
+
+### IC parameter handling (PR 6 vs PR 7)
+
+PR 6 allocates an `InlineCache<LispyICEntry>` fresh per
+dispatch and discards it after the call.  PR 7 (IC machinery)
+introduces a per-call-site IC table indexed by
+`IIRInstr::ic_slot` (LANG20 §"IIR additions") — at that point
+the IC allocation moves to table lookup but the trait calls
+stay identical.  No breaking change.
+
+### Tests across the diff
+
+- twig-vm: **90 unit + 2 doc** — all pass on stable Rust.
+  Miri verification deferred to CI.
+- lispy-runtime: 105 unit + 1 doc — unchanged (PR 6 is
+  dispatcher-only; lispy-runtime's binding methods already
+  return the right errors from PR 2).
+
+### Hardening
+
+- Clippy-clean.
+- All resource limits from prior PRs (`MAX_DISPATCH_DEPTH`,
+  `MAX_INSTRUCTIONS_PER_RUN`, `MAX_REGISTERS_PER_FRAME`) still
+  enforced.
+- The new opcodes don't add any unsafe; no `cargo-geiger` impact.
+
 ## [0.3.0] — 2026-04-29
 
 ### Added — PR 5 of LANG20: closures, top-level value defines, quoted symbols
