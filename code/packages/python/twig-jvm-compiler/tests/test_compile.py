@@ -124,24 +124,9 @@ def test_mutual_recursion_compiles() -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_cons_rejected() -> None:
-    with pytest.raises(TwigCompileError, match="cons"):
-        compile_to_ir("(cons 1 2)")
-
-
 def test_print_rejected() -> None:
     with pytest.raises(TwigCompileError, match="print"):
         compile_to_ir("(print 1)")
-
-
-def test_nil_rejected() -> None:
-    with pytest.raises(TwigCompileError, match="nil"):
-        compile_to_ir("nil")
-
-
-def test_quoted_symbol_rejected() -> None:
-    with pytest.raises(TwigCompileError, match="symbols"):
-        compile_to_ir("'foo")
 
 
 def test_unbound_name_rejected() -> None:
@@ -203,3 +188,71 @@ def test_closure_call_emits_apply_closure() -> None:
     ap = [i for i in ir.instructions if i.opcode is IrOp.APPLY_CLOSURE]
     assert len(ap) == 1
     assert ap[0].operands[2].value == 1
+
+
+# ── Heap primitives (TW03 Phase 3e) ───────────────────────────────────────
+
+
+def test_nil_emits_load_nil() -> None:
+    """A bare ``nil`` literal compiles to ``LOAD_NIL``."""
+    from compiler_ir import IrOp
+    ir = compile_to_ir("nil")
+    assert IrOp.LOAD_NIL in [i.opcode for i in ir.instructions]
+
+
+def test_quoted_symbol_emits_make_symbol() -> None:
+    """``'foo`` (or ``(quote foo)``) compiles to ``MAKE_SYMBOL``
+    with the symbol name as an ``IrLabel``."""
+    from compiler_ir import IrLabel, IrOp
+    ir = compile_to_ir("'foo")
+    mks = [i for i in ir.instructions if i.opcode is IrOp.MAKE_SYMBOL]
+    assert len(mks) == 1
+    assert isinstance(mks[0].operands[1], IrLabel)
+    assert mks[0].operands[1].name == "foo"
+
+
+def test_cons_emits_make_cons() -> None:
+    from compiler_ir import IrOp
+    ir = compile_to_ir("(cons 1 nil)")
+    assert IrOp.MAKE_CONS in [i.opcode for i in ir.instructions]
+
+
+def test_car_emits_car() -> None:
+    from compiler_ir import IrOp
+    ir = compile_to_ir("(car (cons 1 nil))")
+    assert IrOp.CAR in [i.opcode for i in ir.instructions]
+
+
+def test_cdr_emits_cdr() -> None:
+    from compiler_ir import IrOp
+    ir = compile_to_ir("(cdr (cons 1 nil))")
+    assert IrOp.CDR in [i.opcode for i in ir.instructions]
+
+
+def test_null_predicate_emits_is_null() -> None:
+    from compiler_ir import IrOp
+    ir = compile_to_ir("(null? nil)")
+    assert IrOp.IS_NULL in [i.opcode for i in ir.instructions]
+
+
+def test_pair_predicate_emits_is_pair() -> None:
+    from compiler_ir import IrOp
+    ir = compile_to_ir("(pair? (cons 1 nil))")
+    assert IrOp.IS_PAIR in [i.opcode for i in ir.instructions]
+
+
+def test_symbol_predicate_emits_is_symbol() -> None:
+    from compiler_ir import IrOp
+    ir = compile_to_ir("(symbol? 'foo)")
+    assert IrOp.IS_SYMBOL in [i.opcode for i in ir.instructions]
+
+
+def test_cons_arity_validation() -> None:
+    """``cons`` takes exactly 2 args."""
+    with pytest.raises(TwigCompileError, match="cons"):
+        compile_to_ir("(cons 1)")
+
+
+def test_car_arity_validation() -> None:
+    with pytest.raises(TwigCompileError, match="car"):
+        compile_to_ir("(car)")

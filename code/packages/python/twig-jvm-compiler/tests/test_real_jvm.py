@@ -189,3 +189,59 @@ def test_closure_let_bound() -> None:
     result = run_source(src, class_name="TwigLetClos")
     assert result.returncode == 0, result.stderr
     assert result.stdout == b"*"
+
+
+# ── Heap primitives (TW03 Phase 3e) — real-java end-to-end ────────────────
+
+
+@requires_java
+@pytest.mark.xfail(
+    strict=True,
+    reason=(
+        "JVM Phase 3b limitation: caller-saves on CALL only cover "
+        "__ca_regs (int pool), not __ca_objregs (object pool).  "
+        "Recursive `length` re-enters the function and the object "
+        "register holding the cons ref is clobbered before the "
+        "recursive call returns.  Will auto-flip to passing once a "
+        "follow-up extends caller-saves to the obj pool — same "
+        "shape as the JVM01 fix that unblocked recursion through "
+        "int registers."
+    ),
+)
+def test_heap_list_of_ints_length() -> None:
+    """``(length (cons 1 (cons 2 (cons 3 nil)))) → 3``.
+
+    The headline TW03 Phase 3 acceptance criterion.  Currently
+    xfail because of the obj-pool caller-saves limitation noted
+    above; the simpler non-recursive heap test
+    (`test_heap_car_of_singleton_returns_int`) does pass and
+    proves the ir-emit path works."""
+    src = """
+        (define (length xs)
+          (if (null? xs) 0 (+ 1 (length (cdr xs)))))
+        (length (cons 1 (cons 2 (cons 3 nil))))
+    """
+    result = run_source(src, class_name="TwigLength")
+    assert result.returncode == 0, (
+        f"length pipeline broke at runtime.\n"
+        f"  exit code: {result.returncode}\n"
+        f"  stdout: {result.stdout!r}\n"
+        f"  stderr: {result.stderr!r}"
+    )
+    # 3 → byte 0x03.
+    assert result.stdout == b"\x03", (
+        f"expected b'\\x03' (= 3), got {result.stdout!r}"
+    )
+
+
+@requires_java
+def test_heap_car_of_singleton_returns_int() -> None:
+    """``(car (cons 42 nil)) → 42`` exercises the ``CAR`` int-read
+    path: the cons head is written from an int register and CAR
+    reads it back into another int register, ready for SYSCALL
+    output."""
+    src = "(car (cons 42 nil))"
+    result = run_source(src, class_name="TwigCarOne")
+    assert result.returncode == 0, result.stderr
+    # 42 = 0x2a = b'*'.
+    assert result.stdout == b"*"
