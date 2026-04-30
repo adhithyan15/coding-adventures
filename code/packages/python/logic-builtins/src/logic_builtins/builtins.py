@@ -37,6 +37,7 @@ from logic_engine import (
     conj,
     cut,
     eq,
+    fresh,
     freshen_clause,
     goal_as_term,
     goal_from_term,
@@ -102,10 +103,12 @@ __all__ = [
     "fd_sumo",
     "fd_sum_relationo",
     "failo",
+    "excludeo",
     "FiniteDomainConstraint",
     "FiniteDomainStore",
     "findallo",
     "floordiv",
+    "foldlo",
     "forallo",
     "functoro",
     "geqo",
@@ -114,10 +117,12 @@ __all__ = [
     "ifthenelseo",
     "iftheno",
     "integero",
+    "includeo",
     "iso",
     "leqo",
     "labelingo",
     "lto",
+    "maplisto",
     "mod",
     "mul",
     "neg",
@@ -128,6 +133,7 @@ __all__ = [
     "numbero",
     "onceo",
     "bagofo",
+    "partitiono",
     "predicate_propertyo",
     "assertao",
     "assertzo",
@@ -236,7 +242,9 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("fd_sumo", 2),
     ("fd_sum_relationo", 3),
     ("failo", 0),
+    ("excludeo", 3),
     ("findallo", 3),
+    ("foldlo", 4),
     ("forallo", 2),
     ("functoro", 3),
     ("geqo", 2),
@@ -245,17 +253,22 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("ifthenelseo", 3),
     ("iftheno", 2),
     ("integero", 1),
+    ("includeo", 3),
     ("iso", 2),
     ("labeling_optionso", 2),
     ("labelingo", 1),
     ("leqo", 2),
     ("lto", 2),
+    ("maplisto", 2),
+    ("maplisto", 3),
+    ("maplisto", 4),
     ("nonvaro", 1),
     ("noto", 1),
     ("numeqo", 2),
     ("numneqo", 2),
     ("numbero", 1),
     ("onceo", 1),
+    ("partitiono", 4),
     ("predicate_propertyo", 3),
     ("retractallo", 1),
     ("retracto", 1),
@@ -2568,6 +2581,257 @@ def calltermo(term_goal: object, *extra_args: object) -> GoalExpr:
         yield from solve_from(program_value, called_goal, state)
 
     return native_goal(run, _as_callable_term(term_goal), *extra_args)
+
+
+def _fresh_logic_vars(
+    count: int,
+    next_var_id: int,
+) -> tuple[tuple[LogicVar, ...], int]:
+    vars_value = tuple(LogicVar(id=next_var_id + index) for index in range(count))
+    return vars_value, next_var_id + count
+
+
+def _materialize_proper_list_args(
+    program_value: Program,
+    state: State,
+    list_terms: tuple[Term, ...],
+) -> Iterator[tuple[State, tuple[tuple[Term, ...], ...]]]:
+    """Resolve proper list arguments, creating same-length open lists when safe."""
+
+    entries: list[list[Term] | LogicVar] = []
+    known_lengths: set[int] = set()
+    for list_term in list_terms:
+        reified_list = _reified(list_term, state)
+        items = _proper_list_items(reified_list)
+        if items is not None:
+            entries.append(items)
+            known_lengths.add(len(items))
+            continue
+        if isinstance(reified_list, LogicVar):
+            entries.append(reified_list)
+            continue
+        return
+
+    if len(known_lengths) != 1:
+        return
+
+    (list_length,) = known_lengths
+    next_state = state
+    materialized: list[tuple[Term, ...]] = []
+    constraints: list[tuple[LogicVar, tuple[LogicVar, ...]]] = []
+    next_var_id = state.next_var_id
+    for entry in entries:
+        if isinstance(entry, LogicVar):
+            vars_value, next_var_id = _fresh_logic_vars(list_length, next_var_id)
+            materialized.append(vars_value)
+            constraints.append((entry, vars_value))
+            continue
+        materialized.append(tuple(entry))
+
+    if constraints:
+        next_state = _state_with_next_var_id(state, next_var_id)
+    states = [next_state]
+    for list_var, items in constraints:
+        states = [
+            unified_state
+            for running_state in states
+            for unified_state in solve_from(
+                program_value,
+                eq(list_var, logic_list(items)),
+                running_state,
+            )
+        ]
+
+    for materialized_state in states:
+        yield materialized_state, tuple(materialized)
+
+
+def _run_maplist_rows(
+    program_value: Program,
+    state: State,
+    closure: Term,
+    rows: tuple[tuple[Term, ...], ...],
+) -> Iterator[State]:
+    if not rows:
+        yield state
+        return
+    row, *tail = rows
+    for called_state in solve_from(program_value, calltermo(closure, *row), state):
+        yield from _run_maplist_rows(program_value, called_state, closure, tuple(tail))
+
+
+def maplisto(closure: object, *lists_value: object) -> GoalExpr:
+    """Apply a callable closure across one to three same-length lists."""
+
+    if not 1 <= len(lists_value) <= 3:
+        return failo()
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        closure_term, *list_terms = args
+        for materialized_state, lists in _materialize_proper_list_args(
+            program_value,
+            state,
+            tuple(list_terms),
+        ):
+            rows = tuple(zip(*lists, strict=True))
+            yield from _run_maplist_rows(
+                program_value,
+                materialized_state,
+                closure_term,
+                rows,
+            )
+
+    return native_goal(run, _as_callable_term(closure), *lists_value)
+
+
+def _first_success_state(
+    program_value: Program,
+    goal: GoalExpr,
+    state: State,
+) -> State | None:
+    return next(solve_from(program_value, goal, state), None)
+
+
+def _partition_items(
+    program_value: Program,
+    state: State,
+    closure: Term,
+    items: tuple[Term, ...],
+) -> tuple[list[Term], list[Term], State] | None:
+    included: list[Term] = []
+    excluded: list[Term] = []
+    running_state = state
+    for item in items:
+        called_state = _first_success_state(
+            program_value,
+            calltermo(closure, item),
+            running_state,
+        )
+        if called_state is None:
+            excluded.append(item)
+            continue
+        included.append(item)
+        running_state = called_state
+    return included, excluded, running_state
+
+
+def partitiono(
+    closure: object,
+    items_value: object,
+    included_value: object,
+    excluded_value: object,
+) -> GoalExpr:
+    """Partition a proper list by a unary callable closure."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        closure_term, items_term, included_term, excluded_term = args
+        items = _proper_list_items(_reified(items_term, state))
+        if items is None:
+            return
+        partitioned = _partition_items(
+            program_value,
+            state,
+            closure_term,
+            tuple(items),
+        )
+        if partitioned is None:
+            return
+        included, excluded, partition_state = partitioned
+        yield from solve_from(
+            program_value,
+            conj(
+                eq(included_term, logic_list(included)),
+                eq(excluded_term, logic_list(excluded)),
+            ),
+            partition_state,
+        )
+
+    return native_goal(
+        run,
+        _as_callable_term(closure),
+        items_value,
+        included_value,
+        excluded_value,
+    )
+
+
+def includeo(closure: object, items_value: object, included_value: object) -> GoalExpr:
+    """Keep the items for which a unary callable closure succeeds."""
+
+    return fresh(
+        1,
+        lambda excluded: partitiono(closure, items_value, included_value, excluded),
+    )
+
+
+def excludeo(closure: object, items_value: object, excluded_value: object) -> GoalExpr:
+    """Keep the items for which a unary callable closure fails."""
+
+    return fresh(
+        1,
+        lambda included: partitiono(closure, items_value, included, excluded_value),
+    )
+
+
+def _run_foldl_items(
+    program_value: Program,
+    state: State,
+    closure: Term,
+    items: tuple[Term, ...],
+    accumulator: Term,
+    result: Term,
+) -> Iterator[State]:
+    if not items:
+        yield from solve_from(program_value, eq(accumulator, result), state)
+        return
+
+    item, *tail = items
+    (next_accumulator,), next_var_id = _fresh_logic_vars(1, state.next_var_id)
+    reserved_state = _state_with_next_var_id(state, next_var_id)
+    for called_state in solve_from(
+        program_value,
+        calltermo(closure, item, accumulator, next_accumulator),
+        reserved_state,
+    ):
+        yield from _run_foldl_items(
+            program_value,
+            called_state,
+            closure,
+            tuple(tail),
+            next_accumulator,
+            result,
+        )
+
+
+def foldlo(
+    closure: object,
+    items_value: object,
+    accumulator_value: object,
+    result_value: object,
+) -> GoalExpr:
+    """Fold a list left-to-right with a ternary callable closure."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        closure_term, items_term, accumulator_term, result_term = args
+        items = _proper_list_items(_reified(items_term, state))
+        if items is None:
+            return
+        yield from _run_foldl_items(
+            program_value,
+            state,
+            closure_term,
+            tuple(items),
+            accumulator_term,
+            result_term,
+        )
+
+    return native_goal(
+        run,
+        _as_callable_term(closure),
+        items_value,
+        accumulator_value,
+        result_value,
+    )
 
 
 def onceo(goal: object) -> GoalExpr:

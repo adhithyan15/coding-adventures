@@ -1006,6 +1006,48 @@ class TestPrologGoalAdapter:
             adapted,
         ) == [atom("tea"), atom("cake")]
 
+    def test_adapt_prolog_goal_rewrites_higher_order_list_builtins(self) -> None:
+        loaded = load_swi_prolog_source(
+            """
+            small(1).
+            small(2).
+            increment(1, 2).
+            increment(2, 3).
+            increment(3, 4).
+            push(Item, Acc, [Item|Acc]).
+
+            ?- maplist(increment, [1,2,3], Ys),
+               include(small, [1,2,3], Small),
+               exclude(small, [1,2,3], Big),
+               partition(small, [1,2,3], Yes, No),
+               foldl(push, [a,b,c], [], Stack).
+            """,
+        )
+        query = loaded.queries[0]
+        adapted = adapt_prolog_goal(query.goal)
+
+        assert solve_all(
+            loaded.program,
+            (
+                query.variables["Ys"],
+                query.variables["Small"],
+                query.variables["Big"],
+                query.variables["Yes"],
+                query.variables["No"],
+                query.variables["Stack"],
+            ),
+            adapted,
+        ) == [
+            (
+                logic_list([2, 3, 4]),
+                logic_list([1, 2]),
+                logic_list([3]),
+                logic_list([1, 2]),
+                logic_list([3]),
+                logic_list(["c", "b", "a"]),
+            ),
+        ]
+
     def test_adapt_prolog_goal_rewrites_clpfd_callable_forms(self) -> None:
         parsed = parse_swi_query(
             "?- ins([X,Y], [1,2,3]), "

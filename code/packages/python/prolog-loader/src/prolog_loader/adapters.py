@@ -23,6 +23,7 @@ from logic_builtins import (
     current_predicateo,
     cuto,
     dynamico,
+    excludeo,
     failo,
     fd_addo,
     fd_bool_ando,
@@ -45,6 +46,7 @@ from logic_builtins import (
     fd_sum_relationo,
     fd_sumo,
     findallo,
+    foldlo,
     forallo,
     functoro,
     geqo,
@@ -52,18 +54,21 @@ from logic_builtins import (
     gto,
     ifthenelseo,
     iftheno,
+    includeo,
     integero,
     iso,
     labeling_optionso,
     labelingo,
     leqo,
     lto,
+    maplisto,
     nonvaro,
     noto,
     numbero,
     numeqo,
     numneqo,
     onceo,
+    partitiono,
     predicate_propertyo,
     retractallo,
     retracto,
@@ -262,6 +267,17 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
     }
     if goal.relation.arity == 4 and name in quaternary_list_builtins:
         return quaternary_list_builtins[name](*args)
+
+    if name == "maplist" and 2 <= goal.relation.arity <= 4:
+        return maplisto(args[0], *args[1:])
+    if name == "include" and goal.relation.arity == 3:
+        return includeo(*args)
+    if name == "exclude" and goal.relation.arity == 3:
+        return excludeo(*args)
+    if name == "partition" and goal.relation.arity == 4:
+        return partitiono(*args)
+    if name == "foldl" and goal.relation.arity == 4:
+        return foldlo(*args)
 
     if name == "call" and 1 <= goal.relation.arity <= 8:
         if goal.relation.arity > 1:
