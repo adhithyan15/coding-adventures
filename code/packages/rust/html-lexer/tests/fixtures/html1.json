@@ -32,6 +32,18 @@
       ]
     },
     {
+      "id": "duplicate-attributes",
+      "description": "Duplicate attributes keep the first value and report duplicate-attribute",
+      "input": "<a href=one HREF=two title=ok>",
+      "tokens": [
+        "StartTag(name=a, attributes=[href=one, title=ok], self_closing=false)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "duplicate-attribute"
+      ]
+    },
+    {
       "id": "mosaic-doctype-and-heading",
       "input": "<!DOCTYPE HTML><H1 class=test>Hello</H1>",
       "tokens": [

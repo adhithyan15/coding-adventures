@@ -47,6 +47,7 @@ Tag tokens:
 - `append_attribute_value(current)`
 - `append_attribute_value(literal)`
 - `commit_attribute`
+- `commit_attribute_dedup`
 - `mark_self_closing`
 - `emit_current_token`
 
@@ -98,6 +99,12 @@ Diagnostics and stream control:
 
 It also enforces a per-input step limit so malformed reconsume-style machines
 cannot spin forever on one code point.
+
+`commit_attribute_dedup` commits the current attribute only when the current
+start tag does not already have an attribute with the same interpreted name. If
+there is already a matching attribute, the runtime drops the current attribute
+and records a `duplicate-attribute` diagnostic. Definitions that want to keep
+duplicates can continue using plain `commit_attribute`.
 
 The runtime also exposes context-seeding helpers such as
 `Tokenizer::set_initial_state` and `Tokenizer::set_last_start_tag` so wrapper
