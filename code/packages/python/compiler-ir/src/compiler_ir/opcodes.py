@@ -279,6 +279,8 @@ class IrOp(IntEnum):
     #               free-variable list maps to the captured registers.
     #   - vm-core:  delegate to the host-side ``make_closure`` builtin
     #               (already implemented in TW00).
+    #
+    # Note: numbered 47 (NOT 25) because 25/26 collide with MUL/DIV.
     MAKE_CLOSURE = 47
 
     # Apply a closure value to zero or more arguments.

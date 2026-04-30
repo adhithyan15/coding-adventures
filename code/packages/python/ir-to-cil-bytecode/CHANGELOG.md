@@ -1,5 +1,73 @@
 # Changelog
 
+## 0.5.0 — 2026-04-29 — CLR02 Phase 2c lowering (structural)
+
+### Added — `MAKE_CLOSURE` and `APPLY_CLOSURE` lowering
+
+- New handlers in `_emit_instruction`:
+  - **`MAKE_CLOSURE`** → `ldloc capt0; ...; ldloc captN-1;
+    newobj Closure_<fn>::.ctor(int32, ...); stloc dst`.
+  - **`APPLY_CLOSURE`** → `ldloc closure; ldloc arg0;
+    callvirt int32 IClosure::Apply(int32); stloc dst`.
+- `CILBackendConfig.closure_free_var_counts` declares which IR
+  regions are lifted-lambda bodies; the backend lowers those
+  regions as `Apply` methods on auto-generated
+  `Closure_<name>` TypeDefs (captures-first prologue copies
+  fields and the explicit arg into IR register slots).
+- Closure regions are no longer included in
+  `CILProgramArtifact.methods` (the main user TypeDef's method
+  list); instead they land on their own TypeDefs via
+  `extra_types`.
+- `_discover_callable_regions` now finds `MAKE_CLOSURE`'s
+  `fn_label` operand as a callable region (the lambda body is
+  invoked indirectly via `callvirt` rather than directly via
+  `CALL`).
+- `SequentialCILTokenProvider` gains five closure-aware
+  methods (`iclosure_apply_token`, `closure_ctor_token`,
+  `closure_apply_token`, `closure_field_token`,
+  `system_object_ctor_token`), all returning deterministic
+  tokens that match the row layout the writer emits.
+
+### Auto-generated TypeArtifacts
+
+For any program with at least one closure region, the lowerer
+emits:
+
+1. `CodingAdventures.IClosure` — abstract interface with one
+   abstract instance method `Apply(int32) → int32`.
+2. One `CodingAdventures.Closure_<name>` per lifted lambda —
+   concrete class extending `System.Object`, implementing
+   `IClosure`, with one `int32` field per capture, a `.ctor`
+   that chains into `System.Object::.ctor()` and stores
+   captures into fields, and an `Apply` instance method whose
+   body is the lambda's lowered IR with a captures-from-fields
+   prologue.
+
+### v1 limitations
+
+- **Arity-1 closures only** for `APPLY_CLOSURE`.  Multi-arity
+  needs `int[]` parameter typing on `IClosure::Apply` plus
+  `newarr int32` machinery (which needs a `System.Int32`
+  TypeRef the writer doesn't yet emit).
+- **Runtime end-to-end is not yet wired.**  Closure references
+  are managed pointers but the existing CLR backend uses an
+  int32-uniform local/parameter convention, so a closure ref
+  stored into an `int32` local truncates the pointer.  The
+  full `((make-adder 7) 35) → 42` pipeline lives as
+  an `xfail(strict=True)` real-`dotnet` test in
+  `cli-assembly-writer` so the structural shape stays right —
+  it'll flip to passing when the typed-register pool work
+  lands (planned next phase).
+
+### Added — opcode renumbering (compiler-ir 0.5.0)
+
+`MAKE_CLOSURE` moved from opcode 25 → 47 and `APPLY_CLOSURE`
+from 26 → 48.  The original numbering collided with `MUL` /
+`DIV` (added in compiler-ir 0.2.0); the IR enum's old values
+silently shadowed them, causing the lowering dispatcher to
+treat closure ops as arithmetic.  This change matches what
+ir-to-beam already adopted in its TW03 Phase 2 PR.
+
 ## 0.4.0 — 2026-04-29 — CLR02 Phase 2b dataclasses
 
 ### Added — closure-shape input to the writer

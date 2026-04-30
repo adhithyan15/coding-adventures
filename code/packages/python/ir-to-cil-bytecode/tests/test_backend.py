@@ -765,3 +765,244 @@ def _program(*instructions: IrInstruction) -> IrProgram:
     for instruction in instructions:
         program.add_instruction(instruction)
     return program
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# CLR02 Phase 2c — closure lowering (structural)
+# ─────────────────────────────────────────────────────────────────────────
+
+
+class TestClosureLoweringStructure:
+    """Tests for MAKE_CLOSURE / APPLY_CLOSURE lowering shape.
+
+    These verify the auto-generated TypeArtifacts and bytecode
+    layout — *not* runtime semantics, which require typed-register
+    work landing in a follow-up phase (managed-pointer locals can't
+    fit in the current int32-uniform register convention; see the
+    xfail real-dotnet test in cli-assembly-writer).
+    """
+
+    def _build_make_adder_program(self) -> IrProgram:
+        program = IrProgram(entry_label="Main")
+        program.add_instruction(
+            IrInstruction(IrOp.LABEL, [IrLabel("_lambda_0")])
+        )
+        program.add_instruction(
+            IrInstruction(
+                IrOp.ADD,
+                [IrRegister(1), IrRegister(2), IrRegister(3)],
+            )
+        )
+        program.add_instruction(IrInstruction(IrOp.RET, []))
+
+        program.add_instruction(
+            IrInstruction(IrOp.LABEL, [IrLabel("make_adder")])
+        )
+        program.add_instruction(
+            IrInstruction(
+                IrOp.MAKE_CLOSURE,
+                [
+                    IrRegister(1),
+                    IrLabel("_lambda_0"),
+                    IrImmediate(1),
+                    IrRegister(2),
+                ],
+            )
+        )
+        program.add_instruction(IrInstruction(IrOp.RET, []))
+
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("Main")]))
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(2), IrImmediate(7)])
+        )
+        program.add_instruction(
+            IrInstruction(IrOp.CALL, [IrLabel("make_adder")])
+        )
+        program.add_instruction(
+            IrInstruction(
+                IrOp.APPLY_CLOSURE,
+                [
+                    IrRegister(1),
+                    IrRegister(1),
+                    IrImmediate(1),
+                    IrRegister(2),
+                ],
+            )
+        )
+        program.add_instruction(IrInstruction(IrOp.RET, []))
+        return program
+
+    def _config(self) -> CILBackendConfig:
+        return CILBackendConfig(
+            call_register_count=None,
+            closure_free_var_counts={"_lambda_0": 1},
+        )
+
+    def test_iclosure_interface_emitted_when_any_closure_present(self) -> None:
+        artifact = lower_ir_to_cil_bytecode(
+            self._build_make_adder_program(), self._config()
+        )
+        names = {(t.namespace, t.name) for t in artifact.extra_types}
+        assert ("CodingAdventures", "IClosure") in names
+        assert ("CodingAdventures", "Closure__lambda_0") in names
+
+    def test_no_extra_types_when_no_closures(self) -> None:
+        program = IrProgram(entry_label="Main")
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("Main")]))
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(1), IrImmediate(42)])
+        )
+        program.add_instruction(IrInstruction(IrOp.RET, []))
+        artifact = lower_ir_to_cil_bytecode(program)
+        assert artifact.extra_types == ()
+
+    def test_iclosure_apply_is_abstract(self) -> None:
+        artifact = lower_ir_to_cil_bytecode(
+            self._build_make_adder_program(), self._config()
+        )
+        iclosure = next(
+            t for t in artifact.extra_types if t.name == "IClosure"
+        )
+        assert iclosure.is_interface is True
+        assert iclosure.extends is None
+        assert len(iclosure.methods) == 1
+        apply = iclosure.methods[0]
+        assert apply.name == "Apply"
+        assert apply.is_abstract is True
+        assert apply.is_instance is True
+        assert apply.return_type == "int32"
+        assert apply.parameter_types == ("int32",)
+
+    def test_closure_class_has_field_per_capture(self) -> None:
+        artifact = lower_ir_to_cil_bytecode(
+            self._build_make_adder_program(), self._config()
+        )
+        closure = next(
+            t for t in artifact.extra_types if t.name == "Closure__lambda_0"
+        )
+        assert len(closure.fields) == 1
+        assert closure.fields[0].name == "capt0"
+        assert closure.fields[0].type == "int32"
+        assert closure.implements == ("CodingAdventures.IClosure",)
+
+    def test_closure_class_has_ctor_and_apply(self) -> None:
+        artifact = lower_ir_to_cil_bytecode(
+            self._build_make_adder_program(), self._config()
+        )
+        closure = next(
+            t for t in artifact.extra_types if t.name == "Closure__lambda_0"
+        )
+        method_names = {m.name for m in closure.methods}
+        assert method_names == {".ctor", "Apply"}
+        ctor = next(m for m in closure.methods if m.name == ".ctor")
+        assert ctor.is_special_name is True
+        assert ctor.is_instance is True
+        assert ctor.return_type == "void"
+        assert ctor.parameter_types == ("int32",)
+        apply = next(m for m in closure.methods if m.name == "Apply")
+        assert apply.is_instance is True
+        assert apply.is_abstract is False
+        assert apply.return_type == "int32"
+        assert apply.parameter_types == ("int32",)
+
+    def test_lambda_region_omitted_from_main_methods(self) -> None:
+        artifact = lower_ir_to_cil_bytecode(
+            self._build_make_adder_program(), self._config()
+        )
+        names = {m.name for m in artifact.methods}
+        assert "_lambda_0" not in names
+        assert "Main" in names
+        assert "make_adder" in names
+
+    def test_make_closure_emits_newobj_token(self) -> None:
+        from cil_bytecode_builder import CILOpcode
+        artifact = lower_ir_to_cil_bytecode(
+            self._build_make_adder_program(), self._config()
+        )
+        make_adder = next(m for m in artifact.methods if m.name == "make_adder")
+        # newobj opcode = 0x73; appears at least once.
+        assert 0x73 in make_adder.body, "MAKE_CLOSURE should emit newobj"
+        # No callvirt — that's APPLY_CLOSURE's opcode.
+        assert int(CILOpcode.CALLVIRT) not in make_adder.body
+
+    def test_apply_closure_emits_callvirt(self) -> None:
+        from cil_bytecode_builder import CILOpcode
+        artifact = lower_ir_to_cil_bytecode(
+            self._build_make_adder_program(), self._config()
+        )
+        main = next(m for m in artifact.methods if m.name == "Main")
+        assert int(CILOpcode.CALLVIRT) in main.body, (
+            "APPLY_CLOSURE should emit callvirt"
+        )
+
+    def test_closure_arity_other_than_one_rejected(self) -> None:
+        """V1 supports arity-1 closures only; arity-2 should error."""
+        program = IrProgram(entry_label="Main")
+        program.add_instruction(
+            IrInstruction(IrOp.LABEL, [IrLabel("_lambda_0")])
+        )
+        program.add_instruction(IrInstruction(IrOp.RET, []))
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("Main")]))
+        program.add_instruction(
+            IrInstruction(
+                IrOp.MAKE_CLOSURE,
+                [
+                    IrRegister(1),
+                    IrLabel("_lambda_0"),
+                    IrImmediate(0),
+                ],
+            )
+        )
+        program.add_instruction(
+            IrInstruction(
+                IrOp.APPLY_CLOSURE,
+                [
+                    IrRegister(1),
+                    IrRegister(1),
+                    IrImmediate(2),  # arity 2
+                    IrRegister(2),
+                    IrRegister(3),
+                ],
+            )
+        )
+        program.add_instruction(IrInstruction(IrOp.RET, []))
+        with pytest.raises(CILBackendError, match=r"arity-1"):
+            lower_ir_to_cil_bytecode(
+                program,
+                CILBackendConfig(closure_free_var_counts={"_lambda_0": 0}),
+            )
+
+    def test_closure_free_var_counts_unknown_region_rejected(self) -> None:
+        program = IrProgram(entry_label="Main")
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("Main")]))
+        program.add_instruction(IrInstruction(IrOp.RET, []))
+        with pytest.raises(CILBackendError, match=r"don't exist"):
+            lower_ir_to_cil_bytecode(
+                program,
+                CILBackendConfig(closure_free_var_counts={"_ghost": 1}),
+            )
+
+    def test_make_closure_capture_count_mismatch_rejected(self) -> None:
+        program = IrProgram(entry_label="Main")
+        program.add_instruction(
+            IrInstruction(IrOp.LABEL, [IrLabel("_lambda_0")])
+        )
+        program.add_instruction(IrInstruction(IrOp.RET, []))
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("Main")]))
+        program.add_instruction(
+            IrInstruction(
+                IrOp.MAKE_CLOSURE,
+                [
+                    IrRegister(1),
+                    IrLabel("_lambda_0"),
+                    IrImmediate(2),
+                    IrRegister(2),
+                ],
+            )
+        )
+        program.add_instruction(IrInstruction(IrOp.RET, []))
+        with pytest.raises(CILBackendError, match=r"num_captured=2"):
+            lower_ir_to_cil_bytecode(
+                program,
+                CILBackendConfig(closure_free_var_counts={"_lambda_0": 2}),
+            )
