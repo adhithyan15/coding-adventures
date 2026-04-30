@@ -1,5 +1,64 @@
 # Changelog
 
+## 0.9.0 — 2026-04-30 — closure-returning closures (3-deep curry)
+
+Closure-returning closures now run end-to-end on real `dotnet`:
+
+```
+(define (mk2 a) (lambda (b) (lambda (c) (+ a (+ b c)))))
+(((mk2 10) 20) 12)
+→ 42
+```
+
+### Bug
+
+`IClosure::Apply` returned `int32` so the inner closure ref
+returned by the outer lambda body got truncated to int.  Caller's
+second `APPLY_CLOSURE` then dereferenced garbage and SIGSEGV'd.
+
+### Fix
+
+`IClosure::Apply` now returns `object` polymorphically.
+Implications:
+
+1. **IClosure interface** — `Apply` returns `object`, not `int32`.
+2. **Closure_<name>::Apply** — returns `object`.  The body's RET
+   adapter:
+   - obj-typed body r1 → `ldloc obj_local_for[1]; ret`
+   - int-typed body r1 → `ldloc 1; box [System.Int32]; ret`
+3. **APPLY_CLOSURE caller** — forward-scans the dst register's
+   next obj-source use:
+   - dst flows to obj op (next APPLY_CLOSURE closure_reg, CDR,
+     etc) → `stloc obj_local_for[dst]`
+   - dst flows to int op (or RET, or never read) →
+     `unbox.any [System.Int32]; stloc dst`
+
+### Supporting changes
+
+- New `system_int32_typeref_token()` on the token provider
+  Protocol + `SequentialCILTokenProvider` (returns `0x01000003`).
+- `cli-assembly-writer` emits a third TypeRef row for
+  `[System.Runtime]System.Int32` so the box opcode has a token
+  to reference.  Always emitted (small cost, deterministic).
+- `_classify_function_return_types` now classifies closure
+  regions too (was previously skipped on the
+  always-int32-per-IClosure assumption).  Each closure body's
+  actual return type drives the adapter's box-vs-no-box choice.
+- `_lower_closure_region` now uses the typed-pool + ctx (was
+  int-only), so closure body MAKE_CLOSURE inside a lambda body
+  correctly stloc's into the obj slot.
+- `_collect_object_typed_registers` back-prop now skips
+  registers that are body-written (e.g. r1 reused for both an
+  obj closure return from CALL and an int from APPLY_CLOSURE).
+  Without the skip, the back-prop would falsely mark a later
+  int source as obj.
+- New `_apply_closure_dst_used_as_obj` forward-scan helper —
+  flow-sensitive disambiguation for APPLY_CLOSURE dst.
+
+### Tests
+
+All 97 ir-to-cil-bytecode tests still pass; coverage 91%.
+
 ## 0.8.0 — 2026-04-30 — per-region parameter typing + obj-aware CALL marshalling
 
 Closes the heap-program runtime gap from Phase 3c.  Twig source

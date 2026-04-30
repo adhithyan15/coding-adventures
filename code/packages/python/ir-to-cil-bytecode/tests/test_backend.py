@@ -870,7 +870,10 @@ class TestClosureLoweringStructure:
         assert apply.name == "Apply"
         assert apply.is_abstract is True
         assert apply.is_instance is True
-        assert apply.return_type == "int32"
+        # TW03 Phase 3 follow-up: Apply now returns ``object`` (was
+        # ``int32``) so closure-returning closures can carry their
+        # inner closure ref through the call boundary.
+        assert apply.return_type == "object"
         assert apply.parameter_types == ("int32",)
 
     def test_closure_class_has_field_per_capture(self) -> None:
@@ -902,7 +905,10 @@ class TestClosureLoweringStructure:
         apply = next(m for m in closure.methods if m.name == "Apply")
         assert apply.is_instance is True
         assert apply.is_abstract is False
-        assert apply.return_type == "int32"
+        # TW03 Phase 3 follow-up: Apply now returns ``object`` (was
+        # ``int32``) so closure-returning closures can carry their
+        # inner closure ref through the call boundary.
+        assert apply.return_type == "object"
         assert apply.parameter_types == ("int32",)
 
     def test_lambda_region_omitted_from_main_methods(self) -> None:
