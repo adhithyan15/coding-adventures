@@ -90,22 +90,39 @@ Phase 2:
 - No backend lowering yet — that lives in 3b/3c/3d.
 - This unblocks parallel work on JVM03, CLR03, BEAM03.
 
-### Phase 3b — JVM heap primitives (JVM03)
+### Phase 3b — JVM heap primitives (JVM03).  **Shipped.**
 
-- Generate `coding_adventures.twig.runtime.Cons` (final fields
-  `head`, `tail`; both `Object`), `Symbol` (`String name`,
-  static intern map), and a `Nil` sentinel class.
-- Lower `MAKE_CONS` to `new Cons; dup; aload head; aload tail;
-  invokespecial Cons.<init>(LObject;LObject;)V`, then
-  `aastore __ca_objregs[dst]`.
-- Lower `CAR` / `CDR` to `aaload __ca_objregs[src];
-  getfield Cons.head/tail; aastore __ca_objregs[dst]`.
-- Lower `IS_NULL` to identity check against the per-program
-  `NIL` static field; `IS_PAIR` and `IS_SYMBOL` to
-  `instanceof` against `Cons` / `Symbol`.
-- `MAKE_SYMBOL` calls a static `Symbol.intern(String)` that
-  hashes into a `HashMap<String,Symbol>`.
-- `LOAD_NIL` reads the per-program `NIL` static field.
+- `coding_adventures.twig.runtime.Cons` (final fields `int head`
+  + `Object tail`), `Symbol` (`String name`, static
+  HashMap-backed `intern(String) Symbol`), and a `Nil` singleton
+  sentinel — all auto-included in the multi-class JAR by
+  `lower_ir_to_jvm_classes` whenever a heap opcode appears.
+- `MAKE_CONS` lowers to `new Cons; dup; iload head; aload tail;
+  invokespecial Cons.<init>(I,LObject;)V; aastore
+  __ca_objregs[dst]`.
+- `CAR` lowers to `aaload __ca_objregs[src]; checkcast Cons;
+  getfield head:I → __ca_regs[dst]`; `CDR` mirrors with
+  `getfield tail:Object → __ca_objregs[dst]`.
+- `IS_NULL` lowers to an `if_acmpne` identity test against
+  `Nil.INSTANCE`; `IS_PAIR` / `IS_SYMBOL` lower to
+  `instanceof Cons` / `instanceof Symbol`.  All three write
+  their 0/1 result into `__ca_regs[dst]` so it feeds straight
+  into `BRANCH_Z`.
+- `MAKE_SYMBOL` lowers to `ldc "name"; invokestatic
+  Symbol.intern(String) Symbol; aastore __ca_objregs[dst]`.
+- `LOAD_NIL` lowers to `getstatic Nil.INSTANCE; aastore
+  __ca_objregs[dst]`.
+
+End-to-end proof on real `java`:
+`(length (cons 1 (cons 2 (cons 3 nil)))) → 3` runs and exits
+with stdout = `\x03`.
+
+Limitation (intentional, scoped to a follow-up):
+`Cons.head` is typed `int` so the spec acceptance criterion
+(list-of-ints) works without typed-register inference for cons
+head slots.  Heterogeneous cells (`(cons 'foo nil)`) need a
+follow-up that widens `head` to `Object` with autoboxing and
+threads typing for the head-read site.
 
 ### Phase 3c — CLR heap primitives (CLR03)
 

@@ -1,5 +1,73 @@
 # ir-to-jvm-class-file
 
+## 0.10.0 — 2026-04-30 — TW03 Phase 3b (heap primitives on real java)
+
+Implements the JVM-side lowering for the eight TW03 Phase 3a heap
+opcodes (`MAKE_CONS`, `CAR`, `CDR`, `IS_NULL`, `IS_PAIR`,
+`MAKE_SYMBOL`, `IS_SYMBOL`, `LOAD_NIL`).  A program that uses any
+heap opcode now compiles to a multi-class JAR that runs on stock
+`java` and produces correct list-walking output.
+
+### Added — three runtime classes auto-included by the multi-class lowering
+
+* `coding_adventures.twig.runtime.Cons` — `int head; Object tail`
+  pair.  Phase 3b v1 targets list-of-ints (the spec acceptance
+  criterion); a follow-up phase widens `head` to `Object` once
+  typed-register inference covers the head slot.  Built by
+  `build_cons_class_artifact()`.
+* `coding_adventures.twig.runtime.Symbol` — interned identifier;
+  `String name` plus a `static HashMap<String,Symbol>`-backed
+  `intern(String) Symbol` method.  Single-threaded — Twig has no
+  concurrency surface today.  Built by
+  `build_symbol_class_artifact()`.
+* `coding_adventures.twig.runtime.Nil` — singleton sentinel via
+  `public static final Nil INSTANCE` and a private no-arg ctor.
+  Built by `build_nil_class_artifact()`.
+
+### Added — eight opcode lowerings
+
+| Opcode | Lowering shape |
+|---|---|
+| `MAKE_CONS dst, head, tail` | `new Cons; dup; iload head; aload tail; invokespecial Cons.<init>(I,LObject;)V; aastore __ca_objregs[dst]` |
+| `CAR dst, src` | `aaload __ca_objregs[src]; checkcast Cons; getfield head:I → __ca_regs[dst]` |
+| `CDR dst, src` | `aaload __ca_objregs[src]; checkcast Cons; getfield tail:Object → __ca_objregs[dst]` |
+| `IS_NULL dst, src` | `aaload __ca_objregs[src]; getstatic Nil.INSTANCE; if_acmpne; iconst_1 / iconst_0 → __ca_regs[dst]` |
+| `IS_PAIR dst, src` | `aaload __ca_objregs[src]; instanceof Cons → __ca_regs[dst]` |
+| `IS_SYMBOL dst, src` | `aaload __ca_objregs[src]; instanceof Symbol → __ca_regs[dst]` |
+| `MAKE_SYMBOL dst, name_label` | `ldc "name"; invokestatic Symbol.intern(String) Symbol; aastore __ca_objregs[dst]` |
+| `LOAD_NIL dst` | `getstatic Nil.INSTANCE; aastore __ca_objregs[dst]` |
+
+### Added — multi-class auto-include
+
+`lower_ir_to_jvm_classes` now scans the program for any heap
+opcode and appends `Cons`, `Symbol`, `Nil` artifacts to the
+returned `JVMMultiClassArtifact` when any are found.  Closure-free
+heap-free programs see zero extra emission — the existing
+single-class flow is unchanged.
+
+### Added — `__ca_objregs` triggered by heap ops
+
+The parallel `Object[] __ca_objregs` static field (introduced for
+closures in Phase 2c.5) is now also triggered by any heap opcode.
+Cons / Symbol / Nil values share the slot pool with closures.
+
+### Test coverage
+
+* 9 new unit tests covering each runtime class layout and each
+  opcode's lowering byte fingerprints.
+* New real-`java` end-to-end test:
+  `(length (cons 1 (cons 2 (cons 3 nil)))) → 3` runs on real
+  `java` and exits with stdout = `\x03`.
+* All 98 tests pass; coverage 93%.
+
+### Limitations (intentional, scoped to follow-up)
+
+* `Cons.head` is typed `int` (matches list-of-ints).
+  Heterogeneous cells (`(cons 'foo nil)`, nested cons) need a
+  follow-up phase that widens `head` to `Object` and threads
+  Integer boxing through the type-aware register pool.
+* `Symbol.intern` uses a plain `HashMap` (single-threaded only).
+
 ## 0.9.0 — 2026-04-29 — JVM02 Phase 2c.5 (typed register pool, end-to-end)
 
 Closes the loop on JVM02 Phase 2 closures.  The headline
