@@ -126,6 +126,28 @@ class TestPrologVMStress:
             {"Chosen": atom("first"), "Fallback": atom("none")},
         ]
 
+    def test_call_n_meta_calls_run_through_vm(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            pick(tea).
+            pick(cake).
+            pair(Name, Flavor) :-
+                call(pick, Name),
+                call(member, Flavor, [sweet, savory]).
+
+            ?- call(pair, Name, Flavor).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert [answer.as_dict() for answer in answers] == [
+            {"Name": atom("tea"), "Flavor": atom("sweet")},
+            {"Name": atom("tea"), "Flavor": atom("savory")},
+            {"Name": atom("cake"), "Flavor": atom("sweet")},
+            {"Name": atom("cake"), "Flavor": atom("savory")},
+        ]
+
     def test_list_stdlib_predicates_run_through_vm(self) -> None:
         compiled = compile_swi_prolog_source(
             """

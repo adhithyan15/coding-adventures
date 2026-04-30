@@ -11,7 +11,8 @@ ordinary logic goal expressions.
 ## What It Adds
 
 - `callo(goal)`
-- `calltermo(term_goal)` for executing reified callable goal terms
+- `calltermo(term_goal, *extra_args)` for executing reified callable goal terms
+  and Prolog-style `call/N` argument extension
 - `onceo(goal)`
 - `cuto()` as the library form of Prolog `!/0`
 - `noto(goal)` for negation as failure

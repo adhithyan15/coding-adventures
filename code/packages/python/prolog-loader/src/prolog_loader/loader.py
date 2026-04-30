@@ -1390,7 +1390,24 @@ def _rewrite_goal_term(
             _rewrite_goal_term(term_value.args[1], resolver, module_resolvers),
         )
 
-    if term_value.functor in {_CALL, _ONCE}:
+    if term_value.functor == _CALL and term_value.args:
+        if len(term_value.args) > 1:
+            return term(
+                term_value.functor,
+                _rewrite_callable_closure(
+                    term_value.args[0],
+                    len(term_value.args) - 1,
+                    resolver,
+                    module_resolvers,
+                ),
+                *term_value.args[1:],
+            )
+        return term(
+            term_value.functor,
+            _rewrite_goal_term(term_value.args[0], resolver, module_resolvers),
+        )
+
+    if term_value.functor == _ONCE and len(term_value.args) == 1:
         return term(
             term_value.functor,
             _rewrite_goal_term(term_value.args[0], resolver, module_resolvers),
@@ -1432,6 +1449,54 @@ def _rewrite_goal_term(
     if resolved_relation.symbol == term_value.functor:
         return term_value
     return term(resolved_relation.symbol, *term_value.args)
+
+
+def _rewrite_callable_closure(
+    term_value: Term,
+    extra_arity: int,
+    resolver: RelationResolver,
+    module_resolvers: dict[Symbol, RelationResolver],
+) -> Term:
+    if isinstance(term_value, Compound):
+        qualified = _qualified_goal(term_value)
+        if qualified is not None:
+            module_name, goal_term = qualified
+            target_resolver = module_resolvers.get(module_name)
+            if target_resolver is None:
+                msg = f"module qualification references unknown module {module_name}"
+                raise ValueError(msg)
+            return _rewrite_callable_closure(
+                goal_term,
+                extra_arity,
+                target_resolver,
+                module_resolvers,
+            )
+
+    closure_arity = _callable_closure_arity(term_value, extra_arity)
+    if closure_arity is None:
+        return term_value
+
+    if isinstance(term_value, Atom):
+        resolved = resolver(Relation(symbol=term_value.symbol, arity=closure_arity))
+        if resolved.symbol == term_value.symbol:
+            return term_value
+        return atom(resolved.symbol)
+
+    if isinstance(term_value, Compound):
+        resolved = resolver(Relation(symbol=term_value.functor, arity=closure_arity))
+        if resolved.symbol == term_value.functor:
+            return term_value
+        return term(resolved.symbol, *term_value.args)
+
+    return term_value
+
+
+def _callable_closure_arity(term_value: Term, extra_arity: int) -> int | None:
+    if isinstance(term_value, Atom):
+        return extra_arity
+    if isinstance(term_value, Compound):
+        return len(term_value.args) + extra_arity
+    return None
 
 
 def _qualified_goal(term_value: Compound) -> tuple[Symbol, Term] | None:

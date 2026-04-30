@@ -1372,6 +1372,25 @@ class TestCallableTermBuiltins:
             conj(clauseo(child("bart", "homer"), body), calltermo(body)),
         ) == [term("parent", "homer", "bart")]
 
+    def test_calltermo_appends_arguments_to_callable_terms(self) -> None:
+        parent = relation("parent", 2)
+        child = var("Child")
+        family = program(
+            fact(parent("homer", "bart")),
+            fact(parent("homer", "lisa")),
+        )
+
+        assert solve_all(
+            family,
+            child,
+            calltermo("parent", "homer", child),
+        ) == [atom("bart"), atom("lisa")]
+        assert solve_all(
+            family,
+            child,
+            calltermo(term("parent", "homer"), child),
+        ) == [atom("bart"), atom("lisa")]
+
     def test_calltermo_fails_for_open_or_non_callable_terms(self) -> None:
         goal = var("Goal")
         marker = var("Marker")
@@ -1713,6 +1732,13 @@ class TestPredicateMetadataBuiltins:
 
         assert solve_all(program(), arity, current_predicateo("calltermo", arity)) == [
             num(1),
+            num(2),
+            num(3),
+            num(4),
+            num(5),
+            num(6),
+            num(7),
+            num(8),
         ]
 
     def test_predicate_propertyo_reports_source_properties(self) -> None:
@@ -1736,7 +1762,7 @@ class TestPredicateMetadataBuiltins:
         prop = var("Property")
 
         properties = set(
-            solve_all(program(), prop, predicate_propertyo("calltermo", 1, prop)),
+            solve_all(program(), prop, predicate_propertyo("calltermo", 3, prop)),
         )
 
         assert atom("defined") in properties

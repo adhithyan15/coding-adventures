@@ -263,7 +263,12 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
     if goal.relation.arity == 4 and name in quaternary_list_builtins:
         return quaternary_list_builtins[name](*args)
 
-    if name == "call" and goal.relation.arity == 1:
+    if name == "call" and 1 <= goal.relation.arity <= 8:
+        if goal.relation.arity > 1:
+            extended_call = _extend_callable_term(args[0], args[1:])
+            if extended_call is None:
+                return calltermo(args[0], *args[1:])
+            return _adapt_callable_goal(extended_call)
         return _adapt_callable_goal(args[0])
     if name == "phrase" and goal.relation.arity == 2:
         try:
@@ -546,6 +551,30 @@ def _adapt_callable_goal(term_value: Term) -> GoalExpr:
         return adapt_prolog_goal(goal_from_term(term_value))
     except TypeError:
         return calltermo(term_value)
+
+
+def _extend_callable_term(
+    callable_term: Term,
+    extra_args: tuple[Term, ...],
+) -> Term | None:
+    if isinstance(callable_term, RelationCall):
+        callable_term = callable_term.as_term()
+    if isinstance(callable_term, LogicVar):
+        return None
+    if isinstance(callable_term, Atom) and callable_term.symbol.namespace is None:
+        return term(callable_term.symbol, *extra_args)
+    if isinstance(callable_term, Compound):
+        if (
+            callable_term.functor.namespace is None
+            and callable_term.functor.name == ":"
+            and len(callable_term.args) == 2
+        ):
+            qualified_goal = _extend_callable_term(callable_term.args[1], extra_args)
+            if qualified_goal is None:
+                return None
+            return term(":", callable_term.args[0], qualified_goal)
+        return term(callable_term.functor, *callable_term.args, *extra_args)
+    return None
 
 
 def _adapt_indicator_declaration(
