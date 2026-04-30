@@ -1605,6 +1605,11 @@ actions = ["emit_rcdata_end_tag_with_whitespace_or_text"]
 
 [[transitions]]
 from = "rcdata_end_tag_whitespace"
+matcher = { literal = "/" }
+to = "rcdata_self_closing_end_tag"
+
+[[transitions]]
+from = "rcdata_end_tag_whitespace"
 matcher = { eof = true }
 to = "done"
 consume = false
@@ -1651,6 +1656,11 @@ from = "rawtext_end_tag_whitespace"
 matcher = { literal = ">" }
 to = "rawtext"
 actions = ["emit_rcdata_end_tag_with_whitespace_or_text"]
+
+[[transitions]]
+from = "rawtext_end_tag_whitespace"
+matcher = { literal = "/" }
+to = "rawtext_self_closing_end_tag"
 
 [[transitions]]
 from = "rawtext_end_tag_whitespace"
@@ -1703,6 +1713,11 @@ actions = ["emit_rcdata_end_tag_with_whitespace_or_text"]
 
 [[transitions]]
 from = "script_data_end_tag_whitespace"
+matcher = { literal = "/" }
+to = "script_data_self_closing_end_tag"
+
+[[transitions]]
+from = "script_data_end_tag_whitespace"
 matcher = { eof = true }
 to = "done"
 consume = false
@@ -1749,6 +1764,11 @@ from = "script_data_escaped_end_tag_whitespace"
 matcher = { literal = ">" }
 to = "script_data_escaped"
 actions = ["emit_rcdata_end_tag_with_whitespace_or_text"]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_whitespace"
+matcher = { literal = "/" }
+to = "script_data_escaped_self_closing_end_tag"
 
 [[transitions]]
 from = "script_data_escaped_end_tag_whitespace"
@@ -6998,6 +7018,12 @@ actions = [
   "emit_current_token",
   "emit(EOF)",
 ]
+
+[[transitions]]
+from = "before_end_tag_close"
+matcher = { literal = "/" }
+to = "before_end_tag_close"
+actions = ["parse_error(end-tag-with-trailing-solidus)"]
 
 [[transitions]]
 from = "before_end_tag_close"
