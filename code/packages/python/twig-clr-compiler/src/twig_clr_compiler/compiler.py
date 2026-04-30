@@ -160,9 +160,28 @@ _BINARY_OPS: dict[str, IrOp] = {
     ">": IrOp.CMP_GT,
 }
 
+# TW03 Phase 3e — heap-primitive builtins now compile (was rejected
+# in v1).  Each maps to its corresponding IR opcode below.  The
+# remaining rejected set is shrunk to opcodes still without a CLR
+# lowering.
 _V1_REJECTED_BUILTINS: frozenset[str] = frozenset(
-    {"cons", "car", "cdr", "null?", "pair?", "number?", "symbol?", "print"}
+    {"number?", "print"}
 )
+
+# TW03 Phase 3e — Lisp heap-primitive builtins.  Each entry maps a
+# builtin name to its IR opcode + arity so the apply-site can
+# generate a uniform call sequence.  Phase 3c's CLR backend
+# lowering will turn these into ``newobj`` / ``ldfld`` / ``isinst``
+# CIL bytecode against the auto-generated Cons / Symbol / Nil
+# TypeDefs.
+_HEAP_BUILTINS: dict[str, tuple[IrOp, int]] = {
+    "cons":    (IrOp.MAKE_CONS, 2),
+    "car":     (IrOp.CAR, 1),
+    "cdr":     (IrOp.CDR, 1),
+    "null?":   (IrOp.IS_NULL, 1),
+    "pair?":   (IrOp.IS_PAIR, 1),
+    "symbol?": (IrOp.IS_SYMBOL, 1),
+}
 
 
 # Register convention — see module docstring.
@@ -352,8 +371,9 @@ class _Compiler:
             return reg
 
         if isinstance(expr, NilLit):
+            # TW03 Phase 3e: lower nil to LOAD_NIL.
             reg = self._fresh_holding(ctx)
-            self._emit(IrOp.LOAD_IMM, reg, IrImmediate(0))
+            self._emit(IrOp.LOAD_NIL, reg)
             return reg
 
         if isinstance(expr, VarRef):
@@ -385,10 +405,10 @@ class _Compiler:
             return self._compile_anonymous_lambda(expr, ctx)
 
         if isinstance(expr, SymLit):
-            raise TwigCompileError(
-                "quoted symbols are not yet supported by the CLR "
-                "backend — see TW03 Phase 3."
-            )
+            # TW03 Phase 3e: lower 'foo / (quote foo) to MAKE_SYMBOL.
+            reg = self._fresh_holding(ctx)
+            self._emit(IrOp.MAKE_SYMBOL, reg, IrLabel(expr.name))
+            return reg
 
         msg = f"unsupported Twig form for CLR v1: {type(expr).__name__}"
         raise TwigCompileError(msg)
@@ -460,6 +480,23 @@ class _Compiler:
                     f"builtin {name!r} is not yet supported by the CLR "
                     "backend — see TW03 Phase 3 for heap primitives."
                 )
+
+            # TW03 Phase 3e — heap-primitive builtins.  Single-shape
+            # lowering: evaluate args, fresh holding reg for the
+            # result, emit the IR opcode.
+            if name in _HEAP_BUILTINS:
+                op, expected_arity = _HEAP_BUILTINS[name]
+                if len(expr.args) != expected_arity:
+                    raise TwigCompileError(
+                        f"{name!r} expects {expected_arity} arguments, "
+                        f"got {len(expr.args)}"
+                    )
+                arg_regs = [
+                    self._compile_expr(a, ctx) for a in expr.args
+                ]
+                dest = self._fresh_holding(ctx)
+                self._emit(op, dest, *arg_regs)
+                return dest
 
             if name in _BINARY_OPS:
                 if len(expr.args) != 2:
@@ -538,6 +575,7 @@ class _Compiler:
             | set(self._value_consts)
             | set(_BINARY_OPS)
             | _V1_REJECTED_BUILTINS
+            | set(_HEAP_BUILTINS)
         )
         captures = free_vars(lam, globals_)
 
