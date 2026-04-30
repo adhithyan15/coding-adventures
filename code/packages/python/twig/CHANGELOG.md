@@ -3,6 +3,55 @@
 All notable changes to this package will be documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.3.0] — 2026-04-29 (TW04 Phase 4b — module resolver)
+
+### Added
+
+- **`twig.module_resolver`** — new module that walks the import
+  graph from a named entry module and returns every reachable
+  module's parsed AST in topological order.
+
+  ```python
+  from pathlib import Path
+  from twig import resolve_modules
+
+  modules = resolve_modules(
+      "user/hello",
+      search_paths=[Path("src/")],
+  )
+  for m in modules:
+      # ``m.name``, ``m.program``, ``m.source_path``
+      compile_one(m)  # backends iterate; deps come first
+  ```
+
+- **`ResolvedModule`** dataclass — `name`, `program`,
+  `source_path` (None for the synthetic `host` module).
+
+- **Synthetic `host` module** — ``(import host)`` works without
+  a `host.tw` file; the resolver materialises a `Module` with
+  the v1 export surface (`write-byte`, `read-byte`, `exit`) on
+  demand.  Per-backend lowering (Phase 4d–4f) will intercept
+  these names and emit the runtime-specific implementations.
+
+- **Cycle detection** with full path messages —
+  ``cycle: a -> b -> c -> a`` — using a three-colour DFS so
+  the user sees exactly which edge to break.
+
+- **Path / name validation** — a file reached via the resolver
+  MUST declare `(module name)` matching the import path.
+  Single-file programs without a module declaration still work
+  through the existing direct compile-source API; the resolver
+  only governs explicit-module imports.
+
+### Tests
+
+- 17 new tests in `tests/test_module_resolver.py`:
+  happy-path single / chain / diamond / nested-path / multiple
+  search paths / re-imports; cycle (2-, 3-, self-); missing
+  entry / transitive / no-search-paths; path-name mismatches.
+- 145/145 twig tests pass; 100% coverage on
+  `module_resolver.py`; package-wide 95.58%.
+
 ## [0.2.0] — 2026-04-29 (TW04 Phase 4a — module form in parser/AST)
 
 ### Added

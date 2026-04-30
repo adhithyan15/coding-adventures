@@ -288,6 +288,11 @@ cleanly to anything.
    that takes (entry module name, search paths) and returns a
    topologically-sorted list of `(module name, AST)` pairs.
    Detects cycles, missing imports, name conflicts.
+   **Status: shipped — `twig` v0.3.0.**  Returns
+   `list[ResolvedModule]` (each carrying `name`, `program`,
+   `source_path`).  The synthetic `host` module is auto-resolved
+   without consulting the search path.  Cycle errors include
+   the full path (`a -> b -> c -> a`) for diagnosability.
 
 3. **Phase 4c — `host` module + cross-module IR ops.**  Two
    new IR ops (`HOST_CALL`, `MODULE_CALL`) — or, simpler, extend
