@@ -1,5 +1,55 @@
 # ir-to-jvm-class-file
 
+## 0.11.0 — 2026-04-30 — obj-pool caller-saves + ADD_IMM-0 obj propagation
+
+Closes the obj-pool gap left by JVM Phase 3b.  Recursive heap
+programs (e.g. `(length (cons 1 (cons 2 (cons 3 nil))))`) now run
+correctly on real `java`.
+
+### Fix — obj-pool caller-saves around CALL
+
+The JVM01 caller-saves convention snapshots `__ca_regs` (int pool)
+into JVM locals before each CALL and restores it after, so
+recursion through int registers works.  But the obj pool
+(`__ca_objregs` — cons cells, symbols, nil sentinels, closure
+refs) was uncovered.  Recursion through any obj-typed register
+clobbered the caller's reference when the recursive call's body
+wrote the same slot.
+
+This change extends the existing pattern to the obj pool:
+
+- `_emit_caller_save_objregs` snapshots `__ca_objregs[0..N-1]`
+  into JVM ref locals `N..2N-1` (using `aload`/`astore`).
+- `_emit_caller_restore_objregs` writes them back, skipping
+  index 1 (same convention as the int-pool restore — closure-
+  returning functions put the result in `__ca_objregs[1]`).
+- Triggered only when `_needs_objregs` is True.  Pure-int
+  programs see zero extra emission.
+- `max_locals` doubles to `2 * reg_count` when triggered.
+
+### Fix — ADD_IMM-0 (move idiom) propagates obj slot
+
+Twig compilers use `ADD_IMM dst, src, 0` as the canonical
+register-move idiom.  Pre-fix it only copied the int half of the
+register, so any object reference in the source's obj slot was
+lost.  This worked *by accident* — `make_adder` happened to write
+its closure to a holding reg whose index matched the one `_start`
+then read.  Once obj-pool caller-saves landed, that accident
+broke.
+
+Fix: when `_needs_objregs` is True and the immediate is 0, also
+emit `__ca_objregs[dst] = __ca_objregs[src]` after the int copy.
+Net: `ADD_IMM dst, src, 0` is now a true register-to-register
+copy that propagates BOTH int and obj slots.
+
+### Tests
+
+All 113 ir-to-jvm-class-file tests still pass; coverage 93%.  The
+previously xfail-strict
+`twig_jvm_compiler.test_real_jvm.test_heap_list_of_ints_length`
+now passes (XPASS unblocks; xfail marker removed in
+twig-jvm-compiler v0.4.0).
+
 ## 0.10.0 — 2026-04-30 — TW03 Phase 3b (heap primitives on real java)
 
 Implements the JVM-side lowering for the eight TW03 Phase 3a heap

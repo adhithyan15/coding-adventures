@@ -195,27 +195,19 @@ def test_closure_let_bound() -> None:
 
 
 @requires_java
-@pytest.mark.xfail(
-    strict=True,
-    reason=(
-        "JVM Phase 3b limitation: caller-saves on CALL only cover "
-        "__ca_regs (int pool), not __ca_objregs (object pool).  "
-        "Recursive `length` re-enters the function and the object "
-        "register holding the cons ref is clobbered before the "
-        "recursive call returns.  Will auto-flip to passing once a "
-        "follow-up extends caller-saves to the obj pool — same "
-        "shape as the JVM01 fix that unblocked recursion through "
-        "int registers."
-    ),
-)
 def test_heap_list_of_ints_length() -> None:
     """``(length (cons 1 (cons 2 (cons 3 nil)))) → 3``.
 
-    The headline TW03 Phase 3 acceptance criterion.  Currently
-    xfail because of the obj-pool caller-saves limitation noted
-    above; the simpler non-recursive heap test
-    (`test_heap_car_of_singleton_returns_int`) does pass and
-    proves the ir-emit path works."""
+    The headline TW03 Phase 3 acceptance criterion — Twig source
+    with cons / cdr / null? + a recursive define compiles to a
+    multi-class JAR and runs end-to-end on real ``java``,
+    producing stdout = ``b'\\x03'``.
+
+    Was xfail-strict in JVM Phase 3b because the obj-pool
+    caller-saves were missing (recursion clobbered the cons ref
+    in the obj register).  Now passes after the obj-pool
+    caller-saves landed (mirrors the JVM01 fix that unblocked
+    recursion through int registers)."""
     src = """
         (define (length xs)
           (if (null? xs) 0 (+ 1 (length (cdr xs)))))

@@ -95,6 +95,12 @@ _OP_ANEWARRAY = 0xBD       # reserved for closure pool init
 _OP_ALOAD_0 = 0x2A         # load `this` (or any aload short form)
 _OP_ALOAD_1 = 0x2B         # load arg slot 1 (used in closure Apply forwarder)
 _OP_ALOAD_2 = 0x2C         # load arg slot 2 (used in Cons ctor for tail param)
+_OP_ALOAD_3 = 0x2D         # load arg slot 3 (used in obj-pool caller-saves)
+_OP_ALOAD = 0x19           # generic aload (uses next byte as local index)
+_OP_ASTORE_0 = 0x4B        # store ref to local 0 (used in obj-pool caller-saves)
+_OP_ASTORE_2 = 0x4D        # store ref to local 2
+_OP_ASTORE_3 = 0x4E        # store ref to local 3
+_OP_ASTORE = 0x3A          # generic astore (uses next byte as local index)
 _OP_AASTORE = 0x53
 _OP_AALOAD = 0x32
 _OP_NOP = 0x00
@@ -482,6 +488,10 @@ class _JvmClassLowerer:
         self._helper_load_word = "__ca_loadWord"
         self._helper_store_word = "__ca_storeWord"
         self._helper_syscall = "__ca_syscall"
+        # Set in ``lower()`` once we know if any heap or closure op
+        # appears.  Default False so methods that don't need obj-pool
+        # caller-saves emit the original int-only sequence.
+        self._needs_objregs = False
 
     def lower(self) -> JVMClassArtifact:
         self._validate_class_name()
@@ -508,6 +518,9 @@ class _JvmClassLowerer:
             i.opcode in _HEAP_OPCODES for i in self.program.instructions
         )
         needs_objregs = has_closures or uses_heap
+        # Stash on self so CALL emission can pick the right caller-saves
+        # discipline (int-only vs int + obj).
+        self._needs_objregs = needs_objregs
 
         fields = [
             _FieldSpec(
@@ -827,6 +840,79 @@ class _JvmClassLowerer:
             self._emit_push_int(builder, reg_idx)
             self._emit_iload(builder, reg_idx)
             builder.emit_opcode(_OP_IASTORE)
+
+    # ------------------------------------------------------------------
+    # TW03 Phase 3 follow-up — caller-saves for the obj register pool
+    # ------------------------------------------------------------------
+    #
+    # The JVM01 caller-saves above only snapshot the int register pool
+    # (``__ca_regs``).  Programs that use heap primitives or closures
+    # ALSO have an object register pool (``__ca_objregs``) holding cons
+    # cells, symbols, nil sentinels, and closure refs.  Without obj-pool
+    # caller-saves, recursion through any heap-typed register (e.g.
+    # ``length`` walking a cons list with the tail in an obj-typed reg)
+    # clobbers the caller's obj reg when the recursive call's body
+    # writes the same slot.
+    #
+    # The fix mirrors the int-pool pattern but uses JVM local slots
+    # ``reg_count..2*reg_count-1`` and the ``aload``/``astore`` +
+    # ``aaload``/``aastore`` opcode pair (verifier types these locals
+    # as ``Object`` independently of the int locals 0..reg_count-1).
+    #
+    # Like the int pool, the restore skips index 1 — the callee's
+    # return value lives in ``__ca_regs[1]`` (an int).  The obj pool
+    # has no analogous "return value" slot today; restoring all entries
+    # is correct because closure/heap calls return ints.
+
+    def _emit_caller_save_objregs(
+        self, builder: _BytecodeBuilder, reg_count: int
+    ) -> None:
+        """Snapshot ``__ca_objregs[0..reg_count-1]`` → JVM ref locals
+        ``reg_count..2*reg_count-1``."""
+        for reg_idx in range(reg_count):
+            builder.emit_u2_instruction(
+                _OP_GETSTATIC,
+                self._field_ref(self._objreg_field, _DESC_OBJECT_ARRAY),
+            )
+            self._emit_push_int(builder, reg_idx)
+            builder.emit_opcode(_OP_AALOAD)
+            self._emit_astore(builder, reg_count + reg_idx)
+
+    def _emit_caller_restore_objregs(
+        self, builder: _BytecodeBuilder, reg_count: int
+    ) -> None:
+        """Write the saved JVM ref locals back into ``__ca_objregs``.
+
+        Skips index 1 — same convention as the int-pool restore.
+        Functions that return an object reference (e.g. ``make_adder``
+        returning a closure) put the result in ``__ca_objregs[1]``,
+        and we want the caller to see the new value, not the
+        saved-pre-call one.
+        """
+        for reg_idx in range(reg_count):
+            if reg_idx == 1:
+                continue  # preserve callee's object return value
+            builder.emit_u2_instruction(
+                _OP_GETSTATIC,
+                self._field_ref(self._objreg_field, _DESC_OBJECT_ARRAY),
+            )
+            self._emit_push_int(builder, reg_idx)
+            self._emit_aload(builder, reg_count + reg_idx)
+            builder.emit_opcode(_OP_AASTORE)
+
+    def _emit_aload(self, builder: _BytecodeBuilder, index: int) -> None:
+        """Load an object reference from JVM local slot ``index``."""
+        if 0 <= index <= 3:
+            builder.emit_opcode(_OP_ALOAD_0 + index)
+        else:
+            builder.emit_u1_instruction(_OP_ALOAD, index)
+
+    def _emit_astore(self, builder: _BytecodeBuilder, index: int) -> None:
+        """Store an object reference into JVM local slot ``index``."""
+        if 0 <= index <= 3:
+            builder.emit_opcode(_OP_ASTORE_0 + index)
+        else:
+            builder.emit_u1_instruction(_OP_ASTORE, index)
 
     # ------------------------------------------------------------------
     # JVM02 Phase 2c — closure op emission (structural)
@@ -1629,15 +1715,18 @@ class _JvmClassLowerer:
         self._emit_callable_body(builder, region, reg_count)
 
         descriptor = "(" + "I" * total_arity + ")I"
+        # max_locals = total_arity (for ldarg) + caller-save snapshot
+        # storage (reg_count for int pool, +reg_count again for the obj
+        # pool when the program uses heap/closures — see
+        # _emit_caller_save_objregs).
+        snapshot_locals = (2 * reg_count) if self._needs_objregs else reg_count
         return _MethodSpec(
             access_flags=ACC_PUBLIC | ACC_STATIC,
             name=region.name,
             descriptor=descriptor,
             code=builder.assemble(),
             max_stack=16,
-            # max_locals = total_arity (for ldarg) + reg_count (for
-            # JVM01 caller-saves snapshots used inside the body).
-            max_locals=total_arity + reg_count,
+            max_locals=total_arity + snapshot_locals,
         )
 
     def _emit_jvm_iload_arg(
@@ -1689,17 +1778,18 @@ class _JvmClassLowerer:
             if region.name == self.program.entry_label
             else _ACC_PRIVATE | ACC_STATIC
         )
+        # JVM01: int-pool caller-saves uses JVM locals 0..reg_count-1.
+        # TW03 Phase 3 follow-up: obj-pool caller-saves additionally
+        # uses locals reg_count..2*reg_count-1.  Reserve the extra
+        # space only when the obj pool is actually in play.
+        max_locals = (2 * reg_count) if self._needs_objregs else reg_count
         return _MethodSpec(
             access_flags=access_flags,
             name=region.name,
             descriptor=_DESC_NOARGS_INT,
             code=code,
             max_stack=16,
-            # JVM01: caller-saves convention uses JVM locals
-            # 0..reg_count-1 as snapshot storage across CALL
-            # boundaries.  Reserve at least ``reg_count`` locals so
-            # the JVM verifier accepts the method.
-            max_locals=reg_count,
+            max_locals=max_locals,
         )
 
     def _emit_region_instructions(
@@ -1884,6 +1974,40 @@ class _JvmClassLowerer:
                     _OP_INVOKESTATIC,
                     self._method_ref(self._helper_reg_set, _DESC_INT_INT_TO_VOID),
                 )
+                # TW03 Phase 3 follow-up: ``ADD_IMM dst, src, 0`` is
+                # the canonical register-move idiom in our compilers
+                # (twig-jvm-compiler emits it for things like closure
+                # propagation: ``ADD_IMM r1, r11, 0`` to move a ref
+                # into the return slot).  Without obj-slot propagation
+                # the move only copies the int half of the register
+                # and any object reference held in the source's obj
+                # slot is lost — which broke closure-returning
+                # functions once the obj-pool caller-saves landed.
+                # Mirror the int copy on the obj pool whenever heap
+                # or closure ops are in play.  Net: the move idiom now
+                # propagates BOTH int and obj slots, making ``ADD_IMM
+                # dst, src, 0`` a true register-to-register copy.
+                if (
+                    self._needs_objregs
+                    and instruction.opcode == IrOp.ADD_IMM
+                    and imm.value == 0
+                ):
+                    builder.emit_u2_instruction(
+                        _OP_GETSTATIC,
+                        self._field_ref(
+                            self._objreg_field, _DESC_OBJECT_ARRAY,
+                        ),
+                    )
+                    self._emit_push_int(builder, dst.index)
+                    builder.emit_u2_instruction(
+                        _OP_GETSTATIC,
+                        self._field_ref(
+                            self._objreg_field, _DESC_OBJECT_ARRAY,
+                        ),
+                    )
+                    self._emit_push_int(builder, src.index)
+                    builder.emit_opcode(_OP_AALOAD)
+                    builder.emit_opcode(_OP_AASTORE)
                 continue
 
             if instruction.opcode == IrOp.NOT:
@@ -1983,6 +2107,15 @@ class _JvmClassLowerer:
                 # private to each invocation — this is what makes
                 # recursion work.
                 self._emit_caller_save_registers(builder, reg_count)
+                # TW03 Phase 3 follow-up — also snapshot the obj pool
+                # when the program uses heap primitives or closures.
+                # Without this, recursion through any obj-typed register
+                # (e.g. ``length`` walking a cons list) clobbers the
+                # caller's reference when the recursive call writes the
+                # same slot.  This is the obj-pool analogue of the JVM01
+                # caller-saves fix that unblocked int-register recursion.
+                if self._needs_objregs:
+                    self._emit_caller_save_objregs(builder, reg_count)
                 self._emit_push_int(builder, 1)
                 builder.emit_u2_instruction(
                     _OP_INVOKESTATIC,
@@ -1992,6 +2125,8 @@ class _JvmClassLowerer:
                     _OP_INVOKESTATIC,
                     self._method_ref(self._helper_reg_set, _DESC_INT_INT_TO_VOID),
                 )
+                if self._needs_objregs:
+                    self._emit_caller_restore_objregs(builder, reg_count)
                 self._emit_caller_restore_registers(builder, reg_count)
                 continue
 

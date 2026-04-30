@@ -1,5 +1,27 @@
 # Changelog — twig-jvm-compiler
 
+## [0.4.0] — 2026-04-30 — recursive heap programs flip to passing
+
+The previously xfail-strict
+`test_heap_list_of_ints_length` now passes — the headline TW03
+Phase 3 acceptance criterion runs end-to-end on real `java`:
+
+```
+(define (length xs)
+  (if (null? xs) 0 (+ 1 (length (cdr xs)))))
+(length (cons 1 (cons 2 (cons 3 nil))))
+→ 3   (stdout = b'\x03')
+```
+
+Was unblocked by ir-to-jvm-class-file v0.11.0 — obj-pool
+caller-saves around CALL + ADD_IMM-0 obj-slot propagation.
+
+### Removed
+
+- The `xfail(strict=True)` decorator on
+  `test_heap_list_of_ints_length`.  XPASS is no longer the
+  result — it's an honest pass.
+
 ## [0.3.0] — 2026-04-30 — TW03 Phase 3e (heap primitives from Twig source)
 
 Twig source containing `cons` / `car` / `cdr` / `null?` / `pair?` /
