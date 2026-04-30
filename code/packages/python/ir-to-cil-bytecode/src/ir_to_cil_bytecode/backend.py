@@ -71,6 +71,10 @@ class CILBackendConfig:
     method_max_stack: int = 16
     call_register_count: int | None = 0
     closure_free_var_counts: dict[str, int] = field(default_factory=dict)
+    # Multi-arity follow-up: per-closure explicit arg count.
+    # Defaults to 1 for back-compat; the Twig CLR frontend
+    # populates it from each lambda's source-level param count.
+    closure_explicit_arities: dict[str, int] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -1560,12 +1564,13 @@ class _RegionEmitContext:
 # the BEAM backend:
 #
 #   r2..r{1+num_free}                           — captures
-#   r{2+num_free}                               — explicit arg (arity-1)
+#   r{2+num_free}..r{1+num_free+explicit_arity} — explicit args
 #
 # The Apply method's prologue copies captures from instance fields
-# and the explicit arg from ldarg.1 into those slots so the rest of
-# the IR body's lowering works unmodified.
-_CLR_CLOSURE_EXPLICIT_ARITY: int = 1
+# and explicit args from the int32[] parameter (ldarg.1 + ldelem.i4)
+# into those slots so the rest of the IR body's lowering works
+# unmodified.  ``explicit_arity`` is per-closure, populated by the
+# Twig CLR frontend from each lambda's source-level param count.
 _REG_PARAM_BASE: int = 2
 
 
@@ -1610,9 +1615,19 @@ def _lower_closure_region(
         builder.emit_token_instruction(0x7B, field_token)  # ldfld
         builder.emit_stloc(_REG_PARAM_BASE + i)
 
-    # The single explicit arg (param 1) → r{2+num_free}.
-    builder.emit_ldarg(1)
-    builder.emit_stloc(_REG_PARAM_BASE + num_free)
+    # Multi-arity follow-up: explicit args arrive in an ``int32[]``
+    # parameter (ldarg.1).  Extract each arg via
+    # ``ldarg.1; ldc.i4 i; ldelem.i4`` and stloc into the
+    # captures-first slot ``r{2+num_free+i}``.  Per-closure arity
+    # comes from config.closure_explicit_arities (defaults to 1
+    # for back-compat with single-arg closures).
+    explicit_arity = config.closure_explicit_arities.get(region.name, 1)
+    for i in range(explicit_arity):
+        builder.emit_ldarg(1)            # int32[] args param
+        builder.emit_ldc_i4(i)           # index
+        # ldelem.i4 — opcode 0x94, no operand.
+        builder.emit_opcode(0x94)
+        builder.emit_stloc(_REG_PARAM_BASE + num_free + i)
 
     # Body emission.  RET at the end will use ctx.return_type to
     # pick int vs obj slot.  For obj-returning closures the body
@@ -1661,7 +1676,11 @@ def _lower_closure_region(
         max_stack=max(config.method_max_stack, 2),
         local_types=local_types,
         return_type="object",
-        parameter_types=("int32",),
+        # Multi-arity follow-up: parameter is now int32[] (was int32),
+        # matching the IClosure interface contract.  Closures of any
+        # arity share this single signature; the body's prologue
+        # extracts individual args via ldelem.i4.
+        parameter_types=("int32[]",),
         is_instance=True,
     )
 
@@ -1684,6 +1703,11 @@ def _build_closure_extra_types(
     # obj-returning closures return the ref directly, and
     # APPLY_CLOSURE callers unbox.any back to int32 when the dst
     # register is int-typed.
+    # Multi-arity follow-up: IClosure.Apply takes ``int32[]`` (was
+    # ``int32``) so closures of any arity share a single uniform
+    # call site.  The closure subclass's Apply prologue extracts
+    # individual args via ``ldelem.i4`` indexed loads.  Mirrors
+    # JVM's IClosure.apply([I)I shape.
     iclosure = CILTypeArtifact(
         name="IClosure",
         namespace="CodingAdventures",
@@ -1696,7 +1720,7 @@ def _build_closure_extra_types(
                 max_stack=0,
                 local_types=(),
                 return_type="object",
-                parameter_types=("int32",),
+                parameter_types=("int32[]",),
                 is_instance=True,
                 is_abstract=True,
             ),
@@ -2145,11 +2169,24 @@ def _emit_instruction(
         return
 
     if instruction.opcode == IrOp.APPLY_CLOSURE:
-        # APPLY_CLOSURE dst, closure_reg, num_args, arg0
-        # → ldloc closure; ldloc arg0;
-        #   callvirt instance int32 IClosure::Apply(int32);
-        #   stloc dst
-        # v1 supports exactly arity-1.
+        # APPLY_CLOSURE dst, closure_reg, num_args, arg0, ...
+        # →
+        #   ldloc closure;
+        #   ldc.i4 num_args;
+        #   newarr [System.Int32];        // empty int32[num_args]
+        #   <for each arg i:>
+        #     dup;
+        #     ldc.i4 i;
+        #     ldloc arg_i;
+        #     stelem.i4;
+        #   callvirt instance object IClosure::Apply(int32[]);
+        #   <unbox.any/stloc-obj per dst typing>
+        #
+        # Multi-arity follow-up: the IClosure interface's Apply now
+        # takes ``int32[]`` so a single uniform call site supports
+        # any arity.  The closure subclass's prologue extracts each
+        # arg via ``ldelem.i4``.  Mirrors JVM's
+        # ``Closure.apply([I)I`` shape.
         if len(instruction.operands) < 3:
             msg = (
                 f"APPLY_CLOSURE expects at least 3 operands "
@@ -2164,24 +2201,19 @@ def _emit_instruction(
         num_args = _as_immediate(
             instruction.operands[2], "APPLY_CLOSURE num_args"
         ).value
-        if num_args != _CLR_CLOSURE_EXPLICIT_ARITY:
-            msg = (
-                f"APPLY_CLOSURE: V1 CLR backend only supports "
-                f"arity-{_CLR_CLOSURE_EXPLICIT_ARITY} closures, got "
-                f"num_args={num_args}.  Multi-arity closures land in a "
-                "later phase."
-            )
-            raise CILBackendError(msg)
         if len(instruction.operands) != 3 + num_args:
             msg = (
                 f"APPLY_CLOSURE: num_args={num_args} but "
                 f"{len(instruction.operands) - 3} arg operands provided"
             )
             raise CILBackendError(msg)
-        arg_reg = _as_register(instruction.operands[3], "APPLY_CLOSURE arg 0")
+        arg_regs = [
+            _as_register(instruction.operands[3 + i], f"APPLY_CLOSURE arg {i}")
+            for i in range(num_args)
+        ]
 
         # Phase 2c.5: closure_reg is an object-typed register —
-        # read it from the obj slot.  arg_reg is int32.
+        # read it from the obj slot.  arg regs are int32.
         # TW03 Phase 3 follow-up: IClosure.Apply now returns
         # ``object`` (was int32) so closure-returning closures can
         # carry their inner ref through the call.  The caller picks
@@ -2197,7 +2229,20 @@ def _emit_instruction(
             builder.emit_ldloc(ctx.obj_local_for[closure_reg.index])
         else:
             builder.emit_ldloc(closure_reg.index)
-        builder.emit_ldloc(arg_reg.index)
+        # Build int32[num_args] and populate it via dup/stelem.i4.
+        # CIL opcodes:
+        #   0x8D  newarr <type_token>   — pops int length, pushes T[]
+        #   0x25  dup                   — duplicates top stack entry
+        #   0x9E  stelem.i4             — pops (array, index, int)
+        builder.emit_ldc_i4(num_args)
+        builder.emit_token_instruction(
+            0x8D, plan.token_provider.system_int32_typeref_token(),
+        )
+        for i, arg_reg in enumerate(arg_regs):
+            builder.emit_opcode(0x25)            # dup (the array ref)
+            builder.emit_ldc_i4(i)               # index
+            builder.emit_ldloc(arg_reg.index)    # arg value (int32)
+            builder.emit_opcode(0x9E)            # stelem.i4
         builder.emit_callvirt(plan.token_provider.iclosure_apply_token())
         # Stack now: [object]
         #

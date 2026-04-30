@@ -346,3 +346,55 @@ def test_heap_car_of_nested_cons_succeeds() -> None:
         assembly_name="ClrCarPair",
     )
     assert result.returncode == 1, result.stderr
+
+
+# ── Multi-arity closures ─────────────────────────────────────────────────
+
+
+@requires_dotnet
+def test_two_arg_lambda() -> None:
+    """``((lambda (x y) (+ x y)) 4 5) → 9``.
+
+    Multi-arity follow-up: pre-fix, the CLR backend hard-rejected
+    APPLY_CLOSURE with arity != 1, and IClosure.Apply took a
+    single ``int32``.  Post-fix, IClosure.Apply takes ``int32[]``,
+    closures of any arity share the same call site, and the Twig
+    frontend records each lambda's arity so the prologue
+    extracts the right number of args via ``ldelem.i4``.
+    """
+    result = run_source(
+        "((lambda (x y) (+ x y)) 4 5)",
+        assembly_name="ClrTwoArgLam",
+    )
+    assert result.returncode == 9, result.stderr
+
+
+@requires_dotnet
+def test_three_arg_lambda() -> None:
+    """``((lambda (a b c) (+ a (+ b c))) 1 2 3) → 6``."""
+    result = run_source(
+        "((lambda (a b c) (+ a (+ b c))) 1 2 3)",
+        assembly_name="ClrThreeArgLam",
+    )
+    assert result.returncode == 6, result.stderr
+
+
+@requires_dotnet
+def test_two_arg_lambda_with_capture() -> None:
+    """``((make-add-pair 10) 4 5) → 19`` — capture + 2 explicit args.
+
+    Stresses both axes of the closure layout: ``num_free=1`` for
+    the captured ``base`` and ``explicit_arity=2`` for ``(x y)``.
+    The closure subclass's prologue copies ``base`` from
+    ``capt0``, then loads ``args[0]``/``args[1]`` into the
+    explicit-arg slots.
+    """
+    result = run_source(
+        """
+        (define (make-add-pair base)
+          (lambda (x y) (+ base (+ x y))))
+        ((make-add-pair 10) 4 5)
+        """,
+        assembly_name="ClrAddPair",
+    )
+    assert result.returncode == 19, result.stderr

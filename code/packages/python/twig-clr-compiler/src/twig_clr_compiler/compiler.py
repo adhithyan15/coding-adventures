@@ -725,9 +725,20 @@ def compile_source(
     # emission.  ir-to-cil-bytecode uses this to detect closure
     # regions and emit them as ``Apply`` methods on the
     # auto-generated ``Closure_<name>`` TypeDefs.
+    #
+    # Multi-arity follow-up: also record each lambda's explicit
+    # arity (its source-level param count, NOT counting captures)
+    # so the backend's IClosure.Apply prologue extracts the right
+    # number of int args from the int32[] parameter.  Without
+    # this, every closure body would be treated as arity-1 and
+    # multi-arg lambdas like ``(lambda (x y) (+ x y))`` would
+    # silently drop the second arg (arity-1 hard limit removed
+    # in the same change).
     closure_free_var_counts: dict[str, int] = {}
-    for lifted_name, captures, _lam in compiler._lifted_lambdas:  # noqa: SLF001
+    closure_explicit_arities: dict[str, int] = {}
+    for lifted_name, captures, lam in compiler._lifted_lambdas:  # noqa: SLF001
         closure_free_var_counts[lifted_name] = len(captures)
+        closure_explicit_arities[lifted_name] = len(lam.params)
 
     try:
         # ``call_register_count=None`` tells the CIL backend to
@@ -743,6 +754,7 @@ def compile_source(
             CILBackendConfig(
                 call_register_count=None,
                 closure_free_var_counts=closure_free_var_counts,
+                closure_explicit_arities=closure_explicit_arities,
             ),
         )
     except Exception as exc:

@@ -1,5 +1,25 @@
 # Changelog — twig-clr-compiler
 
+## 0.6.0 — 2026-04-29 — multi-arity closures
+
+Multi-arg lambdas like `(lambda (x y) (+ x y))` now run on real
+`dotnet`.  Pre-fix, the CLR backend hard-rejected `APPLY_CLOSURE`
+with arity != 1 and `IClosure.Apply` took a single `int32`.
+
+Frontend now records each lifted lambda's source-level param
+count in `closure_explicit_arities` (parallel to
+`closure_free_var_counts`).  Combined with `ir-to-cil-bytecode`
+0.11.0's widened `IClosure.Apply(int32[])` interface, closures of
+any arity share a single uniform call site.
+
+### Acceptance
+
+* `((lambda (x y) (+ x y)) 4 5) → 9`
+* `((lambda (a b c) (+ a (+ b c))) 1 2 3) → 6`
+* `((make-add-pair 10) 4 5) → 19`  (capture + 2 explicit args)
+
+All on real `dotnet`.
+
 ## 0.5.0 — 2026-04-30 — closure-returning closures (3-deep curry)
 
 Closure-returning closures now run end-to-end on real `dotnet`:

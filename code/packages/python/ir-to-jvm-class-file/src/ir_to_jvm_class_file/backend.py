@@ -169,6 +169,13 @@ class JvmBackendConfig:
     emit_main_wrapper: bool = True
     syscall_arg_reg: int = 4  # register holding the SYSCALL print/read argument (Brainfuck=4, BASIC=0)
     closure_free_var_counts: dict[str, int] = field(default_factory=dict)
+    # Multi-arity follow-up: per-closure explicit-arg count (the
+    # number of params the lambda's source declared, NOT counting
+    # captures).  Defaults to 1 per region for back-compat with
+    # existing callers that emit only single-arg closures.  The
+    # Twig compiler frontend populates this from each lambda's
+    # param list so multi-arity ``(lambda (x y) (+ x y))`` works.
+    closure_explicit_arities: dict[str, int] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -1849,7 +1856,14 @@ class _JvmClassLowerer:
            the static array via the ``__ca_regGet`` / ``__ca_regSet``
            helpers — runs unchanged.
         """
-        explicit_arity = _CLR_CLOSURE_EXPLICIT_ARITY  # currently 1
+        # Per-closure explicit arity (number of explicit params the
+        # source-level lambda declared, not counting captures).
+        # Defaults to 1 for back-compat; the Twig frontend
+        # populates ``closure_explicit_arities`` for multi-arity
+        # lambdas like ``(lambda (x y) (+ x y))``.
+        explicit_arity = self.config.closure_explicit_arities.get(
+            region.name, _CLR_CLOSURE_EXPLICIT_ARITY,
+        )
         total_arity = num_free + explicit_arity
 
         builder = _BytecodeBuilder()
@@ -2727,11 +2741,17 @@ def lower_ir_to_jvm_classes(
 
     main_binary_name = config.class_name.replace(".", "/")
     for closure_name, num_free in config.closure_free_var_counts.items():
+        # Pass through per-closure explicit arity so the subclass's
+        # Apply forwards the right number of explicit args from
+        # the int[] parameter to the lifted lambda's static method.
+        # Defaults to 1 for back-compat.
+        explicit_arity = config.closure_explicit_arities.get(closure_name, 1)
         classes.append(
             build_closure_subclass_artifact(
                 closure_name,
                 num_free=num_free,
                 main_class_binary_name=main_binary_name,
+                explicit_arity=explicit_arity,
             )
         )
 

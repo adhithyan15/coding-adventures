@@ -873,8 +873,12 @@ class TestClosureLoweringStructure:
         # TW03 Phase 3 follow-up: Apply now returns ``object`` (was
         # ``int32``) so closure-returning closures can carry their
         # inner closure ref through the call boundary.
+        # Multi-arity follow-up: Apply takes ``int32[]`` (was
+        # ``int32``) so closures of any arity share a single uniform
+        # call site.  The body's prologue extracts each arg via
+        # ``ldelem.i4``.
         assert apply.return_type == "object"
-        assert apply.parameter_types == ("int32",)
+        assert apply.parameter_types == ("int32[]",)
 
     def test_closure_class_has_field_per_capture(self) -> None:
         artifact = lower_ir_to_cil_bytecode(
@@ -908,8 +912,10 @@ class TestClosureLoweringStructure:
         # TW03 Phase 3 follow-up: Apply now returns ``object`` (was
         # ``int32``) so closure-returning closures can carry their
         # inner closure ref through the call boundary.
+        # Multi-arity follow-up: Apply takes ``int32[]`` (was
+        # ``int32``).
         assert apply.return_type == "object"
-        assert apply.parameter_types == ("int32",)
+        assert apply.parameter_types == ("int32[]",)
 
     def test_lambda_region_omitted_from_main_methods(self) -> None:
         artifact = lower_ir_to_cil_bytecode(
@@ -941,8 +947,13 @@ class TestClosureLoweringStructure:
             "APPLY_CLOSURE should emit callvirt"
         )
 
-    def test_closure_arity_other_than_one_rejected(self) -> None:
-        """V1 supports arity-1 closures only; arity-2 should error."""
+    def test_apply_closure_multi_arity_lowers_without_error(self) -> None:
+        """Multi-arity follow-up: APPLY_CLOSURE with arity > 1 now
+        lowers successfully (the arity-1 hard limit was removed when
+        IClosure.Apply was widened to take ``int32[]``).  The call
+        site builds an int32[] via ``newarr [System.Int32]`` and
+        populates each slot with ``dup; ldc.i4 i; ldloc; stelem.i4``.
+        """
         program = IrProgram(entry_label="Main")
         program.add_instruction(
             IrInstruction(IrOp.LABEL, [IrLabel("_lambda_0")])
@@ -965,18 +976,29 @@ class TestClosureLoweringStructure:
                 [
                     IrRegister(1),
                     IrRegister(1),
-                    IrImmediate(2),  # arity 2
+                    IrImmediate(2),  # arity 2 — previously rejected
                     IrRegister(2),
                     IrRegister(3),
                 ],
             )
         )
         program.add_instruction(IrInstruction(IrOp.RET, []))
-        with pytest.raises(CILBackendError, match=r"arity-1"):
-            lower_ir_to_cil_bytecode(
-                program,
-                CILBackendConfig(closure_free_var_counts={"_lambda_0": 0}),
-            )
+        artifact = lower_ir_to_cil_bytecode(
+            program,
+            CILBackendConfig(
+                closure_free_var_counts={"_lambda_0": 0},
+                closure_explicit_arities={"_lambda_0": 2},
+            ),
+        )
+        main = next(m for m in artifact.methods if m.name == "Main")
+        # newarr opcode = 0x8D; stelem.i4 = 0x9E.  Both must appear
+        # in the APPLY_CLOSURE call-site sequence.
+        assert 0x8D in main.body, (
+            "APPLY_CLOSURE should emit newarr to build int32[]"
+        )
+        assert 0x9E in main.body, (
+            "APPLY_CLOSURE should emit stelem.i4 to populate args"
+        )
 
     def test_closure_free_var_counts_unknown_region_rejected(self) -> None:
         program = IrProgram(entry_label="Main")
