@@ -1,5 +1,29 @@
 # Changelog — beam-bytecode-encoder
 
+## 0.2.0 — 2026-04-29 — BEAM02 Phase 2b (FunT scaffolding)
+
+### Added — ``FunT`` chunk encoding
+
+- ``BEAMFun`` dataclass — one row of the ``FunT`` (function)
+  table.  Fields: ``function_atom_index``, ``arity``,
+  ``code_label``, ``index``, ``num_free``, ``old_uniq``.
+- ``BEAMModule.funs`` field — populates the ``FunT`` chunk;
+  the chunk is omitted when empty.
+- Validation rules for ``FunT`` rows: rejects out-of-range atom
+  indices, ``code_label`` exceeding ``label_count``, non-sequential
+  ``index`` values, negative ``num_free`` / ``arity``.
+- ``old_uniq`` values wider than 32 bits are silently truncated
+  to fit the ``u32`` field — useful when callers compute uniqs
+  from a wider hash without downcasting first.
+
+This is infrastructure for the ``make_fun2`` / ``make_fun3``
+closure-construction opcodes.  The ir-to-beam Phase 2 lowering
+ended up using a list-based closure representation +
+``erlang:apply/3`` instead (modern OTP rejects ``make_fun2`` and
+``make_fun3`` needs z-tagged extended-list operands), so the
+``FunT`` chunk is currently unused by Twig — but the encoder
+support stays for future work that wants real BEAM funs.
+
 ## 0.1.0 — 2026-04-29
 
 ### Added — BEAM01 Phase 2: pure encoder

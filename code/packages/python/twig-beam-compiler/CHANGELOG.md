@@ -1,5 +1,34 @@
 # Changelog — twig-beam-compiler
 
+## 0.3.0 — 2026-04-29 — TW03 Phase 2 (BEAM closures)
+
+### Added — anonymous lambdas and closure invocation
+
+- Anonymous ``(lambda (x) body)`` forms in expression position
+  are lifted to fresh ``_lambda_N`` top-level regions.  Free-
+  variable analysis (via ``twig.free_vars``) determines what
+  each lifted lambda captures; the use site emits
+  ``MAKE_CLOSURE`` with the current values of those captures.
+- ``Apply`` whose ``fn`` slot is anything other than a known
+  builtin or top-level function name lowers to
+  ``APPLY_CLOSURE``.  This covers calls of let-bound closures,
+  closures returned from other functions, and chained calls
+  like ``((make-adder 7) 35)``.
+- ``BEAMBackendConfig.closure_free_var_counts`` is populated
+  from the lifted-lambda table so ir-to-beam knows the
+  captures-first parameter layout for each lifted region.
+
+### Test additions (54 tests total, 89.56% coverage)
+
+- ``test_lambda_lifts_to_top_level_region`` — IR-shape unit
+  test covering MAKE_CLOSURE emission for a captured value.
+- ``test_closure_call_emits_apply_closure`` — IR-shape unit
+  test for chained closure invocation.
+- ``test_closure_make_adder`` — end-to-end on real ``erl``:
+  ``((make-adder 7) 35) → 42``.
+- ``test_closure_let_bound`` — end-to-end:
+  ``(let ((adder (make-adder 7))) (adder 35)) → 42``.
+
 ## 0.2.0 — 2026-04-29 — TW03 Phase 1 (BEAM)
 
 Closes the language-surface gap on the BEAM backend so Twig
@@ -30,9 +59,8 @@ Phase 1 CLR PR).
   recursion
 - All confirmed passing on local Erlang/OTP
 
-### Out of scope (TW03 Phase 2+)
+### Out of scope at the time (closures landed in 0.3.0; the rest still pending)
 
-- Closures (lambdas)
 - Heap primitives (``cons`` / ``car`` / ``cdr`` / symbols / quote)
 - Explicit I/O via ``erlang:put_chars/1`` (today the result
   channel is the function return value printed by ``-eval``)

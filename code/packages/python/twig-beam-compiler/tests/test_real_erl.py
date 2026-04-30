@@ -190,3 +190,53 @@ def test_mutual_recursion_even_odd() -> None:
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout.strip() == b"1"
+
+
+# ── closures (TW03 Phase 2) ────────────────────────────────────────────────
+
+
+@requires_erl
+def test_closure_make_adder() -> None:
+    """``((make-adder 7) 35) → 42`` — the headline TW03 Phase 2 test.
+
+    Exercises the full closure pipeline end-to-end on real ``erl``:
+
+    * Free-variable analysis lifts the ``(lambda (x) (+ x n))``
+      to a top-level ``_lambda_0/2`` that takes ``n`` (captured)
+      then ``x`` (explicit).
+    * ``MAKE_CLOSURE`` builds a ``[FnAtom | [n]]`` cons cell.
+    * The outer call ``((make-adder 7) ...)`` uses
+      ``APPLY_CLOSURE`` because the function position is itself
+      an ``Apply`` (not a known top-level name).
+    """
+    result = run_source(
+        """
+        (define (make-adder n) (lambda (x) (+ x n)))
+        ((make-adder 7) 35)
+        """,
+        module_name="bm_closure",
+    )
+    assert result.returncode == 0, (
+        f"erl rejected the module:\n  stdout: {result.stdout!r}\n"
+        f"  stderr: {result.stderr!r}"
+    )
+    assert result.stdout.strip() == b"42"
+
+
+@requires_erl
+def test_closure_let_bound() -> None:
+    """``(let ((adder (make-adder 7))) (adder 35)) → 42``.
+
+    Exercises the let-bound closure path: ``adder`` is a local
+    binding (not in ``_fn_params``) holding a closure value; the
+    call ``(adder 35)`` drops through to the APPLY_CLOSURE branch.
+    """
+    result = run_source(
+        """
+        (define (make-adder n) (lambda (x) (+ x n)))
+        (let ((adder (make-adder 7))) (adder 35))
+        """,
+        module_name="bm_letclos",
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == b"42"

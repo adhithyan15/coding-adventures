@@ -135,6 +135,45 @@ class BEAMExport:
 
 
 @dataclass(frozen=True)
+class BEAMFun:
+    """One row of the ``FunT`` (fun) table — describes a closure /
+    lambda lifted from the source program.
+
+    BEAM has first-class fun objects; the ``FunT`` chunk plus the
+    ``make_fun2`` opcode together let us construct closure values
+    that capture free variables.  See
+    ``code/specs/BEAM02-closure-lowering.md`` for the lowering plan.
+
+    Fields:
+
+    * ``function_atom_index`` — 1-based atom-table index of the
+      lifted lambda's name (e.g. ``_lambda_0`` interned as an atom).
+    * ``arity`` — the lambda's parameter count, NOT counting
+      captured free variables.
+    * ``code_label`` — BEAM label number where the lambda body
+      starts.  Must match the label used by the ``make_fun2``
+      opcode at the construction site.
+    * ``index`` — fun-table entry index, sequential from 0.  Real
+      ``erlc`` mirrors this in the chunk's ``index`` column.
+    * ``num_free`` — count of captured free variables.  Determines
+      how many x-registers ``make_fun2`` reads at the construction
+      site.
+    * ``old_uniq`` — a 32-bit hash used by Erlang's loader to
+      version funs across module reloads.  Real ``erlc`` computes
+      a CRC32 of the function body; for first-emit modules a
+      stable derived value (e.g. CRC32 of the lambda's IR label
+      name) is acceptable and what we use.
+    """
+
+    function_atom_index: int
+    arity: int
+    code_label: int
+    index: int
+    num_free: int
+    old_uniq: int
+
+
+@dataclass(frozen=True)
 class BEAMModule:
     """Structural description of a BEAM module ready for encoding.
 
@@ -171,6 +210,7 @@ class BEAMModule:
     imports: tuple[BEAMImport, ...] = ()
     exports: tuple[BEAMExport, ...] = ()
     locals_: tuple[BEAMExport, ...] = ()
+    funs: tuple[BEAMFun, ...] = ()
     label_count: int = 0
     max_opcode: int = 0
     instruction_set_version: int = 0
@@ -348,6 +388,38 @@ def _encode_imports(imports: tuple[BEAMImport, ...]) -> bytes:
     return bytes(out)
 
 
+def _encode_funt(funs: tuple[BEAMFun, ...]) -> bytes:
+    """Encode the ``FunT`` chunk.
+
+    Layout::
+
+        <u32 BE>  count
+        for each row:
+          <u32 BE>  function_atom_index
+          <u32 BE>  arity
+          <u32 BE>  code_label
+          <u32 BE>  index
+          <u32 BE>  num_free
+          <u32 BE>  old_uniq
+
+    Each row is 24 bytes.  See ``BEAMFun`` for field semantics.
+    """
+    out = bytearray(struct.pack(">I", len(funs)))
+    for fun in funs:
+        out.extend(
+            struct.pack(
+                ">IIIIII",
+                fun.function_atom_index,
+                fun.arity,
+                fun.code_label,
+                fun.index,
+                fun.num_free,
+                fun.old_uniq & 0xFFFFFFFF,  # mask to 32 bits
+            )
+        )
+    return bytes(out)
+
+
 def _encode_exports(exports: tuple[BEAMExport, ...]) -> bytes:
     """Encode the ``ExpT`` or ``LocT`` chunk.
 
@@ -421,6 +493,12 @@ def encode_beam(module: BEAMModule) -> bytes:
     ]
     if module.locals_:
         chunks.append(("LocT", _encode_exports(module.locals_)))
+    if module.funs:
+        # ``FunT`` goes after ``LocT`` per the conventional chunk
+        # ordering ``erlc`` uses.  Order isn't strictly load-bearing
+        # (the BEAM loader looks chunks up by ID, not position) but
+        # matching ``erlc`` keeps disassembler output predictable.
+        chunks.append(("FunT", _encode_funt(module.funs)))
     chunks.extend(module.extra_chunks)
 
     body = bytearray(b"BEAM")
@@ -478,3 +556,37 @@ def _validate(module: BEAMModule) -> None:
                     f"label_count is {module.label_count}"
                 )
                 raise BEAMEncodeError(msg)
+
+    # FunT — same atom-index + label sanity, plus monotonic
+    # ``index`` field check (real ``erlc`` always emits index
+    # rows in 0..N-1 order; the loader doesn't enforce it but
+    # disassembler tooling tends to assume it).
+    for i, fun in enumerate(module.funs):
+        if fun.function_atom_index < 1 or fun.function_atom_index > n_atoms:
+            msg = (
+                f"FunT row references function_atom_index="
+                f"{fun.function_atom_index} but only {n_atoms} atoms "
+                "are declared"
+            )
+            raise BEAMEncodeError(msg)
+        if fun.code_label < 1:
+            msg = f"FunT row code_label must be >= 1, got {fun.code_label}"
+            raise BEAMEncodeError(msg)
+        if module.label_count and fun.code_label > module.label_count:
+            msg = (
+                f"FunT row references code_label {fun.code_label} but "
+                f"label_count is {module.label_count}"
+            )
+            raise BEAMEncodeError(msg)
+        if fun.index != i:
+            msg = (
+                f"FunT row {i} has index={fun.index}; convention is to "
+                "number rows sequentially from 0 in declaration order"
+            )
+            raise BEAMEncodeError(msg)
+        if fun.num_free < 0:
+            msg = f"FunT row num_free must be >= 0, got {fun.num_free}"
+            raise BEAMEncodeError(msg)
+        if fun.arity < 0:
+            msg = f"FunT row arity must be >= 0, got {fun.arity}"
+            raise BEAMEncodeError(msg)
