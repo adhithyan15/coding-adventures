@@ -124,14 +124,32 @@ head slots.  Heterogeneous cells (`(cons 'foo nil)`) need a
 follow-up that widens `head` to `Object` with autoboxing and
 threads typing for the head-read site.
 
-### Phase 3c — CLR heap primitives (CLR03)
+### Phase 3c — CLR heap primitives (CLR03).  **Shipped (structural).**
 
-- Same shape as JVM but as additional `TypeDef` rows in the
-  single PE/CLI assembly (the multi-TypeDef plumbing from
-  CLR02 Phase 2b carries over verbatim).
-- `Cons` / `Symbol` / `Nil` types under the assembly's
-  namespace; `Symbol.Intern(string)` static method.
-- `IS_PAIR` / `IS_SYMBOL` lower to `isinst` + `ldnull; cgt.un`.
+- `CodingAdventures.Cons` (`int32 head` + `object tail`),
+  `CodingAdventures.Symbol` (`string name`), and
+  `CodingAdventures.Nil` types — auto-included in the
+  multi-TypeDef PE/CLI assembly when any heap opcode appears.
+- `MAKE_CONS` lowers to `ldloc head; ldloc tail (obj); newobj
+  Cons.ctor(int32, object); stloc dst (obj)`.
+- `CAR` / `CDR` lower to `ldloc src (obj); castclass Cons;
+  ldfld Cons::head/tail; stloc dst`.
+- `IS_NULL` / `IS_PAIR` / `IS_SYMBOL` lower to `ldloc src (obj);
+  isinst T; ldnull; cgt.un; stloc dst (int)`.
+- `MAKE_SYMBOL` lowers to `ldnull; newobj Symbol.ctor(string)`
+  (placeholder for the name string — proper `ldstr` UserString
+  wiring lands in 3c.5).
+- `LOAD_NIL` lowers to `newobj Nil.ctor()` (fresh instance per
+  call — singleton wiring lands in 3c.5; `IS_NULL` still works
+  via `isinst Nil`).
+
+`SequentialCILTokenProvider` accepts `include_heap_types=True`
+which lays out heap method/field/TypeDef tokens deterministically
+AFTER any closure rows.
+
+V1 limitation: end-to-end on real `dotnet` is deferred until
+Phase 3c.5 wires writer-side support for the UserString intern
+table (Symbol names) and the singleton `Nil.INSTANCE` field.
 
 ### Phase 3d — BEAM heap primitives (BEAM03).  **Shipped.**
 

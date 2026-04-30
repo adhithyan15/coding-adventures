@@ -1155,3 +1155,253 @@ class TestTypedRegisterPool:
         assert plan.function_return_types["Main"] == "int32"
         # Closure regions always return int32 per the IClosure contract.
         assert plan.function_return_types["_lambda_0"] == "int32"
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# TW03 Phase 3c — heap-primitive lowering (cons / symbol / nil)
+# ─────────────────────────────────────────────────────────────────────────
+#
+# Phase 3c v1 ships **structural-only** lowering: bytecode shape is correct
+# (right opcode bytes, right token-provider interaction), the three new
+# extra TypeArtifacts (Cons / Symbol / Nil) get auto-included, but a
+# follow-up (Phase 3c.5) wires in the cli-assembly-writer-side intern
+# tables for symbol names and the singleton Nil instance.  Until then,
+# IS_NULL still works correctly via ``isinst Nil`` (every Nil instance
+# qualifies as null) but two MAKE_SYMBOL calls with the same name yield
+# different Symbol instances (semantically wrong; bytecode-shape correct).
+
+
+class TestHeapExtraTypes:
+    """Tests for the auto-included Cons / Symbol / Nil TypeDefs."""
+
+    def _heap_program(self, instructions: list[IrInstruction]) -> IrProgram:
+        program = IrProgram(entry_label="Main")
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("Main")]))
+        for ins in instructions:
+            program.add_instruction(ins)
+        program.add_instruction(IrInstruction(IrOp.RET, []))
+        return program
+
+    def test_extra_types_include_cons_symbol_nil_when_heap_op_present(
+        self,
+    ) -> None:
+        program = self._heap_program([
+            IrInstruction(IrOp.LOAD_NIL, [IrRegister(2)]),
+        ])
+        artifact = lower_ir_to_cil_bytecode(program)
+        names = {(t.namespace, t.name) for t in artifact.extra_types}
+        assert ("CodingAdventures", "Cons") in names
+        assert ("CodingAdventures", "Symbol") in names
+        assert ("CodingAdventures", "Nil") in names
+
+    def test_no_heap_extra_types_when_no_heap_op(self) -> None:
+        program = self._heap_program([])
+        artifact = lower_ir_to_cil_bytecode(program)
+        names = {(t.namespace, t.name) for t in artifact.extra_types}
+        assert ("CodingAdventures", "Cons") not in names
+        assert ("CodingAdventures", "Symbol") not in names
+        assert ("CodingAdventures", "Nil") not in names
+
+    def test_cons_typedef_has_int_head_and_object_tail(self) -> None:
+        program = self._heap_program([
+            IrInstruction(IrOp.LOAD_NIL, [IrRegister(2)]),
+        ])
+        artifact = lower_ir_to_cil_bytecode(program)
+        cons = next(t for t in artifact.extra_types if t.name == "Cons")
+        field_types = {f.name: f.type for f in cons.fields}
+        assert field_types == {"head": "int32", "tail": "object"}
+
+    def test_symbol_typedef_has_string_name(self) -> None:
+        program = self._heap_program([
+            IrInstruction(IrOp.LOAD_NIL, [IrRegister(2)]),
+        ])
+        artifact = lower_ir_to_cil_bytecode(program)
+        sym = next(t for t in artifact.extra_types if t.name == "Symbol")
+        field_types = {f.name: f.type for f in sym.fields}
+        assert field_types == {"name": "string"}
+
+    def test_nil_typedef_has_no_fields(self) -> None:
+        program = self._heap_program([
+            IrInstruction(IrOp.LOAD_NIL, [IrRegister(2)]),
+        ])
+        artifact = lower_ir_to_cil_bytecode(program)
+        nil = next(t for t in artifact.extra_types if t.name == "Nil")
+        assert nil.fields == ()
+        # Single ctor.
+        ctor_names = [m.name for m in nil.methods]
+        assert ctor_names == [".ctor"]
+
+
+class TestHeapOpLowering:
+    """Each heap op should emit its identifying CIL opcode bytes."""
+
+    def _heap_program(self, instructions: list[IrInstruction]) -> IrProgram:
+        program = IrProgram(entry_label="Main")
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("Main")]))
+        for ins in instructions:
+            program.add_instruction(ins)
+        program.add_instruction(IrInstruction(IrOp.RET, []))
+        return program
+
+    def _main_body(self, artifact: CILProgramArtifact) -> bytes:
+        return next(m.body for m in artifact.methods if m.name == "Main")
+
+    def test_make_cons_emits_newobj(self) -> None:
+        program = self._heap_program([
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(2), IrImmediate(7)]),
+            IrInstruction(IrOp.LOAD_NIL, [IrRegister(3)]),
+            IrInstruction(
+                IrOp.MAKE_CONS,
+                [IrRegister(4), IrRegister(2), IrRegister(3)],
+            ),
+        ])
+        artifact = lower_ir_to_cil_bytecode(program)
+        body = self._main_body(artifact)
+        # 0x73 = newobj.
+        assert b"\x73" in body
+
+    def test_car_emits_castclass_and_ldfld(self) -> None:
+        program = self._heap_program([
+            IrInstruction(IrOp.LOAD_NIL, [IrRegister(2)]),
+            IrInstruction(IrOp.CAR, [IrRegister(3), IrRegister(2)]),
+        ])
+        artifact = lower_ir_to_cil_bytecode(program)
+        body = self._main_body(artifact)
+        # 0x74 = castclass; 0x7B = ldfld.
+        assert b"\x74" in body
+        assert b"\x7B" in body
+
+    def test_cdr_emits_castclass_and_ldfld(self) -> None:
+        program = self._heap_program([
+            IrInstruction(IrOp.LOAD_NIL, [IrRegister(2)]),
+            IrInstruction(IrOp.CDR, [IrRegister(3), IrRegister(2)]),
+        ])
+        artifact = lower_ir_to_cil_bytecode(program)
+        body = self._main_body(artifact)
+        assert b"\x74" in body
+        assert b"\x7B" in body
+
+    def test_is_null_emits_isinst_ldnull_cgt_un(self) -> None:
+        program = self._heap_program([
+            IrInstruction(IrOp.LOAD_NIL, [IrRegister(2)]),
+            IrInstruction(IrOp.IS_NULL, [IrRegister(3), IrRegister(2)]),
+        ])
+        artifact = lower_ir_to_cil_bytecode(program)
+        body = self._main_body(artifact)
+        # 0x75 = isinst; 0x14 = ldnull; 0xFE 0x03 = cgt.un (two bytes).
+        assert b"\x75" in body
+        assert b"\x14" in body
+        assert b"\xfe\x03" in body
+
+    def test_is_pair_emits_isinst(self) -> None:
+        program = self._heap_program([
+            IrInstruction(IrOp.LOAD_NIL, [IrRegister(2)]),
+            IrInstruction(IrOp.IS_PAIR, [IrRegister(3), IrRegister(2)]),
+        ])
+        body = self._main_body(lower_ir_to_cil_bytecode(program))
+        assert b"\x75" in body
+
+    def test_is_symbol_emits_isinst(self) -> None:
+        program = self._heap_program([
+            IrInstruction(IrOp.LOAD_NIL, [IrRegister(2)]),
+            IrInstruction(IrOp.IS_SYMBOL, [IrRegister(3), IrRegister(2)]),
+        ])
+        body = self._main_body(lower_ir_to_cil_bytecode(program))
+        assert b"\x75" in body
+
+    def test_make_symbol_emits_newobj_and_ldnull_placeholder(self) -> None:
+        """Phase 3c v1: MAKE_SYMBOL emits ``ldnull`` for the name
+        argument (proper ldstr UserString wiring lands in 3c.5)."""
+        program = self._heap_program([
+            IrInstruction(
+                IrOp.MAKE_SYMBOL, [IrRegister(2), IrLabel("foo")],
+            ),
+        ])
+        body = self._main_body(lower_ir_to_cil_bytecode(program))
+        # 0x14 ldnull, 0x73 newobj.
+        assert b"\x14" in body
+        assert b"\x73" in body
+
+    def test_load_nil_emits_newobj(self) -> None:
+        program = self._heap_program([
+            IrInstruction(IrOp.LOAD_NIL, [IrRegister(2)]),
+        ])
+        body = self._main_body(lower_ir_to_cil_bytecode(program))
+        # 0x73 = newobj (Nil.ctor()).
+        assert b"\x73" in body
+
+    def test_make_cons_arity_validation(self) -> None:
+        program = self._heap_program([
+            IrInstruction(IrOp.MAKE_CONS, [IrRegister(2)]),  # missing 2 ops
+        ])
+        with pytest.raises(CILBackendError, match="MAKE_CONS expects"):
+            lower_ir_to_cil_bytecode(program)
+
+    def test_load_nil_arity_validation(self) -> None:
+        program = self._heap_program([
+            IrInstruction(IrOp.LOAD_NIL, [IrRegister(2), IrRegister(3)]),
+        ])
+        with pytest.raises(CILBackendError, match="LOAD_NIL expects"):
+            lower_ir_to_cil_bytecode(program)
+
+    def test_validate_for_clr_accepts_heap_opcodes(self) -> None:
+        """validate_for_clr no longer rejects the 8 heap opcodes."""
+        program = self._heap_program([
+            IrInstruction(IrOp.LOAD_NIL, [IrRegister(2)]),
+            IrInstruction(IrOp.MAKE_CONS, [
+                IrRegister(3), IrRegister(2), IrRegister(2),
+            ]),
+            IrInstruction(IrOp.CAR, [IrRegister(4), IrRegister(3)]),
+        ])
+        # Empty errors list → no rejections.
+        assert validate_for_clr(program) == []
+
+
+class TestHeapTokenLayout:
+    """Lock down the deterministic heap-token layout so the writer
+    can mirror it.  Tokens are computed relative to the closure
+    counts so future Phase 3c.5 work doesn't shift them."""
+
+    def test_heap_tokens_unavailable_without_include_heap_types(self) -> None:
+        provider = SequentialCILTokenProvider(
+            ("Main",),
+        )
+        with pytest.raises(CILBackendError, match="cons_ctor"):
+            provider.heap_cons_ctor_token()
+
+    def test_heap_tokens_layout_no_closures(self) -> None:
+        """With no closures and one main method, the heap method
+        tokens start at 0x06000002."""
+        provider = SequentialCILTokenProvider(
+            ("Main",), include_heap_types=True,
+        )
+        # M=1 main methods, no closures.  Heap method base = 0x06000002.
+        assert provider.heap_cons_ctor_token() == 0x06000002
+        assert provider.heap_symbol_ctor_token() == 0x06000003
+        assert provider.heap_nil_ctor_token() == 0x06000004
+        # Field tokens start at 0x04000001.
+        assert provider.heap_cons_head_token() == 0x04000001
+        assert provider.heap_cons_tail_token() == 0x04000002
+        assert provider.heap_symbol_name_token() == 0x04000003
+        # TypeDef tokens: row 1=<Module>, row 2=Main, row 3=Cons.
+        assert provider.heap_cons_typedef_token() == 0x02000003
+        assert provider.heap_symbol_typedef_token() == 0x02000004
+        assert provider.heap_nil_typedef_token() == 0x02000005
+
+    def test_heap_tokens_layout_with_closures(self) -> None:
+        """With 1 main method + 2 closures, the heap method tokens
+        follow the closure rows (1 + 2*2 = 5 closure method rows)."""
+        provider = SequentialCILTokenProvider(
+            ("Main",),
+            closure_names=("_l0", "_l1"),
+            closure_free_var_counts={"_l0": 1, "_l1": 2},
+            include_heap_types=True,
+        )
+        # M=1, closure_method_rows = 1 + 2*2 = 5.  Heap base = 0x06000002 + 5.
+        assert provider.heap_cons_ctor_token() == 0x06000007
+        # field_row after closures: 1 + 2 = 3 capture fields.  Heap fields
+        # start at 0x04000001 + 3 = 0x04000004.
+        assert provider.heap_cons_head_token() == 0x04000004
+        # TypeDef rows: <Module>=1, Main=2, IClosure=3, Closure__l0=4,
+        # Closure__l1=5, Cons=6.
+        assert provider.heap_cons_typedef_token() == 0x02000006

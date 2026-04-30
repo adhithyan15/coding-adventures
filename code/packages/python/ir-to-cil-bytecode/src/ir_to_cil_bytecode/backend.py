@@ -209,6 +209,41 @@ class CILTokenProvider(Protocol):
     def system_object_ctor_token(self) -> int:
         """Return the MemberRef token for ``[System.Runtime]System.Object::.ctor()``."""
 
+    # ── TW03 Phase 3c — heap-primitive tokens ───────────────────────────
+    #
+    # When ``include_heap_types=True`` the provider also lays out the
+    # Cons / Symbol / Nil TypeDef rows after the closure rows.  Each
+    # type contributes one ``.ctor`` MethodDef row; Cons additionally
+    # contributes head + tail Field rows; Symbol contributes a name
+    # Field row.
+
+    def heap_cons_ctor_token(self) -> int:
+        """Return the MethodDef token for ``Cons::.ctor(int32, object)``."""
+
+    def heap_cons_head_token(self) -> int:
+        """Return the Field token for ``Cons::head : int32``."""
+
+    def heap_cons_tail_token(self) -> int:
+        """Return the Field token for ``Cons::tail : object``."""
+
+    def heap_symbol_ctor_token(self) -> int:
+        """Return the MethodDef token for ``Symbol::.ctor(string)``."""
+
+    def heap_symbol_name_token(self) -> int:
+        """Return the Field token for ``Symbol::name : string``."""
+
+    def heap_nil_ctor_token(self) -> int:
+        """Return the MethodDef token for ``Nil::.ctor()``."""
+
+    def heap_cons_typedef_token(self) -> int:
+        """Return the TypeDef token for ``Cons`` (used by ``isinst``)."""
+
+    def heap_symbol_typedef_token(self) -> int:
+        """Return the TypeDef token for ``Symbol`` (used by ``isinst``)."""
+
+    def heap_nil_typedef_token(self) -> int:
+        """Return the TypeDef token for ``Nil`` (used by ``isinst``)."""
+
 
 class SequentialCILTokenProvider:
     """Deterministic token provider for standalone bytecode lowering.
@@ -240,6 +275,7 @@ class SequentialCILTokenProvider:
         *,
         closure_names: tuple[str, ...] = (),
         closure_free_var_counts: dict[str, int] | None = None,
+        include_heap_types: bool = False,
     ) -> None:
         self._method_tokens = {
             name: 0x06000001 + index for index, name in enumerate(method_names)
@@ -271,10 +307,54 @@ class SequentialCILTokenProvider:
                 self._closure_fields[(name, i)] = 0x04000000 | field_row
 
         # System.Object::.ctor MemberRef — present iff any closure
-        # is present (because closures are the only thing that needs
-        # to chain into the base ctor).  Row = helper count + 1.
+        # OR any heap type is present (both need to chain into the
+        # base ctor).  Row = helper count + 1.
+        needs_object_ctor = bool(closure_names) or include_heap_types
         self._object_ctor = (
-            0x0A000000 | (len(CILHelper) + 1) if closure_names else 0
+            0x0A000000 | (len(CILHelper) + 1) if needs_object_ctor else 0
+        )
+
+        # ── TW03 Phase 3c — heap-primitive token layout ────────────
+        #
+        # When ``include_heap_types`` is set, the writer appends three
+        # extra TypeDef rows (Cons, Symbol, Nil) AFTER any closure
+        # types.  Each contributes one ``.ctor`` MethodDef row in
+        # declaration order; Cons additionally contributes head + tail
+        # Field rows, Symbol contributes a name Field row.
+        #
+        # Method rows so far: M (main) + (1 + 2*K) closure rows
+        # (IClosure.Apply + per-closure ctor/Apply).  Heap ctors
+        # follow at offsets +0 (Cons), +1 (Symbol), +2 (Nil).
+        #
+        # Field rows so far: closure capture count.  Heap fields
+        # follow at offsets +0 (Cons.head), +1 (Cons.tail),
+        # +2 (Symbol.name).
+        #
+        # TypeDef rows: <Module>=1, MainType=2, then closure types
+        # (IClosure + Closure_<name> per closure).  Heap types follow.
+        self._include_heap_types = include_heap_types
+        closure_method_rows = (1 + 2 * len(closure_names)) if closure_names else 0
+        heap_method_base = 0x06000001 + m + closure_method_rows
+        self._heap_cons_ctor = heap_method_base if include_heap_types else 0
+        self._heap_symbol_ctor = (heap_method_base + 1) if include_heap_types else 0
+        self._heap_nil_ctor = (heap_method_base + 2) if include_heap_types else 0
+
+        heap_field_base = 0x04000001 + field_row
+        self._heap_cons_head = heap_field_base if include_heap_types else 0
+        self._heap_cons_tail = (heap_field_base + 1) if include_heap_types else 0
+        self._heap_symbol_name = (heap_field_base + 2) if include_heap_types else 0
+
+        # TypeDef rows: <Module>=1, MainType=2.  Then closures (if
+        # any) contribute 1 + len(closure_names) (IClosure +
+        # Closure_<name>...).  Heap types follow.
+        closure_type_rows = (1 + len(closure_names)) if closure_names else 0
+        heap_typedef_base = 0x02000003 + closure_type_rows
+        self._heap_cons_typedef = heap_typedef_base if include_heap_types else 0
+        self._heap_symbol_typedef = (
+            (heap_typedef_base + 1) if include_heap_types else 0
+        )
+        self._heap_nil_typedef = (
+            (heap_typedef_base + 2) if include_heap_types else 0
         )
 
     def method_token(self, method_name: str) -> int:
@@ -328,6 +408,44 @@ class SequentialCILTokenProvider:
             msg = "no closure regions registered with this token provider"
             raise CILBackendError(msg)
         return self._object_ctor
+
+    # ── Heap-primitive token getters (TW03 Phase 3c) ────────────────────
+
+    def _heap_token(self, value: int, name: str) -> int:
+        if not value:
+            msg = (
+                f"heap token {name!r} unavailable — "
+                "include_heap_types=True must be set on the token provider"
+            )
+            raise CILBackendError(msg)
+        return value
+
+    def heap_cons_ctor_token(self) -> int:
+        return self._heap_token(self._heap_cons_ctor, "cons_ctor")
+
+    def heap_cons_head_token(self) -> int:
+        return self._heap_token(self._heap_cons_head, "cons_head")
+
+    def heap_cons_tail_token(self) -> int:
+        return self._heap_token(self._heap_cons_tail, "cons_tail")
+
+    def heap_symbol_ctor_token(self) -> int:
+        return self._heap_token(self._heap_symbol_ctor, "symbol_ctor")
+
+    def heap_symbol_name_token(self) -> int:
+        return self._heap_token(self._heap_symbol_name, "symbol_name")
+
+    def heap_nil_ctor_token(self) -> int:
+        return self._heap_token(self._heap_nil_ctor, "nil_ctor")
+
+    def heap_cons_typedef_token(self) -> int:
+        return self._heap_token(self._heap_cons_typedef, "cons_typedef")
+
+    def heap_symbol_typedef_token(self) -> int:
+        return self._heap_token(self._heap_symbol_typedef, "symbol_typedef")
+
+    def heap_nil_typedef_token(self) -> int:
+        return self._heap_token(self._heap_nil_typedef, "nil_typedef")
 
 
 @dataclass(frozen=True)
@@ -408,6 +526,15 @@ class CILLoweringPipeline:
 
         extra_types = _build_closure_extra_types(plan, closure_apply_methods)
 
+        # TW03 Phase 3c — auto-include Cons/Symbol/Nil TypeDefs when
+        # the program uses any heap opcode.  Programs without heap ops
+        # see zero extra TypeDef rows.
+        uses_heap = any(
+            i.opcode in _HEAP_OPCODES for i in program.instructions
+        )
+        if uses_heap:
+            extra_types = extra_types + _build_heap_extra_types(plan)
+
         return CILProgramArtifact(
             entry_label=program.entry_label,
             methods=tuple(main_methods),
@@ -485,6 +612,31 @@ _CLR_SUPPORTED_OPCODES: frozenset[IrOp] = frozenset({
     # CLR02 Phase 2c — closures.
     IrOp.MAKE_CLOSURE,
     IrOp.APPLY_CLOSURE,
+    # TW03 Phase 3c — heap primitives (cons / symbol / nil).
+    IrOp.MAKE_CONS,
+    IrOp.CAR,
+    IrOp.CDR,
+    IrOp.IS_NULL,
+    IrOp.IS_PAIR,
+    IrOp.MAKE_SYMBOL,
+    IrOp.IS_SYMBOL,
+    IrOp.LOAD_NIL,
+})
+
+
+# TW03 Phase 3c — opcode set that triggers the heap-primitive runtime
+# TypeDefs (Cons / Symbol / Nil) auto-include in the multi-TypeDef
+# assembly artifact.  Programs without these ops see zero extra
+# TypeDef rows.
+_HEAP_OPCODES: frozenset[IrOp] = frozenset({
+    IrOp.MAKE_CONS,
+    IrOp.CAR,
+    IrOp.CDR,
+    IrOp.IS_NULL,
+    IrOp.IS_PAIR,
+    IrOp.MAKE_SYMBOL,
+    IrOp.IS_SYMBOL,
+    IrOp.LOAD_NIL,
 })
 
 
@@ -642,10 +794,18 @@ def _analyze_program(
     # is deterministic.
     closure_names = tuple(r.name for r in regions if r.name in closure_set)
 
+    # TW03 Phase 3c: detect heap-primitive ops so the token provider
+    # also lays out Cons / Symbol / Nil typedef + method + field
+    # tokens after the closure rows.
+    uses_heap = any(
+        i.opcode in _HEAP_OPCODES for i in program.instructions
+    )
+
     provider = token_provider or SequentialCILTokenProvider(
         main_region_names,
         closure_names=closure_names,
         closure_free_var_counts=dict(config.closure_free_var_counts),
+        include_heap_types=uses_heap,
     )
 
     function_return_types = _classify_function_return_types(
@@ -724,6 +884,18 @@ def _instr_register_type_writes(
         new_types[dst.index] = "object"
     elif op is IrOp.APPLY_CLOSURE:
         dst = _as_register(instr.operands[0], "APPLY_CLOSURE dst")
+        new_types[dst.index] = "int32"
+    # TW03 Phase 3c — heap-primitive type-tracking rules.  Same shape
+    # as JVM Phase 3b: CAR reads the int head; CDR / MAKE_CONS /
+    # MAKE_SYMBOL / LOAD_NIL produce object refs; IS_NULL / IS_PAIR /
+    # IS_SYMBOL produce int32 0/1 results ready for BRANCH_Z.
+    elif op in (
+        IrOp.MAKE_CONS, IrOp.CDR, IrOp.MAKE_SYMBOL, IrOp.LOAD_NIL,
+    ):
+        dst = _as_register(instr.operands[0], f"{op.name} dst")
+        new_types[dst.index] = "object"
+    elif op in (IrOp.CAR, IrOp.IS_NULL, IrOp.IS_PAIR, IrOp.IS_SYMBOL):
+        dst = _as_register(instr.operands[0], f"{op.name} dst")
         new_types[dst.index] = "int32"
     elif op is IrOp.CALL:
         target = _as_label(instr.operands[0], "CALL target")
@@ -1162,6 +1334,122 @@ def _build_closure_extra_types(
     return tuple(extras)
 
 
+def _build_heap_extra_types(
+    plan: CILLoweringPlan,
+) -> tuple[CILTypeArtifact, ...]:
+    """Build the Cons / Symbol / Nil TypeArtifacts (TW03 Phase 3c).
+
+    Three TypeDefs are appended after any closure types:
+
+    * ``Cons`` — fields ``int32 head`` + ``object tail``; ctor takes
+      both and stores them.
+    * ``Symbol`` — field ``string name``; ctor takes a string and
+      stores it.
+    * ``Nil`` — empty class with a no-arg ctor; used as the
+      ``isinst`` target for ``IS_NULL``.
+
+    Each ctor chains into ``System.Object::.ctor()`` first, matching
+    the closure-ctor pattern.
+
+    The token provider must have been constructed with
+    ``include_heap_types=True`` so the field/method tokens line up
+    with the row indices the writer will assign.
+    """
+    object_ctor_token = plan.token_provider.system_object_ctor_token()
+
+    # ── Cons ────────────────────────────────────────────────────────
+    cons_ctor_builder = CILBytecodeBuilder()
+    # ldarg.0; call Object::.ctor()
+    cons_ctor_builder.emit_ldarg(0)
+    cons_ctor_builder.emit_call(object_ctor_token)
+    # ldarg.0; ldarg.1; stfld head
+    cons_ctor_builder.emit_ldarg(0)
+    cons_ctor_builder.emit_ldarg(1)
+    cons_ctor_builder.emit_token_instruction(
+        0x7D, plan.token_provider.heap_cons_head_token(),
+    )
+    # ldarg.0; ldarg.2; stfld tail
+    cons_ctor_builder.emit_ldarg(0)
+    cons_ctor_builder.emit_ldarg(2)
+    cons_ctor_builder.emit_token_instruction(
+        0x7D, plan.token_provider.heap_cons_tail_token(),
+    )
+    cons_ctor_builder.emit_ret()
+    cons_ctor = CILMethodArtifact(
+        name=".ctor",
+        body=cons_ctor_builder.assemble(),
+        max_stack=2,
+        local_types=(),
+        return_type="void",
+        parameter_types=("int32", "object"),
+        is_instance=True,
+        is_special_name=True,
+    )
+    cons_type = CILTypeArtifact(
+        name="Cons",
+        namespace="CodingAdventures",
+        extends="System.Object",
+        fields=(
+            CILFieldArtifact(name="head", type="int32"),
+            CILFieldArtifact(name="tail", type="object"),
+        ),
+        methods=(cons_ctor,),
+    )
+
+    # ── Symbol ──────────────────────────────────────────────────────
+    sym_ctor_builder = CILBytecodeBuilder()
+    sym_ctor_builder.emit_ldarg(0)
+    sym_ctor_builder.emit_call(object_ctor_token)
+    sym_ctor_builder.emit_ldarg(0)
+    sym_ctor_builder.emit_ldarg(1)
+    sym_ctor_builder.emit_token_instruction(
+        0x7D, plan.token_provider.heap_symbol_name_token(),
+    )
+    sym_ctor_builder.emit_ret()
+    sym_ctor = CILMethodArtifact(
+        name=".ctor",
+        body=sym_ctor_builder.assemble(),
+        max_stack=2,
+        local_types=(),
+        return_type="void",
+        parameter_types=("string",),
+        is_instance=True,
+        is_special_name=True,
+    )
+    symbol_type = CILTypeArtifact(
+        name="Symbol",
+        namespace="CodingAdventures",
+        extends="System.Object",
+        fields=(CILFieldArtifact(name="name", type="string"),),
+        methods=(sym_ctor,),
+    )
+
+    # ── Nil ─────────────────────────────────────────────────────────
+    nil_ctor_builder = CILBytecodeBuilder()
+    nil_ctor_builder.emit_ldarg(0)
+    nil_ctor_builder.emit_call(object_ctor_token)
+    nil_ctor_builder.emit_ret()
+    nil_ctor = CILMethodArtifact(
+        name=".ctor",
+        body=nil_ctor_builder.assemble(),
+        max_stack=1,
+        local_types=(),
+        return_type="void",
+        parameter_types=(),
+        is_instance=True,
+        is_special_name=True,
+    )
+    nil_type = CILTypeArtifact(
+        name="Nil",
+        namespace="CodingAdventures",
+        extends="System.Object",
+        fields=(),
+        methods=(nil_ctor,),
+    )
+
+    return (cons_type, symbol_type, nil_type)
+
+
 def _build_closure_ctor(
     num_free: int,
     object_ctor_token: int,
@@ -1477,6 +1765,161 @@ def _emit_instruction(
         builder.emit_ldloc(arg_reg.index)
         builder.emit_callvirt(plan.token_provider.iclosure_apply_token())
         builder.emit_stloc(dst.index)
+        return
+
+    # ── TW03 Phase 3c — heap-primitive lowering ─────────────────────────
+    #
+    # Each op picks the int32 vs object slot for its register reads/
+    # writes via ``ctx.obj_local_for`` (mirrors the closure pattern).
+    # CIL opcode bytes used:
+    #   0x14  ldnull              (one byte)
+    #   0x73  newobj <token>
+    #   0x74  castclass <token>
+    #   0x75  isinst <token>
+    #   0x7B  ldfld <token>
+    #   0xFE 0x03  cgt.un          (two bytes)
+    if instruction.opcode == IrOp.MAKE_CONS:
+        if len(instruction.operands) != 3:
+            msg = (
+                f"MAKE_CONS expects 3 operands (dst, head, tail), got "
+                f"{len(instruction.operands)}"
+            )
+            raise CILBackendError(msg)
+        dst = _as_register(instruction.operands[0], "MAKE_CONS dst")
+        head = _as_register(instruction.operands[1], "MAKE_CONS head")
+        tail = _as_register(instruction.operands[2], "MAKE_CONS tail")
+        # head: int32 (from int slot); tail: object (from obj slot)
+        builder.emit_ldloc(head.index)
+        if ctx is not None and tail.index in ctx.obj_local_for:
+            builder.emit_ldloc(ctx.obj_local_for[tail.index])
+        else:
+            builder.emit_ldloc(tail.index)
+        builder.emit_token_instruction(
+            0x73, plan.token_provider.heap_cons_ctor_token(),
+        )
+        # store ref into dst's object slot
+        if ctx is not None and dst.index in ctx.obj_local_for:
+            builder.emit_stloc(ctx.obj_local_for[dst.index])
+        else:
+            builder.emit_stloc(dst.index)
+        return
+
+    if instruction.opcode == IrOp.CAR:
+        if len(instruction.operands) != 2:
+            msg = (
+                f"CAR expects 2 operands (dst, src), got "
+                f"{len(instruction.operands)}"
+            )
+            raise CILBackendError(msg)
+        dst = _as_register(instruction.operands[0], "CAR dst")
+        src = _as_register(instruction.operands[1], "CAR src")
+        if ctx is not None and src.index in ctx.obj_local_for:
+            builder.emit_ldloc(ctx.obj_local_for[src.index])
+        else:
+            builder.emit_ldloc(src.index)
+        builder.emit_token_instruction(
+            0x74, plan.token_provider.heap_cons_typedef_token(),
+        )
+        builder.emit_token_instruction(
+            0x7B, plan.token_provider.heap_cons_head_token(),
+        )
+        builder.emit_stloc(dst.index)  # int32 result → int slot
+        return
+
+    if instruction.opcode == IrOp.CDR:
+        if len(instruction.operands) != 2:
+            msg = (
+                f"CDR expects 2 operands (dst, src), got "
+                f"{len(instruction.operands)}"
+            )
+            raise CILBackendError(msg)
+        dst = _as_register(instruction.operands[0], "CDR dst")
+        src = _as_register(instruction.operands[1], "CDR src")
+        if ctx is not None and src.index in ctx.obj_local_for:
+            builder.emit_ldloc(ctx.obj_local_for[src.index])
+        else:
+            builder.emit_ldloc(src.index)
+        builder.emit_token_instruction(
+            0x74, plan.token_provider.heap_cons_typedef_token(),
+        )
+        builder.emit_token_instruction(
+            0x7B, plan.token_provider.heap_cons_tail_token(),
+        )
+        if ctx is not None and dst.index in ctx.obj_local_for:
+            builder.emit_stloc(ctx.obj_local_for[dst.index])
+        else:
+            builder.emit_stloc(dst.index)
+        return
+
+    if instruction.opcode in (IrOp.IS_NULL, IrOp.IS_PAIR, IrOp.IS_SYMBOL):
+        op_name = instruction.opcode.name
+        if len(instruction.operands) != 2:
+            msg = (
+                f"{op_name} expects 2 operands (dst, src), got "
+                f"{len(instruction.operands)}"
+            )
+            raise CILBackendError(msg)
+        dst = _as_register(instruction.operands[0], f"{op_name} dst")
+        src = _as_register(instruction.operands[1], f"{op_name} src")
+        if instruction.opcode is IrOp.IS_NULL:
+            type_token = plan.token_provider.heap_nil_typedef_token()
+        elif instruction.opcode is IrOp.IS_PAIR:
+            type_token = plan.token_provider.heap_cons_typedef_token()
+        else:
+            type_token = plan.token_provider.heap_symbol_typedef_token()
+        if ctx is not None and src.index in ctx.obj_local_for:
+            builder.emit_ldloc(ctx.obj_local_for[src.index])
+        else:
+            builder.emit_ldloc(src.index)
+        # isinst Type; ldnull; cgt.un  → 1 if src is Type, else 0.
+        builder.emit_token_instruction(0x75, type_token)
+        builder.emit_opcode(0x14)  # ldnull
+        builder.emit_raw(bytes([0xFE, 0x03]))  # cgt.un
+        builder.emit_stloc(dst.index)  # int32 result
+        return
+
+    if instruction.opcode == IrOp.MAKE_SYMBOL:
+        if len(instruction.operands) != 2:
+            msg = (
+                f"MAKE_SYMBOL expects 2 operands (dst, name_label), got "
+                f"{len(instruction.operands)}"
+            )
+            raise CILBackendError(msg)
+        dst = _as_register(instruction.operands[0], "MAKE_SYMBOL dst")
+        # Phase 3c structural: pass null as the name argument.  The
+        # ldstr UserString wiring lands in 3c.5 along with the
+        # writer-side intern table — until then, two MAKE_SYMBOL
+        # calls with the same label produce DIFFERENT Symbol
+        # instances (semantically wrong but bytecode-shape correct).
+        builder.emit_opcode(0x14)  # ldnull (placeholder for the name string)
+        builder.emit_token_instruction(
+            0x73, plan.token_provider.heap_symbol_ctor_token(),
+        )
+        if ctx is not None and dst.index in ctx.obj_local_for:
+            builder.emit_stloc(ctx.obj_local_for[dst.index])
+        else:
+            builder.emit_stloc(dst.index)
+        return
+
+    if instruction.opcode == IrOp.LOAD_NIL:
+        if len(instruction.operands) != 1:
+            msg = (
+                f"LOAD_NIL expects 1 operand (dst), got "
+                f"{len(instruction.operands)}"
+            )
+            raise CILBackendError(msg)
+        dst = _as_register(instruction.operands[0], "LOAD_NIL dst")
+        # Phase 3c structural: newobj Nil.ctor() each time.  The
+        # singleton-INSTANCE wire-up lands in 3c.5; until then
+        # IS_NULL still works correctly via isinst Nil because
+        # every Nil instance qualifies as null.
+        builder.emit_token_instruction(
+            0x73, plan.token_provider.heap_nil_ctor_token(),
+        )
+        if ctx is not None and dst.index in ctx.obj_local_for:
+            builder.emit_stloc(ctx.obj_local_for[dst.index])
+        else:
+            builder.emit_stloc(dst.index)
         return
 
     if instruction.opcode == IrOp.SYSCALL:
