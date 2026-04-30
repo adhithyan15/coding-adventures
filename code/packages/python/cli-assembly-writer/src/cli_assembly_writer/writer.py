@@ -55,8 +55,13 @@ _TYPE_FLAGS_PUBLIC_INTERFACE = 0x000000A1
 # 0x0016 = Public(0x6) + Static(0x10).  Instance methods drop Static
 # and add HideBySig.  Constructors add SpecialName + RTSpecialName.
 _METHOD_FLAGS_PUBLIC_STATIC = 0x0016
-# Public + Virtual + HideBySig.
-_METHOD_FLAGS_PUBLIC_INSTANCE = 0x0086
+# Public + Virtual + HideBySig + NewSlot + Final.  Used for
+# concrete instance methods on closure classes that *implement*
+# an interface method.  ``NewSlot`` puts the method into its own
+# vtable slot (rather than trying to override a parent class
+# slot, which doesn't exist for closure ``Apply``); ``Final``
+# prevents further overriding (closures are leaf types).
+_METHOD_FLAGS_PUBLIC_INSTANCE = 0x01E6
 # Public + HideBySig + SpecialName + RTSpecialName.
 _METHOD_FLAGS_PUBLIC_CTOR = 0x1886
 # Public + Virtual + HideBySig + NewSlot + Abstract.
@@ -355,6 +360,25 @@ class CLIAssemblyWriter:
         for offset, t in enumerate(program.extra_types):
             typedef_row_for_name[_qualified_name(t.namespace, t.name)] = 3 + offset
 
+        # CLR02 Phase 2c: when any extra type extends ``System.Object``
+        # (i.e. a concrete closure class), the closure's .ctor body
+        # chains into ``Object::.ctor()``.  That requires a MemberRef
+        # row pointing at the existing System.Object TypeRef.  We
+        # always emit it at MemberRef row ``len(helper_specs) + 1``
+        # whenever the trigger fires, so the lowerer's deterministic
+        # token computation matches the actual emitted row.
+        needs_object_ctor_memberref = any(
+            (not t.is_interface) and t.extends == "System.Object"
+            for t in program.extra_types
+        )
+        ctor_string_index = strings.add(".ctor") if needs_object_ctor_memberref else 0
+        # ``HASTHIS | paramcount(0) | retType(void)`` per ECMA-335 §II.23.2.1
+        object_ctor_sig_index = (
+            blobs.add(bytes([_SIG_CALLCONV_HASTHIS, 0x00, 0x01]))
+            if needs_object_ctor_memberref
+            else 0
+        )
+
         helper_namespace, helper_name = _split_type_name(self.config.helper_type_name)
         helper_name_index = strings.add(helper_name)
         helper_namespace_index = strings.add(helper_namespace)
@@ -454,6 +478,9 @@ class CLIAssemblyWriter:
             typedef_row_for_name=typedef_row_for_name,
             field_name_indices=field_name_indices,
             field_sig_indices=field_sig_indices,
+            ctor_string_index=ctor_string_index,
+            object_ctor_sig_index=object_ctor_sig_index,
+            needs_object_ctor_memberref=needs_object_ctor_memberref,
             mvid_index=mvid_index,
             system_runtime_name_index=system_runtime_name_index,
             empty_string_index=empty_string_index,
@@ -499,6 +526,9 @@ class CLIAssemblyWriter:
         typedef_row_for_name: dict[str, int],
         field_name_indices: dict[int, int],
         field_sig_indices: dict[int, int],
+        ctor_string_index: int,
+        object_ctor_sig_index: int,
+        needs_object_ctor_memberref: bool,
         mvid_index: int,
         system_runtime_name_index: int,
         empty_string_index: int,
@@ -564,15 +594,14 @@ class CLIAssemblyWriter:
                 program=program,
                 typedef_row_for_name=typedef_row_for_name,
             ),
-            _MEMBER_REF_TABLE: [
-                struct.pack(
-                    "<HHH",
-                    (1 << 3) | 1,
-                    helper_name_indices[spec.helper],
-                    helper_sig_indices[spec.helper],
-                )
-                for spec in program.helper_specs
-            ],
+            _MEMBER_REF_TABLE: _build_memberref_rows(
+                program=program,
+                helper_name_indices=helper_name_indices,
+                helper_sig_indices=helper_sig_indices,
+                ctor_string_index=ctor_string_index,
+                object_ctor_sig_index=object_ctor_sig_index,
+                needs_object_ctor_memberref=needs_object_ctor_memberref,
+            ),
             _STANDALONE_SIG_TABLE: [
                 struct.pack("<H", local_sig_indices[layout.local_sig_token])
                 for layout in method_layouts
@@ -839,6 +868,52 @@ def _build_interfaceimpl_rows(
             )
         for iface_coded in sorted(encoded):
             rows.append(struct.pack("<HH", class_row, iface_coded))
+    return rows
+
+
+def _build_memberref_rows(
+    *,
+    program: CILProgramArtifact,
+    helper_name_indices: dict[CILHelper, int],
+    helper_sig_indices: dict[CILHelper, int],
+    ctor_string_index: int,
+    object_ctor_sig_index: int,
+    needs_object_ctor_memberref: bool,
+) -> list[bytes]:
+    """Emit the MemberRef table.
+
+    Helper rows go first (so their token positions stay stable for
+    CLR01 callers).  When any closure type is present (CLR02
+    Phase 2c), one additional row is appended for
+    ``[System.Runtime]System.Object::.ctor()`` so closure ctors can
+    chain into it via a deterministic ``0x0A...`` token.
+
+    Layout per row: ``Class(MemberRefParent), Name(StringIdx),
+    Signature(BlobIdx)`` = 6 bytes with narrow heaps.
+
+    ``MemberRefParent`` tag bits (low 3): TypeRef = 1.  Helper rows
+    point at TypeRef row 1 (the helper's TypeRef) → ``(1 << 3) | 1
+    = 9``.  System.Object::.ctor points at TypeRef row 2 →
+    ``(2 << 3) | 1 = 17``.
+    """
+    rows: list[bytes] = [
+        struct.pack(
+            "<HHH",
+            (1 << 3) | 1,
+            helper_name_indices[spec.helper],
+            helper_sig_indices[spec.helper],
+        )
+        for spec in program.helper_specs
+    ]
+    if needs_object_ctor_memberref:
+        rows.append(
+            struct.pack(
+                "<HHH",
+                (2 << 3) | 1,
+                ctor_string_index,
+                object_ctor_sig_index,
+            )
+        )
     return rows
 
 

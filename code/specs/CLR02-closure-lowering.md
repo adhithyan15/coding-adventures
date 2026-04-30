@@ -164,9 +164,30 @@ Same staging as JVM02 Phase 2:
   prove that an ``IClosure`` interface and a concrete closure-
   shape class with a field round-trip and load.
 - **CLR02 Phase 2c** — ``MAKE_CLOSURE`` / ``APPLY_CLOSURE``
-  lowering in ``ir-to-cil-bytecode``.  Pending.
+  lowering in ``ir-to-cil-bytecode``.  **Shipped (structural).**
+  The backend emits ``newobj`` / ``callvirt`` against
+  auto-generated ``IClosure`` + ``Closure_<name>`` TypeDefs,
+  with deterministic token assignment that matches the
+  writer's row layout.  Captures-first prologue copies
+  ``ldfld`` results into IR register slots.  V1 limitation:
+  arity-1 closures only (multi-arity needs ``int[]`` array
+  handling).  V1 limitation: end-to-end runtime semantics
+  blocked on a typed-register pool — closure refs are managed
+  pointers but the existing CLR backend uses an int32-uniform
+  local/parameter convention, so a closure ref stored into an
+  int32 local truncates the pointer.  The full ``((make-adder
+  7) 35) → 42`` test is committed as ``xfail(strict=True)`` so
+  it'll flip to passing the moment the typed pool lands.
+- **CLR02 Phase 2c.5** (added during 2c implementation) —
+  typed register pool: parallel ``object[]`` slots for
+  closure-flow registers, with a per-method analysis to
+  classify each register as int or object based on
+  MAKE_CLOSURE / CALL-of-closure-returning-method / ADD_IMM
+  copies.  Required to make Phase 2c semantics work end-to-end
+  on real ``dotnet``.  Pending.
 - **CLR02 Phase 2d** — ``twig-clr-compiler`` accepts ``Lambda``
-  + real-``dotnet`` factorial-closure test.  Pending.
+  + real-``dotnet`` factorial-closure test.  Pending — gated
+  on Phase 2c.5.
 
 ## Risk register
 

@@ -371,6 +371,144 @@ def test_concrete_class_with_field_and_interfaceimpl_loads(
     )
 
 
+# ──────────────────────────────────────────────────────────────────────────
+# CLR02 Phase 2c — closures end-to-end through the full pipeline
+# ──────────────────────────────────────────────────────────────────────────
+
+
+@pytest.mark.xfail(
+    reason=(
+        "CLR02 Phase 2c lowering is structural only — closure refs are "
+        "managed pointers but the existing CLR backend uses int32-uniform "
+        "locals/args, so storing a closure ref into a local typed as "
+        "int32 either truncates the pointer or trips the GC.  The next "
+        "phase (typed register pool, parallel object-slot tracking) "
+        "wires the runtime end-to-end.  Test stays in the file so the "
+        "shape stays right; it'll flip to passing when the typed pool "
+        "lands."
+    ),
+    strict=True,
+)
+@_skip_if_no_dotnet
+def test_make_adder_closure_returns_42_on_real_dotnet(tmp_path: Path) -> None:
+    """The headline CLR02 Phase 2c test:
+    ``((make-adder 7) 35) → 42`` end-to-end on real ``dotnet``.
+
+    Hand-built IR mirroring what twig-clr-compiler will eventually
+    emit for ``(define (make-adder n) (lambda (x) (+ x n)))
+    ((make-adder 7) 35)``.  Exercises the full Phase 2c pipeline:
+
+    * MAKE_CLOSURE → ``newobj Closure_lambda::.ctor(int32)``.
+    * APPLY_CLOSURE → ``callvirt int32 IClosure::Apply(int32)``.
+    * Auto-emitted IClosure interface + per-lambda Closure_lambda
+      TypeDef with one int32 instance field, a ctor, and an Apply
+      method whose body reads the captured ``n`` from the field.
+    * MemberRef to ``System.Object::.ctor`` so the closure ctor can
+      chain into the base class.
+    """
+    from compiler_ir import (
+        IDGenerator,
+        IrImmediate,
+        IrInstruction,
+        IrLabel,
+        IrOp,
+        IrProgram,
+        IrRegister,
+    )
+    from ir_to_cil_bytecode import CILBackendConfig, lower_ir_to_cil_bytecode
+
+    def lbl(name: str) -> IrLabel:
+        return IrLabel(name=name)
+
+    def reg(i: int) -> IrRegister:
+        return IrRegister(index=i)
+
+    def imm(v: int) -> IrImmediate:
+        return IrImmediate(value=v)
+
+    gen = IDGenerator()
+    program = IrProgram(entry_label="Main")
+
+    # _lambda_0(N, X) — captures-first layout: r2 = N (capture),
+    # r3 = X (explicit arg).  Body: r1 = r2 + r3.
+    program.add_instruction(IrInstruction(IrOp.LABEL, [lbl("_lambda_0")], id=-1))
+    program.add_instruction(
+        IrInstruction(IrOp.ADD, [reg(1), reg(2), reg(3)], id=gen.next())
+    )
+    program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+
+    # make_adder(n): returns MAKE_CLOSURE(_lambda_0, [n]).
+    program.add_instruction(IrInstruction(IrOp.LABEL, [lbl("make_adder")], id=-1))
+    program.add_instruction(
+        IrInstruction(
+            IrOp.MAKE_CLOSURE,
+            [reg(1), lbl("_lambda_0"), imm(1), reg(2)],
+            id=gen.next(),
+        )
+    )
+    program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+
+    # Main(): closure = make_adder(7); return APPLY_CLOSURE(closure, [35]).
+    program.add_instruction(IrInstruction(IrOp.LABEL, [lbl("Main")], id=-1))
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [reg(2), imm(7)], id=gen.next())
+    )
+    program.add_instruction(
+        IrInstruction(IrOp.CALL, [lbl("make_adder")], id=gen.next())
+    )
+    # Stash the closure ref in a holding reg so the arg-staging move
+    # for APPLY_CLOSURE doesn't clobber it.
+    program.add_instruction(
+        IrInstruction(IrOp.ADD_IMM, [reg(10), reg(1), imm(0)], id=gen.next())
+    )
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [reg(11), imm(35)], id=gen.next())
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.APPLY_CLOSURE,
+            [reg(1), reg(10), imm(1), reg(11)],
+            id=gen.next(),
+        )
+    )
+    program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+
+    cil_program = lower_ir_to_cil_bytecode(
+        program,
+        CILBackendConfig(
+            call_register_count=None,
+            closure_free_var_counts={"_lambda_0": 1},
+        ),
+    )
+    artifact = write_cli_assembly(
+        cil_program,
+        CLIAssemblyConfig(
+            assembly_name="ClosureAdder",
+            module_name="ClosureAdder.exe",
+            type_name="ClosureAdder",
+        ),
+    )
+
+    asm_path = tmp_path / "ClosureAdder.exe"
+    cfg_path = tmp_path / "ClosureAdder.runtimeconfig.json"
+    asm_path.write_bytes(artifact.assembly_bytes)
+    cfg_path.write_text(_runtimeconfig_for_net9())
+
+    result = subprocess.run(
+        ["dotnet", str(asm_path)],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+    assert result.returncode == 42, (
+        f"closure pipeline broke at runtime.\n"
+        f"  exit code: {result.returncode}\n"
+        f"  stdout: {result.stdout!r}\n"
+        f"  stderr: {result.stderr!r}"
+    )
+
+
 def test_writer_produces_nonempty_output() -> None:
     """Pure unit test — the writer produces some PE bytes for a
     minimal return-42 program.  Pre-CLR01 this test was where we
