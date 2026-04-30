@@ -19,6 +19,7 @@ Quick start::
 from __future__ import annotations
 
 from twig.ast_extract import extract_program
+from twig.ast_nodes import Module, Program
 from twig.compiler import compile_program
 from twig.errors import (
     TwigCompileError,
@@ -39,6 +40,9 @@ __all__ = [
     "parse_twig",
     "extract_program",
     "compile_program",
+    # AST surface (TW04 Phase 4a — module declarations)
+    "Module",
+    "Program",
     # Heap surface
     "Heap",
     "HeapHandle",

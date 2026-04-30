@@ -35,6 +35,7 @@ from twig.ast_nodes import (
     IntLit,
     Lambda,
     Let,
+    Module,
     NilLit,
     Program,
     SymLit,
@@ -100,13 +101,91 @@ def _pos(node: ASTNode | Any) -> tuple[int | None, int | None]:
 
 
 def extract_program(root: ASTNode) -> Program:
-    """Convert a parsed ``program`` ASTNode into a :class:`Program`."""
+    """Convert a parsed ``program`` ASTNode into a :class:`Program`.
+
+    TW04 Phase 4a: if the program starts with a ``module_form``
+    child, lift it to a :class:`Module` and attach it to the
+    returned :class:`Program`.  Programs without a leading module
+    declaration get ``module=None`` (implicit default module —
+    back-compat for every single-file Twig program written
+    before TW04).
+    """
     _expect_rule(root, "program")
+    module: Module | None = None
     forms: list[Form] = []
     for child in _ast_children(root):
+        if child.rule_name == "module_form":
+            # Grammar's ``[ module_form ]`` allows at most one,
+            # so we'll only ever see this branch once.
+            module = _extract_module(child)
+            continue
         _expect_rule(child, "form")
         forms.append(_extract_form(child))
-    return Program(forms=forms)
+    return Program(forms=forms, module=module)
+
+
+# ---------------------------------------------------------------------------
+# Module form (TW04 Phase 4a)
+# ---------------------------------------------------------------------------
+
+
+def _extract_module(node: ASTNode) -> Module:
+    """Convert a ``module_form`` ASTNode into a :class:`Module`.
+
+    Grammar: ``module_form = LPAREN "module" NAME { module_clause } RPAREN ;``
+
+    Multiple ``(export ...)`` clauses are concatenated rather
+    than rejected: the spec is silent on the question and the
+    practical answer (concatenate, like Python's multiple
+    ``__all__`` shadowing wouldn't but Scheme R7RS's nested
+    ``export`` does) keeps the parser permissive.  Duplicate
+    *names* across clauses ARE rejected — that's an unambiguous
+    user error.
+
+    Imports are similarly concatenated; duplicate imports are
+    rejected because ``(import x) (import x)`` is meaningless and
+    typically a copy-paste bug.
+    """
+    line, col = _pos(node)
+    # The leading NAME (after the "module" keyword) is the
+    # module's path-shaped identifier (e.g. ``stdlib/io``).  The
+    # grammar guarantees one is present.
+    name_tok = next(c for c in node.children if _is_token(c, "NAME"))
+
+    exports: list[str] = []
+    imports: list[str] = []
+    for clause in _ast_children(node):
+        # Grammar: ``module_form = ... { module_clause } RPAREN ;``
+        # so every ASTNode child is a module_clause whose only
+        # ASTNode child is an export_clause or an import_clause.
+        inner = _ast_children(clause)[0]
+        if inner.rule_name == "export_clause":
+            for tok in (c for c in inner.children if _is_token(c, "NAME")):
+                if str(tok.value) in exports:
+                    cl, cc = _pos(inner)
+                    raise TwigParseError(
+                        f"duplicate export name {tok.value!r} in "
+                        f"(module {name_tok.value} ...)",
+                        line=cl, column=cc,
+                    )
+                exports.append(str(tok.value))
+        else:  # import_clause
+            for tok in (c for c in inner.children if _is_token(c, "NAME")):
+                if str(tok.value) in imports:
+                    cl, cc = _pos(inner)
+                    raise TwigParseError(
+                        f"duplicate import {tok.value!r} in "
+                        f"(module {name_tok.value} ...)",
+                        line=cl, column=cc,
+                    )
+                imports.append(str(tok.value))
+
+    return Module(
+        name=str(name_tok.value),
+        exports=exports,
+        imports=imports,
+        line=line, column=col,
+    )
 
 
 # ---------------------------------------------------------------------------

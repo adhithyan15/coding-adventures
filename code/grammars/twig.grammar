@@ -23,9 +23,33 @@
 # closure cycles and are deferred to TW01 + mark-sweep GC.  See
 # ``code/specs/TW00-twig-language.md``.
 
-# A program is a sequence of forms.  An empty file is valid (it
-# compiles to an empty Twig module that returns ``nil``).
-program = { form } ;
+# A program is an optional module declaration followed by a
+# sequence of forms.  An empty file is valid (it compiles to an
+# empty Twig module that returns ``nil``).
+#
+# TW04 Phase 4a: when ``(module name ...)`` is present, it MUST
+# be the first form in the file (forms-before-module-form is a
+# TwigCompileError).  Programs without ``(module ...)`` get an
+# implicit "default module" so existing single-file programs
+# keep working unchanged — see ``twig.ast_extract.extract_program``.
+program = [ module_form ] { form } ;
+
+# (module name (export n1 n2 ...) (import m1 m2 ...))
+#
+# ``name`` is a slash-separated path matching the file's location
+# relative to a search-path root: ``stdlib/io.tw`` → module name
+# ``stdlib/io``.  The lexer's NAME regex already permits ``/``
+# inside an identifier so the entire path tokenises as a single
+# NAME.
+#
+# ``(export ...)`` and ``(import ...)`` clauses may appear in any
+# order, zero or more times each.  Semantic checks (uniqueness,
+# at-most-one-export-clause, etc.) live in ``twig.ast_extract``
+# rather than the grammar so error messages can carry context.
+module_form    = LPAREN "module" NAME { module_clause } RPAREN ;
+module_clause  = export_clause | import_clause ;
+export_clause  = LPAREN "export" { NAME } RPAREN ;
+import_clause  = LPAREN "import" { NAME } RPAREN ;
 
 # A form is either a top-level (define ...) or any expression.
 # Top-level expressions accumulate into the synthesised ``main``

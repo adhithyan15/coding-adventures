@@ -148,15 +148,58 @@ class Define:
 
 
 @dataclass
+class Module:
+    """A ``(module name (export ...) (import ...))`` declaration.
+
+    Attached to the :class:`Program` it heads.  Contains:
+
+    * ``name`` — slash-separated module path (``stdlib/io``,
+      ``user/compiler/lexer``).  Must match the file's location
+      relative to a module-search-path root; module-resolution
+      enforces that mismatch is a compile error (TW04 Phase 4b).
+
+    * ``exports`` — ordered list of names this module makes
+      visible to importers.  Names not in this list are
+      file-private.  An empty list means "no public surface"
+      (legal but unusual — useful for entry-point modules whose
+      only role is the side-effect of running their top-level
+      forms).
+
+    * ``imports`` — ordered list of module paths whose exports
+      this module brings into its namespace.  Each imported
+      module's names are accessed as ``<module-path>/<name>``
+      (e.g. ``host/write-byte``, ``stdlib/io/println``) — the
+      prefix is mandatory; see TW04 spec on namespace hygiene.
+
+    Phase 4a is parser-only: the AST records this declaration
+    but no module-resolution, cross-module IR, or per-backend
+    lowering happens yet.  The :class:`Program`'s ``forms`` list
+    is unchanged from the no-module case.
+    """
+
+    name: str
+    exports: list[str] = field(default_factory=list)
+    imports: list[str] = field(default_factory=list)
+    line: int | None = None
+    column: int | None = None
+
+
+@dataclass
 class Program:
     """A whole compilation unit.
 
     ``forms`` is the ordered sequence of top-level defines and
     expressions.  Top-level expressions accumulate into the
     synthesised ``main`` function during compilation.
+
+    ``module`` is the optional :class:`Module` declaration
+    (TW04 Phase 4a).  When ``None``, the program belongs to an
+    implicit "default module" — back-compat for every single-file
+    Twig program written before TW04 landed.
     """
 
     forms: list[Form]
+    module: Module | None = None
 
 
 # ---------------------------------------------------------------------------
