@@ -219,6 +219,51 @@ def test_closure_let_bound() -> None:
     assert result.returncode == 42, result.stderr
 
 
+@requires_dotnet
+def test_three_deep_curry() -> None:
+    """``(((mk2 a) b) c) → 42`` — closure that returns a closure
+    that returns an int.
+
+    Was a SIGSEGV pre-fix because IClosure.Apply returned int32 so
+    the inner closure ref returned by the outer lambda body was
+    truncated to int.  Fixed in ir-to-cil-bytecode v0.9.0:
+    IClosure.Apply now returns object polymorphically (closures
+    that return int box; closures that return obj return the ref
+    directly), and APPLY_CLOSURE callers forward-scan dst's next
+    obj-source use to pick unbox.any int32 vs stloc-obj.
+    """
+    result = run_source(
+        """
+        (define (mk2 a) (lambda (b) (lambda (c) (+ a (+ b c)))))
+        (((mk2 10) 20) 12)
+        """,
+        assembly_name="ClrCurry3",
+    )
+    # 10 + 20 + 12 = 42
+    assert result.returncode == 42, result.stderr
+
+
+@requires_dotnet
+def test_let_bound_closure_called_twice() -> None:
+    """``(let ((add5 (mk-adder 5))) (+ (add5 10) (add5 27))) → 47``.
+
+    Exercises the unbox.any path: the closure returns boxed int,
+    caller's dst (r1's int slot for the ADD result) needs an
+    int — so APPLY_CLOSURE emits unbox.any [System.Int32] before
+    stloc.
+    """
+    result = run_source(
+        """
+        (define (mk-adder n) (lambda (x) (+ x n)))
+        (let ((add5 (mk-adder 5)))
+          (+ (add5 10) (add5 27)))
+        """,
+        assembly_name="ClrLetTwice",
+    )
+    # 15 + 32 = 47
+    assert result.returncode == 47, result.stderr
+
+
 # ── Heap primitives — recursive heap programs on real dotnet ──────────────
 
 

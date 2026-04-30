@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.4.0 — 2026-04-30 — System.Int32 TypeRef (closure box support)
+
+Adds a third TypeRef row for `[System.Runtime]System.Int32` so
+the CIL `box` opcode has a stable TypeDefOrRef token to reference
+when boxing int32 closure returns into the polymorphic
+`object`-returning `IClosure::Apply` contract (TW03 Phase 3
+follow-up — closure-returning closures).
+
+Always emitted (small cost; deterministic token assignment).
+Token is `0x01000003` (TypeRef table tag 0x01, row 3).
+
 ## 0.3.0 — 2026-04-29 — CLR02 Phase 2b (multi-TypeDef metadata)
 
 ### Added — extra TypeDefs alongside the user's main type

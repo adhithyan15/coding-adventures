@@ -209,6 +209,15 @@ class CILTokenProvider(Protocol):
     def system_object_ctor_token(self) -> int:
         """Return the MemberRef token for ``[System.Runtime]System.Object::.ctor()``."""
 
+    def system_int32_typeref_token(self) -> int:
+        """Return the TypeRef token for ``[System.Runtime]System.Int32``.
+
+        Used as the operand to the CIL ``box`` opcode when wrapping
+        an int32 return into an ``object`` for the IClosure.Apply
+        contract (TW03 Phase 3 follow-up — closure-returning
+        closures need polymorphic Apply return).
+        """
+
     # ── TW03 Phase 3c — heap-primitive tokens ───────────────────────────
     #
     # When ``include_heap_types=True`` the provider also lays out the
@@ -408,6 +417,15 @@ class SequentialCILTokenProvider:
             msg = "no closure regions registered with this token provider"
             raise CILBackendError(msg)
         return self._object_ctor
+
+    def system_int32_typeref_token(self) -> int:
+        """``[System.Runtime]System.Int32`` lives at TypeRef row 3
+        (helper TypeRef = row 1, System.Object = row 2, System.Int32
+        = row 3).  TypeRef table tag = 0x01 → token 0x01000003.
+        Always available — the writer emits the TypeRef row
+        unconditionally so closure-returning closures' Apply box
+        opcode has a stable token to reference."""
+        return 0x01000003
 
     # ── Heap-primitive token getters (TW03 Phase 3c) ────────────────────
 
@@ -989,8 +1007,15 @@ def _classify_function_return_types(
     closure_region_names: set[str],
 ) -> dict[str, str]:
     """Compute each region's return type by iterating to a fixed
-    point.  Closure regions (lambdas) always return int32 per the
-    IClosure interface contract.
+    point.
+
+    TW03 Phase 3 follow-up: closure regions are also classified
+    here (was previously skipped on the assumption all closures
+    return int32 per the IClosure contract).  With Apply now
+    returning ``object`` polymorphically, the closure-region
+    adapter needs the body's actual return-type to decide
+    whether to box (for int-returning bodies) or just ldloc-obj
+    (for closure-returning bodies).
     """
     return_types: dict[str, str] = {r.name: "int32" for r in regions}
     changed = True
@@ -999,8 +1024,6 @@ def _classify_function_return_types(
         changed = False
         iteration_cap -= 1
         for region in regions:
-            if region.name in closure_region_names:
-                continue
             inferred = _infer_region_return_type(region, return_types)
             if inferred != return_types[region.name]:
                 return_types[region.name] = inferred
@@ -1088,6 +1111,36 @@ def _collect_object_typed_registers(
     # parameter — needs the back-prop pass to also become obj so
     # the function signature declares it as object and the entry
     # shuffle stores ldarg into v2's obj slot.
+    # Collect register indices that are NEVER written by the body
+    # (i.e. parameter slots + uninitialized regs).  Back-prop only
+    # fires to these, NOT to registers that have body writes — a
+    # register that is reused for both an obj value and an int value
+    # at different program points (e.g. ``r1`` first holding a
+    # closure return from CALL, then later overwritten with the
+    # int from APPLY_CLOSURE) would otherwise be UNION-classified
+    # as obj and incorrectly propagate obj-typing back to its int
+    # source via the move idiom.
+    body_written_regs: set[int] = set()
+    for instr in region.instructions:
+        # First operand is the dst for write-producing ops (per the
+        # _instr_register_type_writes rules).  Match on opcode to
+        # avoid false positives for CALL / RET / etc.
+        op = instr.opcode
+        if op in (
+            IrOp.MAKE_CLOSURE, IrOp.MAKE_CONS, IrOp.MAKE_SYMBOL,
+            IrOp.LOAD_NIL, IrOp.CDR, IrOp.CAR, IrOp.IS_NULL,
+            IrOp.IS_PAIR, IrOp.IS_SYMBOL, IrOp.APPLY_CLOSURE,
+            IrOp.LOAD_IMM, IrOp.LOAD_ADDR, IrOp.LOAD_BYTE,
+            IrOp.LOAD_WORD, IrOp.ADD, IrOp.SUB, IrOp.AND,
+            IrOp.AND_IMM, IrOp.OR, IrOp.OR_IMM, IrOp.XOR,
+            IrOp.XOR_IMM, IrOp.NOT, IrOp.MUL, IrOp.DIV, IrOp.ADD_IMM,
+            IrOp.CMP_EQ, IrOp.CMP_NE, IrOp.CMP_LT, IrOp.CMP_GT,
+        ):
+            if instr.operands and isinstance(instr.operands[0], IrRegister):
+                body_written_regs.add(instr.operands[0].index)
+        elif op is IrOp.CALL:
+            # CALL writes to r1 (the return-value slot).
+            body_written_regs.add(_REG_HALT_RESULT)
     changed = True
     cap = len(region.instructions) + 4
     while changed and cap > 0:
@@ -1108,10 +1161,92 @@ def _collect_object_typed_registers(
                 continue
             dst_idx = instr.operands[0].index
             src_idx = instr.operands[1].index
-            if dst_idx in obj_regs and src_idx not in obj_regs:
+            if (
+                dst_idx in obj_regs
+                and src_idx not in obj_regs
+                and src_idx not in body_written_regs
+            ):
                 obj_regs.add(src_idx)
                 changed = True
     return obj_regs, instr_types
+
+
+def _apply_closure_dst_used_as_obj(
+    region_instructions: tuple[IrInstruction, ...],
+    start_index: int,
+    dst_idx: int,
+) -> bool:
+    """Forward-scan: starting at ``start_index``, return True iff
+    ``dst_idx`` is read as an obj source before being written or
+    before the region ends.
+
+    Handles two patterns:
+    * Direct obj-source read (CDR src, CAR src, IS_NULL src,
+      IS_PAIR src, IS_SYMBOL src, MAKE_CONS tail, APPLY_CLOSURE
+      closure_reg) → True.
+    * ``ADD_IMM dst', src=dst_idx, 0`` (the move idiom) → if
+      dst' is later used as obj, the original dst_idx propagated
+      that obj-ness through the move.  Recurse on dst'.
+
+    Stops at the next write to dst_idx (then the original value
+    is no longer live) or end of region (no more uses → caller
+    treats as int and unboxes, which is the safe default).
+    """
+    seen: set[int] = set()
+    return _scan_obj_use(region_instructions, start_index, dst_idx, seen)
+
+
+def _scan_obj_use(
+    region_instructions: tuple[IrInstruction, ...],
+    start_index: int,
+    target: int,
+    seen: set[int],
+) -> bool:
+    if target in seen:
+        return False
+    seen.add(target)
+    for i in range(start_index, len(region_instructions)):
+        instr = region_instructions[i]
+        # Is target read as obj here?
+        if target in _instr_obj_source_reads(instr):
+            return True
+        # ADD_IMM-0 move propagating target?
+        if (
+            instr.opcode is IrOp.ADD_IMM
+            and len(instr.operands) >= 3
+            and isinstance(instr.operands[0], IrRegister)
+            and isinstance(instr.operands[1], IrRegister)
+            and isinstance(instr.operands[2], IrImmediate)
+            and instr.operands[2].value == 0
+            and instr.operands[1].index == target
+        ):
+            new_target = instr.operands[0].index
+            if _scan_obj_use(region_instructions, i + 1, new_target, seen):
+                return True
+            # Move happened — original target value still lives
+            # only at this slot (target itself).  Keep scanning
+            # for direct obj-source reads of target.
+            continue
+        # Write to target overwrites the value — stop scanning.
+        if instr.operands and isinstance(instr.operands[0], IrRegister):
+            if instr.operands[0].index == target:
+                op = instr.opcode
+                if op in (
+                    IrOp.MAKE_CLOSURE, IrOp.MAKE_CONS, IrOp.MAKE_SYMBOL,
+                    IrOp.LOAD_NIL, IrOp.CDR, IrOp.CAR, IrOp.IS_NULL,
+                    IrOp.IS_PAIR, IrOp.IS_SYMBOL, IrOp.APPLY_CLOSURE,
+                    IrOp.LOAD_IMM, IrOp.LOAD_ADDR, IrOp.LOAD_BYTE,
+                    IrOp.LOAD_WORD, IrOp.ADD, IrOp.SUB, IrOp.AND,
+                    IrOp.AND_IMM, IrOp.OR, IrOp.OR_IMM, IrOp.XOR,
+                    IrOp.XOR_IMM, IrOp.NOT, IrOp.MUL, IrOp.DIV,
+                    IrOp.ADD_IMM, IrOp.CMP_EQ, IrOp.CMP_NE,
+                    IrOp.CMP_LT, IrOp.CMP_GT,
+                ):
+                    return False
+        # CALL writes r1 — stop if target is r1.
+        if instr.opcode is IrOp.CALL and target == _REG_HALT_RESULT:
+            return False
+    return False
 
 
 def _instr_obj_source_reads(instr: IrInstruction) -> set[int]:
@@ -1340,6 +1475,7 @@ def _lower_region(
         instr_types=instr_types,
         function_return_types=plan.function_return_types,
         return_type=return_type,
+        region_instructions=tuple(region.instructions),
     )
 
     for index, instruction in enumerate(region.instructions):
@@ -1390,6 +1526,10 @@ class _RegionEmitContext:
     function_return_types: dict[str, str]
     return_type: str
     current_instr_index: int = 0
+    # Stash the region's instruction tuple so APPLY_CLOSURE can
+    # forward-scan to disambiguate dst's type at this program
+    # point (vs flow-insensitive obj_regs membership).
+    region_instructions: tuple[IrInstruction, ...] = ()
 
     def reg_type_after_current(self, reg_idx: int) -> str:
         """Type of ``reg_idx`` as of *after* the current
@@ -1438,7 +1578,32 @@ def _lower_closure_region(
     builder = CILBytecodeBuilder()
     num_free = plan.closure_free_var_counts[region.name]
 
-    # Prologue: captures from this.fieldI → r{2..1+num_free}
+    # TW03 Phase 3 follow-up: closure regions now use the same
+    # typed-pool + ctx machinery as regular regions so the body
+    # can write/read object refs (e.g. an inner MAKE_CLOSURE that
+    # produces a closure-of-closure).  Without this the body's
+    # MAKE_CLOSURE would stloc-int the new ref and truncate it.
+    obj_regs, instr_types = _collect_object_typed_registers(
+        region, plan.function_return_types,
+    )
+    obj_local_for: dict[int, int] = {
+        reg_idx: plan.local_count + offset
+        for offset, reg_idx in enumerate(sorted(obj_regs))
+    }
+
+    body_return_type = plan.function_return_types.get(region.name, "int32")
+
+    ctx = _RegionEmitContext(
+        plan=plan,
+        config=config,
+        obj_local_for=obj_local_for,
+        instr_types=instr_types,
+        function_return_types=plan.function_return_types,
+        return_type=body_return_type,
+        region_instructions=tuple(region.instructions),
+    )
+
+    # Prologue: captures from this.fieldI → r{2..1+num_free}.
     for i in range(num_free):
         field_token = plan.token_provider.closure_field_token(region.name, i)
         builder.emit_ldarg(0)  # this
@@ -1449,18 +1614,53 @@ def _lower_closure_region(
     builder.emit_ldarg(1)
     builder.emit_stloc(_REG_PARAM_BASE + num_free)
 
-    for instruction in region.instructions:
-        _emit_instruction(builder, instruction, config, plan)
+    # Body emission.  RET at the end will use ctx.return_type to
+    # pick int vs obj slot.  For obj-returning closures the body
+    # also stsfld's the obj ref into the side-channel field
+    # ``_ca_obj_return`` so APPLY_CLOSURE callers can pick it up
+    # (IClosure.Apply's return signature stays int32 — an
+    # obj-typed closure result rides through this field instead).
+    last_instr = region.instructions[-1] if region.instructions else None
+    body_instrs = (
+        region.instructions[:-1]
+        if last_instr is not None and last_instr.opcode in (IrOp.RET, IrOp.HALT)
+        else region.instructions
+    )
+    for index, instruction in enumerate(body_instrs):
+        ctx.current_instr_index = index
+        _emit_instruction(builder, instruction, config, plan, ctx=ctx)
 
-    # Apply has fixed name on every closure type (overrides the
-    # IClosure interface's abstract method); the IR's region name
-    # (e.g. ``_lambda_0``) becomes the TypeDef name instead.
+    # Closure-region adapter RET.  IClosure.Apply returns ``object``
+    # uniformly so closure-returning closures can carry their inner
+    # closure ref through the call boundary.  Two paths:
+    #
+    #   obj-typed r1: ldloc obj_local_for[1]; ret  (returns the ref
+    #     directly).
+    #
+    #   int-typed r1: ldloc r1; box [System.Int32]; ret  (boxes the
+    #     int into a heap-allocated Integer so it satisfies the
+    #     ``object`` return type).  APPLY_CLOSURE callers unbox.any
+    #     when their dst register is int-typed.
+    if body_return_type == "object" and 1 in obj_local_for:
+        builder.emit_ldloc(obj_local_for[1])
+    else:
+        builder.emit_ldloc(1)
+        # box [System.Runtime]System.Int32 — opcode 0x8C; token is
+        # a TypeRef into System.Runtime for System.Int32.
+        builder.emit_token_instruction(
+            0x8C, plan.token_provider.system_int32_typeref_token(),
+        )
+    builder.emit_ret()
+
+    local_types = tuple("int32" for _ in range(plan.local_count)) + tuple(
+        "object" for _ in range(len(obj_regs))
+    )
     return CILMethodArtifact(
         name="Apply",
         body=builder.assemble(),
         max_stack=max(config.method_max_stack, 2),
-        local_types=tuple("int32" for _ in range(plan.local_count)),
-        return_type="int32",
+        local_types=local_types,
+        return_type="object",
         parameter_types=("int32",),
         is_instance=True,
     )
@@ -1477,6 +1677,13 @@ def _build_closure_extra_types(
     if not plan.closure_names:
         return ()
 
+    # TW03 Phase 3 follow-up: IClosure.Apply now returns ``object``
+    # (was ``int32``).  Polymorphic Apply lets closure-returning
+    # closures (e.g. ``(((mk2 a) b) c)``) carry the inner closure
+    # ref through the call boundary — int-returning closures box,
+    # obj-returning closures return the ref directly, and
+    # APPLY_CLOSURE callers unbox.any back to int32 when the dst
+    # register is int-typed.
     iclosure = CILTypeArtifact(
         name="IClosure",
         namespace="CodingAdventures",
@@ -1488,7 +1695,7 @@ def _build_closure_extra_types(
                 body=b"",
                 max_stack=0,
                 local_types=(),
-                return_type="int32",
+                return_type="object",
                 parameter_types=("int32",),
                 is_instance=True,
                 is_abstract=True,
@@ -1971,15 +2178,56 @@ def _emit_instruction(
         arg_reg = _as_register(instruction.operands[3], "APPLY_CLOSURE arg 0")
 
         # Phase 2c.5: closure_reg is an object-typed register —
-        # read it from the obj slot.  arg_reg is int32, dst is
-        # int32 (apply returns int32).
+        # read it from the obj slot.  arg_reg is int32.
+        # TW03 Phase 3 follow-up: IClosure.Apply now returns
+        # ``object`` (was int32) so closure-returning closures can
+        # carry their inner ref through the call.  The caller picks
+        # the post-call shape based on dst's typing in this region:
+        #
+        #   dst obj-typed: stloc obj_local_for[dst]  — the returned
+        #     object is the inner closure ref (or any other obj).
+        #
+        #   dst int-typed: unbox.any int32; stloc dst — the returned
+        #     object is a boxed Int32 (the closure's Apply boxed
+        #     before ret).
         if ctx is not None and closure_reg.index in ctx.obj_local_for:
             builder.emit_ldloc(ctx.obj_local_for[closure_reg.index])
         else:
             builder.emit_ldloc(closure_reg.index)
         builder.emit_ldloc(arg_reg.index)
         builder.emit_callvirt(plan.token_provider.iclosure_apply_token())
-        builder.emit_stloc(dst.index)
+        # Stack now: [object]
+        #
+        # Pick the post-call shape based on dst's NEXT usage in the
+        # body (forward-scan): if the next non-move read of dst is
+        # an obj-source op (e.g. APPLY_CLOSURE closure_reg, CDR src),
+        # the closure's Apply returned a real obj — stloc into
+        # obj_local_for[dst].  Otherwise the result is a boxed int —
+        # unbox.any int32 then stloc into the int slot.
+        #
+        # Forward-scan (instead of obj_regs membership) is needed
+        # because dst may be a register that was obj-typed EARLIER
+        # but is now being reused for an int value (e.g. ``r1``
+        # holding a closure ref from CALL, then later overwritten
+        # by APPLY_CLOSURE's int result).  Membership in obj_regs
+        # is "ever obj" — it tells us a slot exists, not which slot
+        # is correct here.
+        wants_obj_dst = False
+        if ctx is not None and dst.index in ctx.obj_local_for:
+            wants_obj_dst = _apply_closure_dst_used_as_obj(
+                region_instructions=ctx.region_instructions,
+                start_index=ctx.current_instr_index + 1,
+                dst_idx=dst.index,
+            )
+        if wants_obj_dst:
+            builder.emit_stloc(ctx.obj_local_for[dst.index])
+        else:
+            # unbox.any [System.Int32] — opcode 0xA5; reads object,
+            # leaves int32 on stack.
+            builder.emit_token_instruction(
+                0xA5, plan.token_provider.system_int32_typeref_token(),
+            )
+            builder.emit_stloc(dst.index)
         return
 
     # ── TW03 Phase 3c — heap-primitive lowering ─────────────────────────

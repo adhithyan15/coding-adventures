@@ -407,6 +407,13 @@ class CLIAssemblyWriter:
         empty_blob = blobs.add(b"")
         system_object_name_index = strings.add("Object")
         system_namespace_index = strings.add("System")
+        # TW03 Phase 3 follow-up: System.Int32 TypeRef so the box
+        # opcode can wrap int32 closure returns into ``object`` for
+        # the IClosure.Apply contract.  Always emitted (small cost
+        # — 6 bytes of TypeRef + 6 bytes of string heap) so the
+        # token assignment stays deterministic regardless of whether
+        # any specific compilation needs box.
+        system_int32_name_index = strings.add("Int32")
 
         # Same keying decision as the sig table: MethodDef row (1-based).
         # ``Apply`` / ``.ctor`` repeat across closure types and would
@@ -487,6 +494,7 @@ class CLIAssemblyWriter:
             ecma_token_blob=ecma_token_blob,
             empty_blob=empty_blob,
             system_object_name_index=system_object_name_index,
+            system_int32_name_index=system_int32_name_index,
             system_namespace_index=system_namespace_index,
         )
         # Stream order matches what real C# emits: #~, #Strings, #US,
@@ -535,6 +543,7 @@ class CLIAssemblyWriter:
         ecma_token_blob: int,
         empty_blob: int,
         system_object_name_index: int,
+        system_int32_name_index: int,
         system_namespace_index: int,
     ) -> bytes:
         tables: dict[int, list[bytes]] = {
@@ -562,6 +571,15 @@ class CLIAssemblyWriter:
                     "<HHH",
                     6,
                     system_object_name_index,
+                    system_namespace_index,
+                ),
+                # Row 3: ``System.Int32``.  Used by closure subclasses'
+                # Apply method when boxing int32 returns into the
+                # ``object`` IClosure.Apply contract (TW03 Phase 3).
+                struct.pack(
+                    "<HHH",
+                    6,
+                    system_int32_name_index,
                     system_namespace_index,
                 ),
             ],

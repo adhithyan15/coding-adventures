@@ -1,5 +1,23 @@
 # Changelog — twig-clr-compiler
 
+## 0.5.0 — 2026-04-30 — closure-returning closures (3-deep curry)
+
+Closure-returning closures now run end-to-end on real `dotnet`:
+
+```
+(define (mk2 a) (lambda (b) (lambda (c) (+ a (+ b c)))))
+(((mk2 10) 20) 12)
+→ 42
+```
+
+Was unblocked by ir-to-cil-bytecode v0.9.0 — IClosure.Apply now
+returns object polymorphically (boxes int returns, returns obj
+refs directly), and APPLY_CLOSURE callers forward-scan to pick
+unbox.any vs stloc-obj.
+
+Mutual recursion `(evp 8) → 1` also works (it always did on CLR
+— noted here for cross-backend completeness).
+
 ## 0.4.0 — 2026-04-30 — recursive heap programs run on real dotnet
 
 Heap programs now run end-to-end on real `dotnet` from raw Twig
