@@ -21,6 +21,8 @@ the current lane already supports a substantial ALGOL 60 surface:
 - chained assignment, conditional expressions, tolerant trailing/repeated
   semicolons, numeric runtime failure guards, and
   ALGOL-left-associative exponentiation for integer or real exponents
+- boolean `and`, `or`, and `impl` with short-circuiting RHS evaluation, plus
+  strict `eqv`
 - standard numeric functions `abs`, `sign`, `entier`, `sqrt`, `sin`, `cos`,
   `arctan`, `ln`, and `exp`; non-native real math is imported through the
   runtime's `compiler_math` host ABI
