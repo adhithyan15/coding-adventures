@@ -35,6 +35,9 @@ NULL characters in data/RCDATA/RAWTEXT/PLAINTEXT/CDATA/script data and
 attribute values recover by reporting `unexpected-null-character` and appending
 U+FFFD, matching the replacement behavior the future parser will expect from
 the lexer/tokenizer boundary.
+Tag names and attribute names now use the same recovery shape, so a raw NULL in
+markup names becomes U+FFFD and records `unexpected-null-character` instead of
+leaking the raw code point into emitted tokens.
 Comment tokenization includes the standard start-dash recovery cases for empty
 HTML comments such as `<!-->` and `<!--->`, while still preserving normal
 Mosaic-era `<!--note-->` comments. Nested-looking `<!--` sequences inside an

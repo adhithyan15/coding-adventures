@@ -452,6 +452,9 @@ impl Tokenizer {
                     })?;
                     self.append_tag_name(action, ch, true)?;
                 }
+                "append_tag_name_replacement" => {
+                    self.append_tag_name(action, '\u{FFFD}', false)?;
+                }
                 "start_attribute" => {
                     self.current_attribute = Some(Attribute {
                         name: String::new(),
@@ -469,6 +472,9 @@ impl Tokenizer {
                         action: action.clone(),
                     })?;
                     self.append_attribute_name(action, ch, true)?;
+                }
+                "append_attribute_name_replacement" => {
+                    self.append_attribute_name(action, '\u{FFFD}', false)?;
                 }
                 "append_attribute_value(current)" => {
                     let ch = current.ok_or_else(|| TokenizerError::MissingCurrentCodePoint {

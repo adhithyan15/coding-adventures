@@ -239,6 +239,21 @@
       ]
     },
     {
+      "description": "null characters are replaced in tag and attribute names",
+      "input": "<x\u0000 \u0000=v a\u0000b=1 first \u0000second=2></x\u0000>",
+      "output": [
+        ["StartTag", "x\uFFFD", {"\uFFFD": "v", "a\uFFFDb": "1", "first": "", "\uFFFDsecond": "2"}],
+        ["EndTag", "x\uFFFD"]
+      ],
+      "errors": [
+        {"code": "unexpected-null-character", "line": 1, "col": 3},
+        {"code": "unexpected-null-character", "line": 1, "col": 5},
+        {"code": "unexpected-null-character", "line": 1, "col": 10},
+        {"code": "unexpected-null-character", "line": 1, "col": 21},
+        {"code": "unexpected-null-character", "line": 1, "col": 34}
+      ]
+    },
+    {
       "description": "plaintext state literalizes markup and character references",
       "initialStates": ["PLAINTEXT state"],
       "input": "hello <b>still text</b> &amp; literal",
