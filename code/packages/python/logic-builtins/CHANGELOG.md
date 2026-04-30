@@ -24,6 +24,8 @@ All notable changes to this package will be documented in this file.
 - higher-order list predicates `maplisto/2..5`, `convlisto/3`, `includeo/3`,
   `excludeo/3`, `partitiono/4`, `foldlo/4..7`, and `scanlo/4..7` backed by
   callable-term execution.
+- `not_same_termo(left, right)` as the strict non-identity counterpart to
+  `same_termo(left, right)`.
 
 ### Fixed
 

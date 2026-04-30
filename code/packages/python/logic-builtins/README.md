@@ -34,7 +34,8 @@ ordinary logic goal expressions.
 - `functoro(term, name, arity)` for inspection and construction
 - `argo(index, term, value)`
 - `univo(term, parts)` for Prolog-style `=../2` term decomposition/construction
-- `copytermo(source, copy)` and `same_termo(left, right)`
+- `copytermo(source, copy)`, `same_termo(left, right)`, and
+  `not_same_termo(left, right)`
 - `clauseo(head, body)` for Prolog-style clause introspection
 - `compare_termo(order, left, right)`, `termo_lto(left, right)`,
   `termo_leqo(left, right)`, `termo_gto(left, right)`, and
@@ -98,6 +99,7 @@ from logic_builtins import (
     iso,
     labelingo,
     maplisto,
+    not_same_termo,
     noto,
     onceo,
     partitiono,

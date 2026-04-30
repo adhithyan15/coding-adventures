@@ -128,6 +128,7 @@ __all__ = [
     "mul",
     "neg",
     "nonvaro",
+    "not_same_termo",
     "noto",
     "numeqo",
     "numneqo",
@@ -270,6 +271,7 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("maplisto", 4),
     ("maplisto", 5),
     ("nonvaro", 1),
+    ("not_same_termo", 2),
     ("noto", 1),
     ("numeqo", 2),
     ("numneqo", 2),
@@ -3248,6 +3250,19 @@ def same_termo(left: object, right: object) -> GoalExpr:
         left_term, right_term = args
         yield from _succeed_if(
             _reified(left_term, state) == _reified(right_term, state),
+            state,
+        )
+
+    return native_goal(run, left, right)
+
+
+def not_same_termo(left: object, right: object) -> GoalExpr:
+    """Succeed when two reified terms are not strictly identical without binding."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        left_term, right_term = args
+        yield from _succeed_if(
+            _reified(left_term, state) != _reified(right_term, state),
             state,
         )
 

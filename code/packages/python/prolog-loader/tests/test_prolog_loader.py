@@ -836,7 +836,10 @@ class TestPrologGoalAdapter:
                 term("memo", atom("ok")),
                 term(".", atom("memo"), term(".", atom("ok"), atom("[]"))),
             ),
+            relation("=", 2)(LogicVar(id=14), atom("a")),
+            relation("\\=", 2)(atom("a"), atom("b")),
             relation("==", 2)(atom("a"), atom("a")),
+            relation("\\==", 2)(atom("a"), atom("b")),
             relation("compare", 3)(atom("<"), atom("a"), atom("b")),
             relation("@<", 2)(atom("a"), atom("b")),
             relation("@=<", 2)(atom("a"), atom("b")),
@@ -1020,6 +1023,41 @@ class TestPrologGoalAdapter:
             parsed.variables["Result"],
             adapted,
         ) == [atom("first")]
+
+    def test_adapt_prolog_goal_rewrites_term_equality_predicates(self) -> None:
+        parsed = parse_swi_query(
+            "?- X = box(tea), X == box(tea), X \\== box(cake), "
+            "X \\= box(cake), Result = ok.",
+        )
+
+        adapted = adapt_prolog_goal(parsed.goal)
+
+        assert solve_all(
+            program(),
+            (parsed.variables["X"], parsed.variables["Result"]),
+            adapted,
+        ) == [(term("box", "tea"), atom("ok"))]
+
+    def test_adapt_prolog_goal_rewrites_term_equality_failures(self) -> None:
+        parsed_unifiable = parse_swi_query("?- X \\= box(tea).")
+        parsed_identical = parse_swi_query("?- X = box(tea), X \\== box(tea).")
+        parsed_equal = parse_swi_query("?- X = box(tea), X \\= box(tea).")
+
+        assert solve_all(
+            program(),
+            parsed_unifiable.variables["X"],
+            adapt_prolog_goal(parsed_unifiable.goal),
+        ) == []
+        assert solve_all(
+            program(),
+            parsed_identical.variables["X"],
+            adapt_prolog_goal(parsed_identical.goal),
+        ) == []
+        assert solve_all(
+            program(),
+            parsed_equal.variables["X"],
+            adapt_prolog_goal(parsed_equal.goal),
+        ) == []
 
     def test_adapt_prolog_goal_uses_else_branch_from_original_state(self) -> None:
         parsed = parse_swi_query(

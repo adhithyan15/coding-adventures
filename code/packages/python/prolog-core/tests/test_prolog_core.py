@@ -49,6 +49,12 @@ class TestOperatorTable:
         swi = swi_operator_table()
 
         assert iso.get(":-", "xfx") is not None
+        assert iso.get("==", "xfx") is not None
+        assert iso.get("\\==", "xfx") is not None
+        assert iso.get("@<", "xfx") is not None
+        assert iso.get("@=<", "xfx") is not None
+        assert iso.get("@>", "xfx") is not None
+        assert iso.get("@>=", "xfx") is not None
         assert iso.get(":", "xfy") is None
         assert swi.get(":", "xfy") is not None
         assert iso.get("#=", "xfx") is None
