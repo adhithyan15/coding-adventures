@@ -224,6 +224,21 @@
       ]
     },
     {
+      "description": "null characters are replaced in data and attributes",
+      "input": "A\u0000<a title=\"x\u0000y\" data=x\u0000y bare=\u0000>z",
+      "output": [
+        ["Character", "A\uFFFD"],
+        ["StartTag", "a", {"title": "x\uFFFDy", "data": "x\uFFFDy", "bare": "\uFFFD"}],
+        ["Character", "z"]
+      ],
+      "errors": [
+        {"code": "unexpected-null-character", "line": 1, "col": 2},
+        {"code": "unexpected-null-character", "line": 1, "col": 14},
+        {"code": "unexpected-null-character", "line": 1, "col": 24},
+        {"code": "unexpected-null-character", "line": 1, "col": 32}
+      ]
+    },
+    {
       "description": "plaintext state literalizes markup and character references",
       "initialStates": ["PLAINTEXT state"],
       "input": "hello <b>still text</b> &amp; literal",

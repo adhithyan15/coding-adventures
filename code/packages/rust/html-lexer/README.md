@@ -31,6 +31,10 @@ kept, later attributes with the same interpreted name are dropped, and a
 Unquoted attribute values also preserve spec-defined unexpected characters
 such as `"`, `'`, `<`, `=`, and `` ` `` while reporting
 `unexpected-character-in-unquoted-attribute-value`.
+NULL characters in data/RCDATA/RAWTEXT/PLAINTEXT/CDATA/script data and
+attribute values recover by reporting `unexpected-null-character` and appending
+U+FFFD, matching the replacement behavior the future parser will expect from
+the lexer/tokenizer boundary.
 Comment tokenization includes the standard start-dash recovery cases for empty
 HTML comments such as `<!-->` and `<!--->`, while still preserving normal
 Mosaic-era `<!--note-->` comments. Nested-looking `<!--` sequences inside an

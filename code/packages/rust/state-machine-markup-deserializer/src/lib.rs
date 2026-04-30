@@ -679,6 +679,7 @@ fn validate_action(action: &str, token_names: &HashSet<String>) -> Result<()> {
         "flush_text"
         | "emit_current_as_text"
         | "append_text_replacement"
+        | "append_attribute_value_replacement"
         | "create_start_tag"
         | "create_end_tag"
         | "create_comment"

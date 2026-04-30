@@ -410,6 +410,47 @@ fn tokenizer_appends_temporary_buffer_to_attribute_value() {
 }
 
 #[test]
+fn tokenizer_appends_replacement_character_to_attribute_value() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["A"]),
+            vec![EffectfulTransition::new(
+                "data",
+                EffectfulMatcher::Event("A".to_string()),
+                "done",
+            )
+            .with_effects(&[
+                "create_start_tag",
+                "append_tag_name(current_lowercase)",
+                "start_attribute",
+                "append_attribute_name(title)",
+                "append_attribute_value_replacement",
+                "commit_attribute",
+                "emit_current_token",
+            ])],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("A").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![Token::StartTag {
+            name: "a".to_string(),
+            attributes: vec![Attribute {
+                name: "title".to_string(),
+                value: "\u{FFFD}".to_string(),
+            }],
+            self_closing: false,
+        }]
+    );
+}
+
+#[test]
 fn tokenizer_decodes_numeric_character_references_from_temporary_buffer() {
     let mut tokenizer = Tokenizer::new(
         EffectfulStateMachine::new(

@@ -24,3 +24,5 @@ All notable changes to the `state-machine-tokenizer` crate will be documented in
 - Added `commit_attribute_dedup` for lexer definitions that need HTML-style
   duplicate attribute recovery while keeping plain `commit_attribute`
   available for definitions that preserve duplicates.
+- Added `append_attribute_value_replacement` so lexer definitions can recover
+  invalid attribute-value code points with U+FFFD without host callbacks.

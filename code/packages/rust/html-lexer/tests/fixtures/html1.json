@@ -61,6 +61,23 @@
       ]
     },
     {
+      "id": "null-character-replacement",
+      "description": "NULL characters in data and attribute values are replaced with U+FFFD",
+      "input": "A\u0000<a title=\"x\u0000y\" data=x\u0000y bare=\u0000>z",
+      "tokens": [
+        "Text(data=A\uFFFD)",
+        "StartTag(name=a, attributes=[title=x\uFFFDy, data=x\uFFFDy, bare=\uFFFD], self_closing=false)",
+        "Text(data=z)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "unexpected-null-character",
+        "unexpected-null-character",
+        "unexpected-null-character",
+        "unexpected-null-character"
+      ]
+    },
+    {
       "id": "mosaic-doctype-and-heading",
       "input": "<!DOCTYPE HTML><H1 class=test>Hello</H1>",
       "tokens": [
