@@ -1,5 +1,93 @@
 # Changelog
 
+## 0.7.0 — 2026-04-30 — TW03 Phase 3c (CLR heap primitives, structural)
+
+Adds CLR-side lowering for the eight TW03 Phase 3a heap opcodes
+(`MAKE_CONS`, `CAR`, `CDR`, `IS_NULL`, `IS_PAIR`, `MAKE_SYMBOL`,
+`IS_SYMBOL`, `LOAD_NIL`).  Ships **structural-only** — bytecode
+shape is correct (right opcode bytes, right token-provider
+interaction), three new extra TypeArtifacts (Cons / Symbol / Nil)
+get auto-included in the multi-TypeDef assembly artifact, but a
+follow-up (Phase 3c.5) wires in the cli-assembly-writer-side
+intern table for symbol names and the singleton Nil instance.
+
+Mirrors the staging that worked for closures: Phase 2c shipped
+structural, Phase 2c.5 wired runtime correctness.
+
+### Added — three runtime TypeDefs auto-included on heap-using programs
+
+- `CodingAdventures.Cons` — `int32 head; object tail` + ctor that
+  chains into `System.Object::.ctor()`.  Phase 3c v1 targets
+  list-of-ints (the spec acceptance criterion); a follow-up
+  widens `head` once typed-register inference covers cons head
+  slots.
+- `CodingAdventures.Symbol` — `string name` field + ctor.
+  Phase 3c v1 emits a placeholder `ldnull` for the name argument
+  so two `MAKE_SYMBOL` calls with the same name yield DIFFERENT
+  Symbol instances (semantically wrong, bytecode-shape correct).
+  Phase 3c.5 wires in the proper `ldstr` UserString token via the
+  writer-side intern table.
+- `CodingAdventures.Nil` — empty class with no-arg ctor; used as
+  the `isinst` target for `IS_NULL`.  Phase 3c v1 emits a fresh
+  `newobj Nil` for every `LOAD_NIL` (instead of a singleton);
+  `IS_NULL` still works correctly because every `Nil` instance
+  qualifies as null under the `isinst Nil` test.
+
+### Added — eight opcode lowerings
+
+| Opcode | CIL emission |
+|---|---|
+| `MAKE_CONS dst, head, tail` | `ldloc head; ldloc tail (obj slot); newobj Cons.ctor(int32, object); stloc dst (obj slot)` |
+| `CAR dst, src` | `ldloc src (obj); castclass Cons; ldfld Cons::head; stloc dst (int)` |
+| `CDR dst, src` | `ldloc src (obj); castclass Cons; ldfld Cons::tail; stloc dst (obj)` |
+| `IS_NULL dst, src` | `ldloc src (obj); isinst Nil; ldnull; cgt.un; stloc dst (int)` |
+| `IS_PAIR dst, src` | `ldloc src (obj); isinst Cons; ldnull; cgt.un; stloc dst (int)` |
+| `IS_SYMBOL dst, src` | `ldloc src (obj); isinst Symbol; ldnull; cgt.un; stloc dst (int)` |
+| `MAKE_SYMBOL dst, name_label` | `ldnull; newobj Symbol.ctor(string); stloc dst (obj)` (placeholder) |
+| `LOAD_NIL dst` | `newobj Nil.ctor(); stloc dst (obj)` |
+
+### Added — token provider extension
+
+`SequentialCILTokenProvider` accepts `include_heap_types=True`
+which lays out heap method, field, and TypeDef tokens deterministically
+AFTER any closure rows.  See the docstring for the exact layout.
+
+The Protocol gains 9 new methods: `heap_cons_ctor_token`,
+`heap_cons_head_token`, `heap_cons_tail_token`,
+`heap_symbol_ctor_token`, `heap_symbol_name_token`,
+`heap_nil_ctor_token`, `heap_cons_typedef_token`,
+`heap_symbol_typedef_token`, `heap_nil_typedef_token`.
+
+### Added — type-tracking rules
+
+`_instr_register_type_writes` now classifies:
+- `MAKE_CONS` / `CDR` / `MAKE_SYMBOL` / `LOAD_NIL` dst → object
+- `CAR` / `IS_NULL` / `IS_PAIR` / `IS_SYMBOL` dst → int32
+
+Existing typed-register inference + per-instruction slot picking
+reuses without changes.
+
+### Tests
+
+- 4 new TestHeapExtraTypes tests verifying auto-include + field
+  layouts.
+- 11 new TestHeapOpLowering tests verifying each opcode emits the
+  identifying CIL bytes.
+- 3 new TestHeapTokenLayout tests locking down the deterministic
+  token layout.
+- All 97 tests pass; coverage 92%.
+
+### Limitations (intentional, scoped to follow-ups)
+
+- Symbol names are placeholder-`ldnull` until 3c.5 wires the
+  writer-side UserString intern table.
+- `Nil` is a fresh `newobj` per `LOAD_NIL` until 3c.5 wires a
+  singleton `INSTANCE` static field.
+- `Cons.head` is typed `int32` (matches list-of-ints, the spec
+  acceptance criterion).  Heterogeneous cells need a follow-up.
+- End-to-end on real `dotnet` is deferred until 3c.5 lands the
+  writer-side support.
+
 ## 0.6.0 — 2026-04-29 — CLR02 Phase 2c.5 (typed register pool)
 
 ### Added — runtime-correct closure semantics
