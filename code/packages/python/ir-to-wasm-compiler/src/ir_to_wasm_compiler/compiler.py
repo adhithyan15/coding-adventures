@@ -104,6 +104,7 @@ _OPCODE = {
         "f64.sub",
         "f64.mul",
         "f64.div",
+        "f64.sqrt",
         "f64.convert_i32_s",
         "i32.trunc_f64_s",
         "drop",
@@ -151,6 +152,7 @@ _WASM_SUPPORTED_OPCODES: frozenset[IrOp] = frozenset({
     IrOp.F64_SUB,
     IrOp.F64_MUL,
     IrOp.F64_DIV,
+    IrOp.F64_SQRT,
     IrOp.F64_CMP_EQ,
     IrOp.F64_CMP_NE,
     IrOp.F64_CMP_LT,
@@ -806,6 +808,12 @@ class _FunctionLowerer:
                 self._emit_binary_numeric("f64.mul", instruction)
             case IrOp.F64_DIV:
                 self._emit_binary_numeric("f64.div", instruction)
+            case IrOp.F64_SQRT:
+                dst = _expect_register(instruction.operands[0], "F64_SQRT dst")
+                src = _expect_register(instruction.operands[1], "F64_SQRT src")
+                self._emit_local_get(src.index)
+                self._emit_opcode("f64.sqrt")
+                self._emit_local_set(dst.index)
             case IrOp.CMP_EQ:
                 self._emit_binary_numeric("i32.eq", instruction)
             case IrOp.CMP_NE:
@@ -1477,7 +1485,14 @@ def _infer_register_types(
                 _assign_register_type(
                     reg_types, dst.index, ValueType.I32, instruction.opcode.name
                 )
-            case IrOp.F64_ADD | IrOp.F64_SUB | IrOp.F64_MUL | IrOp.F64_DIV | IrOp.F64_FROM_I32:
+            case (
+                IrOp.F64_ADD
+                | IrOp.F64_SUB
+                | IrOp.F64_MUL
+                | IrOp.F64_DIV
+                | IrOp.F64_SQRT
+                | IrOp.F64_FROM_I32
+            ):
                 dst = _expect_register(instruction.operands[0], f"{instruction.opcode.name} dst")
                 _assign_register_type(
                     reg_types, dst.index, ValueType.F64, instruction.opcode.name

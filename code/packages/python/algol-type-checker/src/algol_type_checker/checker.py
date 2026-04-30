@@ -24,7 +24,8 @@ STATIC = "static"
 PARAMETER_STORAGE = "parameter"
 MAX_ARRAY_DIMENSIONS = 4
 _OUTPUT_BUILTINS = {"print", "output"}
-_NUMERIC_BUILTINS = {"abs", "entier", "sign"}
+_FIXED_RETURN_NUMERIC_BUILTINS = {"entier": INTEGER, "sign": INTEGER, "sqrt": REAL}
+_NUMERIC_BUILTINS = {"abs"} | set(_FIXED_RETURN_NUMERIC_BUILTINS)
 _READ_ONLY_BUILTINS = _OUTPUT_BUILTINS | _NUMERIC_BUILTINS
 
 
@@ -2039,8 +2040,8 @@ class AlgolTypeChecker:
             return ERROR
         if name_token.value == "abs":
             return actual_type
-        if name_token.value in {"entier", "sign"}:
-            return INTEGER
+        if name_token.value in _FIXED_RETURN_NUMERIC_BUILTINS:
+            return _FIXED_RETURN_NUMERIC_BUILTINS[name_token.value]
         return ERROR
 
     def _resolved_bare_procedure_expression(
@@ -2648,7 +2649,11 @@ class AlgolTypeChecker:
     ) -> tuple[ProcedureDescriptor, Scope, int] | None:
         if token.value not in _READ_ONLY_BUILTINS:
             return None
-        return_type = INTEGER if token.value in _NUMERIC_BUILTINS else None
+        return_type = None
+        if token.value == "abs":
+            return_type = INTEGER
+        elif token.value in _FIXED_RETURN_NUMERIC_BUILTINS:
+            return_type = _FIXED_RETURN_NUMERIC_BUILTINS[token.value]
         descriptor = ProcedureDescriptor(
             procedure_id=-1,
             name=token.value,

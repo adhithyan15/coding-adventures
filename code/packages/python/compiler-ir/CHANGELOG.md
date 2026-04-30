@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- **`IrOp.F64_SQRT` (49)** — unary 64-bit floating square root
+  (`dst = sqrt(src)`) for frontends that need standard real math builtins.
+
 ## [0.4.0] — 2026-04-29
 
 ### Added — TW03 Phase 2 closure ops

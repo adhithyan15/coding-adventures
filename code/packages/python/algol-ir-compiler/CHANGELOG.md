@@ -87,6 +87,8 @@ All notable changes to this package will be documented in this file.
   paths as the compact `goto` spelling.
 - Lowered standard numeric builtin functions `abs`, `sign`, and `entier` using
   existing integer/f64 IR operations.
+- Lowered standard real builtin function `sqrt` to integer-to-real promotion,
+  a negative-domain runtime failure guard, and the `F64_SQRT` IR opcode.
 
 ## [0.1.0] - 2026-04-20
 

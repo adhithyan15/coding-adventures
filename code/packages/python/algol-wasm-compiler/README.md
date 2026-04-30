@@ -21,7 +21,7 @@ the current lane already supports a substantial ALGOL 60 surface:
 - chained assignment, conditional expressions, tolerant trailing/repeated
   semicolons, numeric runtime failure guards, and
   ALGOL-left-associative exponentiation for integer exponents
-- standard numeric functions `abs`, `sign`, and `entier`
+- standard numeric functions `abs`, `sign`, `entier`, and `sqrt`
 - value and by-name parameters, including Jensen-style expression thunks,
   typed whole-array formals with copy or aliasing semantics, and formal
   procedure calls that forward scalar, whole-array, label, switch, or

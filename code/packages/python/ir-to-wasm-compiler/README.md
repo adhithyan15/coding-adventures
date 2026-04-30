@@ -29,3 +29,5 @@ module = IrToWasmCompiler().compile(
 Generated functions return `i32` values through virtual register `v1` and
 `f64` values through virtual register `v31`. Calls mirror the same convention:
 integer results are copied into `v1`, while real results are copied into `v31`.
+The f64 lowering path includes arithmetic, comparisons, integer conversion,
+truncation, and unary square root via WASM `f64.sqrt`.

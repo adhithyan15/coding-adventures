@@ -25,7 +25,7 @@ The opcodes are grouped by category:
   Bitwise:      OR, OR_IMM, XOR, XOR_IMM, NOT
   Comparison:   CMP_EQ, CMP_NE, CMP_LT, CMP_GT
   Floating:     LOAD_F64_IMM, LOAD_F64, STORE_F64, F64_ADD, ..., F64_FROM_I32,
-                I32_TRUNC_FROM_F64
+                I32_TRUNC_FROM_F64, F64_SQRT
   Control Flow: LABEL, JUMP, BRANCH_Z, BRANCH_NZ, CALL, RET
   System:       SYSCALL, HALT
   Meta:         NOP, COMMENT
@@ -300,6 +300,11 @@ class IrOp(IntEnum):
     #               handle.
     #   - vm-core:  delegate to the host-side ``apply_closure`` builtin.
     APPLY_CLOSURE = 48
+
+    # Compute the square root of an f64 value.
+    # Appended after the closure opcodes to preserve stable opcode values.
+    #   F64_SQRT v1, v2  →  v1 = sqrt(v2)
+    F64_SQRT = 49
 
 
 # Canonical name → opcode mapping. Built from the enum at module load time.

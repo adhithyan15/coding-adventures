@@ -80,6 +80,9 @@ All notable changes to this package will be documented in this file.
   type-checker, IR, and WASM pipeline.
 - Executed standard numeric builtin functions `abs`, `sign`, and `entier`
   through the full parser, type-checker, IR, and WASM pipeline.
+- Executed standard real builtin function `sqrt` through the full parser,
+  type-checker, IR, and WASM pipeline with negative-domain failure returning
+  `0`.
 - Added a convergence golden fixture that combines conditional expressions,
   exponentiation, chained assignment, by-name array summation, real arithmetic,
   and output in one end-to-end program.

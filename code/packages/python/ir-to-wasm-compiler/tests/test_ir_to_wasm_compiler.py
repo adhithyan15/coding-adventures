@@ -345,6 +345,34 @@ def test_compile_f64_to_i32_truncation() -> None:
     assert _runtime_result(module, "trunc_real", [-2.9]) == [-2]
 
 
+def test_compile_f64_sqrt() -> None:
+    gen = IDGenerator()
+    program = IrProgram(entry_label="_fn_sqrt_real")
+    program.add_instruction(
+        IrInstruction(IrOp.LABEL, [IrLabel("_fn_sqrt_real")], id=-1)
+    )
+    program.add_instruction(
+        IrInstruction(IrOp.F64_SQRT, [IrRegister(31), IrRegister(2)], id=gen.next())
+    )
+    program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+
+    module = IrToWasmCompiler().compile(
+        program,
+        function_signatures=[
+            FunctionSignature(
+                label="_fn_sqrt_real",
+                param_count=1,
+                export_name="sqrt_real",
+                param_types=(ValueType.F64,),
+                result_types=(ValueType.F64,),
+            )
+        ],
+    )
+
+    assert _runtime_result(module, "sqrt_real", [9.0]) == [3.0]
+    assert _runtime_result(module, "sqrt_real", [0.25]) == [0.5]
+
+
 def test_compile_function_call_and_run_it() -> None:
     gen = IDGenerator()
     program = IrProgram(entry_label="_start")

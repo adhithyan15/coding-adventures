@@ -114,6 +114,7 @@ _BUILTIN_OUTPUT_LABEL = "__algol_builtin_output"
 _BUILTIN_ABS_LABEL = "__algol_builtin_abs"
 _BUILTIN_ENTIER_LABEL = "__algol_builtin_entier"
 _BUILTIN_SIGN_LABEL = "__algol_builtin_sign"
+_BUILTIN_SQRT_LABEL = "__algol_builtin_sqrt"
 _WRITE_SYSCALL = 1
 
 
@@ -2835,6 +2836,7 @@ class AlgolIrCompiler:
             _BUILTIN_ABS_LABEL,
             _BUILTIN_ENTIER_LABEL,
             _BUILTIN_SIGN_LABEL,
+            _BUILTIN_SQRT_LABEL,
         }:
             return self._compile_builtin_numeric(node, call, scope)
         if call.parameter_symbol_id is not None:
@@ -3380,6 +3382,8 @@ class AlgolIrCompiler:
             return self._emit_builtin_entier(value, actual_type)
         if call.label == _BUILTIN_SIGN_LABEL:
             return self._emit_builtin_sign(value, actual_type)
+        if call.label == _BUILTIN_SQRT_LABEL:
+            return self._emit_builtin_sqrt(value, actual_type, scope)
         raise CompileError(f"unknown builtin numeric function {call.name!r}")
 
     def _emit_builtin_abs(self, value: int, actual_type: str) -> int:
@@ -3538,6 +3542,36 @@ class AlgolIrCompiler:
         self._label(zero_label)
         self._copy_reg(dst=result, src=_ZERO_REG)
         self._label(end_label)
+        return result
+
+    def _emit_builtin_sqrt(
+        self,
+        value: int,
+        actual_type: str,
+        scope: _FrameScope,
+    ) -> int:
+        if actual_type == _INTEGER_TYPE:
+            real_value = self._fresh_reg()
+            self._emit(
+                IrOp.F64_FROM_I32,
+                IrRegister(real_value),
+                IrRegister(value),
+            )
+            value = real_value
+        elif actual_type != _REAL_TYPE:
+            raise CompileError(f"builtin sqrt does not support {actual_type}")
+
+        negative = self._fresh_reg()
+        self._emit(
+            IrOp.F64_CMP_LT,
+            IrRegister(negative),
+            IrRegister(value),
+            IrRegister(self._const_f64_reg(0.0)),
+        )
+        self._emit_runtime_failure_guard(negative, scope)
+
+        result = self._fresh_reg()
+        self._emit(IrOp.F64_SQRT, IrRegister(result), IrRegister(value))
         return result
 
     def _emit_output_chars(self, text: str, scope: _FrameScope) -> None:

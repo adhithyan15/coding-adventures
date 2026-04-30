@@ -61,6 +61,8 @@ All notable changes to this package will be documented in this file.
   `goto` statements.
 - Accepted standard numeric builtin functions `abs`, `sign`, and `entier` with
   integer/real argument checking and read-only by-name analysis.
+- Accepted standard real builtin function `sqrt`, returning `real` for integer
+  or real arguments while preserving read-only by-name analysis.
 
 ## [0.1.0] - 2026-04-20
 

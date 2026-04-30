@@ -187,6 +187,24 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [17]
 
+    def test_sqrt_builtin_executes_with_integer_and_real_arguments(self) -> None:
+        result = compile_source(
+            "begin integer result; real x; "
+            "x := sqrt(9); "
+            "result := entier(x) * 10 + entier(sqrt(0.25) * 10) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [35]
+
+    def test_sqrt_negative_argument_returns_zero_through_runtime_failure(self) -> None:
+        result = compile_source(
+            "begin integer result; real x; "
+            "x := sqrt(0.0 - 1.0); "
+            "result := 7 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
+
     def test_builtin_print_string_literal_writes_stdout(self) -> None:
         result = compile_source("begin integer result; print('Hi'); result := 7 end")
         captured: list[str] = []

@@ -18,8 +18,8 @@ expressions, tolerant trailing/repeated semicolons from the parser, and
 left-associative exponentiation for numeric bases with integer exponents.
 Mixed integer/real conditional branches resolve to `real`; incompatible branch
 types are still rejected before IR lowering. Standard numeric functions
-`abs`, `sign`, and `entier` are resolved as read-only builtins with integer/real
-argument validation.
+`abs`, `sign`, `entier`, and `sqrt` are resolved as read-only builtins with
+integer/real argument validation.
 
 The checker also builds the first ALGOL 60 full-runtime semantic model. Each
 source block receives a stable block id, lexical depth, static-parent id, and a

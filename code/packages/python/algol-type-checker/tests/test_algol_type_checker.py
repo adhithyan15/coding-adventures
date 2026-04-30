@@ -368,8 +368,9 @@ class TestAlgolTypeChecker:
 
     def test_accepts_standard_numeric_builtin_functions(self) -> None:
         ast = parse_algol(
-            "begin integer result; real x; "
-            "result := abs(0 - 3) + sign(x) + entier(2.5) "
+            "begin integer result; real x, root; "
+            "root := sqrt(9); "
+            "result := abs(0 - 3) + sign(x) + entier(root) "
             "end"
         )
         result = check_algol(ast)
@@ -383,6 +384,7 @@ class TestAlgolTypeChecker:
         assert calls["abs"] == "integer"
         assert calls["sign"] == "integer"
         assert calls["entier"] == "integer"
+        assert calls["sqrt"] == "real"
 
     def test_rejects_boolean_actual_for_numeric_builtin_function(self) -> None:
         ast = parse_algol("begin integer result; result := abs(false) end")

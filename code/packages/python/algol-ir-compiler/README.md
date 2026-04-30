@@ -35,8 +35,9 @@ expressions, and ALGOL-left-associative exponentiation when the exponent is an
 integer. Real bases with negative integer exponents are lowered through a
 reciprocal path; arbitrary real exponents remain outside this phase until the
 runtime has a real `pow` implementation instead of an approximation shortcut.
-Standard numeric functions `abs`, `sign`, and `entier` lower directly to
-existing integer/f64 comparison, arithmetic, and conversion IR instructions.
+Standard numeric functions `abs`, `sign`, `entier`, and `sqrt` lower directly
+to existing integer/f64 comparison, arithmetic, conversion, and square-root IR
+instructions.
 
 Scalar by-name parameters lower through a one-word cell in the callee frame.
 Passing a scalar variable as a by-name actual gives the callee a storage pointer,
@@ -98,7 +99,7 @@ before the WASM data encoder can materialize the memory image, dynamic
 procedure recursion stops at the bounded frame stack, and invalid array bounds,
 out-of-bounds subscripts, integer `div`/`mod` by zero or signed divide
 overflow, real division by zero, zero-real-base negative exponentiation,
-oversized arrays, or heap exhaustion return `0`.
+oversized arrays, negative `sqrt` arguments, or heap exhaustion return `0`.
 
 ```python
 from algol_ir_compiler import compile_algol

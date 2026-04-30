@@ -587,7 +587,7 @@ class TestAlgolIrCompiler:
         result = compile_algol(
             parse_algol(
                 "begin integer result; real x; "
-                "x := -2.5; result := abs(0 - 3) + sign(x) + entier(x) "
+                "x := -2.5; result := abs(0 - 3) + sign(x) + entier(sqrt(9)) "
                 "end"
             )
         )
@@ -597,6 +597,7 @@ class TestAlgolIrCompiler:
         assert IrOp.F64_CMP_LT in opcodes
         assert IrOp.I32_TRUNC_FROM_F64 in opcodes
         assert IrOp.F64_FROM_I32 in opcodes
+        assert IrOp.F64_SQRT in opcodes
 
     def test_integer_division_emits_runtime_failure_guard(self) -> None:
         result = compile_algol(
