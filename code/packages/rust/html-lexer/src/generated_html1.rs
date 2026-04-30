@@ -13473,6 +13473,21 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "end_tag_name".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("/".to_string())),
+            to: vec![
+                "before_end_tag_close".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(end-tag-with-trailing-solidus)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "end_tag_name".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Eof),
             to: vec![
                 "done".to_string(),

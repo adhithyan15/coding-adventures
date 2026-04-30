@@ -6458,6 +6458,12 @@ actions = ["emit_current_token"]
 
 [[transitions]]
 from = "end_tag_name"
+matcher = { literal = "/" }
+to = "before_end_tag_close"
+actions = ["parse_error(end-tag-with-trailing-solidus)"]
+
+[[transitions]]
+from = "end_tag_name"
 matcher = { eof = true }
 to = "done"
 consume = false

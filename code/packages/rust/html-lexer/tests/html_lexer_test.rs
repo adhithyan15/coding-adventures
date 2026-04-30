@@ -762,6 +762,30 @@ fn default_html_lexer_recovers_invalid_end_tag_open_as_bogus_comment() {
 }
 
 #[test]
+fn default_html_lexer_recovers_end_tag_with_trailing_solidus() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("Before</p/>After").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("Before".to_string()),
+            Token::EndTag {
+                name: "p".to_string()
+            },
+            Token::Text("After".to_string()),
+            Token::Eof,
+        ]
+    );
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "end-tag-with-trailing-solidus"));
+}
+
+#[test]
 fn default_html_lexer_recovers_abrupt_empty_html_comment() {
     let mut lexer = create_html_lexer().unwrap();
 
