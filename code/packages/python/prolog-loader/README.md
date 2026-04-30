@@ -22,8 +22,8 @@ It keeps parsing side-effect free, then exposes helpers to:
 - link multiple loaded sources into one namespace-aware runnable project with
   module-local predicates and weak imports
 - rewrite explicit `module:goal` qualification during linking, including common
-  meta-goal forms like `call/1..8`, `once/1`, `not/1`, `\\+/1`, and
-  `phrase/2,3`
+  meta-goal forms like `call/1..8`, apply-family closures, `once/1`, `not/1`,
+  `\\+/1`, and `phrase/2,3`
 - adapt Prolog control constructs such as `->/2` and
   `(If -> Then ; Else)` into executable builtin goals
 - adapt common list predicates such as `member/2`, `append/3`, `select/3`,

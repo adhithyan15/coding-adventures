@@ -30,6 +30,8 @@
 - Run common Prolog list predicates, including finite `length/2`, `sort/2`,
   `msort/2`, `nth0/3`, `nth1/3`, `nth0/4`, and `nth1/4`, through the VM path
   by adapting them to `logic-stdlib` relations.
+- Run module-imported apply-family closures through the VM path so higher-order
+  list predicates can target predicates from linked modules.
 
 ## 0.1.0
 

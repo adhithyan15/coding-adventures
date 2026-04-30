@@ -209,6 +209,54 @@ class TestPrologVMStress:
             },
         ]
 
+    def test_module_qualified_apply_family_closures_run_through_vm(self) -> None:
+        compiled = compile_swi_prolog_project(
+            """
+            :- module(apply_helpers, [
+                increment/2,
+                convert/2,
+                small/1,
+                pair_push/4,
+                push/3
+            ]).
+            increment(1, 2).
+            increment(2, 3).
+            convert(1, one).
+            convert(3, three).
+            small(1).
+            small(2).
+            pair_push(Left, Right, Acc, [pair(Left, Right)|Acc]).
+            push(Item, Acc, [Item|Acc]).
+            """,
+            """
+            :- module(app, []).
+            :- use_module(apply_helpers, [
+                increment/2,
+                convert/2,
+                small/1,
+                pair_push/4,
+                push/3
+            ]).
+            ?- maplist(increment, [1,2], Ys),
+               convlist(convert, [1,2,3], Converted),
+               include(small, [1,2,3], Small),
+               foldl(pair_push, [a,b], [x,y], [], Folded),
+               scanl(push, [a,b], [], Scanned).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert [answer.as_dict() for answer in answers] == [
+            {
+                "Ys": logic_list([2, 3]),
+                "Converted": logic_list(["one", "three"]),
+                "Small": logic_list([1, 2]),
+                "Folded": logic_list([term("pair", "b", "y"), term("pair", "a", "x")]),
+                "Scanned": logic_list([logic_list(["a"]), logic_list(["b", "a"])]),
+            },
+        ]
+
     def test_list_stdlib_predicates_run_through_vm(self) -> None:
         compiled = compile_swi_prolog_source(
             """

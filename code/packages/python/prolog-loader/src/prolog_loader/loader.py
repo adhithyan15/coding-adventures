@@ -68,6 +68,13 @@ _FINDALL = sym("findall")
 _BAGOF = sym("bagof")
 _SETOF = sym("setof")
 _FORALL = sym("forall")
+_MAPLIST = sym("maplist")
+_CONVLIST = sym("convlist")
+_INCLUDE = sym("include")
+_EXCLUDE = sym("exclude")
+_PARTITION = sym("partition")
+_FOLDL = sym("foldl")
+_SCANL = sym("scanl")
 
 
 class ParsedSourceLike(Protocol):
@@ -1407,6 +1414,22 @@ def _rewrite_goal_term(
             _rewrite_goal_term(term_value.args[0], resolver, module_resolvers),
         )
 
+    apply_extra_arity = _apply_family_closure_extra_arity(
+        term_value.functor,
+        len(term_value.args),
+    )
+    if apply_extra_arity is not None:
+        return term(
+            term_value.functor,
+            _rewrite_callable_closure(
+                term_value.args[0],
+                apply_extra_arity,
+                resolver,
+                module_resolvers,
+            ),
+            *term_value.args[1:],
+        )
+
     if term_value.functor == _ONCE and len(term_value.args) == 1:
         return term(
             term_value.functor,
@@ -1489,6 +1512,23 @@ def _rewrite_callable_closure(
         return term(resolved.symbol, *term_value.args)
 
     return term_value
+
+
+def _apply_family_closure_extra_arity(
+    functor: Symbol,
+    arity: int,
+) -> int | None:
+    if functor == _MAPLIST and 2 <= arity <= 5:
+        return arity - 1
+    if functor in {_INCLUDE, _EXCLUDE} and arity == 3:
+        return 1
+    if functor == _PARTITION and arity == 4:
+        return 1
+    if functor == _CONVLIST and arity == 3:
+        return 2
+    if functor in {_FOLDL, _SCANL} and 4 <= arity <= 7:
+        return arity - 1
+    return None
 
 
 def _callable_closure_arity(term_value: Term, extra_arity: int) -> int | None:
