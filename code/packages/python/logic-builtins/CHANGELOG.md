@@ -21,8 +21,9 @@ All notable changes to this package will be documented in this file.
   CLP(FD)-style reification and truth-table modeling.
 - variadic `calltermo(term_goal, *extra_args)` for Prolog-style meta-call
   argument extension.
-- higher-order list predicates `maplisto/2..4`, `includeo/3`, `excludeo/3`,
-  `partitiono/4`, and `foldlo/4` backed by callable-term execution.
+- higher-order list predicates `maplisto/2..5`, `convlisto/3`, `includeo/3`,
+  `excludeo/3`, `partitiono/4`, `foldlo/4..7`, and `scanlo/4..7` backed by
+  callable-term execution.
 
 ### Fixed
 
