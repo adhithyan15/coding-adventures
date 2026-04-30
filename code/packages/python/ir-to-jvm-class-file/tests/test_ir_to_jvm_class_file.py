@@ -1458,9 +1458,10 @@ class TestHeapRuntimeClasses:
         artifact = build_cons_class_artifact()
         assert artifact.class_name == CONS_BINARY_NAME.replace("/", ".")
         cf = parse_class_file(artifact.class_bytes)
-        # Single ctor (I,LObject;)V.
+        # Heterogeneous-cons: head is now Object-typed (was int) so
+        # cons cells can hold any Twig value.  Ctor takes two Objects.
         method_descriptors = [m.descriptor for m in cf.methods]
-        assert "(ILjava/lang/Object;)V" in method_descriptors
+        assert "(Ljava/lang/Object;Ljava/lang/Object;)V" in method_descriptors
         # Field-name UTF8 entries — head + tail.
         assert b"head" in artifact.class_bytes
         assert b"tail" in artifact.class_bytes

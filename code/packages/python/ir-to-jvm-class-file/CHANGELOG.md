@@ -1,5 +1,43 @@
 # ir-to-jvm-class-file
 
+## 0.14.0 — 2026-04-30 — heterogeneous cons cells (Cons.head widened to Object)
+
+`Cons.head` is now typed `Object` (was `int`) so cons cells can
+hold any Twig value — boxed Int32, Symbol, another cons, closure
+ref, nil.  Unblocks AST-shaped data, list-of-symbols, and
+nested-cons patterns that any real Lisp program (including a
+self-hosted compiler) needs.
+
+### Class-layout change
+
+```java
+public final class Cons {
+    public final Object head;   // was: int head
+    public final Object tail;
+    public Cons(Object head, Object tail) { ... }
+}
+```
+
+### MAKE_CONS lowering
+
+When the head register is obj-typed in the current region, ldload
+from the obj slot directly.  When int-typed, read the int and box
+via `Integer.valueOf(int) Integer`.  Tail is always Object.
+
+### CAR lowering
+
+Read `Cons.head` as Object.  If dst is obj-typed in the current
+region (e.g. `(symbol? (car ...))`), stloc directly into the obj
+slot.  If int-typed (the common list-of-ints case), `checkcast
+Integer; invokevirtual Integer.intValue()` to unwrap to int.
+
+### Tests
+
+All 113 ir-to-jvm-class-file tests pass; coverage 92%.  Existing
+list-of-ints tests like `(length [1,2,3,4,5])` and `(sum [10 20 30])`
+continue to pass — they exercise the boxing/unboxing path
+transparently.
+
 ## 0.13.0 — 2026-04-30 — APPLY_CLOSURE obj-result propagation (3-deep curry)
 
 Closure-returning closures (e.g. `(((mk2 a) b) c)`) now run

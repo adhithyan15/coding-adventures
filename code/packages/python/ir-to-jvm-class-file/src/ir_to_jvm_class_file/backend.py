@@ -1280,8 +1280,14 @@ class _JvmClassLowerer:
     ) -> None:
         """Lower ``MAKE_CONS dst, head_reg, tail_reg``.
 
-        Phase 3b v1: head is read from the int pool, tail from the
-        object pool.  Cons fields are ``int head; Object tail``.
+        Heterogeneous-cons: head is now ``Object``-typed (was
+        ``int``).  When the source register is obj-typed in the
+        current region, load directly from the obj pool.  When
+        int-typed, read the int and box via
+        ``Integer.valueOf(int) Integer``.
+
+        Tail is always ``Object`` and read from the obj pool —
+        unchanged from the prior list-of-ints design.
         """
         if len(instruction.operands) != 3:
             raise JvmBackendError(
@@ -1291,13 +1297,24 @@ class _JvmClassLowerer:
         dst = _as_register(instruction.operands[0], "MAKE_CONS dst")
         head_reg = _as_register(instruction.operands[1], "MAKE_CONS head")
         tail_reg = _as_register(instruction.operands[2], "MAKE_CONS tail")
-        # new Cons; dup; iload head; aload tail; invokespecial ctor;
-        # then store the resulting ref into __ca_objregs[dst].
         builder.emit_u2_instruction(_OP_NEW, self.cp.class_ref(CONS_BINARY_NAME))
         builder.emit_opcode(_OP_DUP)
-        self._emit_reg_get(builder, head_reg.index)
+        # Head: load from obj slot if obj-typed in this region; else
+        # load int and box to Integer.
+        if head_reg.index in self._region_obj_regs:
+            self._emit_objreg_load(builder, head_reg.index)
+        else:
+            self._emit_reg_get(builder, head_reg.index)
+            # Integer.valueOf(int) → Integer (which IS-A Object).
+            builder.emit_u2_instruction(
+                _OP_INVOKESTATIC,
+                self.cp.method_ref(
+                    "java/lang/Integer", "valueOf",
+                    "(I)Ljava/lang/Integer;",
+                ),
+            )
         self._emit_objreg_load(builder, tail_reg.index)
-        ctor_descriptor = "(I" + _DESC_OBJECT + ")V"
+        ctor_descriptor = "(" + _DESC_OBJECT + _DESC_OBJECT + ")V"
         builder.emit_u2_instruction(
             _OP_INVOKESPECIAL,
             self.cp.method_ref(CONS_BINARY_NAME, "<init>", ctor_descriptor),
@@ -1308,7 +1325,15 @@ class _JvmClassLowerer:
     def _emit_car(
         self, builder: _BytecodeBuilder, instruction: IrInstruction,
     ) -> None:
-        """Lower ``CAR dst, src`` — read ``Cons.head`` (int)."""
+        """Lower ``CAR dst, src`` — read ``Cons.head``.
+
+        Heterogeneous-cons: head is ``Object``-typed.  If dst is
+        obj-typed in this region (e.g. ``(car (cons 'foo nil))``
+        where the car flows to another obj op), store the ref
+        directly into the obj slot.  If int-typed (the common
+        list-of-ints case), unwrap via
+        ``Integer.intValue() int`` after a checkcast to Integer.
+        """
         if len(instruction.operands) != 2:
             raise JvmBackendError(
                 f"CAR expects 2 operands (dst, src), got "
@@ -1322,10 +1347,27 @@ class _JvmClassLowerer:
         )
         builder.emit_u2_instruction(
             _OP_GETFIELD,
-            self.cp.field_ref(CONS_BINARY_NAME, "head", _DESC_INT),
+            self.cp.field_ref(CONS_BINARY_NAME, "head", _DESC_OBJECT),
         )
-        # Stack: [int] → __ca_regs[dst] via _emit_intreg_store_top_int.
-        self._emit_intreg_store_top_int(builder, dst.index)
+        # Stack: [Object head]
+        if dst.index in self._region_obj_regs:
+            # Direct obj store — head was an obj ref (cons / symbol /
+            # nil / closure).  No unwrap needed.
+            self._emit_objreg_store_top_ref(builder, dst.index)
+        else:
+            # head is a boxed Integer (or unsafe int read of a
+            # non-int head — well-formed Twig avoids this).  Cast
+            # and unwrap.
+            builder.emit_u2_instruction(
+                _OP_CHECKCAST, self.cp.class_ref("java/lang/Integer"),
+            )
+            builder.emit_u2_instruction(
+                _OP_INVOKEVIRTUAL,
+                self.cp.method_ref(
+                    "java/lang/Integer", "intValue", "()I",
+                ),
+            )
+            self._emit_intreg_store_top_int(builder, dst.index)
 
     def _emit_cdr(
         self, builder: _BytecodeBuilder, instruction: IrInstruction,
@@ -2911,20 +2953,23 @@ def build_closure_subclass_artifact(
 #   - Tests can assert on byte-stable class layouts.
 
 def build_cons_class_artifact() -> JVMClassArtifact:
-    """Return the ``Cons`` class — pair of ``(int head, Object tail)``.
+    """Return the ``Cons`` class — heterogeneous pair of ``(Object head,
+    Object tail)``.
 
-    Phase 3b v1 design: ``head`` is typed ``int`` and ``tail`` is typed
-    ``Object``.  Matches the spec acceptance criterion (list-of-ints
-    terminated by ``Nil.INSTANCE``); a follow-up phase widens ``head``
-    once typed-register inference covers cons head slots.
+    Heterogeneous-cons follow-up: ``head`` is now typed ``Object``
+    (was ``int``) so cons cells can hold ANY Twig value — int
+    (boxed via ``Integer.valueOf`` at MAKE_CONS), symbol, another
+    cons, closure, nil.  This unblocks list-of-symbols, AST-shaped
+    data, and other heterogeneous heap structures that a real Lisp
+    program needs.
 
     Class layout::
 
         public final class Cons {
-            public final int head;
+            public final Object head;
             public final Object tail;
 
-            public Cons(int head, Object tail) {
+            public Cons(Object head, Object tail) {
                 super();
                 this.head = head;
                 this.tail = tail;
@@ -2932,8 +2977,8 @@ def build_cons_class_artifact() -> JVMClassArtifact:
         }
 
     No ``Nil``-injection at allocation time: it's the caller's job
-    (the lowering site) to ensure the tail is either another ``Cons``
-    or ``Nil.INSTANCE``.
+    (the lowering site) to ensure the tail is either another
+    ``Cons`` / ``Nil.INSTANCE`` / ``Symbol`` / etc.  Same for head.
     """
     pool = _ConstantPoolBuilder()
     this_class_index = pool.class_ref(CONS_BINARY_NAME)
@@ -2941,10 +2986,10 @@ def build_cons_class_artifact() -> JVMClassArtifact:
     object_ctor_ref = pool.method_ref("java/lang/Object", "<init>", "()V")
 
     head_field_name = pool.utf8("head")
-    head_field_desc = pool.utf8(_DESC_INT)
+    head_field_desc = pool.utf8(_DESC_OBJECT)
     tail_field_name = pool.utf8("tail")
     tail_field_desc = pool.utf8(_DESC_OBJECT)
-    head_field_ref = pool.field_ref(CONS_BINARY_NAME, "head", _DESC_INT)
+    head_field_ref = pool.field_ref(CONS_BINARY_NAME, "head", _DESC_OBJECT)
     tail_field_ref = pool.field_ref(CONS_BINARY_NAME, "tail", _DESC_OBJECT)
     code_attribute_name_index = pool.utf8("Code")
 
@@ -2953,14 +2998,14 @@ def build_cons_class_artifact() -> JVMClassArtifact:
     ctor_builder.emit_opcode(_OP_ALOAD_0)
     ctor_builder.emit_u2_instruction(_OP_INVOKESPECIAL, object_ctor_ref)
     ctor_builder.emit_opcode(_OP_ALOAD_0)
-    ctor_builder.emit_opcode(_OP_ILOAD_0 + 1)  # iload_1 — head arg
+    ctor_builder.emit_opcode(_OP_ALOAD_1)  # head: Object arg in slot 1
     ctor_builder.emit_u2_instruction(_OP_PUTFIELD, head_field_ref)
     ctor_builder.emit_opcode(_OP_ALOAD_0)
-    ctor_builder.emit_opcode(_OP_ALOAD_2)
+    ctor_builder.emit_opcode(_OP_ALOAD_2)  # tail: Object arg in slot 2
     ctor_builder.emit_u2_instruction(_OP_PUTFIELD, tail_field_ref)
     ctor_builder.emit_opcode(_OP_RETURN)
     ctor_code = ctor_builder.assemble()
-    ctor_descriptor = "(I" + _DESC_OBJECT + ")V"
+    ctor_descriptor = "(" + _DESC_OBJECT + _DESC_OBJECT + ")V"
     ctor_name_index = pool.utf8("<init>")
     ctor_descriptor_index = pool.utf8(ctor_descriptor)
 

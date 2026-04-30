@@ -314,3 +314,35 @@ def test_heap_recursive_length_returns_3() -> None:
         assembly_name="ClrLength",
     )
     assert result.returncode == 3, result.stderr
+
+
+@requires_dotnet
+def test_heap_car_of_symbol_succeeds() -> None:
+    """``(symbol? (car (cons 'foo nil))) → 1``.
+
+    Heterogeneous-cons: head can hold a symbol (or any obj ref),
+    not just int.  Pre-fix, ``Cons.head`` was typed ``int32`` and
+    storing a Symbol ref into the int field truncated it; the
+    subsequent ``symbol?`` instanceof check failed.  Post-fix,
+    head is ``object``-typed.
+    """
+    result = run_source(
+        "(if (symbol? (car (cons (quote foo) nil))) 1 0)",
+        assembly_name="ClrCarSym",
+    )
+    assert result.returncode == 1, result.stderr
+
+
+@requires_dotnet
+def test_heap_car_of_nested_cons_succeeds() -> None:
+    """``(pair? (car (cons (cons 1 nil) nil))) → 1``.
+
+    Heterogeneous-cons: head can hold another cons cell.  This
+    is the canonical AST-shaped data pattern that any real Lisp
+    program (including a self-hosted compiler) needs.
+    """
+    result = run_source(
+        "(if (pair? (car (cons (cons 1 nil) nil))) 1 0)",
+        assembly_name="ClrCarPair",
+    )
+    assert result.returncode == 1, result.stderr
