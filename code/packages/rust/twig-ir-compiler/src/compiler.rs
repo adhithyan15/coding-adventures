@@ -64,6 +64,7 @@ use interpreter_ir::{
     function::{FunctionTypeStatus, IIRFunction},
     instr::{IIRInstr, Operand},
     module::IIRModule,
+    SourceLoc,
 };
 
 use twig_parser::{
@@ -121,6 +122,10 @@ fn is_builtin(name: &str) -> bool {
 /// names that won't collide.
 struct FnCtx {
     instrs: Vec<IIRInstr>,
+    /// Per-instruction source positions, kept in **lockstep** with
+    /// [`Self::instrs`] (`source_map[i]` = position of `instrs[i]`).
+    /// See [`interpreter_ir::SourceLoc`] for indexing conventions.
+    source_map: Vec<SourceLoc>,
     locals: HashSet<String>,
     var_counter: usize,
     label_counter: usize,
@@ -134,6 +139,7 @@ impl FnCtx {
     fn new() -> Self {
         FnCtx {
             instrs: Vec::new(),
+            source_map: Vec::new(),
             locals: HashSet::new(),
             var_counter: 0,
             label_counter: 0,
@@ -149,6 +155,16 @@ impl FnCtx {
     fn fresh_label(&mut self, prefix: &str) -> String {
         self.label_counter += 1;
         format!("_{prefix}{}", self.label_counter)
+    }
+
+    /// Push an instruction + its source position in lockstep.  Every
+    /// IR-emit site goes through this — the lockstep invariant
+    /// (`source_map.len() == instrs.len()`) is maintained by
+    /// construction.  See [`SourceLoc::SYNTHETIC`] for instructions
+    /// the compiler synthesises with no real source counterpart.
+    fn emit(&mut self, instr: IIRInstr, loc: SourceLoc) {
+        self.instrs.push(instr);
+        self.source_map.push(loc);
     }
 }
 
@@ -225,9 +241,10 @@ impl Compiler {
                 Form::Define(def) => {
                     // (define x value-expr) — evaluate at top level,
                     // store in globals.
+                    let loc = SourceLoc::new(def.line, def.column);
                     let v = self.compile_expr(&def.expr, &mut main_ctx)?;
-                    let name_reg = self.string_arg(&mut main_ctx, &def.name);
-                    main_ctx.instrs.push(IIRInstr::new(
+                    let name_reg = self.string_arg(&mut main_ctx, &def.name, loc);
+                    main_ctx.emit(IIRInstr::new(
                         "call_builtin",
                         None,
                         vec![
@@ -236,7 +253,7 @@ impl Compiler {
                             Operand::Var(v),
                         ],
                         "void",
-                    ));
+                    ), loc);
                     last_main_value = None;
                 }
                 Form::Expr(e) => {
@@ -247,27 +264,27 @@ impl Compiler {
 
         // ── Synthesise `main` ────────────────────────────────────────
         if let Some(reg) = last_main_value {
-            main_ctx.instrs.push(IIRInstr::new(
+            main_ctx.emit(IIRInstr::new(
                 "ret",
                 None,
                 vec![Operand::Var(reg)],
                 "any",
-            ));
+            ), SourceLoc::SYNTHETIC);
         } else {
             // No final value-producing expression → return nil.
             let nil_var = main_ctx.fresh_var("nil");
-            main_ctx.instrs.push(IIRInstr::new(
+            main_ctx.emit(IIRInstr::new(
                 "call_builtin",
                 Some(nil_var.clone()),
                 vec![Operand::Var("make_nil".into())],
                 "any",
-            ));
-            main_ctx.instrs.push(IIRInstr::new(
+            ), SourceLoc::SYNTHETIC);
+            main_ctx.emit(IIRInstr::new(
                 "ret",
                 None,
                 vec![Operand::Var(nil_var)],
                 "any",
-            ));
+            ), SourceLoc::SYNTHETIC);
         }
 
         let main_fn = IIRFunction {
@@ -279,7 +296,7 @@ impl Compiler {
             type_status: FunctionTypeStatus::Untyped,
             call_count: 0,
             feedback_slots: std::collections::HashMap::new(),
-            source_map: vec![],
+            source_map: main_ctx.source_map,
         };
         self.functions.push(main_fn);
 
@@ -297,6 +314,7 @@ impl Compiler {
 
     fn compile_top_level_lambda(&mut self, name: &str, lam: &Lambda) -> Result<(), TwigCompileError> {
         let mut ctx = FnCtx::new();
+        let lam_loc = SourceLoc::new(lam.line, lam.column);
         for p in &lam.params {
             ctx.locals.insert(p.clone());
         }
@@ -310,7 +328,10 @@ impl Compiler {
             line: lam.line,
             column: lam.column,
         })?;
-        ctx.instrs.push(IIRInstr::new("ret", None, vec![Operand::Var(last)], "any"));
+        ctx.emit(
+            IIRInstr::new("ret", None, vec![Operand::Var(last)], "any"),
+            lam_loc,
+        );
 
         let params = lam
             .params
@@ -327,7 +348,7 @@ impl Compiler {
             type_status: FunctionTypeStatus::Untyped,
             call_count: 0,
             feedback_slots: std::collections::HashMap::new(),
-            source_map: vec![],
+            source_map: ctx.source_map,
         });
         Ok(())
     }
@@ -341,6 +362,7 @@ impl Compiler {
         lam: &Lambda,
         outer: &mut FnCtx,
     ) -> Result<String, TwigCompileError> {
+        let lam_loc = SourceLoc::new(lam.line, lam.column);
         // 1. Compute free variables using the union of all globals + builtins.
         let mut globals: HashSet<String> = HashSet::new();
         globals.extend(self.fn_globals.iter().cloned());
@@ -387,7 +409,10 @@ impl Compiler {
             line: lam.line,
             column: lam.column,
         })?;
-        inner.instrs.push(IIRInstr::new("ret", None, vec![Operand::Var(last)], "any"));
+        inner.emit(
+            IIRInstr::new("ret", None, vec![Operand::Var(last)], "any"),
+            lam_loc,
+        );
 
         let mut params: Vec<(String, String)> =
             captures.iter().map(|c| (c.clone(), "any".to_string())).collect();
@@ -402,14 +427,14 @@ impl Compiler {
             type_status: FunctionTypeStatus::Untyped,
             call_count: 0,
             feedback_slots: std::collections::HashMap::new(),
-            source_map: vec![],
+            source_map: inner.source_map,
         });
 
         // 3. Emit `make_closure` at the call site.
         // The fn_name is itself a string literal — we materialise it
         // via `const` so it survives the runtime's frame resolution
         // (see the module-level "Encoding string operands" comment).
-        let fn_name_reg = self.string_arg(outer, &fn_name);
+        let fn_name_reg = self.string_arg(outer, &fn_name, lam_loc);
         let dest = outer.fresh_var("clos");
         let mut srcs: Vec<Operand> = vec![
             Operand::Var("make_closure".into()),
@@ -418,7 +443,10 @@ impl Compiler {
         for c in &captures {
             srcs.push(Operand::Var(c.clone()));
         }
-        outer.instrs.push(IIRInstr::new("call_builtin", Some(dest.clone()), srcs, "any"));
+        outer.emit(
+            IIRInstr::new("call_builtin", Some(dest.clone()), srcs, "any"),
+            lam_loc,
+        );
         Ok(dest)
     }
 
@@ -449,49 +477,51 @@ impl Compiler {
     }
 
     fn compile_expr_inner(&mut self, expr: &Expr, ctx: &mut FnCtx) -> Result<String, TwigCompileError> {
+        let (line, column) = expr.pos();
+        let loc = SourceLoc::new(line, column);
         match expr {
             Expr::IntLit(IntLit { value, .. }) => {
                 let v = ctx.fresh_var("n");
-                ctx.instrs.push(IIRInstr::new(
+                ctx.emit(IIRInstr::new(
                     "const",
                     Some(v.clone()),
                     vec![Operand::Int(*value)],
                     "any",
-                ));
+                ), loc);
                 Ok(v)
             }
 
             Expr::BoolLit(BoolLit { value, .. }) => {
                 let v = ctx.fresh_var("b");
-                ctx.instrs.push(IIRInstr::new(
+                ctx.emit(IIRInstr::new(
                     "const",
                     Some(v.clone()),
                     vec![Operand::Bool(*value)],
                     "any",
-                ));
+                ), loc);
                 Ok(v)
             }
 
             Expr::NilLit(NilLit { .. }) => {
                 let v = ctx.fresh_var("nil");
-                ctx.instrs.push(IIRInstr::new(
+                ctx.emit(IIRInstr::new(
                     "call_builtin",
                     Some(v.clone()),
                     vec![Operand::Var("make_nil".into())],
                     "any",
-                ));
+                ), loc);
                 Ok(v)
             }
 
             Expr::SymLit(SymLit { name, .. }) => {
-                let name_reg = self.string_arg(ctx, name);
+                let name_reg = self.string_arg(ctx, name, loc);
                 let v = ctx.fresh_var("sym");
-                ctx.instrs.push(IIRInstr::new(
+                ctx.emit(IIRInstr::new(
                     "call_builtin",
                     Some(v.clone()),
                     vec![Operand::Var("make_symbol".into()), Operand::Var(name_reg)],
                     "any",
-                ));
+                ), loc);
                 Ok(v)
             }
 
@@ -517,6 +547,7 @@ impl Compiler {
     }
 
     fn compile_var_ref(&mut self, v: &VarRef, ctx: &mut FnCtx) -> Result<String, TwigCompileError> {
+        let loc = SourceLoc::new(v.line, v.column);
         // Locals (params + lets) — return the name directly; the next
         // instruction that reads it resolves through the register file.
         if ctx.locals.contains(&v.name) {
@@ -526,36 +557,36 @@ impl Compiler {
         // Top-level function — wrap in a 0-capture closure handle so
         // the value can be passed around or applied later.
         if self.fn_globals.contains(&v.name) {
-            let name_reg = self.string_arg(ctx, &v.name);
+            let name_reg = self.string_arg(ctx, &v.name, loc);
             let dest = ctx.fresh_var("fnref");
-            ctx.instrs.push(IIRInstr::new(
+            ctx.emit(IIRInstr::new(
                 "call_builtin",
                 Some(dest.clone()),
                 vec![Operand::Var("make_closure".into()), Operand::Var(name_reg)],
                 "any",
-            ));
+            ), loc);
             return Ok(dest);
         }
 
         // Top-level value — look up via the host global table.
         if self.value_globals.contains(&v.name) {
-            let name_reg = self.string_arg(ctx, &v.name);
+            let name_reg = self.string_arg(ctx, &v.name, loc);
             let dest = ctx.fresh_var("g");
-            ctx.instrs.push(IIRInstr::new(
+            ctx.emit(IIRInstr::new(
                 "call_builtin",
                 Some(dest.clone()),
                 vec![Operand::Var("global_get".into()), Operand::Var(name_reg)],
                 "any",
-            ));
+            ), loc);
             return Ok(dest);
         }
 
         // Builtin — wrap in a 0-capture builtin-closure handle so users
         // can pass `+` etc. into higher-order positions.
         if is_builtin(&v.name) {
-            let name_reg = self.string_arg(ctx, &v.name);
+            let name_reg = self.string_arg(ctx, &v.name, loc);
             let dest = ctx.fresh_var("bref");
-            ctx.instrs.push(IIRInstr::new(
+            ctx.emit(IIRInstr::new(
                 "call_builtin",
                 Some(dest.clone()),
                 vec![
@@ -563,7 +594,7 @@ impl Compiler {
                     Operand::Var(name_reg),
                 ],
                 "any",
-            ));
+            ), loc);
             return Ok(dest);
         }
 
@@ -578,62 +609,62 @@ impl Compiler {
     }
 
     fn compile_if(&mut self, expr: &If, ctx: &mut FnCtx) -> Result<String, TwigCompileError> {
+        let loc = SourceLoc::new(expr.line, expr.column);
         let cond = self.compile_expr(&expr.cond, ctx)?;
         let else_label = ctx.fresh_label("else");
         let end_label = ctx.fresh_label("endif");
         let result = ctx.fresh_var("ifv");
 
-        ctx.instrs.push(IIRInstr::new(
+        ctx.emit(IIRInstr::new(
             "jmp_if_false",
             None,
             vec![Operand::Var(cond), Operand::Var(else_label.clone())],
             "void",
-        ));
+        ), loc);
 
         // Then branch — compile and copy into `result` via `_move`.
-        // `_move` is a host-side identity that preserves the value's
-        // *type* (booleans don't get coerced to integers, etc.); a
-        // plain `add result, then_v, 0` would coerce `True` to `1` in
-        // a Python runtime.
         let then_v = self.compile_expr(&expr.then_branch, ctx)?;
-        ctx.instrs.push(IIRInstr::new(
+        let then_loc = SourceLoc::new(expr.then_branch.pos().0, expr.then_branch.pos().1);
+        ctx.emit(IIRInstr::new(
             "call_builtin",
             Some(result.clone()),
             vec![Operand::Var("_move".into()), Operand::Var(then_v)],
             "any",
-        ));
-        ctx.instrs.push(IIRInstr::new(
+        ), then_loc);
+        ctx.emit(IIRInstr::new(
             "jmp",
             None,
             vec![Operand::Var(end_label.clone())],
             "void",
-        ));
+        ), loc);
 
         // Else branch — same shape.
-        ctx.instrs.push(IIRInstr::new(
+        ctx.emit(IIRInstr::new(
             "label",
             None,
             vec![Operand::Var(else_label)],
             "void",
-        ));
+        ), loc);
         let else_v = self.compile_expr(&expr.else_branch, ctx)?;
-        ctx.instrs.push(IIRInstr::new(
+        let else_loc = SourceLoc::new(expr.else_branch.pos().0, expr.else_branch.pos().1);
+        ctx.emit(IIRInstr::new(
             "call_builtin",
             Some(result.clone()),
             vec![Operand::Var("_move".into()), Operand::Var(else_v)],
             "any",
-        ));
+        ), else_loc);
 
-        ctx.instrs.push(IIRInstr::new(
+        ctx.emit(IIRInstr::new(
             "label",
             None,
             vec![Operand::Var(end_label)],
             "void",
-        ));
+        ), loc);
         Ok(result)
     }
 
     fn compile_let(&mut self, expr: &Let, ctx: &mut FnCtx) -> Result<String, TwigCompileError> {
+        let loc = SourceLoc::new(expr.line, expr.column);
         // Compile RHSs in the OUTER scope (Scheme `let`, not `let*`).
         let mut binding_values: Vec<(String, String)> = Vec::new();
         for (name, rhs) in &expr.bindings {
@@ -648,12 +679,12 @@ impl Compiler {
             if ctx.locals.insert(name.clone()) {
                 added.push(name.clone());
             }
-            ctx.instrs.push(IIRInstr::new(
+            ctx.emit(IIRInstr::new(
                 "call_builtin",
                 Some(name.clone()),
                 vec![Operand::Var("_move".into()), Operand::Var(src.clone())],
                 "any",
-            ));
+            ), loc);
         }
 
         // Compile body — at least one expression (parser-enforced).
@@ -672,6 +703,7 @@ impl Compiler {
     }
 
     fn compile_apply(&mut self, expr: &Apply, ctx: &mut FnCtx) -> Result<String, TwigCompileError> {
+        let loc = SourceLoc::new(expr.line, expr.column);
         // Direct call: fn is a VarRef whose name is a top-level
         // function or a builtin.  We materialise this decision at
         // compile time so the hot path stays a single `call`.
@@ -683,12 +715,12 @@ impl Compiler {
                     srcs.push(Operand::Var(r));
                 }
                 let dest = ctx.fresh_var("r");
-                ctx.instrs.push(IIRInstr::new(
+                ctx.emit(IIRInstr::new(
                     "call",
                     Some(dest.clone()),
                     srcs,
                     "any",
-                ));
+                ), loc);
                 return Ok(dest);
             }
 
@@ -699,12 +731,12 @@ impl Compiler {
                     srcs.push(Operand::Var(r));
                 }
                 let dest = ctx.fresh_var("r");
-                ctx.instrs.push(IIRInstr::new(
+                ctx.emit(IIRInstr::new(
                     "call_builtin",
                     Some(dest.clone()),
                     srcs,
                     "any",
-                ));
+                ), loc);
                 return Ok(dest);
             }
         }
@@ -721,12 +753,12 @@ impl Compiler {
             srcs.push(Operand::Var(r));
         }
         let dest = ctx.fresh_var("r");
-        ctx.instrs.push(IIRInstr::new(
+        ctx.emit(IIRInstr::new(
             "call_builtin",
             Some(dest.clone()),
             srcs,
             "any",
-        ));
+        ), loc);
         Ok(dest)
     }
 
@@ -744,14 +776,14 @@ impl Compiler {
     /// string through `Operand::Var` rather than via a dedicated
     /// `Operand::Str` variant (which would require modifying the
     /// shared `interpreter-ir` crate).
-    fn string_arg(&mut self, ctx: &mut FnCtx, literal: &str) -> String {
+    fn string_arg(&mut self, ctx: &mut FnCtx, literal: &str, loc: SourceLoc) -> String {
         let v = ctx.fresh_var("s");
-        ctx.instrs.push(IIRInstr::new(
+        ctx.emit(IIRInstr::new(
             "const",
             Some(v.clone()),
             vec![Operand::Var(literal.to_string())],
             "any",
-        ));
+        ), loc);
         v
     }
 }
