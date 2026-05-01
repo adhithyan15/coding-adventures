@@ -8,6 +8,7 @@ from algol_ir_compiler.compiler import (
     AlgolIrCompiler,
     CompileError,
     CompileResult,
+    IrCompilerLimits,
     ProcedureSignaturePlan,
     compile_algol,
 )
@@ -18,6 +19,7 @@ __all__ = [
     "AlgolIrCompiler",
     "CompileError",
     "CompileResult",
+    "IrCompilerLimits",
     "ProcedureSignaturePlan",
     "compile_algol",
 ]

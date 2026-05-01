@@ -6,7 +6,7 @@ from algol_type_checker import FRAME_WORD_SIZE, FrameSlot, check_algol
 from compiler_ir import IrImmediate, IrOp, IrRegister
 from lang_parser import ASTNode
 
-from algol_ir_compiler import CompileError, __version__, compile_algol
+from algol_ir_compiler import CompileError, IrCompilerLimits, __version__, compile_algol
 from algol_ir_compiler.compiler import (
     _MAX_STRING_OUTPUT_BYTES,
     _MAX_TOTAL_OUTPUT_BYTES,
@@ -1395,6 +1395,62 @@ class TestAlgolIrCompiler:
     def test_raises_for_missing_block(self) -> None:
         with pytest.raises(CompileError, match="must contain a block"):
             compile_algol(ASTNode("program", []))
+
+    def test_raises_when_generated_conditional_label_limit_is_exceeded(
+        self,
+    ) -> None:
+        with pytest.raises(CompileError, match="conditional/generated label sets"):
+            compile_algol(
+                parse_algol(
+                    "begin integer result; "
+                    "if true then result := 1 else result := 0 "
+                    "end"
+                ),
+                limits=IrCompilerLimits(max_if_label_sets=1),
+            )
+
+    def test_raises_when_generated_loop_label_limit_is_exceeded(self) -> None:
+        with pytest.raises(CompileError, match="loop label sets"):
+            compile_algol(
+                parse_algol(
+                    "begin integer result, i; "
+                    "for i := 1 do result := i "
+                    "end"
+                ),
+                limits=IrCompilerLimits(max_loop_label_sets=0),
+            )
+
+    def test_raises_when_generated_switch_dispatch_limit_is_exceeded(self) -> None:
+        with pytest.raises(CompileError, match="switch dispatch states"):
+            compile_algol(
+                parse_algol(
+                    "begin integer result, i; "
+                    "switch s := one; "
+                    "i := 1; goto s[i]; "
+                    "one: result := 1 "
+                    "end"
+                ),
+                limits=IrCompilerLimits(max_switch_dispatches=0),
+            )
+
+    def test_raises_when_generated_output_label_limit_is_exceeded(self) -> None:
+        with pytest.raises(CompileError, match="output helper label sets"):
+            compile_algol(
+                parse_algol("begin print(1) end"),
+                limits=IrCompilerLimits(max_output_label_sets=0),
+            )
+
+    def test_raises_when_generated_eval_thunk_limit_is_exceeded(self) -> None:
+        with pytest.raises(CompileError, match="by-name eval thunks"):
+            compile_algol(
+                parse_algol(
+                    "begin integer result; "
+                    "integer procedure id(x); integer x; begin id := x end; "
+                    "result := id(1 + 2) "
+                    "end"
+                ),
+                limits=IrCompilerLimits(max_eval_thunks=0),
+            )
 
     def test_compiles_without_result_variable(self) -> None:
         result = compile_algol(parse_algol("begin integer x; x := 1 end"))
