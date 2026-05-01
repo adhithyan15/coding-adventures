@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
+import re
+from collections.abc import Callable, Iterator
 
 from logic_builtins import (
     abolisho,
@@ -120,7 +121,11 @@ from logic_engine import (
     GoalExpr,
     LogicVar,
     NeqExpr,
+    Number,
+    Program,
     RelationCall,
+    State,
+    String,
     Term,
     atom,
     conj,
@@ -128,7 +133,11 @@ from logic_engine import (
     eq,
     fresh,
     goal_from_term,
+    logic_list,
+    native_goal,
+    reify,
     relation,
+    solve_from,
     term,
 )
 from logic_stdlib import (
@@ -148,10 +157,14 @@ from logic_stdlib import (
     sorto,
 )
 from prolog_core import expand_dcg_phrase
+from prolog_parser import PrologParseError
+from swi_prolog_parser import parse_swi_term
 
 _PREDICATE_INDICATOR = relation("/", 2)
 _IF_THEN = "->"
 _FD_REIFIABLE_RELATIONS = frozenset({"#=", "#\\=", "#<", "#=<", "#>", "#>="})
+_PLAIN_ATOM_RE = re.compile(r"^[a-z][A-Za-z0-9_]*$")
+_VARIABLE_RE = re.compile(r"^(?:[A-Z_][A-Za-z0-9_]*)$")
 type IndicatorBuilder = Callable[[Term, Term], GoalExpr]
 
 
@@ -368,6 +381,10 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         return copytermo(*args)
     if name == "term_variables" and goal.relation.arity == 2:
         return term_variableso(*args)
+    if name == "term_to_atom" and goal.relation.arity == 2:
+        return _term_to_atom_goal(*args)
+    if name == "atom_to_term" and goal.relation.arity == 3:
+        return _atom_to_term_goal(*args)
     if name == "atom_concat" and goal.relation.arity == 3:
         return atom_concato(*args)
     if name == "atom_length" and goal.relation.arity == 2:
@@ -452,6 +469,136 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         return goal if property_goal is None else property_goal
 
     return goal
+
+
+def _term_to_atom_goal(term_value: object, atom_value: object) -> GoalExpr:
+    def run(
+        program_value: Program,
+        state: State,
+        args: tuple[Term, ...],
+    ) -> Iterator[State]:
+        term_arg, atom_arg = args
+        reified_term = reify(term_arg, state.substitution)
+        reified_atom = reify(atom_arg, state.substitution)
+
+        if not isinstance(reified_term, LogicVar):
+            rendered = _render_prolog_term(reified_term)
+            yield from solve_from(program_value, eq(atom_arg, atom(rendered)), state)
+            return
+
+        if not isinstance(reified_atom, Atom):
+            return
+        parsed = _parse_atom_text(reified_atom)
+        if parsed is None:
+            return
+        yield from solve_from(program_value, eq(term_arg, parsed.term), state)
+
+    return native_goal(run, term_value, atom_value)
+
+
+def _atom_to_term_goal(
+    atom_value: object,
+    term_value: object,
+    bindings: object,
+) -> GoalExpr:
+    def run(
+        program_value: Program,
+        state: State,
+        args: tuple[Term, ...],
+    ) -> Iterator[State]:
+        atom_arg, term_arg, bindings_arg = args
+        reified_atom = reify(atom_arg, state.substitution)
+        if not isinstance(reified_atom, Atom):
+            return
+
+        parsed = _parse_atom_text(reified_atom)
+        if parsed is None:
+            return
+        yield from solve_from(
+            program_value,
+            conj(
+                eq(term_arg, parsed.term),
+                eq(bindings_arg, _variable_bindings(parsed.variables)),
+            ),
+            state,
+        )
+
+    return native_goal(run, atom_value, term_value, bindings)
+
+
+def _parse_atom_text(atom_value: Atom) -> object | None:
+    try:
+        return parse_swi_term(atom_value.symbol.name)
+    except PrologParseError:
+        return None
+
+
+def _variable_bindings(variables: dict[str, LogicVar]) -> Term:
+    return logic_list(
+        [term("=", atom(name), variable) for name, variable in variables.items()],
+    )
+
+
+def _render_prolog_term(term_value: Term) -> str:
+    list_text = _render_list(term_value)
+    if list_text is not None:
+        return list_text
+    if isinstance(term_value, Atom):
+        return _render_atom(term_value.symbol.name)
+    if isinstance(term_value, Number):
+        return str(term_value.value)
+    if isinstance(term_value, String):
+        return '"' + _escape_string(term_value.value) + '"'
+    if isinstance(term_value, LogicVar):
+        return _render_variable(term_value)
+    if isinstance(term_value, Compound):
+        args = ", ".join(_render_prolog_term(argument) for argument in term_value.args)
+        return f"{_render_functor(term_value.functor.name)}({args})"
+    raise TypeError(f"cannot render {type(term_value).__name__} as Prolog term")
+
+
+def _render_list(term_value: Term) -> str | None:
+    items: list[str] = []
+    current = term_value
+    while (
+        isinstance(current, Compound)
+        and current.functor.name == "."
+        and len(current.args) == 2
+    ):
+        items.append(_render_prolog_term(current.args[0]))
+        current = current.args[1]
+    if isinstance(current, Atom) and current.symbol.name == "[]":
+        return "[" + ", ".join(items) + "]"
+    if items:
+        return "[" + ", ".join(items) + " | " + _render_prolog_term(current) + "]"
+    return None
+
+
+def _render_functor(name: str) -> str:
+    if _PLAIN_ATOM_RE.fullmatch(name) or name in {"!", "[]"}:
+        return name
+    return "'" + _escape_atom(name) + "'"
+
+
+def _render_atom(name: str) -> str:
+    if _PLAIN_ATOM_RE.fullmatch(name) or name in {"!", "[]"}:
+        return name
+    return "'" + _escape_atom(name) + "'"
+
+
+def _render_variable(variable: LogicVar) -> str:
+    name = None if variable.display_name is None else variable.display_name.name
+    if name is not None and _VARIABLE_RE.fullmatch(name):
+        return name
+    return f"_G{abs(variable.id)}"
+
+
+def _escape_atom(value: str) -> str:
+    return value.replace("\\", "\\\\").replace("'", "\\'")
+
+
+def _escape_string(value: str) -> str:
+    return value.replace("\\", "\\\\").replace('"', '\\"')
 
 
 def _adapt_fd_equality(left: Term, right: Term) -> GoalExpr:

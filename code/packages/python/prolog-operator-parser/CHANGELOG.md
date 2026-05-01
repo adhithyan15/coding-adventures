@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Added `ParsedOperatorTerm` and `parse_operator_named_term_tokens(...)` so
+  dialect frontends can parse one term while retaining named variable bindings.
+
 ## 0.1.0
 
 - Added a token-level operator-aware Prolog parser shared by dialect frontends
