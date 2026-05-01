@@ -26,6 +26,9 @@
 //! - [`module::IIRModule`] — top-level container for all functions in a program
 //! - [`opcodes`] — predicate functions for opcode category membership, type helpers
 //! - [`serialise`] — compact binary serialisation / deserialisation
+//! - [`source_loc::SourceLoc`] — one source position, indexed in lockstep with
+//!   [`function::IIRFunction::instructions`]; substrate for the dev-tools stack
+//!   (LSP, debugger, coverage, AOT DWARF/PDB)
 //!
 //! ## Design principles
 //!
@@ -82,9 +85,11 @@ pub mod module;
 pub mod opcodes;
 pub mod serialise;
 pub mod slot_state;
+pub mod source_loc;
 
 // Re-export the most commonly used types at the crate root for ergonomic use.
 pub use function::{FunctionTypeStatus, IIRFunction};
 pub use instr::{IIRInstr, Operand};
 pub use module::IIRModule;
 pub use slot_state::{SlotKind, SlotState, MAX_POLYMORPHIC_OBSERVATIONS};
+pub use source_loc::SourceLoc;

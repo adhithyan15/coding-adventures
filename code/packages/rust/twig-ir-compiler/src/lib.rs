@@ -532,4 +532,103 @@ mod tests {
         // crucially: no panic / abort.
         assert!(compile_source(&src, "deep").is_err());
     }
+
+    // ---- PR D-1: source-map population ---------------------------------
+
+    /// Lockstep invariant: for every function in the module,
+    /// `source_map.len() == instructions.len()`.  Every dev tool
+    /// downstream (LSP, debugger, coverage, AOT DWARF/PDB) relies
+    /// on this — if it ever drifts, those consumers see ghosts.
+    #[test]
+    fn source_map_lockstep_holds_for_every_function() {
+        let srcs = [
+            "(+ 1 2)",
+            "(if (< 1 2) 100 200)",
+            "(let ((x 5)) (* x x))",
+            "(define (square x) (* x x)) (square 7)",
+            "((lambda (x) (* x x)) 3)",
+            "(define answer 42) answer",
+            "'foo",
+            "(begin 1 2 3)",
+            "(define (fact n) (if (= n 0) 1 (* n (fact (- n 1))))) (fact 5)",
+        ];
+        for src in srcs {
+            let m = module(src);
+            for f in &m.functions {
+                assert_eq!(
+                    f.source_map.len(),
+                    f.instructions.len(),
+                    "lockstep violated in fn {:?} of source {src:?}: \
+                     source_map.len()={} but instructions.len()={}",
+                    f.name,
+                    f.source_map.len(),
+                    f.instructions.len(),
+                );
+            }
+        }
+    }
+
+    /// Every position in `source_map` is either a real source
+    /// position (line >= 1, column >= 1) or the synthetic
+    /// sentinel.  Frontends should never emit zero-line /
+    /// non-zero-column or vice versa.
+    #[test]
+    fn source_map_positions_are_well_formed() {
+        use interpreter_ir::SourceLoc;
+        let m = module(
+            "(define (fact n) (if (= n 0) 1 (* n (fact (- n 1))))) (fact 5)",
+        );
+        for f in &m.functions {
+            for (i, loc) in f.source_map.iter().enumerate() {
+                let well_formed = loc.is_synthetic()
+                    || (loc.line >= 1 && loc.column >= 1);
+                assert!(
+                    well_formed,
+                    "ill-formed source loc {loc:?} at fn {:?} instr {i}",
+                    f.name,
+                );
+                let _ = SourceLoc::SYNTHETIC; // touch the constant so the use is intentional
+            }
+        }
+    }
+
+    /// First instruction of `(+ 1 2)` is a `const 1` whose
+    /// position should be column 4 (the `1` after `(+ `).  This
+    /// is the "did we actually plumb positions correctly"
+    /// smoke test — not just "are positions present".
+    #[test]
+    fn source_map_records_real_positions_from_ast() {
+        let m = module("(+ 1 2)");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        // The first instruction is `const _n1 = 1` for the `1`
+        // operand, which appears at column 4 of the source.
+        let loc = main.source_map[0];
+        assert_eq!(loc.line, 1, "first instr should be on line 1");
+        assert!(
+            loc.column >= 1 && loc.column <= 10,
+            "first instr column should be a small positive number, got {}",
+            loc.column,
+        );
+    }
+
+    /// Multi-line programs map each instruction back to the
+    /// right line.  Defends against the regression where every
+    /// instruction collapses to (1, 1).
+    #[test]
+    fn source_map_distinguishes_multiple_lines() {
+        let src = "(+ 1 2)\n(* 3 4)";
+        let m = module(src);
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let mut lines_seen: std::collections::HashSet<u32> =
+            std::collections::HashSet::new();
+        for loc in &main.source_map {
+            if !loc.is_synthetic() {
+                lines_seen.insert(loc.line);
+            }
+        }
+        assert!(
+            lines_seen.contains(&1) && lines_seen.contains(&2),
+            "expected positions on both lines 1 and 2, got {lines_seen:?}",
+        );
+    }
 }

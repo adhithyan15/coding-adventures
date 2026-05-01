@@ -33,6 +33,7 @@
 //!     type_status: FunctionTypeStatus::FullyTyped,
 //!     call_count: 0,
 //!     feedback_slots: std::collections::HashMap::new(),
+//!     // No source positions known for hand-built fixtures — leave empty.
 //!     source_map: Vec::new(),
 //! };
 //! assert_eq!(fn_.param_names(), vec!["a", "b"]);
@@ -41,6 +42,7 @@
 use std::collections::HashMap;
 use crate::instr::IIRInstr;
 use crate::opcodes::is_concrete_type;
+use crate::source_loc::SourceLoc;
 
 // ---------------------------------------------------------------------------
 // FunctionTypeStatus
@@ -114,13 +116,26 @@ pub struct IIRFunction {
     /// back to the IIR instruction that owns it.
     pub feedback_slots: HashMap<usize, usize>,
 
-    /// Optional: `(iir_index, source_a, source_b)` triples.
+    /// Per-instruction source positions, indexed in **lockstep** with
+    /// [`Self::instructions`] — `source_map[i]` is the position that
+    /// produced `instructions[i]`.
     ///
-    /// Conventional use: `(iir_index, source_line, source_column)` for
-    /// debugger source-mapping, or `(iir_index, original_bytecode_ip, 0)`
-    /// for Tetrad's branch-profile re-keying.  The third field's meaning is
-    /// frontend-defined; vm-core does not look at it.
-    pub source_map: Vec<(usize, usize, usize)>,
+    /// This is the substrate that powers the entire LANG dev-tools
+    /// stream: the LSP uses it to map errors to source spans, the
+    /// debugger uses it to break on user lines, the AOT codegen uses
+    /// it to emit DWARF/PDB, and the coverage instrumentation uses it
+    /// to attribute per-line execution counts.
+    ///
+    /// The lockstep invariant is enforced at emission time — every
+    /// frontend that pushes to `instructions` must, in the same
+    /// operation, push the matching `SourceLoc` here.  See
+    /// [`SourceLoc`] for the synthetic-instruction sentinel and other
+    /// indexing conventions.
+    ///
+    /// Empty is permitted only on functions where positions are
+    /// genuinely unknown (legacy callers, hand-built test fixtures).
+    /// Frontends that lower from a real AST should always populate it.
+    pub source_map: Vec<SourceLoc>,
 }
 
 impl IIRFunction {
