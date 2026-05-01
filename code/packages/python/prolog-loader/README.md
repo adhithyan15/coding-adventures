@@ -21,6 +21,7 @@ It keeps parsing side-effect free, then exposes helpers to:
 - adapt `phrase/2` and `phrase/3` into executable DCG runtime calls
 - adapt Prolog term equality predicates `=/2`, `\\=/2`, `==/2`, and `\\==/2`
   into engine/builtin goals
+- adapt Prolog `dif/2` into delayed disequality constraints
 - link multiple loaded sources into one namespace-aware runnable project with
   module-local predicates and weak imports
 - rewrite explicit `module:goal` qualification during linking, including common

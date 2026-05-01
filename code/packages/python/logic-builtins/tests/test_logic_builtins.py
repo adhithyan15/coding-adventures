@@ -47,6 +47,7 @@ from logic_builtins import (
     copytermo,
     current_predicateo,
     cuto,
+    difo,
     div,
     dynamico,
     excludeo,
@@ -1740,6 +1741,26 @@ class TestTermMetaprogrammingBuiltins:
             left,
             not_same_termo(term("box", "tea"), term("box", "cake")),
         ) == [left]
+
+    def test_difo_delays_disequality_until_later_bindings(self) -> None:
+        left = var("Left")
+        right = var("Right")
+
+        assert solve_all(program(), left, difo(left, "tea")) == [left]
+        assert (
+            solve_all(program(), left, conj(difo(left, "tea"), eq(left, "tea")))
+            == []
+        )
+        assert solve_all(
+            program(),
+            left,
+            conj(difo(left, "tea"), eq(left, "cake")),
+        ) == [atom("cake")]
+        assert solve_all(
+            program(),
+            (left, right),
+            conj(difo(left, right), eq(left, "tea"), eq(right, "cake")),
+        ) == [(atom("tea"), atom("cake"))]
 
     def test_atomico_and_callableo_classify_reified_terms(self) -> None:
         value = var("Value")

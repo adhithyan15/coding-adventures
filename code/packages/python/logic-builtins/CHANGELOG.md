@@ -26,6 +26,8 @@ All notable changes to this package will be documented in this file.
   callable-term execution.
 - `not_same_termo(left, right)` as the strict non-identity counterpart to
   `same_termo(left, right)`.
+- `difo(left, right)` for delayed disequality constraints that block future
+  unification instead of failing merely because terms are still open.
 
 ### Fixed
 

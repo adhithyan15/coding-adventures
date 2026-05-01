@@ -838,6 +838,7 @@ class TestPrologGoalAdapter:
             ),
             relation("=", 2)(LogicVar(id=14), atom("a")),
             relation("\\=", 2)(atom("a"), atom("b")),
+            relation("dif", 2)(LogicVar(id=15), atom("tea")),
             relation("==", 2)(atom("a"), atom("a")),
             relation("\\==", 2)(atom("a"), atom("b")),
             relation("compare", 3)(atom("<"), atom("a"), atom("b")),
@@ -1057,6 +1058,28 @@ class TestPrologGoalAdapter:
             program(),
             parsed_equal.variables["X"],
             adapt_prolog_goal(parsed_equal.goal),
+        ) == []
+
+    def test_adapt_prolog_goal_rewrites_dif_as_delayed_disequality(self) -> None:
+        parsed = parse_swi_query(
+            "?- dif(X, tea), X = cake, dif(Left, Right), "
+            "Left = box(tea), Right = box(cake).",
+        )
+        parsed_failure = parse_swi_query("?- dif(X, tea), X = tea.")
+
+        assert solve_all(
+            program(),
+            (
+                parsed.variables["X"],
+                parsed.variables["Left"],
+                parsed.variables["Right"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        ) == [(atom("cake"), term("box", "tea"), term("box", "cake"))]
+        assert solve_all(
+            program(),
+            parsed_failure.variables["X"],
+            adapt_prolog_goal(parsed_failure.goal),
         ) == []
 
     def test_adapt_prolog_goal_uses_else_branch_from_original_state(self) -> None:

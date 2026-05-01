@@ -23,6 +23,7 @@ from logic_builtins import (
     copytermo,
     current_predicateo,
     cuto,
+    difo,
     dynamico,
     excludeo,
     failo,
@@ -338,6 +339,8 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         return eq(*args)
     if name == "\\=" and goal.relation.arity == 2:
         return noto(eq(*args))
+    if name == "dif" and goal.relation.arity == 2:
+        return difo(*args)
     if name == "==" and goal.relation.arity == 2:
         return same_termo(*args)
     if name == "\\==" and goal.relation.arity == 2:
