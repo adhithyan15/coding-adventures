@@ -2,7 +2,16 @@
 
 from __future__ import annotations
 
-from logic_engine import Disequality, LogicVar, atom, logic_list, num, string, term
+from logic_engine import (
+    Compound,
+    Disequality,
+    LogicVar,
+    atom,
+    logic_list,
+    num,
+    string,
+    term,
+)
 
 from prolog_vm_compiler import (
     compile_swi_prolog_project,
@@ -188,32 +197,39 @@ class TestPrologVMStress:
                string_chars(String, [h, i]),
                string_length("hello", StringLength),
                sub_string("logic", 2, 2, 1, SubString),
+               term_to_atom(pair(tea, [cup, cake]), RenderedTerm),
+               atom_to_term('pair(X, tea)', ParsedTerm, Bindings),
                string_codes("ok", Codes).
             """,
         )
 
         answers = run_compiled_prolog_query_answers(compiled)
 
-        assert [answer.as_dict() for answer in answers] == [
-            {
-                "Chars": logic_list(["t", "e", "a"]),
-                "Atom": atom("tea"),
-                "Number": num(42),
-                "Float": num(3.5),
-                "Parsed": num(7),
-                "Joined": atom("teacup"),
-                "Prefix": atom("tea"),
-                "AtomLength": num(6),
-                "SubAtom": atom("cup"),
-                "AtomList": atom("tea-2-go"),
-                "Split": logic_list(["tea", "cup"]),
-                "Char": atom("Z"),
-                "String": string("hi"),
-                "StringLength": num(5),
-                "SubString": string("gi"),
-                "Codes": logic_list([111, 107]),
-            },
-        ]
+        assert len(answers) == 1
+        answer = answers[0].as_dict()
+        parsed_term = answer["ParsedTerm"]
+        assert isinstance(parsed_term, Compound)
+        assert answer == {
+            "Chars": logic_list(["t", "e", "a"]),
+            "Atom": atom("tea"),
+            "Number": num(42),
+            "Float": num(3.5),
+            "Parsed": num(7),
+            "Joined": atom("teacup"),
+            "Prefix": atom("tea"),
+            "AtomLength": num(6),
+            "SubAtom": atom("cup"),
+            "AtomList": atom("tea-2-go"),
+            "Split": logic_list(["tea", "cup"]),
+            "Char": atom("Z"),
+            "String": string("hi"),
+            "StringLength": num(5),
+            "SubString": string("gi"),
+            "RenderedTerm": atom("pair(tea, [cup, cake])"),
+            "ParsedTerm": term("pair", parsed_term.args[0], "tea"),
+            "Bindings": logic_list([term("=", "X", parsed_term.args[0])]),
+            "Codes": logic_list([111, 107]),
+        }
 
     def test_current_prolog_flag_runs_through_vm(self) -> None:
         compiled = compile_swi_prolog_source(

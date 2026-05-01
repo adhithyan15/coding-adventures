@@ -954,6 +954,12 @@ class TestPrologGoalAdapter:
                 term("box", LogicVar(id=16)),
                 LogicVar(id=17),
             ),
+            relation("term_to_atom", 2)(term("box", atom("tea")), LogicVar(id=84)),
+            relation("atom_to_term", 3)(
+                atom("box(X)"),
+                LogicVar(id=85),
+                LogicVar(id=86),
+            ),
             relation("current_prolog_flag", 2)(
                 atom("unknown"),
                 LogicVar(id=18),
@@ -1127,12 +1133,14 @@ class TestPrologGoalAdapter:
             "string_chars(String, [h, i]), "
             "string_length(\"hello\", StringLength), "
             "sub_string(\"logic\", 2, 2, 1, SubString), "
+            "term_to_atom(pair(tea, [cup, cake]), RenderedTerm), "
+            "atom_to_term('pair(X, tea)', ParsedTerm, Bindings), "
             'string_codes("ok", Codes).',
         )
 
         adapted = adapt_prolog_goal(parsed.goal)
 
-        assert solve_all(
+        answers = solve_all(
             program(),
             (
                 parsed.variables["Chars"],
@@ -1150,29 +1158,38 @@ class TestPrologGoalAdapter:
                 parsed.variables["String"],
                 parsed.variables["StringLength"],
                 parsed.variables["SubString"],
+                parsed.variables["RenderedTerm"],
+                parsed.variables["ParsedTerm"],
+                parsed.variables["Bindings"],
                 parsed.variables["Codes"],
             ),
             adapted,
-        ) == [
-            (
-                logic_list(["t", "e", "a"]),
-                atom("tea"),
-                num(42),
-                num(3.5),
-                num(7),
-                atom("teacup"),
-                atom("tea"),
-                num(6),
-                atom("cup"),
-                atom("tea-2-go"),
-                logic_list(["tea", "cup"]),
-                atom("Z"),
-                string("hi"),
-                num(5),
-                string("gi"),
-                logic_list([111, 107]),
-            ),
-        ]
+        )
+        assert len(answers) == 1
+        answer = answers[0]
+        parsed_term = answer[16]
+        assert isinstance(parsed_term, Compound)
+        assert answer == (
+            logic_list(["t", "e", "a"]),
+            atom("tea"),
+            num(42),
+            num(3.5),
+            num(7),
+            atom("teacup"),
+            atom("tea"),
+            num(6),
+            atom("cup"),
+            atom("tea-2-go"),
+            logic_list(["tea", "cup"]),
+            atom("Z"),
+            string("hi"),
+            num(5),
+            string("gi"),
+            atom("pair(tea, [cup, cake])"),
+            term("pair", parsed_term.args[0], "tea"),
+            logic_list([term("=", "X", parsed_term.args[0])]),
+            logic_list([111, 107]),
+        )
 
     def test_adapt_prolog_goal_rewrites_term_equality_failures(self) -> None:
         parsed_unifiable = parse_swi_query("?- X \\= box(tea).")

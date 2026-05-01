@@ -143,6 +143,7 @@ The package includes end-to-end stress tests for:
   `atomic_list_concat/3`, and `number_string/2`
 - text inspection with `atom_length/2`, `string_length/2`, `sub_atom/5`, and
   `sub_string/5`
+- term text I/O with `term_to_atom/2` and `atom_to_term/3`
 - runtime flag introspection and branch-local updates with
   `current_prolog_flag/2` and `set_prolog_flag/2`
 - finite integer builtins such as `integer/1`, `between/3`, and `succ/2`

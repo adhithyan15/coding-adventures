@@ -17,6 +17,8 @@ It keeps parsing side-effect free, then exposes helpers to:
   `atomic_list_concat/2,3`, and `number_string/2`
 - adapt text inspection builtins such as `atom_length/2`, `string_length/2`,
   `sub_atom/5`, and `sub_string/5`
+- adapt term text I/O builtins such as `term_to_atom/2` and `atom_to_term/3`
+  through the parser boundary
 - adapt callable CLP(FD) forms such as `in/2`, `ins/2`, `#=/2`,
   `all_different/1`, and `labeling/2`
 - flatten nested additive CLP(FD) equality expressions such as

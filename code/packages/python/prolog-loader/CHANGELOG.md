@@ -55,6 +55,8 @@
   finite text goals
 - adapt Prolog text inspection predicates `atom_length/2`, `string_length/2`,
   `sub_atom/5`, and `sub_string/5` into finite text goals
+- adapt Prolog term text I/O predicates `term_to_atom/2` and `atom_to_term/3`
+  through the parser boundary
 
 ## 0.1.0
 
