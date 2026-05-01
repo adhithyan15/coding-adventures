@@ -47,13 +47,20 @@ The convenience APIs reject source strings larger than 256 KiB before parsing.
 The downstream type checker also enforces configurable AST, block-nesting, and
 procedure-nesting limits so recursive semantic analysis fails with explicit
 diagnostics instead of exhausting Python recursion on hostile inputs.
+At execution time, run compiled modules with `WasmRuntime`'s
+`WasmExecutionLimits` when the ALGOL source is untrusted; the instruction
+budget stops nonterminating control-flow programs before they monopolize the
+host process.
 
 ```python
 from algol_wasm_compiler import compile_source
-from wasm_runtime import WasiConfig, WasiHost, WasmRuntime
+from wasm_runtime import WasiConfig, WasiHost, WasmExecutionLimits, WasmRuntime
 
 compiled = compile_source("begin integer result; result := 7 end")
 assert WasmRuntime().load_and_run(compiled.binary, "_start", []) == [7]
+
+bounded_runtime = WasmRuntime(limits=WasmExecutionLimits(max_instructions=100_000))
+assert bounded_runtime.load_and_run(compiled.binary, "_start", []) == [7]
 
 print_only = compile_source("begin print('Hi') end")
 captured_print: list[str] = []

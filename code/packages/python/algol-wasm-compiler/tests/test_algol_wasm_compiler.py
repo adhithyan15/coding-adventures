@@ -4,7 +4,8 @@ from pathlib import Path
 
 import pytest
 from algol_ir_compiler.compiler import _MAX_STRING_OUTPUT_BYTES, _MAX_TOTAL_OUTPUT_BYTES
-from wasm_runtime import WasiConfig, WasiHost, WasmRuntime
+from wasm_execution import TrapError
+from wasm_runtime import WasiConfig, WasiHost, WasmExecutionLimits, WasmRuntime
 
 from algol_wasm_compiler import (
     MAX_SOURCE_LENGTH,
@@ -532,6 +533,13 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [4]
+
+    def test_runtime_instruction_budget_stops_nonterminating_goto_loop(self) -> None:
+        result = compile_source("begin integer result; loop: goto loop end")
+        runtime = WasmRuntime(limits=WasmExecutionLimits(max_instructions=128))
+
+        with pytest.raises(TrapError, match="instruction budget exhausted"):
+            runtime.load_and_run(result.binary, "_start", [])
 
     def test_local_goto_strategy_preserves_procedure_calls(self) -> None:
         result = compile_source(

@@ -7,16 +7,15 @@ load_and_run shortcut.
 
 from __future__ import annotations
 
-from typing import Any
-
 import pytest
+from wasm_execution import TrapError, WasmExecutionLimits
 from wasm_types import (
     DataSegment,
     Element,
     Export,
     ExternalKind,
-    FuncType,
     FunctionBody,
+    FuncType,
     Global,
     GlobalType,
     Import,
@@ -27,10 +26,7 @@ from wasm_types import (
     WasmModule,
 )
 
-from wasm_execution import TrapError
-from wasm_runtime.instance import WasmInstance
 from wasm_runtime.runtime import WasmRuntime
-
 
 # ===========================================================================
 # Helper: build a module that computes f(x) = x * x
@@ -52,7 +48,12 @@ def _square_module() -> WasmModule:
         exports=[Export(name="square", kind=ExternalKind.FUNCTION, index=0)],
         start=None,
         elements=[],
-        code=[FunctionBody(locals=(), code=bytes([0x20, 0x00, 0x20, 0x00, 0x6C, 0x0B]))],
+        code=[
+            FunctionBody(
+                locals=(),
+                code=bytes([0x20, 0x00, 0x20, 0x00, 0x6C, 0x0B]),
+            )
+        ],
         data=[],
         customs=[],
     )
@@ -71,6 +72,29 @@ def _identity_module() -> WasmModule:
         start=None,
         elements=[],
         code=[FunctionBody(locals=(), code=bytes([0x20, 0x00, 0x0B]))],
+        data=[],
+        customs=[],
+    )
+
+
+def _spinning_module() -> WasmModule:
+    """Build a module with spin() = loop { br 0 }."""
+    return WasmModule(
+        types=[FuncType(params=(), results=())],
+        imports=[],
+        functions=[0],
+        tables=[],
+        memories=[],
+        globals=[],
+        exports=[Export(name="spin", kind=ExternalKind.FUNCTION, index=0)],
+        start=None,
+        elements=[],
+        code=[
+            FunctionBody(
+                locals=(),
+                code=bytes([0x03, 0x40, 0x0C, 0x00, 0x0B]),
+            )
+        ],
         data=[],
         customs=[],
     )
@@ -127,6 +151,13 @@ class TestRuntimeBasic:
         instance = runtime.instantiate(module)
         with pytest.raises(TrapError, match="not a function"):
             runtime.call(instance, "mem", [])
+
+    def test_instruction_budget_traps_nonterminating_function(self) -> None:
+        runtime = WasmRuntime(limits=WasmExecutionLimits(max_instructions=8))
+        instance = runtime.instantiate(_spinning_module())
+
+        with pytest.raises(TrapError, match="instruction budget exhausted"):
+            runtime.call(instance, "spin", [])
 
 
 # ===========================================================================
@@ -350,8 +381,15 @@ class TestRuntimeWithWasi:
 
         module = WasmModule(
             types=[
-                FuncType(params=(ValueType.I32, ValueType.I32, ValueType.I32, ValueType.I32),
-                         results=(ValueType.I32,)),
+                FuncType(
+                    params=(
+                        ValueType.I32,
+                        ValueType.I32,
+                        ValueType.I32,
+                        ValueType.I32,
+                    ),
+                    results=(ValueType.I32,),
+                ),
                 FuncType(params=(ValueType.I32,), results=(ValueType.I32,)),
             ],
             imports=[

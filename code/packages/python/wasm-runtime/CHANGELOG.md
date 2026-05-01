@@ -26,6 +26,9 @@ All notable changes to this package will be documented in this file.
 - **`compiler_math` host imports** — `WasiHost` now resolves `f64_sin`,
   `f64_cos`, `f64_atan`, `f64_ln`, `f64_exp`, and `f64_pow` for generic compiler
   pipeline modules that need non-core WASM real math.
+- `WasmRuntime` now accepts `WasmExecutionLimits`, including a
+  `max_instructions` budget that traps nonterminating module execution
+  predictably.
 
 ### Changed
 

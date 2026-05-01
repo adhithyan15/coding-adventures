@@ -1537,9 +1537,10 @@ Current implementation note: the Python ALGOL lane enforces the first
 front-end limits through the WASM package's source-length guard and the type
 checker's configurable AST-depth, block-depth, and procedure-depth checks. The
 runtime lowering already keeps frames, dynamic arrays, output, eval-thunk
-descriptors, and generated control/helper label state bounded; future
-convergence work should continue closing the remaining host-execution budget
-items against this list.
+descriptors, and generated control/helper label state bounded. The pure-Python
+WASM runtime now also exposes a configurable instruction budget so embedders
+can cap nonterminating compiled programs at execution time; future convergence
+work should keep closing any remaining host-budget items against this list.
 
 ## Documentation Requirements
 

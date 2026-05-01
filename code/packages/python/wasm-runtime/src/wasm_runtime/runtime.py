@@ -7,15 +7,12 @@ from __future__ import annotations
 
 from typing import Any
 
-from wasm_module_parser import WasmModuleParser
-from wasm_types import ExternalKind, FuncType, FunctionBody, GlobalType, ValueType, WasmModule
-from wasm_validator import ValidatedModule, validate
-
 from wasm_execution import (
     LinearMemory,
     Table,
     TrapError,
     WasmExecutionEngine,
+    WasmExecutionLimits,
     WasmValue,
     evaluate_const_expr,
     f32,
@@ -23,6 +20,16 @@ from wasm_execution import (
     i32,
     i64,
 )
+from wasm_module_parser import WasmModuleParser
+from wasm_types import (
+    ExternalKind,
+    FunctionBody,
+    FuncType,
+    GlobalType,
+    ValueType,
+    WasmModule,
+)
+from wasm_validator import ValidatedModule, validate
 
 from wasm_runtime.instance import WasmInstance
 
@@ -37,9 +44,14 @@ class WasmRuntime:
         # result == [25]
     """
 
-    def __init__(self, host: Any | None = None) -> None:
+    def __init__(
+        self,
+        host: Any | None = None,
+        limits: WasmExecutionLimits | None = None,
+    ) -> None:
         self._parser = WasmModuleParser()
         self._host = host
+        self._limits = limits or WasmExecutionLimits()
 
     def load(self, wasm_bytes: bytes | bytearray) -> WasmModule:
         """Parse a .wasm binary into a WasmModule."""
@@ -67,18 +79,34 @@ class WasmRuntime:
                 func_type = module.types[type_idx]
                 func_types.append(func_type)
                 func_bodies.append(None)
-                host_func = self._host.resolve_function(imp.module_name, imp.name) if self._host else None
+                host_func = (
+                    self._host.resolve_function(imp.module_name, imp.name)
+                    if self._host
+                    else None
+                )
                 host_functions.append(host_func)
             elif imp.kind == ExternalKind.MEMORY:
-                imported_mem = self._host.resolve_memory(imp.module_name, imp.name) if self._host else None
+                imported_mem = (
+                    self._host.resolve_memory(imp.module_name, imp.name)
+                    if self._host
+                    else None
+                )
                 if imported_mem:
                     memory = imported_mem
             elif imp.kind == ExternalKind.TABLE:
-                imported_table = self._host.resolve_table(imp.module_name, imp.name) if self._host else None
+                imported_table = (
+                    self._host.resolve_table(imp.module_name, imp.name)
+                    if self._host
+                    else None
+                )
                 if imported_table:
                     tables.append(imported_table)
             elif imp.kind == ExternalKind.GLOBAL:
-                imported_global = self._host.resolve_global(imp.module_name, imp.name) if self._host else None
+                imported_global = (
+                    self._host.resolve_global(imp.module_name, imp.name)
+                    if self._host
+                    else None
+                )
                 if imported_global:
                     global_types.append(imported_global["type"])
                     globals_list.append(imported_global["value"])
@@ -99,10 +127,12 @@ class WasmRuntime:
 
         # Allocate tables
         for table_type in module.tables:
-            tables.append(Table(
-                table_type.limits.min,
-                table_type.limits.max,
-            ))
+            tables.append(
+                Table(
+                    table_type.limits.min,
+                    table_type.limits.max,
+                )
+            )
 
         # Initialize globals
         for global_def in module.globals:
@@ -144,7 +174,11 @@ class WasmRuntime:
         )
 
         # Bind linear memory on the WASI host if it exposes set_memory().
-        if self._host is not None and hasattr(self._host, "set_memory") and memory is not None:
+        if (
+            self._host is not None
+            and hasattr(self._host, "set_memory")
+            and memory is not None
+        ):
             self._host.set_memory(memory)
 
         # Call start function
@@ -157,12 +191,18 @@ class WasmRuntime:
                 func_types=instance.func_types,
                 func_bodies=instance.func_bodies,
                 host_functions=instance.host_functions,
+                limits=self._limits,
             )
             engine.call_function(module.start, [])
 
         return instance
 
-    def call(self, instance: WasmInstance, name: str, args: list[int | float]) -> list[int | float]:
+    def call(
+        self,
+        instance: WasmInstance,
+        name: str,
+        args: list[int | float],
+    ) -> list[int | float]:
         """Call an exported function by name."""
         exp = instance.exports.get(name)
         if exp is None:
@@ -177,7 +217,9 @@ class WasmRuntime:
         # Convert plain numbers to WasmValues
         wasm_args: list[WasmValue] = []
         for idx, arg in enumerate(args):
-            param_type = func_type.params[idx] if idx < len(func_type.params) else ValueType.I32
+            param_type = (
+                func_type.params[idx] if idx < len(func_type.params) else ValueType.I32
+            )
             if param_type == ValueType.I32:
                 wasm_args.append(i32(int(arg)))
             elif param_type == ValueType.I64:
@@ -197,6 +239,7 @@ class WasmRuntime:
             func_types=instance.func_types,
             func_bodies=instance.func_bodies,
             host_functions=instance.host_functions,
+            limits=self._limits,
         )
 
         results = engine.call_function(exp["index"], wasm_args)

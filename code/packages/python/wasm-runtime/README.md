@@ -39,6 +39,19 @@ result = runtime.load_and_run(wasm_bytes, "square", [5])
 print(result)  # [25]
 ```
 
+### Bounding execution
+
+```python
+from wasm_runtime import WasmExecutionLimits, WasmRuntime
+
+runtime = WasmRuntime(limits=WasmExecutionLimits(max_instructions=100_000))
+runtime.load_and_run(wasm_bytes, "_start", [])
+```
+
+When the instruction budget is exhausted, execution traps before dispatching
+the next WASM instruction. This lets untrusted compiled programs fail
+predictably instead of monopolizing the Python host.
+
 ### WASI Tier 1 (stdin/stdout/stderr capture)
 
 ```python

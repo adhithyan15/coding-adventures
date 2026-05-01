@@ -6,13 +6,18 @@ using the GenericVM infrastructure.
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Any
 
 from virtual_machine.generic_vm import GenericVM
-from virtual_machine.vm import CodeObject
-from wasm_types import FuncType, FunctionBody, GlobalType
+from virtual_machine.vm import CodeObject, Instruction
+from wasm_types import FunctionBody, FuncType, GlobalType
 
-from wasm_execution.decoder import build_control_flow_map, decode_function_body, to_vm_instructions
+from wasm_execution.decoder import (
+    build_control_flow_map,
+    decode_function_body,
+    to_vm_instructions,
+)
 from wasm_execution.host_interface import TrapError
 from wasm_execution.instructions.control import register_control
 from wasm_execution.instructions.dispatch import register_all_instructions
@@ -22,6 +27,17 @@ from wasm_execution.types import WasmExecutionContext
 from wasm_execution.values import WasmValue, default_value
 
 MAX_CALL_DEPTH = 1024
+
+
+@dataclass(frozen=True)
+class WasmExecutionLimits:
+    """Configurable safety limits for WASM execution."""
+
+    max_instructions: int | None = None
+
+    def __post_init__(self) -> None:
+        if self.max_instructions is not None and self.max_instructions < 0:
+            raise ValueError("max_instructions must be non-negative")
 
 
 class WasmExecutionEngine:
@@ -50,6 +66,7 @@ class WasmExecutionEngine:
         func_types: list[FuncType],
         func_bodies: list[FunctionBody | None],
         host_functions: list[Any | None],
+        limits: WasmExecutionLimits | None = None,
     ) -> None:
         self._memory = memory
         self._tables = tables
@@ -58,6 +75,8 @@ class WasmExecutionEngine:
         self._func_types = func_types
         self._func_bodies = func_bodies
         self._host_functions = host_functions
+        self._limits = limits or WasmExecutionLimits()
+        self._instructions_executed = 0
 
         # Decoded function body cache (decoded once, reused)
         self._decoded_cache: dict[int, Any] = {}
@@ -69,6 +88,7 @@ class WasmExecutionEngine:
         # Register all WASM instruction handlers
         register_all_instructions(self._vm)
         register_control(self._vm)
+        self._install_instruction_budget_hook()
 
     def call_function(self, func_index: int, args: list[WasmValue]) -> list[WasmValue]:
         """Call a WASM function by index.
@@ -83,10 +103,14 @@ class WasmExecutionEngine:
         if func_index < 0 or func_index >= len(self._func_types):
             msg = f"undefined function index {func_index}"
             raise TrapError(msg)
+        self._instructions_executed = 0
 
         func_type = self._func_types[func_index]
         if len(args) != len(func_type.params):
-            msg = f"function {func_index} expects {len(func_type.params)} arguments, got {len(args)}"
+            msg = (
+                f"function {func_index} expects {len(func_type.params)} "
+                f"arguments, got {len(args)}"
+            )
             raise TrapError(msg)
 
         # Check if this is a host (imported) function
@@ -147,6 +171,7 @@ class WasmExecutionEngine:
         # Re-register handlers after reset
         register_all_instructions(self._vm)
         register_control(self._vm)
+        self._install_instruction_budget_hook()
 
         current_code = code
         while True:
@@ -175,6 +200,25 @@ class WasmExecutionEngine:
                 results.insert(0, self._vm.pop_typed())
 
         return results
+
+    def _install_instruction_budget_hook(self) -> None:
+        if self._limits.max_instructions is None:
+            self._vm.set_pre_instruction_hook(None)
+            return
+
+        def consume_instruction_budget(
+            _vm: GenericVM,
+            _instruction: Instruction,
+            _code: CodeObject,
+        ) -> None:
+            if self._instructions_executed >= self._limits.max_instructions:
+                raise TrapError(
+                    "WASM execution instruction budget exhausted "
+                    f"(limit: {self._limits.max_instructions})"
+                )
+            self._instructions_executed += 1
+
+        self._vm.set_pre_instruction_hook(consume_instruction_budget)
 
     def _resume_saved_frame(self, ctx: WasmExecutionContext) -> CodeObject:
         frame = ctx.saved_frames.pop()
