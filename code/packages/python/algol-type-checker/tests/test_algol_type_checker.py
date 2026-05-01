@@ -899,6 +899,56 @@ class TestAlgolTypeChecker:
         assert parameter.kind == "label"
         assert parameter.type_name == "label"
 
+    def test_accepts_label_parameter_and_conditional_label_actual(self) -> None:
+        ast = parse_algol(
+            "begin integer result; boolean flag; "
+            "procedure jump(target); label target; begin goto target end; "
+            "flag := false; jump(if flag then left else right); "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        parameter = result.semantic.procedures[0].parameters[0]
+        assert parameter.kind == "label"
+
+    def test_accepts_label_parameter_and_numeric_label_actual(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure jump(target); label target; begin goto target end; "
+            "jump(10); "
+            "10: result := 7 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        assert any(label.name == "10" for label in result.semantic.labels)
+
+    def test_accepts_label_parameter_and_switch_selection_actual(self) -> None:
+        ast = parse_algol(
+            "begin integer result, i; switch s := left, right; "
+            "procedure jump(target); label target; begin goto target end; "
+            "i := 2; jump(s[i]); "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        assert any(
+            selection.name == "s"
+            for selection in result.semantic.switch_selections
+        )
+
     def test_accepts_value_label_parameter_and_direct_label_actual(self) -> None:
         ast = parse_algol(
             "begin integer result; "
@@ -1156,6 +1206,53 @@ class TestAlgolTypeChecker:
         shape = result.semantic.procedures[0].parameters[0].procedure_call_shapes[0]
         assert shape.argument_kinds == ("label",)
         assert shape.argument_types == ("label",)
+
+    def test_accepts_procedure_parameter_actual_with_conditional_label_formal(
+        self,
+    ) -> None:
+        ast = parse_algol(
+            "begin integer result; boolean flag; "
+            "procedure invoke(p); procedure p; "
+            "begin p(if flag then left else right) end; "
+            "procedure jump(l); label l; begin goto l end; "
+            "flag := false; invoke(jump); "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        shape = result.semantic.procedures[0].parameters[0].procedure_call_shapes[0]
+        assert shape.argument_kinds == ("label",)
+        assert shape.argument_types == ("label",)
+
+    def test_accepts_procedure_parameter_actual_with_switch_selection_label_formal(
+        self,
+    ) -> None:
+        ast = parse_algol(
+            "begin integer result, i; switch s := left, right; "
+            "procedure invoke(p); procedure p; begin p(s[i]) end; "
+            "procedure jump(l); label l; begin goto l end; "
+            "i := 2; invoke(jump); "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        shape = result.semantic.procedures[0].parameters[0].procedure_call_shapes[0]
+        assert shape.argument_kinds == ("label",)
+        assert shape.argument_types == ("label",)
+        assert any(
+            selection.name == "s"
+            for selection in result.semantic.switch_selections
+        )
 
     def test_accepts_procedure_parameter_actual_with_switch_formal(self) -> None:
         ast = parse_algol(

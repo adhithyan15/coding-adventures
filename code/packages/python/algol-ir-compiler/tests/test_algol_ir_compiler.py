@@ -1034,6 +1034,65 @@ class TestAlgolIrCompiler:
             == ("integer", "integer", "integer")
         )
 
+    def test_compiles_label_parameter_call_with_conditional_argument(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; boolean flag; "
+                "procedure jump(l); label l; begin goto l end; "
+                "flag := false; jump(if flag then left else right); "
+                "left: result := 1; goto done; "
+                "right: result := 2; "
+                "done: "
+                "end"
+            )
+        )
+        opcodes = [instruction.opcode for instruction in result.program.instructions]
+
+        assert IrOp.BRANCH_Z in opcodes
+
+    def test_compiles_procedure_parameter_call_with_conditional_label_argument(
+        self,
+    ) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; boolean flag; "
+                "procedure invoke(p); procedure p; "
+                "begin p(if flag then left else right) end; "
+                "procedure jump(l); label l; begin goto l end; "
+                "flag := false; invoke(jump); "
+                "left: result := 1; goto done; "
+                "right: result := 2; "
+                "done: "
+                "end"
+            )
+        )
+
+        assert (
+            result.procedure_signatures["_fn_algol_call_procedure_label"].param_types
+            == ("integer", "integer", "integer")
+        )
+
+    def test_compiles_procedure_parameter_call_with_switch_selection_label_argument(
+        self,
+    ) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result, i; switch s := left, right; "
+                "procedure invoke(p); procedure p; begin p(s[i]) end; "
+                "procedure jump(l); label l; begin goto l end; "
+                "i := 2; invoke(jump); "
+                "left: result := 1; goto done; "
+                "right: result := 2; "
+                "done: "
+                "end"
+            )
+        )
+
+        assert (
+            result.procedure_signatures["_fn_algol_call_procedure_label"].param_types
+            == ("integer", "integer", "integer")
+        )
+
     def test_compiles_procedure_parameter_call_with_switch_argument(self) -> None:
         result = compile_algol(
             parse_algol(
