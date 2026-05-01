@@ -371,11 +371,26 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
     if name in {"not", "\\+"} and goal.relation.arity == 1:
         return noto(_adapt_callable_goal(args[0]))
     if name == "findall" and goal.relation.arity == 3:
-        return findallo(args[0], _adapt_callable_goal(args[1]), args[2])
+        return findallo(
+            args[0],
+            _adapt_collection_goal(args[1]),
+            args[2],
+            scope=args[1],
+        )
     if name == "bagof" and goal.relation.arity == 3:
-        return bagofo(args[0], _adapt_callable_goal(args[1]), args[2])
+        return bagofo(
+            args[0],
+            _adapt_collection_goal(args[1]),
+            args[2],
+            scope=args[1],
+        )
     if name == "setof" and goal.relation.arity == 3:
-        return setofo(args[0], _adapt_callable_goal(args[1]), args[2])
+        return setofo(
+            args[0],
+            _adapt_collection_goal(args[1]),
+            args[2],
+            scope=args[1],
+        )
     if name == "forall" and goal.relation.arity == 2:
         return forallo(_adapt_callable_goal(args[0]), _adapt_callable_goal(args[1]))
     if name == "labeling" and goal.relation.arity == 2:
@@ -969,6 +984,24 @@ def _adapt_callable_goal(term_value: Term) -> GoalExpr:
         return adapt_prolog_goal(goal_from_term(term_value))
     except TypeError:
         return calltermo(term_value)
+
+
+def _adapt_collection_goal(term_value: Term) -> GoalExpr:
+    """Adapt the executable side of a collector goal, stripping ``^/2`` scopes."""
+
+    return _adapt_callable_goal(_strip_collection_existentials(term_value))
+
+
+def _strip_collection_existentials(term_value: Term) -> Term:
+    current = term_value
+    while (
+        isinstance(current, Compound)
+        and current.functor.namespace is None
+        and current.functor.name == "^"
+        and len(current.args) == 2
+    ):
+        current = current.args[1]
+    return current
 
 
 def _extend_callable_term(

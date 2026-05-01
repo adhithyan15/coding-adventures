@@ -161,6 +161,8 @@ The package includes end-to-end stress tests for:
   puzzles
 - CLP(FD) labeling options such as descending value order
 - collection predicates such as `findall/3`, `bagof/3`, and `setof/3`
+- Prolog-style `bagof/3` and `setof/3` grouping by free variables, including
+  `^/2` existential scopes
 - common list predicates such as `member/2`, `append/3`, `length/2`,
   `sort/2`, `msort/2`, `nth0/3`, `nth1/3`, `nth0/4`, and `nth1/4`
 - dynamic predicates seeded by initialization directives

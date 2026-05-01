@@ -44,6 +44,8 @@ It keeps parsing side-effect free, then exposes helpers to:
 - rewrite explicit `module:goal` qualification during linking, including common
   meta-goal forms like `call/1..8`, apply-family closures, `once/1`, `not/1`,
   `\\+/1`, and `phrase/2,3`
+- preserve raw `bagof/3` and `setof/3` goal scopes so the runtime can group by
+  free variables and honor `^/2` existential quantifiers
 - adapt Prolog control constructs such as `->/2` and
   `(If -> Then ; Else)` into executable builtin goals
 - adapt common list predicates such as `member/2`, `append/3`, `select/3`,

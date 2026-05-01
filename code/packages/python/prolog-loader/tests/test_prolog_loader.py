@@ -19,6 +19,7 @@ from logic_engine import (
     conj,
     disj,
     eq,
+    fact,
     fresh,
     logic_list,
     num,
@@ -1117,6 +1118,36 @@ class TestPrologGoalAdapter:
         assert isinstance(adapted, ConjExpr)
         assert isinstance(adapted.goals[1], DisjExpr)
         assert isinstance(adapted.goals[2], FreshExpr)
+
+    def test_adapt_prolog_goal_preserves_collection_grouping_scope(self) -> None:
+        parent = relation("parent", 2)
+        family = program(
+            fact(parent("homer", "bart")),
+            fact(parent("homer", "lisa")),
+            fact(parent("marge", "maggie")),
+        )
+        grouped = parse_swi_query(
+            "?- bagof(Child, parent(Parent, Child), Children).",
+        )
+        existential = parse_swi_query(
+            "?- bagof(Child, Parent^parent(Parent, Child), Children).",
+        )
+
+        assert solve_all(
+            family,
+            (grouped.variables["Parent"], grouped.variables["Children"]),
+            adapt_prolog_goal(grouped.goal),
+        ) == [
+            (atom("homer"), logic_list(["bart", "lisa"])),
+            (atom("marge"), logic_list(["maggie"])),
+        ]
+        assert solve_all(
+            family,
+            existential.variables["Children"],
+            adapt_prolog_goal(existential.goal),
+        ) == [
+            logic_list(["bart", "lisa", "maggie"]),
+        ]
 
     def test_adapt_prolog_goal_rewrites_if_then_else_control(self) -> None:
         parsed = parse_swi_query(

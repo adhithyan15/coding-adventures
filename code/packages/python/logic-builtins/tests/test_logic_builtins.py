@@ -409,6 +409,26 @@ class TestCollectionBuiltins:
         ) == [logic_list(["tea", "tea"])]
         assert solve_all(program(), results, bagofo(item, fail(), results)) == []
 
+    def test_bagofo_groups_by_free_goal_variables(self) -> None:
+        parent = relation("parent", 2)
+        parent_name = var("Parent")
+        child = var("Child")
+        children = var("Children")
+        family = program(
+            fact(parent("homer", "bart")),
+            fact(parent("homer", "lisa")),
+            fact(parent("marge", "maggie")),
+        )
+
+        assert solve_all(
+            family,
+            (parent_name, children),
+            bagofo(child, parent(parent_name, child), children),
+        ) == [
+            (atom("homer"), logic_list(["bart", "lisa"])),
+            (atom("marge"), logic_list(["maggie"])),
+        ]
+
     def test_setofo_removes_duplicates_and_sorts_terms(self) -> None:
         item = var("Item")
         results = var("Results")
@@ -428,6 +448,27 @@ class TestCollectionBuiltins:
             ),
         ) == [logic_list([2, "apple", "pear"])]
         assert solve_all(program(), results, setofo(item, fail(), results)) == []
+
+    def test_setofo_groups_and_sorts_each_group(self) -> None:
+        score = relation("score", 2)
+        player = var("Player")
+        value = var("Value")
+        scores = var("Scores")
+        scoreboard = program(
+            fact(score("homer", 2)),
+            fact(score("homer", 1)),
+            fact(score("homer", 2)),
+            fact(score("marge", 3)),
+        )
+
+        assert solve_all(
+            scoreboard,
+            (player, scores),
+            setofo(value, score(player, value), scores),
+        ) == [
+            (atom("homer"), logic_list([1, 2])),
+            (atom("marge"), logic_list([3])),
+        ]
 
     def test_collectors_compose_with_arithmetic_predicates(self) -> None:
         raw = var("Raw")

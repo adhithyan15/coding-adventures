@@ -547,6 +547,49 @@ class TestPrologVMStress:
         ]
         assert run_compiled_prolog_query(failure) == []
 
+    def test_grouped_bagof_setof_and_existentials_run_through_vm(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            parent(homer, bart).
+            parent(homer, lisa).
+            parent(marge, maggie).
+            score(homer, 2).
+            score(homer, 1).
+            score(homer, 2).
+            score(marge, 3).
+
+            ?- bagof(Child, parent(Parent, Child), Children),
+               setof(Score, score(Parent, Score), Scores),
+               bagof(AnyChild, AnyParent^parent(AnyParent, AnyChild), AllChildren).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        rows = [answer.as_dict() for answer in answers]
+        assert [
+            {
+                "Parent": row["Parent"],
+                "Children": row["Children"],
+                "Scores": row["Scores"],
+                "AllChildren": row["AllChildren"],
+            }
+            for row in rows
+        ] == [
+            {
+                "Parent": atom("homer"),
+                "Children": logic_list(["bart", "lisa"]),
+                "Scores": logic_list([1, 2]),
+                "AllChildren": logic_list(["bart", "lisa", "maggie"]),
+            },
+            {
+                "Parent": atom("marge"),
+                "Children": logic_list(["maggie"]),
+                "Scores": logic_list([3]),
+                "AllChildren": logic_list(["bart", "lisa", "maggie"]),
+            },
+        ]
+
     def test_higher_order_list_predicates_run_through_vm(self) -> None:
         compiled = compile_swi_prolog_source(
             """
