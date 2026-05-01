@@ -149,3 +149,6 @@ documented in this file.
 - Added a WHATWG named-reference batch for spacing, invisible operators,
   punctuation aliases, and math constants, including multi-codepoint
   replacements such as `ThickSpace`.
+- Added a WHATWG relation/operator named-reference batch for equality, tilde,
+  greater-than, less-than, and negated aliases, including combining-overlay
+  replacements such as `NotNestedGreaterGreater`.
