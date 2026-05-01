@@ -37,6 +37,8 @@
   into callable-term-backed logic builtins
 - expand builtin adaptation for truth/failure/cut, arithmetic, collections,
   `forall/2`, and `copy_term/2`
+- adapt source-level arithmetic predicates to strict Prolog runtime errors for
+  instantiation, type, and zero-divisor evaluation failures
 
 ## 0.1.0
 

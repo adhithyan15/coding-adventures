@@ -39,6 +39,8 @@
   values produced by compiled source queries and stateful runtimes.
 - Add end-to-end stress coverage for negation-as-failure, `once/1`,
   `forall/2`, `bagof/3`, and `setof/3` through the Prolog VM path.
+- Raise structured Prolog runtime errors for source-level arithmetic
+  instantiation, type, and zero-divisor evaluation failures.
 
 ## 0.1.0
 

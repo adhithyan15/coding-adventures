@@ -132,6 +132,8 @@ The package includes end-to-end stress tests for:
 - linked modules and imported predicates
 - DCG expansion with `phrase/3`
 - arithmetic evaluation and comparison
+- structured runtime errors for source-level arithmetic instantiation, type,
+  and zero-divisor failures
 - finite integer builtins such as `integer/1`, `between/3`, and `succ/2`
 - negation and control builtins such as `\+/1`, `once/1`, and `forall/2`
 - callable, natural infix, and nested additive CLP(FD) forms for finite-domain

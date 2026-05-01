@@ -26,6 +26,9 @@ from logic_engine import (
 )
 
 from logic_builtins import (
+    PrologEvaluationError,
+    PrologInstantiationError,
+    PrologTypeError,
     __version__,
     abolisho,
     add,
@@ -102,6 +105,9 @@ from logic_builtins import (
     onceo,
     partitiono,
     predicate_propertyo,
+    prolog_iso,
+    prolog_lto,
+    prolog_numeqo,
     retractallo,
     retracto,
     same_termo,
@@ -549,6 +555,36 @@ class TestArithmeticBuiltins:
             marker,
             conj(eq(marker, "ok"), lto(add(open_value, 1), 3)),
         ) == []
+
+    def test_prolog_strict_arithmetic_raises_source_level_errors(self) -> None:
+        result = var("Result")
+        open_value = var("Open")
+
+        assert solve_all(program(), result, prolog_iso(result, add(1, 2))) == [
+            num(3),
+        ]
+        assert solve_all(program(), result, prolog_numeqo(add(1, 2), 3)) == [
+            result,
+        ]
+
+        with pytest.raises(PrologInstantiationError) as instantiation:
+            solve_all(program(), result, prolog_iso(result, add(open_value, 1)))
+        assert instantiation.value.kind == "instantiation_error"
+
+        with pytest.raises(PrologTypeError) as type_error:
+            solve_all(program(), result, prolog_iso(result, add("tea", 1)))
+        assert type_error.value.kind == "type_error"
+        assert type_error.value.expected == "evaluable"
+
+        with pytest.raises(PrologEvaluationError) as evaluation:
+            solve_all(program(), result, prolog_iso(result, div(7, 0)))
+        assert evaluation.value.kind == "evaluation_error"
+        assert evaluation.value.evaluation_error == "zero_divisor"
+
+        with pytest.raises(PrologInstantiationError):
+            solve_all(program(), result, prolog_lto(open_value, 3))
+        with pytest.raises(PrologTypeError):
+            solve_all(program(), result, prolog_lto("tea", 3))
 
     def test_betweeno_enumerates_inclusive_integer_ranges(self) -> None:
         value = var("Value")

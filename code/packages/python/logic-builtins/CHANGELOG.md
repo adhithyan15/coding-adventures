@@ -28,6 +28,8 @@ All notable changes to this package will be documented in this file.
   `same_termo(left, right)`.
 - `difo(left, right)` for delayed disequality constraints that block future
   unification instead of failing merely because terms are still open.
+- source-level Prolog arithmetic error classes plus strict arithmetic goals
+  for `is/2`, `=:=/2`, `=\=/2`, `</2`, `=</2`, `>/2`, and `>=/2` adapters.
 
 ### Fixed
 
