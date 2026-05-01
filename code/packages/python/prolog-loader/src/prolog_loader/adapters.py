@@ -23,6 +23,7 @@ from logic_builtins import (
     convlisto,
     copytermo,
     current_predicateo,
+    current_prolog_flago,
     cuto,
     difo,
     dynamico,
@@ -348,6 +349,8 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         return copytermo(*args)
     if name == "term_variables" and goal.relation.arity == 2:
         return term_variableso(*args)
+    if name == "current_prolog_flag" and goal.relation.arity == 2:
+        return current_prolog_flago(*args)
     if name == "=" and goal.relation.arity == 2:
         return eq(*args)
     if name == "\\=" and goal.relation.arity == 2:

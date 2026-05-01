@@ -42,6 +42,8 @@
 - adapt Prolog `throw/1` and `catch/3` into the executable exception-control
   builtin layer
 - adapt Prolog `term_variables/2` into the term-metaprogramming builtin layer
+- adapt Prolog `current_prolog_flag/2` into read-only runtime flag
+  introspection
 
 ## 0.1.0
 

@@ -907,6 +907,10 @@ class TestPrologGoalAdapter:
                 term("box", LogicVar(id=16)),
                 LogicVar(id=17),
             ),
+            relation("current_prolog_flag", 2)(
+                atom("unknown"),
+                LogicVar(id=18),
+            ),
             relation("is_list", 1)(
                 term(".", atom("tea"), term(".", atom("cake"), atom("[]"))),
             ),

@@ -51,6 +51,7 @@ from logic_builtins import (
     convlisto,
     copytermo,
     current_predicateo,
+    current_prolog_flago,
     cuto,
     difo,
     div,
@@ -2145,6 +2146,30 @@ class TestClauseIntrospectionBuiltins:
 
 class TestPredicateMetadataBuiltins:
     """Predicate metadata should expose source and builtin predicates."""
+
+    def test_current_prolog_flago_enumerates_read_only_runtime_flags(self) -> None:
+        flag = var("Flag")
+        value = var("Value")
+
+        flags = solve_all(program(), (flag, value), current_prolog_flago(flag, value))
+
+        assert (atom("bounded"), atom("false")) in flags
+        assert (atom("double_quotes"), atom("string")) in flags
+        assert (atom("unknown"), atom("fail")) in flags
+
+    def test_current_prolog_flago_reads_known_flags(self) -> None:
+        value = var("Value")
+
+        assert solve_all(
+            program(),
+            value,
+            current_prolog_flago("integer_rounding_function", value),
+        ) == [atom("floor")]
+        assert solve_all(
+            program(),
+            value,
+            current_prolog_flago("missing_flag", value),
+        ) == []
 
     def test_current_predicateo_enumerates_source_predicates(self) -> None:
         parent = relation("parent", 2)
