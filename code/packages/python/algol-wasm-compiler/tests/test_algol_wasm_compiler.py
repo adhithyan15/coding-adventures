@@ -774,6 +774,34 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
 
+    def test_switch_parameter_accepts_conditional_switch_actual(self) -> None:
+        result = compile_source(
+            "begin integer result; boolean flag; "
+            "switch a := left; switch b := right; "
+            "procedure escape(sw); switch sw; begin goto sw[1] end; "
+            "flag := false; escape(if flag then a else b); result := 0; "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_conditional_switch_actual_forwards_switch_parameters(self) -> None:
+        result = compile_source(
+            "begin integer result; boolean flag; "
+            "procedure escape(sw); switch sw; begin goto sw[1] end; "
+            "procedure select(a, b); switch a, b; "
+            "begin escape(if flag then a else b) end; "
+            "switch leftSwitch := left; switch rightSwitch := right; "
+            "flag := false; select(leftSwitch, rightSwitch); result := 0; "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
     def test_forwarded_switch_parameter_propagates_descriptor_through_calls(
         self,
     ) -> None:
@@ -1458,6 +1486,21 @@ class TestAlgolWasmCompiler:
             "procedure invoke(p); procedure p; begin p(s[i]) end; "
             "procedure jump(target); label target; begin goto target end; "
             "i := 2; invoke(jump); "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_formal_procedure_call_passes_conditional_switch_argument(self) -> None:
+        result = compile_source(
+            "begin integer result; boolean flag; "
+            "switch a := left; switch b := right; "
+            "procedure invoke(p); procedure p; "
+            "begin p(if flag then a else b) end; "
+            "procedure escape(sw); switch sw; begin goto sw[1] end; "
+            "flag := false; invoke(escape); result := 0; "
             "left: result := 1; goto done; "
             "right: result := 2; "
             "done: "

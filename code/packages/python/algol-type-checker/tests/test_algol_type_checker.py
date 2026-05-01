@@ -989,6 +989,44 @@ class TestAlgolTypeChecker:
             for selection in result.semantic.switch_selections
         )
 
+    def test_accepts_switch_parameter_and_conditional_switch_actual(self) -> None:
+        ast = parse_algol(
+            "begin integer result; boolean flag; "
+            "switch a := left; switch b := right; "
+            "procedure escape(sw); switch sw; begin goto sw[1] end; "
+            "flag := false; escape(if flag then a else b); "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        parameter = result.semantic.procedures[0].parameters[0]
+        assert parameter.kind == "switch"
+        assert parameter.type_name == "switch"
+
+    def test_rejects_switch_parameter_conditional_actual_with_non_boolean_condition(
+        self,
+    ) -> None:
+        ast = parse_algol(
+            "begin integer result, flag; "
+            "switch a := done; switch b := done; "
+            "procedure escape(sw); switch sw; begin goto sw[1] end; "
+            "escape(if flag then a else b); "
+            "done: result := 1 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert (
+            "switch designator actual condition must be boolean"
+            in result.diagnostics[0].message
+        )
+
     def test_accepts_value_switch_parameter_and_direct_switch_actual(self) -> None:
         ast = parse_algol(
             "begin integer result; "
@@ -1260,6 +1298,29 @@ class TestAlgolTypeChecker:
             "procedure invoke(p); procedure p; begin p(s) end; "
             "procedure jump(sw); switch sw; begin goto sw[1] end; "
             "invoke(jump); done: "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        shape = result.semantic.procedures[0].parameters[0].procedure_call_shapes[0]
+        assert shape.argument_kinds == ("switch",)
+        assert shape.argument_types == ("switch",)
+
+    def test_accepts_procedure_parameter_actual_with_conditional_switch_formal(
+        self,
+    ) -> None:
+        ast = parse_algol(
+            "begin integer result; boolean flag; "
+            "switch a := left; switch b := right; "
+            "procedure invoke(p); procedure p; "
+            "begin p(if flag then a else b) end; "
+            "procedure jump(sw); switch sw; begin goto sw[1] end; "
+            "flag := false; invoke(jump); "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
             "end"
         )
         result = check_algol(ast)

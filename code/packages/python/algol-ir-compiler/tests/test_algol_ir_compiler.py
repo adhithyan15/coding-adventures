@@ -883,6 +883,28 @@ class TestAlgolIrCompiler:
             for instruction in calls
         )
 
+    def test_compiles_switch_parameter_call_with_conditional_actual(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; boolean flag; "
+                "switch a := left; switch b := right; "
+                "procedure escape(sw); switch sw; begin goto sw[1] end; "
+                "flag := false; escape(if flag then a else b); "
+                "left: result := 1; goto done; "
+                "right: result := 2; "
+                "done: "
+                "end"
+            )
+        )
+        labels = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.LABEL
+        ]
+
+        assert result.procedure_signatures["_fn_algol_eval_switch"].param_count == 3
+        assert any(label.startswith("switch_actual_") for label in labels)
+
     def test_compiles_procedure_parameter_call_and_dispatcher(self) -> None:
         result = compile_algol(
             parse_algol(
@@ -1100,6 +1122,29 @@ class TestAlgolIrCompiler:
                 "procedure invoke(p); procedure p; begin p(s) end; "
                 "procedure jump(sw); switch sw; begin goto sw[1] end; "
                 "invoke(jump); done: "
+                "end"
+            )
+        )
+
+        assert (
+            result.procedure_signatures["_fn_algol_call_procedure_switch"].param_types
+            == ("integer", "integer", "integer")
+        )
+
+    def test_compiles_procedure_parameter_call_with_conditional_switch_argument(
+        self,
+    ) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; boolean flag; "
+                "switch a := left; switch b := right; "
+                "procedure invoke(p); procedure p; "
+                "begin p(if flag then a else b) end; "
+                "procedure jump(sw); switch sw; begin goto sw[1] end; "
+                "flag := false; invoke(jump); "
+                "left: result := 1; goto done; "
+                "right: result := 2; "
+                "done: "
                 "end"
             )
         )
