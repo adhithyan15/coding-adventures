@@ -1,5 +1,12 @@
 # Changelog — @coding-adventures/paint-vm-svg
 
+## Unreleased
+
+### Added
+
+- Added SVG `PaintText` handling so graph visualizers can render browser-shaped
+  labels instead of manually positioned glyph runs.
+
 ## [0.1.0] — 2026-04-03
 
 ### Added

@@ -13,6 +13,20 @@ export interface WeightedInput {
   readonly properties?: GraphPropertyBag;
 }
 
+export interface FeedForwardLayer {
+  readonly name?: string;
+  readonly weights: readonly (readonly number[])[];
+  readonly biases: readonly number[];
+  readonly activation?: ActivationKind;
+  readonly outputNames?: readonly string[];
+}
+
+export interface FeedForwardNetworkOptions {
+  readonly name?: string;
+  readonly inputNames: readonly string[];
+  readonly layers: readonly FeedForwardLayer[];
+}
+
 export class NeuralNetwork {
   readonly graph: NeuralGraph;
 
@@ -72,6 +86,106 @@ export class NeuralNetwork {
 
 export function createNeuralNetwork(name?: string): NeuralNetwork {
   return new NeuralNetwork(name);
+}
+
+export function createFeedForwardNetwork(
+  options: FeedForwardNetworkOptions
+): NeuralNetwork {
+  if (options.inputNames.length === 0) {
+    throw new Error("feed-forward network must have at least one input");
+  }
+  if (options.layers.length === 0) {
+    throw new Error("feed-forward network must have at least one layer");
+  }
+
+  const network = createNeuralNetwork(options.name);
+  const biasNode = "bias";
+  network.constant(biasNode, 1, { "nn.role": "bias" });
+
+  let previousNodes = options.inputNames.map((inputName, index) => {
+    const node = `input_${index}`;
+    network.input(node, inputName, {
+      "nn.layer": "input",
+      "nn.index": index,
+    });
+    return node;
+  });
+
+  for (const [layerIndex, layer] of options.layers.entries()) {
+    const layerName = layer.name ?? `layer_${layerIndex}`;
+    validateFeedForwardLayer(layer, previousNodes.length, layerName);
+
+    const nextNodes: string[] = [];
+    for (let unit = 0; unit < layer.biases.length; unit += 1) {
+      const sumNode = `${layerName}_${unit}_sum`;
+      const activationNode = `${layerName}_${unit}`;
+      network
+        .weightedSum(
+          sumNode,
+          [
+            ...previousNodes.map((node, inputIndex) => ({
+              from: node,
+              weight: layer.weights[inputIndex]![unit],
+              edgeId: `${node}_to_${sumNode}`,
+              properties: {
+                "nn.trainable": true,
+                "nn.layer": layerName,
+              },
+            })),
+            {
+              from: biasNode,
+              weight: layer.biases[unit],
+              edgeId: `${biasNode}_to_${sumNode}`,
+              properties: {
+                "nn.trainable": true,
+                "nn.role": "bias_weight",
+                "nn.layer": layerName,
+              },
+            },
+          ],
+          {
+            "nn.layer": layerName,
+            "nn.index": unit,
+            "nn.role": "weighted_sum",
+          }
+        )
+        .activation(
+          activationNode,
+          sumNode,
+          layer.activation ?? "none",
+          {
+            "nn.layer": layerName,
+            "nn.index": unit,
+            "nn.role": "activation",
+          },
+          `${sumNode}_to_${activationNode}`
+        );
+      nextNodes.push(activationNode);
+    }
+
+    if (layerIndex === options.layers.length - 1) {
+      for (const [unit, node] of nextNodes.entries()) {
+        const outputName = layer.outputNames?.[unit] ?? (
+          nextNodes.length === 1 ? "prediction" : `output${unit}`
+        );
+        network.output(
+          `${layerName}_${unit}_out`,
+          node,
+          outputName,
+          {
+            "nn.layer": layerName,
+            "nn.index": unit,
+            "nn.role": "output",
+          },
+          `${node}_to_${layerName}_${unit}_out`
+        );
+      }
+    }
+
+    previousNodes = nextNodes;
+  }
+
+  return network;
 }
 
 export function createNeuralGraph(name?: string): NeuralGraph {
@@ -200,4 +314,42 @@ export function addOutput(
     "nn.output": outputName,
   });
   return graph.addEdge(input, node, 1.0, {}, edgeId);
+}
+
+function validateFeedForwardLayer(
+  layer: FeedForwardLayer,
+  inputCount: number,
+  layerName: string
+): void {
+  if (layer.biases.length === 0) {
+    throw new Error(`${layerName} must have at least one unit`);
+  }
+  if (layer.weights.length !== inputCount) {
+    throw new Error(
+      `${layerName} weight row count must match previous layer width`
+    );
+  }
+  if (
+    layer.outputNames !== undefined &&
+    layer.outputNames.length !== layer.biases.length
+  ) {
+    throw new Error(`${layerName} output name count must match unit count`);
+  }
+  for (const [rowIndex, row] of layer.weights.entries()) {
+    if (row.length !== layer.biases.length) {
+      throw new Error(
+        `${layerName} weight row ${rowIndex} width must match bias count`
+      );
+    }
+    for (const value of row) {
+      if (!Number.isFinite(value)) {
+        throw new Error(`${layerName} weights must be finite`);
+      }
+    }
+  }
+  for (const value of layer.biases) {
+    if (!Number.isFinite(value)) {
+      throw new Error(`${layerName} biases must be finite`);
+    }
+  }
 }

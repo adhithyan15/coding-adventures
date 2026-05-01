@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Added `createFeedForwardNetwork()` for authoring matrix-shaped feed-forward
+  networks from input names, layer weights, biases, activations, and output names.
 - Added a `constant` primitive for scalar bias or literal nodes.
 - Added `createXorNetwork()` as an explicit hidden-layer graph example.
 

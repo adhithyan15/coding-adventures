@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Pure ML Matrix dimensional operations",
   "main": "dist/matrix.js",
+  "module": "src/matrix.ts",
   "types": "dist/matrix.d.ts",
   "scripts": {
     "build": "tsc",

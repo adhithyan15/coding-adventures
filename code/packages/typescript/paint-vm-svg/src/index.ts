@@ -48,11 +48,11 @@ export const VERSION = "0.1.0";
 
 import { PaintVM, ExportNotSupportedError } from "@coding-adventures/paint-vm";
 import type {
-  PaintInstruction,
   PaintRect,
   PaintEllipse,
   PaintPath,
   PaintGlyphRun,
+  PaintText,
   PaintGroup,
   PaintLayer,
   PaintLine,
@@ -438,6 +438,44 @@ function handleGlyphRun(instr: PaintGlyphRun, ctx: SvgContext): void {
   );
 }
 
+const TEXT_ANCHOR_ALLOWLIST = new Set(["start", "middle", "end"]);
+
+function handleText(instr: PaintText, ctx: SvgContext): void {
+  const anchor = textAlignToAnchor(instr.text_align);
+  const anchorAttr = anchor !== "start" ? ` text-anchor="${anchor}"` : "";
+  ctx.elements.push(
+    `<text${idAttr(instr.id)} x="${safeNum(instr.x, "text.x")}" y="${safeNum(instr.y, "text.y")}" font-family="${escAttr(fontFamilyFromRef(instr.font_ref))}" font-size="${safeNum(instr.font_size, "text.font_size")}" fill="${escAttr(instr.fill)}"${anchorAttr}>${escText(instr.text)}</text>`,
+  );
+}
+
+function textAlignToAnchor(align: PaintText["text_align"]): string {
+  switch (align) {
+    case "center":
+      return "middle";
+    case "end":
+      return "end";
+    case "start":
+    case undefined:
+      return "start";
+    default: {
+      const maybeAnchor = String(align);
+      return TEXT_ANCHOR_ALLOWLIST.has(maybeAnchor) ? maybeAnchor : "start";
+    }
+  }
+}
+
+function fontFamilyFromRef(fontRef: string): string {
+  if (fontRef.startsWith("svg:") || fontRef.startsWith("canvas:")) {
+    const descriptor = fontRef.slice(fontRef.indexOf(":") + 1);
+    const atIndex = descriptor.indexOf("@");
+    return descriptor.slice(0, atIndex === -1 ? undefined : atIndex) || "sans-serif";
+  }
+  if (fontRef.startsWith("css:")) {
+    return fontRef.slice("css:".length) || "sans-serif";
+  }
+  return fontRef || "sans-serif";
+}
+
 function handleGroup(
   instr: PaintGroup,
   ctx: SvgContext,
@@ -597,7 +635,7 @@ function handleImage(instr: PaintImage, ctx: SvgContext): void {
 /**
  * Create a fully configured PaintVM<SvgContext> for SVG string output.
  *
- * The returned VM has handlers registered for all 10 instruction kinds.
+ * The returned VM has handlers registered for all instruction kinds.
  * Call renderToSvgString(scene) as a convenience wrapper, or use the VM
  * directly if you need to register additional custom handlers.
  */
@@ -627,6 +665,9 @@ export function createSvgVM(): PaintVM<SvgContext> {
   });
   vm.register("glyph_run", (instr, ctx) => {
     if (instr.kind === "glyph_run") handleGlyphRun(instr as PaintGlyphRun, ctx);
+  });
+  vm.register("text", (instr, ctx) => {
+    if (instr.kind === "text") handleText(instr as PaintText, ctx);
   });
   vm.register("group", (instr, ctx, vm) => {
     if (instr.kind === "group") handleGroup(instr as PaintGroup, ctx, vm);

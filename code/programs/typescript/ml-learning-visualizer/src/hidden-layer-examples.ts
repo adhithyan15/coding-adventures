@@ -1,6 +1,5 @@
 import {
   createSeededParameters,
-  forwardTwoLayer,
   trainOneEpochTwoLayer,
   traceExampleTwoLayer,
   type ExampleTrace,
@@ -8,6 +7,7 @@ import {
   type TwoLayerParameters,
   type TwoLayerTrainingStep,
 } from "coding-adventures-two-layer-network/src/index";
+import { predictTwoLayerWithVm } from "./neural-vm.js";
 
 export type HiddenLayerChartKind = "curve" | "surface" | "table";
 
@@ -90,7 +90,10 @@ export function createInitialHiddenState(example: HiddenLayerExample): HiddenLay
 }
 
 export function predictHidden(example: HiddenLayerExample, state: HiddenLayerModelState): number[] {
-  return forwardTwoLayer(exampleInputs(example), state.parameters).predictions.map((row) => row[0]!);
+  return predictTwoLayerWithVm(exampleInputs(example), state.parameters, {
+    inputNames: example.inputLabels,
+    outputNames: [example.outputLabel],
+  }).predictions.map((row) => row[0]!);
 }
 
 export function hiddenLoss(example: HiddenLayerExample, state: HiddenLayerModelState): number {

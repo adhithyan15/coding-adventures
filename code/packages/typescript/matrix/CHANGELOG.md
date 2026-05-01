@@ -2,6 +2,12 @@
 
 All notable changes to the TypeScript matrix package will be documented here.
 
+## Unreleased
+
+### Changed
+- Exposed `src/matrix.ts` as the package module entry so Vite/browser builds
+  can bundle the Matrix implementation as ESM.
+
 ## [1.1.0] - 2026-04-04
 
 ### Added
