@@ -445,6 +445,7 @@ members = [
     "twig-folding-ranges",
     "twig-document-symbols",
     "twig-semantic-tokens",
+    "twig-hover",
     "twig-ir-compiler",
     "lang-runtime-core",
     "lispy-runtime",
