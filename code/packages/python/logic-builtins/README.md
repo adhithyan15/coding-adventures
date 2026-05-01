@@ -36,6 +36,11 @@ ordinary logic goal expressions.
 - `univo(term, parts)` for Prolog-style `=../2` term decomposition/construction
 - `copytermo(source, copy)`, `same_termo(left, right)`, and
   `not_same_termo(left, right)`
+- `variant_termo(left, right)`, `not_variant_termo(left, right)`, and
+  `subsumes_termo(general, specific)` for non-binding term generality checks
+- `atom_charso/2`, `atom_codeso/2`, `number_charso/2`, `number_codeso/2`,
+  `char_codeo/2`, `string_charso/2`, and `string_codeso/2` for finite text
+  conversion relations
 - `difo(left, right)` for delayed disequality constraints
 - `clauseo(head, body)` for Prolog-style clause introspection
 - `compare_termo(order, left, right)`, `termo_lto(left, right)`,
@@ -104,7 +109,12 @@ from logic_builtins import (
     iso,
     labelingo,
     maplisto,
+    atom_charso,
+    atom_codeso,
+    number_charso,
+    char_codeo,
     not_same_termo,
+    subsumes_termo,
     noto,
     onceo,
     partitiono,
@@ -114,6 +124,7 @@ from logic_builtins import (
     set_prolog_flago,
     termo_lto,
     univo,
+    variant_termo,
 )
 from logic_engine import (
     atom,
@@ -209,6 +220,12 @@ assert solve_all(
     univo(X, logic_list(["box", "tea", "cake"])),
 ) == [term("box", "tea", "cake")]
 assert solve_all(program(), X, same_termo(X, X)) == [X]
+assert solve_all(program(), X, variant_termo(term("box", X), term("box", Y))) == [X]
+assert solve_all(program(), X, subsumes_termo(term("box", X), term("box", "tea"))) == [X]
+assert solve_all(program(), X, atom_charso(X, logic_list(["t", "e", "a"]))) == [atom("tea")]
+assert solve_all(program(), X, atom_codeso("tea", X)) == [logic_list([116, 101, 97])]
+assert solve_all(program(), X, number_charso(X, logic_list(["4", "2"]))) == [num(42)]
+assert solve_all(program(), X, char_codeo(X, 90)) == [atom("Z")]
 assert solve_all(family, Body, clauseo(child("bart", "homer"), Body)) == [
     term("parent", "homer", "bart"),
 ]

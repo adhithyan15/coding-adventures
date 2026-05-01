@@ -49,6 +49,11 @@
   flag introspection.
 - Run Prolog `set_prolog_flag/2` through the VM path with branch-local
   backtracking semantics.
+- Run Prolog `=@=/2`, `\\=@=/2`, and `subsumes_term/2` through the VM path for
+  source-level term generality checks.
+- Run Prolog text conversion predicates through the VM path, including
+  `atom_chars/2`, `atom_codes/2`, `number_chars/2`, `number_codes/2`,
+  `char_code/2`, `string_chars/2`, and `string_codes/2`.
 
 ## 0.1.0
 

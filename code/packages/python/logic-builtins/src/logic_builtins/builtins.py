@@ -69,6 +69,8 @@ __all__ = [
     "add",
     "all_differento",
     "argo",
+    "atom_codeso",
+    "atom_charso",
     "atomico",
     "atomo",
     "betweeno",
@@ -136,6 +138,8 @@ __all__ = [
     "noto",
     "numeqo",
     "numneqo",
+    "number_codeso",
+    "number_charso",
     "numbero",
     "onceo",
     "bagofo",
@@ -163,7 +167,10 @@ __all__ = [
     "scanlo",
     "setofo",
     "set_prolog_flago",
+    "char_codeo",
     "clauseo",
+    "string_codeso",
+    "string_charso",
     "stringo",
     "sub",
     "succo",
@@ -176,6 +183,9 @@ __all__ = [
     "trueo",
     "univo",
     "varo",
+    "not_variant_termo",
+    "subsumes_termo",
+    "variant_termo",
 ]
 
 
@@ -298,6 +308,8 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("argo", 3),
     ("assertao", 1),
     ("assertzo", 1),
+    ("atom_codeso", 2),
+    ("atom_charso", 2),
     ("atomico", 1),
     ("atomo", 1),
     ("bagofo", 3),
@@ -374,6 +386,8 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("noto", 1),
     ("numeqo", 2),
     ("numneqo", 2),
+    ("number_codeso", 2),
+    ("number_charso", 2),
     ("numbero", 1),
     ("onceo", 1),
     ("partitiono", 4),
@@ -387,6 +401,9 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("scanlo", 7),
     ("setofo", 3),
     ("set_prolog_flago", 2),
+    ("char_codeo", 2),
+    ("string_codeso", 2),
+    ("string_charso", 2),
     ("stringo", 1),
     ("succo", 2),
     ("termo_geqo", 2),
@@ -398,6 +415,9 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("trueo", 0),
     ("univo", 2),
     ("varo", 1),
+    ("not_variant_termo", 2),
+    ("subsumes_termo", 2),
+    ("variant_termo", 2),
 )
 
 
@@ -3627,6 +3647,244 @@ def stringo(term_value: object) -> GoalExpr:
     return _type_checko(term_value, String)
 
 
+def _one_char_atoms_from_text(text: str) -> list[Atom]:
+    """Return a Prolog char list representation for text."""
+
+    return [atom(character) for character in text]
+
+
+def _code_numbers_from_text(text: str) -> list[Number]:
+    """Return a Prolog code list representation for text."""
+
+    return [num(ord(character)) for character in text]
+
+
+def _text_from_char_items(items: list[Term]) -> str | None:
+    characters: list[str] = []
+    for item in items:
+        if (
+            not isinstance(item, Atom)
+            or item.symbol.namespace is not None
+            or len(item.symbol.name) != 1
+        ):
+            return None
+        characters.append(item.symbol.name)
+    return "".join(characters)
+
+
+def _text_from_code_items(items: list[Term]) -> str | None:
+    characters: list[str] = []
+    for item in items:
+        if not isinstance(item, Number):
+            return None
+        value = item.value
+        if not isinstance(value, int):
+            return None
+        try:
+            characters.append(chr(value))
+        except ValueError:
+            return None
+    return "".join(characters)
+
+
+def _number_text(number_value: Number) -> str:
+    """Render a number in a syntax that can be parsed back by Python."""
+
+    return str(number_value.value)
+
+
+def _parse_number_text(text: str) -> Number | None:
+    if text == "":
+        return None
+    try:
+        if any(marker in text for marker in (".", "e", "E")):
+            return num(float(text))
+        return num(int(text))
+    except ValueError:
+        return None
+
+
+def _texto(
+    scalar: object,
+    pieces: object,
+    *,
+    scalar_type: type[Atom] | type[String],
+    from_text: Callable[[str], list[Term]],
+    to_text: Callable[[list[Term]], str | None],
+) -> GoalExpr:
+    """Relate a text-like scalar to either chars or character codes."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        scalar_term, pieces_term = args
+        reified_scalar = _reified(scalar_term, state)
+        if isinstance(reified_scalar, scalar_type):
+            text = (
+                reified_scalar.symbol.name
+                if isinstance(reified_scalar, Atom)
+                else reified_scalar.value
+            )
+            yield from solve_from(
+                program_value,
+                eq(pieces_term, logic_list(from_text(text))),
+                state,
+            )
+            return
+
+        if not isinstance(reified_scalar, LogicVar):
+            return
+
+        items = _proper_list_items(_reified(pieces_term, state))
+        if items is None:
+            return
+        text = to_text(items)
+        if text is None:
+            return
+        constructed = atom(text) if scalar_type is Atom else String(text)
+        yield from solve_from(program_value, eq(scalar_term, constructed), state)
+
+    return native_goal(run, scalar, pieces)
+
+
+def atom_charso(atom_value: object, chars: object) -> GoalExpr:
+    """Relate an atom to a proper list of one-character atoms."""
+
+    return _texto(
+        atom_value,
+        chars,
+        scalar_type=Atom,
+        from_text=_one_char_atoms_from_text,
+        to_text=_text_from_char_items,
+    )
+
+
+def atom_codeso(atom_value: object, codes: object) -> GoalExpr:
+    """Relate an atom to a proper list of Unicode code numbers."""
+
+    return _texto(
+        atom_value,
+        codes,
+        scalar_type=Atom,
+        from_text=_code_numbers_from_text,
+        to_text=_text_from_code_items,
+    )
+
+
+def string_charso(string_value: object, chars: object) -> GoalExpr:
+    """Relate a string term to a proper list of one-character atoms."""
+
+    return _texto(
+        string_value,
+        chars,
+        scalar_type=String,
+        from_text=_one_char_atoms_from_text,
+        to_text=_text_from_char_items,
+    )
+
+
+def string_codeso(string_value: object, codes: object) -> GoalExpr:
+    """Relate a string term to a proper list of Unicode code numbers."""
+
+    return _texto(
+        string_value,
+        codes,
+        scalar_type=String,
+        from_text=_code_numbers_from_text,
+        to_text=_text_from_code_items,
+    )
+
+
+def _number_texto(
+    number_value: object,
+    pieces: object,
+    *,
+    from_text: Callable[[str], list[Term]],
+    to_text: Callable[[list[Term]], str | None],
+) -> GoalExpr:
+    """Relate a number to chars or codes using finite, non-enumerating modes."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        number_term, pieces_term = args
+        reified_number = _reified(number_term, state)
+        if isinstance(reified_number, Number):
+            yield from solve_from(
+                program_value,
+                eq(pieces_term, logic_list(from_text(_number_text(reified_number)))),
+                state,
+            )
+            return
+
+        if not isinstance(reified_number, LogicVar):
+            return
+
+        items = _proper_list_items(_reified(pieces_term, state))
+        if items is None:
+            return
+        text = to_text(items)
+        if text is None:
+            return
+        parsed = _parse_number_text(text)
+        if parsed is None:
+            return
+        yield from solve_from(program_value, eq(number_term, parsed), state)
+
+    return native_goal(run, number_value, pieces)
+
+
+def number_charso(number_value: object, chars: object) -> GoalExpr:
+    """Relate a number to a proper list of one-character atoms."""
+
+    return _number_texto(
+        number_value,
+        chars,
+        from_text=_one_char_atoms_from_text,
+        to_text=_text_from_char_items,
+    )
+
+
+def number_codeso(number_value: object, codes: object) -> GoalExpr:
+    """Relate a number to a proper list of Unicode code numbers."""
+
+    return _number_texto(
+        number_value,
+        codes,
+        from_text=_code_numbers_from_text,
+        to_text=_text_from_code_items,
+    )
+
+
+def char_codeo(char_value: object, code_value: object) -> GoalExpr:
+    """Relate a one-character atom to its Unicode code number."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        char_term, code_term = args
+        reified_char = _reified(char_term, state)
+        reified_code = _reified(code_term, state)
+
+        if isinstance(reified_char, Atom):
+            if reified_char.symbol.namespace is not None:
+                return
+            text = reified_char.symbol.name
+            if len(text) != 1:
+                return
+            yield from solve_from(program_value, eq(code_term, num(ord(text))), state)
+            return
+
+        if not isinstance(reified_char, LogicVar):
+            return
+        if not isinstance(reified_code, Number):
+            return
+        raw_code = reified_code.value
+        if not isinstance(raw_code, int):
+            return
+        try:
+            character = chr(raw_code)
+        except ValueError:
+            return
+        yield from solve_from(program_value, eq(char_term, atom(character)), state)
+
+    return native_goal(run, char_value, code_value)
+
+
 def compoundo(term_value: object) -> GoalExpr:
     """Succeed when the current value is a compound term."""
 
@@ -3862,6 +4120,126 @@ def not_same_termo(left: object, right: object) -> GoalExpr:
         )
 
     return native_goal(run, left, right)
+
+
+def _variant_terms(
+    left: Term,
+    right: Term,
+    left_to_right: dict[LogicVar, LogicVar],
+    right_to_left: dict[LogicVar, LogicVar],
+) -> bool:
+    """Return True when two terms differ only by variable renaming."""
+
+    if isinstance(left, LogicVar) and isinstance(right, LogicVar):
+        mapped_right = left_to_right.get(left)
+        mapped_left = right_to_left.get(right)
+        if mapped_right is None and mapped_left is None:
+            left_to_right[left] = right
+            right_to_left[right] = left
+            return True
+        return mapped_right == right and mapped_left == left
+
+    if isinstance(left, LogicVar) or isinstance(right, LogicVar):
+        return False
+    if isinstance(left, Compound) and isinstance(right, Compound):
+        return (
+            left.functor == right.functor
+            and len(left.args) == len(right.args)
+            and all(
+                _variant_terms(
+                    left_arg,
+                    right_arg,
+                    left_to_right,
+                    right_to_left,
+                )
+                for left_arg, right_arg in zip(left.args, right.args, strict=True)
+            )
+        )
+    return left == right
+
+
+def _subsumes_term(
+    general: Term,
+    specific: Term,
+    bindings: dict[LogicVar, Term],
+) -> bool:
+    """Return True when ``specific`` is an instance of ``general``."""
+
+    if isinstance(general, LogicVar):
+        previous = bindings.get(general)
+        if previous is None:
+            bindings[general] = specific
+            return True
+        return previous == specific
+
+    if isinstance(general, Compound):
+        return (
+            isinstance(specific, Compound)
+            and general.functor == specific.functor
+            and len(general.args) == len(specific.args)
+            and all(
+                _subsumes_term(general_arg, specific_arg, bindings)
+                for general_arg, specific_arg in zip(
+                    general.args,
+                    specific.args,
+                    strict=True,
+                )
+            )
+        )
+    return general == specific
+
+
+def variant_termo(left: object, right: object) -> GoalExpr:
+    """Succeed when two reified terms are variants of each other."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        left_term, right_term = args
+        yield from _succeed_if(
+            _variant_terms(
+                _reified(left_term, state),
+                _reified(right_term, state),
+                {},
+                {},
+            ),
+            state,
+        )
+
+    return native_goal(run, left, right)
+
+
+def not_variant_termo(left: object, right: object) -> GoalExpr:
+    """Succeed when two reified terms are not variants of each other."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        left_term, right_term = args
+        yield from _succeed_if(
+            not _variant_terms(
+                _reified(left_term, state),
+                _reified(right_term, state),
+                {},
+                {},
+            ),
+            state,
+        )
+
+    return native_goal(run, left, right)
+
+
+def subsumes_termo(general: object, specific: object) -> GoalExpr:
+    """Succeed when ``specific`` is an instance of ``general``."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        general_term, specific_term = args
+        yield from _succeed_if(
+            _subsumes_term(
+                _reified(general_term, state),
+                _reified(specific_term, state),
+                {},
+            ),
+            state,
+        )
+
+    return native_goal(run, general, specific)
 
 
 def difo(left: object, right: object) -> GoalExpr:
