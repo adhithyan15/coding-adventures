@@ -954,6 +954,11 @@ class TestPrologGoalAdapter:
                 term("box", LogicVar(id=16)),
                 LogicVar(id=17),
             ),
+            relation("numbervars", 3)(
+                term("box", LogicVar(id=83)),
+                0,
+                LogicVar(id=89),
+            ),
             relation("term_to_atom", 2)(term("box", atom("tea")), LogicVar(id=84)),
             relation("atom_to_term", 3)(
                 atom("box(X)"),
@@ -1237,6 +1242,39 @@ class TestPrologGoalAdapter:
         )
         assert vars_value == logic_list([term_value.args[0], term_value.args[1]])
         assert rendered == atom("pair(tea, [cup])")
+
+    def test_adapt_prolog_goal_rewrites_numbervars_and_write_numbervars(self) -> None:
+        parsed = parse_swi_query(
+            "?- Term = pair(X, box(Y), X), "
+            "numbervars(Term, 0, End), "
+            "write_term_to_atom(Term, Rendered, [numbervars(true)]), "
+            "write_term_to_atom(Term, Canonical, [numbervars(false)]).",
+        )
+
+        answers = solve_all(
+            program(),
+            (
+                parsed.variables["Term"],
+                parsed.variables["End"],
+                parsed.variables["Rendered"],
+                parsed.variables["Canonical"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        assert answers == [
+            (
+                term(
+                    "pair",
+                    term("$VAR", 0),
+                    term("box", term("$VAR", 1)),
+                    term("$VAR", 0),
+                ),
+                num(2),
+                atom("pair(A, box(B), A)"),
+                atom("pair('$VAR'(0), box('$VAR'(1)), '$VAR'(0))"),
+            ),
+        ]
 
     def test_adapt_prolog_goal_rejects_unsupported_term_io_options(self) -> None:
         parsed_read = parse_swi_query(

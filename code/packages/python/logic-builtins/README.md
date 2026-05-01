@@ -36,6 +36,8 @@ ordinary logic goal expressions.
 - `univo(term, parts)` for Prolog-style `=../2` term decomposition/construction
 - `copytermo(source, copy)`, `same_termo(left, right)`, and
   `not_same_termo(left, right)`
+- `term_variableso(term, variables)` and `numbervarso(term, start, end)` for
+  source-level term variable inspection and `'$VAR'(N)` numbering
 - `variant_termo(left, right)`, `not_variant_termo(left, right)`, and
   `subsumes_termo(general, specific)` for non-binding term generality checks
 - `atom_charso/2`, `atom_codeso/2`, `number_charso/2`, `number_codeso/2`,
@@ -123,6 +125,7 @@ from logic_builtins import (
     number_stringo,
     char_codeo,
     not_same_termo,
+    numbervarso,
     subsumes_termo,
     noto,
     onceo,
@@ -232,6 +235,11 @@ assert solve_all(
     univo(X, logic_list(["box", "tea", "cake"])),
 ) == [term("box", "tea", "cake")]
 assert solve_all(program(), X, same_termo(X, X)) == [X]
+assert solve_all(
+    program(),
+    (X, Score),
+    conj(eq(X, term("pair", Y, Y)), numbervarso(X, 0, Score)),
+) == [(term("pair", term("$VAR", 0), term("$VAR", 0)), num(1))]
 assert solve_all(program(), X, variant_termo(term("box", X), term("box", Y))) == [X]
 assert solve_all(program(), X, subsumes_termo(term("box", X), term("box", "tea"))) == [X]
 assert solve_all(program(), X, atom_charso(X, logic_list(["t", "e", "a"]))) == [atom("tea")]

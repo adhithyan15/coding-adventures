@@ -140,6 +140,7 @@ __all__ = [
     "nonvaro",
     "not_same_termo",
     "noto",
+    "numbervarso",
     "numeqo",
     "numneqo",
     "number_codeso",
@@ -4553,6 +4554,26 @@ def term_variableso(term_value: object, variables: object) -> GoalExpr:
         )
 
     return native_goal(run, term_value, variables)
+
+
+def numbervarso(term_value: object, start: object, end: object) -> GoalExpr:
+    """Bind variables in ``term_value`` to ``'$VAR'(N)`` placeholders."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        source_term, start_term, end_target = args
+        start_index = _reified_integer(start_term, state)
+        if start_index is None or start_index < 0:
+            return
+
+        variables = _term_variables_in_order(_reified(source_term, state))
+        goals = [
+            eq(variable, term("$VAR", start_index + offset))
+            for offset, variable in enumerate(variables)
+        ]
+        goals.append(eq(end_target, start_index + len(variables)))
+        yield from solve_from(program_value, conj(*goals), state)
+
+    return native_goal(run, term_value, start, end)
 
 
 def same_termo(left: object, right: object) -> GoalExpr:

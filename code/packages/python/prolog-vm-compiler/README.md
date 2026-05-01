@@ -145,6 +145,8 @@ The package includes end-to-end stress tests for:
   `sub_string/5`
 - term text I/O with `term_to_atom/2`, `atom_to_term/3`,
   `read_term_from_atom/3`, and `write_term_to_atom/3`
+- numbered term variables with `numbervars/3` and `write_term_to_atom/3`
+  `numbervars(true)` rendering
 - runtime flag introspection and branch-local updates with
   `current_prolog_flag/2` and `set_prolog_flag/2`
 - finite integer builtins such as `integer/1`, `between/3`, and `succ/2`
