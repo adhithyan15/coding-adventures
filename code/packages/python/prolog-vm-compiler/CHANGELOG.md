@@ -35,6 +35,8 @@
 - Run Prolog term equality predicates `=/2`, `\\=/2`, `==/2`, and `\\==/2`
   through the VM path.
 - Run Prolog `dif/2` through the VM path as a delayed disequality constraint.
+- Expose residual delayed disequality constraints on named `PrologAnswer`
+  values produced by compiled source queries and stateful runtimes.
 
 ## 0.1.0
 

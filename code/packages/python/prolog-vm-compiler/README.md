@@ -58,6 +58,10 @@ answers = run_initialized_compiled_prolog_query_answers(compiled)
 assert [answer.as_dict() for answer in answers] == [{"Name": atom("alpha")}]
 ```
 
+Named `PrologAnswer` values also expose `residual_constraints` so delayed goals
+such as `dif(X, tea)` stay visible when the answer still contains unresolved
+logic variables.
+
 ## Stateful Query Runtime
 
 Use `create_swi_prolog_vm_runtime(...)` when you want to consult a program once
@@ -137,6 +141,7 @@ The package includes end-to-end stress tests for:
   `sort/2`, `msort/2`, `nth0/3`, `nth1/3`, `nth0/4`, and `nth1/4`
 - dynamic predicates seeded by initialization directives
 - named Python answer bindings
+- residual delayed `dif/2` constraints on named answers
 - loader term/goal expansion before VM compilation
 
 ## Layer Position
