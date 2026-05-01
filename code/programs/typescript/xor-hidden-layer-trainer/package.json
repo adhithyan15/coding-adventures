@@ -4,13 +4,15 @@
   "description": "XOR hidden-layer training example",
   "main": "src/index.ts",
   "scripts": {
-    "start": "npx ts-node --transpileOnly src/index.ts",
+    "start": "tsx src/index.ts",
     "build": "tsc",
     "test": "vitest run"
   },
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
   "dependencies": {
+    "@coding-adventures/neural-network": "file:../../../packages/typescript/neural-network",
+    "@coding-adventures/neural-graph-vm": "file:../../../packages/typescript/neural-graph-vm",
     "coding-adventures-single-layer-network": "file:../../../packages/typescript/single-layer-network",
     "coding-adventures-two-layer-network": "file:../../../packages/typescript/two-layer-network",
     "matrix": "file:../../../packages/typescript/matrix"
@@ -18,6 +20,7 @@
   "devDependencies": {
     "@types/node": "^22.0.0",
     "ts-node": "^10.9.2",
+    "tsx": "^4.20.6",
     "typescript": "^5.0.0",
     "vitest": "^3.0.0"
   }

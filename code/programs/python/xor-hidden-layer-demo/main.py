@@ -5,6 +5,8 @@ from two_layer_network import (
     TwoLayerNetwork,
     create_xor_warm_start_parameters,
 )
+from neural_network import create_xor_network
+from neural_graph_vm import compile_neural_network_to_bytecode, run_neural_bytecode_forward
 
 XOR_INPUTS = [[0.0, 0.0], [0.0, 1.0], [1.0, 0.0], [1.0, 1.0]]
 XOR_TARGETS = [[0.0], [1.0], [1.0], [0.0]]
@@ -37,6 +39,16 @@ def run_hidden_success():
         print(format_row(inputs, target[0], prediction[0], hidden))
 
 
+def run_graph_vm_success():
+    bytecode = compile_neural_network_to_bytecode(create_xor_network("xor-graph-vm"))
+    print("\nGraph API -> bytecode VM:")
+    for inputs, target in zip(XOR_INPUTS, XOR_TARGETS):
+        outputs = run_neural_bytecode_forward(bytecode, {"x0": inputs[0], "x1": inputs[1]})
+        print(format_row(inputs, target[0], outputs["prediction"]))
+    print(f"Compiled {len(bytecode.functions[0].instructions)} bytecode instructions from the graph")
+
+
 if __name__ == "__main__":
     run_linear_failure()
     run_hidden_success()
+    run_graph_vm_success()

@@ -22,7 +22,9 @@ defmodule MansionClassifier.MixProject do
       {:matrix, path: "../../../packages/elixir/matrix"},
       {:coding_adventures_loss_functions, path: "../../../packages/elixir/loss_functions"},
       {:activation_functions, path: "../../../packages/elixir/activation_functions"},
-      {:perceptron, path: "../../../packages/elixir/perceptron"}
+      {:perceptron, path: "../../../packages/elixir/perceptron"},
+      {:neural_network, path: "../../../packages/elixir/neural_network"},
+      {:neural_graph_vm, path: "../../../packages/elixir/neural_graph_vm"}
     ]
   end
 end

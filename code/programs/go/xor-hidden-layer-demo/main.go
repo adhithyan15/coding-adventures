@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 
+	vm "github.com/adhithyan15/coding-adventures/code/packages/go/neural-graph-vm"
+	neuralnetwork "github.com/adhithyan15/coding-adventures/code/packages/go/neural-network"
 	single "github.com/adhithyan15/coding-adventures/code/packages/go/single-layer-network"
 	two "github.com/adhithyan15/coding-adventures/code/packages/go/two-layer-network"
 )
@@ -49,11 +51,32 @@ func runHiddenSuccess() error {
 	return nil
 }
 
+func runGraphVMSuccess() error {
+	bytecode, err := vm.CompileNeuralNetworkToBytecode(neuralnetwork.CreateXorNetwork("xor-graph-vm"))
+	if err != nil {
+		return err
+	}
+	fmt.Println("\nGraph API -> bytecode VM:")
+	for index, input := range xorInputs {
+		outputs, err := vm.RunNeuralBytecodeForward(bytecode, map[string]float64{"x0": input[0], "x1": input[1]})
+		if err != nil {
+			return err
+		}
+		prediction := outputs["prediction"]
+		fmt.Printf("%v target=%.0f prediction=%.4f rounded=%d\n", input, xorTargets[index][0], prediction, rounded(prediction))
+	}
+	fmt.Printf("Compiled %d bytecode instructions from the graph\n", len(bytecode.Functions[0].Instructions))
+	return nil
+}
+
 func main() {
 	if err := runLinearFailure(); err != nil {
 		panic(err)
 	}
 	if err := runHiddenSuccess(); err != nil {
+		panic(err)
+	}
+	if err := runGraphVMSuccess(); err != nil {
 		panic(err)
 	}
 }

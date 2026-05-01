@@ -20,7 +20,9 @@ defmodule CodingAdventures.CelsiusToFahrenheit.MixProject do
   defp deps do
     [
       {:coding_adventures_loss_functions, path: "../../../packages/elixir/loss_functions"},
-      {:coding_adventures_gradient_descent, path: "../../../packages/elixir/gradient_descent"}
+      {:coding_adventures_gradient_descent, path: "../../../packages/elixir/gradient_descent"},
+      {:neural_network, path: "../../../packages/elixir/neural_network"},
+      {:neural_graph_vm, path: "../../../packages/elixir/neural_graph_vm"}
     ]
   end
 end

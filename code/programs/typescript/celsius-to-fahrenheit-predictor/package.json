@@ -2,14 +2,17 @@
   "name": "celsius-to-fahrenheit-predictor",
   "version": "1.0.0",
   "scripts": {
-    "start": "ts-node src/index.ts"
+    "start": "tsx src/index.ts"
   },
   "dependencies": {
     "coding-adventures-loss-functions": "file:../../../packages/typescript/loss-functions",
-    "coding-adventures-gradient-descent": "file:../../../packages/typescript/gradient-descent"
+    "coding-adventures-gradient-descent": "file:../../../packages/typescript/gradient-descent",
+    "@coding-adventures/neural-network": "file:../../../packages/typescript/neural-network",
+    "@coding-adventures/neural-graph-vm": "file:../../../packages/typescript/neural-graph-vm"
   },
   "devDependencies": {
     "typescript": "^5.0.0",
+    "tsx": "^4.20.6",
     "ts-node": "^10.9.1"
   }
 }
