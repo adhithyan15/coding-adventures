@@ -169,7 +169,7 @@ function makeLinearScene(
   pointCount: number,
 ): PaintScene {
   const width = 920;
-  const height = 520;
+  const height = 650;
   const runState = lastStep?.previousState ?? model;
   const prediction = samplePoint.x * runState.weight + runState.bias;
   const error = prediction - samplePoint.y;
@@ -253,34 +253,43 @@ function makeLinearScene(
     ...node(output),
     ...node(target),
     ...node(lossNode),
-    ...flowCard(36, 314, 152, "input batch", [
+    ...sectionLabel("2 folded training loop", 36, 292),
+    ...flowCard(36, 322, 152, "input batch", [
       `${pointCount} rows`,
       `sample x ${fmt(samplePoint.x)}`,
       `target ${fmt(samplePoint.y)}`,
     ], BLUE),
-    ...flowArrow(194, 360, 242, 360, BLUE, "feed"),
-    ...flowCard(252, 314, 158, "prediction", [
+    ...flowArrow(194, 368, 242, 368, BLUE, "feed"),
+    ...flowCard(252, 322, 158, "prediction", [
       `yhat=x*w+b`,
       `yhat ${fmt(prediction)}`,
       "activation linear",
     ], GREEN),
-    ...flowArrow(416, 360, 464, 360, BLUE, "compare"),
-    ...flowCard(474, 314, 162, "error + loss", [
+    ...flowArrow(416, 368, 464, 368, BLUE, "compare"),
+    ...flowCard(474, 322, 162, "error + loss", [
       `error ${signed(error)}`,
       `${lossKind.toUpperCase()} ${fmt(sampleLoss)}`,
       `batch loss ${fmt(lastStep?.previousLoss ?? sampleLoss)}`,
     ], RED),
-    ...flowArrow(642, 360, 690, 360, RED, "differentiate"),
-    ...flowCard(700, 314, 184, "gradient descent", [
+    ...flowArrow(555, 448, 555, 470, RED, ""),
+    ...flowCard(474, 470, 184, "gradient descent", [
       gradientText,
       `dw step ${signed(dw)}`,
       `db step ${signed(db)}`,
     ], VIOLET),
-    ...flowArrow(792, 308, 792, 266, RED, "backprop"),
-    ...flowArrow(700, 266, 332, 210, RED, "apply update"),
-    ...text(updateText, 36, 488, 13, MUTED),
-    ...text(biasUpdateText, 252, 488, 13, MUTED),
-    ...text("parameter update: new = old - learningRate * gradient", 474, 488, 13, MUTED),
+    ...flowArrow(464, 516, 416, 516, VIOLET, "apply lr"),
+    ...flowCard(252, 470, 158, "parameter update", [
+      updateText,
+      biasUpdateText,
+      "next run uses them",
+    ], VIOLET),
+    ...flowArrow(242, 516, 194, 516, VIOLET, "store"),
+    ...flowCard(36, 470, 152, "model state", [
+      `w ${fmt(model.weight)}`,
+      `b ${fmt(model.bias)}`,
+      `epoch ${model.epoch}`,
+    ], BLUE),
+    ...text("parameter update: new = old - learningRate * gradient", 474, 626, 13, MUTED),
     ...text(`epoch ${model.epoch}`, 36, 72, 13, MUTED),
     ...text("line width follows |weight|; green is positive, red is negative", 476, 72, 12, MUTED),
   ];
@@ -300,7 +309,7 @@ function makeHiddenScene(
   learningRate: number,
 ): PaintScene {
   const width = 920;
-  const height = 560;
+  const height = 720;
   const selectedInput = selectedRow.input;
   const selectedError = prediction - selectedRow.target;
   const inputYs = verticalPositions(example.inputLabels.length, 82, 232);
@@ -394,7 +403,7 @@ function makeHiddenScene(
 
   const inputShape = lastStep === null
     ? "input-hidden gradients waiting"
-    : `input-hidden grad ${lastStep.step.inputToHiddenWeightGradients.length}x${lastStep.step.inputToHiddenWeightGradients[0]?.length ?? 0}`;
+    : `dL/dW ${lastStep.step.inputToHiddenWeightGradients.length}x${lastStep.step.inputToHiddenWeightGradients[0]?.length ?? 0}`;
   const outputGrad = lastStep?.step.outputBiasGradients[0] ?? 0;
   const outputDelta = lastStep?.step.outputDeltas[selectedIndex]?.[0] ?? 0;
   const hiddenDeltaRow = lastStep?.step.hiddenDeltas[selectedIndex] ?? [];
@@ -405,34 +414,44 @@ function makeHiddenScene(
     ? "waiting for first step"
     : `max hidden delta ${fmt(hiddenDelta)}`;
   instructions.push(
-    ...sectionLabel("2 loss, deltas, and gradient descent", 32, 352),
-    ...flowCard(32, 382, 158, "input row", [
+    ...sectionLabel("2 folded loss + update loop", 32, 370),
+    ...flowCard(32, 402, 158, "input row", [
       selectedRow.label,
       `inputs ${selectedInput.map((value) => fmt(value)).join(", ")}`,
       `target ${fmt(selectedRow.target)}`,
     ], BLUE),
-    ...flowArrow(196, 428, 244, 428, BLUE, "forward"),
-    ...flowCard(254, 382, 162, "prediction", [
+    ...flowArrow(196, 448, 244, 448, BLUE, "forward"),
+    ...flowCard(254, 402, 162, "prediction", [
       `hidden[${example.hiddenCount}]`,
       `${example.outputLabel} ${fmt(prediction)}`,
       `error ${signed(selectedError)}`,
     ], GREEN),
-    ...flowArrow(422, 428, 470, 428, RED, "loss"),
-    ...flowCard(480, 382, 158, "mse + deltas", [
+    ...flowArrow(422, 448, 470, 448, RED, "loss"),
+    ...flowCard(480, 402, 158, "mse + deltas", [
       `row mse ${fmt(selectedError * selectedError)}`,
       `output delta ${fmt(outputDelta)}`,
       hiddenUpdate,
     ], RED),
-    ...flowArrow(644, 428, 692, 428, RED, "gradients"),
-    ...flowCard(702, 382, 186, "parameter update", [
+    ...flowArrow(559, 528, 559, 550, RED, ""),
+    ...flowCard(480, 550, 186, "gradient matrices", [
       inputShape,
-      `hidden-output ${gradientShape(lastStep?.step.hiddenToOutputWeightGradients)}`,
+      `dL/dV ${gradientShape(lastStep?.step.hiddenToOutputWeightGradients)}`,
       `db out ${signed(-learningRate * outputGrad)}`,
     ], VIOLET),
-    ...flowArrow(800, 376, 800, 330, RED, "backprop"),
-    ...flowArrow(708, 330, 430, 276, RED, "update matrices"),
-    ...text("new weights = old weights - learningRate * gradient", 32, 536, 13, MUTED),
-    ...text("line width = |weight|", 630, 536, 12, MUTED),
+    ...flowArrow(470, 596, 422, 596, VIOLET, "apply lr"),
+    ...flowCard(254, 550, 162, "parameter update", [
+      `lr ${fmt(learningRate)}`,
+      "W, V, and b move",
+      "next batch uses them",
+    ], VIOLET),
+    ...flowArrow(244, 596, 196, 596, VIOLET, "store"),
+    ...flowCard(32, 550, 158, "model state", [
+      `epoch ${state.epoch}`,
+      `${example.hiddenCount} hidden neurons`,
+      `row ${selectedIndex + 1}`,
+    ], BLUE),
+    ...text("new weights = old weights - learningRate * gradient", 32, 696, 13, MUTED),
+    ...text("line width = |weight|", 630, 696, 12, MUTED),
   );
 
   return paintScene(width, height, "#ffffff", instructions, {
@@ -490,28 +509,45 @@ function flowArrow(
   color: string,
   label: string,
 ): PaintInstruction[] {
+  return arrowWithLabel(x1, y1, x2, y2, color, label, 2);
+}
+
+function arrowWithLabel(
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  color: string,
+  label: string,
+  strokeWidth: number,
+  labelOffset = 0.5,
+  labelDy = -7,
+): PaintInstruction[] {
   const angle = Math.atan2(y2 - y1, x2 - x1);
   const head = 9;
   const left = angle + Math.PI * 0.82;
   const right = angle - Math.PI * 0.82;
-  const labelX = x1 + (x2 - x1) * 0.5;
-  const labelY = y1 + (y2 - y1) * 0.5 - 7;
+  const labelX = x1 + (x2 - x1) * labelOffset;
+  const labelY = y1 + (y2 - y1) * labelOffset + labelDy;
 
-  return [
+  const instructions: PaintInstruction[] = [
     paintLine(x1, y1, x2, y2, color, {
-      stroke_width: 2,
+      stroke_width: strokeWidth,
       stroke_cap: "round",
     }),
     paintLine(x2, y2, x2 + Math.cos(left) * head, y2 + Math.sin(left) * head, color, {
-      stroke_width: 2,
+      stroke_width: strokeWidth,
       stroke_cap: "round",
     }),
     paintLine(x2, y2, x2 + Math.cos(right) * head, y2 + Math.sin(right) * head, color, {
-      stroke_width: 2,
+      stroke_width: strokeWidth,
       stroke_cap: "round",
     }),
-    ...centerText(label, labelX, labelY, 10, color),
   ];
+  if (label.length > 0) {
+    instructions.push(...centerText(label, labelX, labelY, 10, color));
+  }
+  return instructions;
 }
 
 function edge(
@@ -525,11 +561,9 @@ function edge(
   const midY = from.y + (to.y - from.y) * labelOffset;
   const color = weight >= 0 ? GREEN : RED;
   const width = Math.min(7, 1.4 + Math.abs(weight) * 0.75);
+  const { x1, y1, x2, y2 } = shortenSegment(from.x, from.y, to.x, to.y, 33, 36);
   return [
-    paintLine(from.x, from.y, to.x, to.y, color, {
-      stroke_width: width,
-      stroke_cap: "round",
-    }),
+    ...arrowWithLabel(x1, y1, x2, y2, color, "", width),
     paintRect(midX - 28, midY - 14, 56, 20, {
       fill: "rgba(255, 255, 255, 0.86)",
       stroke: "rgba(23, 32, 28, 0.08)",
@@ -538,6 +572,30 @@ function edge(
     }),
     ...centerText(label, midX, midY + 4, 10, color),
   ];
+}
+
+function shortenSegment(
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  startOffset: number,
+  endOffset: number,
+): { x1: number; y1: number; x2: number; y2: number } {
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const length = Math.hypot(dx, dy);
+  if (length === 0) {
+    return { x1, y1, x2, y2 };
+  }
+  const ux = dx / length;
+  const uy = dy / length;
+  return {
+    x1: x1 + ux * startOffset,
+    y1: y1 + uy * startOffset,
+    x2: x2 - ux * endOffset,
+    y2: y2 - uy * endOffset,
+  };
 }
 
 function node(nodeData: DiagramNode): PaintInstruction[] {

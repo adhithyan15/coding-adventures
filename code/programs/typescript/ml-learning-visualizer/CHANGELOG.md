@@ -12,6 +12,8 @@ All notable changes to this package will be documented in this file.
   activations, and gradient updates while training runs advance.
 - Expanded the neural graph panels into a full learning-flow trace covering
   forward prediction, error/loss calculation, gradients, and parameter updates.
+- Corrected the learning-flow arrows so forward edges point into each node and
+  loss feedback folds into a lower update loop instead of crossing the graph.
 
 ## [0.1.0] - 2026-03-25
 
