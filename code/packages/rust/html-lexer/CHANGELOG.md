@@ -164,3 +164,6 @@ documented in this file.
   floor/ceiling, triangle, corner, and over/under fence aliases.
 - Added a WHATWG Latin Extended named-reference batch covering macron, breve,
   ogonek, caron, cedilla, circumflex, dot, ring, and tilde letter aliases.
+- Added a second WHATWG arrow named-reference batch covering short/capital,
+  lowercase long, hook, tail, loop, harpoon, negated, squiggle, diagonal, and
+  mapsto aliases.

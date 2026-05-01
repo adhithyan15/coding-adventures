@@ -84,6 +84,9 @@ currently supports:
   aliases with combining-overlay replacements
 - WHATWG arrow and vector named character references, including long, bar, tee,
   map, and vector-bar aliases
+- extended WHATWG arrow aliases, including short/capital arrows, lowercase long
+  arrows, hooks, tails, loops, harpoons, negated arrows, diagonals, and mapsto
+  forms
 - WHATWG Greek variant and letter-like named character references, including
   epsilon, kappa, phi, rho, sigma, theta, digamma, beth, gimel, and daleth
 - WHATWG set, membership, subset/superset, square-set, and n-ary logic named

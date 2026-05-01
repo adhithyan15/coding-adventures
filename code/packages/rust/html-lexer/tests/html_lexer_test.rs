@@ -2475,6 +2475,22 @@ fn default_html_lexer_supports_whatwg_basic_arrow_named_character_references() {
 }
 
 #[test]
+fn default_html_lexer_supports_whatwg_extended_arrow_aliases() {
+    let tokens = lex_html(
+        "More arrows:&Darr;&Downarrow;&Larr;&Leftarrow;&Leftrightarrow;&Rarr;&Rightarrow;&Uarr;&Uparrow;&Updownarrow;&ShortDownArrow;&ShortLeftArrow;&ShortRightArrow;&ShortUpArrow;&LowerLeftArrow;&LowerRightArrow;&UpperLeftArrow;&UpperRightArrow;&DoubleLongLeftArrow;&DoubleLongLeftRightArrow;&DoubleLongRightArrow;&DownTeeArrow;&UpTeeArrow;",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Text("More arrows:↡⇓↞⇐⇔↠⇒↟⇑⇕↓←→↑↙↘↖↗⟸⟺⟹↧↥".to_string()),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_whatwg_long_and_bar_arrow_named_character_references_in_attributes()
 {
     let tokens = lex_html(
@@ -2505,6 +2521,39 @@ fn default_html_lexer_supports_whatwg_long_and_bar_arrow_named_character_referen
 }
 
 #[test]
+fn default_html_lexer_supports_whatwg_hook_tail_and_loop_arrow_aliases_in_attributes() {
+    let tokens = lex_html(
+        "<a plain=\"&downarrow;&leftarrow;&leftrightarrow;&longleftarrow;&longleftrightarrow;&longrightarrow;\" hooks=\"&hookleftarrow;&hookrightarrow;&leftarrowtail;&rightarrowtail;&twoheadleftarrow;&twoheadrightarrow;\" loops=\"&curvearrowleft;&curvearrowright;&circlearrowleft;&circlearrowright;&looparrowleft;&looparrowright;\">",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "plain".to_string(),
+                        value: "↓←↔⟵⟷⟶".to_string(),
+                    },
+                    Attribute {
+                        name: "hooks".to_string(),
+                        value: "↩↪↢↣↞↠".to_string(),
+                    },
+                    Attribute {
+                        name: "loops".to_string(),
+                        value: "↶↷↺↻↫↬".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_seeded_rcdata_whatwg_vector_arrow_named_character_references() {
     let mut lexer = create_html_lexer().unwrap();
     lexer.set_initial_state("rcdata").unwrap();
@@ -2521,6 +2570,31 @@ fn default_html_lexer_supports_seeded_rcdata_whatwg_vector_arrow_named_character
         lexer.drain_tokens(),
         vec![
             Token::Text("↼⇀↿↾⇃⇂↽⇁⥒⥓⥘⥔⥙⥕⥖⥗".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_rcdata_whatwg_harpoon_negated_and_mapsto_arrows() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rcdata").unwrap();
+    lexer.set_last_start_tag("title");
+
+    lexer
+        .push(
+            "&leftharpoonup;&leftharpoondown;&rightharpoonup;&rightharpoondown;&upharpoonleft;&upharpoonright;&downharpoonleft;&downharpoonright;&leftleftarrows;&rightrightarrows;&downdownarrows;&upuparrows;&leftrightarrows;&rightleftarrows;&leftrightharpoons;&rightleftharpoons;&rightsquigarrow;&leftrightsquigarrow;&nleftarrow;&nrightarrow;&nleftrightarrow;&nLeftarrow;&nRightarrow;&nLeftrightarrow;&mapsto;&longmapsto;&mapstoleft;&mapstoup;&mapstodown;&nearrow;&searrow;&swarrow;&nwarrow;</title>",
+        )
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("↼↽⇀⇁↿↾⇃⇂⇇⇉⇊⇈⇆⇄⇋⇌↝↭↚↛↮⇍⇏⇎↦⟼↤↥↧↗↘↙↖".to_string()),
             Token::EndTag {
                 name: "title".to_string()
             },
