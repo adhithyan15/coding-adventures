@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import pytest
-from logic_engine import atom, relation
+from logic_engine import atom, num, relation
 from logic_instructions import (
     DynamicRelationDefInstruction,
     FactInstruction,
@@ -16,6 +16,7 @@ from prolog_vm_compiler import (
     __version__,
     compile_swi_prolog_project,
     compile_swi_prolog_source,
+    create_swi_prolog_vm_runtime,
     load_compiled_prolog_vm,
     run_compiled_prolog_queries,
     run_compiled_prolog_query,
@@ -127,6 +128,29 @@ class TestPrologVMCompiler:
         )
 
         assert run_compiled_prolog_query(compiled) == [()]
+
+    def test_compiles_current_op_against_loaded_operator_table(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            :- op(500, yfx, ++).
+            ?- current_op(P, Type, '++').
+            """,
+        )
+
+        assert run_compiled_prolog_query(compiled) == [
+            (num(500), atom("yfx")),
+        ]
+
+    def test_runtime_current_op_uses_ad_hoc_query_operator_table(self) -> None:
+        runtime = create_swi_prolog_vm_runtime(
+            """
+            :- op(450, xfx, <=>).
+            """,
+        )
+
+        assert runtime.query_values("?- current_op(P, Type, '<=>').") == [
+            (num(450), atom("xfx")),
+        ]
 
     def test_preserves_initialization_queries_before_source_queries(self) -> None:
         compiled = compile_swi_prolog_source(

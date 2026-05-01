@@ -155,7 +155,11 @@ class PrologVMRuntime:
         parsed_query = self._parse_query(source)
         if self.query_rewriter is not None:
             parsed_query = self.query_rewriter(parsed_query)
-        goal = _adapt_goal(parsed_query.goal, adapt_builtins=self.adapt_builtins)
+        goal = _adapt_goal(
+            parsed_query.goal,
+            adapt_builtins=self.adapt_builtins,
+            operator_table=self.operator_table,
+        )
         outputs = tuple(parsed_query.variables.values())
         proof_states = solve_from(self.vm.assembled_program(), goal, self.state)
 
@@ -229,6 +233,7 @@ def compile_loaded_prolog_source(
         loaded_source.initialization_goals,
         loaded_source.program,
         adapt_builtins=adapt_builtins,
+        operator_table=loaded_source.operator_table,
     )
 
 
@@ -245,6 +250,7 @@ def compile_loaded_prolog_project(
         loaded_project.initialization_goals,
         loaded_project.program,
         adapt_builtins=adapt_builtins,
+        operator_table=_project_operator_table(loaded_project),
     )
 
 
@@ -531,17 +537,30 @@ def _compile_loaded_prolog(
     program_value: Program,
     *,
     adapt_builtins: bool,
+    operator_table: OperatorTable | None = None,
 ) -> CompiledPrologVMProgram:
     adapted_clauses = tuple(
-        _adapt_clause(clause_value, adapt_builtins=adapt_builtins)
+        _adapt_clause(
+            clause_value,
+            adapt_builtins=adapt_builtins,
+            operator_table=operator_table,
+        )
         for clause_value in clauses
     )
     adapted_initialization_goals = tuple(
-        _adapt_goal(goal_value, adapt_builtins=adapt_builtins)
+        _adapt_goal(
+            goal_value,
+            adapt_builtins=adapt_builtins,
+            operator_table=operator_table,
+        )
         for goal_value in initialization_goals
     )
     adapted_source_queries = tuple(
-        _adapt_query(query_value, adapt_builtins=adapt_builtins)
+        _adapt_query(
+            query_value,
+            adapt_builtins=adapt_builtins,
+            operator_table=operator_table,
+        )
         for query_value in source_queries
     )
 
@@ -592,27 +611,46 @@ def _compile_loaded_prolog(
     )
 
 
-def _adapt_clause(clause_value: Clause, *, adapt_builtins: bool) -> Clause:
+def _adapt_clause(
+    clause_value: Clause,
+    *,
+    adapt_builtins: bool,
+    operator_table: OperatorTable | None,
+) -> Clause:
     if clause_value.body is None:
         return clause_value
     return Clause(
         head=clause_value.head,
-        body=_adapt_goal(clause_value.body, adapt_builtins=adapt_builtins),
+        body=_adapt_goal(
+            clause_value.body,
+            adapt_builtins=adapt_builtins,
+            operator_table=operator_table,
+        ),
     )
 
 
-def _adapt_goal(goal_value: GoalExpr, *, adapt_builtins: bool) -> GoalExpr:
+def _adapt_goal(
+    goal_value: GoalExpr,
+    *,
+    adapt_builtins: bool,
+    operator_table: OperatorTable | None,
+) -> GoalExpr:
     if not adapt_builtins:
         return goal_value
-    return adapt_prolog_goal(goal_value)
+    return adapt_prolog_goal(goal_value, operator_table=operator_table)
 
 
-def _adapt_query(query_value: ParsedQuery, *, adapt_builtins: bool) -> ParsedQuery:
+def _adapt_query(
+    query_value: ParsedQuery,
+    *,
+    adapt_builtins: bool,
+    operator_table: OperatorTable | None,
+) -> ParsedQuery:
     goal_value = query_value.goal
     if not adapt_builtins:
         return query_value
     return ParsedQuery(
-        goal=adapt_prolog_goal(goal_value),
+        goal=adapt_prolog_goal(goal_value, operator_table=operator_table),
         variables=query_value.variables,
     )
 

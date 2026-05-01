@@ -1149,6 +1149,24 @@ class TestPrologGoalAdapter:
             logic_list(["bart", "lisa", "maggie"]),
         ]
 
+    def test_adapt_prolog_goal_enumerates_loaded_operator_table(self) -> None:
+        loaded = load_swi_prolog_source(
+            """
+            :- op(500, yfx, ++).
+            ?- current_op(500, Type, '++').
+            """,
+        )
+        query = loaded.queries[0]
+
+        adapted = adapt_prolog_goal(
+            query.goal,
+            operator_table=loaded.operator_table,
+        )
+
+        assert solve_all(loaded.program, query.variables["Type"], adapted) == [
+            atom("yfx"),
+        ]
+
     def test_adapt_prolog_goal_rewrites_if_then_else_control(self) -> None:
         parsed = parse_swi_query(
             "?- ((X = first ; X = second) -> Result = X ; Result = none).",
