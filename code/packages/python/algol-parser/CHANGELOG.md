@@ -19,6 +19,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   and double-quoted string literals through the shared ALGOL lexer.
 - Parsed ALGOL publication symbols for relations, exponentiation, and boolean
   operators through the shared lexer normalization layer.
+- Parsed report-style typed formal specifiers such as `integer array a;` and
+  `real procedure f;` while preserving the existing split specifier spelling.
 
 ## [0.1.0] — 2026-04-06
 

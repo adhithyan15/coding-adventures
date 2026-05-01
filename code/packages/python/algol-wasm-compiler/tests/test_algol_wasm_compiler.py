@@ -1031,6 +1031,16 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
 
+    def test_report_style_typed_array_parameter_specifier_executes(self) -> None:
+        result = compile_source(
+            "begin integer result; integer array a[1:2]; "
+            "procedure first(xs); integer array xs; "
+            "begin result := xs[1] end; "
+            "a[1] := 9; first(a) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
+
     def test_formal_procedure_array_argument_honors_value_array_copy(self) -> None:
         result = compile_source(
             "begin integer result; integer array a[1:2]; "
@@ -1135,6 +1145,17 @@ class TestAlgolWasmCompiler:
         result = compile_source(
             "begin integer result; real y; "
             "procedure invoke(f); real f; procedure f; "
+            "begin y := f(2); if y = 4 then result := 1 else result := 0 end; "
+            "real procedure twice(x); value x; real x; begin twice := x * 2 end; "
+            "invoke(twice) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
+
+    def test_report_style_typed_procedure_parameter_specifier_executes(self) -> None:
+        result = compile_source(
+            "begin integer result; real y; "
+            "procedure invoke(f); real procedure f; "
             "begin y := f(2); if y = 4 then result := 1 else result := 0 end; "
             "real procedure twice(x); value x; real x; begin twice := x * 2 end; "
             "invoke(twice) "

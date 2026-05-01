@@ -1099,6 +1099,21 @@ class TestAlgolIrCompiler:
             for instruction in calls
         )
 
+    def test_compiles_report_style_typed_array_parameter_specifier(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; integer array a[1:2]; "
+                "procedure first(xs); integer array xs; "
+                "begin result := xs[1] end; "
+                "a[1] := 9; first(a) "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+
+        assert IrOp.LOAD_WORD in opcodes
+        assert IrOp.STORE_WORD in opcodes
+
     def test_compiles_procedure_parameter_call_with_label_argument(self) -> None:
         result = compile_algol(
             parse_algol(
@@ -1262,6 +1277,24 @@ class TestAlgolIrCompiler:
             parse_algol(
                 "begin integer result; real y; "
                 "procedure invoke(f); real f; procedure f; "
+                "begin y := f(2); if y = 4 then result := 1 else result := 0 end; "
+                "real procedure twice(x); value x; real x; begin twice := x * 2 end; "
+                "invoke(twice) "
+                "end"
+            )
+        )
+        signature = result.procedure_signatures[
+            "_fn_algol_call_procedure_f64_result_i32"
+        ]
+
+        assert signature.param_types == ("integer", "integer", "integer")
+        assert signature.return_type == "real"
+
+    def test_compiles_report_style_typed_procedure_parameter_specifier(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; real y; "
+                "procedure invoke(f); real procedure f; "
                 "begin y := f(2); if y = 4 then result := 1 else result := 0 end; "
                 "real procedure twice(x); value x; real x; begin twice := x * 2 end; "
                 "invoke(twice) "

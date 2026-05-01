@@ -683,6 +683,32 @@ class TestDeclarations:
         own_array_decl_nodes = find_nodes(ast, "own_array_decl")
         assert len(own_array_decl_nodes) >= 1
 
+    def test_report_style_typed_array_parameter_specifier(self) -> None:
+        """Formal parameters accept ``integer array`` as one specifier."""
+        ast = parse(
+            "begin integer result; integer array xs[1:1]; "
+            "procedure first(a); integer array a; begin result := a[1] end; "
+            "first(xs) "
+            "end"
+        )
+
+        assert ast.rule_name == "program"
+        assert find_nodes(ast, "specifier")
+
+    def test_report_style_typed_procedure_parameter_specifier(self) -> None:
+        """Formal parameters accept ``real procedure`` as one specifier."""
+        ast = parse(
+            "begin integer result; "
+            "procedure invoke(f); real procedure f; "
+            "begin if f(2) = 4 then result := 1 else result := 0 end; "
+            "real procedure twice(x); value x; real x; begin twice := x * 2 end; "
+            "invoke(twice) "
+            "end"
+        )
+
+        assert ast.rule_name == "program"
+        assert find_nodes(ast, "specifier")
+
 
 # ---------------------------------------------------------------------------
 # Procedure call tests
