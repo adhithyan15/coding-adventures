@@ -154,3 +154,5 @@ documented in this file.
   replacements such as `NotNestedGreaterGreater`.
 - Added a WHATWG arrow/vector named-reference batch covering basic, double,
   long, bar, tee, map, vector, and vector-bar arrow aliases.
+- Added a WHATWG Greek variant named-reference batch covering epsilon, kappa,
+  phi, pi, rho, sigma, theta, upsilon, digamma, and letter-like aliases.

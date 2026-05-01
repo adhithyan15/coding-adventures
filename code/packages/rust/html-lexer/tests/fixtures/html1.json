@@ -644,6 +644,36 @@
       "last_start_tag": "title"
     },
     {
+      "id": "html-whatwg-greek-variant-character-references-data",
+      "description": "WHATWG Greek variant and letter-like aliases resolve in data state",
+      "input": "Greek variants:&Gammad;&digamma;&Upsi;&upsi;&beth;&gimel;&daleth;&backepsilon;&bepsi;",
+      "tokens": [
+        "Text(data=Greek variants:\u03DC\u03DD\u03D2\u03C5\u2136\u2137\u2138\u03F6\u03F6)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-greek-variant-character-references-attributes",
+      "description": "WHATWG Greek variant aliases resolve inside attribute values",
+      "input": "<i vars=\"&epsi;&epsiv;&varepsilon;&straightepsilon;&kappav;&varkappa;&phiv;&varphi;&straightphi;\" more=\"&rhov;&varrho;&sigmav;&varsigma;&thetav;&vartheta;&varpi;\">",
+      "tokens": [
+        "StartTag(name=i, attributes=[vars=\u03B5\u03F5\u03F5\u03F5\u03F0\u03F0\u03D5\u03D5\u03D5, more=\u03F1\u03F1\u03C2\u03C2\u03D1\u03D1\u03D6], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-greek-variant-character-references-rcdata",
+      "description": "Seeded title RCDATA context resolves WHATWG Greek variant aliases",
+      "input": "&varepsilon;&varkappa;&vartheta;&varrho;&varsigma;&varphi;</title>",
+      "tokens": [
+        "Text(data=\u03F5\u03F0\u03D1\u03F1\u03C2\u03D5)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
       "id": "html-semicolonless-legacy-character-references-data",
       "description": "Legacy named character references recover when the semicolon is missing in data state",
       "input": "Legacy&nbsp symbols: &copy/&reg",
