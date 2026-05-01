@@ -674,6 +674,36 @@
       "last_start_tag": "title"
     },
     {
+      "id": "html-whatwg-set-logic-character-references-data",
+      "description": "WHATWG set and logic aliases resolve in data state",
+      "input": "Sets:&Intersection;&Union;&SquareIntersection;&SquareUnion;&Wedge;&Vee;&And;&Or;&Not;&Cup;&Cap;&CupCap;&NotCupCap;&VerticalSeparator;",
+      "tokens": [
+        "Text(data=Sets:\u22C2\u22C3\u2293\u2294\u22C0\u22C1\u2A53\u2A54\u2AEC\u22D3\u22D2\u224D\u226D\u2758)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-set-logic-character-references-attributes",
+      "description": "WHATWG membership and subset aliases resolve inside attribute values",
+      "input": "<m membership=\"&Element;&NotElement;&ReverseElement;&NotReverseElement;&Exists;&NotExists;&SuchThat;&isinv;&isinE;&notinva;&notinvb;&notinvc;&niv;&notniva;&notnivb;&notnivc;\" subsets=\"&Subset;&Supset;&SubsetEqual;&NotSubset;&NotSubsetEqual;&subE;&supE;&nsubE;&nsupE;&subne;&supne;&subnE;&supnE;\">",
+      "tokens": [
+        "StartTag(name=m, attributes=[membership=\u2208\u2209\u220B\u220C\u2203\u2204\u220B\u2208\u22F9\u2209\u22F7\u22F6\u220B\u220C\u22FE\u22FD, subsets=\u22D0\u22D1\u2286\u2282\u20D2\u2288\u2AC5\u2AC6\u2AC5\u0338\u2AC6\u0338\u228A\u228B\u2ACB\u2ACC], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-set-logic-character-references-rcdata",
+      "description": "Seeded title RCDATA context resolves WHATWG set operation aliases",
+      "input": "&emptyset;&emptyv;&varnothing;&setminus;&smallsetminus;&sqcap;&sqcup;&sqsub;&sqsup;&sqsube;&sqsupe;&cuvee;&cuwed;&xcap;&xcup;&xvee;&xwedge;</title>",
+      "tokens": [
+        "Text(data=\u2205\u2205\u2205\u2216\u2216\u2293\u2294\u228F\u2290\u2291\u2292\u22CE\u22CF\u22C2\u22C3\u22C1\u22C0)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
       "id": "html-semicolonless-legacy-character-references-data",
       "description": "Legacy named character references recover when the semicolon is missing in data state",
       "input": "Legacy&nbsp symbols: &copy/&reg",

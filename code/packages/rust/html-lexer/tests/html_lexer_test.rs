@@ -2598,6 +2598,73 @@ fn default_html_lexer_supports_seeded_rcdata_whatwg_greek_variant_named_characte
 }
 
 #[test]
+fn default_html_lexer_supports_whatwg_set_and_logic_named_character_references() {
+    let tokens = lex_html(
+        "Sets:&Intersection;&Union;&SquareIntersection;&SquareUnion;&Wedge;&Vee;&And;&Or;&Not;&Cup;&Cap;&CupCap;&NotCupCap;&VerticalSeparator;",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![Token::Text("Sets:⋂⋃⊓⊔⋀⋁⩓⩔⫬⋓⋒≍≭❘".to_string()), Token::Eof,]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_set_and_logic_named_character_references_in_attributes() {
+    let tokens = lex_html(
+        "<m membership=\"&Element;&NotElement;&ReverseElement;&NotReverseElement;&Exists;&NotExists;&SuchThat;&isinv;&isinE;&notinva;&notinvb;&notinvc;&niv;&notniva;&notnivb;&notnivc;\" subsets=\"&Subset;&Supset;&SubsetEqual;&NotSubset;&NotSubsetEqual;&subE;&supE;&nsubE;&nsupE;&subne;&supne;&subnE;&supnE;\">",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::StartTag {
+                name: "m".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "membership".to_string(),
+                        value: "∈∉∋∌∃∄∋∈⋹∉⋷⋶∋∌⋾⋽".to_string(),
+                    },
+                    Attribute {
+                        name: "subsets".to_string(),
+                        value: "⋐⋑⊆⊂⃒⊈⫅⫆⫅̸⫆̸⊊⊋⫋⫌".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_rcdata_whatwg_set_and_logic_named_character_references() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rcdata").unwrap();
+    lexer.set_last_start_tag("title");
+
+    lexer
+        .push(
+            "&emptyset;&emptyv;&varnothing;&setminus;&smallsetminus;&sqcap;&sqcup;&sqsub;&sqsup;&sqsube;&sqsupe;&cuvee;&cuwed;&xcap;&xcup;&xvee;&xwedge;</title>",
+        )
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("∅∅∅∖∖⊓⊔⊏⊐⊑⊒⋎⋏⋂⋃⋁⋀".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_semicolonless_legacy_named_character_references() {
     let mut lexer = create_html_lexer().unwrap();
 

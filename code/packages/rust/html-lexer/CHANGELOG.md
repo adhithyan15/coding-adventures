@@ -156,3 +156,5 @@ documented in this file.
   long, bar, tee, map, vector, and vector-bar arrow aliases.
 - Added a WHATWG Greek variant named-reference batch covering epsilon, kappa,
   phi, pi, rho, sigma, theta, upsilon, digamma, and letter-like aliases.
+- Added a WHATWG set/logic named-reference batch covering set operations,
+  membership, subset/superset, square-set, and n-ary logic aliases.
