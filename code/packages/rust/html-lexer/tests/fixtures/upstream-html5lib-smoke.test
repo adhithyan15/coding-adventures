@@ -1173,6 +1173,30 @@
       ]
     },
     {
+      "description": "data state remaining WHATWG vector named character references",
+      "input": "Vectors:&DownLeftRightVector;&DownLeftTeeVector;&DownRightTeeVector;&LeftDownTeeVector;&LeftRightVector;&LeftTeeVector;&LeftUpDownVector;&LeftUpTeeVector;&RightDownTeeVector;&RightTeeVector;&RightUpDownVector;&RightUpTeeVector;",
+      "output": [
+        ["Character", "Vectors:⥐⥞⥟⥡⥎⥚⥑⥠⥝⥛⥏⥜"]
+      ]
+    },
+    {
+      "description": "attribute remaining WHATWG arrow named character references",
+      "input": "<nav upper=\"&Lleftarrow;&Rrightarrow;&RBarr;&Rarrtl;&Uarrocir;&neArr;&nwArr;&seArr;&swArr;&xhArr;&xlArr;&xrArr;\" lower=\"&lAarr;&rAarr;&lbarr;&rbarr;&bkarow;&dbkarow;&drbkarow;&nearr;&nwarr;&searr;&swarr;&zigrarr;\">",
+      "output": [
+        ["StartTag", "nav", {"upper": "⇚⇛⤐⤖⥉⇗⇖⇘⇙⟺⟸⟹", "lower": "⇚⇛⤌⤍⤍⤏⤐↗↖↘↙⇝"}]
+      ]
+    },
+    {
+      "description": "rcdata remaining WHATWG harpoon named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&dHar;&lHar;&rHar;&uHar;&duhar;&lrhar;&rlhar;&lharu;&lhard;&rharu;&rhard;&uharl;&uharr;&dharl;&dharr;&nrarrc;&nrarrw;</title>",
+      "output": [
+        ["Character", "⥥⥢⥤⥣⥯⇋⇌↼↽⇀⇁↿↾⇃⇂⤳̸↝̸"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
       "description": "data state legacy named character references missing semicolons",
       "input": "Legacy&nbsp symbols: &copy/&reg",
       "output": [

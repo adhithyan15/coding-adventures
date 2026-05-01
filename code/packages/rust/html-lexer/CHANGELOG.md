@@ -168,6 +168,8 @@ documented in this file.
   open-face (`*opf`), script (`*scr`), and fraktur (`*fr`) aliases.
 - Added a WHATWG Cyrillic named-reference batch covering core and extended
   uppercase/lowercase `*cy` aliases.
+- Added a remaining WHATWG arrow/vector/harpoon named-reference batch covering
+  vector-tee, fish-tail, curved, negated, and long arrow aliases.
 - Added a WHATWG operator/shape named-reference batch covering circled
   operators, integrals, products, squares, lozenges, stars, suits, and symbols.
 - Added a WHATWG box-drawing named-reference batch covering double-line,
