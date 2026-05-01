@@ -2151,6 +2151,108 @@ fn default_html_lexer_falls_back_for_unknown_named_character_references() {
 }
 
 #[test]
+fn default_html_lexer_uses_longest_named_character_reference_prefix_in_text() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("Text &notit; &copycat &sumtotal").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("Text \u{00AC}it; \u{00A9}cat \u{2211}total".to_string()),
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| {
+                diagnostic.code == "missing-semicolon-after-character-reference"
+            })
+            .count(),
+        3
+    );
+}
+
+#[test]
+fn default_html_lexer_preserves_ambiguous_ampersands_in_attributes() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer
+        .push("<a title=\"&notit; &copycat &copy\" rel=&notin data=&notin;>")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "title".to_string(),
+                        value: "&notit; &copycat \u{00A9}".to_string(),
+                    },
+                    Attribute {
+                        name: "rel".to_string(),
+                        value: "\u{2209}".to_string(),
+                    },
+                    Attribute {
+                        name: "data".to_string(),
+                        value: "\u{2209}".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| {
+                diagnostic.code == "missing-semicolon-after-character-reference"
+            })
+            .count(),
+        2
+    );
+}
+
+#[test]
+fn default_html_lexer_uses_longest_named_character_reference_prefix_in_rcdata() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rcdata").unwrap();
+    lexer.set_last_start_tag("title");
+
+    lexer.push("&notit; &copycat</title>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("\u{00AC}it; \u{00A9}cat".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| {
+                diagnostic.code == "missing-semicolon-after-character-reference"
+            })
+            .count(),
+        2
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_numeric_character_references_in_data() {
     let tokens = lex_html("Letters: &#65; &#x42; &#X43; &#0;").unwrap();
 

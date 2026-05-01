@@ -80,6 +80,8 @@ currently supports:
   `copy`, and `reg` before delimiters and EOF
 - generic named-character-reference scanning with literal fallback for unknown
   names
+- longest-prefix named-character-reference recovery for text and RCDATA, with
+  ambiguous ampersand preservation in attributes
 - semicolon-terminated decimal and hexadecimal numeric character references in
   data, RCDATA, and attribute values
 - missing-semicolon decimal and hexadecimal numeric character reference

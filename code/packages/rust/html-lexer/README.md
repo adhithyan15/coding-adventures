@@ -25,6 +25,11 @@ the project, but the first real HTML authoring artifact that must keep HTML
 The default lexer already resolves the core named character references and the
 classic Latin-1 entity set, preserving entity-name case so legacy names such as
 `Agrave` and `agrave` remain distinct.
+Named character reference scanning now follows the longest-prefix shape of the
+HTML tokenizer: text and RCDATA recover inputs such as `&copycat` as `©cat`
+with a missing-semicolon diagnostic, while attribute values preserve ambiguous
+ampersands like `&copycat` literally when the would-be reference is followed by
+an ASCII alphanumeric character or `=`.
 Numeric character references report invalid-code-point diagnostics and recover
 with the HTML replacement/remapping rules for null, surrogate, out-of-range,
 noncharacter, and Windows-1252 control references.

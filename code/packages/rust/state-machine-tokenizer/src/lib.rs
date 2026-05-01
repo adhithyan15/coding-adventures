@@ -588,18 +588,43 @@ impl Tokenizer {
                     self.attribute_mut(action)?.value.push_str(replacement);
                 }
                 "append_named_character_reference_or_temporary_buffer_to_text" => {
-                    if let Some(replacement) = named_character_reference(&self.temporary_buffer) {
-                        self.text_buffer.push_str(replacement);
+                    if let Some(reference) =
+                        consume_named_character_reference(&self.temporary_buffer, false)
+                    {
+                        let remainder = reference.remainder.to_string();
+                        let missing_semicolon = reference.missing_semicolon;
+                        self.text_buffer.push_str(reference.replacement);
+                        self.text_buffer.push_str(&remainder);
                         self.temporary_buffer.clear();
+                        if missing_semicolon {
+                            self.diagnostics.push(Diagnostic {
+                                code: "missing-semicolon-after-character-reference".to_string(),
+                                position,
+                                state: state.to_string(),
+                            });
+                        }
                     } else {
                         self.text_buffer.push_str(&self.temporary_buffer);
                         self.temporary_buffer.clear();
                     }
                 }
                 "append_named_character_reference_or_temporary_buffer_to_attribute_value" => {
-                    if let Some(replacement) = named_character_reference(&self.temporary_buffer) {
+                    if let Some(reference) =
+                        consume_named_character_reference(&self.temporary_buffer, true)
+                    {
+                        let remainder = reference.remainder.to_string();
+                        let replacement = reference.replacement;
+                        let missing_semicolon = reference.missing_semicolon;
                         self.temporary_buffer.clear();
                         self.attribute_mut(action)?.value.push_str(replacement);
+                        self.attribute_mut(action)?.value.push_str(&remainder);
+                        if missing_semicolon {
+                            self.diagnostics.push(Diagnostic {
+                                code: "missing-semicolon-after-character-reference".to_string(),
+                                position,
+                                state: state.to_string(),
+                            });
+                        }
                     } else {
                         let temporary_buffer = std::mem::take(&mut self.temporary_buffer);
                         self.attribute_mut(action)?
@@ -608,9 +633,13 @@ impl Tokenizer {
                     }
                 }
                 "recover_named_character_reference_to_text" => {
-                    if let Some(replacement) = named_character_reference(&self.temporary_buffer) {
+                    if let Some(reference) =
+                        consume_named_character_reference(&self.temporary_buffer, false)
+                    {
+                        let remainder = reference.remainder.to_string();
+                        self.text_buffer.push_str(reference.replacement);
+                        self.text_buffer.push_str(&remainder);
                         self.temporary_buffer.clear();
-                        self.text_buffer.push_str(replacement);
                         self.diagnostics.push(Diagnostic {
                             code: "missing-semicolon-after-character-reference".to_string(),
                             position,
@@ -622,9 +651,14 @@ impl Tokenizer {
                     }
                 }
                 "recover_named_character_reference_to_attribute_value" => {
-                    if let Some(replacement) = named_character_reference(&self.temporary_buffer) {
+                    if let Some(reference) =
+                        consume_named_character_reference(&self.temporary_buffer, true)
+                    {
+                        let remainder = reference.remainder.to_string();
+                        let replacement = reference.replacement;
                         self.temporary_buffer.clear();
                         self.attribute_mut(action)?.value.push_str(replacement);
+                        self.attribute_mut(action)?.value.push_str(&remainder);
                         self.diagnostics.push(Diagnostic {
                             code: "missing-semicolon-after-character-reference".to_string(),
                             position,
@@ -1447,12 +1481,65 @@ fn windows_1252_control_replacement(value: u32) -> Option<char> {
     }
 }
 
-fn named_character_reference(buffer: &str) -> Option<&'static str> {
-    match buffer
-        .strip_prefix('&')
-        .unwrap_or(buffer)
-        .trim_end_matches(';')
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+struct ConsumedNamedCharacterReference<'a> {
+    replacement: &'static str,
+    remainder: &'a str,
+    missing_semicolon: bool,
+}
+
+fn consume_named_character_reference(
+    buffer: &str,
+    in_attribute: bool,
+) -> Option<ConsumedNamedCharacterReference<'_>> {
+    let body = buffer.strip_prefix('&').unwrap_or(buffer);
+    for end in body
+        .char_indices()
+        .map(|(index, _)| index)
+        .chain(std::iter::once(body.len()))
+        .filter(|end| *end > 0)
+        .collect::<Vec<_>>()
+        .into_iter()
+        .rev()
     {
+        let candidate = &body[..end];
+        let (name, missing_semicolon) = match candidate.strip_suffix(';') {
+            Some(name) => (name, false),
+            None => (candidate, true),
+        };
+        let Some(replacement) = named_character_reference_name(name) else {
+            continue;
+        };
+        let remainder = &body[end..];
+
+        if missing_semicolon
+            && in_attribute
+            && remainder
+                .chars()
+                .next()
+                .is_some_and(|ch| ch.is_ascii_alphanumeric() || ch == '=')
+        {
+            return None;
+        }
+
+        return Some(ConsumedNamedCharacterReference {
+            replacement,
+            remainder,
+            missing_semicolon,
+        });
+    }
+
+    None
+}
+
+fn named_character_reference(buffer: &str) -> Option<&'static str> {
+    let name = buffer.strip_prefix('&').unwrap_or(buffer);
+    let name = name.strip_suffix(';').unwrap_or(name);
+    named_character_reference_name(name)
+}
+
+fn named_character_reference_name(name: &str) -> Option<&'static str> {
+    match name {
         "AElig" => Some("\u{00C6}"),
         "Aacute" => Some("\u{00C1}"),
         "Acirc" => Some("\u{00C2}"),
