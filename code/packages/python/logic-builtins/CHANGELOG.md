@@ -34,6 +34,12 @@ All notable changes to this package will be documented in this file.
 - `iftheno(...)` and `ifthenelseo(...)` now preserve rule-local variable
   freshening when their condition and branches can be represented as callable
   terms.
+- `onceo(...)`, `noto(...)`, and `forallo(...)` now preserve rule-local
+  variable freshening when their embedded goals can be represented as callable
+  terms.
+- `findallo(...)`, `bagofo(...)`, and `setofo(...)` now preserve rule-local
+  variable freshening when their embedded goals can be represented as callable
+  terms.
 
 ## [0.13.0] - 2026-04-22
 

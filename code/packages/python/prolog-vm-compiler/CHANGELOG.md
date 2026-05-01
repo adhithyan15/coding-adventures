@@ -37,6 +37,8 @@
 - Run Prolog `dif/2` through the VM path as a delayed disequality constraint.
 - Expose residual delayed disequality constraints on named `PrologAnswer`
   values produced by compiled source queries and stateful runtimes.
+- Add end-to-end stress coverage for negation-as-failure, `once/1`,
+  `forall/2`, `bagof/3`, and `setof/3` through the Prolog VM path.
 
 ## 0.1.0
 
