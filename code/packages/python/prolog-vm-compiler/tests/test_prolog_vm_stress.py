@@ -199,6 +199,10 @@ class TestPrologVMStress:
                sub_string("logic", 2, 2, 1, SubString),
                term_to_atom(pair(tea, [cup, cake]), RenderedTerm),
                atom_to_term('pair(X, tea)', ParsedTerm, Bindings),
+               read_term_from_atom('pair(X, Y, X)', ReadTerm,
+                   [variable_names(Names), variables(Vars)]),
+               write_term_to_atom(pair(tea, [cup]), WrittenTerm,
+                   [quoted(true), ignore_ops(false)]),
                string_codes("ok", Codes).
             """,
         )
@@ -208,7 +212,9 @@ class TestPrologVMStress:
         assert len(answers) == 1
         answer = answers[0].as_dict()
         parsed_term = answer["ParsedTerm"]
+        read_term = answer["ReadTerm"]
         assert isinstance(parsed_term, Compound)
+        assert isinstance(read_term, Compound)
         assert answer == {
             "Chars": logic_list(["t", "e", "a"]),
             "Atom": atom("tea"),
@@ -228,6 +234,20 @@ class TestPrologVMStress:
             "RenderedTerm": atom("pair(tea, [cup, cake])"),
             "ParsedTerm": term("pair", parsed_term.args[0], "tea"),
             "Bindings": logic_list([term("=", "X", parsed_term.args[0])]),
+            "ReadTerm": term(
+                "pair",
+                read_term.args[0],
+                read_term.args[1],
+                read_term.args[0],
+            ),
+            "Names": logic_list(
+                [
+                    term("=", "X", read_term.args[0]),
+                    term("=", "Y", read_term.args[1]),
+                ],
+            ),
+            "Vars": logic_list([read_term.args[0], read_term.args[1]]),
+            "WrittenTerm": atom("pair(tea, [cup])"),
             "Codes": logic_list([111, 107]),
         }
 

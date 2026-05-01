@@ -960,6 +960,16 @@ class TestPrologGoalAdapter:
                 LogicVar(id=85),
                 LogicVar(id=86),
             ),
+            relation("read_term_from_atom", 3)(
+                atom("box(X)"),
+                LogicVar(id=87),
+                logic_list([]),
+            ),
+            relation("write_term_to_atom", 3)(
+                term("box", atom("tea")),
+                LogicVar(id=88),
+                logic_list([]),
+            ),
             relation("current_prolog_flag", 2)(
                 atom("unknown"),
                 LogicVar(id=18),
@@ -1189,6 +1199,68 @@ class TestPrologGoalAdapter:
             term("pair", parsed_term.args[0], "tea"),
             logic_list([term("=", "X", parsed_term.args[0])]),
             logic_list([111, 107]),
+        )
+
+    def test_adapt_prolog_goal_rewrites_term_read_write_options(self) -> None:
+        parsed = parse_swi_query(
+            "?- read_term_from_atom('pair(X, Y, X)', Term, "
+            "[variable_names(Names), variables(Vars)]), "
+            "write_term_to_atom(pair(tea, [cup]), Rendered, "
+            "[quoted(true), ignore_ops(false)]).",
+        )
+
+        answers = solve_all(
+            program(),
+            (
+                parsed.variables["Term"],
+                parsed.variables["Names"],
+                parsed.variables["Vars"],
+                parsed.variables["Rendered"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        assert len(answers) == 1
+        term_value, names, vars_value, rendered = answers[0]
+        assert isinstance(term_value, Compound)
+        assert term_value == term(
+            "pair",
+            term_value.args[0],
+            term_value.args[1],
+            term_value.args[0],
+        )
+        assert names == logic_list(
+            [
+                term("=", "X", term_value.args[0]),
+                term("=", "Y", term_value.args[1]),
+            ],
+        )
+        assert vars_value == logic_list([term_value.args[0], term_value.args[1]])
+        assert rendered == atom("pair(tea, [cup])")
+
+    def test_adapt_prolog_goal_rejects_unsupported_term_io_options(self) -> None:
+        parsed_read = parse_swi_query(
+            "?- read_term_from_atom('pair(X)', Term, [unknown(true)]).",
+        )
+        parsed_write = parse_swi_query(
+            "?- write_term_to_atom(pair(tea), Atom, [quoted(maybe)]).",
+        )
+
+        assert (
+            solve_all(
+                program(),
+                parsed_read.variables["Term"],
+                adapt_prolog_goal(parsed_read.goal),
+            )
+            == []
+        )
+        assert (
+            solve_all(
+                program(),
+                parsed_write.variables["Atom"],
+                adapt_prolog_goal(parsed_write.goal),
+            )
+            == []
         )
 
     def test_adapt_prolog_goal_rewrites_term_equality_failures(self) -> None:

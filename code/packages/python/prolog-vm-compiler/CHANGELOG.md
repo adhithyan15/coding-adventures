@@ -61,6 +61,8 @@
   `atom_length/2`, `string_length/2`, `sub_atom/5`, and `sub_string/5`.
 - Run Prolog term text I/O predicates through the VM path, including
   `term_to_atom/2` and `atom_to_term/3`.
+- Run Prolog term read/write option predicates through the VM path, including
+  `read_term_from_atom/3` and `write_term_to_atom/3`.
 
 ## 0.1.0
 

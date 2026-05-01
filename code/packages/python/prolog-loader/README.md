@@ -19,6 +19,8 @@ It keeps parsing side-effect free, then exposes helpers to:
   `sub_atom/5`, and `sub_string/5`
 - adapt term text I/O builtins such as `term_to_atom/2` and `atom_to_term/3`
   through the parser boundary
+- adapt parser-backed term read/write helpers such as `read_term_from_atom/3`
+  and `write_term_to_atom/3`
 - adapt callable CLP(FD) forms such as `in/2`, `ins/2`, `#=/2`,
   `all_different/1`, and `labeling/2`
 - flatten nested additive CLP(FD) equality expressions such as
