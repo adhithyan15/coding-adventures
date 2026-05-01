@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from logic_engine import atom, logic_list, num, term
+from logic_engine import Disequality, LogicVar, atom, logic_list, num, term
 
 from prolog_vm_compiler import (
     compile_swi_prolog_project,
@@ -152,6 +152,18 @@ class TestPrologVMStress:
             },
         ]
         assert run_compiled_prolog_query(failure) == []
+
+    def test_dif_residual_constraints_are_visible_on_named_answers(self) -> None:
+        compiled = compile_swi_prolog_source("?- dif(X, tea).")
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert len(answers) == 1
+        binding = answers[0].as_dict()["X"]
+        assert isinstance(binding, LogicVar)
+        assert answers[0].residual_constraints == (
+            Disequality(left=binding, right=atom("tea")),
+        )
 
     def test_if_then_else_commits_to_first_condition_solution(self) -> None:
         compiled = compile_swi_prolog_source(

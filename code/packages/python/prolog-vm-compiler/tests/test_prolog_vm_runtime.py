@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-from logic_engine import atom
+from logic_engine import Disequality, LogicVar, atom
 
 from prolog_vm_compiler import (
     compile_swi_prolog_project_from_files,
@@ -81,6 +81,18 @@ class TestPrologVMRuntime:
         )
 
         assert runtime.query_values("pick(Value)", limit=1) == [atom("first")]
+
+    def test_runtime_answers_expose_residual_constraints(self) -> None:
+        runtime = create_swi_prolog_vm_runtime("")
+
+        answers = runtime.query("dif(X, tea).")
+
+        assert len(answers) == 1
+        binding = answers[0].as_dict()["X"]
+        assert isinstance(binding, LogicVar)
+        assert answers[0].residual_constraints == (
+            Disequality(left=binding, right=atom("tea")),
+        )
 
     def test_runtime_can_be_created_from_an_existing_compiled_program(self) -> None:
         compiled = compile_swi_prolog_source(

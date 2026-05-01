@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass
+from itertools import islice
 from pathlib import Path
 from types import MappingProxyType
 
@@ -11,6 +12,7 @@ from logic_engine import (
     Clause,
     Compound,
     ConjExpr,
+    Disequality,
     DisjExpr,
     FreshExpr,
     GoalExpr,
@@ -106,12 +108,18 @@ class PrologAnswer:
     """A named source-level answer produced by the compiled Prolog VM path."""
 
     bindings: Mapping[str, Term]
+    residual_constraints: tuple[Disequality, ...] = ()
 
     def __post_init__(self) -> None:
         object.__setattr__(
             self,
             "bindings",
             MappingProxyType(dict(self.bindings)),
+        )
+        object.__setattr__(
+            self,
+            "residual_constraints",
+            tuple(self.residual_constraints),
         )
 
     def as_dict(self) -> dict[str, Term]:
@@ -163,7 +171,11 @@ class PrologVMRuntime:
             if committed_state is None:
                 committed_state = proof_state
             answers.append(
-                _answer_from_terms(parsed_query.variables.keys(), outputs, proof_state),
+                _answer_from_terms(
+                    parsed_query.variables.keys(),
+                    outputs,
+                    proof_state,
+                ),
             )
 
         if commit and committed_state is not None:
@@ -440,14 +452,13 @@ def run_compiled_prolog_query_answers(
 ) -> list[PrologAnswer]:
     """Run one source query and return bindings keyed by Prolog variable name."""
 
-    return _answers_from_results(
+    vm = load_compiled_prolog_vm(compiled_program)
+    return _answers_from_vm_query(
         compiled_program,
+        vm,
+        State(),
         source_query_index,
-        run_compiled_prolog_query(
-            compiled_program,
-            source_query_index=source_query_index,
-            limit=limit,
-        ),
+        limit=limit,
     )
 
 
@@ -502,14 +513,14 @@ def run_initialized_compiled_prolog_query_answers(
 ) -> list[PrologAnswer]:
     """Run initializations and return named bindings for one source query."""
 
-    return _answers_from_results(
+    vm = load_compiled_prolog_vm(compiled_program)
+    initialized_state = _run_initializations_on_vm(vm, compiled_program)
+    return _answers_from_vm_query(
         compiled_program,
+        vm,
+        initialized_state,
         source_query_index,
-        run_initialized_compiled_prolog_query(
-            compiled_program,
-            source_query_index=source_query_index,
-            limit=limit,
-        ),
+        limit=limit,
     )
 
 
@@ -690,20 +701,33 @@ def _run_initializations_on_vm(
     return current_state
 
 
-def _answers_from_results(
+def _answers_from_vm_query(
     compiled_program: CompiledPrologVMProgram,
+    vm: LogicVM,
+    state: State,
     source_query_index: int,
-    results: list[Term | tuple[Term, ...]],
+    *,
+    limit: int | None,
 ) -> list[PrologAnswer]:
-    names = compiled_program.source_query_variable_names(source_query_index)
-    if not names:
-        return [PrologAnswer({}) for _result in results]
+    if limit is not None and limit < 0:
+        msg = "query limit must be non-negative"
+        raise ValueError(msg)
 
-    answers: list[PrologAnswer] = []
-    for result in results:
-        values = result if isinstance(result, tuple) else (result,)
-        answers.append(PrologAnswer(dict(zip(names, values, strict=True))))
-    return answers
+    vm_query_index = compiled_program.source_query_vm_index(source_query_index)
+    names = compiled_program.source_query_variable_names(source_query_index)
+    try:
+        outputs = vm.state.queries[vm_query_index].outputs or ()
+    except IndexError as exc:
+        msg = f"query index {vm_query_index} is out of range"
+        raise IndexError(msg) from exc
+
+    proof_states = vm.solve_query_from(state, vm_query_index)
+    if limit is not None:
+        proof_states = islice(proof_states, limit)
+    return [
+        _answer_from_terms(names, tuple(outputs), proof_state)
+        for proof_state in proof_states
+    ]
 
 
 def _answer_from_terms(
@@ -711,13 +735,25 @@ def _answer_from_terms(
     outputs: tuple[Term, ...],
     state: State,
 ) -> PrologAnswer:
+    residual_constraints = _residual_constraints(state)
     if not outputs:
-        return PrologAnswer({})
+        return PrologAnswer({}, residual_constraints=residual_constraints)
     return PrologAnswer(
         {
             name: reify(output, state.substitution)
             for name, output in zip(names, outputs, strict=True)
         },
+        residual_constraints=residual_constraints,
+    )
+
+
+def _residual_constraints(state: State) -> tuple[Disequality, ...]:
+    return tuple(
+        Disequality(
+            left=reify(constraint.left, state.substitution),
+            right=reify(constraint.right, state.substitution),
+        )
+        for constraint in state.constraints
     )
 
 
