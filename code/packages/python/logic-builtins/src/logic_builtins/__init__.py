@@ -138,6 +138,8 @@ from logic_builtins.builtins import (
     termo_lto,
     throwo,
     trueo,
+    unifiableo,
+    unify_with_occurs_checko,
     univo,
     variant_termo,
     varo,
@@ -279,6 +281,8 @@ __all__ = [
     "throwo",
     "trueo",
     "univo",
+    "unifiableo",
+    "unify_with_occurs_checko",
     "varo",
     "variant_termo",
 ]

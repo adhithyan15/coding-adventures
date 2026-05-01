@@ -840,6 +840,15 @@ class TestPrologGoalAdapter:
                 term("memo", atom("ok")),
                 term(".", atom("memo"), term(".", atom("ok"), atom("[]"))),
             ),
+            relation("unifiable", 3)(
+                term("box", LogicVar(id=92)),
+                term("box", atom("tea")),
+                LogicVar(id=93),
+            ),
+            relation("unify_with_occurs_check", 2)(
+                LogicVar(id=94),
+                term("box", atom("tea")),
+            ),
             relation("atom_chars", 2)(atom("tea"), logic_list(["t", "e", "a"])),
             relation("atom_codes", 2)(atom("tea"), logic_list([116, 101, 97])),
             relation("atom_concat", 3)(atom("tea"), atom("cup"), atom("teacup")),
@@ -1329,6 +1338,35 @@ class TestPrologGoalAdapter:
         assert len(template.args) == 2
         assert all(isinstance(argument, LogicVar) for argument in template.args)
         assert template.args[0] != template.args[1]
+
+    def test_adapt_prolog_goal_rewrites_unifiability_predicates(self) -> None:
+        parsed = parse_swi_query(
+            "?- unifiable(pair(X, X), pair(tea, Y), Unifier), "
+            "unify_with_occurs_check(Z, box(tea)).",
+        )
+
+        answers = solve_all(
+            program(),
+            (
+                parsed.variables["X"],
+                parsed.variables["Y"],
+                parsed.variables["Unifier"],
+                parsed.variables["Z"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        assert answers == [
+            (
+                parsed.variables["X"],
+                parsed.variables["Y"],
+                logic_list([
+                    term("=", parsed.variables["X"], atom("tea")),
+                    term("=", parsed.variables["Y"], atom("tea")),
+                ]),
+                term("box", "tea"),
+            ),
+        ]
 
     def test_adapt_prolog_goal_rewrites_term_hash_predicates(self) -> None:
         parsed = parse_swi_query(

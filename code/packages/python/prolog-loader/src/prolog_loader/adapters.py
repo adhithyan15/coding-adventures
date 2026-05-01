@@ -115,6 +115,8 @@ from logic_builtins import (
     termo_lto,
     throwo,
     trueo,
+    unifiableo,
+    unify_with_occurs_checko,
     univo,
     variant_termo,
     varo,
@@ -390,6 +392,10 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         return argo(*args)
     if name == "=.." and goal.relation.arity == 2:
         return univo(*args)
+    if name == "unifiable" and goal.relation.arity == 3:
+        return unifiableo(*args)
+    if name == "unify_with_occurs_check" and goal.relation.arity == 2:
+        return unify_with_occurs_checko(*args)
     if name == "copy_term" and goal.relation.arity == 2:
         return copytermo(*args)
     if name == "term_variables" and goal.relation.arity == 2:

@@ -198,6 +198,8 @@ __all__ = [
     "throwo",
     "trueo",
     "univo",
+    "unifiableo",
+    "unify_with_occurs_checko",
     "varo",
     "not_variant_termo",
     "subsumes_termo",
@@ -446,6 +448,8 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("throwo", 1),
     ("trueo", 0),
     ("univo", 2),
+    ("unifiableo", 3),
+    ("unify_with_occurs_checko", 2),
     ("varo", 1),
     ("not_variant_termo", 2),
     ("subsumes_termo", 2),
@@ -4676,6 +4680,61 @@ def term_variableso(term_value: object, variables: object) -> GoalExpr:
         )
 
     return native_goal(run, term_value, variables)
+
+
+def unify_with_occurs_checko(left: object, right: object) -> GoalExpr:
+    """Unify two terms using the engine's finite-term occurs check."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        left_term, right_term = args
+        yield from solve_from(program_value, eq(left_term, right_term), state)
+
+    return native_goal(run, left, right)
+
+
+def _unifier_equations(
+    left: Term,
+    right: Term,
+    before: State,
+    after: State,
+) -> list[Term]:
+    """Return first-occurrence equations added by a non-binding unifiability check."""
+
+    equations: list[Term] = []
+    for variable in _term_variables_in_order(term("$unifiable", left, right)):
+        if before.substitution.walk(variable) != variable:
+            continue
+        value = reify(variable, after.substitution)
+        if value != variable:
+            equations.append(term("=", variable, value))
+    return equations
+
+
+def unifiableo(left: object, right: object, unifier: object) -> GoalExpr:
+    """Describe how two terms can unify without binding the source terms."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        left_term, right_term, unifier_target = args
+        unified_state = next(
+            solve_from(program_value, eq(left_term, right_term), state),
+            None,
+        )
+        if unified_state is None:
+            return
+
+        equations = _unifier_equations(
+            _reified(left_term, state),
+            _reified(right_term, state),
+            state,
+            unified_state,
+        )
+        yield from solve_from(
+            program_value,
+            eq(unifier_target, logic_list(equations)),
+            state,
+        )
+
+    return native_goal(run, left, right, unifier)
 
 
 def numbervarso(term_value: object, start: object, end: object) -> GoalExpr:

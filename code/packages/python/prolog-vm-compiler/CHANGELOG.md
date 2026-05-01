@@ -69,6 +69,8 @@
   the VM path for compound-only term reflection.
 - Run Prolog `acyclic_term/1` and `cyclic_term/1` through the VM path for
   source-level term-shape checks.
+- Run Prolog `unifiable/3` and `unify_with_occurs_check/2` through the VM path
+  for explicit finite unification.
 - Run Prolog `term_hash/2` and `term_hash/4` through the VM path for
   deterministic structural term hashes.
 

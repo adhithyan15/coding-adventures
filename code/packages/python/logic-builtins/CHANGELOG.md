@@ -41,6 +41,9 @@ All notable changes to this package will be documented in this file.
   and construction.
 - `acyclic_termo(term)` and `cyclic_termo(term)` for standard finite-term and
   rational-tree shape checks.
+- `unify_with_occurs_checko(left, right)` and
+  `unifiableo(left, right, unifier)` for explicit finite unification and
+  non-binding unifier inspection.
 - `term_hasho(term, hash)` and `term_hash_boundedo(term, depth, range, hash)`
   for deterministic structural term hashes.
 - `current_prolog_flago(name, value)` for enumerating read-only runtime flags

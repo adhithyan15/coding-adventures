@@ -150,6 +150,8 @@ The package includes end-to-end stress tests for:
 - compound reflection with `compound_name_arguments/3` and
   `compound_name_arity/3`
 - term-shape checks with `acyclic_term/1` and `cyclic_term/1`
+- explicit unifiability checks with `unifiable/3` and
+  `unify_with_occurs_check/2`
 - structural term hashing with `term_hash/2` and `term_hash/4`
 - runtime flag introspection and branch-local updates with
   `current_prolog_flag/2` and `set_prolog_flag/2`

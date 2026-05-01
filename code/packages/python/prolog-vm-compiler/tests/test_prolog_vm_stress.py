@@ -181,6 +181,25 @@ class TestPrologVMStress:
         )
         assert answer["Result"] == atom("ok")
 
+    def test_unifiability_predicates_run_through_vm(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            ?- unifiable(pair(X, X), pair(tea, Y), Unifier),
+               unify_with_occurs_check(Z, box(tea)),
+               \\+ unify_with_occurs_check(Bad, box(Bad)).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert len(answers) == 1
+        answer = answers[0].as_dict()
+        assert answer["Unifier"] == logic_list([
+            term("=", answer["X"], atom("tea")),
+            term("=", answer["Y"], atom("tea")),
+        ])
+        assert answer["Z"] == term("box", "tea")
+
     def test_term_variables_runs_through_vm(self) -> None:
         compiled = compile_swi_prolog_source(
             """

@@ -38,6 +38,8 @@ ordinary logic goal expressions.
   construction
 - `argo(index, term, value)`
 - `univo(term, parts)` for Prolog-style `=../2` term decomposition/construction
+- `unify_with_occurs_checko(left, right)` and `unifiableo(left, right, unifier)`
+  for finite unification and non-binding unifiability inspection
 - `copytermo(source, copy)`, `same_termo(left, right)`, and
   `not_same_termo(left, right)`
 - `term_variableso(term, variables)` and `numbervarso(term, start, end)` for
@@ -120,6 +122,8 @@ from logic_builtins import (
     groundo,
     acyclic_termo,
     cyclic_termo,
+    unifiableo,
+    unify_with_occurs_checko,
     ifthenelseo,
     includeo,
     integero,
@@ -436,6 +440,8 @@ and arity, while `compound_name_argumentso` and `compound_name_arityo` provide
 compound-only name/arguments and name/arity reflection. `acyclic_termo` and
 `cyclic_termo` expose standard finite-vs-rational-tree checks; today all
 ordinary engine terms are acyclic because the core term model is immutable.
+`unify_with_occurs_checko` exposes finite unification explicitly, while
+`unifiableo` reports a unifier list without binding the source terms.
 `copytermo` refreshes variables in a copied term, while `term_variableso`
 extracts the unique variables still present after reification, `term_hasho`
 gives variant-aware structural hashes for indexing and memoization, and
