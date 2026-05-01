@@ -442,6 +442,7 @@ members = [
     "twig-lexer",
     "twig-parser",
     "twig-formatter",
+    "twig-document-symbols",
     "twig-semantic-tokens",
     "twig-ir-compiler",
     "lang-runtime-core",
