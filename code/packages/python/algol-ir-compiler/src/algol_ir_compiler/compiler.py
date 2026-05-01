@@ -2509,13 +2509,13 @@ class AlgolIrCompiler:
                 raise CompileError(
                     "string comparison requires two string operands"
                 )
-            if operator.value not in {"=", "!="}:
+            if operator.value not in {"=", "!=", "<>"}:
                 raise CompileError(
                     f"comparison operator {operator.value!r} is not supported "
                     "for strings"
                 )
             dst = self._emit_string_equality(left, right, scope)
-            if operator.value == "!=":
+            if operator.value in {"!=", "<>"}:
                 dst = self._invert_bool(dst)
         elif _BOOLEAN_TYPE in {left_type, right_type}:
             if left_type != _BOOLEAN_TYPE or right_type != _BOOLEAN_TYPE:
@@ -2526,7 +2526,7 @@ class AlgolIrCompiler:
                 self._emit(
                     IrOp.CMP_EQ, IrRegister(dst), IrRegister(left), IrRegister(right)
                 )
-            elif operator.value == "!=":
+            elif operator.value in {"!=", "<>"}:
                 self._emit(
                     IrOp.CMP_NE, IrRegister(dst), IrRegister(left), IrRegister(right)
                 )
@@ -2553,7 +2553,7 @@ class AlgolIrCompiler:
                     IrRegister(left),
                     IrRegister(right),
                 )
-            elif operator.value == "!=":
+            elif operator.value in {"!=", "<>"}:
                 self._emit(
                     IrOp.F64_CMP_NE,
                     IrRegister(dst),
@@ -2597,7 +2597,7 @@ class AlgolIrCompiler:
                 self._emit(
                     IrOp.CMP_EQ, IrRegister(dst), IrRegister(left), IrRegister(right)
                 )
-            elif operator.value == "!=":
+            elif operator.value in {"!=", "<>"}:
                 self._emit(
                     IrOp.CMP_NE, IrRegister(dst), IrRegister(left), IrRegister(right)
                 )
@@ -7149,7 +7149,8 @@ def _switch_selection_indexes(node: ASTNode | None) -> list[ASTNode]:
 
 def _has_comparison(children: list[ASTNode | Token]) -> bool:
     return any(
-        isinstance(child, Token) and child.value in {"=", "!=", "<", "<=", ">", ">="}
+        isinstance(child, Token)
+        and child.value in {"=", "!=", "<>", "<", "<=", ">", ">="}
         for child in children
     )
 

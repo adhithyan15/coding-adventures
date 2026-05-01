@@ -763,6 +763,15 @@ class TestAlgolIrCompiler:
         opcodes = [instr.opcode for instr in result.program.instructions]
         assert IrOp.CMP_NE in opcodes
 
+    def test_compiles_angle_not_equal_comparison(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; if 1 <> 2 then result := 1 else result := 0 end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+        assert IrOp.CMP_NE in opcodes
+
     def test_compiles_nested_block(self) -> None:
         result = compile_algol(
             parse_algol(

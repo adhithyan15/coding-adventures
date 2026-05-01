@@ -31,6 +31,39 @@ class TestAlgolTypeChecker:
         assert result.ok
         assert result.root_scope.children[0].symbols["result"].type_name == "integer"
 
+    def test_accepts_uppercase_keywords(self) -> None:
+        ast = parse_algol("BEGIN INTEGER result; result := 7 END")
+        result = check_algol(ast)
+
+        assert result.ok
+
+    def test_accepts_uppercase_comment(self) -> None:
+        ast = parse_algol("begin COMMENT setup; integer result; result := 7 end")
+        result = check_algol(ast)
+
+        assert result.ok
+
+    def test_accepts_comment_prefixed_identifier(self) -> None:
+        ast = parse_algol("begin integer commentary; commentary := 7 end")
+        result = check_algol(ast)
+
+        assert result.ok
+        assert "commentary" in result.root_scope.children[0].symbols
+
+    def test_accepts_angle_not_equal_operator(self) -> None:
+        ast = parse_algol(
+            "begin integer result; if 1 <> 2 then result := 7 else result := 0 end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+
+    def test_accepts_double_quoted_string_literal(self) -> None:
+        ast = parse_algol('begin string message; message := "Hi" end')
+        result = check_algol(ast)
+
+        assert result.ok
+
     def test_reports_undeclared_identifier(self) -> None:
         ast = parse_algol("begin integer result; result := missing end")
         result = check_algol(ast)

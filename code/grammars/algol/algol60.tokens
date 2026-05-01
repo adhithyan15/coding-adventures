@@ -20,7 +20,7 @@
 #   **  must come before  *   (POWER before STAR)
 #   <=  must come before  <   (LEQ before LT)
 #   >=  must come before  >   (GEQ before GT)
-#   !=  must come before any single-char use of !
+#   != and <> must come before any single-char use of !, <, or >
 #   REAL_LIT must come before INTEGER_LIT (decimal/exponent before plain digits)
 
 # ---------------------------------------------------------------------------
@@ -39,9 +39,10 @@ REAL_LIT    = /[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?|[0-9]+[eE][+-]?[0-9]+/
 # Integer literal: one or more decimal digits, no decimal point, no exponent.
 INTEGER_LIT = /[0-9]+/
 
-# String literal: single-quoted. ALGOL 60 strings have no escape sequences —
-# a single quote cannot appear inside a string literal.
-STRING_LIT  = /'[^']*'/
+# String literal: quoted. ALGOL 60 strings have no escape sequences, so the
+# opening quote cannot appear unescaped inside the literal. Both single and
+# double quotes are accepted as common ASCII representations of string quotes.
+STRING_LIT  = /'[^']*'|"[^"]*"/
 
 # Identifier: letter followed by zero or more letters or digits.
 # No underscore — original ALGOL 60 did not allow it.
@@ -63,10 +64,11 @@ ASSIGN      = ":="
 # ** must come before * so "**" is not lexed as STAR STAR.
 POWER       = "**"
 
-# Relational operators (ASCII for ≤, ≥, ≠)
+# Relational operators (ASCII for ≤, ≥, ≠). Not-equal accepts both the modern
+# C-like spelling and the common ALGOL/Pascal-style angle spelling.
 LEQ         = "<="
 GEQ         = ">="
-NEQ         = "!="
+NEQ         = /!=|<>/
 
 # ---------------------------------------------------------------------------
 # Single-character operators
@@ -172,6 +174,7 @@ skip:
 
   # Comment syntax: the word "comment" followed by any text up to the next ";".
   # Example: comment this is a comment;
-  # The pattern matches "comment" (already consumed as a keyword trigger above)
-  # but the comment skip rule runs first in the skip phase.
-  COMMENT    = /comment[^;]*;/
+  # Skip patterns run before keyword reclassification, so require an identifier
+  # boundary after the case-insensitive keyword to avoid swallowing identifiers
+  # such as "commentary".
+  COMMENT    = /(?i:comment)\b[^;]*;/

@@ -18,6 +18,8 @@ the current lane already supports a substantial ALGOL 60 surface:
 - `own` scalars and arrays with static lifetime
 - arrays of `integer`, `boolean`, `real`, and `string` values with runtime
   bounds and checked element access
+- case-insensitive keywords and comments, `!=` or `<>` not-equal spelling, and
+  single- or double-quoted string literals
 - chained assignment, conditional expressions, tolerant trailing/repeated
   semicolons, numeric runtime failure guards, and
   ALGOL-left-associative exponentiation for integer or real exponents
@@ -39,7 +41,7 @@ the current lane already supports a substantial ALGOL 60 surface:
 - builtin `print(...)` / `output(...)` for integers, booleans, reals, strings,
   and string variables
 
-Within the repository's lowercase ASCII `algol60` grammar, the executable
+Within the repository's ASCII `algol60` grammar, the executable
 declaration, statement, expression, procedure, array, by-name, and designational
 surface is now implemented and covered by golden WASM fixtures. It is not a
 claim of historical whole-environment compatibility with every ALGOL system:

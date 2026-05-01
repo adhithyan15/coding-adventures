@@ -36,6 +36,34 @@ class TestAlgolWasmCompiler:
         result = pack_source("begin integer result; result := 1 + 2 * 3 end")
         assert len(result.binary) > 8
 
+    def test_uppercase_keywords_execute(self) -> None:
+        result = compile_source("BEGIN INTEGER result; result := 7 END")
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_uppercase_comment_is_ignored(self) -> None:
+        result = compile_source("begin COMMENT setup; integer result; result := 7 end")
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_comment_prefixed_identifier_is_not_skipped(self) -> None:
+        result = compile_source(
+            "begin integer result, commentary; commentary := 7; result := commentary end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_angle_not_equal_operator_executes(self) -> None:
+        result = compile_source(
+            "begin integer result; if 1 <> 2 then result := 7 else result := 0 end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_double_quoted_string_literal_writes_stdout(self) -> None:
+        result = compile_source('begin output("Hi") end')
+        captured: list[str] = []
+        runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
+
+        assert runtime.load_and_run(result.binary, "_start", []) == [0]
+        assert "".join(captured) == "Hi"
+
     def test_write_wasm_file(self, tmp_path: Path) -> None:
         out = tmp_path / "answer.wasm"
         result = write_wasm_file("begin integer result; result := 9 end", out)
