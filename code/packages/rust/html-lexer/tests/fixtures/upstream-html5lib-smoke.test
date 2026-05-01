@@ -564,6 +564,42 @@
       ]
     },
     {
+      "description": "data state remaining HTML4 math named character references",
+      "input": "Math symbols: &alefsym;&oline; &alefsymtail &olinebar",
+      "output": [
+        ["Character", "Math symbols: "],
+        ["Character", "\u2135"],
+        ["Character", "\u203E"],
+        ["Character", " "],
+        ["Character", "\u2135"],
+        ["Character", "tail "],
+        ["Character", "\u203E"],
+        ["Character", "bar"]
+      ],
+      "errors": [
+        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 32},
+        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 43}
+      ]
+    },
+    {
+      "description": "attribute remaining HTML4 math named character references",
+      "input": "<math alef=\"&alefsym;\" overline=&oline; literal=&alefsymtail>",
+      "output": [
+        ["StartTag", "math", {"alef": "\u2135", "overline": "\u203E", "literal": "&alefsymtail"}]
+      ]
+    },
+    {
+      "description": "rcdata remaining HTML4 math named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&alefsym;&oline;</title>",
+      "output": [
+        ["Character", "\u2135"],
+        ["Character", "\u203E"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
       "description": "data state numeric character references",
       "input": "Letters: &#65; &#x42; &#X43; &#0;",
       "output": [

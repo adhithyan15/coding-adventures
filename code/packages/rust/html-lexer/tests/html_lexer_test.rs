@@ -2046,6 +2046,85 @@ fn default_html_lexer_supports_seeded_rcdata_html4_symbol_named_character_refere
 }
 
 #[test]
+fn default_html_lexer_supports_remaining_html4_math_named_character_references() {
+    let tokens = lex_html("Math symbols: &alefsym;&oline; &alefsymtail &olinebar").unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Text("Math symbols: \u{2135}\u{203E} \u{2135}tail \u{203E}bar".to_string(),),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_remaining_html4_math_named_character_references_in_attributes() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer
+        .push("<math alef=\"&alefsym;\" overline=&oline; literal=&alefsymtail>")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::StartTag {
+                name: "math".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "alef".to_string(),
+                        value: "\u{2135}".to_string(),
+                    },
+                    Attribute {
+                        name: "overline".to_string(),
+                        value: "\u{203E}".to_string(),
+                    },
+                    Attribute {
+                        name: "literal".to_string(),
+                        value: "&alefsymtail".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| {
+                diagnostic.code == "missing-semicolon-after-character-reference"
+            })
+            .count(),
+        0
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_rcdata_remaining_html4_math_named_character_references() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rcdata").unwrap();
+    lexer.set_last_start_tag("title");
+
+    lexer.push("&alefsym;&oline;</title>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("\u{2135}\u{203E}".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_semicolonless_legacy_named_character_references() {
     let mut lexer = create_html_lexer().unwrap();
 

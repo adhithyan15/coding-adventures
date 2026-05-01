@@ -76,6 +76,8 @@ currently supports:
   current shared entity subset
 - legacy named character references `nbsp`, `copy`, and `reg` in data, RCDATA,
   and attribute values
+- HTML4 math/symbol named character references such as `alefsym`, `oline`,
+  `sum`, and `notin`
 - missing-semicolon recovery for legacy named character references `nbsp`,
   `copy`, and `reg` before delimiters and EOF
 - generic named-character-reference scanning with literal fallback for unknown
