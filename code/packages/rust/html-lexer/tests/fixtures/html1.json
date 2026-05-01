@@ -614,6 +614,36 @@
       "last_start_tag": "title"
     },
     {
+      "id": "html-whatwg-basic-arrow-character-references-data",
+      "description": "WHATWG basic and double arrow aliases resolve in data state",
+      "input": "Arrows:&LeftArrow;&RightArrow;&UpArrow;&DownArrow;&LeftRightArrow;&UpDownArrow;&DoubleLeftArrow;&DoubleRightArrow;&DoubleUpArrow;&DoubleDownArrow;&DoubleLeftRightArrow;&DoubleUpDownArrow;",
+      "tokens": [
+        "Text(data=Arrows:\u2190\u2192\u2191\u2193\u2194\u2195\u21D0\u21D2\u21D1\u21D3\u21D4\u21D5)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-long-and-bar-arrow-character-references-attributes",
+      "description": "WHATWG long, bar, tee, and map arrow aliases resolve inside attribute values",
+      "input": "<a long=\"&LongLeftArrow;&LongRightArrow;&LongLeftRightArrow;&Longleftarrow;&Longrightarrow;&Longleftrightarrow;\" bars=\"&LeftArrowBar;&RightArrowBar;&UpArrowBar;&DownArrowBar;&LeftArrowRightArrow;&RightArrowLeftArrow;&UpArrowDownArrow;&DownArrowUpArrow;&LeftTeeArrow;&RightTeeArrow;&map;&Map;\">",
+      "tokens": [
+        "StartTag(name=a, attributes=[long=\u27F5\u27F6\u27F7\u27F8\u27F9\u27FA, bars=\u21E4\u21E5\u2912\u2913\u21C6\u21C4\u21C5\u21F5\u21A4\u21A6\u21A6\u2905], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-vector-arrow-character-references-rcdata",
+      "description": "Seeded title RCDATA context resolves WHATWG vector and vector-bar arrow aliases",
+      "input": "&LeftVector;&RightVector;&LeftUpVector;&RightUpVector;&LeftDownVector;&RightDownVector;&DownLeftVector;&DownRightVector;&LeftVectorBar;&RightVectorBar;&LeftUpVectorBar;&RightUpVectorBar;&LeftDownVectorBar;&RightDownVectorBar;&DownLeftVectorBar;&DownRightVectorBar;</title>",
+      "tokens": [
+        "Text(data=\u21BC\u21C0\u21BF\u21BE\u21C3\u21C2\u21BD\u21C1\u2952\u2953\u2958\u2954\u2959\u2955\u2956\u2957)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
       "id": "html-semicolonless-legacy-character-references-data",
       "description": "Legacy named character references recover when the semicolon is missing in data state",
       "input": "Legacy&nbsp symbols: &copy/&reg",

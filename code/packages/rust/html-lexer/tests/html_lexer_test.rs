@@ -2462,6 +2462,74 @@ fn default_html_lexer_supports_seeded_rcdata_whatwg_negated_relational_named_cha
 }
 
 #[test]
+fn default_html_lexer_supports_whatwg_basic_arrow_named_character_references() {
+    let tokens = lex_html(
+        "Arrows:&LeftArrow;&RightArrow;&UpArrow;&DownArrow;&LeftRightArrow;&UpDownArrow;&DoubleLeftArrow;&DoubleRightArrow;&DoubleUpArrow;&DoubleDownArrow;&DoubleLeftRightArrow;&DoubleUpDownArrow;",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![Token::Text("Arrows:←→↑↓↔↕⇐⇒⇑⇓⇔⇕".to_string()), Token::Eof,]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_long_and_bar_arrow_named_character_references_in_attributes()
+{
+    let tokens = lex_html(
+        "<a long=\"&LongLeftArrow;&LongRightArrow;&LongLeftRightArrow;&Longleftarrow;&Longrightarrow;&Longleftrightarrow;\" bars=\"&LeftArrowBar;&RightArrowBar;&UpArrowBar;&DownArrowBar;&LeftArrowRightArrow;&RightArrowLeftArrow;&UpArrowDownArrow;&DownArrowUpArrow;&LeftTeeArrow;&RightTeeArrow;&map;&Map;\">",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "long".to_string(),
+                        value: "⟵⟶⟷⟸⟹⟺".to_string(),
+                    },
+                    Attribute {
+                        name: "bars".to_string(),
+                        value: "⇤⇥⤒⤓⇆⇄⇅⇵↤↦↦⤅".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_rcdata_whatwg_vector_arrow_named_character_references() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rcdata").unwrap();
+    lexer.set_last_start_tag("title");
+
+    lexer
+        .push(
+            "&LeftVector;&RightVector;&LeftUpVector;&RightUpVector;&LeftDownVector;&RightDownVector;&DownLeftVector;&DownRightVector;&LeftVectorBar;&RightVectorBar;&LeftUpVectorBar;&RightUpVectorBar;&LeftDownVectorBar;&RightDownVectorBar;&DownLeftVectorBar;&DownRightVectorBar;</title>",
+        )
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("↼⇀↿↾⇃⇂↽⇁⥒⥓⥘⥔⥙⥕⥖⥗".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_semicolonless_legacy_named_character_references() {
     let mut lexer = create_html_lexer().unwrap();
 
