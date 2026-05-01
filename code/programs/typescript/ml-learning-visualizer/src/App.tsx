@@ -386,7 +386,14 @@ export function App() {
             </div>
           </section>
 
-          <LinearNetworkDiagram model={model} lastStep={lastStep} learningRate={learningRate} />
+          <LinearNetworkDiagram
+            model={model}
+            lastStep={lastStep}
+            learningRate={learningRate}
+            lossKind={lossKind}
+            samplePoint={selectedLab.points[0]!}
+            pointCount={selectedLab.points.length}
+          />
         </section>
 
         <aside className="controls metrics" aria-label="Training controls and metrics">

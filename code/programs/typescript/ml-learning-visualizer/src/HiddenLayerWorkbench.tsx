@@ -432,7 +432,8 @@ export function HiddenLayerWorkbench() {
         <HiddenNetworkDiagram
           example={example}
           state={state}
-          selectedInput={example.rows[selectedIndex]!.input}
+          selectedRow={example.rows[selectedIndex]!}
+          selectedIndex={selectedIndex}
           prediction={predictions[selectedIndex]!}
           lastStep={lastStep}
           learningRate={learningRate}
