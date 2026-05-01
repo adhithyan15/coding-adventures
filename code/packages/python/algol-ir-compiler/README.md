@@ -17,10 +17,11 @@ are allocated from the module frame stack, and typed procedures return through
 their procedure-name result slot. Integer and boolean procedure results flow
 through `v1`; real procedure results flow through the WASM backend's dedicated
 f64 result register, `v31`.
-Parameterless typed procedures can also be used by bare name in expression
-positions, following ALGOL's omitted-parentheses call syntax; read-only by-name
-actuals of that form lower through eval thunks so each formal read re-runs the
-procedure.
+Parameterless procedures may be declared and called with explicit empty
+parentheses, and typed procedures can still be used by bare name in expression
+positions, following ALGOL's
+omitted-parentheses call syntax; read-only by-name actuals of that form lower
+through eval thunks so each formal read re-runs the procedure.
 
 Integer arrays lower to frame-stored descriptors backed by a separate bounded
 ALGOL heap segment. The compiler evaluates integer lower/upper bounds once at

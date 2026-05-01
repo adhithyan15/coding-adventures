@@ -100,7 +100,9 @@ switch_list  = desig_expr { COMMA desig_expr } ;
 procedure_decl = [ type ] "procedure" NAME [ formal_params ] SEMICOLON
                  [ value_part ] { spec_part } proc_body ;
 
-formal_params = LPAREN ident_list RPAREN ;
+# Empty parentheses are accepted as a compatibility spelling for parameterless
+# procedures; the report-style spelling omits formal_params entirely.
+formal_params = LPAREN [ ident_list ] RPAREN ;
 
 # The VALUE declaration opts specific parameters into call-by-value semantics.
 # All parameters not listed here are call-by-name: the argument expression is
@@ -166,8 +168,8 @@ left_part    = variable ASSIGN ;
 goto_stmt    = "goto" desig_expr ;
 
 # Procedure call as a statement (return value, if any, is discarded).
-# Calls with no arguments omit the parentheses entirely.
-proc_stmt    = NAME [ LPAREN actual_params RPAREN ] ;
+# No-argument calls may use report-style bare names or explicit empty parens.
+proc_stmt    = NAME [ LPAREN [ actual_params ] RPAREN ] ;
 
 actual_params = expression { COMMA expression } ;
 
@@ -318,7 +320,7 @@ variable     = NAME [ LBRACKET subscripts RBRACKET ] ;
 
 subscripts   = arith_expr { COMMA arith_expr } ;
 
-# A procedure call with arguments. The no-argument form (proc_stmt with no parens)
-# is handled in the statement rules. Here we require parentheses — this form
-# is used when a procedure call appears inside an expression.
-proc_call    = NAME LPAREN actual_params RPAREN ;
+# A procedure call expression. No-argument calls may be written with empty
+# parentheses; bare no-argument typed procedure expressions are handled by
+# semantic analysis when a NAME resolves to a typed procedure.
+proc_call    = NAME LPAREN [ actual_params ] RPAREN ;

@@ -824,6 +824,27 @@ class TestAlgolTypeChecker:
             for reference in result.semantic.references
         )
 
+    def test_accepts_explicit_empty_no_argument_typed_procedure_expression(
+        self,
+    ) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer procedure seven(); begin seven := 7 end; "
+            "result := seven() "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        call = next(
+            call
+            for call in result.semantic.procedure_calls
+            if call.name == "seven" and call.role == "expression"
+        )
+        assert call.argument_count == 0
+        assert call.return_type == "integer"
+
     def test_rejects_bare_typed_procedure_expression_with_required_argument(
         self,
     ) -> None:
@@ -876,6 +897,23 @@ class TestAlgolTypeChecker:
         assert result.ok
         assert result.semantic is not None
         call = result.semantic.procedure_calls[0]
+        assert call.role == "statement"
+        assert call.return_type is None
+
+    def test_accepts_explicit_empty_void_procedure_statement_call(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure mark(); begin result := 6 end; "
+            "mark() "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        call = result.semantic.procedure_calls[0]
+        assert call.name == "mark"
+        assert call.argument_count == 0
         assert call.role == "statement"
         assert call.return_type is None
 

@@ -740,10 +740,27 @@ class TestProcedureCall:
 
     def test_procedure_call_no_args(self) -> None:
         """Procedure call with no arguments (no parentheses)."""
-        # In a real ALGOL program, 'halt' would be a declared procedure.
-        # For parser testing, we just verify it parses as proc_stmt.
-        ast = parse("begin integer x; x := 1 end")
+        ast = parse("begin procedure halt; begin end; halt end")
         assert ast.rule_name == "program"
+        assert find_nodes(ast, "proc_stmt")
+
+    def test_procedure_call_explicit_empty_args(self) -> None:
+        """No-argument statement calls also accept explicit empty parens."""
+        ast = parse("begin procedure halt(); begin end; halt() end")
+        proc_nodes = find_nodes(ast, "proc_stmt")
+
+        assert ast.rule_name == "program"
+        assert len(proc_nodes) == 1
+        assert not find_nodes(proc_nodes[0], "actual_params")
+
+    def test_parameterless_procedure_declaration_explicit_empty_params(self) -> None:
+        """Parameterless declarations also accept explicit empty parens."""
+        ast = parse("begin procedure halt(); begin end; halt end")
+
+        assert ast.rule_name == "program"
+        formal_params = find_nodes(ast, "formal_params")
+        assert len(formal_params) == 1
+        assert not find_nodes(formal_params[0], "ident_list")
 
     def test_procedure_call_with_args(self) -> None:
         """Procedure call with arguments in parentheses."""
@@ -766,6 +783,20 @@ class TestProcedureCall:
             "begin integer n; output(n + 1) end"
         )
         assert ast.rule_name == "program"
+
+    def test_no_argument_procedure_call_expression(self) -> None:
+        """Typed procedure calls can use explicit empty parens in expressions."""
+        ast = parse(
+            "begin integer result; "
+            "integer procedure seven(); begin seven := 7 end; "
+            "result := seven() "
+            "end"
+        )
+
+        assert ast.rule_name == "program"
+        proc_calls = find_nodes(ast, "proc_call")
+        assert len(proc_calls) == 1
+        assert not find_nodes(proc_calls[0], "actual_params")
 
     def test_procedure_call_in_relation_left_operand(self) -> None:
         """Procedure calls remain calls inside arithmetic relation operands."""
