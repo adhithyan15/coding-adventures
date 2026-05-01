@@ -187,6 +187,27 @@ class TestPrologVMStress:
             {"Chosen": atom("first"), "Fallback": atom("none")},
         ]
 
+    def test_exception_control_runs_through_vm(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            risky(tea) :- throw(problem(tea)).
+            safe(Value, Status) :-
+                catch(risky(Value), problem(Caught), Status = recovered(Caught)).
+
+            ?- safe(tea, Status),
+               catch(_Result is _Missing + 1,
+                     error(instantiation_error, _Context),
+                     Arithmetic = recovered).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert len(answers) == 1
+        answer = answers[0].as_dict()
+        assert answer["Status"] == term("recovered", "tea")
+        assert answer["Arithmetic"] == atom("recovered")
+
     def test_call_n_meta_calls_run_through_vm(self) -> None:
         compiled = compile_swi_prolog_source(
             """

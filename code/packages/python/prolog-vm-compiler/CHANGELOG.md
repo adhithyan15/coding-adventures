@@ -41,6 +41,8 @@
   `forall/2`, `bagof/3`, and `setof/3` through the Prolog VM path.
 - Raise structured Prolog runtime errors for source-level arithmetic
   instantiation, type, and zero-divisor evaluation failures.
+- Run Prolog `throw/1` and `catch/3` exception control through the VM path,
+  including recovery from structured arithmetic runtime errors.
 
 ## 0.1.0
 
