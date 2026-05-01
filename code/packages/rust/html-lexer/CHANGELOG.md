@@ -164,6 +164,8 @@ documented in this file.
   phi, pi, rho, sigma, theta, upsilon, digamma, and letter-like aliases.
 - Added a WHATWG set/logic named-reference batch covering set operations,
   membership, subset/superset, square-set, and n-ary logic aliases.
+- Added a WHATWG mathematical alphabet named-reference batch covering
+  open-face (`*opf`), script (`*scr`), and fraktur (`*fr`) aliases.
 - Added a WHATWG operator/shape named-reference batch covering circled
   operators, integrals, products, squares, lozenges, stars, suits, and symbols.
 - Added a WHATWG box-drawing named-reference batch covering double-line,
