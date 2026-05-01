@@ -75,6 +75,7 @@ __all__ = [
     "callo",
     "callableo",
     "calltermo",
+    "catcho",
     "compoundo",
     "compare_termo",
     "copytermo",
@@ -142,6 +143,7 @@ __all__ = [
     "PrologEvaluationError",
     "PrologInstantiationError",
     "PrologRuntimeError",
+    "PrologThrown",
     "PrologTypeError",
     "prolog_geqo",
     "prolog_gto",
@@ -166,6 +168,8 @@ __all__ = [
     "termo_gto",
     "termo_leqo",
     "termo_lto",
+    "term_variableso",
+    "throwo",
     "trueo",
     "univo",
     "varo",
@@ -263,6 +267,18 @@ class PrologEvaluationError(PrologRuntimeError):
         self.evaluation_error = evaluation_error
 
 
+class PrologThrown(PrologRuntimeError):
+    """Raised by ``throwo/1`` to unwind to the nearest ``catcho/3``."""
+
+    term: Term
+    state: State
+
+    def __init__(self, term_value: Term, state: State) -> None:
+        super().__init__("throw", f"uncaught Prolog exception: {term_value}")
+        self.term = term_value
+        self.state = state
+
+
 _DEFAULT_LABELING_OPTIONS = LabelingOptions()
 
 
@@ -286,6 +302,7 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("calltermo", 6),
     ("calltermo", 7),
     ("calltermo", 8),
+    ("catcho", 3),
     ("clauseo", 2),
     ("compare_termo", 3),
     ("compoundo", 1),
@@ -364,6 +381,8 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("termo_gto", 2),
     ("termo_leqo", 2),
     ("termo_lto", 2),
+    ("term_variableso", 2),
+    ("throwo", 1),
     ("trueo", 0),
     ("univo", 2),
     ("varo", 1),
@@ -2409,6 +2428,121 @@ def _goal_term_or_none(goal: GoalExpr) -> Term | None:
         return None
 
 
+def throwo(ball: object) -> GoalExpr:
+    """Throw a Prolog exception term to the nearest enclosing ``catcho/3``."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        (ball_term,) = args
+        raise PrologThrown(_reified(ball_term, state), state)
+        yield state
+
+    return native_goal(run, ball)
+
+
+def _runtime_error_ball(error: PrologRuntimeError) -> Term:
+    """Represent structured runtime errors as catchable Prolog error terms."""
+
+    if isinstance(error, PrologTypeError):
+        formal = term(
+            "type_error",
+            atom(error.expected),
+            error.culprit
+            if isinstance(error.culprit, Atom | Compound | LogicVar | Number | String)
+            else atom("unknown"),
+        )
+    elif isinstance(error, PrologEvaluationError):
+        formal = term("evaluation_error", atom(error.evaluation_error))
+    elif isinstance(error, PrologInstantiationError):
+        formal = atom("instantiation_error")
+    else:
+        formal = atom(error.kind)
+    return term("error", formal, atom("logic_runtime"))
+
+
+def _catch_exception(
+    program_value: Program,
+    state: State,
+    catcher: Term,
+    recovery_goal: GoalExpr,
+    thrown: PrologThrown,
+) -> Iterator[State]:
+    """Run catch recovery when the thrown ball unifies with the catcher."""
+
+    matched = False
+    for matched_state in solve_from(
+        program_value,
+        eq(catcher, thrown.term),
+        thrown.state,
+    ):
+        matched = True
+        yield from solve_from(program_value, recovery_goal, matched_state)
+    if not matched:
+        raise thrown
+
+
+def catcho(goal: object, catcher: object, recovery: object) -> GoalExpr:
+    """Run ``goal`` and recover from matching Prolog exceptions."""
+
+    called_goal = _as_goal(goal)
+    recovery_goal = _as_goal(recovery)
+    goal_term = _goal_term_or_none(called_goal)
+    recovery_term = _goal_term_or_none(recovery_goal)
+
+    if goal_term is not None and recovery_term is not None:
+
+        def run_terms(
+            program_value: Program,
+            state: State,
+            args: NativeArgs,
+        ) -> Iterator[State]:
+            called_goal_term, catcher_term, recovery_goal_term = args
+            try:
+                reified_goal = goal_from_term(_reified(called_goal_term, state))
+                reified_recovery = goal_from_term(_reified(recovery_goal_term, state))
+                yield from solve_from(program_value, reified_goal, state)
+            except PrologThrown as thrown:
+                yield from _catch_exception(
+                    program_value,
+                    state,
+                    catcher_term,
+                    reified_recovery,
+                    thrown,
+                )
+            except PrologRuntimeError as error:
+                yield from _catch_exception(
+                    program_value,
+                    state,
+                    catcher_term,
+                    reified_recovery,
+                    PrologThrown(_runtime_error_ball(error), state),
+                )
+
+        return native_goal(run_terms, goal_term, catcher, recovery_term)
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        (catcher_term,) = args
+        try:
+            yield from solve_from(program_value, called_goal, state)
+        except PrologThrown as thrown:
+            yield from _catch_exception(
+                program_value,
+                state,
+                catcher_term,
+                recovery_goal,
+                thrown,
+            )
+        except PrologRuntimeError as error:
+            yield from _catch_exception(
+                program_value,
+                state,
+                catcher_term,
+                recovery_goal,
+                PrologThrown(_runtime_error_ball(error), state),
+            )
+
+    return native_goal(run, catcher)
+
+
 def forallo(generator: object, test: object) -> GoalExpr:
     """Succeed once when every generated proof satisfies `test` at least once."""
 
@@ -3599,6 +3733,41 @@ def copytermo(source: object, copy: object) -> GoalExpr:
         yield from solve_from(program_value, eq(copy_target, copied_source), copy_state)
 
     return native_goal(run, source, copy)
+
+
+def _term_variables_in_order(term_value: Term) -> tuple[LogicVar, ...]:
+    """Collect unique variables in first left-to-right occurrence order."""
+
+    seen: set[LogicVar] = set()
+    ordered: list[LogicVar] = []
+
+    def visit(current: Term) -> None:
+        if isinstance(current, LogicVar):
+            if current not in seen:
+                seen.add(current)
+                ordered.append(current)
+            return
+        if isinstance(current, Compound):
+            for argument in current.args:
+                visit(argument)
+
+    visit(term_value)
+    return tuple(ordered)
+
+
+def term_variableso(term_value: object, variables: object) -> GoalExpr:
+    """Unify ``variables`` with unique variables in a reified term."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        source_term, variables_target = args
+        ordered_variables = _term_variables_in_order(_reified(source_term, state))
+        yield from solve_from(
+            program_value,
+            eq(variables_target, logic_list(ordered_variables)),
+            state,
+        )
+
+    return native_goal(run, term_value, variables)
 
 
 def same_termo(left: object, right: object) -> GoalExpr:

@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "coding-adventures-algol-wasm-compiler"
 version = "0.1.0"
-description = "Package the first ALGOL 60 compiler subset as WebAssembly"
+description = "Package the Python ALGOL 60 compiler lane as WebAssembly"
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]

@@ -957,6 +957,33 @@ class TestAlgolIrCompiler:
         assert "_fn_algol_call_procedure_i32" in labels
         assert IrOp.AND_IMM in opcodes
 
+    def test_compiles_procedure_parameter_call_with_array_element_actual(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; integer array a[1:1]; "
+                "procedure invoke(p); procedure p; begin p(a[1]) end; "
+                "procedure set(x); integer x; begin x := x + 7 end; "
+                "a[1] := 0; invoke(set); result := a[1] "
+                "end"
+            )
+        )
+        labels = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.LABEL
+        ]
+        calls = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+
+        assert "_fn_algol_call_procedure_i32" in labels
+        assert "_fn_algol_eval_thunk" in labels
+        assert "_fn_algol_store_thunk" in labels
+        assert "_fn_algol_eval_thunk" in calls
+        assert "_fn_algol_store_thunk" in calls
+
     def test_compiles_procedure_parameter_call_with_array_argument(self) -> None:
         result = compile_algol(
             parse_algol(

@@ -100,6 +100,14 @@ All notable changes to this package will be documented in this file.
   oversized untrusted source is rejected before parsing or semantic analysis.
 - Documented and tested host-side WASM instruction budgets for compiled ALGOL
   modules so nonterminating `goto` programs can be capped by embedders.
+- Fixed multi-entry switch-formal dispatch so procedure calls that receive a
+  switch parameter return the selected entry label even when another label
+  formal points at an earlier caller label.
+- Added a full-surface golden fixture that combines `own` scalars and arrays,
+  default-real arrays, nested and single-statement procedures, value/by-name
+  procedure calls, label and switch formals, multiple `for` element forms,
+  parenthesized conditional designational expressions, numeric labels, boolean
+  operators, real arithmetic, and output in one end-to-end WASM program.
 
 ## [0.1.0] - 2026-04-20
 

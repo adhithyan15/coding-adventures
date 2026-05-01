@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/smt-lib-format",
+  "capabilities": [],
+  "justification": "Pure data + algorithms: SMT-LIB v2 textual reader/writer over the constraint-instructions Program type.  No I/O, no solver state, no filesystem/network/process/env access.  Inherits no capabilities from constraint-core or constraint-instructions (both empty)."
+}

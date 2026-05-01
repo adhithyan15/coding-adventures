@@ -39,6 +39,9 @@
   `forall/2`, and `copy_term/2`
 - adapt source-level arithmetic predicates to strict Prolog runtime errors for
   instantiation, type, and zero-divisor evaluation failures
+- adapt Prolog `throw/1` and `catch/3` into the executable exception-control
+  builtin layer
+- adapt Prolog `term_variables/2` into the term-metaprogramming builtin layer
 
 ## 0.1.0
 

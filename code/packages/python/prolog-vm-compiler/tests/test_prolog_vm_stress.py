@@ -130,6 +130,27 @@ class TestPrologVMStress:
         assert run_compiled_prolog_query(identical) == []
         assert run_compiled_prolog_query(equal) == []
 
+    def test_term_variables_runs_through_vm(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            ?- Term = pair(X, box(Y, X), tea),
+               Y = cake,
+               term_variables(Term, Variables).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert len(answers) == 1
+        answer = answers[0].as_dict()
+        assert answer["Term"] == term(
+            "pair",
+            answer["X"],
+            term("box", "cake", answer["X"]),
+            "tea",
+        )
+        assert answer["Variables"] == logic_list([answer["X"]])
+
     def test_dif_delayed_disequality_runs_through_vm(self) -> None:
         compiled = compile_swi_prolog_source(
             """
@@ -186,6 +207,27 @@ class TestPrologVMStress:
         assert [answer.as_dict() for answer in answers] == [
             {"Chosen": atom("first"), "Fallback": atom("none")},
         ]
+
+    def test_exception_control_runs_through_vm(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            risky(tea) :- throw(problem(tea)).
+            safe(Value, Status) :-
+                catch(risky(Value), problem(Caught), Status = recovered(Caught)).
+
+            ?- safe(tea, Status),
+               catch(_Result is _Missing + 1,
+                     error(instantiation_error, _Context),
+                     Arithmetic = recovered).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert len(answers) == 1
+        answer = answers[0].as_dict()
+        assert answer["Status"] == term("recovered", "tea")
+        assert answer["Arithmetic"] == atom("recovered")
 
     def test_call_n_meta_calls_run_through_vm(self) -> None:
         compiled = compile_swi_prolog_source(

@@ -28,6 +28,7 @@ from logic_engine import (
 from logic_builtins import (
     PrologEvaluationError,
     PrologInstantiationError,
+    PrologThrown,
     PrologTypeError,
     __version__,
     abolisho,
@@ -43,6 +44,7 @@ from logic_builtins import (
     callableo,
     callo,
     calltermo,
+    catcho,
     clauseo,
     compare_termo,
     compoundo,
@@ -116,10 +118,12 @@ from logic_builtins import (
     stringo,
     sub,
     succo,
+    term_variableso,
     termo_geqo,
     termo_gto,
     termo_leqo,
     termo_lto,
+    throwo,
     trueo,
     univo,
     varo,
@@ -1410,6 +1414,66 @@ class TestControlBuiltins:
             conj(disj(eq(outer, "left"), eq(outer, "right")), cuto()),
         ) == [atom("left")]
 
+    def test_throwo_unwinds_to_matching_catcho(self) -> None:
+        result = var("Result")
+
+        assert solve_all(
+            program(),
+            result,
+            catcho(throwo("boom"), "boom", eq(result, "caught")),
+        ) == [atom("caught")]
+
+    def test_catcho_preserves_throw_state_for_recovery(self) -> None:
+        ball = var("Ball")
+        flavor = var("Flavor")
+
+        assert solve_all(
+            program(),
+            (ball, flavor),
+            catcho(
+                conj(eq(ball, term("failure", "tea")), throwo(ball)),
+                term("failure", flavor),
+                eq(flavor, "tea"),
+            ),
+        ) == [(term("failure", "tea"), atom("tea"))]
+
+    def test_catcho_rethrows_non_matching_exceptions(self) -> None:
+        marker = var("Marker")
+
+        with pytest.raises(PrologThrown) as thrown:
+            solve_all(
+                program(),
+                marker,
+                catcho(throwo("boom"), "other", eq(marker, "caught")),
+            )
+
+        assert thrown.value.term == atom("boom")
+
+    def test_catcho_leaves_normal_goal_solutions_unchanged(self) -> None:
+        result = var("Result")
+
+        assert solve_all(
+            program(),
+            result,
+            catcho(eq(result, "normal"), "boom", eq(result, "caught")),
+        ) == [atom("normal")]
+
+    def test_catcho_can_recover_from_runtime_errors(self) -> None:
+        marker = var("Marker")
+        context = var("Context")
+        result = var("Result")
+        open_value = var("Open")
+
+        assert solve_all(
+            program(),
+            marker,
+            catcho(
+                prolog_iso(result, add(open_value, 1)),
+                term("error", atom("instantiation_error"), context),
+                eq(marker, "caught"),
+            ),
+        ) == [atom("caught")]
+
     def test_noto_succeeds_when_goal_fails_and_fails_when_goal_succeeds(self) -> None:
         marker = var("Marker")
 
@@ -1802,6 +1866,44 @@ class TestTermMetaprogrammingBuiltins:
                 copytermo(source, copy),
             ),
         ) == [term("box", "tea")]
+
+    def test_term_variableso_collects_reified_unique_variables_in_order(self) -> None:
+        source = var("Source")
+        first = var("First")
+        second = var("Second")
+        variables = var("Variables")
+
+        answers = solve_all(
+            program(),
+            variables,
+            conj(
+                eq(source, term("pair", first, term("box", second, first))),
+                term_variableso(source, variables),
+            ),
+        )
+
+        assert answers == [logic_list([first, second])]
+
+    def test_term_variableso_ignores_ground_bindings(self) -> None:
+        first = var("First")
+        second = var("Second")
+        variables = var("Variables")
+
+        answers = solve_all(
+            program(),
+            variables,
+            conj(
+                eq(first, "tea"),
+                term_variableso(term("pair", first, second), variables),
+            ),
+        )
+
+        assert answers == [logic_list([second])]
+        assert solve_all(
+            program(),
+            variables,
+            term_variableso(term("box", 1), variables),
+        ) == [logic_list([])]
 
     def test_same_termo_checks_strict_identity_without_unifying(self) -> None:
         left = var("Left")

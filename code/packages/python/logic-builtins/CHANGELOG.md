@@ -30,6 +30,10 @@ All notable changes to this package will be documented in this file.
   unification instead of failing merely because terms are still open.
 - source-level Prolog arithmetic error classes plus strict arithmetic goals
   for `is/2`, `=:=/2`, `=\=/2`, `</2`, `=</2`, `>/2`, and `>=/2` adapters.
+- `throwo(ball)` and `catcho(goal, catcher, recovery)` for Prolog-style
+  exception control, including catchable structured runtime errors.
+- `term_variableso(term, variables)` for collecting unique reified variables
+  in first occurrence order.
 
 ### Fixed
 

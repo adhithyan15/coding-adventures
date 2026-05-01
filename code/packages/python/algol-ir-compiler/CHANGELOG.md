@@ -100,6 +100,10 @@ All notable changes to this package will be documented in this file.
 - Added configurable generated-state limits for eval thunks, conditional label
   sets, loop label sets, switch dispatch states, and output helper label sets,
   with targeted `CompileError` diagnostics when lowering would exceed them.
+- Copied every switch-entry value into a stable result register in the
+  switch-formal evaluation helper, so multi-entry switch parameters now return
+  the label selected by the runtime index instead of depending on the last
+  compiled entry register.
 
 ## [0.1.0] - 2026-04-20
 

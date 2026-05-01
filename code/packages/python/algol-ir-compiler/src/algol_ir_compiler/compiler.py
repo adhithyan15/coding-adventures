@@ -1,4 +1,4 @@
-"""Lower the first ALGOL 60 compiler subset into compiler IR."""
+"""Lower the Python ALGOL 60 semantic lane into compiler IR."""
 
 from __future__ import annotations
 
@@ -1442,7 +1442,8 @@ class AlgolIrCompiler:
         entry_scope: _FrameScope,
     ) -> int:
         dispatch_index = self._next_switch_index()
-        result = self._const_reg(0)
+        result = self._fresh_reg()
+        self._emit(IrOp.LOAD_IMM, IrRegister(result), IrImmediate(0))
         end_label = f"switch_value_{dispatch_index}_end"
         self.active_switch_selection_ids.append(selection.switch_id)
         try:
@@ -1465,7 +1466,8 @@ class AlgolIrCompiler:
                     raise CompileError(
                         f"switch {selection.name!r} entry {entry_index} is missing"
                     )
-                result = self._compile_designational_value(entry, entry_scope)
+                entry_value = self._compile_designational_value(entry, entry_scope)
+                self._copy_reg(dst=result, src=entry_value)
                 self._emit(IrOp.JUMP, IrLabel(end_label))
                 self._label(next_label)
         finally:

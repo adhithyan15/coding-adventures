@@ -1,17 +1,17 @@
 # algol-type-checker
 
-Type checker for the first ALGOL 60 compiler subset.
+Type checker for the Python ALGOL 60 compiler lane.
 
 This package consumes the generic AST from `algol-parser` and validates the
-structured integer subset described by `code/specs/PL03-algol60-wasm-compiler.md`.
-It currently supports scalar declarations, assignments, arithmetic,
-comparisons, boolean conditions, nested blocks, `if` statements,
-`for ... step ... until ... do` loops, value/by-name procedures, and
-descriptor metadata for typed arrays with integer bounds. Direct labels and
-direct local `goto`/`go to` statements are accepted within one active ALGOL frame, as
-are direct nonlocal block `goto` statements that stay inside the same lowered
-function. Local switch declarations, switch selections, and conditional
-designational `goto` forms are also supported.
+semantic model described by `code/specs/PL04-algol60-full-wasm-runtime.md`.
+It supports scalar declarations, assignments, arithmetic, comparisons, boolean
+conditions, nested blocks, `if` statements, `for` loops with simple, `while`,
+and `step`/`until` elements, value/by-name procedures, and descriptor metadata
+for typed arrays with runtime bounds. Direct labels and direct local
+`goto`/`go to` statements are accepted within one active ALGOL frame, as are
+direct nonlocal block `goto` statements that stay inside the same lowered
+function. Switch declarations, switch selections, and conditional designational
+`goto` forms are also supported.
 
 The expression checker also accepts chained assignments, ALGOL conditional
 expressions, tolerant trailing/repeated semicolons from the parser, and
