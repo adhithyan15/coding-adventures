@@ -159,6 +159,28 @@ class TestPrologVMStress:
             {"Result": atom("ok")},
         ]
 
+    def test_acyclic_and_cyclic_term_predicates_run_through_vm(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            ?- Term = pair(X, box(Y, X), tea),
+               acyclic_term(Term),
+               \\+ cyclic_term(Term),
+               Result = ok.
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert len(answers) == 1
+        answer = answers[0].as_dict()
+        assert answer["Term"] == term(
+            "pair",
+            answer["X"],
+            term("box", answer["Y"], answer["X"]),
+            "tea",
+        )
+        assert answer["Result"] == atom("ok")
+
     def test_term_variables_runs_through_vm(self) -> None:
         compiled = compile_swi_prolog_source(
             """

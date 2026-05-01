@@ -39,6 +39,8 @@ All notable changes to this package will be documented in this file.
 - `compound_name_argumentso(term, name, arguments)` and
   `compound_name_arityo(term, name, arity)` for compound-only term reflection
   and construction.
+- `acyclic_termo(term)` and `cyclic_termo(term)` for standard finite-term and
+  rational-tree shape checks.
 - `term_hasho(term, hash)` and `term_hash_boundedo(term, depth, range, hash)`
   for deterministic structural term hashes.
 - `current_prolog_flago(name, value)` for enumerating read-only runtime flags

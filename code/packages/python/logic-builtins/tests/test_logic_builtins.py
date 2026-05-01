@@ -33,6 +33,7 @@ from logic_builtins import (
     PrologTypeError,
     __version__,
     abolisho,
+    acyclic_termo,
     add,
     all_differento,
     argo,
@@ -63,6 +64,7 @@ from logic_builtins import (
     current_predicateo,
     current_prolog_flago,
     cuto,
+    cyclic_termo,
     difo,
     div,
     dynamico,
@@ -2057,6 +2059,20 @@ class TestTermMetaprogrammingBuiltins:
             solve_all(program(), end, numbervarso(term("box", var("X")), 1.5, end))
             == []
         )
+
+    def test_acyclic_and_cyclic_term_predicates_classify_finite_terms(self) -> None:
+        value = var("Value")
+        result = var("Result")
+
+        assert solve_all(program(), result, acyclic_termo(term("box", value))) == [
+            result,
+        ]
+        assert solve_all(
+            program(),
+            result,
+            conj(eq(value, "tea"), acyclic_termo(term("pair", value, value))),
+        ) == [result]
+        assert solve_all(program(), result, cyclic_termo(term("box", value))) == []
 
     def test_term_hasho_hashes_variants_alike_but_preserves_variable_shape(
         self,

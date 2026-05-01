@@ -67,6 +67,8 @@
   rendering through the VM path.
 - Run Prolog `compound_name_arguments/3` and `compound_name_arity/3` through
   the VM path for compound-only term reflection.
+- Run Prolog `acyclic_term/1` and `cyclic_term/1` through the VM path for
+  source-level term-shape checks.
 - Run Prolog `term_hash/2` and `term_hash/4` through the VM path for
   deterministic structural term hashes.
 

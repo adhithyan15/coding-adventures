@@ -811,6 +811,8 @@ class TestPrologGoalAdapter:
             relation("var", 1)(atom("X")),
             relation("nonvar", 1)(atom("x")),
             relation("ground", 1)(atom("x")),
+            relation("acyclic_term", 1)(term("box", atom("tea"))),
+            relation("cyclic_term", 1)(term("box", atom("tea"))),
             relation("atom", 1)(atom("x")),
             relation("atomic", 1)(atom("x")),
             relation("integer", 1)(1),
