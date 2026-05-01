@@ -118,6 +118,7 @@ from logic_builtins import (
     stringo,
     sub,
     succo,
+    term_variableso,
     termo_geqo,
     termo_gto,
     termo_leqo,
@@ -1865,6 +1866,44 @@ class TestTermMetaprogrammingBuiltins:
                 copytermo(source, copy),
             ),
         ) == [term("box", "tea")]
+
+    def test_term_variableso_collects_reified_unique_variables_in_order(self) -> None:
+        source = var("Source")
+        first = var("First")
+        second = var("Second")
+        variables = var("Variables")
+
+        answers = solve_all(
+            program(),
+            variables,
+            conj(
+                eq(source, term("pair", first, term("box", second, first))),
+                term_variableso(source, variables),
+            ),
+        )
+
+        assert answers == [logic_list([first, second])]
+
+    def test_term_variableso_ignores_ground_bindings(self) -> None:
+        first = var("First")
+        second = var("Second")
+        variables = var("Variables")
+
+        answers = solve_all(
+            program(),
+            variables,
+            conj(
+                eq(first, "tea"),
+                term_variableso(term("pair", first, second), variables),
+            ),
+        )
+
+        assert answers == [logic_list([second])]
+        assert solve_all(
+            program(),
+            variables,
+            term_variableso(term("box", 1), variables),
+        ) == [logic_list([])]
 
     def test_same_termo_checks_strict_identity_without_unifying(self) -> None:
         left = var("Left")

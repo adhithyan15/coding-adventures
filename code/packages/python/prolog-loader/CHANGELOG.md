@@ -41,6 +41,7 @@
   instantiation, type, and zero-divisor evaluation failures
 - adapt Prolog `throw/1` and `catch/3` into the executable exception-control
   builtin layer
+- adapt Prolog `term_variables/2` into the term-metaprogramming builtin layer
 
 ## 0.1.0
 
