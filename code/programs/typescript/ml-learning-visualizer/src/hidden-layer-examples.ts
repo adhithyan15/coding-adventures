@@ -1,13 +1,16 @@
-import {
-  createSeededParameters,
-  trainOneEpochTwoLayer,
-  traceExampleTwoLayer,
-  type ExampleTrace,
-  type MatrixData,
-  type TwoLayerParameters,
-  type TwoLayerTrainingStep,
+import type {
+  ExampleTrace,
+  MatrixData,
 } from "coding-adventures-two-layer-network/src/index";
-import { predictTwoLayerWithVm } from "./neural-vm.js";
+import {
+  createSeededLayeredParameters,
+  hiddenLayerCount,
+  trainOneEpochLayered,
+  traceExampleLayered,
+  type LayeredParameters,
+  type LayeredTrainingStep,
+} from "./layered-network.js";
+import { predictLayeredWithVm } from "./neural-vm.js";
 
 export type HiddenLayerChartKind = "curve" | "surface" | "table";
 
@@ -28,6 +31,9 @@ export interface HiddenLayerExample {
   outputLabel: string;
   rows: HiddenLayerExampleRow[];
   hiddenCount: number;
+  defaultHiddenLayerCount: number;
+  hiddenLayerMin: number;
+  hiddenLayerMax: number;
   initialScale: number;
   seed: number;
   defaultLearningRate: number;
@@ -38,14 +44,15 @@ export interface HiddenLayerExample {
 }
 
 export interface HiddenLayerModelState {
-  parameters: TwoLayerParameters;
+  parameters: LayeredParameters;
   epoch: number;
+  hiddenLayerCount: number;
 }
 
 export interface HiddenLayerStepResult {
   previousState: HiddenLayerModelState;
   state: HiddenLayerModelState;
-  step: TwoLayerTrainingStep;
+  step: LayeredTrainingStep;
   loss: number;
   mae: number;
 }
@@ -56,9 +63,24 @@ export interface HiddenLayerHistoryPoint {
   mae: number;
 }
 
-function makeExample(args: Omit<HiddenLayerExample, "learningRateMin" | "learningRateMax" | "learningRateStep">): HiddenLayerExample {
+type HiddenLayerExampleArgs =
+  Omit<
+    HiddenLayerExample,
+    | "defaultHiddenLayerCount"
+    | "hiddenLayerMin"
+    | "hiddenLayerMax"
+    | "learningRateMin"
+    | "learningRateMax"
+    | "learningRateStep"
+  >
+  & Partial<Pick<HiddenLayerExample, "defaultHiddenLayerCount" | "hiddenLayerMin" | "hiddenLayerMax">>;
+
+function makeExample(args: HiddenLayerExampleArgs): HiddenLayerExample {
   return {
     ...args,
+    defaultHiddenLayerCount: args.defaultHiddenLayerCount ?? 1,
+    hiddenLayerMin: args.hiddenLayerMin ?? 1,
+    hiddenLayerMax: args.hiddenLayerMax ?? 4,
     learningRateMin: args.defaultLearningRate / 20,
     learningRateMax: args.defaultLearningRate * 8,
     learningRateStep: args.defaultLearningRate / 20,
@@ -77,12 +99,21 @@ export function exampleTargets(example: HiddenLayerExample): MatrixData {
   return targetRows(example);
 }
 
-export function createInitialHiddenState(example: HiddenLayerExample): HiddenLayerModelState {
+export function createInitialHiddenState(
+  example: HiddenLayerExample,
+  hiddenLayers = example.defaultHiddenLayerCount,
+): HiddenLayerModelState {
+  const hiddenLayerTotal = Math.max(
+    example.hiddenLayerMin,
+    Math.min(example.hiddenLayerMax, Math.round(hiddenLayers)),
+  );
   return {
     epoch: 0,
-    parameters: createSeededParameters(
+    hiddenLayerCount: hiddenLayerTotal,
+    parameters: createSeededLayeredParameters(
       example.inputLabels.length,
       example.hiddenCount,
+      hiddenLayerTotal,
       1,
       example.seed,
       example.initialScale,
@@ -91,7 +122,7 @@ export function createInitialHiddenState(example: HiddenLayerExample): HiddenLay
 }
 
 export function predictHidden(example: HiddenLayerExample, state: HiddenLayerModelState): number[] {
-  return predictTwoLayerWithVm(exampleInputs(example), state.parameters, {
+  return predictLayeredWithVm(exampleInputs(example), state.parameters, {
     inputNames: example.inputLabels,
     outputNames: [example.outputLabel],
   }).predictions.map((row) => row[0]!);
@@ -125,7 +156,7 @@ export function trainHiddenStep(
   state: HiddenLayerModelState,
   learningRate: number,
 ): HiddenLayerStepResult {
-  const step = trainOneEpochTwoLayer(
+  const step = trainOneEpochLayered(
     exampleInputs(example),
     targetRows(example),
     state.parameters,
@@ -133,6 +164,7 @@ export function trainHiddenStep(
   );
   const nextState = {
     epoch: state.epoch + 1,
+    hiddenLayerCount: hiddenLayerCount(step.nextParameters),
     parameters: step.nextParameters,
   };
 
@@ -167,7 +199,7 @@ export function traceHiddenExample(
   rowIndex: number,
 ): ExampleTrace {
   return {
-    ...traceExampleTwoLayer(
+    ...traceExampleLayered(
       [example.rows[rowIndex]!.input],
       state.parameters,
       0,

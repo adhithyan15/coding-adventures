@@ -12,6 +12,7 @@ import type {
   MatrixData,
   TwoLayerParameters,
 } from "coding-adventures-two-layer-network/src/index";
+import type { LayeredParameters } from "./layered-network.js";
 
 export interface LinearGraphParameters {
   readonly weight: number;
@@ -28,6 +29,10 @@ export interface LinearVmRun extends VmRunMetadata {
 }
 
 export interface TwoLayerVmRun extends VmRunMetadata {
+  readonly predictions: MatrixData;
+}
+
+export interface LayeredVmRun extends VmRunMetadata {
   readonly predictions: MatrixData;
 }
 
@@ -97,6 +102,60 @@ export function predictTwoLayerWithVm(
         outputNames,
       },
     ],
+  });
+  const bytecode = compileNeuralNetworkToBytecode(network);
+  const matrixPlan = compileBytecodeToMatrixPlan(bytecode);
+  const matrixInputs = Object.fromEntries(
+    inputNames.map((name, inputIndex) => [
+      name,
+      inputs.map((row) => row[inputIndex] ?? 0),
+    ]),
+  );
+  const result = runNeuralMatrixForward(matrixPlan, matrixInputs);
+  const predictions = inputs.map((_, rowIndex) => (
+    outputNames.map((name) => result.outputs[name]?.[rowIndex] ?? 0)
+  ));
+
+  return {
+    predictions,
+    bytecodeInstructionCount: bytecode.functions[0]?.instructions.length ?? 0,
+    matrixInstructionCount: matrixPlan.instructions.length,
+  };
+}
+
+export function predictLayeredWithVm(
+  inputs: MatrixData,
+  parameters: LayeredParameters,
+  options: {
+    readonly inputNames?: readonly string[];
+    readonly outputNames?: readonly string[];
+  } = {},
+): LayeredVmRun {
+  const firstLayer = parameters.layers[0];
+  const lastLayer = parameters.layers[parameters.layers.length - 1];
+  if (firstLayer === undefined || lastLayer === undefined) {
+    throw new Error("layered VM prediction requires at least one layer");
+  }
+  const inputCount = inputs[0]?.length ?? firstLayer.weights.length;
+  const outputCount = lastLayer.biases.length;
+  const inputNames = options.inputNames ?? Array.from(
+    { length: inputCount },
+    (_, index) => `input${index}`,
+  );
+  const outputNames = options.outputNames ?? Array.from(
+    { length: outputCount },
+    (_, index) => (outputCount === 1 ? "prediction" : `output${index}`),
+  );
+  const network = createFeedForwardNetwork({
+    name: "ml-learning-layered-visualizer",
+    inputNames,
+    layers: parameters.layers.map((layer, layerIndex) => ({
+      name: layer.name,
+      weights: layer.weights,
+      biases: layer.biases,
+      activation: toGraphActivation(layer.activation),
+      outputNames: layerIndex === parameters.layers.length - 1 ? outputNames : undefined,
+    })),
   });
   const bytecode = compileNeuralNetworkToBytecode(network);
   const matrixPlan = compileBytecodeToMatrixPlan(bytecode);

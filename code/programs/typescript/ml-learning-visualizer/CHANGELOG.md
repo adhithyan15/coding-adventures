@@ -16,6 +16,8 @@ All notable changes to this package will be documented in this file.
   loss feedback folds into a lower update loop instead of crossing the graph.
 - Fixed hidden-layer example switching so each selected example resets the
   model state before the neural graph VM sees the new input shape.
+- Added a hidden-layer depth slider for the neural examples so the same
+  dataset can be retrained with deeper feed-forward networks.
 
 ## [0.1.0] - 2026-03-25
 

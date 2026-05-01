@@ -13,7 +13,8 @@ import {
   type HiddenLayerModelState,
   type HiddenLayerStepResult,
 } from "./hidden-layer-examples.js";
-import { predictTwoLayerWithVm } from "./neural-vm.js";
+import { gradientShape } from "./layered-network.js";
+import { predictLayeredWithVm } from "./neural-vm.js";
 import { HiddenNetworkDiagram } from "./NetworkDiagram.js";
 
 interface HiddenChartFrame {
@@ -58,6 +59,10 @@ function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
 }
 
+function hiddenLayerLabel(count: number): string {
+  return `${count} hidden layer${count === 1 ? "" : "s"}`;
+}
+
 function xScale(value: number, chart: HiddenChartFrame): number {
   const width = chart.width - chart.padLeft - chart.padRight;
   return chart.padLeft + ((value - chart.xMin) / (chart.xMax - chart.xMin)) * width;
@@ -92,7 +97,7 @@ function makeCurvePath(example: HiddenLayerExample, state: HiddenLayerModelState
     const x = CURVE_CHART.xMin + (index / 120) * (CURVE_CHART.xMax - CURVE_CHART.xMin);
     return x;
   });
-  const predictions = predictTwoLayerWithVm(
+  const predictions = predictLayeredWithVm(
     samples.map((x) => [x]),
     state.parameters,
     {
@@ -136,7 +141,7 @@ function makeSurfaceCells(example: HiddenLayerExample, state: HiddenLayerModelSt
     }
   }
 
-  const predictions = predictTwoLayerWithVm(inputs, state.parameters, {
+  const predictions = predictLayeredWithVm(inputs, state.parameters, {
     inputNames: example.inputLabels,
     outputNames: [example.outputLabel],
   }).predictions;
@@ -292,6 +297,7 @@ export function HiddenLayerWorkbench() {
   const [lastStep, setLastStep] = useState<HiddenLayerStepResult | null>(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
+  const hiddenLayerCount = state.hiddenLayerCount;
 
   useEffect(() => {
     const initial = createInitialHiddenState(example);
@@ -307,6 +313,7 @@ export function HiddenLayerWorkbench() {
   const loss = useMemo(() => hiddenLoss(example, state), [example, state]);
   const mae = useMemo(() => hiddenMeanAbsoluteError(example, state), [example, state]);
   const trace = useMemo(() => traceHiddenExample(example, state, selectedIndex), [example, selectedIndex, state]);
+  const outputGradient = lastStep?.step.weightGradients[lastStep.step.weightGradients.length - 1];
 
   function record(result: HiddenLayerStepResult): void {
     setState(result.state);
@@ -327,7 +334,7 @@ export function HiddenLayerWorkbench() {
   }
 
   function reset(): void {
-    const initial = createInitialHiddenState(example);
+    const initial = createInitialHiddenState(example, hiddenLayerCount);
     setState(initial);
     setHistory([hiddenHistoryPoint(example, initial)]);
     setLastStep(null);
@@ -340,6 +347,19 @@ export function HiddenLayerWorkbench() {
     setLearningRate(nextExample.defaultLearningRate);
     setState(initial);
     setHistory([hiddenHistoryPoint(nextExample, initial)]);
+    setLastStep(null);
+    setSelectedIndex(0);
+    setIsRunning(false);
+  }
+
+  function changeHiddenLayerCount(value: number): void {
+    const nextCount = Math.max(
+      example.hiddenLayerMin,
+      Math.min(example.hiddenLayerMax, Math.round(value)),
+    );
+    const initial = createInitialHiddenState(example, nextCount);
+    setState(initial);
+    setHistory([hiddenHistoryPoint(example, initial)]);
     setLastStep(null);
     setSelectedIndex(0);
     setIsRunning(false);
@@ -396,7 +416,7 @@ export function HiddenLayerWorkbench() {
             <h2>{example.title}</h2>
             <p>{example.summary}</p>
           </div>
-          <div className="lab-chip">{example.hiddenCount} hidden</div>
+          <div className="lab-chip">{hiddenLayerCount} layers / {example.hiddenCount} neurons</div>
         </div>
 
         <section className="chart-panel chart-panel--hidden" aria-label="Hidden-layer chart">
@@ -427,16 +447,18 @@ export function HiddenLayerWorkbench() {
             <strong>{formatNumber(predictions[selectedIndex]!, 3)} / {formatNumber(example.rows[selectedIndex]!.target, 3)}</strong>
           </div>
           <div className="hidden-neuron-grid">
-            {trace.layers[0]!.neurons.map((neuron, index) => (
-              <div className="neuron-tile" key={neuron.neuron}>
-                <span>h{index + 1}</span>
-                <strong>{formatNumber(neuron.output, 3)}</strong>
-                <i style={{ width: `${clamp(neuron.output, 0, 1) * 100}%` }} />
-              </div>
-            ))}
+            {trace.layers
+              .filter((layer) => layer.layer.startsWith("hidden"))
+              .flatMap((layer, layerIndex) => layer.neurons.map((neuron, neuronIndex) => (
+                <div className="neuron-tile" key={neuron.neuron}>
+                  <span>h{layerIndex + 1}.{neuronIndex + 1}</span>
+                  <strong>{formatNumber(neuron.output, 3)}</strong>
+                  <i style={{ width: `${clamp(neuron.output, 0, 1) * 100}%` }} />
+                </div>
+              )))}
           </div>
           <div className="trace-equation">
-            <code>{example.inputLabels.join(", ")} {"->"} hidden[{example.hiddenCount}] {"->"} {example.outputLabel}</code>
+            <code>{example.inputLabels.join(", ")} {"->"} {hiddenLayerCount} x hidden[{example.hiddenCount}] {"->"} {example.outputLabel}</code>
           </div>
         </section>
 
@@ -452,6 +474,26 @@ export function HiddenLayerWorkbench() {
       </section>
 
       <aside className="controls metrics" aria-label="Hidden-layer controls">
+        <label className="field">
+          <span>Hidden layers</span>
+          <input
+            type="range"
+            min={example.hiddenLayerMin}
+            max={example.hiddenLayerMax}
+            step="1"
+            value={hiddenLayerCount}
+            onChange={(event) => changeHiddenLayerCount(Number(event.target.value))}
+          />
+          <input
+            type="number"
+            min={example.hiddenLayerMin}
+            max={example.hiddenLayerMax}
+            step="1"
+            value={hiddenLayerCount}
+            onChange={(event) => changeHiddenLayerCount(Number(event.target.value))}
+          />
+        </label>
+
         <label className="field">
           <span>Learning rate</span>
           <input
@@ -514,8 +556,9 @@ export function HiddenLayerWorkbench() {
 
         <div className="gradients">
           <span>Last gradient shape</span>
-          <code>input-hidden {lastStep === null ? "0x0" : `${lastStep.step.inputToHiddenWeightGradients.length}x${lastStep.step.inputToHiddenWeightGradients[0]!.length}`}</code>
-          <code>hidden-output {lastStep === null ? "0x0" : `${lastStep.step.hiddenToOutputWeightGradients.length}x${lastStep.step.hiddenToOutputWeightGradients[0]!.length}`}</code>
+          <code>{hiddenLayerLabel(hiddenLayerCount)}</code>
+          <code>input-hidden {gradientShape(lastStep?.step.weightGradients[0])}</code>
+          <code>hidden-output {gradientShape(outputGradient)}</code>
         </div>
 
         <div className="lesson">
