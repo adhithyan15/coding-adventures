@@ -1326,6 +1326,36 @@
         "EndTag(name=title)",
         "EOF"
       ]
+    },
+    {
+      "id": "html-whatwg-core-cyrillic-character-references-data",
+      "description": "WHATWG core Cyrillic named references decode in data state",
+      "input": "Cyrillic:&Acy;&Bcy;&Vcy;&Gcy;&Dcy;&IEcy;&IOcy;&ZHcy;&Zcy;&Icy;&Jcy;&Kcy;&Lcy;&Mcy;&Ncy;&Ocy;&Pcy;&Rcy;&Scy;&Tcy;&Ucy;&Fcy;&KHcy;&TScy;&CHcy;&SHcy;&SHCHcy;&HARDcy;&Ycy;&SOFTcy;&Ecy;&YUcy;&YAcy;&acy;&bcy;&vcy;&gcy;&dcy;&iecy;&iocy;&zhcy;&zcy;&icy;&jcy;&kcy;&lcy;&mcy;&ncy;&ocy;&pcy;&rcy;&scy;&tcy;&ucy;&fcy;&khcy;&tscy;&chcy;&shcy;&shchcy;&hardcy;&ycy;&softcy;&ecy;&yucy;&yacy;",
+      "tokens": [
+        "Text(data=Cyrillic:АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-extended-cyrillic-character-references-attributes",
+      "description": "WHATWG extended Cyrillic named references decode in attributes",
+      "input": "<span upper=\"&DJcy;&DScy;&DZcy;&GJcy;&Iukcy;&Jsercy;&Jukcy;&KJcy;&LJcy;&NJcy;&TSHcy;&Ubrcy;&YIcy;\" lower=\"&djcy;&dscy;&dzcy;&gjcy;&iukcy;&jsercy;&jukcy;&kjcy;&ljcy;&njcy;&tshcy;&ubrcy;&yicy;\">",
+      "tokens": [
+        "StartTag(name=span, attributes=[upper=ЂЅЏЃІЈЄЌЉЊЋЎЇ, lower=ђѕџѓіјєќљњћўї], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-cyrillic-character-references-rcdata",
+      "description": "WHATWG Cyrillic named references decode in RCDATA",
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title",
+      "input": "&Acy;&IEcy;&ZHcy;&SHCHcy;&SOFTcy;&YAcy;&acy;&iecy;&zhcy;&shchcy;&softcy;&yacy;&DJcy;&TSHcy;&Ubrcy;&YIcy;&djcy;&tshcy;&ubrcy;&yicy;</title>",
+      "tokens": [
+        "Text(data=АЕЖЩЬЯаежщьяЂЋЎЇђћўї)",
+        "EndTag(name=title)",
+        "EOF"
+      ]
     }
   ]
 }

@@ -166,6 +166,8 @@ documented in this file.
   membership, subset/superset, square-set, and n-ary logic aliases.
 - Added a WHATWG mathematical alphabet named-reference batch covering
   open-face (`*opf`), script (`*scr`), and fraktur (`*fr`) aliases.
+- Added a WHATWG Cyrillic named-reference batch covering core and extended
+  uppercase/lowercase `*cy` aliases.
 - Added a WHATWG operator/shape named-reference batch covering circled
   operators, integrals, products, squares, lozenges, stars, suits, and symbols.
 - Added a WHATWG box-drawing named-reference batch covering double-line,

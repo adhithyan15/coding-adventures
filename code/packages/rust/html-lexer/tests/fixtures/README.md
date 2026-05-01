@@ -108,6 +108,8 @@ currently supports:
   macron, breve, ogonek, caron, cedilla, circumflex, dot, ring, and tilde forms
 - WHATWG mathematical alphabet named character references, including open-face,
   script, and fraktur uppercase/lowercase aliases
+- WHATWG Cyrillic named character references, including core and extended
+  uppercase/lowercase aliases
 - missing-semicolon recovery for legacy named character references `nbsp`,
   `copy`, and `reg` before delimiters and EOF
 - generic named-character-reference scanning with literal fallback for unknown
