@@ -582,6 +582,56 @@
       ]
     },
     {
+      "description": "data state WHATWG equality and tilde named character references",
+      "input": "Relations:&Equal;&EqualTilde;&Tilde;&TildeEqual;&TildeFullEqual;&TildeTilde;&NotEqual;&NotEqualTilde;&NotTilde;&NotTildeEqual;&NotTildeFullEqual;&NotTildeTilde;",
+      "output": [
+        ["Character", "Relations:"],
+        ["Character", "\u2A75"],
+        ["Character", "\u2242"],
+        ["Character", "\u223C"],
+        ["Character", "\u2243"],
+        ["Character", "\u2245"],
+        ["Character", "\u2248"],
+        ["Character", "\u2260"],
+        ["Character", "\u2242\u0338"],
+        ["Character", "\u2241"],
+        ["Character", "\u2244"],
+        ["Character", "\u2247"],
+        ["Character", "\u2249"]
+      ]
+    },
+    {
+      "description": "attribute WHATWG greater and less named character references",
+      "input": "<math cmp=\"&GreaterEqual;&GreaterFullEqual;&GreaterGreater;&GreaterLess;&GreaterSlantEqual;&GreaterTilde;\" inv=\"&LessEqualGreater;&LessFullEqual;&LessGreater;&LessLess;&LessSlantEqual;&LessTilde;\">",
+      "output": [
+        ["StartTag", "math", {"cmp": "\u2265\u2267\u2AA2\u2277\u2A7E\u2273", "inv": "\u22DA\u2266\u2276\u2AA1\u2A7D\u2272"}]
+      ]
+    },
+    {
+      "description": "rcdata WHATWG negated relational named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&NotGreater;&NotGreaterEqual;&NotGreaterFullEqual;&NotGreaterGreater;&NotGreaterLess;&NotGreaterSlantEqual;&NotGreaterTilde;&NotLess;&NotLessEqual;&NotLessGreater;&NotLessLess;&NotLessSlantEqual;&NotLessTilde;&NotNestedGreaterGreater;&NotNestedLessLess;</title>",
+      "output": [
+        ["Character", "\u226F"],
+        ["Character", "\u2271"],
+        ["Character", "\u2267\u0338"],
+        ["Character", "\u226B\u0338"],
+        ["Character", "\u2279"],
+        ["Character", "\u2A7E\u0338"],
+        ["Character", "\u2275"],
+        ["Character", "\u226E"],
+        ["Character", "\u2270"],
+        ["Character", "\u2278"],
+        ["Character", "\u226A\u0338"],
+        ["Character", "\u2A7D\u0338"],
+        ["Character", "\u2274"],
+        ["Character", "\u2AA2\u0338"],
+        ["Character", "\u2AA1\u0338"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
       "description": "data state legacy named character references missing semicolons",
       "input": "Legacy&nbsp symbols: &copy/&reg",
       "output": [

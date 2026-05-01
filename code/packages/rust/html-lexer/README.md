@@ -28,7 +28,9 @@ classic Latin-1 entity set, and the HTML4 symbol/math references including
 `Agrave` and `agrave` remain distinct. It also includes a growing WHATWG
 named-reference slice for spacing, invisible operators, punctuation aliases,
 and math constants such as `Tab`, `NewLine`, `NoBreak`, `InvisibleTimes`,
-`OpenCurlyQuote`, and `DifferentialD`.
+`OpenCurlyQuote`, and `DifferentialD`. The same static table now covers a
+focused relation/operator slice including equality, tilde, greater-than,
+less-than, and negated relation aliases with combining-overlay replacements.
 Named character reference scanning now follows the longest-prefix shape of the
 HTML tokenizer: text and RCDATA recover inputs such as `&copycat` as `©cat`
 with a missing-semicolon diagnostic, while attribute values preserve ambiguous

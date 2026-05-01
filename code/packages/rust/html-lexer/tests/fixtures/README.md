@@ -80,6 +80,8 @@ currently supports:
   `sum`, and `notin`
 - WHATWG named character references for spacing, invisible operators,
   punctuation aliases, and math constants
+- WHATWG relation/operator named character references, including negated
+  aliases with combining-overlay replacements
 - missing-semicolon recovery for legacy named character references `nbsp`,
   `copy`, and `reg` before delimiters and EOF
 - generic named-character-reference scanning with literal fallback for unknown
