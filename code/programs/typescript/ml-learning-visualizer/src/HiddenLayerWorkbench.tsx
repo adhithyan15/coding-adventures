@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   HIDDEN_LAYER_EXAMPLES,
   createInitialHiddenState,
+  exampleInputs,
   hiddenHistoryPoint,
   hiddenLoss,
   hiddenMeanAbsoluteError,
@@ -14,7 +15,12 @@ import {
   type HiddenLayerStepResult,
 } from "./hidden-layer-examples.js";
 import { gradientShape } from "./layered-network.js";
-import { predictLayeredWithVm } from "./neural-vm.js";
+import {
+  canUseWebGpuMatrixBackend,
+  predictLayeredWithBestMatrixBackend,
+  predictLayeredWithVm,
+  type MatrixExecutionBackend,
+} from "./neural-vm.js";
 import { HiddenNetworkDiagram } from "./NetworkDiagram.js";
 
 interface HiddenChartFrame {
@@ -44,6 +50,25 @@ const CURVE_CHART: HiddenChartFrame = {
 };
 
 const SURFACE_SIZE = 460;
+
+interface SurfaceCell {
+  readonly x: number;
+  readonly y: number;
+  readonly value: number;
+}
+
+interface SurfaceGrid {
+  readonly cells: readonly SurfaceCell[];
+  readonly inputs: number[][];
+}
+
+interface HiddenPredictionBundle {
+  readonly rowPredictions: number[];
+  readonly curvePath: string;
+  readonly surfaceCells: readonly SurfaceCell[];
+  readonly backend: MatrixExecutionBackend;
+  readonly fallbackReason?: string;
+}
 
 function formatNumber(value: number, digits = 3): string {
   if (!Number.isFinite(value)) {
@@ -92,20 +117,14 @@ function hiddenHistoryPath(history: HiddenLayerHistoryPoint[]): string {
     .join(" ");
 }
 
-function makeCurvePath(example: HiddenLayerExample, state: HiddenLayerModelState): string {
-  const samples = Array.from({ length: 121 }, (_, index) => {
+function makeCurveSamples(): number[] {
+  return Array.from({ length: 121 }, (_, index) => {
     const x = CURVE_CHART.xMin + (index / 120) * (CURVE_CHART.xMax - CURVE_CHART.xMin);
     return x;
   });
-  const predictions = predictLayeredWithVm(
-    samples.map((x) => [x]),
-    state.parameters,
-    {
-      inputNames: example.inputLabels,
-      outputNames: [example.outputLabel],
-    },
-  ).predictions.map((row) => row[0] ?? 0);
+}
 
+function makeCurvePathFromPredictions(samples: readonly number[], predictions: readonly number[]): string {
   const points = samples.map((x, index) => {
     return [x, predictions[index] ?? 0] as const;
   });
@@ -118,8 +137,22 @@ function makeCurvePath(example: HiddenLayerExample, state: HiddenLayerModelState
     .join(" ");
 }
 
-function makeSurfaceCells(example: HiddenLayerExample, state: HiddenLayerModelState): Array<{ x: number; y: number; value: number }> {
-  const cells: Array<{ x: number; y: number; value: number }> = [];
+function makeCurvePath(example: HiddenLayerExample, state: HiddenLayerModelState): string {
+  const samples = makeCurveSamples();
+  const predictions = predictLayeredWithVm(
+    samples.map((x) => [x]),
+    state.parameters,
+    {
+      inputNames: example.inputLabels,
+      outputNames: [example.outputLabel],
+    },
+  ).predictions.map((row) => row[0] ?? 0);
+
+  return makeCurvePathFromPredictions(samples, predictions);
+}
+
+function makeSurfaceGrid(example: HiddenLayerExample): SurfaceGrid {
+  const cells: SurfaceCell[] = [];
   const inputs: number[][] = [];
   const divisions = 26;
   const xValues = example.rows.map((row) => row.input[0]!);
@@ -141,18 +174,68 @@ function makeSurfaceCells(example: HiddenLayerExample, state: HiddenLayerModelSt
     }
   }
 
-  const predictions = predictLayeredWithVm(inputs, state.parameters, {
+  return { cells, inputs };
+}
+
+function makeSurfaceCells(example: HiddenLayerExample, state: HiddenLayerModelState): readonly SurfaceCell[] {
+  const grid = makeSurfaceGrid(example);
+  const predictions = predictLayeredWithVm(grid.inputs, state.parameters, {
     inputNames: example.inputLabels,
     outputNames: [example.outputLabel],
   }).predictions;
 
-  return cells.map((cell, index) => ({
+  return grid.cells.map((cell, index) => ({
     ...cell,
     value: predictions[index]?.[0] ?? 0,
   }));
 }
 
-function CurveChart({ example, state, predictions }: { example: HiddenLayerExample; state: HiddenLayerModelState; predictions: number[] }) {
+function makePredictionBundleSync(example: HiddenLayerExample, state: HiddenLayerModelState): HiddenPredictionBundle {
+  return {
+    rowPredictions: predictHidden(example, state),
+    curvePath: example.chartKind === "curve" ? makeCurvePath(example, state) : "",
+    surfaceCells: example.chartKind === "surface" ? makeSurfaceCells(example, state) : [],
+    backend: "cpu",
+  };
+}
+
+async function makePredictionBundleAsync(
+  example: HiddenLayerExample,
+  state: HiddenLayerModelState,
+): Promise<HiddenPredictionBundle> {
+  const rowInputs = exampleInputs(example);
+  const curveSamples = example.chartKind === "curve" ? makeCurveSamples() : [];
+  const curveInputs = curveSamples.map((x) => [x]);
+  const surfaceGrid = example.chartKind === "surface" ? makeSurfaceGrid(example) : { cells: [], inputs: [] };
+  const allInputs = [
+    ...rowInputs,
+    ...curveInputs,
+    ...surfaceGrid.inputs,
+  ];
+  const run = await predictLayeredWithBestMatrixBackend(allInputs, state.parameters, {
+    inputNames: example.inputLabels,
+    outputNames: [example.outputLabel],
+  });
+  const values = run.predictions.map((row) => row[0] ?? 0);
+  const rowPredictions = values.slice(0, rowInputs.length);
+  const curvePredictions = values.slice(rowInputs.length, rowInputs.length + curveInputs.length);
+  const surfacePredictions = values.slice(rowInputs.length + curveInputs.length);
+
+  return {
+    rowPredictions,
+    curvePath: curveSamples.length > 0
+      ? makeCurvePathFromPredictions(curveSamples, curvePredictions)
+      : "",
+    surfaceCells: surfaceGrid.cells.map((cell, index) => ({
+      ...cell,
+      value: surfacePredictions[index] ?? 0,
+    })),
+    backend: run.backend,
+    fallbackReason: run.fallbackReason,
+  };
+}
+
+function CurveChart({ example, curvePath, predictions }: { example: HiddenLayerExample; curvePath: string; predictions: number[] }) {
   return (
     <svg viewBox={`0 0 ${CURVE_CHART.width} ${CURVE_CHART.height}`} role="img" aria-label={`${example.title} hidden-layer curve`}>
       <rect
@@ -174,7 +257,7 @@ function CurveChart({ example, state, predictions }: { example: HiddenLayerExamp
           </g>
         );
       })}
-      <path className="hidden-curve" d={makeCurvePath(example, state)} />
+      <path className="hidden-curve" d={curvePath} />
       {example.rows.map((row, index) => {
         const px = xScale(row.input[0]!, CURVE_CHART);
         const targetY = yScale(row.target, CURVE_CHART);
@@ -193,14 +276,13 @@ function CurveChart({ example, state, predictions }: { example: HiddenLayerExamp
   );
 }
 
-function SurfaceChart({ example, state, predictions, selectedIndex, onSelect }: {
+function SurfaceChart({ example, cells, predictions, selectedIndex, onSelect }: {
   example: HiddenLayerExample;
-  state: HiddenLayerModelState;
+  cells: readonly SurfaceCell[];
   predictions: number[];
   selectedIndex: number;
   onSelect: (index: number) => void;
 }) {
-  const cells = makeSurfaceCells(example, state);
   const divisions = Math.sqrt(cells.length);
   const cellSize = SURFACE_SIZE / divisions;
   const xValues = example.rows.map((row) => row.input[0]!);
@@ -309,11 +391,44 @@ export function HiddenLayerWorkbench() {
     setIsRunning(false);
   }, [example]);
 
-  const predictions = useMemo(() => predictHidden(example, state), [example, state]);
+  const fallbackBundle = useMemo(() => makePredictionBundleSync(example, state), [example, state]);
+  const [acceleratedBundle, setAcceleratedBundle] = useState<HiddenPredictionBundle | null>(null);
+  const predictionBundle = acceleratedBundle ?? fallbackBundle;
+  const predictions = predictionBundle.rowPredictions;
   const loss = useMemo(() => hiddenLoss(example, state), [example, state]);
   const mae = useMemo(() => hiddenMeanAbsoluteError(example, state), [example, state]);
   const trace = useMemo(() => traceHiddenExample(example, state, selectedIndex), [example, selectedIndex, state]);
   const outputGradient = lastStep?.step.weightGradients[lastStep.step.weightGradients.length - 1];
+  const backendLabel = predictionBundle.backend === "webgpu" ? "WebGPU" : "CPU";
+
+  useEffect(() => {
+    let cancelled = false;
+    setAcceleratedBundle(null);
+    if (!canUseWebGpuMatrixBackend()) {
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    makePredictionBundleAsync(example, state)
+      .then((bundle) => {
+        if (!cancelled) {
+          setAcceleratedBundle(bundle);
+        }
+      })
+      .catch((error: unknown) => {
+        if (!cancelled) {
+          setAcceleratedBundle({
+            ...fallbackBundle,
+            fallbackReason: error instanceof Error ? error.message : "Matrix backend failed",
+          });
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [example, fallbackBundle, state]);
 
   function record(result: HiddenLayerStepResult): void {
     setState(result.state);
@@ -420,11 +535,17 @@ export function HiddenLayerWorkbench() {
         </div>
 
         <section className="chart-panel chart-panel--hidden" aria-label="Hidden-layer chart">
-          {example.chartKind === "curve" && <CurveChart example={example} state={state} predictions={predictions} />}
+          {example.chartKind === "curve" && (
+            <CurveChart
+              example={example}
+              curvePath={predictionBundle.curvePath}
+              predictions={predictions}
+            />
+          )}
           {example.chartKind === "surface" && (
             <SurfaceChart
               example={example}
-              state={state}
+              cells={predictionBundle.surfaceCells}
               predictions={predictions}
               selectedIndex={selectedIndex}
               onSelect={setSelectedIndex}
@@ -532,6 +653,10 @@ export function HiddenLayerWorkbench() {
         <div className="metric">
           <span>Average error</span>
           <strong>{formatNumber(mae, 3)}</strong>
+        </div>
+        <div className="metric" title={predictionBundle.fallbackReason}>
+          <span>Matrix backend</span>
+          <strong>{backendLabel}</strong>
         </div>
 
         <div className="history">

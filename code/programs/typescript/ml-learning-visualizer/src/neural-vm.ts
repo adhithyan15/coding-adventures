@@ -3,9 +3,13 @@ import {
   type ActivationKind,
 } from "@coding-adventures/neural-network";
 import {
+  WebGpuMatrixBackend,
   compileBytecodeToMatrixPlan,
   compileNeuralNetworkToBytecode,
   runNeuralMatrixForward,
+  runNeuralMatrixForwardAsync,
+  type NeuralMatrixInputs,
+  type NeuralMatrixPlan,
 } from "@coding-adventures/neural-graph-vm";
 import type {
   ActivationName,
@@ -24,6 +28,8 @@ export interface VmRunMetadata {
   readonly matrixInstructionCount: number;
 }
 
+export type MatrixExecutionBackend = "cpu" | "webgpu";
+
 export interface LinearVmRun extends VmRunMetadata {
   readonly predictions: number[];
 }
@@ -34,6 +40,11 @@ export interface TwoLayerVmRun extends VmRunMetadata {
 
 export interface LayeredVmRun extends VmRunMetadata {
   readonly predictions: MatrixData;
+}
+
+export interface AcceleratedLayeredVmRun extends LayeredVmRun {
+  readonly backend: MatrixExecutionBackend;
+  readonly fallbackReason?: string;
 }
 
 export function predictLinearWithVm(
@@ -131,6 +142,79 @@ export function predictLayeredWithVm(
     readonly outputNames?: readonly string[];
   } = {},
 ): LayeredVmRun {
+  const compiled = compileLayeredMatrixPlan(inputs, parameters, options);
+  const result = runNeuralMatrixForward(compiled.matrixPlan, compiled.matrixInputs);
+  const predictions = collectMatrixPredictions(inputs, compiled.outputNames, result.outputs);
+
+  return {
+    predictions,
+    bytecodeInstructionCount: compiled.bytecodeInstructionCount,
+    matrixInstructionCount: compiled.matrixInstructionCount,
+  };
+}
+
+export async function predictLayeredWithBestMatrixBackend(
+  inputs: MatrixData,
+  parameters: LayeredParameters,
+  options: {
+    readonly inputNames?: readonly string[];
+    readonly outputNames?: readonly string[];
+  } = {},
+): Promise<AcceleratedLayeredVmRun> {
+  const compiled = compileLayeredMatrixPlan(inputs, parameters, options);
+  const gpuProbe = await getWebGpuBackendProbe();
+
+  if (gpuProbe.backend !== null) {
+    const result = await runNeuralMatrixForwardAsync(
+      compiled.matrixPlan,
+      compiled.matrixInputs,
+      gpuProbe.backend,
+    );
+    return {
+      predictions: collectMatrixPredictions(inputs, compiled.outputNames, result.outputs),
+      bytecodeInstructionCount: compiled.bytecodeInstructionCount,
+      matrixInstructionCount: compiled.matrixInstructionCount,
+      backend: "webgpu",
+    };
+  }
+
+  const result = runNeuralMatrixForward(compiled.matrixPlan, compiled.matrixInputs);
+  return {
+    predictions: collectMatrixPredictions(inputs, compiled.outputNames, result.outputs),
+    bytecodeInstructionCount: compiled.bytecodeInstructionCount,
+    matrixInstructionCount: compiled.matrixInstructionCount,
+    backend: "cpu",
+    fallbackReason: gpuProbe.reason,
+  };
+}
+
+export function canUseWebGpuMatrixBackend(): boolean {
+  return WebGpuMatrixBackend.isNavigatorAvailable();
+}
+
+interface LayeredMatrixCompilation {
+  readonly matrixPlan: NeuralMatrixPlan;
+  readonly matrixInputs: NeuralMatrixInputs;
+  readonly outputNames: readonly string[];
+  readonly bytecodeInstructionCount: number;
+  readonly matrixInstructionCount: number;
+}
+
+interface WebGpuBackendProbe {
+  readonly backend: WebGpuMatrixBackend | null;
+  readonly reason?: string;
+}
+
+let webGpuBackendProbe: Promise<WebGpuBackendProbe> | undefined;
+
+function compileLayeredMatrixPlan(
+  inputs: MatrixData,
+  parameters: LayeredParameters,
+  options: {
+    readonly inputNames?: readonly string[];
+    readonly outputNames?: readonly string[];
+  },
+): LayeredMatrixCompilation {
   const firstLayer = parameters.layers[0];
   const lastLayer = parameters.layers[parameters.layers.length - 1];
   if (firstLayer === undefined || lastLayer === undefined) {
@@ -165,16 +249,52 @@ export function predictLayeredWithVm(
       inputs.map((row) => row[inputIndex] ?? 0),
     ]),
   );
-  const result = runNeuralMatrixForward(matrixPlan, matrixInputs);
-  const predictions = inputs.map((_, rowIndex) => (
-    outputNames.map((name) => result.outputs[name]?.[rowIndex] ?? 0)
-  ));
-
   return {
-    predictions,
+    matrixPlan,
+    matrixInputs,
+    outputNames,
     bytecodeInstructionCount: bytecode.functions[0]?.instructions.length ?? 0,
     matrixInstructionCount: matrixPlan.instructions.length,
   };
+}
+
+function collectMatrixPredictions(
+  inputs: MatrixData,
+  outputNames: readonly string[],
+  outputs: Record<string, readonly number[]>,
+): MatrixData {
+  return inputs.map((_, rowIndex) => (
+    outputNames.map((name) => outputs[name]?.[rowIndex] ?? 0)
+  ));
+}
+
+async function getWebGpuBackendProbe(): Promise<WebGpuBackendProbe> {
+  webGpuBackendProbe ??= createWebGpuBackendProbe();
+  return webGpuBackendProbe;
+}
+
+async function createWebGpuBackendProbe(): Promise<WebGpuBackendProbe> {
+  if (!WebGpuMatrixBackend.isNavigatorAvailable()) {
+    return {
+      backend: null,
+      reason: "WebGPU is not exposed by this browser",
+    };
+  }
+
+  try {
+    const backend = await WebGpuMatrixBackend.createFromNavigator({
+      powerPreference: "high-performance",
+    });
+    return {
+      backend,
+      reason: backend === null ? "WebGPU is not exposed by this browser" : undefined,
+    };
+  } catch (error) {
+    return {
+      backend: null,
+      reason: error instanceof Error ? error.message : "WebGPU initialization failed",
+    };
+  }
 }
 
 function toGraphActivation(activation: ActivationName): ActivationKind {
