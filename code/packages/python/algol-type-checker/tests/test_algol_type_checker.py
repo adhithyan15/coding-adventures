@@ -1087,6 +1087,27 @@ class TestAlgolTypeChecker:
         parameter = result.semantic.procedures[0].parameters[0]
         assert parameter.procedure_call_shapes[0].argument_assignable == (False,)
 
+    def test_accepts_procedure_parameter_actual_with_array_element_by_name_formal(
+        self,
+    ) -> None:
+        ast = parse_algol(
+            "begin integer result; integer array a[1:1]; "
+            "procedure invoke(p); procedure p; begin p(a[1]) end; "
+            "procedure set(x); integer x; begin x := 7 end; "
+            "a[1] := 0; invoke(set); result := a[1] "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        parameter = result.semantic.procedures[0].parameters[0]
+        assert parameter.procedure_call_shapes[0].argument_assignable == (True,)
+        assert any(
+            access.name == "a" and access.role == "write"
+            for access in result.semantic.array_accesses
+        )
+
     def test_accepts_procedure_parameter_actual_with_array_formal(self) -> None:
         ast = parse_algol(
             "begin integer result; integer array a[1:2]; "

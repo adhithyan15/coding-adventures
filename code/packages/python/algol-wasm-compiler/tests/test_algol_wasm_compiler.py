@@ -900,6 +900,59 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
 
+    def test_procedure_parameter_statement_call_passes_array_element_argument(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; integer array a[1:1]; "
+            "procedure invoke(p); procedure p; begin p(a[1]) end; "
+            "procedure set(x); integer x; begin x := x + 7 end; "
+            "a[1] := 0; invoke(set); result := a[1] "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_procedure_parameter_statement_call_passes_real_array_element_argument(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; real array a[1:1]; "
+            "procedure invoke(p); procedure p; begin p(a[1]) end; "
+            "procedure set(x); real x; begin x := 2.5 end; "
+            "a[1] := 0.0; invoke(set); result := entier(a[1] * 10) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [25]
+
+    def test_procedure_parameter_statement_call_passes_boolean_array_element_argument(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; boolean array flags[1:1]; "
+            "procedure invoke(p); procedure p; begin p(flags[1]) end; "
+            "procedure set(x); boolean x; begin x := true end; "
+            "flags[1] := false; invoke(set); "
+            "if flags[1] then result := 7 else result := 0 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_procedure_parameter_statement_call_passes_string_array_element_argument(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; string array messages[1:1]; "
+            "procedure invoke(p); procedure p; begin p(messages[1]) end; "
+            "procedure set(x); string x; begin x := 'OK' end; "
+            "messages[1] := 'NO'; invoke(set); print(messages[1]); result := 7 "
+            "end"
+        )
+        captured: list[str] = []
+        runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
+
+        assert runtime.load_and_run(result.binary, "_start", []) == [7]
+        assert "".join(captured) == "OK"
+
     def test_procedure_parameter_statement_call_passes_array_argument(self) -> None:
         result = compile_source(
             "begin integer result; integer array a[1:2]; "
