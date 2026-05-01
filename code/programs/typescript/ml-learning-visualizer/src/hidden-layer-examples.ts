@@ -43,6 +43,7 @@ export interface HiddenLayerModelState {
 }
 
 export interface HiddenLayerStepResult {
+  previousState: HiddenLayerModelState;
   state: HiddenLayerModelState;
   step: TwoLayerTrainingStep;
   loss: number;
@@ -136,6 +137,7 @@ export function trainHiddenStep(
   };
 
   return {
+    previousState: state,
     state: nextState,
     step,
     loss: hiddenLoss(example, nextState),

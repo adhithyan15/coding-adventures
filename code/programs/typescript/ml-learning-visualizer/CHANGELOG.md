@@ -10,6 +10,8 @@ All notable changes to this package will be documented in this file.
   neural-network graph and neural-graph-vm matrix plan path.
 - Added Paint VM SVG neural graph panels that show weights, bias edges,
   activations, and gradient updates while training runs advance.
+- Expanded the neural graph panels into a full learning-flow trace covering
+  forward prediction, error/loss calculation, gradients, and parameter updates.
 
 ## [0.1.0] - 2026-03-25
 

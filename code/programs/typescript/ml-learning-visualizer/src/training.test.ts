@@ -72,11 +72,15 @@ describe("training helpers", () => {
       { weight: 1.8, bias: 32, epoch: 3 },
       null,
       0.0005,
+      "mse",
+      { x: 0, y: 32 },
+      7,
     );
 
     expect(svg).toContain("<svg");
     expect(svg).toContain("<line");
     expect(svg).toContain("font-size");
+    expect(svg).toContain("gradient descent");
   });
 
   it("applies activation functions used by the lab preview", () => {
@@ -132,7 +136,8 @@ describe("training helpers", () => {
     const svg = renderHiddenNetworkSvg(
       example,
       initial,
-      example.rows[0]!.input,
+      example.rows[0]!,
+      0,
       0.42,
       null,
       example.defaultLearningRate,
@@ -141,6 +146,7 @@ describe("training helpers", () => {
     expect(svg).toContain("<svg");
     expect(svg).toContain("<ellipse");
     expect(svg).toContain("<line");
+    expect(svg).toContain("parameter update");
   });
 
   it("moves downhill on XNOR and absolute value with batch updates", () => {

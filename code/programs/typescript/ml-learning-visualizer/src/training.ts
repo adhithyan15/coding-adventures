@@ -16,6 +16,8 @@ export interface ModelState {
 }
 
 export interface StepResult {
+  previousState: ModelState;
+  previousLoss: number;
   state: ModelState;
   loss: number;
   mae: number;
@@ -94,6 +96,7 @@ export function trainStep(
   lossKind: LossKind,
 ): StepResult {
   const { gradientWeight, gradientBias } = gradients(points, state, lossKind);
+  const previousLoss = loss(points, state, lossKind);
   const nextState = {
     weight: state.weight - learningRate * gradientWeight,
     bias: state.bias - learningRate * gradientBias,
@@ -101,6 +104,8 @@ export function trainStep(
   };
 
   return {
+    previousState: state,
+    previousLoss,
     state: nextState,
     loss: loss(points, nextState, lossKind),
     mae: meanAbsoluteError(points, nextState),
