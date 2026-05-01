@@ -734,6 +734,36 @@
       "last_start_tag": "title"
     },
     {
+      "id": "html-whatwg-angle-character-references-data",
+      "description": "WHATWG angle aliases resolve in data state",
+      "input": "Angles:&angle;&angmsd;&angsph;&angrt;&angrtvb;&angrtvbd;&angst;&angzarr;&measuredangle;",
+      "tokens": [
+        "Text(data=Angles:\u2220\u2221\u2222\u221F\u22BE\u299D\u00C5\u237C\u2221)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-fence-character-references-attributes",
+      "description": "WHATWG angle bracket and fence aliases resolve inside attribute values",
+      "input": "<f angles=\"&lang;&rang;&langle;&rangle;&LeftAngleBracket;&RightAngleBracket;\" fences=\"&LeftCeiling;&RightCeiling;&LeftFloor;&RightFloor;&LeftDoubleBracket;&RightDoubleBracket;&lobrk;&robrk;&lbrack;&rbrack;&lbrace;&rbrace;&lpar;&rpar;\">",
+      "tokens": [
+        "StartTag(name=f, attributes=[angles=\u27E8\u27E9\u27E8\u27E9\u27E8\u27E9, fences=\u2308\u2309\u230A\u230B\u27E6\u27E7\u27E6\u27E7[]{}()], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-triangle-corner-character-references-rcdata",
+      "description": "Seeded title RCDATA context resolves WHATWG triangle, corner, and over-under fence aliases",
+      "input": "&LeftTriangle;&RightTriangle;&triangleleft;&triangleright;&blacktriangleleft;&blacktriangleright;&ulcorner;&urcorner;&llcorner;&lrcorner;&OverBrace;&UnderBrace;&OverBracket;&UnderBracket;&OverParenthesis;&UnderParenthesis;&OverBar;&UnderBar;&bbrk;&bbrktbrk;</title>",
+      "tokens": [
+        "Text(data=\u22B2\u22B3\u25C3\u25B9\u25C2\u25B8\u231C\u231D\u231E\u231F\u23DE\u23DF\u23B4\u23B5\u23DC\u23DD\u203E_\u23B5\u23B6)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
       "id": "html-semicolonless-legacy-character-references-data",
       "description": "Legacy named character references recover when the semicolon is missing in data state",
       "input": "Legacy&nbsp symbols: &copy/&reg",

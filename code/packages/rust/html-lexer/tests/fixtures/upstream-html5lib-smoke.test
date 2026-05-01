@@ -835,6 +835,58 @@
       ]
     },
     {
+      "description": "data state WHATWG angle named character references",
+      "input": "Angles:&angle;&angmsd;&angsph;&angrt;&angrtvb;&angrtvbd;&angst;&angzarr;&measuredangle;",
+      "output": [
+        ["Character", "Angles:"],
+        ["Character", "\u2220"],
+        ["Character", "\u2221"],
+        ["Character", "\u2222"],
+        ["Character", "\u221F"],
+        ["Character", "\u22BE"],
+        ["Character", "\u299D"],
+        ["Character", "\u00C5"],
+        ["Character", "\u237C"],
+        ["Character", "\u2221"]
+      ]
+    },
+    {
+      "description": "attribute WHATWG fence named character references",
+      "input": "<f angles=\"&lang;&rang;&langle;&rangle;&LeftAngleBracket;&RightAngleBracket;\" fences=\"&LeftCeiling;&RightCeiling;&LeftFloor;&RightFloor;&LeftDoubleBracket;&RightDoubleBracket;&lobrk;&robrk;&lbrack;&rbrack;&lbrace;&rbrace;&lpar;&rpar;\">",
+      "output": [
+        ["StartTag", "f", {"angles": "\u27E8\u27E9\u27E8\u27E9\u27E8\u27E9", "fences": "\u2308\u2309\u230A\u230B\u27E6\u27E7\u27E6\u27E7[]{}()"}]
+      ]
+    },
+    {
+      "description": "rcdata WHATWG triangle and corner named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&LeftTriangle;&RightTriangle;&triangleleft;&triangleright;&blacktriangleleft;&blacktriangleright;&ulcorner;&urcorner;&llcorner;&lrcorner;&OverBrace;&UnderBrace;&OverBracket;&UnderBracket;&OverParenthesis;&UnderParenthesis;&OverBar;&UnderBar;&bbrk;&bbrktbrk;</title>",
+      "output": [
+        ["Character", "\u22B2"],
+        ["Character", "\u22B3"],
+        ["Character", "\u25C3"],
+        ["Character", "\u25B9"],
+        ["Character", "\u25C2"],
+        ["Character", "\u25B8"],
+        ["Character", "\u231C"],
+        ["Character", "\u231D"],
+        ["Character", "\u231E"],
+        ["Character", "\u231F"],
+        ["Character", "\u23DE"],
+        ["Character", "\u23DF"],
+        ["Character", "\u23B4"],
+        ["Character", "\u23B5"],
+        ["Character", "\u23DC"],
+        ["Character", "\u23DD"],
+        ["Character", "\u203E"],
+        ["Character", "_"],
+        ["Character", "\u23B5"],
+        ["Character", "\u23B6"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
       "description": "data state legacy named character references missing semicolons",
       "input": "Legacy&nbsp symbols: &copy/&reg",
       "output": [
