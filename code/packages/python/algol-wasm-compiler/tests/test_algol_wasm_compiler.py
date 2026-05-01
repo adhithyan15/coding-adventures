@@ -256,6 +256,23 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [17]
 
+    def test_mixed_case_standard_builtin_functions_execute(self) -> None:
+        result = compile_source(
+            "begin integer result; real x; "
+            "x := SQRT(9); "
+            "result := ABS(0 - 7) + SIGN(x) + ENTIER(x) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [11]
+
+    def test_publication_multiply_and_divide_execute(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "result := 6 × 7 + entier(8 ÷ 2) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [46]
+
     def test_entier_floors_positive_and_negative_reals(self) -> None:
         result = compile_source(
             "begin integer result; real x; "
@@ -307,6 +324,14 @@ class TestAlgolWasmCompiler:
 
     def test_builtin_print_string_literal_writes_stdout(self) -> None:
         result = compile_source("begin integer result; print('Hi'); result := 7 end")
+        captured: list[str] = []
+        runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
+
+        assert runtime.load_and_run(result.binary, "_start", []) == [7]
+        assert "".join(captured) == "Hi"
+
+    def test_mixed_case_builtin_output_writes_stdout(self) -> None:
+        result = compile_source("begin integer result; PRINT('Hi'); result := 7 end")
         captured: list[str] = []
         runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
 

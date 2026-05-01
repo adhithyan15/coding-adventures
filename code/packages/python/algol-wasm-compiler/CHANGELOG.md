@@ -87,7 +87,10 @@ All notable changes to this package will be documented in this file.
 - Executed the report-style `go to` spelling through the full parser,
   type-checker, IR, and WASM pipeline.
 - Executed normalized ALGOL publication symbols for relations, exponentiation,
-  and boolean operators through the full WASM pipeline.
+  multiplication, real division, and boolean operators through the full WASM
+  pipeline.
+- Executed mixed-case standard numeric and output builtins through the full
+  WASM pipeline.
 - Executed standard numeric builtin functions `abs`, `sign`, and `entier`
   through the full parser, type-checker, IR, and WASM pipeline.
 - Executed standard real builtin function `sqrt` through the full parser,

@@ -11,13 +11,14 @@
 # No column restrictions (unlike Fortran 77 and COBOL, which were punched-card-based).
 #
 # Character set note: The ALGOL 60 report used mathematical typographic symbols
-# (≤, ≥, ≠, ↑, ∧, ∨, ¬, ⊃, ≡) that could not be printed on real hardware of the era.
-# Every hardware implementation mapped these to ASCII sequences. This grammar uses
-# the ASCII conventions that became standard.
+# (≤, ≥, ≠, ↑, ×, ÷, ∧, ∨, ¬, ⊃, ≡) that could not be printed on real
+# hardware of the era. Every hardware implementation mapped these to ASCII
+# sequences. This grammar accepts both the publication symbols and the ASCII
+# conventions that became standard.
 #
 # Key ordering rules (first match wins):
 #   :=  must come before  :   (ASSIGN before COLON)
-#   **  must come before  *   (POWER before STAR)
+#   **  must come before  * and ×   (POWER before STAR)
 #   <= and ≤ must come before  <   (LEQ before LT)
 #   >= and ≥ must come before  >   (GEQ before GT)
 #   !=, <>, and ≠ must come before any single-char use of !, <, or >
@@ -84,8 +85,10 @@ EQV_SYM     = "≡"
 
 PLUS        = "+"
 MINUS       = "-"
-STAR        = "*"
-SLASH       = "/"
+# Multiplication and real division. The publication symbols normalize to the
+# same token values as the ASCII spellings in the ALGOL lexer wrapper.
+STAR        = /\*|×/
+SLASH       = /\/|÷/
 
 # Caret: alternative to ** for exponentiation. The ALGOL publication uparrow
 # is normalized to the same token/value shape as caret.

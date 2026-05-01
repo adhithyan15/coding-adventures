@@ -18,9 +18,10 @@ the current lane already supports a substantial ALGOL 60 surface:
 - `own` scalars and arrays with static lifetime
 - arrays of `integer`, `boolean`, `real`, and `string` values with runtime
   bounds and checked element access
-- case-insensitive keywords and comments, `!=`/`<>`/`≠` not-equal spelling,
-  ALGOL publication symbols such as `≤`, `≥`, `↑`, `¬`, `∧`, `∨`, `⊃`, `≡`,
-  and single- or double-quoted string literals
+- case-insensitive keywords, comments, and standard builtins,
+  `!=`/`<>`/`≠` not-equal spelling, ALGOL publication symbols such as `≤`,
+  `≥`, `↑`, `×`, `÷`, `¬`, `∧`, `∨`, `⊃`, `≡`, and single- or double-quoted
+  string literals
 - chained assignment, conditional expressions, tolerant trailing/repeated
   semicolons, numeric runtime failure guards, and
   ALGOL-left-associative exponentiation for integer or real exponents

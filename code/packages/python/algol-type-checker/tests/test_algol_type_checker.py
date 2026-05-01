@@ -515,6 +515,31 @@ class TestAlgolTypeChecker:
         assert calls["ln"] == "real"
         assert calls["exp"] == "real"
 
+    def test_accepts_mixed_case_standard_builtin_functions(self) -> None:
+        ast = parse_algol(
+            "begin integer result; real root; "
+            "root := Sqrt(9); "
+            "result := ABS(0 - 3) + Sign(root) + Entier(root) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        labels = {
+            call.label
+            for call in result.semantic.procedure_calls
+        }
+        names = {
+            call.name
+            for call in result.semantic.procedure_calls
+        }
+        assert {"abs", "sign", "entier", "sqrt"} <= names
+        assert "__algol_builtin_abs" in labels
+        assert "__algol_builtin_sign" in labels
+        assert "__algol_builtin_entier" in labels
+        assert "__algol_builtin_sqrt" in labels
+
     def test_rejects_boolean_actual_for_numeric_builtin_function(self) -> None:
         ast = parse_algol("begin integer result; result := abs(false) end")
         result = check_algol(ast)
@@ -1759,6 +1784,24 @@ class TestAlgolTypeChecker:
         ast = parse_algol(
             "begin integer result; "
             "procedure emit(s); string s; begin print(s); result := 7 end; "
+            "emit('Hi') "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        parameter = result.semantic.procedures[0].parameters[0]
+        assert parameter.type_name == "string"
+        assert parameter.mode == "name"
+        assert not parameter.may_write
+
+    def test_mixed_case_builtin_output_is_read_only_for_by_name_formal(
+        self,
+    ) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure emit(s); string s; begin PRINT(s); result := 7 end; "
             "emit('Hi') "
             "end"
         )
