@@ -334,6 +334,17 @@ export function HiddenLayerWorkbench() {
     setIsRunning(false);
   }
 
+  function selectExample(nextExample: HiddenLayerExample): void {
+    const initial = createInitialHiddenState(nextExample);
+    setSelectedId(nextExample.id);
+    setLearningRate(nextExample.defaultLearningRate);
+    setState(initial);
+    setHistory([hiddenHistoryPoint(nextExample, initial)]);
+    setLastStep(null);
+    setSelectedIndex(0);
+    setIsRunning(false);
+  }
+
   useEffect(() => {
     if (!isRunning) {
       return undefined;
@@ -369,7 +380,7 @@ export function HiddenLayerWorkbench() {
               className={item.id === example.id ? "lab-button lab-button--active" : "lab-button"}
               key={item.id}
               type="button"
-              onClick={() => setSelectedId(item.id)}
+              onClick={() => selectExample(item)}
             >
               <span>{item.title}</span>
               <small>{item.category}</small>

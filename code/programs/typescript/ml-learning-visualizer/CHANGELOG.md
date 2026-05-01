@@ -14,6 +14,8 @@ All notable changes to this package will be documented in this file.
   forward prediction, error/loss calculation, gradients, and parameter updates.
 - Corrected the learning-flow arrows so forward edges point into each node and
   loss feedback folds into a lower update loop instead of crossing the graph.
+- Fixed hidden-layer example switching so each selected example resets the
+  model state before the neural graph VM sees the new input shape.
 
 ## [0.1.0] - 2026-03-25
 

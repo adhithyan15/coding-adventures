@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
+import React from "react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { forwardTwoLayer } from "coding-adventures-two-layer-network/src/index";
 import { activate } from "./activation.js";
+import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
 import {
   CELSIUS_DATASET,
   fitLinearClosedForm,
@@ -147,6 +150,16 @@ describe("training helpers", () => {
     expect(svg).toContain("<ellipse");
     expect(svg).toContain("<line");
     expect(svg).toContain("parameter update");
+  });
+
+  it("renders every hidden-layer example in the workbench", () => {
+    render(React.createElement(HiddenLayerWorkbench));
+
+    for (const example of HIDDEN_LAYER_EXAMPLES) {
+      fireEvent.click(screen.getByRole("button", { name: `${example.title} ${example.category}` }));
+      expect(screen.getByRole("heading", { name: example.title })).toBeTruthy();
+      expect(screen.getByLabelText("Neuron trace")).toBeTruthy();
+    }
   });
 
   it("moves downhill on XNOR and absolute value with batch updates", () => {
