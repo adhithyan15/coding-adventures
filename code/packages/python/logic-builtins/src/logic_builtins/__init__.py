@@ -84,6 +84,7 @@ from logic_builtins.builtins import (
     neg,
     nonvaro,
     not_same_termo,
+    not_variant_termo,
     noto,
     numbero,
     numeqo,
@@ -106,6 +107,7 @@ from logic_builtins.builtins import (
     setofo,
     stringo,
     sub,
+    subsumes_termo,
     succo,
     term_variableso,
     termo_geqo,
@@ -115,6 +117,7 @@ from logic_builtins.builtins import (
     throwo,
     trueo,
     univo,
+    variant_termo,
     varo,
 )
 
@@ -193,6 +196,7 @@ __all__ = [
     "neg",
     "nonvaro",
     "not_same_termo",
+    "not_variant_termo",
     "noto",
     "numeqo",
     "numneqo",
@@ -221,6 +225,7 @@ __all__ = [
     "set_prolog_flago",
     "stringo",
     "sub",
+    "subsumes_termo",
     "succo",
     "termo_geqo",
     "termo_gto",
@@ -231,6 +236,7 @@ __all__ = [
     "trueo",
     "univo",
     "varo",
+    "variant_termo",
 ]
 
 __version__ = "0.15.0"

@@ -176,6 +176,9 @@ __all__ = [
     "trueo",
     "univo",
     "varo",
+    "not_variant_termo",
+    "subsumes_termo",
+    "variant_termo",
 ]
 
 
@@ -398,6 +401,9 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("trueo", 0),
     ("univo", 2),
     ("varo", 1),
+    ("not_variant_termo", 2),
+    ("subsumes_termo", 2),
+    ("variant_termo", 2),
 )
 
 
@@ -3862,6 +3868,126 @@ def not_same_termo(left: object, right: object) -> GoalExpr:
         )
 
     return native_goal(run, left, right)
+
+
+def _variant_terms(
+    left: Term,
+    right: Term,
+    left_to_right: dict[LogicVar, LogicVar],
+    right_to_left: dict[LogicVar, LogicVar],
+) -> bool:
+    """Return True when two terms differ only by variable renaming."""
+
+    if isinstance(left, LogicVar) and isinstance(right, LogicVar):
+        mapped_right = left_to_right.get(left)
+        mapped_left = right_to_left.get(right)
+        if mapped_right is None and mapped_left is None:
+            left_to_right[left] = right
+            right_to_left[right] = left
+            return True
+        return mapped_right == right and mapped_left == left
+
+    if isinstance(left, LogicVar) or isinstance(right, LogicVar):
+        return False
+    if isinstance(left, Compound) and isinstance(right, Compound):
+        return (
+            left.functor == right.functor
+            and len(left.args) == len(right.args)
+            and all(
+                _variant_terms(
+                    left_arg,
+                    right_arg,
+                    left_to_right,
+                    right_to_left,
+                )
+                for left_arg, right_arg in zip(left.args, right.args, strict=True)
+            )
+        )
+    return left == right
+
+
+def _subsumes_term(
+    general: Term,
+    specific: Term,
+    bindings: dict[LogicVar, Term],
+) -> bool:
+    """Return True when ``specific`` is an instance of ``general``."""
+
+    if isinstance(general, LogicVar):
+        previous = bindings.get(general)
+        if previous is None:
+            bindings[general] = specific
+            return True
+        return previous == specific
+
+    if isinstance(general, Compound):
+        return (
+            isinstance(specific, Compound)
+            and general.functor == specific.functor
+            and len(general.args) == len(specific.args)
+            and all(
+                _subsumes_term(general_arg, specific_arg, bindings)
+                for general_arg, specific_arg in zip(
+                    general.args,
+                    specific.args,
+                    strict=True,
+                )
+            )
+        )
+    return general == specific
+
+
+def variant_termo(left: object, right: object) -> GoalExpr:
+    """Succeed when two reified terms are variants of each other."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        left_term, right_term = args
+        yield from _succeed_if(
+            _variant_terms(
+                _reified(left_term, state),
+                _reified(right_term, state),
+                {},
+                {},
+            ),
+            state,
+        )
+
+    return native_goal(run, left, right)
+
+
+def not_variant_termo(left: object, right: object) -> GoalExpr:
+    """Succeed when two reified terms are not variants of each other."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        left_term, right_term = args
+        yield from _succeed_if(
+            not _variant_terms(
+                _reified(left_term, state),
+                _reified(right_term, state),
+                {},
+                {},
+            ),
+            state,
+        )
+
+    return native_goal(run, left, right)
+
+
+def subsumes_termo(general: object, specific: object) -> GoalExpr:
+    """Succeed when ``specific`` is an instance of ``general``."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        general_term, specific_term = args
+        yield from _succeed_if(
+            _subsumes_term(
+                _reified(general_term, state),
+                _reified(specific_term, state),
+                {},
+            ),
+            state,
+        )
+
+    return native_goal(run, general, specific)
 
 
 def difo(left: object, right: object) -> GoalExpr:

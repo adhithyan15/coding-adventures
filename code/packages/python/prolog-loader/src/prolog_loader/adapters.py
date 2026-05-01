@@ -63,6 +63,7 @@ from logic_builtins import (
     maplisto,
     nonvaro,
     not_same_termo,
+    not_variant_termo,
     noto,
     numbero,
     onceo,
@@ -82,6 +83,7 @@ from logic_builtins import (
     set_prolog_flago,
     setofo,
     stringo,
+    subsumes_termo,
     succo,
     term_variableso,
     termo_geqo,
@@ -91,6 +93,7 @@ from logic_builtins import (
     throwo,
     trueo,
     univo,
+    variant_termo,
     varo,
 )
 from logic_engine import (
@@ -364,6 +367,12 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         return same_termo(*args)
     if name == "\\==" and goal.relation.arity == 2:
         return not_same_termo(*args)
+    if name == "=@=" and goal.relation.arity == 2:
+        return variant_termo(*args)
+    if name == "\\=@=" and goal.relation.arity == 2:
+        return not_variant_termo(*args)
+    if name == "subsumes_term" and goal.relation.arity == 2:
+        return subsumes_termo(*args)
     if name == "compare" and goal.relation.arity == 3:
         return compare_termo(*args)
     if name == "@<" and goal.relation.arity == 2:

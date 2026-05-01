@@ -130,6 +130,25 @@ class TestPrologVMStress:
         assert run_compiled_prolog_query(identical) == []
         assert run_compiled_prolog_query(equal) == []
 
+    def test_term_variant_and_subsumes_predicates_run_through_vm(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            variant_ok :-
+                pair(X, X) =@= pair(Y, Y),
+                pair(X, X) \\=@= pair(Y, Z),
+                subsumes_term(box(A), box(tea)).
+
+            ?- variant_ok,
+               Result = ok.
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert [answer.as_dict() for answer in answers] == [
+            {"Result": atom("ok")},
+        ]
+
     def test_term_variables_runs_through_vm(self) -> None:
         compiled = compile_swi_prolog_source(
             """

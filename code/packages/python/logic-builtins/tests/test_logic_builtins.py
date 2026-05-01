@@ -101,6 +101,7 @@ from logic_builtins import (
     neg,
     nonvaro,
     not_same_termo,
+    not_variant_termo,
     noto,
     numbero,
     numeqo,
@@ -119,6 +120,7 @@ from logic_builtins import (
     setofo,
     stringo,
     sub,
+    subsumes_termo,
     succo,
     term_variableso,
     termo_geqo,
@@ -128,6 +130,7 @@ from logic_builtins import (
     throwo,
     trueo,
     univo,
+    variant_termo,
     varo,
 )
 
@@ -1948,6 +1951,72 @@ class TestTermMetaprogrammingBuiltins:
             left,
             not_same_termo(term("box", "tea"), term("box", "cake")),
         ) == [left]
+
+    def test_variant_termo_accepts_alpha_equivalent_terms(self) -> None:
+        left = var("Left")
+        right = var("Right")
+        other = var("Other")
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(
+                eq(marker, "ok"),
+                variant_termo(
+                    term("pair", left, term("box", left)),
+                    term("pair", right, term("box", right)),
+                ),
+            ),
+        ) == [atom("ok")]
+        assert solve_all(
+            program(),
+            marker,
+            variant_termo(term("pair", left, left), term("pair", right, other)),
+        ) == []
+
+    def test_not_variant_termo_detects_non_variants_without_binding(self) -> None:
+        left = var("Left")
+        right = var("Right")
+        other = var("Other")
+
+        assert solve_all(
+            program(),
+            (left, right),
+            not_variant_termo(term("pair", left, left), term("pair", right, other)),
+        ) == [(left, right)]
+        assert solve_all(
+            program(),
+            left,
+            not_variant_termo(term("box", left), term("box", right)),
+        ) == []
+
+    def test_subsumes_termo_checks_instance_relationship_without_binding(self) -> None:
+        general = var("General")
+        specific = var("Specific")
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(
+                eq(marker, "ok"),
+                subsumes_termo(term("box", general), term("box", "tea")),
+            ),
+        ) == [atom("ok")]
+        assert solve_all(
+            program(),
+            marker,
+            subsumes_termo(term("box", "tea"), term("box", specific)),
+        ) == []
+        assert solve_all(
+            program(),
+            marker,
+            subsumes_termo(
+                term("pair", general, general),
+                term("pair", "tea", "cake"),
+            ),
+        ) == []
 
     def test_difo_delays_disequality_until_later_bindings(self) -> None:
         left = var("Left")
