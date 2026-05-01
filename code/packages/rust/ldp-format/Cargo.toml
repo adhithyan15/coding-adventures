@@ -1,0 +1,7 @@
+[package]
+name = "ldp-format"
+version = "0.1.0"
+edition = "2021"
+description = "LANG22 PR 11d — versioned binary serialiser for .ldp (language-runtime profile) artefacts.  Pure data crate, no dependencies; consumed by aot-with-pgo, jit-core (writes profiles), and lang-perf-suggestions"
+
+[dependencies]

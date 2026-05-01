@@ -96,6 +96,7 @@ members = [
     "interpreter-ir",
     "jit-core",
     "jit-profiling-insights",
+    "ldp-format",
     "itf",
     "javascript-lexer",
     "javascript-parser",
