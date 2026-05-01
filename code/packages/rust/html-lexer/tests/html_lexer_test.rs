@@ -501,6 +501,109 @@ fn default_html_lexer_supports_public_and_system_doctype_identifiers() {
 }
 
 #[test]
+fn default_html_lexer_reports_missing_whitespace_after_doctype_public_keyword() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer
+        .push("<!DOCTYPE html PUBLIC\"-//IETF//DTD HTML//EN\">")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: Some("-//IETF//DTD HTML//EN".to_string()),
+                system_identifier: None,
+                force_quirks: false,
+            },
+            Token::Eof,
+        ]
+    );
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "missing-whitespace-after-doctype-public-keyword"));
+}
+
+#[test]
+fn default_html_lexer_reports_missing_whitespace_between_doctype_identifiers() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer
+        .push("<!DOCTYPE html PUBLIC '-//W3C//DTD HTML 4.01//EN'\"about:legacy-compat\">")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: Some("-//W3C//DTD HTML 4.01//EN".to_string()),
+                system_identifier: Some("about:legacy-compat".to_string()),
+                force_quirks: false,
+            },
+            Token::Eof,
+        ]
+    );
+    assert!(lexer.diagnostics().iter().any(|diagnostic| {
+        diagnostic.code == "missing-whitespace-between-doctype-public-and-system-identifiers"
+    }));
+}
+
+#[test]
+fn default_html_lexer_reports_missing_quote_before_doctype_public_identifier() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("<!DOCTYPE html PUBLIC id>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: None,
+                system_identifier: None,
+                force_quirks: true,
+            },
+            Token::Eof,
+        ]
+    );
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "missing-quote-before-doctype-public-identifier"));
+}
+
+#[test]
+fn default_html_lexer_reports_abrupt_doctype_public_identifier() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("<!DOCTYPE html PUBLIC \"unterminated>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: Some("unterminated".to_string()),
+                system_identifier: None,
+                force_quirks: true,
+            },
+            Token::Eof,
+        ]
+    );
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "abrupt-doctype-public-identifier"));
+}
+
+#[test]
 fn default_html_lexer_treats_form_feed_as_doctype_whitespace() {
     let tokens = lex_html(
         "<!DOCTYPE\u{000C}html\u{000C}PUBLIC\u{000C}'-//W3C//DTD HTML 4.01//EN'\u{000C}\"about:legacy-compat\"\u{000C}>",
@@ -537,6 +640,85 @@ fn default_html_lexer_supports_standalone_system_doctype_identifier() {
             Token::Eof,
         ]
     );
+}
+
+#[test]
+fn default_html_lexer_reports_missing_whitespace_after_doctype_system_keyword() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer
+        .push("<!DOCTYPE html SYSTEM\"about:legacy-compat\">")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: None,
+                system_identifier: Some("about:legacy-compat".to_string()),
+                force_quirks: false,
+            },
+            Token::Eof,
+        ]
+    );
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "missing-whitespace-after-doctype-system-keyword"));
+}
+
+#[test]
+fn default_html_lexer_reports_missing_quote_before_doctype_system_identifier() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("<!DOCTYPE html SYSTEM id>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: None,
+                system_identifier: None,
+                force_quirks: true,
+            },
+            Token::Eof,
+        ]
+    );
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "missing-quote-before-doctype-system-identifier"));
+}
+
+#[test]
+fn default_html_lexer_reports_abrupt_doctype_system_identifier() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer
+        .push("<!DOCTYPE html SYSTEM \"about:legacy-compat>")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: None,
+                system_identifier: Some("about:legacy-compat".to_string()),
+                force_quirks: true,
+            },
+            Token::Eof,
+        ]
+    );
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "abrupt-doctype-system-identifier"));
 }
 
 #[test]

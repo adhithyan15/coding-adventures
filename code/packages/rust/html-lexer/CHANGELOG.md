@@ -132,6 +132,9 @@ documented in this file.
   missing identifiers.
 - Standalone `SYSTEM` doctypes and trailing junk after system identifiers are
   now covered, with unexpected trailing junk marking force-quirks mode.
+- DOCTYPE public/system recovery conformance now covers missing whitespace
+  around identifiers, missing identifier quotes, and abrupt identifier
+  termination.
 - DOCTYPE declarations cut off while matching the `DOCTYPE` keyword now emit a
   force-quirks token instead of a clean partial declaration.
 - Malformed `DOCTYPE` keyword text now marks force-quirks mode while preserving

@@ -237,6 +237,54 @@
       ]
     },
     {
+      "id": "doctype-missing-whitespace-after-public-keyword",
+      "description": "DOCTYPE PUBLIC declarations recover when the public identifier starts immediately after the keyword",
+      "input": "<!DOCTYPE html PUBLIC\"-//IETF//DTD HTML//EN\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=-//IETF//DTD HTML//EN, system_identifier=null, force_quirks=false)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-whitespace-after-doctype-public-keyword"
+      ]
+    },
+    {
+      "id": "doctype-missing-whitespace-between-public-and-system-identifiers",
+      "description": "DOCTYPE PUBLIC declarations recover when the system identifier starts immediately after the public identifier",
+      "input": "<!DOCTYPE html PUBLIC '-//W3C//DTD HTML 4.01//EN'\"about:legacy-compat\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=-//W3C//DTD HTML 4.01//EN, system_identifier=about:legacy-compat, force_quirks=false)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-whitespace-between-doctype-public-and-system-identifiers"
+      ]
+    },
+    {
+      "id": "doctype-missing-quote-before-public-identifier",
+      "description": "DOCTYPE PUBLIC declarations missing a quoted public identifier recover through bogus doctype",
+      "input": "<!DOCTYPE html PUBLIC id>",
+      "tokens": [
+        "Doctype(name=html, force_quirks=true)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-quote-before-doctype-public-identifier"
+      ]
+    },
+    {
+      "id": "doctype-abrupt-public-identifier",
+      "description": "DOCTYPE PUBLIC declarations cut off by > inside the public identifier mark force-quirks",
+      "input": "<!DOCTYPE html PUBLIC \"unterminated>",
+      "tokens": [
+        "Doctype(name=html, public_identifier=unterminated, system_identifier=null, force_quirks=true)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "abrupt-doctype-public-identifier"
+      ]
+    },
+    {
       "id": "doctype-missing-public-identifier-quirks",
       "description": "DOCTYPE PUBLIC without an identifier marks force-quirks",
       "input": "<!DOCTYPE html PUBLIC>",
@@ -255,6 +303,42 @@
       "tokens": [
         "Doctype(name=html, public_identifier=null, system_identifier=about:legacy-compat, force_quirks=false)",
         "EOF"
+      ]
+    },
+    {
+      "id": "doctype-missing-whitespace-after-system-keyword",
+      "description": "DOCTYPE SYSTEM declarations recover when the system identifier starts immediately after the keyword",
+      "input": "<!DOCTYPE html SYSTEM\"about:legacy-compat\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=null, system_identifier=about:legacy-compat, force_quirks=false)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-whitespace-after-doctype-system-keyword"
+      ]
+    },
+    {
+      "id": "doctype-missing-quote-before-system-identifier",
+      "description": "DOCTYPE SYSTEM declarations missing a quoted system identifier recover through bogus doctype",
+      "input": "<!DOCTYPE html SYSTEM id>",
+      "tokens": [
+        "Doctype(name=html, force_quirks=true)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-quote-before-doctype-system-identifier"
+      ]
+    },
+    {
+      "id": "doctype-abrupt-system-identifier",
+      "description": "DOCTYPE SYSTEM declarations cut off by > inside the system identifier mark force-quirks",
+      "input": "<!DOCTYPE html SYSTEM \"about:legacy-compat>",
+      "tokens": [
+        "Doctype(name=html, public_identifier=null, system_identifier=about:legacy-compat, force_quirks=true)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "abrupt-doctype-system-identifier"
       ]
     },
     {
