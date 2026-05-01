@@ -96,6 +96,7 @@ members = [
     "intel4004-simulator",
     "interrupt-handler",
     "interpreter-ir",
+    "iir-coverage",
     "jit-core",
     "jit-profiling-insights",
     "ldp-format",
