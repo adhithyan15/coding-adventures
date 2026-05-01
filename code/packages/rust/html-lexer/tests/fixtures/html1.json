@@ -614,6 +614,36 @@
       "last_start_tag": "title"
     },
     {
+      "id": "html-whatwg-precedence-character-references-data",
+      "description": "WHATWG precedence and successor relation aliases resolve in data state",
+      "input": "Precedence:&NotPrecedes;&NotPrecedesEqual;&NotPrecedesSlantEqual;&NotSucceeds;&NotSucceedsEqual;&NotSucceedsSlantEqual;&NotSucceedsTilde;&Precedes;&PrecedesEqual;&PrecedesSlantEqual;&PrecedesTilde;&Succeeds;&SucceedsEqual;&SucceedsSlantEqual;&SucceedsTilde;&curlyeqprec;&curlyeqsucc;&nprec;&npreceq;",
+      "tokens": [
+        "Text(data=Precedence:\u2280\u2AAF\u0338\u22E0\u2281\u2AB0\u0338\u22E1\u227F\u0338\u227A\u2AAF\u227C\u227E\u227B\u2AB0\u227D\u227F\u22DE\u22DF\u2280\u2AAF\u0338)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-precedence-character-references-attributes",
+      "description": "WHATWG precedence aliases resolve inside attribute values",
+      "input": "<math prec=\"&nsucc;&nsucceq;&pr;&prE;&prap;&prcue;&pre;&prec;&precapprox;&preccurlyeq;&preceq;&precnapprox;&precneqq;&precnsim;&precsim;&prnE;&prnap;&prnsim;&prsim;\">",
+      "tokens": [
+        "StartTag(name=math, attributes=[prec=\u2281\u2AB0\u0338\u227A\u2AB3\u2AB7\u227C\u2AAF\u227A\u2AB7\u227C\u2AAF\u2AB9\u2AB5\u22E8\u227E\u2AB5\u2AB9\u22E8\u227E], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-successor-character-references-rcdata",
+      "description": "Seeded title RCDATA context resolves WHATWG successor aliases",
+      "input": "&sc;&scE;&scap;&sccue;&sce;&scnE;&scnap;&scnsim;&scsim;&succ;&succapprox;&succcurlyeq;&succeq;&succnapprox;&succneqq;&succnsim;&succsim;</title>",
+      "tokens": [
+        "Text(data=\u227B\u2AB4\u2AB8\u227D\u2AB0\u2AB6\u2ABA\u22E9\u227F\u227B\u2AB8\u227D\u2AB0\u2ABA\u2AB6\u22E9\u227F)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
       "id": "html-whatwg-basic-arrow-character-references-data",
       "description": "WHATWG basic and double arrow aliases resolve in data state",
       "input": "Arrows:&LeftArrow;&RightArrow;&UpArrow;&DownArrow;&LeftRightArrow;&UpDownArrow;&DoubleLeftArrow;&DoubleRightArrow;&DoubleUpArrow;&DoubleDownArrow;&DoubleLeftRightArrow;&DoubleUpDownArrow;",
