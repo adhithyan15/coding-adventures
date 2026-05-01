@@ -200,11 +200,11 @@ actual_params = expression { COMMA expression } ;
 
 # For loop with a list of for-elements. Elements are separated by commas.
 # Three element forms:
-#   step/until: for i := 1 step 1 until 10 do   (classic range loop)
-#   while:      for i := x while x > 0 do       (conditional advance)
-#   simple:     for i := 5 do                   (single value, executes once)
-# Multiple forms can be combined: for i := 1 step 1 until 5, 10, 20 do
-for_stmt     = "for" NAME ASSIGN for_list "do" statement ;
+#   step/until: for i := 1 step 1 until 10 do      (classic range loop)
+#   while:      for a[i] := x while x > 0 do       (conditional advance)
+#   simple:     for i := 5 do                      (single value, executes once)
+# Multiple forms can be combined: for a[1] := 1 step 1 until 5, 10, 20 do
+for_stmt     = "for" variable ASSIGN for_list "do" statement ;
 
 for_list     = for_elem { COMMA for_elem } ;
 

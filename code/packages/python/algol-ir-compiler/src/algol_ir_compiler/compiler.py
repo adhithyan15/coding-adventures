@@ -224,6 +224,15 @@ class _ForElementPlan:
     check_label: str | None = None
 
 
+@dataclass(frozen=True)
+class _ForControlTarget:
+    """The lvalue controlled by an ALGOL for statement."""
+
+    type_name: str
+    reference: ResolvedReference | None = None
+    array_variable: ASTNode | None = None
+
+
 class AlgolIrCompiler:
     """Compile a typed ALGOL AST into the repository's register IR.
 
@@ -1574,13 +1583,77 @@ class AlgolIrCompiler:
                 self._compile_statement(child, scope)
         self._label(end_label)
 
-    def _compile_for(self, node: ASTNode, scope: _FrameScope) -> None:
-        loop_token = next(
-            (tok for tok in _direct_tokens(node) if tok.type_name == "NAME"), None
-        )
-        if loop_token is None:
+    def _for_control_target(self, node: ASTNode) -> _ForControlTarget:
+        variable = _first_direct_node(node, "variable")
+        name = _variable_head_name(variable)
+        if name is None:
             raise CompileError("for loop is missing its control variable")
-        loop_reference = self._require_reference(loop_token, "control")
+        if _variable_subscripts(variable):
+            access = self._require_array_access(name, "control")
+            return _ForControlTarget(
+                type_name=self.arrays[access.array_id].element_type,
+                array_variable=variable,
+            )
+        reference = self._require_reference(name, "control")
+        return _ForControlTarget(
+            type_name=reference.type_name,
+            reference=reference,
+        )
+
+    def _emit_load_for_control(
+        self, target: _ForControlTarget, scope: _FrameScope
+    ) -> int:
+        if target.reference is not None:
+            return self._emit_load_reference(target.reference, scope)
+        if target.array_variable is None:
+            raise CompileError("for loop control target is missing storage")
+        name = _variable_head_name(target.array_variable)
+        if name is None:
+            raise CompileError("array control target is missing a name")
+        access = self._require_array_access(name, "control")
+        data_pointer, byte_offset = self._compile_array_element_address(
+            target.array_variable,
+            scope,
+            role="control",
+        )
+        dst = self._fresh_reg()
+        self._emit_load_scalar_at_reg(
+            self.arrays[access.array_id].element_type,
+            dst,
+            data_pointer,
+            byte_offset,
+        )
+        return dst
+
+    def _emit_store_for_control(
+        self,
+        target: _ForControlTarget,
+        scope: _FrameScope,
+        value_reg: int,
+    ) -> None:
+        if target.reference is not None:
+            self._emit_store_reference(target.reference, scope, value_reg)
+            return
+        if target.array_variable is None:
+            raise CompileError("for loop control target is missing storage")
+        name = _variable_head_name(target.array_variable)
+        if name is None:
+            raise CompileError("array control target is missing a name")
+        access = self._require_array_access(name, "control")
+        data_pointer, byte_offset = self._compile_array_element_address(
+            target.array_variable,
+            scope,
+            role="control",
+        )
+        self._emit_store_scalar_at_reg(
+            self.arrays[access.array_id].element_type,
+            value_reg,
+            data_pointer,
+            byte_offset,
+        )
+
+    def _compile_for(self, node: ASTNode, scope: _FrameScope) -> None:
+        loop_target = self._for_control_target(node)
         body = _first_direct_node(node, "statement")
         elements = _direct_nodes(_first_direct_node(node, "for_list"), "for_elem")
         if not elements:
@@ -1590,7 +1663,7 @@ class AlgolIrCompiler:
         if len(elements) == 1:
             self._compile_single_for_element(
                 elements[0],
-                loop_reference=loop_reference,
+                loop_target=loop_target,
                 body=body,
                 scope=scope,
                 index=index,
@@ -1653,9 +1726,9 @@ class AlgolIrCompiler:
                 value = self._coerce_reg_to_type(
                     value,
                     self._expr_type(arith_nodes[0]),
-                    expected_type=loop_reference.type_name,
+                    expected_type=loop_target.type_name,
                 )
-                self._emit_store_reference(loop_reference, scope, value)
+                self._emit_store_for_control(loop_target, scope, value)
                 self._emit(
                     IrOp.LOAD_IMM,
                     IrRegister(active_element_reg),
@@ -1674,9 +1747,9 @@ class AlgolIrCompiler:
                 value = self._coerce_reg_to_type(
                     value,
                     self._expr_type(arith_nodes[0]),
-                    expected_type=loop_reference.type_name,
+                    expected_type=loop_target.type_name,
                 )
-                self._emit_store_reference(loop_reference, scope, value)
+                self._emit_store_for_control(loop_target, scope, value)
                 condition = self._compile_expr(bool_node, scope)
                 self._emit(
                     IrOp.BRANCH_Z,
@@ -1700,9 +1773,9 @@ class AlgolIrCompiler:
             start = self._coerce_reg_to_type(
                 start,
                 self._expr_type(arith_nodes[0]),
-                expected_type=loop_reference.type_name,
+                expected_type=loop_target.type_name,
             )
-            self._emit_store_reference(loop_reference, scope, start)
+            self._emit_store_for_control(loop_target, scope, start)
             self._emit(IrOp.JUMP, IrLabel(plan.check_label))
 
             self._label(plan.check_label)
@@ -1713,7 +1786,7 @@ class AlgolIrCompiler:
             self._emit_step_until_dispatch(
                 active_element_reg=active_element_reg,
                 dispatch_value=plan.dispatch_value,
-                loop_reference=loop_reference,
+                loop_target=loop_target,
                 loop_scope=scope,
                 step_value=step_value,
                 step_type=step_type,
@@ -1724,26 +1797,26 @@ class AlgolIrCompiler:
             )
 
             self._label(plan.advance_label)
-            current_value = self._emit_load_reference(loop_reference, scope)
+            current_value = self._emit_load_for_control(loop_target, scope)
             next_value = self._emit_numeric(
                 "+",
                 current_value,
-                loop_reference.type_name,
+                loop_target.type_name,
                 step_value,
                 step_type,
                 scope,
             )
             next_type = self._result_type_for_numeric_operator(
                 "+",
-                loop_reference.type_name,
+                loop_target.type_name,
                 step_type,
             )
             next_value = self._coerce_reg_to_type(
                 next_value,
                 next_type,
-                expected_type=loop_reference.type_name,
+                expected_type=loop_target.type_name,
             )
-            self._emit_store_reference(loop_reference, scope, next_value)
+            self._emit_store_for_control(loop_target, scope, next_value)
             self._emit(IrOp.JUMP, IrLabel(plan.check_label))
 
         self._label(body_label)
@@ -1762,7 +1835,7 @@ class AlgolIrCompiler:
         self,
         elem: ASTNode,
         *,
-        loop_reference: ResolvedReference,
+        loop_target: _ForControlTarget,
         body: ASTNode | None,
         scope: _FrameScope,
         index: int,
@@ -1774,9 +1847,9 @@ class AlgolIrCompiler:
             value = self._coerce_reg_to_type(
                 value,
                 self._expr_type(value_node),
-                expected_type=loop_reference.type_name,
+                expected_type=loop_target.type_name,
             )
-            self._emit_store_reference(loop_reference, scope, value)
+            self._emit_store_for_control(loop_target, scope, value)
             if body is not None:
                 self._compile_statement(body, scope)
             return
@@ -1793,9 +1866,9 @@ class AlgolIrCompiler:
             value = self._coerce_reg_to_type(
                 value,
                 self._expr_type(value_node),
-                expected_type=loop_reference.type_name,
+                expected_type=loop_target.type_name,
             )
-            self._emit_store_reference(loop_reference, scope, value)
+            self._emit_store_for_control(loop_target, scope, value)
             condition = self._compile_expr(condition_node, scope)
             self._emit(IrOp.BRANCH_Z, IrRegister(condition), IrLabel(end_label))
             if body is not None:
@@ -1815,9 +1888,9 @@ class AlgolIrCompiler:
         start = self._coerce_reg_to_type(
             start,
             self._expr_type(start_node),
-            expected_type=loop_reference.type_name,
+            expected_type=loop_target.type_name,
         )
-        self._emit_store_reference(loop_reference, scope, start)
+        self._emit_store_for_control(loop_target, scope, start)
 
         start_label = f"loop_{index}_start"
         body_label = f"loop_{index}_body"
@@ -1828,7 +1901,7 @@ class AlgolIrCompiler:
         limit_value = self._compile_expr(limit_node, scope)
         limit_type = self._expr_type(limit_node)
         self._emit_step_until_branch(
-            loop_reference=loop_reference,
+            loop_target=loop_target,
             loop_scope=scope,
             step_value=step_value,
             step_type=step_type,
@@ -1841,33 +1914,33 @@ class AlgolIrCompiler:
         self._label(body_label)
         if body is not None:
             self._compile_statement(body, scope)
-        current_value = self._emit_load_reference(loop_reference, scope)
+        current_value = self._emit_load_for_control(loop_target, scope)
         next_value = self._emit_numeric(
             "+",
             current_value,
-            loop_reference.type_name,
+            loop_target.type_name,
             step_value,
             step_type,
             scope,
         )
         next_type = self._result_type_for_numeric_operator(
             "+",
-            loop_reference.type_name,
+            loop_target.type_name,
             step_type,
         )
         next_value = self._coerce_reg_to_type(
             next_value,
             next_type,
-            expected_type=loop_reference.type_name,
+            expected_type=loop_target.type_name,
         )
-        self._emit_store_reference(loop_reference, scope, next_value)
+        self._emit_store_for_control(loop_target, scope, next_value)
         self._emit(IrOp.JUMP, IrLabel(start_label))
         self._label(end_label)
 
     def _emit_step_until_branch(
         self,
         *,
-        loop_reference: ResolvedReference,
+        loop_target: _ForControlTarget,
         loop_scope: _FrameScope,
         step_value: int,
         step_type: str,
@@ -1882,7 +1955,7 @@ class AlgolIrCompiler:
         negative_label = f"{label_prefix}_negative"
         compare_type = (
             _REAL_TYPE
-            if _REAL_TYPE in {loop_reference.type_name, limit_type}
+            if _REAL_TYPE in {loop_target.type_name, limit_type}
             else _INTEGER_TYPE
         )
         step_type_for_compare = self._result_type_for_numeric_operator(
@@ -1945,10 +2018,10 @@ class AlgolIrCompiler:
         self._emit(IrOp.JUMP, IrLabel(continue_label))
 
         self._label(positive_label)
-        loop_value = self._emit_load_reference(loop_reference, loop_scope)
+        loop_value = self._emit_load_for_control(loop_target, loop_scope)
         positive_loop = self._coerce_reg_to_type(
             loop_value,
-            loop_reference.type_name,
+            loop_target.type_name,
             expected_type=compare_type,
         )
         positive_limit = self._coerce_reg_to_type(
@@ -1979,10 +2052,10 @@ class AlgolIrCompiler:
         self._emit(IrOp.JUMP, IrLabel(continue_label))
 
         self._label(negative_label)
-        loop_value = self._emit_load_reference(loop_reference, loop_scope)
+        loop_value = self._emit_load_for_control(loop_target, loop_scope)
         negative_loop = self._coerce_reg_to_type(
             loop_value,
-            loop_reference.type_name,
+            loop_target.type_name,
             expected_type=compare_type,
         )
         negative_limit = self._coerce_reg_to_type(
@@ -2040,7 +2113,7 @@ class AlgolIrCompiler:
         *,
         active_element_reg: int,
         dispatch_value: int,
-        loop_reference: ResolvedReference,
+        loop_target: _ForControlTarget,
         loop_scope: _FrameScope,
         step_value: int,
         step_type: str,
@@ -2054,7 +2127,7 @@ class AlgolIrCompiler:
         negative_label = f"{continue_label}_{dispatch_value}_negative"
         compare_type = (
             _REAL_TYPE
-            if _REAL_TYPE in {loop_reference.type_name, limit_type}
+            if _REAL_TYPE in {loop_target.type_name, limit_type}
             else _INTEGER_TYPE
         )
         step_type_for_compare = self._result_type_for_numeric_operator(
@@ -2122,10 +2195,10 @@ class AlgolIrCompiler:
         self._emit(IrOp.JUMP, IrLabel(continue_label))
 
         self._label(positive_label)
-        loop_value = self._emit_load_reference(loop_reference, loop_scope)
+        loop_value = self._emit_load_for_control(loop_target, loop_scope)
         positive_loop = self._coerce_reg_to_type(
             loop_value,
-            loop_reference.type_name,
+            loop_target.type_name,
             expected_type=compare_type,
         )
         positive_limit = self._coerce_reg_to_type(
@@ -2161,10 +2234,10 @@ class AlgolIrCompiler:
         self._emit(IrOp.JUMP, IrLabel(continue_label))
 
         self._label(negative_label)
-        loop_value = self._emit_load_reference(loop_reference, loop_scope)
+        loop_value = self._emit_load_for_control(loop_target, loop_scope)
         negative_loop = self._coerce_reg_to_type(
             loop_value,
-            loop_reference.type_name,
+            loop_target.type_name,
             expected_type=compare_type,
         )
         negative_limit = self._coerce_reg_to_type(

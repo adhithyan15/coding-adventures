@@ -128,6 +128,22 @@ class TestAlgolIrCompiler:
         assert IrOp.F64_CMP_LT in opcodes
         assert IrOp.F64_ADD in opcodes
 
+    def test_compiles_array_element_for_control_variable(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; integer array a[1:1]; "
+                "for a[1] := 1 step 1 until 3 do result := result + a[1] "
+                "end"
+            )
+        )
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+        assert any(label.endswith("_start") for label in labels)
+        assert any(label.endswith("_body") for label in labels)
+
     def test_compiles_own_scalar_to_static_storage(self) -> None:
         result = compile_algol(
             parse_algol(

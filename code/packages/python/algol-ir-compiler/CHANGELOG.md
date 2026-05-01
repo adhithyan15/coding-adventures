@@ -79,6 +79,8 @@ All notable changes to this package will be documented in this file.
   to read or assign through the original argument.
 - Lowered whole-array arguments through formal procedure dispatchers by passing
   descriptor pointers to actual procedures that declare matching array formals.
+- Lowered subscripted integer and real array elements as writable `for`
+  statement control variables.
 - Lowered label, switch, and procedure arguments through formal procedure
   dispatchers by forwarding label ids and descriptor pointers.
 - Lowered report-style typed formal specifiers such as `integer array a;` and

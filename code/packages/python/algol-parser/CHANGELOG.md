@@ -21,6 +21,7 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   operators through the shared lexer normalization layer.
 - Parsed report-style typed formal specifiers such as `integer array a;` and
   `real procedure f;` while preserving the existing split specifier spelling.
+- Parsed subscripted variables as `for` statement control variables.
 
 ## [0.1.0] — 2026-04-06
 

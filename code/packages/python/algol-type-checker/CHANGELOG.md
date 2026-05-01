@@ -78,6 +78,8 @@ All notable changes to this package will be documented in this file.
   `<>` not-equal relations, and double-quoted string literals.
 - Accepted shared lexer front-door publication symbols for relations,
   exponentiation, and boolean operators.
+- Accepted subscripted integer and real array elements as `for` statement
+  control variables.
 
 ## [0.1.0] - 2026-04-20
 

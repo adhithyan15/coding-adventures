@@ -579,6 +579,33 @@ class TestAlgolTypeChecker:
         )
         assert check_algol(ast).ok
 
+    def test_accepts_array_element_for_control_variable(self) -> None:
+        ast = parse_algol(
+            "begin integer result; integer array a[1:1]; "
+            "for a[1] := 1 step 1 until 3 do result := result + a[1] "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        assert any(
+            access.role == "control" for access in result.semantic.array_accesses
+        )
+
+    def test_rejects_boolean_array_element_for_control_variable(self) -> None:
+        ast = parse_algol(
+            "begin integer result; boolean array flags[1:1]; "
+            "for flags[1] := 1 step 1 until 3 do result := result + 1 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "for loop control variable must be integer or real" in (
+            result.diagnostics[0].message
+        )
+
     def test_accepts_nested_block_scope(self) -> None:
         ast = parse_algol(
             "begin integer result; "

@@ -436,6 +436,17 @@ class TestForLoop:
         for_nodes = find_nodes(ast, "for_stmt")
         assert len(for_nodes) >= 1
 
+    def test_array_element_control_variable(self) -> None:
+        """For loops can use a subscripted variable as the control lvalue."""
+        ast = parse(
+            "begin integer result; integer array a[1:1]; "
+            "for a[1] := 1 step 1 until 3 do result := result + a[1] "
+            "end"
+        )
+        for_nodes = find_nodes(ast, "for_stmt")
+        assert len(for_nodes) == 1
+        assert find_nodes(for_nodes[0], "subscripts")
+
 
 # ---------------------------------------------------------------------------
 # Nested block tests

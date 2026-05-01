@@ -1529,14 +1529,29 @@ class AlgolTypeChecker:
                 self._check_statement(child, scope)
 
     def _check_for(self, node: ASTNode, scope: Scope) -> None:
-        loop_name = next(
-            (tok for tok in _direct_tokens(node) if tok.type_name == "NAME"), None
-        )
+        loop_variable = _first_direct_node(node, "variable")
+        loop_name = _variable_head_name(loop_variable)
         if loop_name is None:
             self._error(node, "for loop is missing its control variable")
             return
-        symbol = self._resolve_name(loop_name, scope, role="control")
-        loop_type = ERROR if symbol is None else symbol.type_name
+        if _variable_subscripts(loop_variable):
+            access = self._check_array_access(loop_variable, scope, role="control")
+            descriptor = (
+                next(
+                    (
+                        array
+                        for array in self.semantic_arrays
+                        if array.array_id == access.array_id
+                    ),
+                    None,
+                )
+                if access is not None
+                else None
+            )
+            loop_type = ERROR if descriptor is None else descriptor.element_type
+        else:
+            symbol = self._resolve_name(loop_name, scope, role="control")
+            loop_type = ERROR if symbol is None else symbol.type_name
         if loop_type != ERROR and loop_type not in {INTEGER, REAL}:
             self._error(loop_name, "for loop control variable must be integer or real")
 
