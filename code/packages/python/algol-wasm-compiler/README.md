@@ -43,6 +43,11 @@ The implementation is not yet a full ALGOL 60 conformance lane, but it is well
 beyond a toy arithmetic subset and is now useful for representative block- and
 procedure-heavy programs.
 
+The convenience APIs reject source strings larger than 256 KiB before parsing.
+The downstream type checker also enforces configurable AST, block-nesting, and
+procedure-nesting limits so recursive semantic analysis fails with explicit
+diagnostics instead of exhausting Python recursion on hostile inputs.
+
 ```python
 from algol_wasm_compiler import compile_source
 from wasm_runtime import WasiConfig, WasiHost, WasmRuntime

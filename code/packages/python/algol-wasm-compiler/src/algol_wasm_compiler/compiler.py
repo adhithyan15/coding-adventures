@@ -15,6 +15,8 @@ from wasm_module_encoder import encode_module
 from wasm_types import ValueType, WasmModule
 from wasm_validator import ValidatedModule, ValidationError, validate
 
+MAX_SOURCE_LENGTH = 256 * 1024
+
 
 @dataclass(frozen=True)
 class AlgolWasmResult:
@@ -49,6 +51,13 @@ class AlgolWasmCompiler:
     """Compile the current ALGOL 60 subset into WebAssembly bytes."""
 
     def compile_source(self, source: str) -> AlgolWasmResult:
+        if len(source) > MAX_SOURCE_LENGTH:
+            raise AlgolWasmError(
+                "source",
+                "ALGOL source length "
+                f"{len(source)} exceeds configured limit {MAX_SOURCE_LENGTH}",
+            )
+
         try:
             ast = parse_algol(source)
         except Exception as exc:
