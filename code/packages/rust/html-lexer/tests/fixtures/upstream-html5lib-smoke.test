@@ -522,6 +522,66 @@
       ]
     },
     {
+      "description": "data state WHATWG spacing named character references",
+      "input": "Spacing:&Tab;&NewLine;&MediumSpace;&ThickSpace;&ThinSpace;&VeryThinSpace;&ZeroWidthSpace;&NegativeMediumSpace;",
+      "output": [
+        ["Character", "Spacing:"],
+        ["Character", "\t"],
+        ["Character", "\n"],
+        ["Character", "\u205F"],
+        ["Character", "\u205F\u200A"],
+        ["Character", "\u2009"],
+        ["Character", "\u200A"],
+        ["Character", "\u200B"],
+        ["Character", "\u200B"]
+      ]
+    },
+    {
+      "description": "attribute WHATWG invisible named character references",
+      "input": "<a data=\"&NoBreak;&NonBreakingSpace;&ApplyFunction;&InvisibleTimes;&InvisibleComma;\">",
+      "output": [
+        ["StartTag", "a", {"data": "\u2060\u00A0\u2061\u2062\u2063"}]
+      ]
+    },
+    {
+      "description": "data state WHATWG alias punctuation named character references",
+      "input": "&OpenCurlyQuote;hi&CloseCurlyQuote; &OpenCurlyDoubleQuote;x&CloseCurlyDoubleQuote; &CenterDot;&VerticalBar;&DoubleVerticalBar;&LeftAngleBracket;&RightAngleBracket;&Cross;&SmallCircle;",
+      "output": [
+        ["Character", "\u2018"],
+        ["Character", "hi"],
+        ["Character", "\u2019"],
+        ["Character", " "],
+        ["Character", "\u201C"],
+        ["Character", "x"],
+        ["Character", "\u201D"],
+        ["Character", " "],
+        ["Character", "\u00B7"],
+        ["Character", "\u2223"],
+        ["Character", "\u2225"],
+        ["Character", "\u27E8"],
+        ["Character", "\u27E9"],
+        ["Character", "\u2A2F"],
+        ["Character", "\u2218"]
+      ]
+    },
+    {
+      "description": "rcdata WHATWG math constant named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&DifferentialD;&CapitalDifferentialD;&DD;&dd;&ExponentialE;&ee;&ImaginaryI;&ii;</title>",
+      "output": [
+        ["Character", "\u2146"],
+        ["Character", "\u2145"],
+        ["Character", "\u2145"],
+        ["Character", "\u2146"],
+        ["Character", "\u2147"],
+        ["Character", "\u2147"],
+        ["Character", "\u2148"],
+        ["Character", "\u2148"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
       "description": "data state legacy named character references missing semicolons",
       "input": "Legacy&nbsp symbols: &copy/&reg",
       "output": [

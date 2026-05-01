@@ -25,7 +25,10 @@ the project, but the first real HTML authoring artifact that must keep HTML
 The default lexer already resolves the core named character references, the
 classic Latin-1 entity set, and the HTML4 symbol/math references including
 `alefsym` and `oline`, preserving entity-name case so legacy names such as
-`Agrave` and `agrave` remain distinct.
+`Agrave` and `agrave` remain distinct. It also includes a growing WHATWG
+named-reference slice for spacing, invisible operators, punctuation aliases,
+and math constants such as `Tab`, `NewLine`, `NoBreak`, `InvisibleTimes`,
+`OpenCurlyQuote`, and `DifferentialD`.
 Named character reference scanning now follows the longest-prefix shape of the
 HTML tokenizer: text and RCDATA recover inputs such as `&copycat` as `©cat`
 with a missing-semicolon diagnostic, while attribute values preserve ambiguous

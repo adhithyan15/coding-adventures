@@ -2307,6 +2307,87 @@ fn default_html_lexer_supports_seeded_rcdata_remaining_html4_math_named_characte
 }
 
 #[test]
+fn default_html_lexer_supports_whatwg_spacing_named_character_references() {
+    let tokens = lex_html(
+        "Spacing:&Tab;&NewLine;&MediumSpace;&ThickSpace;&ThinSpace;&VeryThinSpace;&ZeroWidthSpace;&NegativeMediumSpace;",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Text(
+                "Spacing:\t\n\u{205F}\u{205F}\u{200A}\u{2009}\u{200A}\u{200B}\u{200B}".to_string(),
+            ),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_invisible_named_character_references_in_attributes() {
+    let tokens = lex_html(
+        "<a data=\"&NoBreak;&NonBreakingSpace;&ApplyFunction;&InvisibleTimes;&InvisibleComma;\">",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![Attribute {
+                    name: "data".to_string(),
+                    value: "\u{2060}\u{00A0}\u{2061}\u{2062}\u{2063}".to_string(),
+                }],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_alias_punctuation_named_character_references() {
+    let tokens = lex_html(
+        "&OpenCurlyQuote;hi&CloseCurlyQuote; &OpenCurlyDoubleQuote;x&CloseCurlyDoubleQuote; &CenterDot;&VerticalBar;&DoubleVerticalBar;&LeftAngleBracket;&RightAngleBracket;&Cross;&SmallCircle;",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![Token::Text("‘hi’ “x” ·∣∥⟨⟩⨯∘".to_string()), Token::Eof,]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_rcdata_whatwg_math_constant_named_character_references() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rcdata").unwrap();
+    lexer.set_last_start_tag("title");
+
+    lexer
+        .push(
+            "&DifferentialD;&CapitalDifferentialD;&DD;&dd;&ExponentialE;&ee;&ImaginaryI;&ii;</title>",
+        )
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text(
+                "\u{2146}\u{2145}\u{2145}\u{2146}\u{2147}\u{2147}\u{2148}\u{2148}".to_string()
+            ),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_semicolonless_legacy_named_character_references() {
     let mut lexer = create_html_lexer().unwrap();
 
