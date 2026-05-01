@@ -97,6 +97,7 @@ members = [
     "interrupt-handler",
     "interpreter-ir",
     "iir-coverage",
+    "iir-coverage-lcov",
     "jit-core",
     "jit-profiling-insights",
     "ldp-format",
