@@ -36,3 +36,5 @@ All notable changes to the `state-machine-tokenizer` crate will be documented in
 - Numeric character-reference actions now report invalid-code-point diagnostics
   and apply HTML replacement/remapping behavior for null, surrogate,
   out-of-range, noncharacter, and Windows-1252 control references.
+- Expanded the built-in HTML named-character-reference table with the remaining
+  HTML4-era `alefsym` and `oline` math references.
