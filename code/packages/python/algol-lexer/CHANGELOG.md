@@ -14,6 +14,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Accepted `COMMENT`/mixed-case `comment` as comment starters while preserving
   identifiers such as `commentary` through keyword-boundary matching.
 - Accepted `<>` as an alternate ASCII spelling for ALGOL not-equal.
+- Accepted ALGOL publication symbols `≤`, `≥`, `≠`, `↑`, `∧`, `∨`, `¬`, `⊃`,
+  and `≡`, normalizing them to the existing ASCII or keyword token values.
 - Accepted double-quoted string literals in addition to single-quoted strings.
 
 ## [0.1.0] — 2026-04-06

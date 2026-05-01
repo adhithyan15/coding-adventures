@@ -73,6 +73,8 @@ All notable changes to this package will be documented in this file.
   reject hostile inputs with diagnostics before walking too deeply.
 - Accepted shared lexer front-door spellings for uppercase keywords/comments,
   `<>` not-equal relations, and double-quoted string literals.
+- Accepted shared lexer front-door publication symbols for relations,
+  exponentiation, and boolean operators.
 
 ## [0.1.0] - 2026-04-20
 

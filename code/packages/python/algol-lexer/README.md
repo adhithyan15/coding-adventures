@@ -84,8 +84,8 @@ tokens = lexer.tokenize()
 | Arithmetic | `DIV`, `MOD` |
 | Values | `INTEGER_LIT`, `REAL_LIT`, `STRING_LIT`, `IDENT` |
 | Assignment | `ASSIGN` (`:=`) |
-| Exponentiation | `POWER` (`**`), `CARET` (`^`) |
-| Relational | `EQ` (`=`), `NEQ` (`!=`, `<>`), `LT` (`<`), `GT` (`>`), `LEQ` (`<=`), `GEQ` (`>=`) |
+| Exponentiation | `POWER` (`**`), `CARET` (`^`, `↑`) |
+| Relational | `EQ` (`=`), `NEQ` (`!=`, `<>`, `≠`), `LT` (`<`), `GT` (`>`), `LEQ` (`<=`, `≤`), `GEQ` (`>=`, `≥`) |
 | Arithmetic | `PLUS` (`+`), `MINUS` (`-`), `STAR` (`*`), `SLASH` (`/`) |
 | Delimiters | `LPAREN`, `RPAREN`, `LBRACKET`, `RBRACKET`, `SEMICOLON`, `COMMA`, `COLON` |
 
@@ -120,6 +120,13 @@ identifiers.
 
 `BEGIN`, `Begin`, and `begin` all produce the same `BEGIN` token. Keyword
 matching is done after normalizing to lowercase.
+
+### Publication Symbols
+
+ALGOL 60 publication symbols normalize to the same token values as the ASCII or
+word spellings used by the parser and compiler: `≤` to `<=`, `≥` to `>=`, `≠`
+to `!=`, `↑` to `^`, and `¬`, `∧`, `∨`, `⊃`, `≡` to `not`, `and`, `or`,
+`impl`, `eqv`.
 
 ### String Literals
 

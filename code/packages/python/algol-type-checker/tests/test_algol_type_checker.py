@@ -58,6 +58,18 @@ class TestAlgolTypeChecker:
 
         assert result.ok
 
+    def test_accepts_publication_symbol_operators(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "if (2 ↑ 3 = 8) ∧ (3 ≤ 4) ∧ (5 ≥ 5) ∧ (1 ≠ 2) "
+            "∧ (¬ false) ∧ (true ⊃ true) ∧ (true ≡ true) "
+            "then result := 7 else result := 0 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+
     def test_accepts_double_quoted_string_literal(self) -> None:
         ast = parse_algol('begin string message; message := "Hi" end')
         result = check_algol(ast)

@@ -261,6 +261,11 @@ class TestArithmeticExpression:
         ast = parse("begin real x; x := 2 ^ 10 end")
         assert ast.rule_name == "program"
 
+    def test_uparrow_exponentiation(self) -> None:
+        """Publication uparrow exponentiation parses through CARET."""
+        ast = parse("begin real x; x := 2 ↑ 10 end")
+        assert ast.rule_name == "program"
+
     def test_conditional_expression_assignment(self) -> None:
         """ALGOL conditional expressions can appear as assignment values."""
         ast = parse("begin integer x; x := if true then 1 else 2 end")
@@ -307,6 +312,17 @@ class TestIfStatement:
         ast = parse("begin integer x; if x <> 0 then x := 1 end")
         assert ast.rule_name == "program"
         assert find_nodes(ast, "relation")
+
+    def test_if_with_publication_symbol_relations(self) -> None:
+        """Publication relation symbols parse as normalized relations."""
+        ast = parse(
+            "begin integer x; "
+            "if (2 ↑ 3 = 8) ∧ (3 ≤ 4) ∧ (5 ≥ 5) ∧ (1 ≠ 2) "
+            "then x := 1 else x := 0 "
+            "end"
+        )
+        assert ast.rule_name == "program"
+        assert len(find_nodes(ast, "relation")) >= 4
 
     def test_if_with_boolean_operators(self) -> None:
         """Conditional with AND and NOT in the boolean expression."""
@@ -484,9 +500,8 @@ class TestBooleanExpression:
         and    (logical conjunction)
         not    (logical negation, unary prefix)
 
-    ALGOL 60 uses words for all boolean operators, not symbols.
-    This makes programs readable by mathematicians and scientists —
-    the original audience for the language.
+    The compiler accepts both word spellings and publication symbols for these
+    boolean operators, normalizing symbols before parsing.
     """
 
     def test_and_expression(self) -> None:
@@ -553,6 +568,29 @@ class TestBooleanExpression:
             for node in eqv_nodes
             for token in child_tokens(node)
         )
+
+    def test_publication_symbol_boolean_expression(self) -> None:
+        """Boolean publication symbols normalize to parser keyword values."""
+        ast = parse(
+            "begin integer x; "
+            "if (¬ false) ∧ (true ∨ false) ∧ (true ⊃ true) "
+            "∧ (true ≡ true) "
+            "then x := 1 else x := 0 "
+            "end"
+        )
+
+        assert ast.rule_name == "program"
+        all_token_values: list[str] = []
+
+        def collect_token_values(node: ASTNode) -> None:
+            for child in node.children:
+                if isinstance(child, Token):
+                    all_token_values.append(child.value)
+                else:
+                    collect_token_values(child)
+
+        collect_token_values(ast)
+        assert {"not", "and", "or", "impl", "eqv"} <= set(all_token_values)
 
     def test_or_binds_tighter_than_implication(self) -> None:
         """``or`` should parse inside the left operand of ``impl``."""

@@ -772,6 +772,24 @@ class TestAlgolIrCompiler:
         opcodes = [instr.opcode for instr in result.program.instructions]
         assert IrOp.CMP_NE in opcodes
 
+    def test_compiles_publication_symbol_operators(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "if (2 ↑ 3 = 8) ∧ (3 ≤ 4) ∧ (5 ≥ 5) ∧ (1 ≠ 2) "
+                "∧ (¬ false) ∧ (true ⊃ true) ∧ (true ≡ true) "
+                "then result := 1 else result := 0 "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+
+        assert IrOp.MUL in opcodes
+        assert IrOp.CMP_EQ in opcodes
+        assert IrOp.CMP_NE in opcodes
+        assert IrOp.CMP_GT in opcodes
+        assert IrOp.CMP_LT in opcodes
+
     def test_compiles_nested_block(self) -> None:
         result = compile_algol(
             parse_algol(

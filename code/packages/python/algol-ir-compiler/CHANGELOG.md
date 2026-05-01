@@ -89,6 +89,8 @@ All notable changes to this package will be documented in this file.
   dispatch rather than compile-time descriptor expansion.
 - Lowered `go to` statements through the same direct and designational goto
   paths as the compact `goto` spelling.
+- Lowered normalized ALGOL publication symbols for relations, exponentiation,
+  and boolean operators through the existing ASCII/keyword operator paths.
 - Lowered standard numeric builtin functions `abs`, `sign`, and `entier` using
   existing integer/f64 IR operations.
 - Lowered standard real builtin function `sqrt` to integer-to-real promotion,

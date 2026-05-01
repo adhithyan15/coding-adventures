@@ -82,6 +82,8 @@ All notable changes to this package will be documented in this file.
   descriptor lookup through the switch-eval helper at runtime.
 - Executed the report-style `go to` spelling through the full parser,
   type-checker, IR, and WASM pipeline.
+- Executed normalized ALGOL publication symbols for relations, exponentiation,
+  and boolean operators through the full WASM pipeline.
 - Executed standard numeric builtin functions `abs`, `sign`, and `entier`
   through the full parser, type-checker, IR, and WASM pipeline.
 - Executed standard real builtin function `sqrt` through the full parser,
