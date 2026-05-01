@@ -33,7 +33,9 @@ focused relation/operator slice including equality, tilde, greater-than,
 less-than, and negated relation aliases with combining-overlay replacements,
 plus arrow and vector aliases such as `LeftArrow`, `LongRightArrow`, `Map`,
 and `RightDownVectorBar`, along with Greek variant and letter-like aliases such
-as `varepsilon`, `varkappa`, `varphi`, `digamma`, `beth`, and `daleth`.
+as `varepsilon`, `varkappa`, `varphi`, `digamma`, `beth`, and `daleth`. It also
+includes set, membership, subset, and logic aliases such as `Intersection`,
+`Union`, `Element`, `NotElement`, `Subset`, `nsubE`, `sqcup`, and `xwedge`.
 Named character reference scanning now follows the longest-prefix shape of the
 HTML tokenizer: text and RCDATA recover inputs such as `&copycat` as `©cat`
 with a missing-semicolon diagnostic, while attribute values preserve ambiguous

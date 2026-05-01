@@ -721,6 +721,60 @@
       ]
     },
     {
+      "description": "data state WHATWG set and logic named character references",
+      "input": "Sets:&Intersection;&Union;&SquareIntersection;&SquareUnion;&Wedge;&Vee;&And;&Or;&Not;&Cup;&Cap;&CupCap;&NotCupCap;&VerticalSeparator;",
+      "output": [
+        ["Character", "Sets:"],
+        ["Character", "\u22C2"],
+        ["Character", "\u22C3"],
+        ["Character", "\u2293"],
+        ["Character", "\u2294"],
+        ["Character", "\u22C0"],
+        ["Character", "\u22C1"],
+        ["Character", "\u2A53"],
+        ["Character", "\u2A54"],
+        ["Character", "\u2AEC"],
+        ["Character", "\u22D3"],
+        ["Character", "\u22D2"],
+        ["Character", "\u224D"],
+        ["Character", "\u226D"],
+        ["Character", "\u2758"]
+      ]
+    },
+    {
+      "description": "attribute WHATWG set and logic named character references",
+      "input": "<m membership=\"&Element;&NotElement;&ReverseElement;&NotReverseElement;&Exists;&NotExists;&SuchThat;&isinv;&isinE;&notinva;&notinvb;&notinvc;&niv;&notniva;&notnivb;&notnivc;\" subsets=\"&Subset;&Supset;&SubsetEqual;&NotSubset;&NotSubsetEqual;&subE;&supE;&nsubE;&nsupE;&subne;&supne;&subnE;&supnE;\">",
+      "output": [
+        ["StartTag", "m", {"membership": "\u2208\u2209\u220B\u220C\u2203\u2204\u220B\u2208\u22F9\u2209\u22F7\u22F6\u220B\u220C\u22FE\u22FD", "subsets": "\u22D0\u22D1\u2286\u2282\u20D2\u2288\u2AC5\u2AC6\u2AC5\u0338\u2AC6\u0338\u228A\u228B\u2ACB\u2ACC"}]
+      ]
+    },
+    {
+      "description": "rcdata WHATWG set and logic named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&emptyset;&emptyv;&varnothing;&setminus;&smallsetminus;&sqcap;&sqcup;&sqsub;&sqsup;&sqsube;&sqsupe;&cuvee;&cuwed;&xcap;&xcup;&xvee;&xwedge;</title>",
+      "output": [
+        ["Character", "\u2205"],
+        ["Character", "\u2205"],
+        ["Character", "\u2205"],
+        ["Character", "\u2216"],
+        ["Character", "\u2216"],
+        ["Character", "\u2293"],
+        ["Character", "\u2294"],
+        ["Character", "\u228F"],
+        ["Character", "\u2290"],
+        ["Character", "\u2291"],
+        ["Character", "\u2292"],
+        ["Character", "\u22CE"],
+        ["Character", "\u22CF"],
+        ["Character", "\u22C2"],
+        ["Character", "\u22C3"],
+        ["Character", "\u22C1"],
+        ["Character", "\u22C0"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
       "description": "data state legacy named character references missing semicolons",
       "input": "Legacy&nbsp symbols: &copy/&reg",
       "output": [

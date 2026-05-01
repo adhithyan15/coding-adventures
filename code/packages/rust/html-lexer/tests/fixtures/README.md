@@ -86,6 +86,8 @@ currently supports:
   map, and vector-bar aliases
 - WHATWG Greek variant and letter-like named character references, including
   epsilon, kappa, phi, rho, sigma, theta, digamma, beth, gimel, and daleth
+- WHATWG set, membership, subset/superset, square-set, and n-ary logic named
+  character references
 - missing-semicolon recovery for legacy named character references `nbsp`,
   `copy`, and `reg` before delimiters and EOF
 - generic named-character-reference scanning with literal fallback for unknown
