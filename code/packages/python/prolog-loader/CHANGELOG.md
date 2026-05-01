@@ -57,6 +57,8 @@
   `sub_atom/5`, and `sub_string/5` into finite text goals
 - adapt Prolog term text I/O predicates `term_to_atom/2` and `atom_to_term/3`
   through the parser boundary
+- adapt Prolog term read/write predicates `read_term_from_atom/3` and
+  `write_term_to_atom/3` with finite option-list support
 
 ## 0.1.0
 

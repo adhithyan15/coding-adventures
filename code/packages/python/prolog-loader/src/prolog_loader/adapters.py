@@ -385,6 +385,10 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         return _term_to_atom_goal(*args)
     if name == "atom_to_term" and goal.relation.arity == 3:
         return _atom_to_term_goal(*args)
+    if name == "read_term_from_atom" and goal.relation.arity == 3:
+        return _read_term_from_atom_goal(*args)
+    if name == "write_term_to_atom" and goal.relation.arity == 3:
+        return _write_term_to_atom_goal(*args)
     if name == "atom_concat" and goal.relation.arity == 3:
         return atom_concato(*args)
     if name == "atom_length" and goal.relation.arity == 2:
@@ -526,6 +530,58 @@ def _atom_to_term_goal(
     return native_goal(run, atom_value, term_value, bindings)
 
 
+def _read_term_from_atom_goal(
+    atom_value: object,
+    term_value: object,
+    options: object,
+) -> GoalExpr:
+    def run(
+        program_value: Program,
+        state: State,
+        args: tuple[Term, ...],
+    ) -> Iterator[State]:
+        atom_arg, term_arg, options_arg = args
+        reified_atom = reify(atom_arg, state.substitution)
+        if not isinstance(reified_atom, Atom):
+            return
+
+        parsed = _parse_atom_text(reified_atom)
+        if parsed is None:
+            return
+        options_goal = _read_term_options_goal(options_arg, parsed.variables)
+        if options_goal is None:
+            return
+        yield from solve_from(
+            program_value,
+            conj(eq(term_arg, parsed.term), options_goal),
+            state,
+        )
+
+    return native_goal(run, atom_value, term_value, options)
+
+
+def _write_term_to_atom_goal(
+    term_value: object,
+    atom_value: object,
+    options: object,
+) -> GoalExpr:
+    def run(
+        program_value: Program,
+        state: State,
+        args: tuple[Term, ...],
+    ) -> Iterator[State]:
+        term_arg, atom_arg, options_arg = args
+        reified_term = reify(term_arg, state.substitution)
+        if isinstance(reified_term, LogicVar):
+            return
+        if not _write_term_options_supported(reify(options_arg, state.substitution)):
+            return
+        rendered = _render_prolog_term(reified_term)
+        yield from solve_from(program_value, eq(atom_arg, atom(rendered)), state)
+
+    return native_goal(run, term_value, atom_value, options)
+
+
 def _parse_atom_text(atom_value: Atom) -> object | None:
     try:
         return parse_swi_term(atom_value.symbol.name)
@@ -537,6 +593,51 @@ def _variable_bindings(variables: dict[str, LogicVar]) -> Term:
     return logic_list(
         [term("=", atom(name), variable) for name, variable in variables.items()],
     )
+
+
+def _variable_values(variables: dict[str, LogicVar]) -> Term:
+    return logic_list(list(variables.values()))
+
+
+def _read_term_options_goal(
+    options: Term,
+    variables: dict[str, LogicVar],
+) -> GoalExpr | None:
+    items = _logic_list_items(options)
+    if items is None:
+        return None
+
+    goals: list[GoalExpr] = []
+    for item in items:
+        if not isinstance(item, Compound) or len(item.args) != 1:
+            return None
+        if item.functor.name == "variable_names":
+            goals.append(eq(item.args[0], _variable_bindings(variables)))
+        elif item.functor.name == "variables":
+            goals.append(eq(item.args[0], _variable_values(variables)))
+        else:
+            return None
+    return conj(*goals)
+
+
+def _write_term_options_supported(options: Term) -> bool:
+    items = _logic_list_items(options)
+    if items is None:
+        return False
+    for item in items:
+        if not isinstance(item, Compound) or len(item.args) != 1:
+            return False
+        option_name = item.functor.name
+        value = item.args[0]
+        if option_name in {"quoted", "ignore_ops", "numbervars"}:
+            if (
+                not isinstance(value, Atom)
+                or value.symbol.name not in {"true", "false"}
+            ):
+                return False
+            continue
+        return False
+    return True
 
 
 def _render_prolog_term(term_value: Term) -> str:
