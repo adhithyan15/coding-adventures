@@ -1450,6 +1450,44 @@ class TestAlgolIrCompiler:
         assert calls[0].operands[0].name.startswith("_fn_algol_")
         assert result.procedure_signatures[calls[0].operands[0].name].param_count == 2
 
+    def test_compiles_explicit_empty_no_argument_typed_procedure_call(
+        self,
+    ) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "integer procedure seven(); begin seven := 7 end; "
+                "result := seven() "
+                "end"
+            )
+        )
+        calls = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+
+        assert calls[0].operands[0].name.startswith("_fn_algol_")
+        assert result.procedure_signatures[calls[0].operands[0].name].param_count == 2
+
+    def test_compiles_explicit_empty_no_argument_statement_call(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "procedure mark(); begin result := 9 end; "
+                "mark() "
+                "end"
+            )
+        )
+        calls = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+
+        assert calls[0].operands[0].name.startswith("_fn_algol_")
+        assert result.procedure_signatures[calls[0].operands[0].name].param_count == 2
+
     def test_compiles_boolean_value_procedure_call(self) -> None:
         result = compile_algol(
             parse_algol(

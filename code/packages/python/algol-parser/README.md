@@ -99,6 +99,10 @@ The parser covers the complete ALGOL 60 grammar:
 | Designational | `desig_expr`, `simple_desig` |
 | Variables | `variable`, `subscripts`, `proc_call`, `ident_list` |
 
+Procedure declarations and calls accept the report-style omitted-parentheses
+form for parameterless procedures as well as explicit empty parentheses, so
+both `procedure p; p` and `procedure p(); p()` parse to zero-argument shapes.
+
 ## Development
 
 ```bash

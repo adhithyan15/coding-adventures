@@ -1316,6 +1316,26 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
 
+    def test_explicit_empty_no_argument_typed_procedure_expression_runs(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer procedure seven(); begin seven := 7 end; "
+            "result := seven() "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_explicit_empty_no_argument_statement_call_runs(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure mark(); begin result := 9 end; "
+            "mark() "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
+
     def test_bare_procedure_expression_by_name_re_evaluates_each_read(self) -> None:
         result = compile_source(
             "begin integer result, calls; "

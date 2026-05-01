@@ -34,9 +34,10 @@ carrying the static-link delta needed by code generation. Builtin output calls
 and standard numeric functions are treated as read-only by the write analysis,
 so formals that are only printed or inspected can still accept expression
 actuals.
-Bare no-argument typed procedure names used in expressions are resolved as
-procedure calls, matching ALGOL's omitted-parentheses call syntax, while
-procedure result variables inside their own bodies still resolve as storage.
+No-argument procedure declarations and typed procedure expressions may use
+either explicit empty parentheses or bare procedure names, matching ALGOL's
+omitted-parentheses call syntax, while procedure result variables inside their
+own bodies still resolve as storage.
 Integer array declarations receive descriptor slots in their declaring frame,
 dimension metadata for lower/upper bound expressions, and resolved read/write
 accesses that preserve the static-link delta and subscript count needed by the

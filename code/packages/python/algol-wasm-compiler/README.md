@@ -35,8 +35,8 @@ the current lane already supports a substantial ALGOL 60 surface:
   procedure calls that forward scalar, whole-array, label, switch, or procedure
   arguments while validating nested procedure-formal contracts
 - label, switch, and procedure formals in value or by-name mode
-- bare no-argument typed procedure names as expression calls, matching ALGOL's
-  omitted-parentheses call syntax for parameterless procedures
+- explicit empty and bare no-argument procedure declarations/calls, matching
+  ALGOL's omitted-parentheses call syntax for parameterless procedures
 - labels, local and nonlocal `goto`/`go to`, switch designators, and conditional
   designational expressions, including nonlocal branches and nested
   recursive switch entries
