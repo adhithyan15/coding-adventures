@@ -152,6 +152,8 @@ from logic_builtins import (
     termo_lto,
     throwo,
     trueo,
+    unifiableo,
+    unify_with_occurs_checko,
     univo,
     variant_termo,
     varo,
@@ -2073,6 +2075,58 @@ class TestTermMetaprogrammingBuiltins:
             conj(eq(value, "tea"), acyclic_termo(term("pair", value, value))),
         ) == [result]
         assert solve_all(program(), result, cyclic_termo(term("box", value))) == []
+
+    def test_unify_with_occurs_checko_rejects_self_referential_terms(self) -> None:
+        value = var("Value")
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            value,
+            unify_with_occurs_checko(value, term("box", "tea")),
+        ) == [term("box", "tea")]
+        assert (
+            solve_all(
+                program(),
+                marker,
+                unify_with_occurs_checko(value, term("box", value)),
+            )
+            == []
+        )
+
+    def test_unifiableo_reports_bindings_without_applying_them(self) -> None:
+        left = var("Left")
+        right = var("Right")
+        unifier = var("Unifier")
+
+        answers = solve_all(
+            program(),
+            (left, right, unifier),
+            unifiableo(term("pair", left, left), term("pair", "tea", right), unifier),
+        )
+
+        assert answers == [
+            (
+                left,
+                right,
+                logic_list([
+                    term("=", left, atom("tea")),
+                    term("=", right, atom("tea")),
+                ]),
+            ),
+        ]
+
+    def test_unifiableo_fails_when_terms_cannot_unify(self) -> None:
+        unifier = var("Unifier")
+
+        assert (
+            solve_all(
+                program(),
+                unifier,
+                unifiableo(term("box", "tea"), term("box", "cake"), unifier),
+            )
+            == []
+        )
 
     def test_term_hasho_hashes_variants_alike_but_preserves_variable_shape(
         self,

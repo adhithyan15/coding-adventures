@@ -64,6 +64,8 @@
 - adapt Prolog `compound_name_arguments/3` and `compound_name_arity/3` into
   compound-only term reflection goals
 - adapt Prolog `acyclic_term/1` and `cyclic_term/1` into term-shape goals
+- adapt Prolog `unifiable/3` and `unify_with_occurs_check/2` into explicit
+  finite unification goals
 - adapt Prolog `term_hash/2` and `term_hash/4` into deterministic structural
   hash goals
 
