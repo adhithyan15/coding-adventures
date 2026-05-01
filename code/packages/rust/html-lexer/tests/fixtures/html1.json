@@ -704,6 +704,36 @@
       "last_start_tag": "title"
     },
     {
+      "id": "html-whatwg-operator-character-references-data",
+      "description": "WHATWG circled operator, integral, product, and therefore aliases resolve in data state",
+      "input": "Operators:&CircleDot;&CircleMinus;&CirclePlus;&CircleTimes;&ContourIntegral;&DoubleContourIntegral;&Integral;&Product;&Coproduct;&Sum;&Sqrt;&Proportional;&Therefore;&Because;&VerticalTilde;",
+      "tokens": [
+        "Text(data=Operators:\u2299\u2296\u2295\u2297\u222E\u222F\u222B\u220F\u2210\u2211\u221A\u221D\u2234\u2235\u2240)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-operator-shape-character-references-attributes",
+      "description": "WHATWG boxed operator and square aliases resolve inside attribute values",
+      "input": "<g ops=\"&ominus;&odot;&osol;&ocir;&oast;&odash;&pluscir;&timesb;&sdotb;&minusb;&boxplus;&boxminus;&boxtimes;&dotsquare;&compfn;\" shapes=\"&FilledSmallSquare;&EmptySmallSquare;&EmptyVerySmallSquare;&FilledVerySmallSquare;&Square;&SquareSubset;&SquareSubsetEqual;&SquareSuperset;&SquareSupersetEqual;\">",
+      "tokens": [
+        "StartTag(name=g, attributes=[ops=\u2296\u2299\u2298\u229A\u229B\u229D\u2A22\u22A0\u22A1\u229F\u229E\u229F\u22A0\u22A1\u2218, shapes=\u25FC\u25FB\u25AB\u25AA\u25A1\u228F\u2291\u2290\u2292], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-shape-character-references-rcdata",
+      "description": "Seeded title RCDATA context resolves WHATWG square, lozenge, star, suit, and symbol aliases",
+      "input": "&squ;&square;&squf;&squarf;&blacksquare;&lozenge;&lozf;&blacklozenge;&diamond;&diam;&diamondsuit;&malt;&maltese;&starf;&bigstar;&star;&phone;&female;&male;&spadesuit;&clubsuit;&heartsuit;</title>",
+      "tokens": [
+        "Text(data=\u25A1\u25A1\u25AA\u25AA\u25AA\u25CA\u29EB\u29EB\u22C4\u22C4\u2666\u2720\u2720\u2605\u2605\u2606\u260E\u2640\u2642\u2660\u2663\u2665)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
       "id": "html-semicolonless-legacy-character-references-data",
       "description": "Legacy named character references recover when the semicolon is missing in data state",
       "input": "Legacy&nbsp symbols: &copy/&reg",

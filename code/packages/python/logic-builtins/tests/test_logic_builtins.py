@@ -115,6 +115,7 @@ from logic_builtins import (
     retracto,
     same_termo,
     scanlo,
+    set_prolog_flago,
     setofo,
     stringo,
     sub,
@@ -2170,6 +2171,56 @@ class TestPredicateMetadataBuiltins:
             value,
             current_prolog_flago("missing_flag", value),
         ) == []
+
+    def test_set_prolog_flago_updates_current_branch_flags(self) -> None:
+        value = var("Value")
+
+        assert solve_all(
+            program(),
+            value,
+            conj(
+                set_prolog_flago("unknown", "error"),
+                current_prolog_flago("unknown", value),
+            ),
+        ) == [atom("error")]
+
+    def test_set_prolog_flago_rolls_back_across_branches(self) -> None:
+        value = var("Value")
+
+        assert solve_all(
+            program(),
+            value,
+            disj(
+                conj(
+                    set_prolog_flago("double_quotes", "atom"),
+                    current_prolog_flago("double_quotes", value),
+                ),
+                current_prolog_flago("double_quotes", value),
+            ),
+        ) == [atom("atom"), atom("string")]
+
+    def test_set_prolog_flago_rejects_read_only_or_invalid_flags(self) -> None:
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(set_prolog_flago("bounded", "true"), eq(marker, "changed")),
+        ) == []
+        assert solve_all(
+            program(),
+            marker,
+            conj(set_prolog_flago("unknown", "silent"), eq(marker, "changed")),
+        ) == []
+
+    def test_set_prolog_flago_requires_instantiated_inputs(self) -> None:
+        name = var("Name")
+        value = var("Value")
+
+        with pytest.raises(PrologInstantiationError):
+            solve_all(program(), value, set_prolog_flago(name, "fail"))
+        with pytest.raises(PrologInstantiationError):
+            solve_all(program(), value, set_prolog_flago("unknown", value))
 
     def test_current_predicateo_enumerates_source_predicates(self) -> None:
         parent = relation("parent", 2)

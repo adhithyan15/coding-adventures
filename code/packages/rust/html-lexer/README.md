@@ -35,7 +35,9 @@ plus arrow and vector aliases such as `LeftArrow`, `LongRightArrow`, `Map`,
 and `RightDownVectorBar`, along with Greek variant and letter-like aliases such
 as `varepsilon`, `varkappa`, `varphi`, `digamma`, `beth`, and `daleth`. It also
 includes set, membership, subset, and logic aliases such as `Intersection`,
-`Union`, `Element`, `NotElement`, `Subset`, `nsubE`, `sqcup`, and `xwedge`.
+`Union`, `Element`, `NotElement`, `Subset`, `nsubE`, `sqcup`, and `xwedge`,
+plus operator and shape aliases such as `CircleDot`, `ContourIntegral`,
+`FilledSmallSquare`, `blacklozenge`, `bigstar`, and `spadesuit`.
 Named character reference scanning now follows the longest-prefix shape of the
 HTML tokenizer: text and RCDATA recover inputs such as `&copycat` as `©cat`
 with a missing-semicolon diagnostic, while attribute values preserve ambiguous

@@ -88,6 +88,8 @@ currently supports:
   epsilon, kappa, phi, rho, sigma, theta, digamma, beth, gimel, and daleth
 - WHATWG set, membership, subset/superset, square-set, and n-ary logic named
   character references
+- WHATWG operator, square, lozenge, star, suit, and symbol named character
+  references
 - missing-semicolon recovery for legacy named character references `nbsp`,
   `copy`, and `reg` before delimiters and EOF
 - generic named-character-reference scanning with literal fallback for unknown

@@ -911,6 +911,7 @@ class TestPrologGoalAdapter:
                 atom("unknown"),
                 LogicVar(id=18),
             ),
+            relation("set_prolog_flag", 2)(atom("unknown"), atom("error")),
             relation("is_list", 1)(
                 term(".", atom("tea"), term(".", atom("cake"), atom("[]"))),
             ),

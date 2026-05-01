@@ -775,6 +775,66 @@
       ]
     },
     {
+      "description": "data state WHATWG operator named character references",
+      "input": "Operators:&CircleDot;&CircleMinus;&CirclePlus;&CircleTimes;&ContourIntegral;&DoubleContourIntegral;&Integral;&Product;&Coproduct;&Sum;&Sqrt;&Proportional;&Therefore;&Because;&VerticalTilde;",
+      "output": [
+        ["Character", "Operators:"],
+        ["Character", "\u2299"],
+        ["Character", "\u2296"],
+        ["Character", "\u2295"],
+        ["Character", "\u2297"],
+        ["Character", "\u222E"],
+        ["Character", "\u222F"],
+        ["Character", "\u222B"],
+        ["Character", "\u220F"],
+        ["Character", "\u2210"],
+        ["Character", "\u2211"],
+        ["Character", "\u221A"],
+        ["Character", "\u221D"],
+        ["Character", "\u2234"],
+        ["Character", "\u2235"],
+        ["Character", "\u2240"]
+      ]
+    },
+    {
+      "description": "attribute WHATWG operator and shape named character references",
+      "input": "<g ops=\"&ominus;&odot;&osol;&ocir;&oast;&odash;&pluscir;&timesb;&sdotb;&minusb;&boxplus;&boxminus;&boxtimes;&dotsquare;&compfn;\" shapes=\"&FilledSmallSquare;&EmptySmallSquare;&EmptyVerySmallSquare;&FilledVerySmallSquare;&Square;&SquareSubset;&SquareSubsetEqual;&SquareSuperset;&SquareSupersetEqual;\">",
+      "output": [
+        ["StartTag", "g", {"ops": "\u2296\u2299\u2298\u229A\u229B\u229D\u2A22\u22A0\u22A1\u229F\u229E\u229F\u22A0\u22A1\u2218", "shapes": "\u25FC\u25FB\u25AB\u25AA\u25A1\u228F\u2291\u2290\u2292"}]
+      ]
+    },
+    {
+      "description": "rcdata WHATWG shape named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&squ;&square;&squf;&squarf;&blacksquare;&lozenge;&lozf;&blacklozenge;&diamond;&diam;&diamondsuit;&malt;&maltese;&starf;&bigstar;&star;&phone;&female;&male;&spadesuit;&clubsuit;&heartsuit;</title>",
+      "output": [
+        ["Character", "\u25A1"],
+        ["Character", "\u25A1"],
+        ["Character", "\u25AA"],
+        ["Character", "\u25AA"],
+        ["Character", "\u25AA"],
+        ["Character", "\u25CA"],
+        ["Character", "\u29EB"],
+        ["Character", "\u29EB"],
+        ["Character", "\u22C4"],
+        ["Character", "\u22C4"],
+        ["Character", "\u2666"],
+        ["Character", "\u2720"],
+        ["Character", "\u2720"],
+        ["Character", "\u2605"],
+        ["Character", "\u2605"],
+        ["Character", "\u2606"],
+        ["Character", "\u260E"],
+        ["Character", "\u2640"],
+        ["Character", "\u2642"],
+        ["Character", "\u2660"],
+        ["Character", "\u2663"],
+        ["Character", "\u2665"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
       "description": "data state legacy named character references missing semicolons",
       "input": "Legacy&nbsp symbols: &copy/&reg",
       "output": [
