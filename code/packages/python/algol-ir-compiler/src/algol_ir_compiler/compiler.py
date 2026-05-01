@@ -3384,6 +3384,8 @@ class AlgolIrCompiler:
     ) -> tuple[str, str] | None:
         if self._is_label_designational_actual(argument, scope):
             return "label", "label"
+        if self._is_switch_designator_actual(argument, scope):
+            return "switch", "switch"
 
         variable = _single_variable_expr(argument)
         if variable is None or _variable_subscripts(variable):
@@ -4208,9 +4210,37 @@ class AlgolIrCompiler:
         scope: _FrameScope,
         descriptor: int | None,
     ) -> int:
+        parts = _conditional_expression_parts(_meaningful_children(argument))
+        if parts is not None:
+            if descriptor is None:
+                raise CompileError("missing reserved descriptor for switch actual")
+            condition, then_expr, else_expr = parts
+            index = self._next_if_index()
+            else_label = f"switch_actual_{index}_else"
+            end_label = f"switch_actual_{index}_end"
+            result = self._fresh_reg()
+            condition_value = self._compile_expr(condition, scope)
+            self._emit(IrOp.BRANCH_Z, IrRegister(condition_value), IrLabel(else_label))
+            then_pointer = self._compile_switch_actual_pointer(
+                then_expr,
+                scope,
+                descriptor,
+            )
+            self._copy_reg(dst=result, src=then_pointer)
+            self._emit(IrOp.JUMP, IrLabel(end_label))
+            self._label(else_label)
+            else_pointer = self._compile_switch_actual_pointer(
+                else_expr,
+                scope,
+                descriptor,
+            )
+            self._copy_reg(dst=result, src=else_pointer)
+            self._label(end_label)
+            return result
+
         variable = _single_variable_expr(argument)
         if variable is None or _variable_subscripts(variable):
-            raise CompileError("switch parameter actual must be a direct switch")
+            raise CompileError("switch parameter actual must be a switch designator")
         name = _variable_name(variable)
         if name is None:
             raise CompileError("switch parameter actual is missing a name")
@@ -4249,6 +4279,28 @@ class AlgolIrCompiler:
             caller_frame,
         )
         return descriptor
+
+    def _is_switch_designator_actual(
+        self,
+        argument: ASTNode,
+        scope: _FrameScope,
+    ) -> bool:
+        parts = _conditional_expression_parts(_meaningful_children(argument))
+        if parts is not None:
+            _, then_expr, else_expr = parts
+            return self._is_switch_designator_actual(
+                then_expr,
+                scope,
+            ) and self._is_switch_designator_actual(else_expr, scope)
+
+        variable = _single_variable_expr(argument)
+        if variable is None or _variable_subscripts(variable):
+            return False
+        name = _variable_name(variable)
+        if name is None:
+            return False
+        resolved = self._resolve_symbol_in_scope_chain(name.value, scope)
+        return resolved is not None and resolved[0].kind == "switch"
 
     def _compile_procedure_actual_pointer(
         self,

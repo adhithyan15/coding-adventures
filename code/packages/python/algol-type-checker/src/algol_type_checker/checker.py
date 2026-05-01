@@ -2276,6 +2276,20 @@ class AlgolTypeChecker:
             )
             return LABEL, LABEL, None
 
+        if self._check_switch_designator_actual(
+            argument,
+            scope,
+            parameter_name="procedure argument",
+            report=False,
+        ):
+            self._check_switch_designator_actual(
+                argument,
+                scope,
+                parameter_name="procedure argument",
+                report=True,
+            )
+            return SWITCH, SWITCH, None
+
         variable = _single_variable_expr(argument)
         if variable is None or _variable_subscripts(variable):
             return None
@@ -2481,33 +2495,77 @@ class AlgolTypeChecker:
         scope: Scope,
         parameter: ProcedureParameter,
     ) -> Symbol | None:
+        if self._check_switch_designator_actual(
+            argument,
+            scope,
+            parameter_name=parameter.name,
+            report=True,
+        ):
+            return None
+        self._error(
+            argument,
+            f"switch parameter {parameter.name!r} expects a switch designator actual",
+        )
+        return None
+
+    def _check_switch_designator_actual(
+        self,
+        argument: ASTNode,
+        scope: Scope,
+        *,
+        parameter_name: str,
+        report: bool,
+    ) -> bool:
+        parts = _conditional_expression_parts(_meaningful_children(argument))
+        if parts is not None:
+            condition, then_expr, else_expr = parts
+            if report:
+                condition_type = self._infer_expr(condition, scope)
+                if condition_type != ERROR and condition_type != BOOLEAN:
+                    self._error(
+                        condition,
+                        "switch designator actual condition must be boolean",
+                    )
+            then_ok = self._check_switch_designator_actual(
+                then_expr,
+                scope,
+                parameter_name=parameter_name,
+                report=report,
+            )
+            else_ok = self._check_switch_designator_actual(
+                else_expr,
+                scope,
+                parameter_name=parameter_name,
+                report=report,
+            )
+            return then_ok and else_ok
+
         variable = _single_variable_expr(argument)
         if variable is None or _variable_subscripts(variable):
-            self._error(
-                argument,
-                f"switch parameter {parameter.name!r} expects a direct switch actual",
-            )
-            return None
+            return False
         name = _variable_head_name(variable)
         if name is None:
-            self._error(argument, "switch actual is missing a name")
-            return None
+            if report:
+                self._error(argument, "switch actual is missing a name")
+            return False
         resolved = scope.resolve_with_scope(name.value)
         if resolved is None:
-            self._error(
-                name,
-                f"{name.value!r} is not declared in block {scope.block_id} "
-                "or its lexical parents",
-            )
-            return None
+            if report:
+                self._error(
+                    name,
+                    f"{name.value!r} is not declared in block {scope.block_id} "
+                    "or its lexical parents",
+                )
+            return False
         symbol, _, _ = resolved
-        if symbol.kind != SWITCH:
+        if symbol.kind == SWITCH:
+            return True
+        if report:
             self._error(
                 name,
-                f"switch parameter {parameter.name!r} expects a switch actual",
+                f"switch parameter {parameter_name!r} expects a switch actual",
             )
-            return None
-        return symbol
+        return False
 
     def _check_procedure_parameter_actual(
         self,

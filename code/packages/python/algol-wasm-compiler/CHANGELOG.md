@@ -74,6 +74,8 @@ All notable changes to this package will be documented in this file.
   procedures, preserving descriptor aliasing and existing `value` array copies.
 - Executed formal procedure calls that forward label, switch, and procedure
   arguments to actual procedures.
+- Executed conditional switch actuals through direct calls, forwarded switch
+  formals, and formal procedure dispatch, with a golden end-to-end fixture.
 - Rejected formal procedure forwarding when a concrete procedure argument does
   not satisfy the nested procedure formal contract expected by the receiver.
 - Executed recursive switch self-selection entries by routing recursive
