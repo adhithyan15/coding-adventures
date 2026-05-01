@@ -1,0 +1,8 @@
+[package]
+name = "twig-folding-ranges"
+version = "0.1.0"
+edition = "2021"
+description = "LSP folding-range extraction for Twig — the editor 'fold this region' feed.  Walks a parsed Program and returns a typed list of multi-line foldable regions (define / let / lambda / begin bodies) with start/end line numbers."
+
+[dependencies]
+twig-parser = { path = "../twig-parser" }
