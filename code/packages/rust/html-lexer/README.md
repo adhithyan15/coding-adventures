@@ -37,7 +37,9 @@ as `varepsilon`, `varkappa`, `varphi`, `digamma`, `beth`, and `daleth`. It also
 includes set, membership, subset, and logic aliases such as `Intersection`,
 `Union`, `Element`, `NotElement`, `Subset`, `nsubE`, `sqcup`, and `xwedge`,
 plus operator and shape aliases such as `CircleDot`, `ContourIntegral`,
-`FilledSmallSquare`, `blacklozenge`, `bigstar`, and `spadesuit`.
+`FilledSmallSquare`, `blacklozenge`, `bigstar`, and `spadesuit`, and angle or
+fence aliases such as `angmsd`, `LeftDoubleBracket`, `lobrk`, `OverBrace`, and
+`ulcorner`.
 Named character reference scanning now follows the longest-prefix shape of the
 HTML tokenizer: text and RCDATA recover inputs such as `&copycat` as `©cat`
 with a missing-semicolon diagnostic, while attribute values preserve ambiguous

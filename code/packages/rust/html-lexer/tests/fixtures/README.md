@@ -90,6 +90,8 @@ currently supports:
   character references
 - WHATWG operator, square, lozenge, star, suit, and symbol named character
   references
+- WHATWG angle, bracket, floor/ceiling, triangle, corner, and over/under fence
+  named character references
 - missing-semicolon recovery for legacy named character references `nbsp`,
   `copy`, and `reg` before delimiters and EOF
 - generic named-character-reference scanning with literal fallback for unknown
