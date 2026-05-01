@@ -6,3 +6,5 @@ edition = "2021"
 [dependencies]
 loss-functions = { path = "../../../packages/rust/loss-functions" }
 gradient-descent = { path = "../../../packages/rust/gradient-descent" }
+neural-network = { path = "../../../packages/rust/neural-network" }
+neural-graph-vm = { path = "../../../packages/rust/neural-graph-vm" }

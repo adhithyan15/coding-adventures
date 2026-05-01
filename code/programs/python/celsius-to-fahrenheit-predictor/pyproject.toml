@@ -5,7 +5,9 @@ description = "AI learning C to F"
 requires-python = ">=3.9"
 dependencies = [
     "coding-adventures-loss-functions",
-    "coding-adventures-gradient-descent"
+    "coding-adventures-gradient-descent",
+    "coding-adventures-neural-network",
+    "coding-adventures-neural-graph-vm"
 ]
 
 [tool.hatch.metadata]
@@ -14,3 +16,5 @@ allow-direct-references = true
 [tool.uv.sources]
 coding-adventures-loss-functions = { path = "../../../packages/python/loss-functions" }
 coding-adventures-gradient-descent = { path = "../../../packages/python/gradient-descent" }
+coding-adventures-neural-network = { path = "../../../packages/python/neural-network" }
+coding-adventures-neural-graph-vm = { path = "../../../packages/python/neural-graph-vm" }

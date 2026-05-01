@@ -27,6 +27,15 @@ describe("xor hidden-layer trainer", () => {
     expect(result.rows.every(row => row.hidden.length === 2)).toBe(true);
   });
 
+  it("runs the canonical XOR graph through bytecode and matrix instructions", () => {
+    const result = runXorDemo({ epochs: 100, logEvery: 100 });
+
+    expect(result.vmRows.map(row => row.rounded)).toEqual([0, 1, 1, 0]);
+    expect(result.bytecodeInstructionCount).toBeGreaterThan(0);
+    expect(result.matrixInstructionCount).toBeGreaterThan(0);
+    expect(result.matrixInstructionCount).toBeLessThan(result.bytecodeInstructionCount);
+  });
+
   it("formats checkpoints and hidden activations", () => {
     const text = formatXorRun(runXorDemo({ epochs: 100, logEvery: 100 }));
 
