@@ -914,6 +914,31 @@
       ]
     },
     {
+      "description": "data state WHATWG box-drawing named character references",
+      "input": "Boxes:&boxDL;&boxDR;&boxDl;&boxDr;&boxH;&boxHD;&boxHU;&boxHd;&boxHu;&boxUL;&boxUR;&boxUl;&boxUr;&boxV;&boxVH;&boxVL;&boxVR;&boxVh;&boxVl;&boxVr;&boxbox;",
+      "output": [
+        ["Character", "Boxes:"],
+        ["Character", "\u2557\u2554\u2556\u2553\u2550\u2566\u2569\u2564\u2567\u255D\u255A\u255C\u2559\u2551\u256C\u2563\u2560\u256B\u2562\u255F\u29C9"]
+      ]
+    },
+    {
+      "description": "attribute WHATWG box-drawing named character references",
+      "input": "<box double=\"&boxDL;&boxDR;&boxDl;&boxDr;&boxH;&boxHD;&boxHU;&boxHd;&boxHu;&boxUL;&boxUR;&boxUl;&boxUr;\" mixed=\"&boxV;&boxVH;&boxVL;&boxVR;&boxVh;&boxVl;&boxVr;&boxbox;&boxdL;&boxdR;&boxdl;&boxdr;&boxh;&boxhD;&boxhU;\" light=\"&boxhd;&boxhu;&boxuL;&boxuR;&boxul;&boxur;&boxv;&boxvH;&boxvL;&boxvR;&boxvh;&boxvl;&boxvr;\">",
+      "output": [
+        ["StartTag", "box", {"double": "\u2557\u2554\u2556\u2553\u2550\u2566\u2569\u2564\u2567\u255D\u255A\u255C\u2559", "mixed": "\u2551\u256C\u2563\u2560\u256B\u2562\u255F\u29C9\u2555\u2552\u2510\u250C\u2500\u2565\u2568", "light": "\u252C\u2534\u255B\u2558\u2518\u2514\u2502\u256A\u2561\u255E\u253C\u2524\u251C"}]
+      ]
+    },
+    {
+      "description": "rcdata WHATWG box-drawing named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&boxdL;&boxdR;&boxdl;&boxdr;&boxh;&boxhD;&boxhU;&boxhd;&boxhu;&boxuL;&boxuR;&boxul;&boxur;&boxv;&boxvH;&boxvL;&boxvR;&boxvh;&boxvl;&boxvr;</title>",
+      "output": [
+        ["Character", "\u2555\u2552\u2510\u250C\u2500\u2565\u2568\u252C\u2534\u255B\u2558\u2518\u2514\u2502\u256A\u2561\u255E\u253C\u2524\u251C"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
       "description": "data state WHATWG angle named character references",
       "input": "Angles:&angle;&angmsd;&angsph;&angrt;&angrtvb;&angrtvbd;&angst;&angzarr;&measuredangle;",
       "output": [

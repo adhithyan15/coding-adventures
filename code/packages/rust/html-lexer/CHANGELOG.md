@@ -160,6 +160,8 @@ documented in this file.
   membership, subset/superset, square-set, and n-ary logic aliases.
 - Added a WHATWG operator/shape named-reference batch covering circled
   operators, integrals, products, squares, lozenges, stars, suits, and symbols.
+- Added a WHATWG box-drawing named-reference batch covering double-line,
+  mixed-line, light-line, crossing, and corner box aliases.
 - Added a WHATWG angle/fence named-reference batch covering angle, bracket,
   floor/ceiling, triangle, corner, and over/under fence aliases.
 - Added a WHATWG Latin Extended named-reference batch covering macron, breve,

@@ -93,6 +93,8 @@ currently supports:
   character references
 - WHATWG operator, square, lozenge, star, suit, and symbol named character
   references
+- WHATWG box-drawing named character references, including double-line,
+  mixed-line, light-line, crossing, and corner aliases
 - WHATWG angle, bracket, floor/ceiling, triangle, corner, and over/under fence
   named character references
 - WHATWG Latin Extended and diacritic named character references, including
