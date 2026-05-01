@@ -82,6 +82,9 @@ currently supports:
   punctuation aliases, and math constants
 - WHATWG relation/operator named character references, including negated
   aliases with combining-overlay replacements
+- WHATWG extended greater-than and less-than comparison named character
+  references, including `gl*`, `gn*`, `gtr*`, `less*`, `ln*`, and nested
+  negated aliases
 - WHATWG equality, congruence, similarity, vertical-bar, and parallel named
   character references, including `eq*`, `sim*`, `mid*`, and `par*` aliases
 - WHATWG precedence and successor relation named character references, including

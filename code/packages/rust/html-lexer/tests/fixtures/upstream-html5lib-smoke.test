@@ -633,6 +633,31 @@
       ]
     },
     {
+      "description": "data state WHATWG greater and less comparison named character references",
+      "input": "GreaterLess:&GreaterEqualLess;&gl;&glE;&gla;&glj;&gnE;&gnap;&gnapprox;&gne;&gneq;&gneqq;&gnsim;&gtrapprox;&gtrarr;",
+      "output": [
+        ["Character", "GreaterLess:"],
+        ["Character", "\u22DB\u2277\u2A92\u2AA5\u2AA4\u2269\u2A8A\u2A8A\u2A88\u2A88\u2269\u22E7\u2A86\u2978"]
+      ]
+    },
+    {
+      "description": "attribute WHATWG greater and less comparison named character references",
+      "input": "<math cmp=\"&gtrdot;&gtreqless;&gtreqqless;&gtrless;&gtrsim;&lessapprox;&lessdot;&lesseqgtr;&lesseqqgtr;&lessgtr;&lesssim;&lg;&lgE;&lnE;\">",
+      "output": [
+        ["StartTag", "math", {"cmp": "\u22D7\u22DB\u2A8C\u2277\u2273\u2A85\u22D6\u22DA\u2A8B\u2276\u2272\u2276\u2A91\u2268"}]
+      ]
+    },
+    {
+      "description": "rcdata WHATWG negated greater and less comparison named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&lnap;&lnapprox;&lne;&lneq;&lneqq;&lnsim;&nGg;&nGt;&nGtv;&nLl;&nLt;&nLtv;</title>",
+      "output": [
+        ["Character", "\u2A89\u2A89\u2A87\u2A87\u2268\u22E6\u22D9\u0338\u226B\u20D2\u226B\u0338\u22D8\u0338\u226A\u20D2\u226A\u0338"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
       "description": "rcdata WHATWG negated relational named character references",
       "initialStates": ["RCDATA state"],
       "lastStartTag": "title",

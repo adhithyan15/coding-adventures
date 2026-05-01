@@ -152,6 +152,8 @@ documented in this file.
 - Added a WHATWG relation/operator named-reference batch for equality, tilde,
   greater-than, less-than, and negated aliases, including combining-overlay
   replacements such as `NotNestedGreaterGreater`.
+- Added a WHATWG greater/less comparison named-reference batch covering `gl*`,
+  `gn*`, `gtr*`, `less*`, `ln*`, and negated nested comparison aliases.
 - Added a WHATWG equality/congruence/parallel named-reference batch covering
   `Bumpeq`, `Congruent`, `eq*`, `sim*`, `mid*`, and `par*` aliases.
 - Added a WHATWG precedence/successor relation named-reference batch covering
