@@ -960,6 +960,16 @@ class TestPrologGoalAdapter:
                 0,
                 LogicVar(id=89),
             ),
+            relation("compound_name_arguments", 3)(
+                term("box", atom("tea")),
+                LogicVar(id=92),
+                LogicVar(id=93),
+            ),
+            relation("compound_name_arity", 3)(
+                LogicVar(id=94),
+                atom("box"),
+                1,
+            ),
             relation("term_hash", 2)(term("box", atom("tea")), LogicVar(id=90)),
             relation("term_hash", 4)(
                 term("box", atom("tea")),
@@ -1283,6 +1293,40 @@ class TestPrologGoalAdapter:
                 atom("pair('$VAR'(0), box('$VAR'(1)), '$VAR'(0))"),
             ),
         ]
+
+    def test_adapt_prolog_goal_rewrites_compound_reflection_predicates(self) -> None:
+        parsed = parse_swi_query(
+            "?- compound_name_arguments(box(tea, cake), Name, Arguments), "
+            "compound_name_arguments(Built, box, [tea, cake]), "
+            "compound_name_arity(pair(left, right), PairName, PairArity), "
+            "compound_name_arity(Template, pair, 2).",
+        )
+
+        answers = solve_all(
+            program(),
+            (
+                parsed.variables["Name"],
+                parsed.variables["Arguments"],
+                parsed.variables["Built"],
+                parsed.variables["PairName"],
+                parsed.variables["PairArity"],
+                parsed.variables["Template"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        assert len(answers) == 1
+        name, arguments, built, pair_name, pair_arity, template = answers[0]
+        assert name == atom("box")
+        assert arguments == logic_list(["tea", "cake"])
+        assert built == term("box", "tea", "cake")
+        assert pair_name == atom("pair")
+        assert pair_arity == num(2)
+        assert isinstance(template, Compound)
+        assert template.functor == atom("pair").symbol
+        assert len(template.args) == 2
+        assert all(isinstance(argument, LogicVar) for argument in template.args)
+        assert template.args[0] != template.args[1]
 
     def test_adapt_prolog_goal_rewrites_term_hash_predicates(self) -> None:
         parsed = parse_swi_query(

@@ -65,6 +65,8 @@
   `read_term_from_atom/3` and `write_term_to_atom/3`.
 - Run Prolog `numbervars/3` and `write_term_to_atom/3` `numbervars(true)`
   rendering through the VM path.
+- Run Prolog `compound_name_arguments/3` and `compound_name_arity/3` through
+  the VM path for compound-only term reflection.
 - Run Prolog `term_hash/2` and `term_hash/4` through the VM path for
   deterministic structural term hashes.
 

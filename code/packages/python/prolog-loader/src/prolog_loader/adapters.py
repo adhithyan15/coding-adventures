@@ -27,6 +27,8 @@ from logic_builtins import (
     char_codeo,
     clauseo,
     compare_termo,
+    compound_name_argumentso,
+    compound_name_arityo,
     compoundo,
     convlisto,
     copytermo,
@@ -376,6 +378,10 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         return labelingo(args[0])
     if name == "functor" and goal.relation.arity == 3:
         return functoro(*args)
+    if name == "compound_name_arguments" and goal.relation.arity == 3:
+        return compound_name_argumentso(*args)
+    if name == "compound_name_arity" and goal.relation.arity == 3:
+        return compound_name_arityo(*args)
     if name == "arg" and goal.relation.arity == 3:
         return argo(*args)
     if name == "=.." and goal.relation.arity == 2:

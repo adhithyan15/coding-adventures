@@ -55,6 +55,8 @@ from logic_builtins import (
     char_codeo,
     clauseo,
     compare_termo,
+    compound_name_argumentso,
+    compound_name_arityo,
     compoundo,
     convlisto,
     copytermo,
@@ -1857,6 +1859,92 @@ class TestTermMetaprogrammingBuiltins:
         assert solve_all(program(), value, functoro(value, "box", -1)) == []
         assert solve_all(program(), value, functoro(value, "box", 1.5)) == []
         assert solve_all(program(), value, functoro(value, 3, 1)) == []
+
+    def test_compound_name_argumentso_inspects_and_constructs_compounds(self) -> None:
+        name = var("Name")
+        arguments = var("Arguments")
+        constructed = var("Constructed")
+
+        assert solve_all(
+            program(),
+            (name, arguments),
+            compound_name_argumentso(term("box", "tea", "cake"), name, arguments),
+        ) == [(atom("box"), logic_list(["tea", "cake"]))]
+        assert solve_all(
+            program(),
+            constructed,
+            compound_name_argumentso(constructed, "box", logic_list(["tea", "cake"])),
+        ) == [term("box", "tea", "cake")]
+
+    def test_compound_name_argumentso_rejects_non_compound_shapes(self) -> None:
+        value = var("Value")
+        name = var("Name")
+
+        assert (
+            solve_all(
+                program(),
+                name,
+                compound_name_argumentso("tea", name, logic_list([])),
+            )
+            == []
+        )
+        assert (
+            solve_all(
+                program(),
+                value,
+                compound_name_argumentso(value, "box", logic_list([])),
+            )
+            == []
+        )
+        assert (
+            solve_all(program(), value, compound_name_argumentso(value, "box", 3))
+            == []
+        )
+        assert (
+            solve_all(
+                program(),
+                value,
+                compound_name_argumentso(value, 3, logic_list(["tea"])),
+            )
+            == []
+        )
+
+    def test_compound_name_arityo_inspects_and_constructs_compounds(self) -> None:
+        name = var("Name")
+        arity = var("Arity")
+        constructed = var("Constructed")
+
+        assert solve_all(
+            program(),
+            (name, arity),
+            compound_name_arityo(term("box", "tea", "cake"), name, arity),
+        ) == [(atom("box"), num(2))]
+
+        answers = solve_all(
+            program(),
+            constructed,
+            compound_name_arityo(constructed, "pair", 2),
+        )
+        assert len(answers) == 1
+        [pair] = answers
+        assert isinstance(pair, Compound)
+        assert pair.functor == atom("pair").symbol
+        assert len(pair.args) == 2
+        assert all(isinstance(argument, LogicVar) for argument in pair.args)
+        assert pair.args[0] != pair.args[1]
+
+    def test_compound_name_arityo_rejects_atomic_and_invalid_construction(self) -> None:
+        value = var("Value")
+        name = var("Name")
+
+        assert solve_all(program(), name, compound_name_arityo("tea", name, 0)) == []
+        assert solve_all(program(), value, compound_name_arityo(value, "box", 0)) == []
+        assert solve_all(program(), value, compound_name_arityo(value, "box", -1)) == []
+        assert (
+            solve_all(program(), value, compound_name_arityo(value, "box", 1.5))
+            == []
+        )
+        assert solve_all(program(), value, compound_name_arityo(value, 3, 1)) == []
 
     def test_copytermo_copies_ground_terms_and_refreshes_variables(self) -> None:
         copy = var("Copy")
