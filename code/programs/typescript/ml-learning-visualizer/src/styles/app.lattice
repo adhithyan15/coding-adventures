@@ -175,7 +175,8 @@ h2 {
 .chart-panel,
 .metrics,
 .lab-intro,
-.trace-panel {
+.trace-panel,
+.network-panel {
   @include surface;
 }
 
@@ -575,13 +576,31 @@ h2 {
 .lesson,
 .activation-panel,
 .source-panel,
-.trace-panel {
+.trace-panel,
+.network-panel {
   display: grid;
   gap: 6px;
 }
 
 .trace-panel {
   padding: 14px;
+}
+
+.network-panel {
+  padding: 14px;
+}
+
+.network-svg {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.network-svg svg {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .lesson p,

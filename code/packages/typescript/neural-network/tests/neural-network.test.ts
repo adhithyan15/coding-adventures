@@ -6,6 +6,7 @@ import {
   addInput,
   addOutput,
   addWeightedSum,
+  createFeedForwardNetwork,
   createNeuralGraph,
   createNeuralNetwork,
   createXorNetwork,
@@ -101,5 +102,51 @@ describe("neural-network primitives", () => {
       weight: -30,
     });
     expect(network.graph.topologicalSort()).toContain("out");
+  });
+
+  it("authors generic feed-forward layers from matrices", () => {
+    const network = createFeedForwardNetwork({
+      name: "tiny-feed-forward",
+      inputNames: ["x0", "x1"],
+      layers: [
+        {
+          name: "hidden",
+          weights: [
+            [0.5, -0.25],
+            [0.75, 0.1],
+          ],
+          biases: [0.2, -0.3],
+          activation: "sigmoid",
+        },
+        {
+          name: "output",
+          weights: [
+            [1.25],
+            [-0.9],
+          ],
+          biases: [0.05],
+          activation: "none",
+          outputNames: ["score"],
+        },
+      ],
+    });
+
+    expect(network.graph.nodeProperties("hidden_0")).toMatchObject({
+      "nn.op": "activation",
+      "nn.activation": "sigmoid",
+      "nn.layer": "hidden",
+    });
+    expect(network.graph.nodeProperties("output_0_out")).toMatchObject({
+      "nn.op": "output",
+      "nn.output": "score",
+    });
+    expect(network.graph.edgeProperties("input_1_to_hidden_0_sum")).toMatchObject({
+      weight: 0.75,
+      "nn.trainable": true,
+    });
+    expect(network.graph.edgeProperties("bias_to_output_0_sum")).toMatchObject({
+      weight: 0.05,
+      "nn.role": "bias_weight",
+    });
   });
 });

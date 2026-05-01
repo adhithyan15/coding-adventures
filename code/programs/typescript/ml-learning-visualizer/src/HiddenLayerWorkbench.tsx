@@ -13,7 +13,8 @@ import {
   type HiddenLayerModelState,
   type HiddenLayerStepResult,
 } from "./hidden-layer-examples.js";
-import { forwardTwoLayer } from "coding-adventures-two-layer-network/src/index";
+import { predictTwoLayerWithVm } from "./neural-vm.js";
+import { HiddenNetworkDiagram } from "./NetworkDiagram.js";
 
 interface HiddenChartFrame {
   width: number;
@@ -86,14 +87,25 @@ function hiddenHistoryPath(history: HiddenLayerHistoryPoint[]): string {
     .join(" ");
 }
 
-function makeCurvePath(state: HiddenLayerModelState): string {
+function makeCurvePath(example: HiddenLayerExample, state: HiddenLayerModelState): string {
   const samples = Array.from({ length: 121 }, (_, index) => {
     const x = CURVE_CHART.xMin + (index / 120) * (CURVE_CHART.xMax - CURVE_CHART.xMin);
-    const prediction = forwardTwoLayer([[x]], state.parameters).predictions[0]![0]!;
-    return [x, prediction] as const;
+    return x;
+  });
+  const predictions = predictTwoLayerWithVm(
+    samples.map((x) => [x]),
+    state.parameters,
+    {
+      inputNames: example.inputLabels,
+      outputNames: [example.outputLabel],
+    },
+  ).predictions.map((row) => row[0] ?? 0);
+
+  const points = samples.map((x, index) => {
+    return [x, predictions[index] ?? 0] as const;
   });
 
-  return samples
+  return points
     .map(([x, y], index) => {
       const command = index === 0 ? "M" : "L";
       return `${command} ${xScale(x, CURVE_CHART).toFixed(2)} ${yScale(y, CURVE_CHART).toFixed(2)}`;
@@ -103,6 +115,7 @@ function makeCurvePath(state: HiddenLayerModelState): string {
 
 function makeSurfaceCells(example: HiddenLayerExample, state: HiddenLayerModelState): Array<{ x: number; y: number; value: number }> {
   const cells: Array<{ x: number; y: number; value: number }> = [];
+  const inputs: number[][] = [];
   const divisions = 26;
   const xValues = example.rows.map((row) => row.input[0]!);
   const yValues = example.rows.map((row) => row.input[1]!);
@@ -117,12 +130,21 @@ function makeSurfaceCells(example: HiddenLayerExample, state: HiddenLayerModelSt
     for (let x = 0; x < divisions; x += 1) {
       const inputX = xMin - xPad + (x / (divisions - 1)) * (xMax - xMin + xPad * 2);
       const inputY = yMin - yPad + (y / (divisions - 1)) * (yMax - yMin + yPad * 2);
-      const value = forwardTwoLayer([[inputX, inputY]], state.parameters).predictions[0]![0]!;
+      inputs.push([inputX, inputY]);
+      const value = 0;
       cells.push({ x, y, value });
     }
   }
 
-  return cells;
+  const predictions = predictTwoLayerWithVm(inputs, state.parameters, {
+    inputNames: example.inputLabels,
+    outputNames: [example.outputLabel],
+  }).predictions;
+
+  return cells.map((cell, index) => ({
+    ...cell,
+    value: predictions[index]?.[0] ?? 0,
+  }));
 }
 
 function CurveChart({ example, state, predictions }: { example: HiddenLayerExample; state: HiddenLayerModelState; predictions: number[] }) {
@@ -147,7 +169,7 @@ function CurveChart({ example, state, predictions }: { example: HiddenLayerExamp
           </g>
         );
       })}
-      <path className="hidden-curve" d={makeCurvePath(state)} />
+      <path className="hidden-curve" d={makeCurvePath(example, state)} />
       {example.rows.map((row, index) => {
         const px = xScale(row.input[0]!, CURVE_CHART);
         const targetY = yScale(row.target, CURVE_CHART);
@@ -406,6 +428,15 @@ export function HiddenLayerWorkbench() {
             <code>{example.inputLabels.join(", ")} {"->"} hidden[{example.hiddenCount}] {"->"} {example.outputLabel}</code>
           </div>
         </section>
+
+        <HiddenNetworkDiagram
+          example={example}
+          state={state}
+          selectedInput={example.rows[selectedIndex]!.input}
+          prediction={predictions[selectedIndex]!}
+          lastStep={lastStep}
+          learningRate={learningRate}
+        />
       </section>
 
       <aside className="controls metrics" aria-label="Hidden-layer controls">

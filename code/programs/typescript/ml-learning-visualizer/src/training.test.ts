@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { forwardTwoLayer } from "coding-adventures-two-layer-network/src/index";
 import { activate } from "./activation.js";
 import {
   CELSIUS_DATASET,
@@ -16,6 +17,8 @@ import {
   trainHiddenStep,
   trainHiddenSteps,
 } from "./hidden-layer-examples.js";
+import { predictLinearWithVm, predictTwoLayerWithVm } from "./neural-vm.js";
+import { renderHiddenNetworkSvg, renderLinearNetworkSvg } from "./NetworkDiagram.js";
 
 describe("training helpers", () => {
   it("reduces MSE loss for a small learning rate", () => {
@@ -56,6 +59,26 @@ describe("training helpers", () => {
     expect(fit.bias).toBeCloseTo(1);
   });
 
+  it("runs linear predictions through the neural graph VM", () => {
+    const result = predictLinearWithVm([0, 10, 100], { weight: 1.8, bias: 32 });
+
+    expect(result.predictions).toEqual([32, 50, 212]);
+    expect(result.bytecodeInstructionCount).toBeGreaterThan(0);
+    expect(result.matrixInstructionCount).toBeGreaterThan(0);
+  });
+
+  it("renders a Paint VM neural graph view for the linear model", () => {
+    const svg = renderLinearNetworkSvg(
+      { weight: 1.8, bias: 32, epoch: 3 },
+      null,
+      0.0005,
+    );
+
+    expect(svg).toContain("<svg");
+    expect(svg).toContain("<line");
+    expect(svg).toContain("font-size");
+  });
+
   it("applies activation functions used by the lab preview", () => {
     expect(activate(-2, "relu")).toBe(0);
     expect(activate(-2, "leakyRelu")).toBeCloseTo(-0.2);
@@ -85,6 +108,39 @@ describe("training helpers", () => {
       expect(step.step.inputToHiddenWeightGradients).toHaveLength(example.inputLabels.length);
       expect(step.step.hiddenToOutputWeightGradients).toHaveLength(example.hiddenCount);
     }
+  });
+
+  it("matches hidden-layer visualizer predictions with the shared graph VM", () => {
+    const example = HIDDEN_LAYER_EXAMPLES[0]!;
+    const initial = createInitialHiddenState(example);
+    const inputs = example.rows.map((row) => row.input);
+    const direct = forwardTwoLayer(inputs, initial.parameters).predictions;
+    const vm = predictTwoLayerWithVm(inputs, initial.parameters, {
+      inputNames: example.inputLabels,
+      outputNames: [example.outputLabel],
+    });
+
+    expect(vm.predictions).toHaveLength(direct.length);
+    for (const [index, row] of direct.entries()) {
+      expect(vm.predictions[index]![0]).toBeCloseTo(row[0]!);
+    }
+  });
+
+  it("renders a Paint VM neural graph view for hidden-layer examples", () => {
+    const example = HIDDEN_LAYER_EXAMPLES[0]!;
+    const initial = createInitialHiddenState(example);
+    const svg = renderHiddenNetworkSvg(
+      example,
+      initial,
+      example.rows[0]!.input,
+      0.42,
+      null,
+      example.defaultLearningRate,
+    );
+
+    expect(svg).toContain("<svg");
+    expect(svg).toContain("<ellipse");
+    expect(svg).toContain("<line");
   });
 
   it("moves downhill on XNOR and absolute value with batch updates", () => {

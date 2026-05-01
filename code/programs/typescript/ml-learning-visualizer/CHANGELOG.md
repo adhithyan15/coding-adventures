@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Changed
+
+- Routed linear and hidden-layer visualizer predictions through the shared
+  neural-network graph and neural-graph-vm matrix plan path.
+- Added Paint VM SVG neural graph panels that show weights, bias edges,
+  activations, and gradient updates while training runs advance.
+
 ## [0.1.0] - 2026-03-25
 
 ### Added

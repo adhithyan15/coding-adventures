@@ -11,6 +11,7 @@ import {
   paintClip,
   paintGradient,
   paintImage,
+  paintText,
   type PaintScene,
   type PixelContainer,
 } from "@coding-adventures/paint-instructions";
@@ -492,6 +493,37 @@ describe("PaintGlyphRun → SVG <text>", () => {
       ]),
     );
     expect(svg).toContain('fill="#000000"');
+  });
+});
+
+// ============================================================================
+// PaintText → <text>
+// ============================================================================
+
+describe("PaintText → SVG <text>", () => {
+  it("emits native SVG text with font family and content escaping", () => {
+    const svg = renderToSvgString(
+      paintScene(200, 200, "transparent", [
+        paintText(12, 48, "A < B & C", "svg:Inter@16", 16, "#111111"),
+      ]),
+    );
+    expect(svg).toContain("<text");
+    expect(svg).toContain('x="12"');
+    expect(svg).toContain('y="48"');
+    expect(svg).toContain('font-family="Inter"');
+    expect(svg).toContain('font-size="16"');
+    expect(svg).toContain("A &lt; B &amp; C");
+  });
+
+  it("maps centered text alignment to SVG text-anchor middle", () => {
+    const svg = renderToSvgString(
+      paintScene(200, 200, "transparent", [
+        paintText(100, 48, "centered", "svg:Inter@16", 16, "#111111", {
+          text_align: "center",
+        }),
+      ]),
+    );
+    expect(svg).toContain('text-anchor="middle"');
   });
 });
 

@@ -1,3 +1,5 @@
+import { predictLinearWithVm } from "./neural-vm.js";
+
 export type LossKind = "mse" | "mae";
 
 export interface TrainingPoint {
@@ -32,11 +34,11 @@ export const CELSIUS_DATASET: TrainingPoint[] = [
 ];
 
 export function predict(x: number, state: ModelState): number {
-  return state.weight * x + state.bias;
+  return predictLinearWithVm([x], state).predictions[0] ?? 0;
 }
 
 export function predictions(points: TrainingPoint[], state: ModelState): number[] {
-  return points.map((point) => predict(point.x, state));
+  return predictLinearWithVm(points.map((point) => point.x), state).predictions;
 }
 
 export function loss(points: TrainingPoint[], state: ModelState, lossKind: LossKind): number {
