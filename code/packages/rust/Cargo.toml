@@ -442,6 +442,7 @@ members = [
     "twig-lexer",
     "twig-parser",
     "twig-formatter",
+    "twig-folding-ranges",
     "twig-ir-compiler",
     "lang-runtime-core",
     "lispy-runtime",
