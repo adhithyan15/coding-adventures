@@ -151,6 +151,25 @@ class TestPrologVMStress:
         )
         assert answer["Variables"] == logic_list([answer["X"]])
 
+    def test_current_prolog_flag_runs_through_vm(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            ?- current_prolog_flag(unknown, Unknown),
+               current_prolog_flag(double_quotes, DoubleQuotes),
+               current_prolog_flag(integer_rounding_function, Rounding).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert [answer.as_dict() for answer in answers] == [
+            {
+                "Unknown": atom("fail"),
+                "DoubleQuotes": atom("string"),
+                "Rounding": atom("floor"),
+            },
+        ]
+
     def test_dif_delayed_disequality_runs_through_vm(self) -> None:
         compiled = compile_swi_prolog_source(
             """

@@ -80,6 +80,7 @@ __all__ = [
     "compare_termo",
     "copytermo",
     "convlisto",
+    "current_prolog_flago",
     "current_predicateo",
     "cuto",
     "difo",
@@ -308,6 +309,7 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("compoundo", 1),
     ("copytermo", 2),
     ("convlisto", 3),
+    ("current_prolog_flago", 2),
     ("current_predicateo", 2),
     ("cuto", 0),
     ("difo", 2),
@@ -386,6 +388,17 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("trueo", 0),
     ("univo", 2),
     ("varo", 1),
+)
+
+
+_PROLOG_FLAGS: tuple[tuple[Atom, Term], ...] = (
+    (atom("bounded"), atom("false")),
+    (atom("char_conversion"), atom("false")),
+    (atom("debug"), atom("false")),
+    (atom("double_quotes"), atom("string")),
+    (atom("integer_rounding_function"), atom("floor")),
+    (atom("occurs_check"), atom("false")),
+    (atom("unknown"), atom("fail")),
 )
 
 
@@ -4036,6 +4049,21 @@ def _predicate_properties(
         properties.append(atom("built_in"))
     properties.append(term("number_of_clauses", num(clause_count)))
     return tuple(properties)
+
+
+def current_prolog_flago(name: object, value: object) -> GoalExpr:
+    """Enumerate read-only runtime flags exposed by this Prolog layer."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        name_target, value_target = args
+        for flag_name, flag_value in _PROLOG_FLAGS:
+            yield from solve_from(
+                program_value,
+                conj(eq(name_target, flag_name), eq(value_target, flag_value)),
+                state,
+            )
+
+    return native_goal(run, name, value)
 
 
 def current_predicateo(name: object, arity: object) -> GoalExpr:

@@ -45,6 +45,8 @@
   including recovery from structured arithmetic runtime errors.
 - Run Prolog `term_variables/2` through the VM path for source-level
   metaprogramming over reified terms.
+- Run Prolog `current_prolog_flag/2` through the VM path for read-only runtime
+  flag introspection.
 
 ## 0.1.0
 

@@ -43,6 +43,7 @@ ordinary logic goal expressions.
   `termo_geqo(left, right)` for standard term ordering
 - `current_predicateo(name, arity)` and
   `predicate_propertyo(name, arity, property)` for predicate metadata
+- `current_prolog_flago(name, value)` for read-only runtime flag metadata
 - `dynamico(name, arity)`, `assertao(clause)`, `assertzo(clause)`,
   `retracto(clause)`, `retractallo(head)`, and `abolisho(name, arity)` for
   branch-local dynamic database mutation
@@ -77,6 +78,7 @@ from logic_builtins import (
     calltermo,
     clauseo,
     compare_termo,
+    current_prolog_flago,
     current_predicateo,
     cuto,
     difo,
@@ -138,6 +140,7 @@ Results = var("Results")
 Body = var("Body")
 Order = var("Order")
 Property = var("Property")
+FlagValue = var("FlagValue")
 
 parent = relation("parent", 2)
 child = relation("child", 2)
@@ -212,6 +215,9 @@ assert solve_all(
     Body,
     conj(clauseo(child("bart", "homer"), Body), calltermo(Body)),
 ) == [term("parent", "homer", "bart")]
+assert solve_all(program(), FlagValue, current_prolog_flago("unknown", FlagValue)) == [
+    atom("fail"),
+]
 assert solve_all(
     higher_order,
     Results,

@@ -136,6 +136,7 @@ The package includes end-to-end stress tests for:
   and zero-divisor failures
 - exception control with `throw/1`, `catch/3`, and catchable runtime errors
 - term metaprogramming with `term_variables/2`
+- runtime flag introspection with `current_prolog_flag/2`
 - finite integer builtins such as `integer/1`, `between/3`, and `succ/2`
 - negation and control builtins such as `\+/1`, `once/1`, and `forall/2`
 - callable, natural infix, and nested additive CLP(FD) forms for finite-domain
