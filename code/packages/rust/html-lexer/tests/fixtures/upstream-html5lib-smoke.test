@@ -601,6 +601,31 @@
       ]
     },
     {
+      "description": "data state WHATWG congruence named character references",
+      "input": "Congruence:&Bumpeq;&Congruent;&DotEqual;&HumpDownHump;&HumpEqual;&NotVerticalBar;&VerticalLine;&bcong;&bsim;&bsime;&bump;&bumpE;&bumpe;&bumpeq;&circeq;&coloneq;&congdot;&doteq;&doteqdot;",
+      "output": [
+        ["Character", "Congruence:"],
+        ["Character", "\u224E\u2261\u2250\u224E\u224F\u2224|\u224C\u223D\u22CD\u224E\u2AAE\u224F\u224F\u2257\u2254\u2A6D\u2250\u2251"]
+      ]
+    },
+    {
+      "description": "attribute WHATWG equality and parallel named character references",
+      "input": "<math eq=\"&eqcirc;&eqcolon;&eqsim;&eqslantgtr;&eqslantless;&equals;&equest;&equivDD;&eqvparsl;\" parallel=\"&mid;&midast;&midcir;&npar;&nparallel;&nparsl;&npart;&par;&parallel;&parsim;\">",
+      "output": [
+        ["StartTag", "math", {"eq": "\u2256\u2255\u2242\u2A96\u2A95=\u225F\u2A78\u29E5", "parallel": "\u2223*\u2AF0\u2226\u2226\u2AFD\u20E5\u2202\u0338\u2225\u2225\u2AF3"}]
+      ]
+    },
+    {
+      "description": "rcdata WHATWG similarity named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&parsl;&shortmid;&shortparallel;&simdot;&sime;&simeq;&simg;&simgE;&siml;&simlE;&simne;&simplus;&simrarr;</title>",
+      "output": [
+        ["Character", "\u2AFD\u2223\u2225\u2A6A\u2243\u2243\u2A9E\u2AA0\u2A9D\u2A9F\u2246\u2A24\u2972"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
       "description": "attribute WHATWG greater and less named character references",
       "input": "<math cmp=\"&GreaterEqual;&GreaterFullEqual;&GreaterGreater;&GreaterLess;&GreaterSlantEqual;&GreaterTilde;\" inv=\"&LessEqualGreater;&LessFullEqual;&LessGreater;&LessLess;&LessSlantEqual;&LessTilde;\">",
       "output": [

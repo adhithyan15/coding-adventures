@@ -2404,6 +2404,77 @@ fn default_html_lexer_supports_whatwg_equality_and_tilde_named_character_referen
 }
 
 #[test]
+fn default_html_lexer_supports_whatwg_congruence_named_character_references() {
+    let tokens = lex_html(
+        "Congruence:&Bumpeq;&Congruent;&DotEqual;&HumpDownHump;&HumpEqual;&NotVerticalBar;&VerticalLine;&bcong;&bsim;&bsime;&bump;&bumpE;&bumpe;&bumpeq;&circeq;&coloneq;&congdot;&doteq;&doteqdot;",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Text("Congruence:≎≡≐≎≏∤|≌∽⋍≎⪮≏≏≗≔⩭≐≑".to_string()),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_equality_and_parallel_named_character_references_in_attributes(
+) {
+    let tokens = lex_html(
+        "<math eq=\"&eqcirc;&eqcolon;&eqsim;&eqslantgtr;&eqslantless;&equals;&equest;&equivDD;&eqvparsl;\" parallel=\"&mid;&midast;&midcir;&npar;&nparallel;&nparsl;&npart;&par;&parallel;&parsim;\">",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::StartTag {
+                name: "math".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "eq".to_string(),
+                        value: "≖≕≂⪖⪕=≟⩸⧥".to_string(),
+                    },
+                    Attribute {
+                        name: "parallel".to_string(),
+                        value: "∣*⫰∦∦⫽\u{20E5}∂\u{0338}∥∥⫳".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_rcdata_whatwg_similarity_named_character_references() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rcdata").unwrap();
+    lexer.set_last_start_tag("title");
+
+    lexer
+        .push(
+            "&parsl;&shortmid;&shortparallel;&simdot;&sime;&simeq;&simg;&simgE;&siml;&simlE;&simne;&simplus;&simrarr;</title>",
+        )
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("⫽∣∥⩪≃≃⪞⪠⪝⪟≆⨤⥲".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_whatwg_greater_less_named_character_references_in_attributes() {
     let tokens = lex_html(
         "<math cmp=\"&GreaterEqual;&GreaterFullEqual;&GreaterGreater;&GreaterLess;&GreaterSlantEqual;&GreaterTilde;\" inv=\"&LessEqualGreater;&LessFullEqual;&LessGreater;&LessLess;&LessSlantEqual;&LessTilde;\">",
