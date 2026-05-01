@@ -40,6 +40,7 @@ members = [
     "code128",
     "compute-runtime",
     "compute-unit",
+    "constraint-core",
     "core",
     "cpu-pipeline",
     "cpu-simulator",
