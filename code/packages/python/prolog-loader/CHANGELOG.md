@@ -53,6 +53,8 @@
 - adapt Prolog atom composition predicates `atom_concat/3`,
   `atomic_list_concat/2`, `atomic_list_concat/3`, and `number_string/2` into
   finite text goals
+- adapt Prolog text inspection predicates `atom_length/2`, `string_length/2`,
+  `sub_atom/5`, and `sub_string/5` into finite text goals
 
 ## 0.1.0
 

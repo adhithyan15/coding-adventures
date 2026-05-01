@@ -46,6 +46,8 @@ All notable changes to this package will be documented in this file.
 - `atom_concato/3`, `atomic_list_concato/2`,
   `atomic_list_concato_with_separator/3`, and `number_stringo/2` for finite
   atom composition and number/string conversion modes.
+- `atom_lengtho/2`, `string_lengtho/2`, `sub_atomo/5`, and `sub_stringo/5`
+  for finite atom/string length and slicing relations.
 
 ### Fixed
 

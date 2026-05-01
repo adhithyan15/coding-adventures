@@ -15,6 +15,8 @@ It keeps parsing side-effect free, then exposes helpers to:
 - adapt finite integer builtins such as `integer/1`, `between/3`, and `succ/2`
 - adapt atom composition builtins such as `atom_concat/3`,
   `atomic_list_concat/2,3`, and `number_string/2`
+- adapt text inspection builtins such as `atom_length/2`, `string_length/2`,
+  `sub_atom/5`, and `sub_string/5`
 - adapt callable CLP(FD) forms such as `in/2`, `ins/2`, `#=/2`,
   `all_different/1`, and `labeling/2`
 - flatten nested additive CLP(FD) equality expressions such as
