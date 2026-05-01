@@ -81,6 +81,8 @@ All notable changes to this package will be documented in this file.
   descriptor pointers to actual procedures that declare matching array formals.
 - Lowered label, switch, and procedure arguments through formal procedure
   dispatchers by forwarding label ids and descriptor pointers.
+- Lowered report-style typed formal specifiers such as `integer array a;` and
+  `real procedure f;` through the existing array/procedure formal paths.
 - Lowered conditional switch designator actuals by selecting and forwarding the
   chosen switch descriptor through concrete and formal procedure calls.
 - Preserved concrete procedure ids in formal procedure call-shape metadata so

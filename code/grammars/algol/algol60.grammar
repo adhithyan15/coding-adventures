@@ -120,10 +120,20 @@ formal_params = LPAREN ident_list RPAREN ;
 # re-evaluated every time the parameter is used inside the procedure body.
 value_part   = "value" ident_list SEMICOLON ;
 
-# spec_part declares what kind each parameter is (integer, real, array, etc.)
+# spec_part declares what kind each parameter is (integer, real, array, etc.).
+# Typed array/procedure specs accept report-style combined forms such as
+# `integer array a;` and `real procedure f;`. The older split spelling
+# `integer a; array a;` remains valid because repeated spec parts are merged by
+# the semantic checker.
 spec_part    = specifier ident_list SEMICOLON ;
 
-specifier    = "integer" | "real" | "boolean" | "string" | "array" | "label" | "switch" | "procedure" ;
+specifier    = type "array"
+             | type "procedure"
+             | "array"
+             | "label"
+             | "switch"
+             | "procedure"
+             | type ;
 
 proc_body    = block | statement ;
 

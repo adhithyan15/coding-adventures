@@ -3387,22 +3387,39 @@ def _parameter_specs(node: ASTNode) -> dict[str, _ParameterSpec]:
     specs: dict[str, _ParameterSpec] = {}
     for spec_part in _direct_nodes(node, "spec_part"):
         specifier = _first_direct_node(spec_part, "specifier")
-        specifier_name = _first_keyword_value(specifier) or ""
+        specifier_kind, specifier_type = _parameter_specifier(specifier)
         ident_list = _first_direct_node(spec_part, "ident_list")
         for token in _tokens(ident_list):
             if token.type_name == "NAME":
                 current = specs.get(token.value, _ParameterSpec())
-                if specifier_name in {INTEGER, BOOLEAN, REAL, STRING}:
-                    specs[token.value] = _ParameterSpec(
-                        kind=current.kind,
-                        type_name=specifier_name,
-                    )
-                elif specifier_name in {ARRAY, LABEL, SWITCH, "procedure"}:
-                    specs[token.value] = _ParameterSpec(
-                        kind=specifier_name,
-                        type_name=current.type_name,
-                    )
+                specs[token.value] = _ParameterSpec(
+                    kind=specifier_kind or current.kind,
+                    type_name=specifier_type or current.type_name,
+                )
     return specs
+
+
+def _parameter_specifier(node: ASTNode | None) -> tuple[str | None, str | None]:
+    values = [
+        token.value
+        for token in _tokens(node)
+        if token.type_name == "KEYWORD"
+    ]
+    type_name = next(
+        (value for value in values if value in {INTEGER, BOOLEAN, REAL, STRING}),
+        None,
+    )
+    if ARRAY in values:
+        return ARRAY, type_name
+    if "procedure" in values:
+        return "procedure", type_name
+    if LABEL in values:
+        return LABEL, None
+    if SWITCH in values:
+        return SWITCH, None
+    if type_name is not None:
+        return "scalar", type_name
+    return None, None
 
 
 def _label_token(node: ASTNode) -> Token | None:

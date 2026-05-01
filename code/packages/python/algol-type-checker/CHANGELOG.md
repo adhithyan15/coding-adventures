@@ -53,6 +53,9 @@ All notable changes to this package will be documented in this file.
   procedure parameters, recording array argument call shapes for lowering.
 - Accepted procedure-valued actuals with label, switch, and procedure
   parameters for formal procedure parameters.
+- Accepted report-style typed formal specifiers such as `integer array a;` and
+  `real procedure f;`, merging them into the same semantic parameter metadata
+  as the older split spelling.
 - Validated nested procedure-parameter call-shape contracts when a formal
   procedure call forwards a concrete procedure actual.
 - Accepted conditional switch designator actuals for switch formals and formal
