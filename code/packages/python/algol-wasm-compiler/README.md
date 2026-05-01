@@ -1,6 +1,6 @@
 # algol-wasm-compiler
 
-Package the first ALGOL 60 compiler subset as WebAssembly.
+Package the Python ALGOL 60 compiler lane as WebAssembly.
 
 This package is the orchestration layer for the first ALGOL 60 compiled lane:
 
@@ -39,9 +39,14 @@ the current lane already supports a substantial ALGOL 60 surface:
 - builtin `print(...)` / `output(...)` for integers, booleans, reals, strings,
   and string variables
 
-The implementation is not yet a full ALGOL 60 conformance lane, but it is well
-beyond a toy arithmetic subset and is now useful for representative block- and
-procedure-heavy programs.
+Within the repository's lowercase ASCII `algol60` grammar, the executable
+declaration, statement, expression, procedure, array, by-name, and designational
+surface is now implemented and covered by golden WASM fixtures. It is not a
+claim of historical whole-environment compatibility with every ALGOL system:
+the package intentionally keeps the observable I/O surface to `print(...)` /
+`output(...)`, uses the bundled token spelling rather than typographic ALGOL
+publication notation, and applies explicit source, semantic, generated-state,
+memory, and host execution limits for untrusted programs.
 
 The convenience APIs reject source strings larger than 256 KiB before parsing.
 The downstream type checker also enforces configurable AST, block-nesting, and
@@ -112,6 +117,11 @@ local WASM runtime. Those fixtures cover:
 - switch dispatch, procedure-formal dispatch, and procedure-crossing `goto`
 - conditional expressions, chained assignment, and exponentiation in the same
   end-to-end program
+- a full-surface convergence program combining `own` scalars and arrays,
+  default-real arrays, nested and single-statement procedures, value and
+  by-name procedure formals, label and switch formals, multiple `for` element
+  forms, parenthesized conditional designational expressions, numeric labels,
+  boolean operators, real arithmetic, and output
 
 ## Dependencies
 

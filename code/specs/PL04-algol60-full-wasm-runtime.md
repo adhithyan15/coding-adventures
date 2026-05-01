@@ -1572,6 +1572,15 @@ This roadmap does not require:
 
 ## Completion Definition
 
+Current Python-lane status: the bundled lowercase ASCII `algol60` grammar is
+now treated as the executable language surface for the WASM package. The
+remaining documented dialect boundaries are environment-level choices rather
+than parser-supported constructs left without lowering: I/O is intentionally
+limited to the package's `print(...)` / `output(...)` builtins, typographic
+ALGOL publication notation is normalized through the repository token grammar,
+and untrusted compilation/execution remains bounded by explicit source,
+semantic, generated-state, memory, and instruction limits.
+
 Full ALGOL 60 to WASM is complete when:
 
 - the existing `algol60` grammar is the only grammar used by the lane

@@ -1,4 +1,4 @@
-"""algol-type-checker — Type checker for the first ALGOL 60 compiler subset
+"""algol-type-checker — Type checker for the Python ALGOL 60 compiler lane
 
 This package is part of the coding-adventures monorepo, a ground-up
 implementation of the computing stack from transistors to operating systems.
