@@ -1356,6 +1356,36 @@
         "EndTag(name=title)",
         "EOF"
       ]
+    },
+    {
+      "id": "html-whatwg-remaining-vector-character-references-data",
+      "description": "Remaining WHATWG vector named references decode in data state",
+      "input": "Vectors:&DownLeftRightVector;&DownLeftTeeVector;&DownRightTeeVector;&LeftDownTeeVector;&LeftRightVector;&LeftTeeVector;&LeftUpDownVector;&LeftUpTeeVector;&RightDownTeeVector;&RightTeeVector;&RightUpDownVector;&RightUpTeeVector;",
+      "tokens": [
+        "Text(data=Vectors:⥐⥞⥟⥡⥎⥚⥑⥠⥝⥛⥏⥜)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-remaining-arrow-character-references-attributes",
+      "description": "Remaining WHATWG arrow named references decode in attributes",
+      "input": "<nav upper=\"&Lleftarrow;&Rrightarrow;&RBarr;&Rarrtl;&Uarrocir;&neArr;&nwArr;&seArr;&swArr;&xhArr;&xlArr;&xrArr;\" lower=\"&lAarr;&rAarr;&lbarr;&rbarr;&bkarow;&dbkarow;&drbkarow;&nearr;&nwarr;&searr;&swarr;&zigrarr;\">",
+      "tokens": [
+        "StartTag(name=nav, attributes=[upper=⇚⇛⤐⤖⥉⇗⇖⇘⇙⟺⟸⟹, lower=⇚⇛⤌⤍⤍⤏⤐↗↖↘↙⇝], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-remaining-harpoon-character-references-rcdata",
+      "description": "Remaining WHATWG harpoon named references decode in RCDATA",
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title",
+      "input": "&dHar;&lHar;&rHar;&uHar;&duhar;&lrhar;&rlhar;&lharu;&lhard;&rharu;&rhard;&uharl;&uharr;&dharl;&dharr;&nrarrc;&nrarrw;</title>",
+      "tokens": [
+        "Text(data=⥥⥢⥤⥣⥯⇋⇌↼↽⇀⇁↿↾⇃⇂⤳̸↝̸)",
+        "EndTag(name=title)",
+        "EOF"
+      ]
     }
   ]
 }

@@ -45,8 +45,10 @@ fence aliases such as `angmsd`, `LeftDoubleBracket`, `lobrk`, `OverBrace`, and
 `ulcorner`, box-drawing aliases such as `boxH`, `boxVH`, `boxdl`, and `boxvr`,
 plus Latin Extended and diacritic aliases such as `Amacr`, `ccaron`, `Lmidot`,
 `uring`, and `Zdot`, mathematical alphabet aliases such as `Aopf`, `zopf`,
-`Ascr`, `zscr`, `Afr`, and `zfr`, and Cyrillic aliases such as `Acy`, `ZHcy`,
-`SHCHcy`, `DJcy`, `Ubrcy`, and `yicy`.
+`Ascr`, `zscr`, `Afr`, and `zfr`, Cyrillic aliases such as `Acy`, `ZHcy`,
+`SHCHcy`, `DJcy`, `Ubrcy`, and `yicy`, and remaining arrow, vector, and
+harpoon aliases such as `DownLeftRightVector`, `Lleftarrow`, `rarrc`, `dHar`,
+and `nrarrc`.
 Named character reference scanning now follows the longest-prefix shape of the
 HTML tokenizer: text and RCDATA recover inputs such as `&copycat` as `©cat`
 with a missing-semicolon diagnostic, while attribute values preserve ambiguous
