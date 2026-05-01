@@ -68,6 +68,8 @@
   finite unification goals
 - adapt Prolog `term_hash/2` and `term_hash/4` into deterministic structural
   hash goals
+- preserve raw collection goal scopes for `bagof/3` and `setof/3`, enabling
+  source-level free-variable grouping and `^/2` existential quantification
 
 ## 0.1.0
 

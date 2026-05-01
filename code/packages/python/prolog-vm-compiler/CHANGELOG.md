@@ -73,6 +73,8 @@
   for explicit finite unification.
 - Run Prolog `term_hash/2` and `term_hash/4` through the VM path for
   deterministic structural term hashes.
+- Run grouped `bagof/3` and `setof/3` through the VM path, including `^/2`
+  existential scopes inside collection goals.
 
 ## 0.1.0
 

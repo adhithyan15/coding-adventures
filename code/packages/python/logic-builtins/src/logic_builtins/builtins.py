@@ -1662,6 +1662,73 @@ def _collect_template_values(
     ]
 
 
+def _strip_existential_quantifiers(scope: Term) -> tuple[tuple[LogicVar, ...], Term]:
+    """Return variables marked existential by Prolog ``^/2`` collection syntax."""
+
+    variables: list[LogicVar] = []
+    seen: set[LogicVar] = set()
+    current = scope
+    while (
+        isinstance(current, Compound)
+        and current.functor.namespace is None
+        and current.functor.name == "^"
+        and len(current.args) == 2
+    ):
+        quantified, current = current.args
+        for variable in _term_variables_in_order(quantified):
+            if variable not in seen:
+                seen.add(variable)
+                variables.append(variable)
+    return tuple(variables), current
+
+
+def _collection_free_variables(
+    template: Term,
+    scope: Term,
+    state: State,
+) -> tuple[LogicVar, ...]:
+    """Return unquantified goal variables that group ``bagof``/``setof``."""
+
+    reified_template = _reified(template, state)
+    reified_scope = _reified(scope, state)
+    existential_vars, scoped_goal = _strip_existential_quantifiers(reified_scope)
+    template_vars = set(_term_variables_in_order(reified_template))
+    existential_set = set(existential_vars)
+    return tuple(
+        variable
+        for variable in _term_variables_in_order(scoped_goal)
+        if variable not in template_vars and variable not in existential_set
+    )
+
+
+def _group_sort_key(key: tuple[Term, ...]) -> tuple[object, ...]:
+    """Return a deterministic standard-term-order-ish key for one group."""
+
+    return tuple(_term_sort_key(item) for item in key)
+
+
+def _collect_template_groups(
+    program_value: Program,
+    state: State,
+    template: Term,
+    goal: GoalExpr,
+    scope: Term | None,
+) -> list[tuple[tuple[Term, ...], list[Term]]]:
+    """Collect template values, grouped by free variables when a scope exists."""
+
+    if scope is None:
+        values = _collect_template_values(program_value, state, template, goal)
+        return [((), values)] if values else []
+
+    free_vars = _collection_free_variables(template, scope, state)
+    groups: dict[tuple[Term, ...], list[Term]] = {}
+    for inner_state in solve_from(program_value, goal, state):
+        key = tuple(reify(variable, inner_state.substitution) for variable in free_vars)
+        value = reify(template, inner_state.substitution)
+        groups.setdefault(key, []).append(value)
+    return sorted(groups.items(), key=lambda item: _group_sort_key(item[0]))
+
+
 def _unify_collection(
     program_value: Program,
     state: State,
@@ -1673,7 +1740,65 @@ def _unify_collection(
     yield from solve_from(program_value, eq(results, logic_list(values)), state)
 
 
-def findallo(template: object, goal: object, results: object) -> GoalExpr:
+def _unify_collection_group(
+    program_value: Program,
+    state: State,
+    results: Term,
+    values: list[Term],
+    free_vars: tuple[LogicVar, ...],
+    key: tuple[Term, ...],
+) -> Iterator[State]:
+    """Unify one grouped bag/set answer from the outer collection state."""
+
+    bindings = [
+        eq(variable, value)
+        for variable, value in zip(free_vars, key, strict=True)
+    ]
+    yield from solve_from(
+        program_value,
+        conj(*bindings, eq(results, logic_list(values))),
+        state,
+    )
+
+
+def _unify_grouped_collection(
+    program_value: Program,
+    state: State,
+    template: Term,
+    results: Term,
+    groups: list[tuple[tuple[Term, ...], list[Term]]],
+    scope: Term | None,
+    *,
+    unique: bool,
+) -> Iterator[State]:
+    """Unify bag/set groups, binding grouping variables per outer answer."""
+
+    if not groups:
+        return
+    free_vars = (
+        ()
+        if scope is None
+        else _collection_free_variables(template, scope, state)
+    )
+    for key, values in groups:
+        group_values = _unique_sorted_terms(values) if unique else values
+        yield from _unify_collection_group(
+            program_value,
+            state,
+            results,
+            group_values,
+            free_vars,
+            key,
+        )
+
+
+def findallo(
+    template: object,
+    goal: object,
+    results: object,
+    *,
+    scope: Term | None = None,
+) -> GoalExpr:
     """Collect every solution of `goal` into `results`, preserving proof order."""
 
     called_goal = _as_goal(goal)
@@ -1688,7 +1813,10 @@ def findallo(template: object, goal: object, results: object) -> GoalExpr:
         ) -> Iterator[State]:
             template_term, called_goal_term, results_term = args
             try:
-                reified_goal = goal_from_term(_reified(called_goal_term, state))
+                _, scoped_goal = _strip_existential_quantifiers(
+                    _reified(called_goal_term, state),
+                )
+                reified_goal = goal_from_term(scoped_goal)
             except TypeError:
                 return
             values = _collect_template_values(
@@ -1714,11 +1842,18 @@ def findallo(template: object, goal: object, results: object) -> GoalExpr:
     return native_goal(run, template, results)
 
 
-def bagofo(template: object, goal: object, results: object) -> GoalExpr:
-    """Collect a non-empty proof-order bag of solutions."""
+def bagofo(
+    template: object,
+    goal: object,
+    results: object,
+    *,
+    scope: Term | None = None,
+) -> GoalExpr:
+    """Collect a non-empty proof-order bag, grouped by free variables."""
 
     called_goal = _as_goal(goal)
     goal_term = _goal_term_or_none(called_goal)
+    goal_scope = goal_term if scope is None else scope
 
     if goal_term is not None:
 
@@ -1729,86 +1864,117 @@ def bagofo(template: object, goal: object, results: object) -> GoalExpr:
         ) -> Iterator[State]:
             template_term, called_goal_term, results_term = args
             try:
-                reified_goal = goal_from_term(_reified(called_goal_term, state))
+                _, scoped_goal = _strip_existential_quantifiers(
+                    _reified(called_goal_term, state),
+                )
+                reified_goal = goal_from_term(scoped_goal)
             except TypeError:
                 return
-            values = _collect_template_values(
+            groups = _collect_template_groups(
                 program_value,
                 state,
                 template_term,
                 reified_goal,
+                goal_scope,
             )
-            if not values:
-                return
-            yield from _unify_collection(program_value, state, results_term, values)
-
-        return native_goal(run_terms, template, goal_term, results)
-
-    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
-        template_term, results_term = args
-        values = _collect_template_values(
-            program_value,
-            state,
-            template_term,
-            called_goal,
-        )
-        if not values:
-            return
-        yield from _unify_collection(program_value, state, results_term, values)
-
-    return native_goal(run, template, results)
-
-
-def setofo(template: object, goal: object, results: object) -> GoalExpr:
-    """Collect a non-empty sorted set of solutions."""
-
-    called_goal = _as_goal(goal)
-    goal_term = _goal_term_or_none(called_goal)
-
-    if goal_term is not None:
-
-        def run_terms(
-            program_value: Program,
-            state: State,
-            args: NativeArgs,
-        ) -> Iterator[State]:
-            template_term, called_goal_term, results_term = args
-            try:
-                reified_goal = goal_from_term(_reified(called_goal_term, state))
-            except TypeError:
-                return
-            values = _collect_template_values(
+            yield from _unify_grouped_collection(
                 program_value,
                 state,
                 template_term,
-                reified_goal,
-            )
-            if not values:
-                return
-            yield from _unify_collection(
-                program_value,
-                state,
                 results_term,
-                _unique_sorted_terms(values),
+                groups,
+                goal_scope,
+                unique=False,
             )
 
         return native_goal(run_terms, template, goal_term, results)
 
     def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
         template_term, results_term = args
-        values = _collect_template_values(
+        groups = _collect_template_groups(
             program_value,
             state,
             template_term,
             called_goal,
+            goal_scope,
         )
-        if not values:
-            return
-        yield from _unify_collection(
+        yield from _unify_grouped_collection(
             program_value,
             state,
+            template_term,
             results_term,
-            _unique_sorted_terms(values),
+            groups,
+            goal_scope,
+            unique=False,
+        )
+
+    return native_goal(run, template, results)
+
+
+def setofo(
+    template: object,
+    goal: object,
+    results: object,
+    *,
+    scope: Term | None = None,
+) -> GoalExpr:
+    """Collect a non-empty sorted set, grouped by free variables."""
+
+    called_goal = _as_goal(goal)
+    goal_term = _goal_term_or_none(called_goal)
+    goal_scope = goal_term if scope is None else scope
+
+    if goal_term is not None:
+
+        def run_terms(
+            program_value: Program,
+            state: State,
+            args: NativeArgs,
+        ) -> Iterator[State]:
+            template_term, called_goal_term, results_term = args
+            try:
+                _, scoped_goal = _strip_existential_quantifiers(
+                    _reified(called_goal_term, state),
+                )
+                reified_goal = goal_from_term(scoped_goal)
+            except TypeError:
+                return
+            groups = _collect_template_groups(
+                program_value,
+                state,
+                template_term,
+                reified_goal,
+                goal_scope,
+            )
+            yield from _unify_grouped_collection(
+                program_value,
+                state,
+                template_term,
+                results_term,
+                groups,
+                goal_scope,
+                unique=True,
+            )
+
+        return native_goal(run_terms, template, goal_term, results)
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        template_term, results_term = args
+        groups = _collect_template_groups(
+            program_value,
+            state,
+            template_term,
+            called_goal,
+            goal_scope,
+        )
+        yield from _unify_grouped_collection(
+            program_value,
+            state,
+            template_term,
+            results_term,
+            groups,
+            goal_scope,
+            unique=True,
         )
 
     return native_goal(run, template, results)

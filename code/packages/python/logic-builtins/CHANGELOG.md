@@ -63,6 +63,9 @@ All notable changes to this package will be documented in this file.
 
 ### Fixed
 
+- `bagofo(...)` and `setofo(...)` now implement Prolog-style free-variable
+  grouping and `^/2` existential scopes when their goal scope is representable
+  as a callable term.
 - `iftheno(...)` and `ifthenelseo(...)` now preserve rule-local variable
   freshening when their condition and branches can be represented as callable
   terms.

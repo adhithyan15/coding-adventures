@@ -424,7 +424,10 @@ enumerate concrete assignments.
 
 Collections are observations over a nested proof search. `findallo` succeeds
 with an empty list when the inner goal fails, while `bagofo` and `setofo` fail
-for empty collections.
+for empty collections. `bagofo` and `setofo` also group answers by free
+variables in the collection goal, matching the core Prolog behavior behind
+queries such as `bagof(Child, parent(Parent, Child), Children)`. Variables
+marked by `^/2` are treated as existential and do not create separate groups.
 
 Advanced control is intentionally honest about the solver. `cuto()` is real
 solver-level cut, not `onceo` in disguise: it prunes choicepoints made before it
