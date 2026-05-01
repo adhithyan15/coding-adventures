@@ -2810,6 +2810,80 @@ fn default_html_lexer_supports_seeded_rcdata_whatwg_shape_named_character_refere
 }
 
 #[test]
+fn default_html_lexer_supports_whatwg_box_drawing_named_character_references() {
+    let tokens = lex_html(
+        "Boxes:&boxDL;&boxDR;&boxDl;&boxDr;&boxH;&boxHD;&boxHU;&boxHd;&boxHu;&boxUL;&boxUR;&boxUl;&boxUr;&boxV;&boxVH;&boxVL;&boxVR;&boxVh;&boxVl;&boxVr;&boxbox;",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Text("Boxes:╗╔╖╓═╦╩╤╧╝╚╜╙║╬╣╠╫╢╟⧉".to_string()),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_box_drawing_named_character_references_in_attributes() {
+    let tokens = lex_html(
+        "<box double=\"&boxDL;&boxDR;&boxDl;&boxDr;&boxH;&boxHD;&boxHU;&boxHd;&boxHu;&boxUL;&boxUR;&boxUl;&boxUr;\" mixed=\"&boxV;&boxVH;&boxVL;&boxVR;&boxVh;&boxVl;&boxVr;&boxbox;&boxdL;&boxdR;&boxdl;&boxdr;&boxh;&boxhD;&boxhU;\" light=\"&boxhd;&boxhu;&boxuL;&boxuR;&boxul;&boxur;&boxv;&boxvH;&boxvL;&boxvR;&boxvh;&boxvl;&boxvr;\">",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::StartTag {
+                name: "box".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "double".to_string(),
+                        value: "╗╔╖╓═╦╩╤╧╝╚╜╙".to_string(),
+                    },
+                    Attribute {
+                        name: "mixed".to_string(),
+                        value: "║╬╣╠╫╢╟⧉╕╒┐┌─╥╨".to_string(),
+                    },
+                    Attribute {
+                        name: "light".to_string(),
+                        value: "┬┴╛╘┘└│╪╡╞┼┤├".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_rcdata_whatwg_box_drawing_named_character_references() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rcdata").unwrap();
+    lexer.set_last_start_tag("title");
+
+    lexer
+        .push(
+            "&boxdL;&boxdR;&boxdl;&boxdr;&boxh;&boxhD;&boxhU;&boxhd;&boxhu;&boxuL;&boxuR;&boxul;&boxur;&boxv;&boxvH;&boxvL;&boxvR;&boxvh;&boxvl;&boxvr;</title>",
+        )
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("╕╒┐┌─╥╨┬┴╛╘┘└│╪╡╞┼┤├".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_whatwg_angle_named_character_references() {
     let tokens = lex_html(
         "Angles:&angle;&angmsd;&angsph;&angrt;&angrtvb;&angrtvbd;&angst;&angzarr;&measuredangle;",

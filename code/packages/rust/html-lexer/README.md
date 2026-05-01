@@ -40,8 +40,9 @@ includes set, membership, subset, and logic aliases such as `Intersection`,
 plus operator and shape aliases such as `CircleDot`, `ContourIntegral`,
 `FilledSmallSquare`, `blacklozenge`, `bigstar`, and `spadesuit`, and angle or
 fence aliases such as `angmsd`, `LeftDoubleBracket`, `lobrk`, `OverBrace`, and
-`ulcorner`, plus Latin Extended and diacritic aliases such as `Amacr`,
-`ccaron`, `Lmidot`, `uring`, and `Zdot`.
+`ulcorner`, box-drawing aliases such as `boxH`, `boxVH`, `boxdl`, and `boxvr`,
+plus Latin Extended and diacritic aliases such as `Amacr`, `ccaron`, `Lmidot`,
+`uring`, and `Zdot`.
 Named character reference scanning now follows the longest-prefix shape of the
 HTML tokenizer: text and RCDATA recover inputs such as `&copycat` as `©cat`
 with a missing-semicolon diagnostic, while attribute values preserve ambiguous
