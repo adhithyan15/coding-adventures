@@ -36,6 +36,8 @@ All notable changes to this package will be documented in this file.
   in first occurrence order.
 - `numbervarso(term, start, end)` for binding open variables to `'$VAR'(N)`
   placeholders in first occurrence order.
+- `term_hasho(term, hash)` and `term_hash_boundedo(term, depth, range, hash)`
+  for deterministic structural term hashes.
 - `current_prolog_flago(name, value)` for enumerating read-only runtime flags
   exposed by the Prolog compatibility layer.
 - `set_prolog_flago(name, value)` for branch-local updates to supported

@@ -6,6 +6,7 @@ import pytest
 from logic_engine import (
     Compound,
     LogicVar,
+    Number,
     atom,
     conj,
     disj,
@@ -138,6 +139,8 @@ from logic_builtins import (
     sub_stringo,
     subsumes_termo,
     succo,
+    term_hash_boundedo,
+    term_hasho,
     term_variableso,
     termo_geqo,
     termo_gto,
@@ -1966,6 +1969,101 @@ class TestTermMetaprogrammingBuiltins:
             solve_all(program(), end, numbervarso(term("box", var("X")), 1.5, end))
             == []
         )
+
+    def test_term_hasho_hashes_variants_alike_but_preserves_variable_shape(
+        self,
+    ) -> None:
+        first_hash = var("FirstHash")
+        second_hash = var("SecondHash")
+        third_hash = var("ThirdHash")
+        x = var("X")
+        y = var("Y")
+        a = var("A")
+        b = var("B")
+
+        answers = solve_all(
+            program(),
+            (first_hash, second_hash, third_hash),
+            conj(
+                term_hasho(term("pair", x, x), first_hash),
+                term_hasho(term("pair", y, y), second_hash),
+                term_hasho(term("pair", a, b), third_hash),
+            ),
+        )
+
+        assert len(answers) == 1
+        first, second, third = answers[0]
+        assert first == second
+        assert first != third
+        assert isinstance(first, Number)
+        assert 0 <= first.value < 2_147_483_647
+
+    def test_term_hasho_validates_existing_hash_values(self) -> None:
+        hash_target = var("Hash")
+        hash_value = solve_all(
+            program(),
+            hash_target,
+            term_hasho(term("box", "tea"), hash_target),
+        )[0]
+        assert isinstance(hash_value, Number)
+
+        result = var("Result")
+        assert solve_all(
+            program(),
+            result,
+            conj(
+                term_hasho(term("box", "tea"), hash_value),
+                eq(result, "ok"),
+            ),
+        ) == [atom("ok")]
+        assert solve_all(
+            program(),
+            var("Result"),
+            term_hasho(term("box", "tea"), hash_value.value + 1),
+        ) == []
+
+    def test_term_hash_boundedo_honors_depth_and_range(self) -> None:
+        shallow_left = var("ShallowLeft")
+        shallow_right = var("ShallowRight")
+        deep_left = var("DeepLeft")
+        deep_right = var("DeepRight")
+
+        answers = solve_all(
+            program(),
+            (shallow_left, shallow_right, deep_left, deep_right),
+            conj(
+                term_hash_boundedo(term("box", "tea"), 1, 1_000_000, shallow_left),
+                term_hash_boundedo(term("box", "cake"), 1, 1_000_000, shallow_right),
+                term_hash_boundedo(term("box", "tea"), 2, 1_000_000, deep_left),
+                term_hash_boundedo(term("box", "cake"), 2, 1_000_000, deep_right),
+            ),
+        )
+
+        assert len(answers) == 1
+        shallow_tea, shallow_cake, deep_tea, deep_cake = answers[0]
+        assert shallow_tea == shallow_cake
+        assert deep_tea != deep_cake
+        assert isinstance(deep_tea, Number)
+        assert 0 <= deep_tea.value < 1_000_000
+
+    def test_term_hash_boundedo_rejects_invalid_bounds(self) -> None:
+        hash_value = var("Hash")
+
+        assert solve_all(
+            program(),
+            hash_value,
+            term_hash_boundedo(term("box", "tea"), -1, 10, hash_value),
+        ) == []
+        assert solve_all(
+            program(),
+            hash_value,
+            term_hash_boundedo(term("box", "tea"), 1, 0, hash_value),
+        ) == []
+        assert solve_all(
+            program(),
+            hash_value,
+            term_hash_boundedo(term("box", "tea"), 1.5, 10, hash_value),
+        ) == []
 
     def test_same_termo_checks_strict_identity_without_unifying(self) -> None:
         left = var("Left")

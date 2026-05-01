@@ -38,6 +38,8 @@ ordinary logic goal expressions.
   `not_same_termo(left, right)`
 - `term_variableso(term, variables)` and `numbervarso(term, start, end)` for
   source-level term variable inspection and `'$VAR'(N)` numbering
+- `term_hasho(term, hash)` and `term_hash_boundedo(term, depth, range, hash)`
+  for stable structural term hashes
 - `variant_termo(left, right)`, `not_variant_termo(left, right)`, and
   `subsumes_termo(general, specific)` for non-binding term generality checks
 - `atom_charso/2`, `atom_codeso/2`, `number_charso/2`, `number_codeso/2`,
@@ -136,6 +138,8 @@ from logic_builtins import (
     set_prolog_flago,
     sub_atomo,
     sub_stringo,
+    term_hash_boundedo,
+    term_hasho,
     termo_lto,
     univo,
     variant_termo,
@@ -240,6 +244,7 @@ assert solve_all(
     (X, Score),
     conj(eq(X, term("pair", Y, Y)), numbervarso(X, 0, Score)),
 ) == [(term("pair", term("$VAR", 0), term("$VAR", 0)), num(1))]
+assert solve_all(program(), Score, term_hash_boundedo(term("box", "tea"), 2, 1000, Score))
 assert solve_all(program(), X, variant_termo(term("box", X), term("box", Y))) == [X]
 assert solve_all(program(), X, subsumes_termo(term("box", X), term("box", "tea"))) == [X]
 assert solve_all(program(), X, atom_charso(X, logic_list(["t", "e", "a"]))) == [atom("tea")]
@@ -410,8 +415,10 @@ Term metaprogramming treats terms as ordinary data. `univo` decomposes
 `box(tea, cake)` into `[box, tea, cake]` and can construct the term back from
 that list. `functoro` now constructs atoms and compounds when supplied a name
 and arity. `copytermo` refreshes variables in a copied term, while
-`term_variableso` extracts the unique variables still present after reification
-and `same_termo` checks strict identity without binding variables.
+`term_variableso` extracts the unique variables still present after
+reification, `term_hasho` gives variant-aware structural hashes for indexing
+and memoization, and `same_termo` checks strict identity without binding
+variables.
 
 Clause introspection treats source clauses as ordinary data. `clauseo(Head,
 Body)` enumerates facts with body `true` and rules with a term-encoded body,

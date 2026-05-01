@@ -23,6 +23,7 @@ It keeps parsing side-effect free, then exposes helpers to:
   and `write_term_to_atom/3`
 - adapt `numbervars/3` and `write_term_to_atom/3` `numbervars(true)`
   rendering for source-level variable-numbered debug output
+- adapt `term_hash/2` and `term_hash/4` for stable source-level term hashes
 - adapt callable CLP(FD) forms such as `in/2`, `ins/2`, `#=/2`,
   `all_different/1`, and `labeling/2`
 - flatten nested additive CLP(FD) equality expressions such as
