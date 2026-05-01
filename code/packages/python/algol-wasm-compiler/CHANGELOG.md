@@ -98,6 +98,8 @@ All notable changes to this package will be documented in this file.
   and output in one end-to-end program.
 - Added a front-door ALGOL source-length limit to the WASM convenience APIs so
   oversized untrusted source is rejected before parsing or semantic analysis.
+- Documented and tested host-side WASM instruction budgets for compiled ALGOL
+  modules so nonterminating `goto` programs can be capped by embedders.
 
 ## [0.1.0] - 2026-04-20
 
