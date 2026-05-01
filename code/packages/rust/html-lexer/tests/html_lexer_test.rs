@@ -2462,6 +2462,72 @@ fn default_html_lexer_supports_seeded_rcdata_whatwg_negated_relational_named_cha
 }
 
 #[test]
+fn default_html_lexer_supports_whatwg_precedence_named_character_references() {
+    let tokens = lex_html(
+        "Precedence:&NotPrecedes;&NotPrecedesEqual;&NotPrecedesSlantEqual;&NotSucceeds;&NotSucceedsEqual;&NotSucceedsSlantEqual;&NotSucceedsTilde;&Precedes;&PrecedesEqual;&PrecedesSlantEqual;&PrecedesTilde;&Succeeds;&SucceedsEqual;&SucceedsSlantEqual;&SucceedsTilde;&curlyeqprec;&curlyeqsucc;&nprec;&npreceq;",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Text(
+                "Precedence:⊀⪯\u{0338}⋠⊁⪰\u{0338}⋡≿\u{0338}≺⪯≼≾≻⪰≽≿⋞⋟⊀⪯\u{0338}".to_string()
+            ),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_precedence_named_character_references_in_attributes() {
+    let tokens = lex_html(
+        "<math prec=\"&nsucc;&nsucceq;&pr;&prE;&prap;&prcue;&pre;&prec;&precapprox;&preccurlyeq;&preceq;&precnapprox;&precneqq;&precnsim;&precsim;&prnE;&prnap;&prnsim;&prsim;\">",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::StartTag {
+                name: "math".to_string(),
+                attributes: vec![Attribute {
+                    name: "prec".to_string(),
+                    value: "⊁⪰\u{0338}≺⪳⪷≼⪯≺⪷≼⪯⪹⪵⋨≾⪵⪹⋨≾".to_string(),
+                }],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_rcdata_whatwg_successor_named_character_references() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rcdata").unwrap();
+    lexer.set_last_start_tag("title");
+
+    lexer
+        .push(
+            "&sc;&scE;&scap;&sccue;&sce;&scnE;&scnap;&scnsim;&scsim;&succ;&succapprox;&succcurlyeq;&succeq;&succnapprox;&succneqq;&succnsim;&succsim;</title>",
+        )
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("≻⪴⪸≽⪰⪶⪺⋩≿≻⪸≽⪰⪺⪶⋩≿".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_whatwg_basic_arrow_named_character_references() {
     let tokens = lex_html(
         "Arrows:&LeftArrow;&RightArrow;&UpArrow;&DownArrow;&LeftRightArrow;&UpDownArrow;&DoubleLeftArrow;&DoubleRightArrow;&DoubleUpArrow;&DoubleDownArrow;&DoubleLeftRightArrow;&DoubleUpDownArrow;",

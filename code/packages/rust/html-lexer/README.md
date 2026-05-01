@@ -30,9 +30,10 @@ named-reference slice for spacing, invisible operators, punctuation aliases,
 and math constants such as `Tab`, `NewLine`, `NoBreak`, `InvisibleTimes`,
 `OpenCurlyQuote`, and `DifferentialD`. The same static table now covers a
 focused relation/operator slice including equality, tilde, greater-than,
-less-than, and negated relation aliases with combining-overlay replacements,
-plus arrow and vector aliases such as `LeftArrow`, `LongRightArrow`, `Map`,
-`RightDownVectorBar`, `hookleftarrow`, `nLeftrightarrow`, and `longmapsto`,
+less-than, precedence/successor, and negated relation aliases with
+combining-overlay replacements, plus arrow and vector aliases such as
+`LeftArrow`, `LongRightArrow`, `Map`, `RightDownVectorBar`, `hookleftarrow`,
+`nLeftrightarrow`, and `longmapsto`,
 along with Greek variant and letter-like aliases such as `varepsilon`,
 `varkappa`, `varphi`, `digamma`, `beth`, and `daleth`. It also
 includes set, membership, subset, and logic aliases such as `Intersection`,
