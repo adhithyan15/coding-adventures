@@ -38,6 +38,8 @@ All notable changes to this package will be documented in this file.
   exposed by the Prolog compatibility layer.
 - `set_prolog_flago(name, value)` for branch-local updates to supported
   Prolog runtime flags.
+- `variant_termo(left, right)`, `not_variant_termo(left, right)`, and
+  `subsumes_termo(general, specific)` for non-binding term generality checks.
 
 ### Fixed
 

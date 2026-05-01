@@ -51,6 +51,8 @@ class TestOperatorTable:
         assert iso.get(":-", "xfx") is not None
         assert iso.get("==", "xfx") is not None
         assert iso.get("\\==", "xfx") is not None
+        assert iso.get("=@=", "xfx") is not None
+        assert iso.get("\\=@=", "xfx") is not None
         assert iso.get("@<", "xfx") is not None
         assert iso.get("@=<", "xfx") is not None
         assert iso.get("@>", "xfx") is not None

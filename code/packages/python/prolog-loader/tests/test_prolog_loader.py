@@ -841,6 +841,18 @@ class TestPrologGoalAdapter:
             relation("dif", 2)(LogicVar(id=15), atom("tea")),
             relation("==", 2)(atom("a"), atom("a")),
             relation("\\==", 2)(atom("a"), atom("b")),
+            relation("=@=", 2)(
+                term("box", LogicVar(id=78)),
+                term("box", LogicVar(id=79)),
+            ),
+            relation("\\=@=", 2)(
+                term("pair", LogicVar(id=80), LogicVar(id=80)),
+                term("pair", LogicVar(id=81), LogicVar(id=82)),
+            ),
+            relation("subsumes_term", 2)(
+                term("box", LogicVar(id=83)),
+                term("box", atom("tea")),
+            ),
             relation("compare", 3)(atom("<"), atom("a"), atom("b")),
             relation("@<", 2)(atom("a"), atom("b")),
             relation("@=<", 2)(atom("a"), atom("b")),
@@ -1047,6 +1059,21 @@ class TestPrologGoalAdapter:
             (parsed.variables["X"], parsed.variables["Result"]),
             adapted,
         ) == [(term("box", "tea"), atom("ok"))]
+
+    def test_adapt_prolog_goal_rewrites_variant_and_subsumes_predicates(self) -> None:
+        parsed = parse_swi_query(
+            "?- pair(X, X) =@= pair(Y, Y), "
+            "pair(X, X) \\=@= pair(Y, Z), "
+            "subsumes_term(box(A), box(tea)), Result = ok.",
+        )
+
+        adapted = adapt_prolog_goal(parsed.goal)
+
+        assert solve_all(
+            program(),
+            parsed.variables["Result"],
+            adapted,
+        ) == [atom("ok")]
 
     def test_adapt_prolog_goal_rewrites_term_equality_failures(self) -> None:
         parsed_unifiable = parse_swi_query("?- X \\= box(tea).")

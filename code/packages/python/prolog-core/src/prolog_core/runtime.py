@@ -977,6 +977,8 @@ def iso_operator_table() -> OperatorTable:
                 "\\=",
                 "==",
                 "\\==",
+                "=@=",
+                "\\=@=",
                 "@<",
                 "@=<",
                 "@>",

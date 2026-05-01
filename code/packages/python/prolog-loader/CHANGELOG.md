@@ -45,6 +45,8 @@
 - adapt Prolog `current_prolog_flag/2` into read-only runtime flag
   introspection
 - adapt Prolog `set_prolog_flag/2` into branch-local runtime flag updates
+- adapt Prolog `=@=/2`, `\\=@=/2`, and `subsumes_term/2` into non-binding
+  term generality checks
 
 ## 0.1.0
 
