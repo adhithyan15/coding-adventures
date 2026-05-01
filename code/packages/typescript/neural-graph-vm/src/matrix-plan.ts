@@ -61,6 +61,16 @@ export interface MatrixBackend<M> {
   toColumn(matrix: M): number[];
 }
 
+export interface AsyncNeuralMatrixBackend<M> {
+  column(values: readonly number[]): M | Promise<M>;
+  constant(value: number, rows: number, cols?: number): M | Promise<M>;
+  add(left: M, right: M): M | Promise<M>;
+  scale(matrix: M, scalar: number): M | Promise<M>;
+  activate(matrix: M, activation: string): M | Promise<M>;
+  toColumn(matrix: M): number[] | Promise<number[]>;
+  dispose?(matrix: M): void | Promise<void>;
+}
+
 export class TypeScriptMatrixBackend implements MatrixBackend<Matrix> {
   fromRows(rows: readonly (readonly number[])[]): Matrix {
     return new Matrix(cloneRows(rows));
@@ -103,6 +113,34 @@ export class TypeScriptMatrixBackend implements MatrixBackend<Matrix> {
       );
     }
     return matrix.data.map((row) => row[0]);
+  }
+}
+
+export class AsyncTypeScriptMatrixBackend implements AsyncNeuralMatrixBackend<Matrix> {
+  private readonly backend = new TypeScriptMatrixBackend();
+
+  column(values: readonly number[]): Matrix {
+    return this.backend.column(values);
+  }
+
+  constant(value: number, rows: number, cols = 1): Matrix {
+    return this.backend.constant(value, rows, cols);
+  }
+
+  add(left: Matrix, right: Matrix): Matrix {
+    return this.backend.add(left, right);
+  }
+
+  scale(matrix: Matrix, scalar: number): Matrix {
+    return this.backend.scale(matrix, scalar);
+  }
+
+  activate(matrix: Matrix, activation: string): Matrix {
+    return this.backend.map(matrix, (value) => applyNeuralActivation(value, activation));
+  }
+
+  toColumn(matrix: Matrix): number[] {
+    return this.backend.toColumn(matrix);
   }
 }
 
@@ -233,6 +271,108 @@ export function compileBytecodeToMatrixPlan(
     sourceBytecodeVersion: module.version,
     instructions,
   };
+}
+
+export function runNeuralMatrixForwardAsync(
+  plan: NeuralMatrixPlan,
+  inputs: NeuralMatrixInputs
+): Promise<NeuralMatrixForwardResult>;
+export function runNeuralMatrixForwardAsync<M>(
+  plan: NeuralMatrixPlan,
+  inputs: NeuralMatrixInputs,
+  backend: AsyncNeuralMatrixBackend<M>
+): Promise<NeuralMatrixForwardResult>;
+export async function runNeuralMatrixForwardAsync<M>(
+  plan: NeuralMatrixPlan,
+  inputs: NeuralMatrixInputs,
+  backend?: AsyncNeuralMatrixBackend<M>
+): Promise<NeuralMatrixForwardResult> {
+  const matrixBackend = backend
+    ?? new AsyncTypeScriptMatrixBackend() as unknown as AsyncNeuralMatrixBackend<M>;
+  const batchSize = inferBatchSize(inputs);
+  const values = new Map<string, M>();
+  const tracked = new Set<M>();
+  const outputs: Record<string, number[]> = {};
+
+  const track = (matrix: M): M => {
+    tracked.add(matrix);
+    return matrix;
+  };
+
+  try {
+    for (const instruction of plan.instructions) {
+      switch (instruction.op) {
+        case "LOAD_INPUT_MATRIX": {
+          const dst = requirePlanDst(instruction);
+          const inputName = instruction.inputName ?? instruction.sourceNode ?? dst;
+          values.set(
+            dst,
+            track(await matrixBackend.column(readInputColumn(inputs, inputName, batchSize)))
+          );
+          break;
+        }
+        case "LOAD_CONST_MATRIX": {
+          const dst = requirePlanDst(instruction);
+          values.set(
+            dst,
+            track(await matrixBackend.constant(instruction.value ?? 0, batchSize))
+          );
+          break;
+        }
+        case "WEIGHTED_SUM_MATRIX": {
+          const dst = requirePlanDst(instruction);
+          const terms = instruction.terms ?? [];
+          let result: M | undefined;
+          for (const term of terms) {
+            const weighted = track(
+              await matrixBackend.scale(readMatrixValue(values, term.sourceValue), term.weight)
+            );
+            result = result === undefined
+              ? weighted
+              : track(await matrixBackend.add(result, weighted));
+          }
+          values.set(dst, result ?? track(await matrixBackend.constant(0, batchSize)));
+          break;
+        }
+        case "ACTIVATE_MATRIX": {
+          const dst = requirePlanDst(instruction);
+          values.set(
+            dst,
+            track(
+              await matrixBackend.activate(
+                readMatrixValue(values, instruction.input),
+                instruction.activation ?? "relu"
+              )
+            )
+          );
+          break;
+        }
+        case "STORE_OUTPUT_MATRIX": {
+          const outputName = instruction.outputName ?? "output";
+          outputs[outputName] = await matrixBackend.toColumn(
+            readMatrixValue(values, instruction.input)
+          );
+          break;
+        }
+      }
+    }
+
+    return {
+      outputs,
+      values: Object.fromEntries(
+        await Promise.all(
+          [...values.entries()].map(async ([valueId, matrix]) => [
+            valueId,
+            await matrixBackend.toColumn(matrix),
+          ])
+        )
+      ),
+    };
+  } finally {
+    if (matrixBackend.dispose !== undefined) {
+      await Promise.all([...tracked].map((matrix) => matrixBackend.dispose!(matrix)));
+    }
+  }
 }
 
 export function runNeuralMatrixForward(

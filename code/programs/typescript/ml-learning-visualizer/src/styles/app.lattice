@@ -592,14 +592,16 @@ h2 {
 
 .network-svg {
   width: 100%;
-  overflow: hidden;
+  overflow: auto;
   border-radius: 8px;
   background: #ffffff;
 }
 
 .network-svg svg {
   display: block;
-  width: 100%;
+  width: auto;
+  min-width: 100%;
+  max-width: none;
   height: auto;
 }
 

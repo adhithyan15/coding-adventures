@@ -17,10 +17,13 @@ export {
 } from "./neural-graph-vm.js";
 
 export {
+  AsyncTypeScriptMatrixBackend,
   TypeScriptMatrixBackend,
   compileBytecodeToMatrixPlan,
   runNeuralMatrixForward,
+  runNeuralMatrixForwardAsync,
   runNeuralMatrixForwardScalars,
+  type AsyncNeuralMatrixBackend,
   type MatrixBackend,
   type NeuralMatrixForwardResult,
   type NeuralMatrixInputValue,
@@ -30,3 +33,13 @@ export {
   type NeuralMatrixPlanOpcode,
   type NeuralMatrixPlanTerm,
 } from "./matrix-plan.js";
+
+export {
+  WebGpuMatrixBackend,
+  createWebGpuMatrixBackend,
+  getNavigatorGpu,
+  type WebGpuActivationName,
+  type WebGpuLike,
+  type WebGpuMatrix,
+  type WebGpuMatrixBackendOptions,
+} from "./webgpu-matrix-backend.js";

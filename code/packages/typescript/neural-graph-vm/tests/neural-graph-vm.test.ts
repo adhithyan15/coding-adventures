@@ -18,7 +18,9 @@ import {
   runNeuralBytecodeForward,
   runNeuralBytecodeForwardWithTrace,
   runNeuralMatrixForward,
+  runNeuralMatrixForwardAsync,
   runNeuralMatrixForwardScalars,
+  type AsyncNeuralMatrixBackend,
   type MatrixBackend,
 } from "../src/index.js";
 
@@ -186,6 +188,62 @@ describe("neural graph vm", () => {
     expect(calls).toContain("scale");
     expect(calls).toContain("add");
     expect(calls).toContain("map");
+  });
+
+  it("runs matrix plans against an async backend interface", async () => {
+    const calls: string[] = [];
+    const backend: AsyncNeuralMatrixBackend<number[]> = {
+      async column(values) {
+        calls.push("column");
+        return [...values];
+      },
+      async constant(value, rows) {
+        calls.push("constant");
+        return Array(rows).fill(value);
+      },
+      async add(left, right) {
+        calls.push("add");
+        return left.map((value, index) => value + right[index]);
+      },
+      async scale(matrix, scalar) {
+        calls.push("scale");
+        return matrix.map((value) => value * scalar);
+      },
+      async activate(matrix, activation) {
+        calls.push(`activate:${activation}`);
+        return matrix.map((value) => Math.max(0, value));
+      },
+      async toColumn(matrix) {
+        calls.push("toColumn");
+        return [...matrix];
+      },
+    };
+    const bytecode = compileNeuralGraphToBytecode(makeTinyWeightedSumGraph());
+    const plan = compileBytecodeToMatrixPlan(bytecode);
+    const result = await runNeuralMatrixForwardAsync(
+      plan,
+      { x0: [4, 8], x1: [8, 16] },
+      backend
+    );
+
+    expect(result.outputs).toEqual({ prediction: [6, 13] });
+    expect(calls).toContain("scale");
+    expect(calls).toContain("add");
+    expect(calls).toContain("activate:relu");
+  });
+
+  it("runs async matrix plans through the default CPU backend", async () => {
+    const bytecode = compileNeuralNetworkToBytecode(createXorNetwork());
+    const plan = compileBytecodeToMatrixPlan(bytecode);
+    const result = await runNeuralMatrixForwardAsync(plan, {
+      x0: [0, 0, 1, 1],
+      x1: [0, 1, 0, 1],
+    });
+
+    expect(result.outputs.prediction[0]).toBeLessThan(0.01);
+    expect(result.outputs.prediction[1]).toBeGreaterThan(0.99);
+    expect(result.outputs.prediction[2]).toBeGreaterThan(0.99);
+    expect(result.outputs.prediction[3]).toBeLessThan(0.01);
   });
 
   it("supports negative weighted sums through relu", () => {
