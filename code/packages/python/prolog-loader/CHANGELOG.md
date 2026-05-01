@@ -44,6 +44,7 @@
 - adapt Prolog `term_variables/2` into the term-metaprogramming builtin layer
 - adapt Prolog `current_prolog_flag/2` into read-only runtime flag
   introspection
+- adapt Prolog `set_prolog_flag/2` into branch-local runtime flag updates
 
 ## 0.1.0
 

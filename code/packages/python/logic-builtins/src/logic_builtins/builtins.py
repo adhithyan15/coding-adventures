@@ -142,6 +142,7 @@ __all__ = [
     "partitiono",
     "predicate_propertyo",
     "PrologEvaluationError",
+    "PrologFlagStore",
     "PrologInstantiationError",
     "PrologRuntimeError",
     "PrologThrown",
@@ -161,6 +162,7 @@ __all__ = [
     "same_termo",
     "scanlo",
     "setofo",
+    "set_prolog_flago",
     "clauseo",
     "stringo",
     "sub",
@@ -201,6 +203,13 @@ class FiniteDomainStore:
 
     domains: dict[LogicVar, frozenset[int]]
     constraints: tuple[FiniteDomainConstraint, ...] = ()
+
+
+@dataclass(frozen=True, slots=True)
+class PrologFlagStore:
+    """Branch-local Prolog flag overrides."""
+
+    values: dict[Atom, Term]
 
 
 @dataclass(frozen=True, slots=True)
@@ -377,6 +386,7 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("scanlo", 6),
     ("scanlo", 7),
     ("setofo", 3),
+    ("set_prolog_flago", 2),
     ("stringo", 1),
     ("succo", 2),
     ("termo_geqo", 2),
@@ -400,6 +410,19 @@ _PROLOG_FLAGS: tuple[tuple[Atom, Term], ...] = (
     (atom("occurs_check"), atom("false")),
     (atom("unknown"), atom("fail")),
 )
+_PROLOG_DEFAULT_FLAGS: dict[Atom, Term] = dict(_PROLOG_FLAGS)
+_PROLOG_WRITABLE_FLAG_VALUES: dict[Atom, tuple[Term, ...]] = {
+    atom("char_conversion"): (atom("false"), atom("true")),
+    atom("debug"): (atom("false"), atom("true")),
+    atom("double_quotes"): (
+        atom("atom"),
+        atom("chars"),
+        atom("codes"),
+        atom("string"),
+    ),
+    atom("occurs_check"): (atom("false"), atom("true"), atom("error")),
+    atom("unknown"): (atom("error"), atom("fail"), atom("warning")),
+}
 
 
 def _as_goal(goal: object) -> GoalExpr:
@@ -510,6 +533,7 @@ def _state_with_next_var_id(state: State, next_var_id: int) -> State:
         next_var_id=next_var_id,
         database=state.database,
         fd_store=state.fd_store,
+        prolog_flags=state.prolog_flags,
     )
 
 
@@ -539,6 +563,37 @@ def _state_with_fd_store(state: State, store: FiniteDomainStore) -> State:
         next_var_id=state.next_var_id,
         database=state.database,
         fd_store=store,
+        prolog_flags=state.prolog_flags,
+    )
+
+
+def _empty_prolog_flag_store() -> PrologFlagStore:
+    """Return an empty branch-local Prolog flag overlay."""
+
+    return PrologFlagStore(values={})
+
+
+def _prolog_flag_store(state: State) -> PrologFlagStore:
+    """Read the branch-local Prolog flag overlay from ``state``."""
+
+    if state.prolog_flags is None:
+        return _empty_prolog_flag_store()
+    if isinstance(state.prolog_flags, PrologFlagStore):
+        return state.prolog_flags
+    msg = "State.prolog_flags contains an unsupported Prolog flag store"
+    raise TypeError(msg)
+
+
+def _state_with_prolog_flags(state: State, store: PrologFlagStore) -> State:
+    """Return ``state`` with branch-local Prolog flag overrides attached."""
+
+    return State(
+        substitution=state.substitution,
+        constraints=state.constraints,
+        next_var_id=state.next_var_id,
+        database=state.database,
+        fd_store=state.fd_store,
+        prolog_flags=store,
     )
 
 
@@ -4052,16 +4107,68 @@ def _predicate_properties(
 
 
 def current_prolog_flago(name: object, value: object) -> GoalExpr:
-    """Enumerate read-only runtime flags exposed by this Prolog layer."""
+    """Enumerate runtime flags visible in the current proof branch."""
 
     def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
         name_target, value_target = args
+        store = _prolog_flag_store(state)
         for flag_name, flag_value in _PROLOG_FLAGS:
+            current_value = store.values.get(flag_name, flag_value)
             yield from solve_from(
                 program_value,
-                conj(eq(name_target, flag_name), eq(value_target, flag_value)),
+                conj(eq(name_target, flag_name), eq(value_target, current_value)),
                 state,
             )
+
+    return native_goal(run, name, value)
+
+
+def _reified_flag_atom(flag_name: Term, state: State) -> Atom | None:
+    """Return a known Prolog flag atom after reification."""
+
+    reified_name = _reified(flag_name, state)
+    if isinstance(reified_name, LogicVar):
+        msg = "set_prolog_flag/2 requires an instantiated flag name"
+        raise PrologInstantiationError(msg, culprit=reified_name)
+    if not isinstance(reified_name, Atom):
+        return None
+    if reified_name not in _PROLOG_DEFAULT_FLAGS:
+        return None
+    return reified_name
+
+
+def _reified_flag_value(flag_value: Term, state: State) -> Term | None:
+    """Return a concrete Prolog flag value after reification."""
+
+    reified_value = _reified(flag_value, state)
+    if isinstance(reified_value, LogicVar):
+        msg = "set_prolog_flag/2 requires an instantiated flag value"
+        raise PrologInstantiationError(msg, culprit=reified_value)
+    return reified_value
+
+
+def set_prolog_flago(name: object, value: object) -> GoalExpr:
+    """Set a supported Prolog flag in the current proof branch."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        name_term, value_term = args
+        flag_name = _reified_flag_atom(name_term, state)
+        if flag_name is None:
+            return
+
+        allowed_values = _PROLOG_WRITABLE_FLAG_VALUES.get(flag_name)
+        if allowed_values is None:
+            return
+
+        flag_value = _reified_flag_value(value_term, state)
+        if flag_value not in allowed_values:
+            return
+
+        store = _prolog_flag_store(state)
+        yield _state_with_prolog_flags(
+            state,
+            PrologFlagStore(values={**store.values, flag_name: flag_value}),
+        )
 
     return native_goal(run, name, value)
 

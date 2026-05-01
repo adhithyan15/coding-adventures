@@ -79,6 +79,7 @@ from logic_builtins import (
     retracto,
     same_termo,
     scanlo,
+    set_prolog_flago,
     setofo,
     stringo,
     succo,
@@ -351,6 +352,8 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         return term_variableso(*args)
     if name == "current_prolog_flag" and goal.relation.arity == 2:
         return current_prolog_flago(*args)
+    if name == "set_prolog_flag" and goal.relation.arity == 2:
+        return set_prolog_flago(*args)
     if name == "=" and goal.relation.arity == 2:
         return eq(*args)
     if name == "\\=" and goal.relation.arity == 2:

@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- preservation of the `State.prolog_flags` extension slot across engine
+  state-copy helpers so runtime flag builtins compose with fresh variables,
+  rules, relation calls, dynamic database overlays, and CLP(FD) stores.
+
 ## [0.10.0] - 2026-04-22
 
 ### Added
