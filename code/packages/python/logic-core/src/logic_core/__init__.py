@@ -284,6 +284,7 @@ class State:
     next_var_id: int = 0
     database: object | None = None
     fd_store: object | None = None
+    prolog_flags: object | None = None
 
 
 type Goal = Callable[[State], Iterator[State]]
@@ -434,6 +435,7 @@ def eq(left: object, right: object) -> Goal:
             next_var_id=state.next_var_id,
             database=state.database,
             fd_store=state.fd_store,
+            prolog_flags=state.prolog_flags,
         )
 
     return goal
@@ -475,6 +477,7 @@ def neq(left: object, right: object) -> Goal:
             next_var_id=state.next_var_id,
             database=state.database,
             fd_store=state.fd_store,
+            prolog_flags=state.prolog_flags,
         )
 
     return goal
@@ -525,6 +528,7 @@ def fresh(count: int, fn: Callable[..., Goal]) -> Goal:
             next_var_id=state.next_var_id + count,
             database=state.database,
             fd_store=state.fd_store,
+            prolog_flags=state.prolog_flags,
         )
         produced_goal = fn(*variables)
         yield from produced_goal(next_state)

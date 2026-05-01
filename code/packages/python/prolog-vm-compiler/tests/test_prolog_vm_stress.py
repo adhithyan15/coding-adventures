@@ -170,6 +170,23 @@ class TestPrologVMStress:
             },
         ]
 
+    def test_set_prolog_flag_runs_through_vm_with_branch_scope(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            ?- ( set_prolog_flag(unknown, error)
+               ; true
+               ),
+               current_prolog_flag(unknown, Unknown).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert [answer.as_dict() for answer in answers] == [
+            {"Unknown": atom("error")},
+            {"Unknown": atom("fail")},
+        ]
+
     def test_dif_delayed_disequality_runs_through_vm(self) -> None:
         compiled = compile_swi_prolog_source(
             """

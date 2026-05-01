@@ -43,7 +43,8 @@ ordinary logic goal expressions.
   `termo_geqo(left, right)` for standard term ordering
 - `current_predicateo(name, arity)` and
   `predicate_propertyo(name, arity, property)` for predicate metadata
-- `current_prolog_flago(name, value)` for read-only runtime flag metadata
+- `current_prolog_flago(name, value)` and `set_prolog_flago(name, value)` for
+  branch-local runtime flag metadata
 - `dynamico(name, arity)`, `assertao(clause)`, `assertzo(clause)`,
   `retracto(clause)`, `retractallo(head)`, and `abolisho(name, arity)` for
   branch-local dynamic database mutation
@@ -110,6 +111,7 @@ from logic_builtins import (
     predicate_propertyo,
     same_termo,
     succo,
+    set_prolog_flago,
     termo_lto,
     univo,
 )
@@ -218,6 +220,14 @@ assert solve_all(
 assert solve_all(program(), FlagValue, current_prolog_flago("unknown", FlagValue)) == [
     atom("fail"),
 ]
+assert solve_all(
+    program(),
+    FlagValue,
+    conj(
+        set_prolog_flago("unknown", "error"),
+        current_prolog_flago("unknown", FlagValue),
+    ),
+) == [atom("error")]
 assert solve_all(
     higher_order,
     Results,
