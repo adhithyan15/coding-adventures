@@ -440,6 +440,7 @@ members = [
     "ir-to-beam",
     "twig-lexer",
     "twig-parser",
+    "twig-semantic-tokens",
     "twig-ir-compiler",
     "lang-runtime-core",
     "lispy-runtime",
