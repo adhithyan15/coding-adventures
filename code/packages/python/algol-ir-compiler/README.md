@@ -1,6 +1,6 @@
 # algol-ir-compiler
 
-Lower the first ALGOL 60 compiler subset to compiler IR.
+Lower the Python ALGOL 60 semantic lane to compiler IR.
 
 The compiler accepts a checked ALGOL AST and emits `compiler_ir.IrProgram`
 instructions that the existing structured IR-to-WASM lowerer can consume.

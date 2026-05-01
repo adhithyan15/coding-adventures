@@ -803,6 +803,21 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
 
+    def test_switch_parameter_dispatch_uses_selected_entry_result(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure escape(sw, fallback); switch sw; label fallback; "
+            "begin goto sw[1] end; "
+            "switch s := left, 90; "
+            "escape(s, fallback); result := 99; goto done; "
+            "fallback: result := 3; goto done; "
+            "left: result := 11; go to done; "
+            "90: result := 90; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [11]
+
     def test_procedure_parameter_statement_call_dispatches_actual(self) -> None:
         result = compile_source(
             "begin integer result; "
