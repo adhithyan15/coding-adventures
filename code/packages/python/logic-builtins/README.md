@@ -36,6 +36,7 @@ ordinary logic goal expressions.
 - `univo(term, parts)` for Prolog-style `=../2` term decomposition/construction
 - `copytermo(source, copy)`, `same_termo(left, right)`, and
   `not_same_termo(left, right)`
+- `difo(left, right)` for delayed disequality constraints
 - `clauseo(head, body)` for Prolog-style clause introspection
 - `compare_termo(order, left, right)`, `termo_lto(left, right)`,
   `termo_leqo(left, right)`, `termo_gto(left, right)`, and
@@ -78,6 +79,7 @@ from logic_builtins import (
     compare_termo,
     current_predicateo,
     cuto,
+    difo,
     dynamico,
     excludeo,
     all_differento,

@@ -34,6 +34,7 @@
   list predicates can target predicates from linked modules.
 - Run Prolog term equality predicates `=/2`, `\\=/2`, `==/2`, and `\\==/2`
   through the VM path.
+- Run Prolog `dif/2` through the VM path as a delayed disequality constraint.
 
 ## 0.1.0
 

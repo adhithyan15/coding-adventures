@@ -44,6 +44,7 @@ from logic_engine import (
     is_dynamic_relation,
     logic_list,
     native_goal,
+    neq,
     num,
     reify,
     relation,
@@ -80,6 +81,7 @@ __all__ = [
     "convlisto",
     "current_predicateo",
     "cuto",
+    "difo",
     "dynamico",
     "div",
     "fd_eqo",
@@ -223,6 +225,7 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("convlisto", 3),
     ("current_predicateo", 2),
     ("cuto", 0),
+    ("difo", 2),
     ("dynamico", 2),
     ("fd_eqo", 2),
     ("fd_elemento", 3),
@@ -3267,6 +3270,12 @@ def not_same_termo(left: object, right: object) -> GoalExpr:
         )
 
     return native_goal(run, left, right)
+
+
+def difo(left: object, right: object) -> GoalExpr:
+    """Enforce delayed disequality between two terms."""
+
+    return neq(left, right)
 
 
 def compare_termo(order: object, left: object, right: object) -> GoalExpr:

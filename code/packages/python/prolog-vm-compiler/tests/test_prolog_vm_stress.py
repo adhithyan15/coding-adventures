@@ -130,6 +130,29 @@ class TestPrologVMStress:
         assert run_compiled_prolog_query(identical) == []
         assert run_compiled_prolog_query(equal) == []
 
+    def test_dif_delayed_disequality_runs_through_vm(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            ?- dif(X, tea),
+               X = cake,
+               dif(Left, Right),
+               Left = box(tea),
+               Right = box(cake).
+            """,
+        )
+        failure = compile_swi_prolog_source("?- dif(X, tea), X = tea.")
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert [answer.as_dict() for answer in answers] == [
+            {
+                "X": atom("cake"),
+                "Left": term("box", "tea"),
+                "Right": term("box", "cake"),
+            },
+        ]
+        assert run_compiled_prolog_query(failure) == []
+
     def test_if_then_else_commits_to_first_condition_solution(self) -> None:
         compiled = compile_swi_prolog_source(
             """
