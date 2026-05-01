@@ -260,6 +260,11 @@ class TestOperators:
         assert token_types("↑") == ["CARET"]
         assert token_values("↑") == ["^"]
 
+    def test_publication_symbol_multiply_and_divide(self) -> None:
+        """``×`` and ``÷`` normalize to ASCII arithmetic operators."""
+        assert token_types("× ÷") == ["STAR", "SLASH"]
+        assert token_values("× ÷") == ["*", "/"]
+
     def test_leq(self) -> None:
         """``<=`` is a single LEQ token, not LT EQ."""
         types = token_types("<=")

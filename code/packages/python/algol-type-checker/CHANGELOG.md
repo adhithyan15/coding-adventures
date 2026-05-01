@@ -71,13 +71,15 @@ All notable changes to this package will be documented in this file.
 - Accepted standard real builtin functions `sin`, `cos`, `arctan`, `ln`, and
   `exp`, returning `real` for integer or real arguments while preserving
   read-only by-name analysis.
+- Resolved standard numeric and output builtins case-insensitively while
+  preserving normal identifier casing for user declarations.
 - Added configurable type-check resource limits for maximum AST depth, block
   nesting depth, and procedure nesting depth so recursive semantic visitors
   reject hostile inputs with diagnostics before walking too deeply.
 - Accepted shared lexer front-door spellings for uppercase keywords/comments,
   `<>` not-equal relations, and double-quoted string literals.
 - Accepted shared lexer front-door publication symbols for relations,
-  exponentiation, and boolean operators.
+  exponentiation, multiplication, real division, and boolean operators.
 - Accepted subscripted integer and real array elements as `for` statement
   control variables.
 

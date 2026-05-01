@@ -20,7 +20,8 @@ exponents.
 Mixed integer/real conditional branches resolve to `real`; incompatible branch
 types are still rejected before IR lowering. Standard numeric functions
 `abs`, `sign`, `entier`, `sqrt`, `sin`, `cos`, `arctan`, `ln`, and `exp` are
-resolved as read-only builtins with integer/real argument validation.
+resolved case-insensitively as read-only builtins with integer/real argument
+validation.
 
 The checker also builds the first ALGOL 60 full-runtime semantic model. Each
 source block receives a stable block id, lexical depth, static-parent id, and a
@@ -31,9 +32,9 @@ Procedure declarations receive semantic descriptors with generated function
 labels, parameter slots, value-vs-name parameter modes, conservative by-name
 write metadata, result slots for typed procedures, and resolved call sites
 carrying the static-link delta needed by code generation. Builtin output calls
-and standard numeric functions are treated as read-only by the write analysis,
-so formals that are only printed or inspected can still accept expression
-actuals.
+and standard numeric functions are resolved case-insensitively and treated as
+read-only by the write analysis, so formals that are only printed or inspected
+can still accept expression actuals.
 No-argument procedure declarations and typed procedure expressions may use
 either explicit empty parentheses or bare procedure names, matching ALGOL's
 omitted-parentheses call syntax, while procedure result variables inside their

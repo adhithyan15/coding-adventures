@@ -177,6 +177,8 @@ _SYMBOLIC_OPERATOR_VALUES = {
     "GEQ": {"≥": ">="},
     "NEQ": {"≠": "!="},
     "CARET": {"↑": "^"},
+    "STAR": {"×": "*"},
+    "SLASH": {"÷": "/"},
 }
 
 
@@ -254,9 +256,9 @@ def create_algol_lexer(source: str, version: str = "algol60") -> GrammarLexer:
       token ``beginning`` does not match the keyword ``begin``.
     - **Case insensitivity**: ``BEGIN``, ``Begin``, and ``begin`` all produce
       the same token kind. The grammar normalizes to lowercase.
-    - **Publication symbols**: ``≤``, ``≥``, ``≠``, ``↑``, ``∧``, ``∨``,
-      ``¬``, ``⊃``, and ``≡`` normalize to the same token stream as their
-      ASCII or word spellings.
+    - **Publication symbols**: ``≤``, ``≥``, ``≠``, ``↑``, ``×``, ``÷``,
+      ``∧``, ``∨``, ``¬``, ``⊃``, and ``≡`` normalize to the same token
+      stream as their ASCII or word spellings.
     - **Comment skipping**: ``comment text;`` is consumed without emitting
       any token, and the keyword is matched case-insensitively.
     - **Operator ordering**: ``:=`` is matched before ``:``, ``**`` before
@@ -304,7 +306,8 @@ def tokenize_algol(source: str, version: str = "algol60") -> list[Token]:
     - **ASSIGN** (``:=``), **POWER** (``**``), **CARET** (``^`` or ``↑``)
     - **LEQ** (``<=`` or ``≤``), **GEQ** (``>=`` or ``≥``),
       **NEQ** (``!=``, ``<>``, or ``≠``)
-    - **PLUS**, **MINUS**, **STAR**, **SLASH**, **EQ**, **LT**, **GT**
+    - **PLUS**, **MINUS**, **STAR** (``*`` or ``×``), **SLASH** (``/`` or
+      ``÷``), **EQ**, **LT**, **GT**
 
     Delimiters:
     - **LPAREN**, **RPAREN**, **LBRACKET**, **RBRACKET**

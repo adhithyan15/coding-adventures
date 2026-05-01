@@ -125,8 +125,8 @@ matching is done after normalizing to lowercase.
 
 ALGOL 60 publication symbols normalize to the same token values as the ASCII or
 word spellings used by the parser and compiler: `≤` to `<=`, `≥` to `>=`, `≠`
-to `!=`, `↑` to `^`, and `¬`, `∧`, `∨`, `⊃`, `≡` to `not`, `and`, `or`,
-`impl`, `eqv`.
+to `!=`, `↑` to `^`, `×` to `*`, `÷` to `/`, and `¬`, `∧`, `∨`, `⊃`, `≡`
+to `not`, `and`, `or`, `impl`, `eqv`.
 
 ### String Literals
 

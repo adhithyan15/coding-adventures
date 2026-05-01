@@ -41,6 +41,14 @@ _NUMERIC_BUILTINS = {"abs"} | set(_FIXED_RETURN_NUMERIC_BUILTINS)
 _READ_ONLY_BUILTINS = _OUTPUT_BUILTINS | _NUMERIC_BUILTINS
 
 
+def _builtin_name(name: str | None) -> str | None:
+    """Return the canonical builtin spelling for a source-level callee name."""
+    if name is None:
+        return None
+    canonical = name.lower()
+    return canonical if canonical in _READ_ONLY_BUILTINS else None
+
+
 @dataclass(frozen=True)
 class Diagnostic:
     """A stage-friendly type-checking diagnostic."""
@@ -2006,7 +2014,7 @@ class AlgolTypeChecker:
                 )
             call = ResolvedProcedureCall(
                 token_id=id(name_token),
-                name=name_token.value,
+                name=descriptor.name,
                 role=role,
                 procedure_id=descriptor.procedure_id,
                 label=descriptor.label,
@@ -2105,7 +2113,8 @@ class AlgolTypeChecker:
         if not arguments:
             return None
         actual_type = self._infer_expr(arguments[0], scope)
-        if name_token.value in _OUTPUT_BUILTINS:
+        builtin_name = _builtin_name(name_token.value)
+        if builtin_name in _OUTPUT_BUILTINS:
             if actual_type != ERROR and actual_type not in {
                 INTEGER,
                 BOOLEAN,
@@ -2125,10 +2134,10 @@ class AlgolTypeChecker:
                 f"got {actual_type}",
             )
             return ERROR
-        if name_token.value == "abs":
+        if builtin_name == "abs":
             return actual_type
-        if name_token.value in _FIXED_RETURN_NUMERIC_BUILTINS:
-            return _FIXED_RETURN_NUMERIC_BUILTINS[name_token.value]
+        if builtin_name in _FIXED_RETURN_NUMERIC_BUILTINS:
+            return _FIXED_RETURN_NUMERIC_BUILTINS[builtin_name]
         return ERROR
 
     def _resolved_bare_procedure_expression(
@@ -2891,17 +2900,18 @@ class AlgolTypeChecker:
         token: Token,
         scope: Scope,
     ) -> tuple[ProcedureDescriptor, Scope, int] | None:
-        if token.value not in _READ_ONLY_BUILTINS:
+        builtin_name = _builtin_name(token.value)
+        if builtin_name is None:
             return None
         return_type = None
-        if token.value == "abs":
+        if builtin_name == "abs":
             return_type = INTEGER
-        elif token.value in _FIXED_RETURN_NUMERIC_BUILTINS:
-            return_type = _FIXED_RETURN_NUMERIC_BUILTINS[token.value]
+        elif builtin_name in _FIXED_RETURN_NUMERIC_BUILTINS:
+            return_type = _FIXED_RETURN_NUMERIC_BUILTINS[builtin_name]
         descriptor = ProcedureDescriptor(
             procedure_id=-1,
-            name=token.value,
-            label=f"__algol_builtin_{token.value}",
+            name=builtin_name,
+            label=f"__algol_builtin_{builtin_name}",
             declaring_block_id=scope.block_id,
             body_block_id=scope.block_id,
             body_node_id=-1,
@@ -3592,7 +3602,7 @@ def _callee_may_write_argument(
 ) -> bool:
     if callee_name is None:
         return True
-    if callee_name in _READ_ONLY_BUILTINS:
+    if _builtin_name(callee_name) is not None:
         return False
     procedure = known_procedures.get(callee_name)
     if procedure is None or argument_index >= len(procedure.parameters):
