@@ -238,6 +238,25 @@ class TestAlgolIrCompiler:
         assert IrOp.LOAD_BYTE in opcodes
         assert any(label.startswith("algol_label_output_string_") for label in labels)
 
+    def test_compiles_string_equality_to_descriptor_loop(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; string left, right; "
+                "left := 'Hi'; right := 'Hi'; "
+                "if left = right then result := 1 else result := 0 "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+
+        assert IrOp.LOAD_BYTE in opcodes
+        assert any(label.startswith("algol_label_string_equal_") for label in labels)
+
     def test_compiles_string_output_guards_for_length_and_total_bytes(self) -> None:
         result = compile_algol(
             parse_algol(
@@ -659,6 +678,19 @@ class TestAlgolIrCompiler:
             parse_algol(
                 "begin integer result; "
                 "if true eqv false then result := 1 else result := 0 "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+
+        assert IrOp.CMP_EQ in opcodes
+
+    def test_compiles_boolean_equality_comparison(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; boolean flag; "
+                "flag := true; "
+                "if flag = true then result := 1 else result := 0 "
                 "end"
             )
         )

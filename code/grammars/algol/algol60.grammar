@@ -276,6 +276,8 @@ factor       = primary { ( CARET | POWER ) primary } ;
 primary      = INTEGER_LIT
              | REAL_LIT
              | STRING_LIT
+             | "true"
+             | "false"
              | proc_call
              | variable
              | LPAREN arith_expr RPAREN ;
@@ -302,14 +304,14 @@ bool_factor  = bool_secondary { "and" bool_secondary } ;
 
 bool_secondary = "not" bool_secondary | bool_primary ;
 
-bool_primary = "true"
+bool_primary = relation
+             | "true"
              | "false"
-             | relation
              | proc_call
              | variable
              | LPAREN bool_expr RPAREN ;
 
-# A relation compares two arithmetic expressions.
+# A relation compares two scalar expressions.
 # Note: the operands are simple_arith (not full arith_expr) to avoid ambiguity
 # with the conditional expression form.
 relation     = simple_arith ( EQ | NEQ | LT | LEQ | GT | GEQ ) simple_arith ;

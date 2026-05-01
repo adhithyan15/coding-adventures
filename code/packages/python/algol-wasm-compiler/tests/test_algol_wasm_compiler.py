@@ -1808,6 +1808,15 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
 
+    def test_boolean_equality_comparison(self) -> None:
+        result = compile_source(
+            "begin integer result; boolean flag; "
+            "flag := true; "
+            "if flag = true then result := 7 else result := 0 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
     def test_string_array_element_store_and_output(self) -> None:
         result = compile_source(
             "begin integer result; string array messages[1:2]; "
@@ -1832,6 +1841,27 @@ class TestAlgolWasmCompiler:
 
         assert runtime.load_and_run(result.binary, "_start", []) == [9]
         assert "".join(captured) == "Bye"
+
+    def test_string_equality_comparison_uses_descriptor_contents(self) -> None:
+        result = compile_source(
+            "begin integer result; string msg; "
+            "string procedure memo(s); value s; string s; "
+            "begin own string saved; "
+            "if saved = '' then saved := s; "
+            "memo := saved "
+            "end; "
+            "msg := memo('Hi'); "
+            "if msg = 'Hi' then result := 1 else result := 100; "
+            "if memo('Bye') != 'Bye' then result := result + 6 "
+            "else result := result + 100; "
+            "print(msg) "
+            "end"
+        )
+        captured: list[str] = []
+        runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
+
+        assert runtime.load_and_run(result.binary, "_start", []) == [7]
+        assert "".join(captured) == "Hi"
 
     def test_multidimensional_real_array_uses_row_major_offsets(self) -> None:
         result = compile_source(

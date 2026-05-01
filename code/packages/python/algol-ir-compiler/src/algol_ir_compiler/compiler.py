@@ -2504,7 +2504,38 @@ class AlgolIrCompiler:
         if not isinstance(operator, Token):
             raise CompileError("expected comparison operator")
         dst = self._fresh_reg()
-        if _REAL_TYPE in {left_type, right_type}:
+        if _STRING_TYPE in {left_type, right_type}:
+            if left_type != _STRING_TYPE or right_type != _STRING_TYPE:
+                raise CompileError(
+                    "string comparison requires two string operands"
+                )
+            if operator.value not in {"=", "!="}:
+                raise CompileError(
+                    f"comparison operator {operator.value!r} is not supported "
+                    "for strings"
+                )
+            dst = self._emit_string_equality(left, right, scope)
+            if operator.value == "!=":
+                dst = self._invert_bool(dst)
+        elif _BOOLEAN_TYPE in {left_type, right_type}:
+            if left_type != _BOOLEAN_TYPE or right_type != _BOOLEAN_TYPE:
+                raise CompileError(
+                    "boolean comparison requires two boolean operands"
+                )
+            if operator.value == "=":
+                self._emit(
+                    IrOp.CMP_EQ, IrRegister(dst), IrRegister(left), IrRegister(right)
+                )
+            elif operator.value == "!=":
+                self._emit(
+                    IrOp.CMP_NE, IrRegister(dst), IrRegister(left), IrRegister(right)
+                )
+            else:
+                raise CompileError(
+                    f"comparison operator {operator.value!r} is not supported "
+                    "for booleans"
+                )
+        elif _REAL_TYPE in {left_type, right_type}:
             left = self._coerce_reg_to_type(
                 left,
                 left_type,
@@ -2593,6 +2624,139 @@ class AlgolIrCompiler:
                     f"comparison operator {operator.value!r} is not supported"
                 )
         return dst
+
+    def _emit_string_equality(
+        self, left_pointer: int, right_pointer: int, scope: _FrameScope
+    ) -> int:
+        index = self._next_if_index()
+        loop_label = f"algol_label_string_equal_{index}_loop"
+        compare_label = f"algol_label_string_equal_{index}_compare"
+        end_label = f"algol_label_string_equal_{index}_end"
+        result = self._fresh_reg()
+        cursor = self._fresh_reg()
+        at_end = self._fresh_reg()
+        same_length = self._fresh_reg()
+        left_byte = self._fresh_reg()
+        right_byte = self._fresh_reg()
+        same_byte = self._fresh_reg()
+        next_cursor = self._fresh_reg()
+        left_length, left_data = self._emit_string_descriptor_parts(
+            left_pointer,
+            scope,
+        )
+        right_length, right_data = self._emit_string_descriptor_parts(
+            right_pointer,
+            scope,
+        )
+
+        self._emit(IrOp.LOAD_IMM, IrRegister(result), IrImmediate(0))
+        self._emit(
+            IrOp.CMP_EQ,
+            IrRegister(same_length),
+            IrRegister(left_length),
+            IrRegister(right_length),
+        )
+        self._emit(IrOp.BRANCH_Z, IrRegister(same_length), IrLabel(end_label))
+        self._emit(IrOp.LOAD_IMM, IrRegister(cursor), IrImmediate(0))
+        self._label(loop_label)
+        self._emit(
+            IrOp.CMP_EQ,
+            IrRegister(at_end),
+            IrRegister(cursor),
+            IrRegister(left_length),
+        )
+        self._emit(IrOp.BRANCH_Z, IrRegister(at_end), IrLabel(compare_label))
+        self._emit(IrOp.LOAD_IMM, IrRegister(result), IrImmediate(1))
+        self._emit(IrOp.JUMP, IrLabel(end_label))
+        self._label(compare_label)
+        self._emit(
+            IrOp.LOAD_BYTE,
+            IrRegister(left_byte),
+            IrRegister(left_data),
+            IrRegister(cursor),
+        )
+        self._emit(
+            IrOp.LOAD_BYTE,
+            IrRegister(right_byte),
+            IrRegister(right_data),
+            IrRegister(cursor),
+        )
+        self._emit(
+            IrOp.CMP_EQ,
+            IrRegister(same_byte),
+            IrRegister(left_byte),
+            IrRegister(right_byte),
+        )
+        self._emit(IrOp.BRANCH_Z, IrRegister(same_byte), IrLabel(end_label))
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(next_cursor),
+            IrRegister(cursor),
+            IrImmediate(1),
+        )
+        self._copy_reg(dst=cursor, src=next_cursor)
+        self._emit(IrOp.JUMP, IrLabel(loop_label))
+        self._label(end_label)
+        return result
+
+    def _emit_string_descriptor_parts(
+        self, pointer_reg: int, scope: _FrameScope
+    ) -> tuple[int, int]:
+        index = self._next_if_index()
+        done_label = f"algol_label_string_descriptor_{index}_done"
+        data_guard_done_label = (
+            f"algol_label_string_descriptor_{index}_data_guard_done"
+        )
+        length_reg = self._fresh_reg()
+        data_reg = self._fresh_reg()
+        negative_length_reg = self._fresh_reg()
+        too_large_reg = self._fresh_reg()
+        missing_data_reg = self._fresh_reg()
+
+        self._emit(IrOp.LOAD_IMM, IrRegister(length_reg), IrImmediate(0))
+        self._emit(IrOp.LOAD_IMM, IrRegister(data_reg), IrImmediate(0))
+        self._emit(IrOp.BRANCH_Z, IrRegister(pointer_reg), IrLabel(done_label))
+        self._emit_load_scalar(
+            _INTEGER_TYPE,
+            length_reg,
+            pointer_reg,
+            _STRING_DESCRIPTOR_LENGTH_OFFSET,
+        )
+        self._emit_load_scalar(
+            _INTEGER_TYPE,
+            data_reg,
+            pointer_reg,
+            _STRING_DESCRIPTOR_DATA_POINTER_OFFSET,
+        )
+        self._emit(
+            IrOp.CMP_LT,
+            IrRegister(negative_length_reg),
+            IrRegister(length_reg),
+            IrRegister(_ZERO_REG),
+        )
+        self._emit_runtime_failure_guard(negative_length_reg, scope)
+        self._emit(
+            IrOp.CMP_GT,
+            IrRegister(too_large_reg),
+            IrRegister(length_reg),
+            IrRegister(self._const_reg(_MAX_STRING_OUTPUT_BYTES)),
+        )
+        self._emit_runtime_failure_guard(too_large_reg, scope)
+        self._emit(
+            IrOp.BRANCH_Z,
+            IrRegister(length_reg),
+            IrLabel(data_guard_done_label),
+        )
+        self._emit(
+            IrOp.CMP_EQ,
+            IrRegister(missing_data_reg),
+            IrRegister(data_reg),
+            IrRegister(_ZERO_REG),
+        )
+        self._emit_runtime_failure_guard(missing_data_reg, scope)
+        self._label(data_guard_done_label)
+        self._label(done_label)
+        return length_reg, data_reg
 
     def _emit_numeric(
         self,
