@@ -14,6 +14,7 @@ import type {
   HiddenLayerModelState,
   HiddenLayerStepResult,
 } from "./hidden-layer-examples.js";
+import { forwardLayered } from "./layered-network.js";
 import type { LossKind, ModelState, StepResult, TrainingPoint } from "./training.js";
 
 const FONT_REF = "svg:ui-sans-serif@12";
@@ -169,7 +170,7 @@ function makeLinearScene(
   pointCount: number,
 ): PaintScene {
   const width = 920;
-  const height = 520;
+  const height = 650;
   const runState = lastStep?.previousState ?? model;
   const prediction = samplePoint.x * runState.weight + runState.bias;
   const error = prediction - samplePoint.y;
@@ -253,34 +254,43 @@ function makeLinearScene(
     ...node(output),
     ...node(target),
     ...node(lossNode),
-    ...flowCard(36, 314, 152, "input batch", [
+    ...sectionLabel("2 folded training loop", 36, 292),
+    ...flowCard(36, 322, 152, "input batch", [
       `${pointCount} rows`,
       `sample x ${fmt(samplePoint.x)}`,
       `target ${fmt(samplePoint.y)}`,
     ], BLUE),
-    ...flowArrow(194, 360, 242, 360, BLUE, "feed"),
-    ...flowCard(252, 314, 158, "prediction", [
+    ...flowArrow(194, 368, 242, 368, BLUE, "feed"),
+    ...flowCard(252, 322, 158, "prediction", [
       `yhat=x*w+b`,
       `yhat ${fmt(prediction)}`,
       "activation linear",
     ], GREEN),
-    ...flowArrow(416, 360, 464, 360, BLUE, "compare"),
-    ...flowCard(474, 314, 162, "error + loss", [
+    ...flowArrow(416, 368, 464, 368, BLUE, "compare"),
+    ...flowCard(474, 322, 162, "error + loss", [
       `error ${signed(error)}`,
       `${lossKind.toUpperCase()} ${fmt(sampleLoss)}`,
       `batch loss ${fmt(lastStep?.previousLoss ?? sampleLoss)}`,
     ], RED),
-    ...flowArrow(642, 360, 690, 360, RED, "differentiate"),
-    ...flowCard(700, 314, 184, "gradient descent", [
+    ...flowArrow(555, 448, 555, 470, RED, ""),
+    ...flowCard(474, 470, 184, "gradient descent", [
       gradientText,
       `dw step ${signed(dw)}`,
       `db step ${signed(db)}`,
     ], VIOLET),
-    ...flowArrow(792, 308, 792, 266, RED, "backprop"),
-    ...flowArrow(700, 266, 332, 210, RED, "apply update"),
-    ...text(updateText, 36, 488, 13, MUTED),
-    ...text(biasUpdateText, 252, 488, 13, MUTED),
-    ...text("parameter update: new = old - learningRate * gradient", 474, 488, 13, MUTED),
+    ...flowArrow(464, 516, 416, 516, VIOLET, "apply lr"),
+    ...flowCard(252, 470, 158, "parameter update", [
+      updateText,
+      biasUpdateText,
+      "next run uses them",
+    ], VIOLET),
+    ...flowArrow(242, 516, 194, 516, VIOLET, "store"),
+    ...flowCard(36, 470, 152, "model state", [
+      `w ${fmt(model.weight)}`,
+      `b ${fmt(model.bias)}`,
+      `epoch ${model.epoch}`,
+    ], BLUE),
+    ...text("parameter update: new = old - learningRate * gradient", 474, 626, 13, MUTED),
     ...text(`epoch ${model.epoch}`, 36, 72, 13, MUTED),
     ...text("line width follows |weight|; green is positive, red is negative", 476, 72, 12, MUTED),
   ];
@@ -300,11 +310,14 @@ function makeHiddenScene(
   learningRate: number,
 ): PaintScene {
   const width = 920;
-  const height = 560;
+  const height = 720;
   const selectedInput = selectedRow.input;
   const selectedError = prediction - selectedRow.target;
+  const forward = forwardLayered([selectedInput], state.parameters);
+  const hiddenLayers = state.parameters.layers.slice(0, -1);
+  const outputLayer = state.parameters.layers[state.parameters.layers.length - 1]!;
   const inputYs = verticalPositions(example.inputLabels.length, 82, 232);
-  const hiddenYs = verticalPositions(example.hiddenCount, 54, 286);
+  const hiddenXs = horizontalPositions(hiddenLayers.length, 246, 594);
   const inputNodes = example.inputLabels.map((label, index): DiagramNode => ({
     id: `input-${index}`,
     label,
@@ -321,14 +334,18 @@ function makeHiddenScene(
     y: 318,
     tone: "bias",
   };
-  const hiddenNodes = Array.from({ length: example.hiddenCount }, (_, index): DiagramNode => ({
-    id: `hidden-${index}`,
-    label: `h${index + 1}`,
-    value: fmt(sigmoid(rawHidden(state, selectedInput, index))),
-    x: 392,
-    y: hiddenYs[index]!,
-    tone: "hidden",
-  }));
+  const hiddenNodeLayers = hiddenLayers.map((layer, layerIndex) => {
+    const hiddenYs = verticalPositions(layer.biases.length, 54, 286);
+    return layer.biases.map((_, unit): DiagramNode => ({
+      id: `hidden-${layerIndex}-${unit}`,
+      label: `h${layerIndex + 1}.${unit + 1}`,
+      value: fmt(forward.activationsByLayer[layerIndex]![0]![unit] ?? 0),
+      x: hiddenXs[layerIndex]!,
+      y: hiddenYs[unit]!,
+      tone: "hidden",
+    }));
+  });
+  const lastHiddenNodes = hiddenNodeLayers[hiddenNodeLayers.length - 1] ?? [];
   const output: DiagramNode = {
     id: "output",
     label: example.outputLabel,
@@ -366,27 +383,37 @@ function makeHiddenScene(
     ...text("weights update on every batch step", 630, 48, 13, MUTED),
   ];
 
-  for (const [inputIndex, inputNode] of inputNodes.entries()) {
-    for (const [hiddenIndex, hiddenNode] of hiddenNodes.entries()) {
-      const weight = state.parameters.inputToHiddenWeights[inputIndex]![hiddenIndex]!;
-      instructions.push(...edge(inputNode, hiddenNode, weight, fmt(weight), 0.34));
+  for (const [layerIndex, hiddenNodes] of hiddenNodeLayers.entries()) {
+    const layer = hiddenLayers[layerIndex]!;
+    const previousNodes = layerIndex === 0 ? inputNodes : hiddenNodeLayers[layerIndex - 1]!;
+    for (const [previousIndex, previousNode] of previousNodes.entries()) {
+      for (const [unit, hiddenNode] of hiddenNodes.entries()) {
+        const weight = layer.weights[previousIndex]![unit]!;
+        const shouldLabel = layerIndex === 0 && hiddenLayers.length <= 2 && hiddenNodes.length <= 8;
+        instructions.push(...edge(previousNode, hiddenNode, weight, shouldLabel ? fmt(weight) : "", 0.34));
+      }
     }
   }
-  for (const [hiddenIndex, hiddenNode] of hiddenNodes.entries()) {
-    const biasWeight = state.parameters.hiddenBiases[hiddenIndex]!;
-    instructions.push(...edge(bias, hiddenNode, biasWeight, fmt(biasWeight), 0.26));
+  for (const [layerIndex, hiddenNodes] of hiddenNodeLayers.entries()) {
+    const layer = hiddenLayers[layerIndex]!;
+    for (const [unit, hiddenNode] of hiddenNodes.entries()) {
+      const biasWeight = layer.biases[unit]!;
+      const shouldLabel = layerIndex === 0 && hiddenLayers.length === 1 && hiddenNodes.length <= 8;
+      instructions.push(...edge(bias, hiddenNode, biasWeight, shouldLabel ? fmt(biasWeight) : "", 0.26));
+    }
   }
-  for (const [hiddenIndex, hiddenNode] of hiddenNodes.entries()) {
-    const weight = state.parameters.hiddenToOutputWeights[hiddenIndex]![0]!;
-    instructions.push(...edge(hiddenNode, output, weight, fmt(weight), 0.42));
+  for (const [hiddenIndex, hiddenNode] of lastHiddenNodes.entries()) {
+    const weight = outputLayer.weights[hiddenIndex]![0]!;
+    const shouldLabel = hiddenLayers.length <= 2 && lastHiddenNodes.length <= 8;
+    instructions.push(...edge(hiddenNode, output, weight, shouldLabel ? fmt(weight) : "", 0.42));
   }
   instructions.push(
-    ...edge(bias, output, state.parameters.outputBiases[0] ?? 0, fmt(state.parameters.outputBiases[0] ?? 0), 0.28),
+    ...edge(bias, output, outputLayer.biases[0] ?? 0, hiddenLayers.length === 1 ? fmt(outputLayer.biases[0] ?? 0) : "", 0.28),
     ...edge(output, lossNode, selectedError, `err ${signed(selectedError)}`, 0.62),
     ...edge(target, lossNode, -1, "truth", 0.62),
     ...inputNodes.flatMap(node),
     ...node(bias),
-    ...hiddenNodes.flatMap(node),
+    ...hiddenNodeLayers.flatMap((nodes) => nodes.flatMap(node)),
     ...node(output),
     ...node(target),
     ...node(lossNode),
@@ -394,45 +421,58 @@ function makeHiddenScene(
 
   const inputShape = lastStep === null
     ? "input-hidden gradients waiting"
-    : `input-hidden grad ${lastStep.step.inputToHiddenWeightGradients.length}x${lastStep.step.inputToHiddenWeightGradients[0]?.length ?? 0}`;
-  const outputGrad = lastStep?.step.outputBiasGradients[0] ?? 0;
-  const outputDelta = lastStep?.step.outputDeltas[selectedIndex]?.[0] ?? 0;
-  const hiddenDeltaRow = lastStep?.step.hiddenDeltas[selectedIndex] ?? [];
-  const hiddenDelta = hiddenDeltaRow.length === 0
+    : `dL/dW1 ${gradientShape(lastStep.step.weightGradients[0])}`;
+  const lastGradient = lastStep?.step.weightGradients[lastStep.step.weightGradients.length - 1];
+  const outputGrad = lastStep?.step.biasGradients[lastStep.step.biasGradients.length - 1]?.[0] ?? 0;
+  const outputDelta = lastStep?.step.deltas[lastStep.step.deltas.length - 1]?.[selectedIndex]?.[0] ?? 0;
+  const hiddenDeltaValues = lastStep?.step.deltas
+    .slice(0, -1)
+    .flatMap((layerDeltas) => layerDeltas[selectedIndex] ?? []) ?? [];
+  const hiddenDelta = hiddenDeltaValues.length === 0
     ? 0
-    : hiddenDeltaRow.reduce((max, value) => Math.max(max, Math.abs(value)), 0);
+    : hiddenDeltaValues.reduce((max, value) => Math.max(max, Math.abs(value)), 0);
   const hiddenUpdate = lastStep === null
     ? "waiting for first step"
     : `max hidden delta ${fmt(hiddenDelta)}`;
   instructions.push(
-    ...sectionLabel("2 loss, deltas, and gradient descent", 32, 352),
-    ...flowCard(32, 382, 158, "input row", [
+    ...sectionLabel("2 folded loss + update loop", 32, 370),
+    ...flowCard(32, 402, 158, "input row", [
       selectedRow.label,
       `inputs ${selectedInput.map((value) => fmt(value)).join(", ")}`,
       `target ${fmt(selectedRow.target)}`,
     ], BLUE),
-    ...flowArrow(196, 428, 244, 428, BLUE, "forward"),
-    ...flowCard(254, 382, 162, "prediction", [
-      `hidden[${example.hiddenCount}]`,
+    ...flowArrow(196, 448, 244, 448, BLUE, "forward"),
+    ...flowCard(254, 402, 162, "prediction", [
+      `${state.hiddenLayerCount} x hidden[${example.hiddenCount}]`,
       `${example.outputLabel} ${fmt(prediction)}`,
       `error ${signed(selectedError)}`,
     ], GREEN),
-    ...flowArrow(422, 428, 470, 428, RED, "loss"),
-    ...flowCard(480, 382, 158, "mse + deltas", [
+    ...flowArrow(422, 448, 470, 448, RED, "loss"),
+    ...flowCard(480, 402, 158, "mse + deltas", [
       `row mse ${fmt(selectedError * selectedError)}`,
       `output delta ${fmt(outputDelta)}`,
       hiddenUpdate,
     ], RED),
-    ...flowArrow(644, 428, 692, 428, RED, "gradients"),
-    ...flowCard(702, 382, 186, "parameter update", [
+    ...flowArrow(559, 528, 559, 550, RED, ""),
+    ...flowCard(480, 550, 186, "gradient matrices", [
       inputShape,
-      `hidden-output ${gradientShape(lastStep?.step.hiddenToOutputWeightGradients)}`,
+      `dL/dW${state.parameters.layers.length} ${gradientShape(lastGradient)}`,
       `db out ${signed(-learningRate * outputGrad)}`,
     ], VIOLET),
-    ...flowArrow(800, 376, 800, 330, RED, "backprop"),
-    ...flowArrow(708, 330, 430, 276, RED, "update matrices"),
-    ...text("new weights = old weights - learningRate * gradient", 32, 536, 13, MUTED),
-    ...text("line width = |weight|", 630, 536, 12, MUTED),
+    ...flowArrow(470, 596, 422, 596, VIOLET, "apply lr"),
+    ...flowCard(254, 550, 162, "parameter update", [
+      `lr ${fmt(learningRate)}`,
+      `${state.parameters.layers.length} weight matrices`,
+      "next batch uses them",
+    ], VIOLET),
+    ...flowArrow(244, 596, 196, 596, VIOLET, "store"),
+    ...flowCard(32, 550, 158, "model state", [
+      `epoch ${state.epoch}`,
+      `${state.hiddenLayerCount} hidden layers`,
+      `${example.hiddenCount} neurons/layer`,
+    ], BLUE),
+    ...text("new weights = old weights - learningRate * gradient", 32, 696, 13, MUTED),
+    ...text("line width = |weight|", 630, 696, 12, MUTED),
   );
 
   return paintScene(width, height, "#ffffff", instructions, {
@@ -490,28 +530,45 @@ function flowArrow(
   color: string,
   label: string,
 ): PaintInstruction[] {
+  return arrowWithLabel(x1, y1, x2, y2, color, label, 2);
+}
+
+function arrowWithLabel(
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  color: string,
+  label: string,
+  strokeWidth: number,
+  labelOffset = 0.5,
+  labelDy = -7,
+): PaintInstruction[] {
   const angle = Math.atan2(y2 - y1, x2 - x1);
   const head = 9;
   const left = angle + Math.PI * 0.82;
   const right = angle - Math.PI * 0.82;
-  const labelX = x1 + (x2 - x1) * 0.5;
-  const labelY = y1 + (y2 - y1) * 0.5 - 7;
+  const labelX = x1 + (x2 - x1) * labelOffset;
+  const labelY = y1 + (y2 - y1) * labelOffset + labelDy;
 
-  return [
+  const instructions: PaintInstruction[] = [
     paintLine(x1, y1, x2, y2, color, {
-      stroke_width: 2,
+      stroke_width: strokeWidth,
       stroke_cap: "round",
     }),
     paintLine(x2, y2, x2 + Math.cos(left) * head, y2 + Math.sin(left) * head, color, {
-      stroke_width: 2,
+      stroke_width: strokeWidth,
       stroke_cap: "round",
     }),
     paintLine(x2, y2, x2 + Math.cos(right) * head, y2 + Math.sin(right) * head, color, {
-      stroke_width: 2,
+      stroke_width: strokeWidth,
       stroke_cap: "round",
     }),
-    ...centerText(label, labelX, labelY, 10, color),
   ];
+  if (label.length > 0) {
+    instructions.push(...centerText(label, labelX, labelY, 10, color));
+  }
+  return instructions;
 }
 
 function edge(
@@ -525,19 +582,44 @@ function edge(
   const midY = from.y + (to.y - from.y) * labelOffset;
   const color = weight >= 0 ? GREEN : RED;
   const width = Math.min(7, 1.4 + Math.abs(weight) * 0.75);
-  return [
-    paintLine(from.x, from.y, to.x, to.y, color, {
-      stroke_width: width,
-      stroke_cap: "round",
-    }),
-    paintRect(midX - 28, midY - 14, 56, 20, {
+  const { x1, y1, x2, y2 } = shortenSegment(from.x, from.y, to.x, to.y, 33, 36);
+  const instructions: PaintInstruction[] = [
+    ...arrowWithLabel(x1, y1, x2, y2, color, "", width),
+  ];
+  if (label.length > 0) {
+    instructions.push(paintRect(midX - 28, midY - 14, 56, 20, {
       fill: "rgba(255, 255, 255, 0.86)",
       stroke: "rgba(23, 32, 28, 0.08)",
       stroke_width: 1,
       corner_radius: 5,
-    }),
-    ...centerText(label, midX, midY + 4, 10, color),
-  ];
+    }));
+    instructions.push(...centerText(label, midX, midY + 4, 10, color));
+  }
+  return instructions;
+}
+
+function shortenSegment(
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  startOffset: number,
+  endOffset: number,
+): { x1: number; y1: number; x2: number; y2: number } {
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const length = Math.hypot(dx, dy);
+  if (length === 0) {
+    return { x1, y1, x2, y2 };
+  }
+  const ux = dx / length;
+  const uy = dy / length;
+  return {
+    x1: x1 + ux * startOffset,
+    y1: y1 + uy * startOffset,
+    x2: x2 - ux * endOffset,
+    y2: y2 - uy * endOffset,
+  };
 }
 
 function node(nodeData: DiagramNode): PaintInstruction[] {
@@ -586,32 +668,19 @@ function verticalPositions(count: number, top: number, bottom: number): number[]
   return Array.from({ length: count }, (_, index) => top + (span * index) / (count - 1));
 }
 
+function horizontalPositions(count: number, left: number, right: number): number[] {
+  if (count <= 1) {
+    return [(left + right) / 2];
+  }
+  const span = right - left;
+  return Array.from({ length: count }, (_, index) => left + (span * index) / (count - 1));
+}
+
 function gradientShape(rows: readonly (readonly number[])[] | undefined): string {
   if (rows === undefined || rows.length === 0) {
     return "0x0";
   }
   return `${rows.length}x${rows[0]?.length ?? 0}`;
-}
-
-function rawHidden(
-  state: HiddenLayerModelState,
-  input: readonly number[],
-  hiddenIndex: number,
-): number {
-  let raw = state.parameters.hiddenBiases[hiddenIndex] ?? 0;
-  for (const [inputIndex, value] of input.entries()) {
-    raw += value * (state.parameters.inputToHiddenWeights[inputIndex]?.[hiddenIndex] ?? 0);
-  }
-  return raw;
-}
-
-function sigmoid(value: number): number {
-  if (value >= 0) {
-    const z = Math.exp(-value);
-    return 1 / (1 + z);
-  }
-  const z = Math.exp(value);
-  return z / (1 + z);
 }
 
 function nodeFill(tone: DiagramNode["tone"]): string {

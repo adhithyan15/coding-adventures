@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { forwardTwoLayer } from "coding-adventures-two-layer-network/src/index";
+import React from "react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { activate } from "./activation.js";
+import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
+import { forwardLayered } from "./layered-network.js";
 import {
   CELSIUS_DATASET,
   fitLinearClosedForm,
@@ -17,7 +20,7 @@ import {
   trainHiddenStep,
   trainHiddenSteps,
 } from "./hidden-layer-examples.js";
-import { predictLinearWithVm, predictTwoLayerWithVm } from "./neural-vm.js";
+import { predictLayeredWithVm, predictLinearWithVm } from "./neural-vm.js";
 import { renderHiddenNetworkSvg, renderLinearNetworkSvg } from "./NetworkDiagram.js";
 
 describe("training helpers", () => {
@@ -109,17 +112,28 @@ describe("training helpers", () => {
 
       expect(Number.isFinite(step.loss)).toBe(true);
       expect(step.state.epoch).toBe(1);
-      expect(step.step.inputToHiddenWeightGradients).toHaveLength(example.inputLabels.length);
-      expect(step.step.hiddenToOutputWeightGradients).toHaveLength(example.hiddenCount);
+      expect(step.step.weightGradients[0]).toHaveLength(example.inputLabels.length);
+      expect(step.step.weightGradients[step.step.weightGradients.length - 1]).toHaveLength(example.hiddenCount);
     }
+  });
+
+  it("trains a hidden-layer example with additional hidden layers", () => {
+    const example = HIDDEN_LAYER_EXAMPLES[0]!;
+    const initial = createInitialHiddenState(example, 3);
+    const step = trainHiddenStep(example, initial, example.defaultLearningRate);
+
+    expect(initial.hiddenLayerCount).toBe(3);
+    expect(initial.parameters.layers).toHaveLength(4);
+    expect(step.step.weightGradients).toHaveLength(4);
+    expect(Number.isFinite(step.loss)).toBe(true);
   });
 
   it("matches hidden-layer visualizer predictions with the shared graph VM", () => {
     const example = HIDDEN_LAYER_EXAMPLES[0]!;
     const initial = createInitialHiddenState(example);
     const inputs = example.rows.map((row) => row.input);
-    const direct = forwardTwoLayer(inputs, initial.parameters).predictions;
-    const vm = predictTwoLayerWithVm(inputs, initial.parameters, {
+    const direct = forwardLayered(inputs, initial.parameters).predictions;
+    const vm = predictLayeredWithVm(inputs, initial.parameters, {
       inputNames: example.inputLabels,
       outputNames: [example.outputLabel],
     });
@@ -147,6 +161,27 @@ describe("training helpers", () => {
     expect(svg).toContain("<ellipse");
     expect(svg).toContain("<line");
     expect(svg).toContain("parameter update");
+  });
+
+  it("renders every hidden-layer example in the workbench", () => {
+    render(React.createElement(HiddenLayerWorkbench));
+
+    for (const example of HIDDEN_LAYER_EXAMPLES) {
+      fireEvent.click(screen.getByRole("button", { name: `${example.title} ${example.category}` }));
+      expect(screen.getByRole("heading", { name: example.title })).toBeTruthy();
+      expect(screen.getByLabelText("Neuron trace")).toBeTruthy();
+    }
+  });
+
+  it("lets the hidden-layer workbench increase network depth", () => {
+    render(React.createElement(HiddenLayerWorkbench));
+    const depthControls = screen.getAllByLabelText("Hidden layers");
+
+    fireEvent.change(depthControls[0]!, { target: { value: "3" } });
+    fireEvent.click(screen.getByRole("button", { name: "Step" }));
+
+    expect(screen.getAllByText("3 hidden layers").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("3 x hidden[3]").length).toBeGreaterThan(0);
   });
 
   it("moves downhill on XNOR and absolute value with batch updates", () => {
