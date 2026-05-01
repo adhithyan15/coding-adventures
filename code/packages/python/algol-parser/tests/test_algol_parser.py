@@ -128,16 +128,38 @@ class TestMinimalProgram:
         """A block contains BEGIN and END tokens."""
         ast = parse("begin integer x; x := 42 end")
         all_tokens: list[Token] = []
+
         def collect_tokens(node: ASTNode) -> None:
             for child in node.children:
                 if isinstance(child, Token):
                     all_tokens.append(child)
                 else:
                     collect_tokens(child)
+
         collect_tokens(ast)
         token_values = [token.value for token in all_tokens]
         assert "begin" in token_values
         assert "end" in token_values
+
+    def test_keywords_are_case_insensitive(self) -> None:
+        """Uppercase keywords parse through the ALGOL front door."""
+        ast = parse("BEGIN INTEGER x; x := 42 END")
+
+        assert ast.rule_name == "program"
+
+    def test_uppercase_comment_is_ignored(self) -> None:
+        """Uppercase COMMENT follows ALGOL's case-insensitive keyword policy."""
+        ast = parse("begin COMMENT setup; integer x; x := 42 end")
+
+        assert ast.rule_name == "program"
+
+    def test_comment_prefixed_identifier_is_not_ignored(self) -> None:
+        """A variable whose name starts with comment is still a variable."""
+        ast = parse("begin integer commentary; commentary := 42 end")
+        assign_nodes = find_nodes(ast, "assign_stmt")
+
+        assert ast.rule_name == "program"
+        assert assign_nodes
 
 
 # ---------------------------------------------------------------------------
@@ -279,6 +301,12 @@ class TestIfStatement:
         assert ast.rule_name == "program"
         cond_nodes = find_nodes(ast, "cond_stmt")
         assert len(cond_nodes) >= 1
+
+    def test_if_with_angle_not_equal(self) -> None:
+        """The common ``<>`` not-equal spelling parses as a relation."""
+        ast = parse("begin integer x; if x <> 0 then x := 1 end")
+        assert ast.rule_name == "program"
+        assert find_nodes(ast, "relation")
 
     def test_if_with_boolean_operators(self) -> None:
         """Conditional with AND and NOT in the boolean expression."""
@@ -650,6 +678,12 @@ class TestProcedureCall:
         )
         proc_nodes = find_nodes(ast, "proc_stmt")
         assert len(proc_nodes) >= 1
+
+    def test_procedure_call_with_double_quoted_string_arg(self) -> None:
+        """Double-quoted string literals parse as actual parameters."""
+        ast = parse('begin output("Hi") end')
+        assert ast.rule_name == "program"
+        assert find_nodes(ast, "proc_stmt")
 
     def test_procedure_call_as_statement(self) -> None:
         """A procedure call appears as a statement."""

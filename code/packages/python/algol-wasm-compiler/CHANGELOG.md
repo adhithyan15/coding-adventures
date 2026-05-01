@@ -110,6 +110,8 @@ All notable changes to this package will be documented in this file.
   procedure calls, label and switch formals, multiple `for` element forms,
   parenthesized conditional designational expressions, numeric labels, boolean
   operators, real arithmetic, and output in one end-to-end WASM program.
+- Accepted uppercase and mixed-case keywords/comments, `<>` not-equal
+  relations, and double-quoted string literals through the full WASM pipeline.
 
 ## [0.1.0] - 2026-04-20
 

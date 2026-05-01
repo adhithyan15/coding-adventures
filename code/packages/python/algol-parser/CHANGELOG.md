@@ -15,6 +15,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   semicolons, matching common ALGOL dummy-statement style.
 - `goto_stmt` now accepts the report-style two-word `go to` spelling in
   addition to the compact `goto` spelling.
+- Parsed uppercase and mixed-case keywords/comments, `<>` not-equal relations,
+  and double-quoted string literals through the shared ALGOL lexer.
 
 ## [0.1.0] — 2026-04-06
 

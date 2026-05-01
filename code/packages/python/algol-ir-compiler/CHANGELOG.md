@@ -106,6 +106,8 @@ All notable changes to this package will be documented in this file.
   switch-formal evaluation helper, so multi-entry switch parameters now return
   the label selected by the runtime index instead of depending on the last
   compiled entry register.
+- Lowered `<>` as the same not-equal comparison as `!=` for numeric, boolean,
+  and string operands.
 
 ## [0.1.0] - 2026-04-20
 

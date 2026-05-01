@@ -85,7 +85,7 @@ tokens = lexer.tokenize()
 | Values | `INTEGER_LIT`, `REAL_LIT`, `STRING_LIT`, `IDENT` |
 | Assignment | `ASSIGN` (`:=`) |
 | Exponentiation | `POWER` (`**`), `CARET` (`^`) |
-| Relational | `EQ` (`=`), `NEQ` (`!=`), `LT` (`<`), `GT` (`>`), `LEQ` (`<=`), `GEQ` (`>=`) |
+| Relational | `EQ` (`=`), `NEQ` (`!=`, `<>`), `LT` (`<`), `GT` (`>`), `LEQ` (`<=`), `GEQ` (`>=`) |
 | Arithmetic | `PLUS` (`+`), `MINUS` (`-`), `STAR` (`*`), `SLASH` (`/`) |
 | Delimiters | `LPAREN`, `RPAREN`, `LBRACKET`, `RBRACKET`, `SEMICOLON`, `COMMA`, `COLON` |
 
@@ -103,19 +103,29 @@ if x = 42 then ...  (* equality test: is x equal to 42? *)
 
 ### Comments
 
-ALGOL comments use the keyword `comment` followed by text up to the next `;`:
+ALGOL comments use the case-insensitive keyword `comment` followed by text up
+to the next `;`:
 
 ```algol
 comment this is a comment;
+COMMENT this is also a comment;
 x := 1; comment set x to one;
 ```
 
 The comment (including its terminating semicolon) is consumed silently.
+Identifiers that merely start with those letters, such as `commentary`, remain
+identifiers.
 
 ### Keywords Are Case-Insensitive
 
 `BEGIN`, `Begin`, and `begin` all produce the same `BEGIN` token. Keyword
 matching is done after normalizing to lowercase.
+
+### String Literals
+
+String literals may use single or double quotes. The delimiter cannot appear
+inside the literal because the grammar intentionally does not define escape
+sequences.
 
 ### Real Literals
 

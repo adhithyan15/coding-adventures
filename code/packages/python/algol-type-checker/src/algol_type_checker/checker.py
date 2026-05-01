@@ -1719,7 +1719,7 @@ class AlgolTypeChecker:
         if expr.rule_name in {"expr_cmp", "relation"}:
             if any(
                 isinstance(child, Token)
-                and child.value in {"=", "!=", "<", "<=", ">", ">="}
+                and child.value in {"=", "!=", "<>", "<", "<=", ">", ">="}
                 for child in meaningful
             ):
                 return self._infer_comparison(expr, meaningful, scope)
@@ -3147,12 +3147,12 @@ class AlgolTypeChecker:
         if _is_numeric_type(left) and _is_numeric_type(right):
             return BOOLEAN
         if (
-            operator.value in {"=", "!="}
+            operator.value in {"=", "!=", "<>"}
             and left == right
             and left in {BOOLEAN, STRING}
         ):
             return BOOLEAN
-        if operator.value not in {"=", "!="}:
+        if operator.value not in {"=", "!=", "<>"}:
             actual = left if not _is_numeric_type(left) else right
             self._error(node, f"operator requires numeric operand, got {actual}")
             return ERROR
