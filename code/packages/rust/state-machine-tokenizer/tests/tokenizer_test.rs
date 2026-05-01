@@ -1576,6 +1576,56 @@ fn tokenizer_decodes_whatwg_remaining_arrow_named_character_references() {
 }
 
 #[test]
+fn tokenizer_decodes_whatwg_remaining_set_named_character_references() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["T", "A"]),
+            vec![
+                EffectfulTransition::new("data", EffectfulMatcher::Event("T".to_string()), "data")
+                    .with_effects(&[
+                        "clear_temporary_buffer",
+                        "append_temporary_buffer(&NotSquareSubset;)",
+                        "append_named_character_reference_to_text",
+                        "flush_text",
+                    ]),
+                EffectfulTransition::new("data", EffectfulMatcher::Event("A".to_string()), "done")
+                    .with_effects(&[
+                        "create_start_tag",
+                        "append_tag_name(current_lowercase)",
+                        "start_attribute",
+                        "append_attribute_name(title)",
+                        "append_temporary_buffer(&varsupsetneqq;)",
+                        "append_named_character_reference_to_attribute_value",
+                        "commit_attribute",
+                        "emit_current_token",
+                    ]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("TA").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![
+            Token::Text("\u{228F}\u{0338}".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![Attribute {
+                    name: "title".to_string(),
+                    value: "\u{2ACC}\u{FE00}".to_string(),
+                }],
+                self_closing: false,
+            },
+        ]
+    );
+}
+
+#[test]
 fn tokenizer_falls_back_for_unknown_named_character_references() {
     let mut tokenizer = Tokenizer::new(
         EffectfulStateMachine::new(

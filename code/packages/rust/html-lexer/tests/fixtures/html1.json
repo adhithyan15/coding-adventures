@@ -1386,6 +1386,45 @@
         "EndTag(name=title)",
         "EOF"
       ]
+    },
+    {
+      "id": "html-whatwg-remaining-cap-cup-character-references-data",
+      "description": "Remaining WHATWG cap/cup set named references decode in data state",
+      "input": "Sets:&bigcap;&bigcup;&bigsqcup;&UnionPlus;&capand;&capbrcup;&capcap;&capcup;&capdot;&caps;&ccaps;&ccups;&ccupssm;&cupbrcap;&cupcap;&cupcup;&cupdot;&cupor;&cups;&ncap;&ncup;&xsqcup;",
+      "tokens": [
+        "Text(data=Sets:⋂⋃⨆⊎⩄⩉⩋⩇⩀∩︀⩍⩌⩐⩈⩆⩊⊍⩅∪︀⩃⩂⨆)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-remaining-subset-superset-character-references-attributes",
+      "description": "Remaining WHATWG subset/superset named references decode in attributes",
+      "input": "<set sub=\"&Sub;&csub;&csube;&subdot;&subedot;&submult;&subplus;&subset;&subseteq;&subseteqq;&subsetneq;&subsetneqq;&subsim;&subsub;&subsup;\" sup=\"&Sup;&Superset;&SupersetEqual;&csup;&csupe;&supdot;&supdsub;&supedot;&suphsol;&suphsub;&supmult;&supplus;&supset;&supseteq;&supseteqq;&supsetneq;&supsetneqq;&supsim;&supsub;&supsup;\">",
+      "tokens": [
+        "StartTag(name=set, attributes=[sub=⋐⫏⫑⪽⫃⫁⪿⊂⊆⫅⊊⫋⫇⫕⫓, sup=⋑⊃⊇⫐⫒⪾⫘⫄⟉⫗⫂⫀⊃⊇⫆⊋⫌⫈⫔⫖], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-remaining-negated-set-character-references-rcdata",
+      "description": "Remaining WHATWG negated set named references decode in RCDATA",
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title",
+      "input": "&NotSquareSubset;&NotSquareSubsetEqual;&NotSquareSuperset;&NotSquareSupersetEqual;&NotSuperset;&NotSupersetEqual;&nsubset;&nsubseteq;&nsubseteqq;&nsupset;&nsupseteq;&nsupseteqq;&varsubsetneq;&varsubsetneqq;&varsupsetneq;&varsupsetneqq;&vnsub;&vnsup;&vsubnE;&vsubne;&vsupnE;&vsupne;</title>",
+      "tokens": [
+        "Text(data=⊏̸⋢⊐̸⋣⊃⃒⊉⊂⃒⊈⫅̸⊃⃒⊉⫆̸⊊︀⫋︀⊋︀⫌︀⊂⃒⊃⃒⫋︀⊊︀⫌︀⊋︀)",
+        "EndTag(name=title)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-remaining-square-set-character-references-data",
+      "description": "Remaining WHATWG square-set named references decode in data state",
+      "input": "Squares:&sqcaps;&sqcups;&sqsubset;&sqsubseteq;&sqsupset;&sqsupseteq;&nsqsube;&nsqsupe;&setmn;&ssetmn;&bsolhsub;&suphsol;&lsqb;&rsqb;",
+      "tokens": [
+        "Text(data=Squares:⊓︀⊔︀⊏⊑⊐⊒⋢⋣∖∖⟈⟉[])",
+        "EOF"
+      ]
     }
   ]
 }

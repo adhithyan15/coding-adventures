@@ -1162,6 +1162,49 @@
     },
     {
       "id": "html5lib-smoke-98",
+      "description": "data state remaining WHATWG cap/cup set named character references",
+      "input": "Sets:&bigcap;&bigcup;&bigsqcup;&UnionPlus;&capand;&capbrcup;&capcap;&capcup;&capdot;&caps;&ccaps;&ccups;&ccupssm;&cupbrcap;&cupcap;&cupcup;&cupdot;&cupor;&cups;&ncap;&ncup;&xsqcup;",
+      "tokens": [
+        "Text(data=Sets:\u22c2\u22c3\u2a06\u228e\u2a44\u2a49\u2a4b\u2a47\u2a40\u2229\ufe00\u2a4d\u2a4c\u2a50\u2a48\u2a46\u2a4a\u228d\u2a45\u222a\ufe00\u2a43\u2a42\u2a06)",
+        "EOF"
+      ],
+      "diagnostics": []
+    },
+    {
+      "id": "html5lib-smoke-99",
+      "description": "attribute remaining WHATWG subset and superset named character references",
+      "input": "<set sub=\"&Sub;&csub;&csube;&subdot;&subedot;&submult;&subplus;&subset;&subseteq;&subseteqq;&subsetneq;&subsetneqq;&subsim;&subsub;&subsup;\" sup=\"&Sup;&Superset;&SupersetEqual;&csup;&csupe;&supdot;&supdsub;&supedot;&suphsol;&suphsub;&supmult;&supplus;&supset;&supseteq;&supseteqq;&supsetneq;&supsetneqq;&supsim;&supsub;&supsup;\">",
+      "tokens": [
+        "StartTag(name=set, attributes=[sub=\u22d0\u2acf\u2ad1\u2abd\u2ac3\u2ac1\u2abf\u2282\u2286\u2ac5\u228a\u2acb\u2ac7\u2ad5\u2ad3, sup=\u22d1\u2283\u2287\u2ad0\u2ad2\u2abe\u2ad8\u2ac4\u27c9\u2ad7\u2ac2\u2ac0\u2283\u2287\u2ac6\u228b\u2acc\u2ac8\u2ad4\u2ad6], self_closing=false)",
+        "EOF"
+      ],
+      "diagnostics": []
+    },
+    {
+      "id": "html5lib-smoke-100",
+      "description": "rcdata remaining WHATWG negated set named character references",
+      "input": "&NotSquareSubset;&NotSquareSubsetEqual;&NotSquareSuperset;&NotSquareSupersetEqual;&NotSuperset;&NotSupersetEqual;&nsubset;&nsubseteq;&nsubseteqq;&nsupset;&nsupseteq;&nsupseteqq;&varsubsetneq;&varsubsetneqq;&varsupsetneq;&varsupsetneqq;&vnsub;&vnsup;&vsubnE;&vsubne;&vsupnE;&vsupne;</title>",
+      "tokens": [
+        "Text(data=\u228f\u0338\u22e2\u2290\u0338\u22e3\u2283\u20d2\u2289\u2282\u20d2\u2288\u2ac5\u0338\u2283\u20d2\u2289\u2ac6\u0338\u228a\ufe00\u2acb\ufe00\u228b\ufe00\u2acc\ufe00\u2282\u20d2\u2283\u20d2\u2acb\ufe00\u228a\ufe00\u2acc\ufe00\u228b\ufe00)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-101",
+      "description": "data state remaining WHATWG square-set named character references",
+      "input": "Squares:&sqcaps;&sqcups;&sqsubset;&sqsubseteq;&sqsupset;&sqsupseteq;&nsqsube;&nsqsupe;&setmn;&ssetmn;&bsolhsub;&suphsol;&lsqb;&rsqb;",
+      "tokens": [
+        "Text(data=Squares:\u2293\ufe00\u2294\ufe00\u228f\u2291\u2290\u2292\u22e2\u22e3\u2216\u2216\u27c8\u27c9[])",
+        "EOF"
+      ],
+      "diagnostics": []
+    },
+    {
+      "id": "html5lib-smoke-102",
       "description": "data state legacy named character references missing semicolons",
       "input": "Legacy&nbsp symbols: &copy/&reg",
       "tokens": [
@@ -1175,7 +1218,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-99",
+      "id": "html5lib-smoke-103",
       "description": "attribute legacy named character references missing semicolons",
       "input": "<a title=\"A&nbsp B\" copy=&copy reg=&reg>",
       "tokens": [
@@ -1189,7 +1232,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-100",
+      "id": "html5lib-smoke-104",
       "description": "rcdata legacy named character references missing semicolons",
       "input": "Venture&nbsp &copy &reg</title>",
       "tokens": [
@@ -1206,7 +1249,7 @@
       "last_start_tag": "title"
     },
     {
-      "id": "html5lib-smoke-101",
+      "id": "html5lib-smoke-105",
       "description": "data state named character reference fallback",
       "input": "Known &AMP; unknown &madeup;",
       "tokens": [
@@ -1216,7 +1259,7 @@
       "diagnostics": []
     },
     {
-      "id": "html5lib-smoke-102",
+      "id": "html5lib-smoke-106",
       "description": "attribute named character reference fallback",
       "input": "<a title=\"&copy;\" bogus=&madeup;>",
       "tokens": [
@@ -1226,7 +1269,7 @@
       "diagnostics": []
     },
     {
-      "id": "html5lib-smoke-103",
+      "id": "html5lib-smoke-107",
       "description": "data state named character references use the longest matching prefix",
       "input": "Text &notit; &copycat &sumtotal",
       "tokens": [
@@ -1240,7 +1283,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-104",
+      "id": "html5lib-smoke-108",
       "description": "attribute named character references preserve ambiguous ampersands",
       "input": "<a title=\"&notit; &copycat &copy\" rel=&notin data=&notin;>",
       "tokens": [
@@ -1253,7 +1296,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-105",
+      "id": "html5lib-smoke-109",
       "description": "rcdata named character references use the longest matching prefix",
       "input": "&notit; &copycat</title>",
       "tokens": [
@@ -1269,7 +1312,7 @@
       "last_start_tag": "title"
     },
     {
-      "id": "html5lib-smoke-106",
+      "id": "html5lib-smoke-110",
       "description": "data state remaining HTML4 math named character references",
       "input": "Math symbols: &alefsym;&oline; &alefsymtail &olinebar",
       "tokens": [
@@ -1282,7 +1325,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-107",
+      "id": "html5lib-smoke-111",
       "description": "attribute remaining HTML4 math named character references",
       "input": "<math alef=\"&alefsym;\" overline=&oline; literal=&alefsymtail>",
       "tokens": [
@@ -1292,7 +1335,7 @@
       "diagnostics": []
     },
     {
-      "id": "html5lib-smoke-108",
+      "id": "html5lib-smoke-112",
       "description": "rcdata remaining HTML4 math named character references",
       "input": "&alefsym;&oline;</title>",
       "tokens": [
@@ -1305,7 +1348,7 @@
       "last_start_tag": "title"
     },
     {
-      "id": "html5lib-smoke-109",
+      "id": "html5lib-smoke-113",
       "description": "data state numeric character references",
       "input": "Letters: &#65; &#x42; &#X43; &#0;",
       "tokens": [
@@ -1317,7 +1360,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-110",
+      "id": "html5lib-smoke-114",
       "description": "attribute numeric character references",
       "input": "<a title=\"&#65;&#x42;\" data-x='&#X43;' note=&#0;>",
       "tokens": [
@@ -1329,7 +1372,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-111",
+      "id": "html5lib-smoke-115",
       "description": "invalid numeric character reference recovery",
       "input": "<a data='&#0; &#xD800; &#x110000; &#xFDD0; &#x80;'>",
       "tokens": [
@@ -1345,7 +1388,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-112",
+      "id": "html5lib-smoke-116",
       "description": "numeric character references without digits stay literal",
       "input": "Bad &#; &#x; <a title='&#x;' data=&#;>",
       "tokens": [
@@ -1361,7 +1404,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-113",
+      "id": "html5lib-smoke-117",
       "description": "rcdata numeric character references remain text",
       "input": "Fish &#38; &#x3C;/title>",
       "tokens": [
@@ -1373,7 +1416,7 @@
       "last_start_tag": "title"
     },
     {
-      "id": "html5lib-smoke-114",
+      "id": "html5lib-smoke-118",
       "description": "data state numeric character references missing semicolons",
       "input": "Letters: &#65 &#x42Z",
       "tokens": [
@@ -1386,7 +1429,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-115",
+      "id": "html5lib-smoke-119",
       "description": "attribute numeric character references missing semicolons",
       "input": "<a title=&#65 data-x=&#x42>",
       "tokens": [
@@ -1399,7 +1442,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-116",
+      "id": "html5lib-smoke-120",
       "description": "rcdata numeric character references missing semicolons",
       "input": "Fish &#38 &#x3C/title>",
       "tokens": [
@@ -1414,7 +1457,7 @@
       "last_start_tag": "title"
     },
     {
-      "id": "html5lib-smoke-117",
+      "id": "html5lib-smoke-121",
       "description": "script data double escaped state keeps first script end tag literal",
       "input": "x </script> y --></script>",
       "tokens": [
@@ -1427,7 +1470,7 @@
       "last_start_tag": "script"
     },
     {
-      "id": "html5lib-smoke-118",
+      "id": "html5lib-smoke-122",
       "description": "CDATA section state literalizes markup until delimiter",
       "input": "<not-markup> &amp; ]]><p>x</p>",
       "tokens": [
@@ -1441,7 +1484,7 @@
       "initial_state": "CDATA section state"
     },
     {
-      "id": "html5lib-smoke-119",
+      "id": "html5lib-smoke-123",
       "description": "markup declaration CDATA opener enters CDATA section",
       "input": "<![CDATA[<not-markup> &amp; ]]><p>After</p>",
       "tokens": [
@@ -1454,7 +1497,7 @@
       "diagnostics": []
     },
     {
-      "id": "html5lib-smoke-120",
+      "id": "html5lib-smoke-124",
       "description": "nested comment opener reports tokenizer error",
       "input": "Before<!--a <!-- b -->After",
       "tokens": [
@@ -1468,7 +1511,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-121",
+      "id": "html5lib-smoke-125",
       "description": "incorrectly closed comment end bang",
       "input": "Before<!--x--!>After",
       "tokens": [
@@ -1482,7 +1525,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-122",
+      "id": "html5lib-smoke-126",
       "description": "question mark after tag open recovers as bogus comment",
       "input": "Before<?xml version=\"1.0\"?>After",
       "tokens": [
@@ -1496,7 +1539,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-123",
+      "id": "html5lib-smoke-127",
       "description": "question mark bogus comment eof has no eof-in-comment error",
       "input": "Before<?xml",
       "tokens": [
@@ -1509,7 +1552,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-124",
+      "id": "html5lib-smoke-128",
       "description": "incorrectly opened markup declaration reports tokenizer error",
       "input": "Before<!foo>After",
       "tokens": [
@@ -1523,7 +1566,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-125",
+      "id": "html5lib-smoke-129",
       "description": "empty incorrectly opened markup declaration reconsumes delimiter",
       "input": "Before<!>After",
       "tokens": [
@@ -1537,7 +1580,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-126",
+      "id": "html5lib-smoke-130",
       "description": "markup declaration opener eof recovers as empty bogus comment",
       "input": "Before<!",
       "tokens": [
@@ -1550,7 +1593,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-127",
+      "id": "html5lib-smoke-131",
       "description": "one dash markup declaration recovers as bogus comment",
       "input": "Before<!->Middle<!-x>After<!-",
       "tokens": [
@@ -1569,7 +1612,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-128",
+      "id": "html5lib-smoke-132",
       "description": "invalid end tag opener recovers as bogus comment",
       "input": "Before</3>After",
       "tokens": [

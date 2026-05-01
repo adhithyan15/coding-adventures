@@ -1197,6 +1197,37 @@
       ]
     },
     {
+      "description": "data state remaining WHATWG cap/cup set named character references",
+      "input": "Sets:&bigcap;&bigcup;&bigsqcup;&UnionPlus;&capand;&capbrcup;&capcap;&capcup;&capdot;&caps;&ccaps;&ccups;&ccupssm;&cupbrcap;&cupcap;&cupcup;&cupdot;&cupor;&cups;&ncap;&ncup;&xsqcup;",
+      "output": [
+        ["Character", "Sets:⋂⋃⨆⊎⩄⩉⩋⩇⩀∩︀⩍⩌⩐⩈⩆⩊⊍⩅∪︀⩃⩂⨆"]
+      ]
+    },
+    {
+      "description": "attribute remaining WHATWG subset and superset named character references",
+      "input": "<set sub=\"&Sub;&csub;&csube;&subdot;&subedot;&submult;&subplus;&subset;&subseteq;&subseteqq;&subsetneq;&subsetneqq;&subsim;&subsub;&subsup;\" sup=\"&Sup;&Superset;&SupersetEqual;&csup;&csupe;&supdot;&supdsub;&supedot;&suphsol;&suphsub;&supmult;&supplus;&supset;&supseteq;&supseteqq;&supsetneq;&supsetneqq;&supsim;&supsub;&supsup;\">",
+      "output": [
+        ["StartTag", "set", {"sub": "⋐⫏⫑⪽⫃⫁⪿⊂⊆⫅⊊⫋⫇⫕⫓", "sup": "⋑⊃⊇⫐⫒⪾⫘⫄⟉⫗⫂⫀⊃⊇⫆⊋⫌⫈⫔⫖"}]
+      ]
+    },
+    {
+      "description": "rcdata remaining WHATWG negated set named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&NotSquareSubset;&NotSquareSubsetEqual;&NotSquareSuperset;&NotSquareSupersetEqual;&NotSuperset;&NotSupersetEqual;&nsubset;&nsubseteq;&nsubseteqq;&nsupset;&nsupseteq;&nsupseteqq;&varsubsetneq;&varsubsetneqq;&varsupsetneq;&varsupsetneqq;&vnsub;&vnsup;&vsubnE;&vsubne;&vsupnE;&vsupne;</title>",
+      "output": [
+        ["Character", "⊏̸⋢⊐̸⋣⊃⃒⊉⊂⃒⊈⫅̸⊃⃒⊉⫆̸⊊︀⫋︀⊋︀⫌︀⊂⃒⊃⃒⫋︀⊊︀⫌︀⊋︀"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
+      "description": "data state remaining WHATWG square-set named character references",
+      "input": "Squares:&sqcaps;&sqcups;&sqsubset;&sqsubseteq;&sqsupset;&sqsupseteq;&nsqsube;&nsqsupe;&setmn;&ssetmn;&bsolhsub;&suphsol;&lsqb;&rsqb;",
+      "output": [
+        ["Character", "Squares:⊓︀⊔︀⊏⊑⊐⊒⋢⋣∖∖⟈⟉[]"]
+      ]
+    },
+    {
       "description": "data state legacy named character references missing semicolons",
       "input": "Legacy&nbsp symbols: &copy/&reg",
       "output": [
