@@ -26,6 +26,18 @@ const BLUE = "#2563eb";
 const RED = "#c2413b";
 const GOLD = "#b7791f";
 const VIOLET = "#6d5bd0";
+const EDGE_PALETTE = [
+  "#2563eb",
+  "#237a57",
+  "#b7791f",
+  "#6d5bd0",
+  "#c2413b",
+  "#0f766e",
+  "#be185d",
+  "#7c3aed",
+  "#ca8a04",
+  "#0284c7",
+];
 
 interface DiagramNode {
   readonly id: string;
@@ -309,20 +321,38 @@ function makeHiddenScene(
   lastStep: HiddenLayerStepResult | null,
   learningRate: number,
 ): PaintScene {
-  const width = 920;
-  const height = 720;
   const selectedInput = selectedRow.input;
   const selectedError = prediction - selectedRow.target;
   const forward = forwardLayered([selectedInput], state.parameters);
   const hiddenLayers = state.parameters.layers.slice(0, -1);
   const outputLayer = state.parameters.layers[state.parameters.layers.length - 1]!;
-  const inputYs = verticalPositions(example.inputLabels.length, 82, 232);
-  const hiddenXs = horizontalPositions(hiddenLayers.length, 246, 594);
+  const maxLayerWidth = Math.max(
+    example.inputLabels.length,
+    outputLayer.biases.length,
+    ...hiddenLayers.map((layer) => layer.biases.length),
+  );
+  const networkTop = 106;
+  const nodeGap = 66;
+  const networkBottom = Math.max(318, networkTop + Math.max(1, maxLayerWidth - 1) * nodeGap);
+  const flowTop = networkBottom + 92;
+  const height = flowTop + 344;
+  const inputX = 96;
+  const hiddenStartX = 290;
+  const layerGap = 190;
+  const hiddenEndX = hiddenStartX + Math.max(0, hiddenLayers.length - 1) * layerGap;
+  const outputX = hiddenEndX + 210;
+  const lossX = outputX + 150;
+  const width = Math.max(1080, lossX + 98);
+  const inputYs = verticalPositions(example.inputLabels.length, networkTop, networkBottom);
+  const hiddenXs = hiddenLayers.map((_, layerIndex) => hiddenStartX + layerIndex * layerGap);
+  const outputY = networkTop + (networkBottom - networkTop) * 0.42;
+  const targetY = outputY + 86;
+  const lossY = outputY + 42;
   const inputNodes = example.inputLabels.map((label, index): DiagramNode => ({
     id: `input-${index}`,
     label,
     value: fmt(selectedInput[index] ?? 0),
-    x: 86,
+    x: inputX,
     y: inputYs[index]!,
     tone: "input",
   }));
@@ -330,12 +360,12 @@ function makeHiddenScene(
     id: "bias",
     label: "bias",
     value: "1",
-    x: 86,
-    y: 318,
+    x: inputX,
+    y: networkBottom + 56,
     tone: "bias",
   };
   const hiddenNodeLayers = hiddenLayers.map((layer, layerIndex) => {
-    const hiddenYs = verticalPositions(layer.biases.length, 54, 286);
+    const hiddenYs = verticalPositions(layer.biases.length, networkTop, networkBottom);
     return layer.biases.map((_, unit): DiagramNode => ({
       id: `hidden-${layerIndex}-${unit}`,
       label: `h${layerIndex + 1}.${unit + 1}`,
@@ -350,24 +380,24 @@ function makeHiddenScene(
     id: "output",
     label: example.outputLabel,
     value: fmt(prediction),
-    x: 708,
-    y: 170,
+    x: outputX,
+    y: outputY,
     tone: "output",
   };
   const target: DiagramNode = {
     id: "target",
     label: "target",
     value: fmt(selectedRow.target),
-    x: 708,
-    y: 252,
+    x: outputX,
+    y: targetY,
     tone: "bias",
   };
   const lossNode: DiagramNode = {
     id: "loss",
     label: "mse",
     value: fmt(selectedError * selectedError),
-    x: 834,
-    y: 212,
+    x: lossX,
+    y: lossY,
     tone: "output",
   };
 
@@ -380,7 +410,7 @@ function makeHiddenScene(
     }),
     ...sectionLabel("1 selected forward pass", 32, 48),
     ...text(`epoch ${state.epoch}`, 32, 70, 13, MUTED),
-    ...text("weights update on every batch step", 630, 48, 13, MUTED),
+    ...text("edge color follows source node; line width follows |weight|", width - 412, 48, 13, MUTED),
   ];
 
   for (const [layerIndex, hiddenNodes] of hiddenNodeLayers.entries()) {
@@ -390,7 +420,14 @@ function makeHiddenScene(
       for (const [unit, hiddenNode] of hiddenNodes.entries()) {
         const weight = layer.weights[previousIndex]![unit]!;
         const shouldLabel = layerIndex === 0 && hiddenLayers.length <= 2 && hiddenNodes.length <= 8;
-        instructions.push(...edge(previousNode, hiddenNode, weight, shouldLabel ? fmt(weight) : "", 0.34));
+        instructions.push(...edge(
+          previousNode,
+          hiddenNode,
+          weight,
+          shouldLabel ? fmt(weight) : "",
+          0.34,
+          edgeColorForNode(previousNode.id),
+        ));
       }
     }
   }
@@ -399,16 +436,37 @@ function makeHiddenScene(
     for (const [unit, hiddenNode] of hiddenNodes.entries()) {
       const biasWeight = layer.biases[unit]!;
       const shouldLabel = layerIndex === 0 && hiddenLayers.length === 1 && hiddenNodes.length <= 8;
-      instructions.push(...edge(bias, hiddenNode, biasWeight, shouldLabel ? fmt(biasWeight) : "", 0.26));
+      instructions.push(...edge(
+        bias,
+        hiddenNode,
+        biasWeight,
+        shouldLabel ? fmt(biasWeight) : "",
+        0.26,
+        edgeColorForNode(`bias-${layerIndex}`),
+      ));
     }
   }
   for (const [hiddenIndex, hiddenNode] of lastHiddenNodes.entries()) {
     const weight = outputLayer.weights[hiddenIndex]![0]!;
     const shouldLabel = hiddenLayers.length <= 2 && lastHiddenNodes.length <= 8;
-    instructions.push(...edge(hiddenNode, output, weight, shouldLabel ? fmt(weight) : "", 0.42));
+    instructions.push(...edge(
+      hiddenNode,
+      output,
+      weight,
+      shouldLabel ? fmt(weight) : "",
+      0.42,
+      edgeColorForNode(hiddenNode.id),
+    ));
   }
   instructions.push(
-    ...edge(bias, output, outputLayer.biases[0] ?? 0, hiddenLayers.length === 1 ? fmt(outputLayer.biases[0] ?? 0) : "", 0.28),
+    ...edge(
+      bias,
+      output,
+      outputLayer.biases[0] ?? 0,
+      hiddenLayers.length === 1 ? fmt(outputLayer.biases[0] ?? 0) : "",
+      0.28,
+      edgeColorForNode("bias-output"),
+    ),
     ...edge(output, lossNode, selectedError, `err ${signed(selectedError)}`, 0.62),
     ...edge(target, lossNode, -1, "truth", 0.62),
     ...inputNodes.flatMap(node),
@@ -434,45 +492,48 @@ function makeHiddenScene(
   const hiddenUpdate = lastStep === null
     ? "waiting for first step"
     : `max hidden delta ${fmt(hiddenDelta)}`;
+  const cardStartX = 32;
+  const cardY = flowTop + 32;
+  const cardY2 = flowTop + 180;
   instructions.push(
-    ...sectionLabel("2 folded loss + update loop", 32, 370),
-    ...flowCard(32, 402, 158, "input row", [
+    ...sectionLabel("2 folded loss + update loop", cardStartX, flowTop),
+    ...flowCard(cardStartX, cardY, 158, "input row", [
       selectedRow.label,
       `inputs ${selectedInput.map((value) => fmt(value)).join(", ")}`,
       `target ${fmt(selectedRow.target)}`,
     ], BLUE),
-    ...flowArrow(196, 448, 244, 448, BLUE, "forward"),
-    ...flowCard(254, 402, 162, "prediction", [
+    ...flowArrow(cardStartX + 164, cardY + 46, cardStartX + 212, cardY + 46, BLUE, "forward"),
+    ...flowCard(cardStartX + 222, cardY, 162, "prediction", [
       `${state.hiddenLayerCount} x hidden[${example.hiddenCount}]`,
       `${example.outputLabel} ${fmt(prediction)}`,
       `error ${signed(selectedError)}`,
     ], GREEN),
-    ...flowArrow(422, 448, 470, 448, RED, "loss"),
-    ...flowCard(480, 402, 158, "mse + deltas", [
+    ...flowArrow(cardStartX + 390, cardY + 46, cardStartX + 438, cardY + 46, RED, "loss"),
+    ...flowCard(cardStartX + 448, cardY, 158, "mse + deltas", [
       `row mse ${fmt(selectedError * selectedError)}`,
       `output delta ${fmt(outputDelta)}`,
       hiddenUpdate,
     ], RED),
-    ...flowArrow(559, 528, 559, 550, RED, ""),
-    ...flowCard(480, 550, 186, "gradient matrices", [
+    ...flowArrow(cardStartX + 527, cardY + 126, cardStartX + 527, cardY2, RED, ""),
+    ...flowCard(cardStartX + 448, cardY2, 186, "gradient matrices", [
       inputShape,
       `dL/dW${state.parameters.layers.length} ${gradientShape(lastGradient)}`,
       `db out ${signed(-learningRate * outputGrad)}`,
     ], VIOLET),
-    ...flowArrow(470, 596, 422, 596, VIOLET, "apply lr"),
-    ...flowCard(254, 550, 162, "parameter update", [
+    ...flowArrow(cardStartX + 438, cardY2 + 46, cardStartX + 390, cardY2 + 46, VIOLET, "apply lr"),
+    ...flowCard(cardStartX + 222, cardY2, 162, "parameter update", [
       `lr ${fmt(learningRate)}`,
       `${state.parameters.layers.length} weight matrices`,
       "next batch uses them",
     ], VIOLET),
-    ...flowArrow(244, 596, 196, 596, VIOLET, "store"),
-    ...flowCard(32, 550, 158, "model state", [
+    ...flowArrow(cardStartX + 212, cardY2 + 46, cardStartX + 164, cardY2 + 46, VIOLET, "store"),
+    ...flowCard(cardStartX, cardY2, 158, "model state", [
       `epoch ${state.epoch}`,
       `${state.hiddenLayerCount} hidden layers`,
       `${example.hiddenCount} neurons/layer`,
     ], BLUE),
-    ...text("new weights = old weights - learningRate * gradient", 32, 696, 13, MUTED),
-    ...text("line width = |weight|", 630, 696, 12, MUTED),
+    ...text("new weights = old weights - learningRate * gradient", cardStartX, height - 24, 13, MUTED),
+    ...text("scroll the graph to inspect larger networks", width - 336, height - 24, 12, MUTED),
   );
 
   return paintScene(width, height, "#ffffff", instructions, {
@@ -577,10 +638,11 @@ function edge(
   weight: number,
   label: string,
   labelOffset = 0.5,
+  colorOverride?: string,
 ): PaintInstruction[] {
   const midX = from.x + (to.x - from.x) * labelOffset;
   const midY = from.y + (to.y - from.y) * labelOffset;
-  const color = weight >= 0 ? GREEN : RED;
+  const color = colorOverride ?? (weight >= 0 ? GREEN : RED);
   const width = Math.min(7, 1.4 + Math.abs(weight) * 0.75);
   const { x1, y1, x2, y2 } = shortenSegment(from.x, from.y, to.x, to.y, 33, 36);
   const instructions: PaintInstruction[] = [
@@ -596,6 +658,14 @@ function edge(
     instructions.push(...centerText(label, midX, midY + 4, 10, color));
   }
   return instructions;
+}
+
+function edgeColorForNode(nodeId: string): string {
+  let hash = 0;
+  for (let index = 0; index < nodeId.length; index += 1) {
+    hash = (hash * 31 + nodeId.charCodeAt(index)) >>> 0;
+  }
+  return EDGE_PALETTE[hash % EDGE_PALETTE.length]!;
 }
 
 function shortenSegment(
@@ -666,14 +736,6 @@ function verticalPositions(count: number, top: number, bottom: number): number[]
   }
   const span = bottom - top;
   return Array.from({ length: count }, (_, index) => top + (span * index) / (count - 1));
-}
-
-function horizontalPositions(count: number, left: number, right: number): number[] {
-  if (count <= 1) {
-    return [(left + right) / 2];
-  }
-  const span = right - left;
-  return Array.from({ length: count }, (_, index) => left + (span * index) / (count - 1));
 }
 
 function gradientShape(rows: readonly (readonly number[])[] | undefined): string {
