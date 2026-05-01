@@ -92,6 +92,8 @@ currently supports:
   references
 - WHATWG angle, bracket, floor/ceiling, triangle, corner, and over/under fence
   named character references
+- WHATWG Latin Extended and diacritic named character references, including
+  macron, breve, ogonek, caron, cedilla, circumflex, dot, ring, and tilde forms
 - missing-semicolon recovery for legacy named character references `nbsp`,
   `copy`, and `reg` before delimiters and EOF
 - generic named-character-reference scanning with literal fallback for unknown

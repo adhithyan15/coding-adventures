@@ -2803,6 +2803,76 @@ fn default_html_lexer_supports_seeded_rcdata_whatwg_triangle_and_corner_referenc
 }
 
 #[test]
+fn default_html_lexer_supports_whatwg_latin_extended_named_character_references() {
+    let tokens = lex_html(
+        "Latin extended:&Amacr;&abreve;&Aogon;&aogon;&Cacute;&ccaron;&Dcaron;&dcaron;&Emacr;&eogon;&Gbreve;&gcirc;&Idot;&inodot;",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Text("Latin extended:ĀăĄąĆčĎďĒęĞĝİı".to_string()),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_latin_extended_named_character_references_in_attributes() {
+    let tokens = lex_html(
+        "<p upper=\"&Hcirc;&Itilde;&Jcirc;&Kcedil;&Lacute;&Lcaron;&Lcedil;&Lmidot;&Nacute;&Ncaron;&Ncedil;\" lower=\"&hcirc;&itilde;&jcirc;&kcedil;&lacute;&lcaron;&lcedil;&lmidot;&nacute;&ncaron;&ncedil;\">",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::StartTag {
+                name: "p".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "upper".to_string(),
+                        value: "ĤĨĴĶĹĽĻĿŃŇŅ".to_string(),
+                    },
+                    Attribute {
+                        name: "lower".to_string(),
+                        value: "ĥĩĵķĺľļŀńňņ".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_rcdata_whatwg_latin_extended_named_character_references() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rcdata").unwrap();
+    lexer.set_last_start_tag("title");
+
+    lexer
+        .push(
+            "&Omacr;&omacr;&Racute;&rcaron;&Sacute;&scedil;&Scirc;&scirc;&Tcaron;&tcedil;&Ubreve;&umacr;&Uogon;&uring;&Utilde;&wcirc;&Ycirc;&ycirc;&Zacute;&zcaron;&Zdot;&zdot;</title>",
+        )
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("ŌōŔřŚşŜŝŤţŬūŲůŨŵŶŷŹžŻż".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_semicolonless_legacy_named_character_references() {
     let mut lexer = create_html_lexer().unwrap();
 
