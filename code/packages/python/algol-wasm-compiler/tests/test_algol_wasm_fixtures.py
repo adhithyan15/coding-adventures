@@ -29,6 +29,7 @@ _GOLDEN_FIXTURES = (
     GoldenFixture(name="standard-real-math", result=[478], stdout="MATH 478"),
     GoldenFixture(name="full-surface", result=[81], stdout="COMPLETE 81"),
     GoldenFixture(name="switch-actuals", result=[42], stdout="SWITCH 42"),
+    GoldenFixture(name="typed-comparisons", result=[31], stdout="READY 31"),
 )
 
 

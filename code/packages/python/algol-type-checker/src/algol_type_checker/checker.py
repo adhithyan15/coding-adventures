@@ -1722,7 +1722,7 @@ class AlgolTypeChecker:
                 and child.value in {"=", "!=", "<", "<=", ">", ">="}
                 for child in meaningful
             ):
-                return self._infer_numeric_comparison(expr, meaningful, scope)
+                return self._infer_comparison(expr, meaningful, scope)
             return self._infer_expr(meaningful[0], scope)
 
         if expr.rule_name in {"expr_add", "simple_arith", "expr_mul", "term"}:
@@ -3130,23 +3130,38 @@ class AlgolTypeChecker:
             index += 2
         return current_type
 
-    def _infer_numeric_comparison(
+    def _infer_comparison(
         self,
         node: ASTNode,
         children: list[ASTNode | Token],
         scope: Scope,
     ) -> str:
         left = self._infer_expr(children[0], scope)
+        operator = children[1]
         right = self._infer_expr(children[2], scope)
         if left == ERROR or right == ERROR:
             return ERROR
-        if not _is_numeric_type(left):
-            self._error(node, f"operator requires numeric operand, got {left}")
+        if not isinstance(operator, Token):
+            self._error(node, "expected comparison operator")
             return ERROR
-        if not _is_numeric_type(right):
-            self._error(node, f"operator requires numeric operand, got {right}")
+        if _is_numeric_type(left) and _is_numeric_type(right):
+            return BOOLEAN
+        if (
+            operator.value in {"=", "!="}
+            and left == right
+            and left in {BOOLEAN, STRING}
+        ):
+            return BOOLEAN
+        if operator.value not in {"=", "!="}:
+            actual = left if not _is_numeric_type(left) else right
+            self._error(node, f"operator requires numeric operand, got {actual}")
             return ERROR
-        return BOOLEAN
+        self._error(
+            node,
+            f"operator {operator.value!r} requires compatible operands, got "
+            f"{left} and {right}",
+        )
+        return ERROR
 
     def _can_assign(self, target_type: str, value_type: str) -> bool:
         if target_type == value_type:

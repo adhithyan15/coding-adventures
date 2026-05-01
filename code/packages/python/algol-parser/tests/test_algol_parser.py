@@ -486,6 +486,18 @@ class TestBooleanExpression:
         )
         assert ast.rule_name == "program"
 
+    def test_boolean_literal_relation(self) -> None:
+        """Boolean literals can be operands in equality relations."""
+        ast = parse(
+            "begin integer x; boolean b; "
+            "b := true; "
+            "if b = true then x := 1 else x := 0 "
+            "end"
+        )
+
+        assert ast.rule_name == "program"
+        assert find_nodes(ast, "relation")
+
     def test_implication_expression(self) -> None:
         """Boolean expression with IMPL."""
         ast = parse(

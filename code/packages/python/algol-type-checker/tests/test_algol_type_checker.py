@@ -387,6 +387,17 @@ class TestAlgolTypeChecker:
         assert result.ok
         assert result.root_scope.children[0].symbols["flag"].type_name == "boolean"
 
+    def test_accepts_boolean_equality_comparison(self) -> None:
+        ast = parse_algol(
+            "begin integer result; boolean flag; "
+            "flag := true; "
+            "if flag = true then result := 1 else result := 0 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+
     def test_reports_arithmetic_operand_that_is_not_integer(self) -> None:
         ast = parse_algol("begin integer result; result := true + 1 end")
         result = check_algol(ast)
@@ -2029,6 +2040,45 @@ class TestAlgolTypeChecker:
 
         assert result.ok
         assert result.root_scope.children[0].symbols["msg"].type_name == "string"
+
+    def test_accepts_string_equality_comparison(self) -> None:
+        ast = parse_algol(
+            "begin integer result; string msg; "
+            "msg := 'Hi'; "
+            "if msg = 'Hi' then result := 1 else result := 0 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+
+    def test_rejects_string_ordering_comparison(self) -> None:
+        ast = parse_algol(
+            "begin integer result; string msg; "
+            "msg := 'Hi'; "
+            "if msg < 'Hz' then result := 1 else result := 0 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "operator requires numeric operand, got string" in (
+            result.diagnostics[0].message
+        )
+
+    def test_rejects_mismatched_equality_comparison(self) -> None:
+        ast = parse_algol(
+            "begin integer result; string msg; "
+            "msg := 'Hi'; "
+            "if msg = 1 then result := 1 else result := 0 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "requires compatible operands, got string and integer" in (
+            result.diagnostics[0].message
+        )
 
     def test_accepts_builtin_print_with_string_variable(self) -> None:
         ast = parse_algol(
