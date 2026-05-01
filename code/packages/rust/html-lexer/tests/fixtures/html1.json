@@ -632,6 +632,36 @@
       ]
     },
     {
+      "id": "html-whatwg-greater-less-comparison-character-references-data",
+      "description": "WHATWG greater-than and less-than comparison aliases resolve in data state",
+      "input": "GreaterLess:&GreaterEqualLess;&gl;&glE;&gla;&glj;&gnE;&gnap;&gnapprox;&gne;&gneq;&gneqq;&gnsim;&gtrapprox;&gtrarr;",
+      "tokens": [
+        "Text(data=GreaterLess:\u22DB\u2277\u2A92\u2AA5\u2AA4\u2269\u2A8A\u2A8A\u2A88\u2A88\u2269\u22E7\u2A86\u2978)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-greater-less-comparison-character-references-attributes",
+      "description": "WHATWG greater-than and less-than comparison aliases resolve inside attribute values",
+      "input": "<math cmp=\"&gtrdot;&gtreqless;&gtreqqless;&gtrless;&gtrsim;&lessapprox;&lessdot;&lesseqgtr;&lesseqqgtr;&lessgtr;&lesssim;&lg;&lgE;&lnE;\">",
+      "tokens": [
+        "StartTag(name=math, attributes=[cmp=\u22D7\u22DB\u2A8C\u2277\u2273\u2A85\u22D6\u22DA\u2A8B\u2276\u2272\u2276\u2A91\u2268], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-negated-greater-less-comparison-character-references-rcdata",
+      "description": "Seeded title RCDATA context resolves WHATWG negated greater-than and less-than comparison aliases",
+      "input": "&lnap;&lnapprox;&lne;&lneq;&lneqq;&lnsim;&nGg;&nGt;&nGtv;&nLl;&nLt;&nLtv;</title>",
+      "tokens": [
+        "Text(data=\u2A89\u2A89\u2A87\u2A87\u2268\u22E6\u22D9\u0338\u226B\u20D2\u226B\u0338\u22D8\u0338\u226A\u20D2\u226A\u0338)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
       "id": "html-whatwg-negated-relation-character-references-rcdata",
       "description": "Seeded title RCDATA context resolves WHATWG negated relation aliases, including combining-overlay replacements",
       "input": "&NotGreater;&NotGreaterEqual;&NotGreaterFullEqual;&NotGreaterGreater;&NotGreaterLess;&NotGreaterSlantEqual;&NotGreaterTilde;&NotLess;&NotLessEqual;&NotLessGreater;&NotLessLess;&NotLessSlantEqual;&NotLessTilde;&NotNestedGreaterGreater;&NotNestedLessLess;</title>",

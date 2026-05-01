@@ -2504,6 +2504,70 @@ fn default_html_lexer_supports_whatwg_greater_less_named_character_references_in
 }
 
 #[test]
+fn default_html_lexer_supports_whatwg_greater_less_comparison_named_character_references() {
+    let tokens = lex_html(
+        "GreaterLess:&GreaterEqualLess;&gl;&glE;&gla;&glj;&gnE;&gnap;&gnapprox;&gne;&gneq;&gneqq;&gnsim;&gtrapprox;&gtrarr;",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Text("GreaterLess:⋛≷⪒⪥⪤≩⪊⪊⪈⪈≩⋧⪆⥸".to_string()),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_greater_less_comparison_named_character_references_in_attributes(
+) {
+    let tokens = lex_html(
+        "<math cmp=\"&gtrdot;&gtreqless;&gtreqqless;&gtrless;&gtrsim;&lessapprox;&lessdot;&lesseqgtr;&lesseqqgtr;&lessgtr;&lesssim;&lg;&lgE;&lnE;\">",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::StartTag {
+                name: "math".to_string(),
+                attributes: vec![Attribute {
+                    name: "cmp".to_string(),
+                    value: "⋗⋛⪌≷≳⪅⋖⋚⪋≶≲≶⪑≨".to_string(),
+                }],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_rcdata_whatwg_negated_greater_less_named_character_references(
+) {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rcdata").unwrap();
+    lexer.set_last_start_tag("title");
+
+    lexer
+        .push("&lnap;&lnapprox;&lne;&lneq;&lneqq;&lnsim;&nGg;&nGt;&nGtv;&nLl;&nLt;&nLtv;</title>")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("⪉⪉⪇⪇≨⋦⋙\u{0338}≫\u{20D2}≫\u{0338}⋘\u{0338}≪\u{20D2}≪\u{0338}".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_seeded_rcdata_whatwg_negated_relational_named_character_references()
 {
     let mut lexer = create_html_lexer().unwrap();
