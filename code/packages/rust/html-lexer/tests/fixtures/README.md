@@ -78,6 +78,8 @@ currently supports:
   and attribute values
 - HTML4 math/symbol named character references such as `alefsym`, `oline`,
   `sum`, and `notin`
+- WHATWG named character references for spacing, invisible operators,
+  punctuation aliases, and math constants
 - missing-semicolon recovery for legacy named character references `nbsp`,
   `copy`, and `reg` before delimiters and EOF
 - generic named-character-reference scanning with literal fallback for unknown

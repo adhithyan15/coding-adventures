@@ -146,3 +146,6 @@ documented in this file.
 - Completed the HTML4-era math named reference table with `alefsym` and
   `oline`, including data, RCDATA, attribute, and normalized html5lib smoke
   coverage.
+- Added a WHATWG named-reference batch for spacing, invisible operators,
+  punctuation aliases, and math constants, including multi-codepoint
+  replacements such as `ThickSpace`.

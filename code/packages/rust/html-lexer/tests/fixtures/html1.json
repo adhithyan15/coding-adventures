@@ -554,6 +554,36 @@
       "last_start_tag": "title"
     },
     {
+      "id": "html-whatwg-spacing-character-references-data",
+      "description": "WHATWG spacing named character references resolve in data state",
+      "input": "Spacing:&Tab;&NewLine;&MediumSpace;&ThickSpace;&ThinSpace;&VeryThinSpace;&ZeroWidthSpace;&NegativeMediumSpace;",
+      "tokens": [
+        "Text(data=Spacing:\t\n\u205F\u205F\u200A\u2009\u200A\u200B\u200B)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-invisible-character-references-attributes",
+      "description": "WHATWG invisible and non-breaking aliases resolve inside attribute values",
+      "input": "<a data=\"&NoBreak;&NonBreakingSpace;&ApplyFunction;&InvisibleTimes;&InvisibleComma;\">",
+      "tokens": [
+        "StartTag(name=a, attributes=[data=\u2060\u00A0\u2061\u2062\u2063], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-math-constant-character-references-rcdata",
+      "description": "Seeded title RCDATA context resolves WHATWG differential, exponential, and imaginary aliases",
+      "input": "&DifferentialD;&CapitalDifferentialD;&DD;&dd;&ExponentialE;&ee;&ImaginaryI;&ii;</title>",
+      "tokens": [
+        "Text(data=\u2146\u2145\u2145\u2146\u2147\u2147\u2148\u2148)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
       "id": "html-semicolonless-legacy-character-references-data",
       "description": "Legacy named character references recover when the semicolon is missing in data state",
       "input": "Legacy&nbsp symbols: &copy/&reg",
