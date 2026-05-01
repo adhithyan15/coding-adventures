@@ -632,11 +632,41 @@
       ]
     },
     {
+      "id": "html-whatwg-extended-arrow-character-references-data",
+      "description": "WHATWG extended capital, short, diagonal, and double-long arrow aliases resolve in data state",
+      "input": "More arrows:&Darr;&Downarrow;&Larr;&Leftarrow;&Leftrightarrow;&Rarr;&Rightarrow;&Uarr;&Uparrow;&Updownarrow;&ShortDownArrow;&ShortLeftArrow;&ShortRightArrow;&ShortUpArrow;&LowerLeftArrow;&LowerRightArrow;&UpperLeftArrow;&UpperRightArrow;&DoubleLongLeftArrow;&DoubleLongLeftRightArrow;&DoubleLongRightArrow;&DownTeeArrow;&UpTeeArrow;",
+      "tokens": [
+        "Text(data=More arrows:\u21A1\u21D3\u219E\u21D0\u21D4\u21A0\u21D2\u219F\u21D1\u21D5\u2193\u2190\u2192\u2191\u2199\u2198\u2196\u2197\u27F8\u27FA\u27F9\u21A7\u21A5)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-hook-tail-loop-arrow-character-references-attributes",
+      "description": "WHATWG lowercase long, hook, tail, two-head, curve, circle, and loop arrow aliases resolve inside attribute values",
+      "input": "<a plain=\"&downarrow;&leftarrow;&leftrightarrow;&longleftarrow;&longleftrightarrow;&longrightarrow;\" hooks=\"&hookleftarrow;&hookrightarrow;&leftarrowtail;&rightarrowtail;&twoheadleftarrow;&twoheadrightarrow;\" loops=\"&curvearrowleft;&curvearrowright;&circlearrowleft;&circlearrowright;&looparrowleft;&looparrowright;\">",
+      "tokens": [
+        "StartTag(name=a, attributes=[plain=\u2193\u2190\u2194\u27F5\u27F7\u27F6, hooks=\u21A9\u21AA\u21A2\u21A3\u219E\u21A0, loops=\u21B6\u21B7\u21BA\u21BB\u21AB\u21AC], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
       "id": "html-whatwg-vector-arrow-character-references-rcdata",
       "description": "Seeded title RCDATA context resolves WHATWG vector and vector-bar arrow aliases",
       "input": "&LeftVector;&RightVector;&LeftUpVector;&RightUpVector;&LeftDownVector;&RightDownVector;&DownLeftVector;&DownRightVector;&LeftVectorBar;&RightVectorBar;&LeftUpVectorBar;&RightUpVectorBar;&LeftDownVectorBar;&RightDownVectorBar;&DownLeftVectorBar;&DownRightVectorBar;</title>",
       "tokens": [
         "Text(data=\u21BC\u21C0\u21BF\u21BE\u21C3\u21C2\u21BD\u21C1\u2952\u2953\u2958\u2954\u2959\u2955\u2956\u2957)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html-whatwg-harpoon-negated-mapsto-arrow-character-references-rcdata",
+      "description": "Seeded title RCDATA context resolves WHATWG harpoon, repeated, negated, squiggle, mapsto, and diagonal arrow aliases",
+      "input": "&leftharpoonup;&leftharpoondown;&rightharpoonup;&rightharpoondown;&upharpoonleft;&upharpoonright;&downharpoonleft;&downharpoonright;&leftleftarrows;&rightrightarrows;&downdownarrows;&upuparrows;&leftrightarrows;&rightleftarrows;&leftrightharpoons;&rightleftharpoons;&rightsquigarrow;&leftrightsquigarrow;&nleftarrow;&nrightarrow;&nleftrightarrow;&nLeftarrow;&nRightarrow;&nLeftrightarrow;&mapsto;&longmapsto;&mapstoleft;&mapstoup;&mapstodown;&nearrow;&searrow;&swarrow;&nwarrow;</title>",
+      "tokens": [
+        "Text(data=\u21BC\u21BD\u21C0\u21C1\u21BF\u21BE\u21C3\u21C2\u21C7\u21C9\u21CA\u21C8\u21C6\u21C4\u21CB\u21CC\u219D\u21AD\u219A\u219B\u21AE\u21CD\u21CF\u21CE\u21A6\u27FC\u21A4\u21A5\u21A7\u2197\u2198\u2199\u2196)",
         "EndTag(name=title)",
         "EOF"
       ],

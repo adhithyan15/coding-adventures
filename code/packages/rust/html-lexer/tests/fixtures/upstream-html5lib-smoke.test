@@ -658,6 +658,43 @@
       ]
     },
     {
+      "description": "data state WHATWG extended arrow named character references",
+      "input": "More arrows:&Darr;&Downarrow;&Larr;&Leftarrow;&Leftrightarrow;&Rarr;&Rightarrow;&Uarr;&Uparrow;&Updownarrow;&ShortDownArrow;&ShortLeftArrow;&ShortRightArrow;&ShortUpArrow;&LowerLeftArrow;&LowerRightArrow;&UpperLeftArrow;&UpperRightArrow;&DoubleLongLeftArrow;&DoubleLongLeftRightArrow;&DoubleLongRightArrow;&DownTeeArrow;&UpTeeArrow;",
+      "output": [
+        ["Character", "More arrows:"],
+        ["Character", "\u21A1"],
+        ["Character", "\u21D3"],
+        ["Character", "\u219E"],
+        ["Character", "\u21D0"],
+        ["Character", "\u21D4"],
+        ["Character", "\u21A0"],
+        ["Character", "\u21D2"],
+        ["Character", "\u219F"],
+        ["Character", "\u21D1"],
+        ["Character", "\u21D5"],
+        ["Character", "\u2193"],
+        ["Character", "\u2190"],
+        ["Character", "\u2192"],
+        ["Character", "\u2191"],
+        ["Character", "\u2199"],
+        ["Character", "\u2198"],
+        ["Character", "\u2196"],
+        ["Character", "\u2197"],
+        ["Character", "\u27F8"],
+        ["Character", "\u27FA"],
+        ["Character", "\u27F9"],
+        ["Character", "\u21A7"],
+        ["Character", "\u21A5"]
+      ]
+    },
+    {
+      "description": "attribute WHATWG hook tail and loop arrow named character references",
+      "input": "<a plain=\"&downarrow;&leftarrow;&leftrightarrow;&longleftarrow;&longleftrightarrow;&longrightarrow;\" hooks=\"&hookleftarrow;&hookrightarrow;&leftarrowtail;&rightarrowtail;&twoheadleftarrow;&twoheadrightarrow;\" loops=\"&curvearrowleft;&curvearrowright;&circlearrowleft;&circlearrowright;&looparrowleft;&looparrowright;\">",
+      "output": [
+        ["StartTag", "a", {"plain": "\u2193\u2190\u2194\u27F5\u27F7\u27F6", "hooks": "\u21A9\u21AA\u21A2\u21A3\u219E\u21A0", "loops": "\u21B6\u21B7\u21BA\u21BB\u21AB\u21AC"}]
+      ]
+    },
+    {
       "description": "rcdata WHATWG vector arrow named character references",
       "initialStates": ["RCDATA state"],
       "lastStartTag": "title",
@@ -679,6 +716,48 @@
         ["Character", "\u2955"],
         ["Character", "\u2956"],
         ["Character", "\u2957"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
+      "description": "rcdata WHATWG harpoon negated and mapsto arrow named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&leftharpoonup;&leftharpoondown;&rightharpoonup;&rightharpoondown;&upharpoonleft;&upharpoonright;&downharpoonleft;&downharpoonright;&leftleftarrows;&rightrightarrows;&downdownarrows;&upuparrows;&leftrightarrows;&rightleftarrows;&leftrightharpoons;&rightleftharpoons;&rightsquigarrow;&leftrightsquigarrow;&nleftarrow;&nrightarrow;&nleftrightarrow;&nLeftarrow;&nRightarrow;&nLeftrightarrow;&mapsto;&longmapsto;&mapstoleft;&mapstoup;&mapstodown;&nearrow;&searrow;&swarrow;&nwarrow;</title>",
+      "output": [
+        ["Character", "\u21BC"],
+        ["Character", "\u21BD"],
+        ["Character", "\u21C0"],
+        ["Character", "\u21C1"],
+        ["Character", "\u21BF"],
+        ["Character", "\u21BE"],
+        ["Character", "\u21C3"],
+        ["Character", "\u21C2"],
+        ["Character", "\u21C7"],
+        ["Character", "\u21C9"],
+        ["Character", "\u21CA"],
+        ["Character", "\u21C8"],
+        ["Character", "\u21C6"],
+        ["Character", "\u21C4"],
+        ["Character", "\u21CB"],
+        ["Character", "\u21CC"],
+        ["Character", "\u219D"],
+        ["Character", "\u21AD"],
+        ["Character", "\u219A"],
+        ["Character", "\u219B"],
+        ["Character", "\u21AE"],
+        ["Character", "\u21CD"],
+        ["Character", "\u21CF"],
+        ["Character", "\u21CE"],
+        ["Character", "\u21A6"],
+        ["Character", "\u27FC"],
+        ["Character", "\u21A4"],
+        ["Character", "\u21A5"],
+        ["Character", "\u21A7"],
+        ["Character", "\u2197"],
+        ["Character", "\u2198"],
+        ["Character", "\u2199"],
+        ["Character", "\u2196"],
         ["EndTag", "title"]
       ]
     },
