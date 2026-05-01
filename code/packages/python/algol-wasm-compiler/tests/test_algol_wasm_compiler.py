@@ -237,6 +237,15 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [3]
 
+    def test_array_element_for_control_variable_runs(self) -> None:
+        result = compile_source(
+            "begin integer result; integer array a[1:1]; "
+            "result := 0; "
+            "for a[1] := 1 step 1 until 4 do result := result + a[1] "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [10]
+
     def test_standard_numeric_builtin_functions_execute(self) -> None:
         result = compile_source(
             "begin integer result; real x, y; "
