@@ -10,6 +10,8 @@ from logic_builtins import (
     argo,
     assertao,
     assertzo,
+    atom_charso,
+    atom_codeso,
     atomico,
     atomo,
     bagofo,
@@ -17,6 +19,7 @@ from logic_builtins import (
     callableo,
     calltermo,
     catcho,
+    char_codeo,
     clauseo,
     compare_termo,
     compoundo,
@@ -65,6 +68,8 @@ from logic_builtins import (
     not_same_termo,
     not_variant_termo,
     noto,
+    number_charso,
+    number_codeso,
     numbero,
     onceo,
     partitiono,
@@ -82,6 +87,8 @@ from logic_builtins import (
     scanlo,
     set_prolog_flago,
     setofo,
+    string_charso,
+    string_codeso,
     stringo,
     subsumes_termo,
     succo,
@@ -353,6 +360,20 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         return copytermo(*args)
     if name == "term_variables" and goal.relation.arity == 2:
         return term_variableso(*args)
+    if name == "atom_chars" and goal.relation.arity == 2:
+        return atom_charso(*args)
+    if name == "atom_codes" and goal.relation.arity == 2:
+        return atom_codeso(*args)
+    if name == "number_chars" and goal.relation.arity == 2:
+        return number_charso(*args)
+    if name == "number_codes" and goal.relation.arity == 2:
+        return number_codeso(*args)
+    if name == "char_code" and goal.relation.arity == 2:
+        return char_codeo(*args)
+    if name == "string_chars" and goal.relation.arity == 2:
+        return string_charso(*args)
+    if name == "string_codes" and goal.relation.arity == 2:
+        return string_codeso(*args)
     if name == "current_prolog_flag" and goal.relation.arity == 2:
         return current_prolog_flago(*args)
     if name == "set_prolog_flag" and goal.relation.arity == 2:

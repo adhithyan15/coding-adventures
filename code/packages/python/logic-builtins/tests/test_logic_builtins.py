@@ -37,6 +37,8 @@ from logic_builtins import (
     argo,
     assertao,
     assertzo,
+    atom_charso,
+    atom_codeso,
     atomico,
     atomo,
     bagofo,
@@ -45,6 +47,7 @@ from logic_builtins import (
     callo,
     calltermo,
     catcho,
+    char_codeo,
     clauseo,
     compare_termo,
     compoundo,
@@ -103,6 +106,8 @@ from logic_builtins import (
     not_same_termo,
     not_variant_termo,
     noto,
+    number_charso,
+    number_codeso,
     numbero,
     numeqo,
     numneqo,
@@ -118,6 +123,8 @@ from logic_builtins import (
     scanlo,
     set_prolog_flago,
     setofo,
+    string_charso,
+    string_codeso,
     stringo,
     sub,
     subsumes_termo,
@@ -2037,6 +2044,65 @@ class TestTermMetaprogrammingBuiltins:
             (left, right),
             conj(difo(left, right), eq(left, "tea"), eq(right, "cake")),
         ) == [(atom("tea"), atom("cake"))]
+
+    def test_text_conversion_builtins_relate_atoms_strings_and_lists(self) -> None:
+        value = var("Value")
+        pieces = var("Pieces")
+
+        assert solve_all(program(), pieces, atom_charso("tea", pieces)) == [
+            logic_list(["t", "e", "a"]),
+        ]
+        assert solve_all(program(), value, atom_charso(value, logic_list(["t"]))) == [
+            atom("t"),
+        ]
+        assert solve_all(program(), pieces, atom_codeso("tea", pieces)) == [
+            logic_list([116, 101, 97]),
+        ]
+        assert solve_all(
+            program(),
+            value,
+            atom_codeso(value, logic_list([116, 101, 97])),
+        ) == [atom("tea")]
+        assert solve_all(program(), pieces, string_charso(string("hi"), pieces)) == [
+            logic_list(["h", "i"]),
+        ]
+        assert solve_all(program(), value, string_codeso(value, logic_list([104]))) == [
+            string("h"),
+        ]
+
+    def test_number_conversion_builtins_parse_and_render_finite_modes(self) -> None:
+        value = var("Value")
+        pieces = var("Pieces")
+
+        assert solve_all(program(), pieces, number_charso(42, pieces)) == [
+            logic_list(["4", "2"]),
+        ]
+        assert solve_all(
+            program(),
+            value,
+            number_charso(value, logic_list(["-", "7"])),
+        ) == [num(-7)]
+        assert solve_all(program(), pieces, number_codeso(3.5, pieces)) == [
+            logic_list([51, 46, 53]),
+        ]
+        assert solve_all(
+            program(),
+            value,
+            number_codeso(value, logic_list([51, 46, 50, 53])),
+        ) == [num(3.25)]
+        assert (
+            solve_all(program(), value, number_charso(value, logic_list(["x"])))
+            == []
+        )
+
+    def test_char_codeo_relates_one_character_atoms_to_codes(self) -> None:
+        char = var("Char")
+        code = var("Code")
+
+        assert solve_all(program(), code, char_codeo("A", code)) == [num(65)]
+        assert solve_all(program(), char, char_codeo(char, 90)) == [atom("Z")]
+        assert solve_all(program(), code, char_codeo("tea", code)) == []
+        assert solve_all(program(), char, char_codeo(char, -1)) == []
 
     def test_atomico_and_callableo_classify_reified_terms(self) -> None:
         value = var("Value")

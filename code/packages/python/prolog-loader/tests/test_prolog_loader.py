@@ -26,6 +26,7 @@ from logic_engine import (
     relation,
     solve_all,
     solve_from,
+    string,
     term,
     visible_clauses_for,
 )
@@ -836,6 +837,13 @@ class TestPrologGoalAdapter:
                 term("memo", atom("ok")),
                 term(".", atom("memo"), term(".", atom("ok"), atom("[]"))),
             ),
+            relation("atom_chars", 2)(atom("tea"), logic_list(["t", "e", "a"])),
+            relation("atom_codes", 2)(atom("tea"), logic_list([116, 101, 97])),
+            relation("number_chars", 2)(42, logic_list(["4", "2"])),
+            relation("number_codes", 2)(42, logic_list([52, 50])),
+            relation("char_code", 2)(atom("A"), 65),
+            relation("string_chars", 2)(string("hi"), logic_list(["h", "i"])),
+            relation("string_codes", 2)(string("hi"), logic_list([104, 105])),
             relation("=", 2)(LogicVar(id=14), atom("a")),
             relation("\\=", 2)(atom("a"), atom("b")),
             relation("dif", 2)(LogicVar(id=15), atom("tea")),
@@ -1074,6 +1082,43 @@ class TestPrologGoalAdapter:
             parsed.variables["Result"],
             adapted,
         ) == [atom("ok")]
+
+    def test_adapt_prolog_goal_rewrites_text_conversion_predicates(self) -> None:
+        parsed = parse_swi_query(
+            "?- atom_chars(tea, Chars), "
+            "atom_codes(Atom, [116, 101, 97]), "
+            "number_chars(Number, ['4', '2']), "
+            "number_codes(Float, [51, 46, 53]), "
+            "char_code(Char, 90), "
+            "string_chars(String, [h, i]), "
+            'string_codes("ok", Codes).',
+        )
+
+        adapted = adapt_prolog_goal(parsed.goal)
+
+        assert solve_all(
+            program(),
+            (
+                parsed.variables["Chars"],
+                parsed.variables["Atom"],
+                parsed.variables["Number"],
+                parsed.variables["Float"],
+                parsed.variables["Char"],
+                parsed.variables["String"],
+                parsed.variables["Codes"],
+            ),
+            adapted,
+        ) == [
+            (
+                logic_list(["t", "e", "a"]),
+                atom("tea"),
+                num(42),
+                num(3.5),
+                atom("Z"),
+                string("hi"),
+                logic_list([111, 107]),
+            ),
+        ]
 
     def test_adapt_prolog_goal_rewrites_term_equality_failures(self) -> None:
         parsed_unifiable = parse_swi_query("?- X \\= box(tea).")

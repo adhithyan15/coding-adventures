@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from logic_engine import Disequality, LogicVar, atom, logic_list, num, term
+from logic_engine import Disequality, LogicVar, atom, logic_list, num, string, term
 
 from prolog_vm_compiler import (
     compile_swi_prolog_project,
@@ -169,6 +169,33 @@ class TestPrologVMStress:
             "tea",
         )
         assert answer["Variables"] == logic_list([answer["X"]])
+
+    def test_text_conversion_predicates_run_through_vm(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            ?- atom_chars(tea, Chars),
+               atom_codes(Atom, [116, 101, 97]),
+               number_chars(Number, ['4', '2']),
+               number_codes(Float, [51, 46, 53]),
+               char_code(Char, 90),
+               string_chars(String, [h, i]),
+               string_codes("ok", Codes).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert [answer.as_dict() for answer in answers] == [
+            {
+                "Chars": logic_list(["t", "e", "a"]),
+                "Atom": atom("tea"),
+                "Number": num(42),
+                "Float": num(3.5),
+                "Char": atom("Z"),
+                "String": string("hi"),
+                "Codes": logic_list([111, 107]),
+            },
+        ]
 
     def test_current_prolog_flag_runs_through_vm(self) -> None:
         compiled = compile_swi_prolog_source(

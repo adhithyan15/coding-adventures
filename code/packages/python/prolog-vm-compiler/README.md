@@ -137,6 +137,8 @@ The package includes end-to-end stress tests for:
 - exception control with `throw/1`, `catch/3`, and catchable runtime errors
 - term metaprogramming with `term_variables/2`, `=@=/2`, `\=@=/2`, and
   `subsumes_term/2`
+- text conversion with `atom_chars/2`, `atom_codes/2`, `number_chars/2`,
+  `number_codes/2`, `char_code/2`, `string_chars/2`, and `string_codes/2`
 - runtime flag introspection and branch-local updates with
   `current_prolog_flag/2` and `set_prolog_flag/2`
 - finite integer builtins such as `integer/1`, `between/3`, and `succ/2`

@@ -69,6 +69,8 @@ __all__ = [
     "add",
     "all_differento",
     "argo",
+    "atom_codeso",
+    "atom_charso",
     "atomico",
     "atomo",
     "betweeno",
@@ -136,6 +138,8 @@ __all__ = [
     "noto",
     "numeqo",
     "numneqo",
+    "number_codeso",
+    "number_charso",
     "numbero",
     "onceo",
     "bagofo",
@@ -163,7 +167,10 @@ __all__ = [
     "scanlo",
     "setofo",
     "set_prolog_flago",
+    "char_codeo",
     "clauseo",
+    "string_codeso",
+    "string_charso",
     "stringo",
     "sub",
     "succo",
@@ -301,6 +308,8 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("argo", 3),
     ("assertao", 1),
     ("assertzo", 1),
+    ("atom_codeso", 2),
+    ("atom_charso", 2),
     ("atomico", 1),
     ("atomo", 1),
     ("bagofo", 3),
@@ -377,6 +386,8 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("noto", 1),
     ("numeqo", 2),
     ("numneqo", 2),
+    ("number_codeso", 2),
+    ("number_charso", 2),
     ("numbero", 1),
     ("onceo", 1),
     ("partitiono", 4),
@@ -390,6 +401,9 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("scanlo", 7),
     ("setofo", 3),
     ("set_prolog_flago", 2),
+    ("char_codeo", 2),
+    ("string_codeso", 2),
+    ("string_charso", 2),
     ("stringo", 1),
     ("succo", 2),
     ("termo_geqo", 2),
@@ -3631,6 +3645,244 @@ def stringo(term_value: object) -> GoalExpr:
     """Succeed when the current value is a string term."""
 
     return _type_checko(term_value, String)
+
+
+def _one_char_atoms_from_text(text: str) -> list[Atom]:
+    """Return a Prolog char list representation for text."""
+
+    return [atom(character) for character in text]
+
+
+def _code_numbers_from_text(text: str) -> list[Number]:
+    """Return a Prolog code list representation for text."""
+
+    return [num(ord(character)) for character in text]
+
+
+def _text_from_char_items(items: list[Term]) -> str | None:
+    characters: list[str] = []
+    for item in items:
+        if (
+            not isinstance(item, Atom)
+            or item.symbol.namespace is not None
+            or len(item.symbol.name) != 1
+        ):
+            return None
+        characters.append(item.symbol.name)
+    return "".join(characters)
+
+
+def _text_from_code_items(items: list[Term]) -> str | None:
+    characters: list[str] = []
+    for item in items:
+        if not isinstance(item, Number):
+            return None
+        value = item.value
+        if not isinstance(value, int):
+            return None
+        try:
+            characters.append(chr(value))
+        except ValueError:
+            return None
+    return "".join(characters)
+
+
+def _number_text(number_value: Number) -> str:
+    """Render a number in a syntax that can be parsed back by Python."""
+
+    return str(number_value.value)
+
+
+def _parse_number_text(text: str) -> Number | None:
+    if text == "":
+        return None
+    try:
+        if any(marker in text for marker in (".", "e", "E")):
+            return num(float(text))
+        return num(int(text))
+    except ValueError:
+        return None
+
+
+def _texto(
+    scalar: object,
+    pieces: object,
+    *,
+    scalar_type: type[Atom] | type[String],
+    from_text: Callable[[str], list[Term]],
+    to_text: Callable[[list[Term]], str | None],
+) -> GoalExpr:
+    """Relate a text-like scalar to either chars or character codes."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        scalar_term, pieces_term = args
+        reified_scalar = _reified(scalar_term, state)
+        if isinstance(reified_scalar, scalar_type):
+            text = (
+                reified_scalar.symbol.name
+                if isinstance(reified_scalar, Atom)
+                else reified_scalar.value
+            )
+            yield from solve_from(
+                program_value,
+                eq(pieces_term, logic_list(from_text(text))),
+                state,
+            )
+            return
+
+        if not isinstance(reified_scalar, LogicVar):
+            return
+
+        items = _proper_list_items(_reified(pieces_term, state))
+        if items is None:
+            return
+        text = to_text(items)
+        if text is None:
+            return
+        constructed = atom(text) if scalar_type is Atom else String(text)
+        yield from solve_from(program_value, eq(scalar_term, constructed), state)
+
+    return native_goal(run, scalar, pieces)
+
+
+def atom_charso(atom_value: object, chars: object) -> GoalExpr:
+    """Relate an atom to a proper list of one-character atoms."""
+
+    return _texto(
+        atom_value,
+        chars,
+        scalar_type=Atom,
+        from_text=_one_char_atoms_from_text,
+        to_text=_text_from_char_items,
+    )
+
+
+def atom_codeso(atom_value: object, codes: object) -> GoalExpr:
+    """Relate an atom to a proper list of Unicode code numbers."""
+
+    return _texto(
+        atom_value,
+        codes,
+        scalar_type=Atom,
+        from_text=_code_numbers_from_text,
+        to_text=_text_from_code_items,
+    )
+
+
+def string_charso(string_value: object, chars: object) -> GoalExpr:
+    """Relate a string term to a proper list of one-character atoms."""
+
+    return _texto(
+        string_value,
+        chars,
+        scalar_type=String,
+        from_text=_one_char_atoms_from_text,
+        to_text=_text_from_char_items,
+    )
+
+
+def string_codeso(string_value: object, codes: object) -> GoalExpr:
+    """Relate a string term to a proper list of Unicode code numbers."""
+
+    return _texto(
+        string_value,
+        codes,
+        scalar_type=String,
+        from_text=_code_numbers_from_text,
+        to_text=_text_from_code_items,
+    )
+
+
+def _number_texto(
+    number_value: object,
+    pieces: object,
+    *,
+    from_text: Callable[[str], list[Term]],
+    to_text: Callable[[list[Term]], str | None],
+) -> GoalExpr:
+    """Relate a number to chars or codes using finite, non-enumerating modes."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        number_term, pieces_term = args
+        reified_number = _reified(number_term, state)
+        if isinstance(reified_number, Number):
+            yield from solve_from(
+                program_value,
+                eq(pieces_term, logic_list(from_text(_number_text(reified_number)))),
+                state,
+            )
+            return
+
+        if not isinstance(reified_number, LogicVar):
+            return
+
+        items = _proper_list_items(_reified(pieces_term, state))
+        if items is None:
+            return
+        text = to_text(items)
+        if text is None:
+            return
+        parsed = _parse_number_text(text)
+        if parsed is None:
+            return
+        yield from solve_from(program_value, eq(number_term, parsed), state)
+
+    return native_goal(run, number_value, pieces)
+
+
+def number_charso(number_value: object, chars: object) -> GoalExpr:
+    """Relate a number to a proper list of one-character atoms."""
+
+    return _number_texto(
+        number_value,
+        chars,
+        from_text=_one_char_atoms_from_text,
+        to_text=_text_from_char_items,
+    )
+
+
+def number_codeso(number_value: object, codes: object) -> GoalExpr:
+    """Relate a number to a proper list of Unicode code numbers."""
+
+    return _number_texto(
+        number_value,
+        codes,
+        from_text=_code_numbers_from_text,
+        to_text=_text_from_code_items,
+    )
+
+
+def char_codeo(char_value: object, code_value: object) -> GoalExpr:
+    """Relate a one-character atom to its Unicode code number."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        char_term, code_term = args
+        reified_char = _reified(char_term, state)
+        reified_code = _reified(code_term, state)
+
+        if isinstance(reified_char, Atom):
+            if reified_char.symbol.namespace is not None:
+                return
+            text = reified_char.symbol.name
+            if len(text) != 1:
+                return
+            yield from solve_from(program_value, eq(code_term, num(ord(text))), state)
+            return
+
+        if not isinstance(reified_char, LogicVar):
+            return
+        if not isinstance(reified_code, Number):
+            return
+        raw_code = reified_code.value
+        if not isinstance(raw_code, int):
+            return
+        try:
+            character = chr(raw_code)
+        except ValueError:
+            return
+        yield from solve_from(program_value, eq(char_term, atom(character)), state)
+
+    return native_goal(run, char_value, code_value)
 
 
 def compoundo(term_value: object) -> GoalExpr:
