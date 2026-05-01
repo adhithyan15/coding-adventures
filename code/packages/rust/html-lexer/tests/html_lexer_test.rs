@@ -1976,6 +1976,76 @@ fn default_html_lexer_supports_seeded_rcdata_latin1_named_character_references()
 }
 
 #[test]
+fn default_html_lexer_supports_html4_symbol_named_character_references_in_data() {
+    let tokens =
+        lex_html("Greek: &Alpha;&beta;&Omega; Math: &sum;&ne;&le;&ge; Arrows: &larr;&rArr;")
+            .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Text("Greek: \u{0391}\u{03B2}\u{03A9} Math: \u{2211}\u{2260}\u{2264}\u{2265} Arrows: \u{2190}\u{21D2}".to_string()),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_html4_symbol_named_character_references_in_attributes() {
+    let tokens =
+        lex_html("<span title=\"&ldquo;Venture&rdquo; &mdash; &trade;\" math=&radic; set=&sube;>")
+            .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::StartTag {
+                name: "span".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "title".to_string(),
+                        value: "\u{201C}Venture\u{201D} \u{2014} \u{2122}".to_string(),
+                    },
+                    Attribute {
+                        name: "math".to_string(),
+                        value: "\u{221A}".to_string(),
+                    },
+                    Attribute {
+                        name: "set".to_string(),
+                        value: "\u{2286}".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_rcdata_html4_symbol_named_character_references() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rcdata").unwrap();
+    lexer.set_last_start_tag("title");
+
+    lexer
+        .push("&OElig;&oelig; &euro; &spades;</title>")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("\u{0152}\u{0153} \u{20AC} \u{2660}".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_semicolonless_legacy_named_character_references() {
     let mut lexer = create_html_lexer().unwrap();
 
