@@ -16,6 +16,7 @@ from logic_builtins import (
     betweeno,
     callableo,
     calltermo,
+    catcho,
     clauseo,
     compare_termo,
     compoundo,
@@ -84,6 +85,7 @@ from logic_builtins import (
     termo_gto,
     termo_leqo,
     termo_lto,
+    throwo,
     trueo,
     univo,
     varo,
@@ -311,6 +313,14 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
             return goal
     if name == "once" and goal.relation.arity == 1:
         return onceo(_adapt_callable_goal(args[0]))
+    if name == "throw" and goal.relation.arity == 1:
+        return throwo(args[0])
+    if name == "catch" and goal.relation.arity == 3:
+        return catcho(
+            _adapt_callable_goal(args[0]),
+            args[1],
+            _adapt_callable_goal(args[2]),
+        )
     if name == _IF_THEN and goal.relation.arity == 2:
         return iftheno(_adapt_callable_goal(args[0]), _adapt_callable_goal(args[1]))
     if name in {"not", "\\+"} and goal.relation.arity == 1:
