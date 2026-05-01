@@ -40,6 +40,9 @@ All notable changes to this package will be documented in this file.
   Prolog runtime flags.
 - `variant_termo(left, right)`, `not_variant_termo(left, right)`, and
   `subsumes_termo(general, specific)` for non-binding term generality checks.
+- `atom_charso/2`, `atom_codeso/2`, `number_charso/2`, `number_codeso/2`,
+  `char_codeo/2`, `string_charso/2`, and `string_codeso/2` for finite text
+  conversion relations.
 
 ### Fixed
 

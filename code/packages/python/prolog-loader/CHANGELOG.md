@@ -47,6 +47,9 @@
 - adapt Prolog `set_prolog_flag/2` into branch-local runtime flag updates
 - adapt Prolog `=@=/2`, `\\=@=/2`, and `subsumes_term/2` into non-binding
   term generality checks
+- adapt Prolog text conversion predicates `atom_chars/2`, `atom_codes/2`,
+  `number_chars/2`, `number_codes/2`, `char_code/2`, `string_chars/2`, and
+  `string_codes/2` into finite conversion goals
 
 ## 0.1.0
 
