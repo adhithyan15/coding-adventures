@@ -632,6 +632,57 @@
       ]
     },
     {
+      "description": "data state WHATWG basic arrow named character references",
+      "input": "Arrows:&LeftArrow;&RightArrow;&UpArrow;&DownArrow;&LeftRightArrow;&UpDownArrow;&DoubleLeftArrow;&DoubleRightArrow;&DoubleUpArrow;&DoubleDownArrow;&DoubleLeftRightArrow;&DoubleUpDownArrow;",
+      "output": [
+        ["Character", "Arrows:"],
+        ["Character", "\u2190"],
+        ["Character", "\u2192"],
+        ["Character", "\u2191"],
+        ["Character", "\u2193"],
+        ["Character", "\u2194"],
+        ["Character", "\u2195"],
+        ["Character", "\u21D0"],
+        ["Character", "\u21D2"],
+        ["Character", "\u21D1"],
+        ["Character", "\u21D3"],
+        ["Character", "\u21D4"],
+        ["Character", "\u21D5"]
+      ]
+    },
+    {
+      "description": "attribute WHATWG long and bar arrow named character references",
+      "input": "<a long=\"&LongLeftArrow;&LongRightArrow;&LongLeftRightArrow;&Longleftarrow;&Longrightarrow;&Longleftrightarrow;\" bars=\"&LeftArrowBar;&RightArrowBar;&UpArrowBar;&DownArrowBar;&LeftArrowRightArrow;&RightArrowLeftArrow;&UpArrowDownArrow;&DownArrowUpArrow;&LeftTeeArrow;&RightTeeArrow;&map;&Map;\">",
+      "output": [
+        ["StartTag", "a", {"long": "\u27F5\u27F6\u27F7\u27F8\u27F9\u27FA", "bars": "\u21E4\u21E5\u2912\u2913\u21C6\u21C4\u21C5\u21F5\u21A4\u21A6\u21A6\u2905"}]
+      ]
+    },
+    {
+      "description": "rcdata WHATWG vector arrow named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&LeftVector;&RightVector;&LeftUpVector;&RightUpVector;&LeftDownVector;&RightDownVector;&DownLeftVector;&DownRightVector;&LeftVectorBar;&RightVectorBar;&LeftUpVectorBar;&RightUpVectorBar;&LeftDownVectorBar;&RightDownVectorBar;&DownLeftVectorBar;&DownRightVectorBar;</title>",
+      "output": [
+        ["Character", "\u21BC"],
+        ["Character", "\u21C0"],
+        ["Character", "\u21BF"],
+        ["Character", "\u21BE"],
+        ["Character", "\u21C3"],
+        ["Character", "\u21C2"],
+        ["Character", "\u21BD"],
+        ["Character", "\u21C1"],
+        ["Character", "\u2952"],
+        ["Character", "\u2953"],
+        ["Character", "\u2958"],
+        ["Character", "\u2954"],
+        ["Character", "\u2959"],
+        ["Character", "\u2955"],
+        ["Character", "\u2956"],
+        ["Character", "\u2957"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
       "description": "data state legacy named character references missing semicolons",
       "input": "Legacy&nbsp symbols: &copy/&reg",
       "output": [

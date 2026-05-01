@@ -152,3 +152,5 @@ documented in this file.
 - Added a WHATWG relation/operator named-reference batch for equality, tilde,
   greater-than, less-than, and negated aliases, including combining-overlay
   replacements such as `NotNestedGreaterGreater`.
+- Added a WHATWG arrow/vector named-reference batch covering basic, double,
+  long, bar, tee, map, vector, and vector-bar arrow aliases.

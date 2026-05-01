@@ -82,6 +82,8 @@ currently supports:
   punctuation aliases, and math constants
 - WHATWG relation/operator named character references, including negated
   aliases with combining-overlay replacements
+- WHATWG arrow and vector named character references, including long, bar, tee,
+  map, and vector-bar aliases
 - missing-semicolon recovery for legacy named character references `nbsp`,
   `copy`, and `reg` before delimiters and EOF
 - generic named-character-reference scanning with literal fallback for unknown
