@@ -1182,6 +1182,7 @@ def _state_with_database(state: State, database: DynamicDatabase) -> State:
         next_var_id=state.next_var_id,
         database=database,
         fd_store=state.fd_store,
+        prolog_flags=state.prolog_flags,
     )
 
 
@@ -1194,6 +1195,7 @@ def _state_with_next_var_id(state: State, next_var_id: int) -> State:
         next_var_id=next_var_id,
         database=state.database,
         fd_store=state.fd_store,
+        prolog_flags=state.prolog_flags,
     )
 
 
@@ -1678,6 +1680,7 @@ def _instantiate_fresh(goal: FreshExpr, state: State) -> tuple[GoalExpr, State]:
         next_var_id=running_id,
         database=state.database,
         fd_store=state.fd_store,
+        prolog_flags=state.prolog_flags,
     )
     return renamed_body, next_state
 

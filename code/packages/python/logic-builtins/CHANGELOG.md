@@ -36,6 +36,8 @@ All notable changes to this package will be documented in this file.
   in first occurrence order.
 - `current_prolog_flago(name, value)` for enumerating read-only runtime flags
   exposed by the Prolog compatibility layer.
+- `set_prolog_flago(name, value)` for branch-local updates to supported
+  Prolog runtime flags.
 
 ### Fixed
 

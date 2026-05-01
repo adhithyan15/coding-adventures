@@ -47,6 +47,8 @@
   metaprogramming over reified terms.
 - Run Prolog `current_prolog_flag/2` through the VM path for read-only runtime
   flag introspection.
+- Run Prolog `set_prolog_flag/2` through the VM path with branch-local
+  backtracking semantics.
 
 ## 0.1.0
 
