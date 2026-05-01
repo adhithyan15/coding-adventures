@@ -1419,7 +1419,7 @@ class AlgolTypeChecker:
             self._error(name_token, f"{name_token.value!r} is not a switch")
             return
 
-        indexes = _direct_nodes(node, "arith_expr")
+        indexes = _switch_selection_indexes(node)
         if len(indexes) != 1:
             self._error(node, "switch selection requires exactly one index")
             return
@@ -2260,6 +2260,22 @@ class AlgolTypeChecker:
         argument: ASTNode,
         scope: Scope,
     ) -> tuple[str, str, int | None] | None:
+        if self._check_label_designational_actual(
+            argument,
+            scope,
+            parameter_name="procedure argument",
+            report=False,
+            record=False,
+        ):
+            self._check_label_designational_actual(
+                argument,
+                scope,
+                parameter_name="procedure argument",
+                report=True,
+                record=True,
+            )
+            return LABEL, LABEL, None
+
         variable = _single_variable_expr(argument)
         if variable is None or _variable_subscripts(variable):
             return None
@@ -2350,33 +2366,114 @@ class AlgolTypeChecker:
         scope: Scope,
         parameter: ProcedureParameter,
     ) -> Symbol | None:
-        variable = _single_variable_expr(argument)
-        if variable is None or _variable_subscripts(variable):
-            self._error(
-                argument,
-                f"label parameter {parameter.name!r} expects a direct label actual",
-            )
+        if self._check_label_designational_actual(
+            argument,
+            scope,
+            parameter_name=parameter.name,
+            report=True,
+            record=True,
+        ):
             return None
+        self._error(
+            argument,
+            f"label parameter {parameter.name!r} expects a label designational actual",
+        )
+        return None
+
+    def _check_label_designational_actual(
+        self,
+        argument: ASTNode,
+        scope: Scope,
+        *,
+        parameter_name: str,
+        report: bool,
+        record: bool,
+    ) -> bool:
+        parts = _conditional_expression_parts(_meaningful_children(argument))
+        if parts is not None:
+            condition, then_expr, else_expr = parts
+            if report:
+                condition_type = self._infer_expr(condition, scope)
+                if condition_type != ERROR and condition_type != BOOLEAN:
+                    self._error(
+                        condition,
+                        "label designational actual condition must be boolean",
+                    )
+            then_ok = self._check_label_designational_actual(
+                then_expr,
+                scope,
+                parameter_name=parameter_name,
+                report=report,
+                record=record,
+            )
+            else_ok = self._check_label_designational_actual(
+                else_expr,
+                scope,
+                parameter_name=parameter_name,
+                report=report,
+                record=record,
+            )
+            return then_ok and else_ok
+
+        literal_label = _single_integer_label_expr(argument)
+        if literal_label is not None:
+            resolved = scope.resolve_with_scope(literal_label.value)
+            if resolved is None:
+                if report:
+                    self._error(
+                        literal_label,
+                        f"{literal_label.value!r} is not declared in block "
+                        f"{scope.block_id} or its lexical parents",
+                    )
+                return False
+            symbol, _, _ = resolved
+            if symbol.kind == LABEL:
+                return True
+            if report:
+                self._error(
+                    literal_label,
+                    f"label parameter {parameter_name!r} expects a label actual",
+                )
+            return False
+
+        variable = _single_variable_expr(argument)
+        if variable is None:
+            return False
         name = _variable_head_name(variable)
         if name is None:
-            self._error(argument, "label actual is missing a name")
-            return None
+            if report:
+                self._error(argument, "label actual is missing a name")
+            return False
         resolved = scope.resolve_with_scope(name.value)
         if resolved is None:
-            self._error(
-                name,
-                f"{name.value!r} is not declared in block {scope.block_id} "
-                "or its lexical parents",
-            )
-            return None
+            if report:
+                self._error(
+                    name,
+                    f"{name.value!r} is not declared in block {scope.block_id} "
+                    "or its lexical parents",
+                )
+            return False
         symbol, _, _ = resolved
-        if symbol.kind != LABEL:
+        if _variable_subscripts(variable):
+            if symbol.kind == SWITCH:
+                if record:
+                    self._check_switch_selection(variable, scope)
+                return True
+            if report:
+                self._error(
+                    name,
+                    f"label parameter {parameter_name!r} expects a switch "
+                    "selection or label actual",
+                )
+            return False
+        if symbol.kind == LABEL:
+            return True
+        if report:
             self._error(
                 name,
-                f"label parameter {parameter.name!r} expects a label actual",
+                f"label parameter {parameter_name!r} expects a label actual",
             )
-            return None
-        return symbol
+        return False
 
     def _check_switch_parameter_actual(
         self,
@@ -3459,6 +3556,18 @@ def _single_variable_expr(node: ASTNode | None) -> ASTNode | None:
     return _single_variable_expr(meaningful[0])
 
 
+def _single_integer_label_expr(node: ASTNode | None) -> Token | None:
+    if node is None:
+        return None
+    meaningful = _meaningful_children(node)
+    if len(meaningful) != 1:
+        return None
+    child = meaningful[0]
+    if isinstance(child, Token):
+        return child if child.type_name == "INTEGER_LIT" else None
+    return _single_integer_label_expr(child)
+
+
 def _variable_head_name_value(node: ASTNode | None) -> str | None:
     token = _variable_head_name(node)
     return token.value if token is not None else None
@@ -3496,5 +3605,14 @@ def _variable_subscripts(node: ASTNode | None) -> list[ASTNode]:
         variable = node
     else:
         variable = _first_node(node, "variable")
+    subscripts = _first_direct_node(variable, "subscripts")
+    return _direct_nodes(subscripts, "arith_expr")
+
+
+def _switch_selection_indexes(node: ASTNode | None) -> list[ASTNode]:
+    direct = _direct_nodes(node, "arith_expr")
+    if direct:
+        return direct
+    variable = node if node is not None and node.rule_name == "variable" else None
     subscripts = _first_direct_node(variable, "subscripts")
     return _direct_nodes(subscripts, "arith_expr")
