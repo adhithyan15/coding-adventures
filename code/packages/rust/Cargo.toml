@@ -141,6 +141,7 @@ members = [
     "ruby-parser",
     "sql-lexer",
     "sql-parser",
+    "smt-lib-format",
     "starlark-ast-to-bytecode-compiler",
     "starlark-compiler",
     "starlark-interpreter",
