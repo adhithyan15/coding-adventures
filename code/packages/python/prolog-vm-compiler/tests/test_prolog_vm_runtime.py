@@ -5,6 +5,11 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+from logic_builtins import (
+    PrologEvaluationError,
+    PrologInstantiationError,
+    PrologTypeError,
+)
 from logic_engine import Disequality, LogicVar, atom
 
 from prolog_vm_compiler import (
@@ -93,6 +98,26 @@ class TestPrologVMRuntime:
         assert answers[0].residual_constraints == (
             Disequality(left=binding, right=atom("tea")),
         )
+
+    def test_runtime_raises_prolog_arithmetic_errors(self) -> None:
+        runtime = create_swi_prolog_vm_runtime("")
+
+        with pytest.raises(PrologInstantiationError) as instantiation:
+            runtime.query("X is Y + 1.")
+        assert instantiation.value.kind == "instantiation_error"
+
+        with pytest.raises(PrologTypeError) as type_error:
+            runtime.query("X is tea + 1.")
+        assert type_error.value.expected == "evaluable"
+
+        with pytest.raises(PrologEvaluationError) as evaluation:
+            runtime.query("X is 1 / 0.")
+        assert evaluation.value.evaluation_error == "zero_divisor"
+
+        with pytest.raises(PrologInstantiationError):
+            runtime.query("Y < 3.")
+        with pytest.raises(PrologTypeError):
+            runtime.query("tea < 3.")
 
     def test_runtime_can_be_created_from_an_existing_compiled_program(self) -> None:
         compiled = compile_swi_prolog_source(

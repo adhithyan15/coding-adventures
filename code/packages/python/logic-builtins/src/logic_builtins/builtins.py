@@ -139,6 +139,17 @@ __all__ = [
     "bagofo",
     "partitiono",
     "predicate_propertyo",
+    "PrologEvaluationError",
+    "PrologInstantiationError",
+    "PrologRuntimeError",
+    "PrologTypeError",
+    "prolog_geqo",
+    "prolog_gto",
+    "prolog_iso",
+    "prolog_leqo",
+    "prolog_lto",
+    "prolog_numeqo",
+    "prolog_numneqo",
     "assertao",
     "assertzo",
     "abolisho",
@@ -193,6 +204,63 @@ class LabelingOptions:
 
     variable_order: str = "ff"
     value_order: str = "up"
+
+
+class PrologRuntimeError(RuntimeError):
+    """Base class for source-level Prolog runtime errors."""
+
+    kind: str
+    culprit: object | None
+
+    def __init__(
+        self,
+        kind: str,
+        message: str,
+        *,
+        culprit: object | None = None,
+    ) -> None:
+        super().__init__(message)
+        self.kind = kind
+        self.culprit = culprit
+
+
+class PrologInstantiationError(PrologRuntimeError):
+    """Raised when a Prolog builtin needs a term to be instantiated."""
+
+    def __init__(self, message: str, *, culprit: object | None = None) -> None:
+        super().__init__("instantiation_error", message, culprit=culprit)
+
+
+class PrologTypeError(PrologRuntimeError):
+    """Raised when a Prolog builtin receives a term of the wrong type."""
+
+    expected: str
+
+    def __init__(
+        self,
+        expected: str,
+        message: str,
+        *,
+        culprit: object | None = None,
+    ) -> None:
+        super().__init__("type_error", message, culprit=culprit)
+        self.expected = expected
+
+
+class PrologEvaluationError(PrologRuntimeError):
+    """Raised when arithmetic evaluation itself fails."""
+
+    evaluation_error: str
+
+    def __init__(
+        self,
+        evaluation_error: str,
+        message: str,
+        *,
+        culprit: object | None = None,
+    ) -> None:
+        super().__init__("evaluation_error", message, culprit=culprit)
+        self.evaluation_error = evaluation_error
 
 
 _DEFAULT_LABELING_OPTIONS = LabelingOptions()
@@ -2480,6 +2548,58 @@ def _numeric_value(term_value: Term, state: State) -> NumericValue | None:
     return None
 
 
+def _prolog_numeric_value(term_value: Term, state: State) -> NumericValue:
+    """Evaluate an arithmetic expression using Prolog runtime error semantics."""
+
+    reified_value = _reified(term_value, state)
+    if isinstance(reified_value, LogicVar):
+        msg = "arithmetic expression is not sufficiently instantiated"
+        raise PrologInstantiationError(msg, culprit=reified_value)
+    if isinstance(reified_value, Number):
+        return reified_value.value
+    if not isinstance(reified_value, Compound) or reified_value.functor.namespace:
+        msg = "expected an evaluable arithmetic expression"
+        raise PrologTypeError("evaluable", msg, culprit=reified_value)
+
+    operator = reified_value.functor.name
+    arguments = reified_value.args
+
+    if operator == "-" and len(arguments) == 1:
+        return -_prolog_numeric_value(arguments[0], state)
+
+    if len(arguments) != 2:
+        msg = "expected an evaluable arithmetic expression"
+        raise PrologTypeError("evaluable", msg, culprit=reified_value)
+
+    left = _prolog_numeric_value(arguments[0], state)
+    right = _prolog_numeric_value(arguments[1], state)
+
+    if operator == "+":
+        return left + right
+    if operator == "-":
+        return left - right
+    if operator == "*":
+        return left * right
+    if operator == "/":
+        if right == 0:
+            msg = "division by zero"
+            raise PrologEvaluationError("zero_divisor", msg, culprit=reified_value)
+        return left / right
+    if operator == "//":
+        if right == 0:
+            msg = "integer division by zero"
+            raise PrologEvaluationError("zero_divisor", msg, culprit=reified_value)
+        return left // right
+    if operator == "mod":
+        if right == 0:
+            msg = "modulo by zero"
+            raise PrologEvaluationError("zero_divisor", msg, culprit=reified_value)
+        return left % right
+
+    msg = "expected an evaluable arithmetic expression"
+    raise PrologTypeError("evaluable", msg, culprit=reified_value)
+
+
 def iso(result: object, expression: object) -> GoalExpr:
     """Evaluate an arithmetic expression and unify the numeric result."""
 
@@ -2488,6 +2608,17 @@ def iso(result: object, expression: object) -> GoalExpr:
         value = _numeric_value(expression_term, state)
         if value is None:
             return
+        yield from solve_from(program_value, eq(result_term, num(value)), state)
+
+    return native_goal(run, result, expression)
+
+
+def prolog_iso(result: object, expression: object) -> GoalExpr:
+    """Evaluate `is/2` with source-level Prolog error semantics."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        result_term, expression_term = args
+        value = _prolog_numeric_value(expression_term, state)
         yield from solve_from(program_value, eq(result_term, num(value)), state)
 
     return native_goal(run, result, expression)
@@ -2511,10 +2642,36 @@ def _numeric_compareo(
     return native_goal(run, left, right)
 
 
+def _prolog_numeric_compareo(
+    left: object,
+    right: object,
+    predicate: Callable[[NumericValue, NumericValue], bool],
+) -> GoalExpr:
+    """Build a source-level Prolog arithmetic comparison goal."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        left_term, right_term = args
+        left_value = _prolog_numeric_value(left_term, state)
+        right_value = _prolog_numeric_value(right_term, state)
+        yield from _succeed_if(predicate(left_value, right_value), state)
+
+    return native_goal(run, left, right)
+
+
 def numeqo(left: object, right: object) -> GoalExpr:
     """Succeed when two arithmetic expressions evaluate to equal numbers."""
 
     return _numeric_compareo(
+        left,
+        right,
+        lambda left_value, right_value: left_value == right_value,
+    )
+
+
+def prolog_numeqo(left: object, right: object) -> GoalExpr:
+    """Evaluate `=:=/2` with source-level Prolog error semantics."""
+
+    return _prolog_numeric_compareo(
         left,
         right,
         lambda left_value, right_value: left_value == right_value,
@@ -2531,10 +2688,30 @@ def numneqo(left: object, right: object) -> GoalExpr:
     )
 
 
+def prolog_numneqo(left: object, right: object) -> GoalExpr:
+    """Evaluate `=\\=/2` with source-level Prolog error semantics."""
+
+    return _prolog_numeric_compareo(
+        left,
+        right,
+        lambda left_value, right_value: left_value != right_value,
+    )
+
+
 def lto(left: object, right: object) -> GoalExpr:
     """Succeed when the left arithmetic expression is less than the right."""
 
     return _numeric_compareo(
+        left,
+        right,
+        lambda left_value, right_value: left_value < right_value,
+    )
+
+
+def prolog_lto(left: object, right: object) -> GoalExpr:
+    """Evaluate `</2` with source-level Prolog error semantics."""
+
+    return _prolog_numeric_compareo(
         left,
         right,
         lambda left_value, right_value: left_value < right_value,
@@ -2551,6 +2728,16 @@ def leqo(left: object, right: object) -> GoalExpr:
     )
 
 
+def prolog_leqo(left: object, right: object) -> GoalExpr:
+    """Evaluate `=</2` with source-level Prolog error semantics."""
+
+    return _prolog_numeric_compareo(
+        left,
+        right,
+        lambda left_value, right_value: left_value <= right_value,
+    )
+
+
 def gto(left: object, right: object) -> GoalExpr:
     """Succeed when the left arithmetic expression is greater than the right."""
 
@@ -2561,10 +2748,30 @@ def gto(left: object, right: object) -> GoalExpr:
     )
 
 
+def prolog_gto(left: object, right: object) -> GoalExpr:
+    """Evaluate `>/2` with source-level Prolog error semantics."""
+
+    return _prolog_numeric_compareo(
+        left,
+        right,
+        lambda left_value, right_value: left_value > right_value,
+    )
+
+
 def geqo(left: object, right: object) -> GoalExpr:
     """Succeed when the left arithmetic expression is greater than or equal to right."""
 
     return _numeric_compareo(
+        left,
+        right,
+        lambda left_value, right_value: left_value >= right_value,
+    )
+
+
+def prolog_geqo(left: object, right: object) -> GoalExpr:
+    """Evaluate `>=/2` with source-level Prolog error semantics."""
+
+    return _prolog_numeric_compareo(
         left,
         right,
         lambda left_value, right_value: left_value >= right_value,
