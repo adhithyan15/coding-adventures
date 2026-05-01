@@ -840,6 +840,7 @@ class TestPrologGoalAdapter:
             relation("atom_chars", 2)(atom("tea"), logic_list(["t", "e", "a"])),
             relation("atom_codes", 2)(atom("tea"), logic_list([116, 101, 97])),
             relation("atom_concat", 3)(atom("tea"), atom("cup"), atom("teacup")),
+            relation("atom_length", 2)(atom("teacup"), 6),
             relation("atomic_list_concat", 2)(
                 logic_list(["tea", "cup"]),
                 atom("teacup"),
@@ -855,6 +856,21 @@ class TestPrologGoalAdapter:
             relation("char_code", 2)(atom("A"), 65),
             relation("string_chars", 2)(string("hi"), logic_list(["h", "i"])),
             relation("string_codes", 2)(string("hi"), logic_list([104, 105])),
+            relation("string_length", 2)(string("hi"), 2),
+            relation("sub_atom", 5)(
+                atom("teacup"),
+                3,
+                3,
+                0,
+                atom("cup"),
+            ),
+            relation("sub_string", 5)(
+                string("logic"),
+                2,
+                2,
+                1,
+                string("gi"),
+            ),
             relation("=", 2)(LogicVar(id=14), atom("a")),
             relation("\\=", 2)(atom("a"), atom("b")),
             relation("dif", 2)(LogicVar(id=15), atom("tea")),
@@ -1103,10 +1119,14 @@ class TestPrologGoalAdapter:
             "number_string(Parsed, \"7\"), "
             "atom_concat(tea, cup, Joined), "
             "atom_concat(Prefix, cup, teacup), "
+            "atom_length(teacup, AtomLength), "
+            "sub_atom(teacup, 3, 3, 0, SubAtom), "
             "atomic_list_concat([tea, 2, go], '-', AtomList), "
             "atomic_list_concat(Split, '-', 'tea-cup'), "
             "char_code(Char, 90), "
             "string_chars(String, [h, i]), "
+            "string_length(\"hello\", StringLength), "
+            "sub_string(\"logic\", 2, 2, 1, SubString), "
             'string_codes("ok", Codes).',
         )
 
@@ -1122,10 +1142,14 @@ class TestPrologGoalAdapter:
                 parsed.variables["Parsed"],
                 parsed.variables["Joined"],
                 parsed.variables["Prefix"],
+                parsed.variables["AtomLength"],
+                parsed.variables["SubAtom"],
                 parsed.variables["AtomList"],
                 parsed.variables["Split"],
                 parsed.variables["Char"],
                 parsed.variables["String"],
+                parsed.variables["StringLength"],
+                parsed.variables["SubString"],
                 parsed.variables["Codes"],
             ),
             adapted,
@@ -1138,10 +1162,14 @@ class TestPrologGoalAdapter:
                 num(7),
                 atom("teacup"),
                 atom("tea"),
+                num(6),
+                atom("cup"),
                 atom("tea-2-go"),
                 logic_list(["tea", "cup"]),
                 atom("Z"),
                 string("hi"),
+                num(5),
+                string("gi"),
                 logic_list([111, 107]),
             ),
         ]

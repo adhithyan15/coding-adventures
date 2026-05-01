@@ -57,6 +57,8 @@
 - Run Prolog atom composition predicates through the VM path, including
   `atom_concat/3`, `atomic_list_concat/2`, `atomic_list_concat/3`, and
   `number_string/2`.
+- Run Prolog text inspection predicates through the VM path, including
+  `atom_length/2`, `string_length/2`, `sub_atom/5`, and `sub_string/5`.
 
 ## 0.1.0
 

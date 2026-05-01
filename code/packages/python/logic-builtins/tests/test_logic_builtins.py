@@ -40,6 +40,7 @@ from logic_builtins import (
     atom_charso,
     atom_codeso,
     atom_concato,
+    atom_lengtho,
     atomic_list_concato,
     atomic_list_concato_with_separator,
     atomico,
@@ -129,8 +130,11 @@ from logic_builtins import (
     setofo,
     string_charso,
     string_codeso,
+    string_lengtho,
     stringo,
     sub,
+    sub_atomo,
+    sub_stringo,
     subsumes_termo,
     succo,
     term_variableso,
@@ -2164,6 +2168,66 @@ class TestTermMetaprogrammingBuiltins:
             num(3.5),
         ]
         assert solve_all(program(), value, number_stringo(value, string("nope"))) == []
+
+    def test_text_inspection_builtins_measure_atoms_and_strings(self) -> None:
+        value = var("Value")
+
+        assert solve_all(program(), value, atom_lengtho("teacup", value)) == [num(6)]
+        assert solve_all(program(), value, string_lengtho(string("hi"), value)) == [
+            num(2),
+        ]
+        assert solve_all(program(), value, atom_lengtho(value, 3)) == []
+
+    def test_sub_atomo_enumerates_and_filters_finite_atom_slices(self) -> None:
+        before = var("Before")
+        length = var("Length")
+        after = var("After")
+        sub_atom = var("SubAtom")
+
+        assert solve_all(
+            program(),
+            (before, length, after),
+            sub_atomo("teacup", before, length, after, "cup"),
+        ) == [(num(3), num(3), num(0))]
+        assert solve_all(
+            program(),
+            sub_atom,
+            sub_atomo("abc", 1, 1, 1, sub_atom),
+        ) == [atom("b")]
+        assert solve_all(
+            program(),
+            sub_atom,
+            sub_atomo("abc", before, length, after, sub_atom),
+        ) == [
+            atom("a"),
+            atom("ab"),
+            atom("abc"),
+            atom("b"),
+            atom("bc"),
+            atom("c"),
+        ]
+
+    def test_sub_stringo_enumerates_and_constructs_finite_string_slices(self) -> None:
+        before = var("Before")
+        length = var("Length")
+        after = var("After")
+        sub_text = var("SubText")
+        text = var("Text")
+
+        assert solve_all(
+            program(),
+            (before, length, after),
+            sub_stringo(string("logic"), before, length, after, string("gi")),
+        ) == [(num(2), num(2), num(1))]
+        assert solve_all(
+            program(),
+            text,
+            sub_stringo(text, 0, length, 0, string("logic")),
+        ) == [string("logic")]
+        assert (
+            solve_all(program(), text, sub_stringo(text, 1, length, 0, sub_text))
+            == []
+        )
 
     def test_atomico_and_callableo_classify_reified_terms(self) -> None:
         value = var("Value")

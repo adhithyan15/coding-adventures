@@ -72,6 +72,7 @@ __all__ = [
     "atom_concato",
     "atom_codeso",
     "atom_charso",
+    "atom_lengtho",
     "atomico",
     "atomo",
     "atomic_list_concato",
@@ -175,7 +176,10 @@ __all__ = [
     "clauseo",
     "string_codeso",
     "string_charso",
+    "string_lengtho",
     "stringo",
+    "sub_atomo",
+    "sub_stringo",
     "sub",
     "succo",
     "termo_geqo",
@@ -315,6 +319,7 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("atom_concato", 3),
     ("atom_codeso", 2),
     ("atom_charso", 2),
+    ("atom_lengtho", 2),
     ("atomico", 1),
     ("atomo", 1),
     ("atomic_list_concato", 2),
@@ -412,7 +417,10 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("char_codeo", 2),
     ("string_codeso", 2),
     ("string_charso", 2),
+    ("string_lengtho", 2),
     ("stringo", 1),
+    ("sub_atomo", 5),
+    ("sub_stringo", 5),
     ("succo", 2),
     ("termo_geqo", 2),
     ("termo_gto", 2),
@@ -3915,6 +3923,228 @@ def _atomic_text(term_value: Term) -> str | None:
     if isinstance(term_value, Number):
         return _number_text(term_value)
     return None
+
+
+def _non_negative_integer_term(term_value: Term, state: State) -> int | None:
+    value = _reified_integer(term_value, state)
+    if value is None or value < 0:
+        return None
+    return value
+
+
+def _text_lengtho(
+    scalar: object,
+    length: object,
+    *,
+    scalar_type: type[Atom] | type[String],
+) -> GoalExpr:
+    """Relate a text-like scalar to its character length."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        scalar_term, length_term = args
+        reified_scalar = _reified(scalar_term, state)
+        if not isinstance(reified_scalar, scalar_type):
+            return
+        text = (
+            reified_scalar.symbol.name
+            if isinstance(reified_scalar, Atom)
+            else reified_scalar.value
+        )
+        yield from solve_from(program_value, eq(length_term, num(len(text))), state)
+
+    return native_goal(run, scalar, length)
+
+
+def atom_lengtho(atom_value: object, length: object) -> GoalExpr:
+    """Relate an atom to its character length."""
+
+    return _text_lengtho(atom_value, length, scalar_type=Atom)
+
+
+def string_lengtho(string_value: object, length: object) -> GoalExpr:
+    """Relate a string term to its character length."""
+
+    return _text_lengtho(string_value, length, scalar_type=String)
+
+
+def _text_sliceo(
+    text_value: object,
+    before: object,
+    length: object,
+    after: object,
+    sub_text: object,
+    *,
+    scalar_type: type[Atom] | type[String],
+) -> GoalExpr:
+    """Finite relation backing ``sub_atom/5`` and ``sub_string/5``."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        text_term, before_term, length_term, after_term, sub_text_term = args
+        reified_text = _reified(text_term, state)
+        reified_sub_text = _reified(sub_text_term, state)
+
+        if isinstance(reified_text, scalar_type):
+            text = (
+                reified_text.symbol.name
+                if isinstance(reified_text, Atom)
+                else reified_text.value
+            )
+            yield from _run_bound_text_slices(
+                program_value,
+                state,
+                text,
+                before_term,
+                length_term,
+                after_term,
+                sub_text_term,
+                reified_sub_text,
+                scalar_type=scalar_type,
+            )
+            return
+
+        if not isinstance(reified_text, LogicVar):
+            return
+        if (
+            _non_negative_integer_term(before_term, state) != 0
+            or _non_negative_integer_term(after_term, state) != 0
+            or not isinstance(reified_sub_text, scalar_type)
+        ):
+            return
+        text = (
+            reified_sub_text.symbol.name
+            if isinstance(reified_sub_text, Atom)
+            else reified_sub_text.value
+        )
+        constructed = _text_scalar_from_text(text, scalar_type)
+        if constructed is None:
+            return
+        yield from solve_from(
+            program_value,
+            conj(eq(length_term, num(len(text))), eq(text_term, constructed)),
+            state,
+        )
+
+    return native_goal(run, text_value, before, length, after, sub_text)
+
+
+def _run_bound_text_slices(
+    program_value: Program,
+    state: State,
+    text: str,
+    before_term: Term,
+    length_term: Term,
+    after_term: Term,
+    sub_text_term: Term,
+    reified_sub_text: Term,
+    *,
+    scalar_type: type[Atom] | type[String],
+) -> Iterator[State]:
+    before_filter = _bound_non_negative_filter(before_term, state)
+    length_filter = _bound_non_negative_filter(length_term, state)
+    after_filter = _bound_non_negative_filter(after_term, state)
+    sub_text_filter = _bound_text_filter(reified_sub_text, scalar_type)
+    if (
+        before_filter is False
+        or length_filter is False
+        or after_filter is False
+        or sub_text_filter is False
+    ):
+        return
+
+    text_length = len(text)
+    for before_value in range(text_length + 1):
+        for length_value in range(text_length - before_value + 1):
+            after_value = text_length - before_value - length_value
+            substring = text[before_value : before_value + length_value]
+            if before_filter is not None and before_filter != before_value:
+                continue
+            if length_filter is not None and length_filter != length_value:
+                continue
+            if after_filter is not None and after_filter != after_value:
+                continue
+            if sub_text_filter is not None and sub_text_filter != substring:
+                continue
+            constructed_sub_text = _text_scalar_from_text(substring, scalar_type)
+            if constructed_sub_text is None:
+                continue
+            yield from solve_from(
+                program_value,
+                conj(
+                    eq(before_term, num(before_value)),
+                    eq(length_term, num(length_value)),
+                    eq(after_term, num(after_value)),
+                    eq(sub_text_term, constructed_sub_text),
+                ),
+                state,
+            )
+
+
+def _bound_non_negative_filter(term_value: Term, state: State) -> int | bool | None:
+    reified_value = _reified(term_value, state)
+    if isinstance(reified_value, LogicVar):
+        return None
+    value = _integer_value(reified_value)
+    if value is None or value < 0:
+        return False
+    return value
+
+
+def _bound_text_filter(
+    term_value: Term,
+    scalar_type: type[Atom] | type[String],
+) -> str | bool | None:
+    if isinstance(term_value, LogicVar):
+        return None
+    if not isinstance(term_value, scalar_type):
+        return False
+    return term_value.symbol.name if isinstance(term_value, Atom) else term_value.value
+
+
+def _text_scalar_from_text(
+    text: str,
+    scalar_type: type[Atom] | type[String],
+) -> Atom | String | None:
+    if scalar_type is Atom:
+        return _atom_from_text(text)
+    return String(text)
+
+
+def sub_atomo(
+    atom_value: object,
+    before: object,
+    length: object,
+    after: object,
+    sub_atom: object,
+) -> GoalExpr:
+    """Relate an atom to finite substring positions and a sub-atom."""
+
+    return _text_sliceo(
+        atom_value,
+        before,
+        length,
+        after,
+        sub_atom,
+        scalar_type=Atom,
+    )
+
+
+def sub_stringo(
+    string_value: object,
+    before: object,
+    length: object,
+    after: object,
+    sub_string: object,
+) -> GoalExpr:
+    """Relate a string term to finite substring positions and a substring."""
+
+    return _text_sliceo(
+        string_value,
+        before,
+        length,
+        after,
+        sub_string,
+        scalar_type=String,
+    )
 
 
 def atom_concato(left: object, right: object, combined: object) -> GoalExpr:

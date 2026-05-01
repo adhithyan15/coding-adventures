@@ -44,6 +44,8 @@ ordinary logic goal expressions.
 - `atom_concato/3`, `atomic_list_concato/2`,
   `atomic_list_concato_with_separator/3`, and `number_stringo/2` for finite
   atom composition and number/string conversion modes
+- `atom_lengtho/2`, `string_lengtho/2`, `sub_atomo/5`, and `sub_stringo/5` for
+  finite text inspection and slicing modes
 - `difo(left, right)` for delayed disequality constraints
 - `clauseo(head, body)` for Prolog-style clause introspection
 - `compare_termo(order, left, right)`, `termo_lto(left, right)`,
@@ -115,6 +117,7 @@ from logic_builtins import (
     atom_concato,
     atom_charso,
     atom_codeso,
+    atom_lengtho,
     atomic_list_concato_with_separator,
     number_charso,
     number_stringo,
@@ -128,6 +131,8 @@ from logic_builtins import (
     same_termo,
     succo,
     set_prolog_flago,
+    sub_atomo,
+    sub_stringo,
     termo_lto,
     univo,
     variant_termo,
@@ -240,6 +245,11 @@ assert solve_all(
     atomic_list_concato_with_separator(logic_list(["tea", 2, "go"]), "-", X),
 ) == [atom("tea-2-go")]
 assert solve_all(program(), X, number_stringo(X, string("3.5"))) == [num(3.5)]
+assert solve_all(program(), X, atom_lengtho("teacup", X)) == [num(6)]
+assert solve_all(program(), X, sub_atomo("teacup", 3, 3, 0, X)) == [atom("cup")]
+assert solve_all(program(), X, sub_stringo(string("logic"), 2, 2, 1, X)) == [
+    string("gi"),
+]
 assert solve_all(family, Body, clauseo(child("bart", "homer"), Body)) == [
     term("parent", "homer", "bart"),
 ]

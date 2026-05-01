@@ -13,6 +13,7 @@ from logic_builtins import (
     atom_charso,
     atom_codeso,
     atom_concato,
+    atom_lengtho,
     atomic_list_concato,
     atomic_list_concato_with_separator,
     atomico,
@@ -93,7 +94,10 @@ from logic_builtins import (
     setofo,
     string_charso,
     string_codeso,
+    string_lengtho,
     stringo,
+    sub_atomo,
+    sub_stringo,
     subsumes_termo,
     succo,
     term_variableso,
@@ -366,6 +370,8 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         return term_variableso(*args)
     if name == "atom_concat" and goal.relation.arity == 3:
         return atom_concato(*args)
+    if name == "atom_length" and goal.relation.arity == 2:
+        return atom_lengtho(*args)
     if name == "atomic_list_concat" and goal.relation.arity == 2:
         return atomic_list_concato(*args)
     if name == "atomic_list_concat" and goal.relation.arity == 3:
@@ -386,6 +392,12 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         return string_charso(*args)
     if name == "string_codes" and goal.relation.arity == 2:
         return string_codeso(*args)
+    if name == "string_length" and goal.relation.arity == 2:
+        return string_lengtho(*args)
+    if name == "sub_atom" and goal.relation.arity == 5:
+        return sub_atomo(*args)
+    if name == "sub_string" and goal.relation.arity == 5:
+        return sub_stringo(*args)
     if name == "current_prolog_flag" and goal.relation.arity == 2:
         return current_prolog_flago(*args)
     if name == "set_prolog_flag" and goal.relation.arity == 2:
