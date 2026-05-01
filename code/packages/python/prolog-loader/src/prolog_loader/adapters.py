@@ -144,6 +144,7 @@ from logic_engine import (
     goal_from_term,
     logic_list,
     native_goal,
+    num,
     reify,
     relation,
     solve_from,
@@ -165,7 +166,7 @@ from logic_stdlib import (
     selecto,
     sorto,
 )
-from prolog_core import expand_dcg_phrase
+from prolog_core import OperatorTable, expand_dcg_phrase
 from prolog_parser import PrologParseError
 from swi_prolog_parser import parse_swi_term
 
@@ -177,7 +178,11 @@ _VARIABLE_RE = re.compile(r"^(?:[A-Z_][A-Za-z0-9_]*)$")
 type IndicatorBuilder = Callable[[Term, Term], GoalExpr]
 
 
-def adapt_prolog_goal(goal: GoalExpr) -> GoalExpr:
+def adapt_prolog_goal(
+    goal: GoalExpr,
+    *,
+    operator_table: OperatorTable | None = None,
+) -> GoalExpr:
     """Adapt parsed Prolog builtin calls into executable runtime goals.
 
     Goals with no builtin mapping are returned unchanged, so ordinary predicate
@@ -185,14 +190,24 @@ def adapt_prolog_goal(goal: GoalExpr) -> GoalExpr:
     """
 
     if isinstance(goal, RelationCall):
-        return _adapt_relation_call(goal)
+        return _adapt_relation_call(goal, operator_table=operator_table)
     if isinstance(goal, ConjExpr):
-        return conj(*(adapt_prolog_goal(child) for child in goal.goals))
+        return conj(
+            *(
+                adapt_prolog_goal(child, operator_table=operator_table)
+                for child in goal.goals
+            ),
+        )
     if isinstance(goal, DisjExpr):
-        if_then_else = _adapt_if_then_else(goal)
+        if_then_else = _adapt_if_then_else(goal, operator_table=operator_table)
         if if_then_else is not None:
             return if_then_else
-        return disj(*(adapt_prolog_goal(child) for child in goal.goals))
+        return disj(
+            *(
+                adapt_prolog_goal(child, operator_table=operator_table)
+                for child in goal.goals
+            ),
+        )
     if isinstance(goal, NeqExpr):
         # Prolog \=/2 is immediate non-unifiability, unlike the engine's
         # delayed disequality constraint.
@@ -200,12 +215,16 @@ def adapt_prolog_goal(goal: GoalExpr) -> GoalExpr:
     if isinstance(goal, FreshExpr):
         return FreshExpr(
             template_vars=goal.template_vars,
-            body=adapt_prolog_goal(goal.body),
+            body=adapt_prolog_goal(goal.body, operator_table=operator_table),
         )
     return goal
 
 
-def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
+def _adapt_relation_call(
+    goal: RelationCall,
+    *,
+    operator_table: OperatorTable | None,
+) -> GoalExpr:
     name = goal.relation.symbol.name
     args = goal.args
 
@@ -344,8 +363,8 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
             extended_call = _extend_callable_term(args[0], args[1:])
             if extended_call is None:
                 return calltermo(args[0], *args[1:])
-            return _adapt_callable_goal(extended_call)
-        return _adapt_callable_goal(args[0])
+            return _adapt_callable_goal(extended_call, operator_table=operator_table)
+        return _adapt_callable_goal(args[0], operator_table=operator_table)
     if name == "phrase" and goal.relation.arity == 2:
         try:
             return calltermo(expand_dcg_phrase(args[0], args[1]))
@@ -357,42 +376,52 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         except TypeError:
             return goal
     if name == "once" and goal.relation.arity == 1:
-        return onceo(_adapt_callable_goal(args[0]))
+        return onceo(_adapt_callable_goal(args[0], operator_table=operator_table))
     if name == "throw" and goal.relation.arity == 1:
         return throwo(args[0])
     if name == "catch" and goal.relation.arity == 3:
         return catcho(
-            _adapt_callable_goal(args[0]),
+            _adapt_callable_goal(args[0], operator_table=operator_table),
             args[1],
-            _adapt_callable_goal(args[2]),
+            _adapt_callable_goal(args[2], operator_table=operator_table),
         )
     if name == _IF_THEN and goal.relation.arity == 2:
-        return iftheno(_adapt_callable_goal(args[0]), _adapt_callable_goal(args[1]))
+        return iftheno(
+            _adapt_callable_goal(args[0], operator_table=operator_table),
+            _adapt_callable_goal(args[1], operator_table=operator_table),
+        )
     if name in {"not", "\\+"} and goal.relation.arity == 1:
-        return noto(_adapt_callable_goal(args[0]))
+        return noto(_adapt_callable_goal(args[0], operator_table=operator_table))
     if name == "findall" and goal.relation.arity == 3:
         return findallo(
             args[0],
-            _adapt_collection_goal(args[1]),
+            _adapt_collection_goal(args[1], operator_table=operator_table),
             args[2],
             scope=args[1],
         )
     if name == "bagof" and goal.relation.arity == 3:
         return bagofo(
             args[0],
-            _adapt_collection_goal(args[1]),
+            _adapt_collection_goal(args[1], operator_table=operator_table),
             args[2],
             scope=args[1],
         )
     if name == "setof" and goal.relation.arity == 3:
         return setofo(
             args[0],
-            _adapt_collection_goal(args[1]),
+            _adapt_collection_goal(args[1], operator_table=operator_table),
             args[2],
             scope=args[1],
         )
     if name == "forall" and goal.relation.arity == 2:
-        return forallo(_adapt_callable_goal(args[0]), _adapt_callable_goal(args[1]))
+        return forallo(
+            _adapt_callable_goal(args[0], operator_table=operator_table),
+            _adapt_callable_goal(args[1], operator_table=operator_table),
+        )
+    if name == "current_op" and goal.relation.arity == 3:
+        if operator_table is None:
+            return goal
+        return _current_op_goal(operator_table, *args)
     if name == "labeling" and goal.relation.arity == 2:
         return labeling_optionso(args[0], args[1])
     if name == "label" and goal.relation.arity == 1:
@@ -513,6 +542,32 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         return goal if property_goal is None else property_goal
 
     return goal
+
+
+def _current_op_goal(
+    operator_table: OperatorTable,
+    precedence: object,
+    associativity: object,
+    name: object,
+) -> GoalExpr:
+    def run(
+        program_value: Program,
+        state: State,
+        args: tuple[Term, ...],
+    ) -> Iterator[State]:
+        precedence_target, associativity_target, name_target = args
+        for spec in operator_table.operators:
+            yield from solve_from(
+                program_value,
+                conj(
+                    eq(precedence_target, num(spec.precedence)),
+                    eq(associativity_target, atom(spec.associativity)),
+                    eq(name_target, atom(spec.symbol)),
+                ),
+                state,
+            )
+
+    return native_goal(run, precedence, associativity, name)
 
 
 def _term_to_atom_goal(term_value: object, atom_value: object) -> GoalExpr:
@@ -961,7 +1016,11 @@ def _adapt_fd_ins(targets: Term, domain: Term) -> GoalExpr | None:
     return conj(*(fd_ino(item, domain) for item in items))
 
 
-def _adapt_if_then_else(goal: DisjExpr) -> GoalExpr | None:
+def _adapt_if_then_else(
+    goal: DisjExpr,
+    *,
+    operator_table: OperatorTable | None,
+) -> GoalExpr | None:
     if len(goal.goals) != 2:
         return None
     condition_then, else_goal = goal.goals
@@ -973,23 +1032,37 @@ def _adapt_if_then_else(goal: DisjExpr) -> GoalExpr | None:
         return None
     condition, then_goal = condition_then.args
     return ifthenelseo(
-        _adapt_callable_goal(condition),
-        _adapt_callable_goal(then_goal),
-        adapt_prolog_goal(else_goal),
+        _adapt_callable_goal(condition, operator_table=operator_table),
+        _adapt_callable_goal(then_goal, operator_table=operator_table),
+        adapt_prolog_goal(else_goal, operator_table=operator_table),
     )
 
 
-def _adapt_callable_goal(term_value: Term) -> GoalExpr:
+def _adapt_callable_goal(
+    term_value: Term,
+    *,
+    operator_table: OperatorTable | None = None,
+) -> GoalExpr:
     try:
-        return adapt_prolog_goal(goal_from_term(term_value))
+        return adapt_prolog_goal(
+            goal_from_term(term_value),
+            operator_table=operator_table,
+        )
     except TypeError:
         return calltermo(term_value)
 
 
-def _adapt_collection_goal(term_value: Term) -> GoalExpr:
+def _adapt_collection_goal(
+    term_value: Term,
+    *,
+    operator_table: OperatorTable | None = None,
+) -> GoalExpr:
     """Adapt the executable side of a collector goal, stripping ``^/2`` scopes."""
 
-    return _adapt_callable_goal(_strip_collection_existentials(term_value))
+    return _adapt_callable_goal(
+        _strip_collection_existentials(term_value),
+        operator_table=operator_table,
+    )
 
 
 def _strip_collection_existentials(term_value: Term) -> Term:

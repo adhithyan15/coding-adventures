@@ -470,10 +470,14 @@ def run_prolog_initialization_goals(
 ) -> State:
     """Run initialization directives with the shared Prolog builtin adapter."""
 
+    operator_table = getattr(loaded_source, "operator_table", None)
     return run_initialization_goals(
         loaded_source,
         state=state,
-        goal_adapter=adapt_prolog_goal,
+        goal_adapter=lambda goal_value: adapt_prolog_goal(
+            goal_value,
+            operator_table=operator_table,
+        ),
     )
 
 
