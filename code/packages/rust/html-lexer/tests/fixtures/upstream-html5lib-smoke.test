@@ -683,6 +683,44 @@
       ]
     },
     {
+      "description": "data state WHATWG Greek variant named character references",
+      "input": "Greek variants:&Gammad;&digamma;&Upsi;&upsi;&beth;&gimel;&daleth;&backepsilon;&bepsi;",
+      "output": [
+        ["Character", "Greek variants:"],
+        ["Character", "\u03DC"],
+        ["Character", "\u03DD"],
+        ["Character", "\u03D2"],
+        ["Character", "\u03C5"],
+        ["Character", "\u2136"],
+        ["Character", "\u2137"],
+        ["Character", "\u2138"],
+        ["Character", "\u03F6"],
+        ["Character", "\u03F6"]
+      ]
+    },
+    {
+      "description": "attribute WHATWG Greek variant named character references",
+      "input": "<i vars=\"&epsi;&epsiv;&varepsilon;&straightepsilon;&kappav;&varkappa;&phiv;&varphi;&straightphi;\" more=\"&rhov;&varrho;&sigmav;&varsigma;&thetav;&vartheta;&varpi;\">",
+      "output": [
+        ["StartTag", "i", {"vars": "\u03B5\u03F5\u03F5\u03F5\u03F0\u03F0\u03D5\u03D5\u03D5", "more": "\u03F1\u03F1\u03C2\u03C2\u03D1\u03D1\u03D6"}]
+      ]
+    },
+    {
+      "description": "rcdata WHATWG Greek variant named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&varepsilon;&varkappa;&vartheta;&varrho;&varsigma;&varphi;</title>",
+      "output": [
+        ["Character", "\u03F5"],
+        ["Character", "\u03F0"],
+        ["Character", "\u03D1"],
+        ["Character", "\u03F1"],
+        ["Character", "\u03C2"],
+        ["Character", "\u03D5"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
       "description": "data state legacy named character references missing semicolons",
       "input": "Legacy&nbsp symbols: &copy/&reg",
       "output": [

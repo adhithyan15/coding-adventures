@@ -84,6 +84,8 @@ currently supports:
   aliases with combining-overlay replacements
 - WHATWG arrow and vector named character references, including long, bar, tee,
   map, and vector-bar aliases
+- WHATWG Greek variant and letter-like named character references, including
+  epsilon, kappa, phi, rho, sigma, theta, digamma, beth, gimel, and daleth
 - missing-semicolon recovery for legacy named character references `nbsp`,
   `copy`, and `reg` before delimiters and EOF
 - generic named-character-reference scanning with literal fallback for unknown

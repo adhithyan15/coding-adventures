@@ -2530,6 +2530,74 @@ fn default_html_lexer_supports_seeded_rcdata_whatwg_vector_arrow_named_character
 }
 
 #[test]
+fn default_html_lexer_supports_whatwg_greek_variant_named_character_references() {
+    let tokens = lex_html(
+        "Greek variants:&Gammad;&digamma;&Upsi;&upsi;&beth;&gimel;&daleth;&backepsilon;&bepsi;",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Text("Greek variants:Ϝϝϒυℶℷℸ϶϶".to_string()),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_greek_variant_named_character_references_in_attributes() {
+    let tokens = lex_html(
+        "<i vars=\"&epsi;&epsiv;&varepsilon;&straightepsilon;&kappav;&varkappa;&phiv;&varphi;&straightphi;\" more=\"&rhov;&varrho;&sigmav;&varsigma;&thetav;&vartheta;&varpi;\">",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::StartTag {
+                name: "i".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "vars".to_string(),
+                        value: "εϵϵϵϰϰϕϕϕ".to_string(),
+                    },
+                    Attribute {
+                        name: "more".to_string(),
+                        value: "ϱϱςςϑϑϖ".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_rcdata_whatwg_greek_variant_named_character_references() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rcdata").unwrap();
+    lexer.set_last_start_tag("title");
+
+    lexer
+        .push("&varepsilon;&varkappa;&vartheta;&varrho;&varsigma;&varphi;</title>")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("ϵϰϑϱςϕ".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_semicolonless_legacy_named_character_references() {
     let mut lexer = create_html_lexer().unwrap();
 
