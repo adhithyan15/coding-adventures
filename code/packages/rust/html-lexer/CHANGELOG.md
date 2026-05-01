@@ -162,3 +162,5 @@ documented in this file.
   operators, integrals, products, squares, lozenges, stars, suits, and symbols.
 - Added a WHATWG angle/fence named-reference batch covering angle, bracket,
   floor/ceiling, triangle, corner, and over/under fence aliases.
+- Added a WHATWG Latin Extended named-reference batch covering macron, breve,
+  ogonek, caron, cedilla, circumflex, dot, ring, and tilde letter aliases.

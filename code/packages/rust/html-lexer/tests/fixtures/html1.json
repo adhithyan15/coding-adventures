@@ -764,6 +764,36 @@
       "last_start_tag": "title"
     },
     {
+      "id": "html-whatwg-latin-extended-character-references-data",
+      "description": "WHATWG Latin Extended and diacritic aliases resolve in data state",
+      "input": "Latin extended:&Amacr;&abreve;&Aogon;&aogon;&Cacute;&ccaron;&Dcaron;&dcaron;&Emacr;&eogon;&Gbreve;&gcirc;&Idot;&inodot;",
+      "tokens": [
+        "Text(data=Latin extended:\u0100\u0103\u0104\u0105\u0106\u010D\u010E\u010F\u0112\u0119\u011E\u011D\u0130\u0131)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-latin-extended-character-references-attributes",
+      "description": "WHATWG Latin Extended and diacritic aliases resolve inside attribute values",
+      "input": "<p upper=\"&Hcirc;&Itilde;&Jcirc;&Kcedil;&Lacute;&Lcaron;&Lcedil;&Lmidot;&Nacute;&Ncaron;&Ncedil;\" lower=\"&hcirc;&itilde;&jcirc;&kcedil;&lacute;&lcaron;&lcedil;&lmidot;&nacute;&ncaron;&ncedil;\">",
+      "tokens": [
+        "StartTag(name=p, attributes=[upper=\u0124\u0128\u0134\u0136\u0139\u013D\u013B\u013F\u0143\u0147\u0145, lower=\u0125\u0129\u0135\u0137\u013A\u013E\u013C\u0140\u0144\u0148\u0146], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-latin-extended-character-references-rcdata",
+      "description": "Seeded title RCDATA context resolves WHATWG Latin Extended and diacritic aliases",
+      "input": "&Omacr;&omacr;&Racute;&rcaron;&Sacute;&scedil;&Scirc;&scirc;&Tcaron;&tcedil;&Ubreve;&umacr;&Uogon;&uring;&Utilde;&wcirc;&Ycirc;&ycirc;&Zacute;&zcaron;&Zdot;&zdot;</title>",
+      "tokens": [
+        "Text(data=\u014C\u014D\u0154\u0159\u015A\u015F\u015C\u015D\u0164\u0163\u016C\u016B\u0172\u016F\u0168\u0175\u0176\u0177\u0179\u017E\u017B\u017C)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
       "id": "html-semicolonless-legacy-character-references-data",
       "description": "Legacy named character references recover when the semicolon is missing in data state",
       "input": "Legacy&nbsp symbols: &copy/&reg",

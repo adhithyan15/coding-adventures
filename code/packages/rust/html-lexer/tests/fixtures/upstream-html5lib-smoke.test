@@ -887,6 +887,65 @@
       ]
     },
     {
+      "description": "data state WHATWG Latin Extended named character references",
+      "input": "Latin extended:&Amacr;&abreve;&Aogon;&aogon;&Cacute;&ccaron;&Dcaron;&dcaron;&Emacr;&eogon;&Gbreve;&gcirc;&Idot;&inodot;",
+      "output": [
+        ["Character", "Latin extended:"],
+        ["Character", "\u0100"],
+        ["Character", "\u0103"],
+        ["Character", "\u0104"],
+        ["Character", "\u0105"],
+        ["Character", "\u0106"],
+        ["Character", "\u010D"],
+        ["Character", "\u010E"],
+        ["Character", "\u010F"],
+        ["Character", "\u0112"],
+        ["Character", "\u0119"],
+        ["Character", "\u011E"],
+        ["Character", "\u011D"],
+        ["Character", "\u0130"],
+        ["Character", "\u0131"]
+      ]
+    },
+    {
+      "description": "attribute WHATWG Latin Extended named character references",
+      "input": "<p upper=\"&Hcirc;&Itilde;&Jcirc;&Kcedil;&Lacute;&Lcaron;&Lcedil;&Lmidot;&Nacute;&Ncaron;&Ncedil;\" lower=\"&hcirc;&itilde;&jcirc;&kcedil;&lacute;&lcaron;&lcedil;&lmidot;&nacute;&ncaron;&ncedil;\">",
+      "output": [
+        ["StartTag", "p", {"upper": "\u0124\u0128\u0134\u0136\u0139\u013D\u013B\u013F\u0143\u0147\u0145", "lower": "\u0125\u0129\u0135\u0137\u013A\u013E\u013C\u0140\u0144\u0148\u0146"}]
+      ]
+    },
+    {
+      "description": "rcdata WHATWG Latin Extended named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&Omacr;&omacr;&Racute;&rcaron;&Sacute;&scedil;&Scirc;&scirc;&Tcaron;&tcedil;&Ubreve;&umacr;&Uogon;&uring;&Utilde;&wcirc;&Ycirc;&ycirc;&Zacute;&zcaron;&Zdot;&zdot;</title>",
+      "output": [
+        ["Character", "\u014C"],
+        ["Character", "\u014D"],
+        ["Character", "\u0154"],
+        ["Character", "\u0159"],
+        ["Character", "\u015A"],
+        ["Character", "\u015F"],
+        ["Character", "\u015C"],
+        ["Character", "\u015D"],
+        ["Character", "\u0164"],
+        ["Character", "\u0163"],
+        ["Character", "\u016C"],
+        ["Character", "\u016B"],
+        ["Character", "\u0172"],
+        ["Character", "\u016F"],
+        ["Character", "\u0168"],
+        ["Character", "\u0175"],
+        ["Character", "\u0176"],
+        ["Character", "\u0177"],
+        ["Character", "\u0179"],
+        ["Character", "\u017E"],
+        ["Character", "\u017B"],
+        ["Character", "\u017C"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
       "description": "data state legacy named character references missing semicolons",
       "input": "Legacy&nbsp symbols: &copy/&reg",
       "output": [
