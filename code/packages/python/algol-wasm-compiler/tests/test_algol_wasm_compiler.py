@@ -46,13 +46,24 @@ class TestAlgolWasmCompiler:
 
     def test_comment_prefixed_identifier_is_not_skipped(self) -> None:
         result = compile_source(
-            "begin integer result, commentary; commentary := 7; result := commentary end"
+            "begin integer result, commentary; commentary := 7; "
+            "result := commentary end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
 
     def test_angle_not_equal_operator_executes(self) -> None:
         result = compile_source(
             "begin integer result; if 1 <> 2 then result := 7 else result := 0 end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_publication_symbol_operators_execute(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "if (2 ↑ 3 = 8) ∧ (3 ≤ 4) ∧ (5 ≥ 5) ∧ (1 ≠ 2) "
+            "∧ (¬ false) ∧ (true ⊃ true) ∧ (true ≡ true) "
+            "then result := 7 else result := 0 "
+            "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
 

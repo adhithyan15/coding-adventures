@@ -18,9 +18,9 @@
 # Key ordering rules (first match wins):
 #   :=  must come before  :   (ASSIGN before COLON)
 #   **  must come before  *   (POWER before STAR)
-#   <=  must come before  <   (LEQ before LT)
-#   >=  must come before  >   (GEQ before GT)
-#   != and <> must come before any single-char use of !, <, or >
+#   <= and ≤ must come before  <   (LEQ before LT)
+#   >= and ≥ must come before  >   (GEQ before GT)
+#   !=, <>, and ≠ must come before any single-char use of !, <, or >
 #   REAL_LIT must come before INTEGER_LIT (decimal/exponent before plain digits)
 
 # ---------------------------------------------------------------------------
@@ -64,11 +64,19 @@ ASSIGN      = ":="
 # ** must come before * so "**" is not lexed as STAR STAR.
 POWER       = "**"
 
-# Relational operators (ASCII for ≤, ≥, ≠). Not-equal accepts both the modern
-# C-like spelling and the common ALGOL/Pascal-style angle spelling.
-LEQ         = "<="
-GEQ         = ">="
-NEQ         = /!=|<>/
+# Relational operators. The wrapper normalizes the publication symbols to the
+# same values as the ASCII spellings.
+LEQ         = /<=|≤/
+GEQ         = />=|≥/
+NEQ         = /!=|<>|≠/
+
+# Publication-symbol boolean operators. The ALGOL lexer wrapper normalizes
+# these to the same keyword values as their word forms.
+NOT_SYM     = "¬"
+AND_SYM     = "∧"
+OR_SYM      = "∨"
+IMPL_SYM    = "⊃"
+EQV_SYM     = "≡"
 
 # ---------------------------------------------------------------------------
 # Single-character operators
@@ -79,10 +87,9 @@ MINUS       = "-"
 STAR        = "*"
 SLASH       = "/"
 
-# Caret: alternative to ** for exponentiation.
-# Both ^ and ** produce different token kinds so the parser can treat them
-# identically (both map to the exponentiation operator).
-CARET       = "^"
+# Caret: alternative to ** for exponentiation. The ALGOL publication uparrow
+# is normalized to the same token/value shape as caret.
+CARET       = /\^|↑/
 
 # Equality test (not assignment — ALGOL uses := for that).
 EQ          = "="

@@ -67,12 +67,13 @@ Value tokens:
 Multi-character operators (must match before their single-char prefixes):
 - ``ASSIGN``  — ``:=``  (ALGOL separates assignment from equality — no C-style bugs)
 - ``POWER``   — ``**``  (exponentiation, Fortran convention)
-- ``LEQ``     — ``<=``
-- ``GEQ``     — ``>=``
-- ``NEQ``     — ``!=`` or ``<>``
+- ``LEQ``     — ``<=`` or ``≤``
+- ``GEQ``     — ``>=`` or ``≥``
+- ``NEQ``     — ``!=``, ``<>``, or ``≠``
 
 Single-character operators:
-- ``PLUS``, ``MINUS``, ``STAR``, ``SLASH``, ``CARET``, ``EQ``, ``LT``, ``GT``
+- ``PLUS``, ``MINUS``, ``STAR``, ``SLASH``, ``CARET`` (``^`` or ``↑``),
+  ``EQ``, ``LT``, ``GT``
 
 Delimiters:
 - ``LPAREN``, ``RPAREN``, ``LBRACKET``, ``RBRACKET``
@@ -163,6 +164,21 @@ from lexer import GrammarLexer, Token, TokenType
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
 VALID_VERSIONS = {"algol60"}
 
+_SYMBOLIC_KEYWORDS = {
+    "NOT_SYM": "not",
+    "AND_SYM": "and",
+    "OR_SYM": "or",
+    "IMPL_SYM": "impl",
+    "EQV_SYM": "eqv",
+}
+
+_SYMBOLIC_OPERATOR_VALUES = {
+    "LEQ": {"≤": "<="},
+    "GEQ": {"≥": ">="},
+    "NEQ": {"≠": "!="},
+    "CARET": {"↑": "^"},
+}
+
 
 def resolve_tokens_path(version: str = "algol60") -> Path:
     """Resolve a supported ALGOL token grammar path."""
@@ -172,33 +188,51 @@ def resolve_tokens_path(version: str = "algol60") -> Path:
     return GRAMMAR_DIR / "algol" / f"{version}.tokens"
 
 
-def _normalize_case_insensitive_keywords(
+def _replace_token(token: Token, *, type_: TokenType | str, value: str) -> Token:
+    return Token(
+        type=type_,
+        value=value,
+        line=token.line,
+        column=token.column,
+        flags=token.flags,
+    )
+
+
+def _normalize_algol_tokens(
     tokens: list[Token],
     keywords: set[str],
 ) -> list[Token]:
-    """Promote ALGOL keywords without lowercasing the whole source stream."""
+    """Normalize ALGOL keywords and publication symbols after tokenization."""
     normalized: list[Token] = []
     for token in tokens:
+        symbolic_keyword = _SYMBOLIC_KEYWORDS.get(token.type_name)
+        if symbolic_keyword is not None:
+            normalized.append(
+                _replace_token(
+                    token,
+                    type_=TokenType.KEYWORD,
+                    value=symbolic_keyword,
+                )
+            )
+            continue
+
+        symbolic_operator = _SYMBOLIC_OPERATOR_VALUES.get(token.type_name, {}).get(
+            token.value
+        )
+        if symbolic_operator is not None:
+            normalized.append(
+                _replace_token(token, type_=token.type, value=symbolic_operator)
+            )
+            continue
+
         value = token.value.lower()
         if token.type in (TokenType.NAME, "NAME") and value in keywords:
             normalized.append(
-                Token(
-                    type=TokenType.KEYWORD,
-                    value=value,
-                    line=token.line,
-                    column=token.column,
-                    flags=token.flags,
-                )
+                _replace_token(token, type_=TokenType.KEYWORD, value=value)
             )
         elif token.type in (TokenType.KEYWORD, "KEYWORD") and value in keywords:
             normalized.append(
-                Token(
-                    type=token.type,
-                    value=value,
-                    line=token.line,
-                    column=token.column,
-                    flags=token.flags,
-                )
+                _replace_token(token, type_=token.type, value=value)
             )
         else:
             normalized.append(token)
@@ -220,6 +254,9 @@ def create_algol_lexer(source: str, version: str = "algol60") -> GrammarLexer:
       token ``beginning`` does not match the keyword ``begin``.
     - **Case insensitivity**: ``BEGIN``, ``Begin``, and ``begin`` all produce
       the same token kind. The grammar normalizes to lowercase.
+    - **Publication symbols**: ``≤``, ``≥``, ``≠``, ``↑``, ``∧``, ``∨``,
+      ``¬``, ``⊃``, and ``≡`` normalize to the same token stream as their
+      ASCII or word spellings.
     - **Comment skipping**: ``comment text;`` is consumed without emitting
       any token, and the keyword is matched case-insensitively.
     - **Operator ordering**: ``:=`` is matched before ``:``, ``**`` before
@@ -244,9 +281,7 @@ def create_algol_lexer(source: str, version: str = "algol60") -> GrammarLexer:
     grammar = parse_token_grammar(resolve_tokens_path(version).read_text())
     lexer = GrammarLexer(source, grammar)
     keyword_set = {keyword.lower() for keyword in grammar.keywords}
-    lexer.add_post_tokenize(
-        lambda tokens: _normalize_case_insensitive_keywords(tokens, keyword_set)
-    )
+    lexer.add_post_tokenize(lambda tokens: _normalize_algol_tokens(tokens, keyword_set))
     return lexer
 
 
@@ -266,8 +301,9 @@ def tokenize_algol(source: str, version: str = "algol60") -> list[Token]:
     - **IDENT**       — identifiers not matching any keyword
 
     Operators:
-    - **ASSIGN** (``:=``), **POWER** (``**``), **CARET** (``^``)
-    - **LEQ** (``<=``), **GEQ** (``>=``), **NEQ** (``!=`` or ``<>``)
+    - **ASSIGN** (``:=``), **POWER** (``**``), **CARET** (``^`` or ``↑``)
+    - **LEQ** (``<=`` or ``≤``), **GEQ** (``>=`` or ``≥``),
+      **NEQ** (``!=``, ``<>``, or ``≠``)
     - **PLUS**, **MINUS**, **STAR**, **SLASH**, **EQ**, **LT**, **GT**
 
     Delimiters:

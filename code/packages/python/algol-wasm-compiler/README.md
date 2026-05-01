@@ -18,8 +18,9 @@ the current lane already supports a substantial ALGOL 60 surface:
 - `own` scalars and arrays with static lifetime
 - arrays of `integer`, `boolean`, `real`, and `string` values with runtime
   bounds and checked element access
-- case-insensitive keywords and comments, `!=` or `<>` not-equal spelling, and
-  single- or double-quoted string literals
+- case-insensitive keywords and comments, `!=`/`<>`/`≠` not-equal spelling,
+  ALGOL publication symbols such as `≤`, `≥`, `↑`, `¬`, `∧`, `∨`, `⊃`, `≡`,
+  and single- or double-quoted string literals
 - chained assignment, conditional expressions, tolerant trailing/repeated
   semicolons, numeric runtime failure guards, and
   ALGOL-left-associative exponentiation for integer or real exponents
@@ -46,9 +47,9 @@ declaration, statement, expression, procedure, array, by-name, and designational
 surface is now implemented and covered by golden WASM fixtures. It is not a
 claim of historical whole-environment compatibility with every ALGOL system:
 the package intentionally keeps the observable I/O surface to `print(...)` /
-`output(...)`, uses the bundled token spelling rather than typographic ALGOL
-publication notation, and applies explicit source, semantic, generated-state,
-memory, and host execution limits for untrusted programs.
+`output(...)`, supports the bundled ASCII spelling plus common ALGOL
+publication-symbol notation, and applies explicit source, semantic,
+generated-state, memory, and host execution limits for untrusted programs.
 
 The convenience APIs reject source strings larger than 256 KiB before parsing.
 The downstream type checker also enforces configurable AST, block-nesting, and

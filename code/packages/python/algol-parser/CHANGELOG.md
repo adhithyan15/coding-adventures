@@ -17,6 +17,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   addition to the compact `goto` spelling.
 - Parsed uppercase and mixed-case keywords/comments, `<>` not-equal relations,
   and double-quoted string literals through the shared ALGOL lexer.
+- Parsed ALGOL publication symbols for relations, exponentiation, and boolean
+  operators through the shared lexer normalization layer.
 
 ## [0.1.0] — 2026-04-06
 
