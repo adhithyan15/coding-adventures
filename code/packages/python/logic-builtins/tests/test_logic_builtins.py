@@ -114,6 +114,7 @@ from logic_builtins import (
     number_codeso,
     number_stringo,
     numbero,
+    numbervarso,
     numeqo,
     numneqo,
     onceo,
@@ -1924,6 +1925,47 @@ class TestTermMetaprogrammingBuiltins:
             variables,
             term_variableso(term("box", 1), variables),
         ) == [logic_list([])]
+
+    def test_numbervarso_numbers_open_variables_in_first_occurrence_order(self) -> None:
+        first = var("First")
+        second = var("Second")
+        source = var("Source")
+        end = var("End")
+
+        answers = solve_all(
+            program(),
+            (source, end),
+            conj(
+                eq(source, term("pair", first, term("box", second, first))),
+                numbervarso(source, 3, end),
+            ),
+        )
+
+        assert answers == [
+            (
+                term(
+                    "pair",
+                    term("$VAR", 3),
+                    term("box", term("$VAR", 4), term("$VAR", 3)),
+                ),
+                num(5),
+            ),
+        ]
+
+    def test_numbervarso_skips_ground_terms_and_rejects_bad_indices(self) -> None:
+        end = var("End")
+
+        assert solve_all(program(), end, numbervarso(term("box", "tea"), 2, end)) == [
+            num(2),
+        ]
+        assert (
+            solve_all(program(), end, numbervarso(term("box", var("X")), -1, end))
+            == []
+        )
+        assert (
+            solve_all(program(), end, numbervarso(term("box", var("X")), 1.5, end))
+            == []
+        )
 
     def test_same_termo_checks_strict_identity_without_unifying(self) -> None:
         left = var("Left")

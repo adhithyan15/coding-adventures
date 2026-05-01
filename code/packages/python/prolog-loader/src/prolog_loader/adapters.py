@@ -77,6 +77,7 @@ from logic_builtins import (
     number_codeso,
     number_stringo,
     numbero,
+    numbervarso,
     onceo,
     partitiono,
     predicate_propertyo,
@@ -381,6 +382,8 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         return copytermo(*args)
     if name == "term_variables" and goal.relation.arity == 2:
         return term_variableso(*args)
+    if name == "numbervars" and goal.relation.arity == 3:
+        return numbervarso(*args)
     if name == "term_to_atom" and goal.relation.arity == 2:
         return _term_to_atom_goal(*args)
     if name == "atom_to_term" and goal.relation.arity == 3:
@@ -574,9 +577,13 @@ def _write_term_to_atom_goal(
         reified_term = reify(term_arg, state.substitution)
         if isinstance(reified_term, LogicVar):
             return
-        if not _write_term_options_supported(reify(options_arg, state.substitution)):
+        write_options = _write_term_options(reify(options_arg, state.substitution))
+        if write_options is None:
             return
-        rendered = _render_prolog_term(reified_term)
+        rendered = _render_prolog_term(
+            reified_term,
+            numbervars=write_options["numbervars"],
+        )
         yield from solve_from(program_value, eq(atom_arg, atom(rendered)), state)
 
     return native_goal(run, term_value, atom_value, options)
@@ -620,13 +627,18 @@ def _read_term_options_goal(
     return conj(*goals)
 
 
-def _write_term_options_supported(options: Term) -> bool:
+def _write_term_options(options: Term) -> dict[str, bool] | None:
     items = _logic_list_items(options)
     if items is None:
-        return False
+        return None
+    parsed = {
+        "quoted": False,
+        "ignore_ops": False,
+        "numbervars": False,
+    }
     for item in items:
         if not isinstance(item, Compound) or len(item.args) != 1:
-            return False
+            return None
         option_name = item.functor.name
         value = item.args[0]
         if option_name in {"quoted", "ignore_ops", "numbervars"}:
@@ -634,14 +646,19 @@ def _write_term_options_supported(options: Term) -> bool:
                 not isinstance(value, Atom)
                 or value.symbol.name not in {"true", "false"}
             ):
-                return False
+                return None
+            parsed[option_name] = value.symbol.name == "true"
             continue
-        return False
-    return True
+        return None
+    return parsed
 
 
-def _render_prolog_term(term_value: Term) -> str:
-    list_text = _render_list(term_value)
+def _render_prolog_term(term_value: Term, *, numbervars: bool = False) -> str:
+    if numbervars:
+        numbered_name = _render_numbered_variable(term_value)
+        if numbered_name is not None:
+            return numbered_name
+    list_text = _render_list(term_value, numbervars=numbervars)
     if list_text is not None:
         return list_text
     if isinstance(term_value, Atom):
@@ -653,12 +670,15 @@ def _render_prolog_term(term_value: Term) -> str:
     if isinstance(term_value, LogicVar):
         return _render_variable(term_value)
     if isinstance(term_value, Compound):
-        args = ", ".join(_render_prolog_term(argument) for argument in term_value.args)
+        args = ", ".join(
+            _render_prolog_term(argument, numbervars=numbervars)
+            for argument in term_value.args
+        )
         return f"{_render_functor(term_value.functor.name)}({args})"
     raise TypeError(f"cannot render {type(term_value).__name__} as Prolog term")
 
 
-def _render_list(term_value: Term) -> str | None:
+def _render_list(term_value: Term, *, numbervars: bool = False) -> str | None:
     items: list[str] = []
     current = term_value
     while (
@@ -666,13 +686,31 @@ def _render_list(term_value: Term) -> str | None:
         and current.functor.name == "."
         and len(current.args) == 2
     ):
-        items.append(_render_prolog_term(current.args[0]))
+        items.append(_render_prolog_term(current.args[0], numbervars=numbervars))
         current = current.args[1]
     if isinstance(current, Atom) and current.symbol.name == "[]":
         return "[" + ", ".join(items) + "]"
     if items:
-        return "[" + ", ".join(items) + " | " + _render_prolog_term(current) + "]"
+        tail = _render_prolog_term(current, numbervars=numbervars)
+        return "[" + ", ".join(items) + " | " + tail + "]"
     return None
+
+
+def _render_numbered_variable(term_value: Term) -> str | None:
+    if (
+        not isinstance(term_value, Compound)
+        or term_value.functor.name != "$VAR"
+        or len(term_value.args) != 1
+    ):
+        return None
+    [index_term] = term_value.args
+    if not isinstance(index_term, Number):
+        return None
+    index = index_term.value
+    if isinstance(index, bool) or not isinstance(index, int) or index < 0:
+        return None
+    suffix = "" if index < 26 else str(index // 26)
+    return chr(ord("A") + (index % 26)) + suffix
 
 
 def _render_functor(name: str) -> str:

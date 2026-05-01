@@ -34,6 +34,8 @@ All notable changes to this package will be documented in this file.
   exception control, including catchable structured runtime errors.
 - `term_variableso(term, variables)` for collecting unique reified variables
   in first occurrence order.
+- `numbervarso(term, start, end)` for binding open variables to `'$VAR'(N)`
+  placeholders in first occurrence order.
 - `current_prolog_flago(name, value)` for enumerating read-only runtime flags
   exposed by the Prolog compatibility layer.
 - `set_prolog_flago(name, value)` for branch-local updates to supported

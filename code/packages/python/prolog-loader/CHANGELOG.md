@@ -59,6 +59,8 @@
   through the parser boundary
 - adapt Prolog term read/write predicates `read_term_from_atom/3` and
   `write_term_to_atom/3` with finite option-list support
+- adapt Prolog `numbervars/3` and render `'$VAR'(N)` placeholders through
+  `write_term_to_atom/3` when `numbervars(true)` is present
 
 ## 0.1.0
 

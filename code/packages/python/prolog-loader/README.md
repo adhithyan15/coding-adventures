@@ -21,6 +21,8 @@ It keeps parsing side-effect free, then exposes helpers to:
   through the parser boundary
 - adapt parser-backed term read/write helpers such as `read_term_from_atom/3`
   and `write_term_to_atom/3`
+- adapt `numbervars/3` and `write_term_to_atom/3` `numbervars(true)`
+  rendering for source-level variable-numbered debug output
 - adapt callable CLP(FD) forms such as `in/2`, `ins/2`, `#=/2`,
   `all_different/1`, and `labeling/2`
 - flatten nested additive CLP(FD) equality expressions such as

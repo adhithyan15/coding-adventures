@@ -203,6 +203,9 @@ class TestPrologVMStress:
                    [variable_names(Names), variables(Vars)]),
                write_term_to_atom(pair(tea, [cup]), WrittenTerm,
                    [quoted(true), ignore_ops(false)]),
+               read_term_from_atom('pair(X, box(Y), X)', Numbered, []),
+               numbervars(Numbered, 0, NumberedEnd),
+               write_term_to_atom(Numbered, NumberedText, [numbervars(true)]),
                string_codes("ok", Codes).
             """,
         )
@@ -248,6 +251,14 @@ class TestPrologVMStress:
             ),
             "Vars": logic_list([read_term.args[0], read_term.args[1]]),
             "WrittenTerm": atom("pair(tea, [cup])"),
+            "Numbered": term(
+                "pair",
+                term("$VAR", 0),
+                term("box", term("$VAR", 1)),
+                term("$VAR", 0),
+            ),
+            "NumberedEnd": num(2),
+            "NumberedText": atom("pair(A, box(B), A)"),
             "Codes": logic_list([111, 107]),
         }
 

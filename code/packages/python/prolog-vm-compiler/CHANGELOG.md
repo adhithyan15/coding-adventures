@@ -63,6 +63,8 @@
   `term_to_atom/2` and `atom_to_term/3`.
 - Run Prolog term read/write option predicates through the VM path, including
   `read_term_from_atom/3` and `write_term_to_atom/3`.
+- Run Prolog `numbervars/3` and `write_term_to_atom/3` `numbervars(true)`
+  rendering through the VM path.
 
 ## 0.1.0
 
