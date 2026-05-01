@@ -69,10 +69,13 @@ __all__ = [
     "add",
     "all_differento",
     "argo",
+    "atom_concato",
     "atom_codeso",
     "atom_charso",
     "atomico",
     "atomo",
+    "atomic_list_concato",
+    "atomic_list_concato_with_separator",
     "betweeno",
     "callo",
     "callableo",
@@ -140,6 +143,7 @@ __all__ = [
     "numneqo",
     "number_codeso",
     "number_charso",
+    "number_stringo",
     "numbero",
     "onceo",
     "bagofo",
@@ -308,10 +312,13 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("argo", 3),
     ("assertao", 1),
     ("assertzo", 1),
+    ("atom_concato", 3),
     ("atom_codeso", 2),
     ("atom_charso", 2),
     ("atomico", 1),
     ("atomo", 1),
+    ("atomic_list_concato", 2),
+    ("atomic_list_concato_with_separator", 3),
     ("bagofo", 3),
     ("betweeno", 3),
     ("callableo", 1),
@@ -388,6 +395,7 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("numneqo", 2),
     ("number_codeso", 2),
     ("number_charso", 2),
+    ("number_stringo", 2),
     ("numbero", 1),
     ("onceo", 1),
     ("partitiono", 4),
@@ -3883,6 +3891,227 @@ def char_codeo(char_value: object, code_value: object) -> GoalExpr:
         yield from solve_from(program_value, eq(char_term, atom(character)), state)
 
     return native_goal(run, char_value, code_value)
+
+
+def _plain_atom_text(term_value: Term) -> str | None:
+    if not isinstance(term_value, Atom) or term_value.symbol.namespace is not None:
+        return None
+    return term_value.symbol.name
+
+
+def _atom_from_text(text: str) -> Atom | None:
+    """Construct an atom unless the prototype cannot represent that text yet."""
+
+    if text == "":
+        return None
+    return atom(text)
+
+
+def _atomic_text(term_value: Term) -> str | None:
+    if isinstance(term_value, Atom):
+        return _plain_atom_text(term_value)
+    if isinstance(term_value, String):
+        return term_value.value
+    if isinstance(term_value, Number):
+        return _number_text(term_value)
+    return None
+
+
+def atom_concato(left: object, right: object, combined: object) -> GoalExpr:
+    """Relate two atoms to their concatenation using finite modes."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        left_term, right_term, combined_term = args
+        reified_left = _reified(left_term, state)
+        reified_right = _reified(right_term, state)
+        reified_combined = _reified(combined_term, state)
+
+        left_text = _plain_atom_text(reified_left)
+        right_text = _plain_atom_text(reified_right)
+        combined_text = _plain_atom_text(reified_combined)
+
+        if left_text is not None and right_text is not None:
+            joined = _atom_from_text(left_text + right_text)
+            if joined is None:
+                return
+            yield from solve_from(
+                program_value,
+                eq(combined_term, joined),
+                state,
+            )
+            return
+
+        if combined_text is None:
+            return
+
+        if left_text is not None:
+            if combined_text.startswith(left_text):
+                suffix = _atom_from_text(combined_text[len(left_text) :])
+                if suffix is None:
+                    return
+                yield from solve_from(
+                    program_value,
+                    eq(right_term, suffix),
+                    state,
+                )
+            return
+
+        if right_text is not None:
+            if combined_text.endswith(right_text):
+                prefix = _atom_from_text(combined_text[: -len(right_text) or None])
+                if prefix is None:
+                    return
+                yield from solve_from(
+                    program_value,
+                    eq(left_term, prefix),
+                    state,
+                )
+            return
+
+        if not isinstance(reified_left, LogicVar) or not isinstance(
+            reified_right,
+            LogicVar,
+        ):
+            return
+
+        for index in range(len(combined_text) + 1):
+            left_atom = _atom_from_text(combined_text[:index])
+            right_atom = _atom_from_text(combined_text[index:])
+            if left_atom is None or right_atom is None:
+                continue
+            yield from solve_from(
+                program_value,
+                conj(
+                    eq(left_term, left_atom),
+                    eq(right_term, right_atom),
+                ),
+                state,
+            )
+
+    return native_goal(run, left, right, combined)
+
+
+def atomic_list_concato(items: object, combined: object) -> GoalExpr:
+    """Relate a proper list of atomic terms to their concatenated atom."""
+
+    return _atomic_list_concato(items, "", combined)
+
+
+def atomic_list_concato_with_separator(
+    items: object,
+    separator: object,
+    combined: object,
+) -> GoalExpr:
+    """Relate atomic list items, a separator, and their concatenated atom."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        items_term, separator_term, combined_term = args
+        reified_separator = _reified(separator_term, state)
+        separator_text = _atomic_text(reified_separator)
+        if separator_text is None:
+            return
+        yield from _run_atomic_list_concat(
+            program_value,
+            state,
+            items_term,
+            separator_text,
+            combined_term,
+            allow_split=True,
+        )
+
+    return native_goal(run, items, separator, combined)
+
+
+def _atomic_list_concato(
+    items: object,
+    separator_text: str,
+    combined: object,
+) -> GoalExpr:
+    """Build an atomic-list concatenation goal with a fixed separator."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        items_term, combined_term = args
+        yield from _run_atomic_list_concat(
+            program_value,
+            state,
+            items_term,
+            separator_text,
+            combined_term,
+            allow_split=False,
+        )
+
+    return native_goal(run, items, combined)
+
+
+def _run_atomic_list_concat(
+    program_value: Program,
+    state: State,
+    items_term: Term,
+    separator_text: str,
+    combined_term: Term,
+    *,
+    allow_split: bool,
+) -> Iterator[State]:
+    reified_items = _reified(items_term, state)
+    reified_combined = _reified(combined_term, state)
+
+    list_items = _proper_list_items(reified_items)
+    if list_items is not None:
+        texts: list[str] = []
+        for item in list_items:
+            text = _atomic_text(item)
+            if text is None:
+                return
+            texts.append(text)
+        joined = _atom_from_text(separator_text.join(texts))
+        if joined is None:
+            return
+        yield from solve_from(program_value, eq(combined_term, joined), state)
+        return
+
+    if not allow_split or not isinstance(reified_items, LogicVar):
+        return
+
+    combined_text = _plain_atom_text(reified_combined)
+    if combined_text is None or separator_text == "":
+        return
+
+    parts: list[Atom] = []
+    for text in combined_text.split(separator_text):
+        part = _atom_from_text(text)
+        if part is None:
+            return
+        parts.append(part)
+    yield from solve_from(program_value, eq(items_term, logic_list(parts)), state)
+
+
+def number_stringo(number_value: object, string_value: object) -> GoalExpr:
+    """Relate a number to a string term containing its textual representation."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        number_term, string_term = args
+        reified_number = _reified(number_term, state)
+        reified_string = _reified(string_term, state)
+
+        if isinstance(reified_number, Number):
+            yield from solve_from(
+                program_value,
+                eq(string_term, String(_number_text(reified_number))),
+                state,
+            )
+            return
+
+        if not isinstance(reified_number, LogicVar):
+            return
+        if not isinstance(reified_string, String):
+            return
+
+        parsed = _parse_number_text(reified_string.value)
+        if parsed is None:
+            return
+        yield from solve_from(program_value, eq(number_term, parsed), state)
+
+    return native_goal(run, number_value, string_value)
 
 
 def compoundo(term_value: object) -> GoalExpr:

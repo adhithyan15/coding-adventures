@@ -54,6 +54,9 @@
 - Run Prolog text conversion predicates through the VM path, including
   `atom_chars/2`, `atom_codes/2`, `number_chars/2`, `number_codes/2`,
   `char_code/2`, `string_chars/2`, and `string_codes/2`.
+- Run Prolog atom composition predicates through the VM path, including
+  `atom_concat/3`, `atomic_list_concat/2`, `atomic_list_concat/3`, and
+  `number_string/2`.
 
 ## 0.1.0
 

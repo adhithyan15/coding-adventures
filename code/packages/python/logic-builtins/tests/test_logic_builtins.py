@@ -39,6 +39,9 @@ from logic_builtins import (
     assertzo,
     atom_charso,
     atom_codeso,
+    atom_concato,
+    atomic_list_concato,
+    atomic_list_concato_with_separator,
     atomico,
     atomo,
     bagofo,
@@ -108,6 +111,7 @@ from logic_builtins import (
     noto,
     number_charso,
     number_codeso,
+    number_stringo,
     numbero,
     numeqo,
     numneqo,
@@ -2103,6 +2107,63 @@ class TestTermMetaprogrammingBuiltins:
         assert solve_all(program(), char, char_codeo(char, 90)) == [atom("Z")]
         assert solve_all(program(), code, char_codeo("tea", code)) == []
         assert solve_all(program(), char, char_codeo(char, -1)) == []
+
+    def test_atom_composition_builtins_use_finite_concat_modes(self) -> None:
+        left = var("Left")
+        right = var("Right")
+        combined = var("Combined")
+
+        assert solve_all(program(), combined, atom_concato("tea", "cup", combined)) == [
+            atom("teacup"),
+        ]
+        assert solve_all(program(), right, atom_concato("tea", right, "teacup")) == [
+            atom("cup"),
+        ]
+        assert solve_all(program(), left, atom_concato(left, "cup", "teacup")) == [
+            atom("tea"),
+        ]
+        assert solve_all(
+            program(),
+            (left, right),
+            atom_concato(left, right, "ab"),
+        ) == [
+            (atom("a"), atom("b")),
+        ]
+
+    def test_atomic_list_concat_builtins_join_and_split_atoms(self) -> None:
+        value = var("Value")
+        parts = var("Parts")
+
+        assert solve_all(
+            program(),
+            value,
+            atomic_list_concato(logic_list(["tea", "cup"]), value),
+        ) == [atom("teacup")]
+        assert solve_all(
+            program(),
+            value,
+            atomic_list_concato_with_separator(
+                logic_list(["tea", 2, string("go")]),
+                "-",
+                value,
+            ),
+        ) == [atom("tea-2-go")]
+        assert solve_all(
+            program(),
+            parts,
+            atomic_list_concato_with_separator(parts, "-", "tea-cup-pot"),
+        ) == [logic_list(["tea", "cup", "pot"])]
+        assert solve_all(program(), parts, atomic_list_concato(parts, "tea")) == []
+
+    def test_number_stringo_relates_numbers_to_string_terms(self) -> None:
+        value = var("Value")
+        text = var("Text")
+
+        assert solve_all(program(), text, number_stringo(42, text)) == [string("42")]
+        assert solve_all(program(), value, number_stringo(value, string("3.5"))) == [
+            num(3.5),
+        ]
+        assert solve_all(program(), value, number_stringo(value, string("nope"))) == []
 
     def test_atomico_and_callableo_classify_reified_terms(self) -> None:
         value = var("Value")
