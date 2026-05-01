@@ -1378,6 +1378,40 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
 
+    def test_label_parameter_accepts_conditional_designational_actual(self) -> None:
+        result = compile_source(
+            "begin integer result; boolean flag; "
+            "procedure jump(target); label target; begin goto target end; "
+            "flag := false; jump(if flag then left else right); "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_label_parameter_accepts_numeric_label_actual(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure jump(target); label target; begin goto target end; "
+            "jump(10); result := 1; "
+            "10: result := 7 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_label_parameter_accepts_switch_selection_actual(self) -> None:
+        result = compile_source(
+            "begin integer result, i; switch s := left, right; "
+            "procedure jump(target); label target; begin goto target end; "
+            "i := 2; jump(s[i]); "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
     def test_value_label_parameter_jumps_to_caller_label(self) -> None:
         result = compile_source(
             "begin integer result; "
@@ -1401,6 +1435,35 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
+
+    def test_formal_procedure_call_passes_conditional_label_argument(self) -> None:
+        result = compile_source(
+            "begin integer result; boolean flag; "
+            "procedure invoke(p); procedure p; "
+            "begin p(if flag then left else right) end; "
+            "procedure jump(target); label target; begin goto target end; "
+            "flag := false; invoke(jump); "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_formal_procedure_call_passes_switch_selection_label_argument(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result, i; switch s := left, right; "
+            "procedure invoke(p); procedure p; begin p(s[i]) end; "
+            "procedure jump(target); label target; begin goto target end; "
+            "i := 2; invoke(jump); "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
 
     def test_scalar_by_name_parameter_reads_forwarded_pointer(self) -> None:
         result = compile_source(

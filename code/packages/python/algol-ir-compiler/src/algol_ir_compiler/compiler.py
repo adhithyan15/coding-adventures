@@ -1265,7 +1265,7 @@ class AlgolIrCompiler:
             raise CompileError("switch selection was not resolved")
         if execution_scope is None:
             execution_scope = scope
-        indexes = _direct_nodes(node, "arith_expr")
+        indexes = _switch_selection_indexes(node)
         if len(indexes) != 1:
             raise CompileError("switch selection requires exactly one index")
         index_value = self._compile_expr(indexes[0], scope)
@@ -1402,7 +1402,7 @@ class AlgolIrCompiler:
         selection = self.switch_selections.get(id(node))
         if selection is None:
             raise CompileError("switch selection was not resolved")
-        indexes = _direct_nodes(node, "arith_expr")
+        indexes = _switch_selection_indexes(node)
         if len(indexes) != 1:
             raise CompileError("switch selection requires exactly one index")
         index_value = self._compile_expr(indexes[0], scope)
@@ -3382,6 +3382,9 @@ class AlgolIrCompiler:
         argument: ASTNode,
         scope: _FrameScope,
     ) -> tuple[str, str] | None:
+        if self._is_label_designational_actual(argument, scope):
+            return "label", "label"
+
         variable = _single_variable_expr(argument)
         if variable is None or _variable_subscripts(variable):
             return None
@@ -4302,10 +4305,56 @@ class AlgolIrCompiler:
         argument: ASTNode,
         scope: _FrameScope,
     ) -> int:
+        parts = _conditional_expression_parts(_meaningful_children(argument))
+        if parts is not None:
+            condition, then_expr, else_expr = parts
+            index = self._next_if_index()
+            else_label = f"label_actual_{index}_else"
+            end_label = f"label_actual_{index}_end"
+            result = self._fresh_reg()
+            condition_value = self._compile_expr(condition, scope)
+            self._emit(IrOp.BRANCH_Z, IrRegister(condition_value), IrLabel(else_label))
+            then_value = self._compile_label_actual_value(then_expr, scope)
+            self._copy_reg(dst=result, src=then_value)
+            self._emit(IrOp.JUMP, IrLabel(end_label))
+            self._label(else_label)
+            else_value = self._compile_label_actual_value(else_expr, scope)
+            self._copy_reg(dst=result, src=else_value)
+            self._label(end_label)
+            return result
+
+        literal_label = _single_integer_label_expr(argument)
+        if literal_label is not None:
+            label = self._resolve_label_in_scope_chain(literal_label.value, scope)
+            if label is not None:
+                return self._const_reg(label.label_id)
+            label = self._resolve_label_in_semantic_scope(literal_label.value, scope)
+            if label is not None:
+                return self._const_reg(label.label_id)
+            raise CompileError(
+                f"label actual {literal_label.value!r} has no descriptor"
+            )
+
         variable = _single_variable_expr(argument)
-        if variable is None or _variable_subscripts(variable):
-            raise CompileError("label parameter actual must be a direct label")
+        if variable is None:
+            raise CompileError("label parameter actual must be a label designator")
         name = _variable_name(variable)
+        if name is None and _variable_subscripts(variable):
+            switch_name = _variable_head_name(variable)
+            if switch_name is None:
+                raise CompileError("label switch actual is missing a name")
+            resolved = self._resolve_symbol_in_scope_chain(switch_name.value, scope)
+            if resolved is None:
+                raise CompileError(
+                    f"label switch actual {switch_name.value!r} was not resolved"
+                )
+            symbol, _ = resolved
+            if symbol.kind != "switch":
+                raise CompileError(
+                    f"label parameter actual {switch_name.value!r} is not a "
+                    "switch selection"
+                )
+            return self._compile_switch_selection_value(variable, scope)
         if name is None:
             raise CompileError("label parameter actual is missing a name")
         resolved = self._resolve_symbol_in_scope_chain(name.value, scope)
@@ -4334,6 +4383,43 @@ class AlgolIrCompiler:
         if label is None:
             raise CompileError(f"label actual {name.value!r} has no descriptor")
         return self._const_reg(label.label_id)
+
+    def _is_label_designational_actual(
+        self,
+        argument: ASTNode,
+        scope: _FrameScope,
+    ) -> bool:
+        parts = _conditional_expression_parts(_meaningful_children(argument))
+        if parts is not None:
+            _, then_expr, else_expr = parts
+            return self._is_label_designational_actual(
+                then_expr,
+                scope,
+            ) and self._is_label_designational_actual(else_expr, scope)
+
+        literal_label = _single_integer_label_expr(argument)
+        if literal_label is not None:
+            label = self._resolve_label_in_scope_chain(literal_label.value, scope)
+            if label is not None:
+                return True
+            return (
+                self._resolve_label_in_semantic_scope(literal_label.value, scope)
+                is not None
+            )
+
+        variable = _single_variable_expr(argument)
+        if variable is None:
+            return False
+        name = _variable_head_name(variable)
+        if name is None:
+            return False
+        resolved = self._resolve_symbol_in_scope_chain(name.value, scope)
+        if resolved is None:
+            return False
+        symbol, _ = resolved
+        if _variable_subscripts(variable):
+            return symbol.kind == "switch"
+        return symbol.kind == "label"
 
     def _compile_procedure_parameter_pointer(
         self,
@@ -6798,6 +6884,18 @@ def _single_variable_expr(node: ASTNode | None) -> ASTNode | None:
     return _single_variable_expr(meaningful[0])
 
 
+def _single_integer_label_expr(node: ASTNode | None) -> Token | None:
+    if node is None:
+        return None
+    meaningful = _meaningful_children(node)
+    if len(meaningful) != 1:
+        return None
+    child = meaningful[0]
+    if isinstance(child, Token):
+        return child if child.type_name == "INTEGER_LIT" else None
+    return _single_integer_label_expr(child)
+
+
 def _variable_head_name(node: ASTNode | None) -> Token | None:
     if node is None:
         variable = None
@@ -6820,6 +6918,15 @@ def _variable_subscripts(node: ASTNode | None) -> list[ASTNode]:
         variable = node
     else:
         variable = _first_node(node, "variable")
+    subscripts = _first_direct_node(variable, "subscripts")
+    return _direct_nodes(subscripts, "arith_expr")
+
+
+def _switch_selection_indexes(node: ASTNode | None) -> list[ASTNode]:
+    direct = _direct_nodes(node, "arith_expr")
+    if direct:
+        return direct
+    variable = node if node is not None and node.rule_name == "variable" else None
     subscripts = _first_direct_node(variable, "subscripts")
     return _direct_nodes(subscripts, "arith_expr")
 
