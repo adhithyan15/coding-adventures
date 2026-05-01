@@ -2174,6 +2174,8 @@ class AlgolTypeChecker:
                 and self._resolved_bare_procedure_expression(argument) is None
             )
             procedure_argument_ids.append(None)
+            if argument_assignable[-1]:
+                self._record_assignable_actual_write(argument, scope)
             if actual_type != ERROR and actual_type not in {
                 INTEGER,
                 BOOLEAN,
