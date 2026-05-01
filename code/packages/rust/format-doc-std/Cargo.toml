@@ -1,0 +1,8 @@
+[package]
+name = "format-doc-std"
+version = "0.1.0"
+edition = "2021"
+description = "Reusable template layer on top of format-doc.  Common syntax shapes (delimited_list, call_like, block_like, infix_chain) so language-specific formatters compose templates instead of re-deriving every group/line/indent pattern.  Rust port of P2D04."
+
+[dependencies]
+format-doc = { path = "../format-doc" }
