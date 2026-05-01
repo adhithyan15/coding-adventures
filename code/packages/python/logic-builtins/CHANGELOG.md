@@ -43,6 +43,9 @@ All notable changes to this package will be documented in this file.
 - `atom_charso/2`, `atom_codeso/2`, `number_charso/2`, `number_codeso/2`,
   `char_codeo/2`, `string_charso/2`, and `string_codeso/2` for finite text
   conversion relations.
+- `atom_concato/3`, `atomic_list_concato/2`,
+  `atomic_list_concato_with_separator/3`, and `number_stringo/2` for finite
+  atom composition and number/string conversion modes.
 
 ### Fixed
 

@@ -12,6 +12,9 @@ from logic_builtins import (
     assertzo,
     atom_charso,
     atom_codeso,
+    atom_concato,
+    atomic_list_concato,
+    atomic_list_concato_with_separator,
     atomico,
     atomo,
     bagofo,
@@ -70,6 +73,7 @@ from logic_builtins import (
     noto,
     number_charso,
     number_codeso,
+    number_stringo,
     numbero,
     onceo,
     partitiono,
@@ -360,6 +364,12 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         return copytermo(*args)
     if name == "term_variables" and goal.relation.arity == 2:
         return term_variableso(*args)
+    if name == "atom_concat" and goal.relation.arity == 3:
+        return atom_concato(*args)
+    if name == "atomic_list_concat" and goal.relation.arity == 2:
+        return atomic_list_concato(*args)
+    if name == "atomic_list_concat" and goal.relation.arity == 3:
+        return atomic_list_concato_with_separator(*args)
     if name == "atom_chars" and goal.relation.arity == 2:
         return atom_charso(*args)
     if name == "atom_codes" and goal.relation.arity == 2:
@@ -368,6 +378,8 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         return number_charso(*args)
     if name == "number_codes" and goal.relation.arity == 2:
         return number_codeso(*args)
+    if name == "number_string" and goal.relation.arity == 2:
+        return number_stringo(*args)
     if name == "char_code" and goal.relation.arity == 2:
         return char_codeo(*args)
     if name == "string_chars" and goal.relation.arity == 2:

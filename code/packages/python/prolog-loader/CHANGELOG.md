@@ -50,6 +50,9 @@
 - adapt Prolog text conversion predicates `atom_chars/2`, `atom_codes/2`,
   `number_chars/2`, `number_codes/2`, `char_code/2`, `string_chars/2`, and
   `string_codes/2` into finite conversion goals
+- adapt Prolog atom composition predicates `atom_concat/3`,
+  `atomic_list_concat/2`, `atomic_list_concat/3`, and `number_string/2` into
+  finite text goals
 
 ## 0.1.0
 

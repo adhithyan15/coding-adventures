@@ -41,6 +41,9 @@ ordinary logic goal expressions.
 - `atom_charso/2`, `atom_codeso/2`, `number_charso/2`, `number_codeso/2`,
   `char_codeo/2`, `string_charso/2`, and `string_codeso/2` for finite text
   conversion relations
+- `atom_concato/3`, `atomic_list_concato/2`,
+  `atomic_list_concato_with_separator/3`, and `number_stringo/2` for finite
+  atom composition and number/string conversion modes
 - `difo(left, right)` for delayed disequality constraints
 - `clauseo(head, body)` for Prolog-style clause introspection
 - `compare_termo(order, left, right)`, `termo_lto(left, right)`,
@@ -109,9 +112,12 @@ from logic_builtins import (
     iso,
     labelingo,
     maplisto,
+    atom_concato,
     atom_charso,
     atom_codeso,
+    atomic_list_concato_with_separator,
     number_charso,
+    number_stringo,
     char_codeo,
     not_same_termo,
     subsumes_termo,
@@ -139,6 +145,7 @@ from logic_engine import (
     relation,
     rule,
     solve_all,
+    string,
     term,
     var,
 )
@@ -226,6 +233,13 @@ assert solve_all(program(), X, atom_charso(X, logic_list(["t", "e", "a"]))) == [
 assert solve_all(program(), X, atom_codeso("tea", X)) == [logic_list([116, 101, 97])]
 assert solve_all(program(), X, number_charso(X, logic_list(["4", "2"]))) == [num(42)]
 assert solve_all(program(), X, char_codeo(X, 90)) == [atom("Z")]
+assert solve_all(program(), X, atom_concato("tea", "cup", X)) == [atom("teacup")]
+assert solve_all(
+    program(),
+    X,
+    atomic_list_concato_with_separator(logic_list(["tea", 2, "go"]), "-", X),
+) == [atom("tea-2-go")]
+assert solve_all(program(), X, number_stringo(X, string("3.5"))) == [num(3.5)]
 assert solve_all(family, Body, clauseo(child("bart", "homer"), Body)) == [
     term("parent", "homer", "bart"),
 ]

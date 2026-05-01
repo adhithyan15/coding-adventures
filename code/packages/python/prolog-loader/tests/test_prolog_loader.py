@@ -839,8 +839,19 @@ class TestPrologGoalAdapter:
             ),
             relation("atom_chars", 2)(atom("tea"), logic_list(["t", "e", "a"])),
             relation("atom_codes", 2)(atom("tea"), logic_list([116, 101, 97])),
+            relation("atom_concat", 3)(atom("tea"), atom("cup"), atom("teacup")),
+            relation("atomic_list_concat", 2)(
+                logic_list(["tea", "cup"]),
+                atom("teacup"),
+            ),
+            relation("atomic_list_concat", 3)(
+                logic_list(["tea", "cup"]),
+                atom("-"),
+                atom("tea-cup"),
+            ),
             relation("number_chars", 2)(42, logic_list(["4", "2"])),
             relation("number_codes", 2)(42, logic_list([52, 50])),
+            relation("number_string", 2)(42, string("42")),
             relation("char_code", 2)(atom("A"), 65),
             relation("string_chars", 2)(string("hi"), logic_list(["h", "i"])),
             relation("string_codes", 2)(string("hi"), logic_list([104, 105])),
@@ -1089,6 +1100,11 @@ class TestPrologGoalAdapter:
             "atom_codes(Atom, [116, 101, 97]), "
             "number_chars(Number, ['4', '2']), "
             "number_codes(Float, [51, 46, 53]), "
+            "number_string(Parsed, \"7\"), "
+            "atom_concat(tea, cup, Joined), "
+            "atom_concat(Prefix, cup, teacup), "
+            "atomic_list_concat([tea, 2, go], '-', AtomList), "
+            "atomic_list_concat(Split, '-', 'tea-cup'), "
             "char_code(Char, 90), "
             "string_chars(String, [h, i]), "
             'string_codes("ok", Codes).',
@@ -1103,6 +1119,11 @@ class TestPrologGoalAdapter:
                 parsed.variables["Atom"],
                 parsed.variables["Number"],
                 parsed.variables["Float"],
+                parsed.variables["Parsed"],
+                parsed.variables["Joined"],
+                parsed.variables["Prefix"],
+                parsed.variables["AtomList"],
+                parsed.variables["Split"],
                 parsed.variables["Char"],
                 parsed.variables["String"],
                 parsed.variables["Codes"],
@@ -1114,6 +1135,11 @@ class TestPrologGoalAdapter:
                 atom("tea"),
                 num(42),
                 num(3.5),
+                num(7),
+                atom("teacup"),
+                atom("tea"),
+                atom("tea-2-go"),
+                logic_list(["tea", "cup"]),
                 atom("Z"),
                 string("hi"),
                 logic_list([111, 107]),
