@@ -345,7 +345,8 @@ Term metaprogramming treats terms as ordinary data. `univo` decomposes
 `box(tea, cake)` into `[box, tea, cake]` and can construct the term back from
 that list. `functoro` now constructs atoms and compounds when supplied a name
 and arity. `copytermo` refreshes variables in a copied term, while
-`same_termo` checks strict identity without binding variables.
+`term_variableso` extracts the unique variables still present after reification
+and `same_termo` checks strict identity without binding variables.
 
 Clause introspection treats source clauses as ordinary data. `clauseo(Head,
 Body)` enumerates facts with body `true` and rules with a term-encoded body,

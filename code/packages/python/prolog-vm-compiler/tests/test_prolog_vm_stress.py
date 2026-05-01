@@ -130,6 +130,27 @@ class TestPrologVMStress:
         assert run_compiled_prolog_query(identical) == []
         assert run_compiled_prolog_query(equal) == []
 
+    def test_term_variables_runs_through_vm(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            ?- Term = pair(X, box(Y, X), tea),
+               Y = cake,
+               term_variables(Term, Variables).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert len(answers) == 1
+        answer = answers[0].as_dict()
+        assert answer["Term"] == term(
+            "pair",
+            answer["X"],
+            term("box", "cake", answer["X"]),
+            "tea",
+        )
+        assert answer["Variables"] == logic_list([answer["X"]])
+
     def test_dif_delayed_disequality_runs_through_vm(self) -> None:
         compiled = compile_swi_prolog_source(
             """

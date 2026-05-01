@@ -168,6 +168,7 @@ __all__ = [
     "termo_gto",
     "termo_leqo",
     "termo_lto",
+    "term_variableso",
     "throwo",
     "trueo",
     "univo",
@@ -380,6 +381,7 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("termo_gto", 2),
     ("termo_leqo", 2),
     ("termo_lto", 2),
+    ("term_variableso", 2),
     ("throwo", 1),
     ("trueo", 0),
     ("univo", 2),
@@ -3731,6 +3733,41 @@ def copytermo(source: object, copy: object) -> GoalExpr:
         yield from solve_from(program_value, eq(copy_target, copied_source), copy_state)
 
     return native_goal(run, source, copy)
+
+
+def _term_variables_in_order(term_value: Term) -> tuple[LogicVar, ...]:
+    """Collect unique variables in first left-to-right occurrence order."""
+
+    seen: set[LogicVar] = set()
+    ordered: list[LogicVar] = []
+
+    def visit(current: Term) -> None:
+        if isinstance(current, LogicVar):
+            if current not in seen:
+                seen.add(current)
+                ordered.append(current)
+            return
+        if isinstance(current, Compound):
+            for argument in current.args:
+                visit(argument)
+
+    visit(term_value)
+    return tuple(ordered)
+
+
+def term_variableso(term_value: object, variables: object) -> GoalExpr:
+    """Unify ``variables`` with unique variables in a reified term."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        source_term, variables_target = args
+        ordered_variables = _term_variables_in_order(_reified(source_term, state))
+        yield from solve_from(
+            program_value,
+            eq(variables_target, logic_list(ordered_variables)),
+            state,
+        )
+
+    return native_goal(run, term_value, variables)
 
 
 def same_termo(left: object, right: object) -> GoalExpr:

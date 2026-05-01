@@ -903,6 +903,10 @@ class TestPrologGoalAdapter:
             relation("setof", 3)(atom("ok"), term("memo", atom("ok")), LogicVar(id=13)),
             relation("forall", 2)(term("memo", atom("ok")), term("memo", atom("ok"))),
             relation("copy_term", 2)(term("box", LogicVar(id=15)), LogicVar(id=14)),
+            relation("term_variables", 2)(
+                term("box", LogicVar(id=16)),
+                LogicVar(id=17),
+            ),
             relation("is_list", 1)(
                 term(".", atom("tea"), term(".", atom("cake"), atom("[]"))),
             ),

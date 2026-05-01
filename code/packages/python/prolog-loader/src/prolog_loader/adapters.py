@@ -81,6 +81,7 @@ from logic_builtins import (
     setofo,
     stringo,
     succo,
+    term_variableso,
     termo_geqo,
     termo_gto,
     termo_leqo,
@@ -345,6 +346,8 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         return univo(*args)
     if name == "copy_term" and goal.relation.arity == 2:
         return copytermo(*args)
+    if name == "term_variables" and goal.relation.arity == 2:
+        return term_variableso(*args)
     if name == "=" and goal.relation.arity == 2:
         return eq(*args)
     if name == "\\=" and goal.relation.arity == 2:
