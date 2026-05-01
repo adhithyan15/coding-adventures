@@ -70,6 +70,7 @@ members = [
     "font-parser-node",
     "font-parser-python",
     "font-parser-ruby",
+    "format-doc",
     "fp-arithmetic",
     "fsharp-lexer",
     "fsharp-parser",
