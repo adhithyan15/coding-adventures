@@ -1448,6 +1448,29 @@ def findallo(template: object, goal: object, results: object) -> GoalExpr:
     """Collect every solution of `goal` into `results`, preserving proof order."""
 
     called_goal = _as_goal(goal)
+    goal_term = _goal_term_or_none(called_goal)
+
+    if goal_term is not None:
+
+        def run_terms(
+            program_value: Program,
+            state: State,
+            args: NativeArgs,
+        ) -> Iterator[State]:
+            template_term, called_goal_term, results_term = args
+            try:
+                reified_goal = goal_from_term(_reified(called_goal_term, state))
+            except TypeError:
+                return
+            values = _collect_template_values(
+                program_value,
+                state,
+                template_term,
+                reified_goal,
+            )
+            yield from _unify_collection(program_value, state, results_term, values)
+
+        return native_goal(run_terms, template, goal_term, results)
 
     def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
         template_term, results_term = args
@@ -1466,6 +1489,31 @@ def bagofo(template: object, goal: object, results: object) -> GoalExpr:
     """Collect a non-empty proof-order bag of solutions."""
 
     called_goal = _as_goal(goal)
+    goal_term = _goal_term_or_none(called_goal)
+
+    if goal_term is not None:
+
+        def run_terms(
+            program_value: Program,
+            state: State,
+            args: NativeArgs,
+        ) -> Iterator[State]:
+            template_term, called_goal_term, results_term = args
+            try:
+                reified_goal = goal_from_term(_reified(called_goal_term, state))
+            except TypeError:
+                return
+            values = _collect_template_values(
+                program_value,
+                state,
+                template_term,
+                reified_goal,
+            )
+            if not values:
+                return
+            yield from _unify_collection(program_value, state, results_term, values)
+
+        return native_goal(run_terms, template, goal_term, results)
 
     def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
         template_term, results_term = args
@@ -1486,6 +1534,36 @@ def setofo(template: object, goal: object, results: object) -> GoalExpr:
     """Collect a non-empty sorted set of solutions."""
 
     called_goal = _as_goal(goal)
+    goal_term = _goal_term_or_none(called_goal)
+
+    if goal_term is not None:
+
+        def run_terms(
+            program_value: Program,
+            state: State,
+            args: NativeArgs,
+        ) -> Iterator[State]:
+            template_term, called_goal_term, results_term = args
+            try:
+                reified_goal = goal_from_term(_reified(called_goal_term, state))
+            except TypeError:
+                return
+            values = _collect_template_values(
+                program_value,
+                state,
+                template_term,
+                reified_goal,
+            )
+            if not values:
+                return
+            yield from _unify_collection(
+                program_value,
+                state,
+                results_term,
+                _unique_sorted_terms(values),
+            )
+
+        return native_goal(run_terms, template, goal_term, results)
 
     def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
         template_term, results_term = args
@@ -2268,6 +2346,37 @@ def forallo(generator: object, test: object) -> GoalExpr:
 
     generator_goal = _as_goal(generator)
     test_goal = _as_goal(test)
+    generator_term = _goal_term_or_none(generator_goal)
+    test_term = _goal_term_or_none(test_goal)
+
+    if generator_term is not None and test_term is not None:
+
+        def run_terms(
+            program_value: Program,
+            state: State,
+            args: NativeArgs,
+        ) -> Iterator[State]:
+            generator_goal_term, test_goal_term = args
+            try:
+                called_generator = goal_from_term(
+                    _reified(generator_goal_term, state),
+                )
+            except TypeError:
+                return
+
+            for generated_state in solve_from(program_value, called_generator, state):
+                try:
+                    called_test = goal_from_term(
+                        _reified(test_goal_term, generated_state),
+                    )
+                except TypeError:
+                    return
+                test_proofs = solve_from(program_value, called_test, generated_state)
+                if next(test_proofs, None) is None:
+                    return
+            yield state
+
+        return native_goal(run_terms, generator_term, test_term)
 
     def run(program_value: Program, state: State, _args: NativeArgs) -> Iterator[State]:
         for generated_state in solve_from(program_value, generator_goal, state):
@@ -2973,6 +3082,26 @@ def onceo(goal: object) -> GoalExpr:
     """Run `goal` and keep at most its first solution."""
 
     called_goal = _as_goal(goal)
+    goal_term = _goal_term_or_none(called_goal)
+
+    if goal_term is not None:
+
+        def run_terms(
+            program_value: Program,
+            state: State,
+            args: NativeArgs,
+        ) -> Iterator[State]:
+            (called_goal_term,) = args
+            try:
+                reified_goal = goal_from_term(_reified(called_goal_term, state))
+            except TypeError:
+                return
+            iterator = solve_from(program_value, reified_goal, state)
+            first = next(iterator, None)
+            if first is not None:
+                yield first
+
+        return native_goal(run_terms, goal_term)
 
     def run(program_value: Program, state: State, _args: NativeArgs) -> Iterator[State]:
         iterator = solve_from(program_value, called_goal, state)
@@ -2992,6 +3121,25 @@ def noto(goal: object) -> GoalExpr:
     """
 
     called_goal = _as_goal(goal)
+    goal_term = _goal_term_or_none(called_goal)
+
+    if goal_term is not None:
+
+        def run_terms(
+            program_value: Program,
+            state: State,
+            args: NativeArgs,
+        ) -> Iterator[State]:
+            (called_goal_term,) = args
+            try:
+                reified_goal = goal_from_term(_reified(called_goal_term, state))
+            except TypeError:
+                return
+            iterator = solve_from(program_value, reified_goal, state)
+            if next(iterator, None) is None:
+                yield state
+
+        return native_goal(run_terms, goal_term)
 
     def run(program_value: Program, state: State, _args: NativeArgs) -> Iterator[State]:
         iterator = solve_from(program_value, called_goal, state)

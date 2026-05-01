@@ -209,6 +209,64 @@ class TestPrologVMStress:
             {"Name": atom("cake"), "Flavor": atom("savory")},
         ]
 
+    def test_negation_once_and_aggregation_control_run_through_vm(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            item(tea).
+            item(cake).
+            item(jam).
+            blocked(cake).
+            probe(first).
+            probe(second).
+            score(2).
+            score(1).
+            duplicate(jam).
+            duplicate(tea).
+            duplicate(jam).
+
+            allowed(Item) :- item(Item), \\+ blocked(Item).
+            single_probe(Probe) :- once(probe(Probe)).
+            all_numbers_small :- forall(member(N, [1,2,3]), N < 4).
+            all_allowed(Allowed) :- findall(Value, allowed(Value), Allowed).
+            score_bag(Numbers) :- bagof(Number, score(Number), Numbers).
+            unique_duplicates(Unique) :- setof(Name, duplicate(Name), Unique).
+
+            ?- allowed(Item),
+               single_probe(Probe),
+               all_numbers_small,
+               all_allowed(Allowed),
+               score_bag(Numbers),
+               unique_duplicates(Unique),
+               \\+ allowed(cake).
+            """,
+        )
+        failure = compile_swi_prolog_source(
+            """
+            item(tea).
+            ?- \\+ item(tea).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert [answer.as_dict() for answer in answers] == [
+            {
+                "Item": atom("tea"),
+                "Probe": atom("first"),
+                "Allowed": logic_list(["tea", "jam"]),
+                "Numbers": logic_list([2, 1]),
+                "Unique": logic_list(["jam", "tea"]),
+            },
+            {
+                "Item": atom("jam"),
+                "Probe": atom("first"),
+                "Allowed": logic_list(["tea", "jam"]),
+                "Numbers": logic_list([2, 1]),
+                "Unique": logic_list(["jam", "tea"]),
+            },
+        ]
+        assert run_compiled_prolog_query(failure) == []
+
     def test_higher_order_list_predicates_run_through_vm(self) -> None:
         compiled = compile_swi_prolog_source(
             """

@@ -264,6 +264,42 @@ class TestAdvancedControlBuiltins:
             forallo(disj(eq(item, 1), eq(item, 2)), numbero(item)),
         ) == [item]
 
+    def test_control_goal_terms_preserve_rule_local_freshening(self) -> None:
+        item = var("Item")
+        probe_result = var("Probe")
+        output = var("Output")
+        inner = var("Inner")
+        item_rel = relation("item", 1)
+        blocked = relation("blocked", 1)
+        allowed = relation("allowed", 1)
+        probe = relation("probe", 1)
+        first_probe = relation("first_probe", 1)
+        all_small = relation("all_small", 0)
+        visible = relation("visible", 2)
+
+        prog = program(
+            fact(item_rel("tea")),
+            fact(item_rel("cake")),
+            fact(blocked("cake")),
+            fact(probe("first")),
+            fact(probe("second")),
+            rule(allowed(item), conj(item_rel(item), noto(blocked(item)))),
+            rule(first_probe(probe_result), onceo(probe(probe_result))),
+            rule(
+                all_small(),
+                forallo(disj(eq(inner, 1), eq(inner, 2)), lto(inner, 3)),
+            ),
+            rule(
+                visible(item, probe_result),
+                conj(allowed(item), first_probe(probe_result), all_small()),
+            ),
+        )
+
+        assert solve_all(prog, output, visible(output, probe_result)) == [atom("tea")]
+        assert solve_all(prog, probe_result, visible(output, probe_result)) == [
+            atom("first"),
+        ]
+
     def test_advanced_control_rejects_non_goals(self) -> None:
         with pytest.raises(TypeError):
             iftheno(object(), trueo())
@@ -386,6 +422,37 @@ class TestCollectionBuiltins:
             results,
             findallo(child, parent("homer", child), results),
         ) == [logic_list(["bart", "lisa"])]
+
+    def test_collectors_preserve_rule_local_freshening(self) -> None:
+        item = var("Item")
+        output = var("Output")
+        results = var("Results")
+        item_rel = relation("item", 1)
+        duplicate = relation("duplicate", 1)
+        all_items = relation("all_items", 1)
+        bagged_items = relation("bagged_items", 1)
+        unique_items = relation("unique_items", 1)
+
+        prog = program(
+            fact(item_rel("tea")),
+            fact(item_rel("cake")),
+            fact(duplicate("cake")),
+            fact(duplicate("tea")),
+            fact(duplicate("cake")),
+            rule(all_items(results), findallo(item, item_rel(item), results)),
+            rule(bagged_items(results), bagofo(item, item_rel(item), results)),
+            rule(unique_items(results), setofo(item, duplicate(item), results)),
+        )
+
+        assert solve_all(prog, output, all_items(output)) == [
+            logic_list(["tea", "cake"]),
+        ]
+        assert solve_all(prog, output, bagged_items(output)) == [
+            logic_list(["tea", "cake"]),
+        ]
+        assert solve_all(prog, output, unique_items(output)) == [
+            logic_list(["cake", "tea"]),
+        ]
 
     def test_collectors_reject_non_goals(self) -> None:
         results = var("Results")
