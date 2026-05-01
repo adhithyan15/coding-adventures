@@ -82,6 +82,8 @@ currently supports:
   `copy`, and `reg` before delimiters and EOF
 - generic named-character-reference scanning with literal fallback for unknown
   names
+- PUBLIC/SYSTEM DOCTYPE recovery diagnostics for missing whitespace, missing
+  identifier quotes, and abrupt identifier termination
 - longest-prefix named-character-reference recovery for text and RCDATA, with
   ambiguous ampersand preservation in attributes
 - semicolon-terminated decimal and hexadecimal numeric character references in

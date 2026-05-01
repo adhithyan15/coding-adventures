@@ -93,6 +93,46 @@
       ]
     },
     {
+      "description": "doctype missing whitespace after public keyword",
+      "input": "<!DOCTYPE html PUBLIC\"-//IETF//DTD HTML//EN\">",
+      "output": [
+        ["DOCTYPE", "html", "-//IETF//DTD HTML//EN", null, true]
+      ],
+      "errors": [
+        {"code": "missing-whitespace-after-doctype-public-keyword", "line": 1, "col": 22}
+      ]
+    },
+    {
+      "description": "doctype missing whitespace between public and system identifiers",
+      "input": "<!DOCTYPE html PUBLIC '-//W3C//DTD HTML 4.01//EN'\"about:legacy-compat\">",
+      "output": [
+        ["DOCTYPE", "html", "-//W3C//DTD HTML 4.01//EN", "about:legacy-compat", true]
+      ],
+      "errors": [
+        {"code": "missing-whitespace-between-doctype-public-and-system-identifiers", "line": 1, "col": 54}
+      ]
+    },
+    {
+      "description": "doctype missing quote before public identifier",
+      "input": "<!DOCTYPE html PUBLIC id>",
+      "output": [
+        ["DOCTYPE", "html", null, null, false]
+      ],
+      "errors": [
+        {"code": "missing-quote-before-doctype-public-identifier", "line": 1, "col": 23}
+      ]
+    },
+    {
+      "description": "doctype abrupt public identifier",
+      "input": "<!DOCTYPE html PUBLIC \"unterminated>",
+      "output": [
+        ["DOCTYPE", "html", "unterminated", null, false]
+      ],
+      "errors": [
+        {"code": "abrupt-doctype-public-identifier", "line": 1, "col": 35}
+      ]
+    },
+    {
       "description": "doctype missing public identifier",
       "input": "<!DOCTYPE html PUBLIC>",
       "output": [
@@ -107,6 +147,36 @@
       "input": "<!DOCTYPE html SYSTEM \"about:legacy-compat\">",
       "output": [
         ["DOCTYPE", "html", null, "about:legacy-compat", true]
+      ]
+    },
+    {
+      "description": "doctype missing whitespace after system keyword",
+      "input": "<!DOCTYPE html SYSTEM\"about:legacy-compat\">",
+      "output": [
+        ["DOCTYPE", "html", null, "about:legacy-compat", true]
+      ],
+      "errors": [
+        {"code": "missing-whitespace-after-doctype-system-keyword", "line": 1, "col": 22}
+      ]
+    },
+    {
+      "description": "doctype missing quote before system identifier",
+      "input": "<!DOCTYPE html SYSTEM id>",
+      "output": [
+        ["DOCTYPE", "html", null, null, false]
+      ],
+      "errors": [
+        {"code": "missing-quote-before-doctype-system-identifier", "line": 1, "col": 23}
+      ]
+    },
+    {
+      "description": "doctype abrupt system identifier",
+      "input": "<!DOCTYPE html SYSTEM \"about:legacy-compat>",
+      "output": [
+        ["DOCTYPE", "html", null, "about:legacy-compat", false]
+      ],
+      "errors": [
+        {"code": "abrupt-doctype-system-identifier", "line": 1, "col": 42}
       ]
     },
     {
