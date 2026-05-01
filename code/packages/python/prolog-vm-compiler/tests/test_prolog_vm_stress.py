@@ -6,6 +6,7 @@ from logic_engine import (
     Compound,
     Disequality,
     LogicVar,
+    Number,
     atom,
     logic_list,
     num,
@@ -178,6 +179,29 @@ class TestPrologVMStress:
             "tea",
         )
         assert answer["Variables"] == logic_list([answer["X"]])
+
+    def test_term_hash_predicates_run_through_vm(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            ?- read_term_from_atom('pair(X, X)', VariantLeft, []),
+               read_term_from_atom('pair(Y, Y)', VariantRight, []),
+               read_term_from_atom('pair(X, Y)', Different, []),
+               term_hash(VariantLeft, FirstHash),
+               term_hash(VariantRight, SecondHash),
+               term_hash(Different, DifferentHash),
+               term_hash(box(tea), 2, 1000, BoundedHash).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert len(answers) == 1
+        answer = answers[0].as_dict()
+        assert answer["FirstHash"] == answer["SecondHash"]
+        assert answer["FirstHash"] != answer["DifferentHash"]
+        bounded = answer["BoundedHash"]
+        assert isinstance(bounded, Number)
+        assert 0 <= bounded.value < 1000
 
     def test_text_conversion_predicates_run_through_vm(self) -> None:
         compiled = compile_swi_prolog_source(

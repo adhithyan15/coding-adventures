@@ -12,6 +12,7 @@ from logic_engine import (
     DisjExpr,
     FreshExpr,
     LogicVar,
+    Number,
     RelationCall,
     State,
     atom,
@@ -959,6 +960,13 @@ class TestPrologGoalAdapter:
                 0,
                 LogicVar(id=89),
             ),
+            relation("term_hash", 2)(term("box", atom("tea")), LogicVar(id=90)),
+            relation("term_hash", 4)(
+                term("box", atom("tea")),
+                2,
+                1_000,
+                LogicVar(id=91),
+            ),
             relation("term_to_atom", 2)(term("box", atom("tea")), LogicVar(id=84)),
             relation("atom_to_term", 3)(
                 atom("box(X)"),
@@ -1275,6 +1283,32 @@ class TestPrologGoalAdapter:
                 atom("pair('$VAR'(0), box('$VAR'(1)), '$VAR'(0))"),
             ),
         ]
+
+    def test_adapt_prolog_goal_rewrites_term_hash_predicates(self) -> None:
+        parsed = parse_swi_query(
+            "?- term_hash(pair(X, X), FirstHash), "
+            "term_hash(pair(Y, Y), SecondHash), "
+            "term_hash(pair(X, Y), DifferentHash), "
+            "term_hash(box(tea), 2, 1000, BoundedHash).",
+        )
+
+        answers = solve_all(
+            program(),
+            (
+                parsed.variables["FirstHash"],
+                parsed.variables["SecondHash"],
+                parsed.variables["DifferentHash"],
+                parsed.variables["BoundedHash"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        assert len(answers) == 1
+        first, second, different, bounded = answers[0]
+        assert first == second
+        assert first != different
+        assert isinstance(bounded, Number)
+        assert 0 <= bounded.value < 1000
 
     def test_adapt_prolog_goal_rejects_unsupported_term_io_options(self) -> None:
         parsed_read = parse_swi_query(

@@ -102,6 +102,8 @@ from logic_builtins import (
     sub_stringo,
     subsumes_termo,
     succo,
+    term_hash_boundedo,
+    term_hasho,
     term_variableso,
     termo_geqo,
     termo_gto,
@@ -384,6 +386,10 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         return term_variableso(*args)
     if name == "numbervars" and goal.relation.arity == 3:
         return numbervarso(*args)
+    if name == "term_hash" and goal.relation.arity == 2:
+        return term_hasho(*args)
+    if name == "term_hash" and goal.relation.arity == 4:
+        return term_hash_boundedo(*args)
     if name == "term_to_atom" and goal.relation.arity == 2:
         return _term_to_atom_goal(*args)
     if name == "atom_to_term" and goal.relation.arity == 3:

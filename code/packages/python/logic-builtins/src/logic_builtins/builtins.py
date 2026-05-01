@@ -16,6 +16,7 @@ from __future__ import annotations
 
 from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass
+from hashlib import blake2b
 from itertools import product
 
 from logic_engine import (
@@ -188,6 +189,8 @@ __all__ = [
     "termo_leqo",
     "termo_lto",
     "term_variableso",
+    "term_hash_boundedo",
+    "term_hasho",
     "throwo",
     "trueo",
     "univo",
@@ -202,10 +205,12 @@ type NativeArgs = tuple[Term, ...]
 type NativeRunner = Callable[[Program, State, NativeArgs], Iterator[State]]
 type NumericValue = int | float
 type TermSortKey = tuple[object, ...]
+type TermHashKey = tuple[object, ...]
 type FdOperator = str
 
 
 _MAX_FD_DOMAIN_SIZE = 10_000
+_DEFAULT_TERM_HASH_RANGE = 2_147_483_647
 
 
 @dataclass(frozen=True, slots=True)
@@ -423,6 +428,8 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("sub_atomo", 5),
     ("sub_stringo", 5),
     ("succo", 2),
+    ("term_hash_boundedo", 4),
+    ("term_hasho", 2),
     ("termo_geqo", 2),
     ("termo_gto", 2),
     ("termo_leqo", 2),
@@ -4574,6 +4581,87 @@ def numbervarso(term_value: object, start: object, end: object) -> GoalExpr:
         yield from solve_from(program_value, conj(*goals), state)
 
     return native_goal(run, term_value, start, end)
+
+
+def _term_hash_key(
+    term_value: Term,
+    depth_limit: int | None,
+    variables: dict[LogicVar, int],
+    depth: int,
+) -> TermHashKey:
+    """Return a deterministic, variant-aware structural key for a term."""
+
+    if depth_limit is not None and depth >= depth_limit:
+        return ("depth",)
+    if isinstance(term_value, LogicVar):
+        index = variables.setdefault(term_value, len(variables))
+        return ("var", index)
+    if isinstance(term_value, Number):
+        return ("number", type(term_value.value).__name__, term_value.value)
+    if isinstance(term_value, Atom):
+        return ("atom", term_value.symbol.namespace or "", term_value.symbol.name)
+    if isinstance(term_value, String):
+        return ("string", term_value.value)
+    return (
+        "compound",
+        term_value.functor.namespace or "",
+        term_value.functor.name,
+        len(term_value.args),
+        tuple(
+            _term_hash_key(argument, depth_limit, variables, depth + 1)
+            for argument in term_value.args
+        ),
+    )
+
+
+def _term_hash_value(term_value: Term, depth_limit: int | None, range_size: int) -> int:
+    """Hash a term key to a stable non-negative integer within ``range_size``."""
+
+    key = _term_hash_key(term_value, depth_limit, {}, 0)
+    digest = blake2b(repr(key).encode("utf-8"), digest_size=8).digest()
+    return int.from_bytes(digest, "big") % range_size
+
+
+def term_hash_boundedo(
+    term_value: object,
+    depth: object,
+    range_value: object,
+    hash_value: object,
+) -> GoalExpr:
+    """Unify ``hash_value`` with a depth/range-bounded structural term hash."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        source_term, depth_term, range_term, hash_target = args
+        depth_limit = _reified_integer(depth_term, state)
+        range_size = _reified_integer(range_term, state)
+        if depth_limit is None or range_size is None:
+            return
+        if depth_limit < 0 or range_size <= 0:
+            return
+
+        hashed = _term_hash_value(
+            _reified(source_term, state),
+            depth_limit,
+            range_size,
+        )
+        yield from solve_from(program_value, eq(hash_target, hashed), state)
+
+    return native_goal(run, term_value, depth, range_value, hash_value)
+
+
+def term_hasho(term_value: object, hash_value: object) -> GoalExpr:
+    """Unify ``hash_value`` with a deterministic structural term hash."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        source_term, hash_target = args
+        hashed = _term_hash_value(
+            _reified(source_term, state),
+            None,
+            _DEFAULT_TERM_HASH_RANGE,
+        )
+        yield from solve_from(program_value, eq(hash_target, hashed), state)
+
+    return native_goal(run, term_value, hash_value)
 
 
 def same_termo(left: object, right: object) -> GoalExpr:
