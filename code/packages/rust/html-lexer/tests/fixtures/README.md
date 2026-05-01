@@ -112,6 +112,8 @@ currently supports:
   uppercase/lowercase aliases
 - remaining WHATWG arrow, vector, harpoon, fish-tail, and negated arrow named
   character references
+- remaining WHATWG set-algebra named character references, including cap/cup,
+  square-set, subset/superset, and negated aliases
 - missing-semicolon recovery for legacy named character references `nbsp`,
   `copy`, and `reg` before delimiters and EOF
 - generic named-character-reference scanning with literal fallback for unknown
