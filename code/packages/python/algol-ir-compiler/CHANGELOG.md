@@ -97,6 +97,9 @@ All notable changes to this package will be documented in this file.
 - Lowered real exponentiation to integer-to-real promotion and the imported
   `F64_POW` IR opcode, with NaN results routed through the runtime-failure
   path.
+- Added configurable generated-state limits for eval thunks, conditional label
+  sets, loop label sets, switch dispatch states, and output helper label sets,
+  with targeted `CompileError` diagnostics when lowering would exceed them.
 
 ## [0.1.0] - 2026-04-20
 

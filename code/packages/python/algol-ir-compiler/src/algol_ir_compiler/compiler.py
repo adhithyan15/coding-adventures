@@ -98,6 +98,10 @@ _PROCEDURE_DESCRIPTOR_SIZE = 8
 _PROCEDURE_DESCRIPTOR_ID_OFFSET = 0
 _PROCEDURE_DESCRIPTOR_STATIC_LINK_OFFSET = 4
 _MAX_EVAL_THUNKS = 256
+_MAX_IF_LABEL_SETS = 4096
+_MAX_LOOP_LABEL_SETS = 2048
+_MAX_SWITCH_DISPATCHES = 1024
+_MAX_OUTPUT_LABEL_SETS = 2048
 _INTEGER_TYPE = "integer"
 _BOOLEAN_TYPE = "boolean"
 _REAL_TYPE = "real"
@@ -128,6 +132,17 @@ _BUILTIN_REAL_MATH_OPS = {
     _BUILTIN_EXP_LABEL: IrOp.F64_EXP,
 }
 _WRITE_SYSCALL = 1
+
+
+@dataclass(frozen=True)
+class IrCompilerLimits:
+    """Resource limits for generated ALGOL IR helper state."""
+
+    max_eval_thunks: int = _MAX_EVAL_THUNKS
+    max_if_label_sets: int = _MAX_IF_LABEL_SETS
+    max_loop_label_sets: int = _MAX_LOOP_LABEL_SETS
+    max_switch_dispatches: int = _MAX_SWITCH_DISPATCHES
+    max_output_label_sets: int = _MAX_OUTPUT_LABEL_SETS
 
 
 @dataclass(frozen=True)
@@ -217,7 +232,8 @@ class AlgolIrCompiler:
     operands for the generic memory instructions consumed by the WASM backend.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, limits: IrCompilerLimits | None = None) -> None:
+        self.limits = limits or IrCompilerLimits()
         self.ids = IDGenerator()
         self.program = IrProgram(entry_label="_start")
         self.source_ast: ASTNode | None = None
@@ -927,8 +943,7 @@ class AlgolIrCompiler:
         )
 
     def _emit_zero_memory(self, start_pointer: int, end_pointer: int) -> None:
-        index = self.loop_count
-        self.loop_count += 1
+        index = self._next_loop_index()
         loop_label = f"loop_{index}_start"
         end_label = f"loop_{index}_end"
         cursor = self._fresh_reg()
@@ -962,8 +977,7 @@ class AlgolIrCompiler:
     def _emit_copy_memory(
         self, source_pointer: int, target_pointer: int, byte_count: int
     ) -> None:
-        index = self.loop_count
-        self.loop_count += 1
+        index = self._next_loop_index()
         loop_label = f"loop_{index}_start"
         end_label = f"loop_{index}_end"
         cursor = self._fresh_reg()
@@ -1055,8 +1069,7 @@ class AlgolIrCompiler:
         if execution_scope is None:
             execution_scope = scope
         if any(token.value == "if" for token in _direct_tokens(node)):
-            index = self.if_count
-            self.if_count += 1
+            index = self._next_if_index()
             else_label = f"if_{index}_else"
             bool_expr = _first_direct_node(node, "bool_expr")
             if bool_expr is None:
@@ -1287,8 +1300,7 @@ class AlgolIrCompiler:
             selection.declaration_block_id,
             scope,
         )
-        dispatch_index = self.switch_count
-        self.switch_count += 1
+        dispatch_index = self._next_switch_index()
         self.active_switch_selection_ids.append(selection.switch_id)
         try:
             for entry_index, entry_node_id in enumerate(
@@ -1327,8 +1339,7 @@ class AlgolIrCompiler:
         scope: _FrameScope,
     ) -> int:
         if any(token.value == "if" for token in _direct_tokens(node)):
-            index = self.if_count
-            self.if_count += 1
+            index = self._next_if_index()
             else_label = f"if_{index}_else"
             end_label = f"if_{index}_end"
             result = self._fresh_reg()
@@ -1430,8 +1441,7 @@ class AlgolIrCompiler:
         index_value: int,
         entry_scope: _FrameScope,
     ) -> int:
-        dispatch_index = self.switch_count
-        self.switch_count += 1
+        dispatch_index = self._next_switch_index()
         result = self._const_reg(0)
         end_label = f"switch_value_{dispatch_index}_end"
         self.active_switch_selection_ids.append(selection.switch_id)
@@ -1534,8 +1544,7 @@ class AlgolIrCompiler:
         self._emit_store_reference(target, scope, coerced)
 
     def _compile_if(self, cond: ASTNode, scope: _FrameScope) -> None:
-        index = self.if_count
-        self.if_count += 1
+        index = self._next_if_index()
         else_label = f"if_{index}_else"
         end_label = f"if_{index}_end"
 
@@ -1575,8 +1584,7 @@ class AlgolIrCompiler:
         if not elements:
             return
 
-        index = self.loop_count
-        self.loop_count += 1
+        index = self._next_loop_index()
         if len(elements) == 1:
             self._compile_single_for_element(
                 elements[0],
@@ -2309,8 +2317,7 @@ class AlgolIrCompiler:
         else_expr: ASTNode,
         scope: _FrameScope,
     ) -> int:
-        index = self.if_count
-        self.if_count += 1
+        index = self._next_if_index()
         else_label = f"if_{index}_else"
         end_label = f"if_{index}_end"
         result_type = self._expr_type(node)
@@ -2459,8 +2466,7 @@ class AlgolIrCompiler:
         right: ASTNode | Token,
         scope: _FrameScope,
     ) -> int:
-        index = self.if_count
-        self.if_count += 1
+        index = self._next_if_index()
         end_label = f"bool_{index}_{operator}_end"
         result = self._fresh_reg()
 
@@ -2765,8 +2771,7 @@ class AlgolIrCompiler:
         return result
 
     def _emit_integer_power(self, base: int, exponent: int) -> int:
-        index = self.if_count
-        self.if_count += 1
+        index = self._next_if_index()
         negative_label = f"pow_{index}_negative"
         loop_label = f"pow_{index}_loop"
         end_label = f"pow_{index}_end"
@@ -2815,8 +2820,7 @@ class AlgolIrCompiler:
     def _emit_real_integer_power(
         self, base: int, exponent: int, scope: _FrameScope
     ) -> int:
-        index = self.if_count
-        self.if_count += 1
+        index = self._next_if_index()
         negative_label = f"pow_{index}_negative"
         prepare_loop_label = f"pow_{index}_prepare_loop"
         loop_label = f"pow_{index}_loop"
@@ -3462,8 +3466,7 @@ class AlgolIrCompiler:
         raise CompileError(f"unknown builtin numeric function {call.name!r}")
 
     def _emit_builtin_abs(self, value: int, actual_type: str) -> int:
-        index = self.if_count
-        self.if_count += 1
+        index = self._next_if_index()
         nonnegative_label = f"builtin_abs_{index}_nonnegative"
         end_label = f"builtin_abs_{index}_end"
         result = self._fresh_reg()
@@ -3517,8 +3520,7 @@ class AlgolIrCompiler:
         if actual_type != _REAL_TYPE:
             raise CompileError(f"builtin entier does not support {actual_type}")
 
-        index = self.if_count
-        self.if_count += 1
+        index = self._next_if_index()
         maybe_adjust_label = f"builtin_entier_{index}_maybe_adjust"
         end_label = f"builtin_entier_{index}_end"
         result = self._fresh_reg()
@@ -3557,8 +3559,7 @@ class AlgolIrCompiler:
         return result
 
     def _emit_builtin_sign(self, value: int, actual_type: str) -> int:
-        index = self.if_count
-        self.if_count += 1
+        index = self._next_if_index()
         nonnegative_label = f"builtin_sign_{index}_nonnegative"
         zero_label = f"builtin_sign_{index}_zero"
         end_label = f"builtin_sign_{index}_end"
@@ -3714,8 +3715,7 @@ class AlgolIrCompiler:
         )
 
     def _emit_output_string(self, pointer_reg: int, scope: _FrameScope) -> None:
-        index = self.output_count
-        self.output_count += 1
+        index = self._next_output_index()
         loop_label = f"algol_label_output_string_{index}_loop"
         end_label = f"algol_label_output_string_{index}_end"
         data_guard_done_label = f"algol_label_output_string_{index}_data_guard_done"
@@ -3793,8 +3793,7 @@ class AlgolIrCompiler:
         self._label(end_label)
 
     def _emit_output_boolean(self, value_reg: int, scope: _FrameScope) -> None:
-        index = self.output_count
-        self.output_count += 1
+        index = self._next_output_index()
         false_label = f"algol_label_output_bool_{index}_false"
         end_label = f"algol_label_output_bool_{index}_end"
         self._emit(IrOp.BRANCH_Z, IrRegister(value_reg), IrLabel(false_label))
@@ -3805,8 +3804,7 @@ class AlgolIrCompiler:
         self._label(end_label)
 
     def _emit_output_integer(self, value_reg: int, scope: _FrameScope) -> None:
-        index = self.output_count
-        self.output_count += 1
+        index = self._next_output_index()
         extract_loop_label = f"algol_label_output_int_{index}_extract_loop"
         emit_label = f"algol_label_output_int_{index}_emit"
         emit_loop_label = f"algol_label_output_int_{index}_emit_loop"
@@ -3901,8 +3899,7 @@ class AlgolIrCompiler:
         self._label(end_label)
 
     def _emit_output_real(self, value_reg: int, scope: _FrameScope) -> None:
-        index = self.output_count
-        self.output_count += 1
+        index = self._next_output_index()
         positive_label = f"algol_label_output_real_{index}_positive"
         normalized_label = f"algol_label_output_real_{index}_normalized"
         no_carry_label = f"algol_label_output_real_{index}_no_carry"
@@ -4092,9 +4089,9 @@ class AlgolIrCompiler:
             IrRegister(work_reg),
             IrRegister(product_reg),
         )
-        invert_label = f"algol_label_output_digit_{self.output_count}_invert"
-        continue_label = f"algol_label_output_digit_{self.output_count}_continue"
-        self.output_count += 1
+        index = self._next_output_index()
+        invert_label = f"algol_label_output_digit_{index}_invert"
+        continue_label = f"algol_label_output_digit_{index}_continue"
         self._emit(
             IrOp.BRANCH_Z,
             IrRegister(negative_reg),
@@ -4411,15 +4408,15 @@ class AlgolIrCompiler:
         label_value: int,
         scope: _FrameScope,
     ) -> None:
-        end_label = f"label_value_{self.if_count}_end"
-        self.if_count += 1
+        index = self._next_if_index()
+        end_label = f"label_value_{index}_end"
         active_scopes = self._active_function_scopes(scope)
         active_block_ids = {active_scope.block_id for active_scope in active_scopes}
         for label in self.labels_by_id.values():
             if label.declaring_block_id not in active_block_ids:
                 continue
-            next_label = f"label_value_{self.if_count}_next"
-            self.if_count += 1
+            next_index = self._next_if_index()
+            next_label = f"label_value_{next_index}_next"
             matches = self._fresh_reg()
             self._emit(
                 IrOp.CMP_EQ,
@@ -4514,10 +4511,10 @@ class AlgolIrCompiler:
         is_array_element: bool = False,
         store_capable: bool = False,
     ) -> _EvalThunk:
-        if len(self.eval_thunks) >= _MAX_EVAL_THUNKS:
+        if len(self.eval_thunks) >= self.limits.max_eval_thunks:
             raise CompileError(
                 "ALGOL program requires more than "
-                f"{_MAX_EVAL_THUNKS} by-name eval thunks"
+                f"{self.limits.max_eval_thunks} by-name eval thunks"
             )
         thunk = _EvalThunk(
             thunk_id=len(self.eval_thunks) + 1,
@@ -4666,8 +4663,7 @@ class AlgolIrCompiler:
         for thunk in self.eval_thunks:
             if (thunk_kind == _REAL_TYPE) != (thunk.type_name == _REAL_TYPE):
                 continue
-            index = self.if_count
-            self.if_count += 1
+            index = self._next_if_index()
             else_label = f"if_{index}_else"
             end_label = f"if_{index}_end"
             matches = self._fresh_reg()
@@ -4745,8 +4741,7 @@ class AlgolIrCompiler:
                 continue
             if (thunk_kind == _REAL_TYPE) != (thunk.type_name == _REAL_TYPE):
                 continue
-            index = self.if_count
-            self.if_count += 1
+            index = self._next_if_index()
             else_label = f"if_{index}_else"
             end_label = f"if_{index}_end"
             matches = self._fresh_reg()
@@ -4813,8 +4808,7 @@ class AlgolIrCompiler:
             IrRegister(self._const_reg(_SWITCH_DESCRIPTOR_CALLER_FRAME_OFFSET)),
         )
         for switch in self.switches.values():
-            index = self.if_count
-            self.if_count += 1
+            index = self._next_if_index()
             else_label = f"if_{index}_else"
             end_label = f"if_{index}_end"
             matches = self._fresh_reg()
@@ -4900,8 +4894,7 @@ class AlgolIrCompiler:
                 return_type=return_type,
             ):
                 continue
-            index = self.if_count
-            self.if_count += 1
+            index = self._next_if_index()
             else_label = f"if_{index}_else"
             end_label = f"if_{index}_end"
             matches = self._fresh_reg()
@@ -5039,8 +5032,7 @@ class AlgolIrCompiler:
         active_thunk_heap_mark: int,
     ) -> int:
         tag = self._fresh_reg()
-        index = self.if_count
-        self.if_count += 1
+        index = self._next_if_index()
         storage_label = f"if_{index}_else"
         end_label = f"if_{index}_end"
         dst = self._fresh_reg()
@@ -5092,8 +5084,7 @@ class AlgolIrCompiler:
             IrRegister(failed),
             IrRegister(pending_label),
         )
-        index = self.if_count
-        self.if_count += 1
+        index = self._next_if_index()
         continue_label = f"if_{index}_else"
         end_label = f"if_{index}_end"
         self._emit(
@@ -5571,8 +5562,7 @@ class AlgolIrCompiler:
     ) -> int:
         pointer = self._emit_reference_pointer(reference, scope)
         tag = self._fresh_reg()
-        index = self.if_count
-        self.if_count += 1
+        index = self._next_if_index()
         storage_label = f"if_{index}_else"
         end_label = f"if_{index}_end"
         dst = self._fresh_reg()
@@ -5674,8 +5664,7 @@ class AlgolIrCompiler:
         pointer = self._emit_reference_pointer(reference, scope)
         if self._is_by_name_reference(reference):
             tag = self._fresh_reg()
-            index = self.if_count
-            self.if_count += 1
+            index = self._next_if_index()
             storage_label = f"if_{index}_else"
             end_label = f"if_{index}_end"
             self._emit(
@@ -6139,8 +6128,7 @@ class AlgolIrCompiler:
         return _REAL_RESULT_REG if type_name == _REAL_TYPE else _RESULT_REG
 
     def _emit_stack_overflow_guard(self, overflow_reg: int) -> None:
-        index = self.if_count
-        self.if_count += 1
+        index = self._next_if_index()
         else_label = f"if_{index}_else"
         end_label = f"if_{index}_end"
         self._emit(IrOp.BRANCH_Z, IrRegister(overflow_reg), IrLabel(else_label))
@@ -6151,8 +6139,7 @@ class AlgolIrCompiler:
         self._label(end_label)
 
     def _emit_runtime_failure_guard(self, failed_reg: int, scope: _FrameScope) -> None:
-        index = self.if_count
-        self.if_count += 1
+        index = self._next_if_index()
         else_label = f"if_{index}_else"
         end_label = f"if_{index}_end"
         self._emit(IrOp.BRANCH_Z, IrRegister(failed_reg), IrLabel(else_label))
@@ -6201,8 +6188,7 @@ class AlgolIrCompiler:
     def _emit_handle_pending_goto_after_call(self, scope: _FrameScope) -> None:
         pending_label = self._fresh_reg()
         self._load_runtime_state(_RUNTIME_PENDING_GOTO_LABEL_OFFSET, pending_label)
-        index = self.if_count
-        self.if_count += 1
+        index = self._next_if_index()
         no_pending_label = f"if_{index}_else"
         end_label = f"if_{index}_end"
         self._emit(IrOp.BRANCH_Z, IrRegister(pending_label), IrLabel(no_pending_label))
@@ -6221,9 +6207,9 @@ class AlgolIrCompiler:
         for label in self.labels_by_id.values():
             if label.declaring_block_id not in active_block_ids:
                 continue
-            next_label = f"if_{self.if_count}_else"
-            next_end_label = f"if_{self.if_count}_end"
-            self.if_count += 1
+            next_index = self._next_if_index()
+            next_label = f"if_{next_index}_else"
+            next_end_label = f"if_{next_index}_end"
             matches = self._fresh_reg()
             self._emit(
                 IrOp.CMP_EQ,
@@ -6280,8 +6266,7 @@ class AlgolIrCompiler:
         failed_reg: int,
         scope: _FrameScope,
     ) -> None:
-        index = self.if_count
-        self.if_count += 1
+        index = self._next_if_index()
         else_label = f"if_{index}_else"
         end_label = f"if_{index}_end"
         self._emit(IrOp.BRANCH_Z, IrRegister(failed_reg), IrLabel(else_label))
@@ -6327,8 +6312,7 @@ class AlgolIrCompiler:
     def _emit_mark_thunk_failure_if_helper_active(self) -> None:
         depth = self._fresh_reg()
         self._load_runtime_state(_RUNTIME_THUNK_HELPER_DEPTH_OFFSET, depth)
-        index = self.if_count
-        self.if_count += 1
+        index = self._next_if_index()
         else_label = f"if_{index}_else"
         end_label = f"if_{index}_end"
         self._emit(IrOp.BRANCH_Z, IrRegister(depth), IrLabel(else_label))
@@ -6340,8 +6324,7 @@ class AlgolIrCompiler:
     def _emit_helper_return_on_thunk_failure(self, scope: _FrameScope) -> None:
         failed = self._fresh_reg()
         self._load_runtime_state(_RUNTIME_THUNK_FAILURE_OFFSET, failed)
-        index = self.if_count
-        self.if_count += 1
+        index = self._next_if_index()
         else_label = f"if_{index}_else"
         end_label = f"if_{index}_end"
         self._emit(IrOp.BRANCH_Z, IrRegister(failed), IrLabel(else_label))
@@ -6357,8 +6340,7 @@ class AlgolIrCompiler:
         mark_reg = scope.active_thunk_heap_mark_reg
         if mark_reg is None:
             return
-        index = self.if_count
-        self.if_count += 1
+        index = self._next_if_index()
         else_label = f"if_{index}_else"
         end_label = f"if_{index}_end"
         has_mark = self._fresh_reg()
@@ -6576,6 +6558,50 @@ class AlgolIrCompiler:
         self.next_reg += 1
         return reg
 
+    def _next_if_index(self) -> int:
+        return self._next_limited_index(
+            counter_name="if_count",
+            limit=self.limits.max_if_label_sets,
+            description="conditional/generated label sets",
+        )
+
+    def _next_loop_index(self) -> int:
+        return self._next_limited_index(
+            counter_name="loop_count",
+            limit=self.limits.max_loop_label_sets,
+            description="loop label sets",
+        )
+
+    def _next_switch_index(self) -> int:
+        return self._next_limited_index(
+            counter_name="switch_count",
+            limit=self.limits.max_switch_dispatches,
+            description="switch dispatch states",
+        )
+
+    def _next_output_index(self) -> int:
+        return self._next_limited_index(
+            counter_name="output_count",
+            limit=self.limits.max_output_label_sets,
+            description="output helper label sets",
+        )
+
+    def _next_limited_index(
+        self,
+        *,
+        counter_name: str,
+        limit: int,
+        description: str,
+    ) -> int:
+        current = getattr(self, counter_name)
+        if current >= limit:
+            raise CompileError(
+                "ALGOL program requires more than "
+                f"{limit} {description}"
+            )
+        setattr(self, counter_name, current + 1)
+        return current
+
     def _label(self, name: str) -> None:
         self.program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel(name)], id=-1))
 
@@ -6587,8 +6613,11 @@ class AlgolIrCompiler:
         )
 
 
-def compile_algol(typed: TypeCheckResult | ASTNode) -> CompileResult:
-    return AlgolIrCompiler().compile(typed)
+def compile_algol(
+    typed: TypeCheckResult | ASTNode,
+    limits: IrCompilerLimits | None = None,
+) -> CompileResult:
+    return AlgolIrCompiler(limits=limits).compile(typed)
 
 
 def _node_children(node: ASTNode | None) -> list[ASTNode]:

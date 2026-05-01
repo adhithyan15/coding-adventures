@@ -1536,9 +1536,10 @@ The exact defaults may be conservative and configurable.
 Current implementation note: the Python ALGOL lane enforces the first
 front-end limits through the WASM package's source-length guard and the type
 checker's configurable AST-depth, block-depth, and procedure-depth checks. The
-runtime lowering already keeps frames, dynamic arrays, output, and eval-thunk
-descriptors bounded; future convergence work should continue closing the
-remaining generated-state and host-execution budget items against this list.
+runtime lowering already keeps frames, dynamic arrays, output, eval-thunk
+descriptors, and generated control/helper label state bounded; future
+convergence work should continue closing the remaining host-execution budget
+items against this list.
 
 ## Documentation Requirements
 
