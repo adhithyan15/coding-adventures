@@ -7,6 +7,7 @@ from collections.abc import Callable, Iterator
 
 from logic_builtins import (
     abolisho,
+    acyclic_termo,
     all_differento,
     argo,
     assertao,
@@ -35,6 +36,7 @@ from logic_builtins import (
     current_predicateo,
     current_prolog_flago,
     cuto,
+    cyclic_termo,
     difo,
     dynamico,
     excludeo,
@@ -217,6 +219,8 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         "var": varo,
         "nonvar": nonvaro,
         "ground": groundo,
+        "acyclic_term": acyclic_termo,
+        "cyclic_term": cyclic_termo,
         "atom": atomo,
         "atomic": atomico,
         "integer": integero,

@@ -26,7 +26,8 @@ ordinary logic goal expressions.
 - `trueo()` and `failo()`
 - `iftheno(condition, then_goal)` and `ifthenelseo(condition, then_goal, else_goal)`
 - `forallo(generator, test)`
-- `groundo(term)`
+- `groundo(term)`, `acyclic_termo(term)`, and `cyclic_termo(term)` for
+  term-shape checks
 - `varo(term)` and `nonvaro(term)`
 - `atomo(term)`, `integero(term)`, `numbero(term)`, `stringo(term)`, and
   `compoundo(term)`
@@ -117,6 +118,8 @@ from logic_builtins import (
     compound_name_arityo,
     geqo,
     groundo,
+    acyclic_termo,
+    cyclic_termo,
     ifthenelseo,
     includeo,
     integero,
@@ -430,11 +433,13 @@ Term metaprogramming treats terms as ordinary data. `univo` decomposes
 `box(tea, cake)` into `[box, tea, cake]` and can construct the term back from
 that list. `functoro` now constructs atoms and compounds when supplied a name
 and arity, while `compound_name_argumentso` and `compound_name_arityo` provide
-compound-only name/arguments and name/arity reflection. `copytermo` refreshes
-variables in a copied term, while `term_variableso` extracts the unique
-variables still present after reification, `term_hasho` gives variant-aware
-structural hashes for indexing and memoization, and `same_termo` checks strict
-identity without binding variables.
+compound-only name/arguments and name/arity reflection. `acyclic_termo` and
+`cyclic_termo` expose standard finite-vs-rational-tree checks; today all
+ordinary engine terms are acyclic because the core term model is immutable.
+`copytermo` refreshes variables in a copied term, while `term_variableso`
+extracts the unique variables still present after reification, `term_hasho`
+gives variant-aware structural hashes for indexing and memoization, and
+`same_termo` checks strict identity without binding variables.
 
 Clause introspection treats source clauses as ordinary data. `clauseo(Head,
 Body)` enumerates facts with body `true` and rules with a term-encoded body,

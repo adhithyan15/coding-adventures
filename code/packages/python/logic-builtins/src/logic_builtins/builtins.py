@@ -68,6 +68,7 @@ from logic_engine import (
 
 __all__ = [
     "add",
+    "acyclic_termo",
     "all_differento",
     "argo",
     "atom_concato",
@@ -92,6 +93,7 @@ __all__ = [
     "current_prolog_flago",
     "current_predicateo",
     "cuto",
+    "cyclic_termo",
     "difo",
     "dynamico",
     "div",
@@ -320,6 +322,7 @@ _DEFAULT_LABELING_OPTIONS = LabelingOptions()
 
 _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("abolisho", 2),
+    ("acyclic_termo", 1),
     ("all_differento", 1),
     ("argo", 3),
     ("assertao", 1),
@@ -355,6 +358,7 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("current_prolog_flago", 2),
     ("current_predicateo", 2),
     ("cuto", 0),
+    ("cyclic_termo", 1),
     ("difo", 2),
     ("dynamico", 2),
     ("fd_eqo", 2),
@@ -501,6 +505,24 @@ def _is_ground(term_value: Term) -> bool:
     if isinstance(term_value, Compound):
         return all(_is_ground(argument) for argument in term_value.args)
     return True
+
+
+def _is_acyclic_term(term_value: Term, visiting: set[int] | None = None) -> bool:
+    """Return True when a term graph contains no recursive compound path."""
+
+    if not isinstance(term_value, Compound):
+        return True
+
+    active = visiting if visiting is not None else set()
+    identity = id(term_value)
+    if identity in active:
+        return False
+
+    active.add(identity)
+    try:
+        return all(_is_acyclic_term(argument, active) for argument in term_value.args)
+    finally:
+        active.remove(identity)
 
 
 def _is_empty_list(term_value: Term) -> bool:
@@ -3612,6 +3634,26 @@ def groundo(term_value: object) -> GoalExpr:
     def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
         (target,) = args
         yield from _succeed_if(_is_ground(_reified(target, state)), state)
+
+    return native_goal(run, term_value)
+
+
+def acyclic_termo(term_value: object) -> GoalExpr:
+    """Succeed when the current value of ``term_value`` has no cycles."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        (target,) = args
+        yield from _succeed_if(_is_acyclic_term(_reified(target, state)), state)
+
+    return native_goal(run, term_value)
+
+
+def cyclic_termo(term_value: object) -> GoalExpr:
+    """Succeed when the current value of ``term_value`` contains a cycle."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        (target,) = args
+        yield from _succeed_if(not _is_acyclic_term(_reified(target, state)), state)
 
     return native_goal(run, term_value)
 

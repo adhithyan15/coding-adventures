@@ -25,6 +25,8 @@ It keeps parsing side-effect free, then exposes helpers to:
   rendering for source-level variable-numbered debug output
 - adapt `compound_name_arguments/3` and `compound_name_arity/3` for
   compound-only term reflection and construction
+- adapt `acyclic_term/1` and `cyclic_term/1` for source-level term-shape
+  checks
 - adapt `term_hash/2` and `term_hash/4` for stable source-level term hashes
 - adapt callable CLP(FD) forms such as `in/2`, `ins/2`, `#=/2`,
   `all_different/1`, and `labeling/2`
