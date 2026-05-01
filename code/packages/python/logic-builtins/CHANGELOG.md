@@ -36,6 +36,9 @@ All notable changes to this package will be documented in this file.
   in first occurrence order.
 - `numbervarso(term, start, end)` for binding open variables to `'$VAR'(N)`
   placeholders in first occurrence order.
+- `compound_name_argumentso(term, name, arguments)` and
+  `compound_name_arityo(term, name, arity)` for compound-only term reflection
+  and construction.
 - `term_hasho(term, hash)` and `term_hash_boundedo(term, depth, range, hash)`
   for deterministic structural term hashes.
 - `current_prolog_flago(name, value)` for enumerating read-only runtime flags

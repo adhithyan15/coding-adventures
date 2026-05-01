@@ -83,6 +83,8 @@ __all__ = [
     "callableo",
     "calltermo",
     "catcho",
+    "compound_name_argumentso",
+    "compound_name_arityo",
     "compoundo",
     "compare_termo",
     "copytermo",
@@ -345,6 +347,8 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("catcho", 3),
     ("clauseo", 2),
     ("compare_termo", 3),
+    ("compound_name_argumentso", 3),
+    ("compound_name_arityo", 3),
     ("compoundo", 1),
     ("copytermo", 2),
     ("convlisto", 3),
@@ -4435,6 +4439,75 @@ def functoro(term_value: object, name: object, arity: object) -> GoalExpr:
             state,
             state.next_var_id + raw_arity,
         )
+        yield from solve_from(
+            program_value,
+            eq(target, constructed),
+            construction_state,
+        )
+
+    return native_goal(run, term_value, name, arity)
+
+
+def compound_name_argumentso(
+    term_value: object,
+    name: object,
+    arguments: object,
+) -> GoalExpr:
+    """Inspect or construct a compound from its functor name and arguments."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        target, name_target, arguments_target = args
+        reified_target = _reified(target, state)
+
+        if isinstance(reified_target, Compound):
+            goal = conj(
+                eq(name_target, atom(reified_target.functor)),
+                eq(arguments_target, logic_list(list(reified_target.args))),
+            )
+            yield from solve_from(program_value, goal, state)
+            return
+
+        if not isinstance(reified_target, LogicVar):
+            return
+
+        reified_name = _reified(name_target, state)
+        reified_arguments = _reified(arguments_target, state)
+        items = _proper_list_items(reified_arguments)
+        if not isinstance(reified_name, Atom) or not items:
+            return
+
+        constructed = Compound(functor=reified_name.symbol, args=tuple(items))
+        yield from solve_from(program_value, eq(target, constructed), state)
+
+    return native_goal(run, term_value, name, arguments)
+
+
+def compound_name_arityo(term_value: object, name: object, arity: object) -> GoalExpr:
+    """Inspect or construct a compound from its functor name and arity."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        target, name_target, arity_target = args
+        reified_target = _reified(target, state)
+
+        if isinstance(reified_target, Compound):
+            goal = conj(
+                eq(name_target, atom(reified_target.functor)),
+                eq(arity_target, num(len(reified_target.args))),
+            )
+            yield from solve_from(program_value, goal, state)
+            return
+
+        if not isinstance(reified_target, LogicVar):
+            return
+
+        reified_name = _reified(name_target, state)
+        raw_arity = _reified_integer(arity_target, state)
+        if not isinstance(reified_name, Atom) or raw_arity is None or raw_arity <= 0:
+            return
+
+        arguments, next_var_id = _fresh_logic_vars(raw_arity, state.next_var_id)
+        constructed = Compound(functor=reified_name.symbol, args=arguments)
+        construction_state = _state_with_next_var_id(state, next_var_id)
         yield from solve_from(
             program_value,
             eq(target, constructed),

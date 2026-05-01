@@ -32,6 +32,9 @@ ordinary logic goal expressions.
   `compoundo(term)`
 - `atomico(term)` and `callableo(term)`
 - `functoro(term, name, arity)` for inspection and construction
+- `compound_name_argumentso(term, name, arguments)` and
+  `compound_name_arityo(term, name, arity)` for compound-only reflection and
+  construction
 - `argo(index, term, value)`
 - `univo(term, parts)` for Prolog-style `=../2` term decomposition/construction
 - `copytermo(source, copy)`, `same_termo(left, right)`, and
@@ -110,6 +113,8 @@ from logic_builtins import (
     foldlo,
     forallo,
     functoro,
+    compound_name_argumentso,
+    compound_name_arityo,
     geqo,
     groundo,
     ifthenelseo,
@@ -233,6 +238,16 @@ assert solve_all(
     Results,
     univo(term("box", "tea", "cake"), Results),
 ) == [logic_list(["box", "tea", "cake"])]
+assert solve_all(
+    program(),
+    X,
+    compound_name_argumentso(X, "box", logic_list(["tea", "cake"])),
+) == [term("box", "tea", "cake")]
+assert solve_all(
+    program(),
+    (Name, Arity),
+    compound_name_arityo(term("box", "tea"), Name, Arity),
+) == [(atom("box"), num(1))]
 assert solve_all(
     program(),
     X,
@@ -414,11 +429,12 @@ generated proof without leaking generator bindings to the outer query.
 Term metaprogramming treats terms as ordinary data. `univo` decomposes
 `box(tea, cake)` into `[box, tea, cake]` and can construct the term back from
 that list. `functoro` now constructs atoms and compounds when supplied a name
-and arity. `copytermo` refreshes variables in a copied term, while
-`term_variableso` extracts the unique variables still present after
-reification, `term_hasho` gives variant-aware structural hashes for indexing
-and memoization, and `same_termo` checks strict identity without binding
-variables.
+and arity, while `compound_name_argumentso` and `compound_name_arityo` provide
+compound-only name/arguments and name/arity reflection. `copytermo` refreshes
+variables in a copied term, while `term_variableso` extracts the unique
+variables still present after reification, `term_hasho` gives variant-aware
+structural hashes for indexing and memoization, and `same_termo` checks strict
+identity without binding variables.
 
 Clause introspection treats source clauses as ordinary data. `clauseo(Head,
 Body)` enumerates facts with body `true` and rules with a term-encoded body,

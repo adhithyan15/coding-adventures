@@ -203,6 +203,32 @@ class TestPrologVMStress:
         assert isinstance(bounded, Number)
         assert 0 <= bounded.value < 1000
 
+    def test_compound_reflection_predicates_run_through_vm(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            ?- compound_name_arguments(box(tea, cake), Name, Arguments),
+               compound_name_arguments(Built, box, [tea, cake]),
+               compound_name_arity(pair(left, right), PairName, PairArity),
+               compound_name_arity(Template, pair, 2).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert len(answers) == 1
+        answer = answers[0].as_dict()
+        template = answer["Template"]
+        assert answer["Name"] == atom("box")
+        assert answer["Arguments"] == logic_list(["tea", "cake"])
+        assert answer["Built"] == term("box", "tea", "cake")
+        assert answer["PairName"] == atom("pair")
+        assert answer["PairArity"] == num(2)
+        assert isinstance(template, Compound)
+        assert template.functor == atom("pair").symbol
+        assert len(template.args) == 2
+        assert all(isinstance(argument, LogicVar) for argument in template.args)
+        assert template.args[0] != template.args[1]
+
     def test_text_conversion_predicates_run_through_vm(self) -> None:
         compiled = compile_swi_prolog_source(
             """
