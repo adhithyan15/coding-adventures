@@ -110,6 +110,11 @@ Diagnostics and stream control:
 It also enforces a per-input step limit so malformed reconsume-style machines
 cannot spin forever on one code point.
 
+Named character reference actions consume the longest matching known entity
+prefix in text-like contexts and preserve ambiguous ampersands in attribute
+contexts when a missing-semicolon reference would be followed by an ASCII
+alphanumeric character or `=`.
+
 `commit_attribute_dedup` commits the current attribute only when the current
 start tag does not already have an attribute with the same interpreted name. If
 there is already a matching attribute, the runtime drops the current attribute

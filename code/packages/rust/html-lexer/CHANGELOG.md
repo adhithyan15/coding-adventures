@@ -136,3 +136,7 @@ documented in this file.
   force-quirks token instead of a clean partial declaration.
 - Malformed `DOCTYPE` keyword text now marks force-quirks mode while preserving
   the recovered keyword text as the best-effort DOCTYPE name.
+- Named character reference recovery now uses the longest matching known
+  entity prefix in text and RCDATA, while preserving ambiguous ampersands
+  literally in attribute values when the missing-semicolon reference would be
+  followed by an ASCII alphanumeric character or `=`.
