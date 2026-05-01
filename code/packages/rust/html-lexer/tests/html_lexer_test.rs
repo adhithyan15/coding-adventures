@@ -3294,6 +3294,79 @@ fn default_html_lexer_supports_seeded_rcdata_whatwg_fraktur_named_character_refe
 }
 
 #[test]
+fn default_html_lexer_supports_whatwg_core_cyrillic_named_character_references() {
+    let tokens = lex_html(
+        "Cyrillic:&Acy;&Bcy;&Vcy;&Gcy;&Dcy;&IEcy;&IOcy;&ZHcy;&Zcy;&Icy;&Jcy;&Kcy;&Lcy;&Mcy;&Ncy;&Ocy;&Pcy;&Rcy;&Scy;&Tcy;&Ucy;&Fcy;&KHcy;&TScy;&CHcy;&SHcy;&SHCHcy;&HARDcy;&Ycy;&SOFTcy;&Ecy;&YUcy;&YAcy;&acy;&bcy;&vcy;&gcy;&dcy;&iecy;&iocy;&zhcy;&zcy;&icy;&jcy;&kcy;&lcy;&mcy;&ncy;&ocy;&pcy;&rcy;&scy;&tcy;&ucy;&fcy;&khcy;&tscy;&chcy;&shcy;&shchcy;&hardcy;&ycy;&softcy;&ecy;&yucy;&yacy;",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Text(
+                "Cyrillic:АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя"
+                    .to_string()
+            ),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_extended_cyrillic_named_character_references_in_attributes() {
+    let tokens = lex_html(
+        "<span upper=\"&DJcy;&DScy;&DZcy;&GJcy;&Iukcy;&Jsercy;&Jukcy;&KJcy;&LJcy;&NJcy;&TSHcy;&Ubrcy;&YIcy;\" lower=\"&djcy;&dscy;&dzcy;&gjcy;&iukcy;&jsercy;&jukcy;&kjcy;&ljcy;&njcy;&tshcy;&ubrcy;&yicy;\">",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::StartTag {
+                name: "span".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "upper".to_string(),
+                        value: "ЂЅЏЃІЈЄЌЉЊЋЎЇ".to_string(),
+                    },
+                    Attribute {
+                        name: "lower".to_string(),
+                        value: "ђѕџѓіјєќљњћўї".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_rcdata_whatwg_cyrillic_named_character_references() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rcdata").unwrap();
+    lexer.set_last_start_tag("title");
+
+    lexer
+        .push(
+            "&Acy;&IEcy;&ZHcy;&SHCHcy;&SOFTcy;&YAcy;&acy;&iecy;&zhcy;&shchcy;&softcy;&yacy;&DJcy;&TSHcy;&Ubrcy;&YIcy;&djcy;&tshcy;&ubrcy;&yicy;</title>",
+        )
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("АЕЖЩЬЯаежщьяЂЋЎЇђћўї".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_semicolonless_legacy_named_character_references() {
     let mut lexer = create_html_lexer().unwrap();
 
