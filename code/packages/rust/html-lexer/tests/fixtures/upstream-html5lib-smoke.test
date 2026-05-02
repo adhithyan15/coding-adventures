@@ -1780,6 +1780,27 @@
       ]
     },
     {
+      "description": "carriage return newline normalization",
+      "input": "<p\r\nclass=x>one\rtwo\r\nthree</p>",
+      "output": [
+        [
+          "StartTag",
+          "p",
+          {
+            "class": "x"
+          }
+        ],
+        [
+          "Character",
+          "one\ntwo\nthree"
+        ],
+        [
+          "EndTag",
+          "p"
+        ]
+      ]
+    },
+    {
       "description": "eof drops partial start tag",
       "input": "<div class=\"open",
       "output": [],

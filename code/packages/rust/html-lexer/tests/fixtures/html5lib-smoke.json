@@ -1759,6 +1759,18 @@
     },
     {
       "id": "html5lib-smoke-145",
+      "description": "carriage return newline normalization",
+      "input": "<p\r\nclass=x>one\rtwo\r\nthree</p>",
+      "tokens": [
+        "StartTag(name=p, attributes=[class=x], self_closing=false)",
+        "Text(data=one\ntwo\nthree)",
+        "EndTag(name=p)",
+        "EOF"
+      ],
+      "diagnostics": []
+    },
+    {
+      "id": "html5lib-smoke-146",
       "description": "eof drops partial start tag",
       "input": "<div class=\"open",
       "tokens": [
@@ -1769,7 +1781,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-146",
+      "id": "html5lib-smoke-147",
       "description": "eof drops partial end tag",
       "input": "</section class=x",
       "tokens": [
@@ -1782,7 +1794,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-147",
+      "id": "html5lib-smoke-148",
       "description": "eof drops attribute named reference start tag",
       "input": "<a href=&copy",
       "tokens": [
@@ -1794,7 +1806,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-148",
+      "id": "html5lib-smoke-149",
       "description": "eof drops attribute numeric reference start tag",
       "input": "<a href=&#x41",
       "tokens": [

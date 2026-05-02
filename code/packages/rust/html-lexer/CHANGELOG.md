@@ -179,6 +179,8 @@ documented in this file.
   a final generated batch for the remaining aliases.
 - Treated form feed as an HTML ASCII-whitespace delimiter for script
   double-escape boundaries and semicolonless legacy character references.
+- Enabled HTML input-stream newline preprocessing in the Rust wrapper, so CRLF
+  pairs and bare carriage returns tokenize as LF.
 - EOF inside ordinary start/end tag construction now drops the partial token
   after reporting EOF-in-tag diagnostics.
 - EOF inside attribute character-reference substates now also drops the partial

@@ -50,6 +50,42 @@ fn tokenizer_bounds_non_consuming_transition_loops() {
 }
 
 #[test]
+fn tokenizer_preserves_carriage_returns_by_default() {
+    let mut tokenizer = text_tokenizer();
+
+    tokenizer.push("a\r\nb\rc\n").unwrap();
+    tokenizer.finish().unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![Token::Text("a\r\nb\rc\n".to_string()), Token::Eof]
+    );
+    assert_eq!(tokenizer.position().byte_offset, 7);
+    assert_eq!(tokenizer.position().char_offset, 7);
+    assert_eq!(tokenizer.position().line, 3);
+    assert_eq!(tokenizer.position().column, 1);
+}
+
+#[test]
+fn tokenizer_can_normalize_carriage_returns_across_chunks() {
+    let mut tokenizer = text_tokenizer().with_normalized_carriage_returns();
+
+    tokenizer.push("a\r").unwrap();
+    tokenizer.push("\nb\rc").unwrap();
+    tokenizer.push("\n").unwrap();
+    tokenizer.finish().unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![Token::Text("a\nb\nc\n".to_string()), Token::Eof]
+    );
+    assert_eq!(tokenizer.position().byte_offset, 7);
+    assert_eq!(tokenizer.position().char_offset, 7);
+    assert_eq!(tokenizer.position().line, 4);
+    assert_eq!(tokenizer.position().column, 1);
+}
+
+#[test]
 fn tokenizer_builds_start_tag_attributes_and_self_closing_markers() {
     let mut tokenizer = Tokenizer::new(
         EffectfulStateMachine::new(
@@ -2050,6 +2086,25 @@ fn tokenizer_supports_rcdata_end_tag_candidate_fallback_action() {
         mismatch.drain_tokens(),
         vec![Token::Text("Hello</style>".to_string()), Token::Eof]
     );
+}
+
+fn text_tokenizer() -> Tokenizer {
+    Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            HashSet::new(),
+            vec![
+                EffectfulTransition::new("data", EffectfulMatcher::Any, "data")
+                    .with_effects(&["append_text(current)"]),
+                EffectfulTransition::new("data", EffectfulMatcher::End, "done")
+                    .with_effects(&["flush_text", "emit(EOF)"])
+                    .consuming(false),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    )
 }
 
 fn set(values: &[&str]) -> HashSet<String> {

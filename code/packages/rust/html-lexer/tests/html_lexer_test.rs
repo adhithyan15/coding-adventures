@@ -165,6 +165,30 @@ fn default_html_lexer_treats_form_feed_as_tag_whitespace() {
 }
 
 #[test]
+fn default_html_lexer_normalizes_carriage_return_newlines() {
+    let tokens = lex_html("<p\r\nclass=x>one\rtwo\r\nthree</p>").unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::StartTag {
+                name: "p".to_string(),
+                attributes: vec![Attribute {
+                    name: "class".to_string(),
+                    value: "x".to_string(),
+                }],
+                self_closing: false,
+            },
+            Token::Text("one\ntwo\nthree".to_string()),
+            Token::EndTag {
+                name: "p".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_reports_and_drops_duplicate_attributes() {
     let mut lexer = create_html_lexer().unwrap();
 

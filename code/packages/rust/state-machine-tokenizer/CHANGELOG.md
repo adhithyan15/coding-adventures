@@ -38,3 +38,5 @@ All notable changes to the `state-machine-tokenizer` crate will be documented in
   out-of-range, noncharacter, and Windows-1252 control references.
 - Expanded the built-in HTML named-character-reference table with the remaining
   HTML4-era `alefsym` and `oline` math references.
+- Added opt-in CRLF/bare-CR newline normalization for wrapper packages that
+  need HTML input-stream preprocessing before transition matching.

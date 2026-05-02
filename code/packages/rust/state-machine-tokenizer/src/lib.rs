@@ -203,6 +203,8 @@ pub struct Tokenizer {
     trace: Vec<TokenizerTraceEntry>,
     position: SourcePosition,
     max_steps_per_input: usize,
+    normalize_carriage_returns: bool,
+    skip_line_feed_after_carriage_return: bool,
     finished: bool,
 }
 
@@ -222,6 +224,8 @@ impl Tokenizer {
             trace: Vec::new(),
             position: SourcePosition::default(),
             max_steps_per_input: 64,
+            normalize_carriage_returns: false,
+            skip_line_feed_after_carriage_return: false,
             finished: false,
         }
     }
@@ -229,6 +233,16 @@ impl Tokenizer {
     /// Set the per-input step limit used to catch non-consuming transition loops.
     pub fn with_max_steps_per_input(mut self, limit: usize) -> Self {
         self.max_steps_per_input = limit.max(1);
+        self
+    }
+
+    /// Normalize CRLF and bare CR input-stream newlines to LF before tokenizing.
+    ///
+    /// HTML tokenization runs over a preprocessed input stream where `\r\n`
+    /// and bare `\r` are exposed to the tokenizer as a single `\n`. This is
+    /// opt-in so non-HTML tokenizer profiles can keep exact source code points.
+    pub fn with_normalized_carriage_returns(mut self) -> Self {
+        self.normalize_carriage_returns = true;
         self
     }
 
@@ -263,7 +277,7 @@ impl Tokenizer {
         }
 
         for ch in chunk.chars() {
-            self.process_code_point(ch)?;
+            self.process_source_code_point(ch)?;
         }
         Ok(())
     }
@@ -273,6 +287,7 @@ impl Tokenizer {
         if self.finished {
             return Ok(());
         }
+        self.skip_line_feed_after_carriage_return = false;
 
         for _ in 0..self.max_steps_per_input {
             let before = self.position;
@@ -346,7 +361,29 @@ impl Tokenizer {
         self.diagnostics.clear();
         self.trace.clear();
         self.position = SourcePosition::default();
+        self.skip_line_feed_after_carriage_return = false;
         self.finished = false;
+    }
+
+    fn process_source_code_point(&mut self, ch: char) -> Result<()> {
+        if !self.normalize_carriage_returns {
+            return self.process_code_point(ch);
+        }
+
+        if self.skip_line_feed_after_carriage_return {
+            self.skip_line_feed_after_carriage_return = false;
+            if ch == '\n' {
+                self.advance_skipped_line_feed_after_carriage_return();
+                return Ok(());
+            }
+        }
+
+        if ch == '\r' {
+            self.skip_line_feed_after_carriage_return = true;
+            return self.process_code_point('\n');
+        }
+
+        self.process_code_point(ch)
     }
 
     fn process_code_point(&mut self, ch: char) -> Result<()> {
@@ -1277,6 +1314,11 @@ impl Tokenizer {
         } else {
             self.position.column += 1;
         }
+    }
+
+    fn advance_skipped_line_feed_after_carriage_return(&mut self) {
+        self.position.byte_offset += '\n'.len_utf8();
+        self.position.char_offset += 1;
     }
 }
 
