@@ -1247,6 +1247,32 @@ class TestAlgolIrCompiler:
 
         assert IrOp.BRANCH_Z in opcodes
 
+    def test_compiles_by_name_label_argument_through_eval_helper(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result, flag; "
+                "procedure jump(l); label l; begin flag := 1; goto l end; "
+                "flag := 0; jump(if flag = 0 then left else right); "
+                "left: result := 1; goto done; "
+                "right: result := 2; "
+                "done: "
+                "end"
+            )
+        )
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+        calls = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.CALL
+        ]
+
+        assert "_fn_algol_eval_label" in labels
+        assert "_fn_algol_eval_label" in calls
+
     def test_compiles_procedure_parameter_call_with_conditional_label_argument(
         self,
     ) -> None:
@@ -1268,6 +1294,13 @@ class TestAlgolIrCompiler:
             result.procedure_signatures["_fn_algol_call_procedure_label"].param_types
             == ("integer", "integer", "integer")
         )
+        calls = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.CALL
+        ]
+
+        assert "_fn_algol_eval_label" in calls
 
     def test_compiles_procedure_parameter_call_with_switch_selection_label_argument(
         self,
