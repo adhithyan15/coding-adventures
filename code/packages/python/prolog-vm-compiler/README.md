@@ -157,6 +157,7 @@ The package includes end-to-end stress tests for:
   `current_prolog_flag/2` and `set_prolog_flag/2`
 - finite integer builtins such as `integer/1`, `between/3`, and `succ/2`
 - negation and control builtins such as `\+/1`, `once/1`, and `forall/2`
+- cleanup control with `call_cleanup/2` and `setup_call_cleanup/3`
 - callable, natural infix, and nested additive CLP(FD) forms for finite-domain
   puzzles
 - CLP(FD) labeling options such as descending value order

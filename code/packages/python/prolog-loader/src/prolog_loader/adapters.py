@@ -22,6 +22,7 @@ from logic_builtins import (
     atomo,
     bagofo,
     betweeno,
+    call_cleanupo,
     callableo,
     calltermo,
     catcho,
@@ -103,6 +104,7 @@ from logic_builtins import (
     scanlo,
     set_prolog_flago,
     setofo,
+    setup_call_cleanupo,
     string_charso,
     string_codeso,
     string_lengtho,
@@ -393,6 +395,17 @@ def _adapt_relation_call(
         return catcho(
             _adapt_callable_goal(args[0], operator_table=operator_table),
             args[1],
+            _adapt_callable_goal(args[2], operator_table=operator_table),
+        )
+    if name == "call_cleanup" and goal.relation.arity == 2:
+        return call_cleanupo(
+            _adapt_callable_goal(args[0], operator_table=operator_table),
+            _adapt_callable_goal(args[1], operator_table=operator_table),
+        )
+    if name == "setup_call_cleanup" and goal.relation.arity == 3:
+        return setup_call_cleanupo(
+            _adapt_callable_goal(args[0], operator_table=operator_table),
+            _adapt_callable_goal(args[1], operator_table=operator_table),
             _adapt_callable_goal(args[2], operator_table=operator_table),
         )
     if name == _IF_THEN and goal.relation.arity == 2:

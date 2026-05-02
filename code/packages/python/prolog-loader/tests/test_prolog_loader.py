@@ -835,6 +835,15 @@ class TestPrologGoalAdapter:
             relation("once", 1)(term("memo", atom("ok"))),
             relation("repeat", 0)(),
             relation("ignore", 1)(term("memo", atom("ok"))),
+            relation("call_cleanup", 2)(
+                term("memo", atom("ok")),
+                term("memo", atom("cleaned")),
+            ),
+            relation("setup_call_cleanup", 3)(
+                term("memo", atom("setup")),
+                term("memo", atom("ok")),
+                term("memo", atom("cleaned")),
+            ),
             relation("->", 2)(term("memo", atom("ok")), term("memo", atom("then"))),
             relation("not", 1)(term("memo", atom("missing"))),
             relation("\\+", 1)(term("memo", atom("missing"))),
@@ -1237,6 +1246,29 @@ class TestPrologGoalAdapter:
             query.variables["Item"],
             adapt_prolog_goal(query.goal),
         ) == [atom("tea")]
+
+    def test_adapt_prolog_goal_rewrites_cleanup_control(self) -> None:
+        loaded = load_swi_prolog_source(
+            """
+            :- dynamic(resource/1).
+            :- dynamic(cleaned/1).
+
+            ?- setup_call_cleanup(
+                   assertz(resource(open)),
+                   resource(Resource),
+                   assertz(cleaned(Resource))),
+               call_cleanup(true, assertz(cleaned(done))),
+               cleaned(Resource),
+               cleaned(done).
+            """,
+        )
+        query = loaded.queries[0]
+
+        assert solve_all(
+            loaded.program,
+            query.variables["Resource"],
+            adapt_prolog_goal(query.goal),
+        ) == [atom("open")]
 
     def test_adapt_prolog_goal_rewrites_if_then_else_control(self) -> None:
         parsed = parse_swi_query(

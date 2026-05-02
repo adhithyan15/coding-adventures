@@ -49,6 +49,7 @@ from logic_builtins import (
     atomo,
     bagofo,
     betweeno,
+    call_cleanupo,
     callableo,
     callo,
     calltermo,
@@ -139,6 +140,7 @@ from logic_builtins import (
     scanlo,
     set_prolog_flago,
     setofo,
+    setup_call_cleanupo,
     string_charso,
     string_codeso,
     string_lengtho,
@@ -1593,6 +1595,60 @@ class TestControlBuiltins:
                 eq(marker, "caught"),
             ),
         ) == [atom("caught")]
+
+    def test_call_cleanupo_runs_cleanup_after_success(self) -> None:
+        cleaned = relation("cleaned", 1)
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(
+                dynamico("cleaned", 1),
+                call_cleanupo(eq("ok", "ok"), assertzo(cleaned("done"))),
+                cleaned(marker),
+            ),
+        ) == [atom("done")]
+
+    def test_call_cleanupo_runs_cleanup_before_rethrowing(self) -> None:
+        cleaned = relation("cleaned", 1)
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(
+                dynamico("cleaned", 1),
+                catcho(
+                    call_cleanupo(
+                        throwo("boom"),
+                        assertzo(cleaned("after_throw")),
+                    ),
+                    "boom",
+                    cleaned(marker),
+                ),
+            ),
+        ) == [atom("after_throw")]
+
+    def test_setup_call_cleanupo_runs_setup_goal_and_cleanup(self) -> None:
+        resource = relation("resource", 1)
+        cleaned = relation("cleaned", 1)
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(
+                dynamico("resource", 1),
+                dynamico("cleaned", 1),
+                setup_call_cleanupo(
+                    assertzo(resource("open")),
+                    resource(marker),
+                    assertzo(cleaned(marker)),
+                ),
+                cleaned(marker),
+            ),
+        ) == [atom("open")]
 
     def test_noto_succeeds_when_goal_fails_and_fails_when_goal_succeeds(self) -> None:
         marker = var("Marker")
