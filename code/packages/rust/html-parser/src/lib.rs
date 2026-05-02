@@ -104,7 +104,7 @@ impl HtmlParser {
         for token in tokens {
             self.process_token(token);
         }
-        std::mem::take(&mut self.document)
+        self.finish_document()
     }
 
     pub fn diagnostics(&self) -> &[ParserDiagnostic] {
@@ -112,7 +112,7 @@ impl HtmlParser {
     }
 
     fn finish_document(&mut self) -> Document {
-        std::mem::take(&mut self.document)
+        normalize_document_shell(std::mem::take(&mut self.document))
     }
 
     fn process_token(&mut self, token: Token) {
@@ -303,6 +303,117 @@ fn children_at_path_mut<'a>(nodes: &'a mut Vec<Node>, path: &[usize]) -> Option<
     }
 }
 
+fn normalize_document_shell(document: Document) -> Document {
+    let mut normalized = Document::new();
+    let mut builder = DocumentShellBuilder::default();
+
+    for node in document.children {
+        match node {
+            Node::DocumentType(_) => normalized.push_child(node),
+            Node::Comment(_) if !builder.seen_document_element => normalized.push_child(node),
+            Node::Element(mut element) if element.name == "html" => {
+                builder.seen_document_element = true;
+                builder.html_attributes.extend(element.attributes);
+                for child in element.children.drain(..) {
+                    builder.push_html_child(child);
+                }
+            }
+            node => {
+                builder.seen_document_element = true;
+                builder.push_html_child(node);
+            }
+        }
+    }
+
+    normalized.push_child(builder.finish());
+    normalized
+}
+
+#[derive(Debug, Default)]
+struct DocumentShellBuilder {
+    seen_document_element: bool,
+    seen_body_content: bool,
+    html_attributes: Vec<Attribute>,
+    head_attributes: Vec<Attribute>,
+    body_attributes: Vec<Attribute>,
+    head_children: Vec<Node>,
+    body_children: Vec<Node>,
+}
+
+impl DocumentShellBuilder {
+    fn push_html_child(&mut self, node: Node) {
+        match node {
+            Node::Element(mut element) if element.name == "head" => {
+                self.head_attributes.extend(element.attributes);
+                self.head_children.append(&mut element.children);
+            }
+            Node::Element(mut element) if element.name == "body" => {
+                self.seen_body_content = true;
+                self.body_attributes.extend(element.attributes);
+                self.body_children.append(&mut element.children);
+            }
+            Node::Element(element)
+                if !self.seen_body_content && is_head_element(element.name.as_str()) =>
+            {
+                self.head_children.push(Node::Element(element));
+            }
+            node => {
+                if !is_ignorable_before_body(&node) {
+                    self.seen_body_content = true;
+                }
+                self.body_children.push(node);
+            }
+        }
+    }
+
+    fn finish(self) -> Node {
+        let head = Node::element("head".to_string(), self.head_attributes);
+        let body = Node::element("body".to_string(), self.body_attributes);
+        let mut html = Node::element("html".to_string(), self.html_attributes);
+
+        let Node::Element(mut head) = head else {
+            unreachable!("Node::element always returns an element")
+        };
+        head.children = self.head_children;
+
+        let Node::Element(mut body) = body else {
+            unreachable!("Node::element always returns an element")
+        };
+        body.children = self.body_children;
+
+        let Node::Element(ref mut html_element) = html else {
+            unreachable!("Node::element always returns an element")
+        };
+        html_element.children.push(Node::Element(head));
+        html_element.children.push(Node::Element(body));
+        html
+    }
+}
+
+fn is_head_element(name: &str) -> bool {
+    matches!(
+        name,
+        "base"
+            | "basefont"
+            | "bgsound"
+            | "link"
+            | "meta"
+            | "noscript"
+            | "script"
+            | "style"
+            | "template"
+            | "title"
+    )
+}
+
+fn is_ignorable_before_body(node: &Node) -> bool {
+    match node {
+        Node::Text(text) => text.data.chars().all(char::is_whitespace),
+        Node::Comment(_) => true,
+        _ => false,
+    }
+}
+
 fn is_void_element(name: &str) -> bool {
     matches!(
         name,
@@ -335,11 +446,30 @@ mod tests {
         }
     }
 
+    fn html(document: &Document) -> &Element {
+        document
+            .children
+            .iter()
+            .find_map(|node| match node {
+                Node::Element(element) if element.name == "html" => Some(element),
+                _ => None,
+            })
+            .expect("document should have an html element")
+    }
+
+    fn head(document: &Document) -> &Element {
+        element(&html(document).children[0])
+    }
+
+    fn body(document: &Document) -> &Element {
+        element(&html(document).children[1])
+    }
+
     #[test]
     fn parses_nested_elements_and_text() {
         let document = parse_html("<h1>Hello <em>Venture</em></h1>").unwrap();
 
-        let h1 = element(&document.children[0]);
+        let h1 = element(&body(&document).children[0]);
         assert_eq!(h1.name, "h1");
         assert_eq!(h1.children[0], Node::text("Hello "));
 
@@ -362,7 +492,7 @@ mod tests {
         ));
         assert_eq!(document.children[1], Node::comment("note"));
 
-        let image = element(&document.children[2]);
+        let image = element(&body(&document).children[0]);
         assert_eq!(image.name, "img");
         assert_eq!(image.attribute("src"), Some("cat.png"));
         assert_eq!(image.attribute("alt"), Some("Cat"));
@@ -379,7 +509,7 @@ mod tests {
                 "end tag `</section>` did not match an open element"
             )]
         );
-        let paragraph = element(&output.document.children[0]);
+        let paragraph = element(&body(&output.document).children[0]);
         assert_eq!(paragraph.children, vec![Node::text("Hello")]);
     }
 
@@ -387,20 +517,15 @@ mod tests {
     fn applies_simple_html_implied_end_tags() {
         let document = parse_html("<ul><li>one<li>two</ul><p>a<p>b").unwrap();
 
-        let list = element(&document.children[0]);
+        let body = body(&document);
+        let list = element(&body.children[0]);
         assert_eq!(list.name, "ul");
         assert_eq!(list.children.len(), 2);
         assert_eq!(element(&list.children[0]).children, vec![Node::text("one")]);
         assert_eq!(element(&list.children[1]).children, vec![Node::text("two")]);
 
-        assert_eq!(
-            element(&document.children[1]).children,
-            vec![Node::text("a")]
-        );
-        assert_eq!(
-            element(&document.children[2]).children,
-            vec![Node::text("b")]
-        );
+        assert_eq!(element(&body.children[1]).children, vec![Node::text("a")]);
+        assert_eq!(element(&body.children[2]).children, vec![Node::text("b")]);
     }
 
     #[test]
@@ -408,11 +533,11 @@ mod tests {
         let document =
             parse_html("<title>Tom &amp; Jerry</title><textarea>A &lt; B</textarea>").unwrap();
 
-        let title = element(&document.children[0]);
+        let title = element(&head(&document).children[0]);
         assert_eq!(title.name, "title");
         assert_eq!(title.children, vec![Node::text("Tom & Jerry")]);
 
-        let textarea = element(&document.children[1]);
+        let textarea = element(&body(&document).children[0]);
         assert_eq!(textarea.name, "textarea");
         assert_eq!(textarea.children, vec![Node::text("A < B")]);
     }
@@ -424,18 +549,18 @@ mod tests {
         )
         .unwrap();
 
-        let style = element(&document.children[0]);
+        let style = element(&head(&document).children[0]);
         assert_eq!(style.name, "style");
         assert_eq!(style.children, vec![Node::text("a < b &amp; c")]);
 
-        let script = element(&document.children[1]);
+        let script = element(&head(&document).children[1]);
         assert_eq!(script.name, "script");
         assert_eq!(
             script.children,
             vec![Node::text("if (a < b) alert('&amp;');")]
         );
 
-        let paragraph = element(&document.children[2]);
+        let paragraph = element(&body(&document).children[0]);
         assert_eq!(paragraph.children, vec![Node::text("x")]);
     }
 
@@ -443,13 +568,44 @@ mod tests {
     fn parser_drives_plaintext_tokenization_until_eof() {
         let document = parse_html("<p>before</p><plaintext><b>&amp;</b></plaintext>").unwrap();
 
-        let paragraph = element(&document.children[0]);
+        let body = body(&document);
+        let paragraph = element(&body.children[0]);
         assert_eq!(paragraph.children, vec![Node::text("before")]);
 
-        let plaintext = element(&document.children[1]);
+        let plaintext = element(&body.children[1]);
         assert_eq!(
             plaintext.children,
             vec![Node::text("<b>&amp;</b></plaintext>")]
         );
+    }
+
+    #[test]
+    fn creates_implied_html_head_and_body_for_legacy_documents() {
+        let document = parse_html("<title>Venture</title><p>Hello Mosaic</p>").unwrap();
+
+        assert_eq!(document.children.len(), 1);
+        assert_eq!(html(&document).name, "html");
+        assert_eq!(head(&document).children.len(), 1);
+        assert_eq!(element(&head(&document).children[0]).name, "title");
+        assert_eq!(body(&document).children.len(), 1);
+        assert_eq!(
+            element(&body(&document).children[0]).children,
+            vec![Node::text("Hello Mosaic")]
+        );
+    }
+
+    #[test]
+    fn preserves_explicit_html_head_body_attributes() {
+        let document = parse_html(
+            "<!DOCTYPE html><html lang=en><head data-h=yes><title>V</title></head><body class=home><h1>Hi</h1></body></html>",
+        )
+        .unwrap();
+
+        assert!(matches!(&document.children[0], Node::DocumentType(_)));
+        assert_eq!(html(&document).attribute("lang"), Some("en"));
+        assert_eq!(head(&document).attribute("data-h"), Some("yes"));
+        assert_eq!(body(&document).attribute("class"), Some("home"));
+        assert_eq!(element(&head(&document).children[0]).name, "title");
+        assert_eq!(element(&body(&document).children[0]).name, "h1");
     }
 }

@@ -13,6 +13,7 @@ This first slice intentionally starts small:
 - a stack of open elements
 - void element handling
 - adjacent text merging
+- implied document shell creation for omitted `html`, `head`, and `body`
 - parser-controlled lexer handoff for `title`, `textarea`, RAWTEXT elements,
   `script`, and `plaintext`
 - simple implied end tags for `p`, `li`, `dt`, and `dd`
@@ -31,7 +32,7 @@ use dom_core::Node;
 let document = parse_html("<p>Hello <strong>Venture</strong></p>").unwrap();
 
 match &document.children[0] {
-    Node::Element(element) => assert_eq!(element.name, "p"),
+    Node::Element(element) => assert_eq!(element.name, "html"),
     other => panic!("expected element, got {other:?}"),
 }
 ```
