@@ -1546,6 +1546,30 @@
         "EndTag(name=script)",
         "EOF"
       ]
+    },
+    {
+      "id": "html-eof-drops-partial-start-tag",
+      "description": "EOF in an unfinished start tag drops the partial token",
+      "input": "<div class=\"open",
+      "tokens": [
+        "EOF"
+      ],
+      "diagnostics": [
+        "eof-in-tag"
+      ]
+    },
+    {
+      "id": "html-eof-drops-partial-end-tag",
+      "description": "EOF in an unfinished ordinary end tag drops the partial token",
+      "input": "</section class=x",
+      "tokens": [
+        "EOF"
+      ],
+      "diagnostics": [
+        "unexpected-whitespace-after-end-tag-name",
+        "end-tag-with-attributes",
+        "eof-in-end-tag-name-state"
+      ]
     }
   ]
 }

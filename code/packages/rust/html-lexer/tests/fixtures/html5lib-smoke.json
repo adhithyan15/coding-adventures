@@ -1756,6 +1756,30 @@
       "diagnostics": [],
       "initial_state": "Script data state",
       "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-145",
+      "description": "eof drops partial start tag",
+      "input": "<div class=\"open",
+      "tokens": [
+        "EOF"
+      ],
+      "diagnostics": [
+        "eof-in-tag"
+      ]
+    },
+    {
+      "id": "html5lib-smoke-146",
+      "description": "eof drops partial end tag",
+      "input": "</section class=x",
+      "tokens": [
+        "EOF"
+      ],
+      "diagnostics": [
+        "unexpected-whitespace-after-end-tag-name",
+        "end-tag-with-attributes",
+        "eof-in-end-tag-name-state"
+      ]
     }
   ],
   "skipped": []

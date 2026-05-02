@@ -72,6 +72,9 @@ kept, later attributes with the same interpreted name are dropped, and a
 Unquoted attribute values also preserve spec-defined unexpected characters
 such as `"`, `'`, `<`, `=`, and `` ` `` while reporting
 `unexpected-character-in-unquoted-attribute-value`.
+EOF inside ordinary start/end tag construction now reports the relevant
+EOF-in-tag diagnostic and drops the incomplete token instead of handing a
+partial tag to the future parser.
 NULL characters in data/RCDATA/RAWTEXT/PLAINTEXT/CDATA/script data, script
 escaped/double-escaped states, and attribute values recover by reporting
 `unexpected-null-character` and appending U+FFFD, matching the replacement

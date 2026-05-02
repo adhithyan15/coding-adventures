@@ -1778,6 +1778,40 @@
           "script"
         ]
       ]
+    },
+    {
+      "description": "eof drops partial start tag",
+      "input": "<div class=\"open",
+      "output": [],
+      "errors": [
+        {
+          "code": "eof-in-tag",
+          "line": 1,
+          "col": 17
+        }
+      ]
+    },
+    {
+      "description": "eof drops partial end tag",
+      "input": "</section class=x",
+      "output": [],
+      "errors": [
+        {
+          "code": "unexpected-whitespace-after-end-tag-name",
+          "line": 1,
+          "col": 10
+        },
+        {
+          "code": "end-tag-with-attributes",
+          "line": 1,
+          "col": 11
+        },
+        {
+          "code": "eof-in-end-tag-name-state",
+          "line": 1,
+          "col": 18
+        }
+      ]
     }
   ]
 }

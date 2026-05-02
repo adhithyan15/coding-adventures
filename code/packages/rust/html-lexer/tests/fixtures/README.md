@@ -122,6 +122,8 @@ currently supports:
   `copy`, and `reg` before delimiters and EOF
 - form-feed handling as an HTML ASCII-whitespace delimiter for script double
   escape and semicolonless legacy named character references
+- EOF recovery for unfinished ordinary start and end tags, ensuring partial
+  tokens are dropped before the parser sees them
 - generic named-character-reference scanning with literal fallback for unknown
   names
 - PUBLIC/SYSTEM DOCTYPE recovery diagnostics for missing whitespace, missing
