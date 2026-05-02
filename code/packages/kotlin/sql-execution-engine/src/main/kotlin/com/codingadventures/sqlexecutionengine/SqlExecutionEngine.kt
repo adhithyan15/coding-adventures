@@ -284,7 +284,7 @@ object SqlExecutionEngine {
     }
 
     private fun evalFunction(function: Expr.Function, row: Map<String, Any?>, groupRows: List<RowContext>?): Any? {
-        val name = function.name.toUpperCase(Locale.ROOT)
+        val name = function.name.uppercase(Locale.ROOT)
         if (name in setOf("COUNT", "SUM", "AVG", "MIN", "MAX")) {
             val rows = groupRows ?: throw SqlExecutionException("aggregate used outside grouped context: $name")
             if (name == "COUNT") {
@@ -306,8 +306,8 @@ object SqlExecutionEngine {
 
         val value = function.args.firstOrNull()?.let { eval(it, row, groupRows) } ?: return null
         return when (name) {
-            "UPPER" -> value.toString().toUpperCase(Locale.ROOT)
-            "LOWER" -> value.toString().toLowerCase(Locale.ROOT)
+            "UPPER" -> value.toString().uppercase(Locale.ROOT)
+            "LOWER" -> value.toString().lowercase(Locale.ROOT)
             "LENGTH" -> value.toString().length
             else -> throw SqlExecutionException("unknown function: $name")
         }
@@ -316,7 +316,7 @@ object SqlExecutionEngine {
     private fun hasAggregate(expression: Expr): Boolean {
         return when (expression) {
             is Expr.Function ->
-                expression.name.toUpperCase(Locale.ROOT) in setOf("COUNT", "SUM", "AVG", "MIN", "MAX") ||
+                expression.name.uppercase(Locale.ROOT) in setOf("COUNT", "SUM", "AVG", "MIN", "MAX") ||
                     expression.args.any { hasAggregate(it) }
             is Expr.Binary -> hasAggregate(expression.left) || hasAggregate(expression.right)
             is Expr.Unary -> hasAggregate(expression.expression)
@@ -376,9 +376,9 @@ object SqlExecutionEngine {
             is Expr.Column -> expression.name
             is Expr.Function ->
                 if (expression.args.size == 1 && expression.args[0] is Expr.Star) {
-                    expression.name.toUpperCase(Locale.ROOT) + "(*)"
+                    expression.name.uppercase(Locale.ROOT) + "(*)"
                 } else {
-                    expression.name.toUpperCase(Locale.ROOT) + "(...)"
+                    expression.name.uppercase(Locale.ROOT) + "(...)"
                 }
             is Expr.Literal -> expression.value.toString()
             else -> "?"
@@ -436,7 +436,7 @@ object SqlExecutionEngine {
                     index += 1
                     while (index < sql.length && (sql[index].isLetterOrDigit() || sql[index] == '_')) index += 1
                     val value = sql.substring(start, index)
-                    val upper = value.toUpperCase(Locale.ROOT)
+                    val upper = value.uppercase(Locale.ROOT)
                     tokens += Token(if (upper in keywords) TokenKind.KEYWORD else TokenKind.IDENT, value)
                 }
                 ch == '"' || ch == '`' -> {
