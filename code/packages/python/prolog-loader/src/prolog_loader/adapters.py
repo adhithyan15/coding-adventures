@@ -33,6 +33,7 @@ from logic_builtins import (
     compoundo,
     convlisto,
     copytermo,
+    current_atomo,
     current_predicateo,
     current_prolog_flago,
     cuto,
@@ -488,6 +489,8 @@ def _adapt_relation_call(
         return sub_atomo(*args)
     if name == "sub_string" and goal.relation.arity == 5:
         return sub_stringo(*args)
+    if name == "current_atom" and goal.relation.arity == 1:
+        return current_atomo(*args)
     if name == "current_prolog_flag" and goal.relation.arity == 2:
         return current_prolog_flago(*args)
     if name == "set_prolog_flag" and goal.relation.arity == 2:

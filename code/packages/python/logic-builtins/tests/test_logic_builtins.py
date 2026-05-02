@@ -61,6 +61,7 @@ from logic_builtins import (
     compoundo,
     convlisto,
     copytermo,
+    current_atomo,
     current_predicateo,
     current_prolog_flago,
     cuto,
@@ -2851,6 +2852,36 @@ class TestPredicateMetadataBuiltins:
             num(7),
             num(8),
         ]
+
+    def test_current_atomo_enumerates_source_dynamic_and_builtin_atoms(self) -> None:
+        parent = relation("parent", 2)
+        memo = relation("memo", 1)
+        name = var("Name")
+        family = program(
+            fact(parent("homer", "bart")),
+            rule(parent("marge", "lisa"), eq("family", "family")),
+        )
+
+        source_atoms = set(solve_all(family, name, current_atomo(name)))
+        dynamic_atoms = set(
+            solve_all(
+                program(),
+                name,
+                conj(
+                    dynamico("memo", 1),
+                    assertzo(memo("cached")),
+                    current_atomo(name),
+                ),
+            ),
+        )
+
+        assert atom("parent") in source_atoms
+        assert atom("homer") in source_atoms
+        assert atom("bart") in source_atoms
+        assert atom("family") in source_atoms
+        assert atom("current_atomo") in source_atoms
+        assert atom("double_quotes") in source_atoms
+        assert atom("cached") in dynamic_atoms
 
     def test_predicate_propertyo_reports_source_properties(self) -> None:
         parent = relation("parent", 2)
