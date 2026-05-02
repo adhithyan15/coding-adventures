@@ -14,3 +14,5 @@ documented in this file.
 - Parser-driven tokenizer handoff for RCDATA, RAWTEXT, script data, and
   PLAINTEXT elements, preserving text-mode DOM content instead of lexing it as
   ordinary data-state markup.
+- Implied `html`, `head`, and `body` document shell normalization, including
+  preservation of explicit shell attributes and legacy omitted-wrapper pages.
