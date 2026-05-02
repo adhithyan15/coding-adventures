@@ -16,6 +16,7 @@ from logic_builtins import (
     atom_codeso,
     atom_concato,
     atom_lengtho,
+    atom_numbero,
     atomic_list_concato,
     atomic_list_concato_with_separator,
     atomico,
@@ -499,6 +500,8 @@ def _adapt_relation_call(
         return number_codeso(*args)
     if name == "number_string" and goal.relation.arity == 2:
         return number_stringo(*args)
+    if name == "atom_number" and goal.relation.arity == 2:
+        return atom_numbero(*args)
     if name == "char_code" and goal.relation.arity == 2:
         return char_codeo(*args)
     if name == "string_chars" and goal.relation.arity == 2:

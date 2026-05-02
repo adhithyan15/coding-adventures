@@ -85,6 +85,7 @@ __all__ = [
     "atom_codeso",
     "atom_charso",
     "atom_lengtho",
+    "atom_numbero",
     "atomico",
     "atomo",
     "atomic_list_concato",
@@ -350,6 +351,7 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("atom_codeso", 2),
     ("atom_charso", 2),
     ("atom_lengtho", 2),
+    ("atom_numbero", 2),
     ("atomico", 1),
     ("atomo", 1),
     ("atomic_list_concato", 2),
@@ -4238,6 +4240,35 @@ def number_codeso(number_value: object, codes: object) -> GoalExpr:
         from_text=_code_numbers_from_text,
         to_text=_text_from_code_items,
     )
+
+
+def atom_numbero(atom_value: object, number_value: object) -> GoalExpr:
+    """Relate an atom to a number parsed from or rendered as text."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        atom_term, number_term = args
+        reified_atom = _reified(atom_term, state)
+        reified_number = _reified(number_term, state)
+
+        if isinstance(reified_number, Number):
+            yield from solve_from(
+                program_value,
+                eq(atom_term, atom(_number_text(reified_number))),
+                state,
+            )
+            return
+
+        if not isinstance(reified_number, LogicVar):
+            return
+        text = _plain_atom_text(reified_atom)
+        if text is None:
+            return
+        parsed = _parse_number_text(text)
+        if parsed is None:
+            return
+        yield from solve_from(program_value, eq(number_term, parsed), state)
+
+    return native_goal(run, atom_value, number_value)
 
 
 def char_codeo(char_value: object, code_value: object) -> GoalExpr:

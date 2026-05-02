@@ -878,6 +878,7 @@ class TestPrologGoalAdapter:
             relation("number_chars", 2)(42, logic_list(["4", "2"])),
             relation("number_codes", 2)(42, logic_list([52, 50])),
             relation("number_string", 2)(42, string("42")),
+            relation("atom_number", 2)(atom("42"), 42),
             relation("char_code", 2)(atom("A"), 65),
             relation("string_chars", 2)(string("hi"), logic_list(["h", "i"])),
             relation("string_codes", 2)(string("hi"), logic_list([104, 105])),
@@ -1319,6 +1320,8 @@ class TestPrologGoalAdapter:
             "number_chars(Number, ['4', '2']), "
             "number_codes(Float, [51, 46, 53]), "
             "number_string(Parsed, \"7\"), "
+            "atom_number(AtomNumberText, 8), "
+            "atom_number('9.5', AtomNumber), "
             "atom_concat(tea, cup, Joined), "
             "atom_concat(Prefix, cup, teacup), "
             "atom_length(teacup, AtomLength), "
@@ -1344,6 +1347,8 @@ class TestPrologGoalAdapter:
                 parsed.variables["Number"],
                 parsed.variables["Float"],
                 parsed.variables["Parsed"],
+                parsed.variables["AtomNumberText"],
+                parsed.variables["AtomNumber"],
                 parsed.variables["Joined"],
                 parsed.variables["Prefix"],
                 parsed.variables["AtomLength"],
@@ -1363,7 +1368,7 @@ class TestPrologGoalAdapter:
         )
         assert len(answers) == 1
         answer = answers[0]
-        parsed_term = answer[16]
+        parsed_term = answer[18]
         assert isinstance(parsed_term, Compound)
         assert answer == (
             logic_list(["t", "e", "a"]),
@@ -1371,6 +1376,8 @@ class TestPrologGoalAdapter:
             num(42),
             num(3.5),
             num(7),
+            atom("8"),
+            num(9.5),
             atom("teacup"),
             atom("tea"),
             num(6),

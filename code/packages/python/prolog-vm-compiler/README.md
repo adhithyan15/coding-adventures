@@ -138,7 +138,8 @@ The package includes end-to-end stress tests for:
 - term metaprogramming with `term_variables/2`, `=@=/2`, `\=@=/2`, and
   `subsumes_term/2`
 - text conversion with `atom_chars/2`, `atom_codes/2`, `number_chars/2`,
-  `number_codes/2`, `char_code/2`, `string_chars/2`, and `string_codes/2`
+  `number_codes/2`, `atom_number/2`, `char_code/2`, `string_chars/2`, and
+  `string_codes/2`
 - atom composition with `atom_concat/3`, `atomic_list_concat/2`,
   `atomic_list_concat/3`, and `number_string/2`
 - text inspection with `atom_length/2`, `string_length/2`, `sub_atom/5`, and
