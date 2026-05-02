@@ -124,6 +124,10 @@ All notable changes to this package will be documented in this file.
   procedure calls, label and switch formals, multiple `for` element forms,
   parenthesized conditional designational expressions, numeric labels, boolean
   operators, real arithmetic, and output in one end-to-end WASM program.
+- Added golden convergence fixtures for lexical recursion, procedure-formal
+  closures, nonlocal procedure `goto` unwind, dynamic multidimensional array
+  bounds, mixed writable by-name scalar types, and runtime bounds-guard
+  failure before output.
 - Accepted uppercase and mixed-case keywords/comments, `<>` not-equal
   relations, and double-quoted string literals through the full WASM pipeline.
 

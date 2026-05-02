@@ -142,6 +142,15 @@ local WASM runtime. Those fixtures cover:
 - switch dispatch, procedure-formal dispatch, and procedure-crossing `goto`
 - conditional expressions, chained assignment, and exponentiation in the same
   end-to-end program
+- lexical recursion with outer-frame mutation and fresh recursive frames
+- procedure-formal closure dispatch that preserves the actual procedure's
+  static link
+- nonlocal procedure `goto` that unwinds dynamic array storage before the
+  caller resumes at the target label
+- dynamic multidimensional array bounds captured at block entry
+- writable real, boolean, and string by-name scalar formals in one program
+- runtime bounds failure through the zero-result failure path before later
+  output executes
 - a full-surface convergence program combining `own` scalars and arrays,
   default-real arrays, nested and single-statement procedures, value and
   by-name procedure formals, label and switch formals, multiple `for` element
