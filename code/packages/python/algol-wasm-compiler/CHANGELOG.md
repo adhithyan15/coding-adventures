@@ -6,6 +6,8 @@ All notable changes to this package will be documented in this file.
 
 ### Changed
 
+- Added the `algol60-wasm` command and `python -m algol_wasm_compiler` entry
+  point for compiling ALGOL source files into `.wasm` modules from the shell.
 - Compiled ALGOL programs now execute scalar variables through frame-backed
   WASM memory operations, including nested-block outer writes and shadowing.
 - Compiled value-only integer procedures now run through generated WASM
