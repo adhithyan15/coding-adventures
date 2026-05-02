@@ -98,6 +98,8 @@ All notable changes to this package will be documented in this file.
   calls while keeping `value switch` formals as call-time snapshots.
 - Added a golden designator fixture covering lazy versus value label and switch
   formals across direct, forwarded, and formal procedure calls.
+- Added an executable surface audit matrix that runs representative
+  grammar-backed ALGOL programs through the local WASM runtime.
 - Executed recursive switch self-selection entries by routing recursive
   descriptor lookup through the switch-eval helper at runtime.
 - Executed the report-style `go to` spelling through the full parser,
