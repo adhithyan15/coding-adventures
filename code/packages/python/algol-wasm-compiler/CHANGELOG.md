@@ -87,6 +87,9 @@ All notable changes to this package will be documented in this file.
   statement control variables.
 - Rejected formal procedure forwarding when a concrete procedure argument does
   not satisfy the nested procedure formal contract expected by the receiver.
+- Executed formal procedure calls that forward another formal procedure
+  parameter as a procedure argument, including read-only expression actuals and
+  writable by-name actuals through the final concrete procedure.
 - Executed recursive switch self-selection entries by routing recursive
   descriptor lookup through the switch-eval helper at runtime.
 - Executed the report-style `go to` spelling through the full parser,

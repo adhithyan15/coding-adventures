@@ -89,6 +89,9 @@ All notable changes to this package will be documented in this file.
   chosen switch descriptor through concrete and formal procedure calls.
 - Preserved concrete procedure ids in formal procedure call-shape metadata so
   nested procedure-parameter contracts are checked before IR lowering.
+- Lowered formal procedure parameters passed as procedure arguments to another
+  formal procedure call, preserving the forwarded procedure descriptor instead
+  of treating the bare formal name as a scalar expression.
 - Lowered recursive switch self-selection through runtime switch-eval descriptor
   dispatch rather than compile-time descriptor expansion.
 - Lowered `go to` statements through the same direct and designational goto
