@@ -1548,6 +1548,17 @@
       ]
     },
     {
+      "id": "html-carriage-return-newline-normalization",
+      "description": "CRLF and bare CR normalize to LF before HTML tokenization",
+      "input": "<p\r\nclass=x>one\rtwo\r\nthree</p>",
+      "tokens": [
+        "StartTag(name=p, attributes=[class=x], self_closing=false)",
+        "Text(data=one\ntwo\nthree)",
+        "EndTag(name=p)",
+        "EOF"
+      ]
+    },
+    {
       "id": "html-eof-drops-partial-start-tag",
       "description": "EOF in an unfinished start tag drops the partial token",
       "input": "<div class=\"open",

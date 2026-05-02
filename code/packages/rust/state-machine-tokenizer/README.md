@@ -126,6 +126,11 @@ The runtime also exposes context-seeding helpers such as
 packages can execute HTML submodes like RCDATA without loading definition files
 at runtime.
 
+Wrapper packages can opt into HTML-style input-stream newline preprocessing
+with `Tokenizer::with_normalized_carriage_returns`. That maps CRLF pairs and
+bare carriage returns to a single LF before transition matching while keeping
+raw byte/scalar offsets moving across skipped LF bytes.
+
 ## Development
 
 ```bash

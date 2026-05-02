@@ -37,7 +37,7 @@ pub fn html_skeleton_machine() -> std::result::Result<EffectfulStateMachine, Str
 /// Build a Rust HTML lexer over the statically linked HTML 1.x compatibility floor.
 pub fn create_html_lexer() -> Result<HtmlLexer> {
     html1_machine()
-        .map(HtmlLexer::new)
+        .map(|machine| HtmlLexer::new(machine).with_normalized_carriage_returns())
         .map_err(TokenizerError::Machine)
 }
 
