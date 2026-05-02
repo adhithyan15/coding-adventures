@@ -1065,6 +1065,37 @@ class TestAlgolIrCompiler:
         assert result.procedure_signatures["_fn_algol_eval_switch"].param_count == 3
         assert any(label.startswith("switch_actual_") for label in labels)
 
+    def test_compiles_value_switch_parameter_call_through_resolve_helper(
+        self,
+    ) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; boolean flag; "
+                "switch a := left; switch b := right; "
+                "procedure escape(sw); value sw; switch sw; "
+                "begin goto sw[1] end; "
+                "flag := false; escape(if flag then a else b); "
+                "left: result := 1; goto done; "
+                "right: result := 2; "
+                "done: "
+                "end"
+            )
+        )
+        labels = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.LABEL
+        ]
+        calls = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+
+        assert result.procedure_signatures["_fn_algol_resolve_switch"].param_count == 3
+        assert "_fn_algol_resolve_switch" in labels
+        assert "_fn_algol_resolve_switch" in calls
+
     def test_compiles_procedure_parameter_call_and_dispatcher(self) -> None:
         result = compile_algol(
             parse_algol(

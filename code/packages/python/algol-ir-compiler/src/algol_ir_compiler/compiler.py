@@ -86,6 +86,7 @@ _THUNK_EVAL_REAL_LABEL = "_fn_algol_eval_real_thunk"
 _THUNK_STORE_REAL_LABEL = "_fn_algol_store_real_thunk"
 _LABEL_EVAL_LABEL = "_fn_algol_eval_label"
 _SWITCH_EVAL_LABEL = "_fn_algol_eval_switch"
+_SWITCH_RESOLVE_LABEL = "_fn_algol_resolve_switch"
 _PROCEDURE_CALL_LABEL = "_fn_algol_call_procedure"
 _THUNK_DESCRIPTOR_SIZE = 12
 _THUNK_CODE_ID_OFFSET = 0
@@ -228,6 +229,15 @@ class _LabelThunk:
 
 
 @dataclass(frozen=True)
+class _SwitchThunk:
+    """A by-name switch designator captured for helper dispatch."""
+
+    thunk_id: int
+    expression: ASTNode
+    block_id: int
+
+
+@dataclass(frozen=True)
 class _ForElementPlan:
     """A lowered for-list element and the labels needed to execute it."""
 
@@ -302,6 +312,7 @@ class AlgolIrCompiler:
         self.current_function_return_type: str | None = _INTEGER_TYPE
         self.eval_thunks: list[_EvalThunk] = []
         self.label_thunks: list[_LabelThunk] = []
+        self.switch_thunks: list[_SwitchThunk] = []
         self.active_switch_selection_ids: list[int] = []
         self.has_by_name_parameters = False
         self.has_label_parameters = False
@@ -336,6 +347,7 @@ class AlgolIrCompiler:
         self.heap_limit_reg = -1
         self.eval_thunks = []
         self.label_thunks = []
+        self.switch_thunks = []
         self.active_switch_selection_ids = []
         self.has_by_name_parameters = False
         self.has_label_parameters = False
@@ -470,6 +482,11 @@ class AlgolIrCompiler:
                 param_types=(_INTEGER_TYPE, _INTEGER_TYPE, _INTEGER_TYPE),
                 return_type=_INTEGER_TYPE,
             )
+        if self.has_switch_parameters:
+            self.procedure_signatures[_SWITCH_RESOLVE_LABEL] = ProcedureSignaturePlan(
+                param_types=(_INTEGER_TYPE, _INTEGER_TYPE, _INTEGER_TYPE),
+                return_type=_INTEGER_TYPE,
+            )
         if self.has_procedure_parameters:
             self.procedure_signatures[_PROCEDURE_CALL_LABEL] = ProcedureSignaturePlan(
                 param_types=(_INTEGER_TYPE, _INTEGER_TYPE),
@@ -581,8 +598,14 @@ class AlgolIrCompiler:
             )
         if self.has_label_parameters or self.label_thunks:
             self._compile_label_eval_dispatcher()
-        if self.has_switch_parameters or self.has_recursive_switch_selections:
+        if (
+            self.has_switch_parameters
+            or self.has_recursive_switch_selections
+            or self.switch_thunks
+        ):
             self._compile_switch_eval_dispatcher()
+        if self.has_switch_parameters or self.switch_thunks:
+            self._compile_switch_resolve_dispatcher()
         if self.has_procedure_parameters:
             self._compile_procedure_call_dispatcher(
                 argument_kinds=tuple(),
@@ -3415,11 +3438,18 @@ class AlgolIrCompiler:
                         descriptor_heap_mark,
                         switch_descriptor_offsets[index],
                     )
-                arguments[index] = self._compile_switch_actual_pointer(
-                    argument,
-                    scope,
-                    descriptor,
-                )
+                if parameter.mode == _VALUE_MODE:
+                    arguments[index] = self._compile_value_switch_actual_pointer(
+                        argument,
+                        scope,
+                        descriptor,
+                    )
+                else:
+                    arguments[index] = self._compile_switch_thunk_actual(
+                        argument,
+                        scope,
+                        descriptor,
+                    )
                 continue
             if parameter.kind == "procedure":
                 descriptor = None
@@ -3606,7 +3636,7 @@ class AlgolIrCompiler:
                         switch_descriptor_offsets[index],
                     )
                 argument_regs.append(
-                    self._compile_switch_actual_pointer(actual, scope, descriptor)
+                    self._compile_switch_thunk_actual(actual, scope, descriptor)
                 )
                 continue
             if argument_kind == "procedure":
@@ -4789,6 +4819,35 @@ class AlgolIrCompiler:
         )
         return descriptor
 
+    def _compile_switch_thunk_actual(
+        self,
+        argument: ASTNode,
+        scope: _FrameScope,
+        descriptor: int | None,
+    ) -> int:
+        if descriptor is None:
+            raise CompileError("missing reserved descriptor for switch actual")
+        parts = _conditional_expression_parts(_meaningful_children(argument))
+        if parts is not None:
+            thunk = self._register_switch_thunk(argument, scope.block_id)
+            self._emit_write_switch_thunk_descriptor(thunk, scope, descriptor)
+            return descriptor
+
+        pointer = self._compile_switch_actual_pointer(argument, scope, descriptor)
+        self._emit_copy_switch_descriptor(pointer, descriptor)
+        return descriptor
+
+    def _compile_value_switch_actual_pointer(
+        self,
+        argument: ASTNode,
+        scope: _FrameScope,
+        descriptor: int | None,
+    ) -> int:
+        if descriptor is None:
+            raise CompileError("missing reserved descriptor for value switch actual")
+        pointer = self._compile_switch_actual_pointer(argument, scope, descriptor)
+        return self._emit_resolve_switch_descriptor(pointer, descriptor, scope)
+
     def _is_switch_designator_actual(
         self,
         argument: ASTNode,
@@ -5032,6 +5091,32 @@ class AlgolIrCompiler:
         self._copy_reg(dst=result, src=_RESULT_REG)
         return result
 
+    def _emit_resolve_switch_descriptor(
+        self,
+        descriptor_pointer: int,
+        target_descriptor: int,
+        scope: _FrameScope,
+    ) -> int:
+        active_thunk_heap_mark = (
+            scope.active_thunk_heap_mark_reg
+            if scope.active_thunk_heap_mark_reg is not None
+            else self._const_reg(0)
+        )
+        self._emit(
+            IrOp.CALL,
+            IrLabel(_SWITCH_RESOLVE_LABEL),
+            IrRegister(descriptor_pointer),
+            IrRegister(active_thunk_heap_mark),
+            IrRegister(target_descriptor),
+        )
+        if scope.helper_failure:
+            self._emit_helper_return_on_thunk_failure(scope)
+        self._emit_propagate_thunk_failure(scope)
+        self._emit_handle_pending_goto_after_call(scope)
+        result = self._fresh_reg()
+        self._copy_reg(dst=result, src=_RESULT_REG)
+        return result
+
     def _emit_call_concrete_switch_eval(
         self,
         selection: ResolvedSwitchSelection,
@@ -5217,6 +5302,24 @@ class AlgolIrCompiler:
         self.label_thunks.append(thunk)
         return thunk
 
+    def _register_switch_thunk(
+        self,
+        argument: ASTNode,
+        block_id: int,
+    ) -> _SwitchThunk:
+        if len(self.switch_thunks) >= self.limits.max_eval_thunks:
+            raise CompileError(
+                "ALGOL program requires more than "
+                f"{self.limits.max_eval_thunks} by-name switch thunks"
+            )
+        thunk = _SwitchThunk(
+            thunk_id=len(self.switch_thunks) + 1,
+            expression=argument,
+            block_id=block_id,
+        )
+        self.switch_thunks.append(thunk)
+        return thunk
+
     def _emit_reserve_eval_thunk_descriptors(
         self,
         count: int,
@@ -5305,6 +5408,23 @@ class AlgolIrCompiler:
             offset=_LABEL_DESCRIPTOR_CALLER_FRAME_OFFSET,
         )
 
+    def _emit_write_switch_thunk_descriptor(
+        self,
+        thunk: _SwitchThunk,
+        scope: _FrameScope,
+        descriptor: int,
+    ) -> None:
+        self._store_word_const(
+            descriptor,
+            _SWITCH_DESCRIPTOR_ID_OFFSET,
+            -thunk.thunk_id,
+        )
+        self._store_word_reg(
+            value_reg=scope.frame_base_reg,
+            base_reg=descriptor,
+            offset=_SWITCH_DESCRIPTOR_CALLER_FRAME_OFFSET,
+        )
+
     def _emit_write_switch_descriptor(
         self,
         descriptor: int,
@@ -5319,6 +5439,32 @@ class AlgolIrCompiler:
         self._store_word_reg(
             value_reg=caller_frame_reg,
             base_reg=descriptor,
+            offset=_SWITCH_DESCRIPTOR_CALLER_FRAME_OFFSET,
+        )
+
+    def _emit_copy_switch_descriptor(self, source: int, target: int) -> None:
+        switch_id = self._fresh_reg()
+        caller_frame = self._fresh_reg()
+        self._emit(
+            IrOp.LOAD_WORD,
+            IrRegister(switch_id),
+            IrRegister(source),
+            IrRegister(self._const_reg(_SWITCH_DESCRIPTOR_ID_OFFSET)),
+        )
+        self._emit(
+            IrOp.LOAD_WORD,
+            IrRegister(caller_frame),
+            IrRegister(source),
+            IrRegister(self._const_reg(_SWITCH_DESCRIPTOR_CALLER_FRAME_OFFSET)),
+        )
+        self._store_word_reg(
+            value_reg=switch_id,
+            base_reg=target,
+            offset=_SWITCH_DESCRIPTOR_ID_OFFSET,
+        )
+        self._store_word_reg(
+            value_reg=caller_frame,
+            base_reg=target,
             offset=_SWITCH_DESCRIPTOR_CALLER_FRAME_OFFSET,
         )
 
@@ -5619,8 +5765,142 @@ class AlgolIrCompiler:
             self._emit(IrOp.JUMP, IrLabel(end_label))
             self._label(else_label)
             self._label(end_label)
+        for thunk in self.switch_thunks:
+            index = self._next_if_index()
+            else_label = f"if_{index}_else"
+            end_label = f"if_{index}_end"
+            matches = self._fresh_reg()
+            self._emit(
+                IrOp.CMP_EQ,
+                IrRegister(matches),
+                IrRegister(switch_id),
+                IrRegister(self._const_reg(-thunk.thunk_id)),
+            )
+            self._emit(IrOp.BRANCH_Z, IrRegister(matches), IrLabel(else_label))
+            self._emit_enter_thunk_helper()
+            switch_scope = _FrameScope(
+                semantic_block=self.semantic_blocks_by_id[thunk.block_id],
+                frame_base_reg=caller_frame,
+                heap_mark_reg=None,
+                parent=None,
+                goto_parent=None,
+                function_owner_procedure_id=None,
+                active_thunk_heap_mark_reg=active_thunk_heap_mark,
+                helper_failure=True,
+            )
+            temp_descriptor = self._emit_reserve_temp_descriptor_space(
+                _SWITCH_DESCRIPTOR_SIZE,
+                switch_scope,
+            )
+            actual_pointer = self._compile_switch_actual_pointer(
+                thunk.expression,
+                switch_scope,
+                temp_descriptor,
+            )
+            label_value = self._emit_call_switch_eval(
+                actual_pointer,
+                index_value,
+                switch_scope,
+            )
+            self._store_runtime_state(_RUNTIME_HEAP_POINTER_OFFSET, temp_descriptor)
+            self._copy_reg(dst=_RESULT_REG, src=label_value)
+            self._emit_leave_thunk_helper()
+            self._emit(IrOp.RET)
+            self._emit(IrOp.JUMP, IrLabel(end_label))
+            self._label(else_label)
+            self._label(end_label)
         self._store_runtime_state(_RUNTIME_THUNK_FAILURE_OFFSET, self._const_reg(1))
         self._emit_zero_result_reg()
+        self._emit(IrOp.RET)
+        self.current_function_return_type = previous_return_type
+
+    def _compile_switch_resolve_dispatcher(self) -> None:
+        previous_return_type = self.current_function_return_type
+        self.current_function_return_type = _INTEGER_TYPE
+        self._label(_SWITCH_RESOLVE_LABEL)
+        descriptor = _STATIC_LINK_PARAM_REG
+        active_thunk_heap_mark = _THUNK_HEAP_MARK_PARAM_REG
+        target_descriptor = _VALUE_PARAM_BASE_REG
+        switch_id = self._fresh_reg()
+        caller_frame = self._fresh_reg()
+        self._emit(
+            IrOp.LOAD_WORD,
+            IrRegister(switch_id),
+            IrRegister(descriptor),
+            IrRegister(self._const_reg(_SWITCH_DESCRIPTOR_ID_OFFSET)),
+        )
+        self._emit(
+            IrOp.LOAD_WORD,
+            IrRegister(caller_frame),
+            IrRegister(descriptor),
+            IrRegister(self._const_reg(_SWITCH_DESCRIPTOR_CALLER_FRAME_OFFSET)),
+        )
+
+        is_thunk = self._fresh_reg()
+        concrete_label = f"switch_resolve_{self._next_if_index()}_concrete"
+        self._emit(
+            IrOp.CMP_LT,
+            IrRegister(is_thunk),
+            IrRegister(switch_id),
+            IrRegister(_ZERO_REG),
+        )
+        self._emit(IrOp.BRANCH_Z, IrRegister(is_thunk), IrLabel(concrete_label))
+
+        for thunk in self.switch_thunks:
+            index = self._next_if_index()
+            else_label = f"if_{index}_else"
+            end_label = f"if_{index}_end"
+            matches = self._fresh_reg()
+            self._emit(
+                IrOp.CMP_EQ,
+                IrRegister(matches),
+                IrRegister(switch_id),
+                IrRegister(self._const_reg(-thunk.thunk_id)),
+            )
+            self._emit(IrOp.BRANCH_Z, IrRegister(matches), IrLabel(else_label))
+            self._emit_enter_thunk_helper()
+            switch_scope = _FrameScope(
+                semantic_block=self.semantic_blocks_by_id[thunk.block_id],
+                frame_base_reg=caller_frame,
+                heap_mark_reg=None,
+                parent=None,
+                goto_parent=None,
+                function_owner_procedure_id=None,
+                active_thunk_heap_mark_reg=active_thunk_heap_mark,
+                helper_failure=True,
+            )
+            temp_descriptor = self._emit_reserve_temp_descriptor_space(
+                _SWITCH_DESCRIPTOR_SIZE,
+                switch_scope,
+            )
+            actual_pointer = self._compile_switch_actual_pointer(
+                thunk.expression,
+                switch_scope,
+                temp_descriptor,
+            )
+            self._emit(
+                IrOp.CALL,
+                IrLabel(_SWITCH_RESOLVE_LABEL),
+                IrRegister(actual_pointer),
+                IrRegister(active_thunk_heap_mark),
+                IrRegister(target_descriptor),
+            )
+            self._emit_helper_return_on_thunk_failure(switch_scope)
+            self._emit_handle_pending_goto_after_call(switch_scope)
+            self._store_runtime_state(_RUNTIME_HEAP_POINTER_OFFSET, temp_descriptor)
+            self._emit_leave_thunk_helper()
+            self._emit(IrOp.RET)
+            self._emit(IrOp.JUMP, IrLabel(end_label))
+            self._label(else_label)
+            self._label(end_label)
+
+        self._store_runtime_state(_RUNTIME_THUNK_FAILURE_OFFSET, self._const_reg(1))
+        self._emit_zero_result_reg()
+        self._emit(IrOp.RET)
+
+        self._label(concrete_label)
+        self._emit_copy_switch_descriptor(descriptor, target_descriptor)
+        self._copy_reg(dst=_RESULT_REG, src=target_descriptor)
         self._emit(IrOp.RET)
         self.current_function_return_type = previous_return_type
 
@@ -5686,7 +5966,18 @@ class AlgolIrCompiler:
                     else:
                         call_arguments.append(argument_pointer)
                     continue
-                if argument_kind in {"array", "switch", "procedure"}:
+                if argument_kind == "switch":
+                    if parameter.mode == _VALUE_MODE:
+                        call_arguments.append(
+                            self._emit_resolve_switch_argument_pointer(
+                                argument_pointer,
+                                active_thunk_heap_mark,
+                            )
+                        )
+                    else:
+                        call_arguments.append(argument_pointer)
+                    continue
+                if argument_kind in {"array", "procedure"}:
                     call_arguments.append(argument_pointer)
                     continue
                 if parameter.mode == _NAME_MODE:
@@ -5745,6 +6036,23 @@ class AlgolIrCompiler:
             IrLabel(_LABEL_EVAL_LABEL),
             IrRegister(descriptor),
             IrRegister(active_thunk_heap_mark),
+        )
+        self._emit_dispatcher_return_on_runtime_transfer()
+        result = self._fresh_reg()
+        self._copy_reg(dst=result, src=_RESULT_REG)
+        return result
+
+    def _emit_resolve_switch_argument_pointer(
+        self,
+        descriptor: int,
+        active_thunk_heap_mark: int,
+    ) -> int:
+        self._emit(
+            IrOp.CALL,
+            IrLabel(_SWITCH_RESOLVE_LABEL),
+            IrRegister(descriptor),
+            IrRegister(active_thunk_heap_mark),
+            IrRegister(descriptor),
         )
         self._emit_dispatcher_return_on_runtime_transfer()
         result = self._fresh_reg()

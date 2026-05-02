@@ -93,6 +93,9 @@ All notable changes to this package will be documented in this file.
 - Executed by-name label formals through lazy label descriptors, preserving
   conditional label actual re-evaluation through direct and formal procedure
   calls while keeping `value label` formals as call-time snapshots.
+- Executed by-name switch formals through lazy switch descriptors, preserving
+  conditional switch actual re-evaluation through direct and formal procedure
+  calls while keeping `value switch` formals as call-time snapshots.
 - Executed recursive switch self-selection entries by routing recursive
   descriptor lookup through the switch-eval helper at runtime.
 - Executed the report-style `go to` spelling through the full parser,
