@@ -26,6 +26,34 @@ fn default_html_lexer_still_lexes_basic_text_tags_and_eof() {
 }
 
 #[test]
+fn default_html_lexer_drops_partial_start_tag_at_eof() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("<div class=\"open").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(lexer.drain_tokens(), vec![Token::Eof]);
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "eof-in-tag"));
+}
+
+#[test]
+fn default_html_lexer_drops_partial_end_tag_at_eof() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("</section class=x").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(lexer.drain_tokens(), vec![Token::Eof]);
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "eof-in-end-tag-name-state"));
+}
+
+#[test]
 fn default_html_lexer_supports_html1_attributes_comments_and_doctypes() {
     let tokens = lex_html(
         "<!DOCTYPE HTML><IMG SRC=\"mosaic.gif\" ALT='Splash' hidden=1/>Before<!--note-->After",

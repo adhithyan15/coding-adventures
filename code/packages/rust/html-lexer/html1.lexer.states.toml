@@ -3282,7 +3282,7 @@ to = "done"
 consume = false
 actions = [
   "parse_error(eof-in-tag-name-state)",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3351,7 +3351,7 @@ to = "done"
 consume = false
 actions = [
   "parse_error(eof-in-tag)",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3420,8 +3420,7 @@ to = "done"
 consume = false
 actions = [
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3489,8 +3488,7 @@ to = "done"
 consume = false
 actions = [
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3567,8 +3565,7 @@ to = "done"
 consume = false
 actions = [
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3610,8 +3607,7 @@ to = "done"
 consume = false
 actions = [
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3653,8 +3649,7 @@ to = "done"
 consume = false
 actions = [
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3732,8 +3727,7 @@ to = "done"
 consume = false
 actions = [
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -5108,7 +5102,7 @@ to = "done"
 consume = false
 actions = [
   "parse_error(eof-in-tag)",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -5135,7 +5129,7 @@ to = "done"
 consume = false
 actions = [
   "parse_error(eof-in-tag)",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -7160,7 +7154,7 @@ to = "done"
 consume = false
 actions = [
   "parse_error(eof-in-end-tag-name-state)",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -7189,7 +7183,7 @@ to = "done"
 consume = false
 actions = [
   "parse_error(eof-in-end-tag-name-state)",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -7247,7 +7241,7 @@ to = "done"
 consume = false
 actions = [
   "parse_error(eof-in-end-tag-name-state)",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 

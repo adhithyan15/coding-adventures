@@ -7346,7 +7346,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(eof-in-tag-name-state)".to_string(),
-                "emit_current_token".to_string(),
+                "discard_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
             consume: false,
@@ -7504,7 +7504,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(eof-in-tag)".to_string(),
-                "emit_current_token".to_string(),
+                "discard_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
             consume: false,
@@ -7663,8 +7663,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute_dedup".to_string(),
-                "emit_current_token".to_string(),
+                "discard_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
             consume: false,
@@ -7821,8 +7820,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute_dedup".to_string(),
-                "emit_current_token".to_string(),
+                "discard_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
             consume: false,
@@ -7982,8 +7980,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute_dedup".to_string(),
-                "emit_current_token".to_string(),
+                "discard_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
             consume: false,
@@ -8063,8 +8060,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute_dedup".to_string(),
-                "emit_current_token".to_string(),
+                "discard_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
             consume: false,
@@ -8144,8 +8140,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute_dedup".to_string(),
-                "emit_current_token".to_string(),
+                "discard_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
             consume: false,
@@ -8316,8 +8311,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(eof-in-tag)".to_string(),
-                "commit_attribute_dedup".to_string(),
-                "emit_current_token".to_string(),
+                "discard_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
             consume: false,
@@ -10874,7 +10868,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(eof-in-tag)".to_string(),
-                "emit_current_token".to_string(),
+                "discard_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
             consume: false,
@@ -10924,7 +10918,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(eof-in-tag)".to_string(),
-                "emit_current_token".to_string(),
+                "discard_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
             consume: false,
@@ -15028,7 +15022,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(eof-in-end-tag-name-state)".to_string(),
-                "emit_current_token".to_string(),
+                "discard_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
             consume: false,
@@ -15090,7 +15084,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(eof-in-end-tag-name-state)".to_string(),
-                "emit_current_token".to_string(),
+                "discard_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
             consume: false,
@@ -15225,7 +15219,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(eof-in-end-tag-name-state)".to_string(),
-                "emit_current_token".to_string(),
+                "discard_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
             consume: false,

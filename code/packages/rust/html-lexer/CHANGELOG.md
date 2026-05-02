@@ -179,6 +179,8 @@ documented in this file.
   a final generated batch for the remaining aliases.
 - Treated form feed as an HTML ASCII-whitespace delimiter for script
   double-escape boundaries and semicolonless legacy character references.
+- EOF inside ordinary start/end tag construction now drops the partial token
+  after reporting EOF-in-tag diagnostics.
 - Added a WHATWG operator/shape named-reference batch covering circled
   operators, integrals, products, squares, lozenges, stars, suits, and symbols.
 - Added a WHATWG box-drawing named-reference batch covering double-line,
