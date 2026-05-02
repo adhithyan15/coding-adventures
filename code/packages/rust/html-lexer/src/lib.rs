@@ -14,6 +14,13 @@ pub use state_machine_tokenizer::{
 mod generated_html1;
 mod generated_html_skeleton;
 
+/// Parser-facing scripting flag for tokenizer text-mode decisions.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum HtmlScriptingMode {
+    Enabled,
+    Disabled,
+}
+
 /// Parser-facing HTML tokenizer entry state.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum HtmlTokenizerState {
@@ -91,10 +98,20 @@ impl HtmlLexContext {
     /// submodes. It deliberately keeps foreign-content CDATA decisions out of
     /// the element map because those depend on tree-construction context.
     pub fn for_element_text(element_name: &str) -> Option<Self> {
+        Self::for_element_text_with_scripting(element_name, HtmlScriptingMode::Enabled)
+    }
+
+    /// Return the tokenizer context used for text after a start tag, including
+    /// scripting-sensitive `noscript` handling.
+    pub fn for_element_text_with_scripting(
+        element_name: &str,
+        scripting: HtmlScriptingMode,
+    ) -> Option<Self> {
         let name = element_name.to_ascii_lowercase();
         let state = match name.as_str() {
             "title" | "textarea" => HtmlTokenizerState::Rcdata,
             "iframe" | "noembed" | "noframes" | "style" | "xmp" => HtmlTokenizerState::Rawtext,
+            "noscript" if scripting == HtmlScriptingMode::Enabled => HtmlTokenizerState::Rawtext,
             "script" => HtmlTokenizerState::ScriptData,
             "plaintext" => HtmlTokenizerState::Plaintext,
             _ => return None,

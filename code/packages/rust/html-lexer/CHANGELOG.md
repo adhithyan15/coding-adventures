@@ -207,3 +207,6 @@ documented in this file.
 - Added `apply_html_lex_context` so parser code can reconfigure an existing
   lexer with typed HTML context and clear stale text-mode tag context when
   returning to data-state lexing.
+- Added scripting-aware parser-facing text-mode context selection so `noscript`
+  can enter RAWTEXT when scripting is enabled and remain ordinary markup when
+  scripting is disabled.
