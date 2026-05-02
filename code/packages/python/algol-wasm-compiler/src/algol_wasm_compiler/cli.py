@@ -15,6 +15,14 @@ from cli_builder import (
     SpecError,
     VersionResult,
 )
+from wasm_execution import TrapError
+from wasm_runtime import (
+    ProcExitError,
+    WasiConfig,
+    WasiHost,
+    WasmExecutionLimits,
+    WasmRuntime,
+)
 
 from algol_wasm_compiler.compiler import (
     MAX_SOURCE_LENGTH,
@@ -24,6 +32,7 @@ from algol_wasm_compiler.compiler import (
 
 _PROGRAM_NAME = "algol60-wasm"
 _SPEC_RESOURCE = "algol60_wasm_cli.json"
+_DEFAULT_ENTRYPOINT = "_start"
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -45,6 +54,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     if isinstance(parsed, VersionResult):
         print(parsed.version)
         return 0
+
+    if parsed.command_path[-1] == "run":
+        return _run_from_parse_result(parsed)
 
     return _compile_from_parse_result(parsed)
 
@@ -80,6 +92,66 @@ def _compile_from_parse_result(parsed: ParseResult) -> int:
     if not bool(parsed.flags["quiet"]):
         print(output_path)
     return 0
+
+
+def _run_from_parse_result(parsed: ParseResult) -> int:
+    source_path = Path(str(parsed.arguments["source"]))
+
+    try:
+        max_instructions = _max_instructions(parsed)
+        source = _read_source_file(source_path)
+        compiled = AlgolWasmCompiler().compile_source(source)
+        result = _run_wasm(compiled.binary, max_instructions=max_instructions)
+    except AlgolWasmError as exc:
+        print(f"{_PROGRAM_NAME}: {exc}", file=sys.stderr)
+        return 1
+    except TrapError as exc:
+        print(f"{_PROGRAM_NAME}: [run] {exc}", file=sys.stderr)
+        return 1
+    except ProcExitError as exc:
+        return exc.exit_code
+
+    if bool(parsed.flags["print-result"]):
+        print(f"result: {_format_result(result)}", file=sys.stderr)
+    return 0
+
+
+def _max_instructions(parsed: ParseResult) -> int:
+    max_instructions = int(parsed.flags["max-instructions"])
+    if max_instructions < 1:
+        raise AlgolWasmError(
+            "run",
+            "--max-instructions must be at least 1",
+        )
+    return max_instructions
+
+
+def _run_wasm(binary: bytes, *, max_instructions: int) -> list[int | float]:
+    host = WasiHost(
+        config=WasiConfig(
+            stdout=_write_stdout,
+            stderr=_write_stderr,
+        )
+    )
+    runtime = WasmRuntime(
+        host=host,
+        limits=WasmExecutionLimits(max_instructions=max_instructions),
+    )
+    return runtime.load_and_run(binary, _DEFAULT_ENTRYPOINT, [])
+
+
+def _format_result(values: list[int | float]) -> str:
+    if not values:
+        return "<none>"
+    return " ".join(str(value) for value in values)
+
+
+def _write_stdout(text: str) -> None:
+    sys.stdout.write(text)
+
+
+def _write_stderr(text: str) -> None:
+    sys.stderr.write(text)
 
 
 def _read_source_file(source_path: Path) -> str:

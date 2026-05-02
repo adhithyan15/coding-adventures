@@ -67,6 +67,7 @@ host process.
 ```bash
 algol60-wasm program.alg -o program.wasm
 python -m algol_wasm_compiler program.alg
+algol60-wasm run program.alg --print-result
 ```
 
 When `-o` is omitted, the compiler writes next to the source file with a
@@ -74,6 +75,12 @@ When `-o` is omitted, the compiler writes next to the source file with a
 `cli-builder` package, and compiler diagnostics are reported without Python
 tracebacks using the same source-size, parse, type-check, IR, WASM validation,
 and encoding stages as the Python API.
+
+The `run` command compiles in memory and executes the generated module's
+`_start` export through the local WASM runtime. Program output is forwarded to
+stdout, `--print-result` writes `_start` return values to stderr, and
+`--max-instructions` applies a host instruction budget so nonterminating ALGOL
+programs fail with an explicit runtime diagnostic.
 
 ```python
 from algol_wasm_compiler import compile_source
