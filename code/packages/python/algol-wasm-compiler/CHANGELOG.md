@@ -107,6 +107,9 @@ All notable changes to this package will be documented in this file.
   `0` through the ALGOL runtime failure path.
 - Executed real exponentiation through the `compiler_math` `f64_pow` import,
   including integer-base promotion and domain failures returning `0`.
+- Returned `0` for out-of-range, infinite, or NaN real values reaching
+  `entier` or fixed-format real output, preventing host/WASM conversion
+  exceptions from escaping end-to-end execution.
 - Added a standard-real-math golden fixture covering imported real math,
   real exponentiation, and output in one end-to-end program.
 - Added a convergence golden fixture that combines conditional expressions,

@@ -332,6 +332,35 @@ class TestAlgolWasmCompiler:
             result.binary, "_start", []
         ) == [0]
 
+    def test_entier_out_of_i32_range_returns_zero_without_trapping(self) -> None:
+        result = compile_source(
+            "begin integer result; result := entier(1.0E100) end"
+        )
+
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
+
+    def test_entier_nan_returns_zero_without_trapping(self) -> None:
+        result = compile_source(
+            "begin integer result; real x; "
+            "x := (1.0E308 * 10.0) * 0.0; "
+            "result := entier(x) "
+            "end"
+        )
+
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
+
+    def test_entier_keeps_i32_boundary_floor_semantics(self) -> None:
+        result = compile_source(
+            "begin integer result, floor, top; "
+            "floor := entier(-2147483647.5) + 2147483647; "
+            "top := entier(2147483647.9); "
+            "if (floor = -1) and (top = 2147483647) "
+            "then result := 7 else result := 0 "
+            "end"
+        )
+
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
     def test_builtin_print_string_literal_writes_stdout(self) -> None:
         result = compile_source("begin integer result; print('Hi'); result := 7 end")
         captured: list[str] = []
@@ -377,6 +406,50 @@ class TestAlgolWasmCompiler:
 
         assert runtime.load_and_run(result.binary, "_start", []) == [4]
         assert "".join(captured) == "3.500-0.125"
+
+    def test_builtin_print_infinite_real_returns_zero_without_stdout(self) -> None:
+        result = compile_source(
+            "begin integer result; real x; "
+            "x := 1.0E308 * 10.0; "
+            "print(x); "
+            "result := 7 "
+            "end"
+        )
+        captured: list[str] = []
+        runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
+
+        assert runtime.load_and_run(result.binary, "_start", []) == [0]
+        assert "".join(captured) == ""
+
+    def test_builtin_print_negative_infinite_real_writes_no_partial_sign(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; real x; "
+            "x := 0.0 - (1.0E308 * 10.0); "
+            "print(x); "
+            "result := 7 "
+            "end"
+        )
+        captured: list[str] = []
+        runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
+
+        assert runtime.load_and_run(result.binary, "_start", []) == [0]
+        assert "".join(captured) == ""
+
+    def test_builtin_print_nan_real_returns_zero_without_stdout(self) -> None:
+        result = compile_source(
+            "begin integer result; real x; "
+            "x := (1.0E308 * 10.0) * 0.0; "
+            "print(x); "
+            "result := 7 "
+            "end"
+        )
+        captured: list[str] = []
+        runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
+
+        assert runtime.load_and_run(result.binary, "_start", []) == [0]
+        assert "".join(captured) == ""
 
     def test_string_variable_assignment_and_output_write_stdout(self) -> None:
         result = compile_source(

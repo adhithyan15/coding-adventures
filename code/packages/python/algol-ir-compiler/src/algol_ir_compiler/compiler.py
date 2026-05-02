@@ -107,6 +107,7 @@ _BOOLEAN_TYPE = "boolean"
 _REAL_TYPE = "real"
 _STRING_TYPE = "string"
 _I32_MIN = -(1 << 31)
+_I32_MAX_EXCLUSIVE = 1 << 31
 _I32_NEG_ONE = -1
 _STRING_DESCRIPTOR_LENGTH_OFFSET = 0
 _STRING_DESCRIPTOR_DATA_POINTER_OFFSET = 4
@@ -3699,7 +3700,7 @@ class AlgolIrCompiler:
         if call.label == _BUILTIN_ABS_LABEL:
             return self._emit_builtin_abs(value, actual_type)
         if call.label == _BUILTIN_ENTIER_LABEL:
-            return self._emit_builtin_entier(value, actual_type)
+            return self._emit_builtin_entier(value, actual_type, scope)
         if call.label == _BUILTIN_SIGN_LABEL:
             return self._emit_builtin_sign(value, actual_type)
         if call.label == _BUILTIN_SQRT_LABEL:
@@ -3756,7 +3757,12 @@ class AlgolIrCompiler:
         self._label(end_label)
         return result
 
-    def _emit_builtin_entier(self, value: int, actual_type: str) -> int:
+    def _emit_builtin_entier(
+        self,
+        value: int,
+        actual_type: str,
+        scope: _FrameScope,
+    ) -> int:
         if actual_type == _INTEGER_TYPE:
             result = self._fresh_reg()
             self._copy_reg(dst=result, src=value)
@@ -3768,7 +3774,7 @@ class AlgolIrCompiler:
         maybe_adjust_label = f"builtin_entier_{index}_maybe_adjust"
         end_label = f"builtin_entier_{index}_end"
         result = self._fresh_reg()
-        self._emit(IrOp.I32_TRUNC_FROM_F64, IrRegister(result), IrRegister(value))
+        self._emit_checked_i32_trunc_from_f64(result, value, scope)
         negative = self._fresh_reg()
         self._emit(
             IrOp.F64_CMP_LT,
@@ -4147,6 +4153,7 @@ class AlgolIrCompiler:
         positive_label = f"algol_label_output_real_{index}_positive"
         normalized_label = f"algol_label_output_real_{index}_normalized"
         no_carry_label = f"algol_label_output_real_{index}_no_carry"
+        no_sign_label = f"algol_label_output_real_{index}_no_sign"
 
         zero_f64 = self._const_f64_reg(0.0)
         abs_reg = self._fresh_reg()
@@ -4162,7 +4169,6 @@ class AlgolIrCompiler:
             IrRegister(negative_reg),
             IrLabel(positive_label),
         )
-        self._emit_output_chars("-", scope)
         self._emit(
             IrOp.F64_SUB,
             IrRegister(abs_reg),
@@ -4175,11 +4181,7 @@ class AlgolIrCompiler:
         self._label(normalized_label)
 
         integer_part_reg = self._fresh_reg()
-        self._emit(
-            IrOp.I32_TRUNC_FROM_F64,
-            IrRegister(integer_part_reg),
-            IrRegister(abs_reg),
-        )
+        self._emit_checked_i32_trunc_from_f64(integer_part_reg, abs_reg, scope)
         integer_part_f64 = self._coerce_reg_to_type(
             integer_part_reg,
             _INTEGER_TYPE,
@@ -4240,6 +4242,13 @@ class AlgolIrCompiler:
         )
         self._label(no_carry_label)
 
+        self._emit(
+            IrOp.BRANCH_Z,
+            IrRegister(negative_reg),
+            IrLabel(no_sign_label),
+        )
+        self._emit_output_chars("-", scope)
+        self._label(no_sign_label)
         self._emit_output_integer(integer_part_reg, scope)
         self._emit_output_chars(".", scope)
         self._emit_output_three_digits(fraction_digits_reg, scope)
@@ -4300,6 +4309,42 @@ class AlgolIrCompiler:
                 IrRegister(ascii_zero_reg),
             )
             self._emit_output_reg(ascii_reg, scope)
+
+    def _emit_checked_i32_trunc_from_f64(
+        self,
+        dst_reg: int,
+        value_reg: int,
+        scope: _FrameScope,
+    ) -> None:
+        nan_reg = self._fresh_reg()
+        too_low_reg = self._fresh_reg()
+        too_high_reg = self._fresh_reg()
+        self._emit(
+            IrOp.F64_CMP_NE,
+            IrRegister(nan_reg),
+            IrRegister(value_reg),
+            IrRegister(value_reg),
+        )
+        self._emit_runtime_failure_guard(nan_reg, scope)
+        self._emit(
+            IrOp.F64_CMP_LT,
+            IrRegister(too_low_reg),
+            IrRegister(value_reg),
+            IrRegister(self._const_f64_reg(float(_I32_MIN))),
+        )
+        self._emit_runtime_failure_guard(too_low_reg, scope)
+        self._emit(
+            IrOp.F64_CMP_GE,
+            IrRegister(too_high_reg),
+            IrRegister(value_reg),
+            IrRegister(self._const_f64_reg(float(_I32_MAX_EXCLUSIVE))),
+        )
+        self._emit_runtime_failure_guard(too_high_reg, scope)
+        self._emit(
+            IrOp.I32_TRUNC_FROM_F64,
+            IrRegister(dst_reg),
+            IrRegister(value_reg),
+        )
 
     def _emit_extract_integer_digit(
         self,
