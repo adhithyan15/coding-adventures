@@ -193,6 +193,16 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
 
+    def test_string_and_boolean_conditional_expressions_execute(self) -> None:
+        result = compile_source(
+            "begin integer result; boolean ok; string word; "
+            "ok := if false then false else true; "
+            "word := if ok then 'YES' else 'NO'; "
+            "if ok and (word = 'YES') then result := 7 else result := 0 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
     def test_statement_lists_allow_trailing_and_repeated_semicolons(self) -> None:
         result = compile_source(
             "begin integer result; ; result := 1;; result := 2; end"
@@ -977,6 +987,14 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [11]
+
+    def test_switch_index_out_of_range_returns_zero(self) -> None:
+        result = compile_source(
+            "begin integer result; switch exits := done; "
+            "goto exits[2]; result := 9; done: result := 7 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
 
     def test_procedure_parameter_statement_call_dispatches_actual(self) -> None:
         result = compile_source(
@@ -2074,6 +2092,14 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
 
+    def test_terminal_label_can_end_nested_block(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "begin result := 13; goto done; result := 0; done: end "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [13]
+
     def test_out_of_bounds_array_access_returns_zero(self) -> None:
         result = compile_source(
             "begin integer result; integer array a[1:2]; "
@@ -2155,5 +2181,20 @@ class TestAlgolWasmCompiler:
     def test_invalid_array_bounds_return_zero(self) -> None:
         result = compile_source(
             "begin integer result; integer array a[3:1]; result := 1 end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
+
+    def test_array_allocation_element_cap_returns_zero(self) -> None:
+        result = compile_source(
+            "begin integer result; integer array a[1:4097]; result := 1 end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
+
+    def test_heap_exhaustion_returns_zero(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "real array a[1:4096], b[1:4096], c[1:4096]; "
+            "result := 1 "
+            "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]

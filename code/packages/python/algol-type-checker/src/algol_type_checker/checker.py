@@ -1134,16 +1134,22 @@ class AlgolTypeChecker:
                 self._declare_label(label_token, statement, scope)
 
         body = _statement_body(statement)
-        if body is None or body.rule_name == "block":
+        if body is not None:
+            self._collect_nested_statement_labels(body, scope)
+
+    def _collect_nested_statement_labels(self, node: ASTNode, scope: Scope) -> None:
+        if node.rule_name == "block":
             return
-        for child in _node_children(body):
-            if child.rule_name == "statement":
-                self._collect_statement_labels(child, scope)
-            elif child.rule_name == "unlabeled_stmt":
-                nested = _first_ast_child(child)
-                if nested is not None and nested.rule_name != "block":
-                    for nested_statement in _direct_nodes(nested, "statement"):
-                        self._collect_statement_labels(nested_statement, scope)
+        if node.rule_name == "statement":
+            self._collect_statement_labels(node, scope)
+            return
+        if node.rule_name == "unlabeled_stmt":
+            nested = _first_ast_child(node)
+            if nested is not None:
+                self._collect_nested_statement_labels(nested, scope)
+            return
+        for child in _node_children(node):
+            self._collect_nested_statement_labels(child, scope)
 
     def _declare_label(
         self,

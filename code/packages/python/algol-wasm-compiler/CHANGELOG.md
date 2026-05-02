@@ -131,6 +131,9 @@ All notable changes to this package will be documented in this file.
 - Added storage-semantics convergence coverage for mixed `own` scalars and
   arrays, boolean/string `value` array copies, and value versus by-name loop
   control storage updates.
+- Added edge-semantics convergence coverage for boolean/string conditional
+  expressions, conditional subscripts, terminal labels, invalid switch indexes,
+  array element caps, and heap exhaustion guard behavior.
 - Accepted uppercase and mixed-case keywords/comments, `<>` not-equal
   relations, and double-quoted string literals through the full WASM pipeline.
 

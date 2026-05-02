@@ -197,6 +197,19 @@ class TestAlgolTypeChecker:
         assert result.semantic.labels[0].name == "10"
         assert result.semantic.gotos[0].target_name == "10"
 
+    def test_accepts_terminal_label_inside_compound_statement(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "begin result := 13; goto done; result := 0; done: end "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        assert result.semantic.labels[0].name == "done"
+        assert result.semantic.gotos[0].target_name == "done"
+
     def test_accepts_go_to_spelling(self) -> None:
         ast = parse_algol(
             "begin integer result; "
@@ -568,6 +581,17 @@ class TestAlgolTypeChecker:
             "begin integer result; real x; "
             "x := if false then 1 else 2.5; "
             "if x > 2.0 then result := 1 else result := 0 "
+            "end"
+        )
+        result = check_algol(ast)
+        assert result.ok
+
+    def test_accepts_boolean_and_string_conditional_expressions(self) -> None:
+        ast = parse_algol(
+            "begin integer result; boolean ok; string word; "
+            "ok := if false then false else true; "
+            "word := if ok then 'YES' else 'NO'; "
+            "if ok and (word = 'YES') then result := 1 else result := 0 "
             "end"
         )
         result = check_algol(ast)
