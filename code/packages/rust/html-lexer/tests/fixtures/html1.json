@@ -989,6 +989,21 @@
       "last_start_tag": "title"
     },
     {
+      "id": "html-semicolonless-nonlegacy-character-reference-recovery",
+      "description": "Missing-semicolon named references only recover through legacy aliases",
+      "input": "Text &notin &trade <a value=&notin legacy=&Agrave data=&copy/>",
+      "tokens": [
+        "Text(data=Text ¬in &trade )",
+        "StartTag(name=a, attributes=[value=&notin, legacy=À, data=©], self_closing=true)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference"
+      ]
+    },
+    {
       "id": "html-named-character-reference-fallback-data",
       "description": "Named character references resolve known uppercase aliases and unknown references stay literal in data state",
       "input": "Known &AMP; unknown &madeup;",

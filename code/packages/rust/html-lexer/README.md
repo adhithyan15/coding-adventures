@@ -58,6 +58,10 @@ HTML tokenizer: text and RCDATA recover inputs such as `&copycat` as `©cat`
 with a missing-semicolon diagnostic, while attribute values preserve ambiguous
 ampersands like `&copycat` literally when the would-be reference is followed by
 an ASCII alphanumeric character or `=`.
+That missing-semicolon recovery is now constrained to WHATWG's legacy
+no-semicolon aliases, so newer names such as `&trade` stay literal without a
+terminating semicolon and inputs like `&notin` recover through the shorter
+legacy `&not` prefix in text.
 Form feed is treated as HTML ASCII whitespace in the generated delimiter
 paths, including script double-escape boundaries and semicolonless legacy named
 character references.

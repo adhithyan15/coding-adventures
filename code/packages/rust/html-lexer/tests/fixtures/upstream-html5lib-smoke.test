@@ -1308,6 +1308,21 @@
       ]
     },
     {
+      "description": "nonlegacy named references without semicolons fall back to legacy prefixes",
+      "input": "Text &notin &trade <a value=&notin legacy=&Agrave data=&copy/>",
+      "output": [
+        ["Character", "Text "],
+        ["Character", "\u00AC"],
+        ["Character", "in &trade "],
+        ["StartTag", "a", {"value": "&notin", "legacy": "\u00C0", "data": "\u00A9"}, true]
+      ],
+      "errors": [
+        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 10},
+        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 47},
+        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 59}
+      ]
+    },
+    {
       "description": "data state named character reference fallback",
       "input": "Known &AMP; unknown &madeup;",
       "output": [
@@ -1332,25 +1347,21 @@
         ["Character", "\u00AC"],
         ["Character", "it; "],
         ["Character", "\u00A9"],
-        ["Character", "cat "],
-        ["Character", "\u2211"],
-        ["Character", "total"]
+        ["Character", "cat &sumtotal"]
       ],
       "errors": [
         {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 10},
-        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 18},
-        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 27}
+        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 18}
       ]
     },
     {
       "description": "attribute named character references preserve ambiguous ampersands",
       "input": "<a title=\"&notit; &copycat &copy\" rel=&notin data=&notin;>",
       "output": [
-        ["StartTag", "a", {"title": "&notit; &copycat \u00A9", "rel": "\u2209", "data": "\u2209"}]
+        ["StartTag", "a", {"title": "&notit; &copycat \u00A9", "rel": "&notin", "data": "\u2209"}]
       ],
       "errors": [
-        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 33},
-        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 45}
+        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 33}
       ]
     },
     {
@@ -1378,14 +1389,7 @@
         ["Character", "\u2135"],
         ["Character", "\u203E"],
         ["Character", " "],
-        ["Character", "\u2135"],
-        ["Character", "tail "],
-        ["Character", "\u203E"],
-        ["Character", "bar"]
-      ],
-      "errors": [
-        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 32},
-        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 43}
+        ["Character", "&alefsymtail &olinebar"]
       ]
     },
     {

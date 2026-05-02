@@ -2391,7 +2391,7 @@ fn default_html_lexer_supports_remaining_html4_math_named_character_references()
     assert_eq!(
         tokens,
         vec![
-            Token::Text("Math symbols: \u{2135}\u{203E} \u{2135}tail \u{203E}bar".to_string(),),
+            Token::Text("Math symbols: \u{2135}\u{203E} &alefsymtail &olinebar".to_string(),),
             Token::Eof,
         ]
     );
@@ -3834,6 +3834,52 @@ fn default_html_lexer_supports_seeded_rcdata_semicolonless_legacy_named_characte
 }
 
 #[test]
+fn default_html_lexer_restricts_semicolonless_named_references_to_legacy_names() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer
+        .push("Text &notin &trade <a value=&notin legacy=&Agrave data=&copy/>")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("Text \u{00AC}in &trade ".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "value".to_string(),
+                        value: "&notin".to_string(),
+                    },
+                    Attribute {
+                        name: "legacy".to_string(),
+                        value: "\u{00C0}".to_string(),
+                    },
+                    Attribute {
+                        name: "data".to_string(),
+                        value: "\u{00A9}".to_string(),
+                    },
+                ],
+                self_closing: true,
+            },
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| {
+                diagnostic.code == "missing-semicolon-after-character-reference"
+            })
+            .count(),
+        3
+    );
+}
+
+#[test]
 fn default_html_lexer_falls_back_for_unknown_named_character_references() {
     let tokens =
         lex_html("Known &AMP; unknown &madeup; <a title=\"&copy;\" bogus=&madeup;>").unwrap();
@@ -3871,7 +3917,7 @@ fn default_html_lexer_uses_longest_named_character_reference_prefix_in_text() {
     assert_eq!(
         lexer.drain_tokens(),
         vec![
-            Token::Text("Text \u{00AC}it; \u{00A9}cat \u{2211}total".to_string()),
+            Token::Text("Text \u{00AC}it; \u{00A9}cat &sumtotal".to_string()),
             Token::Eof,
         ]
     );
@@ -3883,7 +3929,7 @@ fn default_html_lexer_uses_longest_named_character_reference_prefix_in_text() {
                 diagnostic.code == "missing-semicolon-after-character-reference"
             })
             .count(),
-        3
+        2
     );
 }
 
@@ -3908,7 +3954,7 @@ fn default_html_lexer_preserves_ambiguous_ampersands_in_attributes() {
                     },
                     Attribute {
                         name: "rel".to_string(),
-                        value: "\u{2209}".to_string(),
+                        value: "&notin".to_string(),
                     },
                     Attribute {
                         name: "data".to_string(),
@@ -3928,7 +3974,7 @@ fn default_html_lexer_preserves_ambiguous_ampersands_in_attributes() {
                 diagnostic.code == "missing-semicolon-after-character-reference"
             })
             .count(),
-        2
+        1
     );
 }
 
