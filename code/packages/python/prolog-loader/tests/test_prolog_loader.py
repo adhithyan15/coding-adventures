@@ -914,6 +914,7 @@ class TestPrologGoalAdapter:
             relation("dynamic", 1)(term("/", atom("memo"), 1)),
             relation("abolish", 1)(term("/", atom("memo"), 1)),
             relation("current_predicate", 1)(term("/", atom("memo"), 1)),
+            relation("current_atom", 1)(atom("memo")),
             relation("predicate_property", 2)(
                 term("/", atom("memo"), 1),
                 atom("dynamic"),
@@ -1166,6 +1167,21 @@ class TestPrologGoalAdapter:
         assert solve_all(loaded.program, query.variables["Type"], adapted) == [
             atom("yfx"),
         ]
+
+    def test_adapt_prolog_goal_enumerates_visible_atoms(self) -> None:
+        loaded = load_swi_prolog_source(
+            """
+            parent(homer, bart).
+            ?- current_atom(Atom), Atom = bart.
+            """,
+        )
+        query = loaded.queries[0]
+
+        assert solve_all(
+            loaded.program,
+            query.variables["Atom"],
+            adapt_prolog_goal(query.goal),
+        ) == [atom("bart")]
 
     def test_adapt_prolog_goal_rewrites_if_then_else_control(self) -> None:
         parsed = parse_swi_query(

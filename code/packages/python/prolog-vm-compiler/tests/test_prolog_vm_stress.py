@@ -372,6 +372,28 @@ class TestPrologVMStress:
             },
         ]
 
+    def test_current_atom_runs_through_vm(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            parent(homer, bart).
+            parent(marge, lisa).
+
+            ?- current_atom(SourceAtom),
+               SourceAtom = bart,
+               current_atom(BuiltinAtom),
+               BuiltinAtom = current_atomo.
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert [answer.as_dict() for answer in answers] == [
+            {
+                "SourceAtom": atom("bart"),
+                "BuiltinAtom": atom("current_atomo"),
+            },
+        ]
+
     def test_set_prolog_flag_runs_through_vm_with_branch_scope(self) -> None:
         compiled = compile_swi_prolog_source(
             """

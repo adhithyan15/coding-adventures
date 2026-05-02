@@ -23,14 +23,24 @@ from logic_engine import (
     Atom,
     Clause,
     Compound,
+    ConjExpr,
+    CutExpr,
+    DeferredExpr,
+    DisjExpr,
+    EqExpr,
+    FailExpr,
+    FreshExpr,
     GoalExpr,
     LogicVar,
+    NativeGoalExpr,
+    NeqExpr,
     Number,
     Program,
     Relation,
     RelationCall,
     State,
     String,
+    SucceedExpr,
     Term,
     atom,
     clause_body,
@@ -90,6 +100,7 @@ __all__ = [
     "compare_termo",
     "copytermo",
     "convlisto",
+    "current_atomo",
     "current_prolog_flago",
     "current_predicateo",
     "cuto",
@@ -357,6 +368,7 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("compoundo", 1),
     ("copytermo", 2),
     ("convlisto", 3),
+    ("current_atomo", 1),
     ("current_prolog_flago", 2),
     ("current_predicateo", 2),
     ("cuto", 0),
@@ -5390,6 +5402,86 @@ def _predicate_properties(
         properties.append(atom("built_in"))
     properties.append(term("number_of_clauses", num(clause_count)))
     return tuple(properties)
+
+
+def _remember_atom(ordered: dict[Atom, None], atom_value: Atom) -> None:
+    ordered.setdefault(atom_value, None)
+
+
+def _remember_term_atoms(ordered: dict[Atom, None], term_value: Term) -> None:
+    if isinstance(term_value, Atom):
+        _remember_atom(ordered, term_value)
+        return
+    if isinstance(term_value, Compound):
+        _remember_atom(ordered, atom(term_value.functor))
+        for argument in term_value.args:
+            _remember_term_atoms(ordered, argument)
+
+
+def _remember_goal_atoms(ordered: dict[Atom, None], goal_value: GoalExpr) -> None:
+    if isinstance(goal_value, RelationCall):
+        _remember_atom(ordered, atom(goal_value.relation.symbol))
+        for argument in goal_value.args:
+            _remember_term_atoms(ordered, argument)
+        return
+    if isinstance(goal_value, EqExpr | NeqExpr):
+        _remember_term_atoms(ordered, goal_value.left)
+        _remember_term_atoms(ordered, goal_value.right)
+        return
+    if isinstance(goal_value, ConjExpr | DisjExpr):
+        for child in goal_value.goals:
+            _remember_goal_atoms(ordered, child)
+        return
+    if isinstance(goal_value, FreshExpr):
+        _remember_goal_atoms(ordered, goal_value.body)
+        return
+    if isinstance(goal_value, NativeGoalExpr | DeferredExpr):
+        for argument in goal_value.args:
+            _remember_term_atoms(ordered, argument)
+        return
+    if isinstance(goal_value, SucceedExpr | FailExpr | CutExpr):
+        return
+
+
+def _visible_atoms(program_value: Program, state: State) -> tuple[Atom, ...]:
+    """Enumerate atoms observable from source, dynamic state, and builtins."""
+
+    ordered: dict[Atom, None] = {}
+    for key in visible_predicate_keys(program_value, state):
+        _remember_atom(ordered, atom(key[0]))
+    for source_clause in visible_clauses(program_value, state):
+        _remember_goal_atoms(ordered, source_clause.head)
+        if source_clause.body is not None:
+            _remember_goal_atoms(ordered, source_clause.body)
+    for name, _arity in _BUILTIN_PREDICATES:
+        _remember_atom(ordered, atom(name))
+    for flag_name, flag_value in _PROLOG_FLAGS:
+        _remember_atom(ordered, flag_name)
+        _remember_term_atoms(ordered, flag_value)
+    for writable_flag, allowed_values in _PROLOG_WRITABLE_FLAG_VALUES.items():
+        _remember_atom(ordered, writable_flag)
+        for allowed_value in allowed_values:
+            _remember_term_atoms(ordered, allowed_value)
+    for property_atom in (
+        atom("defined"),
+        atom("dynamic"),
+        atom("static"),
+        atom("built_in"),
+        atom("number_of_clauses"),
+    ):
+        _remember_atom(ordered, property_atom)
+    return tuple(ordered)
+
+
+def current_atomo(name: object) -> GoalExpr:
+    """Enumerate atoms visible in the current source and builtin environment."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        (name_target,) = args
+        for name_atom in _visible_atoms(program_value, state):
+            yield from solve_from(program_value, eq(name_target, name_atom), state)
+
+    return native_goal(run, name)
 
 
 def current_prolog_flago(name: object, value: object) -> GoalExpr:
