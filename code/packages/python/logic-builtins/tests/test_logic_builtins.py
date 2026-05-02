@@ -43,6 +43,7 @@ from logic_builtins import (
     atom_codeso,
     atom_concato,
     atom_lengtho,
+    atom_numbero,
     atomic_list_concato,
     atomic_list_concato_with_separator,
     atomico,
@@ -2612,6 +2613,17 @@ class TestTermMetaprogrammingBuiltins:
             num(3.5),
         ]
         assert solve_all(program(), value, number_stringo(value, string("nope"))) == []
+
+    def test_atom_numbero_relates_atoms_to_numbers(self) -> None:
+        value = var("Value")
+        text = var("Text")
+
+        assert solve_all(program(), text, atom_numbero(text, 42)) == [atom("42")]
+        assert solve_all(program(), value, atom_numbero("-3.5", value)) == [
+            num(-3.5),
+        ]
+        assert solve_all(program(), value, atom_numbero("nope", value)) == []
+        assert solve_all(program(), value, atom_numbero(string("3"), value)) == []
 
     def test_text_inspection_builtins_measure_atoms_and_strings(self) -> None:
         value = var("Value")
