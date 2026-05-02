@@ -16,6 +16,8 @@ This first slice intentionally starts small:
 - implied document shell creation for omitted `html`, `head`, and `body`
 - parser-controlled lexer handoff for `title`, `textarea`, RAWTEXT elements,
   `script`, and `plaintext`
+- parser options for scripting-sensitive tokenizer handoff, including
+  `noscript`
 - simple implied end tags for `p`, `li`, `dt`, and `dd`
 - parser diagnostics for unmatched end tags
 
@@ -26,7 +28,8 @@ onto the same DOM target. A separate adapter can project DOM into
 ## Usage
 
 ```rust
-use coding_adventures_html_parser::parse_html;
+use coding_adventures_html_lexer::HtmlScriptingMode;
+use coding_adventures_html_parser::{parse_html, parse_html_with_options, HtmlParseOptions};
 use dom_core::Node;
 
 let document = parse_html("<p>Hello <strong>Venture</strong></p>").unwrap();
@@ -35,4 +38,12 @@ match &document.children[0] {
     Node::Element(element) => assert_eq!(element.name, "html"),
     other => panic!("expected element, got {other:?}"),
 }
+
+let no_script_document = parse_html_with_options(
+    "<noscript><p>Fallback</p></noscript>",
+    HtmlParseOptions {
+        scripting: HtmlScriptingMode::Disabled,
+    },
+)
+.unwrap();
 ```
