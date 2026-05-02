@@ -140,6 +140,8 @@ local WASM runtime. Those fixtures cover:
 - mixed scalar and array computation with output
 - Jensen-style by-name procedure calls
 - switch dispatch, procedure-formal dispatch, and procedure-crossing `goto`
+- lazy versus value label and switch formals across direct, forwarded, and
+  formal-procedure calls
 - conditional expressions, chained assignment, and exponentiation in the same
   end-to-end program
 - lexical recursion with outer-frame mutation and fresh recursive frames

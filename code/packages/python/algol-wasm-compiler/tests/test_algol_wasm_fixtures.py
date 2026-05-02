@@ -38,6 +38,11 @@ _GOLDEN_FIXTURES = (
     GoldenFixture(name="runtime-guards", result=[0], stdout=""),
     GoldenFixture(name="storage-semantics", result=[737], stdout="STORAGE 737"),
     GoldenFixture(name="edge-semantics", result=[65], stdout="EDGE 65"),
+    GoldenFixture(
+        name="by-name-designators",
+        result=[1111111111],
+        stdout="DESIG 1111111111",
+    ),
 )
 
 
