@@ -18,6 +18,8 @@ This first slice intentionally starts small:
   `script`, and `plaintext`
 - parser options for scripting-sensitive tokenizer handoff, including
   `noscript`
+- parser-approved initial tokenizer contexts for data-state documents and
+  foreign-content CDATA fragments
 - simple implied end tags for `p`, `li`, `dt`, and `dd`
 - parser diagnostics for unmatched end tags
 
@@ -29,7 +31,9 @@ onto the same DOM target. A separate adapter can project DOM into
 
 ```rust
 use coding_adventures_html_lexer::HtmlScriptingMode;
-use coding_adventures_html_parser::{parse_html, parse_html_with_options, HtmlParseOptions};
+use coding_adventures_html_parser::{
+    parse_html, parse_html_with_options, HtmlInitialTokenizerContext, HtmlParseOptions,
+};
 use dom_core::Node;
 
 let document = parse_html("<p>Hello <strong>Venture</strong></p>").unwrap();
@@ -43,6 +47,16 @@ let no_script_document = parse_html_with_options(
     "<noscript><p>Fallback</p></noscript>",
     HtmlParseOptions {
         scripting: HtmlScriptingMode::Disabled,
+        ..HtmlParseOptions::default()
+    },
+)
+.unwrap();
+
+let foreign_cdata_fragment = parse_html_with_options(
+    "<svg:title>&amp;</svg:title>]]>",
+    HtmlParseOptions {
+        initial_tokenizer_context: HtmlInitialTokenizerContext::ForeignContentCdataSection,
+        ..HtmlParseOptions::default()
     },
 )
 .unwrap();

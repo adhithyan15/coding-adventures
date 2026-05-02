@@ -16,12 +16,30 @@ use std::fmt;
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct HtmlParseOptions {
     pub scripting: HtmlScriptingMode,
+    pub initial_tokenizer_context: HtmlInitialTokenizerContext,
 }
 
 impl Default for HtmlParseOptions {
     fn default() -> Self {
         Self {
             scripting: HtmlScriptingMode::Enabled,
+            initial_tokenizer_context: HtmlInitialTokenizerContext::Data,
+        }
+    }
+}
+
+/// Initial tokenizer context for parser-approved document or fragment parsing.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum HtmlInitialTokenizerContext {
+    Data,
+    ForeignContentCdataSection,
+}
+
+impl HtmlInitialTokenizerContext {
+    fn lex_context(self) -> HtmlLexContext {
+        match self {
+            Self::Data => HtmlLexContext::data(),
+            Self::ForeignContentCdataSection => HtmlLexContext::cdata_section(),
         }
     }
 }
@@ -96,6 +114,7 @@ pub fn parse_html_with_diagnostics_and_options(
     options: HtmlParseOptions,
 ) -> Result<ParseOutput, ParseError> {
     let mut lexer = create_html_lexer()?;
+    apply_html_lex_context(&mut lexer, &options.initial_tokenizer_context.lex_context())?;
     let mut parser = HtmlParser::with_options(options);
 
     for ch in source.chars() {
@@ -623,6 +642,7 @@ mod tests {
             "<noscript><p>&amp;</p></noscript><p>x</p>",
             HtmlParseOptions {
                 scripting: HtmlScriptingMode::Disabled,
+                ..HtmlParseOptions::default()
             },
         )
         .unwrap();
@@ -635,6 +655,27 @@ mod tests {
         assert_eq!(fallback_paragraph.children, vec![Node::text("&")]);
 
         let paragraph = element(&body(&document).children[0]);
+        assert_eq!(paragraph.name, "p");
+        assert_eq!(paragraph.children, vec![Node::text("x")]);
+    }
+
+    #[test]
+    fn parser_can_start_in_foreign_content_cdata_context() {
+        let document = parse_html_with_options(
+            "<svg:title>&amp;</svg:title>]]><p>x</p>",
+            HtmlParseOptions {
+                initial_tokenizer_context: HtmlInitialTokenizerContext::ForeignContentCdataSection,
+                ..HtmlParseOptions::default()
+            },
+        )
+        .unwrap();
+
+        assert_eq!(
+            body(&document).children[0],
+            Node::text("<svg:title>&amp;</svg:title>")
+        );
+
+        let paragraph = element(&body(&document).children[1]);
         assert_eq!(paragraph.name, "p");
         assert_eq!(paragraph.children, vec![Node::text("x")]);
     }
