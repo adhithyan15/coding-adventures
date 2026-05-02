@@ -134,12 +134,15 @@ the current recovery diagnostics for missing whitespace, missing identifier
 quotes, and abrupt identifier termination while preserving any recoverable
 public/system identifier text.
 The generated HTML1 machine also exposes `RCDATA`, `RAWTEXT`, `PLAINTEXT`,
-`CDATA section`, `script_data`, `script_data_escaped`, and
-`script_data_double_escaped` entry states for parser-controlled tokenizer
-submodes. The markup declaration path also recognizes `<![CDATA[` and enters
-the CDATA section state so the generated lexer can exercise that tokenizer
-subflow end to end; a future parser can still decide when that opener is valid
-for foreign-content contexts.
+`CDATA section`, `script_data`, `script_data_escaped`,
+`script_data_escaped_dash`, `script_data_escaped_dash_dash`,
+`script_data_escaped_less_than_sign`, `script_data_double_escaped`,
+`script_data_double_escaped_dash`, `script_data_double_escaped_dash_dash`, and
+`script_data_double_escaped_less_than_sign` entry states for parser-controlled
+tokenizer submodes. The markup declaration path also recognizes `<![CDATA[`
+and enters the CDATA section state so the generated lexer can exercise that
+tokenizer subflow end to end; a future parser can still decide when that opener
+is valid for foreign-content contexts.
 `html-skeleton.lexer.states.toml` remains in the crate as a smaller bootstrap
 machine for comparisons and narrow debugging.
 
@@ -166,11 +169,11 @@ fixture normalization logic to live forever inside the Rust tests.
 
 The normalized corpus now carries optional tokenizer-context metadata such as
 `initial_state` and `last_start_tag`, so upstream RCDATA, RAWTEXT, PLAINTEXT,
-CDATA section, script data, script data escaped, and script data double escaped
-cases can already live in the shared Venture fixture format. Current Rust
-conformance tests now seed that context into the generated lexer so the first
-non-data-state cases execute through the same static Rust wrapper as the
-data-state corpus.
+CDATA section, script data, script data escaped/dash/less-than substates, and
+script data double-escaped/dash/less-than substates can already live in the
+shared Venture fixture format. Current Rust conformance tests now seed that
+context into the generated lexer so non-data-state cases execute through the
+same static Rust wrapper as the data-state corpus.
 
 The intended WHATWG/WPT path is to normalize upstream tokenizer cases into this
 same schema rather than teaching the Rust harness to parse raw upstream files

@@ -1784,6 +1784,106 @@
       ]
     },
     {
+      "description": "script escaped dash state can resume escaped text and close script",
+      "input": "x</script>",
+      "initialStates": [
+        "Script data escaped dash state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "Character",
+          "x"
+        ],
+        [
+          "EndTag",
+          "script"
+        ]
+      ]
+    },
+    {
+      "description": "script escaped dash dash state exits escaped text on greater-than",
+      "input": ">plain</script>",
+      "initialStates": [
+        "Script data escaped dash dash state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "Character",
+          ">plain"
+        ],
+        [
+          "EndTag",
+          "script"
+        ]
+      ]
+    },
+    {
+      "description": "script escaped less-than sign state recognizes matching end tag",
+      "input": "/script>tail",
+      "initialStates": [
+        "Script data escaped less-than sign state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "EndTag",
+          "script"
+        ],
+        [
+          "Character",
+          "tail"
+        ]
+      ]
+    },
+    {
+      "description": "script double escaped dash state keeps escaped end marker as text",
+      "input": "x</script>tail",
+      "initialStates": [
+        "Script data double escaped dash state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "Character",
+          "x</script>tail"
+        ]
+      ]
+    },
+    {
+      "description": "script double escaped dash dash state remains text after greater-than",
+      "input": ">still</script>text",
+      "initialStates": [
+        "Script data double escaped dash dash state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "Character",
+          ">still</script>text"
+        ]
+      ]
+    },
+    {
+      "description": "script double escaped less-than sign state exits before matching end tag",
+      "input": "/script>after</script>",
+      "initialStates": [
+        "Script data double escaped less-than sign state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "Character",
+          "/script>after"
+        ],
+        [
+          "EndTag",
+          "script"
+        ]
+      ]
+    },
+    {
       "description": "carriage return newline normalization",
       "input": "<p\r\nclass=x>one\rtwo\r\nthree</p>",
       "output": [
