@@ -59,7 +59,7 @@ class SqlBackendTest {
         val rows = backend.scan("users").toList()
         assertEquals(2, rows.size)
         assertEquals("Ada", rows[0]["name"])
-        assertNull(rows[0]["email"])
+        assertNull(rows[1]["email"])
     }
 
     @Test
