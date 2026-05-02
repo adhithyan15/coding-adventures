@@ -1476,6 +1476,50 @@ class TestAlgolTypeChecker:
         assert not result.ok
         assert "actual expression is not assignable" in result.diagnostics[0].message
 
+    def test_remaps_forwarded_by_name_formal_through_procedure_wrapper(
+        self,
+    ) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer procedure id(x); value x; integer x; begin id := x end; "
+            "integer procedure apply(f, x); integer f, x; procedure f; "
+            "begin apply := f(x) end; "
+            "integer procedure relay(g, y); integer g, y; procedure g; "
+            "begin relay := apply(g, y) end; "
+            "result := relay(id, 3 + 4) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        relay_procedure = result.semantic.procedures[2]
+        procedure_parameter = relay_procedure.parameters[0]
+        scalar_parameter = relay_procedure.parameters[1]
+        assert procedure_parameter.procedure_call_shapes[0].argument_formal_names == (
+            "y",
+        )
+        assert scalar_parameter.write_reason == "transitive call"
+
+    def test_rejects_wrapped_forwarded_by_name_expression_when_actual_writes(
+        self,
+    ) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer procedure inc(x); integer x; "
+            "begin x := x + 1; inc := x end; "
+            "integer procedure apply(f, x); integer f, x; procedure f; "
+            "begin apply := f(x) end; "
+            "integer procedure relay(g, y); integer g, y; procedure g; "
+            "begin relay := apply(g, y) end; "
+            "result := relay(inc, 3 + 4) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "actual expression is not assignable" in result.diagnostics[0].message
+
     def test_accepts_procedure_parameter_actual_with_array_element_by_name_formal(
         self,
     ) -> None:

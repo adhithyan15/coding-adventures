@@ -1402,6 +1402,37 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [44]
 
+    def test_wrapped_formal_procedure_call_accepts_read_only_expression(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer procedure id(x); value x; integer x; begin id := x end; "
+            "integer procedure apply(f, x); integer f, x; procedure f; "
+            "begin apply := f(x) end; "
+            "integer procedure relay(g, y); integer g, y; procedure g; "
+            "begin relay := apply(g, y) end; "
+            "result := relay(id, 3 + 4) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_wrapped_formal_procedure_call_keeps_writable_actual_path(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer procedure inc(x); integer x; "
+            "begin x := x + 1; inc := x end; "
+            "integer procedure apply(f, x); integer f, x; procedure f; "
+            "begin apply := f(x) end; "
+            "integer procedure relay(g, y); integer g, y; procedure g; "
+            "begin relay := apply(g, y) end; "
+            "result := 3; result := relay(inc, result) * 10 + result "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [44]
+
     def test_real_procedure_parameter_accepts_integer_return_actual(self) -> None:
         result = compile_source(
             "begin integer result; real y; "
