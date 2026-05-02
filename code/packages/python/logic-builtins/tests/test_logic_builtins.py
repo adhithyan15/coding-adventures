@@ -62,6 +62,7 @@ from logic_builtins import (
     convlisto,
     copytermo,
     current_atomo,
+    current_functoro,
     current_predicateo,
     current_prolog_flago,
     cuto,
@@ -2882,6 +2883,49 @@ class TestPredicateMetadataBuiltins:
         assert atom("current_atomo") in source_atoms
         assert atom("double_quotes") in source_atoms
         assert atom("cached") in dynamic_atoms
+
+    def test_current_functoro_enumerates_source_dynamic_and_builtin_functors(
+        self,
+    ) -> None:
+        parent = relation("parent", 2)
+        memo = relation("memo", 1)
+        arity = var("Arity")
+        family = program(
+            fact(parent("homer", term("child", "bart"))),
+            rule(
+                parent("marge", "lisa"),
+                eq(term("marker", "ok"), term("marker", "ok")),
+            ),
+        )
+
+        assert solve_all(family, arity, current_functoro("parent", arity)) == [
+            num(2),
+        ]
+        assert solve_all(family, arity, current_functoro("child", arity)) == [
+            num(1),
+        ]
+        assert solve_all(family, arity, current_functoro("bart", arity)) == [
+            num(0),
+        ]
+        assert solve_all(program(), arity, current_functoro("calltermo", arity)) == [
+            num(1),
+            num(2),
+            num(3),
+            num(4),
+            num(5),
+            num(6),
+            num(7),
+            num(8),
+        ]
+        assert solve_all(
+            program(),
+            arity,
+            conj(
+                dynamico("memo", 1),
+                assertzo(memo(term("cached", "value"))),
+                current_functoro("cached", arity),
+            ),
+        ) == [num(1)]
 
     def test_predicate_propertyo_reports_source_properties(self) -> None:
         parent = relation("parent", 2)

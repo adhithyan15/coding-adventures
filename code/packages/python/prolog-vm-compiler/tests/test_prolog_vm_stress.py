@@ -394,6 +394,25 @@ class TestPrologVMStress:
             },
         ]
 
+    def test_current_functor_runs_through_vm(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            parent(homer, child(bart)).
+
+            ?- current_functor(child, SourceArity),
+               current_functor(current_functoro, BuiltinArity).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert [answer.as_dict() for answer in answers] == [
+            {
+                "SourceArity": num(1),
+                "BuiltinArity": num(2),
+            },
+        ]
+
     def test_set_prolog_flag_runs_through_vm_with_branch_scope(self) -> None:
         compiled = compile_swi_prolog_source(
             """

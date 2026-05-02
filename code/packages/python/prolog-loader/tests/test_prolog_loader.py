@@ -915,6 +915,7 @@ class TestPrologGoalAdapter:
             relation("abolish", 1)(term("/", atom("memo"), 1)),
             relation("current_predicate", 1)(term("/", atom("memo"), 1)),
             relation("current_atom", 1)(atom("memo")),
+            relation("current_functor", 2)(atom("memo"), 1),
             relation("predicate_property", 2)(
                 term("/", atom("memo"), 1),
                 atom("dynamic"),
@@ -1182,6 +1183,21 @@ class TestPrologGoalAdapter:
             query.variables["Atom"],
             adapt_prolog_goal(query.goal),
         ) == [atom("bart")]
+
+    def test_adapt_prolog_goal_enumerates_visible_functors(self) -> None:
+        loaded = load_swi_prolog_source(
+            """
+            parent(homer, child(bart)).
+            ?- current_functor(child, Arity).
+            """,
+        )
+        query = loaded.queries[0]
+
+        assert solve_all(
+            loaded.program,
+            query.variables["Arity"],
+            adapt_prolog_goal(query.goal),
+        ) == [num(1)]
 
     def test_adapt_prolog_goal_rewrites_if_then_else_control(self) -> None:
         parsed = parse_swi_query(

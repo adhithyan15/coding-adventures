@@ -101,6 +101,7 @@ __all__ = [
     "copytermo",
     "convlisto",
     "current_atomo",
+    "current_functoro",
     "current_prolog_flago",
     "current_predicateo",
     "cuto",
@@ -369,6 +370,7 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("copytermo", 2),
     ("convlisto", 3),
     ("current_atomo", 1),
+    ("current_functoro", 2),
     ("current_prolog_flago", 2),
     ("current_predicateo", 2),
     ("cuto", 0),
@@ -5408,6 +5410,14 @@ def _remember_atom(ordered: dict[Atom, None], atom_value: Atom) -> None:
     ordered.setdefault(atom_value, None)
 
 
+def _remember_functor(
+    ordered: dict[tuple[Atom, int], None],
+    name: Atom,
+    arity: int,
+) -> None:
+    ordered.setdefault((name, arity), None)
+
+
 def _remember_term_atoms(ordered: dict[Atom, None], term_value: Term) -> None:
     if isinstance(term_value, Atom):
         _remember_atom(ordered, term_value)
@@ -5443,6 +5453,57 @@ def _remember_goal_atoms(ordered: dict[Atom, None], goal_value: GoalExpr) -> Non
         return
 
 
+def _remember_term_functors(
+    ordered: dict[tuple[Atom, int], None],
+    term_value: Term,
+) -> None:
+    if isinstance(term_value, Atom):
+        _remember_functor(ordered, term_value, 0)
+        return
+    if isinstance(term_value, Compound):
+        _remember_functor(ordered, atom(term_value.functor), len(term_value.args))
+        for argument in term_value.args:
+            _remember_term_functors(ordered, argument)
+
+
+def _remember_goal_functors(
+    ordered: dict[tuple[Atom, int], None],
+    goal_value: GoalExpr,
+) -> None:
+    if isinstance(goal_value, RelationCall):
+        _remember_functor(
+            ordered,
+            atom(goal_value.relation.symbol),
+            goal_value.relation.arity,
+        )
+        for argument in goal_value.args:
+            _remember_term_functors(ordered, argument)
+        return
+    if isinstance(goal_value, EqExpr):
+        _remember_functor(ordered, atom("="), 2)
+        _remember_term_functors(ordered, goal_value.left)
+        _remember_term_functors(ordered, goal_value.right)
+        return
+    if isinstance(goal_value, NeqExpr):
+        _remember_functor(ordered, atom("\\="), 2)
+        _remember_term_functors(ordered, goal_value.left)
+        _remember_term_functors(ordered, goal_value.right)
+        return
+    if isinstance(goal_value, ConjExpr | DisjExpr):
+        for child in goal_value.goals:
+            _remember_goal_functors(ordered, child)
+        return
+    if isinstance(goal_value, FreshExpr):
+        _remember_goal_functors(ordered, goal_value.body)
+        return
+    if isinstance(goal_value, NativeGoalExpr | DeferredExpr):
+        for argument in goal_value.args:
+            _remember_term_functors(ordered, argument)
+        return
+    if isinstance(goal_value, SucceedExpr | FailExpr | CutExpr):
+        return
+
+
 def _visible_atoms(program_value: Program, state: State) -> tuple[Atom, ...]:
     """Enumerate atoms observable from source, dynamic state, and builtins."""
 
@@ -5473,6 +5534,34 @@ def _visible_atoms(program_value: Program, state: State) -> tuple[Atom, ...]:
     return tuple(ordered)
 
 
+def _visible_functors(
+    program_value: Program,
+    state: State,
+) -> tuple[tuple[Atom, int], ...]:
+    """Enumerate functor indicators visible in source, dynamic, and builtins."""
+
+    ordered: dict[tuple[Atom, int], None] = {}
+    for key in visible_predicate_keys(program_value, state):
+        _remember_functor(ordered, atom(key[0]), key[1])
+    for source_clause in visible_clauses(program_value, state):
+        _remember_goal_functors(ordered, source_clause.head)
+        if source_clause.body is not None:
+            _remember_goal_functors(ordered, source_clause.body)
+    for name, arity in _BUILTIN_PREDICATES:
+        _remember_functor(ordered, atom(name), arity)
+    for flag_name, flag_value in _PROLOG_FLAGS:
+        _remember_functor(ordered, flag_name, 0)
+        _remember_term_functors(ordered, flag_value)
+    for writable_flag, allowed_values in _PROLOG_WRITABLE_FLAG_VALUES.items():
+        _remember_functor(ordered, writable_flag, 0)
+        for allowed_value in allowed_values:
+            _remember_term_functors(ordered, allowed_value)
+    _remember_functor(ordered, atom("number_of_clauses"), 1)
+    for property_atom in (atom("defined"), atom("dynamic"), atom("static")):
+        _remember_functor(ordered, property_atom, 0)
+    return tuple(ordered)
+
+
 def current_atomo(name: object) -> GoalExpr:
     """Enumerate atoms visible in the current source and builtin environment."""
 
@@ -5482,6 +5571,21 @@ def current_atomo(name: object) -> GoalExpr:
             yield from solve_from(program_value, eq(name_target, name_atom), state)
 
     return native_goal(run, name)
+
+
+def current_functoro(name: object, arity: object) -> GoalExpr:
+    """Enumerate functor indicators visible in the current environment."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        name_target, arity_target = args
+        for name_atom, raw_arity in _visible_functors(program_value, state):
+            yield from solve_from(
+                program_value,
+                conj(eq(name_target, name_atom), eq(arity_target, num(raw_arity))),
+                state,
+            )
+
+    return native_goal(run, name, arity)
 
 
 def current_prolog_flago(name: object, value: object) -> GoalExpr:
