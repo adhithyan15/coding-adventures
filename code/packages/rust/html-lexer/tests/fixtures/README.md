@@ -120,6 +120,9 @@ currently supports:
   character references
 - missing-semicolon recovery for legacy named character references `nbsp`,
   `copy`, and `reg` before delimiters and EOF
+- missing-semicolon named-reference recovery limited to WHATWG legacy
+  no-semicolon aliases, including fallback from longer modern names to shorter
+  legacy prefixes such as `not`
 - form-feed handling as an HTML ASCII-whitespace delimiter for script double
   escape and semicolonless legacy named character references
 - CRLF and bare-CR input-stream newline preprocessing before tokenization

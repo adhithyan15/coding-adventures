@@ -1815,6 +1815,74 @@ fn tokenizer_falls_back_for_unknown_named_character_references() {
 }
 
 #[test]
+fn tokenizer_only_recovers_semicolonless_legacy_named_references() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["T", "A", "L"]),
+            vec![
+                EffectfulTransition::new("data", EffectfulMatcher::Event("T".to_string()), "data")
+                    .with_effects(&[
+                        "clear_temporary_buffer",
+                        "append_temporary_buffer(&notin)",
+                        "append_named_character_reference_or_temporary_buffer_to_text",
+                        "flush_text",
+                    ]),
+                EffectfulTransition::new("data", EffectfulMatcher::Event("A".to_string()), "data")
+                    .with_effects(&[
+                        "create_start_tag",
+                        "append_tag_name(current_lowercase)",
+                        "start_attribute",
+                        "append_attribute_name(value)",
+                        "append_temporary_buffer(&notin)",
+                        "append_named_character_reference_or_temporary_buffer_to_attribute_value",
+                        "commit_attribute",
+                        "emit_current_token",
+                    ]),
+                EffectfulTransition::new("data", EffectfulMatcher::Event("L".to_string()), "done")
+                    .with_effects(&[
+                        "clear_temporary_buffer",
+                        "append_temporary_buffer(&Agrave)",
+                        "append_named_character_reference_or_temporary_buffer_to_text",
+                        "flush_text",
+                    ]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("TAL").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![
+            Token::Text("\u{00AC}in".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![Attribute {
+                    name: "value".to_string(),
+                    value: "&notin".to_string(),
+                }],
+                self_closing: false,
+            },
+            Token::Text("\u{00C0}".to_string()),
+        ]
+    );
+    assert_eq!(
+        tokenizer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| {
+                diagnostic.code == "missing-semicolon-after-character-reference"
+            })
+            .count(),
+        2
+    );
+}
+
+#[test]
 fn tokenizer_supports_switch_to_with_reconsume() {
     let mut tokenizer = Tokenizer::new(
         EffectfulStateMachine::new(

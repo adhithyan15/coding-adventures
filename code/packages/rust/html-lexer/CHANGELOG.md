@@ -143,6 +143,9 @@ documented in this file.
   entity prefix in text and RCDATA, while preserving ambiguous ampersands
   literally in attribute values when the missing-semicolon reference would be
   followed by an ASCII alphanumeric character or `=`.
+- Missing-semicolon named-character-reference recovery is now limited to
+  WHATWG legacy no-semicolon aliases, avoiding over-acceptance of newer names
+  such as `trade` without `;`.
 - Completed the HTML4-era math named reference table with `alefsym` and
   `oline`, including data, RCDATA, attribute, and normalized html5lib smoke
   coverage.

@@ -114,6 +114,9 @@ Named character reference actions consume the longest matching known entity
 prefix in text-like contexts and preserve ambiguous ampersands in attribute
 contexts when a missing-semicolon reference would be followed by an ASCII
 alphanumeric character or `=`.
+Missing-semicolon recovery is limited to the WHATWG legacy no-semicolon names;
+newer names must include `;` or fall back to a shorter legacy prefix/literal
+text instead of being over-accepted.
 
 `commit_attribute_dedup` commits the current attribute only when the current
 start tag does not already have an attribute with the same interpreted name. If
