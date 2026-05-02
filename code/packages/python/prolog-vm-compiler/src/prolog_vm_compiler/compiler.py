@@ -591,6 +591,338 @@ def compile_swi_prolog_project_from_files(
     )
 
 
+def run_prolog_file_query(
+    path: str | Path,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    *,
+    dialect: PrologDialect = "swi",
+    source_resolver: SourceResolver | None = None,
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[Term | tuple[Term, ...]]:
+    """Read, compile, and run one source query from a Prolog file."""
+
+    compiled_program = compile_prolog_file(
+        path,
+        dialect=dialect,
+        source_resolver=source_resolver,
+        adapt_builtins=adapt_builtins,
+    )
+    if initialize:
+        return run_initialized_compiled_prolog_query(
+            compiled_program,
+            source_query_index,
+            limit,
+            backend=backend,
+        )
+    return run_compiled_prolog_query(
+        compiled_program,
+        source_query_index,
+        limit,
+        backend=backend,
+    )
+
+
+def run_prolog_file_query_answers(
+    path: str | Path,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    *,
+    dialect: PrologDialect = "swi",
+    source_resolver: SourceResolver | None = None,
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[PrologAnswer]:
+    """Read, compile, and run one file query with named bindings."""
+
+    compiled_program = compile_prolog_file(
+        path,
+        dialect=dialect,
+        source_resolver=source_resolver,
+        adapt_builtins=adapt_builtins,
+    )
+    if initialize:
+        return run_initialized_compiled_prolog_query_answers(
+            compiled_program,
+            source_query_index,
+            limit,
+            backend=backend,
+        )
+    return run_compiled_prolog_query_answers(
+        compiled_program,
+        source_query_index,
+        limit,
+        backend=backend,
+    )
+
+
+def run_swi_prolog_file_query(
+    path: str | Path,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    *,
+    source_resolver: SourceResolver | None = None,
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[Term | tuple[Term, ...]]:
+    """Read, compile, and run one SWI-compatible file query."""
+
+    return run_prolog_file_query(
+        path,
+        source_query_index,
+        limit,
+        dialect="swi",
+        source_resolver=source_resolver,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def run_swi_prolog_file_query_answers(
+    path: str | Path,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    *,
+    source_resolver: SourceResolver | None = None,
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[PrologAnswer]:
+    """Read, compile, and run one SWI-compatible file query with bindings."""
+
+    return run_prolog_file_query_answers(
+        path,
+        source_query_index,
+        limit,
+        dialect="swi",
+        source_resolver=source_resolver,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def run_prolog_project_query(
+    *sources: str,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    dialect: PrologDialect = "swi",
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[Term | tuple[Term, ...]]:
+    """Parse, link, compile, and run one source query from a project."""
+
+    compiled_program = compile_prolog_project(
+        *sources,
+        dialect=dialect,
+        adapt_builtins=adapt_builtins,
+    )
+    if initialize:
+        return run_initialized_compiled_prolog_query(
+            compiled_program,
+            source_query_index,
+            limit,
+            backend=backend,
+        )
+    return run_compiled_prolog_query(
+        compiled_program,
+        source_query_index,
+        limit,
+        backend=backend,
+    )
+
+
+def run_prolog_project_query_answers(
+    *sources: str,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    dialect: PrologDialect = "swi",
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[PrologAnswer]:
+    """Parse, link, compile, and run one project query with bindings."""
+
+    compiled_program = compile_prolog_project(
+        *sources,
+        dialect=dialect,
+        adapt_builtins=adapt_builtins,
+    )
+    if initialize:
+        return run_initialized_compiled_prolog_query_answers(
+            compiled_program,
+            source_query_index,
+            limit,
+            backend=backend,
+        )
+    return run_compiled_prolog_query_answers(
+        compiled_program,
+        source_query_index,
+        limit,
+        backend=backend,
+    )
+
+
+def run_swi_prolog_project_query(
+    *sources: str,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[Term | tuple[Term, ...]]:
+    """Parse, link, compile, and run one SWI-compatible project query."""
+
+    return run_prolog_project_query(
+        *sources,
+        source_query_index=source_query_index,
+        limit=limit,
+        dialect="swi",
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def run_swi_prolog_project_query_answers(
+    *sources: str,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[PrologAnswer]:
+    """Parse, link, compile, and run one SWI project query with bindings."""
+
+    return run_prolog_project_query_answers(
+        *sources,
+        source_query_index=source_query_index,
+        limit=limit,
+        dialect="swi",
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def run_prolog_project_file_query(
+    *entry_paths: str | Path,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    dialect: PrologDialect = "swi",
+    source_resolver: SourceResolver | None = None,
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[Term | tuple[Term, ...]]:
+    """Load, link, compile, and run one source query from a file graph."""
+
+    compiled_program = compile_prolog_project_from_files(
+        *entry_paths,
+        dialect=dialect,
+        source_resolver=source_resolver,
+        adapt_builtins=adapt_builtins,
+    )
+    if initialize:
+        return run_initialized_compiled_prolog_query(
+            compiled_program,
+            source_query_index,
+            limit,
+            backend=backend,
+        )
+    return run_compiled_prolog_query(
+        compiled_program,
+        source_query_index,
+        limit,
+        backend=backend,
+    )
+
+
+def run_prolog_project_file_query_answers(
+    *entry_paths: str | Path,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    dialect: PrologDialect = "swi",
+    source_resolver: SourceResolver | None = None,
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[PrologAnswer]:
+    """Load, link, compile, and run one file-graph query with bindings."""
+
+    compiled_program = compile_prolog_project_from_files(
+        *entry_paths,
+        dialect=dialect,
+        source_resolver=source_resolver,
+        adapt_builtins=adapt_builtins,
+    )
+    if initialize:
+        return run_initialized_compiled_prolog_query_answers(
+            compiled_program,
+            source_query_index,
+            limit,
+            backend=backend,
+        )
+    return run_compiled_prolog_query_answers(
+        compiled_program,
+        source_query_index,
+        limit,
+        backend=backend,
+    )
+
+
+def run_swi_prolog_project_file_query(
+    *entry_paths: str | Path,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    source_resolver: SourceResolver | None = None,
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[Term | tuple[Term, ...]]:
+    """Load, link, compile, and run one SWI-compatible file-graph query."""
+
+    return run_prolog_project_file_query(
+        *entry_paths,
+        source_query_index=source_query_index,
+        limit=limit,
+        dialect="swi",
+        source_resolver=source_resolver,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def run_swi_prolog_project_file_query_answers(
+    *entry_paths: str | Path,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    source_resolver: SourceResolver | None = None,
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[PrologAnswer]:
+    """Load, link, compile, and run one SWI file-graph query with bindings."""
+
+    return run_prolog_project_file_query_answers(
+        *entry_paths,
+        source_query_index=source_query_index,
+        limit=limit,
+        dialect="swi",
+        source_resolver=source_resolver,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
 def load_compiled_prolog_vm(compiled_program: CompiledPrologVMProgram) -> LogicVM:
     """Load a compiled Prolog instruction stream into a fresh Logic VM."""
 

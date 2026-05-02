@@ -25,6 +25,10 @@ from prolog_vm_compiler import (
     create_swi_prolog_project_runtime,
     create_swi_prolog_vm_runtime,
     run_compiled_prolog_query_answers,
+    run_swi_prolog_file_query_answers,
+    run_swi_prolog_project_file_query_answers,
+    run_swi_prolog_project_query,
+    run_swi_prolog_project_query_answers,
 )
 
 
@@ -206,6 +210,50 @@ class TestPrologVMRuntime:
             {"Who": atom("lisa")},
         ]
 
+    def test_one_shot_file_runner_uses_selected_backend(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        source_path = tmp_path / "family.pl"
+        source_path.write_text(
+            "parent(homer, bart).\n"
+            "parent(homer, lisa).\n"
+            "?- parent(homer, Who).\n",
+            encoding="utf-8",
+        )
+
+        answers = run_swi_prolog_file_query_answers(
+            source_path,
+            backend="bytecode",
+        )
+
+        assert [answer.as_dict() for answer in answers] == [
+            {"Who": atom("bart")},
+            {"Who": atom("lisa")},
+        ]
+
+    def test_one_shot_file_runner_can_run_initializations(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        source_path = tmp_path / "startup.pl"
+        source_path.write_text(
+            ":- initialization(dynamic(seen/1)).\n"
+            ":- initialization(assertz(seen(alpha))).\n"
+            "?- seen(Name).\n",
+            encoding="utf-8",
+        )
+
+        answers = run_swi_prolog_file_query_answers(
+            source_path,
+            initialize=True,
+            backend="bytecode",
+        )
+
+        assert [answer.as_dict() for answer in answers] == [
+            {"Name": atom("alpha")},
+        ]
+
     def test_source_runtime_backend_selector_uses_bytecode_vm(self) -> None:
         runtime = create_swi_prolog_vm_runtime(
             """
@@ -269,6 +317,40 @@ class TestPrologVMRuntime:
             {"Who": atom("lisa")},
         ]
 
+    def test_one_shot_project_runner_uses_selected_backend(self) -> None:
+        answers = run_swi_prolog_project_query_answers(
+            """
+            :- module(family, [ancestor/2]).
+            ancestor(homer, bart).
+            ancestor(homer, lisa).
+            """,
+            """
+            :- module(app, []).
+            :- use_module(family, [ancestor/2]).
+            ?- ancestor(homer, Who).
+            """,
+            backend="bytecode",
+        )
+
+        assert [answer.as_dict() for answer in answers] == [
+            {"Who": atom("bart")},
+            {"Who": atom("lisa")},
+        ]
+
+    def test_one_shot_project_runner_returns_raw_values(self) -> None:
+        answers = run_swi_prolog_project_query(
+            """
+            pick(first).
+            """,
+            """
+            pick(second).
+            ?- pick(Value).
+            """,
+            backend="bytecode",
+        )
+
+        assert answers == [atom("first"), atom("second")]
+
     def test_project_file_compiler_runs_linked_module_source_queries(
         self,
         tmp_path: Path,
@@ -294,6 +376,31 @@ class TestPrologVMRuntime:
         assert [
             answer.as_dict() for answer in run_compiled_prolog_query_answers(compiled)
         ] == [
+            {"Who": atom("bart")},
+            {"Who": atom("lisa")},
+        ]
+
+    def test_one_shot_project_file_runner_loads_consulted_sources(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        facts_path = tmp_path / "facts.pl"
+        facts_path.write_text(
+            "parent(homer, bart).\nparent(homer, lisa).\n",
+            encoding="utf-8",
+        )
+        app_path = tmp_path / "app.pl"
+        app_path.write_text(
+            ":- consult(facts).\n?- parent(homer, Who).\n",
+            encoding="utf-8",
+        )
+
+        answers = run_swi_prolog_project_file_query_answers(
+            app_path,
+            backend="bytecode",
+        )
+
+        assert [answer.as_dict() for answer in answers] == [
             {"Who": atom("bart")},
             {"Who": atom("lisa")},
         ]
