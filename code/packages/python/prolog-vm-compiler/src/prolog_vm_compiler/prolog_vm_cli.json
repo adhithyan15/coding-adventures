@@ -1,0 +1,91 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "prolog-vm",
+  "description": "Run SWI/ISO-compatible Prolog source through the Logic VM or Logic bytecode VM.",
+  "version": "0.1.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
+  "flags": [
+    {
+      "id": "source",
+      "long": "source",
+      "description": "Inline Prolog source text to load instead of file paths.",
+      "type": "string",
+      "value_name": "SOURCE"
+    },
+    {
+      "id": "query",
+      "long": "query",
+      "description": "Ad-hoc top-level query to run; when omitted, the selected source-level ?- query is executed.",
+      "type": "string",
+      "value_name": "QUERY"
+    },
+    {
+      "id": "source-query-index",
+      "long": "source-query-index",
+      "description": "Zero-based source-level ?- query index to run when --query is absent.",
+      "type": "integer",
+      "default": 0,
+      "value_name": "INDEX"
+    },
+    {
+      "id": "query-module",
+      "long": "query-module",
+      "description": "Module context for ad-hoc project/file-graph queries.",
+      "type": "string",
+      "value_name": "MODULE"
+    },
+    {
+      "id": "limit",
+      "long": "limit",
+      "description": "Maximum number of answers to print.",
+      "type": "integer",
+      "value_name": "N"
+    },
+    {
+      "id": "dialect",
+      "long": "dialect",
+      "description": "Prolog dialect profile to use.",
+      "type": "enum",
+      "enum_values": ["swi", "iso"],
+      "default": "swi",
+      "value_name": "DIALECT"
+    },
+    {
+      "id": "backend",
+      "long": "backend",
+      "description": "VM backend to execute with.",
+      "type": "enum",
+      "enum_values": ["structured", "bytecode"],
+      "default": "structured",
+      "value_name": "BACKEND"
+    },
+    {
+      "id": "values",
+      "long": "values",
+      "description": "Print raw answer values instead of named variable bindings.",
+      "type": "boolean"
+    },
+    {
+      "id": "no-initialize",
+      "long": "no-initialize",
+      "description": "Do not run initialization directives before the selected query.",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "files",
+      "name": "FILE",
+      "description": "Prolog file or linked file graph to load.",
+      "type": "path",
+      "required": false,
+      "variadic": true,
+      "variadic_min": 0,
+      "variadic_max": null
+    }
+  ]
+}

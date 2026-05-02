@@ -247,6 +247,33 @@ assert [answer.as_dict() for answer in runtime.query("ancestor(homer, Who)")] ==
 ]
 ```
 
+## CLI
+
+The package also exposes a `prolog-vm` command backed by the repo's declarative
+`cli-builder` package. It can run inline source, a single `.pl` file, or a
+linked project file graph through either VM backend:
+
+```bash
+prolog-vm \
+  --source "parent(homer, bart). parent(homer, lisa)." \
+  --query "parent(homer, Who)" \
+  --backend bytecode
+```
+
+For linked module projects, pass all entry files and the module context for
+ad-hoc queries:
+
+```bash
+prolog-vm app.pl family.pl \
+  --query "ancestor(homer, Who)" \
+  --query-module app \
+  --backend bytecode
+```
+
+Use `--values` to print raw answer values, omit `--query` to run a source-level
+`?-` directive by index, and use `--dialect iso` when the ISO parser profile is
+the desired frontend.
+
 ## Stress Coverage
 
 The package includes end-to-end stress tests for:

@@ -1,3 +1,3 @@
 uv venv --quiet --clear
-uv pip install -e ../symbol-core -e ../logic-core -e ../logic-engine -e ../lexer -e ../parser -e ../grammar-tools -e ../graph -e ../directed-graph -e ../state-machine -e ../prolog-core -e ../prolog-lexer -e ../iso-prolog-lexer -e ../swi-prolog-lexer -e ../prolog-parser -e ../prolog-operator-parser -e ../iso-prolog-parser -e ../swi-prolog-parser -e ../logic-builtins -e ../logic-instructions -e ../logic-vm -e ../prolog-loader -e ".[dev]" --quiet
+uv pip install -e ../symbol-core -e ../logic-core -e ../logic-engine -e ../lexer -e ../parser -e ../grammar-tools -e ../graph -e ../directed-graph -e ../state-machine -e ../cli-builder -e ../prolog-core -e ../prolog-lexer -e ../iso-prolog-lexer -e ../swi-prolog-lexer -e ../prolog-parser -e ../prolog-operator-parser -e ../iso-prolog-parser -e ../swi-prolog-parser -e ../logic-builtins -e ../logic-instructions -e ../logic-vm -e ../prolog-loader -e ".[dev]" --quiet
 .venv\Scripts\python -m pytest tests/ -v
