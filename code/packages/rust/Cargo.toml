@@ -213,6 +213,7 @@ members = [
     "csv-parser",
     "sql-execution-engine",
     "sql-csv-source",
+    "sql-backend",
     "ean-13",
     "epoll",
     "macos-job-backend-launchd-files",
