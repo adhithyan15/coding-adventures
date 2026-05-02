@@ -72,6 +72,7 @@ from logic_builtins import (
     dynamico,
     excludeo,
     failo,
+    falseo,
     fd_addo,
     fd_bool_ando,
     fd_bool_implieso,
@@ -102,6 +103,7 @@ from logic_builtins import (
     gto,
     ifthenelseo,
     iftheno,
+    ignoreo,
     includeo,
     integero,
     iso,
@@ -1460,6 +1462,24 @@ class TestControlBuiltins:
         )
 
         assert answers == [atom("first")]
+
+    def test_falseo_is_failure_alias(self) -> None:
+        assert solve_all(program(), var("Item"), falseo()) == []
+
+    def test_ignoreo_keeps_first_solution_or_succeeds_unchanged(self) -> None:
+        item = var("Item")
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            item,
+            ignoreo(disj(eq(item, "first"), eq(item, "second"))),
+        ) == [atom("first")]
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "kept"), ignoreo(falseo())),
+        ) == [atom("kept")]
 
     def test_repeato_restarts_the_rest_of_the_search(self) -> None:
         item = var("Item")

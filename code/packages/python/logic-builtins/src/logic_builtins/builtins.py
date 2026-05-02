@@ -131,6 +131,7 @@ __all__ = [
     "fd_sumo",
     "fd_sum_relationo",
     "failo",
+    "falseo",
     "excludeo",
     "FiniteDomainConstraint",
     "FiniteDomainStore",
@@ -144,6 +145,7 @@ __all__ = [
     "groundo",
     "ifthenelseo",
     "iftheno",
+    "ignoreo",
     "integero",
     "includeo",
     "iso",
@@ -400,6 +402,7 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("fd_sumo", 2),
     ("fd_sum_relationo", 3),
     ("failo", 0),
+    ("falseo", 0),
     ("excludeo", 3),
     ("findallo", 3),
     ("foldlo", 4),
@@ -413,6 +416,7 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("gto", 2),
     ("ifthenelseo", 3),
     ("iftheno", 2),
+    ("ignoreo", 1),
     ("integero", 1),
     ("includeo", 3),
     ("iso", 2),
@@ -2006,6 +2010,12 @@ def failo() -> GoalExpr:
     """Fail without yielding any successor states."""
 
     return engine_fail()
+
+
+def falseo() -> GoalExpr:
+    """Alias for logical failure, matching Prolog's standard `false/0`."""
+
+    return failo()
 
 
 def cuto() -> GoalExpr:
@@ -3783,6 +3793,37 @@ def onceo(goal: object) -> GoalExpr:
         first = next(iterator, None)
         if first is not None:
             yield first
+
+    return native_goal(run)
+
+
+def ignoreo(goal: object) -> GoalExpr:
+    """Run `goal` once, or succeed unchanged when `goal` cannot be proven."""
+
+    called_goal = _as_goal(goal)
+    goal_term = _goal_term_or_none(called_goal)
+
+    if goal_term is not None:
+
+        def run_terms(
+            program_value: Program,
+            state: State,
+            args: NativeArgs,
+        ) -> Iterator[State]:
+            (called_goal_term,) = args
+            try:
+                reified_goal = goal_from_term(_reified(called_goal_term, state))
+            except TypeError:
+                yield state
+                return
+            iterator = solve_from(program_value, reified_goal, state)
+            yield next(iterator, state)
+
+        return native_goal(run_terms, goal_term)
+
+    def run(program_value: Program, state: State, _args: NativeArgs) -> Iterator[State]:
+        iterator = solve_from(program_value, called_goal, state)
+        yield next(iterator, state)
 
     return native_goal(run)
 

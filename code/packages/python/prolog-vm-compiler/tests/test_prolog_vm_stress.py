@@ -588,6 +588,23 @@ class TestPrologVMStress:
         ]
         assert run_compiled_prolog_query(failure) == []
 
+    def test_ignore_and_false_control_run_through_vm(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            ?- ignore(member(Item, [tea, cake])),
+               ignore(false),
+               \\+ false.
+            """,
+        )
+        failure = compile_swi_prolog_source("?- false.")
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert [answer.as_dict() for answer in answers] == [
+            {"Item": atom("tea")},
+        ]
+        assert run_compiled_prolog_query(failure) == []
+
     def test_grouped_bagof_setof_and_existentials_run_through_vm(self) -> None:
         compiled = compile_swi_prolog_source(
             """
