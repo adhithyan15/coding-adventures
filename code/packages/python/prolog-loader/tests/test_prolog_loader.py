@@ -834,6 +834,7 @@ class TestPrologGoalAdapter:
             ),
             relation("once", 1)(term("memo", atom("ok"))),
             relation("repeat", 0)(),
+            relation("ignore", 1)(term("memo", atom("ok"))),
             relation("->", 2)(term("memo", atom("ok")), term("memo", atom("then"))),
             relation("not", 1)(term("memo", atom("missing"))),
             relation("\\+", 1)(term("memo", atom("missing"))),
@@ -929,6 +930,7 @@ class TestPrologGoalAdapter:
             ),
             relation("true", 0)(),
             relation("fail", 0)(),
+            relation("false", 0)(),
             relation("!", 0)(),
             relation("is", 2)(LogicVar(id=10), term("+", 1, 2)),
             relation("succ", 2)(1, LogicVar(id=29)),
@@ -1221,6 +1223,20 @@ class TestPrologGoalAdapter:
             atom("cake"),
             atom("tea"),
         ]
+
+    def test_adapt_prolog_goal_rewrites_ignore_and_false_control(self) -> None:
+        loaded = load_swi_prolog_source(
+            """
+            ?- ignore(member(Item, [tea, cake])), ignore(false), \\+ false.
+            """,
+        )
+        query = loaded.queries[0]
+
+        assert solve_all(
+            loaded.program,
+            query.variables["Item"],
+            adapt_prolog_goal(query.goal),
+        ) == [atom("tea")]
 
     def test_adapt_prolog_goal_rewrites_if_then_else_control(self) -> None:
         parsed = parse_swi_query(

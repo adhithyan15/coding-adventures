@@ -43,6 +43,7 @@ from logic_builtins import (
     dynamico,
     excludeo,
     failo,
+    falseo,
     fd_addo,
     fd_bool_ando,
     fd_bool_equivo,
@@ -70,6 +71,7 @@ from logic_builtins import (
     groundo,
     ifthenelseo,
     iftheno,
+    ignoreo,
     includeo,
     integero,
     labeling_optionso,
@@ -234,6 +236,7 @@ def _adapt_relation_call(
     nullary_builtins: dict[str, Callable[[], GoalExpr]] = {
         "true": trueo,
         "fail": failo,
+        "false": falseo,
         "!": cuto,
     }
     if goal.relation.arity == 0 and name in nullary_builtins:
@@ -382,6 +385,8 @@ def _adapt_relation_call(
         return onceo(_adapt_callable_goal(args[0], operator_table=operator_table))
     if name == "repeat" and goal.relation.arity == 0:
         return repeato()
+    if name == "ignore" and goal.relation.arity == 1:
+        return ignoreo(_adapt_callable_goal(args[0], operator_table=operator_table))
     if name == "throw" and goal.relation.arity == 1:
         return throwo(args[0])
     if name == "catch" and goal.relation.arity == 3:
