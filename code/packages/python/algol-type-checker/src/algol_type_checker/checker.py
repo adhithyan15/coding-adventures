@@ -2949,10 +2949,10 @@ class AlgolTypeChecker:
                         )
                         return False
                     if procedure_argument_id is not None:
-                        descriptor = self._procedure_descriptor_for_id(
+                        nested_descriptor = self._procedure_descriptor_for_id(
                             procedure_argument_id
                         )
-                        if descriptor is None:
+                        if nested_descriptor is None:
                             self._error(
                                 token,
                                 f"procedure parameter {parameter.name!r} passes a "
@@ -2961,7 +2961,7 @@ class AlgolTypeChecker:
                             return False
                         if not self._procedure_actual_satisfies_formal_shapes(
                             token,
-                            descriptor,
+                            nested_descriptor,
                             actual_parameter,
                         ):
                             return False
@@ -3012,8 +3012,13 @@ class AlgolTypeChecker:
                         f"{actual_parameter.type_name}",
                     )
                     return False
+                parameter_may_write = self._procedure_parameter_may_write_for_shape(
+                    descriptor,
+                    actual_parameter,
+                    shape,
+                )
                 if actual_parameter.mode == NAME and (
-                    actual_parameter.may_write and not argument_assignable
+                    parameter_may_write and not argument_assignable
                 ):
                     self._error(
                         token,
@@ -3024,6 +3029,62 @@ class AlgolTypeChecker:
                     return False
                 continue
         return True
+
+    def _procedure_parameter_may_write_for_shape(
+        self,
+        descriptor: ProcedureDescriptor,
+        parameter: ProcedureParameter,
+        shape: ProcedureFormalCallShape,
+    ) -> bool:
+        if (
+            parameter.kind != "scalar"
+            or parameter.mode != NAME
+            or not parameter.may_write
+        ):
+            return False
+        if parameter.write_reason != "transitive call":
+            return True
+
+        saw_formal_procedure_shape = False
+        for procedure_index, procedure_parameter in enumerate(descriptor.parameters):
+            if procedure_parameter.kind != "procedure":
+                continue
+            for nested_shape in procedure_parameter.procedure_call_shapes:
+                formal_names = _shape_argument_formal_names(nested_shape)
+                for argument_index, formal_name in enumerate(formal_names):
+                    if formal_name != parameter.name:
+                        continue
+                    saw_formal_procedure_shape = True
+                    if self._shape_procedure_argument_writes(
+                        shape,
+                        procedure_index,
+                        nested_shape,
+                        argument_index,
+                    ):
+                        return True
+        return not saw_formal_procedure_shape
+
+    def _shape_procedure_argument_writes(
+        self,
+        shape: ProcedureFormalCallShape,
+        procedure_argument_index: int,
+        nested_shape: ProcedureFormalCallShape,
+        nested_argument_index: int,
+    ) -> bool:
+        if procedure_argument_index >= len(shape.procedure_argument_ids):
+            return True
+        procedure_id = shape.procedure_argument_ids[procedure_argument_index]
+        if procedure_id is None:
+            return True
+        descriptor = self._procedure_descriptor_for_id(procedure_id)
+        if descriptor is None or nested_argument_index >= len(descriptor.parameters):
+            return True
+        parameter = descriptor.parameters[nested_argument_index]
+        return self._procedure_parameter_may_write_for_shape(
+            descriptor,
+            parameter,
+            nested_shape,
+        )
 
     def _procedure_descriptor_for_id(
         self,

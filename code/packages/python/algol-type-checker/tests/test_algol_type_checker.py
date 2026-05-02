@@ -1520,6 +1520,45 @@ class TestAlgolTypeChecker:
         assert not result.ok
         assert "actual expression is not assignable" in result.diagnostics[0].message
 
+    def test_accepts_procedure_actual_shape_when_nested_actual_reads(
+        self,
+    ) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer procedure id(x); value x; integer x; begin id := x end; "
+            "integer procedure relay(g, y); integer g, y; procedure g; "
+            "begin relay := g(y) end; "
+            "procedure invoke(p); integer p; procedure p; "
+            "begin result := p(id, 3 + 4) end; "
+            "invoke(relay) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        relay = result.semantic.procedures[1]
+        assert relay.parameters[1].write_reason == "transitive call"
+
+    def test_rejects_procedure_actual_shape_when_nested_actual_writes(
+        self,
+    ) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer procedure inc(x); integer x; "
+            "begin x := x + 1; inc := x end; "
+            "integer procedure relay(g, y); integer g, y; procedure g; "
+            "begin relay := g(y) end; "
+            "procedure invoke(p); integer p; procedure p; "
+            "begin result := p(inc, 3 + 4) end; "
+            "invoke(relay) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "non-assignable actual" in result.diagnostics[0].message
+
     def test_accepts_procedure_parameter_actual_with_array_element_by_name_formal(
         self,
     ) -> None:
