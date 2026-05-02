@@ -274,6 +274,25 @@ Use `--values` to print raw answer values, omit `--query` to run a source-level
 `?-` directive by index, and use `--dialect iso` when the ISO parser profile is
 the desired frontend.
 
+Repeated `--query` flags run in one stateful runtime. Add `--commit` when the
+first answer state from each query should persist into the next query, which is
+useful for dynamic database updates:
+
+```bash
+prolog-vm \
+  --source ":- dynamic(memo/1)." \
+  --query "assertz(memo(saved))" \
+  --query "memo(Value)" \
+  --commit
+```
+
+Use `--interactive` to consult source once and then stream top-level queries
+from stdin until `halt.`, `:q`, `:quit`, or EOF:
+
+```bash
+prolog-vm family.pl --interactive --backend bytecode
+```
+
 ## Stress Coverage
 
 The package includes end-to-end stress tests for:
