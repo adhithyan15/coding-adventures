@@ -153,6 +153,9 @@ local WASM runtime. Those fixtures cover:
   output executes
 - mixed `own` scalar and array storage for real, boolean, and string values,
   plus value-array copies and by-name loop-control storage behavior
+- boolean and string conditional values, conditional subscripts, terminal labels
+  on empty statements, invalid switch indexes, array element caps, and heap
+  exhaustion through the zero-result runtime guard path
 - a full-surface convergence program combining `own` scalars and arrays,
   default-real arrays, nested and single-statement procedures, value and
   by-name procedure formals, label and switch formals, multiple `for` element

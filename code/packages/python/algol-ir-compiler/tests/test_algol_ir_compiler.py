@@ -54,6 +54,20 @@ class TestAlgolIrCompiler:
         assert IrOp.JUMP in opcodes
         assert opcodes.count(IrOp.STORE_WORD) >= 1
 
+    def test_compiles_boolean_and_string_conditional_expression_values(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; boolean ok; string word; "
+                "ok := if false then false else true; "
+                "word := if ok then 'YES' else 'NO'; "
+                "if ok and (word = 'YES') then result := 1 else result := 0 "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+        assert opcodes.count(IrOp.BRANCH_Z) >= 2
+        assert opcodes.count(IrOp.STORE_WORD) >= 3
+
     def test_compiles_structured_if_labels(self) -> None:
         result = compile_algol(
             parse_algol(
