@@ -95,6 +95,9 @@ All notable changes to this package will be documented in this file.
 - Lowered by-name label formals as lazy label descriptors, so conditional
   label actuals are re-evaluated when the formal is used by `goto`, while
   `value label` formals retain call-time snapshot behavior.
+- Lowered by-name switch formals as lazy switch descriptors, so conditional
+  switch actuals are re-evaluated when the formal is selected, while
+  `value switch` formals resolve the selected descriptor at call time.
 - Lowered recursive switch self-selection through runtime switch-eval descriptor
   dispatch rather than compile-time descriptor expansion.
 - Lowered `go to` statements through the same direct and designational goto

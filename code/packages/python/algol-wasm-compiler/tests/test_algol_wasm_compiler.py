@@ -1031,6 +1031,33 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
 
+    def test_by_name_switch_parameter_re_evaluates_conditional_actual(self) -> None:
+        result = compile_source(
+            "begin integer result, flag; "
+            "switch a := left; switch b := right; "
+            "procedure escape(sw); switch sw; begin flag := 1; goto sw[1] end; "
+            "flag := 0; escape(if flag = 0 then a else b); result := 0; "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_value_switch_parameter_snapshots_conditional_actual(self) -> None:
+        result = compile_source(
+            "begin integer result, flag; "
+            "switch a := left; switch b := right; "
+            "procedure escape(sw); value sw; switch sw; "
+            "begin flag := 1; goto sw[1] end; "
+            "flag := 0; escape(if flag = 0 then a else b); result := 0; "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
+
     def test_conditional_switch_actual_forwards_switch_parameters(self) -> None:
         result = compile_source(
             "begin integer result; boolean flag; "
@@ -1045,6 +1072,35 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_forwarded_by_name_switch_parameter_preserves_lazy_actual(self) -> None:
+        result = compile_source(
+            "begin integer result, flag; "
+            "switch a := left; switch b := right; "
+            "procedure escape(sw); switch sw; begin flag := 1; goto sw[1] end; "
+            "procedure relay(sw); switch sw; begin escape(sw) end; "
+            "flag := 0; relay(if flag = 0 then a else b); result := 0; "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_forwarded_value_switch_parameter_snapshots_lazy_actual(self) -> None:
+        result = compile_source(
+            "begin integer result, flag; "
+            "switch a := left; switch b := right; "
+            "procedure escape(sw); value sw; switch sw; "
+            "begin flag := 1; goto sw[1] end; "
+            "procedure relay(sw); switch sw; begin escape(sw) end; "
+            "flag := 0; relay(if flag = 0 then a else b); result := 0; "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
 
     def test_forwarded_switch_parameter_propagates_descriptor_through_calls(
         self,
@@ -2014,6 +2070,41 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_formal_procedure_switch_argument_remains_lazy_until_selection(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result, flag; "
+            "switch a := left; switch b := right; "
+            "procedure invoke(p); procedure p; "
+            "begin p(if flag = 0 then a else b) end; "
+            "procedure escape(sw); switch sw; begin flag := 1; goto sw[1] end; "
+            "flag := 0; invoke(escape); result := 0; "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_formal_procedure_value_switch_argument_snapshots_before_call(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result, flag; "
+            "switch a := left; switch b := right; "
+            "procedure invoke(p); procedure p; "
+            "begin p(if flag = 0 then a else b) end; "
+            "procedure escape(sw); value sw; switch sw; "
+            "begin flag := 1; goto sw[1] end; "
+            "flag := 0; invoke(escape); result := 0; "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
 
     def test_scalar_by_name_parameter_reads_forwarded_pointer(self) -> None:
         result = compile_source(
