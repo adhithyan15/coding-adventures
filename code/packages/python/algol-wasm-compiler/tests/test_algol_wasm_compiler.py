@@ -1433,6 +1433,37 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [44]
 
+    def test_formal_procedure_actual_shape_accepts_nested_read_only_actual(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer procedure id(x); value x; integer x; begin id := x end; "
+            "integer procedure relay(g, y); integer g, y; procedure g; "
+            "begin relay := g(y) end; "
+            "procedure invoke(p); integer p; procedure p; "
+            "begin result := p(id, 3 + 4) end; "
+            "invoke(relay) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_formal_procedure_actual_shape_keeps_nested_writable_actual(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer procedure inc(x); integer x; "
+            "begin x := x + 1; inc := x end; "
+            "integer procedure relay(g, y); integer g, y; procedure g; "
+            "begin relay := g(y) end; "
+            "procedure invoke(p); integer p; procedure p; "
+            "begin result := 3; result := p(inc, result) * 10 + result end; "
+            "invoke(relay) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [44]
+
     def test_real_procedure_parameter_accepts_integer_return_actual(self) -> None:
         result = compile_source(
             "begin integer result; real y; "
