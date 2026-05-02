@@ -16,14 +16,21 @@ from prolog_vm_compiler import (
     __version__,
     compile_iso_prolog_source,
     compile_prolog_source,
+    compile_prolog_to_bytecode,
     compile_swi_prolog_project,
     compile_swi_prolog_source,
     create_iso_prolog_vm_runtime,
+    create_prolog_source_bytecode_vm_runtime,
     create_prolog_source_vm_runtime,
+    create_swi_prolog_bytecode_vm_runtime,
     create_swi_prolog_vm_runtime,
+    load_compiled_prolog_bytecode_vm,
     load_compiled_prolog_vm,
+    run_compiled_prolog_bytecode_queries,
+    run_compiled_prolog_bytecode_query,
     run_compiled_prolog_queries,
     run_compiled_prolog_query,
+    run_initialized_compiled_prolog_bytecode_query_answers,
 )
 
 
@@ -103,6 +110,26 @@ class TestPrologVMCompiler:
 
         assert execute(compiled.instructions) == [atom("bart"), atom("lisa")]
 
+    def test_compiled_program_runs_through_logic_bytecode_vm(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            parent(homer, bart).
+            parent(homer, lisa).
+
+            ?- parent(homer, Who).
+            """,
+        )
+
+        bytecode = compile_prolog_to_bytecode(compiled)
+        vm = load_compiled_prolog_bytecode_vm(compiled)
+
+        assert bytecode.query_pool
+        assert run_compiled_prolog_bytecode_query(compiled) == [
+            atom("bart"),
+            atom("lisa"),
+        ]
+        assert vm.run_query() == [atom("bart"), atom("lisa")]
+
     def test_compiles_linked_module_project_before_vm_execution(self) -> None:
         compiled = compile_swi_prolog_project(
             """
@@ -137,6 +164,65 @@ class TestPrologVMCompiler:
 
         assert relation("memo", 1).key() in vm.state.dynamic_relations
         assert run_compiled_prolog_query(compiled) == [atom("cached")]
+
+    def test_bytecode_vm_preserves_dynamic_declarations(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            :- dynamic(memo/1).
+            memo(cached).
+
+            ?- memo(Value).
+            """,
+        )
+        vm = load_compiled_prolog_bytecode_vm(compiled)
+
+        assert relation("memo", 1).key() in vm.state.dynamic_relations
+        assert run_compiled_prolog_bytecode_query(compiled) == [atom("cached")]
+
+    def test_bytecode_vm_runs_initializations_before_source_queries(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            :- initialization(dynamic(seen/1)).
+            :- initialization(assertz(seen(alpha))).
+
+            ?- seen(Name).
+            """,
+        )
+
+        assert [
+            answer.as_dict()
+            for answer in run_initialized_compiled_prolog_bytecode_query_answers(
+                compiled,
+            )
+        ] == [{"Name": atom("alpha")}]
+
+    def test_bytecode_runtime_accepts_stateful_ad_hoc_queries(self) -> None:
+        runtime = create_swi_prolog_bytecode_vm_runtime(
+            """
+            :- dynamic(memo/1).
+            parent(homer, bart).
+            """,
+        )
+
+        runtime.query("assertz(memo(saved))", commit=True)
+
+        assert runtime.query_values("parent(homer, Who)") == [atom("bart")]
+        assert runtime.query_values("memo(Value)") == [atom("saved")]
+
+    def test_generic_bytecode_runtime_uses_selected_dialect_parser(self) -> None:
+        runtime = create_prolog_source_bytecode_vm_runtime(
+            """
+            parent(homer, bart).
+            parent(homer, lisa).
+            """,
+            dialect="iso",
+        )
+
+        assert runtime.query_values("parent(homer, Who)") == [
+            atom("bart"),
+            atom("lisa"),
+        ]
+
 
     def test_compiles_variable_facts_as_rules(self) -> None:
         compiled = compile_swi_prolog_source(
@@ -245,6 +331,10 @@ class TestPrologVMCompiler:
         )
 
         assert run_compiled_prolog_queries(compiled) == [
+            [atom("bart")],
+            [atom("marge")],
+        ]
+        assert run_compiled_prolog_bytecode_queries(compiled) == [
             [atom("bart")],
             [atom("marge")],
         ]

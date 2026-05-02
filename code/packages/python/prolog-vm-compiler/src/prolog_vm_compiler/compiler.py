@@ -7,7 +7,11 @@ from dataclasses import dataclass
 from itertools import islice
 from pathlib import Path
 from types import MappingProxyType
+from typing import Protocol
 
+from logic_bytecode import LogicBytecodeProgram
+from logic_bytecode import compile_program as compile_logic_bytecode_program
+from logic_bytecode_vm import LogicBytecodeVM, create_logic_bytecode_vm
 from logic_engine import (
     Clause,
     Compound,
@@ -30,6 +34,7 @@ from logic_engine import (
 from logic_instructions import (
     InstructionProgram,
     LogicInstruction,
+    QueryInstruction,
     defdynamic,
     defrel,
     fact,
@@ -134,12 +139,53 @@ class PrologVMInitializationError(RuntimeError):
     """Raised when a compiled initialization query cannot be proven."""
 
 
+class PrologQueryVMState(Protocol):
+    """Query storage shared by structured and bytecode VM states."""
+
+    queries: list[QueryInstruction]
+
+
+class PrologQueryVM(Protocol):
+    """Minimal VM shape shared by structured and bytecode Prolog runtimes."""
+
+    state: PrologQueryVMState
+
+    def assembled_program(self) -> Program:
+        """Return the loaded VM program as an executable logic-engine program."""
+        ...
+
+    def run_query(
+        self,
+        query_index: int = 0,
+        limit: int | None = None,
+    ) -> list[Term | tuple[Term, ...]]:
+        """Run one stored query from a fresh logic state."""
+        ...
+
+    def solve_query_from(
+        self,
+        state: State,
+        query_index: int = 0,
+    ) -> Iterator[State]:
+        """Yield proof states for one stored query from an existing state."""
+        ...
+
+    def run_query_from(
+        self,
+        state: State,
+        query_index: int = 0,
+        limit: int | None = None,
+    ) -> list[Term | tuple[Term, ...]]:
+        """Run one stored query from an existing logic state."""
+        ...
+
+
 @dataclass(slots=True)
 class PrologVMRuntime:
     """A loaded Prolog VM runtime that can answer ad-hoc source queries."""
 
     compiled_program: CompiledPrologVMProgram
-    vm: LogicVM
+    vm: PrologQueryVM
     state: State
     dialect_profile: DialectProfile | None = None
     operator_table: OperatorTable | None = None
@@ -401,6 +447,25 @@ def load_compiled_prolog_vm(compiled_program: CompiledPrologVMProgram) -> LogicV
     return vm
 
 
+def compile_prolog_to_bytecode(
+    compiled_program: CompiledPrologVMProgram,
+) -> LogicBytecodeProgram:
+    """Lower a compiled Prolog instruction stream into compact Logic bytecode."""
+
+    return compile_logic_bytecode_program(compiled_program.instructions)
+
+
+def load_compiled_prolog_bytecode_vm(
+    compiled_program: CompiledPrologVMProgram,
+) -> LogicBytecodeVM:
+    """Load a compiled Prolog program into a fresh Logic bytecode VM."""
+
+    vm = create_logic_bytecode_vm()
+    vm.load(compile_prolog_to_bytecode(compiled_program))
+    vm.run()
+    return vm
+
+
 def create_prolog_vm_runtime(
     compiled_program: CompiledPrologVMProgram,
     *,
@@ -413,6 +478,37 @@ def create_prolog_vm_runtime(
     """Create a stateful ad-hoc query runtime from a compiled program."""
 
     vm = load_compiled_prolog_vm(compiled_program)
+    profile = (
+        compiled_program.dialect_profile
+        if dialect is None
+        else dialect_profile(dialect)
+    )
+    runtime = PrologVMRuntime(
+        compiled_program=compiled_program,
+        vm=vm,
+        state=State(),
+        dialect_profile=profile,
+        operator_table=operator_table,
+        adapt_builtins=adapt_builtins,
+        query_rewriter=query_rewriter,
+    )
+    if initialize:
+        runtime.run_initializations()
+    return runtime
+
+
+def create_prolog_bytecode_vm_runtime(
+    compiled_program: CompiledPrologVMProgram,
+    *,
+    initialize: bool = True,
+    dialect: PrologDialect | None = None,
+    operator_table: OperatorTable | None = None,
+    adapt_builtins: bool = True,
+    query_rewriter: Callable[[ParsedQuery], ParsedQuery] | None = None,
+) -> PrologVMRuntime:
+    """Create a stateful ad-hoc query runtime backed by Logic bytecode."""
+
+    vm = load_compiled_prolog_bytecode_vm(compiled_program)
     profile = (
         compiled_program.dialect_profile
         if dialect is None
@@ -454,6 +550,28 @@ def create_prolog_source_vm_runtime(
     )
 
 
+def create_prolog_source_bytecode_vm_runtime(
+    source: str,
+    *,
+    dialect: PrologDialect = "swi",
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+) -> PrologVMRuntime:
+    """Parse, compile, bytecode-load, and initialize a query runtime."""
+
+    loaded_source = load_prolog_source(source, dialect=dialect)
+    return create_prolog_bytecode_vm_runtime(
+        compile_loaded_prolog_source(
+            loaded_source,
+            adapt_builtins=adapt_builtins,
+        ),
+        initialize=initialize,
+        dialect=loaded_source.dialect_profile,
+        operator_table=loaded_source.operator_table,
+        adapt_builtins=adapt_builtins,
+    )
+
+
 def create_swi_prolog_vm_runtime(
     source: str,
     *,
@@ -463,6 +581,22 @@ def create_swi_prolog_vm_runtime(
     """Parse, load, compile, and initialize a SWI-compatible query runtime."""
 
     return create_prolog_source_vm_runtime(
+        source,
+        dialect="swi",
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+    )
+
+
+def create_swi_prolog_bytecode_vm_runtime(
+    source: str,
+    *,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+) -> PrologVMRuntime:
+    """Parse, compile, and bytecode-load a SWI-compatible query runtime."""
+
+    return create_prolog_source_bytecode_vm_runtime(
         source,
         dialect="swi",
         initialize=initialize,
@@ -486,6 +620,22 @@ def create_iso_prolog_vm_runtime(
     )
 
 
+def create_iso_prolog_bytecode_vm_runtime(
+    source: str,
+    *,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+) -> PrologVMRuntime:
+    """Parse, compile, and bytecode-load an ISO/Core query runtime."""
+
+    return create_prolog_source_bytecode_vm_runtime(
+        source,
+        dialect="iso",
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+    )
+
+
 def create_swi_prolog_file_runtime(
     path: str | Path,
     *,
@@ -496,6 +646,24 @@ def create_swi_prolog_file_runtime(
     """Create a stateful query runtime from one SWI-compatible Prolog file."""
 
     return create_prolog_file_runtime(
+        path,
+        dialect="swi",
+        source_resolver=source_resolver,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+    )
+
+
+def create_swi_prolog_file_bytecode_vm_runtime(
+    path: str | Path,
+    *,
+    source_resolver: SourceResolver | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+) -> PrologVMRuntime:
+    """Create a bytecode-backed query runtime from one SWI Prolog file."""
+
+    return create_prolog_file_bytecode_vm_runtime(
         path,
         dialect="swi",
         source_resolver=source_resolver,
@@ -531,6 +699,33 @@ def create_prolog_file_runtime(
     )
 
 
+def create_prolog_file_bytecode_vm_runtime(
+    path: str | Path,
+    *,
+    dialect: PrologDialect = "swi",
+    source_resolver: SourceResolver | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+) -> PrologVMRuntime:
+    """Create a bytecode-backed stateful query runtime from one Prolog file."""
+
+    loaded_source = load_prolog_file(
+        path,
+        dialect=dialect,
+        source_resolver=source_resolver,
+    )
+    return create_prolog_bytecode_vm_runtime(
+        compile_loaded_prolog_source(
+            loaded_source,
+            adapt_builtins=adapt_builtins,
+        ),
+        initialize=initialize,
+        dialect=loaded_source.dialect_profile,
+        operator_table=loaded_source.operator_table,
+        adapt_builtins=adapt_builtins,
+    )
+
+
 def create_swi_prolog_project_runtime(
     *sources: str,
     query_module: str | Symbol | None = None,
@@ -540,6 +735,23 @@ def create_swi_prolog_project_runtime(
     """Create a stateful query runtime from linked SWI-compatible sources."""
 
     return create_prolog_project_runtime(
+        *sources,
+        dialect="swi",
+        query_module=query_module,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+    )
+
+
+def create_swi_prolog_project_bytecode_vm_runtime(
+    *sources: str,
+    query_module: str | Symbol | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+) -> PrologVMRuntime:
+    """Create a bytecode-backed query runtime from linked SWI sources."""
+
+    return create_prolog_project_bytecode_vm_runtime(
         *sources,
         dialect="swi",
         query_module=query_module,
@@ -575,6 +787,33 @@ def create_prolog_project_runtime(
     )
 
 
+def create_prolog_project_bytecode_vm_runtime(
+    *sources: str,
+    dialect: PrologDialect = "swi",
+    query_module: str | Symbol | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+) -> PrologVMRuntime:
+    """Create a bytecode-backed runtime from linked source strings."""
+
+    loaded_project = load_prolog_project(*sources, dialect=dialect)
+    return create_prolog_bytecode_vm_runtime(
+        compile_loaded_prolog_project(
+            loaded_project,
+            adapt_builtins=adapt_builtins,
+        ),
+        initialize=initialize,
+        dialect=_project_dialect_profile(loaded_project),
+        operator_table=_project_operator_table(loaded_project),
+        adapt_builtins=adapt_builtins,
+        query_rewriter=lambda query_value: rewrite_loaded_prolog_query(
+            loaded_project,
+            query_value,
+            module=query_module,
+        ),
+    )
+
+
 def create_swi_prolog_project_file_runtime(
     *entry_paths: str | Path,
     source_resolver: SourceResolver | None = None,
@@ -585,6 +824,25 @@ def create_swi_prolog_project_file_runtime(
     """Create a stateful query runtime from a SWI-compatible Prolog file graph."""
 
     return create_prolog_project_file_runtime(
+        *entry_paths,
+        dialect="swi",
+        source_resolver=source_resolver,
+        query_module=query_module,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+    )
+
+
+def create_swi_prolog_project_file_bytecode_vm_runtime(
+    *entry_paths: str | Path,
+    source_resolver: SourceResolver | None = None,
+    query_module: str | Symbol | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+) -> PrologVMRuntime:
+    """Create a bytecode-backed query runtime from a SWI file graph."""
+
+    return create_prolog_project_file_bytecode_vm_runtime(
         *entry_paths,
         dialect="swi",
         source_resolver=source_resolver,
@@ -610,6 +868,38 @@ def create_prolog_project_file_runtime(
         source_resolver=source_resolver,
     )
     return create_prolog_vm_runtime(
+        compile_loaded_prolog_project(
+            loaded_project,
+            adapt_builtins=adapt_builtins,
+        ),
+        initialize=initialize,
+        dialect=_project_dialect_profile(loaded_project),
+        operator_table=_project_operator_table(loaded_project),
+        adapt_builtins=adapt_builtins,
+        query_rewriter=lambda query_value: rewrite_loaded_prolog_query(
+            loaded_project,
+            query_value,
+            module=query_module,
+        ),
+    )
+
+
+def create_prolog_project_file_bytecode_vm_runtime(
+    *entry_paths: str | Path,
+    dialect: PrologDialect = "swi",
+    source_resolver: SourceResolver | None = None,
+    query_module: str | Symbol | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+) -> PrologVMRuntime:
+    """Create a bytecode-backed stateful runtime from a file graph."""
+
+    loaded_project = load_prolog_project_from_files(
+        *entry_paths,
+        dialect=dialect,
+        source_resolver=source_resolver,
+    )
+    return create_prolog_bytecode_vm_runtime(
         compile_loaded_prolog_project(
             loaded_project,
             adapt_builtins=adapt_builtins,
@@ -709,6 +999,99 @@ def run_initialized_compiled_prolog_query_answers(
     """Run initializations and return named bindings for one source query."""
 
     vm = load_compiled_prolog_vm(compiled_program)
+    initialized_state = _run_initializations_on_vm(vm, compiled_program)
+    return _answers_from_vm_query(
+        compiled_program,
+        vm,
+        initialized_state,
+        source_query_index,
+        limit=limit,
+    )
+
+
+def run_compiled_prolog_bytecode_query(
+    compiled_program: CompiledPrologVMProgram,
+    source_query_index: int = 0,
+    limit: int | None = None,
+) -> list[Term | tuple[Term, ...]]:
+    """Run one source query through the Logic bytecode VM path."""
+
+    vm = load_compiled_prolog_bytecode_vm(compiled_program)
+    return vm.run_query(
+        query_index=compiled_program.source_query_vm_index(source_query_index),
+        limit=limit,
+    )
+
+
+def run_compiled_prolog_bytecode_query_answers(
+    compiled_program: CompiledPrologVMProgram,
+    source_query_index: int = 0,
+    limit: int | None = None,
+) -> list[PrologAnswer]:
+    """Run one bytecode VM source query with named Prolog bindings."""
+
+    vm = load_compiled_prolog_bytecode_vm(compiled_program)
+    return _answers_from_vm_query(
+        compiled_program,
+        vm,
+        State(),
+        source_query_index,
+        limit=limit,
+    )
+
+
+def run_compiled_prolog_bytecode_queries(
+    compiled_program: CompiledPrologVMProgram,
+    *,
+    limit: int | None = None,
+) -> list[list[Term | tuple[Term, ...]]]:
+    """Run all source queries through the Logic bytecode VM path."""
+
+    vm = load_compiled_prolog_bytecode_vm(compiled_program)
+    return [
+        vm.run_query(
+            query_index=compiled_program.source_query_vm_index(index),
+            limit=limit,
+        )
+        for index in range(compiled_program.source_query_count)
+    ]
+
+
+def run_compiled_prolog_bytecode_initializations(
+    compiled_program: CompiledPrologVMProgram,
+    *,
+    state: State | None = None,
+) -> State:
+    """Run compiled initialization slots through the bytecode VM path."""
+
+    vm = load_compiled_prolog_bytecode_vm(compiled_program)
+    return _run_initializations_on_vm(vm, compiled_program, state=state)
+
+
+def run_initialized_compiled_prolog_bytecode_query(
+    compiled_program: CompiledPrologVMProgram,
+    source_query_index: int = 0,
+    limit: int | None = None,
+) -> list[Term | tuple[Term, ...]]:
+    """Run bytecode VM initializations, then one source query."""
+
+    vm = load_compiled_prolog_bytecode_vm(compiled_program)
+    initialized_state = _run_initializations_on_vm(vm, compiled_program)
+    return vm.run_query_from(
+        initialized_state,
+        query_index=compiled_program.source_query_vm_index(source_query_index),
+        limit=limit,
+    )
+
+
+def run_initialized_compiled_prolog_bytecode_query_answers(
+    compiled_program: CompiledPrologVMProgram,
+    source_query_index: int = 0,
+    limit: int | None = None,
+) -> list[PrologAnswer]:
+    """Run bytecode VM initializations and return named source bindings."""
+
+    vm = load_compiled_prolog_bytecode_vm(compiled_program)
     initialized_state = _run_initializations_on_vm(vm, compiled_program)
     return _answers_from_vm_query(
         compiled_program,
@@ -939,7 +1322,7 @@ def _query_outputs(query_value: ParsedQuery) -> tuple[Term, ...] | None:
 
 
 def _run_initializations_on_vm(
-    vm: LogicVM,
+    vm: PrologQueryVM,
     compiled_program: CompiledPrologVMProgram,
     *,
     state: State | None = None,
@@ -956,7 +1339,7 @@ def _run_initializations_on_vm(
 
 def _answers_from_vm_query(
     compiled_program: CompiledPrologVMProgram,
-    vm: LogicVM,
+    vm: PrologQueryVM,
     state: State,
     source_query_index: int,
     *,
