@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import io
+import sys
 from pathlib import Path
 
 import pytest
@@ -24,6 +26,91 @@ def test_cli_runs_inline_ad_hoc_query_with_bytecode_values(
 
     assert status == 0
     assert capsys.readouterr().out.splitlines() == ["bart.", "lisa."]
+
+
+def test_cli_repeated_queries_share_committed_runtime_state(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        ":- dynamic(memo/1).",
+        "--query",
+        "assertz(memo(saved))",
+        "--query",
+        "memo(Value)",
+        "--commit",
+        "--backend",
+        "bytecode",
+    ])
+
+    assert status == 0
+    assert capsys.readouterr().out.splitlines() == [
+        "true.",
+        "Value = saved.",
+    ]
+
+
+def test_cli_repeated_queries_report_script_failure(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart).",
+        "--query",
+        "parent(homer, Who)",
+        "--query",
+        "parent(marge, Who)",
+    ])
+
+    assert status == 1
+    assert capsys.readouterr().out.splitlines() == [
+        "Who = bart.",
+        "false.",
+    ]
+
+
+def test_cli_interactive_loop_runs_queries_from_stdin(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    monkeypatch.setattr(
+        sys,
+        "stdin",
+        io.StringIO("parent(homer, Who)\nhalt.\n"),
+    )
+
+    status = main([
+        "--source",
+        "parent(homer, bart).",
+        "--interactive",
+        "--backend",
+        "bytecode",
+    ])
+
+    assert status == 0
+    assert capsys.readouterr().out == "Who = bart.\n"
+
+
+def test_cli_interactive_loop_preserves_committed_setup_queries(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    monkeypatch.setattr(sys, "stdin", io.StringIO("memo(Value)\n:q\n"))
+
+    status = main([
+        "--source",
+        ":- dynamic(memo/1).",
+        "--query",
+        "assertz(memo(saved))",
+        "--interactive",
+        "--commit",
+    ])
+
+    assert status == 0
+    assert capsys.readouterr().out.splitlines() == [
+        "true.",
+        "Value = saved.",
+    ]
 
 
 def test_cli_runs_file_embedded_query_with_named_answers(

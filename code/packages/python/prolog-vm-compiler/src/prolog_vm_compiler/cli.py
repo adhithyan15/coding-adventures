@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import sys
-from collections.abc import Sequence
+from collections.abc import Iterator, Sequence
 from dataclasses import dataclass
 from importlib import resources
 from pathlib import Path
@@ -15,12 +15,10 @@ from logic_engine import Term
 from prolog_vm_compiler.compiler import (
     PrologAnswer,
     PrologVMBackend,
-    query_prolog_file,
-    query_prolog_file_values,
-    query_prolog_project_file,
-    query_prolog_project_file_values,
-    query_prolog_source,
-    query_prolog_source_values,
+    PrologVMRuntime,
+    create_prolog_file_runtime,
+    create_prolog_project_file_runtime,
+    create_prolog_source_vm_runtime,
     run_prolog_file_query,
     run_prolog_file_query_answers,
     run_prolog_project_file_query,
@@ -41,13 +39,15 @@ class CliArgs:
 
     files: tuple[Path, ...]
     source: str | None
-    query: str | None
+    queries: tuple[str, ...]
     source_query_index: int
     query_module: str | None
     limit: int | None
     dialect: CliDialect
     backend: PrologVMBackend
     values: bool
+    commit: bool
+    interactive: bool
     initialize: bool
 
 
@@ -74,13 +74,12 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 2
 
     try:
-        results = _run_cli(args)
+        status = _run_cli(args)
     except Exception as error:  # noqa: BLE001 - CLI should render failures plainly.
         print(f"{_PROGRAM_NAME}: {error}", file=sys.stderr)
         return 1
 
-    _print_results(results, values=args.values)
-    return 0 if results else 1
+    return status
 
 
 def _parse_argv(
@@ -98,7 +97,7 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         for value in cast("list[Path | str]", result.arguments.get("files", []))
     )
     source = _optional_string(flags["source"])
-    query = _optional_string(flags["query"])
+    queries = _string_tuple(flags["query"])
     query_module = _optional_string(flags["query-module"])
     limit = _optional_int(flags["limit"])
     source_query_index = _required_int(
@@ -119,13 +118,15 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     return CliArgs(
         files=files,
         source=source,
-        query=query,
+        queries=queries,
         source_query_index=source_query_index,
         query_module=query_module,
         limit=limit,
         dialect=_dialect(_required_string(flags["dialect"], name="--dialect")),
         backend=_backend(_required_string(flags["backend"], name="--backend")),
         values=bool(flags["values"]),
+        commit=bool(flags["commit"]),
+        interactive=bool(flags["interactive"]),
         initialize=not bool(flags["no-initialize"]),
     )
 
@@ -147,6 +148,17 @@ def _required_string(value: object, *, name: str) -> str:
     return parsed
 
 
+def _string_tuple(value: object) -> tuple[str, ...]:
+    if value is None:
+        return ()
+    if isinstance(value, str):
+        return (value,)
+    if isinstance(value, list):
+        return tuple(_required_string(item, name="--query") for item in value)
+    msg = f"expected string flag value, got {type(value).__name__}"
+    raise ValueError(msg)
+
+
 def _optional_int(value: object) -> int | None:
     if value is None:
         return None
@@ -164,79 +176,93 @@ def _required_int(value: object, *, name: str) -> int:
     return parsed
 
 
-def _run_cli(
-    args: CliArgs,
-) -> list[PrologAnswer] | list[Term | tuple[Term, ...]]:
-    if args.query is not None:
-        return _run_ad_hoc_query(args)
-    return _run_source_query(args)
+def _run_cli(args: CliArgs) -> int:
+    if args.queries or args.interactive:
+        runtime = _create_runtime(args)
+        saw_failure = False
+        if args.queries:
+            saw_failure = _run_ad_hoc_queries(args, runtime=runtime)
+        if args.interactive:
+            saw_failure = _run_interactive(args, runtime=runtime) or saw_failure
+        return 1 if saw_failure else 0
+
+    results = _run_source_query(args)
+    _print_results(results, values=args.values)
+    return 0 if results else 1
 
 
-def _run_ad_hoc_query(
-    args: CliArgs,
-) -> list[PrologAnswer] | list[Term | tuple[Term, ...]]:
-    query = args.query
-    if query is None:
-        msg = "ad-hoc query runner requires --query"
-        raise ValueError(msg)
+def _run_ad_hoc_queries(args: CliArgs, *, runtime: PrologVMRuntime) -> bool:
+    saw_failure = False
+    for query in args.queries:
+        results = _query_runtime(runtime, query, args=args)
+        _print_results(results, values=args.values)
+        saw_failure = saw_failure or not results
+    return saw_failure
 
+
+def _create_runtime(args: CliArgs) -> PrologVMRuntime:
     if args.source is not None:
-        if args.values:
-            return query_prolog_source_values(
-                args.source,
-                query,
-                limit=args.limit,
-                dialect=args.dialect,
-                initialize=args.initialize,
-                backend=args.backend,
-            )
-        return query_prolog_source(
+        return create_prolog_source_vm_runtime(
             args.source,
-            query,
-            limit=args.limit,
             dialect=args.dialect,
             initialize=args.initialize,
             backend=args.backend,
         )
-
     if len(args.files) == 1:
-        if args.values:
-            return query_prolog_file_values(
-                args.files[0],
-                query,
-                limit=args.limit,
-                dialect=args.dialect,
-                initialize=args.initialize,
-                backend=args.backend,
-            )
-        return query_prolog_file(
+        return create_prolog_file_runtime(
             args.files[0],
-            query,
-            limit=args.limit,
             dialect=args.dialect,
             initialize=args.initialize,
             backend=args.backend,
         )
-
-    if args.values:
-        return query_prolog_project_file_values(
-            *args.files,
-            query_source=query,
-            limit=args.limit,
-            dialect=args.dialect,
-            query_module=args.query_module,
-            initialize=args.initialize,
-            backend=args.backend,
-        )
-    return query_prolog_project_file(
+    return create_prolog_project_file_runtime(
         *args.files,
-        query_source=query,
-        limit=args.limit,
         dialect=args.dialect,
         query_module=args.query_module,
         initialize=args.initialize,
         backend=args.backend,
     )
+
+
+def _run_interactive(args: CliArgs, *, runtime: PrologVMRuntime) -> bool:
+    saw_failure = False
+
+    for query in _iter_interactive_queries(sys.stdin, stdout=sys.stdout):
+        results = _query_runtime(runtime, query, args=args)
+        _print_results(results, values=args.values)
+        saw_failure = saw_failure or not results
+
+    return saw_failure
+
+
+def _iter_interactive_queries(
+    stdin: TextIO,
+    *,
+    stdout: TextIO,
+) -> Iterator[str]:
+    while True:
+        if stdin.isatty():
+            print("?- ", end="", file=stdout, flush=True)
+        line = stdin.readline()
+        if not line:
+            return
+        query = line.strip()
+        if not query or query.startswith("%"):
+            continue
+        if query in {"halt", "halt.", ":q", ":quit"}:
+            return
+        yield query
+
+
+def _query_runtime(
+    runtime: PrologVMRuntime,
+    query: str,
+    *,
+    args: CliArgs,
+) -> list[PrologAnswer] | list[Term | tuple[Term, ...]]:
+    if args.values:
+        return runtime.query_values(query, limit=args.limit, commit=args.commit)
+    return runtime.query(query, limit=args.limit, commit=args.commit)
 
 
 def _run_source_query(

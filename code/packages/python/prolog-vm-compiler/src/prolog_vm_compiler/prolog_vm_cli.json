@@ -19,9 +19,10 @@
     {
       "id": "query",
       "long": "query",
-      "description": "Ad-hoc top-level query to run; when omitted, the selected source-level ?- query is executed.",
+      "description": "Ad-hoc top-level query to run; may be repeated for a stateful query script.",
       "type": "string",
-      "value_name": "QUERY"
+      "value_name": "QUERY",
+      "repeatable": true
     },
     {
       "id": "source-query-index",
@@ -67,6 +68,19 @@
       "id": "values",
       "long": "values",
       "description": "Print raw answer values instead of named variable bindings.",
+      "type": "boolean"
+    },
+    {
+      "id": "commit",
+      "long": "commit",
+      "description": "Commit the first answer state from each ad-hoc query so dynamic updates persist across repeated queries or REPL input.",
+      "type": "boolean"
+    },
+    {
+      "id": "interactive",
+      "short": "i",
+      "long": "interactive",
+      "description": "Start a small top-level query loop after loading the source, file, or project.",
       "type": "boolean"
     },
     {
