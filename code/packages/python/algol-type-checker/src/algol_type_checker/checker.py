@@ -225,6 +225,7 @@ class ProcedureFormalCallShape:
     argument_types: tuple[str, ...]
     argument_kinds: tuple[str, ...] = ()
     argument_assignable: tuple[bool, ...] = ()
+    argument_formal_names: tuple[str | None, ...] = ()
     procedure_argument_ids: tuple[int | None, ...] = ()
     return_type: str | None = None
 
@@ -2068,9 +2069,15 @@ class AlgolTypeChecker:
                     f"got {actual_type}",
                 )
                 continue
+            parameter_may_write = self._scalar_parameter_may_write_at_call(
+                descriptor,
+                parameter,
+                arguments,
+                scope,
+            )
             if (
                 parameter.mode == NAME
-                and parameter.may_write
+                and parameter_may_write
                 and (
                     not _is_assignable_actual(argument)
                     or self._resolved_bare_procedure_expression(argument) is not None
@@ -2082,7 +2089,7 @@ class AlgolTypeChecker:
                     "expression is not assignable",
                 )
                 continue
-            if parameter.mode == NAME and parameter.may_write:
+            if parameter.mode == NAME and parameter_may_write:
                 self._record_assignable_actual_write(argument, scope)
 
         if role == "expression" and descriptor.return_type is None:
@@ -2179,6 +2186,7 @@ class AlgolTypeChecker:
         argument_types: list[str] = []
         argument_kinds: list[str] = []
         argument_assignable: list[bool] = []
+        argument_formal_names: list[str | None] = []
         procedure_argument_ids: list[int | None] = []
         for argument in arguments:
             array_type = self._formal_array_argument_type(argument, scope)
@@ -2186,6 +2194,7 @@ class AlgolTypeChecker:
                 argument_types.append(array_type)
                 argument_kinds.append(ARRAY)
                 argument_assignable.append(False)
+                argument_formal_names.append(None)
                 procedure_argument_ids.append(None)
                 continue
             nonscalar = self._formal_nonscalar_argument_shape(argument, scope)
@@ -2194,6 +2203,7 @@ class AlgolTypeChecker:
                 argument_types.append(argument_type)
                 argument_kinds.append(argument_kind)
                 argument_assignable.append(False)
+                argument_formal_names.append(None)
                 procedure_argument_ids.append(procedure_id)
                 continue
             actual_type = self._infer_expr(argument, scope)
@@ -2202,6 +2212,9 @@ class AlgolTypeChecker:
             argument_assignable.append(
                 _is_assignable_actual(argument)
                 and self._resolved_bare_procedure_expression(argument) is None
+            )
+            argument_formal_names.append(
+                self._scalar_by_name_parameter_actual_name(argument, scope)
             )
             procedure_argument_ids.append(None)
             if argument_assignable[-1]:
@@ -2231,6 +2244,7 @@ class AlgolTypeChecker:
                     argument_types=tuple(argument_types),
                     argument_kinds=tuple(argument_kinds),
                     argument_assignable=tuple(argument_assignable),
+                    argument_formal_names=tuple(argument_formal_names),
                     procedure_argument_ids=tuple(procedure_argument_ids),
                     return_type=return_type if role == "expression" else None,
                 ),
@@ -2353,6 +2367,91 @@ class AlgolTypeChecker:
         if symbol.kind == "procedure_parameter" and symbol.type_name == "procedure":
             return "procedure", symbol.type_name, None
         return None
+
+    def _scalar_by_name_parameter_actual_name(
+        self,
+        argument: ASTNode,
+        scope: Scope,
+    ) -> str | None:
+        variable = _single_variable_expr(argument)
+        if variable is None or _variable_subscripts(variable):
+            return None
+        name = _variable_head_name(variable)
+        if name is None:
+            return None
+        resolved = scope.resolve_with_scope(name.value)
+        if resolved is None:
+            return None
+        symbol, _, _ = resolved
+        if symbol.kind == "parameter" and symbol.parameter_mode == NAME:
+            return symbol.name
+        return None
+
+    def _scalar_parameter_may_write_at_call(
+        self,
+        descriptor: ProcedureDescriptor,
+        parameter: ProcedureParameter,
+        arguments: list[ASTNode],
+        scope: Scope,
+    ) -> bool:
+        if (
+            parameter.kind != "scalar"
+            or parameter.mode != NAME
+            or not parameter.may_write
+        ):
+            return False
+        if parameter.write_reason != "transitive call":
+            return True
+
+        saw_formal_procedure_shape = False
+        for procedure_index, procedure_parameter in enumerate(descriptor.parameters):
+            if procedure_parameter.kind != "procedure":
+                continue
+            for shape in procedure_parameter.procedure_call_shapes:
+                formal_names = _shape_argument_formal_names(shape)
+                for argument_index, formal_name in enumerate(formal_names):
+                    if formal_name != parameter.name:
+                        continue
+                    saw_formal_procedure_shape = True
+                    if procedure_index >= len(arguments):
+                        return True
+                    if self._procedure_actual_writes_shape_argument(
+                        arguments[procedure_index],
+                        scope,
+                        argument_index,
+                    ):
+                        return True
+        return not saw_formal_procedure_shape
+
+    def _procedure_actual_writes_shape_argument(
+        self,
+        argument: ASTNode,
+        scope: Scope,
+        argument_index: int,
+    ) -> bool:
+        variable = _single_variable_expr(argument)
+        if variable is None or _variable_subscripts(variable):
+            return True
+        name = _variable_head_name(variable)
+        if name is None:
+            return True
+        resolved = scope.resolve_with_scope(name.value)
+        if resolved is None:
+            return True
+        symbol, _, _ = resolved
+        if symbol.kind == "procedure_parameter":
+            return True
+        if symbol.kind != "procedure" or symbol.procedure_id is None:
+            return True
+        descriptor = self._procedure_descriptor_for_id(symbol.procedure_id)
+        if descriptor is None or argument_index >= len(descriptor.parameters):
+            return True
+        parameter = descriptor.parameters[argument_index]
+        return (
+            parameter.kind == "scalar"
+            and parameter.mode == NAME
+            and parameter.may_write
+        )
 
     def _record_procedure_parameter_call_shape(
         self,
@@ -3615,6 +3714,16 @@ def _callee_may_write_argument(
         return True
     parameter = procedure.parameters[argument_index]
     return parameter.mode == NAME and parameter.may_write
+
+
+def _shape_argument_formal_names(
+    shape: ProcedureFormalCallShape,
+) -> tuple[str | None, ...]:
+    if len(shape.argument_formal_names) >= len(shape.argument_types):
+        return shape.argument_formal_names
+    return shape.argument_formal_names + (None,) * (
+        len(shape.argument_types) - len(shape.argument_formal_names)
+    )
 
 
 def _direct_block_declared_names(node: ASTNode) -> set[str]:

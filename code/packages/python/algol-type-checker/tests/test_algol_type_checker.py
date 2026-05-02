@@ -1437,6 +1437,45 @@ class TestAlgolTypeChecker:
         parameter = result.semantic.procedures[0].parameters[0]
         assert parameter.procedure_call_shapes[0].argument_assignable == (False,)
 
+    def test_accepts_forwarded_by_name_expression_when_procedure_actual_reads(
+        self,
+    ) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer procedure id(x); value x; integer x; begin id := x end; "
+            "integer procedure apply(f, x); integer f, x; procedure f; "
+            "begin apply := f(x) end; "
+            "result := apply(id, 3 + 4) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        procedure_parameter = result.semantic.procedures[1].parameters[0]
+        scalar_parameter = result.semantic.procedures[1].parameters[1]
+        assert procedure_parameter.procedure_call_shapes[0].argument_formal_names == (
+            "x",
+        )
+        assert scalar_parameter.write_reason == "transitive call"
+
+    def test_rejects_forwarded_by_name_expression_when_procedure_actual_writes(
+        self,
+    ) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer procedure inc(x); integer x; "
+            "begin x := x + 1; inc := x end; "
+            "integer procedure apply(f, x); integer f, x; procedure f; "
+            "begin apply := f(x) end; "
+            "result := apply(inc, 3 + 4) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "actual expression is not assignable" in result.diagnostics[0].message
+
     def test_accepts_procedure_parameter_actual_with_array_element_by_name_formal(
         self,
     ) -> None:

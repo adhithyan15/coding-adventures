@@ -2,12 +2,13 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 
 from algol_type_checker import (
     ArrayDescriptor,
     LabelDescriptor,
     ProcedureDescriptor,
+    ProcedureFormalCallShape,
     ProcedureParameter,
     ResolvedArrayAccess,
     ResolvedGoto,
@@ -3165,10 +3166,22 @@ class AlgolIrCompiler:
                 f"procedure {procedure.name!r} expects "
                 f"{len(procedure.parameters)} argument(s), got {len(actuals)}"
             )
+        effective_parameters = [
+            replace(
+                parameter,
+                may_write=self._scalar_parameter_may_write_at_call(
+                    procedure,
+                    parameter,
+                    actuals,
+                    scope,
+                ),
+            )
+            for parameter in procedure.parameters
+        ]
         thunk_actuals = [
             (index, argument, parameter)
             for index, (argument, parameter) in enumerate(
-                zip(actuals, procedure.parameters, strict=True)
+                zip(actuals, effective_parameters, strict=True)
             )
             if parameter.kind not in {"array", "label", "switch", "procedure"}
             and parameter.mode == _NAME_MODE
@@ -3200,7 +3213,7 @@ class AlgolIrCompiler:
 
         arguments: list[int | None] = [None] * len(actuals)
         for index, (argument, parameter) in enumerate(
-            zip(actuals, procedure.parameters, strict=True)
+            zip(actuals, effective_parameters, strict=True)
         ):
             if parameter.kind == "array":
                 continue
@@ -3264,7 +3277,7 @@ class AlgolIrCompiler:
             )
         }
         for index, (argument, parameter) in enumerate(
-            zip(actuals, procedure.parameters, strict=True)
+            zip(actuals, effective_parameters, strict=True)
         ):
             if parameter.kind == "array":
                 arguments[index] = self._compile_array_actual_pointer(argument, scope)
@@ -3594,6 +3607,72 @@ class AlgolIrCompiler:
             argument_kinds.append("scalar")
             argument_types.append(self._expr_type(actual))
         return tuple(argument_kinds), tuple(argument_types)
+
+    def _scalar_parameter_may_write_at_call(
+        self,
+        procedure: ProcedureDescriptor,
+        parameter: ProcedureParameter,
+        actuals: list[ASTNode],
+        scope: _FrameScope,
+    ) -> bool:
+        if (
+            parameter.kind != "scalar"
+            or parameter.mode != _NAME_MODE
+            or not parameter.may_write
+        ):
+            return False
+        if parameter.write_reason != "transitive call":
+            return True
+
+        saw_formal_procedure_shape = False
+        for procedure_index, procedure_parameter in enumerate(procedure.parameters):
+            if procedure_parameter.kind != "procedure":
+                continue
+            for shape in procedure_parameter.procedure_call_shapes:
+                formal_names = _shape_argument_formal_names(shape)
+                for argument_index, formal_name in enumerate(formal_names):
+                    if formal_name != parameter.name:
+                        continue
+                    saw_formal_procedure_shape = True
+                    if procedure_index >= len(actuals):
+                        return True
+                    if self._procedure_actual_writes_shape_argument(
+                        actuals[procedure_index],
+                        scope,
+                        argument_index,
+                    ):
+                        return True
+        return not saw_formal_procedure_shape
+
+    def _procedure_actual_writes_shape_argument(
+        self,
+        argument: ASTNode,
+        scope: _FrameScope,
+        argument_index: int,
+    ) -> bool:
+        variable = _single_variable_expr(argument)
+        if variable is None or _variable_subscripts(variable):
+            return True
+        name = _variable_name(variable)
+        if name is None:
+            return True
+        resolved = self._resolve_symbol_in_scope_chain(name.value, scope)
+        if resolved is None:
+            return True
+        symbol, _ = resolved
+        if symbol.kind == "procedure_parameter":
+            return True
+        if symbol.kind != "procedure" or symbol.procedure_id is None:
+            return True
+        procedure = self.procedures.get(symbol.procedure_id)
+        if procedure is None or argument_index >= len(procedure.parameters):
+            return True
+        parameter = procedure.parameters[argument_index]
+        return (
+            parameter.kind == "scalar"
+            and parameter.mode == _NAME_MODE
+            and parameter.may_write
+        )
 
     def _formal_array_argument_type(
         self,
@@ -7322,6 +7401,16 @@ def _procedure_parameter_type_satisfies(
     return _procedure_return_type_satisfies(
         expected_type=expected_type,
         actual_type=actual_type,
+    )
+
+
+def _shape_argument_formal_names(
+    shape: ProcedureFormalCallShape,
+) -> tuple[str | None, ...]:
+    if len(shape.argument_formal_names) >= len(shape.argument_types):
+        return shape.argument_formal_names
+    return shape.argument_formal_names + (None,) * (
+        len(shape.argument_types) - len(shape.argument_formal_names)
     )
 
 
