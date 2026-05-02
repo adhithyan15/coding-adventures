@@ -2048,7 +2048,13 @@ class AlgolTypeChecker:
                 self._check_switch_parameter_actual(argument, scope, parameter)
                 continue
             if parameter.kind == "procedure":
-                self._check_procedure_parameter_actual(argument, scope, parameter)
+                self._check_procedure_parameter_actual(
+                    argument,
+                    scope,
+                    parameter,
+                    call_descriptor=descriptor,
+                    call_arguments=arguments,
+                )
                 continue
             actual_type = self._infer_expr(argument, scope)
             if actual_type != ERROR and not self._parameter_accepts_type(
@@ -2701,6 +2707,9 @@ class AlgolTypeChecker:
         argument: ASTNode,
         scope: Scope,
         parameter: ProcedureParameter,
+        *,
+        call_descriptor: ProcedureDescriptor | None = None,
+        call_arguments: list[ASTNode] | None = None,
     ) -> Symbol | None:
         variable = _single_variable_expr(argument)
         if variable is None or _variable_subscripts(variable):
@@ -2725,7 +2734,15 @@ class AlgolTypeChecker:
         symbol, _, _ = resolved
         if symbol.kind == "procedure_parameter":
             for shape in parameter.procedure_call_shapes:
-                self._record_procedure_parameter_call_shape(symbol.symbol_id, shape)
+                self._record_procedure_parameter_call_shape(
+                    symbol.symbol_id,
+                    self._remap_forwarded_procedure_call_shape(
+                        shape,
+                        call_descriptor=call_descriptor,
+                        call_arguments=call_arguments,
+                        scope=scope,
+                    ),
+                )
             return symbol
         if symbol.kind != "procedure" or symbol.procedure_id is None:
             self._error(
@@ -2751,6 +2768,50 @@ class AlgolTypeChecker:
         ):
             return None
         return symbol
+
+    def _remap_forwarded_procedure_call_shape(
+        self,
+        shape: ProcedureFormalCallShape,
+        *,
+        call_descriptor: ProcedureDescriptor | None,
+        call_arguments: list[ASTNode] | None,
+        scope: Scope,
+    ) -> ProcedureFormalCallShape:
+        if call_descriptor is None or call_arguments is None:
+            return shape
+
+        remapped_names: list[str | None] = []
+        for formal_name in _shape_argument_formal_names(shape):
+            if formal_name is None:
+                remapped_names.append(None)
+                continue
+            parameter_index = next(
+                (
+                    index
+                    for index, parameter in enumerate(call_descriptor.parameters)
+                    if parameter.name == formal_name
+                ),
+                None,
+            )
+            if parameter_index is None or parameter_index >= len(call_arguments):
+                remapped_names.append(None)
+                continue
+            remapped_names.append(
+                self._scalar_by_name_parameter_actual_name(
+                    call_arguments[parameter_index],
+                    scope,
+                )
+            )
+
+        return ProcedureFormalCallShape(
+            role=shape.role,
+            argument_types=shape.argument_types,
+            argument_kinds=shape.argument_kinds,
+            argument_assignable=shape.argument_assignable,
+            argument_formal_names=tuple(remapped_names),
+            procedure_argument_ids=shape.procedure_argument_ids,
+            return_type=shape.return_type,
+        )
 
     def _procedure_actual_satisfies_formal_shapes(
         self,
