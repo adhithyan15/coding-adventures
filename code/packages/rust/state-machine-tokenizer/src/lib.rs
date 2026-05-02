@@ -270,6 +270,11 @@ impl Tokenizer {
         self.last_start_tag = Some(tag.into());
     }
 
+    /// Clear the last emitted start-tag name used by tokenizer submodes.
+    pub fn clear_last_start_tag(&mut self) {
+        self.last_start_tag = None;
+    }
+
     /// Push one chunk of Unicode text into the tokenizer.
     pub fn push(&mut self, chunk: &str) -> Result<()> {
         if self.finished {

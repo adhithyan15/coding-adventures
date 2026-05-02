@@ -204,3 +204,6 @@ documented in this file.
 - Added parser-facing `HtmlTokenizerState` and `HtmlLexContext` APIs, including
   typed fragment lexing and element-to-tokenizer-mode mapping for RCDATA,
   RAWTEXT, script data, and PLAINTEXT parser handoff.
+- Added `apply_html_lex_context` so parser code can reconfigure an existing
+  lexer with typed HTML context and clear stale text-mode tag context when
+  returning to data-state lexing.

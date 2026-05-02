@@ -81,6 +81,10 @@ impl HtmlLexContext {
         self
     }
 
+    pub fn is_data(&self) -> bool {
+        self.initial_state == HtmlTokenizerState::Data && self.last_start_tag.is_none()
+    }
+
     /// Return the tokenizer context used for text following a start tag.
     ///
     /// This is the parser-facing map from element names to HTML tokenizer
@@ -135,11 +139,19 @@ pub fn create_html_lexer() -> Result<HtmlLexer> {
 /// Build a lexer seeded with a parser-controlled HTML tokenizer context.
 pub fn create_html_lexer_with_context(context: &HtmlLexContext) -> Result<HtmlLexer> {
     let mut lexer = create_html_lexer()?;
+    apply_html_lex_context(&mut lexer, context)?;
+    Ok(lexer)
+}
+
+/// Move an existing lexer into a parser-controlled HTML tokenizer context.
+pub fn apply_html_lex_context(lexer: &mut HtmlLexer, context: &HtmlLexContext) -> Result<()> {
     lexer.set_initial_state(context.initial_state.as_machine_state())?;
     if let Some(last_start_tag) = context.last_start_tag.as_deref() {
         lexer.set_last_start_tag(last_start_tag);
+    } else {
+        lexer.clear_last_start_tag();
     }
-    Ok(lexer)
+    Ok(())
 }
 
 /// Lex one complete HTML string with the current compatibility-floor machine.

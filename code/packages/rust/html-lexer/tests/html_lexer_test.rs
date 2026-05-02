@@ -1,7 +1,7 @@
 use coding_adventures_html_lexer::{
-    create_html_lexer, html1_definition, html1_machine, html_skeleton_definition,
-    html_skeleton_machine, lex_html, lex_html_fragment, Attribute, HtmlLexContext,
-    HtmlTokenizerState, Token,
+    apply_html_lex_context, create_html_lexer, html1_definition, html1_machine,
+    html_skeleton_definition, html_skeleton_machine, lex_html, lex_html_fragment, Attribute,
+    HtmlLexContext, HtmlTokenizerState, Token,
 };
 use state_machine::END_INPUT;
 
@@ -4340,6 +4340,7 @@ fn parser_facing_context_maps_script_and_plaintext_elements() {
 #[test]
 fn parser_facing_context_leaves_normal_elements_in_data_state() {
     assert_eq!(HtmlLexContext::for_element_text("p"), None);
+    assert!(HtmlLexContext::data().is_data());
     assert_eq!(
         HtmlLexContext::data().initial_state.as_machine_state(),
         "data"
@@ -4347,6 +4348,48 @@ fn parser_facing_context_leaves_normal_elements_in_data_state() {
     assert_eq!(
         HtmlTokenizerState::ScriptDataDoubleEscapedLessThanSign.as_machine_state(),
         "script_data_double_escaped_less_than_sign"
+    );
+}
+
+#[test]
+fn parser_facing_context_can_reconfigure_an_existing_lexer() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    apply_html_lex_context(
+        &mut lexer,
+        &HtmlLexContext::for_element_text("script").unwrap(),
+    )
+    .unwrap();
+    lexer.push("if (a < b)</script>").unwrap();
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("if (a < b)".to_string()),
+            Token::EndTag {
+                name: "script".to_string()
+            }
+        ]
+    );
+
+    apply_html_lex_context(&mut lexer, &HtmlLexContext::data()).unwrap();
+    assert_eq!(lexer.current_state(), "data");
+    lexer.push("<p>after</p>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::StartTag {
+                name: "p".to_string(),
+                attributes: Vec::new(),
+                self_closing: false
+            },
+            Token::Text("after".to_string()),
+            Token::EndTag {
+                name: "p".to_string()
+            },
+            Token::Eof
+        ]
     );
 }
 
