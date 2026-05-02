@@ -93,6 +93,28 @@ impl HtmlLexContext {
         Self::new(HtmlTokenizerState::CdataSection)
     }
 
+    /// Return a script tokenizer substate context for parser-approved fragments.
+    ///
+    /// These substates are useful for html5lib/WPT-style fixtures and for
+    /// future parser flows that need to resume script tokenization after
+    /// already recognizing an escaped or double-escaped script section.
+    pub fn script_substate(initial_state: HtmlTokenizerState) -> Option<Self> {
+        match initial_state {
+            HtmlTokenizerState::ScriptData
+            | HtmlTokenizerState::ScriptDataEscaped
+            | HtmlTokenizerState::ScriptDataEscapedDash
+            | HtmlTokenizerState::ScriptDataEscapedDashDash
+            | HtmlTokenizerState::ScriptDataEscapedLessThanSign
+            | HtmlTokenizerState::ScriptDataDoubleEscaped
+            | HtmlTokenizerState::ScriptDataDoubleEscapedDash
+            | HtmlTokenizerState::ScriptDataDoubleEscapedDashDash
+            | HtmlTokenizerState::ScriptDataDoubleEscapedLessThanSign => {
+                Some(Self::new(initial_state).with_last_start_tag("script"))
+            }
+            _ => None,
+        }
+    }
+
     pub fn with_last_start_tag(mut self, tag: impl Into<String>) -> Self {
         self.last_start_tag = Some(tag.into());
         self

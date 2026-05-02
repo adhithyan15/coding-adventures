@@ -4364,6 +4364,51 @@ fn parser_facing_context_maps_script_and_plaintext_elements() {
 }
 
 #[test]
+fn parser_facing_context_maps_script_substates() {
+    let escaped =
+        HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataEscapedDashDash).unwrap();
+    assert_eq!(
+        escaped.initial_state,
+        HtmlTokenizerState::ScriptDataEscapedDashDash
+    );
+    assert_eq!(escaped.last_start_tag.as_deref(), Some("script"));
+    assert_eq!(
+        lex_html_fragment("x</script>", &escaped).unwrap(),
+        vec![
+            Token::Text("x".to_string()),
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Eof
+        ]
+    );
+
+    let double_escaped =
+        HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataDoubleEscapedLessThanSign)
+            .unwrap();
+    assert_eq!(
+        double_escaped.initial_state,
+        HtmlTokenizerState::ScriptDataDoubleEscapedLessThanSign
+    );
+    assert_eq!(double_escaped.last_start_tag.as_deref(), Some("script"));
+    assert_eq!(
+        lex_html_fragment("/script>tail</script>", &double_escaped).unwrap(),
+        vec![
+            Token::Text("/script>tail".to_string()),
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Eof
+        ]
+    );
+
+    assert_eq!(
+        HtmlLexContext::script_substate(HtmlTokenizerState::Rawtext),
+        None
+    );
+}
+
+#[test]
 fn parser_facing_context_leaves_normal_elements_in_data_state() {
     assert_eq!(HtmlLexContext::for_element_text("p"), None);
     assert!(HtmlLexContext::data().is_data());

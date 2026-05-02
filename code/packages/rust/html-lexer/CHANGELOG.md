@@ -212,3 +212,5 @@ documented in this file.
   scripting is disabled.
 - Added a typed parser-facing CDATA section context for future SVG/MathML
   foreign-content tree construction without exposing raw machine-state strings.
+- Added typed parser-facing script substate contexts for script escaped and
+  double-escaped tokenizer fixtures and future parser handoff.

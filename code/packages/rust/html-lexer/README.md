@@ -156,6 +156,10 @@ Foreign-content CDATA is exposed as an explicit
 `HtmlLexContext::cdata_section()` helper rather than as an element-name mapping,
 so future SVG/MathML tree-construction logic can opt into CDATA only after it
 has confirmed the parser context.
+Script escaped and double-escaped substates are exposed through
+`HtmlLexContext::script_substate(...)`, giving parser and conformance callers a
+typed way to seed those script tokenizer subflows without raw machine-state
+strings.
 `html-skeleton.lexer.states.toml` remains in the crate as a smaller bootstrap
 machine for comparisons and narrow debugging.
 
