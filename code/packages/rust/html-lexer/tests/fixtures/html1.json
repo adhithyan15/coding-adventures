@@ -1570,6 +1570,30 @@
         "end-tag-with-attributes",
         "eof-in-end-tag-name-state"
       ]
+    },
+    {
+      "id": "html-eof-drops-attribute-named-reference",
+      "description": "EOF inside an attribute named character reference drops the partial start tag",
+      "input": "<a href=&copy",
+      "tokens": [
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-semicolon-after-character-reference",
+        "eof-in-tag"
+      ]
+    },
+    {
+      "id": "html-eof-drops-attribute-numeric-reference",
+      "description": "EOF inside an attribute numeric character reference drops the partial start tag",
+      "input": "<a href=&#x41",
+      "tokens": [
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-semicolon-after-character-reference",
+        "eof-in-tag"
+      ]
     }
   ]
 }

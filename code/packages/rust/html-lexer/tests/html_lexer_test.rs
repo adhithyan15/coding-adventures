@@ -54,6 +54,46 @@ fn default_html_lexer_drops_partial_end_tag_at_eof() {
 }
 
 #[test]
+fn default_html_lexer_drops_partial_attribute_references_at_eof() {
+    let cases = [
+        (
+            "<a href=&copy",
+            vec!["missing-semicolon-after-character-reference", "eof-in-tag"],
+        ),
+        (
+            "<a href=&#x41",
+            vec!["missing-semicolon-after-character-reference", "eof-in-tag"],
+        ),
+        (
+            "<a href=&#x",
+            vec![
+                "absence-of-digits-in-numeric-character-reference",
+                "eof-in-tag",
+            ],
+        ),
+        ("<a href=&madeup", vec!["eof-in-tag"]),
+    ];
+
+    for (input, expected_diagnostics) in cases {
+        let mut lexer = create_html_lexer().unwrap();
+
+        lexer.push(input).unwrap();
+        lexer.finish().unwrap();
+
+        assert_eq!(lexer.drain_tokens(), vec![Token::Eof], "input {input:?}");
+        assert_eq!(
+            lexer
+                .diagnostics()
+                .iter()
+                .map(|diagnostic| diagnostic.code.as_str())
+                .collect::<Vec<_>>(),
+            expected_diagnostics,
+            "input {input:?}"
+        );
+    }
+}
+
+#[test]
 fn default_html_lexer_supports_html1_attributes_comments_and_doctypes() {
     let tokens = lex_html(
         "<!DOCTYPE HTML><IMG SRC=\"mosaic.gif\" ALT='Splash' hidden=1/>Before<!--note-->After",

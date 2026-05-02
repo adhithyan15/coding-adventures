@@ -1780,6 +1780,30 @@
         "end-tag-with-attributes",
         "eof-in-end-tag-name-state"
       ]
+    },
+    {
+      "id": "html5lib-smoke-147",
+      "description": "eof drops attribute named reference start tag",
+      "input": "<a href=&copy",
+      "tokens": [
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-semicolon-after-character-reference",
+        "eof-in-tag"
+      ]
+    },
+    {
+      "id": "html5lib-smoke-148",
+      "description": "eof drops attribute numeric reference start tag",
+      "input": "<a href=&#x41",
+      "tokens": [
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-semicolon-after-character-reference",
+        "eof-in-tag"
+      ]
     }
   ],
   "skipped": []

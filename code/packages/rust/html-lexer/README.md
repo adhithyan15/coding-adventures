@@ -75,6 +75,8 @@ such as `"`, `'`, `<`, `=`, and `` ` `` while reporting
 EOF inside ordinary start/end tag construction now reports the relevant
 EOF-in-tag diagnostic and drops the incomplete token instead of handing a
 partial tag to the future parser.
+The same partial-token drop now applies when EOF arrives inside an attribute
+character-reference substate, including named and numeric references.
 NULL characters in data/RCDATA/RAWTEXT/PLAINTEXT/CDATA/script data, script
 escaped/double-escaped states, and attribute values recover by reporting
 `unexpected-null-character` and appending U+FFFD, matching the replacement
