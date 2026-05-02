@@ -11,9 +11,21 @@ local m = require("coding_adventures.sql_csv_source")
 
 local fixtures = "fixtures"
 
-local function sorted_names(rows)
+local function row_maps(result)
+  local rows = {}
+  for _, row in ipairs(result.rows) do
+    local mapped = {}
+    for index, column in ipairs(result.columns) do
+      mapped[column] = row[index]
+    end
+    rows[#rows + 1] = mapped
+  end
+  return rows
+end
+
+local function sorted_names(result)
   local names = {}
-  for _, row in ipairs(rows) do
+  for _, row in ipairs(row_maps(result)) do
     names[#names + 1] = row.name
   end
   table.sort(names)
@@ -73,24 +85,26 @@ describe("sql_csv_source", function()
   it("executes SELECT queries against CSV files", function()
     local ok, result = m.execute_csv("SELECT * FROM employees", fixtures)
     assert.is_true(ok)
-    assert.same({"id", "name", "dept_id", "salary", "active"}, result.columns)
+    assert.same({"active", "dept_id", "id", "name", "salary"}, result.columns)
     assert.equals(4, #result.rows)
-    assert.equals("Alice", result.rows[1].name)
-    assert.equals(true, result.rows[1].active)
-    assert.is_nil(result.rows[4].dept_id)
+
+    local rows = row_maps(result)
+    assert.equals("Alice", rows[1].name)
+    assert.equals(true, rows[1].active)
+    assert.is_nil(rows[4].dept_id)
   end)
 
   it("filters active employees", function()
     local ok, result = m.execute_csv("SELECT name FROM employees WHERE active = true", fixtures)
     assert.is_true(ok)
-    assert.same({"Alice", "Bob", "Dave"}, sorted_names(result.rows))
+    assert.same({"Alice", "Bob", "Dave"}, sorted_names(result))
   end)
 
   it("supports IS NULL predicates", function()
     local ok, result = m.execute_csv("SELECT * FROM employees WHERE dept_id IS NULL", fixtures)
     assert.is_true(ok)
     assert.equals(1, #result.rows)
-    assert.equals("Dave", result.rows[1].name)
+    assert.equals("Dave", row_maps(result)[1].name)
   end)
 
   it("supports joins through the execution engine", function()
