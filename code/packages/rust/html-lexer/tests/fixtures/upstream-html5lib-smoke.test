@@ -1660,6 +1660,66 @@
       "errors": [
         {"code": "invalid-first-character-of-tag-name", "line": 1, "col": 9}
       ]
+    },
+    {
+          "description": "final WHATWG named character reference coverage batch 1",
+          "input": "WHATWG remaining named refs 1 (Assign-angmsdah):&Assign;&Backslash;&Barv;&Barwed;&Bernoullis;&Breve;&Cayleys;&Cedilla;&Colon;&Colone;&Dashv;&Del;&Diamond;&DoubleLeftTee;&DoubleRightTee;&DownBreve;&DownTee;&Dstrok;&ENG;&Equilibrium;&Esim;&ForAll;&Fouriertrf;&Gg;&Gt;&Hacek;&Hat;&HilbertSpace;&HorizontalLine;&Hstrok;&IJlig;&Im;&Implies;&Lang;&Laplacetrf;&LeftTee;&LeftTriangleBar;&LeftTriangleEqual;&Ll;&Lsh;&Lstrok;&Lt;&NotCongruent;&NotDoubleVerticalBar;&NotHumpDownHump;&NotHumpEqual;&NotLeftTriangle;&NotLeftTriangleBar;&NotLeftTriangleEqual;&NotRightTriangle;&NotRightTriangleBar;&NotRightTriangleEqual;&Odblac;&PartialD;&Poincareplane;&Pr;&Proportion;&Rang;&Re;&ReverseEquilibrium;&ReverseUpEquilibrium;&RightTee;&RightTriangleBar;&RightTriangleEqual;&RoundImplies;&Rsh;&RuleDelayed;&Sc;&Star;&TRADE;&Tstrok;&Udblac;&UpEquilibrium;&UpTee;&VDash;&Vbar;&Vdash;&Vdashl;&Verbar;&Vert;&Vvdash;&ac;&acE;&acd;&af;&aleph;&amalg;&andand;&andd;&andslope;&andv;&ange;&angmsdaa;&angmsdab;&angmsdac;&angmsdad;&angmsdae;&angmsdaf;&angmsdag;&angmsdah;",
+          "output": [
+                [
+                      "Character",
+                      "WHATWG remaining named refs 1 (Assign-angmsdah):≔∖⫧⌆ℬ˘ℭ¸∷⩴⫤∇⋄⫤⊨̑⊤ĐŊ⇌⩳∀ℱ⋙≫ˇ^ℋ─ĦĲℑ⇒⟪ℒ⊣⧏⊴⋘↰Ł≪≢∦≎̸≏̸⋪⧏̸⋬⋫⧐̸⋭Ő∂ℌ⪻∷⟫ℜ⇋⥯⊢⧐⊵⥰↱⧴⪼⋆™ŦŰ⥮⊥⊫⫫⊩⫦‖‖⊪∾∾̳∿⁡ℵ⨿⩕⩜⩘⩚⦤⦨⦩⦪⦫⦬⦭⦮⦯"
+                ]
+          ]
+    },
+    {
+          "description": "final WHATWG named character reference coverage batch 2",
+          "input": "WHATWG remaining named refs 2 (ap-eng):&ap;&apE;&apacir;&ape;&apid;&approx;&approxeq;&ast;&asympeq;&bNot;&backcong;&backprime;&backsim;&backsimeq;&barvee;&barwed;&barwedge;&becaus;&because;&bemptyv;&bernou;&between;&bigtriangledown;&bigtriangleup;&bigvee;&bigwedge;&blacktriangle;&blacktriangledown;&blank;&blk12;&blk14;&blk34;&block;&bne;&bnequiv;&bnot;&bot;&bottom;&bowtie;&bprime;&breve;&bsemi;&bsol;&bsolb;&bullet;&caret;&caron;&cemptyv;&check;&checkmark;&cir;&cirE;&cire;&cirmid;&cirscir;&colon;&colone;&comma;&commat;&comp;&complement;&complexes;&copysr;&cross;&cuepr;&cuesc;&curlyvee;&curlywedge;&cylcty;&dash;&dashv;&dblac;&ddagger;&demptyv;&die;&disin;&div;&divonx;&dlcorn;&dlcrop;&dollar;&doublebarwedge;&drcorn;&drcrop;&dsol;&dstrok;&dtri;&dtrif;&dwangle;&easter;&ecir;&ecolon;&eg;&egs;&el;&ell;&els;&emsp13;&emsp14;&eng;",
+          "output": [
+                [
+                      "Character",
+                      "WHATWG remaining named refs 2 (ap-eng):≈⩰⩯≊≋≈≊*≍⫭≌‵∽⋍⊽⌅⌅∵∵⦰ℬ≬▽△⋁⋀▴▾␣▒░▓█=⃥≡⃥⌐⊥⊥⋈‵˘⁏\\⧅•⁁ˇ⦲✓✓○⧃≗⫯⧂:≔,@∁∁ℂ℗✗⋞⋟⋎⋏⌭‐⊣˝‡⦱¨⋲÷⋇⌞⌍$⌆⌟⌌⧶đ▿▾⦦⩮≖≕⪚⪖⪙ℓ⪕  ŋ"
+                ]
+          ]
+    },
+    {
+          "description": "final WHATWG named character reference coverage batch 3",
+          "input": "WHATWG remaining named refs 3 (epar-lcub):&epar;&eparsl;&esim;&excl;&expectation;&exponentiale;&ffilig;&fflig;&ffllig;&filig;&fjlig;&flat;&fllig;&fltns;&fork;&forkv;&frac13;&frac15;&frac16;&frac18;&frac23;&frac25;&frac35;&frac38;&frac45;&frac56;&frac58;&frac78;&frown;&gE;&gEl;&gacute;&gammad;&gap;&gel;&geq;&geqq;&geqslant;&ges;&gescc;&gesl;&gesles;&gg;&ggg;&grave;&gsim;&gsime;&gsiml;&gtcc;&gtcir;&gtlPar;&gtquest;&gvertneqq;&gvnE;&hairsp;&half;&hamilt;&hbar;&hercon;&hksearow;&hkswarow;&homtht;&horbar;&hslash;&hstrok;&hybull;&hyphen;&ic;&iff;&iinfin;&iiota;&ijlig;&imagline;&imagpart;&imath;&imof;&imped;&in;&incare;&isins;&isinsv;&it;&jmath;&kgreen;&lAtail;&lE;&lEg;&laemptyv;&lagran;&langd;&lap;&lat;&latail;&late;&lates;&lbbrk;&lbrke;&lbrksld;&lbrkslu;&lcub;",
+          "output": [
+                [
+                      "Character",
+                      "WHATWG remaining named refs 3 (epar-lcub):⋕⧣≂!ℰⅇﬃﬀﬄﬁfj♭ﬂ▱⋔⫙⅓⅕⅙⅛⅔⅖⅗⅜⅘⅚⅝⅞⌢≧⪌ǵϝ⪆⋛≥≧⩾⩾⪩⋛︀⪔≫⋙`≳⪎⪐⪧⩺⦕⩼≩︀≩︀ ½ℋℏ⊹⤥⤦∻―ℏħ⁃‐⁣⇔⧜℩ĳℐℑı⊷Ƶ∈℅⋴⋳⁢ȷĸ⤛≦⪋⦴ℒ⦑⪅⪫⤙⪭⪭︀❲⦋⦏⦍{"
+                ]
+          ]
+    },
+    {
+          "description": "final WHATWG named character reference coverage batch 4",
+          "input": "WHATWG remaining named refs 4 (ldca-nsce):&ldca;&ldquor;&ldsh;&leg;&leq;&leqq;&leqslant;&les;&lescc;&lesg;&lesges;&lhblk;&ll;&lltri;&lmoust;&lmoustache;&loang;&lopar;&lowbar;&lparlt;&lrtri;&lsh;&lsim;&lsime;&lsimg;&lstrok;&ltcc;&ltcir;&lthree;&ltquest;&ltrPar;&ltri;&ltrie;&ltrif;&lvertneqq;&lvnE;&marker;&mcomma;&mho;&mlcp;&mldr;&models;&mp;&mstpos;&multimap;&mumap;&nVDash;&nVdash;&nang;&nap;&napE;&napid;&napos;&napprox;&natur;&natural;&naturals;&nbump;&nbumpe;&ncong;&nearhk;&nequiv;&nesear;&nesim;&nexists;&ngE;&nge;&ngeq;&ngeqq;&ngeqslant;&nges;&ngsim;&ngt;&ngtr;&nhpar;&nis;&nisd;&nlE;&nldr;&nle;&nleq;&nleqq;&nleqslant;&nles;&nless;&nlsim;&nlt;&nltri;&nltrie;&nmid;&notinE;&notni;&npr;&nprcue;&npre;&nrtri;&nrtrie;&nsc;&nsccue;&nsce;",
+          "output": [
+                [
+                      "Character",
+                      "WHATWG remaining named refs 4 (ldca-nsce):⤶„↲⋚≤≦⩽⩽⪨⋚︀⪓▄≪◺⎰⎰⟬⦅_⦓⊿↰≲⪍⪏ł⪦⩹⋋⩻⦖◃⊴◂≨︀≨︀▮⨩℧⫛…⊧∓∾⊸⊸⊯⊮∠⃒≉⩰̸≋̸ŉ≉♮♮ℕ≎̸≏̸≇⤤≢⤨≂̸∄≧̸≱≱≧̸⩾̸⩾̸≵≯≯⫲⋼⋺≦̸‥≰≰≦̸⩽̸⩽̸≮≴≮⋪⋬∤⋹̸∌⊀⋠⪯̸⋫⋭⊁⋡⪰̸"
+                ]
+          ]
+    },
+    {
+          "description": "final WHATWG named character reference coverage batch 5",
+          "input": "WHATWG remaining named refs 5 (nshortmid-rsh):&nshortmid;&nshortparallel;&nsim;&nsime;&nsimeq;&nsmid;&nspar;&ntgl;&ntlg;&ntriangleleft;&ntrianglelefteq;&ntriangleright;&ntrianglerighteq;&num;&numero;&numsp;&nvDash;&nvap;&nvdash;&nvge;&nvgt;&nvinfin;&nvle;&nvlt;&nvltrie;&nvrtrie;&nvsim;&nwarhk;&nwnear;&oS;&odblac;&odiv;&odsold;&ofcir;&ogon;&ogt;&ohbar;&ohm;&olcir;&olcross;&olt;&omid;&opar;&operp;&ord;&order;&orderof;&origof;&oror;&orslope;&orv;&ovbar;&percnt;&period;&pertenk;&phmmat;&pitchfork;&planck;&planckh;&plankv;&pm;&primes;&profalar;&profline;&profsurf;&propto;&prurel;&puncsp;&qprime;&quaternions;&quest;&questeq;&rAtail;&race;&raemptyv;&rangd;&range;&ratail;&ratio;&rationals;&rbbrk;&rbrke;&rbrksld;&rbrkslu;&rcub;&rdca;&rdquor;&rdsh;&realine;&realpart;&reals;&rect;&ring;&rmoust;&rmoustache;&rnmid;&roang;&ropar;&rpargt;&rsh;",
+          "output": [
+                [
+                      "Character",
+                      "WHATWG remaining named refs 5 (nshortmid-rsh):∤∦≁≄≄∤∦≹≸⋪⋬⋫⋭#№ ⊭≍⃒⊬≥⃒>⃒⧞≤⃒<⃒⊴⃒⊵⃒∼⃒⤣⤧Ⓢő⨸⦼⦿˛⧁⦵Ω⦾⦻⧀⦶⦷⦹⩝ℴℴ⊶⩖⩗⩛⌽%.‱ℳ⋔ℏℎℏ±ℙ⌮⌒⌓∝⊰ ⁗ℍ?≟⤜∽̱⦳⦒⦥⤚∶ℚ❳⦌⦎⦐}⤷”↳ℛℜℝ▭˚⎱⎱⫮⟭⦆⦔↱"
+                ]
+          ]
+    },
+    {
+          "description": "final WHATWG named character reference coverage batch 6",
+          "input": "WHATWG remaining named refs 6 (rthree-zeetrf):&rthree;&rtri;&rtrie;&rtrif;&rtriltri;&rx;&searhk;&semi;&seswar;&sext;&sfrown;&sharp;&smashp;&smeparsl;&smid;&smile;&smt;&smte;&smtes;&sol;&solb;&solbar;&spar;&ssmile;&sstarf;&strns;&sung;&swarhk;&swnwar;&target;&tbrk;&telrec;&therefore;&thickapprox;&thicksim;&thkap;&thksim;&toea;&top;&topbot;&topcir;&topfork;&tosa;&tprime;&triangle;&triangledown;&trianglelefteq;&triangleq;&trianglerighteq;&trie;&trisb;&tritime;&trpezium;&tstrok;&twixt;&udblac;&uhblk;&ulcorn;&ulcrop;&ultri;&urcorn;&urcrop;&urtri;&utri;&utrif;&uwangle;&vBar;&vBarv;&vDash;&vangrt;&varpropto;&vartriangleleft;&vartriangleright;&vdash;&vee;&veebar;&veeeq;&vellip;&verbar;&vert;&vltri;&vprop;&vrtri;&vzigzag;&wedbar;&wedge;&wedgeq;&wp;&wr;&wreath;&xdtri;&xmap;&xnis;&xotime;&xutri;&zeetrf;",
+          "output": [
+                [
+                      "Character",
+                      "WHATWG remaining named refs 6 (rthree-zeetrf):⋌▹⊵▸⧎℞⤥;⤩✶⌢♯⨳⧤∣⌣⪪⪬⪬︀/⧄⌿∥⌣⋆¯♪⤦⤪⌖⎴⌕∴≈∼≈∼⤨⊤⌶⫱⫚⤩‴▵▿⊴≜⊵≜⧍⨻⏢ŧ≬ű▀⌜⌏◸⌝⌎◹▵▴⦧⫨⫩⊨⦜∝⊲⊳⊢∨⊻≚⋮||⊲∝⊳⦚⩟∧≙℘≀≀▽⟼⋻⨂△ℨ"
+                ]
+          ]
     }
   ]
 }

@@ -175,6 +175,8 @@ documented in this file.
 - Added a remaining WHATWG operator/integral named-reference batch covering
   contour integrals, circled operators, dot relations, plus/times variants,
   and multi-integral aliases.
+- Completed semicolon-terminated WHATWG named-character-reference coverage with
+  a final generated batch for the remaining aliases.
 - Added a WHATWG operator/shape named-reference batch covering circled
   operators, integrals, products, squares, lozenges, stars, suits, and symbols.
 - Added a WHATWG box-drawing named-reference batch covering double-line,

@@ -1667,6 +1667,66 @@
       "diagnostics": [
         "invalid-first-character-of-tag-name"
       ]
+    },
+    {
+      "id": "html5lib-smoke-137",
+      "description": "final WHATWG named character reference coverage batch 1",
+      "input": "WHATWG remaining named refs 1 (Assign-angmsdah):&Assign;&Backslash;&Barv;&Barwed;&Bernoullis;&Breve;&Cayleys;&Cedilla;&Colon;&Colone;&Dashv;&Del;&Diamond;&DoubleLeftTee;&DoubleRightTee;&DownBreve;&DownTee;&Dstrok;&ENG;&Equilibrium;&Esim;&ForAll;&Fouriertrf;&Gg;&Gt;&Hacek;&Hat;&HilbertSpace;&HorizontalLine;&Hstrok;&IJlig;&Im;&Implies;&Lang;&Laplacetrf;&LeftTee;&LeftTriangleBar;&LeftTriangleEqual;&Ll;&Lsh;&Lstrok;&Lt;&NotCongruent;&NotDoubleVerticalBar;&NotHumpDownHump;&NotHumpEqual;&NotLeftTriangle;&NotLeftTriangleBar;&NotLeftTriangleEqual;&NotRightTriangle;&NotRightTriangleBar;&NotRightTriangleEqual;&Odblac;&PartialD;&Poincareplane;&Pr;&Proportion;&Rang;&Re;&ReverseEquilibrium;&ReverseUpEquilibrium;&RightTee;&RightTriangleBar;&RightTriangleEqual;&RoundImplies;&Rsh;&RuleDelayed;&Sc;&Star;&TRADE;&Tstrok;&Udblac;&UpEquilibrium;&UpTee;&VDash;&Vbar;&Vdash;&Vdashl;&Verbar;&Vert;&Vvdash;&ac;&acE;&acd;&af;&aleph;&amalg;&andand;&andd;&andslope;&andv;&ange;&angmsdaa;&angmsdab;&angmsdac;&angmsdad;&angmsdae;&angmsdaf;&angmsdag;&angmsdah;",
+      "tokens": [
+        "Text(data=WHATWG remaining named refs 1 (Assign-angmsdah):\u2254\u2216\u2ae7\u2306\u212c\u02d8\u212d\u00b8\u2237\u2a74\u2ae4\u2207\u22c4\u2ae4\u22a8\u0311\u22a4\u0110\u014a\u21cc\u2a73\u2200\u2131\u22d9\u226b\u02c7^\u210b\u2500\u0126\u0132\u2111\u21d2\u27ea\u2112\u22a3\u29cf\u22b4\u22d8\u21b0\u0141\u226a\u2262\u2226\u224e\u0338\u224f\u0338\u22ea\u29cf\u0338\u22ec\u22eb\u29d0\u0338\u22ed\u0150\u2202\u210c\u2abb\u2237\u27eb\u211c\u21cb\u296f\u22a2\u29d0\u22b5\u2970\u21b1\u29f4\u2abc\u22c6\u2122\u0166\u0170\u296e\u22a5\u22ab\u2aeb\u22a9\u2ae6\u2016\u2016\u22aa\u223e\u223e\u0333\u223f\u2061\u2135\u2a3f\u2a55\u2a5c\u2a58\u2a5a\u29a4\u29a8\u29a9\u29aa\u29ab\u29ac\u29ad\u29ae\u29af)",
+        "EOF"
+      ],
+      "diagnostics": []
+    },
+    {
+      "id": "html5lib-smoke-138",
+      "description": "final WHATWG named character reference coverage batch 2",
+      "input": "WHATWG remaining named refs 2 (ap-eng):&ap;&apE;&apacir;&ape;&apid;&approx;&approxeq;&ast;&asympeq;&bNot;&backcong;&backprime;&backsim;&backsimeq;&barvee;&barwed;&barwedge;&becaus;&because;&bemptyv;&bernou;&between;&bigtriangledown;&bigtriangleup;&bigvee;&bigwedge;&blacktriangle;&blacktriangledown;&blank;&blk12;&blk14;&blk34;&block;&bne;&bnequiv;&bnot;&bot;&bottom;&bowtie;&bprime;&breve;&bsemi;&bsol;&bsolb;&bullet;&caret;&caron;&cemptyv;&check;&checkmark;&cir;&cirE;&cire;&cirmid;&cirscir;&colon;&colone;&comma;&commat;&comp;&complement;&complexes;&copysr;&cross;&cuepr;&cuesc;&curlyvee;&curlywedge;&cylcty;&dash;&dashv;&dblac;&ddagger;&demptyv;&die;&disin;&div;&divonx;&dlcorn;&dlcrop;&dollar;&doublebarwedge;&drcorn;&drcrop;&dsol;&dstrok;&dtri;&dtrif;&dwangle;&easter;&ecir;&ecolon;&eg;&egs;&el;&ell;&els;&emsp13;&emsp14;&eng;",
+      "tokens": [
+        "Text(data=WHATWG remaining named refs 2 (ap-eng):\u2248\u2a70\u2a6f\u224a\u224b\u2248\u224a*\u224d\u2aed\u224c\u2035\u223d\u22cd\u22bd\u2305\u2305\u2235\u2235\u29b0\u212c\u226c\u25bd\u25b3\u22c1\u22c0\u25b4\u25be\u2423\u2592\u2591\u2593\u2588=\u20e5\u2261\u20e5\u2310\u22a5\u22a5\u22c8\u2035\u02d8\u204f\\\u29c5\u2022\u2041\u02c7\u29b2\u2713\u2713\u25cb\u29c3\u2257\u2aef\u29c2:\u2254,@\u2201\u2201\u2102\u2117\u2717\u22de\u22df\u22ce\u22cf\u232d\u2010\u22a3\u02dd\u2021\u29b1\u00a8\u22f2\u00f7\u22c7\u231e\u230d$\u2306\u231f\u230c\u29f6\u0111\u25bf\u25be\u29a6\u2a6e\u2256\u2255\u2a9a\u2a96\u2a99\u2113\u2a95\u2004\u2005\u014b)",
+        "EOF"
+      ],
+      "diagnostics": []
+    },
+    {
+      "id": "html5lib-smoke-139",
+      "description": "final WHATWG named character reference coverage batch 3",
+      "input": "WHATWG remaining named refs 3 (epar-lcub):&epar;&eparsl;&esim;&excl;&expectation;&exponentiale;&ffilig;&fflig;&ffllig;&filig;&fjlig;&flat;&fllig;&fltns;&fork;&forkv;&frac13;&frac15;&frac16;&frac18;&frac23;&frac25;&frac35;&frac38;&frac45;&frac56;&frac58;&frac78;&frown;&gE;&gEl;&gacute;&gammad;&gap;&gel;&geq;&geqq;&geqslant;&ges;&gescc;&gesl;&gesles;&gg;&ggg;&grave;&gsim;&gsime;&gsiml;&gtcc;&gtcir;&gtlPar;&gtquest;&gvertneqq;&gvnE;&hairsp;&half;&hamilt;&hbar;&hercon;&hksearow;&hkswarow;&homtht;&horbar;&hslash;&hstrok;&hybull;&hyphen;&ic;&iff;&iinfin;&iiota;&ijlig;&imagline;&imagpart;&imath;&imof;&imped;&in;&incare;&isins;&isinsv;&it;&jmath;&kgreen;&lAtail;&lE;&lEg;&laemptyv;&lagran;&langd;&lap;&lat;&latail;&late;&lates;&lbbrk;&lbrke;&lbrksld;&lbrkslu;&lcub;",
+      "tokens": [
+        "Text(data=WHATWG remaining named refs 3 (epar-lcub):\u22d5\u29e3\u2242!\u2130\u2147\ufb03\ufb00\ufb04\ufb01fj\u266d\ufb02\u25b1\u22d4\u2ad9\u2153\u2155\u2159\u215b\u2154\u2156\u2157\u215c\u2158\u215a\u215d\u215e\u2322\u2267\u2a8c\u01f5\u03dd\u2a86\u22db\u2265\u2267\u2a7e\u2a7e\u2aa9\u22db\ufe00\u2a94\u226b\u22d9`\u2273\u2a8e\u2a90\u2aa7\u2a7a\u2995\u2a7c\u2269\ufe00\u2269\ufe00\u200a\u00bd\u210b\u210f\u22b9\u2925\u2926\u223b\u2015\u210f\u0127\u2043\u2010\u2063\u21d4\u29dc\u2129\u0133\u2110\u2111\u0131\u22b7\u01b5\u2208\u2105\u22f4\u22f3\u2062\u0237\u0138\u291b\u2266\u2a8b\u29b4\u2112\u2991\u2a85\u2aab\u2919\u2aad\u2aad\ufe00\u2772\u298b\u298f\u298d{)",
+        "EOF"
+      ],
+      "diagnostics": []
+    },
+    {
+      "id": "html5lib-smoke-140",
+      "description": "final WHATWG named character reference coverage batch 4",
+      "input": "WHATWG remaining named refs 4 (ldca-nsce):&ldca;&ldquor;&ldsh;&leg;&leq;&leqq;&leqslant;&les;&lescc;&lesg;&lesges;&lhblk;&ll;&lltri;&lmoust;&lmoustache;&loang;&lopar;&lowbar;&lparlt;&lrtri;&lsh;&lsim;&lsime;&lsimg;&lstrok;&ltcc;&ltcir;&lthree;&ltquest;&ltrPar;&ltri;&ltrie;&ltrif;&lvertneqq;&lvnE;&marker;&mcomma;&mho;&mlcp;&mldr;&models;&mp;&mstpos;&multimap;&mumap;&nVDash;&nVdash;&nang;&nap;&napE;&napid;&napos;&napprox;&natur;&natural;&naturals;&nbump;&nbumpe;&ncong;&nearhk;&nequiv;&nesear;&nesim;&nexists;&ngE;&nge;&ngeq;&ngeqq;&ngeqslant;&nges;&ngsim;&ngt;&ngtr;&nhpar;&nis;&nisd;&nlE;&nldr;&nle;&nleq;&nleqq;&nleqslant;&nles;&nless;&nlsim;&nlt;&nltri;&nltrie;&nmid;&notinE;&notni;&npr;&nprcue;&npre;&nrtri;&nrtrie;&nsc;&nsccue;&nsce;",
+      "tokens": [
+        "Text(data=WHATWG remaining named refs 4 (ldca-nsce):\u2936\u201e\u21b2\u22da\u2264\u2266\u2a7d\u2a7d\u2aa8\u22da\ufe00\u2a93\u2584\u226a\u25fa\u23b0\u23b0\u27ec\u2985_\u2993\u22bf\u21b0\u2272\u2a8d\u2a8f\u0142\u2aa6\u2a79\u22cb\u2a7b\u2996\u25c3\u22b4\u25c2\u2268\ufe00\u2268\ufe00\u25ae\u2a29\u2127\u2adb\u2026\u22a7\u2213\u223e\u22b8\u22b8\u22af\u22ae\u2220\u20d2\u2249\u2a70\u0338\u224b\u0338\u0149\u2249\u266e\u266e\u2115\u224e\u0338\u224f\u0338\u2247\u2924\u2262\u2928\u2242\u0338\u2204\u2267\u0338\u2271\u2271\u2267\u0338\u2a7e\u0338\u2a7e\u0338\u2275\u226f\u226f\u2af2\u22fc\u22fa\u2266\u0338\u2025\u2270\u2270\u2266\u0338\u2a7d\u0338\u2a7d\u0338\u226e\u2274\u226e\u22ea\u22ec\u2224\u22f9\u0338\u220c\u2280\u22e0\u2aaf\u0338\u22eb\u22ed\u2281\u22e1\u2ab0\u0338)",
+        "EOF"
+      ],
+      "diagnostics": []
+    },
+    {
+      "id": "html5lib-smoke-141",
+      "description": "final WHATWG named character reference coverage batch 5",
+      "input": "WHATWG remaining named refs 5 (nshortmid-rsh):&nshortmid;&nshortparallel;&nsim;&nsime;&nsimeq;&nsmid;&nspar;&ntgl;&ntlg;&ntriangleleft;&ntrianglelefteq;&ntriangleright;&ntrianglerighteq;&num;&numero;&numsp;&nvDash;&nvap;&nvdash;&nvge;&nvgt;&nvinfin;&nvle;&nvlt;&nvltrie;&nvrtrie;&nvsim;&nwarhk;&nwnear;&oS;&odblac;&odiv;&odsold;&ofcir;&ogon;&ogt;&ohbar;&ohm;&olcir;&olcross;&olt;&omid;&opar;&operp;&ord;&order;&orderof;&origof;&oror;&orslope;&orv;&ovbar;&percnt;&period;&pertenk;&phmmat;&pitchfork;&planck;&planckh;&plankv;&pm;&primes;&profalar;&profline;&profsurf;&propto;&prurel;&puncsp;&qprime;&quaternions;&quest;&questeq;&rAtail;&race;&raemptyv;&rangd;&range;&ratail;&ratio;&rationals;&rbbrk;&rbrke;&rbrksld;&rbrkslu;&rcub;&rdca;&rdquor;&rdsh;&realine;&realpart;&reals;&rect;&ring;&rmoust;&rmoustache;&rnmid;&roang;&ropar;&rpargt;&rsh;",
+      "tokens": [
+        "Text(data=WHATWG remaining named refs 5 (nshortmid-rsh):\u2224\u2226\u2241\u2244\u2244\u2224\u2226\u2279\u2278\u22ea\u22ec\u22eb\u22ed#\u2116\u2007\u22ad\u224d\u20d2\u22ac\u2265\u20d2>\u20d2\u29de\u2264\u20d2<\u20d2\u22b4\u20d2\u22b5\u20d2\u223c\u20d2\u2923\u2927\u24c8\u0151\u2a38\u29bc\u29bf\u02db\u29c1\u29b5\u03a9\u29be\u29bb\u29c0\u29b6\u29b7\u29b9\u2a5d\u2134\u2134\u22b6\u2a56\u2a57\u2a5b\u233d%.\u2031\u2133\u22d4\u210f\u210e\u210f\u00b1\u2119\u232e\u2312\u2313\u221d\u22b0\u2008\u2057\u210d?\u225f\u291c\u223d\u0331\u29b3\u2992\u29a5\u291a\u2236\u211a\u2773\u298c\u298e\u2990}\u2937\u201d\u21b3\u211b\u211c\u211d\u25ad\u02da\u23b1\u23b1\u2aee\u27ed\u2986\u2994\u21b1)",
+        "EOF"
+      ],
+      "diagnostics": []
+    },
+    {
+      "id": "html5lib-smoke-142",
+      "description": "final WHATWG named character reference coverage batch 6",
+      "input": "WHATWG remaining named refs 6 (rthree-zeetrf):&rthree;&rtri;&rtrie;&rtrif;&rtriltri;&rx;&searhk;&semi;&seswar;&sext;&sfrown;&sharp;&smashp;&smeparsl;&smid;&smile;&smt;&smte;&smtes;&sol;&solb;&solbar;&spar;&ssmile;&sstarf;&strns;&sung;&swarhk;&swnwar;&target;&tbrk;&telrec;&therefore;&thickapprox;&thicksim;&thkap;&thksim;&toea;&top;&topbot;&topcir;&topfork;&tosa;&tprime;&triangle;&triangledown;&trianglelefteq;&triangleq;&trianglerighteq;&trie;&trisb;&tritime;&trpezium;&tstrok;&twixt;&udblac;&uhblk;&ulcorn;&ulcrop;&ultri;&urcorn;&urcrop;&urtri;&utri;&utrif;&uwangle;&vBar;&vBarv;&vDash;&vangrt;&varpropto;&vartriangleleft;&vartriangleright;&vdash;&vee;&veebar;&veeeq;&vellip;&verbar;&vert;&vltri;&vprop;&vrtri;&vzigzag;&wedbar;&wedge;&wedgeq;&wp;&wr;&wreath;&xdtri;&xmap;&xnis;&xotime;&xutri;&zeetrf;",
+      "tokens": [
+        "Text(data=WHATWG remaining named refs 6 (rthree-zeetrf):\u22cc\u25b9\u22b5\u25b8\u29ce\u211e\u2925;\u2929\u2736\u2322\u266f\u2a33\u29e4\u2223\u2323\u2aaa\u2aac\u2aac\ufe00/\u29c4\u233f\u2225\u2323\u22c6\u00af\u266a\u2926\u292a\u2316\u23b4\u2315\u2234\u2248\u223c\u2248\u223c\u2928\u22a4\u2336\u2af1\u2ada\u2929\u2034\u25b5\u25bf\u22b4\u225c\u22b5\u225c\u29cd\u2a3b\u23e2\u0167\u226c\u0171\u2580\u231c\u230f\u25f8\u231d\u230e\u25f9\u25b5\u25b4\u29a7\u2ae8\u2ae9\u22a8\u299c\u221d\u22b2\u22b3\u22a2\u2228\u22bb\u225a\u22ee||\u22b2\u221d\u22b3\u299a\u2a5f\u2227\u2259\u2118\u2240\u2240\u25bd\u27fc\u22fb\u2a02\u25b3\u2128)",
+        "EOF"
+      ],
+      "diagnostics": []
     }
   ],
   "skipped": []
