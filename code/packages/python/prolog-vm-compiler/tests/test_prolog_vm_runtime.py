@@ -167,6 +167,20 @@ class TestPrologVMRuntime:
             {"Who": atom("bart")},
         ]
 
+    def test_runtime_backend_selector_can_create_bytecode_runtime(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            :- dynamic(memo/1).
+            parent(homer, bart).
+            """,
+        )
+        runtime = create_prolog_vm_runtime(compiled, backend="bytecode")
+
+        runtime.query("assertz(memo(saved))", commit=True)
+
+        assert runtime.query_values("parent(homer, Who)") == [atom("bart")]
+        assert runtime.query_values("memo(Value)") == [atom("saved")]
+
     def test_file_runtime_loads_includes_and_answers_ad_hoc_queries(
         self,
         tmp_path: Path,
@@ -192,6 +206,20 @@ class TestPrologVMRuntime:
             {"Who": atom("lisa")},
         ]
 
+    def test_source_runtime_backend_selector_uses_bytecode_vm(self) -> None:
+        runtime = create_swi_prolog_vm_runtime(
+            """
+            :- dynamic(memo/1).
+            parent(homer, bart).
+            """,
+            backend="bytecode",
+        )
+
+        runtime.query("assertz(memo(saved))", commit=True)
+
+        assert runtime.query_values("parent(homer, Who)") == [atom("bart")]
+        assert runtime.query_values("memo(Value)") == [atom("saved")]
+
     def test_bytecode_file_runtime_loads_includes_and_answers_queries(
         self,
         tmp_path: Path,
@@ -209,6 +237,30 @@ class TestPrologVMRuntime:
         )
 
         runtime = create_swi_prolog_file_bytecode_vm_runtime(app_path)
+
+        answers = runtime.query("ancestor(homer, Who)")
+
+        assert [answer.as_dict() for answer in answers] == [
+            {"Who": atom("bart")},
+            {"Who": atom("lisa")},
+        ]
+
+    def test_project_runtime_backend_selector_resolves_module_context(
+        self,
+    ) -> None:
+        runtime = create_swi_prolog_project_runtime(
+            """
+            :- module(family, [ancestor/2]).
+            ancestor(homer, bart).
+            ancestor(homer, lisa).
+            """,
+            """
+            :- module(app, []).
+            :- use_module(family, [ancestor/2]).
+            """,
+            query_module="app",
+            backend="bytecode",
+        )
 
         answers = runtime.query("ancestor(homer, Who)")
 

@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from itertools import islice
 from pathlib import Path
 from types import MappingProxyType
-from typing import Protocol
+from typing import Literal, Protocol
 
 from logic_bytecode import LogicBytecodeProgram
 from logic_bytecode import compile_program as compile_logic_bytecode_program
@@ -62,6 +62,7 @@ from swi_prolog_parser import parse_swi_query
 from symbol_core import Symbol
 
 type RelationKey = tuple[Symbol, int]
+type PrologVMBackend = Literal["structured", "bytecode"]
 
 
 @dataclass(frozen=True, slots=True)
@@ -466,6 +467,21 @@ def load_compiled_prolog_bytecode_vm(
     return vm
 
 
+def load_compiled_prolog_backend_vm(
+    compiled_program: CompiledPrologVMProgram,
+    *,
+    backend: PrologVMBackend = "structured",
+) -> PrologQueryVM:
+    """Load a compiled Prolog program into the selected VM backend."""
+
+    if backend == "structured":
+        return load_compiled_prolog_vm(compiled_program)
+    if backend == "bytecode":
+        return load_compiled_prolog_bytecode_vm(compiled_program)
+    msg = f"unsupported Prolog VM backend {backend!r}"
+    raise ValueError(msg)
+
+
 def create_prolog_vm_runtime(
     compiled_program: CompiledPrologVMProgram,
     *,
@@ -474,10 +490,11 @@ def create_prolog_vm_runtime(
     operator_table: OperatorTable | None = None,
     adapt_builtins: bool = True,
     query_rewriter: Callable[[ParsedQuery], ParsedQuery] | None = None,
+    backend: PrologVMBackend = "structured",
 ) -> PrologVMRuntime:
     """Create a stateful ad-hoc query runtime from a compiled program."""
 
-    vm = load_compiled_prolog_vm(compiled_program)
+    vm = load_compiled_prolog_backend_vm(compiled_program, backend=backend)
     profile = (
         compiled_program.dialect_profile
         if dialect is None
@@ -508,24 +525,15 @@ def create_prolog_bytecode_vm_runtime(
 ) -> PrologVMRuntime:
     """Create a stateful ad-hoc query runtime backed by Logic bytecode."""
 
-    vm = load_compiled_prolog_bytecode_vm(compiled_program)
-    profile = (
-        compiled_program.dialect_profile
-        if dialect is None
-        else dialect_profile(dialect)
-    )
-    runtime = PrologVMRuntime(
-        compiled_program=compiled_program,
-        vm=vm,
-        state=State(),
-        dialect_profile=profile,
+    return create_prolog_vm_runtime(
+        compiled_program,
+        initialize=initialize,
+        dialect=dialect,
         operator_table=operator_table,
         adapt_builtins=adapt_builtins,
         query_rewriter=query_rewriter,
+        backend="bytecode",
     )
-    if initialize:
-        runtime.run_initializations()
-    return runtime
 
 
 def create_prolog_source_vm_runtime(
@@ -534,6 +542,7 @@ def create_prolog_source_vm_runtime(
     dialect: PrologDialect = "swi",
     initialize: bool = True,
     adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
 ) -> PrologVMRuntime:
     """Parse, load, compile, and initialize a source query runtime by dialect."""
 
@@ -547,6 +556,7 @@ def create_prolog_source_vm_runtime(
         dialect=loaded_source.dialect_profile,
         operator_table=loaded_source.operator_table,
         adapt_builtins=adapt_builtins,
+        backend=backend,
     )
 
 
@@ -559,16 +569,12 @@ def create_prolog_source_bytecode_vm_runtime(
 ) -> PrologVMRuntime:
     """Parse, compile, bytecode-load, and initialize a query runtime."""
 
-    loaded_source = load_prolog_source(source, dialect=dialect)
-    return create_prolog_bytecode_vm_runtime(
-        compile_loaded_prolog_source(
-            loaded_source,
-            adapt_builtins=adapt_builtins,
-        ),
+    return create_prolog_source_vm_runtime(
+        source,
+        dialect=dialect,
         initialize=initialize,
-        dialect=loaded_source.dialect_profile,
-        operator_table=loaded_source.operator_table,
         adapt_builtins=adapt_builtins,
+        backend="bytecode",
     )
 
 
@@ -577,6 +583,7 @@ def create_swi_prolog_vm_runtime(
     *,
     initialize: bool = True,
     adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
 ) -> PrologVMRuntime:
     """Parse, load, compile, and initialize a SWI-compatible query runtime."""
 
@@ -585,6 +592,7 @@ def create_swi_prolog_vm_runtime(
         dialect="swi",
         initialize=initialize,
         adapt_builtins=adapt_builtins,
+        backend=backend,
     )
 
 
@@ -596,11 +604,11 @@ def create_swi_prolog_bytecode_vm_runtime(
 ) -> PrologVMRuntime:
     """Parse, compile, and bytecode-load a SWI-compatible query runtime."""
 
-    return create_prolog_source_bytecode_vm_runtime(
+    return create_swi_prolog_vm_runtime(
         source,
-        dialect="swi",
         initialize=initialize,
         adapt_builtins=adapt_builtins,
+        backend="bytecode",
     )
 
 
@@ -609,6 +617,7 @@ def create_iso_prolog_vm_runtime(
     *,
     initialize: bool = True,
     adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
 ) -> PrologVMRuntime:
     """Parse, load, compile, and initialize an ISO/Core query runtime."""
 
@@ -617,6 +626,7 @@ def create_iso_prolog_vm_runtime(
         dialect="iso",
         initialize=initialize,
         adapt_builtins=adapt_builtins,
+        backend=backend,
     )
 
 
@@ -628,11 +638,11 @@ def create_iso_prolog_bytecode_vm_runtime(
 ) -> PrologVMRuntime:
     """Parse, compile, and bytecode-load an ISO/Core query runtime."""
 
-    return create_prolog_source_bytecode_vm_runtime(
+    return create_iso_prolog_vm_runtime(
         source,
-        dialect="iso",
         initialize=initialize,
         adapt_builtins=adapt_builtins,
+        backend="bytecode",
     )
 
 
@@ -642,6 +652,7 @@ def create_swi_prolog_file_runtime(
     source_resolver: SourceResolver | None = None,
     initialize: bool = True,
     adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
 ) -> PrologVMRuntime:
     """Create a stateful query runtime from one SWI-compatible Prolog file."""
 
@@ -651,6 +662,7 @@ def create_swi_prolog_file_runtime(
         source_resolver=source_resolver,
         initialize=initialize,
         adapt_builtins=adapt_builtins,
+        backend=backend,
     )
 
 
@@ -663,12 +675,12 @@ def create_swi_prolog_file_bytecode_vm_runtime(
 ) -> PrologVMRuntime:
     """Create a bytecode-backed query runtime from one SWI Prolog file."""
 
-    return create_prolog_file_bytecode_vm_runtime(
+    return create_swi_prolog_file_runtime(
         path,
-        dialect="swi",
         source_resolver=source_resolver,
         initialize=initialize,
         adapt_builtins=adapt_builtins,
+        backend="bytecode",
     )
 
 
@@ -679,6 +691,7 @@ def create_prolog_file_runtime(
     source_resolver: SourceResolver | None = None,
     initialize: bool = True,
     adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
 ) -> PrologVMRuntime:
     """Create a stateful query runtime from one Prolog file by dialect."""
 
@@ -696,6 +709,7 @@ def create_prolog_file_runtime(
         dialect=loaded_source.dialect_profile,
         operator_table=loaded_source.operator_table,
         adapt_builtins=adapt_builtins,
+        backend=backend,
     )
 
 
@@ -709,20 +723,13 @@ def create_prolog_file_bytecode_vm_runtime(
 ) -> PrologVMRuntime:
     """Create a bytecode-backed stateful query runtime from one Prolog file."""
 
-    loaded_source = load_prolog_file(
+    return create_prolog_file_runtime(
         path,
         dialect=dialect,
         source_resolver=source_resolver,
-    )
-    return create_prolog_bytecode_vm_runtime(
-        compile_loaded_prolog_source(
-            loaded_source,
-            adapt_builtins=adapt_builtins,
-        ),
         initialize=initialize,
-        dialect=loaded_source.dialect_profile,
-        operator_table=loaded_source.operator_table,
         adapt_builtins=adapt_builtins,
+        backend="bytecode",
     )
 
 
@@ -731,6 +738,7 @@ def create_swi_prolog_project_runtime(
     query_module: str | Symbol | None = None,
     initialize: bool = True,
     adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
 ) -> PrologVMRuntime:
     """Create a stateful query runtime from linked SWI-compatible sources."""
 
@@ -740,6 +748,7 @@ def create_swi_prolog_project_runtime(
         query_module=query_module,
         initialize=initialize,
         adapt_builtins=adapt_builtins,
+        backend=backend,
     )
 
 
@@ -751,12 +760,12 @@ def create_swi_prolog_project_bytecode_vm_runtime(
 ) -> PrologVMRuntime:
     """Create a bytecode-backed query runtime from linked SWI sources."""
 
-    return create_prolog_project_bytecode_vm_runtime(
+    return create_swi_prolog_project_runtime(
         *sources,
-        dialect="swi",
         query_module=query_module,
         initialize=initialize,
         adapt_builtins=adapt_builtins,
+        backend="bytecode",
     )
 
 
@@ -766,6 +775,7 @@ def create_prolog_project_runtime(
     query_module: str | Symbol | None = None,
     initialize: bool = True,
     adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
 ) -> PrologVMRuntime:
     """Create a stateful query runtime from linked source strings by dialect."""
 
@@ -784,6 +794,7 @@ def create_prolog_project_runtime(
             query_value,
             module=query_module,
         ),
+        backend=backend,
     )
 
 
@@ -796,21 +807,13 @@ def create_prolog_project_bytecode_vm_runtime(
 ) -> PrologVMRuntime:
     """Create a bytecode-backed runtime from linked source strings."""
 
-    loaded_project = load_prolog_project(*sources, dialect=dialect)
-    return create_prolog_bytecode_vm_runtime(
-        compile_loaded_prolog_project(
-            loaded_project,
-            adapt_builtins=adapt_builtins,
-        ),
+    return create_prolog_project_runtime(
+        *sources,
+        dialect=dialect,
+        query_module=query_module,
         initialize=initialize,
-        dialect=_project_dialect_profile(loaded_project),
-        operator_table=_project_operator_table(loaded_project),
         adapt_builtins=adapt_builtins,
-        query_rewriter=lambda query_value: rewrite_loaded_prolog_query(
-            loaded_project,
-            query_value,
-            module=query_module,
-        ),
+        backend="bytecode",
     )
 
 
@@ -820,6 +823,7 @@ def create_swi_prolog_project_file_runtime(
     query_module: str | Symbol | None = None,
     initialize: bool = True,
     adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
 ) -> PrologVMRuntime:
     """Create a stateful query runtime from a SWI-compatible Prolog file graph."""
 
@@ -830,6 +834,7 @@ def create_swi_prolog_project_file_runtime(
         query_module=query_module,
         initialize=initialize,
         adapt_builtins=adapt_builtins,
+        backend=backend,
     )
 
 
@@ -842,13 +847,13 @@ def create_swi_prolog_project_file_bytecode_vm_runtime(
 ) -> PrologVMRuntime:
     """Create a bytecode-backed query runtime from a SWI file graph."""
 
-    return create_prolog_project_file_bytecode_vm_runtime(
+    return create_swi_prolog_project_file_runtime(
         *entry_paths,
-        dialect="swi",
         source_resolver=source_resolver,
         query_module=query_module,
         initialize=initialize,
         adapt_builtins=adapt_builtins,
+        backend="bytecode",
     )
 
 
@@ -859,6 +864,7 @@ def create_prolog_project_file_runtime(
     query_module: str | Symbol | None = None,
     initialize: bool = True,
     adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
 ) -> PrologVMRuntime:
     """Create a stateful query runtime from a file graph by dialect."""
 
@@ -881,6 +887,7 @@ def create_prolog_project_file_runtime(
             query_value,
             module=query_module,
         ),
+        backend=backend,
     )
 
 
@@ -894,25 +901,14 @@ def create_prolog_project_file_bytecode_vm_runtime(
 ) -> PrologVMRuntime:
     """Create a bytecode-backed stateful runtime from a file graph."""
 
-    loaded_project = load_prolog_project_from_files(
+    return create_prolog_project_file_runtime(
         *entry_paths,
         dialect=dialect,
         source_resolver=source_resolver,
-    )
-    return create_prolog_bytecode_vm_runtime(
-        compile_loaded_prolog_project(
-            loaded_project,
-            adapt_builtins=adapt_builtins,
-        ),
+        query_module=query_module,
         initialize=initialize,
-        dialect=_project_dialect_profile(loaded_project),
-        operator_table=_project_operator_table(loaded_project),
         adapt_builtins=adapt_builtins,
-        query_rewriter=lambda query_value: rewrite_loaded_prolog_query(
-            loaded_project,
-            query_value,
-            module=query_module,
-        ),
+        backend="bytecode",
     )
 
 
@@ -920,10 +916,12 @@ def run_compiled_prolog_query(
     compiled_program: CompiledPrologVMProgram,
     source_query_index: int = 0,
     limit: int | None = None,
+    *,
+    backend: PrologVMBackend = "structured",
 ) -> list[Term | tuple[Term, ...]]:
     """Run one source-level query from a compiled Prolog VM program."""
 
-    vm = load_compiled_prolog_vm(compiled_program)
+    vm = load_compiled_prolog_backend_vm(compiled_program, backend=backend)
     return vm.run_query(
         query_index=compiled_program.source_query_vm_index(source_query_index),
         limit=limit,
@@ -934,10 +932,12 @@ def run_compiled_prolog_query_answers(
     compiled_program: CompiledPrologVMProgram,
     source_query_index: int = 0,
     limit: int | None = None,
+    *,
+    backend: PrologVMBackend = "structured",
 ) -> list[PrologAnswer]:
     """Run one source query and return bindings keyed by Prolog variable name."""
 
-    vm = load_compiled_prolog_vm(compiled_program)
+    vm = load_compiled_prolog_backend_vm(compiled_program, backend=backend)
     return _answers_from_vm_query(
         compiled_program,
         vm,
@@ -951,10 +951,11 @@ def run_compiled_prolog_queries(
     compiled_program: CompiledPrologVMProgram,
     *,
     limit: int | None = None,
+    backend: PrologVMBackend = "structured",
 ) -> list[list[Term | tuple[Term, ...]]]:
     """Run all source-level queries from a compiled Prolog VM program."""
 
-    vm = load_compiled_prolog_vm(compiled_program)
+    vm = load_compiled_prolog_backend_vm(compiled_program, backend=backend)
     return [
         vm.run_query(
             query_index=compiled_program.source_query_vm_index(index),
@@ -968,10 +969,11 @@ def run_compiled_prolog_initializations(
     compiled_program: CompiledPrologVMProgram,
     *,
     state: State | None = None,
+    backend: PrologVMBackend = "structured",
 ) -> State:
     """Run compiled initialization query slots in order and return final state."""
 
-    vm = load_compiled_prolog_vm(compiled_program)
+    vm = load_compiled_prolog_backend_vm(compiled_program, backend=backend)
     return _run_initializations_on_vm(vm, compiled_program, state=state)
 
 
@@ -979,10 +981,12 @@ def run_initialized_compiled_prolog_query(
     compiled_program: CompiledPrologVMProgram,
     source_query_index: int = 0,
     limit: int | None = None,
+    *,
+    backend: PrologVMBackend = "structured",
 ) -> list[Term | tuple[Term, ...]]:
     """Run initializations, then execute one source query from that state."""
 
-    vm = load_compiled_prolog_vm(compiled_program)
+    vm = load_compiled_prolog_backend_vm(compiled_program, backend=backend)
     initialized_state = _run_initializations_on_vm(vm, compiled_program)
     return vm.run_query_from(
         initialized_state,
@@ -995,10 +999,12 @@ def run_initialized_compiled_prolog_query_answers(
     compiled_program: CompiledPrologVMProgram,
     source_query_index: int = 0,
     limit: int | None = None,
+    *,
+    backend: PrologVMBackend = "structured",
 ) -> list[PrologAnswer]:
     """Run initializations and return named bindings for one source query."""
 
-    vm = load_compiled_prolog_vm(compiled_program)
+    vm = load_compiled_prolog_backend_vm(compiled_program, backend=backend)
     initialized_state = _run_initializations_on_vm(vm, compiled_program)
     return _answers_from_vm_query(
         compiled_program,
@@ -1016,10 +1022,11 @@ def run_compiled_prolog_bytecode_query(
 ) -> list[Term | tuple[Term, ...]]:
     """Run one source query through the Logic bytecode VM path."""
 
-    vm = load_compiled_prolog_bytecode_vm(compiled_program)
-    return vm.run_query(
-        query_index=compiled_program.source_query_vm_index(source_query_index),
-        limit=limit,
+    return run_compiled_prolog_query(
+        compiled_program,
+        source_query_index,
+        limit,
+        backend="bytecode",
     )
 
 
@@ -1030,13 +1037,11 @@ def run_compiled_prolog_bytecode_query_answers(
 ) -> list[PrologAnswer]:
     """Run one bytecode VM source query with named Prolog bindings."""
 
-    vm = load_compiled_prolog_bytecode_vm(compiled_program)
-    return _answers_from_vm_query(
+    return run_compiled_prolog_query_answers(
         compiled_program,
-        vm,
-        State(),
         source_query_index,
-        limit=limit,
+        limit,
+        backend="bytecode",
     )
 
 
@@ -1047,14 +1052,11 @@ def run_compiled_prolog_bytecode_queries(
 ) -> list[list[Term | tuple[Term, ...]]]:
     """Run all source queries through the Logic bytecode VM path."""
 
-    vm = load_compiled_prolog_bytecode_vm(compiled_program)
-    return [
-        vm.run_query(
-            query_index=compiled_program.source_query_vm_index(index),
-            limit=limit,
-        )
-        for index in range(compiled_program.source_query_count)
-    ]
+    return run_compiled_prolog_queries(
+        compiled_program,
+        limit=limit,
+        backend="bytecode",
+    )
 
 
 def run_compiled_prolog_bytecode_initializations(
@@ -1064,8 +1066,11 @@ def run_compiled_prolog_bytecode_initializations(
 ) -> State:
     """Run compiled initialization slots through the bytecode VM path."""
 
-    vm = load_compiled_prolog_bytecode_vm(compiled_program)
-    return _run_initializations_on_vm(vm, compiled_program, state=state)
+    return run_compiled_prolog_initializations(
+        compiled_program,
+        state=state,
+        backend="bytecode",
+    )
 
 
 def run_initialized_compiled_prolog_bytecode_query(
@@ -1075,12 +1080,11 @@ def run_initialized_compiled_prolog_bytecode_query(
 ) -> list[Term | tuple[Term, ...]]:
     """Run bytecode VM initializations, then one source query."""
 
-    vm = load_compiled_prolog_bytecode_vm(compiled_program)
-    initialized_state = _run_initializations_on_vm(vm, compiled_program)
-    return vm.run_query_from(
-        initialized_state,
-        query_index=compiled_program.source_query_vm_index(source_query_index),
-        limit=limit,
+    return run_initialized_compiled_prolog_query(
+        compiled_program,
+        source_query_index,
+        limit,
+        backend="bytecode",
     )
 
 
@@ -1091,14 +1095,11 @@ def run_initialized_compiled_prolog_bytecode_query_answers(
 ) -> list[PrologAnswer]:
     """Run bytecode VM initializations and return named source bindings."""
 
-    vm = load_compiled_prolog_bytecode_vm(compiled_program)
-    initialized_state = _run_initializations_on_vm(vm, compiled_program)
-    return _answers_from_vm_query(
+    return run_initialized_compiled_prolog_query_answers(
         compiled_program,
-        vm,
-        initialized_state,
         source_query_index,
-        limit=limit,
+        limit,
+        backend="bytecode",
     )
 
 

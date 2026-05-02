@@ -20,6 +20,8 @@ It is the bridge between the Prolog frontend stack and the Logic VM:
 - execute the same compiled Prolog program through the bytecode VM path with
   `compile_prolog_to_bytecode(...)` and
   `run_compiled_prolog_bytecode_query(...)`
+- select either the structured VM or bytecode VM through shared APIs with
+  `backend="structured"` or `backend="bytecode"`
 
 ## Quick Start
 
@@ -61,15 +63,12 @@ assert run_compiled_prolog_query(compiled) == [atom("bart")]
 
 ## Bytecode VM Path
 
-Use the bytecode helpers when you want the Prolog frontend stack to converge on
-the lower opcode runtime instead of stopping at `logic-instructions`:
+Use the `backend` selector when you want the Prolog frontend stack to converge
+on the lower opcode runtime instead of stopping at `logic-instructions`:
 
 ```python
 from logic_engine import atom
-from prolog_vm_compiler import (
-    compile_swi_prolog_source,
-    run_compiled_prolog_bytecode_query,
-)
+from prolog_vm_compiler import compile_swi_prolog_source, run_compiled_prolog_query
 
 compiled = compile_swi_prolog_source(
     """
@@ -80,7 +79,7 @@ compiled = compile_swi_prolog_source(
     """,
 )
 
-assert run_compiled_prolog_bytecode_query(compiled) == [
+assert run_compiled_prolog_query(compiled, backend="bytecode") == [
     atom("bart"),
     atom("lisa"),
 ]
@@ -90,13 +89,14 @@ Stateful bytecode runtimes mirror the structured VM runtime helpers:
 
 ```python
 from logic_engine import atom
-from prolog_vm_compiler import create_swi_prolog_bytecode_vm_runtime
+from prolog_vm_compiler import create_swi_prolog_vm_runtime
 
-runtime = create_swi_prolog_bytecode_vm_runtime(
+runtime = create_swi_prolog_vm_runtime(
     """
     :- dynamic(memo/1).
     parent(homer, bart).
     """,
+    backend="bytecode",
 )
 
 runtime.query("assertz(memo(saved))", commit=True)

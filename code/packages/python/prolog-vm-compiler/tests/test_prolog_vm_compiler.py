@@ -24,13 +24,16 @@ from prolog_vm_compiler import (
     create_prolog_source_vm_runtime,
     create_swi_prolog_bytecode_vm_runtime,
     create_swi_prolog_vm_runtime,
+    load_compiled_prolog_backend_vm,
     load_compiled_prolog_bytecode_vm,
     load_compiled_prolog_vm,
     run_compiled_prolog_bytecode_queries,
     run_compiled_prolog_bytecode_query,
     run_compiled_prolog_queries,
     run_compiled_prolog_query,
+    run_compiled_prolog_query_answers,
     run_initialized_compiled_prolog_bytecode_query_answers,
+    run_initialized_compiled_prolog_query_answers,
 )
 
 
@@ -130,6 +133,53 @@ class TestPrologVMCompiler:
         ]
         assert vm.run_query() == [atom("bart"), atom("lisa")]
 
+    def test_backend_selector_loads_structured_or_bytecode_vms(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            parent(homer, bart).
+
+            ?- parent(homer, Who).
+            """,
+        )
+
+        structured = load_compiled_prolog_backend_vm(
+            compiled,
+            backend="structured",
+        )
+        bytecode = load_compiled_prolog_backend_vm(compiled, backend="bytecode")
+
+        assert structured.run_query() == [atom("bart")]
+        assert bytecode.run_query() == [atom("bart")]
+
+    def test_backend_selector_runs_source_queries_and_named_answers(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            parent(homer, bart).
+            parent(homer, lisa).
+
+            ?- parent(homer, Who).
+            """,
+        )
+
+        assert run_compiled_prolog_query(compiled, backend="structured") == [
+            atom("bart"),
+            atom("lisa"),
+        ]
+        assert run_compiled_prolog_query(compiled, backend="bytecode") == [
+            atom("bart"),
+            atom("lisa"),
+        ]
+        assert [
+            answer.as_dict()
+            for answer in run_compiled_prolog_query_answers(
+                compiled,
+                backend="bytecode",
+            )
+        ] == [
+            {"Who": atom("bart")},
+            {"Who": atom("lisa")},
+        ]
+
     def test_compiles_linked_module_project_before_vm_execution(self) -> None:
         compiled = compile_swi_prolog_project(
             """
@@ -193,6 +243,13 @@ class TestPrologVMCompiler:
             answer.as_dict()
             for answer in run_initialized_compiled_prolog_bytecode_query_answers(
                 compiled,
+            )
+        ] == [{"Name": atom("alpha")}]
+        assert [
+            answer.as_dict()
+            for answer in run_initialized_compiled_prolog_query_answers(
+                compiled,
+                backend="bytecode",
             )
         ] == [{"Name": atom("alpha")}]
 
