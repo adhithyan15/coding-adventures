@@ -83,6 +83,16 @@ impl HtmlLexContext {
         Self::new(HtmlTokenizerState::Data)
     }
 
+    /// Return the tokenizer context for parser-approved foreign-content CDATA.
+    ///
+    /// HTML data-state markup only treats `<![CDATA[` specially when the parser
+    /// has entered a foreign-content integration point such as SVG or MathML.
+    /// Keeping this as an explicit context prevents element-name mapping from
+    /// pretending CDATA is valid in ordinary HTML content.
+    pub fn cdata_section() -> Self {
+        Self::new(HtmlTokenizerState::CdataSection)
+    }
+
     pub fn with_last_start_tag(mut self, tag: impl Into<String>) -> Self {
         self.last_start_tag = Some(tag.into());
         self

@@ -4371,6 +4371,25 @@ fn parser_facing_context_leaves_normal_elements_in_data_state() {
         HtmlLexContext::data().initial_state.as_machine_state(),
         "data"
     );
+    let cdata = HtmlLexContext::cdata_section();
+    assert_eq!(cdata.initial_state, HtmlTokenizerState::CdataSection);
+    assert_eq!(cdata.last_start_tag, None);
+    assert_eq!(
+        lex_html_fragment("<svg:title>&amp;</svg:title>]]><p>x</p>", &cdata).unwrap(),
+        vec![
+            Token::Text("<svg:title>&amp;</svg:title>".to_string()),
+            Token::StartTag {
+                name: "p".to_string(),
+                attributes: Vec::new(),
+                self_closing: false
+            },
+            Token::Text("x".to_string()),
+            Token::EndTag {
+                name: "p".to_string()
+            },
+            Token::Eof
+        ]
+    );
     assert_eq!(
         HtmlTokenizerState::ScriptDataDoubleEscapedLessThanSign.as_machine_state(),
         "script_data_double_escaped_less_than_sign"
@@ -4400,8 +4419,6 @@ fn parser_facing_context_can_reconfigure_an_existing_lexer() {
     apply_html_lex_context(&mut lexer, &HtmlLexContext::data()).unwrap();
     assert_eq!(lexer.current_state(), "data");
     lexer.push("<p>after</p>").unwrap();
-    lexer.finish().unwrap();
-
     assert_eq!(
         lexer.drain_tokens(),
         vec![
@@ -4413,9 +4430,18 @@ fn parser_facing_context_can_reconfigure_an_existing_lexer() {
             Token::Text("after".to_string()),
             Token::EndTag {
                 name: "p".to_string()
-            },
-            Token::Eof
+            }
         ]
+    );
+
+    apply_html_lex_context(&mut lexer, &HtmlLexContext::cdata_section()).unwrap();
+    assert_eq!(lexer.current_state(), "cdata_section");
+    lexer.push("<literal>&amp;]]>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![Token::Text("<literal>&amp;".to_string()), Token::Eof]
     );
 }
 

@@ -210,3 +210,5 @@ documented in this file.
 - Added scripting-aware parser-facing text-mode context selection so `noscript`
   can enter RAWTEXT when scripting is enabled and remain ordinary markup when
   scripting is disabled.
+- Added a typed parser-facing CDATA section context for future SVG/MathML
+  foreign-content tree construction without exposing raw machine-state strings.

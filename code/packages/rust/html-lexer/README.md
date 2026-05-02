@@ -152,6 +152,10 @@ linked lexer in the right tokenizer mode without depending on generated
 machine-state strings. Parsers that keep one lexer alive can call
 `apply_html_lex_context` to move that lexer between data state and text-mode
 states while clearing stale last-start-tag context.
+Foreign-content CDATA is exposed as an explicit
+`HtmlLexContext::cdata_section()` helper rather than as an element-name mapping,
+so future SVG/MathML tree-construction logic can opt into CDATA only after it
+has confirmed the parser context.
 `html-skeleton.lexer.states.toml` remains in the crate as a smaller bootstrap
 machine for comparisons and narrow debugging.
 
