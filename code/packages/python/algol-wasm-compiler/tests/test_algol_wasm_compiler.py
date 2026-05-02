@@ -1857,6 +1857,18 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
 
+    def test_by_name_label_parameter_re_evaluates_conditional_actual(self) -> None:
+        result = compile_source(
+            "begin integer result, flag; "
+            "procedure jump(target); label target; begin flag := 1; goto target end; "
+            "flag := 0; jump(if flag = 0 then left else right); "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
     def test_label_parameter_accepts_numeric_label_actual(self) -> None:
         result = compile_source(
             "begin integer result; "
@@ -1890,6 +1902,19 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
 
+    def test_value_label_parameter_snapshots_conditional_actual(self) -> None:
+        result = compile_source(
+            "begin integer result, flag; "
+            "procedure jump(target); value target; label target; "
+            "begin flag := 1; goto target end; "
+            "flag := 0; jump(if flag = 0 then left else right); "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
+
     def test_forwarded_label_parameter_propagates_through_intermediate_procedure(
         self,
     ) -> None:
@@ -1902,6 +1927,19 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
+
+    def test_forwarded_by_name_label_parameter_preserves_lazy_actual(self) -> None:
+        result = compile_source(
+            "begin integer result, flag; "
+            "procedure jump(target); label target; begin flag := 1; goto target end; "
+            "procedure relay(target); label target; begin jump(target) end; "
+            "flag := 0; relay(if flag = 0 then left else right); "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
 
     def test_formal_procedure_call_passes_conditional_label_argument(self) -> None:
         result = compile_source(
@@ -1916,6 +1954,36 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_formal_procedure_label_argument_remains_lazy_until_goto(self) -> None:
+        result = compile_source(
+            "begin integer result, flag; "
+            "procedure invoke(p); procedure p; "
+            "begin p(if flag = 0 then left else right) end; "
+            "procedure jump(target); label target; "
+            "begin flag := 1; goto target end; "
+            "flag := 0; invoke(jump); "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_formal_procedure_value_label_argument_snapshots_before_call(self) -> None:
+        result = compile_source(
+            "begin integer result, flag; "
+            "procedure invoke(p); procedure p; "
+            "begin p(if flag = 0 then left else right) end; "
+            "procedure jump(target); value target; label target; "
+            "begin flag := 1; goto target end; "
+            "flag := 0; invoke(jump); "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
 
     def test_formal_procedure_call_passes_switch_selection_label_argument(
         self,
