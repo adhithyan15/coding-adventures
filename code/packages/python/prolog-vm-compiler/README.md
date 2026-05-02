@@ -25,6 +25,9 @@ It is the bridge between the Prolog frontend stack and the Logic VM:
 - run source text directly through one-shot helpers such as
   `run_prolog_source_query(...)` when callers do not need to keep the compiled
   program around
+- run `.pl` files and linked projects directly through one-shot helpers such as
+  `run_swi_prolog_file_query_answers(...)` and
+  `run_swi_prolog_project_file_query_answers(...)`
 
 ## Quick Start
 
@@ -66,6 +69,26 @@ assert answers == [atom("bart")]
 
 When you want to reuse a compiled program, keep using
 `compile_swi_prolog_source(...)` plus `run_compiled_prolog_query(...)`.
+
+The one-shot helpers also cover files and linked projects:
+
+```python
+from logic_engine import atom
+from prolog_vm_compiler import run_swi_prolog_file_query_answers
+
+answers = run_swi_prolog_file_query_answers("family.pl", backend="bytecode")
+
+assert [answer.as_dict() for answer in answers] == [
+    {"Who": atom("bart")},
+    {"Who": atom("lisa")},
+]
+```
+
+Use `run_swi_prolog_project_query(...)` for linked source strings and
+`run_swi_prolog_project_file_query(...)` for linked file graphs. All one-shot
+runner variants accept `backend="structured"` or `backend="bytecode"` and
+`initialize=True` when initialization directives should run before the selected
+source query.
 
 ## Bytecode VM Path
 
