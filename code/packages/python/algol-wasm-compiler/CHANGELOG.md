@@ -6,6 +6,9 @@ All notable changes to this package will be documented in this file.
 
 ### Changed
 
+- Added `algol60-wasm run SOURCE` for shell-level source-to-WASM execution with
+  stdout forwarding, optional `_start` result reporting, and a default WASM
+  instruction budget.
 - Added the `algol60-wasm` command and `python -m algol_wasm_compiler` entry
   point for compiling ALGOL source files into `.wasm` modules from the shell.
 - Compiled ALGOL programs now execute scalar variables through frame-backed
