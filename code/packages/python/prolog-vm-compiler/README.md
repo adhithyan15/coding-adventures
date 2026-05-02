@@ -28,6 +28,9 @@ It is the bridge between the Prolog frontend stack and the Logic VM:
 - run `.pl` files and linked projects directly through one-shot helpers such as
   `run_swi_prolog_file_query_answers(...)` and
   `run_swi_prolog_project_file_query_answers(...)`
+- answer ad-hoc top-level query strings directly through helpers such as
+  `query_swi_prolog_source_values(...)` and
+  `query_swi_prolog_project_file(...)`
 
 ## Quick Start
 
@@ -70,6 +73,25 @@ assert answers == [atom("bart")]
 When you want to reuse a compiled program, keep using
 `compile_swi_prolog_source(...)` plus `run_compiled_prolog_query(...)`.
 
+When the query should come from the Python caller rather than a source-level
+`?-` directive, use the top-level query helpers:
+
+```python
+from logic_engine import atom
+from prolog_vm_compiler import query_swi_prolog_source_values
+
+answers = query_swi_prolog_source_values(
+    """
+    parent(homer, bart).
+    parent(homer, lisa).
+    """,
+    "parent(homer, Who)",
+    backend="bytecode",
+)
+
+assert answers == [atom("bart"), atom("lisa")]
+```
+
 The one-shot helpers also cover files and linked projects:
 
 ```python
@@ -89,6 +111,10 @@ Use `run_swi_prolog_project_query(...)` for linked source strings and
 runner variants accept `backend="structured"` or `backend="bytecode"` and
 `initialize=True` when initialization directives should run before the selected
 source query.
+
+For ad-hoc queries over linked modules, use `query_swi_prolog_project(...)` or
+`query_swi_prolog_project_file(...)` with `query_module=...` so imports are
+resolved the same way stateful runtimes resolve later top-level queries.
 
 ## Bytecode VM Path
 

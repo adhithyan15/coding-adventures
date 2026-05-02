@@ -24,6 +24,12 @@ from prolog_vm_compiler import (
     create_swi_prolog_project_file_runtime,
     create_swi_prolog_project_runtime,
     create_swi_prolog_vm_runtime,
+    query_iso_prolog_source_values,
+    query_swi_prolog_file,
+    query_swi_prolog_project_file,
+    query_swi_prolog_project_values,
+    query_swi_prolog_source,
+    query_swi_prolog_source_values,
     run_compiled_prolog_query_answers,
     run_swi_prolog_file_query_answers,
     run_swi_prolog_project_file_query_answers,
@@ -94,6 +100,54 @@ class TestPrologVMRuntime:
         )
 
         assert runtime.query_values("pick(Value)", limit=1) == [atom("first")]
+
+    def test_one_shot_top_level_source_query_returns_named_answers(self) -> None:
+        answers = query_swi_prolog_source(
+            """
+            parent(homer, bart).
+            parent(homer, lisa).
+            """,
+            "parent(homer, Who)",
+            backend="bytecode",
+        )
+
+        assert [answer.as_dict() for answer in answers] == [
+            {"Who": atom("bart")},
+            {"Who": atom("lisa")},
+        ]
+
+    def test_one_shot_top_level_source_query_returns_raw_values(self) -> None:
+        assert query_swi_prolog_source_values(
+            """
+            parent(homer, bart).
+            parent(homer, lisa).
+            """,
+            "parent(homer, Who)",
+            backend="bytecode",
+        ) == [atom("bart"), atom("lisa")]
+
+    def test_one_shot_top_level_source_query_runs_initializations(self) -> None:
+        answers = query_swi_prolog_source(
+            """
+            :- initialization(dynamic(seen/1)).
+            :- initialization(assertz(seen(alpha))).
+            """,
+            "seen(Name)",
+            backend="bytecode",
+        )
+
+        assert [answer.as_dict() for answer in answers] == [
+            {"Name": atom("alpha")},
+        ]
+
+    def test_one_shot_top_level_iso_source_query_uses_iso_dialect(self) -> None:
+        assert query_iso_prolog_source_values(
+            """
+            parent(homer, bart).
+            """,
+            "parent(homer, Who)",
+            backend="bytecode",
+        ) == [atom("bart")]
 
     def test_runtime_bounds_repeat_with_limits_and_cut(self) -> None:
         runtime = create_swi_prolog_vm_runtime("")
@@ -254,6 +308,27 @@ class TestPrologVMRuntime:
             {"Name": atom("alpha")},
         ]
 
+    def test_one_shot_top_level_file_query_uses_selected_backend(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        source_path = tmp_path / "family.pl"
+        source_path.write_text(
+            "parent(homer, bart).\nparent(homer, lisa).\n",
+            encoding="utf-8",
+        )
+
+        answers = query_swi_prolog_file(
+            source_path,
+            "parent(homer, Who)",
+            backend="bytecode",
+        )
+
+        assert [answer.as_dict() for answer in answers] == [
+            {"Who": atom("bart")},
+            {"Who": atom("lisa")},
+        ]
+
     def test_source_runtime_backend_selector_uses_bytecode_vm(self) -> None:
         runtime = create_swi_prolog_vm_runtime(
             """
@@ -351,6 +426,24 @@ class TestPrologVMRuntime:
 
         assert answers == [atom("first"), atom("second")]
 
+    def test_one_shot_top_level_project_query_uses_module_context(self) -> None:
+        answers = query_swi_prolog_project_values(
+            """
+            :- module(family, [ancestor/2]).
+            ancestor(homer, bart).
+            ancestor(homer, lisa).
+            """,
+            """
+            :- module(app, []).
+            :- use_module(family, [ancestor/2]).
+            """,
+            query_source="ancestor(homer, Who)",
+            query_module="app",
+            backend="bytecode",
+        )
+
+        assert answers == [atom("bart"), atom("lisa")]
+
     def test_project_file_compiler_runs_linked_module_source_queries(
         self,
         tmp_path: Path,
@@ -397,6 +490,36 @@ class TestPrologVMRuntime:
 
         answers = run_swi_prolog_project_file_query_answers(
             app_path,
+            backend="bytecode",
+        )
+
+        assert [answer.as_dict() for answer in answers] == [
+            {"Who": atom("bart")},
+            {"Who": atom("lisa")},
+        ]
+
+    def test_one_shot_top_level_project_file_query_uses_module_context(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        family_path = tmp_path / "family.pl"
+        family_path.write_text(
+            ":- module(family, [ancestor/2]).\n"
+            "ancestor(homer, bart).\n"
+            "ancestor(homer, lisa).\n",
+            encoding="utf-8",
+        )
+        app_path = tmp_path / "app.pl"
+        app_path.write_text(
+            ":- module(app, []).\n"
+            ":- use_module(family, [ancestor/2]).\n",
+            encoding="utf-8",
+        )
+
+        answers = query_swi_prolog_project_file(
+            app_path,
+            query_source="ancestor(homer, Who)",
+            query_module="app",
             backend="bytecode",
         )
 
