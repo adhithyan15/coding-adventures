@@ -738,6 +738,35 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
 
+    def test_forward_goto_targets_second_label_on_statement(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "goto second; "
+            "first: second: result := 7 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_forward_goto_targets_first_label_on_shared_statement(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "goto first; "
+            "first: second: result := 8 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
+
+    def test_forward_goto_targets_multiple_terminal_labels(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "result := 3; "
+            "goto done2; "
+            "result := 99; "
+            "done1: done2: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [3]
+
     def test_backward_goto_runs_local_loop(self) -> None:
         result = compile_source(
             "begin integer result, i; "

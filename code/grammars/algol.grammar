@@ -120,18 +120,18 @@ proc_body    = block | statement ;
 # Statements
 # ---------------------------------------------------------------------------
 
-# Any statement may carry a label. Labels can be identifiers or integer literals.
-# Labels are the targets of goto statements.
+# Any statement may carry one or more labels. Labels can be identifiers or
+# integer literals. Labels are the targets of goto statements.
 #
-# The third alternative (label COLON alone) supports a standalone label at the
-# end of a block, e.g. `done:` immediately before `end`. This is equivalent to
-# a label on an empty/dummy statement — a common ALGOL 60 idiom for goto targets
+# The third alternative supports standalone labels at the end of a block, e.g.
+# `done:` or `done1: done2:` immediately before `end`. This is equivalent to
+# labels on an empty/dummy statement — a common ALGOL 60 idiom for goto targets
 # at the end of a block. Strictly, ALGOL 60 requires a statement after a label,
-# but most implementations accept a terminal label because the block's `end`
+# but most implementations accept terminal labels because the block's `end`
 # acts as the associated statement.
-statement    = [ label COLON ] unlabeled_stmt
-             | [ label COLON ] cond_stmt
-             | label COLON ;
+statement    = { label COLON } unlabeled_stmt
+             | { label COLON } cond_stmt
+             | label COLON { label COLON } ;
 
 label        = NAME | INTEGER_LIT ;
 

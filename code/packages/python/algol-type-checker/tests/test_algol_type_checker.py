@@ -197,6 +197,33 @@ class TestAlgolTypeChecker:
         assert result.semantic.labels[0].name == "10"
         assert result.semantic.gotos[0].target_name == "10"
 
+    def test_accepts_multiple_labels_on_one_statement(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "goto second; "
+            "first: second: result := 7 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        assert [label.name for label in result.semantic.labels] == ["first", "second"]
+        assert (
+            result.semantic.labels[0].statement_node_id
+            == result.semantic.labels[1].statement_node_id
+        )
+        assert result.semantic.gotos[0].target_name == "second"
+
+    def test_rejects_duplicate_labels_on_one_statement(self) -> None:
+        ast = parse_algol("begin integer result; done: done: result := 7 end")
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "label 'done' is already declared in this frame" in (
+            result.diagnostics[0].message
+        )
+
     def test_accepts_terminal_label_inside_compound_statement(self) -> None:
         ast = parse_algol(
             "begin integer result; "

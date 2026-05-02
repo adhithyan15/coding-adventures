@@ -1137,8 +1137,7 @@ class AlgolTypeChecker:
         )
 
     def _collect_statement_labels(self, statement: ASTNode, scope: Scope) -> None:
-        label_node = _first_direct_node(statement, "label")
-        if label_node is not None:
+        for label_node in _direct_nodes(statement, "label"):
             label_token = _label_token(label_node)
             if label_token is not None:
                 self._declare_label(label_token, statement, scope)
