@@ -34,6 +34,10 @@ from prolog_vm_compiler import (
     run_compiled_prolog_query_answers,
     run_initialized_compiled_prolog_bytecode_query_answers,
     run_initialized_compiled_prolog_query_answers,
+    run_iso_prolog_source_query,
+    run_prolog_source_query,
+    run_prolog_source_query_answers,
+    run_swi_prolog_source_query_answers,
 )
 
 
@@ -179,6 +183,64 @@ class TestPrologVMCompiler:
             {"Who": atom("bart")},
             {"Who": atom("lisa")},
         ]
+
+    def test_one_shot_source_runner_uses_selected_backend(self) -> None:
+        source = """
+        parent(homer, bart).
+        parent(homer, lisa).
+
+        ?- parent(homer, Who).
+        """
+
+        assert run_prolog_source_query(source, backend="structured") == [
+            atom("bart"),
+            atom("lisa"),
+        ]
+        assert run_prolog_source_query(source, backend="bytecode") == [
+            atom("bart"),
+            atom("lisa"),
+        ]
+
+    def test_one_shot_source_runner_returns_named_answers(self) -> None:
+        answers = run_prolog_source_query_answers(
+            """
+            parent(homer, bart).
+            parent(homer, lisa).
+
+            ?- parent(homer, Who).
+            """,
+            backend="bytecode",
+        )
+
+        assert [answer.as_dict() for answer in answers] == [
+            {"Who": atom("bart")},
+            {"Who": atom("lisa")},
+        ]
+
+    def test_one_shot_source_runner_can_run_initializations(self) -> None:
+        answers = run_swi_prolog_source_query_answers(
+            """
+            :- initialization(dynamic(seen/1)).
+            :- initialization(assertz(seen(alpha))).
+
+            ?- seen(Name).
+            """,
+            initialize=True,
+            backend="bytecode",
+        )
+
+        assert [answer.as_dict() for answer in answers] == [
+            {"Name": atom("alpha")},
+        ]
+
+    def test_one_shot_iso_runner_uses_iso_dialect(self) -> None:
+        assert run_iso_prolog_source_query(
+            """
+            parent(homer, bart).
+            ?- parent(homer, Who).
+            """,
+            backend="bytecode",
+        ) == [atom("bart")]
 
     def test_compiles_linked_module_project_before_vm_execution(self) -> None:
         compiled = compile_swi_prolog_project(

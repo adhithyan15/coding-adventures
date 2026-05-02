@@ -349,6 +349,158 @@ def compile_iso_prolog_source(
     )
 
 
+def run_prolog_source_query(
+    source: str,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    *,
+    dialect: PrologDialect = "swi",
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[Term | tuple[Term, ...]]:
+    """Parse, compile, and run one source query through the selected backend."""
+
+    compiled_program = compile_prolog_source(
+        source,
+        dialect=dialect,
+        adapt_builtins=adapt_builtins,
+    )
+    if initialize:
+        return run_initialized_compiled_prolog_query(
+            compiled_program,
+            source_query_index,
+            limit,
+            backend=backend,
+        )
+    return run_compiled_prolog_query(
+        compiled_program,
+        source_query_index,
+        limit,
+        backend=backend,
+    )
+
+
+def run_prolog_source_query_answers(
+    source: str,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    *,
+    dialect: PrologDialect = "swi",
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[PrologAnswer]:
+    """Parse, compile, and run one source query with named bindings."""
+
+    compiled_program = compile_prolog_source(
+        source,
+        dialect=dialect,
+        adapt_builtins=adapt_builtins,
+    )
+    if initialize:
+        return run_initialized_compiled_prolog_query_answers(
+            compiled_program,
+            source_query_index,
+            limit,
+            backend=backend,
+        )
+    return run_compiled_prolog_query_answers(
+        compiled_program,
+        source_query_index,
+        limit,
+        backend=backend,
+    )
+
+
+def run_swi_prolog_source_query(
+    source: str,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    *,
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[Term | tuple[Term, ...]]:
+    """Parse, compile, and run one SWI-compatible source query."""
+
+    return run_prolog_source_query(
+        source,
+        source_query_index,
+        limit,
+        dialect="swi",
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def run_swi_prolog_source_query_answers(
+    source: str,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    *,
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[PrologAnswer]:
+    """Parse, compile, and run one SWI-compatible query with named bindings."""
+
+    return run_prolog_source_query_answers(
+        source,
+        source_query_index,
+        limit,
+        dialect="swi",
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def run_iso_prolog_source_query(
+    source: str,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    *,
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[Term | tuple[Term, ...]]:
+    """Parse, compile, and run one ISO/Core source query."""
+
+    return run_prolog_source_query(
+        source,
+        source_query_index,
+        limit,
+        dialect="iso",
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def run_iso_prolog_source_query_answers(
+    source: str,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    *,
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[PrologAnswer]:
+    """Parse, compile, and run one ISO/Core query with named bindings."""
+
+    return run_prolog_source_query_answers(
+        source,
+        source_query_index,
+        limit,
+        dialect="iso",
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
 def compile_prolog_file(
     path: str | Path,
     *,

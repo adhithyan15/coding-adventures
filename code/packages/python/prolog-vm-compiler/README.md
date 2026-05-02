@@ -22,14 +22,17 @@ It is the bridge between the Prolog frontend stack and the Logic VM:
   `run_compiled_prolog_bytecode_query(...)`
 - select either the structured VM or bytecode VM through shared APIs with
   `backend="structured"` or `backend="bytecode"`
+- run source text directly through one-shot helpers such as
+  `run_prolog_source_query(...)` when callers do not need to keep the compiled
+  program around
 
 ## Quick Start
 
 ```python
 from logic_engine import atom
-from prolog_vm_compiler import compile_swi_prolog_source, run_compiled_prolog_query
+from prolog_vm_compiler import run_swi_prolog_source_query
 
-compiled = compile_swi_prolog_source(
+answers = run_swi_prolog_source_query(
     """
     parent(homer, bart).
     parent(homer, lisa).
@@ -40,7 +43,7 @@ compiled = compile_swi_prolog_source(
     """,
 )
 
-assert run_compiled_prolog_query(compiled) == [atom("bart"), atom("lisa")]
+assert answers == [atom("bart"), atom("lisa")]
 ```
 
 Use the generic dialect-routed entry point when the caller should choose the
@@ -48,9 +51,9 @@ frontend policy explicitly:
 
 ```python
 from logic_engine import atom
-from prolog_vm_compiler import compile_prolog_source, run_compiled_prolog_query
+from prolog_vm_compiler import run_prolog_source_query
 
-compiled = compile_prolog_source(
+answers = run_prolog_source_query(
     """
     parent(homer, bart).
     ?- parent(homer, Who).
@@ -58,8 +61,11 @@ compiled = compile_prolog_source(
     dialect="iso",
 )
 
-assert run_compiled_prolog_query(compiled) == [atom("bart")]
+assert answers == [atom("bart")]
 ```
+
+When you want to reuse a compiled program, keep using
+`compile_swi_prolog_source(...)` plus `run_compiled_prolog_query(...)`.
 
 ## Bytecode VM Path
 
@@ -68,21 +74,19 @@ on the lower opcode runtime instead of stopping at `logic-instructions`:
 
 ```python
 from logic_engine import atom
-from prolog_vm_compiler import compile_swi_prolog_source, run_compiled_prolog_query
+from prolog_vm_compiler import run_swi_prolog_source_query
 
-compiled = compile_swi_prolog_source(
+answers = run_swi_prolog_source_query(
     """
     parent(homer, bart).
     parent(homer, lisa).
 
     ?- parent(homer, Who).
     """,
+    backend="bytecode",
 )
 
-assert run_compiled_prolog_query(compiled, backend="bytecode") == [
-    atom("bart"),
-    atom("lisa"),
-]
+assert answers == [atom("bart"), atom("lisa")]
 ```
 
 Stateful bytecode runtimes mirror the structured VM runtime helpers:
