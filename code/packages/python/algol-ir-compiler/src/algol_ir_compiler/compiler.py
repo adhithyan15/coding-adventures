@@ -3731,7 +3731,7 @@ class AlgolIrCompiler:
             ):
                 return None
             return "procedure", symbol.type_name
-        if symbol.kind == "procedure_parameter" and symbol.type_name == "procedure":
+        if symbol.kind == "procedure_parameter":
             return "procedure", symbol.type_name
         return None
 

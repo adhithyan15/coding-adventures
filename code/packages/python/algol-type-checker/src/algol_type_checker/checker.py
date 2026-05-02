@@ -231,6 +231,15 @@ class ProcedureFormalCallShape:
 
 
 @dataclass(frozen=True)
+class _ProcedureShapeContext:
+    """Maps forwarded formal procedure names to an enclosing call shape."""
+
+    descriptor: ProcedureDescriptor
+    shape: ProcedureFormalCallShape
+    parent: _ProcedureShapeContext | None = None
+
+
+@dataclass(frozen=True)
 class ProcedureParameter:
     """A procedure parameter planned as a frame slot in an activation."""
 
@@ -2205,11 +2214,16 @@ class AlgolTypeChecker:
                 continue
             nonscalar = self._formal_nonscalar_argument_shape(argument, scope)
             if nonscalar is not None:
-                argument_kind, argument_type, procedure_id = nonscalar
+                (
+                    argument_kind,
+                    argument_type,
+                    procedure_id,
+                    formal_name,
+                ) = nonscalar
                 argument_types.append(argument_type)
                 argument_kinds.append(argument_kind)
                 argument_assignable.append(False)
-                argument_formal_names.append(None)
+                argument_formal_names.append(formal_name)
                 procedure_argument_ids.append(procedure_id)
                 continue
             actual_type = self._infer_expr(argument, scope)
@@ -2309,7 +2323,7 @@ class AlgolTypeChecker:
         self,
         argument: ASTNode,
         scope: Scope,
-    ) -> tuple[str, str, int | None] | None:
+    ) -> tuple[str, str, int | None, str | None] | None:
         if self._check_label_designational_actual(
             argument,
             scope,
@@ -2324,7 +2338,7 @@ class AlgolTypeChecker:
                 report=True,
                 record=True,
             )
-            return LABEL, LABEL, None
+            return LABEL, LABEL, None, None
 
         if self._check_switch_designator_actual(
             argument,
@@ -2338,7 +2352,7 @@ class AlgolTypeChecker:
                 parameter_name="procedure argument",
                 report=True,
             )
-            return SWITCH, SWITCH, None
+            return SWITCH, SWITCH, None, None
 
         variable = _single_variable_expr(argument)
         if variable is None or _variable_subscripts(variable):
@@ -2351,9 +2365,9 @@ class AlgolTypeChecker:
             return None
         symbol, _, _ = resolved
         if symbol.kind == LABEL:
-            return LABEL, LABEL, None
+            return LABEL, LABEL, None, None
         if symbol.kind == SWITCH:
-            return SWITCH, SWITCH, None
+            return SWITCH, SWITCH, None, None
         if symbol.kind == "procedure":
             descriptor = next(
                 (
@@ -2369,9 +2383,9 @@ class AlgolTypeChecker:
                 and not descriptor.parameters
             ):
                 return None
-            return "procedure", symbol.type_name, symbol.procedure_id
-        if symbol.kind == "procedure_parameter" and symbol.type_name == "procedure":
-            return "procedure", symbol.type_name, None
+            return "procedure", symbol.type_name, symbol.procedure_id, None
+        if symbol.kind == "procedure_parameter":
+            return "procedure", symbol.type_name, None, symbol.name
         return None
 
     def _scalar_by_name_parameter_actual_name(
@@ -3016,6 +3030,7 @@ class AlgolTypeChecker:
                     descriptor,
                     actual_parameter,
                     shape,
+                    context=None,
                 )
                 if actual_parameter.mode == NAME and (
                     parameter_may_write and not argument_assignable
@@ -3035,6 +3050,8 @@ class AlgolTypeChecker:
         descriptor: ProcedureDescriptor,
         parameter: ProcedureParameter,
         shape: ProcedureFormalCallShape,
+        *,
+        context: _ProcedureShapeContext | None,
     ) -> bool:
         if (
             parameter.kind != "scalar"
@@ -3056,34 +3073,80 @@ class AlgolTypeChecker:
                         continue
                     saw_formal_procedure_shape = True
                     if self._shape_procedure_argument_writes(
+                        descriptor,
                         shape,
                         procedure_index,
                         nested_shape,
                         argument_index,
+                        context=context,
                     ):
                         return True
         return not saw_formal_procedure_shape
 
     def _shape_procedure_argument_writes(
         self,
+        shape_descriptor: ProcedureDescriptor,
         shape: ProcedureFormalCallShape,
         procedure_argument_index: int,
         nested_shape: ProcedureFormalCallShape,
         nested_argument_index: int,
+        *,
+        context: _ProcedureShapeContext | None,
     ) -> bool:
-        if procedure_argument_index >= len(shape.procedure_argument_ids):
-            return True
-        procedure_id = shape.procedure_argument_ids[procedure_argument_index]
+        procedure_id = self._resolve_shape_procedure_argument_id(
+            shape,
+            procedure_argument_index,
+            context,
+        )
         if procedure_id is None:
             return True
         descriptor = self._procedure_descriptor_for_id(procedure_id)
         if descriptor is None or nested_argument_index >= len(descriptor.parameters):
             return True
         parameter = descriptor.parameters[nested_argument_index]
+        nested_context = _ProcedureShapeContext(
+            descriptor=shape_descriptor,
+            shape=shape,
+            parent=context,
+        )
         return self._procedure_parameter_may_write_for_shape(
             descriptor,
             parameter,
             nested_shape,
+            context=nested_context,
+        )
+
+    def _resolve_shape_procedure_argument_id(
+        self,
+        shape: ProcedureFormalCallShape,
+        procedure_argument_index: int,
+        context: _ProcedureShapeContext | None,
+    ) -> int | None:
+        if procedure_argument_index >= len(shape.procedure_argument_ids):
+            return None
+        procedure_id = shape.procedure_argument_ids[procedure_argument_index]
+        if procedure_id is not None:
+            return procedure_id
+        formal_names = _shape_argument_formal_names(shape)
+        if procedure_argument_index >= len(formal_names):
+            return None
+        formal_name = formal_names[procedure_argument_index]
+        if formal_name is None or context is None:
+            return None
+        parameter_index = next(
+            (
+                index
+                for index, parameter in enumerate(context.descriptor.parameters)
+                if parameter.kind == "procedure" and parameter.name == formal_name
+            ),
+            None,
+        )
+        if parameter_index is None:
+            return None
+        return self._resolve_shape_procedure_argument_id(
+            context.shape,
+            parameter_index,
+            context.parent,
         )
 
     def _procedure_descriptor_for_id(

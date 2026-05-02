@@ -58,6 +58,9 @@ All notable changes to this package will be documented in this file.
   as the older split spelling.
 - Validated nested procedure-parameter call-shape contracts when a formal
   procedure call forwards a concrete procedure actual.
+- Validated nested procedure-parameter call-shape contracts when a formal
+  procedure call forwards another formal procedure parameter and resolves the
+  eventual concrete procedure actual through the enclosing call shape.
 - Accepted conditional switch designator actuals for switch formals and formal
   procedure call-shape recording.
 - Accepted recursive switch self-selection entries so terminating recursive

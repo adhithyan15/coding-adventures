@@ -1559,6 +1559,51 @@ class TestAlgolTypeChecker:
         assert not result.ok
         assert "non-assignable actual" in result.diagnostics[0].message
 
+    def test_accepts_forwarded_formal_procedure_actual_shape_when_nested_actual_reads(
+        self,
+    ) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer procedure id(x); value x; integer x; begin id := x end; "
+            "integer procedure relay1(g, y); integer g, y; procedure g; "
+            "begin relay1 := g(y) end; "
+            "integer procedure relay2(p, h, z); integer p, h, z; "
+            "procedure p, h; begin relay2 := p(h, z) end; "
+            "procedure invoke(q); integer q; procedure q; "
+            "begin result := q(relay1, id, 3 + 4) end; "
+            "invoke(relay2) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        relay2 = result.semantic.procedures[2]
+        shape = relay2.parameters[0].procedure_call_shapes[0]
+        assert shape.argument_kinds == ("procedure", "scalar")
+        assert shape.argument_formal_names == ("h", "z")
+
+    def test_rejects_forwarded_formal_procedure_actual_shape_when_nested_actual_writes(
+        self,
+    ) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer procedure inc(x); integer x; "
+            "begin x := x + 1; inc := x end; "
+            "integer procedure relay1(g, y); integer g, y; procedure g; "
+            "begin relay1 := g(y) end; "
+            "integer procedure relay2(p, h, z); integer p, h, z; "
+            "procedure p, h; begin relay2 := p(h, z) end; "
+            "procedure invoke(q); integer q; procedure q; "
+            "begin result := q(relay1, inc, 3 + 4) end; "
+            "invoke(relay2) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "non-assignable actual" in result.diagnostics[0].message
+
     def test_accepts_procedure_parameter_actual_with_array_element_by_name_formal(
         self,
     ) -> None:

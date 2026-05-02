@@ -1464,6 +1464,42 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [44]
 
+    def test_formal_procedure_forwards_formal_procedure_actual_read_only(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer procedure id(x); value x; integer x; begin id := x end; "
+            "integer procedure relay1(g, y); integer g, y; procedure g; "
+            "begin relay1 := g(y) end; "
+            "integer procedure relay2(p, h, z); integer p, h, z; "
+            "procedure p, h; begin relay2 := p(h, z) end; "
+            "procedure invoke(q); integer q; procedure q; "
+            "begin result := q(relay1, id, 3 + 4) end; "
+            "invoke(relay2) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_formal_procedure_forwards_formal_procedure_actual_writable(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer procedure inc(x); integer x; "
+            "begin x := x + 1; inc := x end; "
+            "integer procedure relay1(g, y); integer g, y; procedure g; "
+            "begin relay1 := g(y) end; "
+            "integer procedure relay2(p, h, z); integer p, h, z; "
+            "procedure p, h; begin relay2 := p(h, z) end; "
+            "procedure invoke(q); integer q; procedure q; "
+            "begin result := 3; "
+            "result := q(relay1, inc, result) * 10 + result end; "
+            "invoke(relay2) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [44]
+
     def test_real_procedure_parameter_accepts_integer_return_actual(self) -> None:
         result = compile_source(
             "begin integer result; real y; "

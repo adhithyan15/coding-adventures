@@ -1328,6 +1328,29 @@ class TestAlgolIrCompiler:
             == ("integer", "integer", "integer")
         )
 
+    def test_compiles_formal_procedure_parameter_as_procedure_argument(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "integer procedure id(x); value x; integer x; begin id := x end; "
+                "integer procedure relay1(g, y); integer g, y; procedure g; "
+                "begin relay1 := g(y) end; "
+                "integer procedure relay2(p, h, z); integer p, h, z; "
+                "procedure p, h; begin relay2 := p(h, z) end; "
+                "procedure invoke(q); integer q; procedure q; "
+                "begin result := q(relay1, id, 3 + 4) end; "
+                "invoke(relay2) "
+                "end"
+            )
+        )
+
+        assert (
+            result.procedure_signatures[
+                "_fn_algol_call_procedure_i32_result_procedure_i32_i32"
+            ].param_types
+            == ("integer", "integer", "integer", "integer")
+        )
+
     def test_compiles_value_procedure_parameter_call_with_value_argument(self) -> None:
         result = compile_algol(
             parse_algol(
