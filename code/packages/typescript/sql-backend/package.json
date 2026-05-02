@@ -1,0 +1,20 @@
+{
+  "name": "@coding-adventures/sql-backend",
+  "version": "0.1.0",
+  "description": "Pluggable SQL backend abstractions and in-memory reference backend",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": ["sql", "backend", "database", "education"],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "@vitest/coverage-v8": "^3.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}
