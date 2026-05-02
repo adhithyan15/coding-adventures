@@ -96,6 +96,8 @@ All notable changes to this package will be documented in this file.
 - Executed by-name switch formals through lazy switch descriptors, preserving
   conditional switch actual re-evaluation through direct and formal procedure
   calls while keeping `value switch` formals as call-time snapshots.
+- Added a golden designator fixture covering lazy versus value label and switch
+  formals across direct, forwarded, and formal procedure calls.
 - Executed recursive switch self-selection entries by routing recursive
   descriptor lookup through the switch-eval helper at runtime.
 - Executed the report-style `go to` spelling through the full parser,
