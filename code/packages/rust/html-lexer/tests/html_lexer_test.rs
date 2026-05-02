@@ -1,7 +1,7 @@
 use coding_adventures_html_lexer::{
     apply_html_lex_context, create_html_lexer, html1_definition, html1_machine,
     html_skeleton_definition, html_skeleton_machine, lex_html, lex_html_fragment, Attribute,
-    HtmlLexContext, HtmlTokenizerState, Token,
+    HtmlLexContext, HtmlScriptingMode, HtmlTokenizerState, Token,
 };
 use state_machine::END_INPUT;
 
@@ -4309,6 +4309,32 @@ fn parser_facing_context_maps_rawtext_elements() {
             },
             Token::Eof
         ]
+    );
+}
+
+#[test]
+fn parser_facing_context_maps_noscript_based_on_scripting_mode() {
+    let enabled =
+        HtmlLexContext::for_element_text_with_scripting("noscript", HtmlScriptingMode::Enabled)
+            .unwrap();
+
+    assert_eq!(enabled.initial_state, HtmlTokenizerState::Rawtext);
+    assert_eq!(enabled.last_start_tag.as_deref(), Some("noscript"));
+    assert_eq!(
+        lex_html_fragment("<p>&amp;</p></noscript>", &enabled).unwrap(),
+        vec![
+            Token::Text("<p>&amp;".to_string()),
+            Token::Text("</p>".to_string()),
+            Token::EndTag {
+                name: "noscript".to_string()
+            },
+            Token::Eof
+        ]
+    );
+
+    assert_eq!(
+        HtmlLexContext::for_element_text_with_scripting("noscript", HtmlScriptingMode::Disabled),
+        None
     );
 }
 
