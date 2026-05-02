@@ -354,6 +354,42 @@ class TestGotoStatement:
         goto_nodes = find_nodes(ast, "goto_stmt")
         assert len(goto_nodes) == 1
 
+    def test_multiple_labels_on_statement(self) -> None:
+        """A statement may have more than one direct goto label."""
+        ast = parse(
+            "begin integer result; "
+            "first: second: result := 7 "
+            "end"
+        )
+        statement = next(
+            node
+            for node in find_nodes(ast, "statement")
+            if len([child for child in child_nodes(node) if child.rule_name == "label"])
+            == 2
+        )
+
+        assert [child.rule_name for child in child_nodes(statement)][:2] == [
+            "label",
+            "label",
+        ]
+
+    def test_multiple_terminal_labels(self) -> None:
+        """Multiple terminal labels may share the block-end dummy statement."""
+        ast = parse(
+            "begin integer result; "
+            "result := 1; "
+            "done1: done2: "
+            "end"
+        )
+        statement = next(
+            node
+            for node in find_nodes(ast, "statement")
+            if len([child for child in child_nodes(node) if child.rule_name == "label"])
+            == 2
+        )
+
+        assert all(child.rule_name == "label" for child in child_nodes(statement))
+
 
 # ---------------------------------------------------------------------------
 # For loop tests

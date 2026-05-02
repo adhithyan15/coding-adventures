@@ -423,6 +423,26 @@ class TestAlgolIrCompiler:
 
         assert IrOp.JUMP in opcodes
 
+    def test_compiles_multiple_labels_on_one_statement(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "goto second; "
+                "first: second: result := 7 "
+                "end"
+            )
+        )
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+        algol_labels = [
+            label for label in labels if label.startswith("algol_label_")
+        ]
+
+        assert len(algol_labels) == 2
+
     def test_compiles_procedure_crossing_goto_with_pending_transfer(self) -> None:
         result = compile_algol(
             parse_algol(

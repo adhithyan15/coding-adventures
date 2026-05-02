@@ -266,7 +266,7 @@ class AlgolIrCompiler:
         self.references: dict[tuple[int, str], ResolvedReference] = {}
         self.procedure_calls: dict[tuple[int, str], ResolvedProcedureCall] = {}
         self.array_accesses: dict[tuple[int, str], ResolvedArrayAccess] = {}
-        self.labels: dict[int, LabelDescriptor] = {}
+        self.labels_by_statement: dict[int, list[LabelDescriptor]] = {}
         self.labels_by_symbol: dict[int, LabelDescriptor] = {}
         self.labels_by_block_name: dict[tuple[int, str], LabelDescriptor] = {}
         self.gotos: dict[int, ResolvedGoto] = {}
@@ -347,10 +347,11 @@ class AlgolIrCompiler:
             (access.token_id, access.role): access
             for access in type_result.semantic.array_accesses
         }
-        self.labels = {
-            label.statement_node_id: label
-            for label in type_result.semantic.labels
-        }
+        self.labels_by_statement = {}
+        for label in type_result.semantic.labels:
+            self.labels_by_statement.setdefault(label.statement_node_id, []).append(
+                label
+            )
         self.labels_by_id = {
             label.label_id: label for label in type_result.semantic.labels
         }
@@ -1026,8 +1027,7 @@ class AlgolIrCompiler:
         self._label(end_label)
 
     def _compile_statement(self, statement: ASTNode, scope: _FrameScope) -> None:
-        label = self.labels.get(id(statement))
-        if label is not None:
+        for label in self.labels_by_statement.get(id(statement), ()):
             self._label(label.ir_label)
 
         inner = _statement_body(statement)
