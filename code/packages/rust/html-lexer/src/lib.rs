@@ -14,6 +14,97 @@ pub use state_machine_tokenizer::{
 mod generated_html1;
 mod generated_html_skeleton;
 
+/// Parser-facing HTML tokenizer entry state.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum HtmlTokenizerState {
+    Data,
+    Rcdata,
+    Rawtext,
+    Plaintext,
+    CdataSection,
+    ScriptData,
+    ScriptDataEscaped,
+    ScriptDataEscapedDash,
+    ScriptDataEscapedDashDash,
+    ScriptDataEscapedLessThanSign,
+    ScriptDataDoubleEscaped,
+    ScriptDataDoubleEscapedDash,
+    ScriptDataDoubleEscapedDashDash,
+    ScriptDataDoubleEscapedLessThanSign,
+}
+
+impl HtmlTokenizerState {
+    /// Machine-state identifier used by the generated static lexer.
+    pub fn as_machine_state(self) -> &'static str {
+        match self {
+            Self::Data => "data",
+            Self::Rcdata => "rcdata",
+            Self::Rawtext => "rawtext",
+            Self::Plaintext => "plaintext",
+            Self::CdataSection => "cdata_section",
+            Self::ScriptData => "script_data",
+            Self::ScriptDataEscaped => "script_data_escaped",
+            Self::ScriptDataEscapedDash => "script_data_escaped_dash",
+            Self::ScriptDataEscapedDashDash => "script_data_escaped_dash_dash",
+            Self::ScriptDataEscapedLessThanSign => "script_data_escaped_less_than_sign",
+            Self::ScriptDataDoubleEscaped => "script_data_double_escaped",
+            Self::ScriptDataDoubleEscapedDash => "script_data_double_escaped_dash",
+            Self::ScriptDataDoubleEscapedDashDash => "script_data_double_escaped_dash_dash",
+            Self::ScriptDataDoubleEscapedLessThanSign => {
+                "script_data_double_escaped_less_than_sign"
+            }
+        }
+    }
+}
+
+/// Initial tokenizer context for fragment or parser-controlled lexing.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HtmlLexContext {
+    pub initial_state: HtmlTokenizerState,
+    pub last_start_tag: Option<String>,
+}
+
+impl HtmlLexContext {
+    pub fn new(initial_state: HtmlTokenizerState) -> Self {
+        Self {
+            initial_state,
+            last_start_tag: None,
+        }
+    }
+
+    pub fn data() -> Self {
+        Self::new(HtmlTokenizerState::Data)
+    }
+
+    pub fn with_last_start_tag(mut self, tag: impl Into<String>) -> Self {
+        self.last_start_tag = Some(tag.into());
+        self
+    }
+
+    /// Return the tokenizer context used for text following a start tag.
+    ///
+    /// This is the parser-facing map from element names to HTML tokenizer
+    /// submodes. It deliberately keeps foreign-content CDATA decisions out of
+    /// the element map because those depend on tree-construction context.
+    pub fn for_element_text(element_name: &str) -> Option<Self> {
+        let name = element_name.to_ascii_lowercase();
+        let state = match name.as_str() {
+            "title" | "textarea" => HtmlTokenizerState::Rcdata,
+            "iframe" | "noembed" | "noframes" | "style" | "xmp" => HtmlTokenizerState::Rawtext,
+            "script" => HtmlTokenizerState::ScriptData,
+            "plaintext" => HtmlTokenizerState::Plaintext,
+            _ => return None,
+        };
+
+        let context = Self::new(state);
+        if state == HtmlTokenizerState::Plaintext {
+            Some(context)
+        } else {
+            Some(context.with_last_start_tag(name))
+        }
+    }
+}
+
 /// Return the generated typed definition for the HTML 1.x compatibility-floor lexer.
 pub fn html1_definition() -> StateMachineDefinition {
     generated_html1::html1_lexer_definition()
@@ -41,9 +132,27 @@ pub fn create_html_lexer() -> Result<HtmlLexer> {
         .map_err(TokenizerError::Machine)
 }
 
+/// Build a lexer seeded with a parser-controlled HTML tokenizer context.
+pub fn create_html_lexer_with_context(context: &HtmlLexContext) -> Result<HtmlLexer> {
+    let mut lexer = create_html_lexer()?;
+    lexer.set_initial_state(context.initial_state.as_machine_state())?;
+    if let Some(last_start_tag) = context.last_start_tag.as_deref() {
+        lexer.set_last_start_tag(last_start_tag);
+    }
+    Ok(lexer)
+}
+
 /// Lex one complete HTML string with the current compatibility-floor machine.
 pub fn lex_html(source: &str) -> Result<Vec<Token>> {
     let mut lexer = create_html_lexer()?;
+    lexer.push(source)?;
+    lexer.finish()?;
+    Ok(lexer.drain_tokens())
+}
+
+/// Lex a parser-controlled HTML fragment with an explicit tokenizer context.
+pub fn lex_html_fragment(source: &str, context: &HtmlLexContext) -> Result<Vec<Token>> {
+    let mut lexer = create_html_lexer_with_context(context)?;
     lexer.push(source)?;
     lexer.finish()?;
     Ok(lexer.drain_tokens())

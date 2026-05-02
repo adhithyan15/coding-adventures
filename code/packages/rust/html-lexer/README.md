@@ -143,6 +143,11 @@ tokenizer submodes. The markup declaration path also recognizes `<![CDATA[`
 and enters the CDATA section state so the generated lexer can exercise that
 tokenizer subflow end to end; a future parser can still decide when that opener
 is valid for foreign-content contexts.
+The public Rust API now wraps those parser-controlled entry states in
+`HtmlTokenizerState` and `HtmlLexContext`, including an element-to-context map
+for `title`, `textarea`, raw-text elements, `script`, and `plaintext`. That
+lets the parser request a statically linked lexer in the right tokenizer mode
+without depending on generated machine-state strings.
 `html-skeleton.lexer.states.toml` remains in the crate as a smaller bootstrap
 machine for comparisons and narrow debugging.
 
@@ -196,6 +201,18 @@ assert_eq!(
         Token::Eof,
     ]
 );
+```
+
+Parser-controlled fragments can seed the same static lexer with a typed
+tokenizer context:
+
+```rust
+use coding_adventures_html_lexer::{lex_html_fragment, HtmlLexContext, Token};
+
+let context = HtmlLexContext::for_element_text("title").unwrap();
+let tokens = lex_html_fragment("Tom &amp; Jerry</title>", &context).unwrap();
+
+assert_eq!(tokens[0], Token::Text("Tom & Jerry".into()));
 ```
 
 ## Development
