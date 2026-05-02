@@ -53,6 +53,12 @@ from prolog_vm_compiler.compiler import (
     run_initialized_compiled_prolog_bytecode_query_answers,
     run_initialized_compiled_prolog_query,
     run_initialized_compiled_prolog_query_answers,
+    run_iso_prolog_source_query,
+    run_iso_prolog_source_query_answers,
+    run_prolog_source_query,
+    run_prolog_source_query_answers,
+    run_swi_prolog_source_query,
+    run_swi_prolog_source_query_answers,
 )
 
 __all__ = [
@@ -109,6 +115,12 @@ __all__ = [
     "run_initialized_compiled_prolog_query_answers",
     "run_initialized_compiled_prolog_bytecode_query",
     "run_initialized_compiled_prolog_bytecode_query_answers",
+    "run_iso_prolog_source_query",
+    "run_iso_prolog_source_query_answers",
+    "run_prolog_source_query",
+    "run_prolog_source_query_answers",
+    "run_swi_prolog_source_query",
+    "run_swi_prolog_source_query_answers",
 ]
 
 __version__ = "0.1.0"
