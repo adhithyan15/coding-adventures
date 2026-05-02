@@ -3522,6 +3522,84 @@ fn default_html_lexer_supports_whatwg_remaining_square_set_named_character_refer
 }
 
 #[test]
+fn default_html_lexer_supports_whatwg_remaining_integral_named_character_references() {
+    let tokens = lex_html(
+        "Integrals:&Conint;&Cconint;&ClockwiseContourIntegral;&CounterClockwiseContourIntegral;&Int;&awconint;&awint;&cirfnint;&conint;&cwconint;&cwint;&fpartint;&iiiint;&iiint;&intlarhk;&npolint;&oint;&pointint;&qint;&quatint;&rppolint;&scpolint;&tint;",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Text("Integrals:∯∰∲∳∬∳⨑⨐∮∲∱⨍⨌∭⨗⨔∮⨕⨌⨖⨒⨓∭".to_string()),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_remaining_operator_named_character_references_in_attributes()
+{
+    let tokens = lex_html(
+        "<ops value=\"&MinusPlus;&Otimes;&PlusMinus;&bigcirc;&bigodot;&bigoplus;&bigotimes;&biguplus;&circledast;&circledcirc;&circleddash;&coprod;&divideontimes;&dotminus;&dotplus;&eplus;&loplus;&lotimes;&ltimes;&minusd;&minusdu;&mnplus;&otimesas;&plus;&plusacir;&plusb;&plusdo;&plusdu;&pluse;&plussim;&plustwo;&roplus;&rotimes;&rtimes;&timesbar;&timesd;&triminus;&triplus;&uplus;&xcirc;&xodot;&xoplus;&xuplus;\">",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::StartTag {
+                name: "ops".to_string(),
+                attributes: vec![Attribute {
+                    name: "value".to_string(),
+                    value: "∓⨷±◯⨀⨁⨂⨄⊛⊚⊝∐⋇∸∔⩱⨭⨴⋉∸⨪∓⨶+⨣⊞∔⨥⩲⨦⨧⨮⨵⋊⨱⨰⨺⨹⊎◯⨀⨁⨄".to_string(),
+                }],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_rcdata_whatwg_remaining_dot_named_character_references() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rcdata").unwrap();
+    lexer.set_last_start_tag("title");
+
+    lexer
+        .push(
+            "&DDotrahd;&Dot;&DotDot;&DoubleDot;&TripleDot;&centerdot;&ctdot;&ddotseq;&dot;&dtdot;&eDDot;&eDot;&efDot;&egsdot;&elsdot;&erDot;&esdot;&fallingdotseq;&gesdot;&gesdoto;&gesdotol;&gtdot;&isindot;&lesdot;&lesdoto;&lesdotor;&ltdot;&mDDot;&ncongdot;&nedot;&notindot;&risingdotseq;&sdote;&tdot;&tridot;&utdot;</title>",
+        )
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("⤑¨⃜¨⃛·⋯⩷˙⋱⩷≑≒⪘⪗≓≐≒⪀⪂⪄⋗⋵⩿⪁⪃⋖∺⩭̸≐̸⋵̸≓⩦⃛◬⋰".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_remaining_operator_misc_named_character_references() {
+    let tokens = lex_html(
+        "Misc:&Mellintrf;&infintie;&intcal;&integers;&intercal;&intprod;&iprod;&leftthreetimes;&rightthreetimes;&elinters;",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![Token::Text("Misc:ℳ⧝⊺ℤ⊺⨼⨼⋋⋌⏧".to_string()), Token::Eof]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_semicolonless_legacy_named_character_references() {
     let mut lexer = create_html_lexer().unwrap();
 

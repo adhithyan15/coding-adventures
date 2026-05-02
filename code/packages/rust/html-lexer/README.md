@@ -49,7 +49,9 @@ plus Latin Extended and diacritic aliases such as `Amacr`, `ccaron`, `Lmidot`,
 `SHCHcy`, `DJcy`, `Ubrcy`, and `yicy`, remaining arrow, vector, and harpoon
 aliases such as `DownLeftRightVector`, `Lleftarrow`, `rarrc`, `dHar`, and
 `nrarrc`, plus the remaining set algebra aliases such as `bigcap`, `capand`,
-`subsetneqq`, `NotSquareSubset`, `sqcaps`, and `xsqcup`.
+`subsetneqq`, `NotSquareSubset`, `sqcaps`, and `xsqcup`, and the remaining
+operator/integral aliases such as `Conint`, `bigoplus`, `DotDot`, `ncongdot`,
+`qint`, and `timesbar`.
 Named character reference scanning now follows the longest-prefix shape of the
 HTML tokenizer: text and RCDATA recover inputs such as `&copycat` as `©cat`
 with a missing-semicolon diagnostic, while attribute values preserve ambiguous

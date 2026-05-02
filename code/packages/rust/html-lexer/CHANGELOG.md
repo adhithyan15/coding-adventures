@@ -172,6 +172,9 @@ documented in this file.
   vector-tee, fish-tail, curved, negated, and long arrow aliases.
 - Added a remaining WHATWG set-algebra named-reference batch covering cap/cup,
   square-set, subset/superset, and negated set aliases.
+- Added a remaining WHATWG operator/integral named-reference batch covering
+  contour integrals, circled operators, dot relations, plus/times variants,
+  and multi-integral aliases.
 - Added a WHATWG operator/shape named-reference batch covering circled
   operators, integrals, products, squares, lozenges, stars, suits, and symbols.
 - Added a WHATWG box-drawing named-reference batch covering double-line,

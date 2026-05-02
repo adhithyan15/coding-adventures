@@ -1228,6 +1228,37 @@
       ]
     },
     {
+      "description": "data state remaining WHATWG integral named character references",
+      "input": "Integrals:&Conint;&Cconint;&ClockwiseContourIntegral;&CounterClockwiseContourIntegral;&Int;&awconint;&awint;&cirfnint;&conint;&cwconint;&cwint;&fpartint;&iiiint;&iiint;&intlarhk;&npolint;&oint;&pointint;&qint;&quatint;&rppolint;&scpolint;&tint;",
+      "output": [
+        ["Character", "Integrals:∯∰∲∳∬∳⨑⨐∮∲∱⨍⨌∭⨗⨔∮⨕⨌⨖⨒⨓∭"]
+      ]
+    },
+    {
+      "description": "attribute remaining WHATWG operator named character references",
+      "input": "<ops value=\"&MinusPlus;&Otimes;&PlusMinus;&bigcirc;&bigodot;&bigoplus;&bigotimes;&biguplus;&circledast;&circledcirc;&circleddash;&coprod;&divideontimes;&dotminus;&dotplus;&eplus;&loplus;&lotimes;&ltimes;&minusd;&minusdu;&mnplus;&otimesas;&plus;&plusacir;&plusb;&plusdo;&plusdu;&pluse;&plussim;&plustwo;&roplus;&rotimes;&rtimes;&timesbar;&timesd;&triminus;&triplus;&uplus;&xcirc;&xodot;&xoplus;&xuplus;\">",
+      "output": [
+        ["StartTag", "ops", {"value": "∓⨷±◯⨀⨁⨂⨄⊛⊚⊝∐⋇∸∔⩱⨭⨴⋉∸⨪∓⨶+⨣⊞∔⨥⩲⨦⨧⨮⨵⋊⨱⨰⨺⨹⊎◯⨀⨁⨄"}]
+      ]
+    },
+    {
+      "description": "rcdata remaining WHATWG dot operator named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&DDotrahd;&Dot;&DotDot;&DoubleDot;&TripleDot;&centerdot;&ctdot;&ddotseq;&dot;&dtdot;&eDDot;&eDot;&efDot;&egsdot;&elsdot;&erDot;&esdot;&fallingdotseq;&gesdot;&gesdoto;&gesdotol;&gtdot;&isindot;&lesdot;&lesdoto;&lesdotor;&ltdot;&mDDot;&ncongdot;&nedot;&notindot;&risingdotseq;&sdote;&tdot;&tridot;&utdot;</title>",
+      "output": [
+        ["Character", "⤑¨⃜¨⃛·⋯⩷˙⋱⩷≑≒⪘⪗≓≐≒⪀⪂⪄⋗⋵⩿⪁⪃⋖∺⩭̸≐̸⋵̸≓⩦⃛◬⋰"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
+      "description": "data state remaining WHATWG operator-adjacent named character references",
+      "input": "Misc:&Mellintrf;&infintie;&intcal;&integers;&intercal;&intprod;&iprod;&leftthreetimes;&rightthreetimes;&elinters;",
+      "output": [
+        ["Character", "Misc:ℳ⧝⊺ℤ⊺⨼⨼⋋⋌⏧"]
+      ]
+    },
+    {
       "description": "data state legacy named character references missing semicolons",
       "input": "Legacy&nbsp symbols: &copy/&reg",
       "output": [
