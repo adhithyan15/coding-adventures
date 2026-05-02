@@ -87,6 +87,24 @@ class TestPrologVMRuntime:
 
         assert runtime.query_values("pick(Value)", limit=1) == [atom("first")]
 
+    def test_runtime_bounds_repeat_with_limits_and_cut(self) -> None:
+        runtime = create_swi_prolog_vm_runtime("")
+
+        assert runtime.query_values(
+            "repeat, member(Item, [tea, cake]).",
+            limit=5,
+        ) == [
+            atom("tea"),
+            atom("cake"),
+            atom("tea"),
+            atom("cake"),
+            atom("tea"),
+        ]
+        assert runtime.query_values(
+            "repeat, member(Item, [tea, cake]), !.",
+            limit=5,
+        ) == [atom("tea")]
+
     def test_runtime_answers_expose_residual_constraints(self) -> None:
         runtime = create_swi_prolog_vm_runtime("")
 

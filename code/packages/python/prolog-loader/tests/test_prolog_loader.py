@@ -28,6 +28,7 @@ from logic_engine import (
     relation,
     solve_all,
     solve_from,
+    solve_n,
     string,
     term,
     visible_clauses_for,
@@ -832,6 +833,7 @@ class TestPrologGoalAdapter:
                 atom("[]"),
             ),
             relation("once", 1)(term("memo", atom("ok"))),
+            relation("repeat", 0)(),
             relation("->", 2)(term("memo", atom("ok")), term("memo", atom("then"))),
             relation("not", 1)(term("memo", atom("missing"))),
             relation("\\+", 1)(term("memo", atom("missing"))),
@@ -1198,6 +1200,27 @@ class TestPrologGoalAdapter:
             query.variables["Arity"],
             adapt_prolog_goal(query.goal),
         ) == [num(1)]
+
+    def test_adapt_prolog_goal_rewrites_repeat_control(self) -> None:
+        loaded = load_swi_prolog_source(
+            """
+            ?- repeat, member(Item, [tea, cake]).
+            """,
+        )
+        query = loaded.queries[0]
+
+        assert solve_n(
+            loaded.program,
+            5,
+            query.variables["Item"],
+            adapt_prolog_goal(query.goal),
+        ) == [
+            atom("tea"),
+            atom("cake"),
+            atom("tea"),
+            atom("cake"),
+            atom("tea"),
+        ]
 
     def test_adapt_prolog_goal_rewrites_if_then_else_control(self) -> None:
         parsed = parse_swi_query(

@@ -130,6 +130,7 @@ from logic_builtins import (
     prolog_iso,
     prolog_lto,
     prolog_numeqo,
+    repeato,
     retractallo,
     retracto,
     same_termo,
@@ -1460,6 +1461,22 @@ class TestControlBuiltins:
 
         assert answers == [atom("first")]
 
+    def test_repeato_restarts_the_rest_of_the_search(self) -> None:
+        item = var("Item")
+
+        assert solve_n(
+            program(),
+            5,
+            item,
+            conj(repeato(), disj(eq(item, "tea"), eq(item, "cake"))),
+        ) == [
+            atom("tea"),
+            atom("cake"),
+            atom("tea"),
+            atom("cake"),
+            atom("tea"),
+        ]
+
     def test_cuto_commits_surrounding_search(self) -> None:
         item = var("Item")
 
@@ -1486,6 +1503,16 @@ class TestControlBuiltins:
             outer,
             conj(disj(eq(outer, "left"), eq(outer, "right")), cuto()),
         ) == [atom("left")]
+
+    def test_repeato_composes_with_cut_to_stop_search(self) -> None:
+        item = var("Item")
+
+        assert solve_n(
+            program(),
+            5,
+            item,
+            conj(repeato(), disj(eq(item, "tea"), eq(item, "cake")), cuto()),
+        ) == [atom("tea")]
 
     def test_throwo_unwinds_to_matching_catcho(self) -> None:
         result = var("Result")

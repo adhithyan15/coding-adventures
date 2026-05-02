@@ -94,6 +94,7 @@ from logic_builtins import (
     prolog_lto,
     prolog_numeqo,
     prolog_numneqo,
+    repeato,
     retractallo,
     retracto,
     same_termo,
@@ -379,6 +380,8 @@ def _adapt_relation_call(
             return goal
     if name == "once" and goal.relation.arity == 1:
         return onceo(_adapt_callable_goal(args[0], operator_table=operator_table))
+    if name == "repeat" and goal.relation.arity == 0:
+        return repeato()
     if name == "throw" and goal.relation.arity == 1:
         return throwo(args[0])
     if name == "catch" and goal.relation.arity == 3:
