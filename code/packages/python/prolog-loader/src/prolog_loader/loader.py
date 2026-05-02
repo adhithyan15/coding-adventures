@@ -34,6 +34,7 @@ from logic_engine import (
     var,
 )
 from prolog_core import (
+    DialectProfile,
     OperatorTable,
     PredicateRegistry,
     PrologDirective,
@@ -41,6 +42,7 @@ from prolog_core import (
     PrologModule,
     PrologModuleImport,
     PrologTermExpansion,
+    dialect_profile,
     empty_predicate_registry,
     module_import_from_directive,
     module_spec_from_directive,
@@ -55,6 +57,7 @@ __version__ = "0.1.0"
 type GoalAdapter = Callable[[GoalExpr], object]
 type RelationResolver = Callable[[Relation], Relation]
 type SourceResolver = Callable[[Term, Path], Path | None]
+type PrologDialect = str | Symbol | DialectProfile
 _USER_MODULE = sym("user")
 _MODULE_QUALIFIER = sym(":")
 _CONJUNCTION = sym(",")
@@ -116,6 +119,7 @@ class LoadedPrologSource:
     """A parsed-and-loaded Prolog source with derived initialization metadata."""
 
     source_path: Path | None
+    dialect_profile: DialectProfile
     program: Program
     clauses: tuple[Clause, ...]
     queries: tuple[ParsedQuery, ...]
@@ -138,6 +142,7 @@ class LoadedPrologProject:
 
     program: Program
     sources: tuple[LoadedPrologSource, ...]
+    dialect_profiles: tuple[DialectProfile, ...]
     queries: tuple[ParsedQuery, ...]
     modules: tuple[PrologModule, ...]
     initialization_directives: tuple[PrologDirective, ...]
@@ -170,11 +175,13 @@ class PrologExpansionError(RuntimeError):
 def load_parsed_prolog_source(
     parsed_source: ParsedSourceLike,
     *,
+    dialect: PrologDialect = "swi",
     source_path: str | Path | None = None,
     source_resolver: SourceResolver | None = None,
 ) -> LoadedPrologSource:
     """Normalize a dialect-specific parsed source into one loader result."""
 
+    profile = dialect_profile(dialect)
     predicate_registry = parsed_source.predicate_registry
     normalized_source_path = (
         None if source_path is None else Path(source_path).expanduser().resolve()
@@ -214,6 +221,7 @@ def load_parsed_prolog_source(
     )
     loaded_source = LoadedPrologSource(
         source_path=normalized_source_path,
+        dialect_profile=profile,
         program=parsed_source.program,
         clauses=parsed_source.clauses,
         queries=parsed_source.queries,
@@ -234,6 +242,36 @@ def load_parsed_prolog_source(
     return apply_expansion_directives(loaded_source)
 
 
+def load_prolog_source(
+    source: str,
+    *,
+    dialect: PrologDialect = "swi",
+    operator_table: OperatorTable | None = None,
+    source_path: str | Path | None = None,
+    source_resolver: SourceResolver | None = None,
+) -> LoadedPrologSource:
+    """Parse and load one source string through a supported dialect profile."""
+
+    profile = dialect_profile(dialect)
+    if profile.name == "iso":
+        return load_iso_prolog_source(
+            source,
+            operator_table=operator_table,
+            source_path=source_path,
+            source_resolver=source_resolver,
+        )
+    if profile.name == "swi":
+        return load_swi_prolog_source(
+            source,
+            operator_table=operator_table,
+            source_path=source_path,
+            source_resolver=source_resolver,
+        )
+
+    msg = f"dialect {profile.name!r} does not have an implemented loader yet"
+    raise ValueError(msg)
+
+
 def load_iso_prolog_source(
     source: str,
     *,
@@ -247,6 +285,7 @@ def load_iso_prolog_source(
 
     return load_parsed_prolog_source(
         parse_iso_source(source, operator_table=operator_table),
+        dialect="iso",
         source_path=source_path,
         source_resolver=source_resolver,
     )
@@ -265,7 +304,25 @@ def load_swi_prolog_source(
 
     return load_parsed_prolog_source(
         parse_swi_source(source, operator_table=operator_table),
+        dialect="swi",
         source_path=source_path,
+        source_resolver=source_resolver,
+    )
+
+
+def load_prolog_file(
+    path: str | Path,
+    *,
+    dialect: PrologDialect = "swi",
+    operator_table: OperatorTable | None = None,
+    source_resolver: SourceResolver | None = None,
+) -> LoadedPrologSource:
+    """Read, parse, load, and expand one Prolog source file by dialect."""
+
+    return _load_prolog_file(
+        Path(path).expanduser().resolve(),
+        dialect_profile=dialect_profile(dialect),
+        operator_table=operator_table,
         source_resolver=source_resolver,
     )
 
@@ -278,11 +335,32 @@ def load_swi_prolog_file(
 ) -> LoadedPrologSource:
     """Read, parse, load, and expand one SWI-Prolog source file."""
 
-    return _load_swi_prolog_file(
-        Path(path).expanduser().resolve(),
+    return load_prolog_file(
+        path,
+        dialect="swi",
         operator_table=operator_table,
         source_resolver=source_resolver,
     )
+
+
+def load_prolog_project(
+    *sources: str,
+    dialect: PrologDialect = "swi",
+    operator_table: OperatorTable | None = None,
+    source_resolver: SourceResolver | None = None,
+) -> LoadedPrologProject:
+    """Parse, load, and link multiple source strings under one dialect."""
+
+    loaded_sources = tuple(
+        load_prolog_source(
+            source,
+            dialect=dialect,
+            operator_table=operator_table,
+            source_resolver=source_resolver,
+        )
+        for source in sources
+    )
+    return link_loaded_prolog_sources(*loaded_sources)
 
 
 def load_swi_prolog_project(
@@ -292,24 +370,23 @@ def load_swi_prolog_project(
 ) -> LoadedPrologProject:
     """Parse, load, and link multiple SWI-Prolog sources as one project."""
 
-    loaded_sources = tuple(
-        load_swi_prolog_source(
-            source,
-            operator_table=operator_table,
-            source_resolver=source_resolver,
-        )
-        for source in sources
+    return load_prolog_project(
+        *sources,
+        dialect="swi",
+        operator_table=operator_table,
+        source_resolver=source_resolver,
     )
-    return link_loaded_prolog_sources(*loaded_sources)
 
 
-def load_swi_prolog_project_from_files(
+def load_prolog_project_from_files(
     *entry_paths: str | Path,
+    dialect: PrologDialect = "swi",
     operator_table: OperatorTable | None = None,
     source_resolver: SourceResolver | None = None,
 ) -> LoadedPrologProject:
-    """Load, resolve, and link a SWI-Prolog file graph."""
+    """Load, resolve, and link a Prolog file graph by dialect."""
 
+    profile = dialect_profile(dialect)
     pending_paths = [
         Path(entry_path).expanduser().resolve() for entry_path in entry_paths
     ]
@@ -320,8 +397,9 @@ def load_swi_prolog_project_from_files(
         if current_path in loaded_by_path:
             continue
 
-        loaded_source = load_swi_prolog_file(
+        loaded_source = load_prolog_file(
             current_path,
+            dialect=profile,
             operator_table=operator_table,
             source_resolver=source_resolver,
         )
@@ -341,6 +419,21 @@ def load_swi_prolog_project_from_files(
         for loaded_source in loaded_by_path.values()
     )
     return link_loaded_prolog_sources(*normalized_sources)
+
+
+def load_swi_prolog_project_from_files(
+    *entry_paths: str | Path,
+    operator_table: OperatorTable | None = None,
+    source_resolver: SourceResolver | None = None,
+) -> LoadedPrologProject:
+    """Load, resolve, and link a SWI-Prolog file graph."""
+
+    return load_prolog_project_from_files(
+        *entry_paths,
+        dialect="swi",
+        operator_table=operator_table,
+        source_resolver=source_resolver,
+    )
 
 
 def link_loaded_prolog_sources(
@@ -385,6 +478,9 @@ def link_loaded_prolog_sources(
     return LoadedPrologProject(
         program=program(*linked_clauses, dynamic_relations=dynamic_relations),
         sources=tuple(loaded_sources),
+        dialect_profiles=tuple(
+            dict.fromkeys(source.dialect_profile for source in loaded_sources),
+        ),
         queries=tuple(linked_queries),
         modules=tuple(linked_modules),
         initialization_directives=tuple(initialization_directives),
@@ -757,9 +853,10 @@ def _goal_from_expanded_term(term_value: Term) -> GoalExpr:
         raise PrologExpansionError(msg) from error
 
 
-def _load_swi_prolog_file(
+def _load_prolog_file(
     normalized_path: Path,
     *,
+    dialect_profile: DialectProfile,
     operator_table: OperatorTable | None = None,
     source_resolver: SourceResolver | None = None,
     include_stack: tuple[Path, ...] = (),
@@ -768,8 +865,9 @@ def _load_swi_prolog_file(
         msg = f"circular include detected at {normalized_path}"
         raise ValueError(msg)
 
-    loaded_source = load_swi_prolog_source(
+    loaded_source = load_prolog_source(
         normalized_path.read_text(encoding="utf-8"),
+        dialect=dialect_profile,
         operator_table=operator_table,
         source_path=normalized_path,
         source_resolver=source_resolver,
@@ -783,8 +881,9 @@ def _load_swi_prolog_file(
         return loaded_source
 
     merged_includes = tuple(
-        _load_swi_prolog_file(
+        _load_prolog_file(
             dependency.resolved_path,
+            dialect_profile=dialect_profile,
             operator_table=operator_table,
             source_resolver=source_resolver,
             include_stack=(*include_stack, normalized_path),

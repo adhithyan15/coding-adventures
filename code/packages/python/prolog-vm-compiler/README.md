@@ -6,6 +6,8 @@
 It is the bridge between the Prolog frontend stack and the Logic VM:
 
 - parse and load source with `prolog-loader`
+- route ISO/Core and SWI-compatible source through shared dialect profiles via
+  `compile_prolog_source(...)` and `create_prolog_source_vm_runtime(...)`
 - collect relation declarations, dynamic declarations, clauses, and queries
 - compile ground Prolog facts to `FACT`
 - compile Prolog rules and variable-bearing facts to `RULE`
@@ -33,6 +35,24 @@ compiled = compile_swi_prolog_source(
 )
 
 assert run_compiled_prolog_query(compiled) == [atom("bart"), atom("lisa")]
+```
+
+Use the generic dialect-routed entry point when the caller should choose the
+frontend policy explicitly:
+
+```python
+from logic_engine import atom
+from prolog_vm_compiler import compile_prolog_source, run_compiled_prolog_query
+
+compiled = compile_prolog_source(
+    """
+    parent(homer, bart).
+    ?- parent(homer, Who).
+    """,
+    dialect="iso",
+)
+
+assert run_compiled_prolog_query(compiled) == [atom("bart")]
 ```
 
 ## Named Answers And Initialization

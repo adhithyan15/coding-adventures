@@ -6,6 +6,9 @@ parsers.
 It keeps parsing side-effect free, then exposes helpers to:
 
 - normalize dialect-specific parsed sources into one shared loaded shape
+- route source strings, files, and file graphs through dialect profiles with
+  generic `load_prolog_*` helpers while keeping `load_swi_prolog_*` wrappers
+  as compatibility conveniences
 - retain structured module/import metadata such as `module/2` and
   `use_module/1,2`
 - collect `initialization/1` directives in source order
