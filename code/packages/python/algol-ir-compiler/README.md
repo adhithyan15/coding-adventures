@@ -56,28 +56,29 @@ the new value. Read-only expression thunks can also read array elements; helper
 bounds failures are reported back to the calling procedure before the normal
 frame and thunk-region unwind. Procedure calls inside read-only expression
 thunks are supported, including nested by-name descriptor allocation and runtime
-failure propagation from callees back to the by-name formal read. Stores through
-read-only expression thunks still raise targeted `CompileError` diagnostics
-until Phase 5 grows full store-helper coverage. The supported scalar by-name
-surface is covered by the WASM acceptance suite, including typed whole-array
-formals passed as descriptor pointers. `value` whole-array formals allocate a
-callee-local descriptor, bounds table, and element storage copy at procedure
-entry, so writes to the formal do not alias the caller's array. Label formals
-pass pending-goto targets, and switch formals pass descriptor closures that
-re-evaluate in the caller's declaring scope; these label/switch descriptor
-paths also cover `value` formals. Procedure formals pass descriptor closures
-containing the callee procedure id and static link; formal calls dispatch
-through generated helpers for statement calls and typed expression calls with
-scalar, whole-array, label, switch, or procedure arguments. The dispatch
-helpers pass scalar actual arguments as lazy storage pointers or thunk
-descriptors, evaluating them once for target `value` parameters and forwarding
-them directly for target by-name parameters. Whole-array, switch, and procedure
-actuals pass descriptor pointers, and label actuals pass label ids, so
-forwarded procedure formals keep the original environment in value, by-name,
-array, label, switch, or procedure mode. Real-valued formal procedure calls can
-accept integer-returning actual procedures and promote the dispatched result.
-Concrete procedure actuals forwarded through a formal procedure call retain
-enough type-checker metadata to validate nested procedure-parameter contracts.
+failure propagation from callees back to the by-name formal read. Assignable
+scalar and array-element actuals have storage/store-helper paths; non-assignable
+expression actuals remain read-only and are rejected if by-name flow analysis
+finds a write. The supported scalar by-name surface is covered by the WASM
+acceptance suite, including typed whole-array formals passed as descriptor
+pointers. `value` whole-array formals allocate a callee-local descriptor, bounds
+table, and element storage copy at procedure entry, so writes to the formal do
+not alias the caller's array. Label formals pass pending-goto targets, and
+switch formals pass descriptor closures that re-evaluate in the caller's
+declaring scope; these label/switch descriptor paths also cover `value`
+formals. Procedure formals pass descriptor closures containing the callee
+procedure id and static link; formal calls dispatch through generated helpers
+for statement calls and typed expression calls with scalar, whole-array, label,
+switch, or procedure arguments. The dispatch helpers pass scalar actual
+arguments as lazy storage pointers or thunk descriptors, evaluating them once
+for target `value` parameters and forwarding them directly for target by-name
+parameters. Whole-array, switch, and procedure actuals pass descriptor pointers,
+and label actuals pass label ids, so forwarded procedure formals keep the
+original environment in value, by-name, array, label, switch, or procedure mode.
+Real-valued formal procedure calls can accept integer-returning actual
+procedures and promote the dispatched result. Concrete procedure actuals
+forwarded through a formal procedure call retain enough type-checker metadata to
+validate nested procedure-parameter contracts.
 
 Direct `goto`/`go to` statements lower to ordinary IR `JUMP` instructions targeting
 generated ALGOL labels. Local jumps emit the jump directly. Direct nonlocal

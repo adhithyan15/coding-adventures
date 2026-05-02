@@ -30,6 +30,12 @@ _GOLDEN_FIXTURES = (
     GoldenFixture(name="full-surface", result=[81], stdout="COMPLETE 81"),
     GoldenFixture(name="switch-actuals", result=[42], stdout="SWITCH 42"),
     GoldenFixture(name="typed-comparisons", result=[31], stdout="READY 31"),
+    GoldenFixture(name="recursive-lexical", result=[125], stdout="RECURSE 125"),
+    GoldenFixture(name="procedure-formal-closure", result=[25], stdout="FORMAL 25"),
+    GoldenFixture(name="nonlocal-unwind", result=[42], stdout="UNWIND 42"),
+    GoldenFixture(name="dynamic-array-bounds", result=[63], stdout="DYNAMIC 63"),
+    GoldenFixture(name="by-name-mixed-scalars", result=[27], stdout="BYNAME 27"),
+    GoldenFixture(name="runtime-guards", result=[0], stdout=""),
 )
 
 
