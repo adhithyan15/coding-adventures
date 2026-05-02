@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-html-parser"
+version = "0.1.0"
+edition = "2021"
+description = "Incremental HTML parser that builds a DOM tree for Venture"
+
+[dependencies]
+coding-adventures-html-lexer = { path = "../html-lexer" }
+dom-core = { path = "../dom-core" }
