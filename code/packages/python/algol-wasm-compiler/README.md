@@ -156,6 +156,8 @@ local WASM runtime. Those fixtures cover:
 - boolean and string conditional values, conditional subscripts, terminal labels
   on empty statements, invalid switch indexes, array element caps, and heap
   exhaustion through the zero-result runtime guard path
+- real-to-integer and real-output edge cases that would otherwise trap on
+  overflow, infinity, or NaN now return through the same zero-result guard path
 - a full-surface convergence program combining `own` scalars and arrays,
   default-real arrays, nested and single-statement procedures, value and
   by-name procedure formals, label and switch formals, multiple `for` element

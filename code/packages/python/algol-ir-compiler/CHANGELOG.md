@@ -105,6 +105,9 @@ All notable changes to this package will be documented in this file.
 - Lowered real exponentiation to integer-to-real promotion and the imported
   `F64_POW` IR opcode, with NaN results routed through the runtime-failure
   path.
+- Guarded real-to-integer truncation before emitting `I32_TRUNC_FROM_F64`, so
+  oversized, infinite, or NaN real values return through ALGOL's runtime
+  failure path instead of leaking WASM traps or host exceptions.
 - Added configurable generated-state limits for eval thunks, conditional label
   sets, loop label sets, switch dispatch states, and output helper label sets,
   with targeted `CompileError` diagnostics when lowering would exceed them.

@@ -104,7 +104,9 @@ before the WASM data encoder can materialize the memory image, dynamic
 procedure recursion stops at the bounded frame stack, and invalid array bounds,
 out-of-bounds subscripts, integer `div`/`mod` by zero or signed divide
 overflow, real division by zero, zero-real-base negative exponentiation,
-oversized arrays, negative `sqrt` arguments, or heap exhaustion return `0`.
+real-to-integer conversions outside the WASM `i32.trunc_f64_s` domain,
+non-finite real output, oversized arrays, negative `sqrt` arguments, or heap
+exhaustion return `0`.
 The lowering pass also has configurable generated-state limits for eval thunks,
 conditional label sets, loop label sets, switch dispatch states, and output
 helper label sets. Callers can pass `IrCompilerLimits` to `compile_algol` or
