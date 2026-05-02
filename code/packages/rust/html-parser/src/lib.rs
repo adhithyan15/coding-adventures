@@ -6,8 +6,8 @@
 //! insertion-mode machinery on top of this DOM target.
 
 use coding_adventures_html_lexer::{
-    create_html_lexer, Attribute as LexerAttribute, Diagnostic, HtmlLexContext, HtmlLexer, Token,
-    TokenizerError,
+    apply_html_lex_context, create_html_lexer, Attribute as LexerAttribute, Diagnostic,
+    HtmlLexContext, HtmlLexer, Token, TokenizerError,
 };
 use dom_core::{Attribute, Document, DocumentType, Node};
 use std::fmt;
@@ -256,10 +256,7 @@ fn drain_parser_tokens(lexer: &mut HtmlLexer, parser: &mut HtmlParser) -> Result
         parser.process_token(token);
 
         if let Some(context) = next_context {
-            lexer.set_initial_state(context.initial_state.as_machine_state())?;
-            if let Some(last_start_tag) = context.last_start_tag {
-                lexer.set_last_start_tag(last_start_tag);
-            }
+            apply_html_lex_context(lexer, &context)?;
         }
     }
 

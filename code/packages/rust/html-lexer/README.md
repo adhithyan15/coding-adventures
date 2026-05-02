@@ -147,7 +147,9 @@ The public Rust API now wraps those parser-controlled entry states in
 `HtmlTokenizerState` and `HtmlLexContext`, including an element-to-context map
 for `title`, `textarea`, raw-text elements, `script`, and `plaintext`. That
 lets the parser request a statically linked lexer in the right tokenizer mode
-without depending on generated machine-state strings.
+without depending on generated machine-state strings. Parsers that keep one
+lexer alive can call `apply_html_lex_context` to move that lexer between data
+state and text-mode states while clearing stale last-start-tag context.
 `html-skeleton.lexer.states.toml` remains in the crate as a smaller bootstrap
 machine for comparisons and narrow debugging.
 
