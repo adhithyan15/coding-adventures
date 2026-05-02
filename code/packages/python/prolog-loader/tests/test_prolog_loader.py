@@ -44,6 +44,10 @@ from prolog_loader import (
     adapt_prolog_goal,
     link_loaded_prolog_sources,
     load_iso_prolog_source,
+    load_prolog_file,
+    load_prolog_project,
+    load_prolog_project_from_files,
+    load_prolog_source,
     load_swi_prolog_file,
     load_swi_prolog_project,
     load_swi_prolog_project_from_files,
@@ -80,6 +84,7 @@ class TestPrologLoader:
             {relation("parent", 2).key()},
         )
         assert loaded.predicate_registry.get("parent", 2) is not None
+        assert loaded.dialect_profile.name == "iso"
 
     def test_load_swi_source_collects_initialization_metadata(self) -> None:
         loaded = load_swi_prolog_source(
@@ -91,6 +96,44 @@ class TestPrologLoader:
 
         assert len(loaded.initialization_goals) == 1
         assert str(loaded.initialization_terms[0]) == "main"
+        assert loaded.dialect_profile.name == "swi"
+
+    def test_load_prolog_source_routes_by_dialect_profile(self) -> None:
+        iso_loaded = load_prolog_source(
+            """
+            parent(homer, bart).
+            ?- parent(homer, Who).
+            """,
+            dialect="iso-core",
+        )
+        swi_loaded = load_prolog_source(
+            """
+            :- module(family, [parent/2]).
+            parent(homer, lisa).
+            ?- parent(homer, Who).
+            """,
+            dialect="swipl",
+        )
+
+        assert iso_loaded.dialect_profile.name == "iso"
+        assert swi_loaded.dialect_profile.name == "swi"
+        assert swi_loaded.module_spec is not None
+        assert solve_all(
+            iso_loaded.program,
+            iso_loaded.queries[0].variables["Who"],
+            iso_loaded.queries[0].goal,
+        ) == [atom("bart")]
+        assert solve_all(
+            swi_loaded.program,
+            swi_loaded.queries[0].variables["Who"],
+            swi_loaded.queries[0].goal,
+        ) == [atom("lisa")]
+
+    def test_load_prolog_source_rejects_tracked_but_unimplemented_dialects(
+        self,
+    ) -> None:
+        with pytest.raises(ValueError, match="does not have an implemented loader"):
+            load_prolog_source("parent(homer, bart).\n", dialect="gnu")
 
     def test_load_swi_source_collects_module_metadata(self) -> None:
         loaded = load_swi_prolog_source(
@@ -435,6 +478,33 @@ class TestPrologLoader:
         assert loaded.file_dependencies[1].resolved_path == (
             tmp_path / "facts.pl"
         ).resolve()
+
+    def test_load_prolog_file_and_project_route_by_dialect_profile(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        iso_path = tmp_path / "family.pl"
+        iso_path.write_text(
+            "parent(homer, bart).\n?- parent(homer, Who).\n",
+            encoding="utf-8",
+        )
+
+        loaded = load_prolog_file(iso_path, dialect="iso")
+        project = load_prolog_project(
+            "parent(homer, lisa).\n",
+            "?- parent(homer, Who).\n",
+            dialect="iso",
+        )
+        file_project = load_prolog_project_from_files(iso_path, dialect="iso")
+
+        assert loaded.dialect_profile.name == "iso"
+        assert [profile.name for profile in project.dialect_profiles] == ["iso"]
+        assert [profile.name for profile in file_project.dialect_profiles] == ["iso"]
+        assert solve_all(
+            project.program,
+            project.queries[0].variables["Who"],
+            project.queries[0].goal,
+        ) == [atom("lisa")]
 
     def test_load_swi_prolog_project_from_files_loads_consulted_user_sources(
         self,

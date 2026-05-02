@@ -39,16 +39,17 @@ from logic_instructions import (
     validate,
 )
 from logic_vm import LogicVM, create_logic_vm
-from prolog_core import OperatorTable
+from prolog_core import DialectProfile, OperatorTable, dialect_profile
 from prolog_loader import (
     LoadedPrologProject,
     LoadedPrologSource,
+    PrologDialect,
     SourceResolver,
     adapt_prolog_goal,
-    load_swi_prolog_file,
-    load_swi_prolog_project,
-    load_swi_prolog_project_from_files,
-    load_swi_prolog_source,
+    load_prolog_file,
+    load_prolog_project,
+    load_prolog_project_from_files,
+    load_prolog_source,
     rewrite_loaded_prolog_query,
 )
 from prolog_parser import ParsedQuery
@@ -63,6 +64,7 @@ class CompiledPrologVMProgram:
     """A Prolog source lowered into standardized Logic VM instructions."""
 
     instructions: InstructionProgram
+    dialect_profile: DialectProfile | None = None
     initialization_query_count: int = 0
     source_query_count: int = 0
     source_query_variables: tuple[tuple[str, ...], ...] = ()
@@ -139,6 +141,7 @@ class PrologVMRuntime:
     compiled_program: CompiledPrologVMProgram
     vm: LogicVM
     state: State
+    dialect_profile: DialectProfile | None = None
     operator_table: OperatorTable | None = None
     adapt_builtins: bool = True
     query_rewriter: Callable[[ParsedQuery], ParsedQuery] | None = None
@@ -214,8 +217,9 @@ class PrologVMRuntime:
     def _parse_query(self, source: str | ParsedQuery) -> ParsedQuery:
         if isinstance(source, ParsedQuery):
             return source
-        return parse_swi_query(
+        return _parse_query_for_dialect(
             _normalize_query_source(source),
+            dialect=self.dialect_profile,
             operator_table=self.operator_table,
         )
 
@@ -234,6 +238,7 @@ def compile_loaded_prolog_source(
         loaded_source.program,
         adapt_builtins=adapt_builtins,
         operator_table=loaded_source.operator_table,
+        dialect_profile=loaded_source.dialect_profile,
     )
 
 
@@ -251,6 +256,21 @@ def compile_loaded_prolog_project(
         loaded_project.program,
         adapt_builtins=adapt_builtins,
         operator_table=_project_operator_table(loaded_project),
+        dialect_profile=_project_dialect_profile(loaded_project),
+    )
+
+
+def compile_prolog_source(
+    source: str,
+    *,
+    dialect: PrologDialect = "swi",
+    adapt_builtins: bool = True,
+) -> CompiledPrologVMProgram:
+    """Parse, load, and compile one Prolog source string by dialect profile."""
+
+    return compile_loaded_prolog_source(
+        load_prolog_source(source, dialect=dialect),
+        adapt_builtins=adapt_builtins,
     )
 
 
@@ -261,8 +281,38 @@ def compile_swi_prolog_source(
 ) -> CompiledPrologVMProgram:
     """Parse, load, and compile one SWI-compatible Prolog source string."""
 
+    return compile_prolog_source(
+        source,
+        dialect="swi",
+        adapt_builtins=adapt_builtins,
+    )
+
+
+def compile_iso_prolog_source(
+    source: str,
+    *,
+    adapt_builtins: bool = True,
+) -> CompiledPrologVMProgram:
+    """Parse, load, and compile one ISO/Core Prolog source string."""
+
+    return compile_prolog_source(
+        source,
+        dialect="iso",
+        adapt_builtins=adapt_builtins,
+    )
+
+
+def compile_prolog_file(
+    path: str | Path,
+    *,
+    dialect: PrologDialect = "swi",
+    source_resolver: SourceResolver | None = None,
+    adapt_builtins: bool = True,
+) -> CompiledPrologVMProgram:
+    """Read, load, and compile one Prolog source file by dialect."""
+
     return compile_loaded_prolog_source(
-        load_swi_prolog_source(source),
+        load_prolog_file(path, dialect=dialect, source_resolver=source_resolver),
         adapt_builtins=adapt_builtins,
     )
 
@@ -275,8 +325,23 @@ def compile_swi_prolog_file(
 ) -> CompiledPrologVMProgram:
     """Read, load, and compile one SWI-compatible Prolog source file."""
 
-    return compile_loaded_prolog_source(
-        load_swi_prolog_file(path, source_resolver=source_resolver),
+    return compile_prolog_file(
+        path,
+        dialect="swi",
+        source_resolver=source_resolver,
+        adapt_builtins=adapt_builtins,
+    )
+
+
+def compile_prolog_project(
+    *sources: str,
+    dialect: PrologDialect = "swi",
+    adapt_builtins: bool = True,
+) -> CompiledPrologVMProgram:
+    """Parse, link, and compile multiple Prolog sources by dialect."""
+
+    return compile_loaded_prolog_project(
+        load_prolog_project(*sources, dialect=dialect),
         adapt_builtins=adapt_builtins,
     )
 
@@ -287,8 +352,27 @@ def compile_swi_prolog_project(
 ) -> CompiledPrologVMProgram:
     """Parse, link, and compile multiple SWI-compatible Prolog sources."""
 
+    return compile_prolog_project(
+        *sources,
+        dialect="swi",
+        adapt_builtins=adapt_builtins,
+    )
+
+
+def compile_prolog_project_from_files(
+    *entry_paths: str | Path,
+    dialect: PrologDialect = "swi",
+    source_resolver: SourceResolver | None = None,
+    adapt_builtins: bool = True,
+) -> CompiledPrologVMProgram:
+    """Load, link, and compile a Prolog file graph by dialect."""
+
     return compile_loaded_prolog_project(
-        load_swi_prolog_project(*sources),
+        load_prolog_project_from_files(
+            *entry_paths,
+            dialect=dialect,
+            source_resolver=source_resolver,
+        ),
         adapt_builtins=adapt_builtins,
     )
 
@@ -300,11 +384,10 @@ def compile_swi_prolog_project_from_files(
 ) -> CompiledPrologVMProgram:
     """Load, link, and compile a SWI-compatible Prolog file graph."""
 
-    return compile_loaded_prolog_project(
-        load_swi_prolog_project_from_files(
-            *entry_paths,
-            source_resolver=source_resolver,
-        ),
+    return compile_prolog_project_from_files(
+        *entry_paths,
+        dialect="swi",
+        source_resolver=source_resolver,
         adapt_builtins=adapt_builtins,
     )
 
@@ -322,6 +405,7 @@ def create_prolog_vm_runtime(
     compiled_program: CompiledPrologVMProgram,
     *,
     initialize: bool = True,
+    dialect: PrologDialect | None = None,
     operator_table: OperatorTable | None = None,
     adapt_builtins: bool = True,
     query_rewriter: Callable[[ParsedQuery], ParsedQuery] | None = None,
@@ -329,10 +413,16 @@ def create_prolog_vm_runtime(
     """Create a stateful ad-hoc query runtime from a compiled program."""
 
     vm = load_compiled_prolog_vm(compiled_program)
+    profile = (
+        compiled_program.dialect_profile
+        if dialect is None
+        else dialect_profile(dialect)
+    )
     runtime = PrologVMRuntime(
         compiled_program=compiled_program,
         vm=vm,
         state=State(),
+        dialect_profile=profile,
         operator_table=operator_table,
         adapt_builtins=adapt_builtins,
         query_rewriter=query_rewriter,
@@ -340,6 +430,28 @@ def create_prolog_vm_runtime(
     if initialize:
         runtime.run_initializations()
     return runtime
+
+
+def create_prolog_source_vm_runtime(
+    source: str,
+    *,
+    dialect: PrologDialect = "swi",
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+) -> PrologVMRuntime:
+    """Parse, load, compile, and initialize a source query runtime by dialect."""
+
+    loaded_source = load_prolog_source(source, dialect=dialect)
+    return create_prolog_vm_runtime(
+        compile_loaded_prolog_source(
+            loaded_source,
+            adapt_builtins=adapt_builtins,
+        ),
+        initialize=initialize,
+        dialect=loaded_source.dialect_profile,
+        operator_table=loaded_source.operator_table,
+        adapt_builtins=adapt_builtins,
+    )
 
 
 def create_swi_prolog_vm_runtime(
@@ -350,14 +462,26 @@ def create_swi_prolog_vm_runtime(
 ) -> PrologVMRuntime:
     """Parse, load, compile, and initialize a SWI-compatible query runtime."""
 
-    loaded_source = load_swi_prolog_source(source)
-    return create_prolog_vm_runtime(
-        compile_loaded_prolog_source(
-            loaded_source,
-            adapt_builtins=adapt_builtins,
-        ),
+    return create_prolog_source_vm_runtime(
+        source,
+        dialect="swi",
         initialize=initialize,
-        operator_table=loaded_source.operator_table,
+        adapt_builtins=adapt_builtins,
+    )
+
+
+def create_iso_prolog_vm_runtime(
+    source: str,
+    *,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+) -> PrologVMRuntime:
+    """Parse, load, compile, and initialize an ISO/Core query runtime."""
+
+    return create_prolog_source_vm_runtime(
+        source,
+        dialect="iso",
+        initialize=initialize,
         adapt_builtins=adapt_builtins,
     )
 
@@ -371,13 +495,37 @@ def create_swi_prolog_file_runtime(
 ) -> PrologVMRuntime:
     """Create a stateful query runtime from one SWI-compatible Prolog file."""
 
-    loaded_source = load_swi_prolog_file(path, source_resolver=source_resolver)
+    return create_prolog_file_runtime(
+        path,
+        dialect="swi",
+        source_resolver=source_resolver,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+    )
+
+
+def create_prolog_file_runtime(
+    path: str | Path,
+    *,
+    dialect: PrologDialect = "swi",
+    source_resolver: SourceResolver | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+) -> PrologVMRuntime:
+    """Create a stateful query runtime from one Prolog file by dialect."""
+
+    loaded_source = load_prolog_file(
+        path,
+        dialect=dialect,
+        source_resolver=source_resolver,
+    )
     return create_prolog_vm_runtime(
         compile_loaded_prolog_source(
             loaded_source,
             adapt_builtins=adapt_builtins,
         ),
         initialize=initialize,
+        dialect=loaded_source.dialect_profile,
         operator_table=loaded_source.operator_table,
         adapt_builtins=adapt_builtins,
     )
@@ -391,13 +539,32 @@ def create_swi_prolog_project_runtime(
 ) -> PrologVMRuntime:
     """Create a stateful query runtime from linked SWI-compatible sources."""
 
-    loaded_project = load_swi_prolog_project(*sources)
+    return create_prolog_project_runtime(
+        *sources,
+        dialect="swi",
+        query_module=query_module,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+    )
+
+
+def create_prolog_project_runtime(
+    *sources: str,
+    dialect: PrologDialect = "swi",
+    query_module: str | Symbol | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+) -> PrologVMRuntime:
+    """Create a stateful query runtime from linked source strings by dialect."""
+
+    loaded_project = load_prolog_project(*sources, dialect=dialect)
     return create_prolog_vm_runtime(
         compile_loaded_prolog_project(
             loaded_project,
             adapt_builtins=adapt_builtins,
         ),
         initialize=initialize,
+        dialect=_project_dialect_profile(loaded_project),
         operator_table=_project_operator_table(loaded_project),
         adapt_builtins=adapt_builtins,
         query_rewriter=lambda query_value: rewrite_loaded_prolog_query(
@@ -417,8 +584,29 @@ def create_swi_prolog_project_file_runtime(
 ) -> PrologVMRuntime:
     """Create a stateful query runtime from a SWI-compatible Prolog file graph."""
 
-    loaded_project = load_swi_prolog_project_from_files(
+    return create_prolog_project_file_runtime(
         *entry_paths,
+        dialect="swi",
+        source_resolver=source_resolver,
+        query_module=query_module,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+    )
+
+
+def create_prolog_project_file_runtime(
+    *entry_paths: str | Path,
+    dialect: PrologDialect = "swi",
+    source_resolver: SourceResolver | None = None,
+    query_module: str | Symbol | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+) -> PrologVMRuntime:
+    """Create a stateful query runtime from a file graph by dialect."""
+
+    loaded_project = load_prolog_project_from_files(
+        *entry_paths,
+        dialect=dialect,
         source_resolver=source_resolver,
     )
     return create_prolog_vm_runtime(
@@ -427,6 +615,7 @@ def create_swi_prolog_project_file_runtime(
             adapt_builtins=adapt_builtins,
         ),
         initialize=initialize,
+        dialect=_project_dialect_profile(loaded_project),
         operator_table=_project_operator_table(loaded_project),
         adapt_builtins=adapt_builtins,
         query_rewriter=lambda query_value: rewrite_loaded_prolog_query(
@@ -538,6 +727,7 @@ def _compile_loaded_prolog(
     *,
     adapt_builtins: bool,
     operator_table: OperatorTable | None = None,
+    dialect_profile: DialectProfile | None = None,
 ) -> CompiledPrologVMProgram:
     adapted_clauses = tuple(
         _adapt_clause(
@@ -603,6 +793,7 @@ def _compile_loaded_prolog(
     validate(compiled_instructions)
     return CompiledPrologVMProgram(
         instructions=compiled_instructions,
+        dialect_profile=dialect_profile,
         initialization_query_count=len(adapted_initialization_goals),
         source_query_count=len(adapted_source_queries),
         source_query_variables=tuple(
@@ -659,6 +850,30 @@ def _project_operator_table(project: LoadedPrologProject) -> OperatorTable | Non
     if not project.sources:
         return None
     return project.sources[0].operator_table
+
+
+def _project_dialect_profile(project: LoadedPrologProject) -> DialectProfile | None:
+    if not project.dialect_profiles:
+        return None
+    return project.dialect_profiles[0]
+
+
+def _parse_query_for_dialect(
+    source: str,
+    *,
+    dialect: DialectProfile | None,
+    operator_table: OperatorTable | None,
+) -> ParsedQuery:
+    profile = dialect_profile("swi") if dialect is None else dialect
+    if profile.name == "iso":
+        from iso_prolog_parser import parse_iso_query
+
+        return parse_iso_query(source, operator_table=operator_table)
+    if profile.name == "swi":
+        return parse_swi_query(source, operator_table=operator_table)
+
+    msg = f"dialect {profile.name!r} does not have an implemented query parser yet"
+    raise ValueError(msg)
 
 
 def _collect_relations(

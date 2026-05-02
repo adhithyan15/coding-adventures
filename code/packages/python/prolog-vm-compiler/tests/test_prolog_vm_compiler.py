@@ -14,8 +14,12 @@ from logic_vm import execute
 from prolog_vm_compiler import (
     CompiledPrologVMProgram,
     __version__,
+    compile_iso_prolog_source,
+    compile_prolog_source,
     compile_swi_prolog_project,
     compile_swi_prolog_source,
+    create_iso_prolog_vm_runtime,
+    create_prolog_source_vm_runtime,
     create_swi_prolog_vm_runtime,
     load_compiled_prolog_vm,
     run_compiled_prolog_queries,
@@ -49,6 +53,41 @@ class TestPrologVMCompiler:
         assert compiled.initialization_query_count == 0
         assert compiled.source_query_count == 1
         assert run_compiled_prolog_query(compiled) == [atom("bart"), atom("lisa")]
+
+    def test_compiles_generic_iso_and_swi_dialect_sources(self) -> None:
+        iso_compiled = compile_prolog_source(
+            """
+            parent(homer, bart).
+            ?- parent(homer, Who).
+            """,
+            dialect="iso",
+        )
+        swi_compiled = compile_prolog_source(
+            """
+            :- op(450, xfx, <=>).
+            ?- current_op(P, Type, '<=>').
+            """,
+            dialect="swi",
+        )
+
+        assert iso_compiled.dialect_profile is not None
+        assert iso_compiled.dialect_profile.name == "iso"
+        assert run_compiled_prolog_query(iso_compiled) == [atom("bart")]
+        assert swi_compiled.dialect_profile is not None
+        assert swi_compiled.dialect_profile.name == "swi"
+        assert run_compiled_prolog_query(swi_compiled) == [
+            (num(450), atom("xfx")),
+        ]
+
+    def test_iso_wrapper_compiles_through_same_vm_path(self) -> None:
+        compiled = compile_iso_prolog_source(
+            """
+            parent(homer, bart).
+            ?- parent(homer, Who).
+            """,
+        )
+
+        assert run_compiled_prolog_query(compiled) == [atom("bart")]
 
     def test_compiled_instruction_program_runs_directly_through_logic_vm(
         self,
@@ -151,6 +190,29 @@ class TestPrologVMCompiler:
         assert runtime.query_values("?- current_op(P, Type, '<=>').") == [
             (num(450), atom("xfx")),
         ]
+
+    def test_generic_runtime_uses_selected_dialect_query_parser(self) -> None:
+        runtime = create_prolog_source_vm_runtime(
+            """
+            parent(homer, bart).
+            parent(homer, lisa).
+            """,
+            dialect="iso",
+        )
+
+        assert runtime.query_values("parent(homer, Who)") == [
+            atom("bart"),
+            atom("lisa"),
+        ]
+
+    def test_iso_runtime_wrapper_queries_loaded_program(self) -> None:
+        runtime = create_iso_prolog_vm_runtime(
+            """
+            parent(homer, bart).
+            """,
+        )
+
+        assert runtime.query_values("parent(homer, Who)") == [atom("bart")]
 
     def test_preserves_initialization_queries_before_source_queries(self) -> None:
         compiled = compile_swi_prolog_source(

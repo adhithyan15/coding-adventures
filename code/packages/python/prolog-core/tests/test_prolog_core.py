@@ -9,6 +9,7 @@ from prolog_core import (
     __version__,
     apply_op_directive,
     apply_predicate_directive,
+    dialect_profile,
     directive,
     empty_operator_table,
     empty_predicate_registry,
@@ -16,6 +17,8 @@ from prolog_core import (
     expand_dcg_phrase,
     goal_expansion_from_directive,
     iso_operator_table,
+    known_dialect_profiles,
+    loader_dialect_profiles,
     module_import_from_directive,
     module_spec_from_directive,
     swi_operator_table,
@@ -97,6 +100,38 @@ class TestOperatorTable:
                 empty_operator_table(),
                 term("op", 500, "yfx", term(".", 1, "[]")),
             )
+
+
+class TestDialectProfiles:
+    """Dialect profiles should make frontend policy explicit and data-driven."""
+
+    def test_profiles_track_current_and_future_dialects(self) -> None:
+        profiles = {profile.name: profile for profile in known_dialect_profiles()}
+
+        assert {"iso", "swi", "gnu", "scryer", "trealla", "xsb", "yap", "ciao"} <= (
+            profiles.keys()
+        )
+        assert profiles["iso"].token_grammar == "prolog/iso.tokens"
+        assert profiles["swi"].parser_grammar == "prolog/swi.grammar"
+        assert profiles["gnu"].supports_loader is False
+        assert profiles["swi"].supports_modules is True
+        assert profiles["iso"].supports_modules is False
+
+    def test_profile_aliases_and_operator_tables(self) -> None:
+        assert dialect_profile("swipl").name == "swi"
+        assert dialect_profile("iso_core").name == "iso"
+        assert dialect_profile("swi").operator_table().get("#=", "xfx") is not None
+        assert dialect_profile("iso").operator_table().get("#=", "xfx") is None
+
+    def test_loader_profiles_only_include_implemented_routes(self) -> None:
+        assert [profile.name for profile in loader_dialect_profiles()] == [
+            "iso",
+            "swi",
+        ]
+
+    def test_unknown_profile_reports_known_dialects(self) -> None:
+        with pytest.raises(ValueError, match="known dialects"):
+            dialect_profile("mercury")
 
 
 class TestDirective:
