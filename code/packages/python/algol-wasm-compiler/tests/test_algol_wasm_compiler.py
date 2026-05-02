@@ -471,6 +471,65 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [12]
 
+    def test_own_real_boolean_and_string_scalars_persist_across_calls(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure tick; "
+            "begin own real scalar; own boolean seen; own string marker; "
+            "if not seen then "
+            "begin scalar := 1.5; seen := true; marker := 'OK'; result := 1 end "
+            "else "
+            "begin scalar := scalar + 1.0; "
+            "if seen and (marker = 'OK') and (scalar > 2.0) then result := 7 "
+            "else result := 0 "
+            "end "
+            "end; "
+            "tick; tick "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_own_real_boolean_and_string_arrays_persist_across_calls(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure tick; "
+            "begin own real array totals[1:1]; "
+            "own boolean array ready[1:1]; "
+            "own string array labels[1:1]; "
+            "if not ready[1] then "
+            "begin totals[1] := 2.5; ready[1] := true; "
+            "labels[1] := 'ARR'; result := 1 end "
+            "else "
+            "begin totals[1] := totals[1] + 1.0; "
+            "if ready[1] and (labels[1] = 'ARR') and (totals[1] > 3.0) "
+            "then result := 8 else result := 0 "
+            "end "
+            "end; "
+            "tick; tick "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
+
+    def test_for_control_by_name_writes_caller_storage(self) -> None:
+        result = compile_source(
+            "begin integer result, i; "
+            "procedure run(k); integer k; "
+            "begin for k := 1 step 1 until 3 do result := result + k end; "
+            "i := 0; result := 0; run(i); result := result * 10 + i "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [64]
+
+    def test_for_control_value_parameter_does_not_write_caller_storage(self) -> None:
+        result = compile_source(
+            "begin integer result, i; "
+            "procedure run(k); value k; integer k; "
+            "begin for k := 1 step 1 until 3 do result := result + k end; "
+            "i := 9; result := 0; run(i); result := result * 10 + i "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [69]
+
     def test_boolean_variable_assignment_drives_condition(self) -> None:
         result = compile_source(
             "begin integer result; "
@@ -1498,6 +1557,26 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
+
+    def test_boolean_and_string_value_array_parameters_copy_without_aliasing(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin boolean array flags[1:1]; string array words[1:1]; "
+            "integer result; "
+            "procedure mutate(flagCopy, wordCopy); "
+            "value flagCopy, wordCopy; "
+            "boolean flagCopy; string wordCopy; array flagCopy, wordCopy; "
+            "begin flagCopy[1] := false; wordCopy[1] := 'copy'; "
+            "if (not flagCopy[1]) and (wordCopy[1] = 'copy') "
+            "then result := 10 else result := 0 "
+            "end; "
+            "flags[1] := true; words[1] := 'orig'; mutate(flags, words); "
+            "if flags[1] and (words[1] = 'orig') then result := result + 1 "
+            "else result := 0 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [11]
 
     def test_array_parameter_runtime_dimension_mismatch_returns_from_callee(
         self,

@@ -781,6 +781,31 @@ class TestAlgolTypeChecker:
         assert all(ref.storage_class == "static" for ref in [*reads, *writes])
         assert all(ref.lexical_depth_delta == 1 for ref in [*reads, *writes])
 
+    def test_own_real_boolean_and_string_scalars_use_static_storage(self) -> None:
+        ast = parse_algol(
+            "begin own real scale; own boolean ready; own string marker; "
+            "integer result; "
+            "scale := 1.5; ready := true; marker := 'OK'; result := 1 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        symbols = {symbol.name: symbol for symbol in result.semantic.symbols}
+        assert symbols["scale"].storage_class == "static"
+        assert symbols["scale"].slot_offset == 0
+        assert symbols["scale"].slot_size == FRAME_REAL_SIZE
+        assert symbols["ready"].storage_class == "static"
+        assert symbols["ready"].slot_offset == FRAME_REAL_SIZE
+        assert symbols["ready"].slot_size == FRAME_WORD_SIZE
+        assert symbols["marker"].storage_class == "static"
+        assert symbols["marker"].slot_offset == FRAME_REAL_SIZE + FRAME_WORD_SIZE
+        assert symbols["marker"].slot_size == FRAME_WORD_SIZE
+        assert result.semantic.root_block is not None
+        layout = result.semantic.root_block.frame_layout
+        assert [slot.name for slot in layout.slots] == ["result"]
+
     def test_own_array_uses_static_descriptor_storage(self) -> None:
         ast = parse_algol(
             "begin own integer array counts[1:2]; integer result; "
@@ -801,6 +826,38 @@ class TestAlgolTypeChecker:
         assert counts.slot_offset == 0
         assert counts.slot_size == 4
         assert descriptor.storage_class == "static"
+        assert result.semantic.root_block is not None
+        layout = result.semantic.root_block.frame_layout
+        assert [slot.name for slot in layout.slots] == ["result"]
+
+    def test_own_real_boolean_and_string_arrays_use_static_descriptors(self) -> None:
+        ast = parse_algol(
+            "begin own real array totals[1:1]; "
+            "own boolean array flags[1:1]; "
+            "own string array labels[1:1]; "
+            "integer result; "
+            "totals[1] := 1.5; flags[1] := true; labels[1] := 'OK'; "
+            "result := 1 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        symbols = {symbol.name: symbol for symbol in result.semantic.symbols}
+        arrays = {array.name: array for array in result.semantic.arrays}
+        assert symbols["totals"].storage_class == "static"
+        assert symbols["totals"].slot_offset == 0
+        assert arrays["totals"].storage_class == "static"
+        assert arrays["totals"].element_type == "real"
+        assert symbols["flags"].storage_class == "static"
+        assert symbols["flags"].slot_offset == FRAME_WORD_SIZE
+        assert arrays["flags"].storage_class == "static"
+        assert arrays["flags"].element_type == "boolean"
+        assert symbols["labels"].storage_class == "static"
+        assert symbols["labels"].slot_offset == FRAME_WORD_SIZE * 2
+        assert arrays["labels"].storage_class == "static"
+        assert arrays["labels"].element_type == "string"
         assert result.semantic.root_block is not None
         layout = result.semantic.root_block.frame_layout
         assert [slot.name for slot in layout.slots] == ["result"]

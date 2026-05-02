@@ -176,6 +176,30 @@ class TestAlgolIrCompiler:
         ]
         assert load_addr_labels.count("__algol_static") >= 2
 
+    def test_compiles_own_real_boolean_and_string_scalars_to_static_storage(
+        self,
+    ) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin own real scale; own boolean ready; own string marker; "
+                "integer result; "
+                "scale := 1.5; ready := true; marker := 'OK'; result := 1 "
+                "end"
+            )
+        )
+        data_labels = [decl.label for decl in result.program.data]
+        load_addr_labels = [
+            instr.operands[1].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LOAD_ADDR and len(instr.operands) == 2
+        ]
+        opcodes = [instr.opcode for instr in result.program.instructions]
+
+        assert "__algol_static" in data_labels
+        assert load_addr_labels.count("__algol_static") >= 3
+        assert IrOp.STORE_F64 in opcodes
+        assert IrOp.STORE_WORD in opcodes
+
     def test_compiles_own_array_descriptor_to_static_storage(self) -> None:
         result = compile_algol(
             parse_algol(
@@ -193,6 +217,33 @@ class TestAlgolIrCompiler:
 
         assert "__algol_static" in data_labels
         assert load_addr_labels.count("__algol_static") >= 2
+
+    def test_compiles_own_real_boolean_and_string_array_descriptors_to_static_storage(
+        self,
+    ) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin own real array totals[1:1]; "
+                "own boolean array flags[1:1]; "
+                "own string array labels[1:1]; "
+                "integer result; "
+                "totals[1] := 1.5; flags[1] := true; labels[1] := 'OK'; "
+                "result := 1 "
+                "end"
+            )
+        )
+        data_labels = [decl.label for decl in result.program.data]
+        load_addr_labels = [
+            instr.operands[1].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LOAD_ADDR and len(instr.operands) == 2
+        ]
+        opcodes = [instr.opcode for instr in result.program.instructions]
+
+        assert "__algol_static" in data_labels
+        assert load_addr_labels.count("__algol_static") >= 3
+        assert IrOp.STORE_F64 in opcodes
+        assert IrOp.STORE_WORD in opcodes
 
     def test_compiles_array_allocation_with_zero_fill_loop(self) -> None:
         result = compile_algol(

@@ -128,6 +128,9 @@ All notable changes to this package will be documented in this file.
   closures, nonlocal procedure `goto` unwind, dynamic multidimensional array
   bounds, mixed writable by-name scalar types, and runtime bounds-guard
   failure before output.
+- Added storage-semantics convergence coverage for mixed `own` scalars and
+  arrays, boolean/string `value` array copies, and value versus by-name loop
+  control storage updates.
 - Accepted uppercase and mixed-case keywords/comments, `<>` not-equal
   relations, and double-quoted string literals through the full WASM pipeline.
 
