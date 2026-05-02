@@ -1,7 +1,8 @@
 # prolog-vm-compiler
 
 `prolog-vm-compiler` lowers loaded Prolog artifacts into standardized
-`logic-instructions` programs that can run through `logic-vm`.
+`logic-instructions` programs that can run through `logic-vm` or be lowered
+again into compact `logic-bytecode` for `logic-bytecode-vm`.
 
 It is the bridge between the Prolog frontend stack and the Logic VM:
 
@@ -16,6 +17,9 @@ It is the bridge between the Prolog frontend stack and the Logic VM:
 - run source queries with named answer bindings
 - run initialization query slots before later source queries when callers want
   stateful dynamic startup behavior
+- execute the same compiled Prolog program through the bytecode VM path with
+  `compile_prolog_to_bytecode(...)` and
+  `run_compiled_prolog_bytecode_query(...)`
 
 ## Quick Start
 
@@ -53,6 +57,52 @@ compiled = compile_prolog_source(
 )
 
 assert run_compiled_prolog_query(compiled) == [atom("bart")]
+```
+
+## Bytecode VM Path
+
+Use the bytecode helpers when you want the Prolog frontend stack to converge on
+the lower opcode runtime instead of stopping at `logic-instructions`:
+
+```python
+from logic_engine import atom
+from prolog_vm_compiler import (
+    compile_swi_prolog_source,
+    run_compiled_prolog_bytecode_query,
+)
+
+compiled = compile_swi_prolog_source(
+    """
+    parent(homer, bart).
+    parent(homer, lisa).
+
+    ?- parent(homer, Who).
+    """,
+)
+
+assert run_compiled_prolog_bytecode_query(compiled) == [
+    atom("bart"),
+    atom("lisa"),
+]
+```
+
+Stateful bytecode runtimes mirror the structured VM runtime helpers:
+
+```python
+from logic_engine import atom
+from prolog_vm_compiler import create_swi_prolog_bytecode_vm_runtime
+
+runtime = create_swi_prolog_bytecode_vm_runtime(
+    """
+    :- dynamic(memo/1).
+    parent(homer, bart).
+    """,
+)
+
+runtime.query("assertz(memo(saved))", commit=True)
+
+assert runtime.query_values("parent(homer, Who)") == [atom("bart")]
+assert runtime.query_values("memo(Value)") == [atom("saved")]
 ```
 
 ## Named Answers And Initialization
@@ -202,8 +252,11 @@ prolog-loader
 prolog-vm-compiler
     ↓
 logic-instructions
+    ├── logic-vm
     ↓
-logic-vm
+logic-bytecode
+    ↓
+logic-bytecode-vm
 ```
 
 ## Development

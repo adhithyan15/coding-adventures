@@ -15,8 +15,12 @@ from logic_engine import Disequality, LogicVar, atom
 from prolog_vm_compiler import (
     compile_swi_prolog_project_from_files,
     compile_swi_prolog_source,
+    create_prolog_bytecode_vm_runtime,
     create_prolog_vm_runtime,
+    create_swi_prolog_file_bytecode_vm_runtime,
     create_swi_prolog_file_runtime,
+    create_swi_prolog_project_bytecode_vm_runtime,
+    create_swi_prolog_project_file_bytecode_vm_runtime,
     create_swi_prolog_project_file_runtime,
     create_swi_prolog_project_runtime,
     create_swi_prolog_vm_runtime,
@@ -149,6 +153,20 @@ class TestPrologVMRuntime:
             {"Who": atom("bart")},
         ]
 
+    def test_bytecode_runtime_can_be_created_from_existing_compiled_program(
+        self,
+    ) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            parent(homer, bart).
+            """,
+        )
+        runtime = create_prolog_bytecode_vm_runtime(compiled)
+
+        assert [answer.as_dict() for answer in runtime.query("parent(homer, Who)")] == [
+            {"Who": atom("bart")},
+        ]
+
     def test_file_runtime_loads_includes_and_answers_ad_hoc_queries(
         self,
         tmp_path: Path,
@@ -166,6 +184,31 @@ class TestPrologVMRuntime:
         )
 
         runtime = create_swi_prolog_file_runtime(app_path)
+
+        answers = runtime.query("ancestor(homer, Who)")
+
+        assert [answer.as_dict() for answer in answers] == [
+            {"Who": atom("bart")},
+            {"Who": atom("lisa")},
+        ]
+
+    def test_bytecode_file_runtime_loads_includes_and_answers_queries(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        facts_path = tmp_path / "facts.pl"
+        facts_path.write_text(
+            "parent(homer, bart).\nparent(homer, lisa).\n",
+            encoding="utf-8",
+        )
+        app_path = tmp_path / "app.pl"
+        app_path.write_text(
+            ":- include('facts.pl').\n"
+            "ancestor(X, Y) :- parent(X, Y).\n",
+            encoding="utf-8",
+        )
+
+        runtime = create_swi_prolog_file_bytecode_vm_runtime(app_path)
 
         answers = runtime.query("ancestor(homer, Who)")
 
@@ -239,6 +282,27 @@ class TestPrologVMRuntime:
             {"Who": atom("lisa")},
         ]
 
+    def test_bytecode_project_runtime_resolves_module_context_queries(self) -> None:
+        runtime = create_swi_prolog_project_bytecode_vm_runtime(
+            """
+            :- module(family, [ancestor/2]).
+            ancestor(homer, bart).
+            ancestor(homer, lisa).
+            """,
+            """
+            :- module(app, []).
+            :- use_module(family, [ancestor/2]).
+            """,
+            query_module="app",
+        )
+
+        answers = runtime.query("ancestor(homer, Who)")
+
+        assert [answer.as_dict() for answer in answers] == [
+            {"Who": atom("bart")},
+            {"Who": atom("lisa")},
+        ]
+
     def test_project_file_runtime_answers_consulted_global_queries(
         self,
         tmp_path: Path,
@@ -252,6 +316,25 @@ class TestPrologVMRuntime:
         app_path.write_text(":- consult(facts).\n", encoding="utf-8")
 
         runtime = create_swi_prolog_project_file_runtime(app_path)
+
+        assert [answer.as_dict() for answer in runtime.query("parent(homer, Who)")] == [
+            {"Who": atom("bart")},
+            {"Who": atom("lisa")},
+        ]
+
+    def test_bytecode_project_file_runtime_answers_consulted_queries(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        facts_path = tmp_path / "facts.pl"
+        facts_path.write_text(
+            "parent(homer, bart).\nparent(homer, lisa).\n",
+            encoding="utf-8",
+        )
+        app_path = tmp_path / "app.pl"
+        app_path.write_text(":- consult(facts).\n", encoding="utf-8")
+
+        runtime = create_swi_prolog_project_file_bytecode_vm_runtime(app_path)
 
         assert [answer.as_dict() for answer in runtime.query("parent(homer, Who)")] == [
             {"Who": atom("bart")},
