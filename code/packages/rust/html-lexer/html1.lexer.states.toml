@@ -1094,7 +1094,7 @@ actions = ["append_text(<)"]
 
 [[transitions]]
 from = "script_data_double_escape_start"
-matcher = { one_of = " \n\t\r/>" }
+matcher = { one_of = " \n\t\r\u000C/>" }
 to = "script_data_escaped"
 actions = [
   "append_text(current)",
@@ -1246,7 +1246,7 @@ consume = false
 
 [[transitions]]
 from = "script_data_double_escape_end"
-matcher = { one_of = " \n\t\r/>" }
+matcher = { one_of = " \n\t\r\u000C/>" }
 to = "script_data_double_escaped"
 actions = [
   "append_text(current)",
@@ -2848,7 +2848,7 @@ actions = [
 
 [[transitions]]
 from = "text_named_character_reference_copy"
-matcher = { one_of = " \n\t\r<>/\"'" }
+matcher = { one_of = " \n\t\r\u000C<>/\"'" }
 to = "data"
 consume = false
 actions = [
@@ -2965,7 +2965,7 @@ actions = [
 
 [[transitions]]
 from = "text_named_character_reference_nbsp"
-matcher = { one_of = " \n\t\r<>/\"'" }
+matcher = { one_of = " \n\t\r\u000C<>/\"'" }
 to = "data"
 consume = false
 actions = [
@@ -3056,7 +3056,7 @@ actions = [
 
 [[transitions]]
 from = "text_named_character_reference_reg"
-matcher = { one_of = " \n\t\r<>/\"'" }
+matcher = { one_of = " \n\t\r\u000C<>/\"'" }
 to = "data"
 consume = false
 actions = [
@@ -4783,7 +4783,7 @@ actions = [
 
 [[transitions]]
 from = "attribute_named_character_reference_copy"
-matcher = { one_of = " \n\t\r>/\"'" }
+matcher = { one_of = " \n\t\r\u000C>/\"'" }
 to = "attribute_value_unquoted"
 consume = false
 actions = [
@@ -4932,7 +4932,7 @@ actions = [
 
 [[transitions]]
 from = "attribute_named_character_reference_nbsp"
-matcher = { one_of = " \n\t\r>/\"'" }
+matcher = { one_of = " \n\t\r\u000C>/\"'" }
 to = "attribute_value_unquoted"
 consume = false
 actions = [
@@ -5046,7 +5046,7 @@ actions = [
 
 [[transitions]]
 from = "attribute_named_character_reference_reg"
-matcher = { one_of = " \n\t\r>/\"'" }
+matcher = { one_of = " \n\t\r\u000C>/\"'" }
 to = "attribute_value_unquoted"
 consume = false
 actions = [

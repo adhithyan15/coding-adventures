@@ -177,6 +177,8 @@ documented in this file.
   and multi-integral aliases.
 - Completed semicolon-terminated WHATWG named-character-reference coverage with
   a final generated batch for the remaining aliases.
+- Treated form feed as an HTML ASCII-whitespace delimiter for script
+  double-escape boundaries and semicolonless legacy character references.
 - Added a WHATWG operator/shape named-reference batch covering circled
   operators, integrals, products, squares, lozenges, stars, suits, and symbols.
 - Added a WHATWG box-drawing named-reference batch covering double-line,

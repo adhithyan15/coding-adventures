@@ -58,6 +58,9 @@ HTML tokenizer: text and RCDATA recover inputs such as `&copycat` as `©cat`
 with a missing-semicolon diagnostic, while attribute values preserve ambiguous
 ampersands like `&copycat` literally when the would-be reference is followed by
 an ASCII alphanumeric character or `=`.
+Form feed is treated as HTML ASCII whitespace in the generated delimiter
+paths, including script double-escape boundaries and semicolonless legacy named
+character references.
 Numeric character references report invalid-code-point diagnostics and recover
 with the HTML replacement/remapping rules for null, surrogate, out-of-range,
 noncharacter, and Windows-1252 control references.
