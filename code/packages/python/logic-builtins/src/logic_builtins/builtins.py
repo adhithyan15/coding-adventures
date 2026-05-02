@@ -168,6 +168,7 @@ __all__ = [
     "bagofo",
     "partitiono",
     "predicate_propertyo",
+    "repeato",
     "PrologEvaluationError",
     "PrologFlagStore",
     "PrologInstantiationError",
@@ -435,6 +436,7 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("onceo", 1),
     ("partitiono", 4),
     ("predicate_propertyo", 3),
+    ("repeato", 0),
     ("retractallo", 1),
     ("retracto", 1),
     ("same_termo", 2),
@@ -2010,6 +2012,16 @@ def cuto() -> GoalExpr:
     """Commit to choices made so far in the current search-control frame."""
 
     return cut()
+
+
+def repeato() -> GoalExpr:
+    """Succeed repeatedly, leaving callers to bound search with cut or limits."""
+
+    def run(_program: Program, state: State, _args: NativeArgs) -> Iterator[State]:
+        while True:
+            yield state
+
+    return native_goal(run)
 
 
 def fd_ino(target: object, domain: object) -> GoalExpr:
