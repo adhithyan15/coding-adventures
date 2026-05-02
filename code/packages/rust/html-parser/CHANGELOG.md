@@ -19,3 +19,5 @@ documented in this file.
 - Scripting-aware parse options for parser-controlled tokenizer handoff, so
   `noscript` becomes RAWTEXT with scripting enabled and ordinary fallback
   markup with scripting disabled.
+- Parser-approved initial tokenizer contexts, including foreign-content CDATA
+  section fragments backed by the typed lexer CDATA context.
