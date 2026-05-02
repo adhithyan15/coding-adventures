@@ -1727,6 +1727,35 @@
         "EOF"
       ],
       "diagnostics": []
+    },
+    {
+      "id": "html5lib-smoke-143",
+      "description": "form feed legacy named reference boundary",
+      "input": "A&copy\fB&nbsp\f<a copy=&copy\freg=&reg\f>",
+      "tokens": [
+        "Text(data=A\u00a9\fB\u00a0\f)",
+        "StartTag(name=a, attributes=[copy=\u00a9, reg=\u00ae], self_closing=false)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference"
+      ]
+    },
+    {
+      "id": "html5lib-smoke-144",
+      "description": "form feed script double escape delimiter",
+      "input": "<!-- <script\fx </script\f y --></script>",
+      "tokens": [
+        "Text(data=<!-- <script\fx </script\f y -->)",
+        "EndTag(name=script)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
     }
   ],
   "skipped": []

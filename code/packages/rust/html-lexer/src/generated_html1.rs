@@ -2516,7 +2516,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "script_data_double_escape_start".to_string(),
             on: None,
-            matcher: Some(MatcherDefinition::OneOf(" \n\t\r/>".to_string())),
+            matcher: Some(MatcherDefinition::OneOf(" \n\t\r\u{C}/>".to_string())),
             to: vec![
                 "script_data_escaped".to_string(),
             ],
@@ -2884,7 +2884,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "script_data_double_escape_end".to_string(),
             on: None,
-            matcher: Some(MatcherDefinition::OneOf(" \n\t\r/>".to_string())),
+            matcher: Some(MatcherDefinition::OneOf(" \n\t\r\u{C}/>".to_string())),
             to: vec![
                 "script_data_double_escaped".to_string(),
             ],
@@ -6384,7 +6384,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "text_named_character_reference_copy".to_string(),
             on: None,
-            matcher: Some(MatcherDefinition::OneOf(" \n\t\r<>/\"'".to_string())),
+            matcher: Some(MatcherDefinition::OneOf(" \n\t\r\u{C}<>/\"'".to_string())),
             to: vec![
                 "data".to_string(),
             ],
@@ -6640,7 +6640,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "text_named_character_reference_nbsp".to_string(),
             on: None,
-            matcher: Some(MatcherDefinition::OneOf(" \n\t\r<>/\"'".to_string())),
+            matcher: Some(MatcherDefinition::OneOf(" \n\t\r\u{C}<>/\"'".to_string())),
             to: vec![
                 "data".to_string(),
             ],
@@ -6833,7 +6833,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "text_named_character_reference_reg".to_string(),
             on: None,
-            matcher: Some(MatcherDefinition::OneOf(" \n\t\r<>/\"'".to_string())),
+            matcher: Some(MatcherDefinition::OneOf(" \n\t\r\u{C}<>/\"'".to_string())),
             to: vec![
                 "data".to_string(),
             ],
@@ -10276,7 +10276,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "attribute_named_character_reference_copy".to_string(),
             on: None,
-            matcher: Some(MatcherDefinition::OneOf(" \n\t\r>/\"'".to_string())),
+            matcher: Some(MatcherDefinition::OneOf(" \n\t\r\u{C}>/\"'".to_string())),
             to: vec![
                 "attribute_value_unquoted".to_string(),
             ],
@@ -10540,7 +10540,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "attribute_named_character_reference_nbsp".to_string(),
             on: None,
-            matcher: Some(MatcherDefinition::OneOf(" \n\t\r>/\"'".to_string())),
+            matcher: Some(MatcherDefinition::OneOf(" \n\t\r\u{C}>/\"'".to_string())),
             to: vec![
                 "attribute_value_unquoted".to_string(),
             ],
@@ -10739,7 +10739,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "attribute_named_character_reference_reg".to_string(),
             on: None,
-            matcher: Some(MatcherDefinition::OneOf(" \n\t\r>/\"'".to_string())),
+            matcher: Some(MatcherDefinition::OneOf(" \n\t\r\u{C}>/\"'".to_string())),
             to: vec![
                 "attribute_value_unquoted".to_string(),
             ],

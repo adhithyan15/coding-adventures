@@ -1518,6 +1518,34 @@
         "Text(data=WHATWG remaining named refs 6 (rthree-zeetrf):⋌▹⊵▸⧎℞⤥;⤩✶⌢♯⨳⧤∣⌣⪪⪬⪬︀/⧄⌿∥⌣⋆¯♪⤦⤪⌖⎴⌕∴≈∼≈∼⤨⊤⌶⫱⫚⤩‴▵▿⊴≜⊵≜⧍⨻⏢ŧ≬ű▀⌜⌏◸⌝⌎◹▵▴⦧⫨⫩⊨⦜∝⊲⊳⊢∨⊻≚⋮||⊲∝⊳⦚⩟∧≙℘≀≀▽⟼⋻⨂△ℨ)",
         "EOF"
       ]
+    },
+    {
+      "id": "html-form-feed-legacy-reference-boundary",
+      "description": "Form feed is an ASCII-whitespace boundary for semicolonless legacy named references",
+      "input": "A&copy\fB&nbsp\f<a copy=&copy\freg=&reg\f>",
+      "tokens": [
+        "Text(data=A©\fB \f)",
+        "StartTag(name=a, attributes=[copy=©, reg=®], self_closing=false)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference"
+      ]
+    },
+    {
+      "id": "html-form-feed-script-double-escape-delimiter",
+      "description": "Form feed delimits script double-escape start and end keywords",
+      "initial_state": "Script data state",
+      "last_start_tag": "script",
+      "input": "<!-- <script\fx </script\f y --></script>",
+      "tokens": [
+        "Text(data=<!-- <script\fx </script\f y -->)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
     }
   ]
 }

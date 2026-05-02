@@ -120,6 +120,8 @@ currently supports:
   character references
 - missing-semicolon recovery for legacy named character references `nbsp`,
   `copy`, and `reg` before delimiters and EOF
+- form-feed handling as an HTML ASCII-whitespace delimiter for script double
+  escape and semicolonless legacy named character references
 - generic named-character-reference scanning with literal fallback for unknown
   names
 - PUBLIC/SYSTEM DOCTYPE recovery diagnostics for missing whitespace, missing

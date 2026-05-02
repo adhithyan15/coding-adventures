@@ -625,6 +625,48 @@ fn default_html_lexer_treats_form_feed_as_doctype_whitespace() {
 }
 
 #[test]
+fn default_html_lexer_treats_form_feed_as_legacy_reference_boundary() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer
+        .push("A&copy\u{000C}B&nbsp\u{000C}<a copy=&copy\u{000C}reg=&reg\u{000C}>")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("A\u{00A9}\u{000C}B\u{00A0}\u{000C}".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "copy".to_string(),
+                        value: "\u{00A9}".to_string(),
+                    },
+                    Attribute {
+                        name: "reg".to_string(),
+                        value: "\u{00AE}".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| {
+                diagnostic.code == "missing-semicolon-after-character-reference"
+            })
+            .count(),
+        4
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_standalone_system_doctype_identifier() {
     let tokens = lex_html("<!DOCTYPE html SYSTEM \"about:legacy-compat\">").unwrap();
 
@@ -1865,6 +1907,29 @@ fn default_html_lexer_supports_script_data_double_escaped_text() {
         lexer.drain_tokens(),
         vec![
             Token::Text("<!-- <script>ignored </script> still escaped -->".to_string()),
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_treats_form_feed_as_script_double_escape_delimiter() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("script_data").unwrap();
+    lexer.set_last_start_tag("script");
+
+    lexer
+        .push("<!-- <script\u{000C}x </script\u{000C} y --></script>")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("<!-- <script\u{000C}x </script\u{000C} y -->".to_string()),
             Token::EndTag {
                 name: "script".to_string()
             },
