@@ -16,3 +16,6 @@ documented in this file.
   ordinary data-state markup.
 - Implied `html`, `head`, and `body` document shell normalization, including
   preservation of explicit shell attributes and legacy omitted-wrapper pages.
+- Scripting-aware parse options for parser-controlled tokenizer handoff, so
+  `noscript` becomes RAWTEXT with scripting enabled and ordinary fallback
+  markup with scripting disabled.

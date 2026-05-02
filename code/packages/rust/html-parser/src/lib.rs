@@ -7,10 +7,24 @@
 
 use coding_adventures_html_lexer::{
     apply_html_lex_context, create_html_lexer, Attribute as LexerAttribute, Diagnostic,
-    HtmlLexContext, HtmlLexer, Token, TokenizerError,
+    HtmlLexContext, HtmlLexer, HtmlScriptingMode, Token, TokenizerError,
 };
 use dom_core::{Attribute, Document, DocumentType, Node};
 use std::fmt;
+
+/// Parser options that influence tokenizer handoff and tree construction.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HtmlParseOptions {
+    pub scripting: HtmlScriptingMode,
+}
+
+impl Default for HtmlParseOptions {
+    fn default() -> Self {
+        Self {
+            scripting: HtmlScriptingMode::Enabled,
+        }
+    }
+}
 
 /// Parser result that keeps DOM output and diagnostics together.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -65,8 +79,24 @@ pub fn parse_html(source: &str) -> Result<Document, ParseError> {
 
 /// Parse a complete HTML string into a DOM document plus lexer/parser diagnostics.
 pub fn parse_html_with_diagnostics(source: &str) -> Result<ParseOutput, ParseError> {
+    parse_html_with_diagnostics_and_options(source, HtmlParseOptions::default())
+}
+
+/// Parse a complete HTML string into a DOM document with explicit parser options.
+pub fn parse_html_with_options(
+    source: &str,
+    options: HtmlParseOptions,
+) -> Result<Document, ParseError> {
+    Ok(parse_html_with_diagnostics_and_options(source, options)?.document)
+}
+
+/// Parse a complete HTML string into a DOM document plus diagnostics with explicit parser options.
+pub fn parse_html_with_diagnostics_and_options(
+    source: &str,
+    options: HtmlParseOptions,
+) -> Result<ParseOutput, ParseError> {
     let mut lexer = create_html_lexer()?;
-    let mut parser = HtmlParser::new();
+    let mut parser = HtmlParser::with_options(options);
 
     for ch in source.chars() {
         let mut buffer = [0; 4];
@@ -93,11 +123,19 @@ pub struct HtmlParser {
     document: Document,
     open_elements: Vec<Vec<usize>>,
     diagnostics: Vec<ParserDiagnostic>,
+    options: HtmlParseOptions,
 }
 
 impl HtmlParser {
     pub fn new() -> Self {
         Self::default()
+    }
+
+    pub fn with_options(options: HtmlParseOptions) -> Self {
+        Self {
+            options,
+            ..Self::default()
+        }
     }
 
     pub fn parse_tokens(&mut self, tokens: impl IntoIterator<Item = Token>) -> Document {
@@ -248,11 +286,23 @@ impl HtmlParser {
         let path = self.current_parent_path().to_vec();
         children_at_path_mut(&mut self.document.children, &path)
     }
+
+    fn text_context_for_token(&self, token: &Token) -> Option<HtmlLexContext> {
+        match token {
+            Token::StartTag {
+                name, self_closing, ..
+            } if !self_closing && !is_void_element(name) => {
+                HtmlLexContext::for_element_text_with_scripting(name, self.options.scripting)
+            }
+            Token::EndTag { .. } => Some(HtmlLexContext::data()),
+            _ => None,
+        }
+    }
 }
 
 fn drain_parser_tokens(lexer: &mut HtmlLexer, parser: &mut HtmlParser) -> Result<(), ParseError> {
     for token in lexer.drain_tokens() {
-        let next_context = text_context_for_token(&token);
+        let next_context = parser.text_context_for_token(&token);
         parser.process_token(token);
 
         if let Some(context) = next_context {
@@ -261,16 +311,6 @@ fn drain_parser_tokens(lexer: &mut HtmlLexer, parser: &mut HtmlParser) -> Result
     }
 
     Ok(())
-}
-
-fn text_context_for_token(token: &Token) -> Option<HtmlLexContext> {
-    match token {
-        Token::StartTag {
-            name, self_closing, ..
-        } if !self_closing && !is_void_element(name) => HtmlLexContext::for_element_text(name),
-        Token::EndTag { .. } => Some(HtmlLexContext::data()),
-        _ => None,
-    }
 }
 
 fn element_at_path<'a>(document: &'a Document, path: &[usize]) -> Option<&'a str> {
@@ -561,6 +601,41 @@ mod tests {
         );
 
         let paragraph = element(&body(&document).children[0]);
+        assert_eq!(paragraph.children, vec![Node::text("x")]);
+    }
+
+    #[test]
+    fn parser_drives_noscript_rawtext_when_scripting_is_enabled() {
+        let document = parse_html("<noscript><p>&amp;</p></noscript><p>x</p>").unwrap();
+
+        let noscript = element(&head(&document).children[0]);
+        assert_eq!(noscript.name, "noscript");
+        assert_eq!(noscript.children, vec![Node::text("<p>&amp;</p>")]);
+
+        let paragraph = element(&body(&document).children[0]);
+        assert_eq!(paragraph.name, "p");
+        assert_eq!(paragraph.children, vec![Node::text("x")]);
+    }
+
+    #[test]
+    fn parser_parses_noscript_markup_when_scripting_is_disabled() {
+        let document = parse_html_with_options(
+            "<noscript><p>&amp;</p></noscript><p>x</p>",
+            HtmlParseOptions {
+                scripting: HtmlScriptingMode::Disabled,
+            },
+        )
+        .unwrap();
+
+        let noscript = element(&head(&document).children[0]);
+        assert_eq!(noscript.name, "noscript");
+
+        let fallback_paragraph = element(&noscript.children[0]);
+        assert_eq!(fallback_paragraph.name, "p");
+        assert_eq!(fallback_paragraph.children, vec![Node::text("&")]);
+
+        let paragraph = element(&body(&document).children[0]);
+        assert_eq!(paragraph.name, "p");
         assert_eq!(paragraph.children, vec![Node::text("x")]);
     }
 
