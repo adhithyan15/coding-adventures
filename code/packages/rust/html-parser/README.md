@@ -13,6 +13,8 @@ This first slice intentionally starts small:
 - a stack of open elements
 - void element handling
 - adjacent text merging
+- parser-controlled lexer handoff for `title`, `textarea`, RAWTEXT elements,
+  `script`, and `plaintext`
 - simple implied end tags for `p`, `li`, `dt`, and `dd`
 - parser diagnostics for unmatched end tags
 

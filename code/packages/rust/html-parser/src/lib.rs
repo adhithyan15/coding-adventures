@@ -5,8 +5,10 @@
 //! pretending HTML is context-free. Future batches can add the full WHATWG
 //! insertion-mode machinery on top of this DOM target.
 
-use coding_adventures_html_lexer::{create_html_lexer, Attribute as LexerAttribute, Diagnostic};
-use coding_adventures_html_lexer::{Token, TokenizerError};
+use coding_adventures_html_lexer::{
+    create_html_lexer, Attribute as LexerAttribute, Diagnostic, HtmlLexContext, HtmlLexer, Token,
+    TokenizerError,
+};
 use dom_core::{Attribute, Document, DocumentType, Node};
 use std::fmt;
 
@@ -64,13 +66,19 @@ pub fn parse_html(source: &str) -> Result<Document, ParseError> {
 /// Parse a complete HTML string into a DOM document plus lexer/parser diagnostics.
 pub fn parse_html_with_diagnostics(source: &str) -> Result<ParseOutput, ParseError> {
     let mut lexer = create_html_lexer()?;
-    lexer.push(source)?;
+    let mut parser = HtmlParser::new();
+
+    for ch in source.chars() {
+        let mut buffer = [0; 4];
+        lexer.push(ch.encode_utf8(&mut buffer))?;
+        drain_parser_tokens(&mut lexer, &mut parser)?;
+    }
+
     lexer.finish()?;
+    drain_parser_tokens(&mut lexer, &mut parser)?;
 
     let lexer_diagnostics = lexer.diagnostics().to_vec();
-    let tokens = lexer.drain_tokens();
-    let mut parser = HtmlParser::new();
-    let document = parser.parse_tokens(tokens);
+    let document = parser.finish_document();
 
     Ok(ParseOutput {
         document,
@@ -101,6 +109,10 @@ impl HtmlParser {
 
     pub fn diagnostics(&self) -> &[ParserDiagnostic] {
         &self.diagnostics
+    }
+
+    fn finish_document(&mut self) -> Document {
+        std::mem::take(&mut self.document)
     }
 
     fn process_token(&mut self, token: Token) {
@@ -238,6 +250,32 @@ impl HtmlParser {
     }
 }
 
+fn drain_parser_tokens(lexer: &mut HtmlLexer, parser: &mut HtmlParser) -> Result<(), ParseError> {
+    for token in lexer.drain_tokens() {
+        let next_context = text_context_for_token(&token);
+        parser.process_token(token);
+
+        if let Some(context) = next_context {
+            lexer.set_initial_state(context.initial_state.as_machine_state())?;
+            if let Some(last_start_tag) = context.last_start_tag {
+                lexer.set_last_start_tag(last_start_tag);
+            }
+        }
+    }
+
+    Ok(())
+}
+
+fn text_context_for_token(token: &Token) -> Option<HtmlLexContext> {
+    match token {
+        Token::StartTag {
+            name, self_closing, ..
+        } if !self_closing && !is_void_element(name) => HtmlLexContext::for_element_text(name),
+        Token::EndTag { .. } => Some(HtmlLexContext::data()),
+        _ => None,
+    }
+}
+
 fn element_at_path<'a>(document: &'a Document, path: &[usize]) -> Option<&'a str> {
     let mut nodes = document.children.as_slice();
     let mut current = None;
@@ -365,6 +403,56 @@ mod tests {
         assert_eq!(
             element(&document.children[2]).children,
             vec![Node::text("b")]
+        );
+    }
+
+    #[test]
+    fn parser_drives_rcdata_tokenization_for_title_and_textarea() {
+        let document =
+            parse_html("<title>Tom &amp; Jerry</title><textarea>A &lt; B</textarea>").unwrap();
+
+        let title = element(&document.children[0]);
+        assert_eq!(title.name, "title");
+        assert_eq!(title.children, vec![Node::text("Tom & Jerry")]);
+
+        let textarea = element(&document.children[1]);
+        assert_eq!(textarea.name, "textarea");
+        assert_eq!(textarea.children, vec![Node::text("A < B")]);
+    }
+
+    #[test]
+    fn parser_drives_rawtext_and_script_tokenization() {
+        let document = parse_html(
+            "<style>a < b &amp; c</style><script>if (a < b) alert('&amp;');</script><p>x</p>",
+        )
+        .unwrap();
+
+        let style = element(&document.children[0]);
+        assert_eq!(style.name, "style");
+        assert_eq!(style.children, vec![Node::text("a < b &amp; c")]);
+
+        let script = element(&document.children[1]);
+        assert_eq!(script.name, "script");
+        assert_eq!(
+            script.children,
+            vec![Node::text("if (a < b) alert('&amp;');")]
+        );
+
+        let paragraph = element(&document.children[2]);
+        assert_eq!(paragraph.children, vec![Node::text("x")]);
+    }
+
+    #[test]
+    fn parser_drives_plaintext_tokenization_until_eof() {
+        let document = parse_html("<p>before</p><plaintext><b>&amp;</b></plaintext>").unwrap();
+
+        let paragraph = element(&document.children[0]);
+        assert_eq!(paragraph.children, vec![Node::text("before")]);
+
+        let plaintext = element(&document.children[1]);
+        assert_eq!(
+            plaintext.children,
+            vec![Node::text("<b>&amp;</b></plaintext>")]
         );
     }
 }
