@@ -1374,6 +1374,34 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
 
+    def test_formal_procedure_call_accepts_read_only_forwarded_expression(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer procedure id(x); value x; integer x; begin id := x end; "
+            "integer procedure apply(f, x); integer f, x; procedure f; "
+            "begin apply := f(x) end; "
+            "result := apply(id, 3 + 4) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_formal_procedure_call_writes_forwarded_array_element_actual(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result, i; integer array a[1:1]; "
+            "integer procedure inc(x); integer x; "
+            "begin x := x + 1; inc := x end; "
+            "integer procedure apply(f, x); integer f, x; procedure f; "
+            "begin apply := f(x) end; "
+            "a[1] := 3; i := 1; "
+            "result := apply(inc, a[i]) * 10 + a[1] "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [44]
+
     def test_real_procedure_parameter_accepts_integer_return_actual(self) -> None:
         result = compile_source(
             "begin integer result; real y; "
