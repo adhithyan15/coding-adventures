@@ -241,6 +241,10 @@ The package includes end-to-end stress tests for:
 - named Python answer bindings
 - residual delayed `dif/2` constraints on named answers
 - loader term/goal expansion before VM compilation
+- bytecode VM parity for recursive search, modules, DCGs, dynamic
+  initialization, control/cleanup, grouped collections, higher-order
+  predicates, list stdlib predicates, term/text metadata, flags, and CLP(FD)
+  modeling globals
 
 ## Layer Position
 
