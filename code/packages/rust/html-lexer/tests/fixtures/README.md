@@ -124,6 +124,8 @@ currently supports:
   escape and semicolonless legacy named character references
 - EOF recovery for unfinished ordinary start and end tags, ensuring partial
   tokens are dropped before the parser sees them
+- EOF recovery for unfinished attribute character references, including named
+  and numeric forms
 - generic named-character-reference scanning with literal fallback for unknown
   names
 - PUBLIC/SYSTEM DOCTYPE recovery diagnostics for missing whitespace, missing

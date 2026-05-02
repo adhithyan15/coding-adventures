@@ -1812,6 +1812,40 @@
           "col": 18
         }
       ]
+    },
+    {
+      "description": "eof drops attribute named reference start tag",
+      "input": "<a href=&copy",
+      "output": [],
+      "errors": [
+        {
+          "code": "missing-semicolon-after-character-reference",
+          "line": 1,
+          "col": 14
+        },
+        {
+          "code": "eof-in-tag",
+          "line": 1,
+          "col": 14
+        }
+      ]
+    },
+    {
+      "description": "eof drops attribute numeric reference start tag",
+      "input": "<a href=&#x41",
+      "output": [],
+      "errors": [
+        {
+          "code": "missing-semicolon-after-character-reference",
+          "line": 1,
+          "col": 14
+        },
+        {
+          "code": "eof-in-tag",
+          "line": 1,
+          "col": 14
+        }
+      ]
     }
   ]
 }

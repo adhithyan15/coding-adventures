@@ -181,6 +181,8 @@ documented in this file.
   double-escape boundaries and semicolonless legacy character references.
 - EOF inside ordinary start/end tag construction now drops the partial token
   after reporting EOF-in-tag diagnostics.
+- EOF inside attribute character-reference substates now also drops the partial
+  start tag after preserving the relevant reference diagnostics.
 - Added a WHATWG operator/shape named-reference batch covering circled
   operators, integrals, products, squares, lozenges, stars, suits, and symbols.
 - Added a WHATWG box-drawing named-reference batch covering double-line,

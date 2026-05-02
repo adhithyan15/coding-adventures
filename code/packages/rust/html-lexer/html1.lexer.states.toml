@@ -3911,8 +3911,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3953,8 +3952,7 @@ actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(absence-of-digits-in-numeric-character-reference)",
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3996,8 +3994,7 @@ actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(absence-of-digits-in-numeric-character-reference)",
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -4048,8 +4045,7 @@ actions = [
   "append_numeric_character_reference_to_attribute_value",
   "parse_error(missing-semicolon-after-character-reference)",
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -4088,8 +4084,7 @@ actions = [
   "append_numeric_character_reference_to_attribute_value",
   "parse_error(missing-semicolon-after-character-reference)",
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -4140,8 +4135,7 @@ consume = false
 actions = [
   "recover_named_character_reference_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -4187,8 +4181,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -4222,8 +4215,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -4255,8 +4247,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -4290,8 +4281,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -4325,8 +4315,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -4358,8 +4347,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -4393,8 +4381,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -4426,8 +4413,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -4461,8 +4447,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -4494,8 +4479,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -4529,8 +4513,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -4564,8 +4547,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -4599,8 +4581,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -4632,8 +4613,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -4667,8 +4647,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -4702,8 +4681,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -4737,8 +4715,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -4770,8 +4747,7 @@ actions = [
   "append_named_character_reference_to_attribute_value",
   "parse_error(missing-semicolon-after-character-reference)",
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -4816,8 +4792,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -4851,8 +4826,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -4886,8 +4860,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -4919,8 +4892,7 @@ actions = [
   "append_named_character_reference_to_attribute_value",
   "parse_error(missing-semicolon-after-character-reference)",
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -4965,8 +4937,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -5000,8 +4971,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -5033,8 +5003,7 @@ actions = [
   "append_named_character_reference_to_attribute_value",
   "parse_error(missing-semicolon-after-character-reference)",
   "parse_error(eof-in-tag)",
-  "commit_attribute_dedup",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
