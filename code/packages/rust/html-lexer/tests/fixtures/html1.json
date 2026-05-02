@@ -1425,6 +1425,45 @@
         "Text(data=Squares:⊓︀⊔︀⊏⊑⊐⊒⋢⋣∖∖⟈⟉[])",
         "EOF"
       ]
+    },
+    {
+      "id": "html-whatwg-remaining-integral-character-references-data",
+      "description": "Remaining WHATWG integral named references decode in data state",
+      "input": "Integrals:&Conint;&Cconint;&ClockwiseContourIntegral;&CounterClockwiseContourIntegral;&Int;&awconint;&awint;&cirfnint;&conint;&cwconint;&cwint;&fpartint;&iiiint;&iiint;&intlarhk;&npolint;&oint;&pointint;&qint;&quatint;&rppolint;&scpolint;&tint;",
+      "tokens": [
+        "Text(data=Integrals:∯∰∲∳∬∳⨑⨐∮∲∱⨍⨌∭⨗⨔∮⨕⨌⨖⨒⨓∭)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-remaining-operator-character-references-attributes",
+      "description": "Remaining WHATWG operator named references decode in attributes",
+      "input": "<ops value=\"&MinusPlus;&Otimes;&PlusMinus;&bigcirc;&bigodot;&bigoplus;&bigotimes;&biguplus;&circledast;&circledcirc;&circleddash;&coprod;&divideontimes;&dotminus;&dotplus;&eplus;&loplus;&lotimes;&ltimes;&minusd;&minusdu;&mnplus;&otimesas;&plus;&plusacir;&plusb;&plusdo;&plusdu;&pluse;&plussim;&plustwo;&roplus;&rotimes;&rtimes;&timesbar;&timesd;&triminus;&triplus;&uplus;&xcirc;&xodot;&xoplus;&xuplus;\">",
+      "tokens": [
+        "StartTag(name=ops, attributes=[value=∓⨷±◯⨀⨁⨂⨄⊛⊚⊝∐⋇∸∔⩱⨭⨴⋉∸⨪∓⨶+⨣⊞∔⨥⩲⨦⨧⨮⨵⋊⨱⨰⨺⨹⊎◯⨀⨁⨄], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-remaining-dot-character-references-rcdata",
+      "description": "Remaining WHATWG dot operator named references decode in RCDATA",
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title",
+      "input": "&DDotrahd;&Dot;&DotDot;&DoubleDot;&TripleDot;&centerdot;&ctdot;&ddotseq;&dot;&dtdot;&eDDot;&eDot;&efDot;&egsdot;&elsdot;&erDot;&esdot;&fallingdotseq;&gesdot;&gesdoto;&gesdotol;&gtdot;&isindot;&lesdot;&lesdoto;&lesdotor;&ltdot;&mDDot;&ncongdot;&nedot;&notindot;&risingdotseq;&sdote;&tdot;&tridot;&utdot;</title>",
+      "tokens": [
+        "Text(data=⤑¨⃜¨⃛·⋯⩷˙⋱⩷≑≒⪘⪗≓≐≒⪀⪂⪄⋗⋵⩿⪁⪃⋖∺⩭̸≐̸⋵̸≓⩦⃛◬⋰)",
+        "EndTag(name=title)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-remaining-operator-misc-character-references-data",
+      "description": "Remaining WHATWG operator-adjacent named references decode in data state",
+      "input": "Misc:&Mellintrf;&infintie;&intcal;&integers;&intercal;&intprod;&iprod;&leftthreetimes;&rightthreetimes;&elinters;",
+      "tokens": [
+        "Text(data=Misc:ℳ⧝⊺ℤ⊺⨼⨼⋋⋌⏧)",
+        "EOF"
+      ]
     }
   ]
 }

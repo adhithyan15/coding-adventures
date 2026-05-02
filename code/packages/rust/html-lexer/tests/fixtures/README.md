@@ -114,6 +114,8 @@ currently supports:
   character references
 - remaining WHATWG set-algebra named character references, including cap/cup,
   square-set, subset/superset, and negated aliases
+- remaining WHATWG operator, integral, dot, plus/times, and circled operator
+  named character references
 - missing-semicolon recovery for legacy named character references `nbsp`,
   `copy`, and `reg` before delimiters and EOF
 - generic named-character-reference scanning with literal fallback for unknown
