@@ -1,6 +1,7 @@
 use coding_adventures_html_lexer::{
     create_html_lexer, html1_definition, html1_machine, html_skeleton_definition,
-    html_skeleton_machine, lex_html, Attribute, Token,
+    html_skeleton_machine, lex_html, lex_html_fragment, Attribute, HtmlLexContext,
+    HtmlTokenizerState, Token,
 };
 use state_machine::END_INPUT;
 
@@ -4272,6 +4273,81 @@ fn html_skeleton_helpers_remain_available_for_bootstrap_comparisons() {
                 .iter()
                 .any(|action| action == "emit(EOF)")
     }));
+}
+
+#[test]
+fn parser_facing_context_maps_rcdata_elements() {
+    let context = HtmlLexContext::for_element_text("TITLE").unwrap();
+
+    assert_eq!(context.initial_state, HtmlTokenizerState::Rcdata);
+    assert_eq!(context.last_start_tag.as_deref(), Some("title"));
+    assert_eq!(
+        lex_html_fragment("Tom &amp; Jerry</title>", &context).unwrap(),
+        vec![
+            Token::Text("Tom & Jerry".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof
+        ]
+    );
+}
+
+#[test]
+fn parser_facing_context_maps_rawtext_elements() {
+    let context = HtmlLexContext::for_element_text("style").unwrap();
+
+    assert_eq!(context.initial_state, HtmlTokenizerState::Rawtext);
+    assert_eq!(context.last_start_tag.as_deref(), Some("style"));
+    assert_eq!(
+        lex_html_fragment("a < b &amp; c</style>", &context).unwrap(),
+        vec![
+            Token::Text("a ".to_string()),
+            Token::Text("< b &amp; c".to_string()),
+            Token::EndTag {
+                name: "style".to_string()
+            },
+            Token::Eof
+        ]
+    );
+}
+
+#[test]
+fn parser_facing_context_maps_script_and_plaintext_elements() {
+    let script = HtmlLexContext::for_element_text("script").unwrap();
+    assert_eq!(script.initial_state, HtmlTokenizerState::ScriptData);
+    assert_eq!(script.last_start_tag.as_deref(), Some("script"));
+    assert_eq!(
+        lex_html_fragment("if (a < b) alert('&amp;');</script>", &script).unwrap(),
+        vec![
+            Token::Text("if (a < b) alert('&amp;');".to_string()),
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Eof
+        ]
+    );
+
+    let plaintext = HtmlLexContext::for_element_text("plaintext").unwrap();
+    assert_eq!(plaintext.initial_state, HtmlTokenizerState::Plaintext);
+    assert_eq!(plaintext.last_start_tag, None);
+    assert_eq!(
+        lex_html_fragment("<b>&amp;</b>", &plaintext).unwrap(),
+        vec![Token::Text("<b>&amp;</b>".to_string()), Token::Eof]
+    );
+}
+
+#[test]
+fn parser_facing_context_leaves_normal_elements_in_data_state() {
+    assert_eq!(HtmlLexContext::for_element_text("p"), None);
+    assert_eq!(
+        HtmlLexContext::data().initial_state.as_machine_state(),
+        "data"
+    );
+    assert_eq!(
+        HtmlTokenizerState::ScriptDataDoubleEscapedLessThanSign.as_machine_state(),
+        "script_data_double_escaped_less_than_sign"
+    );
 }
 
 fn token_summary(token: Token) -> String {

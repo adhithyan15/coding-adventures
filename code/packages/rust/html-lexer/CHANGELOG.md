@@ -201,3 +201,6 @@ documented in this file.
 - Added a second WHATWG arrow named-reference batch covering short/capital,
   lowercase long, hook, tail, loop, harpoon, negated, squiggle, diagonal, and
   mapsto aliases.
+- Added parser-facing `HtmlTokenizerState` and `HtmlLexContext` APIs, including
+  typed fragment lexing and element-to-tokenizer-mode mapping for RCDATA,
+  RAWTEXT, script data, and PLAINTEXT parser handoff.
