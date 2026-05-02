@@ -11,3 +11,6 @@ documented in this file.
 - Stack-of-open-elements tree construction seed with void element handling,
   adjacent text merging, simple implied end tags, and unmatched end-tag
   diagnostics.
+- Parser-driven tokenizer handoff for RCDATA, RAWTEXT, script data, and
+  PLAINTEXT elements, preserving text-mode DOM content instead of lexing it as
+  ordinary data-state markup.
