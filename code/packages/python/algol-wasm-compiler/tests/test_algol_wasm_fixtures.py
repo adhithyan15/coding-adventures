@@ -36,6 +36,7 @@ _GOLDEN_FIXTURES = (
     GoldenFixture(name="dynamic-array-bounds", result=[63], stdout="DYNAMIC 63"),
     GoldenFixture(name="by-name-mixed-scalars", result=[27], stdout="BYNAME 27"),
     GoldenFixture(name="runtime-guards", result=[0], stdout=""),
+    GoldenFixture(name="storage-semantics", result=[737], stdout="STORAGE 737"),
 )
 
 

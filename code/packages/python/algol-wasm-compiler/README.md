@@ -151,6 +151,8 @@ local WASM runtime. Those fixtures cover:
 - writable real, boolean, and string by-name scalar formals in one program
 - runtime bounds failure through the zero-result failure path before later
   output executes
+- mixed `own` scalar and array storage for real, boolean, and string values,
+  plus value-array copies and by-name loop-control storage behavior
 - a full-surface convergence program combining `own` scalars and arrays,
   default-real arrays, nested and single-statement procedures, value and
   by-name procedure formals, label and switch formals, multiple `for` element
