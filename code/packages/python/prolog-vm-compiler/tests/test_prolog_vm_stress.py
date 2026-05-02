@@ -605,6 +605,31 @@ class TestPrologVMStress:
         ]
         assert run_compiled_prolog_query(failure) == []
 
+    def test_cleanup_control_runs_through_vm(self) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            :- dynamic(resource/1).
+            :- dynamic(cleaned/1).
+
+            ?- setup_call_cleanup(
+                   assertz(resource(open)),
+                   resource(Resource),
+                   assertz(cleaned(Resource))),
+               call_cleanup(true, assertz(cleaned(done))),
+               catch(call_cleanup(throw(problem), assertz(cleaned(thrown))),
+                     problem,
+                     cleaned(thrown)),
+               cleaned(Resource),
+               cleaned(done).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert [answer.as_dict() for answer in answers] == [
+            {"Resource": atom("open")},
+        ]
+
     def test_grouped_bagof_setof_and_existentials_run_through_vm(self) -> None:
         compiled = compile_swi_prolog_source(
             """

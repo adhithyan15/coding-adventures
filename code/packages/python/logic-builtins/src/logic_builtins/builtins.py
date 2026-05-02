@@ -92,6 +92,7 @@ __all__ = [
     "betweeno",
     "callo",
     "callableo",
+    "call_cleanupo",
     "calltermo",
     "catcho",
     "compound_name_argumentso",
@@ -193,6 +194,7 @@ __all__ = [
     "scanlo",
     "setofo",
     "set_prolog_flago",
+    "setup_call_cleanupo",
     "char_codeo",
     "clauseo",
     "string_codeso",
@@ -356,6 +358,7 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("betweeno", 3),
     ("callableo", 1),
     ("callo", 1),
+    ("call_cleanupo", 2),
     ("calltermo", 1),
     ("calltermo", 2),
     ("calltermo", 3),
@@ -450,6 +453,7 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("scanlo", 7),
     ("setofo", 3),
     ("set_prolog_flago", 2),
+    ("setup_call_cleanupo", 3),
     ("char_codeo", 2),
     ("string_codeso", 2),
     ("string_charso", 2),
@@ -3391,6 +3395,83 @@ def calltermo(term_goal: object, *extra_args: object) -> GoalExpr:
         yield from solve_from(program_value, called_goal, state)
 
     return native_goal(run, _as_callable_term(term_goal), *extra_args)
+
+
+def _runtime_goal(goal_term: Term, state: State) -> GoalExpr | None:
+    """Convert a possibly-bound callable term into an executable goal."""
+
+    try:
+        return goal_from_term(_reified(goal_term, state))
+    except TypeError:
+        return None
+
+
+def _run_cleanup_once(
+    program_value: Program,
+    state: State,
+    cleanup_goal: GoalExpr,
+) -> State:
+    """Run cleanup for its first effectful proof, ignoring ordinary failure."""
+
+    return next(solve_from(program_value, cleanup_goal, state), state)
+
+
+def call_cleanupo(goal: object, cleanup: object) -> GoalExpr:
+    """Run ``cleanup`` after each deterministic ``goal`` proof."""
+
+    called_goal = _as_goal(goal)
+    cleanup_goal = _as_goal(cleanup)
+    goal_term = _goal_term_or_none(called_goal)
+    cleanup_term = _goal_term_or_none(cleanup_goal)
+
+    if goal_term is not None and cleanup_term is not None:
+
+        def run_terms(
+            program_value: Program,
+            state: State,
+            args: NativeArgs,
+        ) -> Iterator[State]:
+            called_goal_term, cleanup_goal_term = args
+            reified_goal = _runtime_goal(called_goal_term, state)
+            reified_cleanup = _runtime_goal(cleanup_goal_term, state)
+            if reified_goal is None or reified_cleanup is None:
+                return
+            try:
+                for goal_state in solve_from(program_value, reified_goal, state):
+                    yield _run_cleanup_once(
+                        program_value,
+                        goal_state,
+                        reified_cleanup,
+                    )
+            except PrologThrown as thrown:
+                cleanup_state = _run_cleanup_once(
+                    program_value,
+                    thrown.state,
+                    reified_cleanup,
+                )
+                raise PrologThrown(thrown.term, cleanup_state) from thrown
+
+        return native_goal(run_terms, goal_term, cleanup_term)
+
+    def run(program_value: Program, state: State, _args: NativeArgs) -> Iterator[State]:
+        try:
+            for goal_state in solve_from(program_value, called_goal, state):
+                yield _run_cleanup_once(program_value, goal_state, cleanup_goal)
+        except PrologThrown as thrown:
+            cleanup_state = _run_cleanup_once(
+                program_value,
+                thrown.state,
+                cleanup_goal,
+            )
+            raise PrologThrown(thrown.term, cleanup_state) from thrown
+
+    return native_goal(run)
+
+
+def setup_call_cleanupo(setup: object, goal: object, cleanup: object) -> GoalExpr:
+    """Run setup once, then run a goal with cleanup semantics."""
+
+    return conj(setup, call_cleanupo(goal, cleanup))
 
 
 def _fresh_logic_vars(
