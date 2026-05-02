@@ -70,6 +70,16 @@ currently supports:
 - explicit `initialStates: ["Data state"]`
 - `initialStates: ["RCDATA state"]` together with `lastStartTag`
 - `initialStates: ["RAWTEXT state"]` together with `lastStartTag`
+- `initialStates: ["PLAINTEXT state"]`
+- `initialStates: ["CDATA section state"]`
+- `initialStates: ["Script data state"]` together with `lastStartTag`
+- `initialStates: ["Script data escaped state"]` together with `lastStartTag`
+- script escaped `dash`, `dash dash`, and `less-than sign` substates together
+  with `lastStartTag`
+- `initialStates: ["Script data double escaped state"]` together with
+  `lastStartTag`
+- script double-escaped `dash`, `dash dash`, and `less-than sign` substates
+  together with `lastStartTag`
 - `StartTag`, `EndTag`, `Character`, `Comment`, and `DOCTYPE` output tokens
 - html5lib start-tag self-closing booleans
 - named character references in data, RCDATA, and attribute values for the

@@ -16,7 +16,25 @@ SUPPORTED_INITIAL_STATES = {
     "PLAINTEXT state",
     "RCDATA state",
     "RAWTEXT state",
+    "Script data double escaped dash dash state",
+    "Script data double escaped dash state",
+    "Script data double escaped less-than sign state",
     "Script data double escaped state",
+    "Script data escaped dash dash state",
+    "Script data escaped dash state",
+    "Script data escaped less-than sign state",
+    "Script data escaped state",
+    "Script data state",
+}
+
+SCRIPT_INITIAL_STATES = {
+    "Script data double escaped dash dash state",
+    "Script data double escaped dash state",
+    "Script data double escaped less-than sign state",
+    "Script data double escaped state",
+    "Script data escaped dash dash state",
+    "Script data escaped dash state",
+    "Script data escaped less-than sign state",
     "Script data escaped state",
     "Script data state",
 }
@@ -79,24 +97,16 @@ def is_supported(test: dict[str, Any]) -> tuple[bool, str]:
         return False, f"unsupported initialStates={initial_states!r}"
 
     last_start_tag = test.get("lastStartTag")
-    if initial_states in (
-        ["RCDATA state"],
-        ["RAWTEXT state"],
-        ["Script data double escaped state"],
-        ["Script data escaped state"],
-        ["Script data state"],
-    ) and not isinstance(last_start_tag, str):
+    if (
+        initial_states
+        and initial_states[0] in {"RCDATA state", "RAWTEXT state", *SCRIPT_INITIAL_STATES}
+        and not isinstance(last_start_tag, str)
+    ):
         return False, f"{initial_states[0]} requires lastStartTag"
 
     if (
         initial_states
-        not in (
-            ["RCDATA state"],
-            ["RAWTEXT state"],
-            ["Script data double escaped state"],
-            ["Script data escaped state"],
-            ["Script data state"],
-        )
+        and initial_states[0] not in {"RCDATA state", "RAWTEXT state", *SCRIPT_INITIAL_STATES}
         and last_start_tag is not None
     ):
         return False, f"unsupported lastStartTag={last_start_tag!r}"

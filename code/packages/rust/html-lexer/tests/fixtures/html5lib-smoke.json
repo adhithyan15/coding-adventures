@@ -10,7 +10,13 @@
     "PLAINTEXT state",
     "RAWTEXT state",
     "RCDATA state",
+    "Script data double escaped dash dash state",
+    "Script data double escaped dash state",
+    "Script data double escaped less-than sign state",
     "Script data double escaped state",
+    "Script data escaped dash dash state",
+    "Script data escaped dash state",
+    "Script data escaped less-than sign state",
     "Script data escaped state",
     "Script data state"
   ],
@@ -1769,6 +1775,82 @@
     },
     {
       "id": "html5lib-smoke-146",
+      "description": "script escaped dash state can resume escaped text and close script",
+      "input": "x</script>",
+      "tokens": [
+        "Text(data=x)",
+        "EndTag(name=script)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data escaped dash state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-147",
+      "description": "script escaped dash dash state exits escaped text on greater-than",
+      "input": ">plain</script>",
+      "tokens": [
+        "Text(data=>plain)",
+        "EndTag(name=script)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data escaped dash dash state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-148",
+      "description": "script escaped less-than sign state recognizes matching end tag",
+      "input": "/script>tail",
+      "tokens": [
+        "EndTag(name=script)",
+        "Text(data=tail)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data escaped less-than sign state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-149",
+      "description": "script double escaped dash state keeps escaped end marker as text",
+      "input": "x</script>tail",
+      "tokens": [
+        "Text(data=x</script>tail)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data double escaped dash state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-150",
+      "description": "script double escaped dash dash state remains text after greater-than",
+      "input": ">still</script>text",
+      "tokens": [
+        "Text(data=>still</script>text)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data double escaped dash dash state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-151",
+      "description": "script double escaped less-than sign state exits before matching end tag",
+      "input": "/script>after</script>",
+      "tokens": [
+        "Text(data=/script>after)",
+        "EndTag(name=script)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data double escaped less-than sign state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-152",
       "description": "carriage return newline normalization",
       "input": "<p\r\nclass=x>one\rtwo\r\nthree</p>",
       "tokens": [
@@ -1780,7 +1862,7 @@
       "diagnostics": []
     },
     {
-      "id": "html5lib-smoke-147",
+      "id": "html5lib-smoke-153",
       "description": "eof drops partial start tag",
       "input": "<div class=\"open",
       "tokens": [
@@ -1791,7 +1873,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-148",
+      "id": "html5lib-smoke-154",
       "description": "eof drops partial end tag",
       "input": "</section class=x",
       "tokens": [
@@ -1804,7 +1886,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-149",
+      "id": "html5lib-smoke-155",
       "description": "eof drops attribute named reference start tag",
       "input": "<a href=&copy",
       "tokens": [
@@ -1816,7 +1898,7 @@
       ]
     },
     {
-      "id": "html5lib-smoke-150",
+      "id": "html5lib-smoke-156",
       "description": "eof drops attribute numeric reference start tag",
       "input": "<a href=&#x41",
       "tokens": [
