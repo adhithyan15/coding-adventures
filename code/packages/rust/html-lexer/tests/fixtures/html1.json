@@ -65,8 +65,8 @@
       "description": "NULL characters in data and attribute values are replaced with U+FFFD",
       "input": "A\u0000<a title=\"x\u0000y\" data=x\u0000y bare=\u0000>z",
       "tokens": [
-        "Text(data=A\uFFFD)",
-        "StartTag(name=a, attributes=[title=x\uFFFDy, data=x\uFFFDy, bare=\uFFFD], self_closing=false)",
+        "Text(data=A�)",
+        "StartTag(name=a, attributes=[title=x�y, data=x�y, bare=�], self_closing=false)",
         "Text(data=z)",
         "EOF"
       ],
@@ -82,8 +82,8 @@
       "description": "NULL characters in tag and attribute names are replaced with U+FFFD",
       "input": "<x\u0000 \u0000=v a\u0000b=1 first \u0000second=2></x\u0000>",
       "tokens": [
-        "StartTag(name=x\uFFFD, attributes=[\uFFFD=v, a\uFFFDb=1, first=, \uFFFDsecond=2], self_closing=false)",
-        "EndTag(name=x\uFFFD)",
+        "StartTag(name=x�, attributes=[�=v, a�b=1, first=, �second=2], self_closing=false)",
+        "EndTag(name=x�)",
         "EOF"
       ],
       "diagnostics": [
@@ -99,12 +99,12 @@
       "description": "NULL characters in comments and bogus comments are replaced with U+FFFD",
       "input": "<!--a\u0000b--><!--\u0000--><!--a-\u0000b--><!--a--\u0000b--><!foo\u0000><!-\u0000>",
       "tokens": [
-        "Comment(data=a\uFFFDb)",
-        "Comment(data=\uFFFD)",
-        "Comment(data=a-\uFFFDb)",
-        "Comment(data=a--\uFFFDb)",
-        "Comment(data=foo\uFFFD)",
-        "Comment(data=-\uFFFD)",
+        "Comment(data=a�b)",
+        "Comment(data=�)",
+        "Comment(data=a-�b)",
+        "Comment(data=a--�b)",
+        "Comment(data=foo�)",
+        "Comment(data=-�)",
         "EOF"
       ],
       "diagnostics": [
@@ -123,8 +123,8 @@
       "description": "NULL characters in DOCTYPE names and identifiers are replaced with U+FFFD",
       "input": "<!DOCTYPE\u0000><!DOCTYPE h\u0000 PUBLIC \"p\u0000\" \"s\u0000\">",
       "tokens": [
-        "Doctype(name=\uFFFD, force_quirks=false)",
-        "Doctype(name=h\uFFFD, public_identifier=p\uFFFD, system_identifier=s\uFFFD, force_quirks=false)",
+        "Doctype(name=�, force_quirks=false)",
+        "Doctype(name=h�, public_identifier=p�, system_identifier=s�, force_quirks=false)",
         "EOF"
       ],
       "diagnostics": [
@@ -498,7 +498,7 @@
       "description": "Legacy named character references resolve in data state",
       "input": "Legacy&nbsp;symbols: &copy; &reg;",
       "tokens": [
-        "Text(data=Legacy\u00A0symbols: \u00A9 \u00AE)",
+        "Text(data=Legacy symbols: © ®)",
         "EOF"
       ]
     },
@@ -507,7 +507,7 @@
       "description": "Legacy named character references resolve inside quoted and unquoted attribute values",
       "input": "<a title=\"A&nbsp;B\" copy='&copy;' reg=&reg;>",
       "tokens": [
-        "StartTag(name=a, attributes=[title=A\u00A0B, copy=\u00A9, reg=\u00AE], self_closing=false)",
+        "StartTag(name=a, attributes=[title=A B, copy=©, reg=®], self_closing=false)",
         "EOF"
       ]
     },
@@ -516,7 +516,7 @@
       "description": "Seeded title RCDATA context resolves legacy named character references as text",
       "input": "Venture&nbsp;&copy;&reg;</title>",
       "tokens": [
-        "Text(data=Venture\u00A0\u00A9\u00AE)",
+        "Text(data=Venture ©®)",
         "EndTag(name=title)",
         "EOF"
       ],
@@ -528,7 +528,7 @@
       "description": "Classic Latin-1 named character references resolve in data state with case-sensitive names",
       "input": "Latin-1: &Agrave;&agrave; &frac12; &yen;",
       "tokens": [
-        "Text(data=Latin-1: \u00C0\u00E0 \u00BD \u00A5)",
+        "Text(data=Latin-1: Àà ½ ¥)",
         "EOF"
       ]
     },
@@ -537,7 +537,7 @@
       "description": "Classic Latin-1 named character references resolve inside quoted and unquoted attribute values",
       "input": "<a title=\"&AElig;&aelig;\" currency=&pound;>",
       "tokens": [
-        "StartTag(name=a, attributes=[title=\u00C6\u00E6, currency=\u00A3], self_closing=false)",
+        "StartTag(name=a, attributes=[title=Ææ, currency=£], self_closing=false)",
         "EOF"
       ]
     },
@@ -546,7 +546,7 @@
       "description": "Seeded title RCDATA context resolves classic Latin-1 named character references as text",
       "input": "&Ntilde;&ntilde;</title>",
       "tokens": [
-        "Text(data=\u00D1\u00F1)",
+        "Text(data=Ññ)",
         "EndTag(name=title)",
         "EOF"
       ],
@@ -558,7 +558,7 @@
       "description": "WHATWG spacing named character references resolve in data state",
       "input": "Spacing:&Tab;&NewLine;&MediumSpace;&ThickSpace;&ThinSpace;&VeryThinSpace;&ZeroWidthSpace;&NegativeMediumSpace;",
       "tokens": [
-        "Text(data=Spacing:\t\n\u205F\u205F\u200A\u2009\u200A\u200B\u200B)",
+        "Text(data=Spacing:\t\n     ​​)",
         "EOF"
       ]
     },
@@ -567,7 +567,7 @@
       "description": "WHATWG invisible and non-breaking aliases resolve inside attribute values",
       "input": "<a data=\"&NoBreak;&NonBreakingSpace;&ApplyFunction;&InvisibleTimes;&InvisibleComma;\">",
       "tokens": [
-        "StartTag(name=a, attributes=[data=\u2060\u00A0\u2061\u2062\u2063], self_closing=false)",
+        "StartTag(name=a, attributes=[data=⁠ ⁡⁢⁣], self_closing=false)",
         "EOF"
       ]
     },
@@ -576,7 +576,7 @@
       "description": "Seeded title RCDATA context resolves WHATWG differential, exponential, and imaginary aliases",
       "input": "&DifferentialD;&CapitalDifferentialD;&DD;&dd;&ExponentialE;&ee;&ImaginaryI;&ii;</title>",
       "tokens": [
-        "Text(data=\u2146\u2145\u2145\u2146\u2147\u2147\u2148\u2148)",
+        "Text(data=ⅆⅅⅅⅆⅇⅇⅈⅈ)",
         "EndTag(name=title)",
         "EOF"
       ],
@@ -588,7 +588,7 @@
       "description": "WHATWG equality and tilde named character references resolve in data state",
       "input": "Relations:&Equal;&EqualTilde;&Tilde;&TildeEqual;&TildeFullEqual;&TildeTilde;&NotEqual;&NotEqualTilde;&NotTilde;&NotTildeEqual;&NotTildeFullEqual;&NotTildeTilde;",
       "tokens": [
-        "Text(data=Relations:\u2A75\u2242\u223C\u2243\u2245\u2248\u2260\u2242\u0338\u2241\u2244\u2247\u2249)",
+        "Text(data=Relations:⩵≂∼≃≅≈≠≂̸≁≄≇≉)",
         "EOF"
       ]
     },
@@ -597,7 +597,7 @@
       "description": "WHATWG congruence and equality aliases resolve in data state",
       "input": "Congruence:&Bumpeq;&Congruent;&DotEqual;&HumpDownHump;&HumpEqual;&NotVerticalBar;&VerticalLine;&bcong;&bsim;&bsime;&bump;&bumpE;&bumpe;&bumpeq;&circeq;&coloneq;&congdot;&doteq;&doteqdot;",
       "tokens": [
-        "Text(data=Congruence:\u224E\u2261\u2250\u224E\u224F\u2224|\u224C\u223D\u22CD\u224E\u2AAE\u224F\u224F\u2257\u2254\u2A6D\u2250\u2251)",
+        "Text(data=Congruence:≎≡≐≎≏∤|≌∽⋍≎⪮≏≏≗≔⩭≐≑)",
         "EOF"
       ]
     },
@@ -606,7 +606,7 @@
       "description": "WHATWG equality and parallel aliases resolve inside attribute values",
       "input": "<math eq=\"&eqcirc;&eqcolon;&eqsim;&eqslantgtr;&eqslantless;&equals;&equest;&equivDD;&eqvparsl;\" parallel=\"&mid;&midast;&midcir;&npar;&nparallel;&nparsl;&npart;&par;&parallel;&parsim;\">",
       "tokens": [
-        "StartTag(name=math, attributes=[eq=\u2256\u2255\u2242\u2A96\u2A95=\u225F\u2A78\u29E5, parallel=\u2223*\u2AF0\u2226\u2226\u2AFD\u20E5\u2202\u0338\u2225\u2225\u2AF3], self_closing=false)",
+        "StartTag(name=math, attributes=[eq=≖≕≂⪖⪕=≟⩸⧥, parallel=∣*⫰∦∦⫽⃥∂̸∥∥⫳], self_closing=false)",
         "EOF"
       ]
     },
@@ -615,7 +615,7 @@
       "description": "Seeded title RCDATA context resolves WHATWG similarity aliases",
       "input": "&parsl;&shortmid;&shortparallel;&simdot;&sime;&simeq;&simg;&simgE;&siml;&simlE;&simne;&simplus;&simrarr;</title>",
       "tokens": [
-        "Text(data=\u2AFD\u2223\u2225\u2A6A\u2243\u2243\u2A9E\u2AA0\u2A9D\u2A9F\u2246\u2A24\u2972)",
+        "Text(data=⫽∣∥⩪≃≃⪞⪠⪝⪟≆⨤⥲)",
         "EndTag(name=title)",
         "EOF"
       ],
@@ -627,7 +627,7 @@
       "description": "WHATWG greater-than and less-than relation aliases resolve inside attribute values",
       "input": "<math cmp=\"&GreaterEqual;&GreaterFullEqual;&GreaterGreater;&GreaterLess;&GreaterSlantEqual;&GreaterTilde;\" inv=\"&LessEqualGreater;&LessFullEqual;&LessGreater;&LessLess;&LessSlantEqual;&LessTilde;\">",
       "tokens": [
-        "StartTag(name=math, attributes=[cmp=\u2265\u2267\u2AA2\u2277\u2A7E\u2273, inv=\u22DA\u2266\u2276\u2AA1\u2A7D\u2272], self_closing=false)",
+        "StartTag(name=math, attributes=[cmp=≥≧⪢≷⩾≳, inv=⋚≦≶⪡⩽≲], self_closing=false)",
         "EOF"
       ]
     },
@@ -636,7 +636,7 @@
       "description": "WHATWG greater-than and less-than comparison aliases resolve in data state",
       "input": "GreaterLess:&GreaterEqualLess;&gl;&glE;&gla;&glj;&gnE;&gnap;&gnapprox;&gne;&gneq;&gneqq;&gnsim;&gtrapprox;&gtrarr;",
       "tokens": [
-        "Text(data=GreaterLess:\u22DB\u2277\u2A92\u2AA5\u2AA4\u2269\u2A8A\u2A8A\u2A88\u2A88\u2269\u22E7\u2A86\u2978)",
+        "Text(data=GreaterLess:⋛≷⪒⪥⪤≩⪊⪊⪈⪈≩⋧⪆⥸)",
         "EOF"
       ]
     },
@@ -645,7 +645,7 @@
       "description": "WHATWG greater-than and less-than comparison aliases resolve inside attribute values",
       "input": "<math cmp=\"&gtrdot;&gtreqless;&gtreqqless;&gtrless;&gtrsim;&lessapprox;&lessdot;&lesseqgtr;&lesseqqgtr;&lessgtr;&lesssim;&lg;&lgE;&lnE;\">",
       "tokens": [
-        "StartTag(name=math, attributes=[cmp=\u22D7\u22DB\u2A8C\u2277\u2273\u2A85\u22D6\u22DA\u2A8B\u2276\u2272\u2276\u2A91\u2268], self_closing=false)",
+        "StartTag(name=math, attributes=[cmp=⋗⋛⪌≷≳⪅⋖⋚⪋≶≲≶⪑≨], self_closing=false)",
         "EOF"
       ]
     },
@@ -654,7 +654,7 @@
       "description": "Seeded title RCDATA context resolves WHATWG negated greater-than and less-than comparison aliases",
       "input": "&lnap;&lnapprox;&lne;&lneq;&lneqq;&lnsim;&nGg;&nGt;&nGtv;&nLl;&nLt;&nLtv;</title>",
       "tokens": [
-        "Text(data=\u2A89\u2A89\u2A87\u2A87\u2268\u22E6\u22D9\u0338\u226B\u20D2\u226B\u0338\u22D8\u0338\u226A\u20D2\u226A\u0338)",
+        "Text(data=⪉⪉⪇⪇≨⋦⋙̸≫⃒≫̸⋘̸≪⃒≪̸)",
         "EndTag(name=title)",
         "EOF"
       ],
@@ -666,7 +666,7 @@
       "description": "Seeded title RCDATA context resolves WHATWG negated relation aliases, including combining-overlay replacements",
       "input": "&NotGreater;&NotGreaterEqual;&NotGreaterFullEqual;&NotGreaterGreater;&NotGreaterLess;&NotGreaterSlantEqual;&NotGreaterTilde;&NotLess;&NotLessEqual;&NotLessGreater;&NotLessLess;&NotLessSlantEqual;&NotLessTilde;&NotNestedGreaterGreater;&NotNestedLessLess;</title>",
       "tokens": [
-        "Text(data=\u226F\u2271\u2267\u0338\u226B\u0338\u2279\u2A7E\u0338\u2275\u226E\u2270\u2278\u226A\u0338\u2A7D\u0338\u2274\u2AA2\u0338\u2AA1\u0338)",
+        "Text(data=≯≱≧̸≫̸≹⩾̸≵≮≰≸≪̸⩽̸≴⪢̸⪡̸)",
         "EndTag(name=title)",
         "EOF"
       ],
@@ -678,7 +678,7 @@
       "description": "WHATWG precedence and successor relation aliases resolve in data state",
       "input": "Precedence:&NotPrecedes;&NotPrecedesEqual;&NotPrecedesSlantEqual;&NotSucceeds;&NotSucceedsEqual;&NotSucceedsSlantEqual;&NotSucceedsTilde;&Precedes;&PrecedesEqual;&PrecedesSlantEqual;&PrecedesTilde;&Succeeds;&SucceedsEqual;&SucceedsSlantEqual;&SucceedsTilde;&curlyeqprec;&curlyeqsucc;&nprec;&npreceq;",
       "tokens": [
-        "Text(data=Precedence:\u2280\u2AAF\u0338\u22E0\u2281\u2AB0\u0338\u22E1\u227F\u0338\u227A\u2AAF\u227C\u227E\u227B\u2AB0\u227D\u227F\u22DE\u22DF\u2280\u2AAF\u0338)",
+        "Text(data=Precedence:⊀⪯̸⋠⊁⪰̸⋡≿̸≺⪯≼≾≻⪰≽≿⋞⋟⊀⪯̸)",
         "EOF"
       ]
     },
@@ -687,7 +687,7 @@
       "description": "WHATWG precedence aliases resolve inside attribute values",
       "input": "<math prec=\"&nsucc;&nsucceq;&pr;&prE;&prap;&prcue;&pre;&prec;&precapprox;&preccurlyeq;&preceq;&precnapprox;&precneqq;&precnsim;&precsim;&prnE;&prnap;&prnsim;&prsim;\">",
       "tokens": [
-        "StartTag(name=math, attributes=[prec=\u2281\u2AB0\u0338\u227A\u2AB3\u2AB7\u227C\u2AAF\u227A\u2AB7\u227C\u2AAF\u2AB9\u2AB5\u22E8\u227E\u2AB5\u2AB9\u22E8\u227E], self_closing=false)",
+        "StartTag(name=math, attributes=[prec=⊁⪰̸≺⪳⪷≼⪯≺⪷≼⪯⪹⪵⋨≾⪵⪹⋨≾], self_closing=false)",
         "EOF"
       ]
     },
@@ -696,7 +696,7 @@
       "description": "Seeded title RCDATA context resolves WHATWG successor aliases",
       "input": "&sc;&scE;&scap;&sccue;&sce;&scnE;&scnap;&scnsim;&scsim;&succ;&succapprox;&succcurlyeq;&succeq;&succnapprox;&succneqq;&succnsim;&succsim;</title>",
       "tokens": [
-        "Text(data=\u227B\u2AB4\u2AB8\u227D\u2AB0\u2AB6\u2ABA\u22E9\u227F\u227B\u2AB8\u227D\u2AB0\u2ABA\u2AB6\u22E9\u227F)",
+        "Text(data=≻⪴⪸≽⪰⪶⪺⋩≿≻⪸≽⪰⪺⪶⋩≿)",
         "EndTag(name=title)",
         "EOF"
       ],
@@ -708,7 +708,7 @@
       "description": "WHATWG basic and double arrow aliases resolve in data state",
       "input": "Arrows:&LeftArrow;&RightArrow;&UpArrow;&DownArrow;&LeftRightArrow;&UpDownArrow;&DoubleLeftArrow;&DoubleRightArrow;&DoubleUpArrow;&DoubleDownArrow;&DoubleLeftRightArrow;&DoubleUpDownArrow;",
       "tokens": [
-        "Text(data=Arrows:\u2190\u2192\u2191\u2193\u2194\u2195\u21D0\u21D2\u21D1\u21D3\u21D4\u21D5)",
+        "Text(data=Arrows:←→↑↓↔↕⇐⇒⇑⇓⇔⇕)",
         "EOF"
       ]
     },
@@ -717,7 +717,7 @@
       "description": "WHATWG long, bar, tee, and map arrow aliases resolve inside attribute values",
       "input": "<a long=\"&LongLeftArrow;&LongRightArrow;&LongLeftRightArrow;&Longleftarrow;&Longrightarrow;&Longleftrightarrow;\" bars=\"&LeftArrowBar;&RightArrowBar;&UpArrowBar;&DownArrowBar;&LeftArrowRightArrow;&RightArrowLeftArrow;&UpArrowDownArrow;&DownArrowUpArrow;&LeftTeeArrow;&RightTeeArrow;&map;&Map;\">",
       "tokens": [
-        "StartTag(name=a, attributes=[long=\u27F5\u27F6\u27F7\u27F8\u27F9\u27FA, bars=\u21E4\u21E5\u2912\u2913\u21C6\u21C4\u21C5\u21F5\u21A4\u21A6\u21A6\u2905], self_closing=false)",
+        "StartTag(name=a, attributes=[long=⟵⟶⟷⟸⟹⟺, bars=⇤⇥⤒⤓⇆⇄⇅⇵↤↦↦⤅], self_closing=false)",
         "EOF"
       ]
     },
@@ -726,7 +726,7 @@
       "description": "WHATWG extended capital, short, diagonal, and double-long arrow aliases resolve in data state",
       "input": "More arrows:&Darr;&Downarrow;&Larr;&Leftarrow;&Leftrightarrow;&Rarr;&Rightarrow;&Uarr;&Uparrow;&Updownarrow;&ShortDownArrow;&ShortLeftArrow;&ShortRightArrow;&ShortUpArrow;&LowerLeftArrow;&LowerRightArrow;&UpperLeftArrow;&UpperRightArrow;&DoubleLongLeftArrow;&DoubleLongLeftRightArrow;&DoubleLongRightArrow;&DownTeeArrow;&UpTeeArrow;",
       "tokens": [
-        "Text(data=More arrows:\u21A1\u21D3\u219E\u21D0\u21D4\u21A0\u21D2\u219F\u21D1\u21D5\u2193\u2190\u2192\u2191\u2199\u2198\u2196\u2197\u27F8\u27FA\u27F9\u21A7\u21A5)",
+        "Text(data=More arrows:↡⇓↞⇐⇔↠⇒↟⇑⇕↓←→↑↙↘↖↗⟸⟺⟹↧↥)",
         "EOF"
       ]
     },
@@ -735,7 +735,7 @@
       "description": "WHATWG lowercase long, hook, tail, two-head, curve, circle, and loop arrow aliases resolve inside attribute values",
       "input": "<a plain=\"&downarrow;&leftarrow;&leftrightarrow;&longleftarrow;&longleftrightarrow;&longrightarrow;\" hooks=\"&hookleftarrow;&hookrightarrow;&leftarrowtail;&rightarrowtail;&twoheadleftarrow;&twoheadrightarrow;\" loops=\"&curvearrowleft;&curvearrowright;&circlearrowleft;&circlearrowright;&looparrowleft;&looparrowright;\">",
       "tokens": [
-        "StartTag(name=a, attributes=[plain=\u2193\u2190\u2194\u27F5\u27F7\u27F6, hooks=\u21A9\u21AA\u21A2\u21A3\u219E\u21A0, loops=\u21B6\u21B7\u21BA\u21BB\u21AB\u21AC], self_closing=false)",
+        "StartTag(name=a, attributes=[plain=↓←↔⟵⟷⟶, hooks=↩↪↢↣↞↠, loops=↶↷↺↻↫↬], self_closing=false)",
         "EOF"
       ]
     },
@@ -744,7 +744,7 @@
       "description": "Seeded title RCDATA context resolves WHATWG vector and vector-bar arrow aliases",
       "input": "&LeftVector;&RightVector;&LeftUpVector;&RightUpVector;&LeftDownVector;&RightDownVector;&DownLeftVector;&DownRightVector;&LeftVectorBar;&RightVectorBar;&LeftUpVectorBar;&RightUpVectorBar;&LeftDownVectorBar;&RightDownVectorBar;&DownLeftVectorBar;&DownRightVectorBar;</title>",
       "tokens": [
-        "Text(data=\u21BC\u21C0\u21BF\u21BE\u21C3\u21C2\u21BD\u21C1\u2952\u2953\u2958\u2954\u2959\u2955\u2956\u2957)",
+        "Text(data=↼⇀↿↾⇃⇂↽⇁⥒⥓⥘⥔⥙⥕⥖⥗)",
         "EndTag(name=title)",
         "EOF"
       ],
@@ -756,7 +756,7 @@
       "description": "Seeded title RCDATA context resolves WHATWG harpoon, repeated, negated, squiggle, mapsto, and diagonal arrow aliases",
       "input": "&leftharpoonup;&leftharpoondown;&rightharpoonup;&rightharpoondown;&upharpoonleft;&upharpoonright;&downharpoonleft;&downharpoonright;&leftleftarrows;&rightrightarrows;&downdownarrows;&upuparrows;&leftrightarrows;&rightleftarrows;&leftrightharpoons;&rightleftharpoons;&rightsquigarrow;&leftrightsquigarrow;&nleftarrow;&nrightarrow;&nleftrightarrow;&nLeftarrow;&nRightarrow;&nLeftrightarrow;&mapsto;&longmapsto;&mapstoleft;&mapstoup;&mapstodown;&nearrow;&searrow;&swarrow;&nwarrow;</title>",
       "tokens": [
-        "Text(data=\u21BC\u21BD\u21C0\u21C1\u21BF\u21BE\u21C3\u21C2\u21C7\u21C9\u21CA\u21C8\u21C6\u21C4\u21CB\u21CC\u219D\u21AD\u219A\u219B\u21AE\u21CD\u21CF\u21CE\u21A6\u27FC\u21A4\u21A5\u21A7\u2197\u2198\u2199\u2196)",
+        "Text(data=↼↽⇀⇁↿↾⇃⇂⇇⇉⇊⇈⇆⇄⇋⇌↝↭↚↛↮⇍⇏⇎↦⟼↤↥↧↗↘↙↖)",
         "EndTag(name=title)",
         "EOF"
       ],
@@ -768,7 +768,7 @@
       "description": "WHATWG Greek variant and letter-like aliases resolve in data state",
       "input": "Greek variants:&Gammad;&digamma;&Upsi;&upsi;&beth;&gimel;&daleth;&backepsilon;&bepsi;",
       "tokens": [
-        "Text(data=Greek variants:\u03DC\u03DD\u03D2\u03C5\u2136\u2137\u2138\u03F6\u03F6)",
+        "Text(data=Greek variants:Ϝϝϒυℶℷℸ϶϶)",
         "EOF"
       ]
     },
@@ -777,7 +777,7 @@
       "description": "WHATWG Greek variant aliases resolve inside attribute values",
       "input": "<i vars=\"&epsi;&epsiv;&varepsilon;&straightepsilon;&kappav;&varkappa;&phiv;&varphi;&straightphi;\" more=\"&rhov;&varrho;&sigmav;&varsigma;&thetav;&vartheta;&varpi;\">",
       "tokens": [
-        "StartTag(name=i, attributes=[vars=\u03B5\u03F5\u03F5\u03F5\u03F0\u03F0\u03D5\u03D5\u03D5, more=\u03F1\u03F1\u03C2\u03C2\u03D1\u03D1\u03D6], self_closing=false)",
+        "StartTag(name=i, attributes=[vars=εϵϵϵϰϰϕϕϕ, more=ϱϱςςϑϑϖ], self_closing=false)",
         "EOF"
       ]
     },
@@ -786,7 +786,7 @@
       "description": "Seeded title RCDATA context resolves WHATWG Greek variant aliases",
       "input": "&varepsilon;&varkappa;&vartheta;&varrho;&varsigma;&varphi;</title>",
       "tokens": [
-        "Text(data=\u03F5\u03F0\u03D1\u03F1\u03C2\u03D5)",
+        "Text(data=ϵϰϑϱςϕ)",
         "EndTag(name=title)",
         "EOF"
       ],
@@ -798,7 +798,7 @@
       "description": "WHATWG set and logic aliases resolve in data state",
       "input": "Sets:&Intersection;&Union;&SquareIntersection;&SquareUnion;&Wedge;&Vee;&And;&Or;&Not;&Cup;&Cap;&CupCap;&NotCupCap;&VerticalSeparator;",
       "tokens": [
-        "Text(data=Sets:\u22C2\u22C3\u2293\u2294\u22C0\u22C1\u2A53\u2A54\u2AEC\u22D3\u22D2\u224D\u226D\u2758)",
+        "Text(data=Sets:⋂⋃⊓⊔⋀⋁⩓⩔⫬⋓⋒≍≭❘)",
         "EOF"
       ]
     },
@@ -807,7 +807,7 @@
       "description": "WHATWG membership and subset aliases resolve inside attribute values",
       "input": "<m membership=\"&Element;&NotElement;&ReverseElement;&NotReverseElement;&Exists;&NotExists;&SuchThat;&isinv;&isinE;&notinva;&notinvb;&notinvc;&niv;&notniva;&notnivb;&notnivc;\" subsets=\"&Subset;&Supset;&SubsetEqual;&NotSubset;&NotSubsetEqual;&subE;&supE;&nsubE;&nsupE;&subne;&supne;&subnE;&supnE;\">",
       "tokens": [
-        "StartTag(name=m, attributes=[membership=\u2208\u2209\u220B\u220C\u2203\u2204\u220B\u2208\u22F9\u2209\u22F7\u22F6\u220B\u220C\u22FE\u22FD, subsets=\u22D0\u22D1\u2286\u2282\u20D2\u2288\u2AC5\u2AC6\u2AC5\u0338\u2AC6\u0338\u228A\u228B\u2ACB\u2ACC], self_closing=false)",
+        "StartTag(name=m, attributes=[membership=∈∉∋∌∃∄∋∈⋹∉⋷⋶∋∌⋾⋽, subsets=⋐⋑⊆⊂⃒⊈⫅⫆⫅̸⫆̸⊊⊋⫋⫌], self_closing=false)",
         "EOF"
       ]
     },
@@ -816,7 +816,7 @@
       "description": "Seeded title RCDATA context resolves WHATWG set operation aliases",
       "input": "&emptyset;&emptyv;&varnothing;&setminus;&smallsetminus;&sqcap;&sqcup;&sqsub;&sqsup;&sqsube;&sqsupe;&cuvee;&cuwed;&xcap;&xcup;&xvee;&xwedge;</title>",
       "tokens": [
-        "Text(data=\u2205\u2205\u2205\u2216\u2216\u2293\u2294\u228F\u2290\u2291\u2292\u22CE\u22CF\u22C2\u22C3\u22C1\u22C0)",
+        "Text(data=∅∅∅∖∖⊓⊔⊏⊐⊑⊒⋎⋏⋂⋃⋁⋀)",
         "EndTag(name=title)",
         "EOF"
       ],
@@ -828,7 +828,7 @@
       "description": "WHATWG circled operator, integral, product, and therefore aliases resolve in data state",
       "input": "Operators:&CircleDot;&CircleMinus;&CirclePlus;&CircleTimes;&ContourIntegral;&DoubleContourIntegral;&Integral;&Product;&Coproduct;&Sum;&Sqrt;&Proportional;&Therefore;&Because;&VerticalTilde;",
       "tokens": [
-        "Text(data=Operators:\u2299\u2296\u2295\u2297\u222E\u222F\u222B\u220F\u2210\u2211\u221A\u221D\u2234\u2235\u2240)",
+        "Text(data=Operators:⊙⊖⊕⊗∮∯∫∏∐∑√∝∴∵≀)",
         "EOF"
       ]
     },
@@ -837,7 +837,7 @@
       "description": "WHATWG boxed operator and square aliases resolve inside attribute values",
       "input": "<g ops=\"&ominus;&odot;&osol;&ocir;&oast;&odash;&pluscir;&timesb;&sdotb;&minusb;&boxplus;&boxminus;&boxtimes;&dotsquare;&compfn;\" shapes=\"&FilledSmallSquare;&EmptySmallSquare;&EmptyVerySmallSquare;&FilledVerySmallSquare;&Square;&SquareSubset;&SquareSubsetEqual;&SquareSuperset;&SquareSupersetEqual;\">",
       "tokens": [
-        "StartTag(name=g, attributes=[ops=\u2296\u2299\u2298\u229A\u229B\u229D\u2A22\u22A0\u22A1\u229F\u229E\u229F\u22A0\u22A1\u2218, shapes=\u25FC\u25FB\u25AB\u25AA\u25A1\u228F\u2291\u2290\u2292], self_closing=false)",
+        "StartTag(name=g, attributes=[ops=⊖⊙⊘⊚⊛⊝⨢⊠⊡⊟⊞⊟⊠⊡∘, shapes=◼◻▫▪□⊏⊑⊐⊒], self_closing=false)",
         "EOF"
       ]
     },
@@ -846,7 +846,7 @@
       "description": "Seeded title RCDATA context resolves WHATWG square, lozenge, star, suit, and symbol aliases",
       "input": "&squ;&square;&squf;&squarf;&blacksquare;&lozenge;&lozf;&blacklozenge;&diamond;&diam;&diamondsuit;&malt;&maltese;&starf;&bigstar;&star;&phone;&female;&male;&spadesuit;&clubsuit;&heartsuit;</title>",
       "tokens": [
-        "Text(data=\u25A1\u25A1\u25AA\u25AA\u25AA\u25CA\u29EB\u29EB\u22C4\u22C4\u2666\u2720\u2720\u2605\u2605\u2606\u260E\u2640\u2642\u2660\u2663\u2665)",
+        "Text(data=□□▪▪▪◊⧫⧫⋄⋄♦✠✠★★☆☎♀♂♠♣♥)",
         "EndTag(name=title)",
         "EOF"
       ],
@@ -858,7 +858,7 @@
       "description": "WHATWG box-drawing aliases resolve in data state",
       "input": "Boxes:&boxDL;&boxDR;&boxDl;&boxDr;&boxH;&boxHD;&boxHU;&boxHd;&boxHu;&boxUL;&boxUR;&boxUl;&boxUr;&boxV;&boxVH;&boxVL;&boxVR;&boxVh;&boxVl;&boxVr;&boxbox;",
       "tokens": [
-        "Text(data=Boxes:\u2557\u2554\u2556\u2553\u2550\u2566\u2569\u2564\u2567\u255D\u255A\u255C\u2559\u2551\u256C\u2563\u2560\u256B\u2562\u255F\u29C9)",
+        "Text(data=Boxes:╗╔╖╓═╦╩╤╧╝╚╜╙║╬╣╠╫╢╟⧉)",
         "EOF"
       ]
     },
@@ -867,7 +867,7 @@
       "description": "WHATWG box-drawing aliases resolve inside attribute values",
       "input": "<box double=\"&boxDL;&boxDR;&boxDl;&boxDr;&boxH;&boxHD;&boxHU;&boxHd;&boxHu;&boxUL;&boxUR;&boxUl;&boxUr;\" mixed=\"&boxV;&boxVH;&boxVL;&boxVR;&boxVh;&boxVl;&boxVr;&boxbox;&boxdL;&boxdR;&boxdl;&boxdr;&boxh;&boxhD;&boxhU;\" light=\"&boxhd;&boxhu;&boxuL;&boxuR;&boxul;&boxur;&boxv;&boxvH;&boxvL;&boxvR;&boxvh;&boxvl;&boxvr;\">",
       "tokens": [
-        "StartTag(name=box, attributes=[double=\u2557\u2554\u2556\u2553\u2550\u2566\u2569\u2564\u2567\u255D\u255A\u255C\u2559, mixed=\u2551\u256C\u2563\u2560\u256B\u2562\u255F\u29C9\u2555\u2552\u2510\u250C\u2500\u2565\u2568, light=\u252C\u2534\u255B\u2558\u2518\u2514\u2502\u256A\u2561\u255E\u253C\u2524\u251C], self_closing=false)",
+        "StartTag(name=box, attributes=[double=╗╔╖╓═╦╩╤╧╝╚╜╙, mixed=║╬╣╠╫╢╟⧉╕╒┐┌─╥╨, light=┬┴╛╘┘└│╪╡╞┼┤├], self_closing=false)",
         "EOF"
       ]
     },
@@ -876,7 +876,7 @@
       "description": "Seeded title RCDATA context resolves WHATWG box-drawing aliases",
       "input": "&boxdL;&boxdR;&boxdl;&boxdr;&boxh;&boxhD;&boxhU;&boxhd;&boxhu;&boxuL;&boxuR;&boxul;&boxur;&boxv;&boxvH;&boxvL;&boxvR;&boxvh;&boxvl;&boxvr;</title>",
       "tokens": [
-        "Text(data=\u2555\u2552\u2510\u250C\u2500\u2565\u2568\u252C\u2534\u255B\u2558\u2518\u2514\u2502\u256A\u2561\u255E\u253C\u2524\u251C)",
+        "Text(data=╕╒┐┌─╥╨┬┴╛╘┘└│╪╡╞┼┤├)",
         "EndTag(name=title)",
         "EOF"
       ],
@@ -888,7 +888,7 @@
       "description": "WHATWG angle aliases resolve in data state",
       "input": "Angles:&angle;&angmsd;&angsph;&angrt;&angrtvb;&angrtvbd;&angst;&angzarr;&measuredangle;",
       "tokens": [
-        "Text(data=Angles:\u2220\u2221\u2222\u221F\u22BE\u299D\u00C5\u237C\u2221)",
+        "Text(data=Angles:∠∡∢∟⊾⦝Å⍼∡)",
         "EOF"
       ]
     },
@@ -897,7 +897,7 @@
       "description": "WHATWG angle bracket and fence aliases resolve inside attribute values",
       "input": "<f angles=\"&lang;&rang;&langle;&rangle;&LeftAngleBracket;&RightAngleBracket;\" fences=\"&LeftCeiling;&RightCeiling;&LeftFloor;&RightFloor;&LeftDoubleBracket;&RightDoubleBracket;&lobrk;&robrk;&lbrack;&rbrack;&lbrace;&rbrace;&lpar;&rpar;\">",
       "tokens": [
-        "StartTag(name=f, attributes=[angles=\u27E8\u27E9\u27E8\u27E9\u27E8\u27E9, fences=\u2308\u2309\u230A\u230B\u27E6\u27E7\u27E6\u27E7[]{}()], self_closing=false)",
+        "StartTag(name=f, attributes=[angles=⟨⟩⟨⟩⟨⟩, fences=⌈⌉⌊⌋⟦⟧⟦⟧[]{}()], self_closing=false)",
         "EOF"
       ]
     },
@@ -906,7 +906,7 @@
       "description": "Seeded title RCDATA context resolves WHATWG triangle, corner, and over-under fence aliases",
       "input": "&LeftTriangle;&RightTriangle;&triangleleft;&triangleright;&blacktriangleleft;&blacktriangleright;&ulcorner;&urcorner;&llcorner;&lrcorner;&OverBrace;&UnderBrace;&OverBracket;&UnderBracket;&OverParenthesis;&UnderParenthesis;&OverBar;&UnderBar;&bbrk;&bbrktbrk;</title>",
       "tokens": [
-        "Text(data=\u22B2\u22B3\u25C3\u25B9\u25C2\u25B8\u231C\u231D\u231E\u231F\u23DE\u23DF\u23B4\u23B5\u23DC\u23DD\u203E_\u23B5\u23B6)",
+        "Text(data=⊲⊳◃▹◂▸⌜⌝⌞⌟⏞⏟⎴⎵⏜⏝‾_⎵⎶)",
         "EndTag(name=title)",
         "EOF"
       ],
@@ -918,7 +918,7 @@
       "description": "WHATWG Latin Extended and diacritic aliases resolve in data state",
       "input": "Latin extended:&Amacr;&abreve;&Aogon;&aogon;&Cacute;&ccaron;&Dcaron;&dcaron;&Emacr;&eogon;&Gbreve;&gcirc;&Idot;&inodot;",
       "tokens": [
-        "Text(data=Latin extended:\u0100\u0103\u0104\u0105\u0106\u010D\u010E\u010F\u0112\u0119\u011E\u011D\u0130\u0131)",
+        "Text(data=Latin extended:ĀăĄąĆčĎďĒęĞĝİı)",
         "EOF"
       ]
     },
@@ -927,7 +927,7 @@
       "description": "WHATWG Latin Extended and diacritic aliases resolve inside attribute values",
       "input": "<p upper=\"&Hcirc;&Itilde;&Jcirc;&Kcedil;&Lacute;&Lcaron;&Lcedil;&Lmidot;&Nacute;&Ncaron;&Ncedil;\" lower=\"&hcirc;&itilde;&jcirc;&kcedil;&lacute;&lcaron;&lcedil;&lmidot;&nacute;&ncaron;&ncedil;\">",
       "tokens": [
-        "StartTag(name=p, attributes=[upper=\u0124\u0128\u0134\u0136\u0139\u013D\u013B\u013F\u0143\u0147\u0145, lower=\u0125\u0129\u0135\u0137\u013A\u013E\u013C\u0140\u0144\u0148\u0146], self_closing=false)",
+        "StartTag(name=p, attributes=[upper=ĤĨĴĶĹĽĻĿŃŇŅ, lower=ĥĩĵķĺľļŀńňņ], self_closing=false)",
         "EOF"
       ]
     },
@@ -936,7 +936,7 @@
       "description": "Seeded title RCDATA context resolves WHATWG Latin Extended and diacritic aliases",
       "input": "&Omacr;&omacr;&Racute;&rcaron;&Sacute;&scedil;&Scirc;&scirc;&Tcaron;&tcedil;&Ubreve;&umacr;&Uogon;&uring;&Utilde;&wcirc;&Ycirc;&ycirc;&Zacute;&zcaron;&Zdot;&zdot;</title>",
       "tokens": [
-        "Text(data=\u014C\u014D\u0154\u0159\u015A\u015F\u015C\u015D\u0164\u0163\u016C\u016B\u0172\u016F\u0168\u0175\u0176\u0177\u0179\u017E\u017B\u017C)",
+        "Text(data=ŌōŔřŚşŜŝŤţŬūŲůŨŵŶŷŹžŻż)",
         "EndTag(name=title)",
         "EOF"
       ],
@@ -948,7 +948,7 @@
       "description": "Legacy named character references recover when the semicolon is missing in data state",
       "input": "Legacy&nbsp symbols: &copy/&reg",
       "tokens": [
-        "Text(data=Legacy\u00A0 symbols: \u00A9/\u00AE)",
+        "Text(data=Legacy  symbols: ©/®)",
         "EOF"
       ],
       "diagnostics": [
@@ -962,7 +962,7 @@
       "description": "Legacy named character references recover when the semicolon is missing in attributes",
       "input": "<a title=\"A&nbsp B\" copy=&copy reg=&reg>",
       "tokens": [
-        "StartTag(name=a, attributes=[title=A\u00A0 B, copy=\u00A9, reg=\u00AE], self_closing=false)",
+        "StartTag(name=a, attributes=[title=A  B, copy=©, reg=®], self_closing=false)",
         "EOF"
       ],
       "diagnostics": [
@@ -976,7 +976,7 @@
       "description": "Seeded title RCDATA context recovers legacy named character references with missing semicolons",
       "input": "Venture&nbsp &copy &reg</title>",
       "tokens": [
-        "Text(data=Venture\u00A0 \u00A9 \u00AE)",
+        "Text(data=Venture  © ®)",
         "EndTag(name=title)",
         "EOF"
       ],
@@ -1002,7 +1002,7 @@
       "description": "Unknown named character references stay literal inside attributes",
       "input": "<a title=\"&copy;\" bogus=&madeup;>",
       "tokens": [
-        "StartTag(name=a, attributes=[title=\u00A9, bogus=&madeup;], self_closing=false)",
+        "StartTag(name=a, attributes=[title=©, bogus=&madeup;], self_closing=false)",
         "EOF"
       ]
     },
@@ -1011,7 +1011,7 @@
       "description": "Decimal and hexadecimal numeric character references resolve in data state",
       "input": "Letters: &#65; &#x42; &#X43; &#0;",
       "tokens": [
-        "Text(data=Letters: A B C \uFFFD)",
+        "Text(data=Letters: A B C �)",
         "EOF"
       ],
       "diagnostics": [
@@ -1023,7 +1023,7 @@
       "description": "Numeric character references resolve inside quoted and unquoted attribute values",
       "input": "<a title=\"&#65;&#x42;\" data-x='&#X43;' note=&#0;>",
       "tokens": [
-        "StartTag(name=a, attributes=[title=AB, data-x=C, note=\uFFFD], self_closing=false)",
+        "StartTag(name=a, attributes=[title=AB, data-x=C, note=�], self_closing=false)",
         "EOF"
       ],
       "diagnostics": [
@@ -1035,7 +1035,7 @@
       "description": "Invalid numeric character references report spec diagnostics and use replacement or remapped characters",
       "input": "<a data='&#0; &#xD800; &#x110000; &#xFDD0; &#x80;'>",
       "tokens": [
-        "StartTag(name=a, attributes=[data=\uFFFD \uFFFD \uFFFD \uFDD0 \u20AC], self_closing=false)",
+        "StartTag(name=a, attributes=[data=� � � ﷐ €], self_closing=false)",
         "EOF"
       ],
       "diagnostics": [
@@ -1462,6 +1462,60 @@
       "input": "Misc:&Mellintrf;&infintie;&intcal;&integers;&intercal;&intprod;&iprod;&leftthreetimes;&rightthreetimes;&elinters;",
       "tokens": [
         "Text(data=Misc:ℳ⧝⊺ℤ⊺⨼⨼⋋⋌⏧)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-final-named-character-references-1",
+      "description": "Final WHATWG named character reference coverage batch 1: Assign through angmsdah",
+      "input": "WHATWG remaining named refs 1 (Assign-angmsdah):&Assign;&Backslash;&Barv;&Barwed;&Bernoullis;&Breve;&Cayleys;&Cedilla;&Colon;&Colone;&Dashv;&Del;&Diamond;&DoubleLeftTee;&DoubleRightTee;&DownBreve;&DownTee;&Dstrok;&ENG;&Equilibrium;&Esim;&ForAll;&Fouriertrf;&Gg;&Gt;&Hacek;&Hat;&HilbertSpace;&HorizontalLine;&Hstrok;&IJlig;&Im;&Implies;&Lang;&Laplacetrf;&LeftTee;&LeftTriangleBar;&LeftTriangleEqual;&Ll;&Lsh;&Lstrok;&Lt;&NotCongruent;&NotDoubleVerticalBar;&NotHumpDownHump;&NotHumpEqual;&NotLeftTriangle;&NotLeftTriangleBar;&NotLeftTriangleEqual;&NotRightTriangle;&NotRightTriangleBar;&NotRightTriangleEqual;&Odblac;&PartialD;&Poincareplane;&Pr;&Proportion;&Rang;&Re;&ReverseEquilibrium;&ReverseUpEquilibrium;&RightTee;&RightTriangleBar;&RightTriangleEqual;&RoundImplies;&Rsh;&RuleDelayed;&Sc;&Star;&TRADE;&Tstrok;&Udblac;&UpEquilibrium;&UpTee;&VDash;&Vbar;&Vdash;&Vdashl;&Verbar;&Vert;&Vvdash;&ac;&acE;&acd;&af;&aleph;&amalg;&andand;&andd;&andslope;&andv;&ange;&angmsdaa;&angmsdab;&angmsdac;&angmsdad;&angmsdae;&angmsdaf;&angmsdag;&angmsdah;",
+      "tokens": [
+        "Text(data=WHATWG remaining named refs 1 (Assign-angmsdah):≔∖⫧⌆ℬ˘ℭ¸∷⩴⫤∇⋄⫤⊨̑⊤ĐŊ⇌⩳∀ℱ⋙≫ˇ^ℋ─ĦĲℑ⇒⟪ℒ⊣⧏⊴⋘↰Ł≪≢∦≎̸≏̸⋪⧏̸⋬⋫⧐̸⋭Ő∂ℌ⪻∷⟫ℜ⇋⥯⊢⧐⊵⥰↱⧴⪼⋆™ŦŰ⥮⊥⊫⫫⊩⫦‖‖⊪∾∾̳∿⁡ℵ⨿⩕⩜⩘⩚⦤⦨⦩⦪⦫⦬⦭⦮⦯)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-final-named-character-references-2",
+      "description": "Final WHATWG named character reference coverage batch 2: ap through eng",
+      "input": "WHATWG remaining named refs 2 (ap-eng):&ap;&apE;&apacir;&ape;&apid;&approx;&approxeq;&ast;&asympeq;&bNot;&backcong;&backprime;&backsim;&backsimeq;&barvee;&barwed;&barwedge;&becaus;&because;&bemptyv;&bernou;&between;&bigtriangledown;&bigtriangleup;&bigvee;&bigwedge;&blacktriangle;&blacktriangledown;&blank;&blk12;&blk14;&blk34;&block;&bne;&bnequiv;&bnot;&bot;&bottom;&bowtie;&bprime;&breve;&bsemi;&bsol;&bsolb;&bullet;&caret;&caron;&cemptyv;&check;&checkmark;&cir;&cirE;&cire;&cirmid;&cirscir;&colon;&colone;&comma;&commat;&comp;&complement;&complexes;&copysr;&cross;&cuepr;&cuesc;&curlyvee;&curlywedge;&cylcty;&dash;&dashv;&dblac;&ddagger;&demptyv;&die;&disin;&div;&divonx;&dlcorn;&dlcrop;&dollar;&doublebarwedge;&drcorn;&drcrop;&dsol;&dstrok;&dtri;&dtrif;&dwangle;&easter;&ecir;&ecolon;&eg;&egs;&el;&ell;&els;&emsp13;&emsp14;&eng;",
+      "tokens": [
+        "Text(data=WHATWG remaining named refs 2 (ap-eng):≈⩰⩯≊≋≈≊*≍⫭≌‵∽⋍⊽⌅⌅∵∵⦰ℬ≬▽△⋁⋀▴▾␣▒░▓█=⃥≡⃥⌐⊥⊥⋈‵˘⁏\\⧅•⁁ˇ⦲✓✓○⧃≗⫯⧂:≔,@∁∁ℂ℗✗⋞⋟⋎⋏⌭‐⊣˝‡⦱¨⋲÷⋇⌞⌍$⌆⌟⌌⧶đ▿▾⦦⩮≖≕⪚⪖⪙ℓ⪕  ŋ)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-final-named-character-references-3",
+      "description": "Final WHATWG named character reference coverage batch 3: epar through lcub",
+      "input": "WHATWG remaining named refs 3 (epar-lcub):&epar;&eparsl;&esim;&excl;&expectation;&exponentiale;&ffilig;&fflig;&ffllig;&filig;&fjlig;&flat;&fllig;&fltns;&fork;&forkv;&frac13;&frac15;&frac16;&frac18;&frac23;&frac25;&frac35;&frac38;&frac45;&frac56;&frac58;&frac78;&frown;&gE;&gEl;&gacute;&gammad;&gap;&gel;&geq;&geqq;&geqslant;&ges;&gescc;&gesl;&gesles;&gg;&ggg;&grave;&gsim;&gsime;&gsiml;&gtcc;&gtcir;&gtlPar;&gtquest;&gvertneqq;&gvnE;&hairsp;&half;&hamilt;&hbar;&hercon;&hksearow;&hkswarow;&homtht;&horbar;&hslash;&hstrok;&hybull;&hyphen;&ic;&iff;&iinfin;&iiota;&ijlig;&imagline;&imagpart;&imath;&imof;&imped;&in;&incare;&isins;&isinsv;&it;&jmath;&kgreen;&lAtail;&lE;&lEg;&laemptyv;&lagran;&langd;&lap;&lat;&latail;&late;&lates;&lbbrk;&lbrke;&lbrksld;&lbrkslu;&lcub;",
+      "tokens": [
+        "Text(data=WHATWG remaining named refs 3 (epar-lcub):⋕⧣≂!ℰⅇﬃﬀﬄﬁfj♭ﬂ▱⋔⫙⅓⅕⅙⅛⅔⅖⅗⅜⅘⅚⅝⅞⌢≧⪌ǵϝ⪆⋛≥≧⩾⩾⪩⋛︀⪔≫⋙`≳⪎⪐⪧⩺⦕⩼≩︀≩︀ ½ℋℏ⊹⤥⤦∻―ℏħ⁃‐⁣⇔⧜℩ĳℐℑı⊷Ƶ∈℅⋴⋳⁢ȷĸ⤛≦⪋⦴ℒ⦑⪅⪫⤙⪭⪭︀❲⦋⦏⦍{)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-final-named-character-references-4",
+      "description": "Final WHATWG named character reference coverage batch 4: ldca through nsce",
+      "input": "WHATWG remaining named refs 4 (ldca-nsce):&ldca;&ldquor;&ldsh;&leg;&leq;&leqq;&leqslant;&les;&lescc;&lesg;&lesges;&lhblk;&ll;&lltri;&lmoust;&lmoustache;&loang;&lopar;&lowbar;&lparlt;&lrtri;&lsh;&lsim;&lsime;&lsimg;&lstrok;&ltcc;&ltcir;&lthree;&ltquest;&ltrPar;&ltri;&ltrie;&ltrif;&lvertneqq;&lvnE;&marker;&mcomma;&mho;&mlcp;&mldr;&models;&mp;&mstpos;&multimap;&mumap;&nVDash;&nVdash;&nang;&nap;&napE;&napid;&napos;&napprox;&natur;&natural;&naturals;&nbump;&nbumpe;&ncong;&nearhk;&nequiv;&nesear;&nesim;&nexists;&ngE;&nge;&ngeq;&ngeqq;&ngeqslant;&nges;&ngsim;&ngt;&ngtr;&nhpar;&nis;&nisd;&nlE;&nldr;&nle;&nleq;&nleqq;&nleqslant;&nles;&nless;&nlsim;&nlt;&nltri;&nltrie;&nmid;&notinE;&notni;&npr;&nprcue;&npre;&nrtri;&nrtrie;&nsc;&nsccue;&nsce;",
+      "tokens": [
+        "Text(data=WHATWG remaining named refs 4 (ldca-nsce):⤶„↲⋚≤≦⩽⩽⪨⋚︀⪓▄≪◺⎰⎰⟬⦅_⦓⊿↰≲⪍⪏ł⪦⩹⋋⩻⦖◃⊴◂≨︀≨︀▮⨩℧⫛…⊧∓∾⊸⊸⊯⊮∠⃒≉⩰̸≋̸ŉ≉♮♮ℕ≎̸≏̸≇⤤≢⤨≂̸∄≧̸≱≱≧̸⩾̸⩾̸≵≯≯⫲⋼⋺≦̸‥≰≰≦̸⩽̸⩽̸≮≴≮⋪⋬∤⋹̸∌⊀⋠⪯̸⋫⋭⊁⋡⪰̸)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-final-named-character-references-5",
+      "description": "Final WHATWG named character reference coverage batch 5: nshortmid through rsh",
+      "input": "WHATWG remaining named refs 5 (nshortmid-rsh):&nshortmid;&nshortparallel;&nsim;&nsime;&nsimeq;&nsmid;&nspar;&ntgl;&ntlg;&ntriangleleft;&ntrianglelefteq;&ntriangleright;&ntrianglerighteq;&num;&numero;&numsp;&nvDash;&nvap;&nvdash;&nvge;&nvgt;&nvinfin;&nvle;&nvlt;&nvltrie;&nvrtrie;&nvsim;&nwarhk;&nwnear;&oS;&odblac;&odiv;&odsold;&ofcir;&ogon;&ogt;&ohbar;&ohm;&olcir;&olcross;&olt;&omid;&opar;&operp;&ord;&order;&orderof;&origof;&oror;&orslope;&orv;&ovbar;&percnt;&period;&pertenk;&phmmat;&pitchfork;&planck;&planckh;&plankv;&pm;&primes;&profalar;&profline;&profsurf;&propto;&prurel;&puncsp;&qprime;&quaternions;&quest;&questeq;&rAtail;&race;&raemptyv;&rangd;&range;&ratail;&ratio;&rationals;&rbbrk;&rbrke;&rbrksld;&rbrkslu;&rcub;&rdca;&rdquor;&rdsh;&realine;&realpart;&reals;&rect;&ring;&rmoust;&rmoustache;&rnmid;&roang;&ropar;&rpargt;&rsh;",
+      "tokens": [
+        "Text(data=WHATWG remaining named refs 5 (nshortmid-rsh):∤∦≁≄≄∤∦≹≸⋪⋬⋫⋭#№ ⊭≍⃒⊬≥⃒>⃒⧞≤⃒<⃒⊴⃒⊵⃒∼⃒⤣⤧Ⓢő⨸⦼⦿˛⧁⦵Ω⦾⦻⧀⦶⦷⦹⩝ℴℴ⊶⩖⩗⩛⌽%.‱ℳ⋔ℏℎℏ±ℙ⌮⌒⌓∝⊰ ⁗ℍ?≟⤜∽̱⦳⦒⦥⤚∶ℚ❳⦌⦎⦐}⤷”↳ℛℜℝ▭˚⎱⎱⫮⟭⦆⦔↱)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-final-named-character-references-6",
+      "description": "Final WHATWG named character reference coverage batch 6: rthree through zeetrf",
+      "input": "WHATWG remaining named refs 6 (rthree-zeetrf):&rthree;&rtri;&rtrie;&rtrif;&rtriltri;&rx;&searhk;&semi;&seswar;&sext;&sfrown;&sharp;&smashp;&smeparsl;&smid;&smile;&smt;&smte;&smtes;&sol;&solb;&solbar;&spar;&ssmile;&sstarf;&strns;&sung;&swarhk;&swnwar;&target;&tbrk;&telrec;&therefore;&thickapprox;&thicksim;&thkap;&thksim;&toea;&top;&topbot;&topcir;&topfork;&tosa;&tprime;&triangle;&triangledown;&trianglelefteq;&triangleq;&trianglerighteq;&trie;&trisb;&tritime;&trpezium;&tstrok;&twixt;&udblac;&uhblk;&ulcorn;&ulcrop;&ultri;&urcorn;&urcrop;&urtri;&utri;&utrif;&uwangle;&vBar;&vBarv;&vDash;&vangrt;&varpropto;&vartriangleleft;&vartriangleright;&vdash;&vee;&veebar;&veeeq;&vellip;&verbar;&vert;&vltri;&vprop;&vrtri;&vzigzag;&wedbar;&wedge;&wedgeq;&wp;&wr;&wreath;&xdtri;&xmap;&xnis;&xotime;&xutri;&zeetrf;",
+      "tokens": [
+        "Text(data=WHATWG remaining named refs 6 (rthree-zeetrf):⋌▹⊵▸⧎℞⤥;⤩✶⌢♯⨳⧤∣⌣⪪⪬⪬︀/⧄⌿∥⌣⋆¯♪⤦⤪⌖⎴⌕∴≈∼≈∼⤨⊤⌶⫱⫚⤩‴▵▿⊴≜⊵≜⧍⨻⏢ŧ≬ű▀⌜⌏◸⌝⌎◹▵▴⦧⫨⫩⊨⦜∝⊲⊳⊢∨⊻≚⋮||⊲∝⊳⦚⩟∧≙℘≀≀▽⟼⋻⨂△ℨ)",
         "EOF"
       ]
     }
