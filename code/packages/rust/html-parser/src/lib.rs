@@ -7,7 +7,7 @@
 
 use coding_adventures_html_lexer::{
     apply_html_lex_context, create_html_lexer, Attribute as LexerAttribute, Diagnostic,
-    HtmlLexContext, HtmlLexer, HtmlScriptingMode, Token, TokenizerError,
+    HtmlLexContext, HtmlLexer, HtmlScriptingMode, HtmlTokenizerState, Token, TokenizerError,
 };
 use dom_core::{Attribute, Document, DocumentType, Node};
 use std::fmt;
@@ -33,6 +33,15 @@ impl Default for HtmlParseOptions {
 pub enum HtmlInitialTokenizerContext {
     Data,
     ForeignContentCdataSection,
+    ScriptData,
+    ScriptDataEscaped,
+    ScriptDataEscapedDash,
+    ScriptDataEscapedDashDash,
+    ScriptDataEscapedLessThanSign,
+    ScriptDataDoubleEscaped,
+    ScriptDataDoubleEscapedDash,
+    ScriptDataDoubleEscapedDashDash,
+    ScriptDataDoubleEscapedLessThanSign,
 }
 
 impl HtmlInitialTokenizerContext {
@@ -40,8 +49,35 @@ impl HtmlInitialTokenizerContext {
         match self {
             Self::Data => HtmlLexContext::data(),
             Self::ForeignContentCdataSection => HtmlLexContext::cdata_section(),
+            Self::ScriptData => script_lex_context(HtmlTokenizerState::ScriptData),
+            Self::ScriptDataEscaped => script_lex_context(HtmlTokenizerState::ScriptDataEscaped),
+            Self::ScriptDataEscapedDash => {
+                script_lex_context(HtmlTokenizerState::ScriptDataEscapedDash)
+            }
+            Self::ScriptDataEscapedDashDash => {
+                script_lex_context(HtmlTokenizerState::ScriptDataEscapedDashDash)
+            }
+            Self::ScriptDataEscapedLessThanSign => {
+                script_lex_context(HtmlTokenizerState::ScriptDataEscapedLessThanSign)
+            }
+            Self::ScriptDataDoubleEscaped => {
+                script_lex_context(HtmlTokenizerState::ScriptDataDoubleEscaped)
+            }
+            Self::ScriptDataDoubleEscapedDash => {
+                script_lex_context(HtmlTokenizerState::ScriptDataDoubleEscapedDash)
+            }
+            Self::ScriptDataDoubleEscapedDashDash => {
+                script_lex_context(HtmlTokenizerState::ScriptDataDoubleEscapedDashDash)
+            }
+            Self::ScriptDataDoubleEscapedLessThanSign => {
+                script_lex_context(HtmlTokenizerState::ScriptDataDoubleEscapedLessThanSign)
+            }
         }
     }
+}
+
+fn script_lex_context(state: HtmlTokenizerState) -> HtmlLexContext {
+    HtmlLexContext::script_substate(state).expect("parser only exposes valid script substates")
 }
 
 /// Parser result that keeps DOM output and diagnostics together.
@@ -678,6 +714,59 @@ mod tests {
         let paragraph = element(&body(&document).children[1]);
         assert_eq!(paragraph.name, "p");
         assert_eq!(paragraph.children, vec![Node::text("x")]);
+    }
+
+    #[test]
+    fn parser_can_start_in_script_escaped_fragment_context() {
+        let output = parse_html_with_diagnostics_and_options(
+            "x</script><p>after</p>",
+            HtmlParseOptions {
+                initial_tokenizer_context: HtmlInitialTokenizerContext::ScriptDataEscapedDashDash,
+                ..HtmlParseOptions::default()
+            },
+        )
+        .unwrap();
+
+        let body = body(&output.document);
+        assert_eq!(body.children[0], Node::text("x"));
+
+        let paragraph = element(&body.children[1]);
+        assert_eq!(paragraph.name, "p");
+        assert_eq!(paragraph.children, vec![Node::text("after")]);
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-end-tag",
+                "end tag `</script>` did not match an open element"
+            )]
+        );
+    }
+
+    #[test]
+    fn parser_can_start_in_script_double_escaped_less_than_context() {
+        let output = parse_html_with_diagnostics_and_options(
+            "/script>tail</script><p>after</p>",
+            HtmlParseOptions {
+                initial_tokenizer_context:
+                    HtmlInitialTokenizerContext::ScriptDataDoubleEscapedLessThanSign,
+                ..HtmlParseOptions::default()
+            },
+        )
+        .unwrap();
+
+        let body = body(&output.document);
+        assert_eq!(body.children[0], Node::text("/script>tail"));
+
+        let paragraph = element(&body.children[1]);
+        assert_eq!(paragraph.name, "p");
+        assert_eq!(paragraph.children, vec![Node::text("after")]);
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-end-tag",
+                "end tag `</script>` did not match an open element"
+            )]
+        );
     }
 
     #[test]
