@@ -1539,8 +1539,11 @@ checker's configurable AST-depth, block-depth, and procedure-depth checks. The
 runtime lowering already keeps frames, dynamic arrays, output, eval-thunk
 descriptors, and generated control/helper label state bounded. The pure-Python
 WASM runtime now also exposes a configurable instruction budget so embedders
-can cap nonterminating compiled programs at execution time; future convergence
-work should keep closing any remaining host-budget items against this list.
+can cap nonterminating compiled programs at execution time. Its WASI `fd_write`
+host path validates iovec tables, guest buffer ranges, and output budgets before
+forwarding stdout/stderr, so compiled ALGOL output has both guest-side and
+host-side bounds. Future convergence work should keep closing any remaining
+host-budget items against this list.
 
 ## Documentation Requirements
 
