@@ -19,7 +19,7 @@ This first slice intentionally starts small:
 - parser options for scripting-sensitive tokenizer handoff, including
   `noscript`
 - parser-approved initial tokenizer contexts for data-state documents and
-  foreign-content CDATA fragments
+  foreign-content CDATA or script-state fragments
 - simple implied end tags for `p`, `li`, `dt`, and `dd`
 - parser diagnostics for unmatched end tags
 
@@ -56,6 +56,15 @@ let foreign_cdata_fragment = parse_html_with_options(
     "<svg:title>&amp;</svg:title>]]>",
     HtmlParseOptions {
         initial_tokenizer_context: HtmlInitialTokenizerContext::ForeignContentCdataSection,
+        ..HtmlParseOptions::default()
+    },
+)
+.unwrap();
+
+let script_fragment = parse_html_with_options(
+    "if (a < b) { run(); }</script><p>done</p>",
+    HtmlParseOptions {
+        initial_tokenizer_context: HtmlInitialTokenizerContext::ScriptData,
         ..HtmlParseOptions::default()
     },
 )
