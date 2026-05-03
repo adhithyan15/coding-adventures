@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import sys
 from collections.abc import Iterator, Sequence
 from dataclasses import dataclass
@@ -10,7 +11,7 @@ from pathlib import Path
 from typing import Literal, TextIO, cast
 
 from cli_builder import HelpResult, ParseErrors, Parser, ParseResult, VersionResult
-from logic_engine import Term
+from logic_engine import Atom, Compound, Disequality, LogicVar, Number, String, Term
 
 from prolog_vm_compiler.compiler import (
     PrologAnswer,
@@ -28,6 +29,7 @@ from prolog_vm_compiler.compiler import (
 )
 
 type CliDialect = Literal["swi", "iso"]
+type CliOutputFormat = Literal["text", "json", "jsonl"]
 
 _PROGRAM_NAME = "prolog-vm"
 _SPEC_RESOURCE = "prolog_vm_cli.json"
@@ -46,6 +48,7 @@ class CliArgs:
     dialect: CliDialect
     backend: PrologVMBackend
     values: bool
+    output_format: CliOutputFormat
     commit: bool
     interactive: bool
     initialize: bool
@@ -125,6 +128,9 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         dialect=_dialect(_required_string(flags["dialect"], name="--dialect")),
         backend=_backend(_required_string(flags["backend"], name="--backend")),
         values=bool(flags["values"]),
+        output_format=_output_format(
+            _required_string(flags["format"], name="--format"),
+        ),
         commit=bool(flags["commit"]),
         interactive=bool(flags["interactive"]),
         initialize=not bool(flags["no-initialize"]),
@@ -181,22 +187,47 @@ def _run_cli(args: CliArgs) -> int:
         runtime = _create_runtime(args)
         saw_failure = False
         if args.queries:
-            saw_failure = _run_ad_hoc_queries(args, runtime=runtime)
+            saw_failure = _run_ad_hoc_queries(
+                args,
+                runtime=runtime,
+                streaming=args.interactive,
+            )
         if args.interactive:
             saw_failure = _run_interactive(args, runtime=runtime) or saw_failure
         return 1 if saw_failure else 0
 
     results = _run_source_query(args)
-    _print_results(results, values=args.values)
+    _print_result_records(
+        [
+            _result_record(
+                results,
+                values=args.values,
+                source_query_index=args.source_query_index,
+            ),
+        ],
+        args=args,
+    )
     return 0 if results else 1
 
 
-def _run_ad_hoc_queries(args: CliArgs, *, runtime: PrologVMRuntime) -> bool:
+def _run_ad_hoc_queries(
+    args: CliArgs,
+    *,
+    runtime: PrologVMRuntime,
+    streaming: bool = False,
+) -> bool:
     saw_failure = False
+    records: list[dict[str, object]] = []
     for query in args.queries:
         results = _query_runtime(runtime, query, args=args)
-        _print_results(results, values=args.values)
+        record = _result_record(results, values=args.values, query=query)
+        if streaming:
+            _print_result_records([record], args=args, streaming=True)
+        else:
+            records.append(record)
         saw_failure = saw_failure or not results
+    if records:
+        _print_result_records(records, args=args)
     return saw_failure
 
 
@@ -229,7 +260,11 @@ def _run_interactive(args: CliArgs, *, runtime: PrologVMRuntime) -> bool:
 
     for query in _iter_interactive_queries(sys.stdin, stdout=sys.stdout):
         results = _query_runtime(runtime, query, args=args)
-        _print_results(results, values=args.values)
+        _print_result_records(
+            [_result_record(results, values=args.values, query=query)],
+            args=args,
+            streaming=True,
+        )
         saw_failure = saw_failure or not results
 
     return saw_failure
@@ -341,6 +376,133 @@ def _backend(value: str) -> PrologVMBackend:
         return "bytecode"
     msg = f"unsupported backend {value!r}"
     raise ValueError(msg)
+
+
+def _output_format(value: str) -> CliOutputFormat:
+    if value == "text":
+        return "text"
+    if value == "json":
+        return "json"
+    if value == "jsonl":
+        return "jsonl"
+    msg = f"unsupported output format {value!r}"
+    raise ValueError(msg)
+
+
+def _print_result_records(
+    records: list[dict[str, object]],
+    *,
+    args: CliArgs,
+    streaming: bool = False,
+    stdout: TextIO | None = None,
+) -> None:
+    output = sys.stdout if stdout is None else stdout
+    if args.output_format == "text":
+        for record in records:
+            _print_results(
+                cast(
+                    "list[PrologAnswer] | list[Term | tuple[Term, ...]]",
+                    record["results"],
+                ),
+                values=args.values,
+                stdout=output,
+            )
+        return
+
+    json_records = [_json_record(record) for record in records]
+    if args.output_format == "jsonl" or streaming:
+        for record in json_records:
+            print(json.dumps(record, sort_keys=True), file=output)
+        return
+
+    payload: object = json_records[0] if len(json_records) == 1 else json_records
+    print(json.dumps(payload, sort_keys=True), file=output)
+
+
+def _result_record(
+    results: list[PrologAnswer] | list[Term | tuple[Term, ...]],
+    *,
+    values: bool,
+    query: str | None = None,
+    source_query_index: int | None = None,
+) -> dict[str, object]:
+    return {
+        "query": query,
+        "source_query_index": source_query_index,
+        "success": bool(results),
+        "values": values,
+        "results": results,
+    }
+
+
+def _json_record(record: dict[str, object]) -> dict[str, object]:
+    query = record["query"]
+    source_query_index = record["source_query_index"]
+    results = cast(
+        "list[PrologAnswer] | list[Term | tuple[Term, ...]]",
+        record["results"],
+    )
+    values = bool(record["values"])
+    payload: dict[str, object] = {
+        "success": bool(record["success"]),
+        "answer_count": len(results),
+        "answers": [_json_answer(result, values=values) for result in results],
+    }
+    if query is not None:
+        payload["query"] = query
+    if source_query_index is not None:
+        payload["source_query_index"] = source_query_index
+    return payload
+
+
+def _json_answer(answer: object, *, values: bool) -> dict[str, object]:
+    if values:
+        return {"value": _json_value(answer)}
+    if isinstance(answer, PrologAnswer):
+        return {
+            "bindings": {
+                name: _json_value(value)
+                for name, value in sorted(answer.as_dict().items())
+            },
+            "residual_constraints": [
+                _json_disequality(constraint)
+                for constraint in answer.residual_constraints
+            ],
+        }
+    return {"value": _json_value(answer)}
+
+
+def _json_disequality(constraint: Disequality) -> dict[str, object]:
+    return {
+        "left": _json_value(constraint.left),
+        "right": _json_value(constraint.right),
+    }
+
+
+def _json_value(value: object) -> object:
+    if isinstance(value, Atom):
+        return {"type": "atom", "value": str(value.symbol)}
+    if isinstance(value, Number):
+        return {"type": "number", "value": value.value}
+    if isinstance(value, String):
+        return {"type": "string", "value": value.value}
+    if isinstance(value, LogicVar):
+        payload: dict[str, object] = {"type": "variable", "id": value.id}
+        if value.display_name is not None:
+            payload["name"] = str(value.display_name)
+        return payload
+    if isinstance(value, Compound):
+        return {
+            "type": "compound",
+            "functor": str(value.functor),
+            "args": [_json_value(argument) for argument in value.args],
+        }
+    if isinstance(value, tuple):
+        return {
+            "type": "tuple",
+            "items": [_json_value(item) for item in value],
+        }
+    return {"type": "host", "value": str(value)}
 
 
 def _print_results(
