@@ -165,6 +165,9 @@ local WASM runtime. Those fixtures cover:
   by-name procedure formals, label and switch formals, multiple `for` element
   forms, parenthesized conditional designational expressions, numeric labels,
   boolean operators, real arithmetic, and output
+- a surface-audit matrix for publication notation, procedure-call spellings,
+  loop forms, typed formal procedures, value array copies, nonlocal switch/goto
+  cleanup, and programs without the `result` compatibility scalar
 
 ## Dependencies
 
