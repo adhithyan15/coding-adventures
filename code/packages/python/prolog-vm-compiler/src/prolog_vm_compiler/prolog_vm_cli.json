@@ -71,6 +71,15 @@
       "type": "boolean"
     },
     {
+      "id": "format",
+      "long": "format",
+      "description": "Output format for query results.",
+      "type": "enum",
+      "enum_values": ["text", "json", "jsonl"],
+      "default": "text",
+      "value_name": "FORMAT"
+    },
+    {
       "id": "commit",
       "long": "commit",
       "description": "Commit the first answer state from each ad-hoc query so dynamic updates persist across repeated queries or REPL input.",

@@ -274,6 +274,18 @@ Use `--values` to print raw answer values, omit `--query` to run a source-level
 `?-` directive by index, and use `--dialect iso` when the ISO parser profile is
 the desired frontend.
 
+Use `--format json` for a machine-readable result object, or `--format jsonl`
+when repeated queries should stream one result record per line. JSON answers
+preserve named bindings, raw values, compound terms, variables, and residual
+constraints without requiring callers to scrape the human text format:
+
+```bash
+prolog-vm \
+  --source "parent(homer, bart)." \
+  --query "parent(homer, Who)" \
+  --format json
+```
+
 Repeated `--query` flags run in one stateful runtime. Add `--commit` when the
 first answer state from each query should persist into the next query, which is
 useful for dynamic database updates:

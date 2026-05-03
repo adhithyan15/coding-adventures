@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import io
+import json
 import sys
 from pathlib import Path
 
@@ -48,6 +49,70 @@ def test_cli_repeated_queries_share_committed_runtime_state(
         "true.",
         "Value = saved.",
     ]
+
+
+def test_cli_json_output_serializes_named_answers(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart).",
+        "--query",
+        "parent(homer, Who)",
+        "--format",
+        "json",
+    ])
+
+    payload = json.loads(capsys.readouterr().out)
+
+    assert status == 0
+    assert payload == {
+        "answer_count": 1,
+        "answers": [
+            {
+                "bindings": {
+                    "Who": {"type": "atom", "value": "bart"},
+                },
+                "residual_constraints": [],
+            },
+        ],
+        "query": "parent(homer, Who)",
+        "success": True,
+    }
+
+
+def test_cli_jsonl_output_streams_repeated_query_records(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart).",
+        "--query",
+        "parent(homer, Who)",
+        "--query",
+        "parent(marge, Who)",
+        "--format",
+        "jsonl",
+    ])
+
+    records = [
+        json.loads(line)
+        for line in capsys.readouterr().out.splitlines()
+    ]
+
+    assert status == 1
+    assert records[0]["success"] is True
+    assert records[0]["answer_count"] == 1
+    assert records[0]["answers"][0]["bindings"]["Who"] == {
+        "type": "atom",
+        "value": "bart",
+    }
+    assert records[1] == {
+        "answer_count": 0,
+        "answers": [],
+        "query": "parent(marge, Who)",
+        "success": False,
+    }
 
 
 def test_cli_repeated_queries_report_script_failure(
