@@ -265,3 +265,66 @@ def test_cli_rejects_missing_input(capsys: pytest.CaptureFixture[str]) -> None:
 
     assert status == 2
     assert "provide --source or at least one Prolog file" in capsys.readouterr().err
+
+
+def test_cli_json_output_serializes_validation_errors(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--query",
+        "parent(homer, Who)",
+        "--format",
+        "json",
+    ])
+
+    captured = capsys.readouterr()
+    payload = json.loads(captured.err)
+
+    assert status == 2
+    assert captured.out == ""
+    assert payload == {
+        "error": {
+            "message": "provide --source or at least one Prolog file",
+            "type": "validation_error",
+        },
+        "success": False,
+    }
+
+
+def test_cli_json_output_serializes_parse_errors(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main(["--format", "json", "--unknown"])
+
+    captured = capsys.readouterr()
+    payload = json.loads(captured.err)
+
+    assert status == 2
+    assert captured.out == ""
+    assert payload["success"] is False
+    assert payload["error"]["type"] == "parse_error"
+    assert payload["error"]["message"] == "invalid command-line arguments"
+    assert payload["error"]["errors"][0]["type"] == "unknown_flag"
+    assert "--unknown" in payload["error"]["errors"][0]["message"]
+
+
+def test_cli_jsonl_output_serializes_runtime_errors(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart).",
+        "--query",
+        "(",
+        "--format",
+        "jsonl",
+    ])
+
+    captured = capsys.readouterr()
+    payload = json.loads(captured.err)
+
+    assert status == 1
+    assert captured.out == ""
+    assert payload["success"] is False
+    assert payload["error"]["type"] == "runtime_error"
+    assert payload["error"]["message"]

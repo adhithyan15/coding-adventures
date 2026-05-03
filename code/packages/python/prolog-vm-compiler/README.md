@@ -286,6 +286,11 @@ prolog-vm \
   --format json
 ```
 
+The same JSON formats also structure CLI diagnostics on stderr. Parse,
+validation, and runtime failures emit a `success: false` object with an error
+`type`, a human `message`, and parser detail records when argument parsing
+fails.
+
 Repeated `--query` flags run in one stateful runtime. Add `--commit` when the
 first answer state from each query should persist into the next query, which is
 useful for dynamic database updates:
