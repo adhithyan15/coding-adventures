@@ -111,6 +111,19 @@ impl HtmlTokenizerState {
         }
     }
 
+    /// Return the typed tokenizer state for a generated machine-state identifier.
+    pub fn from_machine_state(machine_state: &str) -> Option<Self> {
+        HTML_TOKENIZER_STATES
+            .iter()
+            .copied()
+            .find(|state| state.as_machine_state() == machine_state)
+    }
+
+    /// Return the typed fragment state for a generated machine-state identifier.
+    pub fn from_fragment_machine_state(machine_state: &str) -> Option<Self> {
+        Self::from_machine_state(machine_state).filter(|state| state.is_fragment_state())
+    }
+
     /// Return whether this state is a parser-approved script tokenizer substate.
     pub fn is_script_substate(self) -> bool {
         HTML_SCRIPT_TOKENIZER_STATES.contains(&self)

@@ -167,7 +167,11 @@ For importers and parser fragment APIs that need to enumerate the whole
 supported surface, `HTML_TOKENIZER_STATES` lists every parser-facing tokenizer
 entry state and `HTML_FRAGMENT_TOKENIZER_STATES` lists the non-data fragment
 states accepted by the wrapper. `HtmlTokenizerState::is_fragment_state()` keeps
-that validation centralized in the lexer package.
+that validation centralized in the lexer package. Code that starts from
+generated machine-state identifiers can use
+`HtmlTokenizerState::from_machine_state(...)` or
+`HtmlTokenizerState::from_fragment_machine_state(...)` to round-trip back to the
+typed API without copying raw state strings.
 `html-skeleton.lexer.states.toml` remains in the crate as a smaller bootstrap
 machine for comparisons and narrow debugging.
 
