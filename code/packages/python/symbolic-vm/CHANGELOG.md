@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.40.0 — 2026-05-04
+
+**Phase 20 — Upgraded `limit_handler`: L'Hôpital, ±∞, indeterminate forms, one-sided limits.**
+
+Bumps `coding-adventures-cas-limit-series` minimum version from unversioned to
+`>=0.2.0` and upgrades the `Limit` VM handler to use `limit_advanced`.
+
+### Changes in `cas_handlers.py`
+
+- **`limit_handler`** now calls `cas_limit_series.limit_advanced` with injected
+  `diff_fn=lambda e,v: vm.eval(_symbolic_diff(e,v))` and `eval_fn=vm.eval`.
+  Supports the optional 4th argument for direction: `Limit(expr, var, point, plus)`
+  or `Limit(expr, var, point, minus)`.
+- The old Phase 1 direct-substitution-only path is fully replaced.
+- Falls through to unevaluated `Limit(…)` when the limit cannot be determined
+  (oscillating, unknown form, depth exceeded).
+
+---
+
 ## 0.39.0 — 2026-05-04
 
 **Phase 19 — Linear algebra completion: 8 new VM handlers for `cas-matrix` 0.3.0.**
