@@ -1,17 +1,18 @@
 # `lang-refinement-checker`
 
-**LANG23 PRs 23-C + 23-D** — the refinement proof-obligation checker.
+**LANG23 PRs 23-C + 23-D + 23-F** — the refinement proof-obligation checker.
 
 Takes `RefinedType` annotations from the IIR, lowers their predicates to
 `ConstraintInstructions`, runs them through `constraint-vm`, and classifies
 the solver's answer into one of the three LANG23 outcomes.
 
-Two APIs are provided:
+Three APIs are provided:
 
 | API | Module | PR | Scope |
 |-----|--------|----|-------|
 | `Checker` | (crate root) | 23-C | Per-binding: checks one proof obligation given concrete/predicated/unconstrained evidence. |
 | `FunctionChecker` | `function_checker` | 23-D | Function-scope: walks a CFG, accumulates guard predicates path-by-path, checks each return site. |
+| `ModuleChecker` | `module_checker` | 23-F | Module-scope: extends function-scope checking with cross-function call-site reasoning; uses a `ModuleScope` registry for per-symbol opt-out. |
 
 ---
 
@@ -23,7 +24,8 @@ lang-refined-types          (RefinedType, Predicate, Kind)
 lang-refinement-checker     (this crate)
         │  PR 23-C: Checker — per-binding proof obligations
         │  PR 23-D: FunctionChecker — CFG-based path-sensitive analysis
-        │  both lower via ProgramBuilder → constraint-vm
+        │  PR 23-F: ModuleChecker — cross-function call-site reasoning
+        │  all lower via ProgramBuilder → constraint-vm
         │
 constraint-vm ──► constraint-engine ──► SAT / LIA tactics
 ```
@@ -188,6 +190,75 @@ For `Variable("x")`, the accumulated scope predicates for `"x"` are remapped to
 
 If the return type were `(Int 0 200)` instead, `return 255` would produce
 `ProvenUnsafe(CounterExample { value: 255, ... })`.
+
+---
+
+## PR 23-F: Module-scope checker
+
+Extends `FunctionChecker` to reason across function call boundaries within a
+module.  A `ModuleScope` registry maps function names to their `FunctionSignature`s;
+any function absent from the scope is silently skipped (per-symbol opt-out via
+`: any`).
+
+### The `latin1-decode` / `decode` example
+
+```scheme
+;; module: text/ascii.twig
+(define (decode (codepoint : (Int 0 128))) ...)
+
+(define (latin1-decode (cp : (Int 0 256)))
+  (if (< cp 128)
+      (decode cp)              ; solver: cp narrowed to [0, 128) by guard ✓
+      (latin1-fallback cp)))  ; latin1-fallback not in scope → skipped
+```
+
+```rust
+use lang_refined_types::{Kind, Predicate, RefinedType};
+use lang_refinement_checker::function_checker::{BranchGuard, FunctionSignature, ReturnValue};
+use lang_refinement_checker::module_checker::{CallArg, ModuleCfgNode, ModuleChecker, ModuleScope};
+
+let decode_sig = FunctionSignature {
+    params: vec![(
+        "codepoint".into(),
+        RefinedType::refined(Kind::Int, Predicate::Range { lo: Some(0), hi: Some(128), inclusive_hi: false }),
+    )],
+    return_type: RefinedType::unrefined(Kind::Int),
+};
+
+let mut scope = ModuleScope::new();
+scope.register("decode", decode_sig);
+
+let latin1_sig = FunctionSignature {
+    params: vec![(
+        "cp".into(),
+        RefinedType::refined(Kind::Int, Predicate::Range { lo: Some(0), hi: Some(256), inclusive_hi: false }),
+    )],
+    return_type: RefinedType::unrefined(Kind::Int),
+};
+
+let cfg = ModuleCfgNode::Branch {
+    guard: BranchGuard { var: "cp".into(), predicate: Predicate::Range { lo: None, hi: Some(128), inclusive_hi: false } },
+    then_node: Box::new(ModuleCfgNode::Call {
+        callee: "decode".into(),
+        args: vec![CallArg::Variable("cp".into())],
+        next: Box::new(ModuleCfgNode::Return(ReturnValue::Variable("cp".into()))),
+    }),
+    else_node: Box::new(ModuleCfgNode::Return(ReturnValue::Variable("cp".into()))),
+};
+
+let mut checker = ModuleChecker::new(scope);
+let result = checker.check_function(&latin1_sig, &cfg);
+
+// The call to `decode cp` in the then-branch is proven safe by the guard.
+assert!(result.all_call_sites_proven_safe());
+```
+
+### How it works
+
+| Path | Scope for `cp` | Call arg evidence | Callee annotation | Outcome |
+|------|----------------|-------------------|-------------------|---------|
+| then (`cp < 128`) | `[0,256) ∩ cp<128` | `Predicated([Range{0,256}, Range{None,128}])` | `(Int 0 128)` | UNSAT refutation → **ProvenSafe** |
+| else (`cp ≥ 128`) | `(cp ≥ 128)` | — | `latin1-fallback` not in scope | *skipped* |
 
 ---
 

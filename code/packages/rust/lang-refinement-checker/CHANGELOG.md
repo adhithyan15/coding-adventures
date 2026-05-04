@@ -1,5 +1,77 @@
 # Changelog — `lang-refinement-checker`
 
+## 0.3.0 — 2026-05-04
+
+Module-scope refinement checker.  **LANG23 PR 23-F.**
+
+### Added
+
+- `module_checker` module — the PR 23-F module-scope checking API.
+  - `CallArg` enum: `Literal(i128)` | `Variable(String)`.  An argument at a
+    cross-function call site.  `Literal` evidence is `Concrete(v)`; `Variable`
+    evidence is gathered from the path-predicate scope (same substitution
+    logic as `FunctionChecker`).
+  - `ModuleCfgNode` enum: `Branch { guard, then_node, else_node }` |
+    `Call { callee, args, next }` | `Return(ReturnValue)`.  Extends the
+    function-scope `CfgNode` (PR 23-D) with a `Call` variant for cross-function
+    call sites.  `Call` carries the callee name, argument list, and the
+    remaining CFG path (`next`) so sequential calls on the same path are all
+    checked.
+  - `ModuleScope` struct: a `HashMap`-backed registry of `FunctionSignature`s.
+    - `new()` — empty scope.
+    - `register(name, sig)` — add or replace an entry; returns `&mut self` for
+      chaining.
+    - `get_signature(name)` — `Option<&FunctionSignature>` (opt-out via absence).
+    - `len()` / `is_empty()` — introspection.
+  - `CallSiteOutcome` struct: `callee: String`, `param_index: usize`,
+    `label: String`, `outcome: CheckOutcome`.  One entry per argument per
+    registered callee encountered during the DFS walk.
+  - `FunctionBodyCheckResult` struct: `return_sites: Vec<ReturnSiteOutcome>` +
+    `call_sites: Vec<CallSiteOutcome>`.  Aggregate for an entire function body.
+    - `all_proven_safe()` — true iff every return site and call-site argument
+      is `ProvenSafe` (false for vacuous results).
+    - `all_call_sites_proven_safe()` — true iff every call-site argument is
+      `ProvenSafe` (ignores return sites; vacuous call_sites → true).
+    - `has_violation()` — true if any outcome is `ProvenUnsafe`.
+    - `first_counter_example()` — first counter-example across return and call
+      sites (return sites scanned first).
+    - `runtime_check_count()` — number of `Unknown` outcomes across both vecs.
+    - `is_vacuous()` — true iff both vecs are empty.
+  - `ModuleChecker` struct: holds `ModuleScope` + inner `Checker`.
+    - `new(scope)` — construct.
+    - `check_function(&sig, &cfg) -> FunctionBodyCheckResult` — seeds the
+      predicate scope from `sig.params`, walks the `ModuleCfgNode` tree
+      path-sensitively; at `Branch` forks scope; at `Call` checks each arg
+      against the callee's param annotation (if registered); at `Return` checks
+      against `sig.return_type`.
+  - Safety budgets: `MAX_MODULE_CFG_DEPTH = 64` (stack-overflow guard),
+    `MAX_MODULE_RETURN_SITES = 1_024` (memory guard),
+    `MAX_MODULE_CALL_SITES = 4_096` (memory guard).  All emit `Unknown` rather
+    than crashing.
+- 21 unit tests + 3 doc-tests in `module_checker` covering:
+  - `latin1-decode` / `decode` example from the LANG23 spec — primary acceptance
+    criterion: call proven safe by the `< cp 128` guard narrowing `cp`.
+  - Direct call without guard — `ProvenUnsafe` (counter-example extractable).
+  - Literal argument in range → `ProvenSafe` (fast path, no solver).
+  - Literal argument out of range → `ProvenUnsafe` with correct counter-example.
+  - Unregistered callee → no call-site outcomes (per-symbol opt-out).
+  - Unconstrained variable (no annotations, no guards) → `Unknown`.
+  - Multiple annotated params: all safe, and one unsafe.
+  - Return site + call site in the same function body.
+  - `all_proven_safe` / `all_call_sites_proven_safe` / `has_violation` /
+    `first_counter_example` / `runtime_check_count` / `is_vacuous`.
+  - `ModuleScope` `register`/`len`/`is_empty`/`get_signature` API.
+  - Call-site outcome label format.
+  - Depth-limit does not crash.
+  - Call-site count limit bounds collection.
+
+### Changed
+
+- Crate version bumped `0.2.0 → 0.3.0`.
+- Crate description updated to mention 23-C, 23-D, and 23-F.
+- `lib.rs` module-level doc updated to show the three-module structure and
+  the new `ModuleChecker` entry in the module table.
+
 ## 0.2.0 — 2026-05-04
 
 Function-scope refinement checker.  **LANG23 PR 23-D.**

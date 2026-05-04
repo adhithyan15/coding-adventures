@@ -1,8 +1,8 @@
 [package]
 name = "lang-refinement-checker"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
-description = "LANG23 PRs 23-C + 23-D — refinement obligation checker (per-binding + function-scope CFG-based path-sensitive analysis)"
+description = "LANG23 PRs 23-C + 23-D + 23-F — refinement obligation checker (per-binding, function-scope, and module-scope cross-function reasoning)"
 
 [dependencies]
 constraint-core = { path = "../constraint-core" }
