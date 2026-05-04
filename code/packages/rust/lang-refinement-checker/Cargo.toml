@@ -1,8 +1,8 @@
 [package]
 name = "lang-refinement-checker"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "LANG23 PR 23-C — refinement obligation checker: lowers RefinedType predicates to ConstraintInstructions and drives the Constraint-VM to classify PROVEN_SAFE / PROVEN_UNSAFE / UNKNOWN"
+description = "LANG23 PRs 23-C + 23-D — refinement obligation checker (per-binding + function-scope CFG-based path-sensitive analysis)"
 
 [dependencies]
 constraint-core = { path = "../constraint-core" }
