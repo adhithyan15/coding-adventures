@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.7.0 — 2026-05-04
+
+### Added
+
+- **FULL OUTER JOIN execution** — no new VM instructions needed.  FULL JOIN
+  is compiled to two passes by `sql-codegen`: Pass 1 emits left rows via
+  the existing LEFT JOIN machinery; Pass 2 is a right-anti-join that emits
+  only unmatched right rows.  The null-padding mechanism is identical to
+  LEFT/RIGHT JOIN: a closed inner cursor returns `None` from `_load_column`.
+- **4 new outer-join VM tests** in `tests/test_outer_join.py`:
+  `test_full_join_all_rows_appear`, `test_full_join_left_empty`,
+  `test_full_join_right_empty`, `test_full_join_no_overlap`.
+
 ## 1.6.0 — 2026-05-04
 
 ### Added

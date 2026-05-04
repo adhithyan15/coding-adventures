@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.14.0] - 2026-05-04
+
+### Added
+
+- **FULL [OUTER] JOIN end-to-end** — `FULL JOIN` and `FULL OUTER JOIN`
+  now execute correctly through the full mini-sqlite pipeline.  All rows
+  from both tables appear: matched rows carry values from both sides,
+  unmatched left rows carry `NULL` for right columns, and unmatched right
+  rows carry `NULL` for left columns.
+- **7 new integration tests** in `test_outer_join.py`:
+  `test_full_outer_join_basic`, `test_full_join_keyword_alone`,
+  `test_full_outer_join_no_orphans`, `test_full_outer_join_left_empty`,
+  `test_full_outer_join_right_empty`, `test_full_outer_join_where_null_right`,
+  `test_full_outer_join_where_null_left`.
+
 ## [1.13.0] - 2026-05-04
 
 ### Added

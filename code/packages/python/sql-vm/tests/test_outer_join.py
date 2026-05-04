@@ -367,3 +367,160 @@ def test_right_join_left_empty(two_table_backend: InMemoryBackend) -> None:
         assert row[0] is None   # a.x is NULL for all unmatched rows
     by_values = {r[1] for r in result.rows}
     assert by_values == {"hello", "world"}
+
+
+# ---------------------------------------------------------------------------
+# FULL OUTER JOIN
+# ---------------------------------------------------------------------------
+
+
+def test_full_join_all_rows_appear(two_table_backend: InMemoryBackend) -> None:
+    """FULL JOIN: every row from both sides appears at least once.
+
+    customers: 1 Alice, 2 Bob, 3 Carol
+    orders: customer_id=1 alice_order, customer_id=2 bob_order
+
+    Add an orphan order (customer_id=99, no matching customer).
+
+    Expected:
+        Alice  alice_order    (matched)
+        Bob    bob_order      (matched)
+        Carol  NULL           (left unmatched — from pass 1)
+        NULL   orphan_order   (right unmatched — from pass 2)
+    """
+    be = two_table_backend
+    be.insert("orders", {"order_id": 30, "customer_id": 99, "product": "orphan_order"})
+
+    plan = Project(
+        input=Join(
+            left=Scan(table="customers", alias="customers"),
+            right=Scan(table="orders", alias="orders"),
+            kind=JoinKind.FULL,
+            condition=BinaryExpr(
+                op=BinaryOp.EQ,
+                left=Column("customers", "id"),
+                right=Column("orders", "customer_id"),
+            ),
+        ),
+        items=(
+            ProjectionItem(expr=Column("customers", "name"), alias="name"),
+            ProjectionItem(expr=Column("orders", "product"), alias="product"),
+        ),
+    )
+    result = execute(compile(plan), be)
+    by_name = {r[0]: r[1] for r in result.rows if r[0] is not None}
+    orphan_rows = [r for r in result.rows if r[0] is None]
+
+    assert by_name["Alice"] == "alice_order"
+    assert by_name["Bob"] == "bob_order"
+    assert by_name["Carol"] is None          # left unmatched
+    assert len(orphan_rows) == 1
+    assert orphan_rows[0][1] == "orphan_order"  # right unmatched
+
+
+def test_full_join_left_empty(two_table_backend: InMemoryBackend) -> None:
+    """FULL JOIN with empty left table: behaves like RIGHT JOIN."""
+    be = InMemoryBackend()
+    be.create_table("a", [ColumnDef(name="x", type_name="INTEGER")], False)
+    be.create_table(
+        "b",
+        [ColumnDef(name="x", type_name="INTEGER"), ColumnDef(name="y", type_name="TEXT")],
+        False,
+    )
+    be.insert("b", {"x": 10, "y": "hello"})
+    be.insert("b", {"x": 20, "y": "world"})
+    # a is empty → pass 1 (LEFT JOIN) emits nothing; pass 2 emits both b rows
+
+    plan = Project(
+        input=Join(
+            left=Scan(table="a", alias="a"),
+            right=Scan(table="b", alias="b"),
+            kind=JoinKind.FULL,
+            condition=BinaryExpr(
+                op=BinaryOp.EQ,
+                left=Column("a", "x"),
+                right=Column("b", "x"),
+            ),
+        ),
+        items=(
+            ProjectionItem(expr=Column("a", "x"), alias="ax"),
+            ProjectionItem(expr=Column("b", "y"), alias="by"),
+        ),
+    )
+    result = execute(compile(plan), be)
+    assert len(result.rows) == 2
+    for row in result.rows:
+        assert row[0] is None  # a.x is NULL — no left rows to match
+    assert {r[1] for r in result.rows} == {"hello", "world"}
+
+
+def test_full_join_right_empty(two_table_backend: InMemoryBackend) -> None:
+    """FULL JOIN with empty right table: behaves like LEFT JOIN."""
+    be = InMemoryBackend()
+    be.create_table("a", [ColumnDef(name="x", type_name="INTEGER")], False)
+    be.create_table("b", [ColumnDef(name="x", type_name="INTEGER")], False)
+    be.insert("a", {"x": 1})
+    be.insert("a", {"x": 2})
+    # b is empty → pass 1 emits both a rows with NULL b cols; pass 2 emits nothing
+
+    plan = Project(
+        input=Join(
+            left=Scan(table="a", alias="a"),
+            right=Scan(table="b", alias="b"),
+            kind=JoinKind.FULL,
+            condition=BinaryExpr(
+                op=BinaryOp.EQ,
+                left=Column("a", "x"),
+                right=Column("b", "x"),
+            ),
+        ),
+        items=(
+            ProjectionItem(expr=Column("a", "x"), alias="ax"),
+            ProjectionItem(expr=Column("b", "x"), alias="bx"),
+        ),
+    )
+    result = execute(compile(plan), be)
+    assert len(result.rows) == 2
+    ax_values = sorted(r[0] for r in result.rows)
+    assert ax_values == [1, 2]
+    for row in result.rows:
+        assert row[1] is None  # b.x is NULL — no right rows to match
+
+
+def test_full_join_no_overlap(two_table_backend: InMemoryBackend) -> None:
+    """FULL JOIN where no row from either side matches.
+
+    All rows appear: all left rows with NULL right cols, all right rows with
+    NULL left cols.  No duplicates.
+    """
+    be = InMemoryBackend()
+    be.create_table("a", [ColumnDef(name="x", type_name="INTEGER")], False)
+    be.create_table("b", [ColumnDef(name="x", type_name="INTEGER")], False)
+    be.insert("a", {"x": 1})
+    be.insert("a", {"x": 2})
+    be.insert("b", {"x": 10})
+    be.insert("b", {"x": 20})
+    # No ON matches: pass 1 emits a rows (NULL b), pass 2 emits b rows (NULL a)
+
+    plan = Project(
+        input=Join(
+            left=Scan(table="a", alias="a"),
+            right=Scan(table="b", alias="b"),
+            kind=JoinKind.FULL,
+            condition=BinaryExpr(
+                op=BinaryOp.EQ,
+                left=Column("a", "x"),
+                right=Column("b", "x"),
+            ),
+        ),
+        items=(
+            ProjectionItem(expr=Column("a", "x"), alias="ax"),
+            ProjectionItem(expr=Column("b", "x"), alias="bx"),
+        ),
+    )
+    result = execute(compile(plan), be)
+    assert len(result.rows) == 4
+    left_only = [r for r in result.rows if r[0] is not None and r[1] is None]
+    right_only = [r for r in result.rows if r[0] is None and r[1] is not None]
+    assert sorted(r[0] for r in left_only) == [1, 2]
+    assert sorted(r[1] for r in right_only) == [10, 20]

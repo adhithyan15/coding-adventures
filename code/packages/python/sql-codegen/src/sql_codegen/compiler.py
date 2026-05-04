@@ -880,7 +880,67 @@ def _compile_join(
         # Project node above the join and is not affected by the swap.
         return _compile_join(rgt, lft, JoinKind.LEFT, cond, body, ctx)
 
-    # FULL — not yet implemented; raise a clear error.
+    if kind == JoinKind.FULL:
+        # FULL OUTER JOIN — two-pass strategy:
+        #
+        # Pass 1: LEFT JOIN(lft, rgt)
+        #   Emits every lft row.  If a rgt row matches, the body runs with
+        #   real values on both sides.  If no rgt row matches, the body runs
+        #   with the right cursor closed (right cols = NULL).
+        #
+        # Pass 2: right-anti-join — scan rgt as outer, lft as inner.
+        #   For each rgt row, scan lft and check the ON condition.  If ANY
+        #   lft row matched, the rgt row was already emitted by Pass 1 and
+        #   must be skipped here.  If NO lft row matched, emit the rgt row
+        #   with the left cursor closed (left cols = NULL).
+        #
+        # Cursor IDs: Pass 1 allocates cursors 0=lft, 1=rgt.  Pass 2 calls
+        # _compile_source again, so ctx.new_cursor reassigns the aliases to
+        # fresh IDs (2=rgt, 3=lft for pass 2).  When body(c) executes in
+        # pass 2's null-padded path, alias_to_cursor maps lft_alias→3
+        # (closed, returns NULL) and rgt_alias→2 (open, real values). ✓
+
+        # ------------------------------------------------------------------
+        # Pass 1: standard LEFT JOIN
+        # ------------------------------------------------------------------
+        pass1_instrs = _compile_join(lft, rgt, JoinKind.LEFT, cond, body, ctx)
+
+        # ------------------------------------------------------------------
+        # Pass 2: right-anti-join (rgt rows not matched by any lft row)
+        # ------------------------------------------------------------------
+        anti_matched_label = ctx.new_label("foj_anti_matched")
+
+        def foj_anti_inner(c: _Ctx) -> list[Instruction]:
+            # Inner body: only check ON condition and mark matched.
+            # Do NOT call body(c) here — we only want to detect a match.
+            out: list[Instruction] = []
+            skip = c.new_label("foj_anti_cond_skip")
+            if cond is not None:
+                out.extend(_compile_expr(cond, c))
+                out.append(JumpIfFalse(label=skip))
+            out.append(JoinSetMatched())
+            out.append(Label(name=skip))
+            return out
+
+        def foj_anti_outer(c: _Ctx) -> list[Instruction]:
+            # Outer body: per-rgt-row match tracking.
+            out: list[Instruction] = []
+            out.append(JoinBeginRow())
+            out.extend(_compile_source(lft, foj_anti_inner, c))
+            # If any lft row matched the ON condition, skip emission —
+            # this rgt row was already in Pass 1's output.
+            out.append(JoinIfMatched(label=anti_matched_label))
+            # No lft row matched: emit body with lft cursor closed.
+            # LoadColumn for lft-side columns returns NULL because the
+            # inner cursor has no current row.
+            out.extend(body(c))
+            out.append(Label(name=anti_matched_label))
+            return out
+
+        pass2_instrs = _compile_source(rgt, foj_anti_outer, ctx)
+
+        return pass1_instrs + pass2_instrs
+
     raise UnsupportedNode(f"Join({kind})")
 
 
