@@ -103,6 +103,63 @@ def test_cli_check_rejects_ad_hoc_queries(
     assert "--check cannot be combined with --query" in capsys.readouterr().err
 
 
+def test_cli_lists_source_query_variables(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart). ?- parent(homer, Who). ?- true.",
+        "--list-source-queries",
+    ])
+
+    assert status == 0
+    assert capsys.readouterr().out.splitlines() == [
+        "query 0: Who",
+        "query 1: (no variables)",
+    ]
+
+
+def test_cli_lists_source_query_variables_as_json(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart). ?- parent(homer, Who).",
+        "--list-source-queries",
+        "--format",
+        "json",
+    ])
+
+    payload = json.loads(capsys.readouterr().out)
+
+    assert status == 0
+    assert payload == {
+        "mode": "source_queries",
+        "queries": [
+            {"index": 0, "variables": ["Who"]},
+        ],
+        "source_query_count": 1,
+        "success": True,
+    }
+
+
+def test_cli_list_source_queries_rejects_execution_modes(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart).",
+        "--list-source-queries",
+        "--query",
+        "parent(homer, Who)",
+    ])
+
+    assert status == 2
+    assert "--list-source-queries cannot be combined with --query" in (
+        capsys.readouterr().err
+    )
+
+
 def test_cli_json_output_serializes_named_answers(
     capsys: pytest.CaptureFixture[str],
 ) -> None:

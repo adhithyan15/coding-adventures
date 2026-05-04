@@ -59,6 +59,7 @@ class CliArgs:
     source: str | None
     queries: tuple[str, ...]
     check: bool
+    list_source_queries: bool
     source_query_index: int
     all_source_queries: bool
     query_module: str | None
@@ -146,6 +147,7 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         raise ValueError(msg)
     all_source_queries = bool(flags["all-source-queries"])
     check = bool(flags["check"])
+    list_source_queries = bool(flags["list-source-queries"])
     if check and queries:
         msg = "--check cannot be combined with --query"
         raise ValueError(msg)
@@ -154,6 +156,18 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         raise ValueError(msg)
     if check and bool(flags["interactive"]):
         msg = "--check cannot be combined with --interactive"
+        raise ValueError(msg)
+    if list_source_queries and queries:
+        msg = "--list-source-queries cannot be combined with --query"
+        raise ValueError(msg)
+    if list_source_queries and all_source_queries:
+        msg = "--list-source-queries cannot be combined with --all-source-queries"
+        raise ValueError(msg)
+    if list_source_queries and check:
+        msg = "--list-source-queries cannot be combined with --check"
+        raise ValueError(msg)
+    if list_source_queries and bool(flags["interactive"]):
+        msg = "--list-source-queries cannot be combined with --interactive"
         raise ValueError(msg)
     if all_source_queries and queries:
         msg = "--all-source-queries cannot be combined with --query"
@@ -167,6 +181,7 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         source=source,
         queries=queries,
         check=check,
+        list_source_queries=list_source_queries,
         source_query_index=source_query_index,
         all_source_queries=all_source_queries,
         query_module=query_module,
@@ -306,6 +321,8 @@ def _required_int(value: object, *, name: str) -> int:
 def _run_cli(args: CliArgs) -> int:
     if args.check:
         return _run_check(args)
+    if args.list_source_queries:
+        return _run_list_source_queries(args)
 
     if args.queries or args.interactive:
         runtime = _create_runtime(args)
@@ -343,6 +360,46 @@ def _run_check(args: CliArgs) -> int:
         run_compiled_prolog_initializations(compiled_program, backend=args.backend)
     _print_check_record(compiled_program, args=args)
     return 0
+
+
+def _run_list_source_queries(args: CliArgs) -> int:
+    compiled_program = _compile_source_program(args)
+    _print_source_query_summary(compiled_program, args=args)
+    return 0
+
+
+def _print_source_query_summary(
+    compiled_program: CompiledPrologVMProgram,
+    *,
+    args: CliArgs,
+    stdout: TextIO | None = None,
+) -> None:
+    output = sys.stdout if stdout is None else stdout
+    query_summaries = [
+        {
+            "index": index,
+            "variables": list(compiled_program.source_query_variable_names(index)),
+        }
+        for index in range(compiled_program.source_query_count)
+    ]
+
+    if args.output_format == "text":
+        if not query_summaries:
+            print("no source queries.", file=output)
+            return
+        for query in query_summaries:
+            variables = cast("list[str]", query["variables"])
+            variable_text = ", ".join(variables) if variables else "(no variables)"
+            print(f"query {query['index']}: {variable_text}", file=output)
+        return
+
+    payload = {
+        "success": True,
+        "mode": "source_queries",
+        "source_query_count": compiled_program.source_query_count,
+        "queries": query_summaries,
+    }
+    print(json.dumps(payload, sort_keys=True), file=output)
 
 
 def _print_check_record(

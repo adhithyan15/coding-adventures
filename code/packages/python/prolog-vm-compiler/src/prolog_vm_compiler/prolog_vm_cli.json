@@ -31,6 +31,12 @@
       "type": "boolean"
     },
     {
+      "id": "list-source-queries",
+      "long": "list-source-queries",
+      "description": "List embedded source-level ?- queries without running them.",
+      "type": "boolean"
+    },
+    {
       "id": "source-query-index",
       "long": "source-query-index",
       "description": "Zero-based source-level ?- query index to run when --query is absent.",
