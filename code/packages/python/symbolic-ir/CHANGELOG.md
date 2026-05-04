@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.9.0 — 2026-05-04
+
+**Add 9 simplification head symbols — Phase 21 assumption + radical/log/exp suite.**
+
+New `IRSymbol` singletons in `nodes.py`, exported from `__init__.py`:
+
+- `ASSUME = IRSymbol("Assume")` — record a symbol assumption
+- `FORGET = IRSymbol("Forget")` — remove assumption(s)
+- `IS = IRSymbol("Is")` — query an assumption
+- `SIGN = IRSymbol("Sign")` — sign function (+1 / 0 / −1)
+- `RADCAN = IRSymbol("Radcan")` — radical canonicalization
+- `LOGCONTRACT = IRSymbol("LogContract")` — combine log sums
+- `LOGEXPAND = IRSymbol("LogExpand")` — expand log over products/powers
+- `EXPONENTIALIZE = IRSymbol("Exponentialize")` — trig/hyp → exp form
+- `DEMOIVRE = IRSymbol("DeMoivre")` — exp(a+bi) → exp(a)·(cos b + i·sin b)
+
+---
+
 ## 0.8.0 — 2026-04-28
 
 **Add `Coth`, `Sech`, `Csch` head symbols — reciprocal hyperbolic functions (Phase 15).**

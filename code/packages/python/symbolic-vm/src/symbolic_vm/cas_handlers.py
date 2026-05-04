@@ -101,6 +101,11 @@ from cas_multivariate import build_multivariate_handler_table as _build_multivar
 from cas_number_theory.handlers import build_number_theory_handler_table as _build_nt
 from cas_ode import build_ode_handler_table as _build_ode
 from cas_simplify import canonical, simplify
+from cas_simplify.exponentialize import demoivre as _demoivre
+from cas_simplify.exponentialize import exponentialize as _exponentialize
+from cas_simplify.logcontract import logcontract as _logcontract
+from cas_simplify.logcontract import logexpand as _logexpand
+from cas_simplify.radcan import radcan as _radcan
 from cas_solve import ALL, solve_linear, solve_quadratic
 from cas_solve import nsolve_fraction_poly as _nsolve_fraction_poly
 from cas_solve import solve_cubic as _solve_cubic
@@ -187,6 +192,141 @@ def simplify_handler(_vm: VM, expr: IRApply) -> IRNode:
     if len(expr.args) != 1:
         return expr
     return simplify(expr.args[0])
+
+
+# ===========================================================================
+# Section 1b: Phase 21 — assumption framework + radical/log/exp suite
+# ===========================================================================
+
+
+def assume_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Assume(relation)`` or ``Assume(sym, property)`` — record a fact.
+
+    Two calling conventions::
+
+        Assume(Greater(x, 0))      → x > 0 recorded; returns IRSymbol("done")
+        Assume(x, IRSymbol("pos")) → x > 0 via property keyword
+
+    Unknown or malformed inputs are silently ignored (returns "done" either
+    way so MACSYMA's ``assume(...)`` usage is non-fatal).
+    """
+    if len(expr.args) == 1:
+        vm.assumptions.assume_relation(expr.args[0])
+    elif len(expr.args) == 2:
+        vm.assumptions.assume_property(expr.args[0], expr.args[1])
+    return IRSymbol("done")
+
+
+def forget_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Forget()`` or ``Forget(relation)`` — remove assumption(s).
+
+    ``Forget()`` (no arguments) clears every recorded fact.
+    ``Forget(Greater(x, 0))`` removes only that specific fact.
+    """
+    if not expr.args:
+        vm.assumptions.forget_all()
+    else:
+        vm.assumptions.forget_relation(expr.args[0])
+    return IRSymbol("done")
+
+
+def is_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Is(relation)`` — evaluate a relational predicate against assumptions.
+
+    Returns::
+
+        IRSymbol("true")    — definitely true under current assumptions
+        IRSymbol("false")   — definitely false
+        IRSymbol("unknown") — not enough information
+    """
+    if len(expr.args) != 1:
+        return expr
+    result = vm.assumptions.is_true_relation(expr.args[0])
+    if result is True:
+        return IRSymbol("true")
+    if result is False:
+        return IRSymbol("false")
+    return IRSymbol("unknown")
+
+
+def sign_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Sign(x)`` — sign function via the assumption context.
+
+    Returns::
+
+        IRInteger(1)   — x is known positive
+        IRInteger(-1)  — x is known negative
+        IRInteger(0)   — x is known zero
+        expr           — sign unknown (return unevaluated)
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = expr.args[0]
+    if not isinstance(arg, IRSymbol):
+        return expr
+    s = vm.assumptions.sign_of(arg.name)
+    if s == 1:
+        return IRInteger(1)
+    if s == -1:
+        return IRInteger(-1)
+    if s == 0:
+        return IRInteger(0)
+    return expr
+
+
+def radcan_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Radcan(expr)`` — radical canonicalization.
+
+    Applies :func:`cas_simplify.radcan.radcan` with the VM's assumption
+    context so sign-dependent rules (``√(x²) = x`` when ``x > 0``) fire
+    correctly when the user has previously called ``assume(x > 0)``.
+    """
+    if len(expr.args) != 1:
+        return expr
+    return _radcan(expr.args[0], ctx=vm.assumptions)
+
+
+def logcontract_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``LogContract(expr)`` — combine log sums into a single log.
+
+    Rules: ``log(a)+log(b) → log(a·b)``,
+    ``n·log(a) → log(aⁿ)``, ``log(a)-log(b) → log(a/b)``.
+    """
+    if len(expr.args) != 1:
+        return expr
+    return _logcontract(expr.args[0])
+
+
+def logexpand_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``LogExpand(expr)`` — expand a log over products / powers.
+
+    Rules: ``log(aⁿ) → n·log(a)``, ``log(a·b) → log(a)+log(b)``,
+    ``log(a/b) → log(a)-log(b)``.
+    """
+    if len(expr.args) != 1:
+        return expr
+    return _logexpand(expr.args[0], ctx=vm.assumptions)
+
+
+def exponentialize_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Exponentialize(expr)`` — convert trig/hyp to exponential form.
+
+    Rewrites sin, cos, tan, sinh, cosh, tanh in terms of Exp and
+    ImaginaryUnit.
+    """
+    if len(expr.args) != 1:
+        return expr
+    return _exponentialize(expr.args[0])
+
+
+def demoivre_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``DeMoivre(expr)`` — apply De Moivre's theorem.
+
+    Rewrites ``exp(a + b·i) → exp(a)·(cos(b) + i·sin(b))``.
+    """
+    if len(expr.args) != 1:
+        return expr
+    return _demoivre(expr.args[0])
 
 
 def expand_handler(_vm: VM, expr: IRApply) -> IRNode:
@@ -1970,6 +2110,17 @@ def build_cas_handler_table() -> dict[str, Handler]:
         # --- cas_simplify ---------------------------------------------------
         "Simplify": simplify_handler,
         "Expand": expand_handler,
+        # --- Phase 21: assumption framework ---------------------------------
+        "Assume": assume_handler,
+        "Forget": forget_handler,
+        "Is": is_handler,
+        "Sign": sign_handler,
+        # --- Phase 21: radical / log / exponential simplification -----------
+        "Radcan": radcan_handler,
+        "LogContract": logcontract_handler,
+        "LogExpand": logexpand_handler,
+        "Exponentialize": exponentialize_handler,
+        "DeMoivre": demoivre_handler,
         # --- rational function operations (A3) ------------------------------
         "Collect": collect_handler,
         "Together": together_handler,
