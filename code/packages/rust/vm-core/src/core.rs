@@ -155,6 +155,19 @@ pub struct VMCore {
     metrics_instrs: u64,
     /// Total JIT handler invocations since construction.
     metrics_jit_hits: u64,
+
+    // ── LANG17: branch + loop metrics ────────────────────────────────────
+    /// Per-function, per-ip conditional branch taken/not-taken counts.
+    ///
+    /// Written by `jmp_if_true` / `jmp_if_false` handlers in the dispatch
+    /// loop.  Read via `VMCore::branch_profile(fn_name, ip)`.
+    branch_stats: HashMap<String, HashMap<usize, crate::branch_stats::BranchStats>>,
+
+    /// Per-function, per-source-ip back-edge (loop iteration) counts.
+    ///
+    /// Written whenever any jump lands on an earlier instruction index.
+    /// Read via `VMCore::loop_iterations(fn_name)`.
+    loop_back_edge_counts: HashMap<String, HashMap<usize, u64>>,
 }
 
 impl VMCore {
@@ -175,6 +188,8 @@ impl VMCore {
             profiler: Some(VMProfiler::new()),
             metrics_instrs: 0,
             metrics_jit_hits: 0,
+            branch_stats: HashMap::new(),
+            loop_back_edge_counts: HashMap::new(),
         }
     }
 
@@ -268,6 +283,10 @@ impl VMCore {
         self.frames.clear();
         self.frames.push(root_frame);
 
+        // Count the entry-point call (handle_call only counts callee functions
+        // reached via `call` instructions, not the top-level execute() entry).
+        *self.fn_call_counts.entry(fn_name.to_string()).or_insert(0) += 1;
+
         let mut profiler = if self.profiler_enabled {
             Some(VMProfiler::new())
         } else {
@@ -293,6 +312,9 @@ impl VMCore {
             fn_call_counts: &mut self.fn_call_counts,
             metrics_instrs: &mut self.metrics_instrs,
             metrics_jit_hits: &mut self.metrics_jit_hits,
+            branch_stats: &mut self.branch_stats,
+            loop_back_edge_counts: &mut self.loop_back_edge_counts,
+            tracer: None,
         };
 
         // extra_opcodes and jit_handlers are passed as separate references
@@ -305,6 +327,73 @@ impl VMCore {
         )?;
         self.profiler = profiler;
         Ok(result)
+    }
+
+    /// Execute `fn_name` and record a per-instruction `VMTrace` for each
+    /// dispatched instruction.
+    ///
+    /// Returns `(result, traces)`.  Traces are in execution order.
+    ///
+    /// **Overhead warning**: this path clones the register file twice per
+    /// instruction.  Use only for debugging, test assertions, and reproducer
+    /// generation — never on the hot measurement path.
+    pub fn execute_traced(
+        &mut self,
+        module: &mut IIRModule,
+        fn_name: &str,
+        args: &[Value],
+    ) -> Result<(Option<Value>, Vec<crate::trace::VMTrace>), VMError> {
+        let fn_idx = module.functions.iter().position(|f| f.name == fn_name)
+            .ok_or_else(|| VMError::UnknownOpcode(format!("function {fn_name:?}")))?;
+
+        let params = module.functions[fn_idx].params.clone();
+        let reg_count = module.functions[fn_idx].register_count;
+
+        let mut root_frame = VMFrame::for_function(fn_name, &params, reg_count, None);
+        for (i, arg) in args.iter().enumerate().take(params.len()) {
+            root_frame.registers[i] = arg.clone();
+        }
+
+        self.frames.clear();
+        self.frames.push(root_frame);
+
+        // Count the entry-point call (same as execute()).
+        *self.fn_call_counts.entry(fn_name.to_string()).or_insert(0) += 1;
+
+        let mut profiler = if self.profiler_enabled {
+            Some(VMProfiler::new())
+        } else {
+            None
+        };
+
+        let instrs_before = self.metrics_instrs;
+        let mut traces: Vec<crate::trace::VMTrace> = Vec::new();
+
+        let mut ctx = DispatchCtx {
+            frames: &mut self.frames,
+            module_fns: &mut module.functions,
+            builtins: &self.builtins,
+            memory: &mut self.memory,
+            u8_wrap: self.u8_wrap,
+            max_frames: self.max_frames,
+            max_memory_entries: self.max_memory_entries,
+            max_instructions: self.max_instructions.map(|limit| instrs_before.saturating_add(limit)),
+            fn_call_counts: &mut self.fn_call_counts,
+            metrics_instrs: &mut self.metrics_instrs,
+            metrics_jit_hits: &mut self.metrics_jit_hits,
+            branch_stats: &mut self.branch_stats,
+            loop_back_edge_counts: &mut self.loop_back_edge_counts,
+            tracer: Some(&mut traces),
+        };
+
+        let result = run_dispatch_loop(
+            &mut ctx,
+            &self.extra_opcodes,
+            &self.jit_handlers,
+            &mut profiler,
+        )?;
+        self.profiler = profiler;
+        Ok((result, traces))
     }
 
     // ------------------------------------------------------------------
@@ -332,6 +421,76 @@ impl VMCore {
     /// Total profiling observations recorded in the last `execute()` call.
     pub fn total_observations(&self) -> u64 {
         self.profiler.as_ref().map_or(0, |p| p.total_observations())
+    }
+
+    // ── LANG17: branch / loop / hot-function introspection ────────────────
+
+    /// Names of functions called at least `threshold` times.
+    ///
+    /// Useful for identifying hot functions that the JIT should prioritise.
+    /// The list is sorted by call count descending.
+    pub fn hot_functions(&self, threshold: u32) -> Vec<String> {
+        let mut pairs: Vec<(&String, u32)> = self.fn_call_counts
+            .iter()
+            .filter(|(_, &count)| count >= threshold)
+            .map(|(name, &count)| (name, count))
+            .collect();
+        pairs.sort_by(|a, b| b.1.cmp(&a.1));
+        pairs.into_iter().map(|(name, _)| name.clone()).collect()
+    }
+
+    /// Branch taken/not-taken statistics for the conditional at instruction
+    /// index `ip` in function `fn_name`.
+    ///
+    /// Returns `None` if that instruction has never been observed (function
+    /// not called, or non-conditional instruction at `ip`).
+    pub fn branch_profile(
+        &self,
+        fn_name: &str,
+        ip: usize,
+    ) -> Option<&crate::branch_stats::BranchStats> {
+        self.branch_stats.get(fn_name)?.get(&ip)
+    }
+
+    /// Back-edge (loop iteration) counts for all back-edges in `fn_name`.
+    ///
+    /// Keys are the instruction index of the jump instruction.  Values are
+    /// the number of times that jump was executed as a backward jump.
+    ///
+    /// Returns an empty map if the function has never been called or has no
+    /// back-edges.
+    pub fn loop_iterations(&self, fn_name: &str) -> HashMap<usize, u64> {
+        self.loop_back_edge_counts
+            .get(fn_name)
+            .cloned()
+            .unwrap_or_default()
+    }
+
+    /// Reference to the full branch-stats map (all functions).
+    pub fn all_branch_stats(
+        &self,
+    ) -> &HashMap<String, HashMap<usize, crate::branch_stats::BranchStats>> {
+        &self.branch_stats
+    }
+
+    /// Reference to the full loop-back-edge-counts map (all functions).
+    pub fn all_loop_back_edge_counts(&self) -> &HashMap<String, HashMap<usize, u64>> {
+        &self.loop_back_edge_counts
+    }
+
+    /// Zero all metrics accumulators and per-instruction feedback.
+    ///
+    /// Useful in REPL scenarios where the user wants a clean profiling
+    /// snapshot after warm-up without recreating the VM.
+    pub fn reset_metrics(&mut self) {
+        self.metrics_instrs = 0;
+        self.metrics_jit_hits = 0;
+        self.fn_call_counts.clear();
+        self.branch_stats.clear();
+        self.loop_back_edge_counts.clear();
+        if let Some(prof) = self.profiler.as_mut() {
+            *prof = VMProfiler::new();
+        }
     }
 }
 
@@ -576,5 +735,151 @@ mod tests {
         // The const instruction (type_hint="any") should have been profiled.
         let obs_count = module.get_function("main").unwrap().instructions[0].observation_count;
         assert_eq!(obs_count, 1);
+    }
+
+    // ── LANG17 metrics tests ──────────────────────────────────────────────────
+
+    /// Build a loop module: i = 0; while i < limit: i++; ret i
+    /// The loop runs `limit` iterations.
+    fn make_loop_module(limit: i64) -> IIRModule {
+        let fn_ = IIRFunction::new(
+            "main", vec![], "u8",
+            vec![
+                /* 0 */ IIRInstr::new("const", Some("i".into()), vec![Operand::Int(0)], "u8"),
+                /* 1 */ IIRInstr::new("const", Some("lim".into()), vec![Operand::Int(limit)], "u8"),
+                /* 2 */ IIRInstr::new("const", Some("one".into()), vec![Operand::Int(1)], "u8"),
+                /* 3 */ IIRInstr::new("label", None, vec![Operand::Var("top".into())], "void"),
+                /* 4 */ IIRInstr::new("cmp_lt", Some("cond".into()),
+                    vec![Operand::Var("i".into()), Operand::Var("lim".into())], "bool"),
+                /* 5 */ IIRInstr::new("jmp_if_false", None,
+                    vec![Operand::Var("cond".into()), Operand::Var("end".into())], "void"),
+                /* 6 */ IIRInstr::new("add", Some("i".into()),
+                    vec![Operand::Var("i".into()), Operand::Var("one".into())], "u8"),
+                /* 7 */ IIRInstr::new("jmp", None, vec![Operand::Var("top".into())], "void"),
+                /* 8 */ IIRInstr::new("label", None, vec![Operand::Var("end".into())], "void"),
+                /* 9 */ IIRInstr::new("ret", None, vec![Operand::Var("i".into())], "u8"),
+            ],
+        );
+        let mut module = IIRModule::new("test", "test");
+        module.add_or_replace(fn_);
+        module
+    }
+
+    #[test]
+    fn branch_stats_not_taken_incremented_on_loop_exit() {
+        let mut module = make_loop_module(3);
+        let mut vm = VMCore::new();
+        vm.execute(&mut module, "main", &[]).unwrap();
+
+        // jmp_if_false at ip=5: taken 1 time (loop exits when i==3),
+        // not taken 3 times (when i<3 the branch is not taken and loop continues).
+        let stats = vm.branch_profile("main", 5).expect("branch stats for jmp_if_false");
+        assert_eq!(stats.taken_count, 1);   // one exit
+        assert_eq!(stats.not_taken_count, 3); // three iterations
+    }
+
+    #[test]
+    fn branch_stats_taken_ratio_near_zero_for_busy_loop() {
+        // With limit=100, the branch is NOT taken 100 times and taken 1 time.
+        let mut module = make_loop_module(100);
+        let mut vm = VMCore::new();
+        vm.execute(&mut module, "main", &[]).unwrap();
+        let stats = vm.branch_profile("main", 5).unwrap();
+        assert_eq!(stats.taken_count, 1);
+        assert_eq!(stats.not_taken_count, 100);
+        // taken_ratio ≈ 0.0099 (well below 0.5)
+        assert!(stats.taken_ratio() < 0.05);
+    }
+
+    #[test]
+    fn loop_iterations_counts_back_edges() {
+        // limit=5 → jmp at ip=7 is the back-edge; it fires 5 times.
+        let mut module = make_loop_module(5);
+        let mut vm = VMCore::new();
+        vm.execute(&mut module, "main", &[]).unwrap();
+        let counts = vm.loop_iterations("main");
+        // jmp at ip=7 is a back-edge (target = "top" = ip 3 < 7).
+        assert!(counts.contains_key(&7), "back-edge at ip=7 not found: {:?}", counts);
+        assert_eq!(counts[&7], 5);
+    }
+
+    #[test]
+    fn loop_iterations_empty_for_no_loops() {
+        let mut vm = VMCore::new();
+        let mut module = make_const_fn(99);
+        vm.execute(&mut module, "main", &[]).unwrap();
+        assert!(vm.loop_iterations("main").is_empty());
+    }
+
+    #[test]
+    fn hot_functions_returns_names_above_threshold() {
+        let mut vm = VMCore::new();
+        let mut module = make_const_fn(1);
+        // Call "main" 5 times.
+        for _ in 0..5 {
+            vm.execute(&mut module, "main", &[]).unwrap();
+        }
+        let hot = vm.hot_functions(3);
+        assert!(hot.contains(&"main".to_string()));
+        let not_hot = vm.hot_functions(10);
+        assert!(not_hot.is_empty());
+    }
+
+    #[test]
+    fn reset_metrics_clears_all_counters() {
+        let mut vm = VMCore::new();
+        let mut module = make_loop_module(3);
+        vm.execute(&mut module, "main", &[]).unwrap();
+
+        assert!(vm.metrics_instrs() > 0);
+        assert!(vm.branch_profile("main", 5).is_some());
+        assert!(!vm.loop_iterations("main").is_empty());
+
+        vm.reset_metrics();
+
+        assert_eq!(vm.metrics_instrs(), 0);
+        assert!(vm.branch_profile("main", 5).is_none());
+        assert!(vm.loop_iterations("main").is_empty());
+    }
+
+    #[test]
+    fn execute_traced_returns_trace_records() {
+        let mut vm = VMCore::new();
+        let mut module = make_const_fn(42);
+        let (result, traces) = vm.execute_traced(&mut module, "main", &[]).unwrap();
+        assert_eq!(result, Some(Value::Int(42)));
+        // "const" + "ret" = 2 instructions → 2 trace records.
+        assert_eq!(traces.len(), 2);
+        assert_eq!(traces[0].fn_name, "main");
+        assert_eq!(traces[0].ip, 0);
+        assert_eq!(traces[0].instr.op, "const");
+        assert_eq!(traces[1].instr.op, "ret");
+    }
+
+    #[test]
+    fn execute_traced_records_registers_before_and_after() {
+        let mut vm = VMCore::new();
+        let mut module = make_const_fn(7);
+        let (_result, traces) = vm.execute_traced(&mut module, "main", &[]).unwrap();
+        // After "const v=7": registers_after[0] should be Int(7).
+        let after = &traces[0].registers_after;
+        assert!(!after.is_empty());
+        assert_eq!(after[0], Value::Int(7));
+    }
+
+    #[test]
+    fn execute_traced_records_frame_depth() {
+        let mut vm = VMCore::new();
+        let mut module = make_const_fn(1);
+        let (_result, traces) = vm.execute_traced(&mut module, "main", &[]).unwrap();
+        // Top-level function: frame_depth = 0.
+        assert_eq!(traces[0].frame_depth, 0);
+    }
+
+    #[test]
+    fn branch_stats_profile_returns_none_for_unexecuted_branch() {
+        let vm = VMCore::new();
+        assert!(vm.branch_profile("main", 0).is_none());
+        assert!(vm.branch_profile("nonexistent", 42).is_none());
     }
 }
