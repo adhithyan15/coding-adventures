@@ -100,7 +100,7 @@ def test_ev_factor_flag_applies_factor() -> None:
 
 def test_ev_ratsimp_flag_cancels_common_factor() -> None:
     """ev((x^2-1)/(x-1), ratsimp) → x+1 (cancels x-1 from numerator)."""
-    from symbolic_ir import DIV, IRApply as _Apply, IRSymbol as _Sym, IRInteger as _Int, POW, SUB, ADD
+    from symbolic_ir import POW, SUB
 
     backend = MacsymaBackend()
     vm = VM(backend)
@@ -118,7 +118,7 @@ def test_ev_ratsimp_flag_cancels_common_factor() -> None:
 
 def test_ev_trigsimp_flag_applies_pythagorean() -> None:
     """ev(sin(x)^2 + cos(x)^2, trigsimp) → 1."""
-    from symbolic_ir import SIN, COS, ADD, POW, IRApply as _Apply
+    from symbolic_ir import ADD, POW
 
     backend = MacsymaBackend()
     vm = VM(backend)

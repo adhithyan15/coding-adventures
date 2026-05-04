@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.11.0 — 2026-05-04
+
+**Add 12 special-function head symbols — Phase 23 erf/Si/Li₂/Gamma/Fresnel.**
+
+New `IRSymbol` singletons in `nodes.py`, exported from `__init__.py`:
+
+**Error functions (23a)**
+- `ERF = IRSymbol("Erf")` — Gaussian error function erf(x)
+- `ERFC = IRSymbol("Erfc")` — complementary error function 1−erf(x)
+- `ERFI = IRSymbol("Erfi")` — imaginary error function erfi(x)
+
+**Trigonometric integrals (23b)**
+- `SI = IRSymbol("Si")` — sine integral Si(x) = ∫₀^x sin(t)/t dt
+- `CI = IRSymbol("Ci")` — cosine integral Ci(x)
+- `SHI = IRSymbol("Shi")` — hyperbolic sine integral Shi(x)
+- `CHI = IRSymbol("Chi")` — hyperbolic cosine integral Chi(x)
+
+**Dilogarithm (23c)**
+- `LI2 = IRSymbol("Li2")` — Spence's dilogarithm Li₂(z)
+
+**Gamma / Beta (23d)**
+- `GAMMA_FUNC = IRSymbol("GammaFunc")` — Euler's Gamma function Γ(z)
+- `BETA_FUNC = IRSymbol("BetaFunc")` — Beta function B(a,b)
+
+**Fresnel integrals (23e)**
+- `FRESNEL_S = IRSymbol("FresnelS")` — FresnelS(x) = ∫₀^x sin(πt²/2) dt
+- `FRESNEL_C = IRSymbol("FresnelC")` — FresnelC(x) = ∫₀^x cos(πt²/2) dt
+
+---
+
 ## 0.10.0 — 2026-05-04
 
 **Add 5 pattern-matching head symbols — Phase 22 matchdeclare/defrule/apply1/apply2/tellsimp.**

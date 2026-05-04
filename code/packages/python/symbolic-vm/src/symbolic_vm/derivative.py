@@ -51,6 +51,7 @@ from symbolic_ir import (
 )
 
 from symbolic_vm.backend import Handler
+from symbolic_vm.special_functions import DIFF_SPECIAL_HEADS, diff_special
 
 ZERO = IRInteger(0)
 ONE = IRInteger(1)
@@ -276,6 +277,12 @@ def _diff(f: IRNode, x: IRSymbol) -> IRNode:
         numer = IRApply(MUL, (_diff(inner, x), IRApply(COSH, (inner,))))
         denom = IRApply(POW, (IRApply(SINH, (inner,)), IRInteger(2)))
         return IRApply(NEG, (IRApply(DIV, (numer, denom)),))
+
+    # Phase 23: special-function differentiation rules (erf, Si, Li₂, Fresnel…).
+    if isinstance(f, IRApply) and f.head in DIFF_SPECIAL_HEADS:
+        result = diff_special(f, x, _diff)
+        if result is not None:
+            return result
 
     # Unknown function — leave as ``D(f, x)`` unevaluated.
     return IRApply(D, (f, x))

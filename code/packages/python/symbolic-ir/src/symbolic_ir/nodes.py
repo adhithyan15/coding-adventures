@@ -381,3 +381,46 @@ DEFRULE = IRSymbol("Defrule")
 APPLY1 = IRSymbol("Apply1")
 APPLY2 = IRSymbol("Apply2")
 TELLSIMP = IRSymbol("TellSimp")
+
+# ── Phase 23 — Special functions ──────────────────────────────────────────
+#
+# Error functions:
+#   Erf(x)  = (2/√π) ∫₀^x exp(-t²) dt   — the standard error function
+#   Erfc(x) = 1 - Erf(x)                 — complementary error function
+#   Erfi(x) = (2/√π) ∫₀^x exp(t²) dt    — imaginary error function
+#             (= -i · erf(i·x))
+ERF = IRSymbol("Erf")
+ERFC = IRSymbol("Erfc")
+ERFI = IRSymbol("Erfi")
+
+# Trigonometric integrals:
+#   Si(x)  = ∫₀^x sin(t)/t dt            — sine integral
+#   Ci(x)  = γ + log(x) + ∫₀^x (cos(t)-1)/t dt  — cosine integral (γ = Euler–Mascheroni)
+#   Shi(x) = ∫₀^x sinh(t)/t dt           — hyperbolic sine integral
+#   Chi(x) = γ + log(x) + ∫₀^x (cosh(t)-1)/t dt  — hyperbolic cosine integral
+SI = IRSymbol("Si")
+CI = IRSymbol("Ci")
+SHI = IRSymbol("Shi")
+CHI = IRSymbol("Chi")
+
+# Dilogarithm (Spence's function):
+#   Li₂(z) = -∫₀^z log(1-t)/t dt = Σ_{k=1}^∞ z^k/k²  for |z| ≤ 1
+#   Li₂(1) = π²/6  (Basel problem)
+LI2 = IRSymbol("Li2")
+
+# Gamma and Beta functions:
+#   GammaFunc(n) = (n-1)!  for positive integers
+#   GammaFunc(1/2) = √π
+#   BetaFunc(a,b) = GammaFunc(a)·GammaFunc(b) / GammaFunc(a+b)
+#
+# Note: we use GammaFunc / BetaFunc rather than Gamma / Beta to avoid
+# shadowing Python's built-in names in handler code.
+GAMMA_FUNC = IRSymbol("GammaFunc")
+BETA_FUNC = IRSymbol("BetaFunc")
+
+# Fresnel integrals:
+#   FresnelS(x) = ∫₀^x sin(π·t²/2) dt
+#   FresnelC(x) = ∫₀^x cos(π·t²/2) dt
+#   Both → 1/2 as x → ∞.
+FRESNEL_S = IRSymbol("FresnelS")
+FRESNEL_C = IRSymbol("FresnelC")
