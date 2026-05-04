@@ -185,9 +185,24 @@ _HEAP_BUILTINS: dict[str, tuple[IrOp, int]] = {
 
 
 # Register convention — see module docstring.
+_REG_SCRATCH: Final = 0
 _REG_HALT_RESULT: Final = 1
 _REG_PARAM_BASE: Final = 2
 _REG_HOLDING_BASE: Final = 10
+
+# Platform-independent syscall numbers — shared with twig-jvm-compiler
+# and the interpreter (``twig/compiler.py``).  The CIL backend already
+# supports all three: SYSCALL 1 (write-byte), 2 (read-byte), 10 (exit).
+_HOST_SYSCALLS: dict[str, int] = {
+    "host/write-byte": 1,  # write one byte to stdout
+    "host/read-byte":  2,  # read one byte from stdin; return -1 on EOF
+    "host/exit":       10, # exit the process with the given code
+}
+
+# Register 0 is used as the SYSCALL argument slot for the CLR backend.
+# This matches the CILBackendConfig(syscall_arg_reg=_REG_SCRATCH) below
+# so that ``emit_ldloc(config.syscall_arg_reg)`` loads the right value.
+_CLR_SYSCALL_ARG_REG: Final = _REG_SCRATCH
 
 
 # Strict allowlist for ``assembly_name``.  Used as both an
@@ -475,6 +490,39 @@ class _Compiler:
         # ``APPLY_CLOSURE`` and dispatches via the IClosure interface.
         if isinstance(expr.fn, VarRef):
             name = expr.fn.name
+
+            # Module-qualified host syscall: ``host/write-byte``,
+            # ``host/read-byte``, ``host/exit``.  The slash in the
+            # name identifies a host-module reference.  We look up the
+            # platform-independent syscall number and emit
+            # ``IrOp.SYSCALL IrImmediate(num) IrRegister(result_reg)``.
+            #
+            # The CIL backend loads the arg from
+            # ``config.syscall_arg_reg`` (= ``_CLR_SYSCALL_ARG_REG`` =
+            # register 0 = scratch), so for write-byte/exit we move the
+            # arg into register 0 first.  For read-byte there's no
+            # input arg; register 0 is loaded by the backend but ignored
+            # by ``__ca_syscall`` for num=2.
+            _slash = name.find("/")
+            if _slash > 0 and _slash < len(name) - 1:
+                # Module-qualified host call (``host/write-byte`` etc.)
+                num = _HOST_SYSCALLS.get(name)
+                if num is None:
+                    raise TwigCompileError(
+                        f"unknown host call {name!r} — "
+                        "supported: " + ", ".join(sorted(_HOST_SYSCALLS))
+                    )
+                scratch = IrRegister(_CLR_SYSCALL_ARG_REG)
+                if num == 2:  # read-byte — no user arg, result into fresh reg
+                    dest = self._fresh_holding(ctx)
+                    self._emit(IrOp.SYSCALL, IrImmediate(num), dest)
+                    return dest
+                # write-byte (1) or exit (10) — one user arg
+                arg_regs = [self._compile_expr(a, ctx) for a in expr.args]
+                self._emit_move(scratch, arg_regs[0])
+                self._emit(IrOp.SYSCALL, IrImmediate(num), scratch)
+                return scratch
+
             if name in _V1_REJECTED_BUILTINS:
                 raise TwigCompileError(
                     f"builtin {name!r} is not yet supported by the CLR "
@@ -755,6 +803,11 @@ def compile_source(
                 call_register_count=None,
                 closure_free_var_counts=closure_free_var_counts,
                 closure_explicit_arities=closure_explicit_arities,
+                # The compiler emits ``IrOp.SYSCALL`` with the arg value
+                # already in register 0 (scratch).  Configure the CLR
+                # backend to read the syscall arg from that register so
+                # it matches the JVM convention and the compiler's intent.
+                syscall_arg_reg=_CLR_SYSCALL_ARG_REG,
             ),
         )
     except Exception as exc:

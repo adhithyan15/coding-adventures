@@ -1,5 +1,55 @@
 # ir-to-jvm-class-file
 
+## 0.16.0 — 2026-05-04 — SYSCALL 10 (exit) + validator correction
+
+### Added — `SYSCALL 10` (process exit) in `__ca_syscall`
+
+`_build_syscall_method` now handles a third dispatch arm for syscall
+number 10 (exit process), completing the platform-independent syscall
+convention shared across all language backends:
+
+| Number | Primitive | JVM implementation |
+|--------|-----------|---------------------|
+| 1 | write byte to stdout | `System.out.write(b & 0xFF); flush()` |
+| 2 | read byte from stdin  | `System.in.read()` → `__ca_regs[arg_reg]` |
+| 10 | exit process         | `System.exit(__ca_regs[arg_reg])` |
+
+The new arm reads `__ca_regs[arg_reg_index]` as the exit code and calls
+`java/lang/System.exit(I)V`.  A trailing `return` opcode after the
+`invokestatic` satisfies the JVM verifier — `System.exit` never returns
+at runtime but the verifier still requires every bytecode path to end
+with a control-transfer instruction.
+
+Unknown syscall numbers fall through to a `label_done: return` (silent
+no-op), consistent with the existing convention for syscalls the current
+backend has not wired up yet.
+
+### Fixed — validator `_SUPPORTED_SYSCALLS` corrected from `{1, 4}` to `{1, 2, 10}`
+
+The pre-flight validator (`validate_for_jvm`) was carrying an incorrect
+set `{1, 4}` — SYSCALL 4 was a copy-paste artifact; the actual
+implementation has dispatched on **SYSCALL 2** (not 4) for stdin reads
+since the original implementation.  The set is now `{1, 2, 10}`.
+
+The old SYSCALL 4 entry never fired at runtime (no backend emitted it);
+Brainfuck uses SYSCALL 1 and 2, the CLR validator already documented
+1/2/10, and the Twig frontends (Phase 4c) emit 1/2/10.  Two test cases
+that asserted the wrong behaviour (`test_syscall_4_accepted`,
+`test_syscall_10_rejected`) are replaced with correct assertions:
+
+* `test_syscall_2_accepted` — SYSCALL 2 is now accepted (was silently
+  passing before the validator was added, then incorrectly rejected when
+  the validator listed 4 instead of 2).
+* `test_syscall_10_accepted` — SYSCALL 10 is now accepted.
+* `test_syscall_4_rejected` — SYSCALL 4 is now correctly rejected.
+
+### Tests
+
+- Updated `test_syscall_4_accepted` → `test_syscall_2_accepted`.
+- Updated `test_syscall_10_rejected` → `test_syscall_10_accepted`.
+- Added `test_syscall_4_rejected` (documents the correction).
+- All 99 tests pass; 92.26% coverage (≥ 80% required).
+
 ## 0.15.0 — 2026-04-29 — multi-arity closures (per-region explicit_arity)
 
 The lifted-lambda emission and per-closure subclass `apply([I)I`

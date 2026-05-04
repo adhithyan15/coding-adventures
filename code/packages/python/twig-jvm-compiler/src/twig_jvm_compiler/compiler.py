@@ -184,15 +184,27 @@ _HEAP_BUILTINS: dict[str, tuple[IrOp, int]] = {
 }
 
 # Convention shared with the JVM backend's helper register array:
-#   register 0  — scratch zero (also the SYSCALL-arg slot for SYSCALL 1)
+#   register 0  — scratch (also the SYSCALL-arg slot for host syscalls)
 #   register 1  — HALT result / function return value
 #   register 2..N — function parameter slots (param i → register 2 + i)
 #   register 10..  — compiler-allocated holding registers for intermediate
 #                    values; using a high base keeps them clear of
 #                    parameter slots, so nested calls don't clobber.
+_REG_SCRATCH = 0
 _REG_HALT_RESULT = 1
 _REG_PARAM_BASE = 2
 _REG_HOLDING_BASE = 10
+
+# Platform-independent syscall numbers shared by all backends.
+# These numbers are the de-facto convention established by the CLR
+# backend; the JVM backend's ``__ca_syscall`` helper now also handles
+# them.  When a new host export is added, a new entry goes here AND
+# in the backend's syscall handler, AND in ``twig/compiler.py``.
+_HOST_SYSCALLS: dict[str, int] = {
+    "host/write-byte": 1,  # write one byte to stdout
+    "host/read-byte":  2,  # read one byte from stdin; return -1 on EOF
+    "host/exit":       10, # exit the process with the given code
+}
 
 
 # ---------------------------------------------------------------------------
@@ -529,6 +541,10 @@ class _Compiler:
     def _compile_apply(self, expr: Apply, ctx: _FnCtx) -> IrRegister:
         """Function application, dispatched at compile time:
 
+        * ``(host/write-byte b)`` etc. → move arg into scratch reg 0,
+          emit ``IrOp.SYSCALL IrImmediate(num) IrRegister(0)``.
+          The JVM backend's ``__ca_syscall`` helper dispatches on
+          the platform-independent syscall number.
         * ``(+ a b)`` and other binary builtins → emit the
           corresponding ``IrOp`` directly (one IR instruction).
         * ``(f a b)`` where ``f`` is a top-level function → emit
@@ -539,6 +555,38 @@ class _Compiler:
         """
         if isinstance(expr.fn, VarRef):
             name = expr.fn.name
+
+            # Module-qualified host syscall: ``host/write-byte``,
+            # ``host/read-byte``, ``host/exit``.  The slash in the
+            # name identifies a host-module reference.  We look up the
+            # platform-independent syscall number and emit
+            # ``IrOp.SYSCALL IrImmediate(num) IrRegister(arg_or_dest)``.
+            #
+            # Convention (mirrors ``_emit_start``):
+            #   write-byte / exit : move arg into scratch reg 0,
+            #                       emit SYSCALL(num, reg 0)
+            #   read-byte         : emit SYSCALL(2, fresh_dest_reg);
+            #                       result lands in that register
+            _slash = name.find("/")
+            if _slash > 0 and _slash < len(name) - 1:
+                # Module-qualified host call (``host/write-byte`` etc.)
+                num = _HOST_SYSCALLS.get(name)
+                if num is None:
+                    raise TwigCompileError(
+                        f"unknown host call {name!r} — "
+                        "supported: " + ", ".join(sorted(_HOST_SYSCALLS))
+                    )
+                if num == 2:  # read-byte — no user arg, result into fresh reg
+                    dest = self._fresh_holding(ctx)
+                    self._emit(IrOp.SYSCALL, IrImmediate(num), dest)
+                    return dest
+                # write-byte (1) or exit (10) — one user arg
+                arg_regs = [self._compile_expr(a, ctx) for a in expr.args]
+                self._emit_move(IrRegister(_REG_SCRATCH), arg_regs[0])
+                self._emit(IrOp.SYSCALL, IrImmediate(num), IrRegister(_REG_SCRATCH))
+                # Return the scratch reg; callers treat host calls as
+                # returning NIL/0, and the value there is irrelevant.
+                return IrRegister(_REG_SCRATCH)
 
             if name in _V1_REJECTED_BUILTINS:
                 raise TwigCompileError(
