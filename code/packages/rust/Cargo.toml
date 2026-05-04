@@ -398,6 +398,7 @@ members = [
     "shamir",
     "canonical-cbor",
     "vault-records",
+    "vault-key-custody",
     "context-store",
     "artifact-store",
     "skill-store",

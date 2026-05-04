@@ -1,0 +1,12 @@
+[package]
+name = "coding_adventures_vault_key_custody"
+version = "0.1.0"
+edition = "2021"
+description = "VLT03 — pluggable Key Custody. The KeyCustodian trait abstracts where the master KEK lives: passphrase (Argon2id-derived), TPM 2.0 / Secure Enclave, PKCS#11 HSM, Cloud KMS (AWS/GCP/Azure), YubiKey-PRF. Hardware custodians are FIRST-CLASS preferred — the vault refuses to fall back to software when hardware is present unless explicitly forced. Ships PassphraseCustodian + TpmCustodian scaffolding."
+
+[dependencies]
+coding_adventures_argon2id = { path = "../argon2id" }
+coding_adventures_chacha20_poly1305 = { path = "../chacha20-poly1305" }
+coding_adventures_csprng = { path = "../csprng" }
+coding_adventures_zeroize = { path = "../zeroize" }
+coding_adventures_ct_compare = { path = "../ct-compare" }
