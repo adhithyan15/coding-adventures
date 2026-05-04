@@ -387,3 +387,68 @@ class TestWindowCodegenErrors:
         )
         with pytest.raises(UnsupportedNode, match="LAG/LEAD offset"):
             _compile_window([spec], ["a", "b", "l"])
+
+    def test_lag_string_offset_raises(self) -> None:
+        """LAG(col, 'two') — string offset — must be rejected at compile time."""
+        spec = PlanWindowFuncSpec(
+            func="lag",
+            arg_expr=_col("a"),
+            partition_by=(),
+            order_by=(),
+            alias="l",
+            extra_args=(Literal("two"),),
+        )
+        with pytest.raises(UnsupportedNode, match="integer literal"):
+            _compile_window([spec], ["a", "l"])
+
+    def test_lag_float_offset_raises(self) -> None:
+        """LAG(col, 1.5) — float offset — must be rejected at compile time."""
+        spec = PlanWindowFuncSpec(
+            func="lag",
+            arg_expr=_col("a"),
+            partition_by=(),
+            order_by=(),
+            alias="l",
+            extra_args=(Literal(1.5),),
+        )
+        with pytest.raises(UnsupportedNode, match="integer literal"):
+            _compile_window([spec], ["a", "l"])
+
+    def test_ntile_string_n_raises(self) -> None:
+        """NTILE('three') — string bucket count — must be rejected at compile time."""
+        spec = PlanWindowFuncSpec(
+            func="ntile",
+            arg_expr=Literal("three"),
+            partition_by=(),
+            order_by=(),
+            alias="t",
+            extra_args=(),
+        )
+        with pytest.raises(UnsupportedNode, match="integer literal"):
+            _compile_window([spec], ["t"])
+
+    def test_ntile_float_n_raises(self) -> None:
+        """NTILE(3.7) — float bucket count — must be rejected at compile time."""
+        spec = PlanWindowFuncSpec(
+            func="ntile",
+            arg_expr=Literal(3.7),
+            partition_by=(),
+            order_by=(),
+            alias="t",
+            extra_args=(),
+        )
+        with pytest.raises(UnsupportedNode, match="integer literal"):
+            _compile_window([spec], ["t"])
+
+    def test_nth_value_string_n_raises(self) -> None:
+        """NTH_VALUE(col, 'one') — string row index — must be rejected at compile time."""
+        spec = PlanWindowFuncSpec(
+            func="nth_value",
+            arg_expr=_col("a"),
+            partition_by=(),
+            order_by=(),
+            alias="nv",
+            extra_args=(Literal("one"),),
+        )
+        with pytest.raises(UnsupportedNode, match="integer literal"):
+            _compile_window([spec], ["a", "nv"])

@@ -1420,7 +1420,14 @@ def _do_compute_window(ins: ComputeWindowFunctions, st: _VmState) -> None:
                 # These are normalised to exactly two elements by the codegen
                 # compiler, so we can unpack directly.
                 offset_val, default_val = spec.extra_args if spec.extra_args else (1, None)
-                offset_int = int(offset_val) if offset_val is not None else 1  # type: ignore[arg-type]
+                # Defense-in-depth: codegen already rejects non-integer offsets,
+                # but guard here too so a hand-crafted WinFuncSpec can't cause a
+                # leaky ValueError deep in the VM.
+                if not isinstance(offset_val, int) or isinstance(offset_val, bool):
+                    raise RuntimeError(
+                        f"LAG offset must be an integer, got {type(offset_val).__name__!r}"
+                    )
+                offset_int = offset_val
                 for i, row in enumerate(partition):
                     src_idx = i - offset_int
                     if 0 <= src_idx < len(partition) and arg_col:
@@ -1432,7 +1439,11 @@ def _do_compute_window(ins: ComputeWindowFunctions, st: _VmState) -> None:
                 # LEAD(col, offset=1, default=None): mirror of LAG, but looks
                 # *ahead* instead of behind.  Row i fetches from row i+offset.
                 offset_val, default_val = spec.extra_args if spec.extra_args else (1, None)
-                offset_int = int(offset_val) if offset_val is not None else 1  # type: ignore[arg-type]
+                if not isinstance(offset_val, int) or isinstance(offset_val, bool):
+                    raise RuntimeError(
+                        f"LEAD offset must be an integer, got {type(offset_val).__name__!r}"
+                    )
+                offset_int = offset_val
                 for i, row in enumerate(partition):
                     src_idx = i + offset_int
                     if 0 <= src_idx < len(partition) and arg_col:
@@ -1452,13 +1463,18 @@ def _do_compute_window(ins: ComputeWindowFunctions, st: _VmState) -> None:
                 # extra_args = (n: int,) set by codegen.
                 (n_buckets_raw,) = spec.extra_args if spec.extra_args else (1,)
                 total = len(partition)
+                # Defense-in-depth type guard (codegen already enforces int).
+                if not isinstance(n_buckets_raw, int) or isinstance(n_buckets_raw, bool):
+                    raise RuntimeError(
+                        f"NTILE n must be an integer, got {type(n_buckets_raw).__name__!r}"
+                    )
                 # Cap n_buckets to the partition size to prevent a DoS where a
                 # caller specifies NTILE(1_000_000_000) on a tiny partition,
                 # forcing the outer loop to run billions of iterations for no
                 # useful work.  SQL semantics are unaffected: if n > N then
                 # every row gets its own bucket (1..N) and empty buckets are
                 # simply never emitted, which is exactly what capping achieves.
-                raw_n = max(1, int(n_buckets_raw))  # type: ignore[arg-type]
+                raw_n = max(1, n_buckets_raw)
                 n_buckets = min(raw_n, total) if total > 0 else 1
                 q, r = divmod(total, n_buckets)
                 # Build a bucket boundary list: bucket k (1-indexed) ends at

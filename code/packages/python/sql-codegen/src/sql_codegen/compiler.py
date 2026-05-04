@@ -1559,6 +1559,14 @@ def _to_ir_win_spec(spec: PlanWindowFuncSpec) -> WinFuncSpec:
             f"got {type(e).__name__}"
         )
 
+    # Contexts whose value must be a non-boolean integer (offset / bucket-count
+    # / row-number).  Floats are silently truncated by int(), which masks user
+    # errors; strings would cause a ValueError deep in the VM, leaking internal
+    # state in the traceback.  We reject both up front at compile time.
+    _INT_REQUIRED_CTXS = frozenset(
+        {"LAG/LEAD offset", "NTILE n", "NTH_VALUE n"}
+    )
+
     def _literal_val(e: Expr, ctx: str) -> object:
         """Extract a Python constant from a Literal node.
 
@@ -1566,21 +1574,45 @@ def _to_ir_win_spec(spec: PlanWindowFuncSpec) -> WinFuncSpec:
         literal (``-1``) as ``UnaryExpr(NEG, Literal(1))`` rather than
         ``Literal(-1)``.  Only the unary-minus case is folded; all other
         expression types raise ``UnsupportedNode``.
+
+        For contexts listed in ``_INT_REQUIRED_CTXS`` (offsets, bucket counts,
+        row indices) the extracted value must be a plain Python ``int`` (bool
+        excluded).  Non-integer literals — strings, floats, bytes — raise
+        ``UnsupportedNode`` rather than propagating to the VM where they would
+        either truncate silently (float) or crash with a leaky ``ValueError``
+        (str/bytes).
         """
+        raw: object
         if isinstance(e, Literal):
-            return e.value
-        if (
+            raw = e.value
+        elif (
             isinstance(e, UnaryExpr)
             and e.op == AstUnaryOp.NEG
             and isinstance(e.operand, Literal)
         ):
             v = e.operand.value
             if isinstance(v, (int, float)):
-                return -v
-        raise UnsupportedNode(
-            f"window function extra argument ({ctx}) must be a literal constant, "
-            f"got {type(e).__name__}"
-        )
+                raw = -v
+            else:
+                raise UnsupportedNode(
+                    f"window function extra argument ({ctx}) must be a literal "
+                    f"constant, got negated {type(v).__name__}"
+                )
+        else:
+            raise UnsupportedNode(
+                f"window function extra argument ({ctx}) must be a literal constant, "
+                f"got {type(e).__name__}"
+            )
+
+        # bools are a subclass of int in Python; SQL has no boolean literals
+        # for numeric arguments, so reject them too.
+        if ctx in _INT_REQUIRED_CTXS and (not isinstance(raw, int) or isinstance(raw, bool)):
+            raise UnsupportedNode(
+                f"window function argument ({ctx}) must be an integer literal, "
+                f"got {type(raw).__name__!r} value {raw!r}"
+            )
+
+        return raw
 
     # --- Partition / order columns ---
     partition_cols = tuple(_col_name(e) for e in spec.partition_by)

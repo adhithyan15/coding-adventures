@@ -682,3 +682,74 @@ class TestEdgeCases:
         _do_compute_window(instr, state)  # type: ignore[arg-type]
         # With n=1 (default from empty extra_args), every row lands in bucket 1.
         assert all(r[1] == 1 for r in state.result.rows)
+
+    def test_lag_vm_guard_rejects_string_offset(self) -> None:
+        """Defense-in-depth: LAG handler raises RuntimeError for non-int offset.
+
+        The codegen already rejects this at compile time; this test reaches the
+        VM-level guard via a hand-crafted WinFuncSpec to ensure the guard is
+        exercised and does not emit a leaky ValueError.
+        """
+        import types
+
+        import pytest
+        from sql_codegen import ComputeWindowFunctions
+        from sql_codegen.ir import WinFunc, WinFuncSpec
+
+        from sql_vm.result import _MutableResult
+        from sql_vm.vm import _do_compute_window
+
+        spec_ir = WinFuncSpec(
+            func=WinFunc.LAG,
+            arg_col="salary",
+            partition_cols=(),
+            order_cols=(("id", False),),
+            result_col="prev_sal",
+            extra_args=("two", None),   # string offset — invalid
+        )
+        instr = ComputeWindowFunctions(
+            specs=(spec_ir,),
+            output_cols=("id", "salary", "prev_sal"),
+        )
+        result_buf = _MutableResult(
+            columns=("id", "salary"),
+            rows=[(1, 100), (2, 200)],
+        )
+        state = types.SimpleNamespace(result=result_buf)
+        with pytest.raises(RuntimeError, match="LAG offset must be an integer"):
+            _do_compute_window(instr, state)  # type: ignore[arg-type]
+
+    def test_ntile_vm_guard_rejects_string_n(self) -> None:
+        """Defense-in-depth: NTILE handler raises RuntimeError for non-int n.
+
+        As with the LAG guard above, codegen prevents this in practice; we
+        drive the VM directly to confirm the defensive check is reachable.
+        """
+        import types
+
+        import pytest
+        from sql_codegen import ComputeWindowFunctions
+        from sql_codegen.ir import WinFunc, WinFuncSpec
+
+        from sql_vm.result import _MutableResult
+        from sql_vm.vm import _do_compute_window
+
+        spec_ir = WinFuncSpec(
+            func=WinFunc.NTILE,
+            arg_col=None,
+            partition_cols=(),
+            order_cols=(("id", False),),
+            result_col="bucket",
+            extra_args=("three",),  # string bucket count — invalid
+        )
+        instr = ComputeWindowFunctions(
+            specs=(spec_ir,),
+            output_cols=("id", "bucket"),
+        )
+        result_buf = _MutableResult(
+            columns=("id",),
+            rows=[(1,), (2,), (3,)],
+        )
+        state = types.SimpleNamespace(result=result_buf)
+        with pytest.raises(RuntimeError, match="NTILE n must be an integer"):
+            _do_compute_window(instr, state)  # type: ignore[arg-type]
