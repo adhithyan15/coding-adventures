@@ -1,11 +1,32 @@
 # Changelog — @coding-adventures/paint-vm-svg
 
-## Unreleased
+## [0.1.1] — 2026-05-04
 
 ### Added
 
-- Added SVG `PaintText` handling so graph visualizers can render browser-shaped
-  labels instead of manually positioned glyph runs.
+- **`PaintText` handler** (`"text"` instruction) — closes the gap between the
+  canvas and SVG backends. Emits a `<text>` element with individual SVG
+  presentation attributes (`font-family`, `font-size`, `font-weight`,
+  `font-style`, `fill`, `text-anchor`).
+- **`parseSvgFontRef()`** — parses `"canvas:"` and `"svg:"` font_ref schemes
+  into separate SVG attributes. Accepts the same grammar as the canvas backend
+  (`canvas:<family>@<size>[:<weight>[:<style>]]`) so `layout-to-paint` in
+  `"text"` emit mode works without modification against both backends.
+- **`textAlignToSvgAnchor()`** — maps `PaintText.text_align` ("start" |
+  "center" | "end") to SVG `text-anchor` ("start" | "middle" | "end").
+  The Canvas uses "center" but SVG requires "middle" — this mapping is
+  intentional to produce valid SVG.
+- **Security hardening** — `parseSvgFontRef` strips non-allowlisted characters
+  from `font-family` (allowlist: `[a-zA-Z0-9 ,\-_.]`), validates `font-weight`
+  in [1, 1000], and allowlists `font-style` to "italic" / "oblique". Unknown
+  scheme prefixes degrade gracefully to `sans-serif` rather than throwing.
+- **XML escaping for text content** — `escText()` applied to `instr.text` so
+  `&`, `<`, `>` in user-supplied strings produce valid XML (`&amp;`, `&lt;`,
+  `&gt;`).
+- 21 new tests covering: basic output, scheme variants ("canvas:" / "svg:"),
+  font-weight/style attributes, `text_align` → `text-anchor` mapping, XML
+  escaping, `RangeError` on non-finite `font_size`, security injection
+  hardening, and a cowsay-style composed scene.
 
 ## [0.1.0] — 2026-04-03
 
