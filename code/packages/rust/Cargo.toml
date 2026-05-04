@@ -400,6 +400,7 @@ members = [
     "canonical-cbor",
     "vault-records",
     "vault-key-custody",
+    "vault-recipients",
     "context-store",
     "artifact-store",
     "skill-store",
