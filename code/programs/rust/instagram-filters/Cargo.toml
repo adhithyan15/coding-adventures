@@ -1,6 +1,6 @@
 [package]
 name = "instagram-filters"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "End-to-end demo: PPM in → image-gpu-core filter (running on the matrix execution layer) → PPM out. Proves the matrix-ir → matrix-runtime → matrix-cpu pipeline by composing real Instagram-style filters from MatrixIR primitives."
 license = "MIT"

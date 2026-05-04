@@ -1,5 +1,26 @@
 # Changelog — instagram-filters
 
+## 0.2.0 — 2026-05-04
+
+### Added
+
+- After every successful filter, the CLI now prints
+  `instagram-filters: executed on <cpu|metal>` so users can see which
+  backend the matrix execution layer routed their graph to.
+- Picks up `image-gpu-core` v0.3.0, which automatically registers
+  `matrix-metal` alongside `matrix-cpu` on Apple targets.  On Linux /
+  Windows the binary still builds and runs (matrix-metal compiles to a
+  stub there) — the planner just always picks CPU.
+
+### Notes
+
+- Cost-model behaviour: small images (≤ 1024×1024 with the V1 graphs
+  this crate emits) still tend to stay on CPU because the planner sees
+  the per-op transfer-in cost dominate Metal's compute speedup.  This
+  isn't a wiring bug — it's the cost model working as designed.  Larger
+  images and matmul-heavy filters (sepia on the upper end of the V1
+  16 MiB per-tensor cap) start picking Metal.
+
 ## 0.1.0 — 2026-05-04
 
 Initial release.  End-to-end demo program proving the matrix execution
