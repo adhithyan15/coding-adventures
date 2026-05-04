@@ -39,15 +39,19 @@
 //! assert_eq!(result, Some(Value::Int(42)));
 //! ```
 
+pub mod branch_stats;
 pub mod builtins;
 pub mod core;
 pub mod dispatch;
 pub mod errors;
 pub mod frame;
 pub mod profiler;
+pub mod trace;
 pub mod value;
 
 // Re-export the most commonly used items at the crate root.
+pub use branch_stats::BranchStats;
 pub use core::VMCore;
 pub use errors::VMError;
+pub use trace::VMTrace;
 pub use value::Value;
