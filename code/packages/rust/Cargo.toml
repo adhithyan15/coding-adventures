@@ -183,6 +183,7 @@ members = [
     "native-debug-info",
     "virtual-machine",
     "vm-core",
+    "vm-runtime",
     "vm-type-suggestions",
     "wasm-simulator",
     "xml-lexer",
