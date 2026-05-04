@@ -243,6 +243,102 @@ def test_cli_repeated_queries_report_script_failure(
     ]
 
 
+def test_cli_summary_reports_noninteractive_text_counts(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart).",
+        "--query",
+        "parent(homer, Who)",
+        "--query",
+        "parent(marge, Who)",
+        "--summary",
+    ])
+
+    assert status == 1
+    assert capsys.readouterr().out.splitlines() == [
+        "Who = bart.",
+        "false.",
+        "summary: queries=2, succeeded=1, failed=1, answers=1.",
+    ]
+
+
+def test_cli_json_summary_wraps_query_results(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart). ?- parent(homer, Who). ?- parent(marge, Who).",
+        "--all-source-queries",
+        "--summary",
+        "--format",
+        "json",
+    ])
+
+    payload = json.loads(capsys.readouterr().out)
+
+    assert status == 1
+    assert payload["success"] is False
+    assert payload["summary"] == {
+        "answer_count": 1,
+        "failed_query_count": 1,
+        "mode": "summary",
+        "query_count": 2,
+        "succeeded_query_count": 1,
+        "success": False,
+    }
+    assert payload["results"][0]["source_query_index"] == 0
+    assert payload["results"][1]["source_query_index"] == 1
+
+
+def test_cli_jsonl_summary_appends_summary_record(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart).",
+        "--query",
+        "parent(homer, Who)",
+        "--query",
+        "parent(marge, Who)",
+        "--format",
+        "jsonl",
+        "--summary",
+    ])
+
+    records = [
+        json.loads(line)
+        for line in capsys.readouterr().out.splitlines()
+    ]
+
+    assert status == 1
+    assert records[-1] == {
+        "answer_count": 1,
+        "failed_query_count": 1,
+        "mode": "summary",
+        "query_count": 2,
+        "succeeded_query_count": 1,
+        "success": False,
+    }
+
+
+def test_cli_summary_rejects_interactive(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart).",
+        "--summary",
+        "--interactive",
+    ])
+
+    assert status == 2
+    assert "--summary cannot be combined with --interactive" in (
+        capsys.readouterr().err
+    )
+
+
 def test_cli_interactive_loop_runs_queries_from_stdin(
     monkeypatch: pytest.MonkeyPatch,
     capsys: pytest.CaptureFixture[str],

@@ -287,6 +287,10 @@ queries and the CLI should run them as a script. The command prints or emits
 one result record per source query, sets `source_query_index` in JSON formats,
 and exits nonzero if any embedded query has no answers.
 
+Use `--summary` on non-interactive query runs when scripts, CI jobs, or editor
+integrations need compact totals. Text output appends one summary line, JSONL
+appends a summary record, and JSON wraps result records with summary metadata.
+
 Use `--format json` for a machine-readable result object, or `--format jsonl`
 when repeated queries should stream one result record per line. JSON answers
 preserve named bindings, raw values, compound terms, variables, and residual

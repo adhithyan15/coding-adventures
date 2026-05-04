@@ -67,6 +67,7 @@ class CliArgs:
     dialect: CliDialect
     backend: PrologVMBackend
     values: bool
+    summary: bool
     output_format: CliOutputFormat
     commit: bool
     interactive: bool
@@ -169,6 +170,16 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     if list_source_queries and bool(flags["interactive"]):
         msg = "--list-source-queries cannot be combined with --interactive"
         raise ValueError(msg)
+    summary = bool(flags["summary"])
+    if summary and check:
+        msg = "--summary cannot be combined with --check"
+        raise ValueError(msg)
+    if summary and list_source_queries:
+        msg = "--summary cannot be combined with --list-source-queries"
+        raise ValueError(msg)
+    if summary and bool(flags["interactive"]):
+        msg = "--summary cannot be combined with --interactive"
+        raise ValueError(msg)
     if all_source_queries and queries:
         msg = "--all-source-queries cannot be combined with --query"
         raise ValueError(msg)
@@ -189,6 +200,7 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         dialect=_dialect(_required_string(flags["dialect"], name="--dialect")),
         backend=_backend(_required_string(flags["backend"], name="--backend")),
         values=bool(flags["values"]),
+        summary=summary,
         output_format=_output_format(
             _required_string(flags["format"], name="--format"),
         ),
@@ -686,16 +698,64 @@ def _print_result_records(
                 values=args.values,
                 stdout=output,
             )
+        if args.summary:
+            _print_summary_text(_summary_record(records), stdout=output)
         return
 
     json_records = [_json_record(record) for record in records]
     if args.output_format == "jsonl" or streaming:
         for record in json_records:
             print(json.dumps(record, sort_keys=True), file=output)
+        if args.summary:
+            print(json.dumps(_summary_record(records), sort_keys=True), file=output)
         return
 
     payload: object = json_records[0] if len(json_records) == 1 else json_records
+    if args.summary:
+        payload = {
+            "results": json_records,
+            "summary": _summary_record(records),
+            "success": all(bool(record["success"]) for record in records),
+        }
     print(json.dumps(payload, sort_keys=True), file=output)
+
+
+def _summary_record(records: Sequence[dict[str, object]]) -> dict[str, object]:
+    query_count = len(records)
+    failed_query_count = sum(1 for record in records if not bool(record["success"]))
+    answer_count = sum(
+        len(
+            cast(
+                "list[PrologAnswer] | list[Term | tuple[Term, ...]]",
+                record["results"],
+            ),
+        )
+        for record in records
+    )
+    return {
+        "success": failed_query_count == 0,
+        "mode": "summary",
+        "query_count": query_count,
+        "succeeded_query_count": query_count - failed_query_count,
+        "failed_query_count": failed_query_count,
+        "answer_count": answer_count,
+    }
+
+
+def _print_summary_text(
+    summary: dict[str, object],
+    *,
+    stdout: TextIO | None = None,
+) -> None:
+    output = sys.stdout if stdout is None else stdout
+    print(
+        "summary: "
+        f"queries={summary['query_count']}, "
+        f"succeeded={summary['succeeded_query_count']}, "
+        f"failed={summary['failed_query_count']}, "
+        f"answers={summary['answer_count']}.",
+        file=output,
+    )
 
 
 def _result_record(

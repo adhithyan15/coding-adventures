@@ -17,6 +17,7 @@ The goal is practical usability:
 - run all stored source-level `?-` queries as an executable script
 - run one or more ad-hoc top-level queries
 - preserve state across repeated queries when explicitly requested
+- emit opt-in run summaries for scripts and CI
 - provide a small stdin-driven interactive loop
 
 ## Public Command
@@ -41,6 +42,7 @@ Important options:
 - `--backend structured|bytecode` selects the VM backend.
 - `--dialect swi|iso` selects the frontend dialect profile.
 - `--values` prints raw result values instead of named bindings.
+- `--summary` appends compact run totals for non-interactive query execution.
 - `--format text|json|jsonl` selects human text, one JSON document, or
   newline-delimited JSON records.
 - `--commit` persists the first answer state from each ad-hoc query into the
@@ -88,6 +90,12 @@ zero-based `index` and visible `variables` metadata for each embedded query.
 When `--all-source-queries` is set, each embedded `?-` query produces one result
 object with its `source_query_index`. The process exits with status 1 if any
 source query has no answers, matching repeated ad-hoc query scripts.
+
+When `--summary` is set for non-interactive query execution, text output
+appends one compact line with query, success, failure, and answer totals. JSONL
+appends a final `mode: "summary"` record. JSON wraps result records in an object
+with `results`, `summary`, and aggregate `success` fields so downstream tools
+can consume both details and totals without re-counting.
 
 Each result object includes:
 
@@ -150,6 +158,7 @@ The CLI test coverage should prove:
 - no-solution exit behavior
 - JSON and JSONL machine-readable output
 - JSON and JSONL machine-readable diagnostics
+- opt-in query run summaries
 - repeated query scripts with committed runtime state
 - interactive stdin query handling
 - committed setup queries before interactive mode
