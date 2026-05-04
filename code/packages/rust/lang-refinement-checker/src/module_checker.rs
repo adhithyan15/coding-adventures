@@ -295,6 +295,16 @@ impl ModuleScope {
     pub fn is_empty(&self) -> bool {
         self.functions.is_empty()
     }
+
+    /// Iterate all registered `(name, signature)` pairs.
+    ///
+    /// Used by [`crate::program_checker::ProgramChecker`] to audit the public
+    /// surface of a module without exposing the internal `HashMap` to external
+    /// callers.  The iteration order matches the underlying `HashMap`
+    /// (non-deterministic but consistent within one process run).
+    pub(crate) fn iter(&self) -> impl Iterator<Item = (&str, &FunctionSignature)> {
+        self.functions.iter().map(|(k, v)| (k.as_str(), v))
+    }
 }
 
 // ---------------------------------------------------------------------------

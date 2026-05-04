@@ -1,18 +1,19 @@
 # `lang-refinement-checker`
 
-**LANG23 PRs 23-C + 23-D + 23-F** — the refinement proof-obligation checker.
+**LANG23 PRs 23-C + 23-D + 23-F + 23-G** — the refinement proof-obligation checker.
 
 Takes `RefinedType` annotations from the IIR, lowers their predicates to
 `ConstraintInstructions`, runs them through `constraint-vm`, and classifies
 the solver's answer into one of the three LANG23 outcomes.
 
-Three APIs are provided:
+Four APIs are provided:
 
 | API | Module | PR | Scope |
 |-----|--------|----|-------|
 | `Checker` | (crate root) | 23-C | Per-binding: checks one proof obligation given concrete/predicated/unconstrained evidence. |
 | `FunctionChecker` | `function_checker` | 23-D | Function-scope: walks a CFG, accumulates guard predicates path-by-path, checks each return site. |
 | `ModuleChecker` | `module_checker` | 23-F | Module-scope: extends function-scope checking with cross-function call-site reasoning; uses a `ModuleScope` registry for per-symbol opt-out. |
+| `ProgramChecker` | `program_checker` | 23-G | Program-scope: purely structural closed-world check that every public binding in every module carries a refinement annotation; no solver, runs at link time. |
 
 ---
 
@@ -25,7 +26,9 @@ lang-refinement-checker     (this crate)
         │  PR 23-C: Checker — per-binding proof obligations
         │  PR 23-D: FunctionChecker — CFG-based path-sensitive analysis
         │  PR 23-F: ModuleChecker — cross-function call-site reasoning
-        │  all lower via ProgramBuilder → constraint-vm
+        │  PR 23-G: ProgramChecker — structural annotation-completeness gate
+        │  23-C/D/F lower via ProgramBuilder → constraint-vm
+        │  23-G is solver-free (structural only)
         │
 constraint-vm ──► constraint-engine ──► SAT / LIA tactics
 ```
@@ -259,6 +262,94 @@ assert!(result.all_call_sites_proven_safe());
 |------|----------------|-------------------|-------------------|---------|
 | then (`cp < 128`) | `[0,256) ∩ cp<128` | `Predicated([Range{0,256}, Range{None,128}])` | `(Int 0 128)` | UNSAT refutation → **ProvenSafe** |
 | else (`cp ≥ 128`) | `(cp ≥ 128)` | — | `latin1-fallback` not in scope | *skipped* |
+
+---
+
+## PR 23-G: Program-scope checker
+
+Enforces the closed-world invariant at link time: **every public binding in
+every registered module must carry a refinement annotation** (no `: any`).
+This is a purely structural check — no solver, no CFG walk.
+
+The spec (§"Rung 4 — program-scope"):
+
+> The compiler now refuses to link any module whose public surface includes
+> type-only `: any` bindings.  Every cross-module call is proven
+> refinement-safe at build time.
+
+### The two-axis check
+
+| Axis | Always? | Unrefined means… |
+|------|---------|-----------------|
+| Parameters | Yes | Callers cannot prove call-site safety without a runtime check |
+| Return type | Opt-in via `with_return_type_checking()` | Callers cannot inherit narrowed types |
+
+### Example — strict mode rejects a refinement-incomplete module
+
+```rust
+use lang_refined_types::{Kind, Predicate, RefinedType};
+use lang_refinement_checker::function_checker::FunctionSignature;
+use lang_refinement_checker::module_checker::ModuleScope;
+use lang_refinement_checker::program_checker::{ProgramChecker, ProgramModule, ViolationKind};
+
+// `decode` is fully annotated; `helper` has an unrefined param → violation.
+let mut scope = ModuleScope::new();
+scope.register("decode", FunctionSignature {
+    params: vec![(
+        "codepoint".into(),
+        RefinedType::refined(Kind::Int, Predicate::Range { lo: Some(0), hi: Some(128), inclusive_hi: false }),
+    )],
+    return_type: RefinedType::unrefined(Kind::Int),
+});
+scope.register("helper", FunctionSignature {
+    params: vec![("x".into(), RefinedType::unrefined(Kind::Int))], // ← `: any`
+    return_type: RefinedType::unrefined(Kind::Int),
+});
+
+let modules = vec![ProgramModule { name: "text/ascii".into(), scope }];
+let checker = ProgramChecker::new();
+let result = checker.check_program(&modules);
+
+// Strict check catches the unrefined parameter in `helper`.
+assert!(result.has_violations());
+assert_eq!(result.violation_count(), 1);
+assert_eq!(result.violations[0].function_name, "helper");
+assert!(matches!(
+    result.violations[0].kind,
+    ViolationKind::UnrefinedParam { param_index: 0, .. }
+));
+
+// Error message is human-readable — suitable for a compiler diagnostic.
+let msg = result.error_message();
+assert!(msg.contains("[text/ascii] helper: parameter 0 'x'"));
+```
+
+### Per-symbol opt-out
+
+Functions absent from the `ModuleScope` are silently excluded.  To exclude
+a third-party dependency or an unannotated internal helper, simply do not
+register it.
+
+### Return-type checking
+
+```rust
+# use lang_refined_types::{Kind, Predicate, RefinedType};
+# use lang_refinement_checker::function_checker::FunctionSignature;
+# use lang_refinement_checker::module_checker::ModuleScope;
+# use lang_refinement_checker::program_checker::{ProgramChecker, ProgramModule};
+let mut scope = ModuleScope::new();
+scope.register("f", FunctionSignature {
+    params: vec![("x".into(), RefinedType::refined(Kind::Int, Predicate::Range { lo: Some(0), hi: Some(10), inclusive_hi: false }))],
+    return_type: RefinedType::unrefined(Kind::Int), // unrefined return
+});
+let modules = vec![ProgramModule { name: "m".into(), scope }];
+
+// Default: only parameter annotations checked → clean.
+assert!(ProgramChecker::new().check_program(&modules).is_clean());
+
+// Strict: return types also checked → violation.
+assert!(ProgramChecker::new().with_return_type_checking().check_program(&modules).has_violations());
+```
 
 ---
 
