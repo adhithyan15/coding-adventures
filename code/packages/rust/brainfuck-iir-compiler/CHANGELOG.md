@@ -1,5 +1,13 @@
 # Changelog — brainfuck-iir-compiler
 
+## [0.1.1] — 2026-05-04
+
+### Fixed (LANG23 PR 23-E compatibility)
+
+- `IIRFunction` struct literals in `compiler.rs` updated to include
+  `param_refinements: Vec::new()` and `return_refinement: None` after
+  `interpreter-ir` 0.2.0 added those fields.  No behavioural change.
+
 ## [0.1.0] — 2026-04-29
 
 ### Added

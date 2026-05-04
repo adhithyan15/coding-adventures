@@ -267,7 +267,7 @@ fn emit_expr(out: &mut Vec<SemanticToken>, expr: &Expr) {
                 emit_expr(out, e);
             }
         }
-        Expr::Lambda(Lambda { params, body, line, column }) => {
+        Expr::Lambda(Lambda { params, body, line, column, .. }) => {
             let l = u32_of(*line);
             let c = u32_of(*column);
             push_keyword(out, l, c.saturating_add(1), "lambda");

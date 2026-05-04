@@ -1788,6 +1788,8 @@ mod tests {
             call_count: 0,
             feedback_slots: std::collections::HashMap::new(),
             source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
         };
         let module = IIRModule {
             name: "test".into(),
@@ -1813,6 +1815,8 @@ mod tests {
             call_count: 0,
             feedback_slots: std::collections::HashMap::new(),
             source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
         };
         let module = IIRModule {
             name: "test".into(),
@@ -1849,6 +1853,8 @@ mod tests {
             call_count: 0,
             feedback_slots: std::collections::HashMap::new(),
             source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
         };
         let module = IIRModule {
             name: "test".into(),
@@ -1894,6 +1900,8 @@ mod tests {
             call_count: 0,
             feedback_slots: std::collections::HashMap::new(),
             source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
         };
         let err = Frame::new(&f, &[]).unwrap_err();
         match err {
@@ -1927,6 +1935,8 @@ mod tests {
             call_count: 0,
             feedback_slots: std::collections::HashMap::new(),
             source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
         };
         let err = build_label_index(&f).unwrap_err();
         match err {
@@ -1952,6 +1962,8 @@ mod tests {
             call_count: 0,
             feedback_slots: std::collections::HashMap::new(),
             source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
         };
         // Should succeed (clamped to MAX_REGISTERS_PER_FRAME).
         let frame = Frame::new(&f, &[]).expect("frame creation must not abort");
@@ -1980,6 +1992,8 @@ mod tests {
             call_count: 0,
             feedback_slots: std::collections::HashMap::new(),
             source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
         };
         let idx = build_label_index(&f).unwrap();
         assert_eq!(idx.get("L1"), Some(&0));
@@ -2167,6 +2181,8 @@ mod tests {
             call_count: 0,
             feedback_slots: std::collections::HashMap::new(),
             source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
         };
         let module = IIRModule {
             name: "test".into(),
@@ -2212,6 +2228,8 @@ mod tests {
             call_count: 0,
             feedback_slots: std::collections::HashMap::new(),
             source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
         };
         let module = IIRModule {
             name: "test".into(),
@@ -2302,6 +2320,8 @@ mod tests {
             call_count: 0,
             feedback_slots: std::collections::HashMap::new(),
             source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
         };
         IIRModule {
             name: "test".into(),
@@ -2811,6 +2831,8 @@ mod tests {
             call_count: 0,
             feedback_slots: std::collections::HashMap::new(),
             source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
         };
         let main_instrs = vec![
             IIRInstr::new("const", Some("o1".into()), vec![Operand::Int(1)], "any"),
@@ -2829,6 +2851,8 @@ mod tests {
             call_count: 0,
             feedback_slots: std::collections::HashMap::new(),
             source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
         };
         let module = IIRModule {
             name: "test".into(),

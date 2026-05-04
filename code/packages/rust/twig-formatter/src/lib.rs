@@ -479,6 +479,7 @@ mod tests {
         match f {
             Form::Define(d) => Form::Define(Define {
                 name: d.name.clone(),
+                type_annotation: d.type_annotation.clone(),
                 expr: strip_expr(&d.expr),
                 line: 0,
                 column: 0,
@@ -513,6 +514,8 @@ mod tests {
             }),
             Expr::Lambda(l) => Expr::Lambda(Lambda {
                 params: l.params.clone(),
+                param_annotations: l.param_annotations.clone(),
+                return_annotation: l.return_annotation.clone(),
                 body: l.body.iter().map(strip_expr).collect(),
                 line: 0,
                 column: 0,
