@@ -28,6 +28,7 @@ out into helpers so that this file reads like pseudocode.
 
 from __future__ import annotations
 
+import math
 from collections.abc import Callable
 from dataclasses import dataclass, field
 
@@ -183,11 +184,20 @@ class _AggState:
     - SUM               — sum (Null until first non-null input)
     - AVG               — sum + count
     - MIN / MAX         — extremum
+    - GROUP_CONCAT      — items (list of non-null string representations) + separator
+
+    ``items`` and ``separator`` are only populated for GROUP_CONCAT.  They are
+    left as empty list / "," respectively for all other functions to keep the
+    class lightweight; accessing them on non-GROUP_CONCAT slots is a logic
+    error that will produce incorrect output rather than a crash, so keep it
+    that way intentionally — the codegen guarantees correct dispatch.
     """
 
     func: AggFunc
     count: int = 0
-    acc: SqlValue = None  # sum / min / max carrier
+    acc: SqlValue = None       # sum / min / max carrier
+    items: list = field(default_factory=list)   # GROUP_CONCAT accumulator
+    separator: str = ","       # GROUP_CONCAT separator (baked in at InitAgg time)
 
 
 # --------------------------------------------------------------------------
@@ -530,6 +540,16 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
         return
     if isinstance(ins, AdvanceGroupKey):
         st.group_iter += 1
+        # SQL standard: a global aggregate (no GROUP BY) over an empty table
+        # must return exactly one row of NULL / zero values.  When the body
+        # scan produced no rows, ``group_order`` is empty and we would skip
+        # straight to ``on_exhausted``.  Detect this case via ``has_group_by``
+        # and synthesise the implicit ``()`` group so the emit loop runs once.
+        # GROUP BY queries on empty tables correctly return 0 rows — only the
+        # implicit-single-group case needs this treatment.
+        if not ins.has_group_by and st.group_iter == 0 and not st.group_order:
+            st.group_order.append(())
+            st.agg_table[()] = []   # empty slot list; FinalizeAgg auto-grows it
         if st.group_iter >= len(st.group_order):
             st.pc = _resolve(st, ins.on_exhausted)
         else:
@@ -1101,10 +1121,11 @@ def _do_init_agg(ins: InitAgg, st: _VmState) -> None:
     # semantic meaning is "ensure this slot exists for this group". Only
     # allocate on first encounter; on subsequent calls the existing
     # accumulator is preserved. MIN/MAX/SUM start at NULL; AVG tracks
-    # sum and count.
+    # sum and count; GROUP_CONCAT accumulates a list.
     slots = _ensure_group(st)
     while len(slots) <= ins.slot:
-        slots.append(_AggState(func=ins.func))
+        state = _AggState(func=ins.func, separator=ins.separator)
+        slots.append(state)
 
 
 def _do_update_agg(ins: UpdateAgg, st: _VmState) -> None:
@@ -1136,12 +1157,32 @@ def _do_update_agg(ins: UpdateAgg, st: _VmState) -> None:
         if agg.acc is None or value > agg.acc:  # type: ignore[operator]
             agg.acc = value
         return
+    if agg.func is AggFunc.GROUP_CONCAT:
+        # NULL inputs are silently ignored — only non-NULL values join the list.
+        # Convert the value to a string representation matching SQLite: integers
+        # and whole-number finite floats render without a trailing '.0' (SQLite
+        # omits the fraction for integer-valued reals).
+        # Special-case: math.inf and math.nan must be checked with math.isfinite
+        # first because ``inf == int(inf)`` raises OverflowError and
+        # ``nan == int(nan)`` raises ValueError in Python.
+        if value is None:
+            return
+        if isinstance(value, float) and math.isfinite(value) and value == int(value):
+            agg.items.append(str(int(value)))
+        else:
+            agg.items.append(str(value))
+        return
 
 
 def _do_finalize_agg(ins: FinalizeAgg, st: _VmState) -> None:
     slots = _ensure_group(st)
-    if ins.slot >= len(slots):
-        raise InternalError(message=f"finalize_agg: slot {ins.slot} not initialized")
+    # Auto-grow: if InitAgg was never called for this group (the empty-table /
+    # implicit-single-group case), slots will be shorter than expected.  We
+    # lazily create default _AggState entries from the func and separator baked
+    # into the FinalizeAgg instruction.  The resulting zero-state produces the
+    # correct SQL result: NULL for SUM/MIN/MAX/AVG/GROUP_CONCAT, 0 for COUNT.
+    while len(slots) <= ins.slot:
+        slots.append(_AggState(func=ins.func, separator=ins.separator))
     agg = slots[ins.slot]
     if agg.func in (AggFunc.COUNT, AggFunc.COUNT_STAR):
         st.push(agg.count)
@@ -1151,6 +1192,13 @@ def _do_finalize_agg(ins: FinalizeAgg, st: _VmState) -> None:
             st.push(None)
             return
         st.push(agg.acc / agg.count)  # type: ignore[operator]
+        return
+    if agg.func is AggFunc.GROUP_CONCAT:
+        # Return NULL for an empty group (no non-NULL inputs), matching SQLite.
+        if not agg.items:
+            st.push(None)
+        else:
+            st.push(agg.separator.join(agg.items))
         return
     # SUM / MIN / MAX — the accumulator *is* the result (may be NULL for empty).
     st.push(agg.acc)

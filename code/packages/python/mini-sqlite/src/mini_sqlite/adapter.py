@@ -1212,6 +1212,35 @@ def _function_call(node: ASTNode, state: _PlaceholderCounter) -> Expr:
         if len(args) != 1:
             raise ProgrammingError(f"{upper}: expected 1 argument, got {len(args)}")
         return AggregateExpr(func=agg_map[upper], arg=args[0])
+
+    if upper == "GROUP_CONCAT":
+        # GROUP_CONCAT(col)          — SQLite default separator ','
+        # GROUP_CONCAT(col, sep)     — explicit string literal separator
+        #
+        # SQL:2003 §10.9 requires the separator to be a character-string
+        # literal; we enforce that at parse time so the codegen can bake the
+        # separator into the instruction stream rather than evaluating it
+        # dynamically each time.
+        if len(args) == 0 or len(args) > 2:
+            raise ProgrammingError(
+                "GROUP_CONCAT: expected 1 or 2 arguments "
+                "(column [, separator_literal])"
+            )
+        separator: str | None = None
+        if len(args) == 2:
+            sep_expr = args[1].value
+            if not isinstance(sep_expr, Literal) or not isinstance(sep_expr.value, str):
+                raise ProgrammingError(
+                    "GROUP_CONCAT: separator must be a string literal, "
+                    f"got {type(sep_expr).__name__}"
+                )
+            separator = sep_expr.value
+        return AggregateExpr(
+            func=AggFunc.GROUP_CONCAT,
+            arg=args[0],
+            separator=separator,
+        )
+
     return FunctionCall(name=name, args=tuple(args))
 
 

@@ -84,6 +84,7 @@ class AggFunc(Enum):
     AVG = "AVG"
     MIN = "MIN"
     MAX = "MAX"
+    GROUP_CONCAT = "GROUP_CONCAT"  # concatenate non-NULL strings with a separator
 
 
 class Direction(Enum):
@@ -314,9 +315,16 @@ class ScanAllColumns:
 
 @dataclass(frozen=True, slots=True)
 class InitAgg:
-    """Initialize aggregate slot to its zero state for a new group."""
+    """Initialize aggregate slot to its zero state for a new group.
+
+    ``separator`` is only consulted when ``func == GROUP_CONCAT``.  It bakes
+    the separator string into the instruction at compile time (the separator
+    must be a literal in SQL, so this is always valid).  For all other
+    aggregate functions the field is ignored.
+    """
     slot: int
     func: AggFunc
+    separator: str = ","  # GROUP_CONCAT separator; ignored for other funcs
 
 
 @dataclass(frozen=True, slots=True)
@@ -327,8 +335,19 @@ class UpdateAgg:
 
 @dataclass(frozen=True, slots=True)
 class FinalizeAgg:
-    """Compute the final value of ``slot`` and push it."""
+    """Compute the final value of ``slot`` and push it.
+
+    ``func`` and ``separator`` are the aggregate function kind and (for
+    GROUP_CONCAT) the separator baked in at compile time.  They double as
+    fallback initializers: when a no-GROUP-BY aggregate runs over an empty
+    table the body loop never executes, so ``InitAgg`` is never called and
+    the slot list is empty.  ``_do_finalize_agg`` auto-creates a default
+    ``_AggState`` from these fields so the correct zero-state value is
+    returned (NULL for most functions, 0 for COUNT(*)/COUNT).
+    """
     slot: int
+    func: AggFunc = AggFunc.COUNT_STAR   # fallback for empty-group auto-init
+    separator: str = ","                 # GROUP_CONCAT fallback; ignored otherwise
 
 
 @dataclass(frozen=True, slots=True)
@@ -355,8 +374,15 @@ class AdvanceGroupKey:
 
     This mirrors ``AdvanceCursor`` for scans: the same loop-with-exit-label
     pattern, but iterating over groups instead of rows.
+
+    ``has_group_by`` tells the VM whether the query has an explicit GROUP BY
+    clause.  When False (implicit single-group mode) and the scan produced
+    no rows, the VM synthesises a single empty-group entry so the emit loop
+    still runs once — matching the SQL standard requirement that a global
+    aggregate over an empty table returns exactly one row of NULL/zero values.
     """
     on_exhausted: str
+    has_group_by: bool = True   # False → implicit single-group; synthesise if empty
 
 
 # ---- Result-buffer post-processing -------------------------------------

@@ -1,5 +1,33 @@
 # Changelog — twig-beam-compiler
 
+## 0.6.0 — 2026-05-04 — TW04 Phase 4g — stdlib/io structural tests on BEAM
+
+### Added — stdlib/io structural and resolution tests (`tests/test_stdlib_beam.py`)
+
+Tests verify that Twig programs importing `stdlib/io` resolve correctly and
+compile to BEAM bytecode (structural tests), while documenting the known
+limitation that BEAM runtime tests are `xfail`.
+
+**Structural tests (always pass):**
+- `stdlib/io` resolves with auto-included stdlib
+- Topological order: `host → stdlib/io → user/hello`
+- `compile_modules` returns a `MultiModuleBeamResult` with the stdlib
+  module included and the host module excluded
+- The `stdlib/io` `.beam` bytes are non-empty (valid BEAM format)
+
+**Runtime tests (xfail — known limitation):**
+BEAM multi-module does not yet handle the synthetic `host` module as a
+special case during IR lowering.  In multi-module mode, any name with
+an interior `/` (including `host/write-byte`) generates a BEAM remote
+call `call_ext` to a module named `host`, which does not exist at
+runtime.  The three runtime tests (`println_42`, `println_sum_17_25`,
+`println_twice`) are marked `xfail` so CI catches regressions if the
+fix lands.
+
+**Fix path:** Either ship a real Erlang `host.beam` shim module that
+re-exports the three syscall operations, or special-case the `host`
+module name in `ir-to-beam`'s multi-module lowering path.
+
 ## 0.5.0 — 2026-05-04 — TW04 Phase 4f (multi-module BEAM compilation)
 
 Implements multi-module BEAM lowering: each Twig module compiles to one

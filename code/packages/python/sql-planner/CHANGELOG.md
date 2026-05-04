@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.18.0] - 2026-05-04
+
+### Added
+
+- **`GROUP_CONCAT` aggregate function** (`expr.py`, `plan.py`, `planner.py`) —
+  `AggFunc.GROUP_CONCAT` added to the planner-level `AggFunc` enum, matching
+  the SQL `GROUP_CONCAT(col [, separator])` function.
+- **`separator` field on `AggregateExpr`** (`expr.py`) — optional
+  `str | None` carrying the literal separator from `GROUP_CONCAT(col, sep)`.
+  `None` means "use the SQL default `','`".
+- **`separator` field on `AggregateItem`** (`plan.py`) — same semantics;
+  propagated from the expression level through the plan node so the codegen
+  can bake the separator into `InitAgg` at compile time.
+- **`separator` propagation in the planner** (`planner.py`) — both
+  `_resolve` and `_collect_aggregates` now forward the `separator` field
+  when constructing `AggregateItem`.
+
 ## [0.17.0] - 2026-05-04
 
 ### Added

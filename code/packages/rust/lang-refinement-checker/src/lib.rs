@@ -1,7 +1,7 @@
 //! # `lang-refinement-checker` — LANG23 refinement proof-obligation checker.
 //!
-//! **LANG23 PRs 23-C and 23-D.**  The compiler pass that takes `RefinedType`
-//! annotations from the IIR, lowers their predicates to
+//! **LANG23 PRs 23-C + 23-D + 23-F + 23-G.**  The compiler pass that takes
+//! `RefinedType` annotations from the IIR, lowers their predicates to
 //! `ConstraintInstructions`, runs them through `constraint-vm`, and classifies
 //! the solver's answer into one of the three LANG23 outcomes:
 //!
@@ -17,6 +17,8 @@
 //! |--------|----|-------------|
 //! | (top-level) | 23-C | Per-binding `Checker`: checks one proof obligation at a time given concrete/predicated/unconstrained evidence. |
 //! | [`function_checker`] | 23-D | Function-scope `FunctionChecker`: walks a CFG, accumulates guard predicates path-by-path, checks each return site. |
+//! | [`module_checker`] | 23-F | Module-scope `ModuleChecker`: extends function-scope checking with cross-function call-site reasoning; uses a `ModuleScope` registry for per-symbol opt-out. |
+//! | [`program_checker`] | 23-G | Program-scope `ProgramChecker`: purely structural closed-world annotation-completeness check; enforces that no public binding is `: any` at link time. |
 //!
 //! ## Architecture
 //!
@@ -26,7 +28,10 @@
 //! lang-refinement-checker     (this crate)
 //!         │  PR 23-C: Checker — per-binding proof obligations
 //!         │  PR 23-D: FunctionChecker — CFG-based, path-sensitive
-//!         │  both lower via ProgramBuilder → constraint-vm
+//!         │  PR 23-F: ModuleChecker — cross-function call-site reasoning
+//!         │  PR 23-G: ProgramChecker — structural annotation-completeness gate
+//!         │  23-C/D/F lower via ProgramBuilder → constraint-vm
+//!         │  23-G is solver-free (structural only)
 //!         │
 //! constraint-vm ──► constraint-engine ──► SAT / LIA tactics
 //! ```
@@ -77,6 +82,8 @@
 #![warn(rust_2018_idioms)]
 
 pub mod function_checker;
+pub mod module_checker;
+pub mod program_checker;
 
 use constraint_core::{Logic, Predicate as CorePredicate, Sort};
 use constraint_engine::{Model, SolverResult, Value};

@@ -326,6 +326,11 @@ impl HtmlParser {
                 self.pop_table_cell_row_and_section_contexts();
                 self.pop_current_if(|name| name == "caption" || name == "colgroup");
             }
+            "col" => {
+                if self.current_element_is("table") {
+                    self.append_implied_element("colgroup");
+                }
+            }
             "tr" => {
                 self.pop_current_if(|name| name == "td" || name == "th");
                 self.pop_current_if(|name| name == "tr");
@@ -788,6 +793,25 @@ mod tests {
             element(&element(&tbody.children[0]).children[0]).children,
             vec![Node::text("B")]
         );
+    }
+
+    #[test]
+    fn wraps_bare_table_columns_in_implied_colgroup() {
+        let document = parse_html("<table><col span=2><col><tr><td>A</table>").unwrap();
+
+        let table = element(&body(&document).children[0]);
+        assert_eq!(table.children.len(), 2);
+
+        let colgroup = element(&table.children[0]);
+        assert_eq!(colgroup.name, "colgroup");
+        assert_eq!(colgroup.children.len(), 2);
+        assert_eq!(element(&colgroup.children[0]).name, "col");
+        assert_eq!(element(&colgroup.children[0]).attribute("span"), Some("2"));
+        assert_eq!(element(&colgroup.children[1]).name, "col");
+
+        let tbody = element(&table.children[1]);
+        let row = element(&tbody.children[0]);
+        assert_eq!(element(&row.children[0]).children, vec![Node::text("A")]);
     }
 
     #[test]

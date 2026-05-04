@@ -65,3 +65,4 @@ show_missing = true
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/twig"]
+artifacts = ["src/twig/stdlib_twig/**/*.tw"]
