@@ -56,7 +56,7 @@ from cas_list_operations import (
 )
 from cas_matrix import MatrixError, determinant, inverse, is_matrix, matrix, transpose
 from cas_simplify import canonical, simplify
-from cas_solve import ALL, solve_linear, solve_quadratic
+from cas_solve import ALL, solve_cubic, solve_linear, solve_linear_system, solve_quadratic, solve_quartic
 from cas_substitution import subst
 from symbolic_ir import (
     ADD,
@@ -72,7 +72,7 @@ from symbolic_ir import (
 )
 from symbolic_vm.backend import Handler
 from symbolic_vm.numeric import from_number, to_number
-from symbolic_vm.polynomial_bridge import to_rational
+from symbolic_vm.polynomial_bridge import from_polynomial, to_rational
 
 if TYPE_CHECKING:
     from symbolic_vm import VM
@@ -97,16 +97,27 @@ def simplify_handler(_vm: VM, expr: IRApply) -> IRNode:
 
 
 def expand_handler(_vm: VM, expr: IRApply) -> IRNode:
-    """``Expand(expr)`` — canonical flattening and sorting.
+    """``Expand(expr)`` — fully distribute products and powers.
 
-    Phase 1: returns the canonical form of the expression.  Full
-    polynomial distribution (e.g. ``(x+1)^2 → x^2+2x+1``) is reserved
-    for a later phase; ``canonical`` already handles identity removal,
-    argument sorting, and constant folding.
+    Uses the polynomial bridge to expand ``(x+1)*(x+2)`` → ``x^2+3x+2``
+    and ``(x+1)^2`` → ``x^2+2x+1``.  Requires a single-variable polynomial
+    expression; falls back to structural :func:`canonical` otherwise.
     """
     if len(expr.args) != 1:
         return expr
-    return canonical(expr.args[0])
+    inner = expr.args[0]
+    # Try real polynomial expansion via the bridge (single-variable only).
+    x = _find_variable(inner)
+    if x is not None:
+        result = to_rational(inner, x)
+        if result is not None:
+            num, den = result
+            # Only expand pure polynomials (rational functions stay symbolic).
+            if den == (Fraction(1),):
+                return from_polynomial(num, x)
+    # Fallback: structural canonicalization for zero-variable or
+    # multi-variable expressions.
+    return canonical(inner)
 
 
 # ---------------------------------------------------------------------------
@@ -165,6 +176,13 @@ def factor_handler(_vm: VM, expr: IRApply) -> IRNode:
     if not factors:
         # The polynomial was just the content (constant).
         return inner
+
+    # If there is exactly one factor with multiplicity 1 and the content is
+    # ±1, the polynomial is irreducible over Z — no non-trivial factoring
+    # was possible.  Return the expression *unevaluated* (head stays
+    # ``Factor``) so the user can see that it cannot be simplified.
+    if len(factors) == 1 and factors[0][1] == 1 and abs(content_val) == 1:
+        return expr
 
     return _factor_result_to_ir(content_val, factors, x)
 
@@ -325,17 +343,51 @@ def _linear_poly_to_ir(coeffs: list[int], x: IRSymbol) -> IRNode:
 
 
 def solve_handler(_vm: VM, expr: IRApply) -> IRNode:
-    """``Solve(equation, var)`` — solve a linear or quadratic equation.
+    """``Solve(equation, var)`` — solve polynomial equations and linear systems.
 
-    ``equation`` may be:
-    - any polynomial expression in ``var`` treated as ``expr = 0``,
-    - ``Equal(lhs, rhs)`` rewritten to ``Sub(lhs, rhs) = 0``.
+    Two call forms are handled:
+
+    1. ``Solve(equation, var)`` — single-variable polynomial, up to degree 4.
+       ``equation`` may be any IR expression treated as ``expr = 0``, or an
+       ``Equal(lhs, rhs)`` node rewritten to ``Sub(lhs, rhs) = 0``.
+
+    2. ``Solve(List(eq1, eq2, …), List(x, y, …))`` — linear system of
+       equations solved by Gaussian elimination (MACSYMA's ``linsolve``
+       also compiles to this form).  Returns ``List(Rule(x, val), …)``.
 
     Returns ``List(solution, …)`` or unevaluated on failure.
     """
     if len(expr.args) != 2:
         return expr
     eq_ir, var_ir = expr.args
+
+    # ------------------------------------------------------------------
+    # Branch 1 — linear system: both args are List nodes.
+    # ------------------------------------------------------------------
+    if (
+        isinstance(eq_ir, IRApply)
+        and isinstance(eq_ir.head, IRSymbol)
+        and eq_ir.head.name == "List"
+        and isinstance(var_ir, IRApply)
+        and isinstance(var_ir.head, IRSymbol)
+        and var_ir.head.name == "List"
+    ):
+        equations = list(eq_ir.args)
+        variables: list[IRSymbol] = []
+        for v in var_ir.args:
+            if not isinstance(v, IRSymbol):
+                return expr
+            variables.append(v)
+        if not equations or not variables:
+            return expr
+        sol = solve_linear_system(equations, variables)
+        if sol is None:
+            return expr
+        return IRApply(LIST, tuple(sol))
+
+    # ------------------------------------------------------------------
+    # Branch 2 — single-variable polynomial equation.
+    # ------------------------------------------------------------------
     if not isinstance(var_ir, IRSymbol):
         return expr
 
@@ -354,9 +406,7 @@ def solve_handler(_vm: VM, expr: IRApply) -> IRNode:
     if deg < 0:
         return expr  # zero polynomial — degenerate
     if deg == 0:
-        # Constant equation: 0 solutions unless coeff == 0 (all solutions).
-        if coeffs[0] == 0:
-            return IRApply(LIST, ())
+        # Constant equation: 0 solutions.
         return IRApply(LIST, ())
 
     if deg == 1:
@@ -369,12 +419,31 @@ def solve_handler(_vm: VM, expr: IRApply) -> IRNode:
             Fraction(coeffs[1]),
             Fraction(coeffs[0]),
         )
+    elif deg == 3:
+        solutions = solve_cubic(
+            Fraction(coeffs[3]),
+            Fraction(coeffs[2]),
+            Fraction(coeffs[1]),
+            Fraction(coeffs[0]),
+        )
+    elif deg == 4:
+        solutions = solve_quartic(
+            Fraction(coeffs[4]),
+            Fraction(coeffs[3]),
+            Fraction(coeffs[2]),
+            Fraction(coeffs[1]),
+            Fraction(coeffs[0]),
+        )
     else:
-        # Degree > 2 — unevaluated.
+        # Degree > 4 — unevaluated.
         return expr
 
     if solutions == ALL:
         return IRApply(LIST, ())  # all reals — represent as empty list for now
+    if isinstance(solutions, list) and not solutions:
+        # Empty list means the solver couldn't find closed-form roots
+        # (e.g. casus irreducibilis for cubics) — return unevaluated.
+        return expr
     assert isinstance(solutions, list)
     return IRApply(LIST, tuple(solutions))
 
@@ -629,12 +698,19 @@ def transpose_handler(_vm: VM, expr: IRApply) -> IRNode:
         return expr
 
 
-def determinant_handler(_vm: VM, expr: IRApply) -> IRNode:
-    """``Determinant(matrix)`` — compute the determinant (exact, symbolic)."""
+def determinant_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Determinant(matrix)`` — compute the determinant (exact, symbolic).
+
+    The :mod:`cas_matrix` substrate returns the determinant as a symbolic
+    IR expression (e.g. ``Sub(Mul(1, 4), Mul(2, 3))``).  We pass it
+    through the VM so numeric entries fold to a concrete integer/rational
+    (e.g. ``IRInteger(-2)``).
+    """
     if len(expr.args) != 1:
         return expr
     try:
-        return determinant(expr.args[0])
+        raw = determinant(expr.args[0])
+        return vm.eval(raw)
     except (MatrixError, ValueError):
         return expr
 
