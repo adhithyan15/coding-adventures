@@ -141,6 +141,42 @@ _OP_INT_CODE_END: Final[int] = 3
 _OP_CALL: Final[int] = 4
 _OP_CALL_EXT: Final[int] = 7         # call_ext arity import_idx  (preserves frame)
 _OP_ALLOCATE: Final[int] = 12
+# ``allocate_zero`` (opcode 13) is identical to ``allocate`` but
+# initialises every allocated y-register slot to nil (the atom []).
+# This is REQUIRED whenever the function body might trigger a GC
+# cycle before every y-register slot has been written with a valid
+# BEAM term.  BEAM's GC traces ALL allocated y-registers as potential
+# heap pointers — uninitialized slots that happen to contain
+# stack-word garbage can look like valid tagged pointers, causing the
+# GC to follow them and corrupt the heap (intermittent SIGSEGV).
+#
+# In our register layout the function body allocates a SINGLE flat
+# frame of size (max_reg_index + 1) y-slots and only populates a
+# fraction of them (y1 for halt-result, y2..y{arity+1} for params,
+# y10.. for holding registers).  The remaining slots (y0, y3..y9,
+# and any gap between params and holdings) are never explicitly
+# written before a potential GC trigger (e.g. inside a ``gc_bif``).
+# Using ``allocate_zero`` guarantees those slots are nil, which is
+# a valid BEAM term the GC can safely trace (it terminates as a
+# zero-length list).
+#
+# Without this fix, recursive functions inside dep modules called
+# via ``call_ext`` crash non-deterministically at depth ≥ 4 because
+# the unwritten y-slots in the CALLEE's frames contain garbage that
+# the GC mistakes for valid heap references.
+_OP_ALLOCATE_ZERO: Final[int] = 14   # allocate_zero Ystacksize LiveRegs
+# NOTE: opcode 14 (allocate_zero) is an *abstract* opcode number used in
+# the .S assembly format but it is NOT a valid binary BEAM opcode — the
+# actual binary loader rejects it.  Use ``_OP_INIT`` (opcode 17) to
+# initialise individual y-registers to nil instead.
+#
+# ``init y(i)`` — set y-register i to nil (the atom []).  Must be emitted
+# after ``allocate`` and before any GC-triggering instruction (gc_bif,
+# call, call_ext) to prevent the GC from tracing uninitialized y-slots as
+# potential heap pointers.  ``erlc`` uses ``init_yregs`` (a Z-tagged
+# compound instruction) for the same purpose; we fall back to the simpler
+# ``init`` opcode which initialises one slot at a time.
+_OP_INIT: Final[int] = 17            # init y_reg  (set to nil)
 _OP_TEST_HEAP: Final[int] = 16       # test_heap heap_need live  (heap reservation)
 _OP_DEALLOCATE: Final[int] = 18
 _OP_RETURN: Final[int] = 19
@@ -224,6 +260,36 @@ class BEAMBackendConfig:
     arity_overrides: dict[str, int] = field(default_factory=dict)
     y_register_count: int | None = None
     closure_free_var_counts: dict[str, int] = field(default_factory=dict)
+
+    # TW04 Phase 4f — multi-module support
+    # -------------------------------------
+    #
+    # ``extra_callable_labels`` force-includes exported function names as
+    # callable regions even when no local ``IrOp.CALL`` targets them.  This
+    # is needed for dep modules whose exported functions are only called from
+    # OTHER modules — the local module has no CALL to trigger discovery.
+    # Absent from the single-module API (where all callables are reachable
+    # locally via CALL).
+    extra_callable_labels: tuple[str, ...] = ()
+
+    # ``call_register_count`` is NOT used by the BEAM backend for remote calls
+    # (BEAM functions have individually declared arities, unlike CLR/JVM).
+    # This field is kept for API symmetry with the CLR backend but is ignored
+    # during cross-module lowering.  Local calls always use the locally
+    # declared arity from ``arity_overrides``.
+    call_register_count: int | None = None
+
+    # ``external_function_arities`` maps cross-module call labels to their
+    # actual remote function arity.  This is required for BEAM because
+    # ``call_ext N Mfa`` specifies the EXACT arity N that the remote function
+    # is exported with — unlike CLR where a fixed-width parameter frame is
+    # used for all calls.
+    #
+    # Example: ``"a/math/add"`` → 2 means emit ``call_ext 2 {a_math,add,2}``.
+    # If a label is absent (unlikely after compile_modules populates this),
+    # we fall back to 0 (which will cause a runtime badarg but at least won't
+    # corrupt the BEAM loader).
+    external_function_arities: dict[str, int] = field(default_factory=dict)
 
 
 # ---------------------------------------------------------------------------
@@ -315,9 +381,13 @@ class _Builder:
 # ---------------------------------------------------------------------------
 
 
-def _discover_callable_names(program: IrProgram) -> set[str]:
+def _discover_callable_names(
+    program: IrProgram,
+    *,
+    extra_callable_labels: tuple[str, ...] = (),
+) -> set[str]:
     """All region names that are CALL or MAKE_CLOSURE targets,
-    plus the entry label.
+    plus the entry label and any ``extra_callable_labels``.
 
     Internal labels (``_else_0``, ``_endif_0``, etc.) are NOT
     callable — they're targets of branches/jumps within a single
@@ -329,18 +399,34 @@ def _discover_callable_names(program: IrProgram) -> set[str]:
     callable so it gets a func_info + label-target pair like
     regular functions, even though it's invoked indirectly via
     ``call_fun`` rather than ``call``.
+
+    TW04 Phase 4f — cross-module CALL targets
+    -----------------------------------------
+    Labels containing ``/`` (e.g. ``"a/math/add"``) are cross-module
+    call sites; they do NOT correspond to a local callable region in
+    this module.  We skip them here so the region-splitter doesn't
+    try to find a ``LABEL a/math/add`` instruction that doesn't exist.
+
+    ``extra_callable_labels`` (from ``BEAMBackendConfig``) force-adds
+    exported function names that are only called cross-module — they
+    have no local ``CALL`` site in the dep module's own IR.
     """
     callable_names: set[str] = {program.entry_label}
     for instr in program.instructions:
         if instr.opcode is IrOp.CALL:
             target = _operand_label(instr.operands[0], role="CALL target")
-            callable_names.add(target)
+            # Skip cross-module labels — they live in a remote module,
+            # not as a LABEL instruction in this program's IR.
+            if "/" not in target:
+                callable_names.add(target)
         elif instr.opcode is IrOp.MAKE_CLOSURE:
             # MAKE_CLOSURE dst, fn_label, num_captured, capt0, ...
             target = _operand_label(
                 instr.operands[1], role="MAKE_CLOSURE fn_label"
             )
             callable_names.add(target)
+    # Force-include exported functions only called cross-module.
+    callable_names.update(extra_callable_labels)
     return callable_names
 
 
@@ -665,6 +751,9 @@ def _emit_call(
     instr: IrInstruction,
     label_for: dict[str, int],
     arity_for: dict[str, int],
+    *,
+    call_arity: int,
+    remote_calls: dict[str, int],
 ) -> None:
     """Lower CALL with the Twig calling convention.
 
@@ -673,8 +762,66 @@ def _emit_call(
     ``move {y, 2+i}, {x, i}`` per arg before the ``call``, then
     one ``move {x, 0}, {y, 1}`` after to copy the return value
     back into the IR's ``_REG_HALT_RESULT`` slot.
+
+    TW04 Phase 4f — cross-module remote calls
+    -----------------------------------------
+    Labels containing ``/`` (e.g. ``"a/math/add"``) are cross-module
+    call sites.  They are lowered to ``call_ext N import_idx`` where
+    ``import_idx`` is the 0-based index into the ImpT table for the
+    remote MFA ``{a_math, add, N}``.
+
+    Unlike CLR/JVM which use a fixed-width parameter frame across all
+    calls, BEAM functions have individually declared arities.  The
+    ``call_ext N Mfa`` instruction encodes the arity N in BOTH the
+    instruction operand AND the MFA triple — they must match the remote
+    function's declaration exactly.
+
+    ``remote_calls`` maps a cross-module label (e.g. ``"a/math/add"``)
+    to its actual remote function arity (e.g. ``2``).  This dict comes
+    from ``BEAMBackendConfig.external_function_arities`` and is
+    populated by ``twig-beam-compiler``'s ``compile_modules``.
+    ``call_arity`` is only used as a fallback for labels absent from the
+    dict (which should not happen in a well-formed multi-module build).
     """
     target = _operand_label(instr.operands[0], role="CALL target")
+
+    # ── Cross-module remote call ──────────────────────────────────────
+    if "/" in target:
+        # Parse "a/math/add" → last segment is the function name;
+        # everything before the last "/" with "/" replaced by "_" is the
+        # Erlang module atom.  e.g. "a/math/add" → module="a_math", fn="add".
+        # "stdlib/io/write" → module="stdlib_io", fn="write".
+        last_slash = target.rfind("/")
+        beam_module_atom = target[:last_slash].replace("/", "_")
+        fn_atom = target[last_slash + 1 :]
+
+        # Look up the ACTUAL arity of the remote function.  This is critical:
+        # unlike CLR/JVM which use a fixed-width parameter frame, BEAM's
+        # ``call_ext N Mfa`` encodes the arity N in the MFA triple AND in the
+        # instruction prefix.  The arity must match the remote function's
+        # declaration exactly or BEAM will reject it at load-time / runtime.
+        #
+        # ``remote_calls`` is not used here; ``external_function_arities``
+        # on the config object is the authoritative source.  The caller
+        # (``lower_ir_to_beam``) passes it through via the closure over the
+        # ``config`` object captured in this function's kwargs.
+        remote_arity = remote_calls.get(target, call_arity)
+
+        # Stage ``remote_arity`` arguments: y{2+i} → x{i}.
+        for i in range(remote_arity):
+            builder.emit(_OP_MOVE, _y(_REG_PARAM_BASE + i), _x(i))
+
+        # Add the remote MFA to the import table and emit call_ext.
+        mod_atom_idx = builder.atoms.add(beam_module_atom)
+        fn_atom_idx = builder.atoms.add(fn_atom)
+        import_idx = builder.imports.add(mod_atom_idx, fn_atom_idx, remote_arity)
+        builder.emit(_OP_CALL_EXT, _u(remote_arity), _u(import_idx - 1))
+
+        # Result in x0 → IR HALT-result register y1.
+        builder.emit(_OP_MOVE, _x(0), _y(_REG_HALT_RESULT))
+        return
+
+    # ── Local call ───────────────────────────────────────────────────
     if target not in label_for:
         msg = (
             f"CALL target {target!r} has no corresponding LABEL — "
@@ -1141,7 +1288,9 @@ def lower_ir_to_beam(
     module_atom_idx = 1  # by construction, atoms[0] == config.module_name
     module_info_atom_idx = builder.atoms.add("module_info")
 
-    callable_names = _discover_callable_names(program)
+    callable_names = _discover_callable_names(
+        program, extra_callable_labels=config.extra_callable_labels
+    )
     regions = _split_callable_regions(program, callable_names)
     if not regions:
         raise BEAMBackendError(
@@ -1152,11 +1301,32 @@ def lower_ir_to_beam(
     # Simplest: one program-wide value (the highest IR register
     # index used anywhere + 1).  Wasteful for small functions but
     # correct.
+    local_max_reg = _max_register_index(program)
     y_reg_count = (
         config.y_register_count
         if config.y_register_count is not None
-        else _max_register_index(program) + 1
+        else local_max_reg + 1
     )
+
+    # TW04 Phase 4f: ``call_arity`` is the number of x-register slots
+    # staged at every local CALL site.  For a single-module build this
+    # equals the callee's declared arity (looked up per call site).
+    # For a multi-module build ``config.call_register_count`` supplies
+    # the global maximum so every cross-module callee's parameter window
+    # is wide enough.  When the config value is set we also use it as the
+    # floor for local calls (harmless — extra args are simply ignored).
+    #
+    # We derive the local floor from (max_reg_index - _REG_PARAM_BASE + 1)
+    # clipped to ≥ 0, then take max with config.call_register_count.
+    local_call_arity_floor = max(0, local_max_reg - _REG_PARAM_BASE + 1)
+    call_arity_override = config.call_register_count
+    # ``remote_calls`` maps cross-module label strings to their actual
+    # remote function arities.  Populated from
+    # ``BEAMBackendConfig.external_function_arities``.  Each entry
+    # ``"a/math/add" → 2`` tells ``_emit_call`` to emit
+    # ``call_ext 2 {a_math, add, 2}`` — the arity must match the
+    # remote function's declaration exactly.
+    remote_calls: dict[str, int] = dict(config.external_function_arities)
 
     # Pre-pass 2: allocate a BEAM label number for every IR label.
     # Callable regions get TWO each (one for the func_info opcode,
@@ -1213,6 +1383,15 @@ def lower_ir_to_beam(
         pp_import_idx = 0
         apply_import_idx = 0
 
+    # Compute the call_arity used for cross-module remote calls.
+    # This is the global maximum register count so remote callees
+    # always see a wide-enough parameter window.  For single-module
+    # programs this is just local_call_arity_floor.
+    effective_call_arity = max(
+        local_call_arity_floor,
+        call_arity_override if call_arity_override is not None else 0,
+    )
+
     # Pass 4: emit each region's prologue + body + epilogue.
     for name, body in regions:
         function_atom_idx = builder.atoms.add(name)
@@ -1227,7 +1406,35 @@ def lower_ir_to_beam(
 
         # Function entry: allocate y-register frame + copy args
         # from x-registers into the Twig param slots.
+        #
+        # After allocate, we emit ``move {atom,0}, y(i)`` for EVERY
+        # y-register slot to initialise it to nil (the empty list ``[]``,
+        # a safe BEAM tagged-immediate that is NOT a heap pointer).
+        #
+        # WHY: BEAM's GC traces ALL allocated y-register slots as potential
+        # heap pointers.  Uninitialized slots contain stack-word garbage
+        # that can look like valid tagged heap pointers, causing the GC to
+        # follow them and corrupt the heap.  The result is non-deterministic
+        # SIGSEGV when recursive functions inside dep modules are called via
+        # ``call_ext`` at recursion depth ≥ 4 (when the first GC cycle fires
+        # inside the nested call stack).
+        #
+        # ``erlc`` (OTP 24+) uses ``init_yregs`` (opcode 172, Z-tagged list
+        # operand) for selective nil-initialisation; we instead move the nil
+        # atom (atom index 0 = ``[]``) into every slot.  This is one
+        # ``move`` instruction per slot, harmlessly overwritten by the
+        # arg-copy loop that immediately follows.  ``move {atom,0}, y_i``
+        # is the same operation that ``LOAD_NIL`` lowers to in body code,
+        # so the encoder already handles it correctly.
+        #
+        # Note: in OTP 28 the old ``init y_reg`` opcode (17) with a Y-register
+        # operand is rejected by the loader ("please re-compile with OTP 28
+        # compiler") — hence we use ``move`` rather than ``init``.
         builder.emit(_OP_ALLOCATE, _u(y_reg_count), _u(arity_for[name]))
+        # Initialise ALL y-slots to nil so GC never traces an uninitialised
+        # slot.  Atom index 0 is the nil atom (``[]``) by BEAM convention.
+        for _yi in range(y_reg_count):
+            builder.emit(_OP_MOVE, BEAMOperand(BEAMTag.A, 0), _y(_yi))
         arity = arity_for[name]
         for i in range(arity):
             builder.emit(_OP_MOVE, _x(i), _y(_REG_PARAM_BASE + i))
@@ -1248,6 +1455,8 @@ def lower_ir_to_beam(
                 pp_import_idx=pp_import_idx,
                 apply_import_idx=apply_import_idx,
                 y_reg_count=y_reg_count,
+                call_arity=effective_call_arity,
+                remote_calls=remote_calls,
             )
 
         # Lifted lambdas MUST be exported because ``apply/3``
@@ -1323,6 +1532,8 @@ def _emit_body_instruction(
     pp_import_idx: int,
     apply_import_idx: int,
     y_reg_count: int,
+    call_arity: int,
+    remote_calls: dict[str, int],
 ) -> None:
     op = instr.opcode
     if op not in _HANDLERS:
@@ -1354,7 +1565,14 @@ def _emit_body_instruction(
         _emit_cmp(builder, instr)
         return
     if op is IrOp.CALL:
-        _emit_call(builder, instr, label_for, arity_for)
+        _emit_call(
+            builder,
+            instr,
+            label_for,
+            arity_for,
+            call_arity=call_arity,
+            remote_calls=remote_calls,
+        )
         return
     if op is IrOp.RET:
         _emit_return(builder, instr, y_reg_count=y_reg_count)
