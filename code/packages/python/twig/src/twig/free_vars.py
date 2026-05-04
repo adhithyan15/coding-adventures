@@ -77,6 +77,18 @@ def _walk(
     insertion order without allocating a list per recursive call).
     """
     if isinstance(expr, VarRef):
+        # Module-qualified names (e.g. ``host/write-byte``) are
+        # resolved at the call site against the module's export
+        # table — they are *never* closure-captured.  Short-circuit
+        # before the bound/globals check so they never appear in the
+        # free-variable list.
+        #
+        # We check that the slash is *internal* (not bare ``"/"`` —
+        # the arithmetic division operator — and not a leading/trailing
+        # slash), i.e. ``idx > 0 and idx < len - 1``.
+        _slash = expr.name.find("/")
+        if _slash > 0 and _slash < len(expr.name) - 1:
+            return
         # A reference is "free" iff it's neither bound here nor a
         # global.  Builtins (``+``, ``cons``, …) live alongside
         # user globals in ``globals_`` — the wrapper passes them

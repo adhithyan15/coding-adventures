@@ -27,6 +27,15 @@ Apply-site dispatch
 The compiler decides at compile time whether an ``Apply`` is a
 direct call or an indirect closure call:
 
+* If ``apply.fn`` is a ``VarRef`` whose name contains ``/`` →
+  module-qualified cross-module call (host syscall).  The name is
+  looked up in ``_HOST_SYSCALLS`` to obtain the platform-independent
+  syscall number, then emitted as
+  ``IIRInstr("call_builtin", dest, ["syscall", num, ...args])``.
+  The ``"syscall"`` builtin in ``TwigVM`` dispatches by number to
+  the real host operation; JVM/CLR backends lower ``IrOp.SYSCALL``
+  the same way (numbers are already shared conventions from the
+  Brainfuck era).
 * If ``apply.fn`` is a ``VarRef`` whose name is a top-level *function*
   define **or** a builtin → emit ``IIRInstr("call", dest, [name, ...args])``.
 * Otherwise (locals, value-globals, computed expressions) → emit
@@ -87,6 +96,42 @@ from twig.ast_nodes import (
 )
 from twig.errors import TwigCompileError
 from twig.free_vars import free_vars
+
+# ---------------------------------------------------------------------------
+# Host syscall numbers
+# ---------------------------------------------------------------------------
+#
+# These numbers are the platform-independent calling convention shared
+# by all backends (JVM, CLR, interpreter).  They match the numbers
+# Brainfuck established (see ``bf-to-jvm`` / ``bf-to-cil``).
+# When a new host export is added to the ``host`` module, a new entry
+# goes here AND in the ``"syscall"`` builtin in ``twig/vm.py``.
+_HOST_SYSCALLS: dict[str, int] = {
+    "host/write-byte": 1,  # write one byte to stdout
+    "host/read-byte":  2,  # read one byte from stdin; return -1 on EOF
+    "host/exit":       10, # exit the process with the given code
+}
+
+
+def _is_module_qualified(name: str) -> bool:
+    """Return ``True`` iff ``name`` looks like ``module/export``.
+
+    A module-qualified name has a non-empty module part before the
+    first ``/`` AND a non-empty export name after it.  This rules out:
+
+    * ``"/"`` — the arithmetic division operator (bare slash).
+    * ``"/foo"`` — leading slash (not a valid Twig identifier anyway).
+    * ``"foo/"`` — trailing slash (same).
+
+    Examples::
+
+        _is_module_qualified("host/write-byte")  # True
+        _is_module_qualified("stdlib/io/print")  # True  (nested paths ok)
+        _is_module_qualified("/")                # False
+        _is_module_qualified("foo")              # False
+    """
+    idx = name.find("/")
+    return idx > 0 and idx < len(name) - 1
 
 # ---------------------------------------------------------------------------
 # Built-in names
@@ -533,6 +578,32 @@ class _Compiler:
 
     def _compile_apply(self, expr: Apply, ctx: _FnCtx) -> str:
         """``Apply`` — direct call vs. closure call decided at compile time."""
+        # Module-qualified call: ``host/write-byte``, ``host/read-byte``,
+        # ``host/exit``.  The slash in the name signals a host-module
+        # reference.  We look up the platform-independent syscall number in
+        # ``_HOST_SYSCALLS`` and emit
+        # ``call_builtin "syscall" <num> arg…``.
+        # The interpreter's ``"syscall"`` builtin dispatches by number;
+        # the JVM/CLR backends lower ``IrOp.SYSCALL`` the same way.
+        # These names are *never* captured as free variables (see
+        # ``free_vars.py``).
+        if isinstance(expr.fn, VarRef) and _is_module_qualified(expr.fn.name):
+            name = expr.fn.name
+            num = _HOST_SYSCALLS.get(name)
+            if num is None:
+                raise TwigCompileError(
+                    f"unknown host call {name!r} — "
+                    "expected one of: "
+                    + ", ".join(sorted(_HOST_SYSCALLS))
+                )
+            arg_regs = [self._compile_expr(a, ctx) for a in expr.args]
+            dest = self._fresh(ctx, "r")
+            srcs: list[str | int | float | bool] = ["syscall", num, *arg_regs]
+            ctx.instrs.append(
+                IIRInstr("call_builtin", dest, srcs, type_hint="any")
+            )
+            return dest
+
         # Direct call: fn is a VarRef whose name is a top-level
         # function or a builtin.
         if isinstance(expr.fn, VarRef):

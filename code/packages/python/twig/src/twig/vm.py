@@ -20,6 +20,7 @@ is the loop that handles re-entry on ``apply_closure``.
 from __future__ import annotations
 
 import io
+import sys
 from typing import Any
 
 from interpreter_ir import IIRModule
@@ -75,6 +76,11 @@ class TwigVM:
     def execute_module(self, module: IIRModule) -> tuple[str, Any]:
         """Execute a compiled module — useful for reusing one IIR across
         multiple runs (e.g. driver loops, benchmarks).
+
+        Host calls are lowered at compile time to
+        ``call_builtin "syscall" <num> arg…``; the ``"syscall"``
+        builtin registered below dispatches by number to the correct
+        host operation.  No module patching is needed here.
         """
         heap = Heap()
         globals_table: dict[str, Any] = {}
@@ -222,6 +228,34 @@ class TwigVM:
             output.write("\n")
             return NIL
 
+        # ── Host syscall dispatcher (TW04 Phase 4c) ──────────────────
+        # The compiler lowers every ``(host/write-byte x)`` etc. to
+        # ``call_builtin "syscall" <num> arg…``.  Numbers follow the
+        # platform-independent convention established by the Brainfuck
+        # backends (see ``_HOST_SYSCALLS`` in ``twig/compiler.py``):
+        #
+        #   1 — write-byte  (write args[1] & 0xFF to stdout)
+        #   2 — read-byte   (read one byte; return -1 on EOF)
+        #  10 — exit        (sys.exit with args[1] as the code)
+        #
+        # Using a single ``"syscall"`` builtin (instead of one per
+        # operation) keeps the builtin namespace clean and mirrors
+        # how the JVM and CLR backends lower the same numbers.
+        def syscall(args: list[Any]) -> Any:
+            """Interpreter-side syscall dispatcher."""
+            num = _int(args[0])
+            if num == 1:   # write-byte
+                b = _int(args[1]) & 0xFF
+                sys.stdout.buffer.write(bytes([b]))
+                sys.stdout.buffer.flush()
+                return NIL
+            if num == 2:   # read-byte
+                raw = sys.stdin.buffer.read(1)
+                return -1 if not raw else raw[0]
+            if num == 10:  # exit
+                sys.exit(_int(args[1]))
+            raise TwigRuntimeError(f"unknown syscall number: {num}")
+
         # ── Heap construction (compiler-emitted plumbing) ─────────────
         def make_nil(_args: list[Any]) -> Any:
             return NIL
@@ -313,6 +347,8 @@ class TwigVM:
             "number?": is_number,
             "symbol?": is_symbol,
             "print": do_print,
+            # Host syscall dispatcher (TW04 Phase 4c).
+            "syscall": syscall,
             "make_nil": make_nil,
             "make_symbol": make_symbol,
             "make_closure": make_closure,

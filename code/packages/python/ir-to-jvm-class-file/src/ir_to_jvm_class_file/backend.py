@@ -1729,110 +1729,130 @@ class _JvmClassLowerer:
         )
 
     def _build_syscall_method(self) -> _MethodSpec:
+        """Emit the ``__ca_syscall(syscall_num, arg_reg)`` helper.
+
+        Dispatches on the platform-independent syscall number used by
+        all language backends in this repo:
+
+        * **SYSCALL 1** — write one byte to stdout.
+          Reads ``__ca_regs[arg_reg] & 0xFF`` and calls
+          ``PrintStream.write(int)``; flushes.
+        * **SYSCALL 2** — read one byte from stdin.
+          Calls ``InputStream.read()`` and stores the result (byte
+          value 0–255, or −1 on EOF) into ``__ca_regs[arg_reg]``.
+        * **SYSCALL 10** — exit the process.
+          Reads ``__ca_regs[arg_reg]`` as the exit code and calls
+          ``System.exit(int)``.  A trailing ``return`` satisfies the
+          JVM verifier even though ``System.exit`` never returns.
+        * **Other** — silently ignored (no-op).
+
+        Parameters (JVM locals): 0 = syscall_num, 1 = arg_reg_index,
+        2 = scratch (used for the byte read in SYSCALL 2).
+        """
         builder = _BytecodeBuilder()
         label_read = self._fresh_label("sys_read")
-        label_halt = self._fresh_label("sys_halt")
+        label_exit = self._fresh_label("sys_exit")
+        label_done = self._fresh_label("sys_done")
         label_have_input = self._fresh_label("sys_have_input")
 
-        self._emit_iload(builder, 0)
+        # ── SYSCALL 1: write byte ─────────────────────────────────────
+        self._emit_iload(builder, 0)     # syscall_num
         self._emit_push_int(builder, 1)
         builder.emit_branch(_OP_IF_ICMPNE, label_read)
         builder.emit_u2_instruction(
             _OP_GETSTATIC,
-            self.cp.field_ref(
-                "java/lang/System",
-                "out",
-                "Ljava/io/PrintStream;",
-            ),
+            self.cp.field_ref("java/lang/System", "out", "Ljava/io/PrintStream;"),
         )
-        # Load __ca_regs[arg_reg] — arg_reg is local variable 1 (runtime value).
+        # Load __ca_regs[arg_reg] — arg_reg is local variable 1.
         builder.emit_u2_instruction(
             _OP_GETSTATIC,
             self.cp.field_ref(self.config.class_name, "__ca_regs", "[I"),
         )
-        self._emit_iload(builder, 1)   # arg_reg index
-        builder.emit_opcode(_OP_IALOAD)
+        self._emit_iload(builder, 1)     # arg_reg index
+        builder.emit_opcode(_OP_IALOAD)  # __ca_regs[arg_reg]
         self._emit_push_int(builder, 0xFF)
-        builder.emit_opcode(_OP_IAND)
+        builder.emit_opcode(_OP_IAND)    # & 0xFF
         builder.emit_u2_instruction(
             _OP_INVOKEVIRTUAL,
-            self.cp.method_ref(
-                "java/io/PrintStream",
-                "write",
-                _DESC_PRINTSTREAM_WRITE,
-            ),
+            self.cp.method_ref("java/io/PrintStream", "write", _DESC_PRINTSTREAM_WRITE),
         )
         builder.emit_u2_instruction(
             _OP_GETSTATIC,
-            self.cp.field_ref(
-                "java/lang/System",
-                "out",
-                "Ljava/io/PrintStream;",
-            ),
+            self.cp.field_ref("java/lang/System", "out", "Ljava/io/PrintStream;"),
         )
         builder.emit_u2_instruction(
             _OP_INVOKEVIRTUAL,
-            self.cp.method_ref(
-                "java/io/PrintStream",
-                "flush",
-                _DESC_NOARGS_VOID,
-            ),
+            self.cp.method_ref("java/io/PrintStream", "flush", _DESC_NOARGS_VOID),
         )
         builder.emit_opcode(_OP_RETURN)
 
+        # ── SYSCALL 2: read byte ──────────────────────────────────────
         builder.mark(label_read)
-        self._emit_iload(builder, 0)
+        self._emit_iload(builder, 0)     # syscall_num
         self._emit_push_int(builder, 2)
-        builder.emit_branch(_OP_IF_ICMPNE, label_halt)
+        builder.emit_branch(_OP_IF_ICMPNE, label_exit)
         builder.emit_u2_instruction(
             _OP_GETSTATIC,
-            self.cp.field_ref(
-                "java/lang/System",
-                "in",
-                "Ljava/io/InputStream;",
-            ),
+            self.cp.field_ref("java/lang/System", "in", "Ljava/io/InputStream;"),
         )
         builder.emit_u2_instruction(
             _OP_INVOKEVIRTUAL,
-            self.cp.method_ref(
-                "java/io/InputStream",
-                "read",
-                _DESC_INPUTSTREAM_READ,
-            ),
+            self.cp.method_ref("java/io/InputStream", "read", _DESC_INPUTSTREAM_READ),
         )
-        # local 2 = byte read from stdin (local 1 is arg_reg)
+        # local 2 = byte read from stdin (local 1 is arg_reg, local 0 is syscall_num)
         self._emit_istore(builder, 2)
         self._emit_iload(builder, 2)
         self._emit_push_int(builder, -1)
         builder.emit_branch(_OP_IF_ICMPNE, label_have_input)
-        # EOF: store 0 into regs[arg_reg]
-        self._emit_iload(builder, 1)   # arg_reg
-        self._emit_push_int(builder, 0)
+        # EOF: store −1 into regs[arg_reg] (−1 = EOF sentinel)
+        self._emit_iload(builder, 1)     # arg_reg
+        self._emit_push_int(builder, -1)
         builder.emit_u2_instruction(
             _OP_INVOKESTATIC,
             self._method_ref(self._helper_reg_set, _DESC_INT_INT_TO_VOID),
         )
         builder.emit_opcode(_OP_RETURN)
-
         builder.mark(label_have_input)
         # Store read byte into regs[arg_reg]
-        self._emit_iload(builder, 1)   # arg_reg
-        self._emit_iload(builder, 2)   # byte value
+        self._emit_iload(builder, 1)     # arg_reg
+        self._emit_iload(builder, 2)     # byte value
         builder.emit_u2_instruction(
             _OP_INVOKESTATIC,
             self._method_ref(self._helper_reg_set, _DESC_INT_INT_TO_VOID),
         )
         builder.emit_opcode(_OP_RETURN)
 
-        builder.mark(label_halt)
+        # ── SYSCALL 10: exit ──────────────────────────────────────────
+        builder.mark(label_exit)
+        self._emit_iload(builder, 0)     # syscall_num
+        self._emit_push_int(builder, 10)
+        builder.emit_branch(_OP_IF_ICMPNE, label_done)
+        # Load __ca_regs[arg_reg] as the exit code.
+        builder.emit_u2_instruction(
+            _OP_GETSTATIC,
+            self.cp.field_ref(self.config.class_name, "__ca_regs", "[I"),
+        )
+        self._emit_iload(builder, 1)     # arg_reg index
+        builder.emit_opcode(_OP_IALOAD)  # __ca_regs[arg_reg] = exit code
+        builder.emit_u2_instruction(
+            _OP_INVOKESTATIC,
+            self.cp.method_ref("java/lang/System", "exit", "(I)V"),
+        )
+        # Unreachable — but the JVM verifier requires every path to end
+        # with a return or throw instruction, so we satisfy it here.
         builder.emit_opcode(_OP_RETURN)
+
+        # ── Unknown syscall: no-op ────────────────────────────────────
+        builder.mark(label_done)
+        builder.emit_opcode(_OP_RETURN)
+
         return _MethodSpec(
             access_flags=_ACC_PRIVATE | ACC_STATIC,
             name=self._helper_syscall,
-            descriptor="(II)V",   # syscall_num, arg_reg
+            descriptor="(II)V",  # syscall_num, arg_reg_index
             code=builder.assemble(),
             max_stack=4,
-            max_locals=3,          # 0=syscall_num, 1=arg_reg, 2=read_byte
+            max_locals=3,  # 0=syscall_num, 1=arg_reg_index, 2=read_byte
         )
 
     def _build_lifted_lambda_method(
@@ -2282,6 +2302,7 @@ class _JvmClassLowerer:
 
             if instruction.opcode == IrOp.CALL:
                 label = _as_label(instruction.operands[0], "CALL target")
+
                 # ── JVM01: caller-saves convention around CALL ────────
                 # All "IR registers" live in a class-level static int
                 # array (``__ca_regs``).  Without intervention, a
@@ -2577,8 +2598,9 @@ def validate_for_jvm(program: IrProgram) -> list[str]:
        JVM ``int`` and would require a ``long`` (64-bit) type, which the
        backend does not support.
 
-    3. **SYSCALL number** — the V1 JVM backend wires up SYSCALL 1 (print byte)
-       and SYSCALL 4 (read byte).  Any other syscall number is rejected.
+    3. **SYSCALL number** — the JVM backend's ``__ca_syscall`` helper wires up
+       SYSCALL 1 (write byte to stdout), SYSCALL 2 (read byte from stdin),
+       and SYSCALL 10 (exit process).  Any other syscall number is rejected.
 
     Args:
         program: The ``IrProgram`` to inspect.
@@ -2588,7 +2610,7 @@ def validate_for_jvm(program: IrProgram) -> list[str]:
         program is compatible with the JVM V1 backend.
     """
     errors: list[str] = []
-    _SUPPORTED_SYSCALLS = {1, 4}
+    _SUPPORTED_SYSCALLS = {1, 2, 10}
 
     for instr in program.instructions:
         op = instr.opcode
