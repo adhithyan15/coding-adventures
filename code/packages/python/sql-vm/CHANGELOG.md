@@ -1,5 +1,41 @@
 # Changelog
 
+## 1.12.0 — 2026-05-04
+
+### Added
+
+- **`GROUP_CONCAT` aggregate execution** (`vm.py`) — `_do_update_agg` and
+  `_do_finalize_agg` now handle `AggFunc.GROUP_CONCAT`:
+  - Per-row accumulation into `_AggState.items` (a `list[str]`); NULLs are
+    silently ignored; integers and whole-number floats are rendered without a
+    trailing `.0` to match SQLite output.
+  - Finalisation joins the list with `agg.separator`; an empty list returns
+    `None` (matching SQLite's NULL-for-empty-group behaviour).
+- **`items` and `separator` fields on `_AggState`** (`vm.py`) — `items`
+  accumulates strings for GROUP_CONCAT; `separator` is baked in at
+  `InitAgg` time and carried through to `FinalizeAgg`.
+- **Implicit-single-group synthesis in `AdvanceGroupKey` handler** (`vm.py`)
+  — when `has_group_by=False` and the scan produced no rows (`group_order`
+  is empty), the VM synthesises the implicit `()` group so that no-GROUP-BY
+  aggregates over empty tables return exactly one row of NULL/zero values,
+  matching the SQL standard.
+- **Lazy slot initialisation in `_do_finalize_agg`** (`vm.py`) — if the
+  slot list for the current group is shorter than the requested slot index
+  (because `InitAgg` was never called on an empty table), the handler
+  auto-grows the list with default `_AggState` entries using the `func` and
+  `separator` baked into the `FinalizeAgg` instruction.  This eliminates
+  the previous `InternalError` and produces the correct zero-state result.
+
+### Security
+
+- **NTILE DoS prevention** (`vm.py`) — `n_buckets` is clamped to
+  `max(1, min(n_raw, total_rows))` before the modulo-distribution loop,
+  preventing divide-by-zero and pathological O(N²) behaviour from
+  caller-supplied values ≤ 0.
+- **Defense-in-depth guards** (`vm.py`) — `LAG`, `LEAD`, `NTILE`, and
+  `NTH_VALUE` handlers raise `RuntimeError` on non-integer extra-arg
+  values, catching any `WinFuncSpec` objects that bypass codegen validation.
+
 ## 1.11.0 — 2026-05-04
 
 ### Added

@@ -638,11 +638,11 @@ def _resolve(
             return Like(operand=_resolve(operand, scope, schema, outer_scope), pattern=pattern)
         case NotLike(operand, pattern):
             return NotLike(operand=_resolve(operand, scope, schema, outer_scope), pattern=pattern)
-        case AggregateExpr(func, arg, distinct):
+        case AggregateExpr(func, arg, distinct, separator):
             if arg.star or arg.value is None:
                 return expr
             new_arg = type(arg)(star=False, value=_resolve(arg.value, scope, schema, outer_scope))
-            return AggregateExpr(func=func, arg=new_arg, distinct=distinct)
+            return AggregateExpr(func=func, arg=new_arg, distinct=distinct, separator=separator)
         case CaseExpr(whens, else_):
             return CaseExpr(
                 whens=tuple(
@@ -773,11 +773,12 @@ def _collect_aggregates(
     def collect_in(expr: Expr) -> None:
         nonlocal counter
         match expr:
-            case AggregateExpr(func, arg, distinct):
+            case AggregateExpr(func, arg, distinct, separator):
                 alias = f"_agg_{counter}"
                 counter += 1
                 seen.append((
-                    P.AggregateItem(func=func, arg=arg, alias=alias, distinct=distinct),
+                    P.AggregateItem(func=func, arg=arg, alias=alias, distinct=distinct,
+                                    separator=separator),
                     alias,
                 ))
             case BinaryExpr(_, left, right):
