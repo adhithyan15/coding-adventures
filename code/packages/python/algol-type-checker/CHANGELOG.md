@@ -42,6 +42,8 @@ All notable changes to this package will be documented in this file.
 - Treated builtin `print`/`output` calls as read-only during by-name formal
   write analysis, so expression actuals remain valid when a formal is only
   printed.
+- Accepted one or more arguments to builtin `print`/`output` calls while
+  keeping numeric builtins strict about receiving exactly one argument.
 - Accepted integer-returning procedure actuals for real-valued formal
   procedure parameters, matching scalar integer-to-real promotion.
 - Accepted switch declaration entries that target labels in lexical parent

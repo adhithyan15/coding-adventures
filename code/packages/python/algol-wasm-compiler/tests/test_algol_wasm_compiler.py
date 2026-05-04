@@ -407,6 +407,19 @@ class TestAlgolWasmCompiler:
         assert runtime.load_and_run(result.binary, "_start", []) == [4]
         assert "".join(captured) == "3.500-0.125"
 
+    def test_builtin_print_multiple_arguments_writes_stdout_in_order(self) -> None:
+        result = compile_source(
+            "begin integer result; real x; boolean ok; string msg; "
+            "x := 1.5; ok := true; msg := 'Hi'; "
+            "print(msg, ' ', result + 1, ' ', ok, ' ', x); result := 6 "
+            "end"
+        )
+        captured: list[str] = []
+        runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
+
+        assert runtime.load_and_run(result.binary, "_start", []) == [6]
+        assert "".join(captured) == "Hi 1 true 1.500"
+
     def test_builtin_print_infinite_real_returns_zero_without_stdout(self) -> None:
         result = compile_source(
             "begin integer result; real x; "
