@@ -533,6 +533,70 @@ fn round_trip_cast() {
 
 // ─────────────────── 4. Coverage gate ───────────────────
 
+// ─────────────────── Wire decoder hardening ───────────────────
+
+/// A varint claiming `n_tensors = u64::MAX` with no actual data must
+/// not OOM the process.  The decoder caps Vec::with_capacity against
+/// remaining buffer bytes, so the allocation is bounded and the loop
+/// short-circuits via WireUnexpectedEof.
+#[test]
+fn decoder_amplification_attack_is_bounded() {
+    // Format version (4 bytes) + 10-byte uv64 of u64::MAX.
+    let mut buf = Vec::new();
+    buf.extend_from_slice(&matrix_ir::WIRE_FORMAT_VERSION.to_le_bytes());
+    // Encode u64::MAX as varint (10 bytes).
+    let mut v = u64::MAX;
+    while v >= 0x80 {
+        buf.push(((v as u8) & 0x7F) | 0x80);
+        v >>= 7;
+    }
+    buf.push(v as u8);
+    // Now we claim n_tensors = u64::MAX but supplied no tensor data.
+    // The decoder must NOT pre-allocate Vec<Tensor>(u64::MAX) — it
+    // should bound capacity against remaining=0 and fail fast.
+    let result = Graph::from_bytes(&buf);
+    assert!(matches!(result, Err(IrError::WireUnexpectedEof)));
+}
+
+/// Truncating a valid encoding at every byte position must produce a
+/// clean error, never a panic.
+#[test]
+fn truncation_at_every_position_does_not_panic() {
+    let mut g = GraphBuilder::new();
+    let x = g.input(DType::F32, Shape::from(&[2, 3]));
+    let _ = g.neg(&x);
+    let g = g.build().unwrap();
+    let bytes = g.to_bytes();
+
+    for cut in 0..bytes.len() {
+        let truncated = &bytes[..cut];
+        // Must return Err, never panic.
+        let _ = Graph::from_bytes(truncated);
+    }
+}
+
+/// Random byte fuzzing — feed deterministic random bytes into the
+/// decoder and assert it never panics.  This is a smoke test, not a
+/// proof; a real fuzzer would catch more.
+#[test]
+fn fuzz_random_bytes_do_not_panic() {
+    // Simple linear congruential RNG so the test is deterministic and
+    // depends on no external crates.  Per the zero-dependency mandate.
+    let mut state: u64 = 0xCAFEBABE_DEADBEEF;
+    let mut next = || {
+        state = state.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);
+        state
+    };
+    for _ in 0..1024 {
+        let len = (next() & 0xFF) as usize;
+        let buf: Vec<u8> = (0..len).map(|_| (next() & 0xFF) as u8).collect();
+        // Must return some Result, never panic.
+        let _ = Graph::from_bytes(&buf);
+    }
+}
+
+// ─────────────────── 4. Coverage gate ───────────────────
+
 /// Build a graph that exercises every Op variant.  This serves as the
 /// coverage gate — if a future variant is added without being included
 /// here, the test fails (because we count distinct wire tags and assert

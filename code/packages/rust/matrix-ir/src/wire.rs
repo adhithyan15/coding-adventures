@@ -247,6 +247,27 @@ fn encode_op(op: &Op, w: &mut Writer<'_>) {
 
 // ─────────────────────────── decoder ───────────────────────────
 
+/// Cap a pre-allocation against what the input could possibly contain.
+///
+/// `n` is the attacker-supplied count.  `min_elem_bytes` is the smallest
+/// number of payload bytes any single element of this kind can occupy.
+/// `remaining` is the number of bytes still in the input buffer.
+///
+/// We return `min(n, remaining / min_elem_bytes)`.  This means an
+/// attacker who claims `n = 2^60` but only sends 50 bytes can make us
+/// allocate at most `50 / min_elem_bytes` slots — bounded by what the
+/// input could actually fill.  Push() will still grow the Vec further
+/// when the legitimate data exceeds the cap, but the initial allocation
+/// can no longer be amplified arbitrarily.
+fn bounded_capacity(n: u64, min_elem_bytes: usize, remaining: usize) -> usize {
+    let max_possible = remaining / min_elem_bytes.max(1);
+    if n > max_possible as u64 {
+        max_possible
+    } else {
+        n as usize
+    }
+}
+
 pub(crate) struct Reader<'a> {
     buf: &'a [u8],
     pos: usize,
@@ -258,11 +279,23 @@ impl<'a> Reader<'a> {
     }
 
     fn need(&self, n: usize) -> Result<(), IrError> {
-        if self.pos + n > self.buf.len() {
+        // checked_add guards against pos+n overflowing usize on 32-bit
+        // targets when n was decoded from an attacker-controlled varint.
+        let end = self
+            .pos
+            .checked_add(n)
+            .ok_or(IrError::WireUnexpectedEof)?;
+        if end > self.buf.len() {
             Err(IrError::WireUnexpectedEof)
         } else {
             Ok(())
         }
+    }
+
+    /// Bytes remaining after the cursor.  Used by the bounded-capacity
+    /// helper to cap pre-allocations against the actual payload size.
+    pub(crate) fn remaining(&self) -> usize {
+        self.buf.len().saturating_sub(self.pos)
     }
 
     pub(crate) fn u8(&mut self) -> Result<u8, IrError> {
@@ -296,7 +329,13 @@ impl<'a> Reader<'a> {
     }
 
     pub(crate) fn bytes(&mut self) -> Result<Vec<u8>, IrError> {
-        let len = self.uv64()? as usize;
+        let len_u64 = self.uv64()?;
+        // On 32-bit targets, a u64 length can exceed usize::MAX; reject
+        // explicitly rather than silently truncating with `as usize`.
+        if len_u64 > usize::MAX as u64 {
+            return Err(IrError::WireUnexpectedEof);
+        }
+        let len = len_u64 as usize;
         self.need(len)?;
         let v = self.buf[self.pos..self.pos + len].to_vec();
         self.pos += len;
@@ -318,32 +357,44 @@ pub(crate) fn decode_graph(buf: &[u8]) -> Result<Graph, IrError> {
         return Err(IrError::WireUnsupportedVersion(version));
     }
 
-    let n_tensors = r.uv64()? as usize;
-    let mut tensors = Vec::with_capacity(n_tensors);
+    // Each pre-allocation is capped against the bytes still available
+    // in the buffer, so an attacker cannot amplify a small payload into
+    // a huge initial Vec allocation.  Min element sizes:
+    //   - Tensor:    u32 id (4) + u8 dtype (1) + uv64 rank (≥1) = 6 bytes
+    //   - TensorId:  u32 = 4 bytes
+    //   - Op:        u8 tag (≥1) — the smallest var, Const, is 9 bytes
+    //   - Constant:  Tensor (6) + uv64 byte_length (≥1) = 7 bytes
+    let n_tensors = r.uv64()?;
+    let cap = bounded_capacity(n_tensors, 6, r.remaining());
+    let mut tensors = Vec::with_capacity(cap);
     for _ in 0..n_tensors {
         tensors.push(decode_tensor(&mut r)?);
     }
 
-    let n_inputs = r.uv64()? as usize;
-    let mut inputs = Vec::with_capacity(n_inputs);
+    let n_inputs = r.uv64()?;
+    let cap = bounded_capacity(n_inputs, 6, r.remaining());
+    let mut inputs = Vec::with_capacity(cap);
     for _ in 0..n_inputs {
         inputs.push(decode_tensor(&mut r)?);
     }
 
-    let n_outputs = r.uv64()? as usize;
-    let mut outputs = Vec::with_capacity(n_outputs);
+    let n_outputs = r.uv64()?;
+    let cap = bounded_capacity(n_outputs, 4, r.remaining());
+    let mut outputs = Vec::with_capacity(cap);
     for _ in 0..n_outputs {
         outputs.push(TensorId(r.u32()?));
     }
 
-    let n_ops = r.uv64()? as usize;
-    let mut ops = Vec::with_capacity(n_ops);
+    let n_ops = r.uv64()?;
+    let cap = bounded_capacity(n_ops, 1, r.remaining());
+    let mut ops = Vec::with_capacity(cap);
     for _ in 0..n_ops {
         ops.push(decode_op(&mut r)?);
     }
 
-    let n_constants = r.uv64()? as usize;
-    let mut constants = Vec::with_capacity(n_constants);
+    let n_constants = r.uv64()?;
+    let cap = bounded_capacity(n_constants, 7, r.remaining());
+    let mut constants = Vec::with_capacity(cap);
     for _ in 0..n_constants {
         constants.push(decode_constant(&mut r)?);
     }
@@ -373,8 +424,10 @@ fn decode_tensor(r: &mut Reader<'_>) -> Result<Tensor, IrError> {
 }
 
 fn decode_shape(r: &mut Reader<'_>) -> Result<Shape, IrError> {
-    let n = r.uv64()? as usize;
-    let mut dims = Vec::with_capacity(n);
+    let n = r.uv64()?;
+    // Each dim is u32 = 4 bytes.
+    let cap = bounded_capacity(n, 4, r.remaining());
+    let mut dims = Vec::with_capacity(cap);
     for _ in 0..n {
         dims.push(r.u32()?);
     }
@@ -487,8 +540,10 @@ fn decode_op(r: &mut Reader<'_>) -> Result<Op, IrError> {
         }
         0x12 => {
             let input = TensorId(r.u32()?);
-            let n = r.uv64()? as usize;
-            let mut perm = Vec::with_capacity(n);
+            let n = r.uv64()?;
+            // Each perm element is u32 = 4 bytes.
+            let cap = bounded_capacity(n, 4, r.remaining());
+            let mut perm = Vec::with_capacity(cap);
             for _ in 0..n {
                 perm.push(r.u32()?);
             }
@@ -568,8 +623,10 @@ fn decode_reduction(
     ctor: fn(TensorId, Vec<u32>, bool, TensorId) -> Op,
 ) -> Result<Op, IrError> {
     let input = TensorId(r.u32()?);
-    let n_axes = r.uv64()? as usize;
-    let mut axes = Vec::with_capacity(n_axes);
+    let n_axes = r.uv64()?;
+    // Each axis is u32 = 4 bytes.
+    let cap = bounded_capacity(n_axes, 4, r.remaining());
+    let mut axes = Vec::with_capacity(cap);
     for _ in 0..n_axes {
         axes.push(r.u32()?);
     }
@@ -590,9 +647,25 @@ impl Graph {
     }
 
     /// Deserialise a graph from bytes.  The bytes must consist of
-    /// exactly one graph; trailing bytes are an error.  The decoded
-    /// graph is *not* automatically validated; call [`Graph::validate`]
-    /// if you want semantic checks.
+    /// exactly one graph; trailing bytes are an error.
+    ///
+    /// # Security note
+    ///
+    /// `from_bytes` performs **structural** decoding only — it does
+    /// not call [`Graph::validate`].  When deserialising untrusted
+    /// input (e.g. a remote executor's wire payload):
+    ///
+    /// 1. Cap the size of `buf` *before* calling this function.  A
+    ///    sensible default for V1 is `16 MiB`; tune up only if real
+    ///    workloads need more.  Without a cap the decoder still
+    ///    terminates in linear time (`Vec::with_capacity` is bounded
+    ///    against the input length, and the per-element loop fails
+    ///    fast on truncation), but a 1 GB legitimate-looking payload
+    ///    will allocate 1 GB.
+    /// 2. Always call [`Graph::validate`] on the result before using
+    ///    it.  An attacker can construct a structurally-decodable
+    ///    graph that fails semantic checks (e.g. constant byte length
+    ///    not matching declared shape).
     pub fn from_bytes(buf: &[u8]) -> Result<Graph, IrError> {
         decode_graph(buf)
     }
