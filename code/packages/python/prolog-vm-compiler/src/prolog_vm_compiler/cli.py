@@ -31,6 +31,7 @@ from prolog_vm_compiler.compiler import (
     create_prolog_file_runtime,
     create_prolog_project_file_runtime,
     create_prolog_source_vm_runtime,
+    run_compiled_prolog_initializations,
     run_compiled_prolog_query,
     run_compiled_prolog_query_answers,
     run_initialized_compiled_prolog_query,
@@ -57,6 +58,7 @@ class CliArgs:
     files: tuple[Path, ...]
     source: str | None
     queries: tuple[str, ...]
+    check: bool
     source_query_index: int
     all_source_queries: bool
     query_module: str | None
@@ -143,6 +145,16 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         msg = "provide --source or at least one Prolog file"
         raise ValueError(msg)
     all_source_queries = bool(flags["all-source-queries"])
+    check = bool(flags["check"])
+    if check and queries:
+        msg = "--check cannot be combined with --query"
+        raise ValueError(msg)
+    if check and all_source_queries:
+        msg = "--check cannot be combined with --all-source-queries"
+        raise ValueError(msg)
+    if check and bool(flags["interactive"]):
+        msg = "--check cannot be combined with --interactive"
+        raise ValueError(msg)
     if all_source_queries and queries:
         msg = "--all-source-queries cannot be combined with --query"
         raise ValueError(msg)
@@ -154,6 +166,7 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         files=files,
         source=source,
         queries=queries,
+        check=check,
         source_query_index=source_query_index,
         all_source_queries=all_source_queries,
         query_module=query_module,
@@ -291,6 +304,9 @@ def _required_int(value: object, *, name: str) -> int:
 
 
 def _run_cli(args: CliArgs) -> int:
+    if args.check:
+        return _run_check(args)
+
     if args.queries or args.interactive:
         runtime = _create_runtime(args)
         saw_failure = False
@@ -319,6 +335,36 @@ def _run_cli(args: CliArgs) -> int:
         args=args,
     )
     return 0 if results else 1
+
+
+def _run_check(args: CliArgs) -> int:
+    compiled_program = _compile_source_program(args)
+    if args.initialize:
+        run_compiled_prolog_initializations(compiled_program, backend=args.backend)
+    _print_check_record(compiled_program, args=args)
+    return 0
+
+
+def _print_check_record(
+    compiled_program: CompiledPrologVMProgram,
+    *,
+    args: CliArgs,
+    stdout: TextIO | None = None,
+) -> None:
+    output = sys.stdout if stdout is None else stdout
+    if args.output_format == "text":
+        print("ok.", file=output)
+        return
+
+    payload = {
+        "success": True,
+        "mode": "check",
+        "backend": args.backend,
+        "initialized": args.initialize,
+        "initialization_query_count": compiled_program.initialization_query_count,
+        "source_query_count": compiled_program.source_query_count,
+    }
+    print(json.dumps(payload, sort_keys=True), file=output)
 
 
 def _run_all_source_queries(args: CliArgs) -> int:
