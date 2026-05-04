@@ -5078,11 +5078,10 @@ actions = [
 [[transitions]]
 from = "after_attribute_value_quoted"
 matcher = { anything = true }
-to = "attribute_name"
+to = "before_attribute_name"
+consume = false
 actions = [
   "parse_error(missing-whitespace-between-attributes)",
-  "start_attribute",
-  "append_attribute_name(current_lowercase)",
 ]
 
 [[transitions]]

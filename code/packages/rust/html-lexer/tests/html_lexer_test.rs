@@ -337,6 +337,77 @@ fn default_html_lexer_reports_unexpected_chars_in_unquoted_attribute_values() {
 }
 
 #[test]
+fn default_html_lexer_reconsumes_missing_space_after_quoted_attributes() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer
+        .push("<a first=\"1\"second=2 eq=\"x\"==y null=\"z\"\0=w>")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "first".to_string(),
+                        value: "1".to_string(),
+                    },
+                    Attribute {
+                        name: "second".to_string(),
+                        value: "2".to_string(),
+                    },
+                    Attribute {
+                        name: "eq".to_string(),
+                        value: "x".to_string(),
+                    },
+                    Attribute {
+                        name: "=".to_string(),
+                        value: "y".to_string(),
+                    },
+                    Attribute {
+                        name: "null".to_string(),
+                        value: "z".to_string(),
+                    },
+                    Attribute {
+                        name: "\u{FFFD}".to_string(),
+                        value: "w".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "missing-whitespace-between-attributes")
+            .count(),
+        3
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-equals-before-attribute-name")
+            .count(),
+        1
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-null-character")
+            .count(),
+        1
+    );
+}
+
+#[test]
 fn default_html_lexer_replaces_null_characters_in_text_and_attributes() {
     let mut lexer = create_html_lexer().unwrap();
 

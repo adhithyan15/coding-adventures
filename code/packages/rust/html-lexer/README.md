@@ -80,6 +80,9 @@ Unexpected solidus recovery inside start tags now reconsumes in
 `before_attribute_name`, so malformed inputs such as `<img/ src=x>` skip the
 space normally and continue parsing later attributes instead of folding the
 separator into an attribute name.
+Unexpected characters immediately after quoted attribute values use the same
+reconsume path, so jammed attributes such as `href="x"title=y` still recover
+while `=` and NULL characters receive their normal attribute-name diagnostics.
 Unquoted attribute values also preserve spec-defined unexpected characters
 such as `"`, `'`, `<`, `=`, and `` ` `` while reporting
 `unexpected-character-in-unquoted-attribute-value`.
