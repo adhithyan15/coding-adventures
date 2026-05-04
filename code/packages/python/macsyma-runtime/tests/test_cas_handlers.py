@@ -716,10 +716,16 @@ def test_solve_rational_function_unevaluated() -> None:
 
 
 def test_solve_degree_three_unevaluated() -> None:
-    """Solve(x^3 - x, x) — degree 3 → unevaluated."""
+    """Solve(x^3 - 3*x - 1, x) — casus irreducibilis cubic (3 distinct real
+    irrational roots) → solve_cubic returns [] → handler returns unevaluated."""
     vm = _vm()
+    # x^3 - 3x - 1: discriminant D = -4*(-3)^3 - 27*(-1)^2 = 108 - 27 = 81 > 0
+    # but Cardano's D_cardano = q^2/4 + p^3/27 = 1/4 - 1 = -3/4 < 0 → casus
+    # irreducibilis. solve_cubic returns [] so the handler stays unevaluated.
     x3 = IRApply(POW, (_sym("x"), _int(3)))
-    cubic = IRApply(SUB, (x3, _sym("x")))
+    three_x = IRApply(MUL, (_int(3), _sym("x")))
+    # x^3 - 3x - 1
+    cubic = IRApply(SUB, (IRApply(SUB, (x3, three_x)), _int(1)))
     result = vm.eval(_apply("Solve", cubic, _sym("x")))
     assert isinstance(result, IRApply)
     assert result.head == _sym("Solve")  # type: ignore[union-attr]

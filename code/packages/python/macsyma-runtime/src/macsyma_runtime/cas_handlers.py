@@ -177,10 +177,17 @@ def factor_handler(_vm: VM, expr: IRApply) -> IRNode:
         # The polynomial was just the content (constant).
         return inner
 
-    # If there is exactly one factor with multiplicity 1 and the content is
-    # ±1, the polynomial is irreducible over Z — no non-trivial factoring
-    # was possible.  Return the expression *unevaluated* (head stays
-    # ``Factor``) so the user can see that it cannot be simplified.
+    # Degree-1 polynomials (linear: [b, a]) are already in "factored form"
+    # by definition — return the polynomial directly rather than unevaluated.
+    # Only for degree ≥ 2 do we distinguish "irreducible" from "factored".
+    if len(coeffs) <= 2:
+        return _factor_result_to_ir(content_val, factors, x)
+
+    # For degree ≥ 2: if there is exactly one factor with multiplicity 1
+    # and the content is ±1, the polynomial is irreducible over Z — no
+    # non-trivial factoring was possible.  Return the expression
+    # *unevaluated* (head stays ``Factor``) so the user can see that it
+    # cannot be simplified further.
     if len(factors) == 1 and factors[0][1] == 1 and abs(content_val) == 1:
         return expr
 
