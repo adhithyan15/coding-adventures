@@ -54,9 +54,16 @@ from cas_list_operations import (
     select,
     sort_,
 )
-from cas_matrix import MatrixError, determinant, inverse, is_matrix, matrix, transpose
+from cas_matrix import MatrixError, determinant, inverse, matrix, transpose
 from cas_simplify import canonical, simplify
-from cas_solve import ALL, solve_cubic, solve_linear, solve_linear_system, solve_quadratic, solve_quartic
+from cas_solve import (
+    ALL,
+    solve_cubic,
+    solve_linear,
+    solve_linear_system,
+    solve_quadratic,
+    solve_quartic,
+)
 from cas_substitution import subst
 from symbolic_ir import (
     ADD,
@@ -64,13 +71,18 @@ from symbolic_ir import (
     NEG,
     POW,
     IRApply,
-    IRFloat,
     IRInteger,
     IRNode,
-    IRRational,
     IRSymbol,
 )
 from symbolic_vm.backend import Handler
+from symbolic_vm.cas_handlers import apply1_handler as _apply1_handler
+from symbolic_vm.cas_handlers import apply2_handler as _apply2_handler
+from symbolic_vm.cas_handlers import defrule_handler as _defrule_handler
+from symbolic_vm.cas_handlers import (
+    matchdeclare_handler as _matchdeclare_handler,
+)
+from symbolic_vm.cas_handlers import tellsimp_handler as _tellsimp_handler
 from symbolic_vm.numeric import from_number, to_number
 from symbolic_vm.polynomial_bridge import from_polynomial, to_rational
 
@@ -887,4 +899,10 @@ def build_cas_handler_table() -> dict[str, Handler]:
         "Mod": mod_handler,
         "Gcd": gcd_handler,
         "Lcm": lcm_handler,
+        # Pattern-matching rule system (Phase 22) — delegated to symbolic_vm
+        "MatchDeclare": _matchdeclare_handler,
+        "Defrule": _defrule_handler,
+        "Apply1": _apply1_handler,
+        "Apply2": _apply2_handler,
+        "TellSimp": _tellsimp_handler,
     }

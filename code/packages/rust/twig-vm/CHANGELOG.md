@@ -1,5 +1,15 @@
 # Changelog — twig-vm
 
+## [0.6.1] — 2026-05-04
+
+### Fixed (LANG23 PR 23-E compatibility)
+
+- Three `IIRFunction` struct literals in `dispatch.rs` test helpers
+  (`module_with_main`, and the two IC-slot inline-cache test helpers)
+  updated to include `param_refinements: Vec::new()` and
+  `return_refinement: None` after `interpreter-ir` 0.2.0 added those
+  fields to `IIRFunction`.  No behavioural change.
+
 ## [0.6.0] — 2026-04-30
 
 ### Added — PR 8 of LANG20: vm-core profiler

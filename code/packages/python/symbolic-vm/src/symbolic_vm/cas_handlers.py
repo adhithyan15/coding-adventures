@@ -100,6 +100,10 @@ from cas_mnewton import build_mnewton_handler_table as _build_mnewton
 from cas_multivariate import build_multivariate_handler_table as _build_multivariate
 from cas_number_theory.handlers import build_number_theory_handler_table as _build_nt
 from cas_ode import build_ode_handler_table as _build_ode
+from cas_pattern_matching.nodes import Rule as _Rule
+from cas_pattern_matching.rewriter import RewriteCycleError as _RewriteCycleError
+from cas_pattern_matching.rewriter import apply_rule as _pm_apply_rule
+from cas_pattern_matching.rewriter import rewrite as _rewrite
 from cas_simplify import canonical, simplify
 from cas_simplify.exponentialize import demoivre as _demoivre
 from cas_simplify.exponentialize import exponentialize as _exponentialize
@@ -327,6 +331,155 @@ def demoivre_handler(_vm: VM, expr: IRApply) -> IRNode:
     if len(expr.args) != 1:
         return expr
     return _demoivre(expr.args[0])
+
+
+# ===========================================================================
+# Section 1c: Phase 22 — pattern-matching rule system
+# ===========================================================================
+#
+# Five handlers implement MACSYMA's user-defined rewrite-rule system.
+# All five head names are in _HELD_HEADS (backends.py) so arguments
+# reach the handler unevaluated — the pattern LHS / rule name must not
+# be looked up as variable bindings before the handler inspects them.
+# apply1/apply2 manually call vm.eval() on the target sub-expression.
+
+
+def matchdeclare_handler(vm: VM, expr: IRApply) -> IRNode:
+    """Declare a pattern variable for use in ``Defrule`` / ``TellSimp``.
+
+    Two forms::
+
+        MatchDeclare(x)              → x matches anything (predicate "any")
+        MatchDeclare(x, integerp)    → x matches only integer literals
+        MatchDeclare(x, symbolp)     → x matches only symbols
+        MatchDeclare(x, true)        → x matches anything (explicit)
+
+    Returns ``IRSymbol("done")``.  Unknown or malformed inputs are silently
+    ignored.
+    """
+    if len(expr.args) not in (1, 2):
+        return expr
+    sym = expr.args[0]
+    if not isinstance(sym, IRSymbol):
+        return expr
+    pred_tag = "any"
+    if len(expr.args) == 2:
+        pred = expr.args[1]
+        if isinstance(pred, IRSymbol):
+            pred_tag = pred.name
+    vm.match_declarations.declare(sym.name, pred_tag)
+    return IRSymbol("done")
+
+
+def defrule_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Defrule(name, lhs, rhs)`` — compile and store a named rewrite rule.
+
+    Both LHS and RHS are compiled using
+    ``vm.match_declarations.compile_pattern`` so every symbol declared via
+    ``matchdeclare`` becomes a ``Pattern(name, Blank(...))`` node.  In the
+    LHS these are wildcards the matcher looks for; in the RHS they are
+    back-references that ``_substitute`` fills in with the matched values.
+
+    The compiled rule is stored in ``vm.named_rules`` under ``name.name``.
+
+    Returns the rule-name symbol on success, or ``expr`` unchanged if the
+    arguments are malformed.
+    """
+    if len(expr.args) != 3:
+        return expr
+    name_node, lhs, rhs = expr.args
+    if not isinstance(name_node, IRSymbol):
+        return expr
+    compiled_lhs = vm.match_declarations.compile_pattern(lhs)
+    compiled_rhs = vm.match_declarations.compile_pattern(rhs)
+    rule = _Rule(compiled_lhs, compiled_rhs)
+    vm.named_rules.store(name_node.name, rule)
+    return name_node
+
+
+def apply1_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Apply1(name, target)`` — apply a named rule once at the root.
+
+    Evaluates ``target`` first (the handler receives it unevaluated
+    because the head is held), then tries the rule at the outermost
+    level only.  Returns the rewritten and re-evaluated expression on a
+    match, or the evaluated ``target`` unchanged if no match.
+    """
+    if len(expr.args) != 2:
+        return expr
+    name_node, raw_target = expr.args
+    if not isinstance(name_node, IRSymbol):
+        return expr
+    target = vm.eval(raw_target)
+    rule = vm.named_rules.get(name_node.name)
+    if rule is None:
+        return target
+    result = _pm_apply_rule(rule, target)
+    if result is None:
+        return target
+    return vm.eval(result)
+
+
+def apply2_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Apply2(name, target)`` — apply a named rule recursively (bottom-up).
+
+    Evaluates ``target`` first, then calls
+    :func:`cas_pattern_matching.rewriter.rewrite` for a full bottom-up
+    fixed-point traversal.  Returns the fully rewritten expression.
+
+    Raises :class:`~cas_pattern_matching.rewriter.RewriteCycleError`
+    if the rule set does not converge within 100 iterations (indicating
+    an infinitely-looping user rule).
+    """
+    if len(expr.args) != 2:
+        return expr
+    name_node, raw_target = expr.args
+    if not isinstance(name_node, IRSymbol):
+        return expr
+    target = vm.eval(raw_target)
+    rule = vm.named_rules.get(name_node.name)
+    if rule is None:
+        return target
+    try:
+        rewritten = _rewrite(target, [rule])
+        # Re-evaluate so arithmetic and other simplifications fire on the
+        # rewritten expression, matching apply1's behaviour.
+        return vm.eval(rewritten)
+    except _RewriteCycleError:
+        # Cyclic rule — return target unchanged rather than crashing.
+        return target
+
+
+# Hard cap on the number of user-registered simplifier rules.
+# Every eval iterates the full list, so an unbounded list would degrade
+# performance super-linearly.  1000 rules is far beyond any realistic use
+# case; hitting this cap means a buggy or runaway program wrote rules in a
+# loop.
+_MAX_TELLSIMP_RULES: int = 1000
+
+
+def tellsimp_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``TellSimp(lhs, rhs)`` — add a rule to the VM's auto-simplifier.
+
+    Compiles ``lhs`` using ``vm.match_declarations.compile_pattern`` and
+    appends the resulting rule to ``vm.tellsimp_rules``.  The VM tries
+    every rule in that list at step 2b of ``_eval_apply``, so the rule
+    fires automatically whenever a matching expression is evaluated.
+
+    Returns ``IRSymbol("done")`` on success, or ``expr`` unchanged if
+    the arguments are malformed or the rule cap has been reached.
+    """
+    if len(expr.args) != 2:
+        return expr
+    if len(vm.tellsimp_rules) >= _MAX_TELLSIMP_RULES:
+        # Return the expression unevaluated — same convention as other
+        # malformed-input guards throughout the handler table.
+        return expr
+    lhs, rhs = expr.args
+    compiled_lhs = vm.match_declarations.compile_pattern(lhs)
+    rule = _Rule(compiled_lhs, rhs)
+    vm.tellsimp_rules.append(rule)
+    return IRSymbol("done")
 
 
 def expand_handler(_vm: VM, expr: IRApply) -> IRNode:
@@ -2121,6 +2274,12 @@ def build_cas_handler_table() -> dict[str, Handler]:
         "LogExpand": logexpand_handler,
         "Exponentialize": exponentialize_handler,
         "DeMoivre": demoivre_handler,
+        # --- Phase 22: pattern-matching rule system -------------------------
+        "MatchDeclare": matchdeclare_handler,
+        "Defrule": defrule_handler,
+        "Apply1": apply1_handler,
+        "Apply2": apply2_handler,
+        "TellSimp": tellsimp_handler,
         # --- rational function operations (A3) ------------------------------
         "Collect": collect_handler,
         "Together": together_handler,

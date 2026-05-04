@@ -18,11 +18,16 @@ compiler change required.
 from __future__ import annotations
 
 from symbolic_ir import (
+    APPLY1,
+    APPLY2,
+    DEFRULE,
     DIRAC_DELTA,
     FOURIER,
     IFOURIER,
     ILT,
     LAPLACE,
+    MATCHDECLARE,
+    TELLSIMP,
     UNIT_STEP,
     IRSymbol,
 )
@@ -261,6 +266,17 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "assume": ASSUME,
     "forget": FORGET,
     "is": IS,
+    # Pattern-matching rule system (Phase 22)
+    # matchdeclare(x, pred)   — declare x as a pattern variable
+    # defrule(name, lhs, rhs) — compile + store a named rewrite rule
+    # apply1(name, expr)      — apply rule once at root
+    # apply2(name, expr)      — apply rule recursively (bottom-up fixed-point)
+    # tellsimp(lhs, rhs)      — add rule to the VM's automatic simplifier
+    "matchdeclare": MATCHDECLARE,
+    "defrule": DEFRULE,
+    "apply1": APPLY1,
+    "apply2": APPLY2,
+    "tellsimp": TELLSIMP,
 }
 
 

@@ -1,5 +1,46 @@
 # Changelog
 
+## 0.42.0 — 2026-05-04
+
+**Phase 22 — MACSYMA pattern-matching rule system: `matchdeclare`, `defrule`,
+`apply1`, `apply2`, `tellsimp`.**
+
+### New VM state (`vm.py`)
+
+Three new attributes on every `VM` instance:
+
+- `vm.match_declarations: MatchDeclareContext` — per-session store of
+  pattern-variable declarations (`matchdeclare`).
+- `vm.named_rules: RuleStore` — per-session named-rule dictionary
+  populated by `defrule`.
+- `vm.tellsimp_rules: list[IRApply]` — ordered list of auto-applied
+  rules installed by `tellsimp`.
+
+`_eval_apply` gains step 2b: after backend built-in rules and before
+handler dispatch, every `tellsimp` rule is tried in registration order.
+
+### Held heads (`backends.py`)
+
+`MatchDeclare`, `Defrule`, `Apply1`, `Apply2`, `TellSimp` added to
+`_HELD_HEADS` so pattern LHSes and rule names are not pre-evaluated.
+
+### New handlers (`cas_handlers.py`)
+
+| Function | Handler key |
+|---|---|
+| `matchdeclare_handler` | `"MatchDeclare"` |
+| `defrule_handler` | `"Defrule"` |
+| `apply1_handler` | `"Apply1"` |
+| `apply2_handler` | `"Apply2"` |
+| `tellsimp_handler` | `"TellSimp"` |
+
+### Dependency bumps
+
+- `coding-adventures-symbolic-ir>=0.10.0`
+- `coding-adventures-cas-pattern-matching>=0.2.0`
+
+---
+
 ## 0.41.0 — 2026-05-04
 
 **Phase 21 — Assumption framework, `radcan`, `logcontract`/`logexpand`,

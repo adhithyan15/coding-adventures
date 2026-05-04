@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.10.0 — 2026-05-04
+
+**Add 5 pattern-matching head symbols — Phase 22 matchdeclare/defrule/apply1/apply2/tellsimp.**
+
+New `IRSymbol` singletons in `nodes.py`, exported from `__init__.py`:
+
+- `MATCHDECLARE = IRSymbol("MatchDeclare")` — declare a pattern variable
+- `DEFRULE = IRSymbol("Defrule")` — compile and store a named rewrite rule
+- `APPLY1 = IRSymbol("Apply1")` — apply a named rule once at the root
+- `APPLY2 = IRSymbol("Apply2")` — apply a named rule recursively (fixed-point)
+- `TELLSIMP = IRSymbol("TellSimp")` — add a rule to the VM's auto-simplifier
+
+---
+
 ## 0.9.0 — 2026-05-04
 
 **Add 9 simplification head symbols — Phase 21 assumption + radical/log/exp suite.**

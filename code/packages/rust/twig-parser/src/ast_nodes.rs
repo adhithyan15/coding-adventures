@@ -17,11 +17,83 @@
 //! needs.  This is the same pattern used by the Python `twig` package's
 //! `ast_nodes.py` and `ast_extract.py`.
 //!
+//! ## LANG23 PR 23-E — refinement type annotations
+//!
+//! [`TypeAnnotation`] represents the LANG23 v1 predicate vocabulary as
+//! parsed from Twig source.  Annotations appear in two positions:
+//!
+//! - **Value bindings**: `(define x : (Int 0 128) 42)` — the annotation is
+//!   carried on [`Define::type_annotation`].
+//! - **Function parameters**: `(define (f (x : (Int 0 128))) ...)` — each
+//!   element of [`Lambda::param_annotations`] corresponds to the same-index
+//!   element of [`Lambda::params`].
+//! - **Return types**: `(define (f x -> (Int 0 256)) ...)` — the annotation
+//!   is on [`Lambda::return_annotation`].
+//!
+//! All annotation fields default to `None`, so unannotated code is unchanged.
+//!
 //! Source positions (`line` / `column`) are carried on every node so the
 //! IR compiler can emit position-tagged error messages.
 //!
 //! [`GrammarASTNode`]: parser::grammar_parser::GrammarASTNode
 //! [`Token`]: lexer::token::Token
+
+// ---------------------------------------------------------------------------
+// LANG23 PR 23-E — type annotations
+// ---------------------------------------------------------------------------
+
+/// A LANG23 v1 type annotation parsed from Twig source.
+///
+/// The annotation vocabulary is a strict subset of `lang_refined_types::Predicate`
+/// that the Twig parser can express syntactically.  The IR compiler converts
+/// these to [`lang_refined_types::RefinedType`] values when populating
+/// `IIRFunction::param_refinements` / `IIRFunction::return_refinement`.
+///
+/// # Syntax
+///
+/// | Twig syntax          | Variant                              | Semantics              |
+/// |----------------------|--------------------------------------|------------------------|
+/// | `int`                | `UnrefinedInt`                       | any integer            |
+/// | `any`                | `Any`                                | any value              |
+/// | `bool`               | `UnrefinedBool`                      | any boolean            |
+/// | `(Int lo hi)`        | `RangeInt { lo, hi }`                | `lo ≤ x < hi`          |
+/// | `(Member int (v…))`  | `MembershipInt { values }`           | `x ∈ {v₀, v₁, …}`    |
+///
+/// `RangeInt` always uses an *exclusive* upper bound (matching the spec's
+/// `(Int 0 256)` = `[0, 256)` convention).  No other bound combination is
+/// expressible in the v1 syntax.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum TypeAnnotation {
+    /// Unrefined integer — any `int`-kinded value.
+    ///
+    /// Written as `int` in Twig source.  Lowers to
+    /// `RefinedType::unrefined(Kind::Int)`.
+    UnrefinedInt,
+
+    /// Unrefined `any` — the top type, admits any value.
+    ///
+    /// Written as `any` in Twig source.  Lowers to
+    /// `RefinedType::unrefined(Kind::Any)`.
+    Any,
+
+    /// Unrefined boolean — any `bool`-kinded value.
+    ///
+    /// Written as `bool` in Twig source.  Lowers to
+    /// `RefinedType::unrefined(Kind::Bool)`.
+    UnrefinedBool,
+
+    /// Integer range annotation: `(Int lo hi)`.
+    ///
+    /// Semantics: `lo ≤ x` and `x < hi` (exclusive upper bound).
+    /// Lowers to `RefinedType::refined(Kind::Int, Predicate::Range { lo: Some(lo), hi: Some(hi), inclusive_hi: false })`.
+    RangeInt { lo: i128, hi: i128 },
+
+    /// Integer membership annotation: `(Member int (v0 v1 ...))`.
+    ///
+    /// Semantics: `x ∈ {values}`.
+    /// Lowers to `RefinedType::refined(Kind::Int, Predicate::Membership { values })`.
+    MembershipInt { values: Vec<i128> },
+}
 
 // ---------------------------------------------------------------------------
 // Atoms
@@ -105,9 +177,26 @@ pub struct Begin {
 }
 
 /// `(lambda (params*) body+)` — anonymous function.
+///
+/// For anonymous lambdas (from the `(lambda ...)` form), `param_annotations`
+/// is all `None` and `return_annotation` is `None` — the v1 annotation
+/// syntax only applies to top-level `define` function sugar.  Fields are
+/// kept on the struct so the IR compiler can use the same lowering path for
+/// both annotated defines and unannotated lambdas.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Lambda {
     pub params: Vec<String>,
+    /// Per-parameter type annotation, in lockstep with `params`.
+    ///
+    /// `None` at position `i` means parameter `i` is unannotated.
+    /// Populated by the AST extractor when it encounters
+    /// `(define (f (x : TypeAnnotation) ...) ...)` function sugar.
+    pub param_annotations: Vec<Option<TypeAnnotation>>,
+    /// Optional return-type annotation.
+    ///
+    /// Populated by the extractor when the signature contains
+    /// `-> type_annotation` inside the parameter list parentheses.
+    pub return_annotation: Option<TypeAnnotation>,
     pub body: Vec<Expr>,
     pub line: usize,
     pub column: usize,
@@ -133,9 +222,20 @@ pub struct Apply {
 ///
 /// The function-sugar form `(define (f x) body)` is lowered to
 /// `Define { name: "f", expr: Lambda { ... } }` during AST extraction.
+///
+/// For LANG23 annotated value bindings like `(define x : (Int 0 128) 42)`,
+/// `type_annotation` holds the parsed annotation.  For function defines
+/// like `(define (f (x : (Int 0 128))) body)`, the annotation is embedded
+/// in the `Lambda` node (see [`Lambda::param_annotations`]).
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Define {
     pub name: String,
+    /// LANG23 PR 23-E: optional type annotation for value bindings.
+    ///
+    /// `Some(ann)` when the source reads `(define x : ann value)`.
+    /// `None` for all unannotated defines and for function defines
+    /// (which carry their annotations in the nested `Lambda` node).
+    pub type_annotation: Option<TypeAnnotation>,
     pub expr: Expr,
     pub line: usize,
     pub column: usize,

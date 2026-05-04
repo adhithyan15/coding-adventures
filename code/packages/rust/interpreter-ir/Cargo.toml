@@ -1,6 +1,6 @@
 [package]
 name = "interpreter-ir"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "InterpreterIR (IIR) — the bytecode for the LANG JIT/AOT pipeline"
 
@@ -9,3 +9,9 @@ name = "interpreter_ir"
 path = "src/lib.rs"
 
 [dependencies]
+# LANG23 PR 23-E: carry refinement type annotations on IIRFunction.
+# `lang-refined-types` provides `RefinedType` and `Predicate` — the structured
+# annotation that the refinement checker reads.  The dependency is optional at
+# the data level (all annotation fields are `Option<RefinedType>`), so crates
+# that never set annotations pay only the added struct size.
+lang-refined-types = { path = "../lang-refined-types" }
