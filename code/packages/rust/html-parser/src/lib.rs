@@ -318,20 +318,25 @@ impl HtmlParser {
 
     fn apply_table_implied_contexts(&mut self, incoming_name: &str) {
         match incoming_name {
+            "caption" | "colgroup" => {
+                self.pop_table_cell_row_and_section_contexts();
+                self.pop_current_if(|name| name == "caption" || name == "colgroup");
+            }
             "tbody" | "thead" | "tfoot" => {
-                self.pop_current_if(|name| name == "td" || name == "th");
-                self.pop_current_if(|name| name == "tr");
-                self.pop_current_if(is_table_section);
+                self.pop_table_cell_row_and_section_contexts();
+                self.pop_current_if(|name| name == "caption" || name == "colgroup");
             }
             "tr" => {
                 self.pop_current_if(|name| name == "td" || name == "th");
                 self.pop_current_if(|name| name == "tr");
+                self.pop_current_if(|name| name == "caption" || name == "colgroup");
                 if self.current_element_is("table") {
                     self.append_implied_element("tbody");
                 }
             }
             "td" | "th" => {
                 self.pop_current_if(|name| name == "td" || name == "th");
+                self.pop_current_if(|name| name == "caption" || name == "colgroup");
                 if self.current_element_is("table") {
                     self.append_implied_element("tbody");
                 }
@@ -344,6 +349,12 @@ impl HtmlParser {
             }
             _ => {}
         }
+    }
+
+    fn pop_table_cell_row_and_section_contexts(&mut self) {
+        self.pop_current_if(|name| name == "td" || name == "th");
+        self.pop_current_if(|name| name == "tr");
+        self.pop_current_if(is_table_section);
     }
 
     fn apply_simple_implied_end_tags(&mut self, incoming_name: &str) {
@@ -728,6 +739,53 @@ mod tests {
         let tfoot_row = element(&tfoot.children[0]);
         assert_eq!(
             element(&tfoot_row.children[0]).children,
+            vec![Node::text("B")]
+        );
+    }
+
+    #[test]
+    fn closes_table_caption_before_column_groups_and_rows() {
+        let document = parse_html("<table><caption>Cap<colgroup><col><tr><td>A</table>").unwrap();
+
+        let table = element(&body(&document).children[0]);
+        assert_eq!(table.children.len(), 3);
+
+        let caption = element(&table.children[0]);
+        assert_eq!(caption.name, "caption");
+        assert_eq!(caption.children, vec![Node::text("Cap")]);
+
+        let colgroup = element(&table.children[1]);
+        assert_eq!(colgroup.name, "colgroup");
+        assert_eq!(element(&colgroup.children[0]).name, "col");
+
+        let tbody = element(&table.children[2]);
+        let row = element(&tbody.children[0]);
+        assert_eq!(element(&row.children[0]).children, vec![Node::text("A")]);
+    }
+
+    #[test]
+    fn closes_column_groups_when_table_sections_start() {
+        let document =
+            parse_html("<table><colgroup><col><thead><tr><th>H<tbody><tr><td>B</table>").unwrap();
+
+        let table = element(&body(&document).children[0]);
+        assert_eq!(table.children.len(), 3);
+
+        let colgroup = element(&table.children[0]);
+        assert_eq!(colgroup.name, "colgroup");
+        assert_eq!(element(&colgroup.children[0]).name, "col");
+
+        let thead = element(&table.children[1]);
+        assert_eq!(thead.name, "thead");
+        assert_eq!(
+            element(&element(&thead.children[0]).children[0]).children,
+            vec![Node::text("H")]
+        );
+
+        let tbody = element(&table.children[2]);
+        assert_eq!(tbody.name, "tbody");
+        assert_eq!(
+            element(&element(&tbody.children[0]).children[0]).children,
             vec![Node::text("B")]
         );
     }

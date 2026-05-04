@@ -27,3 +27,6 @@ documented in this file.
 - Initial table tree-construction recovery for omitted `tbody`/`tr` structure,
   including implicit row groups for bare rows/cells and section closure when a
   new table section starts.
+- Table caption and column-group boundary recovery so captions/colgroups close
+  before following rows, cells, and table sections in the lightweight DOM tree
+  builder.
