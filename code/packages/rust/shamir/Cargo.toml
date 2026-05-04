@@ -1,0 +1,10 @@
+[package]
+name = "coding_adventures_shamir"
+version = "0.1.0"
+edition = "2021"
+description = "Shamir's Secret Sharing over GF(2^8) — split a secret into n shares so any k reconstruct it; from scratch, no external deps except sibling csprng + zeroize."
+
+[dependencies]
+coding_adventures_csprng = { path = "../csprng" }
+coding_adventures_zeroize = { path = "../zeroize" }
+coding_adventures_ct_compare = { path = "../ct-compare" }

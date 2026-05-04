@@ -389,6 +389,7 @@ members = [
     "http1",
     "storage-core",
     "vault-sealed-store",
+    "shamir",
     "context-store",
     "artifact-store",
     "skill-store",
