@@ -1,5 +1,71 @@
 # Changelog
 
+## 1.12.0 — 2026-05-04
+
+### Added
+
+- **`GROUP_CONCAT` aggregate execution** (`vm.py`) — `_do_update_agg` and
+  `_do_finalize_agg` now handle `AggFunc.GROUP_CONCAT`:
+  - Per-row accumulation into `_AggState.items` (a `list[str]`); NULLs are
+    silently ignored; integers and whole-number floats are rendered without a
+    trailing `.0` to match SQLite output.
+  - Finalisation joins the list with `agg.separator`; an empty list returns
+    `None` (matching SQLite's NULL-for-empty-group behaviour).
+- **`items` and `separator` fields on `_AggState`** (`vm.py`) — `items`
+  accumulates strings for GROUP_CONCAT; `separator` is baked in at
+  `InitAgg` time and carried through to `FinalizeAgg`.
+- **Implicit-single-group synthesis in `AdvanceGroupKey` handler** (`vm.py`)
+  — when `has_group_by=False` and the scan produced no rows (`group_order`
+  is empty), the VM synthesises the implicit `()` group so that no-GROUP-BY
+  aggregates over empty tables return exactly one row of NULL/zero values,
+  matching the SQL standard.
+- **Lazy slot initialisation in `_do_finalize_agg`** (`vm.py`) — if the
+  slot list for the current group is shorter than the requested slot index
+  (because `InitAgg` was never called on an empty table), the handler
+  auto-grows the list with default `_AggState` entries using the `func` and
+  `separator` baked into the `FinalizeAgg` instruction.  This eliminates
+  the previous `InternalError` and produces the correct zero-state result.
+
+### Security
+
+- **NTILE DoS prevention** (`vm.py`) — `n_buckets` is clamped to
+  `max(1, min(n_raw, total_rows))` before the modulo-distribution loop,
+  preventing divide-by-zero and pathological O(N²) behaviour from
+  caller-supplied values ≤ 0.
+- **Defense-in-depth guards** (`vm.py`) — `LAG`, `LEAD`, `NTILE`, and
+  `NTH_VALUE` handlers raise `RuntimeError` on non-integer extra-arg
+  values, catching any `WinFuncSpec` objects that bypass codegen validation.
+
+## 1.11.0 — 2026-05-04
+
+### Added
+
+- **LAG window function** (`vm.py`) — `_do_compute_window` now handles
+  `WinFunc.LAG`: returns the value of `arg_col` from the row `offset`
+  positions before the current row in the sorted partition.  Returns
+  `default_val` (from `extra_args[1]`) when no prior row exists at that
+  distance.  Offset and default are taken from `spec.extra_args = (offset,
+  default)`, normalised to `(1, None)` by the codegen if omitted.
+- **LEAD window function** (`vm.py`) — mirror of LAG, looks ahead by
+  `offset` positions instead of behind.
+- **NTILE window function** (`vm.py`) — `WinFunc.NTILE` divides the
+  partition into `n` approximately equal numbered buckets (1..n).
+  Distribution matches SQLite and PostgreSQL: `q, r = divmod(len, n)`;
+  the first `r` buckets get `q+1` rows, the remaining `n-r` get `q` rows.
+  `n` is taken from `spec.extra_args[0]`.
+- **PERCENT_RANK window function** (`vm.py`) — `WinFunc.PERCENT_RANK`
+  computes `(rank − 1) / (N − 1)` where rank is the SQL RANK() value and
+  N is the partition size.  Returns `0.0` when `N == 1` (avoids division
+  by zero).
+- **CUME_DIST window function** (`vm.py`) — `WinFunc.CUME_DIST` computes
+  the cumulative distribution as `(end-of-peer-group index + 1) / N`.
+  Tied rows share the same peer-group endpoint so they all receive the
+  same value.
+- **NTH_VALUE window function** (`vm.py`) — `WinFunc.NTH_VALUE` returns
+  the value of `arg_col` at the n-th row (1-indexed) of the partition.
+  Rows beyond the partition size return `NULL`.  `n` is taken from
+  `spec.extra_args[0]`.
+
 ## 1.10.0 — 2026-05-04
 
 ### Added

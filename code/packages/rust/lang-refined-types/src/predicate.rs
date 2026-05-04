@@ -175,6 +175,72 @@ impl Hash for Predicate {
     }
 }
 
+// ---------------------------------------------------------------------------
+// Ordering — required to replace the format!("{:?}")-based sort in
+// canonicalise with a proper, allocation-free comparison.
+// ---------------------------------------------------------------------------
+
+/// Return a numeric tag for each variant so different variants sort in a
+/// stable, arbitrary-but-fixed order.
+fn variant_tag(p: &Predicate) -> u8 {
+    match p {
+        Predicate::Range { .. }     => 0,
+        Predicate::Membership { .. } => 1,
+        Predicate::And(_)           => 2,
+        Predicate::Or(_)            => 3,
+        Predicate::Not(_)           => 4,
+        Predicate::LinearCmp { .. } => 5,
+        Predicate::Opaque { .. }    => 6,
+    }
+}
+
+impl PartialOrd for Predicate {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for Predicate {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        use std::cmp::Ordering;
+
+        // Compare by variant first for a stable total order.
+        let tag_ord = variant_tag(self).cmp(&variant_tag(other));
+        if tag_ord != Ordering::Equal {
+            return tag_ord;
+        }
+
+        // Same variant — compare fields lexicographically.
+        match (self, other) {
+            (
+                Predicate::Range { lo: lo1, hi: hi1, inclusive_hi: inc1 },
+                Predicate::Range { lo: lo2, hi: hi2, inclusive_hi: inc2 },
+            ) => lo1.cmp(lo2).then_with(|| hi1.cmp(hi2)).then_with(|| inc1.cmp(inc2)),
+
+            (Predicate::Membership { values: v1 }, Predicate::Membership { values: v2 }) => {
+                v1.cmp(v2)
+            }
+
+            // And and Or both carry Vec<Predicate> — recurse.
+            (Predicate::And(a), Predicate::And(b))
+            | (Predicate::Or(a), Predicate::Or(b)) => a.cmp(b),
+
+            (Predicate::Not(a), Predicate::Not(b)) => a.cmp(b),
+
+            (
+                Predicate::LinearCmp { coefs: c1, op: op1, rhs: rhs1 },
+                Predicate::LinearCmp { coefs: c2, op: op2, rhs: rhs2 },
+            ) => c1.cmp(c2).then_with(|| op1.cmp(op2)).then_with(|| rhs1.cmp(rhs2)),
+
+            (Predicate::Opaque { display: d1 }, Predicate::Opaque { display: d2 }) => d1.cmp(d2),
+
+            // The variant_tag check above guarantees same variant — this arm
+            // is unreachable but required to satisfy the exhaustiveness checker.
+            _ => Ordering::Equal,
+        }
+    }
+}
+
 impl Predicate {
     // -----------------------------------------------------------------------
     // Smart constructors
@@ -278,14 +344,14 @@ impl Predicate {
         match self {
             Predicate::And(parts) => {
                 let mut parts: Vec<_> = parts.into_iter().map(|p| p.canonicalise()).collect();
-                parts.sort_by(|a, b| format!("{a:?}").cmp(&format!("{b:?}")));
-                parts.dedup_by(|a, b| a == b);
+                parts.sort();
+                parts.dedup();
                 Predicate::and(parts)
             }
             Predicate::Or(parts) => {
                 let mut parts: Vec<_> = parts.into_iter().map(|p| p.canonicalise()).collect();
-                parts.sort_by(|a, b| format!("{a:?}").cmp(&format!("{b:?}")));
-                parts.dedup_by(|a, b| a == b);
+                parts.sort();
+                parts.dedup();
                 Predicate::or(parts)
             }
             Predicate::Membership { mut values } => {
@@ -829,6 +895,34 @@ mod tests {
         // Both simplify to Range { lo: 0, hi: 100 } after merge, so the
         // set should have 1 element.
         assert!(set.len() <= 2, "unexpected hash collision count: {}", set.len());
+    }
+
+    // ─── canonicalise / Ord ───────────────────────────────────────────────────
+
+    #[test]
+    fn canonicalise_and_is_order_independent() {
+        let p = Predicate::Range { lo: Some(0), hi: Some(10), inclusive_hi: true };
+        let q = Predicate::Membership { values: vec![5] };
+        let pq = Predicate::And(vec![p.clone(), q.clone()]).canonicalise();
+        let qp = Predicate::And(vec![q.clone(), p.clone()]).canonicalise();
+        assert_eq!(pq, qp);
+    }
+
+    #[test]
+    fn canonicalise_or_is_order_independent() {
+        let p = Predicate::Range { lo: Some(0), hi: Some(10), inclusive_hi: true };
+        let q = Predicate::Membership { values: vec![5] };
+        let pq = Predicate::Or(vec![p.clone(), q.clone()]).canonicalise();
+        let qp = Predicate::Or(vec![q.clone(), p.clone()]).canonicalise();
+        assert_eq!(pq, qp);
+    }
+
+    #[test]
+    fn canonicalise_deduplicates() {
+        let p = Predicate::Range { lo: Some(0), hi: Some(10), inclusive_hi: true };
+        let result = Predicate::And(vec![p.clone(), p.clone()]).canonicalise();
+        // After dedup the And collapses to the single element.
+        assert_eq!(result, p);
     }
 
     // ─── VarId / CmpOp ────────────────────────────────────────────────────────

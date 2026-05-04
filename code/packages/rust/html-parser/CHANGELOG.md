@@ -30,3 +30,5 @@ documented in this file.
 - Table caption and column-group boundary recovery so captions/colgroups close
   before following rows, cells, and table sections in the lightweight DOM tree
   builder.
+- Implied `colgroup` creation for bare `col` elements under tables, keeping
+  column metadata grouped before following row sections.

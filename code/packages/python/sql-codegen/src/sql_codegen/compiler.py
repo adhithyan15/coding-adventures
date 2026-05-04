@@ -986,7 +986,12 @@ def _compile_aggregate(
         out.append(SaveGroupKey(n=len(group_by)))
         # Initialize slots on first encounter (VM handles idempotence).
         for s, a in zip(slots, aggregates, strict=True):
-            out.append(InitAgg(slot=s, func=_plan_agg_to_ir(a.func)))
+            ir_func = _plan_agg_to_ir(a.func)
+            # GROUP_CONCAT bakes the separator into the instruction so the VM
+            # doesn't need to look it up on every row.  The separator field is
+            # ignored for all other aggregate functions.
+            sep = a.separator if a.separator is not None else ","
+            out.append(InitAgg(slot=s, func=ir_func, separator=sep))
         # Update each aggregate with the row's value.
         for s, a in zip(slots, aggregates, strict=True):
             if a.arg.star:
@@ -1012,7 +1017,7 @@ def _compile_aggregate(
     # past the block. This is the same header-then-body pattern as Scan.
     post: list[Instruction] = [
         Label(name=emit_start),
-        AdvanceGroupKey(on_exhausted=emit_end),
+        AdvanceGroupKey(on_exhausted=emit_end, has_group_by=bool(group_by)),
     ]
 
     if having is not None:
@@ -1030,7 +1035,9 @@ def _compile_aggregate(
         name = _column_display_name(e) or f"group_{i}"
         post.append(EmitColumn(name=name))
     for s, a in zip(slots, aggregates, strict=True):
-        post.append(FinalizeAgg(slot=s))
+        ir_func_fin = _plan_agg_to_ir(a.func)
+        sep_fin = a.separator if a.separator is not None else ","
+        post.append(FinalizeAgg(slot=s, func=ir_func_fin, separator=sep_fin))
         post.append(EmitColumn(name=a.alias))
     post.append(EmitRow())
     post.append(Label(name=emit_next))
@@ -1074,7 +1081,9 @@ def _compile_having(
                         or (arg is not None and a.arg == arg)
                     )
                     if a.func is f and matched:
-                        return [FinalizeAgg(slot=s)]
+                        ir_func_hav = _plan_agg_to_ir(a.func)
+                        sep_hav = a.separator if a.separator is not None else ","
+                        return [FinalizeAgg(slot=s, func=ir_func_hav, separator=sep_hav)]
                 raise UnsupportedNode("AggregateExpr not present in Aggregate.aggregates")
             case Column(col=c):
                 if c in group_lookup:
@@ -1519,16 +1528,32 @@ _WIN_FUNC_MAP: dict[str, WinFunc] = {
     "max": WinFunc.MAX,
     "first_value": WinFunc.FIRST_VALUE,
     "last_value": WinFunc.LAST_VALUE,
+    # Offset / navigation functions (SQL:2003)
+    "lag": WinFunc.LAG,
+    "lead": WinFunc.LEAD,
+    "nth_value": WinFunc.NTH_VALUE,
+    "ntile": WinFunc.NTILE,
+    "percent_rank": WinFunc.PERCENT_RANK,
+    "cume_dist": WinFunc.CUME_DIST,
 }
 
 
 def _to_ir_win_spec(spec: PlanWindowFuncSpec) -> WinFuncSpec:
     """Convert a planner-level WindowFuncSpec to an IR WinFuncSpec.
 
-    All expression arguments in the planner spec are expected to be simple
-    :class:`Column` nodes — the planner ensures dependency columns are
-    present in the inner projection with matching names.  Complex
-    sub-expressions are not supported in this release.
+    Primary column arguments (``arg_expr``) must be :class:`Column` references
+    — the planner ensures dependency columns are present in the inner projection
+    with matching names.
+
+    Extra scalar arguments (``extra_args``) must be :class:`Literal` nodes
+    that evaluate to Python primitives at codegen time.  The VM reads them from
+    ``WinFuncSpec.extra_args`` rather than from the result-row buffer.
+
+    LAG / LEAD defaults when extra_args are omitted
+    -------------------------------------------------
+    ``LAG(col)``         → offset=1, default=None
+    ``LAG(col, 2)``      → offset=2, default=None
+    ``LAG(col, 2, 0)``   → offset=2, default=0
     """
     func_key = spec.func.lower()
     ir_func = _WIN_FUNC_MAP.get(func_key)
@@ -1543,12 +1568,109 @@ def _to_ir_win_spec(spec: PlanWindowFuncSpec) -> WinFuncSpec:
             f"got {type(e).__name__}"
         )
 
-    arg_col: str | None = None
-    if spec.arg_expr is not None:
-        arg_col = _col_name(spec.arg_expr)
+    # Contexts whose value must be a non-boolean integer (offset / bucket-count
+    # / row-number).  Floats are silently truncated by int(), which masks user
+    # errors; strings would cause a ValueError deep in the VM, leaking internal
+    # state in the traceback.  We reject both up front at compile time.
+    _INT_REQUIRED_CTXS = frozenset(
+        {"LAG/LEAD offset", "NTILE n", "NTH_VALUE n"}
+    )
 
+    def _literal_val(e: Expr, ctx: str) -> object:
+        """Extract a Python constant from a Literal node.
+
+        Also handles the common case where the parser produces a negated
+        literal (``-1``) as ``UnaryExpr(NEG, Literal(1))`` rather than
+        ``Literal(-1)``.  Only the unary-minus case is folded; all other
+        expression types raise ``UnsupportedNode``.
+
+        For contexts listed in ``_INT_REQUIRED_CTXS`` (offsets, bucket counts,
+        row indices) the extracted value must be a plain Python ``int`` (bool
+        excluded).  Non-integer literals — strings, floats, bytes — raise
+        ``UnsupportedNode`` rather than propagating to the VM where they would
+        either truncate silently (float) or crash with a leaky ``ValueError``
+        (str/bytes).
+        """
+        raw: object
+        if isinstance(e, Literal):
+            raw = e.value
+        elif (
+            isinstance(e, UnaryExpr)
+            and e.op == AstUnaryOp.NEG
+            and isinstance(e.operand, Literal)
+        ):
+            v = e.operand.value
+            if isinstance(v, (int, float)):
+                raw = -v
+            else:
+                raise UnsupportedNode(
+                    f"window function extra argument ({ctx}) must be a literal "
+                    f"constant, got negated {type(v).__name__}"
+                )
+        else:
+            raise UnsupportedNode(
+                f"window function extra argument ({ctx}) must be a literal constant, "
+                f"got {type(e).__name__}"
+            )
+
+        # bools are a subclass of int in Python; SQL has no boolean literals
+        # for numeric arguments, so reject them too.
+        if ctx in _INT_REQUIRED_CTXS and (not isinstance(raw, int) or isinstance(raw, bool)):
+            raise UnsupportedNode(
+                f"window function argument ({ctx}) must be an integer literal, "
+                f"got {type(raw).__name__!r} value {raw!r}"
+            )
+
+        return raw
+
+    # --- Partition / order columns ---
     partition_cols = tuple(_col_name(e) for e in spec.partition_by)
     order_cols = tuple((_col_name(e), desc) for e, desc in spec.order_by)
+
+    # --- Extra scalar arguments + primary arg_col ---
+    # NTILE is special: its first (and only) argument is the bucket-count
+    # literal, NOT a column reference.  We handle it here, before the generic
+    # ``arg_col = _col_name(spec.arg_expr)`` path which would wrongly call
+    # _col_name on a Literal and raise UnsupportedNode.
+    extra: tuple[object, ...]
+    arg_col: str | None = None
+
+    if ir_func in (WinFunc.LAG, WinFunc.LEAD):
+        # Primary arg is a column reference.
+        if spec.arg_expr is not None:
+            arg_col = _col_name(spec.arg_expr)
+        # Normalise to exactly 2 extra slots: (offset, default_value).
+        # SQL: LAG(col [, offset [, default]])
+        offset_val: object = 1         # default offset
+        default_val: object = None     # default replacement
+        if len(spec.extra_args) >= 1:
+            offset_val = _literal_val(spec.extra_args[0], "LAG/LEAD offset")
+        if len(spec.extra_args) >= 2:
+            default_val = _literal_val(spec.extra_args[1], "LAG/LEAD default")
+        extra = (offset_val, default_val)
+
+    elif ir_func == WinFunc.NTILE:
+        # NTILE(n): arg_expr holds the Literal(n) — it is not a column.
+        # Move n into extra_args and leave arg_col as None.
+        if spec.arg_expr is None:
+            raise UnsupportedNode("NTILE requires a bucket-count argument")
+        n_val = _literal_val(spec.arg_expr, "NTILE n")
+        arg_col = None          # NTILE has no column arg
+        extra = (n_val,)
+
+    elif ir_func == WinFunc.NTH_VALUE:
+        # NTH_VALUE(col, n): col is the primary arg; n is in extra_args[0].
+        if spec.arg_expr is not None:
+            arg_col = _col_name(spec.arg_expr)
+        if not spec.extra_args:
+            raise UnsupportedNode("NTH_VALUE requires two arguments: NTH_VALUE(col, n)")
+        extra = (_literal_val(spec.extra_args[0], "NTH_VALUE n"),)
+
+    else:
+        # All other functions: primary arg is an optional column reference.
+        if spec.arg_expr is not None:
+            arg_col = _col_name(spec.arg_expr)
+        extra = ()
 
     return WinFuncSpec(
         func=ir_func,
@@ -1556,4 +1678,5 @@ def _to_ir_win_spec(spec: PlanWindowFuncSpec) -> WinFuncSpec:
         partition_cols=partition_cols,
         order_cols=order_cols,
         result_col=spec.alias,
+        extra_args=extra,
     )

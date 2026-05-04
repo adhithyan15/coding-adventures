@@ -205,6 +205,21 @@ def _extract_form(node: ASTNode) -> Form:
 
 def _extract_define(node: ASTNode) -> Define:
     # define = LPAREN "define" name_or_signature expr { expr } RPAREN
+    #
+    # The grammar (as of TW04 Phase 4g / LANG23) uses:
+    #
+    #   name_or_signature = NAME [ COLON type_annotation ]
+    #                     | LPAREN NAME { typed_param } [ ARROW type_annotation ] RPAREN
+    #
+    #   typed_param = LPAREN NAME COLON type_annotation RPAREN | NAME
+    #
+    # In the function-sugar branch each parameter is wrapped in a
+    # ``typed_param`` ASTNode (even when unannotated — the grammar still
+    # wraps the bare NAME to give a uniform shape).  The old code used
+    # ``_is_token(c, "NAME")`` on the direct children of
+    # ``name_or_signature``, which no longer finds parameters now that
+    # they are nested one level deeper inside ``typed_param`` nodes.
+    # This fix extracts the first NAME from each ``typed_param`` child.
     line, col = _pos(node)
     children = _ast_children(node)
     sig_node = children[0]
@@ -213,14 +228,36 @@ def _extract_define(node: ASTNode) -> Define:
         raise TwigParseError("(define …) must have a body expression",
                              line=line, column=col)
 
-    # name_or_signature = NAME | LPAREN NAME { NAME } RPAREN
+    # name_or_signature children: may be tokens (LPAREN/RPAREN/COLON/ARROW),
+    # NAME tokens, or ASTNode children (typed_param, type_annotation).
     sig_children = sig_node.children
-    name_tokens = [c for c in sig_children if _is_token(c, "NAME")]
-    if not name_tokens:
+
+    # Collect direct NAME tokens from sig_children (covers the plain
+    # ``name`` case and the function-name token in the signature).
+    direct_name_tokens = [c for c in sig_children if _is_token(c, "NAME")]
+
+    # Collect parameter names from typed_param ASTNode children.
+    # Each typed_param either wraps a single bare NAME token (unannotated
+    # parameter) or LPAREN NAME COLON type_annotation RPAREN (annotated).
+    # In both shapes the first NAME token is the parameter identifier.
+    typed_param_nodes = [
+        c for c in sig_children
+        if isinstance(c, ASTNode) and c.rule_name == "typed_param"
+    ]
+    param_names_from_typed = [
+        str(tok.value)
+        for tp in typed_param_nodes
+        for tok in tp.children
+        if _is_token(tok, "NAME")
+    ]
+
+    if not direct_name_tokens and not param_names_from_typed:
         raise TwigParseError("(define …) missing a name", line=line, column=col)
 
-    if len(name_tokens) == 1 and not _has_paren(sig_children):
-        # Plain (define name expr) — single body expression expected.
+    if not _has_paren(sig_children):
+        # Plain (define name expr) — no parens around the name.
+        if not direct_name_tokens:
+            raise TwigParseError("(define …) missing a name", line=line, column=col)
         if len(body_exprs) != 1:
             raise TwigParseError(
                 "(define name expr) takes exactly one body expression — "
@@ -228,14 +265,20 @@ def _extract_define(node: ASTNode) -> Define:
                 line=line, column=col,
             )
         return Define(
-            name=str(name_tokens[0].value),
+            name=str(direct_name_tokens[0].value),
             expr=body_exprs[0],
             line=line, column=col,
         )
 
-    # Function-sugar form: (define (name args...) body+)
-    fn_name = str(name_tokens[0].value)
-    params = [str(t.value) for t in name_tokens[1:]]
+    # Function-sugar form: (define (name params...) body+)
+    # The function name is the first direct NAME token in the signature;
+    # the params are the names extracted from typed_param children.
+    if not direct_name_tokens:
+        raise TwigParseError(
+            "(define …) missing a function name", line=line, column=col
+        )
+    fn_name = str(direct_name_tokens[0].value)
+    params = param_names_from_typed
     lam = Lambda(params=params, body=body_exprs, line=line, column=col)
     return Define(name=fn_name, expr=lam, line=line, column=col)
 

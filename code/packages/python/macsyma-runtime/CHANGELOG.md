@@ -1,5 +1,90 @@
 # Changelog
 
+## 1.14.0 — 2026-05-04
+
+**Phase 23 — Wire MACSYMA surface syntax for special functions (erf, Si/Ci,
+Li₂, Gamma/Beta, Fresnel).**
+
+Bumps `symbolic-ir>=0.11.0` and `symbolic-vm>=0.43.0`.
+
+### `name_table.py`
+
+Adds 13 new entries to `MACSYMA_NAME_TABLE`:
+
+| MACSYMA name | IR head |
+|---|---|
+| `erf` | `ERF` |
+| `erfc` | `ERFC` |
+| `erfi` | `ERFI` |
+| `si` | `SI` |
+| `ci` | `CI` |
+| `shi` | `SHI` |
+| `chi` | `CHI` |
+| `li2` | `LI2` |
+| `gamma` | `GAMMA_FUNC` |
+| `beta` | `BETA_FUNC` |
+| `fresnel_s` | `FRESNEL_S` |
+| `fresnel_c` | `FRESNEL_C` |
+
+### `cas_handlers.py`
+
+Delegates all 12 special-function handlers from
+`symbolic_vm.cas_handlers` into the MacsymaBackend handler table.
+
+### Example MACSYMA sessions
+
+```
+(%i1) integrate(exp(-x^2), x);
+(%o1)                   sqrt(%pi)*erf(x)/2
+
+(%i2) integrate(sin(x)/x, x);
+(%o2)                   si(x)
+
+(%i3) gamma(5);
+(%o3)                   24
+
+(%i4) gamma(1/2);
+(%o4)                   sqrt(%pi)
+
+(%i5) beta(1/2, 1/2);
+(%o5)                   %pi
+```
+
+---
+
+## 1.13.0 — 2026-05-04
+
+**Phase 22 — Wire MACSYMA surface syntax for matchdeclare / defrule / apply1 / apply2 / tellsimp.**
+
+### Added
+
+- `name_table.py` — 5 new entries in `MACSYMA_NAME_TABLE` so the compiler
+  maps the lowercase MACSYMA keywords to their IR heads:
+  - `"matchdeclare"` → `MATCHDECLARE`
+  - `"defrule"` → `DEFRULE`
+  - `"apply1"` → `APPLY1`
+  - `"apply2"` → `APPLY2`
+  - `"tellsimp"` → `TELLSIMP`
+
+- `cas_handlers.py` — 5 new handler table entries that delegate directly to
+  the implementations in `symbolic_vm.cas_handlers`:
+  - `"MatchDeclare"` → `matchdeclare_handler`
+  - `"Defrule"` → `defrule_handler`
+  - `"Apply1"` → `apply1_handler`
+  - `"Apply2"` → `apply2_handler`
+  - `"TellSimp"` → `tellsimp_handler`
+
+  The heads are already in `_HELD_HEADS` via `SymbolicBackend` (inherited
+  by `MacsymaBackend`), so pattern arguments reach handlers unevaluated.
+
+### Dependency bumps
+
+- `coding-adventures-symbolic-ir>=0.10.0`
+- `coding-adventures-symbolic-vm>=0.42.0`
+- `coding-adventures-cas-pattern-matching>=0.2.0`
+
+---
+
 ## 0.2.0 — 2026-04-27
 
 ### Added

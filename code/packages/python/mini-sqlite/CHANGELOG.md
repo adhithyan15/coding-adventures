@@ -1,5 +1,46 @@
 # Changelog
 
+## [1.19.0] - 2026-05-04
+
+### Added
+
+- **`GROUP_CONCAT` end-to-end support** (`adapter.py`) — the SQL adapter
+  now recognises `GROUP_CONCAT(col)` and `GROUP_CONCAT(col, separator)`,
+  emitting `AggregateExpr(func=AggFunc.GROUP_CONCAT, separator=…)`.
+  - Zero or 3+ arguments raise `ProgrammingError` at parse time.
+  - The separator must be a string literal; non-literal separators raise
+    `ProgrammingError`.
+- **15 new GROUP_CONCAT tests** (`tests/test_tier5_group_concat.py`) —
+  covering default and custom separators, per-group concatenation, numeric
+  column values, NULL handling (skip / all-NULL → NULL / empty table → NULL),
+  oracle comparison against the real `sqlite3` module, and error cases.
+
+## [1.18.0] - 2026-05-04
+
+### Added
+
+- **LAG / LEAD window functions** — `LAG(col [, offset [, default]])` and
+  `LEAD(col [, offset [, default]])` are now fully supported end-to-end.
+  The adapter (`adapter.py`) extracts `exprs[1:]` from the `value_list`
+  grammar node into `WindowFuncExpr.extra_args`; codegen normalises these
+  to an `(offset, default)` pair; the VM evaluates the offset-lookback or
+  lookahead within each ordered partition.
+- **NTILE(n) window function** — `NTILE(n)` divides each partition into `n`
+  numbered buckets (1..n) using the standard `divmod` distribution rule.
+  The integer literal `n` is parsed as the sole argument to NTILE.
+- **PERCENT_RANK() window function** — `PERCENT_RANK()` computes
+  `(rank − 1) / (N − 1)`.  Argument-free; only `OVER (ORDER BY ...)` is
+  required.  Returns `0.0` for single-row partitions.
+- **CUME_DIST() window function** — `CUME_DIST()` computes the cumulative
+  distribution fraction for each row's peer group.  Also argument-free.
+- **NTH_VALUE(col, n) window function** — `NTH_VALUE(col, n)` returns the
+  value of `col` at the n-th row (1-indexed) of the partition.  Returns
+  `NULL` when the partition has fewer than n rows.
+- **Negated literal folding in window extra args** (codegen) — SQL expressions
+  like `LAG(col, 1, -1)` where `-1` is parsed as `UnaryExpr(NEG, Literal(1))`
+  are now constant-folded to `-1` by the codegen `_literal_val` helper,
+  making negative default values work correctly.
+
 ## [1.17.0] - 2026-05-04
 
 ### Added

@@ -140,12 +140,16 @@ class AggregateItem:
     ``alias`` is the output column name. If the user wrote
     ``COUNT(*) AS n`` the alias is ``n``; otherwise the planner derives
     a default alias (``count``, ``sum_salary``) using standard SQL rules.
+
+    ``separator`` is only meaningful for ``GROUP_CONCAT``.  When ``None``
+    the VM uses the SQLite default of ``","`` .
     """
 
     func: AggFunc
     arg: FuncArg
     alias: str
     distinct: bool = False
+    separator: str | None = None  # GROUP_CONCAT only
 
 
 @dataclass(frozen=True, slots=True)
@@ -575,6 +579,7 @@ class WindowFuncSpec:
     partition_by: tuple[Expr, ...]
     order_by: tuple[tuple[Expr, bool], ...]
     alias: str
+    extra_args: tuple[Expr, ...] = ()   # LAG/LEAD offset+default; NTH_VALUE n
 
 
 @dataclass(frozen=True, slots=True)

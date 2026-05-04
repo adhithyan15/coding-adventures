@@ -1,5 +1,28 @@
 # Changelog — twig-clr-compiler
 
+## 0.8.0 — 2026-05-04 — TW04 Phase 4g — stdlib/io end-to-end on CLR
+
+### Added — stdlib/io runtime tests (`tests/test_stdlib_clr.py`)
+
+End-to-end tests proving that Twig programs importing the bundled
+`stdlib/io` module compile and execute on the real `dotnet` runtime.
+The headline acceptance criterion:
+
+```
+(module hello (import stdlib/io))
+(stdlib/io/println 42)
+(stdlib/io/println (+ 17 25))
+→ stdout: b"42\n42\n"   (CLR uses clean exit-code convention; no trailing byte)
+```
+
+All 14 tests run on real `dotnet` and skip cleanly when `dotnet` is not
+on PATH.  Tests cover: `println`, `print-int`, `newline`, `print-bool`,
+multi-call, define-then-call, and module-order verification.
+
+Unlike the JVM backend, the CLR `_start` does not append the last
+expression's return value as a byte — `stdout` contains exactly the
+bytes written by `host/write-byte` calls and nothing more.
+
 ## 0.7.0 — 2026-05-04 — Phase 4e multi-module CLR compilation + Phase 4c host calls
 
 ### Added — `compile_modules` and `run_modules`

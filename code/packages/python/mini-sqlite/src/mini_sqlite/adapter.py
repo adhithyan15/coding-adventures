@@ -1212,6 +1212,35 @@ def _function_call(node: ASTNode, state: _PlaceholderCounter) -> Expr:
         if len(args) != 1:
             raise ProgrammingError(f"{upper}: expected 1 argument, got {len(args)}")
         return AggregateExpr(func=agg_map[upper], arg=args[0])
+
+    if upper == "GROUP_CONCAT":
+        # GROUP_CONCAT(col)          — SQLite default separator ','
+        # GROUP_CONCAT(col, sep)     — explicit string literal separator
+        #
+        # SQL:2003 §10.9 requires the separator to be a character-string
+        # literal; we enforce that at parse time so the codegen can bake the
+        # separator into the instruction stream rather than evaluating it
+        # dynamically each time.
+        if len(args) == 0 or len(args) > 2:
+            raise ProgrammingError(
+                "GROUP_CONCAT: expected 1 or 2 arguments "
+                "(column [, separator_literal])"
+            )
+        separator: str | None = None
+        if len(args) == 2:
+            sep_expr = args[1].value
+            if not isinstance(sep_expr, Literal) or not isinstance(sep_expr.value, str):
+                raise ProgrammingError(
+                    "GROUP_CONCAT: separator must be a string literal, "
+                    f"got {type(sep_expr).__name__}"
+                )
+            separator = sep_expr.value
+        return AggregateExpr(
+            func=AggFunc.GROUP_CONCAT,
+            arg=args[0],
+            separator=separator,
+        )
+
     return FunctionCall(name=name, args=tuple(args))
 
 
@@ -1228,9 +1257,13 @@ def _window_func_call(node: ASTNode, state: _PlaceholderCounter) -> WindowFuncEx
 
     Supported functions and their arg requirements:
 
-    - Arg-free (no argument):   ROW_NUMBER, RANK, DENSE_RANK
+    - Arg-free (no argument):   ROW_NUMBER, RANK, DENSE_RANK, PERCENT_RANK, CUME_DIST
     - COUNT(*) (star arg):      COUNT — maps to "count_star"
     - Single-arg:               SUM, COUNT(col), AVG, MIN, MAX, FIRST_VALUE, LAST_VALUE
+    - Literal-arg:              NTILE(n) — n is an integer constant
+    - Multi-arg:                LAG(col [, offset [, default]]),
+                                LEAD(col [, offset [, default]]),
+                                NTH_VALUE(col, n)
 
     All function names are normalised to lower-case.
     """
@@ -1242,6 +1275,7 @@ def _window_func_call(node: ASTNode, state: _PlaceholderCounter) -> WindowFuncEx
     star = any(_is_token(c, type_="STAR") for c in node.children)
     vl = _maybe_child(node, "value_list")
     arg: Expr | None = None
+    extra_args_tuple: tuple[Expr, ...] = ()
 
     if star:
         # COUNT(*) OVER (...) → func="count_star", arg=None
@@ -1250,6 +1284,12 @@ def _window_func_call(node: ASTNode, state: _PlaceholderCounter) -> WindowFuncEx
         exprs = [c for c in vl.children if isinstance(c, ASTNode) and c.rule_name == "expr"]
         if exprs:
             arg = _expr(exprs[0], state)
+            # Multi-argument functions (LAG, LEAD, NTH_VALUE) carry extra args
+            # beyond the first column reference.  We thread them through as a
+            # tuple so the planner and codegen can normalise them into the
+            # proper (offset, default) / (n,) shapes.
+            if len(exprs) > 1:
+                extra_args_tuple = tuple(_expr(e, state) for e in exprs[1:])
     # Arg-free ranking functions keep func_name as-is (row_number, rank, dense_rank).
 
     # Extract the window_spec node.
@@ -1292,6 +1332,7 @@ def _window_func_call(node: ASTNode, state: _PlaceholderCounter) -> WindowFuncEx
         arg=arg,
         partition_by=tuple(partition_exprs),
         order_by=tuple(order_keys),
+        extra_args=extra_args_tuple,
     )
 
 

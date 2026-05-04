@@ -1,0 +1,5 @@
+# matrix-metal is macOS-only (uses Metal.framework).  On Windows the
+# crate is a build-only target — `cargo build` succeeds (the macOS
+# `#[cfg(target_vendor = "apple")]` paths gate the active code; the
+# struct shells stay) but no tests run.
+cargo build -p matrix-metal

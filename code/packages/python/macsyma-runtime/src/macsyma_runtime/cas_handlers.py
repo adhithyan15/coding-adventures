@@ -54,9 +54,16 @@ from cas_list_operations import (
     select,
     sort_,
 )
-from cas_matrix import MatrixError, determinant, inverse, is_matrix, matrix, transpose
+from cas_matrix import MatrixError, determinant, inverse, matrix, transpose
 from cas_simplify import canonical, simplify
-from cas_solve import ALL, solve_cubic, solve_linear, solve_linear_system, solve_quadratic, solve_quartic
+from cas_solve import (
+    ALL,
+    solve_cubic,
+    solve_linear,
+    solve_linear_system,
+    solve_quadratic,
+    solve_quartic,
+)
 from cas_substitution import subst
 from symbolic_ir import (
     ADD,
@@ -64,13 +71,30 @@ from symbolic_ir import (
     NEG,
     POW,
     IRApply,
-    IRFloat,
     IRInteger,
     IRNode,
-    IRRational,
     IRSymbol,
 )
 from symbolic_vm.backend import Handler
+from symbolic_vm.cas_handlers import apply1_handler as _apply1_handler
+from symbolic_vm.cas_handlers import apply2_handler as _apply2_handler
+from symbolic_vm.cas_handlers import beta_handler as _beta_handler
+from symbolic_vm.cas_handlers import chi_handler as _chi_handler
+from symbolic_vm.cas_handlers import ci_handler as _ci_handler
+from symbolic_vm.cas_handlers import defrule_handler as _defrule_handler
+from symbolic_vm.cas_handlers import erf_handler as _erf_handler
+from symbolic_vm.cas_handlers import erfc_handler as _erfc_handler
+from symbolic_vm.cas_handlers import erfi_handler as _erfi_handler
+from symbolic_vm.cas_handlers import fresnel_c_handler as _fresnel_c_handler
+from symbolic_vm.cas_handlers import fresnel_s_handler as _fresnel_s_handler
+from symbolic_vm.cas_handlers import gamma_handler as _gamma_handler
+from symbolic_vm.cas_handlers import li2_handler as _li2_handler
+from symbolic_vm.cas_handlers import (
+    matchdeclare_handler as _matchdeclare_handler,
+)
+from symbolic_vm.cas_handlers import shi_handler as _shi_handler
+from symbolic_vm.cas_handlers import si_handler as _si_handler
+from symbolic_vm.cas_handlers import tellsimp_handler as _tellsimp_handler
 from symbolic_vm.numeric import from_number, to_number
 from symbolic_vm.polynomial_bridge import from_polynomial, to_rational
 
@@ -887,4 +911,23 @@ def build_cas_handler_table() -> dict[str, Handler]:
         "Mod": mod_handler,
         "Gcd": gcd_handler,
         "Lcm": lcm_handler,
+        # Pattern-matching rule system (Phase 22) — delegated to symbolic_vm
+        "MatchDeclare": _matchdeclare_handler,
+        "Defrule": _defrule_handler,
+        "Apply1": _apply1_handler,
+        "Apply2": _apply2_handler,
+        "TellSimp": _tellsimp_handler,
+        # Special functions (Phase 23) — delegated to symbolic_vm
+        "GammaFunc": _gamma_handler,
+        "BetaFunc": _beta_handler,
+        "Erf": _erf_handler,
+        "Erfc": _erfc_handler,
+        "Erfi": _erfi_handler,
+        "Si": _si_handler,
+        "Ci": _ci_handler,
+        "Shi": _shi_handler,
+        "Chi": _chi_handler,
+        "Li2": _li2_handler,
+        "FresnelS": _fresnel_s_handler,
+        "FresnelC": _fresnel_c_handler,
     }

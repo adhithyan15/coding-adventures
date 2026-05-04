@@ -71,13 +71,24 @@ class UnaryOp(Enum):
 
 
 class AggFunc(Enum):
-    """SQL aggregate functions we support. Add more (stddev, group_concat) later."""
+    """SQL aggregate functions supported by the execution stack.
+
+    Numeric aggregates (COUNT, SUM, AVG, MIN, MAX) follow standard SQL
+    semantics: NULL inputs are ignored except for COUNT(*).
+
+    String aggregates
+    -----------------
+    GROUP_CONCAT(col)           — concatenate non-NULL values with ',' (SQLite default)
+    GROUP_CONCAT(col, sep)      — concatenate non-NULL values with the given separator
+    Returns NULL when the group is empty (no non-NULL inputs).
+    """
 
     COUNT = "COUNT"
     SUM = "SUM"
     AVG = "AVG"
     MIN = "MIN"
     MAX = "MAX"
+    GROUP_CONCAT = "GROUP_CONCAT"
 
 
 # ---- Expr variants --------------------------------------------------------
@@ -255,11 +266,21 @@ class AggregateExpr:
     Aggregates can only appear in SELECT lists, HAVING predicates, and
     ORDER BY keys. The planner rejects aggregates in WHERE (SQL forbids
     this — WHERE runs before grouping, so aggregates make no sense there).
+
+    Fields
+    ------
+    func       : which aggregate operation to perform
+    arg        : the column / expression being aggregated (star=True for COUNT(*))
+    distinct   : TRUE for COUNT(DISTINCT col) — deduplicate before accumulating
+    separator  : separator string for GROUP_CONCAT; ``None`` for all other functions.
+                 When ``func == GROUP_CONCAT`` and ``separator is None``, the VM
+                 defaults to ``","`` (matching SQLite's behaviour).
     """
 
     func: AggFunc
     arg: FuncArg  # star=True for COUNT(*)
     distinct: bool = False
+    separator: str | None = None  # GROUP_CONCAT only; None → use default ","
 
 
 @dataclass(frozen=True, slots=True)
@@ -412,6 +433,19 @@ class WindowFuncExpr:
     order_by:
         Tuple of ``(expr, descending)`` sort keys within each partition.
         Required for ranking functions; optional for aggregating functions.
+    extra_args:
+        Additional constant arguments after the primary column argument.
+        Used by offset functions that take more than one argument:
+
+        - ``LAG(col, offset, default)``  → extra_args = (Literal(offset), Literal(default))
+        - ``LEAD(col, offset, default)`` → extra_args = (Literal(offset), Literal(default))
+        - ``NTILE(n)``                   → arg=Literal(n), extra_args = ()
+        - ``NTH_VALUE(col, n)``          → extra_args = (Literal(n),)
+        - ``PERCENT_RANK()``,  ``CUME_DIST()`` → arg=None, extra_args = ()
+
+        The planner resolves these through ``_resolve()`` just like any
+        other expression (they are typically ``Literal`` nodes and pass
+        through unchanged).
 
     Lifecycle
     ---------
@@ -424,6 +458,7 @@ class WindowFuncExpr:
     arg: Expr | None                           # None for arg-free funcs
     partition_by: tuple[Expr, ...] = ()
     order_by: tuple[tuple[Expr, bool], ...] = ()  # (expr, descending)
+    extra_args: tuple[Expr, ...] = ()          # LAG/LEAD offset+default, NTILE n, NTH_VALUE n
 
 
 # The type union every non-specialized consumer should match on. Order

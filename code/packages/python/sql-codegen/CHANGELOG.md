@@ -1,5 +1,68 @@
 # Changelog
 
+## [1.12.0] - 2026-05-04
+
+### Added
+
+- **`GROUP_CONCAT` in `AggFunc` enum** (`ir.py`) — new value
+  `GROUP_CONCAT = "GROUP_CONCAT"` added to the IR aggregate-function enum.
+- **`separator` field on `InitAgg`** (`ir.py`) — `str` field defaulting to
+  `","`.  Baked in at compile time from the SQL literal; ignored for all
+  functions except `GROUP_CONCAT`.
+- **`func` and `separator` fields on `FinalizeAgg`** (`ir.py`) — carry the
+  aggregate function kind and GROUP_CONCAT separator as fallback values for
+  the empty-table implicit-single-group case.  Both have defaults
+  (`COUNT_STAR` / `","`) for backward compatibility with existing
+  `FinalizeAgg(slot=…)` call sites.
+- **`has_group_by` field on `AdvanceGroupKey`** (`ir.py`) — `bool` field
+  defaulting to `True`.  When `False` the VM synthesises an implicit group
+  for no-GROUP-BY queries over empty tables so that exactly one result row
+  is emitted, matching the SQL standard.
+- **`GROUP_CONCAT` codegen** (`compiler.py`) — `_plan_agg_to_ir` now maps
+  `AggFunc.GROUP_CONCAT` → `IrAggFunc.GROUP_CONCAT`.  The compiler wires
+  the `separator` (from `AggregateItem`) into `InitAgg` and passes
+  `func`/`separator` through to every `FinalizeAgg` emission (main emit
+  loop and HAVING predicate).
+- **Compile-time integer enforcement** (`compiler.py`) — `_literal_val`
+  rejects non-integer literals for `LAG/LEAD offset`, `NTILE n`, and
+  `NTH_VALUE n` with a descriptive `UnsupportedNode`.
+
+### Changed
+
+- `AdvanceGroupKey(on_exhausted=…)` emissions now pass
+  `has_group_by=bool(group_by)` so the VM can distinguish implicit-single-
+  group from multi-group aggregates.
+- `FinalizeAgg(slot=…)` emissions now always carry `func` and `separator`
+  matching the corresponding aggregate; the VM uses these for lazy slot
+  initialisation when `InitAgg` was never reached (empty-table path).
+
+## [1.11.0] - 2026-05-04
+
+### Added
+
+- **New `WinFunc` enum values** (`ir.py`) — `LAG`, `LEAD`, `NTH_VALUE`,
+  `NTILE`, `PERCENT_RANK`, `CUME_DIST` added to the `WinFunc` enumeration.
+- **`extra_args` field on `WinFuncSpec`** (`ir.py`) — `tuple[object, ...]`
+  that carries literal constants for multi-argument window functions:
+  - `LAG` / `LEAD` → `(offset: int, default: SqlValue)` (always 2 elements)
+  - `NTILE` → `(n: int,)` — the bucket count
+  - `NTH_VALUE` → `(n: int,)` — the 1-indexed row position
+  - `PERCENT_RANK`, `CUME_DIST` → `()` (empty, no extra args needed)
+- **Extended `_WIN_FUNC_MAP`** (`compiler.py`) — the mapping now includes
+  all six new functions.
+- **Rewritten `_to_ir_win_spec`** (`compiler.py`) — converts planner-level
+  `WindowFuncSpec` to IR `WinFuncSpec`, handling each function's unique
+  argument shape:
+  - `LAG`/`LEAD` — normalises `extra_args` to exactly `(offset, default)`,
+    defaulting to `(1, None)` when arguments are omitted.
+  - `NTILE` — the literal bucket count in `arg_expr` is moved to
+    `extra_args` and `arg_col` is set to `None` (NTILE has no column arg).
+  - `NTH_VALUE` — column is `arg_col`; `n` is `extra_args[0]`.
+  - `PERCENT_RANK`, `CUME_DIST` — no `arg_col` or `extra_args`.
+  - Negated-literal folding: `UnaryExpr(NEG, Literal(n))` (produced by
+    the parser for `-1`, `-2`, …) is constant-folded to `-n` inside
+    `_literal_val` so that `LAG(col, 1, -1)` works correctly.
+
 ## [1.10.0] - 2026-05-04
 
 ### Added

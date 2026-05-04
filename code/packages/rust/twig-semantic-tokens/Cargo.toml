@@ -1,6 +1,6 @@
 [package]
 name = "twig-semantic-tokens"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Semantic-token extraction for Twig.  Walks a parsed Program and emits a typed token stream (keywords / identifiers / numbers / booleans / nil / quoted symbols) suitable for LSP semantic-tokens, syntax highlighters, and editor extensions."
 

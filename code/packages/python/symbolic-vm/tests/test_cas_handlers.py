@@ -13,7 +13,6 @@ from __future__ import annotations
 
 import math
 
-import pytest
 from symbolic_ir import (
     ADD,
     MUL,
@@ -1216,7 +1215,7 @@ _APART = IRSymbol("Apart")
 _DIV = IRSymbol("Div")
 
 
-def _subst_at(vm: "VM", expr: IRApply, val: int) -> IRNode:
+def _subst_at(vm: VM, expr: IRApply, val: int) -> IRNode:
     """Evaluate ``expr`` with ``x = val`` by calling the Subst handler."""
     return vm.eval(IRApply(_SUBST, (IRInteger(val), x, expr)))
 
