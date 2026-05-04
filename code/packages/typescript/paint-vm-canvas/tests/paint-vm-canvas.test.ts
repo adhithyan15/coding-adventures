@@ -762,6 +762,26 @@ describe("PaintImage handler", () => {
     expect(ctx.putImageData).toHaveBeenCalled();
   });
 
+  it("skips putImageData when data.length does not match width*height*4 (DoS guard)", () => {
+    const vm = createCanvasVM();
+    const ctx = makeCtx();
+    // Declared 10×10 but only provides 16 bytes — dimension/length mismatch.
+    // Without the length check ImageData would throw a DOMException; with it
+    // we skip silently and render nothing.
+    const pixels: PixelContainer = {
+      width: 10,
+      height: 10,
+      data: new Uint8Array(16), // should be 10*10*4=400
+    };
+    vm.execute(
+      paintScene(200, 200, "transparent", [
+        paintImage(0, 0, 10, 10, pixels),
+      ]),
+      ctx,
+    );
+    expect(ctx.putImageData).not.toHaveBeenCalled();
+  });
+
   it("draws placeholder rect for URI string src", () => {
     const vm = createCanvasVM();
     const ctx = makeCtx();

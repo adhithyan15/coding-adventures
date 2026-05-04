@@ -708,21 +708,33 @@ function handleGradient(instr: PaintGradient, ctx: SvgContext): void {
  * server-side SVG processor. Allowing arbitrary URI schemes enables:
  *   - javascript:alert(1) — XSS in browsers that render SVG as XML
  *   - file:///etc/passwd  — LFI in headless server-side renderers
- *   - http://internal/    — SSRF against internal services
+ *   - http://internal/    — SSRF against internal services when rendered
+ *                           server-side (even plain HTTP may reach internal
+ *                           endpoints — only https: and data: are safe)
  *
- * We permit only data:, https:, and http: schemes. Everything else is replaced
- * with an empty data URI so the image renders as nothing rather than exploiting.
+ * We permit only data: and https: schemes.
+ *
+ *   http: is intentionally excluded: when this SVG is processed by a headless
+ *   renderer (Puppeteer, librsvg, wkhtmltopdf, etc.) on a server, an http:
+ *   URL can reach internal network services that HTTPS can't (self-signed cert
+ *   rejection acts as an accidental filter). An attacker who controls image src
+ *   could use plain HTTP to scan or exfiltrate data from internal infrastructure.
+ *
+ * Null bytes are stripped before the scheme check because some URI parsers
+ * normalise `java\0script:` to `javascript:`, creating a bypass vector.
+ *
+ * Everything else is replaced with an empty data URI so the image renders as
+ * nothing rather than exploiting.
  */
 function sanitizeImageHref(src: string): string {
-  const lower = src.toLowerCase().trimStart();
-  if (
-    lower.startsWith("data:") ||
-    lower.startsWith("https:") ||
-    lower.startsWith("http:")
-  ) {
-    return src;
+  // Strip null bytes before the scheme check — they can be used to bypass
+  // scheme detection in environments with lenient URI parsers.
+  const cleaned = src.replace(/\0/g, "");
+  const lower = cleaned.toLowerCase().trimStart();
+  if (lower.startsWith("data:") || lower.startsWith("https:")) {
+    return cleaned;
   }
-  // Unsafe scheme — emit empty placeholder
+  // Unsafe scheme (http:, javascript:, file:, vbscript:, etc.) — placeholder.
   return "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
 }
 

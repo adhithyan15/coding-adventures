@@ -616,7 +616,20 @@ function handleImage(
     const pixels = instr.src;
     // PixelContainer is fixed RGBA8 (4 channels, 8 bits, data: Uint8Array).
     // ImageData requires Uint8ClampedArray with the same RGBA8 layout.
-    if (pixels.data instanceof Uint8Array) {
+    //
+    // Security: validate width, height, and buffer length before constructing
+    // ImageData. Without these checks, a crafted PixelContainer with
+    // width/height=0, negative values, non-integers, or a mismatched buffer
+    // would throw a DOMException or allocate an enormous backing buffer — a
+    // DoS vector when the IR is deserialized from an untrusted source.
+    // The length check (width * height * 4) ensures the declared dimensions
+    // match the actual buffer size so ImageData never reads out of bounds.
+    if (
+      pixels.data instanceof Uint8Array &&
+      Number.isInteger(pixels.width) && pixels.width > 0 &&
+      Number.isInteger(pixels.height) && pixels.height > 0 &&
+      pixels.data.length === pixels.width * pixels.height * 4
+    ) {
       const imageData = new ImageData(
         new Uint8ClampedArray(pixels.data.buffer),
         pixels.width,

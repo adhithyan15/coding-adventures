@@ -841,6 +841,28 @@ describe("Security — image href URI validation", () => {
     expect(svg).toContain("data:image/png;base64,abc123");
   });
 
+  it("replaces http: URIs with a safe placeholder (SSRF risk in server-side renderers)", () => {
+    const svg = renderToSvgString(
+      paintScene(200, 200, "transparent", [
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        paintImage(0, 0, 100, 100, "http://internal-server/secret" as any),
+      ]),
+    );
+    expect(svg).not.toContain("http://internal-server");
+    expect(svg).toContain("data:image/gif;base64,");
+  });
+
+  it("strips null bytes before scheme check to prevent bypass", () => {
+    const svg = renderToSvgString(
+      paintScene(200, 200, "transparent", [
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        paintImage(0, 0, 100, 100, "java\0script:alert(1)" as any),
+      ]),
+    );
+    expect(svg).not.toContain("javascript:");
+    expect(svg).toContain("data:image/gif;base64,");
+  });
+
   it("replaces javascript: URIs with a safe placeholder", () => {
     const svg = renderToSvgString(
       paintScene(200, 200, "transparent", [
