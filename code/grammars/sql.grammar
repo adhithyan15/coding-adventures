@@ -36,7 +36,7 @@ set_op_clause     = ( "UNION" | "INTERSECT" | "EXCEPT" ) [ "ALL" ] select_stmt ;
 # ── SELECT ───────────────────────────────────────────────────────────────────
 
 select_stmt       = "SELECT" [ "DISTINCT" | "ALL" ] select_list
-                    "FROM" table_ref { join_clause }
+                    [ "FROM" table_ref { join_clause } ]
                     [ where_clause ] [ group_clause ] [ having_clause ]
                     [ order_clause ] [ limit_clause ] ;
 
@@ -45,11 +45,14 @@ select_item       = expr [ "AS" NAME ] ;
 
 # table_ref: try derived-table form first (starts with "(") then plain name.
 # PEG backtracking ensures "(SELECT ...)" matches the first branch and
-# "users" or "users AS u" matches the second branch.
-table_ref         = "(" query_stmt ")" "AS" NAME | table_name [ "AS" NAME ] ;
+# "users" or "users AS u" or "users u" (alias without AS) matches the
+# second branch.  The alias alternatives are ordered: "AS" NAME first so that
+# "AS" is consumed when present; bare NAME second for the no-AS form.
+# NAME never matches SQL keywords, so WHERE, JOIN, ON etc. are never eaten.
+table_ref         = "(" query_stmt ")" "AS" NAME | table_name [ "AS" NAME | NAME ] ;
 table_name        = NAME [ "." NAME ] ;
 
-join_clause       = join_type "JOIN" table_ref [ "ON" expr ] ;
+join_clause       = [ join_type ] "JOIN" table_ref [ "ON" expr ] ;
 join_type         = "CROSS" | "INNER" | ( "LEFT" [ "OUTER" ] )
                   | ( "RIGHT" [ "OUTER" ] ) | ( "FULL" [ "OUTER" ] ) ;
 
@@ -158,6 +161,8 @@ comparison        = additive [ cmp_op additive
                   | "NOT" "IN" "(" in_expr ")"
                   | "LIKE" additive
                   | "NOT" "LIKE" additive
+                  | "GLOB" additive
+                  | "NOT" "GLOB" additive
                   | "IS" "NULL"
                   | "IS" "NOT" "NULL" ] ;
 
@@ -173,20 +178,24 @@ unary             = "-" unary | primary ;
 # primary: order matters for PEG backtracking.
 #   1. Simple literals
 #   2. CASE expression (starts with "CASE" keyword)
-#   3. Window function call — NAME "(" … ")" "OVER" "(" … )" — tried BEFORE
+#   3. CAST expression — "CAST" "(" expr "AS" NAME ")" — must come before
+#      function_call because CAST is now a keyword; function_call uses NAME
+#      which never matches keywords.
+#   4. Window function call — NAME "(" … ")" "OVER" "(" … )" — tried BEFORE
 #      plain function_call because both start with NAME "(" but only the window
 #      form has the trailing OVER keyword; PEG will backtrack to function_call
 #      if OVER is absent.
-#   4. Function call (NAME "(" — checked before bare column_ref)
-#   5. EXISTS subquery — starts with KEYWORD "EXISTS", unambiguous
-#   6. Scalar subquery "(SELECT ...)" — tried before plain "(" expr ")"
+#   5. Function call (NAME "(" — checked before bare column_ref)
+#   6. EXISTS subquery — starts with KEYWORD "EXISTS", unambiguous
+#   7. Scalar subquery "(SELECT ...)" — tried before plain "(" expr ")"
 #      because query_stmt starts with "SELECT" which is a KEYWORD, not valid
 #      as a plain expression; backtrack if the first token inside "(" is not
 #      "SELECT".
-#   7. Bare column reference NAME [. NAME]
-#   8. Parenthesised expression "(" expr ")"
+#   8. Bare column reference NAME [. NAME]
+#   9. Parenthesised expression "(" expr ")"
 primary           = NUMBER | STRING | BLOB | "NULL" | "TRUE" | "FALSE"
                   | case_expr
+                  | cast_expr
                   | window_func_call
                   | function_call
                   | "EXISTS" "(" query_stmt ")"
@@ -196,6 +205,12 @@ primary           = NUMBER | STRING | BLOB | "NULL" | "TRUE" | "FALSE"
 
 column_ref        = NAME [ "." NAME ] ;
 function_call     = NAME "(" ( STAR | [ value_list ] ) ")" ;
+
+# cast_expr: CAST(expr AS type_name)
+# CAST is a keyword so it cannot appear in function_call (which uses NAME).
+# type_name is a single NAME token (e.g. INTEGER, TEXT, REAL, BLOB, NUMERIC).
+# The AS inside CAST is consumed here, not treated as a column alias.
+cast_expr         = "CAST" "(" expr "AS" NAME ")" ;
 
 # ── WINDOW FUNCTIONS ──────────────────────────────────────────────────────────
 #

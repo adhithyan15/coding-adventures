@@ -331,13 +331,17 @@ def _select(
     distinct = _has_keyword_child(node, "DISTINCT")
     items = _select_list(_child_node(node, "select_list"), state)
 
-    # FROM + JOINs.
-    from_node = _child_node(node, "table_ref")
-    from_ref = _table_ref(from_node, ctes=ctes, view_defs=view_defs)
-    joins = tuple(
-        _join_clause(c, state, ctes=ctes, view_defs=view_defs)
-        for c in _child_nodes(node, "join_clause")
-    )
+    # FROM + JOINs — FROM is optional (SELECT 1, SELECT UPPER('x'), etc.).
+    from_node = _maybe_child(node, "table_ref")
+    if from_node is not None:
+        from_ref = _table_ref(from_node, ctes=ctes, view_defs=view_defs)
+        joins = tuple(
+            _join_clause(c, state, ctes=ctes, view_defs=view_defs)
+            for c in _child_nodes(node, "join_clause")
+        )
+    else:
+        from_ref = None
+        joins = ()
 
     # WHERE / GROUP BY / HAVING / ORDER BY / LIMIT — all optional.
     where = _maybe_expr(node, "where_clause", state, skip=1)
@@ -420,16 +424,30 @@ def _table_ref(
             raise ProgrammingError("derived table requires an alias (AS <name>)")
         return DerivedTableRef(select=inner_stmt, alias=alias)
 
-    # Plain table form: table_name [ "AS" NAME ]
+    # Plain table form: table_name [ "AS" NAME | NAME ]
+    #
+    # The alias is optional.  Two syntactic forms are accepted:
+    #   FROM employees AS e   — classic form with AS
+    #   FROM employees e      — shorthand form without AS
+    # NAME tokens never match SQL keywords (WHERE, JOIN, ON, etc.), so a bare
+    # NAME token following the table_name ASTNode is unambiguously an alias.
     tn = _child_node(node, "table_name")
     parts = [c.value for c in tn.children if isinstance(c, Token) and _token_type(c) == "NAME"]
     table = parts[-1]  # schema.table → we ignore the schema qualifier
     alias = None
+    saw_table_name = False
     for i, c in enumerate(node.children):
-        if _is_keyword(c, "AS") and i + 1 < len(node.children):
+        if isinstance(c, ASTNode) and c.rule_name == "table_name":
+            saw_table_name = True
+        elif saw_table_name and _is_keyword(c, "AS") and i + 1 < len(node.children):
             nxt = node.children[i + 1]
-            if isinstance(nxt, Token):
+            if isinstance(nxt, Token) and _token_type(nxt) == "NAME":
                 alias = nxt.value
+            break
+        elif saw_table_name and isinstance(c, Token) and _token_type(c) == "NAME":
+            # Alias written without AS (e.g. FROM employees e)
+            alias = c.value
+            break
 
     # CTE substitution: if the table name matches a known CTE, replace it.
     if ctes and table in ctes:
@@ -463,9 +481,10 @@ def _join_clause(
     ctes: dict[str, SelectStmt | RecursiveCTERef] | None = None,
     view_defs: dict[str, SelectStmt] | None = None,
 ) -> JoinClause:
-    # join_clause = join_type "JOIN" table_ref [ "ON" expr ]
-    jt = _child_node(node, "join_type")
-    kind = _join_kind(jt)
+    # join_clause = [ join_type ] "JOIN" table_ref [ "ON" expr ]
+    # Plain "JOIN" with no preceding type keyword is treated as INNER JOIN.
+    jt = _maybe_child(node, "join_type")
+    kind = _join_kind(jt) if jt is not None else JoinKind.INNER
     right = _table_ref(_child_node(node, "table_ref"), ctes=ctes, view_defs=view_defs)
     # The grammar makes ON optional (required only for non-CROSS joins).
     expr_node = _maybe_child(node, "expr")
@@ -1038,7 +1057,8 @@ def _comparison(node: ASTNode, state: _PlaceholderCounter) -> Expr:
     if len(additives) == 1 and not any(
         isinstance(c, ASTNode) and c.rule_name == "cmp_op" for c in node.children
     ) and not _has_keyword_child(node, "BETWEEN") and not _has_keyword_child(node, "IN") \
-       and not _has_keyword_child(node, "LIKE") and not _has_keyword_child(node, "IS"):
+       and not _has_keyword_child(node, "LIKE") and not _has_keyword_child(node, "GLOB") \
+       and not _has_keyword_child(node, "IS"):
         return left
 
     # cmp_op form.
@@ -1091,6 +1111,27 @@ def _comparison(node: ASTNode, state: _PlaceholderCounter) -> Expr:
         if negated:
             return NotLike(operand=left, pattern=pat_expr.value)
         return Like(operand=left, pattern=pat_expr.value)
+
+    # GLOB / NOT GLOB — case-sensitive pattern match using Unix glob syntax.
+    #
+    # SQL:  string GLOB pattern
+    # Internal: glob(pattern, string)  — same argument order as SQLite's C API.
+    #
+    # GLOB differs from LIKE in two ways:
+    #   1. Case-sensitive (* matches any sequence, ? matches one character).
+    #   2. The pattern argument is passed dynamically (not restricted to string
+    #      literals), so GLOB can be used with column references or expressions
+    #      as the pattern.  This is consistent with SQLite's behaviour.
+    if _has_keyword_child(node, "GLOB"):
+        negated = _has_keyword_child(node, "NOT")
+        pat_expr = _additive(additives[1], state)
+        glob_call: Expr = FunctionCall(
+            name="glob",
+            args=(FuncArg(value=pat_expr), FuncArg(value=left)),
+        )
+        if negated:
+            return UnaryExpr(op=UnaryOp.NOT, operand=glob_call)
+        return glob_call
 
     # IS NULL / IS NOT NULL.
     if _has_keyword_child(node, "IS"):
@@ -1166,6 +1207,8 @@ def _primary(node: ASTNode, state: _PlaceholderCounter) -> Expr:
                         raise ProgrammingError("EXISTS subquery must be a SELECT statement")
                     return ExistsSubquery(query=inner_stmt)
         elif isinstance(c, ASTNode):
+            if c.rule_name == "cast_expr":
+                return _cast_expr(c, state)
             if c.rule_name == "window_func_call":
                 return _window_func_call(c, state)
             if c.rule_name == "function_call":
@@ -1242,6 +1285,42 @@ def _function_call(node: ASTNode, state: _PlaceholderCounter) -> Expr:
         )
 
     return FunctionCall(name=name, args=tuple(args))
+
+
+def _cast_expr(node: ASTNode, state: _PlaceholderCounter) -> Expr:
+    """Translate a ``cast_expr`` node into a :class:`FunctionCall`.
+
+    Grammar::
+
+        cast_expr = "CAST" "(" expr "AS" NAME ")"
+
+    ``CAST(expr AS type_name)`` is semantically equivalent to calling the
+    scalar function ``cast(expr, 'type_name')`` — which is exactly how the
+    built-in ``cast`` function is registered in :mod:`sql_vm.scalar_functions`.
+
+    The type name (INTEGER, TEXT, REAL, BLOB, NUMERIC) is passed as a string
+    literal so the VM receives a concrete type indicator at dispatch time.
+
+    Example::
+
+        CAST(price AS INTEGER)   →  FunctionCall("cast", (FuncArg(price), FuncArg("INTEGER")))
+    """
+    inner_expr = _expr(_child_node(node, "expr"), state)
+    # Find the NAME token that follows the AS keyword inside this cast_expr node.
+    type_name: str | None = None
+    found_as = False
+    for c in node.children:
+        if _is_keyword(c, "AS"):
+            found_as = True
+        elif found_as and isinstance(c, Token) and _token_type(c) == "NAME":
+            type_name = c.value.upper()
+            break
+    if type_name is None:
+        raise ProgrammingError("CAST: missing type name after AS")
+    return FunctionCall(
+        name="cast",
+        args=(FuncArg(value=inner_expr), FuncArg(value=Literal(value=type_name))),
+    )
 
 
 def _window_func_call(node: ASTNode, state: _PlaceholderCounter) -> WindowFuncExpr:

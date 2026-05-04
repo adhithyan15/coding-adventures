@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.19.0] - 2026-05-04
+
+### Added
+
+- **`SingleRow` plan node** (`plan.py`) — leaf node that yields exactly one
+  empty row; used by `_plan_select` when `SelectStmt.from_` is `None`
+  (SELECT without FROM).  Added to `LogicalPlan` type alias and exported
+  from `__init__.py`.
+
+### Changed
+
+- **`SelectStmt.from_` is now optional** (`ast.py`) — the `from_` field
+  changed from a required `TableRef | DerivedTableRef | RecursiveCTERef` to
+  an optional one that defaults to `None`.  Field ordering was updated so
+  `items` (required) precedes `from_` (optional) to satisfy Python dataclass
+  rules.  Planner now emits `SingleRow()` when `from_` is absent.
+
 ## [0.18.0] - 2026-05-04
 
 ### Added

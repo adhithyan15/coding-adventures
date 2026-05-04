@@ -234,22 +234,49 @@ def apply_unary(op: UnaryOpCode, value: SqlValue) -> SqlValue:
 
 
 def like_match(value: str, pattern: str) -> bool:
-    """Recursive-descent LIKE matcher. Linear in len(value)*len(pattern)."""
-    # Iterative table match — a dynamic-programming approach so the worst
-    # case is still O(n*m) but we avoid the stack blowup of a naive recursion.
-    m, n = len(value), len(pattern)
+    """Case-insensitive LIKE matcher (SQLite / ANSI SQL default behaviour).
+
+    LIKE is case-insensitive for ASCII letters by default in SQLite and in
+    the SQL standard.  Non-ASCII characters (Unicode) are compared
+    case-sensitively here, which matches SQLite's behaviour when the
+    ``NOCASE`` collation is not in effect and ICU is not compiled in.
+
+    Wildcards::
+
+        %   — matches zero or more characters
+        _   — matches exactly one character
+
+    Truth table::
+
+        like_match('Hello', 'hello')   → True   (ASCII case-fold)
+        like_match('Hello', 'HELLO%')  → True
+        like_match('abc',   'a%c')     → True
+        like_match('abc',   'a_c')     → True
+        like_match('ac',    'a_c')     → False  (underscore needs exactly 1)
+        like_match('',      '%')       → True   (% matches empty)
+
+    Algorithm: iterative DP — O(m·n) time, O(m·n) space, no recursion.
+    ``m = len(value)``, ``n = len(pattern)``.
+    ``dp[i][j]`` is True if ``value[:i]`` matches ``pattern[:j]``.
+    """
+    # Normalise to lowercase for case-insensitive ASCII comparison.
+    # The pattern wildcards % and _ are already ASCII so folding them is safe.
+    value_lower = value.lower()
+    pattern_lower = pattern.lower()
+
+    m, n = len(value_lower), len(pattern_lower)
     # dp[i][j] = True if value[:i] matches pattern[:j]
     dp = [[False] * (n + 1) for _ in range(m + 1)]
     dp[0][0] = True
     for j in range(1, n + 1):
-        if pattern[j - 1] == "%":
+        if pattern_lower[j - 1] == "%":
             dp[0][j] = dp[0][j - 1]
     for i in range(1, m + 1):
         for j in range(1, n + 1):
-            p = pattern[j - 1]
+            p = pattern_lower[j - 1]
             if p == "%":
                 # Match zero chars (dp[i][j-1]) or one more char (dp[i-1][j]).
                 dp[i][j] = dp[i][j - 1] or dp[i - 1][j]
-            elif p == "_" or p == value[i - 1]:
+            elif p == "_" or p == value_lower[i - 1]:
                 dp[i][j] = dp[i - 1][j - 1]
     return dp[m][n]
