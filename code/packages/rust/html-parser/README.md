@@ -24,7 +24,7 @@ This first slice intentionally starts small:
   `noscript`
 - parser-approved initial tokenizer contexts for data-state documents and
   foreign-content CDATA or script-state fragments
-- simple implied end tags for `p`, `li`, `dt`, and `dd`
+- simple implied end tags for `p`, `li`, `dt`, `dd`, `option`, and `optgroup`
 - parser diagnostics for unmatched end tags
 
 Future batches can layer the full WHATWG HTML tree-construction insertion modes
