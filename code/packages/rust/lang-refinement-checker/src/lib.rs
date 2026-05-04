@@ -17,6 +17,7 @@
 //! |--------|----|-------------|
 //! | (top-level) | 23-C | Per-binding `Checker`: checks one proof obligation at a time given concrete/predicated/unconstrained evidence. |
 //! | [`function_checker`] | 23-D | Function-scope `FunctionChecker`: walks a CFG, accumulates guard predicates path-by-path, checks each return site. |
+//! | [`module_checker`] | 23-F | Module-scope `ModuleChecker`: extends function-scope checking with cross-function call-site reasoning; uses a `ModuleScope` registry for per-symbol opt-out. |
 //!
 //! ## Architecture
 //!
@@ -26,7 +27,8 @@
 //! lang-refinement-checker     (this crate)
 //!         │  PR 23-C: Checker — per-binding proof obligations
 //!         │  PR 23-D: FunctionChecker — CFG-based, path-sensitive
-//!         │  both lower via ProgramBuilder → constraint-vm
+//!         │  PR 23-F: ModuleChecker — cross-function call-site reasoning
+//!         │  all lower via ProgramBuilder → constraint-vm
 //!         │
 //! constraint-vm ──► constraint-engine ──► SAT / LIA tactics
 //! ```
@@ -77,6 +79,7 @@
 #![warn(rust_2018_idioms)]
 
 pub mod function_checker;
+pub mod module_checker;
 
 use constraint_core::{Logic, Predicate as CorePredicate, Sort};
 use constraint_engine::{Model, SolverResult, Value};
