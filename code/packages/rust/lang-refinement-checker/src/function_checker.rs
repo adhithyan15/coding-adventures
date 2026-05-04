@@ -82,6 +82,41 @@ use lang_refined_types::{Predicate, RefinedType, VarId};
 use crate::{CheckOutcome, Checker, Evidence};
 
 // ---------------------------------------------------------------------------
+// Safety budgets — guard against adversarially-crafted or pathological CFGs.
+// ---------------------------------------------------------------------------
+//
+// The walk_cfg function recurses into CfgNode trees supplied by the compiler
+// frontend.  Without limits, two classes of denial-of-service are possible:
+//
+//   1. **Stack overflow** — a linear chain of N Branch nodes produces an
+//      N-frame call stack.  Rust's default thread stack is 8 MB; frames are
+//      roughly 400-600 bytes, giving ~10 000–15 000 safe frames.  We cap at
+//      MAX_CFG_DEPTH = 64, which is already deeper than any real
+//      if/cond nesting in practice.
+//
+//   2. **Exponential memory** — a balanced binary tree of depth D produces
+//      2^D return sites and 2^D HashMap clones, one per leaf path.
+//      MAX_RETURN_SITES = 1 024 bounds total work to at most 1 K return
+//      sites before we stop and emit Unknown outcomes for the rest.
+//
+// Both guards produce `CheckOutcome::Unknown(...)` so the compiler can still
+// emit runtime checks in lenient mode rather than crashing.
+//
+// The substitute_var helper has its own predicate-depth guard
+// (MAX_PREDICATE_DEPTH = 256) since predicates can also be arbitrarily
+// nested through repeated And/Or/Not wrapping.
+
+/// Maximum CFG branch nesting depth before the walker emits Unknown.
+const MAX_CFG_DEPTH: usize = 64;
+
+/// Maximum total number of return sites before the walker stops traversal.
+const MAX_RETURN_SITES: usize = 1_024;
+
+/// Maximum predicate nesting depth before substitute_var gives up.
+/// Returns `Predicate::Opaque` which causes the checker to emit Unknown.
+const MAX_PREDICATE_DEPTH: usize = 256;
+
+// ---------------------------------------------------------------------------
 // BranchGuard — a guard condition on a named variable
 // ---------------------------------------------------------------------------
 
@@ -375,7 +410,7 @@ impl FunctionChecker {
         }
 
         let mut return_sites = Vec::new();
-        self.walk_cfg(cfg, &init_scope, &sig.return_type, &mut return_sites);
+        self.walk_cfg(cfg, &init_scope, &sig.return_type, &mut return_sites, 0);
         FunctionCheckResult { return_sites }
     }
 
@@ -384,6 +419,10 @@ impl FunctionChecker {
     // `scope` maps each function variable to the predicates known to hold
     // about it along the current path.  At each Branch we clone the scope
     // and push the guard (or its negation) before recursing.
+    //
+    // `depth` tracks the current call-stack depth so we can abort before
+    // overflowing.  `out.len()` tracks total return sites so we can abort
+    // before exploding memory on exponentially wide trees.
 
     fn walk_cfg(
         &mut self,
@@ -391,7 +430,40 @@ impl FunctionChecker {
         scope: &HashMap<String, Vec<Predicate>>,
         return_type: &RefinedType,
         out: &mut Vec<ReturnSiteOutcome>,
+        depth: usize,
     ) {
+        // ── Safety guard 1: CFG nesting depth ────────────────────────────────
+        //
+        // A linear chain of N Branch nodes requires N stack frames.  Cap at
+        // MAX_CFG_DEPTH to prevent a stack overflow on pathologically deep
+        // (or adversarially generated) if/cond trees.
+        if depth > MAX_CFG_DEPTH {
+            out.push(ReturnSiteOutcome {
+                label: "cfg-depth-limit".into(),
+                outcome: CheckOutcome::Unknown(format!(
+                    "CFG nesting depth exceeds {MAX_CFG_DEPTH}; \
+                     cannot prove return annotation — emitting runtime check"
+                )),
+            });
+            return;
+        }
+
+        // ── Safety guard 2: total return-site count ───────────────────────────
+        //
+        // A balanced binary tree of depth D produces 2^D return sites.  Cap
+        // at MAX_RETURN_SITES to prevent exponential memory consumption from
+        // scope-HashMap cloning on each branch.
+        if out.len() >= MAX_RETURN_SITES {
+            out.push(ReturnSiteOutcome {
+                label: "return-site-limit".into(),
+                outcome: CheckOutcome::Unknown(format!(
+                    "return-site count exceeds {MAX_RETURN_SITES}; \
+                     stopping traversal — emitting runtime check for remaining sites"
+                )),
+            });
+            return;
+        }
+
         match node {
             // ── Branch: fork the scope, recurse both arms ─────────────────────
             CfgNode::Branch { guard, then_node, else_node } => {
@@ -402,7 +474,7 @@ impl FunctionChecker {
                         .entry(guard.var.clone())
                         .or_default()
                         .push(guard.predicate.clone());
-                    self.walk_cfg(then_node, &then_scope, return_type, out);
+                    self.walk_cfg(then_node, &then_scope, return_type, out, depth + 1);
                 }
 
                 // Else-arm: negation of guard holds.
@@ -415,7 +487,7 @@ impl FunctionChecker {
                         .entry(guard.var.clone())
                         .or_default()
                         .push(Predicate::not(guard.predicate.clone()));
-                    self.walk_cfg(else_node, &else_scope, return_type, out);
+                    self.walk_cfg(else_node, &else_scope, return_type, out, depth + 1);
                 }
             }
 
@@ -501,23 +573,61 @@ fn build_evidence(
 ///
 /// After `substitute_var(pred, "x", "__v")` the `LinearCmp` references
 /// `VarId("__v")`, which matches the checker's sentinel.
+///
+/// ## Depth limit
+///
+/// Predicates can be arbitrarily nested through repeated `And`/`Or`/`Not`
+/// wrapping.  This function caps recursion at `MAX_PREDICATE_DEPTH = 256`.
+/// If the limit is reached, the predicate is replaced with
+/// `Predicate::Opaque { .. }`, which causes `Checker::check` to return
+/// `Unknown` and the caller to emit a runtime check.  This is safe and
+/// sound: it never claims `ProvenSafe` when the predicate was not fully
+/// analysed.
 pub fn substitute_var(pred: &Predicate, from: &str, to: &str) -> Predicate {
+    substitute_var_depth(pred, from, to, 0)
+}
+
+/// Internal depth-tracked implementation of [`substitute_var`].
+///
+/// ## Design note — depth check placement
+///
+/// The depth limit is applied **only inside the recursive match arms**
+/// (`And`, `Or`, `Not`), not at the top of the function.  Leaf variants
+/// (`Range`, `Membership`, `Opaque`, `LinearCmp`) carry no recursion and
+/// can never overflow the stack, so they must be returned unchanged even
+/// when `depth > MAX_PREDICATE_DEPTH`.
+///
+/// Placing the guard at the top of the function — before the match — is
+/// incorrect because it would convert `Range { lo: None, hi: None }` (a
+/// tautology) into `Opaque` at deep levels, causing the `Predicate::and`
+/// smart constructor to see two `Opaque` children rather than one `Opaque`
+/// and one dropped tautology, yielding `And([Opaque, Opaque])` instead of
+/// the expected flat `Opaque`.
+fn substitute_var_depth(pred: &Predicate, from: &str, to: &str, depth: usize) -> Predicate {
+    /// Inline helper: the Opaque sentinel returned when depth is exceeded.
+    macro_rules! depth_exceeded_opaque {
+        () => {
+            Predicate::Opaque {
+                display: format!(
+                    "predicate nesting depth exceeds {MAX_PREDICATE_DEPTH} in \
+                     substitute_var; variable substitution skipped — \
+                     runtime check emitted"
+                ),
+            }
+        };
+    }
+
     match pred {
-        // No variable references in these variants — return as-is.
+        // ── Leaf variants: no recursion, no depth check needed ────────────────
+        //
+        // Returned as-is regardless of `depth`.  These variants cannot
+        // overflow the stack because they do not call substitute_var_depth
+        // recursively.
         Predicate::Range { .. }
         | Predicate::Membership { .. }
         | Predicate::Opaque { .. } => pred.clone(),
 
-        // Recurse through compound predicates.
-        Predicate::And(parts) => {
-            Predicate::and(parts.iter().map(|p| substitute_var(p, from, to)).collect())
-        }
-        Predicate::Or(parts) => {
-            Predicate::or(parts.iter().map(|p| substitute_var(p, from, to)).collect())
-        }
-        Predicate::Not(inner) => Predicate::not(substitute_var(inner, from, to)),
-
-        // Remap the matching VarId in each coefficient.
+        // LinearCmp: remap variable names — still a leaf (no recursion).
         Predicate::LinearCmp { coefs, op, rhs } => {
             let new_coefs: Vec<(VarId, i128)> = coefs
                 .iter()
@@ -531,6 +641,30 @@ pub fn substitute_var(pred: &Predicate, from: &str, to: &str) -> Predicate {
                 })
                 .collect();
             Predicate::LinearCmp { coefs: new_coefs, op: *op, rhs: *rhs }
+        }
+
+        // ── Recursive variants: check depth before recursing ──────────────────
+        Predicate::And(parts) => {
+            if depth > MAX_PREDICATE_DEPTH {
+                return depth_exceeded_opaque!();
+            }
+            Predicate::and(
+                parts.iter().map(|p| substitute_var_depth(p, from, to, depth + 1)).collect(),
+            )
+        }
+        Predicate::Or(parts) => {
+            if depth > MAX_PREDICATE_DEPTH {
+                return depth_exceeded_opaque!();
+            }
+            Predicate::or(
+                parts.iter().map(|p| substitute_var_depth(p, from, to, depth + 1)).collect(),
+            )
+        }
+        Predicate::Not(inner) => {
+            if depth > MAX_PREDICATE_DEPTH {
+                return depth_exceeded_opaque!();
+            }
+            Predicate::not(substitute_var_depth(inner, from, to, depth + 1))
         }
     }
 }
@@ -1172,5 +1306,121 @@ mod tests {
         assert_eq!(result.return_sites.len(), 2);
         assert!(result.all_proven_safe(),
             "a ∈ [0,100) and literal 50 ∈ [0,100); both safe");
+    }
+
+    // ─── 23. Safety guard: CFG depth limit triggers Unknown ───────────────────
+    //
+    // Build a linear chain of 66 Branch nodes (just past MAX_CFG_DEPTH = 64).
+    // The walker must emit Unknown rather than overflowing the stack.
+
+    #[test]
+    fn cfg_depth_limit_produces_unknown() {
+        let sig = FunctionSignature {
+            params: vec![("x".to_string(), unrefined_int())],
+            return_type: int_ann(range(0, 100)),
+        };
+
+        // Build a chain of (MAX_CFG_DEPTH + 2) nested branches.
+        // Only the deepest node is a Return; all others are Branch.
+        let depth_to_test = MAX_CFG_DEPTH + 2; // 66 — past the limit
+        let mut node = CfgNode::Return(ReturnValue::Literal(42));
+        for _ in 0..depth_to_test {
+            node = CfgNode::Branch {
+                guard: BranchGuard {
+                    var: "x".to_string(),
+                    predicate: range_hi(0),
+                },
+                then_node: Box::new(CfgNode::Return(ReturnValue::Literal(0))),
+                else_node: Box::new(node),
+            };
+        }
+
+        let mut fc = FunctionChecker::new();
+        let result = fc.check_function(&sig, &node);
+
+        // At least one outcome must be Unknown (the depth-limit sentinel).
+        assert!(
+            result.return_sites.iter().any(|r| r.outcome.is_unknown()),
+            "deep CFG should produce at least one Unknown outcome; got: {:?}",
+            result.return_sites.iter().map(|r| &r.outcome).collect::<Vec<_>>()
+        );
+    }
+
+    // ─── 24. Safety guard: return-site limit triggers Unknown ─────────────────
+    //
+    // Build a balanced binary tree of 11 levels deep (2^11 = 2048 return
+    // sites — past MAX_RETURN_SITES = 1024).  The walker must stop early
+    // and emit Unknown rather than exhausting memory.
+
+    #[test]
+    fn return_site_limit_produces_unknown() {
+        let sig = FunctionSignature {
+            params: vec![("x".to_string(), unrefined_int())],
+            return_type: unrefined_int(), // unrefined so each site is ProvenSafe or Unknown
+        };
+
+        // Build a complete binary tree: 11 levels → 2^11 = 2048 leaves.
+        fn build_tree(depth: usize) -> CfgNode {
+            if depth == 0 {
+                return CfgNode::Return(ReturnValue::Literal(0));
+            }
+            CfgNode::Branch {
+                guard: BranchGuard {
+                    var: "x".to_string(),
+                    predicate: Predicate::Range {
+                        lo: None, hi: Some(0), inclusive_hi: false,
+                    },
+                },
+                then_node: Box::new(build_tree(depth - 1)),
+                else_node: Box::new(build_tree(depth - 1)),
+            }
+        }
+
+        let cfg = build_tree(11); // would produce 2048 sites without the limit
+
+        let mut fc = FunctionChecker::new();
+        let result = fc.check_function(&sig, &cfg);
+
+        // The walker must have stopped at MAX_RETURN_SITES.
+        assert!(
+            result.return_sites.len() <= MAX_RETURN_SITES + 1,
+            "return-site count {} exceeds MAX_RETURN_SITES {}",
+            result.return_sites.len(), MAX_RETURN_SITES
+        );
+        // At least one Unknown (the limit-sentinel).
+        assert!(
+            result.return_sites.iter().any(|r| r.outcome.is_unknown()),
+            "should have a limit-sentinel Unknown; got {} sites",
+            result.return_sites.len()
+        );
+    }
+
+    // ─── 25. Safety guard: substitute_var depth limit returns Opaque ──────────
+    //
+    // Build a predicate nested deeper than MAX_PREDICATE_DEPTH via repeated
+    // Not-wrapping.  substitute_var must return Opaque rather than overflowing.
+
+    #[test]
+    fn substitute_var_depth_limit_returns_opaque() {
+        // Construct a predicate of depth MAX_PREDICATE_DEPTH + 5 via Not-wrapping.
+        let inner = Predicate::LinearCmp {
+            coefs: vec![(VarId::new("x"), 1)],
+            op: CmpOp::Lt,
+            rhs: 0,
+        };
+        let mut pred = inner;
+        for _ in 0..(MAX_PREDICATE_DEPTH + 5) {
+            // Each Not wraps adds 1 level of depth.  Double-negation-elimination
+            // would collapse two consecutive Nots, so we wrap in And to prevent it.
+            pred = Predicate::And(vec![pred, Predicate::Range { lo: None, hi: None, inclusive_hi: true }]);
+        }
+
+        let result = substitute_var(&pred, "x", "__v");
+
+        // The result must be Opaque (the depth-limit sentinel).
+        assert!(
+            matches!(result, Predicate::Opaque { .. }),
+            "deeply nested predicate should produce Opaque; got: {result:?}"
+        );
     }
 }
