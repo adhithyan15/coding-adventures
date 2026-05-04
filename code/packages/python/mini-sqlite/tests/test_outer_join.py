@@ -346,3 +346,129 @@ def test_right_outer_join_where_null_left(conn) -> None:
     """).fetchall()
 
     assert rows == [(None, "orphan_order")]
+
+
+# ---------------------------------------------------------------------------
+# FULL OUTER JOIN
+# ---------------------------------------------------------------------------
+
+
+def test_full_outer_join_basic(conn) -> None:
+    """FULL JOIN includes matched rows, unmatched left rows, and unmatched right rows.
+
+    Add an orphan order (customer_id=99, no matching customer).
+
+    Expected (4 rows):
+        Alice  alice_order    (matched)
+        Bob    bob_order      (matched)
+        Carol  NULL           (left unmatched)
+        NULL   orphan_order   (right unmatched)
+    """
+    conn.execute(
+        "INSERT INTO orders (order_id, customer_id, product) VALUES (30, 99, 'orphan_order')"
+    )
+    rows = conn.execute("""
+        SELECT c.name, o.product
+        FROM customers AS c
+        FULL OUTER JOIN orders AS o ON c.id = o.customer_id
+    """).fetchall()
+
+    assert len(rows) == 4
+    by_name = {r[0]: r[1] for r in rows if r[0] is not None}
+    orphan_rows = [r for r in rows if r[0] is None]
+
+    assert by_name["Alice"] == "alice_order"
+    assert by_name["Bob"] == "bob_order"
+    assert by_name["Carol"] is None
+    assert len(orphan_rows) == 1
+    assert orphan_rows[0][1] == "orphan_order"
+
+
+def test_full_join_keyword_alone(conn) -> None:
+    """FULL JOIN (without OUTER) is identical to FULL OUTER JOIN."""
+    conn.execute(
+        "INSERT INTO orders (order_id, customer_id, product) VALUES (30, 99, 'orphan_order')"
+    )
+    rows = conn.execute("""
+        SELECT c.name, o.product
+        FROM customers AS c
+        FULL JOIN orders AS o ON c.id = o.customer_id
+    """).fetchall()
+
+    assert len(rows) == 4
+    orphan_rows = [r for r in rows if r[0] is None]
+    assert len(orphan_rows) == 1
+    assert orphan_rows[0][1] == "orphan_order"
+
+
+def test_full_outer_join_no_orphans(conn) -> None:
+    """FULL JOIN where all rows match: same result as INNER JOIN (no NULL rows)."""
+    # Delete Carol so every customer has an order and vice versa
+    conn.execute("DELETE FROM customers WHERE id = 3")
+    rows = conn.execute("""
+        SELECT c.name, o.product
+        FROM customers AS c
+        FULL OUTER JOIN orders AS o ON c.id = o.customer_id
+        ORDER BY c.name
+    """).fetchall()
+
+    assert rows == [("Alice", "alice_order"), ("Bob", "bob_order")]
+
+
+def test_full_outer_join_left_empty(conn) -> None:
+    """FULL JOIN with empty left table: all right rows appear with NULL left cols."""
+    conn.execute("DELETE FROM customers")
+    rows = conn.execute("""
+        SELECT c.name, o.product
+        FROM customers AS c
+        FULL OUTER JOIN orders AS o ON c.id = o.customer_id
+    """).fetchall()
+
+    assert len(rows) == 2
+    for row in rows:
+        assert row[0] is None
+
+
+def test_full_outer_join_right_empty(conn) -> None:
+    """FULL JOIN with empty right table: all left rows appear with NULL right cols."""
+    conn.execute("DELETE FROM orders")
+    rows = conn.execute("""
+        SELECT c.name, o.product
+        FROM customers AS c
+        FULL OUTER JOIN orders AS o ON c.id = o.customer_id
+        ORDER BY c.name
+    """).fetchall()
+
+    assert len(rows) == 3
+    for row in rows:
+        assert row[1] is None
+
+
+def test_full_outer_join_where_null_right(conn) -> None:
+    """WHERE product IS NULL selects only unmatched left rows (Carol)."""
+    conn.execute(
+        "INSERT INTO orders (order_id, customer_id, product) VALUES (30, 99, 'orphan_order')"
+    )
+    rows = conn.execute("""
+        SELECT c.name
+        FROM customers AS c
+        FULL OUTER JOIN orders AS o ON c.id = o.customer_id
+        WHERE o.product IS NULL
+    """).fetchall()
+
+    assert rows == [("Carol",)]
+
+
+def test_full_outer_join_where_null_left(conn) -> None:
+    """WHERE c.name IS NULL selects only unmatched right rows."""
+    conn.execute(
+        "INSERT INTO orders (order_id, customer_id, product) VALUES (30, 99, 'orphan_order')"
+    )
+    rows = conn.execute("""
+        SELECT c.name, o.product
+        FROM customers AS c
+        FULL OUTER JOIN orders AS o ON c.id = o.customer_id
+        WHERE c.name IS NULL
+    """).fetchall()
+
+    assert rows == [(None, "orphan_order")]

@@ -168,9 +168,10 @@ class TestJoin:
         assert len(opens) == 2
         assert len(closes) == 2
 
-    def test_full_join_raises(self) -> None:
-        from sql_codegen.errors import UnsupportedNode
-
+    def test_full_join_compiles(self) -> None:
+        # FULL OUTER JOIN uses a two-pass strategy (LEFT JOIN + right-anti-join).
+        # It must emit the outer-join match-tracking instructions and open four
+        # cursors (two per pass).
         plan = Project(
             input=Join(
                 left=Scan(table="a", alias="a"),
@@ -182,12 +183,15 @@ class TestJoin:
             ),
             items=(ProjectionItem(expr=Column("a", "k"), alias="k"),),
         )
-        try:
-            compile(plan)
-        except UnsupportedNode:
-            pass
-        else:
-            raise AssertionError("expected UnsupportedNode for FULL JOIN")
+        prog = compile(plan)
+        assert any(isinstance(i, JoinBeginRow) for i in prog.instructions)
+        assert any(isinstance(i, JoinSetMatched) for i in prog.instructions)
+        assert any(isinstance(i, JoinIfMatched) for i in prog.instructions)
+        # Two passes → four OpenScan / CloseScan total.
+        opens = [i for i in prog.instructions if isinstance(i, OpenScan)]
+        closes = [i for i in prog.instructions if isinstance(i, CloseScan)]
+        assert len(opens) == 4
+        assert len(closes) == 4
 
 
 class TestPostProcessing:
