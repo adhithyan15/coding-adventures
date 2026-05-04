@@ -1,14 +1,21 @@
-# MX04 — `compute-runtime`: Planner, Registry, Cost Model
+# MX04 — `matrix-runtime`: Planner, Registry, Cost Model
 
 ## Status
 
-Draft — V1 specification.  Read [MX00](MX00-matrix-execution-overview.md),
+Draft — V1 specification.
+
+> **Naming note**: this crate was originally proposed as `compute-runtime`,
+> but that name was already taken by the G05 GPU-runtime simulator
+> (Vulkan-inspired device-discovery / command-recording crate).  The
+> matrix-execution-layer crate ships as **`matrix-runtime`** to
+> avoid the workspace conflict.  All references to `compute-runtime`
+> in MX00–MX04 have been updated.  Read [MX00](MX00-matrix-execution-overview.md),
 [MX01](MX01-matrix-ir.md), [MX02](MX02-compute-ir.md), and
 [MX03](MX03-executor-protocol.md) first.
 
 ## Purpose
 
-`compute-runtime` is the **brain** of the matrix execution layer.  It:
+`matrix-runtime` is the **brain** of the matrix execution layer.  It:
 
 1. **Owns the registry** of available executors and their capabilities.
 2. **Lowers `MatrixIR` to `ComputeIR`** by running the planner.
@@ -313,7 +320,7 @@ fn block_on<F: Future>(mut f: F) -> F::Output {
 
 This is sufficient because `LocalTransport` resolves immediately.  Network
 transports will require a real reactor; that lands in the transport
-crates themselves, not in `compute-runtime`.
+crates themselves, not in `matrix-runtime`.
 
 ## CPU executor
 
@@ -353,7 +360,7 @@ pub enum PlanError {
 
 ## Test methodology
 
-`compute-runtime` ships:
+`matrix-runtime` ships:
 
 1. **Synthetic-profile tests** — register mock executors with hand-set
    profiles, plan small graphs, assert placement decisions match

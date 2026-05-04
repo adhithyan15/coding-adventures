@@ -287,6 +287,7 @@ members = [
     "gpu-runtime",
     "image-gpu-core",
     "matrix-ir",
+    "matrix-runtime",
     "metal-compute",
     "paint-metal",
     "paint-vm-direct2d-c",
