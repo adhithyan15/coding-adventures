@@ -32,16 +32,30 @@ slot neatly into the same dispatch flow as built-ins.
 
 from __future__ import annotations
 
+from cas_simplify import AssumptionContext
 from symbolic_ir import DEFINE, LIST, IRApply, IRNode, IRSymbol
 
 from symbolic_vm.backend import Backend
 
 
 class VM:
-    """Evaluates symbolic IR trees under a policy supplied by a Backend."""
+    """Evaluates symbolic IR trees under a policy supplied by a Backend.
+
+    Attributes
+    ----------
+    backend:
+        The evaluation policy (symbolic, strict-numeric, etc.).
+    assumptions:
+        Per-session :class:`~cas_simplify.assumptions.AssumptionContext`
+        that records facts declared via ``assume(...)`` and removed via
+        ``forget(...)``.  Handlers read from it via ``vm.assumptions``.
+    """
 
     def __init__(self, backend: Backend) -> None:
         self.backend = backend
+        # Assumption context lives on the VM so every handler in the same
+        # session shares the same declared facts.
+        self.assumptions: AssumptionContext = AssumptionContext()
 
     # ------------------------------------------------------------------
     # Public entry points

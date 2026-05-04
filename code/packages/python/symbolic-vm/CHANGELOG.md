@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.41.0 — 2026-05-04
+
+**Phase 21 — Assumption framework, `radcan`, `logcontract`/`logexpand`,
+`exponentialize`/`demoivre`.**
+
+Bumps `coding-adventures-cas-simplify` to `>=0.3.0` and
+`coding-adventures-symbolic-ir` to `>=0.9.0`.
+
+### Changes in `vm.py`
+
+- `VM.__init__` gains `self.assumptions = AssumptionContext()`.  This
+  per-session mutable store is shared across all handlers so `assume(x > 0)`
+  recorded in one handler call is visible to `radcan`, `logexpand`, etc. in
+  the same session.
+
+### New handlers in `cas_handlers.py`
+
+Nine new handlers registered in `build_cas_handler_table()`:
+
+| Head              | Handler                 | Action                                   |
+|-------------------|-------------------------|------------------------------------------|
+| `Assume`          | `assume_handler`        | Record a relational or property fact     |
+| `Forget`          | `forget_handler`        | Remove a specific fact or clear all      |
+| `Is`              | `is_handler`            | → "true" / "false" / "unknown"           |
+| `Sign`            | `sign_handler`          | → 1 / -1 / 0 / unevaluated              |
+| `Radcan`          | `radcan_handler`        | Radical canonicalization                 |
+| `LogContract`     | `logcontract_handler`   | Combine log sums into one log            |
+| `LogExpand`       | `logexpand_handler`     | Expand log over products and powers      |
+| `Exponentialize`  | `exponentialize_handler`| Trig/hyp → exp form                     |
+| `DeMoivre`        | `demoivre_handler`      | exp(a+bi) → exp(a)·(cos b + i·sin b)    |
+
+---
+
 ## 0.40.0 — 2026-05-04
 
 **Phase 20 — Upgraded `limit_handler`: L'Hôpital, ±∞, indeterminate forms, one-sided limits.**
