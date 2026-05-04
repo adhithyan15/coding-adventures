@@ -28,7 +28,7 @@ from vm_core import VMCore, VMMetrics
 
 from twig.ast_extract import extract_program
 from twig.compiler import compile_program
-from twig.errors import TwigRuntimeError
+from twig.errors import TwigExitRequest, TwigRuntimeError
 from twig.heap import NIL, Heap, HeapHandle
 from twig.parser import parse_twig
 
@@ -253,7 +253,7 @@ class TwigVM:
                 raw = sys.stdin.buffer.read(1)
                 return -1 if not raw else raw[0]
             if num == 10:  # exit
-                sys.exit(_int(args[1]))
+                raise TwigExitRequest(_int(args[1]))
             raise TwigRuntimeError(f"unknown syscall number: {num}")
 
         # ── Heap construction (compiler-emitted plumbing) ─────────────

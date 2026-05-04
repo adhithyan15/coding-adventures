@@ -177,10 +177,21 @@ def resolve_modules(
 # ── Pass 1: discovery ─────────────────────────────────────────────────────
 
 
+# Maximum allowed depth of the import chain during discovery.  This
+# guards against a non-cyclic but extremely deep import chain that
+# would exhaust Python's default recursion limit (~1000) before
+# Pass 2 cycle detection can fire.  200 levels is more than any
+# real program needs while still fitting within the default limit
+# even if the call stack already has some depth from the caller.
+_MAX_IMPORT_DEPTH: int = 200
+
+
 def _discover(
     name: str,
     search_paths: Sequence[Path],
     discovered: dict[str, ResolvedModule],
+    *,
+    _depth: int = 0,
 ) -> None:
     """Recursively load and validate ``name`` and all its imports.
 
@@ -190,7 +201,17 @@ def _discover(
 
     The synthetic ``host`` module is materialised without touching
     the file system.
+
+    ``_depth`` tracks the current recursion depth so we can raise a
+    clean :class:`TwigCompileError` before hitting Python's recursion
+    limit on pathologically deep (but non-cyclic) import chains.
     """
+    if _depth > _MAX_IMPORT_DEPTH:
+        raise TwigCompileError(
+            f"import chain exceeds maximum depth ({_MAX_IMPORT_DEPTH}) "
+            f"while resolving module {name!r}"
+        )
+
     if name in discovered:
         return  # already resolved on a previous branch
 
@@ -210,7 +231,7 @@ def _discover(
     # future visits to ``name`` (via a diamond import) short-circuit
     # above without re-parsing the file.
     for imp in program.module.imports:
-        _discover(imp, search_paths, discovered)
+        _discover(imp, search_paths, discovered, _depth=_depth + 1)
 
 
 # ── Pass 2: topological ordering ─────────────────────────────────────────
@@ -353,8 +374,22 @@ def _module_name_to_relpath(name: str) -> Path:
     separators so module hierarchy mirrors directory hierarchy
     on every OS — ``pathlib.Path`` normalises the result for
     the host platform.
+
+    Security note
+    ~~~~~~~~~~~~~
+    Each path component is validated before constructing the
+    ``Path`` object so that crafted module names like
+    ``foo/../../../etc/passwd`` cannot escape the search root.
+    Empty components, ``.``, and ``..`` are all rejected here
+    rather than relying on the caller to check containment.
     """
     parts = name.split("/")
+    for part in parts:
+        if not part or part in (".", ".."):
+            raise TwigCompileError(
+                f"invalid module name {name!r}: path components must not be "
+                "empty, '.', or '..'"
+            )
     return Path(*parts).with_suffix(".tw")
 
 
@@ -364,12 +399,31 @@ def _find_module_file(name: str, search_paths: Sequence[Path]) -> Path:
     Search paths are tried in order; the first hit wins.  This
     matches Python's ``sys.path`` and Rust's ``--extern``
     semantics — earlier paths shadow later ones.
+
+    Security note
+    ~~~~~~~~~~~~~
+    After constructing the candidate path we resolve it and
+    confirm it is contained within the search-path directory.
+    This is a second-line defence against path-traversal attacks
+    (the first line is the component validation in
+    ``_module_name_to_relpath``).  An attacker who somehow
+    slipped past the component check (e.g. via a symlink in the
+    search tree pointing outside) would still be caught here.
     """
     rel = _module_name_to_relpath(name)
     tried: list[str] = []
     for sp in search_paths:
-        candidate = sp / rel
+        candidate = (sp / rel).resolve()
+        sp_resolved = sp.resolve()
         tried.append(str(candidate))
+        # Reject any path that escapes the search root.
+        try:
+            candidate.relative_to(sp_resolved)
+        except ValueError:
+            raise TwigCompileError(
+                f"module name {name!r} resolves to a path outside "
+                f"the search root {sp_resolved}"
+            )
         if candidate.is_file():
             return candidate
     raise TwigCompileError(

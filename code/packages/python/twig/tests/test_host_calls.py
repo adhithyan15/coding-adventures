@@ -23,7 +23,7 @@ from twig import TwigVM
 from twig.ast_extract import extract_program
 from twig.ast_nodes import Lambda
 from twig.compiler import _HOST_SYSCALLS, _is_module_qualified, compile_program
-from twig.errors import TwigCompileError, TwigRuntimeError
+from twig.errors import TwigCompileError, TwigExitRequest, TwigRuntimeError
 from twig.free_vars import free_vars
 from twig.parser import parse_twig
 
@@ -190,6 +190,21 @@ class TestVMSyscall:
         with patch("sys.stdin", self._fake_stdin(b"")):
             _, result = vm.run("(host/read-byte)")
         assert result == -1
+
+    def test_exit_raises_twig_exit_request(self) -> None:
+        """SYSCALL 10 must raise TwigExitRequest (not sys.exit) so embedded
+        hosts can catch it without the entire Python process dying."""
+        vm = TwigVM()
+        with pytest.raises(TwigExitRequest) as exc_info:
+            vm.run("(host/exit 42)")
+        assert exc_info.value.code == 42
+
+    def test_exit_code_zero(self) -> None:
+        """Exit code 0 also raises TwigExitRequest."""
+        vm = TwigVM()
+        with pytest.raises(TwigExitRequest) as exc_info:
+            vm.run("(host/exit 0)")
+        assert exc_info.value.code == 0
 
     def test_unknown_syscall_raises_runtime_error(self) -> None:
         """A syscall number not in {1, 2, 10} must raise TwigRuntimeError.

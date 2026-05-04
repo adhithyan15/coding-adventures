@@ -30,6 +30,7 @@ from twig.module_resolver import (
 from twig.errors import (
     TwigCompileError,
     TwigError,
+    TwigExitRequest,
     TwigParseError,
     TwigRuntimeError,
 )
@@ -64,4 +65,5 @@ __all__ = [
     "TwigParseError",
     "TwigCompileError",
     "TwigRuntimeError",
+    "TwigExitRequest",
 ]
