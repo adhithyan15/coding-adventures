@@ -1,5 +1,30 @@
 # Changelog
 
+## 1.13.0 — 2026-05-04
+
+### Added
+
+- **`glob(pattern, string)` scalar function** (`scalar_functions.py`) —
+  registers the built-in `glob` function used by the `GLOB` operator.
+  Case-sensitive Unix-style pattern matching via `fnmatch.fnmatchcase`.
+  Returns a Python `bool` (coerced to `1`/`0` on output) so that
+  `UnaryOp.NOT` and WHERE-clause `JumpIfFalse` both work correctly with it.
+  NULL arguments propagate to NULL.
+
+### Fixed
+
+- **`JumpIfFalse` / `JumpIfTrue` now use proper SQL truthiness** (`vm.py`) —
+  previously only Python `False` (identity) was treated as falsy; now any
+  value for which `not v` is true (including integer `0`, float `0.0`) is
+  treated as falsy. This fixes GLOB and any other scalar predicate that
+  returns an integer rather than a Python bool, and correctly handles
+  `WHERE 0` / `WHERE 1` literals.
+
+- **`like_match` is now case-insensitive for ASCII** (`operators.py`) —
+  ANSI SQL and SQLite both define LIKE as case-insensitive by default for
+  ASCII characters. The DP table now normalises both value and pattern to
+  lowercase before comparison, preserving `%` / `_` wildcard semantics.
+
 ## 1.12.0 — 2026-05-04
 
 ### Added

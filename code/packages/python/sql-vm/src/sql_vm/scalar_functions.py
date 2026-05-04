@@ -272,6 +272,57 @@ def _cast_fn(x: SqlValue, target_type: SqlValue) -> SqlValue:
 
 
 # ---------------------------------------------------------------------------
+# GLOB — case-sensitive Unix-style glob pattern matching
+# ---------------------------------------------------------------------------
+#
+# SQL form:    string GLOB pattern
+# Internal:    glob(pattern, string)
+#
+# The argument order matches SQLite's C API: ``glob(Y, X)`` where Y is the
+# pattern and X is the string being tested.  This reversal from the SQL form
+# is conventional (LIKE is also internally ``like(pattern, string)``).
+#
+# Character classes:
+#   *   — matches any sequence of zero or more characters
+#   ?   — matches exactly one character
+#
+# Unlike LIKE, GLOB is case-sensitive.  Python's ``fnmatch.fnmatchcase``
+# implements exactly these semantics.
+
+
+@register("glob")
+def _glob_fn(pattern: SqlValue, string: SqlValue) -> SqlValue:
+    """Case-sensitive glob pattern match.
+
+    Returns 1 (truthy) if *string* matches *pattern*, 0 otherwise.
+    NULL arguments propagate to NULL.
+
+    Truth table::
+
+        glob('J*',   'John')   → 1   (starts with J)
+        glob('J*',   'john')   → 0   (case-sensitive)
+        glob('Jo?n', 'John')   → 1   (? matches h)
+        glob('Jo?n', 'Jon')    → 0   (? needs exactly one char)
+        glob('*',    '')        → 1   (* matches empty string)
+        glob(NULL,   'x')       → NULL
+        glob('*',    NULL)      → NULL
+    """
+    import fnmatch  # stdlib — import here to avoid top-level cost when unused
+
+    if pattern is None or string is None:
+        return None
+    if not isinstance(pattern, str) or not isinstance(string, str):
+        # Non-string operands: convert to string first (SQLite behaviour)
+        pattern = str(pattern) if not isinstance(pattern, str) else pattern
+        string = str(string) if not isinstance(string, str) else string
+    # Return a Python bool so that NOT GLOB compiles correctly via UnaryOp.NOT,
+    # which expects a boolean operand.  The cursor layer's _coerce_value()
+    # converts True→1 and False→0 on the way out, so SELECT results still
+    # show 1/0 rather than True/False — matching SQLite's output format.
+    return fnmatch.fnmatchcase(string, pattern)
+
+
+# ---------------------------------------------------------------------------
 # Numeric functions
 # ---------------------------------------------------------------------------
 

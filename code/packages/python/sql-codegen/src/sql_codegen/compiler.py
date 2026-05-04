@@ -69,6 +69,7 @@ from sql_planner import (
     Rollback,
     ScalarSubquery,
     Scan,
+    SingleRow,
     Sort,
     UnaryExpr,
     Union,
@@ -806,6 +807,13 @@ def _compile_source(
             out.extend(body(ctx))
             out.extend([Jump(label=loop), Label(name=end), CloseScan(cursor_id=cid)])
             return out
+
+        case SingleRow():
+            # SELECT without FROM — body executes exactly once with no cursor.
+            # There is no loop: no AdvanceCursor, no CloseScan, no jump.
+            # The body directly emits its SELECT-list expressions against the
+            # "empty" row context (which only contains literal/scalar values).
+            return body(ctx)
 
         case _:
             raise UnsupportedNode(type(p).__name__)

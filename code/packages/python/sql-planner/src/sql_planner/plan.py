@@ -78,6 +78,29 @@ class EmptyResult:
     columns: tuple[str, ...] = ()
 
 
+@dataclass(frozen=True, slots=True)
+class SingleRow:
+    """Leaf node: yields exactly one empty row. Used for SELECT without FROM.
+
+    This is the semantic equivalent of SQLite's internal "dual" table — a
+    conceptual source of exactly one row with no columns. Any SELECT items
+    above it are evaluated exactly once, making it the correct scan base for
+    queries like::
+
+        SELECT 1 + 1
+        SELECT UPPER('hello')
+        SELECT CAST(3.14 AS INTEGER)
+        SELECT DATE('now')
+
+    The codegen executes the body function once with no cursor loop. No
+    AdvanceCursor, CloseScan, or jump instructions are emitted. This means
+    expressions in the SELECT list that reference columns will raise at
+    runtime (there are no columns on a rowless source), but the planner has
+    already validated that no unqualified column references appear in a
+    from-less SELECT during column resolution.
+    """
+
+
 # ---- Transform nodes ------------------------------------------------------
 
 
@@ -610,6 +633,7 @@ LogicalPlan = (
     Scan
     | IndexScan
     | EmptyResult
+    | SingleRow
     | DerivedTable
     | WorkingSetScan
     | RecursiveCTE
@@ -657,7 +681,7 @@ def children(node: LogicalPlan) -> tuple[LogicalPlan, ...]:
     plan nodes.
     """
     match node:
-        case Scan() | IndexScan() | EmptyResult() | CreateTable() | DropTable():
+        case Scan() | IndexScan() | EmptyResult() | SingleRow() | CreateTable() | DropTable():
             return ()
         case CreateIndex() | DropIndex():
             return ()

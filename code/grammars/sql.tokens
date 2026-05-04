@@ -121,6 +121,8 @@ keywords:
   EACH
   ROW
   RETURNING
+  CAST
+  GLOB
 
 skip:
   WHITESPACE    = /[ \t\r\n]+/
