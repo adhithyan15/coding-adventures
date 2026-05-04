@@ -450,6 +450,14 @@ def apply2_handler(vm: VM, expr: IRApply) -> IRNode:
         return target
 
 
+# Hard cap on the number of user-registered simplifier rules.
+# Every eval iterates the full list, so an unbounded list would degrade
+# performance super-linearly.  1000 rules is far beyond any realistic use
+# case; hitting this cap means a buggy or runaway program wrote rules in a
+# loop.
+_MAX_TELLSIMP_RULES: int = 1000
+
+
 def tellsimp_handler(vm: VM, expr: IRApply) -> IRNode:
     """``TellSimp(lhs, rhs)`` — add a rule to the VM's auto-simplifier.
 
@@ -458,9 +466,14 @@ def tellsimp_handler(vm: VM, expr: IRApply) -> IRNode:
     every rule in that list at step 2b of ``_eval_apply``, so the rule
     fires automatically whenever a matching expression is evaluated.
 
-    Returns ``IRSymbol("done")``.
+    Returns ``IRSymbol("done")`` on success, or ``expr`` unchanged if
+    the arguments are malformed or the rule cap has been reached.
     """
     if len(expr.args) != 2:
+        return expr
+    if len(vm.tellsimp_rules) >= _MAX_TELLSIMP_RULES:
+        # Return the expression unevaluated — same convention as other
+        # malformed-input guards throughout the handler table.
         return expr
     lhs, rhs = expr.args
     compiled_lhs = vm.match_declarations.compile_pattern(lhs)
