@@ -412,6 +412,19 @@ class WindowFuncExpr:
     order_by:
         Tuple of ``(expr, descending)`` sort keys within each partition.
         Required for ranking functions; optional for aggregating functions.
+    extra_args:
+        Additional constant arguments after the primary column argument.
+        Used by offset functions that take more than one argument:
+
+        - ``LAG(col, offset, default)``  → extra_args = (Literal(offset), Literal(default))
+        - ``LEAD(col, offset, default)`` → extra_args = (Literal(offset), Literal(default))
+        - ``NTILE(n)``                   → arg=Literal(n), extra_args = ()
+        - ``NTH_VALUE(col, n)``          → extra_args = (Literal(n),)
+        - ``PERCENT_RANK()``,  ``CUME_DIST()`` → arg=None, extra_args = ()
+
+        The planner resolves these through ``_resolve()`` just like any
+        other expression (they are typically ``Literal`` nodes and pass
+        through unchanged).
 
     Lifecycle
     ---------
@@ -424,6 +437,7 @@ class WindowFuncExpr:
     arg: Expr | None                           # None for arg-free funcs
     partition_by: tuple[Expr, ...] = ()
     order_by: tuple[tuple[Expr, bool], ...] = ()  # (expr, descending)
+    extra_args: tuple[Expr, ...] = ()          # LAG/LEAD offset+default, NTILE n, NTH_VALUE n
 
 
 # The type union every non-specialized consumer should match on. Order

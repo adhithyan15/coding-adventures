@@ -1,5 +1,31 @@
 # Changelog
 
+## [1.18.0] - 2026-05-04
+
+### Added
+
+- **LAG / LEAD window functions** — `LAG(col [, offset [, default]])` and
+  `LEAD(col [, offset [, default]])` are now fully supported end-to-end.
+  The adapter (`adapter.py`) extracts `exprs[1:]` from the `value_list`
+  grammar node into `WindowFuncExpr.extra_args`; codegen normalises these
+  to an `(offset, default)` pair; the VM evaluates the offset-lookback or
+  lookahead within each ordered partition.
+- **NTILE(n) window function** — `NTILE(n)` divides each partition into `n`
+  numbered buckets (1..n) using the standard `divmod` distribution rule.
+  The integer literal `n` is parsed as the sole argument to NTILE.
+- **PERCENT_RANK() window function** — `PERCENT_RANK()` computes
+  `(rank − 1) / (N − 1)`.  Argument-free; only `OVER (ORDER BY ...)` is
+  required.  Returns `0.0` for single-row partitions.
+- **CUME_DIST() window function** — `CUME_DIST()` computes the cumulative
+  distribution fraction for each row's peer group.  Also argument-free.
+- **NTH_VALUE(col, n) window function** — `NTH_VALUE(col, n)` returns the
+  value of `col` at the n-th row (1-indexed) of the partition.  Returns
+  `NULL` when the partition has fewer than n rows.
+- **Negated literal folding in window extra args** (codegen) — SQL expressions
+  like `LAG(col, 1, -1)` where `-1` is parsed as `UnaryExpr(NEG, Literal(1))`
+  are now constant-folded to `-1` by the codegen `_literal_val` helper,
+  making negative default values work correctly.
+
 ## [1.17.0] - 2026-05-04
 
 ### Added

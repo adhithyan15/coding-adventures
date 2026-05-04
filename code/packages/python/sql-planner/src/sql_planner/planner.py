@@ -277,6 +277,7 @@ def _plan_select(
                     partition_by=wf.partition_by,
                     order_by=wf.order_by,
                     alias=alias,
+                    extra_args=wf.extra_args,
                 )
             )
 
@@ -678,7 +679,7 @@ def _resolve(
             resolved_op = _resolve(op, scope, schema, outer_scope)  # type: ignore[arg-type]
             inner_plan = _plan_select(stmt, schema, outer_scope=scope)  # type: ignore[arg-type]
             return NotInSubquery(operand=resolved_op, query=inner_plan)
-        case WindowFuncExpr(func, arg, partition_by, order_by):
+        case WindowFuncExpr(func, arg, partition_by, order_by, extra_args):
             new_arg = _resolve(arg, scope, schema, outer_scope) if arg is not None else None
             new_partition_by = tuple(
                 _resolve(e, scope, schema, outer_scope) for e in partition_by
@@ -686,11 +687,15 @@ def _resolve(
             new_order_by = tuple(
                 (_resolve(e, scope, schema, outer_scope), desc) for e, desc in order_by
             )
+            new_extra_args = tuple(
+                _resolve(e, scope, schema, outer_scope) for e in extra_args
+            )
             return WindowFuncExpr(
                 func=func,
                 arg=new_arg,
                 partition_by=new_partition_by,
                 order_by=new_order_by,
+                extra_args=new_extra_args,
             )
     raise AmbiguousColumn(column="<internal>", tables=[])  # unreachable
 

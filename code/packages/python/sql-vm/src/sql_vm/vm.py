@@ -1410,6 +1410,156 @@ def _do_compute_window(ins: ComputeWindowFunctions, st: _VmState) -> None:
                 for row in partition:
                     row[result_col] = last
 
+            elif func == WinFunc.LAG:
+                # LAG(col, offset=1, default=None): return the value of ``col``
+                # from the row that is ``offset`` positions *before* the current
+                # row within the partition (ordered by order_cols).  Rows with
+                # no preceding peer at that distance return ``default``.
+                #
+                # extra_args = (offset: int, default: SqlValue)
+                # These are normalised to exactly two elements by the codegen
+                # compiler, so we can unpack directly.
+                offset_val, default_val = spec.extra_args if spec.extra_args else (1, None)
+                # Defense-in-depth: codegen already rejects non-integer offsets,
+                # but guard here too so a hand-crafted WinFuncSpec can't cause a
+                # leaky ValueError deep in the VM.
+                if not isinstance(offset_val, int) or isinstance(offset_val, bool):
+                    raise RuntimeError(
+                        f"LAG offset must be an integer, got {type(offset_val).__name__!r}"
+                    )
+                offset_int = offset_val
+                for i, row in enumerate(partition):
+                    src_idx = i - offset_int
+                    if 0 <= src_idx < len(partition) and arg_col:
+                        row[result_col] = partition[src_idx].get(arg_col)
+                    else:
+                        row[result_col] = default_val
+
+            elif func == WinFunc.LEAD:
+                # LEAD(col, offset=1, default=None): mirror of LAG, but looks
+                # *ahead* instead of behind.  Row i fetches from row i+offset.
+                offset_val, default_val = spec.extra_args if spec.extra_args else (1, None)
+                if not isinstance(offset_val, int) or isinstance(offset_val, bool):
+                    raise RuntimeError(
+                        f"LEAD offset must be an integer, got {type(offset_val).__name__!r}"
+                    )
+                offset_int = offset_val
+                for i, row in enumerate(partition):
+                    src_idx = i + offset_int
+                    if 0 <= src_idx < len(partition) and arg_col:
+                        row[result_col] = partition[src_idx].get(arg_col)
+                    else:
+                        row[result_col] = default_val
+
+            elif func == WinFunc.NTILE:
+                # NTILE(n): divide the partition into n approximately equal
+                # buckets and assign each row a bucket number 1..n.
+                #
+                # Distribution rule (matches SQLite and PostgreSQL):
+                #   q, r = divmod(len(partition), n)
+                # The first r buckets have q+1 rows; the remaining n-r buckets
+                # have q rows.  Rows are numbered from 1.
+                #
+                # extra_args = (n: int,) set by codegen.
+                (n_buckets_raw,) = spec.extra_args if spec.extra_args else (1,)
+                total = len(partition)
+                # Defense-in-depth type guard (codegen already enforces int).
+                if not isinstance(n_buckets_raw, int) or isinstance(n_buckets_raw, bool):
+                    raise RuntimeError(
+                        f"NTILE n must be an integer, got {type(n_buckets_raw).__name__!r}"
+                    )
+                # Cap n_buckets to the partition size to prevent a DoS where a
+                # caller specifies NTILE(1_000_000_000) on a tiny partition,
+                # forcing the outer loop to run billions of iterations for no
+                # useful work.  SQL semantics are unaffected: if n > N then
+                # every row gets its own bucket (1..N) and empty buckets are
+                # simply never emitted, which is exactly what capping achieves.
+                raw_n = max(1, n_buckets_raw)
+                n_buckets = min(raw_n, total) if total > 0 else 1
+                q, r = divmod(total, n_buckets)
+                # Build a bucket boundary list: bucket k (1-indexed) ends at
+                # the index computed below.
+                row_idx = 0
+                for bucket in range(1, n_buckets + 1):
+                    bucket_size = q + (1 if bucket <= r else 0)
+                    for _ in range(bucket_size):
+                        if row_idx < total:
+                            partition[row_idx][result_col] = bucket
+                            row_idx += 1
+
+            elif func == WinFunc.PERCENT_RANK:
+                # PERCENT_RANK: (rank − 1) / (N − 1) where rank is the RANK()
+                # value and N is the partition size.
+                # Special case: if N == 1, every row gets 0.0 (division by zero
+                # is avoided; the only row is trivially first).
+                n = len(partition)
+                if n <= 1:
+                    for row in partition:
+                        row[result_col] = 0.0
+                else:
+                    # Reuse the RANK computation — two consecutive rows share a
+                    # rank when their order-key values are identical.
+                    rank = 1
+                    for i, row in enumerate(partition):
+                        if i == 0:
+                            rank = 1
+                        else:
+                            prev = partition[i - 1]
+                            prev_key = _order_vals(prev, spec.order_cols)
+                            cur_key = _order_vals(row, spec.order_cols)
+                            if prev_key != cur_key:
+                                rank = i + 1
+                        row[result_col] = (rank - 1) / (n - 1)
+
+            elif func == WinFunc.CUME_DIST:
+                # CUME_DIST: (number of rows whose order key ≤ current row's
+                # order key) / N.  Two rows with the same order key get the
+                # same CUME_DIST value (the *last* position in the tie group).
+                #
+                # Equivalently: for each row find the *last* row with an equal
+                # order key (i.e. the end of the peer group) and compute
+                # (end_index + 1) / N.
+                n = len(partition)
+                i = 0
+                while i < n:
+                    # Find the end of the current peer group (all rows with
+                    # the same order-key values).
+                    j = i
+                    while j + 1 < n and (
+                        _order_vals(partition[j], spec.order_cols)
+                        == _order_vals(partition[j + 1], spec.order_cols)
+                    ):
+                        j += 1
+                    # Rows i..j all belong to the same peer group.
+                    cd = (j + 1) / n
+                    for k in range(i, j + 1):
+                        partition[k][result_col] = cd
+                    i = j + 1
+
+            elif func == WinFunc.NTH_VALUE:
+                # NTH_VALUE(col, n): return the value of ``col`` at the n-th
+                # row (1-indexed) of the partition.  Rows before the n-th row
+                # also receive that value (the window frame logically grows as
+                # each row is processed, but in our materialised model we simply
+                # broadcast the n-th value to all rows).  If the partition has
+                # fewer than n rows, return NULL.
+                #
+                # extra_args = (n: int,) — 1-indexed.
+                (n_raw,) = spec.extra_args if spec.extra_args else (1,)
+                # Defense-in-depth: codegen already rejects non-integer n, but
+                # guard here too so a hand-crafted WinFuncSpec fails cleanly.
+                if not isinstance(n_raw, int) or isinstance(n_raw, bool):
+                    raise RuntimeError(
+                        f"NTH_VALUE n must be an integer, got {type(n_raw).__name__!r}"
+                    )
+                n_idx = n_raw - 1  # convert to 0-indexed
+                if 0 <= n_idx < len(partition) and arg_col:
+                    nth_val: SqlValue = partition[n_idx].get(arg_col)
+                else:
+                    nth_val = None
+                for row in partition:
+                    row[result_col] = nth_val
+
     # Project rows to output_cols and rebuild tuples.
     out_cols = ins.output_cols
     st.result.rows = [

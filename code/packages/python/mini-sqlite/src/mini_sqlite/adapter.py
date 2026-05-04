@@ -1228,9 +1228,13 @@ def _window_func_call(node: ASTNode, state: _PlaceholderCounter) -> WindowFuncEx
 
     Supported functions and their arg requirements:
 
-    - Arg-free (no argument):   ROW_NUMBER, RANK, DENSE_RANK
+    - Arg-free (no argument):   ROW_NUMBER, RANK, DENSE_RANK, PERCENT_RANK, CUME_DIST
     - COUNT(*) (star arg):      COUNT — maps to "count_star"
     - Single-arg:               SUM, COUNT(col), AVG, MIN, MAX, FIRST_VALUE, LAST_VALUE
+    - Literal-arg:              NTILE(n) — n is an integer constant
+    - Multi-arg:                LAG(col [, offset [, default]]),
+                                LEAD(col [, offset [, default]]),
+                                NTH_VALUE(col, n)
 
     All function names are normalised to lower-case.
     """
@@ -1242,6 +1246,7 @@ def _window_func_call(node: ASTNode, state: _PlaceholderCounter) -> WindowFuncEx
     star = any(_is_token(c, type_="STAR") for c in node.children)
     vl = _maybe_child(node, "value_list")
     arg: Expr | None = None
+    extra_args_tuple: tuple[Expr, ...] = ()
 
     if star:
         # COUNT(*) OVER (...) → func="count_star", arg=None
@@ -1250,6 +1255,12 @@ def _window_func_call(node: ASTNode, state: _PlaceholderCounter) -> WindowFuncEx
         exprs = [c for c in vl.children if isinstance(c, ASTNode) and c.rule_name == "expr"]
         if exprs:
             arg = _expr(exprs[0], state)
+            # Multi-argument functions (LAG, LEAD, NTH_VALUE) carry extra args
+            # beyond the first column reference.  We thread them through as a
+            # tuple so the planner and codegen can normalise them into the
+            # proper (offset, default) / (n,) shapes.
+            if len(exprs) > 1:
+                extra_args_tuple = tuple(_expr(e, state) for e in exprs[1:])
     # Arg-free ranking functions keep func_name as-is (row_number, rank, dense_rank).
 
     # Extract the window_spec node.
@@ -1292,6 +1303,7 @@ def _window_func_call(node: ASTNode, state: _PlaceholderCounter) -> WindowFuncEx
         arg=arg,
         partition_by=tuple(partition_exprs),
         order_by=tuple(order_keys),
+        extra_args=extra_args_tuple,
     )
 
 

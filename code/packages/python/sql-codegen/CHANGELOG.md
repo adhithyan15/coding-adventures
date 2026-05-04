@@ -1,5 +1,32 @@
 # Changelog
 
+## [1.11.0] - 2026-05-04
+
+### Added
+
+- **New `WinFunc` enum values** (`ir.py`) — `LAG`, `LEAD`, `NTH_VALUE`,
+  `NTILE`, `PERCENT_RANK`, `CUME_DIST` added to the `WinFunc` enumeration.
+- **`extra_args` field on `WinFuncSpec`** (`ir.py`) — `tuple[object, ...]`
+  that carries literal constants for multi-argument window functions:
+  - `LAG` / `LEAD` → `(offset: int, default: SqlValue)` (always 2 elements)
+  - `NTILE` → `(n: int,)` — the bucket count
+  - `NTH_VALUE` → `(n: int,)` — the 1-indexed row position
+  - `PERCENT_RANK`, `CUME_DIST` → `()` (empty, no extra args needed)
+- **Extended `_WIN_FUNC_MAP`** (`compiler.py`) — the mapping now includes
+  all six new functions.
+- **Rewritten `_to_ir_win_spec`** (`compiler.py`) — converts planner-level
+  `WindowFuncSpec` to IR `WinFuncSpec`, handling each function's unique
+  argument shape:
+  - `LAG`/`LEAD` — normalises `extra_args` to exactly `(offset, default)`,
+    defaulting to `(1, None)` when arguments are omitted.
+  - `NTILE` — the literal bucket count in `arg_expr` is moved to
+    `extra_args` and `arg_col` is set to `None` (NTILE has no column arg).
+  - `NTH_VALUE` — column is `arg_col`; `n` is `extra_args[0]`.
+  - `PERCENT_RANK`, `CUME_DIST` — no `arg_col` or `extra_args`.
+  - Negated-literal folding: `UnaryExpr(NEG, Literal(n))` (produced by
+    the parser for `-1`, `-2`, …) is constant-folded to `-n` inside
+    `_literal_val` so that `LAG(col, 1, -1)` works correctly.
+
 ## [1.10.0] - 2026-05-04
 
 ### Added

@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.17.0] - 2026-05-04
+
+### Added
+
+- **`extra_args` field on `WindowFuncExpr`** (`expr.py`) — carries zero or
+  more additional literal expressions beyond the primary column argument.
+  Used by multi-argument window functions: `LAG(col, offset, default)`,
+  `LEAD(col, offset, default)`, `NTH_VALUE(col, n)`.
+- **`extra_args` field on `WindowFuncSpec`** (`plan.py`) — same semantics
+  as `WindowFuncExpr.extra_args`, carried through the plan representation
+  so the codegen can extract literal constants at compile time.
+- **`extra_args` propagation in the planner** (`planner.py`) — `_resolve`
+  now recursively resolves all `extra_args` expressions, and
+  `WindowFuncSpec` construction in `_plan_select` passes `extra_args`
+  through from the source expression.
+
 ## [0.16.0] - 2026-05-04
 
 ### Added
