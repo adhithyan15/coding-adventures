@@ -1,0 +1,11 @@
+[package]
+name = "iir-type-checker"
+version = "0.1.0"
+edition = "2021"
+description = "Optional-typing spectrum checker and inference engine for InterpreterIR modules."
+license = "MIT"
+
+[dependencies]
+interpreter-ir = { path = "../interpreter-ir" }
+
+[dev-dependencies]
